@@ -1,0 +1,159 @@
+<!-- MENU BROKER DINAMICO CON RICERCA -->
+<div id="broker-menu" style="font-family:'Inter',sans-serif; padding:24px; background:#f8fafc;">
+
+  <!-- Ricerca -->
+  <input type="text" id="broker-search" placeholder="🔍 Cerca broker o categoria..." style="padding:12px 16px; width:100%; max-width:600px; margin:0 auto 24px; display:block; border-radius:8px; border:1px solid #cbd5e1; font-size:15px;">
+
+  <!-- Tabs -->
+  <div id="broker-tabs" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; justify-content:center;"></div>
+
+  <!-- Risultati -->
+  <div id="broker-results" class="broker-grid"></div>
+</div>
+
+<!-- Script -->
+<script>
+const brokerCategories = {
+  "📱 Mobile App": ["Freedom24","eToro","NAGA","Exante","Plus500","Pepperstone","AvaTrade","FxPro","FP Markets","Eightcap","BlackBull Markets","Skilling","XM"],
+  "💸 Costi Bassi": ["FP Markets","Pepperstone","Eightcap","XM","Plus500","Freedom24","Exante","BlackBull Markets","FxPro","Skilling"],
+  "👥 Copy Trading": ["eToro","NAGA"],
+  "💼 Portafogli Gestiti": ["eToro","Freedom24"],
+  "⚡ DMA": ["Exante","FP Markets"],
+  "📈 Azioni Reali": ["Freedom24","NAGA","Exante","eToro"],
+  "📊 ETF": ["Exante","Freedom24","eToro"],
+  "🧾 Obbligazioni": ["Exante"],
+  "₿ Criptovalute": ["Eightcap","eToro"],
+  "💱 Forex Puro": ["FP Markets","Pepperstone","FxPro","XM","Exante","Plus500","Skilling","Eightcap","BlackBull Markets"],
+  "🔁 CFD": ["FP Markets","AvaTrade","Pepperstone","Plus500","Skilling","Eightcap","BlackBull Markets"],
+  "📉 Futures": ["Exante","FP Markets","Eightcap"],
+  "🧠 Opzioni": ["Exante","AvaTrade"],
+  "🚀 IPO": ["Freedom24","Exante"],
+  "📊 Indici": ["Exante","FP Markets","Eightcap","BlackBull Markets","FxPro"],
+  "🛢 Materie prime": ["Exante","FP Markets","Eightcap","Plus500","BlackBull Markets"],
+  "🤖 Trading Algoritmico": ["Exante","FP Markets","Pepperstone","XM","Eightcap","Skilling","BlackBull Markets"],
+  "⚖️ Leva Elevata": ["BlackBull Markets","Eightcap"],
+  "🎁 Incentivi": ["Freedom24","Exante"]
+};
+
+const brokerInfo = {
+  "Freedom24": { logo: "img/brokers/freedom24.png", link: "freedom24.html" },
+  "eToro": { logo: "img/brokers/etoro.png", link: "etoro.html" },
+  "NAGA": { logo: "img/brokers/naga.png", link: "naga.html" },
+  "Exante": { logo: "img/brokers/exante.png", link: "exante.html" },
+  "Plus500": { logo: "img/brokers/plus500.png", link: "plus500.html" },
+  "Pepperstone": { logo: "img/brokers/pepperstone.png", link: "pepperstone.html" },
+  "AvaTrade": { logo: "img/brokers/avatrade.png", link: "avatrade.html" },
+  "FxPro": { logo: "img/brokers/fxpro.png", link: "fxpro.html" },
+  "FP Markets": { logo: "img/brokers/fpmarkets.png", link: "fpmarkets.html" },
+  "Eightcap": { logo: "img/brokers/eightcap.png", link: "eightcap.html" },
+  "BlackBull Markets": { logo: "img/brokers/blackbull.png", link: "blackbull.html" },
+  "Skilling": { logo: "img/brokers/skilling.png", link: "skilling.html" },
+  "XM": { logo: "img/brokers/xm.png", link: "xm.html" }
+};
+
+function renderTabs() {
+  const tabContainer = document.getElementById("broker-tabs");
+  tabContainer.innerHTML = '';
+  Object.keys(brokerCategories).forEach(cat => {
+    const btn = document.createElement("button");
+    btn.className = "broker-tab";
+    btn.innerText = cat;
+    btn.onclick = () => showBrokers(cat);
+    tabContainer.appendChild(btn);
+  });
+}
+
+function showBrokers(category) {
+  const container = document.getElementById("broker-results");
+  container.innerHTML = '';
+  brokerCategories[category].forEach(name => {
+    const data = brokerInfo[name];
+    if (!data) return;
+    const card = document.createElement('a');
+    card.href = data.link;
+    card.className = 'broker-card';
+    card.innerHTML = `<img src="${data.logo}" class="broker-logo"><div class="broker-name">${name}</div>`;
+    container.appendChild(card);
+  });
+}
+
+function searchBrokers(keyword) {
+  const container = document.getElementById("broker-results");
+  container.innerHTML = '';
+  keyword = keyword.toLowerCase();
+  Object.entries(brokerCategories).forEach(([cat, brokers]) => {
+    if (cat.toLowerCase().includes(keyword)) {
+      showBrokers(cat);
+      return;
+    }
+    brokers.forEach(name => {
+      if (name.toLowerCase().includes(keyword)) {
+        const data = brokerInfo[name];
+        if (!data) return;
+        const card = document.createElement('a');
+        card.href = data.link;
+        card.className = 'broker-card';
+        card.innerHTML = `<img src="${data.logo}" class="broker-logo"><div class="broker-name">${name}</div>`;
+        container.appendChild(card);
+      }
+    });
+  });
+}
+
+document.getElementById("broker-search").addEventListener("input", e => {
+  const q = e.target.value.trim();
+  if (q === "") showBrokers(Object.keys(brokerCategories)[0]);
+  else searchBrokers(q);
+});
+
+renderTabs();
+showBrokers(Object.keys(brokerCategories)[0]);
+</script>
+
+<!-- Style -->
+<style>
+.broker-tab {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: none;
+  background: #e2e8f0;
+  color: #0f172a;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.broker-tab:hover {
+  background: #cbd5e1;
+}
+.broker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+}
+.broker-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  text-decoration: none;
+  color: #1e293b;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  transition: all 0.2s ease;
+}
+.broker-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+}
+.broker-logo {
+  height: 36px;
+  margin-bottom: 10px;
+  object-fit: contain;
+}
+.broker-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+@media (max-width: 768px) {
+  .broker-tab { width: 100%; text-align: left; }
+}
+</style>
