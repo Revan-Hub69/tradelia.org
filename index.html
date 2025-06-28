@@ -41,13 +41,13 @@
 
       function apriSezioneLegale(id) {
         const modal = document.createElement("div");
-        modal.className = "modal";
+        modal.className = "modal animate-fade-in";
         modal.style.display = "flex";
         modal.innerHTML = `
           <div class="modal-content">
-            <div class="modal-close" onclick="this.parentElement.parentElement.remove()">✕</div>
-            <h3>${id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy'}</h3>
-            <p>${id === 'section-tc' ? 'Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all\'investimento. Tutte le operazioni simulate in ambiente demo.' : 'Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l\'utente. Progetto open per educazione finanziaria.'}</p>
+            <div class="modal-close hover:text-red-500 transition" onclick="this.parentElement.parentElement.remove()">✕</div>
+            <h3 class="text-lg font-semibold mb-2">${id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy'}</h3>
+            <p class="text-sm text-gray-800">${id === 'section-tc' ? 'Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all\'investimento. Tutte le operazioni simulate in ambiente demo.' : 'Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l\'utente. Progetto open per educazione finanziaria.'}</p>
           </div>`;
         document.body.appendChild(modal);
       }
@@ -56,9 +56,9 @@
       body {
         font-family: 'Inter', sans-serif;
         background: #f1f5f9;
-        background-image: url('https://www.transparenttextures.com/patterns/graph-paper.png');
+        background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
         background-repeat: repeat;
-        background-size: 300px;
+        background-size: 280px;
       }
       .modal {
         position: fixed;
@@ -71,6 +71,7 @@
         align-items: center;
         justify-content: center;
         z-index: 50;
+        animation: fade-in 0.3s ease-in-out;
       }
       .modal-content {
         background: #fff;
@@ -81,6 +82,8 @@
         line-height: 1.7;
         color: #0f172a;
         position: relative;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
       }
       .modal-close {
         position: absolute;
@@ -89,6 +92,18 @@
         cursor: pointer;
         font-size: 18px;
         color: #334155;
+        transition: color 0.2s;
+      }
+      @keyframes fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      footer p {
+        transition: all 0.3s ease;
+      }
+      footer p:hover {
+        color: #38bdf8;
+        transform: translateX(2px);
       }
     </style>
   </head>
@@ -96,7 +111,7 @@
     <!-- Header -->
     <header class="w-full px-6 py-4 flex justify-between items-center bg-white shadow-sm">
       <div class="text-2xl font-extrabold tracking-tight text-sky-900">
-        <span class="text-slate-900">TRADELIA</span><span class="text-blue-600">•AI</span>
+        <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
       </div>
     </header>
 
@@ -109,23 +124,20 @@
 
     <!-- Strumenti -->
     <section class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-6 pb-24">
-      <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition">
-        <div class="mb-4"><i data-lucide="line-chart" class="w-8 h-8 text-blue-700"></i></div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">Lettore di Grafici</h3>
+      <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition transform hover:scale-[1.02] group">
+        <div class="mb-4 flex items-center gap-2 text-blue-700"><i data-lucide="line-chart" class="w-6 h-6"></i> <span class="font-semibold">Lettore di Grafici</span></div>
         <p class="text-gray-600 mb-4">Guida grafica multitimeframe con supporto AI su indicatori e segnali attivi.</p>
-        <a href="/lettore-grafici.html" class="inline-flex items-center text-blue-700 hover:text-blue-900 font-semibold transition">Scopri lo strumento <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i></a>
+        <a href="/lettore-grafici.html" class="inline-flex items-center text-blue-700 hover:text-blue-900 font-semibold transition">Scopri lo strumento <i data-lucide="arrow-right" class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1"></i></a>
       </div>
 
-      <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition">
-        <div class="mb-4"><i data-lucide="settings" class="w-8 h-8 text-blue-700"></i></div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">Generatore EA</h3>
+      <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition transform hover:scale-[1.02] group">
+        <div class="mb-4 flex items-center gap-2 text-blue-700"><i data-lucide="settings" class="w-6 h-6"></i> <span class="font-semibold">Generatore EA</span></div>
         <p class="text-gray-600 mb-4">Costruisci la tua strategia automatica con AI, logiche di filtro e supporto tecnico.</p>
-        <a href="/generatore-ea.html" class="inline-flex items-center text-blue-700 hover:text-blue-900 font-semibold transition">Scopri lo strumento <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i></a>
+        <a href="/generatore-ea.html" class="inline-flex items-center text-blue-700 hover:text-blue-900 font-semibold transition">Scopri lo strumento <i data-lucide="arrow-right" class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1"></i></a>
       </div>
 
-      <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition">
-        <div class="mb-4"><i data-lucide="database" class="w-8 h-8 text-blue-700"></i></div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">Analisi Istituzionale (In arrivo)</h3>
+      <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition transform hover:scale-[1.02]">
+        <div class="mb-4 flex items-center gap-2 text-blue-700"><i data-lucide="database" class="w-6 h-6"></i> <span class="font-semibold">Analisi Istituzionale</span></div>
         <p class="text-gray-600 mb-4">Analisi avanzate basate su flussi, macro, posizionamenti reali e dati API.</p>
         <span class="inline-flex items-center text-gray-400 font-semibold cursor-not-allowed">In sviluppo</span>
       </div>
@@ -149,8 +161,8 @@
           <p style="margin-top:16px;font-size:13px;color:#60a5fa">✉️ <a href="mailto:info@tradelia.org" style="color:#60a5fa;text-decoration:none">info@tradelia.org</a></p>
         </div>
         <div style="flex:1 1 300px">
-          <p style="font-weight:600;color:#f1f5f9;cursor:pointer;margin-bottom:8px" onclick="apriSezioneLegale('section-tc')">Termini e Condizioni</p>
-          <p style="font-weight:600;color:#f1f5f9;cursor:pointer" onclick="apriSezioneLegale('section-privacy')">Privacy Policy</p>
+          <p class="hover:translate-x-1 hover:text-sky-400 transition cursor-pointer font-semibold text-white mb-2" onclick="apriSezioneLegale('section-tc')">Termini e Condizioni</p>
+          <p class="hover:translate-x-1 hover:text-sky-400 transition cursor-pointer font-semibold text-white" onclick="apriSezioneLegale('section-privacy')">Privacy Policy</p>
         </div>
       </div>
     </footer>
