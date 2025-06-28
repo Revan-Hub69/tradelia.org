@@ -1,66 +1,112 @@
 <!DOCTYPE html>
 <html lang="it">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tradelia AI – Home</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 text-gray-800 font-[Inter] antialiased">
-
-  <!-- Header -->
-  <!--#include virtual="/partial/header.html" -->
-
-  <!-- Menu -->
-  <!--#include virtual="/partial/menu.html" -->
-
-  <!-- Sezione GPTs -->
-  <section class="py-12 bg-gray-100">
-    <div class="max-w-6xl mx-auto px-4">
-      <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">
-        La Tua Suite di GPTs Finanziari
-      </h2>
-      <div class="flex overflow-x-auto space-x-6 pb-4">
-        
-        <!-- GPTs Signal Scanner -->
-        <div class="flex-none w-80 bg-white rounded-xl shadow-lg p-6 border-2 border-green-800">
-          <h3 class="text-xl font-semibold text-green-800 mb-3">GPTs Signal Scanner</h3>
-          <p class="text-gray-600 mb-4 text-sm">
-            Scanner per segnali forti su azioni, ETF, crypto con 7 criteri attivi e OCR per screenshot.
-          </p>
-          <a href="/signal-scanner" class="block mt-auto py-2 px-4 bg-green-800 hover:bg-green-900 text-white text-center rounded transition">
-            Scopri Signal Scanner
-          </a>
-        </div>
-
-        <!-- GPTs EA Builder -->
-        <div class="flex-none w-80 bg-white rounded-xl shadow-lg p-6 border-2 border-gray-800">
-          <h3 class="text-xl font-semibold text-gray-800 mb-3">GPTs EA Builder</h3>
-          <p class="text-gray-600 mb-4 text-sm">
-            Generatore EA per MT4/5, TradingView, cTrader e Python: crea bot in modo guidato.
-          </p>
-          <a href="/ea-builder" class="block mt-auto py-2 px-4 bg-gray-800 hover:bg-gray-900 text-white text-center rounded transition">
-            Scopri EA Builder
-          </a>
-        </div>
-
-        <!-- GPTs Graphic Viewer -->
-        <div class="flex-none w-80 bg-white rounded-xl shadow-lg p-6 border-2 border-blue-800">
-          <h3 class="text-xl font-semibold text-blue-800 mb-3">GPTs Graphic Viewer</h3>
-          <p class="text-gray-600 mb-4 text-sm">
-            Visualizza grafici personalizzati con indicatori e analisi integrate.
-          </p>
-          <a href="/graphic-viewer" class="block mt-auto py-2 px-4 bg-blue-800 hover:bg-blue-900 text-white text-center rounded transition">
-            Scopri Graphic Viewer
-          </a>
-        </div>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tradelia – AI Tools per Trader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        lucide.createIcons();
+      });
+    </script>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      .logo-text {
+        font-weight: 700;
+        font-size: 20px;
+        color: #0f172a;
+        letter-spacing: -0.5px;
+      }
+    </style>
+  </head>
+  <body class="bg-white text-gray-900">
+    <header class="bg-white border-b sticky top-0 z-10">
+      <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="logo-text">TRADELIA<span class="text-blue-600">AI</span></div>
       </div>
-    </div>
-  </section>
+    </header>
 
-  <!-- Footer -->
-  <!--#include virtual="/partial/footer.html" -->
+    <section class="max-w-5xl mx-auto px-6 py-24 text-center">
+      <h1 class="text-5xl md:text-6xl font-bold tracking-tight text-gray-900 mb-6">AI Tools per Trader. Zero Fuffa.</h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+        Tradelia è un progetto indipendente, avanzato e senza scopo di lucro. Nasce da mesi di sviluppo per offrire strumenti GPT di livello professionale. Tutto in ambiente demo. Tutto per imparare.
+      </p>
+    </section>
 
-</body>
+    <section id="tools" class="bg-[#f9fafb] py-20 border-t">
+      <div class="max-w-6xl mx-auto px-6">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-12 text-center">Strumenti disponibili</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="bg-white border rounded-2xl shadow-sm hover:shadow-lg transition p-6 flex flex-col justify-between">
+            <div>
+              <div class="mb-4 text-blue-600">
+                <i data-lucide="line-chart" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">Lettore di Grafici AI</h3>
+              <p class="text-gray-600 text-sm mb-4">
+                Guida passo passo nell'analisi grafica avanzata di asset multitimeframe, indicando quali indicatori aggiungere e come interpretare trend e pattern.
+              </p>
+            </div>
+            <a href="/grafico" class="inline-block mt-4 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition">Scopri lo strumento</a>
+          </div>
+
+          <div class="bg-white border rounded-2xl shadow-sm hover:shadow-lg transition p-6 flex flex-col justify-between">
+            <div>
+              <div class="mb-4 text-blue-600">
+                <i data-lucide="cpu" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">Generatore di Strategie (EA)</h3>
+              <p class="text-gray-600 text-sm mb-4">
+                Costruisci la tua EA passo passo con il supporto dell’AI, scegliendo condizioni, filtri e logiche operative. Pronta per MT4, MT5, cTrader o backtest.
+              </p>
+            </div>
+            <a href="/ea" class="inline-block mt-4 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition">Scopri lo strumento</a>
+          </div>
+
+          <div class="bg-gray-100 border border-dashed rounded-2xl p-6 opacity-70 flex flex-col justify-between">
+            <div>
+              <div class="mb-4 text-gray-400">
+                <i data-lucide="brain" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-500 mb-2">Analisi Istituzionale</h3>
+              <p class="text-gray-500 text-sm mb-4">
+                In arrivo: analisi avanzata su asset basata su metriche istituzionali, con dati macro e fondamentali da API professionali.
+              </p>
+            </div>
+            <span class="text-xs text-gray-400 font-medium">Coming Soon</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer style="width:100%;background:#0f172a;color:#cbd5e1;padding:48px 24px 32px;font-family:'Inter',sans-serif;font-size:14px;line-height:1.7;border-top:1px solid rgba(255,255,255,0.08)">
+      <div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between">
+        <div style="flex:1 1 300px">
+          <h4 style="color:#f8fafc;font-size:16px;margin-bottom:12px;font-weight:600">Tradelia AI</h4>
+          <p>Tradelia è un progetto gratuito, senza scopo di lucro, portato avanti in mesi di lavoro per offrire strumenti educativi d'eccellenza nel campo finanziario. Nessuna consulenza, solo intelligenza applicata.</p>
+          <p style="margin-top:16px;font-size:13px;color:#60a5fa">✉️ <a href="mailto:info@tradelia.org" style="color:#60a5fa;text-decoration:none">info@tradelia.org</a></p>
+        </div>
+        <div style="flex:1 1 300px">
+          <p style="font-weight:600;color:#f1f5f9;cursor:pointer;margin-bottom:8px" onclick="apriSezioneLegale('section-tc')">Termini e Condizioni</p>
+          <p style="font-weight:600;color:#f1f5f9;cursor:pointer" onclick="apriSezioneLegale('section-privacy')">Privacy Policy</p>
+        </div>
+      </div>
+
+      <div style="margin:32px 0 24px;height:1px;background:rgba(255,255,255,0.05)"></div>
+
+      <div style="max-width:1280px;margin:0 auto;font-size:12px;color:#64748b">
+        Tradelia AI non è una società finanziaria e non fornisce consulenza. Tutti gli strumenti sono pensati per uso didattico e simulativo, su broker partner in modalità demo. Alcuni link sono affiliati.
+      </div>
+
+      <div style="max-width:1280px;margin:24px auto 0;font-size:13px;color:#38bdf8;background:rgba(255,255,255,0.03);padding:12px 16px;border-radius:8px;text-align:center">
+        🍪 <strong>Zero biscotti, zero sorprese.</strong><br>
+        Tradelia non utilizza cookie di tracciamento, profilazione o pubblicità.
+      </div>
+    </footer>
+  </body>
 </html>
