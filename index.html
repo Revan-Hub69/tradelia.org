@@ -38,19 +38,27 @@
           document.getElementById("cookie-popup").style.display = "flex";
         }, 1000);
       });
+
+      function apriSezioneLegale(id) {
+        const modal = document.createElement("div");
+        modal.className = "modal";
+        modal.style.display = "flex";
+        modal.innerHTML = `
+          <div class="modal-content">
+            <div class="modal-close" onclick="this.parentElement.parentElement.remove()">✕</div>
+            <h3>${id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy'}</h3>
+            <p>${id === 'section-tc' ? 'Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all\'investimento. Tutte le operazioni simulate in ambiente demo.' : 'Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l\'utente. Progetto open per educazione finanziaria.'}</p>
+          </div>`;
+        document.body.appendChild(modal);
+      }
     </script>
     <style>
       body {
         font-family: 'Inter', sans-serif;
-        background-image: url('https://transparenttextures.com/patterns/asfalt-light.png');
-        background-color: #f1f5f9;
-        background-size: 320px;
-      }
-      .logo-text {
-        font-weight: 700;
-        font-size: 20px;
-        color: #0f172a;
-        letter-spacing: -0.5px;
+        background: #f1f5f9;
+        background-image: url('https://www.transparenttextures.com/patterns/graph-paper.png');
+        background-repeat: repeat;
+        background-size: 300px;
       }
       .modal {
         position: fixed;
@@ -74,11 +82,6 @@
         color: #0f172a;
         position: relative;
       }
-      .modal-content h3 {
-        font-weight: 700;
-        font-size: 18px;
-        margin-bottom: 16px;
-      }
       .modal-close {
         position: absolute;
         top: 16px;
@@ -90,84 +93,66 @@
     </style>
   </head>
   <body class="text-gray-900">
-    <header class="bg-white border-b sticky top-0 z-10">
-      <div class="max-w-7xl mx-auto px-6 py-4">
-        <div class="logo-text">TRADELIA<span class="text-blue-600">AI</span></div>
+    <!-- Header -->
+    <header class="w-full px-6 py-4 flex justify-between items-center bg-white shadow-sm">
+      <div class="text-2xl font-extrabold tracking-tight text-sky-900">
+        <span class="text-slate-900">TRADELIA</span><span class="text-blue-600">•AI</span>
       </div>
     </header>
 
-    <section class="max-w-6xl mx-auto px-6 pt-24 pb-16 text-center">
-      <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4 leading-tight">
-        <span id="typing-text" class="block min-h-[48px] md:min-h-[64px]"></span>
-      </h1>
-      <p class="text-md md:text-lg text-gray-600 max-w-3xl mx-auto">
-        Tradelia è un progetto indipendente, senza scopo di lucro, costruito in mesi di sviluppo. Offre strumenti AI gratuiti per imparare davvero, operando in ambiente demo, senza illusioni.
-      </p>
+    <!-- Hero -->
+    <section class="text-center py-24 px-6 max-w-4xl mx-auto">
+      <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight mb-4">Strumenti AI per la finanza reale</h1>
+      <p class="mt-2 text-lg text-slate-600">Un progetto indipendente, sviluppato in mesi di lavoro per fornire strumenti finanziari AI gratuiti, 100% educational, senza finalità speculative. Tutto in ambiente demo.</p>
+      <p class="mt-4 text-xl text-blue-700 min-h-[32px] font-medium" id="typing-text"></p>
     </section>
 
-    <section id="tools" class="bg-[#f9fafb] py-20 border-t">
-      <div class="max-w-6xl mx-auto px-6">
-        <h2 class="text-3xl font-semibold text-gray-800 mb-12 text-center">Strumenti disponibili</h2>
-        <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div class="bg-white shadow-md p-6 rounded-xl border hover:shadow-lg transition hover:scale-[1.01]">
-            <div class="flex items-center mb-4 text-blue-600"><i data-lucide="line-chart" class="w-5 h-5 mr-2"></i> Lettore Grafici</div>
-            <p class="text-gray-700 text-sm mb-4">Guida passo passo nell'analisi grafica avanzata di asset multitimeframe, con supporto agli indicatori tecnici.</p>
-            <a href="/lettore-grafici" class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-800 transition-all">Scopri lo strumento <i data-lucide="arrow-right" class="ml-1 w-4 h-4 transition-transform group-hover:translate-x-1"></i></a>
-          </div>
-          <div class="bg-white shadow-md p-6 rounded-xl border hover:shadow-lg transition hover:scale-[1.01]">
-            <div class="flex items-center mb-4 text-blue-600"><i data-lucide="settings" class="w-5 h-5 mr-2"></i> Generatore EA</div>
-            <p class="text-gray-700 text-sm mb-4">Costruisci la tua EA pronta per backtest con supporto AI: imposta condizioni, filtri e logiche operative.</p>
-            <a href="/generatore-ea" class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-800 transition-all">Scopri lo strumento <i data-lucide="arrow-right" class="ml-1 w-4 h-4 transition-transform group-hover:translate-x-1"></i></a>
-          </div>
-          <div class="bg-white shadow-md p-6 rounded-xl border hover:shadow-lg transition hover:scale-[1.01]">
-            <div class="flex items-center mb-4 text-blue-600"><i data-lucide="database" class="w-5 h-5 mr-2"></i> Analisi Istituzionale</div>
-            <p class="text-gray-700 text-sm mb-4">In arrivo: analisi avanzata di asset con logiche utilizzate dagli istituzionali, basata su dati API professionali.</p>
-            <a href="/analisi-istituzionale" class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-800 transition-all">Anteprima <i data-lucide="arrow-right" class="ml-1 w-4 h-4 transition-transform group-hover:translate-x-1"></i></a>
-          </div>
-        </div>
+    <!-- Strumenti -->
+    <section class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-6 pb-24">
+      <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition">
+        <div class="mb-4"><i data-lucide="line-chart" class="w-8 h-8 text-blue-700"></i></div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Lettore di Grafici</h3>
+        <p class="text-gray-600 mb-4">Guida grafica multitimeframe con supporto AI su indicatori e segnali attivi.</p>
+        <a href="#" class="inline-flex items-center text-blue-700 hover:text-blue-900 font-semibold transition">Scopri lo strumento <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i></a>
+      </div>
+
+      <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition">
+        <div class="mb-4"><i data-lucide="settings" class="w-8 h-8 text-blue-700"></i></div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Generatore EA</h3>
+        <p class="text-gray-600 mb-4">Costruisci la tua strategia automatica con AI, logiche di filtro e supporto tecnico.</p>
+        <a href="#" class="inline-flex items-center text-blue-700 hover:text-blue-900 font-semibold transition">Scopri lo strumento <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i></a>
+      </div>
+
+      <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition">
+        <div class="mb-4"><i data-lucide="database" class="w-8 h-8 text-blue-700"></i></div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Analisi Istituzionale (In arrivo)</h3>
+        <p class="text-gray-600 mb-4">Analisi avanzate basate su flussi, macro, posizionamenti reali e dati API.</p>
+        <span class="inline-flex items-center text-gray-400 font-semibold cursor-not-allowed">In sviluppo</span>
       </div>
     </section>
 
-    <footer class="bg-[#0f172a] text-[#cbd5e1] text-sm py-12 px-6">
-      <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12">
-        <div>
-          <h4 class="text-white font-semibold text-base mb-3">Tradelia AI</h4>
-          <p>Tradelia è un progetto indipendente che utilizza GPT per offrire strumenti educativi nel campo finanziario. Nessuna consulenza, solo intelligenza applicata.</p>
-          <p class="mt-4 text-blue-400">✉️ <a href="mailto:info@tradelia.org" class="hover:underline">info@tradelia.org</a></p>
-        </div>
-        <div>
-          <p class="font-semibold text-white cursor-pointer mb-2" onclick="document.getElementById('modal-tc').style.display='flex'">Termini e Condizioni</p>
-          <p class="font-semibold text-white cursor-pointer" onclick="document.getElementById('modal-privacy').style.display='flex'">Privacy Policy</p>
-        </div>
-      </div>
-      <div class="mt-12 text-center text-xs text-slate-500">
-        Alcuni link sono affiliati. Le risposte GPT sono imparziali, basate su logiche tecniche. Tradelia non utilizza cookie di tracciamento.
-      </div>
-    </footer>
-
-    <div id="modal-tc" class="modal">
-      <div class="modal-content">
-        <div class="modal-close" onclick="this.parentElement.parentElement.style.display='none'">✕</div>
-        <h3>Termini e Condizioni</h3>
-        <p>Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all'investimento. Tutte le operazioni simulate in ambiente demo.</p>
-      </div>
-    </div>
-
-    <div id="modal-privacy" class="modal">
-      <div class="modal-content">
-        <div class="modal-close" onclick="this.parentElement.parentElement.style.display='none'">✕</div>
-        <h3>Privacy Policy</h3>
-        <p>Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l'utente. Progetto open per educazione finanziaria.</p>
-      </div>
-    </div>
-
+    <!-- Cookie Popup -->
     <div id="cookie-popup" class="modal">
       <div class="modal-content text-center">
-        <div class="modal-close" onclick="this.parentElement.parentElement.style.display='none'">✕</div>
-        <h3 class="text-lg font-semibold mb-2">🍪 Zero biscotti, zero sorprese</h3>
-        <p class="mb-4">Tradelia non utilizza cookie di tracciamento, profilazione o pubblicità. Navigazione sicura, senza sorprese.</p>
-        <button onclick="document.getElementById('cookie-popup').style.display='none'" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Ho capito</button>
+        <h3>🍪 Zero biscotti, zero sorprese.</h3>
+        <p>Tradelia non utilizza cookie di tracciamento, profilazione o pubblicità.</p>
+        <button onclick="document.getElementById('cookie-popup').style.display='none'" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Ho capito</button>
       </div>
     </div>
+
+    <!-- Footer -->
+    <footer style="width:100%;background:#0f172a;color:#cbd5e1;padding:48px 24px 32px;font-family:'Inter',sans-serif;font-size:14px;line-height:1.7;border-top:1px solid rgba(255,255,255,0.08)">
+      <div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between">
+        <div style="flex:1 1 300px">
+          <h4 style="color:#f8fafc;font-size:16px;margin-bottom:12px;font-weight:600">Tradelia AI</h4>
+          <p>Tradelia è un progetto indipendente che utilizza GPT per offrire strumenti educativi nel campo finanziario. Nessuna consulenza, solo intelligenza applicata.</p>
+          <p style="margin-top:16px;font-size:13px;color:#60a5fa">✉️ <a href="mailto:info@tradelia.org" style="color:#60a5fa;text-decoration:none">info@tradelia.org</a></p>
+        </div>
+        <div style="flex:1 1 300px">
+          <p style="font-weight:600;color:#f1f5f9;cursor:pointer;margin-bottom:8px" onclick="apriSezioneLegale('section-tc')">Termini e Condizioni</p>
+          <p style="font-weight:600;color:#f1f5f9;cursor:pointer" onclick="apriSezioneLegale('section-privacy')">Privacy Policy</p>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>
