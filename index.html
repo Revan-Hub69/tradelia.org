@@ -3,40 +3,51 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tradelia – Strumenti AI per la Finanza</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Tradelia – Richiesta Report AI</title>
+    <script src="https://cdn.tailwindcss.com">document.addEventListener("input", function () {
+  const form = document.querySelector("form");
+  const requiredFields = ["asset", "timeframe", "focus", "nome", "contatto", "metodo"];
+  let allFilled = requiredFields.every(id => document.getElementById(id).value);
+  const formContainer = document.getElementById("form-container");
+  if (allFilled) {
+    formContainer.style.borderColor = "#22c55e";
+    formContainer.style.boxShadow = "0 0 20px rgba(34, 197, 94, 0.4)";
+  } else {
+    formContainer.style.borderColor = "transparent";
+    formContainer.style.boxShadow = "0 10px 40px rgba(0, 0, 0, 0.1)";
+  }
+});
+</script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-    <script src="https://unpkg.com/lucide@latest"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        lucide.createIcons();
-        const phrases = [
-          "AI per trader moderni",
-          "Strumenti gratuiti, zero fuffa",
-          "Operatività solo in ambiente demo"
-        ];
-        let current = 0;
-        const typingElement = document.getElementById("typing-text");
-
-        function typePhrase() {
-          const phrase = phrases[current];
-          typingElement.textContent = "";
-          [...phrase].forEach((char, i) => {
-            setTimeout(() => {
-              typingElement.textContent += char;
-            }, i * 50);
-          });
-          setTimeout(() => {
-            current = (current + 1) % phrases.length;
-            typePhrase();
-          }, phrase.length * 50 + 2000);
-        }
-
-        typePhrase();
-
         setTimeout(() => {
           document.getElementById("cookie-popup").style.display = "flex";
         }, 1000);
+
+        const form = document.querySelector("form");
+        form.addEventListener("submit", function (e) {
+          const requiredFields = ["asset", "timeframe", "focus", "nome", "contatto", "metodo"];
+          let valid = true;
+          requiredFields.forEach(id => {
+            const field = document.getElementById(id);
+            const label = document.querySelector(`label[for='${id}']`);
+            if (!field.value) {
+              valid = false;
+              label.innerHTML = label.innerHTML.replace(/✅/g, '').replace(/<span.*?<\/span>/, '<span class="text-red-500">*</span>');
+            } else {
+              label.innerHTML = label.innerHTML.replace(/<span.*?<\/span>/, '✅');
+            }
+          });
+          if (!valid) {
+            e.preventDefault();
+            alert("Compila tutti i campi obbligatori contrassegnati con *");
+          } else {
+            setTimeout(() => {
+              document.getElementById("form-response").classList.remove("hidden");
+            }, 300);
+          }
+        });
       });
 
       function apriSezioneLegale(id) {
@@ -54,11 +65,11 @@
     </script>
     <style>
       body {
-        font-family: 'Inter', sans-serif;
-        background: #f1f5f9;
-        background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
-        background-repeat: repeat;
-        background-size: 280px;
+  font-family: 'Inter', sans-serif;
+  background: #f1f5f9;
+  background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+  background-repeat: repeat;
+  background-size: 280px;
       }
       .modal {
         position: fixed;
@@ -82,7 +93,6 @@
         line-height: 1.7;
         color: #0f172a;
         position: relative;
-        transition: all 0.3s ease;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
       }
       .modal-close {
@@ -92,72 +102,114 @@
         cursor: pointer;
         font-size: 18px;
         color: #334155;
-        transition: color 0.2s;
       }
       @keyframes fade-in {
         from { opacity: 0; }
         to { opacity: 1; }
       }
-      footer p {
-        transition: all 0.3s ease;
-      }
-      footer p:hover {
-        color: #38bdf8;
-        transform: translateX(2px);
-      }
     </style>
-  </head>
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const phrases = [
+      "AI per trader moderni",
+      "Strumenti gratuiti, zero fuffa",
+      "Operatività solo in ambiente demo"
+    ];
+    let current = 0;
+    const typingElement = document.getElementById("typing-text");
+
+    function typePhrase() {
+      const phrase = phrases[current];
+      typingElement.textContent = "";
+      [...phrase].forEach((char, i) => {
+        setTimeout(() => {
+          typingElement.textContent += char;
+        }, i * 50);
+      });
+      setTimeout(() => {
+        current = (current + 1) % phrases.length;
+        typePhrase();
+      }, phrase.length * 50 + 2000);
+    }
+    typePhrase();
+  });
+</script>
+</head>
   <body class="text-gray-900">
-    <!-- Header -->
     <header class="w-full px-6 py-4 flex justify-between items-center bg-white shadow-sm">
       <div class="text-2xl font-extrabold tracking-tight text-sky-900">
         <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
       </div>
     </header>
 
-    <!-- Hero -->
     <section class="text-center py-24 px-6 max-w-4xl mx-auto">
-      <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight mb-4">Strumenti AI per la finanza reale</h1>
-      <p class="mt-2 text-lg text-slate-600">Un progetto indipendente, sviluppato in mesi di lavoro per fornire strumenti finanziari AI gratuiti, 100% educational, senza finalità speculative. Tutto in ambiente demo.</p>
-      <p class="mt-4 text-xl text-blue-700 min-h-[32px] font-medium" id="typing-text"></p>
+  <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight mb-4">Strumenti AI per la finanza reale</h1>
+  <p class="mt-2 text-lg text-slate-600">Richiedi un report AI approfondito su un asset: invio via SMS, WhatsApp o Email. Nessuna profilazione, nessuna pubblicità. Solo analisi.</p>
+  <p class="mt-4 text-xl text-blue-700 min-h-[32px] font-medium" id="typing-text"></p>
+</section>
+
+    <section class="text-center py-16 px-8 max-w-3xl mx-auto bg-white/90 rounded-2xl shadow-2xl backdrop-blur-md border-4 border-transparent transition-all duration-500" id="form-container" style="margin-bottom: 80px;">
+      <form action="https://formsubmit.co/analisi@tradelia.org" method="POST" class="text-left space-y-6">
+        <div class="space-y-1"
+          <label for="asset" class="block text-sm font-semibold">Asset <span class="text-red-500">*</span></label>
+          <input type="text" name="asset" id="asset" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+        </div>
+        <div>
+          <label for="timeframe" class="block text-sm font-semibold">Timeframe <span class="text-red-500">*</span></label>
+          <select name="timeframe" id="timeframe" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+            <option value="">Seleziona...</option>
+            <option>Intraday</option>
+            <option>Daily</option>
+            <option>Weekly</option>
+            <option>Multi-timeframe</option>
+          </select>
+        </div>
+        <div>
+          <label for="focus" class="block text-sm font-semibold">Focus dell'analisi <span class="text-red-500">*</span></label>
+          <select name="focus" id="focus" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+            <option value="">Seleziona...</option>
+            <option>Fondamentale</option>
+            <option>Tecnico</option>
+            <option>Macroeconomico</option>
+            <option>Approfondita</option>
+          </select>
+        </div>
+        <div>
+          <label for="nome" class="block text-sm font-semibold">Nome <span class="text-red-500">*</span></label>
+          <input type="text" name="nome" id="nome" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+        </div>
+        <div>
+          <label for="metodo" class="block text-sm font-semibold">Metodo di ricezione <span class="text-red-500">*</span></label>
+          <select name="metodo" id="metodo" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+            <option value="">Seleziona...</option>
+            <option>SMS</option>
+            <option>Email</option>
+            <option>WhatsApp</option>
+          </select>
+        </div>
+        <div>
+          <label for="contatto" class="block text-sm font-semibold">Inserisci contatto <span class="text-red-500">*</span></label>
+          <input type="text" name="contatto" id="contatto" placeholder="Telefono o email" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+        </div>
+        <p class="text-sm text-slate-500 mt-6">🛡 I tuoi dati saranno utilizzati esclusivamente per inviarti il report richiesto in <a href="#" class="text-blue-600 underline hover:text-blue-800">formato PDF</a>. Nessun utilizzo pubblicitario, nessun tracciamento, nessuna cessione a terzi.</p>
+        <button type="submit" class="w-full mt-4 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg">Invia Richiesta</button>
+        <p id="form-response" class="mt-4 text-green-600 font-medium hidden">✅ Richiesta inviata! Riceverai il report entro poche ore.</p>
+      </form>
     </section>
 
-    <!-- Strumenti -->
-    <section class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-6 pb-24">
-      <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition transform hover:scale-[1.02] group">
-        <div class="mb-4 flex items-center gap-2 text-blue-700"><i data-lucide="line-chart" class="w-6 h-6"></i> <span class="font-semibold">Lettore di Grafici</span></div>
-        <p class="text-gray-600 mb-4">Guida grafica multitimeframe con supporto AI su indicatori e segnali attivi.</p>
-        <a href="/lettore-grafici.html" class="inline-flex items-center text-blue-700 hover:text-blue-900 font-semibold transition">Scopri lo strumento <i data-lucide="arrow-right" class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1"></i></a>
-      </div>
-
-      <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition transform hover:scale-[1.02] group">
-        <div class="mb-4 flex items-center gap-2 text-blue-700"><i data-lucide="settings" class="w-6 h-6"></i> <span class="font-semibold">Generatore EA</span></div>
-        <p class="text-gray-600 mb-4">Costruisci la tua strategia automatica con AI, logiche di filtro e supporto tecnico.</p>
-        <a href="/generatore-ea.html" class="inline-flex items-center text-blue-700 hover:text-blue-900 font-semibold transition">Scopri lo strumento <i data-lucide="arrow-right" class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1"></i></a>
-      </div>
-
-      <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition transform hover:scale-[1.02]">
-        <div class="mb-4 flex items-center gap-2 text-blue-700"><i data-lucide="database" class="w-6 h-6"></i> <span class="font-semibold">Analisi Istituzionale</span></div>
-        <p class="text-gray-600 mb-4">Analisi avanzate basate su flussi, macro, posizionamenti reali e dati API.</p>
-        <span class="inline-flex items-center text-gray-400 font-semibold cursor-not-allowed">In sviluppo</span>
-      </div>
-    </section>
-
-    <!-- Cookie Popup -->
     <div id="cookie-popup" class="modal">
       <div class="modal-content text-center">
-        <h3>🍪 Zero biscotti, zero sorprese.</h3>
+        <h3>Zero biscotti, zero sorprese.</h3>
         <p>Tradelia non utilizza cookie di tracciamento, profilazione o pubblicità.</p>
         <button onclick="document.getElementById('cookie-popup').style.display='none'" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Ho capito</button>
       </div>
     </div>
 
-    <!-- Footer -->
     <footer style="width:100%;background:#0f172a;color:#cbd5e1;padding:48px 24px 32px;font-family:'Inter',sans-serif;font-size:14px;line-height:1.7;border-top:1px solid rgba(255,255,255,0.08)">
       <div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between">
         <div style="flex:1 1 300px">
           <h4 style="color:#f8fafc;font-size:16px;margin-bottom:12px;font-weight:600">Tradelia AI</h4>
-          <p>Tradelia è un progetto indipendente che utilizza GPT per offrire strumenti educativi nel campo finanziario. Nessuna consulenza, solo intelligenza applicata.</p>
+          <p>Tradelia è un progetto indipendente per fornire strumenti educativi e analisi AI gratuite nel campo finanziario.</p>
           <p style="margin-top:16px;font-size:13px;color:#60a5fa">✉️ <a href="mailto:info@tradelia.org" style="color:#60a5fa;text-decoration:none">info@tradelia.org</a></p>
         </div>
         <div style="flex:1 1 300px">
