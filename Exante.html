@@ -93,7 +93,35 @@
   }
 </script>
 
-    <style>
+  
+<style>
+  /* Scrollbar elegante, istituzionale e cross-browser */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 100vh;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 100vh;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db #f3f4f6;
+  }
+
+
       body {
         font-family: 'Inter', sans-serif;
         background: #f1f5f9;
