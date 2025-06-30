@@ -14,7 +14,7 @@
 
         const form = document.querySelector("form");
         form.addEventListener("submit", function (e) {
-          const requiredFields = ["asset", "timeframe", "focus", "nome", "contatto", "metodo"];
+          const requiredFields = ["asset", "categoria", "timeframe", "focus", "nome", "contatto", "metodo"];
           let valid = true;
           requiredFields.forEach(id => {
             const field = document.getElementById(id);
@@ -35,35 +35,7 @@
             }, 300);
           }
         });
-      });
 
-      function apriSezioneLegale(id) {
-        const modal = document.createElement("div");
-        modal.className = "modal animate-fade-in";
-        modal.style.display = "flex";
-        modal.innerHTML = `
-          <div class="modal-content">
-            <div class="modal-close hover:text-red-500 transition" onclick="this.parentElement.parentElement.remove()">✕</div>
-            <h3 class="text-lg font-semibold mb-2">${id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy'}</h3>
-            <p class="text-sm text-gray-800">${id === 'section-tc' ? 'Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all\'investimento. Tutte le operazioni simulate in ambiente demo.' : 'Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l\'utente. Progetto open per educazione finanziaria.'}</p>
-          </div>`;
-        document.body.appendChild(modal);
-      }
-
-      document.addEventListener("input", function () {
-        const requiredFields = ["asset", "timeframe", "focus", "nome", "contatto", "metodo"];
-        let allFilled = requiredFields.every(id => document.getElementById(id).value);
-        const formContainer = document.getElementById("form-container");
-        if (allFilled) {
-          formContainer.style.borderColor = "#22c55e";
-          formContainer.style.boxShadow = "0 0 20px rgba(34, 197, 94, 0.4)";
-        } else {
-          formContainer.style.borderColor = "transparent";
-          formContainer.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.1)";
-        }
-      });
-
-      document.addEventListener("DOMContentLoaded", function () {
         const phrases = [
           "AI per trader moderni",
           "Strumenti gratuiti, zero fuffa",
@@ -87,6 +59,19 @@
         }
         typePhrase();
       });
+
+      function apriSezioneLegale(id) {
+        const modal = document.createElement("div");
+        modal.className = "modal animate-fade-in";
+        modal.style.display = "flex";
+        modal.innerHTML = `
+          <div class="modal-content">
+            <div class="modal-close hover:text-red-500 transition" onclick="this.parentElement.parentElement.remove()">✕</div>
+            <h3 class="text-lg font-semibold mb-2">${id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy'}</h3>
+            <p class="text-sm text-gray-800">${id === 'section-tc' ? 'Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all\'investimento. Tutte le operazioni simulate in ambiente demo.' : 'Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l\'utente. Progetto open per educazione finanziaria.'}</p>
+          </div>`;
+        document.body.appendChild(modal);
+      }
     </script>
     <style>
       body {
@@ -107,25 +92,32 @@
         align-items: center;
         justify-content: center;
         z-index: 50;
+        animation: fadeIn 0.4s ease;
       }
       .modal-content {
-        background: #fff;
-        max-width: 720px;
-        padding: 32px;
-        border-radius: 12px;
+        background: #f8fafc;
+        max-width: 480px;
+        padding: 28px;
+        border-radius: 16px;
         font-size: 15px;
         line-height: 1.7;
         color: #0f172a;
         position: relative;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
+        border: 1px solid #cbd5e1;
       }
       .modal-close {
         position: absolute;
-        top: 16px;
-        right: 16px;
+        top: 12px;
+        right: 12px;
         cursor: pointer;
         font-size: 18px;
         color: #334155;
+      }
+      @keyframes fadeIn {
+        from {opacity: 0; transform: scale(0.95);}
+        to {opacity: 1; transform: scale(1);}
       }
     </style>
   </head>
@@ -145,7 +137,8 @@
     <section class="text-center py-8 px-4 max-w-md mx-auto bg-white/90 rounded-xl shadow-xl backdrop-blur-md border-2 border-transparent transition-all duration-500" id="form-container" style="margin-bottom: 64px;">
       <form action="https://formsubmit.co/analisi@tradelia.org" method="POST" class="text-left space-y-3 text-sm">
         <div><label for="asset" class="block font-semibold">Asset <span class="text-red-500">*</span></label><input type="text" name="asset" id="asset" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
-        <div><label for="timeframe" class="block font-semibold">Timeframe <span class="text-red-500">*</span></label><select name="timeframe" id="timeframe" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Intraday</option><option>Daily</option><option>Weekly</option><option>Multi-timeframe</option></select></div>
+        <div><label for="categoria" class="block font-semibold">Categoria <span class="text-red-500">*</span></label><select name="categoria" id="categoria" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Azioni</option><option>ETF</option><option>Forex</option><option>Crypto</option><option>Commodities</option><option>Obbligazioni</option><option>Indici</option><option>REIT</option><option>Derivati</option></select></div>
+        <div><label for="timeframe" class="block font-semibold">Orizzonte Temporale <span class="text-red-500">*</span></label><select name="timeframe" id="timeframe" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Breve Termine</option><option>Medio Termine</option><option>Lungo Termine</option></select></div>
         <div><label for="focus" class="block font-semibold">Focus dell'analisi <span class="text-red-500">*</span></label><select name="focus" id="focus" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Fondamentale</option><option>Tecnico</option><option>Macroeconomico</option><option>Approfondita</option></select></div>
         <div><label for="nome" class="block font-semibold">Nome <span class="text-red-500">*</span></label><input type="text" name="nome" id="nome" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
         <div><label for="metodo" class="block font-semibold">Metodo di ricezione <span class="text-red-500">*</span></label><select name="metodo" id="metodo" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>SMS</option><option>Email</option><option>WhatsApp</option></select></div>
@@ -156,16 +149,14 @@
       </form>
     </section>
 
- <div id="cookie-popup" class="modal">
-  <div class="modal-content text-center">
-<img src="https://lucid.app/favicon.ico" alt="Lucid icon" class="mx-auto mb-2 w-8 h-8">
-    <h3 class="text-lg font-semibold mb-2">Zero biscotti, zero sorprese.</h3>
-    <p>Tradelia non utilizza cookie di tracciamento, profilazione o pubblicità.</p>
-    <button onclick="document.getElementById('cookie-popup').style.display='none'" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Ho capito</button>
-  </div>
-</div>
-
-
+    <div id="cookie-popup" class="modal">
+      <div class="modal-content">
+        <img src="https://lucid.app/favicon.ico" alt="Lucid icon" class="mx-auto mb-2 w-8 h-8">
+        <h3 class="text-lg font-semibold mb-2">Zero biscotti, zero sorprese.</h3>
+        <p>Tradelia non utilizza cookie di tracciamento, profilazione o pubblicità.</p>
+        <button onclick="document.getElementById('cookie-popup').style.display='none'" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Ho capito</button>
+      </div>
+    </div>
 
     <footer style="width:100%;background:#0f172a;color:#cbd5e1;padding:48px 24px 32px;font-family:'Inter',sans-serif;font-size:14px;line-height:1.7;border-top:1px solid rgba(255,255,255,0.08)">
       <div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between">
@@ -182,3 +173,4 @@
     </footer>
   </body>
 </html>
+
