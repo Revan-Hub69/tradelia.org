@@ -95,31 +95,32 @@
 
     
       <style>
-  /* Scrollbar elegante, istituzionale e cross-browser */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
+/* Scrollbar stile elegante e sottile con blu logo */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
 
-  ::-webkit-scrollbar-track {
-    background: #f3f4f6;
-    border-radius: 100vh;
-  }
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 100vh;
+}
 
-  ::-webkit-scrollbar-thumb {
-    background: #d1d5db;
-    border-radius: 100vh;
-  }
+::-webkit-scrollbar-thumb {
+  background: #3b82f6cc; /* Blu semitrasparente */
+  border-radius: 100vh;
+  box-shadow: inset 0 0 1px rgba(0,0,0,0.1);
+}
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: #9ca3af;
-  }
+::-webkit-scrollbar-thumb:hover {
+  background: #3b82f6;
+}
 
-  /* Firefox */
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: #d1d5db #f3f4f6;
-  }
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3b82f6cc #f1f5f9;
+}
 
       body {
         font-family: 'Inter', sans-serif;
