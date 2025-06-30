@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tradelia – Richiesta Report AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="icon" href="/favicon.png" type="image/png" />
+
+ <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Mostra il popup cookie solo se NON è stato già accettato
+    if (!localStorage.getItem('tradeliaConsent')) {
+      setTimeout(() => {
+        const popup = document.getElementById("cookie-popup");
+        if (popup) popup.style.display = "flex";
+      }, 1000);
+    }
+
+    const form = document.querySelector("form");
+    form.addEventListener("submit", function (e) {
+      const requiredFields = ["asset", "categoria", "timeframe", "focus", "nome", "contatto", "metodo"];
+      let valid = true;
+      requiredFields.forEach(id => {
+        const field = document.getElementById(id);
+        const label = document.querySelector(`label[for='${id}']`);
+        if (!field.value) {
+          valid = false;
+          label.innerHTML = label.innerHTML.replace(/✅/g, '').replace(/<span.*?<\/span>/, '<span class="text-red-500">*</span>');
+        } else {
+          label.innerHTML = label.innerHTML.replace(/<span.*?<\/span>/, '✅');
+        }
+      });
+      if (!valid) {
+        e.preventDefault();
+        alert("Compila tutti i campi obbligatori contrassegnati con *");
+      } else {
+        setTimeout(() => {
+          document.getElementById("form-response").classList.remove("hidden");
+        }, 300);
+      }
+    });
+
+    const phrases = [
+      "AI per trader moderni",
+      "Strumenti gratuiti, zero fuffa",
+      "Operatività solo in ambiente demo"
+    ];
+    let current = 0;
+    const typingElement = document.getElementById("typing-text");
+
+    function typePhrase() {
+      const phrase = phrases[current];
+      typingElement.textContent = "";
+      [...phrase].forEach((char, i) => {
+        setTimeout(() => {
+          typingElement.textContent += char;
+        }, i * 50);
+      });
+      setTimeout(() => {
+        current = (current + 1) % phrases.length;
+        typePhrase();
+      }, phrase.length * 50 + 2000);
+    }
+    typePhrase();
+  });
+
+  function apriSezioneLegale(id) {
+    const modal = document.createElement("div");
+    modal.className = "modal animate-fade-in";
+    modal.style.display = "flex";
+    modal.innerHTML = `
+      <div class="modal-content">
+        <div class="modal-close hover:text-red-500 transition" onclick="this.parentElement.parentElement.remove()">✕</div>
+        <h3 class="text-lg font-semibold mb-2">${id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy'}</h3>
+        <p class="text-sm text-gray-800">
+          ${
+            id === 'section-tc'
+              ? "Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all'investimento. Tutte le operazioni simulate in ambiente demo."
+              : "Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l'utente. Progetto open per educazione finanziaria."
+          }
+        </p>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+
+  // Salva consenso nel localStorage quando l'utente clicca "Ho capito"
+  function chiudiPopupCookie() {
+    localStorage.setItem('tradeliaConsent', 'true');
+    const popup = document.getElementById("cookie-popup");
+    if (popup) popup.style.display = "none";
+  }
+</script>
+
+    
+      <style>
+/* Scrollbar elegante, personalizzata, istituzionale */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+  border-radius: 100vh;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(80, 160, 200, 0.4); /* azzurro-grigio semi */
+  border-radius: 100vh;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(80, 160, 200, 0.6);
+  box-shadow: inset 0 0 6px rgba(80, 160, 200, 0.4);
+}
+
+/* Firefox support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(80, 160, 200, 0.5) #e5e7eb;
+}
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: #f1f5f9;
+        background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+        background-repeat: repeat;
+        background-size: 280px;
+      }
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 50;
+        animation: fadeIn 0.4s ease;
+      }
+      .modal-content {
+        background: #f8fafc;
+        max-width: 480px;
+        padding: 28px;
+        border-radius: 16px;
+        font-size: 15px;
+        line-height: 1.7;
+        color: #0f172a;
+        position: relative;
+        text-align: center;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
+        border: 1px solid #cbd5e1;
+      }
+      .modal-close {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        cursor: pointer;
+        font-size: 18px;
+        color: #334155;
+      }
+      @keyframes fadeIn {
+        from {opacity: 0; transform: scale(0.95);}
+        to {opacity: 1; transform: scale(1);}
+      }
+    </style>
+  </head>
+  <body class="text-gray-900">
+<header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6">
+  <a href="index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+    <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
+  </a>
+</header>
+  <div class="my-12 sm:my-16"></div>
+<section class="max-w-6xl mx-auto px-6 py-12 bg-white rounded-2xl shadow-lg font-inter">
+  <div class="text-center mb-12">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Naga_Group_AG.png" alt="NAGA Logo" class="mx-auto w-48 h-auto mb-4" />
+    <h2 class="text-3xl font-bold text-[#D71921]">NAGA Group AG</h2>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 text-sm text-gray-700">
+
+    <div class="flex gap-4">
+      <div class="text-red-700 mt-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3z" />
+          <path d="M12 22s8-4.5 8-10a8 8 0 10-16 0c0 5.5 8 10 8 10z" />
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[#D71921]">Sede Legale</div>
+        Neustadter Neuer Weg 22, 20459 Amburgo, Germania
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <div class="text-red-700 mt-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M9 12h6m2 0a2 2 0 110-4 2 2 0 010 4zm-8 0a2 2 0 110-4 2 2 0 010 4z" />
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[#D71921]">Licenza Principale</div>
+        CySEC (Cipro) - Licenza 204/13
+      </div>
+    </div>
+
+    <div class="flex gap-4 col-span-1 sm:col-span-2">
+      <div class="text-red-700 mt-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 2a10 10 0 000 20 10 10 0 000-20zM2 12h20M12 2v20" />
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[#D71921]">Altre Regolamentazioni</div>
+        <ul class="list-disc list-inside text-sm">
+          <li><strong>BaFin (Germania):</strong> Passporting MiFID II</li>
+          <li><strong>FCA (UK):</strong> Passaporto Europeo</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <div class="text-red-700 mt-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 4v16m8-8H4" />
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[#D71921]">Lingue Supportate</div>
+        Inglese, Tedesco, Italiano, Spagnolo, Francese, Vietnamita
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <div class="text-red-700 mt-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 20l-8-16h16l-8 16z" />
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[#D71921]">Trustpilot</div>
+        ⭐ 4.3/5 su oltre 8.000 recensioni
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <div class="text-red-700 mt-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M4 7V6a2 2 0 012-2h4m4 0h4a2 2 0 012 2v1M4 7h16M4 7v11a2 2 0 002 2h12a2 2 0 002-2V7" />
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[#D71921]">Capitale Sociale</div>
+        Società quotata alla Borsa di Francoforte (XETRA)
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <div class="text-red-700 mt-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M17 20h5v-2a4 4 0 00-4-4h-1m-6 6H7v-2a4 4 0 014-4h1m4-6a4 4 0 110-8 4 4 0 010 8z" />
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[#D71921]">Utenti Registrati</div>
+        Oltre 1 milione di clienti globali
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <div class="text-red-700 mt-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M8 7V3m8 4V3m-9 8h10m-5 4h.01M4 21h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[#D71921]">Anni di Attività</div>
+        Dal 2015 (9 anni di esperienza)
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <div class="text-red-700 mt-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V13a6 6 0 00-12 0v1.159c0 .538-.214 1.055-.595 1.437L4 17h5m6 0v5a1 1 0 001 1h1a1 1 0 001-1v-5" />
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[#D71921]">Premi e Riconoscimenti</div>
+        Miglior Piattaforma Social Trading 2023
+      </div>
+    </div>
+
+  </div>
+</section>
+
+    <div class="my-12 sm:my-16"></div>
+<section class="max-w-3xl mx-auto px-6 py-12 bg-gray-50 rounded-2xl shadow-md">
+  <h2 class="text-2xl sm:text-3xl font-bold text-center text-[#D71921] mb-8">Contatti NAGA</h2>
+
+  <div class="grid gap-6 text-sm text-gray-700">
+    <!-- Email -->
+    <div class="flex items-start gap-4 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition">
+      <svg class="w-6 h-6 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm1.5 2h9v2h-9V8zm0 4h9v2h-9v-2z" />
+      </svg>
+      <div>
+        <div class="font-semibold text-sm text-gray-900">Email Supporto</div>
+        <div>support@naga.com</div>
+      </div>
+    </div>
+
+    <!-- Telefono -->
+    <div class="flex items-start gap-4 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition">
+      <svg class="w-6 h-6 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C10.07 21 3 13.93 3 5c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.24.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+      </svg>
+      <div>
+        <div class="font-semibold text-sm text-gray-900">Telefono Globale</div>
+        <div>+357 25 041410 (Cipro) | +49 40 524 7780 (Germania)</div>
+      </div>
+    </div>
+
+    <!-- Live Chat -->
+    <div class="flex items-start gap-4 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition">
+      <svg class="w-6 h-6 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M21 6h-2v9H7v2h10l4 4V6z" />
+      </svg>
+      <div>
+        <div class="font-semibold text-sm text-gray-900">Live Chat</div>
+        <div>Disponibile 24/5 dal sito ufficiale naga.com</div>
+      </div>
+    </div>
+
+    <!-- Sede -->
+    <div class="flex items-start gap-4 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition">
+      <svg class="w-6 h-6 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2l7 6v12h-4v-6H9v6H5V8l7-6z" />
+      </svg>
+      <div>
+        <div class="font-semibold text-sm text-gray-900">Sede Legale</div>
+        <div>Neustadter Neuer Weg 22, 20459 Amburgo, Germania</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-xs text-gray-400 text-center mt-6">
+    Consulta sempre il sito ufficiale naga.com per i contatti aggiornati e specifici per il tuo Paese.
+  </div>
+</section>
+
+    <div class="my-12 sm:my-16"></div>
+<section class="max-w-3xl mx-auto px-6 py-10 bg-gray-50 rounded-xl shadow-md">
+  <h2 class="text-2xl sm:text-3xl font-semibold text-center text-[#D71921] mb-8">
+    NAGA: Per Chi È Consigliato?
+  </h2>
+
+  <div class="space-y-5">
+    <!-- Social Traders -->
+    <div class="flex items-start gap-4 bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition">
+      <svg class="w-7 h-7 text-[#D71921]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0v7" />
+      </svg>
+      <div class="flex-1">
+        <div class="font-semibold text-gray-900 mb-1">Social Traders</div>
+        <p class="text-sm text-gray-600">
+          Ideale per copy trading e seguire i top trader della community.
+        </p>
+        <div class="h-2 bg-gray-200 rounded-full mt-3">
+          <div class="h-2 bg-green-600 rounded-full" style="width: 95%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trader CFD -->
+    <div class="flex items-start gap-4 bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition">
+      <svg class="w-7 h-7 text-[#D71921]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a4 4 0 014-4h4" />
+      </svg>
+      <div class="flex-1">
+        <div class="font-semibold text-gray-900 mb-1">Trader CFD</div>
+        <p class="text-sm text-gray-600">
+          Accesso a Forex, indici, materie prime con leva regolamentata (fino a 1:30).
+        </p>
+        <div class="h-2 bg-gray-200 rounded-full mt-3">
+          <div class="h-2 bg-green-600 rounded-full" style="width: 85%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Azioni Reali -->
+    <div class="flex items-start gap-4 bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition">
+      <svg class="w-7 h-7 text-[#D71921]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+      </svg>
+      <div class="flex-1">
+        <div class="font-semibold text-gray-900 mb-1">Azioni Reali</div>
+        <p class="text-sm text-gray-600">
+          Possibilità di acquistare e detenere azioni reali (USA, Europa).
+        </p>
+        <div class="h-2 bg-gray-200 rounded-full mt-3">
+          <div class="h-2 bg-green-600 rounded-full" style="width: 75%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cripto Reali -->
+    <div class="flex items-start gap-4 bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition">
+      <svg class="w-7 h-7 text-[#D71921]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+      <div class="flex-1">
+        <div class="font-semibold text-gray-900 mb-1">Cripto Reali</div>
+        <p class="text-sm text-gray-600">
+          Accesso a crypto reali, con wallet integrato e funzionalità non-CFD.
+        </p>
+        <div class="h-2 bg-gray-200 rounded-full mt-3">
+          <div class="h-2 bg-green-600 rounded-full" style="width: 65%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Investitori Passivi -->
+    <div class="flex items-start gap-4 bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition">
+      <svg class="w-7 h-7 text-[#D71921]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h4v11H3zM17 3h4v18h-4zM10 14h4v7h-4z" />
+      </svg>
+      <div class="flex-1">
+        <div class="font-semibold text-gray-900 mb-1">Investitori Passivi</div>
+        <p class="text-sm text-gray-600">
+          Non pensato per piani di accumulo (PAC) o gestione patrimoniale.
+        </p>
+        <div class="h-2 bg-gray-200 rounded-full mt-3">
+          <div class="h-2 bg-red-500 rounded-full" style="width: 25%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <div class="my-12 sm:my-16"></div>
+<section class="max-w-5xl mx-auto px-6 py-12 bg-gray-50 rounded-xl shadow-md">
+  <h2 class="text-2xl sm:text-3xl font-semibold text-center text-[#D71921] mb-10">
+    Tipologia di Accesso ai Mercati
+  </h2>
+
+  <div class="grid gap-6">
+
+    <!-- Market Maker CFD -->
+    <div class="flex gap-4 items-start bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition">
+      <svg class="w-7 h-7 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v2H8V8zm0 4h8v2H8v-2z" />
+      </svg>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-1">Market Maker per CFD</h3>
+        <p class="text-sm text-gray-600">
+          Gli ordini CFD retail su Forex, indici, azioni e materie prime vengono gestiti da NAGA come market maker, senza accesso ECN o STP diretto.
+        </p>
+      </div>
+    </div>
+
+    <!-- Social Trading -->
+    <div class="flex gap-4 items-start bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition">
+      <svg class="w-7 h-7 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 14l9-5-9-5-9 5 9 5zm0 0v7" />
+      </svg>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-1">Social Trading</h3>
+        <p class="text-sm text-gray-600">
+          Il cuore di NAGA è il social: puoi copiare automaticamente le strategie e le operazioni dei trader più seguiti della community.
+        </p>
+      </div>
+    </div>
+
+    <!-- Azioni Reali -->
+    <div class="flex gap-4 items-start bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition">
+      <svg class="w-7 h-7 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 8v4l3 3" />
+      </svg>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-1">Azioni Reali (Non CFD)</h3>
+        <p class="text-sm text-gray-600">
+          Puoi acquistare azioni reali sui mercati internazionali attraverso partner intermediari, senza accesso DMA diretto.
+        </p>
+      </div>
+    </div>
+
+    <!-- Cripto Reali -->
+    <div class="flex gap-4 items-start bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition">
+      <svg class="w-7 h-7 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-1">Cripto Reali (Non CFD)</h3>
+        <p class="text-sm text-gray-600">
+          Oltre ai CFD crypto, NAGA offre l’acquisto e la custodia di criptovalute reali tramite il proprio wallet dedicato.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="text-xs text-gray-400 text-center mt-10">
+    Dati aggiornati al 2025. Consulta sempre il sito ufficiale naga.com per i dettagli più recenti e specifici per il tuo Paese.
+  </p>
+</section>
+
+<section class="max-w-6xl mx-auto px-6 py-12 bg-gray-50 rounded-2xl shadow-md overflow-x-auto" aria-label="Strategie consigliate su NAGA">
+  <h2 class="text-2xl sm:text-3xl font-bold text-center text-[#D71921] mb-10">Strategie Raccomandate su NAGA</h2>
+
+  <div class="flex gap-6 overflow-x-auto scroll-snap-x scroll-smooth pb-6">
+    <!-- Card: Copy Trading -->
+    <div class="flex-shrink-0 w-80 bg-white rounded-2xl p-6 shadow-lg scroll-snap-align-start relative">
+      <div class="absolute right-0 top-0 h-full w-1.5 bg-gray-200 rounded-r-full">
+        <div class="bg-green-600 w-full rounded-r-full" style="height: 95%; margin-top: 5%;"></div>
+      </div>
+      <h3 class="text-lg font-semibold text-center text-gray-900 mb-4">Copy Trading</h3>
+      <ul class="text-sm text-gray-600 space-y-1">
+        <li><strong>Rischio:</strong> Variabile (dipende dal trader copiato)</li>
+        <li><strong>Utenti in Perdita:</strong> ~75–80% (ultimi 12 mesi, CFD)</li>
+        <li><strong>Guadagni Potenziali:</strong> +5% / +20% annuo</li>
+        <li><strong>Compatibilità:</strong> Eccellente (core NAGA)</li>
+      </ul>
+      <p class="text-xs text-center text-gray-400 mt-4">Nota: Ideale per chi vuole seguire trader esperti.</p>
+    </div>
+
+    <!-- Card: Trading Multi-Asset CFD -->
+    <div class="flex-shrink-0 w-80 bg-white rounded-2xl p-6 shadow-lg scroll-snap-align-start relative">
+      <div class="absolute right-0 top-0 h-full w-1.5 bg-gray-200 rounded-r-full">
+        <div class="bg-green-600 w-full rounded-r-full" style="height: 90%; margin-top: 10%;"></div>
+      </div>
+      <h3 class="text-lg font-semibold text-center text-gray-900 mb-4">Trading Multi-Asset CFD</h3>
+      <ul class="text-sm text-gray-600 space-y-1">
+        <li><strong>Rischio:</strong> Medio-Alto (30–40%)</li>
+        <li><strong>Utenti in Perdita:</strong> ~75% (ultimi 12 mesi)</li>
+        <li><strong>Guadagni Potenziali:</strong> +8% / +15% annuo</li>
+        <li><strong>Compatibilità:</strong> Alta (Forex, indici, crypto CFD)</li>
+      </ul>
+      <p class="text-xs text-center text-gray-400 mt-4">Nota: Per trader attivi con conoscenza dei mercati.</p>
+    </div>
+
+    <!-- Card: Azioni e Cripto Reali -->
+    <div class="flex-shrink-0 w-80 bg-white rounded-2xl p-6 shadow-lg scroll-snap-align-start relative">
+      <div class="absolute right-0 top-0 h-full w-1.5 bg-gray-200 rounded-r-full">
+        <div class="bg-green-600 w-full rounded-r-full" style="height: 80%; margin-top: 20%;"></div>
+      </div>
+      <h3 class="text-lg font-semibold text-center text-gray-900 mb-4">Azioni & Cripto Reali</h3>
+      <ul class="text-sm text-gray-600 space-y-1">
+        <li><strong>Rischio:</strong> Medio (20–30%)</li>
+        <li><strong>Utenti in Perdita:</strong> Dipende dal mercato</li>
+        <li><strong>Guadagni Potenziali:</strong> +6% / +12% annuo</li>
+        <li><strong>Compatibilità:</strong> Buona (per investitori diretti)</li>
+      </ul>
+      <p class="text-xs text-center text-gray-400 mt-4">Nota: Non è trading CFD, ma acquisto diretto.</p>
+    </div>
+  </div>
+
+  <p class="text-xs text-gray-400 text-center mt-8">
+    Dati basati su fonti ufficiali: NAGA, CySEC, FCA. Consultare sempre i documenti ufficiali prima di investire.
+  </p>
+
+  <!-- Box: Limitazioni Operative -->
+  <div class="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow-md">
+    <h3 class="text-base font-semibold text-center text-gray-900 mb-4">Limitazioni Operative su NAGA</h3>
+    <ul class="text-sm text-gray-600 list-disc list-inside space-y-1">
+      <li>❌ Nessun accesso ECN o DMA puro</li>
+      <li>❌ Nessuna piattaforma FIX API per trading istituzionale</li>
+      <li>❌ Non specializzato in scalping ultrarapido</li>
+      <li>❌ Non offre gestione patrimoniale o PAC automatici</li>
+      <li>❌ Richiede buona comprensione dei rischi CFD</li>
+    </ul>
+  </div>
+</section>
+
+<div class="my-12 sm:my-16"></div>
+<section class="max-w-6xl mx-auto px-6 py-12 bg-white rounded-2xl shadow-lg">
+  <h2 class="text-2xl sm:text-3xl font-bold text-center text-[#D71921] mb-10">
+    Sicurezza dei Fondi e Regolamentazioni
+  </h2>
+
+  <div class="flex flex-wrap gap-6 justify-center">
+    <!-- Card 1 -->
+    <div class="flex-1 min-w-[280px] max-w-sm bg-red-50 rounded-xl p-6 shadow-sm">
+      <h3 class="text-lg font-semibold text-[#D71921] mb-3">Segregazione dei Fondi</h3>
+      <p class="text-sm text-gray-700">
+        I fondi dei clienti sono mantenuti in conti separati presso banche regolamentate, proteggendo il capitale in caso di difficoltà finanziarie della società.
+      </p>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="flex-1 min-w-[280px] max-w-sm bg-red-50 rounded-xl p-6 shadow-sm">
+      <h3 class="text-lg font-semibold text-[#D71921] mb-3">Regolamentazione CySEC (Europa)</h3>
+      <p class="text-sm text-gray-700">
+        NAGA opera sotto licenza CySEC (Cipro, EU), garantendo compliance alle normative ESMA e agli standard di trasparenza europei.
+      </p>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="flex-1 min-w-[280px] max-w-sm bg-red-50 rounded-xl p-6 shadow-sm">
+      <h3 class="text-lg font-semibold text-[#D71921] mb-3">Fondo di Compensazione</h3>
+      <p class="text-sm text-gray-700">
+        I clienti europei di NAGA hanno accesso al Fondo di Compensazione degli Investitori (ICF), che copre fino a 20.000 € in caso di insolvenza della società.
+      </p>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="flex-1 min-w-[280px] max-w-sm bg-red-50 rounded-xl p-6 shadow-sm">
+      <h3 class="text-lg font-semibold text-[#D71921] mb-3">Protezione dai Saldi Negativi</h3>
+      <p class="text-sm text-gray-700">
+        NAGA offre protezione contro i saldi negativi per tutti i clienti retail, impedendo perdite superiori al capitale investito, come previsto dalle regole ESMA.
+      </p>
+    </div>
+  </div>
+
+  <div class="text-center mt-10">
+    <span class="inline-block bg-[#D71921] text-white px-5 py-2 rounded-full text-sm font-semibold">
+      ✔ Fondi Protetti e Regolamentazione Europea Garantita
+    </span>
+  </div>
+</section>
+
+<div class="my-12 sm:my-16"></div>
+  <section class="max-w-6xl mx-auto my-12 px-4 py-6 bg-gray-50 rounded-xl shadow-md">
+  <h2 class="text-2xl font-bold text-center text-red-600 mb-8">Costi e Commissioni NAGA</h2>
+
+  <!-- Desktop Table -->
+  <div class="hidden md:block overflow-x-auto">
+    <table class="w-full text-sm text-left border-collapse">
+      <thead class="bg-red-600 text-white">
+        <tr>
+          <th class="py-3 px-4 font-semibold">Strumento</th>
+          <th class="py-3 px-4 font-semibold">Costo</th>
+          <th class="py-3 px-4 font-semibold">Dettaglio</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-800">
+        <tr class="border-b hover:bg-gray-100"><td class="py-3 px-4">Forex CFD</td><td class="py-3 px-4 text-yellow-600 font-medium">da 1.2 pip</td><td class="py-3 px-4">Spread variabile, nessuna commissione fissa</td></tr>
+        <tr class="border-b hover:bg-gray-100"><td class="py-3 px-4">Indici CFD</td><td class="py-3 px-4 text-yellow-600 font-medium">da 1.0–2.0 punti</td><td class="py-3 px-4">Spread incluso, senza costi aggiuntivi</td></tr>
+        <tr class="border-b hover:bg-gray-100"><td class="py-3 px-4">Materie Prime CFD</td><td class="py-3 px-4 text-yellow-600 font-medium">da 0.04 punti</td><td class="py-3 px-4">Oro, Argento, Petrolio, Gas Naturale</td></tr>
+        <tr class="border-b hover:bg-gray-100"><td class="py-3 px-4">Criptovalute CFD</td><td class="py-3 px-4 text-red-600 font-medium">da 40.0 punti</td><td class="py-3 px-4">Spread variabile su Bitcoin, Ethereum, ecc.</td></tr>
+        <tr class="border-b hover:bg-gray-100"><td class="py-3 px-4">Azioni CFD</td><td class="py-3 px-4 text-yellow-600 font-medium">0.20% per trade</td><td class="py-3 px-4">Commissione su volume operato</td></tr>
+        <tr class="border-b hover:bg-gray-100"><td class="py-3 px-4">Azioni Reali</td><td class="py-3 px-4 text-green-600 font-medium">da €0,99</td><td class="py-3 px-4">Acquisto diretto con commissione fissa + spread minimo</td></tr>
+        <tr class="border-b hover:bg-gray-100"><td class="py-3 px-4">Cripto Reali</td><td class="py-3 px-4 text-red-600 font-medium">1% per operazione</td><td class="py-3 px-4">Acquisto diretto tramite NAGA Wallet</td></tr>
+        <tr class="border-b hover:bg-gray-100"><td class="py-3 px-4">Swap Overnight</td><td class="py-3 px-4 text-yellow-600 font-medium">variabile</td><td class="py-3 px-4">Calcolato su posizioni overnight</td></tr>
+        <tr class="border-b hover:bg-gray-100"><td class="py-3 px-4">Depositi / Prelievi</td><td class="py-3 px-4 text-green-600 font-medium">0% (NAGA)</td><td class="py-3 px-4">Eventuali costi bancari a parte</td></tr>
+        <tr class="border-b hover:bg-gray-100"><td class="py-3 px-4">Inattività</td><td class="py-3 px-4 text-red-600 font-medium">€10/mese</td><td class="py-3 px-4">Applicato dopo 12 mesi</td></tr>
+        <tr class="hover:bg-gray-100"><td class="py-3 px-4">Deposito Minimo</td><td class="py-3 px-4 text-green-600 font-medium">€250</td><td class="py-3 px-4">Per apertura conto</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mobile Version -->
+  <div class="block md:hidden mt-6 space-y-4">
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-red-600">Forex CFD</div>
+      <div class="text-gray-600 text-sm">Spread variabile, nessuna commissione fissa</div>
+      <div class="text-yellow-600 font-bold text-sm mt-2">da 1.2 pip</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-red-600">Indici CFD</div>
+      <div class="text-gray-600 text-sm">Spread incluso, senza costi aggiuntivi</div>
+      <div class="text-yellow-600 font-bold text-sm mt-2">da 1.0–2.0 pt</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-red-600">Materie Prime CFD</div>
+      <div class="text-gray-600 text-sm">Oro, Argento, Petrolio, Gas Naturale</div>
+      <div class="text-yellow-600 font-bold text-sm mt-2">da 0.04 pt</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-red-600">Criptovalute CFD</div>
+      <div class="text-gray-600 text-sm">Spread variabile su Bitcoin, Ethereum, ecc.</div>
+      <div class="text-red-600 font-bold text-sm mt-2">da 40.0 punti</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-red-600">Azioni CFD</div>
+      <div class="text-gray-600 text-sm">Commissione su volume operato</div>
+      <div class="text-yellow-600 font-bold text-sm mt-2">0.20% per trade</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-red-600">Azioni Reali</div>
+      <div class="text-gray-600 text-sm">Commissione fissa + spread minimo</div>
+      <div class="text-green-600 font-bold text-sm mt-2">da €0,99</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-red-600">Cripto Reali</div>
+      <div class="text-gray-600 text-sm">Acquisto tramite NAGA Wallet</div>
+      <div class="text-red-600 font-bold text-sm mt-2">1% per operazione</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-red-600">Swap Overnight</div>
+      <div class="text-gray-600 text-sm">Calcolato su posizioni overnight</div>
+      <div class="text-yellow-600 font-bold text-sm mt-2">variabile</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-red-600">Depositi / Prelievi</div>
+      <div class="text-gray-600 text-sm">Eventuali costi bancari a parte</div>
+      <div class="text-green-600 font-bold text-sm mt-2">0% (NAGA)</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-red-600">Inattività</div>
+      <div class="text-gray-600 text-sm">Applicato dopo 12 mesi</div>
+      <div class="text-red-600 font-bold text-sm mt-2">€10/mese</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-red-600">Deposito Minimo</div>
+      <div class="text-gray-600 text-sm">Per apertura conto</div>
+      <div class="text-green-600 font-bold text-sm mt-2">€250</div>
+    </div>
+  </div>
+
+  <div class="text-center text-xs text-gray-400 mt-8">
+    Dati aggiornati al 2025. Verifica sempre le condizioni ufficiali su naga.com.
+  </div>
+</section>
+
+<div class="my-12 sm:my-16"></div>
+<section class="max-w-screen-xl mx-auto p-6 bg-gray-50 rounded-xl shadow-md font-[Inter]">
+  <h2 class="text-center text-xl sm:text-2xl font-semibold text-[#D71921] mb-6">Piattaforme Disponibili su NAGA</h2>
+
+  <div class="flex gap-4 overflow-x-auto pb-4 scroll-snap-x scroll-smooth sm:scroll-auto">
+
+    <!-- NAGA WebTrader -->
+    <div class="min-w-[200px] max-w-[200px] h-[150px] bg-white rounded-lg shadow-md flex flex-col justify-between p-4 scroll-snap-start">
+      <div>
+        <div class="flex items-center mb-1">
+          <svg class="w-4 h-4 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24"><path d="M4 5h16v2H4zM4 9h16v2H4zM4 13h10v2H4z"/></svg>
+          <h3 class="text-sm font-medium ml-1">WebTrader</h3>
+        </div>
+        <p class="text-[11px] text-gray-600 leading-tight">Piattaforma proprietaria via browser, integrata con social trading.</p>
+      </div>
+      <p class="text-[10px] font-medium mt-2">Disponibile: <span class="text-gray-800">Web</span></p>
+    </div>
+
+    <!-- NAGA Mobile App -->
+    <div class="min-w-[200px] max-w-[200px] h-[150px] bg-white rounded-lg shadow-md flex flex-col justify-between p-4 scroll-snap-start">
+      <div>
+        <div class="flex items-center mb-1">
+          <svg class="w-4 h-4 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24"><path d="M7 2h10a2 2 0 012 2v16a2 2 0 01-2 2H7a2 2 0 01-2-2V4a2 2 0 012-2zm5 20a1 1 0 100-2 1 1 0 000 2zm5-4V4H7v14h10z"/></svg>
+          <h3 class="text-sm font-medium ml-1">App Mobile</h3>
+        </div>
+        <p class="text-[11px] text-gray-600 leading-tight">App ufficiale per trading, copy e gestione fondi, disponibile su iOS e Android.</p>
+      </div>
+      <p class="text-[10px] font-medium mt-2">Disponibile: <span class="text-gray-800">Mobile</span></p>
+    </div>
+
+    <!-- NAGA Social Network -->
+    <div class="min-w-[200px] max-w-[200px] h-[150px] bg-white rounded-lg shadow-md flex flex-col justify-between p-4 scroll-snap-start">
+      <div>
+        <div class="flex items-center mb-1">
+          <svg class="w-4 h-4 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+          <h3 class="text-sm font-medium ml-1">Social Network</h3>
+        </div>
+        <p class="text-[11px] text-gray-600 leading-tight">Feed sociale integrato per seguire trader, copiare operazioni e interagire con la community.</p>
+      </div>
+      <p class="text-[10px] font-medium mt-2">Disponibile: <span class="text-gray-800">Web, Mobile</span></p>
+    </div>
+
+  </div>
+
+  <p class="text-[10px] text-gray-400 text-center mt-4">Dati aggiornati al 2025. Controlla il sito ufficiale per info aggiornate.</p>
+</section>
+
+<div class="my-12 sm:my-16"></div>
+ <section class="max-w-screen-xl mx-auto p-6 bg-gray-50 rounded-xl shadow-md font-[Inter]">
+  <h2 class="text-center text-xl sm:text-2xl font-semibold text-[#D71921] mb-6">
+    Strumenti Finanziari Disponibili su NAGA (Aggiornato 2025)
+  </h2>
+
+  <!-- Tabella Desktop -->
+  <div class="hidden md:block">
+    <table class="w-full border-collapse text-sm">
+      <thead class="bg-[#D71921] text-white">
+        <tr>
+          <th class="text-left px-4 py-3">Categoria</th>
+          <th class="text-left px-4 py-3">Numero di Strumenti</th>
+          <th class="text-left px-4 py-3 rounded-tr-lg">Note</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-700">
+        <tr class="bg-white">
+          <td class="px-4 py-3">Forex CFD</td>
+          <td class="px-4 py-3 text-[#10B981]">40+</td>
+          <td class="px-4 py-3">Coppie principali, minori, esotiche</td>
+        </tr>
+        <tr class="bg-gray-100">
+          <td class="px-4 py-3">Indici CFD</td>
+          <td class="px-4 py-3 text-[#F59E0B]">15+</td>
+          <td class="px-4 py-3">USA, Europa, Asia, emergenti</td>
+        </tr>
+        <tr class="bg-white">
+          <td class="px-4 py-3">Materie Prime CFD</td>
+          <td class="px-4 py-3 text-[#10B981]">10+</td>
+          <td class="px-4 py-3">Oro, argento, petrolio, gas naturale</td>
+        </tr>
+        <tr class="bg-gray-100">
+          <td class="px-4 py-3">Azioni CFD</td>
+          <td class="px-4 py-3 text-[#10B981]">500+</td>
+          <td class="px-4 py-3">USA, Europa, UK, Asia</td>
+        </tr>
+        <tr class="bg-white">
+          <td class="px-4 py-3">Azioni Reali</td>
+          <td class="px-4 py-3 text-[#10B981]">300+</td>
+          <td class="px-4 py-3">Acquisto diretto, no CFD</td>
+        </tr>
+        <tr class="bg-gray-100">
+          <td class="px-4 py-3">ETF CFD</td>
+          <td class="px-4 py-3 text-[#F59E0B]">30+</td>
+          <td class="px-4 py-3">ETF su settori e mercati selezionati</td>
+        </tr>
+        <tr class="bg-white">
+          <td class="px-4 py-3">Criptovalute CFD</td>
+          <td class="px-4 py-3 text-[#F59E0B]">10+</td>
+          <td class="px-4 py-3">Bitcoin, Ethereum, Ripple, Litecoin</td>
+        </tr>
+        <tr class="bg-gray-100">
+          <td class="px-4 py-3">Criptovalute Reali</td>
+          <td class="px-4 py-3 text-[#10B981]">10+</td>
+          <td class="px-4 py-3">Acquisto diretto tramite wallet NAGA</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Card Mobile -->
+  <div class="md:hidden flex flex-col gap-4 mt-8">
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Forex CFD</div>
+      <div class="text-[#10B981] text-sm">40+</div>
+      <div class="text-gray-600 text-sm">Coppie principali, minori, esotiche</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Indici CFD</div>
+      <div class="text-[#F59E0B] text-sm">15+</div>
+      <div class="text-gray-600 text-sm">USA, Europa, Asia, emergenti</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Materie Prime CFD</div>
+      <div class="text-[#10B981] text-sm">10+</div>
+      <div class="text-gray-600 text-sm">Oro, argento, petrolio, gas</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Azioni CFD</div>
+      <div class="text-[#10B981] text-sm">500+</div>
+      <div class="text-gray-600 text-sm">USA, Europa, UK, Asia</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Azioni Reali</div>
+      <div class="text-[#10B981] text-sm">300+</div>
+      <div class="text-gray-600 text-sm">Acquisto diretto, no CFD</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">ETF CFD</div>
+      <div class="text-[#F59E0B] text-sm">30+</div>
+      <div class="text-gray-600 text-sm">ETF settoriali e globali</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Criptovalute CFD</div>
+      <div class="text-[#F59E0B] text-sm">10+</div>
+      <div class="text-gray-600 text-sm">Bitcoin, Ethereum, Ripple, Litecoin</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Criptovalute Reali</div>
+      <div class="text-[#10B981] text-sm">10+</div>
+      <div class="text-gray-600 text-sm">Acquisto tramite wallet NAGA</div>
+    </div>
+  </div>
+
+  <p class="text-[12px] text-gray-400 text-center mt-6">
+    Dati aggiornati al 2025. Consultare i documenti ufficiali di NAGA per ulteriori dettagli.
+  </p>
+</section>
+
+    <div class="my-12 sm:my-16"></div>
+<section class="max-w-screen-xl mx-auto p-6 bg-gray-50 rounded-xl font-[Inter] text-gray-800">
+  <h2 class="text-xl sm:text-2xl font-semibold text-center text-[#D71921] mb-6">
+    Servizi Offerti da NAGA
+  </h2>
+
+  <div class="flex gap-4 overflow-x-auto pb-4 scroll-smooth scroll-snap-x scroll-snap-mandatory -webkit-overflow-scrolling-touch">
+    
+    <!-- Card -->
+    <div class="min-w-[280px] max-w-[280px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-base font-semibold mb-2">Conti Multiuso</h3>
+      <p class="text-sm text-gray-600">
+        Un solo conto per accedere a CFD, azioni reali e crypto reali, gestito via web e app mobile.
+      </p>
+    </div>
+
+    <div class="min-w-[280px] max-w-[280px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-base font-semibold mb-2">Copy Trading</h3>
+      <p class="text-sm text-gray-600">
+        Replica automatica delle operazioni dei trader top e possibilità di guadagnare come leader copiato.
+      </p>
+    </div>
+
+    <div class="min-w-[280px] max-w-[280px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-base font-semibold mb-2">Social Network</h3>
+      <p class="text-sm text-gray-600">
+        Feed live per seguire, commentare e interagire con altri trader regolamentati in Europa.
+      </p>
+    </div>
+
+    <div class="min-w-[280px] max-w-[280px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-base font-semibold mb-2">Segnali Operativi</h3>
+      <p class="text-sm text-gray-600">
+        Segnali preimpostati copiabili con 1 clic su CFD e crypto.
+      </p>
+    </div>
+
+    <div class="min-w-[280px] max-w-[280px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-base font-semibold mb-2">Crypto & Azioni Reali</h3>
+      <p class="text-sm text-gray-600">
+        Acquisto diretto di criptovalute e azioni reali in piattaforma unica, oltre al trading CFD.
+      </p>
+    </div>
+
+    <div class="min-w-[280px] max-w-[280px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-base font-semibold mb-2">Formazione e Webinar</h3>
+      <p class="text-sm text-gray-600">
+        Webinar, articoli e guide per migliorare le competenze, adatte anche a principianti.
+      </p>
+    </div>
+
+    <div class="min-w-[280px] max-w-[280px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-base font-semibold mb-2">Regolamentazione Europea</h3>
+      <p class="text-sm text-gray-600">
+        Broker regolamentato CySEC, protezione clienti e fondo di compensazione fino a €20.000.
+      </p>
+    </div>
+
+  </div>
+
+  <p class="text-xs text-gray-400 text-center mt-6">
+    Dati aggiornati al 2025. Verificare sempre i documenti ufficiali di NAGA per dettagli aggiornati.
+  </p>
+</section>
+
+<div class="my-12 sm:my-16"></div>
+<section class="max-w-4xl mx-auto mt-16 p-8 bg-gradient-to-r from-red-600 to-rose-700 text-white rounded-2xl shadow-xl text-center font-[Inter]">
+  <h2 class="text-2xl sm:text-3xl font-bold mb-4">Vuoi Mettere Subito in Pratica le Strategie Suggerite da Tradelia AI?</h2>
+  
+  <p class="text-base sm:text-lg mb-6 leading-relaxed">
+    Apri gratuitamente un conto demo su NAGA e testa le strategie di copy trading e operatività AI.<br />
+    Prova in sicurezza, senza rischiare capitale reale, e scopri come funziona la replica delle operazioni dei migliori trader globali.
+  </p>
+
+  <a href="https://www.financeads.net/tc.php?t=76793C4792126679T" target="_blank"
+     class="inline-block px-8 py-3 bg-white text-red-700 font-semibold text-base sm:text-lg rounded-full shadow-md hover:shadow-lg hover:bg-gray-100 transition-all duration-200">
+    Apri Conto Demo NAGA
+  </a>
+
+  <div class="mt-6 text-[11px] sm:text-xs text-gray-100 text-left max-w-xl mx-auto leading-snug">
+    <p class="mb-2">
+      <strong class="text-white">Disclaimer demo:</strong> L’apertura del conto demo è gratuita e non comporta rischi di perdita di capitale reale.  
+      Tuttavia, le performance ottenute in modalità demo non garantiscono risultati futuri né rappresentano performance reali sui mercati.
+    </p>
+    <p>
+      <strong class="text-white">Disclaimer attività reale (ESMA):</strong> I CFD sono strumenti complessi e comportano un alto rischio di perdere denaro rapidamente a causa della leva finanziaria.  
+      L’<span class="underline">82.08%</span> dei conti degli investitori al dettaglio perde denaro quando negozia CFD con questo fornitore.  
+      Valuta se comprendi come funzionano i CFD e se puoi permetterti di correre l’alto rischio di perdere il tuo denaro.
+    </p>
+  </div>
+</section>
+
+<div class="my-12 sm:my-16"></div>
+    <!-- Transizione fine sezione broker -->
+<div class="w-full max-w-6xl mx-auto my-20 px-4">
+  <div class="w-24 h-1.5 mx-auto bg-gradient-to-r from-blue-700 via-blue-500 to-blue-700 rounded-full opacity-50"></div>
+</div>
+
+
+    <section class="text-center py-12 px-4 max-w-4xl mx-auto">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight mb-4">Strumenti AI per la finanza reale</h1>
+      <p class="mt-2 text-base text-slate-600">Richiedi un report AI su un asset: ricezione via WhatsApp, SMS o Email. Nessun tracciamento. Solo analisi reale, senza fuffa.</p>
+      <p class="mt-4 text-lg text-blue-700 min-h-[28px] font-medium" id="typing-text"></p>
+    </section>
+
+    <section class="text-center py-8 px-4 max-w-md mx-auto bg-white/90 rounded-xl shadow-xl backdrop-blur-md border-2 border-transparent transition-all duration-500" id="form-container" style="margin-bottom: 64px;">
+      <form action="https://formsubmit.co/analisi@tradelia.org" method="POST" class="text-left space-y-3 text-sm">
+        <div><label for="asset" class="block font-semibold">Asset <span class="text-red-500">*</span></label><input type="text" name="asset" id="asset" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
+        <div><label for="categoria" class="block font-semibold">Categoria <span class="text-red-500">*</span></label><select name="categoria" id="categoria" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Azioni</option><option>ETF</option><option>Forex</option><option>Crypto</option><option>Commodities</option><option>Obbligazioni</option><option>Indici</option><option>REIT</option><option>Derivati</option></select></div>
+        <div><label for="timeframe" class="block font-semibold">Orizzonte Temporale <span class="text-red-500">*</span></label><select name="timeframe" id="timeframe" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Breve Termine</option><option>Medio Termine</option><option>Lungo Termine</option></select></div>
+        <div><label for="focus" class="block font-semibold">Focus dell'analisi <span class="text-red-500">*</span></label><select name="focus" id="focus" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Fondamentale</option><option>Tecnico</option><option>Macroeconomico</option><option>Approfondita</option></select></div>
+        <div><label for="nome" class="block font-semibold">Nome <span class="text-red-500">*</span></label><input type="text" name="nome" id="nome" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
+        <div><label for="metodo" class="block font-semibold">Metodo di ricezione <span class="text-red-500">*</span></label><select name="metodo" id="metodo" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>SMS</option><option>Email</option><option>WhatsApp</option></select></div>
+        <div><label for="contatto" class="block font-semibold">Contatto <span class="text-red-500">*</span></label><input type="text" name="contatto" id="contatto" placeholder="Telefono o email" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
+        <p class="text-xs text-slate-500 mt-2 leading-snug">🛡 Nessuna pubblicità. Nessuna profilazione. I dati verranno usati solo per inviarti il report PDF.</p>
+        <button type="submit" class="w-full mt-3 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-md">Invia Richiesta</button>
+        <p id="form-response" class="mt-3 text-green-600 font-medium hidden">✅ Richiesta inviata! Riceverai il report entro poche ore.</p>
+      </form>
+    </section>
+ <body class="text-gray-900">
+    <header class="bg-white shadow py-4 px-6 flex justify-between items-center">
+      <div class="text-xl font-bold text-blue-800">Analisi AI Broker</div>
+    </header>
+
+    <main class="p-4">
+      <div class="bg-white shadow-lg rounded-lg p-6 max-w-6xl mx-auto">
+        <h2 class="text-lg font-semibold mb-4">Broker con Valutazione AI</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6" id="broker-grid"></div>
+      </div>
+    </main>
+
+    <script>
+      const brokerList = [
+        { name: 'Exante', rating: 100, url: '/Exante.html', desc: 'Broker professionale con accesso DMA e ampia offerta istituzionale.', logo: 'exante.svg' },
+        { name: 'Freedom24', rating: 92, url: '/Freedom24.html', desc: 'Azioni reali, IPO e azione gratuita per i nuovi utenti.', logo: 'freedom24.svg' },
+        { name: 'FP Markets', rating: 90, url: '/FPMarkets.html', desc: 'Ottimo per Forex, esecuzione rapida e spread contenuti.', logo: 'fpmarkets.svg' },
+        { name: 'Pepperstone', rating: 87, url: '/Pepperstone.html', desc: 'Broker ECN rapido e trasparente. Perfetto per day trader.', logo: 'pepperstone.svg' },
+        { name: 'eToro', rating: 85, url: '/eToro.html', desc: 'Broker social, azioni reali e funzionalità di copy trading.', logo: 'etoro.svg' },
+        { name: 'Eightcap', rating: 83, url: '/Eightcap.html', desc: 'Ottima offerta di crypto CFD e strumenti per MT5.', logo: 'eightcap.svg' },
+        { name: 'NAGA', rating: 82, url: '/NAGA.html', desc: 'Copy trading, social network e crypto. Giovane e dinamico.', logo: 'naga.svg' },
+        { name: 'FxPro', rating: 80, url: '/FxPro.html', desc: 'Broker multi-asset con regolamentazione forte e buoni spread.', logo: 'fxpro.svg' },
+        { name: 'XM', rating: 79, url: '/XM.html', desc: 'Buon supporto educativo e bonus di benvenuto.', logo: 'xm.svg' },
+        { name: 'Plus500', rating: 78, url: '/Plus500.html', desc: 'Semplice, mobile-friendly, ideale per iniziare con CFD.', logo: 'plus500.svg' },
+        { name: 'Skilling', rating: 77, url: '/Skilling.html', desc: 'Piattaforma semplice, mobile, con discreto supporto.', logo: 'skilling.svg' },
+        { name: 'AvaTrade', rating: 76, url: '/AvaTrade.html', desc: 'Offerta solida multi-asset e opzioni vanilla.', logo: 'avatrade.svg' },
+        { name: 'BlackBull Markets', rating: 74, url: '/BlackBullMarkets.html', desc: 'Broker ECN con spread variabili, adatto a trader avanzati.', logo: 'blackbull.svg' }
+      ];
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('broker-grid');
+        brokerList.sort((a, b) => b.rating - a.rating).forEach(broker => {
+          const card = document.createElement('div');
+          card.className = "border rounded-xl shadow p-5 bg-white hover:bg-blue-50 transition";
+          card.innerHTML = `
+            <div class="flex items-center gap-3 mb-2">
+              <img src="/logos/${broker.logo}" alt="${broker.name}" class="w-8 h-8 rounded-full bg-gray-200" />
+              <div class="text-xl font-bold text-blue-900">${broker.name}</div>
+            </div>
+            <div class="text-sm text-gray-600">Rating AI: ${broker.rating}/100</div>
+            <p class="mt-2 text-sm text-gray-700">${broker.desc}</p>
+            <a href="${broker.url}" class="inline-block mt-3 text-sm text-blue-600 font-medium hover:underline">Leggi analisi AI completa →</a>
+          `;
+          container.appendChild(card);
+        });
+      });
+    </script>
+  </body>
+  <div id="cookie-popup" class="modal">
+  <div class="modal-content">
+    <img src="https://lucid.app/favicon.ico" alt="Lucid icon" class="mx-auto mb-2 w-8 h-8">
+    <h3 class="text-lg font-semibold mb-2">Zero biscotti, zero sorprese.</h3>
+    <p class="mb-2">Tradelia non utilizza cookie di tracciamento, profilazione o pubblicità.</p>
+    <p class="text-sm text-gray-600">Salveremo la tua preferenza sul tuo dispositivo per non mostrarti più questo messaggio.</p>
+    <button onclick="chiudiPopupCookie()" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Ho capito</button>
+  </div>
+</div>
+
+
+    <footer style="width:100%;background:#0f172a;color:#cbd5e1;padding:48px 24px 32px;font-family:'Inter',sans-serif;font-size:14px;line-height:1.7;border-top:1px solid rgba(255,255,255,0.08)">
+      <div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between">
+        <div style="flex:1 1 300px">
+          <h4 style="color:#f8fafc;font-size:16px;margin-bottom:12px;font-weight:600">Tradelia AI</h4>
+          <p>Tradelia è un progetto indipendente per fornire strumenti educativi e analisi AI gratuite nel campo finanziario.</p>
+          <p style="margin-top:16px;font-size:13px;color:#60a5fa">✉️ <a href="mailto:info@tradelia.org" style="color:#60a5fa;text-decoration:none">info@tradelia.org</a></p>
+        </div>
+        <div style="flex:1 1 300px">
+          <p class="hover:translate-x-1 hover:text-sky-400 transition cursor-pointer font-semibold text-white mb-2" onclick="apriSezioneLegale('section-tc')">Termini e Condizioni</p>
+          <p class="hover:translate-x-1 hover:text-sky-400 transition cursor-pointer font-semibold text-white" onclick="apriSezioneLegale('section-privacy')">Privacy Policy</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
