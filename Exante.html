@@ -8,73 +8,91 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 <link rel="icon" href="/favicon.png" type="image/png" />
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        setTimeout(() => {
-          document.getElementById("cookie-popup").style.display = "flex";
-        }, 1000);
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Mostra il popup cookie solo se NON è stato già accettato
+    if (!localStorage.getItem('tradeliaConsent')) {
+      setTimeout(() => {
+        const popup = document.getElementById("cookie-popup");
+        if (popup) popup.style.display = "flex";
+      }, 1000);
+    }
 
-        const form = document.querySelector("form");
-        form.addEventListener("submit", function (e) {
-          const requiredFields = ["asset", "categoria", "timeframe", "focus", "nome", "contatto", "metodo"];
-          let valid = true;
-          requiredFields.forEach(id => {
-            const field = document.getElementById(id);
-            const label = document.querySelector(`label[for='${id}']`);
-            if (!field.value) {
-              valid = false;
-              label.innerHTML = label.innerHTML.replace(/✅/g, '').replace(/<span.*?<\/span>/, '<span class="text-red-500">*</span>');
-            } else {
-              label.innerHTML = label.innerHTML.replace(/<span.*?<\/span>/, '✅');
-            }
-          });
-          if (!valid) {
-            e.preventDefault();
-            alert("Compila tutti i campi obbligatori contrassegnati con *");
-          } else {
-            setTimeout(() => {
-              document.getElementById("form-response").classList.remove("hidden");
-            }, 300);
-          }
-        });
-
-        const phrases = [
-          "AI per trader moderni",
-          "Strumenti gratuiti, zero fuffa",
-          "Operatività solo in ambiente demo"
-        ];
-        let current = 0;
-        const typingElement = document.getElementById("typing-text");
-
-        function typePhrase() {
-          const phrase = phrases[current];
-          typingElement.textContent = "";
-          [...phrase].forEach((char, i) => {
-            setTimeout(() => {
-              typingElement.textContent += char;
-            }, i * 50);
-          });
-          setTimeout(() => {
-            current = (current + 1) % phrases.length;
-            typePhrase();
-          }, phrase.length * 50 + 2000);
+    const form = document.querySelector("form");
+    form.addEventListener("submit", function (e) {
+      const requiredFields = ["asset", "categoria", "timeframe", "focus", "nome", "contatto", "metodo"];
+      let valid = true;
+      requiredFields.forEach(id => {
+        const field = document.getElementById(id);
+        const label = document.querySelector(`label[for='${id}']`);
+        if (!field.value) {
+          valid = false;
+          label.innerHTML = label.innerHTML.replace(/✅/g, '').replace(/<span.*?<\/span>/, '<span class="text-red-500">*</span>');
+        } else {
+          label.innerHTML = label.innerHTML.replace(/<span.*?<\/span>/, '✅');
         }
-        typePhrase();
       });
-
-      function apriSezioneLegale(id) {
-        const modal = document.createElement("div");
-        modal.className = "modal animate-fade-in";
-        modal.style.display = "flex";
-        modal.innerHTML = `
-          <div class="modal-content">
-            <div class="modal-close hover:text-red-500 transition" onclick="this.parentElement.parentElement.remove()">✕</div>
-            <h3 class="text-lg font-semibold mb-2">${id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy'}</h3>
-            <p class="text-sm text-gray-800">${id === 'section-tc' ? 'Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all\'investimento. Tutte le operazioni simulate in ambiente demo.' : 'Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l\'utente. Progetto open per educazione finanziaria.'}</p>
-          </div>`;
-        document.body.appendChild(modal);
+      if (!valid) {
+        e.preventDefault();
+        alert("Compila tutti i campi obbligatori contrassegnati con *");
+      } else {
+        setTimeout(() => {
+          document.getElementById("form-response").classList.remove("hidden");
+        }, 300);
       }
-    </script>
+    });
+
+    const phrases = [
+      "AI per trader moderni",
+      "Strumenti gratuiti, zero fuffa",
+      "Operatività solo in ambiente demo"
+    ];
+    let current = 0;
+    const typingElement = document.getElementById("typing-text");
+
+    function typePhrase() {
+      const phrase = phrases[current];
+      typingElement.textContent = "";
+      [...phrase].forEach((char, i) => {
+        setTimeout(() => {
+          typingElement.textContent += char;
+        }, i * 50);
+      });
+      setTimeout(() => {
+        current = (current + 1) % phrases.length;
+        typePhrase();
+      }, phrase.length * 50 + 2000);
+    }
+    typePhrase();
+  });
+
+  function apriSezioneLegale(id) {
+    const modal = document.createElement("div");
+    modal.className = "modal animate-fade-in";
+    modal.style.display = "flex";
+    modal.innerHTML = `
+      <div class="modal-content">
+        <div class="modal-close hover:text-red-500 transition" onclick="this.parentElement.parentElement.remove()">✕</div>
+        <h3 class="text-lg font-semibold mb-2">${id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy'}</h3>
+        <p class="text-sm text-gray-800">
+          ${
+            id === 'section-tc'
+              ? "Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all'investimento. Tutte le operazioni simulate in ambiente demo."
+              : "Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l'utente. Progetto open per educazione finanziaria."
+          }
+        </p>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+
+  // Salva consenso nel localStorage quando l'utente clicca "Ho capito"
+  function chiudiPopupCookie() {
+    localStorage.setItem('tradeliaConsent', 'true');
+    const popup = document.getElementById("cookie-popup");
+    if (popup) popup.style.display = "none";
+  }
+</script>
+
     <style>
       body {
         font-family: 'Inter', sans-serif;
@@ -307,14 +325,16 @@
       });
     </script>
   </body>
-    <div id="cookie-popup" class="modal">
-      <div class="modal-content">
-        <img src="https://lucid.app/favicon.ico" alt="Lucid icon" class="mx-auto mb-2 w-8 h-8">
-        <h3 class="text-lg font-semibold mb-2">Zero biscotti, zero sorprese.</h3>
-        <p>Tradelia non utilizza cookie di tracciamento, profilazione o pubblicità.</p>
-        <button onclick="document.getElementById('cookie-popup').style.display='none'" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Ho capito</button>
-      </div>
-    </div>
+<div id="cookie-popup" class="modal">
+  <div class="modal-content">
+    <img src="https://lucid.app/favicon.ico" alt="Lucid icon" class="mx-auto mb-2 w-8 h-8">
+    <h3 class="text-lg font-semibold mb-2">Zero biscotti, zero sorprese.</h3>
+    <p class="mb-2">Tradelia non utilizza cookie di tracciamento, profilazione o pubblicità.</p>
+    <p class="text-sm text-gray-600">Salveremo la tua preferenza sul tuo dispositivo per non mostrarti più questo messaggio.</p>
+    <button onclick="chiudiPopupCookie()" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Ho capito</button>
+  </div>
+</div>
+
 
     <footer style="width:100%;background:#0f172a;color:#cbd5e1;padding:48px 24px 32px;font-family:'Inter',sans-serif;font-size:14px;line-height:1.7;border-top:1px solid rgba(255,255,255,0.08)">
       <div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between">
