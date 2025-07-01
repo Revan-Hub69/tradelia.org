@@ -456,7 +456,7 @@
     <!-- Card Template -->
     <template id="card-template">
       <div class="flex items-center gap-4 bg-white rounded-lg p-5 shadow-sm hover:shadow-lg hover:scale-[1.03] transition-transform duration-300">
-        <div class="icon-container text-[#D71921] flex-shrink-0 w-7 h-7"></div>
+        <div class="icon-container text-[#D71921] flex-shrink-0 w-7 h-7 flex items-center justify-center"></div>
         <div class="flex-1">
           <div class="font-semibold mb-2 title"></div>
           <p class="mb-3 description"></p>
@@ -478,31 +478,31 @@
       title: "Trader Avanzati",
       description: "Condizioni ultra-competitive, esecuzione ECN/STP.",
       percentage: 95,
-      icon: "TrendingUp"
+      icon: "trending-up"
     },
     {
       title: "Scalper & Day Trader",
       description: "Spread minimi, velocità top.",
       percentage: 90,
-      icon: "Clock"
+      icon: "clock"
     },
     {
       title: "Trader Algoritmici",
       description: "Expert Advisor, API, trading automatico.",
       percentage: 85,
-      icon: "Cpu"
+      icon: "cpu"
     },
     {
       title: "Principianti",
       description: "Buon supporto e materiale educativo, ma richiede studio.",
       percentage: 60,
-      icon: "BookOpen"
+      icon: "book-open"
     },
     {
       title: "Investitori Passivi",
       description: "Non adatto: niente PAC o gestione passiva.",
       percentage: 20,
-      icon: "Coffee"
+      icon: "coffee"
     }
   ];
 
@@ -523,13 +523,16 @@
     else if (percentage < 70) barColor = "bg-yellow-500";
     progressBar.classList.add(barColor);
 
-    // Inizializza larghezza a 0 per animazione
+    // Inizializza larghezza a 0 per animazione dopo inserimento nel DOM
     progressBar.style.width = "0%";
     label.textContent = `${percentage}%`;
 
-    // Icona Lucide
+    // Icona Lucide (con nomi in minuscolo e trattini)
     const iconContainer = clone.querySelector(".icon-container");
-    const svgIcon = lucide.create(icon);
+    const svgIcon = lucide.create(icon.toLowerCase());
+    // Dimensiona icona coerente con container
+    svgIcon.setAttribute("width", "28");
+    svgIcon.setAttribute("height", "28");
     iconContainer.appendChild(svgIcon);
 
     container.appendChild(clone);
@@ -540,7 +543,7 @@
     }, 100);
   });
 
-  // Inizializza icone Lucide
+  // Inizializza icone Lucide (utile se nel markup ci sono icone statiche)
   lucide.replace();
 </script>
 
@@ -1084,13 +1087,13 @@
           >
             <path d="M12 2a10 10 0 100 20 10 10 0 000-20zM7 9h10v6H7z" />
           </svg>
-          <h3 class="text-sm font-medium ml-1">Piattaforma Proprietaria Pepperstone</h3>
+          <h3 class="text-[13px] font-medium ml-1 leading-snug">Piattaforma Proprietaria Pepperstone</h3>
         </div>
-        <p class="text-[11px] text-gray-800 leading-tight">
+        <p class="text-[10px] text-gray-800 leading-relaxed">
           Piattaforma di trading proprietaria con interfaccia user-friendly e strumenti avanzati per trader di tutti i livelli.
         </p>
       </div>
-      <p class="text-[10px] font-medium mt-2">
+      <p class="text-[9px] font-medium mt-2">
         Disponibile: <span class="text-gray-900">Web, Mobile</span>
       </p>
     </div>
@@ -1119,47 +1122,47 @@
         </tr>
       </thead>
       <tbody class="text-gray-800">
-        <tr tabindex="0" class="odd:bg-white even:bg-gray-100 hover:bg-[#D71921] hover:text-white focus:outline-none focus:bg-[#D71921] focus:text-white transition-colors duration-300 cursor-pointer">
+        <tr tabindex="0" class="odd:bg-white even:bg-gray-100 hover:bg-red-50 hover:text-gray-900 focus:outline-none focus:bg-red-50 focus:text-gray-900 transition-colors duration-300 cursor-pointer">
           <td class="px-4 py-3">Forex</td>
           <td class="px-4 py-3 text-[#10B981] font-semibold">93 coppie</td>
           <td class="px-4 py-3">Principali, minori ed esotiche</td>
         </tr>
-        <tr tabindex="0" class="odd:bg-white even:bg-gray-100 hover:bg-[#D71921] hover:text-white focus:outline-none focus:bg-[#D71921] focus:text-white transition-colors duration-300 cursor-pointer">
+        <tr tabindex="0" class="odd:bg-white even:bg-gray-100 hover:bg-red-50 hover:text-gray-900 focus:outline-none focus:bg-red-50 focus:text-gray-900 transition-colors duration-300 cursor-pointer">
           <td class="px-4 py-3">Indici CFD</td>
           <td class="px-4 py-3 text-[#F59E0B] font-semibold">26</td>
           <td class="px-4 py-3">US500, GER40, UK100, Asia, emergenti</td>
         </tr>
-        <tr tabindex="0" class="odd:bg-white even:bg-gray-100 hover:bg-[#D71921] hover:text-white focus:outline-none focus:bg-[#D71921] focus:text-white transition-colors duration-300 cursor-pointer">
+        <tr tabindex="0" class="odd:bg-white even:bg-gray-100 hover:bg-red-50 hover:text-gray-900 focus:outline-none focus:bg-red-50 focus:text-gray-900 transition-colors duration-300 cursor-pointer">
           <td class="px-4 py-3">Materie Prime</td>
           <td class="px-4 py-3 text-[#10B981] font-semibold">40</td>
           <td class="px-4 py-3">Oro, argento, petrolio, gas naturale, agricoli</td>
         </tr>
-        <tr tabindex="0" class="odd:bg-white even:bg-gray-100 hover:bg-[#D71921] hover:text-white focus:outline-none focus:bg-[#D71921] focus:text-white transition-colors duration-300 cursor-pointer">
+        <tr tabindex="0" class="odd:bg-white even:bg-gray-100 hover:bg-red-50 hover:text-gray-900 focus:outline-none focus:bg-red-50 focus:text-gray-900 transition-colors duration-300 cursor-pointer">
           <td class="px-4 py-3">Azioni CFD</td>
           <td class="px-4 py-3 text-[#10B981] font-semibold">1.200+</td>
           <td class="px-4 py-3">USA, UK, Europa, Australia, Asia</td>
         </tr>
-        <tr tabindex="0" class="odd:bg-white even:bg-gray-100 hover:bg-[#D71921] hover:text-white focus:outline-none focus:bg-[#D71921] focus:text-white transition-colors duration-300 cursor-pointer">
+        <tr tabindex="0" class="odd:bg-white even:bg-gray-100 hover:bg-red-50 hover:text-gray-900 focus:outline-none focus:bg-red-50 focus:text-gray-900 transition-colors duration-300 cursor-pointer">
           <td class="px-4 py-3">ETF CFD</td>
           <td class="px-4 py-3 text-[#10B981] font-semibold">100+</td>
           <td class="px-4 py-3">ETF su settori, mercati e tematici</td>
         </tr>
-        <tr tabindex="0" class="odd:bg-white even:bg-gray-100 hover:bg-[#D71921] hover:text-white focus:outline-none focus:bg-[#D71921] focus:text-white transition-colors duration-300 cursor-pointer">
+        <tr tabindex="0" class="odd:bg-white even:bg-gray-100 hover:bg-red-50 hover:text-gray-900 focus:outline-none focus:bg-red-50 focus:text-gray-900 transition-colors duration-300 cursor-pointer">
           <td class="px-4 py-3">Criptovalute CFD</td>
           <td class="px-4 py-3 text-[#F59E0B] font-semibold">15+</td>
           <td class="px-4 py-3">Bitcoin, Ethereum, Ripple, Litecoin, Dash e altri</td>
         </tr>
-        <tr tabindex="0" class="odd:bg-white even:bg-gray-100 hover:bg-[#D71921] hover:text-white focus:outline-none focus:bg-[#D71921] focus:text-white transition-colors duration-300 cursor-pointer">
+        <tr tabindex="0" class="odd:bg-white even:bg-gray-100 hover:bg-red-50 hover:text-gray-900 focus:outline-none focus:bg-red-50 focus:text-gray-900 transition-colors duration-300 cursor-pointer">
           <td class="px-4 py-3">Obbligazioni CFD</td>
           <td class="px-4 py-3 text-[#EF4444] font-semibold">Solo principali</td>
           <td class="px-4 py-3">Titoli governativi selezionati</td>
         </tr>
-        <tr tabindex="0" class="odd:bg-white even:bg-gray-100 hover:bg-[#D71921] hover:text-white focus:outline-none focus:bg-[#D71921] focus:text-white transition-colors duration-300 cursor-pointer">
+        <tr tabindex="0" class="odd:bg-white even:bg-gray-100 hover:bg-red-50 hover:text-gray-900 focus:outline-none focus:bg-red-50 focus:text-gray-900 transition-colors duration-300 cursor-pointer">
           <td class="px-4 py-3">Opzioni CFD</td>
           <td class="px-4 py-3 text-[#F59E0B] font-semibold">Limitato</td>
           <td class="px-4 py-3">Solo su alcuni indici e coppie FX</td>
         </tr>
-        <tr tabindex="0" class="odd:bg-white even:bg-gray-100 hover:bg-[#D71921] hover:text-white focus:outline-none focus:bg-[#D71921] focus:text-white transition-colors duration-300 cursor-pointer rounded-br-lg">
+        <tr tabindex="0" class="odd:bg-white even:bg-gray-100 hover:bg-red-50 hover:text-gray-900 focus:outline-none focus:bg-red-50 focus:text-gray-900 transition-colors duration-300 cursor-pointer rounded-br-lg">
           <td class="px-4 py-3">Futures CFD</td>
           <td class="px-4 py-3 text-[#F59E0B] font-semibold">Diversi contratti</td>
           <td class="px-4 py-3">Su materie prime e indici</td>
@@ -1223,8 +1226,14 @@
 
   <style>
     @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(10px);}
-      to {opacity: 1; transform: translateY(0);}
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     .animate-fadeIn {
       animation: fadeIn 0.6s ease forwards;
@@ -1232,19 +1241,14 @@
   </style>
 </section>
 
+
     <div class="my-12 sm:my-16"></div>
 <section class="max-w-6xl mx-auto my-10 px-4 py-6 bg-gray-50 rounded-xl shadow-md font-[Inter] text-gray-800 relative">
   <h2 class="text-center text-2xl font-semibold mb-8 text-gray-900">
     Servizi Offerti da Pepperstone
   </h2>
 
-  <!-- Freccia scroll orizzontale animata -->
-  <div aria-hidden="true" class="absolute right-4 top-1/2 -translate-y-1/2 hidden md:flex items-center gap-2 text-gray-400 select-none pointer-events-none">
-    <span class="text-sm font-semibold">Scrolla orizzontalmente</span>
-    <svg class="w-6 h-6 animate-scrollArrow" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
-    </svg>
-  </div>
+
 
   <div
     class="flex gap-6 overflow-x-auto pb-6 scroll-snap-x scroll-smooth -webkit-overflow-scrolling-touch"
@@ -1411,7 +1415,6 @@
 
 
 
-<div class="my-12 sm:my-16"></div>
 <section class="max-w-4xl mx-auto mt-16 p-10 bg-gradient-to-r from-red-700 to-rose-600 text-white rounded-3xl shadow-2xl text-center font-[Inter] select-none">
   <h2 class="text-4xl font-extrabold mb-6 leading-tight drop-shadow-lg tracking-tight animate-fadeInUp">
     Apri Subito un Conto Demo su <span class="underline decoration-white/70">Pepperstone</span>
@@ -1422,7 +1425,8 @@
   </p>
   <a href="https://track.pepperstonepartners.com/visit/?bta=42241&brand=pepperstone" target="_blank" rel="noopener noreferrer"
      class="inline-block px-12 py-4 bg-white text-red-700 font-semibold text-lg rounded-full shadow-lg transition 
-                hover:shadow-2xl hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-red-400 focus:ring-opacity-60 active:scale-[0.98] animate-pulse-on-hover animate-fadeInUp animate-delay-400">
+                hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-red-400 focus:ring-opacity-60 active:scale-[0.98]
+                animate-pulse-on-hover animate-fadeInUp animate-delay-400">
     Apri Conto Demo Pepperstone
   </a>
   <div class="mt-10 max-w-xl mx-auto text-left space-y-6 text-sm sm:text-base animate-fadeInUp animate-delay-600">
@@ -1471,22 +1475,25 @@
     animation-delay: 0.6s;
   }
 
-  /* Pulsazione dolce al passaggio hover sul bottone */
+  /* Pulsazione dolce e discreta al passaggio hover sul bottone */
   @keyframes pulseGlow {
     0%, 100% {
-      box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+      box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.15);
     }
     50% {
-      box-shadow: 0 0 12px 4px rgba(220, 38, 38, 0.7);
+      box-shadow: 0 0 8px 3px rgba(220, 38, 38, 0.3);
     }
   }
 
   .animate-pulse-on-hover:hover {
     animation-name: pulseGlow;
-    animation-duration: 1.5s;
+    animation-duration: 1.8s;
     animation-iteration-count: infinite;
+    color: #b91c1c; /* Rosso scuro elegante */
+    transition: color 0.3s ease, box-shadow 0.3s ease;
   }
 </style>
+
 
 
 <div class="my-12 sm:my-16"></div>
