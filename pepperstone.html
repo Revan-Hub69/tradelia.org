@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tradelia – Richiesta Report AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="icon" href="/favicon.png" type="image/png" />
+
+ <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Mostra il popup cookie solo se NON è stato già accettato
+    if (!localStorage.getItem('tradeliaConsent')) {
+      setTimeout(() => {
+        const popup = document.getElementById("cookie-popup");
+        if (popup) popup.style.display = "flex";
+      }, 1000);
+    }
+
+    const form = document.querySelector("form");
+    form.addEventListener("submit", function (e) {
+      const requiredFields = ["asset", "categoria", "timeframe", "focus", "nome", "contatto", "metodo"];
+      let valid = true;
+      requiredFields.forEach(id => {
+        const field = document.getElementById(id);
+        const label = document.querySelector(`label[for='${id}']`);
+        if (!field.value) {
+          valid = false;
+          label.innerHTML = label.innerHTML.replace(/✅/g, '').replace(/<span.*?<\/span>/, '<span class="text-red-500">*</span>');
+        } else {
+          label.innerHTML = label.innerHTML.replace(/<span.*?<\/span>/, '✅');
+        }
+      });
+      if (!valid) {
+        e.preventDefault();
+        alert("Compila tutti i campi obbligatori contrassegnati con *");
+      } else {
+        setTimeout(() => {
+          document.getElementById("form-response").classList.remove("hidden");
+        }, 300);
+      }
+    });
+
+    const phrases = [
+      "AI per trader moderni",
+      "Strumenti gratuiti, zero fuffa",
+      "Operatività solo in ambiente demo"
+    ];
+    let current = 0;
+    const typingElement = document.getElementById("typing-text");
+
+    function typePhrase() {
+      const phrase = phrases[current];
+      typingElement.textContent = "";
+      [...phrase].forEach((char, i) => {
+        setTimeout(() => {
+          typingElement.textContent += char;
+        }, i * 50);
+      });
+      setTimeout(() => {
+        current = (current + 1) % phrases.length;
+        typePhrase();
+      }, phrase.length * 50 + 2000);
+    }
+    typePhrase();
+  });
+
+  function apriSezioneLegale(id) {
+    const modal = document.createElement("div");
+    modal.className = "modal animate-fade-in";
+    modal.style.display = "flex";
+    modal.innerHTML = `
+      <div class="modal-content">
+        <div class="modal-close hover:text-red-500 transition" onclick="this.parentElement.parentElement.remove()">✕</div>
+        <h3 class="text-lg font-semibold mb-2">${id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy'}</h3>
+        <p class="text-sm text-gray-800">
+          ${
+            id === 'section-tc'
+              ? "Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all'investimento. Tutte le operazioni simulate in ambiente demo."
+              : "Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l'utente. Progetto open per educazione finanziaria."
+          }
+        </p>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+
+  // Salva consenso nel localStorage quando l'utente clicca "Ho capito"
+  function chiudiPopupCookie() {
+    localStorage.setItem('tradeliaConsent', 'true');
+    const popup = document.getElementById("cookie-popup");
+    if (popup) popup.style.display = "none";
+  }
+</script>
+
+    
+      <style>
+/* Scrollbar elegante, personalizzata, istituzionale */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+  border-radius: 100vh;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(80, 160, 200, 0.4); /* azzurro-grigio semi */
+  border-radius: 100vh;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(80, 160, 200, 0.6);
+  box-shadow: inset 0 0 6px rgba(80, 160, 200, 0.4);
+}
+
+/* Firefox support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(80, 160, 200, 0.5) #e5e7eb;
+}
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: #f1f5f9;
+        background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+        background-repeat: repeat;
+        background-size: 280px;
+      }
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 50;
+        animation: fadeIn 0.4s ease;
+      }
+      .modal-content {
+        background: #f8fafc;
+        max-width: 480px;
+        padding: 28px;
+        border-radius: 16px;
+        font-size: 15px;
+        line-height: 1.7;
+        color: #0f172a;
+        position: relative;
+        text-align: center;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
+        border: 1px solid #cbd5e1;
+      }
+      .modal-close {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        cursor: pointer;
+        font-size: 18px;
+        color: #334155;
+      }
+      @keyframes fadeIn {
+        from {opacity: 0; transform: scale(0.95);}
+        to {opacity: 1; transform: scale(1);}
+      }
+    </style>
+  </head>
+  <body class="text-gray-900">
+<header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6">
+  <a href="index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+    <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
+  </a>
+</header>
+<section class="max-w-4xl mx-auto mt-16 p-8 bg-white rounded-2xl shadow-xl font-[Inter]">
+  <div class="text-center mb-8">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/PepperstoneLogo.jpg" alt="Pepperstone Logo" class="mx-auto h-16 sm:h-20 mb-4">
+    <h2 class="text-2xl sm:text-3xl font-bold text-[#D71921]">Pepperstone Group Ltd</h2>
+  </div>
+
+  <div class="grid gap-6 md:grid-cols-2 text-[15px] text-gray-700">
+    <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-md shadow-sm"><strong>Sede Legale:</strong><span>Level 16, Tower One, 727 Collins Street, Melbourne, Australia</span></div>
+    <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-md shadow-sm"><strong>Licenza Principale:</strong><span>ASIC (Australia) - AFSL 414530</span></div>
+    <div class="col-span-full bg-gray-50 p-4 rounded-md shadow-sm">
+      <strong>Altre Regolamentazioni:</strong>
+      <ul class="list-disc ml-6 mt-1 space-y-1">
+        <li>FCA (UK): FRN 684312</li>
+        <li>CySEC (Cipro): Licenza 388/20</li>
+        <li>DFSA (Dubai): F004356</li>
+        <li>BaFin (Germania): Passporting MiFID II</li>
+        <li>CONSOB (Italia): autorizzata tramite passporting MiFID II</li>
+        <li>SCB (Bahamas): Licenza SIA-F217</li>
+        <li>CMA (Kenya): Licenza 128</li>
+      </ul>
+    </div>
+    <div class="col-span-full bg-gray-50 p-4 rounded-md shadow-sm">
+      <strong>Lingue Supportate:</strong>
+      <span>Inglese, Italiano, Spagnolo, Tedesco, Francese, Arabo, Cinese, Vietnamita, Tailandese</span>
+    </div>
+    <div class="col-span-full bg-gray-50 p-4 rounded-md shadow-sm">
+      <strong>Valutazione Trustpilot:</strong>
+      <span>⭐ 4.5/5 su oltre 10.000 recensioni</span>
+    </div>
+    <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-md shadow-sm"><strong>Capitale Sociale:</strong><span>Privato, azienda indipendente fondata nel 2010</span></div>
+    <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-md shadow-sm"><strong>Utenti Registrati:</strong><span>Oltre 750.000 clienti a livello globale</span></div>
+    <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-md shadow-sm"><strong>Anni di Attività:</strong><span>Dal 2010 (15 anni di esperienza)</span></div>
+    <div class="col-span-full bg-gray-50 p-4 rounded-md shadow-sm">
+      <strong>Premi e Riconoscimenti:</strong>
+      <span>Best Forex Trading Platform 2025, Best Overall Broker 2025, Best Forex/CFD Broker EMEA</span>
+    </div>
+  </div>
+</section>
+
+
+    <div class="my-12 sm:my-16"></div>
+<section class="max-w-3xl mx-auto p-8 bg-white rounded-xl shadow-lg font-inter text-gray-800">
+  <h2 class="text-2xl font-bold text-center text-[#D71921] mb-8">Contatti Pepperstone</h2>
+
+  <div class="grid gap-6 text-sm text-gray-700">
+    <!-- Email Supporto -->
+    <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-lg shadow-sm">
+      <svg class="w-6 h-6 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm1.5 2h9v2h-9V8zm0 4h9v2h-9v-2z" />
+      </svg>
+      <div>
+        <div class="font-semibold text-gray-900">Email Supporto</div>
+        <div>support@pepperstone.com</div>
+      </div>
+    </div>
+
+    <!-- Telefono -->
+    <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-lg shadow-sm">
+      <svg class="w-6 h-6 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C10.07 21 3 13.93 3 5c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.24.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+      </svg>
+      <div>
+        <div class="font-semibold text-gray-900">Telefono</div>
+        <div>00357 25 030573</div>
+      </div>
+    </div>
+
+    <!-- Live Chat -->
+    <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-lg shadow-sm">
+      <svg class="w-6 h-6 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 6h-2v9H7v2h10l4 4V6z" />
+      </svg>
+      <div>
+        <div class="font-semibold text-gray-900">Live Chat</div>
+        <div>Disponibile 24/7 dal sito ufficiale</div>
+      </div>
+    </div>
+
+    <!-- Sede Legale -->
+    <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-lg shadow-sm">
+      <svg class="w-6 h-6 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2l7 6v12h-4v-6H9v6H5V8l7-6z" />
+      </svg>
+      <div>
+        <div class="font-semibold text-gray-900">Sede Legale</div>
+        <div>Level 16, Tower One, 727 Collins Street, Melbourne, VIC 3008, Australia</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-xs text-center text-gray-400 mt-6">
+    Consulta sempre il sito ufficiale per i contatti aggiornati e specifici per il tuo Paese.
+  </p>
+</section>
+
+
+
+    <div class="my-12 sm:my-16"></div>
+<section class="max-w-lg mx-auto mt-10 p-6 bg-gray-50 rounded-xl shadow-md font-[Inter] text-gray-900">
+  <h2 class="text-center text-2xl font-semibold text-[#D71921] mb-8">Pepperstone: Per Chi È Consigliato?</h2>
+
+  <div class="space-y-6">
+    <!-- Trader Avanzati -->
+    <div class="flex items-center gap-4 bg-white rounded-lg p-5 shadow-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#D71921" class="w-7 h-7 flex-shrink-0">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a4 4 0 014-4h4" />
+      </svg>
+      <div class="flex-1">
+        <div class="font-semibold mb-1">Trader Avanzati</div>
+        <p>Condizioni ultra-competitive, esecuzione ECN/STP.</p>
+        <div class="h-2 bg-gray-200 rounded-full mt-3">
+          <div class="h-2 bg-green-600 rounded-full" style="width: 95%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scalper & Day Trader -->
+    <div class="flex items-center gap-4 bg-white rounded-lg p-5 shadow-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#D71921" class="w-7 h-7 flex-shrink-0">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+      </svg>
+      <div class="flex-1">
+        <div class="font-semibold mb-1">Scalper & Day Trader</div>
+        <p>Spread minimi, velocità top.</p>
+        <div class="h-2 bg-gray-200 rounded-full mt-3">
+          <div class="h-2 bg-green-600 rounded-full" style="width: 90%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trader Algoritmici -->
+    <div class="flex items-center gap-4 bg-white rounded-lg p-5 shadow-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#D71921" class="w-7 h-7 flex-shrink-0">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+      <div class="flex-1">
+        <div class="font-semibold mb-1">Trader Algoritmici</div>
+        <p>Expert Advisor, API, trading automatico.</p>
+        <div class="h-2 bg-gray-200 rounded-full mt-3">
+          <div class="h-2 bg-green-600 rounded-full" style="width: 85%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Principianti -->
+    <div class="flex items-center gap-4 bg-white rounded-lg p-5 shadow-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#D71921" class="w-7 h-7 flex-shrink-0">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0v7" />
+      </svg>
+      <div class="flex-1">
+        <div class="font-semibold mb-1">Principianti</div>
+        <p>Buon supporto e materiale educativo, ma richiede studio.</p>
+        <div class="h-2 bg-gray-200 rounded-full mt-3">
+          <div class="h-2 bg-yellow-500 rounded-full" style="width: 60%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Investitori Passivi -->
+    <div class="flex items-center gap-4 bg-white rounded-lg p-5 shadow-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#D71921" class="w-7 h-7 flex-shrink-0">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h4v11H3zM17 3h4v18h-4zM10 14h4v7h-4z" />
+      </svg>
+      <div class="flex-1">
+        <div class="font-semibold mb-1">Investitori Passivi</div>
+        <p>Non adatto: niente PAC o gestione passiva.</p>
+        <div class="h-2 bg-gray-200 rounded-full mt-3">
+          <div class="h-2 bg-red-600 rounded-full" style="width: 20%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+    <div class="my-12 sm:my-16"></div>
+<section class="max-w-4xl mx-auto mt-10 p-6 bg-gray-50 rounded-xl shadow-md font-[Inter] text-gray-700">
+  <h2 class="text-2xl font-bold text-center mb-6 text-[#D71921]">Tipologia di Accesso ai Mercati</h2>
+
+  <div class="space-y-6 text-base">
+
+    <!-- Accesso ECN -->
+    <div class="flex gap-4 bg-white rounded-lg p-5 shadow-sm">
+      <svg class="w-7 h-7 flex-shrink-0 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M5 4v16h14V4H5zm12 2v2H7V6h10zM7 18v-8h10v8H7z"/>
+      </svg>
+      <div>
+        <h3 class="font-semibold text-lg mb-1">Accesso ECN (Electronic Communication Network)</h3>
+        <p>
+          Pepperstone fornisce accesso diretto al mercato interbancario senza agire come market maker.
+          Gli ordini vengono instradati a fornitori di liquidità reali, offrendo trasparenza e prezzi competitivi.
+          Ideale per scalper e trader professionisti.
+        </p>
+      </div>
+    </div>
+
+    <!-- Modello STP -->
+    <div class="flex gap-4 bg-white rounded-lg p-5 shadow-sm">
+      <svg class="w-7 h-7 flex-shrink-0 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v2H8V8zm0 4h8v2H8v-2z"/>
+      </svg>
+      <div>
+        <h3 class="font-semibold text-lg mb-1">Modello STP (Straight Through Processing)</h3>
+        <p>
+          Alcuni conti Pepperstone usano una tecnologia STP per processare gli ordini direttamente con i fornitori di liquidità,
+          riducendo i conflitti di interesse. Nessuna manipolazione del dealing desk.
+        </p>
+      </div>
+    </div>
+
+    <!-- Conti Razor -->
+    <div class="flex gap-4 bg-white rounded-lg p-5 shadow-sm">
+      <svg class="w-7 h-7 flex-shrink-0 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2L2 7v13h20V7L12 2zm0 2.18l8 4V9H4V8.18l8-4zm0 16.64c-2.58 0-8-1.28-8-3.82V11h16v6c0 2.54-5.42 3.82-8 3.82z"/>
+      </svg>
+      <div>
+        <h3 class="font-semibold text-lg mb-1">Conto Razor: Accesso Ultra Competitivo</h3>
+        <p>
+          Pensato per trader attivi e scalper, offre spread a partire da 0,0 pip su coppie principali come EUR/USD,
+          con commissioni per lotto. Utilizza infrastrutture Equinix per esecuzioni rapidissime.
+        </p>
+      </div>
+    </div>
+
+    <!-- Conto Standard -->
+    <div class="flex gap-4 bg-white rounded-lg p-5 shadow-sm">
+      <svg class="w-7 h-7 flex-shrink-0 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M3 5h18v2H3V5zm0 4h18v2H3V9zm0 4h12v2H3v-2zm0 4h12v2H3v-2z"/>
+      </svg>
+      <div>
+        <h3 class="font-semibold text-lg mb-1">Conto Standard: Tutto Incluso</h3>
+        <p>
+          Adatto a trader meno esperti, offre spread leggermente più alti ma senza commissioni separate.
+          Semplice e diretto per chi preferisce un modello “all-in”.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="text-sm text-center text-gray-400 mt-8">
+    Dati aggiornati al 2025. Consulta sempre il sito ufficiale per dettagli aggiornati.
+  </p>
+</section>
+
+<div class="my-12 sm:my-16"></div>
+
+<section class="max-w-7xl mx-auto mt-10 px-6">
+  <h2 class="text-2xl font-semibold text-center text-[#D71921] mb-8">Strategie Raccomandate su Pepperstone</h2>
+
+  <div class="flex gap-6 overflow-x-auto pb-6 scroll-snap-x scroll-snap-mandatory">
+    <!-- Scalping -->
+    <div class="flex-shrink-0 w-80 bg-white rounded-2xl p-6 shadow-lg scroll-snap-start relative">
+      <div class="absolute right-0 top-0 bottom-0 w-1.5 bg-gray-200 rounded-tr-2xl rounded-br-2xl">
+        <div class="h-[95%] w-full bg-green-600 rounded-tr-2xl rounded-br-2xl mt-[5%]"></div>
+      </div>
+      <h3 class="font-bold text-xl mb-4 text-center">Scalping</h3>
+      <ul class="list-none p-0 text-gray-700 text-base space-y-1">
+        <li><strong>Rischio:</strong> Medio-Alto (35–40%)</li>
+        <li><strong>Utenti in Perdita:</strong> ~75,5% (ultimi 12 mesi, CFD)</li>
+        <li><strong>Guadagni Potenziali:</strong> +10% / +25% annuo</li>
+        <li><strong>Compatibilità:</strong> Eccellente (ECN, spread bassi)</li>
+      </ul>
+      <p class="text-xs text-gray-400 mt-4 text-center">Nota: Ideale per trader esperti e veloci.</p>
+    </div>
+
+    <!-- Trading Algoritmico -->
+    <div class="flex-shrink-0 w-80 bg-white rounded-2xl p-6 shadow-lg scroll-snap-start relative">
+      <div class="absolute right-0 top-0 bottom-0 w-1.5 bg-gray-200 rounded-tr-2xl rounded-br-2xl">
+        <div class="h-[90%] w-full bg-green-600 rounded-tr-2xl rounded-br-2xl mt-[10%]"></div>
+      </div>
+      <h3 class="font-bold text-xl mb-4 text-center">Trading Algoritmico</h3>
+      <ul class="list-none p-0 text-gray-700 text-base space-y-1">
+        <li><strong>Rischio:</strong> Medio (25–30%)</li>
+        <li><strong>Utenti in Perdita:</strong> stimato ~60%</li>
+        <li><strong>Guadagni Potenziali:</strong> +8% / +20% annuo</li>
+        <li>
+          <strong>Compatibilità:</strong> Alta (API, Expert Advisor, 
+          <span class="text-[#D71921] font-semibold">VPS gratuita solo per clienti Pro</span>)
+        </li>
+      </ul>
+      <p class="text-xs text-gray-400 mt-4 text-center">Nota: Richiede competenze tecniche e software.</p>
+    </div>
+
+    <!-- Swing Trading -->
+    <div class="flex-shrink-0 w-80 bg-white rounded-2xl p-6 shadow-lg scroll-snap-start relative">
+      <div class="absolute right-0 top-0 bottom-0 w-1.5 bg-gray-200 rounded-tr-2xl rounded-br-2xl">
+        <div class="h-[85%] w-full bg-green-600 rounded-tr-2xl rounded-br-2xl mt-[15%]"></div>
+      </div>
+      <h3 class="font-bold text-xl mb-4 text-center">Swing Trading</h3>
+      <ul class="list-none p-0 text-gray-700 text-base space-y-1">
+        <li><strong>Rischio:</strong> Medio (30%)</li>
+        <li><strong>Utenti in Perdita:</strong> stimato ~55–60%</li>
+        <li><strong>Guadagni Potenziali:</strong> +10% / +18% annuo</li>
+        <li><strong>Compatibilità:</strong> Ottima (MT4, MT5, cTrader)</li>
+      </ul>
+      <p class="text-xs text-gray-400 mt-4 text-center">Nota: Adatto a trader disciplinati con visione di medio termine.</p>
+    </div>
+  </div>
+
+  <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-lg p-6 mt-10">
+    <h3 class="text-lg font-bold text-center mb-4">Limitazioni Operative su Pepperstone</h3>
+    <ul class="list-disc list-inside text-gray-700 space-y-2 text-sm">
+      <li>❌ Nessun servizio interno di CopyTrading per i clienti Europei</li>
+      <li>❌ Nessun PAC (Piano di Accumulo Capitale) o portafogli gestiti</li>
+      <li>❌ Non offre criptovalute in acquisto diretto (solo CFD)</li>
+      <li>❌ Non indicato per investimenti passivi o buy & hold</li>
+    </ul>
+  </div>
+
+  <p class="max-w-xl mx-auto text-center text-sm text-[#D71921] mt-6 px-4">
+    <strong>NOTA BENE:</strong> Le percentuali di rischio sono statistiche AI generaliste calcolate in base all'<u>uso corretto di stop loss, take profit e trailing stop</u>. Non costituiscono garanzia di risultato.
+  </p>
+</section>
+<div class="my-12 sm:my-16"></div>
+
+
+<section class="max-w-7xl mx-auto my-10 p-6 bg-white rounded-2xl shadow-lg font-[Inter] text-gray-800">
+  <h2 class="text-2xl font-bold text-center text-[#D71921] mb-8">
+    Sicurezza dei Fondi e Regolamentazioni
+  </h2>
+
+  <div class="flex flex-wrap justify-center gap-6">
+    <!-- Card 1 -->
+    <div class="flex-1 min-w-[280px] max-w-md bg-red-50 rounded-xl p-6 shadow-md">
+      <h3 class="text-lg font-semibold text-[#D71921] mb-4">Segregazione dei Fondi</h3>
+      <p class="text-gray-700 text-base">
+        I fondi dei clienti sono detenuti in conti separati presso banche regolamentate tier-1, garantendo la protezione in caso di insolvenza della società.
+      </p>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="flex-1 min-w-[280px] max-w-md bg-red-50 rounded-xl p-6 shadow-md">
+      <h3 class="text-lg font-semibold text-[#D71921] mb-4">Regolamentazioni Internazionali</h3>
+      <p class="text-gray-700 text-base">
+        Pepperstone è regolamentata da FCA (UK), ASIC (Australia), CySEC (Cipro), BaFin (Germania), CMA (Kenya) e DFSA (Dubai), assicurando standard globali elevati.
+      </p>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="flex-1 min-w-[280px] max-w-md bg-red-50 rounded-xl p-6 shadow-md">
+      <h3 class="text-lg font-semibold text-[#D71921] mb-4">Fondi di Compensazione</h3>
+      <p class="text-gray-700 text-base">
+        I clienti europei idonei (CySEC) possono accedere al Fondo di Compensazione degli Investitori (ICF) fino a 20.000 €, mentre i clienti FCA (UK) sono coperti fino a £85.000 dal FSCS.
+      </p>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="flex-1 min-w-[280px] max-w-md bg-red-50 rounded-xl p-6 shadow-md">
+      <h3 class="text-lg font-semibold text-[#D71921] mb-4">Protezione dai Saldi Negativi</h3>
+      <p class="text-gray-700 text-base">
+        Pepperstone offre protezione contro i saldi negativi ai clienti retail europei e britannici, impedendo perdite superiori al capitale investito.
+      </p>
+    </div>
+  </div>
+
+  <div class="text-center mt-8">
+    <span class="inline-block bg-[#D71921] text-white px-6 py-2 rounded-full font-semibold text-sm">
+      ✔ Fondi Protetti e Conformità Regolamentare Garantita
+    </span>
+  </div>
+</section>
+
+
+
+<div class="my-12 sm:my-16"></div>
+<section class="max-w-6xl mx-auto my-12 px-4 py-6 bg-gray-50 rounded-xl shadow-md font-[Inter] text-gray-900">
+  <h2 class="text-2xl font-bold text-center text-[#D71921] mb-8">Costi e Commissioni Pepperstone</h2>
+
+  <!-- Tabella Desktop -->
+  <div class="hidden md:block overflow-x-auto">
+    <table class="w-full text-sm text-left border-collapse">
+      <thead class="bg-[#D71921] text-white">
+        <tr>
+          <th class="py-3 px-4 font-semibold">Strumento</th>
+          <th class="py-3 px-4 font-semibold">Costo</th>
+          <th class="py-3 px-4 font-semibold">Dettaglio</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-800">
+        <tr class="border-b hover:bg-gray-100">
+          <td class="py-3 px-4">Forex (Razor MT4/MT5)</td>
+          <td class="py-3 px-4 text-green-600 font-medium">0.0 pip + $7 USD per lotto</td>
+          <td class="py-3 px-4">Spread grezzo + commissione</td>
+        </tr>
+        <tr class="border-b hover:bg-gray-100">
+          <td class="py-3 px-4">Forex (Standard)</td>
+          <td class="py-3 px-4 text-yellow-600 font-medium">1.0 pip</td>
+          <td class="py-3 px-4">Spread minimo EUR/USD, senza commissioni</td>
+        </tr>
+        <tr class="border-b hover:bg-gray-100">
+          <td class="py-3 px-4">Indici CFD</td>
+          <td class="py-3 px-4 text-yellow-600 font-medium">da 0.4–1.0 punti</td>
+          <td class="py-3 px-4">AUS200, US500, GER30 – commissioni incluse nello spread</td>
+        </tr>
+        <tr class="border-b hover:bg-gray-100">
+          <td class="py-3 px-4">Materie Prime</td>
+          <td class="py-3 px-4 text-green-600 font-medium">da 0.02–0.05 punti</td>
+          <td class="py-3 px-4">Oro, Petrolio – commissioni incluse nello spread</td>
+        </tr>
+        <tr class="border-b hover:bg-gray-100">
+          <td class="py-3 px-4">Criptovalute CFD</td>
+          <td class="py-3 px-4 text-red-600 font-medium">da 30.0 punti (BTC/USD)</td>
+          <td class="py-3 px-4">Solo CFD, spread variabile</td>
+        </tr>
+        <tr class="border-b hover:bg-gray-100">
+          <td class="py-3 px-4">Azioni CFD (USA)</td>
+          <td class="py-3 px-4 text-green-600 font-medium">$0.02 per azione (min $1)</td>
+          <td class="py-3 px-4">Solo commissione, senza spread</td>
+        </tr>
+        <tr class="border-b hover:bg-gray-100">
+          <td class="py-3 px-4">Azioni CFD (UK, AU)</td>
+          <td class="py-3 px-4 text-yellow-600 font-medium">Min £10 (UK), A$7 (AU)</td>
+          <td class="py-3 px-4">UK: 0.10%, AU: 0.10%</td>
+        </tr>
+        <tr class="border-b hover:bg-gray-100">
+          <td class="py-3 px-4">Swap Overnight</td>
+          <td class="py-3 px-4 text-yellow-600 font-medium">TomNext + 3%</td>
+          <td class="py-3 px-4">Calcolato su posizioni overnight (Forex)</td>
+        </tr>
+        <tr class="border-b hover:bg-gray-100">
+          <td class="py-3 px-4">Swap-Free Account</td>
+          <td class="py-3 px-4 text-red-600 font-medium">$100 USD per lotto (10 giorni)</td>
+          <td class="py-3 px-4">Commissione amministrativa per motivi religiosi</td>
+        </tr>
+        <tr class="border-b hover:bg-gray-100">
+          <td class="py-3 px-4">Depositi / Prelievi</td>
+          <td class="py-3 px-4 text-green-600 font-medium">0% (Pepperstone)</td>
+          <td class="py-3 px-4">Eventuali costi bancari esclusi</td>
+        </tr>
+        <tr class="hover:bg-gray-100">
+          <td class="py-3 px-4">Inattività</td>
+          <td class="py-3 px-4 text-green-600 font-medium">0 USD</td>
+          <td class="py-3 px-4">Dopo 12 mesi, nessuna fee applicata</td>
+        </tr>
+        <tr class="hover:bg-gray-100">
+          <td class="py-3 px-4">Deposito Minimo</td>
+          <td class="py-3 px-4 text-green-600 font-medium">0 USD</td>
+          <td class="py-3 px-4">Importo iniziale richiesto per apertura conto</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mobile Cards -->
+  <div class="block md:hidden mt-6 space-y-4">
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-[#D71921]">Forex (Razor MT4/MT5)</div>
+      <div class="text-gray-600 text-sm">Spread grezzo + commissione</div>
+      <div class="text-green-600 font-bold text-sm mt-2">0.0 pip + $7 USD per lotto</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-[#D71921]">Forex (Standard)</div>
+      <div class="text-gray-600 text-sm">Spread minimo EUR/USD, senza commissioni</div>
+      <div class="text-yellow-600 font-bold text-sm mt-2">1.0 pip</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-[#D71921]">Indici CFD</div>
+      <div class="text-gray-600 text-sm">AUS200, US500, GER30 – commissioni incluse nello spread</div>
+      <div class="text-yellow-600 font-bold text-sm mt-2">da 0.4–1.0 punti</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-[#D71921]">Materie Prime</div>
+      <div class="text-gray-600 text-sm">Oro, Petrolio – commissioni incluse nello spread</div>
+      <div class="text-green-600 font-bold text-sm mt-2">da 0.02–0.05 punti</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-[#D71921]">Criptovalute CFD</div>
+      <div class="text-gray-600 text-sm">Solo CFD, spread variabile</div>
+      <div class="text-red-600 font-bold text-sm mt-2">da 30.0 punti (BTC/USD)</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-[#D71921]">Azioni CFD (USA)</div>
+      <div class="text-gray-600 text-sm">Solo commissione, senza spread</div>
+      <div class="text-green-600 font-bold text-sm mt-2">$0.02 per azione (min $1)</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-[#D71921]">Azioni CFD (UK, AU)</div>
+      <div class="text-gray-600 text-sm">UK: 0.10%, AU: 0.10%</div>
+      <div class="text-yellow-600 font-bold text-sm mt-2">Min £10 (UK), A$7 (AU)</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-[#D71921]">Swap Overnight</div>
+      <div class="text-gray-600 text-sm">Calcolato su posizioni overnight (Forex)</div>
+      <div class="text-yellow-600 font-bold text-sm mt-2">TomNext + 3%</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-[#D71921]">Swap-Free Account</div>
+      <div class="text-gray-600 text-sm">Commissione amministrativa per motivi religiosi</div>
+      <div class="text-red-600 font-bold text-sm mt-2">$100 USD per lotto (10 giorni)</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-[#D71921]">Depositi / Prelievi</div>
+      <div class="text-gray-600 text-sm">Eventuali costi bancari esclusi</div>
+      <div class="text-green-600 font-bold text-sm mt-2">0% (Pepperstone)</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-[#D71921]">Inattività</div>
+      <div class="text-gray-600 text-sm">Dopo 12 mesi, nessuna fee applicata</div>
+      <div class="text-green-600 font-bold text-sm mt-2">0 USD</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-[#D71921]">Deposito Minimo</div>
+      <div class="text-gray-600 text-sm">Importo iniziale richiesto per apertura conto</div>
+      <div class="text-green-600 font-bold text-sm mt-2">0 USD</div>
+    </div>
+  </div>
+
+  <div class="text-center text-xs text-gray-400 mt-8">
+    Dati aggiornati al 2025. Consultare sempre i documenti ufficiali di Pepperstone per eventuali variazioni e condizioni aggiornate.
+  </div>
+</section>
+
+
+
+<div class="my-12 sm:my-16"></div>
+<section class="max-w-6xl mx-auto my-10 p-6 bg-gray-50 rounded-xl shadow-md font-[Inter] text-gray-900">
+  <h2 class="text-center text-lg font-semibold mb-3">Piattaforme Disponibili su Pepperstone</h2>
+
+  <div class="flex gap-4 overflow-x-auto pb-4 scroll-snap-x scroll-smooth sm:scroll-auto">
+    <!-- MetaTrader 4 -->
+    <div class="min-w-[200px] max-w-[200px] h-[150px] bg-white rounded-lg shadow-md flex flex-col justify-between p-4 scroll-snap-start">
+      <div>
+        <div class="flex items-center mb-1">
+          <svg class="w-4 h-4 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M4 5h16v2H4zM4 9h16v2H4zM4 13h10v2H4z" />
+          </svg>
+          <h3 class="text-sm font-medium ml-1">MT4</h3>
+        </div>
+        <p class="text-[11px] text-gray-600 leading-tight">
+          Classica per forex e CFD, supporta EA.
+        </p>
+      </div>
+      <p class="text-[10px] font-medium mt-2">Disponibile: <span class="text-gray-900">Desktop, Web, Mobile</span></p>
+    </div>
+
+    <!-- MetaTrader 5 -->
+    <div class="min-w-[200px] max-w-[200px] h-[150px] bg-white rounded-lg shadow-md flex flex-col justify-between p-4 scroll-snap-start">
+      <div>
+        <div class="flex items-center mb-1">
+          <svg class="w-4 h-4 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M7 2h10a2 2 0 012 2v16a2 2 0 01-2 2H7a2 2 0 01-2-2V4a2 2 0 012-2zm5 20a1 1 0 100-2 1 1 0 000 2zm5-4V4H7v14h10z" />
+          </svg>
+          <h3 class="text-sm font-medium ml-1">MT5</h3>
+        </div>
+        <p class="text-[11px] text-gray-600 leading-tight">
+          Multi-asset, più strumenti e indicatori.
+        </p>
+      </div>
+      <p class="text-[10px] font-medium mt-2">Disponibile: <span class="text-gray-900">Desktop, Web, Mobile</span></p>
+    </div>
+
+    <!-- cTrader -->
+    <div class="min-w-[200px] max-w-[200px] h-[150px] bg-white rounded-lg shadow-md flex flex-col justify-between p-4 scroll-snap-start">
+      <div>
+        <div class="flex items-center mb-1">
+          <svg class="w-4 h-4 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+          </svg>
+          <h3 class="text-sm font-medium ml-1">cTrader</h3>
+        </div>
+        <p class="text-[11px] text-gray-600 leading-tight">
+          ECN puro, scalping, profondità mercato.
+        </p>
+      </div>
+      <p class="text-[10px] font-medium mt-2">Disponibile: <span class="text-gray-900">Desktop, Web, Mobile</span></p>
+    </div>
+
+    <!-- TradingView -->
+    <div class="min-w-[200px] max-w-[200px] h-[150px] bg-white rounded-lg shadow-md flex flex-col justify-between p-4 scroll-snap-start">
+      <div>
+        <div class="flex items-center mb-1">
+          <svg class="w-4 h-4 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M3 10h4v11H3zM17 3h4v18h-4zM10 14h4v7h-4z" />
+          </svg>
+          <h3 class="text-sm font-medium ml-1">TradingView</h3>
+        </div>
+        <p class="text-[11px] text-gray-600 leading-tight">
+          Collegamento diretto ai grafici TradingView.
+        </p>
+      </div>
+      <p class="text-[10px] font-medium mt-2">Disponibile: <span class="text-gray-900">Desktop, Web, Mobile</span></p>
+    </div>
+  </div>
+
+  <p class="text-[10px] text-gray-400 text-center mt-4">Dati aggiornati al 2025. Controlla il sito ufficiale per info aggiornate.</p>
+</section>
+
+<div class="my-12 sm:my-16"></div>
+<section class="max-w-screen-xl mx-auto p-6 bg-gray-50 rounded-xl shadow-md font-[Inter] text-gray-800">
+  <h2 class="text-center text-xl sm:text-2xl font-semibold text-[#D71921] mb-6">
+    Strumenti Finanziari Disponibili su Pepperstone (Aggiornato 2025)
+  </h2>
+
+  <!-- Tabella Desktop -->
+  <div class="hidden md:block overflow-x-auto">
+    <table class="w-full border-collapse text-sm">
+      <thead class="bg-[#D71921] text-white">
+        <tr>
+          <th class="text-left px-4 py-3 font-semibold">Categoria</th>
+          <th class="text-left px-4 py-3 font-semibold">Numero di Strumenti</th>
+          <th class="text-left px-4 py-3 rounded-tr-lg font-semibold">Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="bg-white">
+          <td class="px-4 py-3">Forex</td>
+          <td class="px-4 py-3 text-[#10B981] font-semibold">93 coppie</td>
+          <td class="px-4 py-3">Principali, minori ed esotiche</td>
+        </tr>
+        <tr class="bg-gray-100">
+          <td class="px-4 py-3">Indici CFD</td>
+          <td class="px-4 py-3 text-[#F59E0B] font-semibold">26</td>
+          <td class="px-4 py-3">US500, GER40, UK100, Asia, emergenti</td>
+        </tr>
+        <tr class="bg-white">
+          <td class="px-4 py-3">Materie Prime</td>
+          <td class="px-4 py-3 text-[#10B981] font-semibold">40</td>
+          <td class="px-4 py-3">Oro, argento, petrolio, gas naturale, agricoli</td>
+        </tr>
+        <tr class="bg-gray-100">
+          <td class="px-4 py-3">Azioni CFD</td>
+          <td class="px-4 py-3 text-[#10B981] font-semibold">1.200+</td>
+          <td class="px-4 py-3">USA, UK, Europa, Australia, Asia</td>
+        </tr>
+        <tr class="bg-white">
+          <td class="px-4 py-3">ETF CFD</td>
+          <td class="px-4 py-3 text-[#10B981] font-semibold">100+</td>
+          <td class="px-4 py-3">ETF su settori, mercati e tematici</td>
+        </tr>
+        <tr class="bg-gray-100">
+          <td class="px-4 py-3">Criptovalute CFD</td>
+          <td class="px-4 py-3 text-[#F59E0B] font-semibold">15+</td>
+          <td class="px-4 py-3">Bitcoin, Ethereum, Ripple, Litecoin, Dash e altri</td>
+        </tr>
+        <tr class="bg-white">
+          <td class="px-4 py-3">Obbligazioni CFD</td>
+          <td class="px-4 py-3 text-[#EF4444] font-semibold">Solo principali</td>
+          <td class="px-4 py-3">Titoli governativi selezionati</td>
+        </tr>
+        <tr class="bg-gray-100">
+          <td class="px-4 py-3">Opzioni CFD</td>
+          <td class="px-4 py-3 text-[#F59E0B] font-semibold">Limitato</td>
+          <td class="px-4 py-3">Solo su alcuni indici e coppie FX</td>
+        </tr>
+        <tr class="bg-white">
+          <td class="px-4 py-3">Futures CFD</td>
+          <td class="px-4 py-3 text-[#F59E0B] font-semibold">Diversi contratti</td>
+          <td class="px-4 py-3">Su materie prime e indici</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Card Mobile -->
+  <div class="md:hidden flex flex-col gap-4 mt-8">
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Forex</div>
+      <div class="text-[#10B981] text-sm font-semibold">93 coppie</div>
+      <div class="text-gray-600 text-sm">Principali, minori ed esotiche</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Indici CFD</div>
+      <div class="text-[#F59E0B] text-sm font-semibold">26</div>
+      <div class="text-gray-600 text-sm">US500, GER40, UK100, Asia, emergenti</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Materie Prime</div>
+      <div class="text-[#10B981] text-sm font-semibold">40</div>
+      <div class="text-gray-600 text-sm">Oro, argento, petrolio, gas naturale, agricoli</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Azioni CFD</div>
+      <div class="text-[#10B981] text-sm font-semibold">1.200+</div>
+      <div class="text-gray-600 text-sm">USA, UK, Europa, Australia, Asia</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">ETF CFD</div>
+      <div class="text-[#10B981] text-sm font-semibold">100+</div>
+      <div class="text-gray-600 text-sm">ETF su settori, mercati e tematici</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Criptovalute CFD</div>
+      <div class="text-[#F59E0B] text-sm font-semibold">15+</div>
+      <div class="text-gray-600 text-sm">Bitcoin, Ethereum, Ripple, Litecoin, Dash e altri</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Obbligazioni CFD</div>
+      <div class="text-[#EF4444] text-sm font-semibold">Solo principali</div>
+      <div class="text-gray-600 text-sm">Titoli governativi selezionati</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Opzioni CFD</div>
+      <div class="text-[#F59E0B] text-sm font-semibold">Limitato</div>
+      <div class="text-gray-600 text-sm">Solo su alcuni indici e coppie FX</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Futures CFD</div>
+      <div class="text-[#F59E0B] text-sm font-semibold">Diversi contratti</div>
+      <div class="text-gray-600 text-sm">Su materie prime e indici</div>
+    </div>
+  </div>
+
+  <p class="text-xs text-gray-400 text-center mt-6">
+    Dati aggiornati al 2025. Consultare i documenti ufficiali di Pepperstone per ulteriori dettagli.
+  </p>
+</section>
+
+    <div class="my-12 sm:my-16"></div>
+<section class="max-w-6xl mx-auto my-10 px-4 py-6 bg-gray-50 rounded-xl shadow-md font-[Inter] text-gray-800">
+  <h2 class="text-center text-2xl font-semibold mb-8 text-gray-900">
+    Servizi Offerti da Pepperstone
+  </h2>
+
+  <div
+    class="flex gap-6 overflow-x-auto pb-6 scroll-snap-x scroll-smooth -webkit-overflow-scrolling-touch"
+    style="scroll-snap-type: x mandatory;"
+  >
+    <!-- Card -->
+    <div class="min-w-[300px] max-w-[300px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-lg font-semibold mb-3">Conti Razor e Standard</h3>
+      <p class="text-sm text-gray-600">
+        Il conto Razor offre spread ultra bassi per scalping e trader professionisti, mentre il conto Standard include spread all-in senza commissioni.
+      </p>
+    </div>
+
+    <div class="min-w-[300px] max-w-[300px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-lg font-semibold mb-3">Accesso ECN Puro</h3>
+      <p class="text-sm text-gray-600">
+        Non è market maker: esegue ordini reali sul mercato interbancario con trasparenza e liquidità istituzionale.
+      </p>
+    </div>
+
+    <div class="min-w-[300px] max-w-[300px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-lg font-semibold mb-3">Spread Ultra Bassi</h3>
+      <p class="text-sm text-gray-600">
+        Su coppie come EUR/USD, Pepperstone offre spread da 0,0 pip, applicando una commissione per lotto sulle operazioni Razor.
+      </p>
+    </div>
+
+    <div class="min-w-[300px] max-w-[300px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-lg font-semibold mb-3">Esecuzione Ultra Veloce</h3>
+      <p class="text-sm text-gray-600">
+        Con i data center Equinix, Pepperstone garantisce connessioni a bassa latenza e rapidità nelle esecuzioni, ideali per scalper e HFT.
+      </p>
+    </div>
+
+    <div class="min-w-[300px] max-w-[300px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-lg font-semibold mb-3">Piattaforme Avanzate</h3>
+      <p class="text-sm text-gray-600">
+        Supporto completo per MT4, MT5, cTrader, piattaforma mobile di proprietà e integrazione con TradingView per analisi tecnica avanzata e trading diretto.
+      </p>
+    </div>
+
+    <div class="min-w-[300px] max-w-[300px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-lg font-semibold mb-3">API Avanzate + FIX</h3>
+      <p class="text-sm text-gray-600">
+        Accesso diretto per sviluppatori tramite API e FIX protocol, per sistemi automatizzati e trading ad alta frequenza.
+      </p>
+    </div>
+
+    <div class="min-w-[300px] max-w-[300px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-lg font-semibold mb-3">VPS Gratuito per Grandi Volumi</h3>
+      <p class="text-sm text-gray-600">
+        Offerta di server VPS vicino ai data center per ridurre latenza, gratuita per trader con requisiti di volume minimo.
+      </p>
+    </div>
+
+    <div class="min-w-[300px] max-w-[300px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-lg font-semibold mb-3">Supporto Educativo</h3>
+      <p class="text-sm text-gray-600">
+        Webinar, analisi di mercato, tutorial avanzati e materiali formativi per migliorare le competenze dei trader.
+      </p>
+    </div>
+
+    <div class="min-w-[300px] max-w-[300px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-lg font-semibold mb-3">Regolamentazioni Multiple</h3>
+      <p class="text-sm text-gray-600">
+        Broker regolamentato da FCA (UK), ASIC (Australia), BaFin (Germania), DFSA (Dubai), SCB (Bahamas), CySEC, CONSOB, CMA per offrire protezione globale.
+      </p>
+    </div>
+  </div>
+
+  <p class="text-xs text-gray-400 text-center mt-6">
+    Dati aggiornati al 2025. Verificare sempre i documenti ufficiali di Pepperstone per dettagli aggiornati.
+  </p>
+</section>
+
+
+
+<div class="my-12 sm:my-16"></div>
+<section class="max-w-4xl mx-auto mt-16 p-8 bg-gradient-to-r from-red-600 to-rose-700 text-white rounded-2xl shadow-xl text-center">
+  <h2 class="text-3xl font-bold mb-4">Apri Subito un Conto Demo su Pepperstone</h2>
+  <p class="text-lg mb-6">
+    Apri gratuitamente un conto demo su Pepperstone e prova la piattaforma di trading.  
+    Sperimenta in sicurezza, senza rischiare capitale reale, e valuta i risultati delle simulazioni direttamente sui mercati globali.
+  </p>
+  <a href="https://track.pepperstonepartners.com/visit/?bta=42241&brand=pepperstone" target="_blank" 
+     class="inline-block px-8 py-3 bg-white text-red-700 font-semibold text-lg rounded-full shadow-md hover:shadow-lg hover:bg-gray-100 transition">
+    Apri Conto Demo Pepperstone
+  </a>
+  <div class="mt-6 text-xs max-w-xl mx-auto text-left">
+    <p class="mb-2 text-gray-100">
+      <strong>Disclaimer demo:</strong> L’apertura del conto demo è gratuita e non comporta rischi di perdita di capitale reale.  
+      Tuttavia, le performance ottenute in modalità demo non garantiscono risultati futuri né rappresentano performance reali sui mercati.
+    </p>
+    <p class="p-4 bg-white text-black rounded-md">
+      <strong>Disclaimer attività reale (ESMA):</strong> I CFD sono strumenti complessi e comportano un alto rischio di perdere denaro rapidamente a causa della leva finanziaria.  
+      Il 75,3% dei conti degli investitori al dettaglio perde denaro quando negozia CFD con questo fornitore.  
+      Valuta se comprendi come funzionano i CFD e se puoi permetterti di correre l’alto rischio di perdere il tuo denaro.
+    </p>
+  </div>
+</section>
+
+
+<div class="my-12 sm:my-16"></div>
+    <!-- Transizione fine sezione broker -->
+<div class="w-full max-w-6xl mx-auto my-20 px-4">
+  <div class="w-24 h-1.5 mx-auto bg-gradient-to-r from-blue-700 via-blue-500 to-blue-700 rounded-full opacity-50"></div>
+</div>
+
+
+    <section class="text-center py-12 px-4 max-w-4xl mx-auto">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight mb-4">Strumenti AI per la finanza reale</h1>
+      <p class="mt-2 text-base text-slate-600">Richiedi un report AI su un asset: ricezione via WhatsApp, SMS o Email. Nessun tracciamento. Solo analisi reale, senza fuffa.</p>
+      <p class="mt-4 text-lg text-blue-700 min-h-[28px] font-medium" id="typing-text"></p>
+    </section>
+
+    <section class="text-center py-8 px-4 max-w-md mx-auto bg-white/90 rounded-xl shadow-xl backdrop-blur-md border-2 border-transparent transition-all duration-500" id="form-container" style="margin-bottom: 64px;">
+      <form action="https://formsubmit.co/analisi@tradelia.org" method="POST" class="text-left space-y-3 text-sm">
+        <div><label for="asset" class="block font-semibold">Asset <span class="text-red-500">*</span></label><input type="text" name="asset" id="asset" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
+        <div><label for="categoria" class="block font-semibold">Categoria <span class="text-red-500">*</span></label><select name="categoria" id="categoria" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Azioni</option><option>ETF</option><option>Forex</option><option>Crypto</option><option>Commodities</option><option>Obbligazioni</option><option>Indici</option><option>REIT</option><option>Derivati</option></select></div>
+        <div><label for="timeframe" class="block font-semibold">Orizzonte Temporale <span class="text-red-500">*</span></label><select name="timeframe" id="timeframe" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Breve Termine</option><option>Medio Termine</option><option>Lungo Termine</option></select></div>
+        <div><label for="focus" class="block font-semibold">Focus dell'analisi <span class="text-red-500">*</span></label><select name="focus" id="focus" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Fondamentale</option><option>Tecnico</option><option>Macroeconomico</option><option>Approfondita</option></select></div>
+        <div><label for="nome" class="block font-semibold">Nome <span class="text-red-500">*</span></label><input type="text" name="nome" id="nome" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
+        <div><label for="metodo" class="block font-semibold">Metodo di ricezione <span class="text-red-500">*</span></label><select name="metodo" id="metodo" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>SMS</option><option>Email</option><option>WhatsApp</option></select></div>
+        <div><label for="contatto" class="block font-semibold">Contatto <span class="text-red-500">*</span></label><input type="text" name="contatto" id="contatto" placeholder="Telefono o email" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
+        <p class="text-xs text-slate-500 mt-2 leading-snug">🛡 Nessuna pubblicità. Nessuna profilazione. I dati verranno usati solo per inviarti il report PDF.</p>
+        <button type="submit" class="w-full mt-3 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-md">Invia Richiesta</button>
+        <p id="form-response" class="mt-3 text-green-600 font-medium hidden">✅ Richiesta inviata! Riceverai il report entro poche ore.</p>
+      </form>
+    </section>
+ <body class="text-gray-900">
+    <header class="bg-white shadow py-4 px-6 flex justify-between items-center">
+      <div class="text-xl font-bold text-blue-800">Analisi AI Broker</div>
+    </header>
+
+    <main class="p-4">
+      <div class="bg-white shadow-lg rounded-lg p-6 max-w-6xl mx-auto">
+        <h2 class="text-lg font-semibold mb-4">Broker con Valutazione AI</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6" id="broker-grid"></div>
+      </div>
+    </main>
+
+    <script>
+      const brokerList = [
+        { name: 'Exante', rating: 100, url: '/Exante.html', desc: 'Broker professionale con accesso DMA e ampia offerta istituzionale.', logo: 'exante.svg' },
+        { name: 'Freedom24', rating: 92, url: '/Freedom24.html', desc: 'Azioni reali, IPO e azione gratuita per i nuovi utenti.', logo: 'freedom24.svg' },
+        { name: 'FP Markets', rating: 90, url: '/FPMarkets.html', desc: 'Ottimo per Forex, esecuzione rapida e spread contenuti.', logo: 'fpmarkets.svg' },
+        { name: 'Pepperstone', rating: 87, url: '/Pepperstone.html', desc: 'Broker ECN rapido e trasparente. Perfetto per day trader.', logo: 'pepperstone.svg' },
+        { name: 'eToro', rating: 85, url: '/eToro.html', desc: 'Broker social, azioni reali e funzionalità di copy trading.', logo: 'etoro.svg' },
+        { name: 'Eightcap', rating: 83, url: '/Eightcap.html', desc: 'Ottima offerta di crypto CFD e strumenti per MT5.', logo: 'eightcap.svg' },
+        { name: 'NAGA', rating: 82, url: '/NAGA.html', desc: 'Copy trading, social network e crypto. Giovane e dinamico.', logo: 'naga.svg' },
+        { name: 'FxPro', rating: 80, url: '/FxPro.html', desc: 'Broker multi-asset con regolamentazione forte e buoni spread.', logo: 'fxpro.svg' },
+        { name: 'XM', rating: 79, url: '/XM.html', desc: 'Buon supporto educativo e bonus di benvenuto.', logo: 'xm.svg' },
+        { name: 'Plus500', rating: 78, url: '/Plus500.html', desc: 'Semplice, mobile-friendly, ideale per iniziare con CFD.', logo: 'plus500.svg' },
+        { name: 'Skilling', rating: 77, url: '/Skilling.html', desc: 'Piattaforma semplice, mobile, con discreto supporto.', logo: 'skilling.svg' },
+        { name: 'AvaTrade', rating: 76, url: '/AvaTrade.html', desc: 'Offerta solida multi-asset e opzioni vanilla.', logo: 'avatrade.svg' },
+        { name: 'BlackBull Markets', rating: 74, url: '/BlackBullMarkets.html', desc: 'Broker ECN con spread variabili, adatto a trader avanzati.', logo: 'blackbull.svg' }
+      ];
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('broker-grid');
+        brokerList.sort((a, b) => b.rating - a.rating).forEach(broker => {
+          const card = document.createElement('div');
+          card.className = "border rounded-xl shadow p-5 bg-white hover:bg-blue-50 transition";
+          card.innerHTML = `
+            <div class="flex items-center gap-3 mb-2">
+              <img src="/logos/${broker.logo}" alt="${broker.name}" class="w-8 h-8 rounded-full bg-gray-200" />
+              <div class="text-xl font-bold text-blue-900">${broker.name}</div>
+            </div>
+            <div class="text-sm text-gray-600">Rating AI: ${broker.rating}/100</div>
+            <p class="mt-2 text-sm text-gray-700">${broker.desc}</p>
+            <a href="${broker.url}" class="inline-block mt-3 text-sm text-blue-600 font-medium hover:underline">Leggi analisi AI completa →</a>
+          `;
+          container.appendChild(card);
+        });
+      });
+    </script>
+  </body>
+  <div id="cookie-popup" class="modal">
+  <div class="modal-content">
+    <img src="https://lucid.app/favicon.ico" alt="Lucid icon" class="mx-auto mb-2 w-8 h-8">
+    <h3 class="text-lg font-semibold mb-2">Zero biscotti, zero sorprese.</h3>
+    <p class="mb-2">Tradelia non utilizza cookie di tracciamento, profilazione o pubblicità.</p>
+    <p class="text-sm text-gray-600">Salveremo la tua preferenza sul tuo dispositivo per non mostrarti più questo messaggio.</p>
+    <button onclick="chiudiPopupCookie()" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Ho capito</button>
+  </div>
+</div>
+
+
+    <footer style="width:100%;background:#0f172a;color:#cbd5e1;padding:48px 24px 32px;font-family:'Inter',sans-serif;font-size:14px;line-height:1.7;border-top:1px solid rgba(255,255,255,0.08)">
+      <div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between">
+        <div style="flex:1 1 300px">
+          <h4 style="color:#f8fafc;font-size:16px;margin-bottom:12px;font-weight:600">Tradelia AI</h4>
+          <p>Tradelia è un progetto indipendente per fornire strumenti educativi e analisi AI gratuite nel campo finanziario.</p>
+          <p style="margin-top:16px;font-size:13px;color:#60a5fa">✉️ <a href="mailto:info@tradelia.org" style="color:#60a5fa;text-decoration:none">info@tradelia.org</a></p>
+        </div>
+        <div style="flex:1 1 300px">
+          <p class="hover:translate-x-1 hover:text-sky-400 transition cursor-pointer font-semibold text-white mb-2" onclick="apriSezioneLegale('section-tc')">Termini e Condizioni</p>
+          <p class="hover:translate-x-1 hover:text-sky-400 transition cursor-pointer font-semibold text-white" onclick="apriSezioneLegale('section-privacy')">Privacy Policy</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
