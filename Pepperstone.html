@@ -444,77 +444,164 @@
 </section>
 
 
-<section class="max-w-3xl mx-auto px-6 py-10 bg-gray-50 rounded-xl shadow-md">
-  <h2 class="text-2xl sm:text-3xl font-semibold text-center text-[#1D4A8C] mb-8">
-    AvaTrade: Per Chi È Consigliato?
-  </h2>
+<section class="max-w-lg mx-auto mt-10 p-6 bg-gray-50 rounded-xl shadow-md font-[Inter] text-gray-900">
+  <h2 class="text-center text-2xl font-semibold text-[#D71921] mb-8">Pepperstone: Per Chi È Consigliato?</h2>
 
-  <div class="space-y-5">
-    <!-- Trader Intermedi e Avanzati -->
-    <div class="flex items-start gap-4 bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition">
-      <svg class="w-7 h-7 text-[#1D4A8C]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a4 4 0 014-4h4"/>
-      </svg>
-      <div class="flex-1">
-        <div class="font-semibold text-gray-900 mb-1">Trader Intermedi e Avanzati</div>
-        <p class="text-sm text-gray-600">
-          Ampio catalogo CFD (forex, azioni, ETF, crypto), spread ok, leva alta extra-UE.
-        </p>
-        <div class="h-2 bg-gray-200 rounded-full mt-3">
-          <div class="h-2 bg-green-600 rounded-full" style="width: 85%;"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Trader Algoritmici e Copy Trader -->
-    <div class="flex items-start gap-4 bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition">
-      <svg class="w-7 h-7 text-[#1D4A8C]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-      </svg>
-      <div class="flex-1">
-        <div class="font-semibold text-gray-900 mb-1">Trader Algoritmici e Copy Trader</div>
-        <p class="text-sm text-gray-600">
-          MT4/MT5, DupliTrade, ZuluTrade; bot e automazioni supportate.
-        </p>
-        <div class="h-2 bg-gray-200 rounded-full mt-3">
-          <div class="h-2 bg-green-600 rounded-full" style="width: 80%;"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Principianti -->
-    <div class="flex items-start gap-4 bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition">
-      <svg class="w-7 h-7 text-[#1D4A8C]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0v7"/>
-      </svg>
-      <div class="flex-1">
-        <div class="font-semibold text-gray-900 mb-1">Principianti</div>
-        <p class="text-sm text-gray-600">
-          Materiale educativo buono, demo disponibile, ma serve studio sui CFD.
-        </p>
-        <div class="h-2 bg-gray-200 rounded-full mt-3">
-          <div class="h-2 bg-yellow-500 rounded-full" style="width: 65%;"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Investitori Passivi -->
-    <div class="flex items-start gap-4 bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition">
-      <svg class="w-7 h-7 text-[#1D4A8C]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h4v11H3zM17 3h4v18h-4zM10 14h4v7h-4z"/>
-      </svg>
-      <div class="flex-1">
-        <div class="font-semibold text-gray-900 mb-1">Investitori Passivi e Lungo Termine</div>
-        <p class="text-sm text-gray-600">
-          Non indicato: solo CFD, nessun strumento buy&hold o PAC.
-        </p>
-        <div class="h-2 bg-gray-200 rounded-full mt-3">
-          <div class="h-2 bg-red-500 rounded-full" style="width: 20%;"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div id="cards-container" class="space-y-6"></div>
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.278.0/dist/lucide.min.js"></script>
+<script>
+  const data = [
+    {
+      title: "Trader Avanzati",
+      description: "Condizioni ultra-competitive, esecuzione ECN/STP.",
+      percentage: 95,
+      color: "#16a34a", // verde
+      icon: "trending-up"
+    },
+    {
+      title: "Scalper & Day Trader",
+      description: "Spread minimi, velocità top.",
+      percentage: 90,
+      color: "#16a34a",
+      icon: "clock"
+    },
+    {
+      title: "Trader Algoritmici",
+      description: "Expert Advisor, API, trading automatico.",
+      percentage: 85,
+      color: "#16a34a",
+      icon: "cpu"
+    },
+    {
+      title: "Principianti",
+      description: "Buon supporto e materiale educativo, ma richiede studio.",
+      percentage: 60,
+      color: "#ca8a04", // giallo
+      icon: "book-open"
+    },
+    {
+      title: "Investitori Passivi",
+      description: "Non adatto: niente PAC o gestione passiva.",
+      percentage: 20,
+      color: "#dc2626", // rosso
+      icon: "coffee"
+    }
+  ];
+
+  const container = document.getElementById("cards-container");
+
+  data.forEach(({title, description, percentage, color, icon}) => {
+    // Crea il contenitore card
+    const card = document.createElement("div");
+    card.style.display = "flex";
+    card.style.alignItems = "center";
+    card.style.gap = "16px";
+    card.style.background = "#fff";
+    card.style.borderRadius = "12px";
+    card.style.padding = "20px";
+    card.style.boxShadow = "0 1px 6px rgba(0,0,0,0.1)";
+    card.style.transition = "transform 0.3s ease, box-shadow 0.3s ease";
+    card.tabIndex = 0;
+    card.setAttribute("role", "region");
+    card.setAttribute("aria-label", title);
+
+    card.onmouseenter = () => {
+      card.style.transform = "scale(1.03)";
+      card.style.boxShadow = "0 4px 16px rgba(0,0,0,0.15)";
+    };
+    card.onmouseleave = () => {
+      card.style.transform = "scale(1)";
+      card.style.boxShadow = "0 1px 6px rgba(0,0,0,0.1)";
+    };
+
+    // Icon container
+    const iconContainer = document.createElement("div");
+    iconContainer.style.color = color;
+    iconContainer.style.flexShrink = "0";
+    iconContainer.style.width = "28px";
+    iconContainer.style.height = "28px";
+    iconContainer.style.display = "flex";
+    iconContainer.style.alignItems = "center";
+    iconContainer.style.justifyContent = "center";
+
+    // Carica icona Lucide
+    const svgIcon = lucide.create(icon.toLowerCase());
+    svgIcon.setAttribute("width", "28");
+    svgIcon.setAttribute("height", "28");
+    iconContainer.appendChild(svgIcon);
+
+    // Testo container
+    const textContainer = document.createElement("div");
+    textContainer.style.flex = "1";
+
+    const titleEl = document.createElement("div");
+    titleEl.textContent = title;
+    titleEl.style.fontWeight = "600";
+    titleEl.style.marginBottom = "8px";
+    titleEl.style.fontSize = "1rem";
+
+    const descEl = document.createElement("p");
+    descEl.textContent = description;
+    descEl.style.marginBottom = "12px";
+    descEl.style.fontSize = "0.875rem";
+    descEl.style.color = "#4b5563"; // gray-700
+
+    // Progress bar wrapper
+    const progressWrapper = document.createElement("div");
+    progressWrapper.style.position = "relative";
+    progressWrapper.style.height = "16px";
+    progressWrapper.style.background = "#e5e7eb"; // gray-200
+    progressWrapper.style.borderRadius = "9999px";
+    progressWrapper.style.overflow = "hidden";
+
+    // Progress bar
+    const progressBar = document.createElement("div");
+    progressBar.style.position = "absolute";
+    progressBar.style.top = "0";
+    progressBar.style.left = "0";
+    progressBar.style.height = "16px";
+    progressBar.style.width = "0%";
+    progressBar.style.borderRadius = "9999px";
+    progressBar.style.backgroundColor = color;
+    progressBar.style.transition = "width 1.2s ease-out";
+
+    // Percent label
+    const percentLabel = document.createElement("span");
+    percentLabel.textContent = percentage + "%";
+    percentLabel.style.position = "absolute";
+    percentLabel.style.right = "12px";
+    percentLabel.style.top = "50%";
+    percentLabel.style.transform = "translateY(-50%)";
+    percentLabel.style.fontWeight = "700";
+    percentLabel.style.color = "#fff";
+    percentLabel.style.fontSize = "0.75rem";
+    percentLabel.style.userSelect = "none";
+
+    progressWrapper.appendChild(progressBar);
+    progressWrapper.appendChild(percentLabel);
+
+    // Assemblaggio
+    textContainer.appendChild(titleEl);
+    textContainer.appendChild(descEl);
+    textContainer.appendChild(progressWrapper);
+
+    card.appendChild(iconContainer);
+    card.appendChild(textContainer);
+
+    container.appendChild(card);
+
+    // Trigger animazione dopo inserimento nel DOM
+    requestAnimationFrame(() => {
+      progressBar.style.width = percentage + "%";
+    });
+  });
+
+  // Lucide replace per eventuali icone statiche nel markup
+  lucide.replace();
+</script>
+
 
 
 
