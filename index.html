@@ -186,20 +186,103 @@
       <p class="mt-4 text-lg text-blue-700 min-h-[28px] font-medium" id="typing-text"></p>
     </section>
 
-    <section class="text-center py-8 px-4 max-w-md mx-auto bg-white/90 rounded-xl shadow-xl backdrop-blur-md border-2 border-transparent transition-all duration-500" id="form-container" style="margin-bottom: 64px;">
-      <form action="https://formsubmit.co/analisi@tradelia.org" method="POST" class="text-left space-y-3 text-sm">
-        <div><label for="asset" class="block font-semibold">Asset <span class="text-red-500">*</span></label><input type="text" name="asset" id="asset" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
-        <div><label for="categoria" class="block font-semibold">Categoria <span class="text-red-500">*</span></label><select name="categoria" id="categoria" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Azioni</option><option>ETF</option><option>Forex</option><option>Crypto</option><option>Commodities</option><option>Obbligazioni</option><option>Indici</option><option>REIT</option><option>Derivati</option></select></div>
-        <div><label for="timeframe" class="block font-semibold">Orizzonte Temporale <span class="text-red-500">*</span></label><select name="timeframe" id="timeframe" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Breve Termine</option><option>Medio Termine</option><option>Lungo Termine</option></select></div>
-        <div><label for="focus" class="block font-semibold">Focus dell'analisi <span class="text-red-500">*</span></label><select name="focus" id="focus" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Fondamentale</option><option>Tecnico</option><option>Macroeconomico</option><option>Approfondita</option></select></div>
-        <div><label for="nome" class="block font-semibold">Nome <span class="text-red-500">*</span></label><input type="text" name="nome" id="nome" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
-        <div><label for="metodo" class="block font-semibold">Metodo di ricezione <span class="text-red-500">*</span></label><select name="metodo" id="metodo" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>SMS</option><option>Email</option><option>WhatsApp</option></select></div>
-        <div><label for="contatto" class="block font-semibold">Contatto <span class="text-red-500">*</span></label><input type="text" name="contatto" id="contatto" placeholder="Telefono o email" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
-        <p class="text-xs text-slate-500 mt-2 leading-snug">🛡 Nessuna pubblicità. Nessuna profilazione. I dati verranno usati solo per inviarti il report PDF.</p>
-        <button type="submit" class="w-full mt-3 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-md">Invia Richiesta</button>
-        <p id="form-response" class="mt-3 text-green-600 font-medium hidden">✅ Richiesta inviata! Riceverai il report entro poche ore.</p>
-      </form>
-    </section>
+<section id="form-container" class="py-12 px-6 max-w-xl mx-auto bg-slate-50 shadow-xl rounded-2xl border border-gray-200 font-[Inter] prose">
+  <h2 class="text-2xl font-bold text-center text-blue-800 mb-6">Richiedi il Tuo Report AI Personalizzato</h2>
+
+  <form action="https://formsubmit.co/analisi@tradelia.org" method="POST" target="_blank" onsubmit="handleFormSubmit(event)" class="space-y-4 text-sm text-gray-800">
+    
+    <!-- Asset -->
+    <div>
+      <label for="asset" class="font-semibold">Asset <span class="text-red-500">*</span></label>
+      <input type="text" name="asset" id="asset" class="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 focus:ring-2 focus:ring-blue-600">
+    </div>
+
+    <!-- Categoria -->
+    <div>
+      <label for="categoria" class="font-semibold">Categoria <span class="text-red-500">*</span></label>
+      <select name="categoria" id="categoria" class="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1">
+        <option value="">Seleziona...</option>
+        <option>Azioni</option><option>ETF</option><option>Forex</option><option>Crypto</option><option>Commodities</option><option>Obbligazioni</option><option>Indici</option><option>REIT</option><option>Derivati</option>
+      </select>
+    </div>
+
+    <!-- Timeframe -->
+    <div>
+      <label for="timeframe" class="font-semibold">Orizzonte Temporale <span class="text-red-500">*</span></label>
+      <select name="timeframe" id="timeframe" class="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1">
+        <option value="">Seleziona...</option>
+        <option>Breve Termine</option><option>Medio Termine</option><option>Lungo Termine</option>
+      </select>
+    </div>
+
+    <!-- Focus -->
+    <div>
+      <label for="focus" class="font-semibold">Focus dell'analisi <span class="text-red-500">*</span></label>
+      <select name="focus" id="focus" class="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1">
+        <option value="">Seleziona...</option>
+        <option>Fondamentale</option><option>Tecnico</option><option>Macroeconomico</option><option>Approfondita</option>
+      </select>
+    </div>
+
+    <!-- Nome -->
+    <div>
+      <label for="nome" class="font-semibold">Nome <span class="text-red-500">*</span></label>
+      <input type="text" name="nome" id="nome" class="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1">
+    </div>
+
+    <!-- Metodo di ricezione -->
+    <div>
+      <label for="metodo" class="font-semibold">Metodo di ricezione <span class="text-red-500">*</span></label>
+      <select name="metodo" id="metodo" class="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1">
+        <option value="">Seleziona...</option>
+        <option>SMS</option><option>Email</option><option>WhatsApp</option>
+      </select>
+    </div>
+
+    <!-- Contatto -->
+    <div>
+      <label for="contatto" class="font-semibold">Contatto <span class="text-red-500">*</span></label>
+      <input type="text" name="contatto" id="contatto" placeholder="Telefono o email" class="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1">
+    </div>
+
+    <!-- Disclaimer -->
+    <p class="text-xs text-gray-500 mt-2 leading-snug">🛡 Nessuna pubblicità. Nessuna profilazione. I tuoi dati verranno usati solo per inviarti il report PDF.</p>
+
+    <!-- Submit Button with Spinner -->
+    <button id="submit-btn" type="submit" class="w-full mt-3 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg flex items-center justify-center gap-2">
+      <span id="submit-text">Invia Richiesta</span>
+      <svg id="spinner" class="animate-spin h-4 w-4 text-white hidden" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"/></svg>
+    </button>
+
+    <!-- Conferma -->
+    <p id="form-response" class="hidden mt-4 text-center text-green-600 font-medium">✅ Richiesta inviata! Riceverai il report entro poche ore.</p>
+  </form>
+</section>
+
+<!-- JS finale -->
+<script>
+  function handleFormSubmit(event) {
+    const form = event.target;
+    const btn = document.getElementById('submit-btn');
+    const spinner = document.getElementById('spinner');
+    const text = document.getElementById('submit-text');
+
+    // Mostra spinner
+    spinner.classList.remove('hidden');
+    text.textContent = 'Invio in corso...';
+    btn.disabled = true;
+
+    // Reset e conferma
+    setTimeout(() => {
+      form.reset();
+      document.getElementById('form-response').classList.remove('hidden');
+      spinner.classList.add('hidden');
+      text.textContent = 'Invia Richiesta';
+      btn.disabled = false;
+    }, 1200);
+  }
+</script>
+
  <body class="text-gray-900">
     <header class="bg-white shadow py-4 px-6 flex justify-between items-center">
       <div class="text-xl font-bold text-blue-800">Analisi AI Broker</div>
