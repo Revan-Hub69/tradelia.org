@@ -186,39 +186,46 @@
       <p class="mt-4 text-lg text-blue-700 min-h-[28px] font-medium" id="typing-text"></p>
     </section>
 
-<section id="form-tradelia" class="w-full max-w-2xl mx-auto bg-white p-10 font-[Inter] text-gray-800 rounded-2xl shadow-xl border border-gray-200">
+<section id="form-tradelia" class="w-full max-w-3xl mx-auto bg-white p-10 font-[Inter] text-gray-800 rounded-2xl shadow-xl border border-gray-200">
   <h2 class="text-3xl font-bold text-center text-blue-800 mb-10">Richiedi il Tuo Report AI o Idee di Mercato</h2>
 
   <!-- Step 1: Selezione tipo richiesta -->
-  <div id="step-1" class="space-y-6">
-    <p class="text-sm text-gray-600 text-center">Scegli il tipo di richiesta</p>
+  <div id="step-1" class="space-y-8 animate-fade-in">
+    <p class="text-sm text-gray-600 text-center">Seleziona il tipo di richiesta</p>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <button data-type="analisi" class="request-type-card">Analisi AI</button>
-      <button data-type="azioni" class="request-type-card">3 Azioni Sottovalutate</button>
-      <button data-type="crypto" class="request-type-card">3 Crypto</button>
-      <button data-type="esg" class="request-type-card">3 ESG + Crescita</button>
-      <button data-type="dividendi" class="request-type-card">Dividendi Sostenibili</button>
+      <button data-type="analisi" class="request-type-card">📊 Analisi AI</button>
+      <button data-type="azioni" class="request-type-card">📈 3 Azioni Sottovalutate</button>
+      <button data-type="crypto" class="request-type-card">💹 3 Crypto</button>
+      <button data-type="esg" class="request-type-card">🌱 3 ESG + Crescita</button>
+      <button data-type="dividendi" class="request-type-card">💰 Dividendi Sostenibili</button>
     </div>
   </div>
 
   <!-- Step 2: Campi dinamici -->
-  <div id="step-2" class="mt-10 hidden transition-opacity duration-500 ease-in-out bg-slate-50 border border-gray-200 p-6 rounded-xl shadow">
+  <div id="step-2" class="mt-10 hidden transition-opacity duration-500 ease-in-out bg-slate-50 border border-gray-200 p-6 rounded-xl shadow animate-fade-in">
     <!-- Contenuto dinamico -->
   </div>
 
   <!-- Step 4: Messaggio finale -->
-  <div id="step-success" class="hidden text-center mt-10">
-    <p class="text-blue-800 font-bold text-lg">Richiesta inviata con successo</p>
+  <div id="step-success" class="hidden text-center mt-10 animate-fade-in">
+    <p class="text-blue-800 font-bold text-lg">✅ Richiesta inviata con successo</p>
     <p class="text-sm text-gray-500 mt-2">Riceverai il tuo report entro 24 ore tramite il metodo selezionato.</p>
   </div>
 </section>
 
 <style>
   .request-type-card {
-    @apply w-full text-center text-base font-medium border border-gray-300 px-5 py-3 bg-white text-blue-900 hover:bg-blue-50 rounded-lg transition;
+    @apply w-full text-center text-base font-medium border border-gray-300 px-5 py-3 bg-white text-blue-900 hover:bg-blue-50 rounded-lg shadow-sm transition-all;
   }
   .input {
     @apply w-full border border-gray-300 rounded-md px-3 py-2 mt-1 text-sm bg-white;
+  }
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in {
+    animation: fade-in 0.4s ease-out both;
   }
 </style>
 
@@ -320,7 +327,7 @@
           <option>Email</option><option>SMS</option><option>WhatsApp</option>
         </select></div>
       <div><label class="font-semibold text-sm">Contatto*</label><input required name="contatto" class="input" type="text"></div>
-      <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white py-2 font-semibold mt-4 rounded-md">Invia Richiesta</button>
+      <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white py-2 font-semibold mt-4 rounded-md">📤 Invia Richiesta</button>
     `;
   }
 
@@ -355,6 +362,7 @@
     });
   }
 </script>
+
 
 
 
