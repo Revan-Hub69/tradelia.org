@@ -11,19 +11,7 @@
       body {
         font-family: 'Inter', sans-serif;
       }
-      .service-card {
-        @apply w-full text-center rounded-2xl px-6 py-8 bg-slate-100
-               ring-1 ring-gray-300 shadow-md hover:shadow-xl
-               transition-all duration-500 ease-out cursor-pointer
-               hover:-translate-y-1 hover:bg-slate-200 hover:ring-2 hover:ring-blue-300
-               focus-visible:ring-2 focus-visible:ring-blue-500 active:scale-[0.98];
-      }
-      .service-card p {
-        @apply group-hover:text-gray-700 transition-colors;
-      }
-      .service-card:hover span {
-        color: #1e3a8a;
-      }
+
       @keyframes fade-in {
         from { opacity: 0; transform: translateY(12px); }
         to { opacity: 1; transform: translateY(0); }
@@ -35,51 +23,59 @@
   </head>
   <body class="bg-gradient-to-br from-slate-200 to-slate-50 py-20 px-4">
 
-    <section id="form-tradelia" class="w-full max-w-6xl mx-auto bg-white p-14 lg:px-16 font-[Inter] text-gray-900 rounded-3xl shadow-2xl ring-1 ring-gray-200">
+    <section class="w-full max-w-6xl mx-auto bg-white p-14 lg:px-16 font-[Inter] text-gray-900 rounded-3xl shadow-2xl ring-1 ring-gray-200">
       <h2 class="text-5xl font-semibold text-center text-blue-800 mb-6 tracking-tight leading-tight">I Servizi Gratuiti Tradelia</h2>
       <p class="text-center text-gray-600 text-base tracking-wide mb-12">Soluzioni analitiche professionali per investitori e trader, offerte gratuitamente da Tradelia</p>
 
-      <div id="step-1" class="space-y-6 animate-fade-in">
+      <div class="space-y-6 animate-fade-in">
         <p class="text-base text-gray-600 text-center">Seleziona il tipo di richiesta per avviare l'analisi gratuita</p>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-8">
 
-          <button data-type="analisi" class="group service-card" role="button" aria-label="Analisi su Singolo Asset">
+          <!-- CARD -->
+          <button class="group relative w-full text-left rounded-2xl px-6 py-8 bg-white border border-blue-100 shadow-sm hover:shadow-md hover:-translate-y-1 hover:ring-2 hover:ring-blue-200 transition-all duration-500 ease-out cursor-pointer" role="button">
             <div class="flex flex-col items-center gap-3">
               <div class="bg-blue-100 p-3 rounded-full">
                 <i data-lucide="bar-chart" class="w-6 h-6 text-blue-700 group-hover:text-blue-800 group-hover:scale-110 transition-transform duration-300"></i>
               </div>
-              <span class="text-base font-semibold transition-colors">Analisi su Singolo Asset</span>
+              <span class="text-base font-semibold">Analisi su Singolo Asset</span>
               <p class="text-sm text-gray-500 text-center">Approccio tecnico, fondamentale, macro e approfondito con metodologia avanzata</p>
+              <i data-lucide="arrow-right" class="w-5 h-5 text-blue-600 opacity-70 group-hover:opacity-100 transition-opacity absolute bottom-4 right-4"></i>
             </div>
           </button>
 
-          <button data-type="azioni" class="group service-card" role="button" aria-label="3 Azioni Sottovalutate">
+          <!-- CARD -->
+          <button class="group relative w-full text-left rounded-2xl px-6 py-8 bg-white border border-blue-100 shadow-sm hover:shadow-md hover:-translate-y-1 hover:ring-2 hover:ring-blue-200 transition-all duration-500 ease-out cursor-pointer" role="button">
             <div class="flex flex-col items-center gap-3">
               <div class="bg-blue-100 p-3 rounded-full">
                 <i data-lucide="trending-up" class="w-6 h-6 text-blue-700 group-hover:text-blue-800 group-hover:scale-110 transition-transform duration-300"></i>
               </div>
-              <span class="text-base font-semibold transition-colors">3 Azioni Sottovalutate</span>
+              <span class="text-base font-semibold">3 Azioni Sottovalutate</span>
               <p class="text-sm text-gray-500 text-center">Titoli con fondamentali solidi e pricing inefficiente</p>
+              <i data-lucide="arrow-right" class="w-5 h-5 text-blue-600 opacity-70 group-hover:opacity-100 transition-opacity absolute bottom-4 right-4"></i>
             </div>
           </button>
 
-          <button data-type="crypto" class="group service-card" role="button" aria-label="3 Crypto Solide">
+          <!-- CARD -->
+          <button class="group relative w-full text-left rounded-2xl px-6 py-8 bg-white border border-blue-100 shadow-sm hover:shadow-md hover:-translate-y-1 hover:ring-2 hover:ring-blue-200 transition-all duration-500 ease-out cursor-pointer" role="button">
             <div class="flex flex-col items-center gap-3">
               <div class="bg-blue-100 p-3 rounded-full">
                 <i data-lucide="bitcoin" class="w-6 h-6 text-blue-700 group-hover:text-blue-800 group-hover:scale-110 transition-transform duration-300"></i>
               </div>
-              <span class="text-base font-semibold transition-colors">3 Crypto Solide</span>
+              <span class="text-base font-semibold">3 Crypto Solide</span>
               <p class="text-sm text-gray-500 text-center">Token major cap con sviluppo attivo e margine di crescita</p>
+              <i data-lucide="arrow-right" class="w-5 h-5 text-blue-600 opacity-70 group-hover:opacity-100 transition-opacity absolute bottom-4 right-4"></i>
             </div>
           </button>
 
-          <button data-type="dividendi" class="group service-card" role="button" aria-label="3 Titoli ad Alto Dividendo">
+          <!-- CARD -->
+          <button class="group relative w-full text-left rounded-2xl px-6 py-8 bg-white border border-blue-100 shadow-sm hover:shadow-md hover:-translate-y-1 hover:ring-2 hover:ring-blue-200 transition-all duration-500 ease-out cursor-pointer" role="button">
             <div class="flex flex-col items-center gap-3">
               <div class="bg-blue-100 p-3 rounded-full">
                 <i data-lucide="wallet" class="w-6 h-6 text-blue-700 group-hover:text-blue-800 group-hover:scale-110 transition-transform duration-300"></i>
               </div>
-              <span class="text-base font-semibold transition-colors">3 Titoli ad Alto Dividendo</span>
+              <span class="text-base font-semibold">3 Titoli ad Alto Dividendo</span>
               <p class="text-sm text-gray-500 text-center">Selezione con yield elevato e payout sostenibile</p>
+              <i data-lucide="arrow-right" class="w-5 h-5 text-blue-600 opacity-70 group-hover:opacity-100 transition-opacity absolute bottom-4 right-4"></i>
             </div>
           </button>
 
