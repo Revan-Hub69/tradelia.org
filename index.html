@@ -186,11 +186,11 @@
       <p class="mt-4 text-lg text-blue-700 min-h-[28px] font-medium" id="typing-text"></p>
     </section>
 
-<section id="form-tradelia" class="w-full max-w-2xl mx-auto bg-white p-8 font-[Inter] text-gray-800">
-  <h2 class="text-2xl sm:text-3xl font-bold text-center text-blue-800 mb-8">Richiedi il Tuo Report AI o Idee di Mercato</h2>
+<section id="form-tradelia" class="w-full max-w-2xl mx-auto bg-white p-10 font-[Inter] text-gray-800 rounded-2xl shadow-xl border border-gray-200">
+  <h2 class="text-3xl font-bold text-center text-blue-800 mb-10">Richiedi il Tuo Report AI o Idee di Mercato</h2>
 
   <!-- Step 1: Selezione tipo richiesta -->
-  <div id="step-1" class="space-y-5">
+  <div id="step-1" class="space-y-6">
     <p class="text-sm text-gray-600 text-center">Scegli il tipo di richiesta</p>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <button data-type="analisi" class="request-type-card">Analisi AI</button>
@@ -201,8 +201,10 @@
     </div>
   </div>
 
-  <!-- Step 2 & 3: Campi dinamici -->
-  <div id="step-2" class="mt-6 hidden"></div>
+  <!-- Step 2: Campi dinamici -->
+  <div id="step-2" class="mt-10 hidden transition-opacity duration-500 ease-in-out bg-slate-50 border border-gray-200 p-6 rounded-xl shadow">
+    <!-- Contenuto dinamico -->
+  </div>
 
   <!-- Step 4: Messaggio finale -->
   <div id="step-success" class="hidden text-center mt-10">
@@ -213,10 +215,10 @@
 
 <style>
   .request-type-card {
-    @apply w-full text-center text-base font-medium border border-gray-300 px-5 py-3 bg-white text-blue-900 hover:bg-blue-50 transition;
+    @apply w-full text-center text-base font-medium border border-gray-300 px-5 py-3 bg-white text-blue-900 hover:bg-blue-50 rounded-lg transition;
   }
   .input {
-    @apply w-full border border-gray-300 px-3 py-2 mt-1 text-sm;
+    @apply w-full border border-gray-300 rounded-md px-3 py-2 mt-1 text-sm bg-white;
   }
 </style>
 
@@ -231,21 +233,23 @@
       loadStepTwo(type);
       step1.classList.add('hidden');
       step2.classList.remove('hidden');
+      step2.classList.add('opacity-0');
+      setTimeout(() => step2.classList.remove('opacity-0'), 50);
     });
   });
 
   function loadStepTwo(type) {
-    let html = '';
+    let html = `<h3 class='text-xl font-semibold text-blue-700 mb-6 border-b border-gray-200 pb-2'>Richiesta: ${formatTipo(type)}</h3>`;
 
     if (type === 'analisi') {
       html += `
         <form id="form-analisi" class="space-y-4">
           <input type="hidden" name="tipo" value="analisi">
-          <div><label class="font-semibold">Asset*</label><input required name="asset" class="input" type="text"></div>
-          <div><label class="font-semibold">Categoria*</label><select required name="categoria" class="input">
+          <div><label class="font-semibold text-sm">Asset*</label><input required name="asset" class="input" type="text"></div>
+          <div><label class="font-semibold text-sm">Categoria*</label><select required name="categoria" class="input">
             <option>Azioni</option><option>ETF</option><option>Forex</option><option>Crypto</option>
           </select></div>
-          <div><label class="font-semibold">Focus Analisi*</label><select required name="focus" class="input">
+          <div><label class="font-semibold text-sm">Focus Analisi*</label><select required name="focus" class="input">
             <option>Fondamentale</option><option>Tecnico</option><option>Macroeconomico</option><option>Approfondita</option>
           </select></div>
           ${commonFields()}
@@ -256,7 +260,7 @@
       html += `
         <form id="form-azioni" class="space-y-4">
           <input type="hidden" name="tipo" value="azioni">
-          <div><label class="font-semibold">Stile d'investimento*</label>
+          <div><label class="font-semibold text-sm">Stile d'investimento*</label>
             <select required name="stile" class="input">
               <option>Value</option><option>Growth</option><option>Bilanciato</option>
             </select>
@@ -269,7 +273,7 @@
       html += `
         <form id="form-crypto" class="space-y-4">
           <input type="hidden" name="tipo" value="crypto">
-          <div><label class="font-semibold">Livello di rischio*</label>
+          <div><label class="font-semibold text-sm">Livello di rischio*</label>
             <select required name="rischio" class="input">
               <option>Solo Top Cap</option><option>Mid Cap</option><option>Mix prudente</option>
             </select>
@@ -282,7 +286,7 @@
       html += `
         <form id="form-esg" class="space-y-4">
           <input type="hidden" name="tipo" value="esg">
-          <div><label class="font-semibold">Area ESG*</label>
+          <div><label class="font-semibold text-sm">Area ESG*</label>
             <select required name="area" class="input">
               <option>Ambiente</option><option>Social</option><option>Governance</option><option>Generale</option>
             </select>
@@ -295,7 +299,7 @@
       html += `
         <form id="form-dividendi" class="space-y-4">
           <input type="hidden" name="tipo" value="dividendi">
-          <div><label class="font-semibold">Yield minimo*</label>
+          <div><label class="font-semibold text-sm">Yield minimo*</label>
             <select required name="yield" class="input">
               <option>3%</option><option>4%</option><option>5%</option><option>6%+</option>
             </select>
@@ -310,14 +314,25 @@
 
   function commonFields() {
     return `
-      <div><label class="font-semibold">Nome*</label><input required name="nome" class="input" type="text"></div>
-      <div><label class="font-semibold">Metodo ricezione*</label>
+      <div><label class="font-semibold text-sm">Nome*</label><input required name="nome" class="input" type="text"></div>
+      <div><label class="font-semibold text-sm">Metodo ricezione*</label>
         <select required name="metodo" class="input">
           <option>Email</option><option>SMS</option><option>WhatsApp</option>
         </select></div>
-      <div><label class="font-semibold">Contatto*</label><input required name="contatto" class="input" type="text"></div>
-      <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white py-2 font-semibold mt-2">Invia Richiesta</button>
+      <div><label class="font-semibold text-sm">Contatto*</label><input required name="contatto" class="input" type="text"></div>
+      <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white py-2 font-semibold mt-4 rounded-md">Invia Richiesta</button>
     `;
+  }
+
+  function formatTipo(type) {
+    const map = {
+      analisi: "Analisi AI",
+      azioni: "3 Azioni Sottovalutate",
+      crypto: "3 Crypto",
+      esg: "3 ESG + Crescita",
+      dividendi: "Dividendi Sostenibili"
+    };
+    return map[type] || "Richiesta";
   }
 
   function setupSubmitHandler() {
@@ -340,6 +355,7 @@
     });
   }
 </script>
+
 
 
 
