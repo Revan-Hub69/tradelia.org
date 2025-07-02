@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tradelia – Richiesta Report AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="icon" href="/favicon.png" type="image/png" />
+
+ <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Mostra il popup cookie solo se NON è stato già accettato
+    if (!localStorage.getItem('tradeliaConsent')) {
+      setTimeout(() => {
+        const popup = document.getElementById("cookie-popup");
+        if (popup) popup.style.display = "flex";
+      }, 1000);
+    }
+
+    const form = document.querySelector("form");
+    form.addEventListener("submit", function (e) {
+      const requiredFields = ["asset", "categoria", "timeframe", "focus", "nome", "contatto", "metodo"];
+      let valid = true;
+      requiredFields.forEach(id => {
+        const field = document.getElementById(id);
+        const label = document.querySelector(`label[for='${id}']`);
+        if (!field.value) {
+          valid = false;
+          label.innerHTML = label.innerHTML.replace(/✅/g, '').replace(/<span.*?<\/span>/, '<span class="text-red-500">*</span>');
+        } else {
+          label.innerHTML = label.innerHTML.replace(/<span.*?<\/span>/, '✅');
+        }
+      });
+      if (!valid) {
+        e.preventDefault();
+        alert("Compila tutti i campi obbligatori contrassegnati con *");
+      } else {
+        setTimeout(() => {
+          document.getElementById("form-response").classList.remove("hidden");
+        }, 300);
+      }
+    });
+
+    const phrases = [
+      "AI per trader moderni",
+      "Strumenti gratuiti, zero fuffa",
+      "Operatività solo in ambiente demo"
+    ];
+    let current = 0;
+    const typingElement = document.getElementById("typing-text");
+
+    function typePhrase() {
+      const phrase = phrases[current];
+      typingElement.textContent = "";
+      [...phrase].forEach((char, i) => {
+        setTimeout(() => {
+          typingElement.textContent += char;
+        }, i * 50);
+      });
+      setTimeout(() => {
+        current = (current + 1) % phrases.length;
+        typePhrase();
+      }, phrase.length * 50 + 2000);
+    }
+    typePhrase();
+  });
+
+  function apriSezioneLegale(id) {
+    const modal = document.createElement("div");
+    modal.className = "modal animate-fade-in";
+    modal.style.display = "flex";
+    modal.innerHTML = `
+      <div class="modal-content">
+        <div class="modal-close hover:text-red-500 transition" onclick="this.parentElement.parentElement.remove()">✕</div>
+        <h3 class="text-lg font-semibold mb-2">${id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy'}</h3>
+        <p class="text-sm text-gray-800">
+          ${
+            id === 'section-tc'
+              ? "Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all'investimento. Tutte le operazioni simulate in ambiente demo."
+              : "Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l'utente. Progetto open per educazione finanziaria."
+          }
+        </p>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+
+  // Salva consenso nel localStorage quando l'utente clicca "Ho capito"
+  function chiudiPopupCookie() {
+    localStorage.setItem('tradeliaConsent', 'true');
+    const popup = document.getElementById("cookie-popup");
+    if (popup) popup.style.display = "none";
+  }
+</script>
+
+    
+      <style>
+/* Scrollbar elegante, personalizzata, istituzionale */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+  border-radius: 100vh;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(80, 160, 200, 0.4); /* azzurro-grigio semi */
+  border-radius: 100vh;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(80, 160, 200, 0.6);
+  box-shadow: inset 0 0 6px rgba(80, 160, 200, 0.4);
+}
+
+/* Firefox support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(80, 160, 200, 0.5) #e5e7eb;
+}
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: #f1f5f9;
+        background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+        background-repeat: repeat;
+        background-size: 280px;
+      }
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 50;
+        animation: fadeIn 0.4s ease;
+      }
+      .modal-content {
+        background: #f8fafc;
+        max-width: 480px;
+        padding: 28px;
+        border-radius: 16px;
+        font-size: 15px;
+        line-height: 1.7;
+        color: #0f172a;
+        position: relative;
+        text-align: center;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
+        border: 1px solid #cbd5e1;
+      }
+      .modal-close {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        cursor: pointer;
+        font-size: 18px;
+        color: #334155;
+      }
+      @keyframes fadeIn {
+        from {opacity: 0; transform: scale(0.95);}
+        to {opacity: 1; transform: scale(1);}
+      }
+    </style>
+  </head>
+  <body class="text-gray-900">
+<header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6">
+  <a href="index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+    <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
+  </a>
+</header>
+<section class="max-w-4xl mx-auto mt-16 px-4 py-10 bg-white rounded-3xl shadow-xl font-[Inter] text-gray-900">
+  <div class="text-center mb-12">
+    <img src="https://freedom24.com/layout/img/logo/logo-f24.light.svg" alt="Freedom24 Logo" class="mx-auto h-20 sm:h-24 mb-6" />
+    <h2 class="text-4xl font-extrabold text-[#2563EB] tracking-tight">Freedom Finance Europe Ltd</h2>
+  </div>
+
+  <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
+    <!-- Card Item -->
+    <article class="flex items-start gap-4 p-6 rounded-xl border border-gray-200 bg-gray-50 shadow-sm hover:shadow-lg hover:scale-[1.03] transition-transform duration-300">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9 flex-shrink-0 text-[#2563EB]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3z" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4.5 8-10a8 8 0 10-16 0c0 5.5 8 10 8 10z" />
+      </svg>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-1">Sede Legale</h3>
+        <p class="text-gray-700 leading-relaxed">2 Agiou Pavlou, 1107, Nicosia, Cipro</p>
+      </div>
+    </article>
+
+    <!-- Licenza Principale -->
+    <article class="flex items-start gap-4 p-6 rounded-xl border border-gray-200 bg-gray-50 shadow-sm hover:shadow-lg hover:scale-[1.03] transition-transform duration-300">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9 flex-shrink-0 text-[#2563EB]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m2 0a2 2 0 110-4 2 2 0 010 4zm-8 0a2 2 0 110-4 2 2 0 010 4z" />
+      </svg>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-1">Licenza Principale</h3>
+        <p class="text-gray-700 leading-relaxed">CySEC (Cipro) - N. 275/15</p>
+      </div>
+    </article>
+
+    <!-- Altre Regolamentazioni -->
+    <article class="col-span-full flex items-start gap-4 p-6 rounded-xl border border-gray-200 bg-gray-50 shadow-sm hover:shadow-lg hover:scale-[1.03] transition-transform duration-300">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9 flex-shrink-0 text-[#2563EB]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 2a10 10 0 000 20 10 10 0 000-20zM2 12h20M12 2v20" />
+      </svg>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-2">Altre Regolamentazioni</h3>
+        <ul class="list-disc list-inside space-y-1 text-gray-700 leading-relaxed">
+          <li><strong>SEC (USA):</strong> Parte del gruppo quotato Freedom Holding Corp.</li>
+          <li><strong>EU:</strong> Operatività MiFID II</li>
+          <li><strong>KZ, UA, RU:</strong> Licenze locali per i mercati emergenti</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- Capitale Sociale -->
+    <article class="flex items-start gap-4 p-6 rounded-xl border border-gray-200 bg-gray-50 shadow-sm hover:shadow-lg hover:scale-[1.03] transition-transform duration-300">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9 flex-shrink-0 text-[#2563EB]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 7V6a2 2 0 012-2h4m4 0h4a2 2 0 012 2v1M4 7h16M4 7v11a2 2 0 002 2h12a2 2 0 002-2V7M4 7h16" />
+      </svg>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-1">Capitale Sociale</h3>
+        <p class="text-gray-700 leading-relaxed">Parte di holding quotata al Nasdaq (FRHC)</p>
+      </div>
+    </article>
+
+    <!-- Utenti Registrati -->
+    <article class="flex items-start gap-4 p-6 rounded-xl border border-gray-200 bg-gray-50 shadow-sm hover:shadow-lg hover:scale-[1.03] transition-transform duration-300">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9 flex-shrink-0 text-[#2563EB]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1m-6 6H7v-2a4 4 0 014-4h1m4-6a4 4 0 110-8 4 4 0 010 8zm-8 4a4 4 0 100-8 4 4 0 000 8z" />
+      </svg>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-1">Utenti Registrati</h3>
+        <p class="text-gray-700 leading-relaxed">Oltre 400.000 clienti attivi</p>
+      </div>
+    </article>
+
+    <!-- Anni di Attività -->
+    <article class="flex items-start gap-4 p-6 rounded-xl border border-gray-200 bg-gray-50 shadow-sm hover:shadow-lg hover:scale-[1.03] transition-transform duration-300">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9 flex-shrink-0 text-[#2563EB]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10m-5 4h.01M4 21h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-1">Anni di Attività</h3>
+        <p class="text-gray-700 leading-relaxed">Dal 2015 (9 anni di esperienza)</p>
+      </div>
+    </article>
+
+    <!-- Premi e Riconoscimenti -->
+    <article class="flex items-start gap-4 p-6 rounded-xl border border-gray-200 bg-gray-50 shadow-sm hover:shadow-lg hover:scale-[1.03] transition-transform duration-300">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9 flex-shrink-0 text-[#2563EB]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V13a6 6 0 00-12 0v1.159c0 .538-.214 1.055-.595 1.437L4 17h5m6 0v5a1 1 0 001 1h1a1 1 0 001-1v-5m-6 0v5a1 1 0 001 1h1a1 1 0 001-1v-5" />
+      </svg>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-1">Premi e Riconoscimenti</h3>
+        <p class="text-gray-700 leading-relaxed">Global Brands Magazine 2023, Best Online Broker Emerging Markets</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+
+
+    <div class="my-12 sm:my-16"></div>
+<section class="max-w-3xl mx-auto p-8 bg-white rounded-2xl shadow-lg font-sans text-gray-900">
+  <h2 class="text-3xl font-extrabold text-center text-[#2563EB] mb-12 tracking-tight">
+    Contatti Freedom24 (Freedom Finance Europe Ltd)
+  </h2>
+
+  <div class="grid gap-8 text-base">
+    <!-- Email Supporto -->
+    <div
+      class="flex items-center gap-5 bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+      tabindex="0"
+      role="region"
+      aria-label="Email Supporto"
+    >
+      <svg class="w-8 h-8 flex-shrink-0 text-[#2563EB]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm1.5 2h9v2h-9V8zm0 4h9v2h-9v-2z" />
+      </svg>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-1">Supporto & Reclami</h3>
+        <p class="text-gray-700 select-text">info@freedomfinance.eu</p>
+      </div>
+    </div>
+
+    <!-- Telefono -->
+    <div
+      class="flex items-center gap-5 bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+      tabindex="0"
+      role="region"
+      aria-label="Telefono"
+    >
+      <svg class="w-8 h-8 flex-shrink-0 text-[#2563EB]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C10.07 21 3 13.93 3 5c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.24.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+      </svg>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-1">Telefono</h3>
+        <p class="text-gray-700 select-text">+357 25257787</p>
+      </div>
+    </div>
+
+    <!-- Email DPO -->
+    <div
+      class="flex items-center gap-5 bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+      tabindex="0"
+      role="region"
+      aria-label="Data Protection Officer"
+    >
+      <svg class="w-8 h-8 flex-shrink-0 text-[#2563EB]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm2 13h-4v-2h4v2zm0-4h-4V7h4v4z" />
+      </svg>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-1">Data Protection Officer</h3>
+        <p class="text-gray-700 select-text">dpo@ffineu.eu</p>
+      </div>
+    </div>
+
+    <!-- Sede Legale -->
+    <div
+      class="flex items-start gap-5 bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+      tabindex="0"
+      role="region"
+      aria-label="Sede Legale"
+    >
+      <svg class="w-8 h-8 flex-shrink-0 text-[#2563EB]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2l7 6v12h-4v-6H9v6H5V8l7-6z" />
+      </svg>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-1">Sede Legale</h3>
+        <p class="text-gray-700 leading-snug">
+          Freedom Finance Europe Ltd<br>
+          Christaki Kranou 20, Freedom Tower, 5th Floor<br>
+          4041 Germasogeia, Limassol, Cyprus
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-xs text-center text-gray-400 mt-8 select-none">
+    Dati ufficiali aggiornati al 2024 – verifica sempre il sito Freedom24 o i documenti ufficiali per eventuali aggiornamenti.
+  </p>
+</section>
+
+
+<section class="max-w-lg mx-auto mt-10 p-6 bg-gray-50 rounded-xl shadow-md font-[Inter] text-gray-900">
+<section class="max-w-3xl mx-auto p-8 bg-white rounded-2xl shadow-lg font-sans text-gray-900">
+  <h2 class="text-2xl font-semibold text-center text-[#2563EB] mb-8">Freedom24: Per Chi È Consigliato?</h2>
+
+  <div class="space-y-6">
+    <!-- Card 1 -->
+    <div class="flex items-center gap-4 bg-white rounded-lg p-5 shadow-sm">
+      <div class="flex-shrink-0 w-7 h-7 text-[#2563EB] flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0v7"/></svg>
+      </div>
+      <div class="flex-1">
+        <div class="font-semibold mb-2 text-lg">Principianti Motivati</div>
+        <p class="mb-3 text-gray-700">Non è beginner-friendly puro, ma chi vuole imparare su IPO e azioni reali trova spazio.</p>
+        <div class="relative h-4 bg-gray-200 rounded-full overflow-hidden">
+          <div class="absolute top-0 left-0 h-4 rounded-full bg-yellow-500" style="width: 55%;"></div>
+          <span class="absolute right-2 top-0 text-xs font-semibold text-white select-none leading-4">55%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="flex items-center gap-4 bg-white rounded-lg p-5 shadow-sm">
+      <div class="flex-shrink-0 w-7 h-7 text-[#2563EB] flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2a4 4 0 014-4h4"/></svg>
+      </div>
+      <div class="flex-1">
+        <div class="font-semibold mb-2 text-lg">Investitori a Lungo Termine</div>
+        <p class="mb-3 text-gray-700">Ottimo per costruire portafogli azionari e accedere a IPO globali.</p>
+        <div class="relative h-4 bg-gray-200 rounded-full overflow-hidden">
+          <div class="absolute top-0 left-0 h-4 rounded-full bg-[#2563EB]" style="width: 90%;"></div>
+          <span class="absolute right-2 top-0 text-xs font-semibold text-white select-none leading-4">90%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="flex items-center gap-4 bg-white rounded-lg p-5 shadow-sm">
+      <div class="flex-shrink-0 w-7 h-7 text-[#2563EB] flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3"/></svg>
+      </div>
+      <div class="flex-1">
+        <div class="font-semibold mb-2 text-lg">Trader Speculativi</div>
+        <p class="mb-3 text-gray-700">Non offre CFD, leva o strumenti per day trading aggressivo.</p>
+        <div class="relative h-4 bg-gray-200 rounded-full overflow-hidden">
+          <div class="absolute top-0 left-0 h-4 rounded-full bg-red-600" style="width: 40%;"></div>
+          <span class="absolute right-2 top-0 text-xs font-semibold text-white select-none leading-4">40%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="flex items-center gap-4 bg-white rounded-lg p-5 shadow-sm">
+      <div class="flex-shrink-0 w-7 h-7 text-[#2563EB] flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      </div>
+      <div class="flex-1">
+        <div class="font-semibold mb-2 text-lg">Crypto Investor</div>
+        <p class="mb-3 text-gray-700">Non specializzato: gamma limitata di asset crypto disponibili.</p>
+        <div class="relative h-4 bg-gray-200 rounded-full overflow-hidden">
+          <div class="absolute top-0 left-0 h-4 rounded-full bg-red-600" style="width: 30%;"></div>
+          <span class="absolute right-2 top-0 text-xs font-semibold text-white select-none leading-4">30%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="flex items-center gap-4 bg-white rounded-lg p-5 shadow-sm">
+      <div class="flex-shrink-0 w-7 h-7 text-[#2563EB] flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h4v11H3zM17 3h4v18h-4zM10 14h4v7h-4z"/></svg>
+      </div>
+      <div class="flex-1">
+        <div class="font-semibold mb-2 text-lg">Trader Professionisti</div>
+        <p class="mb-3 text-gray-700">Ideale per chi cerca accesso a IPO, titoli emergenti e trading DMA.</p>
+        <div class="relative h-4 bg-gray-200 rounded-full overflow-hidden">
+          <div class="absolute top-0 left-0 h-4 rounded-full bg-[#2563EB]" style="width: 85%;"></div>
+          <span class="absolute right-2 top-0 text-xs font-semibold text-white select-none leading-4">85%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-xs text-center text-gray-400 mt-8 select-none">
+    Nota: Freedom24 è orientato a investitori intermedi e avanzati. I principianti assoluti potrebbero trovare l’interfaccia e i prodotti complessi senza una formazione adeguata.
+  </p>
+</section>
+
+
+
+
+
+
+    <div class="my-12 sm:my-16"></div>
+<section class="max-w-4xl mx-auto mt-10 p-6 bg-gray-50 rounded-xl shadow-md font-[Inter] text-gray-900 pb-10">
+  <h2 class="text-2xl font-bold text-center mb-6 text-[#D71921]">Tipologia di Accesso ai Mercati</h2>
+
+  <div class="space-y-6 text-base">
+
+    <!-- Accesso DMA azioni & ETF -->
+    <div class="flex gap-4 bg-white rounded-lg p-5 shadow-sm hover:shadow-lg hover:scale-[1.02] transition-transform duration-300">
+      <svg class="w-7 h-7 flex-shrink-0 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M5 4v16h14V4H5zm12 2v2H7V6h10zM7 18v-8h10v8H7z"/>
+      </svg>
+      <div>
+        <h3 class="font-semibold text-lg mb-1">Accesso DMA (Direct Market Access)</h3>
+        <p>
+          Tutti gli ordini di azioni, ETF e opzioni vengono instradati direttamente ai libri ordini di 15 borse mondiali (NYSE, NASDAQ, LSE, Xetra, HKEX ecc.).
+          Massima trasparenza, profondità di mercato in tempo reale e commissioni a partire da €0,008 / azione + €1,2 per ordine. :contentReference[oaicite:1]{index=1}
+        </p>
+      </div>
+    </div>
+
+    <!-- Non CFD / Forex -->
+    <div class="flex gap-4 bg-white rounded-lg p-5 shadow-sm hover:shadow-lg hover:scale-[1.02] transition-transform duration-300">
+      <svg class="w-7 h-7 flex-shrink-0 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v2H8V8zm0 4h8v2H8v-2z"/>
+      </svg>
+      <div>
+        <h3 class="font-semibold text-lg mb-1">No Forex / CFD / Crypto</h3>
+        <p>
+          Freedom24 è focalizzato su strumenti tradizionali (azioni, ETF, obbligazioni, opzioni, futures, IPO). Non offre trading su Forex, CFD o criptovalute. :contentReference[oaicite:2]{index=2}
+        </p>
+      </div>
+    </div>
+
+    <!-- Piano Smart vs Prime -->
+    <div class="flex gap-4 bg-white rounded-lg p-5 shadow-sm hover:shadow-lg hover:scale-[1.02] transition-transform duration-300">
+      <svg class="w-7 h-7 flex-shrink-0 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2L2 7v13h20V7L12 2zm0 2.18l8 4V9H4V8.18l8-4zm0 16.64c-2.58 0-8-1.28-8-3.82V11h16v6c0 2.54-5.42 3.82-8 3.82z"/>
+      </svg>
+      <div>
+        <h3 class="font-semibold text-lg mb-1">Piani Commissionali: Smart & Prime</h3>
+        <p>
+          Due opzioni per il trading azionario:
+          <ul class="list-disc ml-6">
+            <li><strong>Smart:</strong> €0,02/azione + €2 per ordine.</li>
+            <li><strong>Prime:</strong> 0,25 % valore + €0,012/azione + €1,2 per ordine.</li>
+          </ul>
+          I nuovi utenti ricevono 30 giorni di trading commission‑free su azioni/ETF. :contentReference[oaicite:3]{index=3}
+        </p>
+      </div>
+    </div>
+
+    <!-- Requisiti e Cash account -->
+    <div class="flex gap-4 bg-white rounded-lg p-5 shadow-sm hover:shadow-lg hover:scale-[1.02] transition-transform duration-300">
+      <svg class="w-7 h-7 flex-shrink-0 text-[#D71921]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M3 5h18v2H3V5zm0 4h18v2H3V9zm0 4h12v2H3v-2zm0 4h12v2H3v-2z"/>
+      </svg>
+      <div>
+        <h3 class="font-semibold text-lg mb-1">Forex & Cash Accounts</h3>
+        <p>
+          Non disponibile trading Forex o CFD.
+          Tuttavia, è disponibile un conto "D‑Account" (cash account) che offre interessi sul saldo: fino al 5,31 % annuo in USD e 3,88 % in EUR, con piani a termine o flessibili. :contentReference[oaicite:4]{index=4}
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="text-sm text-center text-gray-400 mt-8">
+    Dati aggiornati a luglio 2025. Consulta sempre il sito ufficiale per conferme e dettagli aggiornati.
+  </p>
+</section>
+
+<div class="my-12 sm:my-16"></div>
+
+<section class="max-w-3xl mx-auto p-8 bg-white rounded-2xl shadow-lg font-sans text-gray-900">
+  <h2 class="text-2xl font-semibold text-center text-[#2563EB] mb-8">Freedom24: Strategie Compatibili</h2>
+
+  <div class="space-y-6">
+    <!-- Card 1 -->
+    <div class="flex items-center gap-4 bg-white rounded-lg p-5 shadow-sm">
+      <div class="flex-shrink-0 w-7 h-7 text-[#2563EB] flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h18v18H3z"/></svg>
+      </div>
+      <div class="flex-1">
+        <div class="font-semibold mb-2 text-lg">IPO Investing</div>
+        <p class="mb-3 text-gray-700">Accesso unico a IPO globali con potenziale di guadagno elevato. Rischio medio-alto (40%).</p>
+        <div class="relative h-4 bg-gray-200 rounded-full overflow-hidden">
+          <div class="absolute top-0 left-0 h-4 rounded-full bg-green-600" style="width: 80%;"></div>
+          <span class="absolute right-2 top-0 text-xs font-semibold text-white select-none leading-4">80%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="flex items-center gap-4 bg-white rounded-lg p-5 shadow-sm">
+      <div class="flex-shrink-0 w-7 h-7 text-[#2563EB] flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-7 h-7"><circle cx="12" cy="12" r="10"/></svg>
+      </div>
+      <div class="flex-1">
+        <div class="font-semibold mb-2 text-lg">ETF Core Portfolio</div>
+        <p class="mb-3 text-gray-700">Strategia passiva e bilanciata con rischio contenuto (20%).</p>
+        <div class="relative h-4 bg-gray-200 rounded-full overflow-hidden">
+          <div class="absolute top-0 left-0 h-4 rounded-full bg-green-600" style="width: 90%;"></div>
+          <span class="absolute right-2 top-0 text-xs font-semibold text-white select-none leading-4">90%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="flex items-center gap-4 bg-white rounded-lg p-5 shadow-sm">
+      <div class="flex-shrink-0 w-7 h-7 text-[#2563EB] flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <div class="flex-1">
+        <div class="font-semibold mb-2 text-lg">Stock Picking Azionario</div>
+        <p class="mb-3 text-gray-700">Strategia attiva basata su selezione mirata di titoli. Rischio medio (35%).</p>
+        <div class="relative h-4 bg-gray-200 rounded-full overflow-hidden">
+          <div class="absolute top-0 left-0 h-4 rounded-full bg-yellow-500" style="width: 75%;"></div>
+          <span class="absolute right-2 top-0 text-xs font-semibold text-white select-none leading-4">75%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="flex items-center gap-4 bg-white rounded-lg p-5 shadow-sm">
+      <div class="flex-shrink-0 w-7 h-7 text-[#2563EB] flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h8m-8 6h16"/></svg>
+      </div>
+      <div class="flex-1">
+        <div class="font-semibold mb-2 text-lg">Obbligazioni Corporate</div>
+        <p class="mb-3 text-gray-700">Profilo conservativo con rischio basso (10%) e rendimenti contenuti.</p>
+        <div class="relative h-4 bg-gray-200 rounded-full overflow-hidden">
+          <div class="absolute top-0 left-0 h-4 rounded-full bg-green-600" style="width: 85%;"></div>
+          <span class="absolute right-2 top-0 text-xs font-semibold text-white select-none leading-4">85%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-xs text-center text-gray-400 mt-8 select-none">
+    Dati indicativi: basati su performance storiche e caratteristiche degli strumenti. Non costituiscono garanzia di rendimento.
+  </p>
+</section>
+
+<div class="my-12 sm:my-16"></div>
+
+
+<section class="max-w-7xl mx-auto my-10 p-6 bg-white rounded-2xl shadow-lg font-[Inter] text-gray-800">
+  <h2 class="text-2xl font-bold text-center text-[#00C76A] mb-12 tracking-wide uppercase">
+    Sicurezza dei Fondi e Regolamentazioni
+  </h2>
+
+  <div class="flex flex-wrap justify-center gap-8">
+    <!-- Card 1 -->
+    <article class="flex-1 min-w-[280px] max-w-md bg-green-50 rounded-2xl p-8 shadow-md hover:shadow-xl transition-shadow duration-300" role="region" aria-labelledby="title-segregazione">
+      <h3 id="title-segregazione" class="text-lg font-semibold text-[#00C76A] mb-4 flex items-center gap-2">
+        <svg class="w-6 h-6 text-[#00C76A] flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+        Segregazione dei Fondi
+      </h3>
+      <p class="text-gray-700 leading-relaxed text-sm">
+        I fondi dei clienti sono tenuti separati dai fondi aziendali, garantendo protezione in caso di difficoltà finanziarie del broker.
+      </p>
+    </article>
+
+    <!-- Card 2 -->
+    <article class="flex-1 min-w-[280px] max-w-md bg-green-50 rounded-2xl p-8 shadow-md hover:shadow-xl transition-shadow duration-300" role="region" aria-labelledby="title-regolamentazioni">
+      <h3 id="title-regolamentazioni" class="text-lg font-semibold text-[#00C76A] mb-4 flex items-center gap-2">
+        <svg class="w-6 h-6 text-[#00C76A] flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3M3 11h18M4 15h16M5 19h14" />
+        </svg>
+        Regolamentazioni Internazionali
+      </h3>
+      <p class="text-gray-700 leading-relaxed text-sm">
+        Freedom24 è regolamentata da CySEC (Cipro) con licenza CIF 275/15 e conforme alle normative MiFID II per l’operatività europea.
+      </p>
+    </article>
+
+    <!-- Card 3 -->
+    <article class="flex-1 min-w-[280px] max-w-md bg-green-50 rounded-2xl p-8 shadow-md hover:shadow-xl transition-shadow duration-300" role="region" aria-labelledby="title-fondi-compensazione">
+      <h3 id="title-fondi-compensazione" class="text-lg font-semibold text-[#00C76A] mb-4 flex items-center gap-2">
+        <svg class="w-6 h-6 text-[#00C76A] flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3" />
+        </svg>
+        Fondi di Compensazione
+      </h3>
+      <p class="text-gray-700 leading-relaxed text-sm">
+        Gli investitori hanno diritto alla copertura fino a 20.000 € tramite il Fondo di Compensazione degli Investitori cipriota (ICF), in caso di default.
+      </p>
+    </article>
+
+    <!-- Card 4 -->
+    <article class="flex-1 min-w-[280px] max-w-md bg-green-50 rounded-2xl p-8 shadow-md hover:shadow-xl transition-shadow duration-300" role="region" aria-labelledby="title-protezione-saldi">
+      <h3 id="title-protezione-saldi" class="text-lg font-semibold text-[#00C76A] mb-4 flex items-center gap-2">
+        <svg class="w-6 h-6 text-[#00C76A] flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 12v-3m0 0l-3 3m3-3l3 3" />
+        </svg>
+        Protezione dai Saldi Negativi
+      </h3>
+      <p class="text-gray-700 leading-relaxed text-sm">
+        Freedom24 applica la protezione del saldo negativo per i clienti retail, impedendo perdite superiori all’importo investito.
+      </p>
+    </article>
+  </div>
+
+  <div class="text-center mt-10">
+    <span
+      class="inline-block bg-[#00C76A] text-white px-8 py-3 rounded-full font-semibold text-sm shadow-lg select-none"
+      aria-label="Fondi Protetti e Conformità Regolamentare Garantita"
+      role="note"
+    >
+      ✔ Fondi Protetti e Conformità Regolamentare Garantita
+    </span>
+  </div>
+</section>
+
+
+<div class="my-12 sm:my-16"></div>
+<section class="max-w-6xl mx-auto my-12 px-4 py-6 bg-gray-50 rounded-xl shadow-md font-[Inter] text-gray-900">
+  <h2 class="text-2xl font-bold text-center text-[#00C76A] mb-8">Costi e Commissioni Freedom24</h2>
+
+  <!-- Tabella Desktop -->
+  <div class="hidden md:block overflow-x-auto">
+    <table class="w-full text-sm text-left border-collapse">
+      <thead class="bg-[#00C76A] text-white">
+        <tr>
+          <th class="py-3 px-4 font-semibold">Strumento</th>
+          <th class="py-3 px-4 font-semibold">Costo</th>
+          <th class="py-3 px-4 font-semibold">Dettaglio</th>
+          <th class="py-3 px-4 font-semibold">Note</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-800">
+        <tr class="border-b hover:bg-gray-100 even:bg-gray-50">
+          <td class="py-3 px-4">Azioni USA</td>
+          <td class="py-3 px-4 text-[#0AAB69] font-medium">0,02 USD / azione</td>
+          <td class="py-3 px-4">Commissione fissa</td>
+          <td class="py-3 px-4">Minimo 2 USD per ordine</td>
+        </tr>
+        <tr class="border-b hover:bg-gray-100 even:bg-gray-50">
+          <td class="py-3 px-4">Azioni Europa</td>
+          <td class="py-3 px-4 text-[#F59E0B] font-medium">0,12%</td>
+          <td class="py-3 px-4">Commissione fissa</td>
+          <td class="py-3 px-4">Minimo 2 EUR per ordine</td>
+        </tr>
+        <tr class="border-b hover:bg-gray-100 even:bg-gray-50">
+          <td class="py-3 px-4">IPO (Pre-IPO)</td>
+          <td class="py-3 px-4 text-[#F59E0B] font-medium">0,5% / importo</td>
+          <td class="py-3 px-4">Accesso diretto</td>
+          <td class="py-3 px-4">Minimo 2000 USD di investimento</td>
+        </tr>
+        <tr class="border-b hover:bg-gray-100 even:bg-gray-50">
+          <td class="py-3 px-4">Obbligazioni</td>
+          <td class="py-3 px-4 text-[#F59E0B] font-medium">0,12%</td>
+          <td class="py-3 px-4">Commissione fissa</td>
+          <td class="py-3 px-4">Minimo 80 EUR per ordine</td>
+        </tr>
+        <tr class="border-b hover:bg-gray-100 even:bg-gray-50">
+          <td class="py-3 px-4">ETF</td>
+          <td class="py-3 px-4 text-[#F59E0B] font-medium">0,12%</td>
+          <td class="py-3 px-4">Commissione fissa</td>
+          <td class="py-3 px-4">Minimo 2 EUR per ordine</td>
+        </tr>
+        <tr class="border-b hover:bg-gray-100 even:bg-gray-50">
+          <td class="py-3 px-4">Depositi</td>
+          <td class="py-3 px-4 text-[#0AAB69] font-medium">0%</td>
+          <td class="py-3 px-4">Bonifico bancario</td>
+          <td class="py-3 px-4">Altri metodi possono avere costi</td>
+        </tr>
+        <tr class="border-b hover:bg-gray-100 even:bg-gray-50">
+          <td class="py-3 px-4">Deposito Minimo</td>
+          <td class="py-3 px-4 text-[#0AAB69] font-medium">10 EUR / USD</td>
+          <td class="py-3 px-4">Per aprire conto</td>
+          <td class="py-3 px-4">Importo iniziale richiesto</td>
+        </tr>
+        <tr class="border-b hover:bg-gray-100 even:bg-gray-50">
+          <td class="py-3 px-4">Prelievi</td>
+          <td class="py-3 px-4 text-[#EF4444] font-medium">7 EUR</td>
+          <td class="py-3 px-4">Bonifico bancario</td>
+          <td class="py-3 px-4">Per transazione</td>
+        </tr>
+        <tr class="border-b hover:bg-gray-100 even:bg-gray-50">
+          <td class="py-3 px-4">Inattività</td>
+          <td class="py-3 px-4 text-[#EF4444] font-medium">10 EUR / mese</td>
+          <td class="py-3 px-4">Dopo 180 giorni</td>
+          <td class="py-3 px-4">Applicato solo a conti inattivi</td>
+        </tr>
+        <tr class="hover:bg-gray-100 even:bg-gray-50">
+          <td class="py-3 px-4">Cambio Valuta</td>
+          <td class="py-3 px-4 text-[#F59E0B] font-medium">0,5%</td>
+          <td class="py-3 px-4">Su EUR/USD</td>
+          <td class="py-3 px-4">Per transazione</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mobile Cards -->
+  <div class="block md:hidden mt-6 space-y-4">
+    <div class="bg-white p-4 rounded-xl shadow hover:shadow-lg">
+      <div class="text-sm font-semibold text-[#00C76A]">Azioni USA</div>
+      <div class="text-gray-600 text-sm">Commissione fissa</div>
+      <div class="text-xs text-gray-500">Minimo 2 USD per ordine</div>
+      <div class="text-[#0AAB69] font-bold text-sm mt-2">0,02 USD / azione</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow hover:shadow-lg">
+      <div class="text-sm font-semibold text-[#00C76A]">Azioni Europa</div>
+      <div class="text-gray-600 text-sm">Commissione fissa</div>
+      <div class="text-xs text-gray-500">Minimo 2 EUR per ordine</div>
+      <div class="text-[#F59E0B] font-bold text-sm mt-2">0,12%</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow hover:shadow-lg">
+      <div class="text-sm font-semibold text-[#00C76A]">IPO (Pre-IPO)</div>
+      <div class="text-gray-600 text-sm">Accesso diretto</div>
+      <div class="text-xs text-gray-500">Minimo 2000 USD di investimento</div>
+      <div class="text-[#F59E0B] font-bold text-sm mt-2">0,5% / importo</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow hover:shadow-lg">
+      <div class="text-sm font-semibold text-[#00C76A]">Obbligazioni</div>
+      <div class="text-gray-600 text-sm">Commissione fissa</div>
+      <div class="text-xs text-gray-500">Minimo 80 EUR per ordine</div>
+      <div class="text-[#F59E0B] font-bold text-sm mt-2">0,12%</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow hover:shadow-lg">
+      <div class="text-sm font-semibold text-[#00C76A]">ETF</div>
+      <div class="text-gray-600 text-sm">Commissione fissa</div>
+      <div class="text-xs text-gray-500">Minimo 2 EUR per ordine</div>
+      <div class="text-[#F59E0B] font-bold text-sm mt-2">0,12%</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow hover:shadow-lg">
+      <div class="text-sm font-semibold text-[#00C76A]">Depositi</div>
+      <div class="text-gray-600 text-sm">Bonifico bancario</div>
+      <div class="text-xs text-gray-500">Altri metodi possono avere costi</div>
+      <div class="text-[#0AAB69] font-bold text-sm mt-2">0%</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow hover:shadow-lg">
+      <div class="text-sm font-semibold text-[#00C76A]">Deposito Minimo</div>
+      <div class="text-gray-600 text-sm">Per aprire conto</div>
+      <div class="text-xs text-gray-500">Importo iniziale richiesto</div>
+      <div class="text-[#0AAB69] font-bold text-sm mt-2">10 EUR / USD</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow hover:shadow-lg">
+      <div class="text-sm font-semibold text-[#00C76A]">Prelievi</div>
+      <div class="text-gray-600 text-sm">Bonifico bancario</div>
+      <div class="text-xs text-gray-500">Per transazione</div>
+      <div class="text-[#EF4444] font-bold text-sm mt-2">7 EUR</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow hover:shadow-lg">
+      <div class="text-sm font-semibold text-[#00C76A]">Inattività</div>
+      <div class="text-gray-600 text-sm">Dopo 180 giorni</div>
+      <div class="text-xs text-gray-500">Applicato solo a conti inattivi</div>
+      <div class="text-[#EF4444] font-bold text-sm mt-2">10 EUR / mese</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow hover:shadow-lg">
+      <div class="text-sm font-semibold text-[#00C76A]">Cambio Valuta</div>
+      <div class="text-gray-600 text-sm">Su EUR/USD</div>
+      <div class="text-xs text-gray-500">Per transazione</div>
+      <div class="text-[#F59E0B] font-bold text-sm mt-2">0,5%</div>
+    </div>
+  </div>
+
+  <div class="text-center text-xs text-gray-400 mt-8">
+    Dati aggiornati al 2025. Consultare i documenti ufficiali di Freedom24 per eventuali variazioni e condizioni aggiornate.
+  </div>
+</section>
+
+
+<div class="my-12 sm:my-16"></div>
+<section class="max-w-7xl mx-auto my-10 px-6">
+  <h2 class="text-2xl font-semibold text-center text-[#00C76A] mb-8">Piattaforme Disponibili su Freedom24</h2>
+
+  <div class="flex gap-4 overflow-x-auto pb-4 scroll-snap-x scroll-snap-mandatory scroll-pl-6">
+    <!-- Web Platform -->
+    <div class="min-w-[200px] max-w-[200px] h-[150px] bg-white rounded-lg shadow-md flex flex-col justify-between p-4 scroll-snap-start cursor-pointer hover:shadow-lg hover:scale-[1.03] transition-transform duration-300" role="group" aria-label="Piattaforma Web" tabindex="0">
+      <div>
+        <div class="flex items-center mb-1">
+          <svg class="w-4 h-4 text-[#00C76A]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M4 5h16v2H4zM4 9h16v2H4zM4 13h10v2H4z" />
+          </svg>
+          <h3 class="text-sm font-medium ml-1">Web Platform</h3>
+        </div>
+        <p class="text-[11px] text-gray-800 leading-tight">Piattaforma completa per trading, IPO, azioni, ETF, obbligazioni.</p>
+      </div>
+      <p class="text-[10px] font-medium mt-2">Disponibile: <span class="text-gray-900">Desktop Browser</span></p>
+    </div>
+
+    <!-- App Mobile -->
+    <div class="min-w-[200px] max-w-[200px] h-[150px] bg-white rounded-lg shadow-md flex flex-col justify-between p-4 scroll-snap-start cursor-pointer hover:shadow-lg hover:scale-[1.03] transition-transform duration-300" role="group" aria-label="App Mobile" tabindex="0">
+      <div>
+        <div class="flex items-center mb-1">
+          <svg class="w-4 h-4 text-[#00C76A]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M7 2h10a2 2 0 012 2v16a2 2 0 01-2 2H7a2 2 0 01-2-2V4a2 2 0 012-2zm5 20a1 1 0 100-2 1 1 0 000 2zm5-4V4H7v14h10z" />
+          </svg>
+          <h3 class="text-sm font-medium ml-1">App Mobile</h3>
+        </div>
+        <p class="text-[11px] text-gray-800 leading-tight">Accesso rapido al conto, trading in mobilità, funzioni base.</p>
+      </div>
+      <p class="text-[10px] font-medium mt-2">Disponibile: <span class="text-gray-900">iOS & Android</span></p>
+    </div>
+
+    <!-- Trading Desk -->
+    <div class="min-w-[200px] max-w-[200px] h-[150px] bg-white rounded-lg shadow-md flex flex-col justify-between p-4 scroll-snap-start cursor-pointer hover:shadow-lg hover:scale-[1.03] transition-transform duration-300" role="group" aria-label="Trading Desk" tabindex="0">
+      <div>
+        <div class="flex items-center mb-1">
+          <svg class="w-4 h-4 text-[#00C76A]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+          </svg>
+          <h3 class="text-sm font-medium ml-1">Trading Desk</h3>
+        </div>
+        <p class="text-[11px] text-gray-800 leading-tight">Accesso tramite assistenza per ordini personalizzati e IPO.</p>
+      </div>
+      <p class="text-[10px] font-medium mt-2">Disponibile: <span class="text-gray-900">Contatto Diretto</span></p>
+    </div>
+  </div>
+
+  <p class="text-[10px] text-gray-400 text-center mt-4">Dati aggiornati al 2025. Controlla il sito ufficiale per info aggiornate.</p>
+</section>
+
+
+
+
+<div class="my-12 sm:my-16"></div>
+<section class="max-w-7xl mx-auto my-10 px-6">
+  <h2 class="text-2xl font-semibold text-center text-[#00C76A] mb-8">Strumenti Finanziari Disponibili su Freedom24</h2>
+
+  <!-- Tabella Desktop -->
+  <div class="hidden md:block overflow-x-auto animate-fadeIn">
+    <table class="w-full border-collapse text-sm" aria-label="Elenco strumenti finanziari disponibili su Freedom24">
+      <caption class="sr-only">Elenco strumenti finanziari disponibili su Freedom24 aggiornato al 2025</caption>
+      <thead class="bg-[#00C76A] text-white">
+        <tr>
+          <th scope="col" class="text-left px-4 py-3 font-semibold">Categoria</th>
+          <th scope="col" class="text-left px-4 py-3 font-semibold">Numero di Strumenti</th>
+          <th scope="col" class="text-left px-4 py-3 rounded-tr-lg font-semibold">Note</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-800">
+        <tr class="odd:bg-white even:bg-gray-100">
+          <td class="px-4 py-3">Azioni</td>
+          <td class="px-4 py-3 text-[#10B981] font-semibold">Oltre 40.000</td>
+          <td class="px-4 py-3">USA, Europa, Asia, mercati emergenti</td>
+        </tr>
+        <tr class="odd:bg-white even:bg-gray-100">
+          <td class="px-4 py-3">ETF</td>
+          <td class="px-4 py-3 text-[#10B981] font-semibold">Oltre 1.500</td>
+          <td class="px-4 py-3">ETF globali su azioni, obbligazioni e settori</td>
+        </tr>
+        <tr class="odd:bg-white even:bg-gray-100">
+          <td class="px-4 py-3">Obbligazioni</td>
+          <td class="px-4 py-3 text-[#10B981] font-semibold">Oltre 147.000</td>
+          <td class="px-4 py-3">Corporate, governative e municipali</td>
+        </tr>
+        <tr class="odd:bg-white even:bg-gray-100">
+          <td class="px-4 py-3">Opzioni</td>
+          <td class="px-4 py-3 text-[#F59E0B] font-semibold">Disponibili</td>
+          <td class="px-4 py-3">Su azioni e ETF tramite app mobile</td>
+        </tr>
+        <tr class="odd:bg-white even:bg-gray-100">
+          <td class="px-4 py-3">Futures</td>
+          <td class="px-4 py-3 text-[#F59E0B] font-semibold">Accesso</td>
+          <td class="px-4 py-3">Contratti su valute, indici e materie prime</td>
+        </tr>
+        <tr class="odd:bg-white even:bg-gray-100">
+          <td class="px-4 py-3">IPO</td>
+          <td class="px-4 py-3 text-[#10B981] font-semibold">Accesso selezionato</td>
+          <td class="px-4 py-3">IPO USA ed europee riservate</td>
+        </tr>
+        <tr class="odd:bg-white even:bg-gray-100">
+          <td class="px-4 py-3">Prodotti strutturati</td>
+          <td class="px-4 py-3 text-[#F59E0B] font-semibold">Disponibili</td>
+          <td class="px-4 py-3">Soluzioni personalizzate per gestione rischio/rendimento</td>
+        </tr>
+        <tr class="odd:bg-white even:bg-gray-100">
+          <td class="px-4 py-3">Conto D</td>
+          <td class="px-4 py-3 text-[#10B981] font-semibold">Fino al 5,8% annuo</td>
+          <td class="px-4 py-3">Conto deposito remunerato</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Card Mobile -->
+  <div class="md:hidden flex flex-col gap-4 mt-8 px-4 animate-fadeIn">
+    <div class="bg-white p-4 rounded-md shadow">
+      <div class="text-base font-semibold text-gray-800">Azioni</div>
+      <div class="text-[#10B981] text-sm font-semibold">Oltre 40.000</div>
+      <div class="text-gray-600 text-sm">USA, Europa, Asia, mercati emergenti</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow">
+      <div class="text-base font-semibold text-gray-800">ETF</div>
+      <div class="text-[#10B981] text-sm font-semibold">Oltre 1.500</div>
+      <div class="text-gray-600 text-sm">ETF globali su azioni, obbligazioni e settori</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow">
+      <div class="text-base font-semibold text-gray-800">Obbligazioni</div>
+      <div class="text-[#10B981] text-sm font-semibold">Oltre 147.000</div>
+      <div class="text-gray-600 text-sm">Corporate, governative e municipali</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow">
+      <div class="text-base font-semibold text-gray-800">Opzioni</div>
+      <div class="text-[#F59E0B] text-sm font-semibold">Disponibili</div>
+      <div class="text-gray-600 text-sm">Su azioni e ETF tramite app mobile</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow">
+      <div class="text-base font-semibold text-gray-800">Futures</div>
+      <div class="text-[#F59E0B] text-sm font-semibold">Accesso</div>
+      <div class="text-gray-600 text-sm">Contratti su valute, indici e materie prime</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow">
+      <div class="text-base font-semibold text-gray-800">IPO</div>
+      <div class="text-[#10B981] text-sm font-semibold">Accesso selezionato</div>
+      <div class="text-gray-600 text-sm">IPO USA ed europee riservate</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow">
+      <div class="text-base font-semibold text-gray-800">Prodotti strutturati</div>
+      <div class="text-[#F59E0B] text-sm font-semibold">Disponibili</div>
+      <div class="text-gray-600 text-sm">Soluzioni personalizzate per gestione rischio/rendimento</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow">
+      <div class="text-base font-semibold text-gray-800">Conto D</div>
+      <div class="text-[#10B981] text-sm font-semibold">Fino al 5,8% annuo</div>
+      <div class="text-gray-600 text-sm">Conto deposito remunerato</div>
+    </div>
+  </div>
+
+  <p class="text-xs text-gray-400 text-center mt-6 px-4">
+    Dati aggiornati al 2025. Consultare i documenti ufficiali di Freedom24 per ulteriori dettagli.
+  </p>
+
+  <style>
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-fadeIn {
+      animation: fadeIn 0.6s ease forwards;
+    }
+  </style>
+</section>
+
+
+    <div class="my-12 sm:my-16"></div>
+<section class="max-w-7xl mx-auto my-10 px-6">
+  <h2 class="text-2xl font-semibold text-center text-[#00C76A] mb-8">Servizi Offerti da Freedom24</h2>
+
+  <div class="flex gap-6 overflow-x-auto pb-6 scroll-snap-x scroll-smooth -webkit-overflow-scrolling-touch" style="scroll-snap-type: x mandatory;">
+    <div class="min-w-[300px] max-w-[300px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start cursor-pointer group transition-transform hover:scale-[1.03]" tabindex="0" role="region" aria-label="Accesso IPO">
+      <h3 class="text-lg font-semibold mb-3 group-hover:text-[#00C76A] group-focus:text-[#00C76A] transition-colors duration-300">Accesso IPO</h3>
+      <p class="text-sm text-gray-600">Partecipazione diretta alle principali offerte pubbliche iniziali (IPO) sui mercati USA ed europei. Ideale per investitori che vogliono accedere a titoli emergenti prima della quotazione.</p>
+      <p class="text-xs text-[#EF4444] font-medium mt-3">Disclaimer: Investimento minimo e rischi elevati.</p>
+    </div>
+    <div class="min-w-[300px] max-w-[300px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start cursor-pointer group transition-transform hover:scale-[1.03]" tabindex="0" role="region" aria-label="Piano di Accumulo">
+      <h3 class="text-lg font-semibold mb-3 group-hover:text-[#00C76A] group-focus:text-[#00C76A] transition-colors duration-300">Piano di Accumulo (PAC)</h3>
+      <p class="text-sm text-gray-600">Possibilità di impostare piani di accumulo regolari su azioni ed ETF per costruire un portafoglio a lungo termine, riducendo il rischio del market timing.</p>
+      <p class="text-xs text-gray-800 font-medium mt-3">Note: Importo minimo variabile per piano, nessuna commissione nascosta.</p>
+    </div>
+    <div class="min-w-[300px] max-w-[300px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start cursor-pointer group transition-transform hover:scale-[1.03]" tabindex="0" role="region" aria-label="Conto Deposito Freedom24">
+      <h3 class="text-lg font-semibold mb-3 group-hover:text-[#00C76A] group-focus:text-[#00C76A] transition-colors duration-300">Conto Deposito Freedom24</h3>
+      <p class="text-sm text-gray-600">Conto deposito con rendimento annuo fino al 3% sui fondi non investiti. Perfetto per mantenere liquidità remunerata in attesa di opportunità di mercato.</p>
+      <p class="text-xs text-gray-800 font-medium mt-3">Nota: Tasso soggetto a variazione. Minimo 1.000 EUR/USD.</p>
+    </div>
+    <div class="min-w-[300px] max-w-[300px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start cursor-pointer group transition-transform hover:scale-[1.03]" tabindex="0" role="region" aria-label="Analisi e Ricerca">
+      <h3 class="text-lg font-semibold mb-3 group-hover:text-[#00C76A] group-focus:text-[#00C76A] transition-colors duration-300">Analisi & Ricerca</h3>
+      <p class="text-sm text-gray-600">Accesso a report di analisi finanziaria, rating azionari, aggiornamenti macro e previsioni di mercato per supportare decisioni consapevoli.</p>
+      <p class="text-xs text-gray-800 font-medium mt-3">Incluso: Contenuti esclusivi per clienti attivi.</p>
+    </div>
+    <div class="min-w-[300px] max-w-[300px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start cursor-pointer group transition-transform hover:scale-[1.03]" tabindex="0" role="region" aria-label="Freedom24 Academy">
+      <h3 class="text-lg font-semibold mb-3 group-hover:text-[#00C76A] group-focus:text-[#00C76A] transition-colors duration-300">Freedom24 Academy</h3>
+      <p class="text-sm text-gray-600">Programma educativo con webinar, articoli e guide per migliorare le competenze finanziarie degli utenti. Adatto a investitori principianti e avanzati.</p>
+      <p class="text-xs text-gray-800 font-medium mt-3">Incluso: Accesso gratuito per utenti registrati.</p>
+    </div>
+  </div>
+
+  <p class="text-xs text-gray-400 text-center mt-6">
+    Dati aggiornati al 2025. Le informazioni hanno scopo informativo e non costituiscono consulenza finanziaria. Verificare sempre i documenti ufficiali di Freedom24.
+  </p>
+</section>
+
+
+
+<section style="max-width:600px; margin:40px auto; padding:32px; background: linear-gradient(90deg, #2563eb, #1e40af); border-radius:24px; text-align:center; font-family: Inter, sans-serif; color:#fff; user-select:none;">
+  <h2 style="font-size:2.5rem; font-weight:800; margin-bottom:16px; line-height:1.1;">
+    Apri Subito un Conto Demo su <span style="text-decoration: underline rgba(255 255 255 / 0.7);">Freedom24</span>
+  </h2>
+  <p style="font-size:1.125rem; max-width:480px; margin: 0 auto 28px; line-height:1.5;">
+    Apri gratuitamente un conto demo e prova la piattaforma di investimento Freedom24 con interfaccia intuitiva e accesso a strumenti reali, senza rischiare capitale. In più, puoi ricevere un’<strong>azione gratuita</strong> all’apertura del conto reale.
+  </p>
+  <a 
+    href="https://freedom24.com/invite_from/2953166" 
+    target="_blank" 
+    rel="noopener noreferrer" 
+    style="
+      display: inline-block;
+      padding: 16px 48px;
+      background: #ffffff;
+      color: #1e3a8a;
+      font-weight: 700;
+      font-size: 1.125rem;
+      border-radius: 9999px;
+      box-shadow: 0 4px 14px rgb(30 64 175 / 0.4);
+      text-decoration: none;
+      transition: box-shadow 0.3s ease, transform 0.15s ease;
+      user-select:none;
+    "
+    onmouseover="this.style.boxShadow='0 6px 20px rgb(30 64 175 / 0.7)'; this.style.transform='scale(1.05)';"
+    onmouseout="this.style.boxShadow='0 4px 14px rgb(30 64 175 / 0.4)'; this.style.transform='scale(1)';"
+    onmousedown="this.style.transform='scale(0.95)';"
+    onmouseup="this.style.transform='scale(1.05)';"
+  >
+    Apri Conto Demo Freedom24
+  </a>
+
+  <div style="max-width:480px; margin:32px auto 0; text-align:left; font-size:0.875rem; line-height:1.4; color: rgba(255 255 255 / 0.85);">
+    <p style="margin-bottom:12px;">
+      <strong>Promo azione gratuita:</strong> L’azione gratuita è soggetta a termini e condizioni. Offerta disponibile solo per nuovi utenti che aprono un conto reale tramite il link promozionale.
+    </p>
+    <p style="margin-bottom:12px;">
+      <strong>Disclaimer demo:</strong> L’apertura del conto demo è gratuita e non comporta rischi di perdita di capitale reale. Tuttavia, le performance in modalità demo non garantiscono risultati futuri né rappresentano performance reali sui mercati.
+    </p>
+    <p style="background:#fff; color:#000; border-radius:12px; padding:16px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      <strong>Disclaimer attività reale:</strong> Investire sui mercati reali comporta rischi. È importante valutare il proprio profilo di rischio e informarsi adeguatamente prima di operare. Le performance passate non garantiscono risultati futuri.
+    </p>
+  </div>
+</section>
+
+
+
+
+
+
+<div class="my-12 sm:my-16"></div>
+    <!-- Transizione fine sezione broker -->
+<div class="w-full max-w-6xl mx-auto my-20 px-4">
+  <div class="w-24 h-1.5 mx-auto bg-gradient-to-r from-blue-700 via-blue-500 to-blue-700 rounded-full opacity-50"></div>
+</div>
+
+
+    <section class="text-center py-12 px-4 max-w-4xl mx-auto">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight mb-4">Strumenti AI per la finanza reale</h1>
+      <p class="mt-2 text-base text-slate-600">Richiedi un report AI su un asset: ricezione via WhatsApp, SMS o Email. Nessun tracciamento. Solo analisi reale, senza fuffa.</p>
+      <p class="mt-4 text-lg text-blue-700 min-h-[28px] font-medium" id="typing-text"></p>
+    </section>
+
+    <section class="text-center py-8 px-4 max-w-md mx-auto bg-white/90 rounded-xl shadow-xl backdrop-blur-md border-2 border-transparent transition-all duration-500" id="form-container" style="margin-bottom: 64px;">
+      <form action="https://formsubmit.co/analisi@tradelia.org" method="POST" class="text-left space-y-3 text-sm">
+        <div><label for="asset" class="block font-semibold">Asset <span class="text-red-500">*</span></label><input type="text" name="asset" id="asset" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
+        <div><label for="categoria" class="block font-semibold">Categoria <span class="text-red-500">*</span></label><select name="categoria" id="categoria" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Azioni</option><option>ETF</option><option>Forex</option><option>Crypto</option><option>Commodities</option><option>Obbligazioni</option><option>Indici</option><option>REIT</option><option>Derivati</option></select></div>
+        <div><label for="timeframe" class="block font-semibold">Orizzonte Temporale <span class="text-red-500">*</span></label><select name="timeframe" id="timeframe" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Breve Termine</option><option>Medio Termine</option><option>Lungo Termine</option></select></div>
+        <div><label for="focus" class="block font-semibold">Focus dell'analisi <span class="text-red-500">*</span></label><select name="focus" id="focus" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Fondamentale</option><option>Tecnico</option><option>Macroeconomico</option><option>Approfondita</option></select></div>
+        <div><label for="nome" class="block font-semibold">Nome <span class="text-red-500">*</span></label><input type="text" name="nome" id="nome" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
+        <div><label for="metodo" class="block font-semibold">Metodo di ricezione <span class="text-red-500">*</span></label><select name="metodo" id="metodo" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>SMS</option><option>Email</option><option>WhatsApp</option></select></div>
+        <div><label for="contatto" class="block font-semibold">Contatto <span class="text-red-500">*</span></label><input type="text" name="contatto" id="contatto" placeholder="Telefono o email" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
+        <p class="text-xs text-slate-500 mt-2 leading-snug">🛡 Nessuna pubblicità. Nessuna profilazione. I dati verranno usati solo per inviarti il report PDF.</p>
+        <button type="submit" class="w-full mt-3 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-md">Invia Richiesta</button>
+        <p id="form-response" class="mt-3 text-green-600 font-medium hidden">✅ Richiesta inviata! Riceverai il report entro poche ore.</p>
+      </form>
+    </section>
+ <body class="text-gray-900">
+    <header class="bg-white shadow py-4 px-6 flex justify-between items-center">
+      <div class="text-xl font-bold text-blue-800">Analisi AI Broker</div>
+    </header>
+
+    <main class="p-4">
+      <div class="bg-white shadow-lg rounded-lg p-6 max-w-6xl mx-auto">
+        <h2 class="text-lg font-semibold mb-4">Broker con Valutazione AI</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6" id="broker-grid"></div>
+      </div>
+    </main>
+
+    <script>
+      const brokerList = [
+        { name: 'Exante', rating: 100, url: '/Exante.html', desc: 'Broker professionale con accesso DMA e ampia offerta istituzionale.', logo: 'exante.svg' },
+        { name: 'Freedom24', rating: 92, url: '/Freedom24.html', desc: 'Azioni reali, IPO e azione gratuita per i nuovi utenti.', logo: 'freedom24.svg' },
+        { name: 'FP Markets', rating: 90, url: '/FPMarkets.html', desc: 'Ottimo per Forex, esecuzione rapida e spread contenuti.', logo: 'fpmarkets.svg' },
+        { name: 'Pepperstone', rating: 87, url: '/Pepperstone.html', desc: 'Broker ECN rapido e trasparente. Perfetto per day trader.', logo: 'pepperstone.svg' },
+        { name: 'eToro', rating: 85, url: '/eToro.html', desc: 'Broker social, azioni reali e funzionalità di copy trading.', logo: 'etoro.svg' },
+        { name: 'Eightcap', rating: 83, url: '/Eightcap.html', desc: 'Ottima offerta di crypto CFD e strumenti per MT5.', logo: 'eightcap.svg' },
+        { name: 'NAGA', rating: 82, url: '/NAGA.html', desc: 'Copy trading, social network e crypto. Giovane e dinamico.', logo: 'naga.svg' },
+        { name: 'FxPro', rating: 80, url: '/FxPro.html', desc: 'Broker multi-asset con regolamentazione forte e buoni spread.', logo: 'fxpro.svg' },
+        { name: 'XM', rating: 79, url: '/XM.html', desc: 'Buon supporto educativo e bonus di benvenuto.', logo: 'xm.svg' },
+        { name: 'Plus500', rating: 78, url: '/Plus500.html', desc: 'Semplice, mobile-friendly, ideale per iniziare con CFD.', logo: 'plus500.svg' },
+        { name: 'Skilling', rating: 77, url: '/Skilling.html', desc: 'Piattaforma semplice, mobile, con discreto supporto.', logo: 'skilling.svg' },
+        { name: 'AvaTrade', rating: 76, url: '/AvaTrade.html', desc: 'Offerta solida multi-asset e opzioni vanilla.', logo: 'avatrade.svg' },
+        { name: 'BlackBull Markets', rating: 74, url: '/BlackBullMarkets.html', desc: 'Broker ECN con spread variabili, adatto a trader avanzati.', logo: 'blackbull.svg' }
+      ];
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('broker-grid');
+        brokerList.sort((a, b) => b.rating - a.rating).forEach(broker => {
+          const card = document.createElement('div');
+          card.className = "border rounded-xl shadow p-5 bg-white hover:bg-blue-50 transition";
+          card.innerHTML = `
+            <div class="flex items-center gap-3 mb-2">
+              <img src="/logos/${broker.logo}" alt="${broker.name}" class="w-8 h-8 rounded-full bg-gray-200" />
+              <div class="text-xl font-bold text-blue-900">${broker.name}</div>
+            </div>
+            <div class="text-sm text-gray-600">Rating AI: ${broker.rating}/100</div>
+            <p class="mt-2 text-sm text-gray-700">${broker.desc}</p>
+            <a href="${broker.url}" class="inline-block mt-3 text-sm text-blue-600 font-medium hover:underline">Leggi analisi AI completa →</a>
+          `;
+          container.appendChild(card);
+        });
+      });
+    </script>
+  </body>
+  <div id="cookie-popup" class="modal">
+  <div class="modal-content">
+    <img src="https://lucid.app/favicon.ico" alt="Lucid icon" class="mx-auto mb-2 w-8 h-8">
+    <h3 class="text-lg font-semibold mb-2">Zero biscotti, zero sorprese.</h3>
+    <p class="mb-2">Tradelia non utilizza cookie di tracciamento, profilazione o pubblicità.</p>
+    <p class="text-sm text-gray-600">Salveremo la tua preferenza sul tuo dispositivo per non mostrarti più questo messaggio.</p>
+    <button onclick="chiudiPopupCookie()" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Ho capito</button>
+  </div>
+</div>
+
+
+    <footer style="width:100%;background:#0f172a;color:#cbd5e1;padding:48px 24px 32px;font-family:'Inter',sans-serif;font-size:14px;line-height:1.7;border-top:1px solid rgba(255,255,255,0.08)">
+      <div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between">
+        <div style="flex:1 1 300px">
+          <h4 style="color:#f8fafc;font-size:16px;margin-bottom:12px;font-weight:600">Tradelia AI</h4>
+          <p>Tradelia è un progetto indipendente per fornire strumenti educativi e analisi AI gratuite nel campo finanziario.</p>
+          <p style="margin-top:16px;font-size:13px;color:#60a5fa">✉️ <a href="mailto:info@tradelia.org" style="color:#60a5fa;text-decoration:none">info@tradelia.org</a></p>
+        </div>
+        <div style="flex:1 1 300px">
+          <p class="hover:translate-x-1 hover:text-sky-400 transition cursor-pointer font-semibold text-white mb-2" onclick="apriSezioneLegale('section-tc')">Termini e Condizioni</p>
+          <p class="hover:translate-x-1 hover:text-sky-400 transition cursor-pointer font-semibold text-white" onclick="apriSezioneLegale('section-privacy')">Privacy Policy</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
