@@ -186,102 +186,198 @@
       <p class="mt-4 text-lg text-blue-700 min-h-[28px] font-medium" id="typing-text"></p>
     </section>
 
-<section id="form-container" class="py-12 px-6 max-w-xl mx-auto bg-slate-50 shadow-xl rounded-2xl border border-gray-200 font-[Inter] prose">
-  <h2 class="text-2xl font-bold text-center text-blue-800 mb-6">Richiedi il Tuo Report AI Personalizzato</h2>
+<section id="form-tradelia" class="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-6 font-[Inter] text-gray-800">
+  <h2 class="text-2xl sm:text-3xl font-bold text-center text-blue-800 mb-6">Richiedi il Tuo Report AI o Idee di Mercato</h2>
 
-  <form action="https://formsubmit.co/analisi@tradelia.org" method="POST" target="_blank" onsubmit="handleFormSubmit(event)" class="space-y-4 text-sm text-gray-800">
-    
-    <!-- Asset -->
-    <div>
-      <label for="asset" class="font-semibold">Asset <span class="text-red-500">*</span></label>
-      <input type="text" name="asset" id="asset" class="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 focus:ring-2 focus:ring-blue-600">
+  <!-- Step 1: Selezione tipo richiesta -->
+  <div id="step-1" class="space-y-4 animate-fade-in">
+    <p class="text-sm text-gray-600 text-center mb-2">Scegli il tipo di richiesta</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <button data-type="analisi" class="request-type-card">
+        <i class="lucide lucide-bar-chart-3 w-5 h-5"></i>
+        <span>📊 Analisi AI su Asset</span>
+      </button>
+      <button data-type="azioni" class="request-type-card">
+        <i class="lucide lucide-pie-chart w-5 h-5"></i>
+        <span>📉 3 Azioni Sottovalutate</span>
+      </button>
+      <button data-type="crypto" class="request-type-card">
+        <i class="lucide lucide-bitcoin w-5 h-5"></i>
+        <span>📈 3 Crypto Sottovalutate</span>
+      </button>
+      <button data-type="esg" class="request-type-card">
+        <i class="lucide lucide-leaf w-5 h-5"></i>
+        <span>🌱 3 Titoli ESG + Crescita</span>
+      </button>
+      <button data-type="dividendi" class="request-type-card">
+        <i class="lucide lucide-wallet w-5 h-5"></i>
+        <span>💰 Dividendi Alti e Sostenibili</span>
+      </button>
     </div>
+  </div>
 
-    <!-- Categoria -->
-    <div>
-      <label for="categoria" class="font-semibold">Categoria <span class="text-red-500">*</span></label>
-      <select name="categoria" id="categoria" class="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1">
-        <option value="">Seleziona...</option>
-        <option>Azioni</option><option>ETF</option><option>Forex</option><option>Crypto</option><option>Commodities</option><option>Obbligazioni</option><option>Indici</option><option>REIT</option><option>Derivati</option>
-      </select>
-    </div>
+  <!-- Step 2 & 3: Campi dinamici -->
+  <div id="step-2" class="mt-6 hidden animate-fade-in"></div>
 
-    <!-- Timeframe -->
-    <div>
-      <label for="timeframe" class="font-semibold">Orizzonte Temporale <span class="text-red-500">*</span></label>
-      <select name="timeframe" id="timeframe" class="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1">
-        <option value="">Seleziona...</option>
-        <option>Breve Termine</option><option>Medio Termine</option><option>Lungo Termine</option>
-      </select>
-    </div>
-
-    <!-- Focus -->
-    <div>
-      <label for="focus" class="font-semibold">Focus dell'analisi <span class="text-red-500">*</span></label>
-      <select name="focus" id="focus" class="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1">
-        <option value="">Seleziona...</option>
-        <option>Fondamentale</option><option>Tecnico</option><option>Macroeconomico</option><option>Approfondita</option>
-      </select>
-    </div>
-
-    <!-- Nome -->
-    <div>
-      <label for="nome" class="font-semibold">Nome <span class="text-red-500">*</span></label>
-      <input type="text" name="nome" id="nome" class="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1">
-    </div>
-
-    <!-- Metodo di ricezione -->
-    <div>
-      <label for="metodo" class="font-semibold">Metodo di ricezione <span class="text-red-500">*</span></label>
-      <select name="metodo" id="metodo" class="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1">
-        <option value="">Seleziona...</option>
-        <option>SMS</option><option>Email</option><option>WhatsApp</option>
-      </select>
-    </div>
-
-    <!-- Contatto -->
-    <div>
-      <label for="contatto" class="font-semibold">Contatto <span class="text-red-500">*</span></label>
-      <input type="text" name="contatto" id="contatto" placeholder="Telefono o email" class="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1">
-    </div>
-
-    <!-- Disclaimer -->
-    <p class="text-xs text-gray-500 mt-2 leading-snug">🛡 Nessuna pubblicità. Nessuna profilazione. I tuoi dati verranno usati solo per inviarti il report PDF.</p>
-
-    <!-- Submit Button with Spinner -->
-    <button id="submit-btn" type="submit" class="w-full mt-3 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg flex items-center justify-center gap-2">
-      <span id="submit-text">Invia Richiesta</span>
-      <svg id="spinner" class="animate-spin h-4 w-4 text-white hidden" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"/></svg>
-    </button>
-
-    <!-- Conferma -->
-    <p id="form-response" class="hidden mt-4 text-center text-green-600 font-medium">✅ Richiesta inviata! Riceverai il report entro poche ore.</p>
-  </form>
+  <!-- Step 4: Messaggio finale -->
+  <div id="step-success" class="hidden text-center mt-8 animate-fade-in">
+    <p class="text-green-600 font-semibold text-lg">✅ Richiesta inviata con successo!</p>
+    <p class="text-sm text-gray-500 mt-2">Riceverai il tuo report entro 24 ore tramite il metodo selezionato.</p>
+  </div>
 </section>
 
-<!-- JS finale -->
+<style>
+  .request-type-card {
+    @apply w-full flex items-center justify-start gap-3 border border-gray-300 rounded-lg px-4 py-3 hover:ring-2 hover:ring-blue-700 cursor-pointer transition text-left;
+  }
+  .input {
+    @apply w-full border border-gray-300 rounded px-3 py-2 mt-1;
+  }
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
 <script>
-  function handleFormSubmit(event) {
-    const form = event.target;
+  const step1 = document.getElementById('step-1');
+  const step2 = document.getElementById('step-2');
+  const successBox = document.getElementById('step-success');
+
+  document.querySelectorAll('.request-type-card').forEach(button => {
+    button.addEventListener('click', () => {
+      const type = button.dataset.type;
+      loadStepTwo(type);
+      step1.classList.add('hidden');
+      step2.classList.remove('hidden');
+    });
+  });
+
+  function loadStepTwo(type) {
+    let html = '';
+
+    if (type === 'analisi') {
+      html += `
+        <form id="form-analisi" class="space-y-4">
+          <input type="hidden" name="tipo" value="analisi">
+          <div><label>Asset*</label><input required name="asset" class="input" type="text"></div>
+          <div><label>Categoria*</label><select required name="categoria" class="input">
+            <option>Azioni</option><option>ETF</option><option>Forex</option><option>Crypto</option>
+          </select></div>
+          <div><label>Focus dell'analisi*</label><select required name="focus" class="input">
+            <option>Fondamentale</option><option>Tecnico</option><option>Macroeconomico</option><option>Approfondita</option>
+          </select></div>
+          ${commonFields()}
+        </form>`;
+    }
+
+    if (type === 'azioni') {
+      html += `
+        <form id="form-azioni" class="space-y-4">
+          <input type="hidden" name="tipo" value="azioni">
+          <div><label>Stile d'investimento*</label>
+            <select required name="stile" class="input">
+              <option>Value</option><option>Growth</option><option>Bilanciato</option>
+            </select>
+          </div>
+          ${commonFields()}
+        </form>`;
+    }
+
+    if (type === 'crypto') {
+      html += `
+        <form id="form-crypto" class="space-y-4">
+          <input type="hidden" name="tipo" value="crypto">
+          <div><label>Livello di rischio*</label>
+            <select required name="rischio" class="input">
+              <option>Solo Top Cap</option><option>Mid Cap</option><option>Mix prudente</option>
+            </select>
+          </div>
+          ${commonFields()}
+        </form>`;
+    }
+
+    if (type === 'esg') {
+      html += `
+        <form id="form-esg" class="space-y-4">
+          <input type="hidden" name="tipo" value="esg">
+          <div><label>Area ESG*</label>
+            <select required name="area" class="input">
+              <option>Ambiente</option><option>Social</option><option>Governance</option><option>Generale</option>
+            </select>
+          </div>
+          ${commonFields()}
+        </form>`;
+    }
+
+    if (type === 'dividendi') {
+      html += `
+        <form id="form-dividendi" class="space-y-4">
+          <input type="hidden" name="tipo" value="dividendi">
+          <div><label>Yield minimo*</label>
+            <select required name="yield" class="input">
+              <option>3%</option><option>4%</option><option>5%</option><option>6%+</option>
+            </select>
+          </div>
+          ${commonFields()}
+        </form>`;
+    }
+
+    step2.innerHTML = html;
+    setupSubmitHandler();
+  }
+
+  function commonFields() {
+    return `
+      <div><label>Nome*</label><input required name="nome" class="input" type="text"></div>
+      <div><label>Metodo di ricezione*</label>
+        <select required name="metodo" class="input">
+          <option>Email</option><option>SMS</option><option>WhatsApp</option>
+        </select></div>
+      <div><label>Contatto*</label><input required name="contatto" class="input" type="text"></div>
+      <button type="submit" id="submit-btn" class="w-full bg-blue-700 hover:bg-blue-800 text-white py-2 rounded-lg font-semibold flex items-center justify-center gap-2">
+        <span id="submit-text">Invia Richiesta</span>
+        <svg id="spinner" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path></svg>
+      </button>
+    `;
+  }
+
+  function setupSubmitHandler() {
+    const activeForm = step2.querySelector('form');
     const btn = document.getElementById('submit-btn');
     const spinner = document.getElementById('spinner');
     const text = document.getElementById('submit-text');
 
-    // Mostra spinner
-    spinner.classList.remove('hidden');
-    text.textContent = 'Invio in corso...';
-    btn.disabled = true;
+    activeForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      btn.disabled = true;
+      spinner.classList.remove('hidden');
+      text.textContent = 'Invio in corso...';
 
-    // Reset e conferma
-    setTimeout(() => {
-      form.reset();
-      document.getElementById('form-response').classList.remove('hidden');
+      const formData = Object.fromEntries(new FormData(activeForm).entries());
+      const res = await fetch('/api/send-report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      if (res.ok) {
+        step2.classList.add('hidden');
+        successBox.classList.remove('hidden');
+      } else {
+        alert("Errore durante l'invio. Riprova.");
+      }
+
+      btn.disabled = false;
       spinner.classList.add('hidden');
       text.textContent = 'Invia Richiesta';
-      btn.disabled = false;
-    }, 1200);
+    });
   }
 </script>
+
 
  <body class="text-gray-900">
     <header class="bg-white shadow py-4 px-6 flex justify-between items-center">
