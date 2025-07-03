@@ -22,12 +22,12 @@ ${analisi ? `🧠 Tipo Analisi: ${analisi}` : ""}
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
-        Authorization: "Bearer re_P2UTQkLc_HxqSWp8w3qxZ2ghHJhaSZrN3",
+        Authorization: "Bearer re_hkkZC1CZ_4jT9XipxNg4mN1ffmPTQp61d",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         from: "Tradelia <noreply@resend.dev>",
-        to: "topofferte@protonmail.ch",
+        to: "analisi@tradelia.org",
         subject: "📩 Nuova richiesta analisi gratuita",
         text: contenuto,
       }),
