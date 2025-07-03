@@ -218,6 +218,54 @@
     formContainer.innerHTML = formHTML;
     lucide.createIcons();
   }
+  <!-- Popup Cookie -->
+<div id="cookie-popup" class="modal">
+  <div class="modal-content">
+    <img src="https://lucid.app/favicon.ico" alt="Lucid icon" class="mx-auto mb-2 w-8 h-8">
+    <h3 class="text-lg font-semibold mb-2">Zero biscotti, zero sorprese.</h3>
+    <p class="mb-2">Tradelia non utilizza cookie di tracciamento, profilazione o pubblicità.</p>
+    <p class="text-sm text-gray-600">Salveremo la tua preferenza sul tuo dispositivo per non mostrarti più questo messaggio.</p>
+    <button onclick="chiudiPopupCookie()" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Ho capito</button>
+  </div>
+</div>
+
+<!-- Funzioni JS popup -->
+<script>
+  function chiudiPopupCookie() {
+    localStorage.setItem('tradeliaConsent', 'true');
+    const popup = document.getElementById("cookie-popup");
+    if (popup) popup.style.display = "none";
+  }
+
+  function apriSezioneLegale(id) {
+    const modal = document.createElement("div");
+    modal.className = "modal animate-fade-in";
+    modal.style.display = "flex";
+    modal.innerHTML = `
+      <div class="modal-content">
+        <div class="modal-close hover:text-red-500 transition" onclick="this.parentElement.parentElement.remove()">✕</div>
+        <h3 class="text-lg font-semibold mb-2">${id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy'}</h3>
+        <p class="text-sm text-gray-800">
+          ${
+            id === 'section-tc'
+              ? "Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all'investimento. Tutte le operazioni simulate in ambiente demo."
+              : "Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l'utente. Progetto open per educazione finanziaria."
+          }
+        </p>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    if (!localStorage.getItem('tradeliaConsent')) {
+      setTimeout(() => {
+        const popup = document.getElementById("cookie-popup");
+        if (popup) popup.style.display = "flex";
+      }, 1000);
+    }
+  });
+</script>
+
 
   // POPUP
   function closePopup() {
