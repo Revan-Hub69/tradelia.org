@@ -3,19 +3,20 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
-  const { asset, analisi, metodo, contatto, nome } = req.body;
+  const { asset, analisi, metodo, contatto, nome, servizio } = req.body;
 
   const contenuto = `
-    ✅ Nuova richiesta analisi da Tradelia
+✅ Nuova richiesta analisi da Tradelia
 
-    👤 Nome: ${nome}
-    📞 Metodo di contatto: ${metodo}
-    📨 Contatto: ${contatto}
-    ${asset ? `📊 Asset richiesto: ${asset}` : ""}
-    ${analisi ? `🧠 Tipo Analisi: ${analisi}` : ""}
+👤 Nome: ${nome}
+📝 Servizio: ${servizio || "N/D"}
+📞 Metodo di contatto: ${metodo}
+📬 Contatto: ${contatto}
+${asset ? `📊 Asset richiesto: ${asset}` : ""}
+${analisi ? `🧠 Tipo Analisi: ${analisi}` : ""}
 
-    📍 Inviato da: https://tradelia.org
-  `;
+📍 Inviato da: https://tradelia.org
+`;
 
   try {
     const response = await fetch("https://api.resend.com/emails", {
