@@ -264,6 +264,168 @@
       </div>
     </div>
   </section>
+<script>
+  // FLIP FORM
+  function flipPage(val) {
+    const container = document.getElementById("flipContainer");
+    container.setAttribute("data-flipped", val);
+    const formContainer = document.getElementById("formContainer");
+    formContainer.innerHTML = "";
+
+    const servizio = val === 1 ? "Analisi Singolo Asset"
+                  : val === 2 ? "3 Azioni Sottovalutate"
+                  : val === 3 ? "3 Crypto Solide"
+                  : "3 Titoli ad Alto Dividendo";
+
+    const title = val === 1
+      ? "Analisi su asset con metodologia AI e dati istituzionali"
+      : `Riceverai ${servizio} selezionati da modelli proprietari Tradelia.`;
+
+    const isAsset = val === 1;
+
+    const formHTML = `
+      <div class="text-sm text-gray-600 text-center mb-6">${title}</div>
+      <form id="richiestaForm" class="space-y-5 max-w-xl mx-auto text-sm">
+        <input type="hidden" name="servizio" value="${servizio}" />
+        ${isAsset ? `
+        <div>
+          <label class="block font-medium mb-1">Ticker o nome asset</label>
+          <input name="asset" required class="w-full border border-gray-300 rounded-md px-4 py-2" placeholder="Es. AAPL o Apple Inc." />
+        </div>
+        <div>
+          <label class="block font-medium mb-1">Tipo di analisi</label>
+          <select name="analisi" required class="w-full border border-gray-300 rounded-md px-4 py-2">
+            <option>Approfondita (consigliata)</option>
+            <option>Tecnica</option>
+            <option>Fondamentale</option>
+            <option>Macro</option>
+          </select>
+        </div>` : ""}
+        <div>
+          <label class="block font-medium mb-1">Metodo di ricezione</label>
+          <select name="metodo" required class="w-full border border-gray-300 rounded-md px-4 py-2">
+            <option>WhatsApp (consigliato)</option>
+            <option>SMS</option>
+            <option>Email</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-medium mb-1">Contatto</label>
+          <input name="contatto" required class="w-full border border-gray-300 rounded-md px-4 py-2" placeholder="Numero o email" />
+        </div>
+        <div>
+          <label class="block font-medium mb-1">Nome</label>
+          <input name="nome" required class="w-full border border-gray-300 rounded-md px-4 py-2" placeholder="Il tuo nome" />
+        </div>
+        <div>
+          <button type="submit" class="w-full bg-blue-700 text-white font-semibold py-3 rounded-md hover:bg-blue-800 transition">
+            Invia Richiesta
+          </button>
+        </div>
+      </form>`;
+    formContainer.innerHTML = formHTML;
+    lucide.createIcons();
+  }
+
+  // CHIUDI MODALE SUCCESS
+  function closePopup() {
+    document.getElementById("popupSuccess").classList.add("hidden");
+    flipPage(0);
+  }
+
+  // TESTO TYPING
+  const phrases = [
+    "AI per trader moderni",
+    "Strumenti gratuiti, zero fuffa",
+    "Operatività solo in ambiente demo"
+  ];
+  let current = 0;
+  const typingElement = document.getElementById("typing-text");
+  function typePhrase() {
+    const phrase = phrases[current];
+    typingElement.textContent = "";
+    [...phrase].forEach((char, i) => {
+      setTimeout(() => {
+        typingElement.textContent += char;
+      }, i * 50);
+    });
+    setTimeout(() => {
+      current = (current + 1) % phrases.length;
+      typePhrase();
+    }, phrase.length * 50 + 2000);
+  }
+
+  // COOKIE POPUP
+  function chiudiPopupCookie() {
+    localStorage.setItem('tradeliaConsent', 'true');
+    const popup = document.getElementById("cookie-popup");
+    if (popup) popup.style.display = "none";
+  }
+
+  // MODALE LEGALI
+  function apriSezioneLegale(id) {
+    const modal = document.createElement("div");
+    modal.className = "modal animate-fade-in";
+    modal.style.display = "flex";
+    modal.innerHTML = `
+      <div class="modal-content">
+        <div class="modal-close hover:text-red-500 transition" onclick="this.parentElement.parentElement.remove()">✕</div>
+        <h3 class="text-lg font-semibold mb-2">${id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy'}</h3>
+        <p class="text-sm text-gray-800">
+          ${
+            id === 'section-tc'
+              ? "Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all'investimento. Tutte le operazioni simulate in ambiente demo."
+              : "Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l'utente. Progetto open per educazione finanziaria."
+          }
+        </p>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+
+  // FORM SUBMIT
+  document.addEventListener("submit", async function (e) {
+    const form = e.target;
+    if (form.id !== "richiestaForm") return;
+    e.preventDefault();
+
+    const data = Object.fromEntries(new FormData(form).entries());
+    const btn = form.querySelector("button[type=submit]");
+    const original = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<svg class="animate-spin w-5 h-5 mx-auto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="4" class="opacity-25"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M4 12a8 8 0 018-8" class="opacity-75"/></svg>`;
+
+    try {
+      const res = await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      if (res.ok) {
+        document.getElementById("popupSuccess").classList.remove("hidden");
+      } else {
+        throw new Error("Errore");
+      }
+    } catch (err) {
+      alert("Errore nell'invio. Riprova.");
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = original;
+    }
+  });
+
+  // INIT
+  document.addEventListener("DOMContentLoaded", function () {
+    if (!localStorage.getItem('tradeliaConsent')) {
+      setTimeout(() => {
+        const popup = document.getElementById("cookie-popup");
+        if (popup) popup.style.display = "flex";
+      }, 1000);
+    }
+    typePhrase();
+    lucide.createIcons();
+  });
+</script>
 
 
 
