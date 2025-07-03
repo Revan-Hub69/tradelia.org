@@ -91,9 +91,11 @@
     }
   }
 
+  /* FLIP SYSTEM CORRETTO */
   .flip-page {
     perspective: 2000px;
   }
+
   .flip-wrapper {
     transition: transform 0.8s ease;
     transform-style: preserve-3d;
@@ -101,17 +103,22 @@
     width: 100%;
     min-height: 700px;
   }
+
   .flip-page[data-flipped="1"] .flip-wrapper,
   .flip-page[data-flipped="2"] .flip-wrapper,
   .flip-page[data-flipped="3"] .flip-wrapper,
   .flip-page[data-flipped="4"] .flip-wrapper {
     transform: rotateY(180deg);
   }
+
   .flip-face {
-    backface-visibility: hidden;
-    position: relative; /* ← modificato */
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
+    backface-visibility: hidden;
   }
+
   .flip-back {
     transform: rotateY(180deg);
   }
