@@ -14,108 +14,109 @@
 
     <!-- Font Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* Scrollbar personalizzata */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+    border-radius: 100vh;
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.05);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(80, 160, 200, 0.4);
+    border-radius: 100vh;
+    backdrop-filter: blur(4px);
+    transition: all 0.3s ease;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(80, 160, 200, 0.6);
+    box-shadow: inset 0 0 6px rgba(80, 160, 200, 0.4);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(80, 160, 200, 0.5) #e5e7eb;
+  }
 
-    <style>
-      /* Scrollbar personalizzata */
-      ::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
-      }
-      ::-webkit-scrollbar-track {
-        background: linear-gradient(to right, #f1f5f9, #e2e8f0);
-        border-radius: 100vh;
-        box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.05);
-      }
-      ::-webkit-scrollbar-thumb {
-        background: rgba(80, 160, 200, 0.4);
-        border-radius: 100vh;
-        backdrop-filter: blur(4px);
-        transition: all 0.3s ease;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: rgba(80, 160, 200, 0.6);
-        box-shadow: inset 0 0 6px rgba(80, 160, 200, 0.4);
-      }
-      * {
-        scrollbar-width: thin;
-        scrollbar-color: rgba(80, 160, 200, 0.5) #e5e7eb;
-      }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+    background-size: 280px;
+  }
 
-      body {
-        font-family: 'Inter', sans-serif;
-        background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
-        background-size: 280px;
-      }
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    animation: fadeIn 0.4s ease;
+  }
+  .modal-content {
+    background: #f8fafc;
+    max-width: 480px;
+    padding: 28px;
+    border-radius: 16px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #0f172a;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
+    border: 1px solid #cbd5e1;
+  }
+  .modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #334155;
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 
-      .modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.7);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 50;
-        animation: fadeIn 0.4s ease;
-      }
-      .modal-content {
-        background: #f8fafc;
-        max-width: 480px;
-        padding: 28px;
-        border-radius: 16px;
-        font-size: 15px;
-        line-height: 1.7;
-        color: #0f172a;
-        position: relative;
-        text-align: center;
-        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
-        border: 1px solid #cbd5e1;
-      }
-      .modal-close {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        cursor: pointer;
-        font-size: 18px;
-        color: #334155;
-      }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: scale(0.95);
-        }
-        to {
-          opacity: 1;
-          transform: scale(1);
-        }
-      }
+  .flip-page {
+    perspective: 2000px;
+  }
+  .flip-wrapper {
+    transition: transform 0.8s ease;
+    transform-style: preserve-3d;
+    position: relative;
+    width: 100%;
+    min-height: 700px;
+  }
+  .flip-page[data-flipped="1"] .flip-wrapper,
+  .flip-page[data-flipped="2"] .flip-wrapper,
+  .flip-page[data-flipped="3"] .flip-wrapper,
+  .flip-page[data-flipped="4"] .flip-wrapper {
+    transform: rotateY(180deg);
+  }
+  .flip-face {
+    backface-visibility: hidden;
+    position: relative; /* ← modificato */
+    width: 100%;
+  }
+  .flip-back {
+    transform: rotateY(180deg);
+  }
+</style>
 
-      .flip-page {
-        perspective: 2000px;
-      }
-      .flip-wrapper {
-        transition: transform 0.8s ease;
-        transform-style: preserve-3d;
-        position: relative;
-        width: 100%;
-      }
-      .flip-page[data-flipped="1"] .flip-wrapper,
-      .flip-page[data-flipped="2"] .flip-wrapper,
-      .flip-page[data-flipped="3"] .flip-wrapper,
-      .flip-page[data-flipped="4"] .flip-wrapper {
-        transform: rotateY(180deg);
-      }
-      .flip-face {
-        backface-visibility: hidden;
-        position: absolute;
-        width: 100%;
-      }
-      .flip-back {
-        transform: rotateY(180deg);
-      }
-    </style>
   </head>
 
   <body class="text-gray-900">
