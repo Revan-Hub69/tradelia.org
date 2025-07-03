@@ -26,7 +26,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         from: "Tradelia <noreply@resend.dev>",
-        to: "analisi@tradelia.org",
+        to: "topofferte@protonmail.ch",
         subject: "📩 Nuova richiesta analisi gratuita",
         text: contenuto,
       }),
