@@ -1,24 +1,22 @@
-// /api/send-email.ts (Vercel, Next.js API Route)
-
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
-  const { servizio, asset, analisi, metodo, contatto, nome } = req.body;
+  const { asset, analisi, metodo, contatto, nome, servizio } = req.body;
 
   const contenuto = `
-✅ Nuova richiesta da Tradelia
+✅ Nuova richiesta analisi da Tradelia
 
-🧾 Servizio: ${servizio}
 👤 Nome: ${nome}
+📝 Servizio: ${servizio || "N/D"}
 📞 Metodo di contatto: ${metodo}
 📬 Contatto: ${contatto}
 ${asset ? `📊 Asset richiesto: ${asset}` : ""}
-${analisi ? `🧠 Tipo di analisi: ${analisi}` : ""}
+${analisi ? `🧠 Tipo Analisi: ${analisi}` : ""}
 
-📍 Inviato da https://tradelia.org
-  `;
+📍 Inviato da: https://tradelia.org
+`;
 
   try {
     const response = await fetch("https://api.resend.com/emails", {
@@ -29,8 +27,8 @@ ${analisi ? `🧠 Tipo di analisi: ${analisi}` : ""}
       },
       body: JSON.stringify({
         from: "Tradelia <noreply@resend.dev>",
-        to: "analisi@tradelia.org",
-        subject: "📩 Nuova richiesta da Tradelia",
+        to: "topofferte@protonmail.ch",
+        subject: "📩 Nuova richiesta analisi gratuita",
         text: contenuto,
       }),
     });
