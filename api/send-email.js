@@ -1,40 +1,34 @@
-// /api/send-email.js
+// api/send-email.js
+
 import { Resend } from 'resend';
 
-const resend = new Resend('re_P2UTQkLc_HxqSWp8w3qxZ2ghHJhaSZrN3');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Metodo non consentito' });
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const { asset, analisi, metodo, contatto, nome } = req.body;
 
-  if (!metodo || !contatto || !nome) {
-    return res.status(400).json({ error: 'Campi obbligatori mancanti' });
-  }
-
-  const subject = asset ? `Richiesta Analisi Asset – ${asset}` : 'Richiesta Servizio Gratuito';
-
-  const content = `
-    ✅ Nuova richiesta da modulo Tradelia
-
-    Nome: ${nome}
-    Metodo: ${metodo}
-    Contatto: ${contatto}
-    ${asset ? `Asset: ${asset}\nTipo Analisi: ${analisi}` : '(Richiesta predefinita)'}
-  `;
-
   try {
-    await resend.emails.send({
-      from: 'Tradelia <support@tradelia.org>',
-      to: 'affiliazioni@parola-ai-trader.net',
-      subject,
-      text: content
+    const result = await resend.emails.send({
+      from: 'Tradelia Reports <noreply@tradelia.org>', // Usa un dominio verified su Resend
+      to: ['miodominio@gmail.com'], // Cambia con l'email dove ricevi le richieste
+      subject: '📩 Nuova Richiesta Tradelia',
+      html: `
+        <h2>Nuova Richiesta da Tradelia</h2>
+        <p><strong>Nome:</strong> ${nome}</p>
+        <p><strong>Contatto (${metodo}):</strong> ${contatto}</p>
+        ${asset ? `<p><strong>Asset:</strong> ${asset}</p>` : ''}
+        ${analisi ? `<p><strong>Tipo Analisi:</strong> ${analisi}</p>` : ''}
+        <p><em>Ricevuta tramite modulo gratuito Tradelia</em></p>
+      `,
     });
 
-    return res.status(200).json({ success: true });
-  } catch (err) {
-    return res.status(500).json({ error: 'Errore invio email', details: err.message });
+    return res.status(200).json({ success: true, id: result.id });
+  } catch (error) {
+    console.error('Errore invio:', error);
+    return res.status(500).json({ error: 'Errore durante invio email' });
   }
 }
