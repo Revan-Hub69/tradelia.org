@@ -56,7 +56,6 @@
   <body class="bg-gradient-to-br from-slate-200 to-slate-50 py-20 px-4">
     <div class="flip-page" id="flipContainer" data-flipped="0">
       <div class="flip-wrapper">
-        <!-- FRONT PAGE -->
         <section class="flip-face bg-white p-10 font-[Inter] text-gray-900 rounded-3xl shadow-2xl ring-1 ring-gray-200">
           <h2 class="text-4xl font-semibold text-center text-blue-800 mb-6 tracking-tight leading-tight">I Servizi Gratuiti Tradelia</h2>
           <p class="text-center text-gray-600 text-base tracking-wide mb-10">Soluzioni analitiche professionali per investitori e trader, offerte gratuitamente da Tradelia</p>
@@ -105,7 +104,6 @@
           </div>
         </section>
 
-        <!-- BACK PAGE -->
         <section class="flip-face flip-back bg-white p-10 font-[Inter] text-gray-900 rounded-3xl shadow-2xl ring-1 ring-gray-200 min-h-[600px]">
           <div class="flex justify-end">
             <button onclick="flipPage(0)" class="text-gray-400 hover:text-blue-700 transition-all">
@@ -125,56 +123,57 @@
         const formContainer = document.getElementById("formContainer");
         formContainer.innerHTML = "";
 
-        const spinner = '<svg class="animate-spin h-5 w-5 text-white inline-block ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>';
+        const title = val === 1
+          ? "Analisi su asset con metodologia AI avanzata e dati istituzionali"
+          : `Riceverai 3 ${val === 2 ? "Azioni Sottovalutate" : val === 3 ? "Crypto Solide" : "Titoli ad Alto Dividendo"} selezionati settimanalmente dalla nostra AI.`;
 
-        const buildForm = (val) => {
-          const isAsset = val === 1;
-          const title = isAsset ? "Analisi su asset con metodologia AI avanzata e dati istituzionali" : `Riceverai 3 ${val === 2 ? "Azioni Sottovalutate" : val === 3 ? "Crypto Solide" : "Titoli ad Alto Dividendo"} selezionati settimanalmente dalla nostra AI.`;
+        const isAsset = val === 1;
 
-          return `
-            <p class='text-sm text-gray-600 text-center mb-6 max-w-2xl mx-auto'>${title}</p>
-            <form class='space-y-6 max-w-xl mx-auto' onsubmit="event.preventDefault(); this.querySelector('button').innerHTML='Invio in corso${spinner}'">
-              ${isAsset ? `
-              <div class="form-field">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Ticker o nome asset</label>
-                <input type="text" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Es. AAPL o Apple Inc." />
-              </div>
-              <div class="form-field">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Tipo di analisi</label>
-                <select required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                  <option>Approfondita (consigliata)</option>
-                  <option>Tecnica</option>
-                  <option>Fondamentale</option>
-                  <option>Macro</option>
-                </select>
-              </div>` : ""}
-              <div class="form-field">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Metodo di ricezione</label>
-                <select required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                  <option>WhatsApp</option>
-                  <option>SMS</option>
-                  <option>Email</option>
-                </select>
-              </div>
-              <div class="form-field">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Contatto</label>
-                <input type="text" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Numero o email" />
-              </div>
-              <div class="form-field">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Nome</label>
-                <input type="text" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Il tuo nome" />
-              </div>
-              <div class="pt-2">
-                <button type="submit" class="w-full bg-blue-700 text-white font-semibold py-3 rounded-lg hover:bg-blue-800 focus:ring-2 focus:ring-blue-500 transition">Invia Richiesta</button>
-              </div>
-            </form>`;
-        };
+        const formHTML = `
+          <div class="text-sm text-gray-600 text-center mb-6 max-w-2xl mx-auto">${title}</div>
+          <form class='space-y-6 max-w-xl mx-auto' method="POST" action="/api/send-email">
+            ${isAsset ? `
+            <div class="form-field">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Ticker o nome asset</label>
+              <input name="asset" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Es. AAPL o Apple Inc." />
+            </div>
+            <div class="form-field">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Tipo di analisi</label>
+              <select name="analisi" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                <option>Approfondita (consigliata)</option>
+                <option>Tecnica</option>
+                <option>Fondamentale</option>
+                <option>Macro</option>
+              </select>
+            </div>` : ""}
+            <div class="form-field">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Metodo di ricezione</label>
+              <select name="metodo" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                <option>WhatsApp</option>
+                <option>SMS</option>
+                <option>Email</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Contatto</label>
+              <input name="contatto" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Numero o email" />
+            </div>
+            <div class="form-field">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Nome</label>
+              <input name="nome" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Il tuo nome" />
+            </div>
+            <div class="pt-2">
+              <button type="submit" class="w-full bg-blue-700 text-white font-semibold py-3 rounded-lg hover:bg-blue-800 focus:ring-2 focus:ring-blue-500 transition">
+                Invia Richiesta
+              </button>
+            </div>
+          </form>
+        `;
 
-        formContainer.innerHTML = buildForm(val);
+        formContainer.innerHTML = formHTML;
         lucide.createIcons();
       }
       lucide.createIcons();
     </script>
   </body>
 </html>
-
