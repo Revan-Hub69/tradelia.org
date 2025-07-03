@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tradelia – Richiesta Report AI</title>
     <link rel="icon" href="/favicon.png" type="image/png" />
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -49,9 +49,11 @@
 
       .modal {
         position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.7);
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
         display: none;
         align-items: center;
         justify-content: center;
@@ -80,12 +82,19 @@
         color: #334155;
       }
       @keyframes fadeIn {
-        from {opacity: 0; transform: scale(0.95);}
-        to {opacity: 1; transform: scale(1);}
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
       }
 
-      /* Flip-card */
-      .flip-page { perspective: 2000px; }
+      .flip-page {
+        perspective: 2000px;
+      }
       .flip-wrapper {
         transition: transform 0.8s ease;
         transform-style: preserve-3d;
@@ -108,6 +117,8 @@
       }
     </style>
   </head>
+  <body class="text-gray-900">
+
 
   <body class="text-gray-900">
 <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6">
