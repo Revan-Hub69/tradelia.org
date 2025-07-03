@@ -84,6 +84,16 @@
     </div>
   </div>
 
+  <!-- Popup conferma -->
+  <div id="popupSuccess" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 text-center max-w-sm w-full">
+      <div class="text-green-600 text-3xl mb-4">✅</div>
+      <p class="text-lg font-semibold mb-2">Richiesta inviata con successo!</p>
+      <p class="text-sm text-gray-600 mb-4">Ti contatteremo entro poche ore con il materiale richiesto.</p>
+      <button onclick="closePopup()" class="mt-2 px-5 py-2 bg-blue-700 text-white rounded-md hover:bg-blue-800">Torna Indietro</button>
+    </div>
+  </div>
+
   <script>
     function flipPage(val) {
       const container = document.getElementById("flipContainer");
@@ -128,7 +138,7 @@
               <option>Email</option>
             </select>
             <p class="text-[11px] text-gray-500 mt-1 italic">
-              Non riceverai comunicazioni promozionali. I dati sono usati solo per inviarti il report richiesto.
+              Nessuna pubblicità: usiamo i tuoi dati solo per questa richiesta.
             </p>
           </div>
           <div>
@@ -147,6 +157,11 @@
         </form>`;
       formContainer.innerHTML = formHTML;
       lucide.createIcons();
+    }
+
+    function closePopup() {
+      document.getElementById("popupSuccess").classList.add("hidden");
+      flipPage(0);
     }
 
     lucide.createIcons();
@@ -170,7 +185,7 @@
         });
 
         if (res.ok) {
-          form.innerHTML = `<div class="text-center text-green-600 font-medium text-lg py-6">✅ Richiesta inviata con successo! Ti contatteremo a breve.</div>`;
+          document.getElementById("popupSuccess").classList.remove("hidden");
         } else {
           throw new Error("Errore");
         }
