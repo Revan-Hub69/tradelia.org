@@ -93,45 +93,45 @@
   <p class="mt-4 text-lg text-blue-700 min-h-[28px] font-medium" id="typing-text"></p>
 </section>
 
-<section class="bg-gradient-to-br from-slate-200 to-slate-50 py-20 px-4 font-[Inter]">
-  <div class="flip-page" id="flipContainer" data-flipped="0">
-    <div class="flip-wrapper max-w-5xl mx-auto min-h-[700px]">
-
-      <!-- FACCIA FRONTALE -->
-      <div class="flip-face bg-white p-10 text-gray-900 rounded-3xl shadow-2xl ring-1 ring-gray-200">
-        <h2 class="text-3xl sm:text-4xl font-semibold text-center text-blue-800 mb-4">Servizi Gratuiti Tradelia</h2>
-        <p class="text-center text-gray-600 mb-8">Richiedi un'analisi professionale supportata da intelligenza artificiale e dati istituzionali</p>
-<div class="grid grid-cols-2 gap-6">
-          <button onclick="flipPage(1)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
-            <div class="flex flex-col items-center gap-2">
-              <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="bar-chart" class="w-6 h-6 text-blue-700"></i></div>
-              <span class="font-semibold">Analisi Singolo Asset</span>
-              <p class="text-sm text-gray-500">Tecnica, fondamentale e macro</p>
-            </div>
-          </button>
-          <button onclick="flipPage(2)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
-            <div class="flex flex-col items-center gap-2">
-              <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="trending-up" class="w-6 h-6 text-blue-700"></i></div>
-              <span class="font-semibold">3 Azioni Sottovalutate</span>
-              <p class="text-sm text-gray-500">Scelte basate su inefficienze di pricing</p>
-            </div>
-          </button>
-          <button onclick="flipPage(3)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
-            <div class="flex flex-col items-center gap-2">
-              <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="bitcoin" class="w-6 h-6 text-blue-700"></i></div>
-              <span class="font-semibold">3 Crypto Solide</span>
-              <p class="text-sm text-gray-500">Token con sviluppo attivo e adozione</p>
-            </div>
-          </button>
-          <button onclick="flipPage(4)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
-            <div class="flex flex-col items-center gap-2">
-              <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="wallet" class="w-6 h-6 text-blue-700"></i></div>
-              <span class="font-semibold">3 Titoli ad Alto Dividendo</span>
-              <p class="text-sm text-gray-500">Selezione settoriale con yield elevato</p>
-            </div>
-          </button>
-        </div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+  <button onclick="flipPage(1)" class="group rounded-2xl px-4 py-4 sm:px-6 sm:py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
+    <div class="flex flex-col items-center gap-1 sm:gap-2">
+      <div class="bg-blue-100 p-2 sm:p-3 rounded-full">
+        <i data-lucide="bar-chart" class="w-5 h-5 sm:w-6 sm:h-6 text-blue-700"></i>
       </div>
+      <span class="font-semibold text-sm sm:text-base">Analisi Singolo Asset</span>
+      <p class="text-xs sm:text-sm text-gray-500 text-center">Tecnica, fondamentale e macro</p>
+    </div>
+  </button>
+  <button onclick="flipPage(2)" class="group rounded-2xl px-4 py-4 sm:px-6 sm:py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
+    <div class="flex flex-col items-center gap-1 sm:gap-2">
+      <div class="bg-blue-100 p-2 sm:p-3 rounded-full">
+        <i data-lucide="trending-up" class="w-5 h-5 sm:w-6 sm:h-6 text-blue-700"></i>
+      </div>
+      <span class="font-semibold text-sm sm:text-base">3 Azioni Sottovalutate</span>
+      <p class="text-xs sm:text-sm text-gray-500 text-center">Scelte basate su inefficienze di pricing</p>
+    </div>
+  </button>
+  <button onclick="flipPage(3)" class="group rounded-2xl px-4 py-4 sm:px-6 sm:py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
+    <div class="flex flex-col items-center gap-1 sm:gap-2">
+      <div class="bg-blue-100 p-2 sm:p-3 rounded-full">
+        <i data-lucide="bitcoin" class="w-5 h-5 sm:w-6 sm:h-6 text-blue-700"></i>
+      </div>
+      <span class="font-semibold text-sm sm:text-base">3 Crypto Solide</span>
+      <p class="text-xs sm:text-sm text-gray-500 text-center">Token con sviluppo attivo e adozione</p>
+    </div>
+  </button>
+  <button onclick="flipPage(4)" class="group rounded-2xl px-4 py-4 sm:px-6 sm:py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
+    <div class="flex flex-col items-center gap-1 sm:gap-2">
+      <div class="bg-blue-100 p-2 sm:p-3 rounded-full">
+        <i data-lucide="wallet" class="w-5 h-5 sm:w-6 sm:h-6 text-blue-700"></i>
+      </div>
+      <span class="font-semibold text-sm sm:text-base">3 Titoli ad Alto Dividendo</span>
+      <p class="text-xs sm:text-sm text-gray-500 text-center">Selezione settoriale con yield elevato</p>
+    </div>
+  </button>
+</div>
+
 
       <!-- FACCIA POSTERIORE -->
       <div class="flip-face flip-back bg-white p-8 sm:p-10 rounded-3xl shadow-2xl ring-1 ring-gray-200 min-h-[600px]">
