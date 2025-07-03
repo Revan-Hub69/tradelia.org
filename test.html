@@ -104,15 +104,21 @@
       const formContainer = document.getElementById("formContainer");
       formContainer.innerHTML = "";
 
+      const servizio = val === 1 ? "Analisi Singolo Asset"
+                    : val === 2 ? "3 Azioni Sottovalutate"
+                    : val === 3 ? "3 Crypto Solide"
+                    : "3 Titoli ad Alto Dividendo";
+
       const title = val === 1
         ? "Analisi su asset con metodologia AI avanzata e dati istituzionali"
-        : `Riceverai 3 ${val === 2 ? "Azioni Sottovalutate" : val === 3 ? "Crypto Solide" : "Titoli ad Alto Dividendo"} selezionati settimanalmente.`;
+        : `Riceverai 3 ${servizio.slice(2)} selezionati settimanalmente.`;
 
       const isAsset = val === 1;
 
       const formHTML = `
         <div class="text-sm text-gray-600 text-center mb-6">${title}</div>
         <form id="richiestaForm" class="space-y-6 max-w-xl mx-auto">
+          <input type="hidden" name="servizio" value="${servizio}" />
           ${isAsset ? `
           <div class="form-field">
             <label class="block text-sm font-medium text-gray-700 mb-1">Ticker o nome asset</label>
