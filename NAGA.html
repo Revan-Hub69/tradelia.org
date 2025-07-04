@@ -864,70 +864,269 @@
       <p class="mt-2 text-base text-slate-600">Richiedi un report AI su un asset: ricezione via WhatsApp, SMS o Email. Nessun tracciamento. Solo analisi reale, senza fuffa.</p>
       <p class="mt-4 text-lg text-blue-700 min-h-[28px] font-medium" id="typing-text"></p>
     </section>
+<section class="text-center py-12 px-4 max-w-4xl mx-auto">
+  <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight mb-4">Strumenti AI per la finanza reale</h1>
+  <p class="mt-2 text-base text-slate-600">Richiedi un report AI su un asset: ricezione via WhatsApp, SMS o Email. Nessun tracciamento. Solo analisi reale, senza fuffa.</p>
+  <p class="mt-4 text-lg text-blue-700 min-h-[28px] font-medium" id="typing-text"></p>
+</section>
 
-    <section class="text-center py-8 px-4 max-w-md mx-auto bg-white/90 rounded-xl shadow-xl backdrop-blur-md border-2 border-transparent transition-all duration-500" id="form-container" style="margin-bottom: 64px;">
-      <form action="https://formsubmit.co/analisi@tradelia.org" method="POST" class="text-left space-y-3 text-sm">
-        <div><label for="asset" class="block font-semibold">Asset <span class="text-red-500">*</span></label><input type="text" name="asset" id="asset" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
-        <div><label for="categoria" class="block font-semibold">Categoria <span class="text-red-500">*</span></label><select name="categoria" id="categoria" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Azioni</option><option>ETF</option><option>Forex</option><option>Crypto</option><option>Commodities</option><option>Obbligazioni</option><option>Indici</option><option>REIT</option><option>Derivati</option></select></div>
-        <div><label for="timeframe" class="block font-semibold">Orizzonte Temporale <span class="text-red-500">*</span></label><select name="timeframe" id="timeframe" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Breve Termine</option><option>Medio Termine</option><option>Lungo Termine</option></select></div>
-        <div><label for="focus" class="block font-semibold">Focus dell'analisi <span class="text-red-500">*</span></label><select name="focus" id="focus" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Fondamentale</option><option>Tecnico</option><option>Macroeconomico</option><option>Approfondita</option></select></div>
-        <div><label for="nome" class="block font-semibold">Nome <span class="text-red-500">*</span></label><input type="text" name="nome" id="nome" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
-        <div><label for="metodo" class="block font-semibold">Metodo di ricezione <span class="text-red-500">*</span></label><select name="metodo" id="metodo" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>SMS</option><option>Email</option><option>WhatsApp</option></select></div>
-        <div><label for="contatto" class="block font-semibold">Contatto <span class="text-red-500">*</span></label><input type="text" name="contatto" id="contatto" placeholder="Telefono o email" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
-        <p class="text-xs text-slate-500 mt-2 leading-snug">🛡 Nessuna pubblicità. Nessuna profilazione. I dati verranno usati solo per inviarti il report PDF.</p>
-        <button type="submit" class="w-full mt-3 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-md">Invia Richiesta</button>
-        <p id="form-response" class="mt-3 text-green-600 font-medium hidden">✅ Richiesta inviata! Riceverai il report entro poche ore.</p>
-      </form>
-    </section>
- <body class="text-gray-900">
-    <header class="bg-white shadow py-4 px-6 flex justify-between items-center">
-      <div class="text-xl font-bold text-blue-800">Analisi AI Broker</div>
-    </header>
+<section class="bg-gradient-to-br from-slate-200 to-slate-50 py-20 px-4 font-[Inter] relative z-10">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-3xl sm:text-4xl font-semibold text-center text-blue-800 mb-4">Servizi Gratuiti Tradelia</h2>
+    <p class="text-center text-gray-600 mb-8">Richiedi un'analisi professionale supportata da intelligenza artificiale e dati istituzionali</p>
 
-    <main class="p-4">
-      <div class="bg-white shadow-lg rounded-lg p-6 max-w-6xl mx-auto">
-        <h2 class="text-lg font-semibold mb-4">Broker con Valutazione AI</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6" id="broker-grid"></div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <button onclick="apriModale(1)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
+        <div class="flex flex-col items-center gap-2">
+          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="bar-chart" class="w-6 h-6 text-blue-700"></i></div>
+          <span class="font-semibold">Analisi Singolo Asset</span>
+          <p class="text-sm text-gray-500">Tecnica, fondamentale e macro</p>
+        </div>
+      </button>
+
+      <button onclick="apriModale(2)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
+        <div class="flex flex-col items-center gap-2">
+          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="trending-up" class="w-6 h-6 text-blue-700"></i></div>
+          <span class="font-semibold">3 Azioni Sottovalutate</span>
+          <p class="text-sm text-gray-500">Scelte basate su inefficienze di pricing</p>
+        </div>
+      </button>
+
+      <button onclick="apriModale(3)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
+        <div class="flex flex-col items-center gap-2">
+          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="bitcoin" class="w-6 h-6 text-blue-700"></i></div>
+          <span class="font-semibold">3 Crypto Solide</span>
+          <p class="text-sm text-gray-500">Token con sviluppo attivo e adozione</p>
+        </div>
+      </button>
+
+      <button onclick="apriModale(4)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
+        <div class="flex flex-col items-center gap-2">
+          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="wallet" class="w-6 h-6 text-blue-700"></i></div>
+          <span class="font-semibold">3 Titoli ad Alto Dividendo</span>
+          <p class="text-sm text-gray-500">Selezione settoriale con yield elevato</p>
+        </div>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- MODALE -->
+<div id="modaleServizio" class="hidden fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center px-4">
+  <div class="bg-white rounded-xl p-6 max-w-xl w-full relative shadow-lg overflow-y-auto max-h-[90vh]">
+    <button onclick="chiudiModale()" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-xl">✕</button>
+    <div id="contenutoServizio"></div>
+  </div>
+</div>
+
+<!-- POPUP SUCCESSO -->
+<div id="popupSuccess" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg p-6 text-center max-w-sm w-full shadow-xl">
+    <div class="text-green-600 text-3xl mb-4">✅</div>
+    <p class="text-lg font-semibold mb-2">Richiesta inviata con successo!</p>
+    <p class="text-sm text-gray-600 mb-4">Ti contatteremo entro poche ore con il materiale richiesto.</p>
+    <button onclick="closePopup()" class="mt-2 px-5 py-2 bg-blue-700 text-white rounded-md hover:bg-blue-800 transition">Torna Indietro</button>
+  </div>
+</div>
+<script>
+function apriModale(servizioId) {
+  const contenuto = document.getElementById("contenutoServizio");
+  const modale = document.getElementById("modaleServizio");
+  contenuto.innerHTML = "";
+
+  const servizio = servizioId === 1 ? "Analisi Singolo Asset"
+                : servizioId === 2 ? "3 Azioni Sottovalutate"
+                : servizioId === 3 ? "3 Crypto Solide"
+                : "3 Titoli ad Alto Dividendo";
+
+  const titolo = servizioId === 1
+    ? "Analisi su asset con metodologia AI e dati istituzionali"
+    : `Riceverai ${servizio} selezionati da modelli proprietari Tradelia.`;
+
+  const isAsset = servizioId === 1;
+
+  const formHTML = `
+    <div class="text-sm text-gray-600 text-center mb-6">${titolo}</div>
+    <form id="richiestaForm" class="space-y-5 text-sm" onsubmit="inviaRichiesta(event)">
+      <input type="hidden" name="servizio" value="${servizio}" />
+      ${isAsset ? `
+        <div>
+          <label class="block font-medium mb-1">Ticker o nome asset</label>
+          <input name="asset" required class="w-full border border-gray-300 rounded-md px-4 py-2" placeholder="Es. AAPL o Apple Inc." />
+        </div>
+        <div>
+          <label class="block font-medium mb-1">Tipo di analisi</label>
+          <select name="analisi" required class="w-full border border-gray-300 rounded-md px-4 py-2">
+            <option>Approfondita (consigliata)</option>
+            <option>Tecnica</option>
+            <option>Fondamentale</option>
+            <option>Macro</option>
+          </select>
+        </div>` : ""}
+      <div>
+        <label class="block font-medium mb-1">Metodo di ricezione</label>
+        <select name="metodo" required class="w-full border border-gray-300 rounded-md px-4 py-2">
+          <option>WhatsApp (consigliato)</option>
+          <option>SMS</option>
+          <option>Email</option>
+        </select>
       </div>
-    </main>
+      <div>
+        <label class="block font-medium mb-1">Contatto</label>
+        <input name="contatto" required class="w-full border border-gray-300 rounded-md px-4 py-2" placeholder="Numero o email" />
+      </div>
+      <div>
+        <label class="block font-medium mb-1">Nome</label>
+        <input name="nome" required class="w-full border border-gray-300 rounded-md px-4 py-2" placeholder="Il tuo nome" />
+      </div>
+      <div>
+        <button type="submit" class="w-full bg-blue-700 text-white font-semibold py-3 rounded-md hover:bg-blue-800 transition">Invia Richiesta</button>
+      </div>
+    </form>`;
 
-    <script>
-      const brokerList = [
-        { name: 'Exante', rating: 100, url: '/Exante.html', desc: 'Broker professionale con accesso DMA e ampia offerta istituzionale.', logo: 'exante.svg' },
-        { name: 'Freedom24', rating: 92, url: '/Freedom24.html', desc: 'Azioni reali, IPO e azione gratuita per i nuovi utenti.', logo: 'freedom24.svg' },
-        { name: 'FP Markets', rating: 90, url: '/FPMarkets.html', desc: 'Ottimo per Forex, esecuzione rapida e spread contenuti.', logo: 'fpmarkets.svg' },
-        { name: 'Pepperstone', rating: 87, url: '/Pepperstone.html', desc: 'Broker ECN rapido e trasparente. Perfetto per day trader.', logo: 'pepperstone.svg' },
-        { name: 'eToro', rating: 85, url: '/eToro.html', desc: 'Broker social, azioni reali e funzionalità di copy trading.', logo: 'etoro.svg' },
-        { name: 'Eightcap', rating: 83, url: '/Eightcap.html', desc: 'Ottima offerta di crypto CFD e strumenti per MT5.', logo: 'eightcap.svg' },
-        { name: 'NAGA', rating: 82, url: '/NAGA.html', desc: 'Copy trading, social network e crypto. Giovane e dinamico.', logo: 'naga.svg' },
-        { name: 'FxPro', rating: 80, url: '/FxPro.html', desc: 'Broker multi-asset con regolamentazione forte e buoni spread.', logo: 'fxpro.svg' },
-        { name: 'XM', rating: 79, url: '/XM.html', desc: 'Buon supporto educativo e bonus di benvenuto.', logo: 'xm.svg' },
-        { name: 'Plus500', rating: 78, url: '/Plus500.html', desc: 'Semplice, mobile-friendly, ideale per iniziare con CFD.', logo: 'plus500.svg' },
-        { name: 'Skilling', rating: 77, url: '/Skilling.html', desc: 'Piattaforma semplice, mobile, con discreto supporto.', logo: 'skilling.svg' },
-        { name: 'AvaTrade', rating: 76, url: '/AvaTrade.html', desc: 'Offerta solida multi-asset e opzioni vanilla.', logo: 'avatrade.svg' },
-        { name: 'BlackBull Markets', rating: 74, url: '/BlackBullMarkets.html', desc: 'Broker ECN con spread variabili, adatto a trader avanzati.', logo: 'blackbull.svg' }
-      ];
+  contenuto.innerHTML = formHTML;
+  lucide.createIcons();
+  modale.classList.remove("hidden");
+}
 
-      document.addEventListener('DOMContentLoaded', () => {
-        const container = document.getElementById('broker-grid');
-        brokerList.sort((a, b) => b.rating - a.rating).forEach(broker => {
-          const card = document.createElement('div');
-          card.className = "border rounded-xl shadow p-5 bg-white hover:bg-blue-50 transition";
-          card.innerHTML = `
-            <div class="flex items-center gap-3 mb-2">
-              <img src="/logos/${broker.logo}" alt="${broker.name}" class="w-8 h-8 rounded-full bg-gray-200" />
-              <div class="text-xl font-bold text-blue-900">${broker.name}</div>
-            </div>
-            <div class="text-sm text-gray-600">Rating AI: ${broker.rating}/100</div>
-            <p class="mt-2 text-sm text-gray-700">${broker.desc}</p>
-            <a href="${broker.url}" class="inline-block mt-3 text-sm text-blue-600 font-medium hover:underline">Leggi analisi AI completa →</a>
-          `;
-          container.appendChild(card);
-        });
-      });
-    </script>
-  </body>
-  <div id="cookie-popup" class="modal">
+function chiudiModale() {
+  document.getElementById("modaleServizio").classList.add("hidden");
+}
+
+function inviaRichiesta(e) {
+  e.preventDefault();
+  const form = e.target;
+  const data = Object.fromEntries(new FormData(form).entries());
+  const btn = form.querySelector("button[type=submit]");
+  const original = btn.innerHTML;
+
+  btn.disabled = true;
+  btn.innerHTML = `<svg class="animate-spin w-5 h-5 mx-auto" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" stroke-width="4" class="opacity-25"/>
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M4 12a8 8 0 018-8" class="opacity-75"/>
+  </svg>`;
+
+  fetch("/api/send-email", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  }).then(res => {
+    if (res.ok) {
+      chiudiModale();
+      document.getElementById("popupSuccess").classList.remove("hidden");
+    } else {
+      throw new Error("Errore");
+    }
+  }).catch(() => {
+    alert("Errore nell'invio. Riprova.");
+  }).finally(() => {
+    btn.disabled = false;
+    btn.innerHTML = original;
+  });
+}
+
+function closePopup() {
+  document.getElementById("popupSuccess").classList.add("hidden");
+  document.querySelectorAll(".modal").forEach(modal => modal.remove());
+}
+
+const phrases = [
+  "AI per trader moderni",
+  "Strumenti gratuiti, zero fuffa",
+  "Operatività solo in ambiente demo"
+];
+let current = 0;
+const typingElement = document.getElementById("typing-text");
+function typePhrase() {
+  const phrase = phrases[current];
+  typingElement.textContent = "";
+  [...phrase].forEach((char, i) => {
+    setTimeout(() => {
+      typingElement.textContent += char;
+    }, i * 50);
+  });
+  setTimeout(() => {
+    current = (current + 1) % phrases.length;
+    typePhrase();
+  }, phrase.length * 50 + 2000);
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  typePhrase();
+  lucide.createIcons();
+});
+</script>
+</body>
+</html>
+
+  <div class="my-12 sm:my-16"></div>
+
+<!-- BROKER CON VALUTAZIONE AI -->
+<section class="bg-white py-20 px-4">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-2xl font-bold text-blue-800 mb-6">Broker con Valutazione AI</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" id="broker-grid"></div>
+  </div>
+</section>
+
+<script>
+  const brokerList = [
+    { name: 'Exante', rating: 100, url: '/Exante.html', desc: 'Broker professionale con accesso DMA e ampia offerta istituzionale.', logo: 'exante.svg' },
+    { name: 'Freedom24', rating: 92, url: '/Freedom24.html', desc: 'Azioni reali, IPO e azione gratuita per i nuovi utenti.', logo: 'freedom24.svg' },
+    { name: 'FP Markets', rating: 90, url: '/FPMarkets.html', desc: 'Ottimo per Forex, esecuzione rapida e spread contenuti.', logo: 'fpmarkets.svg' },
+    { name: 'Pepperstone', rating: 87, url: '/Pepperstone.html', desc: 'Broker ECN rapido e trasparente. Perfetto per day trader.', logo: 'pepperstone.svg' },
+    { name: 'eToro', rating: 85, url: '/eToro.html', desc: 'Broker social, azioni reali e funzionalità di copy trading.', logo: 'etoro.svg' },
+    { name: 'Eightcap', rating: 83, url: '/Eightcap.html', desc: 'Ottima offerta di crypto CFD e strumenti per MT5.', logo: 'eightcap.svg' },
+    { name: 'NAGA', rating: 82, url: '/NAGA.html', desc: 'Copy trading, social network e crypto. Giovane e dinamico.', logo: 'naga.svg' },
+    { name: 'FxPro', rating: 80, url: '/FxPro.html', desc: 'Broker multi-asset con regolamentazione forte e buoni spread.', logo: 'fxpro.svg' },
+    { name: 'XM', rating: 79, url: '/XM.html', desc: 'Buon supporto educativo e bonus di benvenuto.', logo: 'xm.svg' },
+    { name: 'Plus500', rating: 78, url: '/Plus500.html', desc: 'Semplice, mobile-friendly, ideale per iniziare con CFD.', logo: 'plus500.svg' },
+    { name: 'Skilling', rating: 77, url: '/Skilling.html', desc: 'Piattaforma semplice, mobile, con discreto supporto.', logo: 'skilling.svg' },
+    { name: 'AvaTrade', rating: 76, url: '/AvaTrade.html', desc: 'Offerta solida multi-asset e opzioni vanilla.', logo: 'avatrade.svg' },
+    { name: 'BlackBull Markets', rating: 74, url: '/BlackBullMarkets.html', desc: 'Broker ECN con spread variabili, adatto a trader avanzati.', logo: 'blackbull.svg' }
+  ];
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('broker-grid');
+    brokerList.sort((a, b) => b.rating - a.rating).forEach(broker => {
+      const card = document.createElement('div');
+      card.className = "border rounded-xl shadow p-5 bg-white hover:bg-blue-50 transition";
+      card.innerHTML = `
+        <div class="flex items-center gap-3 mb-2">
+          <img src="/logos/${broker.logo}" alt="${broker.name}" class="w-8 h-8 rounded-full bg-gray-200" />
+          <div class="text-xl font-bold text-blue-900">${broker.name}</div>
+        </div>
+        <div class="text-sm text-gray-600">Rating AI: ${broker.rating}/100</div>
+        <p class="mt-2 text-sm text-gray-700">${broker.desc}</p>
+        <a href="${broker.url}" class="inline-block mt-3 text-sm text-blue-600 font-medium hover:underline">Leggi analisi AI completa →</a>
+      `;
+      container.appendChild(card);
+    });
+  });
+</script>
+
+<!-- MODALE LEGALE DINAMICO (Termini e Privacy) -->
+<script>
+  function apriSezioneLegale(id) {
+    const modal = document.createElement("div");
+    modal.className = "modal";
+    modal.style.display = "flex";
+    modal.innerHTML = `
+      <div class="modal-content relative">
+        <div class="modal-close absolute top-3 right-4 text-lg cursor-pointer hover:text-red-600" onclick="this.parentElement.parentElement.remove()">✕</div>
+        <h3 class="text-lg font-semibold mb-2">${id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy'}</h3>
+        <p class="text-sm text-gray-800">
+          ${
+            id === 'section-tc'
+              ? "Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all'investimento. Tutte le operazioni simulate in ambiente demo."
+              : "Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l'utente. Progetto open per educazione finanziaria."
+          }
+        </p>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+</script>
+<div id="cookie-popup" class="modal">
   <div class="modal-content">
     <img src="https://lucid.app/favicon.ico" alt="Lucid icon" class="mx-auto mb-2 w-8 h-8">
     <h3 class="text-lg font-semibold mb-2">Zero biscotti, zero sorprese.</h3>
@@ -936,20 +1135,36 @@
     <button onclick="chiudiPopupCookie()" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Ho capito</button>
   </div>
 </div>
+<!-- FOOTER -->
+<footer class="bg-slate-900 text-slate-300 px-6 py-12 text-sm mt-16">
+  <div class="max-w-7xl mx-auto grid gap-10 md:grid-cols-2 items-start">
+    
+    <!-- COLONNA 1 -->
+    <div>
+      <h4 class="text-white text-base font-semibold mb-3">Tradelia AI</h4>
+      <p class="leading-relaxed">
+        Tradelia è un progetto indipendente per fornire strumenti educativi e analisi AI gratuite nel campo finanziario.
+      </p>
+      <p class="mt-4 text-blue-400">
+        ✉️ <a href="mailto:info@tradelia.org" class="hover:underline">info@tradelia.org</a>
+      </p>
+    </div>
+    
+    <!-- COLONNA 2 -->
+    <div>
+      <h4 class="text-white text-base font-semibold mb-3">Legal</h4>
+      <ul class="space-y-2">
+        <li>
+          <button onclick="apriSezioneLegale('section-tc')" class="hover:text-sky-400 transition">Termini e Condizioni</button>
+        </li>
+        <li>
+          <button onclick="apriSezioneLegale('section-privacy')" class="hover:text-sky-400 transition">Privacy Policy</button>
+        </li>
+      </ul>
+    </div>
 
+  </div>
+</footer>
 
-    <footer style="width:100%;background:#0f172a;color:#cbd5e1;padding:48px 24px 32px;font-family:'Inter',sans-serif;font-size:14px;line-height:1.7;border-top:1px solid rgba(255,255,255,0.08)">
-      <div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between">
-        <div style="flex:1 1 300px">
-          <h4 style="color:#f8fafc;font-size:16px;margin-bottom:12px;font-weight:600">Tradelia AI</h4>
-          <p>Tradelia è un progetto indipendente per fornire strumenti educativi e analisi AI gratuite nel campo finanziario.</p>
-          <p style="margin-top:16px;font-size:13px;color:#60a5fa">✉️ <a href="mailto:info@tradelia.org" style="color:#60a5fa;text-decoration:none">info@tradelia.org</a></p>
-        </div>
-        <div style="flex:1 1 300px">
-          <p class="hover:translate-x-1 hover:text-sky-400 transition cursor-pointer font-semibold text-white mb-2" onclick="apriSezioneLegale('section-tc')">Termini e Condizioni</p>
-          <p class="hover:translate-x-1 hover:text-sky-400 transition cursor-pointer font-semibold text-white" onclick="apriSezioneLegale('section-privacy')">Privacy Policy</p>
-        </div>
-      </div>
-    </footer>
-  </body>
+</body>
 </html>
