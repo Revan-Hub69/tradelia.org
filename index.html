@@ -153,7 +153,7 @@
 
 
 <!-- MODALE -->
-<div id="modaleServizio" class="hidden fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center px-4">
+<div id="modaleServizio" class="modal hidden">
   <div class="bg-white rounded-xl p-6 max-w-xl w-full relative shadow-lg overflow-y-auto max-h-[90vh]">
     <button onclick="chiudiModale()" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-xl">✕</button>
     <div id="contenutoServizio"></div>
@@ -161,7 +161,7 @@
 </div>
 
 <!-- POPUP SUCCESSO -->
-<div id="popupSuccess" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+<div id="popupSuccess" class="modal hidden">
   <div class="bg-white rounded-lg p-6 text-center max-w-sm w-full shadow-xl">
     <div class="text-green-600 text-3xl mb-4">✅</div>
     <p class="text-lg font-semibold mb-2">Richiesta inviata con successo!</p>
@@ -169,61 +169,8 @@
     <button onclick="closePopup()" class="mt-2 px-5 py-2 bg-blue-700 text-white rounded-md hover:bg-blue-800 transition">Torna Indietro</button>
   </div>
 </div>
+
 <script>
-function apriModale(servizioId) {
-  const contenuto = document.getElementById("contenutoServizio");
-  const modale = document.getElementById("modaleServizio");
-  contenuto.innerHTML = "";
-
-  const servizio = servizioId === 1 ? "Analisi Singolo Asset"
-                : servizioId === 2 ? "3 Azioni Sottovalutate"
-                : servizioId === 3 ? "3 Crypto Solide"
-                : "3 Titoli ad Alto Dividendo";
-
-  const titolo = servizioId === 1
-    ? "Analisi su asset con metodologia AI e dati istituzionali"
-    : `Riceverai ${servizio} selezionati da modelli proprietari Tradelia.`;
-
-  const isAsset = servizioId === 1;
-
-  const formHTML = `
-    <div class="text-sm text-gray-600 text-center mb-6">${titolo}</div>
-    <form id="richiestaForm" class="space-y-5 text-sm" onsubmit="inviaRichiesta(event)">
-      <input type="hidden" name="servizio" value="${servizio}" />
-      ${isAsset ? `
-        <div>
-          <label class="block font-medium mb-1">Ticker o nome asset</label>
-          <input name="asset" required class="w-full border border-gray-300 rounded-md px-4 py-2" placeholder="Es. AAPL o Apple Inc." />
-        </div>
-        <div>
-          <label class="block font-medium mb-1">Tipo di analisi</label>
-          <select name="analisi" required class="w-full border border-gray-300 rounded-md px-4 py-2">
-            <option>Approfondita (consigliata)</option>
-            <option>Tecnica</option>
-            <option>Fondamentale</option>
-            <option>Macro</option>
-          </select>
-        </div>` : ""}
-      <div>
-        <label class="block font-medium mb-1">Metodo di ricezione</label>
-        <select name="metodo" required class="w-full border border-gray-300 rounded-md px-4 py-2">
-          <option>WhatsApp (consigliato)</option>
-          <option>SMS</option>
-          <option>Email</option>
-        </select>
-      </div>
-      <div>
-        <label class="block font-medium mb-1">Contatto</label>
-        <input name="contatto" required class="w-full border border-gray-300 rounded-md px-4 py-2" placeholder="Numero o email" />
-      </div>
-      <div>
-        <label class="block font-medium mb-1">Nome</label>
-        <input name="nome" required class="w-full border border-gray-300 rounded-md px-4 py-2" placeholder="Il tuo nome" />
-      </div>
-      <div>
-        <button type="submit" class="w-full bg-blue-700 text-white font-semibold py-3 rounded-md hover:bg-blue-800 transition">Invia Richiesta</button>
-      </div>
-    </form>`;
 function apriModale(servizioId) {
   const contenuto = document.getElementById("contenutoServizio");
   const modale = document.getElementById("modaleServizio");
@@ -285,16 +232,25 @@ function apriModale(servizioId) {
   modale.classList.add("show");
 }
 
+function chiudiModale() {
+  const modale = document.getElementById("modaleServizio");
+  modale.classList.remove("show");
+  modale.classList.add("hide");
+  setTimeout(() => {
+    modale.classList.add("hidden");
+  }, 200);
+}
 
-  <div class="my-12 sm:my-16"></div>
-
-<!-- BROKER CON VALUTAZIONE AI -->
-<section class="bg-white py-20 px-4">
-  <div class="max-w-6xl mx-auto">
-    <h2 class="text-2xl font-bold text-blue-800 mb-6">Broker con Valutazione AI</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" id="broker-grid"></div>
-  </div>
-</section>
+function closePopup() {
+  const popup = document.getElementById("popupSuccess");
+  popup.classList.remove("show");
+  popup.classList.add("hide");
+  setTimeout(() => {
+    popup.classList.add("hidden");
+    document.querySelectorAll(".modal").forEach(modal => modal.remove());
+  }, 200);
+}
+</script>
 
 <script>
   const brokerList = [
