@@ -73,40 +73,67 @@
     <p class="text-center text-gray-600 mb-8">Richiedi un'analisi professionale supportata da intelligenza artificiale e dati istituzionali</p>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-      <button onclick="apriModale(1)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
-        <div class="flex flex-col items-center gap-2">
-          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="bar-chart" class="w-6 h-6 text-blue-700"></i></div>
-          <span class="font-semibold">Analisi Singolo Asset</span>
-          <p class="text-sm text-gray-500">Tecnica, fondamentale e macro</p>
+      
+      <!-- CARD 1 -->
+      <button onclick="apriModale(1)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-left">
+        <div class="flex flex-col gap-2">
+          <div class="bg-blue-100 p-3 rounded-full w-max mx-auto"><i data-lucide="bar-chart" class="w-6 h-6 text-blue-700"></i></div>
+          <div class="text-center">
+            <span class="font-semibold block">Analisi Singolo Asset</span>
+            <p class="text-sm text-gray-500">Tecnica, fondamentale e macro</p>
+          </div>
+        </div>
+        <div class="absolute bottom-3 right-4 flex items-center gap-1 text-blue-600 text-sm font-medium group-hover:translate-x-1 transition-transform">
+          Richiedi <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </div>
       </button>
 
-      <button onclick="apriModale(2)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
-        <div class="flex flex-col items-center gap-2">
-          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="trending-up" class="w-6 h-6 text-blue-700"></i></div>
-          <span class="font-semibold">3 Azioni Sottovalutate</span>
-          <p class="text-sm text-gray-500">Scelte basate su inefficienze di pricing</p>
+      <!-- CARD 2 -->
+      <button onclick="apriModale(2)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-left">
+        <div class="flex flex-col gap-2">
+          <div class="bg-blue-100 p-3 rounded-full w-max mx-auto"><i data-lucide="trending-up" class="w-6 h-6 text-blue-700"></i></div>
+          <div class="text-center">
+            <span class="font-semibold block">3 Azioni Sottovalutate</span>
+            <p class="text-sm text-gray-500">Scelte basate su inefficienze di pricing</p>
+          </div>
+        </div>
+        <div class="absolute bottom-3 right-4 flex items-center gap-1 text-blue-600 text-sm font-medium group-hover:translate-x-1 transition-transform">
+          Richiedi <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </div>
       </button>
 
-      <button onclick="apriModale(3)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
-        <div class="flex flex-col items-center gap-2">
-          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="bitcoin" class="w-6 h-6 text-blue-700"></i></div>
-          <span class="font-semibold">3 Crypto Solide</span>
-          <p class="text-sm text-gray-500">Token con sviluppo attivo e adozione</p>
+      <!-- CARD 3 -->
+      <button onclick="apriModale(3)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-left">
+        <div class="flex flex-col gap-2">
+          <div class="bg-blue-100 p-3 rounded-full w-max mx-auto"><i data-lucide="bitcoin" class="w-6 h-6 text-blue-700"></i></div>
+          <div class="text-center">
+            <span class="font-semibold block">3 Crypto Solide</span>
+            <p class="text-sm text-gray-500">Token con sviluppo attivo e adozione</p>
+          </div>
+        </div>
+        <div class="absolute bottom-3 right-4 flex items-center gap-1 text-blue-600 text-sm font-medium group-hover:translate-x-1 transition-transform">
+          Richiedi <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </div>
       </button>
 
-      <button onclick="apriModale(4)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
-        <div class="flex flex-col items-center gap-2">
-          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="wallet" class="w-6 h-6 text-blue-700"></i></div>
-          <span class="font-semibold">3 Titoli ad Alto Dividendo</span>
-          <p class="text-sm text-gray-500">Selezione settoriale con yield elevato</p>
+      <!-- CARD 4 -->
+      <button onclick="apriModale(4)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-left">
+        <div class="flex flex-col gap-2">
+          <div class="bg-blue-100 p-3 rounded-full w-max mx-auto"><i data-lucide="wallet" class="w-6 h-6 text-blue-700"></i></div>
+          <div class="text-center">
+            <span class="font-semibold block">3 Titoli ad Alto Dividendo</span>
+            <p class="text-sm text-gray-500">Selezione settoriale con yield elevato</p>
+          </div>
+        </div>
+        <div class="absolute bottom-3 right-4 flex items-center gap-1 text-blue-600 text-sm font-medium group-hover:translate-x-1 transition-transform">
+          Richiedi <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </div>
       </button>
+
     </div>
   </div>
 </section>
+
 
 <!-- MODALE -->
 <div id="modaleServizio" class="hidden fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center px-4">
