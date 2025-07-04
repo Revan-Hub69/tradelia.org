@@ -53,23 +53,6 @@
       text-align: center;
       box-shadow: 0 12px 48px rgba(0,0,0,0.25);
     }
-     .modal.show {
-    display: flex !important;
-    animation: fadeIn 0.25s ease-out forwards;
-  }
-  .modal.hide {
-    animation: fadeOut 0.2s ease-in forwards;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.98); }
-    to   { opacity: 1; transform: scale(1); }
-  }
-
-  @keyframes fadeOut {
-    from { opacity: 1; transform: scale(1); }
-    to   { opacity: 0; transform: scale(0.98); }
-  }
   </style>
 </head>
 <body class="text-gray-900">
@@ -90,70 +73,43 @@
     <p class="text-center text-gray-600 mb-8">Richiedi un'analisi professionale supportata da intelligenza artificiale e dati istituzionali</p>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-      
-      <!-- CARD 1 -->
-      <button onclick="apriModale(1)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-left">
-        <div class="flex flex-col gap-2">
-          <div class="bg-blue-100 p-3 rounded-full w-max mx-auto"><i data-lucide="bar-chart" class="w-6 h-6 text-blue-700"></i></div>
-          <div class="text-center">
-            <span class="font-semibold block">Analisi Singolo Asset</span>
-            <p class="text-sm text-gray-500">Tecnica, fondamentale e macro</p>
-          </div>
-        </div>
-        <div class="absolute bottom-3 right-4 flex items-center gap-1 text-blue-600 text-sm font-medium group-hover:translate-x-1 transition-transform">
-          Richiedi <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      <button onclick="apriModale(1)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
+        <div class="flex flex-col items-center gap-2">
+          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="bar-chart" class="w-6 h-6 text-blue-700"></i></div>
+          <span class="font-semibold">Analisi Singolo Asset</span>
+          <p class="text-sm text-gray-500">Tecnica, fondamentale e macro</p>
         </div>
       </button>
 
-      <!-- CARD 2 -->
-      <button onclick="apriModale(2)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-left">
-        <div class="flex flex-col gap-2">
-          <div class="bg-blue-100 p-3 rounded-full w-max mx-auto"><i data-lucide="trending-up" class="w-6 h-6 text-blue-700"></i></div>
-          <div class="text-center">
-            <span class="font-semibold block">3 Azioni Sottovalutate</span>
-            <p class="text-sm text-gray-500">Scelte basate su inefficienze di pricing</p>
-          </div>
-        </div>
-        <div class="absolute bottom-3 right-4 flex items-center gap-1 text-blue-600 text-sm font-medium group-hover:translate-x-1 transition-transform">
-          Richiedi <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      <button onclick="apriModale(2)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
+        <div class="flex flex-col items-center gap-2">
+          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="trending-up" class="w-6 h-6 text-blue-700"></i></div>
+          <span class="font-semibold">3 Azioni Sottovalutate</span>
+          <p class="text-sm text-gray-500">Scelte basate su inefficienze di pricing</p>
         </div>
       </button>
 
-      <!-- CARD 3 -->
-      <button onclick="apriModale(3)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-left">
-        <div class="flex flex-col gap-2">
-          <div class="bg-blue-100 p-3 rounded-full w-max mx-auto"><i data-lucide="bitcoin" class="w-6 h-6 text-blue-700"></i></div>
-          <div class="text-center">
-            <span class="font-semibold block">3 Crypto Solide</span>
-            <p class="text-sm text-gray-500">Token con sviluppo attivo e adozione</p>
-          </div>
-        </div>
-        <div class="absolute bottom-3 right-4 flex items-center gap-1 text-blue-600 text-sm font-medium group-hover:translate-x-1 transition-transform">
-          Richiedi <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      <button onclick="apriModale(3)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
+        <div class="flex flex-col items-center gap-2">
+          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="bitcoin" class="w-6 h-6 text-blue-700"></i></div>
+          <span class="font-semibold">3 Crypto Solide</span>
+          <p class="text-sm text-gray-500">Token con sviluppo attivo e adozione</p>
         </div>
       </button>
 
-      <!-- CARD 4 -->
-      <button onclick="apriModale(4)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-left">
-        <div class="flex flex-col gap-2">
-          <div class="bg-blue-100 p-3 rounded-full w-max mx-auto"><i data-lucide="wallet" class="w-6 h-6 text-blue-700"></i></div>
-          <div class="text-center">
-            <span class="font-semibold block">3 Titoli ad Alto Dividendo</span>
-            <p class="text-sm text-gray-500">Selezione settoriale con yield elevato</p>
-          </div>
-        </div>
-        <div class="absolute bottom-3 right-4 flex items-center gap-1 text-blue-600 text-sm font-medium group-hover:translate-x-1 transition-transform">
-          Richiedi <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      <button onclick="apriModale(4)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
+        <div class="flex flex-col items-center gap-2">
+          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="wallet" class="w-6 h-6 text-blue-700"></i></div>
+          <span class="font-semibold">3 Titoli ad Alto Dividendo</span>
+          <p class="text-sm text-gray-500">Selezione settoriale con yield elevato</p>
         </div>
       </button>
-
     </div>
   </div>
 </section>
 
-
 <!-- MODALE -->
-<div id="modaleServizio" class="modal hidden">
+<div id="modaleServizio" class="hidden fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center px-4">
   <div class="bg-white rounded-xl p-6 max-w-xl w-full relative shadow-lg overflow-y-auto max-h-[90vh]">
     <button onclick="chiudiModale()" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-xl">✕</button>
     <div id="contenutoServizio"></div>
@@ -161,7 +117,7 @@
 </div>
 
 <!-- POPUP SUCCESSO -->
-<div id="popupSuccess" class="modal hidden">
+<div id="popupSuccess" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white rounded-lg p-6 text-center max-w-sm w-full shadow-xl">
     <div class="text-green-600 text-3xl mb-4">✅</div>
     <p class="text-lg font-semibold mb-2">Richiesta inviata con successo!</p>
@@ -169,7 +125,6 @@
     <button onclick="closePopup()" class="mt-2 px-5 py-2 bg-blue-700 text-white rounded-md hover:bg-blue-800 transition">Torna Indietro</button>
   </div>
 </div>
-
 <script>
 function apriModale(servizioId) {
   const contenuto = document.getElementById("contenutoServizio");
@@ -228,29 +183,88 @@ function apriModale(servizioId) {
 
   contenuto.innerHTML = formHTML;
   lucide.createIcons();
-  modale.classList.remove("hidden", "hide");
-  modale.classList.add("show");
+  modale.classList.remove("hidden");
 }
 
 function chiudiModale() {
-  const modale = document.getElementById("modaleServizio");
-  modale.classList.remove("show");
-  modale.classList.add("hide");
-  setTimeout(() => {
-    modale.classList.add("hidden");
-  }, 200);
+  document.getElementById("modaleServizio").classList.add("hidden");
+}
+
+function inviaRichiesta(e) {
+  e.preventDefault();
+  const form = e.target;
+  const data = Object.fromEntries(new FormData(form).entries());
+  const btn = form.querySelector("button[type=submit]");
+  const original = btn.innerHTML;
+
+  btn.disabled = true;
+  btn.innerHTML = `<svg class="animate-spin w-5 h-5 mx-auto" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" stroke-width="4" class="opacity-25"/>
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M4 12a8 8 0 018-8" class="opacity-75"/>
+  </svg>`;
+
+  fetch("/api/send-email", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  }).then(res => {
+    if (res.ok) {
+      chiudiModale();
+      document.getElementById("popupSuccess").classList.remove("hidden");
+    } else {
+      throw new Error("Errore");
+    }
+  }).catch(() => {
+    alert("Errore nell'invio. Riprova.");
+  }).finally(() => {
+    btn.disabled = false;
+    btn.innerHTML = original;
+  });
 }
 
 function closePopup() {
-  const popup = document.getElementById("popupSuccess");
-  popup.classList.remove("show");
-  popup.classList.add("hide");
-  setTimeout(() => {
-    popup.classList.add("hidden");
-    document.querySelectorAll(".modal").forEach(modal => modal.remove());
-  }, 200);
+  document.getElementById("popupSuccess").classList.add("hidden");
+  document.querySelectorAll(".modal").forEach(modal => modal.remove());
 }
+
+const phrases = [
+  "AI per trader moderni",
+  "Strumenti gratuiti, zero fuffa",
+  "Operatività solo in ambiente demo"
+];
+let current = 0;
+const typingElement = document.getElementById("typing-text");
+function typePhrase() {
+  const phrase = phrases[current];
+  typingElement.textContent = "";
+  [...phrase].forEach((char, i) => {
+    setTimeout(() => {
+      typingElement.textContent += char;
+    }, i * 50);
+  });
+  setTimeout(() => {
+    current = (current + 1) % phrases.length;
+    typePhrase();
+  }, phrase.length * 50 + 2000);
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  typePhrase();
+  lucide.createIcons();
+});
 </script>
+</body>
+</html>
+
+  <div class="my-12 sm:my-16"></div>
+
+<!-- BROKER CON VALUTAZIONE AI -->
+<section class="bg-white py-20 px-4">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-2xl font-bold text-blue-800 mb-6">Broker con Valutazione AI</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" id="broker-grid"></div>
+  </div>
+</section>
 
 <script>
   const brokerList = [
