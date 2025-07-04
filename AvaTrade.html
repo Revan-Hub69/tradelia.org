@@ -879,37 +879,87 @@
     <h2 class="text-3xl sm:text-4xl font-semibold text-center text-blue-800 mb-4">Servizi Gratuiti Tradelia</h2>
     <p class="text-center text-gray-600 mb-8">Richiedi un'analisi professionale supportata da intelligenza artificiale e dati istituzionali</p>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-      <button onclick="apriModale(1)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
-        <div class="flex flex-col items-center gap-2">
-          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="bar-chart" class="w-6 h-6 text-blue-700"></i></div>
-          <span class="font-semibold">Analisi Singolo Asset</span>
-          <p class="text-sm text-gray-500">Tecnica, fondamentale e macro</p>
-        </div>
-      </button>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
-      <button onclick="apriModale(2)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
-        <div class="flex flex-col items-center gap-2">
-          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="trending-up" class="w-6 h-6 text-blue-700"></i></div>
-          <span class="font-semibold">3 Azioni Sottovalutate</span>
-          <p class="text-sm text-gray-500">Scelte basate su inefficienze di pricing</p>
-        </div>
-      </button>
+  <!-- CARD 1 – Asset Singolo -->
+  <button onclick="apriModale(1)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition-all text-left shadow-sm flex flex-col justify-between h-full">
+    <div class="flex flex-col gap-3">
+      <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
+        <i data-lucide="bar-chart" class="w-6 h-6 text-blue-700"></i>
+      </div>
+      <h3 class="font-semibold text-gray-900">Analisi Approfondita su Asset Selezionato</h3>
+      <p class="text-sm text-gray-500">
+        Report dettagliato con approccio istituzionale. Include analisi tecnica multi-timeframe, valutazione fondamentale, scenario macroeconomico e indicatori avanzati.
+      </p>
+    </div>
+    <div class="mt-4 flex items-center justify-between">
+      <span class="text-sm text-blue-700 font-medium underline underline-offset-2">Richiedi gratis</span>
+      <div class="w-9 h-9 rounded-full bg-white/50 backdrop-blur-md shadow-md flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
+        <i data-lucide="arrow-up-right" class="w-4 h-4 text-blue-700"></i>
+      </div>
+    </div>
+  </button>
 
-      <button onclick="apriModale(3)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
-        <div class="flex flex-col items-center gap-2">
-          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="bitcoin" class="w-6 h-6 text-blue-700"></i></div>
-          <span class="font-semibold">3 Crypto Solide</span>
-          <p class="text-sm text-gray-500">Token con sviluppo attivo e adozione</p>
-        </div>
-      </button>
+  <!-- CARD 2 – Azioni -->
+  <button onclick="apriModale(2)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition-all text-left shadow-sm flex flex-col justify-between h-full">
+    <div class="flex flex-col gap-3">
+      <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
+        <i data-lucide="trending-up" class="w-6 h-6 text-blue-700"></i>
+      </div>
+      <h3 class="font-semibold text-gray-900">3 Azioni Potenzialmente Sottovalutate</h3>
+      <p class="text-sm text-gray-500">
+        Selezione basata su inefficienze di mercato rilevate tramite modelli quantitativi. Include ratio fondamentali, momentum tecnico e screening settoriale.
+      </p>
+    </div>
+    <div class="mt-4 flex items-center justify-between">
+      <span class="text-sm text-blue-700 font-medium underline underline-offset-2">Richiedi gratis</span>
+      <div class="w-9 h-9 rounded-full bg-white/50 backdrop-blur-md shadow-md flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
+        <i data-lucide="arrow-up-right" class="w-4 h-4 text-blue-700"></i>
+      </div>
+    </div>
+  </button>
 
-      <button onclick="apriModale(4)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
-        <div class="flex flex-col items-center gap-2">
-          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="wallet" class="w-6 h-6 text-blue-700"></i></div>
-          <span class="font-semibold">3 Titoli ad Alto Dividendo</span>
-          <p class="text-sm text-gray-500">Selezione settoriale con yield elevato</p>
-        </div>
+  <!-- CARD 3 – Crypto -->
+  <button onclick="apriModale(3)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition-all text-left shadow-sm flex flex-col justify-between h-full">
+    <div class="flex flex-col gap-3">
+      <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
+        <i data-lucide="bitcoin" class="w-6 h-6 text-blue-700"></i>
+      </div>
+      <h3 class="font-semibold text-gray-900">3 Criptovalute con Adozione Reale</h3>
+      <p class="text-sm text-gray-500">
+        Selezione indipendente di crypto con sviluppo attivo, utilità concreta e integrazione in ecosistemi reali. Esclusi progetti speculativi e meme token.
+      </p>
+    </div>
+    <div class="mt-4 flex items-center justify-between">
+      <span class="text-sm text-blue-700 font-medium underline underline-offset-2">Richiedi gratis</span>
+      <div class="w-9 h-9 rounded-full bg-white/50 backdrop-blur-md shadow-md flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
+        <i data-lucide="arrow-up-right" class="w-4 h-4 text-blue-700"></i>
+      </div>
+    </div>
+  </button>
+
+  <!-- CARD 4 – Dividendi -->
+  <button onclick="apriModale(4)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition-all text-left shadow-sm flex flex-col justify-between h-full">
+    <div class="flex flex-col gap-3">
+      <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
+        <i data-lucide="wallet" class="w-6 h-6 text-blue-700"></i>
+      </div>
+      <h3 class="font-semibold text-gray-900">3 Titoli Difensivi con Alto Dividend Yield</h3>
+      <p class="text-sm text-gray-500">
+        Selezione focalizzata su solidità finanziaria, payout sostenibile e bassa volatilità. Include analisi settoriale e scenario macro avverso.
+      </p>
+    </div>
+    <div class="mt-4 flex items-center justify-between">
+      <span class="text-sm text-blue-700 font-medium underline underline-offset-2">Richiedi gratis</span>
+      <div class="w-9 h-9 rounded-full bg-white/50 backdrop-blur-md shadow-md flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
+        <i data-lucide="arrow-up-right" class="w-4 h-4 text-blue-700"></i>
+      </div>
+    </div>
+  </button>
+
+</div>
+
+
       </button>
     </div>
   </div>
