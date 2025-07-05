@@ -1,178 +1,86 @@
 <!DOCTYPE html>
 <html lang="it">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tradelia – Richiesta Report AI</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-<link rel="icon" href="/favicon.png" type="image/png" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tradelia – Richiesta Report AI</title>
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 
- <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // Mostra il popup cookie solo se NON è stato già accettato
-    if (!localStorage.getItem('tradeliaConsent')) {
-      setTimeout(() => {
-        const popup = document.getElementById("cookie-popup");
-        if (popup) popup.style.display = "flex";
-      }, 1000);
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+      background-size: 280px;
     }
-
-    const form = document.querySelector("form");
-    form.addEventListener("submit", function (e) {
-      const requiredFields = ["asset", "categoria", "timeframe", "focus", "nome", "contatto", "metodo"];
-      let valid = true;
-      requiredFields.forEach(id => {
-        const field = document.getElementById(id);
-        const label = document.querySelector(`label[for='${id}']`);
-        if (!field.value) {
-          valid = false;
-          label.innerHTML = label.innerHTML.replace(/✅/g, '').replace(/<span.*?<\/span>/, '<span class="text-red-500">*</span>');
-        } else {
-          label.innerHTML = label.innerHTML.replace(/<span.*?<\/span>/, '✅');
-        }
-      });
-      if (!valid) {
-        e.preventDefault();
-        alert("Compila tutti i campi obbligatori contrassegnati con *");
-      } else {
-        setTimeout(() => {
-          document.getElementById("form-response").classList.remove("hidden");
-        }, 300);
-      }
-    });
-
-    const phrases = [
-      "AI per trader moderni",
-      "Strumenti gratuiti, zero fuffa",
-      "Operatività solo in ambiente demo"
-    ];
-    let current = 0;
-    const typingElement = document.getElementById("typing-text");
-
-    function typePhrase() {
-      const phrase = phrases[current];
-      typingElement.textContent = "";
-      [...phrase].forEach((char, i) => {
-        setTimeout(() => {
-          typingElement.textContent += char;
-        }, i * 50);
-      });
-      setTimeout(() => {
-        current = (current + 1) % phrases.length;
-        typePhrase();
-      }, phrase.length * 50 + 2000);
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track {
+      background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+      border-radius: 100vh;
     }
-    typePhrase();
-  });
-
-  function apriSezioneLegale(id) {
-    const modal = document.createElement("div");
-    modal.className = "modal animate-fade-in";
-    modal.style.display = "flex";
-    modal.innerHTML = `
-      <div class="modal-content">
-        <div class="modal-close hover:text-red-500 transition" onclick="this.parentElement.parentElement.remove()">✕</div>
-        <h3 class="text-lg font-semibold mb-2">${id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy'}</h3>
-        <p class="text-sm text-gray-800">
-          ${
-            id === 'section-tc'
-              ? "Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all'investimento. Tutte le operazioni simulate in ambiente demo."
-              : "Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l'utente. Progetto open per educazione finanziaria."
-          }
-        </p>
-      </div>`;
-    document.body.appendChild(modal);
-  }
-
-  // Salva consenso nel localStorage quando l'utente clicca "Ho capito"
-  function chiudiPopupCookie() {
-    localStorage.setItem('tradeliaConsent', 'true');
-    const popup = document.getElementById("cookie-popup");
-    if (popup) popup.style.display = "none";
-  }
-</script>
-
-    
-      <style>
-/* Scrollbar elegante, personalizzata, istituzionale */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: linear-gradient(to right, #f1f5f9, #e2e8f0);
-  border-radius: 100vh;
-  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.05);
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(80, 160, 200, 0.4); /* azzurro-grigio semi */
-  border-radius: 100vh;
-  backdrop-filter: blur(4px);
-  transition: all 0.3s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(80, 160, 200, 0.6);
-  box-shadow: inset 0 0 6px rgba(80, 160, 200, 0.4);
-}
-
-/* Firefox support */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(80, 160, 200, 0.5) #e5e7eb;
-}
-
-      body {
-        font-family: 'Inter', sans-serif;
-        background: #f1f5f9;
-        background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
-        background-repeat: repeat;
-        background-size: 280px;
-      }
-      .modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.7);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 50;
-        animation: fadeIn 0.4s ease;
-      }
-      .modal-content {
-        background: #f8fafc;
-        max-width: 480px;
-        padding: 28px;
-        border-radius: 16px;
-        font-size: 15px;
-        line-height: 1.7;
-        color: #0f172a;
-        position: relative;
-        text-align: center;
-        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
-        border: 1px solid #cbd5e1;
-      }
-      .modal-close {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        cursor: pointer;
-        font-size: 18px;
-        color: #334155;
-      }
-      @keyframes fadeIn {
-        from {opacity: 0; transform: scale(0.95);}
-        to {opacity: 1; transform: scale(1);}
-      }
-    </style>
-  </head>
-  <body class="text-gray-900">
+    ::-webkit-scrollbar-thumb {
+      background: rgba(80, 160, 200, 0.4);
+      border-radius: 100vh;
+      backdrop-filter: blur(4px);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(80, 160, 200, 0.6);
+    }
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(80, 160, 200, 0.5) #e5e7eb;
+    }
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+    .modal-content {
+      background: #f8fafc;
+      max-width: 480px;
+      padding: 28px;
+      border-radius: 16px;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #0f172a;
+      text-align: center;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.25);
+    }
+    .flip-page {
+      perspective: 2000px;
+    }
+    .flip-wrapper {
+      transition: transform 0.8s ease;
+      transform-style: preserve-3d;
+      position: relative;
+      width: 100%;
+      min-height: 700px;
+    }
+    .flip-page[data-flipped="1"] .flip-wrapper,
+    .flip-page[data-flipped="2"] .flip-wrapper,
+    .flip-page[data-flipped="3"] .flip-wrapper,
+    .flip-page[data-flipped="4"] .flip-wrapper {
+      transform: rotateY(180deg);
+    }
+    .flip-face {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      backface-visibility: hidden;
+    }
+    .flip-back {
+      transform: rotateY(180deg);
+    }
+  </style>
+</head>
+<body class="text-gray-900">
 <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6">
   <a href="index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
     <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
@@ -1218,24 +1126,11 @@
 </section>
 
 
-
-
-
-
-<div class="my-12 sm:my-16"></div>
     <!-- Transizione fine sezione broker -->
 <div class="w-full max-w-6xl mx-auto my-20 px-4">
   <div class="w-24 h-1.5 mx-auto bg-gradient-to-r from-blue-700 via-blue-500 to-blue-700 rounded-full opacity-50"></div>
 </div>
-
-
-    <section class="text-center py-12 px-4 max-w-4xl mx-auto">
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight mb-4">Strumenti AI per la finanza reale</h1>
-      <p class="mt-2 text-base text-slate-600">Richiedi un report AI su un asset: ricezione via WhatsApp, SMS o Email. Nessun tracciamento. Solo analisi reale, senza fuffa.</p>
-      <p class="mt-4 text-lg text-blue-700 min-h-[28px] font-medium" id="typing-text"></p>
-    </section>
-
-  <section class="text-center py-12 px-4 max-w-4xl mx-auto">
+<section class="text-center py-12 px-4 max-w-4xl mx-auto">
   <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight mb-4">Strumenti AI per la finanza reale</h1>
   <p class="mt-2 text-base text-slate-600">Richiedi un report AI su un asset: ricezione via WhatsApp, SMS o Email. Nessun tracciamento. Solo analisi reale, senza fuffa.</p>
   <p class="mt-4 text-lg text-blue-700 min-h-[28px] font-medium" id="typing-text"></p>
@@ -1246,37 +1141,87 @@
     <h2 class="text-3xl sm:text-4xl font-semibold text-center text-blue-800 mb-4">Servizi Gratuiti Tradelia</h2>
     <p class="text-center text-gray-600 mb-8">Richiedi un'analisi professionale supportata da intelligenza artificiale e dati istituzionali</p>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-      <button onclick="apriModale(1)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
-        <div class="flex flex-col items-center gap-2">
-          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="bar-chart" class="w-6 h-6 text-blue-700"></i></div>
-          <span class="font-semibold">Analisi Singolo Asset</span>
-          <p class="text-sm text-gray-500">Tecnica, fondamentale e macro</p>
-        </div>
-      </button>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
-      <button onclick="apriModale(2)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
-        <div class="flex flex-col items-center gap-2">
-          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="trending-up" class="w-6 h-6 text-blue-700"></i></div>
-          <span class="font-semibold">3 Azioni Sottovalutate</span>
-          <p class="text-sm text-gray-500">Scelte basate su inefficienze di pricing</p>
-        </div>
-      </button>
+  <!-- CARD 1 – Asset Singolo -->
+  <button onclick="apriModale(1)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition-all text-left shadow-sm flex flex-col justify-between h-full">
+    <div class="flex flex-col gap-3">
+      <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
+        <i data-lucide="bar-chart" class="w-6 h-6 text-blue-700"></i>
+      </div>
+      <h3 class="font-semibold text-gray-900">Analisi Approfondita su Asset Selezionato</h3>
+      <p class="text-sm text-gray-500">
+        Report dettagliato con approccio istituzionale. Include analisi tecnica multi-timeframe, valutazione fondamentale, scenario macroeconomico e indicatori avanzati.
+      </p>
+    </div>
+    <div class="mt-4 flex items-center justify-between">
+      <span class="text-sm text-blue-700 font-medium underline underline-offset-2">Richiedi gratis</span>
+      <div class="w-9 h-9 rounded-full bg-white/50 backdrop-blur-md shadow-md flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
+        <i data-lucide="arrow-up-right" class="w-4 h-4 text-blue-700"></i>
+      </div>
+    </div>
+  </button>
 
-      <button onclick="apriModale(3)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
-        <div class="flex flex-col items-center gap-2">
-          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="bitcoin" class="w-6 h-6 text-blue-700"></i></div>
-          <span class="font-semibold">3 Crypto Solide</span>
-          <p class="text-sm text-gray-500">Token con sviluppo attivo e adozione</p>
-        </div>
-      </button>
+  <!-- CARD 2 – Azioni -->
+  <button onclick="apriModale(2)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition-all text-left shadow-sm flex flex-col justify-between h-full">
+    <div class="flex flex-col gap-3">
+      <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
+        <i data-lucide="trending-up" class="w-6 h-6 text-blue-700"></i>
+      </div>
+      <h3 class="font-semibold text-gray-900">3 Azioni Potenzialmente Sottovalutate</h3>
+      <p class="text-sm text-gray-500">
+        Selezione basata su inefficienze di mercato rilevate tramite modelli quantitativi. Include ratio fondamentali, momentum tecnico e screening settoriale.
+      </p>
+    </div>
+    <div class="mt-4 flex items-center justify-between">
+      <span class="text-sm text-blue-700 font-medium underline underline-offset-2">Richiedi gratis</span>
+      <div class="w-9 h-9 rounded-full bg-white/50 backdrop-blur-md shadow-md flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
+        <i data-lucide="arrow-up-right" class="w-4 h-4 text-blue-700"></i>
+      </div>
+    </div>
+  </button>
 
-      <button onclick="apriModale(4)" class="group rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition text-center">
-        <div class="flex flex-col items-center gap-2">
-          <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="wallet" class="w-6 h-6 text-blue-700"></i></div>
-          <span class="font-semibold">3 Titoli ad Alto Dividendo</span>
-          <p class="text-sm text-gray-500">Selezione settoriale con yield elevato</p>
-        </div>
+  <!-- CARD 3 – Crypto -->
+  <button onclick="apriModale(3)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition-all text-left shadow-sm flex flex-col justify-between h-full">
+    <div class="flex flex-col gap-3">
+      <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
+        <i data-lucide="bitcoin" class="w-6 h-6 text-blue-700"></i>
+      </div>
+      <h3 class="font-semibold text-gray-900">3 Criptovalute con Adozione Reale</h3>
+      <p class="text-sm text-gray-500">
+        Selezione indipendente di crypto con sviluppo attivo, utilità concreta e integrazione in ecosistemi reali. Esclusi progetti speculativi e meme token.
+      </p>
+    </div>
+    <div class="mt-4 flex items-center justify-between">
+      <span class="text-sm text-blue-700 font-medium underline underline-offset-2">Richiedi gratis</span>
+      <div class="w-9 h-9 rounded-full bg-white/50 backdrop-blur-md shadow-md flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
+        <i data-lucide="arrow-up-right" class="w-4 h-4 text-blue-700"></i>
+      </div>
+    </div>
+  </button>
+
+  <!-- CARD 4 – Dividendi -->
+  <button onclick="apriModale(4)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition-all text-left shadow-sm flex flex-col justify-between h-full">
+    <div class="flex flex-col gap-3">
+      <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
+        <i data-lucide="wallet" class="w-6 h-6 text-blue-700"></i>
+      </div>
+      <h3 class="font-semibold text-gray-900">3 Titoli Difensivi con Alto Dividend Yield</h3>
+      <p class="text-sm text-gray-500">
+        Selezione focalizzata su solidità finanziaria, payout sostenibile e bassa volatilità. Include analisi settoriale e scenario macro avverso.
+      </p>
+    </div>
+    <div class="mt-4 flex items-center justify-between">
+      <span class="text-sm text-blue-700 font-medium underline underline-offset-2">Richiedi gratis</span>
+      <div class="w-9 h-9 rounded-full bg-white/50 backdrop-blur-md shadow-md flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
+        <i data-lucide="arrow-up-right" class="w-4 h-4 text-blue-700"></i>
+      </div>
+    </div>
+  </button>
+
+</div>
+
+
       </button>
     </div>
   </div>
@@ -1538,4 +1483,6 @@ document.addEventListener("DOMContentLoaded", function () {
 </footer>
 
 </body>
-</html>
+</html
+  
+
