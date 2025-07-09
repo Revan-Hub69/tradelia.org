@@ -6,6 +6,7 @@
   <style>
     @media print {
       .no-print { display: none !important; }
+      .page-break { page-break-before: always; }
     }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -36,11 +37,13 @@
     .disclaimer-box {
       background: #f9fafb;
       padding: 1.5rem;
-      border-left: 4px solid #3b82f6;
+      border-left: 5px solid #2563eb;
       margin-bottom: 40px;
+      font-size: 0.95rem;
     }
     .page-break {
-      page-break-after: always;
+      margin-top: 60px;
+      page-break-before: always;
     }
   </style>
 </head>
@@ -53,12 +56,12 @@
 
 <header>
   <h1>Tradelia AI – Report Azionario</h1>
-  <p class="label">Data: <span style="font-weight:normal">9 luglio 2025</span></p>
+  <p class="label">Data: <span id="data-attuale" style="font-weight:normal"></span></p>
 </header>
 
 <section class="disclaimer-box editable" contenteditable="true">
   <strong>Disclaimer Legale:</strong>
-  <p>Il presente documento è generato automaticamente da sistemi AI basati su fonti pubbliche selezionate. Non costituisce raccomandazione finanziaria o sollecitazione al pubblico risparmio. L’utente è responsabile di ogni decisione basata sui dati contenuti.</p>
+  <p>Il presente report è generato automaticamente da sistemi di intelligenza artificiale e si basa su dati raccolti da fonti ritenute affidabili, ma non garantite. Non costituisce sollecitazione all’investimento, consulenza finanziaria o raccomandazione operativa. L'utente accetta che ogni decisione di investimento basata su questo documento è a proprio rischio esclusivo. Tradelia AI e i suoi partner non si assumono alcuna responsabilità per eventuali perdite o danni derivanti dall'uso delle informazioni contenute.</p>
 </section>
 
 <section class="section">
@@ -82,29 +85,39 @@
   </ol>
 </section>
 
-<section class="section">
+<div class="page-break"></div>
+
+<section class="section page-break">
   <h2>Strategia: Investimento Lungo Termine</h2>
   <div class="editable" contenteditable="true"><p>[Scrivi qui la strategia]</p></div>
 </section>
 
-<section class="section">
+<section class="section page-break">
   <h2>Strategia: Swing Trading</h2>
   <div class="editable" contenteditable="true"><p>[Scrivi qui la strategia]</p></div>
 </section>
 
-<section class="section">
+<section class="section page-break">
   <h2>Strategia: Opzioni & Derivati</h2>
   <div class="editable" contenteditable="true"><p>[Scrivi qui la strategia]</p></div>
 </section>
 
 <script>
+  const oggi = new Date();
+  document.getElementById("data-attuale").textContent = oggi.toLocaleDateString("it-IT", {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+
   for (let i = 1; i <= 12; i++) {
-    document.write(`
-      <section class="section">
-        <h2>Blocco ${i} – [Titolo del Blocco ${i}]</h2>
-        <div class="editable" contenteditable="true"><p>[Scrivi qui il contenuto del Blocco ${i}]</p></div>
-      </section>
-    `);
+    const sezione = document.createElement("section");
+    sezione.className = "section page-break";
+    sezione.innerHTML = `
+      <h2>Blocco ${i} – [Titolo del Blocco ${i}]</h2>
+      <div class="editable" contenteditable="true"><p>[Scrivi qui il contenuto del Blocco ${i}]</p></div>
+    `;
+    document.body.appendChild(sezione);
   }
 </script>
 
