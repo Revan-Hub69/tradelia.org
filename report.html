@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tradelia AI – Report Azionario</title>
+  <style>
+    @media print {
+      .no-print { display: none !important; }
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 40px auto;
+      max-width: 900px;
+      color: #1d3557;
+      background-color: #ffffff;
+      line-height: 1.6;
+    }
+    h1, h2, h3 {
+      color: #143f84;
+    }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 0.2em;
+    }
+    .section {
+      margin-top: 60px;
+    }
+    .label {
+      font-weight: bold;
+    }
+    .editable:hover {
+      outline: 2px dashed #60a5fa;
+      background-color: #f0f9ff;
+      cursor: text;
+    }
+    .disclaimer-box {
+      background: #f9fafb;
+      padding: 1.5rem;
+      border-left: 4px solid #3b82f6;
+      margin-bottom: 40px;
+    }
+    .page-break {
+      page-break-after: always;
+    }
+  </style>
+</head>
+<body>
+
+<header style="border-bottom: 2px solid #e5e7eb; padding-bottom: 20px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center;">
+  <div style="font-size: 2rem; font-weight: 700; color: #1e3a8a;">TRADELIA<span style="color: #2563eb;">•AI</span></div>
+  <div style="font-size: 0.9rem; color: #6b7280;">Report Generato</div>
+</header>
+
+<header>
+  <h1>Tradelia AI – Report Azionario</h1>
+  <p class="label">Data: <span style="font-weight:normal">9 luglio 2025</span></p>
+</header>
+
+<section class="disclaimer-box editable" contenteditable="true">
+  <strong>Disclaimer Legale:</strong>
+  <p>Il presente documento è generato automaticamente da sistemi AI basati su fonti pubbliche selezionate. Non costituisce raccomandazione finanziaria o sollecitazione al pubblico risparmio. L’utente è responsabile di ogni decisione basata sui dati contenuti.</p>
+</section>
+
+<section class="section">
+  <h2>Indice</h2>
+  <ol>
+    <li>Strategia: Investimento Lungo Termine</li>
+    <li>Strategia: Swing Trading</li>
+    <li>Strategia: Opzioni & Derivati</li>
+    <li>Blocco 1 – Identificativi & Contesto</li>
+    <li>Blocco 2 – Multipli & Valutazione</li>
+    <li>Blocco 3 – Fondamentali Aziendali</li>
+    <li>Blocco 4 – Dividendi & Buyback</li>
+    <li>Blocco 5 – Performance & Rischio</li>
+    <li>Blocco 6 – Microstruttura</li>
+    <li>Blocco 7 – Derivati & Sentiment</li>
+    <li>Blocco 8 – Analisi Tecnica & Correlazioni</li>
+    <li>Blocco 9 – Proprietà & ESG</li>
+    <li>Blocco 10 – Cluster Strategico & AI</li>
+    <li>Blocco 11 – Eventi Rilevanti</li>
+    <li>Blocco 12 – Dati Alternativi</li>
+  </ol>
+</section>
+
+<section class="section">
+  <h2>Strategia: Investimento Lungo Termine</h2>
+  <div class="editable" contenteditable="true"><p>[Scrivi qui la strategia]</p></div>
+</section>
+
+<section class="section">
+  <h2>Strategia: Swing Trading</h2>
+  <div class="editable" contenteditable="true"><p>[Scrivi qui la strategia]</p></div>
+</section>
+
+<section class="section">
+  <h2>Strategia: Opzioni & Derivati</h2>
+  <div class="editable" contenteditable="true"><p>[Scrivi qui la strategia]</p></div>
+</section>
+
+<script>
+  for (let i = 1; i <= 12; i++) {
+    document.write(`
+      <section class="section">
+        <h2>Blocco ${i} – [Titolo del Blocco ${i}]</h2>
+        <div class="editable" contenteditable="true"><p>[Scrivi qui il contenuto del Blocco ${i}]</p></div>
+      </section>
+    `);
+  }
+</script>
+
+</body>
+</html>
