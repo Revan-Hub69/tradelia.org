@@ -7,7 +7,20 @@
     @media print {
       .no-print { display: none !important; }
       .page-break { page-break-before: always; }
+      header.fixed-header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: #fff;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 10px 0;
+      }
+      .logo-small {
+        height: 25px;
+        margin-bottom: 5px;
+      }
     }
+
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 40px auto;
@@ -16,24 +29,30 @@
       background-color: #ffffff;
       line-height: 1.6;
     }
-    h1, h2, h3 {
+
+    h1, h2 {
       color: #143f84;
     }
+
     h1 {
-      font-size: 2.5em;
+      font-size: 2.4em;
       margin-bottom: 0.2em;
     }
+
     .section {
       margin-top: 60px;
     }
+
     .label {
       font-weight: bold;
     }
+
     .editable:hover {
       outline: 2px dashed #60a5fa;
       background-color: #f0f9ff;
       cursor: text;
     }
+
     .disclaimer-box {
       background: #f9fafb;
       padding: 1.5rem;
@@ -41,40 +60,55 @@
       margin-bottom: 40px;
       font-size: 0.95rem;
     }
+
     .page-break {
       margin-top: 60px;
       page-break-before: always;
+    }
+
+    .logo {
+      height: 50px;
+    }
+
+    .header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 10px;
+      margin-bottom: 30px;
     }
   </style>
 </head>
 <body>
 
-<header style="border-bottom: 2px solid #e5e7eb; padding-bottom: 20px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center;">
-  <div style="font-size: 2rem; font-weight: 700; color: #1e3a8a;">TRADELIA<span style="color: #2563eb;">•AI</span></div>
+<!-- Header con logo SVG principale -->
+<header class="header-flex">
+  <div>
+    <svg class="logo" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+      <text x="0" y="50" font-size="42" font-family="Segoe UI" fill="#1e3a8a" font-weight="bold">TRADELIA</text>
+      <circle cx="220" cy="35" r="6" fill="#2563eb" />
+      <text x="230" y="50" font-size="42" font-family="Segoe UI" fill="#2563eb" font-weight="bold">AI</text>
+    </svg>
+  </div>
   <div style="font-size: 0.9rem; color: #6b7280;">Report Generato</div>
 </header>
 
-<header>
-  <h1>Tradelia AI – Report Azionario</h1>
-  <p class="label">Data: <span id="data-attuale" style="font-weight:normal"></span></p>
-</header>
+<h1>Tradelia AI – Report Azionario</h1>
+<p class="label">Data: <span id="data-attuale" style="font-weight:normal"></span></p>
 
+<!-- Disclaimer -->
 <section class="disclaimer-box editable" contenteditable="true">
   <strong>Disclaimer Legale – Analisi AI su dati verificati da fonti autorevoli:</strong>
   <p>Il presente documento è stato generato da sistemi avanzati di Intelligenza Artificiale (Tradelia AI), basati su dati raccolti da fonti informative autorevoli, pubblicamente accessibili e ad alto grado di affidabilità, tra cui agenzie finanziarie, database istituzionali, report ufficiali, provider di dati di mercato e piattaforme regolamentate.</p>
-  
   <p>Tutte le informazioni vengono analizzate, verificate e incrociate attraverso più fonti, ma non è comunque possibile garantire la totale accuratezza, completezza o aggiornamento in tempo reale dei contenuti. Eventuali discrepanze, errori, omissioni o ritardi sono sempre possibili.</p>
-  
   <p>Le analisi, valutazioni, strategie e segnali presenti in questo documento hanno esclusivamente finalità informative e didattiche. Non costituiscono in alcun modo una consulenza finanziaria personalizzata, un'offerta di investimento, una sollecitazione al pubblico risparmio, né una raccomandazione all'acquisto o vendita di strumenti finanziari.</p>
-  
   <p>Tradelia AI non tiene conto del profilo finanziario, patrimoniale, fiscale o di rischio dell’utente. Qualsiasi decisione operativa basata su queste analisi è assunta in piena autonomia e responsabilità. Si raccomanda di consultare un consulente finanziario abilitato prima di prendere decisioni di investimento.</p>
-  
   <p>Tradelia, i suoi sviluppatori, collaboratori e partner declinano ogni responsabilità per eventuali perdite, danni o conseguenze negative derivanti dall’uso o dall’interpretazione dei contenuti di questo documento.</p>
-  
   <p>L’accesso, lettura e utilizzo del presente report implicano l’accettazione piena e incondizionata di tutte le limitazioni sopra esposte.</p>
 </section>
 
-
+<!-- Indice -->
 <section class="section">
   <h2>Indice</h2>
   <ol>
@@ -82,37 +116,42 @@
     <li>Strategia: Swing Trading</li>
     <li>Strategia: Opzioni & Derivati</li>
     <li>Blocco 1 – Identificativi & Contesto</li>
-    <li>Blocco 2 – Multipli & Valutazione</li>
+    <li>Blocco 2 – Multipli & Valutazione Intrinseca</li>
     <li>Blocco 3 – Fondamentali Aziendali</li>
     <li>Blocco 4 – Dividendi & Buyback</li>
-    <li>Blocco 5 – Performance & Rischio</li>
-    <li>Blocco 6 – Microstruttura</li>
+    <li>Blocco 5 – Performance & Momentum</li>
+    <li>Blocco 6 – Microstruttura & Proprietà</li>
     <li>Blocco 7 – Derivati & Sentiment</li>
-    <li>Blocco 8 – Analisi Tecnica & Correlazioni</li>
-    <li>Blocco 9 – Proprietà & ESG</li>
-    <li>Blocco 10 – Cluster Strategico & AI</li>
-    <li>Blocco 11 – Eventi Rilevanti</li>
-    <li>Blocco 12 – Dati Alternativi</li>
+    <li>Blocco 8 – Analisi Tecnica & Correlazioni Intermarket</li>
+    <li>Blocco 9 – Struttura Proprietaria & ESG</li>
+    <li>Blocco 10 – Cluster Strategico & Segmentazione AI</li>
+    <li>Blocco 11 – Eventi Rilevanti & Calendario</li>
+    <li>Blocco 12 – Dati Alternativi & Retail Intelligence</li>
   </ol>
 </section>
 
-<div class="page-break"></div>
-
-<section class="section page-break">
+<!-- Strategia 1 -->
+<div class="page-break section">
+  <img class="logo-small" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 80'><text x='0' y='50' font-size='42' font-family='Segoe UI' fill='%231e3a8a' font-weight='bold'>TRADELIA</text><circle cx='220' cy='35' r='6' fill='%232563eb'/><text x='230' y='50' font-size='42' font-family='Segoe UI' fill='%232563eb' font-weight='bold'>AI</text></svg>" alt="Logo" />
   <h2>Strategia: Investimento Lungo Termine</h2>
   <div class="editable" contenteditable="true"><p>[Scrivi qui la strategia]</p></div>
-</section>
+</div>
 
-<section class="section page-break">
+<!-- Strategia 2 -->
+<div class="page-break section">
+  <img class="logo-small" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 80'><text x='0' y='50' font-size='42' font-family='Segoe UI' fill='%231e3a8a' font-weight='bold'>TRADELIA</text><circle cx='220' cy='35' r='6' fill='%232563eb'/><text x='230' y='50' font-size='42' font-family='Segoe UI' fill='%232563eb' font-weight='bold'>AI</text></svg>" alt="Logo" />
   <h2>Strategia: Swing Trading</h2>
   <div class="editable" contenteditable="true"><p>[Scrivi qui la strategia]</p></div>
-</section>
+</div>
 
-<section class="section page-break">
+<!-- Strategia 3 -->
+<div class="page-break section">
+  <img class="logo-small" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 80'><text x='0' y='50' font-size='42' font-family='Segoe UI' fill='%231e3a8a' font-weight='bold'>TRADELIA</text><circle cx='220' cy='35' r='6' fill='%232563eb'/><text x='230' y='50' font-size='42' font-family='Segoe UI' fill='%232563eb' font-weight='bold'>AI</text></svg>" alt="Logo" />
   <h2>Strategia: Opzioni & Derivati</h2>
   <div class="editable" contenteditable="true"><p>[Scrivi qui la strategia]</p></div>
-</section>
+</div>
 
+<!-- Blocchi -->
 <script>
   const oggi = new Date();
   document.getElementById("data-attuale").textContent = oggi.toLocaleDateString("it-IT", {
@@ -121,15 +160,31 @@
     year: 'numeric'
   });
 
-  for (let i = 1; i <= 12; i++) {
-    const sezione = document.createElement("section");
-    sezione.className = "section page-break";
+  const titoliBlocchi = [
+    "Identificativi & Contesto",
+    "Multipli & Valutazione Intrinseca",
+    "Fondamentali Aziendali",
+    "Dividendi & Buyback",
+    "Performance & Momentum",
+    "Microstruttura & Proprietà",
+    "Derivati & Sentiment",
+    "Analisi Tecnica & Correlazioni Intermarket",
+    "Struttura Proprietaria & ESG",
+    "Cluster Strategico & Segmentazione AI",
+    "Eventi Rilevanti & Calendario",
+    "Dati Alternativi & Retail Intelligence"
+  ];
+
+  titoliBlocchi.forEach((titolo, i) => {
+    const sezione = document.createElement("div");
+    sezione.className = "page-break section";
     sezione.innerHTML = `
-      <h2>Blocco ${i} – [Titolo del Blocco ${i}]</h2>
-      <div class="editable" contenteditable="true"><p>[Scrivi qui il contenuto del Blocco ${i}]</p></div>
+      <img class="logo-small" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 80'><text x='0' y='50' font-size='42' font-family='Segoe UI' fill='%231e3a8a' font-weight='bold'>TRADELIA</text><circle cx='220' cy='35' r='6' fill='%232563eb'/><text x='230' y='50' font-size='42' font-family='Segoe UI' fill='%232563eb' font-weight='bold'>AI</text></svg>" alt="Logo" />
+      <h2>Blocco ${i + 1} – ${titolo}</h2>
+      <div class="editable" contenteditable="true"><p>[Scrivi qui il contenuto del Blocco ${i + 1}]</p></div>
     `;
     document.body.appendChild(sezione);
-  }
+  });
 </script>
 
 </body>
