@@ -113,32 +113,35 @@
 </section>
 
 
-<!-- BLOCCO 1 – versione a righe tipo quaderno -->
 <section id="blocco1" class="mt-12">
   <h2 class="text-lg font-semibold text-gray-800 mb-4">Blocco 1 – Identificativi & Contesto</h2>
-  <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-    <div class="divide-y divide-gray-200 text-sm">
-      <div class="py-2"><u><strong>Ticker:</strong></u> BUZ.MI</div>
-      <div class="py-2"><u><strong>ISIN:</strong></u> IT0001347308</div>
-      <div class="py-2"><u><strong>Exchange:</strong></u> Borsa Italiana</div>
-      <div class="py-2"><u><strong>Settore:</strong></u> Materiali</div>
-      <div class="py-2"><u><strong>Industria:</strong></u> Cemento e Costruzioni</div>
-      <div class="py-2"><u><strong>Market Cap:</strong></u> €3.5 Mld</div>
-      <div class="py-2"><u><strong>Numero Azioni:</strong></u> 165,000,000</div>
-      <div class="py-2"><u><strong>Free Float (%):</strong></u> 48.6%</div>
-      <div class="py-2"><u><strong>Prezzo Attuale:</strong></u> €22.45</div>
-      <div class="py-2"><u><strong>Prezzo Target Medio Analisti:</strong></u> €27.80</div>
-      <div class="py-2"><u><strong>Rating Analisti:</strong></u> Buy</div>
-      <div class="py-2"><u><strong>Variazione 24h / 7gg / 30gg:</strong></u> +1.2% / +3.8% / +7.4%</div>
-      <div class="py-2"><u><strong>Massimo / Minimo Storico:</strong></u> €35.00 / €7.50</div>
-      <div class="py-2"><u><strong>Data IPO:</strong></u> 2001</div>
-      <div class="py-2"><u><strong>Indice di Appartenenza:</strong></u> FTSE Italia Mid Cap</div>
-    </div>
-    <div class="mt-6 text-sm text-gray-700 bg-gray-50 p-4 rounded border border-gray-200">
-      <u><strong>Commento Tradelia AI:</strong></u> Buona capitalizzazione, presenza in un indice mid cap italiano, prezzo attuale ben sotto i massimi storici. Target analisti positivo. Free float nella media. Nessun alert anomalo.
-    </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm bg-white p-6 rounded-xl border border-gray-200">
+    <div class="flex justify-between items-center"><span><strong>Ticker:</strong> BUZ.MI</span><i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i></div>
+    <div class="flex justify-between items-center"><span><strong>ISIN:</strong> IT0001347308</span><i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i></div>
+    <div class="flex justify-between items-center"><span><strong>Exchange:</strong> Borsa Italiana</span><i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i></div>
+    <div class="flex justify-between items-center"><span><strong>Settore:</strong> Materiali</span><i data-lucide="eye" class="w-4 h-4 text-yellow-500"></i></div>
+    <div class="flex justify-between items-center"><span><strong>Industria:</strong> Cemento e Costruzioni</span><i data-lucide="eye" class="w-4 h-4 text-yellow-500"></i></div>
+    <div class="flex justify-between items-center"><span><strong>Market Cap:</strong> €3.5 Mld</span><i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i></div>
+    <div class="flex justify-between items-center"><span><strong>Numero Azioni:</strong> 165,000,000</span><i data-lucide="eye" class="w-4 h-4 text-yellow-500"></i></div>
+    <div class="flex justify-between items-center"><span><strong>Free Float (%):</strong> 48.6%</span><i data-lucide="eye" class="w-4 h-4 text-yellow-500"></i></div>
+    <div class="flex justify-between items-center"><span><strong>Prezzo Attuale:</strong> €22.45</span><i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i></div>
+    <div class="flex justify-between items-center"><span><strong>Prezzo Target Medio Analisti:</strong> €27.80</span><i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i></div>
+    <div class="flex justify-between items-center"><span><strong>Rating Analisti:</strong> Buy</span><i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i></div>
+    <div class="flex justify-between items-center"><span><strong>Variazione 24h / 7gg / 30gg:</strong> +1.2% / +3.8% / +7.4%</span><i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i></div>
+    <div class="flex justify-between items-center"><span><strong>Massimo / Minimo Storico:</strong> €35.00 / €7.50</span><i data-lucide="eye" class="w-4 h-4 text-yellow-500"></i></div>
+    <div class="flex justify-between items-center"><span><strong>Data IPO:</strong> 2001</span><i data-lucide="eye" class="w-4 h-4 text-yellow-500"></i></div>
+    <div class="flex justify-between items-center"><span><strong>Indice di Appartenenza:</strong> FTSE Italia Mid Cap</span><i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i></div>
+  </div>
+  <div class="mt-4 text-sm text-gray-700">
+    <strong>Commento Tradelia AI:</strong> Buona capitalizzazione, presenza in un indice mid cap italiano, prezzo attuale ben sotto i massimi storici. Target analisti positivo. Free float nella media. Nessun alert anomalo.
   </div>
 </section>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  lucide.createIcons();
+</script>
+
 
 
 <br><br>
@@ -253,6 +256,11 @@
       modal.style.display = "flex";
     }
   };
+</script>
+<!-- Caricamento icone Lucide -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+  lucide.createIcons();
 </script>
 
 
