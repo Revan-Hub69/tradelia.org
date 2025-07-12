@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Archivio Report – Tradelia</title>
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+      background-size: 280px;
+    }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track {
+      background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+      border-radius: 100vh;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(80, 160, 200, 0.4);
+      border-radius: 100vh;
+      backdrop-filter: blur(4px);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(80, 160, 200, 0.6);
+    }
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(80, 160, 200, 0.5) #e5e7eb;
+    }
+  </style>
+</head>
+<body class="text-gray-900">
+  <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6">
+    <a href="index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
+    </a>
+    <a href="archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
+  </header>
+
+  <main class="px-6 py-12 max-w-5xl mx-auto">
+    <h1 class="text-3xl font-bold text-slate-800 mb-6">Archivio Storico Report Tradelia</h1>
+    <ul class="space-y-3 text-base text-slate-700">
+      <li><a href="/reports/azioni/buzzi-2025-07-10.html" target="_blank" class="text-blue-600 hover:underline">10/07/2025 – Azioni – Buzzi</a></li>
+      <li><a href="/reports/forex/usdeur-2025-07-09.html" target="_blank" class="text-blue-600 hover:underline">09/07/2025 – Forex – USD/EUR</a></li>
+      <li><a href="/reports/portafogli-simulati/azionario-week27.html" target="_blank" class="text-blue-600 hover:underline">08/07/2025 – Simulazione Portafoglio – Azionario Week 27</a></li>
+      <li><a href="/reports/crypto/ethereum-2025-07-08.html" target="_blank" class="text-blue-600 hover:underline">08/07/2025 – Crypto – Ethereum</a></li>
+      <li><a href="/reports/etf/sp500value-2025-07-06.html" target="_blank" class="text-blue-600 hover:underline">06/07/2025 – ETF – S&P 500 Value</a></li>
+    </ul>
+  </main>
+
+  <!-- COOKIE POPUP -->
+  <div id="cookie-popup" class="modal">
+    <div class="modal-content">
+      <img src="https://lucid.app/favicon.ico" alt="Lucid icon" class="mx-auto mb-2 w-8 h-8">
+      <h3 class="text-lg font-semibold mb-2">Zero biscotti, zero sorprese.</h3>
+      <p class="mb-2">Tradelia non utilizza cookie di tracciamento, profilazione o pubblicità.</p>
+      <p class="text-sm text-gray-600">Salveremo la tua preferenza sul tuo dispositivo per non mostrarti più questo messaggio.</p>
+      <button onclick="chiudiPopupCookie()" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Ho capito</button>
+    </div>
+  </div>
+  <script>
+    if (!localStorage.getItem("cookie-accettato")) {
+      document.getElementById("cookie-popup").style.display = "flex";
+    }
+    function chiudiPopupCookie() {
+      localStorage.setItem("cookie-accettato", "true");
+      document.getElementById("cookie-popup").style.display = "none";
+    }
+  </script>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-900 text-slate-300 px-6 py-12 text-sm mt-16">
+    <div class="max-w-7xl mx-auto grid gap-10 md:grid-cols-2 items-start">
+      <div>
+        <h4 class="text-white text-base font-semibold mb-3">Tradelia AI</h4>
+        <p class="leading-relaxed">
+          Tradelia è un progetto indipendente per fornire strumenti educativi e analisi AI gratuite nel campo finanziario.
+        </p>
+        <p class="mt-4 text-blue-400">
+          ✉️ <a href="mailto:info@tradelia.org" class="hover:underline">info@tradelia.org</a>
+        </p>
+      </div>
+      <div>
+        <h4 class="text-white text-base font-semibold mb-3">Legal</h4>
+        <ul class="space-y-2">
+          <li>
+            <button onclick="apriSezioneLegale('section-tc')" class="hover:text-sky-400 transition">Termini e Condizioni</button>
+          </li>
+          <li>
+            <button onclick="apriSezioneLegale('section-privacy')" class="hover:text-sky-400 transition">Privacy Policy</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+  <script>
+    function apriSezioneLegale(id) {
+      const modal = document.createElement("div");
+      modal.className = "modal";
+      modal.style.display = "flex";
+      modal.innerHTML = `
+        <div class="modal-content relative">
+          <div class="modal-close absolute top-3 right-4 text-lg cursor-pointer hover:text-red-600" onclick="this.parentElement.parentElement.remove()">✕</div>
+          <h3 class="text-lg font-semibold mb-2">
+            ${id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy'}
+          </h3>
+          <p class="text-sm text-gray-800">
+            ${id === 'section-tc'
+              ? "Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all'investimento. Tutte le operazioni simulate in ambiente demo."
+              : "Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l'utente. Progetto open per educazione finanziaria."}
+          </p>
+        </div>`;
+      document.body.appendChild(modal);
+    }
+  </script>
+</body>
+</html>
