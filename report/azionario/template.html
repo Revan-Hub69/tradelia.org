@@ -49,7 +49,33 @@
       color: #0f172a;
       text-align: left;
       box-shadow: 0 12px 48px rgba(0,0,0,0.25);
-    }
+    } 
+     .table-excel {
+    font-family: 'Inter', sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  .table-excel th {
+    background-color: #f8fafc;
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    white-space: nowrap;
+  }
+  .table-excel td {
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+  }
+  .positive {
+    background-color: rgba(34,197,94,0.15);
+  }
+  .neutral {
+    background-color: rgba(234,179,8,0.15);
+  }
+  .negative {
+    background-color: rgba(239,68,68,0.15);
+  }
 
 </style>
 
@@ -116,35 +142,9 @@
 </section>
 
 <section class="mt-12 bg-white px-6 py-6 rounded-xl border border-gray-300 text-sm text-gray-800 shadow-sm">
+  <br>
   <h2 class="text-lg font-semibold text-gray-900 mb-6">Blocco 1 – Identificativi & Contesto</h2>
-  <style>
-    .table-excel {
-      font-family: 'Inter', sans-serif;
-      border-collapse: collapse;
-      width: 100%;
-    }
-    .table-excel th {
-      background-color: #f8fafc;
-      font-weight: 600;
-      text-align: left;
-      padding: 10px 14px;
-      border: 1px solid #d1d5db;
-      white-space: nowrap;
-    }
-    .table-excel td {
-      padding: 10px 14px;
-      border: 1px solid #d1d5db;
-    }
-    .positive {
-      background-color: rgba(34,197,94,0.15);
-    }
-    .neutral {
-      background-color: rgba(234,179,8,0.15);
-    }
-    .negative {
-      background-color: rgba(239,68,68,0.15);
-    }
-  </style>
+ 
   <table class="table-excel mb-6">
     <tr><th>Ticker</th><td>BUZ.MI</td></tr>
     <tr><th>ISIN</th><td>IT0001347308</td></tr>
