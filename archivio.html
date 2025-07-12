@@ -30,7 +30,29 @@
     * {
       scrollbar-width: thin;
       scrollbar-color: rgba(80, 160, 200, 0.5) #e5e7eb;
-    }
+    } 
+    .modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+.modal-content {
+  background: #f8fafc;
+  max-width: 480px;
+  padding: 28px;
+  border-radius: 16px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #0f172a;
+  text-align: center;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.25);
+}
+
   </style>
 </head>
 <body class="text-gray-900">
@@ -51,6 +73,19 @@
       <li><a href="/reports/etf/sp500value-2025-07-06.html" target="_blank" class="text-blue-600 hover:underline">06/07/2025 – ETF – S&P 500 Value</a></li>
     </ul>
   </main>
+<script>
+  function chiudiPopupCookie() {
+    const popup = document.getElementById('cookie-popup');
+    popup.style.display = 'none';
+    localStorage.setItem("tradelia-cookie-ok", "1");
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    if (!localStorage.getItem("tradelia-cookie-ok")) {
+      document.getElementById('cookie-popup').style.display = 'flex';
+    }
+  });
+</script>
 
 <script>
   function apriSezioneLegale(id) {
