@@ -400,25 +400,18 @@ document.addEventListener("DOMContentLoaded", function () {
     
     <!-- COLONNA 2 -->
     <div>
-      <h4 class="text-white text-base font-semibold mb-3">Legal</h4>
-      <ul class="space-y-2">
-        <li>
-          <button onclick="apriSezioneLegale('section-tc')" class="hover:text-sky-400 transition">Termini e Condizioni</button>
-        </li>
-        <li>
-          <button onclick="apriSezioneLegale('section-privacy')" class="hover:text-sky-400 transition">Privacy Policy</button>
-        </li>
-        <li>
-          <a href="/index.html" class="hover:text-sky-400 transition">Home</a>
-        </li>
-        <li>
-          <a href="/archivio.html" class="hover:text-sky-400 transition">Archivio Storico</a>
-        </li>
-      </ul>
+      <h4 class="text-white text-base font-semibold mb-3">Legal & Navigazione</h4>
+      <div class="flex flex-wrap gap-6">
+        <button onclick="apriSezioneLegale('section-tc')" class="hover:text-sky-400 transition">Termini e Condizioni</button>
+        <button onclick="apriSezioneLegale('section-privacy')" class="hover:text-sky-400 transition">Privacy Policy</button>
+        <a href="/index.html" class="hover:text-sky-400 transition">Home</a>
+        <a href="/archivio.html" class="hover:text-sky-400 transition">Archivio Storico</a>
+      </div>
     </div>
 
   </div>
 </footer>
+
 
 
 </body>
