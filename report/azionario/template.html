@@ -73,7 +73,26 @@
       color: #374151;
       line-height: 1.6;
     }
-      ::-webkit-scrollbar {
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+        width: 100%;
+      }
+      tr {
+        margin-bottom: 1rem;
+      }
+      th {
+        background: none;
+        font-weight: 600;
+        padding-top: 0;
+      }
+      td {
+        border-top: none;
+        background-color: #f9fafb;
+        margin-top: -10px;
+      }
+    }
+    ::-webkit-scrollbar {
       width: 10px;
       height: 10px;
     }
@@ -97,11 +116,11 @@
 </head>
 <body>
   <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6">
-  <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
-    <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
-  </a>
-  <a href="https://tradelia.org/archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
-</header>
+    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
+    </a>
+    <a href="https://tradelia.org/archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
+  </header>
   <main>
     <section class="bg-white border border-red-300 rounded-xl shadow-sm px-8 py-6 text-sm leading-relaxed text-gray-800 mb-10 max-w-4xl mx-auto">
       <p>
@@ -111,6 +130,7 @@
         <strong class="text-red-700 underline">Non costituiscono consulenza finanziaria, sollecitazione all’investimento o raccomandazione operativa</strong>. Le strategie descritte non sono validate per l’uso con denaro reale senza la supervisione di un <strong class="text-red-700 underline">consulente finanziario abilitato</strong> (OAM, Consob, FCA, ecc.).
       </p>
     </section>
+
     <section>
       <h2>Simulazione Tradelia AI – Investimento Lungo Termine</h2>
       <table>
@@ -131,6 +151,10 @@
         <strong>Commento Tradelia AI:</strong> Segnale con ottimo profilo rischio/rendimento. Strategia d’ingresso graduale supportata da struttura fondamentale e regime macro favorevole.
       </div>
     </section>
+  </main>
+</body>
+</html>
+
 
     <section>
       <h2>Simulazione Tradelia AI – Swing Trading Multistrategia</h2>
