@@ -1,346 +1,202 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TRADELIA • AI — Report Azionario</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: #f8fafc;
+      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+      background-size: 280px;
       color: #0f172a;
-      display: flex;
+      line-height: 1.6;
     }
-
     header {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 60px;
-      background: #ffffff;
-      border-bottom: 1px solid #e2e8f0;
+      background: #0f172a;
+      color: white;
+      padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 30px;
-      z-index: 1000;
     }
-
-    header .logo {
-      font-size: 22px;
-      font-weight: 800;
-      color: #0f172a;
-    }
-
-    header .logo span {
-      color: #2563eb;
-    }
-
     header a {
-      font-size: 14px;
-      font-weight: 500;
-      color: #2563eb;
+      color: #facc15;
       text-decoration: none;
-    }
-
-    aside {
-      position: fixed;
-      top: 60px;
-      left: 0;
-      width: 240px;
-      height: calc(100vh - 60px);
-      background: #ffffff;
-      border-right: 1px solid #e2e8f0;
-      padding: 30px 20px;
-      overflow-y: auto;
-    }
-
-    aside h2 {
-      font-size: 15px;
       font-weight: 600;
-      margin-bottom: 20px;
     }
-
+    .container {
+      display: flex;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+      gap: 2rem;
+    }
+    aside {
+      width: 250px;
+      position: sticky;
+      top: 2rem;
+      height: fit-content;
+    }
     aside ul {
       list-style: none;
       padding: 0;
       margin: 0;
     }
-
     aside li {
-      margin-bottom: 12px;
+      margin: 0.75rem 0;
     }
-
     aside a {
-      font-size: 14px;
-      color: #2563eb;
       text-decoration: none;
+      color: #0f172a;
+      font-weight: 500;
     }
-
     main {
-      margin-left: 240px;
-      padding: 100px 40px 40px;
-      max-width: 900px;
+      flex: 1;
+      min-width: 0;
     }
-
     section {
-      margin-bottom: 50px;
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      margin-bottom: 3rem;
     }
-
-    .section-title {
-      font-size: 20px;
-      font-weight: 600;
-      border-bottom: 2px solid #e2e8f0;
-      padding-bottom: 8px;
-      margin-bottom: 20px;
-      color: #1e293b;
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 0.25rem;
     }
-
-    .disclaimer {
-      background: #fef2f2;
-      border-left: 5px solid #dc2626;
-      padding: 20px;
-      font-size: 15px;
-      border-radius: 8px;
-      margin-bottom: 30px;
-    }
-
-    .strategy, .block, .comment {
-      font-size: 15px;
-      line-height: 1.6;
-    }
-
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 16px;
+      margin-top: 1rem;
+      overflow-x: auto;
+      display: block;
     }
-
-    th, td {
-      padding: 10px 14px;
-      border: 1px solid #d1d5db;
+    table th, table td {
+      border: 1px solid #e5e7eb;
+      padding: 0.75rem;
       text-align: left;
     }
-
-    th {
-      background-color: #f1f5f9;
-      font-weight: 600;
-    }
-
-    .positive { background-color: #ecfdf5; }
-    .neutral  { background-color: #fef9c3; }
+    .positive { background-color: #dcfce7; }
+    .neutral { background-color: #fef9c3; }
     .negative { background-color: #fee2e2; }
-
-    .comment {
-      background: #f9fafb;
-      border-left: 4px solid #2563eb;
-      padding: 16px;
-      border-radius: 8px;
-      margin-top: 20px;
+    .strategy-block {
+      border-left: 6px solid #10b981;
+      padding: 1.5rem;
+      background: white;
+      box-shadow: 0 0 0 1px #e5e7eb;
+      margin-bottom: 2rem;
     }
-
-    /* Responsive */
-    @media screen and (max-width: 900px) {
-      aside {
-        display: none;
-      }
-
-      main {
-        margin-left: 0;
-        padding: 100px 20px 40px;
-      }
-
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-        height: auto;
-        padding: 16px 20px;
-      }
-
-      header .logo {
-        font-size: 20px;
-        margin-bottom: 6px;
-      }
-
-      header a {
-        font-size: 13px;
-      }
+    .strategy-block h3 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      color: #0f172a;
     }
-
-    /* Modal */
+    .strategy-block .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem 1rem;
+    }
+    .strategy-block p {
+      margin: 0;
+    }
     .modal {
-      display: none;
       position: fixed;
-      z-index: 9999;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.7);
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
       justify-content: center;
       align-items: center;
+      z-index: 1000;
     }
-
     .modal-content {
       background: white;
-      padding: 30px;
-      border-radius: 14px;
-      width: 90%;
+      padding: 2rem;
       max-width: 600px;
-      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
-    }
-
-    .modal-content h3 {
-      color: #dc2626;
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 16px;
-    }
-
-    .modal-content p {
-      font-size: 14px;
-      color: #1e293b;
-      margin-bottom: 10px;
-    }
-
-    .modal-content button {
-      margin-top: 20px;
-      padding: 8px 16px;
-      background: #f3f4f6;
-      border: 1px solid #cbd5e1;
       border-radius: 6px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+    .modal-content button {
+      background: #0f172a;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
       cursor: pointer;
+      margin-top: 1rem;
+    }
+    @media screen and (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        padding: 1rem;
+      }
+      aside {
+        display: none !important;
+      }
+      .strategy-block .grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- HEADER -->
   <header>
-    <div class="logo">TRADELIA <span>•AI</span></div>
-    <a href="https://tradelia.org/archivio.html">Archivio Storico</a>
+    <div><strong>TRADELIA • AI</strong> — Report Azionario</div>
+    <nav><a href="/reports">Archivio Report</a></nav>
   </header>
 
-  <!-- SIDEBAR -->
-  <aside>
-    <h2>Indice</h2>
-    <ul>
-      <li><a href="#strategie">Strategie Tecniche</a></li>
-      <li><a href="#blocco-1">Blocco 1 – Identificativi</a></li>
-      <!-- ... altri blocchi -->
-    </ul>
-  </aside>
+  <div class="container">
+    <aside>
+      <ul>
+        <li><a href="#disclaimer">Disclaimer</a></li>
+        <li><a href="#strategie">Strategie</a></li>
+        <li><a href="#blocco1">Blocco 1</a></li>
+      </ul>
+    </aside>
+    <main>
+      <section id="disclaimer">
+        <h2>Disclaimer Istituzionale Iniziale</h2>
+        <p>Il presente report è generato in ambiente automatizzato e non costituisce in alcun modo consulenza finanziaria, raccomandazione d’investimento o invito al pubblico risparmio. I contenuti sono destinati a un’utenza consapevole, in grado di valutare autonomamente il rischio connesso all’utilizzo dei dati esposti. Tradelia AI declina ogni responsabilità in merito a decisioni operative basate sulle informazioni contenute nel documento.</p>
+      </section>
 
-  <!-- CONTENUTO -->
-  <main>
-    <!-- DISCLAIMER ISTITUZIONALE -->
-    <div class="disclaimer">
-      <strong>Nota Importante:</strong><br>
-      Le analisi e simulazioni presenti in questo documento sono elaborate da sistemi quantitativi e AI sviluppati da <strong>Tradelia</strong>.  
-      Non costituiscono consulenza finanziaria o sollecitazione all'investimento.  
-      Ogni decisione deve essere assunta con il supporto di un consulente abilitato (OAM, Consob, FCA, ecc.).
-    </div>
+      <section id="strategie">
+        <h2>Strategie Simulate</h2>
 
-      <!-- STRATEGIE -->
-    <section id="strategie">
-      <div class="section-title">Simulazione Strategica: Investimento Lungo Termine</div>
-      <div class="strategy">
-        <p><strong>🎯 Fair Value & Potenziale Upside</strong><br>
-        Prezzo attuale: €98.50<br>
-        Fair Value stimato: €126.40<br>
-        Upside 12 mesi: +28.3%<br>
-        Valutazione attuale: <strong class="positive">✅ Sottovalutato</strong></p>
-
-        <p><strong>📊 Score Composito Tradelia AI</strong><br>
-        Fondamentali: 7.8 / 10<br>
-        Rischio finanziario: 5.4 / 10<br>
-        Sentiment & Flussi: 6.1 / 10<br>
-        → Composite Score: <strong>6.4 / 10</strong> → <strong class="neutral">⚠️ Borderline</strong></p>
-
-        <p><strong>📌 Raccomandazione</strong><br>
-        BUY<br>
-        Entry ideale: sotto €100.00<br>
-        Target price: €122–128<br>
-        Revisione: trimestrale o in caso di evento binario</p>
-
-        <p><strong>💼 Esposizione</strong><br>
-        Peso consigliato: 4% del portafoglio<br>
-        Settore: sovrappeso Tech / Neutrale Utilities<br>
-        Geografia: prevalente USA, rischio USD moderato</p>
-
-        <p><strong>⚠️ Rischi & ESG</strong><br>
-        - Rischio regolamentare USA/UE<br>
-        - Controversia aperta su governance ESG<br>
-        - Sensibilità a dati inflattivi e Fed</p>
-
-        <p><strong>💸 Dividendi</strong><br>
-        Yield forward: 2.3%<br>
-        Prossimo stacco: 15/09/2025 → €0.56/az</p>
-
-        <p><strong>📈 Simulazione Capital Gain 3Y (Buy & Hold)</strong><br>
-        Capitale iniziale: €10.000 → €14.120 (CAGR ≈ 11.6%)</p>
-
-        <div class="comment">
-          <strong>🧠 Commento Finale</strong><br>
-          Titolo con buone prospettive di rivalutazione, in linea con crescita utili e multipli contenuti. Momentum positivo e flussi retail/institutional bilanciati.
+        <div class="strategy-block">
+          <h3>Segnale Investimento Lungo Termine</h3>
+          <div class="grid">
+            <p><strong>Fair Value stimato:</strong> €126.40</p>
+            <p><strong>Valutazione:</strong> ✅ Sottovalutato</p>
+            <p><strong>Composite Score:</strong> 6.4 / 10 — ⚠️ Borderline</p>
+            <p><strong>Raccomandazione:</strong> BUY (entry sotto €100.00)</p>
+            <p><strong>Target price:</strong> €140.00</p>
+            <p><strong>Stop Loss dinamico:</strong> -6% sotto entry</p>
+            <p><strong>Dividendo atteso:</strong> €0.56 / az — Yield 2.3%</p>
+            <p><strong>Revisione segnale:</strong> ogni 90 giorni</p>
+          </div>
         </div>
-      </div>
-    </section>
 
-    <section>
-      <div class="section-title">Simulazione Strategica: Swing Trading Multistrategia</div>
-      <div class="strategy">
-        <p><strong>Segnale attuale:</strong> ✅ ATTIVO<br>
-        Strategia selezionata: Pullback su Supporto<br>
-        Tipo operazione: LONG<br>
-        Trend coerente (1H/4H): Sì</p>
+        <div class="strategy-block">
+          <h3>Segnale Swing Trading — Pullback su Supporto</h3>
+          <div class="grid">
+            <p><strong>Setup tecnico:</strong> RSI in crescita, breakout potenziale, EMA21 attiva</p>
+            <p><strong>Tipo:</strong> LONG</p>
+            <p><strong>Entry:</strong> €98.00</p>
+            <p><strong>Stop Loss:</strong> €95.70</p>
+            <p><strong>TP1:</strong> €103.10</p>
+            <p><strong>TP2:</strong> €108.00</p>
+            <p><strong>Trailing:</strong> attivo dopo TP1</p>
+            <p><strong>R:R atteso:</strong> 2.05</p>
+            <p><strong>Conferme inter-blocco:</strong> GEX, volumi, pattern validato</p>
+          </div>
+        </div>
 
+      </section>
+
+      <section id="blocco1">
+        <h2>Blocco 1 — Identificativi & Contesto</h2>
         <table>
-          <thead><tr><th>Livello</th><th>Valore</th><th>Motivo Tecnico</th></tr></thead>
-          <tbody>
-            <tr><td>Entry</td><td>€98.00</td><td>Test EMA21 + supporto statico</td></tr>
-            <tr><td>Stop Loss</td><td>€95.70</td><td>2×ATR sotto supporto</td></tr>
-            <tr><td>Take Profit 1</td><td>€103.10</td><td>Resistenza precedente + Fibo</td></tr>
-            <tr><td>Take Profit 2</td><td>€108.00</td><td>Estensione Fibo + swing</td></tr>
-            <tr><td>Trailing Stop</td><td>Attivo sopra €103.10</td><td>Su EMA dinamica</td></tr>
-            <tr><td>R:R atteso</td><td>2.6</td><td>Trade valido</td></tr>
-          </tbody>
-        </table>
-
-        <div class="comment">
-          <strong>🧠 Commento Operativo</strong><br>
-          Setup confermato con pattern di ripartenza, RSI in crescita e MACD positivo. Volumi in aumento, breakout tecnico in validazione.
-          Conferme anche da Blocco 5, 6 e 12.
-        </div>
-
-        <div style="margin-top: 30px;">
-          <strong>Codice C# per cTrader (.algo)</strong><br>
-          <pre style="background:#f1f5f9;padding:16px;border-radius:8px;font-size:13px;overflow:auto;">
-// Estratto cAlgo – Swing Long su Pullback
-// Entry su supporto EMA21 con TP1/TP2 e SL dinamico
-if (RSI.Result.LastValue > 50 && Price > EMA21.Result.LastValue) {
-    ExecuteMarketOrder(TradeType.Buy, Symbol, volume, "SwingLong",
-        StopLossPips, TakeProfitPips);
-    // Attiva trailing sopra TP1
-    if (Symbol.Bid > TP1) {
-        double trailing = Symbol.Bid - (1.5 * ATR);
-        ModifyPosition(position, trailing, TP2);
-    }
-}
-          </pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- BLOCCO 1 -->
-    <section id="blocco-1">
-      <div class="section-title">Blocco 1 – Identificativi & Contesto</div>
-      <table>
-        <thead><tr><th>Parametro</th><th>Valore</th></tr></thead>
-        <tbody>
           <tr class="positive"><td>Ticker</td><td>AAPL</td></tr>
           <tr class="positive"><td>Nome Azienda</td><td>Apple Inc.</td></tr>
           <tr class="positive"><td>Exchange</td><td>NASDAQ</td></tr>
@@ -351,28 +207,23 @@ if (RSI.Result.LastValue > 50 && Price > EMA21.Result.LastValue) {
           <tr class="neutral"><td>Data IPO</td><td>12/1980</td></tr>
           <tr class="neutral"><td>Capitalizzazione</td><td>$2.94T</td></tr>
           <tr class="negative"><td>Free Float %</td><td>58%</td></tr>
-        </tbody>
-      </table>
-    </section>
-  </main>
+        </table>
+      </section>
+    </main>
+  </div>
 
-  <!-- MODALE DISCLAIMER -->
   <div class="modal" id="disclaimer-popup">
     <div class="modal-content">
       <h3>Disclaimer Legale Istituzionale</h3>
-      <p>Questo documento è prodotto da Tradelia AI, basato su modelli AI e valutazioni multi-blocco.</p>
-      <p>Non costituisce raccomandazione operativa, proposta d’investimento né consulenza finanziaria.</p>
-      <p>Ogni decisione operativa deve essere presa con il supporto di un consulente autorizzato e iscritto agli albi ufficiali.</p>
-      <p class="italic text-gray-500">È vietata la riproduzione, pubblicazione o diffusione non autorizzata.</p>
+      <p>Il presente documento è fornito esclusivamente a scopo informativo e non rappresenta in alcun modo un'offerta, una raccomandazione o una sollecitazione all'investimento. Nessuna informazione contenuta deve essere considerata come consulenza finanziaria o garanzia di risultato futuro. Tradelia AI non assume responsabilità per decisioni operative assunte in base ai contenuti analizzati.</p>
       <button onclick="document.getElementById('disclaimer-popup').style.display='none'">Chiudi</button>
     </div>
   </div>
 
   <script>
-    // Mostra il disclaimer popup all'apertura
     window.onload = () => {
       document.getElementById('disclaimer-popup').style.display = 'flex';
-    }
+    };
   </script>
 </body>
 </html>
