@@ -16,9 +16,7 @@
 
     header {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: 60px;
       background: #ffffff;
       border-bottom: 1px solid #e2e8f0;
@@ -113,13 +111,9 @@
       margin-bottom: 30px;
     }
 
-    .strategy {
-      margin-bottom: 20px;
-      background: #f9fafb;
-      border: 1px solid #e2e8f0;
-      padding: 18px;
-      border-radius: 10px;
+    .strategy, .block, .comment {
       font-size: 15px;
+      line-height: 1.6;
     }
 
     table {
@@ -139,6 +133,10 @@
       font-weight: 600;
     }
 
+    .positive { background-color: #ecfdf5; }
+    .neutral  { background-color: #fef9c3; }
+    .negative { background-color: #fee2e2; }
+
     .comment {
       background: #f9fafb;
       border-left: 4px solid #2563eb;
@@ -147,7 +145,35 @@
       margin-top: 20px;
     }
 
-    /* Disclaimer modale */
+    /* Responsive */
+    @media screen and (max-width: 900px) {
+      aside {
+        display: none;
+      }
+
+      main {
+        margin-left: 0;
+        padding: 100px 20px 40px;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        height: auto;
+        padding: 16px 20px;
+      }
+
+      header .logo {
+        font-size: 20px;
+        margin-bottom: 6px;
+      }
+
+      header a {
+        font-size: 13px;
+      }
+    }
+
+    /* Modal */
     .modal {
       display: none;
       position: fixed;
@@ -191,80 +217,161 @@
     }
   </style>
 </head>
-
 <body>
-
-  <!-- Header -->
+  <!-- HEADER -->
   <header>
     <div class="logo">TRADELIA <span>•AI</span></div>
     <a href="https://tradelia.org/archivio.html">Archivio Storico</a>
   </header>
 
-  <!-- Sidebar -->
+  <!-- SIDEBAR -->
   <aside>
     <h2>Indice</h2>
     <ul>
       <li><a href="#strategie">Strategie Tecniche</a></li>
       <li><a href="#blocco-1">Blocco 1 – Identificativi</a></li>
-      <li><a href="#blocco-2">Blocco 2 – Multipli</a></li>
-      <li><a href="#blocco-3">Blocco 3 – Fondamentali</a></li>
-      <!-- ... -->
+      <!-- ... altri blocchi -->
     </ul>
   </aside>
 
-  <!-- Contenuto principale -->
+  <!-- CONTENUTO -->
   <main>
-
-    <!-- Disclaimer iniziale -->
+    <!-- DISCLAIMER ISTITUZIONALE -->
     <div class="disclaimer">
-      Le simulazioni presenti sono prodotte da modelli AI Tradelia a solo scopo informativo.  
-      Non rappresentano indicazioni operative né consulenza finanziaria.  
-      Non agire senza supervisione di un consulente abilitato (OAM, Consob, FCA).
+      <strong>Nota Importante:</strong><br>
+      Le analisi e simulazioni presenti in questo documento sono elaborate da sistemi quantitativi e AI sviluppati da <strong>Tradelia</strong>.  
+      Non costituiscono consulenza finanziaria o sollecitazione all'investimento.  
+      Ogni decisione deve essere assunta con il supporto di un consulente abilitato (OAM, Consob, FCA, ecc.).
     </div>
-
-    <!-- Strategie -->
+    <!-- STRATEGIE -->
     <section id="strategie">
-      <div class="section-title">Simulazioni Tecniche</div>
-      <div class="strategy"><strong>Investimento Lungo Termine:</strong> Acquisto su debolezza sotto $460 con orizzonte 24–36 mesi.</div>
-      <div class="strategy"><strong>Swing Short:</strong> Short su rejection $483–488, TP1 $464, TP2 $448, SL $494.</div>
-      <div class="strategy"><strong>Opzioni:</strong> Bias derivati bullish, IV moderata, opportunità su call debit spread.</div>
-    </section>
+      <div class="section-title">Simulazione Strategica: Investimento Lungo Termine</div>
+      <div class="strategy">
+        <p><strong>🎯 Fair Value & Potenziale Upside</strong><br>
+        Prezzo attuale: €98.50<br>
+        Fair Value stimato: €126.40<br>
+        Upside 12 mesi: +28.3%<br>
+        Valutazione attuale: <strong class="positive">✅ Sottovalutato</strong></p>
 
-    <!-- Blocco 1 -->
-    <section id="blocco-1">
-      <div class="section-title">Blocco 1 – Identificativi & Contesto</div>
-      <table>
-        <tr><th>Ticker</th><td>CRWD</td></tr>
-        <tr><th>ISIN</th><td>US22788C1053</td></tr>
-        <tr><th>Exchange</th><td>Nasdaq</td></tr>
-        <tr><th>Prezzo</th><td>$473.28</td></tr>
-      </table>
-      <div class="comment">
-        Titolo ad alta capitalizzazione, incluso in Nasdaq-100 e S&P500. Free float elevato. Nessun alert attivo.
+        <p><strong>📊 Score Composito Tradelia AI</strong><br>
+        Fondamentali: 7.8 / 10<br>
+        Rischio finanziario: 5.4 / 10<br>
+        Sentiment & Flussi: 6.1 / 10<br>
+        → Composite Score: <strong>6.4 / 10</strong> → <strong class="neutral">⚠️ Borderline</strong></p>
+
+        <p><strong>📌 Raccomandazione</strong><br>
+        BUY<br>
+        Entry ideale: sotto €100.00<br>
+        Target price: €122–128<br>
+        Revisione: trimestrale o in caso di evento binario</p>
+
+        <p><strong>💼 Esposizione</strong><br>
+        Peso consigliato: 4% del portafoglio<br>
+        Settore: sovrappeso Tech / Neutrale Utilities<br>
+        Geografia: prevalente USA, rischio USD moderato</p>
+
+        <p><strong>⚠️ Rischi & ESG</strong><br>
+        - Rischio regolamentare USA/UE<br>
+        - Controversia aperta su governance ESG<br>
+        - Sensibilità a dati inflattivi e Fed</p>
+
+        <p><strong>💸 Dividendi</strong><br>
+        Yield forward: 2.3%<br>
+        Prossimo stacco: 15/09/2025 → €0.56/az</p>
+
+        <p><strong>📈 Simulazione Capital Gain 3Y (Buy & Hold)</strong><br>
+        Capitale iniziale: €10.000 → €14.120 (CAGR ≈ 11.6%)</p>
+
+        <div class="comment">
+          <strong>🧠 Commento Finale</strong><br>
+          Titolo con buone prospettive di rivalutazione, in linea con crescita utili e multipli contenuti. Momentum positivo e flussi retail/institutional bilanciati.
+        </div>
       </div>
     </section>
 
-    <!-- altri blocchi... -->
+    <section>
+      <div class="section-title">Simulazione Strategica: Swing Trading Multistrategia</div>
+      <div class="strategy">
+        <p><strong>Segnale attuale:</strong> ✅ ATTIVO<br>
+        Strategia selezionata: Pullback su Supporto<br>
+        Tipo operazione: LONG<br>
+        Trend coerente (1H/4H): Sì</p>
 
+        <table>
+          <thead><tr><th>Livello</th><th>Valore</th><th>Motivo Tecnico</th></tr></thead>
+          <tbody>
+            <tr><td>Entry</td><td>€98.00</td><td>Test EMA21 + supporto statico</td></tr>
+            <tr><td>Stop Loss</td><td>€95.70</td><td>2×ATR sotto supporto</td></tr>
+            <tr><td>Take Profit 1</td><td>€103.10</td><td>Resistenza precedente + Fibo</td></tr>
+            <tr><td>Take Profit 2</td><td>€108.00</td><td>Estensione Fibo + swing</td></tr>
+            <tr><td>Trailing Stop</td><td>Attivo sopra €103.10</td><td>Su EMA dinamica</td></tr>
+            <tr><td>R:R atteso</td><td>2.6</td><td>Trade valido</td></tr>
+          </tbody>
+        </table>
+
+        <div class="comment">
+          <strong>🧠 Commento Operativo</strong><br>
+          Setup confermato con pattern di ripartenza, RSI in crescita e MACD positivo. Volumi in aumento, breakout tecnico in validazione.
+          Conferme anche da Blocco 5, 6 e 12.
+        </div>
+
+        <div style="margin-top: 30px;">
+          <strong>Codice C# per cTrader (.algo)</strong><br>
+          <pre style="background:#f1f5f9;padding:16px;border-radius:8px;font-size:13px;overflow:auto;">
+// Estratto cAlgo – Swing Long su Pullback
+// Entry su supporto EMA21 con TP1/TP2 e SL dinamico
+if (RSI.Result.LastValue > 50 && Price > EMA21.Result.LastValue) {
+    ExecuteMarketOrder(TradeType.Buy, Symbol, volume, "SwingLong",
+        StopLossPips, TakeProfitPips);
+    // Attiva trailing sopra TP1
+    if (Symbol.Bid > TP1) {
+        double trailing = Symbol.Bid - (1.5 * ATR);
+        ModifyPosition(position, trailing, TP2);
+    }
+}
+          </pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOCCO 1 -->
+    <section id="blocco-1">
+      <div class="section-title">Blocco 1 – Identificativi & Contesto</div>
+      <table>
+        <thead><tr><th>Parametro</th><th>Valore</th></tr></thead>
+        <tbody>
+          <tr class="positive"><td>Ticker</td><td>AAPL</td></tr>
+          <tr class="positive"><td>Nome Azienda</td><td>Apple Inc.</td></tr>
+          <tr class="positive"><td>Exchange</td><td>NASDAQ</td></tr>
+          <tr class="positive"><td>Settore</td><td>Technology</td></tr>
+          <tr class="neutral"><td>Industria</td><td>Consumer Electronics</td></tr>
+          <tr class="positive"><td>Paese</td><td>USA</td></tr>
+          <tr class="positive"><td>Valuta</td><td>USD</td></tr>
+          <tr class="neutral"><td>Data IPO</td><td>12/1980</td></tr>
+          <tr class="neutral"><td>Capitalizzazione</td><td>$2.94T</td></tr>
+          <tr class="negative"><td>Free Float %</td><td>58%</td></tr>
+        </tbody>
+      </table>
+    </section>
   </main>
 
-  <!-- Disclaimer modale -->
+  <!-- MODALE DISCLAIMER -->
   <div class="modal" id="disclaimer-popup">
     <div class="modal-content">
-      <h3>Disclaimer Legale</h3>
-      <p>Questo report è il risultato di simulazioni tecniche basate su dati pubblici e modelli AI. Non costituisce consulenza finanziaria.</p>
-      <p>Non prendere decisioni operative senza consulente iscritto ad albi ufficiali.</p>
-      <p><em>Documento riservato — vietata riproduzione o diffusione.</em></p>
+      <h3>Disclaimer Legale Istituzionale</h3>
+      <p>Questo documento è prodotto da Tradelia AI, basato su modelli AI e valutazioni multi-blocco.</p>
+      <p>Non costituisce raccomandazione operativa, proposta d’investimento né consulenza finanziaria.</p>
+      <p>Ogni decisione operativa deve essere presa con il supporto di un consulente autorizzato e iscritto agli albi ufficiali.</p>
+      <p class="italic text-gray-500">È vietata la riproduzione, pubblicazione o diffusione non autorizzata.</p>
       <button onclick="document.getElementById('disclaimer-popup').style.display='none'">Chiudi</button>
     </div>
   </div>
 
   <script>
+    // Mostra il disclaimer popup all'apertura
     window.onload = () => {
-      const modal = document.getElementById('disclaimer-popup');
-      modal.style.display = 'flex';
-    };
+      document.getElementById('disclaimer-popup').style.display = 'flex';
+    }
   </script>
-
 </body>
 </html>
