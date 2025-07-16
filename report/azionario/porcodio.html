@@ -175,17 +175,17 @@ main {
     <tr><th>Stato Segnale</th><td></td></tr>
     <tr><th>Tipo Ordine</th><td></td></tr> <!-- Es: Market, Buy Limit, Sell Stop -->
     <tr><th>Prezzo di Entrata Stimato</th>
-      <td><span id="entryPrice"></span> <button onclick="copyText('entryPrice')">Copia</button></td>
+      <td><span id="entryPrice">€xxx.xx</span> <button onclick="copyText('entryPrice')">Copia</button></td>
     </tr>
     <tr><th>Stop Loss Dinamico</th>
-      <td><span id="stopLoss"></span> <button onclick="copyText('stopLoss')">Copia</button></td>
+      <td><span id="stopLoss">€xxx.xx</span> <button onclick="copyText('stopLoss')">Copia</button></td>
     </tr>
     <tr><th>Trailing Stop Attivo</th><td></td></tr>
     <tr><th>Take Profit 1</th>
-      <td><span id="tp1"></span> <button onclick="copyText('tp1')">Copia</button></td>
+      <td><span id="tp1">€xxx.xx</span> <button onclick="copyText('tp1')">Copia</button></td>
     </tr>
     <tr><th>Take Profit 2 (esteso)</th>
-      <td><span id="tp2"></span> <button onclick="copyText('tp2')">Copia</button></td>
+      <td><span id="tp2">€xxx.xx</span> <button onclick="copyText('tp2')">Copia</button></td>
     </tr>
     <tr><th>R:R Stimato</th><td></td></tr>
     <tr><th>Validità Setup</th><td></td></tr>
@@ -195,14 +195,16 @@ main {
     <tr><th>Conferme Tecniche Multi-Timeframe</th><td></td></tr>
   </table>
 
-  <p><strong>Motivazione GPT:</strong></p>
+  <h3 style="margin-top: 24px;">Motivazione GPT</h3>
   <ul style="line-height: 1.8;">
     <li>Sintesi operativa basata su blocchi 1–12</li>
     <li>Setup tecnico confermato, logica multi-strategia valida, rischio controllato</li>
+    <li>Eventi esclusi, coerenza IV/GEX e R:R minimo garantito</li>
   </ul>
 
-  <div style="margin-top: 24px;">
-    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 6px;">Codice cAlgo (non visibile)</h3>
+  <div style="margin-top: 32px;">
+    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 6px;">Codice cAlgo (nascosto)</h3>
+    <button onclick="copyText('algoCode')"> Copia Codice cAlgo</button>
     <textarea id="algoCode" style="width: 100%; height: 200px; display: none;">
 // === ESEMPIO DI STRATEGIA PULLBACK PER CTRADER ===
 using cAlgo.API;
@@ -241,25 +243,25 @@ namespace cAlgo.Robots
     }
 }
     </textarea>
-    <button onclick="copyText('algoCode')">📥 Copia Codice cAlgo</button>
+  </div>
+
+  <div style="margin-top: 32px;">
+    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 6px;">Backtest Strategia Swing – Risultati Storici</h3>
+    <table class="table-excel">
+      <tr><th>Finestra Storica</th><td>Ultimi 24 mesi</td></tr>
+      <tr><th>Numero Operazioni Simulate</th><td></td></tr>
+      <tr><th>Durata Media Posizione</th><td></td></tr>
+      <tr><th>Tasso di Successo TP1</th><td></td></tr>
+      <tr><th>Tasso di Successo TP2</th><td></td></tr>
+      <tr><th>Stop Loss Triggerato</th><td></td></tr>
+      <tr><th>Performance Media Netto</th><td></td></tr>
+      <tr><th>Drawdown Massimo</th><td></td></tr>
+      <tr><th>Sharpe Ratio Stimato</th><td></td></tr>
+      <tr><th>Confronto con Buy&Hold</th><td></td></tr>
+      <tr><th>Note Metodo</th><td>Simulazione storica condotta su dati reali, con slippage, commissioni e rollover inclusi</td></tr>
+    </table>
   </div>
 </section>
-<div style="margin-top: 32px;">
-  <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 6px;">Backtest Strategia Swing – Risultati Storici</h3>
-  <table class="table-excel">
-    <tr><th>Finestra Storica</th><td>Ultimi 24 mesi</td></tr>
-    <tr><th>Numero Operazioni Simulate</th><td></td></tr>
-    <tr><th>Durata Media Posizione</th><td></td></tr>
-    <tr><th>Tasso di Successo TP1</th><td></td></tr>
-    <tr><th>Tasso di Successo TP2</th><td></td></tr>
-    <tr><th>Stop Loss Triggerato</th><td></td></tr>
-    <tr><th>Performance Media Netto</th><td></td></tr>
-    <tr><th>Drawdown Massimo</th><td></td></tr>
-    <tr><th>Sharpe Ratio Stimato</th><td></td></tr>
-    <tr><th>Confronto con Buy&Hold</th><td></td></tr>
-    <tr><th>Note Metodo</th><td>Simulazione storica condotta su dati reali, con slippage, commissioni e rollover inclusi</td></tr>
-  </table>
-</div>
 
 <script>
   function copyText(id) {
