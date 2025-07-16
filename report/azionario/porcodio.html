@@ -121,58 +121,48 @@ main {
 
     <div class="content">
 
-  <section id="strategia-investimento" class="block">
+ <section id="strategia-investimento" class="block">
   <h2>Simulazione Investimento Lungo Termine</h2>
 
   <table class="table-excel">
     <tr><th>Ticker</th><td></td></tr>
     <tr><th>Prezzo Attuale</th><td></td></tr>
-    <tr><th>Prezzo di Entrata Consigliato</th><td></td></tr> <!-- Basato su supporto, compressione, fair value sconto -->
-    <tr><th>Raccomandazione</th><td class="positive"></td></tr> <!-- BUY / HOLD / AVOID -->
-    <tr><th>Fair Value Target</th><td class="positive"></td></tr> <!-- Calcolo GPT da DCF + comparables -->
-    <tr><th>Fonte Fair Value</th><td></td></tr> <!-- FMP, Morningstar, GPT-calculated -->
-    <tr><th>Fair Value Bull/Bear Case</th><td></td></tr> <!-- Scenario ottimista/pessimista su EPS/multipli -->
-    <tr><th>Upside/Downside</th><td></td></tr> <!-- Percentuale da prezzo attuale vs fair value -->
-    <tr><th>Ranking Settoriale</th><td></td></tr> <!-- GPT su multipli + performance rispetto peers -->
-    <tr><th>Rischio Stimato</th><td class="neutral"></td></tr> <!-- Basso / Moderato / Alto - in base a volatilità, leva, beta -->
-    <tr><th>Composite Score (Tradelia AI)</th><td></td></tr> <!-- Score numerico GPT da 0–100 su 12 blocchi -->
-    <tr><th>Cluster GPT</th><td></td></tr> <!-- Cluster comportamentale del titolo (value, momentum, growth, reversal...) -->
-    <tr><th>Regime Macro</th><td></td></tr> <!-- Risk-on / Risk-off / neutro -->
-    <tr><th>Impatto Regime</th><td></td></tr> <!-- Positivo / neutro / negativo -->
-    <tr><th>Retail vs Istituzionali</th><td></td></tr> <!-- Dominanza AI su flussi netti -->
-    <tr><th>Divergenza</th><td></td></tr> <!-- Divergenza tra sentiment, flussi e prezzo -->
-    <tr><th>Validità del Segnale</th><td class="neutral"></td></tr> <!-- Breve / media / lunga - coerente con volatilità -->
-    <tr><th>Frequenza Controllo</th><td></td></tr> <!-- Mensile / settimanale / trimestrale -->
-    <tr><th>Percentuale di Allocazione Stimata</th><td></td></tr> <!-- GPT su profilo rischio + correlazione portafoglio -->
-    <tr><th>Ruolo nel Portafoglio</th><td></td></tr> <!-- Core / Satellite / Opportunistico -->
-    <tr><th>Livello di Diversificazione Offerto</th><td></td></tr> <!-- Basso / Medio / Alto - su base settoriale/regionale -->
-    <tr><th>Driver Sensibili Esterni</th><td></td></tr> <!-- GPT: variabili esterne sensibili al business -->
-    <tr><th>Fattori di Rischio Settoriali</th><td></td></tr> <!-- ESG, regolatori, pricing power, input cost -->
-    <tr><th>Dipendenza da Ciclo Economico</th><td></td></tr> <!-- Alta / Media / Bassa -->
+    <tr><th>Prezzo di Entrata Consigliato</th><td></td></tr>
+    <tr><th>Raccomandazione GPT</th><td class="positive"></td></tr>
+    <tr><th>Fair Value Target</th><td></td></tr>
+    <tr><th>Upside/Downside</th><td></td></tr>
+    <tr><th>Cluster GPT</th><td></td></tr>
+    <tr><th>Rischio Stimato</th><td></td></tr>
+    <tr><th>Validità del Segnale</th><td></td></tr>
+    <tr><th>Allocazione Consigliata</th><td></td></tr>
+    <tr><th>Ruolo nel Portafoglio</th><td></td></tr>
   </table>
 
-  <table class="table-excel" style="margin-top: 32px;">
-    <tr><th>Periodo Analizzato</th><td>36 mesi rolling</td></tr>
-    <tr><th>Investimento Iniziale Lordo</th><td></td></tr> <!-- Simulato: es. 1000 € -->
-    <tr><th>Commissione di Ingresso (%)</th><td></td></tr> <!-- Es. 0.10% -->
-    <tr><th>Importo Netto Investito</th><td></td></tr> <!-- Calcolato: lordo - commissioni -->
-    <tr><th>Dividendi Reinvestiti</th><td>Sì (netti)</td></tr> <!-- Simulazione con DRIP netto (post-26%) -->
-    <tr><th>Costi Annuali Stimati</th><td></td></tr> <!-- Tenuta conto, reinvestimento -->
-    <tr><th>Valore Finale Netto Simulato</th><td></td></tr> <!-- Simulato con CAGR netto -->
-    <tr><th>Plusvalenza Totale</th><td></td></tr> <!-- Valore finale - netto iniziale -->
-    <tr><th>Tasse su Plusvalenze (stimata)</th><td></td></tr> <!-- 26% su gain finale -->
-    <tr><th>Performance Totale Netta</th><td></td></tr> <!-- Calcolo netto finale / netto iniziale -->
-    <tr><th>Performance Annualizzata (CAGR Netto)</th><td></td></tr> <!-- CAGR post-tasse e costi -->
-    <tr><th>Confronto Benchmark</th><td></td></tr> <!-- GPT: confronto con MSCI World o peer group -->
-  </table>
-
-  <p><strong>Commento Tradelia AI:</strong></p>
-
-  <ul style="line-height: 1.8; margin-top: 16px;">
-    <li>GPT elenca i 3–5 fattori esterni principali che influenzano direttamente il business model</li>
-    <li>Evita frasi promozionali o vaghe. Sii tecnico, sintetico, verificabile</li>
-    <li>Commento strutturato in: contesto + setup + validazione + rischio + coerenza macro</li>
+  <p><strong>Motivazione GPT:</strong></p>
+  <ul style="line-height: 1.8;">
+    <li>Costruita sulla base dei dati integrati dei blocchi 1–12</li>
+    <li>Include coerenza fondamentali, momentum tecnico, contesto macro e rischio</li>
+    <li>Esporre in forma sintetica e operativa</li>
   </ul>
+
+  <div style="margin-top: 32px;">
+    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Backtest Storico – 3 Anni (Total Return Netto)</h3>
+
+    <table class="table-excel" style="max-width: 700px;">
+      <tr><th>Periodo Analizzato</th><td>36 mesi rolling</td></tr>
+      <tr><th>Investimento Iniziale Lordo</th><td></td></tr>
+      <tr><th>Commissione di Ingresso (%)</th><td></td></tr>
+      <tr><th>Importo Netto Investito</th><td></td></tr>
+      <tr><th>Dividendi Reinvestiti</th><td>Sì (netti dopo ritenuta)</td></tr>
+      <tr><th>Costi Annuali Stimati</th><td></td></tr>
+      <tr><th>Valore Finale Netto Simulato</th><td></td></tr>
+      <tr><th>Plusvalenza Totale</th><td></td></tr>
+      <tr><th>Tasse su Plusvalenze (simulato)</th><td></td></tr>
+      <tr><th>Performance Totale Netta</th><td></td></tr>
+      <tr><th>Performance Annualizzata (CAGR Netto)</th><td></td></tr>
+      <tr><th>Confronto Benchmark</th><td></td></tr>
+    </table>
+  </div>
 </section>
 
 
