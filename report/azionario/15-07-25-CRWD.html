@@ -76,6 +76,27 @@
   .negative {
     background-color: rgba(239,68,68,0.15);
   }
+    
+  .blocco-tradelia {
+    @apply mt-10 mb-16 px-4 py-6 bg-white border border-gray-200 rounded-xl shadow-sm;
+  }
+  .titolo-blocco {
+    @apply text-xl font-semibold text-gray-900 mb-6 px-2;
+  }
+  .etichetta {
+    @apply text-left py-3 px-3 w-1/2 text-gray-900;
+  }
+  .valore {
+    @apply px-3 py-3;
+  }
+  .commento-tradelia {
+    @apply bg-gray-50 border border-gray-200 rounded-xl px-6 py-5 mt-10 shadow-sm text-[15px] leading-relaxed;
+  }
+  .commento-tradelia h3 {
+    @apply text-base font-semibold text-blue-900 mb-3;
+  }
+
+
 
 </style>
 
@@ -233,96 +254,43 @@
 <br><br>
 
 
-<section class="mt-14 mb-20 px-4 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
-  <!-- Titolo blocco -->
-  <h2 class="text-xl font-semibold text-gray-900 mb-6 px-2">Blocco 2 – Multipli & Valutazione Intrinseca</h2>
+<!-- BLOCCO 2 – Multipli & Valutazione Intrinseca -->
+<section class="blocco-tradelia">
+  <h2 class="titolo-blocco">Blocco 2 – Multipli & Valutazione Intrinseca</h2>
 
-  <!-- Tabella dati -->
   <div class="overflow-x-auto">
     <table class="w-full text-sm border-collapse">
       <tbody>
-        <tr class="border-t">
-          <th class="text-left py-3 px-3 text-gray-800 font-medium w-1/2">P/E Trailing</th>
-          <td class="bg-yellow-100 px-3 py-3">N/A (utile netto negativo)</td>
-        </tr>
-        <tr class="border-t">
-          <th class="text-left py-3 px-3 text-gray-800 font-medium">Forward P/E</th>
-          <td class="bg-red-100 px-3 py-3">~130×</td>
-        </tr>
-        <tr class="border-t">
-          <th class="text-left py-3 px-3 text-gray-800 font-medium">PEG Ratio</th>
-          <td class="bg-red-100 px-3 py-3">~5.0</td>
-        </tr>
-        <tr class="border-t">
-          <th class="text-left py-3 px-3 text-gray-800 font-medium">P/B</th>
-          <td class="bg-yellow-100 px-3 py-3">~26.5</td>
-        </tr>
-        <tr class="border-t">
-          <th class="text-left py-3 px-3 text-gray-800 font-medium">P/S</th>
-          <td class="bg-red-100 px-3 py-3">~26–28</td>
-        </tr>
-        <tr class="border-t">
-          <th class="text-left py-3 px-3 text-gray-800 font-medium">EV/EBITDA</th>
-          <td class="bg-red-100 px-3 py-3">~689–2,200×</td>
-        </tr>
-        <tr class="border-t">
-          <th class="text-left py-3 px-3 text-gray-800 font-medium">P/FCF</th>
-          <td class="bg-red-100 px-3 py-3">~112.6×</td>
-        </tr>
-        <tr class="border-t">
-          <th class="text-left py-3 px-3 text-gray-800 font-medium">EV/Revenue</th>
-          <td class="bg-red-100 px-3 py-3">~27.6×</td>
-        </tr>
-        <tr class="border-t">
-          <th class="text-left py-3 px-3 text-gray-800 font-medium">EV/FCF</th>
-          <td class="bg-red-100 px-3 py-3">~112.6×</td>
-        </tr>
-        <tr class="border-t">
-          <th class="text-left py-3 px-3 text-gray-800 font-medium">DCF Fair Value (Base)</th>
-          <td class="bg-red-100 px-3 py-3">$109</td>
-        </tr>
-        <tr class="border-t">
-          <th class="text-left py-3 px-3 text-gray-800 font-medium">DCF Fair Value (Bull)</th>
-          <td class="bg-red-100 px-3 py-3">$142</td>
-        </tr>
-        <tr class="border-t">
-          <th class="text-left py-3 px-3 text-gray-800 font-medium">DCF Fair Value (Bear)</th>
-          <td class="bg-red-100 px-3 py-3">$82</td>
-        </tr>
-        <tr class="border-t">
-          <th class="text-left py-3 px-3 text-gray-800 font-medium">Upside % vs Prezzo Attuale</th>
-          <td class="bg-red-100 px-3 py-3">–77%</td>
-        </tr>
-        <tr class="border-t">
-          <th class="text-left py-3 px-3 text-gray-800 font-medium">Ranking Peer P/E</th>
-          <td class="bg-red-100 px-3 py-3">~90° percentile → alto</td>
-        </tr>
-        <tr class="border-t">
-          <th class="text-left py-3 px-3 text-gray-800 font-medium">Ranking Peer EV/EBITDA</th>
-          <td class="bg-red-100 px-3 py-3">~95° percentile → premium</td>
-        </tr>
-        <tr class="border-t">
-          <th class="text-left py-3 px-3 text-gray-800 font-medium">Ranking Peer P/B</th>
-          <td class="bg-red-100 px-3 py-3">~85° percentile → sopra media</td>
-        </tr>
-        <tr class="border-t border-b">
-          <th class="text-left py-3 px-3 text-gray-900 font-semibold">Valutazione Tradelia</th>
-          <td class="bg-red-100 px-3 py-3 font-semibold text-red-800">Overvalued</td>
-        </tr>
+        <tr class="border-t"><th class="etichetta">P/E Trailing</th><td class="valore bg-yellow-100">N/A (utile netto negativo)</td></tr>
+        <tr class="border-t"><th class="etichetta">Forward P/E</th><td class="valore bg-red-100">~130×</td></tr>
+        <tr class="border-t"><th class="etichetta">PEG Ratio</th><td class="valore bg-red-100">~5.0</td></tr>
+        <tr class="border-t"><th class="etichetta">P/B</th><td class="valore bg-yellow-100">~26.5</td></tr>
+        <tr class="border-t"><th class="etichetta">P/S</th><td class="valore bg-red-100">~26–28</td></tr>
+        <tr class="border-t"><th class="etichetta">EV/EBITDA</th><td class="valore bg-red-100">~689–2,200×</td></tr>
+        <tr class="border-t"><th class="etichetta">P/FCF</th><td class="valore bg-red-100">~112.6×</td></tr>
+        <tr class="border-t"><th class="etichetta">EV/Revenue</th><td class="valore bg-red-100">~27.6×</td></tr>
+        <tr class="border-t"><th class="etichetta">EV/FCF</th><td class="valore bg-red-100">~112.6×</td></tr>
+        <tr class="border-t"><th class="etichetta">DCF Fair Value (Base)</th><td class="valore bg-red-100">$109</td></tr>
+        <tr class="border-t"><th class="etichetta">DCF Fair Value (Bull)</th><td class="valore bg-red-100">$142</td></tr>
+        <tr class="border-t"><th class="etichetta">DCF Fair Value (Bear)</th><td class="valore bg-red-100">$82</td></tr>
+        <tr class="border-t"><th class="etichetta">Upside % vs Prezzo Attuale</th><td class="valore bg-red-100">–77%</td></tr>
+        <tr class="border-t"><th class="etichetta">Ranking Peer P/E</th><td class="valore bg-red-100">~90° percentile → alto</td></tr>
+        <tr class="border-t"><th class="etichetta">Ranking Peer EV/EBITDA</th><td class="valore bg-red-100">~95° percentile → premium</td></tr>
+        <tr class="border-t"><th class="etichetta">Ranking Peer P/B</th><td class="valore bg-red-100">~85° percentile → sopra media</td></tr>
+        <tr class="border-t border-b"><th class="etichetta font-semibold">Valutazione Tradelia</th><td class="valore font-semibold text-red-800 bg-red-100">Overvalued</td></tr>
       </tbody>
     </table>
   </div>
 
-  <!-- Box commento GPT -->
-  <div class="bg-gray-50 border border-gray-200 rounded-xl px-6 py-5 mt-10 shadow-sm">
-    <h3 class="text-base font-semibold text-blue-900 mb-3">Commento Tradelia AI</h3>
-    <p class="mb-3 text-[15px] leading-relaxed">I multipli fondamentali indicano una sopravvalutazione significativa. Il Forward P/E (~130×) e il PEG Ratio (~5.0) segnalano che il prezzo attuale riflette già una crescita molto ambiziosa.</p>
-    <p class="mb-3 text-[15px] leading-relaxed">La valutazione DCF, anche nello scenario ottimistico, resta inferiore alla quotazione di mercato, con un potenziale downside del –77%.</p>
-    <p class="mb-3 text-[15px] leading-relaxed">Il titolo si colloca nei percentili più elevati su base P/E, EV/EBITDA e P/B, evidenziando un posizionamento premium eccessivo rispetto ai peer.</p>
-    <p class="font-semibold text-[15px] leading-relaxed">Conclusione: rischio elevato di compressione multipli in caso di normalizzazione della crescita o deterioramento del contesto macro. Margine di sicurezza insufficiente per un’esposizione value-oriented.</p>
+  <!-- Commento GPT -->
+  <div class="commento-tradelia">
+    <h3>Commento Tradelia AI</h3>
+    <p class="mb-3">I multipli fondamentali indicano una sopravvalutazione significativa. Il Forward P/E (~130×) e il PEG Ratio (~5.0) segnalano che il prezzo attuale riflette già una crescita molto ambiziosa.</p>
+    <p class="mb-3">La valutazione DCF, anche nello scenario ottimistico, resta inferiore alla quotazione di mercato, con un potenziale downside del –77%.</p>
+    <p class="mb-3">Il titolo si colloca nei percentili più elevati su base P/E, EV/EBITDA e P/B, evidenziando un posizionamento premium eccessivo rispetto ai peer.</p>
+    <p class="font-semibold">Conclusione: rischio elevato di compressione multipli in caso di normalizzazione della crescita o deterioramento del contesto macro. Margine di sicurezza insufficiente per un’esposizione value-oriented.</p>
   </div>
 </section>
-
 
 
 
