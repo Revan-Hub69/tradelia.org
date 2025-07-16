@@ -8,51 +8,94 @@
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #f8fafc;
+      background: #f8fafc;
       margin: 0;
-      padding: 0;
       color: #0f172a;
       line-height: 1.6;
+      display: flex;
     }
 
     header {
-      background-color: #ffffff;
-      padding: 20px 40px;
+      position: sticky;
+      top: 0;
+      width: 100%;
+      background: #ffffff;
       border-bottom: 1px solid #e2e8f0;
+      padding: 16px 40px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      z-index: 999;
     }
 
     .logo {
       font-size: 24px;
-      font-weight: 700;
+      font-weight: 800;
       color: #1e293b;
     }
 
-    .subtitle {
+    .logo span {
+      color: #2563eb;
+    }
+
+    .nav-link {
       font-size: 14px;
-      color: #3b82f6;
+      color: #2563eb;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    aside {
+      width: 240px;
+      padding: 40px 20px;
+      background-color: #ffffff;
+      border-right: 1px solid #e2e8f0;
+      position: sticky;
+      top: 68px;
+      height: calc(100vh - 68px);
+      overflow-y: auto;
+    }
+
+    aside h3 {
+      font-size: 15px;
+      margin-bottom: 16px;
+      color: #1e293b;
       font-weight: 600;
+    }
+
+    aside ul {
+      padding: 0;
+      list-style: none;
+    }
+
+    aside li {
+      margin-bottom: 10px;
+    }
+
+    aside a {
+      text-decoration: none;
+      font-size: 14px;
+      color: #2563eb;
     }
 
     main {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 0 20px;
+      flex: 1;
+      padding: 40px;
+      max-width: 1000px;
+      margin: 0 auto;
     }
 
-    h2.section-title {
+    .section-title {
       font-size: 20px;
       font-weight: 600;
       color: #1e293b;
+      margin-bottom: 16px;
       border-bottom: 2px solid #e2e8f0;
-      padding-bottom: 8px;
-      margin-bottom: 20px;
+      padding-bottom: 6px;
     }
 
-    .report-block {
-      background-color: #ffffff;
+    .block {
+      background: #ffffff;
       border: 1px solid #e2e8f0;
       border-radius: 12px;
       padding: 24px;
@@ -84,7 +127,7 @@
     .negative { background-color: #fee2e2; }
 
     .comment {
-      background-color: #f9fafb;
+      background: #f9fafb;
       border-left: 4px solid #3b82f6;
       padding: 16px 20px;
       margin-top: 20px;
@@ -92,70 +135,158 @@
       font-size: 15px;
     }
 
-    footer {
-      text-align: center;
-      padding: 30px 20px;
-      font-size: 13px;
-      color: #64748b;
+    .disclaimer-initial {
+      background: #fef2f2;
+      padding: 20px;
+      border-left: 5px solid #dc2626;
+      border-radius: 8px;
+      margin-bottom: 40px;
+      font-size: 15px;
     }
 
-    .disclaimer {
+    .strategia {
+      margin-bottom: 30px;
+      background: #ffffff;
+      padding: 20px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 13px;
+      color: #64748b;
+      margin: 40px 0 20px 0;
+    }
+
+    /* MODAL DISCLAIMER */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      max-width: 600px;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-content h3 {
+      font-size: 18px;
+      font-weight: bold;
+      color: #dc2626;
+      margin-bottom: 16px;
+    }
+
+    .modal-content p {
       font-size: 14px;
-      background-color: #fef2f2;
-      padding: 18px 20px;
-      margin-top: 40px;
-      border-radius: 10px;
-      border-left: 4px solid #dc2626;
+      color: #1e293b;
+      margin-bottom: 10px;
+    }
+
+    .modal-content button {
+      margin-top: 20px;
+      padding: 8px 16px;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
+  <!-- Header -->
   <header>
-    <div class="logo">TRADELIA • AI</div>
-    <div class="subtitle">Report Azionario</div>
+    <div class="logo">TRADELIA <span>•AI</span></div>
+    <a href="https://tradelia.org/archivio.html" class="nav-link">Archivio Storico</a>
   </header>
 
+  <!-- Sidebar indice -->
+  <aside>
+    <h3>Indice Analitico</h3>
+    <ul>
+      <li><a href="#strategie">Strategie Tecniche</a></li>
+      <li><a href="#blocco-1">Blocco 1 – Identificativi</a></li>
+      <li><a href="#blocco-2">Blocco 2 – Multipli</a></li>
+      <li><a href="#blocco-3">Blocco 3 – Fondamentali</a></li>
+      <li><a href="#blocco-4">Blocco 4 – Dividendi</a></li>
+      <!-- ... altri blocchi -->
+    </ul>
+  </aside>
+
+  <!-- Main -->
   <main>
-    <section class="report-block">
+    <!-- Disclaimer iniziale -->
+    <div class="disclaimer-initial">
+      Le simulazioni presenti sono generate da modelli AI Tradelia a solo scopo informativo e non rappresentano indicazioni operative.  
+      Non utilizzare questi dati per decisioni finanziarie reali senza la supervisione di un consulente autorizzato (OAM, Consob, FCA...).
+    </div>
+
+    <!-- Strategie tecniche -->
+    <section id="strategie">
+      <div class="section-title">Simulazioni Tecniche — Tradelia AI</div>
+
+      <div class="strategia">
+        <strong>Investimento Lungo Termine:</strong> Upside moderato (+6%), ma multipli elevati → Acquisto solo su debolezza sotto $460.
+      </div>
+
+      <div class="strategia">
+        <strong>Swing Short — Strategia 4:</strong> Short su rejection tra $483–488, TP $464/$448, SL $494, trailing 1H high –1.25×ATR.
+      </div>
+
+      <div class="strategia">
+        <strong>Opzioni:</strong> Bias rialzista su derivati, IV media, Max Pain $470–475 → opportunità su call strutturate conservative.
+      </div>
+    </section>
+
+    <!-- BLOCCO ESEMPIO -->
+    <section class="block" id="blocco-1">
       <h2 class="section-title">Blocco 1 – Identificativi & Contesto</h2>
       <table>
         <tr><th>Ticker</th><td>CRWD</td></tr>
         <tr><th>ISIN</th><td>US22788C1053</td></tr>
         <tr><th>Exchange</th><td>Nasdaq</td></tr>
-        <tr><th>Settore</th><td>Technology</td></tr>
-        <tr><th>Prezzo Attuale</th><td>$473.28</td></tr>
+        <tr><th>Settore</th><td>Cybersecurity</td></tr>
+        <tr><th>Prezzo</th><td>$473.28</td></tr>
       </table>
       <div class="comment">
-        <strong>Commento:</strong> Ticker a grande capitalizzazione, incluso in Nasdaq-100 e S&P500. Prezzo attuale vicino al target analisti.
+        Commento: Titolo tech USA con forte crescita storica e presenza in S&P500 e Nasdaq-100. Target vicino al prezzo attuale.
       </div>
     </section>
 
-    <section class="report-block">
-      <h2 class="section-title">Blocco 2 – Multipli & Valutazione</h2>
-      <table>
-        <tr><th>Forward P/E</th><td class="negative">130×</td></tr>
-        <tr><th>EV/EBITDA</th><td class="negative">689×</td></tr>
-        <tr><th>P/FCF</th><td class="negative">112.6×</td></tr>
-        <tr><th>DCF Fair Value</th><td class="negative">$109 (vs prezzo attuale $473)</td></tr>
-      </table>
-      <div class="comment">
-        <strong>Commento:</strong> Multipli estremamente elevati. DCF segnala forte sopravvalutazione, con potenziale downside significativo.
-      </div>
-    </section>
+    <!-- altri blocchi... -->
 
-    <!-- Altri blocchi... -->
-
-    <div class="disclaimer">
-      <strong>DISCLAIMER:</strong><br>
-      Questo documento è una simulazione tecnica realizzata da modelli AI. Non rappresenta una consulenza finanziaria.  
-      Nessuna operazione deve essere compiuta senza supporto di un consulente autorizzato.
-    </div>
+    <footer>
+      © TRADELIA • AI — Tutti i diritti riservati
+    </footer>
   </main>
 
-  <footer>
-    © Tradelia AI — Tutti i diritti riservati • Report generato automaticamente
-  </footer>
+  <!-- Disclaimer atomico modale -->
+  <div class="modal" id="disclaimer-popup">
+    <div class="modal-content">
+      <h3>Disclaimer Legale Istituzionale</h3>
+      <p>Questo documento è frutto di simulazioni tecniche basate su modelli AI e dati pubblici. Non costituisce in alcun modo consulenza finanziaria, raccomandazione operativa o invito all’investimento.</p>
+      <p>Tradelia AI declina ogni responsabilità per decisioni prese sulla base di questo contenuto.</p>
+      <p class="italic text-gray-500">Documento riservato — vietata la riproduzione non autorizzata.</p>
+      <button onclick="document.getElementById('disclaimer-popup').style.display='none'">Chiudi</button>
+    </div>
+  </div>
+
+  <script>
+    window.onload = () => {
+      const popup = document.getElementById('disclaimer-popup');
+      if (popup) popup.style.display = 'flex';
+    };
+  </script>
 
 </body>
 </html>
