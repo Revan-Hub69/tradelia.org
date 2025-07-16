@@ -14,14 +14,16 @@
       margin: 0;
       padding: 0;
     }
-    main {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 20px;
-      display: flex;
-      flex-direction: row;
-      gap: 32px;
-    }
+    
+main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
     aside {
       width: 250px;
     }
@@ -29,9 +31,16 @@
       aside {
         display: none;
       }
-      main {
-        flex-direction: column;
-      }
+      
+main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
     }
     section {
       margin-bottom: 60px;
@@ -65,13 +74,7 @@
     .positive { background-color: rgba(34,197,94,0.15); }
     .neutral { background-color: rgba(234,179,8,0.15); }
     .negative { background-color: rgba(239,68,68,0.15); }
-    .block {
-      background: white;
-      padding: 30px;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      margin-bottom: 40px;
-    }
+    .block { background: white; padding: 30px; border: 1px solid #e2e8f0; border-radius: 16px; margin: 0 auto 40px auto; max-width: 900px; }
     .btn {
       display: inline-block;
       padding: 10px 16px;
@@ -135,15 +138,25 @@
         <a href="strategia-swing.calgo" download class="btn">Scarica Strategia cAlgo</a>
       </section>
 
+
 <section class="block">
   <h2>Indice dei Blocchi Analitici</h2>
   <ul style="line-height: 1.8;">
     <li><a href="#blocco1">Blocco 1 – Identificativi & Contesto</a></li>
-    <li><a href="#blocco2">Blocco 2 – Multipli</a></li>
-    <li><a href="#blocco3">Blocco 3 – Fondamentali</a></li>
-    <!-- Estendibile fino al Blocco 12 -->
+    <li><a href="#blocco2">Blocco 2 – Multipli di Valutazione</a></li>
+    <li><a href="#blocco3">Blocco 3 – Fondamentali Aziendali</a></li>
+    <li><a href="#blocco4">Blocco 4 – Redditività & Margini</a></li>
+    <li><a href="#blocco5">Blocco 5 – Cash Flow & Spese</a></li>
+    <li><a href="#blocco6">Blocco 6 – Performance & Momentum</a></li>
+    <li><a href="#blocco7">Blocco 7 – Microstruttura & Order Flow</a></li>
+    <li><a href="#blocco8">Blocco 8 – Derivati & Volatilità</a></li>
+    <li><a href="#blocco9">Blocco 9 – Analisi Tecnica & Correlazioni</a></li>
+    <li><a href="#blocco10">Blocco 10 – Proprietà, ESG & Governance</a></li>
+    <li><a href="#blocco11">Blocco 11 – Eventi, Revisioni & Newsflow</a></li>
+    <li><a href="#blocco12">Blocco 12 – Dati Alternativi & Sentiment</a></li>
   </ul>
 </section>
+
 
 
       <section id="blocco1" class="block">
