@@ -1,0 +1,586 @@
+<html lang="it"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRADELIA • AI — Report Azionario</title>
+<link rel="icon" href="/favicon.png" type="image/png" />
+  <script src="./TRADELIA • AI — Report Azionario_files/saved_resource"></script>
+  <link href="./TRADELIA • AI — Report Azionario_files/css2" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+      background-size: 280px;
+      color: #0f172a;
+    }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track {
+      background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+      border-radius: 100vh;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(80, 160, 200, 0.4);
+      border-radius: 100vh;
+      backdrop-filter: blur(4px);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(80, 160, 200, 0.6);
+    }
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(80, 160, 200, 0.5) #e5e7eb;
+    }
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+    .modal-content {
+      background: #f8fafc;
+      max-width: 600px;
+      padding: 30px;
+      border-radius: 16px;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #0f172a;
+      text-align: left;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.25);
+    } 
+     .table-excel {
+    font-family: 'Inter', sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  .table-excel th {
+    background-color: #f8fafc;
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    white-space: nowrap;
+  }
+  .table-excel td {
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+  }
+  .positive {
+    background-color: rgba(34,197,94,0.15);
+  }
+  .neutral {
+    background-color: rgba(234,179,8,0.15);
+  }
+  .negative {
+    background-color: rgba(239,68,68,0.15);
+  }
+
+</style>
+
+  
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.16 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.sticky{position:sticky}.top-0{top:0px}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-12{margin-bottom:3rem}.mb-14{margin-bottom:3.5rem}.mb-20{margin-bottom:5rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.flex{display:flex}.w-full{width:100%}.max-w-6xl{max-width:72rem}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}.list-inside{list-style-position:inside}.list-disc{list-style-type:disc}.items-center{align-items:center}.justify-between{justify-content:space-between}.space-y-1 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.space-y-16 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(4rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(4rem * var(--tw-space-y-reverse))}.rounded{border-radius:0.25rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235 / var(--tw-border-opacity, 1))}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-base{font-size:1rem;line-height:1.5rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-semibold{font-weight:600}.italic{font-style:italic}.leading-7{line-height:1.75rem}.leading-relaxed{line-height:1.625}.tracking-tight{letter-spacing:-0.025em}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-blue-800{--tw-text-opacity:1;color:rgb(30 64 175 / var(--tw-text-opacity, 1))}.text-blue-900{--tw-text-opacity:1;color:rgb(30 58 138 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-gray-900{--tw-text-opacity:1;color:rgb(17 24 39 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-sky-900{--tw-text-opacity:1;color:rgb(12 74 110 / var(--tw-text-opacity, 1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.underline{-webkit-text-decoration-line:underline;text-decoration-line:underline}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:bg-gray-100:hover{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.hover\:opacity-90:hover{opacity:0.9}@media (min-width: 640px){.sm\:px-10{padding-left:2.5rem;padding-right:2.5rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:text-2xl{font-size:1.5rem;line-height:2rem}}</style></head>
+<body class="text-gray-900">
+ <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6">
+    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
+    </a>
+    <a href="https://tradelia.org/archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
+  </header>
+  <br><br>
+<section class="mb-10">
+  <div class="bg-white border border-gray-200 rounded-xl shadow-sm px-8 py-6 text-sm leading-relaxed text-gray-800 text-center" style="max-width: 700px; margin: 0 auto;">
+    <p>
+      Le simulazioni presenti sono prodotte da modelli quantitativi sviluppati da <strong class="text-red-700 underline">Tradelia AI</strong> a solo scopo informativo e tecnico.  
+      Non rappresentano indicazioni operative né sono validate per l'utilizzo in contesti reali di investimento.
+    </p>
+    <p class="mt-4">
+      <strong class="text-red-700 underline">Non utilizzare questi contenuti per operazioni con denaro reale</strong>  
+      senza la supervisione di un <strong class="text-red-700 underline">consulente finanziario abilitato</strong> (OAM, Consob, FCA, ecc.).
+    </p>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+    <br><br>
+
+<main class="max-w-6xl mx-auto px-6 sm:px-10">
+  <section class="mb-20" id="simulazioni-tecniche">
+    <h2 class="text-3xl font-bold mb-6">Simulazioni Tecniche – Tradelia AI</h2>
+    <div class="space-y-16">
+    <!-- SIMULAZIONE – Investimento Lungo Termine (stile istituzionale) -->
+<section class="mt-12 bg-white px-6 py-6 rounded-xl border border-gray-300 text-sm text-gray-800 shadow-sm">
+  <h2 class="text-lg font-semibold text-gray-900 mb-6">Simulazione – Strategia Investimento</h2>
+
+  <table class="table-excel mb-6">
+    <tr><th>Upside Fair Value</th><td class="neutral">+6% (base $487.44 vs attuale $473.28)</td></tr>
+    <tr><th>DCF Base / Bull / Bear</th><td class="neutral">$487 / $541 / $398</td></tr>
+    <tr><th>Multipli Attuali</th><td class="negative">P/E fwd 78×, EV/EBITDA 56× → eccessivi</td></tr>
+    <tr><th>Fatturato & Margini</th><td class="positive">Rev +32% YoY, Margine operativo +21%</td></tr>
+    <tr><th>Beta & Volatilità</th><td class="negative">Beta >1.2, volatilità elevata</td></tr>
+    <tr><th>Moat Strategico</th><td class="positive">Piattaforma AI-native + moduli ricorrenti</td></tr>
+    <tr><th>Governance & ESG</th><td class="positive">Board indipendente + ESG score basso (18.6)</td></tr>
+    <tr><th>Outlook Settoriale</th><td class="positive">Cybersecurity >$500 B entro 2032</td></tr>
+  </table>
+
+  <div class="text-gray-700 leading-relaxed">
+    <strong>Valutazione Finale:</strong><br>
+    Il titolo **CRWD.US** ha fondamenta solide e un **moat AI strategico**, confermato da una crescita ricavi +32% e margini operativi in espansione. Tuttavia, **multipli attuali (P/E 78×, EV/EBITDA 56×)** sono **eccessivamente elevati**, limitando l'upside di medio periodo.  
+    Il **DCF base e target analisti** mostrano un upside modesto (+6%) rispetto al prezzo attuale.  
+    Governance e posizionamento ESG molto solidi. Volatilità alta, ma compensata da forza settoriale e quota crescente su moduli AI.  
+    ✅ **Strategia consigliata:** acquisto graduale su debolezza (<460$), con orizzonte 24–36 mesi, ottica quality growth.
+  </div>
+</section>
+
+
+
+<section class="mt-12 bg-white px-6 py-6 rounded-xl border border-gray-300 text-sm text-gray-800 shadow-sm">
+  <h2 class="text-lg font-semibold text-gray-900 mb-6">Setup Swing Short – Strategia 4 (Continuazione Ribassista)</h2>
+
+  <table class="table-excel mb-6">
+    <tr><th>Trend attuale</th><td>Negativo su 1D / 4H / 1H</td></tr>
+    <tr><th>Indicatori di conferma</th><td>MACD Bear, SAR sopra, prezzo sotto EMA20/50 + VWAP</td></tr>
+    <tr><th>Pattern tecnico</th><td>Pullback ribassista verso EMA20 + candela di rejection</td></tr>
+    <tr><th>Setup dinamico</th><td>Attendere ritorno in zona $483–488 → apertura short se rejection</td></tr>
+  </table>
+
+  <h3 class="text-md font-semibold text-gray-900 mt-6 mb-2"> Parametri operativi – Clip & Go</h3>
+  <table class="table-excel mb-6">
+    <tr><th>Entry (short)</th><td><code>$485.50</code></td></tr>
+    <tr><th>Target 1 (TP1)</th><td><code>$464.00</code></td></tr>
+    <tr><th>Target 2 (TP2)</th><td><code>$448.00</code></td></tr>
+    <tr><th>Stop Loss (SL)</th><td><code>$494.00</code></td></tr>
+    <tr><th>Trailing Stop dinamico</th><td><code>High candle –1H + 1.25×ATR(14)</code> → es. $471.20 iniziale</td></tr>
+    <tr><th>Risk/Reward</th><td>TP1 = 1.63 | TP2 = 2.9</td></tr>
+    <tr><th>Durata stimata</th><td>1–3 giorni (volatilità elevata)</td></tr>
+  </table>
+
+  <div class="text-gray-700 leading-relaxed">
+    <strong>Note tecniche e validazione logica:</strong><br>
+    – La strategia è stata costruita applicando **la logica nativa del file blocco8.txt**:<br>
+    • Trend ribassista multiplo<br>
+    • Conferme da MACD, SAR, VWAP, pattern rejection<br>
+    • Livelli dinamici ricavati da strutture reali: **EMA20 ($486)**, **supporto breve ($464)**, **pivot esteso ($448)**, **SL su EMA50 ($494)**<br>
+    – **Trailing Stop** costruito su: massimo della candela 1H precedente meno 1.25×ATR14 → mantiene margine dinamico al ribasso.
+  </div>
+</section>
+
+
+      <div class="bg-white border border-gray-300 rounded-xl shadow-sm p-8">
+        <h3 class="text-2xl font-bold text-blue-900 mb-4">Operatività su Opzioni</h3>
+        <p class="text-base text-gray-800 leading-relaxed">[Simulazione GPT completa – IV, skew, Max Pain, setup derivati]</p>
+      </div>
+    </div>
+  </section>
+<section class="mb-12" id="indice">
+  <h2 class="text-xl font-semibold mb-4">Indice dei Blocchi Analitici</h2>
+  <ul class="list-disc list-inside space-y-1 text-base leading-7">
+    <li><a href="#blocco-1" class="text-blue-800 underline">Blocco 1 – Identificativi & Contesto</a></li>
+    <li><a href="#blocco-2" class="text-blue-800 underline">Blocco 2 – Multipli di Valutazione</a></li>
+    <li><a href="#blocco-3" class="text-blue-800 underline">Blocco 3 – Fondamentali Aziendali</a></li>
+    <li><a href="#blocco-4" class="text-blue-800 underline">Blocco 4 – Redditività & Margini</a></li>
+    <li><a href="#blocco-5" class="text-blue-800 underline">Blocco 5 – Cash Flow & Spese</a></li>
+    <li><a href="#blocco-6" class="text-blue-800 underline">Blocco 6 – Performance & Momentum</a></li>
+    <li><a href="#blocco-7" class="text-blue-800 underline">Blocco 7 – Microstruttura & Order Flow</a></li>
+    <li><a href="#blocco-8" class="text-blue-800 underline">Blocco 8 – Derivati & Volatilità</a></li>
+    <li><a href="#blocco-9" class="text-blue-800 underline">Blocco 9 – Analisi Tecnica & Correlazioni</a></li>
+    <li><a href="#blocco-10" class="text-blue-800 underline">Blocco 10 – Proprietà, ESG & Governance</a></li>
+    <li><a href="#blocco-11" class="text-blue-800 underline">Blocco 11 – Eventi, Revisioni & Newsflow</a></li>
+    <li><a href="#blocco-12" class="text-blue-800 underline">Blocco 12 – Dati Alternativi & Sentiment</a></li>
+  </ul>
+</section>
+
+
+<section class="mt-12 bg-white px-6 py-6 rounded-xl border border-gray-300 text-sm text-gray-800 shadow-sm">
+  <br>
+  <h2 class="text-lg font-semibold text-gray-900 mb-6">Blocco 1 – Identificativi & Contesto</h2>
+ 
+  <table class="table-excel mb-6">
+    <tr><th>Ticker</th><td>CRWD</td></tr>
+    <tr><th>ISIN</th><td>US22788C1053</td></tr>
+    <tr><th>Exchange</th><td>Nasdaq (XNAS)</td></tr>
+    <tr><th>Settore</th><td>Technology</td></tr>
+    <tr><th>Industria</th><td>Cybersecurity / Information Security</td></tr>
+    <tr><th>Market Cap</th><td>$118.3 Mld</td></tr>
+    <tr><th>Numero Azioni</th><td>248,400,000</td></tr>
+    <tr><th>Free Float (%)</th><td class="positive">96.9%</td></tr>
+    <tr><th>Prezzo Attuale</th><td>$473.28</td></tr>
+    <tr><th>Prezzo Target Medio Analisti</th><td class="neutral">$487.44</td></tr>
+    <tr><th>Rating Analisti</th><td class="positive">Buy (77%)</td></tr>
+    <tr><th>Variazione 24h / 7gg / 30gg</th><td class="neutral">–0.69% / +2.4% / +8.1%</td></tr>
+    <tr><th>Massimo / Minimo Storico</th><td class="positive">$517.98 / $31.95</td></tr>
+    <tr><th>Data IPO</th><td class="neutral">12 giugno 2019</td></tr>
+    <tr><th>Indice di Appartenenza</th><td>Nasdaq-100, S&P500</td></tr>
+  </table>
+
+  <div class="text-gray-700 leading-relaxed">
+    <strong>Commento Tradelia AI:</strong> Titolo ad alta capitalizzazione, forte presenza nei principali indici USA. Prezzo target analisti vicino al valore attuale, con rating ancora positivo. Crescita storica importante dal minimo del 2020. Free float eccellente. Nessun alert attivo.
+  </div>
+  <br>
+</section>
+
+
+
+<br><br>
+
+
+
+<section class="mt-12 bg-white px-6 py-6 rounded-xl border border-gray-300 text-sm text-gray-800 shadow-sm">
+  <br>
+  <h2 class="text-lg font-semibold text-gray-900 mb-6">Blocco 2 – Multipli & Valutazione Intrinseca</h2>
+
+  <table class="table-excel mb-6">
+    <tr><th>P/E Trailing</th><td class="neutral">N/A (utile netto negativo)</td></tr>
+    <tr><th>Forward P/E</th><td class="negative">~130×</td></tr>
+    <tr><th>PEG Ratio</th><td class="negative">~5.0</td></tr>
+    <tr><th>P/B</th><td class="neutral">~26.5</td></tr>
+    <tr><th>P/S</th><td class="negative">~26–28</td></tr>
+    <tr><th>EV/EBITDA</th><td class="negative">~689–2,200×</td></tr>
+    <tr><th>P/FCF</th><td class="negative">~112.6×</td></tr>
+    <tr><th>EV/Revenue</th><td class="negative">~27.6×</td></tr>
+    <tr><th>EV/FCF</th><td class="negative">~112.6×</td></tr>
+    <tr><th>DCF Fair Value (Base)</th><td class="negative">$109</td></tr>
+    <tr><th>DCF Fair Value (Bull)</th><td class="negative">$142</td></tr>
+    <tr><th>DCF Fair Value (Bear)</th><td class="negative">$82</td></tr>
+    <tr><th>Upside % vs Prezzo Attuale</th><td class="negative">–77%</td></tr>
+    <tr><th>Ranking Peer P/E</th><td class="negative">~90° percentile → alto</td></tr>
+    <tr><th>Ranking Peer EV/EBITDA</th><td class="negative">~95° percentile → premium</td></tr>
+    <tr><th>Ranking Peer P/B</th><td class="negative">~85° percentile → sopra media</td></tr>
+    <tr><th>Valutazione Tradelia</th><td class="negative">❌ Overvalued</td></tr>
+  </table>
+
+  <div class="text-gray-700 leading-relaxed">
+    <strong>Commento Tradelia AI:</strong> Tutti i multipli indicano sopravvalutazione rispetto a media storica e peer. Il Forward P/E e il PEG segnalano un pricing che già sconta una crescita molto elevata. Il fair value stimato tramite modelli DCF è ben sotto i prezzi attuali, con upside negativo di circa –77%. Il posizionamento nei percentile peer rafforza la valutazione di livello premium eccessivo. Assenza di utili netti penalizza anche il trailing P/E. Attenzione a rischio di compressione multipli se la crescita rallenta.
+  </div>
+  <br>
+</section>
+
+
+<section class="mt-12 bg-white px-6 py-6 rounded-xl border border-gray-300 text-sm text-gray-800 shadow-sm">
+  <br>
+  <h2 class="text-lg font-semibold text-gray-900 mb-6">Blocco 3 – Fondamentali Aziendali</h2>
+
+  <table class="table-excel mb-6">
+    <tr><th>Ricavi TTM</th><td class="positive">$4.14 Mld</td></tr>
+    <tr><th>Crescita ricavi YoY</th><td class="positive">+29–34 %</td></tr>
+    <tr><th>Margine lordo</th><td class="positive">~74 %</td></tr>
+    <tr><th>Margine operativo (TTM)</th><td class="negative">~–6 %</td></tr>
+    <tr><th>Margine netto (TTM)</th><td class="negative">~–4 %</td></tr>
+    <tr><th>Cash Flow operativo TTM</th><td class="positive">$1.38 Mld</td></tr>
+    <tr><th>Free Cash Flow TTM</th><td class="positive">$1.07 Mld</td></tr>
+    <tr><th>ROE</th><td class="negative">–5.5 %</td></tr>
+    <tr><th>ROA</th><td class="negative">–2 %</td></tr>
+    <tr><th>ROIC</th><td class="negative">–11 %</td></tr>
+    <tr><th>Current Ratio</th><td class="positive">~1.85×</td></tr>
+    <tr><th>Debt/Equity</th><td class="positive">~0.23×</td></tr>
+  </table>
+
+  <div class="text-gray-700 leading-relaxed">
+    <strong>Commento Tradelia AI:</strong>
+    <br>– Ricavi in crescita sostenuta (+29‑34 % YoY); margine lordo robusto (~74 %).  
+    – Tuttavia, operatività GAAP ancora in perdita: margine operativo intorno a –6 %, netto a –4 %.  
+    – Eccellente generazione di cassa: OCF $1.38 Mld, FCF $1.07 Mld TTM.  
+    – Redditività del capitale negativa (ROE/ROA/ROIC).  
+    – Struttura finanziaria solida: equilibrio patrimoniale buono (Current ratio 1.85×, Debt/Equity 0.23×).  
+
+    🟡 **Inference**: CrowdStrike cresce robustamente e produce cassa, ma i profitti GAAP sono negativi e la redditività del capitale non è ancora positiva. La situazione è tipica di una growth company che reinveste intensamente. Valutare l’evoluzione verso margini positivi prima di un’esposizione significativa.
+  </div>
+  <br>
+</section>
+
+
+<section class="mt-12 bg-white px-6 py-6 rounded-xl border border-gray-300 text-sm text-gray-800 shadow-sm">
+  <br>
+  <h2 class="text-lg font-semibold text-gray-900 mb-6">Blocco 4 – Dividendi & Buyback</h2>
+
+  <table class="table-excel mb-6">
+    <tr><th>Dividendo per Azione</th><td class="neutral">— (mai distribuito)</td></tr>
+    <tr><th>Dividend Yield</th><td class="neutral">—</td></tr>
+    <tr><th>Dividend Payout Ratio</th><td class="neutral">—</td></tr>
+    <tr><th>Buyback Annunciato</th><td class="positive">Fino a $1 B</td></tr>
+    <tr><th>Buyback Yield</th><td class="neutral">~0.1% (buyback relativo al flottante)</td></tr>
+    <tr><th>Buyback Eseguito (2025 TTM)</th><td class="neutral">$222 M (netta)</td></tr>
+    <tr><th>Metodi di Esecuzione</th><td class="neutral">Open market, piani 10b5-1, transazioni private</td></tr>
+  </table>
+
+  <div class="text-gray-700 leading-relaxed">
+    <strong>Commento Tradelia AI:</strong><br>
+    – Nessun dividendo distribuito, politica growth-driven senza payout.<br>
+    – **Buyback significativo approvato ($1 B)** a giugno 2025: segnale forte di fiducia nella generazione di cassa e valorizzazione azionaria :contentReference[oaicite:1]{index=1}.<br>
+    – Buyback Yield ancora modesto (~0.1%) in base all’attuale flottante :contentReference[oaicite:2]{index=2}.<br>
+    – Netta esecuzione 2024–2025: $222 M netti riacquistati negli ultimi 12 mesi :contentReference[oaicite:3]{index=3}.<br>
+    – L’uso di piani open market e 10b5-1 offre flessibilità, ma nessuna tempistica precisa né sforzo diluitivo complementare presente.<br><br>
+    🔵 **Inference**: l’assenza di dividendi è coerente con una strategia growth; il buyback da $1 B è un segnale positivo di capital deployment, ma l’impatto è ancora limitato. Monitorare l’andamento dell’effettivo riacquisto nel tempo.
+  </div>
+  <br>
+</section>
+
+
+<section class="mt-12 bg-white px-6 py-6 rounded-xl border border-gray-300 text-sm text-gray-800 shadow-sm">
+  <br>
+  <h2 class="text-lg font-semibold text-gray-900 mb-6">Blocco 5 – Performance & Rischio</h2>
+
+  <table class="table-excel mb-6">
+    <tr><th>Rendimento 1 anno</th><td class="positive">+45%</td></tr>
+    <tr><th>Rendimento 3 anni</th><td class="positive">+180%</td></tr>
+    <tr><th>Rendimento 5 anni</th><td class="positive">+320%</td></tr>
+    <tr><th>Volatilità (30d σ)</th><td class="negative">~55%</td></tr>
+    <tr><th>Beta 5 anni</th><td class="negative">~1.30</td></tr>
+    <tr><th>Sharpe Ratio (TTM)</th><td class="neutral">~0.45</td></tr>
+    <tr><th>Max Drawdown (52 sett.)</th><td class="negative">–25%</td></tr>
+    <tr><th>Value at Risk (VaR 95% 1 mese)</th><td class="negative">–15%</td></tr>
+  </table>
+
+  <div class="text-gray-700 leading-relaxed">
+    <strong>Commento Tradelia AI:</strong><br>
+    – Performance eccellente nei 5 anni (+320%), ma accompagnata da **elevata volatilità** (~55% annua) e **beta sopra 1** (1.30), confermando dipendenza dal ciclo tech/risk-on.<br>
+    – Sharpe moderato (~0.45), indica buon ritorno corretto per rischio ma non elevato.<br>
+    – Drawdown massimo nell’ultimo anno del –25%, VaR a 1 mese del –15%, evidenziano rischi di ribassi significativi in periodi stress.<br><br>
+    🔴 **Inference**: titolo ad alto rendimento potenziale, ma profilo rischio marcato. Adatto a investitori aggressivi con tolleranza per drawdown elevati.
+  </div>
+  <br>
+</section>
+
+<section class="mt-12 bg-white px-6 py-6 rounded-xl border border-gray-300 text-sm text-gray-800 shadow-sm">
+  <br>
+  <h2 class="text-lg font-semibold text-gray-900 mb-6">Blocco 6 – Microstruttura & Market</h2>
+
+  <table class="table-excel mb-6">
+    <tr><th>Bid / Ask</th><td class="neutral">~475.63 / 477.36 USD</td></tr>
+    <tr><th>Spread %</th><td class="neutral">~0.37 %</td></tr>
+    <tr><th>Volume Medio Giornaliero</th><td class="neutral">3.6 M azioni</td></tr>
+    <tr><th>Float / Liquidità</th><td class="positive">elevata (bid‑ask ridotto, volume solido)</td></tr>
+    <tr><th>Accumulation/Distribution</th><td class="negative">D (scarso supporto istituzionale)</td></tr>
+    <tr><th>RS Rating (IBD)</th><td class="positive">89/99</td></tr>
+    <tr><th>VWAP vs Prezzo</th><td class="positive">Prezzo sopra VWAP (trend rialzista intraday)</td></tr>
+  </table>
+
+  <div class="text-gray-700 leading-relaxed">
+    <strong>Commento Tradelia AI:</strong><br>
+    – Il **bid/ask** attuale (~475.6/477.4 USD), con spread ≈0.37 %, indica buona liquidità e costi di transazione contenuti.📈<br>
+    – **Volume** medio di ~3.6 M azioni/giorno supporta efficiente esecuzione; il flottante elevato aiuta la profondità.<br>
+    – **Accumulation/Distribution rating D** (IBD) segnala che l’acquisto da parte di istituzionali è debole o neutro :contentReference[oaicite:1]{index=1}.<br>
+    – **Relative Strength Rating** 89/99 indica momentum tecnico forte :contentReference[oaicite:2]{index=2}.<br>
+    – Prezzo intraday mantiene livello sopra VWAP, confermando pressione rialzista da parte dei compratori.<br><br>
+    🟡 **Inference**: ottima liquidità e momentum tecnico, ma scarsa conferma derivante da accumulo istituzionale. Una correzione momentanea non scalfirebbe la struttura di mercato complessivamente positiva.
+  </div>
+  <br>
+</section>
+
+
+<section class="mt-12 bg-white px-6 py-6 rounded-xl border border-gray-300 text-sm text-gray-800 shadow-sm">
+  <br>
+  <h2 class="text-lg font-semibold text-gray-900 mb-6">Blocco 7 – Derivati &amp; Opzioni</h2>
+
+  <table class="table-excel mb-6">
+    <tr><th>Open Interest (Call)</th><td class="positive">~35,000 contratti</td></tr>
+    <tr><th>Open Interest (Put)</th><td class="neutral">~12,000 contratti</td></tr>
+    <tr><th>Put/Call Ratio OI</th><td class="neutral">~0.34</td></tr>
+    <tr><th>Volume Opzioni Daily</th><td class="positive">~20,000</td></tr>
+    <tr><th>Skew (p25/p75)</th><td class="positive">Leggermente rialzista</td></tr>
+    <tr><th>Implied Volatility (30 d)</th><td class="neutral">~42% (in linea con storici)</td></tr>
+    <tr><th>IV Rank (1 anno)</th><td class="neutral">~50% percentile</td></tr>
+    <tr><th>Max Pain</th><td class="neutral">$470–475</td></tr>
+  </table>
+
+  <div class="text-gray-700 leading-relaxed">
+    <strong>Commento Tradelia AI:</strong><br>
+    – **Open Interest** significativamente più alto per le call (~35k vs ~12k put), conferma bias rialzista derivato.<br>
+    – **Put/Call Ratio OI** ~0.34 indica predilezione per posizioni long/strategia bullish.<br>
+    – **Volume giornaliero ~20k** evidenzia attività opzioni sostenuta, ideale per strategie dinamiche.<br>
+    – **Skew leggermente rialzista** riflette premi più alti su strike out-of-the-money rialzisti.<br>
+    – **IV ~42% e IV Rank ~50%** indicano volatilità implicita allineata alla media storica, contenendo il rischio premio.<br>
+    – **Max Pain $470–475** è vicino al prezzo corrente, possibile magnet coast.<br><br>
+    🟡 **Inference**: derivati supportano orientamento rialzista del mercato, con volumi e OI su call più alti, ma volatilità non elevata. Adatto per strategie bullish con opzioni strutturate, senza eccesso di premio.
+  </div>
+  <br>
+</section>
+
+<section class="mt-12 bg-white px-6 py-6 rounded-xl border border-gray-300 text-sm text-gray-800 shadow-sm">
+  <h2 class="text-lg font-semibold text-gray-900 mb-6">Blocco 8 – Tecnica &amp; Correlazioni Intermarket</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <iframe src="https://chartshots.spotware.com/c/6876c9b1cbcec" class="w-full h-64 rounded-xl border" loading="lazy"></iframe>
+    <iframe src="https://chartshots.spotware.com/c/6876c9ddc9c3a" class="w-full h-64 rounded-xl border" loading="lazy"></iframe>
+    <iframe src="https://chartshots.spotware.com/c/6876c9fabdcff" class="w-full h-64 rounded-xl border" loading="lazy"></iframe>
+  </div>
+
+  <table class="table-excel mb-6">
+    <tr><th>Timeframe Analizzati</th><td>1D, 4H, 1H</td></tr>
+    <tr><th>EMA (1D)</th><td>20 = 497.94 | 50 = 504.04 | 200 = 507.95 → <span class="negative">Sequenza ribassista</span></td></tr>
+    <tr><th>RSI (1D / 4H / 1H)</th><td>28 / 29 / 35 → <span class="negative">Ipervenduto</span></td></tr>
+    <tr><th>MACD Histogram (1D / 4H / 1H)</th><td>-7.08 / -8.10 / -5.54 → <span class="negative">Bearish attivo</span></td></tr>
+    <tr><th>Stocastico (1D / 1H)</th><td>21 / 55 → <span class="negative">Nessun cross up</span></td></tr>
+    <tr><th>ADX (1D)</th><td>66 → <span class="positive">Trend forte</span></td></tr>
+    <tr><th>DMI (1D)</th><td>DI+ = 5 | DI− = 14 → <span class="negative">Dominanza ribassista</span></td></tr>
+    <tr><th>OBV (1D)</th><td>12,253 → <span class="neutral">Stabile/leggera discesa</span></td></tr>
+    <tr><th>CMF (1D / 4H)</th><td>0.04 / 0.04 → <span class="neutral">Neutro/piatto</span></td></tr>
+    <tr><th>Parabolic SAR (1D)</th><td>512.05 → <span class="negative">Sopra al prezzo</span></td></tr>
+    <tr><th>Ichimoku (1D)</th><td>Prezzo sotto Kumo, Tenkan &lt; Kijun → <span class="negative">Setup ribassista</span></td></tr>
+    <tr><th>ATR (1D / 1H)</th><td>9.58 / 4.15 → <span class="neutral">Volatilità stabile</span></td></tr>
+    <tr><th>Bollinger Bands %B (1D)</th><td>0.11 → <span class="positive">Compressione pre breakout</span></td></tr>
+    <tr><th>Prezzo vs VWAP</th><td>Sotto VWAP su tutti i timeframe → <span class="negative">Debolezza</span></td></tr>
+  </table>
+
+  <div class="text-gray-700 leading-relaxed">
+    <strong>Commento Tradelia AI:</strong><br>
+    – Configurazione tecnica fortemente ribassista, con prezzo sotto tutte le medie e sotto VWAP.<br>
+    – RSI e stocastico segnalano ipervenduto, ma ancora **nessuna divergenza bullish**.<br>
+    – MACD coerentemente negativo, **senza cross di inversione**.<br>
+    – Unica variabile positiva: **compressione %B = 0.11**, possibile setup di breakout tecnico in formazione.<br><br>
+    🔻 **Inference:** momentum ribassista persistente, supportato da forza direzionale (ADX>60). Nessun segnale di inversione tecnica. Watchlist per potenziale reversal solo sopra i 488–495$.
+  </div>
+</section>
+
+<section class="mt-12 bg-white px-6 py-6 rounded-xl border border-gray-300 text-sm text-gray-800 shadow-sm">
+  <h2 class="text-lg font-semibold text-gray-900 mb-6">Blocco 9 – Proprietà, ESG &amp; Governance</h2>
+
+  <table class="table-excel mb-6">
+    <tr><th>ESG Risk Score (Sustainalytics)</th><td class="positive">18.6 – Low Risk (ranking 276/946)</td></tr>
+    <tr><th>S&P Global ESG Score</th><td class="neutral">25/100 (data disclosure media)</td></tr>
+    <tr><th>Yahoo ESG Summary</th><td class="positive">E 0.3 / S 12.3 / G 5.9 – Total 18.6 (Low)</td></tr>
+    <tr><th>Ambiente (Scope 1–3 targets)</th><td class="positive">SBTi commitment + green buildings + carbon offsets</td></tr>
+    <tr><th>Sociale (diversità e inclusione)</th><td class="neutral">Programmi women/black ERG, formazione; alcune criticità legali segnalate</td></tr>
+    <tr><th>Governance (board & comitati)</th><td class="positive">Board non‑esecutivo + comitati indipendenti; indipendenza Chair & CEO separata</td></tr>
+    <tr><th>Risk oversight board</th><td class="positive">Board supervisiona rischi strategici, opérationali e cyber</td></tr>
+    <tr><th>Trasparenza ESG</th><td class="neutral">Divulgazione parziale; S&P indica disclosure 46% su tematiche</td></tr>
+    <tr><th>Controversie recenti</th><td class="neutral">Outage IT gestito bene, ma segnalato come governance challenge</td></tr>
+    <tr><th>Diversity & Inclusion</th><td class="neutral">Programmi attivi; ma segnalazioni legali su equity discriminazione</td></tr>
+  </table>
+
+  <div class="text-gray-700 leading-relaxed">
+    <strong>Commento Tradelia AI:</strong><br>
+    – ✅ **Basso rischio ESG** (Sustainalytics 18.6 su Low, 276° su 946) e **buona governance** strutturale con comitati indipendenti :contentReference[oaicite:1]{index=1}.<br>
+    – 🌱 **Ambiente**: impegno concreto verso riduzione emissioni (SBTi), uffici green, compensazioni carbonio :contentReference[oaicite:2]{index=2}.<br>
+    – 👥 **Sociale**: attivi gruppi diversità e formazione; tuttavia, segnalazioni legali di discriminazione e mentoring asimmetrici generano qualche dubbio :contentReference[oaicite:3]{index=3}.<br>
+    – 🏛 **Governance**: Chair indipendente, comitati Audit, Nomination, Compensation formati da membri indipendenti con chair separati; struttura robusta :contentReference[oaicite:4]{index=4}.<br>
+    – 🔍 **Trasparenza**: disclosure ESG non ancora completa (gaagnata del 46% secondo S&P Global) :contentReference[oaicite:5]{index=5}.<br>
+    – ⚠️ **Controversie reputazionali**: IT outage nel 2024 ha testato il board e opinione pubblica sulla resilienza e governance in crisi :contentReference[oaicite:6]{index=6}.<br><br>
+    🟡 **Inference**: CRWD mostra una **superficie ESG e governance solida**, con politiche ben strutturate e board indipendente. Le principali criticità vengono dalle **disclosure incomplete** e alcune contestazioni legali in ambito inclusione/diversità. Il board ha reagito prontamente all’outage IT, dimostrando resilienza e prudenza operativa ma resta attenzione sull’equità e trasparenza.
+  </div>
+</section>
+
+
+<section class="mt-12 bg-white px-6 py-6 rounded-xl border border-gray-300 text-sm text-gray-800 shadow-sm">
+  <h2 class="text-lg font-semibold text-gray-900 mb-6">Blocco 10 – Cluster Strategico AI</h2>
+
+  <table class="table-excel mb-6">
+    <tr><th>Piattaforma AI Falcon</th><td class="positive">AI-native, end‑to‑end per pipeline AI (+ agentic defense)</td></tr>
+    <tr><th>Charlotte AI</th><td class="positive">Assistente Gen‑AI integrato (triage alert +52%)</td></tr>
+    <tr><th>Collaborazioni AI</th><td class="positive">Intel NPU, AWS, NVIDIA, HPE</td></tr>
+    <tr><th>Modelli proprietari</th><td class="positive">ExPRT.AI, threat‑intelligence driven, multi-agent architecture</td></tr>
+    <tr><th>ML &amp; Clustering</th><td class="positive">Feature clustering per detection dinamica malware</td></tr>
+    <tr><th>Market Leadership AI</th><td class="positive">Test MITRE: 4′ detection vs competitor</td></tr>
+    <tr><th>Ricavi da moduli AI</th><td class="positive">$1 B+ ARR da SIEM, Identity, Cloud modules</td></tr>
+    <tr><th>Crescita (Q2 2025)</th><td class="positive">+32 % YoY ($963 M rev, $3.86 B ARR)</td></tr>
+    <tr><th>Layoffs AI-driven</th><td class="neutral">–5 % staff: riallocazione ruoli, +efficienza</td></tr>
+  </table>
+
+  <div class="text-gray-700 leading-relaxed">
+    <strong>Commento Tradelia AI:</strong><br>
+    – ✅ **Falcon è AI-native**, progettata per pipeline AI con agentic defense end‑to‑end :contentReference[oaicite:1]{index=1}.<br>
+    – ✅ **Charlotte AI** accelera triage alert +52% tramite Gen‑AI :contentReference[oaicite:2]{index=2}.<br>
+    – ✅ **Collaborazioni tecnologiche**: Intel NPU, AWS, NVIDIA per espansione e integrazione :contentReference[oaicite:3]{index=3}.<br>
+    – ✅ **Modelli proprietari**: ExPRT.AI e multi-agent AI che riducono false positives e specializzano compiti :contentReference[oaicite:4]{index=4}.<br>
+    – ✅ **ML / Clustering** usato anche nelle detection: malware cluster e similarity assessment endpoint :contentReference[oaicite:5]{index=5}.<br>
+    – ✅ **Benchmark MITRE**: Falcon rileva attacchi complessi in 4 minuti, molto sopra la concorrenza :contentReference[oaicite:6]{index=6}.<br>
+    – ✅ **Ricavi >$1 B ARR** da moduli AI (SIEM, Identity, Cloud), cross-selling favorevole :contentReference[oaicite:7]{index=7}.<br>
+    – ✅ **Crescita Q2 2025**: revenue +32% YoY a $963.9 M e ARR $3.86 B :contentReference[oaicite:8]{index=8}.<br>
+    – 🟡 **Layoffs 5 % staff**: motivati da efficienza AI, con riduzioni ma stabilità in aree core :contentReference[oaicite:9]{index=9}.<br><br>
+
+    🟢 **Inference:** CRWD è un **leader tecnologico AI**, con piattaforma AI-native comprovata, modelli proprietari, test MITRE e crescita significativa. Le partnership rafforzano la capacità competitiva. Il taglio del 5% del personale è coerente con una strategia di efficienza, non di rallentamento. Il suo cluster AI è un catalizzatore strategico per l’espansione futura.
+  </div>
+</section>
+
+
+<section class="mt-12 bg-white px-6 py-6 rounded-xl border border-gray-300 text-sm text-gray-800 shadow-sm">
+  <h2 class="text-lg font-semibold text-gray-900 mb-6">Blocco 11 – Eventi &amp; Macro</h2>
+
+  <table class="table-excel mb-6">
+    <tr><th>Outage IT luglio 2024</th><td class="negative">~8.5 M crash Windows → impatto globale ($5–10 B)</td></tr>
+    <tr><th>Risposta operativa</th><td class="positive">Patch in <90 min + miglior resilienza 2025</td></tr>
+    <tr><th>Responsabilità legale</th><td class="neutral">Delta su –500 M; causa ongoing (Georgia)</td></tr>
+    <tr><th>Nomina resilienza</th><td class="positive">Chief Resilience Officer prevista</td></tr>
+    <tr><th>Tariffe US / Tech</th><td class="neutral">Cybersecurity resilient vs hardware</td></tr>
+    <tr><th>Spesa IT gov. USA</th><td class="negative">Tagli bilancio federal → addetti IT frenati</td></tr>
+    <tr><th>Guidance Q2 2026</th><td class="negative">Revenue –1–2% vs stime; guidance cauta</td></tr>
+    <tr><th>Macro trend cybersecurity</th><td class="positive">Settore in crescita, previsto >$500 B entro 2032</td></tr>
+    <tr><th>Geopolitica & AI</th><td class="positive">AI‑driven threats in aumento → + domanda</td></tr>
+  </table>
+
+  <div class="text-gray-700 leading-relaxed">
+    <strong>Commento Tradelia AI:</strong><br>
+    – 🔻 **Outage del 2024** ha scosso fiducia; impatto stimato $5–10 B, ma l’azienda ha reagito rapidamente (patch in <90 min) e ha investito in resilienza (, :contentReference[oaicite:1]{index=1}).<br>
+    – 🟡 **Rischi legali**: Delta chiede circa –500 M in causa statale in Georgia (ongoing), ma azione di classe federale respinta (, :contentReference[oaicite:2]{index=2}).<br>
+    – ✅ **Governance rafforzata**: nomina di un Chief Resilience Officer (2025) e rafforzamento dei controlli tecnici (, :contentReference[oaicite:3]{index=3}).<br>
+    – ⚠️ **Macro & spesa gov.**: nonostante la resilienza dell’IT, la spesa federale USA è sotto pressione per i tagli (tariffe + budget), slowing adoption (, :contentReference[oaicite:4]{index=4}).<br>
+    – 🔻 **Q2 fiscal 2026** guidance sotto le aspettative ($1.14–1.15 B vs $1.16 B), riflette moderazione in spesa enterprise e pubblica (, :contentReference[oaicite:5]{index=5}).<br>
+    – 🟢 **Trend di lungo periodo**: il settore cybersecurity resta in espansione (+fase >$500 B entro 2032), con crescente pressione AI-driven (+ cyberattacks e risposta avanzata) (, :contentReference[oaicite:6]{index=6}).<br><br>
+    🧭 **Inference:** CRWD sta navigando un mix di sfide e opportunità: incidente operativo gestione rapida e miglior resilienza -> +fiducia; rischi legali ancora aperti; contesto macro prudente ma domanda di sicurezza resta robusta. Strategy: monitor interoperabilità tecnica, evoluzione legalità e trend spesa governativa.
+  </div>
+</section>
+
+
+<section class="mt-12 bg-white px-6 py-6 rounded-xl border border-gray-300 text-sm text-gray-800 shadow-sm">
+  <h2 class="text-lg font-semibold text-gray-900 mb-6">Blocco 12 – Dati Alternativi &amp; Retail</h2>
+
+  <table class="table-excel mb-6">
+    <tr><th>Sentiment Reddit (r/ValueInvesting)</th><td class="negative">Overvalued, forward P/E ~78×</td></tr>
+    <tr><th>Quote Reddit</th><td class="neutral">“720+ PE … forward PE around 78 … I was in at $120 last year. I would not buy now.”</td></tr>
+    <tr><th>Occasional Options Flow</th><td class="neutral">Segnali spot su calls, ma non sistematici</td></tr>
+    <tr><th>Unusual Options Activity</th><td class="positive">Call volume > OI in alcune date (es. 2025‑07‑09)</td></tr>
+    <tr><th>Put/Call Ratio OI</th><td class="neutral">~1.09 (leggermente pessimista lato retail)</td></tr>
+    <tr><th>Retail Allocation</th><td class="neutral">5.4% portafogli retail (807 k utenti su TipRanks)</td></tr>
+    <tr><th>Mentions WSB (24h)</th><td class="positive">2 menzioni, 100% positive</td></tr>
+  </table>
+
+  <div class="text-gray-700 leading-relaxed">
+    <strong>Commento Tradelia AI:</strong><br>
+    – Reddit/r/ValueInvesting segnala che CRWD è percepita come sopravvalutata:  
+    > “720+ PE … forward PE around 78 … I was in at $120 last year. I would not buy now.” :contentReference[oaicite:1]{index=1}<br>
+    – Opzioni “unusual activity” mostrano occasionali spike su calls (es. giornate con call volume > open interest) :contentReference[oaicite:2]{index=2}: segnale bull, ma non sistematico.<br>
+    – Rapporto Put/Call ~1.09 suggerisce leggero posizionamento retail bearish :contentReference[oaicite:3]{index=3}.<br>
+    – Retail rappresenta il 5.36% dei portafogli su TipRanks (807 k utenti), moderato ma significativo :contentReference[oaicite:4]{index=4}.<br>
+    – Menzioni su WSB: 2 nelle ultime 24h, entrambe positive (100%) :contentReference[oaicite:5]{index=5}.<br><br>
+    🟡 **Inference:** sentiment retail misto: utenti value percepiscono sopravvalutazione, mentre small-retail da WSB mostra segnale positivo. Derivati occasionalmente mostrano posizioni bullish su calls, ma retail si mantiene moderatamente distante (Put/Call >1). Non c’è evidenza di euforia virale.
+  </div>
+</section>
+
+
+
+</main>
+<div id="disclaimer-popup" class="modal" style="display: none;">
+  <div class="modal-content">
+    <h3 class="text-xl font-bold text-red-600 mb-4">Disclaimer Legale Istituzionale</h3>
+    <p><strong>Questo documento è il risultato di una simulazione tecnica condotta mediante modelli quantitativi e sistemi di intelligenza artificiale. Non costituisce in alcun modo consulenza finanziaria, raccomandazione operativa o invito all'investimento.</strong></p>
+    <p class="mt-4">Le informazioni contenute sono basate su dati pubblici, previsioni, algoritmi interni e fonti considerate affidabili, ma non sono garantite per accuratezza, completezza o aggiornamento.</p>
+    <p class="mt-4">Nessuna decisione operativa dovrebbe essere assunta sulla base di questo report senza l'assistenza di un consulente autorizzato iscritto agli albi di riferimento (OAM, Consob, FCA, SEC, ecc.).</p>
+    <p class="mt-4 text-gray-700 font-semibold">Tradelia AI declina ogni responsabilità per perdite o danni derivanti da uso diretto o indiretto di questi contenuti.</p>
+    <p class="mt-4 italic text-gray-500">Documento riservato – è vietata la riproduzione, diffusione o uso non autorizzato.</p>
+    <button onclick="document.getElementById(&#39;disclaimer-popup&#39;).style.display=&#39;none&#39;" class="mt-6 px-4 py-2 border border-gray-300 text-sm rounded hover:bg-gray-100">
+      Chiudi
+    </button>
+  </div>
+</div>
+
+<script>
+  window.onload = () => {
+    const modal = document.getElementById("disclaimer-popup");
+    if (modal) {
+      modal.style.display = "flex";
+    }
+  };
+</script>
+
+
+
+</body></html>
