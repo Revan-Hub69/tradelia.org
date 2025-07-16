@@ -1,418 +1,71 @@
-<html lang="it"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TRADELIA • AI — Report Azionario</title>
-<link rel="icon" href="/favicon.png" type="image/png" />
-  <script src="./TRADELIA • AI — Report Azionario_files/saved_resource"></script>
-  <link href="./TRADELIA • AI — Report Azionario_files/css2" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
-      background-size: 280px;
-      color: #0f172a;
-    }
-    ::-webkit-scrollbar { width: 10px; height: 10px; }
-    ::-webkit-scrollbar-track {
-      background: linear-gradient(to right, #f1f5f9, #e2e8f0);
-      border-radius: 100vh;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(80, 160, 200, 0.4);
-      border-radius: 100vh;
-      backdrop-filter: blur(4px);
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(80, 160, 200, 0.6);
-    }
-    * {
-      scrollbar-width: thin;
-      scrollbar-color: rgba(80, 160, 200, 0.5) #e5e7eb;
-    }
-    .modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-    }
-    .modal-content {
-      background: #f8fafc;
-      max-width: 600px;
-      padding: 30px;
-      border-radius: 16px;
-      font-size: 15px;
-      line-height: 1.7;
-      color: #0f172a;
-      text-align: left;
-      box-shadow: 0 12px 48px rgba(0,0,0,0.25);
-    } 
-     .table-excel {
-    font-family: 'Inter', sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-  }
-  .table-excel th {
-    background-color: #f8fafc;
-    font-weight: 600;
-    text-align: left;
-    padding: 10px 14px;
-    border: 1px solid #d1d5db;
-    white-space: nowrap;
-  }
-  .table-excel td {
-    padding: 10px 14px;
-    border: 1px solid #d1d5db;
-  }
-  .positive {
-    background-color: rgba(34,197,94,0.15);
-  }
-  .neutral {
-    background-color: rgba(234,179,8,0.15);
-  }
-  .negative {
-    background-color: rgba(239,68,68,0.15);
-  }
+  <title>Report Azionario – Tradelia AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lightweight-charts@4.2.1/dist/lightweight-charts.standalone.production.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+  <div class="max-w-4xl mx-auto p-6">
+    <!-- Sezione chart -->
+    <div id="chart" class="h-64 bg-white border rounded-lg mb-6"></div>
 
-</style>
+    <!-- Sezione tabelle fondamentali -->
+    <div class="bg-white border rounded-lg p-4 mb-6">
+      <h2 class="text-lg font-semibold mb-4">Simulazione – Investimento Lungo Termine</h2>
+      <table class="w-full table-fixed border-collapse">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="p-2 border">Parametro</th>
+            <th class="p-2 border">Valore</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="p-2 border">Prezzo Attuale</td><td class="p-2 border">€XXX.XX</td></tr>
+          <!-- altri parametri -->
+        </tbody>
+      </table>
+    </div>
 
-  
-<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.16 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.sticky{position:sticky}.top-0{top:0px}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-12{margin-bottom:3rem}.mb-14{margin-bottom:3.5rem}.mb-20{margin-bottom:5rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.flex{display:flex}.w-full{width:100%}.max-w-6xl{max-width:72rem}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}.list-inside{list-style-position:inside}.list-disc{list-style-type:disc}.items-center{align-items:center}.justify-between{justify-content:space-between}.space-y-1 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.space-y-16 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(4rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(4rem * var(--tw-space-y-reverse))}.rounded{border-radius:0.25rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235 / var(--tw-border-opacity, 1))}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-base{font-size:1rem;line-height:1.5rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-semibold{font-weight:600}.italic{font-style:italic}.leading-7{line-height:1.75rem}.leading-relaxed{line-height:1.625}.tracking-tight{letter-spacing:-0.025em}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-blue-800{--tw-text-opacity:1;color:rgb(30 64 175 / var(--tw-text-opacity, 1))}.text-blue-900{--tw-text-opacity:1;color:rgb(30 58 138 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-gray-900{--tw-text-opacity:1;color:rgb(17 24 39 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-sky-900{--tw-text-opacity:1;color:rgb(12 74 110 / var(--tw-text-opacity, 1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.underline{-webkit-text-decoration-line:underline;text-decoration-line:underline}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:bg-gray-100:hover{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.hover\:opacity-90:hover{opacity:0.9}@media (min-width: 640px){.sm\:px-10{padding-left:2.5rem;padding-right:2.5rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:text-2xl{font-size:1.5rem;line-height:2rem}}</style></head>
-<body class="text-gray-900">
- <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6">
-    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
-      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
-    </a>
-    <a href="https://tradelia.org/archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
-  </header>
-  <br><br>
-<section class="mb-10 px-4 sm:px-0">
-  <div class="bg-white border border-gray-200 rounded-xl shadow-sm px-6 sm:px-8 py-6 text-sm leading-relaxed text-gray-800 text-center" style="max-width: 700px; margin: 0 auto;">
-
-      Le simulazioni presenti sono prodotte da modelli quantitativi sviluppati da <strong class="text-red-700 underline">Tradelia AI</strong> a solo scopo informativo e tecnico.  
-      Non rappresentano indicazioni operative né sono validate per l'utilizzo in contesti reali di investimento.
-    </p>
-    <p class="mt-4">
-      <strong class="text-red-700 underline">Non utilizzare questi contenuti per operazioni con denaro reale</strong>  
-      senza la supervisione di un <strong class="text-red-700 underline">consulente finanziario abilitato</strong> (OAM, Consob, FCA, ecc.).
-    </p>
+    <!-- Sezione Swing Trading -->
+    <div class="bg-white border rounded-lg p-4">
+      <h2 class="text-lg font-semibold mb-4">Swing Trading – Segnale Multi-Day</h2>
+      <table class="w-full table-fixed border-collapse mb-4">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="p-2 border">Livello</th>
+            <th class="p-2 border">Valore</th>
+            <th class="p-2 border">Giustificazione</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="p-2 border">Entry</td><td class="p-2 border">–</td><td class="p-2 border">Breakout / Pullback</td></tr>
+          <tr><td class="p-2 border">Stop Loss</td><td class="p-2 border">–</td><td class="p-2 border">2×ATR / Supporto chiave</td></tr>
+          <!-- altri livelli -->
+        </tbody>
+      </table>
+      <ul class="list-disc list-inside text-sm">
+        <li>Size consigliata: 1–3%</li>
+        <li>Durata stimata: 2–15 giorni</li>
+        <!-- altri punti -->
+      </ul>
+    </div>
   </div>
-</section>
 
-
-
-
-
-
-
-
-
-
-<section class="mt-12 bg-white px-6 py-6 rounded-xl border border-gray-300 text-sm text-gray-800 shadow-sm">
-  <h2 class="text-lg font-semibold text-gray-900 mb-6">Simulazione GPT – Investimento Lungo Termine</h2>
-
-  <table class="table-excel mb-6">
-    <tr><th>Prezzo Attuale</th><td>€XXX.XX</td></tr>
-    <tr><th>Fair Value Stimato</th><td>€XXX.XX (DCF + Comparables)</td></tr>
-    <tr><th>Upside/Downside 12M</th><td>+X.XX% / -X.XX%</td></tr>
-    <tr><th>Valutazione Attuale</th><td>✅ Sottovalutato / ⚠️ Fair / ❌ Sopravvalutato</td></tr>
-  </table>
-
-  <table class="table-excel mb-6">
-    <tr><th>Fondamentali Economici</th><td>X.X</td></tr>
-    <tr><th>Rischio Finanziario</th><td>X.X</td></tr>
-    <tr><th>Sentiment & Flussi</th><td>X.X</td></tr>
-    <tr><th>Composite Score (0–10)</th><td>X.X / 10 → ✅ / ⚠️ / ❌</td></tr>
-  </table>
-
-  <table class="table-excel mb-6">
-    <tr><th>Raccomandazione GPT</th><td>BUY / HOLD / AVOID</td></tr>
-    <tr><th>Entry Point Tecnico</th><td>< €XXX.XX</td></tr>
-    <tr><th>Target Price 12M</th><td>€XXX – €XXX</td></tr>
-    <tr><th>Frequenza Revisione</th><td>90 giorni o eventi binari</td></tr>
-  </table>
-
-  <table class="table-excel mb-6">
-    <tr><th>Allocazione Consigliata</th><td>X.X% portafoglio azionario</td></tr>
-    <tr><th>Raccomandazione Settoriale</th><td>Sovrappeso / Neutrale / Sottopeso</td></tr>
-    <tr><th>Esposizione Geografica</th><td>US / EU / Emergenti</td></tr>
-  </table>
-
-  <table class="table-excel mb-6">
-    <tr><th>Stop Loss Suggerito</th><td>-X.X% dal punto di ingresso</td></tr>
-    <tr><th>Driver Macro Relevanti</th><td>Tassi / Geopolitica / Materie prime</td></tr>
-    <tr><th>Sensibilità del titolo</th><td>Fed / Energia / Settore</td></tr>
-  </table>
-
-  <table class="table-excel mb-6">
-    <tr><th>Rischi ESG</th><td>[Controversie / Governance / Ambientale]</td></tr>
-    <tr><th>Rischi Macro</th><td>[Inflazione / Normative / Tech war]</td></tr>
-  </table>
-
-  <table class="table-excel mb-6">
-    <tr><th>Prossimo Dividendo</th><td>€X.XX</td></tr>
-    <tr><th>Data Stacco / Pagamento</th><td>GG/MM/AAAA — GG/MM/AAAA</td></tr>
-    <tr><th>Dividend Yield Forward</th><td>X.XX%</td></tr>
-    <tr><th>Dividend Policy</th><td>Stabile / Crescente / Variabile</td></tr>
-  </table>
-
-  <table class="table-excel mb-6">
-    <tr><th>Capitale Iniziale</th><td>€10.000</td></tr>
-    <tr><th>Valore Stimato a 3 Anni</th><td>€XX.XXX</td></tr>
-    <tr><th>Performance Totale</th><td>+XX,XX%</td></tr>
-    <tr><th>CAGR Stimato</th><td>XX.X%</td></tr>
-  </table>
-
-  <table class="table-excel mb-6">
-    <tr><th>Commento GPT Finale</th><td>[Analisi riassuntiva AI, congiunta blocchi 1–12]</td></tr>
-  </table>
-</section>
-
-
-
-<section class="bg-white border border-gray-300 rounded-xl shadow-sm p-8 mt-12">
-  <h3 class="text-2xl font-bold text-blue-900 mb-4">Swing Trading Multi-Day – Simulazione GPT</h3>
-
-  <!-- 1. Stato del Segnale -->
-  <h4 class="text-lg font-semibold text-gray-900 mt-6 mb-2"> 1. Stato del Segnale</h4>
-  <ul class="text-sm text-gray-800 list-disc list-inside leading-6">
-    <li><strong>Stato:</strong> ✅ ATTIVO / ⏳ IN FORMAZIONE / ❌ NON ATTIVO</li>
-    <li><strong>Tipo operazione:</strong> LONG / SHORT</li>
-    <li><strong>Trend multi-timeframe coerente:</strong> Sì / No</li>
-    <li><strong>Bias tecnico attuale:</strong> Rialzista / Ribassista / Laterale</li>
-    <li><strong>Strategia selezionata:</strong> [Breakout Momentum / Pullback / Mean Reversion / ...]</li>
-  </ul>
-
-  <!-- 2. Strategia e Condizioni Tecniche -->
-  <h4 class="text-lg font-semibold text-gray-900 mt-6 mb-2"> 2. Analisi Tecnica – Strategia Identificata</h4>
-  <ul class="text-sm text-gray-800 list-disc list-inside leading-6">
-    <li>RSI: zona favorevole / neutra / estrema</li>
-    <li>MACD: sopra/sotto la linea segnale – incrocio attivo? Istogramma?</li>
-    <li>Volumi: confermati / sopra media / assenti</li>
-    <li>Pattern candlestick: valido / assente / in formazione</li>
-    <li>Divergenze: presenti / assenti</li>
-    <li>Supporti/Resistenze: testati / rotti / rispettati</li>
-    <li>ATR / compressione: coerente con la strategia?</li>
-  </ul>
-
-  <!-- 3. Livelli Operativi -->
-  <h4 class="text-lg font-semibold text-gray-900 mt-6 mb-2"> 3. Livelli Operativi e Gestione Trade</h4>
-  <table class="table-excel text-sm mb-6">
-    <tr><th>Livello</th><th>Valore</th><th>Giustificazione Tecnica</th></tr>
-    <tr><td>Entry</td><td>–</td><td>Breakout / Pullback / Cluster</td></tr>
-    <tr><td>Stop Loss</td><td>–</td><td>2×ATR o sotto supporto</td></tr>
-    <tr><td>Take Profit 1</td><td>–</td><td>2.5×ATR o resistenza</td></tr>
-    <tr><td>Take Profit 2</td><td>–</td><td>4×ATR / Estensione Fibo</td></tr>
-    <tr><td>Trailing Stop</td><td>–</td><td>Dinamico dopo TP1 (EMA/VWAP)</td></tr>
-    <tr><td>Invalidazione tecnica</td><td>–</td><td>Rottura pattern / gap contrario</td></tr>
-    <tr><td>R:R atteso</td><td>≥ 1.8</td><td>Altrimenti il trade è annullato</td></tr>
-  </table>
-
-  <!-- 4. Rischio e Posizione -->
-  <h4 class="text-lg font-semibold text-gray-900 mt-6 mb-2">📉 4. Rischio, Size e Posizionamento</h4>
-  <ul class="text-sm text-gray-800 list-disc list-inside leading-6">
-    <li>Size consigliata: 1–3% del capitale</li>
-    <li>Filtro correlazione: evitare sovraesposizione su asset correlati</li>
-    <li>Gestione rischio: trailing solo su breakout confermato</li>
-    <li>Controllo esposizione settoriale e intermarket</li>
-  </ul>
-
-  <!-- 5. Durata e Monitoraggio -->
-  <h4 class="text-lg font-semibold text-gray-900 mt-6 mb-2">⏱️ 5. Durata & Monitoraggio</h4>
-  <table class="table-excel text-sm mb-6">
-    <tr><th>Aspetto</th><th>Dettaglio</th></tr>
-    <tr><td>Durata stimata</td><td>2–15 giorni</td></tr>
-    <tr><td>Frequenza monitoraggio</td><td>Ogni 6–12 ore</td></tr>
-    <tr><td>Uscita anticipata se</td><td>Volumi in calo / divergenze / compressione anomala</td></tr>
-    <tr><td>Invalidazione forzata</td><td>Pattern opposto / news binarie</td></tr>
-  </table>
-
-  <!-- 6. Commento Tecnico GPT -->
-  <h4 class="text-lg font-semibold text-gray-900 mt-6 mb-2"> 6. Commento Operativo – Stato del Segnale</h4>
-  <p class="text-sm text-gray-800 leading-6">[Commento GPT coerente con stato segnale, strategia e blocchi 5,6,7,12]</p>
-
-  <!-- 7. Motivazioni Segnale Non Attivo -->
-  <h4 class="text-lg font-semibold text-gray-900 mt-6 mb-2"> 7. Motivazioni – Segnale NON ATTIVO</h4>
-  <table class="table-excel text-sm mb-6">
-    <tr><th>Motivo principale</th><th>Spiegazione tecnica</th></tr>
-    <tr><td>RSI neutro</td><td>Nessun segnale di momentum</td></tr>
-    <tr><td>MACD negativo</td><td>Pressione ribassista dominante</td></tr>
-    <tr><td>Pattern assente</td><td>Nessuna struttura affidabile</td></tr>
-    <tr><td>Volumi deboli</td><td>Manca interesse istituzionale</td></tr>
-    <tr><td>Divergenze attive</td><td>Conflitto tra indicatori</td></tr>
-  </table>
-
-  <!-- 8. Livelli da Monitorare -->
-  <h4 class="text-lg font-semibold text-gray-900 mt-6 mb-2"> 8. Livelli da Monitorare</h4>
-  <table class="table-excel text-sm mb-6">
-    <tr><th>Livello</th><th>Valore</th><th>Note Tecniche</th></tr>
-    <tr><td>Resistenza chiave</td><td>–</td><td>Breakout necessario per validazione long</td></tr>
-    <tr><td>Supporto da mantenere</td><td>–</td><td>Conferma pullback o reversal</td></tr>
-    <tr><td>ATR attuale</td><td>–</td><td>Se basso = compressione</td></tr>
-    <tr><td>Livello invalidazione</td><td>–</td><td>Se rotto → setup annullato</td></tr>
-  </table>
-</section>
-
-     
-  
-  
-<section class="mb-12" id="indice">
-  <h2 class="text-xl font-semibold mb-4">Indice dei Blocchi Analitici</h2>
-  <ul class="list-disc list-inside space-y-1 text-base leading-7">
-    <li><a href="#blocco-1" class="text-blue-800 underline">Blocco 1 – Identificativi & Contesto</a></li>
-    <li><a href="#blocco-2" class="text-blue-800 underline">Blocco 2 – Multipli di Valutazione</a></li>
-    <li><a href="#blocco-3" class="text-blue-800 underline">Blocco 3 – Fondamentali Aziendali</a></li>
-    <li><a href="#blocco-4" class="text-blue-800 underline">Blocco 4 – Redditività & Margini</a></li>
-    <li><a href="#blocco-5" class="text-blue-800 underline">Blocco 5 – Cash Flow & Spese</a></li>
-    <li><a href="#blocco-6" class="text-blue-800 underline">Blocco 6 – Performance & Momentum</a></li>
-    <li><a href="#blocco-7" class="text-blue-800 underline">Blocco 7 – Microstruttura & Order Flow</a></li>
-    <li><a href="#blocco-8" class="text-blue-800 underline">Blocco 8 – Derivati & Volatilità</a></li>
-    <li><a href="#blocco-9" class="text-blue-800 underline">Blocco 9 – Analisi Tecnica & Correlazioni</a></li>
-    <li><a href="#blocco-10" class="text-blue-800 underline">Blocco 10 – Proprietà, ESG & Governance</a></li>
-    <li><a href="#blocco-11" class="text-blue-800 underline">Blocco 11 – Eventi, Revisioni & Newsflow</a></li>
-    <li><a href="#blocco-12" class="text-blue-800 underline">Blocco 12 – Dati Alternativi & Sentiment</a></li>
-  </ul>
-</section>
-
-
-<section class="mt-12 bg-white px-6 py-6 rounded-xl border border-gray-300 text-sm text-gray-800 shadow-sm">
-  <br>
-  <h2 class="text-lg font-semibold text-gray-900 mb-6">Blocco 1 – Identificativi & Contesto</h2>
- 
-  <table class="table-excel mb-6">
-    <tr><th>Ticker</th><td>BUZ.MI</td></tr>
-    <tr><th>ISIN</th><td>IT0001347308</td></tr>
-    <tr><th>Exchange</th><td>Borsa Italiana</td></tr>
-    <tr><th>Settore</th><td>Materiali</td></tr>
-    <tr><th>Industria</th><td>Cemento e Costruzioni</td></tr>
-    <tr><th>Market Cap</th><td>€3.5 Mld</td></tr>
-    <tr><th>Numero Azioni</th><td>165,000,000</td></tr>
-    <tr><th>Free Float (%)</th><td class="neutral">48.6%</td></tr>
-    <tr><th>Prezzo Attuale</th><td>€22.45</td></tr>
-    <tr><th>Prezzo Target Medio Analisti</th><td class="positive">€27.80</td></tr>
-    <tr><th>Rating Analisti</th><td class="positive">Buy</td></tr>
-    <tr><th>Variazione 24h / 7gg / 30gg</th><td class="positive">+1.2% / +3.8% / +7.4%</td></tr>
-    <tr><th>Massimo / Minimo Storico</th><td class="neutral">€35.00 / €7.50</td></tr>
-    <tr><th>Data IPO</th><td class="neutral">2001</td></tr>
-    <tr><th>Indice di Appartenenza</th><td>FTSE Italia Mid Cap</td></tr>
-  </table>
-
-  <div class="text-gray-700 leading-relaxed">
-    <strong>Commento Tradelia AI:</strong> Buona capitalizzazione, presenza in un indice mid cap italiano, prezzo attuale ben sotto i massimi storici. Target analisti positivo. Free float nella media. Nessun alert anomalo.
-  </div>
-  <br>
-</section>
-
-
-<br><br>
-
-
-
-<section id="blocco-2" class="mb-14">
-  <h2 class="text-xl font-semibold mb-3">Blocco 2 – Multipli di Valutazione</h2>
-  <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-    <p class="text-base text-gray-800 leading-relaxed">[Contenuto GPT del blocco 2]</p>
-  </div>
-</section>
-
-<section id="blocco-3" class="mb-14">
-  <h2 class="text-xl font-semibold mb-3">Blocco 3 – Fondamentali Aziendali</h2>
-  <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-    <p class="text-base text-gray-800 leading-relaxed">[Contenuto GPT del blocco 3]</p>
-  </div>
-</section>
-
-<section id="blocco-4" class="mb-14">
-  <h2 class="text-xl font-semibold mb-3">Blocco 4 – Redditività & Margini</h2>
-  <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-    <p class="text-base text-gray-800 leading-relaxed">[Contenuto GPT del blocco 4]</p>
-  </div>
-</section>
-
-<section id="blocco-5" class="mb-14">
-  <h2 class="text-xl font-semibold mb-3">Blocco 5 – Cash Flow & Spese</h2>
-  <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-    <p class="text-base text-gray-800 leading-relaxed">[Contenuto GPT del blocco 5]</p>
-  </div>
-</section>
-
-<section id="blocco-6" class="mb-14">
-  <h2 class="text-xl font-semibold mb-3">Blocco 6 – Performance & Momentum</h2>
-  <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-    <p class="text-base text-gray-800 leading-relaxed">[Contenuto GPT del blocco 6]</p>
-  </div>
-</section>
-
-<section id="blocco-7" class="mb-14">
-  <h2 class="text-xl font-semibold mb-3">Blocco 7 – Microstruttura & Order Flow</h2>
-  <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-    <p class="text-base text-gray-800 leading-relaxed">[Contenuto GPT del blocco 7]</p>
-  </div>
-</section>
-
-<section id="blocco-8" class="mb-14">
-  <h2 class="text-xl font-semibold mb-3">Blocco 8 – Derivati & Volatilità</h2>
-  <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-    <p class="text-base text-gray-800 leading-relaxed">[Contenuto GPT del blocco 8]</p>
-  </div>
-</section>
-
-<section id="blocco-9" class="mb-14">
-  <h2 class="text-xl font-semibold mb-3">Blocco 9 – Analisi Tecnica & Correlazioni</h2>
-  <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-    <p class="text-base text-gray-800 leading-relaxed">[Contenuto GPT del blocco 9]</p>
-  </div>
-</section>
-
-<section id="blocco-10" class="mb-14">
-  <h2 class="text-xl font-semibold mb-3">Blocco 10 – Proprietà, ESG & Governance</h2>
-  <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-    <p class="text-base text-gray-800 leading-relaxed">[Contenuto GPT del blocco 10]</p>
-  </div>
-</section>
-
-<section id="blocco-11" class="mb-14">
-  <h2 class="text-xl font-semibold mb-3">Blocco 11 – Eventi, Revisioni & Newsflow</h2>
-  <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-    <p class="text-base text-gray-800 leading-relaxed">[Contenuto GPT del blocco 11]</p>
-  </div>
-</section>
-
-<section id="blocco-12" class="mb-14">
-  <h2 class="text-xl font-semibold mb-3">Blocco 12 – Dati Alternativi & Sentiment</h2>
-  <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-    <p class="text-base text-gray-800 leading-relaxed">[Contenuto GPT del blocco 12]</p>
-  </div>
-</section>
-
-
-</main>
-<div id="disclaimer-popup" class="modal" style="display: none;">
-  <div class="modal-content">
-    <h3 class="text-xl font-bold text-red-600 mb-4">Disclaimer Legale Istituzionale</h3>
-    <p><strong>Questo documento è il risultato di una simulazione tecnica condotta mediante modelli quantitativi e sistemi di intelligenza artificiale. Non costituisce in alcun modo consulenza finanziaria, raccomandazione operativa o invito all'investimento.</strong></p>
-    <p class="mt-4">Le informazioni contenute sono basate su dati pubblici, previsioni, algoritmi interni e fonti considerate affidabili, ma non sono garantite per accuratezza, completezza o aggiornamento.</p>
-    <p class="mt-4">Nessuna decisione operativa dovrebbe essere assunta sulla base di questo report senza l'assistenza di un consulente autorizzato iscritto agli albi di riferimento (OAM, Consob, FCA, SEC, ecc.).</p>
-    <p class="mt-4 text-gray-700 font-semibold">Tradelia AI declina ogni responsabilità per perdite o danni derivanti da uso diretto o indiretto di questi contenuti.</p>
-    <p class="mt-4 italic text-gray-500">Documento riservato – è vietata la riproduzione, diffusione o uso non autorizzato.</p>
-    <button onclick="document.getElementById(&#39;disclaimer-popup&#39;).style.display=&#39;none&#39;" class="mt-6 px-4 py-2 border border-gray-300 text-sm rounded hover:bg-gray-100">
-      Chiudi
-    </button>
-  </div>
-</div>
-
-<script>
-  window.onload = () => {
-    const modal = document.getElementById("disclaimer-popup");
-    if (modal) {
-      modal.style.display = "flex";
-    }
-  };
-</script>
-
-
-
-</body></html>
+  <script>
+    const chart = LightweightCharts.createChart(document.getElementById('chart'), {
+      layout: { backgroundColor: '#ffffff', textColor: '#333' },
+      width: document.getElementById('chart').clientWidth,
+      height: 300,
+    });
+    const candleSeries = chart.addCandlestickSeries();
+    candleSeries.setData([
+      { time: '2025-07-10', open: 22, high: 25, low: 21, close: 24 },
+      { time: '2025-07-11', open: 24, high: 26, low: 23, close: 25 },
+      // dati reali JSON...
+    ]);
+  </script>
+</body>
+</html>
