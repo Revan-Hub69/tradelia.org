@@ -831,5 +831,16 @@ section {
 
 
   </main>
+  <button id="backToTop" title="Torna all'inizio" aria-label="Torna all'inizio" 
+  class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-lg transition-opacity opacity-80 hover:opacity-100 focus:outline-none">
+  ↑ Torna all'inizio
+</button>
+<script>
+  const btn = document.getElementById('backToTop');
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+
 </body>
 </html>
