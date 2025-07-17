@@ -32,6 +32,32 @@
       color: white;
       border-color: #2563eb;
     }
+    /* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+  border-radius: 100vh;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(80, 160, 200, 0.5);
+  border-radius: 100vh;
+  transition: background-color 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(80, 160, 200, 0.7);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
+  box-sizing: border-box;
+}
   </style>
 </head>
 <body>
