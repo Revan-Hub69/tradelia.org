@@ -7,41 +7,36 @@
   <title>TRADELIA • AI — Report Azionario</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-<style>
-  /* Base */
   body {
     font-family: 'Inter', sans-serif;
     background: #f8fafc;
     color: #0f172a;
     margin: 0;
     padding: 0;
-    line-height: 1.7;
+    line-height: 1.75;
   }
 
-  /* Header */
   header {
     background: #ffffff;
-    border-bottom: 1px solid #dbe1ea;
-    padding: 16px 32px;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-weight: 700;
-    font-size: 18px;
+    font-size: 1.125rem;
   }
 
-  /* Section */
   section {
     background: #ffffff;
     padding: 2rem;
     border-radius: 1rem;
-    border: 1px solid #d1d5db;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
     margin: 2rem auto;
-    max-width: 800px;
+    max-width: 850px;
   }
 
-  /* Headings */
   h1, h2, h3 {
     color: #1e293b;
     margin-top: 0;
@@ -50,14 +45,14 @@
 
   h1 {
     font-size: 2rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   h2 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
     border-bottom: 2px solid #cbd5e1;
-    padding-bottom: 0.25rem;
+    padding-bottom: 0.35rem;
   }
 
   h3 {
@@ -66,18 +61,17 @@
     margin-bottom: 0.75rem;
   }
 
-  /* Paragraphs */
   p {
     margin-bottom: 1rem;
-    font-size: 1.05rem;
+    font-size: 1.075rem;
     color: #374151;
   }
 
-  /* Links */
   a {
     color: #2563eb;
     text-decoration: none;
     transition: color 0.2s ease-in-out;
+    font-weight: 500;
   }
 
   a:hover, a:focus {
@@ -86,7 +80,6 @@
     outline: none;
   }
 
-  /* Tables */
   table {
     width: 100%;
     border-collapse: collapse;
@@ -94,36 +87,35 @@
   }
 
   th, td {
-    padding: 10px 14px;
-    border: 1px solid #d1d5db;
+    padding: 12px 16px;
+    border: 1px solid #e5e7eb;
     text-align: left;
     vertical-align: top;
+    font-size: 0.975rem;
   }
 
   th {
-    background: #f1f5f9;
+    background: #f9fafb;
     white-space: nowrap;
     font-weight: 600;
   }
 
   table tr:hover {
-    background-color: rgba(226, 232, 240, 0.3);
+    background-color: rgba(226, 232, 240, 0.25);
   }
 
-  /* Color cues */
   .positive {
-    background-color: rgba(34,197,94,0.12);
+    background-color: rgba(34, 197, 94, 0.12);
   }
 
   .neutral {
-    background-color: rgba(234,179,8,0.15);
+    background-color: rgba(234, 179, 8, 0.15);
   }
 
   .negative {
-    background-color: rgba(239,68,68,0.12);
+    background-color: rgba(239, 68, 68, 0.12);
   }
 
-  /* Index / Navigation */
   nav ol {
     list-style-position: inside;
     padding-left: 1rem;
@@ -145,15 +137,14 @@
     text-decoration: underline;
   }
 
-  /* Responsive */
   @media (max-width: 768px) {
     section {
-      padding: 1.25rem;
-      margin: 1rem;
+      padding: 1.5rem;
+      margin: 1.25rem;
     }
 
     h1 {
-      font-size: 1.5rem;
+      font-size: 1.625rem;
     }
 
     h2 {
@@ -170,7 +161,7 @@
     }
 
     th {
-      background: #f1f5f9;
+      background: #f9fafb;
       border-bottom: none;
     }
 
@@ -181,7 +172,6 @@
     }
   }
 
-  /* Scrollbar Styling */
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -202,110 +192,175 @@
   }
 
   * {
+    box-sizing: border-box;
     scrollbar-width: thin;
     scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
-    box-sizing: border-box;
   }
 </style>
 
 </head>
 <body>
-  <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6">
-    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
-      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
-    </a>
-    <a href="https://tradelia.org/archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
-  </header>
-  <main>
-   <section>
-  <h2>Indice dei Contenuti</h2>
-  <nav aria-label="Indice del report">
-    <ol>
-      <li><a href="#introduzione">1. Introduzione alla crisi</a></li>
-      <li><a href="#strumenti">2. Gli strumenti chiave: MBS, CDO e CDS</a></li>
-      <li><a href="#protagonisti">3. I protagonisti dello short – Chi ha scommesso contro</a></li>
-      <li><a href="#cifre">4. Le cifre reali delle operazioni</a></li>
-      <li><a href="#consapevolezza">5. Chi sapeva cosa: banche, agenzie, governi</a></li>
-      <li><a href="#perdite">6. Perdite: chi ha perso davvero</a></li>
-      <li><a href="#piccoli">7. Impatto sui piccoli investitori</a></li>
-      <li><a href="#conclusioni">8. Conclusioni – Crisi evitabile? O solo anticipata?</a></li>
-    </ol>
-  </nav>
-</section>
+<header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-3 flex justify-between items-center">
+  <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 hover:opacity-90 transition">
+    TRADELIA<span class="text-blue-600 animate-pulse">•AI</span>
+  </a>
+  <a href="https://tradelia.org/archivio.html" class="text-sm sm:text-base text-blue-700 font-medium hover:underline transition">
+    Archivio Storico
+  </a>
+</header>
+
+<main class="px-4 sm:px-6">
+  <section class="mt-6 mb-10 max-w-3xl mx-auto">
+    <h2 class="text-2xl font-semibold text-slate-800 mb-4 border-b-2 border-slate-200 pb-1">Indice dei Contenuti</h2>
+    <nav aria-label="Indice del report">
+      <ol class="list-decimal list-inside space-y-2 text-slate-700 text-base sm:text-lg leading-relaxed">
+        <li><a href="#introduzione" class="hover:text-blue-600 transition">1. Introduzione alla crisi</a></li>
+        <li><a href="#strumenti" class="hover:text-blue-600 transition">2. Gli strumenti chiave: MBS, CDO e CDS</a></li>
+        <li><a href="#protagonisti" class="hover:text-blue-600 transition">3. I protagonisti dello short – Chi ha scommesso contro</a></li>
+        <li><a href="#cifre" class="hover:text-blue-600 transition">4. Le cifre reali delle operazioni</a></li>
+        <li><a href="#consapevolezza" class="hover:text-blue-600 transition">5. Chi sapeva cosa: banche, agenzie, governi</a></li>
+        <li><a href="#perdite" class="hover:text-blue-600 transition">6. Perdite complessive e aiuti statali</a></li>
+        <li><a href="#piccoli" class="hover:text-blue-600 transition">7. Impatto sui piccoli investitori</a></li>
+        <li><a href="#conclusioni" class="hover:text-blue-600 transition">8. Conclusioni – Crisi evitabile? O solo anticipata?</a></li>
+      </ol>
+    </nav>
+  </section>
+</main>
+
 <br>
 <section id="introduzione">
   <h2>1. Introduzione alla crisi</h2>
   <p>
-    La crisi finanziaria globale del 2007–2008, conosciuta come crisi dei mutui subprime, rappresenta uno dei momenti più critici della storia economica contemporanea. Scaturita da un sistema ipotecario americano fortemente deregolamentato e da prodotti finanziari altamente complessi e scarsamente compresi, la crisi ha innescato un crollo sistemico che ha colpito banche, assicurazioni, governi e famiglie in tutto il mondo.
+    La crisi finanziaria globale del 2007–2008, passata alla storia come <strong>crisi dei mutui subprime</strong>, ha rappresentato il più grave collasso del sistema economico internazionale dalla Grande Depressione del 1929. Originatasi negli Stati Uniti, si è rapidamente propagata all’intero sistema finanziario mondiale, mettendo in discussione i fondamenti della finanza moderna e la solidità di istituzioni fino ad allora considerate inattaccabili.
   </p>
   <p>
-    Negli anni precedenti, un mix di tassi d'interesse bassi, politiche espansive sul credito e strumenti di finanza strutturata come i mutui cartolarizzati (MBS), i collateralized debt obligations (CDO) e i credit default swaps (CDS), aveva generato una spirale di speculazione e leva finanziaria. Questi strumenti, nati per ridurre il rischio, finirono per amplificarlo e diffonderlo a livello globale.
+    Alla base della crisi vi era un’ampia diffusione di mutui ad alto rischio – concessi a soggetti con scarso merito creditizio – che venivano aggregati, riconfezionati e venduti in forma di strumenti derivati complessi come i <strong>Mortgage-Backed Securities (MBS)</strong>, i <strong>Collateralized Debt Obligations (CDO)</strong> e i <strong>Credit Default Swaps (CDS)</strong>. Questi strumenti, concepiti per ridurre il rischio individuale, finirono per <strong>trasformare il rischio locale in rischio sistemico</strong>.
   </p>
   <p>
-    Quando i mutui sottostanti iniziarono a fallire in massa, la fiducia nei mercati evaporò rapidamente. Le valutazioni di asset apparentemente “sicuri” crollarono, alcune delle principali istituzioni finanziarie del mondo fallirono o dovettero essere salvate, e il sistema bancario entrò in paralisi. Le conseguenze colpirono l’economia reale con disoccupazione, recessione e perdita di ricchezza diffusa.
+    La leva finanziaria spinta, la deregolamentazione del credito, e un sistema di incentivi perversi coinvolgente banche, agenzie di rating e intermediari finanziari, alimentarono un mercato ipotecario insostenibile. Quando i tassi d’insolvenza iniziarono ad aumentare e i default si moltiplicarono, il castello di carta crollò rapidamente. 
   </p>
   <p>
-    Comprendere a fondo le dinamiche che portarono a questa crisi non è solo esercizio storico: è un elemento essenziale per evitare il ripetersi di errori sistemici, valutare la resilienza dei mercati e progettare regole più efficaci per il futuro della finanza globale.
+    Le conseguenze furono devastanti: crollo dei mercati azionari, fallimento di colossi come <em>Lehman Brothers</em>, salvataggi governativi da centinaia di miliardi di dollari, paralisi del credito e <strong>una crisi economica globale</strong> con milioni di disoccupati e famiglie che persero la casa e i risparmi.
   </p>
+  <p>
+    Questo report nasce per analizzare in modo dettagliato e documentato le origini della crisi, il funzionamento degli strumenti coinvolti, i protagonisti, le responsabilità e le lezioni apprese. Comprendere questi meccanismi è fondamentale per costruire un sistema finanziario più resiliente, trasparente ed equo.
+  </p>
+</section>
+
+<br>
+
+  <section class="max-w-4xl mx-auto mt-12 mb-20">
+  <h3 class="text-xl font-semibold text-slate-800 mb-6 border-b pb-2">📅 Timeline della crisi: eventi chiave</h3>
+  <div class="relative pl-6 sm:pl-10 border-l-4 border-blue-200">
+
+    <div class="mb-10 relative">
+      <div class="absolute -left-3 top-0 w-4 h-4 rounded-full bg-blue-600 border-2 border-white"></div>
+      <span class="text-sm font-medium text-blue-700">2000–2003</span>
+      <p class="text-slate-700 mt-1">
+        Politica monetaria espansiva della Fed: tassi d’interesse ai minimi storici incentivano prestiti facili e crescita dei mutui subprime.
+      </p>
+    </div>
+
+    <div class="mb-10 relative">
+      <div class="absolute -left-3 top-0 w-4 h-4 rounded-full bg-blue-500 border-2 border-white"></div>
+      <span class="text-sm font-medium text-blue-700">2004–2006</span>
+      <p class="text-slate-700 mt-1">
+        Boom immobiliare USA. Crescono cartolarizzazioni e diffusione di MBS/CDO. Le agenzie di rating assegnano valutazioni AAA a titoli ad alto rischio.
+      </p>
+    </div>
+
+    <div class="mb-10 relative">
+      <div class="absolute -left-3 top-0 w-4 h-4 rounded-full bg-blue-400 border-2 border-white"></div>
+      <span class="text-sm font-medium text-blue-700">2006</span>
+      <p class="text-slate-700 mt-1">
+        I tassi d’interesse iniziano a salire, i mutuatari subprime iniziano a non pagare. Le insolvenze si impennano. Prime avvisaglie nei fondi hedge.
+      </p>
+    </div>
+
+    <div class="mb-10 relative">
+      <div class="absolute -left-3 top-0 w-4 h-4 rounded-full bg-blue-300 border-2 border-white"></div>
+      <span class="text-sm font-medium text-blue-700">2007</span>
+      <p class="text-slate-700 mt-1">
+        Crollano i primi fondi legati ai mutui subprime. Bear Stearns salva 2 hedge fund. Il mercato dei CDO inizia a congelarsi.
+      </p>
+    </div>
+
+    <div class="mb-10 relative">
+      <div class="absolute -left-3 top-0 w-4 h-4 rounded-full bg-blue-500 border-2 border-white"></div>
+      <span class="text-sm font-medium text-blue-700">Settembre 2008</span>
+      <p class="text-slate-700 mt-1 font-semibold">
+        Fallisce <em>Lehman Brothers</em>. I mercati globali collassano. Vengono salvate AIG, Fannie Mae, Freddie Mac. Scatta il piano di emergenza USA (TARP).
+      </p>
+    </div>
+
+    <div class="mb-2 relative">
+      <div class="absolute -left-3 top-0 w-4 h-4 rounded-full bg-blue-700 border-2 border-white"></div>
+      <span class="text-sm font-medium text-blue-700">2009</span>
+      <p class="text-slate-700 mt-1">
+        Inizia la recessione globale. Disoccupazione record, esplosione dei pignoramenti, piani di salvataggio bancari e riforme regolatorie in discussione.
+      </p>
+    </div>
+
+  </div>
 </section>
 <br>
-<section id="strumenti">
-  <h2>2. Gli strumenti chiave: MBS, CDO e CDS</h2>
+<section id="strumenti" class="max-w-4xl mx-auto mt-12 mb-16">
+  <h2 class="text-2xl font-semibold text-slate-800 mb-6 border-b pb-2">2. Gli strumenti chiave: MBS, CDO e CDS</h2>
 
-  <h3>📘 Introduzione tecnica: principi della finanza strutturata</h3>
-  <p>
-    Tra il 2000 e il 2007, la finanza moderna ha visto un’esplosione di strumenti strutturati. Questi strumenti si basano su tre concetti fondamentali:
+  <h3 class="text-lg font-semibold text-slate-700 mb-3">Introduzione tecnica: principi della finanza strutturata</h3>
+  <p class="text-slate-700 mb-4">
+    Tra il 2000 e il 2007, la finanza moderna ha assistito a un’esplosione di strumenti strutturati, basati su tre pilastri concettuali:
   </p>
-  <ul>
+  <ul class="list-disc list-inside text-slate-700 mb-6 space-y-2">
     <li><strong>Cartolarizzazione (securitization):</strong> trasformare un flusso di crediti futuri (es. mutui) in titoli negoziabili.</li>
-    <li><strong>Tranching:</strong> suddividere un portafoglio di rischio in parti (tranche) con priorità e rendimenti differenti.</li>
-    <li><strong>Leva finanziaria:</strong> moltiplicare esposizione e rendimento assumendo debiti o replicando titoli tramite derivati (es. CDS).</li>
+    <li><strong>Tranching:</strong> suddividere un portafoglio in strati di rischio e rendimento diversi, detti "tranche".</li>
+    <li><strong>Leva finanziaria:</strong> aumentare l'esposizione utilizzando derivati o finanziamenti a debito.</li>
+  </ul>
+  <p class="text-slate-700 mb-6">
+    L’obiettivo teorico era distribuire il rischio e rendere il credito più liquido. In realtà, i modelli sottovalutavano la correlazione tra insolvenze e i conflitti di interesse tra banche, agenzie di rating e assicuratori portarono a distorsioni sistemiche.
+  </p>
+
+  <h3 class="text-lg font-semibold text-slate-700 mb-3">Come funzionavano davvero</h3>
+
+  <h4 class="text-slate-800 font-semibold mt-6 mb-2">MBS – Mortgage-Backed Securities</h4>
+  <p class="text-slate-700 mb-3">
+    Una banca concede centinaia di mutui. Invece di attendere anni per recuperarli, li impacchetta in titoli e li vende agli investitori. Quei titoli sono i MBS.
+  </p>
+  <ul class="list-disc list-inside text-slate-700 mb-6 space-y-2">
+    <li><strong>Reddito:</strong> gli investitori ricevono i pagamenti mensili delle rate.</li>
+    <li><strong>Rischio:</strong> se i mutuatari smettono di pagare, l’investitore perde.</li>
+    <li><strong>Distorsione:</strong> molti MBS pieni di mutui subprime ricevettero rating AAA.</li>
   </ul>
 
-  <p>
-    Lo scopo teorico di questi strumenti era distribuire il rischio, migliorare la liquidità del credito e rendere il sistema più efficiente. Tuttavia, le ipotesi di partenza si rivelarono fallaci: i rischi erano concentrati, i modelli usati sottostimavano la correlazione tra i default, e gli incentivi delle parti coinvolte (banche, agenzie di rating, assicuratori) spingevano verso l’opacità, non la trasparenza.
+  <h4 class="text-slate-800 font-semibold mt-6 mb-2">CDO – Collateralized Debt Obligations</h4>
+  <p class="text-slate-700 mb-3">
+    I CDO erano titoli composti da pezzi di altri pacchetti MBS, suddivisi in tre livelli:
   </p>
-
-  <h3>🔍 Spiegazione chiara: come funzionavano davvero</h3>
-
-  <h4>➡️ MBS – Mortgage-Backed Securities</h4>
-  <p>
-    Immagina una banca che fa 1.000 mutui casa. Invece di aspettare 30 anni per riavere i soldi, la banca li impacchetta in un “pacco finanziario” e lo vende a investitori. Questi pacchi si chiamano MBS.
-  </p>
-  <ul>
-    <li><strong>Chi guadagna:</strong> L’investitore che compra un MBS riceve ogni mese parte delle rate che le famiglie pagano.</li>
-    <li><strong>Dove sta il rischio:</strong> Se le famiglie non pagano più, l’investitore perde una parte o tutto il capitale.</li>
-    <li><strong>Trucchi usati:</strong> Le agenzie di rating davano voti AAA anche a pacchi pieni di mutui a rischio (subprime).</li>
-  </ul>
-
-  <h4>➡️ CDO – Collateralized Debt Obligations</h4>
-  <p>
-    Un CDO è come un “super pacco” che contiene pezzi di altri pacchi MBS. Si divide in tre strati:
-  </p>
-  <ul>
-    <li><strong>Tranche senior:</strong> priorità massima, rendimento basso, considerata sicura.</li>
+  <ul class="list-disc list-inside text-slate-700 mb-4 space-y-2">
+    <li><strong>Senior tranche:</strong> priorità nei rimborsi, rendimento basso.</li>
     <li><strong>Mezzanine:</strong> rischio medio, rendimento maggiore.</li>
-    <li><strong>Equity:</strong> la parte più rischiosa, ma con guadagni potenzialmente altissimi.</li>
+    <li><strong>Equity:</strong> la più rischiosa, guadagni potenziali elevati.</li>
   </ul>
-  <p>
-    Queste strutture sembravano scientifiche, ma in realtà spesso combinavano spazzatura in modo elegante. I CDO sintetici, ancora più pericolosi, contenevano <strong>scommesse su altri pacchi</strong> tramite CDS, e non titoli reali. Così lo stesso mutuo veniva replicato in decine di prodotti, amplificando il rischio.
+  <p class="text-slate-700 mb-6">
+    I CDO sintetici replicavano l’esposizione a mutui tramite scommesse (CDS) invece che titoli reali. Questo generò un’esposizione moltiplicata e opaca: lo stesso mutuo poteva comparire in decine di prodotti derivati.
   </p>
 
-  <h4>➡️ CDS – Credit Default Swaps</h4>
-  <p>
-    Un CDS è come un’assicurazione. Se hai paura che un pacco (MBS o CDO) fallisca, puoi pagare qualcuno per proteggerti. Se il pacco crolla, lui ti rimborsa. Il problema? Chi vendeva questi CDS (come AIG) incassava premi miliardari, ma <strong>non metteva da parte i soldi per coprire le perdite</strong>.
+  <h4 class="text-slate-800 font-semibold mt-6 mb-2">CDS – Credit Default Swaps</h4>
+  <p class="text-slate-700 mb-3">
+    Un CDS è un’assicurazione sul fallimento di un titolo. Si paga un premio per essere rimborsati se il titolo crolla. Ma chi vendeva CDS (come AIG) non accantonava fondi per coprire i rischi.
   </p>
-  <ul>
-    <li><strong>Uso originale:</strong> proteggersi da fallimenti di titoli.</li>
-    <li><strong>Uso speculativo:</strong> comprare CDS senza possedere i titoli, solo per scommettere sul crollo.</li>
-    <li><strong>Effetto domino:</strong> Quando troppi CDS vennero attivati, esplose una bomba da centinaia di miliardi.</li>
+  <ul class="list-disc list-inside text-slate-700 mb-6 space-y-2">
+    <li><strong>Uso iniziale:</strong> protezione dal default di obbligazioni.</li>
+    <li><strong>Uso distorto:</strong> speculazione pura su titoli che non si possedevano.</li>
+    <li><strong>Effetto sistemico:</strong> attivazione di CDS in massa creò perdite catastrofiche a effetto domino.</li>
   </ul>
 
-  <h3>💡 In parole semplici</h3>
-  <p>
-    Le banche hanno preso prestiti rischiosi (mutui a chi non poteva permetterseli), li hanno impacchettati in titoli chiamati MBS, poi li hanno ricombinati in CDO. Infine, hanno venduto CDS come scommesse sul fallimento di questi pacchi. Quando le famiglie hanno smesso di pagare, è crollato tutto insieme. Era come costruire un castello con carte truccate: bastava che si piegasse un angolo, e veniva giù l’intero sistema.
+  <h3 class="text-lg font-semibold text-slate-700 mb-3">In parole semplici</h3>
+  <p class="text-slate-700">
+    Le banche concessero mutui a clienti inaffidabili. Quei mutui furono venduti come titoli (MBS), poi riconfezionati in nuovi pacchetti (CDO). Infine, si scommise sul loro fallimento con derivati (CDS). Quando le famiglie smisero di pagare, l’intero sistema crollò come un castello di carte costruito su ipotesi errate e incentivi distorti.
   </p>
 </section>
+
 
 <br>
 <section id="protagonisti">
@@ -457,34 +512,34 @@
     Oltre alle devastanti perdite finanziarie, la crisi dei mutui subprime ha avuto ripercussioni profonde sul piano umano e sociale. Milioni di famiglie hanno perso la casa, il lavoro o l’accesso al credito. Le comunità sono state frantumate e la fiducia nei mercati e nelle istituzioni è crollata.
   </p>
 
-  <h3 class="list-title">📉 Pignoramenti e perdita della casa</h3>
+  <h3 class="list-title"> Pignoramenti e perdita della casa</h3>
   <ul>
     <li>Tra il 2008 e il 2011, oltre <strong>9 milioni di famiglie americane</strong> sono state soggette a pignoramento (<em>foreclosure</em>).</li>
     <li>Le aree più colpite sono state Florida, Nevada, Arizona e California, con interi quartieri svuotati.</li>
     <li>Le comunità afroamericane e ispaniche sono state sproporzionatamente colpite, spesso vittime di prestiti “predatori”.</li>
   </ul>
 
-  <h3 class="list-title">👨‍👩‍👧‍👦 Conseguenze sulla povertà e stabilità familiare</h3>
+  <h3 class="list-title"> Conseguenze sulla povertà e stabilità familiare</h3>
   <ul>
     <li>L’accesso all’abitazione stabile è stato compromesso, con aumento dei senzatetto e degli sfratti.</li>
     <li>Le famiglie colpite hanno spesso visto crollare il proprio punteggio di credito, rendendo difficile ripartire.</li>
     <li>Molti bambini hanno subito interruzioni scolastiche, trasferimenti forzati e impatti psicologici prolungati.</li>
   </ul>
 
-  <h3 class="list-title">📊 Occupazione e accesso al lavoro</h3>
+  <h3 class="list-title"> Occupazione e accesso al lavoro</h3>
   <ul>
     <li>Nel solo 2008, gli Stati Uniti hanno perso <strong>oltre 2,6 milioni di posti di lavoro</strong>.</li>
     <li>La disoccupazione ha raggiunto il <strong>10%</strong> a fine 2009, con impatto maggiore nei settori edile, bancario e manifatturiero.</li>
     <li>Molti adulti, anche laureati, hanno visto svanire le prospettive di carriera.</li>
   </ul>
 
-  <h3 class="list-title">🏥 Effetti su salute mentale e fisica</h3>
+  <h3 class="list-title"> Effetti su salute mentale e fisica</h3>
   <ul>
     <li>Numerosi studi hanno correlato il pignoramento della casa a picchi di depressione, ansia e disturbi da stress post-traumatico.</li>
     <li>In alcune regioni, si è osservato un aumento nei tassi di suicidio legati a debiti e perdita patrimoniale.</li>
   </ul>
 
-  <h3 class="list-title">📉 Aumento della diseguaglianza</h3>
+  <h3 class="list-title"> Aumento della diseguaglianza</h3>
   <ul>
     <li>I cittadini a basso reddito hanno perso proporzionalmente molto di più in termini patrimoniali.</li>
     <li>La ricchezza media delle famiglie afroamericane è scesa di oltre il 50%, contro il 16% per quelle bianche.</li>
@@ -503,28 +558,28 @@
     Molti dei protagonisti istituzionali erano consapevoli, almeno parzialmente, dell’instabilità del mercato subprime. Alcuni hanno ignorato i segnali, altri li hanno deliberatamente nascosti. Ecco una panoramica dettagliata delle responsabilità.
   </p>
 
-  <h3 class="list-title">🏦 Banche d’investimento</h3>
+  <h3 class="list-title"> Banche d’investimento</h3>
   <ul>
     <li><strong>Goldman Sachs</strong>: documenti interni mostrano come l’istituto, già nel 2006, iniziò a “shortare il mercato subprime”, pur continuando a vendere CDO ai clienti.</li>
     <li><strong>Citigroup</strong>: il CFO Chuck Prince dichiarò nel luglio 2007: “finché la musica suona dobbiamo continuare a ballare”, ignorando la bolla imminente.</li>
     <li><strong>Lehman Brothers</strong>: pur sapendo della bassa qualità degli asset, aumentò l’esposizione ai CDO mezzanine nel 2007 per recuperare profitti.</li>
   </ul>
 
-  <h3 class="list-title">📉 Agenzie di rating</h3>
+  <h3 class="list-title"> Agenzie di rating</h3>
   <ul>
     <li><strong>Moody’s e S&amp;P</strong> hanno assegnato rating AAA a titoli che includevano prestiti subprime di bassissima qualità.</li>
     <li>Email interne rivelano frasi come: “potremmo valutare una mucca” – indicando un processo di rating compromesso.</li>
     <li>Il conflitto d’interesse (chi paga è l’emittente) ha portato a una corsa verso il basso in termini di rigore.</li>
   </ul>
 
-  <h3 class="list-title">🏛️ Regolatori pubblici</h3>
+  <h3 class="list-title"> Regolatori pubblici</h3>
   <ul>
     <li><strong>SEC</strong>: mancato monitoraggio dei livelli di leva finanziaria, specialmente per banche con 30x o 40x leverage.</li>
     <li><strong>Fed e OCC</strong>: minimizzarono l’impatto sistemico dei subprime e non intervennero nel mercato CDO/CDS.</li>
     <li><strong>Alan Greenspan</strong> (ex presidente Fed) dichiarò nel 2004 che i mutui subprime “avevano democratizzato il credito” – salvo poi ammettere l’errore nel 2008.</li>
   </ul>
 
-  <h3 class="list-title">📚 Prove chiave</h3>
+  <h3 class="list-title"> Prove chiave</h3>
   <ul>
     <li><strong>2005–2006:</strong> Documenti da banche d’affari mostrano previsioni interne di crollo per il mercato immobiliare.</li>
     <li><strong>2007:</strong> Citazioni da manager CDO (es. “this stuff is all crap”) durante la fase di emissione.</li>
@@ -543,7 +598,7 @@
     Oltre alla responsabilità finanziaria, la crisi ha visto numerosi comportamenti discutibili – e in alcuni casi potenzialmente criminali – da parte di banche, assicurazioni e operatori finanziari. Ecco le evidenze principali:
   </p>
 
-  <h3 class="list-title">🏦 Goldman Sachs – Abacus 2007‑AC1</h3>
+  <h3 class="list-title"> Goldman Sachs – Abacus 2007‑AC1</h3>
   <ul>
     <li>La <strong>SEC ha accusato Goldman</strong> di aver strutturato e venduto un CDO sintetico progettato per fallire, nascondendo il ruolo di John Paulson – che lo aveva ideato e scommetteva contro <strong>sotto-disclosure</strong> di conflitti d’interesse :contentReference[oaicite:1]{index=1}.</li>
     <li>Nel 2010 un accordo con la SEC ha imposto a Goldman una multa record di <strong>$550 milioni</strong> per frode nella vendita di Abacus :contentReference[oaicite:2]{index=2}.</li>
@@ -551,7 +606,7 @@
     <li><strong>Nessun imputato penale</strong>: il DOJ ha rinunciato a procedimenti criminali, nonostante esistessero potenziali violazioni penali :contentReference[oaicite:4]{index=4}.</li>
   </ul>
 
-  <h3 class="list-title">🏛️ AIG – Valutazione dei CDS & bonus</h3>
+  <h3 class="list-title"> AIG – Valutazione dei CDS & bonus</h3>
   <ul>
     <li>L’**SEC e il DOJ** hanno indagato AIG per falsa valutazione e bozza della contagiosità dei CDS subprime :contentReference[oaicite:5]{index=5}.</li>
     <li>Il baco: AIG non aveva capitali sufficienti per coprire i CDS che vendeva, e continuava a distribuire miliardari contratti senza riserva adeguata.</li>
@@ -559,19 +614,19 @@
     <li>Joe Cassano, il principale responsabile, scampa a accuse penali formali nonostante l’indagine DOJ (2010) :contentReference[oaicite:7]{index=7}.</li>
   </ul>
 
-  <h3 class="list-title">🏦 Bank of America / Countrywide</h3>
+  <h3 class="list-title"> Bank of America / Countrywide</h3>
   <ul>
     <li>Bank of America ha pagato **$650 milioni** per risolvere una causa AIG RMBS, accusata di <strong>frode negli MBS</strong> emessi da Countrywide :contentReference[oaicite:8]{index=8}.</li>
     <li>Nonostante le evidenze, non si sono concretizzate azioni penali a carico di manager individuati.</li>
   </ul>
 
-  <h3 class="list-title">💼 Altri istituti – DOJ & SEC enforcement</h3>
+  <h3 class="list-title"> Altri istituti – DOJ & SEC enforcement</h3>
   <ul>
     <li>UBS ha raggiunto nel 2018 un accordo da **$1,4 miliardi** con il DOJ per frodi in titoli RMBS 2006–2007 :contentReference[oaicite:9]{index=9}.</li>
     <li>Numerose banche incluse JPMorgan, Wells Fargo e Citigroup hanno concordato accordi congiunti nel 2011 per pratiche simili, seppur senza procedimenti penali.</li>
   </ul>
 
-  <h3 class="list-title">⚖️ Conclusioni legali e morali</h3>
+  <h3 class="list-title">⚖ Conclusioni legali e morali</h3>
   <ul>
     <li>Nonostante evidenze consistenti, <strong>non ci furono condanne penali</strong> per crimini finanziari relativi alla crisi — solo riparazioni civili e maxi-multe :contentReference[oaicite:10]{index=10}.</li>
     <li>L’assenza di responsabilità individuale ha innescato accuse di <strong>impunità morale</strong>: “privatizzazione dei guadagni e socializzazione delle perdite” :contentReference[oaicite:11]{index=11}.</li>
@@ -586,7 +641,7 @@
     A posteriori, la crisi dei mutui subprime non è apparsa come un’improvvisa catastrofe, ma come l’esito di una lunga catena di comportamenti opportunistici, omissioni istituzionali e costruzioni finanziarie deliberatamente opache. Più che un errore collettivo, fu una <strong>truffa sistemica “designata”</strong>, in cui milioni di cittadini furono inconsapevoli vittime di meccanismi che non potevano controllare né comprendere.
   </p>
 
-  <h3 class="list-title">🧩 Un sistema truccato: incentivi e silenzi</h3>
+  <h3 class="list-title"> Un sistema truccato: incentivi e silenzi</h3>
   <ul>
     <li><strong>Emittenti:</strong> sapevano della scarsa qualità dei mutui ma impacchettavano i titoli per venderli comunque, spesso shortando contro.</li>
     <li><strong>Agenzie di rating:</strong> gonfiavano i rating sotto pressione commerciale, creando un’apparenza di sicurezza.</li>
@@ -594,14 +649,14 @@
     <li><strong>Regolatori:</strong> ignorarono i segnali di allarme, permettendo a banche e fondi di usare leva estrema su asset illiquidi.</li>
   </ul>
 
-  <h3 class="list-title">💥 Vittime invisibili: i piccoli risparmiatori</h3>
+  <h3 class="list-title"> Vittime invisibili: i piccoli risparmiatori</h3>
   <ul>
     <li>Obbligazioni subprime e CDO vennero vendute come “investimenti sicuri” a famiglie e fondi pensione in USA ed Europa.</li>
     <li>Milioni di cittadini persero casa, risparmi e accesso al credito, senza comprendere il ruolo sistemico che li aveva condotti lì.</li>
     <li>Nessuno dei principali responsabili subì conseguenze penali: le perdite furono socializzate, i profitti privatizzati.</li>
   </ul>
 
-  <h3 class="list-title">📚 Lezioni da apprendere</h3>
+  <h3 class="list-title"> Lezioni da apprendere</h3>
   <ul>
     <li>Il rischio non è solo tecnico, ma <strong>etico e sistemico</strong>.</li>
     <li>La complessità finanziaria non deve essere uno scudo per la responsabilità.</li>
