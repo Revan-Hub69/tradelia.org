@@ -7,112 +7,156 @@
   <title>TRADELIA • AI — Report Azionario</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
-      background-size: 280px;
-      color: #0f172a;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background: #fff;
-      border-bottom: 1px solid #dbe1ea;
-      padding: 16px 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 700;
-      font-size: 18px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 2rem;
-    }
-    th, td {
-      padding: 10px 14px;
-      border: 1px solid #d1d5db;
-      text-align: left;
-    }
-    th {
-      background: #f8fafc;
-      white-space: nowrap;
-    }
-    .positive {
-      background-color: rgba(34,197,94,0.15);
-    }
-    .neutral {
-      background-color: rgba(234,179,8,0.15);
-    }
-    .negative {
-      background-color: rgba(239,68,68,0.15);
-    }
-    h2 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      color: #1e293b;
-    }
-    h3.list-title {
-      font-size: 1.125rem;
-      margin-top: 2rem;
-      margin-bottom: 0.75rem;
-      color: #1e293b;
-      font-weight: 600;
-    }
-    section {
-      background: #fff;
-      padding: 2rem;
-      border-radius: 1rem;
-      border: 1px solid #d1d5db;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-      margin: 2rem auto;
-      max-width: 800px;
-    }
-    .text-gray {
-      color: #374151;
-      line-height: 1.6;
-    }
-    @media (max-width: 768px) {
-      table, thead, tbody, th, td, tr {
-        display: block;
-        width: 100%;
-      }
-      tr {
-        margin-bottom: 1rem;
-      }
-      th {
-        background: none;
-        font-weight: 600;
-        padding-top: 0;
-      }
-      td {
-        border-top: none;
-        background-color: #f9fafb;
-        margin-top: -10px;
-      }
-    }
-    ::-webkit-scrollbar {
-      width: 10px;
-      height: 10px;
-    }
-    ::-webkit-scrollbar-track {
-      background: linear-gradient(to right, #f1f5f9, #e2e8f0);
-      border-radius: 100vh;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(80, 160, 200, 0.4);
-      border-radius: 100vh;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(80, 160, 200, 0.6);
-    }
-    * {
-      scrollbar-width: thin;
-      scrollbar-color: rgba(80, 160, 200, 0.5) #e5e7eb;
-      box-sizing: border-box;
-    }
-  </style>
+  body {
+  font-family: 'Inter', sans-serif;
+  background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+  background-size: 280px;
+  color: #0f172a;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background: #fff;
+  border-bottom: 1px solid #dbe1ea;
+  padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+}
+
+th, td {
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  text-align: left;
+  line-height: 1.5;
+}
+
+th {
+  background: #f8fafc;
+  white-space: nowrap;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+table tr:hover {
+  background-color: rgba(14, 165, 233, 0.1);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.positive {
+  background-color: rgba(34,197,94,0.25);
+}
+
+.neutral {
+  background-color: rgba(234,179,8,0.25);
+}
+
+.negative {
+  background-color: rgba(239,68,68,0.25);
+}
+
+a {
+  color: #2563eb;
+  text-decoration: underline;
+  transition: color 0.2s ease-in-out;
+}
+
+a:hover, a:focus {
+  color: #1d4ed8;
+  outline: none;
+  text-decoration: none;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #1e293b;
+}
+
+h3.list-title {
+  font-size: 1.125rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: #1e293b;
+  font-weight: 600;
+  border-bottom: 2px solid #cbd5e1;
+  padding-bottom: 0.25rem;
+}
+
+
+section {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  margin: 2rem auto;
+  max-width: 800px;
+}
+
+.text-gray {
+  color: #374151;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+    width: 100%;
+  }
+  tr {
+    margin-bottom: 1rem;
+  }
+  th {
+    background: none;
+    font-weight: 600;
+    padding-top: 0;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  td {
+    border-top: none;
+    background-color: #f9fafb;
+    margin-top: 0.25rem;
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+  border-radius: 100vh;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(80, 160, 200, 0.5);
+  border-radius: 100vh;
+  transition: background-color 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(80, 160, 200, 0.7);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
+  box-sizing: border-box;
+}
+</style>
 </head>
 <body>
   <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6">
@@ -210,101 +254,170 @@
 <br>
 
 <section>
-  <h3 class="list-title">Broker Consigliati per Investimento Long-Term</h3>
-  <table>
-    <tr>
-      <th><a href="https://www.tradelia.org/Exante.html" target="_blank">Exante</a></th>
-      <td>
-        ✅ Accesso diretto a oltre 50 mercati globali<br>
-        ✅ Piattaforma professionale multi-asset<br>
-        ✅ Ideale per investitori esperti o portafogli diversificati<br>
-        <a href="https://www.tradelia.org/Exante.html" target="_blank"> Scopri il broker</a>
-      </td>
-    </tr>
-    <tr>
-      <th><a href="https://www.tradelia.org/Freedom24.html" target="_blank">Freedom24</a></th>
-      <td>
-        ✅ Commissioni competitive su azioni USA<br>
-        ✅ Possibilità di partecipare a IPO in anteprima<br>
-        ✅ Ottimo per investitori retail e medio termine<br>
-        <a href="https://www.tradelia.org/Freedom24.html" target="_blank"> Scopri il broker</a>
-      </td>
-    </tr>
+  <h3 class="list-title" style="font-weight: 600; font-size: 1.25rem; margin-bottom: 1rem;">
+    Broker Consigliati per Investimento Long-Term
+  </h3>
+  <table style="width: 100%; border-collapse: collapse;">
+    <tbody>
+      <tr style="border-bottom: 1px solid #ddd;">
+        <th style="text-align: left; padding: 12px 8px; vertical-align: top; font-weight: 600;">
+          <a href="https://www.tradelia.org/Exante.html" target="_blank" style="color: #1a56db; text-decoration: underline;">
+            Exante
+          </a>
+        </th>
+        <td style="padding: 12px 8px; color: #333; font-size: 0.95rem; line-height: 1.4;">
+          • Accesso diretto a oltre 50 mercati globali<br>
+          • Piattaforma professionale multi-asset<br>
+          • Ideale per investitori esperti o portafogli diversificati<br>
+          <a href="https://www.tradelia.org/Exante.html" target="_blank" style="color: #1a56db; font-weight: 600; text-decoration: underline;">
+            Scopri il broker →
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th style="text-align: left; padding: 12px 8px; vertical-align: top; font-weight: 600;">
+          <a href="https://www.tradelia.org/Freedom24.html" target="_blank" style="color: #1a56db; text-decoration: underline;">
+            Freedom24
+          </a>
+        </th>
+        <td style="padding: 12px 8px; color: #333; font-size: 0.95rem; line-height: 1.4;">
+          • Commissioni competitive su azioni USA<br>
+          • Possibilità di partecipare a IPO in anteprima<br>
+          • Ottimo per investitori retail e medio termine<br>
+          <a href="https://www.tradelia.org/Freedom24.html" target="_blank" style="color: #1a56db; font-weight: 600; text-decoration: underline;">
+            Scopri il broker →
+          </a>
+        </td>
+      </tr>
+    </tbody>
   </table>
 </section>
+
 
 
 
 <section>
   <h3 class="list-title">Segnale Operativo – SWING TRADING</h3>
   <table>
-    <tr><th>Timeframe operativo</th><td class="positiva">1H – 4H</td></tr>
-    <tr><th>Contesto attuale</th><td class="positiva">
-      Trend rialzista attivo su 1H e 4H<br>
-      Breakout sopra 172.3 in corso<br>
-      RSI sostenuti ma non estremi – ADX > 30
-    </td></tr>
-    <tr><th>Livelli chiave</th><td>
-      Supporto tecnico: 168.9 / 166.5 (EMA 55 + swing low)<br>
-      Resistenza: 173.9 / 176.2 (soglia breakout + gamma max pain)
-    </td></tr>
-    <tr><th>Volatilità implicita</th><td class="positiva">IV stabile 34–36% → ottima per strategie direzionali bilanciate</td></tr>
-    <tr><th>Pattern attivi</th><td class="positiva">Ascending triangle + volume breakout (TF 1H)</td></tr>
-    <tr><th>Strategia consigliata</th><td class="positiva">
-      LONG su pullback area 169.2–168<br>
-      Stop loss: 165.9  
-      Target 1: 173.9  
-      Target 2: 176.5  
-      RR medio: 2.4
-    </td></tr>
-    <tr><th>Alternativa ribassista</th><td class="neutrale">
-      SHORT intraday sotto 165.8 (break EMA e struttura)<br>
-      Target rapido: 162.2<br>
-      Solo con conferma VIX > 17.5 o fallimento breakout Nasdaq
-    </td></tr>
-    <tr><th>Timing e rischio</th><td class="positiva">
-      Finestra ottimale: 17–25 luglio<br>
-      Swing duration ideale: 2–6 giorni<br>
-      Rischio medio–basso con trailing stop dinamico
-    </td></tr>
-    <tr><th>Note Tradelia AI</th><td class="text-gray">
-      Il contesto tecnico favorisce il proseguimento del trend con buy-the-dip tra 169–168.  
-      Volume, compressione %B e sentiment opzioni supportano direzione long.  
-      Lateralizzazione sopra 172.3 può offrire estensione rapida (gamma trigger area).
-    </td></tr>
-    <tr><th>Simulazione finale swing</th><td class="positiva">✅ LONG SWING con entrata tra 169.2–168, TP 173.9/176.5, SL 165.9</td></tr>
-    <tr><th>La simulazione si basa su trend attuale</th><td class="neutrale"> → se avviene un reversal improvviso (gap, news), può invalidarsi</td></tr>
-    <tr><th>Nota Bene</th><td class="neutrale">Nessuna simulazione può anticipare un evento esogeno inatteso (ban AI, escalation Taiwan, vol spike improvviso)</td></tr>
-
-
+    <tr>
+      <th>Timeframe operativo</th>
+      <td class="positive">1H – 4H</td>
+    </tr>
+    <tr>
+      <th>Contesto attuale</th>
+      <td class="positive">
+        Trend rialzista attivo su 1H e 4H<br>
+        Breakout sopra 172.3 in corso<br>
+        RSI sostenuti ma non estremi – ADX &gt; 30
+      </td>
+    </tr>
+    <tr>
+      <th>Livelli chiave</th>
+      <td class="neutral">
+        Supporto tecnico: 168.9 / 166.5 (EMA 55 + swing low)<br>
+        Resistenza: 173.9 / 176.2 (soglia breakout + gamma max pain)
+      </td>
+    </tr>
+    <tr>
+      <th>Volatilità implicita</th>
+      <td class="positive">IV stabile 34–36% → ottima per strategie direzionali bilanciate</td>
+    </tr>
+    <tr>
+      <th>Pattern attivi</th>
+      <td class="positive">Ascending triangle + volume breakout (TF 1H)</td>
+    </tr>
+    <tr>
+      <th>Strategia consigliata</th>
+      <td class="positive">
+        LONG su pullback area 169.2–168<br>
+        Stop loss: 165.9<br>
+        Target 1: 173.9<br>
+        Target 2: 176.5<br>
+        RR medio: 2.4
+      </td>
+    </tr>
+    <tr>
+      <th>Alternativa ribassista</th>
+      <td class="negative">
+        SHORT intraday sotto 165.8 (break EMA e struttura)<br>
+        Target rapido: 162.2<br>
+        Solo con conferma VIX &gt; 17.5 o fallimento breakout Nasdaq
+      </td>
+    </tr>
+    <tr>
+      <th>Timing e rischio</th>
+      <td class="positive">
+        Finestra ottimale: 17–25 luglio<br>
+        Swing duration ideale: 2–6 giorni<br>
+        Rischio medio–basso con trailing stop dinamico
+      </td>
+    </tr>
+    <tr>
+      <th>Note Tradelia AI</th>
+      <td class="neutral">
+        Il contesto tecnico favorisce il proseguimento del trend con buy-the-dip tra 169–168.<br>
+        Volume, compressione %B e sentiment opzioni supportano direzione long.<br>
+        Lateralizzazione sopra 172.3 può offrire estensione rapida (gamma trigger area).
+      </td>
+    </tr>
+    <tr>
+      <th>Simulazione finale swing</th>
+      <td class="positive">LONG SWING con entrata tra 169.2–168, TP 173.9/176.5, SL 165.9</td>
+    </tr>
+    <tr>
+      <th>La simulazione si basa su trend attuale</th>
+      <td class="neutral">Se avviene un reversal improvviso (gap, news), può invalidarsi</td>
+    </tr>
+    <tr>
+      <th>Nota Bene</th>
+      <td class="neutral">Nessuna simulazione può anticipare un evento esogeno inatteso (ban AI, escalation Taiwan, vol spike improvviso)</td>
+    </tr>
   </table>
 </section>
+
+
+    
 <br><br>
 <section>
   <h3 class="list-title">Broker Consigliati – CFD Azioni USA</h3>
   <table>
-    <tr>
-      <th><a href="https://www.tradelia.org/Pepperstone.html" target="_blank">Pepperstone</a></th>
-      <td>
-        Categoria: <strong>Intermedio – Pro</strong><br>
-        Rating AI: <strong>87/100</strong><br>
-        ✅ Broker ECN con esecuzione veloce e spread reali<br>
-        ✅ Ottimo per swing e day trading attivo<br>
-        <a href="https://www.tradelia.org/Pepperstone.html" target="_blank"> Scopri il broker</a>
-      </td>
-    </tr>
-    <tr>
-      <th><a href="https://www.tradelia.org/Plus500.html" target="_blank">Plus500</a></th>
-      <td>
-        Categoria: <strong>Principiante</strong><br>
-        Rating AI: <strong>78/100</strong><br>
-        ✅ Interfaccia semplice, zero commissioni (spread inclusi)<br>
-        ✅ Ideale per chi inizia con CFD su azioni USA<br>
-        <a href="https://www.tradelia.org/Plus500.html" target="_blank"> Scopri il broker</a>
-      </td>
-    </tr>
+    <tbody>
+      <tr>
+        <th>
+          <a href="https://www.tradelia.org/Pepperstone.html" target="_blank" style="color:#1a56db; text-decoration: underline;">
+            Pepperstone
+          </a>
+        </th>
+        <td class="positive">
+          Categoria: <strong>Intermedio – Pro</strong><br>
+          Rating AI: <strong>87/100</strong><br>
+          Broker ECN con esecuzione veloce e spread reali<br>
+          Ottimo per swing e day trading attivo<br>
+          <a href="https://www.tradelia.org/Pepperstone.html" target="_blank" style="color:#1a56db; font-weight: 600; text-decoration: underline;">
+            Scopri il broker →
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>
+          <a href="https://www.tradelia.org/Plus500.html" target="_blank" style="color:#1a56db; text-decoration: underline;">
+            Plus500
+          </a>
+        </th>
+        <td class="neutral">
+          Categoria: <strong>Principiante</strong><br>
+          Rating AI: <strong>78/100</strong><br>
+          Interfaccia semplice, zero commissioni (spread inclusi)<br>
+          Ideale per chi inizia con CFD su azioni USA<br>
+          <a href="https://www.tradelia.org/Plus500.html" target="_blank" style="color:#1a56db; font-weight: 600; text-decoration: underline;">
+            Scopri il broker →
+          </a>
+        </td>
+      </tr>
+    </tbody>
   </table>
 </section>
+
 <br><br>
 
       <section>
@@ -364,25 +477,54 @@
 <br><br>
 
 <section>
-  <h3 class="list-title">Blocco 2 – Multipli & Valutazione Intrinseca</h3>
+  <h3 class="list-title">Blocco 2 – Multipli &amp; Valutazione Intrinseca</h3>
   <table>
-    <tr><th>P/E (TTM)</th><td class="neutrale">~55× (range 52–56×)</td></tr>
-    <tr><th>Forward P/E</th><td class="positiva">~33× (sotto media storica di settore ~40×)</td></tr>
-    <tr><th>EV/EBITDA (TTM)</th><td class="neutrale">~45×</td></tr>
-    <tr><th>EV/EBITDA (Forward)</th><td class="positiva">~33× (forward 12M)</td></tr>
-    <tr><th>DCF Fair Value – Base (luglio 2025)</th><td class="negativa">$146.49 (≈ −14.5% dal prezzo attuale)</td></tr>
-    <tr><th>DCF Fair Value – Bull (luglio 2025)</th><td class="positiva">$178.88 (+4.5%)</td></tr>
-    <tr><th>DCF Fair Value – Bear (luglio 2025)</th><td class="negativa">$81.13 (≈ −53%)</td></tr>
-    <tr><th>Upside/Downside realistico a 12 mesi</th>
-      <td class="neutrale">+4.5% / −14.5% (DCF centrale; range esteso: −53% / +4.5%)</td>
+    <tr>
+      <th>P/E (TTM)</th>
+      <td class="neutral">~55× (range 52–56×)</td>
     </tr>
-    <tr><th>Confidence Valutazione</th><td class="neutrale">Alta coerenza tra modelli aggiornati a luglio 2025</td></tr>
-    <tr><th>Scostamento storico da FV</th><td class="neutrale">Attuale +17% rispetto a media base-case ($146)</td></tr>
-    <tr><th>Note Tradelia AI</th>
+    <tr>
+      <th>Forward P/E</th>
+      <td class="positive">~33× (sotto media storica di settore ~40×)</td>
+    </tr>
+    <tr>
+      <th>EV/EBITDA (TTM)</th>
+      <td class="neutral">~45×</td>
+    </tr>
+    <tr>
+      <th>EV/EBITDA (Forward)</th>
+      <td class="positive">~33× (forward 12M)</td>
+    </tr>
+    <tr>
+      <th>DCF Fair Value – Base (luglio 2025)</th>
+      <td class="negative">$146,49 (≈ −14,5% dal prezzo attuale)</td>
+    </tr>
+    <tr>
+      <th>DCF Fair Value – Bull (luglio 2025)</th>
+      <td class="positive">$178,88 (+4,5%)</td>
+    </tr>
+    <tr>
+      <th>DCF Fair Value – Bear (luglio 2025)</th>
+      <td class="negative">$81,13 (≈ −53%)</td>
+    </tr>
+    <tr>
+      <th>Upside/Downside realistico a 12 mesi</th>
+      <td class="neutral">+4,5% / −14,5% (DCF centrale; range esteso: −53% / +4,5%)</td>
+    </tr>
+    <tr>
+      <th>Confidence Valutazione</th>
+      <td class="neutral">Alta coerenza tra modelli aggiornati a luglio 2025</td>
+    </tr>
+    <tr>
+      <th>Scostamento storico da FV</th>
+      <td class="neutral">Attuale +17% rispetto a media base-case ($146)</td>
+    </tr>
+    <tr>
+      <th>Note Tradelia AI</th>
       <td class="text-gray">
-        Sono stati inclusi **solo modelli DCF pubblicati entro luglio 2025**, evitando quelli obsoleti o incoerenti con i dati post earnings Q1 FY26.  
-        Il fair value centrale di **$146.49** riflette proiezioni prudenziali con margini normalizzati e WACC > 9%, mentre lo scenario ottimistico ($178.88) presuppone margini attuali e crescita perpetua > 4%.  
-        L’upside è quindi **limitato**, e lo scarto tra prezzo attuale e FV base suggerisce cautela.
+        Sono stati inclusi solo modelli DCF pubblicati entro luglio 2025, evitando quelli obsoleti o incoerenti con i dati post earnings Q1 FY26.<br>
+        Il fair value centrale di <strong>$146,49</strong> riflette proiezioni prudenziali con margini normalizzati e WACC &gt; 9%, mentre lo scenario ottimistico (<strong>$178,88</strong>) presuppone margini attuali e crescita perpetua &gt; 4%.<br>
+        L’upside è quindi limitato, e lo scarto tra prezzo attuale e FV base suggerisce cautela.
       </td>
     </tr>
   </table>
@@ -393,48 +535,75 @@
 <section>
   <h3 class="list-title">Blocco 3 – Fondamentali Aziendali</h3>
   <table>
-    <tr><th>Ricavi TTM</th><td class="positiva">$148,5 mld (+86% YoY)</td></tr>
-    <tr><th>Ricavi Q1 FY26</th><td class="positiva">$44,1 mld (+69% YoY)</td></tr>
-    <tr><th>Margine Lordo (Q1 FY26)</th><td class="neutrale">60,5% GAAP (–12.5 pt QoQ, –17.9 pt YoY)</td></tr>
-    <tr><th>Margine Operativo (Q1 FY26)</th><td class="positiva">~52% non‑GAAP (~23.3 mld / 44.1 mld)</td></tr>
-    <tr><th>Utile Netto (Q1 FY26)</th><td class="positiva">$19,9 mld non‑GAAP (+31% YoY)</td></tr>
-    <tr><th>ROE</th><td class="positiva">22.4%</td></tr>
-    <tr><th>ROA</th><td class="positiva">14.99%</td></tr>
-    <tr><th>Operating Cash Flow TTM</th><td class="positiva">$76,16 mld (+83% YoY)</td></tr>
-    <tr><th>Free Cash Flow TTM</th><td class="positiva">$72,06 mld (+83% YoY)</td></tr>
-    <tr><th>FCF Margin (TTM)</th><td class="positiva">≈49% (+ >20 pt YoY)</td></tr>
-    <tr><th>Capex TTM</th><td class="neutrale">~$4,1 mld</td></tr>
-    <tr><th>Beta 5Y</th><td class="neutrale">2.12 (elevata volatilità)</td></tr>
+    <tr><th>Ricavi TTM</th><td class="positive">$148,5 mld (+86% YoY)</td></tr>
+    <tr><th>Ricavi Q1 FY26</th><td class="positive">$44,1 mld (+69% YoY)</td></tr>
+    <tr><th>Margine Lordo (Q1 FY26)</th><td class="neutral">60,5% GAAP (–12,5 pt QoQ, –17,9 pt YoY)</td></tr>
+    <tr><th>Margine Operativo (Q1 FY26)</th><td class="positive">~52% non‑GAAP (~23,3 mld / 44,1 mld)</td></tr>
+    <tr><th>Utile Netto (Q1 FY26)</th><td class="positive">$19,9 mld non‑GAAP (+31% YoY)</td></tr>
+    <tr><th>ROE</th><td class="positive">22,4%</td></tr>
+    <tr><th>ROA</th><td class="positive">14,99%</td></tr>
+    <tr><th>Operating Cash Flow TTM</th><td class="positive">$76,16 mld (+83% YoY)</td></tr>
+    <tr><th>Free Cash Flow TTM</th><td class="positive">$72,06 mld (+83% YoY)</td></tr>
+    <tr><th>FCF Margin (TTM)</th><td class="positive">≈49% (+ &gt;20 pt YoY)</td></tr>
+    <tr><th>Capex TTM</th><td class="neutral">~$4,1 mld</td></tr>
+    <tr><th>Beta 5Y</th><td class="neutral">2,12 (elevata volatilità)</td></tr>
     <tr><th>Note Tradelia AI</th>
       <td class="text-gray">
-        NVIDIA mostra profitti enormi trainati da crescita AI, con margini lordi ancora forti e margine operativo intorno al 52%.  
-        La generazione di cassa è eccezionale: FCF TTM oltre $72 mld, con margine vicino al 50%, tra i più alti del settore.  
-        ROE e ROA sono robusti, ma l’elevata beta suggerisce volatilità.  
+        NVIDIA mostra profitti enormi trainati da crescita AI, con margini lordi ancora forti e margine operativo intorno al 52%.<br>
+        La generazione di cassa è eccezionale: FCF TTM oltre $72 mld, con margine vicino al 50%, tra i più alti del settore.<br>
+        ROE e ROA sono robusti, ma l’elevata beta suggerisce volatilità.<br>
         Segnali solidi per sostenere l’attuale valutazione e giustificare multipli elevati.
       </td>
     </tr>
   </table>
 </section>
 
+
 <br><br>
 
 <section>
-  <h3 class="list-title">Blocco 4 – Dividendi & Buyback</h3>
+  <h3 class="list-title">Blocco 4 – Dividendi &amp; Buyback</h3>
   <table>
-    <tr><th>Dividend Yield (TTM)</th><td class="neutrale">0.02%</td></tr>
-    <tr><th>Dividendo Annuale</th><td class="neutrale">$0.04 per azione</td></tr>
-    <tr><th>Ultimo Pagamento</th><td class="neutrale">$0.01 (3 luglio 2025; ex-div 11 giugno 2025)</td></tr>
-    <tr><th>Payout Ratio</th><td class="neutrale">~1.3% dell’utile netto</td></tr>
-    <tr><th>Dividendi in Crescita</th><td class="positiva">+150% YoY (da $0.016 nel 2024 a $0.04 nel 2025)</td></tr>
-    <tr><th>Buyback Yield (TTM)</th><td class="positiva">~1.04%</td></tr>
-    <tr><th>Buybacks Q2 FY25</th><td class="positiva">$14.1 mld (↑82% YoY)</td></tr>
-    <tr><th>Buyback Authorization</th><td class="positiva">$50 mld approvati (agosto 2024)</td></tr>
-    <tr><th>Shareholder Yield</th><td class="positiva">~1.1% (dividendi + buyback)</td></tr>
+    <tr><th>Dividend Yield (TTM)</th><td class="neutral">0.02%</td></tr>
+    <tr><th>Dividendo Annuale</th><td class="neutral">$0.04 per azione</td></tr>
+    <tr><th>Ultimo Pagamento</th><td class="neutral">$0.01 (3 luglio 2025; ex-div 11 giugno 2025)</td></tr>
+    <tr><th>Payout Ratio</th><td class="neutral">~1.3% dell’utile netto</td></tr>
+    <tr><th>Dividendi in Crescita</th><td class="positive">+150% YoY (da $0.016 nel 2024 a $0.04 nel 2025)</td></tr>
+    <tr><th>Buyback Yield (TTM)</th><td class="positive">~1.04%</td></tr>
+    <tr><th>Buybacks Q2 FY25</th><td class="positive">$14.1 mld (↑82% YoY)</td></tr>
+    <tr><th>Buyback Authorization</th><td class="positive">$50 mld approvati (agosto 2024)</td></tr>
+    <tr><th>Shareholder Yield</th><td class="positive">~1.1% (dividendi + buyback)</td></tr>
     <tr><th>Note Tradelia AI</th>
       <td class="text-gray">
-        NVDA paga dividendi minimi (0.02%), ma ha avviato un’accelerazione negli ultimi 12 mesi (+150% YoY).
-        Il vero ritorno è nei **buyback**, con $14 mld negli ultimi trimestri e un’autorizzazione aggiuntiva da $50 mld, segnale di forte fiducia nel business.  
-        Il rendimento azionario complessivo è ~1.1%, basso rispetto alla media S&P; il rischio principale è il timing: buyback ai massimi può limitare l’efficacia in caso di correzione del titolo.
+        NVDA paga dividendi minimi (0.02%), ma ha avviato un’accelerazione negli ultimi 12 mesi (+150% YoY).<br>
+        Il vero ritorno è nei <strong>buyback</strong>, con $14 mld negli ultimi trimestri e un’autorizzazione aggiuntiva da $50 mld, segnale di forte fiducia nel business.<br>
+        Il rendimento azionario complessivo è ~1.1%, basso rispetto alla media S&amp;P; il rischio principale è il timing: buyback ai massimi può limitare l’efficacia in caso di correzione del titolo.
+      </td>
+    </tr>
+  </table>
+</section>
+
+
+<br><br>
+
+<section>
+  <h3 class="list-title">Blocco 5 – Performance &amp; Rischio</h3>
+  <table>
+    <tr><th>Performance YTD (YTD)</th><td class="positive">+22% (al 15 luglio 2025)</td></tr>
+    <tr><th>Rendimento 12 mesi</th><td class="positive">+90% (rally da aprile)</td></tr>
+    <tr><th>Drawdown 12 mesi (max)</th><td class="negative">−43% (aprile–luglio 2024)</td></tr>
+    <tr><th>Beta 5 anni</th><td class="neutral">2.06–2.12 (alta volatilità)</td></tr>
+    <tr><th>Volatilità realizzata 1 mese</th><td class="neutral">~55% annualizzata</td></tr>
+    <tr><th>Sharpe Ratio 1 anno</th><td class="neutral">0.63 (vs S&amp;P 0.53)</td></tr>
+    <tr><th>Calmar Ratio</th><td class="positive">0.68 (vs S&amp;P 0.61)</td></tr>
+    <tr><th>Sortino Ratio</th><td class="positive">0.97 (vs S&amp;P 0.95)</td></tr>
+    <tr><th>Omega Ratio</th><td class="neutral">1.12 (vs S&amp;P 1.14)</td></tr>
+    <tr><th>Note Tradelia AI</th>
+      <td class="text-gray">
+        NVDA ha mostrato performance eccezionali nel 2024–25 (+90% su base annua), ma ha anche vissuto un <strong>drawdown del 43%</strong>, dimostrando un profilo rischio/volatilità rilevante.<br>
+        L’alfa di rischio è positivo: ratio Sharpe, Sortino e Calmar superiori allo S&amp;P 500.<br>
+        Il beta &gt;2 segnala forte sensibilità ai mercati.<br>
+        Strategia consigliata: <strong>posizioni a medio termine</strong>, con stop o coperture su segmenti a breve, vista la volatilità elevata.
       </td>
     </tr>
   </table>
@@ -443,22 +612,24 @@
 <br><br>
 
 <section>
-  <h3 class="list-title">Blocco 5 – Performance & Rischio</h3>
+  <h3 class="list-title">Blocco 6 – Microstruttura &amp; Market</h3>
   <table>
-    <tr><th>Performance YTD (YTD)</th><td class="positiva">+22% (al 15 luglio 2025)</td></tr>
-    <tr><th>Rendimento 12 mesi</th><td class="positiva">+90% (rally da aprile)</td></tr>
-    <tr><th>Drawdown 12 mesi (max)</th><td class="negativa">–43% (aprile–luglio 2024)</td></tr>
-    <tr><th>Beta 5 anni</th><td class="neutrale">2.06–2.12 (alta volatilità)</td></tr>
-    <tr><th>Volatilità realizzata 1 mese</th><td class="neutrale">~55% annualizzata</td></tr>
-    <tr><th>Sharpe Ratio 1 anno</th><td class="neutrale">0.63 (vs S&P 0.53) ✅</td></tr>
-    <tr><th>Calmar Ratio</th><td class="positiva">0.68 (vs S&P 0.61)</td></tr>
-    <tr><th>Sortino Ratio</th><td class="positiva">0.97 (vs S&P 0.95)</td></tr>
-    <tr><th>Omega Ratio</th><td class="neutrale">1.12 (vs S&P 1.14)</td></tr>
+    <tr><th>Spread Bid‑Ask medio</th><td class="positive">$0,02–0,03 (alta efficienza esecutiva)</td></tr>
+    <tr><th>Profondità book</th><td class="positive">Elevata, livelli ±$1–2 molto densi</td></tr>
+    <tr><th>Ordini impattanti</th><td class="neutral">Sopra 100K azioni per spostamenti reali</td></tr>
+    <tr><th>Orari ad alto volume</th><td class="positive">9:30–10:30 e 15:00–16:00 EST</td></tr>
+    <tr><th>ADTV 3 mesi</th><td class="positive">~50 milioni azioni/giorno</td></tr>
+    <tr><th>Turnover giornaliero</th><td class="positive">~5–8% del flottante</td></tr>
+    <tr><th>Relative Volume (RVol)</th><td class="positive">&gt;2 in eventi/earnings</td></tr>
+    <tr><th>Algoritmi attivi</th><td class="neutral">Iceberg e HFT presenti, volume nascosto comune</td></tr>
+    <tr><th>Supporti visibili</th><td class="positive">$169–170 (order flow stabile)</td></tr>
+    <tr><th>Resistenze visibili</th><td class="positive">$172–173 (book con blocchi ask)</td></tr>
     <tr><th>Note Tradelia AI</th>
       <td class="text-gray">
-        NVDA ha mostrato performance eccezionali nel 2024–25 (+90% su base annua), ma ha anche vissuto un **drawdown del 43%**, dimostrando un profilo rischio/volatilità rilevante. L’alfa di rischio è positivo: ratio Sharpe, Sortino e Calmar superiori allo S&P 500.  
-        Il beta >2 segnala forte sensibilità ai mercati.  
-        Strategia consigliata: **posizioni a medio termine**, con stop o coperture su segmenti a breve, vista la volatilità elevata.
+        NVDA mostra microstruttura ideale per operatività HFT e istituzionale. Spread minimali e profondità del book<br>
+        permettono scalping e swing efficiente. Le finestre ottimali sono apertura e chiusura, mentre ordini VWAP<br>
+        tra le 11:00–14:00 EST massimizzano la qualità media di esecuzione.<br>
+        Durante eventi macro o trimestrali, l’RVol esplode &gt;2×, amplificando opportunità ma anche rischio di slippage.
       </td>
     </tr>
   </table>
@@ -467,94 +638,102 @@
 <br><br>
 
 <section>
-  <h3 class="list-title">Blocco 6 – Microstruttura & Market</h3>
+  <h3 class="list-title">Blocco 7 – Derivati &amp; Opzioni</h3>
   <table>
-    <tr><th>Spread Bid‑Ask medio</th><td class="positiva">$0,02–0,03 (alta efficienza esecutiva)</td></tr>
-    <tr><th>Profondità book</th><td class="positiva">Elevata, livelli ±$1–2 molto densi</td></tr>
-    <tr><th>Ordini impattanti</th><td class="neutrale">Sopra 100K azioni per spostamenti reali</td></tr>
-    <tr><th>Orari ad alto volume</th><td class="positiva">9:30–10:30 e 15:00–16:00 EST</td></tr>
-    <tr><th>ADTV 3 mesi</th><td class="positiva">~50 milioni azioni/giorno</td></tr>
-    <tr><th>Turnover giornaliero</th><td class="positiva">~5–8% del flottante</td></tr>
-    <tr><th>Relative Volume (RVol)</th><td class="positiva">>2 in eventi/earnings</td></tr>
-    <tr><th>Algoritmi attivi</th><td class="neutrale">Iceberg e HFT presenti, volume nascosto comune</td></tr>
-    <tr><th>Supporti visibili</th><td class="positiva">$169–170 (order flow stabile)</td></tr>
-    <tr><th>Resistenze visibili</th><td class="positiva">$172–173 (book con blocchi ask)</td></tr>
-    <tr><th>Note Tradelia AI</th>
-      <td class="text-gray">
-        NVDA mostra microstruttura ideale per operatività HFT e istituzionale. Spread minimali e profondità del book
-        permettono scalping e swing efficiente. Le finestre ottimali sono apertura e chiusura, mentre ordini VWAP
-        tra le 11:00–14:00 EST massimizzano la qualità media di esecuzione.  
-        Durante eventi macro o trimestrali, l’RVol esplode >2×, amplificando opportunità ma anche rischio di slippage.
-      </td>
+    <tr>
+      <th>Implied Volatility (30‑day)</th>
+      <td class="positive">≈ 35,10% (attuale vs storico ~27%)</td>
     </tr>
-  </table>
-</section>
-
-<br><br>
-
-<section>
-  <h3 class="list-title">Blocco 7 – Derivati & Opzioni</h3>
-  <table>
-    <tr><th>Implied Volatility (30‑day)</th><td>≈ 35.10% (attuale vs storico ~27%)</td></tr>
-    <tr><th>Open Interest Totale</th><td>≈ 19,518,225 contratti</td></tr>
-    <tr><th>Call OI</th><td>≈ 10,109,675</td></tr>
-    <tr><th>Put OI</th><td>≈ 9,408,550</td></tr>
-    <tr><th>Put‑Call Ratio (OI)</th><td>≈ 0.93 (leggermente più call)</td></tr>
-    <tr><th>Skew (30‑day IV Put‑Call)</th><td>≈ 0.066 (premium puts)</td></tr>
-    <tr><th>Implied Move (per weekly expiry: 18 luglio)</th><td>≈ ±$2.97 (~1.73%)</td></tr>
-    <tr><th>Note Tradelia AI</th>
+    <tr>
+      <th>Open Interest Totale</th>
+      <td class="neutral">≈ 19.518.225 contratti</td>
+    </tr>
+    <tr>
+      <th>Call OI</th>
+      <td class="neutral">≈ 10.109.675</td>
+    </tr>
+    <tr>
+      <th>Put OI</th>
+      <td class="neutral">≈ 9.408.550</td>
+    </tr>
+    <tr>
+      <th>Put‑Call Ratio (OI)</th>
+      <td class="neutral">≈ 0,93 (leggermente più call)</td>
+    </tr>
+    <tr>
+      <th>Skew (30‑day IV Put‑Call)</th>
+      <td class="neutral">≈ 0,066 (premium puts)</td>
+    </tr>
+    <tr>
+      <th>Implied Move (per weekly expiry: 18 luglio)</th>
+      <td class="neutral">≈ ±$2,97 (~1,73%)</td>
+    </tr>
+    <tr>
+      <th>Note Tradelia AI</th>
       <td class="text-gray">
         IV elevata al 35%, superiore allo storico medio (~27%).<br>
         Open interest totale di circa 19,5 milioni contratti; composizione bilanciata con lieve prevalenza call.<br>
-        Skew positivo (0.066) segnala premi put superiori alle call a pari distanza.<br>
-        L’implied move per la scadenza settimanale è di circa ±1.73%, utile per definire range operativo per strategie a breve.<br>
+        Skew positivo (0,066) segnala premi put superiori alle call a pari distanza.<br>
+        L’implied move per la scadenza settimanale è di circa ±1,73%, utile per definire range operativo per strategie a breve.<br>
         Contesto tecnico favorevole per operazioni a premio come covered call, straddle o collar.
       </td>
     </tr>
   </table>
 </section>
 
+
 <br><br>
 
 <section>
-  <h3 class="list-title">Blocco 8 – Tecnica & Correlazioni (Multi-Timeframe)</h3>
+  <h3 class="list-title">Blocco 8 – Tecnica &amp; Correlazioni (Multi-Timeframe)</h3>
   <table>
-    <tr><th>TF 15m – Timing breve</th><td class="neutrale">
-      Compressione %B: 0.89, RVol: 0.87<br>
-      RSI 14: 62 → momentum positivo ma non estremo<br>
-      MACD: leggero bullish cross, ma istogramma in indebolimento<br>
-      ADX 14: 17 (debole) → trend in formazione<br>
-      Setup: attesa breakout con squeeze bollinger → possibile entrata breve termine sopra 172.3
-    </td></tr>
-    
-    <tr><th>TF 1H – Trend operativo</th><td class="positiva">
-      Compressione %B: 0.72, RVol: 0.72<br>
-      RSI 14: 68 → zona alta ma ancora non overbought<br>
-      MACD positivo e crescente (+1.85) → conferma forza momentum<br>
-      ADX: 31 (positivo) → trend strutturato attivo<br>
-      Setup: supporto chiave a 168.9, resistenza tecnica 172.38 → breakout confermerebbe espansione
-    </td></tr>
-    
-    <tr><th>TF 4H – Struttura intermedia</th><td class="positiva">
-      Compressione: 0.91, RVol: 0.65<br>
-      RSI 14: 79 → in ipercomprato, ma con supporto di volume<br>
-      MACD fortemente positivo (+4.43) e ADX > 40 → trend maturo ma ancora in spinta<br>
-      Setup: consolidamento atteso sopra 163.3, bull channel attivo → rischio “mean reversion” se sotto 166.5
-    </td></tr>
-    
-    <tr><th>TF Daily – Contesto macro-tecnico</th><td class="positiva">
-      Bollinger %B: 0.94, RVol: 0.83<br>
-      RSI: 78 – ipercomprato avanzato<br>
-      MACD: 7.57 / 6.99 → spinta rialzista massima<br>
-      ADX: 47.45 – trend forte e confermato<br>
-      Ichimoku: Kumo rialzista, prezzo sopra tutte le medie → massima forza tecnica
-    </td></tr>
-
-    <tr><th>Indicazioni operative integrate</th><td class="text-gray">
-      - Rialzo tecnico pienamente confermato su tutti i timeframe, con compressione in 15m e 1H → potenziale breakout imminente<br>
-      - RSI elevati su 4H e D1, ma sostenuti da ADX e volume → **nessun segnale di inversione chiaro**, solo attenzione a divergenze future<br>
-      - Opportunità operative su pullback a 168.9–166.5 per swing bullish; allerta sopra 172.3 per breakout-trade
-    </td></tr>
+    <tr>
+      <th>TF 15m – Timing breve</th>
+      <td class="neutral">
+        Compressione %B: 0.89, RVol: 0.87<br>
+        RSI 14: 62 → momentum positivo ma non estremo<br>
+        MACD: leggero bullish cross, ma istogramma in indebolimento<br>
+        ADX 14: 17 (debole) → trend in formazione<br>
+        Setup: attesa breakout con squeeze bollinger → possibile entrata breve termine sopra 172.3
+      </td>
+    </tr>
+    <tr>
+      <th>TF 1H – Trend operativo</th>
+      <td class="positive">
+        Compressione %B: 0.72, RVol: 0.72<br>
+        RSI 14: 68 → zona alta ma ancora non overbought<br>
+        MACD positivo e crescente (+1.85) → conferma forza momentum<br>
+        ADX: 31 (positivo) → trend strutturato attivo<br>
+        Setup: supporto chiave a 168.9, resistenza tecnica 172.38 → breakout confermerebbe espansione
+      </td>
+    </tr>
+    <tr>
+      <th>TF 4H – Struttura intermedia</th>
+      <td class="positive">
+        Compressione: 0.91, RVol: 0.65<br>
+        RSI 14: 79 → in ipercomprato, ma con supporto di volume<br>
+        MACD fortemente positivo (+4.43) e ADX &gt; 40 → trend maturo ma ancora in spinta<br>
+        Setup: consolidamento atteso sopra 163.3, bull channel attivo → rischio “mean reversion” se sotto 166.5
+      </td>
+    </tr>
+    <tr>
+      <th>TF Daily – Contesto macro-tecnico</th>
+      <td class="positive">
+        Bollinger %B: 0.94, RVol: 0.83<br>
+        RSI: 78 – ipercomprato avanzato<br>
+        MACD: 7.57 / 6.99 → spinta rialzista massima<br>
+        ADX: 47.45 – trend forte e confermato<br>
+        Ichimoku: Kumo rialzista, prezzo sopra tutte le medie → massima forza tecnica
+      </td>
+    </tr>
+    <tr>
+      <th>Indicazioni operative integrate</th>
+      <td class="text-gray">
+        - Rialzo tecnico pienamente confermato su tutti i timeframe, con compressione in 15m e 1H → potenziale breakout imminente<br>
+        - RSI elevati su 4H e D1, ma sostenuti da ADX e volume → <strong>nessun segnale di inversione chiaro</strong>, solo attenzione a divergenze future<br>
+        - Opportunità operative su pullback a 168.9–166.5 per swing bullish; allerta sopra 172.3 per breakout-trade
+      </td>
+    </tr>
   </table>
 </section>
 
@@ -562,17 +741,17 @@
 <section>
   <h3 class="list-title">Blocco 8-II – Correlazioni Strategiche (Multi-asset)</h3>
   <table>
-    <tr><th>Nasdaq-100 (QQQ)</th><td class="positiva">+0.91 (alta, diretta)</td></tr>
-    <tr><th>SOXX (ETF semiconduttori)</th><td class="positiva">+0.94 (massima correlazione settoriale)</td></tr>
-    <tr><th>TSMC</th><td class="positiva">+0.85 → trend settoriale tech-fab condiviso</td></tr>
-    <tr><th>AMD</th><td class="positiva">+0.87 → ottima proxy intra-settoriale</td></tr>
-    <tr><th>Bitcoin</th><td class="neutrale">+0.24 → correlazione bassa/non sistemica</td></tr>
-    <tr><th>Rendimento Treasury 10Y</th><td class="negativa">-0.62 → sensibile a movimenti tassi</td></tr>
-    <tr><th>Dollaro Index (DXY)</th><td class="negativa">-0.45 → moderata correlazione inversa, rischio macro</td></tr>
-    <tr><th>VIX (indice volatilità)</th><td class="negativa">-0.73 → sensibile all’avversione al rischio</td></tr>
-    <tr><th>Oil WTI</th><td class="neutrale">+0.15 → irrilevante sul core business NVIDIA</td></tr>
+    <tr><th>Nasdaq-100 (QQQ)</th><td class="positive">+0.91 (alta, diretta)</td></tr>
+    <tr><th>SOXX (ETF semiconduttori)</th><td class="positive">+0.94 (massima correlazione settoriale)</td></tr>
+    <tr><th>TSMC</th><td class="positive">+0.85 → trend settoriale tech-fab condiviso</td></tr>
+    <tr><th>AMD</th><td class="positive">+0.87 → ottima proxy intra-settoriale</td></tr>
+    <tr><th>Bitcoin</th><td class="neutral">+0.24 → correlazione bassa/non sistemica</td></tr>
+    <tr><th>Rendimento Treasury 10Y</th><td class="negative">-0.62 → sensibile a movimenti tassi</td></tr>
+    <tr><th>Dollaro Index (DXY)</th><td class="negative">-0.45 → moderata correlazione inversa, rischio macro</td></tr>
+    <tr><th>VIX (indice volatilità)</th><td class="negative">-0.73 → sensibile all’avversione al rischio</td></tr>
+    <tr><th>Oil WTI</th><td class="neutral">+0.15 → irrilevante sul core business NVIDIA</td></tr>
     <tr><th>Correlazione media settoriale</th><td>+0.89 (tech mega-cap)</td></tr>
-    <tr><th>Correlazione sistemica vs macro</th><td class="negativa">Alta sensibilità a tassi/volatilità (Fed/VIX)</td></tr>
+    <tr><th>Correlazione sistemica vs macro</th><td class="negative">Alta sensibilità a tassi/volatilità (Fed/VIX)</td></tr>
   </table>
 </section>
 <br><br>
@@ -580,16 +759,16 @@
 <section>
   <h3 class="list-title">Blocco 9 – Proprietà, ESG & Governance</h3>
   <table>
-    <tr><th>Azionariato principale</th><td class="positiva">🇺🇸 Vanguard (8.3%), BlackRock (7.6%), State Street (4.3%) – forte controllo istituzionale</td></tr>
-    <tr><th>Quota insider</th><td class="positiva">~3.9% (incluso CEO Jensen Huang con ~3.6%) → forte skin-in-the-game</td></tr>
-    <tr><th>Proprietà retail</th><td class="neutrale">Bassa (~12%) → volatilità limitata ma minor voce nei proxy vote</td></tr>
-    <tr><th>Board & governance</th><td class="positiva">Board composto da 13 membri, 9 indipendenti; forte componente tech/AI</td></tr>
-    <tr><th>CEO rating & leadership</th><td class="positiva">Jensen Huang con altissima approvazione (Glassdoor >95%) e leadership visionaria</td></tr>
-    <tr><th>Rating ESG (MSCI)</th><td class="positiva">AA (Leader) – punti di forza in innovazione, gestione ambientale e diversity</td></tr>
-    <tr><th>Controversie recenti</th><td class="neutrale">Nessuna significativa – alcune critiche su governance AI e uso energetico datacenter</td></tr>
-    <tr><th>Iniziative ESG attive</th><td class="positiva">Net Zero 2040, neutralità carbonica datacenter già dal 2023, parità gender board</td></tr>
-    <tr><th>Rischi ESG rilevanti</th><td class="negativa">Dipendenza energia, uso minerali rari, supply chain in Cina e Taiwan</td></tr>
-    <tr><th>Valutazione finale Tradelia AI</th><td class="positiva">Governance tra le migliori del settore tech, ESG robusto e migliorabile</td></tr>
+    <tr><th>Azionariato principale</th><td class="positive">🇺🇸 Vanguard (8.3%), BlackRock (7.6%), State Street (4.3%) – forte controllo istituzionale</td></tr>
+    <tr><th>Quota insider</th><td class="positive">~3.9% (incluso CEO Jensen Huang con ~3.6%) → forte skin-in-the-game</td></tr>
+    <tr><th>Proprietà retail</th><td class="neutral">Bassa (~12%) → volatilità limitata ma minor voce nei proxy vote</td></tr>
+    <tr><th>Board & governance</th><td class="positive">Board composto da 13 membri, 9 indipendenti; forte componente tech/AI</td></tr>
+    <tr><th>CEO rating & leadership</th><td class="positive">Jensen Huang con altissima approvazione (Glassdoor >95%) e leadership visionaria</td></tr>
+    <tr><th>Rating ESG (MSCI)</th><td class="positive">AA (Leader) – punti di forza in innovazione, gestione ambientale e diversity</td></tr>
+    <tr><th>Controversie recenti</th><td class="neutral">Nessuna significativa – alcune critiche su governance AI e uso energetico datacenter</td></tr>
+    <tr><th>Iniziative ESG attive</th><td class="positive">Net Zero 2040, neutralità carbonica datacenter già dal 2023, parità gender board</td></tr>
+    <tr><th>Rischi ESG rilevanti</th><td class="negative">Dipendenza energia, uso minerali rari, supply chain in Cina e Taiwan</td></tr>
+    <tr><th>Valutazione finale Tradelia AI</th><td class="positive">Governance tra le migliori del settore tech, ESG robusto e migliorabile</td></tr>
   </table>
 </section>
 <br><br>
@@ -597,15 +776,15 @@
 <section>
   <h3 class="list-title">Blocco 10 – Cluster Strategico AI</h3>
   <table>
-    <tr><th>Prodotti AI core</th><td class="positiva">H100, H200, GH200 – full stack compute + networking NVLink</td></tr>
-    <tr><th>Clienti AI principali</th><td class="positiva">OpenAI, Meta, Microsoft, Amazon, Google, Oracle</td></tr>
-    <tr><th>Cluster GPU attivi nel 2025</th><td class="positiva">~10 dei 15 più grandi supercomputer AI usano stack NVIDIA</td></tr>
-    <tr><th>Leadership AI hardware</th><td class="positiva">Quota >85% nel training LLM e inferenza avanzata</td></tr>
-    <tr><th>Partnership strategiche</th><td class="positiva">AWS (Trainium + H200), Google TPU-G v4/5, Meta custom stack</td></tr>
-    <tr><th>Quote AI su ricavi 2025</th><td class="positiva">>50% dei ricavi datacenter legati direttamente ad AI stack</td></tr>
-    <tr><th>Edge AI e automotive</th><td class="positiva">NVIDIA Drive, Omniverse Cloud, Jetson AGX Orin per AI embedded</td></tr>
-    <tr><th>Rischi competitivi</th><td class="neutrale">TPU (Google), MI300X (AMD), Trainium2 (AWS) → ma NVIDIA avanti di 12–18 mesi</td></tr>
-    <tr><th>R&D su AI 2025</th><td class="positiva">$8.4B spesi in ricerca – focus compute stack, AI agents, SW</td></tr>
+    <tr><th>Prodotti AI core</th><td class="positive">H100, H200, GH200 – full stack compute + networking NVLink</td></tr>
+    <tr><th>Clienti AI principali</th><td class="positive">OpenAI, Meta, Microsoft, Amazon, Google, Oracle</td></tr>
+    <tr><th>Cluster GPU attivi nel 2025</th><td class="positive">~10 dei 15 più grandi supercomputer AI usano stack NVIDIA</td></tr>
+    <tr><th>Leadership AI hardware</th><td class="positive">Quota >85% nel training LLM e inferenza avanzata</td></tr>
+    <tr><th>Partnership strategiche</th><td class="positive">AWS (Trainium + H200), Google TPU-G v4/5, Meta custom stack</td></tr>
+    <tr><th>Quote AI su ricavi 2025</th><td class="positive">>50% dei ricavi datacenter legati direttamente ad AI stack</td></tr>
+    <tr><th>Edge AI e automotive</th><td class="positive">NVIDIA Drive, Omniverse Cloud, Jetson AGX Orin per AI embedded</td></tr>
+    <tr><th>Rischi competitivi</th><td class="neutral">TPU (Google), MI300X (AMD), Trainium2 (AWS) → ma NVIDIA avanti di 12–18 mesi</td></tr>
+    <tr><th>R&D su AI 2025</th><td class="positive">$8.4B spesi in ricerca – focus compute stack, AI agents, SW</td></tr>
     <tr><th>Note Tradelia AI</th><td class="text-gray">
       NVIDIA è al centro dell’intero ecosistema AI mondiale: domina in training, inferenza, infrastruttura e cloud AI.  
       La competizione cresce, ma nessuno ha l’integrazione verticale tra chip, networking, software, piattaforme (CUDA, TensorRT, Omniverse).  
@@ -618,12 +797,12 @@
 <section>
   <h3 class="list-title">Blocco 11 – Eventi & Macro</h3>
   <table>
-    <tr><th>Prossima trimestrale</th><td class="positiva">21 agosto 2025 – attese alte, forward guidance chiave</td></tr>
-    <tr><th>Eventi macro rilevanti</th><td class="neutrale">FOMC 31 luglio, CPI US 10 agosto – influiscono su multipli e beta tech</td></tr>
-    <tr><th>Beta e sensitivity tassi</th><td class="negativa">Beta ~1.57, molto sensibile a rendimenti Fed 10Y</td></tr>
-    <tr><th>Geopolitica e rischio Cina</th><td class="negativa">Esposizione diretta a Taiwan (TSMC), rischio export chip >40% area Asia</td></tr>
-    <tr><th>Eventi AI settoriali</th><td class="positiva">Hot Chips 2025 (19–21 agosto), GTC Fall (settembre)</td></tr>
-    <tr><th>Fiscal policy & investimenti</th><td class="positiva">Influx AI Act EU e fondi US (CHIPS+IRA) sostengono domanda</td></tr>
+    <tr><th>Prossima trimestrale</th><td class="positive">21 agosto 2025 – attese alte, forward guidance chiave</td></tr>
+    <tr><th>Eventi macro rilevanti</th><td class="neutral">FOMC 31 luglio, CPI US 10 agosto – influiscono su multipli e beta tech</td></tr>
+    <tr><th>Beta e sensitivity tassi</th><td class="negative">Beta ~1.57, molto sensibile a rendimenti Fed 10Y</td></tr>
+    <tr><th>Geopolitica e rischio Cina</th><td class="negative">Esposizione diretta a Taiwan (TSMC), rischio export chip >40% area Asia</td></tr>
+    <tr><th>Eventi AI settoriali</th><td class="positive">Hot Chips 2025 (19–21 agosto), GTC Fall (settembre)</td></tr>
+    <tr><th>Fiscal policy & investimenti</th><td class="positive">Influx AI Act EU e fondi US (CHIPS+IRA) sostengono domanda</td></tr>
     <tr><th>Note Tradelia AI</th><td class="text-gray">
       Le prossime 4–6 settimane sono critiche per NVDA: la trimestrale del 21 agosto coincide con evento Hot Chips (rilasci AI attesi).  
       Il contesto macro resta sfidante per titoli high beta: attenzione a tassi lunghi e inflazione sticky.  
@@ -636,12 +815,12 @@
 <section>
   <h3 class="list-title">Blocco 12 – Dati Alternativi & Retail</h3>
   <table>
-    <tr><th>Interesse retail (Google Trends)</th><td class="positiva">Livello 93/100 – massimo da marzo 2024</td></tr>
-    <tr><th>Flussi ETF (settore semiconduttori)</th><td class="positiva">Net inflow settimanale: +$680M (guidato da NVDA)</td></tr>
-    <tr><th>Retail sentiment (social, forum)</th><td class="positiva">Positivo 68% (rilevazioni Reddit, X, YouTube)</td></tr>
-    <tr><th>Attività insider</th><td class="neutrale">Nessuna vendita significativa segnalata da maggio</td></tr>
-    <tr><th>Utilizzo GPU in AI cloud (proxy GitHub + LLM use)</th><td class="positiva">H100 e H200 con trend +19% M/M in carichi LLM open</td></tr>
-    <tr><th>Alternative chip activity</th><td class="positiva">Tracking supply chain conferma backlog stabile >90 giorni</td></tr>
+    <tr><th>Interesse retail (Google Trends)</th><td class="positive">Livello 93/100 – massimo da marzo 2024</td></tr>
+    <tr><th>Flussi ETF (settore semiconduttori)</th><td class="positive">Net inflow settimanale: +$680M (guidato da NVDA)</td></tr>
+    <tr><th>Retail sentiment (social, forum)</th><td class="positive">Positivo 68% (rilevazioni Reddit, X, YouTube)</td></tr>
+    <tr><th>Attività insider</th><td class="neutral">Nessuna vendita significativa segnalata da maggio</td></tr>
+    <tr><th>Utilizzo GPU in AI cloud (proxy GitHub + LLM use)</th><td class="positive">H100 e H200 con trend +19% M/M in carichi LLM open</td></tr>
+    <tr><th>Alternative chip activity</th><td class="positive">Tracking supply chain conferma backlog stabile >90 giorni</td></tr>
     <tr><th>Note Tradelia AI</th><td class="text-gray">
       Il sentiment retail è fortemente positivo, sia lato flussi ETF che attenzione media/social.  
       I dati alternativi suggeriscono **carichi AI attivi in aumento**, senza segnali di saturazione.  
