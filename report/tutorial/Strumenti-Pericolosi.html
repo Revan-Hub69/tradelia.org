@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Report completo TRADELIA AI sulla crisi finanziaria 2008: analisi tecnica, strumenti derivati, protagonisti e impatto sociale.">
+  <title>TRADELIA • AI — Report Azionario</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    h1, h2, h3, h4 {
+      color: #0f172a;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.25rem; }
+    h3 { font-size: 1.25rem; }
+    h4 { font-size: 1.125rem; }
+    p { margin-bottom: 1.25rem; color: #374151; }
+    ul, ol { padding-left: 1.25rem; margin-bottom: 1.25rem; }
+    li { margin-bottom: 0.5rem; }
+    section {
+      background: #ffffff;
+      padding: 2.5rem 2rem;
+      margin: 2rem auto;
+      border-radius: 0.75rem;
+      max-width: 840px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e5e7eb;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
+    th, td {
+      padding: 0.75rem;
+      border: 1px solid #e5e7eb;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+    th { background: #f3f4f6; font-weight: 600; }
+    tr:nth-child(even) { background: #f9fafb; }
+    .positive { color: #16a34a; font-weight: 600; }
+    .negative { color: #dc2626; font-weight: 600; }
+    .neutral { color: #64748b; font-weight: 500; }
+    a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    a:hover { text-decoration: underline; color: #1d4ed8; }
+    @media screen and (max-width: 768px) {
+      body { font-size: 15px; line-height: 1.6; }
+      section { padding: 1.25rem; margin: 1rem; }
+      h1 { font-size: 1.5rem; }
+      h2 { font-size: 1.25rem; }
+      h3 { font-size: 1.125rem; }
+      h4 { font-size: 1rem; }
+      table, thead, tbody, th, td, tr {
+        display: block; width: 100%;
+      }
+      th { display: none; }
+      td {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border: none;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #1e293b;
+        padding-right: 1rem;
+        min-width: 140px;
+        display: inline-block;
+      }
+    }
+    #backToTop {
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+
+<body>
+<header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-3 flex justify-between items-center">
+  <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 hover:opacity-90 transition">
+    TRADELIA<span class="text-blue-600 animate-pulse">•AI</span>
+  </a>
+  <a href="https://tradelia.org/archivio.html" class="text-sm sm:text-base text-blue-700 font-medium hover:underline transition">
+    Archivio Storico
+  </a>
+</header>
+
+<main class="px-4 sm:px-6">
+
+<section id="strumenti-complessi" class="max-w-4xl mx-auto mt-16 mb-20 px-4 sm:px-6">
+  <h2 class="text-2xl font-semibold text-slate-800 mb-6 border-b pb-2">
+    9. Strumenti Finanziari Complessi, Sintetici & Opachi
+  </h2>
+
+  <p class="text-slate-700 mb-6">
+    Il panorama finanziario contemporaneo ospita strumenti sempre più sofisticati, spesso presentati come innovazioni d'investimento ma caratterizzati da <strong>strutture opache, composizioni ibride e rischi impliciti elevati</strong>. Questa sezione li classifica in due gruppi principali, per chiarirne rischi, composizione e casi storici.
+  </p>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
+    <div class="bg-slate-100 border border-slate-300 rounded-2xl p-4 shadow-sm">
+      <h3 class="text-lg font-semibold text-slate-800 mb-2">Gruppo A – Strumenti Complessi & Opachi</h3>
+      <p class="text-sm text-slate-600">
+        Prodotti formalmente regolamentati, spesso collocati al retail. Strutture complesse, condizioni nascoste e rendimento asimmetrico. Esempi: obbligazioni strutturate, CoCo, opzioni weekly.
+      </p>
+    </div>
+    <div class="bg-slate-100 border border-slate-300 rounded-2xl p-4 shadow-sm">
+      <h3 class="text-lg font-semibold text-slate-800 mb-2">Gruppo B – Strumenti Sintetici & Derivati Opachi</h3>
+      <p class="text-sm text-slate-600">
+        Strumenti che replicano l’esposizione economica a un asset senza detenerlo. Comportano rischio di leva implicita e controparte. Esempi: CFD, swap sintetici, stablecoin algoritmiche.
+      </p>
+    </div>
+  </div>
+<div class="mb-12">
+  <h4 class="text-xl font-semibold text-slate-800 mb-2">Obbligazioni Strutturate</h4>
+  <p class="text-slate-700 mb-4">
+    Le obbligazioni strutturate sono titoli di debito che integrano una componente derivativa opzionale. Promettono cedole elevate, spesso indicizzate a performance di indici, azioni o asset esotici, ma presentano una struttura asimmetrica che può penalizzare gravemente l’investitore in determinati scenari di mercato.
+  </p>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Composizione</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Componente obbligazionaria:</strong> titolo a tasso fisso o variabile.</li>
+    <li><strong>Componente derivativa:</strong> tipicamente un’opzione (call o put) su equity, tassi, valute, materie prime o indici.</li>
+    <li><strong>Strutture comuni:</strong> reverse convertible, autocallable, dual currency bond, bonus cap, barrier notes.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Rischi principali</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Rendimento non lineare:</strong> l’investitore partecipa solo parzialmente agli upside ma si espone interamente ai downside.</li>
+    <li><strong>Barriere e trigger:</strong> in caso di violazione, la protezione del capitale decade.</li>
+    <li><strong>Scarsa liquidità secondaria:</strong> difficoltà di smobilizzo prima della scadenza.</li>
+    <li><strong>Complessità strutturale:</strong> difficile da valutare senza modellizzazione quantitativa (es. Monte Carlo).</li>
+    <li><strong>Prezzo opaco:</strong> il fair value dipende da volatilità implicita, tassi forward e correlazioni non trasparenti.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Casi storici significativi</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>2008 – Obbligazioni Lehman Autocallable:</strong> vendute a investitori retail italiani, azzerate con il default della banca. Assenza di garanzie implicite, rischio sottovalutato.</li>
+    <li><strong>2016 – Note Barclays legate a FTSE + trigger barriera:</strong> dopo Brexit e drawdown iniziale, barriere toccate → rimborso solo del valore di mercato delle azioni sottostanti.</li>
+    <li><strong>2020 – Obbligazioni autocall COVID:</strong> il crollo improvviso dei mercati ha reso inutili le clausole autocall, generando grosse minusvalenze per chi aveva acquistato in fase pre-crisi.</li>
+  </ul>
+
+  <p class="text-slate-700 mt-4">
+    <strong>Conclusione:</strong> pur essendo prodotti legalmente regolamentati e spesso collocati tramite banche tradizionali, le obbligazioni strutturate richiedono una capacità analitica avanzata. La mancata comprensione della componente derivativa e delle condizioni di attivazione comporta un rischio sostanziale di perdita, soprattutto in fasi di mercato ad alta volatilità.
+  </p>
+
+  <p class="mt-4">
+    <a href="/tutorial/Obbligazioni-Strutturate" target="_blank" class="text-sm text-blue-600 hover:underline">
+      Approfondimento tecnico sul funzionamento delle obbligazioni strutturate →
+    </a>
+  </p>
+</div>
+<div class="mb-12">
+  <h4 class="text-xl font-semibold text-slate-800 mb-2">CoCo Bonds (Contingent Convertibles)</h4>
+  <p class="text-slate-700 mb-4">
+    I CoCo bond sono obbligazioni ibride emesse da istituzioni finanziarie, concepite per assorbire perdite in caso di deterioramento del capitale. Offrono rendimenti superiori alle obbligazioni senior ma comportano <strong>rischi estremi di conversione o azzeramento</strong> in presenza di eventi trigger.
+  </p>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Composizione</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Obbligazione subordinata:</strong> collocata nella parte bassa della struttura del capitale.</li>
+    <li><strong>Trigger contrattuali:</strong> in caso di CET1 ratio sotto soglia o decisione regolatoria → conversione in equity o write-down.</li>
+    <li><strong>Nessuna garanzia:</strong> il rimborso del capitale dipende dalle condizioni della banca e dal contesto normativo.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Rischi principali</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Rischio di perdita totale:</strong> se attivato il trigger, l’obbligazione può essere convertita in azioni (a prezzi svantaggiosi) o cancellata.</li>
+    <li><strong>Assenza di call anticipata:</strong> l’emittente può decidere di non rimborsare alla prima call date.</li>
+    <li><strong>Volatilità del prezzo:</strong> alta sensibilità al rischio bancario sistemico o percezione di stress.</li>
+    <li><strong>Assenza di protezione legale:</strong> le autorità di vigilanza possono forzare il write-down anche senza default.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Casi storici significativi</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>2023 – UBS/Credit Suisse:</strong> CoCo AT1 bond per $17 miliardi azzerati dalla FINMA nel contesto del salvataggio Credit Suisse, senza compensazione agli obbligazionisti.</li>
+    <li><strong>2017 – Banco Popular (Spagna):</strong> i CoCo furono integralmente cancellati prima della vendita lampo a Banco Santander.</li>
+    <li><strong>2016 – Deutsche Bank:</strong> crisi temporanea di fiducia sui CoCo AT1 portò il prezzo sotto il 75% → intervento comunicativo dell’istituto per rassicurare i mercati.</li>
+  </ul>
+
+  <p class="text-slate-700 mt-4">
+    <strong>Conclusione:</strong> i CoCo bond sono strumenti ad alto rischio sistemico, destinati a investitori consapevoli e in grado di tollerare perdite integrali. Il loro pricing è complesso e dipende da metriche regolatorie, percezione di stabilità e margini di capitale. Possono sembrare appetibili per il rendimento cedolare, ma <strong>non garantiscono la restituzione del capitale</strong>.
+  </p>
+
+  <p class="mt-4">
+    <a href="/tutorial/CoCo-Bonds" target="_blank" class="text-sm text-blue-600 hover:underline">
+      Approfondimento tecnico sui CoCo Bond →
+    </a>
+  </p>
+</div>
+<div class="mb-12">
+  <h4 class="text-xl font-semibold text-slate-800 mb-2">Obbligazioni Callable & Step-Up</h4>
+  <p class="text-slate-700 mb-4">
+    Le obbligazioni callable e step-up sono titoli di debito che includono una clausola di richiamo anticipato da parte dell’emittente. Offrono rendimenti inizialmente più alti per compensare il rischio di richiamo, ma in realtà favoriscono l’emittente nei momenti a lui più convenienti, penalizzando l’investitore in fase di ribasso tassi.
+  </p>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Composizione</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Struttura base:</strong> tasso fisso per un certo periodo, seguito da step-up cedolari su base predeterminata.</li>
+    <li><strong>Clausola call:</strong> l’emittente può rimborsare anticipatamente a date fissate (tipicamente ogni anno dopo la prima call date).</li>
+    <li><strong>Durata legale vs durata attesa:</strong> la scadenza effettiva è spesso inferiore alla durata contrattuale, rendendo difficile stimare rendimento reale.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Rischi principali</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Asimmetria decisionale:</strong> se i tassi scendono, l’emittente esercita la call e l’investitore deve reinvestire a tassi più bassi (“reinvestment risk”).</li>
+    <li><strong>Durata incerta:</strong> il rendimento effettivo dipende dalla probabilità di richiamo, spesso sottostimata nei fogli informativi.</li>
+    <li><strong>Prezzo sensibile ai tassi:</strong> più difficile da modellizzare rispetto a bond plain vanilla.</li>
+    <li><strong>Illusione del rendimento:</strong> i rendimenti illustrati con scadenza piena raramente si materializzano.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Casi storici significativi</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>2012–2015:</strong> massiccio richiamo di callable corporate bond dopo il taglio tassi post-crisi → perdita opportunità per investitori.</li>
+    <li><strong>2020 – Fase pre-COVID:</strong> molte obbligazioni step-up bancarie emesse con call ravvicinata furono richiamate entro il primo anno a causa dei tassi ultra-bassi.</li>
+    <li><strong>2023–2024:</strong> alcuni istituti non esercitano la call per non dover rifinanziare a tassi alti → perdita di valore sul mercato secondario per chi sperava nel rimborso anticipato.</li>
+  </ul>
+
+  <p class="text-slate-700 mt-4">
+    <strong>Conclusione:</strong> queste obbligazioni appaiono semplici, ma in realtà favoriscono l’emittente. Sono strumenti adatti a chi sa modellare scenari di tasso e valutare duration effettiva. Il rischio non è la perdita nominale, ma il <strong>rendimento effettivo inferiore alle attese</strong> e l'impossibilità di pianificare il cash flow.
+  </p>
+
+  <p class="mt-4">
+    <a href="/tutorial/Callable-StepUp" target="_blank" class="text-sm text-blue-600 hover:underline">
+      Approfondimento su obbligazioni callable e step-up →
+    </a>
+  </p>
+</div>
+<div class="mb-12">
+  <h4 class="text-xl font-semibold text-slate-800 mb-2">Obbligazioni Dual Currency</h4>
+  <p class="text-slate-700 mb-4">
+    Le obbligazioni dual currency (DCB) sono strumenti che pagano cedole in una valuta ma rimborsano il capitale in un’altra. Sono strutturate per offrire un rendimento superiore alla media, ma espongono l’investitore a un <strong>rischio valutario implicito</strong> e spesso <strong>asimmetrico</strong>.
+  </p>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Composizione</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Valuta di cedola:</strong> solitamente una valuta forte (es. USD, EUR), con tasso superiore alla media.</li>
+    <li><strong>Valuta di rimborso:</strong> una valuta emergente o con tasso più debole (es. BRL, TRY, ZAR).</li>
+    <li><strong>Embedded FX option:</strong> il rendimento extra compensa implicitamente il rischio di deprezzamento della valuta di rimborso.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Rischi principali</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Rischio cambio:</strong> anche piccole svalutazioni della valuta di rimborso possono azzerare il vantaggio cedolare.</li>
+    <li><strong>Asimmetria implicita:</strong> il rischio è totalmente a carico dell’investitore, ma il premio è limitato.</li>
+    <li><strong>Complessità di pricing:</strong> richiedono la comprensione implicita di opzioni FX e forward rate.</li>
+    <li><strong>Scarsa trasparenza:</strong> spesso vendute come “bond a cedola alta” senza disclosure del rischio FX effettivo.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Casi storici significativi</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>2018 – Lira turca:</strong> molte DCB emesse con rimborso in TRY hanno subito perdite > 30% per effetto della svalutazione improvvisa.</li>
+    <li><strong>2014 – Crisi rublo:</strong> obbligazioni dual USD/RUB hanno bruciato il rendimento in poche settimane dopo l’attacco speculativo.</li>
+    <li><strong>2022 – Guerra Russia-Ucraina:</strong> titoli con rimborso in valute emergenti sono stati fortemente penalizzati da instabilità geopolitica e restrizioni sui movimenti di capitale.</li>
+  </ul>
+
+  <p class="text-slate-700 mt-4">
+    <strong>Conclusione:</strong> le DCB vanno comprese come <strong>scommesse strutturate sul cambio</strong>, mascherate da prodotti di reddito fisso. Sono strumenti adatti solo a chi è disposto ad assumere pienamente il rischio valutario su valute volatili. In portafogli conservativi, andrebbero evitate del tutto.
+  </p>
+
+  <p class="mt-4">
+    <a href="/tutorial/Dual-Currency-Bonds" target="_blank" class="text-sm text-blue-600 hover:underline">
+      Approfondimento sulle obbligazioni dual currency →
+    </a>
+  </p>
+</div>
+<div class="mb-12">
+  <h4 class="text-xl font-semibold text-slate-800 mb-2">Reverse Convertible Bonds</h4>
+  <p class="text-slate-700 mb-4">
+    Le reverse convertible sono obbligazioni strutturate che pagano una cedola fissa elevata, ma il rimborso finale può avvenire <strong>in azioni</strong> invece che in denaro, se il sottostante scende sotto un certo livello. Sono quindi <strong>obbligazioni con rischio azionario pieno</strong>, spesso collocate come “strumenti a reddito fisso” con un profilo di rischio sottostimato.
+  </p>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Composizione</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Componente cedolare:</strong> tasso fisso elevato, non condizionato all’andamento del sottostante.</li>
+    <li><strong>Componente equity put:</strong> l’investitore accetta di ricevere il sottostante (azioni) se il prezzo scende sotto la barriera finale.</li>
+    <li><strong>Barriera osservata:</strong> può essere continua o solo alla scadenza (European style).</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Rischi principali</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Rischio di rimborso in azioni svalutate:</strong> l’investitore può trovarsi con un pacchetto di titoli in perdita, invece del capitale.</li>
+    <li><strong>Rischio di perdita integrale del capitale:</strong> in caso di crolli marcati del sottostante.</li>
+    <li><strong>Volatilità ignorata:</strong> più il sottostante è volatile, più l'opzione embedded vale → minore il valore reale del titolo.</li>
+    <li><strong>Asimmetria:</strong> la cedola non compensa adeguatamente il rischio di perdita totale del capitale.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Casi storici significativi</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>2007–2008:</strong> migliaia di investitori retail in Europa rimborsati in azioni bancarie crollate (es. UBS, Commerzbank) → perdite superiori al 60%.</li>
+    <li><strong>2011 – Crisi eurozona:</strong> reverse su titoli bancari italiani portarono a rimborso in equity durante drawdown improvvisi.</li>
+    <li><strong>2020 – COVID flash crash:</strong> molti sottostanti toccarono le barriere → rimborso in azioni durante il crollo → recuperi lenti e parziali nel tempo.</li>
+  </ul>
+
+  <p class="text-slate-700 mt-4">
+    <strong>Conclusione:</strong> le reverse convertible trasferiscono il rischio equity all’investitore, a fronte di una cedola fissa che spesso <strong>non copre nemmeno la perdita potenziale</strong>. Sono strumenti sofisticati mascherati da prodotti “a reddito”, inadatti a profili conservativi o ignari del rischio equity implicito.
+  </p>
+
+  <p class="mt-4">
+    <a href="/tutorial/Reverse-Convertible" target="_blank" class="text-sm text-blue-600 hover:underline">
+      Approfondimento sulle reverse convertible →
+    </a>
+  </p>
+</div>
+<div class="mb-12">
+  <h4 class="text-xl font-semibold text-slate-800 mb-2">Note Strutturate con Barriera (Bonus Cap, Phoenix, Memory)</h4>
+  <p class="text-slate-700 mb-4">
+    Le note strutturate con barriera offrono cedole condizionate e protezione del capitale solo se un sottostante (o basket) non scende sotto una certa soglia. Sono vendute come prodotti “protetti” o “stabili”, ma la struttura è in realtà <strong>asimmetrica, opaca e altamente rischiosa</strong> in caso di mercato volatile o ribassista.
+  </p>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Composizione</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Basket sottostante:</strong> 1–3 titoli o indici, il peggiore è il driver.</li>
+    <li><strong>Barriera:</strong> di solito tra il 50% e l’80% del valore iniziale. Se violata → perdita del capitale.</li>
+    <li><strong>Coupon:</strong> condizionato (trigger mensile/trimestrale) + opzione memoria.</li>
+    <li><strong>Autocall:</strong> possibile richiamo anticipato se trigger superato in date specifiche.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Rischi principali</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Rischio barriera:</strong> in caso di violazione → rimborso in titoli depreciati o in valore percentuale basso.</li>
+    <li><strong>Complessità:</strong> performance dipendente da combinazione di autocall, trigger coupon, memoria e barriera finale.</li>
+    <li><strong>Rischio singolo titolo:</strong> basta che 1 su 3 sottostanti vada sotto soglia per attivare la perdita su tutto il capitale.</li>
+    <li><strong>Illusione della cedola:</strong> coupon non garantiti e spesso non incassati nei momenti peggiori del ciclo.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Casi storici significativi</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>2020 – COVID shock:</strong> molte Phoenix Note con sottostanti come ENI, Lufthansa, Unicredit hanno perso >40%, coupon bloccati per mesi, barriere toccate → rimborso in azioni o forti perdite.</li>
+    <li><strong>2022 – Tech Drawdown:</strong> titoli come Meta o Netflix in crollo hanno portato note con basket a performance devastanti → barriera rotta da singolo titolo.</li>
+    <li><strong>Retail tedesco e italiano:</strong> migliaia di risparmiatori colpiti da prodotti venduti come “alternativa al BTP” con meccanismi non compresi.</li>
+  </ul>
+
+  <p class="text-slate-700 mt-4">
+    <strong>Conclusione:</strong> queste note sono altamente complesse, richiedono modellizzazione probabilistica avanzata (Monte Carlo, trinomial tree). Il rendimento promesso è condizionale, il rischio è concentrato su eventi barriera binari. Vanno evitate da chi non è in grado di simulare probabilità di rimborso parziale o nullo.
+  </p>
+
+  <p class="mt-4">
+    <a href="/tutorial/Note-Strutturate-Barriera" target="_blank" class="text-sm text-blue-600 hover:underline">
+      Approfondimento sulle note strutturate con barriera →
+    </a>
+  </p>
+</div>
+  <div class="mb-12">
+  <h4 class="text-xl font-semibold text-slate-800 mb-2">Certificates Complessi (Twin Win, Shark Notes, Altro)</h4>
+  <p class="text-slate-700 mb-4">
+    I certificates complessi sono strumenti derivati cartolarizzati che combinano opzioni esotiche con payoff non lineari, spesso difficili da decifrare. Offrono protezione condizionata e partecipazione a scenari di mercato specifici, ma comportano <strong>rischi asimmetrici e valutazione opaca</strong>.
+  </p>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Tipologie comuni</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Twin Win:</strong> guadagni sia in rialzo che in ribasso del sottostante, ma solo entro limiti predefiniti.</li>
+    <li><strong>Shark Notes:</strong> cedola crescente legata a soglie di prezzo multiple → payoff condizionale e scalare.</li>
+    <li><strong>Bonus Cap Reverse / Express:</strong> strutture ibride con autocall e premi condizionati a barriere.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Rischi principali</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Complessità:</strong> il payoff dipende da molteplici scenari → difficile stima del rendimento reale.</li>
+    <li><strong>Rischio barriera:</strong> violazioni anche temporanee possono invalidare protezione e premi.</li>
+    <li><strong>Volatilità implicita:</strong> pricing fortemente influenzato da variabili non trasparenti al retail.</li>
+    <li><strong>Scarsa liquidità:</strong> emissioni singole con mercato secondario sottile o assente.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Casi storici significativi</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>2008 – Certificates Twin Win su indici:</strong> promettevano guadagni bidirezionali ma le barriere furono violate nel crash → perdita del capitale.</li>
+    <li><strong>2012–2016 – Emissioni Shark in Europa:</strong> molte emissioni su titoli bancari hanno avuto performance negative a causa di strutture non lineari e barriere basse.</li>
+    <li><strong>2020 – Shock COVID:</strong> la volatilità ha disattivato premi in molte strutture → rendimenti inferiori ai bond plain vanilla.</li>
+  </ul>
+
+  <p class="text-slate-700 mt-4">
+    <strong>Conclusione:</strong> i certificates complessi sono strumenti confezionati ad hoc, spesso con logiche pubblicitarie più che finanziarie. L’aspetto “protettivo” è condizionato, mentre la partecipazione ai guadagni è limitata. Serve analisi quantitativa avanzata per valutarli correttamente.
+  </p>
+
+  <p class="mt-4">
+    <a href="/tutorial/Certificates-Complessi" target="_blank" class="text-sm text-blue-600 hover:underline">
+      Approfondimento sui certificates complessi →
+    </a>
+  </p>
+</div>
+<br>
+<div class="mb-12">
+  <h4 class="text-xl font-semibold text-slate-800 mb-2">"Obbligazioni Principal Protected" – protezione condizionata</h4>
+  <p class="text-slate-700 mb-4">
+    Alcune obbligazioni strutturate vengono pubblicizzate come strumenti a “capitale protetto” o “principal protected”, ma in realtà offrono solo una <strong>protezione condizionata</strong>, valida solo se certi scenari di mercato si realizzano. Sono vendute come alternative conservative al reddito fisso tradizionale, ma possono generare <strong>perdite rilevanti</strong> in caso di mercati avversi.
+  </p>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Composizione</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Componente obbligazionaria:</strong> parte del capitale è allocata su zero coupon bond o bond governativi.</li>
+    <li><strong>Componente derivativa:</strong> opzione su indici o asset alternativi → determina il rendimento finale.</li>
+    <li><strong>Protezione parziale o a scadenza:</strong> il capitale è protetto solo se certe condizioni sono rispettate (es. nessuna barriera violata).</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Rischi principali</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Protezione apparente:</strong> in molti casi la protezione è condizionata → il capitale è perso se il sottostante scende sotto una soglia (es. barriera).</li>
+    <li><strong>Complessità nascosta:</strong> prodotti strutturati con payoff non lineari, spesso mal spiegati nella documentazione marketing.</li>
+    <li><strong>Orizzonte fisso:</strong> il rimborso a capitale è valido solo a scadenza → rischio mark-to-market importante.</li>
+    <li><strong>Falsa percezione di sicurezza:</strong> spesso collocate presso clientela retail con etichette fuorvianti (“a capitale garantito” quando non lo sono).</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Casi storici significativi</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>2008 – Crisi subprime:</strong> molte note “protette” legate a indici azionari hanno restituito solo il capitale nominale, senza rendimento, mentre altri strumenti hanno generato perdite per violazione barriera.</li>
+    <li><strong>2020 – COVID crash:</strong> strutture con protezione condizionata sono andate in perdita netta per eventi barriera → forte disillusione degli investitori.</li>
+    <li><strong>Collocamenti bancari 2014–2019:</strong> titoli venduti come sicuri hanno avuto performance nulle o negative a causa di barriere “invisibili” nei prospetti.</li>
+  </ul>
+
+  <p class="text-slate-700 mt-4">
+    <strong>Conclusione:</strong> nessun prodotto è realmente “protetto” se la protezione è subordinata a condizioni di mercato. L’etichetta “principal protected” deve essere verificata nel prospetto tecnico. In molti casi, questi strumenti sono solo una combinazione di obbligazioni zero-coupon e opzioni che trasferiscono il rischio sull’investitore.
+  </p>
+<br>
+  <p class="mt-4">
+    <a href="/tutorial/False-Principal-Protection" target="_blank" class="text-sm text-blue-600 hover:underline">
+      Approfondimento sulla protezione condizionata del capitale →
+    </a>
+  </p>
+</div>
+
+  <div class="mt-10 mb-12">
+  <h3 class="text-lg font-semibold text-slate-800 mb-2">Gruppo B – Strumenti Sintetici & Derivati Opachi</h3>
+  <p class="text-slate-700 text-sm">
+    Questa categoria include strumenti derivati o ingegnerizzati che offrono esposizione indiretta a un sottostante senza detenerlo fisicamente. Si basano su <strong>swap, leve giornaliere, opzioni, replicazioni sintetiche</strong> o algoritmi di collateralizzazione. Sono spesso presenti nei portafogli retail e professionali, ma implicano <strong>rischi latenti di leva, liquidazione automatica, controparte e volatilità non lineare</strong>. Il loro utilizzo richiede competenze quantitative e monitoraggio attivo.
+  </p>
+</div>
+
+<div class="mb-12">
+  
+  <h4 class="text-xl font-semibold text-slate-800 mb-2">ETF a leva e inversi</h4>
+  <p class="text-slate-700 mb-4">
+    Gli ETF a leva (es. x2, x3) e inversi (-1x, -2x) sono strumenti sintetici che replicano giornalmente la performance amplificata o opposta di un indice o asset. Sono progettati per il <strong>trading intraday o di breve periodo</strong>, ma vengono spesso fraintesi e mantenuti in portafoglio per settimane o mesi, con effetti imprevedibili dovuti al <strong>compounding giornaliero</strong>.
+  </p>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Composizione</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Replica sintetica:</strong> tramite swap e derivati OTC con controparti bancarie.</li>
+    <li><strong>Leva integrata:</strong> performance moltiplicata o invertita, ricalibrata ogni giorno.</li>
+    <li><strong>Ribilanciamento giornaliero:</strong> genera deviazioni significative su orizzonti > 1 giorno.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Rischi principali</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Compounding effect:</strong> l’effetto leva su base giornaliera produce risultati divergenti dal target su orizzonti > 1 settimana.</li>
+    <li><strong>Tracking error:</strong> lo scostamento dall’indice obiettivo può diventare enorme in mercati laterali e volatili.</li>
+    <li><strong>Elevato rischio sistemico:</strong> molti ETF a leva sono altamente concentrati su tech, oro, indici USA → forte sensibilità a eventi macro.</li>
+    <li><strong>Utilizzo improprio:</strong> molti investitori li mantengono in portafoglio per mesi → rischio di erosione completa del capitale.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Casi storici significativi</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>2011 – ETF inversi su VIX:</strong> esplosione di volatilità ha causato collassi improvvisi fino al 95% in 48h.</li>
+    <li><strong>2020 – COVID crash:</strong> ETF a leva long su indici USA hanno perso >60% in meno di due settimane.</li>
+    <li><strong>Mercati laterali:</strong> ETF x3 su Nasdaq o DAX hanno avuto performance peggiori dell’indice stesso per l’erosione da compounding.</li>
+  </ul>
+
+  <p class="text-slate-700 mt-4">
+    <strong>Conclusione:</strong> gli ETF a leva e inversi non sono strumenti da portafoglio core. Sono destinati al trading tattico intraday, e <strong>l’uso improprio è una delle principali fonti di perdita per investitori non esperti</strong>. La comprensione matematica dell’effetto compounding è cruciale.
+  </p>
+
+  <p class="mt-4">
+    <a href="/tutorial/ETF-Leva-Inversi" target="_blank" class="text-sm text-blue-600 hover:underline">
+      Approfondimento sugli ETF a leva e inversi →
+    </a>
+  </p>
+</div>
+<div class="mb-12">
+  <h4 class="text-xl font-semibold text-slate-800 mb-2">CFD (Contract for Difference)</h4>
+  <p class="text-slate-700 mb-4">
+    I CFD sono strumenti derivati OTC che permettono di speculare sul movimento di un asset (azioni, indici, valute, materie prime) senza possederlo fisicamente. Consentono <strong>posizioni long e short con leva finanziaria</strong> e vengono eseguiti tramite piattaforme broker, spesso con costi impliciti elevati e meccanismi di marginazione aggressivi.
+  </p>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Composizione</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Esecuzione non standardizzata:</strong> i CFD non sono scambiati su mercati regolamentati ma attraverso piattaforme broker, con modalità MM (market maker), STP o ECN. La trasparenza e il conflitto di interesse variano a seconda del modello.
+      <a href="/tutorial/CFD-MM-STP-ECN" target="_blank" class="text-blue-600 hover:underline ml-1">Scopri le differenze →</a>
+    </li>
+    <li><strong>Replica sintetica:</strong> la performance è calcolata sulla differenza tra prezzo di apertura e chiusura del sottostante.</li>
+    <li><strong>Leva variabile:</strong> fino a 30x per retail (più alta per clienti professionali).</li>
+    <li><strong>Margine iniziale:</strong> il trader deposita solo una frazione del valore nozionale.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Rischi principali</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Rischio di leva:</strong> anche piccoli movimenti avversi generano perdite sproporzionate.</li>
+    <li><strong>Liquidazione automatica:</strong> se il margine residuo scende sotto soglia → chiusura forzata della posizione.</li>
+    <li><strong>Spread ampi e slippage:</strong> il prezzo eseguito può divergere dal prezzo di mercato reale.</li>
+    <li><strong>Rischio controparte:</strong> dipendenza totale dalla piattaforma broker (esecuzione, solvibilità, manipolazioni).</li>
+    <li><strong>Costi occulti:</strong> rollover notturni, commissioni implicite, interessi su leva → erosione silenziosa del capitale.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Casi storici significativi</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>2015 – Crisi franco svizzero:</strong> centinaia di clienti CFD colpiti da stop-out improvvisi e slippage >20% → saldi negativi e insolvenze.</li>
+    <li><strong>2020 – Crollo petrolio WTI:</strong> CFD sul crude oil hanno generato perdite superiori al 100% per via di rollover errati e prezzi negativi → broker incapaci di eseguire correttamente i contratti.</li>
+    <li><strong>Vari casi retail:</strong> class action contro broker per esecuzioni scorrette, spread anomali e politiche di marginazione opache (es. Plus500, IG Markets, XTB, AvaTrade).</li>
+  </ul>
+
+  <p class="text-slate-700 mt-4">
+    <strong>Conclusione:</strong> i CFD non sono strumenti di investimento, ma veicoli di trading altamente speculativi. Richiedono gestione attiva del rischio, strategia di marginazione e conoscenza delle meccaniche del broker. Sono <strong>inadatti a investitori retail passivi</strong> e possono generare perdite fulminee anche superiori al capitale versato.
+  </p>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-6 mb-2">Approfondimento storico: retail e pratiche scorrette</h5>
+  <p class="text-slate-700 mb-4">
+    A partire dagli anni 2010, migliaia di investitori retail in Europa hanno subito <strong>perdite sistemiche sui CFD</strong> a causa di leverage eccessivo, esecuzioni opache, pricing non regolamentato e tecniche aggressive di vendita online. Le autorità (ESMA, FCA, Consob) sono intervenute solo dopo denunce e class action. La comprensione di questi episodi è essenziale per valutare il rischio reale di questi strumenti.
+  </p>
+
+  <p class="mt-2">
+    <a href="/tutorial/CFD-Retail" target="_blank" class="text-sm text-blue-600 hover:underline font-medium">
+      → Approfondimento: CFD Retail & Pratiche scorrette
+    </a>
+  </p>
+</div>
+<div class="mb-12">
+  <h4 class="text-xl font-semibold text-slate-800 mb-2">ETF Strutturati Sintetici</h4>
+  <p class="text-slate-700 mb-4">
+    Gli ETF strutturati sintetici sono fondi quotati che replicano l’andamento di un indice o asset attraverso <strong>strumenti derivati</strong>, come swap o contratti a termine, invece che acquistare fisicamente i titoli sottostanti. Sono diffusi su mercati inaccessibili o illiquidi (es. Cina A-shares, commodity, indici emergenti).
+  </p>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Composizione</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Replica sintetica:</strong> tramite swap totali o parziali con una controparte (tipicamente bancaria).</li>
+    <li><strong>Collateralizzazione:</strong> portafoglio separato di garanzie per ridurre il rischio controparte.</li>
+    <li><strong>Tracking teorico:</strong> l’ETF segue l’indice target ma non possiede i titoli reali.</li>
+    <li><strong>Gestione passiva con overlay derivativo:</strong> l’ETF detiene strumenti neutrali e scambia la performance via derivati.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Rischi principali</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Rischio controparte:</strong> fallimento o insolvenza dell’intermediario dello swap può compromettere il NAV.</li>
+    <li><strong>Opacità del collateral:</strong> la qualità e la trasparenza delle garanzie offerte possono variare notevolmente.</li>
+    <li><strong>Tracking error anomalo:</strong> possibili divergenze tra indice e NAV, soprattutto in fasi di stress di mercato.</li>
+    <li><strong>Rischio regolatorio:</strong> alcuni ETF sintetici operano in mercati con restrizioni capitali o poca vigilanza (es. Cina, Russia, Medio Oriente).</li>
+    <li><strong>Complessità fiscale:</strong> su alcuni mercati i proventi e le minusvalenze possono non essere trattati in modo standard (es. USA su commodity ETF).</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Casi ed esempi significativi</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>2011 – Allerta ESMA/FCA:</strong> warning ufficiale sui rischi sistemici degli ETF sintetici swap-based, soprattutto per collateral opachi e rischio di concentrazione bancaria.</li>
+    <li><strong>2015 – ETF su indici cinesi (HSCEI, CSI300):</strong> tracking error esteso durante il crash della borsa di Shanghai → prezzi non aggiornati, NAV sospeso per giorni.</li>
+    <li><strong>2020 – Commodity synthetic ETF:</strong> prodotti su petrolio e gas naturale hanno subito gravi divergenze dal sottostante per effetto di rollover dei futures e illiquidità → chiusura anticipata di vari strumenti (es. ETFS Brent Crude).</li>
+    <li><strong>2022 – ETF Russia (Lyxor, Xtrackers):</strong> ETF su indice russo non più replicabili a causa di sanzioni e sospensione di Borsa Mosca → NAV bloccato, investitori congelati senza possibilità di uscita.</li>
+  </ul>
+
+  <p class="text-slate-700 mt-4">
+    <strong>Conclusione:</strong> gli ETF sintetici sono strumenti efficienti per accedere a mercati complessi, ma <strong>non equivalgono agli ETF fisici</strong>. Richiedono attenzione a rischio controparte, struttura dello swap e trasparenza del collateral. Per un investitore non esperto, <strong>la replica fisica resta preferibile</strong>.
+  </p>
+
+  <p class="mt-4">
+    <a href="/tutorial/ETF-Sintetici" target="_blank" class="text-sm text-blue-600 hover:underline">
+      Approfondimento tecnico sugli ETF sintetici →
+    </a>
+  </p>
+</div>
+<div class="mb-12">
+  <h4 class="text-xl font-semibold text-slate-800 mb-2">Opzioni Plain Vanilla (Call & Put)</h4>
+  <p class="text-slate-700 mb-4">
+    Le opzioni plain vanilla sono contratti derivati standardizzati che danno diritto, ma non obbligo, di comprare (call) o vendere (put) un asset sottostante a un prezzo prefissato (strike), entro una data definita (scadenza). Sono tra i derivati più antichi e versatili, ma anche <strong>tra i più fraintesi dagli investitori retail</strong>.
+  </p>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Composizione</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Tipo:</strong> opzione Call (acquisto) o Put (vendita).</li>
+    <li><strong>Strike price:</strong> livello prefissato per esercizio del diritto.</li>
+    <li><strong>Scadenza:</strong> data entro cui l’opzione può essere esercitata (es. mensile, settimanale).</li>
+    <li><strong>Premium:</strong> prezzo pagato per acquistare l’opzione.</li>
+    <li><strong>Sottostante:</strong> può essere azione, indice, ETF, materia prima, tasso o valuta.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Rischi principali</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Decay temporale (Theta):</strong> il valore dell’opzione si riduce nel tempo, penalizzando chi acquista.</li>
+    <li><strong>Elevata leva implicita:</strong> anche piccole variazioni del sottostante possono generare forti guadagni o perdite.</li>
+    <li><strong>Complessità delle "Greche":</strong> sensibilità dell’opzione a parametri come volatilità (Vega), tempo (Theta), direzione (Delta), tassi (Rho).</li>
+    <li><strong>Alta probabilità di perdita:</strong> molte opzioni comprate scadono senza valore → perdita totale del premio.</li>
+    <li><strong>Uso improprio:</strong> retail spesso le usa per scommesse binarie senza comprendere payoff o rischio.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Casi storici significativi</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>2000 – Bolla dot-com:</strong> migliaia di investitori bruciarono premi enormi su opzioni call tech acquistate a leva → scadenze fuori dal money dopo il crollo.</li>
+    <li><strong>2020 – Retail su Tesla, AMC, GameStop:</strong> boom di opzioni settimanali deep-OTM → alto tasso di perdita totale del premio, con implicazioni speculative su piattaforme come Robinhood.</li>
+    <li><strong>2020 – Put protettive su S&P500:</strong> chi aveva acquistato put su indici prima del crash COVID ha realizzato guadagni elevati → esempio di copertura efficace se ben pianificata.</li>
+    <li><strong>2022 – Volatilità post-Fed:</strong> venditori di opzioni short straddle su tassi hanno subito forti perdite a causa di movimenti imprevisti sui rendimenti USA.</li>
+  </ul>
+
+  <p class="text-slate-700 mt-4">
+    <strong>Conclusione:</strong> le opzioni vanilla sono strumenti potenti e flessibili, ma <strong>altamente sofisticati</strong>. L’uso speculativo espone a perdita rapida del capitale, mentre l’uso protettivo richiede una strategia ben definita. Il rischio principale per i retail è <strong>non comprenderne il funzionamento</strong>.
+  </p>
+
+  <p class="mt-4">
+    <a href="/tutorial/Opzioni-Vanilla" target="_blank" class="text-sm text-blue-600 hover:underline">
+      Approfondimento tecnico sulle opzioni plain vanilla →
+    </a>
+  </p>
+</div>
+<div class="mb-12">
+  <h4 class="text-xl font-semibold text-slate-800 mb-2">Opzioni Esotiche (Barrier, Digital, Asian...)</h4>
+  <p class="text-slate-700 mb-4">
+    Le opzioni esotiche sono strumenti derivati con meccanismi di payoff non standardizzati. Possono includere barriere di attivazione, formule complesse di calcolo o dipendenza da medie storiche. Sono usate per strutturare prodotti su misura (exotic structured products), spesso con rischi nascosti e valutazione complessa.
+  </p>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Tipologie comuni</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Barrier Options:</strong> attivazione o disattivazione legata al superamento di un livello (knock-in / knock-out).</li>
+    <li><strong>Digital/Binary Options:</strong> payoff fisso se il sottostante supera lo strike → tutto o niente.</li>
+    <li><strong>Asian Options:</strong> payoff basato sulla media del sottostante durante il periodo.</li>
+    <li><strong>Lookback Options:</strong> basate sul prezzo massimo o minimo raggiunto durante la vita del contratto.</li>
+    <li><strong>Cliquet / Ladder:</strong> serie di strike progressivi → payoff cumulativi o scalari.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Rischi principali</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Rischio barriera:</strong> la violazione o il mancato superamento può annullare il valore del derivato (es. knock-out).</li>
+    <li><strong>Opacità del pricing:</strong> richiedono modelli avanzati (Monte Carlo, binomial tree) per valutazione corretta.</li>
+    <li><strong>Sensibilità estrema:</strong> il valore può cambiare drasticamente vicino alla barriera.</li>
+    <li><strong>Limitata liquidità secondaria:</strong> molte opzioni esotiche sono emesse OTC, non quotate.</li>
+    <li><strong>Uso inconsapevole:</strong> retail spesso espone a barriere via prodotti strutturati senza comprenderne l’effetto reale.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Casi storici significativi</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>2007–2008 – Equity Barrier Notes:</strong> milioni di euro in prodotti con opzioni knock-in legate a titoli bancari attivate durante il crollo → perdita totale del capitale.</li>
+    <li><strong>2015 – Opzioni digitali su tassi:</strong> prodotti venduti come “cedole fisse se EURIBOR ≥ 0” divenuti inutili con il passaggio a tassi negativi → azzeramento cedole per anni.</li>
+    <li><strong>2020 – Barrier Phoenix su COVID:</strong> opzioni knock-out attivate da drawdown improvviso → cedole annullate e capitale a rischio → effetto domino su prodotti complessi strutturati.</li>
+  </ul>
+
+  <p class="text-slate-700 mt-4">
+    <strong>Conclusione:</strong> le opzioni esotiche sono adatte solo a operatori professionali o istituzionali in grado di modellarne il comportamento. Nei portafogli retail appaiono spesso nascoste in prodotti strutturati, causando <strong>perdite impreviste</strong> in caso di attivazione barriere. La trasparenza e la capacità di modellazione sono requisiti imprescindibili.
+  </p>
+
+  <p class="mt-4">
+    <a href="/tutorial/Opzioni-Esotiche" target="_blank" class="text-sm text-blue-600 hover:underline">
+      Approfondimento tecnico sulle opzioni esotiche →
+    </a>
+  </p>
+</div>
+<div class="mb-12">
+  <h4 class="text-xl font-semibold text-slate-800 mb-2">Derivati OTC (Swap, CDS, FX Forward…)</h4>
+  <p class="text-slate-700 mb-4">
+    I derivati OTC (Over The Counter) sono contratti finanziari personalizzati scambiati bilateralmente tra due controparti, al di fuori dei mercati regolamentati. Sono strumenti complessi usati da banche, fondi hedge e grandi imprese per copertura o speculazione su tassi, valute, credito e performance di asset.
+  </p>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Tipologie comuni</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Interest Rate Swap (IRS):</strong> scambio di flussi a tasso fisso vs variabile.</li>
+    <li><strong>Total Return Swap (TRS):</strong> replica totale della performance di un asset → leva sintetica.</li>
+    <li><strong>FX Forward / FX Swap:</strong> contratti per bloccare tassi di cambio futuri.</li>
+    <li><strong>Credit Default Swap (CDS):</strong> assicurazione contro default di un obbligazionista.</li>
+    <li><strong>Variance / Volatility Swap:</strong> contratti su varianza o volatilità implicita di asset.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Rischi principali</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Rischio controparte:</strong> in caso di fallimento, l'altra parte può non onorare il contratto (es. AIG).</li>
+    <li><strong>Assenza di trasparenza:</strong> prezzo, mark-to-market e condizioni contrattuali non sono pubblici.</li>
+    <li><strong>Illiquidità:</strong> spesso non è possibile uscire dal contratto prima della scadenza → rischio inatteso.</li>
+    <li><strong>Effetto leva nascosto:</strong> possibilità di esposizioni enormi con margini iniziali ridotti.</li>
+    <li><strong>Valutazione complessa:</strong> richiedono modelli stocastici e parametri di volatilità, tassi forward, credit spread.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Casi storici significativi</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>2008 – AIG e CDS su subprime:</strong> l'assicuratore americano vendette protezione su mutui subprime via CDS senza collateral adeguato → salvataggio da $180 miliardi.</li>
+    <li><strong>2021 – Archegos Capital:</strong> usò Total Return Swap con più banche per scommesse su azioni cinesi e USA → collasso da $20 miliardi e vendite forzate.</li>
+    <li><strong>Crisi Grecia 2010:</strong> swap valutari OTC usati per nascondere debito sovrano → impatto su credibilità dei conti pubblici.</li>
+  </ul>
+
+  <p class="text-slate-700 mt-4">
+    <strong>Conclusione:</strong> i derivati OTC rappresentano una componente chiave dei mercati globali, ma sono riservati a operatori esperti. Per via della personalizzazione, dell’illiquidità e dell’assenza di standardizzazione, possono generare <strong>rischi sistemici</strong> non visibili ex ante. Richiedono competenze quantitative, legali e di risk management elevate.
+  </p>
+
+  <p class="mt-4">
+    <a href="/tutorial/Derivati-OTC" target="_blank" class="text-sm text-blue-600 hover:underline">
+      Approfondimento tecnico sui derivati OTC →
+    </a>
+  </p>
+</div>
+<div class="mb-12">
+  <h4 class="text-xl font-semibold text-slate-800 mb-2">SPAC (Special Purpose Acquisition Company)</h4>
+  <p class="text-slate-700 mb-4">
+    Le SPAC sono veicoli societari quotati senza attività operativa, creati per acquisire un’azienda target futura. Formalmente classificate come azioni, in realtà rappresentano <strong>strumenti sintetici con profilo opzionale e struttura opaca</strong>, spesso usate come scommesse indirette su operazioni speculative.
+  </p>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Composizione</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Fase 1:</strong> IPO raccolta fondi senza business sottostante (“blank check company”).</li>
+    <li><strong>Fase 2:</strong> acquisizione di azienda target → fusione inversa (De-SPAC).</li>
+    <li><strong>Warrant inclusi:</strong> opzioni gratuite esercitabili post-fusione → leva implicita e payoff esotico.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Rischi principali</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Opacità informativa:</strong> fino all'annuncio dell'acquisizione non si conosce il business reale.</li>
+    <li><strong>Diluizione post-fusione:</strong> i warrant e la struttura del deal spesso diluiscono il valore reale dell’equity.</li>
+    <li><strong>Scarsa qualità target:</strong> molte SPAC hanno acquisito aziende non profittevoli o speculative.</li>
+    <li><strong>Alta volatilità:</strong> il prezzo può esplodere o crollare in base alla notizia della fusione, senza fondamentali solidi.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Casi storici significativi</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>2020–2021 – SPAC Mania USA:</strong> centinaia di SPAC lanciate su hype tecnologico → fusioni con aziende senza ricavi → performance negative per il 70% delle post-SPAC.</li>
+    <li><strong>Nikola (NKLA):</strong> da $30 a < $2 nel 2022 → accuse di frode post-fusione con SPAC VectoIQ.</li>
+    <li><strong>Lordstown Motors, Clover Health:</strong> fusione SPAC con aziende speculative → inchieste SEC e crolli azionari successivi.</li>
+  </ul>
+
+  <p class="text-slate-700 mt-4">
+    <strong>Conclusione:</strong> le SPAC sono strumenti ibridi tra equity e opzione, con struttura sintetica e alto rischio di esecuzione. In fase pre-fusione sono proxy di liquidità; in fase post-fusione diventano equity ad alta incertezza. Il profilo rischio/rendimento è fortemente asimmetrico e influenzato da fattori extracontabili.
+  </p>
+
+  <p class="mt-4">
+    <a href="/tutorial/SPAC-Rischi" target="_blank" class="text-sm text-blue-600 hover:underline">
+      Approfondimento sui rischi e sulla struttura delle SPAC →
+    </a>
+  </p>
+</div>
+<div class="mb-12">
+  <h4 class="text-xl font-semibold text-slate-800 mb-2">CLO / CDO (Collateralized Loan & Debt Obligations)</h4>
+  <p class="text-slate-700 mb-4">
+    I CLO e CDO sono strumenti di <strong>cartolarizzazione strutturata</strong> che impacchettano prestiti (leveraged loan o debito corporate) e li suddividono in tranches con diverso rischio e rendimento. Formalmente classificati come titoli obbligazionari, sono <strong>derivati sintetici sul credito</strong> e hanno avuto un ruolo cruciale nella crisi finanziaria del 2008.
+  </p>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Composizione</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Sottostante:</strong> portafoglio di prestiti sindacati, mutui subprime o debiti ad alto rendimento.</li>
+    <li><strong>Tranches:</strong> Senior (AAA), Mezzanine (A–BBB), Equity (non rated) → diverso grado di subordinazione e rischio.</li>
+    <li><strong>Cash flow waterfall:</strong> priorità di pagamento che favorisce le tranches senior → l’equity assorbe le prime perdite.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Rischi principali</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Rischio di correlazione:</strong> in scenari di stress tutti i prestiti possono deteriorarsi simultaneamente → perdita rapida anche per tranches mezzanine.</li>
+    <li><strong>Modellizzazione errata:</strong> i rating sono spesso basati su ipotesi di default non realistiche.</li>
+    <li><strong>Illiquidità:</strong> mercato secondario molto ristretto → difficoltà di valorizzazione mark-to-market.</li>
+    <li><strong>Opacity strutturale:</strong> difficile per l'investitore retail comprendere composizione, rotazione del portafoglio e rischi sottostanti.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Casi storici significativi</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>2007–2008 – Crisi subprime:</strong> i CDO sintetici su mutui residenziali esplosero in default, portando a perdite sistemiche su scala globale.</li>
+    <li><strong>Tranches Equity:</strong> definite "toxic waste" per la loro sensibilità massima al default → azzerate anche con default minimi.</li>
+    <li><strong>AIG:</strong> vendette protezione su centinaia di CDO tramite CDS → fallimento sistemico evitato solo da bailout governativo.</li>
+  </ul>
+
+  <p class="text-slate-700 mt-4">
+    <strong>Conclusione:</strong> i CLO e CDO sono strumenti ad altissima leva implicita, utilizzati principalmente da istituzionali. Il rischio è concentrato nella modellizzazione, correlazione del sottostante e struttura di subordinazione. Vanno evitati nei portafogli retail o conservativi.
+  </p>
+
+  <p class="mt-4">
+    <a href="/tutorial/CLO-CDO" target="_blank" class="text-sm text-blue-600 hover:underline">
+      Approfondimento sui rischi strutturali dei CLO/CDO →
+    </a>
+  </p>
+</div>
+<div class="mb-12">
+  <h4 class="text-xl font-semibold text-slate-800 mb-2">Token Sintetici & Wrapped Assets</h4>
+  <p class="text-slate-700 mb-4">
+    I token sintetici e i wrapped assets sono strumenti del mondo cripto-finanziario che <strong>replicano artificialmente l’esposizione</strong> a un asset reale (es. azioni, oro, valute), senza detenerlo. Sono usati per facilitare trading cross-chain, derivati decentralizzati e accesso speculativo a mercati regolamentati tramite blockchain.
+  </p>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Composizione</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Wrapped assets:</strong> token su blockchain che rappresentano asset reali (es. WBTC = Bitcoin su Ethereum, backed 1:1).</li>
+    <li><strong>Token sintetici:</strong> strumenti costruiti via smart contract con collaterale + oracoli → simulano il prezzo di un asset (es. sUSD, sTSLA).</li>
+    <li><strong>Collateralizzazione:</strong> in stablecoin o crypto volatili, soggetta a liquidazioni automatizzate.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Rischi principali</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Rischio di controparte smart contract:</strong> bug, exploit o errore di codice → perdita immediata dei fondi.</li>
+    <li><strong>Dipendenza da oracoli:</strong> pricing errato o manipolato porta a liquidazioni o disallineamenti.</li>
+    <li><strong>Illusione della parità:</strong> molti wrapped token non sono effettivamente garantiti 1:1 (es. caso RenBTC post-FTX).</li>
+    <li><strong>Volatilità del collaterale:</strong> in ambienti bear market, anche piccoli cali portano a perdite sistemiche su token sintetici.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Casi storici significativi</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>2022 – RenBTC:</strong> dopo il collasso FTX, la rete non era più garantita → wrapped BTC svalutati > 30%.</li>
+    <li><strong>Synthetix (2021–2023):</strong> sistema di token sintetici colpito da divergenze di prezzo e attacchi oracle.</li>
+    <li><strong>WETH shock (varie chain):</strong> problemi temporanei di depeg su token wrapped ETH in reti L2 o bridge centralizzati.</li>
+  </ul>
+
+  <p class="text-slate-700 mt-4">
+    <strong>Conclusione:</strong> i token sintetici e i wrapped assets sono strumenti innovativi ma ad alto rischio operativo, sistemico e tecnologico. L’apparente semplicità maschera una dipendenza da infrastrutture complesse e soggette a fallimenti. Vanno evitati in contesti retail o conservativi.
+  </p>
+
+  <p class="mt-4">
+    <a href="/tutorial/Token-Sintetici" target="_blank" class="text-sm text-blue-600 hover:underline">
+      Approfondimento sui rischi dei token sintetici e wrapped assets →
+    </a>
+  </p>
+</div>
+<div class="mb-12">
+  <h4 class="text-xl font-semibold text-slate-800 mb-2">Stablecoin Algoritmiche</h4>
+  <p class="text-slate-700 mb-4">
+    Le stablecoin algoritmiche sono criptovalute progettate per mantenere un valore stabile (tipicamente 1 USD) tramite <strong>meccanismi automatici di equilibrio</strong> basati su smart contract. A differenza delle stablecoin collateralizzate, non hanno riserve reali ma si affidano a <strong>incentivi di mercato e algoritmi di supply-demand</strong>. La loro stabilità è altamente fragile in condizioni di stress.
+  </p>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Composizione</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Algoritmo di stabilizzazione:</strong> smart contract che aumenta o riduce l’offerta per mantenere l’ancoraggio al dollaro.</li>
+    <li><strong>Token duali:</strong> spesso esistono due token: uno “stabile” (es. UST) e uno volatile (es. LUNA) che assorbe la volatilità.</li>
+    <li><strong>Sistema di arbitraggio:</strong> incentivi per bruciare o creare token in base al prezzo di mercato rispetto al target.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Rischi principali</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>Assenza di collaterale:</strong> la stabilità dipende totalmente dalla fiducia nel sistema e nella sua dinamica di incentivi.</li>
+    <li><strong>Rischio di bank run:</strong> se troppi utenti cercano di uscire contemporaneamente, il token collaterale crolla → loop negativo.</li>
+    <li><strong>Rischio sistemico decentralizzato:</strong> spesso integrati in DEX, lending, farming → crollo a catena in caso di depeg.</li>
+    <li><strong>Opacità strutturale:</strong> il meccanismo sembra semplice, ma il comportamento reale in stress è difficile da prevedere.</li>
+  </ul>
+
+  <h5 class="text-base font-semibold text-slate-700 mt-4 mb-2">Casi storici significativi</h5>
+  <ul class="list-disc list-inside text-slate-700 space-y-1">
+    <li><strong>2022 – UST / LUNA collapse:</strong> il sistema Terra implose in 72h: UST perse il peg, LUNA crollò da $80 a $0 → perdita di oltre $40 miliardi per gli investitori.</li>
+    <li><strong>2021 – Empty Set Dollar, Basis Cash:</strong> progetti algoritmici collassati in pochi giorni a causa della mancata adozione e attacchi speculativi.</li>
+    <li><strong>2023 – Frax, USDD:</strong> fluttuazioni importanti durante periodi di stress di liquidità e FUD sui sistemi semi-algoritmici.</li>
+  </ul>
+
+  <p class="text-slate-700 mt-4">
+    <strong>Conclusione:</strong> le stablecoin algoritmiche rappresentano una <strong>scommessa sulla fiducia e sulla teoria dei giochi</strong>. I meccanismi di stabilizzazione funzionano solo in condizioni ideali e con liquidità elevata. In caso contrario, collassano rapidamente. Sono inadatte a investitori retail o a portafogli conservativi.
+  </p>
+
+  <p class="mt-4">
+    <a href="/tutorial/Stablecoin-Algoritmiche" target="_blank" class="text-sm text-blue-600 hover:underline">
+      Approfondimento sulle stablecoin algoritmiche →
+    </a>
+  </p>
+</div>
+
+</section>
+<section>
+<div class="mb-16">
+  <h4 class="text-xl font-semibold text-slate-800 mb-4">Approfondimenti collegati</h4>
+  <ul class="list-disc list-inside text-slate-700 space-y-2">
+    <li><a href="/report/macro/CDS-CDO-subprime" class="text-blue-600 hover:underline" target="_blank">Gli Strumenti della crisi Subprime →</a></li>
+  </ul>
+</div>
+
+<hr class="my-12">
+
+<div class="mb-16">
+  <h4 class="text-xl font-semibold text-slate-800 mb-4"> Analisi AI più lette</h4>
+  <ul class="list-disc list-inside text-slate-700 space-y-2">
+        <li><a href="/report/tutorial/Simulatore-Portafogli" class="text-blue-600 hover:underline" target="_blank">Simulatore Portafogli →</a></li>
+    <li><a href="/report/tutorial/Truffe-Cripto" class="text-blue-600 hover:underline" target="_blank">Truffe cripto più famose →</a></li>
+    <li><a href="/report/tutorial/Truffe-Finanziarie-Storiche" class="text-blue-600 hover:underline" target="_blank">Grandi truffe finanziarie della storia →</a></li>
+    <li><a href="/report/tutorial/Statistiche-Truffe-Online" class="text-blue-600 hover:underline" target="_blank">Statistiche e numeri delle truffe online su investimenti →</a></li>
+    <li><a href="/report/tutorial/MM-STP-ECN" class="text-blue-600 hover:underline" target="_blank">Broker: differenze tra MM, STP ed ECN →</a></li>
+  </ul>
+</div>
+</section>
+  </main>
+  <button id="backToTop" title="Torna all'inizio" aria-label="Torna all'inizio" 
+  class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-lg transition-opacity opacity-80 hover:opacity-100 focus:outline-none">
+  ↑ Torna all'inizio
+</button>
+<script>
+  const btn = document.getElementById('backToTop');
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+
+</body>
+</html>
