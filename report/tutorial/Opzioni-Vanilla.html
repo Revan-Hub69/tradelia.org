@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Report completo TRADELIA AI sulla crisi finanziaria 2008: analisi tecnica, strumenti derivati, protagonisti e impatto sociale.">
+  <title>TRADELIA • AI — Strumenti Finanziari Complessi</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    h1, h2, h3, h4 {
+      color: #0f172a;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.25rem; }
+    h3 { font-size: 1.25rem; }
+    h4 { font-size: 1.125rem; }
+    p { margin-bottom: 1.25rem; color: #374151; }
+    ul, ol { padding-left: 1.25rem; margin-bottom: 1.25rem; }
+    li { margin-bottom: 0.5rem; }
+    section {
+      background: #ffffff;
+      padding: 2.5rem 2rem;
+      margin: 2rem auto;
+      border-radius: 0.75rem;
+      max-width: 840px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e5e7eb;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
+    th, td {
+      padding: 0.75rem;
+      border: 1px solid #e5e7eb;
+      text-align: left;
+      font-size: 0.95rem;
+      word-break: break-word;
+    }
+    th { background: #f3f4f6; font-weight: 600; }
+    tr:nth-child(even) { background: #f9fafb; }
+    .positive { color: #16a34a; font-weight: 600; }
+    .negative { color: #dc2626; font-weight: 600; }
+    .neutral { color: #64748b; font-weight: 500; }
+    a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    a:hover { text-decoration: underline; color: #1d4ed8; }
+    @media screen and (max-width: 768px) {
+      body { font-size: 15px; line-height: 1.6; }
+      section { padding: 1.25rem; margin: 1rem; }
+      h1 { font-size: 1.5rem; }
+      h2 { font-size: 1.25rem; }
+      h3 { font-size: 1.125rem; }
+      h4 { font-size: 1rem; }
+      table, thead, tbody, th, td, tr {
+        display: block; width: 100%;
+      }
+      th { display: none; }
+      td {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border: none;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #1e293b;
+        padding-right: 1rem;
+        min-width: 140px;
+        display: inline-block;
+      }
+    }
+    #backToTop {
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    /* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+  border-radius: 100vh;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(80, 160, 200, 0.5);
+  border-radius: 100vh;
+  transition: background-color 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(80, 160, 200, 0.7);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
+  box-sizing: border-box;
+}
+  </style>
+</head>
+  <body>
+
+<header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-3 flex justify-between items-center">
+  <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 hover:opacity-90 transition">
+    TRADELIA<span class="text-blue-600 animate-pulse">•AI</span>
+  </a>
+  <a href="https://tradelia.org/archivio.html" class="text-sm sm:text-base text-blue-700 font-medium hover:underline transition">
+    Archivio Storico
+  </a>
+</header> 
+<br>
+<section>
+  <nav class="max-w-4xl mx-auto mt-4 mb-10 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+    <h2 class="text-lg font-semibold text-gray-800 mb-3">Indice del Tutorial</h2>
+    <ul class="list-disc list-inside text-sm text-blue-600 space-y-2">
+      <li><a href="#sezione-1">1. Definizione e Tipologie Base</a></li>
+      <li><a href="#sezione-2">2. Funzionamento: Call e Put</a></li>
+      <li><a href="#sezione-3">3. Profilo Rendimento-Rischio e Scenari</a></li>
+      <li><a href="#sezione-4">4. Valutazione: Prezzo, Delta, Greche</a></li>
+      <li><a href="#sezione-5">5. Scadenza, Strike e Tempo Residuo</a></li>
+      <li><a href="#sezione-6">6. Volatilità Implicita e Realizzata</a></li>
+      <li><a href="#sezione-7">7. Esempi Pratici di Utilizzo (Hedging e Speculazione)</a></li>
+      <li><a href="#sezione-8">8. Mercati Regolamentati vs OTC</a></li>
+      <li><a href="#sezione-9">9. Dove si Acquistano: Broker e Accesso ai Mercati</a></li>
+      <li><a href="#sezione-10">10. Rischi Operativi e Psicologia del Trader</a></li>
+      <li><a href="#sezione-11">11. Confronto con Opzioni Esotiche</a></li>
+      <li><a href="#sezione-12">12. Check-list Pre-Contrattuale</a></li>
+      <li><a href="#sezione-13">13. Glossario Tecnico Essenziale</a></li>
+    </ul>
+  </nav>
+</section>
+<br>
+<section id="sezione-1" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">1. Definizione e Tipologie Base</h2>
+
+  <p>
+    Le <strong>opzioni plain vanilla</strong> sono contratti derivati che conferiscono al compratore il diritto, ma non l’obbligo, di <strong>acquistare (call)</strong> o <strong>vendere (put)</strong> un'attività sottostante a un prezzo prestabilito (strike price), entro o a una certa data (scadenza).
+  </p>
+
+  <p>
+    Questi strumenti rappresentano la forma più semplice e standardizzata di opzione, rispetto alle opzioni esotiche che includono clausole complesse. Sono quotate su mercati regolamentati o scambiate OTC e hanno regole contrattuali ben definite.
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700">
+    <li><strong>Call:</strong> diritto di acquistare l’attività sottostante</li>
+    <li><strong>Put:</strong> diritto di vendere l’attività sottostante</li>
+    <li><strong>European:</strong> esercitabile solo alla scadenza</li>
+    <li><strong>American:</strong> esercitabile in qualsiasi momento fino alla scadenza</li>
+  </ul>
+
+  <p class="mt-4">
+    Le opzioni possono essere utilizzate per finalità speculative, di copertura (hedging) o per costruire strategie complesse di trading e gestione del rischio.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Un'opzione vanilla è semplice nella forma, ma potentissima nella struttura. Capirla bene è il primo passo verso un uso professionale dei derivati.»
+  </p>
+</section>
+<br>
+<section id="sezione-2" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">2. Funzionamento: Call e Put</h2>
+
+  <p>
+    Il meccanismo di funzionamento delle opzioni plain vanilla si basa su due tipologie principali: <strong>opzioni call</strong> e <strong>opzioni put</strong>. In entrambi i casi, l’acquirente paga un <strong>premio</strong> per avere il diritto di eseguire (o meno) l’operazione entro una certa data.
+  </p>
+
+  <p>
+    La controparte, ovvero il venditore (writer), ha l’obbligo di rispettare i termini del contratto qualora l’acquirente decida di esercitare l’opzione.
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700">
+    <li><strong>Opzione Call:</strong> il titolare ha il diritto di acquistare il sottostante allo strike price. È vantaggiosa se il prezzo di mercato sale sopra lo strike.</li>
+    <li><strong>Opzione Put:</strong> il titolare ha il diritto di vendere il sottostante allo strike price. È vantaggiosa se il prezzo di mercato scende sotto lo strike.</li>
+    <li><strong>Venditore (writer):</strong> incassa il premio ma si espone a perdite potenzialmente elevate (illimitate per call non coperte).</li>
+  </ul>
+
+  <p class="mt-4">
+    La leva finanziaria è intrinseca: con un esborso ridotto (il premio), è possibile esporsi a variazioni rilevanti del sottostante. Tuttavia, ciò comporta anche un <strong>rischio di perdita totale</strong> del premio pagato se l'opzione scade out of the money.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Call e put sono come leve: possono amplificare i risultati, ma anche accelerare le perdite. Saperle maneggiare è essenziale per ogni investitore evoluto.»
+  </p>
+</section>
+<br>
+<section id="sezione-3" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">3. Profilo Rendimento-Rischio e Scenari</h2>
+
+  <p>
+    Le opzioni plain vanilla presentano un profilo di rischio-rendimento asimmetrico. Questo le rende strumenti versatili sia per chi desidera proteggere un portafoglio, sia per chi cerca un’esposizione a rendimento potenzialmente elevato con capitale limitato.
+  </p>
+
+  <p>
+    A seconda che l’investitore sia <strong>acquirente</strong> o <strong>venditore</strong>, il comportamento del payoff cambia radicalmente:
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700">
+    <li><strong>Acquirente di Call:</strong> perdita massima = premio pagato; profitto potenzialmente illimitato se il sottostante sale</li>
+    <li><strong>Acquirente di Put:</strong> perdita massima = premio pagato; profitto massimo = strike - 0 (se il sottostante azzera)</li>
+    <li><strong>Venditore di Call:</strong> guadagno massimo = premio incassato; perdita potenziale teoricamente illimitata</li>
+    <li><strong>Venditore di Put:</strong> guadagno massimo = premio incassato; perdita potenziale fino allo strike (se il sottostante va a zero)</li>
+  </ul>
+
+  <p>
+    Gli scenari si modellano graficamente con i cosiddetti <strong>“profit/loss diagrams”</strong>, fondamentali per comprendere visivamente il comportamento dell’opzione al variare del prezzo del sottostante.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Chi acquista un’opzione sa quanto può perdere. Chi la vende spesso lo scopre troppo tardi. Il premio è certo, il rischio no.»
+  </p>
+</section>
+<br>
+<section id="sezione-4" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">4. Valutazione: Prezzo, Delta, Greche</h2>
+
+  <p>
+    Il valore di un’opzione è determinato da modelli matematici che tengono conto di diversi fattori: prezzo del sottostante, strike price, tempo residuo, tassi d’interesse e volatilità. Il più noto è il <strong>modello di Black-Scholes</strong>.
+  </p>
+
+  <p>
+    Gli strumenti fondamentali per comprendere il comportamento dell’opzione in risposta a variazioni di mercato sono le <strong>“Greche”</strong>, derivate parziali della funzione di prezzo:
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700">
+    <li><strong>Delta:</strong> sensibilità del prezzo dell’opzione rispetto al prezzo del sottostante. Misura approssimativamente la probabilità di chiusura in-the-money.</li>
+    <li><strong>Gamma:</strong> sensibilità del delta rispetto al prezzo del sottostante. Indica quanto il delta cambia con movimenti del mercato.</li>
+    <li><strong>Theta:</strong> erosione temporale. Indica quanto valore perde l’opzione ogni giorno che passa, a parità di condizioni.</li>
+    <li><strong>Vega:</strong> sensibilità del prezzo dell’opzione alla variazione della volatilità implicita.</li>
+    <li><strong>Rho:</strong> sensibilità al tasso di interesse. Più rilevante per opzioni con lunga scadenza.</li>
+  </ul>
+
+  <p>
+    Una corretta valutazione richiede software dedicati o piattaforme di trading avanzate. Le greche aiutano a costruire strategie di copertura e gestione dinamica del rischio.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Chi conosce le greche non predice il futuro, ma lo gestisce meglio. Sono la grammatica nascosta delle opzioni.»
+  </p>
+</section>
+<br>
+<section id="sezione-5" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">5. Scadenza, Strike e Tempo Residuo</h2>
+
+  <p>
+    Le caratteristiche fondamentali di un’opzione sono <strong>scadenza</strong>, <strong>prezzo di esercizio (strike)</strong> e <strong>tempo residuo</strong>. Questi parametri definiscono non solo il comportamento dell’opzione, ma anche il suo valore e la probabilità di esercizio.
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700">
+    <li><strong>Strike price:</strong> il livello di prezzo al quale l’opzione può essere esercitata. Determina se è in-the-money, at-the-money o out-of-the-money.</li>
+    <li><strong>Scadenza (expiration date):</strong> il giorno in cui l’opzione cessa di esistere. Dopo tale data, il contratto è nullo se non è stato esercitato.</li>
+    <li><strong>Tempo residuo:</strong> il tempo mancante alla scadenza incide sul valore temporale dell’opzione. Più tempo significa maggior premio, ma anche maggiore incertezza.</li>
+  </ul>
+
+  <p>
+    La perdita di valore nel tempo è governata dalla <strong>decaduta temporale (theta)</strong>. In prossimità della scadenza, le opzioni at-the-money perdono valore più velocemente.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Ogni giorno che passa è un costo per chi compra opzioni. Il tempo è un nemico silenzioso, ma costante.»
+  </p>
+</section>
+<br><section id="sezione-6" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">6. Volatilità Implicita e Realizzata</h2>
+
+  <p>
+    La <strong>volatilità</strong> è uno degli elementi più critici nella valutazione di un’opzione. Esistono due tipi fondamentali:
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700">
+    <li><strong>Volatilità storica (realizzata):</strong> misura la variabilità dei prezzi passati del sottostante. È un dato oggettivo e osservabile.</li>
+    <li><strong>Volatilità implicita:</strong> è il valore di volatilità atteso dai mercati, dedotto dal prezzo corrente delle opzioni. Riflette la percezione del rischio futuro.</li>
+  </ul>
+
+  <p>
+    Un’opzione può sembrare economica o costosa a seconda della relazione tra volatilità implicita e quella storica. Gli operatori spesso usano questa differenza per strategie di <strong>volatility trading</strong>.
+  </p>
+
+  <p>
+    L’aumento della volatilità implica un aumento del valore dell’opzione (soprattutto per opzioni at-the-money), mentre una compressione della volatilità tende a farne scendere il prezzo.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Non compri solo il diritto di esercizio, ma anche il “rischio atteso”. La volatilità implicita è il cuore nascosto di ogni opzione.»
+  </p>
+</section>
+<br>
+<section id="sezione-7" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">7. Esempi Pratici di Utilizzo (Hedging e Speculazione)</h2>
+
+  <p>
+    Le opzioni plain vanilla sono strumenti estremamente versatili. Possono essere impiegate sia per strategie <strong>difensive (hedging)</strong>, sia per finalità <strong>speculative</strong>.
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700">
+    <li><strong>Hedging:</strong> acquisto di put per proteggere un portafoglio azionario da ribassi. È una forma di assicurazione finanziaria.</li>
+    <li><strong>Covered call:</strong> vendita di opzioni call su titoli già in portafoglio. Consente di incassare premi extra in cambio di un tetto ai guadagni.</li>
+    <li><strong>Speculazione rialzista:</strong> acquisto di call su un’azione in attesa di un rally. Permette leva con rischio limitato (il premio pagato).</li>
+    <li><strong>Speculazione ribassista:</strong> acquisto di put in previsione di una discesa dei prezzi. Strategia direzionale a rischio limitato.</li>
+  </ul>
+
+  <p>
+    Le combinazioni di opzioni, come spread, straddle, strangle, permettono di gestire scenari complessi e costruire payoff su misura. Tuttavia, richiedono conoscenze avanzate e gestione del rischio accurata.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Con le opzioni puoi proteggere, guadagnare, amplificare o frenare. Ma se non capisci cosa stai comprando, qualcun altro sta guadagnando da te.»
+  </p>
+</section>
+<br>
+<section id="sezione-7" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">7. Esempi Pratici di Utilizzo (Hedging e Speculazione)</h2>
+
+  <p>
+    Le opzioni plain vanilla sono strumenti estremamente versatili. Possono essere impiegate sia per strategie <strong>difensive (hedging)</strong>, sia per finalità <strong>speculative</strong>.
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700">
+    <li><strong>Hedging:</strong> acquisto di put per proteggere un portafoglio azionario da ribassi. È una forma di assicurazione finanziaria.</li>
+    <li><strong>Covered call:</strong> vendita di opzioni call su titoli già in portafoglio. Consente di incassare premi extra in cambio di un tetto ai guadagni.</li>
+    <li><strong>Speculazione rialzista:</strong> acquisto di call su un’azione in attesa di un rally. Permette leva con rischio limitato (il premio pagato).</li>
+    <li><strong>Speculazione ribassista:</strong> acquisto di put in previsione di una discesa dei prezzi. Strategia direzionale a rischio limitato.</li>
+  </ul>
+
+  <p>
+    Le combinazioni di opzioni, come spread, straddle, strangle, permettono di gestire scenari complessi e costruire payoff su misura. Tuttavia, richiedono conoscenze avanzate e gestione del rischio accurata.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Con le opzioni puoi proteggere, guadagnare, amplificare o frenare. Ma se non capisci cosa stai comprando, qualcun altro sta guadagnando da te.»
+  </p>
+</section>
+<br>
+<section id="sezione-9" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">9. Dove si Acquistano: Broker e Accesso ai Mercati</h2>
+
+  <p>
+    Le opzioni vanilla possono essere acquistate tramite broker che offrono accesso ai mercati derivati, sia regolamentati che OTC. È fondamentale scegliere una piattaforma con pricing trasparente, strumenti analitici evoluti e supporto operativo.
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700">
+    <li><strong>Piattaforme regolamentate:</strong> broker con accesso diretto a mercati come CBOE, CME, EUREX, Euronext</li>
+    <li><strong>Broker CFD e opzioni sintetiche:</strong> adatti a speculazione con leva, ma meno adatti per gestione professionale di portafoglio</li>
+    <li><strong>Soluzioni ibride:</strong> broker che offrono sia accesso a derivati regolamentati sia strutture personalizzate OTC</li>
+  </ul>
+
+  <p>
+    Di seguito, due soluzioni partner di TRADELIA•AI per operare su opzioni plain vanilla con strumenti professionali:
+  </p>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+    <div class="bg-slate-50 border-l-4 border-blue-600 p-4 rounded-md shadow-sm">
+      <h3 class="text-base font-semibold text-slate-900 mb-2">Accedi a opzioni regolamentate con EXANTE</h3>
+      <p class="text-slate-700 mb-4 text-sm">
+        EXANTE offre accesso diretto a opzioni europee e americane su equity, indici e future con piattaforma multi-asset e spread competitivi.
+      </p>
+      <a href="https://www.tradelia.org/Exante.html" target="_blank" class="inline-block bg-white border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md text-sm font-medium transition duration-200">
+        Scopri EXANTE →
+      </a>
+    </div>
+    
+    <div class="bg-slate-50 border-l-4 border-green-600 p-4 rounded-md shadow-sm">
+      <h3 class="text-base font-semibold text-slate-900 mb-2">Specula sulle opzioni con leva via AvaTrade</h3>
+      <p class="text-slate-700 mb-4 text-sm">
+        AvaTrade consente operatività su opzioni sintetiche (call/put) via CFD con leva, adatte a strategie direzionali e intraday.
+      </p>
+      <a href="https://www.tradelia.org/AvaTrade.html" target="_blank" class="inline-block bg-white border border-green-600 text-green-600 hover:bg-green-600 hover:text-white px-4 py-2 rounded-md text-sm font-medium transition duration-200">
+        Vai ad AvaTrade →
+      </a>
+    </div>
+  </div>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «I derivati non sono per tutti. Ma chi li conosce e li controlla, ha accesso a una cassetta degli attrezzi avanzata. Il primo passo è la piattaforma giusta.»
+  </p>
+</section>
+<br>
+<section id="sezione-10" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">10. Rischi Operativi e Psicologia del Trader</h2>
+
+  <p>
+    Operare con opzioni vanilla richiede più della sola conoscenza tecnica: serve disciplina, gestione del rischio e consapevolezza psicologica. I derivati amplificano emozioni, errori e automatismi cognitivi.
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700">
+    <li><strong>Overtrading:</strong> l’illusione del controllo porta a eseguire troppi ordini senza analisi concreta</li>
+    <li><strong>Gestione errata del margine:</strong> soprattutto per chi vende opzioni naked, l’esposizione può diventare ingestibile</li>
+    <li><strong>Bias cognitivi:</strong> ancoraggio al premio ricevuto, avversione alla perdita e overconfidence</li>
+    <li><strong>Rischio evento:</strong> una notizia inaspettata può cambiare drasticamente il valore dell’opzione (gap risk)</li>
+    <li><strong>Errore di esecuzione:</strong> ordini errati o latenze nella piattaforma possono costare molto più del premio</li>
+  </ul>
+
+  <p>
+    Un trader consapevole adotta regole chiare su posizione massima, stop loss, time-frame operativo e riduce al minimo l’interferenza emotiva.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Le opzioni sono uno specchio della tua mente. Più è caotica la strategia, più il mercato te lo farà pagare. La disciplina è la vera protezione implicita.»
+  </p>
+</section>
+<br>
+<section id="sezione-11" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">11. Confronto con Opzioni Esotiche</h2>
+
+  <p>
+    Le <strong>opzioni esotiche</strong> rappresentano una categoria più complessa rispetto alle plain vanilla. Introdotte soprattutto nei mercati OTC, includono meccanismi condizionati, barriere, trigger o payoff non lineari.
+  </p>
+
+  <table class="table-auto w-full mt-4 border text-sm text-slate-700">
+    <thead>
+      <tr class="bg-slate-100">
+        <th class="px-2 py-1 border">Caratteristica</th>
+        <th class="px-2 py-1 border">Opzioni Vanilla</th>
+        <th class="px-2 py-1 border">Opzioni Esotiche</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="px-2 py-1 border">Struttura</td>
+        <td class="px-2 py-1 border">Semplice (call/put)</td>
+        <td class="px-2 py-1 border">Condizionata o combinata</td>
+      </tr>
+      <tr>
+        <td class="px-2 py-1 border">Prezzo</td>
+        <td class="px-2 py-1 border">Trasparente, mercato visibile</td>
+        <td class="px-2 py-1 border">Derivato da modelli complessi</td>
+      </tr>
+      <tr>
+        <td class="px-2 py-1 border">Mercato</td>
+        <td class="px-2 py-1 border">Regolamentato (CBOE, EUREX)</td>
+        <td class="px-2 py-1 border">OTC (banche, desk strutturati)</td>
+      </tr>
+      <tr>
+        <td class="px-2 py-1 border">Liquidità</td>
+        <td class="px-2 py-1 border">Alta</td>
+        <td class="px-2 py-1 border">Limitata o nulla</td>
+      </tr>
+      <tr>
+        <td class="px-2 py-1 border">Utilizzatori</td>
+        <td class="px-2 py-1 border">Retail e istituzionali</td>
+        <td class="px-2 py-1 border">Professionali o strutturatori</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    Le esotiche vengono spesso impiegate per strutturare note, prodotti bancari ibridi o coperture dinamiche avanzate. Sono inadatte a investitori non esperti, a causa della loro opacità e della difficoltà di pricing indipendente.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Un'opzione esotica può sembrare attraente nei rendimenti, ma spesso nasconde un payoff condizionato. Se non ne controlli il meccanismo, ne subisci la logica.»
+  </p>
+</section>
+<br>
+<section id="sezione-12" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">12. Check-list Pre-Contrattuale</h2>
+
+  <p>
+    Prima di operare su opzioni plain vanilla, è essenziale un controllo rigoroso di vari aspetti tecnici e operativi. Ecco una check-list per evitare errori comuni:
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700 space-y-2">
+    <li><strong>Obiettivo:</strong> Sto proteggendo, speculando o generando rendimento passivo?</li>
+    <li><strong>Profilo di rischio:</strong> Sono in grado di sostenere una perdita del 100% del premio?</li>
+    <li><strong>Greche:</strong> Conosco l’impatto di delta, theta e vega sulla mia posizione?</li>
+    <li><strong>Scadenza:</strong> Ho chiaro quando l’opzione termina e come si comporta vicino alla data?</li>
+    <li><strong>Mercato sottostante:</strong> È liquido, trasparente e adatto al mio time-frame operativo?</li>
+    <li><strong>Margine richiesto (se vendo):</strong> È compatibile con la mia equity e la mia tolleranza al rischio?</li>
+    <li><strong>Strategia di uscita:</strong> Ho un piano se il mercato si muove contro di me?</li>
+    <li><strong>Broker:</strong> Offre strumenti avanzati, prezzi corretti e affidabilità tecnica?</li>
+  </ul>
+
+  <p class="mt-4">
+    Ogni risposta “non so” o “dipende” è un segnale di allerta. Le opzioni sono strumenti condizionati: vanno compresi prima, non gestiti dopo.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Ogni opzione è un contratto con il tempo, la volatilità e le tue convinzioni. Se non firmi con lucidità, sarà il mercato a riscuotere.»
+  </p>
+</section>
+<br>
+<section id="sezione-13" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">13. Glossario Tecnico Essenziale</h2>
+
+  <ul class="space-y-4 text-slate-700">
+    <li>
+      <strong>Call:</strong> opzione che conferisce il diritto di acquistare il sottostante a un prezzo predefinito entro una certa scadenza.
+    </li>
+    <li>
+      <strong>Put:</strong> opzione che conferisce il diritto di vendere il sottostante a un prezzo predefinito entro una certa scadenza.
+    </li>
+    <li>
+      <strong>Strike Price:</strong> prezzo al quale può avvenire l’acquisto o la vendita del sottostante tramite l’opzione.
+    </li>
+    <li>
+      <strong>Premium:</strong> costo pagato dall’acquirente dell’opzione per ottenere il diritto di esercizio.
+    </li>
+    <li>
+      <strong>Scadenza (Expiration):</strong> data oltre la quale l’opzione perde validità e valore residuo.
+    </li>
+    <li>
+      <strong>Delta:</strong> misura della variazione del prezzo dell’opzione rispetto al movimento del sottostante.
+    </li>
+    <li>
+      <strong>Theta:</strong> misura dell’effetto del tempo sul valore dell’opzione (decadimento temporale).
+    </li>
+    <li>
+      <strong>Vega:</strong> sensibilità del prezzo dell’opzione alla variazione della volatilità implicita.
+    </li>
+    <li>
+      <strong>Gamma:</strong> sensibilità del delta rispetto al prezzo del sottostante.
+    </li>
+    <li>
+      <strong>Volatilità Implicita:</strong> stima della futura volatilità del sottostante implicita nel prezzo dell’opzione.
+    </li>
+    <li>
+      <strong>In the Money (ITM):</strong> opzione esercitabile con profitto (call se sottostante &gt; strike, put se sottostante &lt; strike).
+    </li>
+    <li>
+      <strong>Out of the Money (OTM):</strong> opzione non esercitabile con profitto alla data attuale.
+    </li>
+    <li>
+      <strong>Rischio di Controparte:</strong> rischio che una delle parti del contratto non onori i propri obblighi, più rilevante nei mercati OTC.
+    </li>
+  </ul>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Imparare le definizioni è il primo passo. Usarle in tempo reale fa la differenza tra teoria e operatività vera.»
+  </p>
+</section>
+<br>
+<section id="disclaimer" class="max-w-4xl mx-auto mb-24 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">Disclaimer e Note Legali</h2>
+
+  <p class="text-slate-700">
+    Le informazioni contenute in questo tutorial hanno esclusiva finalità didattica e informativa. Non rappresentano in alcun modo un’offerta al pubblico, una raccomandazione d’investimento, né un invito all’acquisto o alla vendita di strumenti finanziari derivati.
+  </p>
+
+  <p class="text-slate-700 mt-4">
+    Le opzioni vanilla comportano un elevato livello di rischio, soprattutto se utilizzate in modalità scoperta o con leva. Ogni decisione operativa deve essere preceduta da un’adeguata analisi dei rischi, lettura della documentazione ufficiale e, se necessario, consulto con un professionista abilitato.
+  </p>
+
+  <p class="text-slate-700 mt-4">
+    TRADELIA•AI declina ogni responsabilità per danni diretti o indiretti derivanti dall’uso improprio, parziale o non aggiornato delle informazioni contenute in questo documento.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Conoscere non basta. Serve capire, validare e soprattutto agire con metodo. Ogni derivato è una scommessa sulla propria consapevolezza.»
+  </p>
+</section>
+<br>
