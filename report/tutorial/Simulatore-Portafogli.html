@@ -8,194 +8,127 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
-  html { scroll-behavior: smooth; }
-
-  body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f9fafb;
-    color: #1f2937;
-    margin: 0;
-    padding: 0;
-    line-height: 1.7;
-    font-size: 16px;
-  }
-
-  h1, h2, h3, h4 {
-    color: #0f172a;
-    line-height: 1.3;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    font-weight: 600;
-  }
-
-  h1 { font-size: 2rem; }
-  h2 { font-size: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.25rem; }
-  h3 { font-size: 1.25rem; }
-  h4 { font-size: 1.125rem; }
-
-  p {
-    margin-bottom: 1.25rem;
-    color: #374151;
-  }
-
-  ul, ol {
-    padding-left: 1.25rem;
-    margin-bottom: 1.25rem;
-  }
-
-  li {
-    margin-bottom: 0.5rem;
-  }
-
-  section {
-    background: #ffffff;
-    padding: 2.5rem 2rem;
-    margin: 2rem auto;
-    border-radius: 0.75rem;
-    max-width: 840px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e5e7eb;
-  }
-
-  a {
-    color: #2563eb;
-    text-decoration: none;
-    font-weight: 500;
-  }
-
-  a:hover {
-    text-decoration: underline;
-    color: #1d4ed8;
-  }
-
-  .positive { color: #16a34a; font-weight: 600; }
-  .negative { color: #dc2626; font-weight: 600; }
-  .neutral  { color: #64748b; font-weight: 500; }
-
-  /* Responsive Typography */
-  @media screen and (max-width: 768px) {
-    body { font-size: 15px; line-height: 1.6; }
-    section { padding: 1.25rem; margin: 1rem; }
-    h1 { font-size: 1.5rem; }
-    h2 { font-size: 1.25rem; }
-    h3 { font-size: 1.125rem; }
-    h4 { font-size: 1rem; }
-  }
-
-  /* TABLE RESPONSIVE STYLE MIGLIORATO */
-  .responsive-table-wrapper {
-    width: 100%;
-    margin-bottom: 2rem;
-  }
-
-  table.responsive-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-  }
-
-  table.responsive-table th,
-  table.responsive-table td {
-    padding: 0.75rem;
-    border: 1px solid #e5e7eb;
-    text-align: left;
-    font-size: 0.95rem;
-    word-break: break-word;
-  }
-
-  table.responsive-table th {
-    background-color: #f3f4f6;
-    font-weight: 600;
-  }
-
-  table.responsive-table tr:nth-child(even) {
-    background-color: #f9fafb;
-  }
-
-  @media screen and (max-width: 768px) {
-    table.responsive-table {
-      display: block;
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    h1, h2, h3, h4 {
+      color: #0f172a;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.25rem; }
+    h3 { font-size: 1.25rem; }
+    h4 { font-size: 1.125rem; }
+    p {
+      margin-bottom: 1.25rem;
+      color: #374151;
+    }
+    ul, ol {
+      padding-left: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    li {
+      margin-bottom: 0.5rem;
+    }
+    section {
+      background: #ffffff;
+      padding: 2.5rem 2rem;
+      margin: 2rem auto;
+      border-radius: 0.75rem;
+      max-width: 840px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e5e7eb;
+    }
+    a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    a:hover {
+      text-decoration: underline;
+      color: #1d4ed8;
+    }
+    .positive { color: #16a34a; font-weight: 600; }
+    .negative { color: #dc2626; font-weight: 600; }
+    .neutral  { color: #64748b; font-weight: 500; }
+    @media screen and (max-width: 768px) {
+      body { font-size: 15px; line-height: 1.6; }
+      section { padding: 1.25rem; margin: 1rem; }
+      h1 { font-size: 1.5rem; }
+      h2 { font-size: 1.25rem; }
+      h3 { font-size: 1.125rem; }
+      h4 { font-size: 1rem; }
     }
 
-    table.responsive-table thead,
-    table.responsive-table tbody,
-    table.responsive-table tr {
-      display: block;
+    /* TABLE RESPONSIVE STYLE - struttura tabellare scrollabile */
+    .responsive-table-wrapper {
       width: 100%;
+      overflow-x: auto;
+      margin-bottom: 2rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
     }
-
-    table.responsive-table thead tr {
-      display: flex;
-      flex-wrap: wrap;
-      background: none;
-      padding-bottom: 0.5rem;
+    table.responsive-table {
+      width: 100%;
+      min-width: 640px;
+      border-collapse: collapse;
+      background-color: white;
     }
-
-    table.responsive-table thead th {
-      flex: 1 1 100%;
-      font-size: 0.875rem;
-      text-transform: uppercase;
-      background: none;
-      border: none;
-      padding: 0.25rem 0;
+    table.responsive-table th,
+    table.responsive-table td {
+      padding: 0.75rem 1rem;
+      border: 1px solid #e5e7eb;
+      text-align: left;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+    table.responsive-table th {
+      background-color: #f3f4f6;
+      font-weight: 600;
       color: #1f2937;
     }
-
-    table.responsive-table tbody tr {
-      margin-bottom: 1rem;
-      background: #ffffff;
-      border-radius: 0.75rem;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    table.responsive-table tr:nth-child(even) {
+      background-color: #f9fafb;
     }
 
-    table.responsive-table td {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.75rem 1rem;
-      border: none;
-      border-bottom: 1px solid #f1f5f9;
-      font-size: 0.95rem;
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
     }
-
-    table.responsive-table td:last-child {
-      border-bottom: none;
+    ::-webkit-scrollbar-track {
+      background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+      border-radius: 100vh;
     }
-  }
-
-  /* Scrollbar globale */
-  ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: linear-gradient(to right, #f1f5f9, #e2e8f0);
-    border-radius: 100vh;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: rgba(80, 160, 200, 0.5);
-    border-radius: 100vh;
-    transition: background-color 0.2s ease-in-out;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(80, 160, 200, 0.7);
-  }
-
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
-    box-sizing: border-box;
-  }
-
-  /* ScrollToTop button (se usi uno) */
-  #backToTop {
-    transition: all 0.3s ease-in-out;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
-</style>
+    ::-webkit-scrollbar-thumb {
+      background: rgba(80, 160, 200, 0.5);
+      border-radius: 100vh;
+      transition: background-color 0.2s ease-in-out;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(80, 160, 200, 0.7);
+    }
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
+      box-sizing: border-box;
+    }
+    #backToTop {
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+  </style>
 </head>
+
 
 <body>
   <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-3 flex justify-between items-center">
@@ -206,28 +139,24 @@
       Archivio Storico
     </a>
   </header>
+<section id="indice" class="section">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">Indice del Report – Simulatore Portafogli</h2>
 
-<br>
-<section>
-  <nav class="max-w-4xl mx-auto mt-4 mb-10 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-    <h2 class="text-lg font-semibold text-gray-800 mb-3">Indice del Report – Simulatore Portafogli</h2>
-    <ul class="list-disc list-inside text-sm text-blue-600 space-y-2">
-      <li><a href="#sezione-1">1. Cos'è un simulatore di portafoglio</a></li>
-      <li><a href="#sezione-2">2. Obiettivi: rischio, rendimento e orizzonte temporale</a></li>
-      <li><a href="#sezione-3">3. Profilazione: chi sei come investitore</a></li>
-      <li><a href="#sezione-4">4. Tipi di portafoglio: difensivo, bilanciato, aggressivo</a></li>
-      <li><a href="#sezione-5">5. Allocazione per asset class (azioni, bond, liquidità, oro)</a></li>
-      <li><a href="#sezione-6">6. Scenari reali: dal giovane a basso reddito al professionista high net worth</a></li>
-      <li><a href="#sezione-7">7. Simulazione dinamica: ribilanciamento e stress test</a></li>
-      <li><a href="#sezione-8">8. Collegamenti utili: come valutare azioni, ETF, obbligazioni e strumenti alternativi</a></li>
-      <li><a href="#sezione-9">9. Glossario: metriche chiave del portafoglio</a></li>
-      <li><a href="#sezione-10">10. Disclaimer finale e responsabilità d’uso</a></li>
-    </ul>
-  </nav>
+  <ul class="list-disc list-inside text-blue-600 space-y-2 text-sm sm:text-base">
+    <li><a href="#sezione-1" target="_self">1. Cos'è un simulatore di portafoglio</a></li>
+    <li><a href="#sezione-2" target="_self">2. Obiettivi: rischio, rendimento e orizzonte temporale</a></li>
+    <li><a href="#sezione-3" target="_self">3. Profilazione: chi sei come investitore</a></li>
+    <li><a href="#sezione-4" target="_self">4. Tipi di portafoglio: difensivo, bilanciato, aggressivo</a></li>
+    <li><a href="#sezione-5" target="_self">5. Allocazione per asset class (azioni, bond, liquidità, oro)</a></li>
+    <li><a href="#sezione-6" target="_self">6. Scenari reali: dal giovane a basso reddito al professionista high net worth</a></li>
+    <li><a href="#sezione-7" target="_self">7. Simulazione dinamica: ribilanciamento e stress test</a></li>
+    <li><a href="#sezione-8" target="_self">8. Collegamenti utili: come valutare azioni, ETF, obbligazioni e strumenti alternativi</a></li>
+    <li><a href="#sezione-9" target="_self">9. Glossario: metriche chiave del portafoglio</a></li>
+    <li><a href="#sezione-10" target="_self">10. Disclaimer finale e responsabilità d’uso</a></li>
+  </ul>
 </section>
-<br>
-    <section id="sezione-1" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">1. Cos'è un simulatore di portafoglio</h2>
+<section id="sezione-1" class="section">
+  <h2>1. Cos'è un simulatore di portafoglio</h2>
 
   <p>
     Un <strong>simulatore di portafoglio</strong> è uno strumento analitico che consente di valutare, costruire e testare una composizione di investimenti coerente con i propri obiettivi finanziari, il profilo di rischio e l’orizzonte temporale. Integra dati storici, metriche di rischio e scenari ipotetici per offrire <strong>una rappresentazione realistica ma non vincolante</strong> del comportamento futuro di un portafoglio.
@@ -237,66 +166,64 @@
     Non fornisce certezze, ma <strong>approssimazioni ragionate</strong> basate su asset allocation, volatilità attesa, correlazioni e possibilità di ribilanciamento. È particolarmente utile per confrontare scenari “what if” (es. aumento tassi, shock azionario, inflazione alta) e per testare la resilienza del portafoglio a eventi sistemici.
   </p>
 
-  <h3 class="text-lg font-semibold mt-4 text-slate-800">Funzioni principali</h3>
-  <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
+  <h3>Funzioni principali</h3>
+  <ul>
     <li>Simulare portafogli con strumenti diversi (azioni, ETF, bond, oro, liquidità)</li>
     <li>Valutare il profilo rischio/rendimento atteso</li>
     <li>Confrontare scenari storici e ipotetici (crisi, tassi, inflazione)</li>
     <li>Calcolare metriche chiave: sharpe ratio, drawdown, volatilità</li>
   </ul>
 
-  <p class="mt-4">
+  <p>
     Ogni simulatore efficace è tanto utile quanto la qualità delle ipotesi inserite. Non è uno strumento predittivo, ma uno strumento di <strong>consapevolezza operativa</strong> per investitori e consulenti.
   </p>
 
-  <p class="mt-6 text-sm text-gray-500 italic">
+  <p class="text-sm text-gray-500 italic">
     «Un portafoglio non si costruisce per il rendimento. Si costruisce per resistere — e il simulatore ti aiuta a capire a cosa.»
   </p>
 </section>
-<br>
-<section id="sezione-2" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">2. Obiettivi: rischio, rendimento e orizzonte temporale</h2>
+<section id="sezione-2" class="section">
+  <h2>2. Obiettivi: rischio, rendimento e orizzonte temporale</h2>
 
   <p>
     Ogni portafoglio nasce da un <strong>obiettivo finanziario specifico</strong>. La definizione iniziale è il punto cruciale da cui dipendono l’allocazione degli strumenti, il grado di rischio accettabile e l’orizzonte temporale di riferimento.
   </p>
 
-  <h3 class="text-lg font-semibold mt-4 text-slate-800">1. Obiettivo primario</h3>
-  <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
+  <h3>1. Obiettivo primario</h3>
+  <ul>
     <li>Protezione del capitale (es. pensionato, breve termine)</li>
     <li>Rendita regolare (es. investitore conservativo)</li>
     <li>Accrescimento del patrimonio (es. giovane professionista)</li>
     <li>Indipendenza finanziaria / FIRE (es. lungo termine, elevato rischio accettato)</li>
   </ul>
 
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">2. Rischio tollerabile</h3>
+  <h3>2. Rischio tollerabile</h3>
   <p>
     La tolleranza al rischio è personale. Va valutata con strumenti di profilazione, ma anche in base a esperienze passate, emotività e capacità di sostenere drawdown senza disinvestire. Un portafoglio non sostenibile psicologicamente è inefficiente.
   </p>
 
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">3. Orizzonte temporale</h3>
+  <h3>3. Orizzonte temporale</h3>
   <p>
     Il tempo è un fattore di protezione e rendimento. Un orizzonte lungo permette maggior rischio e volatilità. Uno breve impone stabilità, liquidità e bassa esposizione a strumenti volatili.
   </p>
 
-  <p class="mt-4">
+  <p>
     Il triangolo rischio-rendimento-tempo va sempre valutato insieme: <strong>massimizzare uno, implica sacrificare almeno uno degli altri</strong>.
   </p>
 
-  <p class="mt-6 text-sm text-gray-500 italic">
+  <p class="text-sm text-gray-500 italic">
     «Un portafoglio che ignora l’orizzonte temporale è come un viaggio senza mappa. Può portarti ovunque, ma non dove serve.»
   </p>
 </section>
-<br>
-<section id="sezione-3" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">3. Profilazione: chi sei come investitore</h2>
+<section id="sezione-3" class="section">
+  <h2>3. Profilazione: chi sei come investitore</h2>
 
   <p>
     Ogni simulazione efficace inizia dalla comprensione di <strong>chi sei</strong> come investitore. La profilazione non riguarda solo l’età o il reddito, ma include aspetti <strong>comportamentali, patrimoniali e cognitivi</strong>.
   </p>
 
-  <h3 class="text-lg font-semibold mt-4 text-slate-800">Fattori chiave nella profilazione</h3>
-  <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
+  <h3>Fattori chiave nella profilazione</h3>
+  <ul>
     <li><strong>Età anagrafica e fase di vita:</strong> inizio carriera, picco professionale, pensionamento</li>
     <li><strong>Capacità di risparmio:</strong> costante mensile, bonus, rendite passive</li>
     <li><strong>Esperienza finanziaria:</strong> principianti, intermedi, avanzati</li>
@@ -305,8 +232,8 @@
     <li><strong>Priorità personali:</strong> reddito, protezione, crescita, eredità</li>
   </ul>
 
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">Esempi di profili realistici</h3>
-  <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
+  <h3>Esempi di profili realistici</h3>
+  <ul>
     <li><strong>Giovane dipendente</strong> con reddito fisso e orizzonte lungo → tolleranza alta, focus su crescita</li>
     <li><strong>Libero professionista</strong> con flussi variabili → bilanciamento tra liquidità e rischio</li>
     <li><strong>Pensionato</strong> con capitale accumulato → basso rischio, attenzione al ritiro graduale</li>
@@ -314,22 +241,22 @@
     <li><strong>Impiegato 40enne, single</strong>, ha €5.000 da parte e possibilità di investire €200/mese → strategia PAC su ETF ben diversificati con tolleranza moderata al rischio e orizzonte >10 anni</li>
   </ul>
 
-  <p class="mt-4">
+  <p>
     La simulazione ha senso solo se parte da dati realistici: <strong>ogni investitore è un caso a sé</strong>, e ogni simulazione dovrebbe rifletterlo.
   </p>
 
-  <p class="mt-6 text-sm text-gray-500 italic">
+  <p class="text-sm text-gray-500 italic">
     «Il portafoglio non si costruisce in base a chi sei sulla carta. Si costruisce in base a chi sei nei crolli.»
   </p>
 </section>
-<br>
-<section id="sezione-3" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">3. Contesto macro‑economico e geopolitico 2025</h2>
+<section id="sezione-3b" class="section">
+  <h2>3.b Contesto macro‑economico e geopolitico 2025</h2>
 
   <p>
     Ogni modello di portafoglio deve partire da una visione strategica del contesto globale. Il 2025 è caratterizzato da un mix complesso di variabili dove ogni scelta allocativa diventa una risposta ponderata a:
   </p>
-  <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
+
+  <ul>
     <li>Ripresa post-pandemica con economie a velocità diverse (USA resilienti, Europa stagnante, Asia divisa)</li>
     <li>Guerre regionali e tensioni geopolitiche crescenti (Ucraina, Medio Oriente, Taiwan)</li>
     <li>Tassi storicamente elevati, ma divergenza tra aree geografiche e aspettative future incerte</li>
@@ -337,76 +264,73 @@
     <li>Evoluzione normativa: regolamentazione cripto (MiCA), miliardi in fondi ESG, focus su trasparenza</li>
   </ul>
 
-  <h3 class="text-lg font-semibold mt-4 text-slate-800">1. Tassi e liquidità</h3>
+  <h3>1. Tassi e liquidità</h3>
   <p>
     La stretta monetaria prosegue in molte aree: il costo del denaro è alto, ma le traiettorie future sono instabili. Questo scenario impatta direttamente su durate obbligazionarie e costi/opportunità dei conti remunerati.
   </p>
 
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">2. Inflazione settoriale</h3>
+  <h3>2. Inflazione settoriale</h3>
   <p>
     Seppure l’inflazione headline stia rallentando, permangono pressioni in settori specifici: energia (transition cost), food e sanità. Gli asset reali e i bond inflation-linked diventano strumenti essenziali nella difesa del potere d’acquisto.
   </p>
 
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">3. Geopolitica e supply chain</h3>
+  <h3>3. Geopolitica e supply chain</h3>
   <p>
     I conflitti in Ucraina e Medio Oriente, la tensione USA‑Cina/Taiwan, e la transizione energetica impongono volatilità e rotture nelle catene di approvvigionamento. È fondamentale una visione globale, con coperture su commodity, mercati difensivi e asset decorrelati.
   </p>
 
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">4. Asset digitale e regolamentazione</h3>
+  <h3>4. Asset digitale e regolamentazione</h3>
   <p>
     Il 2025 vede l’emergere di ETF cripto regolamentati (es. in Europa e USA), la regolamentazione MiCA e una crescente richiesta di prodotti digitali conformi. L’innovazione non è più esotica, ma richiede rigore e compliance.
   </p>
 
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">5. Comportamento dell’investitore moderno</h3>
+  <h3>5. Comportamento dell’investitore moderno</h3>
   <p>
     L’investitore contemporaneo chiede trasparenza, governance attiva, strumenti digitali e PAC. Non segue più schematicamente i trend, ma cerca controllo, personalizzazione e sostenibilità a lungo termine.
   </p>
 
-  <p class="mt-4">
+  <p>
     Questo contesto definisce i parametri da cui derivano i sei concept portafoglio: ogni composizione è infatti una combinazione di risposta strutturata a tassi, inflazione, geopolitica, innovazione, e profili di rischio personali.
   </p>
 
-  <p class="mt-6 text-sm text-gray-500 italic">
+  <p class="text-sm text-gray-500 italic">
     «Nel 2025, l’investitore non costruisce un portafoglio. Costruisce una strategia che risponde a tassi, inflazione, guerre e innovazione. Solo così un mix di asset ha senso.»
   </p>
 </section>
-<br>
-<section id="sezione-3b" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">
-    3.b Evoluzione accademica: dalla Modern Portfolio Theory alla costruzione dinamica del portafoglio 2025
-  </h2>
+<section id="sezione-3c" class="section">
+  <h2>3.c Evoluzione accademica: dalla Modern Portfolio Theory alla costruzione dinamica del portafoglio 2025</h2>
 
   <p>
     La <strong>Modern Portfolio Theory (MPT)</strong>, formulata da Harry Markowitz nel 1952, ha rappresentato un punto di svolta nella finanza: per la prima volta, rischio e rendimento venivano valutati con approccio quantitativo, tracciando la cosiddetta frontiera efficiente. Tuttora, la MPT è insegnata nelle Business School e utilizzata come base per tool di asset allocation automatizzati.
   </p>
 
-  <h3 class="text-lg font-semibold mt-4 text-slate-800">1. Perché la MPT rimane rilevante</h3>
-  <ul class="list-disc list-inside text-slate-700 space-y-2">
+  <h3>1. Perché la MPT rimane rilevante</h3>
+  <ul>
     <li>Fornisce una cornice formale per scegliere portafogli ottimizzati rischio/rendimento</li>
     <li>Richiede dati semplici (rendimenti attesi, covarianze) ed è compatibile con strumenti liquidi e regolamentati</li>
     <li>Costituisce una solida base iniziale anche per modelli avanzati (es. Black-Litterman, risk parity)</li>
   </ul>
 
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">2. Limiti oggettivi nel 2025</h3>
-  <ul class="list-disc list-inside text-slate-700 space-y-2">
+  <h3>2. Limiti oggettivi nel 2025</h3>
+  <ul>
     <li>Presuppone distribuzioni gaussiane dei rendimenti — inadatte per asset crypto, tech, ETP a leva e scenari tail-risk</li>
     <li>Ignora eventi estremi (black swan) e regimi di mercato (soggetti a regime-switching)</li>
     <li>Non incorpora dimensione comportamentale, fiscale, ritardi di esecuzione o costi d’ingresso (slippage)</li>
   </ul>
 
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">3. Principali evoluzioni moderne</h3>
-  <ul class="list-disc list-inside text-slate-700 space-y-2">
+  <h3>3. Principali evoluzioni moderne</h3>
+  <ul>
     <li><strong>Mean–CVaR Optimization:</strong> minimizzazione del valore a rischio (Conditional Value at Risk)</li>
     <li><strong>Black‑Litterman model:</strong> fusione di previsioni soggettive con bersaglio di mercato</li>
     <li><strong>Risk Parity & Factor Investing:</strong> allocazione secondo rischio sistemico (volatilità, beta, fattori value/momentum)</li>
     <li><strong>Regime‑Switching Models:</strong> modelli dinamici che adattano l’asset allocation in base al contesto (es. inflazione, tassi, geopolitica)</li>
   </ul>
 
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">4. Applicazione al nostro framework</h3>
-  <p class="text-slate-700">
+  <h3>4. Applicazione al nostro framework</h3>
+  <p>
     Le cinque fasi metodologiche che hanno guidato la definizione dei modelli di portafoglio:
   </p>
-  <ol class="list-decimal list-inside text-slate-700 space-y-2">
+  <ol>
     <li><strong>Costruzione iniziale:</strong> utilizzo del modello MPT per definire il core diversificato (70 %) e satellite tattico (30 %)</li>
     <li><strong>Integrazione fattoriale:</strong> inclusion of inflation-linked, commodity e fattori difensivi o growth nelle componenti core e satellite</li>
     <li><strong>Adattamento regimi:</strong> allocazioni variabili secondo scenari di inflazione, tassi, geopolitica, crypto digitization</li>
@@ -414,391 +338,384 @@
     <li><strong>Compliant design:</strong> strumenti UCITS, ETF regolamentati, posizioni CFD/ETP con leva limitata e gestione del margine</li>
   </ol>
 
-  <p class="mt-4">
-    Questo approccio garantisce un disegno **accademicamente fondato**, **normativamente solido** e **operativamente realistico**, riducendo la distanza tra teoria e pratica professionale.
+  <p>
+    Questo approccio garantisce un disegno <strong>accademicamente fondato</strong>, <strong>normativamente solido</strong> e <strong>operativamente realistico</strong>, riducendo la distanza tra teoria e pratica professionale.
   </p>
 
-  <p class="mt-6 text-sm text-gray-500 italic">
+  <p class="text-sm text-gray-500 italic">
     «La teoria insegna il possibile. I modelli evoluti traducono il possibile nel gestibile, nel reale, nel 2025.»
   </p>
 </section>
-<br>
-<section id="sezione-4" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">4. Sei portafogli evoluti 2025 – profili target e varianti avanzate</h2>
+<section id="sezione-4" class="section">
+  <h2>4. Sei portafogli evoluti 2025 – profili target e varianti avanzate</h2>
 
-  <p>Template generici costruiti secondo approccio Core (70 %) + Satellite (30 %), con esposizione netta 100 %. Si fondano su MPT evoluta (Black–Litterman, Mean–CVaR, regime-switching) e strumenti UCITS/CFD/ETP compliant MiFID‑MiCA. Non costituiscono consulenza personalizzata.</p>
+  <p>
+    Template generici costruiti secondo approccio Core (70 %) + Satellite (30 %), con esposizione netta 100 %. Si fondano su MPT evoluta (Black–Litterman, Mean–CVaR, regime-switching) e strumenti UCITS/CFD/ETP compliant MiFID‑MiCA. Non costituiscono consulenza personalizzata.
+  </p>
 
   <!-- 1. Ultra Difensivo -->
   <h3>1. Ultra Difensivo</h3>
-  <ul class="list-disc ml-6 text-slate-700 space-y-2">
-    <li><strong>Profilo Target:</strong> pensionati, liquidità prioritaria, orizzonte <3 anni</li>
-    <li><strong>Variante A – Protezione assoluta</strong>: Core = 70 % ETF monetari/T‑Bill; Satellite = 20 % inflation-linked; 10 % oro tramite ETF.</li>
-    <li><strong>Variante B – Liquidità operativa</strong>: Core = 70 % conti deposito; Satellite = 20 % T‑Bill ETF; 10 % CFD tassi futures (copertura attiva).</li>
-    <li><strong>Variante C – Patrimonio conservativo</strong>: Core = 60 % liquidità; 10 % ETF IG short duration; Satellite = 20 % inflation-linked; 10 % ETF oro.</li>
+  <ul>
+    <li><strong>Profilo Target:</strong> pensionati, liquidità prioritaria, orizzonte &lt;3 anni</li>
+    <li><strong>Variante A – Protezione assoluta:</strong> Core = 70 % ETF monetari/T‑Bill; Satellite = 20 % inflation-linked; 10 % oro tramite ETF</li>
+    <li><strong>Variante B – Liquidità operativa:</strong> Core = 70 % conti deposito; Satellite = 20 % T‑Bill ETF; 10 % CFD tassi futures (copertura attiva)</li>
+    <li><strong>Variante C – Patrimonio conservativo:</strong> Core = 60 % liquidità; 10 % ETF IG short duration; Satellite = 20 % inflation-linked; 10 % ETF oro</li>
   </ul>
 
   <!-- 2. Difensivo Evoluto -->
   <h3>2. Difensivo Evoluto</h3>
-  <ul class="list-disc ml-6 text-slate-700 space-y-2">
+  <ul>
     <li><strong>Profilo Target:</strong> famiglie, risparmiatori avversi a grande rischio, orizzonte 3–5 anni</li>
-    <li><strong>Variante A – Rendita & copertura inf.</strong>: Core = 40 %Bond IG,20 %Inflation‑linked,10 %Equity difensiva; Satellite = 15 %Oro ETF,10 %FX‑hedged ETF,5 %CFD bond futures.</li>
-    <li><strong>Variante B – Crescita prudente</strong>: Core = 50 %Bond IG,20 %Bond flessibili,30 %Equity dividend; Satellite = 15 %Commodity ETF,15 %ESG tematici.</li>
-    <li><strong>Variante C – Balanced yield</strong>: Core = 60 %Bond IG,10 %Bond HY; Satellite = 20 %Inflation-linked,10 %Oro ETF.</li>
+    <li><strong>Variante A – Rendita & copertura inf.:</strong> Core = 40 % Bond IG, 20 % Inflation‑linked, 10 % Equity difensiva; Satellite = 15 % Oro ETF, 10 % FX‑hedged ETF, 5 % CFD bond futures</li>
+    <li><strong>Variante B – Crescita prudente:</strong> Core = 50 % Bond IG, 20 % Bond flessibili, 30 % Equity dividend; Satellite = 15 % Commodity ETF, 15 % ESG tematici</li>
+    <li><strong>Variante C – Balanced yield:</strong> Core = 60 % Bond IG, 10 % Bond HY; Satellite = 20 % Inflation-linked, 10 % Oro ETF</li>
   </ul>
 
   <!-- 3. Bilanciato Strategico -->
   <h3>3. Bilanciato Strategico</h3>
-  <ul class="list-disc ml-6 text-slate-700 space-y-2">
+  <ul>
     <li><strong>Profilo Target:</strong> impiegati 40–55 anni, PAC €200–500/mese, orizzonte 5‑10 anni</li>
-    <li><strong>Variante A – PAC core</strong>: Core = 45 %Equity globali,35 %Bond flessibili; Satellite = 10 %REIT,10 %Commodity ETF.</li>
-    <li><strong>Variante B – Esposizione geopolitica</strong>: Core = 40 %Equity globali,30 %Bond IG; Satellite = 10 %Emergenti,10 %Crypto ETF,10 %Real asset.</li>
-    <li><strong>Variante C – Trajectory builder</strong>: Core = 50 %Equity globali,20 %Bond flessibili; Satellite = 20 %ESG tematici,10 %Inflation-linked.</li>
+    <li><strong>Variante A – PAC core:</strong> Core = 45 % Equity globali, 35 % Bond flessibili; Satellite = 10 % REIT, 10 % Commodity ETF</li>
+    <li><strong>Variante B – Esposizione geopolitica:</strong> Core = 40 % Equity globali, 30 % Bond IG; Satellite = 10 % Emergenti, 10 % Crypto ETF, 10 % Real asset</li>
+    <li><strong>Variante C – Trajectory builder:</strong> Core = 50 % Equity globali, 20 % Bond flessibili; Satellite = 20 % ESG tematici, 10 % Inflation-linked</li>
   </ul>
 
   <!-- 4. Dinamico Tematico -->
   <h3>4. Dinamico Tematico</h3>
-  <ul class="list-disc ml-6 text-slate-700 space-y-2">
+  <ul>
     <li><strong>Profilo Target:</strong> under 50, stock picking e tematiche digitali, orizzonte >10 anni</li>
-    <li><strong>Variante A – Megatrend + reddito</strong>: Core = 35 %Equity quality,20 %HY bond,15 %AI/clean‑tech ETF; Satellite = 10 %Crypto ETF,10 %ETP robotica,10 %CFD commodity.</li>
-    <li><strong>Variante B – Growth focalizzato</strong>: Core = 50 %Growth equity,20 %Bond flessibili; Satellite = 10 %Frontier markets ETF,10 %Crypto ETF,10 %Biotech ETF.</li>
-    <li><strong>Variante C – Tech ethos</strong>: Core = 40 %Growth equity,20 %Bond flessibili,10 %ESG tematici; Satellite = 10 %Crypto ETF,10 %AI frontier ETF,10 %CFD tech.</li>
+    <li><strong>Variante A – Megatrend + reddito:</strong> Core = 35 % Equity quality, 20 % HY bond, 15 % AI/clean‑tech ETF; Satellite = 10 % Crypto ETF, 10 % ETP robotica, 10 % CFD commodity</li>
+    <li><strong>Variante B – Growth focalizzato:</strong> Core = 50 % Growth equity, 20 % Bond flessibili; Satellite = 10 % Frontier markets ETF, 10 % Crypto ETF, 10 % Biotech ETF</li>
+    <li><strong>Variante C – Tech ethos:</strong> Core = 40 % Growth equity, 20 % Bond flessibili, 10 % ESG tematici; Satellite = 10 % Crypto ETF, 10 % AI frontier ETF, 10 % CFD tech</li>
   </ul>
 
   <!-- 5. Aggressivo Globale -->
   <h3>5. Aggressivo Globale</h3>
-  <ul class="list-disc ml-6 text-slate-700 space-y-2">
+  <ul>
     <li><strong>Profilo Target:</strong> giovani professionisti, FIRE, capacità di sostenere drawdown >30%</li>
-    <li><strong>Variante A – Strategia FIRE</strong>: Core = 50 %Growth global equity,20 %Small‑cap/Emerging; Satellite = 10 %Crypto ETF,10 %REIT,10 %CFD tech leverage.</li>
-    <li><strong>Variante B – Megatrend globale</strong>: Core = 60 %Growth equity,10 %Emerging value; Satellite = 10 %Crypto ETF,10 %ETF spazio,10 %ETF AI frontier.</li>
-    <li><strong>Variante C – Aggressive border</strong>: Core = 40 %Growth equity,20 %Small‑cap/Emerging,10 %ESG; Satellite = 10 %Crypto ETF,10 %ETP frontier,10 %CFD biotech.</li>
+    <li><strong>Variante A – Strategia FIRE:</strong> Core = 50 % Growth global equity, 20 % Small‑cap/Emerging; Satellite = 10 % Crypto ETF, 10 % REIT, 10 % CFD tech leverage</li>
+    <li><strong>Variante B – Megatrend globale:</strong> Core = 60 % Growth equity, 10 % Emerging value; Satellite = 10 % Crypto ETF, 10 % ETF spazio, 10 % ETF AI frontier</li>
+    <li><strong>Variante C – Aggressive border:</strong> Core = 40 % Growth equity, 20 % Small‑cap/Emerging, 10 % ESG; Satellite = 10 % Crypto ETF, 10 % ETP frontier, 10 % CFD biotech</li>
   </ul>
 
   <!-- 6. Satellite Speculativo -->
   <h3>6. Satellite Speculativo</h3>
-  <ul class="list-disc ml-6 text-slate-700 space-y-2">
-    <li><strong>Profilo Target:</strong> investitori esperti, capitali dedicati a rischio elevato, horizon <2 anni</li>
-    <li><strong>Variante A – High Risk / High Alpha</strong>: Satellite = 10 %Leveraged ETP,10 %Frontier market ETF,10 %Crypto volatility ETF.</li>
-    <li><strong>Variante B – Innovazione pura</strong>: Satellite = 10 %Biotech ETF,10 %Energy transition ETF,10 %CFD AI focus.</li>
-    <li><strong>Variante C – Thematic explorer</strong>: Satellite = 10 %Space ETF,10 %Quantum computing ETF,10 %Crypto NFT/blockchain ETF.</li>
+  <ul>
+    <li><strong>Profilo Target:</strong> investitori esperti, capitali dedicati a rischio elevato, horizon &lt;2 anni</li>
+    <li><strong>Variante A – High Risk / High Alpha:</strong> Satellite = 10 % Leveraged ETP, 10 % Frontier market ETF, 10 % Crypto volatility ETF</li>
+    <li><strong>Variante B – Innovazione pura:</strong> Satellite = 10 % Biotech ETF, 10 % Energy transition ETF, 10 % CFD AI focus</li>
+    <li><strong>Variante C – Thematic explorer:</strong> Satellite = 10 % Space ETF, 10 % Quantum computing ETF, 10 % Crypto NFT/blockchain ETF</li>
   </ul>
 
-  <p class="mt-6 text-sm text-gray-500 italic">«Questi portafogli derivano dall’evoluzione della Modern Portfolio Theory integrata con Black–Litterman, Mean–CVaR e modelli regime-switching: non formule statiche, ma strutture flessibili basate su scenari attesi.»</p>
-  <p class="mt-2 text-sm text-gray-500 italic">«I portafogli non sono formule universali, ma opportunità strutturate. Ogni caso va modulato in base a un modello solido, adattivo e contestualizzato.»</p>
+  <p class="text-sm text-gray-500 italic">
+    «Questi portafogli derivano dall’evoluzione della Modern Portfolio Theory integrata con Black–Litterman, Mean–CVaR e modelli regime-switching: non formule statiche, ma strutture flessibili basate su scenari attesi.»
+  </p>
+  <p class="text-sm text-gray-500 italic">
+    «I portafogli non sono formule universali, ma opportunità strutturate. Ogni caso va modulato in base a un modello solido, adattivo e contestualizzato.»
+  </p>
 </section>
-<br>
-  <section id="sezione-5" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-    <h2 class="text-xl font-semibold text-slate-900 mb-4">
-      5. Quantitative Analysis & Stress Test – modelli validati per scenari 2025
-    </h2>
-
-    <p>
-      Ogni portafoglio è stato validato secondo metodologie quantitative di livello accademico e istituzionale, integrando:
-      <ul class="list-disc list-inside text-slate-700">
-        <li><strong>Frontiera efficiente rolling window (24 mesi)</strong> con distorsione regolata sull’avversione al rischio</li>
-        <li><strong>Black–Litterman overlay</strong> per integrare previsioni macro (inflazione, tassi, geopolitica)</li>
-        <li><strong>Optimizzazione Mean–CVaR</strong> (95%) con controllo tail risk</li>
-        <li><strong>Regime-switching dinamico</strong> in funzione di fase economica (hawkish, stagnazione, crescita), adattando l’asset mix in tempo reale</li>
-      </ul>
-    </p>
-
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">Indicatori di rischio/rendimento</h3>
-<div class="responsive-table-wrapper">
-  <table>
-    <thead>
-      <tr>
-        <th>Modello</th>
-        <th>Volatilità</th>
-        <th>CVaR</th>
-        <th>Drawdown</th>
-        <th>Sharpe</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td data-label="Modello">Ultra Difensivo</td>
-        <td data-label="Volatilità">2.5%</td>
-        <td data-label="CVaR">−3%</td>
-        <td data-label="Drawdown">−5%</td>
-        <td data-label="Sharpe">0.45</td>
-      </tr>
-      <tr>
-        <td data-label="Modello">Difensivo Evoluto</td>
-        <td data-label="Volatilità">5%</td>
-        <td data-label="CVaR">−7%</td>
-        <td data-label="Drawdown">−12%</td>
-        <td data-label="Sharpe">0.55</td>
-      </tr>
-      <tr>
-        <td data-label="Modello">Bilanciato Strategico</td>
-        <td data-label="Volatilità">10%</td>
-        <td data-label="CVaR">−15%</td>
-        <td data-label="Drawdown">−20%</td>
-        <td data-label="Sharpe">0.60</td>
-      </tr>
-      <tr>
-        <td data-label="Modello">Dinamico Tematico</td>
-        <td data-label="Volatilità">12%</td>
-        <td data-label="CVaR">−18%</td>
-        <td data-label="Drawdown">−25%</td>
-        <td data-label="Sharpe">0.58</td>
-      </tr>
-      <tr>
-        <td data-label="Modello">Aggressivo Globale</td>
-        <td data-label="Volatilità">18%</td>
-        <td data-label="CVaR">−25%</td>
-        <td data-label="Drawdown">−35%</td>
-        <td data-label="Sharpe">0.52</td>
-      </tr>
-      <tr>
-        <td data-label="Modello">Satellite Speculativo</td>
-        <td data-label="Volatilità">22%</td>
-        <td data-label="CVaR">−35%</td>
-        <td data-label="Drawdown">−45%</td>
-        <td data-label="Sharpe">0.48</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-    <h3 class="text-lg font-semibold mt-6 text-slate-800">Stress Test scenari macro estesi</h3>
-    <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
-      <li><strong>Scenario Hawkish Inflation:</strong> tassi +200 bps, equity –10%, bond IG –5%, inflation-linked +3%.</li>
-      <li><strong>Scenario Geopolitical Shock:</strong> volatilità +30%, equity –15%, commodity +7%, real assets +5%.</li>
-      <li><strong>Scenario Crypto Crash:</strong> crypto ETF –50%, small cap –20%, tech –15%, bond/monetari +2%.</li>
-    </ul>
-
- <h3 class="text-lg font-semibold mt-6 text-slate-800">Impatto scenari</h3>
-<div class="responsive-table-wrapper">
-  <table>
-    <thead>
-      <tr>
-        <th>Portafoglio</th>
-        <th>Hawkish %</th>
-        <th>Geopolitico %</th>
-        <th>Crypto Crash %</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td data-label="Portafoglio">Ultra Difensivo</td>
-        <td data-label="Hawkish %">−1.0</td>
-        <td data-label="Geopolitico %">−2.0</td>
-        <td data-label="Crypto Crash %">−0.5</td>
-      </tr>
-      <tr>
-        <td data-label="Portafoglio">Difensivo Evoluto</td>
-        <td data-label="Hawkish %">−3.0</td>
-        <td data-label="Geopolitico %">−5.0</td>
-        <td data-label="Crypto Crash %">−1.0</td>
-      </tr>
-      <tr>
-        <td data-label="Portafoglio">Bilanciato Strategico</td>
-        <td data-label="Hawkish %">−6.0</td>
-        <td data-label="Geopolitico %">−8.0</td>
-        <td data-label="Crypto Crash %">−3.0</td>
-      </tr>
-      <tr>
-        <td data-label="Portafoglio">Dinamico Tematico</td>
-        <td data-label="Hawkish %">−8.0</td>
-        <td data-label="Geopolitico %">−10.0</td>
-        <td data-label="Crypto Crash %">−5.0</td>
-      </tr>
-      <tr>
-        <td data-label="Portafoglio">Aggressivo Globale</td>
-        <td data-label="Hawkish %">−12.0</td>
-        <td data-label="Geopolitico %">−15.0</td>
-        <td data-label="Crypto Crash %">−7.0</td>
-      </tr>
-      <tr>
-        <td data-label="Portafoglio">Satellite Speculativo</td>
-        <td data-label="Hawkish %">−15.0</td>
-        <td data-label="Geopolitico %">−20.0</td>
-        <td data-label="Crypto Crash %">−10.0</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-
-    <p class="mt-6">
-      Questa sezione dimostra che i modelli sono stati testati con rigore quantitativo, esponendo le metriche fondamentali e i comportamenti in scenari di stress. È un livello professionale adatto ad analisti senior, gestori e desk istituzionali.
-    </p>
-
-    <p class="mt-6 text-sm text-gray-500 italic">
-      «Un modello quantitativo non è serio se non resiste ai numeri, alle code grasse, agli stress. Qui regge.»
-    </p>
-  </section>
-<br>
-<section id="sezione-6" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">6. Scenari reali per profili d’investitore</h2>
+<section id="sezione-5" class="section">
+  <h2>5. Quantitative Analysis & Stress Test – modelli validati per scenari 2025</h2>
 
   <p>
-    In questa sezione presentiamo **scenari realistici**, ciascuno associato a un profilo specifico, con composizione ottimale, meccanismi di PAC o prelievo, e commenti su orizzonte, limiti fiscali e psicologici.
+    Ogni portafoglio è stato validato secondo metodologie quantitative di livello accademico e istituzionale, integrando:
+  </p>
+  <ul>
+    <li><strong>Frontiera efficiente rolling window (24 mesi)</strong> con distorsione regolata sull’avversione al rischio</li>
+    <li><strong>Black–Litterman overlay</strong> per integrare previsioni macro (inflazione, tassi, geopolitica)</li>
+    <li><strong>Ottimizzazione Mean–CVaR</strong> (95%) con controllo tail risk</li>
+    <li><strong>Regime-switching dinamico</strong> in funzione di fase economica (hawkish, stagnazione, crescita), adattando l’asset mix in tempo reale</li>
+  </ul>
+
+  <h3>Indicatori di rischio/rendimento</h3>
+  <div class="responsive-table-wrapper">
+    <table class="responsive-table">
+      <thead>
+        <tr>
+          <th>Modello</th>
+          <th>Volatilità</th>
+          <th>CVaR</th>
+          <th>Drawdown</th>
+          <th>Sharpe</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ultra Difensivo</td>
+          <td>2.5%</td>
+          <td>−3%</td>
+          <td>−5%</td>
+          <td>0.45</td>
+        </tr>
+        <tr>
+          <td>Difensivo Evoluto</td>
+          <td>5%</td>
+          <td>−7%</td>
+          <td>−12%</td>
+          <td>0.55</td>
+        </tr>
+        <tr>
+          <td>Bilanciato Strategico</td>
+          <td>10%</td>
+          <td>−15%</td>
+          <td>−20%</td>
+          <td>0.60</td>
+        </tr>
+        <tr>
+          <td>Dinamico Tematico</td>
+          <td>12%</td>
+          <td>−18%</td>
+          <td>−25%</td>
+          <td>0.58</td>
+        </tr>
+        <tr>
+          <td>Aggressivo Globale</td>
+          <td>18%</td>
+          <td>−25%</td>
+          <td>−35%</td>
+          <td>0.52</td>
+        </tr>
+        <tr>
+          <td>Satellite Speculativo</td>
+          <td>22%</td>
+          <td>−35%</td>
+          <td>−45%</td>
+          <td>0.48</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Stress Test scenari macro estesi</h3>
+  <ul>
+    <li><strong>Scenario Hawkish Inflation:</strong> tassi +200 bps, equity –10%, bond IG –5%, inflation-linked +3%</li>
+    <li><strong>Scenario Geopolitical Shock:</strong> volatilità +30%, equity –15%, commodity +7%, real assets +5%</li>
+    <li><strong>Scenario Crypto Crash:</strong> crypto ETF –50%, small cap –20%, tech –15%, bond/monetari +2%</li>
+  </ul>
+
+  <h3>Impatto scenari</h3>
+  <div class="responsive-table-wrapper">
+    <table class="responsive-table">
+      <thead>
+        <tr>
+          <th>Portafoglio</th>
+          <th>Hawkish %</th>
+          <th>Geopolitico %</th>
+          <th>Crypto Crash %</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ultra Difensivo</td>
+          <td>−1.0</td>
+          <td>−2.0</td>
+          <td>−0.5</td>
+        </tr>
+        <tr>
+          <td>Difensivo Evoluto</td>
+          <td>−3.0</td>
+          <td>−5.0</td>
+          <td>−1.0</td>
+        </tr>
+        <tr>
+          <td>Bilanciato Strategico</td>
+          <td>−6.0</td>
+          <td>−8.0</td>
+          <td>−3.0</td>
+        </tr>
+        <tr>
+          <td>Dinamico Tematico</td>
+          <td>−8.0</td>
+          <td>−10.0</td>
+          <td>−5.0</td>
+        </tr>
+        <tr>
+          <td>Aggressivo Globale</td>
+          <td>−12.0</td>
+          <td>−15.0</td>
+          <td>−7.0</td>
+        </tr>
+        <tr>
+          <td>Satellite Speculativo</td>
+          <td>−15.0</td>
+          <td>−20.0</td>
+          <td>−10.0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    Questa sezione dimostra che i modelli sono stati testati con rigore quantitativo, esponendo le metriche fondamentali e i comportamenti in scenari di stress. È un livello professionale adatto ad analisti senior, gestori e desk istituzionali.
   </p>
 
-  <!-- Scenario A: Famiglia con capitale medio -->
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">A. Coppia con risparmi €100 000 – “Fondo Università Figli”</h3>
-  <ul class="list-disc list-inside text-slate-700 space-y-2 ml-6">
+  <p class="text-sm text-gray-500 italic">
+    «Un modello quantitativo non è serio se non resiste ai numeri, alle code grasse, agli stress. Qui regge.»
+  </p>
+</section>
+<section id="sezione-6" class="section">
+  <h2>6. Scenari reali per profili d’investitore</h2>
+
+  <p>
+    In questa sezione presentiamo <strong>scenari realistici</strong>, ciascuno associato a un profilo specifico, con composizione ottimale, meccanismi di PAC o prelievo, e commenti su orizzonte, limiti fiscali e psicologici.
+  </p>
+
+  <!-- Scenario A -->
+  <h3>A. Coppia con risparmi €100 000 – “Fondo Università Figli”</h3>
+  <ul>
     <li><strong>Profilo:</strong> 45–50 anni, orientamento conservativo-moderato, orizzonte 15 anni</li>
     <li><strong>Obiettivo:</strong> costruire capitale per spese figli (es. università), crescita graduale</li>
     <li><strong>Strategia:</strong>
-      <ul class="list-decimal list-inside text-slate-700 space-y-1 ml-6">
+      <ol>
         <li>Iniziale allocazione €100.000: 60 % <em>Difensivo evoluto Variante A</em>, 40 % <em>Bilanciato strategico Variante A</em></li>
         <li>PAC mensile: €500 su ETF bilanciati (equity globali + bond flessibili)</li>
         <li>Ribilanciamento ogni semestre: mantieni core 70 % / satellite 30 %</li>
-      </ul>
+      </ol>
     </li>
-    <li><strong>Metriche attese:</strong> volatilità annua ≈ 7 %, drawdown atteso < –15 %</li>
-    <li><strong>Fiscalità:</strong> plusvalenze tassate al 26 %; le cedole ETF reinvestite subiscono imposta del 26 %. PAC con compensazione automatica delle minusvalenze</li>
+    <li><strong>Metriche attese:</strong> volatilità annua ≈ 7 %, drawdown atteso &lt; –15 %</li>
+    <li><strong>Fiscalità:</strong> plusvalenze tassate al 26 %; cedole ETF reinvestite con imposta 26 %. PAC con compensazione minusvalenze</li>
     <li><strong>Osservazioni:</strong> orizzonte lungo permette assorbire volatilità. Piano fiscale semplice per regime dei capital gain</li>
   </ul>
 
-  <!-- Scenario B: Impiegato 40enne single -->
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">B. Impiegato 40enne single – €5 000 iniziali + PAC €200/mese</h3>
-  <ul class="list-disc list-inside text-slate-700 space-y-2 ml-6">
-    <li><strong>Profilo:</strong> basso capitale iniziale, tolleranza moderata, orizzonte >10 anni</li>
+  <!-- Scenario B -->
+  <h3>B. Impiegato 40enne single – €5 000 iniziali + PAC €200/mese</h3>
+  <ul>
+    <li><strong>Profilo:</strong> basso capitale iniziale, tolleranza moderata, orizzonte &gt;10 anni</li>
     <li><strong>Obiettivo:</strong> far crescere capitale e costruire riserva su crescita futura</li>
     <li><strong>Strategia:</strong>
-      <ul class="list-decimal list-inside text-slate-700 space-y-1 ml-6">
+      <ol>
         <li>Portafoglio iniziale: 100 % <em>Bilanciato strategico Variante A</em></li>
         <li>PAC €200/mese su ETF global equity + bond flessibili (60/40)</li>
-        <li>Rebalancing ogni 12 mesi o se asset deviato >5 %</li>
-      </ul>
+        <li>Rebalancing ogni 12 mesi o se asset deviato &gt;5 %</li>
+      </ol>
     </li>
     <li><strong>Metriche attese:</strong> volatilità ≈ 10 %, Sharpe ≈ 0,6</li>
-    <li><strong>Fiscalità:</strong> opzione regime dichiarativo; rimborso annuale della tassazione su eventuali minusvalenze</li>
+    <li><strong>Fiscalità:</strong> regime dichiarativo; compensazione minusvalenze su ETF cumulativi</li>
     <li><strong>Osservazioni:</strong> buon trade-off tra rischio e accumulo, PAC riduce l’effetto volatilità</li>
   </ul>
 
-  <!-- Scenario C: Giovane FIRE aggressivo -->
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">C. Giovane professionista – Strategia FIRE</h3>
-  <ul class="list-disc list-inside text-slate-700 space-y-2 ml-6">
-    <li><strong>Profilo:</strong> 28–35 anni, elevata tolleranza al rischio, orizzonte >20 anni</li>
+  <!-- Scenario C -->
+  <h3>C. Giovane professionista – Strategia FIRE</h3>
+  <ul>
+    <li><strong>Profilo:</strong> 28–35 anni, elevata tolleranza al rischio, orizzonte &gt;20 anni</li>
     <li><strong>Obiettivo:</strong> indipendenza finanziaria precoce (FIRE), rendimento aggressivo</li>
     <li><strong>Strategia:</strong>
-      <ul class="list-decimal list-inside text-slate-700 space-y-1 ml-6">
+      <ol>
         <li>Allocazione iniziale: 80 % <em>Aggressivo globale Variante A</em>, 20 % <em>Satellite speculativo Variante A</em></li>
         <li>PAC €300/mese mirato su ETF growth e small cap high momentum</li>
         <li>Overlay semestrale di ribilanciamento sulla base delle performance (±10 %)</li>
-      </ul>
+      </ol>
     </li>
-    <li><strong>Metriche previste:</strong> volatilità ≈ 18–22 %, CVaR (95%) ≈ –25 %, drawdown storico potenziale –35 %</li>
-    <li><strong>Fiscalità:</strong> regime dichiarativo ordinario; monitoraggio RW crypto ETF</li>
+    <li><strong>Metriche previste:</strong> volatilità ≈ 18–22 %, CVaR (95%) ≈ –25 %, drawdown potenziale –35 %</li>
+    <li><strong>Fiscalità:</strong> regime dichiarativo; monitoraggio RW crypto ETF</li>
     <li><strong>Osservazioni:</strong> alta volatilità accettata. L’orizzonte lungo assorbe shock; utile stabilire stop-loss psicologici</li>
   </ul>
 
-  <!-- Scenario D: Pensionato con capitale conservativo -->
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">D. Pensionato – Protezione del capitale e rendita</h3>
-  <ul class="list-disc list-inside text-slate-700 space-y-2 ml-6">
-    <li><strong>Profilo:</strong> >65 anni, tolleranza molto bassa, orizzonte <5 anni</li>
+  <!-- Scenario D -->
+  <h3>D. Pensionato – Protezione del capitale e rendita</h3>
+  <ul>
+    <li><strong>Profilo:</strong> &gt;65 anni, tolleranza molto bassa, orizzonte &lt;5 anni</li>
     <li><strong>Obiettivo:</strong> preservare capitale, generare flusso periodico</li>
     <li><strong>Strategia:</strong>
-      <ul class="list-decimal list-inside text-slate-700 space-y-1 ml-6">
+      <ol>
         <li>Allocazione: 100 % <em>Ultra difensivo Variante A</em>, con infrastruttura liquidità capillare</li>
         <li>Prelievo fisso = 4 %/anno; ribilanciamento trimestrale</li>
-      </ul>
+      </ol>
     </li>
     <li><strong>Metriche:</strong> volatilità ≈ 2 %, CVaR ≈ –3 %</li>
-    <li><strong>Fiscalità:</strong> regime agevolato per rendite da bond; nessun impatto significativo su RW</li>
-    <li><strong>Osservazioni:</strong> adeguato anche per eredità; flessibilità di ribilanciamento e protezione tail-risk elevate</li>
+    <li><strong>Fiscalità:</strong> regime agevolato per rendite da bond</li>
+    <li><strong>Osservazioni:</strong> adeguato anche per eredità; protezione tail-risk elevata</li>
   </ul>
 
-  <p class="mt-6">
+  <p>
     Questi 4 scenari coprono la maggior parte del ciclo vitale e degli obiettivi. Ogni simulazione è dettagliata: profilo, orizzonte, composizione iniziale e dinamiche operative esplicitate.
   </p>
 
-  <p class="mt-6 text-sm text-gray-500 italic">
+  <p class="text-sm text-gray-500 italic">
     «Un buon simulatore non solo calcola numeri: spiega perché, quando e come li usi — in base a chi sei veramente.»
   </p>
 </section>
-<br>
-<section id="sezione-7" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">7. Simulazione dinamica: ribilanciamento & gestione attiva</h2>
+<section id="sezione-7" class="section">
+  <h2>7. Simulazione dinamica: ribilanciamento & gestione attiva</h2>
 
   <p>
     Questa sezione descrive il funzionamento del simulatore nei ribilanciamenti periodici, gli overlay tattici in risposta agli scenari macro e le logiche operative per mantenere coerenza col profilo.
   </p>
 
-  <h3 class="text-lg font-semibold mt-4 text-slate-800">1. Ribilancio periodico</h3>
-  <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
+  <h3>1. Ribilancio periodico</h3>
+  <ul>
     <li><strong>Frequenza:</strong> base 6/12/3 mesi a seconda del profilo (es. pensionato trimestralmente, FIRE semestralmente)</li>
-    <li><strong>Soglia:</strong> deviazione del core > ±5 % rispetto al peso target = trigger automatico</li>
+    <li><strong>Soglia:</strong> deviazione del core &gt; ±5 % rispetto al peso target = trigger automatico</li>
     <li><strong>Meccanismo:</strong> acquisto/vendita equilibrata tra asset che eccedono o perdono</li>
     <li><strong>Costi:</strong> simulazione con slippage 0,05 % e commissioni procedurali 0,1 %</li>
   </ul>
 
-<h3 class="text-lg font-semibold mt-6 text-slate-800">Overlay tattici</h3>
-<div class="responsive-table-wrapper">
-  <table>
-    <thead>
-      <tr>
-        <th>Scenario</th>
-        <th>Azione tattica</th>
-        <th>Strumento</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td data-label="Scenario">Inflazione alta</td>
-        <td data-label="Azione tattica">+5 % su inflation-linked</td>
-        <td data-label="Strumento">ETF TIPS o BTP€i</td>
-      </tr>
-      <tr>
-        <td data-label="Scenario">Shock geopolitico</td>
-        <td data-label="Azione tattica">+5 % su oro e commodity</td>
-        <td data-label="Strumento">ETF pan-europei commodity</td>
-      </tr>
-      <tr>
-        <td data-label="Scenario">Crisi tech/crypto</td>
-        <td data-label="Azione tattica">−5 % equity tech e crypto; +5 % monetari</td>
-        <td data-label="Strumento">ETF money market</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+  <h3>2. Overlay tattici</h3>
+  <div class="responsive-table-wrapper">
+    <table class="responsive-table">
+      <thead>
+        <tr>
+          <th>Scenario</th>
+          <th>Azione tattica</th>
+          <th>Strumento</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Inflazione alta</td>
+          <td>+5 % su inflation-linked</td>
+          <td>ETF TIPS o BTP€i</td>
+        </tr>
+        <tr>
+          <td>Shock geopolitico</td>
+          <td>+5 % su oro e commodity</td>
+          <td>ETF pan-europei commodity</td>
+        </tr>
+        <tr>
+          <td>Crisi tech/crypto</td>
+          <td>−5 % equity tech e crypto; +5 % monetari</td>
+          <td>ETF money market</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-  <p class="mt-2">Gli overlay vengono inseriti per 3/6 mesi, poi riporta alla strategia base.</p>
+  <p>Gli overlay vengono inseriti per 3/6 mesi, poi si rientra nella strategia base.</p>
 
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">3. Simulazione automatica su 10 anni</h3>
+  <h3>3. Simulazione automatica su 10 anni</h3>
   <p>
-    Il simulatore può generare un test backtesting sintetico per 10 anni partendo dal portafoglio iniziale, includendo:
+    Il simulatore può generare un test sintetico su 10 anni partendo dal portafoglio iniziale, includendo:
   </p>
-  <ul class="list-disc list-inside text-slate-700 space-y-2">
+  <ul>
     <li>Ribilanciamenti come da regole sopra</li>
-    <li>Overlay invece discesi da segnali macro (inflazione, guerra, crolli)</li>
+    <li>Overlay discesi da segnali macro (inflazione, guerra, crolli)</li>
     <li>Calcolo rolling delle metriche: rendimento medio, volatilità annua, drawdown massimo, CVaR dinamico</li>
   </ul>
 
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">4. Report grafico e output</h3>
-  <p>
-    Il simulatore genera due output principali:
-  </p>
-  <ul class="list-disc list-inside text-slate-700 space-y-2">
+  <h3>4. Report grafico e output</h3>
+  <ul>
     <li><strong>Grafico equity curve</strong> con bande di confidenza (CI 95 %) e marcatori overlay scenari</li>
-    <li><strong>Cruscotto KPI:</strong> CAGR, Sharpe Ratio, Max Drawdown, % Tempo sopra la linea del break-even</li>
+    <li><strong>Cruscotto KPI:</strong> CAGR, Sharpe Ratio, Max Drawdown, % Tempo sopra break-even</li>
   </ul>
 
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">5. Rischi e avvertenze operative</h3>
-  <ul class="list-disc list-inside text-slate-700 space-y-2">
+  <h3>5. Rischi e avvertenze operative</h3>
+  <ul>
     <li>Backtest non garantisce performance future; modelli prevedono distribuzioni storiche (non gaussiane)</li>
     <li>Ribilanciamenti troppo frequenti possono erodere rendimenti per costi reali</li>
     <li>Overlay: rischio di market timing errato o buffer insufficienti</li>
     <li>Simulazioni devono includere stress test vs costi, slippage, anomalie dei mercati emergenti</li>
   </ul>
 
-  <p class="mt-4 text-sm text-gray-500 italic">
+  <p class="text-sm text-gray-500 italic">
     «Non è solo questione di cosa possiedi, ma di quando e come lo modifichi.»
   </p>
 </section>
-<br>
-<section id="sezione-8" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">8. Collegamenti utili: valutare ogni asset class con metodo</h2>
+<section id="sezione-8" class="section">
+  <h2>8. Collegamenti utili: valutare ogni asset class con metodo</h2>
 
   <p>
     Per ogni asset incluso nella simulazione del portafoglio, è cruciale adottare metodi di valutazione coerenti e accademicamente fondati. Ecco le guide tecniche per l’analisi dei singoli strumenti:
   </p>
-
-
 
   <ul class="list-disc list-inside text-blue-600 mt-4 space-y-2 text-sm sm:text-base">
     <li><a href="/report/tutorial/valutare-azioni.html" target="_blank" rel="noopener noreferrer">Come valutare un’azione (equity singola): metriche fondamentali e tecniche</a></li>
@@ -809,15 +726,13 @@
     <li><a href="/report/tutorial/valutare-commodities.html" target="_blank" rel="noopener noreferrer">Come valutare le commodities: struttura a termine, stagionalità, utilizzo in portafoglio</a></li>
     <li><a href="/report/tutorial/valutare-liquidita.html" target="_blank" rel="noopener noreferrer">Come valutare la liquidità: rischio opportunità, conti deposito, T‑Bill, ETF monetari</a></li>
   </ul>
-</section>
-
 
   <p class="mt-6 text-sm text-gray-500 italic">
     «Ogni strumento ha una grammatica. Un portafoglio avanzato si costruisce solo se sai leggere tutte le sue parole.»
   </p>
 </section>
-<section id="sezione-10" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">10. Disclaimer e responsabilità d’uso</h2>
+<section id="sezione-10" class="section">
+  <h2>10. Disclaimer e responsabilità d’uso</h2>
 
   <p>
     Il presente documento è stato redatto a fini esclusivamente informativi e didattici. Le simulazioni di portafoglio, i dati quantitativi, gli scenari macroeconomici e le analisi presentate non costituiscono in alcun modo un’offerta, una raccomandazione personalizzata, né una sollecitazione all’investimento.
@@ -835,9 +750,8 @@
     TRADELIA •AI e gli autori non assumono responsabilità per eventuali decisioni prese sulla base delle informazioni contenute nel report. Si raccomanda di consultare un consulente finanziario abilitato prima di intraprendere qualsiasi decisione di investimento.
   </p>
 
-  <p class="mt-6 text-sm text-gray-500 italic">
+  <p class="text-sm text-gray-500 italic">
     «Questo documento non è una mappa. È un atlante: serve per orientarsi, non per partire.»
   </p>
 </section>
 
-    
