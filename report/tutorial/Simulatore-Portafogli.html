@@ -453,28 +453,64 @@
       </ul>
     </p>
 
-    <h3 class="text-lg font-semibold mt-4 text-slate-800">Indicatori chiave di rischio/rendimento</h3>
-    <div class="responsive-table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Modello</th>
-            <th>Volatilità ≈</th>
-            <th>CVaR (95%) ≈</th>
-            <th>Max Drawdown (storico) ≈</th>
-            <th>Sharpe Ratio ≈</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Ultra Difensivo</td><td>2.5%</td><td>−3%</td><td>−5%</td><td>0.45</td></tr>
-          <tr><td>Difensivo Evoluto</td><td>5%</td><td>−7%</td><td>−12%</td><td>0.55</td></tr>
-          <tr><td>Bilanciato Strategico</td><td>10%</td><td>−15%</td><td>−20%</td><td>0.60</td></tr>
-          <tr><td>Dinamico Tematico</td><td>12%</td><td>−18%</td><td>−25%</td><td>0.58</td></tr>
-          <tr><td>Aggressivo Globale</td><td>18%</td><td>−25%</td><td>−35%</td><td>0.52</td></tr>
-          <tr><td>Satellite Speculativo</td><td>22%</td><td>−35%</td><td>−45%</td><td>0.48</td></tr>
-        </tbody>
-      </table>
-    </div>
+  <h3 class="text-lg font-semibold mt-6 text-slate-800">Indicatori di rischio/rendimento</h3>
+<div class="responsive-table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Modello</th>
+        <th>Volatilità</th>
+        <th>CVaR</th>
+        <th>Drawdown</th>
+        <th>Sharpe</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-label="Modello">Ultra Difensivo</td>
+        <td data-label="Volatilità">2.5%</td>
+        <td data-label="CVaR">−3%</td>
+        <td data-label="Drawdown">−5%</td>
+        <td data-label="Sharpe">0.45</td>
+      </tr>
+      <tr>
+        <td data-label="Modello">Difensivo Evoluto</td>
+        <td data-label="Volatilità">5%</td>
+        <td data-label="CVaR">−7%</td>
+        <td data-label="Drawdown">−12%</td>
+        <td data-label="Sharpe">0.55</td>
+      </tr>
+      <tr>
+        <td data-label="Modello">Bilanciato Strategico</td>
+        <td data-label="Volatilità">10%</td>
+        <td data-label="CVaR">−15%</td>
+        <td data-label="Drawdown">−20%</td>
+        <td data-label="Sharpe">0.60</td>
+      </tr>
+      <tr>
+        <td data-label="Modello">Dinamico Tematico</td>
+        <td data-label="Volatilità">12%</td>
+        <td data-label="CVaR">−18%</td>
+        <td data-label="Drawdown">−25%</td>
+        <td data-label="Sharpe">0.58</td>
+      </tr>
+      <tr>
+        <td data-label="Modello">Aggressivo Globale</td>
+        <td data-label="Volatilità">18%</td>
+        <td data-label="CVaR">−25%</td>
+        <td data-label="Drawdown">−35%</td>
+        <td data-label="Sharpe">0.52</td>
+      </tr>
+      <tr>
+        <td data-label="Modello">Satellite Speculativo</td>
+        <td data-label="Volatilità">22%</td>
+        <td data-label="CVaR">−35%</td>
+        <td data-label="Drawdown">−45%</td>
+        <td data-label="Sharpe">0.48</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
     <h3 class="text-lg font-semibold mt-6 text-slate-800">Stress Test scenari macro estesi</h3>
     <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
@@ -483,24 +519,58 @@
       <li><strong>Scenario Crypto Crash:</strong> crypto ETF –50%, small cap –20%, tech –15%, bond/monetari +2%.</li>
     </ul>
 
-    <h3 class="text-lg font-semibold mt-6 text-slate-800">Impatto sugli portafogli</h3>
-    <div class="responsive-table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Portafoglio</th><th>Hawkish %</th><th>Geopolitico %</th><th>Crypto Crash %</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Ultra Difensivo</td><td>−1.0</td><td>−2.0</td><td>−0.5</td></tr>
-          <tr><td>Difensivo Evoluto</td><td>−3.0</td><td>−5.0</td><td>−1.0</td></tr>
-          <tr><td>Bilanciato Strategico</td><td>−6.0</td><td>−8.0</td><td>−3.0</td></tr>
-          <tr><td>Dinamico Tematico</td><td>−8.0</td><td>−10.0</td><td>−5.0</td></tr>
-          <tr><td>Aggressivo Globale</td><td>−12.0</td><td>−15.0</td><td>−7.0</td></tr>
-          <tr><td>Satellite Speculativo</td><td>−15.0</td><td>−20.0</td><td>−10.0</td></tr>
-        </tbody>
-      </table>
-    </div>
+ <h3 class="text-lg font-semibold mt-6 text-slate-800">Impatto scenari</h3>
+<div class="responsive-table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Portafoglio</th>
+        <th>Hawkish %</th>
+        <th>Geopolitico %</th>
+        <th>Crypto Crash %</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-label="Portafoglio">Ultra Difensivo</td>
+        <td data-label="Hawkish %">−1.0</td>
+        <td data-label="Geopolitico %">−2.0</td>
+        <td data-label="Crypto Crash %">−0.5</td>
+      </tr>
+      <tr>
+        <td data-label="Portafoglio">Difensivo Evoluto</td>
+        <td data-label="Hawkish %">−3.0</td>
+        <td data-label="Geopolitico %">−5.0</td>
+        <td data-label="Crypto Crash %">−1.0</td>
+      </tr>
+      <tr>
+        <td data-label="Portafoglio">Bilanciato Strategico</td>
+        <td data-label="Hawkish %">−6.0</td>
+        <td data-label="Geopolitico %">−8.0</td>
+        <td data-label="Crypto Crash %">−3.0</td>
+      </tr>
+      <tr>
+        <td data-label="Portafoglio">Dinamico Tematico</td>
+        <td data-label="Hawkish %">−8.0</td>
+        <td data-label="Geopolitico %">−10.0</td>
+        <td data-label="Crypto Crash %">−5.0</td>
+      </tr>
+      <tr>
+        <td data-label="Portafoglio">Aggressivo Globale</td>
+        <td data-label="Hawkish %">−12.0</td>
+        <td data-label="Geopolitico %">−15.0</td>
+        <td data-label="Crypto Crash %">−7.0</td>
+      </tr>
+      <tr>
+        <td data-label="Portafoglio">Satellite Speculativo</td>
+        <td data-label="Hawkish %">−15.0</td>
+        <td data-label="Geopolitico %">−20.0</td>
+        <td data-label="Crypto Crash %">−10.0</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 
     <p class="mt-6">
       Questa sezione dimostra che i modelli sono stati testati con rigore quantitativo, esponendo le metriche fondamentali e i comportamenti in scenari di stress. È un livello professionale adatto ad analisti senior, gestori e desk istituzionali.
@@ -609,20 +679,36 @@
     <li><strong>Costi:</strong> simulazione con slippage 0,05 % e commissioni procedurali 0,1 %</li>
   </ul>
 
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">2. Overlay tattici</h3>
-  <p>
-    Per ogni scenario macro-identificato, il simulatore può attivare overlay tattici per proteggere o sfruttare opportunità:
-  </p>
+<h3 class="text-lg font-semibold mt-6 text-slate-800">Overlay tattici</h3>
+<div class="responsive-table-wrapper">
   <table>
     <thead>
-      <tr><th>Scenario</th><th>Azione tattica</th><th>Strumento</th></tr>
+      <tr>
+        <th>Scenario</th>
+        <th>Azione tattica</th>
+        <th>Strumento</th>
+      </tr>
     </thead>
     <tbody>
-      <tr><td>Inflazione alta</td><td>+5 % su inflation-linked</td><td>ETF TIPS o BTP€i</td></tr>
-      <tr><td>Shock geopolitico</td><td>+5 % su oro e commodity</td><td>ETF pan-europei commodity</td></tr>
-      <tr><td>Crisi tech/crypto</td><td>-5 % equity tech e crypto; +5 % monetari</td><td>ETF money market</td></tr>
+      <tr>
+        <td data-label="Scenario">Inflazione alta</td>
+        <td data-label="Azione tattica">+5 % su inflation-linked</td>
+        <td data-label="Strumento">ETF TIPS o BTP€i</td>
+      </tr>
+      <tr>
+        <td data-label="Scenario">Shock geopolitico</td>
+        <td data-label="Azione tattica">+5 % su oro e commodity</td>
+        <td data-label="Strumento">ETF pan-europei commodity</td>
+      </tr>
+      <tr>
+        <td data-label="Scenario">Crisi tech/crypto</td>
+        <td data-label="Azione tattica">−5 % equity tech e crypto; +5 % monetari</td>
+        <td data-label="Strumento">ETF money market</td>
+      </tr>
     </tbody>
   </table>
+</div>
+
   <p class="mt-2">Gli overlay vengono inseriti per 3/6 mesi, poi riporta alla strategia base.</p>
 
   <h3 class="text-lg font-semibold mt-6 text-slate-800">3. Simulazione automatica su 10 anni</h3>
