@@ -528,6 +528,7 @@
 </section>
 
 <br>
+  <section id="sezione-boh" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
 <div class="mt-8">
   <p class="text-sm text-gray-700 mb-6">
     Alcuni broker selezionati da Tradelia AI adottano un approccio trasparente e professionale nella scelta e comunicazione dei propri liquidity provider, offrendo un'esecuzione realmente market-driven. Di seguito, segnaliamo solo quelli che pubblicano esplicitamente l'accesso a LP istituzionali Tier-1, o che ne certificano la presenza nei documenti di esecuzione.
@@ -564,7 +565,8 @@
       </a>
     </div>
   </div>
-</div>
+</section>
+  
 <br>
 <section id="sezione-7" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
   <h2 class="text-xl font-semibold text-slate-900 mb-4">7. NDD – No Dealing Desk: concetto reale o marketing?</h2>
@@ -611,75 +613,82 @@
 <section id="sezione-8" class="max-w-6xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm overflow-x-auto">
   <h2 class="text-xl font-semibold text-slate-900 mb-6">8. Confronto tecnico-operativo tra i modelli</h2>
 
-  <table class="min-w-full text-sm text-left border border-gray-200">
-    <thead class="bg-gray-100 text-gray-700 font-medium">
-      <tr>
-        <th class="p-3 border border-gray-200">Caratteristica</th>
-        <th class="p-3 border border-gray-200">Market Maker</th>
-        <th class="p-3 border border-gray-200">STP</th>
-        <th class="p-3 border border-gray-200">ECN</th>
-        <th class="p-3 border border-gray-200">DMA</th>
-      </tr>
-    </thead>
-    <tbody class="text-gray-800">
-      <tr>
-        <td class="p-3 border border-gray-200 font-medium">Controparte dell’ordine</td>
-        <td class="p-3 border border-gray-200">Il broker stesso</td>
-        <td class="p-3 border border-gray-200">Liquidity provider esterni</td>
-        <td class="p-3 border border-gray-200">Partecipanti ECN / LP</td>
-        <td class="p-3 border border-gray-200">Mercato diretto (exchange)</td>
-      </tr>
-      <tr class="bg-gray-50">
-        <td class="p-3 border border-gray-200 font-medium">Modello di pricing</td>
-        <td class="p-3 border border-gray-200">Spread fissi o manipolabili</td>
-        <td class="p-3 border border-gray-200">Spread variabili reali</td>
-        <td class="p-3 border border-gray-200">Bid/Ask competitivi multilaterali</td>
-        <td class="p-3 border border-gray-200">Prezzi ufficiali di borsa</td>
-      </tr>
-      <tr>
-        <td class="p-3 border border-gray-200 font-medium">Trasparenza</td>
-        <td class="p-3 border border-gray-200">Bassa, ordine gestito internamente</td>
-        <td class="p-3 border border-gray-200">Media, dipende dai LP e policy</td>
-        <td class="p-3 border border-gray-200">Alta, accesso a book e flusso ordini</td>
-        <td class="p-3 border border-gray-200">Massima, esecuzione su exchange</td>
-      </tr>
-      <tr class="bg-gray-50">
-        <td class="p-3 border border-gray-200 font-medium">Conflitto di interesse</td>
-        <td class="p-3 border border-gray-200 text-red-600 font-semibold">Presente</td>
-        <td class="p-3 border border-gray-200">Assente (se LP indipendenti)</td>
-        <td class="p-3 border border-gray-200">Assente</td>
-        <td class="p-3 border border-gray-200">Assente</td>
-      </tr>
-      <tr>
-        <td class="p-3 border border-gray-200 font-medium">Commissioni aggiuntive</td>
-        <td class="p-3 border border-gray-200">Incluse nello spread</td>
-        <td class="p-3 border border-gray-200">Talvolta presenti</td>
-        <td class="p-3 border border-gray-200">Sempre presenti</td>
-        <td class="p-3 border border-gray-200">Sempre presenti</td>
-      </tr>
-      <tr class="bg-gray-50">
-        <td class="p-3 border border-gray-200 font-medium">Velocità e latenza</td>
-        <td class="p-3 border border-gray-200">Alta, interna</td>
-        <td class="p-3 border border-gray-200">Media</td>
-        <td class="p-3 border border-gray-200">Dipende dalla rete ECN</td>
-        <td class="p-3 border border-gray-200">Dipende da exchange e DMA</td>
-      </tr>
-      <tr>
-        <td class="p-3 border border-gray-200 font-medium">Accesso al book di mercato</td>
-        <td class="p-3 border border-gray-200">Assente</td>
-        <td class="p-3 border border-gray-200">Limitato</td>
-        <td class="p-3 border border-gray-200">Completo (Depth of Market)</td>
-        <td class="p-3 border border-gray-200">Completo (Level 2/3)</td>
-      </tr>
-      <tr class="bg-gray-50">
-        <td class="p-3 border border-gray-200 font-medium">Tipologia di trader adatto</td>
-        <td class="p-3 border border-gray-200">Principianti, piccoli lotti</td>
-        <td class="p-3 border border-gray-200">Trader attivi / swing</td>
-        <td class="p-3 border border-gray-200">Scalper, istituzionali</td>
-        <td class="p-3 border border-gray-200">Professionisti / gestori</td>
-      </tr>
-    </tbody>
-  </table>
+<section class="max-w-4xl mx-auto mb-12 bg-white p-4 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">Confronto tecnico tra i modelli di esecuzione</h2>
+
+  <div class="space-y-4">
+
+    <!-- Market Maker -->
+    <div class="border border-gray-200 rounded-lg">
+      <details class="group p-4">
+        <summary class="font-semibold text-blue-700 cursor-pointer text-base sm:text-lg">
+          Market Maker
+        </summary>
+        <div class="pt-3 text-gray-800 text-sm sm:text-base space-y-2">
+          <p><strong>Controparte:</strong> il broker stesso</p>
+          <p><strong>Pricing:</strong> spread fissi o manipolabili</p>
+          <p><strong>Trasparenza:</strong> bassa, ordine interno</p>
+          <p><strong>Conflitto di interesse:</strong> <span class="text-red-600 font-semibold">presente</span></p>
+          <p><strong>Commissioni:</strong> incluse nello spread</p>
+          <p><strong>Accesso book:</strong> assente</p>
+          <p><strong>Trader adatto:</strong> principianti, piccoli lotti</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- STP -->
+    <div class="border border-gray-200 rounded-lg">
+      <details class="group p-4">
+        <summary class="font-semibold text-blue-700 cursor-pointer text-base sm:text-lg">
+          STP (Straight Through Processing)
+        </summary>
+        <div class="pt-3 text-gray-800 text-sm sm:text-base space-y-2">
+          <p><strong>Controparte:</strong> liquidity provider esterni</p>
+          <p><strong>Pricing:</strong> spread variabili reali</p>
+          <p><strong>Trasparenza:</strong> media, dipende dai LP</p>
+          <p><strong>Conflitto di interesse:</strong> assente (se LP indipendenti)</p>
+          <p><strong>Commissioni:</strong> talvolta presenti</p>
+          <p><strong>Accesso book:</strong> limitato</p>
+          <p><strong>Trader adatto:</strong> trader attivi, swing</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- ECN -->
+    <div class="border border-gray-200 rounded-lg">
+      <details class="group p-4">
+        <summary class="font-semibold text-blue-700 cursor-pointer text-base sm:text-lg">
+          ECN (Electronic Communication Network)
+        </summary>
+        <div class="pt-3 text-gray-800 text-sm sm:text-base space-y-2">
+          <p><strong>Controparte:</strong> partecipanti ECN, LP multilaterali</p>
+          <p><strong>Pricing:</strong> bid/ask competitivi</p>
+          <p><strong>Trasparenza:</strong> alta, book visibile</p>
+          <p><strong>Conflitto di interesse:</strong> assente</p>
+          <p><strong>Commissioni:</strong> sempre presenti</p>
+          <p><strong>Accesso book:</strong> completo (Depth of Market)</p>
+          <p><strong>Trader adatto:</strong> scalper, istituzionali</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- DMA -->
+    <div class="border border-gray-200 rounded-lg">
+      <details class="group p-4">
+        <summary class="font-semibold text-blue-700 cursor-pointer text-base sm:text-lg">
+          DMA (Direct Market Access)
+        </summary>
+        <div class="pt-3 text-gray-800 text-sm sm:text-base space-y-2">
+          <p><strong>Controparte:</strong> mercato diretto (exchange)</p>
+          <p><strong>Pricing:</strong> prezzi ufficiali di borsa</p>
+          <p><strong>Trasparenza:</strong> massima</p>
+          <p><strong>Conflitto di interesse:</strong> assente</p>
+          <p><strong>Commissioni:</strong> sempre presenti</p>
+          <p><strong>Accesso book:</strong> completo (Level 2/3)</p>
+          <p><strong>Trader adatto:</strong> professionisti, gestori</p>
+        </div>
+      </details>
+    </div>
 
   <p class="text-gray-700 text-sm mt-6">
     Questa tabella è pensata per aiutare il trader a identificare il modello più adatto al proprio stile operativo. Non tutti i broker che dichiarano “NDD” o “STP” offrono effettivamente un accesso trasparente e diretto ai mercati.
