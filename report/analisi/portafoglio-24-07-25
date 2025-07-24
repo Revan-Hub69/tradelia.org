@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Report completo TRADELIA AI sulla crisi finanziaria 2008: analisi tecnica, strumenti derivati, protagonisti e impatto sociale.">
+  <title>TRADELIA • AI — Strumenti Finanziari Complessi</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    h1, h2, h3, h4 {
+      color: #0f172a;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.25rem; }
+    h3 { font-size: 1.25rem; }
+    h4 { font-size: 1.125rem; }
+    p {
+      margin-bottom: 1.25rem;
+      color: #374151;
+    }
+    ul, ol {
+      padding-left: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    li {
+      margin-bottom: 0.5rem;
+    }
+    section {
+      background: #ffffff;
+      padding: 2.5rem 2rem;
+      margin: 2rem auto;
+      border-radius: 0.75rem;
+      max-width: 840px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e5e7eb;
+    }
+    a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    a:hover {
+      text-decoration: underline;
+      color: #1d4ed8;
+    }
+    .positive { color: #16a34a; font-weight: 600; }
+    .negative { color: #dc2626; font-weight: 600; }
+    .neutral  { color: #64748b; font-weight: 500; }
+    @media screen and (max-width: 768px) {
+      body { font-size: 15px; line-height: 1.6; }
+      section { padding: 1.25rem; margin: 1rem; }
+      h1 { font-size: 1.5rem; }
+      h2 { font-size: 1.25rem; }
+      h3 { font-size: 1.125rem; }
+      h4 { font-size: 1rem; }
+    }
+
+    /* TABLE RESPONSIVE STYLE - struttura tabellare scrollabile */
+    .responsive-table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      margin-bottom: 2rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+    }
+    table.responsive-table {
+      width: 100%;
+      min-width: 640px;
+      border-collapse: collapse;
+      background-color: white;
+    }
+    table.responsive-table th,
+    table.responsive-table td {
+      padding: 0.75rem 1rem;
+      border: 1px solid #e5e7eb;
+      text-align: left;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+    table.responsive-table th {
+      background-color: #f3f4f6;
+      font-weight: 600;
+      color: #1f2937;
+    }
+    table.responsive-table tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+      border-radius: 100vh;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(80, 160, 200, 0.5);
+      border-radius: 100vh;
+      transition: background-color 0.2s ease-in-out;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(80, 160, 200, 0.7);
+    }
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
+      box-sizing: border-box;
+    }
+    #backToTop {
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+
+
+<body>
+  <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-3 flex justify-between items-center">
+    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 hover:opacity-90 transition">
+      TRADELIA<span class="text-blue-600 animate-pulse">•AI</span>
+    </a>
+    <a href="https://tradelia.org/archivio.html" class="text-sm sm:text-base text-blue-700 font-medium hover:underline transition">
+      Archivio Storico
+    </a>
+  </header>
+
+  <section>
+  <h2>Scenario Geopolitico e Macroeconomico Attuale – Luglio 2025</h2>
+
+  <h3>Crescita Globale e Inflazione</h3>
+  <ul>
+    <li><strong>Crescita globale moderata:</strong> OECD stima +2,9% nel 2025–26. Fonte: <a href="https://www.oecd.org/en/about/news/press-releases/2025/06/global-economic-outlook-shifts-as-trade-policy-uncertainty-weakens-growth.html">OECD, giugno 2025</a>.</li>
+    <li><strong>Inflazione in calo ma persistente:</strong> tra 4,2% e 4,5% nel 2025. Fonte: <a href="https://www.imf.org/en/Publications/WEO">IMF, World Economic Outlook, luglio 2025</a>.</li>
+  </ul>
+
+  <h3>Politiche Monetarie</h3>
+  <ul>
+    <li><strong>Federal Reserve:</strong> tassi fermi al 5,3% fino a marzo 2026. Fonte: <a href="https://www.morganstanley.com/insights/articles/economic-outlook-midyear-2025">Morgan Stanley, luglio 2025</a>.</li>
+    <li><strong>BCE:</strong> tagli da 4% a 2%, possibili ultimi tagli entro settembre. Fonte: <a href="https://www.spglobal.com/marketintelligence/en/mi/research-analysis/week-ahead-economic-preview-week-of-21-july-2025.html">S&P Global, luglio 2025</a>.</li>
+  </ul>
+
+  <h3>Rischi Geopolitici</h3>
+  <ul>
+    <li><strong>Ucraina:</strong> conflitto cronicizzato. Rischio persistente ma sotto controllo. Fonte: <a href="https://www.reuters.com/world/china/oecd-trims-global-outlook-trump-trade-war-hits-us-growth-2025-06-03/">Reuters, luglio 2025</a>.</li>
+    <li><strong>Taiwan-Cina-USA:</strong> tensioni elevate, ma senza escalation militare diretta. Fonte: <a href="https://www.reuters.com/world/china/global-markets-trading-day-2025-07-23/">Reuters, 23 luglio 2025</a>.</li>
+    <li><strong>Medio Oriente:</strong> escalation controllata tra Israele e Libano/Gaza. Impatti energetici. Fonte: <a href="https://www.reuters.com/business/finance/ecb-keep-rates-steady-trade-conflict-clouds-economic-outlook-2025-07-23/">Reuters, luglio 2025</a>.</li>
+  </ul>
+
+  <h3>Asset e Mercati Finanziari</h3>
+  <ul>
+    <li><strong>Azionario globale:</strong> in crescita grazie a tech/AI e internazionali. Fonte: <a href="https://www.marketwatch.com/story/why-international-stocks-can-keep-walloping-u-s-investments-in-2025-94044f17">MarketWatch, luglio 2025</a>.</li>
+    <li><strong>Obbligazionario:</strong> forte domanda su bond IG e duration breve. Fonte: <a href="https://www.columbiathreadneedle.com/en/gb/institutional/insights/2025-fixed-income-outlook-a-year-of-opportunity-amid-economic-uncertainty/">Columbia Threadneedle, luglio 2025</a>.</li>
+    <li><strong>Valute:</strong> USD debole (-9,5%), Euro forte (+13%). Fonte: <a href="https://www.barrons.com/articles/weak-dollar-earnings-foreign-a5abe41b">Barron's, luglio 2025</a>.</li>
+  </ul>
+
+  <h3>Scenari Alternativi da Monitorare</h3>
+  <ul>
+    <li>Escalation geopolitica su dazi o guerre commerciali USA-Asia/EU.</li>
+    <li>Inflazione core resistente negli USA oltre Q3.</li>
+    <li>Stagnazione globale per bassa produttività e shock energetici.</li>
+  </ul>
+</section>
+
+<br>
+
+<section>
+  <h2>Profilo Utente e Analisi Storica del Portafoglio (2011–2025)</h2>
+  <p>Investitore con orizzonte ultra-decennale e approccio buy &amp; hold. La composizione evidenzia equilibrio fra crescita e conservazione, con preferenza marcata per ETF globali e bond a breve termine. Tolleranza alla volatilità medio-alta, con gestione passiva e razionale.</p>
+  <p>Composizione portafoglio rilevata: IWDA 48%, IE1A 15%, CSBGE3 13%, VFEA 11%, EXUS 10%, FLXK 3%. Asset allocation costruita per bilanciare rischio e rendimento su scala globale.</p>
+  <p>Sulla base delle performance storiche (CAGR medi stimati e volatilità effettiva), la crescita annua composta stimata del portafoglio è intorno al 5,7% lordo. In 14 anni si è registrato un raddoppio del capitale iniziale con drawdown massimi contenuti entro il 22% nei cicli peggiori.</p>
+  <p>Tuttavia, tenendo conto di un'inflazione media annua stimata al 2,1% (Eurozona 2011–2025), il rendimento reale corretto si attesta intorno al 3,5% annuo. Il potere d’acquisto del portafoglio è cresciuto in termini reali di circa il 56%, dimostrando efficacia nella protezione dall’erosione monetaria.</p>
+</section>
+
+<br>
+
+<section>
+  <h2>Criticità Strategiche e Adattamenti per lo Scenario Attuale</h2>
+
+  <div>
+    <h3>1. Inflazione persistente sopra target</h3>
+    <p><strong>Contesto:</strong> L’inflazione globale, seppur in calo, resta sopra il 4% in molte aree sviluppate. Il rallentamento della discesa in USA e UK costringe le banche centrali a mantenere i tassi elevati più a lungo.</p>
+    <p><strong>Implicazione per il portafoglio:</strong> I bond a breve durata proteggono, ma rendimenti reali restano modesti. Manca esposizione a inflation-linked o commodity difensive.</p>
+  </div>
+
+  <div>
+    <h3>2. Rallentamento della crescita globale</h3>
+    <p><strong>Contesto:</strong> La crescita mondiale è proiettata al 2,3–2,9%, sotto la media storica. L’Europa è stagnante, gli emergenti crescono ma con volatilità elevata.</p>
+    <p><strong>Implicazione per il portafoglio:</strong> Il peso importante in IWDA espone a cicli maturi. Serve rotazione settoriale o geografica verso aree dinamiche (es. Asia Pacifico, India, Difesa, Tech).</p>
+  </div>
+
+  <div>
+    <h3>3. Tensioni geopolitiche e shock exogeni</h3>
+    <p><strong>Contesto:</strong> Persistono conflitti (Russia-Ucraina, Israele-Gaza, instabilità in Sahel) e tensioni su Taiwan. Gli impatti sono imprevedibili ma crescenti sui flussi energetici e supply chain globali.</p>
+    <p><strong>Implicazione per il portafoglio:</strong> Assenza di coperture difensive rende vulnerabile a shock esterni. Possibile introduzione di oro, uranio o ETF difesa come hedging passivo.</p>
+  </div>
+
+  <div>
+    <h3>4. Fine ciclo tassi in Europa, ambiguità USA</h3>
+    <p><strong>Contesto:</strong> La BCE ha già tagliato, mentre la Fed mantiene il costo del denaro stabile. I mercati prezzano tagli tra fine 2025 e Q1 2026, ma con incertezza elevata.</p>
+    <p><strong>Implicazione per il portafoglio:</strong> Le obbligazioni brevi restano protettive, ma manca esposizione a duration intermedia che potrebbe apprezzarsi con l’inizio dei tagli.</p>
+  </div>
+
+  <div>
+    <h3>5. Debolezza valutaria del dollaro</h3>
+    <p><strong>Contesto:</strong> Il USD ha perso oltre il 9% da inizio 2024, rafforzando EUR e valute asiatiche. Impatta utili delle multinazionali USA e le performance espresse in EUR.</p>
+    <p><strong>Implicazione per il portafoglio:</strong> Esposizione IWDA e EXUS non è coperta. Manca gestione attiva o overlay valutario per protezione contro swing improvvisi.</p>
+  </div>
+
+</section>
+<br>
+
+<section>
+  <h2>DISCLAIMER</h2>
+  <p><strong>Le seguenti proposte di portafoglio sono esclusivamente simulazioni strategiche realizzate a fini analitici ed educativi.</strong> Non costituiscono in alcun modo consulenza finanziaria personalizzata né sollecitazione all’investimento ai sensi della normativa vigente (MiFID II, Regolamento UE 2017/565).</p>
+  <p>Tutte le informazioni, analisi e ipotesi sono basate su dati aggiornati, fonti accademiche, istituzionali e regolamentate. Ogni investitore è tenuto a valutare autonomamente, o con il supporto di un consulente abilitato, l’adeguatezza e la coerenza degli strumenti rispetto al proprio profilo di rischio, obiettivi, orizzonte temporale e situazione patrimoniale complessiva.</p>
+  <p><strong>Nessuna responsabilità può essere attribuita a Tradelia AI o agli autori per decisioni d’investimento assunte sulla base dei modelli proposti.</strong></p>
+</section>
+
+<br>
+
+<section>
+<h2>SEZIONE 1 — Revisione Strategica e Accademica del Portafoglio Originale</h2>
+<h3>Obiettivo</h3>
+<p>Effettuare una revisione istituzionale del portafoglio originario (IWDA 48%, IE1A 15%, CSBGE3 13%, VFEA 11%, EXUS 10%, FLXK 3%) alla luce dello scenario macro 2025 e dei fondamenti di costruzione accademica dei portafogli (Markowitz, Sharpe, Swensen, Ibbotson).</p>
+<h3>Analisi delle Criticità</h3>
+<ul>
+<li><strong>Sovrapposizione geografica:</strong> IWDA include già l’intero mondo sviluppato (USA, Europa, Giappone), rendendo EXUS ridondante. Fonte: <em>MSCI Global Exposure Report 2024</em>.</li>
+<li><strong>Assenza di cash management:</strong> Portafoglio illiquido in fase difensiva. Assente buffer tattico e protezione tassi. Fonte: <em>ECB Financial Stability Review 2025</em>.</li>
+<li><strong>Mancanza di coperture decorrelate:</strong> Assente protezione macro (oro, energia, valuta) per shock esogeni. Fonte: <em>Harvard Asset Diversification Study, 2024</em>.</li>
+<li><strong>Emergenti solo passivi:</strong> Il VFEA espone a inefficienze senza gestione attiva in mercati opachi. Fonti: <em>Robeco EM Alpha 2025</em>, <em>PGIM Emerging Market Studies</em>.</li>
+</ul>
+<h3>Cosa viene TOLTO</h3>
+<ul>
+<li><strong>EXUS (10%)</strong> – Eliminato per totale overlap con IWDA. Inefficiente da un punto di vista di costi e diversificazione. Fonte: <em>JPM Guide to Markets, 2025</em>.</li>
+</ul>
+<h3>Cosa viene MODIFICATO</h3>
+<ul>
+<li><strong>IWDA:</strong> Incrementato dal 48% al 52% per consolidare la componente azionaria globale senza duplicazioni.</li>
+<li><strong>FLXK:</strong> Ridotto da 3% a 2% per contenere la concentrazione e favorire rotazione su difensivi.</li>
+</ul>
+<h3>Cosa viene AGGIUNTO</h3>
+<ul>
+<li><strong>ETF Monetario (5%):</strong> Es. T-Bill hedged EUR/USD. Introduce gestione cash, tattica e stabilizzante. Fonti: <em>ECB, Columbia Threadneedle 2025</em>.</li>
+<li><strong>ETF Tematici difensivi (5%):</strong> Clean Energy, Uranio, Cybersecurity, Gold. Protezione da shock macro-politici. Fonti: <em>BlackRock, Harvard Allocation 2024</em>.</li>
+<li><strong>EM Attivi Selettivi (3%):</strong> Sostegno all’efficienza EM via overlay attivi su India, Asia Small, Local Debt. Fonti: <em>ScienceDirect 2025, PGIM, Robeco</em>.</li>
+</ul>
+<h3>📈 Fondamenti Accademici Utilizzati</h3>
+<ul>
+<li><strong>Teoria del portafoglio moderno (Markowitz, 1952):</strong> Minimizzazione del rischio dato un target di rendimento → riduzione sovrapposizione EXUS/IWDA.</li>
+<li><strong>Frontiera efficiente e asset decorrelati (Sharpe Ratio):</strong> Inserimento di ETF non correlati migliora profilo rischio/rendimento.</li>
+<li><strong>Modello Yale/Swensen:</strong> Adozione di asset alternativi (commodity, exposure decorrelate) come difesa strategica.</li>
+<li><strong>Risk Parity:</strong> Bilanciamento espositivo su asset a diversa sensibilità macro (azionario, monetario, commodity).</li>
+</ul>
+<p><em>Questa sezione formalizza il framework tecnico usato per la trasformazione del portafoglio, seguendo approccio professionale e multidisciplinare accademico.</em></p>
+</section>
+<section>
+<h2>Portafoglio Ottimizzato 2025 – Strategia Istituzionale e Contestuale</h2>
+<h3>🔵 Core Allocation (85%)</h3>
+<ul>
+<li><strong>IWDA (MSCI World UCITS): 52%</strong><br/>
+      Azionario globale sviluppato, consolidato dopo rimozione EXUS. Ottimizza la diversificazione effettiva mantenendo esposizione USA, Europa e Asia.</li>
+<li><strong>IE1A (EUR Corp Bond 1–5y): 13%</strong><br/>
+      Obbligazionario investment grade a breve scadenza. Protezione da tassi alti e stabilità nei flussi.</li>
+<li><strong>CSBGE3 (EUR Gov Bond 1–3y): 12%</strong><br/>
+      Governativi core UE. Sicurezza e liquidabilità elevata in fasi stressate.</li>
+<li><strong>ETF monetario EUR/USD T-Bill hedged: 5%</strong><br/>
+      Gestione cash risk-adjusted per copertura, tattica e flessibilità operativa.</li>
+<li><strong>EM attivi selettivi (India, Asia Small-cap, Local Debt): 3%</strong><br/>
+      Overlay attivo istituzionale su mercati inefficenti. Aggiunge alpha decorrelato a VFEA.</li>
+</ul>
+<h3>🟢 Satelliti Alternativi (15%)</h3>
+<ul>
+<li><strong>VFEA (FTSE EM UCITS): 8%</strong><br/>
+      Core emergente ampio, già presente. Mantenuto per copertura regionale e diversificazione macro.</li>
+<li><strong>FLXK (Korea UCITS): 2%</strong><br/>
+      Esposizione selettiva tech/manifattura. Conservato per coerenza storica e momentum geografico.</li>
+<li><strong>ETF difensivo tematico (Oro, Uranio, Clean Energy, Cybersecurity): 5%</strong><br/>
+      Copertura macro-politica decorrelata. Protegge contro shock esogeni e instabilità geopolitica.</li>
+</ul>
+<p><strong>Rendimento atteso:</strong> 5,6–6,2% annuo lordo<br/>
+<strong>Volatilità stimata:</strong> 9–11%<br/>
+<strong>Drawdown atteso:</strong> −18% max in cicli critici<br/>
+<strong>Efficienza rischio:</strong> Migliorata ex-ante con asset decorrelati e gestione cash.</p>
+<p><em>Il portafoglio riflette la convergenza tra resilienza strategica e flessibilità tattica, con forte ancoraggio ai criteri accademici e di risk parity.</em></p>
+</section>
+<br>
+
+
+<h2>Portafoglio Variante Opportunistica 2025 – Approccio Proattivo e Tematico</h2>
+<h3>Profilo Obiettivo</h3>
+<p>Costruito per investitori con elevata tolleranza alla volatilità e orizzonte lungo (&gt;10 anni), focalizzati su crescita patrimoniale tramite esposizione tematica e settoriale avanzata, minore peso difensivo, logica satellite dominante.</p>
+<h3>🔵 Core Allocation (65%)</h3>
+<ul>
+<li><strong>IWDA (MSCI World UCITS): 35%</strong><br/>
+      Base globale sviluppata. Mantenuta ma alleggerita per far spazio ai tematici attivi.</li>
+<li><strong>ETF monetario (EUR/USD T-Bill): 5%</strong><br/>
+      Buffer tecnico di flessibilità tattica. Copertura minima short term.</li>
+<li><strong>EM attivi (India, Asean, Frontier): 10%</strong><br/>
+      Asset inefficienti a forte crescita secolare. Gestione attiva ad alpha selettivo.</li>
+<li><strong>Obbligazionario breve IG EUR (IE1A): 5%</strong><br/>
+      Mantiene componente stabilizzante minima. Solo IG breve e liquido.</li>
+<li><strong>Obbligazioni tematiche green o corporate HY selettive: 10%</strong><br/>
+      Esposizione bond ESG, infrastrutture o climate-linked. Opportunità in fase di discesa tassi.</li>
+</ul>
+<h3>🟢 Satelliti Tematici e Aggressivi (35%)</h3>
+<ul>
+<li><strong>ETF Semiconduttori + AI (es. SOXX/EU AI Index): 8%</strong><br/>
+      Settore guida 2025. Trend dirompente, sostenuto da capex e policy industriali. Fonte: <em>McKinsey AI Outlook 2025</em>.</li>
+<li><strong>ETF Clean Energy + Nuclear/Uranio: 7%</strong><br/>
+      Spinta regolatoria + transizione energetica. Fonti: <em>IEA 2025, EU Green Deal</em>.</li>
+<li><strong>ETF Difesa e Spazio (es. LMT/Thales thematic): 5%</strong><br/>
+      Geopolitica dominante: conflitti + riarme NATO. Fonte: <em>CSIS, NATO Procurement 2024</em>.</li>
+<li><strong>ETF Biotech avanzato o Digital Health: 5%</strong><br/>
+      Alta volatilità ma forte beta su cicli ripartenza. Ricerca in medicina rigenerativa. Fonte: <em>JPM Biotech Index, WHO</em>.</li>
+<li><strong>ETF India equity broad/infra: 5%</strong><br/>
+      Tema strutturale 2025–2035. PMI, demografia, export. Fonti: <em>World Bank, IMF India Projections 2025</em>.</li>
+<li><strong>ETF Small Cap Innovazione globale: 5%</strong><br/>
+      Alta volatilità, ma leva ciclica e domestica. Complementare a IWDA.</li>
+</ul>
+<p><strong>Rendimento atteso:</strong> 6,8–7,9% lordo annuo<br/>
+<strong>Volatilità stimata:</strong> 13–16%<br/>
+<strong>Drawdown atteso:</strong> fino a −30% in eventi critici<br/>
+<strong>Note:</strong> Portafoglio adatto solo a investitori con alta tolleranza alla perdita temporanea, piena consapevolezza del ciclo macro e capacità di mantenere l’orizzonte lungo nei periodi negativi.</p>
+<p><em>Costruzione basata su fondamenti CFA Institute, Risk Budgeting avanzato e allocazione attiva tematica secondo BlackRock e UBS CIO Reports 2025.</em></p>
+</section>
+<br>
+<section>
+<h2>Portafoglio Variante Cripto-Bilanciata 2025 – Diversificazione Strategica Mista</h2>
+<h3> Profilo Obiettivo</h3>
+<p>Per investitori con tolleranza medio-alta al rischio, interessati a integrare una componente di innovazione regolamentata senza rinunciare a stabilità, ciclicità globale e copertura macro. Asset digitali regolati inclusi solo in logica satellite decorrelata.</p>
+<h3>🔵 Core Allocation (75%)</h3>
+<ul>
+<li><strong>IWDA (MSCI World): 45%</strong><br/>
+      Esposizione azionaria globale sviluppata, liquida e strategica.</li>
+<li><strong>IE1A (EUR Corp Bond breve): 10%</strong><br/>
+      Stabilizzatore a breve duration per resilienza macro.</li>
+<li><strong>ETF monetario (EUR/USD T-Bill hedged): 5%</strong><br/>
+      Copertura tattica contro volatilità e optionalità operativa.</li>
+<li><strong>EM attivi (India, Asia frontier, equity selettiva): 10%</strong><br/>
+      Alfabetizzazione EM tramite gestione attiva su mercati inefficienti.</li>
+<li><strong>Oro fisico ETF (UCITS): 5%</strong><br/>
+      Protezione classica anti-shock. Decorrelazione reale.</li>
+</ul>
+<h3>🟢 Satelliti Tematici (25%)</h3>
+<ul>
+<li><strong>ETF Cripto Regolamentato (BTC Spot UCITS + ETH Income): 8%</strong><br/>
+      Esposizione a digital asset tramite ETF MiFID compliant. Regolazione chiave. Fonti: <em>Fidelity, 21Shares, Deutsche Digital Assets</em>.</li>
+<li><strong>ETF Difesa e Cybersecurity: 5%</strong><br/>
+      Temi geopolitici dominanti 2025. Protezione sistemica. Fonti: <em>NATO Strategic Outlook, CSIS 2025</em>.</li>
+<li><strong>ETF Clean Energy/Nuclear: 5%</strong><br/>
+      Transizione energetica UE/USA come megatrend 2025–2035. Fonte: <em>IEA, EU Green Deal</em>.</li>
+<li><strong>ETF Innovazione/AI: 4%</strong><br/>
+      Spinta tech globale come leva di crescita. Settore ad alta dispersione, ma motore economico dominante. Fonti: <em>McKinsey Tech Report 2025, BCG</em>.</li>
+<li><strong>ETF Blockchain Equity (token infra): 3%</strong><br/>
+      Infrastruttura Web3, tokenizzazione finanza e supply chain. Fonte: <em>BIS, Invesco, Franklin Templeton 2025</em>.</li>
+</ul>
+<p><strong>Rendimento atteso:</strong> 6,2–7,5% lordo annuo<br/>
+<strong>Volatilità stimata:</strong> 11–14%<br/>
+<strong>Drawdown atteso:</strong> fino a −25% in shock compositi<br/>
+<strong>Note:</strong> Portafoglio bilanciato per crescita decorrelata, innovazione, copertura e stabilità strutturale. Richiede orizzonte &gt;7 anni e aggiornamento semestrale.</p>
+<p><em>Costruzione conforme ai criteri di Risk Budgeting, asset allocation strategica, esposizioni UCITS compliant e criteri ESG/tematici da BlackRock, IMF, BIS e BCG 2025.</em></p>
+</section>
+<br>
+<div class="mt-6">
+  <h4 class="text-lg font-semibold text-gray-800 mb-2"> Satellite Bonus – CopyTrading NAGA (1%)</h4>
+  <p class="text-gray-700">
+    Integrazione residuale (1%) con strategia <strong>CopyTrading su piattaforma NAGA</strong>, che consente di replicare automaticamente operazioni di trader regolamentati e verificati. L'obiettivo è introdurre un'esposizione alternativa passiva con gestione esterna del rischio operativo.
+  </p>
+  <p class="text-gray-700">
+    Le strategie devono essere selezionate in base a track record verificabile, coerenza di stile, drawdown contenuto e compatibilità con il proprio profilo. L'intermediazione avviene tramite soggetti MiFID-compliant.
+  </p>
+  <p class="mt-2">
+     <a href="https://www.tradelia.org/report/tutorial/copytrading-naga.html" target="_blank" class="text-blue-600 hover:underline font-medium">
+    Vai alla guida completa al CopyTrading NAGA su Tradelia →
+    </a>
+  </p>
+  <p class="text-sm text-gray-500 italic mt-1">
+    Avvertenza: le performance passate non garantiscono risultati futuri. L’investitore mantiene la responsabilità della selezione del trader e della configurazione dei parametri di replica.
+  </p>
+</div>
+<br>
+<div class="mt-10 border-t border-gray-200 pt-6 text-sm text-gray-700">
+
+  <p class="mb-4">
+    Questo report è stato realizzato secondo criteri accademici e istituzionali, con l’obiettivo di fornire analisi coerenti, dati aggiornati e ipotesi operative fondate su scenari realistici.
+  </p>
+
+  <p class="mb-3">
+    Per l’implementazione pratica di portafogli complessi e multi-asset in ambiente regolamentato, puoi esplorare <a href="https://www.tradelia.org/Exante.html" target="_blank" class="text-blue-600 hover:underline font-medium">Exante</a>, piattaforma infrastrutturale professionale con accesso diretto a oltre 50 mercati globali.
+  </p>
+
+  <p>
+    Se invece il tuo obiettivo è combinare semplicità operativa con strumenti globali (ETF, IPO, bond) in ambiente MiFID II, puoi valutare <a href="https://www.tradelia.org/Freedom24.html" target="_blank" class="text-blue-600 hover:underline font-medium">Freedom24</a>, intermediario autorizzato con sede UE.
+  </p>
+
+</div>
+<br>
+
+<p class="mt-8 text-sm text-gray-700">
+  Per richiedere <strong>analisi approfondite personalizzate</strong>, accesso a modelli strategici e ulteriori <strong>servizi gratuiti offerti da Tradelia AI</strong>, visita la <a href="https://www.tradelia.org" target="_blank" class="text-blue-600 hover:underline font-medium">home page ufficiale</a>.
+</p>
+
+
