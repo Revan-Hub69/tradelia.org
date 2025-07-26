@@ -978,97 +978,150 @@ section {
 
 
 
-<section>
-  <h3 class="list-title">Blocco 8-II – Correlazioni Strategiche (Multi-asset)</h3>
-  <div class="overflow-x-auto">
-    <table class="min-w-full text-sm text-left text-gray-800 border border-gray-200 rounded-lg">
-      <thead class="bg-gray-100 text-gray-700 font-semibold">
-        <tr>
-          <th class="p-3">Asset</th>
-          <th class="p-3">Correlazione</th>
-          <th class="p-3">Andamento 24h</th>
-          <th class="p-3">7 giorni</th>
-          <th class="p-3">30 giorni</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="border-t">
-          <th class="p-3 align-top">Nasdaq-100 (QQQ)</th>
-          <td class="positive p-3">+0.91</td>
-          <td class="positive p-3">+0.4%</td>
-          <td class="positive p-3">+2.1%</td>
-          <td class="positive p-3">+4.3%</td>
-        </tr>
-        <tr class="border-t">
-          <th class="p-3 align-top">SOXX (ETF semiconduttori)</th>
-          <td class="positive p-3">+0.94</td>
-          <td class="positive p-3">+0.6%</td>
-          <td class="positive p-3">+3.2%</td>
-          <td class="positive p-3">+5.8%</td>
-        </tr>
-        <tr class="border-t">
-          <th class="p-3 align-top">TSMC</th>
-          <td class="positive p-3">+0.85</td>
-          <td class="positive p-3">+0.3%</td>
-          <td class="positive p-3">+1.9%</td>
-          <td class="positive p-3">+4.1%</td>
-        </tr>
-        <tr class="border-t">
-          <th class="p-3 align-top">AMD</th>
-          <td class="positive p-3">+0.87</td>
-          <td class="positive p-3">+0.5%</td>
-          <td class="positive p-3">+2.4%</td>
-          <td class="positive p-3">+3.9%</td>
-        </tr>
-        <tr class="border-t">
-          <th class="p-3 align-top">Bitcoin</th>
-          <td class="neutral p-3">+0.24</td>
-          <td class="negative p-3">−1.1%</td>
-          <td class="negative p-3">−4.2%</td>
-          <td class="negative p-3">−9.3%</td>
-        </tr>
-        <tr class="border-t">
-          <th class="p-3 align-top">Treasury 10Y Yield</th>
-          <td class="negative p-3">−0.62</td>
-          <td class="positive p-3">+0.02%</td>
-          <td class="positive p-3">+0.14%</td>
-          <td class="positive p-3">+0.28%</td>
-        </tr>
-        <tr class="border-t">
-          <th class="p-3 align-top">Dollaro Index (DXY)</th>
-          <td class="negative p-3">−0.45</td>
-          <td class="neutral p-3">+0.1%</td>
-          <td class="negative p-3">−0.3%</td>
-          <td class="neutral p-3">+0.2%</td>
-        </tr>
-        <tr class="border-t">
-          <th class="p-3 align-top">VIX</th>
-          <td class="negative p-3">−0.73</td>
-          <td class="negative p-3">−3.5%</td>
-          <td class="negative p-3">−8.0%</td>
-          <td class="negative p-3">−6.2%</td>
-        </tr>
-        <tr class="border-t">
-          <th class="p-3 align-top">Oil WTI</th>
-          <td class="neutral p-3">+0.15</td>
-          <td class="positive p-3">+0.9%</td>
-          <td class="positive p-3">+2.3%</td>
-          <td class="positive p-3">+1.1%</td>
-        </tr>
-        <tr class="border-t font-semibold">
-          <th class="p-3 align-top">Correlazione media settoriale</th>
-          <td class="positive p-3">+0.89 (tech mega-cap)</td>
-          <td class="neutral p-3" colspan="3">—</td>
-        </tr>
-        <tr class="border-t font-semibold">
-          <th class="p-3 align-top">Correlazione sistemica vs macro</th>
-          <td class="negative p-3">Alta sensibilità a tassi / VIX</td>
-          <td class="neutral p-3" colspan="3">Monitorare Treasury e VIX</td>
-        </tr>
-      </tbody>
-    </table>
+<section class="max-w-4xl mx-auto mt-10 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-lg sm:text-xl font-semibold text-slate-900 mb-4 text-center">
+    Blocco 8-II – Correlazioni Strategiche (Multi-asset)
+  </h3>
+
+  <div class="space-y-4 text-sm sm:text-base">
+
+    <!-- NASDAQ-100 -->
+    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+      <div class="flex justify-between items-center mb-1">
+        <span class="font-semibold text-slate-800">Nasdaq-100 (QQQ)</span>
+        <span class="text-green-600 font-semibold">+0.91</span>
+      </div>
+      <div class="text-slate-700 space-y-1">
+        <div><strong>24h:</strong> <span class="positive">+0.4%</span></div>
+        <div><strong>7 giorni:</strong> <span class="positive">+2.1%</span></div>
+        <div><strong>30 giorni:</strong> <span class="positive">+4.3%</span></div>
+      </div>
+    </div>
+
+    <!-- SOXX -->
+    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+      <div class="flex justify-between items-center mb-1">
+        <span class="font-semibold text-slate-800">SOXX (ETF semiconduttori)</span>
+        <span class="text-green-600 font-semibold">+0.94</span>
+      </div>
+      <div class="text-slate-700 space-y-1">
+        <div><strong>24h:</strong> <span class="positive">+0.6%</span></div>
+        <div><strong>7 giorni:</strong> <span class="positive">+3.2%</span></div>
+        <div><strong>30 giorni:</strong> <span class="positive">+5.8%</span></div>
+      </div>
+    </div>
+
+    <!-- TSMC -->
+    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+      <div class="flex justify-between items-center mb-1">
+        <span class="font-semibold text-slate-800">TSMC</span>
+        <span class="text-green-600 font-semibold">+0.85</span>
+      </div>
+      <div class="text-slate-700 space-y-1">
+        <div><strong>24h:</strong> <span class="positive">+0.3%</span></div>
+        <div><strong>7 giorni:</strong> <span class="positive">+1.9%</span></div>
+        <div><strong>30 giorni:</strong> <span class="positive">+4.1%</span></div>
+      </div>
+    </div>
+
+    <!-- AMD -->
+    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+      <div class="flex justify-between items-center mb-1">
+        <span class="font-semibold text-slate-800">AMD</span>
+        <span class="text-green-600 font-semibold">+0.87</span>
+      </div>
+      <div class="text-slate-700 space-y-1">
+        <div><strong>24h:</strong> <span class="positive">+0.5%</span></div>
+        <div><strong>7 giorni:</strong> <span class="positive">+2.4%</span></div>
+        <div><strong>30 giorni:</strong> <span class="positive">+3.9%</span></div>
+      </div>
+    </div>
+
+    <!-- Bitcoin -->
+    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+      <div class="flex justify-between items-center mb-1">
+        <span class="font-semibold text-slate-800">Bitcoin</span>
+        <span class="text-yellow-600 font-semibold">+0.24</span>
+      </div>
+      <div class="text-slate-700 space-y-1">
+        <div><strong>24h:</strong> <span class="negative">−1.1%</span></div>
+        <div><strong>7 giorni:</strong> <span class="negative">−4.2%</span></div>
+        <div><strong>30 giorni:</strong> <span class="negative">−9.3%</span></div>
+      </div>
+    </div>
+
+    <!-- Treasury 10Y -->
+    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+      <div class="flex justify-between items-center mb-1">
+        <span class="font-semibold text-slate-800">Treasury 10Y Yield</span>
+        <span class="text-red-600 font-semibold">−0.62</span>
+      </div>
+      <div class="text-slate-700 space-y-1">
+        <div><strong>24h:</strong> <span class="positive">+0.02%</span></div>
+        <div><strong>7 giorni:</strong> <span class="positive">+0.14%</span></div>
+        <div><strong>30 giorni:</strong> <span class="positive">+0.28%</span></div>
+      </div>
+    </div>
+
+    <!-- DXY -->
+    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+      <div class="flex justify-between items-center mb-1">
+        <span class="font-semibold text-slate-800">Dollaro Index (DXY)</span>
+        <span class="text-red-600 font-semibold">−0.45</span>
+      </div>
+      <div class="text-slate-700 space-y-1">
+        <div><strong>24h:</strong> <span class="neutral">+0.1%</span></div>
+        <div><strong>7 giorni:</strong> <span class="negative">−0.3%</span></div>
+        <div><strong>30 giorni:</strong> <span class="neutral">+0.2%</span></div>
+      </div>
+    </div>
+
+    <!-- VIX -->
+    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+      <div class="flex justify-between items-center mb-1">
+        <span class="font-semibold text-slate-800">VIX</span>
+        <span class="text-red-600 font-semibold">−0.73</span>
+      </div>
+      <div class="text-slate-700 space-y-1">
+        <div><strong>24h:</strong> <span class="negative">−3.5%</span></div>
+        <div><strong>7 giorni:</strong> <span class="negative">−8.0%</span></div>
+        <div><strong>30 giorni:</strong> <span class="negative">−6.2%</span></div>
+      </div>
+    </div>
+
+    <!-- Oil WTI -->
+    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+      <div class="flex justify-between items-center mb-1">
+        <span class="font-semibold text-slate-800">Oil WTI</span>
+        <span class="text-yellow-700 font-semibold">+0.15</span>
+      </div>
+      <div class="text-slate-700 space-y-1">
+        <div><strong>24h:</strong> <span class="positive">+0.9%</span></div>
+        <div><strong>7 giorni:</strong> <span class="positive">+2.3%</span></div>
+        <div><strong>30 giorni:</strong> <span class="positive">+1.1%</span></div>
+      </div>
+    </div>
+
+    <!-- Media settoriale -->
+    <div class="border border-gray-300 rounded-lg p-4 bg-white font-medium">
+      <div class="flex justify-between mb-1">
+        <span class="text-slate-800">Correlazione media settoriale</span>
+        <span class="text-green-600 font-semibold">+0.89 (tech mega-cap)</span>
+      </div>
+    </div>
+
+    <!-- Correlazione sistemica -->
+    <div class="border border-gray-300 rounded-lg p-4 bg-white font-medium">
+      <div class="flex justify-between mb-1">
+        <span class="text-slate-800">Correlazione sistemica vs macro</span>
+        <span class="text-red-600 font-semibold">Alta sensibilità a tassi / VIX</span>
+      </div>
+      <p class="text-slate-700 text-sm mt-1">Monitorare Treasury e volatilità implicita</p>
+    </div>
+
   </div>
 </section>
+
 
 
 <section>
