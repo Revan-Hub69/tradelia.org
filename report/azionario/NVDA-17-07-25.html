@@ -603,25 +603,26 @@ section {
   </div>
 </section>
 
- <section class="max-w-4xl mx-auto mt-8 px-6 py-5 bg-white border border-gray-200 rounded-xl shadow-sm overflow-x-auto">
-    <h2 class="text-lg sm:text-xl font-semibold text-slate-900 mb-2 text-center">
-      Analisi Approfondita – Blocchi 1–12
-    </h2>
-    <div class="flex flex-wrap sm:flex-nowrap gap-x-4 gap-y-2 text-slate-700 text-sm sm:text-base whitespace-nowrap">
-      <span>1. Fair Value & Potenziale</span>
-      <span>2. Redditività e Margini</span>
-      <span>3. Momentum Tecnico</span>
-      <span>4. Settore & Competizione</span>
-      <span>5. Forza Relativa & Leadership</span>
-      <span>6. Volumi & Order Book</span>
-      <span>7. Derivati & GEX</span>
-      <span>8. Setup Tecnico Multi-TF</span>
-      <span>9. ESG & Governance</span>
-      <span>10. Eventi & Catalizzatori</span>
-      <span>11. Retail vs Istituzionali</span>
-      <span>12. Sentiment Aggregato</span>
-    </div>
-  </section>
+<section class="max-w-4xl mx-auto mt-8 px-6 py-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h2 class="text-lg sm:text-xl font-semibold text-slate-900 mb-4 text-center">
+    Analisi Approfondita – Blocchi 1–12
+  </h2>
+  <ul class="list-disc pl-5 text-slate-700 text-sm sm:text-base leading-relaxed space-y-1">
+    <li>1. Fair Value & Potenziale</li>
+    <li>2. Redditività e Margini</li>
+    <li>3. Momentum Tecnico</li>
+    <li>4. Settore & Competizione</li>
+    <li>5. Forza Relativa & Leadership</li>
+    <li>6. Volumi & Order Book</li>
+    <li>7. Derivati & GEX</li>
+    <li>8. Setup Tecnico Multi-TF</li>
+    <li>9. ESG & Governance</li>
+    <li>10. Eventi & Catalizzatori</li>
+    <li>11. Retail vs Istituzionali</li>
+    <li>12. Sentiment Aggregato</li>
+  </ul>
+</section>
+
 
 
 <section class="max-w-4xl mx-auto my-12 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
@@ -977,23 +978,98 @@ section {
 
 
 
-
 <section>
   <h3 class="list-title">Blocco 8-II – Correlazioni Strategiche (Multi-asset)</h3>
-  <table class="min-w-full text-sm text-left text-gray-800 border border-gray-200 rounded-lg overflow-hidden">
-    <tr><th class="p-3 font-semibold align-top">Nasdaq-100 (QQQ)</th><td class="positive p-3">+0.91 (alta, diretta)</td></tr>
-    <tr><th class="p-3 font-semibold align-top">SOXX (ETF semiconduttori)</th><td class="positive p-3">+0.94 (massima correlazione settoriale)</td></tr>
-    <tr><th class="p-3 font-semibold align-top">TSMC</th><td class="positive p-3">+0.85 → trend settoriale tech-fab condiviso</td></tr>
-    <tr><th class="p-3 font-semibold align-top">AMD</th><td class="positive p-3">+0.87 → ottima proxy intra-settoriale</td></tr>
-    <tr><th class="p-3 font-semibold align-top">Bitcoin</th><td class="neutral p-3">+0.24 → correlazione bassa/non sistemica</td></tr>
-    <tr><th class="p-3 font-semibold align-top">Rendimento Treasury 10Y</th><td class="negative p-3">-0.62 → sensibile a movimenti tassi</td></tr>
-    <tr><th class="p-3 font-semibold align-top">Dollaro Index (DXY)</th><td class="negative p-3">-0.45 → moderata correlazione inversa, rischio macro</td></tr>
-    <tr><th class="p-3 font-semibold align-top">VIX (indice volatilità)</th><td class="negative p-3">-0.73 → sensibile all’avversione al rischio</td></tr>
-    <tr><th class="p-3 font-semibold align-top">Oil WTI</th><td class="neutral p-3">+0.15 → irrilevante sul core business NVIDIA</td></tr>
-    <tr><th class="p-3 font-semibold align-top">Correlazione media settoriale</th><td class="positive p-3">+0.89 (tech mega-cap)</td></tr>
-    <tr><th class="p-3 font-semibold align-top">Correlazione sistemica vs macro</th><td class="negative p-3">Alta sensibilità a tassi/volatilità (Fed/VIX)</td></tr>
-  </table>
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-sm text-left text-gray-800 border border-gray-200 rounded-lg">
+      <thead class="bg-gray-100 text-gray-700 font-semibold">
+        <tr>
+          <th class="p-3">Asset</th>
+          <th class="p-3">Correlazione</th>
+          <th class="p-3">Andamento 24h</th>
+          <th class="p-3">7 giorni</th>
+          <th class="p-3">30 giorni</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-t">
+          <th class="p-3 align-top">Nasdaq-100 (QQQ)</th>
+          <td class="positive p-3">+0.91</td>
+          <td class="positive p-3">+0.4%</td>
+          <td class="positive p-3">+2.1%</td>
+          <td class="positive p-3">+4.3%</td>
+        </tr>
+        <tr class="border-t">
+          <th class="p-3 align-top">SOXX (ETF semiconduttori)</th>
+          <td class="positive p-3">+0.94</td>
+          <td class="positive p-3">+0.6%</td>
+          <td class="positive p-3">+3.2%</td>
+          <td class="positive p-3">+5.8%</td>
+        </tr>
+        <tr class="border-t">
+          <th class="p-3 align-top">TSMC</th>
+          <td class="positive p-3">+0.85</td>
+          <td class="positive p-3">+0.3%</td>
+          <td class="positive p-3">+1.9%</td>
+          <td class="positive p-3">+4.1%</td>
+        </tr>
+        <tr class="border-t">
+          <th class="p-3 align-top">AMD</th>
+          <td class="positive p-3">+0.87</td>
+          <td class="positive p-3">+0.5%</td>
+          <td class="positive p-3">+2.4%</td>
+          <td class="positive p-3">+3.9%</td>
+        </tr>
+        <tr class="border-t">
+          <th class="p-3 align-top">Bitcoin</th>
+          <td class="neutral p-3">+0.24</td>
+          <td class="negative p-3">−1.1%</td>
+          <td class="negative p-3">−4.2%</td>
+          <td class="negative p-3">−9.3%</td>
+        </tr>
+        <tr class="border-t">
+          <th class="p-3 align-top">Treasury 10Y Yield</th>
+          <td class="negative p-3">−0.62</td>
+          <td class="positive p-3">+0.02%</td>
+          <td class="positive p-3">+0.14%</td>
+          <td class="positive p-3">+0.28%</td>
+        </tr>
+        <tr class="border-t">
+          <th class="p-3 align-top">Dollaro Index (DXY)</th>
+          <td class="negative p-3">−0.45</td>
+          <td class="neutral p-3">+0.1%</td>
+          <td class="negative p-3">−0.3%</td>
+          <td class="neutral p-3">+0.2%</td>
+        </tr>
+        <tr class="border-t">
+          <th class="p-3 align-top">VIX</th>
+          <td class="negative p-3">−0.73</td>
+          <td class="negative p-3">−3.5%</td>
+          <td class="negative p-3">−8.0%</td>
+          <td class="negative p-3">−6.2%</td>
+        </tr>
+        <tr class="border-t">
+          <th class="p-3 align-top">Oil WTI</th>
+          <td class="neutral p-3">+0.15</td>
+          <td class="positive p-3">+0.9%</td>
+          <td class="positive p-3">+2.3%</td>
+          <td class="positive p-3">+1.1%</td>
+        </tr>
+        <tr class="border-t font-semibold">
+          <th class="p-3 align-top">Correlazione media settoriale</th>
+          <td class="positive p-3">+0.89 (tech mega-cap)</td>
+          <td class="neutral p-3" colspan="3">—</td>
+        </tr>
+        <tr class="border-t font-semibold">
+          <th class="p-3 align-top">Correlazione sistemica vs macro</th>
+          <td class="negative p-3">Alta sensibilità a tassi / VIX</td>
+          <td class="neutral p-3" colspan="3">Monitorare Treasury e VIX</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </section>
+
 
 <section>
   <h3 class="list-title">Blocco 9 – Proprietà, ESG & Governance</h3>
