@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRADELIA • AI — Report Azionario</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+  body {
+  font-family: 'Inter', sans-serif;
+  background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+  background-size: 280px;
+  color: #0f172a;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background: #fff;
+  border-bottom: 1px solid #dbe1ea;
+  padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+}
+
+th, td {
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  text-align: left;
+  line-height: 1.5;
+}
+
+th {
+  background: #f8fafc;
+  white-space: nowrap;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+table tr:hover {
+  background-color: rgba(14, 165, 233, 0.1);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.positive {
+  background-color: rgba(34,197,94,0.25);
+}
+
+.neutral {
+  background-color: rgba(234,179,8,0.25);
+}
+
+.negative {
+  background-color: rgba(239,68,68,0.25);
+}
+
+a {
+  color: #2563eb;
+  text-decoration: underline;
+  transition: color 0.2s ease-in-out;
+}
+
+a:hover, a:focus {
+  color: #1d4ed8;
+  outline: none;
+  text-decoration: none;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #1e293b;
+}
+
+h3.list-title {
+  font-size: 1.125rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: #1e293b;
+  font-weight: 600;
+  border-bottom: 2px solid #cbd5e1;
+  padding-bottom: 0.25rem;
+}
+
+
+section {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  margin: 2rem auto;
+  max-width: 800px;
+}
+
+.text-gray {
+  color: #374151;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+    width: 100%;
+  }
+  tr {
+    margin-bottom: 1rem;
+  }
+  th {
+    background: none;
+    font-weight: 600;
+    padding-top: 0;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  td {
+    border-top: none;
+    background-color: #f9fafb;
+    margin-top: 0.25rem;
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+  border-radius: 100vh;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(80, 160, 200, 0.5);
+  border-radius: 100vh;
+  transition: background-color 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(80, 160, 200, 0.7);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
+  box-sizing: border-box;
+}
+</style>
+</head>
+<body>
+  <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6">
+    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
+    </a>
+    <a href="https://tradelia.org/archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
+  </header>
+  <main>
+
+  <section>
+  <h2 class="text-2xl font-bold mb-4 text-center">Analisi Approfondita – Modello Tradelia AI Multi-Blocco</h2>
+  <h3 class="list-title">Indice Sezioni Analitiche (Blocchi 1–13 + Strategia Finale)</h3>
+  <ul class="list-disc pl-6 text-gray">
+    <li>Blocco 1 – Identificativi & Contesto</li>
+    <li>Blocco 2 – Multipli & Valutazione Intrinseca</li>
+    <li>Blocco 3 – Fondamentali Aziendali</li>
+    <li>Blocco 4 – Dividendi & Buyback</li>
+    <li>Blocco 5 – Performance & Rischio</li>
+    <li>Blocco 6 – Microstruttura & Market</li>
+    <li>Blocco 7 – Derivati & Opzioni</li>
+    <li>Blocco 8 – Tecnica & Correlazioni</li>
+    <li>Blocco 9 – Proprietà, ESG & Governance</li>
+    <li>Blocco 10 – Flussi ETF</li>
+    <li>Blocco 11 – Eventi & Macroeconomia</li>
+    <li>Blocco 12 – Dati Alternativi & Retail</li>
+    <li>Blocco Finale – Cluster Strategico & AI</li>
+    <li><strong>Simulazione Operativa – Strategie Finali</strong></li>
+  </ul>
+</section>
+<section class="max-w-4xl mx-auto my-12 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-lg font-semibold text-slate-800 mb-4">Blocco 1 – Identificativi & Contesto</h3>
+  <div class="overflow-x-auto">
+    <table class="min-w-full border-collapse text-sm sm:text-base text-left text-gray-800">
+      <tbody>
+        <tr><th class="font-semibold p-3">Ticker</th><td class="positive p-3">TSLA</td></tr>
+        <tr><th class="font-semibold p-3">ISIN</th><td class="positive p-3">US88160R1014</td></tr>
+        <tr><th class="font-semibold p-3">Exchange</th><td class="positive p-3">NASDAQ</td></tr>
+        <tr><th class="font-semibold p-3">Settore</th><td class="positive p-3">Consumer Discretionary</td></tr>
+        <tr><th class="font-semibold p-3">Industria</th><td class="positive p-3">Automobiles & AI Robotics</td></tr>
+        <tr><th class="font-semibold p-3">Indice primario</th><td class="positive p-3">S&P 500, S&P 100</td></tr>
+        <tr><th class="font-semibold p-3">Indici secondari</th><td class="positive p-3">ARKQ, ESG Leaders, AI ETFs</td></tr>
+        <tr><th class="font-semibold p-3">Prezzo Attuale</th><td class="positive p-3">$316,08 (27 luglio 2025)</td></tr>
+        <tr><th class="font-semibold p-3">Prezzo Target Medio Analisti</th><td class="neutral p-3">$315,20 (consensus istituzionale)</td></tr>
+        <tr><th class="font-semibold p-3">Rating Analisti</th><td class="neutral p-3">Hold (TipRanks / MarketBeat / WSJ)</td></tr>
+        <tr><th class="font-semibold p-3">Market Cap</th><td class="positive p-3">~$1.01 trilioni</td></tr>
+        <tr><th class="font-semibold p-3">Numero Azioni Totali</th><td class="positive p-3">~3,2 miliardi</td></tr>
+        <tr><th class="font-semibold p-3">Free Float (%)</th><td class="positive p-3">~86%</td></tr>
+        <tr><th class="font-semibold p-3">Prezzo Min/Max 52 settimane</th><td class="positive p-3">$152 – $317</td></tr>
+        <tr><th class="font-semibold p-3">Variazione 24h</th><td class="positive p-3">+0,6%</td></tr>
+        <tr><th class="font-semibold p-3">Variazione 7gg</th><td class="positive p-3">+3,4%</td></tr>
+        <tr><th class="font-semibold p-3">Variazione 30gg</th><td class="positive p-3">+11,2%</td></tr>
+        <tr><th class="font-semibold p-3">Massimo Storico Assoluto</th><td class="positive p-3">$414,50 (novembre 2021, post split)</td></tr>
+        <tr><th class="font-semibold p-3">Minimo Storico Assoluto</th><td class="neutral p-3">$3,84 (2009, pre‑rally EV)</td></tr>
+        <tr><th class="font-semibold p-3">Data IPO</th><td class="positive p-3">29 giugno 2010</td></tr>
+        <tr><th class="font-semibold p-3">Valuta di Quotazione</th><td class="positive p-3">USD</td></tr>
+        <tr><th class="font-semibold p-3">Sede Legale / Paese</th><td class="positive p-3">Austin, Texas – USA</td></tr>
+        <tr><th class="font-semibold p-3">Variazione prezzo vs competitor (30gg)</th><td class="positive p-3">+11,2% vs media peer +4,1%</td></tr>
+        <tr>
+          <th class="font-semibold p-3 align-top">Commento Tradelia AI</th>
+          <td class="text-slate-700 p-3">
+            Tesla mantiene una posizione di leadership nel settore EV, con espansione strategica verso AI, Robotaxi e robotica.<br>
+            Il prezzo attuale è allineato al consensus istituzionale, ma in rally tecnico superiore alla media peer.<br>
+            Rating "Hold" riflette equilibrio tra visione futura e pressione attuale su margini e vendite.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+<section class="max-w-4xl mx-auto my-12 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h4 class="text-md font-semibold mb-4">Blocco 1.1 – Competitor Diretti</h4>
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-sm sm:text-base text-left text-gray-800">
+      <thead>
+        <tr>
+          <th class="font-semibold p-3">Competitor</th>
+          <th class="font-semibold p-3">Profilo / Punti di Forza</th>
+          <th class="font-semibold p-3">Rischi o Sfide</th>
+          <th class="font-semibold p-3">Variazioni Prezzo (24 h / 7 gg / 30 gg)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="p-3">BYD Co. Ltd.</td>
+          <td class="p-3">Leader BEV globale: ~1,59 M veicoli venduti nel 2023; integrazione verticale batterie/ADAS “God’s Eye”</td>
+          <td class="p-3">Espansione USA rallentata da dazi e distribuzione, margini inferiori a Tesla</td>
+          <td class="p-3">−1.40 % / −2.0 %* / −8.0 %* </td>
+        </tr>
+        <tr>
+          <td class="p-3">XPeng Inc.</td>
+          <td class="p-3">Smart‑EV cinesi con modelli P7, G3i; partnership VW/BP Pulse per network ultra‑fast charging</td>
+          <td class="p-3">Margini negativi, dipendenza dal mercato cinese; PE ratio negativo (~−25) suggerisce perdite TTM</td>
+          <td class="p-3">≈ +1.6 %* / +10 %* / +20 %* </td>
+        </tr>
+        <tr>
+          <td class="p-3">Rivian Automotive, Inc.</td>
+          <td class="p-3">Pickup/SUV EV premium, supporto Amazon e partnership in espansione</td>
+          <td class="p-3">Volumi ridotti, perdite operative strutturali, rischi finanziari</td>
+          <td class="p-3">≈ −2 % / −5 %* / −10 %* </td>
+        </tr>
+        <tr>
+          <td class="p-3">Lucid Motors</td>
+          <td class="p-3">EV lusso americano (Lucid Air, Gravity), autonomia record, finanziamenti da PIF</td>
+          <td class="p-3">Vendite limitate, perdita netta consolidata, posizionamento costoso a rischio durata ciclo economico</td>
+          <td class="p-3">≈ +4 %* / +8 %* / −12 %* </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="text-gray-600 mt-4"><small>*stima basata su trend YTD e articoli recenti su MarketWatch, Business Insider, StockTwits e altri peer comparables</small></p>
+</section>
+<section class="max-w-4xl mx-auto my-12 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-lg font-semibold text-slate-800 mb-4">Blocco 2 – Multipli & Valutazione Intrinseca</h3>
+
+  <h4 class="text-md font-semibold mt-4 mb-2">Multipli Comparativi</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Multiplo</th>
+        <th class="p-3 font-medium">Valore TSLA</th>
+        <th class="p-3 font-medium">Media Peer</th>
+        <th class="p-3 font-medium">Valutazione</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="negative">
+        <td class="p-3">P/E (TTM)</td>
+        <td class="p-3">167.2×</td>
+        <td class="p-3">~40–50×</td>
+        <td class="p-3">Sopravvalutato</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">EV/EBITDA</td>
+        <td class="p-3">85–87×</td>
+        <td class="p-3">~10–11×</td>
+        <td class="p-3">Estremamente Elevato</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">EV/Sales</td>
+        <td class="p-3">10.2–10.7×</td>
+        <td class="p-3">~3–5×</td>
+        <td class="p-3">Sopra Soglia</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Analisi Sintetica Valutativa</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Parametro</th>
+        <th class="p-3 font-medium">Valore</th>
+        <th class="p-3 font-medium">Confronto Settore</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="negative">
+        <td class="p-3">P/E</td>
+        <td class="p-3">167×</td>
+        <td class="p-3">>> Media Settore</td>
+        <td class="p-3">Negativo</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">EV/EBITDA</td>
+        <td class="p-3">85–87×</td>
+        <td class="p-3">8× mediana</td>
+        <td class="p-3">Negativo</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">EV/Sales</td>
+        <td class="p-3">10.5×</td>
+        <td class="p-3">~3× superiore</td>
+        <td class="p-3">Negativo</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Commento Tecnico – Tradelia AI</h4>
+  <p class="text-slate-700">
+    I multipli attuali di Tesla sono significativamente superiori ai benchmark settoriali, con un P/E sopra i 160× e EV/EBITDA oltre 85×. Questo configura una valutazione altamente esigente, che incorpora pienamente le aspettative future su AI, guida autonoma e posizionamento tecnologico. Il margine di sicurezza risulta ridotto, con un potenziale fair value (DCF base) compreso tra $250 e $280, inferiore al prezzo attuale. La coerenza con i target analisti (~$315) rafforza l'indicazione di assenza di upside fondamentale.
+  </p>
+</section>
+
+<section class="max-w-4xl mx-auto my-12 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-lg font-semibold text-slate-800 mb-4">Blocco 3 – Fondamentali Aziendali</h3>
+
+  <h4 class="text-md font-semibold mt-4 mb-2">Crescita Ricavi e Tendenze Annuali</h4>
+  <table class="min-w-full text-sm text-left">
+    <tbody>
+      <tr class="negative"><th class="p-3 font-medium">Revenue Q2 2025 YoY</th><td class="p-3">−12 %</td></tr>
+      <tr class="negative"><th class="p-3 font-medium">Revenue Automotive Q2 YoY</th><td class="p-3">−16 %</td></tr>
+      <tr class="neutral"><th class="p-3 font-medium">TTM Revenue Totale</th><td class="p-3">$95–96 mld</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Margini Operativi</h4>
+  <table class="min-w-full text-sm text-left">
+    <tbody>
+      <tr class="neutral"><th class="p-3 font-medium">Gross Margin</th><td class="p-3">~16‑17 %</td></tr>
+      <tr class="negative"><th class="p-3 font-medium">Operating Margin</th><td class="p-3">4.1 %</td></tr>
+      <tr class="neutral"><th class="p-3 font-medium">EBITDA Margin TTM</th><td class="p-3">13–14 %</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Efficienza del Capitale</h4>
+  <table class="min-w-full text-sm text-left">
+    <tbody>
+      <tr class="neutral"><th class="p-3 font-medium">ROE</th><td class="p-3">8.3 %</td></tr>
+      <tr class="neutral"><th class="p-3 font-medium">ROIC</th><td class="p-3">4.1 %</td></tr>
+      <tr class="neutral"><th class="p-3 font-medium">ROA</th><td class="p-3">2.9 %</td></tr>
+      <tr class="neutral"><th class="p-3 font-medium">Asset Turnover</th><td class="p-3">0.77</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Free Cash Flow e Liquidità</h4>
+  <table class="min-w-full text-sm text-left">
+    <tbody>
+      <tr class="neutral"><th class="p-3 font-medium">Operating Cash Flow TTM</th><td class="p-3">$14.9 mld</td></tr>
+      <tr class="neutral"><th class="p-3 font-medium">Free Cash Flow TTM</th><td class="p-3">$5.65 mld</td></tr>
+      <tr class="negative"><th class="p-3 font-medium">Free Cash Flow Q2</th><td class="p-3">$146 mln (–89 % YoY)</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Commento Fondamentale – Tradelia AI</h4>
+  <p class="text-slate-700">
+    I ricavi trimestrali registrano un calo doppia cifra, riflettendo una pressione generalizzata su vendite e prezzi. I margini operativi sono scesi al 4.1 %, con margini lordi al di sotto del 17 %. Il ROIC risulta debole rispetto agli standard del settore tech-industrial. Il calo drastico del free cash flow trimestrale (–89 %) evidenzia un deterioramento della generazione interna di capitale.
+  </p>
+</section>
+<section class="max-w-4xl mx-auto my-12 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-lg font-semibold text-slate-800 mb-4">Blocco 4 – Dividendi & Buyback</h3>
+
+  <h4 class="text-md font-semibold mt-4 mb-2">Dividendi Ordinari</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Parametro</th>
+        <th class="p-3 font-medium">Valore</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="neutral">
+        <td class="p-3">Dividendo Annuale</td>
+        <td class="p-3">0 USD</td>
+        <td class="p-3">Assente</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">Dividend Yield</td>
+        <td class="p-3">0 %</td>
+        <td class="p-3">Assente</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">Data Ultimo Dividendo</td>
+        <td class="p-3">n/a</td>
+        <td class="p-3">n/a</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Programmi di Buyback</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Parametro</th>
+        <th class="p-3 font-medium">Valore</th>
+        <th class="p-3">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="neutral">
+        <td class="p-3">Buyback TTM</td>
+        <td class="p-3">0 USD</td>
+        <td class="p-3">Assente</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">Yield Buyback</td>
+        <td class="p-3">≈ −0.76 %</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">Autorizzazioni Future</td>
+        <td class="p-3">In discussione (range $5–10 mld)</td>
+        <td class="p-3">Non ancora approvate</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Commento Analitico Tradelia AI</h4>
+  <p class="text-slate-700">
+    Tesla non ha mai distribuito dividendi e non prevede attualmente alcuna politica di payout. Anche i programmi di buyback non risultano ancora attivati, nonostante ipotesi preliminari da parte del consiglio. L’assenza di remunerazione agli azionisti è coerente con l’orientamento strategico alla crescita interna e reinvestimento del capitale generato.
+  </p>
+</section>
+<section class="max-w-4xl mx-auto my-12 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-lg font-semibold text-slate-800 mb-4">Blocco 5 – Performance & Rischio</h3>
+
+  <h4 class="text-md font-semibold mt-4 mb-2">Performance Annualizzata</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Periodo</th>
+        <th class="p-3 font-medium">Rendimento</th>
+        <th class="p-3 font-medium">Percentile Settore</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="positive">
+        <td class="p-3">1Y</td>
+        <td class="p-3">+43.8 %</td>
+        <td class="p-3">~95° percentile</td>
+        <td class="p-3">Positivo</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">3Y (ann.)</td>
+        <td class="p-3">+5.6 %</td>
+        <td class="p-3">~50° percentile</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+      <tr class="positive">
+        <td class="p-3">5Y (ann.)</td>
+        <td class="p-3">+27.3 %</td>
+        <td class="p-3">~90° percentile</td>
+        <td class="p-3">Positivo</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-4 mb-2">Volatilità e Rischio</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Parametro</th>
+        <th class="p-3 font-medium">Valore</th>
+        <th class="p-3 font-medium">Descrizione</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="negative">
+        <td class="p-3">Deviazione Std Annuale</td>
+        <td class="p-3">≈ 64.4 %</td>
+        <td class="p-3">Altissima volatilità vs peer auto</td>
+        <td class="p-3">Negativo</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">Max Drawdown (5Y)</td>
+        <td class="p-3">−71.6 %</td>
+        <td class="p-3">Tra i più elevati nel settore</td>
+        <td class="p-3">Negativo</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">Sortino Ratio</td>
+        <td class="p-3">≈ 1.36</td>
+        <td class="p-3">Moderato rischio downside</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Commento Analitico – Tradelia AI</h4>
+  <p class="text-slate-700">
+    Tesla mostra performance annualizzate elevate (+43.8 % su 1 anno, +27.3 % su 5 anni), posizionandosi nei percentili top del settore. Tuttavia, la volatilità annuale (~64 %) e un drawdown massivo di −71.6 % negli ultimi cinque anni costituiscono segnali di rischio significativo. Il Sortino Ratio è moderato (~1.36), sufficiente ma non eccellente: riflette ritorni consistenti ma con ampia flessione potenziale. Complessivamente, il profilo rischio‑reward è elevato, adatto a investitori con alta tolleranza alla volatilità e orientamento di lungo termine.
+  </p>
+</section>
+<section class="max-w-4xl mx-auto my-12 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-lg font-semibold text-slate-800 mb-4">Blocco 6 – Microstruttura & Market</h3>
+
+  <h4 class="text-md font-semibold mt-4 mb-2">Volumi di Trading</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Parametro</th>
+        <th class="p-3 font-medium">Valore</th>
+        <th class="p-3 font-medium">Riferimento</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="neutral">
+        <td class="p-3">Volume medio 10 giorni</td>
+        <td class="p-3">~97.15 M az.</td>
+        <td class="p-3">Yahoo Finance (10gg)</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">Volume medio 30 giorni</td>
+        <td class="p-3">~102.3 M az.</td>
+        <td class="p-3">YCharts 30gg</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">Volume giorno 25‑lug‑2025</td>
+        <td class="p-3">148.2 M az.</td>
+        <td class="p-3">Investing.com</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Order Book & Short Interest</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Parametro</th>
+        <th class="p-3 font-medium">Valore</th>
+        <th class="p-3 font-medium">Riferimento</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="neutral">
+        <td class="p-3">Short Interest (% float)</td>
+        <td class="p-3">2.49 %</td>
+        <td class="p-3">Benzinga / MarketBeat</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">Days to Cover</td>
+        <td class="p-3">1 giorno</td>
+        <td class="p-3">Benzinga / MarketBeat</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">Spread Bid‑Ask (stima)</td>
+        <td class="p-3">~0.02 %</td>
+        <td class="p-3">Tipico per Mega‑cap liquidità</td>
+        <td class="p-3">Positivo</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Opzioni & Liquidità Derivati</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Parametro</th>
+        <th class="p-3 font-medium">Valore</th>
+        <th class="p-3 font-medium">Riferimento</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="positive">
+        <td class="p-3">IV (Implied Volatility)</td>
+        <td class="p-3">≈46.3 %</td>
+        <td class="p-3">OptionCharts</td>
+        <td class="p-3">Positivo</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">IV Rank</td>
+        <td class="p-3">1.6 %</td>
+        <td class="p-3">OptionCharts</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">Put/Call Volume Ratio</td>
+        <td class="p-3">~0.92</td>
+        <td class="p-3">Barchart</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Commento Analitico – Tradelia AI</h4>
+  <p class="text-slate-700">
+    Tesla presenta volumi trading elevati, con media recente intorno a 100 M azioni/giorno, e un avanzo del giorno specifico del 48% rispetto alla media. Lo short interest è basso (2.49% del float) e richiede circa un giorno per copertura completa, riducendo il rischio di short squeeze sostenuti. Lo spread bid‑ask stimato è minimo, coerente con liquidità da mega cap. L’IV è moderata (~46%), ma molto bassa rispetto al suo range storico (Rank ~1.6%), indicando condizioni tranquille nel breve termine. Il rapporto put/call indica sentiment leggermente ribassista. Complessivamente, microstruttura e liquidità suggeriscono elevata affidabilità nel liquidity provision, con rischio strutturale contenuto.
+  </p>
+</section>
+<section class="max-w-4xl mx-auto my-12 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-lg font-semibold text-slate-800 mb-4">Blocco 7 – Derivati &amp; Opzioni</h3>
+
+  <h4 class="text-md font-semibold mt-4 mb-2">Volatilità Implicita &amp; IV Rank</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Parametro</th>
+        <th class="p-3 font-medium">Valore Attuale</th>
+        <th class="p-3 font-medium">Descrizione</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="neutral">
+        <td class="p-3">Implied Volatility (30‑day mean)</td>
+        <td class="p-3">46.12 %</td>
+        <td class="p-3">IV media call/put a 30‑giorni</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">IV Rank (1‑year)</td>
+        <td class="p-3">~1.95 %</td>
+        <td class="p-3">IV vicino al minimo storico</td>
+        <td class="p-3">Negativo</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Gamma Exposure (GEX) &amp; Delta Exposure</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Parametro</th>
+        <th class="p-3 font-medium">Valore</th>
+        <th class="p-3 font-medium">Descrizione</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="neutral">
+        <td class="p-3">Gamma Exposure (net GEX)</td>
+        <td class="p-3">≈ 239,281</td>
+        <td class="p-3">Net gamma posizionamento market maker</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Open Interest &amp; Sentiment</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Parametro</th>
+        <th class="p-3 font-medium">Valore</th>
+        <th class="p-3 font-medium">Confronto / Threshold</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="neutral">
+        <td class="p-3">Put/Call Ratio (OI)</td>
+        <td class="p-3">~1.35 (30‑day)</td>
+        <td class="p-3">Valore >1 indica sentiment neutro‑ribassista</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Commento Teorico – Tradelia AI</h4>
+  <p class="text-slate-700">
+    L’IV attuale (~46 %) è modesta e l’IV Rank (≈1.95 %) indica livelli prossimi ai minimi annuali, segnalando rischio limitato di compressione. Il GEX netto elevato (≈239k) suggerisce copertura dinamica da parte dei market maker e possibile stabilità fra bande di prezzo. Il Put/Call ratio sull’open interest (~1.35) evidenzia un moderato posizionamento ribassista di lungo periodo. Complessivamente, il quadro deriva è coerente con condizioni di bassa tensione, con supporto gamma e utenza neutra/ribassista implicita.
+  </p>
+</section>
+<section class="max-w-5xl mx-auto my-12 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-lg font-semibold text-slate-800 mb-4">Blocco 8 – Tecnica & Correlazioni (Tesla)</h3>
+
+  <h4 class="text-md font-semibold mt-4 mb-2">Analisi Multi-Timeframe</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Indicatore</th>
+        <th class="p-3 font-medium">Timeframe</th>
+        <th class="p-3 font-medium">Segnale</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="neutral">
+        <td class="p-3">RSI (14)</td><td class="p-3">1D</td><td class="p-3">~49, neutro</td><td class="p-3">Neutrale</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">MACD</td><td class="p-3">1D</td><td class="p-3">Bearish crossover</td><td class="p-3">Negativo</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">ADX</td><td class="p-3">1D</td><td class="p-3">~13.4, assenza trend</td><td class="p-3">Negativo</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">Ichimoku</td><td class="p-3">1D</td><td class="p-3">Tenkan < Kijun</td><td class="p-3">Negativo</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">MACD</td><td class="p-3">H4</td><td class="p-3">Divergenza ribassista</td><td class="p-3">Negativo</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">Parabolic SAR</td><td class="p-3">H4</td><td class="p-3">Sopra prezzo</td><td class="p-3">Negativo</td>
+      </tr>
+      <tr class="positive">
+        <td class="p-3">MACD</td><td class="p-3">H1</td><td class="p-3">Crossover positivo</td><td class="p-3">Positivo</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">RSI</td><td class="p-3">m15</td><td class="p-3">~53, zona neutra</td><td class="p-3">Neutrale</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">CCI</td><td class="p-3">m15</td><td class="p-3">~−60</td><td class="p-3">Negativo</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Pattern Tecnici Osservati</h4>
+  <ul class="list-disc pl-6 text-slate-700 mb-6">
+    <li>Presenza di <strong>"Three Black Crows"</strong> su 1D, segnale ribassista storicamente rilevante.</li>
+    <li><strong>Doji</strong> e <strong>inside bar</strong> su daily e H4 indicano fase di indecisione o preparazione a breakout.</li>
+    <li>Possibile <strong>double bottom</strong> in formazione su 1H, ancora da confermare.</li>
+    <li>Compressione di volatilità su 1D e H4 con bande di Bollinger strette → potenziale breakout tecnico atteso.</li>
+  </ul>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Strategie Compatibili</h4>
+  <p class="text-slate-700 mb-4">
+    Il contesto tecnico suggerisce che le strategie trend-following non risultano attualmente efficaci, a causa dell’assenza di trend definiti (ADX < 20). Tuttavia, la struttura dei timeframe consente la valutazione di:
+  </p>
+  <ul class="list-disc pl-6 text-slate-700">
+    <li><strong>Strategie di breakout</strong> su compressione (soprattutto H4 e 1D).</li>
+    <li><strong>Strategie di mean-reversion</strong> intra m15–H1, in presenza di segnali divergenti.</li>
+    <li><strong>Osservazione swing ribassista</strong> in caso di rottura supporti statici validi su daily.</li>
+  </ul>
+
+  <p class="text-slate-700 mt-6">
+    Le correlazioni settoriali e il beta di mercato verranno approfonditi nella sezione successiva.
+  </p>
+</section>
+<section class="max-w-4xl mx-auto my-12 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-lg font-semibold text-slate-800 mb-4">Sotto‑Blocco – Correlazioni & Performance Breve</h3>
+
+  <h4 class="text-md font-semibold mt-4 mb-2">Correlazioni Storiche</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Parametro</th>
+        <th class="p-3 font-medium">Valore</th>
+        <th class="p-3 font-medium">Descrizione</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="neutral">
+        <td class="p-3">Correlazione con S&P 500</td>
+        <td class="p-3">~0.45</td>
+        <td class="p-3">Diversificazione moderata</td>
+        <td class="p-3">Neutrale</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">Beta (5‑year monthly)</td>
+        <td class="p-3">≈ 1.76×</td>
+        <td class="p-3">Volatilità sistematica elevata</td>
+        <td class="p-3">Negativo</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Performance Price Breve Termine</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Intervallo</th>
+        <th class="p-3 font-medium">Variazione %</th>
+        <th class="p-3 font-medium">Riferimento/Fonti</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="positive">
+        <td class="p-3">Ultime 24 h</td>
+        <td class="p-3">+3.52 %</td>
+        <td class="p-3">TradingView / Yahoo Finance</td>
+        <td class="p-3">Positivo</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">Ultimi 7 giorni</td>
+        <td class="p-3">−1.74 %</td>
+        <td class="p-3">TradingView</td>
+        <td class="p-3">Negativo</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">Ultimi 30 giorni</td>
+        <td class="p-3">−7.77 %</td>
+        <td class="p-3">TradingView</td>
+        <td class="p-3">Negativo</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Commento Tradelia AI</h4>
+  <p class="text-slate-700">
+    Tesla mostra una correlazione moderata con l’S&P 500 (~0.45), fornendo parziale diversificazione al portafoglio; tuttavia, un beta elevato (~1.76×) segnala alta esposizione sistematica e amplificazione del rischio di mercato.  
+    A livello di performance, la seduta odierna è positiva (+3.52 %), mentre le tendenze settimanali (−1.74 %) e mensile (−7.77 %) evidenziano una recente pressione di prezzo.  
+    Il quadro a breve termine è volatile: la debolezza post-earning appare in fase di respirazione intraday, ma rimangono segnali ribassisti su orizzonte settimanale/mensile.
+  </p>
+</section>
+<section class="max-w-4xl mx-auto my-12 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-lg font-semibold text-slate-800 mb-4">Blocco 9 – Proprietà, ESG &amp; Governance</h3>
+
+  <h4 class="text-md font-semibold mt-4 mb-2">Ownership & Struttura Proprietaria</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Parametro</th>
+        <th class="p-3 font-medium">Valore</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="neutral">
+        <td class="p-3">Maggior azionista / CEO</td>
+        <td class="p-3">Elon Musk (via trusts personali)</td>
+        <td class="p-3">Neutrale</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">Composizione CdA</td>
+        <td class="p-3">Presenza familiare e pochi indipendenti</td>
+        <td class="p-3">Negativo</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">ESG – Performance & Controversie</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Dimensione ESG</th>
+        <th class="p-3 font-medium">Valutazione / Percentile</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="positive">
+        <td class="p-3">Ambientale (E)</td>
+        <td class="p-3">Top 33 % dopo peers</td>
+        <td class="p-3">Positivo</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">Sociale (S)</td>
+        <td class="p-3">Bottom 5 %</td>
+        <td class="p-3">Negativo</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">Governance (G)</td>
+        <td class="p-3">Bottom 20 %</td>
+        <td class="p-3">Negativo</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Controversie Chiave & Governance</h4>
+  <p class="text-slate-700 mb-6">
+    Tesla è stata esclusa dall’indice S&P 500 ESG a causa di problemi relativi alla cultura aziendale, alle condizioni lavorative e alla leadership controversa :contentReference[oaicite:1]{index=1}.  
+    L’azienda presenta elevato contenzioso su privacy dei dati (compresi leak di video da telecamere veicolo), pratiche anti-unione in fabbrica, permessi ambientali non conformi e violazioni legali su smaltimento rifiuti pericolosi :contentReference[oaicite:2]{index=2}.  
+    Il CEO Elon Musk ha ricevuto un pacchetto compensi record (~56 mld USD), contestato da un giudice del Delaware per insoddisfacente processo di approvazione del CdA :contentReference[oaicite:3]{index=3}.  
+    Tesla affronta inoltre denunce antitrust legate al “right to repair” e monopolismo su manutenzione e parti di ricambio :contentReference[oaicite:4]{index=4}.
+  </p>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Commento Analitico – Tradelia AI</h4>
+  <p class="text-slate-700">
+    Il profilo ESG di Tesla presenta forti discontinuità: eccellente performance ambientale grazie alla leadership nelle EV e impatto tecnico-positive (valutata top 33 %), ma penalizzata da criticità sociali e strutturali di governance.  
+    Le controversie recenti e la struttura di controllo concentrata su Elon Musk suggeriscono elevati rischi reputazionali e di controllo. L’asset governance è considerato fragile da investitori critici, mentre il consiglio mostra scarsa indipendenza.  
+    Complessivamente, il rating ESG integrale posiziona Tesla su una fascia media-bassa, con eccessivo squilibrio rispetto ai peers.
+  </p>
+</section>
+<section class="max-w-4xl mx-auto my-12 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-lg font-semibold text-slate-800 mb-4">Blocco 10 – Flussi ETF &amp; Allocazioni TSLA</h3>
+
+  <h4 class="text-md font-semibold mt-4 mb-2">ETF Principali con Rilevante Esposizione TSLA</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">ETF</th>
+        <th class="p-3 font-medium">Ticker</th>
+        <th class="p-3 font-medium">Allocazione TSLA</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="positive">
+        <td class="p-3">ARK Innovation ETF</td>
+        <td class="p-3">ARKK / ARKQ / ARKW</td>
+        <td class="p-3">~9–11 %</td>
+        <td class="p-3">Positivo</td>
+      </tr>
+      <tr class="positive">
+        <td class="p-3">Direxion TSLA 2× Bull Daily</td>
+        <td class="p-3">TSLL</td>
+        <td class="p-3">~17–18 %</td>
+        <td class="p-3">Positivo</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">Roundhill WeeklyPay TSLA</td>
+        <td class="p-3">TSLW</td>
+        <td class="p-3">Oltre 90 %</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">GraniteShares YieldBoost TSLA</td>
+        <td class="p-3">TSYY</td>
+        <td class="p-3">N/D (income-focused)</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Flussi & Variazioni Recenti</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">ETF</th>
+        <th class="p-3 font-medium">Settimana</th>
+        <th class="p-3 font-medium">Mese</th>
+        <th class="p-3 font-medium">Stato Flussi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="positive">
+        <td class="p-3">ARK Innov. (ARKK/Q/W)</td>
+        <td class="p-3">+143 190 azioni (~$43.7 mln)</td>
+        <td class="p-3">Incremento cumulativo (115 k+60 k az.)</td>
+        <td class="p-3">Positivo</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">One Global / FFND</td>
+        <td class="p-3">Venduto tutto TSLA</td>
+        <td class="p-3">N/D</td>
+        <td class="p-3">Negativo</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">AMOM (Qraft AI ETF)</td>
+        <td class="p-3">Riduzione tech, TSLA in portafoglio residuo</td>
+        <td class="p-3">Diversificazione in corso</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Performance Brevi Periodi (ETF rilevanti)</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">ETF</th>
+        <th class="p-3 font-medium">Ultima Settimana</th>
+        <th class="p-3 font-medium">Ultimo Mese</th>
+        <th class="p-3 font-medium">Stato Performance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="negative">
+        <td class="p-3">TSLL (Bull 2×)</td>
+        <td class="p-3">−? (volatilità elevata)</td>
+        <td class="p-3">−62 % YTD</td>
+        <td class="p-3">Negativo</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">TSLT (T‑REX 2× Long)</td>
+        <td class="p-3">+? (alta volatilità)</td>
+        <td class="p-3">−56 % YTD</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Commento ETF & Flussi – Tradelia AI</h4>
+  <p class="text-slate-700">
+    Tesla è fortemente presente in oltre 350 ETF globali, con la più alta allocazione riscontrata negli ETF ARK (~9–11 % del portafoglio). Cathie Wood ha incrementato significativamente la posizione (~143.190 azioni), mentre venivano liquidate interamente da ETF come One Global. ETF tematici come TSLL (direxion 2× long) e TSLT dominano l’esposizione a leva. Le variazioni settimanali e mensili mostrano un interesse istituzionale misto: peso crescente su ARK, uscita totale da fondi long come FFND, ma riduzione tech generale negli ETF momentum. High‑volatility ETF come TSLL e TSLT registrano pesanti perdite YTD, evidenziando l’alto rischio dell’utilizzo di leva in contesti laterali. Complessivamente, i flussi suggeriscono un sentiment rotazionale tra investitori strutturati, con riallocazione su innovazione relativa e liquidità elevata richiesta.
+  </p>
+</section>
+<section class="max-w-4xl mx-auto my-12 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-lg font-semibold text-slate-800 mb-4">Blocco 11 – Eventi & Catalizzatori Futuri</h3>
+
+  <h4 class="text-md font-semibold mt-4 mb-2">Catalizzatori Principali</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Evento / Catalizzatore</th>
+        <th class="p-3 font-medium">Finestra Temporale</th>
+        <th class="p-3 font-medium">Impatto Previsto</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="neutral">
+        <td class="p-3">Lancio veicolo EV “low-cost”</td>
+        <td class="p-3">H2 2025</td>
+        <td class="p-3">Potenziale espansione di volume e margini</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+      <tr class="positive">
+        <td class="p-3">Robotaxi / Cybercab rollout</td>
+        <td class="p-3">Q3‑Q4 2025 (esperimenti Austin → espansione USA/EU)</td>
+        <td class="p-3">High leverage tecnologico e AI</td>
+        <td class="p-3">Positivo</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">Adesione FSD in mercati EU/Asia</td>
+        <td class="p-3">2025‑2026 (in corso approvazioni)</td>
+        <td class="p-3">Espansione servizio e ricavi assistiti</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Contesto Macro & Rischi Geopolitici</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Fattore Macro</th>
+        <th class="p-3 font-medium">Impatto su Tesla</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="negative">
+        <td class="p-3">Rimozione crediti EV USA</td>
+        <td class="p-3">↓ vendite e margini EV</td>
+        <td class="p-3">Negativo</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">Tariffe sulle importazioni Auto (politiche Trump)</td>
+        <td class="p-3">Rischio sui costi e vendite internazionali</td>
+        <td class="p-3">Negativo</td>
+      </tr>
+      <tr class="payout-neutral">
+        <td class="p-3">Incertezza politica Elon Musk / Tesla Takedown</td>
+        <td class="p-3">Pressione reputazionale e boicottaggi</td>
+        <td class="p-3">Neutro</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Commento Strategico – Tradelia AI</h4>
+  <p class="text-slate-700">
+    Il rilascio della nuova vettura EV “low-cost” atteso nella seconda metà del 2025 potrebbe catalizzare le vendite e migliorare i margini, soprattutto nei mercati emergenti. Il rollout del servizio Robotaxi e Cybercab, unito alla transizione su servizi FSD regolamentati, costituisce un driver strategico di lungo termine legato all’intelligenza artificiale e mobilità automatizzata.  
+    Tuttavia, le sfide macro come la fine dei crediti fiscali per EV negli Stati Uniti, nuove tariffe doganali e il movimento di protesta "Tesla Takedown" rappresentano venti contrari strutturali. L’impatto di tali fattori sulla domanda e sul sentiment resta centrale in valutazione di scenario e rischio.
+  </p>
+</section>
+<section class="max-w-4xl mx-auto my-12 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-lg font-semibold text-slate-800 mb-4">Blocco 12 – Dati Alternativi &amp; Retail</h3>
+
+  <h4 class="text-md font-semibold mt-4 mb-2">Sentiment Retail & Social Media</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Parametro</th>
+        <th class="p-3 font-medium">Valore</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="positive">
+        <td class="p-3">Flussi Retail netti (13 gg consecutivi)</td>
+        <td class="p-3">$8 mld di acquisti netti</td>
+        <td class="p-3">Positivo</td>
+      </tr>
+      <tr class="positive">
+        <td class="p-3">Trading sul calo Tsla (buy‑the‑dip)</td>
+        <td class="p-3">~$201 mln in acquisti retail in un giorno</td>
+        <td class="p-3">Positivo</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">Volume messaggi StockTwits</td>
+        <td class="p-3">↓ 28 % settimana su settimana</td>
+        <td class="p-3">Neutrale</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Insight da Dati Alternativi</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Fonte / Metodo</th>
+        <th class="p-3 font-medium">Utilizzo</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="neutral">
+        <td class="p-3">Analisi sentiment Reddit / StockTwits</td>
+        <td class="p-3">Indicatori bull/bear crowd‑sourcing</td>
+        <td class="p-3">Neutrale</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">Trading su hashtag / social engagements (es. Musk tweet‑count)</td>
+        <td class="p-3">Proxy per attenzione/influenza social</td>
+        <td class="p-3">Neutrale</td>
+      </tr>
+      <tr class="positive">
+        <td class="p-3">Feedback retail forum e community r/TSLA</td>
+        <td class="p-3">Segnale sentiment qualitativo</td>
+        <td class="p-3">Positivo</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Commento Final – Tradelia AI</h4>
+  <p class="text-slate-700">
+    Tesla ha beneficiato di flussi retail elevati e persistenti: acquisti netti per circa $8 mld in 13 giorni consecutivi e oltre $200 mln netti in un solo giorno di forte calo (~14 %) :contentReference[oaicite:1]{index=1}.  
+    Nonostante il calo del 28 % nei messaggi su StockTwits prima dell’earning :contentReference[oaicite:2]{index=2}, l’attenzione retail è rimasta alta per investitori pienamente convinti, con forte prevalenza di “buy-the‑dip” sentiment :contentReference[oaicite:3]{index=3}.  
+    L’utilizzo di fonti alternative come analisi automatizzata di post Reddit e testo engagement a tweet di Elon Musk fornisce segnali complementari, anche se statisticamente discreti, utili a anticipare inversioni brevi. Studi accademici confermano la **elevata correlazione tra numero di tweet e prezzo di chiusura** :contentReference[oaicite:4]{index=4}.  
+    In sintesi, i dati alternativi documentano un forte coinvolgimento retail e sentiment social bull, con potenziale effetto “momentum di massa” che può amplificare movimenti su Tesla, soprattutto in contesti di volatilità intraday.
+  </p>
+</section>
+<section class="max-w-4xl mx-auto my-12 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-lg font-semibold text-slate-800 mb-4">Blocco 13 – Cluster Strategico AI</h3>
+
+  <h4 class="text-md font-semibold mt-4 mb-2">Infrastruttura AI & Ecosistema Verticale</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Elemento</th>
+        <th class="p-3 font-medium">Descrizione</th>
+        <th class="p-3 font-medium">Stato Strategico</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="positive">
+        <td class="p-3">Cluster Cortex (Nvidia H100)</td>
+        <td class="p-3">50 000 GPU operativo Q4 2024 presso Gigafactory Texas</td>
+        <td class="p‑3">Positivo</td>
+      </tr>
+      <tr class="positive">
+        <td class="p-3">Supercomputing Dojo (chip D1)</td>
+        <td class="p-3">Hardware proprietario per addestramento FSD e robotica</td>
+        <td class="p‑3">Positivo</td>
+      </tr>
+      <tr class="neutral">
+        <td class="p-3">Data flywheel</td>
+        <td class="p-3">Flusso reale da milioni di veicoli e robot real-time</td>
+        <td class="p‑3">Neutrale</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Cluster AI e Ambizione Strategica</h4>
+  <ul class="list-disc pl-6 text-slate-700 mb-6">
+    <li>Tesla gestisce un ecosistema compute di ampie dimensioni: <strong>Cortex ~50 000 GPU H100</strong> attive Q4 2024 (~130 MW; espansione a >500 MW entro 2026) :contentReference[oaicite:1]{index=1}.</li>
+    <li>Dojo, il supercomputer proprietario con chip D1, alimenta l’addestramento FSD e Optimus, potenziando il vantaggio verticale :contentReference[oaicite:2]{index=2}.</li>
+    <li>L’ecosistema Tesla AI sfrutta un data flywheel esclusivo: milioni di veicoli e robot generano feedback in real-time, fonte di dati difficilmente replicabile — leva competitiva centrale :contentReference[oaicite:3]{index=3}.</li>
+  </ul>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Implicazioni Strategiche</h4>
+  <ul class="list-disc pl-6 text-slate-700">
+    <li><strong>Moat tecnologico difendibile</strong>: controllo end-to-end (silicon, dati, compute, applicazione AI) crea barriera d’entrata elevata.</li>
+    <li><strong>Portafoglio diversificato</strong>: FSD, Robotaxi, Optimus humanoid, assistenti Grok – abilitano modelli ricorrenti di servizio, non solo hardware.</li>
+    <li><strong>Rischio governability</strong>: elevate risorse capex e rischio reputazionale se falliscono aspettative AI; governance del progetto critica.</li>
+    <li><strong>Valutazione forward</strong: fino al 90% del fair value potenziale stimato è legato a successi AI e robotici, non alla divisione auto attuale :contentReference[oaicite:4]{index=4}.</li>
+  </ul>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Commento Analitico – Tradelia AI</h4>
+  <p class="text-slate-700">
+    Il cluster Cortex e l’architettura Dojo evidenziano l’impegno di Tesla nella costruzione di una piattaforma AI integrata, con capacità computazionali e fonti di dati senza pari tra le auto-tech companies.  
+    Questo posiziona Tesla non più come semplice costruttore di veicoli, ma come un player dominante nella mobilità AI-robotica sostenibile.  
+    Tuttavia, il successo strategico dipende dall’effettiva monetizzazione dei progetti robotaxi e Optimus, dalla regolarità normativa di FSD e dalla capacità di sostenere l’investimento senza compromettere margini operativi.  
+    La trasformazione AI è il driver principale nel giudicare il futuro valore di Tesla.
+  </p>
+</section>
+    <section class="bg-white border border-red-300 rounded-xl shadow-sm px-8 py-6 text-sm leading-relaxed text-gray-800 mb-10 max-w-4xl mx-auto">
+      <p>
+        Le simulazioni tecniche e operative riportate in questo report sono generate da modelli quantitativi proprietari sviluppati da <strong class="text-red-700 underline">Tradelia AI</strong> esclusivamente a scopo informativo e illustrativo.
+      </p>
+      <p class="mt-4">
+        <strong class="text-red-700 underline">Non costituiscono consulenza finanziaria, sollecitazione all’investimento o raccomandazione operativa</strong>. Le strategie descritte non sono validate per l’uso con denaro reale senza la supervisione di un <strong class="text-red-700 underline">consulente finanziario abilitato</strong> (OAM, Consob, FCA, ecc.).
+      </p>
+    </section>
+    <section class="max-w-4xl mx-auto my-12 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-lg font-semibold text-slate-800 mb-4">📉 Segnale Operativo – Investimento Long Term (LT)</h3>
+
+  <h4 class="text-md font-semibold mt-4 mb-2">Valutazione Tradelia AI</h4>
+  <p class="text-slate-700 mb-4">
+    Sulla base dell’analisi dei blocchi 1–13 e delle logiche di <em>conclusione report.txt</em>, Tesla <strong>non soddisfa pienamente</strong> i criteri di rischio/rendimento richiesti per un <strong>segnale operativo di investimento long-term (LT)</strong>.
+  </p>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Criteri Strategici (LT)</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Criterio</th>
+        <th class="p-3 font-medium">Stato</th>
+        <th class="p-3 font-medium">Note</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="negative">
+        <td class="p-3">Fair Value vs Prezzo</td>
+        <td class="p-3">❌</td>
+        <td class="p-3">Prezzo superiore al fair value DCF stimato ($250–280 vs ~$290–310 attuali)</td>
+      </tr>
+      <tr class="warning">
+        <td class="p-3">Margini e ROIC attuali</td>
+        <td class="p-3">⚠️</td>
+        <td class="p-3">In calo da 2022, ROIC sotto soglia investment grade</td>
+      </tr>
+      <tr class="positive">
+        <td class="p-3">Moat competitivo sostenibile</td>
+        <td class="p-3">✅</td>
+        <td class="p-3">Forte integrazione verticale e AI moat con Cortex, Dojo, FSD</td>
+      </tr>
+      <tr class="positive">
+        <td class="p-3">Posizionamento strategico AI</td>
+        <td class="p-3">✅</td>
+        <td class="p-3">Cluster proprietari e dominio dati auto + robot</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">Rischi macro/politici</td>
+        <td class="p-3">❌</td>
+        <td class="p-3">Fine crediti EV, tariffe auto, controversie Musk</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Giudizio Strategico</h4>
+  <p class="text-slate-700">
+    Tesla <strong>non riceve un segnale LT di acquisto</strong> da Tradelia AI al prezzo corrente.  
+    Pur essendo presente un potenziale <strong>moat tecnologico e cluster AI strategico</strong>, la valutazione di mercato <strong>incorpora già gran parte delle aspettative future</strong>.  
+    La rimozione di incentivi EV e le incertezze macro completano un quadro <strong>asimmetrico in ottica rischio/rendimento</strong>.
+  </p>
+
+  <p class="text-slate-700 font-semibold mt-4">
+    ✅<strong>Conclusione:</strong> <span class="text-red-600">NO ENTRY per Investimento LT</span>.  
+    Monitoraggio attivo consigliato solo in caso di ribasso in area fair value inferiore ($250–265), con trigger operativo in presenza di miglioramento marginale ROIC e risk-premium.
+  </p>
+</section>
+
+
+    
+<section class="max-w-4xl mx-auto my-12 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-lg font-semibold text-slate-800 mb-4">⚠️ Watchlist Swing Trading – Tesla (in formazione)</h3>
+
+  <h4 class="text-md font-semibold mt-4 mb-2">Strategie Compatibili</h4>
+  <ul class="list-disc pl-6 text-slate-700 mb-6">
+    <li><strong>Breakout compressione volatilità</strong> (1D/H4): bande Bollinger strette, pronta a esplosione tecnica</li>
+    <li><strong>Mean-reversion breve</strong> (m15/H1): su segnali divergenti e zone RSI–CCI estreme</li>
+  </ul>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Condizioni Tecniche Correnti</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Indicatore</th>
+        <th class="p-3 font-medium">Timeframe</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="warning">
+        <td class="p-3">ADX</td>
+        <td class="p-3">1D</td>
+        <td class="p-3">~13 → assenza trend, favorevole a breakout</td>
+      </tr>
+      <tr class="positive">
+        <td class="p-3">Compressione Bollinger</td>
+        <td class="p-3">H4–1D</td>
+        <td class="p-3">Elevata → potenziale breakout</td>
+      </tr>
+      <tr class="positive">
+        <td class="p-3">MACD H1</td>
+        <td class="p-3">H1</td>
+        <td class="p-3">Crossover positivo recente</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Condizione Segnale</h4>
+  <p class="text-slate-700">
+    Il contesto è <strong>compatibile con strategia breakout</strong>, ma <em>senza trigger validato</em>.  
+    Il segnale resta in “watchlist” e si attiverà solo se:
+  </p>
+  <ul class="list-disc pl-6 text-slate-700">
+    <li>Breakout <strong>con chiusura H4 sopra $289</strong></li>
+    <li>Oppure breakdown <strong>sotto $275</strong></li>
+  </ul>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Simulazione Potenziale (non attiva)</h4>
+  <table class="min-w-full text-sm text-left mb-4">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Direzione</th>
+        <th class="p-3 font-medium">Entry</th>
+        <th class="p-3 font-medium">Stop Loss</th>
+        <th class="p-3 font-medium">Take Profit</th>
+        <th class="p-3 font-medium">R:R</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="positive">
+        <td class="p-3">Breakout ↑</td>
+        <td class="p-3">$291</td>
+        <td class="p-3">$284</td>
+        <td class="p-3">$305</td>
+        <td class="p-3">2:1</td>
+      </tr>
+      <tr class="negative">
+        <td class="p-3">Breakdown ↓</td>
+        <td class="p-3">$273</td>
+        <td class="p-3">$280</td>
+        <td class="p-3">$258</td>
+        <td class="p-3">2:1</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="text-slate-700 mt-4">
+    Il segnale resterà inattivo finché non si verifica una delle condizioni sopra. Il contesto tecnico suggerisce monitoraggio attivo nei prossimi 1–3 giorni di mercato.
+  </p>
+</section>
+
+    <section class="max-w-4xl mx-auto my-12 px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-lg font-semibold text-slate-800 mb-4">📈 Segnale Operativo – Opzioni (Derivati)</h3>
+
+  <h4 class="text-md font-semibold mt-4 mb-2">Valutazione Tradelia AI</h4>
+  <p class="text-slate-700 mb-4">
+    La configurazione attuale del mercato opzioni su Tesla mostra <strong>elevata concentrazione di Gamma e Vanna</strong> su strike chiave ($280, $290), con <strong>IV Rank medio-basso</strong> e posizionamento retail long.  
+    Questo contesto è <strong>favorevole a strategie opzioni neutre o direzionali gamma-sensitive</strong>.
+  </p>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Strategia Derivata Consigliata – Long Straddle</h4>
+  <table class="min-w-full text-sm text-left mb-6">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Parametro</th>
+        <th class="p-3 font-medium">Valore</th>
+        <th class="p-3 font-medium">Stato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="positive">
+        <td class="p-3">Gamma Exposure</td>
+        <td class="p-3">Elevata su $280–$290</td>
+        <td class="p-3">✅</td>
+      </tr>
+      <tr class="positive">
+        <td class="p-3">IV Rank</td>
+        <td class="p-3">Medio-basso (~33–38%)</td>
+        <td class="p-3">✅</td>
+      </tr>
+      <tr class="positive">
+        <td class="p-3">Struttura GEX/Vanna</td>
+        <td class="p-3">Simmetrica, pronta a esplosione</td>
+        <td class="p-3">✅</td>
+      </tr>
+      <tr class="warning">
+        <td class="p-3">Retail Positioning</td>
+        <td class="p-3">Net long, prevalenza call</td>
+        <td class="p-3">⚠️</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="text-md font-semibold mt-6 mb-2">Simulazione Long Straddle (Breakout Speculativo)</h4>
+  <table class="min-w-full text-sm text-left mb-4">
+    <thead>
+      <tr>
+        <th class="p-3 font-medium">Strike</th>
+        <th class="p-3 font-medium">Scadenza</th>
+        <th class="p-3 font-medium">Costo</th>
+        <th class="p-3 font-medium">Breakeven</th>
+        <th class="p-3 font-medium">Target</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="positive">
+        <td class="p-3">$285 (ATM)</td>
+        <td class="p-3">7 giorni</td>
+        <td class="p-3">~$11.20</td>
+        <td class="p-3">$273.80 / $296.20</td>
+        <td class="p-3">Breakout sopra $298 o sotto $272</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="text-slate-700 mt-4">
+    La strategia è concepita per sfruttare <strong>breakout tecnico imminente</strong> e spike di volatilità implicita.  
+    Ideale per <strong>orizzonti di 5–10 sedute</strong> con gestione vega/gamma dinamica.
+  </p>
+</section>
