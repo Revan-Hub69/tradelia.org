@@ -1,162 +1,201 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TRADELIA • AI — Report Azionario</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+        },
+        extend: {
+          colors: {
+            primary: '#0f172a',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Font Inter + privacy -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" referrerpolicy="no-referrer" />
+
+  <!-- Custom Style -->
   <style>
-  body {
-  font-family: 'Inter', sans-serif;
-  background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
-  background-size: 280px;
-  color: #0f172a;
-  margin: 0;
-  padding: 0;
-}
+    :root {
+      color-scheme: light dark;
+    }
 
-header {
-  background: #fff;
-  border-bottom: 1px solid #dbe1ea;
-  padding: 16px 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 700;
-  font-size: 18px;
-}
+    html {
+      scroll-behavior: smooth;
+    }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 2rem;
-}
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+      background-size: 280px;
+      color: #0f172a;
+      margin: 0;
+      padding: 0;
+    }
 
-th, td {
-  padding: 10px 14px;
-  border: 1px solid #d1d5db;
-  text-align: left;
-  line-height: 1.5;
-}
+    header {
+      background: #fff;
+      border-bottom: 1px solid #dbe1ea;
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: 18px;
+    }
 
-th {
-  background: #f8fafc;
-  white-space: nowrap;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e5e7eb;
-}
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
 
-table tr:hover {
-  background-color: rgba(14, 165, 233, 0.1);
-  transition: background-color 0.2s ease-in-out;
-}
+    th,
+    td {
+      padding: 10px 14px;
+      border: 1px solid #d1d5db;
+      text-align: left;
+      line-height: 1.5;
+    }
 
-.positive {
-  background-color: rgba(34,197,94,0.25);
-}
+    th {
+      background: #f8fafc;
+      white-space: nowrap;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
 
-.neutral {
-  background-color: rgba(234,179,8,0.25);
-}
+    table tr:hover {
+      background-color: rgba(14, 165, 233, 0.1);
+      transition: background-color 0.2s ease-in-out;
+    }
 
-.negative {
-  background-color: rgba(239,68,68,0.25);
-}
+    a {
+      color: #2563eb;
+      text-decoration: underline;
+      transition: color 0.2s ease-in-out;
+    }
 
-a {
-  color: #2563eb;
-  text-decoration: underline;
-  transition: color 0.2s ease-in-out;
-}
+    a:hover,
+    a:focus {
+      color: #1d4ed8;
+      outline: none;
+      text-decoration: none;
+    }
 
-a:hover, a:focus {
-  color: #1d4ed8;
-  outline: none;
-  text-decoration: none;
-}
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #1e293b;
+    }
 
-h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #1e293b;
-}
+    h3.list-title {
+      font-size: 1.125rem;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      color: #1e293b;
+      font-weight: 600;
+      border-bottom: 2px solid #cbd5e1;
+      padding-bottom: 0.25rem;
+    }
 
-h3.list-title {
-  font-size: 1.125rem;
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
-  color: #1e293b;
-  font-weight: 600;
-  border-bottom: 2px solid #cbd5e1;
-  padding-bottom: 0.25rem;
-}
+    section {
+      background: #fff;
+      border-radius: 1rem;
+      border: 1px solid #d1d5db;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      margin: 2rem auto;
+      max-width: 800px;
+      padding: 1.5rem 1rem;
+    }
 
+    @media (min-width: 640px) {
+      section {
+        padding: 2rem;
+      }
+    }
 
-section {
-  background: #fff;
-  padding: 2rem;
-  border-radius: 1rem;
-  border: 1px solid #d1d5db;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
-  margin: 2rem auto;
-  max-width: 800px;
-}
+    .text-gray {
+      color: #374151;
+      line-height: 1.6;
+    }
 
-.text-gray {
-  color: #374151;
-  line-height: 1.6;
-}
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
 
-@media (max-width: 768px) {
-  table, thead, tbody, th, td, tr {
-    display: block;
-    width: 100%;
-  }
-  tr {
-    margin-bottom: 1rem;
-  }
-  th {
-    background: none;
-    font-weight: 600;
-    padding-top: 0;
-    padding-bottom: 0.25rem;
-    border-bottom: 1px solid #e5e7eb;
-  }
-  td {
-    border-top: none;
-    background-color: #f9fafb;
-    margin-top: 0.25rem;
-  }
-}
+    @media (max-width: 768px) {
+      table,
+      thead,
+      tbody,
+      th,
+      td,
+      tr {
+        display: block;
+        width: 100%;
+      }
 
-/* Scrollbar Styling */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
+      tr {
+        margin-bottom: 1rem;
+      }
 
-::-webkit-scrollbar-track {
-  background: linear-gradient(to right, #f1f5f9, #e2e8f0);
-  border-radius: 100vh;
-}
+      th {
+        background: none;
+        font-weight: 600;
+        padding-top: 0;
+        padding-bottom: 0.25rem;
+        border-bottom: 1px solid #e5e7eb;
+      }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(80, 160, 200, 0.5);
-  border-radius: 100vh;
-  transition: background-color 0.2s ease-in-out;
-}
+      td {
+        border-top: none;
+        background-color: #f9fafb;
+        margin-top: 0.25rem;
+      }
+    }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(80, 160, 200, 0.7);
-}
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
 
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
-  box-sizing: border-box;
-}
-</style>
+    ::-webkit-scrollbar-track {
+      background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+      border-radius: 100vh;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(80, 160, 200, 0.5);
+      border-radius: 100vh;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(80, 160, 200, 0.7);
+    }
+
+    :where(*) {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
+      box-sizing: border-box;
+    }
+  </style>
 </head>
 <body>
   <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6">
@@ -189,68 +228,42 @@ section {
 </section>
 <section class="max-w-4xl mx-auto my-12 px-4 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
   <h3 class="text-lg sm:text-xl font-semibold text-slate-800 mb-4">Blocco 1 – Identificativi & Contesto</h3>
-
-  <div class="divide-y divide-gray-200">
-
-    <!-- Elemento -->
-    <details class="py-3 group">
-      <summary class="flex justify-between items-center cursor-pointer">
-        <span class="font-medium text-sm sm:text-base text-slate-700">Ticker</span>
-        <span class="text-green-600 text-sm sm:text-base">NVDA</span>
-      </summary>
-    </details>
-
-    <details class="py-3 group">
-      <summary class="flex justify-between items-center cursor-pointer">
-        <span class="font-medium text-sm sm:text-base text-slate-700">ISIN</span>
-        <span class="text-sm sm:text-base">US67066G1040</span>
-      </summary>
-    </details>
-
-    <details class="py-3 group">
-      <summary class="flex justify-between items-center cursor-pointer">
-        <span class="font-medium text-sm sm:text-base text-slate-700">Exchange</span>
-        <span class="text-sm sm:text-base">NASDAQ</span>
-      </summary>
-    </details>
-
-    <details class="py-3 group">
-      <summary class="flex justify-between items-center cursor-pointer">
-        <span class="font-medium text-sm sm:text-base text-slate-700">Settore</span>
-        <span class="text-sm sm:text-base">Information Technology</span>
-      </summary>
-    </details>
-
-    <details class="py-3 group">
-      <summary class="flex justify-between items-center cursor-pointer">
-        <span class="font-medium text-sm sm:text-base text-slate-700">Industria</span>
-        <span class="text-sm sm:text-base">Semiconductors & AI Hardware</span>
-      </summary>
-    </details>
-
-    <!-- Esempio con valore lungo -->
-    <details class="py-3 group">
-      <summary class="flex justify-between items-center cursor-pointer">
-        <span class="font-medium text-sm sm:text-base text-slate-700">Indice Primario</span>
-        <span class="text-sm sm:text-base text-right text-gray-700">S&P 500, Nasdaq-100, Dow Jones</span>
-      </summary>
-    </details>
-
-    <!-- Commento -->
-    <details class="py-3 group">
-      <summary class="flex justify-between items-center cursor-pointer">
-        <span class="font-medium text-sm sm:text-base text-slate-700">Commento Tradelia AI</span>
-        <svg class="w-5 h-5 text-slate-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-        </svg>
-      </summary>
-      <div class="mt-2 text-sm sm:text-base text-gray-700 leading-relaxed">
-        Valutazione forte, supportata da leadership AI e performance record.<br>
-        Momentum tecnico elevato e target analisti sopra prezzo attuale.<br>
-        Rischi geopolitici e valutazioni elevate da monitorare.
-      </div>
-    </details>
-
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-sm sm:text-base text-left text-gray-800 border-collapse">
+      <tbody>
+        <tr><th class="font-semibold p-3">Ticker</th><td class="text-green-600 p-3">NVDA</td></tr>
+        <tr><th class="font-semibold p-3">ISIN</th><td class="p-3">US67066G1040</td></tr>
+        <tr><th class="font-semibold p-3">Exchange</th><td class="p-3">NASDAQ</td></tr>
+        <tr><th class="font-semibold p-3">Settore</th><td class="p-3">Information Technology</td></tr>
+        <tr><th class="font-semibold p-3">Industria</th><td class="p-3">Semiconductors & AI Hardware</td></tr>
+        <tr><th class="font-semibold p-3">Indice primario</th><td class="p-3">S&P 500, Nasdaq-100, Dow Jones</td></tr>
+        <tr><th class="font-semibold p-3">Indici secondari</th><td class="p-3">Magnificent Seven, IBD 50, IBD Tech Leaders</td></tr>
+        <tr><th class="font-semibold p-3">Prezzo Attuale</th><td class="text-green-600 p-3">$171,33 (17 luglio 2025)</td></tr>
+        <tr><th class="font-semibold p-3">Prezzo Target Medio Analisti</th><td class="text-green-600 p-3">$186,40</td></tr>
+        <tr><th class="font-semibold p-3">Rating Analisti</th><td class="text-green-600 p-3">Strong Buy</td></tr>
+        <tr><th class="font-semibold p-3">Market Cap</th><td class="text-green-600 p-3">$4.080 miliardi</td></tr>
+        <tr><th class="font-semibold p-3">Numero Azioni Totali</th><td class="p-3">23,82 miliardi</td></tr>
+        <tr><th class="font-semibold p-3">Free Float (%)</th><td class="text-green-600 p-3">~96%</td></tr>
+        <tr><th class="font-semibold p-3">Prezzo Min/Max 52 settimane</th><td class="text-green-600 p-3">$40,92 – $171,70</td></tr>
+        <tr><th class="font-semibold p-3">Variazione 24h</th><td class="text-green-600 p-3">+0,38%</td></tr>
+        <tr><th class="font-semibold p-3">Variazione 7gg</th><td class="text-green-600 p-3">+4,26%</td></tr>
+        <tr><th class="font-semibold p-3">Variazione 30gg</th><td class="text-green-600 p-3">+15,73%</td></tr>
+        <tr><th class="font-semibold p-3">Massimo Storico Assoluto</th><td class="text-green-600 p-3">$171,70 (16 luglio 2025)</td></tr>
+        <tr><th class="font-semibold p-3">Minimo Storico Assoluto</th><td class="text-yellow-600 p-3">$0,53 (aprile 2000)</td></tr>
+        <tr><th class="font-semibold p-3">Data IPO</th><td class="p-3">22 gennaio 1999</td></tr>
+        <tr><th class="font-semibold p-3">Valuta di Quotazione</th><td class="p-3">USD</td></tr>
+        <tr><th class="font-semibold p-3">Sede Legale / Paese</th><td class="p-3">Santa Clara (CA), Stati Uniti</td></tr>
+        <tr><th class="font-semibold p-3">Variazione prezzo vs competitor (30gg)</th><td class="text-green-600 p-3">+15,73% vs media peer +6,7%</td></tr>
+        <tr>
+          <th class="font-semibold p-3 align-top">Commento Tradelia AI</th>
+          <td class="p-3 text-slate-700 leading-relaxed">
+            Valutazione <span class="text-green-600 font-medium">forte</span>, supportata da leadership AI e performance record.<br>
+            Momentum tecnico <span class="text-green-600">elevato</span> e target analisti sopra prezzo attuale.<br>
+            <span class="text-yellow-600">Rischi geopolitici e valutazioni elevate</span> da monitorare.
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </section>
 
