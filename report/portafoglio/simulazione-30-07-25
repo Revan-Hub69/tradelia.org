@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TRADELIA • AI — Report Azionario</title>
+
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+        },
+        extend: {
+          colors: {
+            primary: '#0f172a',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Font Inter + privacy -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" referrerpolicy="no-referrer" />
+
+  <!-- Custom Style -->
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+      background-size: 280px;
+      color: #0f172a;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid #dbe1ea;
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
+
+    th,
+    td {
+      padding: 10px 14px;
+      border: 1px solid #d1d5db;
+      text-align: left;
+      line-height: 1.5;
+    }
+
+    th {
+      background: #f8fafc;
+      white-space: nowrap;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    table tr:hover {
+      background-color: rgba(14, 165, 233, 0.1);
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    a {
+      color: #2563eb;
+      text-decoration: underline;
+      transition: color 0.2s ease-in-out;
+    }
+
+    a:hover,
+    a:focus {
+      color: #1d4ed8;
+      outline: none;
+      text-decoration: none;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #1e293b;
+    }
+
+    h3.list-title {
+      font-size: 1.125rem;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      color: #1e293b;
+      font-weight: 600;
+      border-bottom: 2px solid #cbd5e1;
+      padding-bottom: 0.25rem;
+    }
+
+    section {
+      background: #fff;
+      border-radius: 1rem;
+      border: 1px solid #d1d5db;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      margin: 2rem auto;
+      max-width: 800px;
+      padding: 1.5rem 1rem;
+    }
+    
+.tooltip-icon {
+  color: #94a3b8;
+  font-size: 0.75rem;
+  margin-left: 0.25rem;
+  transition: color 0.15s ease-in-out;
+}
+
+.group:hover .tooltip-icon {
+  color: #64748b;
+}
+
+
+
+    @media (min-width: 640px) {
+      section {
+        padding: 2rem;
+      }
+    }
+
+    .text-gray {
+      color: #374151;
+      line-height: 1.6;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+     .modal-backdrop { background: rgba(15, 23, 42, 0.85); }
+  .modal-img { max-height: 90vh; }
+
+    @media (max-width: 768px) {
+      table,
+      thead,
+      tbody,
+      th,
+      td,
+      tr {
+        display: block;
+        width: 100%;
+      }
+
+      tr {
+        margin-bottom: 1rem;
+      }
+
+      th {
+        background: none;
+        font-weight: 600;
+        padding-top: 0;
+        padding-bottom: 0.25rem;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      td {
+        border-top: none;
+        background-color: #f9fafb;
+        margin-top: 0.25rem;
+      }
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+      border-radius: 100vh;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(80, 160, 200, 0.5);
+      border-radius: 100vh;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(80, 160, 200, 0.7);
+    }
+
+    :where(*) {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6">
+    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
+    </a>
+    <a href="https://tradelia.org/archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
+  </header>
+  <main>
+
+<section id="disclaimer-istituzionale" class="max-w-4xl mx-auto my-6 px-4 sm:px-6 py-6 bg-yellow-50 border border-yellow-300 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-yellow-900 mb-3">⚠️ Disclaimer Istituzionale</h3>
+
+  <div class="text-xs sm:text-sm text-yellow-900 space-y-2 leading-relaxed">
+    <p>
+      Il presente documento ha finalità esclusivamente <strong>accademiche, informative e didattiche</strong>. Non costituisce in alcun modo consulenza personalizzata ai sensi della Direttiva 2014/65/UE (MiFID II), né offerta o sollecitazione all'investimento.
+    </p>
+    <p>
+      Ogni informazione contenuta è frutto di un'analisi indipendente su base teorica e istituzionale, e fa riferimento a scenari simulati, costruiti utilizzando fonti pubbliche autorevoli (BCE, FMI, BIS, BlackRock Institute, KKR Insight, World Bank, ecc.) e principi consolidati di asset allocation accademica (Markowitz, Sharpe, Bogle, Swensen).
+    </p>
+    <p>
+      Le strutture di portafoglio riportate sono esempi modelli e <strong>non possono essere considerate raccomandazioni operative</strong>. Qualsiasi decisione di investimento dovrebbe essere preceduta da una <strong>adeguata profilazione finanziaria</strong>, da parte di un consulente finanziario abilitato e indipendente, iscritto all’albo OCF (Organismo di vigilanza e tenuta dell'albo dei Consulenti Finanziari).
+    </p>
+    <p>
+      Nessuna responsabilità viene assunta in merito a decisioni prese sulla base di tali esempi. La performance passata non è indicativa di risultati futuri e ogni investimento comporta rischi, inclusa la perdita del capitale.
+    </p>
+    <p>
+      La struttura proposta rispetta le linee guida MiFID II in materia di categorizzazione degli strumenti (ETF armonizzati UCITS, titoli liquidi, obbligazioni investment grade, cash management regolamentato, REIT quotati) ed esclude deliberatamente qualsiasi esposizione non trasparente o non regolamentata.
+    </p>
+    <p class="font-semibold">
+      Ogni simulazione è da intendersi <span class="underline">come esercizio teorico e non operativo</span>. Si raccomanda sempre il confronto diretto con un professionista per la validazione delle scelte, anche qualora si tratti di semplici ETF.
+    </p>
+  </div>
+</section>
+
+
+
+<section id="blocco1-1" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 1.1 – Profilo dell’Investitore</h3>
+
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+
+    <!-- Età -->
+    <div class="bg-gray-100 px-2 py-1 font-semibold">Età</div>
+    <div class="bg-white px-2 py-1">30+ anni <span class="text-green-600 font-semibold">[✓]</span></div>
+
+    <!-- Situazione familiare -->
+    <div class="bg-gray-100 px-2 py-1 font-semibold mt-2">Situazione familiare</div>
+    <div class="bg-white px-2 py-1">Single, senza figli <span class="text-green-600 font-semibold">[✓]</span></div>
+
+    <!-- Capitale disponibile -->
+    <div class="bg-gray-100 px-2 py-1 font-semibold mt-2">Capitale disponibile</div>
+    <div class="bg-white px-2 py-1">60.000 € totali, 55.000 € investibili <span class="text-green-600 font-semibold">[✓]</span></div>
+
+    <!-- Altri strumenti attivi -->
+    <div class="bg-gray-100 px-2 py-1 font-semibold mt-2">Strumenti attivi esistenti</div>
+    <div class="bg-white px-2 py-1">Fondi + 2 polizze vita datate, bassa redditività percepita <span class="text-yellow-500 font-semibold">[da valutare]</span></div>
+
+    <!-- Redditività polizze attive -->
+    <div class="bg-gray-100 px-2 py-1 font-semibold mt-2">Redditività delle polizze attive</div>
+    <div class="bg-white px-2 py-1">Dato non conosciuto <span class="text-red-600 font-semibold">[✗ da richiedere]</span></div>
+
+    <!-- Orizzonte temporale -->
+    <div class="bg-gray-100 px-2 py-1 font-semibold mt-2">Orizzonte temporale</div>
+    <div class="bg-white px-2 py-1">Lungo termine (10+ anni) <span class="text-green-600 font-semibold">[✓]</span></div>
+
+    <!-- Esperienza finanziaria -->
+    <div class="bg-gray-100 px-2 py-1 font-semibold mt-2">Esperienza finanziaria</div>
+    <div class="bg-white px-2 py-1">Bassa, percepita scarsa comprensione <span class="text-yellow-500 font-semibold">[da rafforzare]</span></div>
+
+    <!-- Obiettivo rendimento -->
+    <div class="bg-gray-100 px-2 py-1 font-semibold mt-2">Obiettivo rendimento</div>
+    <div class="bg-white px-2 py-1">Rivalutare capitale in modo efficiente <span class="text-green-600 font-semibold">[✓]</span></div>
+
+    <!-- Tolleranza al rischio -->
+    <div class="bg-gray-100 px-2 py-1 font-semibold mt-2">Tolleranza al rischio</div>
+    <div class="bg-white px-2 py-1">Moderata (da validare meglio) <span class="text-yellow-500 font-semibold">[da confermare]</span></div>
+
+    <!-- Disponibilità a delegare -->
+    <div class="bg-gray-100 px-2 py-1 font-semibold mt-2">Gestione / delega</div>
+    <div class="bg-white px-2 py-1">Attuale fiducia al consulente bancario, ma voglia di capire <span class="text-green-600 font-semibold">[✓]</span></div>
+
+    <!-- Etica e criteri ESG -->
+    <div class="bg-gray-100 px-2 py-1 font-semibold mt-2">Preferenze etiche / ESG</div>
+    <div class="bg-white px-2 py-1">Non specificate <span class="text-red-600 font-semibold">[✗ da chiarire]</span></div>
+
+  </div>
+</section>
+
+<section id="blocco1-2" class="max-w-4xl mx-auto my-6 px-4 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 1.2 – Scenario Macroeconomico (Fonti Istituzionali)</h3>
+
+  <div class="text-xs sm:text-sm text-slate-800 space-y-4">
+
+    <div>
+      <h4 class="font-semibold">Scenario attuale (luglio 2025)</h4>
+      <ul class="list-disc list-inside mt-2 space-y-1">
+        <li>Inflazione Eurozona: 2,0 % su base annua, in lieve aumento da maggio (1,9 %) – <em>fonte: Eurostat, Reuters</em>.</li>
+        <li>Inflazione core: stabile al 2,3 %, trainata da servizi e dinamiche salariali – <em>fonte: BCE, ECB Economic Bulletin</em>.</li>
+        <li>Tassi BCE: fermi al 2,00 % (deposit), 2,15 % (refi), 2,40 % (marginal lending) – <em>fonte: BCE, comunicato stampa 25 luglio 2025</em>.</li>
+        <li>Approccio della BCE: neutralità condizionata ai dati ("data-dependent stance"), sospensione temporanea del ciclo di easing – <em>fonte: ECB Monetary Policy Decision, 25/07/2025</em>.</li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="font-semibold">Scenario atteso – 6 mesi (fino a fine 2025)</h4>
+      <ul class="list-disc list-inside mt-2 space-y-1">
+        <li>Il PIL globale è previsto in crescita del 3,0 % nel 2025, in lieve rallentamento – <em>fonte: IMF World Economic Outlook, luglio 2025</em>.</li>
+        <li>Eurozona: crescita contenuta allo 0,9 %, con inflazione moderata – <em>fonte: ECB Staff Projections, Conference Board Europe</em>.</li>
+        <li>Mercati emergenti: rallentamento al 2,4 %, condizionato da tensioni commerciali USA-Cina-UE – <em>fonte: J.P. Morgan Mid-Year Outlook</em>.</li>
+        <li>Politica monetaria: BCE orientata alla stabilità; tagli subordinati a segnali forti di disinflazione – <em>fonte: Reuters, FT, Deutsche Bank Global Macro</em>.</li>
+        <li>Valute: euro volatile; possibili effetti deflattivi da importazioni asiatiche – <em>fonte: ECB Blog, 30 luglio 2025</em>.</li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="font-semibold">Scenario atteso – 12 mesi (fino a luglio 2026)</h4>
+      <ul class="list-disc list-inside mt-2 space-y-1">
+        <li>Previsioni PIL globale 2026 in crescita al 3,1 % – <em>fonte: IMF WEO Update, luglio 2025</em>.</li>
+        <li>Eurozona in accelerazione all’1,1–1,3 %, trainata da investimenti pubblici – <em>fonte: ECB Projections, Conference Board</em>.</li>
+        <li>Inflazione attesa in discesa: headline 1,6 %, core 2,0 % – <em>fonte: ECB, Bloomberg Survey</em>.</li>
+        <li>Possibilità tecnica di primo taglio tassi BCE: Q1 2026 se l’inflazione continua a scendere – <em>fonte: Reuters, Deutsche Bank, Natixis</em>.</li>
+        <li>Premio per il rischio azionario ridotto, valutazioni tirate in USA ed Europa – <em>fonte: Morgan Stanley Global Strategy Team</em>.</li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="font-semibold">Implicazioni intermarket (multi-asset)</h4>
+      <ul class="list-disc list-inside mt-2 space-y-1">
+        <li>Azionario: sostenuto ma vulnerabile a shock; eccesso valutativo in tech USA – <em>fonte: BlackRock Investment Institute</em>.</li>
+        <li>Obbligazionario: favorevole a duration media; opportunità selettive su IG euro e T-bond USA – <em>fonte: KKR Mid-Year Outlook</em>.</li>
+        <li>Commodities: stabili o leggermente in discesa su rallentamento macro – <em>fonte: World Bank Commodities Update, luglio 2025</em>.</li>
+        <li>FX: euro sensibile a dati su inflazione, export e posizionamenti geopolitici – <em>fonte: ECB Blog e FX Strategy di Barclays</em>.</li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="font-semibold">Considerazioni operative</h4>
+      <ul class="list-disc list-inside mt-2 space-y-1">
+        <li>Evitare concentrazioni azionarie eccessive nei prossimi 3–6 mesi.</li>
+        <li>Valutare entrata graduale sui mercati (piano di accumulo o step di allocazione).</li>
+        <li>Mantenere posizione prudente su cash o ETF monetari di qualità.</li>
+        <li>Possibile rivalutazione della duration obbligazionaria in Q1 2026.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<section id="blocco1-3" class="max-w-4xl mx-auto my-6 px-4 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 1.3 – Implicazioni su Asset Allocation</h3>
+
+  <div class="text-xs sm:text-sm text-slate-800 space-y-4">
+
+    <div>
+      <h4 class="font-semibold">1. Contesto di riferimento (sintesi macro)</h4>
+      <ul class="list-disc list-inside mt-2 space-y-1">
+        <li>Inflazione stabile ma non domata, con rischi bilaterali (supply chain e salari).</li>
+        <li>Tassi fermi a livelli restrittivi ma con possibile inversione nel 2026.</li>
+        <li>Ritorno alla crescita moderata nel 2025–2026, ma senza stimoli fiscali rilevanti in Europa.</li>
+        <li>Mercati azionari ai massimi con premio per il rischio compresso.</li>
+        <li>Obbligazionario IG torna rilevante per rapporto rischio/rendimento.</li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="font-semibold">2. Asset class potenzialmente favorite (allocazioni core)</h4>
+      <ul class="list-disc list-inside mt-2 space-y-1">
+        <li><strong>Obbligazioni investment grade (Euro o globali hedged):</strong> buona alternativa risk-adjusted.</li>
+        <li><strong>Cash management / ETF monetari:</strong> utile per flessibilità tattica in attesa di finestre migliori.</li>
+        <li><strong>ETF azionari globali large cap:</strong> solo con ingresso graduale o in ottica di lungo periodo (10+ anni).</li>
+        <li><strong>REIT infrastrutturali o logistici:</strong> copertura reale + reddito, selettivi.</li>
+        <li><strong>ETF inflation-linked brevi scadenze:</strong> solo se rischio inflattivo riaccelera (scenario alternativo).</li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="font-semibold">3. Asset class da sottoporre a cautela (satelliti o esclusione)</h4>
+      <ul class="list-disc list-inside mt-2 space-y-1">
+        <li><strong>Azioni USA tech growth:</strong> valutazioni elevate, alta sensibilità a tassi e earning revision.</li>
+        <li><strong>Small cap globali:</strong> penalizzate in scenari di liquidità contratta e margini bassi.</li>
+        <li><strong>Bond emergenti in valuta locale:</strong> troppo esposti a variabili FX e geopolitica.</li>
+        <li><strong>Commodity industriali:</strong> vulnerabili a rallentamento ciclico e calo domanda cinese.</li>
+        <li><strong>Prodotti strutturati opachi:</strong> da evitare in fase di ristrutturazione patrimoniale.</li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="font-semibold">4. Implicazioni pratiche per la costruzione portafoglio</h4>
+      <ul class="list-disc list-inside mt-2 space-y-1">
+        <li>Inserire una componente obbligazionaria centrale (core fixed income) con duration controllata.</li>
+        <li>Allocare solo parte dell’equity globale (MSCI World/ACWI) in modo frazionato (es. 3-4 ingressi).</li>
+        <li>Mantenere un buffer cash o ETF monetario per 6–12 mesi (≈10–20 %).</li>
+        <li>Usare satelliti tematici solo dove ci sono trend strutturali validati (es. infrastrutture digitali, clean tech).</li>
+        <li>Monitorare trimestralmente macro e ribilanciare secondo dati reali, non previsioni soggettive.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<section id="blocco1-4" class="max-w-4xl mx-auto my-6 px-4 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 1.4 – Scenari Macroeconomici Alternativi</h3>
+
+  <div class="text-xs sm:text-sm text-slate-800 space-y-6">
+
+    <!-- Scenario A: Inflazione persistente -->
+    <div>
+      <h4 class="font-semibold">Scenario A – Inflazione persistente / nuova fiammata inflattiva</h4>
+      <ul class="list-disc list-inside mt-2 space-y-1">
+        <li><strong>Cause:</strong> salari rigidi, shock energetico, sussidi pubblici prolungati, tariffe commerciali.</li>
+        <li><strong>Effetti attesi:</strong> BCE costretta a mantenere o alzare i tassi; obbligazioni penalizzate; cash e inflation-linked avvantaggiati.</li>
+        <li><strong>Asset resilienti:</strong> ETF monetari, inflation-linked brevi, materie prime (oro, uranio), titoli a tasso variabile.</li>
+        <li><strong>Asset fragili:</strong> bond a lunga duration, growth stocks, real estate con leva.</li>
+      </ul>
+    </div>
+
+    <!-- Scenario B: Hard Landing / Recessione -->
+    <div>
+      <h4 class="font-semibold">Scenario B – Recessione tecnica o hard landing USA/Eurozona</h4>
+      <ul class="list-disc list-inside mt-2 space-y-1">
+        <li><strong>Cause:</strong> stretta creditizia prolungata, calo investimenti, crisi geopolitiche, contrazione export.</li>
+        <li><strong>Effetti attesi:</strong> taglio tassi BCE e Fed, corsa verso titoli sicuri (flight to quality).</li>
+        <li><strong>Asset resilienti:</strong> Treasury USA, bond IG euro, oro, cash, ETF difensivi (utilities, healthcare).</li>
+        <li><strong>Asset fragili:</strong> small cap, high yield, ciclici, emerging markets.</li>
+      </ul>
+    </div>
+
+    <!-- Scenario C: Boom tech & soft landing -->
+    <div>
+      <h4 class="font-semibold">Scenario C – Soft landing globale + boom AI / investimenti pubblici</h4>
+      <ul class="list-disc list-inside mt-2 space-y-1">
+        <li><strong>Cause:</strong> efficienza produttiva da AI, nuovi investimenti in infrastrutture e difesa, export resiliente.</li>
+        <li><strong>Effetti attesi:</strong> equity in rally, soprattutto tech e industria innovativa; tassi stabili o in lieve discesa.</li>
+        <li><strong>Asset resilienti:</strong> azioni growth USA, tematici AI e clean tech, semiconduttori, REIT data center.</li>
+        <li><strong>Asset fragili:</strong> cash, bond a breve, asset difensivi (limitata rotazione verso value).</li>
+      </ul>
+    </div>
+
+    <!-- Scenario D: Shock geopolitico -->
+    <div>
+      <h4 class="font-semibold">Scenario D – Shock geopolitico / escalation militare</h4>
+      <ul class="list-disc list-inside mt-2 space-y-1">
+        <li><strong>Cause:</strong> escalation in Ucraina o Medio Oriente, interruzioni energetiche o cyber-attacchi sistemici.</li>
+        <li><strong>Effetti attesi:</strong> sell-off azionario globale, picco oro e Treasury, aumento CDS sovrani.</li>
+        <li><strong>Asset resilienti:</strong> oro fisico/ETC, Treasury USA, ETF difesa, liquidità, CHF e USD.</li>
+        <li><strong>Asset fragili:</strong> equity globali, obbligazioni corporate, commodity industriali.</li>
+      </ul>
+    </div>
+
+    <!-- Sintesi -->
+    <div>
+      <h4 class="font-semibold">Sintesi Strategica</h4>
+      <ul class="list-disc list-inside mt-2 space-y-1">
+        <li>La costruzione di portafoglio deve prevedere strumenti <strong>robusti cross-scenario</strong>: ETF liquidi, bond IG, exposure tematiche selettive.</li>
+        <li>La <strong>liquidità strategica</strong> (10–20 %) è chiave per reagire tatticamente.</li>
+        <li>Opportuna <strong>diversificazione valutaria e settoriale</strong> per scenari divergenti.</li>
+        <li>Le coperture (oro, Treasury long, ETF difensivi) sono cruciali solo se calibrate su <strong>peso marginale e non speculativo</strong>.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<section id="blocco2-1" class="max-w-4xl mx-auto my-6 px-4 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 2.1 – Portafoglio Modello 1: Equilibrato Solido</h3>
+
+  <div class="text-xs sm:text-sm text-slate-800 space-y-6">
+
+    <!-- Tabella composizione -->
+    <div>
+      <h4 class="font-semibold">Composizione Portafoglio</h4>
+      <table class="w-full mt-2 text-left border border-gray-200 text-xs sm:text-sm">
+        <thead class="bg-gray-100 font-semibold text-slate-700">
+          <tr>
+            <th class="px-2 py-1 border border-gray-200">Componente</th>
+            <th class="px-2 py-1 border border-gray-200">% Allocazione</th>
+            <th class="px-2 py-1 border border-gray-200">Categoria</th>
+            <th class="px-2 py-1 border border-gray-200">Funzione</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="bg-white">
+            <td class="px-2 py-1 border">ETF MSCI World Accumulazione</td>
+            <td class="px-2 py-1 border">30%</td>
+            <td class="px-2 py-1 border">Equity globale core</td>
+            <td class="px-2 py-1 border">Crescita lungo termine</td>
+          </tr>
+          <tr class="bg-white">
+            <td class="px-2 py-1 border">ETF Azionario Emergente</td>
+            <td class="px-2 py-1 border">5%</td>
+            <td class="px-2 py-1 border">Equity satellite</td>
+            <td class="px-2 py-1 border">Diversificazione geografica</td>
+          </tr>
+          <tr class="bg-white">
+            <td class="px-2 py-1 border">ETF Obbligazionario Euro IG</td>
+            <td class="px-2 py-1 border">25%</td>
+            <td class="px-2 py-1 border">Bond investment grade</td>
+            <td class="px-2 py-1 border">Stabilità e rendimento cedolare</td>
+          </tr>
+          <tr class="bg-white">
+            <td class="px-2 py-1 border">ETF Aggregate Global (hedged)</td>
+            <td class="px-2 py-1 border">10%</td>
+            <td class="px-2 py-1 border">Bond globale core</td>
+            <td class="px-2 py-1 border">Bilanciamento e diversificazione FX</td>
+          </tr>
+          <tr class="bg-white">
+            <td class="px-2 py-1 border">ETF Monetario Area Euro</td>
+            <td class="px-2 py-1 border">10%</td>
+            <td class="px-2 py-1 border">Cash management</td>
+            <td class="px-2 py-1 border">Flessibilità operativa</td>
+          </tr>
+          <tr class="bg-white">
+            <td class="px-2 py-1 border">ETF Tematico Infrastrutture / AI</td>
+            <td class="px-2 py-1 border">5%</td>
+            <td class="px-2 py-1 border">Satellite tematico</td>
+            <td class="px-2 py-1 border">Trend secolare, potenziale extra-rendimento</td>
+          </tr>
+          <tr class="bg-white">
+            <td class="px-2 py-1 border">ETC Oro fisico (hedged EUR)</td>
+            <td class="px-2 py-1 border">5%</td>
+            <td class="px-2 py-1 border">Commodity difensiva</td>
+            <td class="px-2 py-1 border">Copertura geopolitica/inflattiva</td>
+          </tr>
+          <tr class="bg-white">
+            <td class="px-2 py-1 border">Conto deposito o pronti contro termine</td>
+            <td class="px-2 py-1 border">10%</td>
+            <td class="px-2 py-1 border">Cash reale</td>
+            <td class="px-2 py-1 border">Riserva tattica</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Commento -->
+    <div>
+      <h4 class="font-semibold mt-4">Commento tecnico</h4>
+      <p>
+        Il portafoglio è costruito per massimizzare la chiarezza e il controllo: le componenti core sono ETF UCITS liquidi e trasparenti.
+        Le esposizioni equity sono contenute entro il 35%, in linea con la tolleranza rischio stimata. La componente obbligazionaria (35%)
+        è ben diversificata tra Euro e mercati globali hedged. Il 20% in cash/liquidità è pensato per accompagnare l’investitore nella fase iniziale,
+        mantenendo ampia flessibilità operativa.
+      </p>
+    </div>
+
+    <!-- Alternative difensive -->
+    <div>
+      <h4 class="font-semibold mt-4">Alternative difensive e cosa possono sostituire</h4>
+      <ul class="list-disc list-inside mt-2 space-y-1">
+        <li><strong>ETF Inflation Linked 1–3y</strong>: può sostituire una parte del 10% bond Euro IG in caso di scenario inflattivo persistente.</li>
+        <li><strong>ETF Treasury 10–20 anni (USD hedged)</strong>: può sostituire la quota "Aggregate Global" in scenari recessivi o hard landing.</li>
+        <li><strong>ETF Difensivi settoriali (Healthcare / Utilities)</strong>: alternativa ai tematici AI, in caso di bassa propensione al rischio growth.</li>
+        <li><strong>ETF CHF Cash / USD Cash (hedged)</strong>: alternativa ai monetari euro per protezione valutaria in caso di shock FX.</li>
+        <li><strong>REIT infrastrutture digitali</strong>: può affiancare o sostituire il tematico AI, offrendo anche rendimento cedolare.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<section id="blocco2-2" class="max-w-4xl mx-auto my-6 px-4 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 2.2 – Portafoglio Modello 2: Prudente Cash First</h3>
+
+  <div class="text-xs sm:text-sm text-slate-800 space-y-6">
+
+    <!-- Composizione Responsive -->
+    <div>
+      <h4 class="font-semibold">Composizione Portafoglio</h4>
+      <div class="overflow-x-auto">
+        <table class="min-w-full mt-2 text-left border border-gray-200 text-xs sm:text-sm">
+          <thead class="bg-gray-100 font-semibold text-slate-700">
+            <tr>
+              <th class="px-2 py-1 border border-gray-200">Componente</th>
+              <th class="px-2 py-1 border border-gray-200">% Allocazione</th>
+              <th class="px-2 py-1 border border-gray-200">Categoria</th>
+              <th class="px-2 py-1 border border-gray-200">Funzione</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-white">
+              <td class="px-2 py-1 border">Conto deposito vincolato o pronti contro termine</td>
+              <td class="px-2 py-1 border">30%</td>
+              <td class="px-2 py-1 border">Cash reale</td>
+              <td class="px-2 py-1 border">Sicurezza, nessuna volatilità, accessibilità</td>
+            </tr>
+            <tr class="bg-white">
+              <td class="px-2 py-1 border">ETF Monetario Area Euro</td>
+              <td class="px-2 py-1 border">25%</td>
+              <td class="px-2 py-1 border">Cash management</td>
+              <td class="px-2 py-1 border">Rendimento minimo a rischio nullo</td>
+            </tr>
+            <tr class="bg-white">
+              <td class="px-2 py-1 border">ETF Obbligazionario Euro IG breve</td>
+              <td class="px-2 py-1 border">20%</td>
+              <td class="px-2 py-1 border">Fixed income difensivo</td>
+              <td class="px-2 py-1 border">Cedole stabili, bassa volatilità</td>
+            </tr>
+            <tr class="bg-white">
+              <td class="px-2 py-1 border">ETF MSCI World Accumulazione</td>
+              <td class="px-2 py-1 border">15%</td>
+              <td class="px-2 py-1 border">Equity core</td>
+              <td class="px-2 py-1 border">Crescita globale a lungo termine</td>
+            </tr>
+            <tr class="bg-white">
+              <td class="px-2 py-1 border">ETC Oro fisico (hedged EUR)</td>
+              <td class="px-2 py-1 border">5%</td>
+              <td class="px-2 py-1 border">Commodity difensiva</td>
+              <td class="px-2 py-1 border">Protezione da shock esterni</td>
+            </tr>
+            <tr class="bg-white">
+              <td class="px-2 py-1 border">ETF Infrastrutture / Sanità</td>
+              <td class="px-2 py-1 border">5%</td>
+              <td class="px-2 py-1 border">Satellite tematico</td>
+              <td class="px-2 py-1 border">Trend stabili e reali</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Commento tecnico -->
+    <div>
+      <h4 class="font-semibold mt-4">Commento istituzionale</h4>
+      <p>
+        Il portafoglio è progettato per chi ha <strong>minima tolleranza al rischio iniziale</strong> ma vuole uscire da immobilismo finanziario.  
+        Con una <strong>componente cash del 55%</strong>, offre totale accessibilità e protezione del capitale.  
+        Solo il 15% è esposto all’equity globale (MSCI World), gestito in logica “entry prudente”.  
+        L’obbligazionario IG breve copre la parte cedolare senza rischio tasso, mentre oro ed ETF infrastrutturali completano con micro-esposizioni difensive.
+      </p>
+    </div>
+
+    <!-- Alternativa operativa -->
+    <div>
+      <h4 class="font-semibold mt-4">Alternativa operativa</h4>
+      <ul class="list-disc list-inside mt-2 space-y-1">
+        <li>Nel tempo, la quota equity può essere incrementata gradualmente (PAC mensile da ETF World o All Country).</li>
+        <li>La componente ETF monetario può diventare una riserva per investimenti mirati futuri (tematici, REIT, ecc.).</li>
+        <li>Il portafoglio può fungere da “fondo ponte” verso strutture più evolute, ma solo quando la comprensione migliora.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
