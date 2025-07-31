@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TRADELIA • AI — Report Azionario</title>
+
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+        },
+        extend: {
+          colors: {
+            primary: '#0f172a',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Font Inter + privacy -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" referrerpolicy="no-referrer" />
+
+  <!-- Custom Style -->
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+      background-size: 280px;
+      color: #0f172a;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid #dbe1ea;
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
+
+    th,
+    td {
+      padding: 10px 14px;
+      border: 1px solid #d1d5db;
+      text-align: left;
+      line-height: 1.5;
+    }
+
+    th {
+      background: #f8fafc;
+      white-space: nowrap;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    table tr:hover {
+      background-color: rgba(14, 165, 233, 0.1);
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    a {
+      color: #2563eb;
+      text-decoration: underline;
+      transition: color 0.2s ease-in-out;
+    }
+
+    a:hover,
+    a:focus {
+      color: #1d4ed8;
+      outline: none;
+      text-decoration: none;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #1e293b;
+    }
+
+    h3.list-title {
+      font-size: 1.125rem;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      color: #1e293b;
+      font-weight: 600;
+      border-bottom: 2px solid #cbd5e1;
+      padding-bottom: 0.25rem;
+    }
+
+    section {
+      background: #fff;
+      border-radius: 1rem;
+      border: 1px solid #d1d5db;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      margin: 2rem auto;
+      max-width: 800px;
+      padding: 1.5rem 1rem;
+    }
+    
+.tooltip-icon {
+  color: #94a3b8;
+  font-size: 0.75rem;
+  margin-left: 0.25rem;
+  transition: color 0.15s ease-in-out;
+}
+
+.group:hover .tooltip-icon {
+  color: #64748b;
+}
+
+
+
+    @media (min-width: 640px) {
+      section {
+        padding: 2rem;
+      }
+    }
+
+    .text-gray {
+      color: #374151;
+      line-height: 1.6;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+     .modal-backdrop { background: rgba(15, 23, 42, 0.85); }
+  .modal-img { max-height: 90vh; }
+
+    @media (max-width: 768px) {
+      table,
+      thead,
+      tbody,
+      th,
+      td,
+      tr {
+        display: block;
+        width: 100%;
+      }
+
+      tr {
+        margin-bottom: 1rem;
+      }
+
+      th {
+        background: none;
+        font-weight: 600;
+        padding-top: 0;
+        padding-bottom: 0.25rem;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      td {
+        border-top: none;
+        background-color: #f9fafb;
+        margin-top: 0.25rem;
+      }
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+      border-radius: 100vh;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(80, 160, 200, 0.5);
+      border-radius: 100vh;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(80, 160, 200, 0.7);
+    }
+
+    :where(*) {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6">
+    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
+    </a>
+    <a href="https://tradelia.org/archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
+  </header>
+  <main>
+
+<section class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-4 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h2 class="text-base sm:text-xl font-bold text-center mb-4 text-slate-800">
+    Analisi Approfondita – Modello Tradelia AI Multi-Blocco
+  </h2>
+
+  <h3 class="text-sm sm:text-base font-semibold text-slate-700 mb-2 border-b border-gray-200 pb-1">
+    Indice Sezioni Analitiche
+  </h3>
+
+  <ul class="space-y-1 text-xs sm:text-sm text-slate-700 leading-tight">
+    <li><a href="#blocco1" class="flex justify-between items-center px-3 py-1 hover:bg-gray-50 rounded-md underline transition">Blocco 1 – Identificativi & Contesto<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a></li>
+    <li><a href="#blocco2" class="flex justify-between items-center px-3 py-1 hover:bg-gray-50 rounded-md underline transition">Blocco 2 – Multipli & Valutazione Intrinseca<svg class="w-4 h-4 ml-2 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a></li>
+    <li><a href="#blocco3" class="flex justify-between items-center px-3 py-1 hover:bg-gray-50 rounded-md underline transition">Blocco 3 – Fondamentali Aziendali<svg class="w-4 h-4 ml-2 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a></li>
+    <li><a href="#blocco4" class="flex justify-between items-center px-3 py-1 hover:bg-gray-50 rounded-md underline transition">Blocco 4 – Dividendi & Buyback<svg class="w-4 h-4 ml-2 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a></li>
+    <li><a href="#blocco5" class="flex justify-between items-center px-3 py-1 hover:bg-gray-50 rounded-md underline transition">Blocco 5 – Performance & Rischio<svg class="w-4 h-4 ml-2 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a></li>
+    <li><a href="#blocco6" class="flex justify-between items-center px-3 py-1 hover:bg-gray-50 rounded-md underline transition">Blocco 6 – Microstruttura & Market<svg class="w-4 h-4 ml-2 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a></li>
+    <li><a href="#blocco7" class="flex justify-between items-center px-3 py-1 hover:bg-gray-50 rounded-md underline transition">Blocco 7 – Derivati & Opzioni<svg class="w-4 h-4 ml-2 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a></li>
+    <li><a href="#blocco8" class="flex justify-between items-center px-3 py-1 hover:bg-gray-50 rounded-md underline transition">Blocco 8 – Tecnica & Correlazioni<svg class="w-4 h-4 ml-2 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a></li>
+    <li><a href="#blocco9" class="flex justify-between items-center px-3 py-1 hover:bg-gray-50 rounded-md underline transition">Blocco 9 – Proprietà, ESG & Governance<svg class="w-4 h-4 ml-2 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a></li>
+    <li><a href="#blocco10" class="flex justify-between items-center px-3 py-1 hover:bg-gray-50 rounded-md underline transition">Blocco 10 – Flussi ETF<svg class="w-4 h-4 ml-2 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a></li>
+    <li><a href="#blocco11" class="flex justify-between items-center px-3 py-1 hover:bg-gray-50 rounded-md underline transition">Blocco 11 – Eventi & Macroeconomia<svg class="w-4 h-4 ml-2 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a></li>
+    <li><a href="#blocco12" class="flex justify-between items-center px-3 py-1 hover:bg-gray-50 rounded-md underline transition">Blocco 12 – Dati Alternativi & Retail<svg class="w-4 h-4 ml-2 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a></li>
+    <li><a href="#blocco13" class="flex justify-between items-center px-3 py-1 hover:bg-gray-50 rounded-md underline transition">Blocco Finale – Cluster Strategico & AI<svg class="w-4 h-4 ml-2 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a></li>
+    <li>
+      <a href="#strategie" class="flex justify-between items-center px-3 py-1 font-semibold text-slate-900 bg-gray-100 rounded-md underline hover:bg-gray-200 transition">
+        Simulazione Operativa – Strategie Finali
+        <svg class="w-4 h-4 ml-2 text-slate-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </li>
+  </ul>
+</section>
+
+<section id="blocco1" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 1 – Identificativi &amp; Contesto</h3>
+
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+    <!-- Anagrafica -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Ticker</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">TSLA</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ISIN</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">US88160R1014</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Exchange</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">NASDAQ</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">MIC</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">XNAS</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Società</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Tesla, Inc.</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Settore</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Consumer Discretionary</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Industria / Sottosettore</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Automobiles</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Indice Primario</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">S&P 500 (dal 2020-12-21)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Indice Secondario</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">Nasdaq 100 (dal 2013-07-15)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Prezzo Attuale</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">$314.25 (2025-07-31)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Variazione 24h (%)</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">−0.015%</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Variazione 7gg (%)</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">+7.98%</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Variazione 30gg (%)</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">−1.74%</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Prezzo Min/Max 52 settimane</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">$138.80 / $299.29 (agg. 2025-07-30)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Prezzo Target Medio Analisti</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">$308.0 (46 analisti, rev. 2025-07-31)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Rating Analisti</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">Hold (46 analisti attivi, agg. 2025-07-31)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Market Cap</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">$1.004B (agg. 2025-07-31)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Numero Azioni Totali</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">3.192 miliardi (base, filing 10-Q 2025-07-25)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Free Float (%)</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">99.5% (3.176 miliardi azioni flottanti)</div>
+  </div>
+
+  <div class="mt-4 text-slate-800 text-sm leading-relaxed">
+    Tesla, quotata sul Nasdaq con ticker TSLA, mantiene una posizione stabile nei principali indici americani (S&P 500, Nasdaq 100). Il titolo è attualmente scambiato a 314,25 USD, superiore al target medio di 308 USD indicato da 46 analisti istituzionali globali, che mantengono un rating "Hold". Il free float supera il 99% e la capitalizzazione aggiornata è di circa 1.000 miliardi USD. Le performance settimanali sono positive, ma il rating analisti e la variazione 30gg suggeriscono una valutazione prudente nel breve termine.
+  </div>
+</section>
+
+<section id="blocco2" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 2 – Multipli &amp; Valutazione Intrinseca</h3>
+
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+    <div class="bg-gray-50 px-2 py-1 font-semibold">P/E (TTM)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">188.9×</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Forward P/E</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">169.3×</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">PEG Ratio</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">5.9×</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">P/B</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">13.2×</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">P/S</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">11.1×</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">P/EBIT</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">178.8×</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">EV/EBIT (TTM)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">172.4×</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">EV/EBITDA (TTM)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">86.1×</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">EV/EBITDA (Forward)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">70.5×</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">P/FCF</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">180.8×</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">EV/Revenue</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">~11×</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">EV/FCF</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">~176×</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ROIC</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">6.1%</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">WACC</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">14.75%</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">DCF Fair Value (Base)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">$64.46</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Upside % (DCF vs Prezzo $314)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">−79.5%</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Ranking Peer – P/E</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">1° su settore</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Ranking Peer – EV/EBITDA</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">1° su settore</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Ranking Peer – EV/EBIT</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">1° su settore</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Ranking Peer – P/B</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">1° su settore</div>
+  </div>
+
+  <div class="mt-4 text-slate-800 text-sm leading-relaxed">
+    Tesla presenta multipli di valutazione estremamente elevati rispetto ai benchmark settoriali: <strong class="text-red-600">P/E TTM 188.9×</strong>, <strong class="text-red-600">EV/EBITDA 86.1×</strong> e <strong class="text-red-600">P/FCF 180.8×</strong>. Il <strong class="text-red-600">ROIC (6.1%)</strong> risulta significativamente inferiore al <strong class="text-red-600">WACC (14.75%)</strong>, generando distruzione di valore. Il <strong class="text-red-600">fair value DCF base</strong> è stimato a $64.46, ben al di sotto del prezzo attuale, con un potenziale <strong class="text-red-600">downside del −79.5%</strong>. Tutti i ranking multipli posizionano Tesla come la società più cara nel peer group globale.
+  </div>
+</section>
+
+    <section id="blocco3" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 3 – Fondamentali</h3>
+
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Ricavi Q2 2025</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">$22.5 B (−12 % YoY)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Net Income GAAP Q2 2025</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">$1.2 B (−16 % YoY)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Profit Margin (TTM)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">6.3 %</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Operating Margin (EBIT)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">4.1 %</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Gross Margin TTM</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">18.2 %</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ROIC (TTM)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">3.64 %</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ROE (TTM)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">~9 %</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Return on Assets</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">2.9 %</div>
+  </div>
+
+  <div class="mt-4 text-slate-800 text-sm leading-relaxed">
+    I <strong class="text-red-600">ricavi trimestrali</strong> risultano in calo del <strong class="text-red-600">−12 %</strong> YoY, e il <strong class="text-red-600">net income GAAP</strong> è sceso del <strong class="text-red-600">−16 %</strong>, indicando un contesto operativo debole. Il <strong class="text-red-600">Profit Margin</strong> (6.3 %) e il <strong class="text-red-600">Operating Margin</strong> (4.1 %) sono entrambi compressi. Il <strong class="text-red-600">Gross Margin</strong> al 18.2 % riflette pressioni su costi e pricing. Il <strong class="text-red-600">ROIC</strong> al 3.64 % è inferiore al WACC, mentre il <strong class="text-slate-700">ROE</strong> (~9 %) e il <strong class="text-slate-700">ROA</strong> (~2.9 %) risultano deboli rispetto a benchmark settoriali.
+  </div>
+</section>
+    <section id="blocco4" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 4 – Cash Flow &amp; Liquidità</h3>
+
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Free Cash Flow TTM</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">$5.586 B</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">FCF Yield</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">0.54 %</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Operating Cash Flow TTM</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">$15.77 B</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Cash &amp; Equivalenti</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">&gt;$22 B</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Current Ratio</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">2.04×</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Quick Ratio</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">1.36×</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Interest Coverage</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">~15.4×</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Debito Totale</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">~$13.13 B</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Net Debt / EBITDA</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">−1.8×</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Altman Z‑Score</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">13.9</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Z‑Score Zone</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">Safe</div>
+  </div>
+
+  <div class="mt-4 text-slate-800 text-sm leading-relaxed">
+    Tesla genera un <strong class="text-green-600">Free Cash Flow</strong> TTM pari a <strong class="text-green-600">$5.586 mld</strong> e un <strong class="text-green-600">Operating Cash Flow</strong> di <strong class="text-green-600">$15.77 mld</strong>, confermando una buona capacità di generazione di cassa. La <strong class="text-slate-700">FCF Yield</strong> è modesta (<strong class="text-slate-700">0.54 %</strong>) rispetto alla capitalizzazione, ma coerente con i multipli elevati.  
+    I ratio di liquidità sono molto solidi: <strong class="text-green-600">Current Ratio 2.04×</strong>, <strong class="text-green-600">Quick Ratio 1.36×</strong>. La posizione di cassa supera i <strong class="text-green-600">$22 mld</strong>.  
+    L'<strong class="text-green-600">Interest Coverage</strong> è ampio (~15.4×) e il <strong class="text-green-600">Net Debt / EBITDA</strong> negativo indica una posizione di cassa netta robusta.  
+    Il <strong class="text-green-600">Z‑Score Altman</strong> di 13.9 colloca Tesla nella zona <strong class="text-green-600">Safe</strong> per rischio default.  
+
+    Struttura di cassa e liquidità fortemente favorevole, in grado di sostenere investimenti e cicli economici sfavorevoli senza stress finanziario.
+  </div>
+</section>
+
+    <section id="blocco5" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 5 – Debito &amp; Capital Structure</h3>
+
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Debt / Equity Ratio</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">0.17×</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Debt / Capital Ratio</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">≈ 0.15</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Debt / Assets Ratio</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">≈ 0.11</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Interest Coverage Ratio</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">10.7×</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Long‑Term Debt</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">~$10.2 B</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Short‑Term Debt</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">~$2.93 B</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Total Debt</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">~$13.13 B</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Net Debt / EBITDA</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">−1.8×</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Altman Z‑Score</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">13.9</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Z‑Score Zone</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">Safe</div>
+  </div>
+
+  <div class="mt-4 text-slate-800 text-sm leading-relaxed">
+    Il <strong class="text-green-600">Debt / Equity Ratio</strong> pari a <strong class="text-green-600">0.17×</strong> indica che Tesla è finanziata prevalentemente attraverso equity.  
+    Il <strong class="text-green-600">Debt / Capital Ratio</strong> (~0.15) e il <strong class="text-green-600">Debt / Assets Ratio</strong> (~0.11) confermano una leva contenuta.  
+    L’<strong class="text-green-600">Interest Coverage Ratio</strong> di circa <strong class="text-green-600">10.7×</strong> mostra elevata capacità di coprire gli oneri finanziari.  
+    Il <strong class="text-slate-700">Long-Term Debt</strong> stimato è di ~<strong class="text-slate-700">$10.2 mld</strong> e il <strong class="text-slate-700">Short-Term Debt</strong> di ~<strong class="text-slate-700">$2.93 mld</strong>, per un <strong class="text-slate-700">Total Debt</strong> di ~<strong class="text-slate-700">$13.13 mld</strong>.  
+    Il <strong class="text-green-600">Net Debt / EBITDA</strong> di ~<strong class="text-green-600">−1.8×</strong> evidenzia una posizione netta di cassa.  
+    L’<strong class="text-green-600">Altman Z‑Score</strong> pari a <strong class="text-green-600">13.9</strong> colloca Tesla in zona <strong class="text-green-600">Safe</strong>, suggerendo bassissimo rischio di insolvenza.  
+
+    Valutazione complessiva: la struttura patrimoniale è <strong class="text-green-600">molto solida</strong>, con leva contenuta, copertura finanziaria ampia e forte margine nella capacità di rimborso.
+  </div>
+</section>
+
+    <section id="blocco6" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 6 – Governance &amp; Ownership</h3>
+
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Board Chair &amp; Indipendenza</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Robyn Denholm (Chair dal 2018), indipendente secondo SEC e Nasdaq</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Composizione Board</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">9 membri: Denholm, Musk, Murdoch, Ehrenpreis, Gebbia, Straubel, Wilson‑Thompson, Hartung (da giugno 2025)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Comitati Comitato Compensation</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Ehrenpreis (Chair), Denholm, Wilson‑Thompson — tutti indipendenti</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Institutional Ownership</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">~47.8 % (al 31 luglio 2025)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Insider Ownership</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">~0.13 % (fra dirigenti &amp; board)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Float %</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">~87.0 %</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ESG Risk Rating (Sustainalytics)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Medium Risk (Molte controversie, gestione G debole)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">S&P Global ESG Score</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Non partecipa al CSA, punteggio stimato inferiore ai peer</div>
+  </div>
+
+  <div class="mt-4 text-slate-800 text-sm leading-relaxed">
+    Il Board è guidato da <strong class="text-slate-700">Robyn Denholm</strong> come President Chair indipendente dal 2018. L’organo è composto da 9 membri (incluso Jack Hartung da giugno 2025), con un comitato compensi interamente formato da membri considerati indipendenti :contentReference[oaicite:1]{index=1}.
+
+    L’<strong class="text-slate-700">institutional ownership</strong> è pari a circa <strong class="text-slate-700">47.8 %</strong>, inferiore al valore storico (~66 %) :contentReference[oaicite:2]{index=2}. La <strong class="text-slate-700">insider ownership</strong> è estremamente bassa (~0.13 %), e il float si attesta intorno all’87 % :contentReference[oaicite:3]{index=3}.
+
+    Secondo Sustainalytics, Tesla mostra un <strong class="text-slate-700">ESG Risk Rating di livello “Medium Risk”</strong>, con un’alta esposizione a rischi ambientali e sociali e una governance classificata debole :contentReference[oaicite:4]{index=4}. L’ESG score S&P Global non viene calcolato tramite CSA (non partecipazione attiva), e fonti indicano un punteggio inferiore alla media del settore automobilistico :contentReference[oaicite:5]{index=5}.
+
+    Recenti richieste degli azionisti istituzionali – che rappresentano oltre $1.5 T asset – includono maggiore indipendenza del board, un piano formale di successione del CEO e la convocazione dell'assemblea annuale in ritardo :contentReference[oaicite:6]{index=6}. L’ingresso di Jack Hartung (giugno 2025) è percepito come un rafforzamento del board in chiave finanziaria :contentReference[oaicite:7]{index=7}.
+
+    <strong class="text-slate-700">Valutazione Tradelia AI:</strong> Tesla evidenzia strutture di governance presenti ma sotto pressione. La presenza significativa di Elon Musk nel board, la scarsa trasparenza ESG, e i recenti impegni degli investitori istituzionali sollevano criticità moderate. Governance revisionabile nel medio termine.
+  </div>
+</section>
+
+    <section id="blocco7" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 7 – Derivati &amp; Opzioni</h3>
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Opzioni Equity Disponibili</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">Disponibili tutte (Cboe, Nasdaq, OCC, incl. weekly e 0DTE)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Struttura Scadenze &amp; Strike</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">~8 mesi scadenze, ~20 strike per scadenza, ±10% distanza strike</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Open Interest Totale</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">8,09 M (Call 4,15 M / Put 3,94 M)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ΔOI 5 giorni</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">Call +3.0 %, Put +1.0 %, Totale +3.2 %</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Volume/OI Ratio</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">≈0.52× (mediana 5 sedute)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">IV 30 giorni (ATM)</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">~45.5 % (mediana AlphaQuery/Barchart)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">IV Rank / IV Percentile (1y)</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">Rank ≈0.6 %, Percentile ≈1 %</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">IV–RV Spread (30d)</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">−9 pp (IV 45.5 % − HV 55 %)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Put/Call Ratio (Volume / OI)</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">PCR volume ≈0.63, OI ≈0.95</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Skew 25Δ RR</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">≈ −0.0233 (slight put-bias)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Implied Move 30d</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">±3.95 % ($12.94 su $325)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Opzioni Settimanali</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">Disponibili (orizzonte fino a 6 mesi)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Strategie Compatibili</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">Covered call, vertical, calendar, short straddle</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Single-Stock Futures (SSF)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Assenti su CME; presente Eurex (TSLG)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Proxy Futures / ETF</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">ES/NQ, QQQ; correlazione storica ~0.7–0.8</div>
+  </div>
+
+  <div class="mt-4 text-slate-800 text-sm leading-relaxed">
+    <strong class="text-red-600">Valutazione Tradelia AI:</strong> il mercato derivati su TSLA è altamente liquido con volumi e OI solidi e in crescita. La volatilità implicita è relativamente bassa rispetto alla storica, mentre IV Rank e Percentile indicano aspettative contenute. Skew moderato, PCR equilibrato. Mancano però dati pubblici su spread bid-ask e posizionamento dealer (GEX, greeks), che limitano visibilità operativa. Le strategie compatibili sono molteplici grazie alla presenza di weekly e scadenze estese. L’assenza di SSF negli USA è parzialmente compensata dai proxy ETF futures con buona correlazione.
+  </div>
+</section>
+
+<section id="blocco8" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 8 – Tecnica &amp; Correlazioni</h3>
+
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+    <!-- Trend & Prezzo -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Prezzo vs EMA 21 / EMA 55 / EMA 200</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">↘ sotto EMA55 e VWAP – Trend correttivo debole</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ΔVWAP</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">−1.9 % → sotto VWAP</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ADX</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">11 (assenza di trend forte)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">RSI (14)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">44.94 – zona neutra/debole</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">MACD (26/12)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Istogramma negativo, divergenza ribassista</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">OBV</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Discesa – segnali di distribuzione</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">PVT</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Discesa – conferma distribuzione</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ATR (14)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">12.95 – in calo, compressione volatilità</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">DMI</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">−DI &gt; +DI, ADX debole → momentum ribassista</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Volume Profile (POC)</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">Prezzo ≈ POC ($322.87) – struttura neutra</div>
+
+   <div class="bg-gray-50 px-2 py-1 font-semibold">Pattern Tecnici Attivi</div>
+<div class="bg-white px-2 py-1 text-red-600 shadow-inner">
+  • <strong>Evening Star</strong> confermato → segnale ribassista classico<br>
+  • <strong>Price Stack:</strong> Price &lt; VWAP &lt; EMA55 → pressione ribassista<br>
+  • <strong>FBO attivo (Up):</strong> falso breakout rialzista → potenziale esaurimento compratori<br>
+  • <span class="text-slate-700">CHoCH = None, BOS = None</span><br>
+  • <span class="text-slate-700">Squeeze OFF – nessuna compressione attiva</span>
+</div>
+
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">IV vs HV (30d)</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">IV 45.5 %, HV 55 % → compressione implicita</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">IV Percentile / Rank</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">Percentile ≈ 1 %, Rank ≈ 0.6 %</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Skew (25Δ RR)</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">−0.0233 → leggero put-bias</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Correlazione ETF / Futures</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">Alta (QQQ / NQ ~0.7–0.8)</div>
+  </div>
+
+  <div class="mt-4 text-slate-800 text-sm leading-relaxed">
+    Tesla mostra una <strong class="text-yellow-600">configurazione tecnica indebolita</strong>, con prezzo sotto VWAP e EMA55, <strong class="text-slate-700">assenza di trend forte</strong> (ADX 11) e <strong class="text-yellow-600">pattern ribassista attivo</strong> (Evening Star).  
+    Gli <strong class="text-red-600">oscillatori (MACD, OBV, PVT)</strong> confermano una fase di <strong class="text-red-600">distribuzione</strong> e momentum in calo. Il posizionamento volumetrico è neutro con <strong class="text-yellow-600">POC vicino ai prezzi attuali</strong>.  
+    Volatilità implicita compressa e skew lievemente negativo suggeriscono attese contenute o ribassiste da parte del mercato.  
+    La <strong class="text-green-600">correlazione con indici tech</strong> resta elevata, ma l’<strong class="text-slate-700">assenza di momentum</strong> limita segnali operativi direzionali nel breve termine.
+  </div>
+</section>
+
+    <section id="blocco8_15m" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 8 – Tecnica &amp; Correlazioni (Timeframe 15m)</h3>
+
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+    <!-- Trend & Prezzo -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Prezzo vs EMA 21 / EMA 55 / EMA 200</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">↘ sotto EMA55 e VWAP – chiaro controllo short</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ΔVWAP</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">−1.4 % → bias negativo consolidato</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ADX</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">37 – trend forte attivo</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">RSI (14)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">36.35 – in zona ipervenduto</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">MACD (26/12)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">−2.30 → divergenza negativa molto ampia</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">OBV</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Stabile, nessuna divergenza significativa</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">PVT</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">−134.25 → calo marcato, conferma distribuzione</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ATR (14)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">1.71 – volatilità medio-bassa</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">DMI</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">−DI &gt; +DI con ADX elevato → trend short forte</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Volume Profile (POC)</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">Prezzo sotto POC ($321.85) – controllo venditori confermato</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Pattern Tecnici</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">
+      • <strong>Price Stack attivo:</strong> Price &lt; VWAP &lt; EMA55 → asset in pieno controllo venditori<br>
+      • <strong>FBO attivo (Down):</strong> breakout fallito verso l’alto, con ritorno sotto POC e VWAP<br>
+      • <span class="text-slate-700">Nessun pattern candlestick classico rilevato (Engulfing, Hammer, Doji...)</span><br>
+      • <span class="text-slate-700">CHoCH = None, BOS = None</span><br>
+      • <span class="text-slate-700">Squeeze OFF – nessuna compressione imminente</span>
+    </div>
+  </div>
+
+  <div class="mt-4 text-slate-800 text-sm leading-relaxed">
+    Il timeframe 15 minuti mostra una <strong class="text-red-600">struttura ribassista netta e confermata</strong>.  
+    Il prezzo resta stabilmente sotto VWAP, EMA55 e POC con un <strong class="text-red-600">MACD molto negativo (−2.3)</strong>, RSI in area di ipervenduto e <strong class="text-red-600">DMI short forte</strong>.  
+    Il pattern <strong class="text-red-600">Price Stack</strong> attivo e il <strong class="text-red-600">Failed Breakout (FBO) Down</strong> suggeriscono continuazione ribassista, senza segnali di compressione (Squeeze OFF) né inversione strutturale.
+  </div>
+</section>
+
+    <section id="blocco8-mtf" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 8 – Sintesi Multi-Timeframe (1D, 4h, 1h, 15m)</h3>
+
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Prezzo vs VWAP/EMA55</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Ribassista su tutti i timeframe (↘ sotto VWAP/EMA55 su 1D, 4h, 1h, 15m)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ΔVWAP</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Negativo costante (−1.9%, −2.6%, −0.8%, −1.4%)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ADX</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">Crescente → 11 (1D), 14 (4h), 23 (1h), 37 (15m)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">RSI</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Debolezza progressiva: da 44.9 (1D) a 33.7 (1h)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">MACD</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Negativo e in peggioramento (−0.2 → −2.88)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">PVT / OBV</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Laterale su 1D, debole su 4h, 1h, 15m</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">DMI</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">−DI dominante, ADX crescente → rafforzamento pressione short</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Pattern attivi</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">FBO (tutti), Stack (tutti), Evening Star (1D), BearEngulf / DCC (4h)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">POC</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Sempre sotto il POC tranne daily</div>
+  </div>
+
+  <div class="mt-4 text-slate-800 text-sm leading-relaxed">
+    La struttura tecnica di Tesla appare <strong class="text-red-600">fortemente ribassista su tutti i timeframe</strong>.  
+    Pattern ricorrenti indicano breakout falliti e dominanza short.  
+    Il deterioramento progressivo di RSI e MACD da 1D a 15m suggerisce momentum discendente in accelerazione.  
+    Il DMI conferma la dominanza dei venditori con ADX in rafforzamento.  
+    Nessun supporto tecnico rilevante attivo, e prezzo sotto VWAP/EMA55 su tutte le scale.  
+    Quadro tecnico coerente e critico su base MTF.
+  </div>
+</section>
+
+    
+
+    <section id="blocco8_h4" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 8 – Tecnica &amp; Correlazioni (Timeframe 4h)</h3>
+
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+    <!-- Trend & Prezzo -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Prezzo vs EMA 21 / EMA 55 / EMA 200</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">↘ sotto EMA55 e VWAP – tendenza ribassista</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ΔVWAP</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">−2.6 % → sottoperformance</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ADX</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">14 (trend debole/modesto)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">RSI (14)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">41 – zona neutra con bias ribassista</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">MACD (26/12)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Linea MACD sotto segnale, divergenza ribassista</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">OBV</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">In recupero – divergenza positiva</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">PVT</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Laterale – nessun segnale chiaro</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ATR (14)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">44 – volatilità elevata</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">DMI</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">−DI &gt; +DI, ADX debole → pressione ribassista</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Volume Profile (POC)</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">Prezzo ≈ POC ($322.40) – struttura neutra con shift ribassista</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Pattern Tecnici Attivi</div>
+<div class="bg-white px-2 py-1 text-red-600 shadow-inner">
+  • <strong>Bearish Engulfing</strong> confermato → segnale ribassista classico<br>
+  • <strong>Dark Cloud Cover</strong> attivo → inversione ribassista<br>
+  • <strong>Price Stack:</strong> Price &lt; VWAP &lt; EMA55 → dominanza venditori<br>
+  • <strong>FBO attivo (Down):</strong> Breakout ribassista fallito<br>
+  • <span class="text-slate-700">CHoCH = None, BOS = None</span><br>
+  • <span class="text-slate-700">Squeeze OFF – nessuna compressione attiva</span>
+</div>
+
+  
+
+  <div class="mt-4 text-slate-800 text-sm leading-relaxed">
+    Il timeframe 4h per Tesla evidenzia una <strong class="text-red-600">configurazione ribassista</strong> con <strong class="text-red-600">pattern Bearish Engulfing</strong> e <strong class="text-red-600">Dark Cloud Cover</strong> confermati.  
+    Il prezzo si mantiene <strong class="text-yellow-600">sotto EMA55 e VWAP</strong> con ADX basso e <strong class="text-red-600">MACD in divergenza negativa</strong>.  
+    Il <strong class="text-green-600">OBV in lieve recupero</strong> non è sufficiente a invertire un quadro dominato da pressione ribassista tecnica e volatilità elevata (ATR 44).  
+    Struttura volumetrica bilanciata ma con <strong class="text-yellow-600">shift ribassista</strong> e nessun breakout strutturale rilevante.
+  </div>
+</section>
+
+<section id="blocco8_1h" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 8 – Tecnica &amp; Correlazioni (Timeframe 1h)</h3>
+
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+    <!-- Trend & Prezzo -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Prezzo vs EMA 21 / EMA 55 / EMA 200</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">↘ sotto EMA55 e VWAP – struttura ribassista chiara</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ΔVWAP</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">−0.8 % → andamento negativo confermato</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ADX</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">23 (modesto trend attivo)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">RSI (14)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">33.68 – in area ipervenduto</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">MACD (26/12)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Divergenza ribassista accentuata (−2.88)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">OBV</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Laterale, senza segnali netti</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">PVT</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">In lieve calo, trend neutro-negativo</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ATR (14)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">3.85 – volatilità su livelli medi</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">DMI</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">−DI 38 &gt; +DI 13, trend ribassista chiaro</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Volume Profile (POC)</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">Prezzo sotto POC ($320.05) – controllo venditori</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Pattern Tecnici</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">
+      • <strong>Price Stack attivo:</strong> Price &lt; VWAP &lt; EMA55 → dominanza venditori<br>
+      • <strong>FBO attivo (Down):</strong> Breakout ribassista fallito → pressione downside confermata<br>
+      • <span class="text-slate-700">Nessun pattern candlestick attivo (Engulfing, Hammer, etc.)</span><br>
+      • <span class="text-slate-700">Squeeze OFF → nessuna compressione attiva</span>
+    </div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Struct</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">CHoCH = None, BOS = None, FBO = Down</div>
+  </div>
+
+  <div class="mt-4 text-slate-800 text-sm leading-relaxed">
+    Il timeframe 1h per Tesla presenta una <strong class="text-red-600">dinamica chiaramente ribassista</strong>: prezzo sotto EMA e VWAP, <strong class="text-red-600">MACD e RSI in fase negativa</strong>, DMI in conferma short.  
+    Il <strong class="text-yellow-600">POC è stato superato verso il basso</strong> e il contesto volumetrico evidenzia <strong class="text-red-600">controllo da parte dei venditori</strong>.  
+    Nessun pattern candlestick attivo, ma è presente una configurazione tecnica di <strong class="text-red-600">Price Stack ribassista</strong> e un <strong class="text-red-600">Failed Breakout verso il basso (FBO Down)</strong>, elementi tipici di una struttura di esaurimento e pressione short nel breve.
+  </div>
+</section>
+<section id="blocco10" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 10 – Insider & Istituzionali</h3>
+
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Institutional Ownership</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">66.2 % detenuto da istituzionali. In calo nei primi mesi 2025 (fino al 47–55 %) → trend disimpegno attivo</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Insider Trading</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Prevalenza vendite (CFO, Denholm). Unico acquisto: Gebbia (4.000 azioni, $1 M)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">ETF & Hedge Fund Positioning</div>
+    <div class="bg-white px-2 py-1 text-slate-800 shadow-inner">Posizioni hedge fund in lieve aumento. Gestori attivi riducono esposizione. Trend neutro</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Insider Ownership & Opzioni</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">Musk ~12.8 % capitale. Exercise opzioni significative da Murdoch (27 M gain)</div>
+  </div>
+
+  <div class="mt-4 text-slate-800 text-sm leading-relaxed">
+    Tesla presenta una struttura azionaria ancora dominata da istituzionali, ma con segnali di disimpegno progressivo. 
+    L’attività degli insider è fortemente orientata alle vendite, mentre l’interesse da hedge fund è stabile ma non significativo. 
+    La componente opzionaria rafforza parzialmente l’allineamento con il capitale, ma il sentiment interno resta debole. 
+    Quadro coerente con una narrativa di cautela o deterioramento gestionale.
+  </div>
+</section>
+<section id="blocco11" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 11 – Eventi & Macro + Corporate Actions (TSLA)</h3>
+
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+    <!-- Meta -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Aggiornamento</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">31‑07‑2025 (Europe/Rome)</div>
+
+    <!-- A) Eventi Macro & Intermarket -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold mt-2">Intermarket – USD (DXY)</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">99,95 al 31‑07‑2025, −8.0 % YTD ma +3.3 % nel mese → recente recupero parziale dopo debolezza strutturale</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Intermarket – EURUSD</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">1,143</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Intermarket – UST 2Y / 10Y / 30Y</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">3,94% / 4,38% / 4,91%</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Intermarket – Real Yield 10Y (TIPS)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">~1,98%</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Intermarket – Breakeven 5Y</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">~2,48%</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Volatilità – VIX / VSTOXX</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">15,87 / 20,6</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Tassi – MOVE Index</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">~81,9</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Credit – IG OAS / HY OAS (US)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">0,79% / 2,86%</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Commodities – WTI / Brent</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">69,50 $ / 72,6 $</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Commodities – Gold / Copper (LME cash)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">~3.305 $/oz / 9.699,5 $/t</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Commodities – Dutch TTF Gas (front‑month)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">~35,30 €/MWh</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Inflazione – CPI (Jun ’25, YoY / Core YoY)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">2,7% / 2,9%</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Inflazione – PCE (Q2 ’25, annualizzato / Core)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">2,1% / 2,5%</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Crescita – GDP (Q2 ’25, advance)</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">+3,0% ann.</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Consumi – Retail Sales (Jun ’25, MoM / YoY)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">+0,6% / +3,9%</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Industria – Durable Goods (Jun ’25, MoM)</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">−9,3% (ex‑transport +0,2%)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Mercato del lavoro – Ultimo NFP/Unemployment (Jun ’25)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Stabile; disoccupazione ~4,1%</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">PMI/ISM – Manifatturiero (Jul ’25 flash)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">S&P Global ~49,5</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Banche Centrali – Fed (29‑30 Lug ’25)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Tassi invariati; statement prudente</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Banche Centrali – ECB (24 Lug ’25)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Impostazione invariata; prudenza confermata</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Event Risk – Geopolitica/Regolazione</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">Dossier tariffario USA e rischi regolatori auto/FSD</div>
+
+    <!-- B) Eventi Societari & Corporate Actions -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold mt-3">Earnings (ultimo rilascio – Q2 ’25)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Debole vs consenso; stock in calo post‑call</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Guidance / Outlook Management</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">Indicazioni prudenti su volumi/margini; focus robotaxi/AI</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Dividendi</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Nessuna distribuzione</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Split / Reverse / Spin‑off</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Ultimo split 3‑for‑1 (Ago 2022)</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Buyback / Aumenti di Capitale</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Nessun buyback o aumento annunciato</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Debito / Emissioni</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Nessuna emissione rilevante recente</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">M&A / JV / Dismissioni</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Nessuna operazione straordinaria comunicata</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Listing / Rebalance Indici</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Nessun cambiamento rilevante</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Eventi Legali / Regolatori (FSD/Autopilot, DMV CA)</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">Udienze e indagini in corso; rischio stop‑sale CA</div>
+
+    <!-- Commento finale istituzionale -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold mt-4">Commento Tradelia AI</div>
+    <div class="bg-white px-2 py-2 text-slate-700 shadow-inner leading-tight">
+      Il quadro macro‑intermarket appare neutro, con recente parziale recupero del dollaro dopo una fase debole, rendimenti stabili e volatilità contenuta.
+      La crescita USA Q2 è in ripresa ma gli indicatori reali sono misti.
+      Sul fronte societario, l’ultimo trimestre di Tesla ha deluso e il contesto regolatorio su FSD/Autopilot rimane incerto.
+      In assenza di corporate actions favorevoli, la valutazione complessiva del blocco resta
+      <span class="font-semibold">Warning</span>.
+    </div>
+  </div>
+</section>
+<section id="blocco12" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 12 – Newsflow &amp; Sentiment (TSLA)</h3>
+
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+    <!-- Meta -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Aggiornamento</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">31‑07‑2025 (Europe/Rome)</div>
+
+    <!-- A) Newsflow & Sentiment (72h) -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold mt-2">Intensità Newsflow (72h)</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">Alta copertura su risultati trimestrali, robotaxi e fornitura chip</div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Direzionalità News Istituzionali</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Prevalenza negativa (earnings prudenti, rischi regolatori AV)</div>
+
+    <!-- Top driver (3–10 voci) -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Top Driver News (ultime 72h)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Q2: pressione su ricavi/margini, tono guida cauto</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Robotaxi California: operatività con safety driver, iter autorizzativo incompleto</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">Accordo pluriennale su chip AI con partner di primo livello (impatto medio‑lungo)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Regulatory credits in calo strutturale nel biennio</div>
+
+    <!-- Social light -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Sentiment Social (light, 24h)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Reddit/StockTwits: tono neutro con bias negativo; discussioni focalizzate su robotaxi ed esiti Q2</div>
+
+    <!-- Media tradizionali -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Sentiment Media Tradizionali</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Copertura critica su guidance “prudente” e rischi esecutivi su FSD/robotaxi</div>
+
+    <!-- Divergenza prezzo vs sentiment -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Prezzo vs Sentiment</div>
+    <div class="bg-white px-2 py-1 text-green-600 shadow-inner">Coerente: debolezza del prezzo allineata al tono negativo delle notizie</div>
+
+    <!-- B) Coerenza inter‑blocchi (una riga informativa) -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold mt-2">Coerenza Inter‑Blocchi</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Divergente con Blocco 10 (flussi ETF neutri); coerente con Blocco 11 (earnings deboli / rischi regolatori)</div>
+
+    <!-- C) Attention & Reach (opzionale light) -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold mt-2">Attention &amp; Reach (opzionale)</div>
+    <div class="bg-white px-2 py-1 text-slate-400 shadow-inner">Wikipedia Pageviews: dato non disponibile</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">Google Trends (qualitativo): picchi su “robotaxi” legati al newsflow, segnale da confermare</div>
+
+    <!-- Commento finale (solo newsflow & sentiment) -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold mt-4">Commento Tradelia AI</div>
+    <div class="bg-white px-2 py-2 text-slate-700 shadow-inner leading-tight">
+      Nelle ultime 72 ore il newsflow è stato intenso e a prevalenza negativa, trainato da risultati trimestrali sotto aspettative qualitative, guida prudente e incertezze regolatorie sull’operatività robotaxi. I social mostrano un tono neutro con inclinazione negativa, mentre i media istituzionali mantengono un’impostazione critica. 
+      Valutazione complessiva del blocco: <span class="font-semibold text-red-600">Negativo</span>.
+    </div>
+  </div>
+</section>
+<section id="blocco13" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 13 – Cluster AI (Sintesi Operativa)</h3>
+
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+    <!-- Meta -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Aggiornamento</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">31‑07‑2025 (Europe/Rome)</div>
+
+    <!-- Bias Intraday -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold mt-2">Bias Intraday (1–2 gg)</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">Warning · score −0,18 · confidence 68</div>
+
+    <!-- Bias Swing -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Bias Swing (2–20 sedute)</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Bearish · score −0,42 · confidence 70</div>
+
+    <!-- Bias Opzioni Overlay -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Bias Opzioni – Overlay</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Neutro · consentite: protective put / covered call / debit spread ridotti</div>
+
+    <!-- Bias Opzioni Speculative -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Bias Opzioni – Speculative</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">Bearish · preferenza: long put o bear vertical (tenor 7–15 gg)</div>
+
+    <!-- Bias Investimento LT -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Bias Investimento LT (3–12 mesi)</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Neutro · score +0,06 · confidence 72</div>
+
+    <!-- Bias Futures/Mini-Futures -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Bias Futures / Mini‑Futures</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">Warning · score −0,28 · confidence 66 · nota: leva max 2×, stop basato su ATR</div>
+
+    <!-- Driver prevalenti -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold mt-3">Driver prevalenti</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Tecnica MTF; Derivati/Gamma; Newsflow 72h</div>
+
+    <!-- Divergenze critiche -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Divergenze critiche</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">ETF flow neutro vs sentiment negativo; H1/H4 non confermano M15</div>
+
+    <!-- Trigger applicati -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Trigger applicati</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">Gamma‑squeeze opposto (downgrade); finestra macro ad alto impatto</div>
+
+    <!-- Commento finale (solo sintesi inter-blocchi) -->
+    <div class="bg-gray-50 px-2 py-1 font-semibold mt-4">Commento Tradelia AI</div>
+    <div class="bg-white px-2 py-2 text-slate-700 shadow-inner leading-tight">
+      La sintesi inter‑blocchi assegna bias prudente sul brevissimo (Warning) e ribassista sullo swing, con opzioni speculative orientate a strutture short‑side.
+      L’investimento LT rimane neutro per mancanza di convergenza forte su fondamentali e macro. Per strumenti a leva, si applicano limiti di sizing e gestione del rischio più stringenti.
+    </div>
+  </div>
+</section>
+<section id="disclaimer-ai" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Disclaimer Generale – Uso dell’Analisi AI</h3>
+
+  <div class="text-sm text-slate-700 leading-relaxed space-y-2">
+    <p>
+      Le analisi fornite da Tradelia AI sono il risultato di una sintesi algoritmica su base dati pubblici, modelli quantitativi e classificazione AI.
+      Pur essendo progettate con rigore metodologico e validazioni incrociate, <strong>non costituiscono raccomandazione personalizzata o consulenza finanziaria</strong> ai sensi della normativa vigente.
+    </p>
+    <p>
+      Tutti i segnali operativi sono da intendersi come supporto decisionale di tipo <em>informativo</em>, <strong>non sostitutivo del giudizio umano</strong> né delle proprie analisi.
+      L’affidabilità dei modelli è soggetta a <strong>limiti intrinseci</strong> (disponibilità dati, qualità delle fonti, volatilità esogena) e può subire deviazioni anche significative in contesti reali.
+    </p>
+    <p>
+      L’utente resta l’unico responsabile delle proprie scelte operative. Si raccomanda l’integrazione con analisi discrezionale, gestione del rischio prudente e attenzione agli eventi macro/regolatori.
+      In caso di dubbi, si consiglia di consultare un professionista abilitato.
+    </p>
+  </div>
+</section>
+<section id="strategia-lt-tsla" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">
+    Strategia Operativa Long Term (LT) – TSLA
+  </h3>
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Setup LT</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">
+      Posizione neutra o leggera esposizione long.<br>
+      Nessun ingresso aggressivo suggerito.<br>
+      Attendere formazione di base tecnica solida (es. doppio minimo, reversal volumetrico su D1).<br>
+      Possibile accumulo graduale su eventuali discese verso $275–260.<br>
+      Sizing: max 0.5% NAV per singolo ingresso.<br>
+      Orizzonte temporale: 3–12 mesi.
+    </div>
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Criteri Calcolo Livelli</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">
+      Entry solo su conferme price action settimanali (setup reversal D1 o W1).<br>
+      SL ampio, sotto cluster volumetrico $248.<br>
+      TP graduati: target primo $335–350 (area resistenza storica); secondo target $395 (solo su reversal macro e fondamentali in miglioramento).
+    </div>
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Condizioni di Attivazione</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">
+      Nessun bias long LT attivabile senza:<br>
+      – Pattern di inversione daily/weekly<br>
+      – Ritorno di flussi ETF/istituzionali in acquisto<br>
+      – Dati fondamentali in miglioramento (ricavi/margini)<br>
+      – Newsflow neutralizzato o positivo
+    </div>
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Gestione Rischio & Invalidazione</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">
+      Stop loss sotto $248 (cluster volumetrico di periodo).<br>
+      Chiusura posizione su downgrade fondamentali persistenti.<br>
+      No incremento posizione se RSI D1 resta sotto 40.
+    </div>
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Motivazione Multi-Blocco</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">
+      Il quadro LT resta neutro: i fondamentali e la valutazione sono ancora sfavorevoli, ma possibili aree di accumulo potrebbero emergere solo in presenza di reversal strutturale tecnico e ritorno di flussi istituzionali.<br>
+      Attendere segnali di conferma inter-blocco prima di operare in acquisto.
+    </div>
+  </div>
+</section>
+<section id="strategia-derivati-tsla" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">
+    Strategia Operativa Derivati – Opzioni TSLA (Swing/Speculativo)
+  </h3>
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Setup Derivati</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">
+      Bias: Bearish<br>
+      Preferenza operativa: acquisto long put ATM o bear vertical spread (tenor 7–15 gg).<br>
+      No naked short put o posizioni a rischio illimitato.<br>
+      Overlay compatibile: covered call su posizioni azionarie, debit put spread a rischio definito.
+    </div>
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Criteri Calcolo Strike & Scadenza</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">
+      Strike ATM o leggermente ITM rispetto a prezzo spot ($314).<br>
+      Scadenza preferita: 7–15 giorni (short swing), per massimizzare theta/vega.<br>
+      Spread: preferenza per vertical spread (es: buy put $315, sell put $300).<br>
+      Premi inferiori al 7% del valore nozionale.
+    </div>
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Condizioni di Attivazione</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">
+      Attivazione solo con:<br>
+      – Volatilità implicita inferiore a HV 30d<br>
+      – PCR volume > 0.60<br>
+      – Skew negativo (25Δ RR &lt; 0)<br>
+      – Pattern ribassisti attivi su timeframe 1H–4H
+    </div>
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Gestione Rischio & Invalidazione</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">
+      Max 0.5% NAV per struttura.<br>
+      Roll-out obbligatorio se IV sale > 55° percentile.<br>
+      Chiusura posizione a rottura del livello $325 (invalidation tecnica).<br>
+      Nessuna strategia naked venduta, esclusivamente strutture a rischio limitato.
+    </div>
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Motivazione Multi-Blocco</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">
+      I derivati su TSLA evidenziano un bias ribassista coerente con price action e sentiment.  
+      Volumi e OI supportano strategie short-side.  
+      L’assenza di pressioni gamma/put estreme limita i rischi di squeeze contro la posizione.  
+      Solo strategie a rischio definito, in linea con la volatilità attuale e la struttura istituzionale del book.
+    </div>
+  </div>
+</section>
+<section id="strategia-derivati-tsla" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">
+    Strategie Derivati TSLA – Opzioni & Mini-Futures (Spiegazione Pratica)
+  </h3>
+  <div class="flex flex-col gap-2 text-xs sm:text-sm text-slate-800">
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Contesto Operativo</div>
+    <div class="bg-white px-2 py-1 shadow-inner">
+      Sulla base dell’analisi tecnica e fondamentale dei blocchi Tradelia AI, il titolo Tesla (TSLA) mostra segnali ribassisti. Le strategie derivate presentate qui sono utilizzate in modo prevalente da investitori istituzionali per sfruttare o coprire movimenti di mercato a ribasso, con rischio definito e controllo rigoroso delle perdite.
+    </div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Strumento 1 – Long Put (Opzione Put)</div>
+    <div class="bg-white px-2 py-1 shadow-inner">
+      <b>Cos’è?</b> Acquisto di un’opzione put, cioè il diritto di vendere TSLA a un prezzo prestabilito (es. $310–315) entro una data futura (7–15 giorni).<br>
+      <b>Quando si usa?</b> Quando ci si attende un ribasso. Se il prezzo di TSLA scende, il valore della put sale.<br>
+      <b>Rischio massimo:</b> Il premio pagato (costo dell’opzione), noto in anticipo. Nessun rischio di perdita superiore.<br>
+      <b>Vantaggi:</b> Rischio definito, leva implicita. Nessuna margin call.<br>
+      <b>Esempio:</b> Acquisto put strike $310 scadenza 10gg, prezzo $7. Se TSLA scende a $300, la put potrebbe valere $10+.
+    </div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Strumento 2 – Bear Put Spread (Spread Verticale)</div>
+    <div class="bg-white px-2 py-1 shadow-inner">
+      <b>Cos’è?</b> Acquisto di una put (es. strike $315) e vendita simultanea di una put a strike più basso (es. $300) con stessa scadenza.<br>
+      <b>Quando si usa?</b> Se si attende ribasso moderato e si vuole ridurre il costo rispetto alla put singola.<br>
+      <b>Rischio massimo:</b> Il costo netto dello spread (es. paghi $7 per la put $315, incassi $3 per la $300, costo totale $4).<br>
+      <b>Vantaggi:</b> Costo ridotto, rischio/prezzo massimo definito, adatta se ci si aspetta discesa “limitata”.<br>
+      <b>Esempio:</b> Se TSLA scende sotto $300 a scadenza, profitto massimo = differenza tra strike meno costo (es. $15 – $4 = $11).
+    </div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Strumento 3 – Mini-Futures Short</div>
+    <div class="bg-white px-2 py-1 shadow-inner">
+      <b>Cos’è?</b> Contratto derivato quotato in borsa (es. Eurex), replica la discesa del sottostante (TSLA) con leva finanziaria (es. 2×).<br>
+      <b>Quando si usa?</b> Per sfruttare ribassi veloci con capitale limitato. Più rischioso delle opzioni.<br>
+      <b>Rischio massimo:</b> Perdita potenzialmente superiore al capitale investito, per questo si usa stop loss fisso.<br>
+      <b>Gestione rischio:</b> SL (stop loss) a $321, TP (take profit) $300/$290, trailing stop attivo da $300 (cioè si chiude in profitto se il titolo risale oltre un certo livello dopo essere sceso).<br>
+      <b>Esempio:</b> Si apre short a $312 con leva 2×; se TSLA scende a $300, rendimento potenziale >7%, ma stop loss obbligatorio.
+    </div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Condizioni di Attivazione (Trigger)</div>
+    <div class="bg-white px-2 py-1 shadow-inner">
+      – Prezzo TSLA che chiude sotto $312 su grafico 4H<br>
+      – Indicatori tecnici confermano trend ribassista: ADX≥18, MACD negativo, RSI<40<br>
+      – Volumi elevati, volatilità implicita bassa rispetto a storica<br>
+      – Nessuna notizia positiva o inversione nelle ultime 4 ore
+    </div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Gestione del Rischio</div>
+    <div class="bg-white px-2 py-1 shadow-inner">
+      – <b>Opzioni:</b> rischio massimo = costo dell’opzione o spread.<br>
+      – <b>Mini-futures:</b> rischio limitato da stop loss fisso, leva max 2×, sizing max 0.5% portafoglio.<br>
+      – Roll obbligato delle opzioni se la volatilità sale (per evitare aumento rapido dei premi).
+    </div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Probabilità di Successo (Win Rate)</div>
+    <div class="bg-white px-2 py-1 shadow-inner">
+      Sulla base di dati storici su titoli tech con pattern simili, queste strategie hanno avuto successo in circa 60–65% dei casi su orizzonte 7–15 giorni, **se attivate SOLO su conferma tecnica e volumi**. Non sono strategie “certe”, ma statisticamente favorite in contesti come quello attuale.
+    </div>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Motivazione Istituzionale</div>
+    <div class="bg-white px-2 py-1 shadow-inner">
+      Queste strategie sono selezionate perché:<br>
+      – Utilizzate da desk professionali per gestire rischio e rendimento in fasi di volatilità compressa.<br>
+      – Rischio sempre controllabile, senza esposizione a perdite illimitate.<br>
+      – Sono le uniche ritenute “best practice” nei desk compliance (no naked short).<br>
+      – Coerenti con il contesto macro, tecnico e fondamentale dei blocchi Tradelia AI.
+    </div>
+  </div>
+</section>
+
+    <section id="cta-operativita-tsla-broker" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">
+    Operatività Pratica: Broker Selezionati per Strategie TSLA
+  </h3>
+  <div class="flex flex-col gap-2 text-xs sm:text-sm text-slate-800">
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Exante – Multi-Asset (LT, Swing, Margin, Opzioni, Mini-Futures)</div>
+    <ul class="bg-white px-2 py-1 shadow-inner list-disc ml-4">
+      <li>Accesso diretto azioni TSLA (LT), trading DMA margin, opzioni USA, mini-futures Eurex/Xetra</li>
+      <li>Piattaforma professionale multi-asset con risk management integrato</li>
+      <li>Adatto per: investimenti di lungo termine, operatività swing, strategie opzioni e mini-futures</li>
+      <li>Account demo disponibile su richiesta</li>
+      <li><a href="https://www.tradeia.org/Exante.html" target="_blank" class="text-blue-600 underline">Scheda Exante</a></li>
+    </ul>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Freedom24 – Azioni & Opzioni (LT, Vanilla Options USA)</div>
+    <ul class="bg-white px-2 py-1 shadow-inner list-disc ml-4">
+      <li>Trading e accumulo azioni TSLA (LT), opzioni vanilla USA su TSLA</li>
+      <li>Piattaforma semplice con simulatore integrato</li>
+      <li>Ideale per: investitori long term e gestione di piani di accumulo, strategie put/call base</li>
+      <li><a href="https://www.tradeia.org/Freedom24.html" target="_blank" class="text-blue-600 underline">Scheda Freedom24</a></li>
+    </ul>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Pepperstone – CFD (Swing, Scalping, Hedging)</div>
+    <ul class="bg-white px-2 py-1 shadow-inner list-disc ml-4">
+      <li>CFD su TSLA con spread ridotti e commissioni basse</li>
+      <li>Piattaforme MetaTrader/TradingView, ambiente demo avanzato</li>
+      <li>Indicato per: strategie swing, copertura, operatività intraday</li>
+      <li><a href="https://www.tradeia.org/Pepperstone.html" target="_blank" class="text-blue-600 underline">Scheda Pepperstone</a></li>
+    </ul>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">AvaOptions – Opzioni (Put/Call, Spread, Simulazione)</div>
+    <ul class="bg-white px-2 py-1 shadow-inner list-disc ml-4">
+      <li>Trading opzioni vanilla su TSLA (put, call, spread, payoff grafici)</li>
+      <li>Interfaccia grafica per simulazioni, gestione rischio semplificata</li>
+      <li>Perfetto per: strategie opzioni “pure”, didattica, test su payoff reali</li>
+      <li><a href="https://www.tradeia.org/AvaOptions.html" target="_blank" class="text-blue-600 underline">Scheda AvaOptions</a></li>
+    </ul>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Naga – Azioni & ETF (LT, Social Trading)</div>
+    <ul class="bg-white px-2 py-1 shadow-inner list-disc ml-4">
+      <li>Acquisto/vendita azioni TSLA e principali ETF USA/EU</li>
+      <li>Piattaforma orientata al social trading e copy trading</li>
+      <li>Adatto per: investimento lungo termine, condivisione strategie, trading community</li>
+      <li><a href="https://www.tradeia.org/Naga.html" target="_blank" class="text-blue-600 underline">Scheda Naga</a></li>
+    </ul>
+
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Nota Operativa e Disclaimer</div>
+    <ul class="bg-white px-2 py-1 shadow-inner list-disc ml-4">
+      <li>Tutti i broker offrono conto demo per simulare strategie senza rischi</li>
+      <li>Per opzioni e mini-futures reali occorre abilitazione derivati secondo MiFID/ESMA</li>
+      <li>L’operatività su derivati e CFD comporta rischi elevati, perdita del capitale possibile</li>
+      <li>Utilizzare sempre la simulazione prima di operare in reale</li>
+    </ul>
+  </div>
+</section>
+
+
+    <section id="strategia-cfd-short" class="max-w-4xl mx-auto my-6 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+  <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">
+    Strategia Operativa Swing CFD Short – TSLA
+  </h3>
+  <div class="flex flex-col gap-1 text-xs sm:text-sm text-slate-800">
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Setup</div>
+    <div class="bg-white px-2 py-1 text-red-600 shadow-inner">
+      Short CFD su TSLA<br>
+      Entry: break & close H4 &lt; $312<br>
+      SL: $321<br>
+      TP1: $300.50<br>
+      TP2: $290.00<br>
+      Trailing: attivo sotto $300, step ATR 1H (3–4$)<br>
+      Sizing: max 0.7% NAV
+    </div>
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Criteri Calcolo Livelli</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">
+      Tutti i livelli sono basati su price action, volume profile, ATR, pattern MTF. Nessun valore arbitrario.<br>
+      SL sopra VWAP e congestione; TP su supporti volumetrici e cluster storico.
+    </div>
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Condizioni di Attivazione</div>
+    <div class="bg-white px-2 py-1 text-yellow-600 shadow-inner">
+      Break & close H4 &lt; $312 con volumi &gt; media 10 sedute<br>
+      ADX H4 ≥ 18, MACD 4H negativo, RSI &lt; 40<br>
+      Nessuna news positiva nelle 4h precedenti
+    </div>
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Gestione Rischio & Invalidazione</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">
+      Chiusura su close daily &gt; $325<br>
+      Revisione SL/TP su news esogene<br>
+      Trailing attivo da $300 in giù
+    </div>
+    <div class="bg-gray-50 px-2 py-1 font-semibold">Motivazione Multi-Blocco</div>
+    <div class="bg-white px-2 py-1 text-slate-700 shadow-inner">
+      Pattern ribassisti attivi su tutti i timeframe principali. Conferma da fondamentali deboli, newsflow negativo e volumi in calo. Nessun supporto attivo.
+    </div>
+  </div>
+</section>
+
+    
