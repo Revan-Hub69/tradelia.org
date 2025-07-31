@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tradelia AI – Report Azionario Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: #f8fafc; }
+    .accordion-section + .accordion-section { margin-top: 1rem; }
+    /* Accordion transitions */
+    [x-cloak] { display: none !important; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+  <div class="max-w-3xl mx-auto py-8 px-2 sm:px-6">
+    <h1 class="text-2xl font-bold text-primary mb-2">Report Azionario – Demo Tradelia AI</h1>
+    <p class="text-sm mb-6 text-slate-600">Esempio di struttura automatizzabile per report finanziari professionali, con blocchi a fisarmonica mobile-first.</p>
+
+    <!-- Accordion Blocco 1 -->
+    <section x-data="{ open: true }" class="accordion-section rounded-xl border border-slate-200 shadow-inner bg-white">
+      <button @click="open = !open" class="w-full flex items-center justify-between px-5 py-3 bg-slate-100 rounded-t-xl font-semibold text-slate-800 focus:outline-none transition">
+        <span>Blocco 1 – Identificativi &amp; Contesto</span>
+        <svg :class="{'rotate-90': open}" class="w-5 h-5 transition-transform" viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2"/></svg>
+      </button>
+      <div x-show="open" x-transition class="p-4 space-y-2" x-cloak>
+        <div class="flex justify-between border-b pb-1">
+          <span class="font-medium">Ticker</span>
+          <span class="text-slate-800">TSLA</span>
+        </div>
+        <div class="flex justify-between border-b pb-1">
+          <span class="font-medium">ISIN</span>
+          <span class="text-slate-800">US88160R1014</span>
+        </div>
+        <div class="flex justify-between border-b pb-1">
+          <span class="font-medium">Exchange</span>
+          <span class="text-slate-800">NASDAQ</span>
+        </div>
+        <div class="flex justify-between border-b pb-1">
+          <span class="font-medium">Settore</span>
+          <span class="text-slate-800">Auto Elettriche</span>
+        </div>
+        <div class="flex justify-between border-b pb-1">
+          <span class="font-medium">Market Cap</span>
+          <span class="text-green-600 font-semibold">900 mld $</span>
+        </div>
+        <div class="flex justify-between border-b pb-1">
+          <span class="font-medium">Prezzo attuale</span>
+          <span class="text-green-600 font-semibold">240,20 $</span>
+        </div>
+        <div class="flex justify-between border-b pb-1">
+          <span class="font-medium">% Variazione 24h</span>
+          <span class="text-red-600 font-semibold">-2,15 %</span>
+        </div>
+        <div class="flex justify-between border-b pb-1">
+          <span class="font-medium">Prezzo Target Analisti</span>
+          <span class="text-yellow-600 font-semibold">260,00 $</span>
+        </div>
+        <div class="flex justify-between border-b pb-1">
+          <span class="font-medium">Rating Analisti</span>
+          <span class="text-slate-700 font-semibold">Hold</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="font-medium">Min/Max 52 settimane</span>
+          <span class="text-slate-800">180 $ / 300 $</span>
+        </div>
+        <div class="mt-4 text-xs text-slate-600">
+          <strong>Commento Tradelia AI:</strong> Dati aggiornati, capitalizzazione in forte crescita, ma recente correzione di breve periodo. Target e rating analisti da monitorare.
+        </div>
+      </div>
+    </section>
+
+    <!-- Accordion Blocco 2 -->
+    <section x-data="{ open: false }" class="accordion-section rounded-xl border border-slate-200 shadow-inner bg-white">
+      <button @click="open = !open" class="w-full flex items-center justify-between px-5 py-3 bg-slate-100 rounded-t-xl font-semibold text-slate-800 focus:outline-none transition">
+        <span>Blocco 2 – Multipli &amp; Valutazione Intrinseca</span>
+        <svg :class="{'rotate-90': open}" class="w-5 h-5 transition-transform" viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2"/></svg>
+      </button>
+      <div x-show="open" x-transition class="p-4 space-y-2" x-cloak>
+        <div class="flex justify-between border-b pb-1">
+          <span class="font-medium">P/E (TTM)</span>
+          <span class="text-yellow-600 font-semibold">55,3</span>
+        </div>
+        <div class="flex justify-between border-b pb-1">
+          <span class="font-medium">EV/EBITDA</span>
+          <span class="text-red-600 font-semibold">38,2</span>
+        </div>
+        <div class="flex justify-between border-b pb-1">
+          <span class="font-medium">P/BV</span>
+          <span class="text-green-600 font-semibold">10,1</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="font-medium">DCF Fair Value</span>
+          <span class="text-slate-700 font-semibold">230,00 $</span>
+        </div>
+        <div class="mt-4 text-xs text-slate-600">
+          <strong>Commento Tradelia AI:</strong> I multipli sono sopra la media di settore, riflettono forti aspettative future. Attenzione alle revisioni sugli utili.
+        </div>
+      </div>
+    </section>
+
+    <!-- Altri blocchi (aggiungi quanti vuoi con lo stesso schema) -->
+    <!-- ... -->
+
+    <!-- CTA footer -->
+    <div class="mt-10 py-5 border-t text-center text-xs text-slate-400">
+      Report demo generato secondo standard Tradelia AI.<br>
+      <a href="https://tradelia.org" class="underline text-primary hover:text-blue-800">www.tradelia.org</a>
+    </div>
+  </div>
+</body>
+</html>
