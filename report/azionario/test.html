@@ -4,163 +4,144 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TRADELIA • AI — Report Azionario</title>
-
-  <!-- Tailwind CSS v3 -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Tailwind Config -->
-  <script>
-    tailwind.config = {
-      theme: {
-        fontFamily: {
-          sans: ['Inter', 'sans-serif'],
-        },
-        extend: {
-          colors: {
-            primary: '#0f172a',
-          },
-        },
-      },
-    };
-  </script>
-
-  <!-- Font Inter + privacy -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" referrerpolicy="no-referrer" />
-
-  <!-- Custom scrollbar style -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
-    html { scroll-behavior: smooth; }
-    body { background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png'); background-size: 280px; color: #0f172a; }
-
-    ::-webkit-scrollbar { height: 9px; width: 10px; }
-    ::-webkit-scrollbar-thumb { background: rgba(80,160,200,0.4); border-radius: 100vh; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(80,160,200,0.6); }
-    ::-webkit-scrollbar-track { background: linear-gradient(to right, #f1f5f9, #e2e8f0); border-radius: 100vh; }
-
-    .tab-active { background: #f8fafc; border-bottom: 2.5px solid #2563eb; color: #2563eb !important; }
-    .tab-inactive { background: #fff; border-bottom: 2.5px solid transparent; }
-    .tab-label { min-width: 120px; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9;
+    }
+    .tab-active {
+      background: #2563eb;
+      color: #fff;
+      font-weight: 600;
+      transition: background 0.18s, color 0.18s;
+    }
+    .tab-btn {
+      transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s;
+    }
+    .tab-btn:hover:not(.tab-active), .tab-btn:focus:not(.tab-active) {
+      background: #e0e7ef;
+      color: #2563eb;
+      box-shadow: 0 2px 8px rgba(0,30,100,0.04);
+      transform: translateY(-1px) scale(1.03);
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(18px);
+      animation: fadeInBlock 0.5s cubic-bezier(.4,0,.2,1) forwards;
+    }
+    @keyframes fadeInBlock {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .card-hover {
+      transition: box-shadow 0.18s, transform 0.18s;
+    }
+    .card-hover:hover, .card-hover:focus {
+      box-shadow: 0 4px 16px rgba(36, 57, 101, 0.10), 0 1.5px 3px rgba(80,160,200,.07);
+      transform: translateY(-2px) scale(1.01);
+      z-index: 2;
+    }
   </style>
 </head>
-<body class="font-sans">
-  <!-- Header istituzionale -->
-  <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-3">
-    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
-      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
+<body class="min-h-screen">
+  <!-- Header premium -->
+  <header class="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm px-4 py-2 flex justify-between items-center">
+    <a href="https://tradelia.org/index.html" class="text-xl font-extrabold tracking-tight text-sky-900">
+      TRADELIA<span class="text-blue-600 animate-pulse">•AI</span>
     </a>
     <a href="https://tradelia.org/archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
   </header>
 
-  <!-- TAB BAR: blocchi dinamici -->
-  <nav id="tab-bar" class="sticky top-[60px] z-40 w-full overflow-x-auto bg-white border-b border-gray-200">
-    <div class="flex flex-row gap-1 sm:gap-2 px-2 py-2 min-w-[700px]">
-      <button class="tab-label tab-active px-4 py-1 rounded-t-md font-semibold text-sm transition focus:outline-none" onclick="openTab(0)">Blocco 1 – Identificativi</button>
-      <button class="tab-label tab-inactive px-4 py-1 rounded-t-md font-semibold text-sm transition focus:outline-none" onclick="openTab(1)">Blocco 2 – Multipli & Valutazione</button>
-      <button class="tab-label tab-inactive px-4 py-1 rounded-t-md font-semibold text-sm transition focus:outline-none" onclick="openTab(2)">Blocco 3 – Fondamentali</button>
-      <!-- puoi aggiungere altre tab qui -->
-    </div>
+  <!-- Tabs -->
+  <nav class="sticky top-[56px] z-30 bg-white shadow-inner border-b border-slate-100 flex overflow-x-auto no-scrollbar">
+    <button class="tab-btn tab-active px-4 py-2 mr-1 rounded-t-lg" onclick="showBlock('blocco1')">Profilo</button>
+    <button class="tab-btn px-4 py-2 mr-1 rounded-t-lg" onclick="showBlock('blocco2')">Portafoglio</button>
+    <button class="tab-btn px-4 py-2 mr-1 rounded-t-lg" onclick="showBlock('blocco3')">Scenario</button>
+    <!-- altre tab -->
   </nav>
 
-  <!-- CONTENUTO BLOCCHI -->
-  <main class="max-w-4xl mx-auto">
-    <!-- BLOCCO 1 -->
-    <section id="tab-content-0" class="tab-content bg-white border border-gray-200 rounded-xl shadow-inner my-6 px-3 sm:px-6 py-6 transition-all">
-      <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 1 – Identificativi &amp; Contesto</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm text-slate-800">
-        <div class="bg-gray-50 p-3 rounded-lg border">
-          <div class="font-semibold text-slate-700">Ticker</div>
-          <div class="font-mono">TSLA</div>
+  <main class="max-w-4xl mx-auto px-3 sm:px-6 mt-6">
+
+    <!-- Blocco 1 (Profilo) -->
+    <section id="blocco1" class="fade-in">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div class="card-hover bg-white border border-slate-200 rounded-xl p-5 shadow-inner">
+          <h3 class="font-semibold text-slate-700 mb-2">Età e situazione</h3>
+          <ul class="text-sm space-y-1">
+            <li>Età: <span class="text-slate-800 font-medium">30+</span></li>
+            <li>Famiglia: <span class="text-slate-800 font-medium">Single, senza figli</span></li>
+            <li>Capitale: <span class="text-green-600 font-semibold">60.000 €</span></li>
+            <li>Orizzonte: <span class="text-slate-800 font-medium">Lungo termine</span></li>
+          </ul>
         </div>
-        <div class="bg-gray-50 p-3 rounded-lg border">
-          <div class="font-semibold text-slate-700">ISIN</div>
-          <div class="font-mono">US88160R1014</div>
-        </div>
-        <div class="bg-gray-50 p-3 rounded-lg border">
-          <div class="font-semibold text-slate-700">Exchange</div>
-          <div>NASDAQ</div>
-        </div>
-        <div class="bg-gray-50 p-3 rounded-lg border">
-          <div class="font-semibold text-slate-700">Settore</div>
-          <div>Auto &amp; EV</div>
-        </div>
-        <div class="bg-gray-50 p-3 rounded-lg border col-span-2">
-          <div class="font-semibold text-slate-700">Market Cap</div>
-          <div>$900B <span class="text-green-600 font-semibold">(Top 5 NASDAQ)</span></div>
-        </div>
-        <div class="bg-gray-50 p-3 rounded-lg border col-span-2">
-          <div class="font-semibold text-slate-700">Target Analisti 12M</div>
-          <div>$320 (+21% upside, consenso Reuters/Bloomberg)</div>
+        <div class="card-hover bg-white border border-slate-200 rounded-xl p-5 shadow-inner">
+          <h3 class="font-semibold text-slate-700 mb-2">Esperienza & Obiettivi</h3>
+          <ul class="text-sm space-y-1">
+            <li>Esperienza: <span class="text-yellow-500 font-semibold">Bassa</span></li>
+            <li>Obiettivo: <span class="text-green-600 font-semibold">Crescita efficiente</span></li>
+            <li>Tolleranza rischio: <span class="text-yellow-500 font-semibold">Moderata</span></li>
+          </ul>
         </div>
       </div>
     </section>
-    <!-- BLOCCO 2 -->
-    <section id="tab-content-1" class="tab-content hidden bg-white border border-gray-200 rounded-xl shadow-inner my-6 px-3 sm:px-6 py-6 transition-all">
-      <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 2 – Multipli &amp; Valutazione</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm text-slate-800">
-        <div class="bg-gray-50 p-3 rounded-lg border">
-          <div class="font-semibold text-slate-700">P/E (TTM)</div>
-          <div class="font-mono">74x</div>
+
+    <!-- Blocco 2 (Portafoglio) -->
+    <section id="blocco2" class="fade-in hidden">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div class="card-hover bg-white border border-slate-200 rounded-xl p-5 shadow-inner">
+          <h3 class="font-semibold text-slate-700 mb-2">Portafoglio Difensivo</h3>
+          <ul class="text-sm space-y-1">
+            <li>Cash & T-bill: <span class="text-slate-800 font-medium">25%</span></li>
+            <li>Bond IG: <span class="text-slate-800 font-medium">35%</span></li>
+            <li>Oro: <span class="text-slate-800 font-medium">10%</span></li>
+          </ul>
         </div>
-        <div class="bg-gray-50 p-3 rounded-lg border">
-          <div class="font-semibold text-slate-700">P/B</div>
-          <div class="font-mono">15x</div>
-        </div>
-        <div class="bg-gray-50 p-3 rounded-lg border">
-          <div class="font-semibold text-slate-700">EV/EBITDA</div>
-          <div class="font-mono">38x</div>
-        </div>
-        <div class="bg-gray-50 p-3 rounded-lg border">
-          <div class="font-semibold text-slate-700">FCF Yield</div>
-          <div class="font-mono">1.1%</div>
-        </div>
-        <div class="bg-gray-50 p-3 rounded-lg border col-span-2">
-          <div class="font-semibold text-slate-700">Valutazione</div>
-          <div class="text-yellow-600 font-semibold">Warning: multipli molto tirati vs peers tech/auto</div>
+        <div class="card-hover bg-white border border-slate-200 rounded-xl p-5 shadow-inner">
+          <h3 class="font-semibold text-slate-700 mb-2">Bilanciato Prudente</h3>
+          <ul class="text-sm space-y-1">
+            <li>Azionario World: <span class="text-slate-800 font-medium">30%</span></li>
+            <li>Bond: <span class="text-slate-800 font-medium">30%</span></li>
+            <li>Commodities: <span class="text-slate-800 font-medium">10%</span></li>
+          </ul>
         </div>
       </div>
     </section>
-    <!-- BLOCCO 3 -->
-    <section id="tab-content-2" class="tab-content hidden bg-white border border-gray-200 rounded-xl shadow-inner my-6 px-3 sm:px-6 py-6 transition-all">
-      <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 3 – Fondamentali Aziendali</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm text-slate-800">
-        <div class="bg-gray-50 p-3 rounded-lg border">
-          <div class="font-semibold text-slate-700">Ricavi TTM</div>
-          <div class="font-mono">$96B</div>
-        </div>
-        <div class="bg-gray-50 p-3 rounded-lg border">
-          <div class="font-semibold text-slate-700">Utile Netto TTM</div>
-          <div class="font-mono">$12.4B</div>
-        </div>
-        <div class="bg-gray-50 p-3 rounded-lg border">
-          <div class="font-semibold text-slate-700">Crescita YoY</div>
-          <div class="font-mono">+23%</div>
-        </div>
-        <div class="bg-gray-50 p-3 rounded-lg border">
-          <div class="font-semibold text-slate-700">Margine Operativo</div>
-          <div class="font-mono">10.3%</div>
-        </div>
-        <div class="bg-gray-50 p-3 rounded-lg border col-span-2">
-          <div class="font-semibold text-slate-700">Commento</div>
-          <div class="text-green-700">Ricavi e margini in crescita, cash flow solido su base annua</div>
-        </div>
+
+    <!-- Blocco 3 (Scenario) -->
+    <section id="blocco3" class="fade-in hidden">
+      <div class="card-hover bg-white border border-slate-200 rounded-xl p-5 shadow-inner">
+        <h3 class="font-semibold text-slate-700 mb-2">Scenario macro (lug 2025)</h3>
+        <ul class="text-sm space-y-1">
+          <li>Crescita globale: <span class="text-green-700">+3,0%</span></li>
+          <li>Inflazione USA: <span class="text-yellow-700">2,9%</span></li>
+          <li>Fed/BCE: <span class="text-slate-800">Tagli tassi attesi Q4 2025</span></li>
+        </ul>
       </div>
     </section>
-    <!-- Altri blocchi... -->
   </main>
 
   <script>
-    // JS dinamico per TAB switching
-    function openTab(idx) {
-      // nasconde tutti
-      document.querySelectorAll('.tab-content').forEach(e => e.classList.add('hidden'));
-      document.querySelectorAll('.tab-label').forEach(e => {
-        e.classList.remove('tab-active');
-        e.classList.add('tab-inactive');
+    // Micro-interazione cambio tab
+    function showBlock(id) {
+      // nascondi tutte le sezioni
+      document.querySelectorAll('main > section').forEach(sec => {
+        sec.classList.add('hidden');
       });
-      // mostra quello selezionato
-      document.getElementById('tab-content-' + idx).classList.remove('hidden');
-      document.querySelectorAll('.tab-label')[idx].classList.add('tab-active');
-      document.querySelectorAll('.tab-label')[idx].classList.remove('tab-inactive');
+      // rimuovi active da tutte le tab
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('tab-active');
+      });
+      // mostra la sezione selezionata
+      document.getElementById(id).classList.remove('hidden');
+      // ri-trigger animazione fade-in (rimetti la classe, forzando il reflow)
+      let block = document.getElementById(id);
+      block.classList.remove('fade-in');
+      void block.offsetWidth; // reflow
+      block.classList.add('fade-in');
+      // attiva la tab giusta
+      let index = id.match(/\d+/)[0] - 1;
+      document.querySelectorAll('.tab-btn')[index].classList.add('tab-active');
     }
   </script>
 </body>
