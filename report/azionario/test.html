@@ -7,116 +7,236 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
-    body { font-family: 'Inter', sans-serif; background: #f1f5f9; }
-    .tab-active { background: #2563eb; color: #fff; font-weight: 600; transition: background 0.18s, color 0.18s; }
-    .tab-btn { transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s; }
-    .tab-btn:hover:not(.tab-active), .tab-btn:focus:not(.tab-active) {
-      background: #e0e7ef; color: #2563eb;
-      box-shadow: 0 2px 8px rgba(0,30,100,0.04); transform: translateY(-1px) scale(1.03);
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+      background-size: 280px;
+      color: #0f172a;
+      margin: 0;
+      padding: 0;
     }
-    .fade-in { opacity: 0; transform: translateY(18px); animation: fadeInBlock 0.5s cubic-bezier(.4,0,.2,1) forwards; }
-    @keyframes fadeInBlock { to { opacity: 1; transform: translateY(0); } }
-    .card-hover { transition: box-shadow 0.18s, transform 0.18s; }
-    .card-hover:hover, .card-hover:focus {
-      box-shadow: 0 4px 16px rgba(36, 57, 101, 0.10), 0 1.5px 3px rgba(80,160,200,.07);
-      transform: translateY(-2px) scale(1.01); z-index: 2;
+    /* Scrollbar custom */
+    ::-webkit-scrollbar { height: 8px; background: #e0e7ef; border-radius: 10px;}
+    ::-webkit-scrollbar-thumb { background: #70a7e8; border-radius: 10px;}
+    .tabs-scroll::-webkit-scrollbar { height: 8px; background: #e0e7ef;}
+    .tabs-scroll::-webkit-scrollbar-thumb { background: #70a7e8; }
+    /* Tab soft fade */
+    .tab-btn { transition: background 0.17s, color 0.13s; }
+    .tab-btn:hover, .tab-btn.active {
+      background: #e0e7ef;
+      color: #0369a1;
     }
-    .tag { font-size: 13px; padding: 1.5px 9px; border-radius: 10px; font-weight: 600; }
-    .tag-green { background: #d1fae5; color: #065f46; }
-    .tag-yellow { background: #fef9c3; color: #b45309; }
-    .tag-red { background: #fee2e2; color: #991b1b; }
-    .tag-neutral { background: #e2e8f0; color: #334155; }
+    /* Card hover ultra soft */
+    .card-blocco:hover { background: #f1f8fe; box-shadow: 0 2px 16px 0 rgba(50,120,200,0.05);}
+    /* Tooltip */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .tooltip .tooltip-text {
+      visibility: hidden;
+      width: 210px;
+      background-color: #222e3a;
+      color: #fff;
+      text-align: left;
+      border-radius: 6px;
+      padding: 7px 12px;
+      position: absolute;
+      z-index: 10;
+      left: 50%;
+      top: 140%;
+      transform: translateX(-50%);
+      opacity: 0;
+      font-size: 13px;
+      transition: opacity 0.2s;
+      box-shadow: 0 4px 24px 0 rgba(35,70,120,0.15);
+      pointer-events: none;
+    }
+    .tooltip:hover .tooltip-text,
+    .tooltip:focus-within .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: all;
+    }
+    @media (max-width: 700px) {
+      .tabs-scroll { overflow-x: auto; }
+      .tab-btn { min-width: 160px; }
+      .tab-btn svg { display: none; }
+    }
+    @media (min-width: 640px) {
+      .card-blocco { padding: 2rem 2.5rem; }
+    }
   </style>
 </head>
-<body class="min-h-screen">
-  <header class="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm px-4 py-2 flex justify-between items-center">
-    <a href="https://tradelia.org/index.html" class="text-xl font-extrabold tracking-tight text-sky-900">
-      TRADELIA<span class="text-blue-600 animate-pulse">•AI</span>
+<body>
+  <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6 border-b border-slate-200">
+    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
     </a>
     <a href="https://tradelia.org/archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
   </header>
 
-  <!-- Tab dinamiche blocchi -->
-  <nav class="sticky top-[56px] z-30 bg-white shadow-inner border-b border-slate-100 flex overflow-x-auto no-scrollbar">
-    <button class="tab-btn tab-active px-4 py-2 mr-1 rounded-t-lg" onclick="showBlock('blocco1')">Identificativi</button>
-    <button class="tab-btn px-4 py-2 mr-1 rounded-t-lg" onclick="showBlock('blocco2')">Multipli & Valutazione</button>
-    <!-- ...altre tab per ogni blocco Tradelia AI... -->
-  </nav>
+  <!-- Tabs scroll orizzontale blocchi -->
+  <div class="w-full flex overflow-x-auto tabs-scroll space-x-1 px-2 pb-1" style="scrollbar-width: thin;">
+    <button class="tab-btn active px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200">Blocco 1</button>
+    <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200">Blocco 2</button>
+    <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200">Blocco 3</button>
+    <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200">Blocco 4</button>
+    <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200">Blocco 5</button>
+    <!-- ...altri blocchi -->
+  </div>
 
-  <main class="max-w-4xl mx-auto px-3 sm:px-6 mt-6">
-    <!-- BLOCCO 1: Identificativi & Contesto -->
-    <section id="blocco1" class="fade-in">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div class="card-hover bg-white border border-slate-200 rounded-xl p-5 shadow-inner">
-          <h3 class="font-semibold text-slate-700 mb-2">Dati Identificativi</h3>
-          <ul class="text-sm space-y-1">
-            <li>Ticker: <span class="font-semibold text-slate-800">TSLA</span> <span class="tag tag-green">Validato</span></li>
-            <li>ISIN: <span class="font-semibold text-slate-800">US88160R1014</span> <span class="tag tag-green">Validato</span></li>
-            <li>Exchange: <span class="font-semibold text-slate-800">NASDAQ</span> <span class="tag tag-green">Validato</span></li>
-            <li>Settore: <span class="font-semibold text-slate-800">Auto & Tech</span> <span class="tag tag-neutral">Neutro</span></li>
-            <li>Market Cap: <span class="font-semibold text-green-700">$900 Mrd</span> <span class="tag tag-green">Validato</span></li>
-            <li>Prezzo attuale: <span class="font-semibold text-green-700">$255,60</span> <span class="tag tag-green">Live</span></li>
-          </ul>
+  <!-- Contenuto blocco selezionato -->
+  <main class="px-2 max-w-4xl mx-auto">
+    <!-- Card Blocco 1 – esempio -->
+    <section class="card-blocco transition-all duration-150 bg-white rounded-2xl border border-slate-200 shadow-inner my-8 px-3 sm:px-8 py-7">
+      <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+        Profilo Investitore <span class="tooltip">
+          <!-- Lucide info SVG -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="inline w-4 h-4 text-slate-400 hover:text-blue-600 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
+            <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
+            <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
+          </svg>
+          <span class="tooltip-text">
+            Dati raccolti tramite autodichiarazione e analisi preliminare: età, situazione familiare, patrimonio, esperienza finanziaria e obiettivi.
+          </span>
+        </span>
+      </h2>
+      <div class="flex flex-col gap-3 text-xs sm:text-sm text-slate-800">
+        <div class="flex items-center gap-2">
+          Età: <span class="font-semibold text-slate-700">30 anni</span>
+          <span class="tooltip">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
+              <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
+              <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
+            </svg>
+            <span class="tooltip-text">Anni compiuti alla data della profilazione, dato statico richiesto dal Regolamento MiFID II.</span>
+          </span>
         </div>
-        <div class="card-hover bg-white border border-slate-200 rounded-xl p-5 shadow-inner">
-          <h3 class="font-semibold text-slate-700 mb-2">Altri Dati & Score</h3>
-          <ul class="text-sm space-y-1">
-            <li>Prezzo Target analisti: <span class="font-semibold text-yellow-700">$260</span> <span class="tag tag-yellow">Warning</span></li>
-            <li>Variazione 24h: <span class="font-semibold text-green-700">+2,8%</span> <span class="tag tag-green">Positivo</span></li>
-            <li>Variazione 7gg: <span class="font-semibold text-green-700">+4,2%</span> <span class="tag tag-green">Positivo</span></li>
-            <li>Min/Max 52w: <span class="font-semibold text-slate-800">$168 – $299</span> <span class="tag tag-neutral">Neutro</span></li>
-            <li>Rating analisti: <span class="font-semibold text-yellow-700">Hold</span> <span class="tag tag-yellow">Warning</span></li>
-          </ul>
+        <div class="flex items-center gap-2">
+          Capitale disponibile: <span class="font-semibold text-slate-700">60.000 €</span>
+          <span class="tooltip">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
+              <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
+              <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
+            </svg>
+            <span class="tooltip-text">Somma attualmente liquida e investibile secondo dichiarazione, esclusi immobili e asset illiquidi.</span>
+          </span>
         </div>
-      </div>
-      <div class="mt-6 card-hover bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-700 shadow-inner">
-        <b>Commento Tradelia AI:</b> Validazione completa delle metriche principali. Dati live da Nasdaq IR, Bloomberg, Reuters, S&P CapitalIQ. Prezzo in trend laterale rispetto al target; rating analisti neutro. Nessuna criticità evidente sul blocco identificativo.
+        <div class="flex items-center gap-2">
+          Orizzonte temporale: <span class="font-semibold text-slate-700">Lungo termine</span>
+          <span class="tooltip">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
+              <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
+              <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
+            </svg>
+            <span class="tooltip-text">Periodo minimo previsto per mantenere gli investimenti: tipicamente > 7 anni.</span>
+          </span>
+        </div>
+        <div class="flex items-center gap-2">
+          Tolleranza al rischio: <span class="font-semibold text-slate-700">Moderata</span>
+          <span class="tooltip">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
+              <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
+              <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
+            </svg>
+            <span class="tooltip-text">Capacità di sopportare variazioni negative temporanee: valutata su base soggettiva e oggettiva.</span>
+          </span>
+        </div>
+        <div class="flex items-center gap-2">
+          Esperienza finanziaria: <span class="font-semibold text-slate-700">Bassa</span>
+          <span class="tooltip">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
+              <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
+              <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
+            </svg>
+            <span class="tooltip-text">Auto-valutazione della conoscenza dei prodotti finanziari e dei mercati regolamentati.</span>
+          </span>
+        </div>
       </div>
     </section>
 
-    <!-- BLOCCO 2: Multipli & Valutazione -->
-    <section id="blocco2" class="fade-in hidden">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div class="card-hover bg-white border border-slate-200 rounded-xl p-5 shadow-inner">
-          <h3 class="font-semibold text-slate-700 mb-2">Multipli principali</h3>
-          <ul class="text-sm space-y-1">
-            <li>P/E: <span class="font-semibold text-yellow-700">76x</span> <span class="tag tag-yellow">Elevato</span></li>
-            <li>P/B: <span class="font-semibold text-green-700">8,1x</span> <span class="tag tag-green">Buono</span></li>
-            <li>P/S: <span class="font-semibold text-slate-800">7,5x</span> <span class="tag tag-neutral">Neutro</span></li>
-            <li>EV/EBITDA: <span class="font-semibold text-yellow-700">48x</span> <span class="tag tag-yellow">Warning</span></li>
-            <li>Dividend Yield: <span class="font-semibold text-red-700">n/a</span> <span class="tag tag-red">Assente</span></li>
-          </ul>
+    <!-- Card Blocco 2 – esempio -->
+    <section class="card-blocco transition-all duration-150 bg-white rounded-2xl border border-slate-200 shadow-inner my-8 px-3 sm:px-8 py-7">
+      <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+        Asset Allocation <span class="tooltip">
+          <svg xmlns="http://www.w3.org/2000/svg" class="inline w-4 h-4 text-slate-400 hover:text-blue-600 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
+            <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
+            <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
+          </svg>
+          <span class="tooltip-text">
+            Suddivisione teorica tra strumenti core e satellite, basata su modelli istituzionali BlackRock/Vanguard.
+          </span>
+        </span>
+      </h2>
+      <div class="flex flex-col gap-3 text-xs sm:text-sm text-slate-800">
+        <div class="flex items-center gap-2">
+          <span class="font-semibold">ETF Monetari &amp; T-bill:</span> 25%
+          <span class="tooltip">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
+              <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
+              <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
+            </svg>
+            <span class="tooltip-text">Quota cash per protezione liquidità e gestione volatilità breve (ETF monetari, Treasury Bill).</span>
+          </span>
         </div>
-        <div class="card-hover bg-white border border-slate-200 rounded-xl p-5 shadow-inner">
-          <h3 class="font-semibold text-slate-700 mb-2">Valutazione Intrinseca</h3>
-          <ul class="text-sm space-y-1">
-            <li>DCF Fair Value: <span class="font-semibold text-green-700">$270</span> <span class="tag tag-green">Sottovalutato</span></li>
-            <li>Premio/Discount vs Peer: <span class="font-semibold text-yellow-700">+20%</span> <span class="tag tag-yellow">Warning</span></li>
-            <li>Score Value: <span class="font-semibold text-yellow-700">5,7/10</span> <span class="tag tag-yellow">Medio</span></li>
-          </ul>
+        <div class="flex items-center gap-2">
+          <span class="font-semibold">Obbligazioni Investment Grade:</span> 35%
+          <span class="tooltip">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
+              <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
+              <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
+            </svg>
+            <span class="tooltip-text">Titoli obbligazionari a basso rischio di credito, rating BBB o superiore.</span>
+          </span>
         </div>
-      </div>
-      <div class="mt-6 card-hover bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-700 shadow-inner">
-        <b>Commento Tradelia AI:</b> I multipli restano elevati rispetto ai peer, ma la valutazione DCF suggerisce spazio di rivalutazione. Score value solo medio. Verificare sostenibilità delle attese.
+        <div class="flex items-center gap-2">
+          <span class="font-semibold">Inflation Linked:</span> 15%
+          <span class="tooltip">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
+              <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
+              <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
+            </svg>
+            <span class="tooltip-text">ETF su titoli indicizzati all’inflazione (TIPS USA, BTP Italia, ecc.).</span>
+          </span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="font-semibold">Oro fisico o ETC:</span> 10%
+          <span class="tooltip">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
+              <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
+              <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
+            </svg>
+            <span class="tooltip-text">Quota di oro fisico via ETC come copertura contro rischi sistemici o inflattivi.</span>
+          </span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="font-semibold">REIT difensivi:</span> 5%
+          <span class="tooltip">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
+              <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
+              <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
+            </svg>
+            <span class="tooltip-text">ETF immobiliari su logistica, healthcare, segmenti resilienti nelle fasi di stress.</span>
+          </span>
+        </div>
       </div>
     </section>
-    <!-- ...aggiungi qui altri blocchi con stessa logica... -->
   </main>
-  <script>
-    // Cambio tab con microanimazione
-    function showBlock(id) {
-      document.querySelectorAll('main > section').forEach(sec => { sec.classList.add('hidden'); });
-      document.querySelectorAll('.tab-btn').forEach(btn => { btn.classList.remove('tab-active'); });
-      document.getElementById(id).classList.remove('hidden');
-      let block = document.getElementById(id);
-      block.classList.remove('fade-in');
-      void block.offsetWidth; // reflow per riattivare animazione
-      block.classList.add('fade-in');
-      let tabs = Array.from(document.querySelectorAll('.tab-btn'));
-      tabs.forEach((btn, i) => {
-        if (btn.getAttribute('onclick').includes(id)) btn.classList.add('tab-active');
-      });
-    }
-  </script>
 </body>
 </html>
