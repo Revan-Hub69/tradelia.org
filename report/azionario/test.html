@@ -3,73 +3,120 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TRADELIA • Report Azionario – Modello Istituzionale</title>
+  <title>TRADELIA • Report Azionario</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
-    body { font-family: 'Inter', sans-serif; background: #f1f5f9; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+    }
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: #2563eb #e2e8f0;
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+      background: #e2e8f0;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2563eb;
+      border-radius: 8px;
+      border: 2px solid #e2e8f0;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #1d4ed8;
+    }
+    ::-webkit-scrollbar-corner {
+      background: transparent;
+    }
   </style>
 </head>
-<body class="min-h-screen bg-slate-50">
-  <!-- HEADER ISTITUZIONALE -->
-  <header class="w-full sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
-    <div class="max-w-5xl mx-auto flex items-center justify-between px-5 sm:px-10 py-3">
+<body class="bg-slate-50 min-h-screen">
+
+  <!-- HEADER -->
+  <header class="w-full sticky top-0 z-50 bg-white/95 border-b border-slate-200 shadow-sm backdrop-blur-lg">
+    <div class="max-w-screen-md mx-auto flex items-center justify-between px-6 py-4">
       <div class="flex flex-col sm:flex-row sm:items-end">
-        <span class="text-[1.6rem] sm:text-2xl font-extrabold tracking-tight text-sky-900">
-          TRADELIA<span class="text-blue-700">•AI</span>
-        </span>
-        <span class="ml-0 sm:ml-4 text-xs sm:text-sm text-slate-600 font-medium tracking-wide uppercase">
-          Report Azionario – Modello Istituzionale
-        </span>
+        <span class="text-[2rem] font-extrabold tracking-tight text-primary">TRADELIA<span class="text-blue-700">•AI</span></span>
+        <span class="ml-0 sm:ml-4 text-xs sm:text-sm text-slate-600 font-medium uppercase tracking-wide">Report Azionario</span>
       </div>
-      <a href="https://tradelia.org/archivio.html" class="text-xs sm:text-sm text-blue-700 font-semibold hover:underline">
+      <a href="https://tradelia.org/archivio.html" class="hidden sm:block text-xs sm:text-sm text-blue-700 font-semibold hover:underline">
         Archivio Report
       </a>
     </div>
   </header>
-  <!-- FINE HEADER -->
 
-  <!-- INTRO (puoi automatizzare titolo e sintesi) -->
-  <section class="max-w-3xl mx-auto mt-8 mb-6 px-5 py-8 bg-white rounded-2xl border border-slate-200 shadow-sm">
-    <h1 class="text-xl sm:text-2xl font-bold text-slate-900 mb-2 tracking-tight">
-      Analisi Approfondita – Azione [NOME TITOLO]
+  <!-- INTRO -->
+  <section class="max-w-screen-md mx-auto mt-8 mb-6 px-6 py-8 bg-white rounded-3xl border border-slate-200 shadow-md">
+    <h1 class="text-2xl font-bold text-slate-900 mb-3 tracking-tight">
+      Analisi Approfondita – Azione <span class="text-blue-700">Tesla (TSLA)</span>
     </h1>
-    <p class="text-sm sm:text-base text-slate-700 leading-relaxed">
-      Questo report utilizza il modello a blocchi istituzionale Tradelia AI per offrire una valutazione multilivello su fondamentali, tecnica, newsflow e derivati.<br />
-      Ogni sezione presenta dati validati, colori a stato, e commento professionale.  
-      <span class="block mt-2 text-slate-500 text-xs">Dati aggiornati al: <b>[DATA RILEVAZIONE]</b></span>
+    <p class="text-base text-slate-700 leading-relaxed">
+      Report completo istituzionale Tradelia AI. Validazione multilivello: fondamentali, tecnica, newsflow, derivati. Dati validati, colori a stato, commento desk.
+      <span class="block mt-2 text-slate-500 text-xs">Dati aggiornati al: <b>31/07/2025</b></span>
     </p>
   </section>
 
-  <!-- BLOCCO ESEMPIO (replicabile e automatizzabile) -->
-  <section class="max-w-3xl mx-auto mb-6 px-5 py-8 bg-white rounded-2xl border border-slate-200 shadow-inner">
-    <h2 class="text-lg sm:text-xl font-semibold text-slate-800 mb-4">Blocco 1 – Identificativi & Contesto</h2>
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-2 text-xs sm:text-sm">
-      <div class="font-semibold text-slate-700">Ticker</div>
-      <div class="text-green-700">TSLA</div>
-      <div class="font-semibold text-slate-700">ISIN</div>
-      <div class="text-slate-700">US88160R1014</div>
-      <div class="font-semibold text-slate-700">Exchange</div>
-      <div class="text-slate-700">NASDAQ</div>
-      <div class="font-semibold text-slate-700">Settore</div>
-      <div class="text-slate-700">Consumer Discretionary</div>
-      <div class="font-semibold text-slate-700">Prezzo Attuale</div>
-      <div class="text-green-700">$314.25</div>
-      <div class="font-semibold text-slate-700">Variazione 7gg</div>
-      <div class="text-green-700">+7.98%</div>
-      <div class="font-semibold text-slate-700">Rating Analisti</div>
-      <div class="text-yellow-600 col-span-3">Hold (46 analisti, agg. 31/07/2025)</div>
-      <div class="font-semibold text-slate-700">Market Cap</div>
-      <div class="text-green-700">$1.004B</div>
+  <!-- BLOCCO 1 – CARD RESPONSIVE -->
+  <section class="max-w-screen-md mx-auto mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 px-2">
+      <!-- CARD 1 -->
+      <div class="bg-white rounded-2xl shadow-lg px-6 py-6 flex flex-col items-start gap-2 border border-slate-100">
+        <span class="text-xs font-semibold text-slate-500">Ticker</span>
+        <span class="text-lg font-bold text-green-700 tracking-widest">TSLA</span>
+      </div>
+      <!-- CARD 2 -->
+      <div class="bg-white rounded-2xl shadow-lg px-6 py-6 flex flex-col items-start gap-2 border border-slate-100">
+        <span class="text-xs font-semibold text-slate-500">ISIN</span>
+        <span class="text-lg font-medium text-slate-700">US88160R1014</span>
+      </div>
+      <!-- CARD 3 -->
+      <div class="bg-white rounded-2xl shadow-lg px-6 py-6 flex flex-col items-start gap-2 border border-slate-100">
+        <span class="text-xs font-semibold text-slate-500">Prezzo Attuale</span>
+        <span class="text-lg font-bold text-green-700">$314.25</span>
+      </div>
+      <!-- CARD 4 -->
+      <div class="bg-white rounded-2xl shadow-lg px-6 py-6 flex flex-col items-start gap-2 border border-slate-100">
+        <span class="text-xs font-semibold text-slate-500">Market Cap</span>
+        <span class="text-lg font-bold text-green-700">$1.004B</span>
+      </div>
     </div>
-    <div class="mt-5 text-slate-800 text-sm leading-relaxed">
-      <b>Commento Tradelia AI:</b> Tesla mantiene posizione solida negli indici principali ma il rating aggregato suggerisce prudenza nel breve termine.
+
+    <!-- SECONDA RIGA CARD -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-5 px-2">
+      <div class="bg-white rounded-2xl shadow-lg px-6 py-6 flex flex-col items-start gap-2 border border-slate-100">
+        <span class="text-xs font-semibold text-slate-500">Exchange</span>
+        <span class="text-base font-semibold text-slate-700">NASDAQ</span>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg px-6 py-6 flex flex-col items-start gap-2 border border-slate-100">
+        <span class="text-xs font-semibold text-slate-500">Settore</span>
+        <span class="text-base font-semibold text-slate-700">Consumer Discretionary</span>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg px-6 py-6 flex flex-col items-start gap-2 border border-slate-100">
+        <span class="text-xs font-semibold text-slate-500">Variazione 7gg</span>
+        <span class="text-base font-bold text-green-700">+7.98%</span>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg px-6 py-6 flex flex-col items-start gap-2 border border-slate-100">
+        <span class="text-xs font-semibold text-slate-500">Rating Analisti</span>
+        <span class="text-base font-bold text-yellow-600">Hold</span>
+        <span class="text-xs text-slate-500">46 analisti • 31/07/2025</span>
+      </div>
+    </div>
+
+    <!-- COMMENTO -->
+    <div class="max-w-2xl mx-auto mt-8 px-4">
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 shadow-inner">
+        <div class="text-base font-semibold text-slate-800 mb-1">Commento Tradelia AI</div>
+        <div class="text-sm text-slate-700 leading-relaxed">
+          Tesla mantiene posizione solida negli indici principali, ma il rating aggregato suggerisce prudenza nel breve termine.
+        </div>
+      </div>
     </div>
   </section>
-  <!-- /BLOCCO ESEMPIO -->
 
-  <!-- DISCLAIMER (sempre istituzionale) -->
-  <section class="max-w-3xl mx-auto my-8 px-5 py-6 bg-white rounded-2xl border border-slate-200 shadow-inner">
+  <!-- DISCLAIMER -->
+  <section class="max-w-screen-md mx-auto my-12 px-6 py-7 bg-white rounded-3xl border border-slate-200 shadow-inner">
     <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-3">Disclaimer</h2>
     <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
       Le analisi Tradelia AI sono di tipo informativo e non costituiscono raccomandazione personalizzata. L’utente è responsabile delle proprie scelte. Consultare sempre un professionista abilitato.
