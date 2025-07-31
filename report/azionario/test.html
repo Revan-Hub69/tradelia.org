@@ -3,134 +3,77 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TRADELIA AI – Report Azionario</title>
+  <title>TRADELIA • Report Azionario – Modello Istituzionale</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
-    body { font-family: 'Inter', sans-serif; background: #f8fafc; }
-    .accordion-content { transition: max-height 0.4s cubic-bezier(.4,0,.2,1); overflow: hidden; }
-    .accordion-active { max-height: 600px; }
-    .accordion-inactive { max-height: 0; }
+    body { font-family: 'Inter', sans-serif; background: #f1f5f9; }
   </style>
 </head>
-<body class="text-slate-800">
-
-  <!-- Header -->
-  <header class="w-full py-5 bg-white border-b border-slate-200 shadow-sm mb-2">
-    <div class="max-w-3xl mx-auto px-4 flex items-center justify-between">
-      <h1 class="text-xl font-bold tracking-tight text-primary">TRADELIA <span class="font-light">AI</span></h1>
-      <span class="text-xs sm:text-sm font-medium text-slate-500">Report Azionario Istituzionale</span>
+<body class="min-h-screen bg-slate-50">
+  <!-- HEADER ISTITUZIONALE -->
+  <header class="w-full sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
+    <div class="max-w-5xl mx-auto flex items-center justify-between px-5 sm:px-10 py-3">
+      <div class="flex flex-col sm:flex-row sm:items-end">
+        <span class="text-[1.6rem] sm:text-2xl font-extrabold tracking-tight text-sky-900">
+          TRADELIA<span class="text-blue-700">•AI</span>
+        </span>
+        <span class="ml-0 sm:ml-4 text-xs sm:text-sm text-slate-600 font-medium tracking-wide uppercase">
+          Report Azionario – Modello Istituzionale
+        </span>
+      </div>
+      <a href="https://tradelia.org/archivio.html" class="text-xs sm:text-sm text-blue-700 font-semibold hover:underline">
+        Archivio Report
+      </a>
     </div>
   </header>
+  <!-- FINE HEADER -->
 
-  <!-- Indice -->
-  <nav class="max-w-3xl mx-auto mb-4 px-4">
-    <ol class="list-decimal pl-5 text-sm space-y-1">
-      <li><a href="#blocco1" class="hover:underline text-primary">1. Identificativi &amp; Contesto</a></li>
-      <li><a href="#blocco2" class="hover:underline text-primary">2. Multipli &amp; Valutazione</a></li>
-      <li><a href="#blocco3" class="hover:underline text-primary">3. Fondamentali Aziendali</a></li>
-    </ol>
-  </nav>
+  <!-- INTRO (puoi automatizzare titolo e sintesi) -->
+  <section class="max-w-3xl mx-auto mt-8 mb-6 px-5 py-8 bg-white rounded-2xl border border-slate-200 shadow-sm">
+    <h1 class="text-xl sm:text-2xl font-bold text-slate-900 mb-2 tracking-tight">
+      Analisi Approfondita – Azione [NOME TITOLO]
+    </h1>
+    <p class="text-sm sm:text-base text-slate-700 leading-relaxed">
+      Questo report utilizza il modello a blocchi istituzionale Tradelia AI per offrire una valutazione multilivello su fondamentali, tecnica, newsflow e derivati.<br />
+      Ogni sezione presenta dati validati, colori a stato, e commento professionale.  
+      <span class="block mt-2 text-slate-500 text-xs">Dati aggiornati al: <b>[DATA RILEVAZIONE]</b></span>
+    </p>
+  </section>
 
-  <!-- Accordion -->
-  <main class="max-w-3xl mx-auto px-4 space-y-4">
-    <!-- Accordion: BLOCCO 1 -->
-    <section id="blocco1" class="bg-white rounded-2xl border border-slate-200 shadow-inner">
-      <button type="button" class="w-full flex justify-between items-center py-4 px-3 text-left" onclick="toggleAccordion(1)">
-        <span class="font-semibold text-base">Blocco 1 – Identificativi &amp; Contesto</span>
-        <span id="arrow1" class="ml-2 text-primary transition-transform">&#x25BC;</span>
-      </button>
-      <div id="content1" class="accordion-content accordion-active px-3 pb-4">
-        <div class="grid grid-cols-2 gap-y-2 text-xs sm:text-sm">
-          <div class="font-medium">Ticker</div>
-          <div class="text-slate-700">TSLA</div>
-          <div class="font-medium">ISIN</div>
-          <div class="text-slate-700">US88160R1014</div>
-          <div class="font-medium">Exchange</div>
-          <div class="text-slate-700">NASDAQ</div>
-          <div class="font-medium">Settore</div>
-          <div class="text-slate-700">Automotive</div>
-          <div class="font-medium">Prezzo attuale</div>
-          <div class="text-green-600 font-semibold">252,10 $</div>
-          <div class="font-medium">% 24h</div>
-          <div class="text-red-600 font-semibold">-2,17 %</div>
-          <div class="font-medium">Market Cap</div>
-          <div class="text-green-600">803 Mld $</div>
-          <div class="font-medium">Target analisti</div>
-          <div class="text-yellow-600">280 $</div>
-          <div class="font-medium">Rating medio</div>
-          <div class="text-slate-700">Hold</div>
-        </div>
-        <div class="mt-4 text-xs italic text-slate-500">Commento Tradelia AI: Dati validati e in linea con i principali provider istituzionali.</div>
-      </div>
-    </section>
-
-    <!-- Accordion: BLOCCO 2 -->
-    <section id="blocco2" class="bg-white rounded-2xl border border-slate-200 shadow-inner">
-      <button type="button" class="w-full flex justify-between items-center py-4 px-3 text-left" onclick="toggleAccordion(2)">
-        <span class="font-semibold text-base">Blocco 2 – Multipli &amp; Valutazione</span>
-        <span id="arrow2" class="ml-2 text-primary transition-transform">&#x25BC;</span>
-      </button>
-      <div id="content2" class="accordion-content accordion-inactive px-3 pb-4">
-        <div class="grid grid-cols-2 gap-y-2 text-xs sm:text-sm">
-          <div class="font-medium">P/E (TTM)</div>
-          <div class="text-yellow-600">62,1</div>
-          <div class="font-medium">EV/EBITDA</div>
-          <div class="text-green-600">38,7</div>
-          <div class="font-medium">Price/Sales</div>
-          <div class="text-slate-700">9,6</div>
-          <div class="font-medium">Fair Value</div>
-          <div class="text-red-600">206,50 $</div>
-        </div>
-        <div class="mt-4 text-xs italic text-slate-500">Commento Tradelia AI: Valutazione elevata rispetto ai fondamentali storici del settore.</div>
-      </div>
-    </section>
-
-    <!-- Accordion: BLOCCO 3 -->
-    <section id="blocco3" class="bg-white rounded-2xl border border-slate-200 shadow-inner">
-      <button type="button" class="w-full flex justify-between items-center py-4 px-3 text-left" onclick="toggleAccordion(3)">
-        <span class="font-semibold text-base">Blocco 3 – Fondamentali Aziendali</span>
-        <span id="arrow3" class="ml-2 text-primary transition-transform">&#x25BC;</span>
-      </button>
-      <div id="content3" class="accordion-content accordion-inactive px-3 pb-4">
-        <div class="grid grid-cols-2 gap-y-2 text-xs sm:text-sm">
-          <div class="font-medium">Ricavi (TTM)</div>
-          <div class="text-green-600">96,77 Mld $</div>
-          <div class="font-medium">Margine operativo</div>
-          <div class="text-yellow-600">11,2 %</div>
-          <div class="font-medium">ROE</div>
-          <div class="text-green-600">17,3 %</div>
-          <div class="font-medium">Debito/Equity</div>
-          <div class="text-slate-700">0,16</div>
-        </div>
-        <div class="mt-4 text-xs italic text-slate-500">Commento Tradelia AI: Solida crescita dei ricavi, margini leggermente in calo rispetto al 2022.</div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Disclaimer -->
-  <footer class="max-w-3xl mx-auto my-8 px-4">
-    <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-500 shadow-inner">
-      Le informazioni presenti in questo report hanno finalità esclusivamente informative e non costituiscono raccomandazione d'investimento. Consultare fonti istituzionali e un consulente abilitato prima di ogni operazione. Powered by Tradelia AI.
+  <!-- BLOCCO ESEMPIO (replicabile e automatizzabile) -->
+  <section class="max-w-3xl mx-auto mb-6 px-5 py-8 bg-white rounded-2xl border border-slate-200 shadow-inner">
+    <h2 class="text-lg sm:text-xl font-semibold text-slate-800 mb-4">Blocco 1 – Identificativi & Contesto</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-2 text-xs sm:text-sm">
+      <div class="font-semibold text-slate-700">Ticker</div>
+      <div class="text-green-700">TSLA</div>
+      <div class="font-semibold text-slate-700">ISIN</div>
+      <div class="text-slate-700">US88160R1014</div>
+      <div class="font-semibold text-slate-700">Exchange</div>
+      <div class="text-slate-700">NASDAQ</div>
+      <div class="font-semibold text-slate-700">Settore</div>
+      <div class="text-slate-700">Consumer Discretionary</div>
+      <div class="font-semibold text-slate-700">Prezzo Attuale</div>
+      <div class="text-green-700">$314.25</div>
+      <div class="font-semibold text-slate-700">Variazione 7gg</div>
+      <div class="text-green-700">+7.98%</div>
+      <div class="font-semibold text-slate-700">Rating Analisti</div>
+      <div class="text-yellow-600 col-span-3">Hold (46 analisti, agg. 31/07/2025)</div>
+      <div class="font-semibold text-slate-700">Market Cap</div>
+      <div class="text-green-700">$1.004B</div>
     </div>
-  </footer>
+    <div class="mt-5 text-slate-800 text-sm leading-relaxed">
+      <b>Commento Tradelia AI:</b> Tesla mantiene posizione solida negli indici principali ma il rating aggregato suggerisce prudenza nel breve termine.
+    </div>
+  </section>
+  <!-- /BLOCCO ESEMPIO -->
 
-  <!-- Script Accordion -->
-  <script>
-    const sections = [1,2,3];
-    function toggleAccordion(id) {
-      sections.forEach(n => {
-        document.getElementById('content'+n).className =
-          'accordion-content ' + (n===id
-            ? 'accordion-active'
-            : 'accordion-inactive');
-        document.getElementById('arrow'+n).style.transform =
-          (n===id) ? 'rotate(180deg)' : 'rotate(0)';
-      });
-    }
-    // Open first by default
-    window.onload = () => toggleAccordion(1);
-  </script>
-
+  <!-- DISCLAIMER (sempre istituzionale) -->
+  <section class="max-w-3xl mx-auto my-8 px-5 py-6 bg-white rounded-2xl border border-slate-200 shadow-inner">
+    <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-3">Disclaimer</h2>
+    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+      Le analisi Tradelia AI sono di tipo informativo e non costituiscono raccomandazione personalizzata. L’utente è responsabile delle proprie scelte. Consultare sempre un professionista abilitato.
+    </p>
+  </section>
 </body>
 </html>
