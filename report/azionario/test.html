@@ -28,7 +28,7 @@
       color: #0369a1;
     }
     /* Card hover ultra soft */
-    .card-blocco:hover { background: #f1f8fe; box-shadow: 0 2px 16px 0 rgba(50,120,200,0.05);}
+    .card-blocco:hover { background: #f7fafc; box-shadow: 0 2px 16px 0 rgba(50,120,200,0.07);}
     /* Tooltip */
     .tooltip {
       position: relative;
@@ -38,22 +38,22 @@
     }
     .tooltip .tooltip-text {
       visibility: hidden;
-      width: 210px;
+      width: 230px;
       background-color: #222e3a;
       color: #fff;
       text-align: left;
-      border-radius: 6px;
-      padding: 7px 12px;
+      border-radius: 7px;
+      padding: 8px 13px;
       position: absolute;
-      z-index: 10;
+      z-index: 20;
       left: 50%;
-      top: 140%;
+      top: 135%;
       transform: translateX(-50%);
       opacity: 0;
       font-size: 13px;
-      transition: opacity 0.2s;
       box-shadow: 0 4px 24px 0 rgba(35,70,120,0.15);
       pointer-events: none;
+      transition: opacity 0.19s;
     }
     .tooltip:hover .tooltip-text,
     .tooltip:focus-within .tooltip-text {
@@ -63,11 +63,12 @@
     }
     @media (max-width: 700px) {
       .tabs-scroll { overflow-x: auto; }
-      .tab-btn { min-width: 160px; }
+      .tab-btn { min-width: 130px; }
       .tab-btn svg { display: none; }
+      .card-blocco { padding: 1.1rem 0.6rem;}
     }
     @media (min-width: 640px) {
-      .card-blocco { padding: 2rem 2.5rem; }
+      .card-blocco { padding: 2rem 2.3rem;}
     }
   </style>
 </head>
@@ -79,164 +80,167 @@
     <a href="https://tradelia.org/archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
   </header>
 
-  <!-- Tabs scroll orizzontale blocchi -->
+  <!-- Tab orizzontali scrollabili -->
   <div class="w-full flex overflow-x-auto tabs-scroll space-x-1 px-2 pb-1" style="scrollbar-width: thin;">
     <button class="tab-btn active px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200">Blocco 1</button>
     <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200">Blocco 2</button>
     <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200">Blocco 3</button>
     <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200">Blocco 4</button>
     <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200">Blocco 5</button>
-    <!-- ...altri blocchi -->
+    <!-- ...altre tab se vuoi -->
   </div>
 
-  <!-- Contenuto blocco selezionato -->
   <main class="px-2 max-w-4xl mx-auto">
-    <!-- Card Blocco 1 – esempio -->
-    <section class="card-blocco transition-all duration-150 bg-white rounded-2xl border border-slate-200 shadow-inner my-8 px-3 sm:px-8 py-7">
-      <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-        Profilo Investitore <span class="tooltip">
+
+    <!-- Card Blocco 1 – Identificativi & Contesto -->
+    <section class="card-blocco transition-all duration-150 bg-white rounded-2xl border border-slate-200 shadow-inner my-8">
+      <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-5 flex items-center gap-2">
+        Blocco 1 – Identificativi &amp; Contesto
+        <span class="tooltip">
           <!-- Lucide info SVG -->
           <svg xmlns="http://www.w3.org/2000/svg" class="inline w-4 h-4 text-slate-400 hover:text-blue-600 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
             <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
             <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
             <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
           </svg>
-          <span class="tooltip-text">
-            Dati raccolti tramite autodichiarazione e analisi preliminare: età, situazione familiare, patrimonio, esperienza finanziaria e obiettivi.
-          </span>
+          <span class="tooltip-text">Dati identificativi e di scenario, validati su fonti istituzionali e documenti SEC/Bloomberg/Nasdaq.</span>
         </span>
       </h2>
-      <div class="flex flex-col gap-3 text-xs sm:text-sm text-slate-800">
+      <div class="flex flex-col gap-4 text-xs sm:text-sm text-slate-800">
         <div class="flex items-center gap-2">
-          Età: <span class="font-semibold text-slate-700">30 anni</span>
+          <span class="font-semibold">Ticker:</span> TSLA
           <span class="tooltip">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">Anni compiuti alla data della profilazione, dato statico richiesto dal Regolamento MiFID II.</span>
+            <span class="tooltip-text">Sigla ufficiale del titolo su Nasdaq (fonte: Nasdaq IR, Bloomberg, Reuters).</span>
           </span>
         </div>
         <div class="flex items-center gap-2">
-          Capitale disponibile: <span class="font-semibold text-slate-700">60.000 €</span>
+          <span class="font-semibold">ISIN:</span> US88160R1014
           <span class="tooltip">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">Somma attualmente liquida e investibile secondo dichiarazione, esclusi immobili e asset illiquidi.</span>
+            <span class="tooltip-text">International Securities Identification Number. Codice identificativo univoco globale.</span>
           </span>
         </div>
         <div class="flex items-center gap-2">
-          Orizzonte temporale: <span class="font-semibold text-slate-700">Lungo termine</span>
+          <span class="font-semibold">Exchange:</span> NASDAQ
           <span class="tooltip">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">Periodo minimo previsto per mantenere gli investimenti: tipicamente > 7 anni.</span>
+            <span class="tooltip-text">Mercato di quotazione principale. Verificato su Nasdaq Official, Bloomberg, SEC Filing.</span>
           </span>
         </div>
         <div class="flex items-center gap-2">
-          Tolleranza al rischio: <span class="font-semibold text-slate-700">Moderata</span>
+          <span class="font-semibold">Settore:</span> Auto EV, Tech
           <span class="tooltip">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">Capacità di sopportare variazioni negative temporanee: valutata su base soggettiva e oggettiva.</span>
+            <span class="tooltip-text">Classificazione settoriale standard (GICS/MSCI/FactSet) validata sulle fonti IR.</span>
           </span>
         </div>
         <div class="flex items-center gap-2">
-          Esperienza finanziaria: <span class="font-semibold text-slate-700">Bassa</span>
+          <span class="font-semibold">Prezzo attuale:</span> $256.91
           <span class="tooltip">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">Auto-valutazione della conoscenza dei prodotti finanziari e dei mercati regolamentati.</span>
+            <span class="tooltip-text">Prezzo aggiornato real-time/ultimo close, validato su Nasdaq/Bloomberg/Reuters.</span>
           </span>
         </div>
       </div>
     </section>
 
-    <!-- Card Blocco 2 – esempio -->
-    <section class="card-blocco transition-all duration-150 bg-white rounded-2xl border border-slate-200 shadow-inner my-8 px-3 sm:px-8 py-7">
-      <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-        Asset Allocation <span class="tooltip">
+    <!-- Card Blocco 2 – Multipli & Valutazione Intrinseca -->
+    <section class="card-blocco transition-all duration-150 bg-white rounded-2xl border border-slate-200 shadow-inner my-8">
+      <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-5 flex items-center gap-2">
+        Blocco 2 – Multipli &amp; Valutazione Intrinseca
+        <span class="tooltip">
           <svg xmlns="http://www.w3.org/2000/svg" class="inline w-4 h-4 text-slate-400 hover:text-blue-600 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
             <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
             <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
             <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
           </svg>
-          <span class="tooltip-text">
-            Suddivisione teorica tra strumenti core e satellite, basata su modelli istituzionali BlackRock/Vanguard.
-          </span>
+          <span class="tooltip-text">Indicatori di valutazione: P/E, EV/EBITDA, crescita EPS, fair value teorico (DCF), medie settore.</span>
         </span>
       </h2>
-      <div class="flex flex-col gap-3 text-xs sm:text-sm text-slate-800">
+      <div class="flex flex-col gap-4 text-xs sm:text-sm text-slate-800">
         <div class="flex items-center gap-2">
-          <span class="font-semibold">ETF Monetari &amp; T-bill:</span> 25%
+          <span class="font-semibold">P/E TTM:</span> 82.5
           <span class="tooltip">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">Quota cash per protezione liquidità e gestione volatilità breve (ETF monetari, Treasury Bill).</span>
+            <span class="tooltip-text">Price/Earnings trailing 12 mesi, confronto con mediana settore e S&P500.</span>
           </span>
         </div>
         <div class="flex items-center gap-2">
-          <span class="font-semibold">Obbligazioni Investment Grade:</span> 35%
+          <span class="font-semibold">EV/EBITDA:</span> 47.2
           <span class="tooltip">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">Titoli obbligazionari a basso rischio di credito, rating BBB o superiore.</span>
+            <span class="tooltip-text">Enterprise Value / EBITDA trailing, comparabile con peers auto/tech.</span>
           </span>
         </div>
         <div class="flex items-center gap-2">
-          <span class="font-semibold">Inflation Linked:</span> 15%
+          <span class="font-semibold">PEG ratio:</span> 3.1
           <span class="tooltip">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">ETF su titoli indicizzati all’inflazione (TIPS USA, BTP Italia, ecc.).</span>
+            <span class="tooltip-text">Price/Earnings to Growth ratio, aggiusta i multipli per il tasso di crescita EPS atteso.</span>
           </span>
         </div>
         <div class="flex items-center gap-2">
-          <span class="font-semibold">Oro fisico o ETC:</span> 10%
+          <span class="font-semibold">DCF fair value:</span> $203
           <span class="tooltip">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">Quota di oro fisico via ETC come copertura contro rischi sistemici o inflattivi.</span>
+            <span class="tooltip-text">Valore intrinseco stimato da modello Discounted Cash Flow su 5 anni.</span>
           </span>
         </div>
         <div class="flex items-center gap-2">
-          <span class="font-semibold">REIT difensivi:</span> 5%
+          <span class="font-semibold">Median sector P/E:</span> 27.1
           <span class="tooltip">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">ETF immobiliari su logistica, healthcare, segmenti resilienti nelle fasi di stress.</span>
+            <span class="tooltip-text">Valore medio dei multipli P/E delle principali aziende comparabili del settore.</span>
           </span>
         </div>
       </div>
     </section>
+
+    <!-- CTA footer esempio -->
+    <footer class="max-w-4xl mx-auto my-7 px-3 sm:px-6 py-4 bg-yellow-50 border border-yellow-300 rounded-xl shadow-sm text-xs sm:text-sm text-yellow-900">
+      <strong>Disclaimer:</strong> Questo report ha finalità informative e didattiche, nessuna raccomandazione o consulenza.
+    </footer>
   </main>
 </body>
 </html>
