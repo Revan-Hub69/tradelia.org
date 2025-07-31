@@ -27,33 +27,14 @@
       background: #e0e7ef;
       color: #0369a1;
     }
-    /* Card hover ultra soft */
     .card-blocco:hover { background: #f7fafc; box-shadow: 0 2px 16px 0 rgba(50,120,200,0.07);}
-    /* Tooltip */
-    .tooltip {
-      position: relative;
-      display: inline-block;
-      cursor: pointer;
-      z-index: 2;
-    }
+    .tooltip { position: relative; display: inline-block; cursor: pointer; z-index: 2; }
     .tooltip .tooltip-text {
-      visibility: hidden;
-      width: 230px;
-      background-color: #222e3a;
-      color: #fff;
-      text-align: left;
-      border-radius: 7px;
-      padding: 8px 13px;
-      position: absolute;
-      z-index: 20;
-      left: 50%;
-      top: 135%;
-      transform: translateX(-50%);
-      opacity: 0;
-      font-size: 13px;
-      box-shadow: 0 4px 24px 0 rgba(35,70,120,0.15);
-      pointer-events: none;
-      transition: opacity 0.19s;
+      visibility: hidden; width: 230px; background-color: #222e3a; color: #fff;
+      text-align: left; border-radius: 7px; padding: 8px 13px; position: absolute; z-index: 20;
+      left: 50%; top: 135%; transform: translateX(-50%);
+      opacity: 0; font-size: 13px; box-shadow: 0 4px 24px 0 rgba(35,70,120,0.15);
+      pointer-events: none; transition: opacity 0.19s;
     }
     .tooltip:hover .tooltip-text,
     .tooltip:focus-within .tooltip-text {
@@ -63,8 +44,7 @@
     }
     @media (max-width: 700px) {
       .tabs-scroll { overflow-x: auto; }
-      .tab-btn { min-width: 130px; }
-      .tab-btn svg { display: none; }
+      .tab-btn { min-width: 180px; font-size: 13px; }
       .card-blocco { padding: 1.1rem 0.6rem;}
     }
     @media (min-width: 640px) {
@@ -81,19 +61,24 @@
   </header>
 
   <!-- Tab orizzontali scrollabili -->
-  <div class="w-full flex overflow-x-auto tabs-scroll space-x-1 px-2 pb-1" style="scrollbar-width: thin;">
-    <button class="tab-btn active px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200">Blocco 1</button>
-    <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200">Blocco 2</button>
-    <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200">Blocco 3</button>
-    <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200">Blocco 4</button>
-    <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200">Blocco 5</button>
-    <!-- ...altre tab se vuoi -->
-  </div>
+  <nav class="w-full flex overflow-x-auto tabs-scroll space-x-1 px-2 pb-1" style="scrollbar-width: thin;">
+    <button class="tab-btn active px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200"
+      data-tab="blocco1">Blocco 1 – Identificativi & Contesto</button>
+    <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200"
+      data-tab="blocco2">Blocco 2 – Multipli & Valutazione</button>
+    <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200"
+      data-tab="blocco3">Blocco 3 – Fondamentali</button>
+    <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200"
+      data-tab="blocco4">Blocco 4 – Dividendi & Buyback</button>
+    <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold text-slate-800 bg-white border border-b-0 border-slate-200"
+      data-tab="blocco5">Blocco 5 – Performance & Rischio</button>
+    <!-- Puoi aggiungere altre tab... -->
+  </nav>
 
   <main class="px-2 max-w-4xl mx-auto">
 
-    <!-- Card Blocco 1 – Identificativi & Contesto -->
-    <section class="card-blocco transition-all duration-150 bg-white rounded-2xl border border-slate-200 shadow-inner my-8">
+    <!-- Card Blocco 1 -->
+    <section id="blocco1" class="card-blocco transition-all duration-150 bg-white rounded-2xl border border-slate-200 shadow-inner my-8">
       <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-5 flex items-center gap-2">
         Blocco 1 – Identificativi &amp; Contesto
         <span class="tooltip">
@@ -103,7 +88,7 @@
             <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
             <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
           </svg>
-          <span class="tooltip-text">Dati identificativi e di scenario, validati su fonti istituzionali e documenti SEC/Bloomberg/Nasdaq.</span>
+          <span class="tooltip-text">Dati identificativi e di scenario, validati su fonti istituzionali.</span>
         </span>
       </h2>
       <div class="flex flex-col gap-4 text-xs sm:text-sm text-slate-800">
@@ -115,7 +100,7 @@
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">Sigla ufficiale del titolo su Nasdaq (fonte: Nasdaq IR, Bloomberg, Reuters).</span>
+            <span class="tooltip-text">Sigla ufficiale del titolo su Nasdaq.</span>
           </span>
         </div>
         <div class="flex items-center gap-2">
@@ -126,7 +111,7 @@
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">International Securities Identification Number. Codice identificativo univoco globale.</span>
+            <span class="tooltip-text">Codice identificativo internazionale del titolo.</span>
           </span>
         </div>
         <div class="flex items-center gap-2">
@@ -137,7 +122,7 @@
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">Mercato di quotazione principale. Verificato su Nasdaq Official, Bloomberg, SEC Filing.</span>
+            <span class="tooltip-text">Mercato di quotazione principale.</span>
           </span>
         </div>
         <div class="flex items-center gap-2">
@@ -148,7 +133,7 @@
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">Classificazione settoriale standard (GICS/MSCI/FactSet) validata sulle fonti IR.</span>
+            <span class="tooltip-text">Classificazione GICS/MSCI del settore.</span>
           </span>
         </div>
         <div class="flex items-center gap-2">
@@ -159,14 +144,14 @@
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">Prezzo aggiornato real-time/ultimo close, validato su Nasdaq/Bloomberg/Reuters.</span>
+            <span class="tooltip-text">Prezzo in tempo reale (ultimo close).</span>
           </span>
         </div>
       </div>
     </section>
 
-    <!-- Card Blocco 2 – Multipli & Valutazione Intrinseca -->
-    <section class="card-blocco transition-all duration-150 bg-white rounded-2xl border border-slate-200 shadow-inner my-8">
+    <!-- Card Blocco 2 -->
+    <section id="blocco2" class="card-blocco transition-all duration-150 bg-white rounded-2xl border border-slate-200 shadow-inner my-8 hidden">
       <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-5 flex items-center gap-2">
         Blocco 2 – Multipli &amp; Valutazione Intrinseca
         <span class="tooltip">
@@ -175,7 +160,7 @@
             <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
             <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
           </svg>
-          <span class="tooltip-text">Indicatori di valutazione: P/E, EV/EBITDA, crescita EPS, fair value teorico (DCF), medie settore.</span>
+          <span class="tooltip-text">Indicatori di valutazione: P/E, EV/EBITDA, fair value (DCF), confronto settore.</span>
         </span>
       </h2>
       <div class="flex flex-col gap-4 text-xs sm:text-sm text-slate-800">
@@ -187,7 +172,7 @@
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">Price/Earnings trailing 12 mesi, confronto con mediana settore e S&P500.</span>
+            <span class="tooltip-text">Prezzo/utili ultimi 12 mesi (settore).</span>
           </span>
         </div>
         <div class="flex items-center gap-2">
@@ -198,7 +183,7 @@
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">Enterprise Value / EBITDA trailing, comparabile con peers auto/tech.</span>
+            <span class="tooltip-text">Enterprise Value / EBITDA trailing.</span>
           </span>
         </div>
         <div class="flex items-center gap-2">
@@ -209,7 +194,7 @@
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">Price/Earnings to Growth ratio, aggiusta i multipli per il tasso di crescita EPS atteso.</span>
+            <span class="tooltip-text">Prezzo/utili/rapporto crescita EPS.</span>
           </span>
         </div>
         <div class="flex items-center gap-2">
@@ -220,7 +205,7 @@
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">Valore intrinseco stimato da modello Discounted Cash Flow su 5 anni.</span>
+            <span class="tooltip-text">Valore intrinseco stimato (Discounted Cash Flow).</span>
           </span>
         </div>
         <div class="flex items-center gap-2">
@@ -231,16 +216,37 @@
               <line x1="12" y1="16" x2="12" y2="12" stroke-width="1.5"/>
               <circle cx="12" cy="8" r="1" stroke-width="1.5"/>
             </svg>
-            <span class="tooltip-text">Valore medio dei multipli P/E delle principali aziende comparabili del settore.</span>
+            <span class="tooltip-text">Valore medio dei multipli P/E delle aziende comparabili.</span>
           </span>
         </div>
       </div>
     </section>
+    <!-- Puoi aggiungere qui altri blocchi... -->
 
-    <!-- CTA footer esempio -->
+    <!-- Disclaimer finale -->
     <footer class="max-w-4xl mx-auto my-7 px-3 sm:px-6 py-4 bg-yellow-50 border border-yellow-300 rounded-xl shadow-sm text-xs sm:text-sm text-yellow-900">
       <strong>Disclaimer:</strong> Questo report ha finalità informative e didattiche, nessuna raccomandazione o consulenza.
     </footer>
   </main>
+  <!-- JS tab switcher -->
+  <script>
+    // tab switcher
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const blocchi = [
+      document.getElementById('blocco1'),
+      document.getElementById('blocco2'),
+      // document.getElementById('blocco3'), ecc...
+    ];
+    tabBtns.forEach((btn, idx) => {
+      btn.addEventListener('click', function () {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        blocchi.forEach((bl, j) => {
+          if (j === idx) bl.classList.remove('hidden');
+          else bl.classList.add('hidden');
+        });
+      });
+    });
+  </script>
 </body>
 </html>
