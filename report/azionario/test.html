@@ -4,156 +4,164 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TRADELIA • AI — Report Azionario</title>
+
   <!-- Tailwind CSS v3 -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+        },
+        extend: {
+          colors: {
+            primary: '#0f172a',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Font Inter + privacy -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" referrerpolicy="no-referrer" />
+
+  <!-- Custom scrollbar style -->
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
-      background-size: 280px;
-      color: #0f172a;
-      margin: 0;
-      padding: 0;
-    }
-    html {
-      scroll-behavior: smooth;
-      scrollbar-width: thin;
-      scrollbar-color: #60a5fa #e2e8f0;
-    }
-    ::-webkit-scrollbar {
-      width: 10px;
-      height: 10px;
-    }
-    ::-webkit-scrollbar-track {
-      background: linear-gradient(to right, #f1f5f9, #e2e8f0);
-      border-radius: 100vh;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(80, 160, 200, 0.5);
-      border-radius: 100vh;
-      transition: background-color 0.2s ease-in-out;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(80, 160, 200, 0.7);
-    }
-    :where(*) {
-      scrollbar-width: thin;
-      scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
-      box-sizing: border-box;
-    }
-    /* Card Scrollbar Orizzontale Mobile */
-    .scroll-cards::-webkit-scrollbar {
-      height: 7px;
-    }
-    .scroll-cards::-webkit-scrollbar-thumb {
-      background: #60a5fa;
-      border-radius: 100vh;
-    }
-    .scroll-cards {
-      scrollbar-color: #60a5fa #e5e7eb;
-      scrollbar-width: thin;
-    }
+    html { scroll-behavior: smooth; }
+    body { background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png'); background-size: 280px; color: #0f172a; }
+
+    ::-webkit-scrollbar { height: 9px; width: 10px; }
+    ::-webkit-scrollbar-thumb { background: rgba(80,160,200,0.4); border-radius: 100vh; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(80,160,200,0.6); }
+    ::-webkit-scrollbar-track { background: linear-gradient(to right, #f1f5f9, #e2e8f0); border-radius: 100vh; }
+
+    .tab-active { background: #f8fafc; border-bottom: 2.5px solid #2563eb; color: #2563eb !important; }
+    .tab-inactive { background: #fff; border-bottom: 2.5px solid transparent; }
+    .tab-label { min-width: 120px; }
   </style>
 </head>
-<body>
-  <!-- HEADER Identico al tuo -->
-  <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6">
+<body class="font-sans">
+  <!-- Header istituzionale -->
+  <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-3">
     <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
       <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
     </a>
     <a href="https://tradelia.org/archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
   </header>
-  <main class="mb-12">
 
-    <!-- BLOCCO 1 – Identificativi & Contesto -->
-    <section id="blocco1" class="max-w-4xl mx-auto my-8 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
-      <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-6">Blocco 1 – Identificativi &amp; Contesto</h3>
-      <!-- CARD WRAP con scroll-x mobile -->
-      <div class="scroll-cards flex gap-6 overflow-x-auto pb-2">
-        <!-- CARD 1 -->
-        <div class="min-w-[220px] max-w-xs bg-gradient-to-br from-blue-50 to-slate-50 border border-slate-200 rounded-2xl shadow-lg px-6 py-6 flex flex-col gap-2">
-          <span class="text-xs font-semibold text-slate-500 uppercase">Ticker</span>
-          <span class="text-lg font-bold text-green-700 tracking-widest">TSLA</span>
+  <!-- TAB BAR: blocchi dinamici -->
+  <nav id="tab-bar" class="sticky top-[60px] z-40 w-full overflow-x-auto bg-white border-b border-gray-200">
+    <div class="flex flex-row gap-1 sm:gap-2 px-2 py-2 min-w-[700px]">
+      <button class="tab-label tab-active px-4 py-1 rounded-t-md font-semibold text-sm transition focus:outline-none" onclick="openTab(0)">Blocco 1 – Identificativi</button>
+      <button class="tab-label tab-inactive px-4 py-1 rounded-t-md font-semibold text-sm transition focus:outline-none" onclick="openTab(1)">Blocco 2 – Multipli & Valutazione</button>
+      <button class="tab-label tab-inactive px-4 py-1 rounded-t-md font-semibold text-sm transition focus:outline-none" onclick="openTab(2)">Blocco 3 – Fondamentali</button>
+      <!-- puoi aggiungere altre tab qui -->
+    </div>
+  </nav>
+
+  <!-- CONTENUTO BLOCCHI -->
+  <main class="max-w-4xl mx-auto">
+    <!-- BLOCCO 1 -->
+    <section id="tab-content-0" class="tab-content bg-white border border-gray-200 rounded-xl shadow-inner my-6 px-3 sm:px-6 py-6 transition-all">
+      <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 1 – Identificativi &amp; Contesto</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm text-slate-800">
+        <div class="bg-gray-50 p-3 rounded-lg border">
+          <div class="font-semibold text-slate-700">Ticker</div>
+          <div class="font-mono">TSLA</div>
         </div>
-        <!-- CARD 2 -->
-        <div class="min-w-[220px] max-w-xs bg-gradient-to-br from-blue-50 to-slate-50 border border-slate-200 rounded-2xl shadow-lg px-6 py-6 flex flex-col gap-2">
-          <span class="text-xs font-semibold text-slate-500 uppercase">ISIN</span>
-          <span class="text-lg font-medium text-slate-700">US88160R1014</span>
+        <div class="bg-gray-50 p-3 rounded-lg border">
+          <div class="font-semibold text-slate-700">ISIN</div>
+          <div class="font-mono">US88160R1014</div>
         </div>
-        <!-- CARD 3 -->
-        <div class="min-w-[220px] max-w-xs bg-gradient-to-br from-blue-50 to-slate-50 border border-slate-200 rounded-2xl shadow-lg px-6 py-6 flex flex-col gap-2">
-          <span class="text-xs font-semibold text-slate-500 uppercase">Exchange</span>
-          <span class="text-lg font-semibold text-slate-700">NASDAQ</span>
+        <div class="bg-gray-50 p-3 rounded-lg border">
+          <div class="font-semibold text-slate-700">Exchange</div>
+          <div>NASDAQ</div>
         </div>
-        <!-- CARD 4 -->
-        <div class="min-w-[220px] max-w-xs bg-gradient-to-br from-blue-50 to-slate-50 border border-slate-200 rounded-2xl shadow-lg px-6 py-6 flex flex-col gap-2">
-          <span class="text-xs font-semibold text-slate-500 uppercase">Settore</span>
-          <span class="text-lg font-semibold text-slate-700">Consumer Discretionary</span>
+        <div class="bg-gray-50 p-3 rounded-lg border">
+          <div class="font-semibold text-slate-700">Settore</div>
+          <div>Auto &amp; EV</div>
         </div>
-        <!-- CARD 5 -->
-        <div class="min-w-[220px] max-w-xs bg-gradient-to-br from-blue-50 to-slate-50 border border-slate-200 rounded-2xl shadow-lg px-6 py-6 flex flex-col gap-2">
-          <span class="text-xs font-semibold text-slate-500 uppercase">Market Cap</span>
-          <span class="text-lg font-bold text-green-700">$1.004B</span>
+        <div class="bg-gray-50 p-3 rounded-lg border col-span-2">
+          <div class="font-semibold text-slate-700">Market Cap</div>
+          <div>$900B <span class="text-green-600 font-semibold">(Top 5 NASDAQ)</span></div>
         </div>
-        <!-- CARD 6 -->
-        <div class="min-w-[220px] max-w-xs bg-gradient-to-br from-blue-50 to-slate-50 border border-slate-200 rounded-2xl shadow-lg px-6 py-6 flex flex-col gap-2">
-          <span class="text-xs font-semibold text-slate-500 uppercase">Rating Analisti</span>
-          <span class="text-base font-bold text-yellow-600">Hold</span>
-          <span class="text-xs text-slate-500">46 analisti • 31/07/2025</span>
-        </div>
-      </div>
-      <!-- COMMENTO -->
-      <div class="max-w-2xl mx-auto mt-8 px-4">
-        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 shadow-inner">
-          <div class="text-base font-semibold text-slate-800 mb-1">Commento Tradelia AI</div>
-          <div class="text-sm text-slate-700 leading-relaxed">
-            Asset solido, valutazione premium, presenza globale ma sentiment prudente sul breve. Rating aggregato da validare trimestralmente.
-          </div>
+        <div class="bg-gray-50 p-3 rounded-lg border col-span-2">
+          <div class="font-semibold text-slate-700">Target Analisti 12M</div>
+          <div>$320 (+21% upside, consenso Reuters/Bloomberg)</div>
         </div>
       </div>
     </section>
-
-    <!-- BLOCCO 2 – Multipli & Valutazione Intrinseca -->
-    <section id="blocco2" class="max-w-4xl mx-auto my-8 px-3 sm:px-6 py-6 bg-white border border-gray-200 rounded-xl shadow-sm">
-      <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-6">Blocco 2 – Multipli &amp; Valutazione Intrinseca</h3>
-      <div class="scroll-cards flex gap-6 overflow-x-auto pb-2">
-        <!-- CARD 1 -->
-        <div class="min-w-[220px] max-w-xs bg-gradient-to-br from-indigo-50 to-slate-50 border border-indigo-200 rounded-2xl shadow-lg px-6 py-6 flex flex-col gap-2">
-          <span class="text-xs font-semibold text-slate-500 uppercase">P/E Forward</span>
-          <span class="text-lg font-bold text-green-700">51,8</span>
-          <span class="text-xs text-slate-500">vs settore: 24,3</span>
+    <!-- BLOCCO 2 -->
+    <section id="tab-content-1" class="tab-content hidden bg-white border border-gray-200 rounded-xl shadow-inner my-6 px-3 sm:px-6 py-6 transition-all">
+      <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 2 – Multipli &amp; Valutazione</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm text-slate-800">
+        <div class="bg-gray-50 p-3 rounded-lg border">
+          <div class="font-semibold text-slate-700">P/E (TTM)</div>
+          <div class="font-mono">74x</div>
         </div>
-        <!-- CARD 2 -->
-        <div class="min-w-[220px] max-w-xs bg-gradient-to-br from-indigo-50 to-slate-50 border border-indigo-200 rounded-2xl shadow-lg px-6 py-6 flex flex-col gap-2">
-          <span class="text-xs font-semibold text-slate-500 uppercase">EV/EBITDA</span>
-          <span class="text-lg font-bold text-green-700">34,9</span>
-          <span class="text-xs text-slate-500">vs settore: 13,1</span>
+        <div class="bg-gray-50 p-3 rounded-lg border">
+          <div class="font-semibold text-slate-700">P/B</div>
+          <div class="font-mono">15x</div>
         </div>
-        <!-- CARD 3 -->
-        <div class="min-w-[220px] max-w-xs bg-gradient-to-br from-indigo-50 to-slate-50 border border-indigo-200 rounded-2xl shadow-lg px-6 py-6 flex flex-col gap-2">
-          <span class="text-xs font-semibold text-slate-500 uppercase">P/BV</span>
-          <span class="text-lg font-bold text-yellow-600">13,8</span>
-          <span class="text-xs text-slate-500">vs settore: 6,2</span>
+        <div class="bg-gray-50 p-3 rounded-lg border">
+          <div class="font-semibold text-slate-700">EV/EBITDA</div>
+          <div class="font-mono">38x</div>
         </div>
-        <!-- CARD 4 -->
-        <div class="min-w-[220px] max-w-xs bg-gradient-to-br from-indigo-50 to-slate-50 border border-indigo-200 rounded-2xl shadow-lg px-6 py-6 flex flex-col gap-2">
-          <span class="text-xs font-semibold text-slate-500 uppercase">FCF Yield</span>
-          <span class="text-lg font-bold text-red-600">2,1%</span>
-          <span class="text-xs text-slate-500">vs settore: 5,4%</span>
+        <div class="bg-gray-50 p-3 rounded-lg border">
+          <div class="font-semibold text-slate-700">FCF Yield</div>
+          <div class="font-mono">1.1%</div>
         </div>
-      </div>
-      <!-- COMMENTO -->
-      <div class="max-w-2xl mx-auto mt-8 px-4">
-        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 shadow-inner">
-          <div class="text-base font-semibold text-slate-800 mb-1">Commento Tradelia AI</div>
-          <div class="text-sm text-slate-700 leading-relaxed">
-            Valutazione superiore alla media di settore: premiata la crescita ma rischio di compressione multipli se guidance non confermata.
-          </div>
+        <div class="bg-gray-50 p-3 rounded-lg border col-span-2">
+          <div class="font-semibold text-slate-700">Valutazione</div>
+          <div class="text-yellow-600 font-semibold">Warning: multipli molto tirati vs peers tech/auto</div>
         </div>
       </div>
     </section>
-
+    <!-- BLOCCO 3 -->
+    <section id="tab-content-2" class="tab-content hidden bg-white border border-gray-200 rounded-xl shadow-inner my-6 px-3 sm:px-6 py-6 transition-all">
+      <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 3 – Fondamentali Aziendali</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm text-slate-800">
+        <div class="bg-gray-50 p-3 rounded-lg border">
+          <div class="font-semibold text-slate-700">Ricavi TTM</div>
+          <div class="font-mono">$96B</div>
+        </div>
+        <div class="bg-gray-50 p-3 rounded-lg border">
+          <div class="font-semibold text-slate-700">Utile Netto TTM</div>
+          <div class="font-mono">$12.4B</div>
+        </div>
+        <div class="bg-gray-50 p-3 rounded-lg border">
+          <div class="font-semibold text-slate-700">Crescita YoY</div>
+          <div class="font-mono">+23%</div>
+        </div>
+        <div class="bg-gray-50 p-3 rounded-lg border">
+          <div class="font-semibold text-slate-700">Margine Operativo</div>
+          <div class="font-mono">10.3%</div>
+        </div>
+        <div class="bg-gray-50 p-3 rounded-lg border col-span-2">
+          <div class="font-semibold text-slate-700">Commento</div>
+          <div class="text-green-700">Ricavi e margini in crescita, cash flow solido su base annua</div>
+        </div>
+      </div>
+    </section>
+    <!-- Altri blocchi... -->
   </main>
+
+  <script>
+    // JS dinamico per TAB switching
+    function openTab(idx) {
+      // nasconde tutti
+      document.querySelectorAll('.tab-content').forEach(e => e.classList.add('hidden'));
+      document.querySelectorAll('.tab-label').forEach(e => {
+        e.classList.remove('tab-active');
+        e.classList.add('tab-inactive');
+      });
+      // mostra quello selezionato
+      document.getElementById('tab-content-' + idx).classList.remove('hidden');
+      document.querySelectorAll('.tab-label')[idx].classList.add('tab-active');
+      document.querySelectorAll('.tab-label')[idx].classList.remove('tab-inactive');
+    }
+  </script>
 </body>
 </html>
