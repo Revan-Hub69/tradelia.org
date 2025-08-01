@@ -8,7 +8,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script>document.addEventListener('DOMContentLoaded', () => AOS.init());</script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      AOS.init({ duration: 400, easing: "ease-out", once: true });
+    });
+    function closeMenu() {
+      document.getElementById('menuMobile').classList.add('hidden');
+    }
+  </script>
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -19,38 +26,9 @@
     }
     ::-webkit-scrollbar { height: 8px; width: 10px; background: #e0e7ef; border-radius: 10px;}
     ::-webkit-scrollbar-thumb { background: #70a7e8; border-radius: 10px;}
-    .tabs-scroll::-webkit-scrollbar { height: 8px; background: #e0e7ef;}
-    .tabs-scroll::-webkit-scrollbar-thumb { background: #70a7e8; }
-    .tab-btn { transition: background 0.17s, color 0.13s; }
-    .tab-btn:hover, .tab-btn.active { background: #e0e7ef; color: #0369a1; }
     .card-blocco:hover { background: #f7fafc; box-shadow: 0 2px 16px 0 rgba(50,120,200,0.07);}
-    .tooltip { position: relative; display: inline-block; cursor: pointer; z-index: 2; }
-    .tooltip .tooltip-text {
-      display: none;
-      position: fixed;
-      left: 50%; top: 53vh;
-      transform: translate(-50%, -50%);
-      background: #222e3a;
-      color: #fff;
-      min-width: 210px;
-      max-width: 340px;
-      font-size: 13px;
-      border-radius: 9px;
-      padding: 14px 18px;
-      box-shadow: 0 4px 24px 0 rgba(35,70,120,0.15);
-      z-index: 90;
-      line-height: 1.55;
-      pointer-events: none;
-      opacity: 0; transition: opacity 0.17s;
-    }
-    .tooltip:hover .tooltip-text, .tooltip:focus-within .tooltip-text { display: block; pointer-events: all; opacity: 1; }
-    .tooltip .tooltip-title { font-weight: 700; color: #60a5fa; margin-bottom: 5px; }
-    .tooltip .tooltip-fonti { color: #dbeafe; font-size: 12px; margin-top: 10px; }
     @media (max-width: 700px) {
-      .tabs-scroll { overflow-x: auto; }
-      .tab-btn { min-width: 170px; font-size: 13px; }
       .card-blocco { padding: 1.1rem 0.7rem; }
-      .tooltip .tooltip-text { min-width: 160px; max-width: 90vw; font-size: 13px; padding: 10px 9px; }
     }
     @media (min-width: 640px) {
       .card-blocco { padding: 2.2rem 2.5rem; }
@@ -58,14 +36,72 @@
   </style>
 </head>
 <body>
-  <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6 border-b border-slate-200">
-    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
-      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
-    </a>
-    <a href="https://tradelia.org/archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
-  </header>
-  <main class="px-2 max-w-4xl mx-auto">
-    <!-- contenuto dei blocchi qui -->
-  </main>
+
+<!-- Sidebar desktop -->
+<nav class="hidden lg:block fixed top-24 left-6 w-52 text-sm space-y-2 z-40">
+  <a href="#blocco1" class="text-sky-900 hover:text-blue-600 font-medium block">Blocco 1 – Contesto</a>
+  <a href="#blocco2" class="text-sky-900 hover:text-blue-600 font-medium block">Blocco 2 – Valutazione</a>
+  <a href="#blocco3" class="text-sky-900 hover:text-blue-600 font-medium block">Blocco 3 – Fondamentali</a>
+  <a href="#blocco4" class="text-sky-900 hover:text-blue-600 font-medium block">Blocco 4 – Dividendi</a>
+  <a href="#blocco5" class="text-sky-900 hover:text-blue-600 font-medium block">Blocco 5 – Rischio</a>
+  <a href="#blocco6" class="text-sky-900 hover:text-blue-600 font-medium block">Blocco 6 – Market</a>
+  <a href="#blocco7" class="text-sky-900 hover:text-blue-600 font-medium block">Blocco 7 – Derivati</a>
+  <a href="#blocco8" class="text-sky-900 hover:text-blue-600 font-medium block">Blocco 8 – Tecnica</a>
+  <a href="#blocco9" class="text-sky-900 hover:text-blue-600 font-medium block">Blocco 9 – Proprietà</a>
+  <a href="#blocco10" class="text-sky-900 hover:text-blue-600 font-medium block">Blocco 10 – Cluster Strategico</a>
+  <a href="#blocco11" class="text-sky-900 hover:text-blue-600 font-medium block">Blocco 11 – Eventi & Macro</a>
+  <a href="#blocco12" class="text-sky-900 hover:text-blue-600 font-medium block">Blocco 12 – Dati Alternativi</a>
+  <a href="#blocco13" class="text-sky-900 hover:text-blue-600 font-medium block">Blocco 13 – Cluster Tradelia</a>
+  <a href="#blocco14" class="text-sky-900 hover:text-blue-600 font-medium block">Blocco 14 – Simulazioni</a>
+</nav>
+
+<!-- Bottone mobile -->
+<button onclick="document.getElementById('menuMobile').classList.toggle('hidden')"
+  class="fixed bottom-6 right-6 z-50 bg-blue-700 text-white px-4 py-3 rounded-full shadow-lg sm:hidden">
+  Menu Sezioni
+</button>
+
+<!-- Menu mobile -->
+<div id="menuMobile" class="hidden fixed inset-0 bg-white z-50 p-6 overflow-y-auto shadow-2xl sm:hidden">
+  <h2 class="text-lg font-semibold mb-4 text-sky-900">Vai a una sezione:</h2>
+  <nav class="space-y-2">
+    <a href="#blocco1" onclick="closeMenu()" class="block text-blue-700 underline">Blocco 1 – Contesto</a>
+    <a href="#blocco2" onclick="closeMenu()" class="block text-blue-700 underline">Blocco 2 – Valutazione</a>
+    <a href="#blocco3" onclick="closeMenu()" class="block text-blue-700 underline">Blocco 3 – Fondamentali</a>
+    <a href="#blocco4" onclick="closeMenu()" class="block text-blue-700 underline">Blocco 4 – Dividendi</a>
+    <a href="#blocco5" onclick="closeMenu()" class="block text-blue-700 underline">Blocco 5 – Rischio</a>
+    <a href="#blocco6" onclick="closeMenu()" class="block text-blue-700 underline">Blocco 6 – Market</a>
+    <a href="#blocco7" onclick="closeMenu()" class="block text-blue-700 underline">Blocco 7 – Derivati</a>
+    <a href="#blocco8" onclick="closeMenu()" class="block text-blue-700 underline">Blocco 8 – Tecnica</a>
+    <a href="#blocco9" onclick="closeMenu()" class="block text-blue-700 underline">Blocco 9 – Proprietà</a>
+    <a href="#blocco10" onclick="closeMenu()" class="block text-blue-700 underline">Blocco 10 – Cluster Strategico</a>
+    <a href="#blocco11" onclick="closeMenu()" class="block text-blue-700 underline">Blocco 11 – Eventi & Macro</a>
+    <a href="#blocco12" onclick="closeMenu()" class="block text-blue-700 underline">Blocco 12 – Dati Alternativi</a>
+    <a href="#blocco13" onclick="closeMenu()" class="block text-blue-700 underline">Blocco 13 – Cluster Tradelia</a>
+    <a href="#blocco14" onclick="closeMenu()" class="block text-blue-700 underline">Blocco 14 – Simulazioni</a>
+  </nav>
+  <button onclick="closeMenu()" class="mt-6 text-sm text-gray-500 underline">Chiudi</button>
+</div>
+
+<!-- Header istituzionale -->
+<header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6 border-b border-slate-200">
+  <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+    <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
+  </a>
+  <a href="https://tradelia.org/archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
+</header>
+
+<!-- Main Content -->
+<main class="px-2 max-w-4xl mx-auto">
+  <!-- Blocchi 1–14 -->
+  <!-- Puoi incollare ogni blocco con id="bloccoX" qui sotto -->
+  <!-- Esempio: -->
+  <section id="blocco1" class="card-blocco bg-white rounded-2xl border border-slate-200 shadow-inner my-8" data-aos="fade-up">
+    <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-5">Blocco 1 – Contesto</h2>
+    <p class="text-sm text-slate-600">Contenuto da aggiungere…</p>
+  </section>
+  <!-- Ripeti per blocchi 2-14 cambiando id e titolo -->
+</main>
+
 </body>
 </html>
