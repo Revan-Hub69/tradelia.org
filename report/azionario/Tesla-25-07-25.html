@@ -4,18 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TRADELIA • AI — Report Azionario</title>
+  <meta name="description" content="Report istituzionale Tradelia AI — analisi fondamentale, tecnica e strategica su asset selezionati.">
+  <meta name="author" content="Tradelia AI">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      AOS.init({ duration: 400, easing: "ease-out", once: true });
-    });
-    function closeMenu() {
-      document.getElementById('menuMobile').classList.add('hidden');
-    }
-  </script>
+  <script>document.addEventListener('DOMContentLoaded', () => AOS.init());</script>
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -23,166 +20,142 @@
       background-size: 280px;
       color: #0f172a;
       margin: 0; padding: 0;
+      font-size: 15px;
+      line-height: 1.6;
     }
-    ::-webkit-scrollbar { height: 8px; width: 10px; background: #e0e7ef; border-radius: 10px;}
-    ::-webkit-scrollbar-thumb { background: #70a7e8; border-radius: 10px;}
-    .card-blocco:hover { background: #f7fafc; box-shadow: 0 2px 16px 0 rgba(50,120,200,0.07);}
-    .tooltip { position: relative; display: inline-block; cursor: pointer; z-index: 2; }
+    ::-webkit-scrollbar { height: 8px; width: 10px; background: #e0e7ef; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: #70a7e8; border-radius: 10px; }
+    .tabs-scroll::-webkit-scrollbar { height: 8px; background: #e0e7ef; }
+    .tabs-scroll::-webkit-scrollbar-thumb { background: #70a7e8; }
+    .tab-btn {
+      transition: background 0.17s, color 0.13s;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      white-space: nowrap;
+    }
+    .tab-btn:hover, .tab-btn.active {
+      background: #e0e7ef;
+      color: #0369a1;
+    }
+    .card-blocco:hover {
+      background: #f7fafc;
+      box-shadow: 0 2px 16px 0 rgba(50,120,200,0.07);
+    }
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+      z-index: 2;
+    }
     .tooltip .tooltip-text {
       display: none;
       position: fixed;
-      left: 50%; top: 53vh;
+      left: 50%;
+      top: 53vh;
       transform: translate(-50%, -50%);
-      background: #222e3a;
+      background: #1e293b;
       color: #fff;
       min-width: 210px;
-      max-width: 340px;
-      font-size: 13px;
+      max-width: 360px;
+      font-size: 13.5px;
+      border: 1px solid #334155;
       border-radius: 9px;
       padding: 14px 18px;
       box-shadow: 0 4px 24px 0 rgba(35,70,120,0.15);
       z-index: 90;
       line-height: 1.55;
       pointer-events: none;
-      opacity: 0; transition: opacity 0.17s;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
     }
-    .tooltip:hover .tooltip-text,
-    .tooltip:focus-within .tooltip-text {
-      display: block; pointer-events: all; opacity: 1;
+    .tooltip:hover .tooltip-text, .tooltip:focus-within .tooltip-text {
+      display: block;
+      pointer-events: all;
+      opacity: 1;
     }
-    .tooltip .tooltip-title { font-weight: 700; color: #60a5fa; margin-bottom: 5px; }
-    .tooltip .tooltip-fonti { color: #dbeafe; font-size: 12px; margin-top: 10px; }
+    .tooltip .tooltip-title {
+      font-weight: 700;
+      color: #60a5fa;
+      margin-bottom: 5px;
+    }
+    .tooltip .tooltip-fonti {
+      color: #dbeafe;
+      font-size: 12px;
+      margin-top: 10px;
+    }
     @media (max-width: 700px) {
+      .tabs-scroll { overflow-x: auto; }
+      .tab-btn { min-width: 170px; font-size: 13px; }
       .card-blocco { padding: 1.1rem 0.7rem; }
       .tooltip .tooltip-text { min-width: 160px; max-width: 90vw; font-size: 13px; padding: 10px 9px; }
     }
     @media (min-width: 640px) {
       .card-blocco { padding: 2.2rem 2.5rem; }
     }
+    @media print {
+      header, .tabs-scroll, footer { display: none !important; }
+      body { background: white !important; }
+      .card-blocco { box-shadow: none !important; border: 1px solid #ccc; }
+    }
   </style>
 </head>
 <body>
+  <header class="sticky top-0 z-50 bg-white shadow-sm w-full px-4 sm:px-6 py-3 flex justify-between items-center border-b border-slate-200 backdrop-blur-sm bg-white/95">
+    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600">•AI</span>
+    </a>
+    <a href="https://tradelia.org/archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
+  </header>
 
-<!-- Sidebar desktop -->
-<nav class="hidden lg:block fixed top-24 left-6 w-52 text-sm space-y-2 z-40">
-  <a href="#blocco0" class="text-sky-900 hover:text-blue-600 font-medium block">Blocco 0 – Asset</a>
-  <a href="#blocco1" class="text-sky-900 hover:text-blue-600 font-medium block">Blocco 1 – Contesto</a>
-  <a href="#blocco2" class="text-sky-900 hover:text-blue-600 font-medium block">Blocco 2 – Valutazione</a>
-  <!-- Aggiungi blocchi 3–14 -->
-</nav>
+  <div class="tabs-scroll flex overflow-x-auto gap-2 sm:gap-4 py-3 px-3 border-b border-slate-200 sticky top-[56px] z-40 bg-white backdrop-blur">
+    <!-- Tab dinamici qui -->
+  </div>
 
-<!-- Bottone mobile -->
-<button onclick="document.getElementById('menuMobile').classList.toggle('hidden')"
-  class="fixed bottom-6 right-6 z-50 bg-blue-700 text-white px-4 py-3 rounded-full shadow-lg sm:hidden">
-  Menu Sezioni
-</button>
+  <main class="px-3 sm:px-6 max-w-6xl mx-auto space-y-6 pb-32">
+    <nav class="text-xs text-slate-600 py-2 px-1 sm:px-0">
+      <span class="text-blue-700 font-semibold">Home</span> / <span class="text-slate-500">Report</span> / TSLA 2025
+    </nav>
 
-<!-- Menu mobile -->
-<div id="menuMobile" class="hidden fixed inset-0 bg-white z-50 p-6 overflow-y-auto shadow-2xl sm:hidden">
-  <h2 class="text-lg font-semibold mb-4 text-sky-900">Vai a una sezione:</h2>
-  <nav class="space-y-2">
-    <a href="#blocco0" onclick="closeMenu()" class="block text-blue-700 underline">Blocco 0 – Asset</a>
-    <a href="#blocco1" onclick="closeMenu()" class="block text-blue-700 underline">Blocco 1 – Contesto</a>
-    <a href="#blocco2" onclick="closeMenu()" class="block text-blue-700 underline">Blocco 2 – Valutazione</a>
-    <!-- Blocchi successivi -->
-  </nav>
-  <button onclick="closeMenu()" class="mt-6 text-sm text-gray-500 underline">Chiudi</button>
-</div>
-
-<!-- Header top fisso -->
-<header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6 border-b border-slate-200">
-  <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
-    <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
-  </a>
-  <a href="https://tradelia.org/archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
-</header>
-
-<main class="px-2 max-w-4xl mx-auto">
-
-  <!-- BLOCCO 0 – Header Asset + Chart -->
-  <section id="blocco0" class="bg-white rounded-xl shadow-inner border border-slate-200 p-6 flex flex-col sm:flex-row items-center gap-5 my-6" data-aos="fade-up">
-    <div class="flex-1 flex flex-col items-start">
-      <div class="text-xs uppercase text-slate-400 tracking-wide mb-1">Asset</div>
-      <div class="font-bold text-lg sm:text-2xl text-sky-900 mb-1">Tesla, Inc. <span class="font-semibold text-slate-500 ml-1">| TSLA</span></div>
-      <div class="text-xs text-slate-500">Data report: <span class="font-semibold text-slate-700">31/07/2025</span></div>
+    <div class="mt-2 mb-6 border-b border-gray-200 pb-2">
+      <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">Report Azionario • Tesla (TSLA)</h1>
+      <p class="text-sm text-slate-500 mt-1">Aggiornato al 2 Agosto 2025</p>
     </div>
-    <div class="flex-1 flex justify-center items-center">
-      <img src="https://img.chartshots.net/688c832d32534.png" alt="Screenshot TSLA Chart" class="max-h-32 rounded-lg shadow border border-slate-200" loading="lazy">
-    </div>
-  </section>
 
-  <!-- BLOCCO 1 -->
-  <section id="blocco1" class="card-blocco bg-white rounded-2xl border border-slate-200 shadow-inner my-8 p-6" data-aos="fade-up">
-    <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-5 border-b pb-2 border-slate-200">Blocco 1 – Identificativi & Contesto</h2>
-    <div class="text-sm space-y-2 text-slate-800">
-      <div><strong class="text-slate-600">Ticker:</strong> <span class="text-green-600 font-bold">TSLA</span></div>
-      <div><strong class="text-slate-600">ISIN:</strong> <span class="text-green-600 font-bold">US88160R1014</span></div>
-      <div><strong class="text-slate-600">Exchange:</strong> <span class="text-green-600 font-bold">NASDAQ</span></div>
-      <div><strong class="text-slate-600">Prezzo Attuale:</strong> <span class="text-green-600 font-bold">$314.25</span></div>
-      <div><strong class="text-slate-600">Variazione 24h:</strong> <span class="text-yellow-600 font-bold">-0.015%</span></div>
+    <!-- BLOCCO 0 – CHART E VARIAZIONE -->
+<section id="blocco0" class="bg-white border-t border-b border-slate-200 py-6 px-4 sm:px-6" data-aos="fade-up">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-1">Andamento titolo</h2>
+      <p class="text-sm text-slate-600">Performance giornaliera e indice di riferimento</p>
     </div>
-    <div class="mt-6 pt-4 border-t text-slate-700 text-sm leading-relaxed">
-      <strong>Commento Tradelia AI:</strong> Dati identificativi confermati su più fonti. Validazione complessiva: <span class="text-green-600 font-bold">Positiva</span>.
+    <div class="text-sm text-slate-700">
+      <span class="font-semibold">+2,45%</span> su 24h<br/>
+      <span class="text-slate-500">Indice Nasdaq: +1,20%</span>
     </div>
-  </section>
+  </div>
+  <div class="mt-4 w-full h-[240px] bg-slate-100 rounded-lg overflow-hidden border border-slate-200">
+    <img src="https://dummyimage.com/800x240/dae1e7/64748b.png&text=Grafico+Intraday+TSLA" alt="Grafico intraday TSLA" class="w-full h-full object-cover" />
+  </div>
+</section>
 
-  <!-- BLOCCO 2 -->
-  <section id="blocco2" class="card-blocco bg-white rounded-2xl border border-slate-200 shadow-inner my-8 p-6" data-aos="fade-up">
-    <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-5 border-b pb-2 border-slate-200">Blocco 2 – Multipli & Valutazione</h2>
-    <p class="text-sm text-slate-700">Contenuto placeholder. Inserire P/E, EV/EBITDA, DCF, comparables, fair value ecc.</p>
-    <div class="mt-6 pt-4 border-t text-slate-700 text-sm leading-relaxed">
-      <strong>Commento Tradelia AI:</strong> In attesa di valorizzazione multipli comparabili. Nessuna indicazione operativa.
-    </div>
-  </section>
+<!-- BLOCCO 1 – IDENTIFICATIVI & CONTESTO -->
+<section id="blocco1" class="card-blocco bg-white border border-slate-200 rounded-xl shadow-sm px-5 py-6" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 1 – Identificativi & Contesto</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm text-slate-700">
+    <div><span class="font-semibold text-slate-600">Ticker:</span> TSLA</div>
+    <div><span class="font-semibold text-slate-600">ISIN:</span> US88160R1014</div>
+    <div><span class="font-semibold text-slate-600">Settore:</span> Auto Elettriche</div>
+    <div><span class="font-semibold text-slate-600">Sede:</span> Austin, Texas (USA)</div>
+    <div><span class="font-semibold text-slate-600">Indice Principale:</span> Nasdaq 100</div>
+    <div><span class="font-semibold text-slate-600">Fuso Orario:</span> UTC -5</div>
+    <div class="sm:col-span-2"><span class="font-semibold text-slate-600">Descrizione:</span> Tesla è un produttore globale di veicoli elettrici, sistemi energetici e software per la guida autonoma. Fondata da Elon Musk e altri nel 2003.</div>
+  </div>
+</section>
+  </main>
 
-  <!-- BLOCCO 3 -->
-  <section id="blocco3" class="card-blocco bg-white rounded-2xl border border-slate-200 shadow-inner my-8 p-6" data-aos="fade-up">
-    <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-5 border-b pb-2 border-slate-200">Blocco 3 – Fondamentali Aziendali</h2>
-    <p class="text-sm text-slate-700">Contenuto placeholder. Inserire ricavi, margini, crescita EPS, debito netto, ROE/ROIC.</p>
-    <div class="mt-6 pt-4 border-t text-slate-700 text-sm leading-relaxed">
-      <strong>Commento Tradelia AI:</strong> Attendere analisi bilanci ultimi 4 trimestri. Warning su margine lordo vs peer group.
-    </div>
-  </section>
-
-  <!-- BLOCCO 4 -->
-  <section id="blocco4" class="card-blocco bg-white rounded-2xl border border-slate-200 shadow-inner my-8 p-6" data-aos="fade-up">
-    <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-5 border-b pb-2 border-slate-200">Blocco 4 – Dividendi & Buyback</h2>
-    <p class="text-sm text-slate-700">Contenuto placeholder. Nessun dividendo erogato. Buyback attuale non presente.</p>
-    <div class="mt-6 pt-4 border-t text-slate-700 text-sm leading-relaxed">
-      <strong>Commento Tradelia AI:</strong> Profilo orientato alla crescita, politiche di ritorno capitale assenti.
-    </div>
-  </section>
-
-  <!-- BLOCCO 5 -->
-  <section id="blocco5" class="card-blocco bg-white rounded-2xl border border-slate-200 shadow-inner my-8 p-6" data-aos="fade-up">
-    <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-5 border-b pb-2 border-slate-200">Blocco 5 – Performance & Rischio</h2>
-    <p class="text-sm text-slate-700">Placeholder: inserire Beta, drawdown max, volatilità 30d/90d, Sharpe, profilo rischio storico.</p>
-    <div class="mt-6 pt-4 border-t text-slate-700 text-sm leading-relaxed">
-      <strong>Commento Tradelia AI:</strong> Volatilità elevata ma storicamente premiata. Asset adatto a portafogli aggressivi.
-    </div>
-  </section>
-
-  <!-- CTA FINALE -->
-  <section class="bg-white rounded-xl shadow-inner border border-slate-300 p-6 my-10" data-aos="fade-up">
-    <h2 class="text-lg font-semibold text-slate-900 mb-3">Strategia Operativa & Simulazione</h2>
-    <p class="text-sm text-slate-700 leading-relaxed">
-      Per questo asset è possibile eseguire simulazioni operative con opzioni, CFD, DMA margin o ETF tematici.
-      La validazione tecnica e macro può abilitare ingressi su rottura dei livelli o pullback strutturati.
-    </p>
-    <div class="mt-4">
-      <a href="https://tradelia.org/simulazioni.html" class="inline-block bg-blue-700 text-white px-4 py-2 text-sm rounded hover:bg-blue-800 transition">
-        Vai alla simulazione interattiva →
-      </a>
-    </div>
-  </section>
-
-  <!-- DISCLAIMER -->
-  <footer class="text-xs text-slate-500 text-justify max-w-4xl mx-auto border-t pt-6 pb-10 px-3 sm:px-6 leading-relaxed">
-    Le informazioni contenute in questo report sono prodotte da Tradelia AI a fini informativi e non costituiscono sollecitazione all'investimento. I dati sono ottenuti da fonti ritenute affidabili, ma non si garantisce l'accuratezza o la completezza. Le performance passate non sono indicative di risultati futuri. L'investimento in strumenti finanziari comporta rischi, inclusa la perdita del capitale. Prima di operare si raccomanda di consultare un consulente finanziario abilitato.
+  <footer class="text-xs text-slate-500 text-center border-t border-slate-200 py-4 mt-10">
+    Report generato da Tradelia AI. I dati non costituiscono raccomandazione d’investimento. ©2025 Tradelia.org
   </footer>
-
-</main>
-
-
 </body>
 </html>
