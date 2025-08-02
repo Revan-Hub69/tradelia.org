@@ -19,120 +19,124 @@
       lucide.createIcons();
     });
   </script>
- <style>
-  body {
-    font-family: 'Inter', sans-serif;
-    background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
-    background-size: 280px;
-    color: #0f172a;
-    margin: 0;
-    padding: 0;
-    font-size: 15px;
-    line-height: 1.6;
-  }
-
-  .card-blocco {
-    background: #ffffff;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
-    transition: box-shadow 0.2s ease;
-  }
-
-  .card-blocco:hover {
-    background: #f8fafc;
-    box-shadow: 0 2px 12px 0 rgba(100, 120, 200, 0.07);
-  }
-
-  section.card-blocco {
-    scroll-margin-top: 90px;
-  }
-
-  /* Tooltip */
-  .tooltip {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    cursor: pointer;
-    z-index: 50;
-  }
-
-  .tooltip .tooltip-text {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    transform: translateY(8px);
-    background: #1e293b;
-    color: #fff;
-    min-width: 210px;
-    max-width: 320px;
-    font-size: 13.5px;
-    border: 1px solid #334155;
-    border-radius: 9px;
-    padding: 14px 18px;
-    box-shadow: 0 4px 24px 0 rgba(35,70,120,0.15);
-    z-index: 99;
-    line-height: 1.55;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
-    white-space: normal;
-    margin-top: 14px;
-  }
-
-  .tooltip:hover .tooltip-text {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .tooltip .tooltip-text::before {
-    content: '';
-    position: absolute;
-    top: -6px;
-    left: 14px;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-bottom: 6px solid #1e293b;
-  }
-
-  .tooltip .tooltip-title {
-    font-weight: 700;
-    color: #60a5fa;
-    margin-bottom: 5px;
-  }
-
-  .tooltip .tooltip-fonti {
-    color: #dbeafe;
-    font-size: 12px;
-    margin-top: 10px;
-  }
-
-  /* Responsive tooltip */
-  @media screen and (max-width: 480px) {
-    .tooltip .tooltip-text {
-      max-width: 90vw;
-      left: 0;
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      AOS.init({ once: true, disableMutationObserver: true });
+      lucide.createIcons();
+    });
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+      background-size: 280px;
+      color: #0f172a;
+      margin: 0;
+      padding: 0;
+      font-size: 15px;
+      line-height: 1.6;
     }
-  }
 
-  /* Scrollbar custom Tradelia AI */
-  ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-  }
-  ::-webkit-scrollbar-track {
-    background: #e2e8f0;
-    border-radius: 8px;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #94a3b8;
-    border-radius: 8px;
-    border: 2px solid #e2e8f0;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #64748b;
-  }
-</style>
+    .card-blocco {
+      position: relative;
+      z-index: 10;
+      background: #ffffff;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+      transition: box-shadow 0.2s ease;
+    }
 
+    .card-blocco:hover {
+      background: #f8fafc;
+      box-shadow: 0 2px 12px 0 rgba(100, 120, 200, 0.07);
+    }
+
+    section.card-blocco {
+      scroll-margin-top: 90px;
+    }
+
+    .tooltip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      z-index: 50;
+    }
+
+    .tooltip .tooltip-text {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      transform: translateY(8px);
+      background: #1e293b;
+      color: #fff;
+      min-width: 210px;
+      max-width: 320px;
+      font-size: 13.5px;
+      border: 1px solid #334155;
+      border-radius: 9px;
+      padding: 14px 18px;
+      box-shadow: 0 4px 24px 0 rgba(35,70,120,0.15);
+      z-index: 9999;
+      line-height: 1.55;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+      white-space: normal;
+      margin-top: 14px;
+    }
+
+    .tooltip:hover .tooltip-text {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .tooltip .tooltip-text::before {
+      content: '';
+      position: absolute;
+      top: -6px;
+      left: 14px;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 6px solid #1e293b;
+    }
+
+    .tooltip .tooltip-title {
+      font-weight: 700;
+      color: #60a5fa;
+      margin-bottom: 5px;
+    }
+
+    .tooltip .tooltip-fonti {
+      color: #dbeafe;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+
+    @media screen and (max-width: 480px) {
+      .tooltip .tooltip-text {
+        max-width: 90vw;
+        left: 0;
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #e2e8f0;
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      border-radius: 8px;
+      border: 2px solid #e2e8f0;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+  </style>
 </head>
 
 <body>
@@ -181,56 +185,41 @@
       </div>
     </section>
 
-<section id="blocco1" class="card-blocco border border-slate-200 rounded-xl px-5 py-6" data-aos="fade-up">
+<section id="blocco1" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative z-10" data-aos="fade-up">
   <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-4 flex items-center">
-    <i data-lucide="layers" class="icon-section"></i>Blocco 1 – Identificativi & Contesto
+    <i data-lucide="layers" class="icon-section mr-2"></i>Blocco 1 – Identificativi & Contesto
   </h2>
 
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-5 gap-x-10 text-sm">
-    <div><p class="text-xs uppercase text-slate-500">Ticker <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Ticker</span>Simbolo unico utilizzato per identificare il titolo in borsa. <span class="tooltip-fonti">Fonte: Nasdaq</span></span></span></p><p class="font-medium text-slate-800">TSLA</p></div>
-    
-    <div><p class="text-xs uppercase text-slate-500">ISIN <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">ISIN</span>Codice di 12 caratteri che identifica univocamente un titolo a livello internazionale. <span class="tooltip-fonti">Fonte: Bloomberg</span></span></span></p><p class="font-medium text-slate-800">US88160R1014</p></div>
-    
-    <div><p class="text-xs uppercase text-slate-500">Exchange <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Exchange</span>Mercato regolamentato su cui è negoziato il titolo. <span class="tooltip-fonti">Fonte: SEC</span></span></span></p><p class="font-medium text-slate-800">Nasdaq</p></div>
-    
-    <div><p class="text-xs uppercase text-slate-500">MIC <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">MIC</span>Codice identificativo della sede di negoziazione secondo lo standard ISO 10383. <span class="tooltip-fonti">Fonte: ISO</span></span></span></p><p class="font-medium text-slate-800">XNAS</p></div>
-    
-    <div><p class="text-xs uppercase text-slate-500">Società <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Società</span>Ragione sociale completa dell’emittente del titolo. <span class="tooltip-fonti">Fonte: SEC Filing</span></span></span></p><p class="font-medium text-slate-800">Tesla Inc.</p></div>
-    
-    <div><p class="text-xs uppercase text-slate-500">Settore (GICS) <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Settore (GICS)</span>Macro-categoria economica secondo la classificazione GICS. <span class="tooltip-fonti">Fonte: MSCI/S&P</span></span></span></p><p class="font-medium text-slate-800">Consumer Discretionary</p></div>
-    
-    <div><p class="text-xs uppercase text-slate-500">Industria / Sottosettore <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Industria / Sottosettore</span>Classificazione più specifica utile per analisi comparativa. <span class="tooltip-fonti">Fonte: MSCI GICS</span></span></span></p><p class="font-medium text-slate-800">Automobiles / EV</p></div>
-    
-    <div><p class="text-xs uppercase text-slate-500">Indice Primario <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Indice Primario</span>Indice principale in cui il titolo è incluso, con data di ingresso. <span class="tooltip-fonti">Fonte: Nasdaq</span></span></span></p><p class="font-medium text-slate-800">Nasdaq 100 (dal 2013)</p></div>
-    
-    <div><p class="text-xs uppercase text-slate-500">Indice Secondario <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Indice Secondario</span>Ulteriori indici rilevanti per il posizionamento sistemico. <span class="tooltip-fonti">Fonte: S&P Global</span></span></span></p><p class="font-medium text-slate-800">S&P 500 (dal 2020)</p></div>
-    
-    <div><p class="text-xs uppercase text-slate-500">Prezzo Attuale <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Prezzo Attuale</span>Ultima quotazione disponibile durante la sessione. <span class="tooltip-fonti">Fonte: Yahoo Finance</span></span></span></p><p class="font-bold text-sky-800">$266.35 (16:00 EST)</p></div>
-    
-    <div><p class="text-xs uppercase text-slate-500">Variazione 7gg <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Variazione 7gg</span>Rendimento del titolo negli ultimi 7 giorni. <span class="tooltip-fonti">Fonte: Bloomberg</span></span></span></p><p class="font-bold text-yellow-600">+0.95%</p></div>
-    
-    <div><p class="text-xs uppercase text-slate-500">Variazione 30gg <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Variazione 30gg</span>Rendimento a 30 giorni utile per identificare trend. <span class="tooltip-fonti">Fonte: TradingView</span></span></span></p><p class="font-bold text-red-600">−4.12%</p></div>
-    
-    <div><p class="text-xs uppercase text-slate-500">Prezzo Min/Max 52 settimane <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">52 Settimane</span>Range di prezzo più basso e più alto negli ultimi 12 mesi. <span class="tooltip-fonti">Fonte: Nasdaq</span></span></span></p><p class="font-bold text-slate-800">$152.37 / $299.87</p></div>
-    
-    <div><p class="text-xs uppercase text-slate-500">Target Medio Analisti <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Target Analisti</span>Prezzo stimato medio dagli analisti sell-side. <span class="tooltip-fonti">Fonte: MarketScreener</span></span></span></p><p class="font-bold text-green-600">$278.00 (32 analisti)</p></div>
-    
-    <div><p class="text-xs uppercase text-slate-500">Rating Analisti <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Rating Analisti</span>Consensi aggregati su Buy / Hold / Sell. <span class="tooltip-fonti">Fonte: Morningstar</span></span></span></p><p class="font-bold text-yellow-600">Hold (18 Buy / 10 Hold / 4 Sell)</p></div>
-    
-    <div><p class="text-xs uppercase text-slate-500">Market Cap <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Market Cap</span>Valore di mercato totale delle azioni in circolazione. <span class="tooltip-fonti">Fonte: Google Finance</span></span></span></p><p class="font-bold text-green-600">$850 Mld (Ago 2025)</p></div>
-    
-    <div><p class="text-xs uppercase text-slate-500">Numero Azioni Totali <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Azioni Totali</span>Quantità totale di azioni emesse, per classe. <span class="tooltip-fonti">Fonte: EDGAR</span></span></span></p><p class="font-bold text-slate-800">3.15 Mld (Classe A – filing Q2 2025)</p></div>
-    
-    <div><p class="text-xs uppercase text-slate-500">Free Float <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Free Float</span>Quota di azioni effettivamente negoziabili sul mercato. <span class="tooltip-fonti">Fonte: FMP</span></span></span></p><p class="font-bold text-green-600">81.2% — 2.56 Mld</p></div>
+    <div><p class="text-xs uppercase text-slate-500">Ticker <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Ticker</span>Simbolo unico utilizzato per identificare il titolo in borsa.<br><span class="tooltip-fonti">Fonte: Nasdaq</span></span></span></p><p class="font-medium text-slate-800">TSLA</p></div>
+    <div><p class="text-xs uppercase text-slate-500">ISIN <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">ISIN</span>Codice di 12 caratteri che identifica univocamente un titolo a livello internazionale.<br><span class="tooltip-fonti">Fonte: Bloomberg</span></span></span></p><p class="font-medium text-slate-800">US88160R1014</p></div>
+    <div><p class="text-xs uppercase text-slate-500">Exchange <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Exchange</span>Mercato regolamentato su cui è negoziato il titolo.<br><span class="tooltip-fonti">Fonte: SEC</span></span></span></p><p class="font-medium text-slate-800">Nasdaq</p></div>
+    <div><p class="text-xs uppercase text-slate-500">MIC <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">MIC</span>Codice identificativo della sede di negoziazione secondo lo standard ISO 10383.<br><span class="tooltip-fonti">Fonte: ISO</span></span></span></p><p class="font-medium text-slate-800">XNAS</p></div>
+    <div><p class="text-xs uppercase text-slate-500">Società <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Società</span>Ragione sociale completa dell’emittente del titolo.<br><span class="tooltip-fonti">Fonte: SEC Filing</span></span></span></p><p class="font-medium text-slate-800">Tesla Inc.</p></div>
+    <div><p class="text-xs uppercase text-slate-500">Settore (GICS) <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Settore (GICS)</span>Macro-categoria economica secondo la classificazione GICS.<br><span class="tooltip-fonti">Fonte: MSCI/S&P</span></span></span></p><p class="font-medium text-slate-800">Consumer Discretionary</p></div>
+    <div><p class="text-xs uppercase text-slate-500">Industria / Sottosettore <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Industria / Sottosettore</span>Classificazione più specifica utile per analisi comparativa.<br><span class="tooltip-fonti">Fonte: MSCI GICS</span></span></span></p><p class="font-medium text-slate-800">Automobiles / EV</p></div>
+    <div><p class="text-xs uppercase text-slate-500">Indice Primario <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Indice Primario</span>Indice principale in cui il titolo è incluso, con data di ingresso.<br><span class="tooltip-fonti">Fonte: Nasdaq</span></span></span></p><p class="font-medium text-slate-800">Nasdaq 100 (dal 2013)</p></div>
+    <div><p class="text-xs uppercase text-slate-500">Indice Secondario <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Indice Secondario</span>Ulteriori indici rilevanti per il posizionamento sistemico.<br><span class="tooltip-fonti">Fonte: S&P Global</span></span></span></p><p class="font-medium text-slate-800">S&P 500 (dal 2020)</p></div>
+    <div><p class="text-xs uppercase text-slate-500">Prezzo Attuale <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Prezzo Attuale</span>Ultima quotazione disponibile durante la sessione.<br><span class="tooltip-fonti">Fonte: Yahoo Finance</span></span></span></p><p class="font-bold text-sky-800">$266.35 (16:00 EST)</p></div>
+    <div><p class="text-xs uppercase text-slate-500">Variazione 7gg <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Variazione 7gg</span>Rendimento del titolo negli ultimi 7 giorni.<br><span class="tooltip-fonti">Fonte: Bloomberg</span></span></span></p><p class="font-bold text-yellow-600">+0.95%</p></div>
+    <div><p class="text-xs uppercase text-slate-500">Variazione 30gg <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Variazione 30gg</span>Rendimento a 30 giorni utile per identificare trend.<br><span class="tooltip-fonti">Fonte: TradingView</span></span></span></p><p class="font-bold text-red-600">−4.12%</p></div>
+    <div><p class="text-xs uppercase text-slate-500">Prezzo Min/Max 52 settimane <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">52 Settimane</span>Range di prezzo più basso e più alto negli ultimi 12 mesi.<br><span class="tooltip-fonti">Fonte: Nasdaq</span></span></span></p><p class="font-bold text-slate-800">$152.37 / $299.87</p></div>
+    <div><p class="text-xs uppercase text-slate-500">Target Medio Analisti <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Target Analisti</span>Prezzo stimato medio dagli analisti sell-side.<br><span class="tooltip-fonti">Fonte: MarketScreener</span></span></span></p><p class="font-bold text-green-600">$278.00 (32 analisti)</p></div>
+    <div><p class="text-xs uppercase text-slate-500">Rating Analisti <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Rating Analisti</span>Consensi aggregati su Buy / Hold / Sell.<br><span class="tooltip-fonti">Fonte: Morningstar</span></span></span></p><p class="font-bold text-yellow-600">Hold (18 Buy / 10 Hold / 4 Sell)</p></div>
+    <div><p class="text-xs uppercase text-slate-500">Market Cap <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Market Cap</span>Valore di mercato totale delle azioni in circolazione.<br><span class="tooltip-fonti">Fonte: Google Finance</span></span></span></p><p class="font-bold text-green-600">$850 Mld (Ago 2025)</p></div>
+    <div><p class="text-xs uppercase text-slate-500">Numero Azioni Totali <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Azioni Totali</span>Quantità totale di azioni emesse, per classe.<br><span class="tooltip-fonti">Fonte: EDGAR</span></span></span></p><p class="font-bold text-slate-800">3.15 Mld (Classe A – filing Q2 2025)</p></div>
+    <div><p class="text-xs uppercase text-slate-500">Free Float <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Free Float</span>Quota di azioni effettivamente negoziabili sul mercato.<br><span class="tooltip-fonti">Fonte: FMP</span></span></span></p><p class="font-bold text-green-600">81.2% — 2.56 Mld</p></div>
   </div>
 
-  <hr class="divider">
+  <hr class="divider mt-6">
   <div class="pt-4">
     <p class="text-sm text-slate-700 leading-relaxed">
       <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
       <span class="text-green-600 font-semibold">Tesla mostra una struttura solida</span> in termini di flottante e copertura analitica.
-      <span class="text-green-600 font-semibold">La presenza in indici primari</span> e il <span class="text-yellow-600 font-semibold">rating neutro</span>
-      confermano la sua rilevanza sistemica, pur in uno scenario di <span class="text-red-600 font-semibold">volatilità ciclica</span>.
+      <span class="text-green-600 font-semibold">La presenza in indici primari</span> e il 
+      <span class="text-yellow-600 font-semibold">rating neutro</span>
+      confermano la sua rilevanza sistemica, pur in uno scenario di 
+      <span class="text-red-600 font-semibold">volatilità ciclica</span>.
     </p>
   </div>
 </section>
