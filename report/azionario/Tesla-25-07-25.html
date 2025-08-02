@@ -97,10 +97,120 @@
       </div>
     </section>
 
-    <section id="blocco1" class="card-blocco bg-white border border-slate-200 rounded-xl shadow-sm px-5 py-6" data-aos="fade-up">
+  <!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TRADELIA • AI — Report Azionario</title>
+  <meta name="description" content="Report istituzionale Tradelia AI — analisi fondamentale, tecnica e strategica su asset selezionati.">
+  <meta name="author" content="Tradelia AI">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+    });
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+      background-size: 280px;
+      color: #0f172a;
+      margin: 0; padding: 0;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .card-blocco:hover {
+      background: #f8fafc;
+      box-shadow: 0 2px 12px 0 rgba(100, 120, 200, 0.07);
+    }
+    section.card-blocco {
+      scroll-margin-top: 90px;
+    }
+    .tooltip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+    .tooltip .tooltip-text {
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      transform: translateY(-8px);
+      background: #1e293b;
+      color: #fff;
+      min-width: 210px;
+      max-width: 320px;
+      font-size: 13.5px;
+      border: 1px solid #334155;
+      border-radius: 9px;
+      padding: 14px 18px;
+      box-shadow: 0 4px 24px 0 rgba(35,70,120,0.15);
+      z-index: 90;
+      line-height: 1.55;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+      white-space: normal;
+    }
+    .tooltip:hover .tooltip-text {
+      opacity: 1;
+      visibility: visible;
+    }
+    .tooltip .tooltip-title {
+      font-weight: 700;
+      color: #60a5fa;
+      margin-bottom: 5px;
+    }
+    .tooltip .tooltip-fonti {
+      color: #dbeafe;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+    .icon-info {
+      width: 14px;
+      height: 14px;
+      color: #94a3b8;
+    }
+    hr.divider {
+      border: none;
+      border-top: 1px solid #cbd5e1;
+      margin: 3.5rem 0 2rem;
+      opacity: 0.4;
+    }
+  </style>
+</head>
+<body>
+  <main class="px-3 sm:px-6 max-w-6xl mx-auto py-10">
+    <section id="blocco1" class="card-blocco bg-white border border-slate-200 rounded-xl shadow-sm px-5 py-6">
       <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 1 – Identificativi & Contesto</h2>
-      <div class="grid sm:grid-cols-2 gap-y-4 gap-x-10 text-sm" id="metriche-blocco1">
-        <!-- METRICHE INSERITE PROGRAMMATICAMENTE QUI -->
+      <div class="grid sm:grid-cols-2 gap-y-4 gap-x-10 text-sm">
+        <div><p class="text-xs uppercase text-slate-500">Ticker</p><p class="font-medium text-slate-800">TSLA</p></div>
+        <div><p class="text-xs uppercase text-slate-500">ISIN</p><p class="font-medium text-slate-800">US88160R1014</p></div>
+        <div><p class="text-xs uppercase text-slate-500">Exchange</p><p class="font-medium text-slate-800">Nasdaq</p></div>
+        <div><p class="text-xs uppercase text-slate-500">MIC</p><p class="font-medium text-slate-800">XNAS</p></div>
+        <div><p class="text-xs uppercase text-slate-500">Società</p><p class="font-medium text-slate-800">Tesla Inc.</p></div>
+        <div><p class="text-xs uppercase text-slate-500">Settore (GICS)</p><p class="font-medium text-slate-800">Consumer Discretionary</p></div>
+        <div><p class="text-xs uppercase text-slate-500">Industria / Sottosettore</p><p class="font-medium text-slate-800">Automobiles / EV</p></div>
+        <div><p class="text-xs uppercase text-slate-500">Indice Primario</p><p class="font-medium text-slate-800">Nasdaq 100 (dal 2013)</p></div>
+        <div><p class="text-xs uppercase text-slate-500">Indice Secondario</p><p class="font-medium text-slate-800">S&P 500 (dal 2020)</p></div>
+        <div><p class="text-xs uppercase text-slate-500">Prezzo Attuale</p><p class="font-bold text-sky-800">$266.35 (16:00 EST)</p></div>
+        <div><p class="text-xs uppercase text-slate-500">Variazione 24h</p><p class="font-bold text-green-600">+2.45%</p></div>
+        <div><p class="text-xs uppercase text-slate-500">Variazione 7gg</p><p class="font-bold text-yellow-600">+0.95%</p></div>
+        <div><p class="text-xs uppercase text-slate-500">Variazione 30gg</p><p class="font-bold text-red-600">−4.12%</p></div>
+        <div><p class="text-xs uppercase text-slate-500">Prezzo Min/Max 52 settimane</p><p class="font-bold text-slate-800">$152.37 / $299.87</p></div>
+        <div><p class="text-xs uppercase text-slate-500">Target Medio Analisti</p><p class="font-bold text-green-600">$278.00 (32 analisti)</p></div>
+        <div><p class="text-xs uppercase text-slate-500">Rating Analisti</p><p class="font-bold text-yellow-600">Hold (18 Buy / 10 Hold / 4 Sell)</p></div>
+        <div><p class="text-xs uppercase text-slate-500">Market Cap</p><p class="font-bold text-green-600">$850 Mld (Ago 2025)</p></div>
+        <div><p class="text-xs uppercase text-slate-500">Numero Azioni Totali</p><p class="font-bold text-slate-800">3.15 Mld (Classe A – filing Q2 2025)</p></div>
+        <div><p class="text-xs uppercase text-slate-500">Free Float</p><p class="font-bold text-green-600">81.2% — 2.56 Mld</p></div>
       </div>
       <div class="pt-6 border-t mt-6">
         <p class="text-sm text-slate-700 leading-relaxed">
@@ -111,6 +221,10 @@
         </p>
       </div>
     </section>
+  </main>
+</body>
+</html>
+
   </main>
 </body>
 </html>
