@@ -255,20 +255,26 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.tooltip').forEach(tooltip => {
-      const tipText = tooltip.querySelector('.tooltip-text');
-      if (!tipText) return;
+      tooltip.addEventListener('mouseenter', () => {
+        const tipText = tooltip.querySelector('.tooltip-text');
+        if (!tipText) return;
 
-      const rect = tooltip.getBoundingClientRect();
-      const spaceBelow = window.innerHeight - rect.bottom;
-      const spaceAbove = rect.top;
+        const rect = tooltip.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const spaceAbove = rect.top;
 
-      // Se sotto c'è poco spazio, metti classe .top
-      if (spaceBelow < 160 && spaceAbove > 160) {
-        tooltip.classList.add('top');
-      }
+        // Reset prima
+        tooltip.classList.remove('top');
+
+        // Se lo spazio sotto è troppo poco, ma sopra c'è, inverti
+        if (spaceBelow < 180 && spaceAbove > 180) {
+          tooltip.classList.add('top');
+        }
+      });
     });
   });
 </script>
+
 
   </main>
 </body>
