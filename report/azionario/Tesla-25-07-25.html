@@ -12,7 +12,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script>document.addEventListener('DOMContentLoaded', () => AOS.init());</script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>document.addEventListener('DOMContentLoaded', () => { AOS.init({ once: true, disableMutationObserver: true }); lucide.createIcons(); });</script>
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -25,29 +26,11 @@
     }
     ::-webkit-scrollbar { height: 8px; width: 10px; background: #e0e7ef; border-radius: 10px; }
     ::-webkit-scrollbar-thumb { background: #70a7e8; border-radius: 10px; }
-    .tabs-scroll::-webkit-scrollbar { height: 8px; background: #e0e7ef; }
-    .tabs-scroll::-webkit-scrollbar-thumb { background: #70a7e8; }
-    .tab-btn {
-      transition: background 0.17s, color 0.13s;
-      font-weight: 600;
-      border-radius: 8px;
-      padding: 0.5rem 1rem;
-      white-space: nowrap;
-    }
-    .tab-btn:hover, .tab-btn.active {
-      background: #e0e7ef;
-      color: #0369a1;
-    }
-    .card-blocco:hover {
-      background: #f7fafc;
-      box-shadow: 0 2px 16px 0 rgba(50,120,200,0.07);
-    }
-    .tooltip {
-      position: relative;
-      display: inline-block;
-      cursor: pointer;
-      z-index: 2;
-    }
+    .tab-btn { transition: background 0.17s, color 0.13s; font-weight: 600; border-radius: 8px; padding: 0.5rem 1rem; white-space: nowrap; }
+    .tab-btn:hover, .tab-btn.active { background: #e0e7ef; color: #0369a1; }
+    .card-blocco { transition: box-shadow 0.2s ease; background-color: #fff; }
+    .card-blocco:hover { background: #f8fafc; box-shadow: 0 2px 12px 0 rgba(100, 120, 200, 0.07); }
+    .tooltip { position: relative; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; z-index: 2; }
     .tooltip .tooltip-text {
       display: none;
       position: fixed;
@@ -84,19 +67,10 @@
       font-size: 12px;
       margin-top: 10px;
     }
-    @media (max-width: 700px) {
-      .tabs-scroll { overflow-x: auto; }
-      .tab-btn { min-width: 170px; font-size: 13px; }
-      .card-blocco { padding: 1.1rem 0.7rem; }
-      .tooltip .tooltip-text { min-width: 160px; max-width: 90vw; font-size: 13px; padding: 10px 9px; }
-    }
-    @media (min-width: 640px) {
-      .card-blocco { padding: 2.2rem 2.5rem; }
-    }
-    @media print {
-      header, .tabs-scroll, footer { display: none !important; }
-      body { background: white !important; }
-      .card-blocco { box-shadow: none !important; border: 1px solid #ccc; }
+    .icon-info {
+      width: 14px;
+      height: 14px;
+      color: #94a3b8;
     }
   </style>
 </head>
@@ -108,87 +82,35 @@
     <a href="https://tradelia.org/archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
   </header>
 
-  <div class="tabs-scroll flex overflow-x-auto gap-2 sm:gap-4 py-3 px-3 border-b border-slate-200 sticky top-[56px] z-40 bg-white backdrop-blur">
-    <!-- Tab dinamici qui -->
-  </div>
-
   <main class="px-3 sm:px-6 max-w-6xl mx-auto space-y-6 pb-32">
-    <nav class="text-xs text-slate-600 py-2 px-1 sm:px-0">
-      <span class="text-blue-700 font-semibold">Home</span> / <span class="text-slate-500">Report</span> / TSLA 2025
-    </nav>
+    <div class="text-xs text-slate-400 px-1 sm:px-2 mb-1">Home / Report / Azionario</div>
 
-    <div class="mt-2 mb-6 border-b border-gray-200 pb-2">
-      <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">Report Azionario • Tesla (TSLA)</h1>
-      <p class="text-sm text-slate-500 mt-1">Aggiornato al 2 Agosto 2025</p>
-    </div>
-
-    <!-- BLOCCO 0 – CHART E VARIAZIONE -->
-<section id="blocco0" class="card-blocco bg-white border border-slate-200 rounded-xl shadow-sm px-5 py-6 space-y-4" data-aos="fade-up" data-aos-duration="400">
-  <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-    <div>
-      <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-1">Andamento titolo</h2>
-      <p class="text-sm text-slate-600">Performance a 24h con confronto benchmark</p>
-    </div>
-    <div class="flex flex-col sm:items-end text-sm">
-      <div class="font-semibold text-green-600">+2,45% <span class="text-slate-500 font-normal">(24h)</span></div>
-      <div class="tooltip text-slate-700">
-        Indice Nasdaq: <span class="font-semibold">+1,20%</span>
-        <div class="tooltip-text">
-          <div class="tooltip-title">Indice Nasdaq</div>
-          Performance relativa rispetto al benchmark settoriale.
-          <div class="tooltip-fonti">Fonte: Nasdaq.com / Yahoo Finance</div>
-        </div>
+    <section id="blocco0" class="card-blocco border border-slate-200 rounded-xl shadow-sm px-5 py-6 bg-white" data-aos="fade-up">
+      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-4">
+        <h2 class="text-base sm:text-lg font-semibold text-slate-800">Tesla Inc. (TSLA)</h2>
+        <p class="text-sm font-bold text-green-600">Segnale LT: Positivo</p>
       </div>
-    </div>
-  </div>
+      <img src="https://img.chartshots.net/688dd9710a90c.png" alt="Grafico" class="w-full rounded-md border border-slate-200" />
+      <div class="grid grid-cols-2 gap-4 text-sm mt-4">
+        <div><p class="text-xs uppercase text-slate-500">Variazione 24h</p><p class="font-bold text-green-600">+2.45%</p></div>
+        <div><p class="text-xs uppercase text-slate-500">Benchmark S&P500</p><p class="font-bold text-yellow-600">+0.91%</p></div>
+      </div>
+    </section>
 
-  <div class="w-full h-[240px] bg-slate-100 rounded-lg overflow-hidden border border-slate-200">
-    <img src="https://dummyimage.com/800x240/dae1e7/64748b.png&text=Grafico+Intraday+TSLA" alt="Grafico intraday TSLA" class="w-full h-full object-cover" />
-  </div>
-
-  <div class="text-xs text-right text-slate-400">Fonte grafico: Yahoo Finance API (agg. 2 Ago 2025)</div>
-
-  <div class="mt-4 border-t pt-4">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-semibold text-sky-800">Commento Tradelia AI:</span> L’andamento odierno di <strong>TSLA</strong> mostra un'accelerazione superiore al benchmark tecnologico, con un segnale <span class="text-green-600 font-bold">positivo</span> supportato da flussi settoriali e rinnovato interesse sugli EV.
-    </p>
-  </div>
-</section>
-
-<!-- BLOCCO 1 – IDENTIFICATIVI & CONTESTO -->
-<section id="blocco1" class="card-blocco bg-white border-t border-b border-slate-200 px-5 py-6 space-y-4" data-aos="fade-up" data-aos-duration="400">
-  <h2 class="text-base sm:text-lg font-semibold text-slate-800">Blocco 1 – Identificativi & Contesto</h2>
-  <div class="grid grid-cols-1 sm:grid-cols-2 text-sm text-slate-700">
-    <div class="grid grid-cols-[auto,1fr] gap-x-2 w-full border-b border-slate-200 py-1.5"><span class="font-semibold text-slate-600">Ticker:</span><span class="bg-white px-1 rounded">TSLA</span></div>
-    <div class="grid grid-cols-[auto,1fr] gap-x-2 w-full border-b border-slate-200 py-1.5"><span class="font-semibold text-slate-600">ISIN:</span><span class="bg-white px-1 rounded">US88160R1014</span></div>
-    <div class="grid grid-cols-[auto,1fr] gap-x-2 w-full border-b border-slate-200 py-1.5"><span class="font-semibold text-slate-600">Exchange:</span><span class="bg-white px-1 rounded">Nasdaq</span></div>
-    <div class="grid grid-cols-[auto,1fr] gap-x-2 w-full border-b border-slate-200 py-1.5"><span class="font-semibold text-slate-600">MIC:</span><span class="bg-white px-1 rounded">XNAS</span></div>
-    <div class="grid grid-cols-[auto,1fr] gap-x-2 w-full border-b border-slate-200 py-1.5"><span class="font-semibold text-slate-600">Società:</span><span class="bg-white px-1 rounded">Tesla Inc.</span></div>
-    <div class="grid grid-cols-[auto,1fr] gap-x-2 w-full border-b border-slate-200 py-1.5"><span class="font-semibold text-slate-600">Settore (GICS):</span><span class="bg-white px-1 rounded">Consumer Discretionary</span></div>
-    <div class="grid grid-cols-[auto,1fr] gap-x-2 w-full border-b border-slate-200 py-1.5"><span class="font-semibold text-slate-600">Industria / Sottosettore:</span><span class="bg-white px-1 rounded">Automobiles / Electric Vehicles</span></div>
-    <div class="grid grid-cols-[auto,1fr] gap-x-2 w-full border-b border-slate-200 py-1.5"><span class="font-semibold text-slate-600">Indice Primario:</span><span class="bg-white px-1 rounded">Nasdaq 100 (dal 2013)</span></div>
-    <div class="grid grid-cols-[auto,1fr] gap-x-2 w-full border-b border-slate-200 py-1.5"><span class="font-semibold text-slate-600">Indice Secondario:</span><span class="bg-white px-1 rounded">S&P 500 (dal 2020)</span></div>
-    <div class="grid grid-cols-[auto,1fr] gap-x-2 w-full border-b border-slate-200 py-1.5"><span class="font-semibold text-slate-600">Prezzo Attuale:</span><span class="bg-white px-1 rounded">$266.35 (02/08/2025 16:00 EST)</span></div>
-    <div class="grid grid-cols-[auto,1fr] gap-x-2 w-full border-b border-slate-200 py-1.5"><span class="font-semibold text-slate-600">Variazione 24h:</span><span class="text-green-600 font-semibold bg-white px-1 rounded">+2.45%</span></div>
-    <div class="grid grid-cols-[auto,1fr] gap-x-2 w-full border-b border-slate-200 py-1.5"><span class="font-semibold text-slate-600">Variazione 7gg:</span><span class="text-yellow-600 font-semibold bg-white px-1 rounded">+0.95%</span></div>
-    <div class="grid grid-cols-[auto,1fr] gap-x-2 w-full border-b border-slate-200 py-1.5"><span class="font-semibold text-slate-600">Variazione 30gg:</span><span class="text-red-600 font-semibold bg-white px-1 rounded">−4.12%</span></div>
-    <div class="grid sm:col-span-2 grid-cols-[auto,1fr] gap-x-2 w-full border-b border-slate-200 py-1.5"><span class="font-semibold text-slate-600">Prezzo 52w Min/Max:</span><span class="bg-white px-1 rounded">$152.37 / $299.87 (agg. Lug 2025)</span></div>
-    <div class="grid sm:col-span-2 grid-cols-[auto,1fr] gap-x-2 w-full border-b border-slate-200 py-1.5"><span class="font-semibold text-slate-600">Prezzo Target Medio Analisti:</span><span class="bg-white px-1 rounded">$278.00 (32 analisti, Lug 2025)</span></div>
-    <div class="grid sm:col-span-2 grid-cols-[auto,1fr] gap-x-2 w-full border-b border-slate-200 py-1.5"><span class="font-semibold text-slate-600">Rating Analisti:</span><span class="bg-white px-1 rounded">Hold (Buy 18 / Hold 10 / Sell 4 — Lug 2025)</span></div>
-    <div class="grid grid-cols-[auto,1fr] gap-x-2 w-full border-b border-slate-200 py-1.5"><span class="font-semibold text-slate-600">Market Cap:</span><span class="bg-white px-1 rounded">$850 Mld (Ago 2025)</span></div>
-    <div class="grid grid-cols-[auto,1fr] gap-x-2 w-full border-b border-slate-200 py-1.5"><span class="font-semibold text-slate-600">Azioni Totali:</span><span class="bg-white px-1 rounded">3.15 Mld (Classe A – filing Q2 2025)</span></div>
-    <div class="grid sm:col-span-2 grid-cols-[auto,1fr] gap-x-2 w-full border-b border-slate-200 py-1.5"><span class="font-semibold text-slate-600">Free Float:</span><span class="bg-white px-1 rounded">81.2% — 2.56 Mld azioni</span></div>
-  </div>
-  <div class="mt-4 border-t pt-4">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-semibold text-sky-800">Commento Tradelia AI:</span> Le metriche strutturali confermano l'inquadramento di <strong>Tesla</strong> come componente stabile di benchmark globali, con un flottante ampio e buona copertura istituzionale. Il target medio evidenzia un margine residuo <span class="text-yellow-600 font-semibold">moderatamente positivo</span>, ma la volatilità recente suggerisce prudenza per nuove allocazioni.
-    </p>
-  </div>
-</section>
+    <section id="blocco1" class="card-blocco bg-white border border-slate-200 rounded-xl shadow-sm px-5 py-6" data-aos="fade-up">
+      <h2 class="text-base sm:text-lg font-semibold text-slate-800 mb-4">Blocco 1 – Identificativi & Contesto</h2>
+      <div class="grid sm:grid-cols-2 gap-y-4 gap-x-10 text-sm" id="metriche-blocco1">
+        <!-- METRICHE INSERITE PROGRAMMATICAMENTE QUI -->
+      </div>
+      <div class="pt-6 border-t mt-6">
+        <p class="text-sm text-slate-700 leading-relaxed">
+          <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+          <span class="text-green-600 font-semibold">Tesla mostra una struttura solida</span> in termini di flottante e copertura analitica.
+          <span class="text-green-600 font-semibold">La presenza in indici primari</span> e il <span class="text-yellow-600 font-semibold">rating neutro</span>
+          confermano la sua rilevanza sistemica, pur in uno scenario di <span class="text-red-600 font-semibold">volatilità ciclica</span>.
+        </p>
+      </div>
+    </section>
   </main>
-
-  <footer class="text-xs text-slate-500 text-center border-t border-slate-200 py-4 mt-10">
-    Report generato da Tradelia AI. I dati non costituiscono raccomandazione d’investimento. ©2025 Tradelia.org
-  </footer>
 </body>
 </html>
