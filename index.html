@@ -81,94 +81,95 @@
   <p class="mt-4 text-lg text-blue-700 min-h-[28px] font-medium" id="typing-text"></p>
 </section>
 
-<section class="bg-gradient-to-br from-slate-200 to-slate-50 py-20 px-4 font-[Inter] relative z-10">
-  <div class="max-w-5xl mx-auto">
-    <h2 class="text-3xl sm:text-4xl font-semibold text-center text-blue-800 mb-4">Report Generati da AI</h2>
-    <p class="text-center text-gray-600 mb-8">I contenuti hanno scopo esclusivamente illustrativo, basati su modelli AI. Non rappresentano indicazioni operative o consulenza professionale.</p>
+<section class="bg-white py-20 px-4 font-[Inter] border-t border-gray-200">
+  <div class="max-w-2xl mx-auto">
+    <h2 class="text-2xl sm:text-3xl font-semibold text-center text-slate-800 mb-4">Validazione Portafoglio • Tradelia AI</h2>
+    <p class="text-center text-sm text-gray-600 mb-10">
+      Compila il modulo con le informazioni essenziali sulla tua attuale allocazione.  
+      <strong>Tradelia AI – Validatore Portafogli</strong> analizzerà i dati ricevuti e fornirà un output entro <strong class="text-blue-800">24 ore</strong>.
+    </p>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+    <form id="formPortafoglio" onsubmit="inviaRichiesta(event)" class="space-y-6 text-sm">
+      <input type="hidden" name="servizio" value="Validazione Portafoglio" />
 
-  <!-- CARD 1 – Asset Singolo -->
-  <button onclick="apriModale(1)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition-all text-left shadow-sm flex flex-col justify-between h-full">
-    <div class="flex flex-col gap-3">
-      <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
-        <i data-lucide="bar-chart" class="w-6 h-6 text-blue-700"></i>
+      <div>
+        <label class="block font-medium mb-1">Email per ricevere l’analisi</label>
+        <input name="contatto_email" type="email" class="w-full border border-gray-300 rounded-md px-4 py-2" placeholder="esempio@email.it" />
       </div>
-      <h3 class="font-semibold text-gray-900">Analisi AI su Asset Singolo</h3>
-      <p class="text-sm text-gray-500">
-        Report generato tramite algoritmo AI. Include dati tecnici, fondamentali e macroeconomici, ma non è una raccomandazione d’investimento.
+
+      <div>
+        <label class="block font-medium mb-1">Numero WhatsApp (opzionale)</label>
+        <input name="contatto_whatsapp" type="tel" class="w-full border border-gray-300 rounded-md px-4 py-2" placeholder="+39 331 1881090" />
+      </div>
+
+      <p class="text-xs text-gray-500 italic -mt-4">
+        Se compilati entrambi, la risposta verrà inviata su WhatsApp.
       </p>
-    </div>
-    <div class="mt-4 flex items-center justify-between">
-      <span class="text-sm text-blue-700 font-medium underline underline-offset-2">Visualizza</span>
-      <div class="w-9 h-9 rounded-full bg-white/50 backdrop-blur-md shadow-md flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
-        <i data-lucide="arrow-up-right" class="w-4 h-4 text-blue-700"></i>
-      </div>
-    </div>
-  </button>
 
-  <!-- CARD 2 – Azioni -->
-  <button onclick="apriModale(2)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition-all text-left shadow-sm flex flex-col justify-between h-full">
-    <div class="flex flex-col gap-3">
-      <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
-        <i data-lucide="trending-up" class="w-6 h-6 text-blue-700"></i>
+      <div>
+        <label class="block font-medium mb-1">Obiettivo dell’investimento</label>
+        <select name="obiettivo" required class="w-full border border-gray-300 rounded-md px-4 py-2">
+          <option value="">Seleziona un'opzione</option>
+          <option>Accumulo di lungo periodo</option>
+          <option>Rendita da dividendi</option>
+          <option>Crescita patrimoniale</option>
+          <option>Protezione del capitale</option>
+        </select>
       </div>
-      <h3 class="font-semibold text-gray-900">Selezione AI: 3 Azioni da Analizzare</h3>
-      <p class="text-sm text-gray-500">
-        Screening AI di titoli azionari potenzialmente interessanti. Usare come punto di partenza per analisi personali, non come consiglio operativo.
-      </p>
-    </div>
-    <div class="mt-4 flex items-center justify-between">
-      <span class="text-sm text-blue-700 font-medium underline underline-offset-2">Visualizza</span>
-      <div class="w-9 h-9 rounded-full bg-white/50 backdrop-blur-md shadow-md flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
-        <i data-lucide="arrow-up-right" class="w-4 h-4 text-blue-700"></i>
-      </div>
-    </div>
-  </button>
 
-  <!-- CARD 3 – Crypto -->
-  <button onclick="apriModale(3)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition-all text-left shadow-sm flex flex-col justify-between h-full">
-    <div class="flex flex-col gap-3">
-      <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
-        <i data-lucide="bitcoin" class="w-6 h-6 text-blue-700"></i>
+      <div>
+        <label class="block font-medium mb-1">Orizzonte temporale</label>
+        <select name="orizzonte" required class="w-full border border-gray-300 rounded-md px-4 py-2">
+          <option value="">Seleziona un'opzione</option>
+          <option>Meno di 1 anno</option>
+          <option>1–3 anni</option>
+          <option>3–7 anni</option>
+          <option>Oltre 10 anni</option>
+        </select>
       </div>
-      <h3 class="font-semibold text-gray-900">Crypto: Output AI da Verificare</h3>
-      <p class="text-sm text-gray-500">
-        Output AI su progetti crypto con utilizzo concreto. Nessuna validazione o garanzia di correttezza. Analizzare sempre con spirito critico.
-      </p>
-    </div>
-    <div class="mt-4 flex items-center justify-between">
-      <span class="text-sm text-blue-700 font-medium underline underline-offset-2">Visualizza</span>
-      <div class="w-9 h-9 rounded-full bg-white/50 backdrop-blur-md shadow-md flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
-        <i data-lucide="arrow-up-right" class="w-4 h-4 text-blue-700"></i>
-      </div>
-    </div>
-  </button>
 
-  <!-- CARD 4 – Dividendi -->
-  <button onclick="apriModale(4)" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition-all text-left shadow-sm flex flex-col justify-between h-full">
-    <div class="flex flex-col gap-3">
-      <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
-        <i data-lucide="wallet" class="w-6 h-6 text-blue-700"></i>
+      <div>
+        <label class="block font-medium mb-1">Profilo di rischio</label>
+        <select name="rischio" required class="w-full border border-gray-300 rounded-md px-4 py-2">
+          <option value="">Seleziona un'opzione</option>
+          <option>Conservativo</option>
+          <option>Bilanciato</option>
+          <option>Aggressivo</option>
+        </select>
       </div>
-      <h3 class="font-semibold text-gray-900">3 Titoli ad Alto Dividendo (AI)</h3>
-      <p class="text-sm text-gray-500">
-        Output generato da AI per fini comparativi. Valutare sempre i dati in modo critico e autonomo. Non è un consiglio di investimento.
-      </p>
-    </div>
-    <div class="mt-4 flex items-center justify-between">
-      <span class="text-sm text-blue-700 font-medium underline underline-offset-2">Visualizza</span>
-      <div class="w-9 h-9 rounded-full bg-white/50 backdrop-blur-md shadow-md flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
-        <i data-lucide="arrow-up-right" class="w-4 h-4 text-blue-700"></i>
+
+      <div>
+        <label class="block font-medium mb-1">Composizione del portafoglio (nome + %)</label>
+        <textarea name="composizione" rows="5" required class="w-full border border-gray-300 rounded-md px-4 py-2" placeholder="Esempio:
+MSCI World – 60%
+Emerging Markets – 20%
+Oro – 10%
+Liquidità – 10%"></textarea>
       </div>
-    </div>
-  </button>
-</div>
 
-<p class="text-xs text-gray-500 mt-10 text-center">
-  <strong>Disclaimer:</strong> Le analisi fornite sono elaborate con il supporto di strumenti di intelligenza artificiale e basate su dati pubblici disponibili. Non costituiscono raccomandazioni d’investimento né consulenza personalizzata. L’obiettivo è informativo e didattico, utile per confronti e approfondimenti. L’accuratezza dei dati non è garantita. Se non siete esperti o sicuri di ciò che fate, <strong>non operate mai con denaro reale</strong>. Il rischio di perdita è elevato. Utilizzate questi report solo come spunto per simulazioni e approfondimenti personali.
-</p>
+      <div>
+        <label class="block font-medium mb-1">Importo complessivo stimato (€)</label>
+        <input type="number" step="100" name="importo" required class="w-full border border-gray-300 rounded-md px-4 py-2" placeholder="Es. 15.000" />
+      </div>
 
+      <div>
+        <label class="block font-medium mb-1">Note aggiuntive (facoltative)</label>
+        <textarea name="note" rows="3" class="w-full border border-gray-300 rounded-md px-4 py-2" placeholder="PAC attivo, strumenti già impostati, aree su cui vorresti riflettere..."></textarea>
+      </div>
+
+      <div class="pt-6">
+        <button type="submit" class="w-full bg-blue-900 text-white font-semibold py-3 rounded-md hover:bg-blue-950 transition">
+          Invia a Tradelia AI
+        </button>
+      </div>
+    </form>
+
+    <p class="text-xs text-gray-500 mt-8 text-center leading-relaxed">
+      Le informazioni fornite non verranno archiviate né utilizzate per addestrare alcun modello.  
+      Tradelia AI elabora i dati unicamente per restituire spunti riflessivi e comparativi, senza alcun valore vincolante.  
+      Il servizio non fornisce assistenza finanziaria professionale e non sostituisce il parere di un consulente abilitato.
+    </p>
+  </div>
 </section>
 
 
