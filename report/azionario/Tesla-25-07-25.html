@@ -13,8 +13,13 @@
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script>document.addEventListener('DOMContentLoaded', () => { AOS.init({ once: true, disableMutationObserver: true }); lucide.createIcons(); });</script>
-   <style>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      AOS.init({ once: true, disableMutationObserver: true });
+      lucide.createIcons();
+    });
+  </script>
+  <style>
     body {
       font-family: 'Inter', sans-serif;
       background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
@@ -28,100 +33,6 @@
       background: #ffffff;
       box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
       transition: box-shadow 0.2s ease;
-    }
-    .card-blocco:hover {
-      background: #f8fafc;
-      box-shadow: 0 2px 12px 0 rgba(100, 120, 200, 0.07);
-    }
-    section.card-blocco {
-      scroll-margin-top: 90px;
-    }
-    .tooltip {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .icon-info {
-      width: 14px;
-      height: 14px;
-      color: #94a3b8;
-      cursor: pointer;
-    }
-    .icon-info:focus {
-      outline: 2px solid #60a5fa;
-      outline-offset: 2px;
-    }
-    .icon-section {
-      width: 20px;
-      height: 20px;
-      margin-right: 6px;
-      color: #0369a1;
-      vertical-align: middle;
-    }
-    hr.divider {
-      border: none;
-      border-top: 1px solid #cbd5e1;
-      margin: 3.5rem 0 2rem;
-      opacity: 0.4;
-    }
-    @media screen and (max-width: 360px) {
-      .card-blocco p {
-        font-size: 11px;
-        word-break: break-word;
-      }
-    }
-  </style>
-</head>
-<body>
-  <header class="sticky top-0 z-50 bg-white shadow-sm w-full px-4 sm:px-6 py-3 flex justify-between items-center border-b border-slate-200 backdrop-blur-sm bg-white/95">
-    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
-      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600">•AI</span>
-    </a>
-    <a href="https://tradelia.org/archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
-  </header>
-
-  <main class="px-3 sm:px-6 max-w-6xl mx-auto space-y-6 pb-32">
-    <div class="text-xs text-slate-400 px-1 sm:px-2 mb-1">Home / Report / Azionario</div>
-
-    <section id="blocco0" class="card-blocco border border-slate-200 rounded-xl shadow-sm px-5 py-6 bg-white" data-aos="fade-up">
-      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-4">
-        <h2 class="text-base sm:text-lg font-semibold text-slate-800">Tesla Inc. (TSLA)</h2>
-        <p class="text-sm font-bold text-green-600">Segnale LT: Positivo</p>
-      </div>
-      <img src="https://img.chartshots.net/688dd9710a90c.png" alt="Grafico" class="w-full rounded-md border border-slate-200" />
-      <div class="grid grid-cols-2 gap-4 text-sm mt-4">
-        <div><p class="text-xs uppercase text-slate-500">Variazione 24h</p><p class="font-bold text-green-600">+2.45%</p></div>
-        <div><p class="text-xs uppercase text-slate-500">Benchmark S&P500</p><p class="font-bold text-yellow-600">+0.91%</p></div>
-      </div>
-    </section>
-
-  <!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TRADELIA • AI — Report Azionario</title>
-  <meta name="description" content="Report istituzionale Tradelia AI — analisi fondamentale, tecnica e strategica su asset selezionati.">
-  <meta name="author" content="Tradelia AI">
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      lucide.createIcons();
-    });
-  </script>
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
-      background-size: 280px;
-      color: #0f172a;
-      margin: 0; padding: 0;
-      font-size: 15px;
-      line-height: 1.6;
     }
     .card-blocco:hover {
       background: #f8fafc;
@@ -177,157 +88,127 @@
       height: 14px;
       color: #94a3b8;
     }
+    .icon-section {
+      width: 20px;
+      height: 20px;
+      margin-right: 6px;
+      color: #0369a1;
+      vertical-align: middle;
+    }
     hr.divider {
       border: none;
       border-top: 1px solid #cbd5e1;
       margin: 3.5rem 0 2rem;
       opacity: 0.4;
     }
+    @media screen and (max-width: 360px) {
+      .card-blocco p {
+        font-size: 11px;
+        word-break: break-word;
+      }
+    }
   </style>
 </head>
+
 <body>
-<main class="px-3 sm:px-6 max-w-6xl mx-auto py-10">
-    <section id="blocco1" class="card-blocco border border-slate-200 rounded-xl px-5 py-6">
-      <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-4 flex items-center">
-        <i data-lucide="layers" class="icon-section"></i>Blocco 1 – Identificativi & Contesto
-      </h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-5 gap-x-10 text-sm">
-        <div><p class="text-xs uppercase text-slate-500">Ticker <span class="tooltip" tabindex="0" data-tooltip-id="tooltip-ticker"><i data-lucide="info" class="icon-info"></i></span></p><p class="font-medium text-slate-800">TSLA</p></div>
-        <div><p class="text-xs uppercase text-slate-500">ISIN <span class="tooltip" tabindex="0" data-tooltip-id="tooltip-isin"><i data-lucide="info" class="icon-info"></i></span></p><p class="font-medium text-slate-800">US88160R1014</p></div>
-        <div><p class="text-xs uppercase text-slate-500">Exchange <span class="tooltip" tabindex="0" data-tooltip-id="tooltip-exchange"><i data-lucide="info" class="icon-info"></i></span></p><p class="font-medium text-slate-800">Nasdaq</p></div>
-        <div><p class="text-xs uppercase text-slate-500">MIC <span class="tooltip" tabindex="0" data-tooltip-id="tooltip-mic"><i data-lucide="info" class="icon-info"></i></span></p><p class="font-medium text-slate-800">XNAS</p></div>
-        <div><p class="text-xs uppercase text-slate-500">Società <span class="tooltip" tabindex="0" data-tooltip-id="tooltip-societa"><i data-lucide="info" class="icon-info"></i></span></p><p class="font-medium text-slate-800">Tesla Inc.</p></div>
-        <div><p class="text-xs uppercase text-slate-500">Settore (GICS) <span class="tooltip" tabindex="0" data-tooltip-id="tooltip-settore"><i data-lucide="info" class="icon-info"></i></span></p><p class="font-medium text-slate-800">Consumer Discretionary</p></div>
-        <div><p class="text-xs uppercase text-slate-500">Industria / Sottosettore <span class="tooltip" tabindex="0" data-tooltip-id="tooltip-industria"><i data-lucide="info" class="icon-info"></i></span></p><p class="font-medium text-slate-800">Automobiles / EV</p></div>
-        <div><p class="text-xs uppercase text-slate-500">Indice Primario <span class="tooltip" tabindex="0" data-tooltip-id="tooltip-indice-primario"><i data-lucide="info" class="icon-info"></i></span></p><p class="font-medium text-slate-800">Nasdaq 100 (dal 2013)</p></div>
-        <div><p class="text-xs uppercase text-slate-500">Indice Secondario <span class="tooltip" tabindex="0" data-tooltip-id="tooltip-indice-secondario"><i data-lucide="info" class="icon-info"></i></span></p><p class="font-medium text-slate-800">S&P 500 (dal 2020)</p></div>
-        <div><p class="text-xs uppercase text-slate-500">Prezzo Attuale</p><p class="font-bold text-sky-800">$266.35 (16:00 EST)</p></div>
-        <div><p class="text-xs uppercase text-slate-500">Variazione 24h</p><p class="font-bold text-green-600">+2.45%</p></div>
-        <div><p class="text-xs uppercase text-slate-500">Variazione 7gg</p><p class="font-bold text-yellow-600">+0.95%</p></div>
-        <div><p class="text-xs uppercase text-slate-500">Variazione 30gg</p><p class="font-bold text-red-600">−4.12%</p></div>
-        <div><p class="text-xs uppercase text-slate-500">Prezzo Min/Max 52 settimane</p><p class="font-bold text-slate-800">$152.37 / $299.87</p></div>
-        <div><p class="text-xs uppercase text-slate-500">Target Medio Analisti</p><p class="font-bold text-green-600">$278.00 (32 analisti)</p></div>
-        <div><p class="text-xs uppercase text-slate-500">Rating Analisti</p><p class="font-bold text-yellow-600">Hold (18 Buy / 10 Hold / 4 Sell)</p></div>
-        <div><p class="text-xs uppercase text-slate-500">Market Cap</p><p class="font-bold text-green-600">$850 Mld (Ago 2025)</p></div>
-        <div><p class="text-xs uppercase text-slate-500">Numero Azioni Totali</p><p class="font-bold text-slate-800">3.15 Mld (Classe A – filing Q2 2025)</p></div>
-        <div><p class="text-xs uppercase text-slate-500">Free Float</p><p class="font-bold text-green-600">81.2% — 2.56 Mld</p></div>
+  <header class="sticky top-0 z-50 bg-white shadow-sm w-full px-4 sm:px-6 py-3 flex justify-between items-center border-b border-slate-200 backdrop-blur-sm bg-white/95">
+    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600">•AI</span>
+    </a>
+    <a href="https://tradelia.org/archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
+  </header>
+
+  <main class="px-3 sm:px-6 max-w-6xl mx-auto space-y-6 pb-32">
+    <div class="text-xs text-slate-400 px-1 sm:px-2 mt-2">Home / Report / Azionario</div>
+
+    <!-- BLOCCO 0 - Anteprima -->
+    <section id="blocco0" class="card-blocco border border-slate-200 rounded-xl shadow-sm px-5 py-6 bg-white" data-aos="fade-up">
+      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-4">
+        <h2 class="text-base sm:text-lg font-semibold text-slate-800">Tesla Inc. (TSLA)</h2>
+        <p class="text-sm font-bold text-green-600">Segnale LT: Positivo</p>
       </div>
-      <hr class="divider">
-      <div class="pt-4">
-        <p class="text-sm text-slate-700 leading-relaxed">
-          <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
-          <span class="text-green-600 font-semibold">Tesla mostra una struttura solida</span> in termini di flottante e copertura analitica.
-          <span class="text-green-600 font-semibold">La presenza in indici primari</span> e il <span class="text-yellow-600 font-semibold">rating neutro</span>
-          confermano la sua rilevanza sistemica, pur in uno scenario di <span class="text-red-600 font-semibold">volatilità ciclica</span>.
-        </p>
+      <img src="https://img.chartshots.net/688dd9710a90c.png" alt="Grafico giornaliero Tesla" class="w-full rounded-md border border-slate-200" />
+      <div class="grid grid-cols-2 gap-4 text-sm mt-4">
+        <div>
+          <p class="text-xs uppercase text-slate-500">Variazione 24h 
+            <span class="tooltip"><i data-lucide="info" class="icon-info"></i>
+              <span class="tooltip-text">
+                <span class="tooltip-title">Variazione 24h</span>
+                Performance giornaliera del titolo in percentuale.<br>
+                <span class="tooltip-fonti">Fonte: Refinitiv</span>
+              </span>
+            </span>
+          </p>
+          <p class="font-bold text-green-600">+2.45%</p>
+        </div>
+        <div>
+          <p class="text-xs uppercase text-slate-500">Benchmark S&P500 
+            <span class="tooltip"><i data-lucide="info" class="icon-info"></i>
+              <span class="tooltip-text">
+                <span class="tooltip-title">Benchmark</span>
+                Confronto con l’indice S&P 500 nella stessa sessione.<br>
+                <span class="tooltip-fonti">Fonte: S&P Global</span>
+              </span>
+            </span>
+          </p>
+          <p class="font-bold text-yellow-600">+0.91%</p>
+        </div>
       </div>
     </section>
 
+<section id="blocco1" class="card-blocco border border-slate-200 rounded-xl px-5 py-6" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-4 flex items-center">
+    <i data-lucide="layers" class="icon-section"></i>Blocco 1 – Identificativi & Contesto
+  </h2>
 
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-5 gap-x-10 text-sm">
+    <div><p class="text-xs uppercase text-slate-500">Ticker <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Ticker</span>Simbolo unico utilizzato per identificare il titolo in borsa. <span class="tooltip-fonti">Fonte: Nasdaq</span></span></span></p><p class="font-medium text-slate-800">TSLA</p></div>
+    
+    <div><p class="text-xs uppercase text-slate-500">ISIN <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">ISIN</span>Codice di 12 caratteri che identifica univocamente un titolo a livello internazionale. <span class="tooltip-fonti">Fonte: Bloomberg</span></span></span></p><p class="font-medium text-slate-800">US88160R1014</p></div>
+    
+    <div><p class="text-xs uppercase text-slate-500">Exchange <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Exchange</span>Mercato regolamentato su cui è negoziato il titolo. <span class="tooltip-fonti">Fonte: SEC</span></span></span></p><p class="font-medium text-slate-800">Nasdaq</p></div>
+    
+    <div><p class="text-xs uppercase text-slate-500">MIC <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">MIC</span>Codice identificativo della sede di negoziazione secondo lo standard ISO 10383. <span class="tooltip-fonti">Fonte: ISO</span></span></span></p><p class="font-medium text-slate-800">XNAS</p></div>
+    
+    <div><p class="text-xs uppercase text-slate-500">Società <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Società</span>Ragione sociale completa dell’emittente del titolo. <span class="tooltip-fonti">Fonte: SEC Filing</span></span></span></p><p class="font-medium text-slate-800">Tesla Inc.</p></div>
+    
+    <div><p class="text-xs uppercase text-slate-500">Settore (GICS) <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Settore (GICS)</span>Macro-categoria economica secondo la classificazione GICS. <span class="tooltip-fonti">Fonte: MSCI/S&P</span></span></span></p><p class="font-medium text-slate-800">Consumer Discretionary</p></div>
+    
+    <div><p class="text-xs uppercase text-slate-500">Industria / Sottosettore <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Industria / Sottosettore</span>Classificazione più specifica utile per analisi comparativa. <span class="tooltip-fonti">Fonte: MSCI GICS</span></span></span></p><p class="font-medium text-slate-800">Automobiles / EV</p></div>
+    
+    <div><p class="text-xs uppercase text-slate-500">Indice Primario <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Indice Primario</span>Indice principale in cui il titolo è incluso, con data di ingresso. <span class="tooltip-fonti">Fonte: Nasdaq</span></span></span></p><p class="font-medium text-slate-800">Nasdaq 100 (dal 2013)</p></div>
+    
+    <div><p class="text-xs uppercase text-slate-500">Indice Secondario <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Indice Secondario</span>Ulteriori indici rilevanti per il posizionamento sistemico. <span class="tooltip-fonti">Fonte: S&P Global</span></span></span></p><p class="font-medium text-slate-800">S&P 500 (dal 2020)</p></div>
+    
+    <div><p class="text-xs uppercase text-slate-500">Prezzo Attuale <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Prezzo Attuale</span>Ultima quotazione disponibile durante la sessione. <span class="tooltip-fonti">Fonte: Yahoo Finance</span></span></span></p><p class="font-bold text-sky-800">$266.35 (16:00 EST)</p></div>
+    
+    <div><p class="text-xs uppercase text-slate-500">Variazione 7gg <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Variazione 7gg</span>Rendimento del titolo negli ultimi 7 giorni. <span class="tooltip-fonti">Fonte: Bloomberg</span></span></span></p><p class="font-bold text-yellow-600">+0.95%</p></div>
+    
+    <div><p class="text-xs uppercase text-slate-500">Variazione 30gg <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Variazione 30gg</span>Rendimento a 30 giorni utile per identificare trend. <span class="tooltip-fonti">Fonte: TradingView</span></span></span></p><p class="font-bold text-red-600">−4.12%</p></div>
+    
+    <div><p class="text-xs uppercase text-slate-500">Prezzo Min/Max 52 settimane <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">52 Settimane</span>Range di prezzo più basso e più alto negli ultimi 12 mesi. <span class="tooltip-fonti">Fonte: Nasdaq</span></span></span></p><p class="font-bold text-slate-800">$152.37 / $299.87</p></div>
+    
+    <div><p class="text-xs uppercase text-slate-500">Target Medio Analisti <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Target Analisti</span>Prezzo stimato medio dagli analisti sell-side. <span class="tooltip-fonti">Fonte: MarketScreener</span></span></span></p><p class="font-bold text-green-600">$278.00 (32 analisti)</p></div>
+    
+    <div><p class="text-xs uppercase text-slate-500">Rating Analisti <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Rating Analisti</span>Consensi aggregati su Buy / Hold / Sell. <span class="tooltip-fonti">Fonte: Morningstar</span></span></span></p><p class="font-bold text-yellow-600">Hold (18 Buy / 10 Hold / 4 Sell)</p></div>
+    
+    <div><p class="text-xs uppercase text-slate-500">Market Cap <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Market Cap</span>Valore di mercato totale delle azioni in circolazione. <span class="tooltip-fonti">Fonte: Google Finance</span></span></span></p><p class="font-bold text-green-600">$850 Mld (Ago 2025)</p></div>
+    
+    <div><p class="text-xs uppercase text-slate-500">Numero Azioni Totali <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Azioni Totali</span>Quantità totale di azioni emesse, per classe. <span class="tooltip-fonti">Fonte: EDGAR</span></span></span></p><p class="font-bold text-slate-800">3.15 Mld (Classe A – filing Q2 2025)</p></div>
+    
+    <div><p class="text-xs uppercase text-slate-500">Free Float <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Free Float</span>Quota di azioni effettivamente negoziabili sul mercato. <span class="tooltip-fonti">Fonte: FMP</span></span></span></p><p class="font-bold text-green-600">81.2% — 2.56 Mld</p></div>
+  </div>
 
-  
- 
-
-  </main>
-   <div id="tooltips" class="hidden">
-  <div id="tooltip-ticker">
-    <div class="tooltip-title">Ticker</div>
-    Simbolo alfanumerico unico con cui il titolo è negoziato in borsa (es. TSLA per Tesla).
-    <div class="tooltip-fonti">Fonte: Nasdaq</div>
+  <hr class="divider">
+  <div class="pt-4">
+    <p class="text-sm text-slate-700 leading-relaxed">
+      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+      <span class="text-green-600 font-semibold">Tesla mostra una struttura solida</span> in termini di flottante e copertura analitica.
+      <span class="text-green-600 font-semibold">La presenza in indici primari</span> e il <span class="text-yellow-600 font-semibold">rating neutro</span>
+      confermano la sua rilevanza sistemica, pur in uno scenario di <span class="text-red-600 font-semibold">volatilità ciclica</span>.
+    </p>
   </div>
-  <div id="tooltip-isin">
-    <div class="tooltip-title">ISIN</div>
-    Codice di 12 caratteri che identifica univocamente il titolo a livello internazionale.
-    <div class="tooltip-fonti">Fonte: Bloomberg</div>
-  </div>
-  <div id="tooltip-exchange">
-    <div class="tooltip-title">Exchange</div>
-    Mercato regolamentato in cui avviene la negoziazione del titolo.
-    <div class="tooltip-fonti">Fonte: SEC</div>
-  </div>
-  <div id="tooltip-mic">
-    <div class="tooltip-title">MIC</div>
-    Codice ISO 10383 che identifica la sede di negoziazione (es. XNAS per Nasdaq).
-    <div class="tooltip-fonti">Fonte: ISO</div>
-  </div>
-  <div id="tooltip-societa">
-    <div class="tooltip-title">Società</div>
-    Nome legale completo dell’emittente del titolo.
-    <div class="tooltip-fonti">Fonte: SEC Filing</div>
-  </div>
-  <div id="tooltip-settore">
-    <div class="tooltip-title">Settore (GICS)</div>
-    Classificazione economica primaria secondo lo standard GICS (MSCI/S&P).
-    <div class="tooltip-fonti">Fonte: MSCI GICS</div>
-  </div>
-  <div id="tooltip-industria">
-    <div class="tooltip-title">Industria / Sottosettore</div>
-    Classificazione specifica nel GICS utile per benchmarking e analisi comparata.
-    <div class="tooltip-fonti">Fonte: MSCI GICS</div>
-  </div>
-  <div id="tooltip-indice-primario">
-    <div class="tooltip-title">Indice Primario</div>
-    Indice principale in cui il titolo è incluso, con data di ingresso.
-    <div class="tooltip-fonti">Fonte: Nasdaq</div>
-  </div>
-  <div id="tooltip-indice-secondario">
-    <div class="tooltip-title">Indice Secondario</div>
-    Altri indici rilevanti ai fini del posizionamento sistemico.
-    <div class="tooltip-fonti">Fonte: S&P Global</div>
-  </div>
-  <div id="tooltip-prezzo-attuale">
-    <div class="tooltip-title">Prezzo Attuale</div>
-    Ultimo prezzo ufficiale disponibile, con valuta e timestamp.
-    <div class="tooltip-fonti">Fonte: Yahoo Finance</div>
-  </div>
-  <div id="tooltip-var24h">
-    <div class="tooltip-title">Variazione 24h</div>
-    Performance giornaliera del titolo in percentuale.
-    <div class="tooltip-fonti">Fonte: Refinitiv</div>
-  </div>
-  <div id="tooltip-var7gg">
-    <div class="tooltip-title">Variazione 7gg</div>
-    Variazione della quotazione negli ultimi 7 giorni di borsa aperta.
-    <div class="tooltip-fonti">Fonte: Bloomberg</div>
-  </div>
-  <div id="tooltip-var30gg">
-    <div class="tooltip-title">Variazione 30gg</div>
-    Rendimento su base mensile, utile per evidenziare trend di breve.
-    <div class="tooltip-fonti">Fonte: TradingView</div>
-  </div>
-  <div id="tooltip-52week">
-    <div class="tooltip-title">Prezzo Min/Max 52 settimane</div>
-    Estremi di prezzo registrati negli ultimi 12 mesi.
-    <div class="tooltip-fonti">Fonte: Nasdaq</div>
-  </div>
-  <div id="tooltip-target-analisti">
-    <div class="tooltip-title">Prezzo Target Medio Analisti</div>
-    Stima media degli analisti sell-side con numero e data aggiornamento.
-    <div class="tooltip-fonti">Fonte: MarketScreener</div>
-  </div>
-  <div id="tooltip-rating-analisti">
-    <div class="tooltip-title">Rating Analisti</div>
-    Consensi aggregati: Buy, Hold, Sell e relative percentuali.
-    <div class="tooltip-fonti">Fonte: Morningstar</div>
-  </div>
-  <div id="tooltip-market-cap">
-    <div class="tooltip-title">Market Cap</div>
-    Capitalizzazione di mercato, aggiornata con valuta e mese.
-    <div class="tooltip-fonti">Fonte: Google Finance</div>
-  </div>
-  <div id="tooltip-numero-azioni">
-    <div class="tooltip-title">Numero Azioni Totali</div>
-    Totale delle azioni emesse, con indicazione della classe e filing SEC.
-    <div class="tooltip-fonti">Fonte: EDGAR</div>
-  </div>
-  <div id="tooltip-free-float">
-    <div class="tooltip-title">Free Float</div>
-    Percentuale e volume di azioni effettivamente disponibili al mercato.
-    <div class="tooltip-fonti">Fonte: FMP</div>
-  </div>
-</div>
-</body>
-</html>
+</section>
 
   </main>
 </body>
