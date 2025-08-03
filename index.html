@@ -191,123 +191,98 @@
     document.addEventListener("DOMContentLoaded", type);
   </script>
   🚧 Inserimento delle 3 modali reali in corso...
+<!-- ✅ REVISIONE COMPLETA VALIDATORE: Composizione per asset reali con strumenti precisi -->
 
-<!-- MODALI PER I 3 SERVIZI (inserire subito dopo il blocco CTA o alla fine del body) -->
+<!-- MODALE VALIDAZIONE COMPLETA -->
 <div id="modal-validazione" class="modal">
   <div class="modal-content w-full max-w-xl">
-    <h3 class="text-lg font-semibold mb-4">Validazione Portafoglio</h3>
+    <h3 class="text-lg font-semibold mb-4">Validazione Portafoglio Attuale</h3>
     <form id="formValidazione" class="space-y-4 text-left text-sm">
       <input type="hidden" name="tipo" value="validazione">
-      <label class="block">Composizione attuale
-        <textarea name="composizione" rows="3" required class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="Es: 40% azioni, 30% obbligazioni..."></textarea>
-      </label>
-      <label class="block">Obiettivo
-        <select name="obiettivo" required class="w-full border mt-1 px-2 py-1.5 rounded">
+
+      <label class="block">Età (fascia)
+        <select name="eta" required class="w-full border mt-1 px-2 py-1.5 rounded">
           <option value="">Seleziona</option>
-          <option>Protezione</option>
-          <option>Cedolare</option>
-          <option>Crescita moderata</option>
-          <option>Crescita aggressiva</option>
+          <option>18–30</option><option>31–45</option><option>46–60</option><option>61+</option>
         </select>
       </label>
+
+      <label class="block">Orizzonte temporale
+        <select name="orizzonte" required class="w-full border mt-1 px-2 py-1.5 rounded">
+          <option value="">Seleziona</option>
+          <option>1–3 anni</option><option>4–7 anni</option><option>8+ anni</option>
+        </select>
+      </label>
+
+      <label class="block">Obiettivo prevalente
+        <select name="obiettivo" required class="w-full border mt-1 px-2 py-1.5 rounded">
+          <option value="">Seleziona</option>
+          <option>Protezione</option><option>Cedolare</option><option>Crescita moderata</option><option>Crescita aggressiva</option>
+        </select>
+      </label>
+
+      <fieldset class="border rounded p-3">
+        <legend class="text-sm font-medium">Composizione dettagliata (strumenti + %)</legend>
+        <p class="text-xs text-slate-600 mb-2">Inserisci fino a 15 strumenti specifici con percentuali indicative.</p>
+        <div class="space-y-2">
+          <!-- Genera 15 campi strumento + % -->
+          " + Array.from({length: 15}, (_, i) => {
+            const n = i + 1;
+            return `
+          <div class="grid grid-cols-5 gap-2">
+            <label class="col-span-3">Strumento ${n}<input name="strumento${n}" type="text" placeholder="Es: iShares MSCI World" class="w-full border mt-1 px-2 py-1.5 rounded"></label>
+            <label class="col-span-2">%<input name="percentuale${n}" type="number" min="0" max="100" class="w-full border mt-1 px-2 py-1.5 rounded"></label>
+          </div>`;
+          }).join('') + "
+        </div>
+        <p class="text-xs text-gray-500 mt-2">Somma indicativa: 100%</p>
+      </fieldset>
+
+      <label class="block">PAC attivo?
+        <select name="pac" required class="w-full border mt-1 px-2 py-1.5 rounded">
+          <option value="">Seleziona</option>
+          <option>Sì</option><option>No</option>
+        </select>
+      </label>
+
+      <label class="block">Broker utilizzato (facoltativo)
+        <input type="text" name="broker" class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="Es. Fineco, DEGIRO, Exante...">
+      </label>
+
+      <label class="block">Patrimonio liquido (fascia)
+        <select name="patrimonio" required class="w-full border mt-1 px-2 py-1.5 rounded">
+          <option value="">Seleziona</option>
+          <option>0–10k</option><option>10k–50k</option><option>50k–200k</option><option>200k+</option>
+        </select>
+      </label>
+
+      <label class="block">Tolleranza a drawdown
+        <select name="drawdown" required class="w-full border mt-1 px-2 py-1.5 rounded">
+          <option value="">Seleziona</option>
+          <option>−5%</option><option>−10%</option><option>−20%</option><option>−30% o più</option>
+        </select>
+      </label>
+
+      <label class="block">Preferenze o vincoli (facoltativo)
+        <textarea name="vincoli" rows="2" class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="Es. no ETF, solo titoli reali, esclusione energy..."></textarea>
+      </label>
+
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <label>Email
+        <label>Email (facoltativo)
           <input type="email" name="email" class="w-full border mt-1 px-2 py-1.5 rounded">
         </label>
-        <label>WhatsApp
+        <label>WhatsApp (facoltativo)
           <input type="text" name="whatsapp" class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="+39...">
         </label>
       </div>
-      <p class="text-xs text-slate-500 italic">Almeno un recapito è obbligatorio.</p>
+
+      <p class="text-xs text-slate-500 italic">Indica almeno un recapito (Email o WhatsApp).</p>
+      <p class="text-xs text-red-600 italic">Nessuna raccomandazione individuale. AI non infallibile. Verifica sempre con un consulente abilitato.</p>
+
       <button type="submit" class="w-full border border-slate-700 text-slate-800 font-medium text-sm rounded py-1.5 uppercase hover:bg-slate-100 transition">
-        Invia
+        Invia Validazione
       </button>
     </form>
     <button onclick="chiudiModale('validazione')" class="mt-4 text-sm text-blue-600 underline">Chiudi</button>
   </div>
 </div>
-
-<div id="modal-simulazione" class="modal">
-  <div class="modal-content w-full max-w-xl">
-    <h3 class="text-lg font-semibold mb-4">Simulazione Portafoglio Ideale</h3>
-    <form id="formSimulazione" class="space-y-4 text-left text-sm">
-      <input type="hidden" name="tipo" value="simulazione">
-      <label class="block">Età
-        <select name="eta" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>18–30</option>
-          <option>31–45</option>
-          <option>46–60</option>
-          <option>61+</option>
-        </select>
-      </label>
-      <label class="block">Orizzonte
-        <select name="orizzonte" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>1–3 anni</option>
-          <option>4–7 anni</option>
-          <option>8+ anni</option>
-        </select>
-      </label>
-      <label class="block">Tolleranza a drawdown
-        <select name="drawdown" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>−5%</option>
-          <option>−10%</option>
-          <option>−20%</option>
-          <option>−30% o più</option>
-        </select>
-      </label>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <label>Email
-          <input type="email" name="email" class="w-full border mt-1 px-2 py-1.5 rounded">
-        </label>
-        <label>WhatsApp
-          <input type="text" name="whatsapp" class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="+39...">
-        </label>
-      </div>
-      <button type="submit" class="w-full border border-slate-700 text-slate-800 font-medium text-sm rounded py-1.5 uppercase hover:bg-slate-100 transition">
-        Invia
-      </button>
-    </form>
-    <button onclick="chiudiModale('simulazione')" class="mt-4 text-sm text-blue-600 underline">Chiudi</button>
-  </div>
-</div>
-
-<div id="modal-report" class="modal">
-  <div class="modal-content w-full max-w-xl">
-    <h3 class="text-lg font-semibold mb-4">Richiesta Report AI</h3>
-    <form id="formReport" class="space-y-4 text-left text-sm">
-      <input type="hidden" name="tipo" value="report">
-      <label class="block">Asset da analizzare
-        <input type="text" name="asset" required class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="Es: Tesla, EUR/USD, iShares EM Bond...">
-      </label>
-      <label class="block">Categoria strumento
-        <select name="categoria" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>Azioni</option>
-          <option>ETF</option>
-          <option>Obbligazioni</option>
-          <option>Crypto</option>
-          <option>Forex</option>
-          <option>Altro</option>
-        </select>
-      </label>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <label>Email
-          <input type="email" name="email" class="w-full border mt-1 px-2 py-1.5 rounded">
-        </label>
-        <label>WhatsApp
-          <input type="text" name="whatsapp" class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="+39...">
-        </label>
-      </div>
-      <button type="submit" class="w-full border border-slate-700 text-slate-800 font-medium text-sm rounded py-1.5 uppercase hover:bg-slate-100 transition">
-        Invia
-      </button>
-    </form>
-    <button onclick="chiudiModale('report')" class="mt-4 text-sm text-blue-600 underline">Chiudi</button>
-  </div>
-</div>
-
-</body>
-</html>
