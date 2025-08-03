@@ -287,156 +287,136 @@
 </head>
 <body class="py-12 px-4">
 
-  <form id="simulazioneForm" class="bg-white border border-slate-200 rounded-xl p-6 max-w-2xl mx-auto space-y-5 shadow-sm">
-    <h3 class="text-lg font-semibold text-slate-900 uppercase tracking-wide text-center border-b pb-2">
-      Simulazione Portafoglio Ideale
-    </h3>
+  <form id="simulazioneForm" class="bg-white border border-slate-200 rounded-lg p-5 max-w-3xl mx-auto space-y-4 shadow-sm text-sm">
+    <h2 class="text-center text-base font-semibold text-slate-800 uppercase tracking-wide pb-2 border-b">Simulazione Portafoglio Ideale</h2>
 
     <input type="hidden" name="tipo" value="simulazione" />
 
-    <!-- DOMANDE -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <label class="block text-sm text-slate-700">
-        Età (fascia)
-        <select name="eta" required class="mt-1 w-full border border-slate-300 rounded px-3 py-2 text-sm">
-          <option value="">Seleziona fascia</option>
-          <option>18–30</option>
-          <option>31–45</option>
-          <option>46–60</option>
-          <option>61 o più</option>
-        </select>
-      </label>
-
-      <label class="block text-sm text-slate-700">
-        Stato civile
-        <select name="stato_civile" required class="mt-1 w-full border border-slate-300 rounded px-3 py-2 text-sm">
+    <!-- DOMANDE PRINCIPALI -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <label>Età (fascia)
+        <select name="eta" required class="mt-1 w-full border border-slate-300 rounded px-2 py-1.5">
           <option value="">Seleziona</option>
-          <option>Single</option>
-          <option>Convivente / Sposato</option>
-          <option>Separato / Vedovo</option>
+          <option>18–30</option><option>31–45</option><option>46–60</option><option>61 o più</option>
         </select>
       </label>
 
-      <label class="block text-sm text-slate-700">
-        Hai un PAC attivo?
-        <select name="pac_attivo" required class="mt-1 w-full border border-slate-300 rounded px-3 py-2 text-sm">
+      <label>Stato civile
+        <select name="stato_civile" required class="mt-1 w-full border border-slate-300 rounded px-2 py-1.5">
           <option value="">Seleziona</option>
-          <option>No</option>
-          <option>Sì</option>
+          <option>Single</option><option>Convivente / Sposato</option><option>Separato / Vedovo</option>
         </select>
       </label>
 
-      <label class="block text-sm text-slate-700">
-        Fascia patrimonio liquido
-        <select name="patrimonio" required class="mt-1 w-full border border-slate-300 rounded px-3 py-2 text-sm">
-          <option value="">Seleziona fascia</option>
-          <option>0–10.000 €</option>
-          <option>10.000–50.000 €</option>
-          <option>50.000–200.000 €</option>
-          <option>Oltre 200.000 €</option>
-        </select>
-      </label>
-
-      <label class="block text-sm text-slate-700">
-        Orizzonte temporale
-        <select name="orizzonte" required class="mt-1 w-full border border-slate-300 rounded px-3 py-2 text-sm">
+      <label>PAC attivo?
+        <select name="pac_attivo" required class="mt-1 w-full border border-slate-300 rounded px-2 py-1.5">
           <option value="">Seleziona</option>
-          <option>Breve (1–3 anni)</option>
-          <option>Medio (4–7 anni)</option>
-          <option>Lungo (oltre 8 anni)</option>
+          <option>No</option><option>Sì</option>
         </select>
       </label>
 
-      <label class="block text-sm text-slate-700">
-        Obiettivo
-        <select name="obiettivo" required class="mt-1 w-full border border-slate-300 rounded px-3 py-2 text-sm">
+      <label>Patrimonio liquido
+        <select name="patrimonio" required class="mt-1 w-full border border-slate-300 rounded px-2 py-1.5">
           <option value="">Seleziona</option>
-          <option>Protezione del capitale</option>
-          <option>Entrate periodiche (cedola / dividendo)</option>
-          <option>Crescita moderata nel tempo</option>
-          <option>Crescita a lungo termine</option>
+          <option>0–10k</option><option>10k–50k</option><option>50k–200k</option><option>200k+</option>
         </select>
       </label>
 
-      <label class="block text-sm text-slate-700">
-        Vuoi includere PAC?
-        <select name="includi_pac" required class="mt-1 w-full border border-slate-300 rounded px-3 py-2 text-sm">
+      <label>Orizzonte temporale
+        <select name="orizzonte" required class="mt-1 w-full border border-slate-300 rounded px-2 py-1.5">
           <option value="">Seleziona</option>
-          <option>No</option>
-          <option>Sì</option>
-          <option>Valuto entrambe</option>
+          <option>1–3 anni</option><option>4–7 anni</option><option>8+ anni</option>
         </select>
       </label>
 
-      <label class="block text-sm text-slate-700">
-        Conoscenze finanziarie
-        <select name="conoscenze" required class="mt-1 w-full border border-slate-300 rounded px-3 py-2 text-sm">
+      <label>Obiettivo principale
+        <select name="obiettivo" required class="mt-1 w-full border border-slate-300 rounded px-2 py-1.5">
           <option value="">Seleziona</option>
-          <option>Base</option>
-          <option>Intermedio</option>
-          <option>Avanzato</option>
+          <option>Protezione</option><option>Cedolare</option><option>Crescita moderata</option><option>Crescita aggressiva</option>
         </select>
       </label>
 
-      <label class="block text-sm text-slate-700">
-        Tolleranza a drawdown
-        <select name="drawdown" required class="mt-1 w-full border border-slate-300 rounded px-3 py-2 text-sm">
+      <label>Includere PAC?
+        <select name="includi_pac" required class="mt-1 w-full border border-slate-300 rounded px-2 py-1.5">
           <option value="">Seleziona</option>
-          <option>Massimo −5%</option>
-          <option>Massimo −10%</option>
-          <option>Massimo −20%</option>
-          <option>Oltre −30%</option>
+          <option>No</option><option>Sì</option><option>Valuto entrambe</option>
+        </select>
+      </label>
+
+      <label>Conoscenze finanziarie
+        <select name="conoscenze" required class="mt-1 w-full border border-slate-300 rounded px-2 py-1.5">
+          <option value="">Seleziona</option>
+          <option>Base</option><option>Intermedio</option><option>Avanzato</option>
+        </select>
+      </label>
+
+      <label>Tolleranza drawdown
+        <select name="drawdown" required class="mt-1 w-full border border-slate-300 rounded px-2 py-1.5">
+          <option value="">Seleziona</option>
+          <option>−5%</option><option>−10%</option><option>−20%</option><option>−30% o più</option>
         </select>
       </label>
     </div>
 
     <!-- VINCOLI -->
-    <label class="block text-sm text-slate-700">
+    <label class="block">
       Vincoli o preferenze (facoltativo)
-      <textarea name="vincoli" rows="3" class="mt-1 w-full border border-slate-300 rounded px-3 py-2 text-sm" placeholder="Es: no cripto, preferenza obbligazioni, esclusione oil & gas..."></textarea>
+      <textarea name="vincoli" rows="3" class="mt-1 w-full border border-slate-300 rounded px-2 py-1.5" placeholder="Es: no cripto, preferenza obbligazioni, esclusione oil & gas..."></textarea>
     </label>
 
     <!-- CONTATTI -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <label class="block text-sm text-slate-700">
-        Email (facoltativo)
-        <input type="email" name="email" class="mt-1 w-full border border-slate-300 rounded px-3 py-2 text-sm" />
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <label>Email (facoltativo)
+        <input type="email" name="email" class="mt-1 w-full border border-slate-300 rounded px-2 py-1.5" />
       </label>
 
-      <label class="block text-sm text-slate-700">
-        WhatsApp (facoltativo)
-        <input type="text" name="whatsapp" class="mt-1 w-full border border-slate-300 rounded px-3 py-2 text-sm" placeholder="+39..." />
+      <label>WhatsApp (facoltativo)
+        <input type="text" name="whatsapp" class="mt-1 w-full border border-slate-300 rounded px-2 py-1.5" placeholder="+39..." />
       </label>
     </div>
 
-    <p class="text-xs text-slate-500 italic text-center">
-      È sufficiente compilare almeno uno dei due recapiti per ricevere il report.
+    <p class="text-xs text-center text-slate-500 italic mt-2">È necessario indicare almeno uno tra Email o WhatsApp.</p>
+
+    <p class="text-xs text-center text-red-500 italic">
+      Le simulazioni AI sono solo ipotesi illustrative. Consigliamo sempre un consulente finanziario abilitato.
     </p>
 
-    <!-- DISCLAIMER -->
-    <p class="text-xs text-red-500 italic text-center">
-      Le simulazioni AI sono ipotesi illustrative. Rivolgiti sempre a un consulente finanziario abilitato. Le intelligenze artificiali possono commettere errori.
-    </p>
-
-    <!-- INVIO -->
-    <button type="submit" class="block w-full text-center text-sm font-semibold uppercase tracking-wide border border-slate-700 text-slate-800 rounded py-2 hover:bg-slate-100 transition">
-      Invia Simulazione AI
+    <button type="submit" class="w-full mt-2 border border-slate-700 text-slate-800 font-medium text-sm rounded py-1.5 uppercase hover:bg-slate-100 transition">
+      Invia Simulazione
     </button>
-
-    <div id="successMessage" class="hidden text-green-600 text-sm text-center mt-2 font-medium fade-in">
-      ✅ Simulazione inviata. Riceverai a breve il report.
-    </div>
   </form>
 
-  <!-- JS -->
+  <!-- MODAL SUCCESSO -->
+  <div id="modalSuccess" class="hidden fixed inset-0 z-50 flex items-center justify-center modal">
+    <div class="bg-white border border-slate-300 rounded-lg p-6 shadow-md text-center max-w-sm">
+      <h3 class="text-sm font-semibold text-green-700">✅ Simulazione inviata</h3>
+      <p class="text-xs text-slate-600 mt-2">Riceverai un link al report via email o WhatsApp.</p>
+      <button onclick="closeModal()" class="mt-4 text-sm text-slate-700 underline">Chiudi</button>
+    </div>
+  </div>
+
+  <!-- JS VALIDAZIONE + INVIO -->
   <script>
-    const form = document.getElementById("simulazioneForm");
-    const successMsg = document.getElementById("successMessage");
+    const form = document.getElementById('simulazioneForm');
+    const modal = document.getElementById('modalSuccess');
 
-    form.addEventListener("submit", async (e) => {
+    function closeModal() {
+      modal.classList.add('hidden');
+    }
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      const formData = new FormData(form);
+      const email = formData.get("email")?.trim();
+      const whatsapp = formData.get("whatsapp")?.trim();
 
-      const data = Object.fromEntries(new FormData(form).entries());
+      // Verifica recapito obbligatorio
+      if (!email && !whatsapp) {
+        alert("Inserisci almeno Email o WhatsApp.");
+        return;
+      }
+
+      const data = Object.fromEntries(formData.entries());
 
       try {
         const res = await fetch("/api/send-email", {
@@ -447,8 +427,7 @@
 
         if (res.ok) {
           form.reset();
-          successMsg.classList.remove("hidden");
-          successMsg.classList.add("fade-in");
+          modal.classList.remove('hidden');
         } else {
           alert("Errore durante l'invio. Riprova.");
         }
