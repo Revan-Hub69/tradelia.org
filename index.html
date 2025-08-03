@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tradelia – Richiesta Report AI</title>
+  <title>Tradelia – Homepage AI</title>
   <link rel="icon" href="/favicon.png" type="image/png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -140,8 +140,8 @@
     </div>
   </section>
 <!-- MODALE VALIDAZIONE -->
-<div id="modal-validazione" class="modal overflow-y-auto">
-  <div class="modal-content w-full max-w-2xl max-h-screen overflow-y-auto">
+<div id="modal-validazione" class="modal overflow-y-auto" onclick="chiudiModaleClick(event, 'validazione')">
+  <div class="modal-content w-full max-w-2xl max-h-screen overflow-y-auto" onclick="event.stopPropagation()">
     <h3 class="text-lg font-semibold mb-4">Validazione Portafoglio Attuale</h3>
     <form id="formValidazione" class="space-y-4 text-left text-sm">
       <input type="hidden" name="tipo" value="validazione">
@@ -168,17 +168,9 @@
       </label>
 
       <fieldset class="border rounded p-3">
-        <legend class="text-sm font-medium">Composizione dettagliata (strumenti + %)</legend>
-        <p class="text-xs text-slate-600 mb-2">Inserisci fino a 15 strumenti precisi con la relativa percentuale.</p>
-        <div class="space-y-2">
-          <!-- 15 strumenti -->
-          <!-- Ripetuto manualmente per chiarezza -->
-          <div class="grid grid-cols-5 gap-2" >
-            <label class="col-span-3">Strumento 1<input name="strumento1" type="text" class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="Es: iShares MSCI World"></label>
-            <label class="col-span-2">%<input name="percentuale1" type="number" min="0" max="100" class="w-full border mt-1 px-2 py-1.5 rounded"></label>
-          </div>
-          <!-- ... strumenti 2-15 (ripetere lo stesso schema se vuoi statico o in JS se dinamico) -->
-        </div>
+        <legend class="text-sm font-medium">Composizione portafoglio</legend>
+        <p class="text-xs text-slate-600 mb-2">Inserisci strumenti e percentuali. Nuovi campi appaiono automaticamente.</p>
+        <div id="strumenti-container" class="space-y-2"></div>
         <p class="text-xs text-gray-500 mt-2">Somma indicativa: 100%</p>
       </fieldset>
 
@@ -230,193 +222,8 @@
     <button onclick="chiudiModale('validazione')" class="mt-4 text-sm text-blue-600 underline">Chiudi</button>
   </div>
 </div>
-<!-- MODALE SIMULAZIONE -->
-<div id="modal-simulazione" class="modal overflow-y-auto">
-  <div class="modal-content w-full max-w-3xl max-h-screen overflow-y-auto text-left">
-    <h3 class="text-lg font-semibold mb-4">Simulazione Portafoglio Ideale</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-      <!-- FORM SIMULAZIONE -->
-      <form id="formSimulazione" class="space-y-4 text-sm">
-        <input type="hidden" name="tipo" value="simulazione">
-
-        <label class="block">Età (fascia)
-          <select name="eta" required class="w-full border mt-1 px-2 py-1.5 rounded">
-            <option value="">Seleziona</option>
-            <option>18–30</option><option>31–45</option><option>46–60</option><option>61+</option>
-          </select>
-        </label>
-
-        <label class="block">Stato civile
-          <select name="stato_civile" required class="w-full border mt-1 px-2 py-1.5 rounded">
-            <option value="">Seleziona</option>
-            <option>Single</option><option>Coniugato/a</option><option>Separato/a</option>
-          </select>
-        </label>
-
-        <label class="block">Figli a carico?
-          <select name="figli" required class="w-full border mt-1 px-2 py-1.5 rounded">
-            <option value="">Seleziona</option>
-            <option>Sì</option><option>No</option>
-          </select>
-        </label>
-
-        <label class="block">Proprietà immobiliari?
-          <select name="proprieta" required class="w-full border mt-1 px-2 py-1.5 rounded">
-            <option value="">Seleziona</option>
-            <option>Sì</option><option>No</option>
-          </select>
-        </label>
-
-        <label class="block">Occupazione
-          <select name="occupazione" required class="w-full border mt-1 px-2 py-1.5 rounded">
-            <option value="">Seleziona</option>
-            <option>Dipendente</option><option>Autonomo</option><option>Pensionato</option><option>Disoccupato</option>
-          </select>
-        </label>
-
-        <label class="block">Obiettivo finanziario
-          <select name="obiettivo" required class="w-full border mt-1 px-2 py-1.5 rounded">
-            <option value="">Seleziona</option>
-            <option>Crescita</option><option>Cedolare</option><option>Protezione</option><option>Altro</option>
-          </select>
-        </label>
-
-        <label class="block">Orizzonte temporale
-          <select name="orizzonte" required class="w-full border mt-1 px-2 py-1.5 rounded">
-            <option value="">Seleziona</option>
-            <option>&lt;3 anni</option><option>3–7 anni</option><option>&gt;7 anni</option>
-          </select>
-        </label>
-
-        <label class="block">Capitale iniziale (fascia)
-          <select name="capitale" required class="w-full border mt-1 px-2 py-1.5 rounded">
-            <option value="">Seleziona</option>
-            <option>&lt;5k</option><option>5k–20k</option><option>20k–100k</option><option>&gt;100k</option>
-          </select>
-        </label>
-
-        <label class="block">Conoscenze finanziarie
-          <select name="conoscenze" required class="w-full border mt-1 px-2 py-1.5 rounded">
-            <option value="">Seleziona</option>
-            <option>Basse</option><option>Medie</option><option>Avanzate</option>
-          </select>
-        </label>
-
-        <label class="block">PAC attivo?
-          <select name="pac" required class="w-full border mt-1 px-2 py-1.5 rounded">
-            <option value="">Seleziona</option>
-            <option>Sì</option><option>No</option>
-          </select>
-        </label>
-
-        <label class="block">Tolleranza a drawdown massimo
-          <select name="drawdown" required class="w-full border mt-1 px-2 py-1.5 rounded">
-            <option value="">Seleziona</option>
-            <option>−5%</option><option>−10%</option><option>−20%</option><option>−30% o oltre</option>
-          </select>
-        </label>
-
-        <label class="block">Vincoli o preferenze (facoltativo)
-          <textarea name="vincoli" rows="2" class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="Es. no ETF, solo titoli reali, esclusione crypto..."></textarea>
-        </label>
-
-        <label class="block">Come vuoi ricevere il risultato?
-          <select name="ricezione" required class="w-full border mt-1 px-2 py-1.5 rounded">
-            <option value="">Seleziona</option>
-            <option>Email</option><option>WhatsApp</option><option>Entrambi</option>
-          </select>
-        </label>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <label>Email (facoltativo)
-            <input type="email" name="email" class="w-full border mt-1 px-2 py-1.5 rounded">
-          </label>
-          <label>WhatsApp (facoltativo)
-            <input type="text" name="whatsapp" class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="+39...">
-          </label>
-        </div>
-
-        <p class="text-xs text-red-600 italic">Non forniamo raccomandazioni. Le AI non sono infallibili. Consulta sempre un professionista abilitato.</p>
-
-        <button type="submit" class="w-full border border-slate-700 text-slate-800 font-medium text-sm rounded py-1.5 uppercase hover:bg-slate-100 transition">
-          Invia Simulazione
-        </button>
-      </form>
-
-      <!-- RIEPILOGO AUTOMATICO -->
-      <div class="border border-slate-300 rounded-md p-4 bg-white shadow-sm text-sm h-fit">
-        <h4 class="font-semibold text-slate-800 mb-3">📋 Riepilogo simulazione</h4>
-        <div id="riepilogoSimulazione" class="space-y-2 text-slate-700">
-          <p class="text-slate-500 italic">I tuoi dati saranno riepilogati qui man mano che compili.</p>
-        </div>
-      </div>
-
-    </div>
-    <button onclick="chiudiModale('simulazione')" class="mt-4 text-sm text-blue-600 underline">Chiudi</button>
-  </div>
-</div>
-<!-- MODALE REPORT AI -->
-<div id="modal-report" class="modal overflow-y-auto">
-  <div class="modal-content w-full max-w-xl max-h-screen overflow-y-auto text-left">
-    <h3 class="text-lg font-semibold mb-4">Richiesta Report AI su Asset</h3>
-    <form id="formReport" class="space-y-4 text-sm">
-      <input type="hidden" name="tipo" value="report">
-
-      <label class="block">Nome Asset / Strumento
-        <input type="text" name="nome" required placeholder="Es: Tesla, iShares Global Clean Energy..." class="w-full border mt-1 px-2 py-1.5 rounded">
-      </label>
-
-      <label class="block">Ticker o Codice ISIN (facoltativo)
-        <input type="text" name="ticker" placeholder="TSLA, IE00B1XNHC34, BTCUSD, EUR/USD..." class="w-full border mt-1 px-2 py-1.5 rounded">
-      </label>
-
-      <label class="block">Tipologia Asset
-        <select name="categoria" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>Azione</option>
-          <option>ETF</option>
-          <option>Obbligazione</option>
-          <option>Criptovaluta</option>
-          <option>Forex</option>
-          <option>Altro</option>
-        </select>
-      </label>
-
-      <label class="block">Orizzonte di interesse
-        <select name="orizzonte" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>Breve termine (1–3 mesi)</option>
-          <option>Medio termine (3–12 mesi)</option>
-          <option>Lungo termine (1 anno+)</option>
-        </select>
-      </label>
-
-      <label class="block">Note o preferenze particolari (facoltativo)
-        <textarea name="note" rows="2" class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="Es: focus su dividendi, rischio, correlazioni..."></textarea>
-      </label>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <label>Email (facoltativo)
-          <input type="email" name="email" class="w-full border mt-1 px-2 py-1.5 rounded">
-        </label>
-        <label>WhatsApp (facoltativo)
-          <input type="text" name="whatsapp" class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="+39...">
-        </label>
-      </div>
-
-      <p class="text-xs text-slate-500 italic">Indica almeno un recapito (Email o WhatsApp).</p>
-      <p class="text-xs text-red-600 italic">L'analisi AI non è una raccomandazione. Verifica sempre con un professionista abilitato.</p>
-
-      <button type="submit" class="w-full border border-slate-700 text-slate-800 font-medium text-sm rounded py-1.5 uppercase hover:bg-slate-100 transition">
-        Invia Richiesta
-      </button>
-    </form>
-    <button onclick="chiudiModale('report')" class="mt-4 text-sm text-blue-600 underline">Chiudi</button>
-  </div>
-</div>
 <script>
-  // ✅ MODALI
+  // ✅ GESTIONE MODALI — apertura e chiusura
   function apriModale(id) {
     document.getElementById(`modal-${id}`).classList.add("show");
     document.body.classList.add("overflow-hidden");
@@ -427,11 +234,16 @@
     document.body.classList.remove("overflow-hidden");
   }
 
-  // ✅ INVIO FORM (Valido per tutti e 3 i form)
+  function chiudiModaleClick(event, id) {
+    if (event.target.classList.contains("modal")) {
+      chiudiModale(id);
+    }
+  }
+
+  // ✅ FORM SUBMIT con invio e chiusura automatica modale
   document.querySelectorAll("form").forEach((form) => {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-
       const formData = new FormData(form);
       const data = {};
       formData.forEach((val, key) => {
@@ -448,6 +260,8 @@
         if (res.ok) {
           alert("✅ Richiesta inviata correttamente.");
           form.reset();
+          const tipo = data.tipo;
+          chiudiModale(tipo);
         } else {
           alert("❌ Errore nell'invio. Riprova.");
         }
@@ -458,21 +272,38 @@
     });
   });
 
-  // ✅ RIEPILOGO AUTOMATICO (Simulazione)
-  const formSim = document.getElementById("formSimulazione");
-  const riepilogoDiv = document.getElementById("riepilogoSimulazione");
+  // ✅ CAMPI STRUMENTI – Dinamico fino a 15
+  const container = document.getElementById("strumenti-container");
+  let index = 1;
 
-  if (formSim && riepilogoDiv) {
-    formSim.addEventListener("input", () => {
-      const dati = Array.from(formSim.elements)
-        .filter((el) => el.name && el.value && el.type !== "hidden")
-        .map((el) => {
-          const label = el.closest("label");
-          return label ? `<li><strong>${label.textContent.trim().split("\n")[0]}:</strong> ${el.value}</li>` : null;
-        })
-        .filter(Boolean)
-        .join("");
-      riepilogoDiv.innerHTML = dati ? `<ul class="space-y-1">${dati}</ul>` : `<p class="text-slate-500 italic">Compila il modulo per vedere il riepilogo.</p>`;
-    });
+  function creaCampo(index) {
+    const div = document.createElement("div");
+    div.className = "grid grid-cols-5 gap-2";
+
+    const label1 = document.createElement("label");
+    label1.className = "col-span-3";
+    label1.innerHTML = `Strumento ${index}<input name="strumento${index}" type="text" class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="Es: ETF, Azione, Fondo..." />`;
+
+    const label2 = document.createElement("label");
+    label2.className = "col-span-2";
+    label2.innerHTML = `%<input name="percentuale${index}" type="number" min="0" max="100" class="w-full border mt-1 px-2 py-1.5 rounded" />`;
+
+    div.appendChild(label1);
+    div.appendChild(label2);
+    container.appendChild(div);
   }
+
+  // ✅ Mostra subito il primo campo e aggiunge altri al focus
+  creaCampo(index);
+
+  container.addEventListener("input", (e) => {
+    const lastStrumento = document.querySelector(`input[name="strumento${index}"]`);
+    const lastPerc = document.querySelector(`input[name="percentuale${index}"]`);
+    if (lastStrumento.value.trim() !== "" || lastPerc.value.trim() !== "") {
+      if (index < 15) {
+        index++;
+        creaCampo(index);
+      }
+    }
+  });
 </script>
