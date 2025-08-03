@@ -67,31 +67,13 @@
   <p class="mt-2 text-base text-slate-600">Richiedi un report AI su un asset: ricezione via WhatsApp, SMS o Email. Nessun tracciamento. Solo analisi reale, senza fuffa.</p>
   <p class="mt-4 text-lg text-blue-700 min-h-[28px] font-medium" id="typing-text"></p>
 </section>
-  <!-- CARD – Validazione / Simulazione Portafoglio -->
-<button onclick="apriFunnelPortafoglio()" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition-all text-left shadow-sm flex flex-col justify-between h-full">
-  <div class="flex flex-col gap-3">
-    <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
-      <i data-lucide="layers" class="w-6 h-6 text-blue-700"></i>
-    </div>
-    <h3 class="font-semibold text-gray-900">Validazione / Simulazione Portafoglio</h3>
-    <p class="text-sm text-gray-500">
-      Funnel AI guidato per validare o costruire il tuo portafoglio. Risposta in meno di 24 ore. Nessuna consulenza, solo analisi reale.
-    </p>
-  </div>
-  <div class="mt-4 flex items-center justify-between">
-    <span class="text-sm text-blue-700 font-medium underline underline-offset-2">Avvia Funnel</span>
-    <div class="w-9 h-9 rounded-full bg-white/50 backdrop-blur-md shadow-md flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
-      <i data-lucide="arrow-up-right" class="w-4 h-4 text-blue-700"></i>
-    </div>
-  </div>
-</button>
-
-
-<!-- ✅ FUNNEL PORTAFOGLIO – MODALE FULLSCREEN -->
+  <!-- ✅ FUNNEL PORTAFOGLIO – MODALE FULLSCREEN -->
 <div id="modaleFunnelPortafoglio" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden overflow-y-auto px-4 py-8">
   <div class="bg-white max-w-xl mx-auto rounded-xl shadow-lg p-6 sm:p-8 relative">
     <button onclick="chiudiFunnelPortafoglio()" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-xl">&times;</button>
     <h2 class="text-xl font-semibold text-blue-900 text-center mb-4">Funnel AI – Simulazione / Validazione Portafoglio</h2>
+
+    <p class="text-center text-slate-600 text-sm mb-6">Questo strumento non offre consulenza finanziaria. Le analisi generate hanno scopo puramente informativo, riflessivo e didattico. Non prendere decisioni operative basate esclusivamente su questi output.</p>
 
     <form id="funnelForm" onsubmit="inviaFunnel(event)">
       <!-- STEP 1–12 -->
@@ -271,8 +253,6 @@
   }
 </script>
 
-</body>
-</html>
 
   <div class="my-12 sm:my-16"></div>
 
