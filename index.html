@@ -8,7 +8,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -42,11 +41,18 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
+      background: rgba(0, 0, 0, 0.7);
+      visibility: hidden;
+      opacity: 0;
       z-index: 50;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .modal.show {
+      visibility: visible;
+      opacity: 1;
     }
     .modal-content {
       background: #f8fafc;
@@ -93,7 +99,72 @@
     </p>
   </section>
 
+  <!-- SEZIONE CTA -->
+  <section class="bg-slate-50 py-20 px-4 sm:px-6">
+    <div class="max-w-5xl mx-auto text-center mb-14">
+      <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 underline decoration-blue-400 underline-offset-4 mb-4">
+        Servizi Tradelia AI
+      </h2>
+      <p class="text-lg text-slate-700 leading-relaxed">
+        Strumenti indipendenti a supporto delle decisioni d'investimento, sviluppati nel rispetto dei <strong>principi MIFID II</strong>.
+      </p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <div class="bg-white rounded-md border border-slate-200 shadow-sm p-6 hover:border-blue-300 transition">
+        <h3 class="text-base font-semibold text-slate-900 text-center uppercase tracking-wide mb-2">Validazione Portafoglio</h3>
+        <p class="text-sm text-slate-700 text-center leading-relaxed mb-3">
+          Valutazione qualitativa di portafogli esistenti: esposizioni, rischio implicito, concentrazione settoriale e stress test.
+        </p>
+        <p class="text-xs text-center text-slate-500 mb-3">Output generato da AI. Nessuna consulenza individuale.</p>
+        <div class="text-center mt-4">
+          <button onclick="apriModale('validazione')" class="text-sm font-medium text-blue-700 underline hover:text-blue-900 transition">Richiedi validazione</button>
+        </div>
+      </div>
+      <div class="bg-white rounded-md border border-slate-200 shadow-sm p-6 hover:border-blue-300 transition">
+        <h3 class="text-base font-semibold text-slate-900 text-center uppercase tracking-wide mb-2">Simulazione Ideale</h3>
+        <p class="text-sm text-slate-700 text-center leading-relaxed mb-3">
+          Funnel interattivo con asset allocation simulata su base autodichiarativa: orizzonte, vincoli, conoscenze.
+        </p>
+        <p class="text-xs text-center text-slate-500 mb-3">Strumento didattico. Nessuna raccomandazione personalizzata.</p>
+        <div class="text-center mt-4">
+          <button onclick="apriModale('simulazione')" class="text-sm font-medium text-blue-700 underline hover:text-blue-900 transition">Avvia simulazione</button>
+        </div>
+      </div>
+      <div class="bg-white rounded-md border border-slate-200 shadow-sm p-6 hover:border-blue-300 transition">
+        <h3 class="text-base font-semibold text-slate-900 text-center uppercase tracking-wide mb-2">Report AI su Qualsiasi Asset</h3>
+        <p class="text-sm text-slate-700 text-center leading-relaxed mb-3">
+          Analisi AI su azioni, ETF, bond, crypto, forex o altri strumenti: fondamentali, tecnica, macro, sentiment e stress test.
+        </p>
+        <p class="text-xs text-center text-slate-500 mb-3">Nessuna finalità promozionale. Documento informativo.</p>
+        <div class="text-center mt-4">
+          <button onclick="apriModale('report')" class="text-sm font-medium text-blue-700 underline hover:text-blue-900 transition">Richiedi analisi AI</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODALE CONFERMA -->
+  <div id="modal-successo" class="modal">
+    <div class="modal-content w-full max-w-sm">
+      <h3 class="text-lg font-semibold text-green-700 mb-2">✅ Richiesta Inviata</h3>
+      <p class="text-sm text-slate-700">Grazie per aver inviato la tua richiesta.<br>Riceverai un link al report via email o WhatsApp.</p>
+      <button onclick="document.getElementById('modal-successo').classList.remove('show')" class="mt-4 text-sm text-blue-600 underline">Chiudi</button>
+    </div>
+  </div>
+
   <script>
+    function apriModale(tipo) {
+      const modale = document.getElementById("modal-" + tipo);
+      if (modale) modale.classList.add("show");
+    }
+    function chiudiModale(tipo) {
+      const modale = document.getElementById("modal-" + tipo);
+      if (modale) modale.classList.remove("show");
+    }
+    function mostraConferma() {
+      document.getElementById("modal-successo").classList.add("show");
+    }
+
     const phrases = [
       "Analisi AI generate su richiesta, senza raccolta dati.",
       "Fonti verificate, struttura multiblocco, metodo accademico.",
@@ -119,437 +190,5 @@
 
     document.addEventListener("DOMContentLoaded", type);
   </script>
-
-  <section class="bg-slate-50 py-20 px-4 sm:px-6">
-    <div class="max-w-5xl mx-auto text-center mb-14">
-      <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 underline decoration-blue-400 underline-offset-4 mb-4">
-        Servizi Tradelia AI
-      </h2>
-      <p class="text-lg text-slate-700 leading-relaxed">
-        Strumenti indipendenti a supporto delle decisioni d'investimento, sviluppati nel rispetto dei <strong>principi MIFID II</strong>.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-
-      <div class="bg-white rounded-md border border-slate-200 shadow-sm p-6 hover:border-blue-300 transition">
-        <h3 class="text-base font-semibold text-slate-900 text-center uppercase tracking-wide mb-2">
-          Validazione Portafoglio
-        </h3>
-        <p class="text-sm text-slate-700 text-center leading-relaxed mb-3">
-          Valutazione qualitativa di portafogli esistenti: esposizioni, rischio implicito, concentrazione settoriale e stress test.
-        </p>
-        <p class="text-xs text-center text-slate-500">
-          Output generato da AI. Nessuna consulenza individuale.
-        </p>
-      </div>
-
-      <div class="bg-white rounded-md border border-slate-200 shadow-sm p-6 hover:border-blue-300 transition">
-        <h3 class="text-base font-semibold text-slate-900 text-center uppercase tracking-wide mb-2">
-          Simulazione Ideale
-        </h3>
-        <p class="text-sm text-slate-700 text-center leading-relaxed mb-3">
-          Funnel interattivo con asset allocation simulata su base autodichiarativa: orizzonte, vincoli, conoscenze.
-        </p>
-        <p class="text-xs text-center text-slate-500">
-          Strumento didattico. Nessuna raccomandazione personalizzata.
-        </p>
-      </div>
-
-      <div class="bg-white rounded-md border border-slate-200 shadow-sm p-6 hover:border-blue-300 transition">
-        <h3 class="text-base font-semibold text-slate-900 text-center uppercase tracking-wide mb-2">
-          Report AI Azioni / ETF
-        </h3>
-        <p class="text-sm text-slate-700 text-center leading-relaxed mb-3">
-          Analisi HTML multiblocco su richiesta: fondamentali, tecnica, sentiment, macro e stress test storici.
-        </p>
-        <p class="text-xs text-center text-slate-500">
-          Nessuna finalità promozionale. Documento informativo.
-        </p>
-      </div>
-
-    </div>
-  </section>
-<section class="bg-white py-20 px-4 sm:px-6 border-t border-slate-200">
-  <div class="max-w-5xl mx-auto text-center mb-10">
-    <h2 class="text-2xl sm:text-3xl font-semibold text-slate-900 mb-2">
-      Asset Class Analizzate
-    </h2>
-    <p class="text-sm text-slate-600 max-w-xl mx-auto">
-      I modelli AI di Tradelia supportano l’analisi di sei grandi categorie di strumenti finanziari, con logiche ispirate a metodo accademico e fonti istituzionali.
-    </p>
-  </div>
-
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl mx-auto mt-10">
-
-    <div class="border border-slate-200 rounded-md px-4 py-5 text-center bg-slate-50">
-      <h3 class="text-sm font-semibold text-slate-800 uppercase mb-1 tracking-wide">Azioni</h3>
-      <p class="text-xs text-slate-600 leading-snug">Analisi fondamentale, tecnica, sentiment, volatilità storica.</p>
-    </div>
-
-    <div class="border border-slate-200 rounded-md px-4 py-5 text-center bg-slate-50">
-      <h3 class="text-sm font-semibold text-slate-800 uppercase mb-1 tracking-wide">ETF</h3>
-      <p class="text-xs text-slate-600 leading-snug">Struttura, replica, liquidità, composizione e rischio sistemico.</p>
-    </div>
-
-    <div class="border border-slate-200 rounded-md px-4 py-5 text-center bg-slate-50">
-      <h3 class="text-sm font-semibold text-slate-800 uppercase mb-1 tracking-wide">Obbligazioni</h3>
-      <p class="text-xs text-slate-600 leading-snug">Rating, duration, rischio tasso e stress test BCE.</p>
-    </div>
-
-    <div class="border border-slate-200 rounded-md px-4 py-5 text-center bg-slate-50">
-      <h3 class="text-sm font-semibold text-slate-800 uppercase mb-1 tracking-wide">Cripto</h3>
-      <p class="text-xs text-slate-600 leading-snug">Volatilità, drawdown, dinamiche macro e metriche on-chain.</p>
-    </div>
-
-    <div class="border border-slate-200 rounded-md px-4 py-5 text-center bg-slate-50">
-      <h3 class="text-sm font-semibold text-slate-800 uppercase mb-1 tracking-wide">Commodities</h3>
-      <p class="text-xs text-slate-600 leading-snug">Trend, stagionalità, eventi globali e logiche di copertura.</p>
-    </div>
-
-    <div class="border border-slate-200 rounded-md px-4 py-5 text-center bg-slate-50">
-      <h3 class="text-sm font-semibold text-slate-800 uppercase mb-1 tracking-wide">Forex</h3>
-      <p class="text-xs text-slate-600 leading-snug">Pattern tecnici, correlazioni, eventi macro e forza valutaria.</p>
-    </div>
-
-  </div>
-</section>
-</script>
-
-</script>
-
-<script>
-  const forms = ["formSimulazione", "formValidazione", "formReport"];
-
-  forms.forEach((formId) => {
-    const form = document.getElementById(formId);
-    if (!form) return;
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
-
-      const email = data.email?.trim();
-      const whatsapp = data.whatsapp?.trim();
-
-      if (!email && !whatsapp) {
-        alert("Inserisci almeno Email o WhatsApp.");
-        return;
-      }
-
-      try {
-        const res = await fetch("/api/send-email", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
-
-        if (res.ok) {
-          form.reset();
-          mostraConferma();
-          form.closest(".modal").classList.add("hidden");
-        } else {
-          alert("Errore durante l'invio. Riprova.");
-        }
-      } catch (err) {
-        alert("Errore di rete: " + err.message);
-      }
-    });
-  });
-</script>
-
-<!-- MODALI REALI PER OGNI SERVIZIO -->
-<div id="modal-simulazione" class="modal hidden">
-  <div class="modal-content w-full max-w-xl">
-    <h3 class="text-lg font-semibold mb-4">Simulazione Portafoglio Ideale</h3>
-    <form id="formSimulazione" class="space-y-4 text-left text-sm">
-      <input type="hidden" name="tipo" value="simulazione" />
-
-      <label class="block">Età
-        <select name="eta" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>18–30</option><option>31–45</option><option>46–60</option><option>61+</option>
-        </select>
-      </label>
-
-      <label class="block">Stato civile
-        <select name="stato_civile" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>Single</option><option>Convivente / Sposato</option><option>Separato / Vedovo</option>
-        </select>
-      </label>
-
-      <label class="block">Orizzonte temporale
-        <select name="orizzonte" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>1–3 anni</option><option>4–7 anni</option><option>8+ anni</option>
-        </select>
-      </label>
-
-      <label class="block">Obiettivo principale
-        <select name="obiettivo" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>Protezione</option><option>Cedolare</option><option>Crescita moderata</option><option>Crescita aggressiva</option>
-        </select>
-      </label>
-
-      <label class="block">Patrimonio liquido
-        <select name="patrimonio" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>0–10k</option><option>10k–50k</option><option>50k–200k</option><option>200k+</option>
-        </select>
-      </label>
-
-      <label class="block">Conoscenze finanziarie
-        <select name="conoscenze" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>Base</option><option>Intermedio</option><option>Avanzato</option>
-        </select>
-      </label>
-
-      <label class="block">Tolleranza a drawdown
-        <select name="drawdown" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>−5%</option><option>−10%</option><option>−20%</option><option>−30% o più</option>
-        </select>
-      </label>
-
-      <label class="block">Vincoli / Preferenze (facoltativo)
-        <textarea name="vincoli" rows="2" class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="Es. no cripto, preferenza obbligazioni..."></textarea>
-      </label>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <label>Email (facoltativo)
-          <input type="email" name="email" class="w-full border mt-1 px-2 py-1.5 rounded">
-        </label>
-        <label>WhatsApp (facoltativo)
-          <input type="text" name="whatsapp" class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="+39...">
-        </label>
-      </div>
-      <p class="text-xs text-slate-500 italic">Indica almeno un recapito (Email o WhatsApp).</p>
-      <p class="text-xs text-red-600 italic">AI non infallibile. Nessuna consulenza. Verifica sempre con esperti abilitati.</p>
-
-      <button type="submit" class="w-full border border-slate-700 text-slate-800 font-medium text-sm rounded py-1.5 uppercase hover:bg-slate-100 transition">
-        Invia Simulazione
-      </button>
-    </form>
-    <button onclick="chiudiModale('simulazione')" class="mt-4 text-sm text-blue-600 underline">Chiudi</button>
-  </div>
-</div>
-</div>
-
-<div id="modal-validazione" class="modal hidden">
-  <div class="modal-content w-full max-w-xl">
-    <h3 class="text-lg font-semibold mb-4">Validazione Portafoglio Attuale</h3>
-    <form id="formValidazione" class="space-y-4 text-left text-sm">
-      <input type="hidden" name="tipo" value="validazione" />
-
-      <label class="block">Età (fascia)
-        <select name="eta" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>18–30</option><option>31–45</option><option>46–60</option><option>61+</option>
-        </select>
-      </label>
-
-      <label class="block">Orizzonte temporale
-        <select name="orizzonte" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>1–3 anni</option><option>4–7 anni</option><option>8+ anni</option>
-        </select>
-      </label>
-
-      <label class="block">Obiettivo prevalente
-        <select name="obiettivo" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>Protezione</option><option>Cedolare</option><option>Crescita moderata</option><option>Crescita aggressiva</option>
-        </select>
-      </label>
-
-      <label class="block">Composizione attuale (approssimativa)
-        <textarea name="composizione" rows="3" required class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="Es: 40% azioni, 30% obbligazioni, 20% ETF, 10% liquidità..."></textarea>
-      </label>
-
-      <label class="block">PAC attivo?
-        <select name="pac" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>Sì</option><option>No</option>
-        </select>
-      </label>
-
-      <label class="block">Broker utilizzato (facoltativo)
-        <input type="text" name="broker" class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="Es. Fineco, DEGIRO, Exante...">
-      </label>
-
-      <label class="block">Patrimonio liquido (fascia)
-        <select name="patrimonio" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>0–10k</option><option>10k–50k</option><option>50k–200k</option><option>200k+</option>
-        </select>
-      </label>
-
-      <label class="block">Tolleranza a drawdown
-        <select name="drawdown" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>−5%</option><option>−10%</option><option>−20%</option><option>−30% o più</option>
-        </select>
-      </label>
-
-      <label class="block">Preferenze o vincoli (facoltativo)
-        <textarea name="vincoli" rows="2" class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="Es. no ETF, solo titoli reali, esclusione energy..."></textarea>
-      </label>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <label>Email (facoltativo)
-          <input type="email" name="email" class="w-full border mt-1 px-2 py-1.5 rounded">
-        </label>
-        <label>WhatsApp (facoltativo)
-          <input type="text" name="whatsapp" class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="+39...">
-        </label>
-      </div>
-
-      <p class="text-xs text-slate-500 italic">Indica almeno un recapito (Email o WhatsApp).</p>
-      <p class="text-xs text-red-600 italic">Nessuna raccomandazione individuale. AI non infallibile. Verifica sempre con un consulente abilitato.</p>
-
-      <button type="submit" class="w-full border border-slate-700 text-slate-800 font-medium text-sm rounded py-1.5 uppercase hover:bg-slate-100 transition">
-        Invia Validazione
-      </button>
-    </form>
-    <button onclick="chiudiModale('validazione')" class="mt-4 text-sm text-blue-600 underline">Chiudi</button>
-  </div>
-</div>
-
-<div id="modal-report" class="modal hidden">
-  <div class="modal-content w-full max-w-xl">
-    <h3 class="text-lg font-semibold mb-4">Analisi Approfondita Asset</h3>
-    <form id="formReport" class="space-y-4 text-left text-sm">
-      <input type="hidden" name="tipo" value="report" />
-
-      <label class="block">Asset da analizzare (ticker o nome completo)
-        <input type="text" name="asset" required class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="Es: Tesla, EUR/USD, iShares EM Bond...">
-      </label>
-
-      <label class="block">Categoria strumento
-        <select name="categoria" required class="w-full border mt-1 px-2 py-1.5 rounded">
-          <option value="">Seleziona</option>
-          <option>Azioni</option><option>ETF</option><option>Obbligazioni</option><option>Crypto</option><option>Forex</option><option>Altro</option>
-        </select>
-      </label>
-
-      <label class="block">Note o preferenze sull’analisi (facoltativo)
-        <textarea name="note" rows="2" class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="Es: focus su dividendi, test crisi 2008, alert drawdown..."></textarea>
-      </label>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <label>Email (facoltativo)
-          <input type="email" name="email" class="w-full border mt-1 px-2 py-1.5 rounded">
-        </label>
-        <label>WhatsApp (facoltativo)
-          <input type="text" name="whatsapp" class="w-full border mt-1 px-2 py-1.5 rounded" placeholder="+39...">
-        </label>
-      </div>
-
-      <p class="text-xs text-slate-500 italic">Indica almeno un recapito (Email o WhatsApp).</p>
-      <p class="text-xs text-red-600 italic">Le analisi AI non costituiscono raccomandazione. Verifica sempre con fonti ufficiali.</p>
-
-      <button type="submit" class="w-full border border-slate-700 text-slate-800 font-medium text-sm rounded py-1.5 uppercase hover:bg-slate-100 transition">
-        Invia Richiesta Analisi
-      </button>
-    </form>
-    <button onclick="chiudiModale('report')" class="mt-4 text-sm text-blue-600 underline">Chiudi</button>
-  </div>
-</div>
-</div>
-
-<script>
-  function chiudiModale(tipo) {
-    document.getElementById("modal-" + tipo).classList.add("hidden");
-  }
-
-  function apriModale(tipo) {
-    document.getElementById("modal-" + tipo).classList.remove("hidden");
-  }
-</script>
-
-<!-- MODALE CONFERMA SUCCESSO -->
-<div id="modal-successo" class="modal hidden">
-  <div class="modal-content w-full max-w-sm">
-    <h3 class="text-lg font-semibold text-green-700 mb-2">✅ Richiesta Inviata</h3>
-    <p class="text-sm text-slate-700">Grazie per aver inviato la tua richiesta.<br>Riceverai un link al report via email o WhatsApp.</p>
-    <button onclick="document.getElementById('modal-successo').classList.add('hidden')" class="mt-4 text-sm text-blue-600 underline">Chiudi</button>
-  </div>
-</div>
-
-<script>
-  function mostraConferma() {
-    document.getElementById("modal-successo").classList.remove("hidden");
-  }
-</script>
-<section class="bg-slate-50 py-20 px-4 sm:px-6">
-  <div class="max-w-5xl mx-auto text-center mb-14">
-    <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 underline decoration-blue-400 underline-offset-4 mb-4">
-      Servizi Tradelia AI
-    </h2>
-    <p class="text-lg text-slate-700 leading-relaxed">
-      Strumenti indipendenti a supporto delle decisioni d'investimento, sviluppati nel rispetto dei <strong>principi MIFID II</strong>.
-    </p>
-  </div>
-
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-
-    <!-- ✅ Box 1: Validazione -->
-    <div class="bg-white rounded-md border border-slate-200 shadow-sm p-6 hover:border-blue-300 transition">
-      <h3 class="text-base font-semibold text-slate-900 text-center uppercase tracking-wide mb-2">
-        Validazione Portafoglio
-      </h3>
-      <p class="text-sm text-slate-700 text-center leading-relaxed mb-3">
-        Valutazione qualitativa di portafogli esistenti: esposizioni, rischio implicito, concentrazione settoriale e stress test.
-      </p>
-      <p class="text-xs text-center text-slate-500 mb-3">
-        Output generato da AI. Nessuna consulenza individuale.
-      </p>
-      <div class="text-center mt-4">
-        <button onclick="apriModale('validazione')" class="text-sm font-medium text-blue-700 underline hover:text-blue-900 transition">
-          Richiedi validazione
-        </button>
-      </div>
-    </div>
-
-    <!-- ✅ Box 2: Simulazione -->
-    <div class="bg-white rounded-md border border-slate-200 shadow-sm p-6 hover:border-blue-300 transition">
-      <h3 class="text-base font-semibold text-slate-900 text-center uppercase tracking-wide mb-2">
-        Simulazione Ideale
-      </h3>
-      <p class="text-sm text-slate-700 text-center leading-relaxed mb-3">
-        Funnel interattivo con asset allocation simulata su base autodichiarativa: orizzonte, vincoli, conoscenze.
-      </p>
-      <p class="text-xs text-center text-slate-500 mb-3">
-        Strumento didattico. Nessuna raccomandazione personalizzata.
-      </p>
-      <div class="text-center mt-4">
-        <button onclick="apriModale('simulazione')" class="text-sm font-medium text-blue-700 underline hover:text-blue-900 transition">
-          Avvia simulazione
-        </button>
-      </div>
-    </div>
-
-    <!-- ✅ Box 3: Report AI -->
-    <div class="bg-white rounded-md border border-slate-200 shadow-sm p-6 hover:border-blue-300 transition">
-      <h3 class="text-base font-semibold text-slate-900 text-center uppercase tracking-wide mb-2">
-        Report AI Azioni / ETF
-      </h3>
-      <p class="text-sm text-slate-700 text-center leading-relaxed mb-3">
-        Analisi HTML multiblocco su richiesta: fondamentali, tecnica, sentiment, macro e stress test storici.
-      </p>
-      <p class="text-xs text-center text-slate-500 mb-3">
-        Nessuna finalità promozionale. Documento informativo.
-      </p>
-      <div class="text-center mt-4">
-        <button onclick="apriModale('report')" class="text-sm font-medium text-blue-700 underline hover:text-blue-900 transition">
-          Richiedi analisi AI
-        </button>
-      </div>
-    </div>
-
-  </div>
-</section>
+</body>
+</html>
