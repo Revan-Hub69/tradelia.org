@@ -494,33 +494,52 @@
 <!-- MODALE LEGALE DINAMICO (Termini e Privacy) -->
 <script>
   function apriSezioneLegale(id) {
+    const titolo = id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy';
+    const testo = id === 'section-tc'
+      ? "Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all'investimento. Tutte le operazioni simulate in ambiente demo."
+      : "Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l'utente. Progetto open per educazione finanziaria.";
+
     const modal = document.createElement("div");
-    modal.className = "modal";
+    modal.className = "modal show";
     modal.style.display = "flex";
     modal.innerHTML = `
-      <div class="modal-content relative">
-        <div class="modal-close absolute top-3 right-4 text-lg cursor-pointer hover:text-red-600" onclick="this.parentElement.parentElement.remove()">✕</div>
-        <h3 class="text-lg font-semibold mb-2">${id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy'}</h3>
-        <p class="text-sm text-gray-800">
-          ${
-            id === 'section-tc'
-              ? "Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all'investimento. Tutte le operazioni simulate in ambiente demo."
-              : "Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l'utente. Progetto open per educazione finanziaria."
-          }
-        </p>
-      </div>`;
+      <div class="modal-content relative max-w-xl" onclick="event.stopPropagation()">
+        <div class="absolute top-3 right-4 text-lg cursor-pointer hover:text-red-600" onclick="this.closest('.modal').remove()">✕</div>
+        <h3 class="text-lg font-semibold mb-3">${titolo}</h3>
+        <p class="text-sm text-gray-800 leading-relaxed">${testo}</p>
+      </div>
+    `;
+    modal.onclick = () => modal.remove();
     document.body.appendChild(modal);
   }
 </script>
-<div id="cookie-popup" class="modal">
-  <div class="modal-content">
+
+<!-- COOKIE POPUP – ZERO TRACKING -->
+<div id="cookie-popup" class="modal show" style="display: flex;">
+  <div class="modal-content text-center max-w-md">
     <img src="https://lucid.app/favicon.ico" alt="Lucid icon" class="mx-auto mb-2 w-8 h-8">
     <h3 class="text-lg font-semibold mb-2">Zero biscotti, zero sorprese.</h3>
-    <p class="mb-2">Tradelia non utilizza cookie di tracciamento, profilazione o pubblicità.</p>
-    <p class="text-sm text-gray-600">Salveremo la tua preferenza sul tuo dispositivo per non mostrarti più questo messaggio.</p>
-    <button onclick="chiudiPopupCookie()" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Ho capito</button>
+    <p class="mb-2 text-sm text-slate-700">Tradelia non utilizza cookie di tracciamento, profilazione o pubblicità.</p>
+    <p class="text-xs text-gray-500 mb-3">Salveremo la tua preferenza localmente per non mostrarti più questo messaggio.</p>
+    <button onclick="chiudiPopupCookie()" class="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg">Ho capito</button>
   </div>
 </div>
+
+<script>
+  function chiudiPopupCookie() {
+    localStorage.setItem("tradelia_cookie_consent", "true");
+    document.getElementById("cookie-popup").style.display = "none";
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const consento = localStorage.getItem("tradelia_cookie_consent");
+    if (consento === "true") {
+      const popup = document.getElementById("cookie-popup");
+      if (popup) popup.style.display = "none";
+    }
+  });
+</script>
+
 <!-- FOOTER -->
 <footer class="bg-slate-900 text-slate-300 px-6 py-12 text-sm mt-16">
   <div class="max-w-7xl mx-auto grid gap-10 md:grid-cols-2 items-start">
@@ -558,9 +577,5 @@
   </div>
 </footer>
 
-
 </body>
-</html
-
-</body>
-</html
+</html>
