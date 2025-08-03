@@ -62,138 +62,39 @@
     </a>
     <a href="archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
   </header>
-<!-- ✅ INTRODUZIONE SERVIZI TRADELIA -->
-<section class="max-w-3xl mx-auto px-4 py-12 text-center">
-  <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Servizi AI per l'investitore consapevole</h1>
-  <p class="text-slate-600 leading-relaxed text-base sm:text-lg">
-    Tradelia AI offre strumenti gratuiti, basati su algoritmi e dati pubblici, per supportare l’utente in modo autonomo e responsabile. <br class="hidden sm:inline"> Nessuna consulenza, nessun conflitto d’interessi: solo spunti analitici per riflettere e decidere in libertà.
-  </p>
-</section>
+<section class="bg-white py-20 px-6 relative overflow-hidden">
+  <!-- sfondo simbolico AI -->
+  <div class="absolute inset-0 pointer-events-none opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-cover"></div>
 
-<!-- ✅ FUNNEL PORTAFOGLIO – MODALE FULLSCREEN -->
-<div id="modaleFunnelPortafoglio" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden overflow-y-auto px-4 py-8">
-  <div class="bg-white max-w-xl mx-auto rounded-2xl shadow-2xl p-6 sm:p-8 relative">
-    <button onclick="chiudiFunnelPortafoglio()" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-2xl">&times;</button>
-    <h2 class="text-2xl font-bold text-blue-900 text-center mb-4 tracking-tight">Funnel AI – Simulazione / Validazione Portafoglio</h2>
-
-    <p class="text-center text-slate-600 text-sm mb-6 leading-relaxed">Questo strumento non offre consulenza finanziaria. Le analisi generate hanno scopo puramente informativo, riflessivo e didattico. Non prendere decisioni operative basate esclusivamente su questi output.</p>
-
-    <form id="funnelForm" onsubmit="inviaFunnel(event)" class="space-y-5">
-      <!-- STEP 1–12 -->
-      <div class="step active" id="step-1">
-        <label class="block mb-1 font-semibold text-sm">Età</label>
-        <input type="number" name="eta" required class="w-full border rounded-md px-3 py-2" />
-      </div>
-
-      <div class="step" id="step-2">
-        <label class="block mb-1 font-semibold text-sm">Stato civile</label>
-        <select name="stato_civile" required class="w-full border rounded-md px-3 py-2">
-          <option value="">Seleziona</option>
-          <option>Single</option><option>Coniugato/a</option><option>Separato/a</option><option>Vedovo/a</option>
-        </select>
-      </div>
-
-      <div class="step" id="step-3">
-        <label class="block mb-1 font-semibold text-sm">Hai figli?</label>
-        <select name="figli" required class="w-full border rounded-md px-3 py-2">
-          <option value="">Seleziona</option>
-          <option>No</option><option>Sì, 1</option><option>Sì, 2+</option>
-        </select>
-      </div>
-
-      <div class="step" id="step-4">
-        <label class="block mb-1 font-semibold text-sm">Proprietà immobiliari?</label>
-        <select name="proprieta" required class="w-full border rounded-md px-3 py-2">
-          <option value="">Seleziona</option>
-          <option>Sì</option><option>No</option>
-        </select>
-      </div>
-
-      <div class="step" id="step-5">
-        <label class="block mb-1 font-semibold text-sm">Hai già un portafoglio investito?</label>
-        <select name="ha_portafoglio" required onchange="impostaTipo(this)" class="w-full border rounded-md px-3 py-2">
-          <option value="">Seleziona</option>
-          <option value="validazione">Sì, voglio validarlo</option>
-          <option value="simulazione">No, voglio simularlo</option>
-        </select>
-      </div>
-
-      <div class="step" id="step-6">
-        <label class="block mb-1 font-semibold text-sm">Obiettivo dell'investimento</label>
-        <select name="obiettivo" required class="w-full border rounded-md px-3 py-2">
-          <option value="">Seleziona</option>
-          <option>Accumulo lungo periodo</option>
-          <option>Rendita da dividendi</option>
-          <option>Crescita patrimoniale</option>
-          <option>Protezione del capitale</option>
-        </select>
-      </div>
-
-      <div class="step" id="step-7">
-        <label class="block mb-1 font-semibold text-sm">Orizzonte temporale</label>
-        <select name="orizzonte" required class="w-full border rounded-md px-3 py-2">
-          <option value="">Seleziona</option>
-          <option>Meno di 1 anno</option><option>1–3 anni</option><option>3–7 anni</option><option>Oltre 10 anni</option>
-        </select>
-      </div>
-
-      <div class="step" id="step-8">
-        <label class="block mb-1 font-semibold text-sm">Capitale disponibile (€)</label>
-        <input type="number" name="capitale" required class="w-full border rounded-md px-3 py-2" />
-      </div>
-
-      <div class="step" id="step-9">
-        <label class="block mb-1 font-semibold text-sm">Asset class preferite</label>
-        <div class="grid grid-cols-2 gap-2 text-sm text-slate-700 mb-4">
-          <label><input type="checkbox" name="asset[]" value="Azioni" /> Azioni</label>
-          <label><input type="checkbox" name="asset[]" value="Obbligazioni" /> Obbligazioni</label>
-          <label><input type="checkbox" name="asset[]" value="ETF" /> ETF</label>
-          <label><input type="checkbox" name="asset[]" value="Crypto" /> Crypto</label>
-          <label><input type="checkbox" name="asset[]" value="Materie prime" /> Materie prime</label>
-          <label><input type="checkbox" name="asset[]" value="Altro" /> Altro</label>
-        </div>
-      </div>
-
-      <div class="step" id="step-10">
-        <label class="block mb-1 font-semibold text-sm">Vincoli o preferenze</label>
-        <textarea name="vincoli" rows="3" placeholder="Es. evitare crypto, solo strumenti UCITS..." class="w-full border rounded-md px-3 py-2"></textarea>
-      </div>
-
-      <div class="step" id="step-11">
-        <label class="block mb-1 font-semibold text-sm">Metodo di ricezione</label>
-        <select name="metodo" required class="mb-2 w-full border rounded-md px-3 py-2">
-          <option>Email</option><option>WhatsApp</option>
-        </select>
-        <input name="contatto" required placeholder="esempio@mail.com o +39..." class="w-full border rounded-md px-3 py-2" />
-      </div>
-
-      <div class="step" id="step-12">
-        <p class="text-slate-600 text-sm mb-3 leading-relaxed">
-          Con l'invio accetti di ricevere un'analisi gratuita da <strong>Tradelia AI</strong>. Nessun archivio dati. Nessuna consulenza. Nessun invito all'investimento.
-        </p>
-        <label class="inline-flex items-start gap-2 text-xs text-slate-700">
-          <input type="checkbox" required />
-          <span>Ho compreso che questa non è consulenza finanziaria e che le analisi sono a scopo didattico e informativo.</span>
-        </label>
-        <input type="hidden" name="tipo" id="tipoRichiesta" value="simulazione" />
-      </div>
-
-      <!-- CONTROLLI -->
-      <div class="flex justify-between items-center pt-4">
-        <button type="button" onclick="prevStep()" class="text-sm text-slate-500 underline">Indietro</button>
-        <button type="button" id="nextBtn" onclick="nextStep()" class="bg-blue-800 hover:bg-blue-900 text-white px-4 py-2 rounded text-sm">Avanti</button>
-        <button type="submit" id="submitBtn" class="hidden bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded text-sm">Invia</button>
-      </div>
-    </form>
-
-    <div id="conferma" class="hidden text-green-700 mt-4 text-center text-sm font-medium">
-      ✅ Analisi inviata. Ti risponderemo entro 24 ore.
+  <!-- Icona AI centrale -->
+  <div class="flex justify-center mb-6">
+    <div class="bg-blue-100 text-blue-700 p-4 rounded-full shadow-lg ring-2 ring-blue-200 animate-pulse transition hover:scale-105">
+      <i data-lucide="brain-circuit" class="w-8 h-8"></i>
     </div>
   </div>
-</div>
 
+  <div class="max-w-3xl mx-auto text-center relative z-10">
+    <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-6 leading-tight">
+      Analisi AI gratuite ispirate da metodo accademico e fonti pubbliche
+    </h1>
+
+    <p class="text-lg sm:text-xl text-slate-700 leading-relaxed mb-5">
+      Tradelia AI è un progetto indipendente che elabora analisi su richiesta, tramite strumenti multistep sviluppati internamente e addestrati per oltre 6 mesi su fonti esclusivamente istituzionali.
+    </p>
+
+    <p class="text-base sm:text-lg text-slate-600 leading-relaxed mb-5">
+      Nessuna scorciatoia, nessun fine commerciale: le analisi seguono approcci accademici, non costituiscono consulenza finanziaria e non sostituiscono un parere professionale abilitato.
+    </p>
+
+    <p class="text-sm text-slate-500 italic">
+      Se non comprendi pienamente i contenuti, rivolgiti sempre a un consulente iscritto all'albo. Le analisi fornite hanno esclusivamente finalità informative e riflessive.
+    </p>
+  </div>
+</section>
+
+<!-- INIT LUCIDE -->
 <script>
-// (script identico, lasciato invariato)
+  lucide.createIcons();
 </script>
 
 
