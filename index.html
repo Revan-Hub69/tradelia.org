@@ -485,3 +485,71 @@
     document.getElementById("modal-successo").classList.remove("hidden");
   }
 </script>
+<section class="bg-slate-50 py-20 px-4 sm:px-6">
+  <div class="max-w-5xl mx-auto text-center mb-14">
+    <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 underline decoration-blue-400 underline-offset-4 mb-4">
+      Servizi Tradelia AI
+    </h2>
+    <p class="text-lg text-slate-700 leading-relaxed">
+      Strumenti indipendenti a supporto delle decisioni d'investimento, sviluppati nel rispetto dei <strong>principi MIFID II</strong>.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+
+    <!-- ✅ Box 1: Validazione -->
+    <div class="bg-white rounded-md border border-slate-200 shadow-sm p-6 hover:border-blue-300 transition">
+      <h3 class="text-base font-semibold text-slate-900 text-center uppercase tracking-wide mb-2">
+        Validazione Portafoglio
+      </h3>
+      <p class="text-sm text-slate-700 text-center leading-relaxed mb-3">
+        Valutazione qualitativa di portafogli esistenti: esposizioni, rischio implicito, concentrazione settoriale e stress test.
+      </p>
+      <p class="text-xs text-center text-slate-500 mb-3">
+        Output generato da AI. Nessuna consulenza individuale.
+      </p>
+      <div class="text-center mt-4">
+        <button onclick="apriModale('validazione')" class="text-sm font-medium text-blue-700 underline hover:text-blue-900 transition">
+          Richiedi validazione
+        </button>
+      </div>
+    </div>
+
+    <!-- ✅ Box 2: Simulazione -->
+    <div class="bg-white rounded-md border border-slate-200 shadow-sm p-6 hover:border-blue-300 transition">
+      <h3 class="text-base font-semibold text-slate-900 text-center uppercase tracking-wide mb-2">
+        Simulazione Ideale
+      </h3>
+      <p class="text-sm text-slate-700 text-center leading-relaxed mb-3">
+        Funnel interattivo con asset allocation simulata su base autodichiarativa: orizzonte, vincoli, conoscenze.
+      </p>
+      <p class="text-xs text-center text-slate-500 mb-3">
+        Strumento didattico. Nessuna raccomandazione personalizzata.
+      </p>
+      <div class="text-center mt-4">
+        <button onclick="apriModale('simulazione')" class="text-sm font-medium text-blue-700 underline hover:text-blue-900 transition">
+          Avvia simulazione
+        </button>
+      </div>
+    </div>
+
+    <!-- ✅ Box 3: Report AI -->
+    <div class="bg-white rounded-md border border-slate-200 shadow-sm p-6 hover:border-blue-300 transition">
+      <h3 class="text-base font-semibold text-slate-900 text-center uppercase tracking-wide mb-2">
+        Report AI Azioni / ETF
+      </h3>
+      <p class="text-sm text-slate-700 text-center leading-relaxed mb-3">
+        Analisi HTML multiblocco su richiesta: fondamentali, tecnica, sentiment, macro e stress test storici.
+      </p>
+      <p class="text-xs text-center text-slate-500 mb-3">
+        Nessuna finalità promozionale. Documento informativo.
+      </p>
+      <div class="text-center mt-4">
+        <button onclick="apriModale('report')" class="text-sm font-medium text-blue-700 underline hover:text-blue-900 transition">
+          Richiedi analisi AI
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
