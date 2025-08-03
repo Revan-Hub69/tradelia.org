@@ -67,117 +67,99 @@
   <p class="mt-2 text-base text-slate-600">Richiedi un report AI su un asset: ricezione via WhatsApp, SMS o Email. Nessun tracciamento. Solo analisi reale, senza fuffa.</p>
   <p class="mt-4 text-lg text-blue-700 min-h-[28px] font-medium" id="typing-text"></p>
 </section>
+  <!-- CARD – Validazione / Simulazione Portafoglio -->
+<button onclick="apriFunnelPortafoglio()" class="group relative rounded-2xl px-6 py-6 bg-white border border-blue-100 hover:ring-2 hover:ring-blue-200 hover:-translate-y-1 transition-all text-left shadow-sm flex flex-col justify-between h-full">
+  <div class="flex flex-col gap-3">
+    <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
+      <i data-lucide="layers" class="w-6 h-6 text-blue-700"></i>
+    </div>
+    <h3 class="font-semibold text-gray-900">Validazione / Simulazione Portafoglio</h3>
+    <p class="text-sm text-gray-500">
+      Funnel AI guidato per validare o costruire il tuo portafoglio. Risposta in meno di 24 ore. Nessuna consulenza, solo analisi reale.
+    </p>
+  </div>
+  <div class="mt-4 flex items-center justify-between">
+    <span class="text-sm text-blue-700 font-medium underline underline-offset-2">Avvia Funnel</span>
+    <div class="w-9 h-9 rounded-full bg-white/50 backdrop-blur-md shadow-md flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
+      <i data-lucide="arrow-up-right" class="w-4 h-4 text-blue-700"></i>
+    </div>
+  </div>
+</button>
 
-<!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tradelia AI – Simulazione / Validazione</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; }
-    .step { display: none; }
-    .step.active { display: block; }
-  </style>
-</head>
-<body class="p-6 sm:p-10">
 
-  <div class="max-w-xl mx-auto bg-white p-6 sm:p-8 rounded-xl shadow border">
-    <h1 class="text-2xl font-semibold mb-6 text-blue-900 text-center">Tradelia AI – Funnel Portafoglio</h1>
+<!-- ✅ FUNNEL PORTAFOGLIO – MODALE FULLSCREEN -->
+<div id="modaleFunnelPortafoglio" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden overflow-y-auto px-4 py-8">
+  <div class="bg-white max-w-xl mx-auto rounded-xl shadow-lg p-6 sm:p-8 relative">
+    <button onclick="chiudiFunnelPortafoglio()" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-xl">&times;</button>
+    <h2 class="text-xl font-semibold text-blue-900 text-center mb-4">Funnel AI – Simulazione / Validazione Portafoglio</h2>
 
     <form id="funnelForm" onsubmit="inviaFunnel(event)">
-      <!-- Step 1: Età -->
+      <!-- STEP 1–12 -->
       <div class="step active" id="step-1">
-        <label class="block mb-2 font-medium">Età</label>
-        <input type="number" name="eta" required class="w-full border rounded-md px-4 py-2 mb-6"/>
-        <button type="button" class="w-full bg-blue-700 text-white py-2 rounded" onclick="nextStep()">Avanti</button>
+        <label class="block mb-1 font-medium">Età</label>
+        <input type="number" name="eta" required />
       </div>
 
-      <!-- Step 2: Stato Civile -->
       <div class="step" id="step-2">
-        <label class="block mb-2 font-medium">Stato civile</label>
-        <select name="stato_civile" required class="w-full border rounded-md px-4 py-2 mb-6">
+        <label class="block mb-1 font-medium">Stato civile</label>
+        <select name="stato_civile" required>
           <option value="">Seleziona</option>
-          <option>Single</option>
-          <option>Coniugato/a</option>
-          <option>Separato/a</option>
-          <option>Vedovo/a</option>
+          <option>Single</option><option>Coniugato/a</option><option>Separato/a</option><option>Vedovo/a</option>
         </select>
-        <button type="button" class="w-full bg-blue-700 text-white py-2 rounded" onclick="nextStep()">Avanti</button>
       </div>
 
-      <!-- Step 3: Figli -->
       <div class="step" id="step-3">
-        <label class="block mb-2 font-medium">Hai figli?</label>
-        <select name="figli" required class="w-full border rounded-md px-4 py-2 mb-6">
+        <label class="block mb-1 font-medium">Hai figli?</label>
+        <select name="figli" required>
           <option value="">Seleziona</option>
-          <option>No</option>
-          <option>Sì, 1</option>
-          <option>Sì, 2+</option>
+          <option>No</option><option>Sì, 1</option><option>Sì, 2+</option>
         </select>
-        <button type="button" class="w-full bg-blue-700 text-white py-2 rounded" onclick="nextStep()">Avanti</button>
       </div>
 
-      <!-- Step 4: Proprietà -->
       <div class="step" id="step-4">
-        <label class="block mb-2 font-medium">Possiedi proprietà immobiliari?</label>
-        <select name="proprieta" required class="w-full border rounded-md px-4 py-2 mb-6">
+        <label class="block mb-1 font-medium">Proprietà immobiliari?</label>
+        <select name="proprieta" required>
           <option value="">Seleziona</option>
-          <option>Sì</option>
-          <option>No</option>
+          <option>Sì</option><option>No</option>
         </select>
-        <button type="button" class="w-full bg-blue-700 text-white py-2 rounded" onclick="nextStep()">Avanti</button>
       </div>
 
-      <!-- Step 5: Hai già un portafoglio? -->
       <div class="step" id="step-5">
-        <label class="block mb-2 font-medium">Hai già un portafoglio investito?</label>
-        <select id="ha_portafoglio" required class="w-full border rounded-md px-4 py-2 mb-6" onchange="impostaTipo(this)">
+        <label class="block mb-1 font-medium">Hai già un portafoglio investito?</label>
+        <select name="ha_portafoglio" required onchange="impostaTipo(this)">
           <option value="">Seleziona</option>
           <option value="validazione">Sì, voglio validarlo</option>
           <option value="simulazione">No, voglio simularlo</option>
         </select>
-        <button type="button" class="w-full bg-blue-700 text-white py-2 rounded" onclick="nextStep()">Avanti</button>
       </div>
 
-      <!-- Step 6: Obiettivo investimento -->
       <div class="step" id="step-6">
-        <label class="block mb-2 font-medium">Obiettivo dell’investimento</label>
-        <select name="obiettivo" required class="w-full border rounded-md px-4 py-2 mb-6">
+        <label class="block mb-1 font-medium">Obiettivo dell'investimento</label>
+        <select name="obiettivo" required>
           <option value="">Seleziona</option>
           <option>Accumulo lungo periodo</option>
           <option>Rendita da dividendi</option>
           <option>Crescita patrimoniale</option>
           <option>Protezione del capitale</option>
         </select>
-        <button type="button" class="w-full bg-blue-700 text-white py-2 rounded" onclick="nextStep()">Avanti</button>
       </div>
 
-      <!-- Step 7: Orizzonte temporale -->
       <div class="step" id="step-7">
-        <label class="block mb-2 font-medium">Orizzonte temporale</label>
-        <select name="orizzonte" required class="w-full border rounded-md px-4 py-2 mb-6">
+        <label class="block mb-1 font-medium">Orizzonte temporale</label>
+        <select name="orizzonte" required>
           <option value="">Seleziona</option>
-          <option>Meno di 1 anno</option>
-          <option>1–3 anni</option>
-          <option>3–7 anni</option>
-          <option>Oltre 10 anni</option>
+          <option>Meno di 1 anno</option><option>1–3 anni</option><option>3–7 anni</option><option>Oltre 10 anni</option>
         </select>
-        <button type="button" class="w-full bg-blue-700 text-white py-2 rounded" onclick="nextStep()">Avanti</button>
       </div>
 
-      <!-- Step 8: Capitale disponibile -->
       <div class="step" id="step-8">
-        <label class="block mb-2 font-medium">Capitale disponibile (€)</label>
-        <input name="capitale" type="number" required class="w-full border rounded-md px-4 py-2 mb-6"/>
-        <button type="button" class="w-full bg-blue-700 text-white py-2 rounded" onclick="nextStep()">Avanti</button>
+        <label class="block mb-1 font-medium">Capitale disponibile (€)</label>
+        <input type="number" name="capitale" required />
       </div>
 
-      <!-- Step 9: Asset preferiti -->
       <div class="step" id="step-9">
-        <label class="block mb-2 font-medium">Asset class preferite</label>
-        <div class="grid grid-cols-2 gap-2 mb-4 text-sm text-gray-700">
+        <label class="block mb-1 font-medium">Asset class preferite</label>
+        <div class="grid grid-cols-2 gap-2 text-sm text-slate-700 mb-4">
           <label><input type="checkbox" name="asset[]" value="Azioni" /> Azioni</label>
           <label><input type="checkbox" name="asset[]" value="Obbligazioni" /> Obbligazioni</label>
           <label><input type="checkbox" name="asset[]" value="ETF" /> ETF</label>
@@ -185,78 +167,109 @@
           <label><input type="checkbox" name="asset[]" value="Materie prime" /> Materie prime</label>
           <label><input type="checkbox" name="asset[]" value="Altro" /> Altro</label>
         </div>
-        <button type="button" class="w-full bg-blue-700 text-white py-2 rounded" onclick="nextStep()">Avanti</button>
       </div>
 
-      <!-- Step 10: Vincoli -->
       <div class="step" id="step-10">
-        <label class="block mb-2 font-medium">Vincoli o preferenze</label>
-        <textarea name="vincoli" class="w-full border rounded-md px-4 py-2 mb-6" rows="3" placeholder="Es. evitare crypto, solo strumenti UCITS..."></textarea>
-        <button type="button" class="w-full bg-blue-700 text-white py-2 rounded" onclick="nextStep()">Avanti</button>
+        <label class="block mb-1 font-medium">Vincoli o preferenze</label>
+        <textarea name="vincoli" rows="3" placeholder="Es. evitare crypto, solo strumenti UCITS..."></textarea>
       </div>
 
-      <!-- Step 11: Metodo ricezione -->
       <div class="step" id="step-11">
-        <label class="block mb-2 font-medium">Come vuoi ricevere la simulazione?</label>
-        <select name="metodo" required class="w-full border rounded-md px-4 py-2 mb-6">
-          <option>Email</option>
-          <option>WhatsApp</option>
+        <label class="block mb-1 font-medium">Metodo di ricezione</label>
+        <select name="metodo" required class="mb-2">
+          <option>Email</option><option>WhatsApp</option>
         </select>
-        <label class="block font-medium mb-1">Contatto (email o numero)</label>
-        <input name="contatto" required class="w-full border rounded-md px-4 py-2 mb-6" placeholder="esempio@mail.com o +39..."/>
-        <button type="button" class="w-full bg-blue-700 text-white py-2 rounded" onclick="nextStep()">Riepilogo</button>
+        <input name="contatto" required placeholder="esempio@mail.com o +39..." />
       </div>
 
-      <!-- Step 12: Conferma -->
       <div class="step" id="step-12">
-        <p class="text-sm text-gray-700 mb-4">
-          Cliccando su "Invia" accetti di ricevere un'analisi gratuita da <strong>Tradelia AI</strong>, senza archiviazione dei dati e senza assistenza finanziaria professionale.
+        <p class="text-slate-600 text-sm mb-3">
+          Con l'invio accetti di ricevere un'analisi gratuita da <strong>Tradelia AI</strong>. Nessun archivio dati. Nessuna consulenza.
         </p>
         <input type="hidden" name="tipo" id="tipoRichiesta" value="simulazione" />
-        <button type="submit" class="w-full bg-green-700 hover:bg-green-800 text-white py-2 rounded font-semibold">Invia richiesta</button>
+      </div>
+
+      <!-- CONTROLLI -->
+      <div class="flex justify-between items-center mt-4">
+        <button type="button" onclick="prevStep()" class="text-sm text-slate-500 underline">Indietro</button>
+        <button type="button" id="nextBtn" onclick="nextStep()" class="bg-blue-800 hover:bg-blue-900 text-white px-4 py-2 rounded text-sm">Avanti</button>
+        <button type="submit" id="submitBtn" class="hidden bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded text-sm">Invia</button>
       </div>
     </form>
+
+    <div id="conferma" class="hidden text-green-700 mt-4 text-center text-sm font-medium">
+      ✅ Analisi inviata. Ti risponderemo entro 24 ore.
+    </div>
   </div>
+</div>
 
-  <script>
-    let step = 1;
-    const total = 12;
-    function nextStep() {
-      document.getElementById(`step-${step}`).classList.remove('active');
-      step++;
-      document.getElementById(`step-${step}`).classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+<script>
+  let step = 1;
+  const total = 12;
 
-    function impostaTipo(select) {
-      const tipo = select.value;
-      document.getElementById('tipoRichiesta').value = tipo;
-    }
+  function showStep() {
+    document.querySelectorAll('.step').forEach((el, idx) => {
+      el.classList.toggle('active', idx === step - 1);
+    });
+    document.getElementById("nextBtn").classList.toggle("hidden", step === total);
+    document.getElementById("submitBtn").classList.toggle("hidden", step !== total);
+  }
 
-    function inviaFunnel(e) {
-      e.preventDefault();
-      const form = e.target;
-      const data = Object.fromEntries(new FormData(form).entries());
+  function nextStep() {
+    if (step < total) { step++; showStep(); window.scrollTo({ top: 0 }); }
+  }
 
-      // Convert checkboxes array
-      const assetRaw = form.querySelectorAll("input[name='asset[]']:checked");
-      data.asset = [...assetRaw].map(el => el.value);
+  function prevStep() {
+    if (step > 1) { step--; showStep(); window.scrollTo({ top: 0 }); }
+  }
 
-      fetch("/api/send-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      }).then(res => {
-        if (res.ok) {
-          alert("Richiesta inviata con successo.");
-          form.reset();
-          location.reload();
-        } else {
-          alert("Errore nell'invio. Riprova.");
+  function impostaTipo(select) {
+    document.getElementById('tipoRichiesta').value = select.value;
+  }
+
+  function inviaFunnel(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = Object.fromEntries(new FormData(form).entries());
+    const assetRaw = form.querySelectorAll("input[name='asset[]']:checked");
+    data.asset = [...assetRaw].map(el => el.value);
+
+    fetch("/api/send-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    }).then(res => {
+      if (res.ok) {
+        document.getElementById("conferma").classList.remove("hidden");
+        form.reset();
+        form.classList.add("pointer-events-none", "opacity-50");
+      } else {
+        alert("Errore nell'invio.");
+      }
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("input, select, textarea").forEach(el => {
+      el.addEventListener("keypress", e => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          if (step < total) nextStep();
         }
       });
-    }
-  </script>
+    });
+    showStep();
+  });
+
+  function apriFunnelPortafoglio() {
+    document.getElementById('modaleFunnelPortafoglio').classList.remove('hidden');
+    window.scrollTo({ top: 0 });
+  }
+
+  function chiudiFunnelPortafoglio() {
+    document.getElementById('modaleFunnelPortafoglio').classList.add('hidden');
+  }
+</script>
 
 </body>
 </html>
