@@ -143,59 +143,11 @@
     </div>
   </section>
 
-  <!-- MODALE CONFERMA -->
-  <div id="modal-successo" class="modal">
-    <div class="modal-content w-full max-w-sm">
-      <h3 class="text-lg font-semibold text-green-700 mb-2">✅ Richiesta Inviata</h3>
-      <p class="text-sm text-slate-700">Grazie per aver inviato la tua richiesta.<br>Riceverai un link al report via email o WhatsApp.</p>
-      <button onclick="document.getElementById('modal-successo').classList.remove('show')" class="mt-4 text-sm text-blue-600 underline">Chiudi</button>
-    </div>
-  </div>
-
-  <script>
-    function apriModale(tipo) {
-      const modale = document.getElementById("modal-" + tipo);
-      if (modale) modale.classList.add("show");
-    }
-    function chiudiModale(tipo) {
-      const modale = document.getElementById("modal-" + tipo);
-      if (modale) modale.classList.remove("show");
-    }
-    function mostraConferma() {
-      document.getElementById("modal-successo").classList.add("show");
-    }
-
-    const phrases = [
-      "Analisi AI generate su richiesta, senza raccolta dati.",
-      "Fonti verificate, struttura multiblocco, metodo accademico.",
-      "Zero pubblicità. Zero cookie. Zero conflitti d’interesse."
-    ];
-    let currentPhrase = 0, currentChar = 0;
-    const el = document.getElementById("typing-text");
-
-    function type() {
-      if (!el) return;
-      if (currentChar < phrases[currentPhrase].length) {
-        el.textContent += phrases[currentPhrase].charAt(currentChar++);
-        setTimeout(type, 40);
-      } else {
-        setTimeout(() => {
-          el.textContent = "";
-          currentChar = 0;
-          currentPhrase = (currentPhrase + 1) % phrases.length;
-          type();
-        }, 2800);
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", type);
-  </script>
-  🚧 Inserimento delle 3 modali reali in corso...
 <!-- ✅ REVISIONE COMPLETA VALIDATORE: Composizione per asset reali con strumenti precisi -->
 
 <!-- MODALE VALIDAZIONE COMPLETA -->
-<div id="modal-validazione" class="modal">
-  <div class="modal-content w-full max-w-xl">
+<div id="modal-validazione" class="modal overflow-y-auto">
+  <div class="modal-content w-full max-w-2xl max-h-screen overflow-y-auto">
     <h3 class="text-lg font-semibold mb-4">Validazione Portafoglio Attuale</h3>
     <form id="formValidazione" class="space-y-4 text-left text-sm">
       <input type="hidden" name="tipo" value="validazione">
@@ -225,8 +177,8 @@
         <legend class="text-sm font-medium">Composizione dettagliata (strumenti + %)</legend>
         <p class="text-xs text-slate-600 mb-2">Inserisci fino a 15 strumenti specifici con percentuali indicative.</p>
         <div class="space-y-2">
-          <!-- Genera 15 campi strumento + % -->
-          " + Array.from({length: 15}, (_, i) => {
+          <!-- 15 campi strumento + % -->
+          " + [...Array(15)].map((_, i) => {
             const n = i + 1;
             return `
           <div class="grid grid-cols-5 gap-2">
