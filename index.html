@@ -62,8 +62,100 @@
     </a>
     <a href="archivio.html" class="text-sm text-blue-700 font-medium hover:underline">Archivio Storico</a>
   </header>
-<main role="main" class="relative z-10 bg-white py-20 px-6 overflow-hidden" aria-labelledby="intro-title">\n\n <!-- Pattern sfondo -->\n <div class="absolute inset-0 pointer-events-none opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-cover"></div>\n\n <!-- Icona AI -->\n <div class="flex justify-center mb-6">\n <div class="bg-blue-100 text-blue-700 p-4 rounded-full shadow-lg ring-2 ring-blue-200 animate-pulse transition hover:scale-105">\n <i data-lucide="brain-circuit" class="w-8 h-8"></i>\n </div>\n </div>\n\n <!-- Testo istituzionale -->\n <section class="max-w-3xl mx-auto text-center relative z-10" aria-label="Introduzione ai servizi Tradelia AI">\n <h1 id="intro-title" class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-6 leading-tight">\n <span class="underline decoration-blue-400 underline-offset-4">Strumenti AI</span> gratuiti e ispirati da metodo accademico\n </h1>\n\n <p class="text-lg sm:text-xl text-slate-700 leading-relaxed mb-5">\n Tradelia AI \u00e8 un'iniziativa indipendente che sviluppa <strong>strumenti multi-step</strong> per supportare gli investitori in modo autonomo e consapevole, senza finalit\u00e0 commerciali.\n </p>\n\n <p class="text-base sm:text-lg text-slate-600 leading-relaxed mb-5">\n I moduli sono basati su un <strong>addestramento AI di 6 mesi</strong>, costruito solo su fonti pubbliche e <span class="underline decoration-blue-300 font-medium">istituzionali</span>: BCE, ESMA, BIS, IMF, SEC, Eurostat, OECD, World Bank.\n </p>\n\n <p class="text-base sm:text-lg text-slate-600 leading-relaxed mb-5">\n Nessuna consulenza, nessuna promozione: solo <strong>spunti riflessivi e didattici</strong> generati su richiesta.\n </p>\n\n <p class="text-sm text-red-600 font-semibold mt-4">\n \u26a0\ufe0f Se non comprendi il contenuto o hai dubbi sulla sua interpretazione, <u>rivolgiti sempre a un consulente finanziario abilitato</u>.\n </p>\n\n <p class="mt-6 text-sm text-slate-500 italic typing-text min-h-[28px]">\n <span id="typing-text"></span>\n </p>\n </section>\n</main>\n\n<!-- Lucide -->\n<script>\n lucide.createIcons();\n</script>\n\n<!-- Typing dinamico -->\n<script>\n const phrases = [\n "Analisi AI generate su richiesta, senza raccolta dati.",\n "Fonti verificate, struttura multiblocco, metodo accademico.",\n "Zero pubblicit\u00e0. Zero cookie. Zero conflitti d\u2019interesse."\n ];\n let currentPhrase = 0;\n let currentChar = 0;\n const el = document.getElementById("typing-text");\n\n function type() {\n if (!el) return;\n if (currentChar < phrases[currentPhrase].length) {\n el.textContent += phrases[currentPhrase].charAt(currentChar);\n currentChar++;\n setTimeout(type, 40);\n } else {\n setTimeout(() => {\n el.textContent = "";\n currentChar = 0;\n currentPhrase = (currentPhrase + 1) % phrases.length;\n type();\n }, 2800);\n }\n }\n\n document.addEventListener("DOMContentLoaded", type);\n</script>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tradelia AI – Introduzione</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #fff;
+    }
+  </style>
+</head>
 
+<body>
+<main class="relative z-10 bg-white py-20 px-6 overflow-hidden">
+
+  <!-- Pattern sfondo -->
+  <div class="absolute inset-0 pointer-events-none opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-cover"></div>
+
+  <!-- Icona AI -->
+  <div class="flex justify-center mb-6 relative z-10">
+    <div class="bg-blue-100 text-blue-700 p-4 rounded-full shadow-lg ring-2 ring-blue-200 animate-pulse transition hover:scale-105">
+      <i data-lucide="brain-circuit" class="w-8 h-8"></i>
+    </div>
+  </div>
+
+  <!-- Testo istituzionale -->
+  <section class="max-w-3xl mx-auto text-center relative z-10" aria-label="Introduzione ai servizi Tradelia AI">
+    <h1 id="intro-title" class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-6 leading-tight">
+      <span class="underline decoration-blue-400 underline-offset-4">Strumenti AI</span> gratuiti ispirati da metodo accademico
+    </h1>
+
+    <p class="text-lg sm:text-xl text-slate-700 leading-relaxed mb-5">
+      Tradelia AI è un'iniziativa indipendente che sviluppa <strong>strumenti multi-step</strong> per supportare gli investitori in modo autonomo e consapevole, senza finalità commerciali.
+    </p>
+
+    <p class="text-base sm:text-lg text-slate-600 leading-relaxed mb-5">
+      I moduli sono basati su un <strong>addestramento AI di 6 mesi</strong>, costruito solo su fonti pubbliche e <span class="underline decoration-blue-300 font-medium">istituzionali</span>: BCE, ESMA, BIS, IMF, SEC, Eurostat, OECD, World Bank.
+    </p>
+
+    <p class="text-base sm:text-lg text-slate-600 leading-relaxed mb-5">
+      Nessuna consulenza, nessuna promozione: solo <strong>spunti riflessivi e didattici</strong> generati su richiesta.
+    </p>
+
+    <p class="text-sm text-red-600 font-semibold mt-4">
+      ⚠️ Se non comprendi il contenuto o hai dubbi sulla sua interpretazione, <u>rivolgiti sempre a un consulente finanziario abilitato</u>.
+    </p>
+
+    <p class="mt-6 text-sm text-slate-500 italic typing-text min-h-[28px]">
+      <span id="typing-text"></span>
+    </p>
+  </section>
+</main>
+
+<!-- Attiva Lucide -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    lucide.createIcons();
+  });
+</script>
+
+<!-- Typing dinamico -->
+<script>
+  const phrases = [
+    "Analisi AI generate su richiesta, senza raccolta dati.",
+    "Fonti verificate, struttura multiblocco, metodo accademico.",
+    "Zero pubblicità. Zero cookie. Zero conflitti d’interesse."
+  ];
+  let currentPhrase = 0, currentChar = 0;
+  const el = document.getElementById("typing-text");
+
+  function type() {
+    if (!el) return;
+    if (currentChar < phrases[currentPhrase].length) {
+      el.textContent += phrases[currentPhrase].charAt(currentChar++);
+      setTimeout(type, 40);
+    } else {
+      setTimeout(() => {
+        el.textContent = "";
+        currentChar = 0;
+        currentPhrase = (currentPhrase + 1) % phrases.length;
+        type();
+      }, 2800);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", type);
+</script>
+
+</body>
+</html>
   <div class="my-12 sm:my-16"></div>
 
 <!-- BROKER CON VALUTAZIONE AI -->
