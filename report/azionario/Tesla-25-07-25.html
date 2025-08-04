@@ -49,73 +49,7 @@
       scroll-margin-top: 90px;
     }
 
-.tooltip {
-  position: relative;
-  display: inline-block;
-  cursor: help;
-  z-index: 10;
-}
 
-.tooltip .tooltip-text {
-  position: absolute;
-  top: 110%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 12px 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-  font-size: 13px;
-  line-height: 1.5;
-  color: #0f172a;
-  width: 320px;
-  white-space: normal;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s ease-in-out;
-}
-
-.tooltip:hover .tooltip-text {
-  opacity: 1;
-  visibility: visible;
-}
-
-.tooltip .tooltip-text::before {
-  content: "";
-  position: absolute;
-  top: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-bottom: 6px solid #e2e8f0;
-}
-
-.tooltip-title {
-  display: block;
-  font-weight: 600;
-  font-size: 13px;
-  color: #1e293b;
-  margin-bottom: 4px;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.tooltip-fonti {
-  margin-top: 6px;
-  font-size: 12px;
-  color: #64748b;
-}
-
-/* Icona (i) sobria e sottile */
-.icon-info {
-  width: 14px;
-  height: 14px;
-  stroke-width: 1.5;
-  color: #94a3b8;
-  margin-left: 4px;
-}
 
 
 
@@ -158,35 +92,20 @@
 
   <img src="https://img.chartshots.net/688dd9710a90c.png" alt="Grafico giornaliero Tesla" class="w-full rounded-md border border-slate-200" />
 
-  <div class="grid grid-cols-2 gap-4 text-sm mt-4">
-    <div>
-      <p class="text-xs uppercase text-slate-500">Variazione 24h
-        <span class="tooltip">
-          <i data-lucide="info" class="icon-info"></i>
-          <span class="tooltip-text">
-            <span class="tooltip-title">Variazione 24h</span>
-            Performance giornaliera del titolo in percentuale.
-            <span class="tooltip-fonti">Fonte: Refinitiv</span>
-          </span>
-        </span>
-      </p>
-      <p class="font-bold text-green-600">+2.45%</p>
-    </div>
-
-    <div>
-      <p class="text-xs uppercase text-slate-500">Benchmark S&P500
-        <span class="tooltip">
-          <i data-lucide="info" class="icon-info"></i>
-          <span class="tooltip-text">
-            <span class="tooltip-title">Benchmark</span>
-            Confronto con l’indice S&P 500 nella stessa sessione.
-            <span class="tooltip-fonti">Fonte: S&P Global</span>
-          </span>
-        </span>
-      </p>
-      <p class="font-bold text-yellow-600">+0.91%</p>
-    </div>
+<div class="grid grid-cols-2 gap-4 text-sm mt-4">
+  <div>
+    <p class="text-xs uppercase text-slate-500">Variazione 24h</p>
+    <p class="text-[11px] text-slate-400 mb-1">Performance giornaliera del titolo in percentuale. Fonte: Refinitiv</p>
+    <p class="font-bold text-green-600">+2.45%</p>
   </div>
+
+  <div>
+    <p class="text-xs uppercase text-slate-500">Benchmark S&P500</p>
+    <p class="text-[11px] text-slate-400 mb-1">Confronto con l’indice S&P 500 nella stessa sessione. Fonte: S&P Global</p>
+    <p class="font-bold text-yellow-600">+0.91%</p>
+  </div>
+</div>
+
 </section>
 
 <section id="blocco1" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative hover:z-10" data-aos="fade-up">
@@ -195,24 +114,96 @@
   </h2>
 
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-5 gap-x-10 text-sm">
-    <div><p class="text-xs uppercase text-slate-600 flex items-center gap-1">Ticker <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Ticker</span>Simbolo unico utilizzato per identificare il titolo in borsa.<br><span class="tooltip-fonti">Fonte: Nasdaq</span></span></span></p><p class="font-medium text-slate-800 break-words">TSLA</p></div>
-    <div><p class="text-xs uppercase text-slate-600 flex items-center gap-1">ISIN <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">ISIN</span>Codice di 12 caratteri che identifica univocamente un titolo a livello internazionale.<br><span class="tooltip-fonti">Fonte: Bloomberg</span></span></span></p><p class="font-medium text-slate-800 break-words">US88160R1014</p></div>
-    <div><p class="text-xs uppercase text-slate-600 flex items-center gap-1">Exchange <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Exchange</span>Mercato regolamentato su cui è negoziato il titolo.<br><span class="tooltip-fonti">Fonte: SEC</span></span></span></p><p class="font-medium text-slate-800 break-words">Nasdaq</p></div>
-    <div><p class="text-xs uppercase text-slate-600 flex items-center gap-1">MIC <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">MIC</span>Codice identificativo della sede di negoziazione secondo lo standard ISO 10383.<br><span class="tooltip-fonti">Fonte: ISO</span></span></span></p><p class="font-medium text-slate-800 break-words">XNAS</p></div>
-    <div><p class="text-xs uppercase text-slate-600 flex items-center gap-1">Società <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Società</span>Ragione sociale completa dell’emittente del titolo.<br><span class="tooltip-fonti">Fonte: SEC Filing</span></span></span></p><p class="font-medium text-slate-800 break-words">Tesla Inc.</p></div>
-    <div><p class="text-xs uppercase text-slate-600 flex items-center gap-1">Settore (GICS) <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Settore (GICS)</span>Macro-categoria economica secondo la classificazione GICS.<br><span class="tooltip-fonti">Fonte: MSCI/S&P</span></span></span></p><p class="font-medium text-slate-800 break-words">Consumer Discretionary</p></div>
-    <div><p class="text-xs uppercase text-slate-600 flex items-center gap-1">Industria / Sottosettore <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Industria / Sottosettore</span>Classificazione più specifica utile per analisi comparativa.<br><span class="tooltip-fonti">Fonte: MSCI GICS</span></span></span></p><p class="font-medium text-slate-800 break-words">Automobiles / EV</p></div>
-    <div><p class="text-xs uppercase text-slate-600 flex items-center gap-1">Indice Primario <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Indice Primario</span>Indice principale in cui il titolo è incluso, con data di ingresso.<br><span class="tooltip-fonti">Fonte: Nasdaq</span></span></span></p><p class="font-medium text-slate-800 break-words">Nasdaq 100 (dal 2013)</p></div>
-    <div><p class="text-xs uppercase text-slate-600 flex items-center gap-1">Indice Secondario <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Indice Secondario</span>Ulteriori indici rilevanti per il posizionamento sistemico.<br><span class="tooltip-fonti">Fonte: S&P Global</span></span></span></p><p class="font-medium text-slate-800 break-words">S&P 500 (dal 2020)</p></div>
-    <div><p class="text-xs uppercase text-slate-600 flex items-center gap-1">Prezzo Attuale <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Prezzo Attuale</span>Ultima quotazione disponibile durante la sessione.<br><span class="tooltip-fonti">Fonte: Yahoo Finance</span></span></span></p><p class="font-bold text-sky-800 break-words">$266.35 (16:00 EST)</p></div>
-    <div><p class="text-xs uppercase text-slate-600 flex items-center gap-1">Variazione 7gg <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Variazione 7gg</span>Rendimento del titolo negli ultimi 7 giorni.<br><span class="tooltip-fonti">Fonte: Bloomberg</span></span></span></p><p class="font-bold text-yellow-600 break-words">+0.95%</p></div>
-    <div><p class="text-xs uppercase text-slate-600 flex items-center gap-1">Variazione 30gg <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Variazione 30gg</span>Rendimento a 30 giorni utile per identificare trend.<br><span class="tooltip-fonti">Fonte: TradingView</span></span></span></p><p class="font-bold text-red-600 break-words">−4.12%</p></div>
-    <div><p class="text-xs uppercase text-slate-600 flex items-center gap-1">Prezzo Min/Max 52 settimane <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">52 Settimane</span>Range di prezzo più basso e più alto negli ultimi 12 mesi.<br><span class="tooltip-fonti">Fonte: Nasdaq</span></span></span></p><p class="font-bold text-slate-800 break-words">$152.37 / $299.87</p></div>
-    <div><p class="text-xs uppercase text-slate-600 flex items-center gap-1">Target Medio Analisti <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Target Analisti</span>Prezzo stimato medio dagli analisti sell-side.<br><span class="tooltip-fonti">Fonte: MarketScreener</span></span></span></p><p class="font-bold text-green-600 break-words">$278.00 (32 analisti)</p></div>
-    <div><p class="text-xs uppercase text-slate-600 flex items-center gap-1">Rating Analisti <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Rating Analisti</span>Consensi aggregati su Buy / Hold / Sell.<br><span class="tooltip-fonti">Fonte: Morningstar</span></span></span></p><p class="font-bold text-yellow-600 break-words">Hold (18 Buy / 10 Hold / 4 Sell)</p></div>
-    <div><p class="text-xs uppercase text-slate-600 flex items-center gap-1">Market Cap <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Market Cap</span>Valore di mercato totale delle azioni in circolazione.<br><span class="tooltip-fonti">Fonte: Google Finance</span></span></span></p><p class="font-bold text-green-600 break-words">$850 Mld (Ago 2025)</p></div>
-    <div><p class="text-xs uppercase text-slate-600 flex items-center gap-1">Numero Azioni Totali <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Azioni Totali</span>Quantità totale di azioni emesse, per classe.<br><span class="tooltip-fonti">Fonte: EDGAR</span></span></span></p><p class="font-bold text-slate-800 break-words">3.15 Mld (Classe A – filing Q2 2025)</p></div>
-    <div><p class="text-xs uppercase text-slate-600 flex items-center gap-1">Free Float <span class="tooltip"><i data-lucide="info" class="icon-info"></i><span class="tooltip-text"><span class="tooltip-title">Free Float</span>Quota di azioni effettivamente negoziabili sul mercato.<br><span class="tooltip-fonti">Fonte: FMP</span></span></span></p><p class="font-bold text-green-600 break-words">81.2% — 2.56 Mld</p></div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Ticker</p>
+      <p class="text-[11px] text-slate-400">Simbolo unico utilizzato per identificare il titolo. Fonte: Nasdaq</p>
+      <p class="font-medium text-slate-800">TSLA</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">ISIN</p>
+      <p class="text-[11px] text-slate-400">Codice internazionale identificativo. Fonte: Bloomberg</p>
+      <p class="font-medium text-slate-800">US88160R1014</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Exchange</p>
+      <p class="text-[11px] text-slate-400">Mercato regolamentato di negoziazione. Fonte: SEC</p>
+      <p class="font-medium text-slate-800">Nasdaq</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">MIC</p>
+      <p class="text-[11px] text-slate-400">Codice ISO della sede di negoziazione. Fonte: ISO</p>
+      <p class="font-medium text-slate-800">XNAS</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Società</p>
+      <p class="text-[11px] text-slate-400">Ragione sociale dell'emittente. Fonte: SEC Filing</p>
+      <p class="font-medium text-slate-800">Tesla Inc.</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Settore (GICS)</p>
+      <p class="text-[11px] text-slate-400">Categoria economica secondo GICS. Fonte: MSCI/S&P</p>
+      <p class="font-medium text-slate-800">Consumer Discretionary</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Industria / Sottosettore</p>
+      <p class="text-[11px] text-slate-400">Classificazione per analisi comparativa. Fonte: MSCI GICS</p>
+      <p class="font-medium text-slate-800">Automobiles / EV</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Indice Primario</p>
+      <p class="text-[11px] text-slate-400">Indice principale di inclusione. Fonte: Nasdaq</p>
+      <p class="font-medium text-slate-800">Nasdaq 100 (dal 2013)</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Indice Secondario</p>
+      <p class="text-[11px] text-slate-400">Ulteriori indici rilevanti. Fonte: S&P Global</p>
+      <p class="font-medium text-slate-800">S&P 500 (dal 2020)</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Prezzo Attuale</p>
+      <p class="text-[11px] text-slate-400">Ultima quotazione disponibile. Fonte: Yahoo Finance</p>
+      <p class="font-bold text-sky-800">$266.35 (16:00 EST)</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Variazione 7gg</p>
+      <p class="text-[11px] text-slate-400">Rendimento ultimi 7 giorni. Fonte: Bloomberg</p>
+      <p class="font-bold text-yellow-600">+0.95%</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Variazione 30gg</p>
+      <p class="text-[11px] text-slate-400">Rendimento ultimi 30 giorni. Fonte: TradingView</p>
+      <p class="font-bold text-red-600">−4.12%</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Prezzo Min/Max 52 settimane</p>
+      <p class="text-[11px] text-slate-400">Range di prezzo su 12 mesi. Fonte: Nasdaq</p>
+      <p class="font-bold text-slate-800">$152.37 / $299.87</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Target Medio Analisti</p>
+      <p class="text-[11px] text-slate-400">Prezzo medio stimato. Fonte: MarketScreener</p>
+      <p class="font-bold text-green-600">$278.00 (32 analisti)</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Rating Analisti</p>
+      <p class="text-[11px] text-slate-400">Consenso Buy / Hold / Sell. Fonte: Morningstar</p>
+      <p class="font-bold text-yellow-600">Hold (18 Buy / 10 Hold / 4 Sell)</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Market Cap</p>
+      <p class="text-[11px] text-slate-400">Valore totale delle azioni. Fonte: Google Finance</p>
+      <p class="font-bold text-green-600">$850 Mld (Ago 2025)</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Numero Azioni Totali</p>
+      <p class="text-[11px] text-slate-400">Quantità emessa (Classe A). Fonte: EDGAR</p>
+      <p class="font-bold text-slate-800">3.15 Mld (Q2 2025)</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Free Float</p>
+      <p class="text-[11px] text-slate-400">Quota negoziabile sul mercato. Fonte: FMP</p>
+      <p class="font-bold text-green-600">81.2% — 2.56 Mld</p>
+    </div>
   </div>
 
   <hr class="divider mt-6">
@@ -227,6 +218,7 @@
     </p>
   </div>
 </section>
+
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.tooltip').forEach(tooltip => {
