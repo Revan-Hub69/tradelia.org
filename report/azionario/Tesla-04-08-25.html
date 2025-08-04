@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TRADELIA • AI — Report Azionario</title>
+  <meta name="description" content="Report istituzionale Tradelia AI — analisi fondamentale, tecnica e strategica su asset selezionati.">
+  <meta name="author" content="Tradelia AI">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      AOS.init({ once: true, disableMutationObserver: true });
+      lucide.createIcons();
+    });
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+      background-size: 280px;
+      color: #0f172a;
+      margin: 0;
+      padding: 0;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .card-blocco {
+      position: relative;
+      z-index: 10;
+      background: #ffffff;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+      transition: box-shadow 0.2s ease;
+    }
+
+    .card-blocco:hover {
+      background: #f8fafc;
+      box-shadow: 0 2px 12px 0 rgba(100, 120, 200, 0.07);
+    }
+
+    section.card-blocco {
+      scroll-margin-top: 90px;
+    }
+
+
+
+
+
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #e2e8f0;
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      border-radius: 8px;
+      border: 2px solid #e2e8f0;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="sticky top-0 z-50 bg-white shadow-sm w-full px-4 sm:px-6 py-3 flex justify-between items-center border-b border-slate-200 backdrop-blur-sm bg-white/95">
+    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600">•AI</span>
+    </a>
+  </header>
+
+  <main class="px-3 sm:px-6 max-w-6xl mx-auto space-y-6 pb-32">
+    <div class="text-xs text-slate-400 px-1 sm:px-2 mt-2">Home / Report / Azionario</div>
+
+ <!-- BLOCCO 0 - Anteprima -->
+<section id="blocco0" class="card-blocco border border-slate-200 rounded-xl shadow-sm px-5 py-6 bg-white relative z-10 hover:z-20" data-aos="fade-up">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-4">
+    <h2 class="text-base sm:text-lg font-semibold text-slate-800">Tesla Inc. (TSLA)</h2>
+    <p class="text-sm font-bold text-green-600">Segnale LT: Positivo</p>
+  </div>
+
+  <img src="https://img.chartshots.net/688dd9710a90c.png" alt="Grafico giornaliero Tesla" class="w-full rounded-md border border-slate-200" />
+
+<div class="grid grid-cols-2 gap-4 text-sm mt-4">
+  <div>
+    <p class="text-xs uppercase text-slate-500">Variazione 24h</p>
+    <p class="text-[11px] text-slate-400 mb-1">Performance giornaliera del titolo in percentuale. Fonte: Refinitiv</p>
+    <p class="font-bold text-green-600">+2.45%</p>
+  </div>
+
+  <div>
+    <p class="text-xs uppercase text-slate-500">Benchmark S&P500</p>
+    <p class="text-[11px] text-slate-400 mb-1">Confronto con l’indice S&P 500 nella stessa sessione. Fonte: S&P Global</p>
+    <p class="font-bold text-yellow-600">+0.91%</p>
+  </div>
+</div>
+
+</section>
+
+<section id="blocco1" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-4 flex items-center">
+    <i data-lucide="layers" class="icon-section mr-2"></i>Blocco 1 – Identificativi & Contesto
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-5 gap-x-10 text-sm">
+    <div>
+      <p class="text-xs uppercase text-slate-600">Ticker</p>
+      <p class="text-[11px] text-slate-400">Simbolo alfanumerico ufficiale dell’azione, assegnato dalla borsa di riferimento. Fonte: Nasdaq</p>
+      <p class="font-medium text-slate-800">TSLA</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Ticker Storico / ADR</p>
+      <p class="text-[11px] text-slate-400">Eventuale ticker precedente (per cambi denominazione) o ticker ADR per titoli esteri. Fonte: Nasdaq / SEC</p>
+      <p class="font-medium text-slate-800">TSLA</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Cambio denominazione</p>
+      <p class="text-[11px] text-slate-400">Evidenzia se la società ha modificato la propria ragione sociale nel tempo. Fonte: SEC / EDGAR</p>
+      <p class="font-medium text-slate-800">Nessun cambio (ex Tesla Motors Inc.)</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Share Class Breakdown</p>
+      <p class="text-[11px] text-slate-400">Distribuzione tra diverse classi azionarie (A, B, C, Preferred), con o senza diritto di voto. Fonte: Prospectus SEC</p>
+      <p class="font-medium text-slate-800">Classe A: 3.15 Mld – Nessuna classe B/C</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">ISIN</p>
+      <p class="text-[11px] text-slate-400">Codice univoco di 12 caratteri che identifica il titolo a livello internazionale. Fonte: Bloomberg</p>
+      <p class="font-medium text-slate-800">US88160R1014</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Exchange</p>
+      <p class="text-[11px] text-slate-400">Borsa presso cui il titolo è quotato e negoziato. Fonte: SEC</p>
+      <p class="font-medium text-slate-800">Nasdaq</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">MIC</p>
+      <p class="text-[11px] text-slate-400">Codice ufficiale della sede di scambio secondo lo standard ISO 10383. Fonte: ISO</p>
+      <p class="font-medium text-slate-800">XNAS</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Società</p>
+      <p class="text-[11px] text-slate-400">Nome legale della società emittente secondo i filing ufficiali. Fonte: SEC</p>
+      <p class="font-medium text-slate-800">Tesla Inc.</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Settore (GICS)</p>
+      <p class="text-[11px] text-slate-400">Settore economico primario secondo classificazione GICS (Global Industry Classification Standard). Fonte: MSCI/S&P</p>
+      <p class="font-medium text-slate-800">Consumer Discretionary</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Industria / Sottosettore</p>
+      <p class="text-[11px] text-slate-400">Ulteriore suddivisione dell’attività aziendale per analisi settoriale. Fonte: MSCI GICS</p>
+      <p class="font-medium text-slate-800">Automobiles / EV</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Indice Primario</p>
+      <p class="text-[11px] text-slate-400">Indice principale di inclusione del titolo. Fonte: Nasdaq</p>
+      <p class="font-medium text-slate-800">Nasdaq 100 (dal 2013)</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Indice Secondario</p>
+      <p class="text-[11px] text-slate-400">Ulteriori indici di riferimento in cui il titolo è incluso. Fonte: S&P Global</p>
+      <p class="font-medium text-slate-800">S&P 500 (dal 2020)</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Data IPO</p>
+      <p class="text-[11px] text-slate-400">Data ufficiale della prima offerta pubblica di azioni della società (Initial Public Offering). Fonte: SEC/EDGAR</p>
+      <p class="font-medium text-slate-800">29 giugno 2010</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Prezzo Attuale</p>
+      <p class="text-[11px] text-slate-400">Ultima quotazione ufficiale disponibile in orario di mercato. Fonte: Yahoo Finance</p>
+      <p class="font-bold text-sky-800">$266.35 (16:00 EST)</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Variazione 7gg</p>
+      <p class="text-[11px] text-slate-400">Rendimento calcolato negli ultimi 7 giorni di mercato. Fonte: Bloomberg</p>
+      <p class="font-bold text-yellow-600">+0.95%</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Variazione 30gg</p>
+      <p class="text-[11px] text-slate-400">Rendimento percentuale su base mensile (30 giorni). Fonte: TradingView</p>
+      <p class="font-bold text-red-600">−4.12%</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Prezzo Min/Max 52 settimane</p>
+      <p class="text-[11px] text-slate-400">Prezzo più basso e più alto registrato negli ultimi 12 mesi. Fonte: Nasdaq</p>
+      <p class="font-bold text-slate-800">$152.37 / $299.87</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Target Medio Analisti</p>
+      <p class="text-[11px] text-slate-400">Stima media del prezzo obiettivo secondo copertura analisti. Fonte: MarketScreener</p>
+      <p class="font-bold text-green-600">$278.00 (32 analisti)</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Rating Analisti</p>
+      <p class="text-[11px] text-slate-400">Consenso aggregato degli analisti in termini di raccomandazione (Buy / Hold / Sell). Fonte: Morningstar</p>
+      <p class="font-bold text-yellow-600">Hold (18 Buy / 10 Hold / 4 Sell)</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Market Cap</p>
+      <p class="text-[11px] text-slate-400">Valore di mercato complessivo delle azioni in circolazione. Fonte: Google Finance</p>
+      <p class="font-bold text-green-600">$850 Mld (Ago 2025)</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Numero Azioni Totali</p>
+      <p class="text-[11px] text-slate-400">Totale delle azioni emesse dalla società, incluse quelle in mano a insider. Fonte: EDGAR</p>
+      <p class="font-bold text-slate-800">3.15 Mld (Q2 2025)</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Free Float</p>
+      <p class="text-[11px] text-slate-400">Percentuale di azioni liberamente negoziabili sul mercato. Fonte: FMP</p>
+      <p class="font-bold text-green-600">81.2% — 2.56 Mld</p>
+    </div>
+  </div>
+
+  <hr class="divider mt-6">
+  <div class="pt-4">
+    <p class="text-sm text-slate-700 leading-relaxed">
+      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+      <span class="text-green-600 font-semibold">Tesla mostra una struttura solida</span> in termini di flottante e copertura analitica.
+      <span class="text-green-600 font-semibold">La presenza in indici primari</span> e il 
+      <span class="text-yellow-600 font-semibold">rating neutro</span>
+      confermano la sua rilevanza sistemica, pur in uno scenario di 
+      <span class="text-red-600 font-semibold">volatilità ciclica</span>.
+    </p>
+  </div>
+</section>
+
+
+<!-- BLOCCO 1.1 – Competitor Diretti -->
+<section id="blocco1-1" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative hover:z-10 bg-white" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+    <i data-lucide="users" class="icon-section mr-2"></i>Blocco 1.1 – Competitor Diretti (Peer Group Comparativo)
+  </h2>
+
+  <!-- Mobile layout: Card per ciascun peer -->
+  <div class="grid grid-cols-1 gap-4 sm:hidden text-sm">
+    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50">
+      <h3 class="font-semibold text-slate-800 text-sm mb-1">Ford Motor Company <span class="text-xs text-slate-500">(F)</span></h3>
+      <p class="text-xs text-slate-500">Settore: Consumer Discretionary</p>
+      <p class="text-xs text-slate-500 mb-2">Market Cap: <span class="text-slate-700 font-medium">$52.1 Mld</span> (Ago 2025)</p>
+      <div class="grid grid-cols-2 gap-y-1 gap-x-4 text-[13px]">
+        <div>
+          <p class="text-slate-400">24h</p>
+          <p class="font-bold text-green-600">+1.30%</p>
+        </div>
+        <div>
+          <p class="text-slate-400">7gg</p>
+          <p class="font-bold text-yellow-600">+0.80%</p>
+        </div>
+        <div>
+          <p class="text-slate-400">30gg</p>
+          <p class="font-bold text-red-600">−4.25%</p>
+        </div>
+        <div>
+          <p class="text-slate-400">1 anno</p>
+          <p class="font-bold text-green-600">+18.6%</p>
+        </div>
+      </div>
+    </div>
+    <!-- Aggiungi qui altre card peer -->
+  </div>
+
+  <!-- Desktop layout: Tabella comparativa -->
+  <div class="hidden sm:block overflow-x-auto mt-4">
+    <table class="min-w-full text-sm text-left">
+      <thead class="text-xs uppercase bg-slate-100 text-slate-500">
+        <tr>
+          <th class="px-4 py-2 font-medium">Azienda</th>
+          <th class="px-4 py-2 font-medium">Ticker</th>
+          <th class="px-4 py-2 font-medium">Settore</th>
+          <th class="px-4 py-2 font-medium">Market Cap</th>
+          <th class="px-4 py-2 font-medium">24h</th>
+          <th class="px-4 py-2 font-medium">7gg</th>
+          <th class="px-4 py-2 font-medium">30gg</th>
+          <th class="px-4 py-2 font-medium">1 anno</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-200">
+        <tr>
+          <td class="px-4 py-2 text-slate-800 font-medium">Ford Motor Company</td>
+          <td class="px-4 py-2">F</td>
+          <td class="px-4 py-2">Consumer Discretionary</td>
+          <td class="px-4 py-2">$52.1 Mld</td>
+          <td class="px-4 py-2 text-green-600 font-bold">+1.30%</td>
+          <td class="px-4 py-2 text-yellow-600 font-bold">+0.80%</td>
+          <td class="px-4 py-2 text-red-600 font-bold">−4.25%</td>
+          <td class="px-4 py-2 text-green-600 font-bold">+18.6%</td>
+        </tr>
+        <!-- Altri peer comparabili -->
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+
+<section id="blocco2" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-4 flex items-center">
+    <i data-lucide="bar-chart" class="icon-section mr-2"></i>Blocco 2 – Multipli & Valutazione Intrinseca
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-5 gap-x-10 text-sm">
+    <div>
+      <p class="text-xs uppercase text-slate-600">P/E (TTM)</p>
+      <p class="text-[11px] text-slate-400">Indica quanto stai pagando oggi per ogni dollaro di utili prodotti negli ultimi 12 mesi. Fonte: MarketWatch</p>
+      <p class="font-bold text-red-600">188.1×</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Forward P/E</p>
+      <p class="text-[11px] text-slate-400">Prezzo per utili futuri attesi nei prossimi 12 mesi. Fonte: Morningstar</p>
+      <p class="font-bold text-red-600">158.7×</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">PEG Ratio</p>
+      <p class="text-[11px] text-slate-400">Valuta il P/E in rapporto alla crescita attesa. Valori >1 indicano sopravvalutazione. Fonte: Reuters</p>
+      <p class="font-bold text-red-600">4.8×</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">P/B</p>
+      <p class="text-[11px] text-slate-400">Prezzo rispetto al valore contabile per azione. Fonte: S&P Global</p>
+      <p class="font-bold text-slate-700">11.2×</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">P/S</p>
+      <p class="text-[11px] text-slate-400">Prezzo in rapporto ai ricavi annuali per azione. Fonte: Nasdaq</p>
+      <p class="font-bold text-slate-700">6.4×</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">P/EBIT</p>
+      <p class="text-[11px] text-slate-400">Prezzo in rapporto al risultato operativo. Fonte: EDGAR</p>
+      <p class="font-bold text-red-600">95×</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">EV/EBIT (TTM)</p>
+      <p class="text-[11px] text-slate-400">Valore d’impresa in rapporto al risultato operativo. Fonte: Tradelia AI</p>
+      <p class="font-bold text-red-600">102×</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">EV/EBIT (Forward)</p>
+      <p class="text-[11px] text-slate-400">Stima prospettica di EV/EBIT sui prossimi 12 mesi. Fonte: Tradelia AI</p>
+      <p class="font-bold text-red-600">89×</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">EV/EBITDA (TTM)</p>
+      <p class="text-[11px] text-slate-400">Valore d’impresa su margine operativo lordo. Fonte: Tradelia AI</p>
+      <p class="font-bold text-red-600">88.8×</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">EV/EBITDA (Forward)</p>
+      <p class="text-[11px] text-slate-400">Multiplo EV/EBITDA previsto per i prossimi 12 mesi. Fonte: Tradelia AI</p>
+      <p class="font-bold text-red-600">~79×</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">P/FCF</p>
+      <p class="text-[11px] text-slate-400">Prezzo per flusso di cassa libero. Fonte: Tradelia AI</p>
+      <p class="font-bold text-red-600">156×</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">EV/Revenue</p>
+      <p class="text-[11px] text-slate-400">Valore d’impresa in rapporto ai ricavi. Fonte: MarketScreener</p>
+      <p class="font-bold text-slate-700">6.9×</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">EV/FCF</p>
+      <p class="text-[11px] text-slate-400">Valore d’impresa su flusso di cassa libero. Fonte: Tradelia AI</p>
+      <p class="font-bold text-red-600">145×</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">ROIC vs WACC</p>
+      <p class="text-[11px] text-slate-400">Confronta ritorno sul capitale investito con il costo del capitale. Fonte: Tradelia AI</p>
+      <p class="font-bold text-yellow-600">ROIC 6.5% vs WACC 8.0%</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">CAGR EPS 5Y</p>
+      <p class="text-[11px] text-slate-400">Tasso annuo composto di crescita degli utili per azione atteso a 5 anni. Fonte: Refinitiv</p>
+      <p class="font-bold text-slate-700">12.4%</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">FCFE Yield</p>
+      <p class="text-[11px] text-slate-400">Rendimento implicito per l’azionista calcolato dal flusso di cassa disponibile all’equity. Fonte: Tradelia AI</p>
+      <p class="font-bold text-red-600">0.6%</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Adjusted ROIC / EVA</p>
+      <p class="text-[11px] text-slate-400">Misura la creazione di valore oltre il costo del capitale. EVA = (ROIC − WACC) × capitale investito. Fonte: Tradelia AI</p>
+      <p class="font-bold text-yellow-600">EVA negativa (−1.5%)</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Reverse DCF Sensitivity</p>
+      <p class="text-[11px] text-slate-400">Mostra la crescita attesa implicita nel prezzo attuale, data una struttura di flussi di cassa. Fonte: Tradelia AI</p>
+      <p class="font-bold text-red-600">≈ 18.7% CAGR atteso</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Ranking Peer – P/E</p>
+      <p class="text-[11px] text-slate-400">Posizionamento percentile rispetto ai peer settoriali per il multiplo P/E. Fonte: Tradelia AI</p>
+      <p class="font-bold text-red-600">92° percentile</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Ranking Peer – EV/EBITDA</p>
+      <p class="text-[11px] text-slate-400">Classifica rispetto ai competitor diretti per EV/EBITDA. Fonte: Tradelia AI</p>
+      <p class="font-bold text-red-600">94° percentile</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Ranking Peer – EV/EBIT</p>
+      <p class="text-[11px] text-slate-400">Posizione nel settore per EV/EBIT. Fonte: Tradelia AI</p>
+      <p class="font-bold text-red-600">91° percentile</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Ranking Peer – P/B</p>
+      <p class="text-[11px] text-slate-400">Confronto con il settore per P/B. Fonte: Tradelia AI</p>
+      <p class="font-bold text-red-600">89° percentile</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Z-score EV/EBITDA</p>
+      <p class="text-[11px] text-slate-400">Deviazione standard dal valore medio storico di EV/EBITDA. Fonte: Tradelia AI</p>
+      <p class="font-bold text-red-600">+2.8σ</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Z-score P/FCF</p>
+      <p class="text-[11px] text-slate-400">Scostamento del P/FCF dalla media storica. Fonte: Tradelia AI</p>
+      <p class="font-bold text-red-600">+2.1σ</p>
+    </div>
+    <div>
+      <p class="text-xs uppercase text-slate-600">Z-score EV/EBIT</p>
+      <p class="text-[11px] text-slate-400">Deviazione standard del multiplo EV/EBIT. Fonte: Tradelia AI</p>
+      <p class="font-bold text-red-600">+1.9σ</p>
+    </div>
+  </div>
+
+  <!-- DCF Box Section -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+    <div class="bg-slate-50 border border-slate-200 rounded-md p-3">
+      <p class="text-xs text-slate-600 uppercase">DCF – Scenario Base</p>
+      <p class="text-[11px] text-slate-400">Valore stimato medio secondo i flussi previsti attuali. Fonte: Tradelia AI</p>
+      <p class="font-bold text-red-600">$198</p>
+    </div>
+    <div class="bg-slate-50 border border-slate-200 rounded-md p-3">
+      <p class="text-xs text-slate-600 uppercase">DCF – Scenario Bull</p>
+      <p class="text-[11px] text-slate-400">Scenario ottimistico con crescita superiore alle attese. Fonte: Tradelia AI</p>
+      <p class="font-bold text-slate-700">$245</p>
+    </div>
+    <div class="bg-slate-50 border border-slate-200 rounded-md p-3">
+      <p class="text-xs text-slate-600 uppercase">DCF – Scenario Bear</p>
+      <p class="text-[11px] text-slate-400">Valore minimo in caso di revisione al ribasso delle stime. Fonte: Tradelia AI</p>
+      <p class="font-bold text-red-600">$121</p>
+    </div>
+  </div>
+
+  <hr class="divider mt-6">
+  <div class="pt-4">
+    <p class="text-sm text-slate-700 leading-relaxed">
+      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+      I multipli risultano <span class="text-red-600 font-medium">significativamente sopra la media</span> del settore e della propria storia.
+      Z-score e ranking confermano <span class="text-red-600 font-medium">una sopravvalutazione strutturale</span>, in particolare su EV/EBITDA, EV/EBIT e P/FCF.
+      Il modello DCF suggerisce un <span class="text-red-600 font-semibold">downside stimato del −17%</span>, con ampio spread tra scenari.
+      Il <span class="text-yellow-600 font-medium">ROIC inferiore al WACC</span> e un <span class="text-red-600">FCFE Yield minimo</span> rafforzano la tesi di valutazione elevata.
+      Reverse DCF evidenzia una <span class="text-red-600 font-medium">crescita attesa implicita eccessiva</span>.
+      Valutazione complessiva: <span class="text-red-600 font-semibold">Overvalued</span>.
+    </p>
+  </div>
+</section>
+
+  </main>
+</body>
+</html>
