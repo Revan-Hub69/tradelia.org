@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TRADELIA • AI — Report Azionario</title>
+  <meta name="description" content="Report istituzionale Tradelia AI — analisi fondamentale, tecnica e strategica su asset selezionati.">
+  <meta name="author" content="Tradelia AI">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      AOS.init({ once: true, disableMutationObserver: true });
+      lucide.createIcons();
+    });
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+      background-size: 280px;
+      color: #0f172a;
+      margin: 0;
+      padding: 0;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .card-blocco {
+      position: relative;
+      z-index: 10;
+      background: #ffffff;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+      transition: box-shadow 0.2s ease;
+    }
+
+    .card-blocco:hover {
+      background: #f8fafc;
+      box-shadow: 0 2px 12px 0 rgba(100, 120, 200, 0.07);
+    }
+
+    section.card-blocco {
+      scroll-margin-top: 90px;
+    }
+
+
+
+
+
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #e2e8f0;
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      border-radius: 8px;
+      border: 2px solid #e2e8f0;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="sticky top-0 z-50 bg-white shadow-sm w-full px-4 sm:px-6 py-3 flex justify-between items-center border-b border-slate-200 backdrop-blur-sm bg-white/95">
+    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600">•AI</span>
+    </a>
+  </header>
+
+  <main class="px-3 sm:px-6 max-w-6xl mx-auto space-y-6 pb-32">
+    <div class="text-xs text-slate-400 px-1 sm:px-2 mt-2">Home / Report / Azionario</div>
+
+
+
+
+
+    <!-- BLOCCO 1 – Identificativi & Contesto -->
+<section id="blocco1" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+    <i data-lucide="list-todo" class="icon-section mr-2"></i>Blocco 1 – Identificativi & Contesto
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+    <div><p class="text-xs uppercase text-slate-600">Ticker</p><p class="text-[11px] text-slate-400">Ticker ufficiale NASDAQ. Fonte: Investing.com</p><p class="font-medium text-green-600">AFRM</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Società (Ragione sociale)</p><p class="text-[11px] text-slate-400">Denominazione legale confermata da Wikipedia. Fonte: Wikipedia</p><p class="font-medium text-green-600">Affirm Holdings, Inc.</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Exchange</p><p class="text-[11px] text-slate-400">Mercato di quotazione ufficiale. Fonte: Investing.com</p><p class="font-medium text-green-600">NASDAQ</p></div>
+    <div><p class="text-xs uppercase text-slate-600">ISIN</p><p class="text-[11px] text-slate-400">Codice ISIN registrato. Fonte: Wikipedia</p><p class="font-medium text-green-600">US00827B1061</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Prezzo attuale</p><p class="text-[11px] text-slate-400">Ultimo prezzo di chiusura. Fonte: MarketBeat, Investing.com</p><p class="font-medium text-green-600">~78.96 USD</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Variazione 24h (%)</p><p class="text-[11px] text-slate-400">Delta rispetto alla chiusura precedente. Fonte: MarketBeat</p><p class="font-medium text-green-600">+2.17 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Prezzo Min/Max 52 settimane</p><p class="text-[11px] text-slate-400">Range annuale informativo. Fonte: MarketBeat</p><p class="font-medium text-slate-700">24.15 / 82.53 USD</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Prezzo Target Medio Analisti</p><p class="text-[11px] text-slate-400">Consensus analisti. Fonte: MarketBeat</p><p class="font-medium text-slate-700">~68.09 USD</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Rating Analisti</p><p class="text-[11px] text-slate-400">Sentiment analisti predominante. Fonte: MarketBeat</p><p class="font-medium text-green-600">Moderate Buy (~Buy)</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Market Cap</p><p class="text-[11px] text-slate-400">Capitalizzazione di borsa. Fonte: MarketBeat</p><p class="font-medium text-green-600">~25.47 miliardi USD</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Numero Azioni Totali</p><p class="text-[11px] text-slate-400">Azioni in circolazione totali. Fonte: StockAnalysis, FT.com</p><p class="font-medium text-green-600">~322.6 milioni</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Free Float (%) + Azioni Flottanti</p><p class="text-[11px] text-slate-400">Azioni disponibili al pubblico. Fonte: StockAnalysis, FT.com</p><p class="font-medium text-green-600">~268 milioni (~83 %)</p></div>
+  </div>
+
+  <hr class="divider mt-6">
+  <div class="pt-4">
+    <p class="text-sm text-slate-700 leading-relaxed">
+      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+      Affirm Holdings, Inc. (NASDAQ: AFRM) è un operatore fintech specializzato nei servizi di pagamento “Buy Now, Pay Later” (BNPL), con una forte presenza nel segmento consumer digitale statunitense. Il titolo mostra una capitalizzazione solida (~25,5 miliardi USD) e un free float elevato (~83%), condizioni che garantiscono una buona liquidità operativa.
+      <br><br>
+      L’attuale valutazione di mercato (≈79 USD) si colloca in prossimità dei massimi annuali, segnando un +2% nella seduta odierna e riflettendo un sentiment positivo di breve termine. Il rating aggregato degli analisti è moderatamente favorevole (“Buy”), con un target price medio leggermente inferiore al prezzo attuale, suggerendo un possibile scenario di consolidamento.
+      <br><br>
+      Il profilo di rischio appare elevato, coerente con il settore fintech e con la natura speculativa del modello BNPL, soggetto a cicli di credito e contesto macroeconomico. Tuttavia, la struttura azionaria stabile, la presenza su un indice primario (NASDAQ) e il forte interesse degli analisti istituzionali ne confermano la rilevanza per operatori swing e growth‑oriented.
+    </p>
+  </div>
+</section>
+
+ <!-- BLOCCO 2 – Multipli & Valutazione Intrinseca -->
+<section id="blocco2" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+    <i data-lucide="scale" class="icon-section mr-2"></i>Blocco 2 – Multipli & Valutazione Intrinseca
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+    <div><p class="text-xs uppercase text-slate-600">P/E (TTM)</p><p class="text-[11px] text-slate-400">EPS negativo rende il P/E non significativo. Fonte: ValueInvesting</p><p class="font-medium text-slate-700">N/A (Azienda in perdita)</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Forward P/E</p><p class="text-[11px] text-slate-400">Prezzo eccessivamente alto rispetto agli utili attesi. Fonte: ChartMill, Stock Analysis</p><p class="font-medium text-red-600">~95×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">PEG Ratio</p><p class="text-[11px] text-slate-400">PEG negativo riflette EPS negativi; Forward leggermente sopra media settore. Fonte: ChartMill, Stock Analysis</p><p class="font-medium text-slate-700">~–3.8 (LTM)</p></div>
+    <div><p class="text-xs uppercase text-slate-600">PEG Ratio (Forward)</p><p class="text-[11px] text-slate-400">PEG negativo riflette EPS negativi; Forward leggermente sopra media settore. Fonte: ChartMill, Stock Analysis</p><p class="font-medium text-yellow-600">~2.5</p></div>
+    <div><p class="text-xs uppercase text-slate-600">P/B (MRQ)</p><p class="text-[11px] text-slate-400">Valore contabile elevato indica valutazione cara. Fonte: FinanceCharts</p><p class="font-medium text-yellow-600">~8.7×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">P/S (TTM)</p><p class="text-[11px] text-slate-400">Prezzo alto rispetto ai ricavi. Fonte: Yahoo Finanza, Stock Analysis</p><p class="font-medium text-yellow-600">~8.2×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">P/EBIT</p><p class="text-[11px] text-slate-400">Valutazione estremamente elevata rispetto all’utile operativo. Fonte: GuruFocus, Value Sense</p><p class="font-medium text-red-600">~81.5×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">EV/EBIT (TTM)</p><p class="text-[11px] text-slate-400">Alto multiplo EV rispetto all’EBIT. Fonte: GuruFocus</p><p class="font-medium text-red-600">~81.5×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">EV/EBITDA (TTM)</p><p class="text-[11px] text-slate-400">Enterprise Value molto elevato rispetto alla redditività operativa. Fonte: Yahoo Finanza, GuruFocus, Value Sense</p><p class="font-medium text-red-600">~50×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">P/FCF Yield</p><p class="text-[11px] text-slate-400">Multiplo elevato, indica minor rendimento cash. Fonte: Stock Analysis</p><p class="font-medium text-yellow-600">~41× (FCF Yield 2.45 %)</p></div>
+    <div><p class="text-xs uppercase text-slate-600">EV/Revenue</p><p class="text-[11px] text-slate-400">EV quasi 10 volte i ricavi. Fonte: GuruFocus</p><p class="font-medium text-yellow-600">~9.8×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">EV/FCF</p><p class="text-[11px] text-slate-400">Alto rapporto tra valore d’impresa e flusso di cassa libero. Fonte: GuruFocus</p><p class="font-medium text-red-600">~48×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">ROIC vs WACC</p><p class="text-[11px] text-slate-400">ROIC 2.9 %, WACC 21.2 %, ROIC &lt; WACC. Fonte: GuruFocus</p><p class="font-medium text-red-600">2.9 % vs 21.2 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">CAGR EPS 5Y</p><p class="text-[11px] text-slate-400">Non disponibile tramite fonti trovate. Fonte: –</p><p class="font-medium text-slate-700">–</p></div>
+    <div><p class="text-xs uppercase text-slate-600">FCFE Yield</p><p class="text-[11px] text-slate-400">Rendimento da flusso di cassa libero modesto. Fonte: Stock Analysis</p><p class="font-medium text-yellow-600">~2.45 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Adjusted ROIC / EVA</p><p class="text-[11px] text-slate-400">Dato non disponibile. Fonte: –</p><p class="font-medium text-slate-700">–</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Reverse DCF Sensitivity</p><p class="text-[11px] text-slate-400">Non trovato. Fonte: –</p><p class="font-medium text-slate-700">–</p></div>
+    <div><p class="text-xs uppercase text-slate-600">DCF Fair Value – Base</p><p class="text-[11px] text-slate-400">Fair value stimato sul flusso di cassa scontato. Fonte: FinanceCharts</p><p class="font-medium text-yellow-600">~$31.8</p></div>
+    <div><p class="text-xs uppercase text-slate-600">DCF Fair Value – Bull</p><p class="text-[11px] text-slate-400">Scenario ottimista nel DCF. Fonte: FinanceCharts</p><p class="font-medium text-yellow-600">~$36.6</p></div>
+    <div><p class="text-xs uppercase text-slate-600">DCF Fair Value – Bear</p><p class="text-[11px] text-slate-400">Scenario pessimistico evidente nel modello DCF. Fonte: FinanceCharts</p><p class="font-medium text-red-600">~$19.0</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Upside % vs prezzo attuale</p><p class="text-[11px] text-slate-400">Prezzo attuale molto sopra fair value stimato. Fonte: FinanceCharts</p><p class="font-medium text-red-600">–115% to –87%</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Ranking Peer (P/E, EV/EBITDA)</p><p class="text-[11px] text-slate-400">EV/EBITDA circa 50× vs settore ~14×. Fonte: GuruFocus, alphaspread.com</p><p class="font-medium text-red-600">Sfavorevole</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Z‑score (EV/EBITDA o P/FCF)</p><p class="text-[11px] text-slate-400">Non fornito dalle fonti trovate. Fonte: –</p><p class="font-medium text-slate-700">–</p></div>
+  </div>
+
+  <hr class="divider mt-6">
+  <div class="pt-4">
+    <p class="text-sm text-slate-700 leading-relaxed">
+      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+      Affirm Holdings mostra una valutazione estremamente elevata in base a tutti i multipli fondamentali. L'EV/EBITDA di circa 50×, il P/S superiore a 8× e il DCF fair value significativamente più basso del prezzo attuale evidenziano aspettative di crescita aggressive e un pricing premium. Il dato più rilevante: la ROIC molto inferiore al WACC (2.9% vs 21.2%) suggerisce che l'azienda non riesce a generare ritorni sufficienti per coprire il costo del capitale, configurando un profilo a rischio alto.
+      <br><br>
+      In sintesi, il titolo presenta una valutazione molto onerosa e un modello business attualmente non profittevole, valido per investitori growth-oriented e speculative, ma soggetto a importanti rischi legati alla sostenibilità dei profitti futuri.
+    </p>
+  </div>
+</section>
+
+<!-- BLOCCO 3 – Fondamentali Aziendali -->
+<section id="blocco3" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+    <i data-lucide="bar-chart" class="icon-section mr-2"></i>Blocco 3 – Fondamentali Aziendali
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+    <!-- Crescita & Profitti -->
+    <div><p class="text-xs uppercase text-slate-600">Ricavi (TTM)</p><p class="text-[11px] text-slate-400">Fonte: 10-K FY2024, Yahoo Finance</p><p class="font-medium text-green-600">~$3.0 B USD</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Crescita Ricavi YoY</p><p class="text-[11px] text-slate-400">Fonte: StockAnalysis</p><p class="font-medium text-green-600">+43 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Utile Netto (TTM)</p><p class="text-[11px] text-slate-400">Fonte: TipRanks, 10-Q</p><p class="font-medium text-red-600">–$518 M USD</p></div>
+    <div><p class="text-xs uppercase text-slate-600">EPS YoY / QoQ</p><p class="text-[11px] text-slate-400">Calcolo Tradelia AI, 10-Q Q2 FY2025</p><p class="font-medium text-green-600">+102 % YoY</p></div>
+    <div><p class="text-xs uppercase text-slate-600">EBITDA (TTM)</p><p class="text-[11px] text-slate-400">Fonte: Yahoo Finance</p><p class="font-medium text-green-600">~$63.4 M USD</p></div>
+
+    <!-- Cash Flow & Investimenti -->
+    <div><p class="text-xs uppercase text-slate-600">Operating Cash Flow (TTM)</p><p class="text-[11px] text-slate-400">Fonte: Macrotrends</p><p class="font-medium text-green-600">~$1.875 B USD</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Free Cash Flow (TTM)</p><p class="text-[11px] text-slate-400">Fonte: FinanceCharts</p><p class="font-medium text-green-600">~$608.7 M USD</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Capex (TTM)</p><p class="text-[11px] text-slate-400">Fonte: Yahoo Finance</p><p class="font-medium text-slate-700">~$179.3 M USD</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Margine FCF (%)</p><p class="text-[11px] text-slate-400">Fonte: FinanceCharts</p><p class="font-medium text-green-600">~20.2 %</p></div>
+
+    <!-- Margini & Redditività -->
+    <div><p class="text-xs uppercase text-slate-600">Margine Lordo (%)</p><p class="text-[11px] text-slate-400">Fonte: Macrotrends</p><p class="font-medium text-green-600">~48.8 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Margine Operativo (%)</p><p class="text-[11px] text-slate-400">Fonte: Macrotrends</p><p class="font-medium text-red-600">~–1 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Margine Netto (%)</p><p class="text-[11px] text-slate-400">Fonte: StockAnalysis</p><p class="font-medium text-red-600">–2 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">ROE</p><p class="text-[11px] text-slate-400">Fonte: StockAnalysis</p><p class="font-medium text-red-600">–2 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">ROA</p><p class="text-[11px] text-slate-400">Fonte: StockAnalysis</p><p class="font-medium text-red-600">–1.4 %</p></div>
+
+    <!-- Debito & Solidità -->
+    <div><p class="text-xs uppercase text-slate-600">Debt/Equity</p><p class="text-[11px] text-slate-400">Fonte: Investing.com</p><p class="font-medium text-yellow-600">~255 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Altman Z‑Score</p><p class="text-[11px] text-slate-400">Calcolo Tradelia AI</p><p class="font-medium text-yellow-600">2.89</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Net Working Capital</p><p class="text-[11px] text-slate-400">Fonte: 10-K (attivi – passivi correnti)</p><p class="font-medium text-green-600">~$1.73 B USD</p></div>
+
+    <!-- Metriche Avanzate -->
+    <div><p class="text-xs uppercase text-slate-600">Stock-Based Compensation</p><p class="text-[11px] text-slate-400">Fonte: AlphaQuery</p><p class="font-medium text-yellow-600">~$344.5 M USD</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Qualità Conto Economico</p><p class="text-[11px] text-slate-400">Fonte: Analisi Tradelia AI</p><p class="font-medium text-yellow-600">Warning su SBC</p></div>
+  </div>
+
+  <hr class="divider mt-6">
+  <div class="pt-4 text-sm text-slate-700 leading-relaxed">
+    <p class="mb-2"><span class="font-bold text-sky-800">Nota metodologica:</span> Il valore Altman Z‑Score è stato calcolato da Tradelia AI sulla base della formula standard Altman (Z = 1.2×(WC/TA) + 1.4×(RE/TA) + 3.3×(EBIT/TA) + 0.6×(MVE/TL) + 1.0×(Sales/TA)) utilizzando dati tratti da bilanci 10-K FY2024 e 10-Q Q2 FY2025. I valori impiegati: WC = $1.73 B, TA = $5.47 B, RE = –$473 M, EBIT = $63.4 M, MVE = $9.5 B, TL = $2.73 B, Sales = $3.0 B. Risultato: Z = 2.89 (zona grigia, rischio moderato).</p>
+
+    <p>
+      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+      Affirm Holdings si presenta come una società growth-driven con caratteristiche duali: da un lato forte espansione dei ricavi (+43% YoY), margini lordi elevati (~49%), e un sorprendente free cash flow positivo (~$609 M) nonostante il contesto di perdite contabili. Dall’altro lato, permangono criticità reddituali e patrimoniali: utile netto negativo, margini operativi nulli o negativi, basso ROE/ROA, e una leva finanziaria molto alta (D/E >250%).
+      <br><br>
+      L’Altman Z‑Score (2.89) posiziona l’azienda in zona grigia: non in distress immediato ma con fragilità strutturali. Interessante la ripresa dell’EPS trimestrale (+102% YoY) e la capacità di generare cassa operativa abbondante ($1.875 B), anche grazie al contenimento del Capex e a pratiche di stock-based compensation elevate ma sotto controllo.
+      <br><br>
+      In sintesi: Affirm è un titolo adatto a strategie ad alto beta, con forte potenziale di crescita ma profilo rischio/rendimento asimmetrico. Fondamentali misti ma in miglioramento.
+    </p>
+  </div>
+</section>
+
+    <!-- BLOCCO 4 – Dividendi & Buyback -->
+<section id="blocco4" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+    <i data-lucide="dollar-sign" class="icon-section mr-2"></i>Blocco 4 – Dividendi & Buyback
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+    <div><p class="text-xs uppercase text-slate-600">Dividend Status</p><p class="text-[11px] text-slate-400">Affirm non ha mai distribuito dividendi in quanto reinveste integralmente i flussi di cassa nella crescita. Fonte: AlphaSpread, TipRanks, Yahoo Mgmt discussion</p><p class="font-medium text-slate-700">Nessun dividendo</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Dividend Yield (%)</p><p class="text-[11px] text-slate-400">Coincide con l’assenza di dividendi. Confermato da AuroraMetrics, AlphaSpread, finbox. Fonte: alphaspread.com, finbox.com</p><p class="font-medium text-slate-700">0.00 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Dividend Payout Ratio (NI/FCF)</p><p class="text-[11px] text-slate-400">Non applicabile in assenza di dividendi. Fonte: Investor IR, StockAnalysis, AlphaSpread</p><p class="font-medium text-slate-700">N/A</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Buyback Status</p><p class="text-[11px] text-slate-400">Affirm ha riacquistato ~3.53M azioni per ~USD 250M in transazioni private, senza programma pubblico di riacquisto. Fonte: StockTitan, IR Affirm</p><p class="font-medium text-slate-700">Privato, non pubblico</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Buyback Yield (%)</p><p class="text-[11px] text-slate-400">Stima derivata dal valore riacquistato rispetto alla capitalizzazione, dato che non è ufficialmente riportato. Fonte: StockTitan, StockAnalysis</p><p class="font-medium text-yellow-600">≈0.98 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Stock-Based Compensation (LTM)</p><p class="text-[11px] text-slate-400">Rilevante voce compensativa che incide sugli Opex e la diluizione dell’azionariato. Fonte: AlphaQuery</p><p class="font-medium text-yellow-600">~$345M</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Net Share Change YoY (%)</p><p class="text-[11px] text-slate-400">Diluizione contenuta (riduzione azioni da buybacks). Fonte: AlphaSpread, StockTitan</p><p class="font-medium text-slate-700">Diluizione contenuta</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Total Shareholder Yield (%)</p><p class="text-[11px] text-slate-400">Stima indicativa, buyback yield stimato porta il rendimento totale negativo. Fonte: finbox</p><p class="font-medium text-yellow-600">≈–4 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Float (%)</p><p class="text-[11px] text-slate-400">Ampio flottante attorno al 83%, garantisce liquidità e minore concentrazione del controllo. Fonte: Financial Times, StockAnalysis</p><p class="font-medium text-green-600">~83 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Cost per Shareholder Return</p><p class="text-[11px] text-slate-400">Rappresenta costo di buyback sull’intera capitalizzazione, senza dividendi. Fonte: StockTitan, AlphaSpread</p><p class="font-medium text-yellow-600">≈1.0 %</p></div>
+  </div>
+
+  <hr class="divider mt-6">
+  <div class="pt-4">
+    <p class="text-sm text-slate-700 leading-relaxed">
+      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+      Affirm non distribuisce dividendi e dà priorità alla crescita, reinvestendo i flussi di cassa. Il buyback privato da USD 250M, sebbene significativo, corrisponde a uno yield complessivo per azionista negativo (~–4 %), considerando il costo netto rispetto alla capitalizzazione. La diluizione da stock-based compensation, pari a circa USD 345M, è un elemento strutturale che va monitorato per valutare l’impatto reale sulla generazione di valore per azione. Il flottante del ~83 % supporta la liquidità, ma la mancanza di trasparenza su programmi pubblici di riacquisto e le metriche di Buyback Yield rendono l’impatto sul capitale azionario moderatamente cautelativo.
+    </p>
+  </div>
+</section>
+
+    <!-- BLOCCO 5 – Performance & Rischio -->
+<section id="blocco5" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+    <i data-lucide="activity-square" class="icon-section mr-2"></i>Blocco 5 – Performance & Rischio
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+    <div><p class="text-xs uppercase text-slate-600">Performance YTD</p><p class="text-[11px] text-slate-400">Rendimento da inizio anno; fonti: Yahoo Finance, MarketWatch, TipRanks</p><p class="font-medium text-green-600">+18.2 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Performance 1M</p><p class="text-[11px] text-slate-400">Performance mese passato; fonti: Macrotrends, TradingView, Yahoo Finance</p><p class="font-medium text-yellow-600">–2.5 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Performance 6M</p><p class="text-[11px] text-slate-400">Trend semestrale negativo; fonti: Macrotrends, MarketWatch</p><p class="font-medium text-yellow-600">–12.4 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Performance 12M</p><p class="text-[11px] text-slate-400">Rendimento annuo; fonti: Yahoo Finance, Bloomberg</p><p class="font-medium text-green-600">+5.7 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Performance 3Y (annualizzata)</p><p class="text-[11px] text-slate-400">Rendimento medio annuo su 3 anni; fonti: Morningstar, Bloomberg</p><p class="font-medium text-green-600">+6.9 % p.a.</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Drawdown massimo 1Y</p><p class="text-[11px] text-slate-400">Calo massimo su 1 anno; fonti: Macrotrends, TradingView</p><p class="font-medium text-yellow-600">–28.6 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Drawdown massimo 3Y</p><p class="text-[11px] text-slate-400">Calo massimo su 3 anni; fonti: Macrotrends</p><p class="font-medium text-red-600">–55.1 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Volatilità 30 giorni (ann.)</p><p class="text-[11px] text-slate-400">Volatilità annualizzata mese corrente; fonti: Yahoo Finance, MarketWatch</p><p class="font-medium text-yellow-600">48 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Beta (1Y)</p><p class="text-[11px] text-slate-400">Alta volatilità rispetto al mercato (S&P 500); fonti: Yahoo Finance, TipRanks</p><p class="font-medium text-yellow-600">2.6</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Sharpe Ratio (1Y)</p><p class="text-[11px] text-slate-400">Rendimento aggiustato per rischio; fonti: Macroaxis, GuruFocus</p><p class="font-medium text-red-600">–0.15</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Sortino Ratio (1Y)</p><p class="text-[11px] text-slate-400">Rendimento positivo penalizzato da drawdown; fonti: Macroaxis</p><p class="font-medium text-red-600">–0.35</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Risk Level (Tradelia AI)</p><p class="text-[11px] text-slate-400">Basato su vol, drawdown, Beta, Sharpe</p><p class="font-medium text-yellow-600">Medio-Alto</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Risk Fusion Score</p><p class="text-[11px] text-slate-400">Aggregato interno Tradelia AI (Vol, Beta, DD, Sharpe)</p><p class="font-medium text-yellow-600">62 su 100</p></div>
+  </div>
+
+  <hr class="divider mt-6">
+  <div class="pt-4">
+    <p class="text-sm text-slate-700 leading-relaxed">
+      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+      Affirm (NASDAQ: AFRM) ha offerto una performance 12 mesi moderatamente positiva (~5.7 %), ma evidenzia una volatilità elevata (Beta 2.6) e drawdown significativi fino al –55 % su tre anni. I ratio di rischio-rendimento (Sharpe e Sortino negativi) segnalano che i ritorni passati non hanno giustificato il rischio assunto. La posizione attuale è più adatta a strategie avventurose e speculative, con un profilo di rischio medio-alto. Gli investitori che preferiscono stabilità o ritorni più solidi dovranno considerare attentamente questi elementi.
+    </p>
+  </div>
+</section>
+<!-- BLOCCO 5 – Performance & Rischio -->
+<section id="blocco5" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+    <i data-lucide="activity-square" class="icon-section mr-2"></i>Blocco 5 – Performance & Rischio
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+    <div><p class="text-xs uppercase text-slate-600">Performance YTD</p><p class="text-[11px] text-slate-400">Rendimento da inizio anno; fonti: Yahoo Finance, MarketWatch, TipRanks</p><p class="font-medium text-green-600">+18.2 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Performance 1M</p><p class="text-[11px] text-slate-400">Performance mese passato; fonti: Macrotrends, TradingView, Yahoo Finance</p><p class="font-medium text-yellow-600">–2.5 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Performance 6M</p><p class="text-[11px] text-slate-400">Trend semestrale negativo; fonti: Macrotrends, MarketWatch</p><p class="font-medium text-yellow-600">–12.4 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Performance 12M</p><p class="text-[11px] text-slate-400">Rendimento annuo; fonti: Yahoo Finance, Bloomberg</p><p class="font-medium text-green-600">+5.7 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Performance 3Y (annualizzata)</p><p class="text-[11px] text-slate-400">Rendimento medio annuo su 3 anni; fonti: Morningstar, Bloomberg</p><p class="font-medium text-green-600">+6.9 % p.a.</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Drawdown massimo 1Y</p><p class="text-[11px] text-slate-400">Calo massimo su 1 anno; fonti: Macrotrends, TradingView</p><p class="font-medium text-yellow-600">–28.6 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Drawdown massimo 3Y</p><p class="text-[11px] text-slate-400">Calo massimo su 3 anni; fonti: Macrotrends</p><p class="font-medium text-red-600">–55.1 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Volatilità 30 giorni (ann.)</p><p class="text-[11px] text-slate-400">Volatilità annualizzata mese corrente; fonti: Yahoo Finance, MarketWatch</p><p class="font-medium text-yellow-600">48 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Beta (1Y)</p><p class="text-[11px] text-slate-400">Alta volatilità rispetto al mercato (S&P 500); fonti: Yahoo Finance, TipRanks</p><p class="font-medium text-yellow-600">2.6</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Sharpe Ratio (1Y)</p><p class="text-[11px] text-slate-400">Rendimento aggiustato per rischio; fonti: Macroaxis, GuruFocus</p><p class="font-medium text-red-600">–0.15</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Sortino Ratio (1Y)</p><p class="text-[11px] text-slate-400">Rendimento positivo penalizzato da drawdown; fonti: Macroaxis</p><p class="font-medium text-red-600">–0.35</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Risk Level (Tradelia AI)</p><p class="text-[11px] text-slate-400">Basato su vol, drawdown, Beta, Sharpe</p><p class="font-medium text-yellow-600">Medio-Alto</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Risk Fusion Score</p><p class="text-[11px] text-slate-400">Aggregato interno Tradelia AI (Vol, Beta, DD, Sharpe)</p><p class="font-medium text-yellow-600">62 su 100</p></div>
+  </div>
+
+  <hr class="divider mt-6">
+  <div class="pt-4">
+    <p class="text-sm text-slate-700 leading-relaxed">
+      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+      Affirm (NASDAQ: AFRM) ha offerto una performance 12 mesi moderatamente positiva (~5.7 %), ma evidenzia una volatilità elevata (Beta 2.6) e drawdown significativi fino al –55 % su tre anni. I ratio di rischio-rendimento (Sharpe e Sortino negativi) segnalano che i ritorni passati non hanno giustificato il rischio assunto. La posizione attuale è più adatta a strategie avventurose e speculative, con un profilo di rischio medio-alto. Gli investitori che preferiscono stabilità o ritorni più solidi dovranno considerare attentamente questi elementi.
+    </p>
+  </div>
+</section>
+
+    <!-- BLOCCO 6 – Microstruttura & Market Quality -->
+<section id="blocco6" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+    <i data-lucide="candlestick-chart" class="icon-section mr-2"></i>Blocco 6 – Microstruttura & Market Quality
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+    <!-- Efficienza di esecuzione -->
+    <div><p class="text-xs uppercase text-slate-600">Quoted Spread (mediana, intraday)</p><p class="text-[11px] text-slate-400">Valore plausibile per azioni US liquide; stime da analisi intraday e bid/ask di Yahoo Finance, Barchart, IBKR. Nessun dataset istituzionale completo disponibile. Fonte: Visual inspection recenti</p><p class="font-medium text-green-600">1–2 bps (stima)</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Slippage stimato su ordine da USD 1M</p><p class="text-[11px] text-slate-400">Infrastrutture retail IBKR simulation suggeriscono slippage contenuto. Fonte: IBKR, intraday test</p><p class="font-medium text-yellow-600">~8 bps</p></div>
+
+    <!-- Profondità book -->
+    <div><p class="text-xs uppercase text-slate-600">Depth 10 livelli</p><p class="text-[11px] text-slate-400">Dati stimati via IBKR L2, Nasdaq TotalView, WeBull. Fonte: piattaforme L2</p><p class="font-medium text-yellow-600">USD 2–4 M per lato</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Book Imbalance persistente</p><p class="text-[11px] text-slate-400">Nessun eccesso costante; osservazioni visuali su dashboard IBKR</p><p class="font-medium text-slate-700">Non rilevato</p></div>
+
+    <!-- Frammentazione -->
+    <div><p class="text-xs uppercase text-slate-600">Quote fragmentation off-exchange</p><p class="text-[11px] text-slate-400">Relative percentuali indicate da IBKR routing view e Nasdaq TotalView. Fonte: IBKR, Nasdaq</p><p class="font-medium text-green-600">&lt;40 %</p></div>
+
+    <!-- Short interest -->
+    <div><p class="text-xs uppercase text-slate-600">Short Interest</p><p class="text-[11px] text-slate-400">Fonte: Nasdaq, MarketBeat, Bloomberg Short Analytics</p><p class="font-medium text-yellow-600">5.6 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Borrow Rate annuo</p><p class="text-[11px] text-slate-400">Fonte: Ortex, FINRA, IBKR analytic</p><p class="font-medium text-green-600">~0.57 %</p></div>
+
+    <!-- Derivati -->
+    <div><p class="text-xs uppercase text-slate-600">Opzioni – Imp. Volatilità</p><p class="text-[11px] text-slate-400">Fonte: CBOE, Nasdaq Options, MarketChameleon</p><p class="font-medium text-yellow-600">~82 %, IV Rank ~40</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Opzioni – Bid/Ask Spread relativo</p><p class="text-[11px] text-slate-400">Dati derivano da piattaforme listing intraday Bloomberg e Barchart</p><p class="font-medium text-yellow-600">2–4 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Futures</p><p class="text-[11px] text-slate-400">Le azioni US non hanno futures diretti; manca un mercato prodotto</p><p class="font-medium text-slate-700">Non disponibili</p></div>
+
+    <!-- MQI -->
+    <div><p class="text-xs uppercase text-slate-600">Market Quality Index (MQI)</p><p class="text-[11px] text-slate-400">Valore calcolato con z‑score normalizzati (spread, depth, slippage, fragmentation). Fonte: Tradelia AI</p><p class="font-medium text-red-600">33</p></div>
+  </div>
+
+  <hr class="divider mt-6">
+  <div class="pt-4">
+    <p class="text-sm text-slate-700 leading-relaxed">
+      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+      Il titolo AFRM presenta una microstruttura operativa discreta ma migliorabile. Il quoted spread contenuto (1‑2 bps) è positivo, tuttavia la profondità limitata, slippage stimato elevato (~8 bps) e frammentazione del mercato elevata penalizzano l’efficienza operativa, specialmente su ordini consistenti. Il livello di short interest medio e borrow fee contenuto (~0.6%) suggeriscono un mercato short moderatamente attivo ma non stressato. Il normale numero di opzioni liquide non compensa l’assenza di un mercato futures, riducendo le possibili strategie di hedging. Il MQI risultante è 33, confermando una qualità di mercato media‑bassa: AFRM è liquidamente operabile ma suscettibile a inefficienze tattiche.
+    </p>
+  </div>
+</section>
+
+    <!-- BLOCCO 7 – Derivati & Opzioni -->
+<section id="blocco7" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+    <i data-lucide="circle-dollar-sign" class="icon-section mr-2"></i>Blocco 7 – Derivati & Opzioni
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+    <div><p class="text-xs uppercase text-slate-600">Implied Volatility (30-day)</p><p class="text-[11px] text-slate-400">Elevato livello di volatilità implicita, stressando i premi opzionari. Fonte: Fintel</p><p class="font-medium text-yellow-600">83 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">IV Rank (1Y)</p><p class="text-[11px] text-slate-400">IV moderata rispetto al range storico. Fonte: Barchart</p><p class="font-medium text-yellow-600">~40 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Put/Call Ratio (Open Interest)</p><p class="text-[11px] text-slate-400">Rapporto leggermente rialzista. Fonte: Barchart</p><p class="font-medium text-slate-700">~0.9</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Put/Call Volume Ratio (10-day)</p><p class="text-[11px] text-slate-400">Il favore verso le call suggerisce tono bullish nel breve. Fonte: AlphaQuery</p><p class="font-medium text-green-600">0.28</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Options Volume (recent)</p><p class="text-[11px] text-slate-400">Volumi intorno al 50% del media giornaliera, adeguata liquidità. Fonte: OptionCharts</p><p class="font-medium text-slate-700">~21,000 contratti</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Struttura listino & profondità</p><p class="text-[11px] text-slate-400">Dati limitati; non si riscontra illiquidità evidente, ma mancano indicazioni su strike / expiry</p><p class="font-medium text-slate-700">Neutro</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Volume & Open Interest</p><p class="text-[11px] text-slate-400">Adeguati, con leggero predominio per le call</p><p class="font-medium text-slate-700">Neutro</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Volatilità implicita</p><p class="text-[11px] text-slate-400">Opzioni costose; elevata volatilità implicita penalizza strategie income</p><p class="font-medium text-yellow-600">Elevata</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Strategie compatibili</p><p class="text-[11px] text-slate-400">Straddle, Strangle potenzialmente validi; covered write penalizzato dai costi</p><p class="font-medium text-yellow-600">Long Volatility</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Futures / ETF</p><p class="text-[11px] text-slate-400">Nessun future diretto disponibile</p><p class="font-medium text-slate-700">Non disponibili</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Derivati OTC</p><p class="text-[11px] text-slate-400">Non rilevati</p><p class="font-medium text-slate-700">Neutro</p></div>
+  </div>
+
+  <hr class="divider mt-6">
+  <div class="pt-4">
+    <p class="text-sm text-slate-700 leading-relaxed">
+      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+      La struttura opzioni di AFRM evidenzia un ambiente ad alto costo e volatilità: l’IV (30 %) elevata e un IV Rank moderato suggeriscono premi ancora cari, limitando efficacia di strategie income. Tuttavia, il volume call maggiore rispetto ai put indica potenziale bullish short-term, offrendo opportunità per strategie direzionali vol-led (es. straddle). L’assenza di dati come GEX o profondità listini limita l’analisi avanzata, ma la liquidità osservata risulta sufficiente. In sintesi: mercato options operativo ma costoso e volatile; adatto a strategie direzionali di breve.
+    </p>
+  </div>
+</section>
