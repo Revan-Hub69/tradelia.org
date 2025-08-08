@@ -3,139 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Report completo TRADELIA AI sulla crisi finanziaria 2008: analisi tecnica, strumenti derivati, protagonisti e impatto sociale.">
-  <title>TRADELIA • AI — Strumenti Finanziari Complessi</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
+  <title>TRADELIA • AI — Report Azionario</title>
+  <meta name="description" content="Report istituzionale Tradelia AI — analisi fondamentale, tecnica e strategica su asset selezionati.">
+  <meta name="author" content="Tradelia AI">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      AOS.init({ once: true, disableMutationObserver: true });
+      lucide.createIcons();
+    });
+  </script>
+
   <style>
-    html { scroll-behavior: smooth; }
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #f9fafb;
-      color: #1f2937;
+      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+      background-size: 280px;
+      color: #0f172a;
       margin: 0;
       padding: 0;
-      line-height: 1.7;
-      font-size: 16px;
-    }
-    h1, h2, h3, h4 {
-      color: #0f172a;
-      line-height: 1.3;
-      margin-top: 2rem;
-      margin-bottom: 1rem;
-      font-weight: 600;
-    }
-    h1 { font-size: 2rem; }
-    h2 { font-size: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.25rem; }
-    h3 { font-size: 1.25rem; }
-    h4 { font-size: 1.125rem; }
-    p {
-      margin-bottom: 1.25rem;
-      color: #374151;
-    }
-    ul, ol {
-      padding-left: 1.25rem;
-      margin-bottom: 1.25rem;
-    }
-    li {
-      margin-bottom: 0.5rem;
-    }
-    section {
-      background: #ffffff;
-      padding: 2.5rem 2rem;
-      margin: 2rem auto;
-      border-radius: 0.75rem;
-      max-width: 840px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-      border: 1px solid #e5e7eb;
-    }
-    a {
-      color: #2563eb;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    a:hover {
-      text-decoration: underline;
-      color: #1d4ed8;
-    }
-    .positive { color: #16a34a; font-weight: 600; }
-    .negative { color: #dc2626; font-weight: 600; }
-    .neutral  { color: #64748b; font-weight: 500; }
-    @media screen and (max-width: 768px) {
-      body { font-size: 15px; line-height: 1.6; }
-      section { padding: 1.25rem; margin: 1rem; }
-      h1 { font-size: 1.5rem; }
-      h2 { font-size: 1.25rem; }
-      h3 { font-size: 1.125rem; }
-      h4 { font-size: 1rem; }
+      font-size: 15px;
+      line-height: 1.6;
     }
 
-    /* TABLE RESPONSIVE STYLE - struttura tabellare scrollabile */
-    .responsive-table-wrapper {
-      width: 100%;
-      overflow-x: auto;
-      margin-bottom: 2rem;
-      border: 1px solid #e5e7eb;
-      border-radius: 0.75rem;
+    .card-blocco {
+      position: relative;
+      z-index: 10;
+      background: #ffffff;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+      transition: box-shadow 0.2s ease;
     }
-    table.responsive-table {
-      width: 100%;
-      min-width: 640px;
-      border-collapse: collapse;
-      background-color: white;
+
+    .card-blocco:hover {
+      background: #f8fafc;
+      box-shadow: 0 2px 12px 0 rgba(100, 120, 200, 0.07);
     }
-    table.responsive-table th,
-    table.responsive-table td {
-      padding: 0.75rem 1rem;
-      border: 1px solid #e5e7eb;
-      text-align: left;
-      font-size: 0.95rem;
-      white-space: nowrap;
+
+    section.card-blocco {
+      scroll-margin-top: 90px;
     }
-    table.responsive-table th {
-      background-color: #f3f4f6;
-      font-weight: 600;
-      color: #1f2937;
-    }
-    table.responsive-table tr:nth-child(even) {
-      background-color: #f9fafb;
-    }
+
+
+
+
 
     ::-webkit-scrollbar {
       width: 10px;
       height: 10px;
     }
     ::-webkit-scrollbar-track {
-      background: linear-gradient(to right, #f1f5f9, #e2e8f0);
-      border-radius: 100vh;
+      background: #e2e8f0;
+      border-radius: 8px;
     }
     ::-webkit-scrollbar-thumb {
-      background: rgba(80, 160, 200, 0.5);
-      border-radius: 100vh;
-      transition: background-color 0.2s ease-in-out;
+      background: #94a3b8;
+      border-radius: 8px;
+      border: 2px solid #e2e8f0;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: rgba(80, 160, 200, 0.7);
-    }
-    * {
-      scrollbar-width: thin;
-      scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
-      box-sizing: border-box;
-    }
-    #backToTop {
-      transition: all 0.3s ease-in-out;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      background: #64748b;
     }
   </style>
 </head>
 
-
 <body>
-  <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-3 flex justify-between items-center">
-    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 hover:opacity-90 transition">
-      TRADELIA<span class="text-blue-600 animate-pulse">•AI</span>
-    </a>
-    
+  <header class="sticky top-0 z-50 bg-white shadow-sm w-full px-4 sm:px-6 py-3 flex justify-between items-center border-b border-slate-200 backdrop-blur-sm bg-white/95">
+    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600">•AI</span>
     </a>
   </header>
 
@@ -143,7 +83,7 @@
 <!-- BLOCCO 5 – Ottimizzazione Portafoglio Obbligazionario -->
 <section id="blocco5" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
   <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-    <i data-lucide="activity-square" class="icon-section mr-2"></i>Blocco 5 – Ottimizzazione Portafoglio Obbligazionario
+    <i data-lucide="activity-square" class="icon-section mr-2"></i>- Ottimizzazione Portafoglio Obbligazionario
   </h2>
 
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
