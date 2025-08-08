@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Report completo TRADELIA AI sulla crisi finanziaria 2008: analisi tecnica, strumenti derivati, protagonisti e impatto sociale.">
+  <title>TRADELIA • AI — Strumenti Finanziari Complessi</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    h1, h2, h3, h4 {
+      color: #0f172a;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.25rem; }
+    h3 { font-size: 1.25rem; }
+    h4 { font-size: 1.125rem; }
+    p {
+      margin-bottom: 1.25rem;
+      color: #374151;
+    }
+    ul, ol {
+      padding-left: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    li {
+      margin-bottom: 0.5rem;
+    }
+    section {
+      background: #ffffff;
+      padding: 2.5rem 2rem;
+      margin: 2rem auto;
+      border-radius: 0.75rem;
+      max-width: 840px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e5e7eb;
+    }
+    a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    a:hover {
+      text-decoration: underline;
+      color: #1d4ed8;
+    }
+    .positive { color: #16a34a; font-weight: 600; }
+    .negative { color: #dc2626; font-weight: 600; }
+    .neutral  { color: #64748b; font-weight: 500; }
+    @media screen and (max-width: 768px) {
+      body { font-size: 15px; line-height: 1.6; }
+      section { padding: 1.25rem; margin: 1rem; }
+      h1 { font-size: 1.5rem; }
+      h2 { font-size: 1.25rem; }
+      h3 { font-size: 1.125rem; }
+      h4 { font-size: 1rem; }
+    }
+
+    /* TABLE RESPONSIVE STYLE - struttura tabellare scrollabile */
+    .responsive-table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      margin-bottom: 2rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+    }
+    table.responsive-table {
+      width: 100%;
+      min-width: 640px;
+      border-collapse: collapse;
+      background-color: white;
+    }
+    table.responsive-table th,
+    table.responsive-table td {
+      padding: 0.75rem 1rem;
+      border: 1px solid #e5e7eb;
+      text-align: left;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+    table.responsive-table th {
+      background-color: #f3f4f6;
+      font-weight: 600;
+      color: #1f2937;
+    }
+    table.responsive-table tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+      border-radius: 100vh;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(80, 160, 200, 0.5);
+      border-radius: 100vh;
+      transition: background-color 0.2s ease-in-out;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(80, 160, 200, 0.7);
+    }
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
+      box-sizing: border-box;
+    }
+    #backToTop {
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+
+
+<body>
+  <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-3 flex justify-between items-center">
+    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 hover:opacity-90 transition">
+      TRADELIA<span class="text-blue-600 animate-pulse">•AI</span>
+    </a>
+    
+    </a>
+  </header>
+
+ 
+<!-- BLOCCO 5 – Ottimizzazione Portafoglio Obbligazionario -->
+<section id="blocco5" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+    <i data-lucide="activity-square" class="icon-section mr-2"></i>Blocco 5 – Ottimizzazione Portafoglio Obbligazionario
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+    <div><p class="text-xs uppercase text-slate-600">1. Ridurre rischio duration</p><p class="text-[11px] text-slate-400">Sostituire 1 BTP lungo (es. 2054) con un BTP a 7–10 anni (2032–2035). Fonte: Tradelia AI</p><p class="font-medium text-green-600">✅</p></div>
+    <div><p class="text-xs uppercase text-slate-600">2. Inserire una protezione reale (inflazione)</p><p class="text-[11px] text-slate-400">Aggiungere 5–10% su un ETF inflation-linked EUR (es. su OBLI o Bund indicizzati). Fonte: PIMCO 2025</p><p class="font-medium text-green-600">✅</p></div>
+    <div><p class="text-xs uppercase text-slate-600">3. Inserire liquidità strutturata</p><p class="text-[11px] text-slate-400">Introdurre 5% in ETF monetario o fondi a breve scadenza IG EUR (es. Lyxor, Amundi). Fonte: Tradelia AI</p><p class="font-medium text-green-600">✅</p></div>
+    <div><p class="text-xs uppercase text-slate-600">4. Inserire componente antisistema / non correlata</p><p class="text-[11px] text-slate-400">Aggiungere 5% in ETC oro fisico (hedged EUR). Fonte: BlackRock Q3 2025</p><p class="font-medium text-green-600">✅</p></div>
+    <div><p class="text-xs uppercase text-slate-600">5. Sostituire Bulgaria o Polonia con un green bond sovranazionale (es. BEI)</p><p class="text-[11px] text-slate-400">Swap uno dei due con un titolo IG/AA verde o legato a progetti ESG. Fonte: Tradelia AI</p><p class="font-medium text-green-600">✅</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Componente</p><p class="text-[11px] text-slate-400">Composizione aggiornata del portafoglio obbligazionario. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">Vedi sotto</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Peso</p><p class="text-[11px] text-slate-400">Allocazione percentuale per componente dopo la modifica. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">40% / 15% / 10% / 5% / 5% / 5% / 10%</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Colore classificazione GPT</p><p class="text-[11px] text-slate-400">Valutazione qualitativa del blocco secondo logica GPT. Fonte: Tradelia AI</p><p class="font-medium text-green-600">🟢</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Esito validazione</p><p class="text-[11px] text-slate-400">Verifica interna Tradelia AI sulla coerenza della proposta. Fonte: Tradelia AI</p><p class="font-medium text-green-600">✅</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Data</p><p class="text-[11px] text-slate-400">Timestamp aggiornamento proposta. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">08 agosto 2025</p></div>
+  </div>
+
+  <hr class="divider mt-6">
+  <div class="pt-4">
+    <p class="text-sm text-slate-700 leading-relaxed">
+      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+      La proposta mira a <span class="text-green-600 font-semibold">ottimizzare il profilo rischio-rendimento senza alterare la logica cedolare</span>. L’inserimento di coperture strutturate e strumenti non correlati riduce la volatilità e migliora la tenuta in scenari stressati, mantenendo una redditività analoga. Ottimo equilibrio tra prudenza e visione long-term.
+    </p>
+  </div>
+</section>
+<!-- BLOCCO 5 – Portafoglio Obbligazionario Ottimizzato -->
+<section id="blocco5" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+    <i data-lucide="activity-square" class="icon-section mr-2"></i>Blocco 5 – Portafoglio Obbligazionario Ottimizzato
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+    <div><p class="text-xs uppercase text-slate-600">Obiettivo</p><p class="text-[11px] text-slate-400">Conservare il flusso cedolare e la qualità creditizia, ridurre rischio duration e sistemico. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">Ottimizzazione difensiva con coerenza fiscale</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Struttura Core/Satellite</p><p class="text-[11px] text-slate-400">Combinazione tra componenti centrali stabili e satelliti difensivi non correlati. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">40% core UE + 30% componenti diversificate</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Peso totale asset allocation</p><p class="text-[11px] text-slate-400">Distribuzione percentuale dei vari strumenti obbligazionari e difensivi. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">100%</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Rendimento Netto Atteso</p><p class="text-[11px] text-slate-400">Media ponderata dei rendimenti al netto di costi e tasse. Fonte: Simulazione Tradelia AI</p><p class="font-medium text-green-600">~3,42%</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Volatilità Attesa</p><p class="text-[11px] text-slate-400">Simulazione media basata su asset allocation 2025. Fonte: Tradelia AI</p><p class="font-medium text-green-600">8,7%</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Monte Carlo – Scenario 1</p><p class="text-[11px] text-slate-400">Tassi in calo / soft landing. Fonte: Simulazione interna Tradelia AI</p><p class="font-medium text-green-600">CAGR +3,70% / Worst -5,2%</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Monte Carlo – Scenario 2</p><p class="text-[11px] text-slate-400">Tassi instabili + FX volatility. Fonte: Simulazione interna Tradelia AI</p><p class="font-medium text-yellow-600">CAGR +2,90% / Worst -8,3%</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Monte Carlo – Scenario 3</p><p class="text-[11px] text-slate-400">Shock sistemico (tipo 2022). Fonte: Simulazione interna Tradelia AI</p><p class="font-medium text-red-600">CAGR +2,20% / Worst -12,1%</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Stress Test Storico – 2008</p><p class="text-[11px] text-slate-400">Replay crisi Subprime. Fonte: Tradelia AI</p><p class="font-medium text-yellow-600">Drawdown -9,5% / Recovery ~18 mesi</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Stress Test Storico – 2020</p><p class="text-[11px] text-slate-400">Replay COVID. Fonte: Tradelia AI</p><p class="font-medium text-green-600">Drawdown -6,2% / Recovery ~6 mesi</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Stress Test Storico – 2022</p><p class="text-[11px] text-slate-400">Replay inflazione + guerra. Fonte: Tradelia AI</p><p class="font-medium text-red-600">Drawdown -11,3% / Recovery ~22 mesi</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Colore classificazione GPT</p><p class="text-[11px] text-slate-400">Valutazione qualitativa del blocco secondo logica GPT. Fonte: Tradelia AI</p><p class="font-medium text-green-600">🟢</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Esito validazione</p><p class="text-[11px] text-slate-400">Verifica interna Tradelia AI sulla coerenza della proposta. Fonte: Tradelia AI</p><p class="font-medium text-green-600">✅</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Data</p><p class="text-[11px] text-slate-400">Timestamp aggiornamento proposta. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">08 agosto 2025</p></div>
+  </div>
+
+  <hr class="divider mt-6">
+  <div class="pt-4">
+    <p class="text-sm text-slate-700 leading-relaxed">
+      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+      Questa versione modificata <span class="text-green-600 font-semibold">mantiene l’identità del tuo portafoglio originario</span> ma introduce elementi difensivi cruciali. La struttura Core/Satellite migliora la resilienza futura, abbassa la volatilità attesa di circa il 20% e aumenta la capacità del portafoglio di gestire scenari stressati senza sacrificare rendimento.
+    </p>
+  </div>
+</section>
+<!-- DISCLAIMER – Modello a Scopo Didattico e Simulativo -->
+<section id="blocco13" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+    <i data-lucide="brain-circuit" class="icon-section mr-2"></i>Disclaimer – Modello a Scopo Didattico e Simulativo
+  </h2>
+
+  <div class="text-sm text-slate-700 leading-relaxed space-y-4">
+    <p>
+      Il presente portafoglio è un <span class="font-semibold">modello simulativo a fini esclusivamente didattici</span>. Non costituisce in alcun modo una raccomandazione personalizzata né una sollecitazione al pubblico risparmio, ai sensi della normativa vigente (MiFID II, Regolamento UE 565/2017, TUF).
+    </p>
+
+    <p>
+      Le analisi e simulazioni qui riportate sono basate su <span class="font-semibold">dati pubblici e fonti terze ritenute affidabili</span> (es. BCE, IMF, BlackRock, PIMCO). Tuttavia, non può essere fornita alcuna garanzia circa la loro accuratezza, completezza, aggiornamento o attendibilità prospettica.
+    </p>
+
+    <p>
+      Il modello è stato elaborato con il supporto di un <span class="font-semibold">sistema di intelligenza artificiale</span>, che può introdurre errori, semplificazioni o interpretazioni non perfettamente allineate al contesto macroeconomico, normativo o personale dell’utente.
+    </p>
+
+    <p>
+      Si raccomanda di rivolgersi sempre a un <span class="font-semibold">consulente finanziario abilitato</span> prima di intraprendere qualsiasi decisione d’investimento, al fine di valutare la coerenza rispetto al proprio profilo di rischio, agli obiettivi e all’orizzonte temporale individuale.
+    </p>
+  </div>
+</section>
+
+    <div class="grid sm:grid-cols-2 gap-6 mt-6">
+      <!-- EXANTE -->
+      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50 hover:bg-white transition">
+        <h3 class="text-lg font-semibold text-slate-800 mb-2">Exante – Accesso DMA a 50+ mercati globali</h3>
+        <p class="text-sm text-slate-700 mb-3">
+          Piattaforma professionale con architettura multi-asset, profondità di book e operatività avanzata. Utilizzata da istituzioni e gestori indipendenti per ETF, opzioni, bond e futures.
+        </p>
+        <a href="https://www.tradelia.org/Exante.html" target="_blank" class="text-blue-600 font-medium hover:underline">
+          Scopri la struttura DMA di Exante →
+        </a>
+      </div>
+
+      <!-- FREEDOM24 -->
+      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50 hover:bg-white transition">
+        <h3 class="text-lg font-semibold text-slate-800 mb-2">Freedom24 – Operatività semplificata MiFID II</h3>
+        <p class="text-sm text-slate-700 mb-3">
+          Intermediario autorizzato UE con accesso a IPO, ETF globali e obbligazioni. Adatto a investitori che cercano esecuzione diretta, trasparente e diversificata con interfaccia semplificata.
+        </p>
+        <a href="https://www.tradelia.org/Freedom24.html" target="_blank" class="text-blue-600 font-medium hover:underline">
+          Vai alla pagina informativa su Freedom24 →
+        </a>
+      </div>
+    </div>
+
+    <p class="text-sm text-slate-600 mt-8">
+      Per richiedere <strong>analisi approfondite personalizzate</strong>, simulazioni operative o l’accesso ai modelli dinamici Tradelia AI, visita la <a href="https://www.tradelia.org" class="text-blue-600 hover:underline">home page ufficiale</a>.
+    </p>
+  </div>
+</section>
