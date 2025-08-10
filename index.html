@@ -395,6 +395,8 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
             <select name="ESG" class="w-full border rounded px-3 py-2" data-estimable>
               <option>Nessuno</option><option>ESG Light</option><option>ESG Strict</option>
             </select>
+            <textarea name="ESG_note" rows="2" class="w-full border rounded px-3 py-2 mt-2" placeholder="Esempi: escludere armi/tabacco; no fossili; halal; sharia-compliant; solo ETF UCITS SRI."></textarea>
+            <span class="text-[11px] text-slate-500">Specifica eventuali esclusioni o preferenze concrete.</span>
           </label>
           <label>Preferenza valutaria
             <select name="preferenza_valutaria" class="w-full border rounded px-3 py-2" data-estimable>
@@ -402,23 +404,23 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
             </select>
           </label>
           <label>Vincoli su asset class
-            <input type="text" name="vincoli_asset_class" class="w-full border rounded px-3 py-2" placeholder="Es. max 20% crypto; no leva">
+            <textarea name="vincoli_asset_class" rows="2" class="w-full border rounded px-3 py-2" placeholder="Esempi: max 20% crypto; no leva; solo titoli reali; obbligazionario investment grade."></textarea>
           </label>
         </div>
       </section>
 
       <!-- STEP 7 – Contesto Macro Personale -->
       <section class="step hidden" data-step="7">
-        <h4 class="text-base font-semibold text-slate-900 mb-2">7) Contesto macro personale</h4>
+        <h4 class="text-base font-semibold text-slate-900 mb-2">7) Situazione reddituale e fiscale</h4>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <label>Dipendenza da reddito esterno *
+          <label>Dipendenza dal reddito da lavoro *
             <select name="dipendenza_reddito" class="w-full border rounded px-3 py-2" data-estimable required>
               <option value="">Seleziona</option><option>Bassa</option><option>Media</option><option>Alta</option>
             </select>
-            
+            <span class="text-[11px] text-slate-500">Bassa = spese coperte da rendite/risparmi; Alta = spese coperte quasi solo da stipendio.</span>
           </label>
           <label class="md:col-span-2">Prospettiva fiscale 5–10 anni
-            <input type="text" name="prospettiva_fiscale" class="w-full border rounded px-3 py-2" placeholder="Es. cambio residenza, aliquote diverse…">
+            <input type="text" name="prospettiva_fiscale" class="w-full border rounded px-3 py-2" placeholder="Esempi: cambio residenza, rientro in Italia, scaglioni diversi, nuovi regimi.">
           </label>
         </div>
       </section>
@@ -504,8 +506,18 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
 
       <!-- STEP 10 – Recapiti & Invio -->
       <section class="step hidden" data-step="10">
-        <h4 class="text-base font-semibold text-slate-900 mb-2">10) Recapiti & invio</h4>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">10) Condivisione, recapiti & invio</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-2">
+          <label>Visibilità del report *
+            <select name="share_visibility" class="w-full border rounded px-3 py-2" required onchange="toggleSharing(this.value)">
+              <option value="pubblico" selected>Pubblico (link aperto)</option>
+              <option value="privato">Privato (protetto da password)</option>
+            </select>
+            <span class="text-[11px] text-slate-500">Il risultato viene fornito come <strong>link web</strong>. Se scegli "Privato", imposta una password per aprirlo.</span>
+          </label>
+          <label>Password (solo se privato)
+            <input type="password" name="share_password" class="w-full border rounded px-3 py-2" placeholder="Imposta una password" disabled>
+          </label>
           <label>Email (facoltativo)
             <input type="email" name="email" class="w-full border rounded px-3 py-2" placeholder="you@example.com">
           </label>
@@ -513,11 +525,18 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
             <input type="text" name="whatsapp" class="w-full border rounded px-3 py-2" placeholder="+39...">
           </label>
         </div>
-        <p class="text-xs text-slate-500">Indica almeno un recapito. I dati inviati sono <strong>minimizzati</strong> (solo campi valorizzati).</p>
+        <p class="text-xs text-slate-600">Indica almeno un recapito. I dati inviati sono <strong>minimizzati</strong> (solo campi valorizzati).</p>
         <details class="mt-3 border rounded p-3">
-          <summary class="cursor-pointer text-sm font-medium">Anteprima payload</summary>
+          <summary class="cursor-pointer text-sm font-medium">Anteprima (riepilogo tecnico per l’AI)</summary>
+          <p class="text-xs text-slate-500 mb-2">Questa è una <em>vista tecnica</em> del contenuto che invieremo al motore AI (formato JSON equivalente allo schema YAML). Serve a verificare cosa stai condividendo.</p>
           <pre id="payload" class="text-xs bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto"></pre>
         </details>
+        <div class="mt-4">
+          <label class="inline-flex items-start gap-2">
+            <input type="checkbox" name="disclaimer_ok" class="mt-1 accent-blue-700" required>
+            <span class="text-xs text-slate-700">Ho letto e compreso il <strong>disclaimer etico</strong>: il risultato è solo didattico e non costituisce consulenza.</span>
+          </label>
+        </div>
       </section>
 
     </form>
@@ -526,7 +545,7 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
     <div class="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
       <button type="button" class="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-100" onclick="prevStep()">Indietro</button>
       <div class="flex items-center gap-3">
-        <button id="btn-preview" type="button" class="px-3 py-2 text-sm border border-slate-300 rounded-lg hover:bg-slate-100" onclick="renderPayload()">Aggiorna anteprima</button>
+        <!-- Anteprima aggiornata automaticamente -->
         <button id="submit-btn" class="px-4 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-800 hidden" onclick="inviaProfilo()">Invia</button>
         <button id="next-btn" type="button" class="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800" onclick="nextStep()">Avanti</button>
       </div>
@@ -557,6 +576,8 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
     document.getElementById('form-portafoglio').reset();
     currentStep = 0; stepsOrder = baseOrder.slice();
     aggiornaStep();
+    // set sharing default UI
+    toggleSharing(document.querySelector('[name="share_visibility"]')?.value||'pubblico');
     if(mode){ const r = document.querySelector(`input[name=tipo_analisi][value=${mode}]`); if(r){ r.checked = true; onModeChange(); } }
   }
   function chiudiModuloPortafoglio(){ document.getElementById('modal-portafoglio').classList.add('hidden'); __unlockScroll(); }
@@ -614,6 +635,14 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
     names.forEach(n=>{ const el = document.querySelector(`[name="${n}"]`); if(el){ el.disabled = (v!=='Sì'); if(v==='Sì'){ el.closest('label').classList.remove('opacity-50'); } else { el.closest('label').classList.add('opacity-50'); } } });
   }
   function toggleCSManual(val){ const box = document.getElementById('cs-manuale'); if(box) box.classList.toggle('hidden', val !== 'manuale'); }
+  function toggleSharing(v){
+    const pwd = document.querySelector('[name="share_password"]');
+    if(!pwd) return;
+    const isPriv = v==='privato';
+    pwd.disabled = !isPriv;
+    pwd.required = isPriv;
+    pwd.closest('label').classList.toggle('opacity-50', !isPriv);
+  }
 
   // ===== Portafoglio attuale – righe dinamiche =====
   function rowValTemplate(i){
@@ -722,6 +751,7 @@ function buildPayload(){
       },
       vincoli_preferenze: {
         ESG: { valore: fd.get('ESG')||'Nessuno' },
+        ESG_note: { valore: (fd.get('ESG_note')||'').trim()||null },
         preferenza_valutaria: { valore: fd.get('preferenza_valutaria')||'EUR' },
         vincoli_asset_class: { valore:(fd.get('vincoli_asset_class')||'').trim()||null }
       },
@@ -746,6 +776,7 @@ function buildPayload(){
         performance_storica: { valore: null },
         volatilita_drawdown: { valore: { vol: fd.get('volatilita_drawdown_vol')||'n/d', dd: fd.get('volatilita_drawdown_dd')||'n/d' } },
         coperture: { valore:(fd.get('coperture')||'').trim()||null },
+        posizioni: { valore: pos },
         controllo_coerenza: { esito: !!fd.get('controllo_coerenza_allocativa'), descrizione: null, validazione_colore: null }
       } : null
     };
@@ -754,7 +785,8 @@ function buildPayload(){
       servizio: 'profilo_investitore',
       tipo_analisi: mode,
       Profilo_Investitore,
-      recapiti: { email: (fd.get('email')||'').trim()||null, whatsapp: (fd.get('whatsapp')||'').trim()||null }
+      recapiti: { email: (fd.get('email')||'').trim()||null, whatsapp: (fd.get('whatsapp')||'').trim()||null },
+      sharing: { visibility: fd.get('share_visibility')||'pubblico', password: (fd.get('share_visibility')==='privato' ? (fd.get('share_password')||null) : null) }
     };
     return payload;
   }
@@ -764,9 +796,33 @@ function buildPayload(){
     const pre = document.getElementById('payload');
     if(pre) pre.textContent = JSON.stringify(p, null, 2);
   }
+  // Anteprima automatica (debounced)
+  const __debounce = (fn, ms=400)=>{ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,args), ms); }; };
+  const __autoPreview = __debounce(()=>renderPayload(), 250);
+  (function(){
+    const f = document.getElementById('form-portafoglio');
+    if(!f) return;
+    f.addEventListener('input', __autoPreview);
+    f.addEventListener('change', __autoPreview);
+  })();
 
   // ===== INVIO =====
   async function inviaProfilo(){
+    // checkbox obbligatoria
+    const acc = document.querySelector('input[name="disclaimer_ok"]');
+    if(!acc || !acc.checked){ currentStep = stepsOrder.indexOf(10); aggiornaStep(); alert('Per procedere, conferma di aver letto e compreso il disclaimer.'); return; }
+
+    // disclaimer etico forte
+    const disclaimer = `NOTA BENE
+
+L'analisi AI è uno strumento didattico per confrontare le tue idee.
+Non è consulenza e non ha validazione professionale.
+Potrebbe contenere errori o ragionamenti incompleti.
+Non affidarti mai a nessuna AI per prendere decisioni di investimento.
+
+Vuoi procedere inviando i dati?`;
+    if(!confirm(disclaimer)) return;
+
     // validazione recapiti
     const email = document.querySelector("[name='email']")?.value.trim();
     const wa = document.querySelector("[name='whatsapp']")?.value.trim();
@@ -790,6 +846,7 @@ function buildPayload(){
     }catch(err){ console.error(err); alert('❌ Errore durante l\'invio. Riprova.'); }
   }
 </script>
+
 
 
 
