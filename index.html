@@ -847,6 +847,292 @@ Vuoi procedere inviando i dati?`;
   }
 </script>
 
+<!-- MODALE – ANALISI ASSET (privacy-first, finalità d’uso only, fetch /api/send-email) -->
+<div id="modal-asset" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
+  <div class="bg-white w-full max-w-4xl mx-auto rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[92vh]" role="dialog" aria-modal="true" aria-labelledby="asset-title">
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
+      <div class="flex items-center gap-3">
+        <i data-lucide="search" class="w-6 h-6 text-blue-700"></i>
+        <h3 id="asset-title" class="text-lg font-semibold text-slate-900">Analisi AI – Asset singolo</h3>
+      </div>
+      <button onclick="chiudiModuloAsset()" class="text-slate-500 hover:text-red-500" aria-label="Chiudi">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="px-6 pt-4">
+      <div class="flex items-center gap-2 text-xs text-slate-600 mb-2">
+        <span id="a-progress-label">Step 1 di 3</span>
+        <span class="ml-auto">* campi obbligatori</span>
+      </div>
+      <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+        <div id="a-progress-bar" class="h-2 bg-blue-700 w-[33%] transition-all"></div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <form id="form-asset" class="p-6 md:p-8 overflow-y-auto flex-1 space-y-10 leading-relaxed" onsubmit="event.preventDefault(); inviaAnalisiAsset();">
+
+      <!-- STEP A0 – Identificazione -->
+      <section class="a-step" data-astep="0">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">1) Identificazione asset</h4>
+        <p class="text-xs text-slate-500 mb-4">Bastano poche info. Usa <strong>sigle standard</strong> e <strong>fasce</strong> (privacy-first).</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <label>Tipologia *
+            <select name="tipo_asset" class="w-full border rounded px-3 py-2" required onchange="onTipoAssetChange(this.value)">
+              <option value="">Seleziona</option>
+              <option>Azione</option>
+              <option>ETF</option>
+              <option>Obbligazione</option>
+              <option>Commodity</option>
+              <option>Forex</option>
+              <option>Criptovaluta</option>
+              <option>Altro</option>
+            </select>
+          </label>
+
+          <label>Identificativo (ticker / ISIN / nome) *
+            <input name="identificativo" class="w-full border rounded px-3 py-2" required placeholder="Es. AAPL | IE00B4L5Y983 | Tesla | EUR/USD | BTC" />
+            <span id="a-hint-id" class="text-[11px] text-slate-500">Per ETF preferisci l’<strong>ISIN</strong> per evitare omonimie.</span>
+          </label>
+
+          <label>Mercato / Borsa (facoltativo)
+            <input name="mercato" class="w-full border rounded px-3 py-2" placeholder="Es. NASDAQ, XETRA, Borsa Italiana, CME" />
+          </label>
+
+          <label>Valuta quotazione (facoltativo)
+            <select name="valuta" class="w-full border rounded px-3 py-2">
+              <option>Auto</option><option>EUR</option><option>USD</option><option>GBP</option><option>CHF</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP A1 – Finalità d’uso -->
+      <section class="a-step hidden" data-astep="1">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">2) Finalità d’uso</h4>
+        <p class="text-[11px] text-slate-500 mb-3">
+          Scegli lo scopo dell’analisi. Il motore deciderà automaticamente quali blocchi applicare
+          (fondamentale, tecnica, macro, news, valutazione…).
+        </p>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Investimento lungo termine" class="accent-blue-700">Investimento lungo termine (Buy & Hold)</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Investimento medio/breve" class="accent-blue-700">Investimento medio/breve (swing)</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Speculazione CFD" class="accent-blue-700">Speculazione CFD</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Opzioni" class="accent-blue-700">Opzioni</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Futures" class="accent-blue-700">Futures</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Hedging" class="accent-blue-700">Hedging (copertura rischio)</label>
+          <label class="inline-flex items-center gap-2 md:col-span-2"><input type="checkbox" name="finalita" value="Analisi completa" class="accent-blue-700">Analisi completa (tutte le dimensioni)</label>
+        </div>
+
+        <label class="block mt-4">Domande o note (facoltativo)
+          <textarea name="note" rows="3" class="w-full border rounded px-3 py-2" placeholder="Esempi: CFD solo su indici; covered call; futures per hedging; richiesta DCF; news/regolatorio; confronto peer."></textarea>
+        </label>
+      </section>
+
+      <!-- STEP A2 – Recapiti & invio (senza visibilità report) -->
+      <section class="a-step hidden" data-astep="2">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">3) Recapiti & invio</h4>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <label>Email (facoltativo)
+            <input type="email" name="a_email" class="w-full border rounded px-3 py-2" placeholder="you@example.com">
+          </label>
+          <label>WhatsApp (facoltativo)
+            <input type="text" name="a_whatsapp" class="w-full border rounded px-3 py-2" placeholder="+39...">
+          </label>
+        </div>
+        <p class="text-xs text-slate-500 mt-1">Indica almeno un recapito. I dati sono <strong>minimizzati</strong> (solo campi valorizzati).</p>
+
+        <details class="mt-3 border rounded p-3">
+          <summary class="cursor-pointer text-sm font-medium">Anteprima (riepilogo tecnico per l’AI)</summary>
+          <p class="text-xs text-slate-500 mb-2">Vista tecnica del contenuto che invieremo al motore AI (JSON equivalente allo schema). Serve a verificare cosa stai condividendo.</p>
+          <pre id="a-payload" class="text-xs bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto"></pre>
+        </details>
+      </section>
+
+    </form>
+
+    <!-- FOOTER NAV -->
+    <div class="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+      <button type="button" class="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-100" onclick="aPrevStep()">Indietro</button>
+      <div class="flex items-center gap-3">
+        <button id="a-submit-btn" class="px-4 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-800 hidden" onclick="inviaAnalisiAsset()">Invia</button>
+        <button id="a-next-btn" type="button" class="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800" onclick="aNextStep()">Avanti</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ===== Apertura/chiusura modale (lock body scroll) =====
+  const __aLockScroll = () => document.body.classList.add('overflow-hidden');
+  const __aUnlockScroll = () => document.body.classList.remove('overflow-hidden');
+
+  function apriModuloAsset(){
+    const modal = document.getElementById('modal-asset');
+    modal.classList.remove('hidden');
+    __aLockScroll();
+    if(window.lucide) lucide.createIcons();
+    // reset
+    const f = document.getElementById('form-asset');
+    f.reset();
+    aCurrentStep = 0; aStepsOrder = [0,1,2];
+    aUpdateStep();
+    aRenderPayload();
+  }
+  function chiudiModuloAsset(){
+    document.getElementById('modal-asset').classList.add('hidden');
+    __aUnlockScroll();
+  }
+
+  // ===== Navigazione step =====
+  let aStepsOrder = [0,1,2];
+  let aCurrentStep = 0;
+
+  function aShowStep(i){
+    document.querySelectorAll('#modal-asset .a-step').forEach(s=>s.classList.add('hidden'));
+    const selector = `#modal-asset .a-step[data-astep="${aStepsOrder[i]}"]`;
+    const el = document.querySelector(selector);
+    if(el) el.classList.remove('hidden');
+  }
+  function aUpdateStep(){
+    aShowStep(aCurrentStep);
+    const total = aStepsOrder.length;
+    document.getElementById('a-progress-label').textContent = `Step ${aCurrentStep+1} di ${total}`;
+    document.getElementById('a-progress-bar').style.width = `${Math.round(((aCurrentStep+1)/total)*100)}%`;
+    document.getElementById('a-submit-btn').classList.toggle('hidden', aCurrentStep !== total-1);
+    document.getElementById('a-next-btn').classList.toggle('hidden', aCurrentStep === total-1);
+  }
+  function aNextStep(){ if(!aValidaStep()) return; if(aCurrentStep < aStepsOrder.length-1){ aCurrentStep++; aUpdateStep(); } }
+  function aPrevStep(){ if(aCurrentStep>0){ aCurrentStep--; aUpdateStep(); } }
+
+  // ===== Hint dinamico per identificativo =====
+  function onTipoAssetChange(v){
+    const hint = document.getElementById('a-hint-id');
+    if(!hint) return;
+    if(v==='ETF')      hint.textContent = 'Per ETF preferisci l’ISIN (es. IE00B4L5Y983).';
+    else if(v==='Obbligazione') hint.textContent = 'Per obbligazioni usa preferibilmente l’ISIN (es. IT0005433195).';
+    else if(v==='Forex') hint.textContent = 'Formato suggerito: EUR/USD, USD/JPY, ecc.';
+    else if(v==='Criptovaluta') hint.textContent = 'Ticker o nome (es. BTC, ETH, Solana).';
+    else hint.textContent = 'Per ETF preferisci l’ISIN per evitare omonimie.';
+  }
+
+  // ===== Validazione per step =====
+  function aValidaStep(){
+    const key = aStepsOrder[aCurrentStep];
+    const el = document.querySelector(`#modal-asset .a-step[data-astep="${key}"]`);
+    let ok = true;
+
+    if(el){
+      el.querySelectorAll('select[required], input[required]').forEach(inp=>{
+        if(!inp.value){ ok=false; inp.classList.add('ring-2','ring-red-400'); }
+        else { inp.classList.remove('ring-2','ring-red-400'); }
+      });
+    }
+    if(!ok){ el && el.scrollIntoView({behavior:'smooth', block:'start'}); }
+
+    // Step Finalità: richiedi almeno una voce
+    if(key === 1){
+      const anyFin = document.querySelectorAll('#modal-asset input[name="finalita"]:checked').length > 0;
+      if(!anyFin){
+        ok = false;
+        alert("Seleziona almeno una finalità d'uso (LT, CFD, Opzioni, Futures, Hedging o Completa).");
+      }
+    }
+    return ok;
+  }
+
+  // ===== Payload builder (JSON equivalente allo schema) =====
+  function buildAssetPayload(){
+    const fd = new FormData(document.getElementById('form-asset'));
+    const finalita = Array.from(document.querySelectorAll('#modal-asset input[name="finalita"]:checked')).map(x=>x.value);
+
+    const Analisi_Asset = {
+      identificazione: {
+        tipo:          { valore: fd.get('tipo_asset') || null },
+        identificativo:{ valore: (fd.get('identificativo')||'').trim() || null },
+        mercato:       { valore: (fd.get('mercato')||'').trim() || null },
+        valuta:        { valore: fd.get('valuta') || 'Auto' }
+      },
+      richiesta: {
+        finalita: { valore: finalita },
+        note:     { valore: (fd.get('note')||'').trim() || null }
+      }
+    };
+
+    return {
+      servizio: 'analisi_asset',
+      Analisi_Asset,
+      recapiti: {
+        email:    (fd.get('a_email')||'').trim() || null,
+        whatsapp: (fd.get('a_whatsapp')||'').trim() || null
+      }
+    };
+  }
+
+  // ===== Anteprima auto (debounced) =====
+  function aRenderPayload(){
+    const pre = document.getElementById('a-payload');
+    if(!pre) return;
+    pre.textContent = JSON.stringify(buildAssetPayload(), null, 2);
+  }
+  const __aDebounce = (fn, ms=300)=>{ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,args), ms); }; };
+  (function(){
+    const f = document.getElementById('form-asset');
+    if(!f) return;
+    const auto = __aDebounce(aRenderPayload, 200);
+    f.addEventListener('input', auto);
+    f.addEventListener('change', auto);
+  })();
+
+  // ===== INVIO =====
+  async function inviaAnalisiAsset(){
+    // Recapiti: almeno uno
+    const email = document.querySelector('#form-asset [name="a_email"]')?.value.trim();
+    const wa    = document.querySelector('#form-asset [name="a_whatsapp"]')?.value.trim();
+    if(!email && !wa){ alert('Indica almeno un recapito (Email o WhatsApp).'); return; }
+
+    // Disclaimer forte
+    const disclaimer = `NOTA BENE
+
+L'analisi AI è uno strumento didattico per confrontare le tue idee.
+Non è consulenza e non ha validazione professionale.
+Potrebbe contenere errori o ragionamenti incompleti.
+Non affidarti mai a nessuna AI per prendere decisioni di investimento.
+
+Vuoi procedere inviando i dati?`;
+    if(!confirm(disclaimer)) return;
+
+    // Validazione step correnti
+    for(let i=0;i<aStepsOrder.length;i++){
+      aCurrentStep = i; if(!aValidaStep()) { aUpdateStep(); return; }
+    }
+
+    const payload = buildAssetPayload();
+    aRenderPayload();
+
+    try{
+      const res = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      alert('✅ Richiesta inviata correttamente.');
+      chiudiModuloAsset();
+    }catch(err){
+      console.error(err);
+      alert('❌ Errore durante l\'invio. Riprova.');
+    }
+  }
+</script>
 
 
 
