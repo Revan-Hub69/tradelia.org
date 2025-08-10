@@ -70,66 +70,85 @@
     </a>
   </header>
 
-<section class="bg-white border-b border-slate-200">
+<!-- HERO SECTION -->
+<section class="bg-white border-b border-slate-200 relative overflow-hidden">
   <div class="max-w-7xl mx-auto px-6 lg:px-8 py-16 grid lg:grid-cols-2 gap-12 items-center">
 
     <!-- Testo -->
     <div>
-      <h1 class="text-4xl font-bold text-slate-900 mb-6 leading-tight">
-        Potenza <span class="font-extrabold relative">AI
-          <svg class="absolute bottom-0 left-0 w-full h-3" viewBox="0 0 100 10" preserveAspectRatio="none">
-            <path d="M0 6 Q25 12, 50 6 T100 6" stroke="#38bdf8" stroke-width="3" fill="transparent" stroke-linecap="round"/>
-          </svg>
-        </span>
-        • Metodo <span class="font-extrabold relative">Istituzionale
-          <svg class="absolute bottom-0 left-0 w-full h-3" viewBox="0 0 100 10" preserveAspectRatio="none">
-            <path d="M0 6 Q25 12, 50 6 T100 6" stroke="#38bdf8" stroke-width="3" fill="transparent" stroke-linecap="round"/>
-          </svg>
-        </span>
-        • Privacy <span class="font-extrabold relative">Totale
-          <svg class="absolute bottom-0 left-0 w-full h-3" viewBox="0 0 100 10" preserveAspectRatio="none">
-            <path d="M0 6 Q25 12, 50 6 T100 6" stroke="#38bdf8" stroke-width="3" fill="transparent" stroke-linecap="round"/>
-          </svg>
-        </span>
+      <h1 class="text-4xl font-bold text-slate-900 mb-4 leading-tight">
+        <span id="hero-typing"></span>
       </h1>
-
-      <p class="text-lg text-slate-700 mb-10 leading-relaxed">
-        Tradelia AI utilizza motori proprietari <strong>con metodo istituzionale</strong> per analizzare e simulare scenari di portafoglio.
-        Offriamo strumenti didattici per comprendere mercati, rischi e correlazioni, garantendo <strong>privacy</strong> e <strong>trasparenza</strong>.
+      <p class="text-lg text-slate-700 mb-8 leading-relaxed">
+        Tradelia AI utilizza <mark class="marker">motori proprietari avanzati</mark> <strong>con metodo istituzionale</strong> 
+        per <mark class="marker">analizzare e simulare</mark> scenari di portafoglio.  
+        Strumenti didattici per comprendere mercati, rischi e correlazioni, con piena consapevolezza dei <strong>limiti tecnici e legali</strong> delle AI.
       </p>
 
       <!-- Tre pilastri -->
-      <div class="space-y-5">
+      <div class="space-y-4">
         <div class="flex items-start gap-3">
-          <i data-lucide="bar-chart-3" class="w-6 h-6 text-blue-700"></i>
-          <span class="text-slate-700"><strong>Potenza Analitica</strong> – Modelli multilayer che integrano analisi tecnica, macro e fondamentale.</span>
+          <i data-lucide="bar-chart-3" class="w-6 h-6 text-blue-700 flex-shrink-0"></i>
+          <span class="text-slate-700"><strong>Potenza Analitica</strong> – Analisi tecnica, macro e fondamentale integrate in modelli multilayer.</span>
         </div>
         <div class="flex items-start gap-3">
-          <i data-lucide="shield-check" class="w-6 h-6 text-blue-700"></i>
+          <i data-lucide="shield-check" class="w-6 h-6 text-blue-700 flex-shrink-0"></i>
           <span class="text-slate-700"><strong>Trasparenza</strong> – Progetto indipendente, senza marketing aggressivo o tracciamenti pubblicitari.</span>
         </div>
         <div class="flex items-start gap-3">
-          <i data-lucide="lock" class="w-6 h-6 text-blue-700"></i>
-          <span class="text-slate-700"><strong>Privacy Totale</strong> – Nessun cookie di tracciamento, nessuna vendita dati, nessuna memorizzazione lato AI.</span>
+          <i data-lucide="lock" class="w-6 h-6 text-blue-700 flex-shrink-0"></i>
+          <span class="text-slate-700"><strong>Privacy Totale</strong> – Nessun cookie di tracciamento, nessuna raccolta o vendita di dati.</span>
         </div>
       </div>
     </div>
 
-    <!-- Immagine -->
+    <!-- Immagine con Parallax -->
     <div class="relative">
-      <img src="/img/hero-institutional.jpg" alt="Analisi con metodo istituzionale" class="rounded-lg shadow-lg border border-slate-200">
+      <div class="parallax bg-cover bg-center rounded-lg shadow-lg border border-slate-200 h-96" style="background-image:url('/img/hero-institutional.jpg')"></div>
     </div>
   </div>
 
   <!-- Disclaimer -->
   <div class="bg-slate-50 border-t border-slate-200">
-    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-5 text-sm text-slate-600 leading-relaxed">
-      <strong>Disclaimer:</strong> Le analisi e simulazioni fornite da Tradelia AI sono esclusivamente a scopo educativo.
-      Le AI utilizzate non memorizzano dati, non tracciano l’utente e possono contenere errori.
-      Non costituiscono consulenza finanziaria e non sostituiscono un professionista abilitato.
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-4 text-sm text-slate-600 leading-relaxed">
+      ℹ️ Le analisi di Tradelia AI sono a scopo esclusivamente <strong>didattico</strong>.  
+      Le AI non memorizzano dati, non tracciano l’utente e possono contenere errori.  
+      Non costituiscono <strong>consulenza finanziaria</strong> e non sostituiscono un professionista abilitato.
     </div>
   </div>
 </section>
+
+<!-- STILI SOTTOLINEATURA MARKER -->
+<style>
+  .marker {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="30"><path d="M5 20 Q 100 40 195 20" stroke="%23fde047" stroke-width="10" fill="none" stroke-linecap="round"/></svg>') no-repeat bottom;
+    background-size: 100% 0.6em;
+    padding-bottom: 0.1em;
+  }
+  /* Parallax solo su desktop */
+  @media (min-width: 1024px) {
+    .parallax {
+      background-attachment: fixed;
+    }
+  }
+</style>
+
+<!-- SCRIPT ICONS + TYPING -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    lucide.createIcons();
+    new Typed('#hero-typing', {
+      strings: ['Potenza AI • Metodo Istituzionale • Privacy Totale'],
+      typeSpeed: 50,
+      backSpeed: 0,
+      loop: false,
+      showCursor: false
+    });
+  });
+</script>
+
 
 
 <!-- BROKER CON VALUTAZIONE AI -->
