@@ -70,153 +70,66 @@
     </a>
   </header>
 
-<section class="relative bg-slate-900 text-white overflow-hidden">
-  <!-- Immagine di sfondo con effetto parallax -->
-  <div class="absolute inset-0">
-    <div class="parallax-bg"></div>
-    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/70 to-slate-900/40"></div>
-  </div>
+<section class="bg-white border-b border-slate-200">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8 py-16 grid lg:grid-cols-2 gap-12 items-center">
 
-  <!-- Contenuto -->
-  <div class="relative max-w-7xl mx-auto px-6 sm:px-8 py-20 lg:py-28 grid lg:grid-cols-2 gap-12 items-center">
-    <div class="text-center lg:text-left fade-slide-up">
-      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight">
-        <span id="typed-title"></span><span id="typed-cursor" class="cursor">|</span>
+    <!-- Testo -->
+    <div>
+      <h1 class="text-4xl font-bold text-slate-900 mb-6 leading-tight">
+        Potenza <span class="font-extrabold relative">AI
+          <svg class="absolute bottom-0 left-0 w-full h-3" viewBox="0 0 100 10" preserveAspectRatio="none">
+            <path d="M0 6 Q25 12, 50 6 T100 6" stroke="#38bdf8" stroke-width="3" fill="transparent" stroke-linecap="round"/>
+          </svg>
+        </span>
+        • Metodo <span class="font-extrabold relative">Istituzionale
+          <svg class="absolute bottom-0 left-0 w-full h-3" viewBox="0 0 100 10" preserveAspectRatio="none">
+            <path d="M0 6 Q25 12, 50 6 T100 6" stroke="#38bdf8" stroke-width="3" fill="transparent" stroke-linecap="round"/>
+          </svg>
+        </span>
+        • Privacy <span class="font-extrabold relative">Totale
+          <svg class="absolute bottom-0 left-0 w-full h-3" viewBox="0 0 100 10" preserveAspectRatio="none">
+            <path d="M0 6 Q25 12, 50 6 T100 6" stroke="#38bdf8" stroke-width="3" fill="transparent" stroke-linecap="round"/>
+          </svg>
+        </span>
       </h1>
-      <p class="text-base sm:text-lg text-slate-200 mb-10 leading-relaxed max-w-xl mx-auto lg:mx-0">
-        Tradelia AI offre strumenti <strong>con metodo istituzionale</strong> per simulare e analizzare portafogli,  
-        aiutandoti a comprendere mercati, rischi e correlazioni, nel rispetto della privacy e con la massima trasparenza.
+
+      <p class="text-lg text-slate-700 mb-10 leading-relaxed">
+        Tradelia AI utilizza motori proprietari <strong>con metodo istituzionale</strong> per analizzare e simulare scenari di portafoglio.
+        Offriamo strumenti didattici per comprendere mercati, rischi e correlazioni, garantendo <strong>privacy</strong> e <strong>trasparenza</strong>.
       </p>
 
-      <!-- Pilastri -->
-      <div class="space-y-6 sm:space-y-5 max-w-lg mx-auto lg:mx-0">
-        <div class="flex items-start gap-3 fade-icon">
-          <i data-lucide="bar-chart-3" class="w-7 h-7 text-blue-400 shrink-0 icon-glow"></i>
-          <p class="text-sm sm:text-base"><strong>Potenza Analitica</strong> – Modelli multilayer che integrano analisi tecnica, macro e fondamentale.</p>
+      <!-- Tre pilastri -->
+      <div class="space-y-5">
+        <div class="flex items-start gap-3">
+          <i data-lucide="bar-chart-3" class="w-6 h-6 text-blue-700"></i>
+          <span class="text-slate-700"><strong>Potenza Analitica</strong> – Modelli multilayer che integrano analisi tecnica, macro e fondamentale.</span>
         </div>
-        <div class="flex items-start gap-3 fade-icon">
-          <i data-lucide="shield-check" class="w-7 h-7 text-blue-400 shrink-0 icon-glow"></i>
-          <p class="text-sm sm:text-base"><strong>Trasparenza</strong> – Progetto indipendente, senza marketing aggressivo o tracciamenti pubblicitari.</p>
+        <div class="flex items-start gap-3">
+          <i data-lucide="shield-check" class="w-6 h-6 text-blue-700"></i>
+          <span class="text-slate-700"><strong>Trasparenza</strong> – Progetto indipendente, senza marketing aggressivo o tracciamenti pubblicitari.</span>
         </div>
-        <div class="flex items-start gap-3 fade-icon">
-          <i data-lucide="lock" class="w-7 h-7 text-blue-400 shrink-0 icon-glow"></i>
-          <p class="text-sm sm:text-base"><strong>Privacy Totale</strong> – Nessun cookie di tracciamento, nessuna raccolta o vendita di dati, nessuna memorizzazione lato AI.</p>
+        <div class="flex items-start gap-3">
+          <i data-lucide="lock" class="w-6 h-6 text-blue-700"></i>
+          <span class="text-slate-700"><strong>Privacy Totale</strong> – Nessun cookie di tracciamento, nessuna vendita dati, nessuna memorizzazione lato AI.</span>
         </div>
       </div>
+    </div>
+
+    <!-- Immagine -->
+    <div class="relative">
+      <img src="/img/hero-institutional.jpg" alt="Analisi con metodo istituzionale" class="rounded-lg shadow-lg border border-slate-200">
     </div>
   </div>
 
   <!-- Disclaimer -->
-  <div class="relative bg-yellow-50 border-t border-yellow-400 text-slate-800 fade-slide-up" style="animation-delay: 0.3s;">
-    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-4 text-xs sm:text-sm leading-relaxed flex items-start gap-2">
-      <i data-lucide="alert-triangle" class="w-5 h-5 text-yellow-600 shrink-0 mt-0.5"></i>
-      <p>
-        Le analisi e simulazioni di Tradelia AI sono a scopo esclusivamente didattico.  
-        Le AI utilizzate non memorizzano dati, non tracciano l’utente e possono contenere errori.  
-        Non costituiscono consulenza finanziaria e non sostituiscono un professionista abilitato.
-      </p>
+  <div class="bg-slate-50 border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-5 text-sm text-slate-600 leading-relaxed">
+      <strong>Disclaimer:</strong> Le analisi e simulazioni fornite da Tradelia AI sono esclusivamente a scopo educativo.
+      Le AI utilizzate non memorizzano dati, non tracciano l’utente e possono contenere errori.
+      Non costituiscono consulenza finanziaria e non sostituiscono un professionista abilitato.
     </div>
   </div>
 </section>
-
-<style>
-  .parallax-bg {
-    background-image: url('/img/hero-institutional.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    width: 100%;
-    height: 100%;
-    opacity: 0.4;
-  }
-  @media (max-width: 768px) {
-    .parallax-bg {
-      background-attachment: scroll;
-    }
-  }
-  .fade-slide-up {
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeSlideUp 0.8s ease-out forwards;
-  }
-  @keyframes fadeSlideUp {
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .cursor {
-    display: inline-block;
-    animation: blink 0.8s steps(2, start) infinite;
-    color: #60a5fa;
-  }
-  @keyframes blink {
-    to { visibility: hidden; }
-  }
-  .glow {
-    color: #60a5fa;
-    text-shadow: 0 0 5px #60a5fa, 0 0 10px #60a5fa, 0 0 15px #2563eb;
-    animation: glowPulse 1.8s ease-in-out infinite alternate;
-  }
-  @keyframes glowPulse {
-    from { text-shadow: 0 0 5px #60a5fa, 0 0 10px #60a5fa, 0 0 15px #2563eb; }
-    to { text-shadow: 0 0 10px #93c5fd, 0 0 20px #60a5fa, 0 0 30px #2563eb; }
-  }
-  .fade-icon {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.6s ease-out;
-  }
-  .fade-icon.show {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .icon-glow {
-    transition: all 0.4s ease-in-out;
-  }
-  .fade-icon.show .icon-glow {
-    filter: drop-shadow(0 0 5px #60a5fa) drop-shadow(0 0 10px #2563eb);
-  }
-</style>
-
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const typedText = "Potenza AI • Metodo Istituzionale • Privacy Totale";
-    const typedEl = document.getElementById("typed-title");
-    const cursorEl = document.getElementById("typed-cursor");
-    let i = 0;
-
-    function typeWriter() {
-      if (i < typedText.length) {
-        typedEl.innerHTML += typedText.charAt(i);
-        i++;
-        setTimeout(typeWriter, 40);
-      } else {
-        cursorEl.style.animation = "blink 0.8s steps(2, start) infinite";
-        addGlowEffect();
-      }
-    }
-
-    function addGlowEffect() {
-      typedEl.innerHTML = typedText
-        .replace("AI", "<span class='glow'>AI</span>")
-        .replace("Metodo Istituzionale", "<span class='glow'>Metodo Istituzionale</span>")
-        .replace("Privacy Totale", "<span class='glow'>Privacy Totale</span>");
-    }
-
-    typeWriter();
-
-    // Glow icone on scroll
-    const icons = document.querySelectorAll(".fade-icon");
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("show");
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.2 });
-
-    icons.forEach(icon => observer.observe(icon));
-  });
-</script>
 
 
 <!-- BROKER CON VALUTAZIONE AI -->
