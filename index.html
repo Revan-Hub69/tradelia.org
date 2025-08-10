@@ -70,19 +70,23 @@
     </a>
   </header>
 
-<!-- HERO SECTION -->
 <section class="bg-white border-b border-slate-200 relative overflow-hidden">
-  <div class="max-w-7xl mx-auto px-6 lg:px-8 py-16 grid lg:grid-cols-2 gap-12 items-center">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8 py-10 lg:py-16 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
+
+    <!-- Immagine mobile sopra -->
+    <div class="order-1 lg:order-2">
+      <div class="parallax bg-cover bg-center rounded-lg shadow-lg border border-slate-200 h-64 sm:h-80 lg:h-96" style="background-image:url('/img/hero-institutional.jpg')"></div>
+    </div>
 
     <!-- Testo -->
-    <div>
-      <h1 class="text-4xl font-bold text-slate-900 mb-4 leading-tight min-h-[56px]">
+    <div class="order-2 lg:order-1">
+      <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-4 leading-tight min-h-[56px]">
         <span id="hero-typing"></span>
       </h1>
-      <p class="text-lg text-slate-700 mb-8 leading-relaxed">
-        Tradelia AI utilizza <span class="marker"><strong>motori proprietari avanzati</strong></span> <span class="marker"><strong>con metodo istituzionale</strong></span> 
-        per <span class="marker"><strong>analizzare e simulare</strong></span> scenari di portafoglio.  
-        Strumenti didattici per comprendere mercati, rischi e correlazioni, con piena consapevolezza dei <span class="marker"><strong>limiti tecnici e legali</strong></span> delle AI.
+      <p class="text-base sm:text-lg text-slate-700 mb-6 sm:mb-8 leading-relaxed">
+        Tradelia AI utilizza <strong>tecnologie AI integrate e ottimizzate per il metodo Tradelia</strong> 
+        per <strong>analizzare e simulare</strong> scenari di portafoglio.  
+        Strumenti didattici per comprendere mercati, rischi e correlazioni, con piena consapevolezza dei <strong>limiti tecnici e legali</strong> delle AI.
       </p>
 
       <!-- Tre pilastri -->
@@ -101,29 +105,19 @@
         </div>
       </div>
     </div>
-
-    <!-- Immagine con Parallax -->
-    <div class="relative">
-      <div class="parallax bg-cover bg-center rounded-lg shadow-lg border border-slate-200 h-96" style="background-image:url('/img/hero-institutional.jpg')"></div>
-    </div>
   </div>
 
   <!-- Disclaimer -->
   <div class="bg-slate-50 border-t border-slate-200">
-    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-4 text-sm text-slate-600 leading-relaxed flex items-center gap-2">
-      <i data-lucide="info" class="w-4 h-4 text-blue-600 flex-shrink-0"></i>
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-4 text-xs sm:text-sm text-slate-600 leading-relaxed flex items-start sm:items-center gap-2">
+      <i data-lucide="info" class="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5"></i>
       <span>Le analisi di Tradelia AI sono a scopo esclusivamente <strong>didattico</strong>. Le AI non memorizzano dati, non tracciano l’utente e possono contenere errori. Non costituiscono <strong>consulenza finanziaria</strong> e non sostituiscono un professionista abilitato.</span>
     </div>
   </div>
 </section>
 
-<!-- STILI SOTTOLINEATURA MARKER -->
+<!-- PARALLAX SOLO DESKTOP -->
 <style>
-  .marker {
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="30"><path d="M5 20 Q 100 40 195 20" stroke="%2360a5fa" stroke-width="8" fill="none" stroke-linecap="round"/></svg>') no-repeat bottom;
-    background-size: 100% 0.6em;
-    padding-bottom: 0.1em;
-  }
   @media (min-width: 1024px) {
     .parallax { background-attachment: fixed; }
   }
@@ -138,19 +132,22 @@
 
     new Typed('#hero-typing', {
       strings: [
-        '<span class="marker"><strong>Potenza AI modulare</strong></span>',
-        '<span class="marker"><strong>Metodo Istituzionale</strong></span>',
-        '<span class="marker"><strong>Privacy Totale</strong></span>'
+        '<strong>Potenza AI modulare</strong>',
+        '<strong>Metodo Istituzionale</strong>',
+        '<strong>Privacy Totale</strong>'
       ],
       typeSpeed: 50,
       backSpeed: 30,
       backDelay: 1500,
       loop: true,
       fadeOut: true,
+      fadeOutClass: 'typed-fade-out',
+      fadeOutDelay: 200,
       showCursor: false
     });
   });
 </script>
+
 
 
 <!-- BROKER CON VALUTAZIONE AI -->
