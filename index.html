@@ -678,6 +678,7 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
     if(!warn) return;
     const out = (s>110 || s<90) && !isNaN(s);
     warn.classList.toggle('hidden', !out);
+  }
   
   // ===== Serializzazione → Schema YAML (JSON equivalente) =====
   function readValue(form, name){
@@ -801,6 +802,7 @@ function buildPayload(){
     }catch(err){ console.error(err); alert('❌ Errore durante l\'invio. Riprova.'); }
   }
 </script>
+
 
 
 <!-- BROKER CON VALUTAZIONE AI -->
