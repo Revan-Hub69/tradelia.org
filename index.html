@@ -1134,6 +1134,271 @@ Vuoi procedere inviando i dati?`;
   }
 </script>
 
+<!-- MODALE – DOMANDA LIBERA (privacy-first, multi-step, fetch /api/send-email) -->
+<div id="modal-domanda" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
+  <div class="bg-white w-full max-w-4xl mx-auto rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[92vh]" role="dialog" aria-modal="true" aria-labelledby="q-title">
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
+      <div class="flex items-center gap-3">
+        <i data-lucide="message-square" class="w-6 h-6 text-blue-700"></i>
+        <h3 id="q-title" class="text-lg font-semibold text-slate-900">Domanda Libera – Tradelia AI</h3>
+      </div>
+      <button onclick="chiudiModuloDomanda()" class="text-slate-500 hover:text-red-500" aria-label="Chiudi">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="px-6 pt-4">
+      <div class="flex items-center gap-2 text-xs text-slate-600 mb-2">
+        <span id="q-progress-label">Step 1 di 3</span>
+        <span class="ml-auto">* campi obbligatori</span>
+      </div>
+      <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+        <div id="q-progress-bar" class="h-2 bg-blue-700 w-[33%] transition-all"></div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <form id="form-domanda" class="p-6 md:p-8 overflow-y-auto flex-1 space-y-10 leading-relaxed" onsubmit="event.preventDefault(); inviaDomandaLibera();">
+
+      <!-- STEP Q0 – Tema & contesto -->
+      <section class="q-step" data-qstep="0">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">1) Tema & contesto</h4>
+        <p class="text-xs text-slate-500 mb-4">Seleziona l’area generale della tua domanda. Niente dati sensibili, usa termini generici.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <label>Argomento principale *
+            <select name="q_argomento" class="w-full border rounded px-3 py-2" required>
+              <option value="">Seleziona</option>
+              <option>Macro & ciclo</option>
+              <option>Strategie & asset allocation</option>
+              <option>Rischi & stress test</option>
+              <option>Regolatorio / normativa</option>
+              <option>Strumenti & prodotti (ETF, bond, derivati)</option>
+              <option>Altro</option>
+            </select>
+          </label>
+
+          <label>Riferimento (facoltativo)
+            <input name="q_riferimento" class="w-full border rounded px-3 py-2" placeholder="Es. S&P 500, BTP 2030, EUR/USD, ETF EIMI, settore energy">
+            <span class="text-[11px] text-slate-500">Un asset/mercato/settore collegato alla domanda (opzionale).</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP Q1 – Domanda & finalità d’uso -->
+      <section class="q-step hidden" data-qstep="1">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">2) Domanda & finalità d’uso</h4>
+
+        <label>Scrivi la tua domanda *
+          <textarea name="q_domanda" rows="5" class="w-full border rounded px-3 py-2" required
+            placeholder="Esempi: come valutare il rischio tasso su un portafoglio 60/40 nei prossimi 12 mesi?; quali driver fondamentali contano oggi per AAPL?; quali alternative all’hedging con futures su Eurostoxx?"></textarea>
+          <span class="text-[11px] text-slate-500">Suggerimento: spiega in 1–3 frasi cosa vuoi ottenere.</span>
+        </label>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+          <label>Finalità d’uso *
+            <select name="q_finalita" class="w-full border rounded px-3 py-2" required>
+              <option value="">Seleziona</option>
+              <option>Informativa (capire il tema)</option>
+              <option>Validazione idea</option>
+              <option>Tesi vs antitesi (pro & contro)</option>
+              <option>Operatività (CFD/Opzioni/Futures)</option>
+              <option>Altro</option>
+            </select>
+            <span class="text-[11px] text-slate-500">Guida il motore nella scelta dei blocchi di analisi.</span>
+          </label>
+
+          <label>Note (facoltativo)
+            <input name="q_note" class="w-full border rounded px-3 py-2" placeholder="Es. focus news/regolatorio; confronta con ETF simili; ipotesi di copertura…">
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP Q2 – Recapiti & invio -->
+      <section class="q-step hidden" data-qstep="2">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">3) Recapiti & invio</h4>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <label>Email (facoltativo)
+            <input type="email" name="q_email" class="w-full border rounded px-3 py-2" placeholder="you@example.com">
+          </label>
+          <label>WhatsApp (facoltativo)
+            <input type="text" name="q_whatsapp" class="w-full border rounded px-3 py-2" placeholder="+39...">
+          </label>
+        </div>
+        <p class="text-xs text-slate-500 mt-1">Indica almeno un recapito. I dati sono <strong>minimizzati</strong> (solo campi valorizzati).</p>
+
+        <details class="mt-3 border rounded p-3">
+          <summary class="cursor-pointer text-sm font-medium">Anteprima (riepilogo tecnico per l’AI)</summary>
+          <p class="text-xs text-slate-500 mb-2">Vista tecnica del contenuto che invieremo al motore AI (JSON equivalente allo schema). Serve a verificare cosa stai condividendo.</p>
+          <pre id="q-payload" class="text-xs bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto"></pre>
+        </details>
+      </section>
+
+    </form>
+
+    <!-- FOOTER NAV -->
+    <div class="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+      <button type="button" class="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-100" onclick="qPrevStep()">Indietro</button>
+      <div class="flex items-center gap-3">
+        <button id="q-submit-btn" class="px-4 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-800 hidden" onclick="inviaDomandaLibera()">Invia</button>
+        <button id="q-next-btn" type="button" class="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800" onclick="qNextStep()">Avanti</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  /* Touch-friendly inputs su mobile */
+  @media (max-width: 640px){
+    #modal-domanda select,
+    #modal-domanda input,
+    #modal-domanda textarea{ min-height:44px; font-size:16px; }
+  }
+</style>
+
+<script>
+  // ===== Apertura/chiusura modale (lock body scroll) =====
+  const __qLockScroll = () => document.body.classList.add('overflow-hidden');
+  const __qUnlockScroll = () => document.body.classList.remove('overflow-hidden');
+
+  function apriModuloDomanda(){
+    const modal = document.getElementById('modal-domanda');
+    modal.classList.remove('hidden');
+    __qLockScroll();
+    if(window.lucide) lucide.createIcons();
+    // reset
+    const f = document.getElementById('form-domanda');
+    f.reset();
+    qCurrentStep = 0; qStepsOrder = [0,1,2];
+    qUpdateStep();
+    qRenderPayload();
+  }
+  function chiudiModuloDomanda(){
+    document.getElementById('modal-domanda').classList.add('hidden');
+    __qUnlockScroll();
+  }
+
+  // ===== Navigazione step =====
+  let qStepsOrder = [0,1,2];
+  let qCurrentStep = 0;
+
+  function qShowStep(i){
+    document.querySelectorAll('#modal-domanda .q-step').forEach(s=>s.classList.add('hidden'));
+    const el = document.querySelector(`#modal-domanda .q-step[data-qstep="${qStepsOrder[i]}"]`);
+    if(el) el.classList.remove('hidden');
+  }
+  function qUpdateStep(){
+    qShowStep(qCurrentStep);
+    const total = qStepsOrder.length;
+    document.getElementById('q-progress-label').textContent = `Step ${qCurrentStep+1} di ${total}`;
+    document.getElementById('q-progress-bar').style.width = `${Math.round(((qCurrentStep+1)/total)*100)}%`;
+    document.getElementById('q-submit-btn').classList.toggle('hidden', qCurrentStep !== total-1);
+    document.getElementById('q-next-btn').classList.toggle('hidden', qCurrentStep === total-1);
+  }
+  function qNextStep(){ if(!qValidaStep()) return; if(qCurrentStep < qStepsOrder.length-1){ qCurrentStep++; qUpdateStep(); } }
+  function qPrevStep(){ if(qCurrentStep>0){ qCurrentStep--; qUpdateStep(); } }
+
+  // ===== Validazione per step =====
+  function qValidaStep(){
+    const key = qStepsOrder[qCurrentStep];
+    const el = document.querySelector(`#modal-domanda .q-step[data-qstep="${key}"]`);
+    let ok = true;
+
+    if(el){
+      el.querySelectorAll('select[required], input[required], textarea[required]').forEach(inp=>{
+        if(!inp.value){ ok=false; inp.classList.add('ring-2','ring-red-400'); }
+        else { inp.classList.remove('ring-2','ring-red-400'); }
+      });
+      if(key===1){
+        const domanda = (el.querySelector('[name="q_domanda"]')?.value || '').trim();
+        if(domanda.length < 10){ ok=false; alert('Scrivi una domanda un po’ più dettagliata (almeno 10 caratteri).'); }
+      }
+    }
+    if(!ok){ el && el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    return ok;
+  }
+
+  // ===== Payload builder =====
+  function buildQuestionPayload(){
+    const fd = new FormData(document.getElementById('form-domanda'));
+    const Richiesta = {
+      argomento:    { valore: fd.get('q_argomento') || null },
+      riferimento:  { valore: (fd.get('q_riferimento')||'').trim() || null },
+      domanda:      { valore: (fd.get('q_domanda')||'').trim() || null },
+      finalita:     { valore: fd.get('q_finalita') || null },
+      note:         { valore: (fd.get('q_note')||'').trim() || null }
+    };
+    return {
+      servizio: 'domanda_libera',
+      Richiesta,
+      recapiti: {
+        email:    (fd.get('q_email')||'').trim() || null,
+        whatsapp: (fd.get('q_whatsapp')||'').trim() || null
+      }
+    };
+  }
+
+  // ===== Anteprima auto (debounced) =====
+  function qRenderPayload(){
+    const pre = document.getElementById('q-payload');
+    if(!pre) return;
+    pre.textContent = JSON.stringify(buildQuestionPayload(), null, 2);
+  }
+  const __qDebounce = (fn, ms=250)=>{ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,args), ms); }; };
+  (function(){
+    const f = document.getElementById('form-domanda');
+    if(!f) return;
+    const auto = __qDebounce(qRenderPayload, 200);
+    f.addEventListener('input', auto);
+    f.addEventListener('change', auto);
+  })();
+
+  // ===== INVIO =====
+  async function inviaDomandaLibera(){
+    // Recapiti minimi
+    const email = document.querySelector('#form-domanda [name="q_email"]')?.value.trim();
+    const wa    = document.querySelector('#form-domanda [name="q_whatsapp"]')?.value.trim();
+    if(!email && !wa){ alert('Indica almeno un recapito (Email o WhatsApp).'); return; }
+
+    // Disclaimer forte
+    const disclaimer = `NOTA BENE
+
+L'analisi AI è uno strumento didattico per confrontare le tue idee.
+Non è consulenza e non ha validazione professionale.
+Potrebbe contenere errori o ragionamenti incompleti.
+Non affidarti mai a nessuna AI per prendere decisioni di investimento.
+
+Vuoi procedere inviando i dati?`;
+    if(!confirm(disclaimer)) return;
+
+    // Validazione step correnti
+    for(let i=0;i<qStepsOrder.length;i++){
+      qCurrentStep = i; if(!qValidaStep()) { qUpdateStep(); return; }
+    }
+
+    const payload = buildQuestionPayload();
+    qRenderPayload();
+
+    try{
+      const res = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      alert('✅ Richiesta inviata correttamente.');
+      chiudiModuloDomanda();
+    }catch(err){
+      console.error(err);
+      alert('❌ Errore durante l\'invio. Riprova.');
+    }
+  }
+</script>
 
 
 <!-- BROKER CON VALUTAZIONE AI -->
