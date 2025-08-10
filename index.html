@@ -283,34 +283,22 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
 
       <!-- STEP 2 – Capitale e Liquidità -->
       <section class="step hidden" data-step="2">
-        <h4 class="text-base font-semibold text-slate-900 mb-2">2) Capitale e liquidità</h4>
-        <p class="text-xs text-slate-500 mb-4">Indica le <strong>fasce</strong>: non chiediamo importi precisi.</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <label>Capitale totale *
+        <h4 class="text-base font-semibold text-slate-900 mb-2">2) Capitale</h4>
+        <p class="text-xs text-slate-500 mb-4">Indica solo valori <strong>indicativi a fascia</strong> per tutelare la privacy.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <label>Capitale totale (fascia) *
             <select name="capitale_totale" class="w-full border rounded px-3 py-2" required>
-              <option value="">Fascia</option>
+              <option value="">Seleziona</option>
               <option>< 10k</option><option>10k–50k</option><option>50k–200k</option><option>200k–500k</option><option>> 500k</option>
             </select>
+            <span class="text-[11px] text-slate-500">Somma indicativa di conti, investimenti, immobili, ecc.</span>
           </label>
-          <label>Capitale investibile immediato *
+          <label>Quota investibile ora (fascia) *
             <select name="capitale_investibile" class="w-full border rounded px-3 py-2" required>
-              <option value="">Fascia</option>
+              <option value="">Seleziona</option>
               <option>< 5k</option><option>5k–25k</option><option>25k–100k</option><option>100k–250k</option><option>> 250k</option>
             </select>
-          </label>
-          <label>Liquidità di sicurezza (%) *
-            <select name="cash_buffer" class="w-full border rounded px-3 py-2" required>
-              <option value="">Fascia</option>
-              <option>< 5%</option><option>5–10%</option><option>10–20%</option><option>20–30%</option><option>> 30%</option>
-            </select>
-            <span class="text-[11px] text-slate-500">Percentuale minima che desideri mantenere disponibile in conto.</span>
-          </label>
-          <label class="md:col-span-3">Situazione patrimoniale (% investibile) *
-            <select name="situazione_patrimoniale" class="w-full border rounded px-3 py-2" required>
-              <option value="">Seleziona</option>
-              <option>< 20%</option><option>20–40%</option><option>40–60%</option><option>60–80%</option><option>> 80%</option>
-            </select>
-            <span class="text-[11px] text-slate-500">Quota del tuo patrimonio totale che intendi investire.</span>
+            <span class="text-[11px] text-slate-500">Quanto sei pronto a destinare subito agli investimenti.</span>
           </label>
         </div>
       </section>
@@ -709,12 +697,12 @@ function buildPayload(){
       dati_anagrafici: {
         eta: readValue(fd,'eta'),
         area_fiscale: readValue(fd,'area_fiscale'),
-        situazione_patrimoniale: readValue(fd,'situazione_patrimoniale')
+        situazione_patrimoniale: { valore: null }
       },
       capitale_liquidita: {
         capitale_totale: readValue(fd,'capitale_totale'),
         capitale_investibile: readValue(fd,'capitale_investibile'),
-        cash_buffer: readValue(fd,'cash_buffer')
+        cash_buffer: { valore: null }
       },
       orizzonte_temporale: {
         anni_obiettivo: readValue(fd,'anni_obiettivo'),
