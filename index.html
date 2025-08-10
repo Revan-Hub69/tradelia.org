@@ -166,64 +166,6 @@
         <p class="text-sm text-slate-600 flex-grow">
           Costruisci o valida un portafoglio seguendo criteri di coerenza macro, rischio e rendimento, con analisi multilayer AI.
         </p>
-        <a href="/portafoglio.html" class="mt-4 inline-block bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 text-sm font-medium text-center">
-          Avvia Analisi
-        </a>
-      </div>
-
-      <!-- Card 2: Analisi Asset -->
-      <div class="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition p-6 flex flex-col">
-        <i data-lucide="search" class="w-10 h-10 text-blue-700 mb-4"></i>
-        <h3 class="text-xl font-semibold text-slate-900 mb-2">Analisi Asset</h3>
-        <p class="text-sm text-slate-600 flex-grow">
-          Analizza azioni, ETF, obbligazioni, commodities e altri strumenti, combinando dati tecnici, fondamentali e macro.
-        </p>
-        <a href="/analisi-asset.html" class="mt-4 inline-block bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 text-sm font-medium text-center">
-          Avvia Analisi
-        </a>
-      </div>
-
-      <!-- Card 3: Domanda Libera -->
-      <div class="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition p-6 flex flex-col">
-        <i data-lucide="message-square" class="w-10 h-10 text-blue-700 mb-4"></i>
-        <h3 class="text-xl font-semibold text-slate-900 mb-2">Domanda Libera</h3>
-        <p class="text-sm text-slate-600 flex-grow">
-          Formula qualsiasi domanda su mercati, strategie o scenari e ricevi un’analisi ragionata basata sul metodo Tradelia.
-        </p>
-        <a href="/domanda-libera.html" class="mt-4 inline-block bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 text-sm font-medium text-center">
-          Fai una domanda
-        </a>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<script src="https://unpkg.com/lucide@latest"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    lucide.createIcons();
-  });
-</script>
-<br><br><br>
-  <section class="bg-slate-50 py-16 border-b border-slate-200">
-  <div class="max-w-7xl mx-auto px-6 lg:px-8">
-    <h2 class="text-3xl font-bold text-slate-900 mb-4 text-center">
-      Servizi AI <span class="text-blue-700">&bull;</span> Tradelia
-    </h2>
-    <p class="text-lg text-slate-700 text-center max-w-2xl mx-auto mb-12">
-      Tre strumenti principali, un unico <strong>metodo istituzionale</strong> ottimizzato per l’apprendimento e l’analisi.
-    </p>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      
-      <!-- Card 1: Portafoglio -->
-      <div class="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition p-6 flex flex-col">
-        <i data-lucide="layers" class="w-10 h-10 text-blue-700 mb-4"></i>
-        <h3 class="text-xl font-semibold text-slate-900 mb-2">Validazione / Simulazione Portafoglio</h3>
-        <p class="text-sm text-slate-600 flex-grow">
-          Costruisci o valida un portafoglio seguendo criteri di coerenza macro, rischio e rendimento, con analisi multilayer AI.
-        </p>
         <button onclick="apriModuloPortafoglio()" class="mt-4 inline-block bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 text-sm font-medium text-center">
           Avvia Analisi
         </button>
@@ -264,6 +206,584 @@
   });
 </script>
 
+<!-- MODALE – BLOCCO 1 PROFILO INVESTITORE (v1.1 Ultra – Antilacune Hard++ – con PAC)
+Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/send-email
+-->
+<div id="modal-portafoglio" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
+  <div class="bg-white w-full max-w-4xl mx-auto rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[92vh]">
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
+      <div class="flex items-center gap-3">
+        <i data-lucide="layers" class="w-6 h-6 text-blue-700"></i>
+        <h3 class="text-lg font-semibold text-slate-900">Profilo Investitore – Validazione / Simulazione</h3>
+      </div>
+      <button onclick="chiudiModuloPortafoglio()" class="text-slate-500 hover:text-red-500" aria-label="Chiudi">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="px-6 pt-4">
+      <div class="flex items-center gap-2 text-xs text-slate-600 mb-2">
+        <span id="progress-label">Step 1 di 11</span>
+        <span class="ml-auto">* campi obbligatori</span>
+      </div>
+      <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+        <div id="progress-bar" class="h-2 bg-blue-700 w-[9%] transition-all"></div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <form id="form-portafoglio" class="p-6 overflow-y-auto flex-1 space-y-8" onsubmit="event.preventDefault(); inviaProfilo();">
+
+      <!-- STEP 0 – Modalità -->
+      <section class="step" data-step="0">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">0) Seleziona modalità</h4>
+        <p class="text-xs text-slate-500 mb-3">Scegli se vuoi <strong>validare</strong> un portafoglio esistente o <strong>simulare</strong> una nuova costruzione.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <label class="border rounded-lg p-4 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-start gap-3">
+            <input type="radio" name="tipo_analisi" value="validazione" class="accent-blue-700 mt-1" required>
+            <div>
+              <div class="font-medium">Validazione Portafoglio</div>
+              <div class="text-xs text-slate-500">Controlli su coerenza, rischio, concentrazione, coperture, storico.</div>
+            </div>
+          </label>
+          <label class="border rounded-lg p-4 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-start gap-3">
+            <input type="radio" name="tipo_analisi" value="simulazione" class="accent-blue-700 mt-1" required>
+            <div>
+              <div class="font-medium">Simulazione Portafoglio</div>
+              <div class="text-xs text-slate-500">Costruzione ex‑novo con vincoli, obiettivi e profilo rischio.</div>
+            </div>
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP 1 – Dati anagrafici e strutturali -->
+      <section class="step hidden" data-step="1">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">1) Dati anagrafici e strutturali</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <label>Età *
+            <select name="eta" class="w-full border rounded px-3 py-2" data-estimable required>
+              <option value="">Seleziona</option>
+              <option>18–30</option><option>31–45</option><option>46–60</option><option>61+</option>
+            </select>
+            <span class="text-[11px] text-slate-500">Usiamo fasce per privacy.</span>
+            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="eta__stimato" class="accent-blue-700"> stimato</label>
+          </label>
+          <label>Area fiscale *
+            <select name="area_fiscale" class="w-full border rounded px-3 py-2" data-estimable required>
+              <option value="">Seleziona</option>
+              <option>Italia</option><option>UE (non IT)</option><option>UK</option><option>USA</option><option>Altro</option>
+            </select>
+            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="area_fiscale__stimato" class="accent-blue-700"> stimato</label>
+          </label>
+          <label>Situazione patrimoniale (% investibile) *
+            <select name="situazione_patrimoniale" class="w-full border rounded px-3 py-2" data-estimable required>
+              <option value="">Seleziona</option>
+              <option>< 20%</option><option>20–40%</option><option>40–60%</option><option>60–80%</option><option>> 80%</option>
+            </select>
+            <span class="text-[11px] text-slate-500">Quota del patrimonio che intendi investire.</span>
+            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="situazione_patrimoniale__stimato" class="accent-blue-700"> stimato</label>
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP 2 – Capitale e Liquidità -->
+      <section class="step hidden" data-step="2">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">2) Capitale e liquidità</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <label>Capitale totale *
+            <select name="capitale_totale" class="w-full border rounded px-3 py-2" data-estimable required>
+              <option value="">Fascia</option>
+              <option>< 10k</option><option>10k–50k</option><option>50k–200k</option><option>200k–500k</option><option>> 500k</option>
+            </select>
+            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="capitale_totale__stimato" class="accent-blue-700"> stimato</label>
+          </label>
+          <label>Capitale investibile immediato *
+            <select name="capitale_investibile" class="w-full border rounded px-3 py-2" data-estimable required>
+              <option value="">Fascia</option>
+              <option>< 5k</option><option>5k–25k</option><option>25k–100k</option><option>100k–250k</option><option>> 250k</option>
+            </select>
+            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="capitale_investibile__stimato" class="accent-blue-700"> stimato</label>
+          </label>
+          <label>Liquidità di sicurezza (%)*
+            <select name="cash_buffer" class="w-full border rounded px-3 py-2" data-estimable required>
+              <option value="">Fascia</option>
+              <option>< 5%</option><option>5–10%</option><option>10–20%</option><option>20–30%</option><option>> 30%</option>
+            </select>
+            <span class="text-[11px] text-slate-500">Quota minima che preferisci tenere liquida.</span>
+            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="cash_buffer__stimato" class="accent-blue-700"> stimato</label>
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP 3 – Orizzonte temporale -->
+      <section class="step hidden" data-step="3">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">3) Orizzonte temporale</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <label>Anni fino all’obiettivo *
+            <select name="anni_obiettivo" class="w-full border rounded px-3 py-2" data-estimable required>
+              <option value="">Seleziona</option>
+              <option>Fino a 2</option><option>3–5</option><option>6–10</option><option>10+</option>
+            </select>
+            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="anni_obiettivo__stimato" class="accent-blue-700"> stimato</label>
+          </label>
+          <label class="md:col-span-2">Milestone rilevanti (facoltativo)
+            <input type="text" name="milestone" class="w-full border rounded px-3 py-2" placeholder="Es. acconto casa in 3 anni; università figli in 8 anni">
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP 4 – Rischio e Rendimento -->
+      <section class="step hidden" data-step="4">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">4) Rischio e rendimento</h4>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <label>Tolleranza al rischio (1–10) *
+            <input type="number" name="tolleranza_rischio" min="1" max="10" class="w-full border rounded px-3 py-2" data-estimable required>
+            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="tolleranza_rischio__stimato" class="accent-blue-700"> stimato</label>
+          </label>
+          <label>Drawdown massimo *
+            <select name="drawdown_tollerato" class="w-full border rounded px-3 py-2" data-estimable required>
+              <option value="">Seleziona</option>
+              <option>Fino a −5%</option><option>Fino a −10%</option><option>Fino a −20%</option><option>Oltre −20%</option>
+            </select>
+            <details class="mt-1 text-[11px] text-slate-500"><summary class="cursor-pointer">Cos’è?</summary><p class="mt-1">Calo temporaneo massimo che accetti prima di intervenire.</p></details>
+            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="drawdown_tollerato__stimato" class="accent-blue-700"> stimato</label>
+          </label>
+          <label>Rendimento obiettivo *
+            <select name="rendimento_obiettivo" class="w-full border rounded px-3 py-2" data-estimable required>
+              <option value="">Annuale (fascia)</option>
+              <option>2–4%</option><option>4–6%</option><option>6–8%</option><option>> 8%</option>
+            </select>
+            <select name="rnd_tipo" class="w-full border rounded px-3 py-2 mt-2">
+              <option>Nominale</option><option>Reale (al netto inflazione)</option>
+            </select>
+            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="rendimento_obiettivo__stimato" class="accent-blue-700"> stimato</label>
+          </label>
+          <label>Elasticità al drawdown *
+            <select name="elasticita_drawdown" class="w-full border rounded px-3 py-2" data-estimable required>
+              <option value="">Seleziona</option>
+              <option>Ridurre subito il rischio</option><option>Ribilanciare parzialmente</option><option>Mantenere le posizioni</option>
+            </select>
+            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="elasticita_drawdown__stimato" class="accent-blue-700"> stimato</label>
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP 5 – Esperienza e Conoscenza -->
+      <section class="step hidden" data-step="5">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">5) Esperienza e conoscenza</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <label>Anni di esperienza *
+            <select name="anni_esperienza" class="w-full border rounded px-3 py-2" data-estimable required>
+              <option value="">Seleziona</option>
+              <option>0</option><option>1–2</option><option>3–5</option><option>6–10</option><option>10+</option>
+            </select>
+            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="anni_esperienza__stimato" class="accent-blue-700"> stimato</label>
+          </label>
+          <label class="md:col-span-2">Strumenti già utilizzati *</label>
+          <div class="md:col-span-3 grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
+            <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Azioni" class="accent-blue-700">Azioni</label>
+            <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="ETF" class="accent-blue-700">ETF</label>
+            <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Obbligazioni" class="accent-blue-700">Obbligazioni</label>
+            <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Commodities" class="accent-blue-700">Commodities</label>
+            <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Derivati" class="accent-blue-700">Derivati</label>
+            <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Crypto" class="accent-blue-700">Crypto</label>
+          </div>
+          <label class="md:col-span-3">Competenza su prodotti complessi *
+            <select name="competenza_prodotti_complessi" class="w-full border rounded px-3 py-2" data-estimable required>
+              <option value="">Seleziona</option><option>Bassa</option><option>Media</option><option>Alta</option>
+            </select>
+            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="competenza_prodotti_complessi__stimato" class="accent-blue-700"> stimato</label>
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP 6 – Vincoli e Preferenze -->
+      <section class="step hidden" data-step="6">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">6) Vincoli e preferenze</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <label>ESG / Etico / Religioso
+            <select name="ESG" class="w-full border rounded px-3 py-2" data-estimable>
+              <option>Nessuno</option><option>ESG Light</option><option>ESG Strict</option>
+            </select>
+          </label>
+          <label>Preferenza valutaria
+            <select name="preferenza_valutaria" class="w-full border rounded px-3 py-2" data-estimable>
+              <option>EUR</option><option>USD</option><option>GBP</option><option>CHF</option>
+            </select>
+          </label>
+          <label>Vincoli su asset class
+            <input type="text" name="vincoli_asset_class" class="w-full border rounded px-3 py-2" placeholder="Es. max 20% crypto; no leva">
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP 7 – Contesto Macro Personale -->
+      <section class="step hidden" data-step="7">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">7) Contesto macro personale</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <label>Dipendenza da reddito esterno *
+            <select name="dipendenza_reddito" class="w-full border rounded px-3 py-2" data-estimable required>
+              <option value="">Seleziona</option><option>Bassa</option><option>Media</option><option>Alta</option>
+            </select>
+            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="dipendenza_reddito__stimato" class="accent-blue-700"> stimato</label>
+          </label>
+          <label class="md:col-span-2">Prospettiva fiscale 5–10 anni
+            <input type="text" name="prospettiva_fiscale" class="w-full border rounded px-3 py-2" placeholder="Es. cambio residenza, aliquote diverse…">
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP 8 – PAC -->
+      <section class="step hidden" data-step="8">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">8) Piano di Accumulo Capitale (PAC)</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <label>Presenza PAC *
+            <select name="pac_presenza" class="w-full border rounded px-3 py-2" required onchange="togglePAC(this.value)">
+              <option value="">Seleziona</option><option>No</option><option>Sì</option>
+            </select>
+          </label>
+          <label>Tipo piano
+            <select name="pac_tipo" class="w-full border rounded px-3 py-2" disabled>
+              <option>PAC</option><option>PIC</option><option>Ibrido</option>
+            </select>
+          </label>
+          <label>Frequenza versamenti
+            <select name="pac_frequenza" class="w-full border rounded px-3 py-2" disabled>
+              <option>Mensile</option><option>Trimestrale</option><option>Semestrale</option><option>Annuale</option>
+            </select>
+          </label>
+          <label>Importo rata (fascia)
+            <select name="pac_importo" class="w-full border rounded px-3 py-2" disabled>
+              <option>< 100</option><option>100–300</option><option>300–700</option><option>700–1500</option><option>> 1500</option>
+            </select>
+          </label>
+          <label>Durata prevista
+            <select name="pac_durata" class="w-full border rounded px-3 py-2" disabled>
+              <option>1–3 anni</option><option>4–7 anni</option><option>8–12 anni</option><option>12+ anni</option>
+            </select>
+          </label>
+          <label>Rivalutazione rata
+            <select name="pac_rivalutazione" class="w-full border rounded px-3 py-2" disabled>
+              <option>No</option><option>Sì, % annua</option><option>Sì, importo fisso</option>
+            </select>
+          </label>
+          <label class="md:col-span-3">Asset target
+            <input type="text" name="pac_asset_target" class="w-full border rounded px-3 py-2" placeholder="Es. ETF equity globali; obbligazionario indicizzato" disabled>
+          </label>
+          <label class="md:col-span-3">Note particolari
+            <input type="text" name="pac_note" class="w-full border rounded px-3 py-2" placeholder="Es. PAC solo su ETF UCITS, esclusione energy…" disabled>
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP 9 – Portafoglio attuale (solo Validazione) -->
+      <section class="step hidden" data-step="9">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">9) Portafoglio attuale (solo Validazione)</h4>
+        <p class="text-xs text-slate-500 mb-2">Inserisci in % per privacy; opzionalmente apri “Dettagli” per specificare strumenti.</p>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-medium">Allocazione attuale (Core/Satellite facoltativo)</span>
+          <button type="button" class="text-sm text-blue-700 hover:underline" onclick="aggiungiRigaVal()">+ Aggiungi riga</button>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+          <label>Core/Satellite (fac)
+            <select name="allocazione_core_satellite" class="w-full border rounded px-3 py-2">
+              <option>n/d</option><option>70/30</option><option>60/40</option><option>80/20</option>
+            </select>
+          </label>
+          <label>Volatilità realizzata (fascia)
+            <select name="volatilita_drawdown_vol" class="w-full border rounded px-3 py-2">
+              <option>n/d</option><option>< 8%</option><option>8–12%</option><option>12–18%</option><option>> 18%</option>
+            </select>
+          </label>
+          <label>Drawdown storico (fascia)
+            <select name="volatilita_drawdown_dd" class="w-full border rounded px-3 py-2">
+              <option>n/d</option><option>< −5%</option><option>−5% / −10%</option><option>−10% / −20%</option><option>< −20%</option>
+            </select>
+          </label>
+        </div>
+        <div id="val-positions" class="space-y-2"></div>
+        <div class="text-xs text-slate-600" id="val-somma">Somma indicativa: 0%</div>
+        <label class="block mt-3">Coperture in essere (facoltativo)
+          <input type="text" name="coperture" class="w-full border rounded px-3 py-2" placeholder="Es. put su indice; inverse ETF; future">
+        </label>
+        <label class="mt-2 inline-flex items-center gap-2 text-sm">
+          <input type="checkbox" name="controllo_coerenza_allocativa" class="accent-blue-700"> Esegui controllo coerenza allocativa
+        </label>
+      </section>
+
+      <!-- STEP 10 – Recapiti & Invio -->
+      <section class="step hidden" data-step="10">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">10) Recapiti & invio</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <label>Email (facoltativo)
+            <input type="email" name="email" class="w-full border rounded px-3 py-2" placeholder="you@example.com">
+          </label>
+          <label>WhatsApp (facoltativo)
+            <input type="text" name="whatsapp" class="w-full border rounded px-3 py-2" placeholder="+39...">
+          </label>
+        </div>
+        <p class="text-xs text-slate-500">Indica almeno un recapito. I dati inviati sono <strong>minimizzati</strong> (solo campi valorizzati).</p>
+        <details class="mt-3 border rounded p-3">
+          <summary class="cursor-pointer text-sm font-medium">Anteprima payload</summary>
+          <pre id="payload" class="text-xs bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto"></pre>
+        </details>
+      </section>
+
+    </form>
+
+    <!-- FOOTER NAV -->
+    <div class="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+      <button type="button" class="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-100" onclick="prevStep()">Indietro</button>
+      <div class="flex items-center gap-3">
+        <button id="btn-preview" type="button" class="px-3 py-2 text-sm border border-slate-300 rounded-lg hover:bg-slate-100" onclick="renderPayload()">Aggiorna anteprima</button>
+        <button id="submit-btn" class="px-4 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-800 hidden" onclick="inviaProfilo()">Invia</button>
+        <button id="next-btn" type="button" class="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800" onclick="nextStep()">Avanti</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ===== Apertura/chiusura =====
+  function apriModuloPortafoglio(mode=null){
+    const modal = document.getElementById('modal-portafoglio');
+    modal.classList.remove('hidden');
+    if(window.lucide) lucide.createIcons();
+    // reset
+    document.getElementById('form-portafoglio').reset();
+    currentStep = 0; stepsOrder = baseOrder.slice();
+    aggiornaStep();
+    if(mode){ const r = document.querySelector(`input[name=tipo_analisi][value=${mode}]`); if(r){ r.checked = true; onModeChange(); } }
+  }
+  function chiudiModuloPortafoglio(){ document.getElementById('modal-portafoglio').classList.add('hidden'); }
+
+  // ===== Navigazione step =====
+  const baseOrder = [0,1,2,3,4,5,6,7,8,9,10];
+  let stepsOrder = baseOrder.slice();
+  let currentStep = 0;
+
+  function mostraStep(i){
+    document.querySelectorAll('.step').forEach(s=>s.classList.add('hidden'));
+    document.querySelector(`.step[data-step="${stepsOrder[i]}"]`).classList.remove('hidden');
+  }
+  function aggiornaStep(){
+    mostraStep(currentStep);
+    const total = stepsOrder.length;
+    document.getElementById('progress-label').textContent = `Step ${currentStep+1} di ${total}`;
+    document.getElementById('progress-bar').style.width = `${Math.round(((currentStep+1)/total)*100)}%`;
+    // submit visibile solo all'ultimo
+    document.getElementById('submit-btn').classList.toggle('hidden', currentStep !== total-1);
+    document.getElementById('next-btn').classList.toggle('hidden', currentStep === total-1);
+  }
+  function nextStep(){ if(!validaStep()) return; if(currentStep < stepsOrder.length-1){ currentStep++; aggiornaStep(); } }
+  function prevStep(){ if(currentStep>0){ currentStep--; aggiornaStep(); } }
+
+  // ===== Mode logic (validazione vs simulazione) =====
+  document.addEventListener('change', (e)=>{
+    if(e.target && e.target.name==='tipo_analisi') onModeChange();
+  });
+  function onModeChange(){
+    const mode = getMode();
+    // Step 9 (portafoglio attuale) è richiesto solo in validazione
+    const idx9 = stepsOrder.indexOf(9);
+    if(mode === 'validazione' && idx9 === -1){ stepsOrder.splice(stepsOrder.length-1,0,9); }
+    if(mode === 'simulazione' && idx9 !== -1){ stepsOrder = stepsOrder.filter(s=>s!==9); }
+    // UI sezioni dedicate
+    document.querySelector('[data-step="9"]').classList.toggle('hidden', mode !== 'validazione');
+    aggiornaStep();
+  }
+  function getMode(){ const r = document.querySelector('input[name=tipo_analisi]:checked'); return r ? r.value : null; }
+
+  // ===== Validazione minima per step =====
+  function validaStep(){
+    const key = stepsOrder[currentStep];
+    const el = document.querySelector(`.step[data-step="${key}"]`);
+    let ok = true;
+    el.querySelectorAll('select[required], input[required]').forEach(inp=>{ if(!inp.value){ ok=false; inp.classList.add('ring-2','ring-red-400'); } else inp.classList.remove('ring-2','ring-red-400'); });
+    if(!ok){ el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    return ok;
+  }
+
+  // ===== Sezioni dinamiche =====
+  function togglePAC(v){
+    const names = ['pac_tipo','pac_frequenza','pac_importo','pac_durata','pac_rivalutazione','pac_asset_target','pac_note'];
+    names.forEach(n=>{ const el = document.querySelector(`[name="${n}"]`); if(el){ el.disabled = (v!=='Sì'); if(v==='Sì'){ el.closest('label').classList.remove('opacity-50'); } else { el.closest('label').classList.add('opacity-50'); } } });
+  }
+  function toggleCSManual(val){ const box = document.getElementById('cs-manuale'); if(box) box.classList.toggle('hidden', val !== 'manuale'); }
+
+  // ===== Portafoglio attuale – righe dinamiche =====
+  function rowValTemplate(i){
+    return `
+      <div class="border rounded-lg p-3">
+        <div class="grid grid-cols-12 gap-2 items-center">
+          <div class="col-span-7">
+            <label class="text-xs text-slate-600">Strumento o Categoria
+              <input name="pos[${i}][nome]" class="w-full border rounded px-2 py-1.5 mt-1" placeholder="Es. ETF azionario globale / BTP / Cash" />
+            </label>
+          </div>
+          <div class="col-span-3">
+            <label class="text-xs text-slate-600">Percentuale (%)
+              <input name="pos[${i}][pct]" type="number" min="0" max="100" step="any" class="w-full border rounded px-2 py-1.5 mt-1 pct-input" oninput="aggiornaSomma()" />
+            </label>
+          </div>
+          <div class="col-span-2 text-right">
+            <button type="button" class="text-xs text-red-600 hover:underline" onclick="rimuoviRigaVal(this)">Rimuovi</button>
+          </div>
+        </div>
+        <details class="mt-2">
+          <summary class="text-xs cursor-pointer text-slate-600">Dettagli (facoltativi)</summary>
+          <div class="grid grid-cols-12 gap-2 mt-2">
+            <label class="col-span-3 text-xs text-slate-600">Ticker/ISIN
+              <input name="pos[${i}][id]" class="w-full border rounded px-2 py-1.5 mt-1" />
+            </label>
+            <label class="col-span-3 text-xs text-slate-600">Quantità
+              <input name="pos[${i}][qty]" type="number" step="any" class="w-full border rounded px-2 py-1.5 mt-1" />
+            </label>
+            <label class="col-span-3 text-xs text-slate-600">Prezzo medio
+              <input name="pos[${i}][px]" type="number" step="any" class="w-full border rounded px-2 py-1.5 mt-1" />
+            </label>
+            <label class="col-span-3 text-xs text-slate-600">Valuta
+              <input name="pos[${i}][ccy]" class="w-full border rounded px-2 py-1.5 mt-1" placeholder="EUR/USD/…" />
+            </label>
+          </div>
+        </details>
+      </div>`;
+  }
+  function aggiungiRigaVal(){
+    const wrap = document.getElementById('val-positions');
+    const i = wrap.children.length;
+    const div = document.createElement('div'); div.innerHTML = rowValTemplate(i); wrap.appendChild(div.firstElementChild);
+  }
+  function rimuoviRigaVal(btn){ btn.closest('.border.rounded-lg').remove(); aggiornaSomma(); }
+  function aggiornaSomma(){ let s=0; document.querySelectorAll('.pct-input').forEach(i=>{ const v=parseFloat(i.value); if(!isNaN(v)) s+=v; }); document.getElementById('val-somma').textContent = `Somma indicativa: ${s.toFixed(1)}%`; }
+
+  // ===== Serializzazione → Schema YAML (JSON equivalente) =====
+  function readEstimable(form, name){
+    const value = form.get(name);
+    if(value===null || String(value).trim()==='') return null;
+    const stim = form.get(name+'__stimato') ? true : false;
+    return { valore: value, stimato: stim };
+  }
+  function buildPayload(){
+    const fd = new FormData(document.getElementById('form-portafoglio'));
+    // strumenti usati (multi)
+    const strumenti = [];
+    (document.querySelectorAll('input[name="strumenti_usati"]:checked')||[]).forEach(x=> strumenti.push(x.value));
+
+    // posizioni validazione
+    const pos = [];
+    (document.querySelectorAll('#val-positions > .border.rounded-lg')||[]).forEach(card=>{
+      const q = sel => card.querySelector(sel)?.value?.trim();
+      const pct = parseFloat(q('[name$="[pct]"]'));
+      const nome = q('[name$="[nome]"]');
+      if(nome || !isNaN(pct)){
+        pos.push({ nome: nome||null, pct: isNaN(pct)?null:pct, id:q('[name$="[id]"]')||null, qty:q('[name$="[qty]"]')||null, px:q('[name$="[px]"]')||null, ccy:q('[name$="[ccy]"]')||null });
+      }
+    });
+
+    const mode = document.querySelector('input[name=tipo_analisi]:checked')?.value || null;
+
+    const Profilo_Investitore = {
+      dati_anagrafici: {
+        eta: readEstimable(fd,'eta'),
+        area_fiscale: readEstimable(fd,'area_fiscale'),
+        situazione_patrimoniale: readEstimable(fd,'situazione_patrimoniale')
+      },
+      capitale_liquidita: {
+        capitale_totale: readEstimable(fd,'capitale_totale'),
+        capitale_investibile: readEstimable(fd,'capitale_investibile'),
+        cash_buffer: readEstimable(fd,'cash_buffer')
+      },
+      orizzonte_temporale: {
+        anni_obiettivo: readEstimable(fd,'anni_obiettivo'),
+        milestone: { valore: (fd.get('milestone')||'').trim()||null, stimato:false }
+      },
+      rischio_rendimento: {
+        tolleranza_rischio: readEstimable(fd,'tolleranza_rischio'),
+        drawdown_tollerato: readEstimable(fd,'drawdown_tollerato'),
+        rendimento_obiettivo: readEstimable(fd,'rendimento_obiettivo'),
+        elasticita_drawdown: readEstimable(fd,'elasticita_drawdown'),
+        rnd_tipo: (fd.get('rnd_tipo')||'Nominale')
+      },
+      esperienza_conoscenza: {
+        anni_esperienza: readEstimable(fd,'anni_esperienza'),
+        strumenti_usati: { valore: strumenti, stimato:false },
+        competenza_prodotti_complessi: readEstimable(fd,'competenza_prodotti_complessi')
+      },
+      vincoli_preferenze: {
+        ESG: { valore: fd.get('ESG')||'Nessuno', stimato:false },
+        preferenza_valutaria: { valore: fd.get('preferenza_valutaria')||'EUR', stimato:false },
+        vincoli_asset_class: { valore:(fd.get('vincoli_asset_class')||'').trim()||null, stimato:false }
+      },
+      contesto_macro_personale: {
+        dipendenza_reddito: readEstimable(fd,'dipendenza_reddito'),
+        prospettiva_fiscale: { valore:(fd.get('prospettiva_fiscale')||'').trim()||null, stimato:false }
+      },
+      pac: (fd.get('pac_presenza')==='Sì') ? {
+        presenza: { valore:'Sì', stimato:false },
+        tipo: { valore: fd.get('pac_tipo')||null, stimato:false },
+        frequenza: { valore: fd.get('pac_frequenza')||null, stimato:false },
+        importo_rata: { valore: fd.get('pac_importo')||null, stimato:false },
+        durata: { valore: fd.get('pac_durata')||null, stimato:false },
+        rivalutazione_rata: { valore: fd.get('pac_rivalutazione')||null, stimato:false },
+        asset_target: { valore:(fd.get('pac_asset_target')||'').trim()||null, stimato:false },
+        note: { valore:(fd.get('pac_note')||'').trim()||null, stimato:false }
+      } : {
+        presenza: { valore:'No', stimato:false }
+      },
+      portafoglio_attuale: (mode==='validazione') ? {
+        allocazione: { valore: fd.get('allocazione_core_satellite')||'n/d', stimato:false },
+        performance_storica: { valore: null, stimato:true },
+        volatilita_drawdown: { valore: { vol: fd.get('volatilita_drawdown_vol')||'n/d', dd: fd.get('volatilita_drawdown_dd')||'n/d' }, stimato:false },
+        coperture: { valore:(fd.get('coperture')||'').trim()||null, stimato:false },
+        controllo_coerenza: { esito: !!fd.get('controllo_coerenza_allocativa'), descrizione: null, validazione_colore: null }
+      } : null
+    };
+
+    const payload = {
+      servizio: 'profilo_investitore',
+      tipo_analisi: mode,
+      Profilo_Investitore,
+      recapiti: { email: (fd.get('email')||'').trim()||null, whatsapp: (fd.get('whatsapp')||'').trim()||null }
+    };
+    return payload;
+  }
+
+  function renderPayload(){
+    const p = buildPayload();
+    const pre = document.getElementById('payload');
+    if(pre) pre.textContent = JSON.stringify(p, null, 2);
+  }
+
+  // ===== INVIO =====
+  async function inviaProfilo(){
+    // validazione recapiti
+    const email = document.querySelector("[name='email']")?.value.trim();
+    const wa = document.querySelector("[name='whatsapp']")?.value.trim();
+    if(!email && !wa){ alert('Indica almeno un recapito (Email o WhatsApp).'); return; }
+
+    // Antilacune: verifica richiesti nello scenario corrente
+    for(let i=0;i<stepsOrder.length-1;i++){ // esclude recapiti
+      const el = document.querySelector(`.step[data-step="${stepsOrder[i]}"]`);
+      let ok = true; el.querySelectorAll('select[required], input[required]').forEach(inp=>{ if(!inp.value) ok=false; });
+      if(!ok){ currentStep = i; aggiornaStep(); alert('Compila i campi obbligatori dello step attuale.'); return; }
+    }
+
+    const payload = buildPayload();
+    renderPayload();
+
+    try{
+      const res = await fetch('/api/send-email', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      alert('✅ Profilo inviato correttamente.');
+      chiudiModuloPortafoglio();
+    }catch(err){ console.error(err); alert('❌ Errore durante l\'invio. Riprova.'); }
+  }
+</script>
 
 
 <!-- BROKER CON VALUTAZIONE AI -->
