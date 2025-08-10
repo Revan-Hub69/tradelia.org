@@ -210,7 +210,7 @@
 Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/send-email
 -->
 <div id="modal-portafoglio" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
-  <div class="bg-white w-full max-w-5xl mx-auto rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[94vh]" role="dialog" aria-modal="true"">
+  <div class="bg-white w-full max-w-5xl mx-auto rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[94vh]" role="dialog" aria-modal="true">
 
     <!-- HEADER -->
     <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
@@ -261,59 +261,56 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
 
       <!-- STEP 1 – Dati anagrafici e strutturali -->
       <section class="step hidden" data-step="1">
-        <h4 class="text-base font-semibold text-slate-900 mb-2">1) Dati anagrafici e strutturali</h4>
+        <h4 class="text-base font-semibold text-slate-900 mb-2">1) Dati anagrafici e fiscali</h4>
+        <p class="text-xs text-slate-500 mb-4">Questi dati servono solo per calibrare orizzonte e tassazione a livello generale.</p>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <label>Età *
-            <select name="eta" class="w-full border rounded px-3 py-2" data-estimable required>
+            <select name="eta" class="w-full border rounded px-3 py-2" required>
               <option value="">Seleziona</option>
               <option>18–30</option><option>31–45</option><option>46–60</option><option>61+</option>
             </select>
             <span class="text-[11px] text-slate-500">Seleziona una fascia: non chiediamo cifre precise.</span>
-            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="eta__stimato" class="accent-blue-700"> stimato</label>
           </label>
           <label>Area fiscale *
-            <select name="area_fiscale" class="w-full border rounded px-3 py-2" data-estimable required>
+            <select name="area_fiscale" class="w-full border rounded px-3 py-2" required>
               <option value="">Seleziona</option>
               <option>Italia</option><option>UE (non IT)</option><option>UK</option><option>USA</option><option>Altro</option>
             </select>
-            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="area_fiscale__stimato" class="accent-blue-700"> stimato</label>
           </label>
-          <label>Situazione patrimoniale (% investibile) *
-            <select name="situazione_patrimoniale" class="w-full border rounded px-3 py-2" data-estimable required>
-              <option value="">Seleziona</option>
-              <option>< 20%</option><option>20–40%</option><option>40–60%</option><option>60–80%</option><option>> 80%</option>
-            </select>
-            <span class="text-[11px] text-slate-500">Quota del patrimonio che intendi investire.</span>
-            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="situazione_patrimoniale__stimato" class="accent-blue-700"> stimato</label>
-          </label>
+          <div class="md:col-span-1"></div>
         </div>
       </section>
 
       <!-- STEP 2 – Capitale e Liquidità -->
       <section class="step hidden" data-step="2">
         <h4 class="text-base font-semibold text-slate-900 mb-2">2) Capitale e liquidità</h4>
+        <p class="text-xs text-slate-500 mb-4">Indica le <strong>fasce</strong>: non chiediamo importi precisi.</p>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <label>Capitale totale *
-            <select name="capitale_totale" class="w-full border rounded px-3 py-2" data-estimable required>
+            <select name="capitale_totale" class="w-full border rounded px-3 py-2" required>
               <option value="">Fascia</option>
               <option>< 10k</option><option>10k–50k</option><option>50k–200k</option><option>200k–500k</option><option>> 500k</option>
             </select>
-            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="capitale_totale__stimato" class="accent-blue-700"> stimato</label>
           </label>
           <label>Capitale investibile immediato *
-            <select name="capitale_investibile" class="w-full border rounded px-3 py-2" data-estimable required>
+            <select name="capitale_investibile" class="w-full border rounded px-3 py-2" required>
               <option value="">Fascia</option>
               <option>< 5k</option><option>5k–25k</option><option>25k–100k</option><option>100k–250k</option><option>> 250k</option>
             </select>
-            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="capitale_investibile__stimato" class="accent-blue-700"> stimato</label>
           </label>
-          <label>Liquidità di sicurezza (%)*
-            <select name="cash_buffer" class="w-full border rounded px-3 py-2" data-estimable required>
+          <label>Liquidità di sicurezza (%) *
+            <select name="cash_buffer" class="w-full border rounded px-3 py-2" required>
               <option value="">Fascia</option>
               <option>< 5%</option><option>5–10%</option><option>10–20%</option><option>20–30%</option><option>> 30%</option>
             </select>
             <span class="text-[11px] text-slate-500">Percentuale minima che desideri mantenere disponibile in conto.</span>
-            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="cash_buffer__stimato" class="accent-blue-700"> stimato</label>
+          </label>
+          <label class="md:col-span-3">Situazione patrimoniale (% investibile) *
+            <select name="situazione_patrimoniale" class="w-full border rounded px-3 py-2" required>
+              <option value="">Seleziona</option>
+              <option>< 20%</option><option>20–40%</option><option>40–60%</option><option>60–80%</option><option>> 80%</option>
+            </select>
+            <span class="text-[11px] text-slate-500">Quota del tuo patrimonio totale che intendi investire.</span>
           </label>
         </div>
       </section>
@@ -327,7 +324,7 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
               <option value="">Seleziona</option>
               <option>Fino a 2</option><option>3–5</option><option>6–10</option><option>10+</option>
             </select>
-            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="anni_obiettivo__stimato" class="accent-blue-700"> stimato</label>
+            
           </label>
           <label class="md:col-span-2">Milestone rilevanti (facoltativo)
             <input type="text" name="milestone" class="w-full border rounded px-3 py-2" placeholder="Es. acconto casa in 3 anni; università figli in 8 anni">
@@ -340,33 +337,30 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
         <h4 class="text-base font-semibold text-slate-900 mb-2">4) Rischio e rendimento</h4>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
           <label>Tolleranza al rischio (1–10) *
-            <input type="number" name="tolleranza_rischio" min="1" max="10" class="w-full border rounded px-3 py-2" data-estimable required>
-            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="tolleranza_rischio__stimato" class="accent-blue-700"> stimato</label>
+            <input type="number" name="tolleranza_rischio" min="1" max="10" class="w-full border rounded px-3 py-2" required>
+            <span class="text-[11px] text-slate-500">1 = non tollero oscillazioni, 10 = accetto forti oscillazioni.</span>
           </label>
           <label>Drawdown massimo *
-            <select name="drawdown_tollerato" class="w-full border rounded px-3 py-2" data-estimable required>
+            <select name="drawdown_tollerato" class="w-full border rounded px-3 py-2" required>
               <option value="">Seleziona</option>
               <option>Fino a −5%</option><option>Fino a −10%</option><option>Fino a −20%</option><option>Oltre −20%</option>
             </select>
-            <details class="mt-1 text-[11px] text-slate-500"><summary class="cursor-pointer">Cos’è?</summary><p class="mt-1">Calo temporaneo massimo che accetti prima di intervenire.</p></details>
-            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="drawdown_tollerato__stimato" class="accent-blue-700"> stimato</label>
+            <details class="mt-1 text-[11px] text-slate-500"><summary class="cursor-pointer">Cos’è?</summary><p class="mt-1">Calo massimo temporaneo accettabile prima di intervenire.</p></details>
           </label>
           <label>Rendimento obiettivo *
-            <select name="rendimento_obiettivo" class="w-full border rounded px-3 py-2" data-estimable required>
+            <select name="rendimento_obiettivo" class="w-full border rounded px-3 py-2" required>
               <option value="">Annuale (fascia)</option>
               <option>2–4%</option><option>4–6%</option><option>6–8%</option><option>> 8%</option>
             </select>
             <select name="rnd_tipo" class="w-full border rounded px-3 py-2 mt-2">
               <option>Nominale</option><option>Reale (al netto inflazione)</option>
             </select>
-            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="rendimento_obiettivo__stimato" class="accent-blue-700"> stimato</label>
           </label>
-          <label>Elasticità al drawdown *
-            <select name="elasticita_drawdown" class="w-full border rounded px-3 py-2" data-estimable required>
+          <label>Comportamento in caso di calo *
+            <select name="elasticita_drawdown" class="w-full border rounded px-3 py-2" required>
               <option value="">Seleziona</option>
               <option>Ridurre subito il rischio</option><option>Ribilanciare parzialmente</option><option>Mantenere le posizioni</option>
             </select>
-            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="elasticita_drawdown__stimato" class="accent-blue-700"> stimato</label>
           </label>
         </div>
       </section>
@@ -374,28 +368,33 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
       <!-- STEP 5 – Esperienza e Conoscenza -->
       <section class="step hidden" data-step="5">
         <h4 class="text-base font-semibold text-slate-900 mb-2">5) Esperienza e conoscenza</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <label>Anni di esperienza *
-            <select name="anni_esperienza" class="w-full border rounded px-3 py-2" data-estimable required>
-              <option value="">Seleziona</option>
-              <option>0</option><option>1–2</option><option>3–5</option><option>6–10</option><option>10+</option>
-            </select>
-            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="anni_esperienza__stimato" class="accent-blue-700"> stimato</label>
-          </label>
-          <label class="md:col-span-2">Strumenti già utilizzati *</label>
-          <div class="md:col-span-3 grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
-            <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Azioni" class="accent-blue-700">Azioni</label>
-            <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="ETF" class="accent-blue-700">ETF</label>
-            <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Obbligazioni" class="accent-blue-700">Obbligazioni</label>
-            <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Commodities" class="accent-blue-700">Commodities</label>
-            <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Derivati" class="accent-blue-700">Derivati</label>
-            <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Crypto" class="accent-blue-700">Crypto</label>
+        <div class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <label>Anni di esperienza *
+              <select name="anni_esperienza" class="w-full border rounded px-3 py-2" required>
+                <option value="">Seleziona</option>
+                <option>0</option><option>1–2</option><option>3–5</option><option>6–10</option><option>10+</option>
+              </select>
+              <span class="text-[11px] text-slate-500">Esperienza complessiva, anche non continuativa.</span>
+            </label>
+            <div class="md:col-span-2">
+              <div class="mb-1 font-medium text-sm">Strumenti già utilizzati *</div>
+              <p class="text-[11px] text-slate-500 mb-2">Seleziona tutte le tipologie su cui hai operato (anche in demo).</p>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
+                <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Azioni" class="accent-blue-700">Azioni</label>
+                <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="ETF" class="accent-blue-700">ETF</label>
+                <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Obbligazioni" class="accent-blue-700">Obbligazioni</label>
+                <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Commodities" class="accent-blue-700">Commodities</label>
+                <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Derivati" class="accent-blue-700">Derivati</label>
+                <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Crypto" class="accent-blue-700">Crypto</label>
+              </div>
+            </div>
           </div>
-          <label class="md:col-span-3">Competenza su prodotti complessi *
-            <select name="competenza_prodotti_complessi" class="w-full border rounded px-3 py-2" data-estimable required>
+          <label>Competenza su prodotti complessi *
+            <select name="competenza_prodotti_complessi" class="w-full border rounded px-3 py-2" required>
               <option value="">Seleziona</option><option>Bassa</option><option>Media</option><option>Alta</option>
             </select>
-            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="competenza_prodotti_complessi__stimato" class="accent-blue-700"> stimato</label>
+            <span class="text-[11px] text-slate-500">Esempi: opzioni, futures, leva, prodotti strutturati.</span>
           </label>
         </div>
       </section>
@@ -428,7 +427,7 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
             <select name="dipendenza_reddito" class="w-full border rounded px-3 py-2" data-estimable required>
               <option value="">Seleziona</option><option>Bassa</option><option>Media</option><option>Alta</option>
             </select>
-            <label class="text-[11px] text-slate-500 inline-flex items-center gap-1 mt-1"><input type="checkbox" name="dipendenza_reddito__stimato" class="accent-blue-700"> stimato</label>
+            
           </label>
           <label class="md:col-span-2">Prospettiva fiscale 5–10 anni
             <input type="text" name="prospettiva_fiscale" class="w-full border rounded px-3 py-2" placeholder="Es. cambio residenza, aliquote diverse…">
@@ -506,6 +505,7 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
         </div>
         <div id="val-positions" class="space-y-2"></div>
         <div class="text-xs text-slate-600" id="val-somma">Somma indicativa: 0%</div>
+        <div id="sum-warning" class="hidden mt-2 text-xs bg-amber-100 text-amber-800 border border-amber-300 rounded px-3 py-2">⚠️ Le percentuali non sembrano coerenti con il totale (atteso ~100%). Verifica valori e riprova.</div>
         <label class="block mt-3">Coperture in essere (facoltativo)
           <input type="text" name="coperture" class="w-full border rounded px-3 py-2" placeholder="Es. put su indice; inverse ETF; future">
         </label>
@@ -546,6 +546,14 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
 
   </div>
 </div>
+
+<style>
+  @media (max-width: 640px){
+    #modal-portafoglio select,
+    #modal-portafoglio input,
+    #modal-portafoglio textarea{ min-height:44px; font-size:16px; }
+  }
+</style>
 
 <script>
   // Previeni lo scroll del body sotto il modale
@@ -663,16 +671,21 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
     const div = document.createElement('div'); div.innerHTML = rowValTemplate(i); wrap.appendChild(div.firstElementChild);
   }
   function rimuoviRigaVal(btn){ btn.closest('.border.rounded-lg').remove(); aggiornaSomma(); }
-  function aggiornaSomma(){ let s=0; document.querySelectorAll('.pct-input').forEach(i=>{ const v=parseFloat(i.value); if(!isNaN(v)) s+=v; }); document.getElementById('val-somma').textContent = `Somma indicativa: ${s.toFixed(1)}%`; }
-
+  function aggiornaSomma(){
+    let s=0; document.querySelectorAll('.pct-input').forEach(i=>{ const v=parseFloat(i.value); if(!isNaN(v)) s+=v; });
+    document.getElementById('val-somma').textContent = `Somma indicativa: ${s.toFixed(1)}%`;
+    const warn = document.getElementById('sum-warning');
+    if(!warn) return;
+    const out = (s>110 || s<90) && !isNaN(s);
+    warn.classList.toggle('hidden', !out);
+  
   // ===== Serializzazione → Schema YAML (JSON equivalente) =====
-  function readEstimable(form, name){
+  function readValue(form, name){
     const value = form.get(name);
     if(value===null || String(value).trim()==='') return null;
-    const stim = form.get(name+'__stimato') ? true : false;
-    return { valore: value, stimato: stim };
+    return { valore: value };
   }
-  function buildPayload(){
+function buildPayload(){
     const fd = new FormData(document.getElementById('form-portafoglio'));
     // strumenti usati (multi)
     const strumenti = [];
@@ -693,57 +706,57 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
 
     const Profilo_Investitore = {
       dati_anagrafici: {
-        eta: readEstimable(fd,'eta'),
-        area_fiscale: readEstimable(fd,'area_fiscale'),
-        situazione_patrimoniale: readEstimable(fd,'situazione_patrimoniale')
+        eta: readValue(fd,'eta'),
+        area_fiscale: readValue(fd,'area_fiscale'),
+        situazione_patrimoniale: readValue(fd,'situazione_patrimoniale')
       },
       capitale_liquidita: {
-        capitale_totale: readEstimable(fd,'capitale_totale'),
-        capitale_investibile: readEstimable(fd,'capitale_investibile'),
-        cash_buffer: readEstimable(fd,'cash_buffer')
+        capitale_totale: readValue(fd,'capitale_totale'),
+        capitale_investibile: readValue(fd,'capitale_investibile'),
+        cash_buffer: readValue(fd,'cash_buffer')
       },
       orizzonte_temporale: {
-        anni_obiettivo: readEstimable(fd,'anni_obiettivo'),
-        milestone: { valore: (fd.get('milestone')||'').trim()||null, stimato:false }
+        anni_obiettivo: readValue(fd,'anni_obiettivo'),
+        milestone: { valore: (fd.get('milestone')||'').trim()||null }
       },
       rischio_rendimento: {
-        tolleranza_rischio: readEstimable(fd,'tolleranza_rischio'),
-        drawdown_tollerato: readEstimable(fd,'drawdown_tollerato'),
-        rendimento_obiettivo: readEstimable(fd,'rendimento_obiettivo'),
-        elasticita_drawdown: readEstimable(fd,'elasticita_drawdown'),
+        tolleranza_rischio: readValue(fd,'tolleranza_rischio'),
+        drawdown_tollerato: readValue(fd,'drawdown_tollerato'),
+        rendimento_obiettivo: readValue(fd,'rendimento_obiettivo'),
+        elasticita_drawdown: readValue(fd,'elasticita_drawdown'),
         rnd_tipo: (fd.get('rnd_tipo')||'Nominale')
       },
       esperienza_conoscenza: {
-        anni_esperienza: readEstimable(fd,'anni_esperienza'),
-        strumenti_usati: { valore: strumenti, stimato:false },
-        competenza_prodotti_complessi: readEstimable(fd,'competenza_prodotti_complessi')
+        anni_esperienza: readValue(fd,'anni_esperienza'),
+        strumenti_usati: { valore: strumenti },
+        competenza_prodotti_complessi: readValue(fd,'competenza_prodotti_complessi')
       },
       vincoli_preferenze: {
-        ESG: { valore: fd.get('ESG')||'Nessuno', stimato:false },
-        preferenza_valutaria: { valore: fd.get('preferenza_valutaria')||'EUR', stimato:false },
-        vincoli_asset_class: { valore:(fd.get('vincoli_asset_class')||'').trim()||null, stimato:false }
+        ESG: { valore: fd.get('ESG')||'Nessuno' },
+        preferenza_valutaria: { valore: fd.get('preferenza_valutaria')||'EUR' },
+        vincoli_asset_class: { valore:(fd.get('vincoli_asset_class')||'').trim()||null }
       },
       contesto_macro_personale: {
-        dipendenza_reddito: readEstimable(fd,'dipendenza_reddito'),
-        prospettiva_fiscale: { valore:(fd.get('prospettiva_fiscale')||'').trim()||null, stimato:false }
+        dipendenza_reddito: readValue(fd,'dipendenza_reddito'),
+        prospettiva_fiscale: { valore:(fd.get('prospettiva_fiscale')||'').trim()||null }
       },
       pac: (fd.get('pac_presenza')==='Sì') ? {
-        presenza: { valore:'Sì', stimato:false },
-        tipo: { valore: fd.get('pac_tipo')||null, stimato:false },
-        frequenza: { valore: fd.get('pac_frequenza')||null, stimato:false },
-        importo_rata: { valore: fd.get('pac_importo')||null, stimato:false },
-        durata: { valore: fd.get('pac_durata')||null, stimato:false },
-        rivalutazione_rata: { valore: fd.get('pac_rivalutazione')||null, stimato:false },
-        asset_target: { valore:(fd.get('pac_asset_target')||'').trim()||null, stimato:false },
-        note: { valore:(fd.get('pac_note')||'').trim()||null, stimato:false }
+        presenza: { valore:'Sì' },
+        tipo: { valore: fd.get('pac_tipo')||null },
+        frequenza: { valore: fd.get('pac_frequenza')||null },
+        importo_rata: { valore: fd.get('pac_importo')||null },
+        durata: { valore: fd.get('pac_durata')||null },
+        rivalutazione_rata: { valore: fd.get('pac_rivalutazione')||null },
+        asset_target: { valore:(fd.get('pac_asset_target')||'').trim()||null },
+        note: { valore:(fd.get('pac_note')||'').trim()||null }
       } : {
-        presenza: { valore:'No', stimato:false }
+        presenza: { valore:'No' }
       },
       portafoglio_attuale: (mode==='validazione') ? {
-        allocazione: { valore: fd.get('allocazione_core_satellite')||'n/d', stimato:false },
-        performance_storica: { valore: null, stimato:true },
-        volatilita_drawdown: { valore: { vol: fd.get('volatilita_drawdown_vol')||'n/d', dd: fd.get('volatilita_drawdown_dd')||'n/d' }, stimato:false },
-        coperture: { valore:(fd.get('coperture')||'').trim()||null, stimato:false },
+        allocazione: { valore: fd.get('allocazione_core_satellite')||'n/d' },
+        performance_storica: { valore: null },
+        volatilita_drawdown: { valore: { vol: fd.get('volatilita_drawdown_vol')||'n/d', dd: fd.get('volatilita_drawdown_dd')||'n/d' } },
+        coperture: { valore:(fd.get('coperture')||'').trim()||null },
         controllo_coerenza: { esito: !!fd.get('controllo_coerenza_allocativa'), descrizione: null, validazione_colore: null }
       } : null
     };
@@ -788,6 +801,7 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
     }catch(err){ console.error(err); alert('❌ Errore durante l\'invio. Riprova.'); }
   }
 </script>
+
 
 <!-- BROKER CON VALUTAZIONE AI -->
 <section class="bg-white py-20 px-4">
