@@ -1,32 +1,55 @@
+// /pages/api/send-email.js  (Next.js Pages)  – compat vecchio/nuovo payload
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
-  const MAIL_FROM = process.env.MAIL_FROM || "Tradelia <onboarding@resend.dev>"; // meglio: "Tradelia <ai@tradelia.org>"
+  const MAIL_FROM = process.env.MAIL_FROM || "Tradelia <noreply@resend.dev>";
   const MAIL_TO = process.env.MAIL_TO || "analisi@tradelia.org";
 
   if (!RESEND_API_KEY) {
     return res.status(500).json({ error: "Missing RESEND_API_KEY" });
   }
 
-  const body = req.body || {};
+  // Parse body in modo tollerante
+  let body = {};
+  try {
+    body = typeof req.body === "string" ? JSON.parse(req.body) : (req.body || {});
+  } catch (_) {
+    body = req.body || {};
+  }
+
   const servizio = body.servizio || "N/D";
 
-  // Recapiti minimi
-  const email = body?.recapiti?.email?.trim();
-  const wa = body?.recapiti?.whatsapp?.trim();
-  if (!email && !wa) {
+  // ---- Back-compat recapiti ----
+  // nuovo schema: body.recapiti.email / .whatsapp
+  // vecchio schema piatto: metodo/contatto oppure email/whatsapp sparsi
+  const email =
+    body?.recapiti?.email?.trim() ||
+    body?.email?.trim() ||
+    body?.a_email?.trim() ||
+    body?.q_email?.trim() ||
+    ((typeof body?.contatto === "string" && body.contatto.includes("@")) ? body.contatto : null);
+
+  const whatsapp =
+    body?.recapiti?.whatsapp?.trim() ||
+    body?.whatsapp?.trim() ||
+    body?.a_whatsapp?.trim() ||
+    body?.q_whatsapp?.trim() ||
+    ((typeof body?.contatto === "string" && /^\+?\d/.test(body.contatto)) ? body.contatto : null);
+
+  if (!email && !whatsapp) {
     return res.status(400).json({ error: "Indica almeno un recapito (email o WhatsApp)." });
   }
 
-  // Sanitize: NON inviare password
+  // Sanitize: mai inviare password
   const sanitized = JSON.parse(JSON.stringify(body));
   if (sanitized?.sharing?.password) delete sanitized.sharing.password;
 
-  // Helpers
-  const truncate = (s, n = 180) => (typeof s === "string" && s.length > n ? s.slice(0, n) + "…" : s || "N/D");
+  // Helper sicuri
+  const truncate = (s, n = 220) =>
+    (typeof s === "string" && s.length > n ? s.slice(0, n) + "…" : (s || "N/D"));
   const val = (obj, path, fallback = "N/D") => {
     try {
       return path.split(".").reduce((a, k) => (a && a[k] !== undefined ? a[k] : undefined), obj) ?? fallback;
@@ -35,66 +58,56 @@ export default async function handler(req, res) {
     }
   };
 
-  // Header comune
+  // Subject + contenuto umani
+  let subject = "📩 Nuova richiesta Tradelia AI";
   const righe = [];
   righe.push("✅ Nuova richiesta AI da Tradelia");
+  if (body.nome) righe.push(`👤 Nome: ${body.nome}`);
   righe.push(`📝 Servizio: ${servizio}`);
-  righe.push(`📞 Contatti: ${[email, wa].filter(Boolean).join(" | ") || "N/D"}`);
 
-  // Sezioni per servizio
-  let subject = "📩 Nuova richiesta Tradelia AI";
+  const contattiLine = [email, whatsapp].filter(Boolean).join(" | ") || body.contatto || "N/D";
+  righe.push(`📬 Contatti: ${contattiLine}`);
+  if (body.metodo) righe.push(`📞 Metodo: ${body.metodo}`);
 
   if (servizio === "profilo_investitore") {
     subject = "📩 Profilo Investitore – nuova richiesta";
     righe.push(`🎯 Modalità: ${body.tipo_analisi || "N/D"}`);
     righe.push(
-      `👤 Età: ${val(body, "Profilo_Investitore.dati_anagrafici.eta.valore")} | Area fiscale: ${val(
-        body,
-        "Profilo_Investitore.dati_anagrafici.area_fiscale.valore"
-      )}`
+      `👤 Età: ${val(body, "Profilo_Investitore.dati_anagrafici.eta.valore")} | Area fiscale: ${val(body, "Profilo_Investitore.dati_anagrafici.area_fiscale.valore")}`
     );
     righe.push(
-      `💰 Capitale: ${val(body, "Profilo_Investitore.capitale_liquidita.capitale_totale.valore")} | Investibile ora: ${val(
-        body,
-        "Profilo_Investitore.capitale_liquidita.capitale_investibile.valore"
-      )}`
+      `💰 Capitale: ${val(body, "Profilo_Investitore.capitale_liquidita.capitale_totale.valore")} | Investibile ora: ${val(body, "Profilo_Investitore.capitale_liquidita.capitale_investibile.valore")}`
     );
     righe.push(
-      `⚖️ Rischio: tol=${val(body, "Profilo_Investitore.rischio_rendimento.tolleranza_rischio.valore")} | DD=${val(
-        body,
-        "Profilo_Investitore.rischio_rendimento.drawdown_tollerato.valore"
-      )} | Rnd=${val(body, "Profilo_Investitore.rischio_rendimento.rendimento_obiettivo.valore")} (${val(
-        body,
-        "Profilo_Investitore.rischio_rendimento.rnd_tipo",
-        "Nominale"
-      )})`
+      `⚖️ Rischio: tol=${val(body, "Profilo_Investitore.rischio_rendimento.tolleranza_rischio.valore")} | DD=${val(body, "Profilo_Investitore.rischio_rendimento.drawdown_tollerato.valore")} | Rnd=${val(body, "Profilo_Investitore.rischio_rendimento.rendimento_obiettivo.valore")} (${val(body, "Profilo_Investitore.rischio_rendimento.rnd_tipo","Nominale")})`
     );
     if (body.tipo_analisi === "validazione") {
       const pos = val(body, "Profilo_Investitore.portafoglio_attuale.posizioni.valore", []);
       righe.push(`📦 Posizioni dichiarate: ${Array.isArray(pos) ? pos.length : 0}`);
     }
-    if (body?.sharing?.visibility) {
-      righe.push(`🔐 Visibilità report: ${body.sharing.visibility}`);
-    }
+    if (body?.sharing?.visibility) righe.push(`🔐 Visibilità report: ${body.sharing.visibility}`);
   } else if (servizio === "analisi_asset") {
     subject = "📩 Analisi Asset – nuova richiesta";
     righe.push(
-      `🔎 Tipo: ${val(body, "Analisi_Asset.identificazione.tipo.valore")} | ID: ${val(
-        body,
-        "Analisi_Asset.identificazione.identificativo.valore"
-      )}`
+      `🔎 Tipo: ${val(body, "Analisi_Asset.identificazione.tipo.valore")} | ID: ${val(body, "Analisi_Asset.identificazione.identificativo.valore")}`
     );
     const fin = val(body, "Analisi_Asset.richiesta.finalita.valore", []);
     righe.push(`🎯 Finalità: ${Array.isArray(fin) ? fin.join(", ") : fin}`);
     const note = val(body, "Analisi_Asset.richiesta.note.valore", "");
-    if (note && note !== "N/D") righe.push(`📝 Note: ${truncate(note, 220)}`);
+    if (note && note !== "N/D") righe.push(`📝 Note: ${truncate(note)}`);
+    // Back-compat (vecchio payload)
+    if (body.asset) righe.push(`📊 Asset richiesto: ${body.asset}`);
+    if (body.analisi) righe.push(`🧠 Tipo Analisi: ${body.analisi}`);
   } else if (servizio === "domanda_libera") {
     subject = "📩 Domanda Libera – nuova richiesta";
     righe.push(`📚 Argomento: ${val(body, "Richiesta.argomento.valore")}`);
-    const domanda = val(body, "Richiesta.domanda.valore", "");
-    righe.push(`❓ Domanda: ${truncate(domanda, 220)}`);
+    righe.push(`❓ Domanda: ${truncate(val(body, "Richiesta.domanda.valore", ""))}`);
     const rif = val(body, "Richiesta.riferimento.valore", "");
     if (rif && rif !== "N/D") righe.push(`🎯 Riferimento: ${rif}`);
+  } else {
+    // fallback per richieste vecchie molto semplici
+    if (body.asset) righe.push(`📊 Asset richiesto: ${body.asset}`);
+    if (body.analisi) righe.push(`🧠 Tipo Analisi: ${body.analisi}`);
   }
 
   righe.push("");
@@ -120,13 +133,15 @@ export default async function handler(req, res) {
       }),
     });
 
+    const respText = await response.text(); // log utile
     if (!response.ok) {
-      const error = await response.text();
-      return res.status(500).json({ error: "Errore invio email", details: error });
+      console.error("Resend error:", response.status, respText);
+      return res.status(500).json({ error: "Errore invio email", details: respText });
     }
 
     return res.status(200).json({ success: true });
   } catch (err) {
+    console.error("Handler error:", err);
     return res.status(500).json({ error: "Errore server", details: err.message });
   }
 }
