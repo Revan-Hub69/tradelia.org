@@ -212,27 +212,28 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
 <div id="modal-portafoglio" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
   <div class="bg-white w-full max-w-5xl mx-auto rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[94vh]" role="dialog" aria-modal="true">
 
-    <!-- HEADER -->
-    <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
-      <div class="flex items-center gap-3">
-        <i data-lucide="layers" class="w-6 h-6 text-blue-700"></i>
-        <h3 class="text-lg font-semibold text-slate-900">Profilo Investitore – Validazione / Simulazione</h3>
-      </div>
-      <button onclick="chiudiModuloPortafoglio()" class="text-slate-500 hover:text-red-500" aria-label="Chiudi">
-        <i data-lucide="x" class="w-5 h-5"></i>
-      </button>
+<!-- HEADER + PROGRESS (sticky) -->
+<div class="sticky top-0 z-40">
+  <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
+    <div class="flex items-center gap-3">
+      <i data-lucide="layers" class="w-6 h-6 text-blue-700"></i>
+      <h3 class="text-lg font-semibold text-slate-900">Profilo Investitore – Validazione / Simulazione</h3>
     </div>
+    <button onclick="chiudiModuloPortafoglio()" class="text-slate-500 hover:text-red-500" aria-label="Chiudi">
+      <i data-lucide="x" class="w-5 h-5"></i>
+    </button>
+  </div>
+  <div class="px-6 pt-3 pb-3 bg-white border-b border-slate-200">
+    <div class="flex items-center gap-2 text-xs text-slate-600 mb-2">
+      <span id="progress-label">Step 1 di 11</span>
+      <span class="ml-auto">* campi obbligatori</span>
+    </div>
+    <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+      <div id="progress-bar" class="h-2 bg-blue-700 w-[9%] transition-all"></div>
+    </div>
+  </div>
+</div>
 
-    <!-- PROGRESS -->
-    <div class="px-6 pt-4">
-      <div class="flex items-center gap-2 text-xs text-slate-600 mb-2">
-        <span id="progress-label">Step 1 di 11</span>
-        <span class="ml-auto">* campi obbligatori</span>
-      </div>
-      <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-        <div id="progress-bar" class="h-2 bg-blue-700 w-[9%] transition-all"></div>
-      </div>
-    </div>
 
     <!-- FORM -->
     <form id="form-portafoglio" class="p-8 overflow-y-auto flex-1 space-y-10 leading-relaxed" onsubmit="event.preventDefault(); inviaProfilo();">
@@ -555,12 +556,21 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
 </div>
 
 <style>
-  @media (max-width: 640px){
-    #modal-portafoglio select,
-    #modal-portafoglio input,
-    #modal-portafoglio textarea{ min-height:44px; font-size:16px; }
+@media (max-width:640px){
+  #modal-portafoglio select,
+  #modal-portafoglio input,
+  #modal-portafoglio textarea { 
+    min-height:48px; 
+    font-size:16px; 
+    padding:12px 14px; 
+    border-radius:12px;
   }
+  #modal-portafoglio textarea{ min-height:120px; }
+  #modal-portafoglio input[type="checkbox"],
+  #modal-portafoglio input[type="radio"]{ width:20px; height:20px; }
+}
 </style>
+
 
 <script>
   // Previeni lo scroll del body sotto il modale
