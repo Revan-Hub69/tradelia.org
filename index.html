@@ -206,37 +206,34 @@
   });
 </script>
 
-<!-- MODALE – BLOCCO 1 PROFILO INVESTITORE (v1.1 Ultra – Antilacune Hard++ – con PAC)
-Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/send-email
--->
+<!-- MODALE – BLOCCO 1 PROFILO INVESTITORE (v1.1 Ultra – Mobile-first, compact) -->
 <div id="modal-portafoglio" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
   <div class="bg-white w-full max-w-5xl mx-auto rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[94vh]" role="dialog" aria-modal="true">
 
-<!-- HEADER + PROGRESS (sticky) -->
-<div class="sticky top-0 z-40">
-  <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
-    <div class="flex items-center gap-3">
-      <i data-lucide="layers" class="w-6 h-6 text-blue-700"></i>
-      <h3 class="text-lg font-semibold text-slate-900">Profilo Investitore – Validazione / Simulazione</h3>
+    <!-- HEADER + PROGRESS (sticky) -->
+    <div class="sticky top-0 z-40">
+      <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
+        <div class="flex items-center gap-3">
+          <i data-lucide="layers" class="w-6 h-6 text-blue-700"></i>
+          <h3 class="text-lg font-semibold text-slate-900">Profilo Investitore – Validazione / Simulazione</h3>
+        </div>
+        <button onclick="chiudiModuloPortafoglio()" class="text-slate-500 hover:text-red-500" aria-label="Chiudi">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="px-6 pt-3 pb-3 bg-white border-b border-slate-200">
+        <div class="flex items-center gap-2 text-xs text-slate-600 mb-2">
+          <span id="progress-label">Step 1 di 11</span>
+          <span class="ml-auto">* campi obbligatori</span>
+        </div>
+        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+          <div id="progress-bar" class="h-2 bg-blue-700 w-[9%] transition-all"></div>
+        </div>
+      </div>
     </div>
-    <button onclick="chiudiModuloPortafoglio()" class="text-slate-500 hover:text-red-500" aria-label="Chiudi">
-      <i data-lucide="x" class="w-5 h-5"></i>
-    </button>
-  </div>
-  <div class="px-6 pt-3 pb-3 bg-white border-b border-slate-200">
-    <div class="flex items-center gap-2 text-xs text-slate-600 mb-2">
-      <span id="progress-label">Step 1 di 11</span>
-      <span class="ml-auto">* campi obbligatori</span>
-    </div>
-    <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-      <div id="progress-bar" class="h-2 bg-blue-700 w-[9%] transition-all"></div>
-    </div>
-  </div>
-</div>
-
 
     <!-- FORM -->
-    <form id="form-portafoglio" class="p-8 overflow-y-auto flex-1 space-y-10 leading-relaxed" onsubmit="event.preventDefault(); inviaProfilo();">
+    <form id="form-portafoglio" class="p-6 md:p-8 overflow-y-auto flex-1 space-y-8 md:space-y-10 leading-relaxed" onsubmit="event.preventDefault(); inviaProfilo();">
 
       <!-- STEP 0 – Modalità -->
       <section class="step" data-step="0">
@@ -247,30 +244,30 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
             <input type="radio" name="tipo_analisi" value="validazione" class="accent-blue-700 mt-1" required>
             <div>
               <div class="font-medium">Validazione Portafoglio</div>
-              <div class="text-xs text-slate-500">Controlli su coerenza, rischio, concentrazione, coperture, storico.</div>
+              <div class="text-xs text-slate-500">Coerenza, rischio, concentrazione, coperture, storico.</div>
             </div>
           </label>
           <label class="border rounded-lg p-4 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-start gap-3">
             <input type="radio" name="tipo_analisi" value="simulazione" class="accent-blue-700 mt-1" required>
             <div>
               <div class="font-medium">Simulazione Portafoglio</div>
-              <div class="text-xs text-slate-500">Costruzione ex‑novo con vincoli, obiettivi e profilo rischio.</div>
+              <div class="text-xs text-slate-500">Costruzione ex-novo con vincoli e profilo rischio.</div>
             </div>
           </label>
         </div>
       </section>
 
-      <!-- STEP 1 – Dati anagrafici e strutturali -->
+      <!-- STEP 1 – Dati anagrafici e fiscali -->
       <section class="step hidden" data-step="1">
         <h4 class="text-base font-semibold text-slate-900 mb-2">1) Dati anagrafici e fiscali</h4>
-        <p class="text-xs text-slate-500 mb-4">Questi dati servono solo per calibrare orizzonte e tassazione a livello generale.</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <p class="text-xs text-slate-500 mb-4">Servono solo per calibrare orizzonte e tassazione a livello generale.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
           <label>Età *
             <select name="eta" class="w-full border rounded px-3 py-2" required>
               <option value="">Seleziona</option>
               <option>18–30</option><option>31–45</option><option>46–60</option><option>61+</option>
             </select>
-            <span class="text-[11px] text-slate-500">Seleziona una fascia: non chiediamo cifre precise.</span>
+            <span class="text-[11px] text-slate-500">Fasce, non cifre precise.</span>
           </label>
           <label>Area fiscale *
             <select name="area_fiscale" class="w-full border rounded px-3 py-2" required>
@@ -282,59 +279,58 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
         </div>
       </section>
 
-      <!-- STEP 2 – Capitale e Liquidità -->
+      <!-- STEP 2 – Capitale -->
       <section class="step hidden" data-step="2">
         <h4 class="text-base font-semibold text-slate-900 mb-2">2) Capitale</h4>
-        <p class="text-xs text-slate-500 mb-4">Indica solo valori <strong>indicativi a fascia</strong> per tutelare la privacy.</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <p class="text-xs text-slate-500 mb-4">Indica valori <strong>a fascia</strong> per privacy.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
           <label>Capitale totale (fascia) *
             <select name="capitale_totale" class="w-full border rounded px-3 py-2" required>
               <option value="">Seleziona</option>
               <option>< 10k</option><option>10k–50k</option><option>50k–200k</option><option>200k–500k</option><option>> 500k</option>
             </select>
-            <span class="text-[11px] text-slate-500">Somma indicativa di conti, investimenti, immobili, ecc.</span>
+            <span class="text-[11px] text-slate-500">Conti, investimenti, immobili, ecc.</span>
           </label>
           <label>Quota investibile ora (fascia) *
             <select name="capitale_investibile" class="w-full border rounded px-3 py-2" required>
               <option value="">Seleziona</option>
               <option>< 5k</option><option>5k–25k</option><option>25k–100k</option><option>100k–250k</option><option>> 250k</option>
             </select>
-            <span class="text-[11px] text-slate-500">Quanto sei pronto a destinare subito agli investimenti.</span>
+            <span class="text-[11px] text-slate-500">Pronto da investire subito.</span>
           </label>
         </div>
       </section>
 
-      <!-- STEP 3 – Orizzonte temporale -->
+      <!-- STEP 3 – Orizzonte -->
       <section class="step hidden" data-step="3">
         <h4 class="text-base font-semibold text-slate-900 mb-2">3) Orizzonte temporale</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
           <label>Anni fino all’obiettivo *
             <select name="anni_obiettivo" class="w-full border rounded px-3 py-2" data-estimable required>
               <option value="">Seleziona</option>
               <option>Fino a 2</option><option>3–5</option><option>6–10</option><option>10+</option>
             </select>
-            
           </label>
-          <label class="md:col-span-2">Milestone rilevanti (facoltativo)
+          <label class="md:col-span-2">Milestone (facoltativo)
             <input type="text" name="milestone" class="w-full border rounded px-3 py-2" placeholder="Es. acconto casa in 3 anni; università figli in 8 anni">
           </label>
         </div>
       </section>
 
-      <!-- STEP 4 – Rischio e Rendimento -->
+      <!-- STEP 4 – Rischio & rendimento -->
       <section class="step hidden" data-step="4">
         <h4 class="text-base font-semibold text-slate-900 mb-2">4) Rischio e rendimento</h4>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-5 md:gap-6">
           <label>Tolleranza al rischio (1–10) *
             <input type="number" name="tolleranza_rischio" min="1" max="10" class="w-full border rounded px-3 py-2" required>
-            <span class="text-[11px] text-slate-500">1 = non tollero oscillazioni, 10 = accetto forti oscillazioni.</span>
+            <span class="text-[11px] text-slate-500">1 = no oscillazioni, 10 = forti oscillazioni.</span>
           </label>
           <label>Drawdown massimo *
             <select name="drawdown_tollerato" class="w-full border rounded px-3 py-2" required>
               <option value="">Seleziona</option>
               <option>Fino a −5%</option><option>Fino a −10%</option><option>Fino a −20%</option><option>Oltre −20%</option>
             </select>
-            <details class="mt-1 text-[11px] text-slate-500"><summary class="cursor-pointer">Cos’è?</summary><p class="mt-1">Calo massimo temporaneo accettabile prima di intervenire.</p></details>
+            <details class="mt-1 text-[11px] text-slate-500"><summary class="cursor-pointer">Cos’è?</summary><p class="mt-1">Calo massimo temporaneo accettabile.</p></details>
           </label>
           <label>Rendimento obiettivo *
             <select name="rendimento_obiettivo" class="w-full border rounded px-3 py-2" required>
@@ -354,21 +350,21 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
         </div>
       </section>
 
-      <!-- STEP 5 – Esperienza e Conoscenza -->
+      <!-- STEP 5 – Esperienza -->
       <section class="step hidden" data-step="5">
         <h4 class="text-base font-semibold text-slate-900 mb-2">5) Esperienza e conoscenza</h4>
         <div class="space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
             <label>Anni di esperienza *
               <select name="anni_esperienza" class="w-full border rounded px-3 py-2" required>
                 <option value="">Seleziona</option>
                 <option>0</option><option>1–2</option><option>3–5</option><option>6–10</option><option>10+</option>
               </select>
-              <span class="text-[11px] text-slate-500">Esperienza complessiva, anche non continuativa.</span>
+              <span class="text-[11px] text-slate-500">Anche non continuativa.</span>
             </label>
             <div class="md:col-span-2">
               <div class="mb-1 font-medium text-sm">Strumenti già utilizzati *</div>
-              <p class="text-[11px] text-slate-500 mb-2">Seleziona tutte le tipologie su cui hai operato (anche in demo).</p>
+              <p class="text-[11px] text-slate-500 mb-2">Seleziona tutte le tipologie (anche in demo).</p>
               <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
                 <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Azioni" class="accent-blue-700">Azioni</label>
                 <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="ETF" class="accent-blue-700">ETF</label>
@@ -383,21 +379,21 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
             <select name="competenza_prodotti_complessi" class="w-full border rounded px-3 py-2" required>
               <option value="">Seleziona</option><option>Bassa</option><option>Media</option><option>Alta</option>
             </select>
-            <span class="text-[11px] text-slate-500">Esempi: opzioni, futures, leva, prodotti strutturati.</span>
+            <span class="text-[11px] text-slate-500">Es. opzioni, futures, leva, strutturati.</span>
           </label>
         </div>
       </section>
 
-      <!-- STEP 6 – Vincoli e Preferenze -->
+      <!-- STEP 6 – Vincoli & preferenze -->
       <section class="step hidden" data-step="6">
         <h4 class="text-base font-semibold text-slate-900 mb-2">6) Vincoli e preferenze</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
           <label>ESG / Etico / Religioso
             <select name="ESG" class="w-full border rounded px-3 py-2" data-estimable>
               <option>Nessuno</option><option>ESG Light</option><option>ESG Strict</option>
             </select>
-            <textarea name="ESG_note" rows="2" class="w-full border rounded px-3 py-2 mt-2" placeholder="Esempi: escludere armi/tabacco; no fossili; halal; sharia-compliant; solo ETF UCITS SRI."></textarea>
-            <span class="text-[11px] text-slate-500">Specifica eventuali esclusioni o preferenze concrete.</span>
+            <textarea name="ESG_note" rows="2" class="w-full border rounded px-3 py-2 mt-2" placeholder="Es: escludere armi/tabacco; no fossili; halal; sharia; solo ETF UCITS SRI."></textarea>
+            <span class="text-[11px] text-slate-500">Specifica esclusioni o preferenze.</span>
           </label>
           <label>Preferenza valutaria
             <select name="preferenza_valutaria" class="w-full border rounded px-3 py-2" data-estimable>
@@ -405,23 +401,23 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
             </select>
           </label>
           <label>Vincoli su asset class
-            <textarea name="vincoli_asset_class" rows="2" class="w-full border rounded px-3 py-2" placeholder="Esempi: max 20% crypto; no leva; solo titoli reali; obbligazionario investment grade."></textarea>
+            <textarea name="vincoli_asset_class" rows="2" class="w-full border rounded px-3 py-2" placeholder="Es: max 20% crypto; no leva; solo titoli reali; IG only."></textarea>
           </label>
         </div>
       </section>
 
-      <!-- STEP 7 – Contesto Macro Personale -->
+      <!-- STEP 7 – Reddito & fiscale -->
       <section class="step hidden" data-step="7">
         <h4 class="text-base font-semibold text-slate-900 mb-2">7) Situazione reddituale e fiscale</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
           <label>Dipendenza dal reddito da lavoro *
             <select name="dipendenza_reddito" class="w-full border rounded px-3 py-2" data-estimable required>
               <option value="">Seleziona</option><option>Bassa</option><option>Media</option><option>Alta</option>
             </select>
-            <span class="text-[11px] text-slate-500">Bassa = spese coperte da rendite/risparmi; Alta = spese coperte quasi solo da stipendio.</span>
+            <span class="text-[11px] text-slate-500">Bassa = spese coperte da rendite/risparmi.</span>
           </label>
           <label class="md:col-span-2">Prospettiva fiscale 5–10 anni
-            <input type="text" name="prospettiva_fiscale" class="w-full border rounded px-3 py-2" placeholder="Esempi: cambio residenza, rientro in Italia, scaglioni diversi, nuovi regimi.">
+            <input type="text" name="prospettiva_fiscale" class="w-full border rounded px-3 py-2" placeholder="Es: cambio residenza, rientro in Italia, nuovi regimi.">
           </label>
         </div>
       </section>
@@ -429,7 +425,7 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
       <!-- STEP 8 – PAC -->
       <section class="step hidden" data-step="8">
         <h4 class="text-base font-semibold text-slate-900 mb-2">8) Piano di Accumulo Capitale (PAC)</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
           <label>Presenza PAC *
             <select name="pac_presenza" class="w-full border rounded px-3 py-2" required onchange="togglePAC(this.value)">
               <option value="">Seleziona</option><option>No</option><option>Sì</option>
@@ -464,7 +460,7 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
             <input type="text" name="pac_asset_target" class="w-full border rounded px-3 py-2" placeholder="Es. ETF equity globali; obbligazionario indicizzato" disabled>
           </label>
           <label class="md:col-span-3">Note particolari
-            <input type="text" name="pac_note" class="w-full border rounded px-3 py-2" placeholder="Es. PAC solo su ETF UCITS, esclusione energy…" disabled>
+            <input type="text" name="pac_note" class="w-full border rounded px-3 py-2" placeholder="Es. solo ETF UCITS, esclusione energy…" disabled>
           </label>
         </div>
       </section>
@@ -473,10 +469,7 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
       <section class="step hidden" data-step="9">
         <h4 class="text-base font-semibold text-slate-900 mb-2">9) Portafoglio attuale (solo Validazione)</h4>
         <p class="text-xs text-slate-500 mb-2">Inserisci in % per privacy; opzionalmente apri “Dettagli” per specificare strumenti.</p>
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-sm font-medium">Allocazione attuale (Core/Satellite facoltativo)</span>
-          <button type="button" class="text-sm text-blue-700 hover:underline" onclick="aggiungiRigaVal()">+ Aggiungi riga</button>
-        </div>
+
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-3">
           <label>Core/Satellite (fac)
             <select name="allocazione_core_satellite" class="w-full border rounded px-3 py-2">
@@ -494,9 +487,20 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
             </select>
           </label>
         </div>
+
+        <!-- Righe posizioni -->
         <div id="val-positions" class="space-y-4 divide-y divide-slate-200"></div>
-        <div class="text-xs text-slate-600" id="val-somma">Somma indicativa: 0%</div>
+
+        <div class="mt-3">
+          <button type="button" id="btn-add-row" class="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-100" onclick="aggiungiRigaVal(); scrollToLastRow();">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Aggiungi riga</span>
+          </button>
+        </div>
+
+        <div class="text-xs text-slate-600 mt-2" id="val-somma">Somma indicativa: 0%</div>
         <div id="sum-warning" class="hidden mt-2 text-xs bg-amber-100 text-amber-800 border border-amber-300 rounded px-3 py-2">⚠️ Le percentuali non sembrano coerenti con il totale (atteso ~100%). Verifica valori e riprova.</div>
+
         <label class="block mt-3">Coperture in essere (facoltativo)
           <input type="text" name="coperture" class="w-full border rounded px-3 py-2" placeholder="Es. put su indice; inverse ETF; future">
         </label>
@@ -508,13 +512,13 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
       <!-- STEP 10 – Recapiti & Invio -->
       <section class="step hidden" data-step="10">
         <h4 class="text-base font-semibold text-slate-900 mb-2">10) Condivisione, recapiti & invio</h4>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-2">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 mb-2">
           <label>Visibilità del report *
             <select name="share_visibility" class="w-full border rounded px-3 py-2" required onchange="toggleSharing(this.value)">
               <option value="pubblico" selected>Pubblico (link aperto)</option>
               <option value="privato">Privato (protetto da password)</option>
             </select>
-            <span class="text-[11px] text-slate-500">Il risultato viene fornito come <strong>link web</strong>. Se scegli "Privato", imposta una password per aprirlo.</span>
+            <span class="text-[11px] text-slate-500">Se “Privato”, imposta una password.</span>
           </label>
           <label>Password (solo se privato)
             <input type="password" name="share_password" class="w-full border rounded px-3 py-2" placeholder="Imposta una password" disabled>
@@ -526,22 +530,20 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
             <input type="text" name="whatsapp" class="w-full border rounded px-3 py-2" placeholder="+39...">
           </label>
         </div>
-        <p class="text-xs text-slate-600">Indica almeno un recapito. I dati inviati sono <strong>minimizzati</strong> (solo campi valorizzati).</p>
+
         <details class="mt-3 border rounded p-3">
           <summary class="cursor-pointer text-sm font-medium">Anteprima (riepilogo tecnico per l’AI)</summary>
-          <p class="text-xs text-slate-500 mb-2">Questa è una <em>vista tecnica</em> del contenuto che invieremo al motore AI (formato JSON equivalente allo schema YAML). Serve a verificare cosa stai condividendo.</p>
+          <p class="text-xs text-slate-500 mb-2">Vista tecnica del contenuto (JSON equivalente allo schema).</p>
           <pre id="payload" class="text-xs bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto"></pre>
         </details>
-        
       </section>
 
     </form>
 
-    <!-- FOOTER NAV -->
+    <!-- FOOTER NAV (sticky con sfumatura) -->
     <div class="sticky-footer p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
       <button type="button" class="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-100" onclick="prevStep()">Indietro</button>
       <div class="flex items-center gap-3">
-        <!-- Anteprima aggiornata automaticamente -->
         <button id="submit-btn" class="px-4 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-800 hidden" onclick="inviaProfilo()">Invia</button>
         <button id="next-btn" type="button" class="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800" onclick="nextStep()">Avanti</button>
       </div>
@@ -551,35 +553,32 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
 </div>
 
 <style>
-@media (max-width:640px){
-  #modal-portafoglio select,
-  #modal-portafoglio input,
-  #modal-portafoglio textarea { 
-    min-height:48px; 
-    font-size:16px; 
-    padding:12px 14px; 
-    border-radius:12px;
+  /* Mobile-friendly inputs + compact spacing */
+  @media (max-width:640px){
+    #modal-portafoglio select,
+    #modal-portafoglio input,
+    #modal-portafoglio textarea{
+      min-height:48px; font-size:16px; padding:12px 14px; border-radius:12px;
+    }
+    #modal-portafoglio textarea{ min-height:120px; }
+    #modal-portafoglio input[type="checkbox"],
+    #modal-portafoglio input[type="radio"]{ width:20px; height:20px; }
   }
-  #modal-portafoglio textarea{ min-height:120px; }
-  #modal-portafoglio input[type="checkbox"],
-  #modal-portafoglio input[type="radio"]{ width:20px; height:20px; }
-}
-/* Micro-animazione focus ring */
-#modal-portafoglio input, #modal-portafoglio select, #modal-portafoglio textarea{
-  transition: box-shadow .15s ease, border-color .15s ease, background-color .15s ease;
-}
-/* Sticky footer con sfumatura superiore */
-#modal-portafoglio .sticky-footer{ position: sticky; bottom: 0; background: #f8fafc; }
-#modal-portafoglio .sticky-footer::before{
-  content: ""; position: absolute; left:0; right:0; top:-16px; height:16px;
-  background: linear-gradient(to top, rgba(248,250,252,1), rgba(248,250,252,0));
-  pointer-events: none;
-}
+  /* Micro-animazione focus ring */
+  #modal-portafoglio input, #modal-portafoglio select, #modal-portafoglio textarea{
+    transition: box-shadow .15s ease, border-color .15s ease, background-color .15s ease;
+  }
+  /* Sticky footer + sfumatura superiore */
+  #modal-portafoglio .sticky-footer{ position: sticky; bottom: 0; background: #f8fafc; }
+  #modal-portafoglio .sticky-footer::before{
+    content:""; position:absolute; left:0; right:0; top:-16px; height:16px;
+    background: linear-gradient(to top, rgba(248,250,252,1), rgba(248,250,252,0));
+    pointer-events:none;
+  }
 </style>
 
-
 <script>
-  // Previeni lo scroll del body sotto il modale
+  // Scroll lock
   const __lockScroll = () => document.body.classList.add('overflow-hidden');
   const __unlockScroll = () => document.body.classList.remove('overflow-hidden');
 
@@ -592,25 +591,22 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
     document.getElementById('form-portafoglio').reset();
     currentStep = 0; stepsOrder = baseOrder.slice();
     aggiornaStep();
-    // set sharing default UI
     toggleSharing(document.querySelector('[name="share_visibility"]')?.value||'pubblico');
     if(mode){ const r = document.querySelector(`input[name=tipo_analisi][value=${mode}]`); if(r){ r.checked = true; onModeChange(); } }
   }
   function chiudiModuloPortafoglio(){ document.getElementById('modal-portafoglio').classList.add('hidden'); __unlockScroll(); }
 
-  // ===== Navigazione step =====
+  // Stepper
   const baseOrder = [0,1,2,3,4,5,6,7,8,9,10];
   let stepsOrder = baseOrder.slice();
   let currentStep = 0;
 
-  // Auto-focus: seleziona il primo campo interattivo visibile nello step corrente
+  // Auto-focus primo campo dello step
   function focusPrimoCampo(scope){
     const container = scope || document.querySelector(`.step[data-step="${stepsOrder[currentStep]}"]`);
     if(!container) return;
     const el = container.querySelector('input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled])');
-    if(el){
-      setTimeout(()=>{ try{ el.focus({ preventScroll: true }); if(typeof el.select==='function') el.select(); }catch(_){} }, 10);
-    }
+    if(el){ setTimeout(()=>{ try{ el.focus({ preventScroll:true }); if(typeof el.select==='function') el.select(); }catch(_){} }, 10); }
   }
 
   function mostraStep(i){
@@ -618,12 +614,12 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
     const key = stepsOrder[i];
     const section = document.querySelector(`.step[data-step="${key}"]`);
     if(section) section.classList.remove('hidden');
-    // Se entriamo nello step 9, garantisci almeno una riga iniziale
+
+    // Se entri nello step 9, aggiungi almeno una riga
     if(key === 9){
       const wrap = document.getElementById('val-positions');
       if(wrap && wrap.children.length === 0){ aggiungiRigaVal(); }
     }
-    // Autofocus al primo campo dello step
     focusPrimoCampo(section);
   }
   function aggiornaStep(){
@@ -631,30 +627,25 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
     const total = stepsOrder.length;
     document.getElementById('progress-label').textContent = `Step ${currentStep+1} di ${total}`;
     document.getElementById('progress-bar').style.width = `${Math.round(((currentStep+1)/total)*100)}%`;
-    // submit visibile solo all'ultimo
     document.getElementById('submit-btn').classList.toggle('hidden', currentStep !== total-1);
     document.getElementById('next-btn').classList.toggle('hidden', currentStep === total-1);
   }
   function nextStep(){ if(!validaStep()) return; if(currentStep < stepsOrder.length-1){ currentStep++; aggiornaStep(); } }
   function prevStep(){ if(currentStep>0){ currentStep--; aggiornaStep(); } }
 
-  // ===== Mode logic (validazione vs simulazione) =====
-  document.addEventListener('change', (e)=>{
-    if(e.target && e.target.name==='tipo_analisi') onModeChange();
-  });
+  // Mode logic
+  document.addEventListener('change', (e)=>{ if(e.target && e.target.name==='tipo_analisi') onModeChange(); });
   function onModeChange(){
     const mode = getMode();
-    // Step 9 (portafoglio attuale) è richiesto solo in validazione
     const idx9 = stepsOrder.indexOf(9);
     if(mode === 'validazione' && idx9 === -1){ stepsOrder.splice(stepsOrder.length-1,0,9); }
     if(mode === 'simulazione' && idx9 !== -1){ stepsOrder = stepsOrder.filter(s=>s!==9); }
-    // UI sezioni dedicate
     document.querySelector('[data-step="9"]').classList.toggle('hidden', mode !== 'validazione');
     aggiornaStep();
   }
   function getMode(){ const r = document.querySelector('input[name=tipo_analisi]:checked'); return r ? r.value : null; }
 
-  // ===== Validazione minima per step =====
+  // Validazione minima
   function validaStep(){
     const key = stepsOrder[currentStep];
     const el = document.querySelector(`.step[data-step="${key}"]`);
@@ -664,12 +655,17 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
     return ok;
   }
 
-  // ===== Sezioni dinamiche =====
+  // Toggle sezioni dinamiche
   function togglePAC(v){
     const names = ['pac_tipo','pac_frequenza','pac_importo','pac_durata','pac_rivalutazione','pac_asset_target','pac_note'];
-    names.forEach(n=>{ const el = document.querySelector(`[name="${n}"]`); if(el){ el.disabled = (v!=='Sì'); if(v==='Sì'){ el.closest('label').classList.remove('opacity-50'); } else { el.closest('label').classList.add('opacity-50'); } } });
+    names.forEach(n=>{
+      const el = document.querySelector(`[name="${n}"]`);
+      if(!el) return;
+      const dis = (v!=='Sì');
+      el.disabled = dis;
+      el.closest('label')?.classList.toggle('opacity-50', dis);
+    });
   }
-  function toggleCSManual(val){ const box = document.getElementById('cs-manuale'); if(box) box.classList.toggle('hidden', val !== 'manuale'); }
   function toggleSharing(v){
     const pwd = document.querySelector('[name="share_password"]');
     if(!pwd) return;
@@ -679,7 +675,7 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
     pwd.closest('label').classList.toggle('opacity-50', !isPriv);
   }
 
-  // ===== Portafoglio attuale – righe dinamiche =====
+  // Righe dinamiche Portafoglio (Step 9)
   function rowValTemplate(i){
     return `
       <div class="border rounded-xl p-3 sm:p-4">
@@ -697,7 +693,7 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
           </div>
         </div>
         <details class="mt-2">
-          <summary class="text-xs cursor-pointer text-slate-600">Dettagli (facoltativi)</summary>
+          <summary class="text-sm cursor-pointer text-slate-600">Dettagli (facoltativi)</summary>
           <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 mt-2">
             <label class="sm:col-span-3 text-[12px] text-slate-600">Ticker/ISIN
               <input name="pos[${i}][id]" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[48px] text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-300" />
@@ -723,9 +719,14 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
     div.innerHTML = rowValTemplate(i);
     const node = div.firstElementChild;
     wrap.appendChild(node);
-    // focus sul primo campo della nuova riga
     const first = node.querySelector(`input[name="pos[${i}][nome]"]`);
     if(first){ setTimeout(()=> first.focus(), 10); }
+    if(window.lucide) lucide.createIcons();
+  }
+  function scrollToLastRow(){
+    const wrap = document.getElementById('val-positions');
+    const last = wrap?.lastElementChild;
+    if(last){ last.scrollIntoView({behavior:'smooth', block:'end'}); }
   }
   function rimuoviRigaVal(btn){ btn.closest('.border.rounded-xl')?.remove(); aggiornaSomma(); }
   function aggiornaSomma(){
@@ -736,20 +737,18 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
     const out = (s>110 || s<90) && !isNaN(s);
     warn.classList.toggle('hidden', !out);
   }
-  
-  // ===== Serializzazione → Schema YAML (JSON equivalente) =====
+
+  // Serializzazione → payload
   function readValue(form, name){
     const value = form.get(name);
     if(value===null || String(value).trim()==='') return null;
     return { valore: value };
   }
-function buildPayload(){
+  function buildPayload(){
     const fd = new FormData(document.getElementById('form-portafoglio'));
-    // strumenti usati (multi)
     const strumenti = [];
     (document.querySelectorAll('input[name="strumenti_usati"]:checked')||[]).forEach(x=> strumenti.push(x.value));
 
-    // posizioni validazione
     const pos = [];
     (document.querySelectorAll('#val-positions > .border.rounded-xl, #val-positions > .border.rounded-lg')||[]).forEach(card=>{
       const q = sel => card.querySelector(sel)?.value?.trim();
@@ -808,9 +807,7 @@ function buildPayload(){
         rivalutazione_rata: { valore: fd.get('pac_rivalutazione')||null },
         asset_target: { valore:(fd.get('pac_asset_target')||'').trim()||null },
         note: { valore:(fd.get('pac_note')||'').trim()||null }
-      } : {
-        presenza: { valore:'No' }
-      },
+      } : { presenza: { valore:'No' } },
       portafoglio_attuale: (mode==='validazione') ? {
         allocazione: { valore: fd.get('allocazione_core_satellite')||'n/d' },
         performance_storica: { valore: null },
@@ -821,22 +818,18 @@ function buildPayload(){
       } : null
     };
 
-    const payload = {
+    return {
       servizio: 'profilo_investitore',
       tipo_analisi: mode,
       Profilo_Investitore,
       recapiti: { email: (fd.get('email')||'').trim()||null, whatsapp: (fd.get('whatsapp')||'').trim()||null },
       sharing: { visibility: fd.get('share_visibility')||'pubblico', password: (fd.get('share_visibility')==='privato' ? (fd.get('share_password')||null) : null) }
     };
-    return payload;
   }
-
   function renderPayload(){
-    const p = buildPayload();
     const pre = document.getElementById('payload');
-    if(pre) pre.textContent = JSON.stringify(p, null, 2);
+    if(pre) pre.textContent = JSON.stringify(buildPayload(), null, 2);
   }
-  // Anteprima automatica (debounced)
   const __debounce = (fn, ms=400)=>{ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,args), ms); }; };
   const __autoPreview = __debounce(()=>renderPayload(), 250);
   (function(){
@@ -846,9 +839,8 @@ function buildPayload(){
     f.addEventListener('change', __autoPreview);
   })();
 
-  // ===== INVIO =====
+  // INVIO (solo conferma, niente checkbox)
   async function inviaProfilo(){
-    // disclaimer etico forte
     const disclaimer = `NOTA BENE
 
 L'analisi AI è uno strumento didattico per confrontare le tue idee.
@@ -859,12 +851,12 @@ Non affidarti mai a nessuna AI per prendere decisioni di investimento.
 Vuoi procedere inviando i dati?`;
     if(!confirm(disclaimer)) return;
 
-    // validazione recapiti
+    // recapiti minimi
     const email = document.querySelector("[name='email']")?.value.trim();
     const wa = document.querySelector("[name='whatsapp']")?.value.trim();
     if(!email && !wa){ alert('Indica almeno un recapito (Email o WhatsApp).'); return; }
 
-    // Antilacune: verifica richiesti nello scenario corrente
+    // validazione step correnti
     for(let i=0;i<stepsOrder.length-1;i++){ // esclude recapiti
       const el = document.querySelector(`.step[data-step="${stepsOrder[i]}"]`);
       let ok = true; el.querySelectorAll('select[required], input[required]').forEach(inp=>{ if(!inp.value) ok=false; });
@@ -882,6 +874,7 @@ Vuoi procedere inviando i dati?`;
     }catch(err){ console.error(err); alert('❌ Errore durante l\'invio. Riprova.'); }
   }
 </script>
+
 
 
 <!-- MODALE – ANALISI ASSET (privacy-first, finalità d’uso only, fetch /api/send-email) -->
