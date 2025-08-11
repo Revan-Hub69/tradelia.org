@@ -206,7 +206,7 @@
   });
 </script>
 
-<!-- MODALE – BLOCCO 1 PROFILO INVESTITORE (v1.1 Ultra – Mobile-first, compact) -->
+<!-- MODALE – BLOCCO 1 PROFILO INVESTITORE (v1.2 Mobile-compact + PAC toggle) -->
 <div id="modal-portafoglio" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
   <div class="bg-white w-full max-w-5xl mx-auto rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[94vh]" role="dialog" aria-modal="true">
 
@@ -232,26 +232,26 @@
       </div>
     </div>
 
-    <!-- FORM -->
-    <form id="form-portafoglio" class="p-6 md:p-8 overflow-y-auto flex-1 space-y-8 md:space-y-10 leading-relaxed" onsubmit="event.preventDefault(); inviaProfilo();">
+    <!-- FORM (mobile-compact) -->
+    <form id="form-portafoglio" class="p-4 md:p-8 overflow-y-auto flex-1 space-y-6 md:space-y-10 leading-relaxed" onsubmit="event.preventDefault(); inviaProfilo();">
 
       <!-- STEP 0 – Modalità -->
       <section class="step" data-step="0">
-        <h4 class="text-base font-semibold text-slate-900 mb-2">0) Seleziona modalità</h4>
-        <p class="text-xs text-slate-500 mb-3">Scegli se vuoi <strong>validare</strong> un portafoglio esistente o <strong>simulare</strong> una nuova costruzione.</p>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <label class="border rounded-lg p-4 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-start gap-3">
+        <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">0) Seleziona modalità</h4>
+        <p class="text-[12px] text-slate-500 mb-3">Scegli se vuoi <strong>validare</strong> un portafoglio esistente o <strong>simulare</strong> una nuova costruzione.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+          <label class="border rounded-lg p-3 md:p-4 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-start gap-3">
             <input type="radio" name="tipo_analisi" value="validazione" class="accent-blue-700 mt-1" required>
             <div>
-              <div class="font-medium">Validazione Portafoglio</div>
-              <div class="text-xs text-slate-500">Coerenza, rischio, concentrazione, coperture, storico.</div>
+              <div class="font-medium text-sm md:text-base">Validazione Portafoglio</div>
+              <div class="text-[12px] text-slate-500">Coerenza, rischio, concentrazione, coperture, storico.</div>
             </div>
           </label>
-          <label class="border rounded-lg p-4 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-start gap-3">
+          <label class="border rounded-lg p-3 md:p-4 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-start gap-3">
             <input type="radio" name="tipo_analisi" value="simulazione" class="accent-blue-700 mt-1" required>
             <div>
-              <div class="font-medium">Simulazione Portafoglio</div>
-              <div class="text-xs text-slate-500">Costruzione ex-novo con vincoli e profilo rischio.</div>
+              <div class="font-medium text-sm md:text-base">Simulazione Portafoglio</div>
+              <div class="text-[12px] text-slate-500">Costruzione ex-novo con vincoli e profilo rischio.</div>
             </div>
           </label>
         </div>
@@ -259,9 +259,9 @@
 
       <!-- STEP 1 – Dati anagrafici e fiscali -->
       <section class="step hidden" data-step="1">
-        <h4 class="text-base font-semibold text-slate-900 mb-2">1) Dati anagrafici e fiscali</h4>
-        <p class="text-xs text-slate-500 mb-4">Servono solo per calibrare orizzonte e tassazione a livello generale.</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+        <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">1) Dati anagrafici e fiscali</h4>
+        <p class="text-[12px] text-slate-500 mb-3 md:mb-4">Servono solo per calibrare orizzonte e tassazione a livello generale.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           <label>Età *
             <select name="eta" class="w-full border rounded px-3 py-2" required>
               <option value="">Seleziona</option>
@@ -281,9 +281,9 @@
 
       <!-- STEP 2 – Capitale -->
       <section class="step hidden" data-step="2">
-        <h4 class="text-base font-semibold text-slate-900 mb-2">2) Capitale</h4>
-        <p class="text-xs text-slate-500 mb-4">Indica valori <strong>a fascia</strong> per privacy.</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+        <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">2) Capitale</h4>
+        <p class="text-[12px] text-slate-500 mb-3 md:mb-4">Indica valori <strong>a fascia</strong> per privacy.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           <label>Capitale totale (fascia) *
             <select name="capitale_totale" class="w-full border rounded px-3 py-2" required>
               <option value="">Seleziona</option>
@@ -303,8 +303,8 @@
 
       <!-- STEP 3 – Orizzonte -->
       <section class="step hidden" data-step="3">
-        <h4 class="text-base font-semibold text-slate-900 mb-2">3) Orizzonte temporale</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+        <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">3) Orizzonte temporale</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           <label>Anni fino all’obiettivo *
             <select name="anni_obiettivo" class="w-full border rounded px-3 py-2" data-estimable required>
               <option value="">Seleziona</option>
@@ -319,8 +319,8 @@
 
       <!-- STEP 4 – Rischio & rendimento -->
       <section class="step hidden" data-step="4">
-        <h4 class="text-base font-semibold text-slate-900 mb-2">4) Rischio e rendimento</h4>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-5 md:gap-6">
+        <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">4) Rischio e rendimento</h4>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
           <label>Tolleranza al rischio (1–10) *
             <input type="number" name="tolleranza_rischio" min="1" max="10" class="w-full border rounded px-3 py-2" required>
             <span class="text-[11px] text-slate-500">1 = no oscillazioni, 10 = forti oscillazioni.</span>
@@ -330,7 +330,10 @@
               <option value="">Seleziona</option>
               <option>Fino a −5%</option><option>Fino a −10%</option><option>Fino a −20%</option><option>Oltre −20%</option>
             </select>
-            <details class="mt-1 text-[11px] text-slate-500"><summary class="cursor-pointer">Cos’è?</summary><p class="mt-1">Calo massimo temporaneo accettabile.</p></details>
+            <details class="mt-1 text-[11px] text-slate-500">
+              <summary class="cursor-pointer">Cos’è?</summary>
+              <p class="mt-1">Calo massimo temporaneo accettabile.</p>
+            </details>
           </label>
           <label>Rendimento obiettivo *
             <select name="rendimento_obiettivo" class="w-full border rounded px-3 py-2" required>
@@ -352,9 +355,9 @@
 
       <!-- STEP 5 – Esperienza -->
       <section class="step hidden" data-step="5">
-        <h4 class="text-base font-semibold text-slate-900 mb-2">5) Esperienza e conoscenza</h4>
-        <div class="space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+        <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">5) Esperienza e conoscenza</h4>
+        <div class="space-y-5 md:space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             <label>Anni di esperienza *
               <select name="anni_esperienza" class="w-full border rounded px-3 py-2" required>
                 <option value="">Seleziona</option>
@@ -386,8 +389,8 @@
 
       <!-- STEP 6 – Vincoli & preferenze -->
       <section class="step hidden" data-step="6">
-        <h4 class="text-base font-semibold text-slate-900 mb-2">6) Vincoli e preferenze</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+        <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">6) Vincoli e preferenze</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           <label>ESG / Etico / Religioso
             <select name="ESG" class="w-full border rounded px-3 py-2" data-estimable>
               <option>Nessuno</option><option>ESG Light</option><option>ESG Strict</option>
@@ -408,8 +411,8 @@
 
       <!-- STEP 7 – Reddito & fiscale -->
       <section class="step hidden" data-step="7">
-        <h4 class="text-base font-semibold text-slate-900 mb-2">7) Situazione reddituale e fiscale</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+        <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">7) Situazione reddituale e fiscale</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           <label>Dipendenza dal reddito da lavoro *
             <select name="dipendenza_reddito" class="w-full border rounded px-3 py-2" data-estimable required>
               <option value="">Seleziona</option><option>Bassa</option><option>Media</option><option>Alta</option>
@@ -422,15 +425,20 @@
         </div>
       </section>
 
-      <!-- STEP 8 – PAC -->
+      <!-- STEP 8 – PAC (toggle) -->
       <section class="step hidden" data-step="8">
-        <h4 class="text-base font-semibold text-slate-900 mb-2">8) Piano di Accumulo Capitale (PAC)</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
-          <label>Presenza PAC *
-            <select name="pac_presenza" class="w-full border rounded px-3 py-2" required onchange="togglePAC(this.value)">
-              <option value="">Seleziona</option><option>No</option><option>Sì</option>
-            </select>
+        <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">8) Piano di Accumulo Capitale (PAC)</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+          <!-- TOGGLE PRESENZA PAC -->
+          <label class="md:col-span-1 flex items-center justify-between gap-4">
+            <span>Presenza PAC</span>
+            <span class="relative inline-flex items-center select-none">
+              <input type="checkbox" name="pac_presenza" class="sr-only peer" onchange="togglePAC(this.checked)">
+              <span class="block w-11 h-6 rounded-full bg-slate-200 peer-checked:bg-blue-600 transition-colors"></span>
+              <span class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform transform peer-checked:translate-x-5"></span>
+            </span>
           </label>
+
           <label>Tipo piano
             <select name="pac_tipo" class="w-full border rounded px-3 py-2" disabled>
               <option>PAC</option><option>PIC</option><option>Ibrido</option>
@@ -467,10 +475,10 @@
 
       <!-- STEP 9 – Portafoglio attuale (solo Validazione) -->
       <section class="step hidden" data-step="9">
-        <h4 class="text-base font-semibold text-slate-900 mb-2">9) Portafoglio attuale (solo Validazione)</h4>
-        <p class="text-xs text-slate-500 mb-2">Inserisci in % per privacy; opzionalmente apri “Dettagli” per specificare strumenti.</p>
+        <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">9) Portafoglio attuale (solo Validazione)</h4>
+        <p class="text-[12px] text-slate-500 mb-2">Inserisci in % per privacy; opzionalmente apri “Dettagli”.</p>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-3">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-3">
           <label>Core/Satellite (fac)
             <select name="allocazione_core_satellite" class="w-full border rounded px-3 py-2">
               <option>n/d</option><option>70/30</option><option>60/40</option><option>80/20</option>
@@ -498,8 +506,8 @@
           </button>
         </div>
 
-        <div class="text-xs text-slate-600 mt-2" id="val-somma">Somma indicativa: 0%</div>
-        <div id="sum-warning" class="hidden mt-2 text-xs bg-amber-100 text-amber-800 border border-amber-300 rounded px-3 py-2">⚠️ Le percentuali non sembrano coerenti con il totale (atteso ~100%). Verifica valori e riprova.</div>
+        <div class="text-[12px] text-slate-600 mt-2" id="val-somma">Somma indicativa: 0%</div>
+        <div id="sum-warning" class="hidden mt-2 text-[12px] bg-amber-100 text-amber-800 border border-amber-300 rounded px-3 py-2">⚠️ Le percentuali non sembrano coerenti con il totale (atteso ~100%).</div>
 
         <label class="block mt-3">Coperture in essere (facoltativo)
           <input type="text" name="coperture" class="w-full border rounded px-3 py-2" placeholder="Es. put su indice; inverse ETF; future">
@@ -511,8 +519,8 @@
 
       <!-- STEP 10 – Recapiti & Invio -->
       <section class="step hidden" data-step="10">
-        <h4 class="text-base font-semibold text-slate-900 mb-2">10) Condivisione, recapiti & invio</h4>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 mb-2">
+        <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">10) Condivisione, recapiti & invio</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-2">
           <label>Visibilità del report *
             <select name="share_visibility" class="w-full border rounded px-3 py-2" required onchange="toggleSharing(this.value)">
               <option value="pubblico" selected>Pubblico (link aperto)</option>
@@ -533,7 +541,7 @@
 
         <details class="mt-3 border rounded p-3">
           <summary class="cursor-pointer text-sm font-medium">Anteprima (riepilogo tecnico per l’AI)</summary>
-          <p class="text-xs text-slate-500 mb-2">Vista tecnica del contenuto (JSON equivalente allo schema).</p>
+          <p class="text-[12px] text-slate-500 mb-2">Vista tecnica del contenuto (JSON equivalente allo schema).</p>
           <pre id="payload" class="text-xs bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto"></pre>
         </details>
       </section>
@@ -541,11 +549,11 @@
     </form>
 
     <!-- FOOTER NAV (sticky con sfumatura) -->
-    <div class="sticky-footer p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
-      <button type="button" class="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-100" onclick="prevStep()">Indietro</button>
-      <div class="flex items-center gap-3">
-        <button id="submit-btn" class="px-4 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-800 hidden" onclick="inviaProfilo()">Invia</button>
-        <button id="next-btn" type="button" class="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800" onclick="nextStep()">Avanti</button>
+    <div class="sticky-footer p-3 md:p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+      <button type="button" class="px-3 py-2 md:px-4 md:py-2 border border-slate-300 rounded-lg hover:bg-slate-100" onclick="prevStep()">Indietro</button>
+      <div class="flex items-center gap-2 md:gap-3">
+        <button id="submit-btn" class="px-3 py-2 md:px-4 md:py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-800 hidden" onclick="inviaProfilo()">Invia</button>
+        <button id="next-btn" type="button" class="px-3 py-2 md:px-4 md:py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800" onclick="nextStep()">Avanti</button>
       </div>
     </div>
 
@@ -553,16 +561,17 @@
 </div>
 
 <style>
-  /* Mobile-friendly inputs + compact spacing */
+  /* Mobile compact: inputs più bassi, font leggermente più piccoli, spazi ridotti */
   @media (max-width:640px){
+    #modal-portafoglio h4{ font-size:15px; }
     #modal-portafoglio select,
     #modal-portafoglio input,
     #modal-portafoglio textarea{
-      min-height:48px; font-size:16px; padding:12px 14px; border-radius:12px;
+      min-height:44px; font-size:15px; padding:10px 12px; border-radius:12px;
     }
-    #modal-portafoglio textarea{ min-height:120px; }
+    #modal-portafoglio textarea{ min-height:110px; }
     #modal-portafoglio input[type="checkbox"],
-    #modal-portafoglio input[type="radio"]{ width:20px; height:20px; }
+    #modal-portafoglio input[type="radio"]{ width:18px; height:18px; }
   }
   /* Micro-animazione focus ring */
   #modal-portafoglio input, #modal-portafoglio select, #modal-portafoglio textarea{
@@ -615,7 +624,7 @@
     const section = document.querySelector(`.step[data-step="${key}"]`);
     if(section) section.classList.remove('hidden');
 
-    // Se entri nello step 9, aggiungi almeno una riga
+    // Step 9: almeno una riga
     if(key === 9){
       const wrap = document.getElementById('val-positions');
       if(wrap && wrap.children.length === 0){ aggiungiRigaVal(); }
@@ -656,14 +665,13 @@
   }
 
   // Toggle sezioni dinamiche
-  function togglePAC(v){
+  function togglePAC(isOn){
     const names = ['pac_tipo','pac_frequenza','pac_importo','pac_durata','pac_rivalutazione','pac_asset_target','pac_note'];
     names.forEach(n=>{
       const el = document.querySelector(`[name="${n}"]`);
       if(!el) return;
-      const dis = (v!=='Sì');
-      el.disabled = dis;
-      el.closest('label')?.classList.toggle('opacity-50', dis);
+      el.disabled = !isOn;
+      el.closest('label')?.classList.toggle('opacity-50', !isOn);
     });
   }
   function toggleSharing(v){
@@ -682,30 +690,30 @@
         <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-start">
           <label class="sm:col-span-7 text-[12px] text-slate-600 min-w-0">
             Strumento o Categoria
-            <input name="pos[${i}][nome]" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[48px] text-[15px] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="Es. IWDA / BTP 2030 / Cash" />
+            <input name="pos[${i}][nome]" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[44px] text-[15px] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="Es. IWDA / BTP 2030 / Cash" />
           </label>
           <label class="sm:col-span-3 text-[12px] text-slate-600">
             Percentuale (%)
-            <input name="pos[${i}][pct]" type="number" min="0" max="100" step="0.1" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[48px] text-[15px] pct-input focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="%" oninput="aggiornaSomma()" />
+            <input name="pos[${i}][pct]" type="number" min="0" max="100" step="0.1" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[44px] text-[15px] pct-input focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="%" oninput="aggiornaSomma()" />
           </label>
           <div class="sm:col-span-2 flex sm:justify-end">
-            <button type="button" class="w-full sm:w-auto mt-1 px-3 py-3 min-h-[48px] border rounded-xl text-slate-600 hover:bg-slate-50" onclick="rimuoviRigaVal(this)">Rimuovi</button>
+            <button type="button" class="w-full sm:w-auto mt-1 px-3 py-3 min-h-[44px] border rounded-xl text-slate-600 hover:bg-slate-50" onclick="rimuoviRigaVal(this)">Rimuovi</button>
           </div>
         </div>
         <details class="mt-2">
           <summary class="text-sm cursor-pointer text-slate-600">Dettagli (facoltativi)</summary>
           <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 mt-2">
             <label class="sm:col-span-3 text-[12px] text-slate-600">Ticker/ISIN
-              <input name="pos[${i}][id]" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[48px] text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-300" />
+              <input name="pos[${i}][id]" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[44px] text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-300" />
             </label>
             <label class="sm:col-span-3 text-[12px] text-slate-600">Quantità
-              <input name="pos[${i}][qty]" type="number" step="any" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[48px] text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-300" />
+              <input name="pos[${i}][qty]" type="number" step="any" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[44px] text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-300" />
             </label>
             <label class="sm:col-span-3 text-[12px] text-slate-600">Prezzo medio
-              <input name="pos[${i}][px]" type="number" step="any" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[48px] text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-300" />
+              <input name="pos[${i}][px]" type="number" step="any" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[44px] text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-300" />
             </label>
             <label class="sm:col-span-3 text-[12px] text-slate-600">Valuta
-              <input name="pos[${i}][ccy]" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[48px] text-[15px] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="EUR / USD / …" />
+              <input name="pos[${i}][ccy]" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[44px] text-[15px] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="EUR / USD / …" />
             </label>
           </div>
         </details>
@@ -760,6 +768,7 @@
     });
 
     const mode = document.querySelector('input[name=tipo_analisi]:checked')?.value || null;
+    const pacOn = !!document.querySelector('input[name="pac_presenza"]')?.checked;
 
     const Profilo_Investitore = {
       dati_anagrafici: {
@@ -798,7 +807,7 @@
         dipendenza_reddito: readValue(fd,'dipendenza_reddito'),
         prospettiva_fiscale: { valore:(fd.get('prospettiva_fiscale')||'').trim()||null }
       },
-      pac: (fd.get('pac_presenza')==='Sì') ? {
+      pac: pacOn ? {
         presenza: { valore:'Sì' },
         tipo: { valore: fd.get('pac_tipo')||null },
         frequenza: { valore: fd.get('pac_frequenza')||null },
