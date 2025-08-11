@@ -494,7 +494,7 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
             </select>
           </label>
         </div>
-        <div id="val-positions" class="space-y-2"></div>
+        <div id="val-positions" class="space-y-4 divide-y divide-slate-200"></div>
         <div class="text-xs text-slate-600" id="val-somma">Somma indicativa: 0%</div>
         <div id="sum-warning" class="hidden mt-2 text-xs bg-amber-100 text-amber-800 border border-amber-300 rounded px-3 py-2">⚠️ Le percentuali non sembrano coerenti con il totale (atteso ~100%). Verifica valori e riprova.</div>
         <label class="block mt-3">Coperture in essere (facoltativo)
@@ -532,18 +532,13 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
           <p class="text-xs text-slate-500 mb-2">Questa è una <em>vista tecnica</em> del contenuto che invieremo al motore AI (formato JSON equivalente allo schema YAML). Serve a verificare cosa stai condividendo.</p>
           <pre id="payload" class="text-xs bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto"></pre>
         </details>
-        <div class="mt-4">
-          <label class="inline-flex items-start gap-2">
-            <input type="checkbox" name="disclaimer_ok" class="mt-1 accent-blue-700" required>
-            <span class="text-xs text-slate-700">Ho letto e compreso il <strong>disclaimer etico</strong>: il risultato è solo didattico e non costituisce consulenza.</span>
-          </label>
-        </div>
+        
       </section>
 
     </form>
 
     <!-- FOOTER NAV -->
-    <div class="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+    <div class="sticky-footer p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
       <button type="button" class="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-100" onclick="prevStep()">Indietro</button>
       <div class="flex items-center gap-3">
         <!-- Anteprima aggiornata automaticamente -->
@@ -568,6 +563,17 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
   #modal-portafoglio textarea{ min-height:120px; }
   #modal-portafoglio input[type="checkbox"],
   #modal-portafoglio input[type="radio"]{ width:20px; height:20px; }
+}
+/* Micro-animazione focus ring */
+#modal-portafoglio input, #modal-portafoglio select, #modal-portafoglio textarea{
+  transition: box-shadow .15s ease, border-color .15s ease, background-color .15s ease;
+}
+/* Sticky footer con sfumatura superiore */
+#modal-portafoglio .sticky-footer{ position: sticky; bottom: 0; background: #f8fafc; }
+#modal-portafoglio .sticky-footer::before{
+  content: ""; position: absolute; left:0; right:0; top:-16px; height:16px;
+  background: linear-gradient(to top, rgba(248,250,252,1), rgba(248,250,252,0));
+  pointer-events: none;
 }
 </style>
 
@@ -597,9 +603,28 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
   let stepsOrder = baseOrder.slice();
   let currentStep = 0;
 
+  // Auto-focus: seleziona il primo campo interattivo visibile nello step corrente
+  function focusPrimoCampo(scope){
+    const container = scope || document.querySelector(`.step[data-step="${stepsOrder[currentStep]}"]`);
+    if(!container) return;
+    const el = container.querySelector('input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled])');
+    if(el){
+      setTimeout(()=>{ try{ el.focus({ preventScroll: true }); if(typeof el.select==='function') el.select(); }catch(_){} }, 10);
+    }
+  }
+
   function mostraStep(i){
     document.querySelectorAll('.step').forEach(s=>s.classList.add('hidden'));
-    document.querySelector(`.step[data-step="${stepsOrder[i]}"]`).classList.remove('hidden');
+    const key = stepsOrder[i];
+    const section = document.querySelector(`.step[data-step="${key}"]`);
+    if(section) section.classList.remove('hidden');
+    // Se entriamo nello step 9, garantisci almeno una riga iniziale
+    if(key === 9){
+      const wrap = document.getElementById('val-positions');
+      if(wrap && wrap.children.length === 0){ aggiungiRigaVal(); }
+    }
+    // Autofocus al primo campo dello step
+    focusPrimoCampo(section);
   }
   function aggiornaStep(){
     mostraStep(currentStep);
@@ -657,36 +682,34 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
   // ===== Portafoglio attuale – righe dinamiche =====
   function rowValTemplate(i){
     return `
-      <div class="border rounded-lg p-3">
-        <div class="grid grid-cols-12 gap-2 items-center">
-          <div class="col-span-7">
-            <label class="text-xs text-slate-600">Strumento o Categoria
-              <input name="pos[${i}][nome]" class="w-full border rounded px-2 py-1.5 mt-1" placeholder="Es. ETF azionario globale / BTP / Cash" />
-            </label>
-          </div>
-          <div class="col-span-3">
-            <label class="text-xs text-slate-600">Percentuale (%)
-              <input name="pos[${i}][pct]" type="number" min="0" max="100" step="any" class="w-full border rounded px-2 py-1.5 mt-1 pct-input" oninput="aggiornaSomma()" />
-            </label>
-          </div>
-          <div class="col-span-2 text-right">
-            <button type="button" class="text-xs text-red-600 hover:underline" onclick="rimuoviRigaVal(this)">Rimuovi</button>
+      <div class="border rounded-xl p-3 sm:p-4">
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-start">
+          <label class="sm:col-span-7 text-[12px] text-slate-600 min-w-0">
+            Strumento o Categoria
+            <input name="pos[${i}][nome]" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[48px] text-[15px] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="Es. IWDA / BTP 2030 / Cash" />
+          </label>
+          <label class="sm:col-span-3 text-[12px] text-slate-600">
+            Percentuale (%)
+            <input name="pos[${i}][pct]" type="number" min="0" max="100" step="0.1" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[48px] text-[15px] pct-input focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="%" oninput="aggiornaSomma()" />
+          </label>
+          <div class="sm:col-span-2 flex sm:justify-end">
+            <button type="button" class="w-full sm:w-auto mt-1 px-3 py-3 min-h-[48px] border rounded-xl text-slate-600 hover:bg-slate-50" onclick="rimuoviRigaVal(this)">Rimuovi</button>
           </div>
         </div>
         <details class="mt-2">
           <summary class="text-xs cursor-pointer text-slate-600">Dettagli (facoltativi)</summary>
-          <div class="grid grid-cols-12 gap-2 mt-2">
-            <label class="col-span-3 text-xs text-slate-600">Ticker/ISIN
-              <input name="pos[${i}][id]" class="w-full border rounded px-2 py-1.5 mt-1" />
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 mt-2">
+            <label class="sm:col-span-3 text-[12px] text-slate-600">Ticker/ISIN
+              <input name="pos[${i}][id]" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[48px] text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-300" />
             </label>
-            <label class="col-span-3 text-xs text-slate-600">Quantità
-              <input name="pos[${i}][qty]" type="number" step="any" class="w-full border rounded px-2 py-1.5 mt-1" />
+            <label class="sm:col-span-3 text-[12px] text-slate-600">Quantità
+              <input name="pos[${i}][qty]" type="number" step="any" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[48px] text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-300" />
             </label>
-            <label class="col-span-3 text-xs text-slate-600">Prezzo medio
-              <input name="pos[${i}][px]" type="number" step="any" class="w-full border rounded px-2 py-1.5 mt-1" />
+            <label class="sm:col-span-3 text-[12px] text-slate-600">Prezzo medio
+              <input name="pos[${i}][px]" type="number" step="any" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[48px] text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-300" />
             </label>
-            <label class="col-span-3 text-xs text-slate-600">Valuta
-              <input name="pos[${i}][ccy]" class="w-full border rounded px-2 py-1.5 mt-1" placeholder="EUR/USD/…" />
+            <label class="sm:col-span-3 text-[12px] text-slate-600">Valuta
+              <input name="pos[${i}][ccy]" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[48px] text-[15px] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="EUR / USD / …" />
             </label>
           </div>
         </details>
@@ -694,10 +717,17 @@ Privacy‑first (fasce), beginner‑friendly, multi‑step, fetch pronta a /api/
   }
   function aggiungiRigaVal(){
     const wrap = document.getElementById('val-positions');
+    if(!wrap) return;
     const i = wrap.children.length;
-    const div = document.createElement('div'); div.innerHTML = rowValTemplate(i); wrap.appendChild(div.firstElementChild);
+    const div = document.createElement('div');
+    div.innerHTML = rowValTemplate(i);
+    const node = div.firstElementChild;
+    wrap.appendChild(node);
+    // focus sul primo campo della nuova riga
+    const first = node.querySelector(`input[name="pos[${i}][nome]"]`);
+    if(first){ setTimeout(()=> first.focus(), 10); }
   }
-  function rimuoviRigaVal(btn){ btn.closest('.border.rounded-lg').remove(); aggiornaSomma(); }
+  function rimuoviRigaVal(btn){ btn.closest('.border.rounded-xl')?.remove(); aggiornaSomma(); }
   function aggiornaSomma(){
     let s=0; document.querySelectorAll('.pct-input').forEach(i=>{ const v=parseFloat(i.value); if(!isNaN(v)) s+=v; });
     document.getElementById('val-somma').textContent = `Somma indicativa: ${s.toFixed(1)}%`;
@@ -721,7 +751,7 @@ function buildPayload(){
 
     // posizioni validazione
     const pos = [];
-    (document.querySelectorAll('#val-positions > .border.rounded-lg')||[]).forEach(card=>{
+    (document.querySelectorAll('#val-positions > .border.rounded-xl, #val-positions > .border.rounded-lg')||[]).forEach(card=>{
       const q = sel => card.querySelector(sel)?.value?.trim();
       const pct = parseFloat(q('[name$="[pct]"]'));
       const nome = q('[name$="[nome]"]');
@@ -818,10 +848,6 @@ function buildPayload(){
 
   // ===== INVIO =====
   async function inviaProfilo(){
-    // checkbox obbligatoria
-    const acc = document.querySelector('input[name="disclaimer_ok"]');
-    if(!acc || !acc.checked){ currentStep = stepsOrder.indexOf(10); aggiornaStep(); alert('Per procedere, conferma di aver letto e compreso il disclaimer.'); return; }
-
     // disclaimer etico forte
     const disclaimer = `NOTA BENE
 
@@ -856,6 +882,7 @@ Vuoi procedere inviando i dati?`;
     }catch(err){ console.error(err); alert('❌ Errore durante l\'invio. Riprova.'); }
   }
 </script>
+
 
 <!-- MODALE – ANALISI ASSET (privacy-first, finalità d’uso only, fetch /api/send-email) -->
 <div id="modal-asset" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
