@@ -578,5 +578,37 @@
   // Chiudi drawer quando si clicca un link
   document.querySelectorAll('#toc-drawer .toc-link').forEach(a => a.addEventListener('click', closeDrawer));
 </script>
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+  const sections = document.querySelectorAll("section[id]");
+  const navLinks = document.querySelectorAll(".indice a"); // Cambia selettore se serve
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // Rimuove active da tutti
+          navLinks.forEach((link) => link.classList.remove("active"));
+          // Trova il link che punta a questa sezione
+          const activeLink = document.querySelector(`.indice a[href="#${entry.target.id}"]`);
+          if (activeLink) {
+            activeLink.classList.add("active");
+          }
+        }
+      });
+    },
+    {
+      root: null,
+      rootMargin: "-100px 0px -60% 0px", // Offset per sticky header
+      threshold: 0.1,
+    }
+  );
+
+  sections.forEach((section) => {
+    observer.observe(section);
+  });
+});
+</script>
+
 </body>
 </html>
