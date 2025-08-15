@@ -117,21 +117,6 @@
             <i data-lucide="candlestick-chart" class="w-4 h-4 mr-1 inline-block align-[-2px]"></i> Opzioni Speculative
           </button>
         </div>
-
-      <!-- Grafico 1W (clicca per ingrandire) -->
-      <div class="px-6 pt-4" data-aos="fade-up">
-        <figure class="bg-slate-50 border border-slate-200 rounded-lg overflow-hidden shadow-sm">
-          <div class="flex items-center justify-between px-4 py-2 border-b border-slate-200">
-            <figcaption class="text-sm font-medium text-slate-700">Grafico 1W — Micron Technologies (MU)</figcaption>
-            <button id="open-chart-lightbox" type="button" class="inline-flex items-center gap-1 text-xs px-2 py-1 rounded border border-slate-200 hover:bg-white">
-              <i data-lucide="expand" class="w-3.5 h-3.5"></i>
-              Apri
-            </button>
-          </div>
-          <a href="#" id="open-chart-lightbox-img" class="block">
-            <img src="https://img.chartshots.net/689fa2035d26d.png" alt="Grafico settimanale (1W) di Micron Technologies" loading="lazy" class="w-full max-h-[420px] object-contain bg-white" />
-          </a>
-        </figure>
       </div>
 
       <!-- MOBILE: accordion con contenuti completi (ID unici per evitare duplicati) -->
@@ -400,25 +385,6 @@
       </div>
     </div>
 
-  
-
-    <!-- Lightbox per grafico 1W -->
-    <div id="chart-lightbox" class="fixed inset-0 z-[60] hidden no-print" role="dialog" aria-modal="true" aria-labelledby="chart-title">
-      <div id="chart-overlay" class="absolute inset-0 bg-slate-900/70"></div>
-      <div class="absolute inset-4 sm:inset-10 md:inset-16 bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
-        <div class="flex items-center justify-between px-4 py-2 border-b border-slate-200">
-          <h3 id="chart-title" class="text-sm font-semibold">Grafico 1W — Micron Technologies (MU)</h3>
-          <div class="flex items-center gap-2">
-            <a href="https://img.chartshots.net/689fa2035d26d.png" target="_blank" rel="noopener" class="text-xs underline hover:no-underline">Apri in nuova scheda</a>
-            <button id="close-chart-lightbox" class="rounded-md border border-slate-200 px-2 py-1 text-xs hover:bg-slate-50">Chiudi</button>
-          </div>
-        </div>
-        <div class="flex-1 bg-slate-50 overflow-auto p-3">
-          <img src="https://img.chartshots.net/689fa2035d26d.png" alt="Grafico settimanale (1W) di Micron Technologies" class="mx-auto max-h-full object-contain" />
-        </div>
-      </div>
-    </div>
-
   </main>
 
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -558,21 +524,6 @@
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
   // Chiudi drawer quando si clicca un link
   document.querySelectorAll('#toc-drawer .toc-link').forEach(a => a.addEventListener('click', closeDrawer));
-  // Lightbox grafico 1W
-  const lightbox = document.getElementById('chart-lightbox');
-  const lbOpenBtn = document.getElementById('open-chart-lightbox');
-  const lbOpenImg = document.getElementById('open-chart-lightbox-img');
-  const lbCloseBtn = document.getElementById('close-chart-lightbox');
-  const lbOverlay = document.getElementById('chart-overlay');
-
-  const openLightbox = () => { lightbox?.classList.remove('hidden'); document.body.style.overflow = 'hidden'; };
-  const closeLightbox = () => { lightbox?.classList.add('hidden'); document.body.style.overflow = ''; };
-
-  lbOpenBtn?.addEventListener('click', openLightbox);
-  lbOpenImg?.addEventListener('click', (e) => { e.preventDefault(); openLightbox(); });
-  lbCloseBtn?.addEventListener('click', closeLightbox);
-  lbOverlay?.addEventListener('click', closeLightbox);
-  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
 </script>
 </body>
 </html>
