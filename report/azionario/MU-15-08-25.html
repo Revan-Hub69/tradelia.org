@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TRADELIA • AI — Report Azionario</title>
+  <meta name="description" content="Report istituzionale Tradelia AI — analisi fondamentale, tecnica e strategica su asset selezionati.">
+  <meta name="author" content="Tradelia AI">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      AOS.init({ once: true, disableMutationObserver: true });
+      lucide.createIcons();
+    });
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+      background-size: 280px;
+      color: #0f172a;
+      margin: 0;
+      padding: 0;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .card-blocco {
+      position: relative;
+      z-index: 10;
+      background: #ffffff;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+      transition: box-shadow 0.2s ease;
+    }
+
+    .card-blocco:hover {
+      background: #f8fafc;
+      box-shadow: 0 2px 12px 0 rgba(100, 120, 200, 0.07);
+    }
+
+    section.card-blocco {
+      scroll-margin-top: 90px;
+    }
+
+
+
+
+
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #e2e8f0;
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      border-radius: 8px;
+      border: 2px solid #e2e8f0;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="sticky top-0 z-50 bg-white shadow-sm w-full px-4 sm:px-6 py-3 flex justify-between items-center border-b border-slate-200 backdrop-blur-sm bg-white/95">
+    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600">•AI</span>
+    </a>
+  </header>
+
+  <main class="px-3 sm:px-6 max-w-6xl mx-auto space-y-6 pb-32">
+    <div class="text-xs text-slate-400 px-1 sm:px-2 mt-2">Home / Report / Azionario</div>
+
+<br><br>
+
+    <br><br>
+<section id="blocco1" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+    <i data-lucide="list-todo" class="icon-section mr-2"></i>Blocco 1 – Identificativi & Contesto
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+    <div><p class="text-xs uppercase text-slate-600">Ticker</p><p class="text-[11px] text-slate-400">Identificativo univoco del titolo sul mercato. Fonte: FMP, NASDAQ</p><p class="font-medium text-green-600">MU</p></div>
+    <div><p class="text-xs uppercase text-slate-600">ISIN</p><p class="text-[11px] text-slate-400">Codice identificativo internazionale dei titoli. Fonte: SEC, Yahoo Finance</p><p class="font-medium text-green-600">US5951121038</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Exchange</p><p class="text-[11px] text-slate-400">Mercato principale di quotazione del titolo. Fonte: NASDAQ</p><p class="font-medium text-green-600">NASDAQ Global Select</p></div>
+    <div><p class="text-xs uppercase text-slate-600">MIC</p><p class="text-[11px] text-slate-400">Codice identificativo del mercato secondo lo standard ISO. Fonte: ISO, MIC registry</p><p class="font-medium text-green-600">XNGS</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Settore</p><p class="text-[11px] text-slate-400">Macrosettore economico di riferimento. Fonte: GICS, FMP</p><p class="font-medium text-green-600">Technology</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Industria</p><p class="text-[11px] text-slate-400">Categoria industriale specifica. Fonte: GICS, FMP</p><p class="font-medium text-green-600">Semiconductors</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Paese</p><p class="text-[11px] text-slate-400">Nazione di registrazione della società. Fonte: FMP</p><p class="font-medium text-green-600">US</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Data IPO</p><p class="text-[11px] text-slate-400">Data di prima quotazione in borsa. Fonte: SEC, NASDAQ</p><p class="font-medium text-green-600">1984-06-01</p></div>
+    <div><p class="text-xs uppercase text-slate-600">CEO</p><p class="text-[11px] text-slate-400">Chief Executive Officer in carica. Fonte: IR Micron</p><p class="font-medium text-green-600">Sanjay Mehrotra</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Dipendenti</p><p class="text-[11px] text-slate-400">Numero totale dei dipendenti. Fonte: Company Profile</p><p class="font-medium text-green-600">48.000</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Prezzo Attuale</p><p class="text-[11px] text-slate-400">Ultimo prezzo di chiusura disponibile. Fonte: NASDAQ, FMP</p><p class="font-medium text-green-600">125.29 USD</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Variazione 24h (%)</p><p class="text-[11px] text-slate-400">Performance percentuale su base giornaliera. Fonte: NASDAQ</p><p class="font-medium text-green-600">+0.82%</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Variazione 7gg (%)</p><p class="text-[11px] text-slate-400">Performance percentuale su base settimanale. Fonte: FMP, TradingView</p><p class="font-medium text-green-600">+14.88%</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Variazione 30gg (%)</p><p class="text-[11px] text-slate-400">Performance percentuale su base mensile. Fonte: ND</p><p class="font-medium text-slate-700">ND</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Prezzo 52w – Min</p><p class="text-[11px] text-slate-400">Prezzo minimo registrato negli ultimi 12 mesi. Fonte: NASDAQ</p><p class="font-medium text-green-600">61.54 USD</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Prezzo 52w – Max</p><p class="text-[11px] text-slate-400">Prezzo massimo registrato negli ultimi 12 mesi. Fonte: NASDAQ</p><p class="font-medium text-green-600">129.85 USD</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Target medio analisti</p><p class="text-[11px] text-slate-400">Prezzo obiettivo medio fornito dagli analisti. Fonte: MarketBeat, Yahoo</p><p class="font-medium text-green-600">149.71 USD</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Range target min-max</p><p class="text-[11px] text-slate-400">Intervallo dei target price da minimo a massimo. Fonte: TipRanks, Baird</p><p class="font-medium text-slate-700">67–250 USD</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Rating medio analisti</p><p class="text-[11px] text-slate-400">Valutazione media del consenso analisti. Fonte: Yahoo, WSJ</p><p class="font-medium text-slate-700">Neutral / Moderate Buy</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Market Cap</p><p class="text-[11px] text-slate-400">Capitalizzazione totale di mercato. Fonte: FMP, Yahoo</p><p class="font-medium text-green-600">140.21 Mld USD</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Numero Azioni Totali</p><p class="text-[11px] text-slate-400">Totale azioni emesse dalla società. Fonte: FMP</p><p class="font-medium text-green-600">1.119 Mld</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Free Float (%)</p><p class="text-[11px] text-slate-400">Percentuale di azioni liberamente negoziabili sul mercato. Fonte: Yahoo, Finbox</p><p class="font-medium text-green-600">99.6–99.7%</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Sede Legale</p><p class="text-[11px] text-slate-400">Luogo della sede legale. Fonte: IR Micron</p><p class="font-medium text-green-600">Boise, Idaho (USA)</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Codice CIK SEC</p><p class="text-[11px] text-slate-400">Codice identificativo presso la SEC. Fonte: SEC.gov</p><p class="font-medium text-green-600">0000723125</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Codice CUSIP</p><p class="text-[11px] text-slate-400">Codice standard utilizzato per identificare i titoli USA. Fonte: Bloomberg</p><p class="font-medium text-green-600">595112103</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Sito Ufficiale</p><p class="text-[11px] text-slate-400">URL ufficiale della società. Fonte: IR Micron</p><p class="font-medium text-green-600">https://www.micron.com</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Telefono Sede Centrale</p><p class="text-[11px] text-slate-400">Contatto telefonico della sede principale. Fonte: IR Micron</p><p class="font-medium text-green-600">+1 208 368 4000</p></div>
+  </div>
+
+  <hr class="divider mt-6">
+  <div class="pt-4">
+    <p class="text-sm text-slate-700 leading-relaxed">
+      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+      Micron Technology (MU) mostra un profilo tecnico solido e ben strutturato. L’azienda, attiva nel segmento semiconduttori e fortemente esposta al trend dell’intelligenza artificiale, gode di copertura completa da parte degli analisti, con un target price medio a +19.5% rispetto all’attuale e con target bull-case fino a 250 USD (fonte Baird).
+      La capitalizzazione supera i 140 Mld USD, con quasi totalità delle azioni flottanti, garantendo elevata liquidità. L’attuale classificazione media “Neutral” riflette un posizionamento prudente, ma non sfavorevole, da parte del consenso istituzionale, con importanti nomi come Morgan Stanley (TP 135 USD), UBS (TP 155) e Mizuho (TP 155) a supporto di scenari di crescita.
+      Il forte momentum settimanale (+14.88%) e la prossimità ai massimi annuali indicano forte interesse di mercato nel breve periodo. Il titolo presenta le caratteristiche necessarie per un’analisi approfondita nei blocchi successivi.
+    </p>
+  </div>
+</section>
+
+    <br><br>
+<section id="blocco2" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+    <i data-lucide="scale" class="icon-section mr-2"></i>Blocco 2 – Multipli & Valutazione Intrinseca
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+    <div><p class="text-xs uppercase text-slate-600">P/E Trailing</p><p class="text-[11px] text-slate-400">Rapporto prezzo/utili basato sugli ultimi 12 mesi. Valore moderato per un'azienda tech. Fonte: GuruFocus, Value Sense, MarketBeat</p><p class="font-medium text-yellow-600">22.57×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">P/E Forward</p><p class="text-[11px] text-slate-400">Usa EPS stimato; indica che il mercato prevede un forte miglioramento degli utili. Fonte: StockAnalysis</p><p class="font-medium text-green-600">10.49×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">PEG Ratio</p><p class="text-[11px] text-slate-400">Normalizza il P/E con la crescita attesa degli utili: <1 = sottovalutazione potenziale. Fonte: StockAnalysis, financecharts.com</p><p class="font-medium text-green-600">0.21×–0.05×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">P/B Ratio</p><p class="text-[11px] text-slate-400">Prezzo su patrimonio netto; in linea con benchmark tech. Fonte: StockAnalysis, financecharts.com</p><p class="font-medium text-yellow-600">2.76×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">P/S Ratio</p><p class="text-[11px] text-slate-400">Valuta quanto il mercato paga per ogni $1 di fatturato. Fonte: StockAnalysis, Yahoo Finanza, financecharts.com</p><p class="font-medium text-yellow-600">4.12×–4.27×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">EV/EBITDA</p><p class="text-[11px] text-slate-400">Enterprise Value su EBITDA: indica una valutazione sana, entro range normali. Fonte: financecharts.com, StockAnalysis</p><p class="font-medium text-green-600">9.06×–9.26×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">EV/Revenue (EV/Sales)</p><p class="text-[11px] text-slate-400">Confronta il valore d’impresa con i ricavi; utile per settori a margine variabile. Fonte: Yahoo Finanza, financecharts.com</p><p class="font-medium text-yellow-600">~4.26×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">P/FCF Ratio</p><p class="text-[11px] text-slate-400">Estremamente alto; segnala prezzo elevato rispetto al flusso di cassa libero generato. Fonte: StockAnalysis</p><p class="font-medium text-red-600">74.54×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">EV/FCF</p><p class="text-[11px] text-slate-400">Valore d’impresa eccessivo rispetto al FCF; possibile rischio di sopravvalutazione. Fonte: StockAnalysis, GuruFocus</p><p class="font-medium text-red-600">76.67×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Fair Value DCF</p><p class="text-[11px] text-slate-400">Stima alternativa del valore intrinseco basata su flussi di cassa attesi scontati (WACC). Fonte: alphaspread.com</p><p class="font-medium text-green-600">169.61 USD</p></div>
+  </div>
+
+  <hr class="divider mt-6">
+  <div class="pt-4">
+    <p class="text-sm text-slate-700 leading-relaxed">
+      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+      Micron presenta una valutazione contraddittoria, con multipli positivi ma segnali di potenziale sopravvalutazione:
+      Indicatori positivi: P/E forward (10.49×) e PEG molto basso (0.05×–0.21×) indicano attesa di forte crescita degli utili e possibile sottovalutazione relativa alla crescita.
+      Multipli solidi: EV/EBITDA attorno a 9× e P/B, P/S in range accettabili.
+      Segnali di cautela: P/FCF (74×) e EV/FCF (76×) sono molto elevati, suggerendo che il mercato potrebbe già scontare scenari futuri aggressivi; attenzione ai margini di cassa.
+      DCF contrastante: modello alternativo indica fair value a ~169.61 USD (26% upside), però la mancanza di input trasparenti e modelli divergenti riduce l’affidabilità.
+      Conclusione: il valore intrinseco appare misto: buone prospettive di crescita ma attenzione alla valutazione basata su flussi di cassa. Il mercato sembra prezzare aspettative elevate; DCF suggerisce upside moderato ma serve maggiore robustezza nel modello.
+    </p>
+  </div>
+</section>
+
+    <br><br>
+<section id="blocco3" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+    <i data-lucide="bar-chart" class="icon-section mr-2"></i>Blocco 3 – Fondamentali Aziendali
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+    <!-- Redditività -->
+    <div><p class="text-xs uppercase text-slate-600">ROE (Return on Equity)</p><p class="text-[11px] text-slate-400">Rapporto tra utile netto e patrimonio netto medio. Indica quanto utile l'azienda genera per ogni unità di capitale proprio investito; valori sopra il 15 % sono ottimi, 13 % è considerato accettabile nel tech. Fonte: StockAnalysis, Yahoo Finanza, Macrotrends, Trendlyne.com, Investing.com</p><p class="font-medium text-green-600">13.11 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">ROA (Return on Assets)</p><p class="text-[11px] text-slate-400">Utile netto diviso per totale attivo medio. Misura quanto efficacemente un’azienda utilizza i propri asset per generare profitti; valori tra 5–10 % sono nella norma. Fonte: StockAnalysis, Investing.com</p><p class="font-medium text-yellow-600">6.55 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">ROIC (Return on Invested Capital)</p><p class="text-[11px] text-slate-400">Calcolato come NOPAT diviso per capitale investito. Valuta la redditività degli investimenti da equity e debito; è positivo se superiore al WACC. Fonte: StockAnalysis</p><p class="font-medium text-yellow-600">TTM: 7.57 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">ROIC (MLQ.ai)</p><p class="text-[11px] text-slate-400">Stima alternativa di ROIC, utile per confrontare metodologie; leggermente superiore al dato principale. Fonte: MLQ.ai</p><p class="font-medium text-yellow-600">TTM: 9.16 %</p></div>
+    <!-- Margini -->
+    <div><p class="text-xs uppercase text-slate-600">Gross Margin</p><p class="text-[11px] text-slate-400">Ricavo lordo (ricavi - costi di vendita) diviso per ricavi totali. Mostra la marginalità lorda; valori nel range 30–40 % sono comuni nel settore semiconduttori. Fonte: StockAnalysis, Investing.com</p><p class="font-medium text-yellow-600">37.13 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Operating Margin</p><p class="text-[11px] text-slate-400">Rapporto tra utile operativo e ricavi totali. Misura l'efficienza operativa prima delle componenti finanziarie e fiscali; >20 % è molto buono. Fonte: StockAnalysis, Investing.com</p><p class="font-medium text-green-600">22.42 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Profit Margin (Net)</p><p class="text-[11px] text-slate-400">Utile netto diviso per ricavi totali. Indica la quota di profitto generato dopo tutte le spese; margine netto sopra 15 % è eccellente. Fonte: StockAnalysis, Investing.com</p><p class="font-medium text-green-600">18.41 %</p></div>
+    <!-- Leva & Liquidità -->
+    <div><p class="text-xs uppercase text-slate-600">Debt/Equity Ratio</p><p class="text-[11px] text-slate-400">Totale debiti diviso patrimonio netto. Valuta il grado di indebitamento: ~0.3 indica bassa leva e buona stabilità. Fonte: StockAnalysis, Wikipedia, Macrotrends</p><p class="font-medium text-green-600">0.32–0.33</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Debt/EBITDA Ratio</p><p class="text-[11px] text-slate-400">Rapporto tra debito netto e EBITDA. Misura la sostenibilità dell’indebitamento operativo; valori inferiori a 3× sono considerati sicuri. Fonte: StockAnalysis</p><p class="font-medium text-green-600">1.02×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Interest Coverage Ratio</p><p class="text-[11px] text-slate-400">EBIT diviso interessi passivi. Indica quante volte l’azienda può coprire il servizio del debito; valori superiori a 10 sono solidi. Fonte: StockAnalysis</p><p class="font-medium text-green-600">15.50×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Current Ratio</p><p class="text-[11px] text-slate-400">Attività correnti su passività correnti. Misura la capacità di far fronte a obblighi a breve termine; >2 è eccellente. Fonte: StockAnalysis, Yahoo/FMP</p><p class="font-medium text-green-600">2.75×</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Quick Ratio</p><p class="text-[11px] text-slate-400">(Attività correnti - scorte) diviso passività correnti. Riflette liquidità immediata escludendo inventari; >1 è indicativo di buona solidità. Fonte: StockAnalysis</p><p class="font-medium text-green-600">1.80×</p></div>
+    <!-- Crescita (YoY) -->
+    <div><p class="text-xs uppercase text-slate-600">Revenue Growth YoY</p><p class="text-[11px] text-slate-400">Variazione percentuale dei ricavi su base annua. Riflette la capacità dell’azienda di espandere le vendite. Fonte: Yahoo Finance, Macrotrends, Trendlyne.com</p><p class="font-medium text-green-600">36.6 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">EPS Growth YoY</p><p class="text-[11px] text-slate-400">Variazione percentuale dell’utile per azione (EPS) su base annua. Misura la crescita della redditività per azionista. Fonte: Investing.com</p><p class="font-medium text-green-600">≈+48.5 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">5Y Revenue Growth</p><p class="text-[11px] text-slate-400">Crescita annuale composta (CAGR) dei ricavi su 5 anni. Indica espansione di lungo periodo. Fonte: Investing.com</p><p class="font-medium text-green-600">26.15 % CAGR</p></div>
+    <div><p class="text-xs uppercase text-slate-600">5Y EPS Growth</p><p class="text-[11px] text-slate-400">Crescita annuale composta (CAGR) dell’EPS negli ultimi 5 anni. Può riflettere ciclicità settoriale o volatilità dei risultati. Fonte: Investing.com</p><p class="font-medium text-red-600">-33.82 %</p></div>
+    <!-- Return per azionista -->
+    <div><p class="text-xs uppercase text-slate-600">Payout Ratio</p><p class="text-[11px] text-slate-400">Quota degli utili distribuita come dividendo. Valori bassi indicano politica di reinvestimento. Fonte: Investing.com</p><p class="font-medium text-yellow-600">8.37 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Dividend Yield</p><p class="text-[11px] text-slate-400">Rapporto tra dividendo per azione e prezzo dell’azione. Indica il rendimento annuale da dividendi; in aziende growth tende a essere contenuto. Fonte: Investing.com</p><p class="font-medium text-yellow-600">0.39 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">CAGR Revenues (5y)</p><p class="text-[11px] text-slate-400">Crescita media annuale composta dei ricavi. Conferma un trend pluriennale positivo. Fonte: Investing.com</p><p class="font-medium text-green-600">~26 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">CAGR EPS (5y)</p><p class="text-[11px] text-slate-400">Crescita media annuale composta dell’EPS. Valori negativi indicano volatilità e impatti ciclici. Fonte: Investing.com</p><p class="font-medium text-red-600">-33 %</p></div>
+  </div>
+
+  <hr class="divider mt-6">
+  <div class="pt-4">
+    <p class="text-sm text-slate-700 leading-relaxed">
+      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+      Micron Technology presenta fondamentali finanziari robusti e coerenti con un'azienda lungo il ciclo di trasformazione del settore semiconduttori:
+      Redditività: ROE e margini operativi netti elevati indicano forte capacità d’extraction e controllo costi.
+      Capital efficiency: ROIC (~7–9 %) al di sotto del WACC sottolinea margine di miglioramento nella generazione di valore sul capitale investito.
+      Leva e liquidità: Struttura finanziaria solida, basso indebitamento e elevata liquidità favoriscono resilienza in cicli negativi.
+      Crescita: Eccellente performance di breve termine (YoY), ma performance EPS a 5 anni negativa evidenzia attenzione a ciclicità.
+      Return to shareholder: Dividend yield modesto, payout basso confermano focus su reinvestimento e sviluppo capace di rendere più nel lungo periodo.
+    </p>
+  </div>
+</section>
+
+    <br><br>
+<section id="blocco4" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+    <i data-lucide="dollar-sign" class="icon-section mr-2"></i>Blocco 4 – Dividendi & Buyback
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+    <!-- DIVIDENDI -->
+    <div><p class="text-xs uppercase text-slate-600">Dividend Yield</p><p class="text-[11px] text-slate-400">Rapporto tra dividendo per azione e prezzo dell’azione. Indica il rendimento annuale da dividendi per l’investitore. Fonte: Koyfin, StockAnalysis, Yahoo Finance</p><p class="font-medium text-yellow-600">0,37 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Dividend per Share (DPS)</p><p class="text-[11px] text-slate-400">Importo annuale distribuito per singola azione. Rappresenta il dividendo assoluto percepito. Fonte: Koyfin, StockAnalysis</p><p class="font-medium text-yellow-600">0,46 USD annui</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Payout Ratio</p><p class="text-[11px] text-slate-400">Percentuale dell’utile netto distribuita come dividendo. Valori inferiori al 30% indicano sostenibilità e propensione al reinvestimento. Fonte: Koyfin, Investing.com, StockAnalysis</p><p class="font-medium text-green-600">8,37 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Dividend Growth 1y</p><p class="text-[11px] text-slate-400">Variazione percentuale del dividendo su base annua. Stabilità nel valore implica continuità ma non crescita. Fonte: Koyfin</p><p class="font-medium text-yellow-600">0 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Dividend Growth 3y CAGR</p><p class="text-[11px] text-slate-400">Crescita media annualizzata del dividendo su 3 anni. Indica progressione nel tempo del ritorno da dividendo. Fonte: Koyfin</p><p class="font-medium text-green-600">+12,28 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Ex-Dividend Date</p><p class="text-[11px] text-slate-400">Data limite per ricevere il dividendo. Chi acquista dopo non ha diritto al pagamento. Fonte: Yahoo Finance, StockAnalysis</p><p class="font-medium text-yellow-600">7 luglio 2025</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Frequenza</p><p class="text-[11px] text-slate-400">Periodicità dei pagamenti dividendo. Il formato trimestrale è comune tra le società USA. Fonte: Yahoo Finance, StockAnalysis</p><p class="font-medium text-yellow-600">Trimestrale</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Tipo di dividendo</p><p class="text-[11px] text-slate-400">Classificazione del dividendo: ordinario indica distribuzione regolare non straordinaria. Fonte: TipRanks, Dividend.com</p><p class="font-medium text-yellow-600">Ordinario</p></div>
+
+    <!-- BUYBACK -->
+    <div><p class="text-xs uppercase text-slate-600">Buyback Yield</p><p class="text-[11px] text-slate-400">Valore dei riacquisti rapportato alla capitalizzazione. Indica ritorno implicito per l’azionista. Fonte: GuruFocus</p><p class="font-medium text-yellow-600">0,00 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Buyback Totale (ultimo FY)</p><p class="text-[11px] text-slate-400">Valore aggregato dei riacquisti di azioni nell’ultimo anno fiscale. Fonte: FinanceCharts</p><p class="font-medium text-yellow-600">300 M USD</p></div>
+    <div><p class="text-xs uppercase text-slate-600">TTM Buybacks</p><p class="text-[11px] text-slate-400">Valore dei riacquisti su base trailing 12 mesi. Indica intensità recente del programma. Fonte: FinanceCharts</p><p class="font-medium text-yellow-600">75 M USD</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Riduzione Azioni 3–5 anni</p><p class="text-[11px] text-slate-400">Variazione percentuale del numero di azioni in circolazione nel lungo periodo. Fonte: —</p><p class="font-medium text-slate-700">ND</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Programma Buyback attivo</p><p class="text-[11px] text-slate-400">Presenza di autorizzazioni formali a nuovi riacquisti. Nessuna informazione recente. Fonte: —</p><p class="font-medium text-slate-700">ND</p></div>
+  </div>
+
+  <hr class="divider mt-6">
+  <div class="pt-4">
+    <p class="text-sm text-slate-700 leading-relaxed">
+      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+      Micron Technologies adotta una politica dividendale contenuta ma sostenibile:
+      Il payout al 8,37 % evidenzia spazio per reinvestimenti e buyback futuri.
+      La crescita triennale dei dividendi (+12,28 %) è positiva, pur con assenza di incremento nell’ultimo anno.
+      La struttura ordinaria e trimestrale ne garantisce regolarità, ma non rappresenta un richiamo diretto per investitori a reddito.
+      Sul fronte buyback, l’azienda ha effettuato 300 M USD di riacquisti nel FY 2024, ma non ha proseguito in modo significativo negli ultimi trimestri, come dimostrato dal buyback yield attuale nullo (0,00 %). Ciò limita l’impatto di ritorno per azionista nel breve termine, seppur non esclude rilanci futuri.
+      Il quadro complessivo restituisce una remunerazione prudente, difensiva e flessibile, coerente con il profilo di crescita tecnologica e reinvestimento strategico.
+    </p>
+  </div>
+</section>
+
+    <br><br>
+<section id="blocco5" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+    <i data-lucide="activity-square" class="icon-section mr-2"></i>Blocco 5 – Performance & Rischio
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+    <!-- PERFORMANCE ASSOLUTA -->
+    <div><p class="text-xs uppercase text-slate-600">YTD (%)</p><p class="text-[11px] text-slate-400">Rendimento da inizio anno. Misura la performance assoluta nel periodo corrente. Fonte: Barron's, StockAnalysis, FinanceCharts, Yahoo Finanza, Investors</p><p class="font-medium text-green-600">+48 % circa</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Total Return 1Y</p><p class="text-[11px] text-slate-400">Rendimento complessivo su 12 mesi, inclusi dividendi reinvestiti. Fonte: FinanceCharts</p><p class="font-medium text-green-600">+25.36 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">CAGR 3Y</p><p class="text-[11px] text-slate-400">Crescita annuale composta in 3 anni. Indica performance media costante. Fonte: FinanceCharts</p><p class="font-medium text-green-600">+26.56 % circa</p></div>
+    <div><p class="text-xs uppercase text-slate-600">CAGR 5Y</p><p class="text-[11px] text-slate-400">Crescita annuale composta in 5 anni. Indica robustezza su lungo termine. Fonte: FinanceCharts</p><p class="font-medium text-green-600">+21.1 % circa</p></div>
+
+    <!-- RISCHIO & VOLATILITÀ -->
+    <div><p class="text-xs uppercase text-slate-600">Beta</p><p class="text-[11px] text-slate-400">Sensibilità del titolo rispetto al mercato. Beta >1 implica maggiore volatilità sistematica. Fonte: Investing.com, Barchart.com, FinanceCharts, MarketChameleon.com, MarketWatch, PortfoliosLab</p><p class="font-medium text-red-600">1.37–2.34</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Volatilità 1Y</p><p class="text-[11px] text-slate-400">Scarto standard annualizzato dei rendimenti. Valori elevati indicano ampia oscillazione. Fonte: GuruFocus</p><p class="font-medium text-red-600">49.55 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Sharpe Ratio 1Y</p><p class="text-[11px] text-slate-400">Rapporto rischio-rendimento. Negativo = rendimento insufficiente rispetto al rischio assunto. Fonte: PortfoliosLab</p><p class="font-medium text-red-600">–0.10</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Drawdown, Sortino, VaR, Alpha</p><p class="text-[11px] text-slate-400">Mancano dati completi su metrica avanzate di rischio/ritorno. Fonte: —</p><p class="font-medium text-slate-700">ND</p></div>
+  </div>
+
+  <hr class="divider mt-6">
+  <div class="pt-4">
+    <p class="text-sm text-slate-700 leading-relaxed">
+      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+      Micron mostra una performance straordinaria con YTD vicino +48% e forte crescita media annua a 3 e 5 anni (CAGR ~26% e ~21%). Tuttavia, il rischio è altrettanto significativo: Beta elevata e volatilità quasi 50% implicano un profilo altamente sensibile ai movimenti di mercato. Inoltre, un Sharpe negativo rivela che il rendimento non compensa adeguatamente il rischio assunto. L’assenza di dati su drawdown, Sortino, VaR e Alpha limita un’analisi quantitativa più completa del profilo rischio‑ritorno.
+    </p>
+  </div>
+</section>
+
+    <br><br>
+<section id="blocco6" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+    <i data-lucide="candlestick-chart" class="icon-section mr-2"></i>Blocco 6 – Microstruttura & Market
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+    <!-- LIQUIDITÀ & SCAMBI -->
+    <div><p class="text-xs uppercase text-slate-600">Volume Medio 90g</p><p class="text-[11px] text-slate-400">Media giornaliera delle azioni scambiate negli ultimi 90 giorni. Indica liquidità operativa del titolo. Fonte: MarketChameleon, Benzinga, Yahoo Finance</p><p class="font-medium text-green-600">~22,6–22,8 M azioni/giorno</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Free Float (%)</p><p class="text-[11px] text-slate-400">Percentuale di azioni liberamente scambiabili sul mercato. Maggiore è il flottante, maggiore è la liquidità. Fonte: GuruFocus, ChartMill</p><p class="font-medium text-green-600">~99,7 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Turnover Ratio</p><p class="text-[11px] text-slate-400">Rapporto tra volume di scambi e azioni disponibili. Non disponibile. Fonte: —</p><p class="font-medium text-slate-700">ND</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Bid‑Ask Spread</p><p class="text-[11px] text-slate-400">Differenza tra prezzo denaro e lettera; indica costo implicito della transazione. Fonte: —</p><p class="font-medium text-slate-700">ND</p></div>
+
+    <!-- STRUTTURA PROPRIETARIA -->
+    <div><p class="text-xs uppercase text-slate-600">% Azionariato Istituzionale</p><p class="text-[11px] text-slate-400">Quota di capitale detenuta da investitori istituzionali. Alta percentuale implica fiducia strategica. Fonte: MarketBeat, ChartMill, Simply Wall St</p><p class="font-medium text-green-600">~80–83 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Insider Ownership (%)</p><p class="text-[11px] text-slate-400">Percentuale del capitale posseduta da membri interni (es. manager, board). Fonte: MarketBeat, ChartMill</p><p class="font-medium text-yellow-600">~0,19–0,30 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Principali Azionisti</p><p class="text-[11px] text-slate-400">Investitori istituzionali principali con partecipazioni rilevanti. Fonte: Fintel, Nasdaq, MarketScreener</p><p class="font-medium text-green-600">Vanguard, BlackRock, State Street, Capital World</p></div>
+
+    <!-- SHORT INTEREST & SENTIMENT -->
+    <div><p class="text-xs uppercase text-slate-600">Short Interest (% Float)</p><p class="text-[11px] text-slate-400">Quota di azioni vendute allo scoperto rispetto al flottante. Valori bassi = rischio squeeze limitato. Fonte: Fintel, Benzinga, MarketBeat</p><p class="font-medium text-yellow-600">~2,76–2,78 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Days to Cover</p><p class="text-[11px] text-slate-400">Giorni stimati per coprire tutte le posizioni short. Valori <3 = bassi rischi di squeeze. Fonte: Benzinga, Fintel</p><p class="font-medium text-green-600">~1,4 giorni</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Short Squeeze Risk</p><p class="text-[11px] text-slate-400">Probabilità di squeeze tecnico derivato da short interest e volume. Fonte: dato derivato</p><p class="font-medium text-green-600">Basso</p></div>
+
+    <!-- TRANSAZIONI & CONCENTRAZIONE -->
+    <div><p class="text-xs uppercase text-slate-600">Vendite Insider Recenti</p><p class="text-[11px] text-slate-400">Valore delle vendite di azioni da parte di dirigenti negli ultimi 3 mesi. Fonte: MarketBeat, Nasdaq Insider Activity</p><p class="font-medium text-red-600">~34,7 M USD</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Partecipazione Insider (%)</p><p class="text-[11px] text-slate-400">Quota detenuta internamente nel lungo periodo. Fonte: MarketBeat, ChartMill</p><p class="font-medium text-yellow-600">~0,2–0,3 %</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Top 10 Holders (% totale)</p><p class="text-[11px] text-slate-400">Percentuale aggregata detenuta dai primi 10 azionisti. Fonte: —</p><p class="font-medium text-slate-700">ND</p></div>
+  </div>
+
+  <hr class="divider mt-6">
+  <div class="pt-4">
+    <p class="text-sm text-slate-700 leading-relaxed">
+      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
+      Micron Technologies presenta una struttura di mercato ottimale dal punto di vista della liquidità e dell’accesso operativo: volumi elevati, flottante quasi totale e spread contenuti (sebbene non misurabili con precisione). L’ownership è dominato da istituzioni solide (80–83%), confermando la stabilità strategica del titolo. Lo short interest è tecnicamente irrilevante, con days to cover ben sotto soglie critiche.
+
+      Il sentiment interno appare più cauto, con vendite insider significative (>34 M USD in 3 mesi), che potrebbero suggerire prese di profitto o assenza di driver interni per l'accumulazione nel breve. Tuttavia, la loro partecipazione è marginale nel capitale complessivo.
+
+      Nel complesso, il titolo risulta tecnicamente efficiente, ben scambiato e poco esposto a rischi strutturali nel breve, ma va monitorata l’evoluzione delle posizioni insider.
+    </p>
+  </div>
+</section>
+
+    <br><br>
+<section id="blocco8" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
+  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+    <i data-lucide="waves" class="icon-section mr-2"></i>Blocco 8 – Tecnica & Correlazioni
+  </h2>
+
+  <h3 class="text-sm font-medium text-slate-700 mb-4">Grafico 1D</h3>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+    <div><p class="text-xs uppercase text-slate-600">POC (Point of Control)</p><p class="text-[11px] text-slate-400">Livello a maggior volume scambiato. È un supporto/resistenza chiave; vicino al prezzo attuale = potenziale zona attrattiva. Fonte: Market Profile / TPO standard (CMT)</p><p class="font-medium text-yellow-600">123.154</p></div>
+    <div><p class="text-xs uppercase text-slate-600">VAH / VAL</p><p class="text-[11px] text-slate-400">Value Area High / Low: range contenente il 70% del volume. Il prezzo attuale è interno all’area → fase di equilibrio. Fonte: CME Volume Profile</p><p class="font-medium text-yellow-600">128.269 / 96.555</p></div>
+    <div><p class="text-xs uppercase text-slate-600">VWAP (sett. / giorn.)</p><p class="text-[11px] text-slate-400">Prezzo medio ponderato per il volume scambiato. Il prezzo sopra VWAP = bias rialzista. Fonte: Bloomberg / CFA Institute</p><p class="font-medium text-green-600">121.204 / 124.523</p></div>
+    <div><p class="text-xs uppercase text-slate-600">EMA21/55/100/200</p><p class="text-[11px] text-slate-400">Medie mobili esponenziali crescenti. Struttura tecnica rialzista. Fonte: CMT / Investopedia</p><p class="font-medium text-green-600">116.7 / 112.3 / 107.2 / 102.9</p></div>
+    <div><p class="text-xs uppercase text-slate-600">RSI</p><p class="text-[11px] text-slate-400">Relative Strength Index. Valore sopra 60 = forza relativa positiva, ma non eccesso. Fonte: Wilder RSI Model (1978)</p><p class="font-medium text-green-600">63</p></div>
+    <div><p class="text-xs uppercase text-slate-600">MACD</p><p class="text-[11px] text-slate-400">Indicatore di momentum. Segnale attuale ribassista → divergenza negativa. Fonte: MACD Standard (CFA)</p><p class="font-medium text-red-600">Bear</p></div>
+    <div><p class="text-xs uppercase text-slate-600">ADX</p><p class="text-[11px] text-slate-400">Average Directional Index. Valori <25 = trend debole, direzione non strutturata. Fonte: Wilder ADX Framework</p><p class="font-medium text-yellow-600">24</p></div>
+    <div><p class="text-xs uppercase text-slate-600">ATR</p><p class="text-[11px] text-slate-400">Average True Range. Misura di volatilità crescente: maggiori opportunità e rischi. Fonte: ATR Model (CMT)</p><p class="font-medium text-yellow-600">4.83</p></div>
+    <div><p class="text-xs uppercase text-slate-600">BBW%ile</p><p class="text-[11px] text-slate-400">Percentile dell'ampiezza delle bande di Bollinger. Volatilità in espansione → attenzione a breakout. Fonte: Bollinger Analysis</p><p class="font-medium text-yellow-600">61.11</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Skew</p><p class="text-[11px] text-slate-400">Asimmetria verso le put. Valori >1 indicano coperture difensive attive. Fonte: Options Research (CBOE)</p><p class="font-medium text-yellow-600">1.39</p></div>
+    <div><p class="text-xs uppercase text-slate-600">TQR / AsymIdx</p><p class="text-[11px] text-slate-400">TQR sopra soglia critica indica contesto reattivo/direzionale. AsymIdx <1 conferma coerenza operativa. Fonte: Tradelia AI Proprietario</p><p class="font-medium text-green-600">3.54 / 0.87</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Volume (CVDbabs)</p><p class="text-[11px] text-slate-400">Volume assoluto sul cluster attivo. Sopra media → conferma di interesse sul livello. Fonte: Volume Profile</p><p class="font-medium text-green-600">129.049</p></div>
+    <div><p class="text-xs uppercase text-slate-600">DirATR (up / down)</p><p class="text-[11px] text-slate-400">Analisi direzionale della volatilità. Espansione maggiore a ribasso = rischio breakout negativo. Fonte: Tradelia Volatility Engine</p><p class="font-medium text-red-600">3.15 (up), 3.83 (down)</p></div>
+  </div>
+
+ <h3 class="text-sm font-medium text-slate-700 mt-10 mb-4">Grafico 4H</h3>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+    <div><p class="text-xs uppercase text-slate-600">EMA20/50/100/200</p><p class="text-[11px] text-slate-400">Medie mobili esponenziali su 20–200 periodi. Stack rialzista (EMA20 > EMA50 > EMA100 > SMA200) → struttura direzionale forte. Fonte: CMT / Investopedia</p><p class="font-medium text-green-600">118.94 / 116.10 / 106.81 / 100.41</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Slope20</p><p class="text-[11px] text-slate-400">Pendenza della EMA20. Valore positivo e inclinato → trend attivo. Fonte: Tradelia Trend Engine</p><p class="font-medium text-green-600">3.90</p></div>
+    <div><p class="text-xs uppercase text-slate-600">ADX</p><p class="text-[11px] text-slate-400">Average Directional Index: misura la forza del trend. Valore >30 = trend forte. Fonte: Wilder ADX Model</p><p class="font-medium text-green-600">33</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Stack</p><p class="text-[11px] text-slate-400">Struttura delle medie in ordine crescente (EMA20 > EMA50 > EMA100) → conferma momentum rialzista. Fonte: CMT Trend Structure</p><p class="font-medium text-green-600">Bull</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Sqz / BBW%</p><p class="text-[11px] text-slate-400">Squeeze attivo: bande di Bollinger in compressione, fase di accumulo energia. Fonte: Bollinger / Squeeze Momentum Indicator</p><p class="font-medium text-yellow-600">ON / 22.3%</p></div>
+    <div><p class="text-xs uppercase text-slate-600">ATR</p><p class="text-[11px] text-slate-400">Average True Range: escursione media dei prezzi. Moderata, utile per trailing stop o breakout. Fonte: ATR Model (CMT)</p><p class="font-medium text-yellow-600">2.9</p></div>
+    <div><p class="text-xs uppercase text-slate-600">VolPct</p><p class="text-[11px] text-slate-400">Volume percentile elevato = attività sopra media recente. Fonte: Volume Engine Tradelia</p><p class="font-medium text-green-600">96</p></div>
+    <div><p class="text-xs uppercase text-slate-600">OBV</p><p class="text-[11px] text-slate-400">On-Balance Volume: cumulativo dei volumi su chiusure positive. In crescita = conferma flusso compratore. Fonte: OBV – Granville Method</p><p class="font-medium text-green-600">7757</p></div>
+    <div><p class="text-xs uppercase text-slate-600">POC</p><p class="text-[11px] text-slate-400">Point of Control (massimo volume) su H4. Vicino ai supporti dinamici. Fonte: Market Profile</p><p class="font-medium text-yellow-600">116.17</p></div>
+    <div><p class="text-xs uppercase text-slate-600">VAH / VAL</p><p class="text-[11px] text-slate-400">Value Area High / Low: prezzo ≈ upper zone → rischio congestione/ritracciamento. Fonte: Volume Profile (CME)</p><p class="font-medium text-yellow-600">126.76 / 105.06</p></div>
+    <div><p class="text-xs uppercase text-slate-600">HighS / LowS</p><p class="text-[11px] text-slate-400">Range swing attuale; utile per proiezioni di breakout. Fonte: Tradelia Swing Engine</p><p class="font-medium text-yellow-600">128.54 / 121.40</p></div>
+    <div><p class="text-xs uppercase text-slate-600">VWAPd</p><p class="text-[11px] text-slate-400">Volume Weighted Avg Price giornaliero; molto distante = allerta eccesso di estensione. Fonte: Bloomberg / Tradingview</p><p class="font-medium text-red-600">95.50</p></div>
+    <div><p class="text-xs uppercase text-slate-600">RV5 / RV10</p><p class="text-[11px] text-slate-400">Realized Volatility 5/10 periodi: compressione rispetto alla media → favorevole a squeeze breakout. Fonte: Tradelia Vol Volatility Model</p><p class="font-medium text-yellow-600">0.7 / 0.84</p></div>
+    <div><p class="text-xs uppercase text-slate-600">VPimb</p><p class="text-[11px] text-slate-400">Volume Imbalance: pressione negativa netta sui volumi → potenziale divergenza. Fonte: Tradelia Volume Microstructure</p><p class="font-medium text-red-600">-26.3%</p></div>
+    <div><p class="text-xs uppercase text-slate-600">HVN / LVN</p><p class="text-[11px] text-slate-400">High/Low Volume Node: concentrazione vs vuoto volumetrico. Fonte: Market Profile</p><p class="font-medium text-yellow-600">116.17 / 111.27</p></div>
+  </div>
+
+  <h3 class="text-sm font-medium text-slate-700 mt-10 mb-4">Valutazione tecnica</h3>
+  <p class="text-sm text-slate-700 leading-relaxed">Il timeframe H4 evidenzia un quadro tecnico positivo: trend ben strutturato (Stack=Bull, ADX=33), volumi elevati e squeeze attivo (BBW 22.3%) che segnala possibile breakout imminente. Tuttavia, attenzione a eccesso di distanza dal VWAP e squilibrio volumetrico (VPimb -26.3%) che potrebbero anticipare ritracciamenti.</p>
+
+  <h3 class="text-sm font-medium text-slate-700 mt-10 mb-4">Pattern rilevati</h3>
+  <ul class="list-disc list-inside text-sm text-slate-700">
+    <li><strong>Geometrico – FlagBull</strong>: In formazione – continuazione attesa. Dopo un forte movimento rialzista, consolidamento inclinato controtrend con volumi decrescenti. Breakout atteso sopra 128.54.</li>
+    <li><strong>Volumetrico – MicroSqueeze</strong>: ON – compressione bande Bollinger con volumi alti e volatilità realizzata bassa. Potenziale esplosione di volatilità.</li>
+    <li><strong>Candlestick</strong>: Nessun pattern rilevante. Assenza di configurazioni di reversal o continuazione validate dal volume.</li>
+  </ul>
+    </div>
+
+     <h3 class="text-sm font-medium text-slate-700 mt-10 mb-4">Grafico 1H</h3>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+    <div><p class="text-xs uppercase text-slate-600">EMA9/20/50/200</p><p class="text-[11px] text-slate-400">Medie mobili esponenziali; Stack rialzista confermato = breve termine positivo. Fonte: CMT Trend Structure</p><p class="font-medium text-green-600">124.57 / 123.96 / 120.37 / 115.58</p></div>
+    <div><p class="text-xs uppercase text-slate-600">Slope20</p><p class="text-[11px] text-slate-400">Pendenza EMA20. Modesto → trend presente ma non forte. Fonte: Tradelia Trend Engine</p><p class="font-medium text-yellow-600">0.49</p></div>
+    <div><p class="text-xs uppercase text-slate-600">ADX</p><p class="text-[11px] text-slate-400">Sopra 30 = tendenza attiva e stabile. Fonte: Wilder ADX</p><p class="font-medium text-green-600">38</p></div>
+    <div><p class="text-xs uppercase text-slate-600">RSI</p><p class="text-[11px] text-slate-400">Slancio positivo sopra 60, non in ipercomprato. Fonte: Wilder RSI Model</p><p class="font-medium text-green-600">62</p></div>
+    <div><p class="text-xs uppercase text-slate-600">ATR</p><p class="text-[11px] text-slate-400">Escursione media stabile; espansione moderata. Fonte: ATR Framework</p><p class="font-medium text-yellow-600">1.05 (ExpM 1.98)</p></div>
+    <div><p class="text-xs uppercase text-slate-600">BBW% / Sqz</p><p class="text-[11px] text-slate-400">Bande strette con squeeze attivo → potenziale breakout. Fonte: Bollinger / Squeeze Indicator</p><p class="font-medium text-yellow-600">4.65 / ON</p></div>
+    <div><p class="text-xs uppercase text-slate-600">VolPct</p><p class="text-[11px] text-slate-400">Volume percentile basso → poco supporto al movimento. Fonte: Tradelia Volume Engine</p><p class="font-medium text-red-600">20.0</p></div>
+    <div><p class="text-xs uppercase text-slate-600">RVOL10/20</p><p class="text-[11px] text-slate-400">Volatilità realizzata in linea con media → contesto stabile. Fonte: Tradelia Volatility Model</p><p class="font-medium text-yellow-600">1.1 / 1.0</p></div>
+    <div><p class="text-xs uppercase text-slate-600">POC</p><p class="text-[11px] text-slate-400">Point of Control vicino al prezzo → area di bilanciamento. Fonte: Volume Profile</p><p class="font-medium text-yellow-600">124.35</p></div>
+    <div><p class="text-xs uppercase text-slate-600">VAH / VAL</p><p class="text-[11px] text-slate-400">Area di valore stretta; prezzo sul VAL → rischio congestione. Fonte: CME Profile</p><p class="font-medium text-yellow-600">127.66 / 124.35</p></div>
+    <div><p class="text-xs uppercase text-slate-600">VPimb</p><p class="text-[11px] text-slate-400">Volume Imbalance positivo → pressione compratori. Fonte: Tradelia Flow Engine</p><p class="font-medium text-green-600">+25.6%</p></div>
+    <div><p class="text-xs uppercase text-slate-600">HighS / LowS</p><p class="text-[11px] text-slate-400">Range swing utile per breakout. Fonte: Swing Engine Tradelia</p><p class="font-medium text-yellow-600">128.54 / 121.40</p></div>
+    <div><p class="text-xs uppercase text-slate-600">VWAPd</p><p class="text-[11px] text-slate-400">Prezzo distante dal VWAP giornaliero → estensione eccessiva. Fonte: Bloomberg VWAP</p><p class="font-medium text-red-600">95.50</p></div>
+  </div>
+
+  <h3 class="text-sm font-medium text-slate-700 mt-10 mb-4">Valutazione tecnica</h3>
+  <p class="text-sm text-slate-700 leading-relaxed">Il timeframe H4 è positivo con trend ben strutturato, volumi elevati e squeeze attivo, ma segnala rischio da eccesso VWAP e squilibrio volumetrico. L'H1 mostra ancora slancio rialzista con pattern engulfing attivo e pressione dei compratori, ma con volumi bassi e bande compresse che suggeriscono breakout potenziale.</p>
+
+  <h3 class="text-sm font-medium text-slate-700 mt-10 mb-4">Pattern rilevati</h3>
+  <ul class="list-disc list-inside text-sm text-slate-700">
+    <li><strong>Geometrico – FlagBull (H4)</strong>: In formazione – continuazione attesa. Consolidamento inclinato con volumi decrescenti. Breakout sopra 128.54.</li>
+    <li><strong>Volumetrico – MicroSqueeze (H4)</strong>: ON – compressione bande con volumi alti e bassa volatilità realizzata.</li>
+    <li><strong>Candlestick – BullEngulf (H1)</strong>: Attivo – engulfing rialzista con ADX alto e pressione compratori.</li>
+    <li><strong>Volumetrico – Squeeze ON (H1)</strong>: Attivo – bande compresse, possibile esplosione di volatilità.</li>
+  </ul>
+    </div>
+
+    
+    <br><br>
