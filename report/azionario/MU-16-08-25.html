@@ -440,16 +440,17 @@
 
   </main>
 
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script>
-  // Init animazioni e icone
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+(() => {
+  // ==== Init icone + animazioni
   window.addEventListener('DOMContentLoaded', () => {
     if (window.lucide) window.lucide.createIcons();
     if (window.AOS) window.AOS.init({ duration: 400, once: true });
   });
 
-  // Tabs con ARIA + tastiera
+  // ==== Tabs ARIA + tastiera
   const tabBtns = document.querySelectorAll('[role="tab"]');
   const tabPanels = document.querySelectorAll('[role="tabpanel"]');
 
@@ -459,8 +460,7 @@
     btn.setAttribute('aria-selected','true');
     btn.classList.add('border-sky-500','text-sky-700','font-semibold');
     const id = btn.getAttribute('aria-controls');
-    const panel = document.getElementById(id);
-    if (panel) panel.classList.remove('hidden');
+    document.getElementById(id)?.classList.remove('hidden');
   }
 
   tabBtns.forEach(btn => {
@@ -478,32 +478,44 @@
   });
   if (tabBtns.length) activateTab(tabBtns[0]);
 
-  // Accordion mobile: esclusivo + focus stabile con scroll dolce
+  // ==== Accordion mobile esclusivo
   const accRoot = document.getElementById('simulazioni-accordion');
   const accItems = accRoot ? accRoot.querySelectorAll('details') : [];
   accItems.forEach((detail) => {
     detail.addEventListener('toggle', () => {
-      if (detail.open) {
-        setTimeout(() => { accItems.forEach((other) => { if (other !== detail) other.open = false; }); }, 40);
-        detail.querySelector('summary')?.focus({ preventScroll: true });
-        detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      if (!detail.open) return;
+      setTimeout(() => { accItems.forEach((other) => { if (other !== detail) other.open = false; }); }, 40);
+      detail.querySelector('summary')?.focus({ preventScroll: true });
+      detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
 
-  // TOC attiva su scroll + correzione offset header
-  const tocLinks = document.querySelectorAll('.toc-link');
-  const sections = Array.from(tocLinks).map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  // ==== TOC / Indice (drawer + evidenziazione dinamica)
+  const headerEl = document.querySelector('header');
+  const getOffset = () => (headerEl ? headerEl.offsetHeight + 8 : 80);
+
+  const tocLinks = document.querySelectorAll('.toc-link'); // include quelli nel drawer
+  const sections = Array.from(tocLinks)
+    .map(a => {
+      const sel = a.getAttribute('href');
+      return sel && sel.startsWith('#') ? document.querySelector(sel) : null;
+    })
+    .filter(Boolean);
 
   const setActiveToc = (id) => {
-    tocLinks.forEach(a => a.setAttribute('aria-current', 'false'));
+    tocLinks.forEach(a => {
+      a.setAttribute('aria-current', 'false');
+      a.classList.remove('active');
+    });
     const active = Array.from(tocLinks).find(a => a.getAttribute('href') === `#${id}`);
-    if (active) active.setAttribute('aria-current', 'true');
+    if (active) {
+      active.setAttribute('aria-current', 'true');
+      active.classList.add('active');
+    }
   };
 
-  // Sezione corrente in base allo scroll (considera header sticky)
   const getCurrentSectionId = () => {
-    const offset = 80;
+    const offset = getOffset();
     let current = sections[0]?.id || null;
     let bestTop = -Infinity;
     sections.forEach(sec => {
@@ -523,35 +535,57 @@
     return current;
   };
 
-  // Set iniziale all'avvio pagina
+  const smoothScrollTo = (target) => {
+    const top = target.getBoundingClientRect().top + window.scrollY - getOffset();
+    window.scrollTo({ top, behavior: 'smooth' });
+  };
+
+  // Stato iniziale (on load + hash esistente)
   window.addEventListener('load', () => {
+    const hash = window.location.hash;
+    if (hash) {
+      const target = document.querySelector(hash);
+      if (target) {
+        setActiveToc(target.id);
+        // allinea subito senza "saltare"
+        setTimeout(() => smoothScrollTo(target), 0);
+        return;
+      }
+    }
     const id = getCurrentSectionId();
     if (id) setActiveToc(id);
   });
 
+  // Aggiorna con IntersectionObserver
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => { if (entry.isIntersecting) setActiveToc(entry.target.id); });
-  }, { rootMargin: '-70px 0px -75% 0px', threshold: [0, 0.25, 0.66, 1] });
+  }, { rootMargin: `-${getOffset()}px 0px -70% 0px`, threshold: [0, 0.2, 0.66, 1] });
 
   sections.forEach(sec => observer.observe(sec));
 
-  // Smooth scroll per link TOC con offset fisso del header
+  // Smooth scroll per link TOC
   tocLinks.forEach(link => {
     link.addEventListener('click', (e) => {
       const hash = link.getAttribute('href');
-      if (hash && hash.startsWith('#')) {
-        e.preventDefault();
-        const target = document.querySelector(hash);
-        if (!target) return;
-        const rect = target.getBoundingClientRect();
-        const top = rect.top + window.scrollY - 80; // offset header
-        window.history.pushState({}, '', hash);
-        window.scrollTo({ top, behavior: 'smooth' });
-        setActiveToc(target.id);
-      }
+      if (!hash || !hash.startsWith('#')) return;
+      const target = document.querySelector(hash);
+      if (!target) return;
+      e.preventDefault();
+      history.pushState({}, '', hash);
+      smoothScrollTo(target);
+      setActiveToc(target.id);
+      // chiudi eventuale drawer dopo click
+      closeDrawer();
     });
   });
-    // Drawer TOC (aperto da header e da barra in basso)
+
+  // Aggiorna evidenziazione su back/forward
+  window.addEventListener('hashchange', () => {
+    const target = document.querySelector(location.hash);
+    if (target) { setActiveToc(target.id); smoothScrollTo(target); }
+  });
+
+  // ==== Drawer TOC (top button + bottom bar)
   const body = document.body;
   const drawer = document.getElementById('toc-drawer');
   const openBtnTop = document.getElementById('open-toc-drawer-top');
@@ -559,56 +593,30 @@
   const closeBtn = document.getElementById('close-toc-drawer');
   const overlay = document.getElementById('toc-overlay');
 
-  const openDrawer = () => {
-  if (!drawer) return;
-  // Aggiorna evidenziazione sul blocco effettivamente visibile/aperto
-  const id = getCurrentSectionId();
-  if (id) setActiveToc(id);
-  drawer.classList.remove('hidden');
-  body.style.overflow = 'hidden';
-  openBtnBottom?.setAttribute('aria-expanded','true');
-};
-  const closeDrawer = () => { if (!drawer) return; drawer.classList.add('hidden'); body.style.overflow = ''; openBtnBottom?.setAttribute('aria-expanded','false'); };
+  function openDrawer(){
+    if (!drawer) return;
+    const id = getCurrentSectionId();
+    if (id) setActiveToc(id);
+    drawer.classList.remove('hidden');
+    body.style.overflow = 'hidden';
+    openBtnBottom?.setAttribute('aria-expanded','true');
+  }
+  function closeDrawer(){
+    if (!drawer) return;
+    drawer.classList.add('hidden');
+    body.style.overflow = '';
+    openBtnBottom?.setAttribute('aria-expanded','false');
+  }
+  window.closeDrawer = closeDrawer; // esponi per uso nel click TOC
 
   openBtnTop?.addEventListener('click', openDrawer);
   openBtnBottom?.addEventListener('click', openDrawer);
   closeBtn?.addEventListener('click', closeDrawer);
   overlay?.addEventListener('click', closeDrawer);
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
-  // Chiudi drawer quando si clicca un link
-  document.querySelectorAll('#toc-drawer .toc-link').forEach(a => a.addEventListener('click', closeDrawer));
+})();
 </script>
-  <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const sections = document.querySelectorAll("section[id]");
-  const navLinks = document.querySelectorAll(".indice a"); // Cambia selettore se serve
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          // Rimuove active da tutti
-          navLinks.forEach((link) => link.classList.remove("active"));
-          // Trova il link che punta a questa sezione
-          const activeLink = document.querySelector(`.indice a[href="#${entry.target.id}"]`);
-          if (activeLink) {
-            activeLink.classList.add("active");
-          }
-        }
-      });
-    },
-    {
-      root: null,
-      rootMargin: "-100px 0px -60% 0px", // Offset per sticky header
-      threshold: 0.1,
-    }
-  );
-
-  sections.forEach((section) => {
-    observer.observe(section);
-  });
-});
-</script>
 
 </body>
 </html>
