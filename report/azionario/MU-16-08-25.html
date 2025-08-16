@@ -100,166 +100,133 @@
       <p class="mt-2"><span class="font-semibold text-green-700">Prima di assumere decisioni di investimento</span> è raccomandato consultare un <span class="font-semibold">consulente finanziario indipendente</span>.</p>
     </section>
 
-    <!-- Simulazioni Operative -->
-    <section id="sim-op" class="max-w-6xl mx-auto bg-white border border-slate-200 rounded-lg mb-8 shadow-sm" aria-labelledby="sim-title">
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-6 pb-0">
-        <h2 id="sim-title" class="text-xl font-bold">Simulazioni Operative</h2>
-        <div class="hidden sm:flex space-x-2" role="tablist" aria-label="Simulazioni Operative">
-          <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent hover:border-sky-500" role="tab" aria-selected="true" aria-controls="tab-lt" id="tabbtn-lt" data-tab="lt">
-            <i data-lucide="bar-chart" class="w-4 h-4 mr-1 inline-block align-[-2px]"></i> Investimento LT
-          </button>
-          <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent hover:border-sky-500" role="tab" aria-selected="false" aria-controls="tab-cfd" id="tabbtn-cfd" data-tab="cfd">
-            <i data-lucide="activity-square" class="w-4 h-4 mr-1 inline-block align-[-2px]"></i> CFD Swing
-          </button>
-          <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent hover:border-sky-500" role="tab" aria-selected="false" aria-controls="tab-opt" id="tabbtn-opt" data-tab="opt">
-            <i data-lucide="candlestick-chart" class="w-4 h-4 mr-1 inline-block align-[-2px]"></i> Opzioni Speculative
-          </button>
-        </div>
+    
+<!-- Simulazioni Operative (versione unica responsive) -->
+<section id="sim-op" class="max-w-6xl mx-auto bg-white border border-slate-200 rounded-lg mb-8 shadow-sm" aria-labelledby="sim-title">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-6 pb-3">
+    <h2 id="sim-title" class="text-xl font-bold">Simulazioni Operative</h2>
+
+    <!-- Tablist: una sola versione, scrollabile su mobile -->
+    <div class="mt-3 sm:mt-0 overflow-x-auto">
+      <div class="inline-flex min-w-full sm:min-w-0 gap-1" role="tablist" aria-label="Simulazioni Operative">
+        <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent hover:border-sky-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 data-[active=true]:text-sky-700 data-[active=true]:border-sky-600"
+                role="tab" aria-selected="true" aria-controls="tab-lt" id="tabbtn-lt" data-tab="lt">
+          <i data-lucide="bar-chart" class="w-4 h-4 mr-1 inline-block align-[-2px]"></i> Investimento LT
+        </button>
+        <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent hover:border-sky-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 data-[active=true]:text-sky-700 data-[active=true]:border-sky-600"
+                role="tab" aria-selected="false" aria-controls="tab-cfd" id="tabbtn-cfd" data-tab="cfd">
+          <i data-lucide="activity-square" class="w-4 h-4 mr-1 inline-block align-[-2px]"></i> CFD Swing
+        </button>
+        <button class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent hover:border-sky-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 data-[active=true]:text-sky-700 data-[active=true]:border-sky-600"
+                role="tab" aria-selected="false" aria-controls="tab-opt" id="tabbtn-opt" data-tab="opt">
+          <i data-lucide="candlestick-chart" class="w-4 h-4 mr-1 inline-block align-[-2px]"></i> Opzioni Speculative
+        </button>
       </div>
+    </div>
+  </div>
 
-      <!-- MOBILE: accordion -->
-      <div id="simulazioni-accordion" class="sm:hidden divide-y divide-slate-200">
-        <details open>
-          <summary class="cursor-pointer px-6 py-4 font-semibold text-green-700">Investimento LT – Micron Technology (MU)</summary>
-          <div class="px-6 py-4 text-sm text-slate-700">
-            <section id="strategia-lt-m" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white" data-aos="fade-up">
-              <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-                <i data-lucide="bar-chart" class="icon-section mr-2"></i> Strategia Investimento LT – Micron Technology (MU)
-              </h3>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-                <div><p class="text-xs uppercase text-slate-600">Stile Strategia</p><p class="text-[11px] text-slate-400">Valuation Growth</p><p class="font-medium text-slate-800">Valuation Growth</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Raccomandazione</p><p class="text-[11px] text-slate-400">Approccio a tranche in base a conferme tecniche. Fonte: Tradelia AI</p><p class="font-medium text-green-600">Accumulo frazionato (3 tranche)</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Strategia</p><p class="text-[11px] text-slate-400">DCF undervaluation combinata a trend tecnico confermato</p><p class="font-medium text-slate-800">DCF Undervaluation + Confirmed Trend</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Fair Value Stimato</p><p class="text-[11px] text-slate-400">Valutazione intrinseca stimata su base DCF. Fonte: Tradelia AI</p><p class="font-medium text-green-600">145 USD</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Prezzo Attuale</p><p class="text-[11px] text-slate-400">Valore di mercato corrente. Fonte: TradingView</p><p class="font-medium text-slate-800">121 USD</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Upside Potenziale</p><p class="text-[11px] text-slate-400">Differenziale tra fair value stimato e prezzo corrente</p><p class="font-medium text-green-600">+19.8%</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Condizione di Entry</p><p class="text-[11px] text-slate-400">Trigger tecnico settimanale + conferma breakout. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">Close settimanale sopra EMA55 + breakout D1</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Allocazione Massima</p><p class="text-[11px] text-slate-400">Quota massima del portafoglio dedicata. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">7.5%</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Struttura Tranche</p><p class="text-[11px] text-slate-400">Percentuale consigliata per ciascuna tranche</p><p class="font-medium text-slate-800">40% / 30% / 30%</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Rischio per Tranche</p><p class="text-[11px] text-slate-400">Cap su perdita massima per ogni ingresso</p><p class="font-medium text-red-600">1.25%</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Convalida Tecnica LT</p><p class="text-[11px] text-slate-400">Indicatori principali di tendenza confermati su timeframe D1</p><p class="font-medium text-green-600">EMA21 > EMA55 > EMA200, RSI > 55, volumi crescenti</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Conferma Derivati</p><p class="text-[11px] text-slate-400">Analisi Gamma e Skew da opzioni. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">Gamma positivo, Skew neutro</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Macro & Governance</p><p class="text-[11px] text-slate-400">Eventi binari assenti a 30g, trend ESG favorevole</p><p class="font-medium text-slate-800">ESG rating in miglioramento</p></div>
-                <div><p class="text-xs uppercase text-slate-600">WP-LT</p><p class="text-[11px] text-slate-400">Weighting Power Long-Term. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">0.81</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Validità Strategia</p><p class="text-[11px] text-slate-400">Orizzonte temporale massimo per mantenere la strategia attiva</p><p class="font-medium text-slate-800">Fino al 30 settembre 2025</p></div>
-              </div>
-              <hr class="divider mt-6">
-              <div class="pt-4">
-                <p class="text-sm text-slate-700 leading-relaxed">
-                  <span class="font-bold text-sky-800">Nota Operativa:</span>
-                  Il bias LT rimane <span class="font-semibold text-green-700">rialzista</span>. Si privilegia ingresso fra <span class="font-semibold">$118–$120</span> per prima tranche, con eventuali aggiunte sopra <span class="font-semibold">$125</span> se breakout volumetrico confermato. Target primario <span class="font-semibold text-green-700">$145</span> in 6–12 mesi, <span class="font-semibold text-red-600">stop tecnico sotto $110</span>.
-                </p>
-              </div>
-            </section>
-          </div>
-        </details>
-
-        <details>
-          <summary class="cursor-pointer px-6 py-4 font-semibold text-blue-700">CFD Swing – Micron Technology (MU)</summary>
-          <div class="px-6 py-4 text-sm text-slate-700">
-            <section id="strategia-cfd-m" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white" data-aos="fade-up">
-              <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-                <i data-lucide="activity-square" class="icon-section mr-2"></i> CFD Swing – Strategia Micron Technology (MU)
-              </h3>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-                <div><p class="text-xs uppercase text-slate-600">Strategia</p><p class="text-[11px] text-slate-400">Espansione di volatilità su compressione + trend confermato</p><p class="font-medium text-slate-800">BBW Expansion + EMA Stack</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Categoria</p><p class="text-[11px] text-slate-400">Combinazione tra volatilità e trend. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">Volatility + Trend</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Pattern richiesto</p><p class="text-[11px] text-slate-400">BBW percentile &lt; 12 + struttura EMA rialzista su H4/D1</p><p class="font-medium text-slate-800">BBW &lt;12 + EMA21 &gt; EMA55 &gt; EMA200</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Condizione di Attivazione</p><p class="text-[11px] text-slate-400">Breakout della BBW + chiusura sopra la struttura EMA. Fonte: Tradelia AI</p><p class="font-medium text-green-600">Breakout BBW + Close &gt; EMA stack</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Metodo di Validazione</p><p class="text-[11px] text-slate-400">RSI &gt; 55 + RVOL10 &gt; 1.2</p><p class="font-medium text-slate-800">Conferma momentum e volume</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Livello Entry</p><p class="text-[11px] text-slate-400">Prezzo conferma breakout</p><p class="font-medium text-green-700">122.5</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Stop Loss (SL)</p><p class="text-[11px] text-slate-400">Sotto zona di congestione su H4</p><p class="font-medium text-red-600">118.8</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Target 1 (TP1)</p><p class="text-[11px] text-slate-400">R:R 2.5</p><p class="font-medium text-slate-800">127.5</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Target 2 (TP2)</p><p class="text-[11px] text-slate-400">Swing high precedente</p><p class="font-medium text-slate-800">132.0</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Probabilità Attivazione</p><p class="text-[11px] text-slate-400">Analisi tecnica e flussi favorevoli</p><p class="font-medium text-green-600">Alta</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Validità Strategia</p><p class="text-[11px] text-slate-400">Finestra di attivazione stimata</p><p class="font-medium text-slate-800">Fino al 20 agosto 2025</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Trigger Tecnico (B8)</p><p class="text-[11px] text-slate-400">Conferma presente</p><p class="font-medium text-green-600">✓</p></div>
-                <div><p class="text-xs uppercase text-slate-600">ETF Flow (B10)</p><p class="text-[11px] text-slate-400">Trend positivo negli ultimi 3 giorni</p><p class="font-medium text-green-600">Rialzista</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Derivati (B7)</p><p class="text-[11px] text-slate-400">Gamma positivo, skew neutro</p><p class="font-medium text-slate-800">Confermati</p></div>
-                <div><p class="text-xs uppercase text-slate-600">MTF Score</p><p class="text-[11px] text-slate-400">Coerenza tecnica su D1–H4–H1</p><p class="font-medium text-green-600">68</p></div>
-              </div>
-              <hr class="divider mt-6">
-              <div class="pt-4">
-                <p class="text-sm text-slate-700 leading-relaxed">
-                  <span class="font-bold text-sky-800">Nota Operativa:</span>
-                  Setup <span class="font-semibold text-green-700">swing rialzista</span> in atto, con compressione di volatilità e struttura EMA favorevole. Possibile estensione del trend se confermata <span class="font-semibold">chiusura sopra $122.5</span> con volumi superiori alla media a 10 periodi. <span class="font-semibold text-red-600">Stop tecnico</span> ampio per evitare noise intraday.
-                </p>
-              </div>
-            </section>
-          </div>
-        </details>
-
-        <details>
-          <summary class="cursor-pointer px-6 py-4 font-semibold text-red-700">Opzioni Speculative – Micron Technology (MU)</summary>
-          <div class="px-6 py-4 text-sm text-slate-700">
-            <section id="strategia-opzioni-m" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white" data-aos="fade-up">
-              <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-                <i data-lucide="candlestick-chart" class="icon-section mr-2"></i> Opzioni Speculative – Micron Technology (MU)
-              </h3>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-                <div><p class="text-xs uppercase text-slate-600">Categoria</p><p class="text-[11px] text-slate-400">Posizione direzionale con rischio definito</p><p class="font-medium text-red-600">Speculativa – Direzionale</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Struttura</p><p class="text-[11px] text-slate-400">Spread verticale a debito con strike rialzisti</p><p class="font-medium text-slate-800">Call Debit Spread</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Bias Sottostante</p><p class="text-[11px] text-slate-400">Tendenza di fondo swing/long-term favorevole</p><p class="font-medium text-green-600">Swing / LT Rialzista</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Strike</p><p class="text-[11px] text-slate-400">Livelli di attivazione della struttura</p><p class="font-medium text-slate-800">122.5 / 127.5</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Prezzo Attuale</p><p class="text-[11px] text-slate-400">Valore sottostante al momento della strategia</p><p class="font-medium text-slate-800">121.0</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Scadenza</p><p class="text-[11px] text-slate-400">Durata residua fino a maturity</p><p class="font-medium text-slate-800">21 giorni</p></div>
-                <div><p class="text-xs uppercase text-slate-600">IV Percentile</p><p class="text-[11px] text-slate-400">Percentile attuale della volatilità implicita</p><p class="font-medium text-slate-800">58°</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Skew</p><p class="text-[11px] text-slate-400">Distribuzione dei premi tra call e put</p><p class="font-medium text-slate-800">Neutro (leggero favore per call)</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Gamma</p><p class="text-[11px] text-slate-400">Comportamento delta vicino al prezzo</p><p class="font-medium text-green-600">Supportivo</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Condizione di Attivazione</p><p class="text-[11px] text-slate-400">Breakout tecnico + compressione + volume. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">Close H4 > 122.5 + BBW < 12 + RVOL > 1.2</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Metodo di Validazione</p><p class="text-[11px] text-slate-400">Momentum + struttura EMA su H4/D1</p><p class="font-medium text-slate-800">RSI > 55 + EMA stack rialzista</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Rischio Massimo</p><p class="text-[11px] text-slate-400">Premio pagato rispetto al portafoglio</p><p class="font-medium text-red-600">0.9%</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Validità</p><p class="text-[11px] text-slate-400">Scadenza operativa della strategia</p><p class="font-medium text-slate-800">Fino al 5 settembre 2025</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Trigger Tecnico (B8)</p><p class="text-[11px] text-slate-400">Segnale confermato</p><p class="font-medium text-green-600">✓</p></div>
-                <div><p class="text-xs uppercase text-slate-600">Evento Macro</p><p class="text-[11px] text-slate-400">Nessun rischio macro a breve termine</p><p class="font-medium text-green-600">Nessuno</p></div>
-              </div>
-              <hr class="divider mt-6">
-              <div class="pt-4">
-                <p class="text-sm text-slate-700 leading-relaxed">
-                  <span class="font-bold text-sky-800">Nota Operativa:</span>
-                  Struttura <span class="font-semibold text-red-600">direzionale con rischio limitato</span> e profilo di rendimento favorevole in caso di breakout confermato sopra <span class="font-semibold">$122.5</span>. Beneficia di <span class="font-semibold text-green-600">gamma supportivo</span> e <span class="font-semibold">volatilità implicita moderata</span>.
-                </p>
-              </div>
-            </section>
-          </div>
-        </details>
-      </div>
-
-      <!-- DESKTOP: tab panels -->
-      <div class="hidden sm:block p-6" id="tab-content">
-        <div id="tab-lt" class="tab-panel" role="tabpanel" tabindex="0" aria-labelledby="tabbtn-lt">
-          <!-- stesso contenuto LT desktop (coerente con mobile) -->
-          <section id="strategia-lt" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white" data-aos="fade-up">
-            <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-              <i data-lucide="bar-chart" class="icon-section mr-2"></i> Strategia Investimento LT – Micron Technology (MU)
-            </h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-              <div><p class="text-xs uppercase text-slate-600">Stile Strategia</p><p class="text-[11px] text-slate-400">Valuation Growth</p><p class="font-medium text-slate-800">Valuation Growth</p></div>
-              <div><p class="text-xs uppercase text-slate-600">Raccomandazione</p><p class="text-[11px] text-slate-400">Approccio a tranche in base a conferme tecniche. Fonte: Tradelia AI</p><p class="font-medium text-green-600">Accumulo frazionato (3 tranche)</p></div>
-              <div><p class="text-xs uppercase text-slate-600">Strategia</p><p class="text-[11px] text-slate-400">DCF undervaluation combinata a trend tecnico confermato</p><p class="font-medium text-slate-800">DCF Undervaluation + Confirmed Trend</p></div>
-              <div><p class="text-xs uppercase text-slate-600">Fair Value Stimato</p><p class="text-[11px] text-slate-400">Valutazione intrinseca stimata su base DCF. Fonte: Tradelia AI</p><p class="font-medium text-green-600">145 USD</p></div>
-              <div><p class="text-xs uppercase text-slate-600">Prezzo Attuale</p><p class="text-[11px] text-slate-400">Valore di mercato corrente. Fonte: TradingView</p><p class="font-medium text-slate-800">121 USD</p></div>
-              <div><p class="text-xs uppercase text-slate-600">Upside Potenziale</p><p class="text-[11px] text-slate-400">Differenziale tra fair value stimato e prezzo corrente</p><p class="font-medium text-green-600">+19.8%</p></div>
-              <div><p class="text-xs uppercase text-slate-600">Condizione di Entry</p><p class="text-[11px] text-slate-400">Trigger tecnico settimanale + conferma breakout. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">Close settimanale sopra EMA55 + breakout D1</p></div>
-              <div><p class="text-xs uppercase text-slate-600">Allocazione Massima</p><p class="text-[11px] text-slate-400">Quota massima del portafoglio dedicata. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">7.5%</p></div>
-              <div><p class="text-xs uppercase text-slate-600">Struttura Tranche</p><p class="text-[11px] text-slate-400">Percentuale consigliata per ciascuna tranche</p><p class="font-medium text-slate-800">40% / 30% / 30%</p></div>
-              <div><p class="text-xs uppercase text-slate-600">Rischio per Tranche</p><p class="text-[11px] text-slate-400">Cap su perdita massima per ogni ingresso</p><p class="font-medium text-red-600">1.25%</p></div>
-              <div><p class="text-xs uppercase text-slate-600">Convalida Tecnica LT</p><p class="text-[11px] text-slate-400">Indicatori principali di tendenza confermati su timeframe D1</p><p class="font-medium text-green-600">EMA21 > EMA55 > EMA200, RSI > 55, volumi crescenti</p></div>
-              <div><p class="text-xs uppercase text-slate-600">Conferma Derivati</p><p class="text-[11px] text-slate-400">Analisi Gamma e Skew da opzioni. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">Gamma positivo, Skew neutro</p></div>
-              <div><p class="text-xs uppercase text-slate-600">Macro & Governance</p><p class="text-[11px] text-slate-400">Eventi binari assenti a 30g, trend ESG favorevole</p><p class="font-medium text-slate-800">ESG rating in miglioramento</p></div>
-              <div><p class="text-xs uppercase text-slate-600">WP-LT</p><p class="text-[11px] text-slate-400">Weighting Power Long-Term. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">0.81</p></div>
-              <div><p class="text-xs uppercase text-slate-600">Validità Strategia</p><p class="text-[11px] text-slate-400">Orizzonte temporale massimo per mantenere la strategia attiva</p><p class="font-medium text-slate-800">Fino al 30 settembre 2025</p></div>
-            </div>
-            <hr class="divider mt-6">
-            <div class="pt-4">
-              <p class="text-sm text-slate-700 leading-relaxed">
-                <span class="font-bold text-sky-800">Nota Operativa:</span>
-                Il bias LT rimane <span class="font-semibold text-green-700">rialzista</span>. Si privilegia ingresso fra <span class="font-semibold">$118–$120</span> per prima tranche, con eventuali aggiunte sopra <span class="font-semibold">$125</span> se breakout volumetrico confermato. Target primario <span class="font-semibold text-green-700">$145</span> in 6–12 mesi, <span class="font-semibold text-red-600">stop tecnico sotto $110</span>.
-              </p>
-            </div>
-          </section>
+  <!-- Pannelli (un set solo) -->
+  <div class="p-6" id="tab-content">
+    <!-- LT -->
+    <div id="tab-lt" class="tab-panel" role="tabpanel" tabindex="0" aria-labelledby="tabbtn-lt">
+      <section id="strategia-lt" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white" data-aos="fade-up">
+        <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+          <i data-lucide="bar-chart" class="w-5 h-5 mr-2"></i> Strategia Investimento LT – Micron Technology (MU)
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+          <div><p class="text-xs uppercase text-slate-600">Stile Strategia</p><p class="text-[11px] text-slate-400">Valuation Growth</p><p class="font-medium text-slate-800">Valuation Growth</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Raccomandazione</p><p class="text-[11px] text-slate-400">Approccio a tranche in base a conferme tecniche. Fonte: Tradelia AI</p><p class="font-medium text-green-600">Accumulo frazionato (3 tranche)</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Strategia</p><p class="text-[11px] text-slate-400">DCF undervaluation combinata a trend tecnico confermato</p><p class="font-medium text-slate-800">DCF Undervaluation + Confirmed Trend</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Fair Value Stimato</p><p class="text-[11px] text-slate-400">Valutazione intrinseca stimata su base DCF. Fonte: Tradelia AI</p><p class="font-medium text-green-600">145 USD</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Prezzo Attuale</p><p class="text-[11px] text-slate-400">Valore di mercato corrente. Fonte: TradingView</p><p class="font-medium text-slate-800">121 USD</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Upside Potenziale</p><p class="text-[11px] text-slate-400">Differenziale tra fair value stimato e prezzo corrente</p><p class="font-medium text-green-600">+19.8%</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Condizione di Entry</p><p class="text-[11px] text-slate-400">Trigger tecnico settimanale + conferma breakout. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">Close settimanale sopra EMA55 + breakout D1</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Allocazione Massima</p><p class="text-[11px] text-slate-400">Quota massima del portafoglio dedicata. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">7.5%</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Struttura Tranche</p><p class="text-[11px] text-slate-400">Percentuale consigliata per ciascuna tranche</p><p class="font-medium text-slate-800">40% / 30% / 30%</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Rischio per Tranche</p><p class="text-[11px] text-slate-400">Cap su perdita massima per ogni ingresso</p><p class="font-medium text-red-600">1.25%</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Convalida Tecnica LT</p><p class="text-[11px] text-slate-400">Indicatori principali di tendenza confermati su timeframe D1</p><p class="font-medium text-green-600">EMA21 > EMA55 > EMA200, RSI > 55, volumi crescenti</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Conferma Derivati</p><p class="text-[11px] text-slate-400">Analisi Gamma e Skew da opzioni. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">Gamma positivo, Skew neutro</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Macro & Governance</p><p class="text-[11px] text-slate-400">Eventi binari assenti a 30g, trend ESG favorevole</p><p class="font-medium text-slate-800">ESG rating in miglioramento</p></div>
+          <div><p class="text-xs uppercase text-slate-600">WP-LT</p><p class="text-[11px] text-slate-400">Weighting Power Long-Term. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">0.81</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Validità Strategia</p><p class="text-[11px] text-slate-400">Orizzonte temporale massimo per mantenere la strategia attiva</p><p class="font-medium text-slate-800">Fino al 30 settembre 2025</p></div>
         </div>
+        <hr class="divider mt-6">
+        <div class="pt-4">
+          <p class="text-sm text-slate-700 leading-relaxed">
+            <span class="font-bold text-sky-800">Nota Operativa:</span>
+            Bias LT <span class="font-semibold text-green-700">rialzista</span>. Ingresso fra <span class="font-semibold">$118–$120</span> per prima tranche; aggiunte sopra <span class="font-semibold">$125</span> se breakout volumetrico. Target <span class="font-semibold text-green-700">$145</span> (6–12 mesi), <span class="font-semibold text-red-600">stop sotto $110</span>.
+          </p>
+        </div>
+      </section>
+    </div>
 
+    <!-- CFD -->
+    <div id="tab-cfd" class="tab-panel hidden" role="tabpanel" tabindex="0" aria-labelledby="tabbtn-cfd">
+      <section id="strategia-cfd-m" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white" data-aos="fade-up">
+        <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+          <i data-lucide="activity-square" class="w-5 h-5 mr-2"></i> CFD Swing – Strategia Micron Technology (MU)
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+          <div><p class="text-xs uppercase text-slate-600">Strategia</p><p class="text-[11px] text-slate-400">Espansione di volatilità su compressione + trend confermato</p><p class="font-medium text-slate-800">BBW Expansion + EMA Stack</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Categoria</p><p class="text-[11px] text-slate-400">Combinazione tra volatilità e trend. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">Volatility + Trend</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Pattern richiesto</p><p class="text-[11px] text-slate-400">BBW percentile &lt; 12 + struttura EMA rialzista su H4/D1</p><p class="font-medium text-slate-800">BBW &lt;12 + EMA21 &gt; EMA55 &gt; EMA200</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Condizione di Attivazione</p><p class="text-[11px] text-slate-400">Breakout BBW + chiusura sopra la struttura EMA</p><p class="font-medium text-green-600">Breakout BBW + Close &gt; EMA stack</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Metodo di Validazione</p><p class="text-[11px] text-slate-400">RSI &gt; 55 + RVOL10 &gt; 1.2</p><p class="font-medium text-slate-800">Conferma momentum e volume</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Livello Entry</p><p class="text-[11px] text-slate-400">Prezzo conferma breakout</p><p class="font-medium text-green-700">122.5</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Stop Loss (SL)</p><p class="text-[11px] text-slate-400">Sotto zona di congestione su H4</p><p class="font-medium text-red-600">118.8</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Target 1 (TP1)</p><p class="text-[11px] text-slate-400">R:R 2.5</p><p class="font-medium text-slate-800">127.5</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Target 2 (TP2)</p><p class="text-[11px] text-slate-400">Swing high precedente</p><p class="font-medium text-slate-800">132.0</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Probabilità Attivazione</p><p class="text-[11px] text-slate-400">Analisi tecnica e flussi favorevoli</p><p class="font-medium text-green-600">Alta</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Validità Strategia</p><p class="text-[11px] text-slate-400">Finestra di attivazione stimata</p><p class="font-medium text-slate-800">Fino al 20 agosto 2025</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Trigger Tecnico (B8)</p><p class="text-[11px] text-slate-400">Conferma presente</p><p class="font-medium text-green-600">✓</p></div>
+          <div><p class="text-xs uppercase text-slate-600">ETF Flow (B10)</p><p class="text-[11px] text-slate-400">Trend positivo negli ultimi 3 giorni</p><p class="font-medium text-green-600">Rialzista</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Derivati (B7)</p><p class="text-[11px] text-slate-400">Gamma positivo, skew neutro</p><p class="font-medium text-slate-800">Confermati</p></div>
+          <div><p class="text-xs uppercase text-slate-600">MTF Score</p><p class="text-[11px] text-slate-400">Coerenza tecnica su D1–H4–H1</p><p class="font-medium text-green-600">68</p></div>
+        </div>
+        <hr class="divider mt-6">
+        <div class="pt-4">
+          <p class="text-sm text-slate-700 leading-relaxed">
+            <span class="font-bold text-sky-800">Nota Operativa:</span>
+            Setup <span class="font-semibold text-green-700">swing rialzista</span> con compressione di volatilità e struttura EMA favorevole. Possibile estensione se <span class="font-semibold">close &gt; $122.5</span> con RVOL10 &gt; 1.2. <span class="font-semibold text-red-600">Stop</span> ampio per filtrare il rumore intraday.
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Opzioni -->
+    <div id="tab-opt" class="tab-panel hidden" role="tabpanel" tabindex="0" aria-labelledby="tabbtn-opt">
+      <section id="strategia-opzioni-m" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white" data-aos="fade-up">
+        <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
+          <i data-lucide="candlestick-chart" class="w-5 h-5 mr-2"></i> Opzioni Speculative – Micron Technology (MU)
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
+          <div><p class="text-xs uppercase text-slate-600">Categoria</p><p class="text-[11px] text-slate-400">Posizione direzionale con rischio definito</p><p class="font-medium text-red-600">Speculativa – Direzionale</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Struttura</p><p class="text-[11px] text-slate-400">Spread verticale a debito con strike rialzisti</p><p class="font-medium text-slate-800">Call Debit Spread</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Bias Sottostante</p><p class="text-[11px] text-slate-400">Tendenza di fondo swing/long-term favorevole</p><p class="font-medium text-green-600">Swing / LT Rialzista</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Strike</p><p class="text-[11px] text-slate-400">Livelli di attivazione della struttura</p><p class="font-medium text-slate-800">122.5 / 127.5</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Prezzo Attuale</p><p class="text-[11px] text-slate-400">Valore sottostante al momento della strategia</p><p class="font-medium text-slate-800">121.0</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Scadenza</p><p class="text-[11px] text-slate-400">Durata residua fino a maturity</p><p class="font-medium text-slate-800">21 giorni</p></div>
+          <div><p class="text-xs uppercase text-slate-600">IV Percentile</p><p class="text-[11px] text-slate-400">Percentile attuale della volatilità implicita</p><p class="font-medium text-slate-800">58°</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Skew</p><p class="text-[11px] text-slate-400">Distribuzione dei premi tra call e put</p><p class="font-medium text-slate-800">Neutro (leggero favore per call)</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Gamma</p><p class="text-[11px] text-slate-400">Comportamento delta vicino al prezzo</p><p class="font-medium text-green-600">Supportivo</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Condizione di Attivazione</p><p class="text-[11px] text-slate-400">Breakout tecnico + compressione + volume. Fonte: Tradelia AI</p><p class="font-medium text-slate-800">Close H4 &gt; 122.5 + BBW &lt; 12 + RVOL &gt; 1.2</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Metodo di Validazione</p><p class="text-[11px] text-slate-400">Momentum + struttura EMA su H4/D1</p><p class="font-medium text-slate-800">RSI &gt; 55 + EMA stack rialzista</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Rischio Massimo</p><p class="text-[11px] text-slate-400">Premio pagato rispetto al portafoglio</p><p class="font-medium text-red-600">0.9%</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Validità</p><p class="text-[11px] text-slate-400">Scadenza operativa della strategia</p><p class="font-medium text-slate-800">Fino al 5 settembre 2025</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Trigger Tecnico (B8)</p><p class="text-[11px] text-slate-400">Segnale confermato</p><p class="font-medium text-green-600">✓</p></div>
+          <div><p class="text-xs uppercase text-slate-600">Evento Macro</p><p class="text-[11px] text-slate-400">Nessun rischio macro a breve termine</p><p class="font-medium text-green-600">Nessuno</p></div>
+        </div>
+        <hr class="divider mt-6">
+        <div class="pt-4">
+          <p class="text-sm text-slate-700 leading-relaxed">
+            <span class="font-bold text-sky-800">Nota Operativa:</span>
+            Struttura <span class="font-semibold text-red-600">direzionale a rischio limitato</span> favorita da <span class="font-semibold text-green-600">gamma supportivo</span> e <span class="font-semibold">IV moderata</span>. Attivazione sopra <span class="font-semibold">$122.5</span>.
+          </p>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
         <div id="tab-cfd" class="tab-panel hidden" role="tabpanel" tabindex="0" aria-labelledby="tabbtn-cfd">
           <!-- CFD desktop (coerente con mobile) -->
           <section id="strategia-cfd" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white" data-aos="fade-up">
