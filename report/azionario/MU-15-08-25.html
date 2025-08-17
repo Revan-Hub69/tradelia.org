@@ -75,6 +75,12 @@
     }
     h1,h2,h3 { font-family: 'Merriweather', Georgia, serif; letter-spacing:.1px; }
     p, li { hyphens:auto; -webkit-hyphens:auto; overflow-wrap:break-word; }
+/* Accordion: nascondi marker nativo e anima il chevron Lucide */
+details > summary { list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+summary .chev { display:inline-block; transition: transform .2s ease; }
+details[open] summary .chev { transform: rotate(180deg); }
+summary .chev i { width: 18px; height: 18px; color:#64748b; }
 
     /* Scrollbar */
     ::-webkit-scrollbar { width:10px; height:10px; }
@@ -377,17 +383,241 @@
 
     <!-- ===== PANELS ===== -->
 
-    <!-- Simulazione Operativa -->
-    <section id="sim-op" class="sv-panel max-w-6xl mx-auto mt-8 mb-16 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
-             role="tabpanel" aria-labelledby="tab-sim-op">
-      <h2 class="text-lg font-bold text-slate-900 tracking-tight">
-        Simulazione Operativa
-        <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#sim-op">Copia link</button>
-      </h2>
-      <div class="section-divider"><span>SEZIONE</span></div>
-      <p class="text-slate-600 mt-1 text-sm prose-narrow">Qui andranno le 4 simulazioni complete (LT, Opzioni, CFD Swing, Futures) con KPI e validazioni.</p>
-      <!-- Token es.: [[STRAT_LT.title]] · [[STRAT_LT.entry]] · [[STRAT_LT.tp]] · [[STRAT_LT.sl]] -->
-    </section>
+ <!-- Simulazione Operativa — accordion istituzionale (tutti chiusi, apertura esclusiva + chevron Lucide) -->
+<section id="sim-op" class="sv-panel max-w-6xl mx-auto mt-8 mb-16 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+         role="tabpanel" aria-labelledby="tab-sim-op" data-accordion-group="sim-op">
+
+  <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+    Simulazione Operativa
+    <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#sim-op">Copia link</button>
+  </h2>
+
+  <!-- Legenda badge -->
+  <div class="mt-2 mb-5 flex flex-wrap gap-2 text-[11px]">
+    <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-700">Positivo</span>
+    <span class="inline-flex rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 font-semibold text-rose-700">Negativo</span>
+    <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 font-semibold text-slate-700">Neutro</span>
+    <span class="inline-flex rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 font-semibold text-amber-700">Attenzione</span>
+  </div>
+
+  <!-- === LT — Investimento (MU.US) === -->
+  <details class="rounded-lg border border-slate-200">
+    <summary class="cursor-pointer p-4 sm:p-5">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <div class="font-semibold text-slate-900">LT — Investimento (Valuation Growth) · MU.US</div>
+          <p class="mt-1 text-sm text-slate-500">Framework: DCF Undervaluation + Confirmed Trend · Prezzo rif. periodo: ~148 USD (ago 2025)</p>
+          <div class="mt-2 flex flex-wrap gap-2 text-[12px]">
+            <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-700">Stato: Attiva</span>
+            <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 font-semibold text-slate-700">Validità: fino al 30 set 2025</span>
+          </div>
+        </div>
+        <span class="chev translate-y-1"><i data-lucide="chevron-down"></i></span>
+      </div>
+    </summary>
+
+    <div class="px-4 sm:px-5 pb-4 sm:pb-5">
+      <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
+        <div>
+          <div class="flex items-start justify-between">
+            <dt class="text-slate-600 text-sm">Raccomandazione</dt>
+            <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Positivo</span>
+          </div>
+          <dd class="mt-1 text-slate-900">Accumulo frazionato (3 tranche)</dd>
+          <p class="mt-1 text-xs text-slate-600">Mitiga il timing risk e media il costo.</p>
+        </div>
+
+        <div>
+          <div class="flex items-start justify-between">
+            <dt class="text-slate-600 text-sm">Strategia</dt>
+            <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-700">Neutro</span>
+          </div>
+          <dd class="mt-1 text-slate-900">DCF Undervaluation + Confirmed Trend</dd>
+          <p class="mt-1 text-xs text-slate-600">FV &gt; prezzo + trend confermato (B2·B8).</p>
+        </div>
+
+        <div>
+          <div class="flex items-start justify-between">
+            <dt class="text-slate-600 text-sm">Fair Value stimato</dt>
+            <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Positivo</span>
+          </div>
+          <dd class="mt-1 text-slate-900">175–185 USD (DCF Tradelia AI · validato in B2)</dd>
+          <p class="mt-1 text-xs text-slate-600">Margine di sicurezza presente.</p>
+        </div>
+
+        <div>
+          <div class="flex items-start justify-between">
+            <dt class="text-slate-600 text-sm">Prezzo &amp; Upside</dt>
+            <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Positivo</span>
+          </div>
+          <dd class="mt-1 text-slate-900">~148 USD (ago 2025) · Upside: +18% / +25%</dd>
+          <p class="mt-1 text-xs text-slate-600">Calcolato vs FV 175–185; non realtime.</p>
+        </div>
+
+        <div class="sm:col-span-2">
+          <div class="flex items-start justify-between">
+            <dt class="text-slate-600 text-sm">Condizione di ingresso</dt>
+            <span class="inline-flex rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700">Attenzione</span>
+          </div>
+          <dd class="mt-1 text-slate-900">Close settimanale &gt; EMA55 + conferma pattern D1 (B8)</dd>
+          <p class="mt-1 text-xs text-slate-600">Conferma multi-timeframe per validare momentum.</p>
+        </div>
+
+        <div>
+          <div class="flex items-start justify-between">
+            <dt class="text-slate-600 text-sm">Allocazione massima</dt>
+            <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-700">Neutro</span>
+          </div>
+          <dd class="mt-1 text-slate-900">7,5% portafoglio</dd>
+          <p class="mt-1 text-xs text-slate-600">Controllo della concentrazione.</p>
+        </div>
+
+        <div>
+          <div class="flex items-start justify-between">
+            <dt class="text-slate-600 text-sm">Tranche</dt>
+            <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-700">Neutro</span>
+          </div>
+          <dd class="mt-1 text-slate-900">3 step: 40% · 30% · 30%</dd>
+          <p class="mt-1 text-xs text-slate-600">Step su segnale + conferme/ritracci.</p>
+        </div>
+
+        <div>
+          <div class="flex items-start justify-between">
+            <dt class="text-slate-600 text-sm">Rischio per tranche</dt>
+            <span class="inline-flex rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700">Attenzione</span>
+          </div>
+          <dd class="mt-1 text-slate-900">1,25%</dd>
+          <p class="mt-1 text-xs text-slate-600">Risk budgeting disciplinato.</p>
+        </div>
+
+        <div class="sm:col-span-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <div class="flex items-start justify-between">
+                <dt class="text-slate-600 text-sm">Convalida tecnica (B8)</dt>
+                <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Positivo</span>
+              </div>
+              <dd class="mt-1 text-slate-900">EMA stack D1 rialzista · RSI &gt; 55 · BBW in compressione</dd>
+            </div>
+            <div>
+              <div class="flex items-start justify-between">
+                <dt class="text-slate-600 text-sm">Derivati (B7)</dt>
+                <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Positivo</span>
+              </div>
+              <dd class="mt-1 text-slate-900">Gamma positivo · IV &lt; 70° percentile</dd>
+            </div>
+            <div>
+              <div class="flex items-start justify-between">
+                <dt class="text-slate-600 text-sm">Macro &amp; Governance (B11/B9)</dt>
+                <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Positivo</span>
+              </div>
+              <dd class="mt-1 text-slate-900">Nessun warning · ESG in miglioramento (MSCI ↑)</dd>
+            </div>
+            <div>
+              <div class="flex items-start justify-between">
+                <dt class="text-slate-600 text-sm">WP-LT (prob. successo)</dt>
+                <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Positivo</span>
+              </div>
+              <dd class="mt-1 text-slate-900">
+                0.81
+                <div class="mt-2 h-2 rounded bg-slate-100">
+                  <div class="h-2 rounded bg-emerald-500" style="width:81%"></div>
+                </div>
+              </dd>
+              <p class="mt-1 text-xs text-slate-600">Stima composita B2·B3·B7·B8·B9·B11 (scala 0–1).</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sm:col-span-2">
+          <div class="flex items-start justify-between">
+            <dt class="text-slate-600 text-sm">Fonti (Livello A)</dt>
+            <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-700">Neutro</span>
+          </div>
+          <dd class="mt-1 text-slate-900">CFA Curriculum · MSCI ESG · Morningstar · MarketScreener</dd>
+        </div>
+      </dl>
+
+      <div class="mt-6 grid grid-cols-1 gap-4">
+        <section class="rounded-md border border-slate-200 p-3 sm:p-4">
+          <h4 class="font-semibold text-slate-900 text-sm">Note Tradelia AI (LT)</h4>
+          <ul class="mt-2 text-[13px] leading-6 text-slate-800 list-disc pl-5">
+            <li><strong>DCF (B2):</strong> FV 175–185 &gt; prezzo ~148 ⇒ sconto.</li>
+            <li><strong>Fondamentali (B3–B4):</strong> crescita AI/DRAM/HBM, buyback attivo.</li>
+            <li><strong>Tecnica (B8):</strong> breakout weekly, trend confermato.</li>
+            <li><strong>Derivati (B7):</strong> gamma supportivo, IV contenuta.</li>
+            <li><strong>Macro (B11):</strong> nessun evento binario imminente.</li>
+            <li><strong>ESG (B9):</strong> score in miglioramento, nessun rischio governance.</li>
+          </ul>
+        </section>
+
+        <section class="rounded-md border border-emerald-200 bg-emerald-50 p-3 sm:p-4">
+          <h4 class="font-semibold text-slate-900 text-sm">Conclusione Operativa LT — <span class="text-emerald-700">Attiva</span></h4>
+          <p class="mt-1 text-[13px] leading-6 text-slate-800">
+            Accumulo frazionato in 3 tranche (40/30/30), rischio per tranche 1,25%. Upside stimato +18% / +25% validato da DCF, multipli e consenso.
+            Strategia valida fino al 30/09/2025 salvo segnali contrari su macro/governance/tecnica.
+          </p>
+        </section>
+      </div>
+
+      <footer class="mt-4 text-[11px] leading-5 text-slate-500">
+        Principi dati 2025: per-metrica Valore→Spiegazione→Validazione; rounding coerente; badge colore; timestamp esplicito; nessun realtime.
+      </footer>
+    </div>
+  </details>
+
+  <!-- Opzioni -->
+  <details class="mt-4 rounded-lg border border-slate-200">
+    <summary class="cursor-pointer p-4 sm:p-5">
+      <div class="flex items-start justify-between gap-3 w-full">
+        <div>
+          <div class="font-semibold text-slate-900">Opzioni — Coperture / Income</div>
+          <p class="mt-1 text-sm text-slate-500">Strutture candidate: covered call / cash-secured put · coerenti con B7.</p>
+        </div>
+        <span class="chev translate-y-1"><i data-lucide="chevron-down"></i></span>
+      </div>
+      <div class="mt-2 text-[12px]">
+        <span class="inline-flex rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 font-semibold text-amber-700">Bozza · da validare</span>
+      </div>
+    </summary>
+    <div class="px-4 sm:px-5 pb-4 sm:pb-5 text-sm text-slate-600">n/d — popolazione dopo validazione book opzioni (B7).</div>
+  </details>
+
+  <!-- CFD -->
+  <details class="mt-3 rounded-lg border border-slate-200">
+    <summary class="cursor-pointer p-4 sm:p-5">
+      <div class="flex items-start justify-between gap-3 w-full">
+        <div>
+          <div class="font-semibold text-slate-900">CFD — Swing</div>
+          <p class="mt-1 text-sm text-slate-500">Setup risk-defined coerenti con B8.</p>
+        </div>
+        <span class="chev translate-y-1"><i data-lucide="chevron-down"></i></span>
+      </div>
+      <div class="mt-2 text-[12px]">
+        <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 font-semibold text-slate-700">In preparazione</span>
+      </div>
+    </summary>
+    <div class="px-4 sm:px-5 pb-4 sm:pb-5 text-sm text-slate-600">n/d — in attesa di livelli operativi (B8).</div>
+  </details>
+
+  <!-- Futures -->
+  <details class="mt-3 rounded-lg border border-slate-200">
+    <summary class="cursor-pointer p-4 sm:p-5">
+      <div class="flex items-start justify-between gap-3 w-full">
+        <div>
+          <div class="font-semibold text-slate-900">Futures — Overlay</div>
+          <p class="mt-1 text-sm text-slate-500">Overlay tattico/hedge coerente con microstruttura (B6).</p>
+        </div>
+        <span class="chev translate-y-1"><i data-lucide="chevron-down"></i></span>
+      </div>
+      <div class="mt-2 text-[12px]">
+        <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 font-semibold text-slate-700">In preparazione</span>
+      </div>
+    </summary>
+    <div class="px-4 sm:px-5 pb-4 sm:pb-5 text-sm text-slate-600">n/d — definizione size e roll policy in corso.</div>
+  </details>
+</section>
+
 
     <!-- B1 -->
 <!-- B1 — Identificativi & Contesto (MU.US) — istituzionale, mobile-first, NO icone, con accordion -->
@@ -1184,6 +1414,19 @@
       setTimeout(()=>b.textContent=prev,1200);
     });
   });
+</script>
+<script>
+  // Accordion esclusivo: in #sim-op un solo <details> aperto alla volta
+  (function(){
+    const group = document.querySelector('[data-accordion-group="sim-op"]');
+    if (!group) return;
+    const items = Array.from(group.querySelectorAll('details'));
+    items.forEach(d => {
+      d.addEventListener('toggle', () => {
+        if (d.open) items.forEach(o => { if (o !== d && o.open) o.open = false; });
+      });
+    });
+  })();
 </script>
 
 </body>
