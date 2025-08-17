@@ -518,7 +518,7 @@
 
     <!-- Footer -->
     <footer id="print-legal" class="mt-10 py-6 text-center text-xs text-slate-500 border-t border-slate-200">
-      © 2025 Tradelia AI — Uso istituzionale. Vietata la redistribuzione non autorizzata.
+      © 2025 Tradelia AI — Vietata la redistribuzione non autorizzata.
     </footer>
   </main>
 
@@ -529,176 +529,201 @@
   <div id="live-region" class="sr-only" aria-live="polite"></div>
 
   <!-- Script principale -->
-  <script>
-    // Init AOS & icone (anti-FOUC)
-    window.addEventListener('load', () => {
-      if (window.AOS) AOS.init({ once: true, duration: 600 });
-      document.documentElement.classList.add('aos-initialized');
-      if (window.lucide && lucide.createIcons) lucide.createIcons();
-    });
+<script>
+  // Init AOS & icone (anti-FOUC)
+  window.addEventListener('load', () => {
+    if (window.AOS) AOS.init({ once: true, duration: 600 });
+    document.documentElement.classList.add('aos-initialized');
+    if (window.lucide && lucide.createIcons) lucide.createIcons();
+  });
 
-    // Header shrink & progress
-    const header = document.querySelector("header");
-    const progress = document.getElementById("scroll-progress");
-    function onScroll() {
-      header.classList.toggle("shrink", window.scrollY > 40);
-      const h = document.documentElement;
-      const scrolled = (h.scrollTop || document.body.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
-      progress.style.width = scrolled + "%";
-      updateOffsets();
-      document.getElementById('toTop').classList.toggle('hidden', window.scrollY < 600);
-    }
-    addEventListener("scroll", onScroll, { passive: true });
-
-    // Drawer
-    const drawer   = document.getElementById('toc-drawer');
-    const overlay  = document.getElementById('toc-overlay');
-    const openBtns = document.querySelectorAll('.btn-open-toc');
-    const closeBtn = document.getElementById('close-toc-drawer');
-    const bodyEl   = document.body;
-    let lastFocused = null;
-    const focusableSelectors = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
-
-
-    function openDrawer() {
-      lastFocused = document.activeElement;
-      drawer.classList.add('open');
-      drawer.setAttribute('aria-hidden', 'false');
-      overlay.classList.remove('hidden');
-      bodyEl.classList.add('overflow-hidden');
-      const first = drawer.querySelector(focusableSelectors);
-      first && first.focus();
-      if (window.lucide && lucide.createIcons) lucide.createIcons();
-    }
-    function closeDrawer() {
-      drawer.classList.remove('open');
-      drawer.setAttribute('aria-hidden', 'true');
-      overlay.classList.add('hidden');
-      bodyEl.classList.remove('overflow-hidden');
-      lastFocused && lastFocused.focus();
-    }
-    openBtns.forEach(btn => btn.addEventListener('click', openDrawer));
-    closeBtn?.addEventListener('click', closeDrawer);
-    overlay.addEventListener('click', closeDrawer);
-    addEventListener('keydown', (e) => { if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer(); });
-
-    // TOC links (highlight handled in setActive)
-    const tocLinks = document.querySelectorAll('#toc-drawer .toc-link');
-
-    // Single-View Tabs
-    const tabsBar   = document.getElementById('section-tabs');
-    const scroller  = document.getElementById('tabs-scroller');
-    const tabs      = Array.from(document.querySelectorAll('.sv-tab'));
-    const panels    = Array.from(document.querySelectorAll('.sv-panel'));
-    const tabMap    = new Map(tabs.map(b => [b.dataset.target, b]));
-    const panelMap  = new Map(panels.map(p => [p.id, p]));
-
-    function prefersReducedMotion(){ return matchMedia('(prefers-reduced-motion: reduce)').matches; }
-
-    function updateOffsets(){
-      const topOffset = header.getBoundingClientRect().height;
-      tabsBar.style.top = topOffset + 'px';
-      const extra = tabsBar.getBoundingClientRect().height + 8;
-      panels.forEach(p => p.style.scrollMarginTop = (topOffset + extra) + 'px');
-    }
-
-    function setActive(id, pushHash=true, doScroll=true){
-      if (!panelMap.has(id)) return;
-
-      // Tabs aria + tabindex
-      tabs.forEach(t => {
-        const sel = (t.dataset.target === id);
-        t.classList.toggle('active', sel);
-        t.setAttribute('aria-selected', sel ? 'true' : 'false');
-        t.tabIndex = sel ? 0 : -1;
-      });
-
-      // Panels visibility
-      panels.forEach(p => {
-        const vis = (p.id === id);
-        p.classList.toggle('hidden', !vis);
-        p.toggleAttribute('hidden', !vis);
-      });
-
-      // URL + storage
-      if (pushHash) { try { history.replaceState(null, '', '#'+id); } catch(e){} }
-      try { localStorage.setItem('tradelia_active_section', id); } catch(e){}
-
-      // Scroll pagina
-      if (doScroll){
-        const topOffset = header.getBoundingClientRect().height;
-        const tabsH = tabsBar.getBoundingClientRect().height + 8;
-        const y = panelMap.get(id).getBoundingClientRect().top + scrollY - (topOffset + tabsH);
-        scrollTo({ top: y, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
-      }
-
-      // Assicura visibilità del tab attivo
-      const activeTab = tabMap.get(id);
-      activeTab?.scrollIntoView({ inline: 'nearest', block: 'nearest', behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
-
-      // Live region + TOC highlight
-      document.getElementById('live-region').textContent = `Sezione: ${id}`;
-      tocLinks.forEach(l => l.classList.remove('bg-sky-50','text-sky-700','font-semibold'));
-      document.querySelector(`#toc-drawer .toc-link[href="#${id}"]`)?.classList.add('bg-sky-50','text-sky-700','font-semibold');
-
-      if (window.lucide && lucide.createIcons) lucide.createIcons();
-    }
-    window.setActive = setActive;
-
-    // Click tabs
-    tabs.forEach(t => t.addEventListener('click', () => setActive(t.dataset.target)));
-
-    // Frecce tastiera: ← →
-    tabsBar.addEventListener('keydown', (e) => {
-      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-      const current = document.activeElement.closest('.sv-tab');
-      if (!current) return;
-      e.preventDefault();
-      const idx = tabs.indexOf(current);
-      const nextIdx = e.key === 'ArrowRight' ? Math.min(idx + 1, tabs.length - 1) : Math.max(idx - 1, 0);
-      const next = tabs[nextIdx];
-      next.focus();
-      setActive(next.dataset.target, true, false);
-    });
-
-    function initActiveFromHash(){
-      const saved = localStorage.getItem('tradelia_active_section');
-      const hash  = (location.hash || '').replace('#','');
-      const target = panelMap.has(hash) ? hash : (panelMap.has(saved) ? saved : 'sim-op');
-      setActive(target, false, false);
-    }
+  // Header shrink & progress
+  const header = document.querySelector("header");
+  const progress = document.getElementById("scroll-progress");
+  function onScroll() {
+    header.classList.toggle("shrink", window.scrollY > 40);
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop || document.body.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    progress.style.width = scrolled + "%";
     updateOffsets();
-    addEventListener('resize', updateOffsets);
-    initActiveFromHash();
+    document.getElementById('toTop').classList.toggle('hidden', window.scrollY < 600);
+  }
+  addEventListener("scroll", onScroll, { passive: true });
 
-    // Back-to-top
-    document.getElementById('toTop').addEventListener('click', () => {
-      scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+  // Drawer
+  const drawer   = document.getElementById('toc-drawer');
+  const overlay  = document.getElementById('toc-overlay');
+  const openBtns = document.querySelectorAll('.btn-open-toc');
+  const closeBtn = document.getElementById('close-toc-drawer');
+  const bodyEl   = document.body;
+  let lastFocused = null;
+  const focusableSelectors = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+
+  function openDrawer() {
+    lastFocused = document.activeElement;
+    drawer.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+    overlay.classList.remove('hidden');
+    bodyEl.classList.add('overflow-hidden');
+    const first = drawer.querySelector(focusableSelectors);
+    first && first.focus();
+    if (window.lucide && lucide.createIcons) lucide.createIcons();
+  }
+  function closeDrawer() {
+    drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+    overlay.classList.add('hidden');
+    bodyEl.classList.remove('overflow-hidden');
+    lastFocused && lastFocused.focus();
+  }
+  openBtns.forEach(btn => btn.addEventListener('click', openDrawer));
+  closeBtn?.addEventListener('click', closeDrawer);
+  overlay.addEventListener('click', closeDrawer);
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer(); });
+
+  // TOC links (highlight handled in setActive)
+  const tocLinks = document.querySelectorAll('#toc-drawer .toc-link');
+
+  // Single-View Tabs
+  const tabsBar   = document.getElementById('section-tabs');
+  const scroller  = document.getElementById('tabs-scroller');
+  const tabs      = Array.from(document.querySelectorAll('.sv-tab'));
+  const panels    = Array.from(document.querySelectorAll('.sv-panel'));
+  const tabMap    = new Map(tabs.map(b => [b.dataset.target, b]));
+  const panelMap  = new Map(panels.map(p => [p.id, p]));
+
+  function prefersReducedMotion(){ return matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  function updateOffsets(){
+    const topOffset = header.getBoundingClientRect().height;
+    tabsBar.style.top = topOffset + 'px';
+    const extra = tabsBar.getBoundingClientRect().height + 8;
+    panels.forEach(p => p.style.scrollMarginTop = (topOffset + extra) + 'px');
+  }
+
+  function setActive(id, pushHash=true, doScroll=true){
+    if (!panelMap.has(id)) return;
+
+    // Tabs aria + tabindex
+    tabs.forEach(t => {
+      const sel = (t.dataset.target === id);
+      t.classList.toggle('active', sel);
+      t.setAttribute('aria-selected', sel ? 'true' : 'false');
+      t.tabIndex = sel ? 0 : -1;
     });
 
-    // Data locale
-    (function(){
-      const t=document.getElementById('report-date');
-      if(!t) return;
-      const iso=t.getAttribute('datetime');
-      try {
-        const d=new Date(iso);
-        t.textContent = new Intl.DateTimeFormat(navigator.language||'it-IT',{dateStyle:'long'}).format(d);
-      } catch(e){}
-    })();
-
-    // Copy anchor (robusto anche in file://)
-    document.querySelectorAll('.anchor').forEach(b=>{
-      b.addEventListener('click',()=>{
-        const id=b.getAttribute('data-copy');
-        const originOk = location.origin && location.origin !== 'null' ? location.origin : '';
-        const base = originOk + location.pathname;
-        const url = base + id;
-        navigator.clipboard.writeText(url).catch(()=>{});
-        const prev=b.textContent; b.textContent='Copiato';
-        setTimeout(()=>b.textContent=prev,1200);
-      });
+    // Panels visibility
+    panels.forEach(p => {
+      const vis = (p.id === id);
+      p.classList.toggle('hidden', !vis);
+      p.toggleAttribute('hidden', !vis);
     });
-  </script>
+
+    // URL + storage
+    if (pushHash) { try { history.replaceState(null, '', '#'+id); } catch(e){} }
+    try { localStorage.setItem('tradelia_active_section', id); } catch(e){}
+
+    // Scroll pagina
+    if (doScroll){
+      const topOffset = header.getBoundingClientRect().height;
+      const tabsH = tabsBar.getBoundingClientRect().height + 8;
+      const y = panelMap.get(id).getBoundingClientRect().top + scrollY - (topOffset + tabsH);
+      scrollTo({ top: y, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+    }
+
+    // Assicura visibilità del tab attivo
+    const activeTab = tabMap.get(id);
+    activeTab?.scrollIntoView({ inline: 'nearest', block: 'nearest', behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+
+    // Live region + TOC highlight
+    document.getElementById('live-region').textContent = `Sezione: ${id}`;
+    tocLinks.forEach(l => l.classList.remove('bg-sky-50','text-sky-700','font-semibold'));
+    document.querySelector(`#toc-drawer .toc-link[href="#${id}"]`)?.classList.add('bg-sky-50','text-sky-700','font-semibold');
+
+    if (window.lucide && lucide.createIcons) lucide.createIcons();
+  }
+  window.setActive = setActive;
+
+  // Click tabs
+  tabs.forEach(t => t.addEventListener('click', () => setActive(t.dataset.target)));
+
+  // Frecce tastiera: ← →
+  tabsBar.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    const current = document.activeElement.closest('.sv-tab');
+    if (!current) return;
+    e.preventDefault();
+    const idx = tabs.indexOf(current);
+    const nextIdx = e.key === 'ArrowRight' ? Math.min(idx + 1, tabs.length - 1) : Math.max(idx - 1, 0);
+    const next = tabs[nextIdx];
+    next.focus();
+    setActive(next.dataset.target, true, false);
+  });
+
+  // --- TOC Drawer: cambia sezione al click (event delegation) ---
+  const tocNav = document.querySelector('#toc-drawer nav[aria-label="Sezioni del report"]');
+  if (tocNav) {
+    tocNav.addEventListener('click', (e) => {
+      const a = e.target.closest('.toc-link');
+      if (!a) return;
+      e.preventDefault();
+      const id = (new URL(a.getAttribute('href'), location.href)).hash.replace('#','');
+      if (!panelMap.has(id)) return;
+      closeDrawer();
+      setActive(id, true, true);
+    });
+    // Supporto tastiera (Enter/Space) dentro il drawer
+    tocNav.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const a = e.target.closest('.toc-link');
+      if (!a) return;
+      e.preventDefault();
+      const id = (new URL(a.getAttribute('href'), location.href)).hash.slice(1);
+      if (!panelMap.has(id)) return;
+      closeDrawer();
+      setActive(id, true, true);
+    });
+  }
+
+  function initActiveFromHash(){
+    const saved = localStorage.getItem('tradelia_active_section');
+    const hash  = (location.hash || '').replace('#','');
+    const target = panelMap.has(hash) ? hash : (panelMap.has(saved) ? saved : 'sim-op');
+    setActive(target, false, false);
+  }
+  updateOffsets();
+  addEventListener('resize', updateOffsets);
+  initActiveFromHash();
+
+  // Back-to-top
+  document.getElementById('toTop').addEventListener('click', () => {
+    scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+  });
+
+  // Data locale
+  (function(){
+    const t=document.getElementById('report-date');
+    if(!t) return;
+    const iso=t.getAttribute('datetime');
+    try {
+      const d=new Date(iso);
+      t.textContent = new Intl.DateTimeFormat(navigator.language||'it-IT',{dateStyle:'long'}).format(d);
+    } catch(e){}
+  })();
+
+  // Copy anchor (robusto anche in file://)
+  document.querySelectorAll('.anchor').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const id=b.getAttribute('data-copy');
+      const originOk = location.origin && location.origin !== 'null' ? location.origin : '';
+      const base = originOk + location.pathname;
+      const url = base + id;
+      navigator.clipboard.writeText(url).catch(()=>{});
+      const prev=b.textContent; b.textContent='Copiato';
+      setTimeout(()=>b.textContent=prev,1200);
+    });
+  });
+</script>
+
 </body>
 </html>
