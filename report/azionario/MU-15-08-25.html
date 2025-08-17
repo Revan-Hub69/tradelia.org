@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <title>TRADELIA • AI — Report Azionario ([[REPORT_VERSION]] • Istituzionale 2025)</title>
   <meta name="description" content="Report istituzionale Tradelia AI: analisi multi-blocco avanzata con strategie operative, fondamentali, tecnica e governance." />
@@ -18,28 +18,22 @@
   <meta property="og:locale" content="it_IT">
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- Theme color dinamico -->
+  <!-- Theme color -->
   <meta name="theme-color" content="#0ea5e9" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
 
-  <!-- Fonts & CDN perf -->
+  <!-- Fonts & CDN -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="preconnect" href="https://unpkg.com" crossorigin>
-  <link rel="dns-prefetch" href="//unpkg.com">
 
-  <!-- Tailwind (safelist per generazione dinamica) -->
+  <!-- Tailwind (safelist minima per semafori metriche future) -->
   <script>
-    tailwind = {
-      config: {
-        safelist: [
-          "hidden","block","bg-emerald-50","bg-sky-50","bg-amber-50","bg-rose-50",
-          "text-emerald-700","text-sky-700","text-amber-700","text-rose-700",
-          "border-emerald-200","border-sky-200","border-amber-200","border-rose-200"
-        ]
-      }
-    }
+    tailwind = { config: { safelist: [
+      "hidden","block","bg-emerald-50","bg-amber-50","bg-rose-50",
+      "text-emerald-700","text-amber-700","text-rose-700",
+      "border-emerald-200","border-amber-200","border-rose-200"
+    ]}};
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -49,17 +43,17 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
 
   <style>
-    :root { color-scheme: light dark; --brand:#0ea5e9; --ink:#0f172a; --muted:#64748b; }
+    :root { color-scheme: light dark; }
     html { scroll-behavior: smooth; }
     body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#f8fafc; color:#0f172a; }
 
-    /* Scrollbar raffinata */
+    /* Scrollbar */
     ::-webkit-scrollbar { width:10px; height:10px; }
     ::-webkit-scrollbar-track { background:#e2e8f0; border-radius:8px; }
     ::-webkit-scrollbar-thumb { background:#94a3b8; border-radius:8px; border:2px solid #e2e8f0; }
     ::-webkit-scrollbar-thumb:hover { background:#64748b; }
 
-    /* Accessibilità focus */
+    /* Focus */
     :focus-visible { outline:2px solid rgb(14 165 233); outline-offset:3px; border-radius:4px; }
 
     /* Header shrink */
@@ -74,38 +68,17 @@
     #toc-drawer.open { transform: translateX(0%); }
     #toc-overlay.hidden { opacity:0; pointer-events:none; }
 
-    /* Single-view tabs */
+    /* Tabs (single-view) */
     .sv-tab.active { background:white; border-color:#94a3b8; box-shadow:0 1px 2px rgba(0,0,0,.04); color:#0f172a; font-weight:600; }
 
     /* Anti-FOUC AOS */
     [data-aos] { opacity:0; }
     html.aos-initialized [data-aos] { opacity:1; }
 
-    /* Tema Terminale (Bloomberg-like) */
-    body.terminal { background:#0b1220; color:#e5e7eb; }
-    body.terminal .border-slate-200 { border-color:#1f2937 !important; }
-    body.terminal .text-slate-900, body.terminal .text-slate-800 { color:#e5e7eb !important; }
-    body.terminal .text-slate-700 { color:#cbd5e1 !important; }
-    body.terminal .text-slate-600 { color:#94a3b8 !important; }
-    body.terminal .bg-white, body.terminal .bg-slate-50 { background:#0f172a !important; }
-    body.terminal .shadow-sm, body.terminal .shadow-inner { box-shadow:none !important; }
-    body.terminal .sv-tab.active { background:#0f172a !important; border-color:#334155 !important; color:#e5e7eb !important; }
-    body.terminal #section-tabs { background:rgba(15,23,42,.92); border-color:#1f2937; }
-    body.terminal .toc-link:hover { background:rgba(59,130,246,.10) !important; }
-
-    /* Compact / High contrast toggles */
-    body.compact .sv-panel{ padding:1rem !important }
-    body.compact h2{ font-size:.95rem !important }
-    body.compact .px-6{ padding-left:1rem !important; padding-right:1rem !important }
-    body.compact .py-10{ padding-top:1.25rem !important; padding-bottom:1.25rem !important }
-    body.contrast .text-slate-700{color:#111827 !important}
-    body.contrast .text-slate-600{color:#1f2937 !important}
-    body.contrast .border-slate-200{border-color:#94a3b8 !important}
-
     /* iOS safe-area per sticky */
     #section-tabs { padding-bottom: max(0px, env(safe-area-inset-bottom)); }
 
-    /* Stampa enterprise */
+    /* Stampa */
     @media print {
       #scroll-progress, #section-tabs, #toc-overlay, #toc-drawer, .no-print { display:none !important; }
       header { position: static !important; box-shadow: none !important; }
@@ -119,7 +92,7 @@
 </head>
 
 <body class="antialiased">
-  <!-- Noscript istituzionale -->
+  <!-- Noscript -->
   <noscript>
     <div style="background:#fee2e2;color:#7f1d1d;padding:.75rem;text-align:center;font:14px/1.4 Inter,system-ui,sans-serif">
       Questo report richiede JavaScript per navigazione e accessibilità avanzata.
@@ -132,14 +105,12 @@
   <!-- Header -->
   <header role="banner" aria-label="Intestazione report"
     class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm px-4 sm:px-6 py-3 flex items-center justify-between transition-all duration-300">
-    
     <!-- Logo -->
-    <a href="https://tradelia.org" target="_blank" rel="noopener noreferrer" 
+    <a href="https://tradelia.org" target="_blank" rel="noopener noreferrer"
        class="flex items-center font-extrabold tracking-tight hover:opacity-90 transition">
       <span class="logo-text text-lg sm:text-2xl text-slate-900">TRADELIA</span>
       <span class="logo-text ml-1 text-lg sm:text-2xl text-sky-600">•AI</span>
     </a>
-
     <!-- Azioni -->
     <nav aria-label="Azioni pagina" class="flex gap-2">
       <button onclick="window.print()" class="no-print hidden sm:inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50">
@@ -148,7 +119,6 @@
       <button onclick="window.print()" class="sm:hidden p-2 rounded-md border border-slate-200 hover:bg-slate-50" aria-label="Stampa">
         <i data-lucide="printer" class="w-4 h-4"></i>
       </button>
-      <!-- Indice -->
       <button type="button" class="btn-open-toc no-print hidden sm:inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50">
         <i data-lucide="list-tree" class="w-4 h-4"></i> Indice
       </button>
@@ -158,58 +128,39 @@
     </nav>
   </header>
 
-  <!-- TOC Overlay -->
+  <!-- Overlay & Drawer -->
   <div id="toc-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-[1px] z-40 transition-opacity duration-200 hidden"></div>
 
-  <!-- TOC Drawer -->
   <aside id="toc-drawer"
     class="fixed top-0 right-0 h-full w-80 max-w-full bg-white border-l border-slate-200 shadow-xl z-50 transition-transform duration-300 ease-in-out"
     aria-label="Indice del Report" aria-hidden="true">
-    
     <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200">
       <h2 class="text-sm font-semibold text-slate-700">Indice Report</h2>
-      <div class="flex items-center gap-3">
-        <!-- Toggles -->
-        <label class="inline-flex items-center gap-2 text-xs text-slate-600 select-none">
-          <input id="toggle-terminal" type="checkbox" class="rounded border-slate-300"> Terminale
-        </label>
-        <label class="inline-flex items-center gap-2 text-xs text-slate-600 select-none">
-          <input id="toggle-compact" type="checkbox" class="rounded border-slate-300"> Compatto
-        </label>
-        <label class="inline-flex items-center gap-2 text-xs text-slate-600 select-none">
-          <input id="toggle-contrast" type="checkbox" class="rounded border-slate-300"> Alto Contrasto
-        </label>
-        <button id="close-toc-drawer" class="p-1 rounded-md hover:bg-slate-100" aria-label="Chiudi indice">
-          <i data-lucide="x" class="w-5 h-5 text-slate-500"></i>
-        </button>
-      </div>
+      <button id="close-toc-drawer" class="p-1 rounded-md hover:bg-slate-100" aria-label="Chiudi indice">
+        <i data-lucide="x" class="w-5 h-5 text-slate-500"></i>
+      </button>
     </div>
-
-    <div class="p-3">
-      <input id="toc-search" type="search" placeholder="Cerca sezione…" class="w-full border rounded px-2 py-1 text-sm" />
-    </div>
-
-    <nav class="p-4 space-y-2 text-sm text-slate-700 overflow-y-auto h-[calc(100%-6.5rem)]" aria-label="Sezioni del report">
-      <a href="#sim-op"   class="toc-link block px-2 py-1 rounded hover:bg-slate-50">Simulazione Operativa</a>
-      <a href="#blocco1"  class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B1 — Identificativi & Contesto</a>
-      <a href="#blocco2"  class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B2 — Multipli & Valutazione Intrinseca</a>
-      <a href="#blocco3"  class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B3 — Fondamentali Aziendali</a>
-      <a href="#blocco4"  class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B4 — Dividendi & Buyback</a>
-      <a href="#blocco5"  class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B5 — Performance & Rischio</a>
-      <a href="#blocco6"  class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B6 — Microstruttura & Market</a>
-      <a href="#blocco7"  class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B7 — Derivati & Opzioni</a>
-      <a href="#blocco8"  class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B8 — Tecnica & Correlazioni</a>
-      <a href="#blocco9"  class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B9 — Proprietà, ESG & Governance</a>
-      <a href="#blocco10" class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B10 — ETF Flow</a>
-      <a href="#blocco11" class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B11 — Eventi & Macro + Stress Test</a>
-      <a href="#blocco12" class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B12 — Newsflow & Sentiment</a>
-      <a href="#blocco13" class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B13 — Cluster Strategico AI</a>
+    <nav class="p-4 space-y-1 text-sm text-slate-700 overflow-y-auto h-[calc(100%-3rem)]" aria-label="Sezioni del report">
+      <a href="#sim-op"   class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="activity" class="w-4 h-4"></i> Simulazione Operativa</a>
+      <a href="#blocco1"  class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="list-todo" class="w-4 h-4"></i> B1 — Identificativi & Contesto</a>
+      <a href="#blocco2"  class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="scale" class="w-4 h-4"></i> B2 — Multipli & Valutazione Intrinseca</a>
+      <a href="#blocco3"  class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="factory" class="w-4 h-4"></i> B3 — Fondamentali Aziendali</a>
+      <a href="#blocco4"  class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="banknote" class="w-4 h-4"></i> B4 — Dividendi & Buyback</a>
+      <a href="#blocco5"  class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="trending-up" class="w-4 h-4"></i> B5 — Performance & Rischio</a>
+      <a href="#blocco6"  class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="layout-grid" class="w-4 h-4"></i> B6 — Microstruttura & Market</a>
+      <a href="#blocco7"  class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="layers-3" class="w-4 h-4"></i> B7 — Derivati & Opzioni</a>
+      <a href="#blocco8"  class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="bar-chart-3" class="w-4 h-4"></i> B8 — Tecnica & Correlazioni</a>
+      <a href="#blocco9"  class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="shield-check" class="w-4 h-4"></i> B9 — Proprietà, ESG & Governance</a>
+      <a href="#blocco10" class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="database" class="w-4 h-4"></i> B10 — ETF Flow</a>
+      <a href="#blocco11" class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="calendar" class="w-4 h-4"></i> B11 — Eventi & Macro + Stress Test</a>
+      <a href="#blocco12" class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="newspaper" class="w-4 h-4"></i> B12 — Newsflow & Sentiment</a>
+      <a href="#blocco13" class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="cpu" class="w-4 h-4"></i> B13 — Cluster Strategico AI</a>
     </nav>
   </aside>
 
   <!-- Contenuto -->
   <main id="contenuto">
-    <!-- HERO (introduttiva, senza numeri che arrivano dopo) -->
+    <!-- HERO -->
     <section id="hero" class="relative bg-gradient-to-b from-sky-50 to-white border-b border-slate-200 px-6 sm:px-10 py-10" data-aos="fade-down">
       <div class="max-w-5xl mx-auto">
         <div class="flex flex-wrap items-center justify-between gap-4">
@@ -232,55 +183,81 @@
           </span>
         </div>
         <p class="mt-6 max-w-3xl text-base text-slate-700 leading-relaxed">
-          Analisi multi-blocco sviluppata da <span class="font-semibold text-sky-800">Tradelia AI</span>, con approccio istituzionale e framework accademico 2025.
+          Analisi multi-blocco sviluppata da <span class="font-semibold text-sky-800">Tradelia AI</span>, con approccio istituzionale e framework 2025.
           Include valutazioni fondamentali, tecnica multi-timeframe e strategie operative su equity, derivati e flussi di capitale.
         </p>
       </div>
     </section>
 
-    <!-- TAB STICKY (single-view controller, ARIA) -->
+    <!-- TABS sticky: icona + nome blocco -->
     <nav id="section-tabs" class="sticky z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm"
          role="tablist" aria-label="Sezioni report">
       <div class="max-w-7xl mx-auto px-2 py-2 flex gap-1 overflow-x-auto snap-x">
-        <button class="sv-tab active px-3 py-1.5 text-sm rounded-md border border-slate-300 bg-white"
-                data-target="sim-op" role="tab" aria-selected="true" aria-controls="sim-op" id="tab-sim-op">Simulazione</button>
-        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200"
-                data-target="blocco1" role="tab" aria-selected="false" aria-controls="blocco1" id="tab-blocco1">B1</button>
-        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200"
-                data-target="blocco2" role="tab" aria-selected="false" aria-controls="blocco2" id="tab-blocco2">B2</button>
-        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200"
-                data-target="blocco3" role="tab" aria-selected="false" aria-controls="blocco3" id="tab-blocco3">B3</button>
-        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200"
-                data-target="blocco4" role="tab" aria-selected="false" aria-controls="blocco4" id="tab-blocco4">B4</button>
-        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200"
-                data-target="blocco5" role="tab" aria-selected="false" aria-controls="blocco5" id="tab-blocco5">B5</button>
-        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200"
-                data-target="blocco6" role="tab" aria-selected="false" aria-controls="blocco6" id="tab-blocco6">B6</button>
-        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200"
-                data-target="blocco7" role="tab" aria-selected="false" aria-controls="blocco7" id="tab-blocco7">B7</button>
-        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200"
-                data-target="blocco8" role="tab" aria-selected="false" aria-controls="blocco8" id="tab-blocco8">B8</button>
-        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200"
-                data-target="blocco9" role="tab" aria-selected="false" aria-controls="blocco9" id="tab-blocco9">B9</button>
-        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200"
-                data-target="blocco10" role="tab" aria-selected="false" aria-controls="blocco10" id="tab-blocco10">B10</button>
-        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200"
-                data-target="blocco11" role="tab" aria-selected="false" aria-controls="blocco11" id="tab-blocco11">B11</button>
-        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200"
-                data-target="blocco12" role="tab" aria-selected="false" aria-controls="blocco12" id="tab-blocco12">B12</button>
-        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200"
-                data-target="blocco13" role="tab" aria-selected="false" aria-controls="blocco13" id="tab-blocco13">B13</button>
+        <button class="sv-tab active px-3 py-1.5 text-sm rounded-md border border-slate-300 bg-white flex items-center gap-1.5"
+                data-target="sim-op" role="tab" aria-selected="true" aria-controls="sim-op" id="tab-sim-op">
+          <i data-lucide="activity" class="w-4 h-4"></i> Simulazione
+        </button>
+        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
+                data-target="blocco1" role="tab" aria-selected="false" aria-controls="blocco1" id="tab-blocco1">
+          <i data-lucide="list-todo" class="w-4 h-4"></i> B1
+        </button>
+        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
+                data-target="blocco2" role="tab" aria-selected="false" aria-controls="blocco2" id="tab-blocco2">
+          <i data-lucide="scale" class="w-4 h-4"></i> B2
+        </button>
+        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
+                data-target="blocco3" role="tab" aria-selected="false" aria-controls="blocco3" id="tab-blocco3">
+          <i data-lucide="factory" class="w-4 h-4"></i> B3
+        </button>
+        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
+                data-target="blocco4" role="tab" aria-selected="false" aria-controls="blocco4" id="tab-blocco4">
+          <i data-lucide="banknote" class="w-4 h-4"></i> B4
+        </button>
+        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
+                data-target="blocco5" role="tab" aria-selected="false" aria-controls="blocco5" id="tab-blocco5">
+          <i data-lucide="trending-up" class="w-4 h-4"></i> B5
+        </button>
+        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
+                data-target="blocco6" role="tab" aria-selected="false" aria-controls="blocco6" id="tab-blocco6">
+          <i data-lucide="layout-grid" class="w-4 h-4"></i> B6
+        </button>
+        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
+                data-target="blocco7" role="tab" aria-selected="false" aria-controls="blocco7" id="tab-blocco7">
+          <i data-lucide="layers-3" class="w-4 h-4"></i> B7
+        </button>
+        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
+                data-target="blocco8" role="tab" aria-selected="false" aria-controls="blocco8" id="tab-blocco8">
+          <i data-lucide="bar-chart-3" class="w-4 h-4"></i> B8
+        </button>
+        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
+                data-target="blocco9" role="tab" aria-selected="false" aria-controls="blocco9" id="tab-blocco9">
+          <i data-lucide="shield-check" class="w-4 h-4"></i> B9
+        </button>
+        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
+                data-target="blocco10" role="tab" aria-selected="false" aria-controls="blocco10" id="tab-blocco10">
+          <i data-lucide="database" class="w-4 h-4"></i> B10
+        </button>
+        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
+                data-target="blocco11" role="tab" aria-selected="false" aria-controls="blocco11" id="tab-blocco11">
+          <i data-lucide="calendar" class="w-4 h-4"></i> B11
+        </button>
+        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
+                data-target="blocco12" role="tab" aria-selected="false" aria-controls="blocco12" id="tab-blocco12">
+          <i data-lucide="newspaper" class="w-4 h-4"></i> B12
+        </button>
+        <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
+                data-target="blocco13" role="tab" aria-selected="false" aria-controls="blocco13" id="tab-blocco13">
+          <i data-lucide="cpu" class="w-4 h-4"></i> B13
+        </button>
       </div>
     </nav>
 
-    <!-- PANELS: una sola sezione visibile alla volta -->
+    <!-- PANELS (una sola visibile) -->
     <section id="sim-op" class="sv-panel max-w-6xl mx-auto mt-8 mb-16 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
              role="tabpanel" aria-labelledby="tab-sim-op">
       <h2 class="text-lg font-bold text-slate-900">Simulazione Operativa</h2>
       <p class="text-slate-600 mt-1 text-sm">Qui andranno le 4 simulazioni complete (LT, Opzioni, CFD Swing, Futures) con KPI e validazioni.</p>
-      <!-- Esempio di placeholder token-ready:
-      [[STRAT_LT.title]] • [[STRAT_LT.entry]] • [[STRAT_LT.tp]] • [[STRAT_LT.sl]] • [[STRAT_LT.notes]]
-      -->
+      <!-- Esempio token: [[STRAT_LT.title]] · [[STRAT_LT.entry]] · [[STRAT_LT.tp]] · [[STRAT_LT.sl]] -->
     </section>
 
     <section id="blocco1" class="sv-panel hidden max-w-6xl mx-auto mb-8 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
@@ -301,25 +278,25 @@
       <p class="text-slate-600 mt-1 text-sm">[[B3.summary]]</p>
     </section>
 
-    <!-- Aggiungi B4..B13 come sopra con class="sv-panel hidden" e token [[B*.summary]] -->
+    <!-- Aggiungi B4..B13 allo stesso modo -->
   </main>
 
   <!-- Back to top -->
   <button id="toTop" class="fixed bottom-5 right-5 hidden rounded-full border px-3 py-2 bg-white shadow" aria-label="Torna su">↑</button>
 
-  <!-- Live region ARIA -->
+  <!-- Live region -->
   <div id="live-region" class="sr-only" aria-live="polite"></div>
 
   <!-- Script principale -->
   <script>
-    // ===== Init AOS & icone (anti-FOUC) =====
+    // Init AOS & icone (anti-FOUC)
     window.addEventListener('load', () => {
       if (window.AOS) AOS.init({ once: true, duration: 600 });
       document.documentElement.classList.add('aos-initialized');
       if (window.lucide && lucide.createIcons) lucide.createIcons();
     });
 
-    // ===== Header shrink & progress =====
+    // Header shrink & progress
     const header = document.querySelector("header");
     const progress = document.getElementById("scroll-progress");
     function onScroll() {
@@ -332,7 +309,7 @@
     }
     addEventListener("scroll", onScroll, { passive: true });
 
-    // ===== Drawer accessibile =====
+    // Drawer
     const drawer   = document.getElementById('toc-drawer');
     const overlay  = document.getElementById('toc-overlay');
     const openBtns = document.querySelectorAll('.btn-open-toc');
@@ -361,22 +338,12 @@
     openBtns.forEach(btn => btn.addEventListener('click', openDrawer));
     closeBtn?.addEventListener('click', closeDrawer);
     overlay.addEventListener('click', closeDrawer);
-    overlay.addEventListener('touchmove', e => e.preventDefault(), { passive:false });
-    drawer.addEventListener('touchmove', e => e.stopPropagation(), { passive:true });
     addEventListener('keydown', (e) => { if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer(); });
 
-    // TOC search
-    (function(){
-      const s=document.getElementById('toc-search');
-      if(!s) return;
-      const items=[...document.querySelectorAll('#toc-drawer .toc-link')];
-      s.addEventListener('input', ()=>{
-        const q=s.value.toLowerCase();
-        items.forEach(a=> a.classList.toggle('hidden', !a.textContent.toLowerCase().includes(q)));
-      });
-    })();
+    // TOC -> attiva single-view
+    const tocLinks = document.querySelectorAll('#toc-drawer .toc-link');
 
-    // ===== Single-View Tabs =====
+    // Single-View Tabs
     const tabsBar  = document.getElementById('section-tabs');
     const tabs     = Array.from(document.querySelectorAll('.sv-tab'));
     const panels   = Array.from(document.querySelectorAll('.sv-panel'));
@@ -395,25 +362,21 @@
     function setActive(id, pushHash=true, doScroll=true){
       if (!panelMap.has(id)) return;
 
-      // Tabs state + ARIA
       tabs.forEach(t => {
         const sel = (t.dataset.target === id);
         t.classList.toggle('active', sel);
         t.setAttribute('aria-selected', sel ? 'true' : 'false');
       });
 
-      // Panels visibility + ARIA
       panels.forEach(p => {
         const vis = (p.id === id);
         p.classList.toggle('hidden', !vis);
         p.toggleAttribute('hidden', !vis);
       });
 
-      // Hash & persistenza
       if (pushHash) { try { history.replaceState(null, '', '#'+id); } catch(e){} }
       try { localStorage.setItem('tradelia_active_section', id); } catch(e){}
 
-      // Scroll con offset
       if (doScroll){
         const topOffset = header.getBoundingClientRect().height;
         const tabsH = tabsBar.getBoundingClientRect().height + 8;
@@ -421,31 +384,23 @@
         window.scrollTo({ top: y, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
       }
 
-      // Live region (screen readers)
       document.getElementById('live-region').textContent = `Sezione: ${id}`;
 
-      // Evidenzia nel TOC
-      document.querySelectorAll('#toc-drawer .toc-link').forEach(l => l.classList.remove('bg-sky-50','text-sky-700','font-semibold'));
+      // evidenzia nel TOC
+      tocLinks.forEach(l => l.classList.remove('bg-sky-50','text-sky-700','font-semibold'));
       document.querySelector(`#toc-drawer .toc-link[href="#${id}"]`)?.classList.add('bg-sky-50','text-sky-700','font-semibold');
 
-      // Re-init icone se il contenuto è stato iniettato dinamicamente
       if (window.lucide && lucide.createIcons) lucide.createIcons();
     }
-    window.setActive = setActive; // esposto per Command Palette o altri moduli
+    window.setActive = setActive;
 
-    // Click tab
     tabs.forEach(t => t.addEventListener('click', () => setActive(t.dataset.target)));
+    tocLinks.forEach(link => link.addEventListener('click', (e) => {
+      const id = link.getAttribute('href').slice(1);
+      if (!panelMap.has(id)) return;
+      e.preventDefault(); closeDrawer(); setActive(id, true, true);
+    }));
 
-    // TOC -> attiva single-view
-    document.querySelectorAll('#toc-drawer .toc-link').forEach(link => {
-      link.addEventListener('click', (e) => {
-        const id = link.getAttribute('href').slice(1);
-        if (!panelMap.has(id)) return;
-        e.preventDefault(); closeDrawer(); setActive(id, true, true);
-      });
-    });
-
-    // Init sezione da hash o persistenza
     function initActiveFromHash(){
       const saved = localStorage.getItem('tradelia_active_section');
       const hash  = (location.hash || '').replace('#','');
@@ -461,44 +416,7 @@
       window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
     });
 
-    // Hotkeys basiche (g+s, g+1..13)
-    addEventListener('keydown', e=>{
-      if(document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
-      if(e.key==='g'){window.__gKey=Date.now(); return;}
-      if(window.__gKey && Date.now()-window.__gKey<800){
-        if(e.key==='s'){ setActive('sim-op'); }
-        const n=Number(e.key); if(n>=1&&n<=13) setActive('blocco'+n);
-        window.__gKey=0;
-      }
-    });
-
-    // Toggles Tema/Compatto/Contrasto (persistenza)
-    const terminalToggle = document.getElementById('toggle-terminal');
-    const compactToggle  = document.getElementById('toggle-compact');
-    const contrastToggle = document.getElementById('toggle-contrast');
-
-    try {
-      if (localStorage.getItem('tradelia_theme_terminal')==='1') { document.body.classList.add('terminal'); terminalToggle.checked = true; }
-      if (localStorage.getItem('tradelia_compact')==='1')       { document.body.classList.add('compact');  compactToggle.checked  = true; }
-      if (localStorage.getItem('tradelia_contrast')==='1')      { document.body.classList.add('contrast'); contrastToggle.checked = true; }
-    } catch(e){}
-
-    terminalToggle?.addEventListener('change', () => {
-      document.body.classList.toggle('terminal', terminalToggle.checked);
-      try { localStorage.setItem('tradelia_theme_terminal', terminalToggle.checked ? '1' : '0'); } catch(e){}
-      updateOffsets();
-    });
-    compactToggle?.addEventListener('change', () => {
-      document.body.classList.toggle('compact', compactToggle.checked);
-      try { localStorage.setItem('tradelia_compact', compactToggle.checked ? '1' : '0'); } catch(e){}
-      updateOffsets();
-    });
-    contrastToggle?.addEventListener('change', () => {
-      document.body.classList.toggle('contrast', contrastToggle.checked);
-      try { localStorage.setItem('tradelia_contrast', contrastToggle.checked ? '1' : '0'); } catch(e){}
-    });
-
-    // Formatta la data in base alla locale (fallback a it-IT)
+    // Formatta data in locale
     (function(){
       const t=document.getElementById('report-date');
       if(!t) return;
