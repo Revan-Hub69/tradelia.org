@@ -22,12 +22,12 @@
   <meta name="theme-color" content="#0ea5e9" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
 
-  <!-- Fonts & CDN -->
+  <!-- Fonts (doppia tipografia: Inter + Merriweather) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:wght@700;800&display=swap" rel="stylesheet" />
 
-  <!-- Tailwind (safelist minima per semafori metriche future) -->
+  <!-- Tailwind (safelist minima per futuri badge KPI) -->
   <script>
     tailwind = { config: { safelist: [
       "hidden","block","bg-emerald-50","bg-amber-50","bg-rose-50",
@@ -44,8 +44,19 @@
 
   <style>
     :root { color-scheme: light dark; }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#f8fafc; color:#0f172a; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background:#f8fafc; color:#0f172a;
+      font-feature-settings:"tnum" 1, "lnum" 1;
+      font-variant-numeric: tabular-nums slashed-zero;
+      text-rendering: optimizeLegibility;
+    }
+    h1,h2,h3 {
+      font-family: 'Merriweather', Georgia, serif;
+      letter-spacing:.1px;
+    }
+    p, li { hyphens:auto; -webkit-hyphens:auto; overflow-wrap:break-word; }
 
     /* Scrollbar */
     ::-webkit-scrollbar { width:10px; height:10px; }
@@ -53,12 +64,17 @@
     ::-webkit-scrollbar-thumb { background:#94a3b8; border-radius:8px; border:2px solid #e2e8f0; }
     ::-webkit-scrollbar-thumb:hover { background:#64748b; }
 
+    /* Link */
+    a { color:#0369a1; text-decoration:none; }
+    a:hover { text-decoration:underline; text-underline-offset:2px; }
+    a:focus-visible { outline:2px solid #0ea5e9; outline-offset:2px; border-radius:4px; }
+
     /* Focus */
-    :focus-visible { outline:2px solid rgb(14 165 233); outline-offset:3px; border-radius:4px; }
+    :focus-visible { outline:2px solid rgb(14 165 233); outline-offset:2px; border-radius:6px; }
 
     /* Header shrink */
     header.shrink { padding-top:.4rem; padding-bottom:.4rem; }
-    header.shrink .logo-text { font-size:1.1rem; }
+    header.shrink .logo-text { font-size:1.1rem; letter-spacing:.1px; }
 
     /* Progress bar */
     #scroll-progress { position:fixed; top:0; left:0; height:3px; background:linear-gradient(to right, #0ea5e9,#3b82f6); width:0%; z-index:60; }
@@ -69,7 +85,14 @@
     #toc-overlay.hidden { opacity:0; pointer-events:none; }
 
     /* Tabs (single-view) */
-    .sv-tab.active { background:white; border-color:#94a3b8; box-shadow:0 1px 2px rgba(0,0,0,.04); color:#0f172a; font-weight:600; }
+    .sv-tab { transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+    .sv-tab i { flex:none; }
+    .sv-tab.active {
+      background:white; border-color:#94a3b8;
+      box-shadow:0 1px 2px rgba(0,0,0,.05);
+      color:#0f172a; font-weight:600;
+    }
+    .sv-tab:not(.active):hover { background:#f8fafc; border-color:#cbd5e1; }
 
     /* Anti-FOUC AOS */
     [data-aos] { opacity:0; }
@@ -78,11 +101,42 @@
     /* iOS safe-area per sticky */
     #section-tabs { padding-bottom: max(0px, env(safe-area-inset-bottom)); }
 
+    /* Divider istituzionale */
+    .section-divider { position:relative; display:flex; align-items:center; margin:2rem 0; }
+    .section-divider::before, .section-divider::after {
+      content:""; flex:1; border-bottom:1px solid #e2e8f0;
+    }
+    .section-divider span {
+      margin:0 .75rem; color:#64748b; font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase;
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+
+    /* Badge status (enterprise) */
+    .badge {
+      display:inline-flex; align-items:center; gap:.375rem;
+      padding:.25rem .5rem; border-radius:999px;
+      font-size:12px; font-weight:600;
+      background:#ecfdf5; color:#047857; border:1px solid #a7f3d0;
+    }
+
+    /* Copy anchor su h2 */
+    .anchor { opacity:0; transition:opacity .15s; margin-left:.5rem; }
+    h2:hover .anchor { opacity:1; }
+
+    /* Prosa stretta */
+    .prose-narrow { max-width:62ch; }
+
     /* Stampa */
     @media print {
-      #scroll-progress, #section-tabs, #toc-overlay, #toc-drawer, .no-print { display:none !important; }
+      #scroll-progress, #section-tabs, #toc-overlay, #toc-drawer, .no-print, #toTop { display:none !important; }
       header { position: static !important; box-shadow: none !important; }
       .shadow-sm, .shadow, .shadow-inner { box-shadow: none !important; }
+      /* mostra SEMPRE tutti i blocchi */
+      .sv-panel { display:block !important; }
+      .sv-panel[hidden] { display:block !important; }
+      /* spezzature eleganti */
+      h1, h2, h3 { page-break-after: avoid; page-break-inside: avoid; }
+      p, li { orphans:3; widows:3; }
       section[role="tabpanel"] { break-inside: avoid; page-break-inside: avoid; }
       #hero { page-break-after: avoid; }
       @page { margin: 18mm 14mm 18mm 14mm; }
@@ -92,7 +146,6 @@
 </head>
 
 <body class="antialiased">
-  <!-- Noscript -->
   <noscript>
     <div style="background:#fee2e2;color:#7f1d1d;padding:.75rem;text-align:center;font:14px/1.4 Inter,system-ui,sans-serif">
       Questo report richiede JavaScript per navigazione e accessibilità avanzata.
@@ -135,26 +188,70 @@
     class="fixed top-0 right-0 h-full w-80 max-w-full bg-white border-l border-slate-200 shadow-xl z-50 transition-transform duration-300 ease-in-out"
     aria-label="Indice del Report" aria-hidden="true">
     <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200">
-      <h2 class="text-sm font-semibold text-slate-700">Indice Report</h2>
+      <h2 class="text-sm font-semibold text-slate-700 tracking-tight">Indice Report</h2>
       <button id="close-toc-drawer" class="p-1 rounded-md hover:bg-slate-100" aria-label="Chiudi indice">
-        <i data-lucide="x" class="w-5 h-5 text-slate-500"></i>
+        <i data-lucide="x" class="w-4 h-4 text-slate-500"></i>
       </button>
     </div>
-    <nav class="p-4 space-y-1 text-sm text-slate-700 overflow-y-auto h-[calc(100%-3rem)]" aria-label="Sezioni del report">
-      <a href="#sim-op"   class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="activity" class="w-4 h-4"></i> Simulazione Operativa</a>
-      <a href="#blocco1"  class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="list-todo" class="w-4 h-4"></i> B1 — Identificativi & Contesto</a>
-      <a href="#blocco2"  class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="scale" class="w-4 h-4"></i> B2 — Multipli & Valutazione Intrinseca</a>
-      <a href="#blocco3"  class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="factory" class="w-4 h-4"></i> B3 — Fondamentali Aziendali</a>
-      <a href="#blocco4"  class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="banknote" class="w-4 h-4"></i> B4 — Dividendi & Buyback</a>
-      <a href="#blocco5"  class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="trending-up" class="w-4 h-4"></i> B5 — Performance & Rischio</a>
-      <a href="#blocco6"  class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="layout-grid" class="w-4 h-4"></i> B6 — Microstruttura & Market</a>
-      <a href="#blocco7"  class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="layers-3" class="w-4 h-4"></i> B7 — Derivati & Opzioni</a>
-      <a href="#blocco8"  class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="bar-chart-3" class="w-4 h-4"></i> B8 — Tecnica & Correlazioni</a>
-      <a href="#blocco9"  class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="shield-check" class="w-4 h-4"></i> B9 — Proprietà, ESG & Governance</a>
-      <a href="#blocco10" class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="database" class="w-4 h-4"></i> B10 — ETF Flow</a>
-      <a href="#blocco11" class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="calendar" class="w-4 h-4"></i> B11 — Eventi & Macro + Stress Test</a>
-      <a href="#blocco12" class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="newspaper" class="w-4 h-4"></i> B12 — Newsflow & Sentiment</a>
-      <a href="#blocco13" class="toc-link flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50"><i data-lucide="cpu" class="w-4 h-4"></i> B13 — Cluster Strategico AI</a>
+
+    <!-- TOC con meta -->
+    <nav class="p-4 space-y-2 text-sm text-slate-700 overflow-y-auto h-[calc(100%-3rem)]" aria-label="Sezioni del report">
+      <a href="#sim-op" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="activity" class="w-4 h-4 mt-0.5"></i>
+        <span>Simulazione Operativa<small class="block text-[11px] text-slate-400 mt-0.5">4 strategie: LT, Opzioni, CFD, Futures</small></span>
+      </a>
+      <a href="#blocco1" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="list-todo" class="w-4 h-4 mt-0.5"></i>
+        <span>B1 — Identificativi & Contesto<small class="block text-[11px] text-slate-400 mt-0.5">ticker, settore, peer set</small></span>
+      </a>
+      <a href="#blocco2" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="scale" class="w-4 h-4 mt-0.5"></i>
+        <span>B2 — Multipli & Valutazione<small class="block text-[11px] text-slate-400 mt-0.5">DCF, comparabili, fair value</small></span>
+      </a>
+      <a href="#blocco3" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="factory" class="w-4 h-4 mt-0.5"></i>
+        <span>B3 — Fondamentali Aziendali<small class="block text-[11px] text-slate-400 mt-0.5">ricavi, margini, capex</small></span>
+      </a>
+      <a href="#blocco4" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="banknote" class="w-4 h-4 mt-0.5"></i>
+        <span>B4 — Dividendi & Buyback<small class="block text-[11px] text-slate-400 mt-0.5">policy, payout, yield</small></span>
+      </a>
+      <a href="#blocco5" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="trending-up" class="w-4 h-4 mt-0.5"></i>
+        <span>B5 — Performance & Rischio<small class="block text-[11px] text-slate-400 mt-0.5">volatilità, drawdown, beta</small></span>
+      </a>
+      <a href="#blocco6" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="layout-grid" class="w-4 h-4 mt-0.5"></i>
+        <span>B6 — Microstruttura & Market<small class="block text-[11px] text-slate-400 mt-0.5">liquidità, spread, tape</small></span>
+      </a>
+      <a href="#blocco7" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="layers-3" class="w-4 h-4 mt-0.5"></i>
+        <span>B7 — Derivati & Opzioni<small class="block text-[11px] text-slate-400 mt-0.5">IV, skew, gamma</small></span>
+      </a>
+      <a href="#blocco8" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="bar-chart-3" class="w-4 h-4 mt-0.5"></i>
+        <span>B8 — Tecnica & Correlazioni<small class="block text-[11px] text-slate-400 mt-0.5">MTF, livelli, relazioni</small></span>
+      </a>
+      <a href="#blocco9" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="shield-check" class="w-4 h-4 mt-0.5"></i>
+        <span>B9 — Proprietà, ESG & Governance<small class="block text-[11px] text-slate-400 mt-0.5">azionariato, score ESG</small></span>
+      </a>
+      <a href="#blocco10" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="database" class="w-4 h-4 mt-0.5"></i>
+        <span>B10 — ETF Flow<small class="block text-[11px] text-slate-400 mt-0.5">flussi, posizionamento</small></span>
+      </a>
+      <a href="#blocco11" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="calendar" class="w-4 h-4 mt-0.5"></i>
+        <span>B11 — Eventi & Macro + Stress Test<small class="block text-[11px] text-slate-400 mt-0.5">earnings, guidance, macro</small></span>
+      </a>
+      <a href="#blocco12" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="newspaper" class="w-4 h-4 mt-0.5"></i>
+        <span>B12 — Newsflow & Sentiment<small class="block text-[11px] text-slate-400 mt-0.5">notizie, segnali</small></span>
+      </a>
+      <a href="#blocco13" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="cpu" class="w-4 h-4 mt-0.5"></i>
+        <span>B13 — Cluster Strategico AI<small class="block text-[11px] text-slate-400 mt-0.5">catena valore, moat</small></span>
+      </a>
     </nav>
   </aside>
 
@@ -167,13 +264,14 @@
           <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
             Report Azionario • [[ASSET_NAME]] ([[TICKER]])
           </h1>
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-medium rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm">
+          <span class="badge">
             <i data-lucide="check-circle-2" class="w-4 h-4"></i> [[REPORT_STATUS]]
           </span>
         </div>
-        <div class="mt-3 flex flex-wrap gap-3 text-sm text-slate-600">
+        <div class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-[13px] sm:text-sm text-slate-600">
           <span class="flex items-center gap-1.5">
-            <i data-lucide="calendar" class="w-4 h-4 text-slate-500"></i> Aggiornamento: <time id="report-date" datetime="[[ISO_DATE]]">[[HUMAN_DATE]]</time>
+            <i data-lucide="calendar" class="w-4 h-4 text-slate-500"></i>
+            Aggiornamento: <time id="report-date" datetime="[[ISO_DATE]]">[[HUMAN_DATE]]</time>
           </span>
           <span class="flex items-center gap-1.5">
             <i data-lucide="file-text" class="w-4 h-4 text-slate-500"></i> Versione [[REPORT_VERSION]]
@@ -182,14 +280,14 @@
             <i data-lucide="shield" class="w-4 h-4 text-slate-500"></i> Documento a uso istituzionale
           </span>
         </div>
-        <p class="mt-6 max-w-3xl text-base text-slate-700 leading-relaxed">
+        <p class="mt-6 prose-narrow text-[15px] leading-7 text-slate-700">
           Analisi multi-blocco sviluppata da <span class="font-semibold text-sky-800">Tradelia AI</span>, con approccio istituzionale e framework 2025.
           Include valutazioni fondamentali, tecnica multi-timeframe e strategie operative su equity, derivati e flussi di capitale.
         </p>
       </div>
     </section>
 
-    <!-- TABS sticky: icona + nome blocco -->
+    <!-- TABS sticky: icona + nome blocco (etichetta breve) -->
     <nav id="section-tabs" class="sticky z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm"
          role="tablist" aria-label="Sezioni report">
       <div class="max-w-7xl mx-auto px-2 py-2 flex gap-1 overflow-x-auto snap-x">
@@ -199,86 +297,220 @@
         </button>
         <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
                 data-target="blocco1" role="tab" aria-selected="false" aria-controls="blocco1" id="tab-blocco1">
-          <i data-lucide="list-todo" class="w-4 h-4"></i> B1
+          <i data-lucide="list-todo" class="w-4 h-4"></i> B1 Ident.
         </button>
         <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
                 data-target="blocco2" role="tab" aria-selected="false" aria-controls="blocco2" id="tab-blocco2">
-          <i data-lucide="scale" class="w-4 h-4"></i> B2
+          <i data-lucide="scale" class="w-4 h-4"></i> B2 Valutaz.
         </button>
         <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
                 data-target="blocco3" role="tab" aria-selected="false" aria-controls="blocco3" id="tab-blocco3">
-          <i data-lucide="factory" class="w-4 h-4"></i> B3
+          <i data-lucide="factory" class="w-4 h-4"></i> B3 Fondam.
         </button>
         <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
                 data-target="blocco4" role="tab" aria-selected="false" aria-controls="blocco4" id="tab-blocco4">
-          <i data-lucide="banknote" class="w-4 h-4"></i> B4
+          <i data-lucide="banknote" class="w-4 h-4"></i> B4 Div/BB
         </button>
         <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
                 data-target="blocco5" role="tab" aria-selected="false" aria-controls="blocco5" id="tab-blocco5">
-          <i data-lucide="trending-up" class="w-4 h-4"></i> B5
+          <i data-lucide="trending-up" class="w-4 h-4"></i> B5 Perf/Risk
         </button>
         <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
                 data-target="blocco6" role="tab" aria-selected="false" aria-controls="blocco6" id="tab-blocco6">
-          <i data-lucide="layout-grid" class="w-4 h-4"></i> B6
+          <i data-lucide="layout-grid" class="w-4 h-4"></i> B6 Microstr.
         </button>
         <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
                 data-target="blocco7" role="tab" aria-selected="false" aria-controls="blocco7" id="tab-blocco7">
-          <i data-lucide="layers-3" class="w-4 h-4"></i> B7
+          <i data-lucide="layers-3" class="w-4 h-4"></i> B7 Derivati
         </button>
         <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
                 data-target="blocco8" role="tab" aria-selected="false" aria-controls="blocco8" id="tab-blocco8">
-          <i data-lucide="bar-chart-3" class="w-4 h-4"></i> B8
+          <i data-lucide="bar-chart-3" class="w-4 h-4"></i> B8 Tecnica
         </button>
         <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
                 data-target="blocco9" role="tab" aria-selected="false" aria-controls="blocco9" id="tab-blocco9">
-          <i data-lucide="shield-check" class="w-4 h-4"></i> B9
+          <i data-lucide="shield-check" class="w-4 h-4"></i> B9 ESG/Gov
         </button>
         <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
                 data-target="blocco10" role="tab" aria-selected="false" aria-controls="blocco10" id="tab-blocco10">
-          <i data-lucide="database" class="w-4 h-4"></i> B10
+          <i data-lucide="database" class="w-4 h-4"></i> B10 ETF
         </button>
         <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
                 data-target="blocco11" role="tab" aria-selected="false" aria-controls="blocco11" id="tab-blocco11">
-          <i data-lucide="calendar" class="w-4 h-4"></i> B11
+          <i data-lucide="calendar" class="w-4 h-4"></i> B11 Macro
         </button>
         <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
                 data-target="blocco12" role="tab" aria-selected="false" aria-controls="blocco12" id="tab-blocco12">
-          <i data-lucide="newspaper" class="w-4 h-4"></i> B12
+          <i data-lucide="newspaper" class="w-4 h-4"></i> B12 News/Sent
         </button>
         <button class="sv-tab px-3 py-1.5 text-sm rounded-md border border-slate-200 flex items-center gap-1.5"
                 data-target="blocco13" role="tab" aria-selected="false" aria-controls="blocco13" id="tab-blocco13">
-          <i data-lucide="cpu" class="w-4 h-4"></i> B13
+          <i data-lucide="cpu" class="w-4 h-4"></i> B13 Cluster AI
         </button>
       </div>
     </nav>
 
-    <!-- PANELS (una sola visibile) -->
+    <!-- ===== PANELS (una sola visibile su web) ===== -->
+
+    <!-- Simulazione Operativa -->
     <section id="sim-op" class="sv-panel max-w-6xl mx-auto mt-8 mb-16 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
              role="tabpanel" aria-labelledby="tab-sim-op">
-      <h2 class="text-lg font-bold text-slate-900">Simulazione Operativa</h2>
-      <p class="text-slate-600 mt-1 text-sm">Qui andranno le 4 simulazioni complete (LT, Opzioni, CFD Swing, Futures) con KPI e validazioni.</p>
-      <!-- Esempio token: [[STRAT_LT.title]] · [[STRAT_LT.entry]] · [[STRAT_LT.tp]] · [[STRAT_LT.sl]] -->
+      <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+        Simulazione Operativa
+        <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#sim-op">Copia link</button>
+      </h2>
+      <div class="section-divider"><span>SEZIONE</span></div>
+      <p class="text-slate-600 mt-1 text-sm prose-narrow">Qui andranno le 4 simulazioni complete (LT, Opzioni, CFD Swing, Futures) con KPI e validazioni.</p>
+      <!-- Token es.: [[STRAT_LT.title]] · [[STRAT_LT.entry]] · [[STRAT_LT.tp]] · [[STRAT_LT.sl]] -->
     </section>
 
-    <section id="blocco1" class="sv-panel hidden max-w-6xl mx-auto mb-8 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+    <!-- B1 -->
+    <section id="blocco1" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
              role="tabpanel" aria-labelledby="tab-blocco1" hidden>
-      <h2 class="text-lg font-bold text-slate-900">B1 — Identificativi & Contesto</h2>
-      <p class="text-slate-600 mt-1 text-sm">[[B1.summary]]</p>
+      <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+        <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 1</span> — Identificativi & Contesto
+        <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco1">Copia link</button>
+      </h2>
+      <div class="section-divider"><span>SEZIONE</span></div>
+      <p class="text-slate-600 mt-1 text-sm leading-6 prose-narrow">[[B1.summary]]</p>
     </section>
 
-    <section id="blocco2" class="sv-panel hidden max-w-6xl mx-auto mb-8 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+    <!-- B2 -->
+    <section id="blocco2" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
              role="tabpanel" aria-labelledby="tab-blocco2" hidden>
-      <h2 class="text-lg font-bold text-slate-900">B2 — Multipli & Valutazione Intrinseca</h2>
-      <p class="text-slate-600 mt-1 text-sm">[[B2.summary]]</p>
+      <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+        <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 2</span> — Multipli & Valutazione Intrinseca
+        <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco2">Copia link</button>
+      </h2>
+      <div class="section-divider"><span>SEZIONE</span></div>
+      <p class="text-slate-600 mt-1 text-sm leading-6 prose-narrow">[[B2.summary]]</p>
     </section>
 
-    <section id="blocco3" class="sv-panel hidden max-w-6xl mx-auto mb-8 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+    <!-- B3 -->
+    <section id="blocco3" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
              role="tabpanel" aria-labelledby="tab-blocco3" hidden>
-      <h2 class="text-lg font-bold text-slate-900">B3 — Fondamentali Aziendali</h2>
-      <p class="text-slate-600 mt-1 text-sm">[[B3.summary]]</p>
+      <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+        <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 3</span> — Fondamentali Aziendali
+        <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco3">Copia link</button>
+      </h2>
+      <div class="section-divider"><span>SEZIONE</span></div>
+      <p class="text-slate-600 mt-1 text-sm leading-6 prose-narrow">[[B3.summary]]</p>
     </section>
 
-    <!-- Aggiungi B4..B13 allo stesso modo -->
+    <!-- B4 -->
+    <section id="blocco4" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+             role="tabpanel" aria-labelledby="tab-blocco4" hidden>
+      <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+        <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 4</span> — Dividendi & Buyback
+        <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco4">Copia link</button>
+      </h2>
+      <div class="section-divider"><span>SEZIONE</span></div>
+      <p class="text-slate-600 mt-1 text-sm leading-6 prose-narrow">[[B4.summary]]</p>
+    </section>
+
+    <!-- B5 -->
+    <section id="blocco5" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+             role="tabpanel" aria-labelledby="tab-blocco5" hidden>
+      <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+        <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 5</span> — Performance & Rischio
+        <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco5">Copia link</button>
+      </h2>
+      <div class="section-divider"><span>SEZIONE</span></div>
+      <p class="text-slate-600 mt-1 text-sm leading-6 prose-narrow">[[B5.summary]]</p>
+    </section>
+
+    <!-- B6 -->
+    <section id="blocco6" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+             role="tabpanel" aria-labelledby="tab-blocco6" hidden>
+      <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+        <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 6</span> — Microstruttura & Market
+        <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco6">Copia link</button>
+      </h2>
+      <div class="section-divider"><span>SEZIONE</span></div>
+      <p class="text-slate-600 mt-1 text-sm leading-6 prose-narrow">[[B6.summary]]</p>
+    </section>
+
+    <!-- B7 -->
+    <section id="blocco7" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+             role="tabpanel" aria-labelledby="tab-blocco7" hidden>
+      <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+        <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 7</span> — Derivati & Opzioni
+        <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco7">Copia link</button>
+      </h2>
+      <div class="section-divider"><span>SEZIONE</span></div>
+      <p class="text-slate-600 mt-1 text-sm leading-6 prose-narrow">[[B7.summary]]</p>
+    </section>
+
+    <!-- B8 -->
+    <section id="blocco8" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+             role="tabpanel" aria-labelledby="tab-blocco8" hidden>
+      <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+        <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 8</span> — Tecnica & Correlazioni
+        <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco8">Copia link</button>
+      </h2>
+      <div class="section-divider"><span>SEZIONE</span></div>
+      <p class="text-slate-600 mt-1 text-sm leading-6 prose-narrow">[[B8.summary]]</p>
+    </section>
+
+    <!-- B9 -->
+    <section id="blocco9" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+             role="tabpanel" aria-labelledby="tab-blocco9" hidden>
+      <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+        <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 9</span> — Proprietà, ESG & Governance
+        <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco9">Copia link</button>
+      </h2>
+      <div class="section-divider"><span>SEZIONE</span></div>
+      <p class="text-slate-600 mt-1 text-sm leading-6 prose-narrow">[[B9.summary]]</p>
+    </section>
+
+    <!-- B10 -->
+    <section id="blocco10" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+             role="tabpanel" aria-labelledby="tab-blocco10" hidden>
+      <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+        <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 10</span> — ETF Flow
+        <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco10">Copia link</button>
+      </h2>
+      <div class="section-divider"><span>SEZIONE</span></div>
+      <p class="text-slate-600 mt-1 text-sm leading-6 prose-narrow">[[B10.summary]]</p>
+    </section>
+
+    <!-- B11 -->
+    <section id="blocco11" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+             role="tabpanel" aria-labelledby="tab-blocco11" hidden>
+      <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+        <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 11</span> — Eventi & Macro + Stress Test
+        <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco11">Copia link</button>
+      </h2>
+      <div class="section-divider"><span>SEZIONE</span></div>
+      <p class="text-slate-600 mt-1 text-sm leading-6 prose-narrow">[[B11.summary]]</p>
+    </section>
+
+    <!-- B12 -->
+    <section id="blocco12" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+             role="tabpanel" aria-labelledby="tab-blocco12" hidden>
+      <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+        <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 12</span> — Newsflow & Sentiment
+        <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco12">Copia link</button>
+      </h2>
+      <div class="section-divider"><span>SEZIONE</span></div>
+      <p class="text-slate-600 mt-1 text-sm leading-6 prose-narrow">[[B12.summary]]</p>
+    </section>
+
+    <!-- B13 -->
+    <section id="blocco13" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+             role="tabpanel" aria-labelledby="tab-blocco13" hidden>
+      <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+        <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 13</span> — Cluster Strategico AI
+        <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco13">Copia link</button>
+      </h2>
+      <div class="section-divider"><span>SEZIONE</span></div>
+      <p class="text-slate-600 mt-1 text-sm leading-6 prose-narrow">[[B13.summary]]</p>
+    </section>
+
+    <!-- Footer istituzionale (per web + stampa) -->
+    <footer id="print-legal" class="mt-10 py-6 text-center text-xs text-slate-500 border-t border-slate-200">
+      © 2025 Tradelia AI — Uso istituzionale. Vietata la redistribuzione non autorizzata.
+    </footer>
   </main>
 
   <!-- Back to top -->
@@ -362,12 +594,14 @@
     function setActive(id, pushHash=true, doScroll=true){
       if (!panelMap.has(id)) return;
 
+      // Tabs
       tabs.forEach(t => {
         const sel = (t.dataset.target === id);
         t.classList.toggle('active', sel);
         t.setAttribute('aria-selected', sel ? 'true' : 'false');
       });
 
+      // Panels
       panels.forEach(p => {
         const vis = (p.id === id);
         p.classList.toggle('hidden', !vis);
@@ -416,7 +650,7 @@
       window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
     });
 
-    // Formatta data in locale
+    // Data locale
     (function(){
       const t=document.getElementById('report-date');
       if(!t) return;
@@ -426,6 +660,16 @@
         t.textContent = new Intl.DateTimeFormat(navigator.language||'it-IT',{dateStyle:'long'}).format(d);
       } catch(e){}
     })();
+
+    // Copy anchor
+    document.querySelectorAll('.anchor').forEach(b=>{
+      b.addEventListener('click',()=>{
+        const id=b.getAttribute('data-copy'); const url=location.origin+location.pathname+id;
+        navigator.clipboard.writeText(url);
+        b.textContent='Copiato';
+        setTimeout(()=>b.textContent='Copia link',1200);
+      });
+    });
   </script>
 </body>
 </html>
