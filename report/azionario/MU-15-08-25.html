@@ -9,7 +9,7 @@
   <meta name="author" content="Tradelia AI" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-  <!-- Open Graph / Twitter (per anteprime professionali) -->
+  <!-- Open Graph / Twitter -->
   <meta property="og:type" content="article">
   <meta property="og:title" content="TRADELIA • AI — Report Azionario Istituzionale 2025">
   <meta property="og:description" content="Analisi avanzata multi-blocco, con strategie operative e framework istituzionale.">
@@ -63,6 +63,11 @@
       height: 3px; background: linear-gradient(to right, #0ea5e9, #3b82f6);
       width: 0%; z-index: 60;
     }
+
+    /* Drawer stato aperto/chiuso */
+    #toc-drawer { transform: translateX(100%); }
+    #toc-drawer.open { transform: translateX(0%); }
+    #toc-overlay.hidden { opacity: 0; pointer-events: none; }
   </style>
 </head>
 
@@ -74,116 +79,133 @@
   <header role="banner" aria-label="Intestazione report"
     class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm px-4 sm:px-6 py-3 flex items-center justify-between transition-all duration-300">
     
-<!-- Logo -->
-<a href="https://tradelia.org" target="_blank" rel="noopener noreferrer" 
-   class="flex items-center font-extrabold tracking-tight hover:opacity-90 transition">
-  <span class="text-lg sm:text-2xl text-slate-900">TRADELIA</span>
-  <span class="ml-1 text-lg sm:text-2xl text-sky-600">•AI</span>
-</a>
-
-
+    <!-- Logo -->
+    <a href="https://tradelia.org" target="_blank" rel="noopener noreferrer" 
+       class="flex items-center font-extrabold tracking-tight hover:opacity-90 transition">
+      <span class="logo-text text-lg sm:text-2xl text-slate-900">TRADELIA</span>
+      <span class="logo-text ml-1 text-lg sm:text-2xl text-sky-600">•AI</span>
+    </a>
 
     <!-- Azioni -->
     <nav aria-label="Azioni pagina" class="flex gap-2">
       <!-- Stampa -->
       <button onclick="window.print()" 
-              class="no-print inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50 hidden sm:flex">
+              class="no-print hidden sm:inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50">
         <i data-lucide="printer" class="w-4 h-4"></i> Stampa
       </button>
       <!-- Solo icona su mobile -->
       <button onclick="window.print()" 
-              class="sm:hidden p-2 rounded-md border border-slate-200 hover:bg-slate-50">
+              class="sm:hidden p-2 rounded-md border border-slate-200 hover:bg-slate-50" aria-label="Stampa">
         <i data-lucide="printer" class="w-4 h-4"></i>
       </button>
 
-      <!-- Indice -->
-      <button id="open-toc-drawer" type="button" 
-              class="no-print inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50 hidden sm:flex">
+      <!-- Indice (usa CLASSE, niente ID duplicati) -->
+      <button type="button" 
+              class="btn-open-toc no-print hidden sm:inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50">
         <i data-lucide="list-tree" class="w-4 h-4"></i> Indice
       </button>
-      <button id="open-toc-drawer" type="button" 
-              class="sm:hidden p-2 rounded-md border border-slate-200 hover:bg-slate-50">
+      <button type="button" 
+              class="btn-open-toc sm:hidden p-2 rounded-md border border-slate-200 hover:bg-slate-50" aria-label="Apri indice">
         <i data-lucide="list-tree" class="w-4 h-4"></i>
       </button>
     </nav>
   </header>
 
+  <!-- TOC Overlay -->
+  <div id="toc-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-[1px] z-40 transition-opacity duration-200 hidden"></div>
+
   <!-- TOC Drawer (Indice Report) -->
   <aside id="toc-drawer"
-    class="fixed top-0 right-0 h-full w-80 max-w-full bg-white border-l border-slate-200 shadow-xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out"
+    class="fixed top-0 right-0 h-full w-80 max-w-full bg-white border-l border-slate-200 shadow-xl z-50 transition-transform duration-300 ease-in-out"
     aria-label="Indice del Report"
     aria-hidden="true">
     
     <!-- Header Drawer -->
     <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200">
       <h2 class="text-sm font-semibold text-slate-700">Indice Report</h2>
-      <button id="close-toc-drawer" class="p-1 rounded-md hover:bg-slate-100">
+      <button id="close-toc-drawer" class="p-1 rounded-md hover:bg-slate-100" aria-label="Chiudi indice">
         <i data-lucide="x" class="w-5 h-5 text-slate-500"></i>
       </button>
     </div>
 
     <!-- Lista Sezioni -->
-    <nav class="p-4 space-y-3 text-sm text-slate-700 overflow-y-auto h-[calc(100%-3rem)]">
-      <a href="#sim-op" class="block hover:text-sky-700 hover:underline">Simulazione Operativa</a>
-      <a href="#blocco1" class="block hover:text-sky-700 hover:underline">B1 — Identificativi & Contesto</a>
-      <a href="#blocco2" class="block hover:text-sky-700 hover:underline">B2 — Multipli & Valutazione Intrinseca</a>
-      <a href="#blocco3" class="block hover:text-sky-700 hover:underline">B3 — Fondamentali Aziendali</a>
-      <a href="#blocco4" class="block hover:text-sky-700 hover:underline">B4 — Dividendi & Buyback</a>
-      <a href="#blocco5" class="block hover:text-sky-700 hover:underline">B5 — Performance & Rischio</a>
-      <a href="#blocco6" class="block hover:text-sky-700 hover:underline">B6 — Microstruttura & Market</a>
-      <a href="#blocco7" class="block hover:text-sky-700 hover:underline">B7 — Derivati & Opzioni</a>
-      <a href="#blocco8" class="block hover:text-sky-700 hover:underline">B8 — Tecnica & Correlazioni</a>
-      <a href="#blocco9" class="block hover:text-sky-700 hover:underline">B9 — Proprietà, ESG & Governance</a>
-      <a href="#blocco10" class="block hover:text-sky-700 hover:underline">B10 — ETF Flow</a>
-      <a href="#blocco11" class="block hover:text-sky-700 hover:underline">B11 — Eventi & Macro + Stress Test</a>
-      <a href="#blocco12" class="block hover:text-sky-700 hover:underline">B12 — Newsflow & Sentiment</a>
-      <a href="#blocco13" class="block hover:text-sky-700 hover:underline">B13 — Cluster Strategico AI</a>
+    <nav class="p-4 space-y-2 text-sm text-slate-700 overflow-y-auto h-[calc(100%-3rem)]" aria-label="Sezioni del report">
+      <a href="#sim-op"   class="toc-link block px-2 py-1 rounded hover:bg-slate-50">Simulazione Operativa</a>
+      <a href="#blocco1"  class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B1 — Identificativi & Contesto</a>
+      <a href="#blocco2"  class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B2 — Multipli & Valutazione Intrinseca</a>
+      <a href="#blocco3"  class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B3 — Fondamentali Aziendali</a>
+      <a href="#blocco4"  class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B4 — Dividendi & Buyback</a>
+      <a href="#blocco5"  class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B5 — Performance & Rischio</a>
+      <a href="#blocco6"  class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B6 — Microstruttura & Market</a>
+      <a href="#blocco7"  class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B7 — Derivati & Opzioni</a>
+      <a href="#blocco8"  class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B8 — Tecnica & Correlazioni</a>
+      <a href="#blocco9"  class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B9 — Proprietà, ESG & Governance</a>
+      <a href="#blocco10" class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B10 — ETF Flow</a>
+      <a href="#blocco11" class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B11 — Eventi & Macro + Stress Test</a>
+      <a href="#blocco12" class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B12 — Newsflow & Sentiment</a>
+      <a href="#blocco13" class="toc-link block px-2 py-1 rounded hover:bg-slate-50">B13 — Cluster Strategico AI</a>
     </nav>
   </aside>
-<!-- Hero Report -->
-<section id="hero" class="relative bg-gradient-to-b from-sky-50 to-white border-b border-slate-200 px-6 sm:px-10 py-10" data-aos="fade-down">
-  <div class="max-w-5xl mx-auto">
 
-    <!-- Titolo e Badge -->
-    <div class="flex flex-wrap items-center justify-between gap-4">
-      <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
-        Report Azionario • Micron Technology (MU)
-      </h1>
-      <span class="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-medium rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm">
-        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
-        Aggiornato
-      </span>
-    </div>
+  <!-- Contenuto principale -->
+  <main id="contenuto">
+    <!-- Hero Report (pulita, senza emoji) -->
+    <section id="hero" class="relative bg-gradient-to-b from-sky-50 to-white border-b border-slate-200 px-6 sm:px-10 py-10" data-aos="fade-down">
+      <div class="max-w-5xl mx-auto">
 
-    <!-- Meta -->
-    <div class="mt-3 flex flex-wrap gap-3 text-sm text-slate-600">
-      <span class="flex items-center gap-1.5">
-        <i data-lucide="calendar" class="w-4 h-4 text-slate-500"></i> Aggiornamento: 17 Agosto 2025
-      </span>
-      <span class="flex items-center gap-1.5">
-        <i data-lucide="file-text" class="w-4 h-4 text-slate-500"></i> Versione v4 • Istituzionale
-      </span>
-    </div>
+        <!-- Titolo e Badge -->
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
+            Report Azionario • Micron Technology (MU)
+          </h1>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-medium rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm">
+            <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+            Aggiornato
+          </span>
+        </div>
 
-    <!-- Abstract -->
-    <p class="mt-6 max-w-3xl text-base text-slate-700 leading-relaxed">
-      Analisi multi-blocco sviluppata da 
-      <span class="font-semibold text-sky-800">Tradelia AI</span>, 
-      con focus su <span class="font-semibold">fondamentali</span>, 
-      <span class="font-semibold">tecnica multi-timeframe</span> e 
-      <span class="font-semibold">strategie operative</span> su equity, derivati e flussi istituzionali.
-    </p>
+        <!-- Meta -->
+        <div class="mt-3 flex flex-wrap gap-3 text-sm text-slate-600">
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="calendar" class="w-4 h-4 text-slate-500"></i> Aggiornamento: 17 Agosto 2025
+          </span>
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="file-text" class="w-4 h-4 text-slate-500"></i> Versione v4 • Istituzionale
+          </span>
+        </div>
 
-  </div>
-</section>
+        <!-- Abstract -->
+        <p class="mt-6 max-w-3xl text-base text-slate-700 leading-relaxed">
+          Analisi multi-blocco sviluppata da 
+          <span class="font-semibold text-sky-800">Tradelia AI</span>, 
+          con focus su <span class="font-semibold">fondamentali</span>, 
+          <span class="font-semibold">tecnica multi-timeframe</span> e 
+          <span class="font-semibold">strategie operative</span> su equity, derivati e flussi istituzionali.
+        </p>
+      </div>
+    </section>
 
-<!-- Script AOS init -->
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>
-  AOS.init({ once: true, duration: 600 });
-</script>
+    <!-- Placeholder delle sezioni (aggiungi poi i tuoi blocchi reali) -->
+    <section id="sim-op" class="max-w-6xl mx-auto mt-8 mb-16 bg-white border border-slate-200 rounded-xl shadow-sm p-6">
+      <h2 class="text-lg font-bold text-slate-900">Simulazione Operativa</h2>
+      <p class="text-slate-600 mt-1 text-sm">Qui andranno le 4 simulazioni complete (LT, Opzioni, CFD Swing, Futures).</p>
+    </section>
 
+    <section id="blocco1" class="max-w-6xl mx-auto mb-8 bg-white border border-slate-200 rounded-xl shadow-sm p-6">
+      <h2 class="text-lg font-bold text-slate-900">B1 — Identificativi & Contesto</h2>
+      <p class="text-slate-600 mt-1 text-sm">Placeholder blocco 1.</p>
+    </section>
 
+    <section id="blocco2" class="max-w-6xl mx-auto mb-8 bg-white border border-slate-200 rounded-xl shadow-sm p-6">
+      <h2 class="text-lg font-bold text-slate-900">B2 — Multipli & Valutazione Intrinseca</h2>
+      <p class="text-slate-600 mt-1 text-sm">Placeholder blocco 2.</p>
+    </section>
+
+    <!-- Aggiungi qui blocco3 ... blocco13 come preferisci -->
+  </main>
+
+  <!-- Script: icone, scroll, TOC accessibile, AOS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
     // Inizializza icone Lucide
     if (window.lucide && lucide.createIcons) lucide.createIcons();
@@ -191,11 +213,7 @@
     // Header shrink on scroll
     const header = document.querySelector("header");
     window.addEventListener("scroll", () => {
-      if (window.scrollY > 40) {
-        header.classList.add("shrink");
-      } else {
-        header.classList.remove("shrink");
-      }
+      header.classList.toggle("shrink", window.scrollY > 40);
     });
 
     // Progress bar scroll
@@ -206,18 +224,107 @@
       progress.style.width = scrolled + "%";
     });
 
-    // Drawer toggle
-    const tocDrawer = document.getElementById('toc-drawer');
-    document.querySelectorAll('#open-toc-drawer').forEach(btn => {
-      btn.addEventListener('click', () => {
-        tocDrawer.classList.remove('translate-x-full');
-        tocDrawer.setAttribute('aria-hidden', 'false');
+    // ===== TOC Drawer accessibile =====
+    const drawer   = document.getElementById('toc-drawer');
+    const overlay  = document.getElementById('toc-overlay');
+    const openBtns = document.querySelectorAll('.btn-open-toc');
+    const closeBtn = document.getElementById('close-toc-drawer');
+    const body     = document.body;
+
+    // Focus trap setup
+    let lastFocused = null;
+    const focusableSelectors = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+
+    function openDrawer() {
+      lastFocused = document.activeElement;
+      drawer.classList.add('open');
+      drawer.setAttribute('aria-hidden', 'false');
+      overlay.classList.remove('hidden');
+      body.classList.add('overflow-hidden');
+
+      // Focus al primo elemento focussabile nel drawer
+      const first = drawer.querySelector(focusableSelectors);
+      first && first.focus();
+      // Inizializza (o re-render) icone nel drawer
+      if (window.lucide && lucide.createIcons) lucide.createIcons();
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove('open');
+      drawer.setAttribute('aria-hidden', 'true');
+      overlay.classList.add('hidden');
+      body.classList.remove('overflow-hidden');
+      lastFocused && lastFocused.focus();
+    }
+
+    openBtns.forEach(btn => btn.addEventListener('click', openDrawer));
+    closeBtn?.addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+
+    // Esc per chiudere
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+    });
+
+    // Focus trap nel drawer
+    drawer.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const focusables = Array.from(drawer.querySelectorAll(focusableSelectors))
+        .filter(el => !el.hasAttribute('disabled') && el.tabIndex !== -1 && el.offsetParent !== null);
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last  = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault(); last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault(); first.focus();
+      }
+    });
+
+    // Smooth scroll con offset header per i link del TOC
+    const tocLinks = document.querySelectorAll('#toc-drawer .toc-link');
+    tocLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        const id = link.getAttribute('href').slice(1);
+        const target = document.getElementById(id);
+        if (!target) return;
+        e.preventDefault();
+        closeDrawer();
+        const offset = header.getBoundingClientRect().height + 8;
+        const y = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
       });
     });
-    document.getElementById('close-toc-drawer')?.addEventListener('click', () => {
-      tocDrawer.classList.add('translate-x-full');
-      tocDrawer.setAttribute('aria-hidden', 'true');
+
+    // Evidenziazione sezione attiva (scrollspy)
+    const allTargets = ['sim-op','blocco1','blocco2','blocco3','blocco4','blocco5','blocco6','blocco7','blocco8','blocco9','blocco10','blocco11','blocco12','blocco13']
+      .map(id => document.getElementById(id))
+      .filter(Boolean);
+
+    const linksMap = new Map();
+    document.querySelectorAll('#toc-drawer .toc-link').forEach(a => {
+      const id = a.getAttribute('href').slice(1);
+      linksMap.set(id, a);
     });
+
+    const spy = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const id = entry.target.id;
+        const link = linksMap.get(id);
+        if (!link) return;
+        if (entry.isIntersecting) {
+          // reset
+          linksMap.forEach(el => el.classList.remove('bg-sky-50','text-sky-700','font-semibold'));
+          // highlight corrente
+          link.classList.add('bg-sky-50','text-sky-700','font-semibold');
+        }
+      });
+    }, { rootMargin: `-120px 0px -60% 0px`, threshold: 0.1 });
+
+    allTargets.forEach(el => spy.observe(el));
+
+    // AOS init
+    AOS.init({ once: true, duration: 600 });
   </script>
 </body>
 </html>
