@@ -390,15 +390,222 @@
     </section>
 
     <!-- B1 -->
-    <section id="blocco1" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
-             role="tabpanel" aria-labelledby="tab-blocco1" hidden>
-      <h2 class="text-lg font-bold text-slate-900 tracking-tight">
-        <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 1</span> — Identificativi &amp; Contesto
-        <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco1">Copia link</button>
-      </h2>
-      <div class="section-divider"><span>SEZIONE</span></div>
-      <p class="text-slate-600 mt-1 text-sm leading-6 prose-narrow">[[B1.summary]]</p>
-    </section>
+   <!-- B1 — Commento, Analisti & Identificativi (istituzionale, NO icone, NO JS) -->
+<section id="blocco1" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+         role="tabpanel" aria-labelledby="tab-blocco1" hidden>
+  <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+    <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 1</span> — Commento, Analisti &amp; Identificativi
+    <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco1">Copia link</button>
+  </h2>
+
+  <div class="section-divider"><span>SEZIONE</span></div>
+
+  <!-- Legenda validazioni (testo-only) -->
+  <div class="mb-5 flex flex-wrap gap-2 text-[12px]">
+    <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-700">Positivo</span>
+    <span class="inline-flex items-center rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 font-semibold text-rose-700">Negativo</span>
+    <span class="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 font-semibold text-slate-700">Neutro</span>
+    <span class="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 font-semibold text-amber-700">Attenzione</span>
+  </div>
+
+  <!-- 1) COMMENTO (in cima) -->
+  <article class="rounded-lg border border-slate-200 p-4 sm:p-5 bg-slate-50">
+    <h3 class="font-semibold text-slate-900 mb-2">Commento Tradelia AI — MU.US (Micron Technology)</h3>
+    <p class="text-sm text-slate-700 leading-6">
+      Profilo identificativo solido e coerente con large cap USA: quotata su NASDAQ (XNAS) dal 1984; inclusa in Nasdaq-100 e S&amp;P 500.
+      Struttura del capitale favorevole alla liquidità (float ~99,7%; short ~2,8%). Il consensus analisti è tendenzialmente costruttivo con
+      target medio 12M (~$149,7) sopra i prezzi di periodo (~$121). Le performance a 7/30 giorni (+7,8% / +1,6%) indicano resilienza a fronte
+      di volatilità di breve (−3,5% 24h). Dividendi marginali (coerenti con profilo growth). Lettura complessiva: <span class="font-semibold text-emerald-700">positiva</span>
+      con dispersione dei target tra case (prudenza selettiva).
+    </p>
+  </article>
+
+  <!-- 2) ANALISTI -->
+  <article class="mt-8 rounded-lg border border-slate-200 p-4 sm:p-5">
+    <header class="mb-3">
+      <h3 class="font-semibold text-slate-900">Aggiornamenti analisti — Data, Rating e Target</h3>
+      <p class="text-sm text-slate-500">Ordinati per data (più recenti in alto). Fonte prevalente: Finviz.</p>
+    </header>
+
+    <ul class="divide-y divide-slate-200">
+      <!-- 14 Aug 2025 — Erste Group -->
+      <li class="py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div class="min-w-0">
+          <div class="flex flex-wrap items-center gap-2">
+            <time datetime="2025-08-14" class="text-sm text-slate-500">14 ago 2025</time>
+            <span class="font-medium text-slate-900">Erste Group</span>
+            <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[12px] font-semibold text-emerald-700">Buy</span>
+          </div>
+          <p class="text-sm text-slate-600 mt-1">Ripresa rating. <span class="text-slate-400">Fonte: Finviz</span></p>
+        </div>
+        <div class="text-sm text-slate-700">Target —</div>
+      </li>
+
+      <!-- 12 Aug 2025 — JP Morgan -->
+      <li class="py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div class="min-w-0">
+          <div class="flex flex-wrap items-center gap-2">
+            <time datetime="2025-08-12" class="text-sm text-slate-500">12 ago 2025</time>
+            <span class="font-medium text-slate-900">JP Morgan</span>
+            <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[12px] font-semibold text-emerald-700">Overweight</span>
+          </div>
+          <p class="text-sm text-slate-600 mt-1">Revisione al rialzo del target. <span class="text-slate-400">Fonte: Finviz</span></p>
+        </div>
+        <div class="text-sm text-slate-700">
+          Target <span class="font-semibold">$185</span> <span class="mx-1 text-slate-400">•</span> da $165 ↑
+        </div>
+      </li>
+
+      <!-- 10 Jul 2025 — Goldman Sachs -->
+      <li class="py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div class="min-w-0">
+          <div class="flex flex-wrap items-center gap-2">
+            <time datetime="2025-07-10" class="text-sm text-slate-500">10 lug 2025</time>
+            <span class="font-medium text-slate-900">Goldman Sachs</span>
+            <span class="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-[12px] font-semibold text-slate-700">Neutral</span>
+          </div>
+          <p class="text-sm text-slate-600 mt-1"><span class="text-slate-400">Fonte: Finviz</span></p>
+        </div>
+        <div class="text-sm text-slate-700">Target <span class="font-semibold">$130</span></div>
+      </li>
+
+      <!-- 10 Jul 2025 — Deutsche Bank -->
+      <li class="py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div class="min-w-0">
+          <div class="flex flex-wrap items-center gap-2">
+            <time datetime="2025-07-10" class="text-sm text-slate-500">10 lug 2025</time>
+            <span class="font-medium text-slate-900">Deutsche Bank</span>
+            <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[12px] font-semibold text-emerald-700">Buy</span>
+          </div>
+          <p class="text-sm text-slate-600 mt-1">Avvio/aggiornamento copertura. <span class="text-slate-400">Fonte: Finviz</span></p>
+        </div>
+        <div class="text-sm text-slate-700">Target <span class="font-semibold">$150</span></div>
+      </li>
+    </ul>
+  </article>
+
+  <!-- 3) METRICHE & IDENTIFICATIVI -->
+  <article class="mt-8 rounded-lg border border-slate-200 p-4 sm:p-5">
+    <header class="mb-4">
+      <h3 class="font-semibold text-slate-900">Metriche &amp; Identificativi — MU.US (Micron Technology)</h3>
+      <p class="text-sm text-slate-500">Struttura, indici, prezzi di periodo e consensus. Note tecniche essenziali.</p>
+    </header>
+
+    <!-- Scheda responsive: dl 1→2 colonne -->
+    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
+      <!-- Ticker -->
+      <div>
+        <div class="flex items-start justify-between gap-3">
+          <dt class="text-slate-600 text-sm">Ticker</dt>
+          <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-700">Neutro</span>
+        </div>
+        <dd class="mt-1 text-slate-900">MU (USA, Nasdaq)</dd>
+        <p class="mt-0.5 text-xs text-slate-500">Identificativo standard.</p>
+      </div>
+
+      <!-- ADR / storico -->
+      <div>
+        <div class="flex items-start justify-between gap-3">
+          <dt class="text-slate-600 text-sm">Ticker storico / ADR</dt>
+          <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-700">Neutro</span>
+        </div>
+        <dd class="mt-1 text-slate-900">— (non presente)</dd>
+        <p class="mt-0.5 text-xs text-slate-500">Nessun codice alternativo rilevante.</p>
+      </div>
+
+      <!-- Denominazione -->
+      <div>
+        <div class="flex items-start justify-between">
+          <dt class="text-slate-600 text-sm">Società (denominazione)</dt>
+          <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-700">Neutro</span>
+        </div>
+        <dd class="mt-1 text-slate-900">Micron Technology, Inc.</dd>
+        <p class="mt-0.5 text-xs text-slate-500">Denominazione legale.</p>
+      </div>
+
+      <!-- Exchange/MIC -->
+      <div>
+        <div class="flex items-start justify-between">
+          <dt class="text-slate-600 text-sm">Exchange / MIC</dt>
+          <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-700">Neutro</span>
+        </div>
+        <dd class="mt-1 text-slate-900">NASDAQ GS — XNAS</dd>
+        <p class="mt-0.5 text-xs text-slate-500">Mercato principale; codice identificativo.</p>
+      </div>
+
+      <!-- GICS -->
+      <div>
+        <div class="flex items-start justify-between">
+          <dt class="text-slate-600 text-sm">Settore / Industria (GICS)</dt>
+          <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-700">Neutro</span>
+        </div>
+        <dd class="mt-1 text-slate-900">IT → Semiconductors; dispositivi correlati</dd>
+        <p class="mt-0.5 text-xs text-slate-500">Classificazione ufficiale.</p>
+      </div>
+
+      <!-- Indici primari -->
+      <div>
+        <div class="flex items-start justify-between">
+          <dt class="text-slate-600 text-sm">Indici primari</dt>
+          <span class="inline-flex rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700">Attenzione</span>
+        </div>
+        <dd class="mt-1 text-slate-900">Nasdaq-100; S&amp;P 500</dd>
+        <p class="mt-0.5 text-xs text-amber-700">Inclusione confermata; data precisa non disponibile.</p>
+      </div>
+
+      <!-- IPO -->
+      <div>
+        <div class="flex items-start justify-between">
+          <dt class="text-slate-600 text-sm">Data IPO</dt>
+          <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-700">Neutro</span>
+        </div>
+        <dd class="mt-1 text-slate-900">1984 (Nasdaq)</dd>
+        <p class="mt-0.5 text-xs text-slate-500">Storico consolidato.</p>
+      </div>
+
+      <!-- Prezzi & performance -->
+      <div class="sm:col-span-2">
+        <div class="flex items-start justify-between">
+          <dt class="text-slate-600 text-sm">Prezzi &amp; performance</dt>
+          <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Prevalenza positiva</span>
+        </div>
+        <dd class="mt-1 text-slate-900">
+          Prezzo ≈ <span class="font-medium">$120.87</span> (metà ago 2025) · 24h <span class="text-rose-700 font-medium">−3,5%</span> · 7gg <span class="text-emerald-700 font-medium">+7,76%</span> · 30gg <span class="text-emerald-700 font-medium">+1,55%</span> · 52w: min ≈ $61,54 / max ≈ $157,54
+        </dd>
+        <p class="mt-0.5 text-xs text-slate-500">Indicazioni di periodo per contesto; non prezzi in tempo reale.</p>
+      </div>
+
+      <!-- Consensus & target -->
+      <div class="sm:col-span-2">
+        <div class="flex items-start justify-between">
+          <dt class="text-slate-600 text-sm">Consensus &amp; target</dt>
+          <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Positivo</span>
+        </div>
+        <dd class="mt-1 text-slate-900">
+          Target medio 12M ~ <span class="font-medium">$149,71</span> (Yahoo Finance) · Rating: mix Buy / Overweight / Neutral.
+        </dd>
+        <p class="mt-0.5 text-xs text-slate-500">Target medio sopra il prezzo corrente; dispersione tra case.</p>
+      </div>
+
+      <!-- Struttura capitale -->
+      <div class="sm:col-span-2">
+        <div class="flex items-start justify-between">
+          <dt class="text-slate-600 text-sm">Struttura capitale</dt>
+          <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Positivo</span>
+        </div>
+        <dd class="mt-1 text-slate-900">
+          Market Cap ~ <span class="font-medium">$135,3 mld</span> · Outstanding ~ <span class="font-medium">1,12 mld</span> · Float ≈ <span class="font-medium">99,7%</span> (short ≈ 2,76%).
+        </dd>
+        <p class="mt-0.5 text-xs text-slate-500">Float ampio → liquidità elevata; short moderato.</p>
+      </div>
+    </dl>
+
+    <footer class="mt-4 text-xs text-slate-500">
+      Fonti (brief): Finviz, TradingView, Nasdaq, Yahoo Finance, Fintel, Wikipedia, Barchart.com, Barron’s, IBD.
+    </footer>
+  </article>
+</section>
+
 
     <!-- B2 -->
     <section id="blocco2" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
