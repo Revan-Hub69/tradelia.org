@@ -77,16 +77,15 @@
     <!-- Logo -->
     <a href="https://tradelia.org" target="_blank" rel="noopener noreferrer" 
        class="flex items-center font-extrabold tracking-tight hover:opacity-90 transition">
-      <span class="logo-text hidden sm:inline text-xl sm:text-2xl text-slate-900">TRADELIA</span>
-      <span class="logo-text sm:text-2xl text-sky-600 sm:ml-1">•AI</span>
-      <span class="logo-text sm:hidden text-lg text-slate-900">T•AI</span>
+      <span class="logo-text text-xl sm:text-2xl text-slate-900">TRADELIA</span>
+      <span class="logo-text sm:text-2xl text-sky-600 ml-1">•AI</span>
     </a>
 
     <!-- Azioni -->
     <nav aria-label="Azioni pagina" class="flex gap-2">
       <!-- Stampa -->
       <button onclick="window.print()" 
-              class="no-print inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50 focus-visible:outline focus-visible:outline-sky-500 hidden sm:flex">
+              class="no-print inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50 hidden sm:flex">
         <i data-lucide="printer" class="w-4 h-4"></i> Stampa
       </button>
       <!-- Solo icona su mobile -->
@@ -97,7 +96,7 @@
 
       <!-- Indice -->
       <button id="open-toc-drawer" type="button" 
-              class="no-print inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50 focus-visible:outline focus-visible:outline-sky-500 hidden sm:flex">
+              class="no-print inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50 hidden sm:flex">
         <i data-lucide="list-tree" class="w-4 h-4"></i> Indice
       </button>
       <button id="open-toc-drawer" type="button" 
@@ -106,6 +105,39 @@
       </button>
     </nav>
   </header>
+
+  <!-- TOC Drawer (Indice Report) -->
+  <aside id="toc-drawer"
+    class="fixed top-0 right-0 h-full w-80 max-w-full bg-white border-l border-slate-200 shadow-xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out"
+    aria-label="Indice del Report"
+    aria-hidden="true">
+    
+    <!-- Header Drawer -->
+    <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+      <h2 class="text-sm font-semibold text-slate-700">Indice Report</h2>
+      <button id="close-toc-drawer" class="p-1 rounded-md hover:bg-slate-100">
+        <i data-lucide="x" class="w-5 h-5 text-slate-500"></i>
+      </button>
+    </div>
+
+    <!-- Lista Sezioni -->
+    <nav class="p-4 space-y-3 text-sm text-slate-700 overflow-y-auto h-[calc(100%-3rem)]">
+      <a href="#sim-op" class="block hover:text-sky-700 hover:underline">Simulazione Operativa</a>
+      <a href="#blocco1" class="block hover:text-sky-700 hover:underline">B1 — Identificativi & Contesto</a>
+      <a href="#blocco2" class="block hover:text-sky-700 hover:underline">B2 — Multipli & Valutazione Intrinseca</a>
+      <a href="#blocco3" class="block hover:text-sky-700 hover:underline">B3 — Fondamentali Aziendali</a>
+      <a href="#blocco4" class="block hover:text-sky-700 hover:underline">B4 — Dividendi & Buyback</a>
+      <a href="#blocco5" class="block hover:text-sky-700 hover:underline">B5 — Performance & Rischio</a>
+      <a href="#blocco6" class="block hover:text-sky-700 hover:underline">B6 — Microstruttura & Market</a>
+      <a href="#blocco7" class="block hover:text-sky-700 hover:underline">B7 — Derivati & Opzioni</a>
+      <a href="#blocco8" class="block hover:text-sky-700 hover:underline">B8 — Tecnica & Correlazioni</a>
+      <a href="#blocco9" class="block hover:text-sky-700 hover:underline">B9 — Proprietà, ESG & Governance</a>
+      <a href="#blocco10" class="block hover:text-sky-700 hover:underline">B10 — ETF Flow</a>
+      <a href="#blocco11" class="block hover:text-sky-700 hover:underline">B11 — Eventi & Macro + Stress Test</a>
+      <a href="#blocco12" class="block hover:text-sky-700 hover:underline">B12 — Newsflow & Sentiment</a>
+      <a href="#blocco13" class="block hover:text-sky-700 hover:underline">B13 — Cluster Strategico AI</a>
+    </nav>
+  </aside>
 
   <script>
     // Inizializza icone Lucide
@@ -127,5 +159,18 @@
       const h = document.documentElement;
       const scrolled = (h.scrollTop || document.body.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
       progress.style.width = scrolled + "%";
+    });
+
+    // Drawer toggle
+    const tocDrawer = document.getElementById('toc-drawer');
+    document.querySelectorAll('#open-toc-drawer').forEach(btn => {
+      btn.addEventListener('click', () => {
+        tocDrawer.classList.remove('translate-x-full');
+        tocDrawer.setAttribute('aria-hidden', 'false');
+      });
+    });
+    document.getElementById('close-toc-drawer')?.addEventListener('click', () => {
+      tocDrawer.classList.add('translate-x-full');
+      tocDrawer.setAttribute('aria-hidden', 'true');
     });
   </script>
