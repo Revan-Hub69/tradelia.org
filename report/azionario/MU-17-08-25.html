@@ -1,31 +1,37 @@
 <!DOCTYPE html>
-<html lang="it" class="scroll-smooth">
+<html lang="it">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TRADELIA • AI — Report Azionario (v3 • Istituzionale 2025)</title>
-  <meta name="description" content="Report istituzionale Tradelia AI su Micron Technology (MU): strategie operative, fondamentali, derivati, tecnica, governance e flussi ETF." />
-  <meta name="author" content="Tradelia AI" />
-  <meta name="last-modified" content="2025-08-17" />
+
+  <title>TRADELIA • AI — Report Azionario (v4 • Istituzionale 2025)</title>
+  <meta name="description" content="Report istituzionale Tradelia AI: analisi multi-blocco su Micron Technology (MU), con strategie operative, fondamentali, tecnica e governance." />
   <meta name="theme-color" content="#0ea5e9" />
+  <meta name="author" content="Tradelia AI" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <!-- Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <!-- AOS Animations -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
     :root { color-scheme: light dark; }
     html { scroll-behavior: smooth; }
-    body { 
-      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans;
-      line-height: 1.6;
-      max-width: 75ch;
-      margin: 0 auto;
+    body {
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
     }
-
-    /* Offset sezioni per header sticky */
-    section[id] { scroll-margin-top: 92px; }
 
     /* Scrollbar raffinata */
     ::-webkit-scrollbar { width: 10px; height: 10px; }
@@ -33,1585 +39,423 @@
     ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 8px; border: 2px solid #e2e8f0; }
     ::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
-    /* Tipografia fluida */
-    h1 { font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem); }
-    h2 { font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem); }
-    p, li { font-size: clamp(0.95rem, 0.85rem + 0.25vw, 1.1rem); }
+    /* Accessibilità focus */
+    :focus-visible { outline: 2px solid rgb(14 165 233); outline-offset: 3px; border-radius: 4px; }
 
-    /* Skip-link focus visibile */
-    .sr-only:focus:not(:focus-visible) { outline: none; }
-    .sr-only:focus-visible {
-      position: fixed;
-      top: 1rem; left: 1rem;
-      background: #fff;
-      padding: 0.5rem 1rem;
-      z-index: 1000;
-      border: 2px solid #0ea5e9;
-      border-radius: 0.5rem;
-    }
-
-    /* Print styles istituzionali */
-    @media print {
-      header, nav, .no-print { display:none !important; }
-      body { background:#fff; color:#000; max-width:100%; }
-      .card-blocco { border-color:#000 !important; }
+    /* Motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
 
-<body class="bg-slate-50 text-slate-900 antialiased">
-  <a href="#main" class="sr-only">Salta al contenuto</a>
+<body class="antialiased">
+  <!-- Skip link -->
+  <a href="#contenuto" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-white focus:text-sky-900 focus:border focus:border-slate-300 focus:rounded-md focus:px-3 focus:py-2">
+    Salta al contenuto
+  </a>
 
-  <header role="banner" class="sticky top-0 z-50 bg-white shadow-sm w-full px-4 sm:px-6 py-3 flex justify-between items-center border-b border-slate-200 backdrop-blur-sm bg-white/95">
-    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition" target="_blank" rel="noopener noreferrer">
-      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600">•AI</span>
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm px-4 sm:px-6 py-3 flex items-center justify-between">
+    <a href="https://tradelia.org" target="_blank" rel="noopener noreferrer" class="flex items-center text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 hover:opacity-90 transition">
+      <span class="text-slate-900">TRADELIA</span><span class="text-sky-600">•AI</span>
     </a>
-    <nav role="navigation" aria-label="Azioni pagina" class="hidden sm:flex gap-2">
-      <button onclick="window.print()" class="no-print inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-500">
+    <nav aria-label="Azioni pagina" class="hidden sm:flex gap-2">
+      <button onclick="window.print()" class="no-print inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50 focus-visible:outline focus-visible:outline-sky-500">
         <i data-lucide="printer" class="w-4 h-4"></i> Stampa
       </button>
-      <button id="open-toc-drawer-top" type="button" class="no-print inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-500" aria-expanded="false" aria-controls="toc-drawer">
+      <button id="open-toc-drawer" type="button" class="no-print inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50 focus-visible:outline focus-visible:outline-sky-500">
         <i data-lucide="list-tree" class="w-4 h-4"></i> Indice
       </button>
     </nav>
   </header>
-
-  <main id="main" role="main">
-
-  <main class="px-3 sm:px-6 max-w-6xl mx-auto space-y-6 pb-32">
-    <div class="text-xs text-slate-400 px-1 sm:px-2 mt-2">Home / Report / Azionario</div>
-
-    <!-- Header contestuale titolo + data -->
-    <section class="bg-white border border-slate-200 rounded-lg px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between" data-aos="fade-down" data-aos-duration="400">
-      <div>
-        <h1 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-          Micron Technology <span class="text-slate-500 text-lg font-medium">(MU)</span>
+  <!-- Hero Report -->
+  <section id="hero" class="relative bg-gradient-to-b from-sky-50 to-white border-b border-slate-200 px-6 sm:px-10 py-10" data-aos="fade-down">
+    <div class="max-w-5xl mx-auto">
+      
+      <!-- Titolo e Badge -->
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
+          Report Azionario • Micron Technology (MU)
         </h1>
-        <p class="text-sm text-slate-500">Report aggiornato al <time datetime="2025-08-15">15 Agosto 2025</time></p>
-      </div>
-      <div class="mt-3 sm:mt-0">
-        <span class="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700">
-          <i data-lucide="clock" class="w-3.5 h-3.5"></i> Aggiornato
+        <span class="inline-flex items-center px-3 py-1 text-sm font-medium rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+          🟢 Aggiornato
         </span>
       </div>
-    </section>
 
-    <!-- Avvertenze -->
-    <section class="max-w-6xl mx-auto p-6 bg-yellow-50 border border-yellow-200 rounded-lg mb-8 shadow-sm text-sm leading-relaxed" aria-labelledby="avvertenze-titolo">
-      <h2 id="avvertenze-titolo" class="sr-only">Avvertenze</h2>
-      <p><span class="font-semibold text-red-600">I contenuti generati da Tradelia AI</span> hanno finalità esclusivamente informative e non costituiscono in alcun modo sollecitazione all’investimento, consulenza finanziaria o raccomandazione operativa.</p>
-      <p class="mt-2">Le analisi si basano su <span class="font-semibold text-sky-700">dati e notizie provenienti da fonti pubbliche ritenute affidabili</span>, ma Tradelia non può garantirne l’accuratezza, la completezza o l’aggiornamento.</p>
-      <p class="mt-2"><span class="font-semibold text-yellow-600">Le intelligenze artificiali possono commettere errori</span>, fornire interpretazioni parziali o incoerenti; sono strumenti di confronto e non sostituiscono un’analisi umana professionale.</p>
-      <p class="mt-2"><span class="font-semibold text-green-700">Prima di assumere decisioni di investimento</span> è raccomandato consultare un <span class="font-semibold">consulente finanziario indipendente</span>.</p>
-    </section>
-
-    
-<section id="sim-op" class="max-w-6xl mx-auto bg-white border border-slate-200 rounded-lg mb-8 shadow-sm" aria-labelledby="sim-title">
-  <div class="p-6 border-b border-slate-200">
-    <h2 id="sim-title" class="text-xl font-bold">Simulazioni Operative</h2>
-    <p class="text-sm text-slate-500 mt-1">Strategie validate multi-blocco (LT, Opzioni, CFD, Futures). Espandi i moduli per i dettagli.</p>
-  </div>
-
-  <div class="divide-y divide-slate-200" role="tablist" aria-label="Strategie operative">
-
-    <!-- Strategia LT -->
-    <div class="accordion-item">
-      <button class="accordion-trigger w-full flex justify-between items-center px-6 py-4 text-left font-medium hover:bg-slate-50" data-accordion="lt" aria-expanded="false">
-        <span class="flex items-center gap-2">
-          <i data-lucide="trending-up" class="w-4 h-4 text-emerald-600"></i>
-          Investimento LT – Micron Technology (MU)
+      <!-- Meta -->
+      <div class="mt-3 flex flex-wrap gap-3 text-sm text-slate-600">
+        <span class="flex items-center gap-1.5">
+          <i data-lucide="calendar" class="w-4 h-4"></i> Aggiornamento: 17 Agosto 2025
         </span>
-        <span class="text-xs inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700">🟢 Attivo</span>
-      </button>
-      <div id="accordion-lt" class="accordion-panel hidden px-6 pb-6 text-sm leading-relaxed">
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 mt-4">
-          <div><p class="text-xs uppercase text-slate-600">Stile</p><p class="font-medium text-slate-800">Valuation Growth</p></div>
-          <div><p class="text-xs uppercase text-slate-600">Strategia</p><p class="font-medium text-slate-800">DCF + Trend</p></div>
-          <div><p class="text-xs uppercase text-slate-600">Bias</p><p class="font-medium text-green-600">LT Bullish (3–12 mesi)</p></div>
-          <div><p class="text-xs uppercase text-slate-600">Fair Value</p><p class="font-medium text-green-600">150–160 USD</p></div>
-          <div><p class="text-xs uppercase text-slate-600">Prezzo Attuale</p><p class="font-medium text-slate-800">121.8 USD</p></div>
-          <div><p class="text-xs uppercase text-slate-600">Upside</p><p class="font-medium text-green-600">+23% ~ +31%</p></div>
-          <div><p class="text-xs uppercase text-slate-600">Condizione Entry</p><p class="font-medium text-slate-800">Close W > EMA55 + breakout D1</p></div>
-          <div><p class="text-xs uppercase text-slate-600">Allocazione Massima</p><p class="font-medium text-slate-800">7.5% (3 tranche)</p></div>
-          <div><p class="text-xs uppercase text-slate-600">Struttura Tranche</p><p class="font-medium text-slate-800">40% / 30% / 30%</p></div>
-          <div><p class="text-xs uppercase text-slate-600">Rischio per Tranche</p><p class="font-medium text-red-600">1.25%</p></div>
-          <div><p class="text-xs uppercase text-slate-600">Livelli Tecnici</p><p class="font-medium text-slate-800">Entry: 121–123 • SL: 111 • TP1: 145 • TP2: 160</p></div>
-          <div><p class="text-xs uppercase text-slate-600">Validazione Tecnica</p><p class="font-medium text-green-600">EMA21>EMA55>EMA200 + RSI>55</p></div>
-        </div>
-
-        <hr class="my-6 border-slate-200">
-
-        <div class="text-sm text-slate-700 leading-relaxed">
-          <p><strong class="text-sky-800">Nota Operativa:</strong> Strategia attiva fino al <time datetime="2025-09-30">30/09/2025</time>. Winning Rate stimato 75–80% (storico + multiblocco).</p>
-          <p class="mt-3"><strong class="text-sky-800">Cosa Monitorare (invalidatori):</strong></p>
-          <ul class="list-disc list-inside mt-1 space-y-1">
-            <li>Close settimanale < 111 USD</li>
-            <li>ETF QQQ/SOX negativi ≥3 giorni</li>
-            <li>Gamma neutro + IV > 85° pct</li>
-            <li>Shock macro (Fed/geopolitica)</li>
-            <li>Governance warning (B9)</li>
-          </ul>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Placeholder opzioni -->
-    <div class="accordion-item">
-      <button class="accordion-trigger w-full flex justify-between items-center px-6 py-4 text-left font-medium hover:bg-slate-50" data-accordion="opt" aria-expanded="false">
-        <span class="flex items-center gap-2">
-          <i data-lucide="layers" class="w-4 h-4 text-sky-600"></i>
-          Opzioni Speculative – MU
+        <span class="flex items-center gap-1.5">
+          <i data-lucide="file-text" class="w-4 h-4"></i> Versione v4 • Istituzionale
         </span>
-        <span class="text-xs inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-50 border border-sky-200 text-sky-700">🟡 In formazione</span>
-      </button>
-      <div id="accordion-opt" class="accordion-panel hidden px-6 pb-6 text-sm leading-relaxed">
-        <!-- Contenuto da inserire -->
       </div>
-    </div>
 
-    <!-- Placeholder CFD -->
-    <div class="accordion-item">
-      <button class="accordion-trigger w-full flex justify-between items-center px-6 py-4 text-left font-medium hover:bg-slate-50" data-accordion="cfd" aria-expanded="false">
-        <span class="flex items-center gap-2">
-          <i data-lucide="activity" class="w-4 h-4 text-indigo-600"></i>
-          CFD Swing – MU
-        </span>
-        <span class="text-xs inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700">🟡 Validazione</span>
-      </button>
-      <div id="accordion-cfd" class="accordion-panel hidden px-6 pb-6 text-sm leading-relaxed">
-        <!-- Contenuto da inserire -->
-      </div>
+      <!-- Abstract -->
+      <p class="mt-6 max-w-3xl text-base text-slate-700 leading-relaxed">
+        Analisi multi-blocco sviluppata da <span class="font-semibold text-sky-800">Tradelia AI</span>, 
+        con focus su <span class="font-semibold">fondamentali</span>, 
+        <span class="font-semibold">tecnica multi-timeframe</span> e 
+        <span class="font-semibold">strategie operative</span> su equity, derivati e flussi istituzionali.
+      </p>
     </div>
+  </section>
 
-    <!-- Placeholder Futures -->
-    <div class="accordion-item">
-      <button class="accordion-trigger w-full flex justify-between items-center px-6 py-4 text-left font-medium hover:bg-slate-50" data-accordion="fut" aria-expanded="false">
-        <span class="flex items-center gap-2">
-          <i data-lucide="bar-chart-4" class="w-4 h-4 text-purple-600"></i>
-          Futures / Micro-Futures – MU
-        </span>
-        <span class="text-xs inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-50 border border-purple-200 text-purple-700">Intraday</span>
-      </button>
-      <div id="accordion-fut" class="accordion-panel hidden px-6 pb-6 text-sm leading-relaxed">
-        <!-- Contenuto da inserire -->
-      </div>
-    </div>
+<!-- NAVIGATION RAIL (Sticky Bottom, completo) -->
+<nav id="nav-rail"
+     class="no-print fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-t border-slate-200 shadow-inner"
+     role="navigation" aria-label="Indice sezioni report">
+  <div class="max-w-6xl mx-auto flex gap-1 sm:gap-2 px-1 sm:px-2 overflow-x-auto">
+    <!-- Simulazione Operativa -->
+    <a href="#sim-op" title="Simulazione Operativa"
+       class="nav-rail-link px-3 sm:px-4 py-2 sm:py-3 flex flex-col items-center shrink-0 text-[11px] sm:text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 rounded-md"
+       data-target="sim-op">
+      <i data-lucide="activity" class="w-5 h-5 mb-0.5"></i>
+      <span class="block sm:hidden">Simulaz.</span>
+      <span class="hidden sm:block">Simulazione</span>
+    </a>
 
+    <!-- B1 -->
+    <a href="#blocco1" title="B1 – Identificativi & Contesto"
+       class="nav-rail-link px-3 sm:px-4 py-2 sm:py-3 flex flex-col items-center shrink-0 text-[11px] sm:text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 rounded-md"
+       data-target="blocco1">
+      <i data-lucide="list-todo" class="w-5 h-5 mb-0.5"></i>
+      <span class="block sm:hidden">B1</span>
+      <span class="hidden sm:block">Identificativi</span>
+    </a>
+
+    <!-- B2 -->
+    <a href="#blocco2" title="B2 – Multipli & Valutazione Intrinseca"
+       class="nav-rail-link px-3 sm:px-4 py-2 sm:py-3 flex flex-col items-center shrink-0 text-[11px] sm:text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 rounded-md"
+       data-target="blocco2">
+      <i data-lucide="scale" class="w-5 h-5 mb-0.5"></i>
+      <span class="block sm:hidden">B2</span>
+      <span class="hidden sm:block">Valutazione</span>
+    </a>
+
+    <!-- B3 -->
+    <a href="#blocco3" title="B3 – Fondamentali Aziendali"
+       class="nav-rail-link px-3 sm:px-4 py-2 sm:py-3 flex flex-col items-center shrink-0 text-[11px] sm:text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 rounded-md"
+       data-target="blocco3">
+      <i data-lucide="factory" class="w-5 h-5 mb-0.5"></i>
+      <span class="block sm:hidden">B3</span>
+      <span class="hidden sm:block">Fondamentali</span>
+    </a>
+
+    <!-- B4 -->
+    <a href="#blocco4" title="B4 – Dividendi & Buyback"
+       class="nav-rail-link px-3 sm:px-4 py-2 sm:py-3 flex flex-col items-center shrink-0 text-[11px] sm:text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 rounded-md"
+       data-target="blocco4">
+      <i data-lucide="banknote" class="w-5 h-5 mb-0.5"></i>
+      <span class="block sm:hidden">B4</span>
+      <span class="hidden sm:block">Dividendi</span>
+    </a>
+
+    <!-- B5 -->
+    <a href="#blocco5" title="B5 – Performance & Rischio"
+       class="nav-rail-link px-3 sm:px-4 py-2 sm:py-3 flex flex-col items-center shrink-0 text-[11px] sm:text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 rounded-md"
+       data-target="blocco5">
+      <i data-lucide="trending-up" class="w-5 h-5 mb-0.5"></i>
+      <span class="block sm:hidden">B5</span>
+      <span class="hidden sm:block">Performance</span>
+    </a>
+
+    <!-- B6 -->
+    <a href="#blocco6" title="B6 – Microstruttura & Market"
+       class="nav-rail-link px-3 sm:px-4 py-2 sm:py-3 flex flex-col items-center shrink-0 text-[11px] sm:text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 rounded-md"
+       data-target="blocco6">
+      <i data-lucide="layout-grid" class="w-5 h-5 mb-0.5"></i>
+      <span class="block sm:hidden">B6</span>
+      <span class="hidden sm:block">Microstruttura</span>
+    </a>
+
+    <!-- B7 -->
+    <a href="#blocco7" title="B7 – Derivati & Opzioni"
+       class="nav-rail-link px-3 sm:px-4 py-2 sm:py-3 flex flex-col items-center shrink-0 text-[11px] sm:text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 rounded-md"
+       data-target="blocco7">
+      <i data-lucide="layers-3" class="w-5 h-5 mb-0.5"></i>
+      <span class="block sm:hidden">B7</span>
+      <span class="hidden sm:block">Derivati</span>
+    </a>
+
+    <!-- B8 -->
+    <a href="#blocco8" title="B8 – Tecnica & Correlazioni"
+       class="nav-rail-link px-3 sm:px-4 py-2 sm:py-3 flex flex-col items-center shrink-0 text-[11px] sm:text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 rounded-md"
+       data-target="blocco8">
+      <i data-lucide="bar-chart-3" class="w-5 h-5 mb-0.5"></i>
+      <span class="block sm:hidden">B8</span>
+      <span class="hidden sm:block">Tecnica</span>
+    </a>
+
+    <!-- B9 -->
+    <a href="#blocco9" title="B9 – Proprietà, ESG & Governance"
+       class="nav-rail-link px-3 sm:px-4 py-2 sm:py-3 flex flex-col items-center shrink-0 text-[11px] sm:text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 rounded-md"
+       data-target="blocco9">
+      <i data-lucide="shield-check" class="w-5 h-5 mb-0.5"></i>
+      <span class="block sm:hidden">B9</span>
+      <span class="hidden sm:block">ESG & Gov</span>
+    </a>
+
+    <!-- B10 -->
+    <a href="#blocco10" title="B10 – ETF Flow"
+       class="nav-rail-link px-3 sm:px-4 py-2 sm:py-3 flex flex-col items-center shrink-0 text-[11px] sm:text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 rounded-md"
+       data-target="blocco10">
+      <i data-lucide="database" class="w-5 h-5 mb-0.5"></i>
+      <span class="block sm:hidden">B10</span>
+      <span class="hidden sm:block">ETF Flow</span>
+    </a>
+
+    <!-- B11 -->
+    <a href="#blocco11" title="B11 – Eventi & Macro + Stress Test"
+       class="nav-rail-link px-3 sm:px-4 py-2 sm:py-3 flex flex-col items-center shrink-0 text-[11px] sm:text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 rounded-md"
+       data-target="blocco11">
+      <i data-lucide="calendar" class="w-5 h-5 mb-0.5"></i>
+      <span class="block sm:hidden">B11</span>
+      <span class="hidden sm:block">Eventi & Macro</span>
+    </a>
+
+    <!-- B12 -->
+    <a href="#blocco12" title="B12 – Newsflow & Sentiment"
+       class="nav-rail-link px-3 sm:px-4 py-2 sm:py-3 flex flex-col items-center shrink-0 text-[11px] sm:text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 rounded-md"
+       data-target="blocco12">
+      <i data-lucide="newspaper" class="w-5 h-5 mb-0.5"></i>
+      <span class="block sm:hidden">B12</span>
+      <span class="hidden sm:block">News & Sentiment</span>
+    </a>
+
+    <!-- B13 -->
+    <a href="#blocco13" title="B13 – Cluster Strategico AI"
+       class="nav-rail-link px-3 sm:px-4 py-2 sm:py-3 flex flex-col items-center shrink-0 text-[11px] sm:text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 rounded-md"
+       data-target="blocco13">
+      <i data-lucide="cpu" class="w-5 h-5 mb-0.5"></i>
+      <span class="block sm:hidden">B13</span>
+      <span class="hidden sm:block">Cluster AI</span>
+    </a>
   </div>
-</section>
-
-
-    <!-- Ancore vuote per i 13 blocchi (ID unici e separati dai tab) -->
-
-
-
-    
-    <section id="b1" class="mt-2"></section>
-
- <section id="blocco1" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
-  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-    <i data-lucide="list-todo" class="icon-section mr-2"></i>
-    Blocco 1 – Identificativi & Contesto
-  </h2>
-
-  <!-- Commento sintetico -->
-  <div class="mb-4">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
-      <span class="font-semibold text-emerald-700">Micron Technology Inc. (MU)</span> mostra una base identificativa
-      solida, conforme agli standard ISO e GICS, con una quota flottante prossima al 100%
-      che ne garantisce <span class="font-semibold text-emerald-700">elevata liquidabilità</span>.
-      Il titolo rientra tra i leader del settore <span class="font-semibold text-sky-700">semiconduttori</span>,
-      con copertura analitica coerente e un <span class="font-semibold text-emerald-700">target medio</span>
-      ben superiore alle quotazioni attuali.  
-      La validazione incrociata delle fonti istituzionali conferma robustezza complessiva,
-      con alcune micro-informazioni (MIC, indici secondari) in stato di <span class="font-semibold text-yellow-600">Warning</span>.
-    </p>
-  </div>
-
-  <!-- Accordion dettagli -->
-  <details class="group border border-slate-200 rounded-lg">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Mostra dettagli identificativi (con note accademiche)</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-
-    <div class="px-4 py-4 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-
-      <!-- Ticker -->
-      <div>
-        <p class="text-xs uppercase text-slate-600">Ticker</p>
-        <p class="text-[11px] text-slate-400">
-          Simbolo alfanumerico univoco per la negoziazione di un titolo, assegnato dal mercato primario (NASDAQ).
-          <abbr title="Fonte: NASDAQ, SEC Filings">[fonte]</abbr>
-        </p>
-        <p class="font-semibold text-emerald-700">
-          MU
-          <span class="ml-1 text-[10px] px-1 py-0.5 rounded bg-emerald-50 border border-emerald-200">Validato</span>
-        </p>
-      </div>
-
-      <!-- ISIN -->
-      <div>
-        <p class="text-xs uppercase text-slate-600">ISIN</p>
-        <p class="text-[11px] text-slate-400">
-          Codice internazionale di 12 caratteri conforme allo standard <strong>ISO 6166</strong>,
-          identifica univocamente lo strumento finanziario.
-          <abbr title="Fonte: SEC, PortfoliosLab">[fonte]</abbr>
-        </p>
-        <p class="font-semibold text-emerald-700">
-          US5951121038
-          <span class="ml-1 text-[10px] px-1 py-0.5 rounded bg-emerald-50 border border-emerald-200">Validato</span>
-        </p>
-      </div>
-
-      <!-- Exchange -->
-      <div>
-        <p class="text-xs uppercase text-slate-600">Exchange</p>
-        <p class="text-[11px] text-slate-400">
-          Mercato regolamentato in cui il titolo è quotato e negoziato. Standard di riferimento: <strong>SEC Reg. NMS</strong>.
-          <abbr title="Fonte: NASDAQ, Reuters">[fonte]</abbr>
-        </p>
-        <p class="font-semibold text-emerald-700">
-          NASDAQ (XNGS)
-          <span class="ml-1 text-[10px] px-1 py-0.5 rounded bg-emerald-50 border border-emerald-200">Validato</span>
-        </p>
-      </div>
-
-      <!-- Market Cap -->
-      <div>
-        <p class="text-xs uppercase text-slate-600">Market Cap</p>
-        <p class="text-[11px] text-slate-400">
-          Capitalizzazione di mercato = Prezzo × Azioni in circolazione. Riferimento metodologico <strong>OECD / FMI</strong>.
-          <abbr title="Fonte: MarketWatch, CompaniesMarketCap">[fonte]</abbr>
-        </p>
-        <p class="font-semibold text-emerald-700">
-          ~135.3 B USD
-          <span class="ml-1 text-[10px] px-1 py-0.5 rounded bg-emerald-50 border border-emerald-200">Validato</span>
-        </p>
-      </div>
-
-      <!-- Free Float -->
-      <div>
-        <p class="text-xs uppercase text-slate-600">Free Float</p>
-        <p class="text-[11px] text-slate-400">
-          Azioni effettivamente disponibili sul mercato (esclusi insider & lock-up).
-          Definizione standard <strong>GICS</strong>.
-          <abbr title="Fonte: GuruFocus, StockAnalysis, Finbox">[fonte]</abbr>
-        </p>
-        <p class="font-semibold text-emerald-700">
-          ~99.6% (~1.115 B azioni)
-          <span class="ml-1 text-[10px] px-1 py-0.5 rounded bg-emerald-50 border border-emerald-200">Validato</span>
-        </p>
-      </div>
-
-      <!-- Prezzo Target -->
-      <div>
-        <p class="text-xs uppercase text-slate-600">Prezzo Target Medio Analisti</p>
-        <p class="text-[11px] text-slate-400">
-          Media dei target price di analisti sell-side certificati, raccolti da fonti indipendenti.
-          <abbr title="Fonte: MarketScreener, WSJ, StockAnalysis">[fonte]</abbr>
-        </p>
-        <p class="font-semibold text-emerald-700">
-          ~152.8 USD
-          <span class="ml-1 text-[10px] px-1 py-0.5 rounded bg-emerald-50 border border-emerald-200">Validato</span>
-        </p>
-      </div>
-
-      <!-- MIC -->
-      <div>
-        <p class="text-xs uppercase text-slate-600">MIC</p>
-        <p class="text-[11px] text-slate-400">
-          Market Identifier Code (ISO 10383). Identifica il sistema di trading a cui il titolo appartiene.
-          <abbr title="Fonte: ISO, Refinitiv">[fonte]</abbr>
-        </p>
-        <p class="font-semibold text-yellow-600">
-          Non reperito
-          <span class="ml-1 text-[10px] px-1 py-0.5 rounded bg-yellow-50 border border-yellow-300">Warning</span>
-        </p>
-      </div>
-
-    </div>
-  </details>
-</section>
-
-
-    <section id="b2" class="mt-2"></section>
-<section id="blocco2" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
-  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-    <i data-lucide="scale" class="icon-section mr-2"></i>Blocco 2 – Multipli & Valutazione Intrinseca
-  </h2>
-
-  <div class="mb-4">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
-      Micron presenta un profilo valutativo articolato, con multipli forward interessanti (P/E, PEG) e segnali di sottovalutazione rispetto ai peers. I modelli DCF mostrano valutazioni molto variabili, ma le stime forward-oriented risultano prevalenti. Le criticità su P/FCF ed EV/FCF derivano da ciclicità e investimenti, mentre il confronto settoriale evidenzia forte competitività relativa.
-    </p>
-  </div>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Mostra dettagli Multipli di Mercato</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">P/E trailing</p><p class="text-[11px] text-slate-400">Prezzo / Utili a consuntivo: quante volte il prezzo incorpora gli EPS TTM. Rischio di sopravvalutazione se elevato.</p><p class="font-medium text-yellow-600">≈ 21.9×</p></div>
-      <div><p class="text-xs uppercase text-slate-600">P/E forward</p><p class="text-[11px] text-slate-400">Prezzo / Utili attesi a 12 mesi. Indica valutazione prospettica.</p><p class="font-medium text-green-600">≈ 10.1×</p></div>
-      <div><p class="text-xs uppercase text-slate-600">PEG</p><p class="text-[11px] text-slate-400">P/E diviso tasso di crescita EPS. Valori <1 indicano sottovalutazione rispetto alla crescita attesa.</p><p class="font-medium text-green-600">≈ 0.20</p></div>
-      <div><p class="text-xs uppercase text-slate-600">P/B</p><p class="text-[11px] text-slate-400">Prezzo / Valore contabile per azione. Indica quanto il mercato paga rispetto al patrimonio netto.</p><p class="font-medium text-yellow-600">≈ 2.67×</p></div>
-      <div><p class="text-xs uppercase text-slate-600">P/S</p><p class="text-[11px] text-slate-400">Prezzo / Ricavi per azione. Usato per aziende a bassa redditività o in crescita.</p><p class="font-medium text-yellow-600">≈ 3.98×</p></div>
-      <div><p class="text-xs uppercase text-slate-600">P/FCF</p><p class="text-[11px] text-slate-400">Prezzo / Free Cash Flow per azione. Riflette la capacità di generare cassa libera.</p><p class="font-medium text-rose-700">≈ 71.9×</p></div>
-      <div><p class="text-xs uppercase text-slate-600">EV/EBITDA</p><p class="text-[11px] text-slate-400">Valore d’impresa rapportato alla redditività operativa lorda. Usato per confronti settoriali.</p><p class="font-medium text-green-600">≈ 8.7–8.9×</p></div>
-      <div><p class="text-xs uppercase text-slate-600">EV/Revenue</p><p class="text-[11px] text-slate-400">Valore d’impresa / Ricavi. Indica quanto il mercato paga per unità di fatturato.</p><p class="font-medium text-yellow-600">≈ 4.1×</p></div>
-      <div><p class="text-xs uppercase text-slate-600">EV/FCF</p><p class="text-[11px] text-slate-400">Valore d’impresa / Free Cash Flow. Metriche elevate indicano pressioni sul cash flow.</p><p class="font-medium text-rose-700">≈ 74–75×</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Mostra dettagli Valutazione Intrinseca (DCF)</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">AlphaSpread</p><p class="text-[11px] text-slate-400">Modello DCF forward-looking con proiezioni dinamiche su margini e capex.</p><p class="font-medium text-green-600">159.5 USD (+32%)</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Yahoo Finance</p><p class="text-[11px] text-slate-400">DCF semplificato basato su medie storiche e crescita implicita.</p><p class="font-medium text-yellow-600">130 USD (+7.5%)</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Simply Wall St</p><p class="text-[11px] text-slate-400">Modello conservativo basato su crescita stabile e FCF depurati.</p><p class="font-medium text-rose-700">69.3 USD (–43%)</p></div>
-      <div><p class="text-xs uppercase text-slate-600">GuruFocus</p><p class="text-[11px] text-slate-400">DCF automatico penalizzato da flussi negativi storici e margini sotto media.</p><p class="font-medium text-rose-700">19.2 USD (–84%)</p></div>
-      <div><p class="text-xs uppercase text-slate-600">ValueInvesting.io</p><p class="text-[11px] text-slate-400">DCF semplificato su medie cicliche penalizzate.</p><p class="font-medium text-rose-700">42.6 USD (–64%)</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Mostra dettagli Confronto Settoriale (Peers)</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Forward P/E</p><p class="text-[11px] text-slate-400">Micron vs media peers (AMD, INTC, NVDA, TSM). Multiplo molto inferiore alla media (28–54×).</p><p class="font-medium text-green-600">10.1×</p></div>
-      <div><p class="text-xs uppercase text-slate-600">PEG</p><p class="text-[11px] text-slate-400">Rapporto tra P/E e crescita EPS. Peers con valori >1.</p><p class="font-medium text-green-600">0.20</p></div>
-      <div><p class="text-xs uppercase text-slate-600">EV/EBITDA</p><p class="text-[11px] text-slate-400">Micron inferiore alla media settoriale (11–14×), indicando sottovalutazione relativa.</p><p class="font-medium text-green-600">8.7×</p></div>
-    </div>
-  </details>
-</section>
-   
-    
-    
-    <section id="b3" class="mt-2"></section>
-    <section id="blocco3" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
-  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-    <i data-lucide="bar-chart-3" class="icon-section mr-2"></i>Blocco 3 – Fondamentali Aziendali
-  </h2>
-
-  <div class="mb-4">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
-      Micron evidenzia una eccellente performance nei fondamentali: ricavi e EPS in forte crescita, margini robusti, ritorni sul capitale solidi, e capacità di generare FCF nonostante crescite cicliche. Gli investimenti (CapEx) sono rilevanti e coerenti con la strategia di espansione, ma vale la pena completare con dati su Debt/Equity e Coverage per avere una visione pienamente strutturata.
-    </p>
-  </div>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Mostra dettagli Revenue & EPS</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Ricavi TTM</p><p class="text-[11px] text-slate-400">Totale vendite generate negli ultimi 12 mesi. Misura la scala operativa.</p><p class="font-medium text-green-600">33,81 miliardi USD (+58%)</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Crescita Ricavi YoY</p><p class="text-[11px] text-slate-400">Variazione dei ricavi rispetto allo stesso periodo dell’anno precedente.</p><p class="font-medium text-green-600">+58,2%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">EPS TTM (diluito)</p><p class="text-[11px] text-slate-400">Utili per azione negli ultimi 12 mesi. Riflette la redditività netta per azione.</p><p class="font-medium text-green-600">~5,55 USD</p></div>
-      <div><p class="text-xs uppercase text-slate-600">EPS YoY Growth</p><p class="text-[11px] text-slate-400">Crescita degli utili per azione su base annua. Indica dinamica dei profitti.</p><p class="font-medium text-green-600">≈ +171%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">EPS forward (FY+1)</p><p class="text-[11px] text-slate-400">Stima degli utili per azione per l’esercizio successivo. Usato per proiezioni valutative.</p><p class="font-medium text-green-600">≈ 2,85 USD</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Mostra dettagli Profit & Margini</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Gross Margin</p><p class="text-[11px] text-slate-400">Margine lordo: utile lordo / ricavi. Misura la redditività operativa base.</p><p class="font-medium text-green-600">37,7–39%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Operating Margin</p><p class="text-[11px] text-slate-400">Reddito operativo / ricavi. Esprime la redditività netta operativa.</p><p class="font-medium text-green-600">23,3% (Q3)</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Net Profit Margin</p><p class="text-[11px] text-slate-400">Utile netto / ricavi. Riflette l’efficienza complessiva dell’azienda.</p><p class="font-medium text-green-600">~20,3%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">ROA</p><p class="text-[11px] text-slate-400">Return on Assets. Utile netto / totale attivo. Misura redditività degli asset.</p><p class="font-medium text-green-600">6,55%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">ROE</p><p class="text-[11px] text-slate-400">Return on Equity. Utile netto / patrimonio netto. Misura la redditività per gli azionisti.</p><p class="font-medium text-green-600">13,02%</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Mostra dettagli Investimenti & Leva</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">CapEx (Q3)</p><p class="text-[11px] text-slate-400">Spese in conto capitale. Riflettono investimenti in capacità produttiva e tecnologia.</p><p class="font-medium text-green-600">2.938 milioni USD</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Crescita CapEx YoY</p><p class="text-[11px] text-slate-400">Incremento delle spese in conto capitale rispetto all’anno precedente.</p><p class="font-medium text-green-600">+40,8%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Free Cash Flow (Q3 adj.)</p><p class="text-[11px] text-slate-400">Flusso di cassa operativo al netto degli investimenti. Indica capacità di autofinanziamento.</p><p class="font-medium text-green-600">~1.949 milioni USD</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Debt/Equity</p><p class="text-[11px] text-slate-400">Indica il grado di leva finanziaria rispetto al patrimonio netto.</p><p class="font-medium text-black">Dato non disponibile</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Interest Coverage</p><p class="text-[11px] text-slate-400">Capacità dell’azienda di coprire gli interessi passivi con l’EBIT.</p><p class="font-medium text-black">Dato non disponibile</p></div>
-    </div>
-  </details>
-</section>
-
-    <section id="b4" class="mt-2"></section>
-<section id="blocco4" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
-  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-    <i data-lucide="dollar-sign" class="icon-section mr-2"></i>Blocco 4 – Dividendi & Buyback
-  </h2>
-
-  <div class="mb-4">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
-      Il profilo di ritorno agli azionisti di Micron rimane principalmente legato ai dividendi, non ai buyback. Il rendimento da dividendo è modesto ma sostenibile, mentre i riacquisti di azioni risultano al momento trascurabili. La politica complessiva segnala prudenza, reinvestimento e stabilità.
-    </p>
-  </div>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Mostra dettagli Dividendi</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Dividend Yield (TTM)</p><p class="text-[11px] text-slate-400">Rendimento del dividendo sugli ultimi 12 mesi rispetto al prezzo corrente dell’azione.</p><p class="font-medium text-yellow-600">~0.37–0.38%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Annual Dividend per Share</p><p class="text-[11px] text-slate-400">Totale dividendi annui pagati per azione. Misura assoluta della remunerazione.</p><p class="font-medium text-yellow-600">~$0.46</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Payout Ratio</p><p class="text-[11px] text-slate-400">Quota dell’utile distribuita come dividendo. Misura la sostenibilità del payout.</p><p class="font-medium text-green-600">~8.3–8.4%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Dividend Growth YoY</p><p class="text-[11px] text-slate-400">Tasso di crescita del dividendo su base annua. Indica tendenza all’aumento.</p><p class="font-medium text-yellow-600">~0% (stabile)</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Consecutive Years Paying Dividend</p><p class="text-[11px] text-slate-400">Numero di anni consecutivi con dividendi pagati.</p><p class="font-medium text-yellow-600">1 anno</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Consecutive Years Increasing Dividend</p><p class="text-[11px] text-slate-400">Numero di anni consecutivi con incremento del dividendo.</p><p class="font-medium text-yellow-600">1 anno</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Dividend Status</p><p class="text-[11px] text-slate-400">Indicazione qualitativa sulla regolarità e sostenibilità della politica di dividendo.</p><p class="font-medium text-green-600">Attivo e stabile</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Mostra dettagli Buyback</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Buyback Yield (TTM)</p><p class="text-[11px] text-slate-400">Percentuale di azioni riacquistate rispetto alla capitalizzazione. Indica ritorno via buyback.</p><p class="font-medium text-rose-700">0.00%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Buyback Amount (USD)</p><p class="text-[11px] text-slate-400">Valore complessivo dei riacquisti effettuati negli ultimi 12 mesi.</p><p class="font-medium text-yellow-600">~$75 M</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Buyback CAGR 3Y / 5Y</p><p class="text-[11px] text-slate-400">Tasso di crescita annuale composto dei buyback a 3 e 5 anni.</p><p class="font-medium text-yellow-600">Diminuito rispetto a picco</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Net Buyback Status</p><p class="text-[11px] text-slate-400">Situazione netta riacquisti/vendite. Valuta la presenza di ritorni effettivi.</p><p class="font-medium text-rose-700">Nullo (nessun riacquisto recente)</p></div>
-    </div>
-  </details>
-</section>
-
-    <section id="b5" class="mt-2"></section>
-    <section id="blocco5" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
-  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-    <i data-lucide="activity" class="icon-section mr-2"></i>Blocco 5 – Performance & Rischio
-  </h2>
-
-  <div class="mb-4">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
-      Il profilo rischio/rendimento di Micron è fortemente asimmetrico a favore del rendimento nel 2025, con performance superiori all’indice e un rapporto rischio-premio eccellente (Sharpe >2.8). La volatilità elevata e il drawdown storico sono coerenti con la natura ciclica del business.
-    </p>
-  </div>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Mostra dettagli Performance Storica</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">YTD Performance (2025)</p><p class="text-[11px] text-slate-400">Variazione percentuale del prezzo da inizio anno. Indica andamento corrente.</p><p class="font-medium text-green-600">+72.4%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">1Y Performance</p><p class="text-[11px] text-slate-400">Rendimento cumulato negli ultimi 12 mesi. Misura la performance annuale.</p><p class="font-medium text-green-600">+89.1%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">3Y Performance (ann.)</p><p class="text-[11px] text-slate-400">Rendimento medio annuo composto su 3 anni. Indica ritorni corretti per volatilità ciclica.</p><p class="font-medium text-yellow-600">+6.7% annuo</p></div>
-      <div><p class="text-xs uppercase text-slate-600">5Y Performance (ann.)</p><p class="text-[11px] text-slate-400">Rendimento medio annuo composto su 5 anni. Riflette la sostenibilità dei ritorni nel lungo periodo.</p><p class="font-medium text-green-600">+20.2% annuo</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Mostra dettagli Volatilità & Rischio</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Beta (1Y)</p><p class="text-[11px] text-slate-400">Misura la sensibilità del titolo rispetto al mercato. Valori >1 indicano maggiore volatilità.</p><p class="font-medium text-yellow-600">1.24</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Volatilità giornaliera (30D)</p><p class="text-[11px] text-slate-400">Deviazione standard della variazione giornaliera del prezzo su 30 giorni.</p><p class="font-medium text-yellow-600">~2.6%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Max Drawdown (3Y)</p><p class="text-[11px] text-slate-400">Massima perdita percentuale dal picco negli ultimi 3 anni. Misura rischio storico.</p><p class="font-medium text-rose-700">−51%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Sharpe Ratio (1Y)</p><p class="text-[11px] text-slate-400">Rendimento in eccesso sul risk-free per unità di rischio. >1 è buono, >2 eccellente.</p><p class="font-medium text-green-600">2.87</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Sortino Ratio (1Y)</p><p class="text-[11px] text-slate-400">Versione del Sharpe che penalizza solo la volatilità negativa. Più indicativo nei mercati instabili.</p><p class="font-medium text-green-600">4.21</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Alpha (1Y)</p><p class="text-[11px] text-slate-400">Performance aggiustata per rischio rispetto al benchmark. Positiva indica sovra-performance.</p><p class="font-medium text-green-600">+18.4%</p></div>
-    </div>
-  </details>
-</section>
-
-    <section id="b6" class="mt-2"></section>
-<section id="blocco6" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
-  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-    <i data-lucide="layout" class="icon-section mr-2"></i>Blocco 6 – Microstruttura & Market
-  </h2>
-
-  <div class="mb-4">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
-      Micron presenta una microstruttura di mercato liquida e stabile, con volumi robusti e turnover elevato. Il posizionamento degli short è contenuto e gestibile. Sono però da integrare dati su dollar volume, bid‑ask spread e profondità del book per una visione pienamente strutturata.
-    </p>
-  </div>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Mostra dettagli Liquidità & Volumi</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Media volumi giornalieri (90D)</p><p class="text-[11px] text-slate-400">Numero medio di azioni scambiate giornalmente negli ultimi 90 giorni. Misura la liquidità di mercato.</p><p class="font-medium text-green-600">~22,620,642</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Turnover Ratio (%)</p><p class="text-[11px] text-slate-400">Rapporto tra volumi annuali e flottante. Valuta la rotazione complessiva del capitale azionario.</p><p class="font-medium text-yellow-600">~98%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Volume / Float Ratio (giornaliero)</p><p class="text-[11px] text-slate-400">Quota percentuale del flottante scambiata ogni giorno. Misura l’intensità del trading.</p><p class="font-medium text-yellow-600">~2.0–2.1%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Dollar Volume (90D)</p><p class="text-[11px] text-slate-400">Valore monetario medio scambiato giornalmente. Utile per analisi di liquidità istituzionale.</p><p class="font-medium text-slate-900">n.d.</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Mostra dettagli Order Book & Bid‑Ask</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Bid‑Ask Spread</p><p class="text-[11px] text-slate-400">Differenza percentuale tra miglior prezzo di acquisto e di vendita. Misura i costi di transazione.</p><p class="font-medium text-slate-900">n.d.</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Order Book Depth (Top 5 livelli)</p><p class="text-[11px] text-slate-400">Profondità media degli ordini ai primi 5 livelli di book. Indica resilienza del mercato agli ordini.</p><p class="font-medium text-slate-900">n.d.</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Mostra dettagli Short Interest & Sentiment</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Short Interest (% float)</p><p class="text-[11px] text-slate-400">Percentuale del flottante venduta allo scoperto. Indica pressione ribassista potenziale.</p><p class="font-medium text-yellow-600">~2.76–2.77%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Short Ratio (Days to Cover)</p><p class="text-[11px] text-slate-400">Numero medio di giorni di trading necessari a ricoprire le posizioni short. Valuta la possibilità di short squeeze.</p><p class="font-medium text-green-600">~1.4 giorni</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Put/Call Ratio (Open Interest)</p><p class="text-[11px] text-slate-400">Rapporto tra posizioni in opzioni put e call aperte. Misura il sentiment direzionale degli investitori.</p><p class="font-medium text-slate-900">n.d.</p></div>
-    </div>
-  </details>
-</section>
-
-    <section id="b7" class="mt-2"></section>
-<section id="blocco7" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
-  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-    <i data-lucide="candlestick-chart" class="icon-section mr-2"></i>Blocco 7 – Derivati & Posizionamento
-  </h2>
-
-  <div class="mb-4">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
-      La struttura dei derivati su Micron evidenzia un interesse consistente (open interest elevato), con leggera inclinazione ribassista suggerita da un Put/Call OI Ratio sopra 1 e da livelli di Max Pain al di sotto del prezzo attuale. Manca tuttavia la disponibilità di dati completi su Gamma Exposure e Skew, che sono cruciali per valutare la pressione esercitata dai market maker. Il quadro complessivo resta neutrale, ma vigilato.
-    </p>
-  </div>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Mostra dettagli Open Interest & Posizionamento Derivati</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Total Open Interest</p><p class="text-[11px] text-slate-400">Numero totale di contratti derivati aperti (call + put). Misura il livello di interesse e liquidità nel mercato delle opzioni.</p><p class="font-medium text-green-600">~1,8 milioni contratti</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Put/Call OI Ratio</p><p class="text-[11px] text-slate-400">Rapporto tra open interest di put e call. Valori >1 indicano prevalenza di posizioni ribassiste, <1 prevalenza rialzista.</p><p class="font-medium text-yellow-600">~1.2</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Mostra dettagli Max Pain, Gamma, Skew & Esposizione</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Max Pain (15 ago)</p><p class="text-[11px] text-slate-400">Prezzo teorico che minimizza le perdite per gli scrittori di opzioni alla scadenza. Utile per stimare zone di equilibrio del mercato.</p><p class="font-medium text-yellow-600">$110</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Max Pain (22 ago)</p><p class="text-[11px] text-slate-400">Indicatore calcolato per la scadenza successiva. Può variare sensibilmente con il posizionamento delle opzioni.</p><p class="font-medium text-yellow-600">$119</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Gamma Exposure (GEX)</p><p class="text-[11px] text-slate-400">Esposizione complessiva dei market maker al rischio di gamma. Indica la probabilità di pressioni da hedging sulle quotazioni.</p><p class="font-medium text-slate-900">n.d.</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Implied Volatility Skew</p><p class="text-[11px] text-slate-400">Differenza di volatilità implicita tra opzioni out-of-the-money call e put. Misura la percezione asimmetrica del rischio.</p><p class="font-medium text-slate-900">n.d.</p></div>
-    </div>
-  </details>
-</section>
-
-    <section id="b8" class="mt-2"></section>
-<section id="blocco8" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
-  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-    <i data-lucide="activity" class="icon-section mr-2"></i>Blocco 8 – Analisi Tecnica (Grafico 1D)
-  </h2>
-
-  <div class="mb-4">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
-      Micron si trova in una fase di consolidamento correttivo all’interno di un trend rialzista primario, con supporto EMA21/POC attivo in zona 117–118 USD. I volumi restano sostenuti, ma il momentum è in calo (VMI negativo, MACD debole). Il pattern AB=CD suggerisce una possibile fase di respiro. VWAP e pressione CVD indicano potenziale ritracciamento verso supporti dinamici. Nessun segnale di breakdown strutturale, ma attenzione a eventuale rottura dei 117.5.
-    </p>
-  </div>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Prezzo & Livelli</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Prezzo ultimo</p><p class="text-[11px] text-slate-400">Ultimo prezzo di chiusura rilevato sul timeframe giornaliero.</p><p class="font-medium text-slate-900">121.12 USD</p></div>
-      <div><p class="text-xs uppercase text-slate-600">VWAP attuale</p><p class="text-[11px] text-slate-400">Prezzo medio ponderato per il volume (intraday). Prezzo sotto VWAP può indicare pressione ribassista.</p><p class="font-medium text-yellow-600">122.836 USD</p></div>
-      <div><p class="text-xs uppercase text-slate-600">VWAP dinamico 5D</p><p class="text-[11px] text-slate-400">Media VWAP settimanale mobile, utile come riferimento dinamico per supporti/resistenze di breve.</p><p class="font-medium text-slate-900">122.486 USD</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Δ Close (%)</p><p class="text-[11px] text-slate-400">Variazione percentuale dell’ultima chiusura rispetto al giorno precedente.</p><p class="font-medium text-red-600">−3.39%</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Trend & Pattern</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Trend dominante (1D)</p><p class="text-[11px] text-slate-400">Valutazione dell’inclinazione media dei prezzi su orizzonti brevi (Δ55 e Δ100). Indica direzione prevalente.</p><p class="font-medium text-green-600">+7.55% (Δ55), +17.45% (Δ100)</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Pattern rilevato</p><p class="text-[11px] text-slate-400">Pattern armonico attivo sul grafico 1D, confermato da simmetria e proporzioni classiche.</p><p class="font-medium text-green-600">AB=CD geometrico</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Convergenza VWAP/EMA</p><p class="text-[11px] text-slate-400">Avvicinamento tra VWAP e medie esponenziali. Può indicare supporto dinamico in formazione.</p><p class="font-medium text-slate-900">Presente</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Volumi & Pressione</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Volume Δabs</p><p class="text-[11px] text-slate-400">Differenza assoluta di volume rispetto alla seduta precedente. Indica incremento o calo partecipazione.</p><p class="font-medium text-slate-900">117,058</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Volume delta gradiente</p><p class="text-[11px] text-slate-400">Differenza tra volumi bid/ask. Negativo suggerisce pressione in vendita.</p><p class="font-medium text-red-600">−11,991</p></div>
-      <div><p class="text-xs uppercase text-slate-600">VOL% 30D</p><p class="text-[11px] text-slate-400">Volume giornaliero come percentuale della media 30D. Sopra 70% indica partecipazione attiva.</p><p class="font-medium text-green-600">73.3%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">VMI (Volume Momentum Index)</p><p class="text-[11px] text-slate-400">Indicatore proprietario di momentum volumetrico. Negativo indica fading o perdita di spinta.</p><p class="font-medium text-red-600">−176.80</p></div>
-      <div><p class="text-xs uppercase text-slate-600">CVD Flow</p><p class="text-[11px] text-slate-400">Cumulative Volume Delta: saldo tra aggressività ask e bid. Divergenze possono anticipare inversioni.</p><p class="font-medium text-yellow-600">Ask > Bid con CVD↑</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Medie Mobili & Volatilità</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">EMA21, EMA55, EMA100, EMA200</p><p class="text-[11px] text-slate-400">Medie mobili esponenziali. Il prezzo sopra tutte le EMA indica trend positivo consolidato.</p><p class="font-medium text-green-600">Prezzo sopra tutte</p></div>
-      <div><p class="text-xs uppercase text-slate-600">ATR (14)</p><p class="text-[11px] text-slate-400">Average True Range: misura della volatilità media. Valori più alti implicano rischio operativo maggiore.</p><p class="font-medium text-yellow-600">4.12 – 4.98</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Skew</p><p class="text-[11px] text-slate-400">Misura la simmetria della distribuzione dei ritorni. Valori vicini a 1 indicano neutralità del rischio asimmetrico.</p><p class="font-medium text-slate-900">0.92 (neutrale)</p></div>
-      <div><p class="text-xs uppercase text-slate-600">DirATRup / ATRdn</p><p class="text-[11px] text-slate-400">Rapporto tra range direzionali di ATR positivo e negativo. Indica simmetria direzionale.</p><p class="font-medium text-slate-900">3.19 / 3.73</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Indicatori Tecnici & Price Action</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">MACD</p><p class="text-[11px] text-slate-400">Moving Average Convergence Divergence. Il segnale sotto MACD segnala divergenza ribassista.</p><p class="font-medium text-red-600">Bearish divergence</p></div>
-      <div><p class="text-xs uppercase text-slate-600">RSI</p><p class="text-[11px] text-slate-400">Relative Strength Index. Valori tra 45–60 indicano equilibrio o leggera forza rialzista.</p><p class="font-medium text-slate-900">56</p></div>
-      <div><p class="text-xs uppercase text-slate-600">ADX</p><p class="text-[11px] text-slate-400">Average Directional Index. Misura la forza del trend: sotto 25 indica trend debole o transitorio.</p><p class="font-medium text-slate-900">24</p></div>
-    </div>
-  </details>
-</section>
-
-    <section id="blocco8-4h" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
-  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-    <i data-lucide="activity" class="icon-section mr-2"></i>Blocco 8 – Analisi Tecnica (Grafico 4H)
-  </h2>
-
-  <div class="mb-4">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
-      Micron mostra una struttura tecnica fortemente costruttiva sul timeframe 4H, con stacking di medie mobili pienamente rialzista, volatilità compressa (squeeze attivo), e pattern di continuazione FlagBull attivo. Il prezzo resta compresso nel range 119.4–128.5 con swing logic coerente e forte partecipazione volumetrica. La rottura di 128.5 attiverebbe pienamente la prosecuzione.
-    </p>
-  </div>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Trend e Struttura</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Stack medie mobili</p><p class="text-[11px] text-slate-400">Configurazione EMA20 > EMA50 > EMA200 indica trend bullish strutturato.</p><p class="font-medium text-green-600">Bullish</p></div>
-      <div><p class="text-xs uppercase text-slate-600">ADX</p><p class="text-[11px] text-slate-400">Misura la forza del trend. Valori >25 suggeriscono trend forte e strutturato.</p><p class="font-medium text-green-600">31</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Slope EMA20</p><p class="text-[11px] text-slate-400">Inclinazione della media mobile a 20 periodi. Positiva = momentum rialzista.</p><p class="font-medium text-green-600">+2.39</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Break of Structure</p><p class="text-[11px] text-slate-400">Rottura di strutture precedenti conferma la direzione del trend attuale.</p><p class="font-medium text-green-600">Confermato</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Livelli Chiave</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Swing High / Low</p><p class="text-[11px] text-slate-400">Livelli recenti di massimo/minimo da struttura swing. Utili per trailing o breakout watch.</p><p class="font-medium text-slate-900">128.54 / 119.44</p></div>
-      <div><p class="text-xs uppercase text-slate-600">VWAP dinamico</p><p class="text-[11px] text-slate-400">Prezzo medio ponderato sul timeframe intraday. Prezzo molto sopra VWAP può indicare estensione eccessiva.</p><p class="font-medium text-yellow-600">95.55</p></div>
-      <div><p class="text-xs uppercase text-slate-600">VAH / VAL</p><p class="text-[11px] text-slate-400">Volume Area High / Low: estremi del range di valore. Zone tipiche di reazione.</p><p class="font-medium text-slate-900">126.76 / 105.06</p></div>
-      <div><p class="text-xs uppercase text-slate-600">POC</p><p class="text-[11px] text-slate-400">Point of Control – Livello con massimo volume scambiato.</p><p class="font-medium text-slate-900">116.17</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Volatilità e Volume</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">ATR (14)</p><p class="text-[11px] text-slate-400">Average True Range. Valori più alti implicano maggiore volatilità e rischio.</p><p class="font-medium text-yellow-600">2.8</p></div>
-      <div><p class="text-xs uppercase text-slate-600">VolPct</p><p class="text-[11px] text-slate-400">Percentuale del volume rispetto alla media. Sopra 70% = elevata partecipazione.</p><p class="font-medium text-green-600">86%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">BBW%</p><p class="text-[11px] text-slate-400">Bollinger Band Width. Indica compressione o espansione. Sotto 20% = squeeze.</p><p class="font-medium text-green-600">15.6%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Squeeze</p><p class="text-[11px] text-slate-400">Compressione tecnica in corso. Spesso anticipa breakout direzionali.</p><p class="font-medium text-green-600">ON</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Pattern Tecnici & Swing Logic</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">FlagBull</p><p class="text-[11px] text-slate-400">Pattern di continuazione rialzista. Range laterale su swing high/low precedenti con breakout potenziale.</p><p class="font-medium text-green-600">Attivo</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Inside Bar</p><p class="text-[11px] text-slate-400">Candela interna alla precedente. Indica compressione e attesa, spesso pre-breakout.</p><p class="font-medium text-green-600">Attivo</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Swing Logic</p><p class="text-[11px] text-slate-400">Sequenza tecnica Higher Low + Higher High. Indica struttura di trend sana.</p><p class="font-medium text-green-600">LLx3 – LHX3</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Stop Level</p><p class="text-[11px] text-slate-400">Livelli di protezione basati su swing chiave: SL = invalidazione, SH = breakout target.</p><p class="font-medium text-slate-900">SL: 106.75 – SH: 128.54</p></div>
-    </div>
-  </details>
-</section>
-<section id="blocco8-1h" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
-  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-    <i data-lucide="activity" class="icon-section mr-2"></i>Blocco 8 – Analisi Tecnica (Grafico 1H)
-  </h2>
-
-  <div class="mb-4">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
-      Micron (MU) su timeframe 1H evidenzia compressione tecnica: ATR e volatilità contenute, squeeze attivo, e pattern di continuazione nel range 119.4–124.7. È presente un pattern bullish engulfing, che potrebbe segnalare rimbalzo verso la parte alta del range. Tuttavia, la disposizione delle medie è mista e il volume è sotto la media: breakout affidabile solo sopra 124.5–125.
-    </p>
-  </div>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Trend e Struttura</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Stack medie mobili</p><p class="text-[11px] text-slate-400">La disposizione delle medie (EMA9, 20, 50) indica direzionalità. Stack misto suggerisce indecisione.</p><p class="font-medium text-yellow-600">Mixed</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Slope EMA20</p><p class="text-[11px] text-slate-400">Inclinazione della media a 20 periodi. Negativa = possibile perdita di momentum.</p><p class="font-medium text-red-600">−0.95</p></div>
-      <div><p class="text-xs uppercase text-slate-600">ADX</p><p class="text-[11px] text-slate-400">Misura la forza del trend. >25 segnala struttura definita.</p><p class="font-medium text-green-600">30</p></div>
-      <div><p class="text-xs uppercase text-slate-600">TrendScore</p><p class="text-[11px] text-slate-400">Valutazione sintetica della qualità del trend (0–5).</p><p class="font-medium text-yellow-600">2</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Volatilità e Volume</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">ATR(14)</p><p class="text-[11px] text-slate-400">Average True Range. Indica l'ampiezza media delle oscillazioni recenti.</p><p class="font-medium text-yellow-600">1.28</p></div>
-      <div><p class="text-xs uppercase text-slate-600">VolPct</p><p class="text-[11px] text-slate-400">Volume percentile rispetto alla media. Sotto 40% = bassa partecipazione.</p><p class="font-medium text-yellow-600">36%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">BBW%</p><p class="text-[11px] text-slate-400">Bollinger Band Width. Valori bassi = fase di compressione.</p><p class="font-medium text-yellow-600">5.69%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Squeeze</p><p class="text-[11px] text-slate-400">Fase tecnica in cui la volatilità è compressa. Può precedere un breakout.</p><p class="font-medium text-green-600">ON</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Livelli Chiave</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Range intraday</p><p class="text-[11px] text-slate-400">Zona compresa tra massimo/minimo recente. Aiuta a identificare breakout.</p><p class="font-medium text-slate-900">119.44 – 128.54</p></div>
-      <div><p class="text-xs uppercase text-slate-600">VWAP</p><p class="text-[11px] text-slate-400">Prezzo medio ponderato per i volumi. Utile per valutare fair value intraday.</p><p class="font-medium text-yellow-600">95.55</p></div>
-      <div><p class="text-xs uppercase text-slate-600">POC</p><p class="text-[11px] text-slate-400">Livello di massimo volume scambiato nel range attuale.</p><p class="font-medium text-slate-900">124.35</p></div>
-      <div><p class="text-xs uppercase text-slate-600">VAH / VAL</p><p class="text-[11px] text-slate-400">Volume Area High / Low. Zone di valore rilevanti.</p><p class="font-medium text-slate-900">124.79 / 120.36</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Pattern Tecnici Rilevati</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Bullish Engulfing</p><p class="text-[11px] text-slate-400">Pattern di inversione: candela rialzista ingloba completamente la precedente ribassista.</p><p class="font-medium text-green-600">Attivo</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Swing Logic</p><p class="text-[11px] text-slate-400">Sequenze alternanti di LL e LH indicano assenza di direzione definita.</p><p class="font-medium text-yellow-600">Mixed</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Inside Range</p><p class="text-[11px] text-slate-400">Fase di consolidamento dentro range definito, spesso preludio a espansione.</p><p class="font-medium text-green-600">Attivo</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Price Action</p><p class="text-[11px] text-slate-400">Candlestick in compressione indicano pausa e attesa. Confermate da squeeze.</p><p class="font-medium text-green-600">Squeeze / Inside Candle</p></div>
-    </div>
-  </details>
-</section>
-<section id="blocco8-15m" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
-  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-    <i data-lucide="activity" class="icon-section mr-2"></i>Blocco 8 – Analisi Tecnica (Grafico 15m)
-  </h2>
-
-  <div class="mb-4">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
-      Il timeframe 15m su Micron mostra una configurazione tecnica di compressione ribassista. Le medie mobili evidenziano uno stack discendente, con pendenza negativa e ADX basso, indicativo di trend debole o assente. Il prezzo si trova in prossimità della parte alta della value area, ma i volumi estremamente bassi e l'assenza di momentum suggeriscono fase di attesa. Potenziale breakout tecnico in caso di superamento di 121.5 al rialzo o violazione dei 120.1 al ribasso.
-    </p>
-  </div>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Trend e Struttura</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Stack medie mobili</p><p class="text-[11px] text-slate-400">Disposizione ribassista (EMA9 < EMA20 < EMA50), segnale di pressione discendente.</p><p class="font-medium text-red-600">Bear</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Slope EMA20</p><p class="text-[11px] text-slate-400">Indica la pendenza della media a 20 periodi. Negativa = perdita di slancio.</p><p class="font-medium text-red-600">−0.095</p></div>
-      <div><p class="text-xs uppercase text-slate-600">ADX</p><p class="text-[11px] text-slate-400">Misura la forza del trend. Valori <25 = trend debole o assente.</p><p class="font-medium text-yellow-600">17</p></div>
-      <div><p class="text-xs uppercase text-slate-600">TrendScore</p><p class="text-[11px] text-slate-400">Indicatore sintetico della direzionalità, da 0 (nessuna) a 5 (forte).</p><p class="font-medium text-slate-600">0</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Volatilità e Volume</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">ATR(14)</p><p class="text-[11px] text-slate-400">Average True Range. Valore basso segnala scarsa escursione e bassa volatilità.</p><p class="font-medium text-yellow-600">0.33 (0.27%)</p></div>
-      <div><p class="text-xs uppercase text-slate-600">VolPct</p><p class="text-[11px] text-slate-400">Percentile volume rispetto alla media. Valori bassi indicano scambi ridotti.</p><p class="font-medium text-slate-600">0.0%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">BBW%</p><p class="text-[11px] text-slate-400">Larghezza bande di Bollinger. Valore molto basso = compressione estrema.</p><p class="font-medium text-yellow-600">0.9%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Squeeze</p><p class="text-[11px] text-slate-400">Fase in cui BBW e Keltner convergono. Può anticipare esplosione di volatilità.</p><p class="font-medium text-green-600">ON</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Livelli Chiave</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Range</p><p class="text-[11px] text-slate-400">Area delimitata da livelli recenti di supporto e resistenza osservati su timeframe 15m.</p><p class="font-medium text-slate-900">119.44 – 121.21</p></div>
-      <div><p class="text-xs uppercase text-slate-600">POC</p><p class="text-[11px] text-slate-400">Livello a maggiore concentrazione di volumi.</p><p class="font-medium text-slate-900">120.76</p></div>
-      <div><p class="text-xs uppercase text-slate-600">VWAP (h1)</p><p class="text-[11px] text-slate-400">Media ponderata per i volumi dal timeframe orario.</p><p class="font-medium text-slate-900">118.30</p></div>
-      <div><p class="text-xs uppercase text-slate-600">VAH / VAL</p><p class="text-[11px] text-slate-400">Limiti superiore e inferiore della Value Area, ovvero 70% dei volumi scambiati.</p><p class="font-medium text-slate-900">121.21 / 120.10</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Pattern Tecnici Rilevati</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Compressione</p><p class="text-[11px] text-slate-400">Condizione tecnica con range e volatilità estremamente compressi.</p><p class="font-medium text-green-600">Attiva</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Inside Range</p><p class="text-[11px] text-slate-400">Prezzo racchiuso tra due livelli chiave, in attesa di breakout.</p><p class="font-medium text-green-600">Attivo</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Swing Logic</p><p class="text-[11px] text-slate-400">Struttura dei massimi e minimi non coerente, segnale di indecisione.</p><p class="font-medium text-yellow-600">Mixed</p></div>
-    </div>
-  </details>
-</section>
-<section id="blocco8-15m" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
-  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-    <i data-lucide="activity" class="icon-section mr-2"></i>Blocco 8 – Analisi Tecnica (Grafico 15m)
-  </h2>
-
-  <div class="mb-4">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
-      Il timeframe 15m su Micron mostra una configurazione tecnica di compressione ribassista. Le medie mobili evidenziano uno stack discendente, con pendenza negativa e ADX basso, indicativo di trend debole o assente. Il prezzo si trova in prossimità della parte alta della value area, ma i volumi estremamente bassi e l'assenza di momentum suggeriscono fase di attesa. Potenziale breakout tecnico in caso di superamento di 121.5 al rialzo o violazione dei 120.1 al ribasso.
-    </p>
-  </div>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Trend e Struttura</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Stack medie mobili</p><p class="text-[11px] text-slate-400">Disposizione ribassista (EMA9 < EMA20 < EMA50), segnale di pressione discendente.</p><p class="font-medium text-red-600">Bear</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Slope EMA20</p><p class="text-[11px] text-slate-400">Indica la pendenza della media a 20 periodi. Negativa = perdita di slancio.</p><p class="font-medium text-red-600">−0.095</p></div>
-      <div><p class="text-xs uppercase text-slate-600">ADX</p><p class="text-[11px] text-slate-400">Misura la forza del trend. Valori <25 = trend debole o assente.</p><p class="font-medium text-yellow-600">17</p></div>
-      <div><p class="text-xs uppercase text-slate-600">TrendScore</p><p class="text-[11px] text-slate-400">Indicatore sintetico della direzionalità, da 0 (nessuna) a 5 (forte).</p><p class="font-medium text-slate-600">0</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Volatilità e Volume</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">ATR(14)</p><p class="text-[11px] text-slate-400">Average True Range. Valore basso segnala scarsa escursione e bassa volatilità.</p><p class="font-medium text-yellow-600">0.33 (0.27%)</p></div>
-      <div><p class="text-xs uppercase text-slate-600">VolPct</p><p class="text-[11px] text-slate-400">Percentile volume rispetto alla media. Valori bassi indicano scambi ridotti.</p><p class="font-medium text-slate-600">0.0%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">BBW%</p><p class="text-[11px] text-slate-400">Larghezza bande di Bollinger. Valore molto basso = compressione estrema.</p><p class="font-medium text-yellow-600">0.9%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Squeeze</p><p class="text-[11px] text-slate-400">Fase in cui BBW e Keltner convergono. Può anticipare esplosione di volatilità.</p><p class="font-medium text-green-600">ON</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Livelli Chiave</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Range</p><p class="text-[11px] text-slate-400">Area delimitata da livelli recenti di supporto e resistenza osservati su timeframe 15m.</p><p class="font-medium text-slate-900">119.44 – 121.21</p></div>
-      <div><p class="text-xs uppercase text-slate-600">POC</p><p class="text-[11px] text-slate-400">Livello a maggiore concentrazione di volumi.</p><p class="font-medium text-slate-900">120.76</p></div>
-      <div><p class="text-xs uppercase text-slate-600">VWAP (h1)</p><p class="text-[11px] text-slate-400">Media ponderata per i volumi dal timeframe orario.</p><p class="font-medium text-slate-900">118.30</p></div>
-      <div><p class="text-xs uppercase text-slate-600">VAH / VAL</p><p class="text-[11px] text-slate-400">Limiti superiore e inferiore della Value Area, ovvero 70% dei volumi scambiati.</p><p class="font-medium text-slate-900">121.21 / 120.10</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Pattern Tecnici Rilevati</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Compressione</p><p class="text-[11px] text-slate-400">Condizione tecnica con range e volatilità estremamente compressi.</p><p class="font-medium text-green-600">Attiva</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Inside Range</p><p class="text-[11px] text-slate-400">Prezzo racchiuso tra due livelli chiave, in attesa di breakout.</p><p class="font-medium text-green-600">Attivo</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Swing Logic</p><p class="text-[11px] text-slate-400">Struttura dei massimi e minimi non coerente, segnale di indecisione.</p><p class="font-medium text-yellow-600">Mixed</p></div>
-    </div>
-  </details>
-</section>
-
-
-    <section id="b9" class="mt-2"></section>
-<section id="blocco9-proprieta" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
-  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-    <i data-lucide="shield-check" class="icon-section mr-2"></i>Blocco 9 – Proprietà, ESG e Governance
-  </h2>
-
-  <div class="mb-4">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
-      Micron presenta una struttura proprietaria fortemente istituzionalizzata, con proprietà frazionata in larga misura tra i principali gestori globali. I profili ESG sono ben controllati, senza controversie rilevanti. La governance è stabile, anche se manca visibilità su alcune metriche interne.
-    </p>
-  </div>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Ownership & Struttura Azionaria</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Ownership istituzionale</p><p class="text-[11px] text-slate-400">Quota di capitale detenuta da investitori istituzionali. Valori elevati suggeriscono stabilità e interesse istituzionale.</p><p class="font-medium text-green-600">~95%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Ownership insider</p><p class="text-[11px] text-slate-400">Partecipazione diretta del management o dei dirigenti. Bassa proprietà insider è tipica di società mature.</p><p class="font-medium text-slate-600">~0.18%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Principali azionisti</p><p class="text-[11px] text-slate-400">Vanguard (~9.3%), BlackRock (~8.3%), Capital Research (~8.4%)</p><p class="font-medium text-green-600">🟢</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Free Float</p><p class="text-[11px] text-slate-400">Percentuale di azioni liberamente negoziabili. Valore alto implica alta liquidità.</p><p class="font-medium text-green-600">~99.7%</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">ESG – Environmental, Social, Governance</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">ESG Risk Score</p><p class="text-[11px] text-slate-400">Valutazione complessiva di rischio legato a temi ambientali, sociali e di governance.</p><p class="font-medium text-green-600">~18.6 (basso rischio)</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Environmental / Social / Governance</p><p class="text-[11px] text-slate-400">Punteggi settoriali: Env 8.9 / Soc 5.0 / Gov 4.7</p><p class="font-medium text-green-600">🟢</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Controversie ESG</p><p class="text-[11px] text-slate-400">Eventuali episodi di rilievo negativi. L’assenza segnala buona condotta societaria.</p><p class="font-medium text-green-600">Nessuna recente</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Governance Aziendale</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">CEO</p><p class="text-[11px] text-slate-400">Chief Executive Officer attuale.</p><p class="font-medium text-slate-900">Sanjay Mehrotra</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Chairman</p><p class="text-[11px] text-slate-400">Presidente del consiglio di amministrazione.</p><p class="font-medium text-slate-900">Robert E. Switz</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Board Structure</p><p class="text-[11px] text-slate-400">Non disponibile nelle fonti pubbliche principali.</p><p class="font-medium text-yellow-600">🟡</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Compensi / Pay Ratio</p><p class="text-[11px] text-slate-400">Non disponibile su fonti verificate. Da integrare con filing SEC.</p><p class="font-medium text-yellow-600">🟡</p></div>
-    </div>
-  </details>
-</section>
-
-    <section id="b10" class="mt-2"></section>
-<section id="blocco10-etf" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
-  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-    <i data-lucide="layers" class="icon-section mr-2"></i>Blocco 10 – Esposizione ETF
-  </h2>
-
-  <div class="mb-4">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
-      Micron è ampiamente incluso in ETF settoriali e tematici, con un peso rilevante soprattutto nei fondi sui semiconduttori. L’esposizione diffusa riflette l’interesse istituzionale e la rilevanza strategica del titolo. I flussi specifici su MU non sono disponibili, ma il trend generale del settore rimane positivo.
-    </p>
-  </div>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Esposizione e Peso in ETF</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Numero ETF</p><p class="text-[11px] text-slate-400">Quantità di ETF che includono MU nel portafoglio. Alta presenza segnala rilevanza istituzionale.</p><p class="font-medium text-green-600">336 – 799</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Peso medio / massimo</p><p class="text-[11px] text-slate-400">Percentuale di MU all’interno dei principali ETF settoriali.</p><p class="font-medium text-green-600">FTXL ~8.5% / SOXX ~5.6%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Top ETF</p><p class="text-[11px] text-slate-400">ETF con maggiore esposizione a MU.</p><p class="font-medium text-green-600">FTXL, WAR, FEPI, CEPI, SOXX</p></div>
-      <div><p class="text-xs uppercase text-slate-600">% Free Float via ETF</p><p class="text-[11px] text-slate-400">Quota del flottante detenuta da ETF. Non disponibile con precisione.</p><p class="font-medium text-slate-600">⚫ Non reperito</p></div>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Flussi e Trend Settoriale</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Flussi Netti ETF su MU</p><p class="text-[11px] text-slate-400">Entrate e uscite di capitale legate direttamente a MU via ETF.</p><p class="font-medium text-slate-600">⚫ Non disponibile</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Trend settoriale ETF</p><p class="text-[11px] text-slate-400">Performance ETF semiconduttori negli ultimi mesi.</p><p class="font-medium text-green-600">SOXX +35% YTD / SMH +58% YTD</p></div>
-    </div>
-  </details>
-</section>
-
-    <section id="b11" class="mt-2"></section>
-<section id="blocco11-eventi" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
-  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-    <i data-lucide="calendar" class="icon-section mr-2"></i>Blocco 11 – Eventi Aziendali, Settoriali & Macroeconomici
-  </h2>
-
-  <div class="mb-4">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
-      Micron beneficia di una guidance in rialzo, supportata dalla forte domanda AI e da politiche industriali favorevoli negli Stati Uniti. Il contesto macroeconomico rimane positivo ma con rischi legati a inflazione e geopolitica. La resilienza del titolo è supportata da driver strutturali e ciclici.
-    </p>
-  </div>
-
-  <!-- Eventi Aziendali -->
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Eventi Aziendali</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Ricavi attesi Q4 FY2025</p><p class="text-[11px] text-slate-400">Guidance ufficiale dell’azienda per il quarto trimestre fiscale 2025.</p><p class="font-medium text-green-600">$11,2 mld ± $100 mln (da $10,7 mld ± $300 mln)</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Margine lordo non-GAAP</p><p class="text-[11px] text-slate-400">Indica la redditività lorda escludendo elementi straordinari.</p><p class="font-medium text-green-600">44,5% ± 0,5 (da 42%)</p></div>
-      <div><p class="text-xs uppercase text-slate-600">EPS non-GAAP</p><p class="text-[11px] text-slate-400">Utile per azione atteso, misura diretta della profittabilità aziendale.</p><p class="font-medium text-green-600">$2,85 ± 0,07 (da $2,50 ± 0,15)</p></div>
-    </div>
-  </details>
-
-  <!-- Eventi Settoriali -->
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Eventi Settoriali</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Ciclo semiconduttori & AI</p><p class="text-[11px] text-slate-400">Domanda per chip di memoria (DRAM/HBM) trainata dall’AI e dai data center.</p><p class="font-medium text-green-600">Domanda in forte crescita</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Regolamentazioni e incentivi</p><p class="text-[11px] text-slate-400">Effetto dei programmi Chips Act e IRA sulla filiera USA.</p><p class="font-medium text-green-600">Supporto strutturale agli investimenti</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Pressioni commerciali e dazi</p><p class="text-[11px] text-slate-400">Rischi derivanti da tensioni globali e costi di produzione.</p><p class="font-medium text-amber-600">Da monitorare</p></div>
-    </div>
-  </details>
-
-  <!-- Eventi Macroeconomici -->
-  <details class="group border border-slate-200 rounded-lg">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Eventi Macroeconomici</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div><p class="text-xs uppercase text-slate-600">Inflazione attesa (1Y)</p><p class="text-[11px] text-slate-400">Attese di inflazione da consumatori e analisti (FRED, Fed NY, UoM).</p><p class="font-medium text-amber-600">2,6% – 5,1%</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Politica monetaria</p><p class="text-[11px] text-slate-400">Attese sui tassi Fed: primi tagli previsti da settembre 2025.</p><p class="font-medium text-green-600">1–2 tagli entro fine 2025</p></div>
-      <div><p class="text-xs uppercase text-slate-600">Crescita economica USA</p><p class="text-[11px] text-slate-400">Proiezioni GDP trimestrali della Fed di Atlanta.</p><p class="font-medium text-green-600">+2,5% Q3 2025</p></div>
-    </div>
-  </details>
-</section>
-
-    <section id="b12" class="mt-2"></section>
-<section id="blocco12-newsflow" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
-  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5 flex items-center">
-    <i data-lucide="megaphone" class="icon-section mr-2"></i>Blocco 12 – Newsflow & Sentiment
-  </h2>
-
-  <div class="mb-4">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-bold text-sky-800">Commento Tradelia AI:</span>
-      Il newsflow su <span class="font-semibold text-emerald-700">Micron Technology (MU)</span> è fortemente positivo, alimentato da una <span class="font-semibold text-sky-700">revisione rialzista della guidance</span> e dalla crescente <span class="font-semibold text-sky-700">domanda AI-driven</span> per chip di memoria. Il sentiment istituzionale e alternativo converge su scenari favorevoli, supportato anche da engagement in crescita sui media e piattaforme di analisi quantitativa.
-    </p>
-  </div>
-
-  <!-- Newsflow Istituzionale -->
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Newsflow Istituzionale</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div>
-        <p class="text-xs uppercase text-slate-600">Upgrade Guidance Q4</p>
-        <p class="text-[11px] text-slate-400">Annuncio su revisione al rialzo outlook aziendale.</p>
-        <p class="font-medium text-green-600">Classificazione: Positiva • 5gg fa • Impatto: +5% pre-market</p>
-      </div>
-      <div>
-        <p class="text-xs uppercase text-slate-600">Domanda AI e margini</p>
-        <p class="text-[11px] text-slate-400">Ottimismo sulla domanda HBM4 e visione venditori.</p>
-        <p class="font-medium text-green-600">Classificazione: Positiva • 5gg fa • Impatto: +6%</p>
-      </div>
-      <div>
-        <p class="text-xs uppercase text-slate-600">Rally AI & geopolitica</p>
-        <p class="text-[11px] text-slate-400">Micron guida l’indice semiconduttori su revisioni e contesto globale.</p>
-        <p class="font-medium text-green-600">Classificazione: Positiva • 5gg fa</p>
-      </div>
-    </div>
-  </details>
-
-  <!-- Newsflow Alternativo -->
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Newsflow Alternativo</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div>
-        <p class="text-xs uppercase text-slate-600">Leadership tech e SSD PCIe Gen6</p>
-        <p class="text-[11px] text-slate-400">Evidenziato ruolo guida nell’innovazione NAND e AI-space.</p>
-        <p class="font-medium text-green-600">Classificazione: Positiva • Ieri</p>
-      </div>
-      <div>
-        <p class="text-xs uppercase text-slate-600">Strategia AI hardware</p>
-        <p class="text-[11px] text-slate-400">Hardware Micron più resiliente rispetto ad AI software.</p>
-        <p class="font-medium text-green-600">Classificazione: Positiva • 4gg fa</p>
-      </div>
-    </div>
-  </details>
-
-  <!-- Sentiment Analitico -->
-  <details class="group border border-slate-200 rounded-lg">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 flex items-center justify-between">
-      <span class="text-sm font-medium">Sentiment Analitico</span>
-      <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-    </summary>
-    <div class="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 text-sm">
-      <div>
-        <p class="text-xs uppercase text-slate-600">AI Score Danelfin</p>
-        <p class="text-[11px] text-slate-400">Probabilità di sovraperformance a 3 mesi secondo AI model.</p>
-        <p class="font-medium text-green-600">“Buy” • Probabilità +56%</p>
-      </div>
-      <div>
-        <p class="text-xs uppercase text-slate-600">Sentiment comparato settore</p>
-        <p class="text-[11px] text-slate-400">Percentile su metriche di fiducia e ottimismo.</p>
-        <p class="font-medium text-green-600">87° percentile</p>
-      </div>
-      <div>
-        <p class="text-xs uppercase text-slate-600">Trend media & engagement</p>
-        <p class="text-[11px] text-slate-400">Crescita visibilità web e interazioni media settimanali.</p>
-        <p class="font-medium text-green-600">Mentions +89% WoW • Pageviews +26.5%</p>
-      </div>
-    </div>
-  </details>
-</section>
-
-    <section id="b13" class="mt-2"></section>
-<section id="blocco13-cluster" class="card-blocco border border-slate-200 rounded-xl px-5 py-6 relative bg-white hover:z-10" data-aos="fade-up">
-  <h2 class="text-base sm:text-lg font-semibold text-gray-900 mb-5">
-    Blocco 13 – Cluster Strategico AI
-  </h2>
-
-  <div class="mb-4">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-bold text-sky-800">Aggiornamento:</span> Agosto 2025<br>
-      Il presente blocco sintetizza i contenuti analizzati nei blocchi precedenti (B1–B12), offrendo una visione integrata della posizione strategica di <span class="font-semibold text-emerald-700">Micron Technology (MU)</span> all’interno del cluster AI.
-    </p>
-  </div>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 text-sm font-medium">
-      B13 | Sintesi Fondamentale (Blocchi 1–4)
-    </summary>
-    <div class="px-4 py-3 text-sm text-slate-700 leading-relaxed">
-      Identificativi: MU, NASDAQ, semiconduttori, IPO 1984. Market Cap ~135 Mld USD, ~1,11B azioni. Target medio analisti: 152 USD (upside >20%).<br>
-      Multipli: P/E fwd ~17x, EV/EBITDA ~11x, P/B ~2,3x. Fair value stimato 140–160 USD.<br>
-      Fondamentali: Margini in espansione, crescita guidata da DRAM/HBM.<br>
-      Politica shareholder: Dividendo <1%, buyback selettivi.<br>
-      <span class="font-semibold text-green-600">🟢 Sintesi: fondamentali solidi, esposizione AI forte, valutazioni interessanti.</span>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 text-sm font-medium">
-      B13 | Sintesi Performance e Mercato (Blocchi 5–8)
-    </summary>
-    <div class="px-4 py-3 text-sm text-slate-700 leading-relaxed">
-      Performance: +80% YTD, volatilità elevata ma ciclica.<br>
-      Microstruttura: Elevata liquidità, presenza istituzionale.<br>
-      Derivati: Forte attività opzioni, call skew positivo, gamma su 120–125 USD.<br>
-      Tecnica: Trend rialzista, supporto 115–118 USD, resistenza 130 USD, flag e golden cross.<br>
-      <span class="font-semibold text-green-600">🟢 Sintesi: momentum forte, rischi tecnici contenuti.</span>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg mb-4">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 text-sm font-medium">
-      B13 | Sintesi ESG, ETF & Macro (Blocchi 9–11)
-    </summary>
-    <div class="px-4 py-3 text-sm text-slate-700 leading-relaxed">
-      ESG: Governance solida, ESG positivo con rischio Asia.<br>
-      ETF: Presente in 300–700 ETF, peso SOXX/FTXL >5%, inflow settoriali in aumento.<br>
-      Macro: Guidance alzata, inflazione calante (2,6%), Fed in taglio tassi, Chips Act come catalizzatore. Rischi geopolitici residui (USA–Cina).<br>
-      <span class="font-semibold text-amber-600">🟢🟡 Sintesi: macro favorevole, warning geopolitico presente.</span>
-    </div>
-  </details>
-
-  <details class="group border border-slate-200 rounded-lg">
-    <summary class="cursor-pointer select-none px-4 py-2 bg-slate-50 hover:bg-slate-100 text-sm font-medium">
-      B13 | Sintesi Sentiment & Newsflow (Blocco 12)
-    </summary>
-    <div class="px-4 py-3 text-sm text-slate-700 leading-relaxed">
-      Newsflow: Upgrade guidance riportato da fonti Tier1, AI come catalizzatore. Impatto positivo +6%.<br>
-      Alternativa: Narrativa AI e space-grade consolidata.<br>
-      Sentiment: AI Score elevato (>80° percentile), engagement media in aumento (+89%).<br>
-      <span class="font-semibold text-green-600">🟢 Sintesi: polarità positiva, storytelling AI dominante.</span>
-    </div>
-  </details>
-
-  <div class="mt-5 border-t pt-5">
-    <p class="text-sm font-medium text-sky-800 mb-1">Classificazione finale Cluster Strategico AI</p>
-    <ul class="text-sm text-slate-700 leading-relaxed list-disc list-inside">
-      <li>Fondamentali: <span class="font-semibold text-green-600">🟢</span></li>
-      <li>Performance & Tecnica: <span class="font-semibold text-green-600">🟢</span></li>
-      <li>ESG, ETF & Macro: <span class="font-semibold text-amber-600">🟢🟡</span></li>
-      <li>Sentiment & Newsflow: <span class="font-semibold text-green-600">🟢</span></li>
-    </ul>
-    <p class="mt-2 font-semibold text-emerald-700">Cluster Strategico AI (MU): 🟢 Positivo prevalente</p>
-  </div>
-
-  <div class="mt-5">
-    <p class="text-sm text-slate-700 leading-relaxed">
-      <span class="font-bold text-sky-800">Commento Tecnico Tradelia AI – Blocco 13:</span><br>
-      Micron si posiziona in una fase strutturalmente favorevole: fondamentali in miglioramento, momentum tecnico positivo e supporto macro forte. L'esposizione al trend AI (DRAM/HBM, SSD Gen6) è chiave, con una narrativa solida sia per l’istituzionale che per il retail.<br>
-      <span class="font-semibold text-green-600">Outlook 6–12 mesi:</span> prevalenza di upside, target >150 USD.<br>
-      <span class="font-semibold text-green-600">Outlook 3 anni:</span> consolidamento come leader AI memory, unico rischio rilevante: geopolitica USA–Cina e ciclicità.<br>
-      <span class="font-semibold text-green-600">Strategia:</span> Bullish strutturale, bias positivo, rischio monitorabile via geopolitica e inflazione wholesale.
-    </p>
-  </div>
-</section>
-
-    <section class="cta-broker bg-slate-50 border-t border-slate-200 px-6 py-8 mt-10 rounded-xl">
-      <h3 class="text-lg font-semibold text-slate-900 mb-5">Broker consigliati per questo scenario</h3>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-
-        <!-- EXANTE -->
-        <div class="p-4 bg-white border rounded-lg shadow-sm">
-          <h4 class="text-sky-800 font-bold text-lg">Exante</h4>
-          <p class="text-sm text-slate-700 mt-1">
-            Specializzato in <span class="font-semibold">opzioni</span> e <span class="font-semibold">azioni reali</span>,
-            con piattaforma tecnica di livello <span class="font-semibold">istituzionale</span>.
-          </p>
-          <p class="text-xs text-slate-500 mt-1">
-            Accesso diretto DMA, copertura globale e strumenti professionali avanzati.
-          </p>
-          <div class="mt-3 flex flex-col gap-2">
-            <a href="https://www.tradelia.org/Exante.html" target="_blank" rel="noopener noreferrer" class="inline-block px-4 py-2 bg-sky-600 text-white text-sm rounded hover:bg-sky-700">
-              Apri Conto
-            </a>
-            <a href="https://www.tradelia.org/Exante.html" target="_blank" rel="noopener noreferrer" class="text-xs text-sky-600 hover:underline">
-              Leggi analisi AI completa →
-            </a>
-          </div>
-        </div>
-
-        <!-- FREEDOM24 -->
-        <div class="p-4 bg-white border rounded-lg shadow-sm">
-          <h4 class="text-sky-800 font-bold text-lg">Freedom24</h4>
-          <p class="text-sm text-slate-700 mt-1">
-            <span class="font-semibold">Azioni reali</span> e <span class="font-semibold">opzioni semplificate</span>
-            su piattaforma di livello <span class="font-semibold">intermedio</span>.
-          </p>
-          <p class="text-xs text-slate-500 mt-1">
-            Accesso a IPO internazionali, azione gratuita per i nuovi clienti e gestione intuitiva.
-          </p>
-          <div class="mt-3 flex flex-col gap-2">
-            <a href="https://www.tradelia.org/Freedom24.html" target="_blank" rel="noopener noreferrer" class="inline-block px-4 py-2 bg-sky-600 text-white text-sm rounded hover:bg-sky-700">
-              Apri Conto
-            </a>
-            <a href="https://www.tradelia.org/Freedom24.html" target="_blank" rel="noopener noreferrer" class="text-xs text-sky-600 hover:underline">
-              Leggi analisi AI completa →
-            </a>
-          </div>
-        </div>
-
-        <!-- PEPPERSTONE -->
-        <div class="p-4 bg-white border rounded-lg shadow-sm">
-          <h4 class="text-sky-800 font-bold text-lg">Pepperstone</h4>
-          <p class="text-sm text-slate-700 mt-1">
-            <span class="font-semibold">CFD azioni</span> con spread ridotti e esecuzione diretta.
-          </p>
-          <p class="text-xs text-slate-500 mt-1">
-            Regolamentazione forte, velocità di esecuzione e ideale per day trader e swing trader.
-          </p>
-          <div class="mt-3 flex flex-col gap-2">
-            <a href="https://www.tradelia.org/Pepperstone.html" target="_blank" rel="noopener noreferrer" class="inline-block px-4 py-2 bg-sky-600 text-white text-sm rounded hover:bg-sky-700">
-              Apri Conto
-            </a>
-            <a href="https://www.tradelia.org/Pepperstone.html" target="_blank" rel="noopener noreferrer" class="text-xs text-sky-600 hover:underline">
-              Leggi analisi AI completa →
-            </a>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <footer class="mt-10 text-xs text-slate-500 border-t border-slate-200 pt-6">
-      <p>© 2025 Tradelia •AI — Tutti i diritti riservati. Questo documento è fornito “as is”.</p>
-      <p class="mt-2">Contatti: <a href="mailto:info@tradelia.org" class="underline hover:no-underline">info@tradelia.org</a></p>
-    </footer>
-    <!-- Barra fissa in basso + Drawer indice -->
-    <div id="bottom-toc-bar" class="fixed bottom-0 inset-x-0 z-50 no-print">
-      <div class="mx-auto max-w-6xl px-4 pb-[env(safe-area-inset-bottom)]">
-        <div class="rounded-full shadow-lg bg-white border border-slate-200 flex items-center justify-between px-4 py-2">
-          <button id="open-toc-drawer" type="button" class="inline-flex items-center gap-2 text-sm font-medium" aria-controls="toc-drawer" aria-expanded="false">
-            <i data-lucide="list-tree" class="w-4 h-4" aria-hidden="true"></i>
-            Indice
-          </button>
-          <a href="#sim-op" class="text-sm hover:underline">↑ Top</a>
-        </div>
-      </div>
-    </div>
-
-    <div id="toc-drawer" class="fixed inset-0 z-50 hidden no-print" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="toc-title">
-      <div id="toc-overlay" class="absolute inset-0 bg-slate-900/40"></div>
-      <div class="absolute right-0 top-0 h-full w-full sm:w-[50%] max-w-md bg-white border-l border-slate-200 shadow-xl p-5 overflow-y-auto">
-        <div class="flex items-center justify-between mb-4">
-          <h2 id="toc-title" class="text-base font-semibold">Indice</h2>
-          <button id="close-toc-drawer" type="button" class="rounded-md border border-slate-200 px-2 py-1 text-sm hover:bg-slate-50">Chiudi</button>
-        </div>
-        <nav class="space-y-2 text-sm" aria-label="Indice">
-          <a href="#sim-op" class="toc-link block px-3 py-2 rounded border border-slate-200 hover:bg-indigo-50" aria-current="true">Simulazioni Operative</a>
-          <a href="#b1" class="toc-link block px-3 py-2 rounded border border-slate-200 hover:bg-indigo-50">Blocco 1 — Identificativi &amp; Contesto</a>
-          <a href="#b2" class="toc-link block px-3 py-2 rounded border border-slate-200 hover:bg-indigo-50">Blocco 2 — Multipli &amp; Valutazione Intrinseca</a>
-          <a href="#b3" class="toc-link block px-3 py-2 rounded border border-slate-200 hover:bg-indigo-50">Blocco 3 — Fondamentali Aziendali</a>
-          <a href="#b4" class="toc-link block px-3 py-2 rounded border border-slate-200 hover:bg-indigo-50">Blocco 4 — Dividendi &amp; Buyback</a>
-          <a href="#b5" class="toc-link block px-3 py-2 rounded border border-slate-200 hover:bg-indigo-50">Blocco 5 — Performance &amp; Rischio</a>
-          <a href="#b6" class="toc-link block px-3 py-2 rounded border border-slate-200 hover:bg-indigo-50">Blocco 6 — Microstruttura &amp; Market</a>
-          <a href="#b7" class="toc-link block px-3 py-2 rounded border border-slate-200 hover:bg-indigo-50">Blocco 7 — Derivati &amp; Opzioni</a>
-          <a href="#b8" class="toc-link block px-3 py-2 rounded border border-slate-200 hover:bg-indigo-50">Blocco 8 — Tecnica &amp; Correlazioni</a>
-          <a href="#b9" class="toc-link block px-3 py-2 rounded border border-slate-200 hover:bg-indigo-50">Blocco 9 — Proprietà, ESG &amp; Governance</a>
-          <a href="#b10" class="toc-link block px-3 py-2 rounded border border-slate-200 hover:bg-indigo-50">Blocco 10 — ETF FLOW</a>
-          <a href="#b11" class="toc-link block px-3 py-2 rounded border border-slate-200 hover:bg-indigo-50">Blocco 11 — Eventi &amp; Macro</a>
-          <a href="#b12" class="toc-link block px-3 py-2 rounded border border-slate-200 hover:bg-indigo-50">Blocco 12 — Rischi &amp; Sensibilità</a>
-          <a href="#b13" class="toc-link block px-3 py-2 rounded border border-slate-200 hover:bg-indigo-50">Blocco 13 — Conclusioni &amp; Score</a>
-        </nav>
-      </div>
-    </div>
-
-  </main>
-
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script>
-  (() => {
-    // ==== Init icone + animazioni
-    window.addEventListener('DOMContentLoaded', () => {
-      if (window.lucide) window.lucide.createIcons();
-      if (window.AOS) window.AOS.init({ duration: 400, once: true });
-    });
-
-    // ==== Tabs ARIA + tastiera
-    const tabBtns = document.querySelectorAll('[role="tab"]');
-    const tabPanels = document.querySelectorAll('[role="tabpanel"]');
-
-    function activateTab(btn){
-      tabBtns.forEach(b => { b.setAttribute('aria-selected','false'); b.classList.remove('border-sky-500','text-sky-700','font-semibold'); });
-      tabPanels.forEach(p => p.classList.add('hidden'));
-      btn.setAttribute('aria-selected','true');
-      btn.classList.add('border-sky-500','text-sky-700','font-semibold');
-      const id = btn.getAttribute('aria-controls');
-      document.getElementById(id)?.classList.remove('hidden');
-    }
-
-    tabBtns.forEach(btn => {
-      btn.addEventListener('click', () => activateTab(btn));
-      btn.addEventListener('keydown', (e) => {
-        const arr = Array.from(tabBtns);
-        const i = arr.indexOf(btn);
-        let next = null;
-        if (e.key === 'ArrowRight') next = arr[(i+1)%arr.length];
-        if (e.key === 'ArrowLeft')  next = arr[(i-1+arr.length)%arr.length];
-        if (e.key === 'Home') next = arr[0];
-        if (e.key === 'End')  next = arr[arr.length-1];
-        if (next) { next.focus(); activateTab(next); e.preventDefault(); }
-      });
-    });
-    if (tabBtns.length) activateTab(tabBtns[0]);
-
-    // ==== Accordion mobile esclusivo
-    const accRoot = document.getElementById('simulazioni-accordion');
-    const accItems = accRoot ? accRoot.querySelectorAll('details') : [];
-    accItems.forEach((detail) => {
-      detail.addEventListener('toggle', () => {
-        if (!detail.open) return;
-        setTimeout(() => { accItems.forEach((other) => { if (other !== detail) other.open = false; }); }, 40);
-        detail.querySelector('summary')?.focus({ preventScroll: true });
-        detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    });
-
-    // ==== TOC / Indice (drawer + evidenziazione dinamica)
-    const headerEl = document.querySelector('header');
-    const getOffset = () => (headerEl ? headerEl.offsetHeight + 8 : 80);
-
-    const tocLinks = document.querySelectorAll('.toc-link');
-    const sections = Array.from(tocLinks)
-      .map(a => {
-        const sel = a.getAttribute('href');
-        return sel && sel.startsWith('#') ? document.querySelector(sel) : null;
-      })
-      .filter(Boolean);
-
-    const setActiveToc = (id) => {
-      tocLinks.forEach(a => {
-        a.setAttribute('aria-current', 'false');
-        a.classList.remove('active');
-      });
-      const active = Array.from(tocLinks).find(a => a.getAttribute('href') === `#${id}`);
-      if (active) {
-        active.setAttribute('aria-current', 'true');
-        active.classList.add('active');
+</nav>
+
+<script>
+  // Inizializza icone Lucide (se non già inizializzate altrove)
+  if (window.lucide && lucide.createIcons) lucide.createIcons();
+
+  // Offset per header sticky (regola anche scroll-margin sui target)
+  const OFFSET = 96;
+
+  // Imposta scroll-margin-top per tutte le sezioni target
+  document.querySelectorAll('#sim-op, #blocco1, #blocco2, #blocco3, #blocco4, #blocco5, #blocco6, #blocco7, #blocco8, #blocco9, #blocco10, #blocco11, #blocco12, #blocco13')
+    .forEach(sec => sec.style.scrollMarginTop = OFFSET + 'px');
+
+  // Scroll-spy con IntersectionObserver
+  const links = Array.from(document.querySelectorAll('#nav-rail .nav-rail-link'));
+  const map = new Map(links.map(a => [a.dataset.target, a]));
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const id = entry.target.id;
+      const link = map.get(id);
+      if (!link) return;
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('text-sky-700','bg-sky-50','font-semibold'));
+        link.classList.add('text-sky-700','bg-sky-50','font-semibold');
+        links.forEach(l => l.setAttribute('aria-current','false'));
+        link.setAttribute('aria-current','true');
       }
-    };
-
-    const getCurrentSectionId = () => {
-      const offset = getOffset();
-      let current = sections[0]?.id || null;
-      let bestTop = -Infinity;
-      sections.forEach(sec => {
-        const top = sec.getBoundingClientRect().top - offset;
-        if (top <= 0 && top > bestTop) {
-          bestTop = top;
-          current = sec.id;
-        }
-      });
-      if (!current) {
-        const firstInView = sections.find(sec => {
-          const r = sec.getBoundingClientRect();
-          return r.top >= 0 && r.top < window.innerHeight * 0.6;
-        });
-        current = firstInView ? firstInView.id : sections[0]?.id || null;
-      }
-      return current;
-    };
-
-    const smoothScrollTo = (target) => {
-      const top = target.getBoundingClientRect().top + window.scrollY - getOffset();
-      window.scrollTo({ top, behavior: 'smooth' });
-    };
-
-    // Stato iniziale
-    window.addEventListener('load', () => {
-      const hash = window.location.hash;
-      if (hash) {
-        const target = document.querySelector(hash);
-        if (target) {
-          setActiveToc(target.id);
-          setTimeout(() => smoothScrollTo(target), 0);
-          return;
-        }
-      }
-      const id = getCurrentSectionId();
-      if (id) setActiveToc(id);
     });
+  }, { rootMargin: `-${OFFSET}px 0px -60% 0px`, threshold: 0.1 });
 
-    // Aggiorna con IntersectionObserver
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { if (entry.isIntersecting) setActiveToc(entry.target.id); });
-    }, { rootMargin: `-${getOffset()}px 0px -70% 0px`, threshold: [0, 0.2, 0.66, 1] });
-    sections.forEach(sec => observer.observe(sec));
+  // Osserva le sezioni
+  ['sim-op','blocco1','blocco2','blocco3','blocco4','blocco5','blocco6','blocco7','blocco8','blocco9','blocco10','blocco11','blocco12','blocco13']
+    .forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
 
-    // Smooth scroll per link TOC
-    tocLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        const hash = link.getAttribute('href');
-        if (!hash || !hash.startsWith('#')) return;
-        const target = document.querySelector(hash);
-        if (!target) return;
-        e.preventDefault();
-        history.pushState({}, '', hash);
-        smoothScrollTo(target);
-        setActiveToc(target.id);
-        closeDrawer();
-      });
-    });
-
-    // Aggiorna evidenziazione su back/forward
-    window.addEventListener('hashchange', () => {
-      const target = document.querySelector(location.hash);
-      if (target) { setActiveToc(target.id); smoothScrollTo(target); }
-    });
-
-    // ==== Drawer TOC (top + bottom) — ARIA dinamico + focus trap
-    const body = document.body;
-    const drawer = document.getElementById('toc-drawer');
-    const openBtnTop = document.getElementById('open-toc-drawer-top');
-    const openBtnBottom = document.getElementById('open-toc-drawer');
-    const closeBtn = document.getElementById('close-toc-drawer');
-    const overlay = document.getElementById('toc-overlay');
-
-    let lastFocused = null;
-
-    function focusTrap(e){
-      if (!drawer || drawer.classList.contains('hidden')) return;
-      const focusables = drawer.querySelectorAll('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])');
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (e.key === 'Tab') {
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault(); last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault(); first.focus();
-        }
-      }
-      if (e.key === 'Escape') closeDrawer();
-    }
-
-    function openDrawer(){
-      if (!drawer) return;
-      const id = getCurrentSectionId();
-      if (id) setActiveToc(id);
-      lastFocused = document.activeElement;
-      drawer.classList.remove('hidden');
-      drawer.setAttribute('aria-hidden','false');
-      body.style.overflow = 'hidden';
-      openBtnBottom?.setAttribute('aria-expanded','true');
-      openBtnTop?.setAttribute('aria-expanded','true');
-      // focus iniziale sul titolo
-      const title = drawer.querySelector('#toc-title');
-      title?.focus({ preventScroll: true });
-      window.addEventListener('keydown', focusTrap);
-    }
-
-    function closeDrawer(){
-      if (!drawer) return;
-      drawer.classList.add('hidden');
-      drawer.setAttribute('aria-hidden','true');
-      body.style.overflow = '';
-      openBtnBottom?.setAttribute('aria-expanded','false');
-      openBtnTop?.setAttribute('aria-expanded','false');
-      window.removeEventListener('keydown', focusTrap);
-      // ritorno focus al trigger
-      (lastFocused && typeof lastFocused.focus === 'function') ? lastFocused.focus() : openBtnBottom?.focus();
-    }
-
-    window.closeDrawer = closeDrawer;
-
-    openBtnTop?.addEventListener('click', openDrawer);
-    openBtnBottom?.addEventListener('click', openDrawer);
-    closeBtn?.addEventListener('click', closeDrawer);
-    overlay?.addEventListener('click', closeDrawer);
-  })();
-  </script>
-    <script>
-  const tabButtons = document.querySelectorAll('.tab-btn');
-  const tabPanels = document.querySelectorAll('.tab-panel');
-
-  tabButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const target = btn.getAttribute('data-tab');
-
-      tabButtons.forEach(b => {
-        b.classList.remove('text-sky-700', 'border-sky-600');
-        b.setAttribute('aria-selected', 'false');
-        b.setAttribute('data-active', 'false');
-      });
-
-      tabPanels.forEach(panel => {
-        panel.classList.add('hidden');
-      });
-
-      btn.classList.add('text-sky-700', 'border-sky-600');
-      btn.setAttribute('aria-selected', 'true');
-      btn.setAttribute('data-active', 'true');
-      document.getElementById(`tab-${target}`).classList.remove('hidden');
+  // Smooth scroll con offset “intelligente” per i click sul rail
+  links.forEach(link => {
+    link.addEventListener('click', (e) => {
+      const id = link.getAttribute('href').slice(1);
+      const target = document.getElementById(id);
+      if (!target) return;
+      e.preventDefault();
+      const y = target.getBoundingClientRect().top + window.scrollY - OFFSET + 1;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+      // Stato visuale immediato
+      links.forEach(l => l.classList.remove('text-sky-700','bg-sky-50','font-semibold'));
+      link.classList.add('text-sky-700','bg-sky-50','font-semibold');
     });
   });
 </script>
 
-</body>
-</html>
+<style>
+  /* Nascondi navigation rail in stampa */
+  @media print { #nav-rail { display: none !important; } }
+</style>
+<!-- SIMULAZIONE OPERATIVA (Executive Summary) -->
+<section id="sim-op" class="max-w-6xl mx-auto mt-8 mb-16 bg-white border border-slate-200 rounded-xl shadow-sm">
+  <header class="px-6 py-5 border-b border-slate-200">
+    <h2 class="text-xl font-bold text-slate-900">Simulazione Operativa</h2>
+    <p class="text-sm text-slate-600 mt-1">
+      Panoramica sintetica dei setup su MU: <span class="font-medium">LT, Opzioni, CFD Swing, Futures</span>.
+      Apri un modulo per i livelli, le condizioni e i controlli in tempo reale.
+    </p>
+  </header>
+
+  <div class="divide-y divide-slate-200">
+
+    <!-- LT (esempio compilato) -->
+    <details class="group">
+      <summary class="flex items-center justify-between w-full px-6 py-4 cursor-pointer hover:bg-slate-50">
+        <div class="flex items-center gap-2">
+          <i data-lucide="trending-up" class="w-5 h-5 text-emerald-600"></i>
+          <span class="font-medium">Investimento LT — Micron Technology (MU)</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center px-2 py-0.5 text-xs rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Stato: Attivo</span>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180"></i>
+        </div>
+      </summary>
+
+      <div class="px-6 pb-6 pt-2 text-sm">
+        <!-- Grid metriche -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5">
+          <div>
+            <p class="text-xs uppercase tracking-wide text-slate-500">Stile</p>
+            <p class="font-semibold text-slate-800">Valuation Growth</p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wide text-slate-500">Strategia</p>
+            <p class="font-semibold text-slate-800">DCF + Trend confermato</p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wide text-slate-500">Bias</p>
+            <p class="font-semibold text-emerald-700">Bullish 3–12 mesi</p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wide text-slate-500">Fair Value</p>
+            <p class="font-semibold text-emerald-700">150–160 USD</p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wide text-slate-500">Prezzo Attuale</p>
+            <p class="font-semibold text-slate-800">121.8 USD</p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wide text-slate-500">Upside (FV)</p>
+            <p class="font-semibold text-emerald-700">+23% ~ +31%</p>
+          </div>
+          <div class="sm:col-span-2">
+            <p class="text-xs uppercase tracking-wide text-slate-500">Livelli tecnici</p>
+            <p class="font-semibold text-slate-800">Entry 121–123 • SL 111 • TP1 145 • TP2 160</p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wide text-slate-500">Allocazione Max</p>
+            <p class="font-semibold text-slate-800">7.5% (tranche 40/30/30)</p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wide text-slate-500">Validazione</p>
+            <p class="font-semibold text-emerald-700">EMA21&gt;55&gt;200 + RSI&gt;55</p>
+          </div>
+        </div>
+
+        <hr class="my-5">
+
+        <!-- Cosa monitorare: Attivi / In formazione / Invalidatori -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="rounded-lg border border-emerald-200 bg-emerald-50/50 p-3">
+            <div class="flex items-center gap-2 mb-1.5">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-700"></i>
+              <p class="text-xs font-semibold text-emerald-800 uppercase tracking-wide">Attivi</p>
+            </div>
+            <ul class="list-disc list-inside text-slate-700 space-y-1">
+              <li>Trend W confermato (EMA stack)</li>
+              <li>RSI D1 &gt; 55</li>
+            </ul>
+          </div>
+
+          <div class="rounded-lg border border-amber-200 bg-amber-50/50 p-3">
+            <div class="flex items-center gap-2 mb-1.5">
+              <i data-lucide="hourglass" class="w-4 h-4 text-amber-700"></i>
+              <p class="text-xs font-semibold text-amber-800 uppercase tracking-wide">In formazione</p>
+            </div>
+            <ul class="list-disc list-inside text-slate-700 space-y-1">
+              <li>Breakout D1 sopra 123</li>
+              <li>RVOL10 ≥ 1.2 su breakout</li>
+            </ul>
+          </div>
+
+          <div class="rounded-lg border border-rose-200 bg-rose-50/50 p-3">
+            <div class="flex items-center gap-2 mb-1.5">
+              <i data-lucide="x-octagon" class="w-4 h-4 text-rose-700"></i>
+              <p class="text-xs font-semibold text-rose-800 uppercase tracking-wide">Invalidatori</p>
+            </div>
+            <ul class="list-disc list-inside text-slate-700 space-y-1">
+              <li>Close W &lt; 111 USD</li>
+              <li>QQQ/SOX negativi ≥ 3 giorni</li>
+              <li>IV &gt; 85° pct o Gamma neutro</li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="mt-5 text-slate-700">
+          <span class="font-semibold text-sky-800">Nota:</span> strategia valida fino al <time datetime="2025-09-30">30/09/2025</time>; WR stimata 75–80% su storico multi-blocco.
+        </p>
+      </div>
+    </details>
+
+    <!-- Opzioni Speculative -->
+    <details class="group">
+      <summary class="flex items-center justify-between w-full px-6 py-4 cursor-pointer hover:bg-slate-50">
+        <div class="flex items-center gap-2">
+          <i data-lucide="layers" class="w-5 h-5 text-sky-600"></i>
+          <span class="font-medium">Opzioni Speculative — Call Debit Spread</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center px-2 py-0.5 text-xs rounded-full bg-sky-50 text-sky-700 border border-sky-200">Stato: In formazione</span>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180"></i>
+        </div>
+      </summary>
+      <div class="px-6 pb-6 pt-2 text-sm text-slate-600">
+        <!-- placeholder: riempiamo dopo -->
+        Struttura: 120/130 • Scadenza: 20/09/2025 • Condizione: Close H4 &gt; 123 + breakout D1 • Rischio: 0.7% portafoglio.
+      </div>
+    </details>
+
+    <!-- CFD Swing -->
+    <details class="group">
+      <summary class="flex items-center justify-between w-full px-6 py-4 cursor-pointer hover:bg-slate-50">
+        <div class="flex items-center gap-2">
+          <i data-lucide="activity" class="w-5 h-5 text-indigo-600"></i>
+          <span class="font-medium">CFD Swing — BBW Expansion + Trend</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center px-2 py-0.5 text-xs rounded-full bg-amber-50 text-amber-700 border border-amber-200">Stato: In validazione</span>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180"></i>
+        </div>
+      </summary>
+      <div class="px-6 pb-6 pt-2 text-sm text-slate-600">
+        <!-- placeholder -->
+        Condizione: H4 &gt; 123 + BBW&lt;12 • SL 118.9 • TP 127/132 • Rischio 0.7–1.5%.
+      </div>
+    </details>
+
+    <!-- Futures / Micro-Futures -->
+    <details class="group">
+      <summary class="flex items-center justify-between w-full px-6 py-4 cursor-pointer hover:bg-slate-50">
+        <div class="flex items-center gap-2">
+          <i data-lucide="bar-chart-4" class="w-5 h-5 text-purple-600"></i>
+          <span class="font-medium">Futures / Micro-Futures — VWAP Compression</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center px-2 py-0.5 text-xs rounded-full bg-purple-50 text-purple-700 border border-purple-200">Stato: Intraday</span>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180"></i>
+        </div>
+      </summary>
+      <div class="px-6 pb-6 pt-2 text-sm text-slate-600">
+        <!-- placeholder -->
+        Entry 123.2 • SL 121.4 • TP 125.5/128/132 • Leva 2.5x • Validazione: RSI&gt;55, POC retest, tape aggressivo ask.
+      </div>
+    </details>
+
+  </div>
+</section>
+  
+
+  
