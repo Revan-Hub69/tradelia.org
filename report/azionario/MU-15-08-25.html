@@ -559,18 +559,6 @@
     let lastFocused = null;
     const focusableSelectors = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
 
-    // --- TOC Drawer: cambia sezione al click ---
-const tocNav = document.querySelector('#toc-drawer nav');
-tocNav.addEventListener('click', (e) => {
-  const a = e.target.closest('.toc-link');
-  if (!a) return;
-  e.preventDefault();
-  // supporta href assoluti/relativi
-  const id = (new URL(a.getAttribute('href'), location.href)).hash.replace('#','');
-  if (!panelMap.has(id)) return;
-  closeDrawer();
-  setActive(id, true, true);
-
 
     function openDrawer() {
       lastFocused = document.activeElement;
