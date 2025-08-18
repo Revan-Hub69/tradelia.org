@@ -61,7 +61,7 @@
       text-align: left;
       box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
     }
- body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+   body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
     .card{transition:transform .2s ease, box-shadow .2s ease}
     .card:hover{box-shadow:0 10px 30px rgba(2,6,23,.08); transform: translateY(-2px)}
     .logo-fb{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:.75rem;font-weight:700;color:#fff;box-shadow:inset 0 0 0 1px rgba(15,23,42,.08)}
@@ -72,7 +72,8 @@
     .score-badge{font-size:11px;padding:.125rem .5rem;border-radius:999px;background:#eef2ff;color:#3730a3;font-weight:700}
     .no-scrollbar{scrollbar-width:none}
     .no-scrollbar::-webkit-scrollbar{display:none}
-
+    .clamp-3{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  html:has(#modal.flex), body:has(#modal.flex){overflow:hidden}
   </style>
 </head>
 <body class="text-gray-900">
@@ -1491,14 +1492,7 @@ Vuoi procedere inviando i dati?`;
 
 
  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
-<header class="sticky top-0 z-30 bg-white/90 backdrop-blur border-b border-slate-200">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-      <div class="text-xl font-extrabold tracking-tight">TRADELIA <span class="text-sky-700">•</span> AI</div>
-      <div class="text-xs text-slate-500">Presentazione istituzionale · Link affiliati solo nei modali</div>
-    </div>
-  </header>
-
-  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+ <main class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <nav aria-label="Sezioni" class="mb-6 -mt-2 text-sm overflow-x-auto no-scrollbar">
       <ul class="flex gap-2">
         <li><a href="#corepro" class="tag hover:bg-white">Core Pro</a></li>
@@ -1519,51 +1513,67 @@ Vuoi procedere inviando i dati?`;
     <!-- Core Pro / Istituzionali -->
     <section id="corepro" class="mb-10">
       <h2 class="text-xl font-semibold mb-4">Core Pro / Istituzionali</h2>
-      <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch">
+      <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
         <!-- EXANTE (Affiliato) -->
-        <li data-key="exante" class="card border border-slate-200 bg-white rounded-xl h-full p-5 flex gap-3 items-start">
+        <li data-key="exante" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
           <div class="logo-fb bg-sky-600">E</div>
           <div class="min-w-0 flex flex-col h-full">
             <div class="font-semibold mb-1 flex items-center gap-2">EXANTE <span class="badge bg-emerald-100 text-emerald-700">Affiliato</span> <span class="score-badge">92/100</span></div>
-            <div class="text-sm text-slate-600 mb-2">DMA globale su mercati quotati (azioni, ETF, futures, opzioni, bond). <strong>Cripto solo via CFD</strong> o tramite ETF/ETN quotati.</div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">DMA globale su mercati quotati (azioni, ETF, futures, opzioni, bond). <strong>Cripto solo via CFD</strong> o tramite ETF/ETN quotati.</div>
             <div class="flex flex-wrap gap-1 mb-3">
               <span class="tag">DMA</span><span class="tag">Bond</span><span class="tag">Derivati quotati</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
             </div>
             <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('exante')">Maggiori info</button>
           </div>
         </li>
         <!-- Saxo Bank (non affiliato) -->
-        <li data-key="saxo" class="card border border-slate-200 bg-white rounded-xl h-full p-5 flex gap-3 items-start">
+        <li data-key="saxo" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
           <div class="logo-fb bg-blue-700">S</div>
           <div class="min-w-0 flex flex-col h-full">
             <div class="font-semibold mb-1">Saxo Bank <span class="score-badge">90/100</span></div>
-            <div class="text-sm text-slate-600 mb-2">Piattaforma multi-asset avanzata con accesso a mercati globali e derivati quotati.</div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">Piattaforma multi-asset avanzata con accesso a mercati globali e derivati quotati.</div>
             <div class="flex flex-wrap gap-1 mb-3">
               <span class="tag">DMA</span><span class="tag">Opzioni</span><span class="tag">Futures</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
             </div>
             <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('saxo')">Maggiori info</button>
           </div>
         </li>
         <!-- Interactive Brokers (non affiliato) -->
-        <li data-key="ibkr" class="card border border-slate-200 bg-white rounded-xl h-full p-5 flex gap-3 items-start">
+        <li data-key="ibkr" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
           <div class="logo-fb bg-slate-800">IB</div>
           <div class="min-w-0 flex flex-col h-full">
             <div class="font-semibold mb-1">Interactive Brokers (IBKR) <span class="score-badge">95/100</span></div>
-            <div class="text-sm text-slate-600 mb-2">Accesso istituzionale a azioni, ETF, bond, opzioni e futures su borse globali; TWS/IBKR APIs.</div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">Accesso istituzionale a azioni, ETF, bond, opzioni e futures su borse globali; TWS/IBKR APIs.</div>
             <div class="flex flex-wrap gap-1 mb-3">
               <span class="tag">DMA</span><span class="tag">TWS/API</span><span class="tag">Derivati quotati</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
             </div>
             <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('ibkr')">Maggiori info</button>
           </div>
         </li>
         <!-- MEXEM (non affiliato) -->
-        <li data-key="mexem" class="card border border-slate-200 bg-white rounded-xl h-full p-5 flex gap-3 items-start">
+        <li data-key="mexem" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
           <div class="logo-fb bg-amber-700">M</div>
           <div class="min-w-0 flex flex-col h-full">
             <div class="font-semibold mb-1">MEXEM <span class="score-badge">88/100</span></div>
-            <div class="text-sm text-slate-600 mb-2">Introducer europeo con accesso a TWS/IBKR; multi-asset quotati UE/USA.</div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">Introducer europeo con accesso a TWS/IBKR; multi-asset quotati UE/USA.</div>
             <div class="flex flex-wrap gap-1 mb-3">
               <span class="tag">DMA</span><span class="tag">TWS</span><span class="tag">Multi-mercato</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
             </div>
             <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('mexem')">Maggiori info</button>
           </div>
@@ -1574,39 +1584,51 @@ Vuoi procedere inviando i dati?`;
     <!-- Retail evoluto / Business -->
     <section id="retail" class="mb-10">
       <h2 class="text-xl font-semibold mb-4">Retail evoluto / Business</h2>
-      <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch">
+      <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
         <!-- Freedom24 (Affiliato) -->
-        <li data-key="freedom24" class="card border border-slate-200 bg-white rounded-xl h-full p-5 flex gap-3 items-start">
+        <li data-key="freedom24" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
           <div class="logo-fb bg-emerald-600">F</div>
           <div class="min-w-0 flex flex-col h-full">
             <div class="font-semibold mb-1 flex items-center gap-2">Freedom24 <span class="badge bg-emerald-100 text-emerald-700">Affiliato</span> <span class="score-badge">85/100</span></div>
-            <div class="text-sm text-slate-600 mb-2">Accesso ad <strong>IPO</strong>, azioni/ETF e obbligazioni. <strong>Nessun CFD</strong>.</div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">Accesso ad <strong>IPO</strong>, azioni/ETF e obbligazioni. <strong>Nessun CFD</strong>.</div>
             <div class="flex flex-wrap gap-1 mb-3">
               <span class="tag">IPO</span><span class="tag">Azioni</span><span class="tag">ETF</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
             </div>
             <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('freedom24')">Maggiori info</button>
           </div>
         </li>
         <!-- Scalable Capital (non affiliato) -->
-        <li data-key="scalable" class="card border border-slate-200 bg-white rounded-xl h-full p-5 flex gap-3 items-start">
+        <li data-key="scalable" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
           <div class="logo-fb bg-indigo-600">S</div>
           <div class="min-w-0 flex flex-col h-full">
             <div class="font-semibold mb-1">Scalable Capital <span class="score-badge">83/100</span></div>
-            <div class="text-sm text-slate-600 mb-2">PAC su ETF a costi contenuti.</div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">PAC su ETF a costi contenuti.</div>
             <div class="flex flex-wrap gap-1 mb-3">
               <span class="tag">ETF</span><span class="tag">PAC</span><span class="tag">Low fees</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
             </div>
             <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('scalable')">Maggiori info</button>
           </div>
         </li>
         <!-- DEGIRO (non affiliato) -->
-        <li data-key="degiro" class="card border border-slate-200 bg-white rounded-xl h-full p-5 flex gap-3 items-start">
+        <li data-key="degiro" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
           <div class="logo-fb bg-pink-600">D</div>
           <div class="min-w-0 flex flex-col h-full">
             <div class="font-semibold mb-1">DEGIRO <span class="score-badge">84/100</span></div>
-            <div class="text-sm text-slate-600 mb-2">Costi competitivi e ampia copertura mercati.</div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">Costi competitivi e ampia copertura mercati.</div>
             <div class="flex flex-wrap gap-1 mb-3">
               <span class="tag">ETF</span><span class="tag">Azioni</span><span class="tag">Multi-mercato</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
             </div>
             <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('degiro')">Maggiori info</button>
           </div>
@@ -1617,27 +1639,35 @@ Vuoi procedere inviando i dati?`;
     <!-- Mass market / Social -->
     <section id="mass" class="mb-10">
       <h2 class="text-xl font-semibold mb-4">Mass market / Social (solo real assets)</h2>
-      <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch">
+      <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
         <!-- eToro (Affiliato) -->
-        <li data-key="etoro" class="card border border-slate-200 bg-white rounded-xl h-full p-5 flex gap-3 items-start">
+        <li data-key="etoro" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
           <div class="logo-fb bg-red-600">e</div>
           <div class="min-w-0 flex flex-col h-full">
             <div class="font-semibold mb-1 flex items-center gap-2">eToro <span class="badge bg-emerald-100 text-emerald-700">Affiliato</span> <span class="score-badge">76/100</span></div>
-            <div class="text-sm text-slate-600 mb-2">Azioni/ETF reali e <strong>cripto spot</strong> con funzioni social. <strong>Offre anche CFD</strong> (noi includiamo solo la parte real assets).</div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">Azioni/ETF reali e <strong>cripto spot</strong> con funzioni social. <strong>Offre anche CFD</strong> (noi includiamo solo la parte real assets).</div>
             <div class="flex flex-wrap gap-1 mb-3">
               <span class="tag">Azioni</span><span class="tag">ETF</span><span class="tag">Cripto spot</span><span class="tag">Social</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
             </div>
             <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('etoro')">Maggiori info</button>
           </div>
         </li>
         <!-- NAGA (Affiliato) -->
-        <li data-key="naga" class="card border border-slate-200 bg-white rounded-xl h-full p-5 flex gap-3 items-start">
+        <li data-key="naga" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
           <div class="logo-fb bg-orange-600">N</div>
           <div class="min-w-0 flex flex-col h-full">
             <div class="font-semibold mb-1 flex items-center gap-2">NAGA <span class="badge bg-emerald-100 text-emerald-700">Affiliato</span> <span class="score-badge">72/100</span></div>
-            <div class="text-sm text-slate-600 mb-2">Titoli/ETF reali e componente social. <strong>Offre anche CFD</strong> (incluso solo per real assets).</div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">Titoli/ETF reali e componente social. <strong>Offre anche CFD</strong> (incluso solo per real assets).</div>
             <div class="flex flex-wrap gap-1 mb-3">
               <span class="tag">Azioni</span><span class="tag">ETF</span><span class="tag">Social</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
             </div>
             <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('naga')">Maggiori info</button>
           </div>
@@ -1648,15 +1678,19 @@ Vuoi procedere inviando i dati?`;
     <!-- Italia -->
     <section id="italia" class="mb-12">
       <h2 class="text-xl font-semibold mb-4">Broker italiani 🇮🇹 (CONSOB)</h2>
-      <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch">
+      <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
         <!-- Directa SIM (non affiliato) -->
-        <li data-key="directa" class="card border border-slate-200 bg-white rounded-xl h-full p-5 flex gap-3 items-start">
+        <li data-key="directa" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
           <div class="logo-fb bg-slate-600">D</div>
           <div class="min-w-0 flex flex-col h-full">
             <div class="font-semibold mb-1">Directa SIM <span class="score-badge">82/100</span></div>
-            <div class="text-sm text-slate-600 mb-2">Mercato italiano e fiscalità domestica.</div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">Mercato italiano e fiscalità domestica.</div>
             <div class="flex flex-wrap gap-1 mb-3">
               <span class="tag">Italia</span><span class="tag">Borsa Italiana</span><span class="tag">CONSOB</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
             </div>
             <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('directa')">Maggiori info</button>
           </div>
@@ -1672,7 +1706,7 @@ Vuoi procedere inviando i dati?`;
 
   <!-- Modal (single, dynamic) -->
   <div id="modal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/50 p-4">
-    <div class="bg-white w-full max-w-lg rounded-xl shadow-2xl overflow-hidden">
+    <div class="bg-white w-full max-w-xl rounded-xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
       <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
         <div class="flex items-center gap-2">
           <h3 id="m-title" class="font-semibold text-slate-900">Broker</h3>
@@ -1680,7 +1714,7 @@ Vuoi procedere inviando i dati?`;
         </div>
         <button class="text-slate-500 hover:text-red-600" onclick="closeModal()">✕</button>
       </div>
-      <div class="px-5 py-4 text-sm text-slate-700 grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div class="px-5 py-4 text-sm text-slate-700 grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 overflow-y-auto">
         <div id="m-tags" class="flex flex-wrap gap-1 sm:col-span-2"></div>
         <div><span class="font-semibold">Tipi di strumenti:</span> <span id="m-assets"></span></div>
         <div><span class="font-semibold">Numero strumenti:</span> <span id="m-count"></span></div>
@@ -2015,6 +2049,17 @@ Vuoi procedere inviando i dati?`;
     }
     function closeModal(){ const m=$('#modal'); m.classList.add('hidden'); m.classList.remove('flex'); }
     document.getElementById('modal').addEventListener('click', (e)=>{ if(e.target.id==='modal') closeModal(); });
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); });
+  // Fill card summaries (platforms & fees)
+    document.querySelectorAll('li[data-key]').forEach(li=>{
+      const key = li.getAttribute('data-key');
+      const d = DATA[key]; if(!d) return;
+      const p = li.querySelector('.js-platforms');
+      const f = li.querySelector('.js-fees');
+      if(p) p.textContent = d.platforms || 'N/D';
+      if(f) f.textContent = d.fees || 'N/D';
+    });
+
   // --- Filtro CFD ---
     function applyFilter(mode){
       const cards = document.querySelectorAll('li[data-key]');
@@ -2039,41 +2084,6 @@ Vuoi procedere inviando i dati?`;
       applyFilter('standard');
     }
   </script>
-<!-- MODALE LEGALE DINAMICO (Termini e Privacy) -->
-<script>
-  function apriSezioneLegale(id) {
-    const titolo = id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy';
-    const testo = id === 'section-tc'
-      ? "Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all'investimento. Tutte le operazioni simulate in ambiente demo."
-      : "Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l'utente. Progetto open per educazione finanziaria.";
-
-    const modal = document.createElement("div");
-    modal.className = "modal show";
-    modal.style.display = "flex";
-    modal.innerHTML = `
-      <div class="modal-content relative max-w-xl" onclick="event.stopPropagation()">
-        <div class="absolute top-3 right-4 text-lg cursor-pointer hover:text-red-600" onclick="this.closest('.modal').remove()">✕</div>
-        <h3 class="text-lg font-semibold mb-3">${titolo}</h3>
-        <p class="text-sm text-gray-800 leading-relaxed">${testo}</p>
-      </div>
-    `;
-    modal.onclick = () => modal.remove();
-    document.body.appendChild(modal);
-  }
-</script>
-
-<!-- COOKIE POPUP – ZERO TRACKING -->
-<div id="cookie-popup" class="modal show" style="display: flex;">
-  <div class="modal-content text-center max-w-md">
-    <img src="https://lucid.app/favicon.ico" alt="Lucid icon" class="mx-auto mb-2 w-8 h-8">
-    <h3 class="text-lg font-semibold mb-2">Zero biscotti, zero sorprese.</h3>
-    <p class="mb-2 text-sm text-slate-700">Tradelia non utilizza cookie di tracciamento, profilazione o pubblicità.</p>
-    <p class="text-xs text-gray-500 mb-3">Salveremo la tua preferenza localmente per non mostrarti più questo messaggio.</p>
-    <button onclick="chiudiPopupCookie()" class="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg">Ho capito</button>
-  </div>
-</div>
-
-<script>
   function chiudiPopupCookie() {
     localStorage.setItem("tradelia_cookie_consent", "true");
     document.getElementById("cookie-popup").style.display = "none";
