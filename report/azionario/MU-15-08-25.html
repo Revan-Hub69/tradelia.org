@@ -396,6 +396,10 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
         <button class="sv-tab" data-target="blocco13" role="tab" aria-selected="false" aria-controls="blocco13" id="tab-blocco13" tabindex="-1">
           <i data-lucide="cpu"></i><span class="hidden sm:inline">B13 Cluster Strategico AI</span><span class="sm:hidden">B13 Cluster AI</span>
         </button>
+        <button class="sv-tab" data-target="broker" role="tab" aria-selected="false" aria-controls="broker" id="tab-broker" tabindex="-1">
+  <i data-lucide="briefcase"></i><span>Broker</span>
+</button>
+
       </div>
     </nav>
 
@@ -1229,6 +1233,201 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
       <div class="section-divider"><span>SEZIONE</span></div>
       <p class="text-slate-600 mt-1 text-sm leading-6 prose-narrow">[[B13.summary]]</p>
     </section>
+
+    <section id="broker" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+         role="tabpanel" aria-labelledby="tab-broker" hidden>
+  <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+    Selezione Broker &amp; Piattaforme (Tradelia AI)
+    <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#broker">Copia link</button>
+  </h2>
+
+  <!-- Nota/legenda -->
+  <div class="mt-3 mb-6 grid gap-3 sm:grid-cols-2">
+    <div class="rounded-md border border-sky-200 bg-sky-50 p-3 text-[13px] leading-6 text-slate-800">
+      <p><strong>Metodo:</strong> presentiamo solo <em>strumenti reali</em> (azioni, ETF, obbligazioni, derivati quotati, cripto spot). Se un intermediario offre anche CFD, lo indichiamo chiaramente e lo includiamo <strong>solo</strong> per la parte quotata.</p>
+      <p class="mt-1"><strong>Trasparenza:</strong> badge “Affiliato” presente esclusivamente sui partner (EXANTE, eToro, Freedom24, NAGA). Gli altri link puntano ai siti ufficiali.</p>
+    </div>
+    <div class="rounded-md border border-amber-200 bg-amber-50 p-3 text-[12.5px] leading-6 text-slate-800">
+      <p><strong>Avvertenza CFD (ESMA):</strong> i CFD sono strumenti complessi e presentano un rischio elevato di perdere denaro rapidamente a causa della leva finanziaria.
+      <em>Percentuale di conti retail in perdita</em>: {{CFD_LOSING_PCT}}% (consultare il sito del broker).</p>
+    </div>
+  </div>
+
+  <!-- Griglia card broker -->
+  <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- EXANTE -->
+    <li class="border border-slate-200 rounded-xl p-5 flex flex-col">
+      <div class="flex items-center gap-2">
+        <h3 class="font-semibold">EXANTE</h3>
+        <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Affiliato</span>
+        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">92/100</span>
+      </div>
+      <p class="mt-1 text-sm text-slate-600">DMA globale; azioni, ETF, bond, futures/opzioni. <strong>Cripto solo via CFD</strong> (oppure ETF/ETN quotati).</p>
+      <dl class="mt-3 grid grid-cols-1 text-sm gap-1">
+        <div><dt class="text-slate-500 inline">Livello tecnico:</dt> <dd class="inline font-medium">Avanzato</dd></div>
+        <div><dt class="text-slate-500 inline">Piattaforme:</dt> <dd class="inline">Web, Desktop, App</dd></div>
+        <div><dt class="text-slate-500 inline">Costi (indic.):</dt> <dd class="inline">per-mercato; cambio/dati separati; min. ~€10k</dd></div>
+        <div><dt class="text-slate-500 inline">CFD:</dt> <dd class="inline">Solo crypto</dd></div>
+      </dl>
+      <div class="mt-4 flex gap-2">
+        <a href="https://exantepartner.com/p/38603/" target="_blank" rel="sponsored noopener" class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito (aff.)</a>
+      </div>
+    </li>
+
+    <!-- Interactive Brokers -->
+    <li class="border border-slate-200 rounded-xl p-5 flex flex-col">
+      <div class="flex items-center gap-2">
+        <h3 class="font-semibold">Interactive Brokers (IBKR)</h3>
+        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">95/100</span>
+      </div>
+      <p class="mt-1 text-sm text-slate-600">Accesso istituzionale globale; TWS/API; derivati quotati.</p>
+      <dl class="mt-3 text-sm space-y-1">
+        <div><span class="text-slate-500">Livello tecnico:</span> <span class="font-medium">Pro</span></div>
+        <div><span class="text-slate-500">Piattaforme:</span> TWS, Client Portal, Mobile, API</div>
+        <div><span class="text-slate-500">Costi (indic.):</span> tiered/fixed; cambio/dati separati</div>
+        <div><span class="text-slate-500">CFD:</span> disponibili (non promossi)</div>
+      </dl>
+      <div class="mt-4"><a href="https://www.interactivebrokers.eu" target="_blank" rel="noopener" class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito ufficiale</a></div>
+    </li>
+
+    <!-- Saxo Bank -->
+    <li class="border border-slate-200 rounded-xl p-5 flex flex-col">
+      <div class="flex items-center gap-2">
+        <h3 class="font-semibold">Saxo Bank</h3>
+        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">90/100</span>
+      </div>
+      <p class="mt-1 text-sm text-slate-600">Multi-asset avanzato; opzioni/futures; obbligazioni.</p>
+      <dl class="mt-3 text-sm space-y-1">
+        <div><span class="text-slate-500">Livello tecnico:</span> <span class="font-medium">Avanzato</span></div>
+        <div><span class="text-slate-500">Piattaforme:</span> SaxoTraderGO/PRO, Web, App</div>
+        <div><span class="text-slate-500">Costi (indic.):</span> per-mercato; dati/cambio possibili</div>
+        <div><span class="text-slate-500">CFD:</span> disponibili (non promossi)</div>
+      </dl>
+      <div class="mt-4"><a href="https://www.saxo.com" target="_blank" rel="noopener" class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito ufficiale</a></div>
+    </li>
+
+    <!-- MEXEM -->
+    <li class="border border-slate-200 rounded-xl p-5 flex flex-col">
+      <div class="flex items-center gap-2">
+        <h3 class="font-semibold">MEXEM</h3>
+        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">88/100</span>
+      </div>
+      <p class="mt-1 text-sm text-slate-600">Introducer su infrastruttura IBKR; TWS; multi-mercato.</p>
+      <dl class="mt-3 text-sm space-y-1">
+        <div><span class="text-slate-500">Livello tecnico:</span> <span class="font-medium">Avanzato</span></div>
+        <div><span class="text-slate-500">Piattaforme:</span> TWS, Client Portal, App</div>
+        <div><span class="text-slate-500">Costi (indic.):</span> in linea con IBKR</div>
+        <div><span class="text-slate-500">CFD:</span> disponibili (non promossi)</div>
+      </dl>
+      <div class="mt-4"><a href="https://www.mexem.com" target="_blank" rel="noopener" class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito ufficiale</a></div>
+    </li>
+
+    <!-- Freedom24 -->
+    <li class="border border-slate-200 rounded-xl p-5 flex flex-col">
+      <div class="flex items-center gap-2">
+        <h3 class="font-semibold">Freedom24</h3>
+        <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Affiliato</span>
+        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">85/100</span>
+      </div>
+      <p class="mt-1 text-sm text-slate-600">IPO, azioni/ETF USA-EU, obbligazioni. <strong>Nessun CFD</strong>.</p>
+      <dl class="mt-3 text-sm space-y-1">
+        <div><span class="text-slate-500">Livello tecnico:</span> <span class="font-medium">Base</span></div>
+        <div><span class="text-slate-500">Piattaforme:</span> Web, App</div>
+        <div><span class="text-slate-500">Costi (indic.):</span> per-ordine; condizioni dedicate IPO</div>
+        <div><span class="text-slate-500">CFD:</span> no</div>
+      </dl>
+      <div class="mt-4"><a href="https://freedom24.com/invite_from/2953166" target="_blank" rel="sponsored noopener" class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito (aff.)</a></div>
+    </li>
+
+    <!-- Scalable Capital -->
+    <li class="border border-slate-200 rounded-xl p-5 flex flex-col">
+      <div class="flex items-center gap-2">
+        <h3 class="font-semibold">Scalable Capital</h3>
+        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">83/100</span>
+      </div>
+      <p class="mt-1 text-sm text-slate-600">PAC su ETF a costi contenuti; azioni/derivati gettex.</p>
+      <dl class="mt-3 text-sm space-y-1">
+        <div><span class="text-slate-500">Livello tecnico:</span> <span class="font-medium">Base</span></div>
+        <div><span class="text-slate-500">Piattaforme:</span> Web, App</div>
+        <div><span class="text-slate-500">Costi (indic.):</span> piani flat o per-ordine</div>
+        <div><span class="text-slate-500">CFD:</span> no</div>
+      </dl>
+      <div class="mt-4"><a href="https://it.scalable.capital" target="_blank" rel="noopener" class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito ufficiale</a></div>
+    </li>
+
+    <!-- DEGIRO -->
+    <li class="border border-slate-200 rounded-xl p-5 flex flex-col">
+      <div class="flex items-center gap-2">
+        <h3 class="font-semibold">DEGIRO</h3>
+        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">84/100</span>
+      </div>
+      <p class="mt-1 text-sm text-slate-600">Azioni/ETF/obbligazioni + derivati quotati; costi competitivi.</p>
+      <dl class="mt-3 text-sm space-y-1">
+        <div><span class="text-slate-500">Livello tecnico:</span> <span class="font-medium">Intermedio</span></div>
+        <div><span class="text-slate-500">Piattaforme:</span> Web, App</div>
+        <div><span class="text-slate-500">Costi (indic.):</span> molto competitivi; dati spesso opzionali</div>
+        <div><span class="text-slate-500">CFD:</span> no</div>
+      </dl>
+      <div class="mt-4"><a href="https://www.degiro.it" target="_blank" rel="noopener" class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito ufficiale</a></div>
+    </li>
+
+    <!-- eToro -->
+    <li class="border border-slate-200 rounded-xl p-5 flex flex-col">
+      <div class="flex items-center gap-2">
+        <h3 class="font-semibold">eToro</h3>
+        <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Affiliato</span>
+        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">76/100</span>
+      </div>
+      <p class="mt-1 text-sm text-slate-600">Azioni/ETF reali e cripto spot con funzioni social. <strong>Offre anche CFD</strong>.</p>
+      <dl class="mt-3 text-sm space-y-1">
+        <div><span class="text-slate-500">Livello tecnico:</span> <span class="font-medium">Base</span></div>
+        <div><span class="text-slate-500">Piattaforme:</span> Web, App</div>
+        <div><span class="text-slate-500">Costi (indic.):</span> commissioni ridotte; possibili spread/cambio</div>
+        <div><span class="text-slate-500">CFD:</span> sì (non promossi)</div>
+      </dl>
+      <div class="mt-4"><a href="https://med.etoro.com/B7979_A124128_TClick.aspx" target="_blank" rel="sponsored noopener" class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito (aff.)</a></div>
+    </li>
+
+    <!-- NAGA -->
+    <li class="border border-slate-200 rounded-xl p-5 flex flex-col">
+      <div class="flex items-center gap-2">
+        <h3 class="font-semibold">NAGA</h3>
+        <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Affiliato</span>
+        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">72/100</span>
+      </div>
+      <p class="mt-1 text-sm text-slate-600">Titoli/ETF reali con componente social. <strong>Offre anche CFD</strong>.</p>
+      <dl class="mt-3 text-sm space-y-1">
+        <div><span class="text-slate-500">Livello tecnico:</span> <span class="font-medium">Base</span></div>
+        <div><span class="text-slate-500">Piattaforme:</span> Web, App</div>
+        <div><span class="text-slate-500">Costi (indic.):</span> commissioni/spread; possibili costi movimenti</div>
+        <div><span class="text-slate-500">CFD:</span> sì (non promossi)</div>
+      </dl>
+      <div class="mt-4"><a href="https://www.financeads.net/tc.php?t=76793C4792126679T" target="_blank" rel="sponsored noopener" class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito (aff.)</a></div>
+    </li>
+
+    <!-- Directa SIM -->
+    <li class="border border-slate-200 rounded-xl p-5 flex flex-col">
+      <div class="flex items-center gap-2">
+        <h3 class="font-semibold">Directa SIM</h3>
+        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">82/100</span>
+      </div>
+      <p class="mt-1 text-sm text-slate-600">Borsa Italiana + USA/EU; fiscalità domestica.</p>
+      <dl class="mt-3 text-sm space-y-1">
+        <div><span class="text-slate-500">Livello tecnico:</span> <span class="font-medium">Intermedio</span></div>
+        <div><span class="text-slate-500">Piattaforme:</span> Web/desktop proprietarie, App</div>
+        <div><span class="text-slate-500">Costi (indic.):</span> per-mercato; regimi fiscali locali</div>
+        <div><span class="text-slate-500">CFD:</span> disponibili (non promossi)</div>
+      </dl>
+      <div class="mt-4"><a href="https://www.directa.it" target="_blank" rel="noopener" class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito ufficiale</a></div>
+    </li>
+  </ul>
+
+  <!-- Nota finale -->
+  <p class="mt-6 text-[12.5px] text-slate-600">
+    I numeri (strumenti, minimi, listini) sono indicativi e soggetti a variazioni. Verificare sempre sul sito ufficiale prima di operare.
+  </p>
+</section>
+
 
     <!-- Footer -->
     <footer id="print-legal" class="mt-10 py-6 text-center text-xs text-slate-500 border-t border-slate-200">
