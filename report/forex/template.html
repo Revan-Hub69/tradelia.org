@@ -157,6 +157,17 @@
       @page { margin: 18mm 14mm 18mm 14mm; }
       body{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
+      /* Responsiveness tweaks */
+    .fluid-title{font-size:clamp(1.5rem,2.4vw+1rem,2.75rem)}
+    .fluid-sub{font-size:clamp(0.9rem,1vw+0.6rem,1.05rem)}
+    .x-scroll-hint{position:relative}
+    .x-scroll-hint::after{content:"";position:absolute;top:0;right:0;width:32px;height:100%;pointer-events:none;background:linear-gradient(to left,rgba(255,255,255,1),rgba(255,255,255,0))}
+    @media (max-width: 640px){
+      header .logo-text{font-size:1.125rem}
+      .sv-tab{min-height:36px}
+      .badge{font-size:11px}
+      #hero .prose-narrow{font-size:14.5px}
+    }
   </style>
 </head>
 
@@ -244,7 +255,7 @@
     <section id="hero" class="relative bg-gradient-to-b from-sky-50 to-white border-b border-slate-200 px-6 sm:px-10 py-10" data-aos="fade-down">
       <div class="max-w-5xl mx-auto">
         <div class="flex flex-wrap items-center justify-between gap-4">
-          <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
+          <h1 class="$1 fluid-title">
             Report Forex • [[ASSET_NAME]] ([[SYMBOL]])
           </h1>
           <span class="badge">
@@ -272,11 +283,19 @@
     </section>
 
     <!-- DISCLAIMER BREVE -->
-    <section id="disclaimer-brief" role="note" aria-label="Disclaimer Tradelia AI"
+    <section id="disclaimer-brief" role="note" aria-label="Informazioni importanti"
       class="max-w-5xl mx-auto px-6 sm:px-10 mt-4 mb-8">
-      <div class="rounded-md border border-sky-200 bg-sky-50/70 p-4 sm:p-5 text-[13.5px] leading-6 text-slate-800">
-        <p><strong>Nota onesta · Tradelia AI.</strong> Dati da fonti pubbliche; informazioni non realtime. Non è consulenza finanziaria.</p>
-        <p class="mt-2 text-[12.5px] text-slate-600">Le performance passate non garantiscono risultati futuri.</p>
+      <div class="rounded-md border border-amber-300 bg-amber-50/70 p-4 sm:p-5 text-[13.5px] leading-6 text-slate-800">
+        <h2 class="text-sm font-semibold text-slate-900">Informazioni importanti</h2>
+        <ul class="mt-2 list-disc pl-5 fluid-sub text-slate-800">
+          <li><strong>Natura informativa:</strong> questo documento è materiale didattico e generico. Non costituisce ricerca in materia di investimenti, consulenza, sollecitazione o raccomandazione personalizzata.</li>
+          <li><strong>Dati e fonti:</strong> contenuti derivati da fonti ritenute affidabili (IR, autorità di mercato, provider dati). Le metriche non sono in tempo reale e possono contenere errori o omissioni.</li>
+          <li><strong>Rischi del Forex:</strong> il trading su valute comporta <em>leva finanziaria</em>, rischio di perdita superiore al capitale depositato presso alcuni intermediari, rischio di cambio e di gap durante eventi macro.</li>
+          <li><strong>Esecuzione e costi:</strong> spread, commissioni, slippage e qualità di esecuzione incidono in modo significativo su risultati e backtest. Valutare sempre i costi applicati dal proprio broker.</li>
+          <li><strong>Conflitti & interessi:</strong> l’autore non opera come intermediario né garantisce esiti. L’eventuale detenzione di posizioni verrà indicata nel blocco B5, se rilevante.</li>
+          <li><strong>Responsabilità:</strong> l’uso dei contenuti implica che l’utente effettui verifiche indipendenti e consideri obiettivi, esperienza e profilo di rischio. Le performance passate non sono indicative di risultati futuri.</li>
+        </ul>
+        <p class="mt-2 text-[12.5px] text-slate-600">Giurisdizione: si applicano le leggi e normative del Paese di residenza dell’utente e del broker utilizzato.</p>
       </div>
     </section>
 
@@ -497,7 +516,7 @@
         <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco4">Copia link</button>
       </h2>
       <div class="section-divider"><span>SEZIONE</span></div>
-      <div class="overflow-x-auto">
+      <div class="overflow-x-auto x-scroll-hint">
         <table class="w-full text-sm">
           <thead class="text-left text-slate-600">
             <tr>
