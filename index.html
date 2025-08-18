@@ -6,6 +6,7 @@
   <title>Tradelia – Homepage AI</title>
   <link rel="icon" href="/favicon.png" type="image/png" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide: una sola import -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 
@@ -137,11 +138,10 @@
 </style>
 
 <!-- SCRIPT ICONS + TYPING -->
-<script src="https://unpkg.com/lucide@latest"></script>
 <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    lucide.createIcons();
+    if (window.lucide) lucide.createIcons();
 
     new Typed('#hero-typing', {
       strings: [
@@ -201,7 +201,7 @@
 <br><br><br>
   <section class="bg-slate-50 py-16 border-b border-slate-200">
   <div class="max-w-7xl mx-auto px-6 lg:px-8">
-    <h2 class="text-3xl font-bold text-slate-900 mb-4 text-center">
+    <h2 class="text-3cxl font-bold text-slate-900 mb-4 text-center">
       Servizi AI <span class="text-blue-700">&bull;</span> Tradelia
     </h2>
     <p class="text-lg text-slate-700 text-center max-w-2xl mx-auto mb-12">
@@ -250,10 +250,9 @@
   </div>
 </section>
 
-<script src="https://unpkg.com/lucide@latest"></script>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    lucide.createIcons();
+    if (window.lucide) lucide.createIcons();
   });
 </script>
 
@@ -338,14 +337,14 @@
           <label>Capitale totale (fascia) *
             <select name="capitale_totale" class="w-full border rounded px-3 py-2" required>
               <option value="">Seleziona</option>
-              <option>< 10k</option><option>10k–50k</option><option>50k–200k</option><option>200k–500k</option><option>> 500k</option>
+              <option>&lt; 10k</option><option>10k–50k</option><option>50k–200k</option><option>200k–500k</option><option>&gt; 500k</option>
             </select>
             <span class="text-[11px] text-slate-500">Conti, investimenti, immobili, ecc.</span>
           </label>
           <label>Quota investibile ora (fascia) *
             <select name="capitale_investibile" class="w-full border rounded px-3 py-2" required>
               <option value="">Seleziona</option>
-              <option>< 5k</option><option>5k–25k</option><option>25k–100k</option><option>100k–250k</option><option>> 250k</option>
+              <option>&lt; 5k</option><option>5k–25k</option><option>25k–100k</option><option>100k–250k</option><option>&gt; 250k</option>
             </select>
             <span class="text-[11px] text-slate-500">Pronto da investire subito.</span>
           </label>
@@ -389,7 +388,7 @@
           <label>Rendimento obiettivo *
             <select name="rendimento_obiettivo" class="w-full border rounded px-3 py-2" required>
               <option value="">Annuale (fascia)</option>
-              <option>2–4%</option><option>4–6%</option><option>6–8%</option><option>> 8%</option>
+              <option>2–4%</option><option>4–6%</option><option>6–8%</option><option>&gt; 8%</option>
             </select>
             <select name="rnd_tipo" class="w-full border rounded px-3 py-2 mt-2">
               <option>Nominale</option><option>Reale (al netto inflazione)</option>
@@ -502,7 +501,7 @@
           </label>
           <label>Importo rata (fascia)
             <select name="pac_importo" class="w-full border rounded px-3 py-2" disabled>
-              <option>< 100</option><option>100–300</option><option>300–700</option><option>700–1500</option><option>> 1500</option>
+              <option>&lt; 100</option><option>100–300</option><option>300–700</option><option>700–1500</option><option>&gt; 1500</option>
             </select>
           </label>
           <label>Durata prevista
@@ -537,12 +536,12 @@
           </label>
           <label>Volatilità realizzata (fascia)
             <select name="volatilita_drawdown_vol" class="w-full border rounded px-3 py-2">
-              <option>n/d</option><option>< 8%</option><option>8–12%</option><option>12–18%</option><option>> 18%</option>
+              <option>n/d</option><option>&lt; 8%</option><option>8–12%</option><option>12–18%</option><option>&gt; 18%</option>
             </select>
           </label>
           <label>Drawdown storico (fascia)
             <select name="volatilita_drawdown_dd" class="w-full border rounded px-3 py-2">
-              <option>n/d</option><option>< −5%</option><option>−5% / −10%</option><option>−10% / −20%</option><option>< −20%</option>
+              <option>n/d</option><option>&lt; −5%</option><option>−5% / −10%</option><option>−10% / −20%</option><option>&lt; −20%</option>
             </select>
           </label>
         </div>
@@ -1492,7 +1491,6 @@ Vuoi procedere inviando i dati?`;
 
 
  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
- <main class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <nav aria-label="Sezioni" class="mb-6 -mt-2 text-sm overflow-x-auto no-scrollbar">
       <ul class="flex gap-2">
         <li><a href="#corepro" class="tag hover:bg-white">Core Pro</a></li>
@@ -2069,9 +2067,9 @@ Vuoi procedere inviando i dati?`;
         if(!d){ card.classList.remove('hidden'); return; }
         let show = true;
         if(mode === 'no-cfd'){
-          show = (d.cfd_class === 'none');
+          show = (d.cfd === false); // mostra solo chi NON ha CFD
         } else if(mode === 'standard'){
-          show = (d.cfd_class === 'none' || d.cfd_class === 'optional');
+          show = true; // default: mostra tutti
         } else {
           show = true; // all
         }
@@ -2084,9 +2082,13 @@ Vuoi procedere inviando i dati?`;
       applyFilter('standard');
     }
   </script>
+
+<!-- Cookie & Legal helpers (fix: racchiusi in <script>) -->
+<script>
   function chiudiPopupCookie() {
     localStorage.setItem("tradelia_cookie_consent", "true");
-    document.getElementById("cookie-popup").style.display = "none";
+    const popup = document.getElementById("cookie-popup");
+    if (popup) popup.style.display = "none";
   }
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -2096,6 +2098,17 @@ Vuoi procedere inviando i dati?`;
       if (popup) popup.style.display = "none";
     }
   });
+
+  // Funzione usata nel footer
+  function apriSezioneLegale(id) {
+    const el = document.getElementById(id);
+    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    const map = {
+      'section-tc': '/legal/termini.html#section-tc',
+      'section-privacy': '/legal/privacy.html#section-privacy'
+    };
+    window.location.href = map[id] || '/legal/';
+  }
 </script>
 
 <!-- FOOTER -->
