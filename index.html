@@ -1492,236 +1492,598 @@ Vuoi procedere inviando i dati?`;
 
 
  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
- <!-- ===== BLOCCO BROKER — Tradelia • Istituzionale ===== -->
-<section id="broker" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
-         role="tabpanel" aria-labelledby="tab-broker" hidden>
-  <h2 class="text-lg font-bold text-slate-900 tracking-tight">
-    Selezione Broker &amp; Piattaforme (Tradelia)
-    <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#broker">Copia link</button>
-  </h2>
-
-  <!-- Criteri & Trasparenza -->
-  <div class="mt-3 grid gap-3 md:grid-cols-2">
-    <div class="rounded-md border border-slate-200 bg-slate-50 p-3 text-[13px] leading-6 text-slate-800">
-      <p class="font-semibold text-slate-900">Criteri di valutazione (pesi)</p>
-      <ul class="mt-1 list-disc pl-5">
-        <li><span class="font-medium">Accesso &amp; mercati</span> 40% — copertura borse, obbligazioni, derivati quotati, cripto <em>spot/ETP</em>.</li>
-        <li><span class="font-medium">Costi &amp; trasparenza</span> 25% — commissioni, cambio, dati, canoni.</li>
-        <li><span class="font-medium">Piattaforme &amp; tooling</span> 20% — desktop/web/mobile, API, dati.</li>
-        <li><span class="font-medium">Regolamentazione</span> 10% — vigilanza UE/UK/US, tutela investitori.</li>
-        <li><span class="font-medium">Servizio &amp; operatività</span> 5% — on-boarding, assistenza, fiscalità.</li>
+ <main class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <nav aria-label="Sezioni" class="mb-6 -mt-2 text-sm overflow-x-auto no-scrollbar">
+      <ul class="flex gap-2">
+        <li><a href="#corepro" class="tag hover:bg-white">Core Pro</a></li>
+        <li><a href="#retail" class="tag hover:bg-white">Retail</a></li>
+        <li><a href="#mass" class="tag hover:bg-white">Mass market</a></li>
+        <li><a href="#italia" class="tag hover:bg-white">Italia</a></li>
       </ul>
-    </div>
-    <div class="rounded-md border border-amber-200 bg-amber-50 p-3 text-[12.5px] leading-6 text-slate-800">
-      <p class="font-semibold text-slate-900">Nota CFD (ESMA/CONSOB)</p>
-      <p>I <strong>CFD</strong> sono strumenti complessi e comportano un rischio elevato di perdita rapida di denaro a causa della leva. La percentuale di conti retail in perdita è riportata per ciascun broker che offre CFD.</p>
+    </nav>
+    <!-- Intro -->
+    <section class="mb-8">
+      <h1 class="text-2xl sm:text-3xl font-bold mb-2">Broker regolamentati per ogni profilo</h1>
+      <p class="text-sm sm:text-base text-slate-600 max-w-3xl">
+        Selezione curata da <strong>Tradelia AI</strong> con focus su <strong>strumenti reali</strong> (azioni, ETF, obbligazioni, derivati quotati).
+        <span class="font-semibold text-amber-700">Se un broker offre anche CFD, lo includiamo esclusivamente per la componente di strumenti diretti.</span>
+      </p>
+    </section>
+
+    <!-- Core Pro / Istituzionali -->
+    <section id="corepro" class="mb-10">
+      <h2 class="text-xl font-semibold mb-4">Core Pro / Istituzionali</h2>
+      <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+        <!-- EXANTE (Affiliato) -->
+        <li data-key="exante" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
+          <div class="logo-fb bg-sky-600">E</div>
+          <div class="min-w-0 flex flex-col h-full">
+            <div class="font-semibold mb-1 flex items-center gap-2">EXANTE <span class="badge bg-emerald-100 text-emerald-700">Affiliato</span> <span class="score-badge">92/100</span></div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">DMA globale su mercati quotati (azioni, ETF, futures, opzioni, bond). <strong>Cripto solo via CFD</strong> o tramite ETF/ETN quotati.</div>
+            <div class="flex flex-wrap gap-1 mb-3">
+              <span class="tag">DMA</span><span class="tag">Bond</span><span class="tag">Derivati quotati</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
+            </div>
+            <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('exante')">Maggiori info</button>
+          </div>
+        </li>
+        <!-- Saxo Bank (non affiliato) -->
+        <li data-key="saxo" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
+          <div class="logo-fb bg-blue-700">S</div>
+          <div class="min-w-0 flex flex-col h-full">
+            <div class="font-semibold mb-1">Saxo Bank <span class="score-badge">90/100</span></div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">Piattaforma multi-asset avanzata con accesso a mercati globali e derivati quotati.</div>
+            <div class="flex flex-wrap gap-1 mb-3">
+              <span class="tag">DMA</span><span class="tag">Opzioni</span><span class="tag">Futures</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
+            </div>
+            <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('saxo')">Maggiori info</button>
+          </div>
+        </li>
+        <!-- Interactive Brokers (non affiliato) -->
+        <li data-key="ibkr" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
+          <div class="logo-fb bg-slate-800">IB</div>
+          <div class="min-w-0 flex flex-col h-full">
+            <div class="font-semibold mb-1">Interactive Brokers (IBKR) <span class="score-badge">95/100</span></div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">Accesso istituzionale a azioni, ETF, bond, opzioni e futures su borse globali; TWS/IBKR APIs.</div>
+            <div class="flex flex-wrap gap-1 mb-3">
+              <span class="tag">DMA</span><span class="tag">TWS/API</span><span class="tag">Derivati quotati</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
+            </div>
+            <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('ibkr')">Maggiori info</button>
+          </div>
+        </li>
+        <!-- MEXEM (non affiliato) -->
+        <li data-key="mexem" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
+          <div class="logo-fb bg-amber-700">M</div>
+          <div class="min-w-0 flex flex-col h-full">
+            <div class="font-semibold mb-1">MEXEM <span class="score-badge">88/100</span></div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">Introducer europeo con accesso a TWS/IBKR; multi-asset quotati UE/USA.</div>
+            <div class="flex flex-wrap gap-1 mb-3">
+              <span class="tag">DMA</span><span class="tag">TWS</span><span class="tag">Multi-mercato</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
+            </div>
+            <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('mexem')">Maggiori info</button>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Retail evoluto / Business -->
+    <section id="retail" class="mb-10">
+      <h2 class="text-xl font-semibold mb-4">Retail evoluto / Business</h2>
+      <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+        <!-- Freedom24 (Affiliato) -->
+        <li data-key="freedom24" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
+          <div class="logo-fb bg-emerald-600">F</div>
+          <div class="min-w-0 flex flex-col h-full">
+            <div class="font-semibold mb-1 flex items-center gap-2">Freedom24 <span class="badge bg-emerald-100 text-emerald-700">Affiliato</span> <span class="score-badge">85/100</span></div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">Accesso ad <strong>IPO</strong>, azioni/ETF e obbligazioni. <strong>Nessun CFD</strong>.</div>
+            <div class="flex flex-wrap gap-1 mb-3">
+              <span class="tag">IPO</span><span class="tag">Azioni</span><span class="tag">ETF</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
+            </div>
+            <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('freedom24')">Maggiori info</button>
+          </div>
+        </li>
+        <!-- Scalable Capital (non affiliato) -->
+        <li data-key="scalable" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
+          <div class="logo-fb bg-indigo-600">S</div>
+          <div class="min-w-0 flex flex-col h-full">
+            <div class="font-semibold mb-1">Scalable Capital <span class="score-badge">83/100</span></div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">PAC su ETF a costi contenuti.</div>
+            <div class="flex flex-wrap gap-1 mb-3">
+              <span class="tag">ETF</span><span class="tag">PAC</span><span class="tag">Low fees</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
+            </div>
+            <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('scalable')">Maggiori info</button>
+          </div>
+        </li>
+        <!-- DEGIRO (non affiliato) -->
+        <li data-key="degiro" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
+          <div class="logo-fb bg-pink-600">D</div>
+          <div class="min-w-0 flex flex-col h-full">
+            <div class="font-semibold mb-1">DEGIRO <span class="score-badge">84/100</span></div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">Costi competitivi e ampia copertura mercati.</div>
+            <div class="flex flex-wrap gap-1 mb-3">
+              <span class="tag">ETF</span><span class="tag">Azioni</span><span class="tag">Multi-mercato</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
+            </div>
+            <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('degiro')">Maggiori info</button>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Mass market / Social -->
+    <section id="mass" class="mb-10">
+      <h2 class="text-xl font-semibold mb-4">Mass market / Social (solo real assets)</h2>
+      <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+        <!-- eToro (Affiliato) -->
+        <li data-key="etoro" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
+          <div class="logo-fb bg-red-600">e</div>
+          <div class="min-w-0 flex flex-col h-full">
+            <div class="font-semibold mb-1 flex items-center gap-2">eToro <span class="badge bg-emerald-100 text-emerald-700">Affiliato</span> <span class="score-badge">76/100</span></div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">Azioni/ETF reali e <strong>cripto spot</strong> con funzioni social. <strong>Offre anche CFD</strong> (noi includiamo solo la parte real assets).</div>
+            <div class="flex flex-wrap gap-1 mb-3">
+              <span class="tag">Azioni</span><span class="tag">ETF</span><span class="tag">Cripto spot</span><span class="tag">Social</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
+            </div>
+            <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('etoro')">Maggiori info</button>
+          </div>
+        </li>
+        <!-- NAGA (Affiliato) -->
+        <li data-key="naga" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
+          <div class="logo-fb bg-orange-600">N</div>
+          <div class="min-w-0 flex flex-col h-full">
+            <div class="font-semibold mb-1 flex items-center gap-2">NAGA <span class="badge bg-emerald-100 text-emerald-700">Affiliato</span> <span class="score-badge">72/100</span></div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">Titoli/ETF reali e componente social. <strong>Offre anche CFD</strong> (incluso solo per real assets).</div>
+            <div class="flex flex-wrap gap-1 mb-3">
+              <span class="tag">Azioni</span><span class="tag">ETF</span><span class="tag">Social</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
+            </div>
+            <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('naga')">Maggiori info</button>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Italia -->
+    <section id="italia" class="mb-12">
+      <h2 class="text-xl font-semibold mb-4">Broker italiani 🇮🇹 (CONSOB)</h2>
+      <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+        <!-- Directa SIM (non affiliato) -->
+        <li data-key="directa" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
+          <div class="logo-fb bg-slate-600">D</div>
+          <div class="min-w-0 flex flex-col h-full">
+            <div class="font-semibold mb-1">Directa SIM <span class="score-badge">82/100</span></div>
+            <div class="text-sm text-slate-600 mb-3 clamp-3">Mercato italiano e fiscalità domestica.</div>
+            <div class="flex flex-wrap gap-1 mb-3">
+              <span class="tag">Italia</span><span class="tag">Borsa Italiana</span><span class="tag">CONSOB</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 space-y-1">
+              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
+            </div>
+            <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('directa')">Maggiori info</button>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section class="text-[12px] text-slate-500">
+      <p>I dati (strumenti disponibili, quantità, minimi) sono indicativi e soggetti a variazioni; verificare sempre sul sito ufficiale prima di operare.</p>
+      <p>Questa pagina evita i CFD. Se un broker li offre, Tradelia AI lo include solo per strumenti diretti (azioni, ETF, bond, derivati quotati, cripto spot).</p>
+    </section>
+  </main>
+
+  <!-- Modal (single, dynamic) -->
+  <div id="modal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/50 p-4">
+    <div class="bg-white w-full max-w-xl rounded-xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+      <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <h3 id="m-title" class="font-semibold text-slate-900">Broker</h3>
+          <span id="m-badge" class="badge bg-emerald-100 text-emerald-700 hidden">Affiliato</span>
+        </div>
+        <button class="text-slate-500 hover:text-red-600" onclick="closeModal()">✕</button>
+      </div>
+      <div class="px-5 py-4 text-sm text-slate-700 grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 overflow-y-auto">
+        <div id="m-tags" class="flex flex-wrap gap-1 sm:col-span-2"></div>
+        <div><span class="font-semibold">Tipi di strumenti:</span> <span id="m-assets"></span></div>
+        <div><span class="font-semibold">Numero strumenti:</span> <span id="m-count"></span></div>
+        <div><span class="font-semibold">Deposito minimo:</span> <span id="m-min"></span></div>
+        <div><span class="font-semibold">Regolamentazione:</span> <span id="m-reg"></span></div>
+        <div><span class="font-semibold">Valutazione Tradelia AI:</span> <span id="m-score"></span></div>
+        <div><span class="font-semibold">Livello tecnico richiesto:</span> <span id="m-skill"></span></div>
+        <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div><span class="font-semibold">Piattaforme:</span> <span id="m-platforms"></span></div>
+          <div><span class="font-semibold">Costi (indicativi):</span> <span id="m-fees"></span></div>
+        </div>
+        <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <div class="font-semibold mb-1">Pro</div>
+            <ul id="m-pros" class="list-disc pl-5 space-y-1"></ul>
+          </div>
+          <div>
+            <div class="font-semibold mb-1">Contro</div>
+            <ul id="m-cons" class="list-disc pl-5 space-y-1"></ul>
+          </div>
+        </div>
+        <div id="m-cfd" class="hidden text-amber-800 bg-amber-50 border border-amber-200 px-3 py-2 rounded sm:col-span-2">
+          ⚠ Questo intermediario offre anche CFD. <strong>Tradelia AI lo seleziona solo per strumenti diretti</strong> (no CFD).
+          <div id="m-cfd-note" class="text-xs mt-1"></div>
+        </div>
+      </div>
+      <div class="px-5 py-4 border-t border-slate-200 flex items-center justify-between bg-slate-50">
+        <span id="m-afftext" class="text-[12px] text-slate-500">Unico link cliccabile (affiliato).</span>
+        <a id="m-aff" href="#" rel="sponsored noopener" target="_blank"
+           class="btn bg-sky-700 hover:bg-sky-800 text-white">Vai al sito ufficiale</a>
+      </div>
     </div>
   </div>
 
-  <!-- Griglia card uniforme (altezza coerente) -->
-  <ul class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    <!-- EXANTE -->
-    <li class="border border-slate-200 rounded-xl p-5 flex flex-col min-h-[320px]">
-      <div class="flex items-center gap-2">
-        <h3 class="font-semibold">EXANTE</h3>
-        <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Affiliato</span>
-        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">92/100</span>
-      </div>
-      <p class="mt-1 text-sm text-slate-600">
-        Multi-asset <strong>DMA</strong> (azioni, ETF incl. ETP crypto, bond, futures/opzioni). <strong>Cripto solo via CFD</strong>.
-      </p>
-      <dl class="mt-3 text-sm space-y-1">
-        <div><span class="text-slate-500">Livello tecnico:</span> <span class="font-medium">Avanzato</span></div>
-        <div><span class="text-slate-500">Piattaforme:</span> Web, Desktop, App</div>
-        <div><span class="text-slate-500">Costi (indic.):</span> per-mercato; cambio/dati separati; deposito ~€10k</div>
-        <div><span class="text-slate-500">CFD:</span> <span class="font-medium">Solo crypto</span> — disclosure: <span class="font-medium">74–89%</span> conti retail in perdita</div>
-      </dl>
-      <div class="mt-auto pt-4 flex gap-2">
-        <a href="https://exantepartner.com/p/38603/" target="_blank" rel="sponsored noopener"
-           class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito (aff.)</a>
-      </div>
-    </li>
+  <script>
+    // Dati modali — sostituisci "/aff/..." con i tuoi URL reali quando vuoi
+    const DATA = {
+      exante: {
+        name: "EXANTE",
+        affiliated: true,
+        tags: ["DMA","Bond","Derivati quotati"],
+        assets: "Azioni, ETF (incl. ETN crypto), Futures, Opzioni, Obbligazioni; Cripto via CFD",
+        count: "≈ 1.000.000+ strumenti • 50+ mercati • 20.000+ bond • 40.000+ azioni • 25.000+ ticker opzioni / 1.000.000+ strike",
+        min: "≈ €10.000 (retail UE)",
+        reg: "UE · entità europee (es. MFSA/CySEC) · operatività per residenti italiani",
+        cfd: true,
+        cfd_note: "Su EXANTE <strong>solo le criptovalute sono offerte tramite CFD</strong>. Tutti gli altri strumenti sono quotati su mercati regolamentati.",
+        score: 92,
+        platforms: "Web, Desktop, App",
+        fees: "Commissioni per mercato; cambio e dati in tempo reale separati; deposito minimo €10k.",
+        pros: [
+          "Accesso DMA su 50+ mercati",
+          "Vasta copertura obbligazionaria",
+          "Derivati quotati su molte borse"
+        ],
+        cons: [
+          "Deposito minimo elevato",
+          "Cripto solo via CFD",
+          "Listino e mercati da verificare"
+        ],
+        skill: "Avanzato",
+        aff: "https://exantepartner.com/p/38603/"
+      },
+      saxo: {
+        name: "Saxo Bank",
+        affiliated: false,
+        tags: ["DMA","Opzioni","Futures"],
+        assets: "Azioni, ETF, Opzioni, Futures, Obbligazioni; FX; commodities",
+        count: "23.000+ azioni • 7.400+ ETF • 250 futures • 3.100 opzioni • 5.200+ bond",
+        min: "Variabile per area/conti (verificare)",
+        reg: "UE/UK/DK · entità regolamentate · disponibile in Italia",
+        cfd: true,
+        cfd_note: "Offre CFD multi-asset; in questa selezione consideriamo solo strumenti quotati.",
+        score: 90,
+        platforms: "SaxoTraderGO/PRO, Web, App",
+        fees: "Commissioni per mercato; possibili costi per dati e cambio.",
+        pros: [
+          "Piattaforme mature e stabili",
+          "Copertura multi-asset avanzata",
+          "Buoni strumenti di analisi"
+        ],
+        cons: [
+          "Costi di dati/cambio possono incidere",
+          "Curva di apprendimento per funzioni pro"
+        ],
+        skill: "Avanzato",
+        aff: ""
+      },
+      ibkr: {
+        name: "Interactive Brokers (IBKR)",
+        affiliated: false,
+        tags: ["DMA","TWS/API","Derivati quotati"],
+        assets: "Azioni, ETF, Bond, Opzioni, Futures su borse globali; Forex; Fondi; API/TWS",
+        count: "160+ mercati in 36 paesi • 1.000.000+ bond",
+        min: "Nessun minimo formale (verificare requisiti)",
+        reg: "USA/EU · entità regolamentate · operatività per residenti italiani",
+        cfd: true,
+        cfd_note: "CFD disponibili tramite entità abilitate (es. IBKR UK/IE); selezioniamo solo strumenti quotati.",
+        score: 95,
+        platforms: "TWS, Client Portal, IBKR Mobile, API",
+        fees: "Piani tiered/fixed; dati e cambio separati.",
+        pros: [
+          "Copertura globale (160+ mercati)",
+          "TWS/API molto potenti",
+          "Infrastruttura professionale"
+        ],
+        cons: [
+          "Curva di apprendimento ripida",
+          "Pricing articolato",
+          "Dati in tempo reale spesso a pagamento"
+        ],
+        skill: "Pro",
+        aff: ""
+      },
+      mexem: {
+        name: "MEXEM",
+        affiliated: false,
+        tags: ["DMA","TWS","Multi-mercato"],
+        assets: "Accesso a TWS/IBKR; azioni, ETF, opzioni e futures quotati",
+        count: "Via IBKR: 160+ mercati • 1.000.000+ bond",
+        min: "N/D ufficiale",
+        reg: "UE · vigilanza (es. CySEC) · disponibile in Italia",
+        cfd: true,
+        cfd_note: "CFD disponibili tramite entità IBKR dove consentito; selezioniamo solo la parte quotata.",
+        score: 88,
+        platforms: "TWS (IBKR), Client Portal, App",
+        fees: "Listino in linea con IBKR; dati/cambio separati.",
+        pros: [
+          "Accesso a TWS/IBKR con supporto UE/IT",
+          "Multi-mercato con infrastruttura solida"
+        ],
+        cons: [
+          "Struttura costi simile a IBKR (da verificare)",
+          "Dipendenza dall'infrastruttura IBKR"
+        ],
+        skill: "Avanzato",
+        aff: ""
+      },
+      freedom24: {
+        name: "Freedom24",
+        affiliated: true,
+        tags: ["IPO","Azioni","ETF"],
+        assets: "IPO primarie, Azioni USA/EU, ETF, Obbligazioni; Opzioni/Futures quotati",
+        count: "≈ 1.000.000 strumenti • 3.600+ ETF",
+        min: "≈ €10",
+        reg: "UE · vigilanza (CySEC) · disponibile in Italia",
+        cfd: false,
+        score: 85,
+        platforms: "Web, App",
+        fees: "Commissioni su azioni/ETF; IPO con condizioni dedicate.",
+        pros: [
+          "Accesso a IPO primarie",
+          "Copertura ampia USA/EU",
+          "Interfaccia semplice"
+        ],
+        cons: [
+          "Le IPO comportano rischi elevati",
+          "Funzioni pro più limitate rispetto ai broker istituzionali"
+        ],
+        skill: "Base",
+        aff: "https://freedom24.com/invite_from/2953166"
+      },
+      scalable: {
+        name: "Scalable Capital",
+        affiliated: false,
+        tags: ["ETF","PAC","Low fees"],
+        assets: "ETF, Azioni; piani PAC; Fondi; Derivati (gettex/EU); Crypto ETP",
+        count: "≈ 8.000 azioni • 2.200 ETF • 2.000 fondi • 375.000+ derivati",
+        min: "da importi ridotti per PAC",
+        reg: "UE · vigilanza tedesca · disponibile in Italia",
+        cfd: false,
+        score: 83,
+        platforms: "Web, App",
+        fees: "Piani flat e per-ordine; PAC a costi contenuti.",
+        pros: [
+          "PAC su ETF efficienti",
+          "Costi bassi su gettex",
+          "UI moderna"
+        ],
+        cons: [
+          "Copertura borse focalizzata su DE",
+          "Alcuni strumenti/mercati non disponibili"
+        ],
+        skill: "Base",
+        aff: ""
+      },
+      degiro: {
+        name: "DEGIRO",
+        affiliated: false,
+        tags: ["ETF","Azioni","Multi-mercato"],
+        assets: "Azioni, ETF, Obbligazioni, Fondi, Opzioni/Futures (quotati), Warrants/Certificates",
+        count: "50+ borse in 30 paesi • ETF su 19 mercati",
+        min: "Nessun minimo formale (verificare requisiti operativi)",
+        reg: "UE · vigilanza Paesi Bassi/UE · disponibile in Italia",
+        cfd: false,
+        score: 84,
+        platforms: "Web, App",
+        fees: "Commissioni competitive; dati in tempo reale spesso opzionali.",
+        pros: [
+          "Costi molto competitivi",
+          "Ampia copertura borse EU/US"
+        ],
+        cons: [
+          "Dati real-time spesso a pagamento",
+          "Mancano API/strumenti pro avanzati"
+        ],
+        skill: "Intermedio",
+        aff: ""
+      },
+      etoro: {
+        name: "eToro",
+        affiliated: true,
+        tags: ["Azioni","ETF","Cripto spot","Social"],
+        assets: "Azioni/ETF reali, Cripto spot; Opzioni US; funzioni social/copy",
+        count: "7.000+ asset totali • Azioni su 20+ borse • >130 crypto (globale; disponibilità varia per area)",
+        min: "≈ €50 (variabile per area)",
+        reg: "UE · entità europee abilitate · disponibile in Italia",
+        cfd: true,
+        cfd_note: "Offre CFD su più asset. In questa selezione consideriamo solo la componente <em>real assets</em>.",
+        score: 76,
+        platforms: "Web, App",
+        fees: "Azioni/ETF reali con commissioni ridotte; spread/cambio e costi di prelievo possibili.",
+        pros: [
+          "Funzioni social/copy",
+          "Ampia scelta di cripto spot",
+          "UI semplice"
+        ],
+        cons: [
+          "CFD disponibili (non promossi)",
+          "Spread/cambio possono incidere",
+          "Strumenti avanzati limitati"
+        ],
+        skill: "Base",
+        aff: "https://med.etoro.com/B7979_A124128_TClick.aspx"
+      },
+      naga: {
+        name: "NAGA",
+        affiliated: true,
+        tags: ["Azioni","ETF","Social"],
+        assets: "Azioni/ETF reali; componente social/copy",
+        count: "3.000+ azioni/ETF reali • 15 borse",
+        min: "N/D ufficiale",
+        reg: "UE · vigilanza europea · disponibile in Italia",
+        cfd: true,
+        cfd_note: "NAGA offre CFD; qui selezionata solo la parte titoli/ETF reali.",
+        score: 72,
+        platforms: "Web, App",
+        fees: "Commissioni/spread; possibili costi di deposito/prelievo.",
+        pros: [
+          "Componente social",
+          "Titoli/ETF reali accanto a altri asset"
+        ],
+        cons: [
+          "Presenza CFD (non promossi)",
+          "Listino commissioni da verificare per mercato"
+        ],
+        skill: "Base",
+        aff: "https://www.financeads.net/tc.php?t=76793C4792126679T"
+      },
+      directa: {
+        name: "Directa SIM",
+        affiliated: false,
+        tags: ["Italia","Borsa Italiana","CONSOB"],
+        assets: "Azioni/ETF/Obbligazioni Italia; IDEM (derivati quotati); USA (NYSE/NASDAQ/AMEX); Xetra/SIX ecc.",
+        count: "Borsa Italiana (EXM, ETFplus, MOT/EuroTLX, ExtraMOT) • USA (NYSE, NASDAQ, AMEX)",
+        min: "N/D ufficiale",
+        reg: "Italia · SIM iscritta CONSOB · vigilanza Banca d’Italia",
+        cfd: true,
+        cfd_note: "Disponibili CFD/FX via LMAX; in questa selezione consideriamo solo gli strumenti quotati.",
+        score: 82,
+        platforms: "Web/desktop proprietarie, App",
+        fees: "Commissioni per mercato; regime fiscale domestico.",
+        pros: [
+          "Broker italiano (CONSOB)",
+          "Accesso diretto a Borsa Italiana + USA/Europa",
+          "Fiscalità domestica e supporto in italiano"
+        ],
+        cons: [
+          "Interfacce più tecniche",
+          "Listino commissionale articolato"
+        ],
+        skill: "Intermedio",
+        aff: ""
+      }
+    };
 
-    <!-- Interactive Brokers -->
-    <li class="border border-slate-200 rounded-xl p-5 flex flex-col min-h-[320px]">
-      <div class="flex items-center gap-2">
-        <h3 class="font-semibold">Interactive Brokers (IBKR)</h3>
-        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">95/100</span>
-      </div>
-      <p class="mt-1 text-sm text-slate-600">Accesso istituzionale globale; <strong>TWS/API</strong>; derivati quotati; obbligazioni.</p>
-      <dl class="mt-3 text-sm space-y-1">
-        <div><span class="text-slate-500">Livello tecnico:</span> <span class="font-medium">Pro</span></div>
-        <div><span class="text-slate-500">Piattaforme:</span> TWS, Client Portal, Mobile, API</div>
-        <div><span class="text-slate-500">Costi (indic.):</span> tiered/fixed; cambio/dati separati</div>
-        <div><span class="text-slate-500">CFD:</span> sì — <span class="font-medium">59,7%</span> conti retail in perdita</div>
-      </dl>
-      <div class="mt-auto pt-4">
-        <a href="https://www.interactivebrokers.eu" target="_blank" rel="noopener"
-           class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito ufficiale</a>
-      </div>
-    </li>
+    const $ = s => document.querySelector(s);
+    function openModal(key){
+      const d = DATA[key]; if(!d) return;
+      $('#m-title').textContent = d.name;
+      // badge affiliato
+      $('#m-badge').classList.toggle('hidden', !d.affiliated);
+      // tag
+      const tg = $('#m-tags'); tg.innerHTML = '';
+      d.tags.forEach(t => { const s=document.createElement('span'); s.className='tag'; s.textContent=t; tg.appendChild(s); });
+      $('#m-assets').textContent = d.assets;
+      $('#m-count').textContent  = d.count;
+      $('#m-min').textContent    = d.min;
+      $('#m-reg').textContent = d.reg;
+      $('#m-score').textContent = d.score ? `${d.score}/100` : 'N/D';
+      $('#m-skill').textContent = d.skill || 'N/D';
+      // CFD alert + nota specifica
+      const cfdBox = $('#m-cfd');
+      cfdBox.classList.toggle('hidden', !d.cfd);
+      const note = $('#m-cfd-note');
+      note.innerHTML = d.cfd && d.cfd_note ? d.cfd_note : '';
+      // piattaforme e costi
+      $('#m-platforms').textContent = d.platforms || 'N/D';
+      $('#m-fees').textContent = d.fees || 'N/D';
+      // pro e contro
+      const prosUl = $('#m-pros'); const consUl = $('#m-cons');
+      prosUl.innerHTML = ''; consUl.innerHTML = '';
+      (d.pros || []).forEach(p=>{ const li=document.createElement('li'); li.innerHTML=p; prosUl.appendChild(li); });
+      (d.cons || []).forEach(c=>{ const li=document.createElement('li'); li.innerHTML=c; consUl.appendChild(li); });
+      // link affiliato (solo se presente)
+      const affBtn = $('#m-aff');
+      const affText = $('#m-afftext');
+      const OFFICIAL = { saxo: 'https://www.saxo.com', ibkr: 'https://www.interactivebrokers.eu', mexem: 'https://www.mexem.com', scalable: 'https://it.scalable.capital', degiro: 'https://www.degiro.it', directa: 'https://www.directa.it' };
+      const url = d.aff ? d.aff : OFFICIAL[key] || '#';
+      if(url && url !== '#'){
+        affBtn.classList.remove('hidden');
+        affBtn.setAttribute('href', url);
+        affBtn.setAttribute('rel', d.affiliated ? 'sponsored noopener' : 'noopener');
+        affText.textContent = d.affiliated ? 'Link affiliato' : 'Sito ufficiale (non affiliato)';
+      } else {
+        affBtn.classList.add('hidden');
+        affBtn.removeAttribute('href');
+        affBtn.setAttribute('rel', 'noopener');
+        affText.textContent = 'Nessun link disponibile.';
+      }
+      const modal = $('#modal'); modal.classList.remove('hidden'); modal.classList.add('flex');
+    }
+    function closeModal(){ const m=$('#modal'); m.classList.add('hidden'); m.classList.remove('flex'); }
+    document.getElementById('modal').addEventListener('click', (e)=>{ if(e.target.id==='modal') closeModal(); });
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); });
+  // Fill card summaries (platforms & fees)
+    document.querySelectorAll('li[data-key]').forEach(li=>{
+      const key = li.getAttribute('data-key');
+      const d = DATA[key]; if(!d) return;
+      const p = li.querySelector('.js-platforms');
+      const f = li.querySelector('.js-fees');
+      if(p) p.textContent = d.platforms || 'N/D';
+      if(f) f.textContent = d.fees || 'N/D';
+    });
 
-    <!-- Saxo Bank -->
-    <li class="border border-slate-200 rounded-xl p-5 flex flex-col min-h-[320px]">
-      <div class="flex items-center gap-2">
-        <h3 class="font-semibold">Saxo Bank</h3>
-        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">90/100</span>
-      </div>
-      <p class="mt-1 text-sm text-slate-600">Piattaforma avanzata multi-asset; opzioni/futures; obbligazioni.</p>
-      <dl class="mt-3 text-sm space-y-1">
-        <div><span class="text-slate-500">Livello tecnico:</span> <span class="font-medium">Avanzato</span></div>
-        <div><span class="text-slate-500">Piattaforme:</span> SaxoTraderGO/PRO, Web, App</div>
-        <div><span class="text-slate-500">Costi (indic.):</span> per-mercato; possibili canoni dati</div>
-        <div><span class="text-slate-500">CFD:</span> sì — <span class="font-medium">64%</span> conti retail in perdita</div>
-      </dl>
-      <div class="mt-auto pt-4">
-        <a href="https://www.saxo.com" target="_blank" rel="noopener"
-           class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito ufficiale</a>
-      </div>
-    </li>
-
-    <!-- MEXEM -->
-    <li class="border border-slate-200 rounded-xl p-5 flex flex-col min-h-[320px]">
-      <div class="flex items-center gap-2">
-        <h3 class="font-semibold">MEXEM</h3>
-        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">88/100</span>
-      </div>
-      <p class="mt-1 text-sm text-slate-600">Introducer su infrastruttura IBKR; accesso TWS; multi-mercato quotato.</p>
-      <dl class="mt-3 text-sm space-y-1">
-        <div><span class="text-slate-500">Livello tecnico:</span> <span class="font-medium">Avanzato</span></div>
-        <div><span class="text-slate-500">Piattaforme:</span> TWS, Client Portal, App</div>
-        <div><span class="text-slate-500">Costi (indic.):</span> in linea con IBKR; differenze commerciali possibili</div>
-        <div><span class="text-slate-500">CFD:</span> disponibili — <span class="font-medium">verificare % in fase di onboarding</span></div>
-      </dl>
-      <div class="mt-auto pt-4">
-        <a href="https://www.mexem.com" target="_blank" rel="noopener"
-           class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito ufficiale</a>
-      </div>
-    </li>
-
-    <!-- Freedom24 -->
-    <li class="border border-slate-200 rounded-xl p-5 flex flex-col min-h-[320px]">
-      <div class="flex items-center gap-2">
-        <h3 class="font-semibold">Freedom24</h3>
-        <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Affiliato</span>
-        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">85/100</span>
-      </div>
-      <p class="mt-1 text-sm text-slate-600">Accesso <strong>IPO</strong>, azioni/ETF USA–EU, obbligazioni. <strong>Nessun CFD</strong>.</p>
-      <dl class="mt-3 text-sm space-y-1">
-        <div><span class="text-slate-500">Livello tecnico:</span> <span class="font-medium">Base</span></div>
-        <div><span class="text-slate-500">Piattaforme:</span> Web, App</div>
-        <div><span class="text-slate-500">Costi (indic.):</span> per-ordine; condizioni dedicate IPO</div>
-        <div><span class="text-slate-500">CFD:</span> no</div>
-      </dl>
-      <div class="mt-auto pt-4">
-        <a href="https://freedom24.com/invite_from/2953166" target="_blank" rel="sponsored noopener"
-           class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito (aff.)</a>
-      </div>
-    </li>
-
-    <!-- Scalable Capital -->
-    <li class="border border-slate-200 rounded-xl p-5 flex flex-col min-h-[320px]">
-      <div class="flex items-center gap-2">
-        <h3 class="font-semibold">Scalable Capital</h3>
-        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">83/100</span>
-      </div>
-      <p class="mt-1 text-sm text-slate-600">ETF/PAC a costi contenuti; azioni e derivati quotati (gettex).</p>
-      <dl class="mt-3 text-sm space-y-1">
-        <div><span class="text-slate-500">Livello tecnico:</span> <span class="font-medium">Base</span></div>
-        <div><span class="text-slate-500">Piattaforme:</span> Web, App</div>
-        <div><span class="text-slate-500">Costi (indic.):</span> piani flat o per-ordine</div>
-        <div><span class="text-slate-500">CFD:</span> no</div>
-      </dl>
-      <div class="mt-auto pt-4">
-        <a href="https://it.scalable.capital" target="_blank" rel="noopener"
-           class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito ufficiale</a>
-      </div>
-    </li>
-
-    <!-- DEGIRO -->
-    <li class="border border-slate-200 rounded-xl p-5 flex flex-col min-h-[320px]">
-      <div class="flex items-center gap-2">
-        <h3 class="font-semibold">DEGIRO</h3>
-        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">84/100</span>
-      </div>
-      <p class="mt-1 text-sm text-slate-600">Azioni/ETF/obbligazioni; derivati quotati; costi competitivi.</p>
-      <dl class="mt-3 text-sm space-y-1">
-        <div><span class="text-slate-500">Livello tecnico:</span> <span class="font-medium">Intermedio</span></div>
-        <div><span class="text-slate-500">Piattaforme:</span> Web, App</div>
-        <div><span class="text-slate-500">Costi (indic.):</span> molto competitivi; dati opzionali</div>
-        <div><span class="text-slate-500">CFD:</span> no</div>
-      </dl>
-      <div class="mt-auto pt-4">
-        <a href="https://www.degiro.it" target="_blank" rel="noopener"
-           class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito ufficiale</a>
-      </div>
-    </li>
-
-    <!-- eToro -->
-    <li class="border border-slate-200 rounded-xl p-5 flex flex-col min-h-[320px]">
-      <div class="flex items-center gap-2">
-        <h3 class="font-semibold">eToro</h3>
-        <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Affiliato</span>
-        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">76/100</span>
-      </div>
-      <p class="mt-1 text-sm text-slate-600">Azioni/ETF reali e <strong>crypto spot</strong> con componente social. Offre anche CFD.</p>
-      <dl class="mt-3 text-sm space-y-1">
-        <div><span class="text-slate-500">Livello tecnico:</span> <span class="font-medium">Base</span></div>
-        <div><span class="text-slate-500">Piattaforme:</span> Web, App</div>
-        <div><span class="text-slate-500">Costi (indic.):</span> commissioni ridotte; spread/cambio possibili</div>
-        <div><span class="text-slate-500">CFD:</span> sì — <span class="font-medium">61%</span> conti retail in perdita</div>
-      </dl>
-      <div class="mt-auto pt-4">
-        <a href="https://med.etoro.com/B7979_A124128_TClick.aspx" target="_blank" rel="sponsored noopener"
-           class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito (aff.)</a>
-      </div>
-    </li>
-
-    <!-- NAGA -->
-    <li class="border border-slate-200 rounded-xl p-5 flex flex-col min-h-[320px]">
-      <div class="flex items-center gap-2">
-        <h3 class="font-semibold">NAGA</h3>
-        <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Affiliato</span>
-        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">72/100</span>
-      </div>
-      <p class="mt-1 text-sm text-slate-600">Titoli/ETF reali con funzione social. Offre anche CFD.</p>
-      <dl class="mt-3 text-sm space-y-1">
-        <div><span class="text-slate-500">Livello tecnico:</span> <span class="font-medium">Base</span></div>
-        <div><span class="text-slate-500">Piattaforme:</span> Web, App</div>
-        <div><span class="text-slate-500">Costi (indic.):</span> commissioni/spread; movimenti</div>
-        <div><span class="text-slate-500">CFD:</span> sì — <span class="font-medium">73,04%</span> conti retail in perdita</div>
-      </dl>
-      <div class="mt-auto pt-4">
-        <a href="https://www.financeads.net/tc.php?t=76793C4792126679T" target="_blank" rel="sponsored noopener"
-           class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito (aff.)</a>
-      </div>
-    </li>
-
-    <!-- Directa SIM -->
-    <li class="border border-slate-200 rounded-xl p-5 flex flex-col min-h-[320px]">
-      <div class="flex items-center gap-2">
-        <h3 class="font-semibold">Directa SIM</h3>
-        <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] font-semibold">82/100</span>
-      </div>
-      <p class="mt-1 text-sm text-slate-600">Borsa Italiana + USA/EU; fiscalità domestica; derivati quotati IDEM.</p>
-      <dl class="mt-3 text-sm space-y-1">
-        <div><span class="text-slate-500">Livello tecnico:</span> <span class="font-medium">Intermedio</span></div>
-        <div><span class="text-slate-500">Piattaforme:</span> dLite/Libera (web/desktop), App</div>
-        <div><span class="text-slate-500">Costi (indic.):</span> per-mercato; regimi fiscali locali</div>
-        <div><span class="text-slate-500">CFD:</span> sì (LMAX) — <span class="font-medium">77,20%</span> conti retail in perdita</div>
-      </dl>
-      <div class="mt-auto pt-4">
-        <a href="https://www.directa.it" target="_blank" rel="noopener"
-           class="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-slate-50">Sito ufficiale</a>
-      </div>
-    </li>
-  </ul>
-
-  <p class="mt-6 text-[12.5px] text-slate-600">
-    Dati e % CFD soggetti ad aggiornamenti regolamentari; verificare sempre sui siti ufficiali degli intermediari prima di operare.
-  </p>
-</section>
-
+  // --- Filtro CFD ---
+    function applyFilter(mode){
+      const cards = document.querySelectorAll('li[data-key]');
+      cards.forEach(card => {
+        const key = card.getAttribute('data-key');
+        const d = DATA[key];
+        if(!d){ card.classList.remove('hidden'); return; }
+        let show = true;
+        if(mode === 'no-cfd'){
+          show = (d.cfd_class === 'none');
+        } else if(mode === 'standard'){
+          show = (d.cfd_class === 'none' || d.cfd_class === 'optional');
+        } else {
+          show = true; // all
+        }
+        card.classList.toggle('hidden', !show);
+      });
+    }
+    const select = document.getElementById('f-cfd');
+    if(select){
+      select.addEventListener('change', ()=> applyFilter(select.value));
+      applyFilter('standard');
+    }
+  </script>
   function chiudiPopupCookie() {
     localStorage.setItem("tradelia_cookie_consent", "true");
     document.getElementById("cookie-popup").style.display = "none";
