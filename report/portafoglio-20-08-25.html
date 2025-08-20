@@ -816,122 +816,174 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
 
 
     <!-- B1 -->
-<!-- B1 — Profilo Investitore -->
 <!-- BLOCCO 1 — PROFILO INVESTITORE -->
-<section id="blocco1" class="p-6 bg-gray-50 rounded-2xl shadow-md mb-6">
-  <h2 class="text-2xl font-bold mb-4">BLOCCO 1 — PROFILO INVESTITORE</h2>
+<section id="blocco1" class="bg-white p-6 rounded-2xl shadow-lg max-w-4xl mx-auto my-6">
+  <h2 class="text-2xl font-bold mb-4">BLOCCO 1 • Profilo Investitore</h2>
 
   <!-- Dati Anagrafici -->
-  <div class="mb-4 p-4 bg-white rounded-xl shadow-sm border-l-4 border-blue-600">
-    <h3 class="text-xl font-semibold mb-2">1. Dati Anagrafici</h3>
-    <p class="text-gray-700 mb-1"><strong>Descrizione:</strong> Identificazione di base dell’investitore, utile per contestualizzare età, residenza e nucleo familiare in relazione a orizzonte temporale e rischio.</p>
-    <p class="text-gray-600 text-sm mb-2"><strong>Fonte:</strong> MiFID II, ESMA Suitability Guidelines 2018</p>
-    <p class="text-gray-800"><strong>Valore:</strong> 39 anni, Italia, non sposato</p>
-    <p class="text-gray-500 italic">Commento Investment Committee: Profilo anagrafico coerente con un orizzonte di lungo termine; nessuna criticità evidenziata. 🟢</p>
+  <div class="mb-5">
+    <div class="flex justify-between items-center">
+      <h3 class="text-xl font-semibold">Dati Anagrafici</h3>
+      <lucide-user-check class="w-6 h-6 text-green-600"></lucide-user-check>
+    </div>
+    <p class="text-gray-700 mt-1">
+      Età: 39, Residenza: Italia, Stato civile: non specificato
+    </p>
+    <p class="text-gray-500 italic text-sm mt-1">
+      Descrizione accademica: Identificazione di base dell’investitore, utile per contestualizzare età, residenza e nucleo familiare in relazione a orizzonte temporale e rischio.  
+      Fonte: MiFID II, ESMA Suitability Guidelines 2018
+    </p>
   </div>
 
   <!-- Situazione Patrimoniale -->
-  <div class="mb-4 p-4 bg-white rounded-xl shadow-sm border-l-4 border-blue-600">
-    <h3 class="text-xl font-semibold mb-2">2. Situazione Patrimoniale</h3>
-    <p class="text-gray-700 mb-1"><strong>Descrizione:</strong> Analisi del patrimonio complessivo (liquidità, investimenti, immobili, passività) per stimare la capacità di sostenere rischi finanziari.</p>
-    <p class="text-gray-600 text-sm mb-2"><strong>Fonte:</strong> CONSOB Quaderni FinTech 2020; OECD Household Finance Studies</p>
-    <p class="text-gray-800"><strong>Valore:</strong> Liquidità: 5.000€, Casa di proprietà, Nessuna passività significativa</p>
-    <p class="text-gray-500 italic">Commento Investment Committee: Patrimonio di base sufficiente, basso indebitamento. 🟢</p>
+  <div class="mb-5">
+    <div class="flex justify-between items-center">
+      <h3 class="text-xl font-semibold">Situazione Patrimoniale</h3>
+      <lucide-wallet class="w-6 h-6 text-green-600"></lucide-wallet>
+    </div>
+    <p class="text-gray-700 mt-1">
+      Liquidità: 5.000€ su conto bancario, Immobili: casa di proprietà, Passività: nessuna
+    </p>
+    <p class="text-gray-500 italic text-sm mt-1">
+      Descrizione accademica: Analisi del patrimonio complessivo per stimare la capacità di sostenere rischi finanziari, considerando liquidità immediata, investimenti e passività.  
+      Fonte: CONSOB Quaderni FinTech 2020; OECD Household Finance Studies
+    </p>
   </div>
 
-  <!-- Reddito e Flusso Cassa -->
-  <div class="mb-4 p-4 bg-white rounded-xl shadow-sm border-l-4 border-blue-600">
-    <h3 class="text-xl font-semibold mb-2">3. Reddito e Flusso Cassa</h3>
-    <p class="text-gray-700 mb-1"><strong>Descrizione:</strong> Valutazione della stabilità e diversificazione delle entrate, per stimare resilienza e capacità di investimento regolare.</p>
-    <p class="text-gray-600 text-sm mb-2"><strong>Fonte:</strong> EFAMA Investor Education Report 2021</p>
-    <p class="text-gray-800"><strong>Valore:</strong> Stipendio stabile, inferiore a 25k€/anno</p>
-    <p class="text-gray-500 italic">Commento Investment Committee: Reddito sufficiente per un PAC moderato; monitorare eventuali variazioni di flusso. 🟡</p>
+  <!-- Reddito e Flusso di Cassa -->
+  <div class="mb-5">
+    <div class="flex justify-between items-center">
+      <h3 class="text-xl font-semibold">Reddito e Flusso di Cassa</h3>
+      <lucide-dollar-sign class="w-6 h-6 text-green-600"></lucide-dollar-sign>
+    </div>
+    <p class="text-gray-700 mt-1">
+      Stipendio stabile, inferiore a 25.000€ annui
+    </p>
+    <p class="text-gray-500 italic text-sm mt-1">
+      Descrizione accademica: Valutazione della stabilità e diversificazione delle entrate, per stimare resilienza finanziaria e capacità di investimento regolare.  
+      Fonte: EFAMA Investor Education Report 2021
+    </p>
   </div>
 
   <!-- Obiettivi di Investimento -->
-  <div class="mb-4 p-4 bg-white rounded-xl shadow-sm border-l-4 border-blue-600">
-    <h3 class="text-xl font-semibold mb-2">4. Obiettivi di Investimento</h3>
-    <p class="text-gray-700 mb-1"><strong>Descrizione:</strong> Chiarisce finalità principali (accumulazione, reddito, protezione, pianificazione pensionistica), essenziali per la definizione del portafoglio.</p>
-    <p class="text-gray-600 text-sm mb-2"><strong>Fonte:</strong> Sharpe, F. (1964). Capital Asset Prices; MiFID II, art. 25</p>
-    <p class="text-gray-800"><strong>Valore:</strong> Incrementare gradualmente i risparmi</p>
-    <p class="text-gray-500 italic">Commento Investment Committee: Obiettivo coerente con profilo a lungo termine e tolleranza moderata. 🟢</p>
+  <div class="mb-5">
+    <div class="flex justify-between items-center">
+      <h3 class="text-xl font-semibold">Obiettivi di Investimento</h3>
+      <lucide-target class="w-6 h-6 text-green-600"></lucide-target>
+    </div>
+    <p class="text-gray-700 mt-1">
+      Aumentare i risparmi
+    </p>
+    <p class="text-gray-500 italic text-sm mt-1">
+      Descrizione accademica: Chiarisce finalità principali (accumulazione, reddito, protezione), essenziali per definire la strategia di portafoglio coerente con gli obiettivi.  
+      Fonte: Sharpe, F. (1964); MiFID II, art. 25
+    </p>
   </div>
 
   <!-- Orizzonte Temporale -->
-  <div class="mb-4 p-4 bg-white rounded-xl shadow-sm border-l-4 border-blue-600">
-    <h3 class="text-xl font-semibold mb-2">5. Orizzonte Temporale</h3>
-    <p class="text-gray-700 mb-1"><strong>Descrizione:</strong> Durata prevista dell’investimento, elemento chiave nella tolleranza al rischio e nella scelta degli strumenti finanziari.</p>
-    <p class="text-gray-600 text-sm mb-2"><strong>Fonte:</strong> Bodie, Zvi (1995). On the Risk of Stocks in the Long Run</p>
-    <p class="text-gray-800"><strong>Valore:</strong> Lungo termine</p>
-    <p class="text-gray-500 italic">Commento Investment Committee: Orizzonte coerente con strategie di accumulo e strumenti ad alta volatilità come criptovalute. 🟢</p>
+  <div class="mb-5">
+    <div class="flex justify-between items-center">
+      <h3 class="text-xl font-semibold">Orizzonte Temporale</h3>
+      <lucide-clock class="w-6 h-6 text-green-600"></lucide-clock>
+    </div>
+    <p class="text-gray-700 mt-1">
+      Lungo termine
+    </p>
+    <p class="text-gray-500 italic text-sm mt-1">
+      Descrizione accademica: Durata prevista dell’investimento, elemento chiave nella tolleranza al rischio e nella selezione degli strumenti finanziari.  
+      Fonte: Bodie, Zvi (1995)
+    </p>
   </div>
 
   <!-- Esperienza e Conoscenza Finanziaria -->
-  <div class="mb-4 p-4 bg-white rounded-xl shadow-sm border-l-4 border-blue-600">
-    <h3 class="text-xl font-semibold mb-2">6. Esperienza e Conoscenza Finanziaria</h3>
-    <p class="text-gray-700 mb-1"><strong>Descrizione:</strong> Valutazione di conoscenze pregresse e pratiche dell’investitore su strumenti e mercati, utile per determinare adeguatezza.</p>
-    <p class="text-gray-600 text-sm mb-2"><strong>Fonte:</strong> ESMA Guidelines 2018; OECD Financial Literacy Studies</p>
-    <p class="text-gray-800"><strong>Valore:</strong> Principiante, solo criptovalute</p>
-    <p class="text-gray-500 italic">Commento Investment Committee: Profilo di base, richiede educazione finanziaria aggiuntiva. 🟡</p>
+  <div class="mb-5">
+    <div class="flex justify-between items-center">
+      <h3 class="text-xl font-semibold">Esperienza e Conoscenza Finanziaria</h3>
+      <lucide-book-open class="w-6 h-6 text-yellow-500"></lucide-book-open>
+    </div>
+    <p class="text-gray-700 mt-1">
+      Solo criptovalute, Principiante
+    </p>
+    <p class="text-gray-500 italic text-sm mt-1">
+      Descrizione accademica: Valutazione delle conoscenze pregresse e pratiche dell’investitore su strumenti e mercati per determinare adeguatezza e formazione necessaria.  
+      Fonte: ESMA Guidelines 2018; OECD Financial Literacy Studies
+    </p>
   </div>
 
   <!-- Propensione al Rischio -->
-  <div class="mb-4 p-4 bg-white rounded-xl shadow-sm border-l-4 border-blue-600">
-    <h3 class="text-xl font-semibold mb-2">7. Propensione al Rischio</h3>
-    <p class="text-gray-700 mb-1"><strong>Descrizione:</strong> Analisi psicometrica e comportamentale dell’attitudine a sostenere volatilità e perdite temporanee.</p>
-    <p class="text-gray-600 text-sm mb-2"><strong>Fonte:</strong> Kahneman & Tversky (1979). Prospect Theory; MiFID II</p>
-    <p class="text-gray-800"><strong>Valore:</strong> Incerta, non sicuro del comportamento in caso di volatilità</p>
-    <p class="text-gray-500 italic">Commento Investment Committee: Profilo cauto, possibile necessità di limitare esposizione. 🟡</p>
-  </div>
-
-  <!-- Capacità di Sostenere Perdite -->
-  <div class="mb-4 p-4 bg-white rounded-xl shadow-sm border-l-4 border-blue-600">
-    <h3 class="text-xl font-semibold mb-2">8. Capacità di Sostenere Perdite</h3>
-    <p class="text-gray-700 mb-1"><strong>Descrizione:</strong> Valutazione della perdita massima sostenibile senza compromettere obiettivi di vita o stabilità finanziaria.</p>
-    <p class="text-gray-600 text-sm mb-2"><strong>Fonte:</strong> CONSOB Report on Household Finance 2022</p>
-    <p class="text-gray-800"><strong>Valore:</strong> 10% perdita massima accettabile</p>
-    <p class="text-gray-500 italic">Commento Investment Committee: Limite prudente, adeguato all’orizzonte di lungo termine. 🟢</p>
+  <div class="mb-5">
+    <div class="flex justify-between items-center">
+      <h3 class="text-xl font-semibold">Propensione al Rischio</h3>
+      <lucide-alert-circle class="w-6 h-6 text-yellow-500"></lucide-alert-circle>
+    </div>
+    <p class="text-gray-700 mt-1">
+      Non sicuro di come reagirebbe, Tolleranza perdita massima: 10%
+    </p>
+    <p class="text-gray-500 italic text-sm mt-1">
+      Descrizione accademica: Analisi comportamentale dell’attitudine a sostenere volatilità e perdite temporanee, utile per allineare strategia di investimento con tolleranza al rischio.  
+      Fonte: Kahneman & Tversky (1979); MiFID II
+    </p>
   </div>
 
   <!-- Preferenze ESG -->
-  <div class="mb-4 p-4 bg-white rounded-xl shadow-sm border-l-4 border-blue-600">
-    <h3 class="text-xl font-semibold mb-2">9. Preferenze ESG</h3>
-    <p class="text-gray-700 mb-1"><strong>Descrizione:</strong> Rilevazione dell’interesse per investimenti sostenibili, etici e socialmente responsabili.</p>
-    <p class="text-gray-600 text-sm mb-2"><strong>Fonte:</strong> Regolamento (UE) 2019/2088 — SFDR; EU Taxonomy</p>
-    <p class="text-gray-800"><strong>Valore:</strong> Non rilevante</p>
-    <p class="text-gray-500 italic">Commento Investment Committee: Nessuna preferenza ESG indicata; coerente con obiettivo di crescita aggressiva. 🟢</p>
+  <div class="mb-5">
+    <div class="flex justify-between items-center">
+      <h3 class="text-xl font-semibold">Preferenze ESG</h3>
+      <lucide-leaf class="w-6 h-6 text-gray-400"></lucide-leaf>
+    </div>
+    <p class="text-gray-700 mt-1">
+      Non rilevante
+    </p>
+    <p class="text-gray-500 italic text-sm mt-1">
+      Descrizione accademica: Rilevazione dell’interesse per investimenti sostenibili e responsabili secondo le normative SFDR.  
+      Fonte: Regolamento (UE) 2019/2088 — SFDR; EU Taxonomy
+    </p>
   </div>
 
   <!-- Liquidità e Vincoli -->
-  <div class="mb-4 p-4 bg-white rounded-xl shadow-sm border-l-4 border-blue-600">
-    <h3 class="text-xl font-semibold mb-2">10. Liquidità e Vincoli</h3>
-    <p class="text-gray-700 mb-1"><strong>Descrizione:</strong> Analisi delle esigenze di liquidità immediata e vincoli legali/fiscali che possono condizionare la strategia.</p>
-    <p class="text-gray-600 text-sm mb-2"><strong>Fonte:</strong> OECD Financial Market Trends 2021</p>
-    <p class="text-gray-800"><strong>Valore:</strong> Liquidità minima: 4.000€ disponibile</p>
-    <p class="text-gray-500 italic">Commento Investment Committee: Livello di liquidità adeguato per emergenze; strategia coerente. 🟢</p>
+  <div class="mb-5">
+    <div class="flex justify-between items-center">
+      <h3 class="text-xl font-semibold">Liquidità e Vincoli</h3>
+      <lucide-credit-card class="w-6 h-6 text-green-600"></lucide-credit-card>
+    </div>
+    <p class="text-gray-700 mt-1">
+      Minimo 4.000€ liquidi disponibili
+    </p>
+    <p class="text-gray-500 italic text-sm mt-1">
+      Descrizione accademica: Analisi delle esigenze di liquidità immediata e vincoli legali/fiscali, determinante per strategia e strumenti utilizzabili.  
+      Fonte: OECD Financial Market Trends 2021
+    </p>
   </div>
 
-  <!-- Piano Accumulo Capitale (PAC) -->
-  <div class="mb-4 p-4 bg-white rounded-xl shadow-sm border-l-4 border-blue-600">
-    <h3 class="text-xl font-semibold mb-2">11. Piano Accumulo Capitale (PAC)</h3>
-    <p class="text-gray-700 mb-1"><strong>Descrizione:</strong> Definizione di eventuali PAC, frequenza e importi, come strumento di investimento graduale e diversificazione temporale.</p>
-    <p class="text-gray-600 text-sm mb-2"><strong>Fonte:</strong> Cost Averaging Theory; Vanguard Research 2019</p>
-    <p class="text-gray-800"><strong>Valore:</strong> PAC mensile: 200€</p>
-    <p class="text-gray-500 italic">Commento Investment Committee: Approccio disciplinato e coerente con obiettivo di accumulo a lungo termine. 🟢</p>
+  <!-- Piano Accumulo Capitale -->
+  <div class="mb-5">
+    <div class="flex justify-between items-center">
+      <h3 class="text-xl font-semibold">Piano Accumulo Capitale (PAC)</h3>
+      <lucide-piggy-bank class="w-6 h-6 text-green-600"></lucide-piggy-bank>
+    </div>
+    <p class="text-gray-700 mt-1">
+      PAC mensile: 200€
+    </p>
+    <p class="text-gray-500 italic text-sm mt-1">
+      Descrizione accademica: Definizione di investimenti graduali e diversificazione temporale tramite PAC.  
+      Fonte: Cost Averaging Theory; Vanguard Research 2019
+    </p>
   </div>
 
-  <!-- Validazione Standardizzata -->
-  <div class="p-4 bg-gray-100 rounded-xl border-l-4 border-green-600">
-    <h3 class="text-xl font-semibold mb-2">Validazione Standardizzata</h3>
-    <p class="text-gray-700 mb-1"><strong>Descrizione:</strong> Sistema di validazione con semaforo per misurare coerenza e completezza del profilo.</p>
-    <p class="text-gray-600 text-sm mb-2"><strong>Fonte:</strong> CONSOB Linee Guida 2022; EFAMA Investor Profiling Standards</p>
-    <p class="text-gray-800"><strong>Esito:</strong> 🟢 Profilo completo e coerente in tutte le sezioni</p>
+  <!-- Commento Tradelia AI -->
+  <div class="bg-gray-50 p-4 rounded-xl border-l-4 border-blue-500 mb-4">
+    <h4 class="font-semibold text-blue-700 mb-2">Commento Tradelia AI</h4>
+    <p class="text-gray-700 text-sm">
+      Profilo coerente con investitore a lungo termine, con liquidità sufficiente e PAC regolare. Esperienza limitata e propensione al rischio moderata: consigliata attenzione agli strumenti ad alta volatilità come le criptovalute.
+    </p>
   </div>
 
-  <!-- Disclaimer -->
-  <div class="mt-6 p-4 bg-gray-200 rounded-xl text-sm text-gray-700 italic">
-    <strong>Disclaimer Consob:</strong> Le informazioni raccolte sono elaborate unicamente in forma anonima e aggregata. Questo schema ha esclusiva finalità educativa, accademica e di ricerca. Non costituisce consulenza finanziaria personalizzata né valutazione di adeguatezza ai sensi della normativa MiFID II o CONSOB. Per decisioni di investimento si raccomanda di rivolgersi a consulenti finanziari indipendenti e professionisti abilitati.
-  </div>
+  <!-- Disclaimer Normativo -->
+  <p class="text-gray-500 text-xs italic mt-6">
+    Le informazioni presentate sono fornite a scopo educativo, accademico e di ricerca, senza alcuna valutazione personalizzata.  
+    Non costituiscono consulenza finanziaria né raccomandazione di investimento.  
+    Per decisioni finanziarie si raccomanda di rivolgersi a professionisti abilitati.
+  </p>
 </section>
 
 <!-- B2 — Macro Regime -->
