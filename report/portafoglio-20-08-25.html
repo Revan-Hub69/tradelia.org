@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>TRADELIA • AI — Validazione & Simulazione Portafogli ([[REPORT_VERSION]] • Istituzionale 2025)</title>
+  <meta name="description" content="Template istituzionale Tradelia AI: validazione e simulazione portafogli con profilo investitore, regime macro, vincoli, ottimizzazione, stress test, implementazione e scoring finale." />
+  <meta name="author" content="Tradelia AI" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <link rel="canonical" href="[[CANONICAL_URL]]" />
+
+ <!-- Canonical -->
+<link rel="canonical" href="https://www.tradelia.org/">
+
+<!-- Open Graph -->
+<meta property="og:url" content="https://www.tradelia.org/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TRADELIA • AI — Validazione & Simulazione Portafogli (Metodo Istituzionale 2025)">
+<meta property="og:description" content="Profilazione, regime macro, vincoli tecnici, ottimizzazione, stress test e scoring in un unico framework.">
+<meta property="og:site_name" content="TRADELIA • AI">
+<meta property="og:locale" content="it_IT">
+<meta property="og:image" content="https://www.tradelia.org/img/tradelia_og_vC_white_clean.png?v=2025-08-17">
+<meta property="og:image:secure_url" content="https://www.tradelia.org/img/ChatGPT Image 18 ago 2025, 10_04_10.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Copertina Tradelia — Metodo istituzionale 2025">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TRADELIA • AI — Validazione & Simulazione Portafogli (Metodo Istituzionale 2025)">
+<meta name="twitter:description" content="Analisi multi-blocco con metodo istituzionale 2025 per portafogli.">
+<meta name="twitter:image" content="https://www.tradelia.org/img/ChatGPT Image 18 ago 2025, 10_04_10.png">
+<meta name="twitter:image:alt" content="Copertina Tradelia — Metodo istituzionale 2025">
+
+
+  <!-- Theme color -->
+  <meta name="theme-color" content="#0ea5e9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+
+  <!-- Fonts (Inter + Merriweather) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:wght@700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind (config + safelist) -->
+  <script>
+    tailwind = window.tailwind || {};
+    tailwind.config = {
+      safelist: [
+        "hidden","block",
+        "bg-emerald-50","bg-amber-50","bg-rose-50",
+        "text-emerald-700","text-amber-700","text-rose-700",
+        "border-emerald-200","border-amber-200","border-rose-200",
+        "bg-sky-50","text-sky-900","border-sky-300","text-slate-600","border-slate-300"
+      ]
+    };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- AOS + Lucide -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+
+  <style>
+    :root { color-scheme: light dark; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background:#f8fafc; color:#0f172a;
+      font-feature-settings:"tnum" 1, "lnum" 1;
+      font-variant-numeric: tabular-nums slashed-zero;
+      text-rendering: optimizeLegibility;
+    }
+    h1,h2,h3 { font-family: 'Merriweather', Georgia, serif; letter-spacing:.1px; }
+    p, li { hyphens:auto; -webkit-hyphens:auto; overflow-wrap:break-word; }
+/* Accordion: nascondi marker nativo e anima il chevron Lucide */
+.details-clean > summary { list-style: none; }
+.details-clean > summary::-webkit-details-marker { display: none; }
+summary .chev { display:inline-block; transition: transform .2s ease; }
+.details-clean[open] summary .chev { transform: rotate(180deg); }
+summary .chev i { width: 18px; height: 18px; color:#64748b; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width:10px; height:10px; }
+    ::-webkit-scrollbar-track { background:#e2e8f0; border-radius:8px; }
+    ::-webkit-scrollbar-thumb { background:#94a3b8; border-radius:8px; border:2px solid #e2e8f0; }
+    ::-webkit-scrollbar-thumb:hover { background:#64748b; }
+
+    /* Link */
+    a { color:#0369a1; text-decoration:none; }
+    a:hover { text-decoration:underline; text-underline-offset:2px; }
+    a:focus-visible { outline:2px solid #0ea5e9; outline-offset:2px; border-radius:4px; }
+
+    /* Focus */
+    :focus-visible { outline:2px solid rgb(14 165 233); outline-offset:2px; border-radius:6px; }
+
+    /* Header shrink */
+    header.shrink { padding-top:.4rem; padding-bottom:.4rem; }
+    header.shrink .logo-text { font-size:1.1rem; letter-spacing:.1px; }
+
+    /* Progress bar */
+    #scroll-progress { position:fixed; top:0; left:0; height:3px; background:linear-gradient(to right, #0ea5e9,#3b82f6); width:0%; z-index:60; }
+
+    /* Drawer */
+    #toc-drawer { transform: translateX(100%); }
+    #toc-drawer.open { transform: translateX(0%); }
+    #toc-overlay.hidden { opacity:0; pointer-events:none; }
+
+    /* Tabs improved */
+    #section-tabs { position: sticky; top: 0; z-index: 40; }
+    #tabs-scroller {
+      display: flex; gap: .25rem; padding: .5rem .5rem;
+      overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity;
+      -webkit-mask-image: linear-gradient(to right, transparent 0, black 16px, black calc(100% - 16px), transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0, black 16px, black calc(100% - 16px), transparent 100%);
+    }
+    .sv-tab {
+      display: inline-flex; align-items: center; gap: .4rem;
+      padding: .45rem .6rem; border-radius: .6rem;
+      border: 1px solid #cbd5e1; background: #ffffff;
+      font-size: 13.5px; line-height: 1; color: #0f172a;
+      white-space: nowrap; scroll-snap-align: start;
+      transition: background-color .15s, border-color .15s, color .15s, box-shadow .15s;
+      min-height: 40px;
+    }
+    .sv-tab i { width: 16px; height: 16px; flex: none; }
+    .sv-tab:hover { background: #f8fafc; border-color: #94a3b8; }
+    .sv-tab:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }
+    .sv-tab.active {
+      background: #f0f9ff; color: #0c4a6e;
+      border-color: #7dd3fc;
+      box-shadow: 0 1px 0 rgba(2,132,199,.08), 0 0 0 2px rgba(125,211,252,.25) inset;
+      font-weight: 600;
+    }
+    @media (max-width: 640px) {
+      .sv-tab { padding: .40rem .55rem; font-size: 13px; min-height: 38px; }
+      .sv-tab i { width: 14px; height: 14px; }
+    }
+    #section-tabs::before, #section-tabs::after {
+      content: ""; position: absolute; top: 0; bottom: 0; width: 16px; pointer-events: none;
+    }
+    #section-tabs::before { left: 0; background: linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0)); }
+    #section-tabs::after  { right: 0; background: linear-gradient(to left,  rgba(255,255,255,1), rgba(255,255,255,0)); }
+
+    /* Anti-FOUC AOS */
+    [data-aos] { opacity:0; }
+    html.aos-initialized [data-aos] { opacity:1; }
+
+    /* iOS safe-area */
+    #section-tabs { padding-bottom: max(0px, env(safe-area-inset-bottom)); }
+
+    /* Divider istituzionale */
+    .section-divider { position:relative; display:flex; align-items:center; margin:2rem 0; }
+    .section-divider::before, .section-divider::after { content:""; flex:1; border-bottom:1px solid #e2e8f0; }
+    .section-divider span {
+      margin:0 .75rem; color:#64748b; font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase;
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+
+    /* Badge status */
+    .badge {
+      display:inline-flex; align-items:center; gap:.375rem;
+      padding:.25rem .5rem; border-radius:999px;
+      font-size:12px; font-weight:600;
+      background:#ecfdf5; color:#047857; border:1px solid #a7f3d0;
+    }
+
+    /* Copy anchor su h2 */
+    .anchor { opacity:0; transition:opacity .15s; margin-left:.5rem; }
+    h2:hover .anchor { opacity:1; }
+
+    /* Prosa stretta */
+    .prose-narrow { max-width:62ch; }
+
+    /* Code blocks */
+    pre.codeblock { background:#0b1220; color:#e2e8f0; border-radius:.75rem; padding:1rem; overflow:auto; border:1px solid #1f2937; }
+
+    /* Stampa */
+    @media print {
+      #scroll-progress, #section-tabs, #toc-overlay, #toc-drawer, .no-print, #toTop { display:none !important; }
+      header { position: static !important; box-shadow: none !important; }
+      .shadow-sm, .shadow, .shadow-inner { box-shadow: none !important; }
+      .sv-panel { display:block !important; }
+      .sv-panel[hidden] { display:block !important; }
+      h1, h2, h3 { page-break-after: avoid; page-break-inside: avoid; }
+      p, li { orphans:3; widows:3; }
+      section[role="tabpanel"] { break-inside: avoid; page-break-inside: avoid; }
+      #hero { page-break-after: avoid; }
+      @page { margin: 18mm 14mm 18mm 14mm; }
+      body{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+
+<body class="antialiased">
+  <noscript>
+    <div style="background:#fee2e2;color:#7f1d1d;padding:.75rem;text-align:center;font:14px/1.4 Inter,system-ui,sans-serif">
+      Questo report richiede JavaScript per navigazione e accessibilità avanzata.
+    </div>
+  </noscript>
+
+  <!-- Progress bar -->
+  <div id="scroll-progress"></div>
+
+  <!-- Header -->
+  <header role="banner" aria-label="Intestazione report"
+    class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm px-4 sm:px-6 py-3 flex items-center justify-between transition-all duration-300">
+    <!-- Logo -->
+    <a href="https://tradelia.org" target="_blank" rel="noopener noreferrer"
+       class="flex items-center font-extrabold tracking-tight hover:opacity-90 transition">
+      <span class="logo-text text-lg sm:text-2xl text-slate-900">TRADELIA</span>
+      <span class="logo-text ml-1 text-lg sm:text-2xl text-sky-600">•AI</span>
+    </a>
+    <!-- Azioni -->
+    <nav aria-label="Azioni pagina" class="flex gap-2">
+      <button onclick="window.print()" class="no-print hidden sm:inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50">
+        <i data-lucide="printer" class="w-4 h-4"></i> Stampa
+      </button>
+      <button onclick="window.print()" class="sm:hidden p-2 rounded-md border border-slate-200 hover:bg-slate-50" aria-label="Stampa">
+        <i data-lucide="printer" class="w-4 h-4"></i>
+      </button>
+      <button type="button" class="btn-open-toc no-print hidden sm:inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50">
+        <i data-lucide="list-tree" class="w-4 h-4"></i> Indice
+      </button>
+      <button type="button" class="btn-open-toc sm:hidden p-2 rounded-md border border-slate-200 hover:bg-slate-50" aria-label="Apri indice">
+        <i data-lucide="list-tree" class="w-4 h-4"></i>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Overlay & Drawer -->
+  <div id="toc-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-[1px] z-40 transition-opacity duration-200 hidden"></div>
+
+  <aside id="toc-drawer"
+    class="fixed top-0 right-0 h-full w-80 max-w-full bg-white border-l border-slate-200 shadow-xl z-50 transition-transform duration-300 ease-in-out"
+    aria-label="Indice del Report" aria-hidden="true">
+    <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+      <h2 class="text-sm font-semibold text-slate-700 tracking-tight">Indice Report</h2>
+      <button id="close-toc-drawer" class="p-1 rounded-md hover:bg-slate-100" aria-label="Chiudi indice">
+        <i data-lucide="x" class="w-4 h-4 text-slate-500"></i>
+      </button>
+    </div>
+
+    <!-- TOC con meta -->
+    <nav class="p-4 space-y-2 text-sm text-slate-700 overflow-y-auto h-[calc(100%-3rem)]" aria-label="Sezioni del report">
+            <a href="#broker" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+  <i data-lucide="store" class="w-4 h-4 mt-0.5"></i>
+  <span>Broker regolamentati<small class="block text-[11px] text-slate-400 mt-0.5">DMA/quotati • no CFD</small></span>
+</a>
+      <a href="#sim-op" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="activity" class="w-4 h-4 mt-0.5"></i>
+        <span>Simulazione Portafoglio<small class="block text-[11px] text-slate-400 mt-0.5">Candidati A/B/C + snapshot</small></span>
+      </a>
+      <a href="#blocco1" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="user-cog" class="w-4 h-4 mt-0.5"></i>
+        <span>B1 — Profilo Investitore<small class="block text-[11px] text-slate-400 mt-0.5">obiettivi, ESG, MiFID, FX</small></span>
+      </a>
+      <a href="#blocco2" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="globe-2" class="w-4 h-4 mt-0.5"></i>
+        <span>B2 — Macro Regime<small class="block text-[11px] text-slate-400 mt-0.5">regime e scenari</small></span>
+      </a>
+      <a href="#blocco3" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="settings-2" class="w-4 h-4 mt-0.5"></i>
+        <span>B3 — Parametri Tecnici &amp; Vincoli<small class="block text-[11px] text-slate-400 mt-0.5">vol, dd, complessità</small></span>
+      </a>
+      <a href="#blocco4" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="building-2" class="w-4 h-4 mt-0.5"></i>
+        <span>B4 — Ottimizzazione &amp; Candidati<small class="block text-[11px] text-slate-400 mt-0.5">allocazioni A/B/C</small></span>
+      </a>
+      <a href="#blocco5" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="activity" class="w-4 h-4 mt-0.5"></i>
+        <span>B5 — Simulation &amp; Stress<small class="block text-[11px] text-slate-400 mt-0.5">MC, shock, replay</small></span>
+      </a>
+      <a href="#blocco6" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="wrench" class="w-4 h-4 mt-0.5"></i>
+        <span>B6 — Implementation &amp; Rebalancing<small class="block text-[11px] text-slate-400 mt-0.5">piano operativo</small></span>
+      </a>
+      <a href="#blocco7" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="award" class="w-4 h-4 mt-0.5"></i>
+        <span>B7 — Scoring &amp; Classificazione Finale<small class="block text-[11px] text-slate-400 mt-0.5">rating & utility</small></span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Contenuto -->
+  <main id="contenuto">
+    <!-- HERO -->
+    <section id="hero" class="relative bg-gradient-to-b from-sky-50 to-white border-b border-slate-200 px-6 sm:px-10 py-10" data-aos="fade-down">
+      <div class="max-w-5xl mx-auto">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
+            Validazione & Simulazione • [[PORTFOLIO_NAME]]
+          </h1>
+          <span class="badge">
+            <i data-lucide="check-circle-2" class="w-4 h-4"></i> [[REPORT_STATUS]]
+          </span>
+        </div>
+        <div class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-[13px] sm:text-sm text-slate-600">
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="calendar" class="w-4 h-4 text-slate-500"></i>
+            Aggiornamento: <time id="report-date" datetime="[[ISO_DATE]]">[[HUMAN_DATE]]</time>
+          </span>
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="file-text" class="w-4 h-4 text-slate-500"></i> Versione [[REPORT_VERSION]]
+          </span>
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="shield" class="w-4 h-4 text-slate-500"></i> Documento a uso didattico
+          </span>
+        </div>
+        <p class="mt-6 prose-narrow text-[15px] leading-7 text-slate-700">
+          Framework multi-blocco sviluppato da <span class="font-semibold text-sky-800">Tradelia AI</span> per profilazione, ottimizzazione e <em>stress test</em> di portafogli. Ogni blocco produce <strong>output YAML</strong> standardizzati per automazioni e API.
+        </p>
+      </div>
+    </section>
+<!-- DISCLAIMER BREVE — Tradelia • AI -->
+<section id="disclaimer-brief" role="note" aria-label="Disclaimer Tradelia AI"
+  class="max-w-5xl mx-auto px-6 sm:px-10 mt-4 mb-8">
+  <div class="rounded-md border border-sky-200 bg-sky-50/70 p-4 sm:p-5 text-[13.5px] leading-6 text-slate-800">
+    <p><strong>Nota onesta · Tradelia AI.</strong> Tradelia AI elabora e sintetizza dati da
+      <em>fonti pubbliche ritenute di alta qualità</em> (es. banche centrali, provider istituzionali, IR aziendali).
+      Le informazioni non sono validate da un soggetto esterno e possono non essere complete, accurate o aggiornate.</p>
+
+    <p class="mt-2"><strong>Non è consulenza finanziaria.</strong> Questo materiale non è ricerca in materia di
+      investimenti né raccomandazione personalizzata e <em>non sostituisce un consulente abilitato</em>.
+      Usalo come <strong>spunto di confronto</strong>; prima di impiegare denaro reale, effettua verifiche indipendenti
+      e considera obiettivi, orizzonte e profilo di rischio.</p>
+
+    <p class="mt-2 text-[12.5px] text-slate-600">
+      Le performance passate non garantiscono risultati futuri. L’uso dei contenuti implica accettazione di questi limiti.
+    </p>
+  </div>
+</section>
+
+    <!-- TABS sticky -->
+    <nav id="section-tabs" class="sticky bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm" role="tablist" aria-label="Sezioni report">
+      <div id="tabs-scroller" class="max-w-7xl mx-auto">
+          <button class="sv-tab" data-target="broker" role="tab" aria-selected="false" aria-controls="broker" id="tab-broker" tabindex="-1">
+  <i data-lucide="store"></i><span>Broker</span>
+</button>
+        <button class="sv-tab active" data-target="sim-op" role="tab" aria-selected="true" aria-controls="sim-op" id="tab-sim-op" tabindex="0">
+          <i data-lucide="activity"></i><span>Simulazione</span>
+        </button>
+        <button class="sv-tab" data-target="blocco1" role="tab" aria-selected="false" aria-controls="blocco1" id="tab-blocco1" tabindex="-1">
+          <i data-lucide="user-cog"></i><span class="hidden sm:inline">B1 Profilo</span><span class="sm:hidden">B1</span>
+        </button>
+        <button class="sv-tab" data-target="blocco2" role="tab" aria-selected="false" aria-controls="blocco2" id="tab-blocco2" tabindex="-1">
+          <i data-lucide="globe-2"></i><span class="hidden sm:inline">B2 Macro</span><span class="sm:hidden">B2</span>
+        </button>
+        <button class="sv-tab" data-target="blocco3" role="tab" aria-selected="false" aria-controls="blocco3" id="tab-blocco3" tabindex="-1">
+          <i data-lucide="settings-2"></i><span class="hidden sm:inline">B3 Vincoli</span><span class="sm:hidden">B3</span>
+        </button>
+        <button class="sv-tab" data-target="blocco4" role="tab" aria-selected="false" aria-controls="blocco4" id="tab-blocco4" tabindex="-1">
+          <i data-lucide="building-2"></i><span class="hidden sm:inline">B4 Ottimizzazione</span><span class="sm:hidden">B4</span>
+        </button>
+        <button class="sv-tab" data-target="blocco5" role="tab" aria-selected="false" aria-controls="blocco5" id="tab-blocco5" tabindex="-1">
+          <i data-lucide="activity"></i><span class="hidden sm:inline">B5 Stress</span><span class="sm:hidden">B5</span>
+        </button>
+        <button class="sv-tab" data-target="blocco6" role="tab" aria-selected="false" aria-controls="blocco6" id="tab-blocco6" tabindex="-1">
+          <i data-lucide="wrench"></i><span class="hidden sm:inline">B6 Implement.</span><span class="sm:hidden">B6</span>
+        </button>
+        <button class="sv-tab" data-target="blocco7" role="tab" aria-selected="false" aria-controls="blocco7" id="tab-blocco7" tabindex="-1">
+          <i data-lucide="award"></i><span class="hidden sm:inline">B7 Scoring</span><span class="sm:hidden">B7</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ===== PANELS ===== -->
+<section id="broker" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+         role="tabpanel" aria-labelledby="tab-broker" hidden>
+  <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+    Broker regolamentati — selezione Tradelia AI
+    <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#broker">Copia link</button>
+  </h2>
+
+  <p class="mt-2 text-sm text-slate-600">
+    Focus su <strong>strumenti quotati reali</strong> (azioni, ETF, obbligazioni, opzioni/futures su mercati regolamentati).
+    Se un broker offre anche CFD, <em>lo includiamo qui solo per la parte “real assets”</em>.
+  </p>
+
+  <!-- Cards -->
+  <ul class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="brk-cards">
+    <!-- Esempi: metti pure in ordine tuo, i dettagli arrivano dallo script -->
+    <li data-brk="exante"   class="border rounded-xl p-5 bg-white hover:shadow-sm transition">
+      <div class="flex items-start gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-600 text-white font-bold">E</div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="font-semibold">EXANTE</span>
+            <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Affiliato</span>
+            <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-800 px-2 py-0.5 text-[11px] font-semibold">92/100</span>
+          </div>
+          <p class="mt-1 text-sm text-slate-600">DMA globale (azioni/ETF/bond/derivati). <strong>Cripto via CFD</strong> o ETN quotati.</p>
+          <div class="mt-3 text-xs text-slate-500 space-y-1">
+            <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">—</span></div>
+            <div><span class="font-medium">Costi:</span> <span class="js-fees">—</span></div>
+          </div>
+          <button class="brk-more mt-3 inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50">
+            <i data-lucide="info" class="w-4 h-4"></i> Maggiori info
+          </button>
+        </div>
+      </div>
+    </li>
+
+    <li data-brk="saxo"     class="border rounded-xl p-5 bg-white hover:shadow-sm transition">
+      <div class="flex items-start gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-700 text-white font-bold">S</div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="font-semibold">Saxo Bank</span>
+            <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-800 px-2 py-0.5 text-[11px] font-semibold">90/100</span>
+          </div>
+          <p class="mt-1 text-sm text-slate-600">Multi-asset avanzato, opzioni/futures quotati.</p>
+          <div class="mt-3 text-xs text-slate-500 space-y-1">
+            <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">—</span></div>
+            <div><span class="font-medium">Costi:</span> <span class="js-fees">—</span></div>
+          </div>
+          <button class="brk-more mt-3 inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50">
+            <i data-lucide="info" class="w-4 h-4"></i> Maggiori info
+          </button>
+        </div>
+      </div>
+    </li>
+
+    <li data-brk="ibkr"     class="border rounded-xl p-5 bg-white hover:shadow-sm transition">
+      <div class="flex items-start gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-800 text-white font-bold">IB</div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="font-semibold">Interactive Brokers (IBKR)</span>
+            <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-800 px-2 py-0.5 text-[11px] font-semibold">95/100</span>
+          </div>
+          <p class="mt-1 text-sm text-slate-600">Copertura globale, TWS/API, derivati quotati.</p>
+          <div class="mt-3 text-xs text-slate-500 space-y-1">
+            <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">—</span></div>
+            <div><span class="font-medium">Costi:</span> <span class="js-fees">—</span></div>
+          </div>
+          <button class="brk-more mt-3 inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50">
+            <i data-lucide="info" class="w-4 h-4"></i> Maggiori info
+          </button>
+        </div>
+      </div>
+    </li>
+
+    <li data-brk="mexem"    class="border rounded-xl p-5 bg-white hover:shadow-sm transition">
+      <div class="flex items-start gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-700 text-white font-bold">M</div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="font-semibold">MEXEM</span>
+            <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-800 px-2 py-0.5 text-[11px] font-semibold">88/100</span>
+          </div>
+          <p class="mt-1 text-sm text-slate-600">Introducer europeo con accesso TWS/IBKR.</p>
+          <div class="mt-3 text-xs text-slate-500 space-y-1">
+            <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">—</span></div>
+            <div><span class="font-medium">Costi:</span> <span class="js-fees">—</span></div>
+          </div>
+          <button class="brk-more mt-3 inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50">
+            <i data-lucide="info" class="w-4 h-4"></i> Maggiori info
+          </button>
+        </div>
+      </div>
+    </li>
+
+    <li data-brk="freedom24" class="border rounded-xl p-5 bg-white hover:shadow-sm transition">
+      <div class="flex items-start gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-600 text-white font-bold">F</div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="font-semibold">Freedom24</span>
+            <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Affiliato</span>
+            <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-800 px-2 py-0.5 text-[11px] font-semibold">85/100</span>
+          </div>
+          <p class="mt-1 text-sm text-slate-600">IPO, azioni/ETF, bond. Nessun CFD.</p>
+          <div class="mt-3 text-xs text-slate-500 space-y-1">
+            <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">—</span></div>
+            <div><span class="font-medium">Costi:</span> <span class="js-fees">—</span></div>
+          </div>
+          <button class="brk-more mt-3 inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50">
+            <i data-lucide="info" class="w-4 h-4"></i> Maggiori info
+          </button>
+        </div>
+      </div>
+    </li>
+
+    <li data-brk="scalable" class="border rounded-xl p-5 bg-white hover:shadow-sm transition">
+      <div class="flex items-start gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600 text-white font-bold">S</div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="font-semibold">Scalable Capital</span>
+            <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-800 px-2 py-0.5 text-[11px] font-semibold">83/100</span>
+          </div>
+          <p class="mt-1 text-sm text-slate-600">PAC ETF low-fee, azioni/ETP.</p>
+          <div class="mt-3 text-xs text-slate-500 space-y-1">
+            <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">—</span></div>
+            <div><span class="font-medium">Costi:</span> <span class="js-fees">—</span></div>
+          </div>
+          <button class="brk-more mt-3 inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50">
+            <i data-lucide="info" class="w-4 h-4"></i> Maggiori info
+          </button>
+        </div>
+      </div>
+    </li>
+
+    <li data-brk="degiro"   class="border rounded-xl p-5 bg-white hover:shadow-sm transition">
+      <div class="flex items-start gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-pink-600 text-white font-bold">D</div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="font-semibold">DEGIRO</span>
+            <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-800 px-2 py-0.5 text-[11px] font-semibold">84/100</span>
+          </div>
+          <p class="mt-1 text-sm text-slate-600">Azioni/ETF a costi competitivi.</p>
+          <div class="mt-3 text-xs text-slate-500 space-y-1">
+            <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">—</span></div>
+            <div><span class="font-medium">Costi:</span> <span class="js-fees">—</span></div>
+          </div>
+          <button class="brk-more mt-3 inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50">
+            <i data-lucide="info" class="w-4 h-4"></i> Maggiori info
+          </button>
+        </div>
+      </div>
+    </li>
+
+    <li data-brk="etoro"    class="border rounded-xl p-5 bg-white hover:shadow-sm transition">
+      <div class="flex items-start gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-red-600 text-white font-bold">e</div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="font-semibold">eToro</span>
+            <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Affiliato</span>
+            <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-800 px-2 py-0.5 text-[11px] font-semibold">76/100</span>
+          </div>
+          <p class="mt-1 text-sm text-slate-600">Azioni/ETF reali, cripto spot, social.</p>
+          <div class="mt-3 text-xs text-slate-500 space-y-1">
+            <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">—</span></div>
+            <div><span class="font-medium">Costi:</span> <span class="js-fees">—</span></div>
+          </div>
+          <button class="brk-more mt-3 inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50">
+            <i data-lucide="info" class="w-4 h-4"></i> Maggiori info
+          </button>
+        </div>
+      </div>
+    </li>
+
+    <li data-brk="naga"     class="border rounded-xl p-5 bg-white hover:shadow-sm transition">
+      <div class="flex items-start gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-600 text-white font-bold">N</div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="font-semibold">NAGA</span>
+            <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Affiliato</span>
+            <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-800 px-2 py-0.5 text-[11px] font-semibold">72/100</span>
+          </div>
+          <p class="mt-1 text-sm text-slate-600">Azioni/ETF reali con social.</p>
+          <div class="mt-3 text-xs text-slate-500 space-y-1">
+            <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">—</span></div>
+            <div><span class="font-medium">Costi:</span> <span class="js-fees">—</span></div>
+          </div>
+          <button class="brk-more mt-3 inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50">
+            <i data-lucide="info" class="w-4 h-4"></i> Maggiori info
+          </button>
+        </div>
+      </div>
+    </li>
+
+    <li data-brk="directa"  class="border rounded-xl p-5 bg-white hover:shadow-sm transition">
+      <div class="flex items-start gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-600 text-white font-bold">D</div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="font-semibold">Directa SIM</span>
+            <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-800 px-2 py-0.5 text-[11px] font-semibold">82/100</span>
+          </div>
+          <p class="mt-1 text-sm text-slate-600">Broker italiano (CONSOB), Borsa Italiana + USA/EU.</p>
+          <div class="mt-3 text-xs text-slate-500 space-y-1">
+            <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">—</span></div>
+            <div><span class="font-medium">Costi:</span> <span class="js-fees">—</span></div>
+          </div>
+          <button class="brk-more mt-3 inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50">
+            <i data-lucide="info" class="w-4 h-4"></i> Maggiori info
+          </button>
+        </div>
+      </div>
+    </li>
+  </ul>
+
+  <p class="mt-4 text-[12px] text-slate-500">
+    Dati indicativi e soggetti a variazione; verifica sempre sul sito ufficiale prima di operare.
+    Tradelia AI non promuove l’uso dei CFD: qui consideriamo solo strumenti quotati “reali”.
+  </p>
+</section>
+<!-- Modal broker (unico, dinamico) -->
+<div id="brk-modal" class="hidden fixed inset-0 z-[60] items-center justify-center bg-black/50 p-4">
+  <div class="bg-white w-full max-w-xl rounded-xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+    <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <h3 id="brk-title" class="font-semibold text-slate-900">Broker</h3>
+        <span id="brk-badge" class="hidden inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Affiliato</span>
+      </div>
+      <button class="p-1 text-slate-500 hover:text-red-600" data-brk-close aria-label="Chiudi">✕</button>
+    </div>
+
+    <div class="px-5 py-4 text-sm text-slate-700 grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 overflow-y-auto">
+      <div id="brk-tags" class="sm:col-span-2 flex flex-wrap gap-1"></div>
+      <div><span class="font-semibold">Strumenti:</span> <span id="brk-assets"></span></div>
+      <div><span class="font-semibold">Copertura:</span> <span id="brk-count"></span></div>
+      <div><span class="font-semibold">Deposito min.:</span> <span id="brk-min"></span></div>
+      <div><span class="font-semibold">Regolamentazione:</span> <span id="brk-reg"></span></div>
+      <div><span class="font-semibold">Score:</span> <span id="brk-score"></span></div>
+      <div><span class="font-semibold">Skill richiesto:</span> <span id="brk-skill"></span></div>
+      <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div><span class="font-semibold">Piattaforme:</span> <span id="brk-platforms"></span></div>
+        <div><span class="font-semibold">Costi (indic.):</span> <span id="brk-fees"></span></div>
+      </div>
+      <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <div class="font-semibold mb-1">Pro</div>
+          <ul id="brk-pros" class="list-disc pl-5 space-y-1"></ul>
+        </div>
+        <div>
+          <div class="font-semibold mb-1">Contro</div>
+          <ul id="brk-cons" class="list-disc pl-5 space-y-1"></ul>
+        </div>
+      </div>
+      <div id="brk-cfd" class="hidden text-amber-800 bg-amber-50 border border-amber-200 px-3 py-2 rounded sm:col-span-2">
+        ⚠ Offre anche CFD. <strong>Qui è selezionato solo per strumenti quotati reali</strong>.
+        <div id="brk-cfd-note" class="text-xs mt-1"></div>
+      </div>
+    </div>
+
+    <div class="px-5 py-4 border-t border-slate-200 flex items-center justify-between bg-slate-50">
+      <span id="brk-afftxt" class="text-[12px] text-slate-500">Sito ufficiale</span>
+      <a id="brk-link" href="#" rel="noopener" target="_blank"
+         class="inline-flex items-center gap-2 rounded-md bg-sky-700 hover:bg-sky-800 text-white px-3 py-1.5 text-sm">
+        Vai al sito
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // --- Dataset broker (compatto) ---
+  const BRK = {
+    exante:{name:"EXANTE",aff:true,tags:["DMA","Bond","Derivati quotati"],assets:"Azioni, ETF/ETN, Futures, Opzioni, Bond; Cripto via CFD",count:"50+ mercati • 1M+ strumenti",min:"≈ €10.000",reg:"UE (es. MFSA/CySEC) • IT ok",score:92,skill:"Avanzato",platforms:"Web, Desktop, App",fees:"Per mercato; dati/cambio a parte",pros:["DMA esteso","Bond molto ampi","Derivati su molte borse"],cons:["Minimo elevato","Cripto via CFD"],cfd:true,cfd_note:"Solo le criptovalute sono via CFD.",link:"https://exantepartner.com/p/38603/"},
+    saxo:{name:"Saxo Bank",aff:false,tags:["DMA","Opzioni","Futures"],assets:"Azioni, ETF, Opzioni, Futures, Bond, FX",count:"Copertura globale",min:"Variabile",reg:"UE/UK/DK • IT ok",score:90,skill:"Avanzato",platforms:"SaxoTraderGO/PRO",fees:"Per mercato; dati/cambio possibili",pros:["Piattaforme mature","Strumenti pro"],cons:["Curva apprendimento","Costi dati"],cfd:true,cfd_note:"CFD disponibili (non promossi).",link:"https://www.saxo.com"},
+    ibkr:{name:"Interactive Brokers (IBKR)",aff:false,tags:["DMA","TWS/API","Derivati"],assets:"Azioni, ETF, Bond, Opzioni, Futures, FX",count:"160+ mercati",min:"Nessun minimo formale",reg:"USA/EU • IT ok",score:95,skill:"Pro",platforms:"TWS, Portal, Mobile, API",fees:"Tiered/Fixed; dati/cambio a parte",pros:["Copertura massima","API/TWS avanzati"],cons:["Pricing articolato","Learning curve"],cfd:true,cfd_note:"CFD tramite entità IBKR ove consentito.",link:"https://www.interactivebrokers.eu"},
+    mexem:{name:"MEXEM",aff:false,tags:["DMA","TWS","EU"],assets:"Titoli/derivati via infrastruttura IBKR",count:"Multi-mercato",min:"n/d",reg:"UE • IT ok",score:88,skill:"Avanzato",platforms:"TWS/Portal/App",fees:"In linea con IBKR",pros:["Accesso TWS/IBKR","Supporto EU/IT"],cons:["Dipende da IBKR"],cfd:true,cfd_note:"CFD come per IBKR.",link:"https://www.mexem.com"},
+    freedom24:{name:"Freedom24",aff:true,tags:["IPO","Azioni","ETF"],assets:"IPO, Azioni/ETF, Bond",count:"USA/EU ampio",min:"≈ €10",reg:"UE (CySEC) • IT ok",score:85,skill:"Base",platforms:"Web, App",fees:"Per-ordine; condizioni IPO",pros:["Accesso IPO","UI semplice"],cons:["Rischio IPO elevato"],cfd:false,link:"https://freedom24.com/invite_from/2953166"},
+    scalable:{name:"Scalable Capital",aff:false,tags:["ETF","PAC","Low fee"],assets:"ETF, Azioni, ETP, derivati gettex",count:"DE-centric",min:"basso (PAC)",reg:"DE/UE • IT ok",score:83,skill:"Base",platforms:"Web, App",fees:"Flat/ordine; PAC economici",pros:["PAC efficienti","Costi bassi"],cons:["Copertura borse DE-centric"],cfd:false,link:"https://it.scalable.capital"},
+    degiro:{name:"DEGIRO",aff:false,tags:["ETF","Azioni","Multi-mercato"],assets:"Azioni, ETF, Bond, Opzioni/Futures quotati",count:"50+ borse",min:"—",reg:"UE • IT ok",score:84,skill:"Intermedio",platforms:"Web, App",fees:"Molto competitivi",pros:["Fee basse","Mercati ampi"],cons:["Dati realtime spesso extra"],cfd:false,link:"https://www.degiro.it"},
+    etoro:{name:"eToro",aff:true,tags:["Azioni","ETF","Cripto spot","Social"],assets:"Azioni/ETF reali, Cripto spot, Opzioni US",count:"Multi-asset",min:"≈ €50",reg:"UE • IT ok",score:76,skill:"Base",platforms:"Web, App",fees:"Spread/cambio; prelievi",pros:["Social/copy","Offerta cripto spot"],cons:["Spread e cambio incidono"],cfd:true,cfd_note:"CFD presenti ma non promossi qui.",link:"https://med.etoro.com/B7979_A124128_TClick.aspx"},
+    naga:{name:"NAGA",aff:true,tags:["Azioni","ETF","Social"],assets:"Azioni/ETF reali + social",count:"15 borse",min:"n/d",reg:"UE • IT ok",score:72,skill:"Base",platforms:"Web, App",fees:"Commissioni/spread",pros:["Social copy","Titoli reali"],cons:["Presenza CFD"],cfd:true,cfd_note:"CFD presenti ma non promossi qui.",link:"https://www.financeads.net/tc.php?t=76793C4792126679T"},
+    directa:{name:"Directa SIM",aff:false,tags:["Italia","CONSOB","Borsa Italiana"],assets:"Azioni/ETF/Bond ITA, IDEM; USA/EU",count:"EXM/ETFplus/MOT + USA",min:"—",reg:"Italia (CONSOB)",score:82,skill:"Intermedio",platforms:"Web/Desktop, App",fees:"Per mercato; regime fiscale IT",pros:["Broker italiano","Accesso Borsa Italiana"],cons:["UI più tecnica"],cfd:true,cfd_note:"CFD/FX via partner: qui considerati solo strumenti quotati.",link:"https://www.directa.it"}
+  };
+
+  // Riempi “Piattaforme” e “Costi” nelle card + bind modale
+  const cards = document.querySelectorAll('#brk-cards [data-brk]');
+  cards.forEach(card => {
+    const key = card.getAttribute('data-brk');
+    const d = BRK[key];
+    if (!d) return;
+    card.querySelector('.js-platforms').textContent = d.platforms || '—';
+    card.querySelector('.js-fees').textContent = d.fees || '—';
+  });
+
+  // Modal helpers
+  const $ = s => document.querySelector(s);
+  const modal = $('#brk-modal');
+  const open = (key) => {
+    const d = BRK[key]; if (!d) return;
+    $('#brk-title').textContent = d.name;
+    $('#brk-badge').classList.toggle('hidden', !d.aff);
+    const tg = $('#brk-tags'); tg.innerHTML = '';
+    (d.tags||[]).forEach(t => {
+      const span = document.createElement('span');
+      span.className = 'text-[11px] px-2 py-0.5 rounded-full border border-slate-200 bg-slate-50 mr-1 mb-1';
+      span.textContent = t; tg.appendChild(span);
+    });
+    $('#brk-assets').textContent = d.assets || '—';
+    $('#brk-count').textContent  = d.count  || '—';
+    $('#brk-min').textContent    = d.min    || '—';
+    $('#brk-reg').textContent    = d.reg    || '—';
+    $('#brk-score').textContent  = d.score ? `${d.score}/100` : '—';
+    $('#brk-skill').textContent  = d.skill || '—';
+    $('#brk-platforms').textContent = d.platforms || '—';
+    $('#brk-fees').textContent      = d.fees || '—';
+    const pros = $('#brk-pros'); const cons = $('#brk-cons');
+    pros.innerHTML = ''; cons.innerHTML = '';
+    (d.pros||[]).forEach(p=>{ const li=document.createElement('li'); li.textContent=p; pros.appendChild(li); });
+    (d.cons||[]).forEach(c=>{ const li=document.createElement('li'); li.textContent=c; cons.appendChild(li); });
+    const cfdBox = $('#brk-cfd');
+    cfdBox.classList.toggle('hidden', !d.cfd);
+    $('#brk-cfd-note').innerHTML = d.cfd && d.cfd_note ? d.cfd_note : '';
+    const a = $('#brk-link');
+    a.href = d.link || '#';
+    a.rel  = d.aff ? 'sponsored noopener' : 'noopener';
+    $('#brk-afftxt').textContent = d.aff ? 'Link affiliato' : 'Sito ufficiale';
+    modal.classList.remove('hidden'); modal.classList.add('flex');
+    if (window.lucide && lucide.createIcons) lucide.createIcons();
+  };
+  const close = () => { modal.classList.add('hidden'); modal.classList.remove('flex'); };
+
+  modal.addEventListener('click', (e)=>{ if(e.target.id==='brk-modal') close(); });
+  modal.querySelector('[data-brk-close]').addEventListener('click', close);
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && !modal.classList.contains('hidden')) close(); });
+
+  // Bind pulsanti “Maggiori info”
+  document.querySelectorAll('#brk-cards .brk-more').forEach(btn=>{
+    const card = btn.closest('[data-brk]'); const key = card?.getAttribute('data-brk');
+    btn.addEventListener('click', ()=> open(key));
+  });
+})();
+</script>
+
+    
+ <!-- Simulazione Portafoglio — accordion istituzionale (tutti chiusi, apertura esclusiva + chevron Lucide) -->
+<section id="sim-op" class="sv-panel max-w-6xl mx-auto mt-8 mb-16 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+         role="tabpanel" aria-labelledby="tab-sim-op" data-accordion-group="sim-op">
+
+  <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+    Simulazione Portafoglio
+    <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#sim-op">Copia link</button>
+  </h2>
+
+  <!-- Legenda badge -->
+  <div class="mt-2 mb-5 flex flex-wrap gap-2 text-[11px]">
+    <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-700">Positivo</span>
+    <span class="inline-flex rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 font-semibold text-rose-700">Negativo</span>
+    <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 font-semibold text-slate-700">Neutro</span>
+    <span class="inline-flex rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 font-semibold text-amber-700">Attenzione</span>
+  </div>
+
+  <!-- === Candidato A — Core === -->
+  <details class="rounded-lg border border-slate-200 details-clean">
+    <summary class="cursor-pointer p-4 sm:p-5">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <div class="font-semibold text-slate-900">Candidato A — Core Beta (Tracking Low)</div>
+          <p class="mt-1 text-sm text-slate-500">Equity Global / IG Bonds / Cash · Vol target: [[A_VOL]] · Max DD: [[A_DD_MAX]]</p>
+          <div class="mt-2 flex flex-wrap gap-2 text-[12px]">
+            <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-700">Stato: [[A_STATUS]]</span>
+            <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 font-semibold text-slate-700">Coerenza vincoli: [[A_CONS]]</span>
+          </div>
+        </div>
+        <span class="chev translate-y-1"><i data-lucide="chevron-down"></i></span>
+      </div>
+    </summary>
+
+    <div class="px-4 sm:px-5 pb-4 sm:pb-5">
+      <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
+        <div>
+          <div class="flex items-start justify-between">
+            <dt class="text-slate-600 text-sm">Allocazioni</dt>
+            <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-700">Neutro</span>
+          </div>
+          <dd class="mt-1 text-slate-900">[[A_WEIGHTS]]</dd>
+          <p class="mt-1 text-xs text-slate-600">Peso equity/bond/cash conforme a B3.</p>
+        </div>
+        <div>
+          <div class="flex items-start justify-between">
+            <dt class="text-slate-600 text-sm">Semaforo Robustezza</dt>
+            <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">[[A_FLAG]]</span>
+          </div>
+          <dd class="mt-1 text-slate-900">VaR95: [[A_VAR95]] · CVaR95: [[A_CVAR95]]</dd>
+          <p class="mt-1 text-xs text-slate-600">Da B5 Monte Carlo.</p>
+        </div>
+        <div class="sm:col-span-2">
+          <div class="flex items-start justify-between">
+            <dt class="text-slate-600 text-sm">Note</dt>
+            <span class="inline-flex rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700">Attenzione</span>
+          </div>
+          <dd class="mt-1 text-slate-900">[[A_NOTES]]</dd>
+        </div>
+      </dl>
+    </div>
+  </details>
+
+  <!-- === Candidato B — Core/Satellite === -->
+  <details class="mt-4 rounded-lg border border-slate-200 details-clean">
+    <summary class="cursor-pointer p-4 sm:p-5">
+      <div class="flex items-start justify-between gap-3 w-full">
+        <div>
+          <div class="font-semibold text-slate-900">Candidato B — Core/Satellite (Factor + Theme)</div>
+          <p class="mt-1 text-sm text-slate-500">Core [[B_CORE]]% + Satelliti [[B_SAT]]% · Vol target: [[B_VOL]]</p>
+        </div>
+        <span class="chev translate-y-1"><i data-lucide="chevron-down"></i></span>
+      </div>
+      <div class="mt-2 text-[12px]">
+        <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-700">Flag: [[B_FLAG]]</span>
+      </div>
+    </summary>
+    <div class="px-4 sm:px-5 pb-4 sm:pb-5 text-sm text-slate-600">[[B_SUMMARY]]</div>
+  </details>
+
+  <!-- === Candidato C — Defensive === -->
+  <details class="mt-3 rounded-lg border border-slate-200 details-clean">
+    <summary class="cursor-pointer p-4 sm:p-5">
+      <div class="flex items-start justify-between gap-3 w-full">
+        <div>
+          <div class="font-semibold text-slate-900">Candidato C — Defensive (Rates + Bills + Overlay)</div>
+          <p class="mt-1 text-sm text-slate-500">Max DD target: [[C_DD]] · Hedge overlay: [[C_OVERLAY]]</p>
+        </div>
+        <span class="chev translate-y-1"><i data-lucide="chevron-down"></i></span>
+      </div>
+      <div class="mt-2 text-[12px]">
+        <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 font-semibold text-slate-700">Coerenza vincoli: [[C_CONS]]</span>
+      </div>
+    </summary>
+    <div class="px-4 sm:px-5 pb-4 sm:pb-5 text-sm text-slate-600">[[C_SUMMARY]]</div>
+  </details>
+</section>
+
+
+    <!-- B1 -->
+<!-- B1 — Profilo Investitore -->
+<section id="blocco1" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+         role="tabpanel" aria-labelledby="tab-blocco1" hidden>
+  <h2 class="text-2xl font-bold mb-4">BLOCCO 1 — Profilo Investitore</h2>
+
+  <div class="space-y-3">
+
+    <!-- Dati Anagrafici -->
+    <div class="border border-gray-200 rounded-lg p-3">
+      <h3 class="font-semibold">1. Dati Anagrafici</h3>
+      <p class="text-gray-700">
+        Età: 39 anni, Paese: Italia, Licenze finanziarie: no. 
+        <br>
+        <strong>Descrizione:</strong> Identificazione di base dell’investitore, utile per contestualizzare età, residenza e nucleo familiare in relazione a orizzonte temporale e rischio.
+        <br>
+        <strong>Fonte:</strong> MiFID II, ESMA Suitability Guidelines 2018
+      </p>
+    </div>
+
+    <!-- Situazione Patrimoniale -->
+    <div class="border border-gray-200 rounded-lg p-3">
+      <h3 class="font-semibold">2. Situazione Patrimoniale</h3>
+      <p class="text-gray-700">
+        Patrimonio: 5000€ conto bancario, proprietà di casa, nessuna passività.
+        <br>
+        <strong>Descrizione:</strong> Analisi del patrimonio complessivo (liquidità, investimenti, immobili, passività) per stimare la capacità di sostenere rischi finanziari.
+        <br>
+        <strong>Fonte:</strong> CONSOB Quaderni FinTech 2020; OECD Household Finance Studies
+      </p>
+    </div>
+
+    <!-- Reddito e Flusso di Cassa -->
+    <div class="border border-gray-200 rounded-lg p-3">
+      <h3 class="font-semibold">3. Reddito e Flusso di Cassa</h3>
+      <p class="text-gray-700">
+        Stipendio stabile, meno di 25.000€ annui.
+        <br>
+        <strong>Descrizione:</strong> Valutazione della stabilità e diversificazione delle entrate, per stimare resilienza e capacità di investimento regolare.
+        <br>
+        <strong>Fonte:</strong> EFAMA Investor Education Report 2021
+      </p>
+    </div>
+
+    <!-- Obiettivi di Investimento -->
+    <div class="border border-gray-200 rounded-lg p-3">
+      <h3 class="font-semibold">4. Obiettivi di Investimento</h3>
+      <p class="text-gray-700">
+        Obiettivo principale: aumentare i risparmi. Investimento concentrato esclusivamente in criptovalute.
+        <br>
+        <strong>Descrizione:</strong> Chiarisce finalità principali (accumulazione, reddito, protezione, pianificazione pensionistica), essenziali per la definizione del portafoglio.
+        <br>
+        <strong>Fonte:</strong> Sharpe, F. (1964). Capital Asset Prices; MiFID II, art. 25
+      </p>
+    </div>
+
+    <!-- Orizzonte Temporale -->
+    <div class="border border-gray-200 rounded-lg p-3">
+      <h3 class="font-semibold">5. Orizzonte Temporale</h3>
+      <p class="text-gray-700">
+        Lungo termine.
+        <br>
+        <strong>Descrizione:</strong> Durata prevista dell’investimento, elemento chiave nella tolleranza al rischio e nella scelta degli strumenti finanziari.
+        <br>
+        <strong>Fonte:</strong> Bodie, Zvi (1995). On the Risk of Stocks in the Long Run
+      </p>
+    </div>
+
+    <!-- Esperienza e Conoscenza Finanziaria -->
+    <div class="border border-gray-200 rounded-lg p-3">
+      <h3 class="font-semibold">6. Esperienza e Conoscenza Finanziaria</h3>
+      <p class="text-gray-700">
+        Livello: principiante.
+        <br>
+        <strong>Descrizione:</strong> Valutazione di conoscenze pregresse e pratiche dell’investitore su strumenti e mercati, utile per determinare adeguatezza.
+        <br>
+        <strong>Fonte:</strong> ESMA Guidelines 2018; OECD Financial Literacy Studies
+      </p>
+    </div>
+
+    <!-- Propensione al Rischio -->
+    <div class="border border-gray-200 rounded-lg p-3">
+      <h3 class="font-semibold">7. Propensione al Rischio</h3>
+      <p class="text-gray-700">
+        Comportamento atteso: non definito, rischio alto su criptovalute.
+        <br>
+        <strong>Descrizione:</strong> Analisi psicometrica e comportamentale dell’attitudine a sostenere volatilità e perdite temporanee.
+        <br>
+        <strong>Fonte:</strong> Kahneman & Tversky (1979). Prospect Theory; MiFID II
+      </p>
+    </div>
+
+    <!-- Capacità di Sostenere Perdite -->
+    <div class="border border-gray-200 rounded-lg p-3">
+      <h3 class="font-semibold">8. Capacità di Sostenere Perdite</h3>
+      <p class="text-gray-700">
+        Perdita massima sostenibile: 10%.
+        <br>
+        <strong>Descrizione:</strong> Valutazione della perdita massima sostenibile senza compromettere obiettivi di vita o stabilità finanziaria.
+        <br>
+        <strong>Fonte:</strong> CONSOB Report on Household Finance 2022
+      </p>
+    </div>
+
+    <!-- Preferenze ESG -->
+    <div class="border border-gray-200 rounded-lg p-3">
+      <h3 class="font-semibold">9. Preferenze ESG</h3>
+      <p class="text-gray-700">
+        Non richiesto.
+        <br>
+        <strong>Descrizione:</strong> Rilevazione dell’interesse per investimenti sostenibili, etici e socialmente responsabili, in linea con le normative SFDR.
+        <br>
+        <strong>Fonte:</strong> Regolamento (UE) 2019/2088 — SFDR; EU Taxonomy
+      </p>
+    </div>
+
+    <!-- Liquidità e Vincoli -->
+    <div class="border border-gray-200 rounded-lg p-3">
+      <h3 class="font-semibold">10. Liquidità e Vincoli</h3>
+      <p class="text-gray-700">
+        Liquidità minima disponibile: 4.000€.
+        <br>
+        <strong>Descrizione:</strong> Analisi delle esigenze di liquidità immediata, vincoli legali o fiscali che possono condizionare la strategia.
+        <br>
+        <strong>Fonte:</strong> OECD Financial Market Trends 2021
+      </p>
+    </div>
+
+    <!-- Piano Accumulo Capitale PAC -->
+    <div class="border border-gray-200 rounded-lg p-3">
+      <h3 class="font-semibold">11. Piano Accumulo Capitale (PAC)</h3>
+      <p class="text-gray-700">
+        PAC mensile: 200€.
+        <br>
+        <strong>Descrizione:</strong> Definizione di eventuali PAC, frequenza e importi, come strumento di investimento graduale e diversificazione temporale.
+        <br>
+        <strong>Fonte:</strong> Cost Averaging Theory; Vanguard Research 2019
+      </p>
+    </div>
+
+    <!-- Validazione Standardizzata -->
+    <div class="border-l-4 border-green-500 bg-green-50 rounded-lg p-3">
+      <h3 class="font-semibold">Validazione Standardizzata</h3>
+      <p class="text-gray-700">
+        🟡 Profilo parzialmente completo, con aree da integrare (esperienza finanziaria e propensione al rischio da approfondire).  
+        <br>
+        <strong>Descrizione:</strong> Sistema di validazione con semaforo per misurare coerenza e completezza del profilo.
+        <br>
+        <strong>Fonte:</strong> CONSOB Linee Guida 2022; EFAMA Investor Profiling Standards
+      </p>
+    </div>
+
+    <!-- Disclaimer CONSOB -->
+    <div class="mt-4 text-sm text-gray-500 border-t pt-2">
+      <p>
+        Le informazioni raccolte sono elaborate unicamente in forma anonima e aggregata.  
+        Questo schema ha esclusiva finalità educativa, accademica e di ricerca.  
+        Non costituisce in alcun modo consulenza finanziaria personalizzata, né valutazione di adeguatezza o appropriatezza ai sensi della normativa MiFID II o CONSOB.  
+        Per decisioni di investimento si raccomanda di rivolgersi a consulenti finanziari indipendenti e professionisti abilitati.
+      </p>
+    </div>
+
+  </div>
+</div>
+  </details>
+</section>
+
+<!-- B2 — Macro Regime -->
+<section id="blocco2" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+         role="tabpanel" aria-labelledby="tab-blocco2" hidden>
+  <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+    <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 2</span> — Macro Regime
+    <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco2">Copia link</button>
+  </h2>
+
+  <div class="section-divider"><span>REGIME & SCENARI</span></div>
+
+  <article class="rounded-lg border border-slate-200 p-4 sm:p-5 bg-slate-50">
+    <h3 class="font-semibold text-slate-900 mb-2">Contenuti</h3>
+    <p class="text-[15px] leading-7 text-slate-800">Regime economico attuale e probabile evoluzione: crescita, inflazione, liquidità; politiche monetarie/fiscali; scenari (soft landing, stagflazione, recessione tecnica…).</p>
+  </article>
+
+  <details class="mt-6 rounded-lg border border-slate-200 details-clean">
+    <summary class="cursor-pointer p-4 sm:p-5">
+      <div class="summary-row">
+        <div>
+          <div class="font-semibold text-slate-900">Output YAML — regime + probabilità</div>
+          <p class="mt-1 text-sm font-normal text-slate-500">Semaforo complessivo per coerenza risk-on/off.</p>
+        </div>
+        <span class="chev translate-y-1"><i data-lucide="chevron-down"></i></span>
+      </div>
+    </summary>
+    <div class="px-4 sm:px-5 pb-4 sm:pb-5">
+      <pre class="codeblock"><code>macro_regime:
+  attuale:
+    crescita: [[B2_GROWTH]]      # ↑ / → / ↓
+    inflazione: [[B2_INFL]]      # ↑ / → / ↓
+    liquidita: [[B2_LIQ]]        # ampia / normale / stretta
+    semaforo: [[B2_FLAG]]        # Positivo | Neutro | Attenzione | Negativo
+  scenari:
+    soft_landing: { p: [[B2_P_SOFT]], note: [[B2_SOFT_NOTE]] }
+    stagflazione: { p: [[B2_P_STAG]], note: [[B2_STAG_NOTE]] }
+    recessione_tecnica: { p: [[B2_P_REC]], note: [[B2_REC_NOTE]] }
+    altro: { label: [[B2_ALT_LABEL]], p: [[B2_P_ALT]], note: [[B2_ALT_NOTE]] }
+  policy:
+    monetaria: [[B2_CB_PATH]]    # es. tagli 50–75 bps 12 mesi
+    fiscale: [[B2_FISCAL_STANCE]]</code></pre>
+    </div>
+  </details>
+</section>
+
+<!-- B3 — Parametri Tecnici & Vincoli -->
+<section id="blocco3" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+         role="tabpanel" aria-labelledby="tab-blocco3" hidden>
+  <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+    <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 3</span> — Parametri Tecnici &amp; Vincoli
+    <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco3">Copia link</button>
+  </h2>
+
+  <div class="section-divider"><span>GRIGLIA VINCOLI</span></div>
+
+  <article class="rounded-lg border border-slate-200 p-4 sm:p-5 bg-slate-50">
+    <h3 class="font-semibold text-slate-900 mb-2">Derivazione da B1+B2</h3>
+    <p class="text-[15px] leading-7 text-slate-800">Vol target, max drawdown, complessità massima, FX allowed, duration target, ESG alignment. Conflitti marcati.</p>
+  </article>
+
+  <details class="mt-6 rounded-lg border border-slate-200 details-clean">
+    <summary class="cursor-pointer p-4 sm:p-5">
+      <div class="summary-row">
+        <div>
+          <div class="font-semibold text-slate-900">Output YAML — griglia vincoli</div>
+          <p class="mt-1 text-sm font-normal text-slate-500">Base per B4 (ottimizzazione).</p>
+        </div>
+        <span class="chev translate-y-1"><i data-lucide="chevron-down"></i></span>
+      </div>
+    </summary>
+    <div class="px-4 sm:px-5 pb-4 sm:pb-5">
+      <pre class="codeblock"><code>vincoli_tecnici:
+  vol_target: [[B3_VOL_TARGET]]          # es. 6% ann.
+  max_drawdown: [[B3_MAX_DD]]            # es. 12%
+  tail_risk: [[B3_TAIL_RISK]]            # limita | accetta | copre
+  complessita_massima: [[B3_COMPLEXITY]] # ETF only | +opzioni | +futures
+  fx_allowed: [[B3_FX_ALLOWED]]          # si/no + hedge rules
+  duration_target: [[B3_DURATION]]       # breve | intermedia | lunga
+  esg_alignment: [[B3_ESG_ALIGN]]        # standard / avanzato / esclusioni
+  coerenza_B1_B2: [[B3_CONSISTENCY_FLAG]]</code></pre>
+    </div>
+  </details>
+</section>
+
+<!-- B4 — Ottimizzazione & Candidati -->
+<section id="blocco4" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+         role="tabpanel" aria-labelledby="tab-blocco4" hidden>
+  <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+    <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 4</span> — Ottimizzazione &amp; Candidati
+    <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco4">Copia link</button>
+  </h2>
+
+  <div class="section-divider"><span>ALLOCATIONS</span></div>
+
+  <div class="rounded-md border border-slate-200 overflow-hidden">
+    <table class="min-w-full text-sm">
+      <thead class="bg-slate-50 text-slate-700">
+        <tr>
+          <th class="px-3 py-2 text-left font-semibold">Portafoglio</th>
+          <th class="px-3 py-2 text-left font-semibold">Asset Class</th>
+          <th class="px-3 py-2 text-left font-semibold">Allocazione</th>
+          <th class="px-3 py-2 text-left font-semibold">Note</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-200">
+        <tr>
+          <td class="px-3 py-2 font-medium">Candidate A — Core</td>
+          <td class="px-3 py-2">Equity Global / IG Bonds / Cash</td>
+          <td class="px-3 py-2">[[B4A_WEIGHTS]]</td>
+          <td class="px-3 py-2">Min. complessità, TE contenuto</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 font-medium">Candidate B — Core/Satellite</td>
+          <td class="px-3 py-2">Core 70% + Satelliti (Factor/Theme)</td>
+          <td class="px-3 py-2">[[B4B_WEIGHTS]]</td>
+          <td class="px-3 py-2">Bilancia beta e tilts</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 font-medium">Candidate C — Defensive</td>
+          <td class="px-3 py-2">IG/Bills/Hedge overlay</td>
+          <td class="px-3 py-2">[[B4C_WEIGHTS]]</td>
+          <td class="px-3 py-2">Resilienza a downside</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-6">
+    <pre class="codeblock"><code>allocazioni_candidati:
+  A_core:
+    equity_global: [[B4A_EQ]]
+    ig_bonds: [[B4A_IG]]
+    cash: [[B4A_CASH]]
+    note: "min complessità"
+  B_core_satellite:
+    core_beta: [[B4B_CORE]]
+    factor_theme: [[B4B_TILTS]]
+    hedge: [[B4B_HEDGE]]
+  C_defensive:
+    ig_bonds: [[B4C_IG]]
+    bills: [[B4C_BILLS]]
+    overlay: [[B4C_OVERLAY]]</code></pre>
+  </div>
+</section>
+
+<!-- B5 — Simulation & Stress -->
+<section id="blocco5" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+         role="tabpanel" aria-labelledby="tab-blocco5" hidden>
+  <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+    <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 5</span> — Simulation &amp; Stress
+    <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco5">Copia link</button>
+  </h2>
+
+  <div class="section-divider"><span>TEST</span></div>
+
+  <details class="rounded-lg border border-slate-200 details-clean">
+    <summary class="cursor-pointer p-4 sm:p-5">
+      <div class="summary-row">
+        <div>
+          <div class="font-semibold text-slate-900">Output YAML — multilayer con semafori</div>
+          <p class="mt-1 text-sm font-normal text-slate-500">Backtest per regime, Monte Carlo, shock fattoriali, replay storici.</p>
+        </div>
+        <span class="chev translate-y-1"><i data-lucide="chevron-down"></i></span>
+      </div>
+    </summary>
+
+    <div class="px-4 sm:px-5 pb-4 sm:pb-5">
+      <pre class="codeblock"><code>simulation_stress:
+  backtest_regime:
+    A_core: { cagr: [[B5_A_CAGR]], max_dd: [[B5_A_DD]], semaforo: [[B5_A_FLAG]] }
+    B_core_sat: { cagr: [[B5_B_CAGR]], max_dd: [[B5_B_DD]], semaforo: [[B5_B_FLAG]] }
+    C_defensive: { cagr: [[B5_C_CAGR]], max_dd: [[B5_C_DD]], semaforo: [[B5_C_FLAG]] }
+  montecarlo:
+    n_paths: [[B5_MC_N]]
+    var_95: [[B5_MC_VAR95]]
+    cvar_95: [[B5_MC_CVAR95]]
+  factor_shocks:
+    rates_up_100bp: { pnl: [[B5_SHOCK_RATES_UP]], flag: [[B5_SHOCK_FLAG1]] }
+    spreads_widen_100bp: { pnl: [[B5_SHOCK_CS_UP]], flag: [[B5_SHOCK_FLAG2]] }
+    fx_eur_usd_plus5: { pnl: [[B5_SHOCK_FX]], flag: [[B5_SHOCK_FLAG3]] }
+  historical_replay:
+    gfc_2008: { pnl: [[B5_GFC]], flag: [[B5_GFC_FLAG]] }
+    covid_2020: { pnl: [[B5_COVID]], flag: [[B5_COVID_FLAG]] }
+    tightening_2022: { pnl: [[B5_2022]], flag: [[B5_2022_FLAG]] }</code></pre>
+    </div>
+  </details>
+</section>
+
+<!-- B6 — Implementation & Rebalancing -->
+<section id="blocco6" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+         role="tabpanel" aria-labelledby="tab-blocco6" hidden>
+  <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+    <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 6</span> — Implementation &amp; Rebalancing
+    <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco6">Copia link</button>
+  </h2>
+
+  <div class="section-divider"><span>PIANO OPERATIVO</span></div>
+
+  <article class="rounded-lg border border-slate-200 p-4 sm:p-5 bg-slate-50">
+    <h3 class="font-semibold text-slate-900 mb-2">Linea guida</h3>
+    <p class="text-[15px] leading-7 text-slate-800">Strategia di implementazione (PAC/lump-sum/ibrida), gestione del cash, frequenza ribilanciamenti e band, costi (TER, slippage, commissioni), KPI (tracking error, aderenza vincoli) e timeline.</p>
+  </article>
+
+  <details class="mt-6 rounded-lg border border-slate-200 details-clean">
+    <summary class="cursor-pointer p-4 sm:p-5">
+      <div class="summary-row">
+        <div>
+          <div class="font-semibold text-slate-900">Output — piano operativo (YAML)</div>
+          <p class="mt-1 text-sm font-normal text-slate-500">Standardizzato per audit e automazioni.</p>
+        </div>
+        <span class="chev translate-y-1"><i data-lucide="chevron-down"></i></span>
+      </div>
+    </summary>
+    <div class="px-4 sm:px-5 pb-4 sm:pb-5">
+      <pre class="codeblock"><code>implementation_plan:
+  esecuzione: [[B6_IMPL_STRATEGY]]     # PAC | Lump Sum | Ibrida
+  cash_mgmt: [[B6_CASH_MGMT]]          # soglie, buffer, utilizzo cedole
+  rebalancing: { freq: [[B6_FREQ]], bands: [[B6_BANDS]] }
+  costi_stimati: { ter_annuo: [[B6_TER]], slippage: [[B6_SLIPPAGE]], commissioni: [[B6_FEES]] }
+  kpi: { tracking_error: [[B6_TE]], aderenza_vincoli: [[B6_COHERENCE]] }
+  timeline: [
+    { t: 0, azione: "tranche_1" },
+    { t: 1, azione: "tranche_2" },
+    { t: 3, azione: "tranche_3" },
+    { t: 6, azione: "verifica_kpi" },
+    { t: 12, azione: "review_annuale" }
+  ]</code></pre>
+    </div>
+  </details>
+</section>
+
+<!-- B7 — Scoring & Classificazione Finale -->
+<section id="blocco7" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
+         role="tabpanel" aria-labelledby="tab-blocco7" hidden>
+  <h2 class="text-lg font-bold text-slate-900 tracking-tight">
+    <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 7</span> — Scoring &amp; Classificazione Finale
+    <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco7">Copia link</button>
+  </h2>
+
+  <div class="section-divider"><span>METRICHE & RATING</span></div>
+
+  <article class="rounded-lg border border-slate-200 p-4 sm:p-5 bg-slate-50">
+    <h3 class="font-semibold text-slate-900 mb-2">Metriche</h3>
+    <p class="text-[15px] leading-7 text-slate-800">Calcolo score quantitativi (SQ, SMA, SRR, SCL, SCF), utility composita U, semaforo e rating A–AAA con nota di selezione.</p>
+  </article>
+
+  <details class="mt-6 rounded-lg border border-slate-200 details-clean">
+    <summary class="cursor-pointer p-4 sm:p-5">
+      <div class="summary-row">
+        <div>
+          <div class="font-semibold text-slate-900">Output — YAML finale</div>
+          <p class="mt-1 text-sm font-normal text-slate-500">Pronto per reporting e audit.</p>
+        </div>
+        <span class="chev translate-y-1"><i data-lucide="chevron-down"></i></span>
+      </div>
+    </summary>
+    <div class="px-4 sm:px-5 pb-4 sm:pb-5">
+      <pre class="codeblock"><code>classificazione_finale:
+  score:
+    SQ: [[B7_SQ]]
+    SMA: [[B7_SMA]]
+    SRR: [[B7_SRR]]
+    SCL: [[B7_SCL]]
+    SCF: [[B7_SCF]]
+    U: [[B7_U]]
+  semaforo: [[B7_FLAG]]             # Positivo | Neutro | Attenzione | Negativo
+  rating: [[B7_RATING]]             # A | AA | AAA
+  selezione: [[B7_SELECTION_NOTE]]  # preferenze per regime/scenari</code></pre>
+    </div>
+  </details>
+</section>
+
+    
+  </main>
+
+  <!-- Back to top -->
+  <button id="toTop" class="no-print fixed bottom-4 right-4 p-2 rounded-full border border-slate-300 bg-white shadow hover:bg-slate-50" aria-label="Torna su" title="Torna su" hidden>
+    <i data-lucide="arrow-up"></i>
+  </button>
+
+ <!-- Scripts -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Icons & animations
+  if (window.lucide) lucide.createIcons();
+  if (window.AOS) { AOS.init({ once: true, duration: 350 }); document.documentElement.classList.add('aos-initialized'); }
+
+  // Scroll progress & header shrink & back to top
+  const sp = document.getElementById('scroll-progress');
+  const toTop = document.getElementById('toTop');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    if (sp) sp.style.width = scrolled + '%';
+    if (toTop) toTop.hidden = h.scrollTop < 600;
+    const header = document.querySelector('header');
+    if (header) { if (h.scrollTop > 24) header.classList.add('shrink'); else header.classList.remove('shrink'); }
+  }, { passive:true });
+  toTop?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // Drawer
+  const drawer = document.getElementById('toc-drawer');
+  const overlay = document.getElementById('toc-overlay');
+  const openBtns = document.querySelectorAll('.btn-open-toc');
+  const closeBtn = document.getElementById('close-toc-drawer');
+  function openDrawer(){ drawer?.classList.add('open'); overlay?.classList.remove('hidden'); drawer?.setAttribute('aria-hidden','false'); }
+  function closeDrawer(){ drawer?.classList.remove('open'); overlay?.classList.add('hidden'); drawer?.setAttribute('aria-hidden','true'); }
+  openBtns.forEach(b => b.addEventListener('click', openDrawer));
+  overlay?.addEventListener('click', closeDrawer);
+  closeBtn?.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeDrawer(); });
+
+  // Tabs
+  const tabs = document.querySelectorAll('.sv-tab');
+  const panels = document.querySelectorAll('.sv-panel');
+  function activateTab(targetId){
+    tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); t.setAttribute('tabindex','-1'); });
+    panels.forEach(p => { p.hidden = true; p.classList.add('hidden'); });
+    const tab = document.querySelector(`.sv-tab[data-target="${targetId}"]`);
+    const panel = document.getElementById(targetId);
+    if (tab) { tab.classList.add('active'); tab.setAttribute('aria-selected','true'); tab.setAttribute('tabindex','0'); }
+    if (panel) { panel.hidden = false; panel.classList.remove('hidden'); }
+    history.replaceState(null, '', '#' + targetId);
+  }
+  tabs.forEach(tab => tab.addEventListener('click', () => activateTab(tab.getAttribute('data-target'))));
+
+  // Drawer TOC -> attiva i tab (non solo anchor)
+  document.querySelectorAll('#toc-drawer .toc-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute('href').replace('#','');
+      activateTab(targetId);
+      closeDrawer();
+      document.getElementById('section-tabs')?.scrollIntoView({ behavior:'smooth', block:'start' });
+    });
+  });
+
+  // Deep link on load
+  const hash = location.hash?.replace('#','');
+  if (hash && document.getElementById(hash)) activateTab(hash);
+  else if (!hash) {
+    // Garantisce che il pannello predefinito sia visibile (es. "sim-op")
+    const active = document.querySelector('.sv-tab.active')?.getAttribute('data-target') || 'sim-op';
+    activateTab(active);
+  }
+
+  // Copy link buttons
+  document.querySelectorAll('[data-copy]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-copy');
+      const url = location.origin + location.pathname + id;
+      navigator.clipboard.writeText(url).then(() => {
+        const prev = btn.textContent;
+        btn.textContent = 'Copiato';
+        setTimeout(() => btn.textContent = prev || 'Copia link', 1200);
+      });
+    });
+  });
+});
+</script>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen font-sans">
+
+<!-- Modale Container -->
+<div id="modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 perspective">
+  <div id="modalInner" class="bg-white rounded-3xl shadow-2xl p-10 max-w-3xl w-full border border-gray-200 transition-transform duration-700 transform-style-preserve-3d relative">
+
+    <!-- Step 1: Disclaimer -->
+    <div id="stepDisclaimer" class="backface-hidden w-full">
+      <h2 class="text-3xl font-bold mb-6 text-gray-900">Accesso Report Tradelia AI</h2>
+      <div class="mb-6 p-6 bg-gray-50 rounded-2xl border border-gray-200 shadow-inner max-h-96 overflow-y-auto text-gray-900 text-base leading-relaxed">
+        <p>
+          Le informazioni raccolte sono esclusivamente in forma di fasce anonime.<br>
+          Questo schema ha finalità educativa e di ricerca.<br>
+          Non costituisce consulenza finanziaria né valutazione MiFID II.<br>
+          Nessun dato personale viene richiesto o trattato.<br>
+          Contatta professionisti indipendenti per valutazioni personalizzate.
+        </p>
+      </div>
+      <button id="proseguiBtn" class="bg-blue-700 text-white font-semibold px-6 py-2 rounded-xl hover:bg-blue-800 transition-colors duration-300 shadow">Prosegui</button>
+    </div>
+
+    <!-- Step 2: Test -->
+    <div id="stepTest" class="backface-hidden absolute inset-0 rotate-y-180 w-full opacity-0 pointer-events-none">
+      <div class="p-6 overflow-y-auto max-h-[70vh] space-y-4">
+        <form id="disclaimerTestForm" class="space-y-4">
+          <div>
+            <label class="block font-semibold mb-1 text-gray-800">1. Le informazioni raccolte nel report sono dati personali identificativi?</label>
+            <select class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none" name="q1">
+              <option value="">Seleziona...</option>
+              <option value="1">Sì, includono nome e codice fiscale</option>
+              <option value="2">No, solo fasce anonime</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-1 text-gray-800">2. Qual è la finalità principale del report?</label>
+            <select class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none" name="q2">
+              <option value="">Seleziona...</option>
+              <option value="1">Fornire consulenza finanziaria personalizzata</option>
+              <option value="2">Educazione e ricerca, in chiave accademica</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-1 text-gray-800">3. Posso usare questo report come valutazione di idoneità MiFID?</label>
+            <select class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none" name="q3">
+              <option value="">Seleziona...</option>
+              <option value="1">Sì</option>
+              <option value="2">No</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-1 text-gray-800">4. Esistono professionisti indipendenti da contattare senza costi?</label>
+            <select class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none" name="q4">
+              <option value="">Seleziona...</option>
+              <option value="1">No</option>
+              <option value="2">Sì</option>
+            </select>
+          </div>
+
+          <button type="submit" class="bg-purple-700 text-white font-semibold px-6 py-2 rounded-xl hover:bg-purple-800 transition-colors duration-300 shadow">Accedi al Report</button>
+        </form>
+        <p id="resultMessage" class="mt-2 font-semibold text-lg"></p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const proseguiBtn = document.getElementById('proseguiBtn');
+const modalInner = document.getElementById('modalInner');
+const stepTest = document.getElementById('stepTest');
+const stepDisclaimer = document.getElementById('stepDisclaimer');
+
+proseguiBtn.addEventListener('click', () => {
+  modalInner.style.transform = 'rotateY(180deg)';
+  stepTest.style.opacity = '1';
+  stepTest.style.pointerEvents = 'auto';
+});
+
+const form = document.getElementById('disclaimerTestForm');
+const resultMessage = document.getElementById('resultMessage');
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const answers = { q1: form.q1.value, q2: form.q2.value, q3: form.q3.value, q4: form.q4.value };
+  const correctAnswers = {q1: '2', q2: '2', q3: '2', q4: '2'};
+  let score = 0;
+
+  Object.keys(correctAnswers).forEach(key => {
+    const select = form[key];
+    if(answers[key] === correctAnswers[key]) {
+      score++;
+      select.classList.remove('border-red-500', 'shadow-inner-red');
+      select.classList.add('border-green-500', 'shadow-inner-green');
+    } else {
+      select.classList.remove('border-green-500', 'shadow-inner-green');
+      select.classList.add('border-red-500', 'shadow-inner-red');
+    }
+  });
+
+  if(score === 4) {
+    resultMessage.textContent = 'Test superato! Puoi accedere al report completo.';
+    resultMessage.classList.remove('text-red-700');
+    resultMessage.classList.add('text-green-700');
+    localStorage.setItem('reportAccess', 'granted');
+    setTimeout(() => document.getElementById('modal').style.display = 'none', 300);
+  } else {
+    resultMessage.innerHTML = '<span class="text-red-700">Test non superato.</span><br><button id="hoCapitoBtn" class="mt-2 bg-gray-700 text-white px-4 py-1 rounded-lg hover:bg-gray-800">Ora ho capito</button>';
+    document.getElementById('hoCapitoBtn').addEventListener('click', () => {
+      modalInner.style.transform = 'rotateY(0deg)';
+      stepTest.style.opacity = '0';
+      stepTest.style.pointerEvents = 'none';
+      resultMessage.textContent = '';
+    });
+  }
+});
+
+if(localStorage.getItem('reportAccess') === 'granted') {
+  document.getElementById('modal').style.display = 'none';
+}
+</script>
+
+<style>
+  .perspective { perspective: 1200px; }
+  .transform-style-preserve-3d { transform-style: preserve-3d; }
+  .backface-hidden { backface-visibility: hidden; }
+  #stepTest { top: 0; left: 0; transform: rotateY(180deg); }
+  .shadow-inner-green { box-shadow: inset 0 0 5px #16a34a; }
+  .shadow-inner-red { box-shadow: inset 0 0 5px #dc2626; }
+</style>
+
+</body>
+</html>
