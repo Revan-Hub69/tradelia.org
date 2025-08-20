@@ -816,177 +816,181 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
 
 
     <!-- B1 -->
-<!-- BLOCCO 1 – PROFILO INVESTITORE -->
-<section id="blocco1" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
-         role="tabpanel" aria-labelledby="tab-blocco1" hidden>  <header class="mb-6">
-    <h2 class="text-2xl font-bold text-gray-800">Blocco 1 • Profilo Investitore</h2>
-    <p class="text-sm text-gray-500 mt-1">Analisi completa del profilo dell’investitore con approccio istituzionale e accademico</p>
+<!-- BLOCCO 1 – PROFILO DELL’INVESTITORE (Parte 1: punti 1-8) -->
+<section id="blocco1" class="panel max-w-6xl mx-auto mb-12 bg-white border border-gray-300 rounded-lg shadow-sm p-8"
+         role="tabpanel" aria-labelledby="tab-blocco1" hidden>
+
+  <!-- Intestazione -->
+  <header class="mb-8 border-b border-gray-200 pb-4">
+    <h2 class="text-3xl font-serif font-bold text-gray-900">Blocco 1 • Profilo dell’Investitore</h2>
+    <p class="text-sm text-gray-600 mt-2">
+      Analisi strutturata del profilo dell’investitore, redatta secondo criteri istituzionali e riferimenti normativi vigenti.
+    </p>
   </header>
 
-  <div class="space-y-4">
+  <div class="space-y-6">
 
-    <!-- Dati Anagrafici -->
-    <div class="flex items-start space-x-3">
-      <i class="lucide-user text-blue-600 w-6 h-6 mt-1"></i>
+    <!-- 1. Dati Anagrafici -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-user text-blue-800 w-7 h-7 mt-1" aria-hidden="true"></i>
       <div>
-        <h3 class="font-semibold text-gray-700">1. Dati Anagrafici</h3>
-        <p class="text-gray-600 text-sm">
-          Identificazione di base dell’investitore, utile per contestualizzare età, residenza e nucleo familiare in relazione a orizzonte temporale e rischio. 
-          <strong>Fonte:</strong> MiFID II, ESMA Suitability Guidelines 2018
+        <h3 class="font-semibold text-gray-800">1. Dati Anagrafici</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Identificazione anagrafica dell’investitore, utile per correlare età, residenza e composizione del nucleo familiare con l’orizzonte temporale e la propensione al rischio.<br>
+          <strong>Riferimenti:</strong> Direttiva MiFID II; ESMA Suitability Guidelines (2018)
         </p>
-        <p class="text-gray-800 mt-1"><strong>Valore fornito:</strong> 39 anni, Italia, nessuna dipendenza familiare</p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> 39 anni, Italia, nessuna dipendenza familiare</p>
       </div>
-    </div>
+    </article>
 
-    <!-- Situazione Patrimoniale -->
-    <div class="flex items-start space-x-3">
-      <i class="lucide-piggy-bank text-green-600 w-6 h-6 mt-1"></i>
+    <!-- 2. Situazione Patrimoniale -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-piggy-bank text-green-800 w-7 h-7 mt-1" aria-hidden="true"></i>
       <div>
-        <h3 class="font-semibold text-gray-700">2. Situazione Patrimoniale</h3>
-        <p class="text-gray-600 text-sm">
-          Analisi del patrimonio complessivo (liquidità, investimenti, immobili, passività) per stimare la capacità di sostenere rischi finanziari.
-          <strong>Fonte:</strong> CONSOB Quaderni FinTech 2020; OECD Household Finance Studies
+        <h3 class="font-semibold text-gray-800">2. Situazione Patrimoniale</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Analisi del patrimonio complessivo (liquidità, investimenti, immobili, passività) per stimare la capacità di sostenere rischi finanziari.<br>
+          <strong>Riferimenti:</strong> CONSOB Quaderni FinTech (2020); OECD Household Finance Studies
         </p>
-        <p class="text-gray-800 mt-1"><strong>Valore fornito:</strong> 5000€ deposito bancario, casa di proprietà, nessuna passività</p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> € 5.000 deposito bancario, casa di proprietà, nessuna passività</p>
       </div>
-    </div>
+    </article>
 
-    <!-- Reddito e Flusso di Cassa -->
-    <div class="flex items-start space-x-3">
-      <i class="lucide-credit-card text-yellow-600 w-6 h-6 mt-1"></i>
+    <!-- 3. Reddito e Flusso di Cassa -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-credit-card text-yellow-700 w-7 h-7 mt-1" aria-hidden="true"></i>
       <div>
-        <h3 class="font-semibold text-gray-700">3. Reddito e Flusso di Cassa</h3>
-        <p class="text-gray-600 text-sm">
-          Valutazione della stabilità e diversificazione delle entrate, per stimare resilienza e capacità di investimento regolare.
-          <strong>Fonte:</strong> EFAMA Investor Education Report 2021
+        <h3 class="font-semibold text-gray-800">3. Reddito e Flusso di Cassa</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Valutazione della stabilità e diversificazione delle entrate, per stimare resilienza e capacità di investimento regolare.<br>
+          <strong>Riferimenti:</strong> EFAMA Investor Education Report (2021)
         </p>
-        <p class="text-gray-800 mt-1"><strong>Valore fornito:</strong> Stipendio stabile, inferiore a 25k € annui</p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> Stipendio stabile, inferiore a € 25.000 annui</p>
       </div>
-    </div>
+    </article>
 
-    <!-- Obiettivi di Investimento -->
-    <div class="flex items-start space-x-3">
-      <i class="lucide-target text-red-600 w-6 h-6 mt-1"></i>
+    <!-- 4. Obiettivi di Investimento -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-target text-red-700 w-7 h-7 mt-1" aria-hidden="true"></i>
       <div>
-        <h3 class="font-semibold text-gray-700">4. Obiettivi di Investimento</h3>
-        <p class="text-gray-600 text-sm">
-          Chiarisce finalità principali (accumulazione, reddito, protezione, pianificazione pensionistica), essenziali per la definizione del portafoglio.
-          <strong>Fonte:</strong> Sharpe, F. (1964). Capital Asset Prices; MiFID II, art. 25
+        <h3 class="font-semibold text-gray-800">4. Obiettivi di Investimento</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Definizione delle finalità principali (accumulazione, reddito, protezione, pianificazione pensionistica), essenziali per la costruzione del portafoglio.<br>
+          <strong>Riferimenti:</strong> Sharpe, F. (1964); MiFID II, art. 25
         </p>
-        <p class="text-gray-800 mt-1"><strong>Valore fornito:</strong> Accumulare risparmi, lungo termine, esposizione solo criptovalute</p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> Accumulare risparmi, lungo termine, esposizione solo criptovalute</p>
       </div>
-    </div>
+    </article>
 
-    <!-- Orizzonte Temporale -->
-    <div class="flex items-start space-x-3">
-      <i class="lucide-clock text-purple-600 w-6 h-6 mt-1"></i>
+    <!-- 5. Orizzonte Temporale -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-clock text-purple-700 w-7 h-7 mt-1" aria-hidden="true"></i>
       <div>
-        <h3 class="font-semibold text-gray-700">5. Orizzonte Temporale</h3>
-        <p class="text-gray-600 text-sm">
-          Durata prevista dell’investimento, elemento chiave nella tolleranza al rischio e nella scelta degli strumenti finanziari.
-          <strong>Fonte:</strong> Bodie, Zvi (1995). On the Risk of Stocks in the Long Run
+        <h3 class="font-semibold text-gray-800">5. Orizzonte Temporale</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Durata prevista dell’investimento, elemento chiave nella tolleranza al rischio e nella scelta degli strumenti.<br>
+          <strong>Riferimenti:</strong> Bodie, Z. (1995)
         </p>
-        <p class="text-gray-800 mt-1"><strong>Valore fornito:</strong> Lungo termine</p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> Lungo termine</p>
       </div>
-    </div>
+    </article>
 
-    <!-- Esperienza e Conoscenza Finanziaria -->
-    <div class="flex items-start space-x-3">
-      <i class="lucide-book-open text-indigo-600 w-6 h-6 mt-1"></i>
+    <!-- 6. Esperienza e Conoscenza Finanziaria -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-book-open text-indigo-700 w-7 h-7 mt-1" aria-hidden="true"></i>
       <div>
-        <h3 class="font-semibold text-gray-700">6. Esperienza e Conoscenza Finanziaria</h3>
-        <p class="text-gray-600 text-sm">
-          Valutazione di conoscenze pregresse e pratiche dell’investitore su strumenti e mercati, utile per determinare adeguatezza.
-          <strong>Fonte:</strong> ESMA Guidelines 2018; OECD Financial Literacy Studies
+        <h3 class="font-semibold text-gray-800">6. Esperienza e Conoscenza Finanziaria</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Valutazione delle conoscenze pregresse e pratiche dell’investitore su strumenti e mercati.<br>
+          <strong>Riferimenti:</strong> ESMA Guidelines (2018); OECD Financial Literacy Studies
         </p>
-        <p class="text-gray-800 mt-1"><strong>Valore fornito:</strong> Principiante</p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> Principiante</p>
       </div>
-    </div>
+    </article>
 
-    <!-- Propensione al Rischio -->
-    <div class="flex items-start space-x-3">
-      <i class="lucide-shield-question text-pink-600 w-6 h-6 mt-1"></i>
+    <!-- 7. Propensione al Rischio -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-shield-question text-pink-700 w-7 h-7 mt-1" aria-hidden="true"></i>
       <div>
-        <h3 class="font-semibold text-gray-700">7. Propensione al Rischio</h3>
-        <p class="text-gray-600 text-sm">
-          Analisi psicometrica e comportamentale dell’attitudine a sostenere volatilità e perdite temporanee.
-          <strong>Fonte:</strong> Kahneman & Tversky (1979). Prospect Theory; MiFID II
+        <h3 class="font-semibold text-gray-800">7. Propensione al Rischio</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Analisi psicometrica e comportamentale dell’attitudine a sostenere volatilità e perdite temporanee.<br>
+          <strong>Riferimenti:</strong> Kahneman & Tversky (1979); MiFID II
         </p>
-        <p class="text-gray-800 mt-1"><strong>Valore fornito:</strong> Non sa come si comporterebbe in caso di volatilità</p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> Non definita</p>
       </div>
-    </div>
+    </article>
 
-    <!-- Capacità di Sostenere Perdite -->
-    <div class="flex items-start space-x-3">
-      <i class="lucide-bar-chart-2 text-teal-600 w-6 h-6 mt-1"></i>
+    <!-- 8. Capacità di Sostenere Perdite -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-bar-chart-2 text-teal-700 w-7 h-7 mt-1" aria-hidden="true"></i>
       <div>
-        <h3 class="font-semibold text-gray-700">8. Capacità di Sostenere Perdite</h3>
-        <p class="text-gray-600 text-sm">
-          Valutazione della perdita massima sostenibile senza compromettere obiettivi di vita o stabilità finanziaria.
-          <strong>Fonte:</strong> CONSOB Report on Household Finance 2022
+        <h3 class="font-semibold text-gray-800">8. Capacità di Sostenere Perdite</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Valutazione della perdita massima sostenibile senza compromettere obiettivi di vita o stabilità finanziaria.<br>
+          <strong>Riferimenti:</strong> CONSOB Report on Household Finance (2022)
         </p>
-        <p class="text-gray-800 mt-1"><strong>Valore fornito:</strong> 10% perdita massima</p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> 10% perdita massima</p>
       </div>
-    </div>
-
-    <!-- Preferenze ESG -->
-    <div class="flex items-start space-x-3">
-      <i class="lucide-leaf text-green-500 w-6 h-6 mt-1"></i>
+    </article>
+ <!-- 9. Preferenze ESG -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-leaf text-green-700 w-7 h-7 mt-1" aria-hidden="true"></i>
       <div>
-        <h3 class="font-semibold text-gray-700">9. Preferenze ESG</h3>
-        <p class="text-gray-600 text-sm">
-          Rilevazione dell’interesse per investimenti sostenibili, etici e socialmente responsabili, in linea con le normative SFDR.
-          <strong>Fonte:</strong> Regolamento (UE) 2019/2088 — SFDR; EU Taxonomy
+        <h3 class="font-semibold text-gray-800">9. Preferenze ESG</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Rilevazione dell’interesse per investimenti sostenibili, etici e socialmente responsabili, in linea con le normative europee sulla finanza sostenibile.<br>
+          <strong>Riferimenti:</strong> Regolamento (UE) 2019/2088 — SFDR; EU Taxonomy
         </p>
-        <p class="text-gray-800 mt-1"><strong>Valore fornito:</strong> Non rilevante</p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> Non rilevante</p>
       </div>
-    </div>
+    </article>
 
-    <!-- Liquidità e Vincoli -->
-    <div class="flex items-start space-x-3">
-      <i class="lucide-droplet text-cyan-600 w-6 h-6 mt-1"></i>
+    <!-- 10. Liquidità e Vincoli -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-droplet text-cyan-700 w-7 h-7 mt-1" aria-hidden="true"></i>
       <div>
-        <h3 class="font-semibold text-gray-700">10. Liquidità e Vincoli</h3>
-        <p class="text-gray-600 text-sm">
-          Analisi delle esigenze di liquidità immediata, vincoli legali o fiscali che possono condizionare la strategia.
-          <strong>Fonte:</strong> OECD Financial Market Trends 2021
+        <h3 class="font-semibold text-gray-800">10. Liquidità e Vincoli</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Analisi delle esigenze di liquidità immediata e di eventuali vincoli legali o fiscali che possano condizionare la strategia di investimento.<br>
+          <strong>Riferimenti:</strong> OECD Financial Market Trends (2021)
         </p>
-        <p class="text-gray-800 mt-1"><strong>Valore fornito:</strong> Minimo 4000€ liquidi</p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> Minimo € 4.000 liquidi</p>
       </div>
-    </div>
+    </article>
 
-    <!-- Piano Accumulo Capitale (PAC) -->
-    <div class="flex items-start space-x-3">
-      <i class="lucide-repeat text-orange-600 w-6 h-6 mt-1"></i>
+    <!-- 11. Piano Accumulo Capitale (PAC) -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-repeat text-orange-700 w-7 h-7 mt-1" aria-hidden="true"></i>
       <div>
-        <h3 class="font-semibold text-gray-700">11. Piano Accumulo Capitale (PAC)</h3>
-        <p class="text-gray-600 text-sm">
-          Definizione di eventuali PAC, frequenza e importi, come strumento di investimento graduale e diversificazione temporale.
-          <strong>Fonte:</strong> Cost Averaging Theory; Vanguard Research 2019
+        <h3 class="font-semibold text-gray-800">11. Piano Accumulo Capitale (PAC)</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Definizione di eventuali piani di accumulo, frequenza e importi, come strumento di investimento graduale e di diversificazione temporale.<br>
+          <strong>Riferimenti:</strong> Cost Averaging Theory; Vanguard Research (2019)
         </p>
-        <p class="text-gray-800 mt-1"><strong>Valore fornito:</strong> PAC mensile 200€</p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> PAC mensile € 200</p>
       </div>
-    </div>
-
-    <!-- Commento Tradelia AI -->
-    <div class="flex items-start space-x-3 mt-6 p-4 border-l-4 border-blue-600 bg-blue-50 rounded-md">
-      <i class="lucide-message-square text-blue-600 w-6 h-6 mt-1"></i>
-      <div>
-        <h3 class="font-semibold text-gray-700">Commento Tradelia AI</h3>
-        <p class="text-gray-600 text-sm">
-          Il profilo risulta coerente per un investitore retail con obiettivi di lungo termine e tolleranza al rischio moderata. Si raccomanda di monitorare l’esperienza e la conoscenza finanziaria per eventuali adeguamenti della strategia.
-        </p>
-      </div>
-    </div>
-
-    <!-- Disclaimer Istituzionale / Educativo -->
-    <div class="mt-6 p-4 bg-gray-100 rounded-md text-gray-600 text-sm">
-      <strong>Avvertenza normativa:</strong> Le informazioni raccolte sono elaborate unicamente in forma anonima e aggregata. Questo schema ha esclusiva finalità educativa, accademica e di ricerca. Non costituisce consulenza finanziaria personalizzata né valutazione di adeguatezza ai sensi della normativa MiFID II. Per decisioni di investimento si raccomanda di rivolgersi a consulenti finanziari indipendenti.
-    </div>
+    </article>
 
   </div>
+
+  <!-- Osservazioni di Sintesi -->
+  <aside class="mt-8 p-5 border-l-4 border-blue-800 bg-blue-50 rounded-md">
+    <h3 class="font-semibold text-gray-800">Osservazioni di Sintesi</h3>
+    <p class="text-gray-700 text-sm leading-relaxed">
+      Il profilo delineato è coerente con un investitore retail orientato al lungo termine, con tolleranza al rischio moderata. Si raccomanda un monitoraggio periodico delle competenze e conoscenze finanziarie per eventuali adeguamenti della strategia.
+    </p>
+  </aside>
+
+  <!-- Disclaimer -->
+  <footer class="mt-8 p-5 bg-gray-100 rounded-md text-gray-700 text-sm leading-relaxed">
+    <strong>Avvertenza:</strong> Le informazioni sono trattate in forma anonima e aggregata. Il presente documento ha esclusiva finalità educativa, accademica e di ricerca e non costituisce consulenza finanziaria personalizzata né valutazione di adeguatezza ai sensi della normativa MiFID II. Per decisioni di investimento si invita a rivolgersi a un consulente finanziario indipendente.
+  </footer>
 </section>
 
+
+
+    
 <!-- B2 — Macro Regime -->
 <section id="blocco2" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
          role="tabpanel" aria-labelledby="tab-blocco2" hidden>
