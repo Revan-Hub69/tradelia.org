@@ -1222,32 +1222,31 @@ document.addEventListener('DOMContentLoaded', () => {
 <body class="bg-gray-50 flex items-center justify-center min-h-screen font-sans">
 
 <!-- Modale Container -->
-<!-- Modale Container -->
 <div id="modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 perspective">
   <div id="modalInner" class="bg-white rounded-3xl shadow-2xl p-10 max-w-3xl w-full border border-gray-200 transition-transform duration-700 transform-style-preserve-3d relative">
 
     <!-- Step 1: Disclaimer -->
     <div id="stepDisclaimer" class="backface-hidden w-full">
       <h2 class="text-3xl font-bold mb-6 text-gray-900">Accesso Report Tradelia AI</h2>
-      <div class="mb-6 p-8 bg-gray-50 rounded-2xl border border-gray-200 shadow-inner max-h-96 overflow-y-auto text-gray-900 text-base leading-relaxed">
+      <div class="mb-6 p-6 bg-gray-50 rounded-2xl border border-gray-200 shadow-inner max-h-96 overflow-y-auto text-gray-900 text-base leading-relaxed">
         <p>
           Le informazioni raccolte sono esclusivamente in forma di fasce anonime.<br>
-          Questo schema ha finalità puramente educativa e di ricerca: illustra modelli istituzionali.<br>
+          Questo schema ha finalità educativa e di ricerca.<br>
           Non costituisce consulenza finanziaria né valutazione MiFID II.<br>
           Nessun dato personale viene richiesto o trattato.<br>
-          È consigliato contattare professionisti indipendenti per valutazioni personalizzate.
+          Contatta professionisti indipendenti per valutazioni personalizzate.
         </p>
       </div>
-      <button id="proseguiBtn" class="bg-blue-700 text-white font-semibold px-8 py-3 rounded-xl hover:bg-blue-800 transition-colors duration-300 shadow">Prosegui</button>
+      <button id="proseguiBtn" class="bg-blue-700 text-white font-semibold px-6 py-2 rounded-xl hover:bg-blue-800 transition-colors duration-300 shadow">Prosegui</button>
     </div>
 
     <!-- Step 2: Test -->
     <div id="stepTest" class="backface-hidden absolute inset-0 rotate-y-180 w-full opacity-0 pointer-events-none">
-      <div class="p-8 overflow-y-auto max-h-[70vh]">
-        <form id="disclaimerTestForm" class="space-y-6">
+      <div class="p-6 overflow-y-auto max-h-[70vh] space-y-4">
+        <form id="disclaimerTestForm" class="space-y-4">
           <div>
-            <label class="block font-semibold mb-2 text-gray-800">1. Le informazioni raccolte nel report sono dati personali identificativi?</label>
-            <select class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none" name="q1">
+            <label class="block font-semibold mb-1 text-gray-800">1. Le informazioni raccolte nel report sono dati personali identificativi?</label>
+            <select class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none" name="q1">
               <option value="">Seleziona...</option>
               <option value="1">Sì, includono nome e codice fiscale</option>
               <option value="2">No, solo fasce anonime</option>
@@ -1255,8 +1254,8 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
 
           <div>
-            <label class="block font-semibold mb-2 text-gray-800">2. Qual è la finalità principale del report?</label>
-            <select class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none" name="q2">
+            <label class="block font-semibold mb-1 text-gray-800">2. Qual è la finalità principale del report?</label>
+            <select class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none" name="q2">
               <option value="">Seleziona...</option>
               <option value="1">Fornire consulenza finanziaria personalizzata</option>
               <option value="2">Educazione e ricerca, in chiave accademica</option>
@@ -1264,8 +1263,8 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
 
           <div>
-            <label class="block font-semibold mb-2 text-gray-800">3. Posso usare questo report come valutazione di idoneità MiFID?</label>
-            <select class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none" name="q3">
+            <label class="block font-semibold mb-1 text-gray-800">3. Posso usare questo report come valutazione di idoneità MiFID?</label>
+            <select class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none" name="q3">
               <option value="">Seleziona...</option>
               <option value="1">Sì</option>
               <option value="2">No</option>
@@ -1273,18 +1272,17 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
 
           <div>
-            <label class="block font-semibold mb-2 text-gray-800">4. Esistono professionisti indipendenti da contattare senza costi?</label>
-            <select class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none" name="q4">
+            <label class="block font-semibold mb-1 text-gray-800">4. Esistono professionisti indipendenti da contattare senza costi?</label>
+            <select class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none" name="q4">
               <option value="">Seleziona...</option>
               <option value="1">No</option>
               <option value="2">Sì</option>
             </select>
           </div>
 
-          <button type="submit" class="bg-purple-700 text-white font-semibold px-8 py-3 rounded-xl hover:bg-purple-800 transition-colors duration-300 shadow">Accedi al Report</button>
+          <button type="submit" class="bg-purple-700 text-white font-semibold px-6 py-2 rounded-xl hover:bg-purple-800 transition-colors duration-300 shadow">Accedi al Report</button>
         </form>
-
-        <p id="resultMessage" class="mt-4 font-semibold text-lg"></p>
+        <p id="resultMessage" class="mt-2 font-semibold text-lg"></p>
       </div>
     </div>
 
@@ -1329,19 +1327,18 @@ form.addEventListener('submit', (e) => {
     resultMessage.classList.remove('text-red-700');
     resultMessage.classList.add('text-green-700');
     localStorage.setItem('reportAccess', 'granted');
-    setTimeout(() => {
-      document.getElementById('modal').style.display = 'none';
-    }, 500);
+    setTimeout(() => document.getElementById('modal').style.display = 'none', 300);
   } else {
-    resultMessage.innerHTML = '<span class="text-red-700">Test non superato.</span><br><button id="hoCapitoBtn" class="mt-3 bg-gray-700 text-white px-6 py-2 rounded-lg hover:bg-gray-800">Ho capito</button>';
-    const hoCapitoBtn = document.getElementById('hoCapitoBtn');
-    hoCapitoBtn.addEventListener('click', () => {
+    resultMessage.innerHTML = '<span class="text-red-700">Test non superato.</span><br><button id="hoCapitoBtn" class="mt-2 bg-gray-700 text-white px-4 py-1 rounded-lg hover:bg-gray-800">Ora ho capito</button>';
+    document.getElementById('hoCapitoBtn').addEventListener('click', () => {
+      modalInner.style.transform = 'rotateY(0deg)';
+      stepTest.style.opacity = '0';
+      stepTest.style.pointerEvents = 'none';
       resultMessage.textContent = '';
     });
   }
 });
 
-// Controllo accesso precedentemente salvato
 if(localStorage.getItem('reportAccess') === 'granted') {
   document.getElementById('modal').style.display = 'none';
 }
@@ -1352,14 +1349,9 @@ if(localStorage.getItem('reportAccess') === 'granted') {
   .transform-style-preserve-3d { transform-style: preserve-3d; }
   .backface-hidden { backface-visibility: hidden; }
   #stepTest { top: 0; left: 0; transform: rotateY(180deg); }
-
   .shadow-inner-green { box-shadow: inset 0 0 5px #16a34a; }
   .shadow-inner-red { box-shadow: inset 0 0 5px #dc2626; }
 </style>
 
-</body>
-
-</body>
-</body>
 </body>
 </html>
