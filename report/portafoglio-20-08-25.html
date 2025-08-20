@@ -820,55 +820,174 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
 <section id="blocco1" class="panel max-w-6xl mx-auto mb-12 bg-white border border-gray-300 rounded-lg shadow-sm p-8"
          role="tabpanel" aria-labelledby="tab-blocco1" hidden>
 
- 
-
-  <header class="mb-8 border-b border-gray-300 dark:border-gray-700 pb-4">
-    <h2 id="titolo-blocco1" class="text-2xl sm:text-3xl md:text-4xl font-serif font-bold">
-      Blocco 1 • Profilo dell’Investitore
-    </h2>
-    <p class="mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-400">
-      Analisi strutturata del profilo dell’investitore, secondo criteri istituzionali e norme vigenti.
+  <!-- Intestazione -->
+  <header class="mb-8 border-b border-gray-200 pb-4">
+    <h2 class="text-3xl font-serif font-bold text-gray-900">Blocco 1 • Profilo dell’Investitore</h2>
+    <p class="text-sm text-gray-600 mt-2">
+      Analisi strutturata del profilo dell’investitore, redatta secondo criteri istituzionali e riferimenti normativi vigenti.
     </p>
   </header>
 
-  <div class="space-y-8">
-    <!-- Punto esemplificativo -->
-    <article class="flex flex-col md:flex-row md:space-x-5">
-      <div class="flex-shrink-0 mb-3 md:mb-0">
-        <span class="inline-flex w-12 h-12 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800">
-          <svg class="w-6 h-6 text-blue-800 dark:text-blue-200" fill="currentColor" viewBox="0 0 20 20"><path d="M10 10a4 4 ..."/></svg>
-        </span>
-      </div>
+  <div class="space-y-6">
+
+    <!-- 1. Dati Anagrafici -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-user text-blue-800 w-7 h-7 mt-1" aria-hidden="true"></i>
       <div>
-        <h3 class="font-semibold text-lg">1. Dati Anagrafici</h3>
-        <p class="mt-1 text-sm sm:text-base">Identificazione anagrafica utile a correlare età, residenza e nucleo familiare con orizzonte e rischio.</p>
-        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-          <strong>Riferimenti:</strong>
-          <cite><a href="https://eur-lex.europa.eu/legal-content/IT/TXT/?uri=CELEX%3A32014L0065" class="underline">Direttiva MiFID II</a></cite>;
-          <cite>ESMA Suitability Guidelines (2018)</cite>
+        <h3 class="font-semibold text-gray-800">1. Dati Anagrafici</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Identificazione anagrafica dell’investitore, utile per correlare età, residenza e composizione del nucleo familiare con l’orizzonte temporale e la propensione al rischio.<br>
+          <strong>Riferimenti:</strong> Direttiva MiFID II; ESMA Suitability Guidelines (2018)
         </p>
-        <dl class="mt-2">
-          <dt class="sr-only">Valore fornito</dt>
-          <dd class="font-medium">39 anni, Italia, nessuna dipendenza familiare</dd>
-        </dl>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> 39 anni, Italia, nessuna dipendenza familiare</p>
       </div>
     </article>
 
-    <!-- Qui ripeti lo schema per 2–11 -->
+    <!-- 2. Situazione Patrimoniale -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-piggy-bank text-green-800 w-7 h-7 mt-1" aria-hidden="true"></i>
+      <div>
+        <h3 class="font-semibold text-gray-800">2. Situazione Patrimoniale</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Analisi del patrimonio complessivo (liquidità, investimenti, immobili, passività) per stimare la capacità di sostenere rischi finanziari.<br>
+          <strong>Riferimenti:</strong> CONSOB Quaderni FinTech (2020); OECD Household Finance Studies
+        </p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> € 5.000 deposito bancario, casa di proprietà, nessuna passività</p>
+      </div>
+    </article>
+
+    <!-- 3. Reddito e Flusso di Cassa -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-credit-card text-yellow-700 w-7 h-7 mt-1" aria-hidden="true"></i>
+      <div>
+        <h3 class="font-semibold text-gray-800">3. Reddito e Flusso di Cassa</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Valutazione della stabilità e diversificazione delle entrate, per stimare resilienza e capacità di investimento regolare.<br>
+          <strong>Riferimenti:</strong> EFAMA Investor Education Report (2021)
+        </p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> Stipendio stabile, inferiore a € 25.000 annui</p>
+      </div>
+    </article>
+
+    <!-- 4. Obiettivi di Investimento -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-target text-red-700 w-7 h-7 mt-1" aria-hidden="true"></i>
+      <div>
+        <h3 class="font-semibold text-gray-800">4. Obiettivi di Investimento</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Definizione delle finalità principali (accumulazione, reddito, protezione, pianificazione pensionistica), essenziali per la costruzione del portafoglio.<br>
+          <strong>Riferimenti:</strong> Sharpe, F. (1964); MiFID II, art. 25
+        </p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> Accumulare risparmi, lungo termine, esposizione solo criptovalute</p>
+      </div>
+    </article>
+
+    <!-- 5. Orizzonte Temporale -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-clock text-purple-700 w-7 h-7 mt-1" aria-hidden="true"></i>
+      <div>
+        <h3 class="font-semibold text-gray-800">5. Orizzonte Temporale</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Durata prevista dell’investimento, elemento chiave nella tolleranza al rischio e nella scelta degli strumenti.<br>
+          <strong>Riferimenti:</strong> Bodie, Z. (1995)
+        </p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> Lungo termine</p>
+      </div>
+    </article>
+
+    <!-- 6. Esperienza e Conoscenza Finanziaria -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-book-open text-indigo-700 w-7 h-7 mt-1" aria-hidden="true"></i>
+      <div>
+        <h3 class="font-semibold text-gray-800">6. Esperienza e Conoscenza Finanziaria</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Valutazione delle conoscenze pregresse e pratiche dell’investitore su strumenti e mercati.<br>
+          <strong>Riferimenti:</strong> ESMA Guidelines (2018); OECD Financial Literacy Studies
+        </p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> Principiante</p>
+      </div>
+    </article>
+
+    <!-- 7. Propensione al Rischio -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-shield-question text-pink-700 w-7 h-7 mt-1" aria-hidden="true"></i>
+      <div>
+        <h3 class="font-semibold text-gray-800">7. Propensione al Rischio</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Analisi psicometrica e comportamentale dell’attitudine a sostenere volatilità e perdite temporanee.<br>
+          <strong>Riferimenti:</strong> Kahneman & Tversky (1979); MiFID II
+        </p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> Non definita</p>
+      </div>
+    </article>
+
+    <!-- 8. Capacità di Sostenere Perdite -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-bar-chart-2 text-teal-700 w-7 h-7 mt-1" aria-hidden="true"></i>
+      <div>
+        <h3 class="font-semibold text-gray-800">8. Capacità di Sostenere Perdite</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Valutazione della perdita massima sostenibile senza compromettere obiettivi di vita o stabilità finanziaria.<br>
+          <strong>Riferimenti:</strong> CONSOB Report on Household Finance (2022)
+        </p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> 10% perdita massima</p>
+      </div>
+    </article>
+ <!-- 9. Preferenze ESG -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-leaf text-green-700 w-7 h-7 mt-1" aria-hidden="true"></i>
+      <div>
+        <h3 class="font-semibold text-gray-800">9. Preferenze ESG</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Rilevazione dell’interesse per investimenti sostenibili, etici e socialmente responsabili, in linea con le normative europee sulla finanza sostenibile.<br>
+          <strong>Riferimenti:</strong> Regolamento (UE) 2019/2088 — SFDR; EU Taxonomy
+        </p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> Non rilevante</p>
+      </div>
+    </article>
+
+    <!-- 10. Liquidità e Vincoli -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-droplet text-cyan-700 w-7 h-7 mt-1" aria-hidden="true"></i>
+      <div>
+        <h3 class="font-semibold text-gray-800">10. Liquidità e Vincoli</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Analisi delle esigenze di liquidità immediata e di eventuali vincoli legali o fiscali che possano condizionare la strategia di investimento.<br>
+          <strong>Riferimenti:</strong> OECD Financial Market Trends (2021)
+        </p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> Minimo € 4.000 liquidi</p>
+      </div>
+    </article>
+
+    <!-- 11. Piano Accumulo Capitale (PAC) -->
+    <article class="flex items-start space-x-4">
+      <i class="lucide-repeat text-orange-700 w-7 h-7 mt-1" aria-hidden="true"></i>
+      <div>
+        <h3 class="font-semibold text-gray-800">11. Piano Accumulo Capitale (PAC)</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Definizione di eventuali piani di accumulo, frequenza e importi, come strumento di investimento graduale e di diversificazione temporale.<br>
+          <strong>Riferimenti:</strong> Cost Averaging Theory; Vanguard Research (2019)
+        </p>
+        <p class="mt-1 text-gray-900 text-sm"><strong>Valore fornito:</strong> PAC mensile € 200</p>
+      </div>
+    </article>
+
   </div>
 
-  <aside class="mt-10 p-6 border-l-4 border-blue-800 dark:border-blue-400 bg-blue-50 dark:bg-blue-900 rounded-md">
-    <h3 class="font-semibold text-lg">Osservazioni di Sintesi</h3>
-    <p class="mt-1 text-sm sm:text-base">
-      Profilo coerente con investitore retail a lungo termine, tolleranza al rischio moderata.
+  <!-- Osservazioni di Sintesi -->
+  <aside class="mt-8 p-5 border-l-4 border-blue-800 bg-blue-50 rounded-md">
+    <h3 class="font-semibold text-gray-800">Osservazioni di Sintesi</h3>
+    <p class="text-gray-700 text-sm leading-relaxed">
+      Il profilo delineato è coerente con un investitore retail orientato al lungo termine, con tolleranza al rischio moderata. Si raccomanda un monitoraggio periodico delle competenze e conoscenze finanziarie per eventuali adeguamenti della strategia.
     </p>
   </aside>
 
-  <footer class="mt-8 p-5 bg-gray-100 dark:bg-gray-800 rounded-md text-xs sm:text-sm leading-relaxed">
-    <strong>Avvertenza:</strong> Documento a finalità educativa; non costituisce consulenza finanziaria personalizzata.
+  <!-- Disclaimer -->
+  <footer class="mt-8 p-5 bg-gray-100 rounded-md text-gray-700 text-sm leading-relaxed">
+    <strong>Avvertenza:</strong> Le informazioni sono trattate in forma anonima e aggregata. Il presente documento ha esclusiva finalità educativa, accademica e di ricerca e non costituisce consulenza finanziaria personalizzata né valutazione di adeguatezza ai sensi della normativa MiFID II. Per decisioni di investimento si invita a rivolgersi a un consulente finanziario indipendente.
   </footer>
-
 </section>
+
 
 
     
