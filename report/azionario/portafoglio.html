@@ -1219,6 +1219,138 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
+<!-- Modale Container -->
+<div id="modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 perspective">
+  <div id="modalInner" class="bg-white rounded-3xl shadow-2xl p-10 max-w-3xl w-full border border-gray-200 transition-transform duration-700 transform-style-preserve-3d relative">
 
+    <!-- Step 1: Disclaimer -->
+    <div id="stepDisclaimer" class="backface-hidden w-full">
+      <h2 class="text-3xl font-bold mb-6 text-gray-900">Accesso Report Tradelia AI</h2>
+      <div class="mb-6 p-8 bg-gray-50 rounded-2xl border border-gray-200 shadow-inner max-h-96 overflow-y-auto text-gray-800 text-base leading-relaxed">
+        <p>
+          Le informazioni raccolte sono esclusivamente in forma di fasce anonime.<br>
+          Questo schema ha finalità puramente educativa e di ricerca: illustra modelli istituzionali.<br>
+          Non costituisce consulenza finanziaria né valutazione MiFID II.<br>
+          Nessun dato personale viene richiesto o trattato.<br>
+          Professionisti indipendenti possono essere contattati gratuitamente per valutazioni personalizzate.
+        </p>
+      </div>
+      <button id="proseguiBtn" class="bg-blue-700 text-white font-semibold px-8 py-3 rounded-xl hover:bg-blue-800 transition-colors duration-300 shadow">Prosegui</button>
+    </div>
+
+    <!-- Step 2: Test -->
+    <div id="stepTest" class="backface-hidden absolute inset-0 rotate-y-180 w-full opacity-0 pointer-events-none">
+      <div class="p-8 overflow-y-auto max-h-[70vh]">
+        <form id="disclaimerTestForm" class="space-y-6">
+          <div>
+            <label class="block font-semibold mb-2 text-gray-800">1. Le informazioni raccolte nel report sono dati personali identificativi?</label>
+            <select class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none" name="q1">
+              <option value="">Seleziona...</option>
+              <option value="1">Sì, includono nome e codice fiscale</option>
+              <option value="2">No, solo fasce anonime</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-2 text-gray-800">2. Qual è la finalità principale del report?</label>
+            <select class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none" name="q2">
+              <option value="">Seleziona...</option>
+              <option value="1">Fornire consulenza finanziaria personalizzata</option>
+              <option value="2">Educazione e ricerca, in chiave accademica</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-2 text-gray-800">3. Posso usare questo report come valutazione di idoneità MiFID?</label>
+            <select class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none" name="q3">
+              <option value="">Seleziona...</option>
+              <option value="1">Sì</option>
+              <option value="2">No</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-2 text-gray-800">4. Esistono professionisti indipendenti da contattare senza costi?</label>
+            <select class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none" name="q4">
+              <option value="">Seleziona...</option>
+              <option value="1">No</option>
+              <option value="2">Sì</option>
+            </select>
+          </div>
+
+          <button type="submit" class="bg-purple-700 text-white font-semibold px-8 py-3 rounded-xl hover:bg-purple-800 transition-colors duration-300 shadow">Accedi al Report</button>
+        </form>
+
+        <p id="resultMessage" class="mt-4 font-semibold text-lg"></p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const proseguiBtn = document.getElementById('proseguiBtn');
+const modalInner = document.getElementById('modalInner');
+const stepTest = document.getElementById('stepTest');
+
+proseguiBtn.addEventListener('click', () => {
+  modalInner.style.transform = 'rotateY(180deg)';
+  stepTest.style.opacity = '1';
+  stepTest.style.pointerEvents = 'auto';
+});
+
+const form = document.getElementById('disclaimerTestForm');
+const resultMessage = document.getElementById('resultMessage');
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const answers = { q1: form.q1.value, q2: form.q2.value, q3: form.q3.value, q4: form.q4.value };
+  const correctAnswers = {q1: '2', q2: '2', q3: '2', q4: '2'};
+  let score = 0;
+
+  Object.keys(correctAnswers).forEach(key => {
+    const select = form[key];
+    if(answers[key] === correctAnswers[key]) {
+      score++;
+      select.classList.remove('border-red-500', 'shadow-inner-red');
+      select.classList.add('border-green-500', 'shadow-inner-green');
+    } else {
+      select.classList.remove('border-green-500', 'shadow-inner-green');
+      select.classList.add('border-red-500', 'shadow-inner-red');
+    }
+  });
+
+  if(score === 4) {
+    resultMessage.textContent = 'Test superato! Puoi accedere al report completo.';
+    resultMessage.classList.remove('text-red-700');
+    resultMessage.classList.add('text-green-700');
+    localStorage.setItem('reportAccess', 'granted');
+    setTimeout(() => {
+      document.getElementById('modal').style.display = 'none';
+    }, 500);
+  } else {
+    resultMessage.textContent = 'Test non superato. Rileggi il disclaimer e riprova.';
+    resultMessage.classList.remove('text-green-700');
+    resultMessage.classList.add('text-red-700');
+  }
+});
+
+// Controllo accesso precedentemente salvato
+if(localStorage.getItem('reportAccess') === 'granted') {
+  document.getElementById('modal').style.display = 'none';
+}
+</script>
+
+<style>
+  .perspective { perspective: 1200px; }
+  .transform-style-preserve-3d { transform-style: preserve-3d; }
+  .backface-hidden { backface-visibility: hidden; }
+  #stepTest { top: 0; left: 0; transform: rotateY(180deg); }
+
+  .shadow-inner-green { box-shadow: inset 0 0 5px #16a34a; }
+  .shadow-inner-red { box-shadow: inset 0 0 5px #dc2626; }
+</style>
+
+</body>
 </body>
 </html>
