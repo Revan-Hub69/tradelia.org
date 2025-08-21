@@ -815,53 +815,148 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
 </section>
 
 
+<!-- BLOCCO 1 – PROFILO DELL’INVESTITORE -->
 <section id="blocco1" class="panel max-w-6xl mx-auto mb-12 bg-white border border-gray-200 rounded-xl shadow-sm p-8 md:p-12"
          role="tabpanel" aria-labelledby="tab-blocco1" hidden>
 
-  <h2 class="text-2xl font-bold text-gray-900 mb-6">BLOCCO 1 — Profilo Investitore</h2>
+  <h2 class="text-2xl font-bold mb-8 text-gray-900">Profilo dell’Investitore</h2>
 
-  <!-- Età -->
-  <div class="mb-6 p-6 bg-gray-50 border border-gray-200 rounded-lg flex justify-between items-center">
+  <!-- DATI ANAGRAFICI -->
+  <div class="mb-6 p-6 bg-gray-50 border border-gray-200 rounded-lg flex flex-col sm:flex-row sm:justify-between sm:items-center">
     <div>
       <h4 class="text-lg font-semibold text-gray-900">Età</h4>
-      <p class="text-sm text-gray-600">
-        Fascia di età dell’investitore. <span class="font-medium">Fonte:</span> ESMA Suitability Guidelines 2018
-      </p>
+      <p class="text-sm text-gray-600">Fascia anagrafica dichiarata.</p>
     </div>
-    <div class="text-right text-gray-900 font-bold">31–45</div>
+    <div class="mt-3 sm:mt-0 sm:text-right text-gray-900 font-bold text-xl">31–45</div>
   </div>
 
-  <!-- Anni di esperienza -->
-  <div class="mb-6 p-6 bg-gray-50 border border-gray-200 rounded-lg flex justify-between items-center">
+  <div class="mb-6 p-6 bg-gray-50 border border-gray-200 rounded-lg flex flex-col sm:flex-row sm:justify-between sm:items-center">
     <div>
-      <h4 class="text-lg font-semibold text-gray-900">Esperienza Finanziaria</h4>
-      <p class="text-sm text-gray-600">
-        Anni di esperienza nei mercati finanziari. <span class="font-medium">Fonte:</span> MiFID II
-      </p>
+      <h4 class="text-lg font-semibold text-gray-900">Area Fiscale</h4>
+      <p class="text-sm text-gray-600">Residenza fiscale principale.</p>
     </div>
-    <div class="text-right text-gray-900 font-bold">0</div>
+    <div class="mt-3 sm:mt-0 sm:text-right text-gray-900 font-bold text-xl">Italia</div>
   </div>
 
-  <!-- Commenti Tradelia -->
-  <div class="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-lg text-gray-900">
-    <h4 class="text-lg font-semibold mb-2">Commenti Tradelia</h4>
-    <p class="text-sm">
-      Profilo giovane con esperienza nulla: ciò evidenzia una <strong>incongruenza tra fascia d’età e competenza dichiarata</strong>. 
-      L’investitore ha capitale limitato (<5k € investibili) e un rendimento obiettivo 6–8% reale con drawdown massimo −5%, 
-      che può essere difficile da conciliare con il livello di rischio accettabile e la poca esperienza sugli strumenti complessi (attualmente solo Crypto).
+  <!-- CAPITALE & LIQUIDITÀ -->
+  <div class="mb-6 p-6 bg-gray-50 border border-gray-200 rounded-lg flex flex-col sm:flex-row sm:justify-between sm:items-center">
+    <div>
+      <h4 class="text-lg font-semibold text-gray-900">Capitale Totale</h4>
+      <p class="text-sm text-gray-600">Disponibilità complessiva dichiarata.</p>
+    </div>
+    <div class="mt-3 sm:mt-0 sm:text-right text-gray-900 font-bold text-xl">&lt; 10k</div>
+  </div>
+
+  <div class="mb-6 p-6 bg-gray-50 border border-gray-200 rounded-lg flex flex-col sm:flex-row sm:justify-between sm:items-center">
+    <div>
+      <h4 class="text-lg font-semibold text-gray-900">Capitale Investibile</h4>
+      <p class="text-sm text-gray-600">Quota disponibile per investimento.</p>
+    </div>
+    <div class="mt-3 sm:mt-0 sm:text-right text-gray-900 font-bold text-xl">&lt; 5k</div>
+  </div>
+
+  <!-- ORIZZONTE TEMPORALE -->
+  <div class="mb-6 p-6 bg-gray-50 border border-gray-200 rounded-lg flex flex-col sm:flex-row sm:justify-between sm:items-center">
+    <div>
+      <h4 class="text-lg font-semibold text-gray-900">Orizzonte</h4>
+      <p class="text-sm text-gray-600">Durata indicativa obiettivi di investimento.</p>
+    </div>
+    <div class="mt-3 sm:mt-0 sm:text-right text-gray-900 font-bold text-xl">6–10 anni</div>
+  </div>
+
+  <!-- RISCHIO & RENDIMENTO -->
+  <div class="mb-6 p-6 bg-gray-50 border border-gray-200 rounded-lg flex flex-col sm:flex-row sm:justify-between sm:items-center">
+    <div>
+      <h4 class="text-lg font-semibold text-gray-900">Tolleranza al Rischio</h4>
+      <p class="text-sm text-gray-600">Autovalutazione su scala 1–5.</p>
+    </div>
+    <div class="mt-3 sm:mt-0 sm:text-right text-gray-900 font-bold text-xl">3</div>
+  </div>
+
+  <div class="mb-6 p-6 bg-gray-50 border border-gray-200 rounded-lg flex flex-col sm:flex-row sm:justify-between sm:items-center">
+    <div>
+      <h4 class="text-lg font-semibold text-gray-900">Rendimento Atteso</h4>
+      <p class="text-sm text-gray-600">Obiettivo annuale netto.</p>
+    </div>
+    <div class="mt-3 sm:mt-0 sm:text-right text-gray-900 font-bold text-xl">6–8%</div>
+  </div>
+
+  <div class="mb-6 p-6 bg-gray-50 border border-gray-200 rounded-lg flex flex-col sm:flex-row sm:justify-between sm:items-center">
+    <div>
+      <h4 class="text-lg font-semibold text-gray-900">Drawdown Tollerato</h4>
+      <p class="text-sm text-gray-600">Perdita massima temporanea accettabile.</p>
+    </div>
+    <div class="mt-3 sm:mt-0 sm:text-right text-gray-900 font-bold text-xl">−5%</div>
+  </div>
+
+  <!-- ESPERIENZA & CONOSCENZA -->
+  <div class="mb-6 p-6 bg-gray-50 border border-gray-200 rounded-lg flex flex-col sm:flex-row sm:justify-between sm:items-center">
+    <div>
+      <h4 class="text-lg font-semibold text-gray-900">Esperienza</h4>
+      <p class="text-sm text-gray-600">Anni dichiarati di operatività finanziaria.</p>
+    </div>
+    <div class="mt-3 sm:mt-0 sm:text-right text-gray-900 font-bold text-xl">0 anni</div>
+  </div>
+
+  <div class="mb-6 p-6 bg-gray-50 border border-gray-200 rounded-lg flex flex-col sm:flex-row sm:justify-between sm:items-center">
+    <div>
+      <h4 class="text-lg font-semibold text-gray-900">Strumenti Utilizzati</h4>
+      <p class="text-sm text-gray-600">Principali asset class già trattate.</p>
+    </div>
+    <div class="mt-3 sm:mt-0 sm:text-right text-gray-900 font-bold text-xl">Crypto</div>
+  </div>
+
+  <!-- VINCOLI & PREFERENZE -->
+  <div class="mb-6 p-6 bg-gray-50 border border-gray-200 rounded-lg flex flex-col sm:flex-row sm:justify-between sm:items-center">
+    <div>
+      <h4 class="text-lg font-semibold text-gray-900">Preferenza Valutaria</h4>
+      <p class="text-sm text-gray-600">Valuta di riferimento preferita.</p>
+    </div>
+    <div class="mt-3 sm:mt-0 sm:text-right text-gray-900 font-bold text-xl">EUR</div>
+  </div>
+
+  <!-- CONTESTO PERSONALE -->
+  <div class="mb-6 p-6 bg-gray-50 border border-gray-200 rounded-lg flex flex-col sm:flex-row sm:justify-between sm:items-center">
+    <div>
+      <h4 class="text-lg font-semibold text-gray-900">Dipendenza da Reddito</h4>
+      <p class="text-sm text-gray-600">Grado di copertura spese da reddito corrente.</p>
+    </div>
+    <div class="mt-3 sm:mt-0 sm:text-right text-gray-900 font-bold text-xl">Alta</div>
+  </div>
+
+  <!-- PAC -->
+  <div class="mb-6 p-6 bg-gray-50 border border-gray-200 rounded-lg flex flex-col sm:flex-row sm:justify-between sm:items-center">
+    <div>
+      <h4 class="text-lg font-semibold text-gray-900">PAC Attivo</h4>
+      <p class="text-sm text-gray-600">Presenza di piani di accumulo ricorrenti.</p>
+    </div>
+    <div class="mt-3 sm:mt-0 sm:text-right text-gray-900 font-bold text-xl">No</div>
+  </div>
+
+  <!-- COMMENTO ISTITUZIONALE -->
+  <div class="mt-10 p-6 bg-yellow-50 border border-yellow-200 rounded-lg">
+    <h3 class="text-lg font-semibold text-yellow-800">Commento Tradelia AI</h3>
+    <p class="text-sm text-yellow-900 mt-2">
+      Il profilo mostra alcune <strong>incongruenze rilevanti</strong>:  
+      capitale investibile molto ridotto (&lt;5k) rispetto all’obiettivo di rendimento netto (6–8% annuo),  
+      unito a <em>tolleranza al rischio bassa</em> (drawdown max −5%) e <em>esperienza nulla</em>.  
+      Ciò rende complesso strutturare un portafoglio realistico che rispetti le attese.  
+      È raccomandabile rivedere le aspettative di rendimento o incrementare la capacità di investimento.  
     </p>
   </div>
 
-  <!-- Disclaimer accademico -->
-  <div class="mt-6 p-4 bg-gray-100 border border-gray-300 rounded text-xs text-gray-600">
-    Questo report sintetico è generato su dati aggregati forniti dall’utente e ha scopo esclusivamente educativo e accademico. 
-    Le analisi e le valutazioni si basano su linee guida ESMA e MiFID II, non costituiscono consulenza finanziaria personalizzata né 
-    raccomandazione di investimento. La simulazione non tiene conto di situazioni fiscali individuali, impatti di mercato reali 
-    o condizioni economico-finanziarie future. L’utente è responsabile delle decisioni di investimento.
+  <!-- DISCLAIMER ACCADEMICO -->
+  <div class="mt-8 p-6 bg-gray-100 border border-gray-300 rounded-lg text-xs text-gray-600">
+    <p>
+      Questo profilo è una simulazione a fini illustrativi. Non costituisce in alcun modo consulenza finanziaria personalizzata né proposta di investimento.  
+      I dati riportati derivano da informazioni fornite dall’utente e non sono stati verificati indipendentemente.  
+      La valutazione è basata su linee guida internazionali di riferimento (<strong>MiFID II – Direttiva 2014/65/UE</strong>,  
+      <strong>ESMA Suitability Guidelines 2018</strong>, <strong>EFAMA Investor Profile Framework</strong>).  
+      Per un piano vincolante e conforme alle normative è necessaria la valutazione di un consulente abilitato iscritto all’albo OCF.  
+    </p>
   </div>
 
 </section>
-
 
 
 
