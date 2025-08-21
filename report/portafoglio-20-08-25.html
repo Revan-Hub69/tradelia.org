@@ -815,10 +815,10 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
 </section>
 
 
-<!-- BLOCCO 1 – PROFILO DELL’INVESTITORE (Tradelia • istituzionale) -->
-<section id="blocco1" 
-         class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-gray-200 rounded-xl shadow-sm p-6"
-         role="tabpanel" aria-labelledby="tab-blocco1" hidden>
+<!-- BLOCCO 1 – PROFILO DELL’INVESTITORE (Tradelia • Istituzionale) -->
+<section id="blocco1"
+  class="panel max-w-6xl mx-auto mb-12 bg-white border border-gray-200 rounded-xl shadow-sm p-5 sm:p-8 md:p-12"
+  role="tabpanel" aria-labelledby="tab-blocco1" hidden>
 
   <!-- Header -->
   <header class="mb-8 border-b border-gray-200 pb-4">
@@ -830,224 +830,182 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
     </p>
   </header>
 
-  <!-- Griglia responsive -->
+  <!-- Griglia responsive: 1 col (mobile) · 2 (tablet) · 3 (desktop) -->
   <div class="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
 
-    <!-- ===== DATI ANAGRAFICI ===== -->
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Età</div>
-      <div class="text-lg font-bold text-gray-900">31–45 anni</div>
-      <div class="text-sm text-gray-500">
-        Fascia di età dell’investitore. Aiuta a definire il profilo di rischio e l’orizzonte temporale. Fonte: CFA Institute, OECD.
-      </div>
+    <!-- ===== CARD METRICHE ===== -->
+    <!-- Età -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+      <div class="text-gray-700 font-semibold">Età</div>
+      <div class="text-gray-900 font-bold">31–45 anni</div>
+      <div class="text-gray-600 text-sm">Indica la fascia anagrafica per la definizione del profilo di rischio. Fonte: dati anagrafici forniti dall’utente.</div>
     </div>
 
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Area fiscale</div>
-      <div class="text-lg font-bold text-gray-900">Italia</div>
-      <div class="text-sm text-gray-500">
-        Giurisdizione fiscale di residenza, necessaria per applicare normative su tassazione di redditi e investimenti. Fonte: Agenzia delle Entrate.
-      </div>
+    <!-- Area fiscale -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+      <div class="text-gray-700 font-semibold">Area fiscale</div>
+      <div class="text-gray-900 font-bold">Italia</div>
+      <div class="text-gray-600 text-sm">Area di residenza fiscale per considerazioni su tassazione e regolamentazione. Fonte: normativa italiana.</div>
     </div>
 
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Situazione patrimoniale</div>
-      <div class="text-lg font-bold text-gray-900">Non dichiarata</div>
-      <div class="text-sm text-gray-500">
-        Informazione non fornita. Importante per calcolare diversificazione e rischio complessivo del portafoglio.
-      </div>
+    <!-- Capitale totale -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+      <div class="text-gray-700 font-semibold">Capitale totale</div>
+      <div class="text-gray-900 font-bold">&lt; 10k EUR</div>
+      <div class="text-gray-600 text-sm">Somma del capitale posseduto per la pianificazione finanziaria. Fonte: dati dichiarati.</div>
     </div>
 
-    <!-- ===== CAPITALE E LIQUIDITÀ ===== -->
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Capitale totale</div>
-      <div class="text-lg font-bold text-gray-900">&lt; 10.000 €</div>
-      <div class="text-sm text-gray-500">
-        Capitale complessivo disponibile. Serve per calibrare dimensione e diversificazione del portafoglio. Fonte: Banca d’Italia.
-      </div>
+    <!-- Capitale investibile -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+      <div class="text-gray-700 font-semibold">Capitale investibile</div>
+      <div class="text-gray-900 font-bold">&lt; 5k EUR</div>
+      <div class="text-gray-600 text-sm">Capitale disponibile per investimenti, al netto di liquidità di emergenza. Fonte: dati dichiarati.</div>
     </div>
 
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Capitale investibile</div>
-      <div class="text-lg font-bold text-gray-900">&lt; 5.000 €</div>
-      <div class="text-sm text-gray-500">
-        Somma destinata a investimenti. Indica la capacità di assumere rischio e la necessità di strategie scalabili. Fonte: CFA Institute.
-      </div>
+    <!-- Orizzonte temporale -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+      <div class="text-gray-700 font-semibold">Orizzonte temporale</div>
+      <div class="text-gray-900 font-bold">6–10 anni</div>
+      <div class="text-gray-600 text-sm">Periodo previsto per raggiungere gli obiettivi finanziari. Fonte: dichiarazione utente.</div>
     </div>
 
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Cash buffer</div>
-      <div class="text-lg font-bold text-gray-900">Non dichiarato</div>
-      <div class="text-sm text-gray-500">
-        Liquidità di emergenza non specificata. Fondamentale per gestire imprevisti senza liquidare investimenti.
-      </div>
+    <!-- Tolleranza al rischio -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+      <div class="text-gray-700 font-semibold">Tolleranza al rischio</div>
+      <div class="text-gray-900 font-bold">3/10</div>
+      <div class="text-gray-600 text-sm">Misura della propensione al rischio su scala 1–10, dove 10 indica massima tolleranza. Fonte: autovalutazione.</div>
     </div>
 
-    <!-- ===== ORIZZONTE TEMPORALE ===== -->
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Orizzonte temporale</div>
-      <div class="text-lg font-bold text-gray-900">6–10 anni</div>
-      <div class="text-sm text-gray-500">
-        Durata prevista degli investimenti per raggiungere gli obiettivi finanziari. Fonte: Morningstar, OECD.
-      </div>
+    <!-- Drawdown massimo -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+      <div class="text-gray-700 font-semibold">Drawdown tollerato</div>
+      <div class="text-gray-900 font-bold">Fino a −5%</div>
+      <div class="text-gray-600 text-sm">Massima perdita percentuale accettabile sul portafoglio. Fonte: autovalutazione.</div>
     </div>
 
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Milestone</div>
-      <div class="text-lg font-bold text-gray-900">Non definita</div>
-      <div class="text-sm text-gray-500">
-        Eventi target intermedi non specificati. Utile per monitorare performance e adeguare strategia.
-      </div>
+    <!-- Rendimento obiettivo -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+      <div class="text-gray-700 font-semibold">Rendimento obiettivo</div>
+      <div class="text-gray-900 font-bold">6–8% reale</div>
+      <div class="text-gray-600 text-sm">Obiettivo di rendimento netto inflazione su base annua. Fonte: dichiarazione utente.</div>
     </div>
 
-    <!-- ===== RISCHIO & RENDIMENTO ===== -->
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Tolleranza al rischio</div>
-      <div class="text-lg font-bold text-gray-900">3 / 10</div>
-      <div class="text-sm text-gray-500">
-        Livello di rischio accettato su scala 1-10 (1 basso, 10 alto). Fonte: Tradelia AI, linee guida CFA Institute.
-      </div>
+    <!-- Esperienza -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+      <div class="text-gray-700 font-semibold">Esperienza</div>
+      <div class="text-gray-900 font-bold">0 anni</div>
+      <div class="text-gray-600 text-sm">Anni di esperienza reale negli investimenti. Fonte: dichiarazione utente.</div>
     </div>
 
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Drawdown tollerato</div>
-      <div class="text-lg font-bold text-gray-900">Fino a −5%</div>
-      <div class="text-sm text-gray-500">
-        Perdita massima accettabile sul portafoglio. Aiuta a costruire strategie coerenti con il profilo di rischio.
-      </div>
+    <!-- Strumenti usati -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+      <div class="text-gray-700 font-semibold">Strumenti finanziari utilizzati</div>
+      <div class="text-gray-900 font-bold">Crypto</div>
+      <div class="text-gray-600 text-sm">Tipologia di strumenti con cui l’utente ha esperienza. Fonte: dichiarazione utente.</div>
     </div>
 
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Rendimento obiettivo</div>
-      <div class="text-lg font-bold text-gray-900">6–8% reale annuo</div>
-      <div class="text-sm text-gray-500">
-        Rendimento atteso al netto dell’inflazione. Guida la selezione di strumenti e allocazione. Fonte: OECD, Morningstar.
-      </div>
+    <!-- Competenza prodotti complessi -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+      <div class="text-gray-700 font-semibold">Competenza prodotti complessi</div>
+      <div class="text-gray-900 font-bold">Bassa</div>
+      <div class="text-gray-600 text-sm">Livello di conoscenza su strumenti finanziari avanzati. Fonte: dichiarazione utente.</div>
     </div>
 
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Elasticità drawdown</div>
-      <div class="text-lg font-bold text-gray-900">Ridurre subito il rischio</div>
-      <div class="text-sm text-gray-500">
-        Indicazione per ridurre rapidamente l’esposizione in caso di perdite eccessive. Fondamentale in gestione prudente del portafoglio.
-      </div>
+    <!-- Vincoli ESG -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+      <div class="text-gray-700 font-semibold">Vincoli ESG</div>
+      <div class="text-gray-900 font-bold">Nessuno</div>
+      <div class="text-gray-600 text-sm">Preferenze di investimento in ambito ambientale, sociale e governance. Fonte: dichiarazione utente.</div>
     </div>
 
-    <!-- ===== ESPERIENZA & CONOSCENZA ===== -->
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Anni di esperienza</div>
-      <div class="text-lg font-bold text-gray-900">0 anni</div>
-      <div class="text-sm text-gray-500">
-        Esperienza pregressa negli investimenti. Indica la necessità di strategie semplici e didattiche. Fonte: CFA Institute.
-      </div>
-    </div>
-
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Strumenti usati</div>
-      <div class="text-lg font-bold text-gray-900">Crypto</div>
-      <div class="text-sm text-gray-500">
-        Strumenti finanziari già utilizzati dall’investitore. Indica familiarità con volatilità elevata.
-      </div>
-    </div>
-
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Competenza prodotti complessi</div>
-      <div class="text-lg font-bold text-gray-900">Bassa</div>
-      <div class="text-sm text-gray-500">
-        Livello di comprensione di derivati, ETP complessi o strategie avanzate. Fondamentale per selezionare strumenti adatti.
-      </div>
-    </div>
-
-    <!-- ===== VINCOLI & PREFERENZE ===== -->
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Preferenza ESG</div>
-      <div class="text-lg font-bold text-gray-900">Nessuno</div>
-      <div class="text-sm text-gray-500">
-        Interesse verso criteri ambientali, sociali e di governance. Influenza selezione fondi sostenibili.
-      </div>
-    </div>
-
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Preferenza valutaria</div>
-      <div class="text-lg font-bold text-gray-900">EUR</div>
-      <div class="text-sm text-gray-500">
-        Valuta di riferimento per gli investimenti. Fondamentale per gestire rischio di cambio.
-      </div>
-    </div>
-
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Vincoli asset class</div>
-      <div class="text-lg font-bold text-gray-900">Non dichiarati</div>
-      <div class="text-sm text-gray-500">
-        Restrizioni su tipi di strumenti finanziari. Utili per costruire portafoglio conforme alle preferenze.
-      </div>
-    </div>
-
-    <!-- ===== CONTESTO MACRO PERSONALE ===== -->
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Dipendenza reddito</div>
-      <div class="text-lg font-bold text-gray-900">Alta</div>
-      <div class="text-sm text-gray-500">
-        Rilevanza del reddito corrente per copertura spese. Impatta tolleranza rischio e necessità di liquidità.
-      </div>
-    </div>
-
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Prospettiva fiscale</div>
-      <div class="text-lg font-bold text-gray-900">Non dichiarata</div>
-      <div class="text-sm text-gray-500">
-        Informazione non disponibile. Utile per pianificazione fiscale avanzata.
-      </div>
-    </div>
-
-    <!-- ===== PAC & Portafoglio ===== -->
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">PAC</div>
-      <div class="text-lg font-bold text-gray-900">Assente</div>
-      <div class="text-sm text-gray-500">
-        Piano di accumulo capitale non attivo. Può essere valutato per strategie di investimento regolari.
-      </div>
-    </div>
-
-    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
-      <div class="font-semibold text-gray-700">Portafoglio attuale</div>
-      <div class="text-lg font-bold text-gray-900">Non dichiarato</div>
-      <div class="text-sm text-gray-500">
-        Composizione attuale non disponibile. Utile per valutare diversificazione e allineamento a obiettivi.
-      </div>
+    <!-- Preferenza valutaria -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+      <div class="text-gray-700 font-semibold">Preferenza valutaria</div>
+      <div class="text-gray-900 font-bold">EUR</div>
+      <div class="text-gray-600 text-sm">Valuta preferita per investimenti. Fonte: dichiarazione utente.</div>
     </div>
 
   </div>
 
-  <!-- Commento Tradelia AI -->
-  <div class="mt-8 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
-    <p class="text-sm text-gray-700">
-      Commento Tradelia AI: alcuni valori non dichiarati (situazione patrimoniale, cash buffer, milestone, prospettiva fiscale, portafoglio attuale) potrebbero ridurre precisione di simulazione. Tolleranza rischio bassa/3 confermata.
+  <!-- ===== COMMENTO TRADELIA AI ===== -->
+  <div class="mt-8 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded flex flex-col gap-3">
+    <div class="flex items-center gap-2">
+      <svg class="w-5 h-5 text-yellow-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M18 10c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8zm-9-4a1 1 0 112 0v4a1 1 0 11-2 0V6zm1 8a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" clip-rule="evenodd"/>
+      </svg>
+      <strong class="text-gray-900">Tradelia AI – Analisi incongruenze</strong>
+    </div>
+    <ul class="text-gray-700 text-sm list-disc list-inside">
+      <li><strong>Esperienza vs. strumenti:</strong> l’utente dichiara 0 anni ma ha utilizzato Crypto, possibile incoerenza di competenza.</li>
+      <li><strong>Capitale investibile vs. Cash Buffer:</strong> cash buffer non dichiarato, riduce accuratezza valutazione rischio.</li>
+      <li><strong>Orizzonte temporale vs. Drawdown/Rendimento:</strong> obiettivo 6–10 anni ma drawdown massimo −5% e rischio 3/10, incoerenza tra durata e aggressività.</li>
+      <li><strong>Vincoli ESG:</strong> assenti ma strumenti crypto possono non rispettare criteri ESG.</li>
+      <li><strong>Prospettiva fiscale e milestone:</strong> non dichiarate, riduce precisione simulazione.</li>
+    </ul>
+  </div>
+
+  <!-- ===== DISCLAIMER ACCADEMICO ===== -->
+ <header class="mb-6 border-b border-gray-200 pb-4">
+    <h2 class="text-[clamp(1.4rem,2vw,1.875rem)] font-semibold tracking-tight text-gray-900">
+      Disclaimer Istituzionale – Tradelia AI
+    </h2>
+    <p class="mt-2 text-[clamp(.9rem,1.5vw,1rem)] text-gray-600 leading-relaxed max-w-3xl">
+      Indicazioni educative e informative. Leggere attentamente tutti i punti.
     </p>
+  </header>
+
+  <div class="space-y-6 text-gray-700 text-[clamp(.85rem,1.2vw,1rem)] leading-relaxed">
+
+    <!-- Punto 1 -->
+    <div class="space-y-2">
+      <h3 class="font-semibold text-gray-900">1. Finalità Didattica e Informativa</h3>
+      <p>
+        Le informazioni contenute in questo report hanno scopo <strong>esclusivamente educativo e informativo</strong>. 
+        Non costituiscono consulenza finanziaria, raccomandazione d’investimento o offerta al pubblico.
+      </p>
+    </div>
+
+    <!-- Punto 2 -->
+    <div class="space-y-2">
+      <h3 class="font-semibold text-gray-900">2. Accuratezza dei Dati e Possibili Incongruenze</h3>
+      <p>
+        I dati del <strong>Profilo dell’Investitore</strong> derivano da dichiarazioni fornite dall’utente. 
+        Tradelia AI può <strong>rilevare possibili discrepanze, incongruenze o dati mancanti</strong>, ma non garantisce la completezza o la correttezza dei risultati.
+      </p>
+    </div>
+
+    <!-- Punto 3 -->
+    <div class="space-y-2">
+      <h3 class="font-semibold text-gray-900">3. Non Sostituisce Consulenza Professionale</h3>
+      <p>
+        Questo report <strong>non sostituisce la valutazione di un consulente finanziario abilitato</strong>, 
+        né può essere utilizzato come unico riferimento per decisioni di investimento.
+      </p>
+    </div>
+
+    <!-- Punto 4 -->
+    <div class="space-y-2">
+      <h3 class="font-semibold text-gray-900">4. Limiti Metodologici</h3>
+      <ul class="list-disc list-inside space-y-1">
+        <li>Non tiene conto di situazioni fiscali o patrimoniali individuali dettagliate.</li>
+        <li>Non garantisce la previsione di performance future, rischi o rendimenti.</li>
+        <li>Non considera condizioni di mercato reali, volatilità o microstruttura dei mercati.</li>
+      </ul>
+    </div>
+
+    <!-- Punto 5 -->
+    <div class="space-y-2">
+      <h3 class="font-semibold text-gray-900">5. Uso Responsabile</h3>
+      <p>
+        Il report è pensato per <strong>educazione finanziaria e simulazioni</strong>. 
+        L’utente è responsabile di ogni decisione derivante dall’interpretazione dei dati forniti.
+      </p>
+    </div>
+
   </div>
-
-  <!-- Disclaimer -->
-<!-- DISCLAIMER ACCADEMICO -->
-  <footer class="mt-8">
-    <details class="bg-gray-100 border border-gray-300 rounded-xl p-5 sm:p-6" open>
-      <summary class="cursor-pointer text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">
-        Disclaimer metodologico (standard istituzionale)
-      </summary>
-      <div class="mt-3 text-[clamp(.85rem,1.2vw,.95rem)] text-gray-700 leading-relaxed">
-        Le informazioni riportate derivano esclusivamente da dati autodichiarati dall’utente e non sono state oggetto di
-        verifica indipendente. Il presente elaborato ha finalità esclusivamente accademiche e di ricerca, in coerenza con
-        i principi delle <strong>ESMA Guidelines on Suitability (2018)</strong> nell’ambito della
-        <strong>MiFID II (Direttiva 2014/65/UE)</strong>, con i riferimenti <strong>CONSOB</strong> su finanza delle famiglie
-        e con gli standard <strong>EFAMA</strong> per il profilo investitore. Il documento non costituisce in alcun modo
-        consulenza finanziaria personalizzata, né valutazione di adeguatezza/appropriatezza ai sensi della normativa vigente
-        e non deve essere utilizzato come unica base per decisioni di investimento. Per definizioni vincolanti e verifiche
-        normative è necessario rivolgersi a consulenti finanziari indipendenti e soggetti abilitati (OCF).
-      </div>
-    </details>
-  </footer>
-
 
 </section>
+
 
 
 
