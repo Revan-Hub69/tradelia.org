@@ -830,438 +830,204 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
     </p>
   </header>
 
-  <!-- Griglia responsive: 1 col (mobile) · 2 (tablet) · 3 (desktop) -->
+  <!-- Griglia responsive -->
   <div class="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
 
     <!-- ===== DATI ANAGRAFICI ===== -->
-    <!-- Età -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Età</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Età come proxy di orizzonte di accumulo e sostenibilità del rischio nel ciclo di vita.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">
-            Fonte: Campbell &amp; Viceira (2002); ESMA (2018) – Suitability.
-          </p>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="text-[clamp(1.1rem,2vw,1.375rem)] font-bold text-gray-900">31–45</div>
-        </div>
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Età</div>
+      <div class="text-lg font-bold text-gray-900">31–45 anni</div>
+      <div class="text-sm text-gray-500">
+        Fascia di età dell’investitore. Aiuta a definire il profilo di rischio e l’orizzonte temporale. Fonte: CFA Institute, OECD.
       </div>
-    </article>
-
-    <!-- Area fiscale -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Area fiscale</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Residenza fiscale: impatto su aliquote, compensazioni e rendicontazione MiFID.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: ESMA (2018) – MiFID II Suitability.</p>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="text-[clamp(1.1rem,2vw,1.375rem)] font-bold text-gray-900">Italia</div>
-        </div>
-      </div>
-    </article>
-
-    <!-- Situazione patrimoniale -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Situazione patrimoniale</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Attivi/passivi totali per stimare la <em>risk capacity</em> e la resilienza a shock.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: OECD Household Finance; CONSOB (2022).</p>
-        </div>
-        <div class="text-right shrink-0">
-          <span class="text-[11px] uppercase bg-gray-100 text-gray-700 px-2 py-1 rounded">n.d.</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- ===== CAPITALE & LIQUIDITÀ ===== -->
-    <!-- Capitale totale -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Capitale totale</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Dimensione del capitale e fattibilità di diversificazione e costi.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: BIS (2019) – Household Finance.</p>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="text-[clamp(1.1rem,2vw,1.375rem)] font-bold text-gray-900">&lt; 10k</div>
-        </div>
-      </div>
-    </article>
-
-    <!-- Capitale investibile -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Capitale investibile</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Quota destinabile all’allocazione iniziale e costruzione del “core”.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: CFA (2023) – Portfolio Construction.</p>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="text-[clamp(1.1rem,2vw,1.375rem)] font-bold text-gray-900">&lt; 5k</div>
-        </div>
-      </div>
-    </article>
-
-    <!-- Cash buffer -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Cash buffer (emergenze)</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            3–6 mesi di spese per evitare liquidazioni forzate nei drawdown.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: Lusardi &amp; Mitchell (2014).</p>
-        </div>
-        <div class="text-right shrink-0">
-          <span class="text-[11px] uppercase bg-gray-100 text-gray-700 px-2 py-1 rounded">n.d.</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- ===== ORIZZONTE TEMPORALE ===== -->
-    <!-- Anni obiettivo -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Orizzonte temporale</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Durata che consente maggiore esposizione a premi di rischio.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: Bodie (1995) – Risk of Stocks Long Run.</p>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="text-[clamp(1.1rem,2vw,1.375rem)] font-bold text-gray-900">6–10</div>
-        </div>
-      </div>
-    </article>
-
-    <!-- Milestone -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Milestone (eventi chiave)</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Allineamento della duration del portafoglio a scadenze reali.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: Campbell &amp; Viceira (2002).</p>
-        </div>
-        <div class="text-right shrink-0">
-          <span class="text-[11px] uppercase bg-amber-50 text-amber-800 border border-amber-200 px-2 py-1 rounded"
-                title="Valore non strutturato">“boh”</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- ===== RISCHIO & RENDIMENTO ===== -->
-    <!-- Tolleranza al rischio -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Tolleranza al rischio (self-report)</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Atteggiamento psicometrico verso volatilità e perdite temporanee (scala 1–5).
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: ESMA (2018); Barberis &amp; Thaler (2003).</p>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="text-[clamp(1.1rem,2vw,1.375rem)] font-bold text-gray-900">3</div>
-        </div>
-      </div>
-    </article>
-
-    <!-- Drawdown tollerato -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Drawdown tollerato</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Perdita massima accettabile come vincolo primario di risk budgeting.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: CFA (2023) – Risk Management.</p>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="text-[clamp(1.1rem,2vw,1.375rem)] font-bold text-gray-900">Fino a −5%</div>
-        </div>
-      </div>
-    </article>
-
-    <!-- Rendimento obiettivo reale -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Rendimento obiettivo (reale)</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Target al netto dell’inflazione, dipendente dall’assunzione di premi al rischio.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: Ilmanen (2011) – Expected Returns.</p>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="text-[clamp(1.1rem,2vw,1.375rem)] font-bold text-gray-900">6–8%</div>
-        </div>
-      </div>
-    </article>
-
-    <!-- Elasticità al drawdown -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Elasticità al drawdown</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Reazione dichiarata ai ribassi; rischio di comportamenti prociclici.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: Kahneman &amp; Tversky (1979) – Prospect Theory.</p>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="text-[clamp(1.1rem,2vw,1.375rem)] font-bold text-gray-900">Ridurre subito il rischio</div>
-        </div>
-      </div>
-    </article>
-
-    <!-- Tipo di rendimento (reale/nominale) -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Tipo di rendimento</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Valutazione in termini reali: focus sul potere d’acquisto.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: Campbell, Lo &amp; MacKinlay (1997).</p>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="text-[clamp(1.1rem,2vw,1.375rem)] font-bold text-gray-900">Reale (al netto inflazione)</div>
-        </div>
-      </div>
-    </article>
-
-    <!-- ===== ESPERIENZA & CONOSCENZA ===== -->
-    <!-- Anni esperienza -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Anni di esperienza</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Grado di familiarità operativa con strumenti/mercati.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: ESMA (2018); OECD Financial Literacy.</p>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="text-[clamp(1.1rem,2vw,1.375rem)] font-bold text-gray-900">0</div>
-        </div>
-      </div>
-    </article>
-
-    <!-- Strumenti utilizzati -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Strumenti utilizzati</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Esposizioni pregresse come indicatore di appropriatezza.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: BIS (2022) – Cryptoassets &amp; Stability.</p>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="text-[clamp(.95rem,1.6vw,1.125rem)] font-bold text-gray-900">Crypto</div>
-        </div>
-      </div>
-    </article>
-
-    <!-- Competenza prodotti complessi -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Prodotti complessi</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Capacità dichiarata su derivati/illiquidi/leveraged.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: ESMA (2018) – Appropriateness.</p>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="text-[clamp(1.1rem,2vw,1.375rem)] font-bold text-gray-900">Bassa</div>
-        </div>
-      </div>
-    </article>
-
-    <!-- ===== VINCOLI & PREFERENZE ===== -->
-    <!-- Preferenze ESG -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Preferenze ESG</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Vincoli/predilezioni in ambito sostenibilità (SFDR, Tassonomia UE).
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: Reg. (UE) 2019/2088 – SFDR.</p>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="text-[clamp(1.1rem,2vw,1.375rem)] font-bold text-gray-900">Nessuno</div>
-        </div>
-      </div>
-    </article>
-
-    <!-- Note ESG -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Note ESG</h3>
-          <p class="mt-1 text-sm text-gray-700">Dettagli qualitativi su preferenze/limitazioni.</p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: SFDR; EU Taxonomy.</p>
-        </div>
-        <div class="text-right shrink-0">
-          <span class="text-[11px] uppercase bg-gray-100 text-gray-700 px-2 py-1 rounded">n.d.</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- Preferenza valutaria -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Preferenza valutaria</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Valuta di riferimento e policy di copertura del rischio cambio.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: CFA (2023) – Currency Risk.</p>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="text-[clamp(1.1rem,2vw,1.375rem)] font-bold text-gray-900">EUR</div>
-        </div>
-      </div>
-    </article>
-
-    <!-- Vincoli asset class -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Vincoli su asset class</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Limitazioni dichiarate all’universo investibile.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: ESMA (2018); Sharpe (1964).</p>
-        </div>
-        <div class="text-right shrink-0">
-          <span class="text-[11px] uppercase bg-gray-100 text-gray-700 px-2 py-1 rounded">n.d.</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- ===== CONTESTO PERSONALE ===== -->
-    <!-- Dipendenza dal reddito -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Dipendenza dal reddito</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Vulnerabilità a shock del reddito e necessità di liquidità precauzionale.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: OECD (2021) – Financial Vulnerability.</p>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="text-[clamp(1.1rem,2vw,1.375rem)] font-bold text-gray-900">Alta</div>
-        </div>
-      </div>
-    </article>
-
-    <!-- Prospettiva fiscale -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Prospettiva fiscale</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Ottimizzazione al netto: differimento, compensazioni, aliquote marginali.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: ESMA (2018) – MiFID II.</p>
-        </div>
-        <div class="text-right shrink-0">
-          <span class="text-[11px] uppercase bg-gray-100 text-gray-700 px-2 py-1 rounded">n.d.</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- ===== PAC ===== -->
-    <!-- Presenza PAC -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Piano Accumulo (PAC)</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Disciplina d’ingresso e mitigazione del market timing nel tempo.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: Vanguard (2019) – Dollar-Cost Averaging.</p>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="text-[clamp(1.1rem,2vw,1.375rem)] font-bold text-gray-900">No</div>
-        </div>
-      </div>
-    </article>
-
-    <!-- ===== PORTAFOGLIO ATTUALE ===== -->
-    <article class="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6 hover:shadow-md transition">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">Portafoglio attuale</h3>
-          <p class="mt-1 text-sm text-gray-700">
-            Stato iniziale per misurare concentrazione, costi e coerenza rischio/obiettivo.
-          </p>
-          <p class="mt-2 text-xs text-gray-500 italic">Fonte: CFA (2023) – Portfolio Review Standards.</p>
-        </div>
-        <div class="text-right shrink-0">
-          <span class="text-[11px] uppercase bg-gray-100 text-gray-700 px-2 py-1 rounded">n.d.</span>
-        </div>
-      </div>
-    </article>
-
-  </div><!-- /grid -->
-
-  <!-- VALIDAZIONE & COMMENTI -->
-  <section class="mt-8 space-y-6">
-
-    <!-- Validazione standardizzata -->
-    <div class="p-5 sm:p-6 bg-gray-50 border border-gray-200 rounded-xl">
-      <h4 class="text-base font-semibold text-gray-900">Validazione standardizzata</h4>
-      <p class="mt-2 text-sm text-gray-700">
-        Esito: <span class="font-semibold text-red-700">Critico</span>
-      </p>
-      <ul class="mt-2 text-sm text-gray-700 list-disc pl-5">
-        <li>Dati mancanti: situazione patrimoniale, cash buffer, vincoli asset class, prospettiva fiscale, portafoglio attuale.</li>
-        <li>Incongruenze: obiettivo reale <span class="font-medium">6–8%</span> con drawdown max <span class="font-medium">−5%</span>,
-          reazione “<em>ridurre subito il rischio</em>”, capitale investibile &lt; 5k, esperienza 0.</li>
-        <li>Valore milestone non strutturato (<code>“boh”</code>): necessaria definizione formale.</li>
-      </ul>
     </div>
 
-    <!-- Commento Tradelia AI (accordion) -->
-    <details class="bg-amber-50 border border-amber-200 rounded-xl p-5 sm:p-6" open>
-      <summary class="cursor-pointer text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-amber-900">
-        Commento Tradelia AI
-      </summary>
-      <div class="mt-3 text-sm text-amber-900 leading-relaxed">
-        La combinazione tra <strong>tolleranza al rischio contenuta</strong> (−5% max),
-        <strong>reazione prociclica</strong> ai ribassi, <strong>obiettivo reale elevato</strong> (6–8%)
-        e <strong>capitale limitato</strong> (&lt;5k) risulta incoerente con un’allocazione efficiente e sostenibile.
-        Priorità: (i) definire cuscinetto di liquidità 3–6 mesi; (ii) formalizzare milestone e vincoli; (iii) ritarare obiettivo di rendimento
-        o l’orizzonte/versamenti; (iv) introdurre PAC per ridurre il timing risk.
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Area fiscale</div>
+      <div class="text-lg font-bold text-gray-900">Italia</div>
+      <div class="text-sm text-gray-500">
+        Giurisdizione fiscale di residenza, necessaria per applicare normative su tassazione di redditi e investimenti. Fonte: Agenzia delle Entrate.
       </div>
-    </details>
+    </div>
 
-  </section>
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Situazione patrimoniale</div>
+      <div class="text-lg font-bold text-gray-900">Non dichiarata</div>
+      <div class="text-sm text-gray-500">
+        Informazione non fornita. Importante per calcolare diversificazione e rischio complessivo del portafoglio.
+      </div>
+    </div>
 
-  <!-- DISCLAIMER ACCADEMICO -->
+    <!-- ===== CAPITALE E LIQUIDITÀ ===== -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Capitale totale</div>
+      <div class="text-lg font-bold text-gray-900">&lt; 10.000 €</div>
+      <div class="text-sm text-gray-500">
+        Capitale complessivo disponibile. Serve per calibrare dimensione e diversificazione del portafoglio. Fonte: Banca d’Italia.
+      </div>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Capitale investibile</div>
+      <div class="text-lg font-bold text-gray-900">&lt; 5.000 €</div>
+      <div class="text-sm text-gray-500">
+        Somma destinata a investimenti. Indica la capacità di assumere rischio e la necessità di strategie scalabili. Fonte: CFA Institute.
+      </div>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Cash buffer</div>
+      <div class="text-lg font-bold text-gray-900">Non dichiarato</div>
+      <div class="text-sm text-gray-500">
+        Liquidità di emergenza non specificata. Fondamentale per gestire imprevisti senza liquidare investimenti.
+      </div>
+    </div>
+
+    <!-- ===== ORIZZONTE TEMPORALE ===== -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Orizzonte temporale</div>
+      <div class="text-lg font-bold text-gray-900">6–10 anni</div>
+      <div class="text-sm text-gray-500">
+        Durata prevista degli investimenti per raggiungere gli obiettivi finanziari. Fonte: Morningstar, OECD.
+      </div>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Milestone</div>
+      <div class="text-lg font-bold text-gray-900">Non definita</div>
+      <div class="text-sm text-gray-500">
+        Eventi target intermedi non specificati. Utile per monitorare performance e adeguare strategia.
+      </div>
+    </div>
+
+    <!-- ===== RISCHIO & RENDIMENTO ===== -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Tolleranza al rischio</div>
+      <div class="text-lg font-bold text-gray-900">3 / 10</div>
+      <div class="text-sm text-gray-500">
+        Livello di rischio accettato su scala 1-10 (1 basso, 10 alto). Fonte: Tradelia AI, linee guida CFA Institute.
+      </div>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Drawdown tollerato</div>
+      <div class="text-lg font-bold text-gray-900">Fino a −5%</div>
+      <div class="text-sm text-gray-500">
+        Perdita massima accettabile sul portafoglio. Aiuta a costruire strategie coerenti con il profilo di rischio.
+      </div>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Rendimento obiettivo</div>
+      <div class="text-lg font-bold text-gray-900">6–8% reale annuo</div>
+      <div class="text-sm text-gray-500">
+        Rendimento atteso al netto dell’inflazione. Guida la selezione di strumenti e allocazione. Fonte: OECD, Morningstar.
+      </div>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Elasticità drawdown</div>
+      <div class="text-lg font-bold text-gray-900">Ridurre subito il rischio</div>
+      <div class="text-sm text-gray-500">
+        Indicazione per ridurre rapidamente l’esposizione in caso di perdite eccessive. Fondamentale in gestione prudente del portafoglio.
+      </div>
+    </div>
+
+    <!-- ===== ESPERIENZA & CONOSCENZA ===== -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Anni di esperienza</div>
+      <div class="text-lg font-bold text-gray-900">0 anni</div>
+      <div class="text-sm text-gray-500">
+        Esperienza pregressa negli investimenti. Indica la necessità di strategie semplici e didattiche. Fonte: CFA Institute.
+      </div>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Strumenti usati</div>
+      <div class="text-lg font-bold text-gray-900">Crypto</div>
+      <div class="text-sm text-gray-500">
+        Strumenti finanziari già utilizzati dall’investitore. Indica familiarità con volatilità elevata.
+      </div>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Competenza prodotti complessi</div>
+      <div class="text-lg font-bold text-gray-900">Bassa</div>
+      <div class="text-sm text-gray-500">
+        Livello di comprensione di derivati, ETP complessi o strategie avanzate. Fondamentale per selezionare strumenti adatti.
+      </div>
+    </div>
+
+    <!-- ===== VINCOLI & PREFERENZE ===== -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Preferenza ESG</div>
+      <div class="text-lg font-bold text-gray-900">Nessuno</div>
+      <div class="text-sm text-gray-500">
+        Interesse verso criteri ambientali, sociali e di governance. Influenza selezione fondi sostenibili.
+      </div>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Preferenza valutaria</div>
+      <div class="text-lg font-bold text-gray-900">EUR</div>
+      <div class="text-sm text-gray-500">
+        Valuta di riferimento per gli investimenti. Fondamentale per gestire rischio di cambio.
+      </div>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Vincoli asset class</div>
+      <div class="text-lg font-bold text-gray-900">Non dichiarati</div>
+      <div class="text-sm text-gray-500">
+        Restrizioni su tipi di strumenti finanziari. Utili per costruire portafoglio conforme alle preferenze.
+      </div>
+    </div>
+
+    <!-- ===== CONTESTO MACRO PERSONALE ===== -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Dipendenza reddito</div>
+      <div class="text-lg font-bold text-gray-900">Alta</div>
+      <div class="text-sm text-gray-500">
+        Rilevanza del reddito corrente per copertura spese. Impatta tolleranza rischio e necessità di liquidità.
+      </div>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Prospettiva fiscale</div>
+      <div class="text-lg font-bold text-gray-900">Non dichiarata</div>
+      <div class="text-sm text-gray-500">
+        Informazione non disponibile. Utile per pianificazione fiscale avanzata.
+      </div>
+    </div>
+
+    <!-- ===== PAC & Portafoglio ===== -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">PAC</div>
+      <div class="text-lg font-bold text-gray-900">Assente</div>
+      <div class="text-sm text-gray-500">
+        Piano di accumulo capitale non attivo. Può essere valutato per strategie di investimento regolari.
+      </div>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex flex-col">
+      <div class="font-semibold text-gray-700">Portafoglio attuale</div>
+      <div class="text-lg font-bold text-gray-900">Non dichiarato</div>
+      <div class="text-sm text-gray-500">
+        Composizione attuale non disponibile. Utile per valutare diversificazione e allineamento a obiettivi.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Commento Tradelia AI -->
+  <div class="mt-8 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+    <p class="text-sm text-gray-700">
+      Commento Tradelia AI: alcuni valori non dichiarati (situazione patrimoniale, cash buffer, milestone, prospettiva fiscale, portafoglio attuale) potrebbero ridurre precisione di simulazione. Tolleranza rischio bassa/3 confermata.
+    </p>
+  </div>
+
+  <!-- Disclaimer -->
+<!-- DISCLAIMER ACCADEMICO -->
   <footer class="mt-8">
     <details class="bg-gray-100 border border-gray-300 rounded-xl p-5 sm:p-6" open>
       <summary class="cursor-pointer text-[clamp(1rem,1.4vw,1.125rem)] font-semibold text-gray-900">
@@ -1279,6 +1045,7 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
       </div>
     </details>
   </footer>
+
 
 </section>
 
