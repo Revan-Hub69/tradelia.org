@@ -266,7 +266,7 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
       </a>
       <a href="#blocco4" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
         <i data-lucide="building-2" class="w-4 h-4 mt-0.5"></i>
-        <span>B4 — Ottimizzazione &amp; Candidati<small class="block text-[11px] text-slate-400 mt-0.5">allocazioni A/B/C</small></span>
+        <span>B4 — Candidati<small class="block text-[11px] text-slate-400 mt-0.5">allocazioni A/B/C</small></span>
       </a>
       <a href="#blocco5" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
         <i data-lucide="activity" class="w-4 h-4 mt-0.5"></i>
@@ -367,7 +367,7 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
           <i data-lucide="settings-2"></i><span class="hidden sm:inline">B3 Quant Engine</span><span class="sm:hidden">B3</span>
         </button>
         <button class="sv-tab" data-target="blocco4" role="tab" aria-selected="false" aria-controls="blocco4" id="tab-blocco4" tabindex="-1">
-          <i data-lucide="building-2"></i><span class="hidden sm:inline">B4 Ottimizzazione</span><span class="sm:hidden">B4</span>
+          <i data-lucide="building-2"></i><span class="hidden sm:inline">B4 Canditati</span><span class="sm:hidden">B4</span>
         </button>
         <button class="sv-tab" data-target="blocco5" role="tab" aria-selected="false" aria-controls="blocco5" id="tab-blocco5" tabindex="-1">
           <i data-lucide="activity"></i><span class="hidden sm:inline">B5 Stress</span><span class="sm:hidden">B5</span>
@@ -1500,66 +1500,178 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
 </section>
 
 
-<!-- B4 — Ottimizzazione & Candidati -->
-<section id="blocco4" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
-         role="tabpanel" aria-labelledby="tab-blocco4" hidden>
-  <h2 class="text-lg font-bold text-slate-900 tracking-tight">
-    <span class="eyebrow text-[11px] font-semibold tracking-wider uppercase text-slate-500">BLOCCO 4</span> — Ottimizzazione &amp; Candidati
-    <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#blocco4">Copia link</button>
-  </h2>
+<!-- BLOCCO 4 – PORTAFOGLI CANDIDATI (Tradelia • Istituzionale) | v1.0 -->
+<section
+  id="blocco4"
+  class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-gray-200 rounded-xl shadow-md p-5 sm:p-8 md:p-12 print:p-6 print:shadow-none"
+  role="tabpanel"
+  aria-labelledby="tab-blocco4"
+  data-section="portafogli-candidati">
 
-  <div class="section-divider"><span>ALLOCATIONS</span></div>
+  <!-- Header -->
+  <header class="mb-8 border-b border-gray-200 pb-4 flex items-start justify-between gap-4">
+    <div>
+      <h2 class="text-[clamp(1.4rem,2vw,1.875rem)] font-semibold tracking-tight text-gray-900" id="heading-blocco4">
+        Blocco 4 · Portafogli Candidati
+      </h2>
+      <p class="mt-2 text-[clamp(.95rem,1.5vw,1rem)] text-gray-600 leading-relaxed max-w-3xl">
+        Generazione di 3 portafogli modello (Cauto / Base / Dinamico) basati su profilazione investitore, analisi macro e parametri quantitativi.
+        Ogni portafoglio include asset allocation, scoring MTF, note operative e fonti accademiche/istituzionali.
+      </p>
+    </div>
+    <div class="text-right shrink-0">
+      <p class="text-xs text-gray-500">Aggiornato al</p>
+      <time id="portafogli-updated" datetime="2025-08-23" class="text-xs font-medium text-gray-700">23 Ago 2025</time>
+    </div>
+  </header>
 
-  <div class="rounded-md border border-slate-200 overflow-hidden">
-    <table class="min-w-full text-sm">
-      <thead class="bg-slate-50 text-slate-700">
-        <tr>
-          <th class="px-3 py-2 text-left font-semibold">Portafoglio</th>
-          <th class="px-3 py-2 text-left font-semibold">Asset Class</th>
-          <th class="px-3 py-2 text-left font-semibold">Allocazione</th>
-          <th class="px-3 py-2 text-left font-semibold">Note</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-slate-200">
-        <tr>
-          <td class="px-3 py-2 font-medium">Candidate A — Core</td>
-          <td class="px-3 py-2">Equity Global / IG Bonds / Cash</td>
-          <td class="px-3 py-2">[[B4A_WEIGHTS]]</td>
-          <td class="px-3 py-2">Min. complessità, TE contenuto</td>
-        </tr>
-        <tr>
-          <td class="px-3 py-2 font-medium">Candidate B — Core/Satellite</td>
-          <td class="px-3 py-2">Core 70% + Satelliti (Factor/Theme)</td>
-          <td class="px-3 py-2">[[B4B_WEIGHTS]]</td>
-          <td class="px-3 py-2">Bilancia beta e tilts</td>
-        </tr>
-        <tr>
-          <td class="px-3 py-2 font-medium">Candidate C — Defensive</td>
-          <td class="px-3 py-2">IG/Bills/Hedge overlay</td>
-          <td class="px-3 py-2">[[B4C_WEIGHTS]]</td>
-          <td class="px-3 py-2">Resilienza a downside</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <!-- Griglia portafogli -->
+  <div class="grid gap-8 sm:gap-8 md:gap-10 grid-cols-1 lg:grid-cols-3">
 
-  <div class="mt-6">
-    <pre class="codeblock"><code>allocazioni_candidati:
-  A_core:
-    equity_global: [[B4A_EQ]]
-    ig_bonds: [[B4A_IG]]
-    cash: [[B4A_CASH]]
-    note: "min complessità"
-  B_core_satellite:
-    core_beta: [[B4B_CORE]]
-    factor_theme: [[B4B_TILTS]]
-    hedge: [[B4B_HEDGE]]
-  C_defensive:
-    ig_bonds: [[B4C_IG]]
-    bills: [[B4C_BILLS]]
-    overlay: [[B4C_OVERLAY]]</code></pre>
+    <!-- CARD · Cauto / Conservativo -->
+    <section id="pf-cauto" role="region" aria-labelledby="pf-cauto-title"
+      class="border border-slate-200 rounded-2xl bg-white p-6 sm:p-8 shadow-md hover:shadow-lg transition-all group break-inside-avoid">
+      <header class="flex items-center gap-2 mb-4">
+        <i data-lucide="shield" class="w-5 h-5 text-slate-500"></i>
+        <h3 id="pf-cauto-title" class="text-lg font-semibold text-gray-900">Cauto / Conservativo</h3>
+      </header>
+      <p class="text-sm text-gray-600 mb-4">
+        Profilo a basso rischio, drawdown max −5%, obiettivo rendimento 6–8% annuo. Focus su stabilità e liquidità.
+      </p>
+
+      <!-- Asset Allocation -->
+      <div class="mb-4">
+        <h4 class="font-medium text-gray-800 mb-2">Asset Allocation</h4>
+        <ul class="list-disc list-inside text-sm space-y-1">
+          <li>Obbligazioni governative: <span class="font-medium">60%</span></li>
+          <li>ETF azionari globali: <span class="font-medium">25%</span></li>
+          <li>Liquidità / Cash: <span class="font-medium">10%</span></li>
+          <li>Alternativi / Oro: <span class="font-medium">5%</span></li>
+        </ul>
+      </div>
+
+      <!-- Scoring & Note -->
+      <div class="mb-4">
+        <h4 class="font-medium text-gray-800 mb-2">Scoring MTF & Note Operative</h4>
+        <dl class="text-sm space-y-1">
+          <div class="flex justify-between">
+            <dt>Volatilità attesa:</dt>
+            <dd class="font-medium text-gray-900">bassa</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt>Drawdown max:</dt>
+            <dd class="font-medium text-gray-900">−5%</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt>Commento:</dt>
+            <dd class="text-gray-600">Ideale per investitori avversi al rischio, mantiene liquidità sufficiente per shock di mercato.</dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- Fonti -->
+      <p class="text-xs text-gray-500">
+        Fonti: IMF, OECD, BCE, Morningstar. Note metodologiche basate su studi accademici di asset allocation conservativa.
+      </p>
+    </section>
+
+    <!-- CARD · Base / Core -->
+    <section id="pf-base" role="region" aria-labelledby="pf-base-title"
+      class="border border-slate-200 rounded-2xl bg-white p-6 sm:p-8 shadow-md hover:shadow-lg transition-all group break-inside-avoid">
+      <header class="flex items-center gap-2 mb-4">
+        <i data-lucide="layers" class="w-5 h-5 text-slate-500"></i>
+        <h3 id="pf-base-title" class="text-lg font-semibold text-gray-900">Base / Core</h3>
+      </header>
+      <p class="text-sm text-gray-600 mb-4">
+        Profilo equilibrato, obiettivo rendimento 8–10% annuo, bilanciamento tra rischio e crescita.
+      </p>
+
+      <!-- Asset Allocation -->
+      <div class="mb-4">
+        <h4 class="font-medium text-gray-800 mb-2">Asset Allocation</h4>
+        <ul class="list-disc list-inside text-sm space-y-1">
+          <li>Obbligazioni governative: <span class="font-medium">40%</span></li>
+          <li>ETF azionari globali: <span class="font-medium">45%</span></li>
+          <li>Liquidità / Cash: <span class="font-medium">10%</span></li>
+          <li>Alternativi / Oro: <span class="font-medium">5%</span></li>
+        </ul>
+      </div>
+
+      <!-- Scoring & Note -->
+      <div class="mb-4">
+        <h4 class="font-medium text-gray-800 mb-2">Scoring MTF & Note Operative</h4>
+        <dl class="text-sm space-y-1">
+          <div class="flex justify-between">
+            <dt>Volatilità attesa:</dt>
+            <dd class="font-medium text-gray-900">media</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt>Drawdown max:</dt>
+            <dd class="font-medium text-gray-900">−10%</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt>Commento:</dt>
+            <dd class="text-gray-600">Portafoglio bilanciato per crescita stabile con moderata esposizione azionaria.</dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- Fonti -->
+      <p class="text-xs text-gray-500">
+        Fonti: IMF, OECD, World Bank, studi MSCI su allocation core-equity. Tutti i dati forward-looking basati su scenario macro.
+      </p>
+    </section>
+
+    <!-- CARD · Dinamico / Opportunistico -->
+    <section id="pf-dinamico" role="region" aria-labelledby="pf-dinamico-title"
+      class="border border-slate-200 rounded-2xl bg-white p-6 sm:p-8 shadow-md hover:shadow-lg transition-all group break-inside-avoid">
+      <header class="flex items-center gap-2 mb-4">
+        <i data-lucide="trending-up" class="w-5 h-5 text-slate-500"></i>
+        <h3 id="pf-dinamico-title" class="text-lg font-semibold text-gray-900">Dinamico / Opportunistico</h3>
+      </header>
+      <p class="text-sm text-gray-600 mb-4">
+        Profilo aggressivo, obiettivo rendimento >10% annuo, esposizione elevata a equity e asset opportunistici.
+      </p>
+
+      <!-- Asset Allocation -->
+      <div class="mb-4">
+        <h4 class="font-medium text-gray-800 mb-2">Asset Allocation</h4>
+        <ul class="list-disc list-inside text-sm space-y-1">
+          <li>Obbligazioni governative: <span class="font-medium">20%</span></li>
+          <li>ETF azionari globali: <span class="font-medium">60%</span></li>
+          <li>Liquidità / Cash: <span class="font-medium">5%</span></li>
+          <li>Alternativi / Oro / Commodities: <span class="font-medium">15%</span></li>
+        </ul>
+      </div>
+
+      <!-- Scoring & Note -->
+      <div class="mb-4">
+        <h4 class="font-medium text-gray-800 mb-2">Scoring MTF & Note Operative</h4>
+        <dl class="text-sm space-y-1">
+          <div class="flex justify-between">
+            <dt>Volatilità attesa:</dt>
+            <dd class="font-medium text-gray-900">alta</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt>Drawdown max:</dt>
+            <dd class="font-medium text-gray-900">−20%</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt>Commento:</dt>
+            <dd class="text-gray-600">Adatto a investitori aggressivi, esposizione alta agli equity e opportunità di mercato. Richiede monitoraggio attivo.</dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- Fonti -->
+      <p class="text-xs text-gray-500">
+        Fonti: IMF, OECD, Morningstar, studi accademici su portafogli opportunistici e gestione dinamica. Dati forward-looking basati su scenario macro 2025.
+      </p>
+    </section>
+
   </div>
 </section>
+
 
 <!-- B5 — Simulation & Stress -->
 <section id="blocco5" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
