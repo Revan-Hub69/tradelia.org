@@ -364,7 +364,7 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
           <i data-lucide="globe-2"></i><span class="hidden sm:inline">B2 Macro</span><span class="sm:hidden">B2</span>
         </button>
         <button class="sv-tab" data-target="blocco3" role="tab" aria-selected="false" aria-controls="blocco3" id="tab-blocco3" tabindex="-1">
-          <i data-lucide="settings-2"></i><span class="hidden sm:inline">B3 Pre‑Alloc Framework & Quant Engine</span><span class="sm:hidden">B3</span>
+          <i data-lucide="settings-2"></i><span class="hidden sm:inline">B3 Quant Engine</span><span class="sm:hidden">B3</span>
         </button>
         <button class="sv-tab" data-target="blocco4" role="tab" aria-selected="false" aria-controls="blocco4" id="tab-blocco4" tabindex="-1">
           <i data-lucide="building-2"></i><span class="hidden sm:inline">B4 Ottimizzazione</span><span class="sm:hidden">B4</span>
@@ -1417,145 +1417,100 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
 
 
 
-<!-- BLOCCO 3 – PRE-ALLOC FRAMEWORK & QUANT ENGINE (Tradelia • Istituzionale) -->
-<section
-  id="blocco3"
-  class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-gray-200 rounded-xl shadow-sm p-5 sm:p-8 md:p-12"
-  role="tabpanel"
-  aria-labelledby="tab-blocco3">
+<!-- BLOCCO 3 – Pre-Alloc Framework & Quant Engine (Versione Didattica & Accademica) -->
+<section id="blocco3" class="sv-panel max-w-6xl mx-auto mb-12 bg-white border border-gray-200 rounded-xl shadow-sm p-6 sm:p-8 md:p-12" role="tabpanel" aria-labelledby="tab-blocco3">
 
   <!-- Header -->
   <header class="mb-8 border-b border-gray-200 pb-4">
-    <h2 class="text-[clamp(1.4rem,2vw,1.875rem)] font-semibold tracking-tight text-gray-900">
-      Blocco 3 · Pre-Alloc Framework & Quant Engine
+    <h2 class="text-[clamp(1.5rem,2vw,1.875rem)] font-semibold tracking-tight text-gray-900">
+      B3 — Pre‑Alloc Framework & Quant Engine
     </h2>
-    <p class="mt-2 text-[clamp(.9rem,1.5vw,1rem)] text-gray-600 leading-relaxed">
-      Analisi quantitativa e framework di pre-allocazione: metriche di volatilità, correlazioni,
-      complessità del portafoglio e motore di ottimizzazione con simulazioni Monte Carlo e scoring sintetico.
+    <p class="mt-2 text-gray-600 text-sm">
+      Guida didattica: come un desk istituzionale tradurrebbe profilo investitore e scenari macro in parametri quantitativi e scoring operativo, con riferimenti accademici per ogni metrica.
     </p>
   </header>
 
-  <!-- STEP 1 – Input Quantitativi -->
-  <div class="mb-10">
-    <h3 class="text-lg font-semibold text-gray-900 mb-4">STEP 1 — Input Quantitativi</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Volatilità -->
-      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50">
-        <h4 class="font-medium text-gray-800 mb-2">Volatilità</h4>
-        <p class="text-sm text-gray-600 mb-3">Storica (realizzata) e forward (implied) su orizzonti 1M, 3M, 12M.</p>
-        <ul class="text-sm text-gray-700 space-y-1">
-          <li>• Storica annualizzata: 12.4%</li>
-          <li>• Implied 3M: 14.1%</li>
-          <li>• Forward 12M range: 11–15%</li>
-        </ul>
-      </div>
-      <!-- Correlazioni -->
-      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50">
-        <h4 class="font-medium text-gray-800 mb-2">Correlazioni Cross-Asset</h4>
-        <p class="text-sm text-gray-600 mb-3">Matrice dinamica equity, bond, commodity, FX.</p>
-        <ul class="text-sm text-gray-700 space-y-1">
-          <li>• Equity vs Bond: −0.35</li>
-          <li>• Equity vs Commodity: +0.42</li>
-          <li>• Bond vs Commodity: −0.12</li>
-        </ul>
-      </div>
-      <!-- Complessità -->
-      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50 md:col-span-2">
-        <h4 class="font-medium text-gray-800 mb-2">Metriche di Complessità</h4>
-        <p class="text-sm text-gray-600 mb-3">Numero effettivo di scommesse e concentrazione portafoglio.</p>
-        <ul class="text-sm text-gray-700 space-y-1">
-          <li>• Effective Number of Constituents (ENC): 8.7</li>
-          <li>• Concentrazione top-5: 61%</li>
-          <li>• Rischio idiosincratico stimato: 22%</li>
-        </ul>
-      </div>
-    </div>
-    <p class="mt-4 text-sm italic text-gray-500">
-      Interpretazione: il profilo di rischio mostra volatilità in linea con mediana storica, correlazioni difensive bond-equity e complessità moderata (ENC < 10).
-    </p>
-  </div>
+  <!-- Step-by-Step -->
+  <ol class="list-decimal list-inside space-y-4 text-gray-700">
+    <li>
+      <strong>Analisi preliminare del profilo (BLOCCO 1)</strong><br>
+      Valutiamo rischio/rendimento, orizzonte temporale e vincoli. Si calcolano:
+      <ul class="list-disc list-inside ml-5">
+        <li>Risk appetite score e capacity constraints numerici (<em>cfr. Weber et al., 2020, Journal of Behavioral Finance</em>)</li>
+        <li>Vincoli regolamentari, liquidità minima e concentrazione massima per settore/area (<em>cfr. Basel Committee, 2019</em>)</li>
+      </ul>
+      <em>Obiettivo didattico: mostrare come il profilo influisce sulle future allocazioni.</em>
+    </li>
 
-  <!-- STEP 2 – Pre-Alloc Framework -->
-  <div class="mb-10">
-    <h3 class="text-lg font-semibold text-gray-900 mb-4">STEP 2 — Pre-Alloc Framework</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Core vs Satellite -->
-      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50">
-        <h4 class="font-medium text-gray-800 mb-2">Core vs Satellite</h4>
-        <p class="text-sm text-gray-600 mb-3">Layering coerente con profilo rischio-rendimento.</p>
-        <ul class="text-sm text-gray-700 space-y-1">
-          <li>• Core (beta stabilizzante): 65%</li>
-          <li>• Satellite (alpha opportunistico): 35%</li>
-        </ul>
-      </div>
-      <!-- Rischio Budget -->
-      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50">
-        <h4 class="font-medium text-gray-800 mb-2">Budget di Rischio</h4>
-        <p class="text-sm text-gray-600 mb-3">Allocazione ottimizzata su volatilità target e drawdown max accettabile.</p>
-        <ul class="text-sm text-gray-700 space-y-1">
-          <li>• Vol target: 11%</li>
-          <li>• Max Drawdown simulato: −18%</li>
-          <li>• Value-at-Risk 95% (1M): −5.3%</li>
-        </ul>
-      </div>
-      <!-- Stress Test -->
-      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50 md:col-span-2">
-        <h4 class="font-medium text-gray-800 mb-2">Stress Test Multi-Scenario</h4>
-        <p class="text-sm text-gray-600 mb-3">Shock su tassi, inflazione, crisi equity.</p>
-        <ul class="text-sm text-gray-700 space-y-1">
-          <li>• Tassi +200bps: −7.5%</li>
-          <li>• Inflazione 6%: −5.1%</li>
-          <li>• Crash equity (−20%): −13.8%</li>
-        </ul>
-      </div>
-    </div>
-    <p class="mt-4 text-sm italic text-gray-500">
-      Interpretazione: la struttura core/satellite bilancia stabilità e crescita; rischio budget coerente con tolleranza definita, stress test in range controllato.
-    </p>
-  </div>
+    <li>
+      <strong>Trasformazione scenari macro in parametri quantitativi (BLOCCO 2)</strong><br>
+      Per ciascuna asset class:
+      <ul class="list-disc list-inside ml-5">
+        <li>Expected Return forward-looking basato sugli scenari macro (<em>cfr. Campbell & Viceira, 2002, Strategic Asset Allocation)</em>)</li>
+        <li>Volatilità attesa su orizzonti breve, medio e lungo (<em>cfr. Hull, 2020, Risk Management and Financial Institutions</em>)</li>
+        <li>Correlation forecast tra asset class e sotto-classi (<em>cfr. Engle, 2002, Dynamic Conditional Correlation)</em>)</li>
+        <li>Macro-Sensitivity Score: esposizione ai drivers macro (inflazione, tassi, commodity, geopolitica) (<em>cfr. Bekaert et al., 2014, Journal of Financial Economics</em>)</li>
+        <li>Tail Risk / Stress Probability: rischio di scenari estremi (<em>cfr. Embrechts et al., 2005, Quantitative Risk Management)</em>)</li>
+        <li>Liquidity Score: capacità di uscita rapida senza impatto significativo (<em>cfr. Acharya & Pedersen, 2005, Journal of Financial Economics</em>)</li>
+      </ul>
+      <em>Obiettivo didattico: capire come il contesto macro influisce sul portafoglio.</em>
+    </li>
 
-  <!-- STEP 3 – Quant Engine -->
-  <div>
-    <h3 class="text-lg font-semibold text-gray-900 mb-4">STEP 3 — Quant Engine</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Monte Carlo -->
-      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50">
-        <h4 class="font-medium text-gray-800 mb-2">Simulazioni Monte Carlo</h4>
-        <p class="text-sm text-gray-600 mb-3">10.000 path con distribuzione non-lineare dei rendimenti.</p>
-        <ul class="text-sm text-gray-700 space-y-1">
-          <li>• Mediana 12M: +7.2%</li>
-          <li>• Percentile 5: −9.4%</li>
-          <li>• Percentile 95: +21.5%</li>
-        </ul>
-      </div>
-      <!-- Ottimizzazione -->
-      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50">
-        <h4 class="font-medium text-gray-800 mb-2">Ottimizzazione Rischio/Rendimento</h4>
-        <p class="text-sm text-gray-600 mb-3">Frontiera efficiente e vincoli istituzionali.</p>
-        <ul class="text-sm text-gray-700 space-y-1">
-          <li>• Sharpe ottimizzato: 0.71</li>
-          <li>• Info Ratio: 0.56</li>
-          <li>• TE ex-ante: 3.1%</li>
-        </ul>
-      </div>
-      <!-- Scoring -->
-      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50 md:col-span-2">
-        <h4 class="font-medium text-gray-800 mb-2">Scoring Sintetico</h4>
-        <p class="text-sm text-gray-600 mb-3">Valutazione 0–100 normalizzata su volatilità, correlazioni e robustezza.</p>
-        <ul class="text-sm text-gray-700 space-y-1">
-          <li>• Volatilità: 68/100</li>
-          <li>• Correlazioni: 74/100</li>
-          <li>• Robustezza stress test: 71/100</li>
-          <li class="font-semibold">• Score finale: 71/100</li>
-        </ul>
-      </div>
-    </div>
-    <p class="mt-4 text-sm italic text-gray-500">
-      Interpretazione: il motore quantitativo segnala un profilo rischio-rendimento bilanciato, con score istituzionale solido (>70), coerente con la strategia multi-asset difensiva-moderata.
-    </p>
-  </div>
+    <li>
+      <strong>Definizione preliminare allocazione strategica</strong><br>
+      Si stimano range di peso strategico (%) per asset class e area geografica, basati su:
+      <ul class="list-disc list-inside ml-5">
+        <li>Integrated Macro Score (B2)</li>
+        <li>Profilo rischio/rendimento del cliente (B1)</li>
+        <li>Metriche quantitative forward-looking (<em>cfr. Markowitz, 1952, Portfolio Selection</em>)</li>
+      </ul>
+      <em>Obiettivo didattico: illustrare la logica strategica prima di passare a portafogli reali.</em>
+    </li>
+
+    <li>
+      <strong>Scoring multi-criterio</strong><br>
+      Per ciascun asset o sottoclasse si valuta:
+      <ul class="list-disc list-inside ml-5">
+        <li>Rischio: volatilità e drawdown potenziale (<em>cfr. Jorion, 2007, Value at Risk</em>)</li>
+        <li>Rendimento atteso: forward-looking (<em>cfr. Campbell & Viceira, 2002</em>)</li>
+        <li>Correlazione: con portafoglio globale (<em>cfr. Engle, 2002</em>)</li>
+        <li>Liquidità: time-to-exit e bid/ask spread (<em>cfr. Acharya & Pedersen, 2005</em>)</li>
+        <li>Tail Risk: probabilità di eventi estremi (<em>cfr. Embrechts et al., 2005</em>)</li>
+        <li>Conviction Score: combinazione ponderata dei criteri precedenti</li>
+      </ul>
+      <em>Obiettivo didattico: mostrare come si classificano gli asset prima della costruzione del portafoglio.</em>
+    </li>
+
+    <li>
+      <strong>Layer tattico</strong><br>
+      Aggiornamento breve/medio termine della strategia basato su:
+      <ul class="list-disc list-inside ml-5">
+        <li>Deviation dal consensus T1</li>
+        <li>Financial Conditions Index forward-looking (<em>cfr. Gilchrist et al., 2017, FRB Working Paper</em>)</li>
+        <li>Indicatori di volatilità e liquidità (<em>cfr. CBOE, VIX Methodology</em>)</li>
+        <li>Eventi geopolitici o energetici emergenti (<em>cfr. Caldara & Iacoviello, 2022, JMCB</em>)</li>
+      </ul>
+      <em>Obiettivo didattico: illustrare come un desk adatta la strategia a breve e medio termine.</em>
+    </li>
+
+    <li>
+      <strong>Parametri operativi per BLOCCO 4</strong><br>
+      Si preparano i range di allocazioni target e vincoli operativi:
+      <ul class="list-disc list-inside ml-5">
+        <li>Concentrazione massima per asset class/area</li>
+        <li>Liquidità minima</li>
+        <li>Hedge FX quando necessario</li>
+      </ul>
+      <em>Obiettivo didattico: fornire input quantitativi e scoring pronti per simulazioni e ottimizzazioni future.</em>
+    </li>
+  </ol>
+
+  <!-- Note metodologiche -->
+  <p class="mt-6 text-sm text-gray-500">
+    Tutti i dati e i punteggi sono illustrativi e didattici. Fonti potenziali: BCE, Fed, IMF, OECD, World Bank, sell-side T1, oltre a riferimenti accademici specifici come sopra citati. Lo scopo è mostrare **come un desk istituzionale 2025 tradurrebbe profilo e macro in parametri quantitativi**, rispettando logiche compliance e passo-step forward-looking.
+  </p>
+
 </section>
-
 
 
 <!-- B4 — Ottimizzazione & Candidati -->
