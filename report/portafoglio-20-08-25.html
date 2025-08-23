@@ -966,21 +966,50 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
   <!-- Griglia responsive: 1 col (mobile) · 2 (tablet) · 3 (desktop) -->
   <div class="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
 
-<!-- BLOCCO 2 – PIL Reale & Potenziale -->
-<div class="metric-card border border-gray-200 rounded-xl p-4 mb-4 bg-white shadow-sm">
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-    <div class="font-semibold text-gray-900">PIL Reale & Potenziale</div>
-    <div class="text-gray-600 text-sm">Misura crescita attuale e capacità produttiva</div>
+<!-- PIL Reale & Potenziale – Step 1 -->
+<section class="mb-6">
+  <h3 class="text-lg font-semibold text-gray-900 mb-1">PIL Reale & Potenziale</h3>
+  <p class="text-sm text-gray-600 mb-2">Crescita attuale e capacità produttiva, con forward su 6–36 mesi e output gap.</p>
+  
+  <table class="w-full text-sm text-gray-800 border-collapse">
+    <thead>
+      <tr class="border-b border-gray-300">
+        <th class="text-left p-1">Area</th>
+        <th class="p-1">QoQ</th>
+        <th class="p-1">YoY</th>
+        <th class="p-1">Forward 6/12/24/36 mesi</th>
+        <th class="p-1">Output Gap (%)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-b border-gray-200">
+        <td class="p-1">🌐 Globale</td>
+        <td class="p-1">3,2%</td>
+        <td class="p-1">3,8%</td>
+        <td class="p-1">3,5 / 3,7 / 3,9 / 4,0</td>
+        <td class="p-1">1,2</td>
+      </tr>
+      <tr class="border-b border-gray-200">
+        <td class="p-1">🇺🇸 USA</td>
+        <td class="p-1">2,8%</td>
+        <td class="p-1">3,1%</td>
+        <td class="p-1">3,2 / 3,5 / 3,6 / 3,8</td>
+        <td class="p-1">1,0</td>
+      </tr>
+      <tr>
+        <td class="p-1">🇪🇺 Eurozona</td>
+        <td class="p-1">1,9%</td>
+        <td class="p-1">2,2%</td>
+        <td class="p-1">2,0 / 2,3 / 2,5 / 2,7</td>
+        <td class="p-1">1,5</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <p class="text-xs text-gray-500 mt-1">Fonti: IMF, OECD, World Bank, Eurostat, Fed, BCE</p>
   </div>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-2 text-gray-800 text-sm">
-    <div>Globale: 3,2% QoQ / 3,8% YoY</div>
-    <div>🇺🇸 USA: 2,8% / 3,1%</div>
-    <div>🇪🇺 Eurozona: 1,9% / 2,2%</div>
-    <div>Forward 6/12/24/36 mesi: 3,5 / 3,7 / 3,9 / 4,0</div>
-    <div>Output gap: 1,2%</div>
-    <div>Fonti: IMF, OECD, WB, Eurostat, Fed, BCE</div>
   </div>
-</div>
+
 
 
 </section>
