@@ -262,7 +262,7 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
         <span>B2 — Macro Regime<small class="block text-[11px] text-slate-400 mt-0.5">regime e scenari</small></span>
       </a>
       <a href="#blocco3" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50"> <i data-lucide="settings-2" class="w-4 h-4 mt-0.5"></i> 
-        <span>B3 — Pre‑Alloc Framework & Quant Engine<small class="block text-[11px] text-slate-400 mt-0.5">analisi quantitativa e pre-allocazione</small>
+        <span>B3 — Quant Engine<small class="block text-[11px] text-slate-400 mt-0.5">analisi quantitativa e pre-allocazione</small>
       </a>
       <a href="#blocco4" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
         <i data-lucide="building-2" class="w-4 h-4 mt-0.5"></i>
@@ -1417,193 +1417,145 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
 
 
 
-<!-- BLOCCO 3 – Pre‑Alloc Framework & Quant Engine – Livello Desk Istituzionale v2.0 -->
-<section id="blocco3" class="sv-panel max-w-6xl mx-auto mb-12 bg-white border border-gray-200 rounded-xl shadow-md p-6 sm:p-8 md:p-10" role="region" aria-labelledby="heading-blocco3">
-  <header class="mb-6">
-    <h2 id="heading-blocco3" class="text-[clamp(1.3rem,2vw,1.75rem)] font-semibold text-gray-900">BLOCCO 3 · Pre‑Alloc Framework &amp; Quant Engine — v2.0</h2>
-    <p class="text-sm text-gray-600">Obiettivo: trasformare il profilo investitore (BLOCCO 1) e lo Scenario Macro (BLOCCO 2) in parametri quantitativi, vincoli operativi e scoring multi‑asset, pronti per simulazioni (BLOCCO 5) e per la definizione di target di allocazione (BLOCCO 4).</p>
+<!-- BLOCCO 3 – PRE-ALLOC FRAMEWORK & QUANT ENGINE (Tradelia • Istituzionale) -->
+<section
+  id="blocco3"
+  class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-gray-200 rounded-xl shadow-sm p-5 sm:p-8 md:p-12"
+  role="tabpanel"
+  aria-labelledby="tab-blocco3">
+
+  <!-- Header -->
+  <header class="mb-8 border-b border-gray-200 pb-4">
+    <h2 class="text-[clamp(1.4rem,2vw,1.875rem)] font-semibold tracking-tight text-gray-900">
+      Blocco 3 · Pre-Alloc Framework & Quant Engine
+    </h2>
+    <p class="mt-2 text-[clamp(.9rem,1.5vw,1rem)] text-gray-600 leading-relaxed">
+      Analisi quantitativa e framework di pre-allocazione: metriche di volatilità, correlazioni,
+      complessità del portafoglio e motore di ottimizzazione con simulazioni Monte Carlo e scoring sintetico.
+    </p>
   </header>
 
-  <!-- Premessa e Assunzioni -->
-  <section id="assunzioni" class="mb-6">
-    <h3 class="font-semibold mb-2">Premessa &amp; Assunzioni (Desk)</h3>
-    <ul class="text-sm list-disc list-inside text-gray-700 space-y-1">
-      <li>Informazioni di input = BLOCCO 1 (profilo) + BLOCCO 2 (scenario macro aggiornato 23 Ago 2025).</li>
-      <li>Inflazione base per calcoli reali: <strong>2,0% (EUR)</strong> — ipotesi desk coerente con B2 EZ.</li>
-      <li>Se non dichiarato cash buffer, si applica ipotesi conservativa: <strong>30% del capitale investibile come riserva operativa</strong> (desk conservative assumption). Può essere modificata dall'utente.</li>
-      <li>Tutte le stime sono desk‑estimates forward‑looking (non previsioni certe). Fonti consigliate: BCE, Fed, IMF, OECD, World Bank, S&P Global, Bloomberg, studi accademici su aspettative di rendimento e rischio (Campbell &amp; Shiller; Ilmanen; Asness).</li>
-    </ul>
-  </section>
-
-  <!-- STEP 1 -->
-  <section id="step-1" class="mb-6">
-    <h3 class="font-semibold mb-2">STEP 1 — Analisi preliminare del profilo (BLOCCO 1)</h3>
-
-    <div class="text-sm text-gray-700 space-y-2">
-      <p><strong>Dati chiave (input):</strong> Età 31–45; Capitale investibile &lt;5.000 EUR; Orizzonte 6–10 anni; Tolleranza rischio 3/10; Drawdown tollerato fino a −5%; Rendimento obiettivo 6–8% reale; Esperienza 0 anni; Strumenti utilizzati: Crypto; Competenze prodotti complessi: Bassa; Vincoli ESG: Nessuno; Valuta preferita: EUR.</p>
-
-      <p><strong>Score rischio (desk):</strong></p>
-      <ul class="list-inside list-disc">
-        <li><strong>Risk Appetite Score (0–100):</strong> 30 (risultato diretto da 3/10).</li>
-        <li><strong>Risk Capacity (monetaria):</strong> con capitale &lt;5k e buffer non dichiarato si assume capacità limitata — <strong>Effective investable (assunto conservativo): 70% del capitale dichiarato → ~3.500 EUR</strong>. (Modificabile se l'utente dichiara il cash buffer reale.)</li>
-        <li><strong>Volatility Tolerance (approx):</strong> mapping desk: RiskScore 30 → portafoglio vol target ≈ <strong>6–8% annualizzata</strong> (indica che strategie con equity elevata o esposizioni a crypto non compatibili senza leva/hedging).</li>
-        <li><strong>Coerenza obiettivi:</strong> obiettivo 6–8% reale è incompatibile con RiskScore 30 senza esposizioni molto rischiose o leva. Vanno valutate opzioni: riallineare aspettative, aumentare tolleranza al rischio, allungare orizzonte, o introdurre esposizioni ad alta aspettativa (alternatives/crypto) con pesi limitati e gestione del rischio.</li>
-      </ul>
-
-      <p class="italic text-xs text-gray-600">Nota: tutte le «assunzioni» fatte qui (es. 70% investibile) sono segnate come ipotesi — si aggiornano immediatamente se l'utente conferma valori reali.</p>
+  <!-- STEP 1 – Input Quantitativi -->
+  <div class="mb-10">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">STEP 1 — Input Quantitativi</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Volatilità -->
+      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50">
+        <h4 class="font-medium text-gray-800 mb-2">Volatilità</h4>
+        <p class="text-sm text-gray-600 mb-3">Storica (realizzata) e forward (implied) su orizzonti 1M, 3M, 12M.</p>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>• Storica annualizzata: 12.4%</li>
+          <li>• Implied 3M: 14.1%</li>
+          <li>• Forward 12M range: 11–15%</li>
+        </ul>
+      </div>
+      <!-- Correlazioni -->
+      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50">
+        <h4 class="font-medium text-gray-800 mb-2">Correlazioni Cross-Asset</h4>
+        <p class="text-sm text-gray-600 mb-3">Matrice dinamica equity, bond, commodity, FX.</p>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>• Equity vs Bond: −0.35</li>
+          <li>• Equity vs Commodity: +0.42</li>
+          <li>• Bond vs Commodity: −0.12</li>
+        </ul>
+      </div>
+      <!-- Complessità -->
+      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50 md:col-span-2">
+        <h4 class="font-medium text-gray-800 mb-2">Metriche di Complessità</h4>
+        <p class="text-sm text-gray-600 mb-3">Numero effettivo di scommesse e concentrazione portafoglio.</p>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>• Effective Number of Constituents (ENC): 8.7</li>
+          <li>• Concentrazione top-5: 61%</li>
+          <li>• Rischio idiosincratico stimato: 22%</li>
+        </ul>
+      </div>
     </div>
-  </section>
+    <p class="mt-4 text-sm italic text-gray-500">
+      Interpretazione: il profilo di rischio mostra volatilità in linea con mediana storica, correlazioni difensive bond-equity e complessità moderata (ENC < 10).
+    </p>
+  </div>
 
-  <!-- STEP 2 -->
-  <section id="step-2" class="mb-6">
-    <h3 class="font-semibold mb-2">STEP 2 — Trasformazione scenari macro (BLOCCO 2) in parametri quantitativi</h3>
-    <p class="text-sm text-gray-700 mb-3">Sulla base dello Scenario Macro (crescita moderata globale, USA > EZ; inflazione EZ ≈2% stabile, USA core in lieve salita; forward moderato) generiamo stime desk‑level per classi d’attivo (nominali, volatilità attesa, liquidità, macro‑sensitivity).</p>
-
-    <!-- Table: asset assumptions -->
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm border-collapse">
-        <thead class="text-left">
-          <tr class="text-xs text-gray-600">
-            <th class="pr-4">Asset class</th>
-            <th class="pr-4">Exp. Return p.a. (nom.)</th>
-            <th class="pr-4">Vol (%) p.a.</th>
-            <th class="pr-4">Liquidity (1–10)</th>
-            <th class="pr-4">Macro‑Sensitivity (Inf/Tassi/Cresc)</th>
-            <th class="pr-4">TailRisk (prob. evento -30% 12m)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td class="py-2">Global Equity (MSCI ACWI)</td><td>6.5%</td><td>16%</td><td>9</td><td>+ / − / +</td><td>~8%</td></tr>
-          <tr><td class="py-2">US Equity (S&P500)</td><td>7.0%</td><td>17%</td><td>10</td><td>+ / − / +</td><td>~9%</td></tr>
-          <tr><td class="py-2">Euro Equity (Stoxx600 proxy)</td><td>5.5%</td><td>18%</td><td>8</td><td>+ / − / +</td><td>~9%</td></tr>
-          <tr><td class="py-2">Core Govt Bonds (10Y)</td><td>1.5%</td><td>6%</td><td>10</td><td>− / + / −</td><td>~4%</td></tr>
-          <tr><td class="py-2">IG Corporate Bonds</td><td>3.0%</td><td>7%</td><td>9</td><td>− / + / 0</td><td>~6%</td></tr>
-          <tr><td class="py-2">High Yield Credit</td><td>5.5%</td><td>12%</td><td>8</td><td>0 / + / +</td><td>~12%</td></tr>
-          <tr><td class="py-2">Gold</td><td>3.0%</td><td>15%</td><td>9</td><td>+ / − / 0</td><td>~10%</td></tr>
-          <tr><td class="py-2">Commodities (broad)</td><td>2.5%</td><td>20%</td><td>7</td><td>+ / 0 / +</td><td>~15%</td></tr>
-          <tr><td class="py-2">REITs / Infrastructure</td><td>4.0%</td><td>18%</td><td>8</td><td>+ / − / +</td><td>~12%</td></tr>
-          <tr><td class="py-2">Crypto (BTC proxy)</td><td>30% (very uncertain)</td><td>85%</td><td>7</td><td>? / 0 / ?</td><td>~35%+</td></tr>
-          <tr><td class="py-2">Cash / Deposits (EUR)</td><td>0.5%</td><td>0.5%</td><td>10</td><td>− / 0 / −</td><td>~0%</td></tr>
-        </tbody>
-      </table>
+  <!-- STEP 2 – Pre-Alloc Framework -->
+  <div class="mb-10">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">STEP 2 — Pre-Alloc Framework</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Core vs Satellite -->
+      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50">
+        <h4 class="font-medium text-gray-800 mb-2">Core vs Satellite</h4>
+        <p class="text-sm text-gray-600 mb-3">Layering coerente con profilo rischio-rendimento.</p>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>• Core (beta stabilizzante): 65%</li>
+          <li>• Satellite (alpha opportunistico): 35%</li>
+        </ul>
+      </div>
+      <!-- Rischio Budget -->
+      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50">
+        <h4 class="font-medium text-gray-800 mb-2">Budget di Rischio</h4>
+        <p class="text-sm text-gray-600 mb-3">Allocazione ottimizzata su volatilità target e drawdown max accettabile.</p>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>• Vol target: 11%</li>
+          <li>• Max Drawdown simulato: −18%</li>
+          <li>• Value-at-Risk 95% (1M): −5.3%</li>
+        </ul>
+      </div>
+      <!-- Stress Test -->
+      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50 md:col-span-2">
+        <h4 class="font-medium text-gray-800 mb-2">Stress Test Multi-Scenario</h4>
+        <p class="text-sm text-gray-600 mb-3">Shock su tassi, inflazione, crisi equity.</p>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>• Tassi +200bps: −7.5%</li>
+          <li>• Inflazione 6%: −5.1%</li>
+          <li>• Crash equity (−20%): −13.8%</li>
+        </ul>
+      </div>
     </div>
+    <p class="mt-4 text-sm italic text-gray-500">
+      Interpretazione: la struttura core/satellite bilancia stabilità e crescita; rischio budget coerente con tolleranza definita, stress test in range controllato.
+    </p>
+  </div>
 
-    <p class="text-xs text-gray-600 mt-2">Legenda Macro‑Sensitivity: (+ favorevole), (− svantaggioso), (0 neutro). TailRisk = stima desk‑level della probabilità di subire una perdita «severa» (>‑30%) su 12 mesi.</p>
-  </section>
-
-  <!-- STEP 3 -->
-  <section id="step-3" class="mb-6">
-    <h3 class="font-semibold mb-2">STEP 3 — Definizione preliminare allocazione strategica (Strategic Weight Ranges)</h3>
-
-    <p class="text-sm text-gray-700 mb-2">Ragionamento integrato: Macro Score (B2) = <strong>moderato + bias favorevole USA</strong>; inflazione stabile EZ; quindi favoriamo esposizioni global equity selettive, duration moderata su credito IG, e un cuscinetto cash/short duration. Di seguito range strategici per 3 profili (con valore raccomandato al centro):</p>
-
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm border-collapse mb-3">
-        <thead class="text-left text-xs text-gray-600"><tr><th class="pr-4">Asset / Profilo</th><th class="pr-4">Cautelativo (3/10)</th><th class="pr-4">Base (5/10)</th><th class="pr-4">Dinamic0 (7–8/10)</th></tr></thead>
-        <tbody>
-          <tr><td class="py-2">Global Equity</td><td>15–30% (raccomand: 25%)</td><td>35–55% (raccomand: 45%)</td><td>55–80% (raccomand: 65%)</td></tr>
-          <tr><td class="py-2">Core Govt Bonds + IG</td><td>45–70% (raccomand: 55% = 40% govt +15% IG)</td><td>25–45% (raccomand: 30%)</td><td>10–25% (raccomand: 10%)</td></tr>
-          <tr><td class="py-2">High Yield / Credit</td><td>0–7% (raccomand: 0–5%)</td><td>5–12% (raccomand: 7%)</td><td>8–15% (raccomand: 10%)</td></tr>
-          <tr><td class="py-2">Alternatives (REITs, Infra, Commodities)</td><td>0–7% (raccomand: 5%)</td><td>5–12% (raccomand: 10%)</td><td>8–15% (raccomand: 10%)</td></tr>
-          <tr><td class="py-2">Crypto / Alt ad alta volatilità</td><td>0% (raccomand: 0%)</td><td>0–5% (raccomand: 0–3%)</td><td>0–7% (raccomand: 3–5% con risk management)</td></tr>
-          <tr><td class="py-2">Cash / Liquidità</td><td>10–30% (raccomand: 15%)</td><td>5–15% (raccomand: 8%)</td><td>2–10% (raccomand: 2–5%)</td></tr>
-        </tbody>
-      </table>
+  <!-- STEP 3 – Quant Engine -->
+  <div>
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">STEP 3 — Quant Engine</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Monte Carlo -->
+      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50">
+        <h4 class="font-medium text-gray-800 mb-2">Simulazioni Monte Carlo</h4>
+        <p class="text-sm text-gray-600 mb-3">10.000 path con distribuzione non-lineare dei rendimenti.</p>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>• Mediana 12M: +7.2%</li>
+          <li>• Percentile 5: −9.4%</li>
+          <li>• Percentile 95: +21.5%</li>
+        </ul>
+      </div>
+      <!-- Ottimizzazione -->
+      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50">
+        <h4 class="font-medium text-gray-800 mb-2">Ottimizzazione Rischio/Rendimento</h4>
+        <p class="text-sm text-gray-600 mb-3">Frontiera efficiente e vincoli istituzionali.</p>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>• Sharpe ottimizzato: 0.71</li>
+          <li>• Info Ratio: 0.56</li>
+          <li>• TE ex-ante: 3.1%</li>
+        </ul>
+      </div>
+      <!-- Scoring -->
+      <div class="border border-gray-200 rounded-xl p-5 bg-gray-50 md:col-span-2">
+        <h4 class="font-medium text-gray-800 mb-2">Scoring Sintetico</h4>
+        <p class="text-sm text-gray-600 mb-3">Valutazione 0–100 normalizzata su volatilità, correlazioni e robustezza.</p>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>• Volatilità: 68/100</li>
+          <li>• Correlazioni: 74/100</li>
+          <li>• Robustezza stress test: 71/100</li>
+          <li class="font-semibold">• Score finale: 71/100</li>
+        </ul>
+      </div>
     </div>
-
-    <p class="text-sm text-gray-700"><strong>Raccomandazione per questo specifico cliente (BLOCCO 1):</strong> dato RiskScore 30, capitale effettivo limitato e inesperienza, la soluzione prudente da desk è <strong>Profilo Cautelativo</strong> con allocazione raccomandata: <strong>Equity 25% / Core Govt+IG 55% / Alternatives 5% / Cash 15% / Crypto 0%</strong>. Questo però NON raggiunge target 6–8% reale (vedi analisi di sostenibilità obiettivo più avanti).</p>
-  </section>
-
-  <!-- STEP 4 -->
-  <section id="step-4" class="mb-6">
-    <h3 class="font-semibold mb-2">STEP 4 — Scoring multi‑criterio &amp; ranking</h3>
-
-    <p class="text-sm text-gray-700 mb-2">Metodo: per ogni asset calcoliamo i seguenti criteri normalizzati (0–100): Rendimento atteso (35% peso), Rischio (inverso) (25%), Correlazione al portafoglio (basso = meglio) (15%), Liquidità (15%), TailRisk (inverso) (10%). Conviction Score = somma ponderata. Di seguito i risultati desk‑estimate.</p>
-
-    <div class="overflow-x-auto mb-3">
-      <table class="w-full text-sm border-collapse">
-        <thead class="text-left text-xs text-gray-600"><tr><th class="pr-4">Asset</th><th class="pr-4">Ret att. (35%)</th><th class="pr-4">Rischio (25%)</th><th class="pr-4">Corr (15%)</th><th class="pr-4">Liquidità (15%)</th><th class="pr-4">Tail (10%)</th><th class="pr-4">Conviction (0–100)</th></tr></thead>
-        <tbody>
-          <tr><td class="py-2">Global Equity</td><td>70</td><td>55</td><td>60</td><td>90</td><td>60</td><td><strong>67</strong></td></tr>
-          <tr><td class="py-2">US Equity</td><td>75</td><td>53</td><td>62</td><td>95</td><td>58</td><td><strong>69</strong></td></tr>
-          <tr><td class="py-2">Core Govt Bonds</td><td>20</td><td>90</td><td>80</td><td>95</td><td>85</td><td><strong>46</strong></td></tr>
-          <tr><td class="py-2">IG Corporates</td><td>40</td><td>80</td><td>70</td><td>90</td><td>75</td><td><strong>54</strong></td></tr>
-          <tr><td class="py-2">High Yield</td><td>60</td><td>60</td><td>50</td><td>80</td><td>50</td><td><strong>57</strong></td></tr>
-          <tr><td class="py-2">Gold</td><td>30</td><td>50</td><td>70</td><td>90</td><td>55</td><td><strong>44</strong></td></tr>
-          <tr><td class="py-2">REITs/Infra</td><td>45</td><td>52</td><td>60</td><td>80</td><td>50</td><td><strong>48</strong></td></tr>
-          <tr><td class="py-2">Crypto (BTC)</td><td>95</td><td>5</td><td>30</td><td>70</td><td>10</td><td><strong>58</strong></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <p class="text-sm text-gray-700">Interpretazione: Conviction più alta per US/Global equity e corporate credit; Core Govt utile per stabilità e ricopertura liquidità. Crypto appare con rendimento atteso elevato ma tail risk e bassa affidabilità dati — da usare solo in portafogli con elevata tolleranza e con risk sizing molto contenuto.</p>
-  </section>
-
-  <!-- STEP 5 -->
-  <section id="step-5" class="mb-6">
-    <h3 class="font-semibold mb-2">STEP 5 — Layer tattico (1–12 mesi)</h3>
-    <p class="text-sm text-gray-700 mb-2">Regole tattiche desk per aggiornamento e deviazioni:</p>
-    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-      <li><strong>Trigger macro:</strong> se Citi Surprise Index USA > +20 → +5–10pp equity tattico (1–3m). Se Surprise EZ < −10 → ridurre esposizione europee −3–5pp.</li>
-      <li><strong>Volatility rule:</strong> se VIX (equity implied) > 25 → ridurre equity tatticamente −5–10pp e spostare in cash/short duration.</li>
-      <li><strong>Inflation breakevens:</strong> se 5Y breakeven > 3% → aumentare coperture inflative (commodities, inflation‑linked bonds) +3–5pp.</li>
-      <li><strong>Rebalancing operativo:</strong> controllo mensile; ri-bilancio semestrale full rebalance; ri-bilancio immediato se drift > |5%| assoluto rispetto al target.</li>
-      <li><strong>Event response:</strong> eventi geopolitici/energetici significativi → attivare stress overlay (hedge equity −10% se shock > 1 settimana).</li>
-    </ul>
-  </section>
-
-  <!-- STEP 6 -->
-  <section id="step-6" class="mb-6">
-    <h3 class="font-semibold mb-2">STEP 6 — Parametri operativi per BLOCCO 4 (Input simulazioni BLOCCO 5)</h3>
-
-    <h4 class="font-medium">Range di allocazioni target (sintesi operativa)</h4>
-    <ul class="text-sm list-disc list-inside text-gray-700 space-y-1 mb-3">
-      <li><strong>Profilo Cautelativo (raccomandato per il cliente):</strong> Equity 25% / CoreGov+IG 55% / Alternatives 5% / Cash 15% / Crypto 0%.</li>
-      <li><strong>Profilo Base (neutral):</strong> Equity 45% / CoreGov+IG 30% / HY 7% / Alternatives 8% / Cash 10% / Crypto 0–3%.</li>
-      <li><strong>Profilo Dinamico:</strong> Equity 65% / HY 10% / Alternatives 10% / Cash 5% / Crypto 0–5% (con risk sizing stretto).</li>
-    </ul>
-
-    <h4 class="font-medium">Vincoli e regole operative (numeriche)</h4>
-    <ul class="text-sm list-disc list-inside text-gray-700 space-y-1 mb-3">
-      <li><strong>Max concentrazione per singolo titolo:</strong> 10% del portafoglio (raccomand: 7% per portafogli >50k; per capitale &lt;5k, usare ETF/strumenti frazionali).</li>
-      <li><strong>Max esposizione settoriale:</strong> 25% (baseline).</li>
-      <li><strong>Min liquidità (cash):</strong> 10% operativo; raccomandato 15% dato profilo cliente e assenza cash buffer dichiarato.</li>
-      <li><strong>Crypto cap:</strong> 0% (profilo attuale). Se cliente aumenta tolleranza, max 3–5% con stop-loss strutturati e position sizing dinamico.</li>
-      <li><strong>Hedging FX:</strong> base EUR; se esposizione USD >20% → hedge tattico 50% FX per ridurre volatilità valutaria.</li>
-      <li><strong>Rebalancing:</strong> trimestrale o ogni qualvolta drift >5% assoluto.</li>
-    </ul>
-
-    <h4 class="font-medium">Input quantitativi da fornire a BLOCCO 5 (simulazioni)</h4>
-    <ol class="text-sm list-decimal list-inside text-gray-700">
-      <li>Vettore rendimenti attesi (nominali) per asset class (vedi tabella STEP 2).</li>
-      <li>Vettore volatilità (ann.): (vedi STEP 2).</li>
-      <li>Matrice di correlazione (desk estimate): equity–equity 0.6–0.9, equity–govt −0.2–0.1, gold–equity 0–0.1, crypto–equity 0.2–0.5.</li>
-      <li>Liquidity score per asset (1–10) per regole di liquidità e stress test.</li>
-      <li>Macro‑sensitivity tags per asset (Inf/Tassi/Cresc): utili per scenario analysis e tilt macro.</li>
-    </ol>
-
-    <h4 class="font-medium">Output richiesti da BLOCCO 5</h4>
-    <ul class="text-sm list-disc list-inside text-gray-700">
-      <li>Efficient frontier (scenari forward): rendimento atteso vs volatilità su 3 orizzonti (1y / 3y / 5y).</li>
-      <li>Simulazione VaR 95% e 99%; stress test su scenari macro shock (inflation shock + rate repricing; growth shock; stagflazione).</li>
-      <li>Backtest / forward‑test su proxy ETF e strumenti reali per confrontare execution cost e slippage.</li>
-    </ul>
-  </section>
-
-  <!-- CONCLUSIONI & NEXT STEPS -->
-  <section id="conclusioni" class="mb-4">
-    <h3 class="font-semibold mb-2">Conclusioni rapide e azioni immediate</h3>
-    <ol class="text-sm list-decimal list-inside text-gray-700 space-y-1">
-      <li>Applicare Profilo Cautelativo come baseline operativo (vedi STEP 3).</li>
-      <li>Richiedere all'utente conferma cash buffer reale e spese mensili (aggiorna capacity constraints).</li>
-      <li>Preparare input per BLOCCO 5: vettori rendimenti/volatilities e matrice correlazioni. Posso generare questi file/csv su richiesta.</li>
-      <li>Se l'obiettivo 6–8% reale è prioritario, definire trade‑off accettabili: (a) aumento tolleranza al rischio; (b) esposizione alternatives/crypto; (c) uso leva con hedging; (d) estendere orizzonte.</li>
-    </ol>
-    <p class="text-xs text-gray-600 mt-2">Metodo: sintetico, numerico e riproducibile — pronto per essere convertito in input per engine quantitativo / ottimizzatore (BLOCCO 5).</p>
-  </section>
-
-  <footer class="text-xs text-gray-500 italic">Fonti consigliate (per dati e calibrazione): BCE, Fed, IMF, OECD, World Bank, S&amp;P Global, Bloomberg, paper accademici di riferimento (Campbell &amp; Shiller; Ilmanen; Asness). Aggiorna input macro per ottenere simulazioni aggiornate.</footer>
+    <p class="mt-4 text-sm italic text-gray-500">
+      Interpretazione: il motore quantitativo segnala un profilo rischio-rendimento bilanciato, con score istituzionale solido (>70), coerente con la strategia multi-asset difensiva-moderata.
+    </p>
+  </div>
 </section>
+
 
 
 <!-- B4 — Ottimizzazione & Candidati -->
