@@ -976,55 +976,153 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
   <!-- Griglia responsive: 1 col (mobile) · 2 (tablet) · 3 (desktop) -->
   <div class="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
 
-  <div class="mb-6 p-4 border border-gray-200 rounded-lg shadow-sm bg-gray-50">
-  <h3 class="text-lg font-semibold text-gray-800">PIL Reale</h3>
-  <p class="text-sm text-gray-700 mb-2">
-    Il PIL misura il valore totale dei beni e servizi prodotti. Indica la crescita economica e lo stato del ciclo.
-  </p>
+    <!-- ===== CARD PIL REALE ===== -->
+    <div class="mb-6 p-4 border border-gray-200 rounded-lg shadow-sm bg-gray-50 min-w-0 overflow-x-auto">
+      <h3 class="text-lg font-semibold text-gray-800">PIL Reale</h3>
+      <p class="text-sm text-gray-700 mb-2">
+        Il PIL misura il valore totale dei beni e servizi prodotti. Indica la crescita economica e lo stato del ciclo.
+      </p>
 
-  <!-- Valori attuali -->
-  <ul class="text-sm text-gray-600 mb-2">
-    <li><strong>Globale (Q2 2025):</strong> +3,1%</li>
-    <li><strong>USA (Q2 2025):</strong> +2,4%</li>
-    <li><strong>Eurozona (Q2 2025):</strong> +0,8%</li>
-  </ul>
+      <!-- Valori attuali -->
+      <ul class="text-sm text-gray-600 mb-2">
+        <li><strong>Globale (Q2 2025):</strong> +3,1%</li>
+        <li><strong>USA (Q2 2025):</strong> +2,4%</li>
+        <li><strong>Eurozona (Q2 2025):</strong> +0,8%</li>
+      </ul>
 
-  <!-- Mini-tabella forward -->
-  <table class="text-sm text-gray-700 border-collapse border border-gray-300 w-full mb-2">
-    <thead>
-      <tr>
-        <th class="border border-gray-300 px-2 py-1">Orizzonte</th>
-        <th class="border border-gray-300 px-2 py-1">Globale</th>
-        <th class="border border-gray-300 px-2 py-1">USA</th>
-        <th class="border border-gray-300 px-2 py-1">Eurozona</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="border border-gray-300 px-2 py-1">6 mesi</td>
-        <td class="border border-gray-300 px-2 py-1">2,9%</td>
-        <td class="border border-gray-300 px-2 py-1">2,0%</td>
-        <td class="border border-gray-300 px-2 py-1">1,1%</td>
-      </tr>
-      <tr>
-        <td class="border border-gray-300 px-2 py-1">12 mesi</td>
-        <td class="border border-gray-300 px-2 py-1">2,7%</td>
-        <td class="border border-gray-300 px-2 py-1">1,8%</td>
-        <td class="border border-gray-300 px-2 py-1">1,3%</td>
-      </tr>
-      <tr>
-        <td class="border border-gray-300 px-2 py-1">36 mesi</td>
-        <td class="border border-gray-300 px-2 py-1">2,5%</td>
-        <td class="border border-gray-300 px-2 py-1">1,6%</td>
-        <td class="border border-gray-300 px-2 py-1">1,5%</td>
-      </tr>
-    </tbody>
-  </table>
+      <!-- Mini-tabella forward -->
+      <table class="text-sm text-gray-700 border-collapse border border-gray-300 w-full mb-2">
+        <thead>
+          <tr>
+            <th class="border border-gray-300 px-2 py-1">Orizzonte</th>
+            <th class="border border-gray-300 px-2 py-1">Globale</th>
+            <th class="border border-gray-300 px-2 py-1">USA</th>
+            <th class="border border-gray-300 px-2 py-1">Eurozona</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border border-gray-300 px-2 py-1">6 mesi</td>
+            <td class="border border-gray-300 px-2 py-1">2,9%</td>
+            <td class="border border-gray-300 px-2 py-1">2,0%</td>
+            <td class="border border-gray-300 px-2 py-1">1,1%</td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-2 py-1">12 mesi</td>
+            <td class="border border-gray-300 px-2 py-1">2,7%</td>
+            <td class="border border-gray-300 px-2 py-1">1,8%</td>
+            <td class="border border-gray-300 px-2 py-1">1,3%</td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-2 py-1">36 mesi</td>
+            <td class="border border-gray-300 px-2 py-1">2,5%</td>
+            <td class="border border-gray-300 px-2 py-1">1,6%</td>
+            <td class="border border-gray-300 px-2 py-1">1,5%</td>
+          </tr>
+        </tbody>
+      </table>
 
-  <p class="text-xs text-gray-400 mt-2">
-    Fonti: FMI WEO (Q2 2025), OECD Economic Outlook, Eurostat Q2 2025, U.S. BEA.
-  </p>
-</div>
+      <p class="text-xs text-gray-400 mt-2">
+        Fonti: FMI WEO (Q2 2025), OECD Economic Outlook, Eurostat Q2 2025, U.S. BEA.
+      </p>
+    </div>
+
+    <!-- ===== CARD INFLAZIONE ===== -->
+    <div class="mb-6 p-4 border border-gray-200 rounded-lg shadow-sm bg-gray-50 min-w-0 overflow-x-auto">
+      <h3 class="text-lg font-semibold text-gray-800">Inflazione</h3>
+      <p class="text-sm text-gray-700 mb-2">
+        Indica la variazione dei prezzi al consumo, misura la pressione sui consumatori e la politica monetaria.
+      </p>
+
+      <!-- Valori attuali -->
+      <ul class="text-sm text-gray-600 mb-2">
+        <li><strong>USA (Luglio 2025):</strong> 3,2%</li>
+        <li><strong>Eurozona (Luglio 2025):</strong> 2,0%</li>
+      </ul>
+
+      <!-- Mini-tabella forward -->
+      <table class="text-sm text-gray-700 border-collapse border border-gray-300 w-full mb-2">
+        <thead>
+          <tr>
+            <th class="border border-gray-300 px-2 py-1">Orizzonte</th>
+            <th class="border border-gray-300 px-2 py-1">USA</th>
+            <th class="border border-gray-300 px-2 py-1">Eurozona</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border border-gray-300 px-2 py-1">6 mesi</td>
+            <td class="border border-gray-300 px-2 py-1">3,0%</td>
+            <td class="border border-gray-300 px-2 py-1">1,9%</td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-2 py-1">12 mesi</td>
+            <td class="border border-gray-300 px-2 py-1">2,8%</td>
+            <td class="border border-gray-300 px-2 py-1">2,0%</td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-2 py-1">36 mesi</td>
+            <td class="border border-gray-300 px-2 py-1">2,5%</td>
+            <td class="border border-gray-300 px-2 py-1">2,1%</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="text-xs text-gray-400 mt-2">
+        Fonti: BLS Luglio 2025, Eurostat Luglio 2025, FRED.
+      </p>
+    </div>
+
+    <!-- ===== CARD DISOCCUPAZIONE ===== -->
+    <div class="mb-6 p-4 border border-gray-200 rounded-lg shadow-sm bg-gray-50 min-w-0 overflow-x-auto">
+      <h3 class="text-lg font-semibold text-gray-800">Disoccupazione</h3>
+      <p class="text-sm text-gray-700 mb-2">
+        Tasso di disoccupazione, indicatore chiave del mercato del lavoro.
+      </p>
+
+      <!-- Valori attuali -->
+      <ul class="text-sm text-gray-600 mb-2">
+        <li><strong>USA (Luglio 2025):</strong> 3,7%</li>
+        <li><strong>Eurozona (Giugno 2025):</strong> 6,8%</li>
+      </ul>
+
+      <!-- Mini-tabella forward -->
+      <table class="text-sm text-gray-700 border-collapse border border-gray-300 w-full mb-2">
+        <thead>
+          <tr>
+            <th class="border border-gray-300 px-2 py-1">Orizzonte</th>
+            <th class="border border-gray-300 px-2 py-1">USA</th>
+            <th class="border border-gray-300 px-2 py-1">Eurozona</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border border-gray-300 px-2 py-1">6 mesi</td>
+            <td class="border border-gray-300 px-2 py-1">3,5%</td>
+            <td class="border border-gray-300 px-2 py-1">6,5%</td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-2 py-1">12 mesi</td>
+            <td class="border border-gray-300 px-2 py-1">3,4%</td>
+            <td class="border border-gray-300 px-2 py-1">6,2%</td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-2 py-1">36 mesi</td>
+            <td class="border border-gray-300 px-2 py-1">3,2%</td>
+            <td class="border border-gray-300 px-2 py-1">5,8%</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="text-xs text-gray-400 mt-2">
+        Fonti: U.S. BLS, Eurostat, OECD Labor Market Data.
+      </p>
+    </div>
+
+    <!-- Altre card macro possono seguire qui nello stesso formato -->
+
+  </div>
+
 </section>
 
 <!-- B3 — Parametri Tecnici & Vincoli -->
