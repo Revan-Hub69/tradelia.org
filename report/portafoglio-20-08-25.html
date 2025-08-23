@@ -947,497 +947,471 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
 </section>
 
 
-<!-- BLOCCO 2 – SCENARIO MACRO (Tradelia • Istituzionale) -->
+<!-- BLOCCO 2 – SCENARIO MACRO (Tradelia • Istituzionale) | v6.0 | 2-col desktop -->
 <section
   id="blocco2"
-  class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-gray-200 rounded-xl shadow-sm p-5 sm:p-8 md:p-12"
+  class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-gray-200 rounded-xl shadow-sm p-5 sm:p-8 md:p-12 print:p-6 print:shadow-none"
   role="tabpanel"
-  aria-labelledby="tab-blocco2">
+  aria-labelledby="tab-blocco2"
+  data-section="scenario-macro">
+  
   <!-- Header -->
-  <header class="mb-8 border-b border-gray-200 pb-4">
-    <h2 class="text-[clamp(1.4rem,2vw,1.875rem)] font-semibold tracking-tight text-gray-900">
-      Blocco 2 · Scenario Macro
-    </h2>
-    <p class="mt-2 text-[clamp(.9rem,1.5vw,1rem)] text-gray-600 leading-relaxed max-w-3xl">
-      Analisi macro globale e regionale istituzionale, forward-looking, con metriche numeriche e fonti accademiche/istituzionali per ogni dato.
-    </p>
+  <header class="mb-8 border-b border-gray-200 pb-4 flex items-start justify-between gap-4">
+    <div>
+      <h2 class="text-[clamp(1.4rem,2vw,1.875rem)] font-semibold tracking-tight text-gray-900" id="heading-blocco2">
+        Blocco 2 · Scenario Macro
+      </h2>
+      <p class="mt-2 text-[clamp(.95rem,1.5vw,1rem)] text-gray-600 leading-relaxed max-w-3xl">
+        Analisi macro globale e regionale istituzionale, forward‑looking, con metriche numeriche e fonti accademiche/istituzionali per ogni dato.
+      </p>
+    </div>
+    <div class="text-right shrink-0">
+      <p class="text-xs text-gray-500">Aggiornato al</p>
+      <time id="macro-updated" datetime="2025-08-23" class="text-xs font-medium text-gray-700">23 Ago 2025</time>
+    </div>
   </header>
 
-  <!-- Griglia responsive: 1 col (mobile) · 2 (tablet) · 3 (desktop) -->
-  <div class="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+  <!-- Griglia responsive: 1 col (mobile) · 2 (tablet) · 2 (desktop) -->
+  <div class="grid gap-6 sm:gap-6 md:gap-7 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
 
-<!-- Card PIL Reale & Potenziale -->
-<div class="border border-gray-300 rounded-lg p-6 mb-6 shadow-sm bg-white max-w-3xl mx-auto">
-  <!-- Titolo -->
-  <h3 class="text-xl font-semibold text-gray-900 mb-4">PIL Reale & Potenziale</h3>
-  <p class="text-sm text-gray-600 mb-6">
-    Crescita attuale e forward del PIL, confronto con potenziale e output gap. Questa scheda mostra lo stato dell’economia globale e regionale.
-  </p>
+    <!-- ========== CARD · Step 2.1 · PIL Reale & Potenziale ========= -->
+    <section id="card-pil" role="region" aria-labelledby="card-pil-title"
+      class="border border-slate-200 rounded-2xl bg-white p-5 sm:p-6 md:p-8 shadow-sm hover:shadow group break-inside-avoid">
+      <header class="flex items-center gap-2 mb-3">
+        <i data-lucide="activity" class="w-5 h-5 text-slate-500"></i>
+        <h3 id="card-pil-title" class="text-[clamp(1.25rem,1.8vw,1.5rem)] font-semibold text-gray-900">Step 2.1 · PIL Reale &amp; Potenziale</h3>
+      </header>
+      <p class="text-sm text-gray-600 mb-5">
+        Crescita attuale e forward del PIL, confronto con potenziale e output gap. Stato dell’economia globale e regionale.
+      </p>
 
-  <!-- Spiegazioni -->
-  <div class="mb-6 text-sm text-gray-500">
-    <p><strong>PIL Reale:</strong> crescita economica osservata.</p>
-    <p><strong>PIL Potenziale:</strong> livello massimo sostenibile senza pressioni inflazionistiche.</p>
-    <p><strong>Output Gap:</strong> differenza tra PIL reale e potenziale. Negativo = sotto-utilizzo risorse, Positivo = surriscaldamento.</p>
-  </div>
-
-  <!-- Valori Attuali -->
-  <div class="mb-6">
-    <h4 class="font-medium text-gray-800 mb-2">Valori Attuali (Q1 2025)</h4>
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-      <div class="p-3 border rounded">
-        <span class="font-semibold">Globale</span>
-        <p class="mt-1">QoQ: <span class="font-medium text-gray-900">0,5%</span></p>
-        <p>YoY: <span class="font-medium text-gray-900">2,1%</span></p>
+      <!-- Spiegazioni sintetiche -->
+      <div class="mb-5 text-sm text-gray-500 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <p><span class="font-semibold">PIL Reale:</span> crescita osservata.</p>
+        <p><span class="font-semibold">PIL Potenziale:</span> massimo sostenibile senza inflazione.</p>
+        <p><span class="font-semibold">Output Gap:</span> PIL reale − potenziale (− = slack, + = surriscaldamento).</p>
       </div>
-      <div class="p-3 border rounded">
-        <span class="font-semibold">USA</span>
-        <p class="mt-1">QoQ: <span class="font-medium text-gray-900">0,6%</span></p>
-        <p>YoY: <span class="font-medium text-gray-900">2,5%</span></p>
+
+      <!-- Valori Attuali -->
+      <div class="mb-5">
+        <h4 class="font-medium text-gray-800 mb-2">Valori Attuali (Q1 2025)</h4>
+        <dl class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+          <div class="p-3 border rounded-lg">
+            <dt class="font-semibold">Globale</dt>
+            <dd class="mt-1">QoQ: <span class="font-medium text-gray-900">0,5%</span></dd>
+            <dd>YoY: <span class="font-medium text-gray-900">2,1%</span></dd>
+          </div>
+          <div class="p-3 border rounded-lg">
+            <dt class="font-semibold">USA</dt>
+            <dd class="mt-1">QoQ: <span class="font-medium text-gray-900">0,6%</span></dd>
+            <dd>YoY: <span class="font-medium text-gray-900">2,5%</span></dd>
+          </div>
+          <div class="p-3 border rounded-lg">
+            <dt class="font-semibold">Eurozona</dt>
+            <dd class="mt-1">QoQ: <span class="font-medium text-gray-900">0,3%</span></dd>
+            <dd>YoY: <span class="font-medium text-gray-900">1,8%</span></dd>
+          </div>
+        </dl>
       </div>
-      <div class="p-3 border rounded">
-        <span class="font-semibold">Eurozona</span>
-        <p class="mt-1">QoQ: <span class="font-medium text-gray-900">0,3%</span></p>
-        <p>YoY: <span class="font-medium text-gray-900">1,8%</span></p>
+
+      <!-- Forward -->
+      <div class="mb-5">
+        <h4 class="font-medium text-gray-800 mb-2">Forward (Previsioni di Crescita)</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+          <div class="p-3 border rounded-lg">
+            <p class="font-semibold">Globale</p>
+            <ul class="list-disc list-inside space-y-1 mt-1">
+              <li>6 mesi: <span class="font-medium text-gray-900">2,0%</span></li>
+              <li>12 mesi: <span class="font-medium text-gray-900">2,3%</span></li>
+              <li>24 mesi: <span class="font-medium text-gray-900">2,5%</span></li>
+              <li>36 mesi: <span class="font-medium text-gray-900">2,7%</span></li>
+            </ul>
+          </div>
+          <div class="p-3 border rounded-lg">
+            <p class="font-semibold">USA</p>
+            <ul class="list-disc list-inside space-y-1 mt-1">
+              <li>6 mesi: <span class="font-medium text-gray-900">2,2%</span></li>
+              <li>12 mesi: <span class="font-medium text-gray-900">2,5%</span></li>
+              <li>24 mesi: <span class="font-medium text-gray-900">2,8%</span></li>
+              <li>36 mesi: <span class="font-medium text-gray-900">3,0%</span></li>
+            </ul>
+          </div>
+          <div class="p-3 border rounded-lg">
+            <p class="font-semibold">Eurozona</p>
+            <ul class="list-disc list-inside space-y-1 mt-1">
+              <li>6 mesi: <span class="font-medium text-gray-900">1,8%</span></li>
+              <li>12 mesi: <span class="font-medium text-gray-900">2,0%</span></li>
+              <li>24 mesi: <span class="font-medium text-gray-900">2,3%</span></li>
+              <li>36 mesi: <span class="font-medium text-gray-900">2,5%</span></li>
+            </ul>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Forward -->
-  <div class="mb-6">
-    <h4 class="font-medium text-gray-800 mb-2">Forward (Previsioni di Crescita)</h4>
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-      <div class="p-3 border rounded">
-        <span class="font-semibold">Globale</span>
-        <ul class="list-disc list-inside mt-1">
-          <li>6 mesi: <span class="font-medium text-gray-900">2,0%</span></li>
-          <li>12 mesi: <span class="font-medium text-gray-900">2,3%</span></li>
-          <li>24 mesi: <span class="font-medium text-gray-900">2,5%</span></li>
-          <li>36 mesi: <span class="font-medium text-gray-900">2,7%</span></li>
-        </ul>
+      <!-- Output Gap -->
+      <div class="mb-5">
+        <h4 class="font-medium text-gray-800 mb-2">Output Gap</h4>
+        <dl class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+          <div class="p-3 border rounded-lg">
+            <dt class="font-semibold">Globale</dt>
+            <dd class="mt-1"><span class="font-medium text-gray-900">-0,5%</span></dd>
+          </div>
+          <div class="p-3 border rounded-lg">
+            <dt class="font-semibold">USA</dt>
+            <dd class="mt-1"><span class="font-medium text-gray-900">-0,3%</span></dd>
+          </div>
+          <div class="p-3 border rounded-lg">
+            <dt class="font-semibold">Eurozona</dt>
+            <dd class="mt-1"><span class="font-medium text-gray-900">-0,7%</span></dd>
+          </div>
+        </dl>
       </div>
-      <div class="p-3 border rounded">
-        <span class="font-semibold">USA</span>
-        <ul class="list-disc list-inside mt-1">
-          <li>6 mesi: <span class="font-medium text-gray-900">2,2%</span></li>
-          <li>12 mesi: <span class="font-medium text-gray-900">2,5%</span></li>
-          <li>24 mesi: <span class="font-medium text-gray-900">2,8%</span></li>
-          <li>36 mesi: <span class="font-medium text-gray-900">3,0%</span></li>
-        </ul>
+
+      <!-- Interpretazione -->
+      <aside class="mb-4 p-3 border-l-4 border-blue-500 bg-blue-50 rounded-r-lg text-sm text-gray-800">
+        <strong>Interpretazione:</strong> espansione lieve con output gap negativo; forward in graduale accelerazione. USA &gt; Eurozona.
+      </aside>
+
+      <!-- Fonti -->
+      <footer class="text-xs text-gray-500 italic">Fonti: IMF, OECD, World Bank, Eurostat, Fed, BCE.</footer>
+    </section>
+
+    <!-- ========== CARD · Step 2.2 · Inflazione Core & Headline ========= -->
+    <section id="card-inflazione" role="region" aria-labelledby="card-inflazione-title"
+      class="border border-slate-200 rounded-2xl bg-white p-5 sm:p-6 md:p-8 shadow-sm hover:shadow group break-inside-avoid">
+      <header class="flex items-center gap-2 mb-3">
+        <i data-lucide="percent" class="w-5 h-5 text-slate-500"></i>
+        <h3 id="card-inflazione-title" class="text-[clamp(1.25rem,1.8vw,1.5rem)] font-semibold text-gray-900">Step 2.2 · Inflazione Core &amp; Headline</h3>
+      </header>
+      <p class="text-sm text-gray-600 mb-5">Dati attuali e previsioni per Eurozona e USA; aspettative (breakeven TIPS).</p>
+
+      <!-- Eurozona -->
+      <div class="mb-5">
+        <h4 class="font-medium text-gray-800 mb-2">Eurozona</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+          <div class="p-3 border rounded-lg">
+            <p class="font-semibold">Core HICP</p>
+            <ul class="list-disc list-inside space-y-1 mt-1">
+              <li>Q1 2025: <span class="font-medium text-gray-900">2,0%</span></li>
+              <li>Q2 2025: <span class="font-medium text-gray-900">2,1%</span></li>
+              <li>Q3 2025: <span class="font-medium text-gray-900">2,1%</span></li>
+              <li>Q4 2025: <span class="font-medium text-gray-900">2,0%</span></li>
+              <li>2026: <span class="font-medium text-gray-900">2,0%</span></li>
+              <li>2027: <span class="font-medium text-gray-900">2,0%</span></li>
+            </ul>
+          </div>
+          <div class="p-3 border rounded-lg">
+            <p class="font-semibold">Headline HICP</p>
+            <ul class="list-disc list-inside space-y-1 mt-1">
+              <li>Q1 2025: <span class="font-medium text-gray-900">2,5%</span></li>
+              <li>Q2 2025: <span class="font-medium text-gray-900">2,3%</span></li>
+              <li>Q3 2025: <span class="font-medium text-gray-900">2,1%</span></li>
+              <li>Q4 2025: <span class="font-medium text-gray-900">2,0%</span></li>
+              <li>2026: <span class="font-medium text-gray-900">1,7%</span></li>
+              <li>2027: <span class="font-medium text-gray-900">2,0%</span></li>
+            </ul>
+          </div>
+        </div>
       </div>
-      <div class="p-3 border rounded">
-        <span class="font-semibold">Eurozona</span>
-        <ul class="list-disc list-inside mt-1">
-          <li>6 mesi: <span class="font-medium text-gray-900">1,8%</span></li>
-          <li>12 mesi: <span class="font-medium text-gray-900">2,0%</span></li>
-          <li>24 mesi: <span class="font-medium text-gray-900">2,3%</span></li>
-          <li>36 mesi: <span class="font-medium text-gray-900">2,5%</span></li>
-        </ul>
+
+      <!-- USA -->
+      <div class="mb-5">
+        <h4 class="font-medium text-gray-800 mb-2">USA</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+          <div class="p-3 border rounded-lg">
+            <p class="font-semibold">Core CPI</p>
+            <ul class="list-disc list-inside space-y-1 mt-1">
+              <li>Q1 2025: <span class="font-medium text-gray-900">2,8%</span></li>
+              <li>Q2 2025: <span class="font-medium text-gray-900">2,9%</span></li>
+              <li>Q3 2025: <span class="font-medium text-gray-900">3,0%</span></li>
+              <li>Q4 2025: <span class="font-medium text-gray-900">3,1%</span></li>
+            </ul>
+          </div>
+          <div class="p-3 border rounded-lg">
+            <p class="font-semibold">Headline CPI</p>
+            <ul class="list-disc list-inside space-y-1 mt-1">
+              <li>Q1 2025: <span class="font-medium text-gray-900">2,7%</span></li>
+              <li>Q2 2025: <span class="font-medium text-gray-900">2,8%</span></li>
+              <li>Q3 2025: <span class="font-medium text-gray-900">2,9%</span></li>
+              <li>Q4 2025: <span class="font-medium text-gray-900">3,0%</span></li>
+            </ul>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Output Gap -->
-  <div class="mb-6">
-    <h4 class="font-medium text-gray-800 mb-2">Output Gap</h4>
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-      <div class="p-3 border rounded">
-        <span class="font-semibold">Globale</span>
-        <p class="mt-1"><span class="font-medium text-gray-900">-0,5%</span></p>
+      <!-- Aspettative & TIPS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5 text-sm">
+        <div class="p-3 border-l-4 border-green-500 bg-green-50 rounded-r-lg">
+          <strong>Aspettative di Inflazione</strong>
+          <ul class="list-disc list-inside space-y-1 mt-1">
+            <li>Eurozona 2025–2027: 2,0% medio</li>
+            <li>USA 2025–2027: 3,0–3,3%</li>
+          </ul>
+        </div>
+        <div class="p-3 border-l-4 border-yellow-500 bg-yellow-50 rounded-r-lg">
+          <strong>Breakevens TIPS (USA)</strong>
+          <ul class="list-disc list-inside space-y-1 mt-1">
+            <li>5Y: <span class="font-medium text-gray-900">2,48%</span></li>
+            <li>10Y: <span class="font-medium text-gray-900">2,41%</span></li>
+          </ul>
+        </div>
       </div>
-      <div class="p-3 border rounded">
-        <span class="font-semibold">USA</span>
-        <p class="mt-1"><span class="font-medium text-gray-900">-0,3%</span></p>
+
+      <aside class="mb-4 p-3 border-l-4 border-blue-500 bg-blue-50 rounded-r-lg text-sm text-gray-800">
+        <strong>Interpretazione:</strong> core EZ ≈ 2% in convergenza; USA core &gt;3% graduale. Breakeven decennale ≈ 2,4%.
+      </aside>
+      <footer class="text-xs text-gray-500 italic">Fonti: BCE, Fed, OECD, Bloomberg.</footer>
+    </section>
+
+    <!-- ========== CARD · Step 2.3 · Occupazione & Disoccupazione ========= -->
+    <section id="card-lavoro" role="region" aria-labelledby="card-lavoro-title"
+      class="border border-slate-200 rounded-2xl bg-white p-5 sm:p-6 md:p-8 shadow-sm hover:shadow group break-inside-avoid">
+      <header class="flex items-center gap-2 mb-3">
+        <i data-lucide="users" class="w-5 h-5 text-slate-500"></i>
+        <h3 id="card-lavoro-title" class="text-[clamp(1.25rem,1.8vw,1.5rem)] font-semibold text-gray-900">Step 2.3 · Occupazione &amp; Disoccupazione</h3>
+      </header>
+      <p class="text-sm text-gray-600 mb-5">Tasso di disoccupazione, partecipazione e employment‑to‑population.</p>
+
+      <dl class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm mb-4">
+        <div class="p-3 border rounded-lg">
+          <dt class="font-medium">Globale</dt>
+          <dd>Disoccupazione: 5,4%</dd>
+          <dd>Partecipazione: 63,0%</dd>
+          <dd>Employment/pop: 60,0%</dd>
+        </div>
+        <div class="p-3 border rounded-lg">
+          <dt class="font-medium">USA</dt>
+          <dd>Disoccupazione: 4,2%</dd>
+          <dd>Partecipazione: 62,2%</dd>
+          <dd>Employment/pop: 59,7%</dd>
+        </div>
+        <div class="p-3 border rounded-lg">
+          <dt class="font-medium">Eurozona</dt>
+          <dd>Disoccupazione: 6,2%</dd>
+          <dd>Partecipazione: 64,5%</dd>
+          <dd>Employment/pop: 60,5%</dd>
+        </div>
+      </dl>
+
+      <div class="text-sm mb-4">
+        <span class="font-medium">Forward (mesi):</span>
+        <p>6m: Globale 5,3%, USA 4,3%, Eurozona 6,1%</p>
+        <p>12m: Globale 5,2%, USA 4,3%, Eurozona 6,0%</p>
+        <p>24m: Globale 5,1%, USA 4,4%, Eurozona 5,9%</p>
+        <p>36m: Globale 5,0%, USA 4,4%, Eurozona 5,8%</p>
       </div>
-      <div class="p-3 border rounded">
-        <span class="font-semibold">Eurozona</span>
-        <p class="mt-1"><span class="font-medium text-gray-900">-0,7%</span></p>
+
+      <aside class="border-l-4 border-blue-500 bg-blue-50 p-3 rounded-r-lg mb-3 text-sm text-gray-700">
+        <p><span class="font-medium">Interpretazione:</span> quadro stabile; lieve calo della disoccupazione globale; USA resilienti, Eurozona elevata ma in calo graduale.</p>
+      </aside>
+      <footer class="text-xs text-gray-500 italic">Fonti: Eurostat, BLS, IMF, OECD.</footer>
+    </section>
+
+    <!-- ========== CARD · Step 2.4 · PMI ========= -->
+    <section id="card-pmi" role="region" aria-labelledby="card-pmi-title"
+      class="border border-slate-200 rounded-2xl bg-white p-5 sm:p-6 md:p-8 shadow-sm hover:shadow group break-inside-avoid">
+      <header class="flex items-center gap-2 mb-3">
+        <i data-lucide="bar-chart-2" class="w-5 h-5 text-slate-500"></i>
+        <h3 id="card-pmi-title" class="text-[clamp(1.25rem,1.8vw,1.5rem)] font-semibold text-gray-900">Step 2.4 · PMI Settoriali &amp; Compositi</h3>
+      </header>
+      <p class="text-sm text-gray-600 mb-5">Indici PMI manifattura, servizi e composito.</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm mb-4">
+        <div class="p-3 border rounded-lg">
+          <p class="font-medium">USA</p>
+          <p>PMI Manifattura: <span class="font-medium text-gray-900">53,3</span> (ago 2025)</p>
+          <p>PMI Servizi: <span class="font-medium text-gray-900">55,4</span> (ago 2025)</p>
+          <p>PMI Composito: <span class="font-medium text-gray-900">55,4</span> (ago 2025)</p>
+        </div>
+        <div class="p-3 border rounded-lg">
+          <p class="font-medium">Eurozona</p>
+          <p>PMI Manifattura: <span class="font-medium text-gray-900">51,1</span> (ago 2025)</p>
+          <p>PMI Servizi: <span class="font-medium text-gray-900">n.d.</span></p>
+          <p>PMI Composito: <span class="font-medium text-gray-900">51,1</span> (ago 2025)</p>
+        </div>
+        <div class="p-3 border rounded-lg">
+          <p class="font-medium">Globale</p>
+          <p>PMI Composito: <span class="font-medium text-gray-900">n.d.</span></p>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Interpretazione -->
-  <div class="mb-4 p-3 border-l-4 border-blue-500 bg-blue-50 text-sm text-gray-800">
-    <strong>Interpretazione:</strong> L’economia globale è in leggera espansione, ma con output gap negativo: ci sono ancora risorse non pienamente sfruttate. Forward in crescita indica aspettative di moderata accelerazione nei prossimi 3 anni. USA mostrano dinamica più solida rispetto all’Eurozona.
-  </div>
-
-  <!-- Fonti -->
-  <div class="text-xs text-gray-500">
-    Fonti: IMF, OECD, World Bank, Eurostat, Fed, BCE
-  </div>
-</div>
-<!-- Card Inflazione Core & Headline -->
-<div class="border border-gray-300 rounded-lg p-6 mb-6 shadow-sm bg-white max-w-3xl mx-auto">
-  <!-- Titolo -->
-  <h3 class="text-xl font-semibold text-gray-900 mb-4">Inflazione Core & Headline</h3>
-  <p class="text-sm text-gray-600 mb-6">
-    Dati attuali e previsioni di inflazione per Eurozona e USA, incluse metriche complementari come inflazione attesa e breakevens TIPS.
-  </p>
-
-  <!-- Spiegazioni -->
-  <div class="mb-6 text-sm text-gray-500">
-    <p><strong>Inflazione Core:</strong> esclude alimentari ed energia, riflette le pressioni inflazionistiche sottostanti.</p>
-    <p><strong>Inflazione Headline:</strong> include tutti i beni e servizi, riflettendo l'impatto diretto di alimentari ed energia.</p>
-    <p><strong>Breakevens TIPS:</strong> aspettative di inflazione implicite nei titoli protetti dall’inflazione USA.</p>
-  </div>
-
-  <!-- Valori attuali e Forward Eurozona -->
-  <div class="mb-6">
-    <h4 class="font-medium text-gray-800 mb-2">Eurozona</h4>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-      <div class="p-3 border rounded">
-        <span class="font-semibold">Core HICP</span>
-        <ul class="list-disc list-inside mt-1">
-          <li>Q1 2025: <span class="font-medium text-gray-900">2,0%</span></li>
-          <li>Q2 2025: <span class="font-medium text-gray-900">2,1%</span></li>
-          <li>Q3 2025: <span class="font-medium text-gray-900">2,1%</span></li>
-          <li>Q4 2025: <span class="font-medium text-gray-900">2,0%</span></li>
-          <li>2026: <span class="font-medium text-gray-900">2,0%</span></li>
-          <li>2027: <span class="font-medium text-gray-900">2,0%</span></li>
-        </ul>
+      <div class="text-sm mb-4">
+        <span class="font-medium">Forward (1–12m):</span> nowcasting/previsioni brevi su modelli S&amp;P Global/Markit (dettagli non pubblici nativamente).
       </div>
-      <div class="p-3 border rounded">
-        <span class="font-semibold">Headline HICP</span>
-        <ul class="list-disc list-inside mt-1">
-          <li>Q1 2025: <span class="font-medium text-gray-900">2,5%</span></li>
-          <li>Q2 2025: <span class="font-medium text-gray-900">2,3%</span></li>
-          <li>Q3 2025: <span class="font-medium text-gray-900">2,1%</span></li>
-          <li>Q4 2025: <span class="font-medium text-gray-900">2,0%</span></li>
-          <li>2026: <span class="font-medium text-gray-900">1,7%</span></li>
-          <li>2027: <span class="font-medium text-gray-900">2,0%</span></li>
-        </ul>
+
+      <aside class="border-l-4 border-blue-500 bg-blue-50 p-3 rounded-r-lg mb-3 text-sm text-gray-700">
+        <p><span class="font-medium">Interpretazione:</span> USA sopra 50 → espansione moderata; Eurozona in lieve miglioramento; trend globale in ripresa graduale.</p>
+      </aside>
+      <footer class="text-xs text-gray-500 italic">Fonti: S&amp;P Global, Markit, Bloomberg.</footer>
+    </section>
+
+    <!-- ========== CARD · Step 2.5 · Leading ========= -->
+    <section id="card-leading" role="region" aria-labelledby="card-leading-title"
+      class="border border-slate-200 rounded-2xl bg-white p-5 sm:p-6 md:p-8 shadow-sm hover:shadow group break-inside-avoid">
+      <header class="flex items-center gap-2 mb-3">
+        <i data-lucide="trending-up" class="w-5 h-5 text-slate-500"></i>
+        <h3 id="card-leading-title" class="text-[clamp(1.25rem,1.8vw,1.5rem)] font-semibold text-gray-900">Step 2.5 · Indicatori Leading</h3>
+      </header>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        <div class="p-3 border rounded-lg">
+          <p class="font-semibold">USA</p>
+          <ul class="list-disc list-inside space-y-1 mt-1">
+            <li>ISM Manifattura: <span class="font-medium text-gray-900">47,2</span> (ago 2025)</li>
+            <li>ISM Servizi: <span class="font-medium text-gray-900">51,2</span> (ago 2025)</li>
+            <li>PMI Composito (S&amp;P): <span class="font-medium text-gray-900">55,4</span> (ago 2025)</li>
+            <li>Conference Board LEI: <span class="font-medium text-gray-900">101,9</span> (lug 2025, −0,2% m/m)</li>
+          </ul>
+        </div>
+        <div class="p-3 border rounded-lg">
+          <p class="font-semibold">Eurozona</p>
+          <ul class="list-disc list-inside space-y-1 mt-1">
+            <li>PMI Composito (HCOB/S&amp;P): <span class="font-medium text-gray-900">51,0–51,1</span> (lug–ago 2025)</li>
+            <li>ZEW Sentiment (DE): <span class="font-medium text-gray-900">34,1</span> (ago 2025)</li>
+          </ul>
+        </div>
+        <div class="p-3 border rounded-lg sm:col-span-2">
+          <p class="font-semibold">Globale</p>
+          <ul class="list-disc list-inside space-y-1 mt-1">
+            <li>J.P. Morgan Global PMI Composito: <span class="font-medium text-gray-900">52,4</span> (lug 2025)</li>
+          </ul>
+        </div>
       </div>
-    </div>
-  </div>
+      <footer class="mt-3 text-xs text-gray-500 italic">Fonti: ISM, S&amp;P Global/Markit, Conference Board, ZEW, J.P. Morgan.</footer>
+    </section>
 
-  <!-- Valori attuali e Forward USA -->
-  <div class="mb-6">
-    <h4 class="font-medium text-gray-800 mb-2">USA</h4>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-      <div class="p-3 border rounded">
-        <span class="font-semibold">Core CPI</span>
-        <ul class="list-disc list-inside mt-1">
-          <li>Q1 2025: <span class="font-medium text-gray-900">2,8%</span></li>
-          <li>Q2 2025: <span class="font-medium text-gray-900">2,9%</span></li>
-          <li>Q3 2025: <span class="font-medium text-gray-900">3,0%</span></li>
-          <li>Q4 2025: <span class="font-medium text-gray-900">3,1%</span></li>
-        </ul>
+    <!-- ========== CARD · Step 2.6 · Coincident ========= -->
+    <section id="card-coincident" role="region" aria-labelledby="card-coincident-title"
+      class="border border-slate-200 rounded-2xl bg-white p-5 sm:p-6 md:p-8 shadow-sm hover:shadow group break-inside-avoid">
+      <header class="flex items-center gap-2 mb-3">
+        <i data-lucide="line-chart" class="w-5 h-5 text-slate-500"></i>
+        <h3 id="card-coincident-title" class="text-[clamp(1.25rem,1.8vw,1.5rem)] font-semibold text-gray-900">Step 2.6 · Indicatori Coincident</h3>
+      </header>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        <div class="p-3 border rounded-lg">
+          <p class="font-semibold">USA</p>
+          <ul class="list-disc list-inside space-y-1 mt-1">
+            <li>Produzione Industriale: <span class="font-medium text-gray-900">−0,6% m/m</span> (lug 2025)</li>
+            <li>Vendite al dettaglio: <span class="font-medium text-gray-900">+0,7% m/m</span> (lug 2025)</li>
+          </ul>
+        </div>
+        <div class="p-3 border rounded-lg">
+          <p class="font-semibold">Eurozona</p>
+          <ul class="list-disc list-inside space-y-1 mt-1">
+            <li>Produzione Industriale: <span class="font-medium text-gray-900">+0,7% m/m</span> (giu 2025)</li>
+            <li>Vendite al dettaglio: <span class="font-medium text-gray-900">+0,2% m/m</span> (giu 2025)</li>
+          </ul>
+        </div>
       </div>
-      <div class="p-3 border rounded">
-        <span class="font-semibold">Headline CPI</span>
-        <ul class="list-disc list-inside mt-1">
-          <li>Q1 2025: <span class="font-medium text-gray-900">2,7%</span></li>
-          <li>Q2 2025: <span class="font-medium text-gray-900">2,8%</span></li>
-          <li>Q3 2025: <span class="font-medium text-gray-900">2,9%</span></li>
-          <li>Q4 2025: <span class="font-medium text-gray-900">3,0%</span></li>
-        </ul>
+      <footer class="mt-3 text-xs text-gray-500 italic">Fonti: Fed (G.17), U.S. Census, Eurostat, Reuters.</footer>
+    </section>
+
+    <!-- ========== CARD · Step 2.7 · Lagging ========= -->
+    <section id="card-lagging" role="region" aria-labelledby="card-lagging-title"
+      class="border border-slate-200 rounded-2xl bg-white p-5 sm:p-6 md:p-8 shadow-sm hover:shadow group break-inside-avoid">
+      <header class="flex items-center gap-2 mb-3">
+        <i data-lucide="clock" class="w-5 h-5 text-slate-500"></i>
+        <h3 id="card-lagging-title" class="text-[clamp(1.25rem,1.8vw,1.5rem)] font-semibold text-gray-900">Step 2.7 · Indicatori Lagging</h3>
+      </header>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        <div class="p-3 border rounded-lg">
+          <p class="font-semibold">USA</p>
+          <ul class="list-disc list-inside space-y-1 mt-1">
+            <li>Tasso di disoccupazione: <span class="font-medium text-gray-900">4,3%</span> (lug 2025)</li>
+            <li>Salari reali (avg hourly, reale): <span class="font-medium text-gray-900">+0,8% a/a</span> (lug 2025)</li>
+            <li>Scorte totali (inventories): <span class="font-medium text-gray-900">+0,2% m/m</span> (giu 2025)</li>
+          </ul>
+        </div>
+        <div class="p-3 border rounded-lg">
+          <p class="font-semibold">Eurozona</p>
+          <ul class="list-disc list-inside space-y-1 mt-1">
+            <li>Tasso di disoccupazione: <span class="font-medium text-gray-900">6,2%</span> (giu 2025)</li>
+          </ul>
+        </div>
       </div>
-    </div>
-  </div>
+      <footer class="mt-3 text-xs text-gray-500 italic">Fonti: BLS, U.S. Census, Eurostat.</footer>
+    </section>
 
-  <!-- Aspettative di Inflazione -->
-  <div class="mb-6 p-3 border-l-4 border-green-500 bg-green-50 text-sm text-gray-800">
-    <strong>Aspettative di Inflazione</strong>
-    <ul class="list-disc list-inside mt-1">
-      <li>Eurozona 2025–2027: 2,0% medio</li>
-      <li>USA 2025–2027: 3,0–3,3%</li>
-    </ul>
-  </div>
-
-  <!-- Breakevens TIPS -->
-  <div class="mb-6 p-3 border-l-4 border-yellow-500 bg-yellow-50 text-sm text-gray-800">
-    <strong>Breakevens TIPS (USA)</strong>
-    <ul class="list-disc list-inside mt-1">
-      <li>5Y: <span class="font-medium text-gray-900">2,48%</span></li>
-      <li>10Y: <span class="font-medium text-gray-900">2,41%</span></li>
-    </ul>
-  </div>
-
-  <!-- Interpretazione -->
-  <div class="mb-4 p-3 border-l-4 border-blue-500 bg-blue-50 text-sm text-gray-800">
-    <strong>Interpretazione:</strong> 
-    <ul class="list-disc list-inside mt-1">
-      <li>Eurozona: inflazione core stabile attorno al 2%, headline in diminuzione verso target 2% nel 2027.</li>
-      <li>USA: inflazione core in aumento graduale oltre il 3%, breakevens TIPS indicano aspettative future stabili attorno al 2,4%.</li>
-    </ul>
-  </div>
-
-  <!-- Fonti -->
-  <div class="text-xs text-gray-500">
-    Fonti: BCE, Fed, OECD, Bloomberg
-  </div>
-</div>
-<!-- Card Occupazione & Disoccupazione -->
-<div class="border border-gray-200 rounded-xl shadow-sm bg-white p-6 sm:p-8 lg:p-10">
-  <!-- Header -->
-  <header class="mb-6">
-    <h3 class="text-[clamp(1.25rem,2vw,1.5rem)] font-semibold text-gray-900 mb-2">Occupazione & Disoccupazione</h3>
-    <p class="text-sm text-gray-600">
-      Tasso di disoccupazione, partecipazione alla forza lavoro e employment-to-population ratio.
-    </p>
-  </header>
-
-  <!-- Valori attuali -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 text-sm">
-    <div>
-      <span class="font-medium">Globale</span><br>
-      Disoccupazione: 5,4%<br>
-      Partecipazione: 63,0%<br>
-      Employment-to-population: 60,0%
-    </div>
-    <div>
-      <span class="font-medium">USA</span><br>
-      Disoccupazione: 4,2%<br>
-      Partecipazione: 62,2%<br>
-      Employment-to-population: 59,7%
-    </div>
-    <div>
-      <span class="font-medium">Eurozona</span><br>
-      Disoccupazione: 6,2%<br>
-      Partecipazione: 64,5%<br>
-      Employment-to-population: 60,5%
-    </div>
-  </div>
-
-  <!-- Forward -->
-  <div class="text-sm mb-4">
-    <span class="font-medium">Forward (mesi):</span><br>
-    6m: Globale 5,3%, USA 4,3%, Eurozona 6,1%<br>
-    12m: Globale 5,2%, USA 4,3%, Eurozona 6,0%<br>
-    24m: Globale 5,1%, USA 4,4%, Eurozona 5,9%<br>
-    36m: Globale 5,0%, USA 4,4%, Eurozona 5,8%
-  </div>
-
-  <!-- Box interpretativo -->
-  <div class="border-l-4 border-blue-500 bg-blue-50 p-3 mb-3 text-sm text-gray-700">
-    <p><span class="font-medium">Interpretazione:</span> Globale stabile, con leggera riduzione della disoccupazione. USA in buona fase di occupazione, Eurozona mostra ancora un tasso relativamente alto ma stabile. L’evoluzione forward suggerisce stabilità nel breve e medio termine, con leggera discesa dei tassi di disoccupazione globali.</p>
-  </div>
-
-  <!-- Fonti -->
-  <div class="text-xs text-gray-500">
-    Fonti: Eurostat, BLS, IMF, OECD
-  </div>
-</div>
-<!-- Card PMI Settoriali & Compositi -->
-<div class="border border-gray-200 rounded-xl shadow-sm bg-white p-6 sm:p-8 lg:p-10">
-  <!-- Header -->
-  <header class="mb-6">
-    <h3 class="text-[clamp(1.25rem,2vw,1.5rem)] font-semibold text-gray-900 mb-2">PMI Settoriali & Compositi</h3>
-    <p class="text-sm text-gray-600">
-      Indici PMI manifattura, servizi e composito per monitorare la salute economica a breve termine.
-    </p>
-  </header>
-
-  <!-- Valori attuali -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 text-sm">
-    <div>
-      <span class="font-medium">USA</span><br>
-      PMI Manifattura: 53,3 (agosto 2025)<br>
-      PMI Servizi: 55,4 (agosto 2025)<br>
-      PMI Composito: 55,4 (agosto 2025)
-    </div>
-    <div>
-      <span class="font-medium">Eurozona</span><br>
-      PMI Manifattura: 51,1 (agosto 2025)<br>
-      PMI Servizi: dati non disponibili<br>
-      PMI Composito: 51,1 (agosto 2025)
-    </div>
-    <div>
-      <span class="font-medium">Globale</span><br>
-      PMI Composito: dati non disponibili
-    </div>
-  </div>
-
-  <!-- Forward -->
-  <div class="text-sm mb-4">
-    <span class="font-medium">Forward (mesi):</span><br>
-    1–12m: nowcasting e previsioni brevi basate su modelli S&P Global e Markit; dati specifici non disponibili
-  </div>
-
-  <!-- Box interpretativo -->
-  <div class="border-l-4 border-blue-500 bg-blue-50 p-3 mb-3 text-sm text-gray-700">
-    <p><span class="font-medium">Interpretazione:</span> Gli Stati Uniti mostrano PMI sopra 50, quindi espansione moderata; Eurozona in leggero miglioramento, manifattura sopra soglia 50. Il composito globale non è disponibile, ma la tendenza suggerisce una ripresa graduale dei mercati sviluppati.</p>
-  </div>
-
-  <!-- Fonti -->
-  <div class="text-xs text-gray-500">
-    Fonti: S&P Global, Markit, Bloomberg
-  </div>
-</div>
-
-<!-- Card – Altri parametri che i desk istituzionali usano per l'asset allocation -->
-<div class="border border-gray-300 rounded-lg p-6 mb-6 shadow-sm bg-white max-w-3xl mx-auto">
-  <h3 class="text-xl font-semibold text-gray-900 mb-2">
-    Altri parametri che i desk istituzionali utilizzano per l’asset allocation dei portafogli
-  </h3>
-  <p class="text-sm text-gray-600 mb-4">
-    Indicatori Leading / Coincident / Lagging, PMI, Capacità Produttiva, Nowcasting e Macro Surprise: confronto USA / Eurozona / Globale (dove disponibile). Solo metriche con dati reali.
-  </p>
-
-  <!-- LEADING -->
-  <div class="mb-6">
-    <h4 class="font-medium text-gray-800 mb-2">Leading</h4>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-      <div class="p-3 border rounded">
-        <span class="font-semibold">USA</span>
-        <ul class="list-disc list-inside mt-1">
-          <li>ISM Manifattura: <span class="font-medium text-gray-900">47,2</span> (ago 2025)</li>
-          <li>ISM Servizi: <span class="font-medium text-gray-900">51,2</span> (ago 2025)</li>
-          <li>PMI Composito (S&P): <span class="font-medium text-gray-900">55,4</span> (ago 2025)</li>
-          <li>Conference Board LEI: <span class="font-medium text-gray-900">101,9</span> (lug 2025, -0,2% m/m)</li>
-        </ul>
+    <!-- ========== CARD · Step 2.8 · Capacità Produttiva ========= -->
+    <section id="card-capacita" role="region" aria-labelledby="card-capacita-title"
+      class="border border-slate-200 rounded-2xl bg-white p-5 sm:p-6 md:p-8 shadow-sm hover:shadow group break-inside-avoid">
+      <header class="flex items-center gap-2 mb-3">
+        <i data-lucide="factory" class="w-5 h-5 text-slate-500"></i>
+        <h3 id="card-capacita-title" class="text-[clamp(1.25rem,1.8vw,1.5rem)] font-semibold text-gray-900">Step 2.8 · Capacità Produttiva</h3>
+      </header>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        <div class="p-3 border rounded-lg">
+          <p class="font-semibold">USA</p>
+          <p>Utilizzo capacità – manifattura: <span class="font-medium text-gray-900">76,8%</span> (lug 2025)</p>
+        </div>
+        <div class="p-3 border rounded-lg">
+          <p class="font-semibold">Eurozona</p>
+          <p>Utilizzo capacità – manifattura: <span class="font-medium text-gray-900">77,7%</span> (Q2 2025)</p>
+        </div>
       </div>
-      <div class="p-3 border rounded">
-        <span class="font-semibold">Eurozona</span>
-        <ul class="list-disc list-inside mt-1">
-          <li>PMI Composito (HCOB/S&P): <span class="font-medium text-gray-900">51,0–51,1</span> (lug–ago 2025)</li>
-          <li>ZEW Sentiment (DE): <span class="font-medium text-gray-900">34,1</span> (ago 2025)</li>
-        </ul>
-      </div>
-      <div class="p-3 border rounded sm:col-span-2">
-        <span class="font-semibold">Globale</span>
-        <ul class="list-disc list-inside mt-1">
-          <li>J.P. Morgan Global PMI Composito: <span class="font-medium text-gray-900">52,4</span> (lug 2025)</li>
-        </ul>
-      </div>
-    </div>
-    <div class="text-xs text-gray-500 mt-2">Fonti: ISM, S&amp;P Global/Markit, Conference Board, ZEW, J.P. Morgan.</div>
-  </div>
+      <footer class="mt-3 text-xs text-gray-500 italic">Fonti: Fed (G.17), European Commission / OECD (BTS).</footer>
+    </section>
 
-  <!-- COINCIDENT -->
-  <div class="mb-6">
-    <h4 class="font-medium text-gray-800 mb-2">Coincident</h4>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-      <div class="p-3 border rounded">
-        <span class="font-semibold">USA</span>
-        <ul class="list-disc list-inside mt-1">
-          <li>Produzione Industriale: <span class="font-medium text-gray-900">-0,6% m/m</span> (lug 2025)</li>
-          <li>Vendite al dettaglio: <span class="font-medium text-gray-900">+0,7% m/m</span> (lug 2025)</li>
-        </ul>
+    <!-- ========== CARD · Step 2.9 · Nowcasting ========= -->
+    <section id="card-nowcast" role="region" aria-labelledby="card-nowcast-title"
+      class="border border-slate-200 rounded-2xl bg-white p-5 sm:p-6 md:p-8 shadow-sm hover:shadow group break-inside-avoid">
+      <header class="flex items-center gap-2 mb-3">
+        <i data-lucide="radar" class="w-5 h-5 text-slate-500"></i>
+        <h3 id="card-nowcast-title" class="text-[clamp(1.25rem,1.8vw,1.5rem)] font-semibold text-gray-900">Step 2.9 · Nowcasting &amp; High‑Frequency</h3>
+      </header>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        <div class="p-3 border rounded-lg">
+          <p class="font-semibold">USA</p>
+          <ul class="list-disc list-inside space-y-1 mt-1">
+            <li>GDPNow (Atlanta Fed): <span class="font-medium text-gray-900">~2,9% ann.</span> (stima Q3, metà ago 2025)</li>
+            <li>NY Fed WEI: <span class="font-medium text-gray-900">~+2–3% ann.</span> (settimana metà ago 2025)</li>
+          </ul>
+        </div>
+        <div class="p-3 border rounded-lg">
+          <p class="font-semibold">Eurozona</p>
+          <ul class="list-disc list-inside space-y-1 mt-1">
+            <li>Confidence flash DG ECFIN (consumatori): <span class="font-medium text-gray-900">−15,5</span> (ago 2025)</li>
+          </ul>
+        </div>
       </div>
-      <div class="p-3 border rounded">
-        <span class="font-semibold">Eurozona</span>
-        <ul class="list-disc list-inside mt-1">
-          <li>Produzione Industriale: <span class="font-medium text-gray-900">+0,7% m/m</span> (giu 2025)</li>
-          <li>Vendite al dettaglio: <span class="font-medium text-gray-900">+0,2% m/m</span> (giu 2025)</li>
-        </ul>
-      </div>
-    </div>
-    <div class="text-xs text-gray-500 mt-2">Fonti: Fed (G.17), U.S. Census, Eurostat, Reuters.</div>
-  </div>
+      <footer class="mt-3 text-xs text-gray-500 italic">Fonti: Atlanta Fed, NY Fed, European Commission (DG ECFIN).</footer>
+    </section>
 
-  <!-- LAGGING -->
-  <div class="mb-6">
-    <h4 class="font-medium text-gray-800 mb-2">Lagging</h4>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-      <div class="p-3 border rounded">
-        <span class="font-semibold">USA</span>
-        <ul class="list-disc list-inside mt-1">
-          <li>Tasso di disoccupazione: <span class="font-medium text-gray-900">4,3%</span> (lug 2025)</li>
-          <li>Salari reali (retrib. oraria media reale): <span class="font-medium text-gray-900">+0,8% a/a</span> (lug 2025)</li>
-          <li>Scorte totali (business inventories): <span class="font-medium text-gray-900">+0,2% m/m</span> (giu 2025)</li>
-        </ul>
+    <!-- ========== CARD · Step 2.10 · Macro Surprise ========= -->
+    <section id="card-surprise" role="region" aria-labelledby="card-surprise-title"
+      class="border border-slate-200 rounded-2xl bg-white p-5 sm:p-6 md:p-8 shadow-sm hover:shadow group break-inside-avoid">
+      <header class="flex items-center gap-2 mb-3">
+        <i data-lucide="zap" class="w-5 h-5 text-slate-500"></i>
+        <h3 id="card-surprise-title" class="text-[clamp(1.25rem,1.8vw,1.5rem)] font-semibold text-gray-900">Step 2.10 · Macro Surprise Index</h3>
+      </header>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        <div class="p-3 border rounded-lg">
+          <p class="font-semibold">USA</p>
+          <p>Citi Economic Surprise Index: <span class="font-medium text-gray-900">~+32</span> (ago 2025)</p>
+        </div>
+        <div class="p-3 border rounded-lg">
+          <p class="font-semibold">Eurozona</p>
+          <p>Citi Economic Surprise Index: <span class="font-medium text-gray-900">~−12</span> (ago 2025)</p>
+        </div>
       </div>
-      <div class="p-3 border rounded">
-        <span class="font-semibold">Eurozona</span>
-        <ul class="list-disc list-inside mt-1">
-          <li>Tasso di disoccupazione: <span class="font-medium text-gray-900">6,2%</span> (giu 2025)</li>
-          <!-- Salari reali & inventari industriali: non pubblicati in serie omogenea T1 -> omessi -->
-        </ul>
-      </div>
-    </div>
-    <div class="text-xs text-gray-500 mt-2">Fonti: BLS, U.S. Census, Eurostat.</div>
-  </div>
+      <footer class="mt-3 text-xs text-gray-500 italic">Fonti: Citi / TradingEconomics (ripubblicazione).</footer>
+    </section>
 
-  <!-- PMI SETTORIALI & COMPOSITI -->
-  <div class="mb-6">
-    <h4 class="font-medium text-gray-800 mb-2">PMI Settoriali &amp; Compositi</h4>
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-      <div class="p-3 border rounded">
-        <span class="font-semibold">USA</span>
-        <p>Manifattura (ISM): <span class="font-medium text-gray-900">47,2</span> (ago 2025)</p>
-        <p>Servizi (ISM): <span class="font-medium text-gray-900">51,2</span> (ago 2025)</p>
-        <p>Composito (S&amp;P): <span class="font-medium text-gray-900">55,4</span> (ago 2025)</p>
-      </div>
-      <div class="p-3 border rounded">
-        <span class="font-semibold">Eurozona</span>
-        <p>Composito (HCOB/S&amp;P): <span class="font-medium text-gray-900">51,0–51,1</span> (lug–ago 2025)</p>
-        <p>Manifattura (lug 2025): <span class="font-medium text-gray-900">49,8</span></p>
-      </div>
-      <div class="p-3 border rounded">
-        <span class="font-semibold">Globale</span>
-        <p>Composito (J.P. Morgan): <span class="font-medium text-gray-900">52,4</span> (lug 2025)</p>
-      </div>
-    </div>
-    <div class="text-xs text-gray-500 mt-2">Fonti: ISM, S&amp;P Global/HCOB, J.P. Morgan.</div>
-  </div>
+    <!-- ========== CARD · Step 2.11 · Sintesi Operativa ========= -->
+    <section id="card-sintesi" role="region" aria-labelledby="card-sintesi-title"
+      class="border border-blue-200 rounded-2xl bg-blue-50/60 p-5 sm:p-6 md:p-8 shadow-sm group break-inside-avoid">
+      <header class="flex items-center gap-2 mb-3">
+        <i data-lucide="notebook-pen" class="w-5 h-5 text-blue-600"></i>
+        <h3 id="card-sintesi-title" class="text-[clamp(1.25rem,1.8vw,1.5rem)] font-semibold text-blue-900">Step 2.11 · Interpretazione Rapida (Desk)</h3>
+      </header>
+      <ul class="list-disc list-inside space-y-1 text-[clamp(.95rem,1vw,1rem)] text-blue-900">
+        <li><span class="font-medium">Leading:</span> USA in espansione moderata (servizi/composito &gt;50), manifattura USA sotto 50; EZ composito &gt;50 e sentiment tedesco positivo.</li>
+        <li><span class="font-medium">Coincident:</span> attività mista; IP USA debole a lug., EZ in rimbalzo a giu.; consumi USA solidi.</li>
+        <li><span class="font-medium">Lagging:</span> mercato del lavoro resiliente; salari reali USA positivi.</li>
+        <li><span class="font-medium">Nowcasting &amp; Surprise:</span> crescita USA ~3% ann. breve termine; sorpresa dati positiva USA, negativa EZ.</li>
+      </ul>
+    </section>
 
-  <!-- CAPACITÀ PRODUTTIVA -->
-  <div class="mb-6">
-    <h4 class="font-medium text-gray-800 mb-2">Capacità Produttiva</h4>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-      <div class="p-3 border rounded">
-        <span class="font-semibold">USA</span>
-        <p>Utilizzo capacità – manifattura: <span class="font-medium text-gray-900">76,8%</span> (lug 2025)</p>
-      </div>
-      <div class="p-3 border rounded">
-        <span class="font-semibold">Eurozona</span>
-        <p>Utilizzo capacità – manifattura: <span class="font-medium text-gray-900">77,7%</span> (Q2 2025)</p>
-      </div>
-    </div>
-    <div class="text-xs text-gray-500 mt-2">Fonti: Fed (G.17), European Commission / OECD (BTS).</div>
   </div>
-
-  <!-- NOWCASTING & HIGH-FREQUENCY -->
-  <div class="mb-6">
-    <h4 class="font-medium text-gray-800 mb-2">Nowcasting &amp; High-Frequency</h4>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-      <div class="p-3 border rounded">
-        <span class="font-semibold">USA</span>
-        <ul class="list-disc list-inside mt-1">
-          <li>GDPNow (Atlanta Fed): <span class="font-medium text-gray-900">~2,9% ann.</span> (stima Q3, metà ago 2025)</li>
-          <li>NY Fed WEI: <span class="font-medium text-gray-900">~+2–3% ann.</span> (settimana metà ago 2025)</li>
-        </ul>
-      </div>
-      <div class="p-3 border rounded">
-        <span class="font-semibold">Eurozona</span>
-        <ul class="list-disc list-inside mt-1">
-          <li>Confidence flash DG ECFIN: <span class="font-medium text-gray-900">-15,5</span> (ago 2025, consumatori)</li>
-          <!-- ECB nowcast pubblico puntuale non disponibile -> uso proxy di sentiment -->
-        </ul>
-      </div>
-    </div>
-    <div class="text-xs text-gray-500 mt-2">Fonti: Atlanta Fed, NY Fed, European Commission (DG ECFIN).</div>
-  </div>
-
-  <!-- MACRO SURPRISE INDEX -->
-  <div class="mb-6">
-    <h4 class="font-medium text-gray-800 mb-2">Macro Surprise Index / Deviation vs Consensus</h4>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-      <div class="p-3 border rounded">
-        <span class="font-semibold">USA</span>
-        <p>Citi Economic Surprise Index: <span class="font-medium text-gray-900">~+32</span> (ago 2025)</p>
-      </div>
-      <div class="p-3 border rounded">
-        <span class="font-semibold">Eurozona</span>
-        <p>Citi Economic Surprise Index: <span class="font-medium text-gray-900">~-12</span> (ago 2025)</p>
-      </div>
-    </div>
-    <div class="text-xs text-gray-500 mt-2">Fonti: Citi / TradingEconomics (ripubblicazione).</div>
-  </div>
-
-  <!-- BOX INTERPRETATIVO -->
-  <div class="mb-4 p-3 border-l-4 border-blue-500 bg-blue-50 text-sm text-gray-800">
-    <strong>Interpretazione rapida:</strong>
-    <ul class="list-disc list-inside mt-1">
-      <li><span class="font-medium">Leading:</span> USA in espansione moderata (PMI >50 servizi/composito), manifattura ancora sotto 50. Eurozona oltre 50 sul composito, sentiment ZEW positivo.</li>
-      <li><span class="font-medium">Coincident:</span> attività reale mista: IP USA debole a luglio, euro-area in rimbalzo a giugno; consumi USA solidi.</li>
-      <li><span class="font-medium">Lagging:</span> mercato del lavoro USA/EZ ancora resiliente; salari reali USA tornati positivi.</li>
-      <li><span class="font-medium">Nowcasting & Surprise:</span> crescita USA ~3% annualizzata breve termine; sorpresa dati positiva in USA e negativa in Eurozona.</li>
-    </ul>
-  </div>
-</div>
-
 </section>
 
 
