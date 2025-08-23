@@ -967,37 +967,54 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
   <div class="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
 
 <!-- Card PIL Reale & Potenziale -->
-<div class="border border-gray-300 rounded-lg p-4 mb-4 shadow-sm bg-white">
-  <h3 class="font-semibold text-gray-900 mb-2">PIL Reale & Potenziale</h3>
-  <p class="text-sm text-gray-600 mb-3">
+<div class="border border-gray-300 rounded-lg p-6 mb-6 shadow-sm bg-white max-w-lg mx-auto">
+  <!-- Titolo -->
+  <h3 class="text-xl font-semibold text-gray-900 mb-4">PIL Reale & Potenziale</h3>
+  <p class="text-sm text-gray-600 mb-6">
     Crescita attuale e forward del PIL, confronto con potenziale e output gap.
   </p>
 
   <!-- Valori attuali -->
-  <div class="grid grid-cols-3 gap-4 mb-3 text-sm">
-    <div>
-      <span class="font-medium">Global</span><br>
-      QoQ: 0.5% | YoY: 2.1%
-    </div>
-    <div>
-      <span class="font-medium">USA</span><br>
-      QoQ: 0.6% | YoY: 2.5%
-    </div>
-    <div>
-      <span class="font-medium">Eurozona</span><br>
-      QoQ: 0.3% | YoY: 1.8%
+  <div class="mb-6">
+    <h4 class="font-medium text-gray-800 mb-2">Valori Attuali</h4>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+      <div class="p-2 border rounded">
+        <span class="font-semibold">Global</span>
+        <p class="mt-1">QoQ: <span class="font-medium text-gray-900">0.5%</span></p>
+        <p>YoY: <span class="font-medium text-gray-900">2.1%</span></p>
+      </div>
+      <div class="p-2 border rounded">
+        <span class="font-semibold">USA</span>
+        <p class="mt-1">QoQ: <span class="font-medium text-gray-900">0.6%</span></p>
+        <p>YoY: <span class="font-medium text-gray-900">2.5%</span></p>
+      </div>
+      <div class="p-2 border rounded">
+        <span class="font-semibold">Eurozona</span>
+        <p class="mt-1">QoQ: <span class="font-medium text-gray-900">0.3%</span></p>
+        <p>YoY: <span class="font-medium text-gray-900">1.8%</span></p>
+      </div>
     </div>
   </div>
 
   <!-- Forward -->
-  <div class="text-sm mb-2">
-    <span class="font-medium">Forward (mesi):</span>
-    6m: 2.0%, 12m: 2.3%, 24m: 2.5%, 36m: 2.7%
+  <div class="mb-6">
+    <h4 class="font-medium text-gray-800 mb-2">Forward</h4>
+    <ul class="list-disc list-inside text-sm">
+      <li>6 mesi: <span class="font-medium text-gray-900">2.0%</span></li>
+      <li>12 mesi: <span class="font-medium text-gray-900">2.3%</span></li>
+      <li>24 mesi: <span class="font-medium text-gray-900">2.5%</span></li>
+      <li>36 mesi: <span class="font-medium text-gray-900">2.7%</span></li>
+    </ul>
   </div>
 
   <!-- Output gap -->
-  <div class="text-sm mb-2">
-    <span class="font-medium">Output gap:</span> Global: -0.5%, USA: -0.3%, Eurozona: -0.7%
+  <div class="mb-4">
+    <h4 class="font-medium text-gray-800 mb-2">Output Gap</h4>
+    <ul class="list-disc list-inside text-sm">
+      <li>Global: <span class="font-medium text-gray-900">-0.5%</span></li>
+      <li>USA: <span class="font-medium text-gray-900">-0.3%</span></li>
+      <li>Eurozona: <span class="font-medium text-gray-900">-0.7%</span></li>
+    </ul>
   </div>
 
   <!-- Fonti -->
@@ -1005,6 +1022,7 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
     Fonti: IMF, OECD, World Bank, Eurostat, Fed, BCE
   </div>
 </div>
+
 </section>
 
 
