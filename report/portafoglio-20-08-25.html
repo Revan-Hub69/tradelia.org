@@ -966,51 +966,20 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
   <!-- Griglia responsive: 1 col (mobile) · 2 (tablet) · 3 (desktop) -->
   <div class="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
 
-    <!-- Scheda PIL Reale & Potenziale -->
-<div class="bg-white border border-gray-200 rounded-xl shadow p-4 hover:shadow-md transition duration-200">
-  <!-- Titolo metrica -->
-  <h3 class="text-lg font-semibold text-gray-900 mb-2">PIL Reale & Potenziale</h3>
-
-  <!-- Spiegazione / commento esteso -->
-  <p class="text-sm text-gray-600 mb-3">
-    Misura della produzione economica effettiva (PIL reale) rispetto al potenziale della capacità produttiva (PIL potenziale). Permette di identificare l'output gap e valutare pressioni inflazionistiche o slack nell’economia.
-  </p>
-
-  <!-- Valori per area -->
-  <div class="grid gap-2 text-sm">
-    <div class="flex justify-between">
-      <span class="font-medium text-gray-700">Globale:</span>
-      <span class="text-gray-900">Crescita QoQ 0.5%, YoY 3.2%, Output gap 1.1%</span>
-    </div>
-    <div class="flex justify-between">
-      <span class="font-medium text-gray-700">USA:</span>
-      <span class="text-gray-900">Crescita QoQ 0.6%, YoY 2.9%, Output gap 0.9%</span>
-    </div>
-    <div class="flex justify-between">
-      <span class="font-medium text-gray-700">Eurozona:</span>
-      <span class="text-gray-900">Crescita QoQ 0.3%, YoY 2.1%, Output gap 1.4%</span>
-    </div>
+<div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
+  <h3 class="font-semibold text-gray-800 mb-1">PIL Reale & Potenziale</h3>
+  <p class="text-gray-600 text-sm mb-2">Misura crescita economica corrente e capacità produttiva potenziale.</p>
+  
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-sm">
+    <div>Globale: 3,2% QoQ / 3,8% YoY</div>
+    <div>🇺🇸 USA: 2,8% QoQ / 3,1% YoY</div>
+    <div>🇪🇺 Eurozona: 1,9% QoQ / 2,2% YoY</div>
   </div>
 
-  <!-- Interpretazione -->
-  <p class="mt-3 text-sm text-gray-600">
-    Output gap positivo indica economia sopra il potenziale → possibile pressione inflazionistica. Output gap negativo indica economia sotto potenziale → slack e margine di stimolo.
-  </p>
+  <p class="text-gray-700 text-sm mt-2">Forward 6/12/24/36 mesi: 3,5 / 3,7 / 3,9 / 4,0%</p>
+  <p class="text-gray-500 text-xs mt-1">Output gap: 1,2% | Fonti: IMF, OECD, World Bank, Eurostat, Fed, BCE</p>
+</div>
 
-  <!-- Forward -->
-  <details class="mt-3">
-    <summary class="cursor-pointer text-blue-600 hover:underline">Forward 6–36 mesi</summary>
-    <div class="mt-2 text-sm text-gray-700">
-      <ul class="list-disc list-inside">
-        <li>6 mesi: Globale +0.4%, USA +0.5%, Eurozona +0.2%</li>
-        <li>12 mesi: Globale +0.7%, USA +0.8%, Eurozona +0.5%</li>
-        <li>24 mesi: Globale +1.1%, USA +1.2%, Eurozona +0.9%</li>
-        <li>36 mesi: Globale +1.4%, USA +1.5%, Eurozona +1.2%</li>
-      </ul>
-      <p class="mt-2 text-gray-600 text-sm">
-        Trend positivo indica ripresa graduale della produzione. Differenze tra aree riflettono politiche monetarie e shock locali.
-      </p>
-    </div>
   </details>
 
   <!-- Fonti -->
