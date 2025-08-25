@@ -1744,17 +1744,27 @@ Vuoi procedere inviando i dati?`;
         <a id="m-aff" href="#" rel="sponsored noopener" target="_blank"
            class="btn bg-sky-700 hover:bg-sky-800 text-white">Vai al sito ufficiale</a>
       </div>
-      <div class="mt-3 text-xs text-slate-500 leading-snug" id="m-disclaimer">
-  Investire comporta rischi: il capitale investito può diminuire e non essere recuperato.<br>
-  <strong>Consulta sempre un consulente finanziario indipendente</strong> prima di investire denaro reale.<br>
-  <span id="m-loss-info" 
-      class="block mt-2 p-2 bg-rose-50 text-rose-800 border border-rose-200 rounded font-medium">
-</span>
+   <div class="space-y-4 text-sm max-w-md mx-auto">
 
-  Consulta le informazioni ufficiali sul sito CONSOB.
+  <!-- Percentuale perdite (dinamica) -->
+  <div class="bg-red-50 border border-red-200 text-red-800 p-3 rounded-md">
+    <span id="loss-rate" class="font-bold text-base">--%</span> 
+    degli investitori retail perde denaro negoziando CFD con questo intermediario.
+  </div>
+
+  <!-- Disclaimer generale -->
+  <div class="bg-gray-50 border border-gray-200 text-gray-700 p-3 rounded-md leading-relaxed">
+    Investire comporta rischi: il capitale investito può diminuire e non essere recuperato. <br>
+    <strong>Consulta sempre un consulente finanziario indipendente</strong> prima di investire denaro reale.
+  </div>
+
+  <!-- Link CONSOB -->
+  <div class="text-xs text-gray-500 leading-relaxed">
+    Consulta le informazioni ufficiali sul sito 
+    <a href="https://www.consob.it" target="_blank" class="underline hover:text-gray-700">CONSOB</a>.
+  </div>
 </div>
 
-    </div>
   </div>
 
   <script>
