@@ -1742,7 +1742,37 @@ Vuoi procedere inviando i dati?`;
       <div class="px-5 py-4 border-t border-slate-200 flex items-center justify-between bg-slate-50">
         <span id="m-afftext" class="text-[12px] text-slate-500">Unico link cliccabile (affiliato).</span>
         <a id="m-aff" href="#" rel="sponsored noopener" target="_blank"
-           class="btn bg-sky-700 hover:bg-sky-800 text-white">Vai al sito ufficiale</a>
+           class="btn bg-sky-700 hover:bg-sky-800 text-white">Vai al sito ufficiale</a><!-- Pulsante Visita il sito -->
+<a href="https://broker.com" target="_blank" rel="noopener sponsored" class="btn bg-sky-700 hover:bg-sky-800 text-white">
+  Visita il sito
+</a>
+
+<!-- Disclaimer istituzionale -->
+<div id="disclaimer" class="text-xs text-slate-500 mt-2 leading-snug">
+  Investire comporta rischi: il capitale investito può diminuire e non essere recuperato.<br>
+  <strong id="cfd-info"></strong><br>
+  Consulta le informazioni ufficiali sul sito CONSOB.
+</div>
+
+<script>
+  // Percentuali reali dei conti al dettaglio che perdono denaro
+  const brokers = {
+    'etoro': 'Per CFD, il 61% dei conti al dettaglio perde denaro.',
+    'ig': 'Per CFD, il 74% dei conti al dettaglio perde denaro.',
+    'cmc': 'Per CFD, il 72% dei conti al dettaglio perde denaro.',
+    'xtb': 'Per CFD, il 76% dei conti al dettaglio perde denaro.',
+    'default': ''
+  };
+
+  function setDisclaimer(broker) {
+    const cfdInfo = brokers[broker] || brokers['default'];
+    document.getElementById('cfd-info').innerHTML = cfdInfo;
+  }
+
+  // Esempio: impostare il disclaimer per eToro
+  setDisclaimer('etoro');
+</script>
+
       </div>
     </div>
   </div>
