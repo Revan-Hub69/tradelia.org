@@ -1696,88 +1696,21 @@ Vuoi procedere inviando i dati?`;
       </ul>
     </section>
 
-    <section class="text-[12px] text-slate-500">
-      <p>I dati (strumenti disponibili, quantità, minimi) sono indicativi e soggetti a variazioni; verificare sempre sul sito ufficiale prima di operare.</p>
-      <p>Questa pagina evita i CFD. Se un broker li offre, Tradelia AI lo include solo per strumenti diretti (azioni, ETF, bond, derivati quotati, cripto spot).</p>
-    </section>
-  </main>
+<div class="px-5 py-4 border-t border-slate-200 flex flex-col bg-slate-50">
+  <!-- Pulsante visita il sito (immutato, funzionante con script) -->
+  <a id="m-aff" href="#" rel="sponsored noopener" target="_blank"
+     class="btn bg-sky-700 hover:bg-sky-800 text-white mb-2">
+     Visita il sito
+  </a>
 
-  <!-- Modal (single, dynamic) -->
-  <div id="modal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/50 p-4">
-    <div class="bg-white w-full max-w-xl rounded-xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
-      <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <h3 id="m-title" class="font-semibold text-slate-900">Broker</h3>
-          <span id="m-badge" class="badge bg-emerald-100 text-emerald-700 hidden">Affiliato</span>
-        </div>
-        <button class="text-slate-500 hover:text-red-600" onclick="closeModal()">✕</button>
-      </div>
-      <div class="px-5 py-4 text-sm text-slate-700 grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 overflow-y-auto">
-        <div id="m-tags" class="flex flex-wrap gap-1 sm:col-span-2"></div>
-        <div><span class="font-semibold">Tipi di strumenti:</span> <span id="m-assets"></span></div>
-        <div><span class="font-semibold">Numero strumenti:</span> <span id="m-count"></span></div>
-        <div><span class="font-semibold">Deposito minimo:</span> <span id="m-min"></span></div>
-        <div><span class="font-semibold">Regolamentazione:</span> <span id="m-reg"></span></div>
-        <div><span class="font-semibold">Valutazione Tradelia AI:</span> <span id="m-score"></span></div>
-        <div><span class="font-semibold">Livello tecnico richiesto:</span> <span id="m-skill"></span></div>
-        <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div><span class="font-semibold">Piattaforme:</span> <span id="m-platforms"></span></div>
-          <div><span class="font-semibold">Costi (indicativi):</span> <span id="m-fees"></span></div>
-        </div>
-        <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <div class="font-semibold mb-1">Pro</div>
-            <ul id="m-pros" class="list-disc pl-5 space-y-1"></ul>
-          </div>
-          <div>
-            <div class="font-semibold mb-1">Contro</div>
-            <ul id="m-cons" class="list-disc pl-5 space-y-1"></ul>
-          </div>
-        </div>
-        <div id="m-cfd" class="hidden text-amber-800 bg-amber-50 border border-amber-200 px-3 py-2 rounded sm:col-span-2">
-          ⚠ Questo intermediario offre anche CFD. <strong>Tradelia AI lo seleziona solo per strumenti diretti</strong> (no CFD).
-          <div id="m-cfd-note" class="text-xs mt-1"></div>
-        </div>
-      </div>
-      <div class="px-5 py-4 border-t border-slate-200 flex items-center justify-between bg-slate-50">
-        <span id="m-afftext" class="text-[12px] text-slate-500">Unico link cliccabile (affiliato).</span>
-        <a id="m-aff" href="#" rel="sponsored noopener" target="_blank"
-           class="btn bg-sky-700 hover:bg-sky-800 text-white">Vai al sito ufficiale</a><!-- Pulsante Visita il sito -->
-<a href="https://broker.com" target="_blank" rel="noopener sponsored" class="btn bg-sky-700 hover:bg-sky-800 text-white">
-  Visita il sito
-</a>
-
-<!-- Disclaimer istituzionale -->
-<div id="disclaimer" class="text-xs text-slate-500 mt-2 leading-snug">
-  Investire comporta rischi: il capitale investito può diminuire e non essere recuperato.<br>
-  <strong id="cfd-info"></strong><br>
-  Consulta le informazioni ufficiali sul sito CONSOB.
+  <!-- Disclaimer istituzionale -->
+  <div id="disclaimer" class="text-xs text-slate-500 leading-snug">
+    Investire comporta rischi: il capitale investito può diminuire e non essere recuperato.<br>
+    <strong id="cfd-info"></strong><br>
+    Consulta le informazioni ufficiali sul sito CONSOB.
+  </div>
 </div>
 
-<script>
-  // Percentuali reali dei conti al dettaglio che perdono denaro
-  const brokers = {
-    'etoro': 'Per CFD, il 61% dei conti al dettaglio perde denaro.',
-    'ig': 'Per CFD, il 74% dei conti al dettaglio perde denaro.',
-    'cmc': 'Per CFD, il 72% dei conti al dettaglio perde denaro.',
-    'xtb': 'Per CFD, il 76% dei conti al dettaglio perde denaro.',
-    'default': ''
-  };
-
-  function setDisclaimer(broker) {
-    const cfdInfo = brokers[broker] || brokers['default'];
-    document.getElementById('cfd-info').innerHTML = cfdInfo;
-  }
-
-  // Esempio: impostare il disclaimer per eToro
-  setDisclaimer('etoro');
-</script>
-
-      </div>
-    </div>
-  </div>
-
-  <script>
     // Dati modali — sostituisci "/aff/..." con i tuoi URL reali quando vuoi
     const DATA = {
       exante: {
