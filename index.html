@@ -1749,249 +1749,380 @@ Copia/incolla al posto del codice attuale
       </div>
     </div>
 
- <!-- MODAL BROKER A DUE STEP (sostituisce interamente il tuo <div id="modal">...</div> + <script>) -->
-<div id="modal" class="hidden fixed inset-0 z-[1000] items-center justify-center bg-black/60 p-4">
-  <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
-    <!-- Testata con stepper -->
-    <div class="px-5 py-4 border-b border-slate-200">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2 min-w-0">
-          <h3 id="m-title" class="font-semibold text-slate-900 truncate">Broker</h3>
-          <span id="m-badge" class="badge bg-emerald-100 text-emerald-700 hidden">Affiliato</span>
-        </div>
-        <button class="text-slate-500 hover:text-red-600" onclick="closeModal()" aria-label="Chiudi">✕</button>
-      </div>
-      <!-- Stepper -->
-      <div class="mt-3 flex items-center gap-2 text-xs">
-        <div id="step-dot-1" class="w-2.5 h-2.5 rounded-full bg-slate-900"></div>
-        <span id="step-label-1" class="text-slate-900 font-medium">Scheda broker</span>
-        <div class="flex-1 h-px bg-slate-200 mx-2"></div>
-        <div id="step-dot-2" class="w-2.5 h-2.5 rounded-full bg-slate-300"></div>
-        <span id="step-label-2" class="text-slate-500">Disclaimer obbligatorio</span>
-      </div>
-    </div>
+    <!-- Footer COMPLIANCE ITALIA -->
+    <div class="px-5 py-4 border-t border-slate-200 bg-slate-50 space-y-3">
+      <!-- Avvertenza minima sempre visibile -->
+      <p class="text-[12px] text-slate-600">
+        <strong class="text-slate-800">Avvertenza (Italia):</strong>
+        contenuti informativi, <u>non consulenza</u>. Strumenti con leva <u>amplificano</u> perdite e profitti.
+        Possono applicarsi <u>commissioni, spread, cambio, dati</u>. Info rivolte a residenti in Italia e a
+        intermediari autorizzati/abilitati in Italia (MiFID II/ESMA/CONSOB).
+      </p>
 
-    <!-- CONTENUTO: Step 1 e Step 2 -->
-    <div class="flex-1 overflow-y-auto">
-      <!-- STEP 1: Scheda broker -->
-      <section id="step1" class="px-5 py-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div id="m-tags" class="flex flex-wrap gap-1 sm:col-span-2"></div>
-        <div><span class="font-semibold">Tipi di strumenti:</span> <span id="m-assets"></span></div>
-        <div><span class="font-semibold">Numero strumenti:</span> <span id="m-count"></span></div>
-        <div><span class="font-semibold">Deposito minimo:</span> <span id="m-min"></span></div>
-        <div><span class="font-semibold">Regolamentazione:</span> <span id="m-reg"></span></div>
-        <div><span class="font-semibold">Valutazione Tradelia AI:</span> <span id="m-score"></span></div>
-        <div><span class="font-semibold">Livello tecnico richiesto:</span> <span id="m-skill"></span></div>
-        <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div><span class="font-semibold">Piattaforme:</span> <span id="m-platforms"></span></div>
-          <div><span class="font-semibold">Costi (indicativi):</span> <span id="m-fees"></span></div>
-        </div>
-        <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <!-- Toggle disclaimer completo -->
+      <button id="m-disclaimer-toggle" class="text-[12px] text-sky-700 hover:underline" aria-expanded="false" aria-controls="m-disclaimer-full">
+        Mostra disclaimer completo
+      </button>
+
+      <!-- Disclaimer completo (collassabile) -->
+      <div id="m-disclaimer-full" class="hidden text-[12px] text-slate-700 border border-slate-200 rounded-lg bg-white p-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
-            <div class="font-semibold mb-1">Pro</div>
-            <ul id="m-pros" class="list-disc pl-5 space-y-1"></ul>
-          </div>
-          <div>
-            <div class="font-semibold mb-1">Contro</div>
-            <ul id="m-cons" class="list-disc pl-5 space-y-1"></ul>
-          </div>
-        </div>
-        <div id="m-cfd" class="hidden text-amber-800 bg-amber-50 border border-amber-200 px-3 py-2 rounded sm:col-span-2">
-          ⚠ Questo intermediario offre anche CFD. <strong>Tradelia AI lo seleziona solo per strumenti diretti</strong> (no CFD).
-          <div id="m-cfd-note" class="text-xs mt-1"></div>
-        </div>
-      </section>
-
-      <!-- STEP 2: Disclaimer obbligatorio -->
-      <section id="step2" class="hidden px-5 py-4">
-        <h4 class="font-semibold mb-2">Avvertenze per gli investitori (MiFID II · ESMA · CONSOB)</h4>
-        <!-- alert sintetico vicino al pulsante come richiesto -->
-        <div id="m-mini-warning" class="text-[12px] text-amber-900 bg-amber-50 border border-amber-200 rounded p-3 mb-3">
-          <strong>Attenzione:</strong> gli investimenti comportano il rischio di perdita, anche totale, del capitale. I derivati sono strumenti complessi e la leva può amplificare rapidamente le perdite. Questo contenuto non è consulenza finanziaria.
-        </div>
-
-        <!-- disclaimer ufficiale specifico per broker -->
-        <div class="text-sm text-slate-700">
-          <div class="font-medium mb-1">Testo ufficiale del broker</div>
-          <div id="m-disclaimer" class="border border-slate-200 rounded-lg p-3 max-h-56 overflow-y-auto whitespace-pre-wrap"></div>
-
-          <!-- riga percentuale CFD opzionale -->
-          <div id="m-cfd-pct-wrap" class="hidden mt-2 text-[12px] text-slate-600">
-            <span class="font-medium">Percentuale conti retail in perdita sui CFD (dichiarata dal broker):</span>
-            <span id="m-cfd-pct"></span>
-          </div>
-
-          <!-- ulteriori note Tradelia -->
-          <details class="mt-3 rounded border border-slate-200 p-3">
-            <summary class="cursor-pointer font-medium">Note di Tradelia AI (non consulenza)</summary>
-            <ul class="list-disc pl-5 mt-2 text-[13px] space-y-1">
-              <li>Verifica sempre sul sito ufficiale del broker condizioni, mercati, costi e regolamentazione aggiornati.</li>
-              <li>Per strumenti <em>DMA</em> (azioni/ETF/obbligazioni) il rischio è in linea con la volatilità dei mercati; la diversificazione riduce ma non elimina il rischio.</li>
-              <li>Per <em>derivati quotati</em> (futures/opzioni) e <em>CFD</em> la leva aumenta il rischio di perdite rapide.</li>
-              <li>Tradelia AI non fornisce raccomandazioni personalizzate; rivolgiti a un consulente finanziario indipendente prima di operare.</li>
+            <p class="font-semibold mb-1">Ambito & limitazioni</p>
+            <ul class="list-disc pl-5 space-y-1">
+              <li>Tradelia AI non fornisce raccomandazioni personalizzate né verifica di idoneità/adeguatezza.</li>
+              <li>Verifica sempre <em>listini, costi, mercati e documenti</em> sul sito ufficiale del broker.</li>
+              <li>Sezione rivolta all'Italia; verifica eventuali restrizioni geografiche del broker.</li>
             </ul>
-          </details>
+          </div>
+          <div>
+            <p class="font-semibold mb-1">Conflitti di interesse</p>
+            <ul class="list-disc pl-5 space-y-1">
+              <li>Potremmo ricevere compensi da link contrassegnati “Affiliato”.</li>
+              <li>Evitiamo la promozione dei CFD: se presenti, includiamo solo la parte <em>strumenti diretti</em> (azioni, ETF, bond, derivati quotati, cripto spot).</li>
+            </ul>
+          </div>
+        </div>
 
-          <!-- accettazione obbligatoria -->
-          <label class="flex items-start gap-2 mt-4">
-            <input type="checkbox" id="m-accept" class="mt-0.5">
-            <span class="text-[13px]">Dichiaro di aver letto e compreso le avvertenze e il disclaimer del broker.</span>
+        <!-- Tabella rischi per asset (DMA + derivati) -->
+        <div class="mt-3 overflow-x-auto">
+          <table class="min-w-full text-[12px] border border-slate-200">
+            <thead class="bg-slate-100 text-slate-700">
+              <tr>
+                <th class="px-2 py-1 border">Asset</th>
+                <th class="px-2 py-1 border">Tipo</th>
+                <th class="px-2 py-1 border">Perdita media retail*</th>
+                <th class="px-2 py-1 border">Cause principali</th>
+              </tr>
+            </thead>
+            <tbody class="text-slate-700">
+              <tr><td class="px-2 py-1 border">Azioni (DMA)</td><td class="px-2 py-1 border">Diretti</td><td class="px-2 py-1 border">~30–50%</td><td class="px-2 py-1 border">Volatilità, eventi macro, rischio emittente</td></tr>
+              <tr><td class="px-2 py-1 border">ETF azionari</td><td class="px-2 py-1 border">DMA</td><td class="px-2 py-1 border">~25–35%</td><td class="px-2 py-1 border">Cicli di mercato, correlazione, tracking</td></tr>
+              <tr><td class="px-2 py-1 border">ETF obbligazionari</td><td class="px-2 py-1 border">DMA</td><td class="px-2 py-1 border">~10–20%</td><td class="px-2 py-1 border">Tassi, duration, credito</td></tr>
+              <tr><td class="px-2 py-1 border">Obbligazioni</td><td class="px-2 py-1 border">DMA</td><td class="px-2 py-1 border">~5–15%</td><td class="px-2 py-1 border">Tassi, credito, liquidità</td></tr>
+              <tr><td class="px-2 py-1 border">Criptovalute (spot)</td><td class="px-2 py-1 border">Non leva</td><td class="px-2 py-1 border">~40–60%</td><td class="px-2 py-1 border">Elevata volatilità, eventi regolatori</td></tr>
+              <tr><td class="px-2 py-1 border">Opzioni / Futures</td><td class="px-2 py-1 border">Derivati quotati</td><td class="px-2 py-1 border">~70–85%</td><td class="px-2 py-1 border">Leva, scadenze, volatilità, margin call</td></tr>
+              <tr><td class="px-2 py-1 border">CFD (azioni/indici)</td><td class="px-2 py-1 border">Derivati OTC</td><td class="px-2 py-1 border">~74–80%</td><td class="px-2 py-1 border">Leva, volatilità, costi impliciti</td></tr>
+              <tr><td class="px-2 py-1 border">CFD (Forex)</td><td class="px-2 py-1 border">Derivati OTC</td><td class="px-2 py-1 border">~72–78%</td><td class="px-2 py-1 border">Leva, eventi macro, gap</td></tr>
+            </tbody>
+          </table>
+          <p class="mt-2 text-[11px] text-slate-500">
+            *Valori indicativi/medi per utenza retail, non predittivi; variano per mercato/periodo/profilo. Verifica i documenti informativi del broker.
+          </p>
+        </div>
+
+        <!-- Consenso obbligatorio -->
+        <div class="mt-3">
+          <label class="inline-flex items-start gap-2">
+            <input id="m-consent" type="checkbox" class="mt-0.5 h-4 w-4 rounded border-slate-300">
+            <span>
+              Dichiaro di aver letto e compreso: (i) che i contenuti non sono consulenza; (ii) i rischi e i costi connessi, incl. leva per derivati; (iii) che opero come residente in Italia o in base a idonea abilitazione del broker.
+            </span>
           </label>
         </div>
-      </section>
-    </div>
-
-    <!-- Footer azioni -->
-    <div class="px-5 py-4 border-t border-slate-200 flex items-center justify-between bg-slate-50">
-      <div class="flex items-center gap-3">
-        <button id="m-prev" class="btn border border-slate-300 text-slate-700 rounded px-3 py-2 hidden">Indietro</button>
-        <button id="m-next" class="btn bg-slate-900 text-white rounded px-3 py-2">Avanti</button>
       </div>
-      <div class="flex items-center gap-2">
-        <span id="m-afftext" class="text-[12px] text-slate-500">Sito ufficiale (non affiliato)</span>
-        <a id="m-aff" href="#" rel="noopener" target="_blank" class="btn rounded px-3 py-2 bg-slate-300 text-white pointer-events-none opacity-60">Procedi al sito</a>
+
+      <!-- Riga azioni: testo link + pulsante, bloccato finché manca il consenso -->
+      <div class="flex items-center justify-between">
+        <span id="m-afftext" class="text-[12px] text-slate-500">Sito ufficiale / link affiliato (se indicato).</span>
+        <a id="m-aff" href="#" rel="noopener" target="_blank"
+           class="btn bg-sky-700 hover:bg-sky-800 text-white pointer-events-none opacity-50"
+           aria-disabled="true" data-requires-consent="true">
+          Vai al sito ufficiale
+        </a>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  // ==== DISCLAIMER UFFICIALI (IT) PER BROKER ====
-  // Inserisci qui i testi italiani (fedeli / tradotti) dei disclaimer ufficiali.
-  // Se non hai il testo ufficiale in IT, usa un riassunto prudente in IT e mantieni un link al testo originale sul sito del broker.
-  const DISCLAIMER_IT = {
+  // =============================
+  // Dati modali — copia/incolla i tuoi URL affiliati reali quando vuoi
+  // =============================
+  const DATA = {
     exante: {
-      text: `I CFD sono strumenti complessi e comportano un rischio elevato di perdere denaro rapidamente a causa della leva. Valuta attentamente se comprendi come funzionano i CFD e se puoi permetterti l’elevato rischio di perdere il tuo denaro. Le informazioni qui fornite hanno carattere generale e non costituiscono consulenza finanziaria. Verifica sempre termini, costi e mercati sul sito ufficiale del broker.`,
-      cfd_loss_pct: null // es. "74%" se dichiarato dal broker (aggiorna dai loro materiali)
+      name: "EXANTE",
+      affiliated: true,
+      tags: ["DMA","Bond","Derivati quotati"],
+      assets: "Azioni, ETF (incl. ETN crypto), Futures, Opzioni, Obbligazioni; Cripto via CFD",
+      count: "≈ 1.000.000+ strumenti • 50+ mercati • 20.000+ bond • 40.000+ azioni • 25.000+ ticker opzioni / 1.000.000+ strike",
+      min: "≈ €10.000 (retail UE)",
+      reg: "UE · entità europee (es. MFSA/CySEC) · operatività per residenti italiani",
+      cfd: true,
+      cfd_note: "Su EXANTE <strong>solo le criptovalute sono offerte tramite CFD</strong>. Tutti gli altri strumenti sono quotati su mercati regolamentati.",
+      score: 92,
+      platforms: "Web, Desktop, App",
+      fees: "Commissioni per mercato; cambio e dati in tempo reale separati; deposito minimo €10k.",
+      pros: [
+        "Accesso DMA su 50+ mercati",
+        "Vasta copertura obbligazionaria",
+        "Derivati quotati su molte borse"
+      ],
+      cons: [
+        "Deposito minimo elevato",
+        "Cripto solo via CFD",
+        "Listino e mercati da verificare"
+      ],
+      skill: "Avanzato",
+      aff: "https://exantepartner.com/p/38603/"
     },
     saxo: {
-      text: `Il trading su prodotti derivati comporta un livello di rischio elevato e non è adatto a tutti gli investitori. A causa della leva, è possibile perdere denaro rapidamente e subire perdite che possono eccedere l’investimento iniziale. Prima di operare, valuta la tua esperienza, i tuoi obiettivi e consulta i documenti informativi sul sito di Saxo Bank.`,
-      cfd_loss_pct: null
+      name: "Saxo Bank",
+      affiliated: false,
+      tags: ["DMA","Opzioni","Futures"],
+      assets: "Azioni, ETF, Opzioni, Futures, Obbligazioni; FX; commodities",
+      count: "23.000+ azioni • 7.400+ ETF • 250 futures • 3.100 opzioni • 5.200+ bond",
+      min: "Variabile per area/conti (verificare)",
+      reg: "UE/UK/DK · entità regolamentate · disponibile in Italia",
+      cfd: true,
+      cfd_note: "Offre CFD multi-asset; in questa selezione consideriamo solo strumenti quotati.",
+      score: 90,
+      platforms: "SaxoTraderGO/PRO, Web, App",
+      fees: "Commissioni per mercato; possibili costi per dati e cambio.",
+      pros: [
+        "Piattaforme mature e stabili",
+        "Copertura multi-asset avanzata",
+        "Buoni strumenti di analisi"
+      ],
+      cons: [
+        "Costi di dati/cambio possono incidere",
+        "Curva di apprendimento per funzioni pro"
+      ],
+      skill: "Avanzato",
+      aff: ""
     },
     ibkr: {
-      text: `Investire comporta rischi, inclusa la possibile perdita del capitale. I prodotti derivati (opzioni, futures) non sono adatti a tutti gli investitori e possono comportare perdite superiori al deposito iniziale. Leggi attentamente le informative sui rischi e i documenti di assunzione di rischio disponibili presso Interactive Brokers.`,
-      cfd_loss_pct: null
+      name: "Interactive Brokers (IBKR)",
+      affiliated: false,
+      tags: ["DMA","TWS/API","Derivati quotati"],
+      assets: "Azioni, ETF, Bond, Opzioni, Futures su borse globali; Forex; Fondi; API/TWS",
+      count: "160+ mercati in 36 paesi • 1.000.000+ bond",
+      min: "Nessun minimo formale (verificare requisiti)",
+      reg: "USA/EU · entità regolamentate · operatività per residenti italiani",
+      cfd: true,
+      cfd_note: "CFD disponibili tramite entità abilitate (es. IBKR UK/IE); selezioniamo solo strumenti quotati.",
+      score: 95,
+      platforms: "TWS, Client Portal, IBKR Mobile, API",
+      fees: "Piani tiered/fixed; dati e cambio separati.",
+      pros: [
+        "Copertura globale (160+ mercati)",
+        "TWS/API molto potenti",
+        "Infrastruttura professionale"
+      ],
+      cons: [
+        "Curva di apprendimento ripida",
+        "Pricing articolato",
+        "Dati in tempo reale spesso a pagamento"
+      ],
+      skill: "Pro",
+      aff: ""
     },
     mexem: {
-      text: `L’operatività tramite infrastruttura IBKR include strumenti complessi (opzioni, futures). La leva può amplificare rapidamente le perdite. Le informazioni non costituiscono consulenza. Verifica regolamentazione, costi e condizioni aggiornate sul sito ufficiale MEXEM.`,
-      cfd_loss_pct: null
+      name: "MEXEM",
+      affiliated: false,
+      tags: ["DMA","TWS","Multi-mercato"],
+      assets: "Accesso a TWS/IBKR; azioni, ETF, opzioni e futures quotati",
+      count: "Via IBKR: 160+ mercati • 1.000.000+ bond",
+      min: "N/D ufficiale",
+      reg: "UE · vigilanza (es. CySEC) · disponibile in Italia",
+      cfd: true,
+      cfd_note: "CFD disponibili tramite entità IBKR dove consentito; selezioniamo solo la parte quotata.",
+      score: 88,
+      platforms: "TWS (IBKR), Client Portal, App",
+      fees: "Listino in linea con IBKR; dati/cambio separati.",
+      pros: [
+        "Accesso a TWS/IBKR con supporto UE/IT",
+        "Multi-mercato con infrastruttura solida"
+      ],
+      cons: [
+        "Struttura costi simile a IBKR (da verificare)",
+        "Dipendenza dall'infrastruttura IBKR"
+      ],
+      skill: "Avanzato",
+      aff: ""
     },
     freedom24: {
-      text: `Gli investimenti in IPO, azioni ed ETF comportano rischi di perdita del capitale. Le IPO sono particolarmente rischiose e possono essere soggette a forte volatilità. Valuta la tua tolleranza al rischio e consulta la documentazione informativa sul sito ufficiale Freedom24.`,
-      cfd_loss_pct: null
+      name: "Freedom24",
+      affiliated: true,
+      tags: ["IPO","Azioni","ETF"],
+      assets: "IPO primarie, Azioni USA/EU, ETF, Obbligazioni; Opzioni/Futures quotati",
+      count: "≈ 1.000.000 strumenti • 3.600+ ETF",
+      min: "≈ €10",
+      reg: "UE · vigilanza (CySEC) · disponibile in Italia",
+      cfd: false,
+      score: 85,
+      platforms: "Web, App",
+      fees: "Commissioni su azioni/ETF; IPO con condizioni dedicate.",
+      pros: [
+        "Accesso a IPO primarie",
+        "Copertura ampia USA/EU",
+        "Interfaccia semplice"
+      ],
+      cons: [
+        "Le IPO comportano rischi elevati",
+        "Funzioni pro più limitate rispetto ai broker istituzionali"
+      ],
+      skill: "Base",
+      aff: "https://freedom24.com/invite_from/2953166"
     },
     scalable: {
-      text: `Investire in ETF/azioni comporta rischi. I piani di accumulo non garantiscono rendimenti e il valore dell’investimento può diminuire. Verifica i documenti informativi chiave (KID/KIID) e i costi sul sito Scalable Capital.`,
-      cfd_loss_pct: null
+      name: "Scalable Capital",
+      affiliated: false,
+      tags: ["ETF","PAC","Low fees"],
+      assets: "ETF, Azioni; piani PAC; Fondi; Derivati (gettex/EU); Crypto ETP",
+      count: "≈ 8.000 azioni • 2.200 ETF • 2.000 fondi • 375.000+ derivati",
+      min: "da importi ridotti per PAC",
+      reg: "UE · vigilanza tedesca · disponibile in Italia",
+      cfd: false,
+      score: 83,
+      platforms: "Web, App",
+      fees: "Piani flat e per-ordine; PAC a costi contenuti.",
+      pros: [
+        "PAC su ETF efficienti",
+        "Costi bassi su gettex",
+        "UI moderna"
+      ],
+      cons: [
+        "Copertura borse focalizzata su DE",
+        "Alcuni strumenti/mercati non disponibili"
+      ],
+      skill: "Base",
+      aff: ""
     },
     degiro: {
-      text: `Il trading su azioni, ETF, obbligazioni e derivati quotati comporta rischi di perdita del capitale. Prima di operare, leggi i documenti informativi chiave e il tariffario sul sito DEGIRO. Nessuna informazione qui presentata costituisce consulenza.`,
-      cfd_loss_pct: null
+      name: "DEGIRO",
+      affiliated: false,
+      tags: ["ETF","Azioni","Multi-mercato"],
+      assets: "Azioni, ETF, Obbligazioni, Fondi, Opzioni/Futures (quotati), Warrants/Certificates",
+      count: "50+ borse in 30 paesi • ETF su 19 mercati",
+      min: "Nessun minimo formale (verificare requisiti operativi)",
+      reg: "UE · vigilanza Paesi Bassi/UE · disponibile in Italia",
+      cfd: false,
+      score: 84,
+      platforms: "Web, App",
+      fees: "Commissioni competitive; dati in tempo reale spesso opzionali.",
+      pros: [
+        "Costi molto competitivi",
+        "Ampia copertura borse EU/US"
+      ],
+      cons: [
+        "Dati real-time spesso a pagamento",
+        "Mancano API/strumenti pro avanzati"
+      ],
+      skill: "Intermedio",
+      aff: ""
     },
     etoro: {
-      text: `Gli investimenti comportano rischi. Il trading su criptoasset e CFD è altamente volatile e può non essere adatto a tutti. Valuta se comprendi il funzionamento dei prodotti e se puoi sostenere l’elevato rischio di perdita del denaro. Consulta la disclosure sui rischi sul sito eToro.`,
-      cfd_loss_pct: null // aggiorna con la percentuale ufficiale eToro se vuoi mostrarla
+      name: "eToro",
+      affiliated: true,
+      tags: ["Azioni","ETF","Cripto spot","Social"],
+      assets: "Azioni/ETF reali, Cripto spot; Opzioni US; funzioni social/copy",
+      count: "7.000+ asset totali • Azioni su 20+ borse • >130 crypto (globale; disponibilità varia per area)",
+      min: "≈ €50 (variabile per area)",
+      reg: "UE · entità europee abilitate · disponibile in Italia",
+      cfd: true,
+      cfd_note: "Offre CFD su più asset. In questa selezione consideriamo solo la componente <em>real assets</em>.",
+      score: 76,
+      platforms: "Web, App",
+      fees: "Azioni/ETF reali con commissioni ridotte; spread/cambio e costi di prelievo possibili.",
+      pros: [
+        "Funzioni social/copy",
+        "Ampia scelta di cripto spot",
+        "UI semplice"
+      ],
+      cons: [
+        "CFD disponibili (non promossi)",
+        "Spread/cambio possono incidere",
+        "Strumenti avanzati limitati"
+      ],
+      skill: "Base",
+      aff: "https://med.etoro.com/B7979_A124128_TClick.aspx"
     },
     naga: {
-      text: `Il social/copy trading non è una garanzia di profitto. I titoli/ETF e gli eventuali CFD comportano rischi di perdita del capitale. Prima di operare, consulta le informative sui rischi e i documenti del broker NAGA.`,
-      cfd_loss_pct: null
+      name: "NAGA",
+      affiliated: true,
+      tags: ["Azioni","ETF","Social"],
+      assets: "Azioni/ETF reali; componente social/copy",
+      count: "3.000+ azioni/ETF reali • 15 borse",
+      min: "N/D ufficiale",
+      reg: "UE · vigilanza europea · disponibile in Italia",
+      cfd: true,
+      cfd_note: "NAGA offre CFD; qui selezionata solo la parte titoli/ETF reali.",
+      score: 72,
+      platforms: "Web, App",
+      fees: "Commissioni/spread; possibili costi di deposito/prelievo.",
+      pros: [
+        "Componente social",
+        "Titoli/ETF reali accanto a altri asset"
+      ],
+      cons: [
+        "Presenza CFD (non promossi)",
+        "Listino commissioni da verificare per mercato"
+      ],
+      skill: "Base",
+      aff: "https://www.financeads.net/tc.php?t=76793C4792126679T"
     },
     directa: {
-      text: `L’operatività su azioni, ETF, obbligazioni e derivati quotati su Borsa Italiana e altri mercati comporta rischi di perdita. Verifica attentamente il prospetto informativo, i KID/KIID e il listino commissionale sul sito Directa SIM.`,
-      cfd_loss_pct: null
+      name: "Directa SIM",
+      affiliated: false,
+      tags: ["Italia","Borsa Italiana","CONSOB"],
+      assets: "Azioni/ETF/Obbligazioni Italia; IDEM (derivati quotati); USA (NYSE/NASDAQ/AMEX); Xetra/SIX ecc.",
+      count: "Borsa Italiana (EXM, ETFplus, MOT/EuroTLX, ExtraMOT) • USA (NYSE, NASDAQ, AMEX)",
+      min: "N/D ufficiale",
+      reg: "Italia · SIM iscritta CONSOB · vigilanza Banca d’Italia",
+      cfd: true,
+      cfd_note: "Disponibili CFD/FX via LMAX; in questa selezione consideriamo solo gli strumenti quotati.",
+      score: 82,
+      platforms: "Web/desktop proprietarie, App",
+      fees: "Commissioni per mercato; regime fiscale domestico.",
+      pros: [
+        "Broker italiano (CONSOB)",
+        "Accesso diretto a Borsa Italiana + USA/Europa",
+        "Fiscalità domestica e supporto in italiano"
+      ],
+      cons: [
+        "Interfacce più tecniche",
+        "Listino commissionale articolato"
+      ],
+      skill: "Intermedio",
+      aff: ""
     }
   };
 
-  // OFFICIAL URL fallback per non affiliati (resta come nel tuo codice)
-  const OFFICIAL = {
-    saxo: 'https://www.saxo.com',
-    ibkr: 'https://www.interactivebrokers.eu',
-    mexem: 'https://www.mexem.com',
-    scalable: 'https://it.scalable.capital',
-    degiro: 'https://www.degiro.it',
-    directa: 'https://www.directa.it'
-  };
-
+  // Utility query
   const $ = s => document.querySelector(s);
-  const modalEl = $('#modal');
-  const step1El = $('#step1');
-  const step2El = $('#step2');
-  const nextBtn = $('#m-next');
-  const prevBtn = $('#m-prev');
-  const affBtn = $('#m-aff');
-  const affText = $('#m-afftext');
-  const acceptCk = $('#m-accept');
-
-  let CURRENT_KEY = null;
-
-  function setStep(n){
-    if(n === 1){
-      step1El.classList.remove('hidden');
-      step2El.classList.add('hidden');
-      prevBtn.classList.add('hidden');
-      nextBtn.classList.remove('hidden');
-      // Stepper UI
-      $('#step-dot-1').className = 'w-2.5 h-2.5 rounded-full bg-slate-900';
-      $('#step-label-1').className = 'text-slate-900 font-medium';
-      $('#step-dot-2').className = 'w-2.5 h-2.5 rounded-full bg-slate-300';
-      $('#step-label-2').className = 'text-slate-500';
-      // Disabilita uscita
-      affBtn.classList.add('pointer-events-none','opacity-60');
-      affBtn.classList.remove('bg-sky-700','hover:bg-sky-800');
-      affBtn.classList.add('bg-slate-300');
-    } else {
-      step1El.classList.add('hidden');
-      step2El.classList.remove('hidden');
-      prevBtn.classList.remove('hidden');
-      nextBtn.classList.add('hidden');
-      // Stepper UI
-      $('#step-dot-1').className = 'w-2.5 h-2.5 rounded-full bg-slate-300';
-      $('#step-label-1').className = 'text-slate-500';
-      $('#step-dot-2').className = 'w-2.5 h-2.5 rounded-full bg-slate-900';
-      $('#step-label-2').className = 'text-slate-900 font-medium';
-      // Reset consenso
-      if(acceptCk){ acceptCk.checked = false; }
-      affBtn.classList.add('pointer-events-none','opacity-60');
-      affBtn.classList.remove('bg-sky-700','hover:bg-sky-800');
-      affBtn.classList.add('bg-slate-300');
-    }
-  }
 
   function openModal(key){
-    // compatibile con il tuo DATA esistente
     const d = DATA[key]; if(!d) return;
-    CURRENT_KEY = key;
-
-    // Testata
-    $('#m-title').textContent = d.name || 'Broker';
+    $('#m-title').textContent = d.name;
+    // badge affiliato
     $('#m-badge').classList.toggle('hidden', !d.affiliated);
-
-    // Tag
+    // tag
     const tg = $('#m-tags'); tg.innerHTML = '';
-    (d.tags||[]).forEach(t => { const s=document.createElement('span'); s.className='tag'; s.textContent=t; tg.appendChild(s); });
-
-    // Campi
-    $('#m-assets').textContent = d.assets || 'N/D';
-    $('#m-count').textContent  = d.count || 'N/D';
-    $('#m-min').textContent    = d.min || 'N/D';
-    $('#m-reg').textContent    = d.reg || 'N/D';
-    $('#m-score').textContent  = d.score ? `${d.score}/100` : 'N/D';
-    $('#m-skill').textContent  = d.skill || 'N/D';
+    d.tags.forEach(t => { const s=document.createElement('span'); s.className='tag'; s.textContent=t; tg.appendChild(s); });
+    $('#m-assets').textContent = d.assets;
+    $('#m-count').textContent  = d.count;
+    $('#m-min').textContent    = d.min;
+    $('#m-reg').textContent = d.reg;
+    $('#m-score').textContent = d.score ? `${d.score}/100` : 'N/D';
+    $('#m-skill').textContent = d.skill || 'N/D';
+    // CFD alert + nota specifica
+    const cfdBox = $('#m-cfd');
+    cfdBox.classList.toggle('hidden', !d.cfd);
+    const note = $('#m-cfd-note');
+    note.innerHTML = d.cfd && d.cfd_note ? d.cfd_note : '';
+    // piattaforme e costi
     $('#m-platforms').textContent = d.platforms || 'N/D';
-    $('#m-fees').textContent      = d.fees || 'N/D';
-
-    // Pro/Contro
+    $('#m-fees').textContent = d.fees || 'N/D';
+    // pro e contro
     const prosUl = $('#m-pros'); const consUl = $('#m-cons');
     prosUl.innerHTML = ''; consUl.innerHTML = '';
     (d.pros || []).forEach(p=>{ const li=document.createElement('li'); li.innerHTML=p; prosUl.appendChild(li); });
     (d.cons || []).forEach(c=>{ const li=document.createElement('li'); li.innerHTML=c; consUl.appendChild(li); });
-
-    // CFD alert + nota
-    const cfdBox = $('#m-cfd');
-    cfdBox.classList.toggle('hidden', !d.cfd);
-    $('#m-cfd-note').innerHTML = d.cfd && d.cfd_note ? d.cfd_note : '';
-
-    // Link affiliato / ufficiale
+    // link affiliato / ufficiale
+    const affBtn = $('#m-aff');
+    const affText = $('#m-afftext');
+    const OFFICIAL = { saxo: 'https://www.saxo.com', ibkr: 'https://www.interactivebrokers.eu', mexem: 'https://www.mexem.com', scalable: 'https://it.scalable.capital', degiro: 'https://www.degiro.it', directa: 'https://www.directa.it' };
     const url = d.aff ? d.aff : OFFICIAL[key] || '#';
     if(url && url !== '#'){
       affBtn.classList.remove('hidden');
@@ -2002,67 +2133,29 @@ Copia/incolla al posto del codice attuale
       affBtn.classList.add('hidden');
       affBtn.removeAttribute('href');
       affBtn.setAttribute('rel', 'noopener');
-      affText.textContent = 'Nessun link disponibile';
+      affText.textContent = 'Nessun link disponibile.';
     }
 
-    // Popola disclaimer specifico (STEP 2)
-    const disc = DISCLAIMER_IT[key];
-    const mDisc = $('#m-disclaimer');
-    const pctWrap = $('#m-cfd-pct-wrap');
-    const pctSpan = $('#m-cfd-pct');
-    if(disc && disc.text){ mDisc.textContent = disc.text; } else {
-      mDisc.textContent = 'Avvertenze non disponibili. Consulta il sito ufficiale del broker per il testo aggiornato sui rischi.';
-    }
-    if(disc && disc.cfd_loss_pct){
-      pctWrap.classList.remove('hidden');
-      pctSpan.textContent = disc.cfd_loss_pct;
-    } else {
-      pctWrap.classList.add('hidden');
-      pctSpan.textContent = '';
-    }
+    // Reset compliance state ad ogni apertura
+    const full = document.getElementById('m-disclaimer-full');
+    const tog  = document.getElementById('m-disclaimer-toggle');
+    const consent = document.getElementById('m-consent');
+    if (full) full.classList.add('hidden');
+    if (tog) { tog.setAttribute('aria-expanded','false'); tog.textContent = 'Mostra disclaimer completo'; }
+    if (consent) consent.checked = false;
+    // disabilita link finché manca consenso
+    affBtn.setAttribute('aria-disabled','true');
+    affBtn.classList.add('pointer-events-none','opacity-50');
 
-    // Mostra modal allo Step 1
-    setStep(1);
-    modalEl.classList.remove('hidden');
-    modalEl.classList.add('flex');
+    const modal = $('#modal'); modal.classList.remove('hidden'); modal.classList.add('flex');
   }
 
-  function closeModal(){ modalEl.classList.add('hidden'); modalEl.classList.remove('flex'); }
+  function closeModal(){ const m=$('#modal'); m.classList.add('hidden'); m.classList.remove('flex'); }
+
   document.getElementById('modal').addEventListener('click', (e)=>{ if(e.target.id==='modal') closeModal(); });
   document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); });
 
-  // Navigazione step
-  nextBtn.addEventListener('click', ()=> setStep(2));
-  prevBtn.addEventListener('click', ()=> setStep(1));
-
-  // Consenso: abilita link solo dopo check
-  if(acceptCk){
-    acceptCk.addEventListener('change', ()=>{
-      const ok = acceptCk.checked;
-      if(ok){
-        affBtn.classList.remove('pointer-events-none','opacity-60','bg-slate-300');
-        affBtn.classList.add('bg-sky-700','hover:bg-sky-800');
-      } else {
-        affBtn.classList.add('pointer-events-none','opacity-60','bg-slate-300');
-        affBtn.classList.remove('bg-sky-700','hover:bg-sky-800');
-      }
-    });
-  }
-
-  // Intercetta click sul link in Step 1: forza passaggio allo Step 2 (compliance)
-  affBtn.addEventListener('click', (e)=>{
-    // Se siamo nello step 1 o se manca il consenso, non uscire
-    const step2Hidden = step2El.classList.contains('hidden');
-    const ok = acceptCk && acceptCk.checked;
-    if(step2Hidden || !ok){
-      e.preventDefault();
-      setStep(2);
-      // piccolo feedback focus sul checkbox
-      if(!ok){ acceptCk && acceptCk.focus(); }
-    }
-  });
-
-  // ======= AUTOFILL CARD SUMMARY (compatibile con tuo codice) =======
+  // Fill card summaries (platforms & fees)
   document.querySelectorAll('li[data-key]').forEach(li=>{
     const key = li.getAttribute('data-key');
     const d = DATA[key]; if(!d) return;
@@ -2072,7 +2165,7 @@ Copia/incolla al posto del codice attuale
     if(f) f.textContent = d.fees || 'N/D';
   });
 
-  // ======= FILTRO CFD (immutato) =======
+  // --- Filtro CFD ---
   function applyFilter(mode){
     const cards = document.querySelectorAll('li[data-key]');
     cards.forEach(card => {
@@ -2082,8 +2175,10 @@ Copia/incolla al posto del codice attuale
       let show = true;
       if(mode === 'no-cfd'){
         show = (d.cfd === false); // mostra solo chi NON ha CFD
-      } else {
+      } else if(mode === 'standard'){
         show = true; // default: mostra tutti
+      } else {
+        show = true; // all
       }
       card.classList.toggle('hidden', !show);
     });
@@ -2093,8 +2188,62 @@ Copia/incolla al posto del codice attuale
     select.addEventListener('change', ()=> applyFilter(select.value));
     applyFilter('standard');
   }
-</script>
 
+  // =============================
+  // Compliance interactions
+  // =============================
+  const modalEl = document.getElementById('modal');
+
+  // Toggle disclaimer completo
+  modalEl.addEventListener('click', (e)=>{
+    const t = e.target;
+    if (t && t.id === 'm-disclaimer-toggle') {
+      const full = document.getElementById('m-disclaimer-full');
+      if (!full) return;
+      const hidden = full.classList.toggle('hidden');
+      t.setAttribute('aria-expanded', hidden ? 'false' : 'true');
+      t.textContent = hidden ? 'Mostra disclaimer completo' : 'Nascondi disclaimer completo';
+    }
+  });
+
+  // Consenso → abilita link
+  modalEl.addEventListener('change', (e)=>{
+    if (e.target && e.target.id === 'm-consent') {
+      const affBtn = document.getElementById('m-aff');
+      const checked = e.target.checked;
+      affBtn.setAttribute('aria-disabled', checked ? 'false' : 'true');
+      affBtn.classList.toggle('pointer-events-none', !checked);
+      affBtn.classList.toggle('opacity-50', !checked);
+    }
+  });
+
+  // Blocca click se manca consenso e mostra feedback
+  modalEl.addEventListener('click', (e)=>{
+    const a = e.target.closest('a#m-aff');
+    if (!a) return;
+    const requires = a.getAttribute('data-requires-consent') === 'true';
+    const disabled = a.getAttribute('aria-disabled') === 'true';
+    if (requires && disabled) {
+      e.preventDefault();
+      const full = document.getElementById('m-disclaimer-full');
+      const tog  = document.getElementById('m-disclaimer-toggle');
+      if (full && full.classList.contains('hidden')) {
+        full.classList.remove('hidden');
+        if (tog){ tog.setAttribute('aria-expanded','true'); tog.textContent = 'Nascondi disclaimer completo'; }
+      }
+      a.classList.add('shake');
+      setTimeout(()=> a.classList.remove('shake'), 400);
+    }
+  });
+
+  // Piccola animazione feedback
+  const style = document.createElement('style');
+  style.textContent = `
+    .shake{animation:shk .4s}
+    @keyframes shk{10%{transform:translateX(-2px)}30%{transform:translateX(2px)}50%{transform:translateX(-1px)}70%{transform:translateX(1px)}90%{transform:translateX(0)}}
+  `;
+  document.head.appendChild(style);
+</script>
 
 <!-- Cookie & Legal helpers (fix: racchiusi in <script>) -->
 <script>
