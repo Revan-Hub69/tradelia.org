@@ -1744,27 +1744,8 @@ Vuoi procedere inviando i dati?`;
         <a id="m-aff" href="#" rel="sponsored noopener" target="_blank"
            class="btn bg-sky-700 hover:bg-sky-800 text-white">Vai al sito ufficiale</a>
       </div>
-<!-- Disclaimer (sezione finale) -->
-<div class="p-5 space-y-3 text-sm text-slate-700 border-t border-slate-200 bg-white">
-  
-  <!-- Percentuale perdite (dinamica) -->
-  <div class="bg-red-50 border border-red-200 text-red-800 p-3 rounded-md">
-    <span id="loss-rate" class="font-bold text-base">--%</span>
-    degli investitori retail perde denaro negoziando CFD con questo intermediario.
+    </div>
   </div>
-
-  <!-- Disclaimer generale -->
-  <div class="bg-gray-50 border border-gray-200 text-gray-700 p-3 rounded-md leading-relaxed">
-    Investire comporta rischi: il capitale investito può diminuire e non essere recuperato. <br>
-    <strong>Consulta sempre un consulente finanziario indipendente</strong> prima di investire denaro reale.
-  </div>
-
-  <!-- Link CONSOB -->
-  <div class="text-xs text-gray-500 leading-relaxed">
-    Consulta le informazioni ufficiali sul sito 
-    <a href="https://www.consob.it" target="_blank" class="underline hover:text-gray-700">CONSOB</a>.
-  </div>
-</div>
 
   <script>
     // Dati modali — sostituisci "/aff/..." con i tuoi URL reali quando vuoi
@@ -2020,16 +2001,6 @@ Vuoi procedere inviando i dati?`;
 
     const $ = s => document.querySelector(s);
     function openModal(key){
-const lossInfo = $('#m-loss-info');
-const lossMap = {
-  etoro: "61% degli investitori retail perde denaro",
-  naga: "82.08% degli investitori retail perde denaro",
-  exante: "≈ 75% degli investitori retail perde denaro",
-  ibkr: "≈ 70% degli investitori retail perde denaro",
-  saxo: "≈ 73% degli investitori retail perde denaro"
-};
-lossInfo.textContent = lossMap[key] || "";
-
       const d = DATA[key]; if(!d) return;
       $('#m-title').textContent = d.name;
       // badge affiliato
