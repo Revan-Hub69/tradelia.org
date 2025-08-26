@@ -2268,134 +2268,73 @@ if (d.disclaimer) {
     
   </main>
 
-<!-- Back to specific section -->
-<button id="toTop" 
-  class="no-print fixed bottom-4 right-4 p-3 rounded-full border border-slate-300 bg-white/90 backdrop-blur-sm shadow
-         hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-opacity duration-300 opacity-0"
-  aria-label="Torna alla sezione tab" title="Torna alla sezione tab">
-  <i data-lucide="arrow-up"></i>
-</button>
+  <!-- Back to top -->
+  <button id="toTop" class="no-print fixed bottom-4 right-4 p-2 rounded-full border border-slate-300 bg-white shadow hover:bg-slate-50" aria-label="Torna su" title="Torna su" hidden>
+    <i data-lucide="arrow-up"></i>
+  </button>
 
+ <!-- Scripts -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // === Init Icons & Animations ===
+  // Icons & animations
   if (window.lucide) lucide.createIcons();
-  if (window.AOS) {
-    AOS.init({ once: true, duration: 350 });
-    document.documentElement.classList.add('aos-initialized');
-  }
+  if (window.AOS) { AOS.init({ once: true, duration: 350 }); document.documentElement.classList.add('aos-initialized'); }
 
-  // === Scroll progress, header shrink & toTop button ===
+  // Scroll progress & header shrink & back to top
   const sp = document.getElementById('scroll-progress');
   const toTop = document.getElementById('toTop');
-
   window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
-
-    // Scroll progress
-    if (sp) {
-      sp.style.width = (scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100) + '%';
-    }
-
-    // Pulsante toTop
-    if (toTop) {
-      if (scrollY >= 600) {
-        toTop.classList.add('opacity-100');
-        toTop.classList.remove('opacity-0');
-      } else {
-        toTop.classList.remove('opacity-100');
-        toTop.classList.add('opacity-0');
-      }
-    }
-
-    // Header shrink
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    if (sp) sp.style.width = scrolled + '%';
+    if (toTop) toTop.hidden = h.scrollTop < 600;
     const header = document.querySelector('header');
-    if (header) {
-      scrollY > 24 ? header.classList.add('shrink') : header.classList.remove('shrink');
-    }
-  }, { passive: true });
+    if (header) { if (h.scrollTop > 24) header.classList.add('shrink'); else header.classList.remove('shrink'); }
+  }, { passive:true });
+  toTop?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-  // Scroll to specific section
-  toTop?.addEventListener('click', () => {
-    const targetSection = document.querySelector('#tabs-scroller');
-    if (targetSection) {
-      targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
-
-  // === Drawer functions ===
+  // Drawer
   const drawer = document.getElementById('toc-drawer');
   const overlay = document.getElementById('toc-overlay');
   const openBtns = document.querySelectorAll('.btn-open-toc');
   const closeBtn = document.getElementById('close-toc-drawer');
-
-  function openDrawer() {
-    drawer?.classList.add('open');
-    overlay?.classList.remove('hidden');
-    drawer?.setAttribute('aria-hidden', 'false');
-    closeBtn?.focus(); // focus sul pulsante chiusura per accessibilità
-  }
-
-  function closeDrawer() {
-    drawer?.classList.remove('open');
-    overlay?.classList.add('hidden');
-    drawer?.setAttribute('aria-hidden', 'true');
-  }
-
+  function openDrawer(){ drawer?.classList.add('open'); overlay?.classList.remove('hidden'); drawer?.setAttribute('aria-hidden','false'); }
+  function closeDrawer(){ drawer?.classList.remove('open'); overlay?.classList.add('hidden'); drawer?.setAttribute('aria-hidden','true'); }
   openBtns.forEach(b => b.addEventListener('click', openDrawer));
   overlay?.addEventListener('click', closeDrawer);
   closeBtn?.addEventListener('click', closeDrawer);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeDrawer(); });
 
-  // === Tabs management ===
+  // Tabs
   const tabs = document.querySelectorAll('.sv-tab');
   const panels = document.querySelectorAll('.sv-panel');
-
-  function activateTab(targetId) {
-    tabs.forEach(t => {
-      t.classList.remove('active');
-      t.setAttribute('aria-selected', 'false');
-      t.setAttribute('tabindex', '-1');
-    });
-    panels.forEach(p => {
-      p.hidden = true;
-      p.classList.add('hidden');
-    });
-
+  function activateTab(targetId){
+    tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); t.setAttribute('tabindex','-1'); });
+    panels.forEach(p => { p.hidden = true; p.classList.add('hidden'); });
     const tab = document.querySelector(`.sv-tab[data-target="${targetId}"]`);
     const panel = document.getElementById(targetId);
-
-    if (tab) {
-      tab.classList.add('active');
-      tab.setAttribute('aria-selected', 'true');
-      tab.setAttribute('tabindex', '0');
-    }
-    if (panel) {
-      panel.hidden = false;
-      panel.classList.remove('hidden');
-      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
+    if (tab) { tab.classList.add('active'); tab.setAttribute('aria-selected','true'); tab.setAttribute('tabindex','0'); }
+    if (panel) { panel.hidden = false; panel.classList.remove('hidden'); }
     history.replaceState(null, '', '#' + targetId);
   }
-
   tabs.forEach(tab => tab.addEventListener('click', () => activateTab(tab.getAttribute('data-target'))));
 
-  // Drawer TOC activates tabs
+  // Drawer TOC -> attiva i tab (non solo anchor)
   document.querySelectorAll('#toc-drawer .toc-link').forEach(link => {
-    link.addEventListener('click', e => {
+    link.addEventListener('click', (e) => {
       e.preventDefault();
-      const targetId = link.getAttribute('href').replace('#', '');
+      const targetId = link.getAttribute('href').replace('#','');
       activateTab(targetId);
       closeDrawer();
+      document.getElementById('section-tabs')?.scrollIntoView({ behavior:'smooth', block:'start' });
     });
   });
 
   // Deep link on load
-  const hash = location.hash?.replace('#', '');
-  if (hash && document.getElementById(hash)) {
-    activateTab(hash);
-  } else if (!hash) {
+  const hash = location.hash?.replace('#','');
+  if (hash && document.getElementById(hash)) activateTab(hash);
+  else if (!hash) {
+    // Garantisce che il pannello predefinito sia visibile (es. "sim-op")
     const active = document.querySelector('.sv-tab.active')?.getAttribute('data-target') || 'sim-op';
     activateTab(active);
   }
@@ -2404,7 +2343,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-copy]').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-copy');
-      const url = location.origin + location.pathname + '#' + id; // aggiunto #
+      const url = location.origin + location.pathname + id;
       navigator.clipboard.writeText(url).then(() => {
         const prev = btn.textContent;
         btn.textContent = 'Copiato';
@@ -2414,5 +2353,4 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
-
 
