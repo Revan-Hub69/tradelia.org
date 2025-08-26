@@ -2269,12 +2269,12 @@ if (d.disclaimer) {
   </main>
 
 <!-- Pulsante Torna alle sezioni -->
-<a href="#section-tabs" id="toTop"
-   class="no-print fixed bottom-4 right-4 p-2 rounded-full border border-slate-300 bg-white shadow hover:bg-slate-50 opacity-0 transition-opacity duration-300"
-   aria-label="Torna alle sezioni"
-   title="Torna alle sezioni">
+<button id="toTop"
+        class="no-print fixed bottom-4 right-4 p-2 rounded-full border border-slate-300 bg-white shadow hover:bg-slate-50"
+        aria-label="Torna alle sezioni"
+        title="Torna alle sezioni">
   <i data-lucide="arrow-up"></i>
-</a>
+</button>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -2296,18 +2296,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
     if (sp) sp.style.width = scrolled + '%';
     if (header) header.classList.toggle('shrink', h.scrollTop > 24);
-
-    // Mostra/nascondi pulsante
-    if (toTop) {
-      if (window.scrollY >= 600) {
-        toTop.classList.add('opacity-100');
-        toTop.classList.remove('opacity-0');
-      } else {
-        toTop.classList.remove('opacity-100');
-        toTop.classList.add('opacity-0');
-      }
-    }
   }, { passive: true });
+
+  // Pulsante Torna alle sezioni → scroll fino alle tabs
+  toTop?.addEventListener('click', e => {
+    e.preventDefault();
+    if (tabsEl) {
+      const offset = header ? header.offsetHeight + 8 : 0; // margine di sicurezza
+      const targetY = tabsEl.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    }
+  });
 
   // Drawer indice
   const drawer   = document.getElementById('toc-drawer');
@@ -2374,7 +2373,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   });
-
 });
 </script>
+
 
