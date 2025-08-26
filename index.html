@@ -2163,17 +2163,7 @@ mexem: {
       // link affiliato (solo se presente)
       const affBtn = $('#m-aff');
       const affText = $('#m-afftext');
-const OFFICIAL = {
-  ibkr: 'https://www.interactivebrokers.eu',
-  mexem: 'https://www.mexem.com',
-  scalable: 'https://it.scalable.capital',
-  degiro: 'https://www.degiro.it',
-  directa: 'https://www.directa.it',
-  traderepublic: 'https://traderepublic.com/it-it',
-  bgsaxo: 'https://www.home.saxo/it-it',
-  ig: 'https://www.ig.com/it'
-};
-
+   const OFFICIAL = { saxo: 'https://www.saxo.com', ibkr: 'https://www.interactivebrokers.eu', mexem: 'https://www.mexem.com', scalable: 'https://it.scalable.capital', degiro: 'https://www.degiro.it', directa: 'https://www.directa.it' };
       if(url && url !== '#'){
         affBtn.classList.remove('hidden');
         affBtn.setAttribute('href', url);
