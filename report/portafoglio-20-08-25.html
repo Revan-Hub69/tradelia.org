@@ -2353,17 +2353,26 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
-<body class="bg-gray-50 flex items-center justify-center min-h-screen font-sans">
+<body class="bg-gray-50 flex items-center justify-center min-h-screen font-sans overflow-hidden">
 
-<!-- Modale Container -->
-<div id="modal2" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 perspective">
-  <div id="modalInner2" class="bg-white rounded-3xl shadow-2xl p-10 max-w-3xl w-full border border-gray-200 transition-transform duration-700 transform-style-preserve-3d relative">
+<!-- Modale -->
+<div id="modal2" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 perspective">
+  <div id="modalInner2" class="bg-white rounded-3xl shadow-2xl p-10 max-w-3xl w-full border border-gray-200 transition-transform duration-[450ms] ease-[cubic-bezier(.4,.0,.2,1)] preserve-3d relative focus:outline-none">
 
     <!-- Step 1: Disclaimer -->
     <div id="stepDisclaimer" class="backface-hidden w-full">
-      <h2 class="text-3xl font-bold mb-6 text-gray-900">Accesso Report Tradelia AI</h2>
+      <div class="flex justify-between items-center mb-6">
+        <div class="flex items-center space-x-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0 3.75h.008v.008H12v-.008zm9-3.75a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h2 class="text-3xl font-semibold text-gray-900">Accesso Report Tradelia AI</h2>
+        </div>
+        <span class="text-sm text-gray-500">Step 1 di 2</span>
+      </div>
+      
       <div class="mb-6 p-6 bg-gray-50 rounded-2xl border border-gray-200 shadow-inner max-h-96 overflow-y-auto text-gray-900 text-base leading-relaxed">
-        <p>
+        <p class="space-y-3">
           Le informazioni raccolte sono esclusivamente in forma di fasce anonime.<br>
           Questo schema ha finalità educativa e di ricerca.<br>
           Non costituisce consulenza finanziaria né valutazione MiFID II.<br>
@@ -2371,16 +2380,24 @@ document.addEventListener('DOMContentLoaded', () => {
           Contatta professionisti indipendenti per valutazioni personalizzate.
         </p>
       </div>
-      <button id="proseguiBtn" class="bg-blue-700 text-white font-semibold px-6 py-2 rounded-xl hover:bg-blue-800 transition-colors duration-300 shadow">Prosegui</button>
+
+      <button id="proseguiBtn" class="bg-accent hover:bg-accent-hover active:translate-y-[1px] text-white font-medium px-6 py-2 rounded-xl transition-all duration-300 shadow hover:shadow-lg focus:ring-2 focus:ring-accent">
+        Prosegui
+      </button>
     </div>
 
     <!-- Step 2: Test -->
     <div id="stepTest" class="backface-hidden absolute inset-0 rotate-y-180 w-full opacity-0 pointer-events-none">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold text-gray-800">Verifica comprensione</h3>
+        <span class="text-sm text-gray-500">Step 2 di 2</span>
+      </div>
+
       <div class="p-6 overflow-y-auto max-h-[70vh] space-y-4">
         <form id="disclaimerTestForm" class="space-y-4">
           <div>
-            <label class="block font-semibold mb-1 text-gray-800">1. Le informazioni raccolte nel report sono dati personali identificativi?</label>
-            <select class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none" name="q1">
+            <label for="q1" class="block font-medium mb-1 text-gray-800">1. Le informazioni raccolte nel report sono dati personali identificativi?</label>
+            <select id="q1" name="q1" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-accent transition-shadow duration-200">
               <option value="">Seleziona...</option>
               <option value="1">Sì, includono nome e codice fiscale</option>
               <option value="2">No, solo fasce anonime</option>
@@ -2388,8 +2405,8 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
 
           <div>
-            <label class="block font-semibold mb-1 text-gray-800">2. Qual è la finalità principale del report?</label>
-            <select class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none" name="q2">
+            <label for="q2" class="block font-medium mb-1 text-gray-800">2. Qual è la finalità principale del report?</label>
+            <select id="q2" name="q2" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-accent transition-shadow duration-200">
               <option value="">Seleziona...</option>
               <option value="1">Fornire consulenza finanziaria personalizzata</option>
               <option value="2">Educazione e ricerca, in chiave accademica</option>
@@ -2397,8 +2414,8 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
 
           <div>
-            <label class="block font-semibold mb-1 text-gray-800">3. Posso usare questo report come valutazione di idoneità MiFID?</label>
-            <select class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none" name="q3">
+            <label for="q3" class="block font-medium mb-1 text-gray-800">3. Posso usare questo report come valutazione di idoneità MiFID?</label>
+            <select id="q3" name="q3" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-accent transition-shadow duration-200">
               <option value="">Seleziona...</option>
               <option value="1">Sì</option>
               <option value="2">No</option>
@@ -2406,87 +2423,81 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
 
           <div>
-            <label class="block font-semibold mb-1 text-gray-800">4. Esistono professionisti indipendenti da contattare senza costi?</label>
-            <select class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none" name="q4">
+            <label for="q4" class="block font-medium mb-1 text-gray-800">4. Esistono professionisti indipendenti da contattare senza costi?</label>
+            <select id="q4" name="q4" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-accent transition-shadow duration-200">
               <option value="">Seleziona...</option>
               <option value="1">No</option>
               <option value="2">Sì</option>
             </select>
           </div>
 
-          <button type="submit" class="bg-purple-700 text-white font-semibold px-6 py-2 rounded-xl hover:bg-purple-800 transition-colors duration-300 shadow">Accedi al Report</button>
+          <button type="submit" class="bg-purple-700 hover:bg-purple-800 active:translate-y-[1px] text-white font-medium px-6 py-2 rounded-xl transition-all duration-300 shadow hover:shadow-lg focus:ring-2 focus:ring-purple-700">
+            Accedi al Report
+          </button>
         </form>
-        <p id="resultMessage" class="mt-2 font-semibold text-lg"></p>
+        <p id="resultMessage" class="mt-2 font-medium text-lg"></p>
       </div>
     </div>
-
   </div>
 </div>
+
+<style>
+  @layer utilities {
+    .perspective { perspective: 1200px; }
+    .preserve-3d { transform-style: preserve-3d; }
+    .backface-hidden { backface-visibility: hidden; }
+    .rotate-y-180 { transform: rotateY(180deg); }
+    .border-success { border-color: #2a7f62; }
+    .border-error { border-color: #b22222; }
+    .shadow-success { box-shadow: inset 0 0 4px #2a7f62; }
+    .shadow-error { box-shadow: inset 0 0 4px #b22222; }
+  }
+</style>
 
 <script>
 const proseguiBtn = document.getElementById('proseguiBtn');
 const modalInner = document.getElementById('modalInner2');
 const stepTest = document.getElementById('stepTest');
-const stepDisclaimer = document.getElementById('stepDisclaimer');
-
-proseguiBtn.addEventListener('click', () => {
-  modalInner.style.transform = 'rotateY(180deg)';
-  stepTest.style.opacity = '1';
-  stepTest.style.pointerEvents = 'auto';
-});
-
 const form = document.getElementById('disclaimerTestForm');
 const resultMessage = document.getElementById('resultMessage');
+const correctAnswers = { q1: '2', q2: '2', q3: '2', q4: '2' };
+
+proseguiBtn.addEventListener('click', () => {
+  modalInner.classList.add('rotate-y-180');
+  stepTest.classList.replace('opacity-0','opacity-100');
+  stepTest.classList.remove('pointer-events-none');
+});
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
-  const answers = { q1: form.q1.value, q2: form.q2.value, q3: form.q3.value, q4: form.q4.value };
-  const correctAnswers = {q1: '2', q2: '2', q3: '2', q4: '2'};
   let score = 0;
 
-  Object.keys(correctAnswers).forEach(key => {
-    const select = form[key];
-    if (answers[key] === correctAnswers[key]) {
+  Object.entries(correctAnswers).forEach(([name, correct]) => {
+    const select = form[name];
+    if (select.value === correct) {
       score++;
-      select.classList.remove('border-red-500', 'shadow-inner-red');
-      select.classList.add('border-green-500', 'shadow-inner-green');
+      select.classList.add('border-success','shadow-success');
+      select.classList.remove('border-error','shadow-error');
     } else {
-      select.classList.remove('border-green-500', 'shadow-inner-green');
-      select.classList.add('border-red-500', 'shadow-inner-red');
+      select.classList.add('border-error','shadow-error');
+      select.classList.remove('border-success','shadow-success');
     }
   });
 
-  if (score === 4) {
-    resultMessage.textContent = 'Test superato! Puoi accedere al report completo.';
-    resultMessage.classList.remove('text-red-700');
-    resultMessage.classList.add('text-green-700');
-    localStorage.setItem('reportAccess', 'granted');
-    setTimeout(() => document.getElementById('modal2').style.display = 'none', 300);
+  if (score === Object.keys(correctAnswers).length) {
+    resultMessage.textContent = 'Test superato. Puoi accedere al report completo.';
+    resultMessage.className = 'mt-2 font-medium text-lg text-success';
+    sessionStorage.setItem('reportAccess', 'granted');
+    setTimeout(() => document.getElementById('modal2').remove(), 500);
   } else {
-    resultMessage.innerHTML = '<span class="text-red-700">Test non superato.</span><br><button id="hoCapitoBtn" class="mt-2 bg-gray-700 text-white px-4 py-1 rounded-lg hover:bg-gray-800">Ora ho capito</button>';
-    document.getElementById('hoCapitoBtn').addEventListener('click', () => {
-      modalInner.style.transform = 'rotateY(0deg)';
-      stepTest.style.opacity = '0';
-      stepTest.style.pointerEvents = 'none';
-      resultMessage.textContent = '';
-    });
+    resultMessage.textContent = 'Test non superato. Rivedi il disclaimer.';
+    resultMessage.className = 'mt-2 font-medium text-lg text-error';
   }
 });
 
-if (localStorage.getItem('reportAccess') === 'granted') {
-  document.getElementById('modal2').style.display = 'none';
+if (sessionStorage.getItem('reportAccess') === 'granted') {
+  document.getElementById('modal2').remove();
 }
 </script>
 
-
-<style>
-  .perspective { perspective: 1200px; }
-  .transform-style-preserve-3d { transform-style: preserve-3d; }
-  .backface-hidden { backface-visibility: hidden; }
-  #stepTest { top: 0; left: 0; transform: rotateY(180deg); }
-  .shadow-inner-green { box-shadow: inset 0 0 5px #16a34a; }
-  .shadow-inner-red { box-shadow: inset 0 0 5px #dc2626; }
-</style>
-
 </body>
-</html>
