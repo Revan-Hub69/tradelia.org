@@ -2285,25 +2285,37 @@ document.addEventListener('DOMContentLoaded', () => {
     document.documentElement.classList.add('aos-initialized');
   }
 
-  // === Scroll progress & header shrink ===
+  // === Scroll progress, header shrink & toTop button ===
   const sp = document.getElementById('scroll-progress');
   const toTop = document.getElementById('toTop');
 
   window.addEventListener('scroll', () => {
-    const h = document.documentElement;
-    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
-    if (sp) sp.style.width = scrolled + '%';
-    if (toTop) {
-      toTop.classList.toggle('opacity-100', h.scrollTop >= 600);
-      toTop.classList.toggle('opacity-0', h.scrollTop < 600);
+    const scrollY = window.scrollY;
+
+    // Scroll progress
+    if (sp) {
+      sp.style.width = (scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100) + '%';
     }
+
+    // Pulsante toTop
+    if (toTop) {
+      if (scrollY >= 600) {
+        toTop.classList.add('opacity-100');
+        toTop.classList.remove('opacity-0');
+      } else {
+        toTop.classList.remove('opacity-100');
+        toTop.classList.add('opacity-0');
+      }
+    }
+
+    // Header shrink
     const header = document.querySelector('header');
     if (header) {
-      h.scrollTop > 24 ? header.classList.add('shrink') : header.classList.remove('shrink');
+      scrollY > 24 ? header.classList.add('shrink') : header.classList.remove('shrink');
     }
   }, { passive: true });
 
-  // === Scroll to specific section ===
+  // Scroll to specific section
   toTop?.addEventListener('click', () => {
     const targetSection = document.querySelector('#tabs-scroller');
     if (targetSection) {
@@ -2321,7 +2333,7 @@ document.addEventListener('DOMContentLoaded', () => {
     drawer?.classList.add('open');
     overlay?.classList.remove('hidden');
     drawer?.setAttribute('aria-hidden', 'false');
-    openBtns[0]?.focus();
+    closeBtn?.focus(); // focus sul pulsante chiusura per accessibilità
   }
 
   function closeDrawer() {
@@ -2349,8 +2361,10 @@ document.addEventListener('DOMContentLoaded', () => {
       p.hidden = true;
       p.classList.add('hidden');
     });
+
     const tab = document.querySelector(`.sv-tab[data-target="${targetId}"]`);
     const panel = document.getElementById(targetId);
+
     if (tab) {
       tab.classList.add('active');
       tab.setAttribute('aria-selected', 'true');
@@ -2361,12 +2375,13 @@ document.addEventListener('DOMContentLoaded', () => {
       panel.classList.remove('hidden');
       panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+
     history.replaceState(null, '', '#' + targetId);
   }
 
   tabs.forEach(tab => tab.addEventListener('click', () => activateTab(tab.getAttribute('data-target'))));
 
-  // === Drawer TOC activates tabs ===
+  // Drawer TOC activates tabs
   document.querySelectorAll('#toc-drawer .toc-link').forEach(link => {
     link.addEventListener('click', e => {
       e.preventDefault();
@@ -2376,7 +2391,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // === Deep link on load ===
+  // Deep link on load
   const hash = location.hash?.replace('#', '');
   if (hash && document.getElementById(hash)) {
     activateTab(hash);
@@ -2385,11 +2400,11 @@ document.addEventListener('DOMContentLoaded', () => {
     activateTab(active);
   }
 
-  // === Copy link buttons ===
+  // Copy link buttons
   document.querySelectorAll('[data-copy]').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-copy');
-      const url = location.origin + location.pathname + id;
+      const url = location.origin + location.pathname + '#' + id; // aggiunto #
       navigator.clipboard.writeText(url).then(() => {
         const prev = btn.textContent;
         btn.textContent = 'Copiato';
