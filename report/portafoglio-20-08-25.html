@@ -2268,12 +2268,11 @@ if (d.disclaimer) {
     
   </main>
 
-<!-- Pulsante Torna su -->
+<!-- Pulsante Torna alle sezioni -->
 <button id="toTop"
         class="no-print fixed bottom-4 right-4 p-2 rounded-full border border-slate-300 bg-white shadow hover:bg-slate-50"
         aria-label="Torna alle sezioni"
-        title="Torna alle sezioni"
-        hidden>
+        title="Torna alle sezioni">
   <i data-lucide="arrow-up"></i>
 </button>
 
@@ -2291,32 +2290,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const header = document.querySelector('header');
   const tabsEl = document.getElementById('section-tabs');
 
-  // Gestione scroll progress, header shrink e visibilità pulsante
+  // Scroll progress & header shrink
   window.addEventListener('scroll', () => {
     const h        = document.documentElement;
     const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
-
     if (sp) sp.style.width = scrolled + '%';
-    if (toTop && tabsEl) {
-      const tabsTop = tabsEl.offsetTop;
-      toTop.hidden  = h.scrollTop < tabsTop + 100;
-    }
-    if (header) {
-      header.classList.toggle('shrink', h.scrollTop > 24);
-    }
+    if (header) header.classList.toggle('shrink', h.scrollTop > 24);
   }, { passive: true });
 
-  // Click su "Torna su" → scroll ai tab
+  // Click → scroll fino ai tab
   toTop?.addEventListener('click', () => {
     if (tabsEl) {
-      // Con offset per non coprire sotto l'header
       const offset = header ? header.offsetHeight + 8 : 0;
       const targetY = tabsEl.getBoundingClientRect().top + window.pageYOffset - offset;
       window.scrollTo({ top: targetY, behavior: 'smooth' });
     }
   });
 
-  // Funzioni per drawer indice
+  // Drawer indice
   const drawer   = document.getElementById('toc-drawer');
   const overlay  = document.getElementById('toc-overlay');
   const openBtns = document.querySelectorAll('.btn-open-toc');
@@ -2360,7 +2351,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Deep link all'apertura pagina
+  // Deep link all'avvio
   const hash = location.hash.slice(1);
   if (hash && document.getElementById(hash)) {
     activateTab(hash);
@@ -2383,4 +2374,3 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
-
