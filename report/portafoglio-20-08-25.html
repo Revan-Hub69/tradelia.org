@@ -2280,7 +2280,7 @@ if (d.disclaimer) {
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // Inizializzazione icone e animazioni
+  // Inizializzazione icone Lucide e AOS
   if (window.lucide) lucide.createIcons();
   if (window.AOS) {
     AOS.init({ once: true, duration: 350 });
@@ -2291,6 +2291,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const toTop  = document.getElementById('toTop');
   const header = document.querySelector('header');
   const tabsEl = document.getElementById('section-tabs');
+  const tabsAnchor = document.getElementById('tabs-anchor');
 
   // Scroll progress & header shrink
   window.addEventListener('scroll', () => {
@@ -2300,13 +2301,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (header) header.classList.toggle('shrink', h.scrollTop > 24);
   }, { passive: true });
 
-  // Pulsante → scroll fluido fino alla sezione tabs
+  // Pulsante → scroll fluido fino all'anchor delle tabs
   toTop?.addEventListener('click', e => {
     e.preventDefault();
-    if (tabsEl) {
-      const offset = header ? header.offsetHeight + 8 : 0; // Altezza header + margine
-      const targetY = tabsEl.offsetTop - offset;           // Scroll fino alla top delle tabs
-      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    if (tabsAnchor) {
+      tabsAnchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   });
 
