@@ -2291,7 +2291,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const toTop  = document.getElementById('toTop');
   const header = document.querySelector('header');
   const tabsEl = document.getElementById('section-tabs');
-  const tabsAnchor = document.getElementById('tabs-anchor');
 
   // Scroll progress & header shrink
   window.addEventListener('scroll', () => {
@@ -2301,12 +2300,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (header) header.classList.toggle('shrink', h.scrollTop > 24);
   }, { passive: true });
 
-  // Pulsante → scroll fluido fino all'anchor delle tabs
+  // Pulsante → scroll fluido fino alle tabs
   toTop?.addEventListener('click', e => {
     e.preventDefault();
-    if (tabsAnchor) {
-      tabsAnchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    if (!tabsEl) return;
+    const offset = header?.offsetHeight || 0;
+    const targetY = tabsEl.getBoundingClientRect().top + window.scrollY - offset - 8; // margine extra
+    window.scrollTo({ top: targetY, behavior: 'smooth' });
   });
 
   // Drawer indice
