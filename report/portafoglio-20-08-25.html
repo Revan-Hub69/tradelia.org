@@ -2270,7 +2270,7 @@ if (d.disclaimer) {
 
 <!-- Pulsante Torna alle sezioni -->
 <button id="toTop"
-        class="no-print fixed bottom-4 right-4 p-2 rounded-full border border-slate-300 bg-white shadow hover:bg-slate-50"
+        class="no-print fixed bottom-4 right-4 p-2 rounded-full border border-slate-300 bg-white shadow hover:bg-slate-50 opacity-0 transition-opacity duration-300"
         aria-label="Torna alle sezioni"
         title="Torna alle sezioni">
   <i data-lucide="arrow-up"></i>
@@ -2278,7 +2278,7 @@ if (d.disclaimer) {
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // Inizializzazione icone e animazioni
+  // === Inizializzazione icone e animazioni ===
   if (window.lucide) lucide.createIcons();
   if (window.AOS) {
     AOS.init({ once: true, duration: 350 });
@@ -2290,30 +2290,51 @@ document.addEventListener('DOMContentLoaded', () => {
   const header = document.querySelector('header');
   const tabsEl = document.getElementById('section-tabs');
 
-  // Scroll progress & header shrink
+  // === Scroll progress & header shrink & toTop button visibility ===
   window.addEventListener('scroll', () => {
-    const h        = document.documentElement;
-    const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
-    if (sp) sp.style.width = scrolled + '%';
-    if (header) header.classList.toggle('shrink', h.scrollTop > 24);
+    const scrollY = window.scrollY;
+
+    // Scroll progress
+    if (sp) {
+      sp.style.width = (scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100) + '%';
+    }
+
+    // Header shrink
+    if (header) header.classList.toggle('shrink', scrollY > 24);
+
+    // toTop button
+    if (toTop) {
+      if (scrollY >= 600) {
+        toTop.classList.add('opacity-100');
+        toTop.classList.remove('opacity-0');
+      } else {
+        toTop.classList.remove('opacity-100');
+        toTop.classList.add('opacity-0');
+      }
+    }
   }, { passive: true });
 
-  // Click → scroll fino ai tab
+  // === Click pulsante toTop: scroll preciso verso i tab ===
   toTop?.addEventListener('click', () => {
     if (tabsEl) {
-      const offset = header ? header.offsetHeight + 8 : 0;
-      const targetY = tabsEl.getBoundingClientRect().top + window.pageYOffset - offset;
-      window.scrollTo({ top: targetY, behavior: 'smooth' });
+      const headerOffset = header ? header.offsetHeight + 8 : 0;
+      const elementPosition = tabsEl.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
     }
   });
 
-  // Drawer indice
+  // === Drawer indice ===
   const drawer   = document.getElementById('toc-drawer');
   const overlay  = document.getElementById('toc-overlay');
   const openBtns = document.querySelectorAll('.btn-open-toc');
   const closeBtn = document.getElementById('close-toc-drawer');
 
-  const openDrawer  = () => { drawer?.classList.add('open'); overlay?.classList.remove('hidden'); drawer?.setAttribute('aria-hidden','false'); };
+  const openDrawer  = () => { drawer?.classList.add('open'); overlay?.classList.remove('hidden'); drawer?.setAttribute('aria-hidden','false'); closeBtn?.focus(); };
   const closeDrawer = () => { drawer?.classList.remove('open'); overlay?.classList.add('hidden'); drawer?.setAttribute('aria-hidden','true'); };
 
   openBtns.forEach(b => b.addEventListener('click', openDrawer));
@@ -2321,7 +2342,7 @@ document.addEventListener('DOMContentLoaded', () => {
   closeBtn?.addEventListener('click', closeDrawer);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
 
-  // Tabs
+  // === Tabs ===
   const tabs   = document.querySelectorAll('.sv-tab');
   const panels = document.querySelectorAll('.sv-panel');
 
@@ -2340,18 +2361,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   tabs.forEach(tab => tab.addEventListener('click', () => activateTab(tab.dataset.target)));
 
-  // TOC link → attiva tab
+  // === TOC link → attiva tab e scroll verso i tab ===
   document.querySelectorAll('#toc-drawer .toc-link').forEach(link => {
     link.addEventListener('click', e => {
       e.preventDefault();
       const targetId = link.getAttribute('href').slice(1);
       activateTab(targetId);
       closeDrawer();
-      tabsEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      if (tabsEl) {
+        tabsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
   });
 
-  // Deep link all'avvio
+  // === Deep link all'avvio ===
   const hash = location.hash.slice(1);
   if (hash && document.getElementById(hash)) {
     activateTab(hash);
@@ -2360,11 +2384,11 @@ document.addEventListener('DOMContentLoaded', () => {
     activateTab(active);
   }
 
-  // Pulsanti copia link
+  // === Pulsanti copia link ===
   document.querySelectorAll('[data-copy]').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.copy;
-      const url = location.origin + location.pathname + id;
+      const url = location.origin + location.pathname + '#' + id; // fix aggiunto
       navigator.clipboard.writeText(url).then(() => {
         const prev = btn.textContent;
         btn.textContent = 'Copiato';
@@ -2372,5 +2396,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   });
+
 });
 </script>
+
