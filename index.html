@@ -1744,6 +1744,8 @@ Vuoi procedere inviando i dati?`;
         <a id="m-aff" href="#" rel="sponsored noopener" target="_blank"
            class="btn bg-sky-700 hover:bg-sky-800 text-white">Vai al sito ufficiale</a>
       </div>
+      <div id="m-disclaimer" class="mt-3 px-3 py-2 bg-gray-100 border border-gray-300 rounded text-xs text-slate-700 leading-relaxed"></div>
+
     </div>
   </div>
 
@@ -1972,32 +1974,32 @@ Vuoi procedere inviando i dati?`;
         skill: "Base",
         aff: "https://www.financeads.net/tc.php?t=76793C4792126679T"
       },
-      directa: {
-        name: "Directa SIM",
-        affiliated: false,
-        tags: ["Italia","Borsa Italiana","CONSOB"],
-        assets: "Azioni/ETF/Obbligazioni Italia; IDEM (derivati quotati); USA (NYSE/NASDAQ/AMEX); Xetra/SIX ecc.",
-        count: "Borsa Italiana (EXM, ETFplus, MOT/EuroTLX, ExtraMOT) • USA (NYSE, NASDAQ, AMEX)",
-        min: "N/D ufficiale",
-        reg: "Italia · SIM iscritta CONSOB · vigilanza Banca d’Italia",
-        cfd: true,
-        cfd_note: "Disponibili CFD/FX via LMAX; in questa selezione consideriamo solo gli strumenti quotati.",
-        score: 82,
-        platforms: "Web/desktop proprietarie, App",
-        fees: "Commissioni per mercato; regime fiscale domestico.",
-        pros: [
-          "Broker italiano (CONSOB)",
-          "Accesso diretto a Borsa Italiana + USA/Europa",
-          "Fiscalità domestica e supporto in italiano"
-        ],
-        cons: [
-          "Interfacce più tecniche",
-          "Listino commissionale articolato"
-        ],
-        skill: "Intermedio",
-        aff: ""
-      }
-    };
+   directa: {
+  name: "Directa SIM",
+  affiliated: false,
+  tags: ["Italia","Borsa Italiana","CONSOB"],
+  assets: "Azioni/ETF/Obbligazioni Italia; IDEM (derivati quotati); USA (NYSE/NASDAQ/AMEX); Xetra/SIX ecc.",
+  count: "Borsa Italiana (EXM, ETFplus, MOT/EuroTLX, ExtraMOT) • USA (NYSE, NASDAQ, AMEX)",
+  min: "N/D ufficiale",
+  reg: "Italia · SIM iscritta CONSOB · vigilanza Banca d’Italia",
+  cfd: true,
+  cfd_note: "Disponibili CFD/FX via LMAX; in questa selezione consideriamo solo gli strumenti quotati.",
+  score: 82,
+  platforms: "Web/desktop proprietarie, App",
+  fees: "Commissioni per mercato; regime fiscale domestico.",
+  pros: [
+    "Broker italiano (CONSOB)",
+    "Accesso diretto a Borsa Italiana + USA/Europa",
+    "Fiscalità domestica e supporto in italiano"
+  ],
+  cons: [
+    "Interfacce più tecniche",
+    "Listino commissionale articolato"
+  ],
+  skill: "Intermedio",
+  aff: "",
+  disclaimer: "Directa SIM è una Società di Intermediazione Mobiliare (SIM) italiana, autorizzata e vigilata da CONSOB e Banca d'Italia. Una SIM è un intermediario finanziario autorizzato a offrire servizi di investimento. Directa SIM offre regime fiscale amministrato (fiscalità gestita), consentendo al cliente di delegare il calcolo e il versamento delle imposte su plusvalenze e redditi finanziari. Le informazioni fornite hanno scopo puramente informativo e non costituiscono consulenza o sollecitazione al pubblico risparmio. Investire comporta rischi di perdita totale o parziale del capitale."
+}
 
     const $ = s => document.querySelector(s);
     function openModal(key){
@@ -2043,6 +2045,14 @@ Vuoi procedere inviando i dati?`;
         affBtn.setAttribute('rel', 'noopener');
         affText.textContent = 'Nessun link disponibile.';
       }
+      const disclaimerBox = document.getElementById('m-disclaimer');
+if (d.disclaimer) {
+  disclaimerBox.textContent = d.disclaimer;
+  disclaimerBox.classList.remove('hidden');
+} else {
+  disclaimerBox.textContent = '';
+  disclaimerBox.classList.add('hidden');
+}
       const modal = $('#modal'); modal.classList.remove('hidden'); modal.classList.add('flex');
     }
     function closeModal(){ const m=$('#modal'); m.classList.add('hidden'); m.classList.remove('flex'); }
