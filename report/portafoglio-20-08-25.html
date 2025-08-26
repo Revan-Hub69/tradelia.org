@@ -387,6 +387,8 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
 </section>
 
     <!-- TABS sticky -->
+    <div id="tabs-anchor" style="position:absolute; top:calc( var(--header-height, 80px) * -1 );"></div>
+
     <nav id="section-tabs" class="sticky bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm" role="tablist" aria-label="Sezioni report">
       <div id="tabs-scroller" class="max-w-7xl mx-auto">
           <button class="sv-tab" data-target="broker" role="tab" aria-selected="false" aria-controls="broker" id="tab-broker" tabindex="-1">
@@ -2302,8 +2304,8 @@ document.addEventListener('DOMContentLoaded', () => {
   toTop?.addEventListener('click', e => {
     e.preventDefault();
     if (tabsEl) {
-      const offset = header ? header.offsetHeight + 8 : 0; // Altezza header + piccolo margine
-      const targetY = tabsEl.getBoundingClientRect().top + window.scrollY - offset;
+      const offset = header ? header.offsetHeight + 8 : 0; // Altezza header + margine
+      const targetY = tabsEl.offsetTop - offset;           // Scroll fino alla top delle tabs
       window.scrollTo({ top: targetY, behavior: 'smooth' });
     }
   });
