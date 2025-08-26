@@ -191,6 +191,44 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
       @page { margin: 18mm 14mm 18mm 14mm; }
       body{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
+      .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0, 0, 0, 0.7);
+      visibility: hidden; opacity: 0;
+      z-index: 50;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .modal.show {
+      visibility: visible;
+      opacity: 1;
+    }
+    .modal-content {
+      background: #f8fafc;
+      max-width: 640px;
+      padding: 28px;
+      border-radius: 16px;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #0f172a;
+      text-align: left;
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
+    }
+   body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    .card{transition:transform .2s ease, box-shadow .2s ease}
+    .card:hover{box-shadow:0 10px 30px rgba(2,6,23,.08); transform: translateY(-2px)}
+    .logo-fb{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:.75rem;font-weight:700;color:#fff;box-shadow:inset 0 0 0 1px rgba(15,23,42,.08)}
+    .tag{font-size:11px;padding:.125rem .5rem;border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc}
+    .btn{display:inline-block;padding:.5rem .75rem;border-radius:.6rem;font-weight:600;transition:all .2s ease}
+    .btn:focus-visible{outline:none;box-shadow:0 0 0 2px rgba(56,189,248,.5)}
+    .badge{font-size:10px;padding:.1rem .45rem;border-radius:999px;font-weight:700}
+    .score-badge{font-size:11px;padding:.125rem .5rem;border-radius:999px;background:#eef2ff;color:#3730a3;font-weight:700}
+    .no-scrollbar{scrollbar-width:none}
+    .no-scrollbar::-webkit-scrollbar{display:none}
+    .clamp-3{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  html:has(#modal.flex), body:has(#modal.flex){overflow:hidden}
   </style>
 </head>
 
