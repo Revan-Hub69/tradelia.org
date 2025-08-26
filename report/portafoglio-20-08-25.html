@@ -2298,11 +2298,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (header) header.classList.toggle('shrink', h.scrollTop > 24);
   }, { passive: true });
 
-  // Pulsante Torna alle sezioni → scroll fino alle tabs
+  // Pulsante → scroll fluido fino alla sezione tabs
   toTop?.addEventListener('click', e => {
     e.preventDefault();
     if (tabsEl) {
-      const offset = header ? header.offsetHeight + 8 : 0; // margine di sicurezza
+      const offset = header ? header.offsetHeight + 8 : 0; // Altezza header + piccolo margine
       const targetY = tabsEl.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top: targetY, behavior: 'smooth' });
     }
@@ -2375,5 +2375,3 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
-
-
