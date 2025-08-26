@@ -2311,8 +2311,8 @@ document.addEventListener('DOMContentLoaded', () => {
 <body class="bg-gray-50 flex items-center justify-center min-h-screen font-sans">
 
 <!-- Modale Container -->
-<div id="modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 perspective">
-  <div id="modalInner" class="bg-white rounded-3xl shadow-2xl p-10 max-w-3xl w-full border border-gray-200 transition-transform duration-700 transform-style-preserve-3d relative">
+<div id="modal2" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 perspective">
+  <div id="modalInner2" class="bg-white rounded-3xl shadow-2xl p-10 max-w-3xl w-full border border-gray-200 transition-transform duration-700 transform-style-preserve-3d relative">
 
     <!-- Step 1: Disclaimer -->
     <div id="stepDisclaimer" class="backface-hidden w-full">
@@ -2380,7 +2380,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <script>
 const proseguiBtn = document.getElementById('proseguiBtn');
-const modalInner = document.getElementById('modalInner');
+const modalInner = document.getElementById('modalInner2');
 const stepTest = document.getElementById('stepTest');
 const stepDisclaimer = document.getElementById('stepDisclaimer');
 
@@ -2401,7 +2401,7 @@ form.addEventListener('submit', (e) => {
 
   Object.keys(correctAnswers).forEach(key => {
     const select = form[key];
-    if(answers[key] === correctAnswers[key]) {
+    if (answers[key] === correctAnswers[key]) {
       score++;
       select.classList.remove('border-red-500', 'shadow-inner-red');
       select.classList.add('border-green-500', 'shadow-inner-green');
@@ -2411,12 +2411,12 @@ form.addEventListener('submit', (e) => {
     }
   });
 
-  if(score === 4) {
+  if (score === 4) {
     resultMessage.textContent = 'Test superato! Puoi accedere al report completo.';
     resultMessage.classList.remove('text-red-700');
     resultMessage.classList.add('text-green-700');
     localStorage.setItem('reportAccess', 'granted');
-    setTimeout(() => document.getElementById('modal').style.display = 'none', 300);
+    setTimeout(() => document.getElementById('modal2').style.display = 'none', 300);
   } else {
     resultMessage.innerHTML = '<span class="text-red-700">Test non superato.</span><br><button id="hoCapitoBtn" class="mt-2 bg-gray-700 text-white px-4 py-1 rounded-lg hover:bg-gray-800">Ora ho capito</button>';
     document.getElementById('hoCapitoBtn').addEventListener('click', () => {
@@ -2428,10 +2428,11 @@ form.addEventListener('submit', (e) => {
   }
 });
 
-if(localStorage.getItem('reportAccess') === 'granted') {
-  document.getElementById('modal').style.display = 'none';
+if (localStorage.getItem('reportAccess') === 'granted') {
+  document.getElementById('modal2').style.display = 'none';
 }
 </script>
+
 
 <style>
   .perspective { perspective: 1200px; }
