@@ -2268,81 +2268,111 @@ if (d.disclaimer) {
     
   </main>
 
-  <!-- Back to top -->
-  <button id="toTop" class="no-print fixed bottom-4 right-4 p-2 rounded-full border border-slate-300 bg-white shadow hover:bg-slate-50" aria-label="Torna su" title="Torna su" hidden>
-    <i data-lucide="arrow-up"></i>
-  </button>
+<!-- Pulsante Torna su -->
+<button id="toTop"
+        class="no-print fixed bottom-4 right-4 p-2 rounded-full border border-slate-300 bg-white shadow hover:bg-slate-50"
+        aria-label="Torna alle sezioni"
+        title="Torna alle sezioni"
+        hidden>
+  <i data-lucide="arrow-up"></i>
+</button>
 
- <!-- Scripts -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // Icons & animations
+  // Inizializzazione icone e animazioni
   if (window.lucide) lucide.createIcons();
-  if (window.AOS) { AOS.init({ once: true, duration: 350 }); document.documentElement.classList.add('aos-initialized'); }
+  if (window.AOS) {
+    AOS.init({ once: true, duration: 350 });
+    document.documentElement.classList.add('aos-initialized');
+  }
 
-  // Scroll progress & header shrink & back to top
-  const sp = document.getElementById('scroll-progress');
-  const toTop = document.getElementById('toTop');
+  const sp     = document.getElementById('scroll-progress');
+  const toTop  = document.getElementById('toTop');
+  const header = document.querySelector('header');
+  const tabsEl = document.getElementById('section-tabs');
+
+  // Gestione scroll progress, header shrink e visibilità pulsante
   window.addEventListener('scroll', () => {
-    const h = document.documentElement;
-    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
-    if (sp) sp.style.width = scrolled + '%';
-    if (toTop) toTop.hidden = h.scrollTop < 600;
-    const header = document.querySelector('header');
-    if (header) { if (h.scrollTop > 24) header.classList.add('shrink'); else header.classList.remove('shrink'); }
-  }, { passive:true });
-  toTop?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    const h        = document.documentElement;
+    const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
 
-  // Drawer
-  const drawer = document.getElementById('toc-drawer');
-  const overlay = document.getElementById('toc-overlay');
+    if (sp) sp.style.width = scrolled + '%';
+    if (toTop && tabsEl) {
+      const tabsTop = tabsEl.offsetTop;
+      toTop.hidden  = h.scrollTop < tabsTop + 100;
+    }
+    if (header) {
+      header.classList.toggle('shrink', h.scrollTop > 24);
+    }
+  }, { passive: true });
+
+  // Click su "Torna su" → scroll ai tab
+  toTop?.addEventListener('click', () => {
+    if (tabsEl) {
+      // Con offset per non coprire sotto l'header
+      const offset = header ? header.offsetHeight + 8 : 0;
+      const targetY = tabsEl.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    }
+  });
+
+  // Funzioni per drawer indice
+  const drawer   = document.getElementById('toc-drawer');
+  const overlay  = document.getElementById('toc-overlay');
   const openBtns = document.querySelectorAll('.btn-open-toc');
   const closeBtn = document.getElementById('close-toc-drawer');
-  function openDrawer(){ drawer?.classList.add('open'); overlay?.classList.remove('hidden'); drawer?.setAttribute('aria-hidden','false'); }
-  function closeDrawer(){ drawer?.classList.remove('open'); overlay?.classList.add('hidden'); drawer?.setAttribute('aria-hidden','true'); }
+
+  const openDrawer  = () => { drawer?.classList.add('open'); overlay?.classList.remove('hidden'); drawer?.setAttribute('aria-hidden','false'); };
+  const closeDrawer = () => { drawer?.classList.remove('open'); overlay?.classList.add('hidden'); drawer?.setAttribute('aria-hidden','true'); };
+
   openBtns.forEach(b => b.addEventListener('click', openDrawer));
   overlay?.addEventListener('click', closeDrawer);
   closeBtn?.addEventListener('click', closeDrawer);
-  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeDrawer(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
 
   // Tabs
-  const tabs = document.querySelectorAll('.sv-tab');
+  const tabs   = document.querySelectorAll('.sv-tab');
   const panels = document.querySelectorAll('.sv-panel');
-  function activateTab(targetId){
-    tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); t.setAttribute('tabindex','-1'); });
-    panels.forEach(p => { p.hidden = true; p.classList.add('hidden'); });
-    const tab = document.querySelector(`.sv-tab[data-target="${targetId}"]`);
-    const panel = document.getElementById(targetId);
-    if (tab) { tab.classList.add('active'); tab.setAttribute('aria-selected','true'); tab.setAttribute('tabindex','0'); }
-    if (panel) { panel.hidden = false; panel.classList.remove('hidden'); }
-    history.replaceState(null, '', '#' + targetId);
-  }
-  tabs.forEach(tab => tab.addEventListener('click', () => activateTab(tab.getAttribute('data-target'))));
 
-  // Drawer TOC -> attiva i tab (non solo anchor)
+  const activateTab = (targetId) => {
+    tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); t.tabIndex = -1; });
+    panels.forEach(p => { p.hidden = true; p.classList.add('hidden'); });
+
+    const tab   = document.querySelector(`.sv-tab[data-target="${targetId}"]`);
+    const panel = document.getElementById(targetId);
+
+    if (tab)   { tab.classList.add('active'); tab.setAttribute('aria-selected','true'); tab.tabIndex = 0; }
+    if (panel) { panel.hidden = false; panel.classList.remove('hidden'); }
+
+    history.replaceState(null, '', '#' + targetId);
+  };
+
+  tabs.forEach(tab => tab.addEventListener('click', () => activateTab(tab.dataset.target)));
+
+  // TOC link → attiva tab
   document.querySelectorAll('#toc-drawer .toc-link').forEach(link => {
-    link.addEventListener('click', (e) => {
+    link.addEventListener('click', e => {
       e.preventDefault();
-      const targetId = link.getAttribute('href').replace('#','');
+      const targetId = link.getAttribute('href').slice(1);
       activateTab(targetId);
       closeDrawer();
-      document.getElementById('section-tabs')?.scrollIntoView({ behavior:'smooth', block:'start' });
+      tabsEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
 
-  // Deep link on load
-  const hash = location.hash?.replace('#','');
-  if (hash && document.getElementById(hash)) activateTab(hash);
-  else if (!hash) {
-    // Garantisce che il pannello predefinito sia visibile (es. "sim-op")
-    const active = document.querySelector('.sv-tab.active')?.getAttribute('data-target') || 'sim-op';
+  // Deep link all'apertura pagina
+  const hash = location.hash.slice(1);
+  if (hash && document.getElementById(hash)) {
+    activateTab(hash);
+  } else if (!hash) {
+    const active = document.querySelector('.sv-tab.active')?.dataset.target || 'sim-op';
     activateTab(active);
   }
 
-  // Copy link buttons
+  // Pulsanti copia link
   document.querySelectorAll('[data-copy]').forEach(btn => {
     btn.addEventListener('click', () => {
-      const id = btn.getAttribute('data-copy');
+      const id = btn.dataset.copy;
       const url = location.origin + location.pathname + id;
       navigator.clipboard.writeText(url).then(() => {
         const prev = btn.textContent;
