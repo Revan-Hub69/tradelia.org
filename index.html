@@ -1490,15 +1490,15 @@ Vuoi procedere inviando i dati?`;
 </script>
 
 
- <main class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
-    <nav aria-label="Sezioni" class="mb-6 -mt-2 text-sm overflow-x-auto no-scrollbar">
-      <ul class="flex gap-2">
-        <li><a href="#corepro" class="tag hover:bg-white">Core Pro</a></li>
-        <li><a href="#retail" class="tag hover:bg-white">Retail</a></li>
-        <li><a href="#mass" class="tag hover:bg-white">Mass market</a></li>
-    <li><a href="#regime-amm" class="tag hover:bg-white">Regime amministrato Italia</a></li>
-      </ul>
-    </nav>
+ <nav aria-label="Sezioni" class="mb-6 -mt-2 text-sm">
+  <ul class="flex gap-2 overflow-x-auto no-scrollbar snap-x snap-mandatory px-1">
+    <li class="snap-start"><a href="#corepro" class="tag hover:bg-white whitespace-nowrap px-3 py-1.5">Core Pro</a></li>
+    <li class="snap-start"><a href="#retail" class="tag hover:bg-white whitespace-nowrap px-3 py-1.5">Retail</a></li>
+    <li class="snap-start"><a href="#mass" class="tag hover:bg-white whitespace-nowrap px-3 py-1.5">Mass market</a></li>
+    <li class="snap-start"><a href="#regime-amm" class="tag hover:bg-white whitespace-nowrap px-3 py-1.5">Regime amministrato Italia</a></li>
+  </ul>
+</nav>
+
     <!-- Intro -->
     <section class="mb-8">
       <h1 class="text-2xl sm:text-3xl font-bold mb-2">Broker regolamentati per ogni profilo</h1>
@@ -1528,23 +1528,7 @@ Vuoi procedere inviando i dati?`;
             <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('exante')">Maggiori info</button>
           </div>
         </li>
-        <!-- Saxo Bank (non affiliato) -->
-        <li data-key="saxo" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
-          <div class="logo-fb bg-blue-700">S</div>
-          <div class="min-w-0 flex flex-col h-full">
-            <div class="font-semibold mb-1">Saxo Bank <span class="score-badge">90/100</span></div>
-            <div class="text-sm text-slate-600 mb-3 clamp-3">Piattaforma multi-asset avanzata con accesso a mercati globali e derivati quotati.</div>
-            <div class="flex flex-wrap gap-1 mb-3">
-              <span class="tag">DMA</span><span class="tag">Opzioni</span><span class="tag">Futures</span>
-            </div>
-            <div class="mt-2 text-xs text-slate-500 space-y-1">
-              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
-              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
-            </div>
-            <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('saxo')">Maggiori info</button>
-          </div>
-        </li>
-        <!-- Interactive Brokers (non affiliato) -->
+              <!-- Interactive Brokers (non affiliato) -->
         <li data-key="ibkr" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
           <div class="logo-fb bg-slate-800">IB</div>
           <div class="min-w-0 flex flex-col h-full">
@@ -1673,28 +1657,88 @@ Vuoi procedere inviando i dati?`;
       </ul>
     </section>
 
-  <section id="regime-amm" class="mb-12">
+ 
+    
+<!-- Regime amministrato Italia -->
+<section id="regime-amm" class="mb-12">
   <h2 class="text-xl font-semibold mb-4">Regime amministrato Italia</h2>
   <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
     
-        <!-- Directa SIM (non affiliato) -->
-        <li data-key="directa" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
-          <div class="logo-fb bg-slate-600">D</div>
-          <div class="min-w-0 flex flex-col h-full">
-            <div class="font-semibold mb-1">Directa SIM <span class="score-badge">82/100</span></div>
-            <div class="text-sm text-slate-600 mb-3 clamp-3">Mercato italiano e fiscalità domestica.</div>
-            <div class="flex flex-wrap gap-1 mb-3">
-              <span class="tag">Italia</span><span class="tag">Borsa Italiana</span><span class="tag">CONSOB</span>
-            </div>
-            <div class="mt-2 text-xs text-slate-500 space-y-1">
-              <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
-              <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
-            </div>
-            <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('directa')">Maggiori info</button>
-          </div>
-        </li>
-      </ul>
-    </section>
+    <!-- Directa SIM (non affiliato) -->
+    <li data-key="directa" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
+      <div class="logo-fb bg-slate-600">D</div>
+      <div class="min-w-0 flex flex-col h-full">
+        <div class="font-semibold mb-1">Directa SIM <span class="score-badge">82/100</span></div>
+        <div class="text-sm text-slate-600 mb-3 clamp-3">Mercato italiano e fiscalità domestica.</div>
+        <div class="flex flex-wrap gap-1 mb-3">
+          <span class="tag">Italia</span><span class="tag">Borsa Italiana</span><span class="tag">CONSOB</span>
+        </div>
+        <div class="mt-2 text-xs text-slate-500 space-y-1">
+          <div><span class="font-medium">Piattaforme:</span> <span class="js-platforms">N/D</span></div>
+          <div><span class="font-medium">Costi:</span> <span class="js-fees">N/D</span></div>
+        </div>
+        <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('directa')">Maggiori info</button>
+      </div>
+    </li>
+
+    <!-- Trade Republic (non affiliato) -->
+    <li data-key="traderepublic" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
+      <div class="logo-fb bg-black">TR</div>
+      <div class="min-w-0 flex flex-col h-full">
+        <div class="font-semibold mb-1">Trade Republic <span class="score-badge">88/100</span></div>
+        <div class="text-sm text-slate-600 mb-3 clamp-3">
+          Conto con IBAN italiano, interessi 3% annuo sulla liquidità, <strong>regime amministrato</strong> e piani di accumulo su azioni, ETF, obbligazioni e crypto.
+        </div>
+        <div class="flex flex-wrap gap-1 mb-3">
+          <span class="tag">IBAN IT</span><span class="tag">PAC</span><span class="tag">Azioni</span><span class="tag">ETF</span><span class="tag">Crypto</span>
+        </div>
+        <div class="mt-2 text-xs text-slate-500 space-y-1">
+          <div><span class="font-medium">Piattaforme:</span> App iOS / Android</div>
+          <div><span class="font-medium">Costi:</span> 1€ per ordine, PAC gratuiti</div>
+        </div>
+        <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('traderepublic')">Maggiori info</button>
+      </div>
+    </li>
+
+    <!-- BG Saxo (non affiliato) -->
+    <li data-key="bgsaxo" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
+      <div class="logo-fb bg-blue-700">S</div>
+      <div class="min-w-0 flex flex-col h-full">
+        <div class="font-semibold mb-1">BG Saxo <span class="score-badge">90/100</span></div>
+        <div class="text-sm text-slate-600 mb-3 clamp-3">
+          SIM vigilata da Consob e Banca d’Italia, <strong>regime amministrato</strong>, accesso a oltre 23.000 azioni, 4.700 ETF, obbligazioni, opzioni e futures globali.
+        </div>
+        <div class="flex flex-wrap gap-1 mb-3">
+          <span class="tag">Azioni</span><span class="tag">ETF</span><span class="tag">Obbligazioni</span><span class="tag">Opzioni</span><span class="tag">Futures</span>
+        </div>
+        <div class="mt-2 text-xs text-slate-500 space-y-1">
+          <div><span class="font-medium">Piattaforme:</span> SaxoTraderGO / SaxoTraderPRO</div>
+          <div><span class="font-medium">Costi:</span> Azioni USA da 1 USD, commissioni variabili per altri mercati</div>
+        </div>
+        <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('bgsaxo')">Maggiori info</button>
+      </div>
+    </li>
+  <li data-key="ig" data-group="fiscalita-gestita" class="card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start">
+      <div class="logo-fb bg-rose-600">IG</div>
+      <div class="min-w-0 flex flex-col h-full">
+        <div class="font-semibold mb-1">IG <span class="score-badge">90/100</span></div>
+        <div class="text-sm text-slate-600 mb-3 clamp-3">
+          Intermediario regolamentato con <strong>regime amministrato</strong> in Italia. Accesso a azioni, ETF, obbligazioni, opzioni e futures quotati; piattaforme IG, ProRealTime e TradingView.
+        </div>
+        <div class="flex flex-wrap gap-1 mb-3">
+          <span class="tag">Azioni</span><span class="tag">ETF</span><span class="tag">Obbligazioni</span><span class="tag">Opzioni</span><span class="tag">Futures</span>
+        </div>
+        <div class="mt-2 text-xs text-slate-500 space-y-1">
+          <div><span class="font-medium">Piattaforme:</span> IG / ProRealTime / TradingView / MT4</div>
+          <div><span class="font-medium">Costi:</span> Azioni Italia/UE da €8, USA da $10</div>
+          <div><span class="font-medium">Fiscalità:</span> Sostituto d’imposta (regime amministrato)</div>
+        </div>
+        <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('ig')">Maggiori info</button>
+      </div>
+  </li>
+  </ul>
+</section>
+
 
     <section class="text-[12px] text-slate-500">
       <p>I dati (strumenti disponibili, quantità, minimi) sono indicativi e soggetti a variazioni; verificare sempre sul sito ufficiale prima di operare.</p>
@@ -1752,228 +1796,230 @@ Vuoi procedere inviando i dati?`;
   <script>
     // Dati modali — sostituisci "/aff/..." con i tuoi URL reali quando vuoi
     const DATA = {
-      exante: {
-        name: "EXANTE",
-        affiliated: true,
-        tags: ["DMA","Bond","Derivati quotati"],
-        assets: "Azioni, ETF (incl. ETN crypto), Futures, Opzioni, Obbligazioni; Cripto via CFD",
-        count: "≈ 1.000.000+ strumenti • 50+ mercati • 20.000+ bond • 40.000+ azioni • 25.000+ ticker opzioni / 1.000.000+ strike",
-        min: "≈ €10.000 (retail UE)",
-        reg: "UE · entità europee (es. MFSA/CySEC) · operatività per residenti italiani",
-        cfd: true,
-        cfd_note: "Su EXANTE <strong>solo le criptovalute sono offerte tramite CFD</strong>. Tutti gli altri strumenti sono quotati su mercati regolamentati.",
-        score: 92,
-        platforms: "Web, Desktop, App",
-        fees: "Commissioni per mercato; cambio e dati in tempo reale separati; deposito minimo €10k.",
-        pros: [
-          "Accesso DMA su 50+ mercati",
-          "Vasta copertura obbligazionaria",
-          "Derivati quotati su molte borse"
-        ],
-        cons: [
-          "Deposito minimo elevato",
-          "Cripto solo via CFD",
-          "Listino e mercati da verificare"
-        ],
-        skill: "Avanzato",
-        aff: "https://exantepartner.com/p/38603/"
-      },
-      saxo: {
-        name: "Saxo Bank",
-        affiliated: false,
-        tags: ["DMA","Opzioni","Futures"],
-        assets: "Azioni, ETF, Opzioni, Futures, Obbligazioni; FX; commodities",
-        count: "23.000+ azioni • 7.400+ ETF • 250 futures • 3.100 opzioni • 5.200+ bond",
-        min: "Variabile per area/conti (verificare)",
-        reg: "UE/UK/DK · entità regolamentate · disponibile in Italia",
-        cfd: true,
-        cfd_note: "Offre CFD multi-asset; in questa selezione consideriamo solo strumenti quotati.",
-        score: 90,
-        platforms: "SaxoTraderGO/PRO, Web, App",
-        fees: "Commissioni per mercato; possibili costi per dati e cambio.",
-        pros: [
-          "Piattaforme mature e stabili",
-          "Copertura multi-asset avanzata",
-          "Buoni strumenti di analisi"
-        ],
-        cons: [
-          "Costi di dati/cambio possono incidere",
-          "Curva di apprendimento per funzioni pro"
-        ],
-        skill: "Avanzato",
-        aff: ""
-      },
-      ibkr: {
-        name: "Interactive Brokers (IBKR)",
-        affiliated: false,
-        tags: ["DMA","TWS/API","Derivati quotati"],
-        assets: "Azioni, ETF, Bond, Opzioni, Futures su borse globali; Forex; Fondi; API/TWS",
-        count: "160+ mercati in 36 paesi • 1.000.000+ bond",
-        min: "Nessun minimo formale (verificare requisiti)",
-        reg: "USA/EU · entità regolamentate · operatività per residenti italiani",
-        cfd: true,
-        cfd_note: "CFD disponibili tramite entità abilitate (es. IBKR UK/IE); selezioniamo solo strumenti quotati.",
-        score: 95,
-        platforms: "TWS, Client Portal, IBKR Mobile, API",
-        fees: "Piani tiered/fixed; dati e cambio separati.",
-        pros: [
-          "Copertura globale (160+ mercati)",
-          "TWS/API molto potenti",
-          "Infrastruttura professionale"
-        ],
-        cons: [
-          "Curva di apprendimento ripida",
-          "Pricing articolato",
-          "Dati in tempo reale spesso a pagamento"
-        ],
-        skill: "Pro",
-        aff: ""
-      },
-      mexem: {
-        name: "MEXEM",
-        affiliated: false,
-        tags: ["DMA","TWS","Multi-mercato"],
-        assets: "Accesso a TWS/IBKR; azioni, ETF, opzioni e futures quotati",
-        count: "Via IBKR: 160+ mercati • 1.000.000+ bond",
-        min: "N/D ufficiale",
-        reg: "UE · vigilanza (es. CySEC) · disponibile in Italia",
-        cfd: true,
-        cfd_note: "CFD disponibili tramite entità IBKR dove consentito; selezioniamo solo la parte quotata.",
-        score: 88,
-        platforms: "TWS (IBKR), Client Portal, App",
-        fees: "Listino in linea con IBKR; dati/cambio separati.",
-        pros: [
-          "Accesso a TWS/IBKR con supporto UE/IT",
-          "Multi-mercato con infrastruttura solida"
-        ],
-        cons: [
-          "Struttura costi simile a IBKR (da verificare)",
-          "Dipendenza dall'infrastruttura IBKR"
-        ],
-        skill: "Avanzato",
-        aff: ""
-      },
-      freedom24: {
-        name: "Freedom24",
-        affiliated: true,
-        tags: ["IPO","Azioni","ETF"],
-        assets: "IPO primarie, Azioni USA/EU, ETF, Obbligazioni; Opzioni/Futures quotati",
-        count: "≈ 1.000.000 strumenti • 3.600+ ETF",
-        min: "≈ €10",
-        reg: "UE · vigilanza (CySEC) · disponibile in Italia",
-        cfd: false,
-        score: 85,
-        platforms: "Web, App",
-        fees: "Commissioni su azioni/ETF; IPO con condizioni dedicate.",
-        pros: [
-          "Accesso a IPO primarie",
-          "Copertura ampia USA/EU",
-          "Interfaccia semplice"
-        ],
-        cons: [
-          "Le IPO comportano rischi elevati",
-          "Funzioni pro più limitate rispetto ai broker istituzionali"
-        ],
-        skill: "Base",
-        aff: "https://freedom24.com/invite_from/2953166"
-      },
-      scalable: {
-        name: "Scalable Capital",
-        affiliated: false,
-        tags: ["ETF","PAC","Low fees"],
-        assets: "ETF, Azioni; piani PAC; Fondi; Derivati (gettex/EU); Crypto ETP",
-        count: "≈ 8.000 azioni • 2.200 ETF • 2.000 fondi • 375.000+ derivati",
-        min: "da importi ridotti per PAC",
-        reg: "UE · vigilanza tedesca · disponibile in Italia",
-        cfd: false,
-        score: 83,
-        platforms: "Web, App",
-        fees: "Piani flat e per-ordine; PAC a costi contenuti.",
-        pros: [
-          "PAC su ETF efficienti",
-          "Costi bassi su gettex",
-          "UI moderna"
-        ],
-        cons: [
-          "Copertura borse focalizzata su DE",
-          "Alcuni strumenti/mercati non disponibili"
-        ],
-        skill: "Base",
-        aff: ""
-      },
-      degiro: {
-        name: "DEGIRO",
-        affiliated: false,
-        tags: ["ETF","Azioni","Multi-mercato"],
-        assets: "Azioni, ETF, Obbligazioni, Fondi, Opzioni/Futures (quotati), Warrants/Certificates",
-        count: "50+ borse in 30 paesi • ETF su 19 mercati",
-        min: "Nessun minimo formale (verificare requisiti operativi)",
-        reg: "UE · vigilanza Paesi Bassi/UE · disponibile in Italia",
-        cfd: false,
-        score: 84,
-        platforms: "Web, App",
-        fees: "Commissioni competitive; dati in tempo reale spesso opzionali.",
-        pros: [
-          "Costi molto competitivi",
-          "Ampia copertura borse EU/US"
-        ],
-        cons: [
-          "Dati real-time spesso a pagamento",
-          "Mancano API/strumenti pro avanzati"
-        ],
-        skill: "Intermedio",
-        aff: ""
-      },
-      etoro: {
-        name: "eToro",
-        affiliated: true,
-        tags: ["Azioni","ETF","Cripto spot","Social"],
-        assets: "Azioni/ETF reali, Cripto spot; Opzioni US; funzioni social/copy",
-        count: "7.000+ asset totali • Azioni su 20+ borse • >130 crypto (globale; disponibilità varia per area)",
-        min: "≈ €50 (variabile per area)",
-        reg: "UE · entità europee abilitate · disponibile in Italia",
-        cfd: true,
-        cfd_note: "Offre CFD su più asset. In questa selezione consideriamo solo la componente <em>real assets</em>.",
-        score: 76,
-        platforms: "Web, App",
-        fees: "Azioni/ETF reali con commissioni ridotte; spread/cambio e costi di prelievo possibili.",
-        pros: [
-          "Funzioni social/copy",
-          "Ampia scelta di cripto spot",
-          "UI semplice"
-        ],
-        cons: [
-          "CFD disponibili (non promossi)",
-          "Spread/cambio possono incidere",
-          "Strumenti avanzati limitati"
-        ],
-        skill: "Base",
-        aff: "https://med.etoro.com/B7979_A124128_TClick.aspx"
-      },
-      naga: {
-        name: "NAGA",
-        affiliated: true,
-        tags: ["Azioni","ETF","Social"],
-        assets: "Azioni/ETF reali; componente social/copy",
-        count: "3.000+ azioni/ETF reali • 15 borse",
-        min: "N/D ufficiale",
-        reg: "UE · vigilanza europea · disponibile in Italia",
-        cfd: true,
-        cfd_note: "NAGA offre CFD; qui selezionata solo la parte titoli/ETF reali.",
-        score: 72,
-        platforms: "Web, App",
-        fees: "Commissioni/spread; possibili costi di deposito/prelievo.",
-        pros: [
-          "Componente social",
-          "Titoli/ETF reali accanto a altri asset"
-        ],
-        cons: [
-          "Presenza CFD (non promossi)",
-          "Listino commissioni da verificare per mercato"
-        ],
-        skill: "Base",
-        aff: "https://www.financeads.net/tc.php?t=76793C4792126679T"
-      },
+{
+  "name": "EXANTE",
+  "affiliated": true,
+  "tags": ["DMA", "Bond", "Derivati quotati"],
+  "assets": "Azioni, ETF (incl. ETN crypto), Futures, Opzioni, Obbligazioni; Cripto via CFD",
+  "count": "≈ 1.000.000+ strumenti • 50+ mercati • 20.000+ bond • 40.000+ azioni • 25.000+ ticker opzioni / 1.000.000+ strike",
+  "min": "≈ €10.000 (retail UE)",
+  "reg": "UE · entità europee (es. MFSA/CySEC) · operatività per residenti italiani",
+  "cfd": true,
+  "cfd_note": "Su EXANTE <strong>solo le criptovalute sono offerte tramite CFD</strong>. Tutti gli altri strumenti sono quotati su mercati regolamentati.",
+  "score": 92,
+  "platforms": "Web, Desktop, App",
+  "fees": "Commissioni per mercato; cambio e dati in tempo reale separati; deposito minimo €10k.",
+  "pros": [
+    "Accesso DMA su 50+ mercati",
+    "Vasta copertura obbligazionaria",
+    "Derivati quotati su molte borse"
+  ],
+  "cons": [
+    "Deposito minimo elevato",
+    "Cripto solo via CFD",
+    "Listino e mercati da verificare"
+  ],
+  "skill": "Avanzato",
+  "aff": "https://exantepartner.com/p/38603/",
+  "disclaimer": "Il trading comporta rischi di perdita. Le performance passate non sono indicative di risultati futuri. Su EXANTE solo le criptovalute sono offerte tramite CFD, prodotti complessi ad alto rischio di perdita rapida di denaro; valuta attentamente se comprendi il funzionamento dei CFD e se puoi permetterti di correre un rischio elevato di perdere il tuo capitale."
+},
+
+ 
+ibkr: {
+  name: "Interactive Brokers (IBKR)",
+  affiliated: false,
+  tags: ["DMA","TWS/API","Derivati quotati"],
+  assets: "Azioni, ETF, obbligazioni, opzioni, futures su borse globali; forex; fondi; accesso API/TWS",
+  count: "160+ mercati in 36 paesi • 1.000.000+ obbligazioni",
+  min: "Nessun minimo formale (verificare requisiti)",
+  reg: "USA/EU · entità regolamentate (SEC, CFTC, FCA, CSSF, IIROC, ASIC, SFC, MAS) · operatività per residenti italiani",
+  cfd: true,
+  cfd_note: "CFD disponibili tramite entità abilitate (es. IBKR UK/IE); in questa selezione consideriamo solo strumenti quotati reali.",
+  score: 95,
+  platforms: "Trader Workstation (TWS), Client Portal, IBKR Mobile, API",
+  fees: "Piani tiered o fixed; costi separati per dati di mercato e cambio valuta",
+  pros: [
+    "Copertura globale su oltre 160 mercati",
+    "Piattaforme TWS/API estremamente potenti",
+    "Infrastruttura professionale e stabile",
+    "Ampia gamma di strumenti e asset class",
+    "Commissioni molto competitive per trader attivi"
+  ],
+  cons: [
+    "Curva di apprendimento ripida per principianti",
+    "Struttura commissionale articolata",
+    "Dati di mercato in tempo reale spesso a pagamento"
+  ],
+  skill: "Pro",
+  aff: "",
+  disclaimer: "I CFD sono strumenti complessi e comportano un alto rischio di perdere denaro rapidamente a causa della leva finanziaria. Il 66,6% dei conti degli investitori al dettaglio perde denaro quando negozia CFD con questo fornitore. Valuta se comprendi come funzionano i CFD e se puoi permetterti di correre l’alto rischio di perdere il tuo denaro."
+},
+
+mexem: {
+  name: "MEXEM",
+  affiliated: false,
+  tags: ["DMA","TWS","Multi-mercato"],
+  assets: "Accesso a TWS/IBKR; azioni, ETF, obbligazioni, opzioni e futures quotati; forex e altri strumenti dove consentito",
+  count: "Oltre 150 mercati globali • 30.000+ strumenti • 1.000.000+ obbligazioni",
+  min: "Nessun deposito minimo",
+  reg: "UE · sede nei Paesi Bassi · vigilanza CySEC e FCA · disponibile in Italia",
+  cfd: true,
+  cfd_note: "CFD disponibili tramite entità IBKR dove consentito; in questa selezione consideriamo solo strumenti quotati reali.",
+  score: 88,
+  platforms: "TWS (IBKR), Client Portal, App",
+  fees: "Commissioni basse su azioni/ETF; nessuna commissione di inattività; costi separati per dati e cambio valuta",
+  pros: [
+    "Accesso a TWS/IBKR con supporto UE/IT",
+    "Multi-mercato con infrastruttura solida",
+    "Commissioni competitive su azioni/ETF",
+    "Nessun deposito minimo",
+    "Ampia gamma di strumenti e mercati"
+  ],
+  cons: [
+    "Piattaforma TWS complessa per principianti",
+    "Commissioni elevate su opzioni e margini",
+    "Dipendenza dall'infrastruttura IBKR"
+  ],
+  skill: "Avanzato",
+  aff: "",
+  disclaimer: "I CFD sono strumenti complessi e comportano un alto rischio di perdere denaro rapidamente a causa della leva finanziaria. Il 74% dei conti degli investitori al dettaglio perde denaro quando negozia CFD con questo fornitore. Valuta se comprendi come funzionano i CFD e se puoi permetterti di correre l’alto rischio di perdere il tuo denaro."
+},
+
+   freedom24: {
+  name: "Freedom24",
+  affiliated: true,
+  tags: ["IPO","Azioni","ETF","Obbligazioni","Opzioni","Futures"],
+  assets: "Accesso a IPO primarie, azioni USA/EU/Asia, ETF, obbligazioni, opzioni e futures quotati",
+  count: "≈ 1.000.000 strumenti • 3.600+ ETF • 147.000+ obbligazioni • 800.000+ opzioni USA",
+  min: "≈ €10 per operatività standard; ≈ $2.000 per partecipare a IPO",
+  reg: "UE · Freedom Finance Europe Ltd · vigilanza CySEC · iscritta CONSOB · parte di Freedom Holding Corp (NASDAQ: FRHC)",
+  cfd: false,
+  score: 85,
+  platforms: "Web, App (iOS/Android)",
+  fees: "Commissioni variabili in base al piano; IPO con condizioni dedicate; conto deposito con interessi fino al 5,8% annuo",
+  pros: [
+    "Accesso a IPO primarie riservate di norma agli investitori istituzionali",
+    "Ampia copertura di mercati USA, UE e Asia",
+    "Piani di risparmio con interessi competitivi",
+    "Parte di un gruppo quotato al NASDAQ con rating S&P Global",
+    "Assicurazione fondi fino a 20.000 € (Investor Compensation Fund UE)"
+  ],
+  cons: [
+    "Deposito minimo elevato per accedere alle IPO",
+    "Commissioni di prelievo e cambio valuta da considerare",
+    "Piattaforma meno avanzata rispetto a broker istituzionali"
+  ],
+  skill: "Base/Intermedio",
+  aff: "https://freedom24.com/invite_from/2953166",
+  disclaimer: "Freedom Finance Europe Ltd è autorizzata e vigilata dalla Cyprus Securities and Exchange Commission (CySEC), iscritta a CONSOB e parte di Freedom Holding Corp, quotata al NASDAQ. Opera nel rispetto della normativa MiFID II e offre protezione dei fondi dei clienti secondo le leggi UE, inclusa copertura fino a 20.000 € tramite l’Investor Compensation Fund. Le informazioni hanno scopo puramente informativo e non costituiscono consulenza o sollecitazione al pubblico risparmio. Investire comporta rischi di perdita totale o parziale del capitale."
+},
+
+  scalable: {
+  name: "Scalable Capital",
+  affiliated: false,
+  tags: ["ETF","PAC","Low fees"],
+  assets: "ETF, Azioni; piani PAC; Fondi; Derivati (gettex/EU); Crypto ETP",
+  count: "≈ 8.000 azioni • 2.200 ETF • 2.000 fondi • 375.000+ derivati",
+  min: "da importi ridotti per PAC",
+  reg: "UE · vigilanza tedesca (BaFin) · disponibile in Italia",
+  cfd: false,
+  score: 83,
+  platforms: "Web, App",
+  fees: "Piani flat e per-ordine; PAC a costi contenuti; interessi 3,5% annuo* su liquidità fino al 31/12/2025",
+  pros: [
+    "PAC su ETF efficienti",
+    "Costi bassi su gettex",
+    "UI moderna",
+    "Interessi competitivi sulla liquidità"
+  ],
+  cons: [
+    "Copertura borse focalizzata su DE",
+    "Alcuni strumenti/mercati non disponibili"
+  ],
+  skill: "Base",
+  aff: "",
+  disclaimer: "Scalable Capital è un intermediario d’investimento regolamentato in Germania (BaFin) e attivo in Italia. Le informazioni fornite hanno scopo puramente informativo e non costituiscono consulenza o sollecitazione al pubblico risparmio. Investire comporta rischi di perdita totale o parziale del capitale; verifica sempre costi, mercati e condizioni aggiornate sul sito ufficiale prima di operare."
+},
+
+ degiro: {
+  name: "DEGIRO",
+  affiliated: false,
+  tags: ["ETF","Azioni","Multi-mercato"],
+  assets: "Azioni, ETF, Obbligazioni, Fondi, Opzioni/Futures (quotati), Warrants/Certificates",
+  count: "50+ borse in 30 paesi • ETF su 19 mercati",
+  min: "Nessun minimo formale (verificare requisiti operativi)",
+  reg: "UE · vigilanza Paesi Bassi/UE · disponibile in Italia",
+  cfd: false,
+  score: 84,
+  platforms: "Web, App",
+  fees: "Commissioni competitive; dati in tempo reale spesso opzionali.",
+  pros: [
+    "Costi molto competitivi",
+    "Ampia copertura borse EU/US"
+  ],
+  cons: [
+    "Dati real-time spesso a pagamento",
+    "Mancano API/strumenti pro avanzati"
+  ],
+  skill: "Intermedio",
+  aff: "",
+  disclaimer: "DEGIRO B.V. è un intermediario regolamentato nei Paesi Bassi e nell’UE. Le informazioni fornite hanno scopo puramente informativo e non costituiscono consulenza o sollecitazione al pubblico risparmio. Investire comporta rischi di perdita totale o parziale del capitale; verifica sempre costi, mercati e condizioni aggiornate sul sito ufficiale prima di operare."
+},
+
+   etoro: {
+  name: "eToro",
+  affiliated: true,
+  tags: ["Azioni","ETF","Cripto spot","Social"],
+  assets: "Azioni/ETF reali, Cripto spot; Opzioni US; funzioni social/copy",
+  count: "7.000+ asset totali • Azioni su 20+ borse • >130 crypto (globale; disponibilità varia per area)",
+  min: "≈ €50 (variabile per area)",
+  reg: "UE · entità europee abilitate · disponibile in Italia",
+  cfd: true,
+  cfd_note: "Offre CFD su più asset. In questa selezione consideriamo solo la componente <em>real assets</em>.",
+  score: 76,
+  platforms: "Web, App",
+  fees: "Azioni/ETF reali con commissioni ridotte; spread/cambio e costi di prelievo possibili.",
+  pros: [
+    "Funzioni social/copy",
+    "Ampia scelta di cripto spot",
+    "UI semplice"
+  ],
+  cons: [
+    "CFD disponibili (non promossi)",
+    "Spread/cambio possono incidere",
+    "Strumenti avanzati limitati"
+  ],
+  skill: "Base",
+  aff: "https://med.etoro.com/B7979_A124128_TClick.aspx",
+  disclaimer: "I CFD sono strumenti complessi e comportano un alto rischio di perdere denaro rapidamente a causa della leva finanziaria. Il 61% dei conti degli investitori al dettaglio perde denaro quando negozia CFD con questo fornitore. Valuta se comprendi come funzionano i CFD e se puoi permetterti di correre l’alto rischio di perdere il tuo denaro."
+},
+
+ naga: {
+  name: "NAGA",
+  affiliated: true,
+  tags: ["Azioni","ETF","Social"],
+  assets: "Azioni/ETF reali; componente social/copy",
+  count: "3.000+ azioni/ETF reali • 15 borse",
+  min: "N/D ufficiale",
+  reg: "UE · vigilanza europea · disponibile in Italia",
+  cfd: true,
+  cfd_note: "NAGA offre CFD; qui selezionata solo la parte titoli/ETF reali.",
+  score: 72,
+  platforms: "Web, App",
+  fees: "Commissioni/spread; possibili costi di deposito/prelievo.",
+  pros: [
+    "Componente social",
+    "Titoli/ETF reali accanto a altri asset"
+  ],
+  cons: [
+    "Presenza CFD (non promossi)",
+    "Listino commissioni da verificare per mercato"
+  ],
+  skill: "Base",
+  aff: "https://www.financeads.net/tc.php?t=76793C4792126679T",
+  disclaimer: "I CFD sono strumenti complessi e comportano un alto rischio di perdere denaro rapidamente a causa della leva finanziaria. L’82.08% dei conti degli investitori al dettaglio perde denaro quando negozia CFD con questo fornitore. Valuta se comprendi come funzionano i CFD e se puoi permetterti di correre l’alto rischio di perdere il tuo denaro."
+},
+
    directa: {
   name: "Directa SIM",
   affiliated: false,
@@ -1999,7 +2045,94 @@ Vuoi procedere inviando i dati?`;
   skill: "Intermedio",
   aff: "",
   disclaimer: "Directa SIM è una Società di Intermediazione Mobiliare (SIM) italiana, autorizzata e vigilata da CONSOB e Banca d'Italia. Una SIM è un intermediario finanziario autorizzato a offrire servizi di investimento. Directa SIM offre regime fiscale amministrato (fiscalità gestita), consentendo al cliente di delegare il calcolo e il versamento delle imposte su plusvalenze e redditi finanziari. Le informazioni fornite hanno scopo puramente informativo e non costituiscono consulenza o sollecitazione al pubblico risparmio. Investire comporta rischi di perdita totale o parziale del capitale."
+},
+      traderepublic: {
+  name: "Trade Republic",
+  affiliated: false,
+  tags: ["IBAN IT", "Regime amministrato", "Azioni", "ETF", "Obbligazioni", "Crypto"],
+  assets: "Azioni, ETF, obbligazioni, derivati, criptovalute; piani di accumulo (PAC) su azioni/ETF/crypto",
+  count: "Oltre 9.000 titoli e ETF globali; obbligazioni governative e corporate; crypto principali",
+  min: "1 € per ordine o PAC",
+  reg: "Italia · Succursale di banca tedesca autorizzata BaFin · vigilanza Banca d’Italia · iscritta CONSOB",
+  cfd: false,
+  cfd_note: "Nessun CFD; solo strumenti reali quotati",
+  score: 88,
+  platforms: "App iOS / Android, Web",
+  fees: "1 € per ordine singolo; PAC gratuiti; nessun canone; interessi 3% annuo sulla liquidità",
+  pros: [
+    "IBAN italiano con conto corrente integrato",
+    "Regime amministrato con sostituto d’imposta",
+    "Interessi 3% annuo sulla liquidità senza massimali",
+    "PAC gratuiti su azioni, ETF e crypto",
+    "1% Saveback sugli acquisti con carta"
+  ],
+  cons: [
+    "Solo piattaforma mobile/web, niente desktop avanzato",
+    "Assistenza clienti solo via chat/email",
+    "Gamma derivati limitata"
+  ],
+  skill: "Base",
+  aff: "",
+  disclaimer: "Trade Republic Bank GmbH è un istituto di credito tedesco con succursale italiana, autorizzato da BaFin e vigilato da Banca d’Italia, iscritto a CONSOB. Opera in regime fiscale amministrato come sostituto d’imposta, calcolando e versando automaticamente le imposte su plusvalenze, dividendi e interessi, incluse le criptovalute. Le informazioni hanno scopo puramente informativo e non costituiscono consulenza o sollecitazione al pubblico risparmio. Investire comporta rischi di perdita totale o parziale del capitale."
+},
+      bgsaxo: {
+  name: "BG Saxo",
+  affiliated: false,
+  tags: ["Italia", "Regime amministrato", "Azioni", "ETF", "Obbligazioni", "Opzioni", "Futures"],
+  assets: "Oltre 23.000 azioni globali, 4.700+ ETF, obbligazioni governative e corporate, opzioni e futures su oltre 20 borse mondiali",
+  count: "Azioni su 26 mercati; ETF tematici e settoriali; oltre 2.100 opzioni e 250 futures",
+  min: "N/D ufficiale",
+  reg: "Italia · SIM vigilata da Consob e Banca d’Italia · parte del gruppo Saxo Bank",
+  cfd: true,
+  cfd_note: "Offre anche CFD; in questa selezione consideriamo solo strumenti quotati reali",
+  score: 90,
+  platforms: "SaxoTraderGO, SaxoTraderPRO",
+  fees: "Azioni USA da 1 USD; commissioni variabili per altri mercati; promozioni su ETF/ETN selezionati",
+  pros: [
+    "Regime amministrato con sostituto d’imposta",
+    "Ampia gamma di strumenti globali",
+    "Piattaforme professionali e ricche di strumenti",
+    "Parte di un gruppo internazionale solido"
+  ],
+  cons: [
+    "Struttura commissionale complessa",
+    "Piattaforme avanzate con curva di apprendimento"
+  ],
+  skill: "Intermedio/Avanzato",
+  aff: "",
+  disclaimer: "BG Saxo SIM S.p.A. è una Società di Intermediazione Mobiliare italiana, vigilata da Consob e Banca d’Italia, parte del gruppo danese Saxo Bank. Opera in regime fiscale amministrato come sostituto d’imposta, gestendo il calcolo e il versamento delle imposte su plusvalenze, dividendi e altri redditi finanziari. Le informazioni hanno scopo puramente informativo e non costituiscono consulenza o sollecitazione al pubblico risparmio. Investire comporta rischi di perdita totale o parziale del capitale."
+},
+    {
+  "name": "IG",
+  "affiliated": false,
+  "tags": ["Azioni", "ETF", "Bond", "Opzioni", "Futures"],
+  "assets": "Azioni, ETF, obbligazioni, opzioni e futures quotati; ampia offerta anche di altri strumenti, inclusi CFD",
+  "count": "≈ 17.000+ mercati complessivi; migliaia di azioni globali e centinaia di ETF",
+  "min": "≈ €300 deposito iniziale (varia in base al tipo di conto)",
+  "reg": "Regolamentazione di alto livello (FCA, BaFin, ASIC, ESMA); operatività per residenti italiani con sede a Milano",
+  "cfd": true,
+  "cfd_note": "IG offre anche CFD su vari asset. Gli strumenti diretti (azioni, ETF, bond, derivati quotati) sono negoziati su mercati regolamentati.",
+  "score": 90,
+  "platforms": "Piattaforma IG proprietaria, ProRealTime, TradingView, MetaTrader 4",
+  "fees": "Commissioni su azioni Italia/UE da €8, USA da $10; costi competitivi su derivati quotati; conto amministrato disponibile",
+  "pros": [
+    "Brand riconosciuto a livello globale con quasi 50 anni di attività",
+    "Ampiezza mercati e strumenti",
+    "Piattaforme potenti e integrate",
+    "Regime amministrato per residenti in Italia"
+  ],
+  "cons": [
+    "Commissioni non sempre le più basse per piccolo buy&hold",
+    "Ampia presenza CFD: serve filtrare per promuovere solo strumenti diretti",
+    "Deposito minimo superiore a zero per alcune tipologie di conto"
+  ],
+  "skill": "Intermedio-Avanzato",
+  "aff": "",
+  "disclaimer": "Il trading comporta rischi di perdita. Le performance passate non sono indicative di risultati futuri. IG offre anche CFD, prodotti complessi ad alto rischio di perdita rapida di denaro; valuta attentamente se comprendi il funzionamento dei CFD e se puoi permetterti di correre un rischio elevato di perdere il tuo capitale."
 }
+
+
+
      };
 
     const $ = s => document.querySelector(s);
