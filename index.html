@@ -2131,150 +2131,98 @@ mexem: {
   disclaimer: "Il trading comporta rischi di perdita. Le performance passate non sono indicative di risultati futuri. IG offre anche CFD, prodotti complessi ad alto rischio di perdita rapida di denaro; valuta attentamente se comprendi il funzionamento dei CFD e se puoi permetterti di correre un rischio elevato di perdere il tuo capitale."
 }
     };
-const $ = s => document.querySelector(s);
 
-function openModal(key) {
-  const d = DATA[key];
-  if (!d) return;
-
-  $('#m-title').textContent = d.name;
-
-  // badge affiliato
-  $('#m-badge').classList.toggle('hidden', !d.affiliated);
-
-  // tag
-  const tg = $('#m-tags');
-  tg.innerHTML = '';
-  d.tags.forEach(t => {
-    const span = document.createElement('span');
-    span.className = 'tag';
-    span.textContent = t;
-    tg.appendChild(span);
-  });
-
-  $('#m-assets').textContent = d.assets;
-  $('#m-count').textContent = d.count;
-  $('#m-min').textContent = d.min;
-  $('#m-reg').textContent = d.reg;
-  $('#m-score').textContent = d.score ? `${d.score}/100` : 'N/D';
-  $('#m-skill').textContent = d.skill || 'N/D';
-
-  // CFD alert + nota specifica
-  const cfdBox = $('#m-cfd');
-  cfdBox.classList.toggle('hidden', !d.cfd);
-  $('#m-cfd-note').innerHTML = d.cfd && d.cfd_note ? d.cfd_note : '';
-
-  // piattaforme e costi
-  $('#m-platforms').textContent = d.platforms || 'N/D';
-  $('#m-fees').textContent = d.fees || 'N/D';
-
-  // pro e contro
-  const prosUl = $('#m-pros');
-  const consUl = $('#m-cons');
-  prosUl.innerHTML = '';
-  consUl.innerHTML = '';
-  (d.pros || []).forEach(p => {
-    const li = document.createElement('li');
-    li.innerHTML = p;
-    prosUl.appendChild(li);
-  });
-  (d.cons || []).forEach(c => {
-    const li = document.createElement('li');
-    li.innerHTML = c;
-    consUl.appendChild(li);
-  });
-
-  // mappa link ufficiali
-  const OFFICIAL = {
-    saxo: 'https://www.saxo.com',
-    ibkr: 'https://www.interactivebrokers.eu',
-    mexem: 'https://www.mexem.com',
-    scalable: 'https://it.scalable.capital',
-    degiro: 'https://www.degiro.it',
-    directa: 'https://www.directa.it'
-  };
-
-  // calcolo URL
-  const url = d.aff && d.aff.trim() !== '' ? d.aff : OFFICIAL[key] || '#';
-
-  // pulsante link
-  const affBtn = $('#m-aff');
-  const affText = $('#m-afftext');
-  if (url && url !== '#') {
-    affBtn.classList.remove('hidden');
-    affBtn.setAttribute('href', url);
-    affBtn.setAttribute('rel', d.affiliated ? 'sponsored noopener' : 'noopener');
-    affText.textContent = d.affiliated ? 'Link affiliato' : 'Sito ufficiale (non affiliato)';
-  } else {
-    affBtn.classList.add('hidden');
-    affBtn.removeAttribute('href');
-    affBtn.setAttribute('rel', 'noopener');
-    affText.textContent = 'Nessun link disponibile.';
-  }
-
-  // disclaimer
-  const disclaimerBox = document.getElementById('m-disclaimer');
-  if (d.disclaimer) {
-    disclaimerBox.textContent = d.disclaimer;
-    disclaimerBox.classList.remove('hidden');
-  } else {
-    disclaimerBox.textContent = '';
-    disclaimerBox.classList.add('hidden');
-  }
-
-  // mostra modale
-  const modal = $('#modal');
-  modal.classList.remove('hidden');
-  modal.classList.add('flex');
+    const $ = s => document.querySelector(s);
+    function openModal(key){
+      const d = DATA[key]; if(!d) return;
+      $('#m-title').textContent = d.name;
+      // badge affiliato
+      $('#m-badge').classList.toggle('hidden', !d.affiliated);
+      // tag
+      const tg = $('#m-tags'); tg.innerHTML = '';
+      d.tags.forEach(t => { const s=document.createElement('span'); s.className='tag'; s.textContent=t; tg.appendChild(s); });
+      $('#m-assets').textContent = d.assets;
+      $('#m-count').textContent  = d.count;
+      $('#m-min').textContent    = d.min;
+      $('#m-reg').textContent = d.reg;
+      $('#m-score').textContent = d.score ? `${d.score}/100` : 'N/D';
+      $('#m-skill').textContent = d.skill || 'N/D';
+      // CFD alert + nota specifica
+      const cfdBox = $('#m-cfd');
+      cfdBox.classList.toggle('hidden', !d.cfd);
+      const note = $('#m-cfd-note');
+      note.innerHTML = d.cfd && d.cfd_note ? d.cfd_note : '';
+      // piattaforme e costi
+      $('#m-platforms').textContent = d.platforms || 'N/D';
+      $('#m-fees').textContent = d.fees || 'N/D';
+      // pro e contro
+      const prosUl = $('#m-pros'); const consUl = $('#m-cons');
+      prosUl.innerHTML = ''; consUl.innerHTML = '';
+      (d.pros || []).forEach(p=>{ const li=document.createElement('li'); li.innerHTML=p; prosUl.appendChild(li); });
+      (d.cons || []).forEach(c=>{ const li=document.createElement('li'); li.innerHTML=c; consUl.appendChild(li); });
+      // link affiliato (solo se presente)
+      const affBtn = $('#m-aff');
+      const affText = $('#m-afftext');
+      const OFFICIAL = { saxo: 'https://www.saxo.com', ibkr: 'https://www.interactivebrokers.eu', mexem: 'https://www.mexem.com', scalable: 'https://it.scalable.capital', degiro: 'https://www.degiro.it', directa: 'https://www.directa.it' };
+      const url = d.aff ? d.aff : OFFICIAL[key] || '#';
+      if(url && url !== '#'){
+        affBtn.classList.remove('hidden');
+        affBtn.setAttribute('href', url);
+        affBtn.setAttribute('rel', d.affiliated ? 'sponsored noopener' : 'noopener');
+        affText.textContent = d.affiliated ? 'Link affiliato' : 'Sito ufficiale (non affiliato)';
+      } else {
+        affBtn.classList.add('hidden');
+        affBtn.removeAttribute('href');
+        affBtn.setAttribute('rel', 'noopener');
+        affText.textContent = 'Nessun link disponibile.';
+      }
+      const disclaimerBox = document.getElementById('m-disclaimer');
+if (d.disclaimer) {
+  disclaimerBox.textContent = d.disclaimer;
+  disclaimerBox.classList.remove('hidden');
+} else {
+  disclaimerBox.textContent = '';
+  disclaimerBox.classList.add('hidden');
 }
-
-function closeModal() {
-  const m = $('#modal');
-  m.classList.add('hidden');
-  m.classList.remove('flex');
-}
-
-document.getElementById('modal').addEventListener('click', e => {
-  if (e.target.id === 'modal') closeModal();
-});
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
-});
-
-// Fill card summaries (platforms & fees)
-document.querySelectorAll('li[data-key]').forEach(li => {
-  const key = li.getAttribute('data-key');
-  const d = DATA[key];
-  if (!d) return;
-  const p = li.querySelector('.js-platforms');
-  const f = li.querySelector('.js-fees');
-  if (p) p.textContent = d.platforms || 'N/D';
-  if (f) f.textContent = d.fees || 'N/D';
-});
-
-// --- Filtro CFD ---
-function applyFilter(mode) {
-  const cards = document.querySelectorAll('li[data-key]');
-  cards.forEach(card => {
-    const key = card.getAttribute('data-key');
-    const d = DATA[key];
-    if (!d) {
-      card.classList.remove('hidden');
-      return;
+      const modal = $('#modal'); modal.classList.remove('hidden'); modal.classList.add('flex');
     }
-    let show = true;
-    if (mode === 'no-cfd') {
-      show = (d.cfd === false); // mostra solo chi NON ha CFD
-    }
-    card.classList.toggle('hidden', !show);
-  });
-}
+    function closeModal(){ const m=$('#modal'); m.classList.add('hidden'); m.classList.remove('flex'); }
+    document.getElementById('modal').addEventListener('click', (e)=>{ if(e.target.id==='modal') closeModal(); });
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); });
+  // Fill card summaries (platforms & fees)
+    document.querySelectorAll('li[data-key]').forEach(li=>{
+      const key = li.getAttribute('data-key');
+      const d = DATA[key]; if(!d) return;
+      const p = li.querySelector('.js-platforms');
+      const f = li.querySelector('.js-fees');
+      if(p) p.textContent = d.platforms || 'N/D';
+      if(f) f.textContent = d.fees || 'N/D';
+    });
 
-const select = document.getElementById('f-cfd');
-if (select) {
-  select.addEventListener('change', () => applyFilter(select.value));
-  applyFilter('standard');
-}
+  // --- Filtro CFD ---
+    function applyFilter(mode){
+      const cards = document.querySelectorAll('li[data-key]');
+      cards.forEach(card => {
+        const key = card.getAttribute('data-key');
+        const d = DATA[key];
+        if(!d){ card.classList.remove('hidden'); return; }
+        let show = true;
+        if(mode === 'no-cfd'){
+          show = (d.cfd === false); // mostra solo chi NON ha CFD
+        } else if(mode === 'standard'){
+          show = true; // default: mostra tutti
+        } else {
+          show = true; // all
+        }
+        card.classList.toggle('hidden', !show);
+      });
+    }
+    const select = document.getElementById('f-cfd');
+    if(select){
+      select.addEventListener('change', ()=> applyFilter(select.value));
+      applyFilter('standard');
+    }
+  </script>
 
 <!-- Cookie & Legal helpers (fix: racchiusi in <script>) -->
 <script>
