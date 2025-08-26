@@ -2300,12 +2300,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (header) header.classList.toggle('shrink', h.scrollTop > 24);
   }, { passive: true });
 
-  // Pulsante → scroll fluido fino alle tabs
+  // Pulsante → scroll fino alle tabs (offset ad occhio)
   toTop?.addEventListener('click', e => {
     e.preventDefault();
     if (!tabsEl) return;
-    const offset = header?.offsetHeight || 0;
-    const targetY = tabsEl.getBoundingClientRect().top + window.scrollY - offset - 8; // margine extra
+
+    // Altezza header stimata + margine superiore
+    const approxOffset = 88; // 80px header + 8px margine
+    const targetY = tabsEl.offsetTop - approxOffset;
+
     window.scrollTo({ top: targetY, behavior: 'smooth' });
   });
 
@@ -2376,3 +2379,4 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
+
