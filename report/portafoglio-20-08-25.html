@@ -386,40 +386,65 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
   </div>
 </section>
 
-    <!-- TABS sticky -->
-    <div id="tabs-anchor" style="position:absolute; top:calc( var(--header-height, 80px) * -1 );"></div>
+   <!-- Anchor per compensare l'altezza header -->
+<div id="tabs-anchor"></div>
 
-    <nav id="section-tabs" class="sticky bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm" role="tablist" aria-label="Sezioni report">
-      <div id="tabs-scroller" class="max-w-7xl mx-auto">
-          <button class="sv-tab" data-target="broker" role="tab" aria-selected="false" aria-controls="broker" id="tab-broker" tabindex="-1">
-  <i data-lucide="store"></i><span>Broker</span>
-</button>
-        <button class="sv-tab active" data-target="sim-op" role="tab" aria-selected="true" aria-controls="sim-op" id="tab-sim-op" tabindex="0">
-          <i data-lucide="activity"></i><span>Simulazione</span>
-        </button>
-        <button class="sv-tab" data-target="blocco1" role="tab" aria-selected="false" aria-controls="blocco1" id="tab-blocco1" tabindex="-1">
-          <i data-lucide="user-cog"></i><span class="hidden sm:inline">B1 Profilo</span><span class="sm:hidden">B1</span>
-        </button>
-        <button class="sv-tab" data-target="blocco2" role="tab" aria-selected="false" aria-controls="blocco2" id="tab-blocco2" tabindex="-1">
-          <i data-lucide="globe-2"></i><span class="hidden sm:inline">B2 Macro</span><span class="sm:hidden">B2</span>
-        </button>
-        <button class="sv-tab" data-target="blocco3" role="tab" aria-selected="false" aria-controls="blocco3" id="tab-blocco3" tabindex="-1">
-          <i data-lucide="settings-2"></i><span class="hidden sm:inline">B3 Quant Engine</span><span class="sm:hidden">B3</span>
-        </button>
-        <button class="sv-tab" data-target="blocco4" role="tab" aria-selected="false" aria-controls="blocco4" id="tab-blocco4" tabindex="-1">
-          <i data-lucide="building-2"></i><span class="hidden sm:inline">B4 Canditati</span><span class="sm:hidden">B4</span>
-        </button>
-        <button class="sv-tab" data-target="blocco5" role="tab" aria-selected="false" aria-controls="blocco5" id="tab-blocco5" tabindex="-1">
-          <i data-lucide="activity"></i><span class="hidden sm:inline">B5 Stress</span><span class="sm:hidden">B5</span>
-        </button>
-        <button class="sv-tab" data-target="blocco6" role="tab" aria-selected="false" aria-controls="blocco6" id="tab-blocco6" tabindex="-1">
-          <i data-lucide="wrench"></i><span class="hidden sm:inline">B6 Implement.</span><span class="sm:hidden">B6</span>
-        </button>
-        <button class="sv-tab" data-target="blocco7" role="tab" aria-selected="false" aria-controls="blocco7" id="tab-blocco7" tabindex="-1">
-          <i data-lucide="award"></i><span class="hidden sm:inline">B7 Scoring</span><span class="sm:hidden">B7</span>
-        </button>
-      </div>
-    </nav>
+<!-- Tabs sticky -->
+<nav id="section-tabs" class="sticky-tabs" role="tablist" aria-label="Sezioni report">
+  <div id="tabs-scroller" class="max-w-7xl mx-auto flex gap-2 overflow-x-auto no-scrollbar">
+    <button class="sv-tab" data-target="broker" role="tab" aria-selected="false" aria-controls="broker" id="tab-broker" tabindex="-1">
+      <i data-lucide="store"></i><span>Broker</span>
+    </button>
+    <button class="sv-tab active" data-target="sim-op" role="tab" aria-selected="true" aria-controls="sim-op" id="tab-sim-op" tabindex="0">
+      <i data-lucide="activity"></i><span>Simulazione</span>
+    </button>
+    <button class="sv-tab" data-target="blocco1" role="tab" aria-selected="false" aria-controls="blocco1" id="tab-blocco1" tabindex="-1">
+      <i data-lucide="user-cog"></i><span class="hidden sm:inline">B1 Profilo</span><span class="sm:hidden">B1</span>
+    </button>
+    <button class="sv-tab" data-target="blocco2" role="tab" aria-selected="false" aria-controls="blocco2" id="tab-blocco2" tabindex="-1">
+      <i data-lucide="globe-2"></i><span class="hidden sm:inline">B2 Macro</span><span class="sm:hidden">B2</span>
+    </button>
+    <button class="sv-tab" data-target="blocco3" role="tab" aria-selected="false" aria-controls="blocco3" id="tab-blocco3" tabindex="-1">
+      <i data-lucide="settings-2"></i><span class="hidden sm:inline">B3 Quant Engine</span><span class="sm:hidden">B3</span>
+    </button>
+    <button class="sv-tab" data-target="blocco4" role="tab" aria-selected="false" aria-controls="blocco4" id="tab-blocco4" tabindex="-1">
+      <i data-lucide="building-2"></i><span class="hidden sm:inline">B4 Canditati</span><span class="sm:hidden">B4</span>
+    </button>
+    <button class="sv-tab" data-target="blocco5" role="tab" aria-selected="false" aria-controls="blocco5" id="tab-blocco5" tabindex="-1">
+      <i data-lucide="activity"></i><span class="hidden sm:inline">B5 Stress</span><span class="sm:hidden">B5</span>
+    </button>
+    <button class="sv-tab" data-target="blocco6" role="tab" aria-selected="false" aria-controls="blocco6" id="tab-blocco6" tabindex="-1">
+      <i data-lucide="wrench"></i><span class="hidden sm:inline">B6 Implement.</span><span class="sm:hidden">B6</span>
+    </button>
+    <button class="sv-tab" data-target="blocco7" role="tab" aria-selected="false" aria-controls="blocco7" id="tab-blocco7" tabindex="-1">
+      <i data-lucide="award"></i><span class="hidden sm:inline">B7 Scoring</span><span class="sm:hidden">B7</span>
+    </button>
+  </div>
+</nav>
+
+<style>
+  :root {
+    --header-height: 80px; /* altezza header fisso */
+  }
+
+  #tabs-anchor {
+    height: var(--header-height);
+  }
+
+  .sticky-tabs {
+    position: sticky;
+    top: 0;
+    background-color: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #e2e8f0;
+    z-index: 1000;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+</style>
+
 
     <!-- ===== PANELS ===== -->
 <section id="broker" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
@@ -2300,16 +2325,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (header) header.classList.toggle('shrink', h.scrollTop > 24);
   }, { passive: true });
 
-  // Pulsante → scroll fino alle tabs (offset ad occhio)
+  // Pulsante → scroll fluido fino alle tabs
   toTop?.addEventListener('click', e => {
     e.preventDefault();
-    if (!tabsEl) return;
-
-    // Altezza header stimata + margine superiore
-    const approxOffset = 88; // 80px header + 8px margine
-    const targetY = tabsEl.offsetTop - approxOffset;
-
-    window.scrollTo({ top: targetY, behavior: 'smooth' });
+    if (tabsEl) {
+      tabsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   });
 
   // Drawer indice
