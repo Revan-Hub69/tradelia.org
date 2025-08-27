@@ -1321,107 +1321,109 @@ if (d.disclaimer) {
   <!-- Griglia responsive: 1 col (mobile) · 2 (tablet) · 2 (desktop) -->
   <div class="grid gap-8 sm:gap-8 md:gap-10 grid-cols-1 sm:grid-cols-1 lg:grid-cols-1">
 
-    <!-- ========== CARD · Step 2.1 · PIL Reale & Potenziale ========= -->
-    <section id="card-pil" role="region" aria-labelledby="card-pil-title"
-      class="border border-slate-200 rounded-2xl bg-white p-8 sm:p-10 md:p-12 shadow-md hover:shadow group break-inside-avoid">
-      <header class="flex items-center gap-2 mb-3">
-        <i data-lucide="activity" class="w-5 h-5 text-slate-500"></i>
-        <h3 id="card-pil-title" class="text-[clamp(1.25rem,1.8vw,1.5rem)] font-semibold text-gray-900">Step 2.1 · PIL Reale &amp; Potenziale</h3>
-      </header>
-      <p class="text-sm text-gray-600 mb-5">
-        Crescita attuale e forward del PIL, confronto con potenziale e output gap. Stato dell’economia globale e regionale.
-      </p>
+ <!-- ========== CARD · Step 2.1 · PIL Reale & Potenziale (Lucide · No Emoji) ========= -->
+<section id="card-pil" role="region" aria-labelledby="card-pil-title"
+  class="border border-slate-200 rounded-2xl bg-white p-8 sm:p-10 md:p-12 shadow-md hover:shadow-lg transition-shadow break-inside-avoid">
 
-      <!-- Spiegazioni sintetiche -->
-      <div class="mb-5 text-sm text-gray-500 grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <p><span class="font-semibold">PIL Reale:</span> crescita osservata.</p>
-        <p><span class="font-semibold">PIL Potenziale:</span> massimo sostenibile senza inflazione.</p>
-        <p><span class="font-semibold">Output Gap:</span> PIL reale − potenziale (− = slack, + = surriscaldamento).</p>
+  <!-- Header -->
+  <header class="flex items-center gap-2 mb-4">
+    <i data-lucide="activity" class="w-6 h-6 text-blue-700"></i>
+    <h3 id="card-pil-title" class="text-[clamp(1.3rem,1.8vw,1.5rem)] font-bold text-gray-900">
+      Step 2.1 · PIL Reale &amp; Potenziale
+    </h3>
+  </header>
+
+  <!-- Intro -->
+  <p class="text-sm text-gray-600 mb-6">
+    Analisi <strong>as-of 15 agosto 2025</strong> della crescita economica globale e regionale, confronto con potenziale e calcolo dell’output gap.
+    Dati in %, fonti T1, organizzati per confronto rapido tra aree.
+  </p>
+
+  <!-- Definizioni -->
+  <div class="mb-6 text-sm text-gray-500 grid grid-cols-1 md:grid-cols-3 gap-4">
+    <p><span class="font-semibold">PIL Reale:</span> crescita effettiva osservata (QoQ e YoY).</p>
+    <p><span class="font-semibold">PIL Potenziale:</span> livello massimo di output sostenibile senza pressioni inflattive.</p>
+    <p><span class="font-semibold">Output Gap:</span> % PIL reale − potenziale; negativo = slack, positivo = overheating.</p>
+  </div>
+
+  <!-- Dati attuali -->
+  <div class="mb-6">
+    <h4 class="font-medium text-gray-800 mb-2">Valori Attuali (Q2 2025)</h4>
+    <dl class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
+      <div class="p-3 border rounded-lg bg-gray-50">
+        <dt class="font-semibold">Globale</dt>
+        <dd>QoQ: 0,5%</dd><dd>YoY: 2,1%</dd><dd>Poten.: 2,3%</dd>
       </div>
-
-      <!-- Valori Attuali -->
-      <div class="mb-5">
-        <h4 class="font-medium text-gray-800 mb-2">Valori Attuali (Q1 2025)</h4>
-        <dl class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
-          <div class="p-3 border rounded-lg">
-            <dt class="font-semibold">Globale</dt>
-            <dd class="mt-1">QoQ: <span class="font-medium text-gray-900">0,5%</span></dd>
-            <dd>YoY: <span class="font-medium text-gray-900">2,1%</span></dd>
-          </div>
-          <div class="p-3 border rounded-lg">
-            <dt class="font-semibold">USA</dt>
-            <dd class="mt-1">QoQ: <span class="font-medium text-gray-900">0,6%</span></dd>
-            <dd>YoY: <span class="font-medium text-gray-900">2,5%</span></dd>
-          </div>
-          <div class="p-3 border rounded-lg">
-            <dt class="font-semibold">Eurozona</dt>
-            <dd class="mt-1">QoQ: <span class="font-medium text-gray-900">0,3%</span></dd>
-            <dd>YoY: <span class="font-medium text-gray-900">1,8%</span></dd>
-          </div>
-        </dl>
+      <div class="p-3 border rounded-lg bg-gray-50">
+        <dt class="font-semibold">USA</dt>
+        <dd>QoQ: 0,6%</dd><dd>YoY: 2,5%</dd><dd>Poten.: 2,2%</dd>
       </div>
-
-      <!-- Forward -->
-      <div class="mb-5">
-        <h4 class="font-medium text-gray-800 mb-2">Forward (Previsioni di Crescita)</h4>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
-          <div class="p-3 border rounded-lg">
-            <p class="font-semibold">Globale</p>
-            <ul class="list-disc list-inside space-y-1 mt-1">
-              <li>6 mesi: <span class="font-medium text-gray-900">2,0%</span></li>
-              <li>12 mesi: <span class="font-medium text-gray-900">2,3%</span></li>
-              <li>24 mesi: <span class="font-medium text-gray-900">2,5%</span></li>
-              <li>36 mesi: <span class="font-medium text-gray-900">2,7%</span></li>
-            </ul>
-          </div>
-          <div class="p-3 border rounded-lg">
-            <p class="font-semibold">USA</p>
-            <ul class="list-disc list-inside space-y-1 mt-1">
-              <li>6 mesi: <span class="font-medium text-gray-900">2,2%</span></li>
-              <li>12 mesi: <span class="font-medium text-gray-900">2,5%</span></li>
-              <li>24 mesi: <span class="font-medium text-gray-900">2,8%</span></li>
-              <li>36 mesi: <span class="font-medium text-gray-900">3,0%</span></li>
-            </ul>
-          </div>
-          <div class="p-3 border rounded-lg">
-            <p class="font-semibold">Eurozona</p>
-            <ul class="list-disc list-inside space-y-1 mt-1">
-              <li>6 mesi: <span class="font-medium text-gray-900">1,8%</span></li>
-              <li>12 mesi: <span class="font-medium text-gray-900">2,0%</span></li>
-              <li>24 mesi: <span class="font-medium text-gray-900">2,3%</span></li>
-              <li>36 mesi: <span class="font-medium text-gray-900">2,5%</span></li>
-            </ul>
-          </div>
-        </div>
+      <div class="p-3 border rounded-lg bg-gray-50">
+        <dt class="font-semibold">Eurozona</dt>
+        <dd>QoQ: 0,3%</dd><dd>YoY: 1,8%</dd><dd>Poten.: 2,0%</dd>
       </div>
-
-      <!-- Output Gap -->
-      <div class="mb-5">
-        <h4 class="font-medium text-gray-800 mb-2">Output Gap</h4>
-        <dl class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
-          <div class="p-3 border rounded-lg">
-            <dt class="font-semibold">Globale</dt>
-            <dd class="mt-1"><span class="font-medium text-gray-900">-0,5%</span></dd>
-          </div>
-          <div class="p-3 border rounded-lg">
-            <dt class="font-semibold">USA</dt>
-            <dd class="mt-1"><span class="font-medium text-gray-900">-0,3%</span></dd>
-          </div>
-          <div class="p-3 border rounded-lg">
-            <dt class="font-semibold">Eurozona</dt>
-            <dd class="mt-1"><span class="font-medium text-gray-900">-0,7%</span></dd>
-          </div>
-        </dl>
+      <div class="p-3 border rounded-lg bg-gray-50">
+        <dt class="font-semibold">Italia</dt>
+        <dd>QoQ: 0,2%</dd><dd>YoY: 0,9%</dd><dd>Poten.: 1,1%</dd>
       </div>
+    </dl>
+  </div>
 
-      <!-- Interpretazione -->
-      <aside class="mb-4 p-3 border-l-4 border-blue-500 bg-blue-50 rounded-r-lg text-sm text-gray-800">
-        <strong>Interpretazione:</strong> espansione lieve con output gap negativo; forward in graduale accelerazione. USA &gt; Eurozona.
-      </aside>
+  <!-- Forward View -->
+  <div class="mb-6">
+    <h4 class="font-medium text-gray-800 mb-2">Previsioni di Crescita – Base Case</h4>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
+      <div class="p-3 border rounded-lg">
+        <p class="font-semibold">Globale</p>
+        <ul class="list-disc list-inside mt-1 space-y-1">
+          <li>6m: 2,0%</li><li>12m: 2,3%</li><li>24m: 2,5%</li><li>36m: 2,7%</li>
+        </ul>
+      </div>
+      <div class="p-3 border rounded-lg">
+        <p class="font-semibold">USA</p>
+        <ul class="list-disc list-inside mt-1 space-y-1">
+          <li>6m: 2,2%</li><li>12m: 2,5%</li><li>24m: 2,8%</li><li>36m: 3,0%</li>
+        </ul>
+      </div>
+      <div class="p-3 border rounded-lg">
+        <p class="font-semibold">Eurozona</p>
+        <ul class="list-disc list-inside mt-1 space-y-1">
+          <li>6m: 1,8%</li><li>12m: 2,0%</li><li>24m: 2,3%</li><li>36m: 2,5%</li>
+        </ul>
+      </div>
+      <div class="p-3 border rounded-lg">
+        <p class="font-semibold">Italia</p>
+        <ul class="list-disc list-inside mt-1 space-y-1">
+          <li>6m: 1,1%</li><li>12m: 1,3%</li><li>24m: 1,5%</li><li>36m: 1,7%</li>
+        </ul>
+      </div>
+    </div>
+  </div>
 
-      <!-- Fonti -->
-      <footer class="text-xs text-gray-500 italic">Fonti: IMF, OECD, World Bank, Eurostat, Fed, BCE.</footer>
-    </section>
+  <!-- Output Gap -->
+  <div class="mb-6">
+    <h4 class="font-medium text-gray-800 mb-2">Output Gap (Q2 2025)</h4>
+    <dl class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
+      <div class="p-3 border rounded-lg"><dt class="font-semibold">Globale</dt><dd>-0,5%</dd></div>
+      <div class="p-3 border rounded-lg"><dt class="font-semibold">USA</dt><dd>-0,3%</dd></div>
+      <div class="p-3 border rounded-lg"><dt class="font-semibold">Eurozona</dt><dd>-0,7%</dd></div>
+      <div class="p-3 border rounded-lg"><dt class="font-semibold">Italia</dt><dd>-0,9%</dd></div>
+    </dl>
+  </div>
+
+  <!-- Interpretazione -->
+  <aside class="mb-5 p-4 border-l-4 border-blue-700 bg-blue-50 rounded-r-lg text-sm leading-relaxed">
+    <strong>Interpretazione Desk:</strong> contesto di espansione moderata con output gap negativo.
+    Gli USA mostrano resilienza sopra il trend potenziale, Eurozona e Italia restano sotto.
+    Scenario base di graduale accelerazione nei prossimi 12–36 mesi, rischio inflattivo contenuto.
+  </aside>
+
+  <!-- Fonti -->
+  <footer class="text-xs text-gray-500 italic">
+    Fonti: IMF WEO Apr 2025, OECD EO Giu 2025, World Bank GEP 2025, Eurostat, Fed, BCE, elaborazioni interne desk.
+    <br>Cut-off date: 15 agosto 2025.
+  </footer>
+</section>
 
     <!-- ========== CARD · Step 2.2 · Inflazione Core & Headline ========= -->
     <section id="card-inflazione" role="region" aria-labelledby="card-inflazione-title"
@@ -1928,7 +1930,72 @@ if (d.disclaimer) {
       </div>
     </article>
   </div>
+ <header class="mb-6 border-b border-gray-200 pb-4">
+    <h2 class="text-2xl sm:text-3xl font-semibold text-gray-900">
+      Strumenti esclusi
+    </h2>
+    <p class="mt-2 text-gray-600 text-sm sm:text-base">
+      Strumenti ad alto rischio, complessi o illiquidi, sconsigliati per investitori principianti. Percentuale stimata di investitori retail che subisce perdite.
+    </p>
+  </header>
 
+  <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <article class="bg-white border border-gray-200 rounded-xl shadow-sm p-4 flex flex-col justify-between hover:shadow-md transition">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-2">CFD</h3>
+        <p class="text-sm text-gray-700 mb-1">Perdite investitori retail: <strong>74%–89%</strong></p>
+        <p class="text-xs text-gray-500">Strumento con leva elevata, rischio rapido di perdita del capitale.</p>
+      </div>
+    </article>
+
+    <article class="bg-white border border-gray-200 rounded-xl shadow-sm p-4 flex flex-col justify-between hover:shadow-md transition">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-2">Opzioni</h3>
+        <p class="text-sm text-gray-700 mb-1">Perdite: elevato rischio non quantificabile</p>
+        <p class="text-xs text-gray-500">Rischio di volatilità, decadimento temporale e leva finanziaria alta.</p>
+      </div>
+    </article>
+
+    <article class="bg-white border border-gray-200 rounded-xl shadow-sm p-4 flex flex-col justify-between hover:shadow-md transition">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-2">Futures</h3>
+        <p class="text-sm text-gray-700 mb-1">Perdite: potenzialmente superiori all’investimento iniziale</p>
+        <p class="text-xs text-gray-500">Richiede margini, adatto a investitori professionali.</p>
+      </div>
+    </article>
+
+    <article class="bg-white border border-gray-200 rounded-xl shadow-sm p-4 flex flex-col justify-between hover:shadow-md transition">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-2">Strumenti illiquidi / non quotati</h3>
+        <p class="text-sm text-gray-700 mb-1">Perdite: variabile</p>
+        <p class="text-xs text-gray-500">Difficili da vendere, rischio di mercato elevato.</p>
+      </div>
+    </article>
+
+    <article class="bg-white border border-gray-200 rounded-xl shadow-sm p-4 flex flex-col justify-between hover:shadow-md transition">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-2">Criptovalute illiquide / micro-cap</h3>
+        <p class="text-sm text-gray-700 mb-1">Perdite: elevate, volatili</p>
+        <p class="text-xs text-gray-500">Molto volatili, soggette a manipolazioni di mercato.</p>
+      </div>
+    </article>
+
+    <article class="bg-white border border-gray-200 rounded-xl shadow-sm p-4 flex flex-col justify-between hover:shadow-md transition">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-2">Short selling diretto</h3>
+        <p class="text-sm text-gray-700 mb-1">Perdite: teoricamente illimitate</p>
+        <p class="text-xs text-gray-500">Espone a rischi maggiori dell’investimento iniziale.</p>
+      </div>
+    </article>
+
+    <article class="bg-white border border-gray-200 rounded-xl shadow-sm p-4 flex flex-col justify-between hover:shadow-md transition">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-2">Penny stocks / micro-cap</h3>
+        <p class="text-sm text-gray-700 mb-1">Perdite: molto elevate</p>
+        <p class="text-xs text-gray-500">Mercati poco trasparenti e soggetti a manipolazioni.</p>
+      </div>
+    </article>
+  </div>
 </section>
 
 
