@@ -1141,7 +1141,7 @@ if (d.disclaimer) {
           Framework multi-blocco sviluppato da <span class="font-semibold text-sky-800">Tradelia AI</span> per profilazione, ottimizzazione e <em>stress test</em> di portafogli. Ogni blocco produce <strong>output YAML</strong> standardizzati per automazioni e API.
         </p>
       </div>
-
+<br><br><br>
 <!-- DISCLAIMER INTRODUTTIVO — Tradelia • AI -->
 
   
@@ -2176,11 +2176,6 @@ if (d.disclaimer) {
     
   </main>
 
-  <!-- Back to top -->
-  <button id="toTop" class="no-print fixed bottom-4 right-4 p-2 rounded-full border border-slate-300 bg-white shadow hover:bg-slate-50" aria-label="Torna su" title="Torna su" hidden>
-    <i data-lucide="arrow-up"></i>
-  </button>
-
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   // Icons & animations
@@ -2257,8 +2252,11 @@ document.addEventListener('DOMContentLoaded', () => {
       panel.classList.remove('hidden'); 
 
       // Focus automatico sul pannello
-      panel.setAttribute('tabindex', '-1'); // rende il pannello focusable
+      panel.setAttribute('tabindex', '-1'); 
       panel.focus({ preventScroll: true }); 
+
+      // SCROLL COMPLETO IN CIMA ALLA PAGINA
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // Aggiorna la URL (deep link)
