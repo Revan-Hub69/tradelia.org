@@ -289,7 +289,7 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
 </a>
       <a href="#sim-op" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
         <i data-lucide="activity" class="w-4 h-4 mt-0.5"></i>
-        <span>Simulazione Portafoglio<small class="block text-[11px] text-slate-400 mt-0.5">Candidati A/B/C + snapshot</small></span>
+        <span>Introduzione<small class="block text-[11px] text-slate-400 mt-0.5">Introduzione alla simulazione</small></span>
       </a>
       <a href="#blocco1" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
         <i data-lucide="user-cog" class="w-4 h-4 mt-0.5"></i>
@@ -324,67 +324,7 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
   <!-- Contenuto -->
   <main id="contenuto">
     <!-- HERO -->
-    <section id="hero" class="relative bg-gradient-to-b from-sky-50 to-white border-b border-slate-200 px-6 sm:px-10 py-10" data-aos="fade-down">
-      <div class="max-w-5xl mx-auto">
-        <div class="flex flex-wrap items-center justify-between gap-4">
-          <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
-            Validazione & Simulazione • [[PORTFOLIO_NAME]]
-          </h1>
-          <span class="badge">
-            <i data-lucide="check-circle-2" class="w-4 h-4"></i> [[REPORT_STATUS]]
-          </span>
-        </div>
-        <div class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-[13px] sm:text-sm text-slate-600">
-          <span class="flex items-center gap-1.5">
-            <i data-lucide="calendar" class="w-4 h-4 text-slate-500"></i>
-            Aggiornamento: <time id="report-date" datetime="[[ISO_DATE]]">[[HUMAN_DATE]]</time>
-          </span>
-          <span class="flex items-center gap-1.5">
-            <i data-lucide="file-text" class="w-4 h-4 text-slate-500"></i> Versione [[REPORT_VERSION]]
-          </span>
-          <span class="flex items-center gap-1.5">
-            <i data-lucide="shield" class="w-4 h-4 text-slate-500"></i> Documento a uso didattico
-          </span>
-        </div>
-        <p class="mt-6 prose-narrow text-[15px] leading-7 text-slate-700">
-          Framework multi-blocco sviluppato da <span class="font-semibold text-sky-800">Tradelia AI</span> per profilazione, ottimizzazione e <em>stress test</em> di portafogli. Ogni blocco produce <strong>output YAML</strong> standardizzati per automazioni e API.
-        </p>
-      </div>
-    </section>
-<!-- DISCLAIMER INTRODUTTIVO — Tradelia • AI -->
-<section id="disclaimer-intro" role="note" aria-label="Disclaimer generale Tradelia AI"
-  class="max-w-6xl mx-auto px-6 sm:px-10 mt-6 mb-10">
-  <div class="rounded-lg border border-sky-200 bg-sky-50/80 shadow-sm p-5 sm:p-7 text-[14px] leading-relaxed text-slate-800">
-    
-    <h2 class="text-[15px] font-semibold tracking-tight text-sky-900 mb-2">
-      Nota introduttiva · Tradelia AI
-    </h2>
-    
-    <p class="mb-3">
-      Questo documento è stato elaborato da <strong>Tradelia AI</strong> attraverso <em>dati pubblici e fonti ritenute affidabili</em> 
-      (banche centrali, provider accademici, report ufficiali). 
-      Le informazioni hanno esclusiva finalità <strong>sperimentale ed educativa</strong> e 
-      <em>non costituiscono consulenza finanziaria</em> né raccomandazioni operative.
-    </p>
-
-    <p class="mb-3">
-      Le analisi, le metriche e le simulazioni qui riportate sono <em>illustrative</em> e possono non essere complete, accurate o aggiornate. 
-      Prima di assumere decisioni finanziarie, è necessario rivolgersi a un <strong>consulente abilitato</strong> e svolgere 
-      verifiche indipendenti.
-    </p>
-
-    <p class="mb-3">
-      <strong>Avvertenza sui rischi:</strong> i mercati finanziari comportano rischi inclusa la perdita del capitale. 
-      Le performance passate non garantiscono risultati futuri. 
-      L’utilizzo del presente materiale implica l’accettazione di tali limiti.
-    </p>
-
-    <p class="text-[13px] text-slate-600">
-      © Tradelia AI – Documento a uso sperimentale/educativo. Riproduzione vietata senza autorizzazione.
-    </p>
-
-  </div>
-</section>
+   
 
     <!-- TABS sticky -->
     <nav id="section-tabs" class="sticky bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm" role="tablist" aria-label="Sezioni report">
@@ -393,7 +333,7 @@ summary .chev i { width: 18px; height: 18px; color:#64748b; }
   <i data-lucide="store"></i><span>Broker</span>
 </button>
         <button class="sv-tab active" data-target="sim-op" role="tab" aria-selected="true" aria-controls="sim-op" id="tab-sim-op" tabindex="0">
-          <i data-lucide="activity"></i><span>Simulazione</span>
+          <i data-lucide="activity"></i><span>Introduzione</span>
         </button>
         <button class="sv-tab" data-target="blocco1" role="tab" aria-selected="false" aria-controls="blocco1" id="tab-blocco1" tabindex="-1">
           <i data-lucide="user-cog"></i><span class="hidden sm:inline">B1 Profilo</span><span class="sm:hidden">B1</span>
@@ -1176,97 +1116,65 @@ if (d.disclaimer) {
 <section id="sim-op" class="sv-panel max-w-6xl mx-auto mt-8 mb-16 bg-white border border-slate-200 rounded-xl shadow-sm p-6"
          role="tabpanel" aria-labelledby="tab-sim-op" data-accordion-group="sim-op">
 
-  <h2 class="text-lg font-bold text-slate-900 tracking-tight">
-    Simulazione Portafoglio
-    <button class="anchor text-xs text-slate-500 border rounded px-1.5 py-0.5" data-copy="#sim-op">Copia link</button>
-  </h2>
+  
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
+            Validazione & Simulazione • [[PORTFOLIO_NAME]]
+          </h1>
+          <span class="badge">
+            <i data-lucide="check-circle-2" class="w-4 h-4"></i> [[REPORT_STATUS]]
+          </span>
+        </div>
+        <div class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-[13px] sm:text-sm text-slate-600">
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="calendar" class="w-4 h-4 text-slate-500"></i>
+            Aggiornamento: <time id="report-date" datetime="[[ISO_DATE]]">[[HUMAN_DATE]]</time>
+          </span>
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="file-text" class="w-4 h-4 text-slate-500"></i> Versione [[REPORT_VERSION]]
+          </span>
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="shield" class="w-4 h-4 text-slate-500"></i> Documento a uso didattico
+          </span>
+        </div>
+        <p class="mt-6 prose-narrow text-[15px] leading-7 text-slate-700">
+          Framework multi-blocco sviluppato da <span class="font-semibold text-sky-800">Tradelia AI</span> per profilazione, ottimizzazione e <em>stress test</em> di portafogli. Ogni blocco produce <strong>output YAML</strong> standardizzati per automazioni e API.
+        </p>
+      </div>
+    </section>
+<!-- DISCLAIMER INTRODUTTIVO — Tradelia • AI -->
+<section id="disclaimer-intro" role="note" aria-label="Disclaimer generale Tradelia AI"
+  class="max-w-6xl mx-auto px-6 sm:px-10 mt-6 mb-10">
+  <div class="rounded-lg border border-sky-200 bg-sky-50/80 shadow-sm p-5 sm:p-7 text-[14px] leading-relaxed text-slate-800">
+    
+    <h2 class="text-[15px] font-semibold tracking-tight text-sky-900 mb-2">
+      Nota introduttiva · Tradelia AI
+    </h2>
+    
+    <p class="mb-3">
+      Questo documento è stato elaborato da <strong>Tradelia AI</strong> attraverso <em>dati pubblici e fonti ritenute affidabili</em> 
+      (banche centrali, provider accademici, report ufficiali). 
+      Le informazioni hanno esclusiva finalità <strong>sperimentale ed educativa</strong> e 
+      <em>non costituiscono consulenza finanziaria</em> né raccomandazioni operative.
+    </p>
 
-  <!-- Legenda badge -->
-  <div class="mt-2 mb-5 flex flex-wrap gap-2 text-[11px]">
-    <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-700">Positivo</span>
-    <span class="inline-flex rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 font-semibold text-rose-700">Negativo</span>
-    <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 font-semibold text-slate-700">Neutro</span>
-    <span class="inline-flex rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 font-semibold text-amber-700">Attenzione</span>
+    <p class="mb-3">
+      Le analisi, le metriche e le simulazioni qui riportate sono <em>illustrative</em> e possono non essere complete, accurate o aggiornate. 
+      Prima di assumere decisioni finanziarie, è necessario rivolgersi a un <strong>consulente abilitato</strong> e svolgere 
+      verifiche indipendenti.
+    </p>
+
+    <p class="mb-3">
+      <strong>Avvertenza sui rischi:</strong> i mercati finanziari comportano rischi inclusa la perdita del capitale. 
+      Le performance passate non garantiscono risultati futuri. 
+      L’utilizzo del presente materiale implica l’accettazione di tali limiti.
+    </p>
+
+    <p class="text-[13px] text-slate-600">
+      © Tradelia AI – Documento a uso sperimentale/educativo. Riproduzione vietata senza autorizzazione.
+    </p>
+
   </div>
-
-  <!-- === Candidato A — Core === -->
-  <details class="rounded-lg border border-slate-200 details-clean">
-    <summary class="cursor-pointer p-4 sm:p-5">
-      <div class="flex items-start justify-between gap-3">
-        <div>
-          <div class="font-semibold text-slate-900">Candidato A — Core Beta (Tracking Low)</div>
-          <p class="mt-1 text-sm text-slate-500">Equity Global / IG Bonds / Cash · Vol target: [[A_VOL]] · Max DD: [[A_DD_MAX]]</p>
-          <div class="mt-2 flex flex-wrap gap-2 text-[12px]">
-            <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-700">Stato: [[A_STATUS]]</span>
-            <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 font-semibold text-slate-700">Coerenza vincoli: [[A_CONS]]</span>
-          </div>
-        </div>
-        <span class="chev translate-y-1"><i data-lucide="chevron-down"></i></span>
-      </div>
-    </summary>
-
-    <div class="px-4 sm:px-5 pb-4 sm:pb-5">
-      <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
-        <div>
-          <div class="flex items-start justify-between">
-            <dt class="text-slate-600 text-sm">Allocazioni</dt>
-            <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-700">Neutro</span>
-          </div>
-          <dd class="mt-1 text-slate-900">[[A_WEIGHTS]]</dd>
-          <p class="mt-1 text-xs text-slate-600">Peso equity/bond/cash conforme a B3.</p>
-        </div>
-        <div>
-          <div class="flex items-start justify-between">
-            <dt class="text-slate-600 text-sm">Semaforo Robustezza</dt>
-            <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">[[A_FLAG]]</span>
-          </div>
-          <dd class="mt-1 text-slate-900">VaR95: [[A_VAR95]] · CVaR95: [[A_CVAR95]]</dd>
-          <p class="mt-1 text-xs text-slate-600">Da B5 Monte Carlo.</p>
-        </div>
-        <div class="sm:col-span-2">
-          <div class="flex items-start justify-between">
-            <dt class="text-slate-600 text-sm">Note</dt>
-            <span class="inline-flex rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700">Attenzione</span>
-          </div>
-          <dd class="mt-1 text-slate-900">[[A_NOTES]]</dd>
-        </div>
-      </dl>
-    </div>
-  </details>
-
-  <!-- === Candidato B — Core/Satellite === -->
-  <details class="mt-4 rounded-lg border border-slate-200 details-clean">
-    <summary class="cursor-pointer p-4 sm:p-5">
-      <div class="flex items-start justify-between gap-3 w-full">
-        <div>
-          <div class="font-semibold text-slate-900">Candidato B — Core/Satellite (Factor + Theme)</div>
-          <p class="mt-1 text-sm text-slate-500">Core [[B_CORE]]% + Satelliti [[B_SAT]]% · Vol target: [[B_VOL]]</p>
-        </div>
-        <span class="chev translate-y-1"><i data-lucide="chevron-down"></i></span>
-      </div>
-      <div class="mt-2 text-[12px]">
-        <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-700">Flag: [[B_FLAG]]</span>
-      </div>
-    </summary>
-    <div class="px-4 sm:px-5 pb-4 sm:pb-5 text-sm text-slate-600">[[B_SUMMARY]]</div>
-  </details>
-
-  <!-- === Candidato C — Defensive === -->
-  <details class="mt-3 rounded-lg border border-slate-200 details-clean">
-    <summary class="cursor-pointer p-4 sm:p-5">
-      <div class="flex items-start justify-between gap-3 w-full">
-        <div>
-          <div class="font-semibold text-slate-900">Candidato C — Defensive (Rates + Bills + Overlay)</div>
-          <p class="mt-1 text-sm text-slate-500">Max DD target: [[C_DD]] · Hedge overlay: [[C_OVERLAY]]</p>
-        </div>
-        <span class="chev translate-y-1"><i data-lucide="chevron-down"></i></span>
-      </div>
-      <div class="mt-2 text-[12px]">
-        <span class="inline-flex rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 font-semibold text-slate-700">Coerenza vincoli: [[C_CONS]]</span>
-      </div>
-    </summary>
-    <div class="px-4 sm:px-5 pb-4 sm:pb-5 text-sm text-slate-600">[[C_SUMMARY]]</div>
-  </details>
 </section>
 
 
