@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>TRADELIA • AI — Validazione & Simulazione Portafogli ([[REPORT_VERSION]] • Istituzionale 2025)</title>
+  <meta name="description" content="Template istituzionale Tradelia AI: validazione e simulazione portafogli con profilo investitore, regime macro, vincoli, ottimizzazione, stress test, implementazione e scoring finale." />
+  <meta name="author" content="Tradelia AI" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <link rel="canonical" href="[[CANONICAL_URL]]" />
+
+ <!-- Canonical -->
+<link rel="canonical" href="https://www.tradelia.org/">
+
+<!-- Open Graph -->
+<meta property="og:url" content="https://www.tradelia.org/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TRADELIA • AI — Validazione & Simulazione Portafogli (Metodo Istituzionale 2025)">
+<meta property="og:description" content="Profilazione, regime macro, vincoli tecnici, ottimizzazione, stress test e scoring in un unico framework.">
+<meta property="og:site_name" content="TRADELIA • AI">
+<meta property="og:locale" content="it_IT">
+<meta property="og:image" content="https://www.tradelia.org/img/tradelia_og_vC_white_clean.png?v=2025-08-17">
+<meta property="og:image:secure_url" content="https://www.tradelia.org/img/ChatGPT Image 18 ago 2025, 10_04_10.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Copertina Tradelia — Metodo istituzionale 2025">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TRADELIA • AI — Validazione & Simulazione Portafogli (Metodo Istituzionale 2025)">
+<meta name="twitter:description" content="Analisi multi-blocco con metodo istituzionale 2025 per portafogli.">
+<meta name="twitter:image" content="https://www.tradelia.org/img/ChatGPT Image 18 ago 2025, 10_04_10.png">
+<meta name="twitter:image:alt" content="Copertina Tradelia — Metodo istituzionale 2025">
+
+
+  <!-- Theme color -->
+  <meta name="theme-color" content="#0ea5e9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+
+  <!-- Fonts (Inter + Merriweather) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:wght@700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind (config + safelist) -->
+  <script>
+    tailwind = window.tailwind || {};
+    tailwind.config = {
+      safelist: [
+        "hidden","block",
+        "bg-emerald-50","bg-amber-50","bg-rose-50",
+        "text-emerald-700","text-amber-700","text-rose-700",
+        "border-emerald-200","border-amber-200","border-rose-200",
+        "bg-sky-50","text-sky-900","border-sky-300","text-slate-600","border-slate-300"
+      ]
+    };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- AOS + Lucide -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+
+  <style>
+    :root { color-scheme: light dark; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background:#f8fafc; color:#0f172a;
+      font-feature-settings:"tnum" 1, "lnum" 1;
+      font-variant-numeric: tabular-nums slashed-zero;
+      text-rendering: optimizeLegibility;
+    }
+    h1,h2,h3 { font-family: 'Merriweather', Georgia, serif; letter-spacing:.1px; }
+    p, li { hyphens:auto; -webkit-hyphens:auto; overflow-wrap:break-word; }
+/* Accordion: nascondi marker nativo e anima il chevron Lucide */
+.details-clean > summary { list-style: none; }
+.details-clean > summary::-webkit-details-marker { display: none; }
+summary .chev { display:inline-block; transition: transform .2s ease; }
+.details-clean[open] summary .chev { transform: rotate(180deg); }
+summary .chev i { width: 18px; height: 18px; color:#64748b; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width:10px; height:10px; }
+    ::-webkit-scrollbar-track { background:#e2e8f0; border-radius:8px; }
+    ::-webkit-scrollbar-thumb { background:#94a3b8; border-radius:8px; border:2px solid #e2e8f0; }
+    ::-webkit-scrollbar-thumb:hover { background:#64748b; }
+
+    /* Link */
+    a { color:#0369a1; text-decoration:none; }
+    a:hover { text-decoration:underline; text-underline-offset:2px; }
+    a:focus-visible { outline:2px solid #0ea5e9; outline-offset:2px; border-radius:4px; }
+
+    /* Focus */
+    :focus-visible { outline:2px solid rgb(14 165 233); outline-offset:2px; border-radius:6px; }
+
+    /* Header shrink */
+    header.shrink { padding-top:.4rem; padding-bottom:.4rem; }
+    header.shrink .logo-text { font-size:1.1rem; letter-spacing:.1px; }
+
+    /* Progress bar */
+    #scroll-progress { position:fixed; top:0; left:0; height:3px; background:linear-gradient(to right, #0ea5e9,#3b82f6); width:0%; z-index:60; }
+
+    /* Drawer */
+    #toc-drawer { transform: translateX(100%); }
+    #toc-drawer.open { transform: translateX(0%); }
+    #toc-overlay.hidden { opacity:0; pointer-events:none; }
+
+    /* Tabs improved */
+    #section-tabs { position: sticky; top: 0; z-index: 40; }
+    #tabs-scroller {
+      display: flex; gap: .25rem; padding: .5rem .5rem;
+      overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity;
+      -webkit-mask-image: linear-gradient(to right, transparent 0, black 16px, black calc(100% - 16px), transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0, black 16px, black calc(100% - 16px), transparent 100%);
+    }
+    .sv-tab {
+      display: inline-flex; align-items: center; gap: .4rem;
+      padding: .45rem .6rem; border-radius: .6rem;
+      border: 1px solid #cbd5e1; background: #ffffff;
+      font-size: 13.5px; line-height: 1; color: #0f172a;
+      white-space: nowrap; scroll-snap-align: start;
+      transition: background-color .15s, border-color .15s, color .15s, box-shadow .15s;
+      min-height: 40px;
+    }
+    .sv-tab i { width: 16px; height: 16px; flex: none; }
+    .sv-tab:hover { background: #f8fafc; border-color: #94a3b8; }
+    .sv-tab:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }
+    .sv-tab.active {
+      background: #f0f9ff; color: #0c4a6e;
+      border-color: #7dd3fc;
+      box-shadow: 0 1px 0 rgba(2,132,199,.08), 0 0 0 2px rgba(125,211,252,.25) inset;
+      font-weight: 600;
+    }
+    @media (max-width: 640px) {
+      .sv-tab { padding: .40rem .55rem; font-size: 13px; min-height: 38px; }
+      .sv-tab i { width: 14px; height: 14px; }
+    }
+    #section-tabs::before, #section-tabs::after {
+      content: ""; position: absolute; top: 0; bottom: 0; width: 16px; pointer-events: none;
+    }
+    #section-tabs::before { left: 0; background: linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0)); }
+    #section-tabs::after  { right: 0; background: linear-gradient(to left,  rgba(255,255,255,1), rgba(255,255,255,0)); }
+
+    /* Anti-FOUC AOS */
+    [data-aos] { opacity:0; }
+    html.aos-initialized [data-aos] { opacity:1; }
+
+    /* iOS safe-area */
+    #section-tabs { padding-bottom: max(0px, env(safe-area-inset-bottom)); }
+
+    /* Divider istituzionale */
+    .section-divider { position:relative; display:flex; align-items:center; margin:2rem 0; }
+    .section-divider::before, .section-divider::after { content:""; flex:1; border-bottom:1px solid #e2e8f0; }
+    .section-divider span {
+      margin:0 .75rem; color:#64748b; font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase;
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+
+    /* Badge status */
+    .badge {
+      display:inline-flex; align-items:center; gap:.375rem;
+      padding:.25rem .5rem; border-radius:999px;
+      font-size:12px; font-weight:600;
+      background:#ecfdf5; color:#047857; border:1px solid #a7f3d0;
+    }
+
+    /* Copy anchor su h2 */
+    .anchor { opacity:0; transition:opacity .15s; margin-left:.5rem; }
+    h2:hover .anchor { opacity:1; }
+
+    /* Prosa stretta */
+    .prose-narrow { max-width:62ch; }
+
+    /* Code blocks */
+    pre.codeblock { background:#0b1220; color:#e2e8f0; border-radius:.75rem; padding:1rem; overflow:auto; border:1px solid #1f2937; }
+
+    /* Stampa */
+    @media print {
+      #scroll-progress, #section-tabs, #toc-overlay, #toc-drawer, .no-print, #toTop { display:none !important; }
+      header { position: static !important; box-shadow: none !important; }
+      .shadow-sm, .shadow, .shadow-inner { box-shadow: none !important; }
+      .sv-panel { display:block !important; }
+      .sv-panel[hidden] { display:block !important; }
+      h1, h2, h3 { page-break-after: avoid; page-break-inside: avoid; }
+      p, li { orphans:3; widows:3; }
+      section[role="tabpanel"] { break-inside: avoid; page-break-inside: avoid; }
+      #hero { page-break-after: avoid; }
+      @page { margin: 18mm 14mm 18mm 14mm; }
+      body{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+      .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0, 0, 0, 0.7);
+      visibility: hidden; opacity: 0;
+      z-index: 50;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .modal.show {
+      visibility: visible;
+      opacity: 1;
+    }
+    .modal-content {
+      background: #f8fafc;
+      max-width: 640px;
+      padding: 28px;
+      border-radius: 16px;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #0f172a;
+      text-align: left;
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
+    }
+   body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    .card{transition:transform .2s ease, box-shadow .2s ease}
+    .card:hover{box-shadow:0 10px 30px rgba(2,6,23,.08); transform: translateY(-2px)}
+    .logo-fb{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:.75rem;font-weight:700;color:#fff;box-shadow:inset 0 0 0 1px rgba(15,23,42,.08)}
+    .tag{font-size:11px;padding:.125rem .5rem;border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc}
+    .btn{display:inline-block;padding:.5rem .75rem;border-radius:.6rem;font-weight:600;transition:all .2s ease}
+    .btn:focus-visible{outline:none;box-shadow:0 0 0 2px rgba(56,189,248,.5)}
+    .badge{font-size:10px;padding:.1rem .45rem;border-radius:999px;font-weight:700}
+    .score-badge{font-size:11px;padding:.125rem .5rem;border-radius:999px;background:#eef2ff;color:#3730a3;font-weight:700}
+    .no-scrollbar{scrollbar-width:none}
+    .no-scrollbar::-webkit-scrollbar{display:none}
+    .clamp-3{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  html:has(#modal.flex), body:has(#modal.flex){overflow:hidden}
+  </style>
+</head>
+ <!-- Progress bar -->
+  <div id="scroll-progress"></div>
+
+  <!-- Header -->
+<header role="banner" aria-label="Intestazione report"
+    class="bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm px-4 sm:px-6 py-3 flex items-center justify-between transition-all duration-300">
+  <!-- Logo -->
+  <a href="https://tradelia.org" target="_blank" rel="noopener noreferrer"
+     class="flex items-center font-extrabold tracking-tight hover:opacity-90 transition">
+    <span class="logo-text text-lg sm:text-2xl text-slate-900">TRADELIA</span>
+    <span class="logo-text ml-1 text-lg sm:text-2xl text-sky-600">•AI</span>
+  </a>
+  <!-- Azioni -->
+  <nav aria-label="Azioni pagina" class="flex gap-2">
+    <button onclick="window.print()" class="no-print hidden sm:inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50">
+      <i data-lucide="printer" class="w-4 h-4"></i> Stampa
+    </button>
+    <button onclick="window.print()" class="sm:hidden p-2 rounded-md border border-slate-200 hover:bg-slate-50" aria-label="Stampa">
+      <i data-lucide="printer" class="w-4 h-4"></i>
+    </button>
+    <button type="button" class="btn-open-toc no-print hidden sm:inline-flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50">
+      <i data-lucide="list-tree" class="w-4 h-4"></i> Indice
+    </button>
+    <button type="button" class="btn-open-toc sm:hidden p-2 rounded-md border border-slate-200 hover:bg-slate-50" aria-label="Apri indice">
+      <i data-lucide="list-tree" class="w-4 h-4"></i>
+    </button>
+  </nav>
+</header>
+<!-- Overlay & Drawer -->
+  <div id="toc-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-[1px] z-40 transition-opacity duration-200 hidden"></div>
+
+  <aside id="toc-drawer"
+    class="fixed top-0 right-0 h-full w-80 max-w-full bg-white border-l border-slate-200 shadow-xl z-50 transition-transform duration-300 ease-in-out"
+    aria-label="Indice del Report" aria-hidden="true">
+    <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+      <h2 class="text-sm font-semibold text-slate-700 tracking-tight">Indice Report</h2>
+      <button id="close-toc-drawer" class="p-1 rounded-md hover:bg-slate-100" aria-label="Chiudi indice">
+        <i data-lucide="x" class="w-4 h-4 text-slate-500"></i>
+      </button>
+    </div>
+
+    <!-- TOC con meta -->
+    <nav class="p-4 space-y-2 text-sm text-slate-700 overflow-y-auto h-[calc(100%-3rem)]" aria-label="Sezioni del report">
+  <a href="#blocco1" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="user-cog" class="w-4 h-4 mt-0.5"></i>
+        <span>B1 — Profilo Investitore<small class="block text-[11px] text-slate-400 mt-0.5">obiettivi, ESG, MiFID, FX</small></span>
+      </a>
+      <a href="#blocco2" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="globe-2" class="w-4 h-4 mt-0.5"></i>
+        <span>B2 — Macro Regime<small class="block text-[11px] text-slate-400 mt-0.5">regime e scenari</small></span>
+      </a>
+      <a href="#blocco3" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50"> <i data-lucide="settings-2" class="w-4 h-4 mt-0.5"></i> 
+        <span>B3 — Quant Engine<small class="block text-[11px] text-slate-400 mt-0.5">analisi quantitativa e pre-allocazione</small>
+      </a>
+      <a href="#blocco4" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="building-2" class="w-4 h-4 mt-0.5"></i>
+        <span>B4 — Candidati<small class="block text-[11px] text-slate-400 mt-0.5">allocazioni A/B/C</small></span>
+      </a>
+      <a href="#blocco5" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="activity" class="w-4 h-4 mt-0.5"></i>
+        <span>B5 — Simulation &amp; Stress<small class="block text-[11px] text-slate-400 mt-0.5">MC, shock, replay</small></span>
+      </a>
+      <a href="#blocco6" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="wrench" class="w-4 h-4 mt-0.5"></i>
+        <span>B6 — Implementation &amp; Rebalancing<small class="block text-[11px] text-slate-400 mt-0.5">piano operativo</small></span>
+      </a>
+      <a href="#blocco7" class="toc-link flex items-start gap-2 px-2 py-2 rounded hover:bg-slate-50">
+        <i data-lucide="award" class="w-4 h-4 mt-0.5"></i>
+        <span>B7 — Scoring &amp; Classificazione Finale<small class="block text-[11px] text-slate-400 mt-0.5">rating & utility</small></span>
+      </a>
+    </nav>
+  </aside>
+  <!-- Contenuto -->
+  <main id="contenuto">
+    <!-- HERO -->
+    <section id="hero" class="relative bg-gradient-to-b from-sky-50 to-white border-b border-slate-200 px-6 sm:px-10 py-10" data-aos="fade-down">
+      <div class="max-w-5xl mx-auto">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
+            Validazione & Simulazione • [[PORTFOLIO_NAME]]
+          </h1>
+          <span class="badge">
+            <i data-lucide="check-circle-2" class="w-4 h-4"></i> [[REPORT_STATUS]]
+          </span>
+        </div>
+        <div class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-[13px] sm:text-sm text-slate-600">
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="calendar" class="w-4 h-4 text-slate-500"></i>
+            Aggiornamento: <time id="report-date" datetime="[[ISO_DATE]]">[[HUMAN_DATE]]</time>
+          </span>
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="file-text" class="w-4 h-4 text-slate-500"></i> Versione [[REPORT_VERSION]]
+          </span>
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="shield" class="w-4 h-4 text-slate-500"></i> Documento a uso didattico
+          </span>
+        </div>
+        <p class="mt-6 prose-narrow text-[15px] leading-7 text-slate-700">
+          Framework multi-blocco sviluppato da <span class="font-semibold text-sky-800">Tradelia AI</span> per profilazione, ottimizzazione e <em>stress test</em> di portafogli. Ogni blocco produce <strong>output YAML</strong> standardizzati per automazioni e API.
+        </p>
+      </div>
+    </section>
+    <!-- DISCLAIMER INTRODUTTIVO — Tradelia • AI -->
+<section id="disclaimer-intro" role="note" aria-label="Disclaimer generale Tradelia AI"
+  class="max-w-6xl mx-auto px-6 sm:px-10 mt-6 mb-10">
+  <div class="rounded-lg border border-sky-200 bg-sky-50/80 shadow-sm p-5 sm:p-7 text-[14px] leading-relaxed text-slate-800">
+    
+    <h2 class="text-[15px] font-semibold tracking-tight text-sky-900 mb-2">
+      Nota introduttiva · Tradelia AI
+    </h2>
+    
+    <p class="mb-3">
+      Questo documento è stato elaborato da <strong>Tradelia AI</strong> attraverso <em>dati pubblici e fonti ritenute affidabili</em> 
+      (banche centrali, provider accademici, report ufficiali). 
+      Le informazioni hanno esclusiva finalità <strong>sperimentale ed educativa</strong> e 
+      <em>non costituiscono consulenza finanziaria</em> né raccomandazioni operative.
+    </p>
+
+    <p class="mb-3">
+      Le analisi, le metriche e le simulazioni qui riportate sono <em>illustrative</em> e possono non essere complete, accurate o aggiornate. 
+      Prima di assumere decisioni finanziarie, è necessario rivolgersi a un <strong>consulente abilitato</strong> e svolgere 
+      verifiche indipendenti.
+    </p>
+
+    <p class="mb-3">
+      <strong>Avvertenza sui rischi:</strong> i mercati finanziari comportano rischi inclusa la perdita del capitale. 
+      Le performance passate non garantiscono risultati futuri. 
+      L’utilizzo del presente materiale implica l’accettazione di tali limiti.
+    </p>
+
+    <p class="text-[13px] text-slate-600">
+      © Tradelia AI – Documento a uso sperimentale/educativo. Riproduzione vietata senza autorizzazione.
+    </p>
+
+  </div>
+</section>
+<!-- Blocco 1 — Profilo Investitore -->
+<section id="blocco1" class="mb-6">
+  <!-- Scheda istituzionale -->
+  <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4">
+    <h2 class="text-lg font-semibold text-slate-800 mb-2">B1 — Profilo Investitore</h2>
+    <p class="text-slate-600 mb-3">Commento Tradelia AI: il profilo indica un investitore giovane, con capitale limitato e bassa tolleranza al rischio, desideroso di rendimenti moderati ma con alcune dichiarazioni potenzialmente incoerenti. La costruzione del portafoglio dovrà quindi bilanciare prudenza, diversificazione e strumenti a basso rischio.</p>
+    <button 
+      class="btn-open-drawer bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded"
+      aria-controls="drawer-blocco1"
+      aria-expanded="false">
+      Leggi tutto
+    </button>
+  </div>
+
+  <!-- Drawer dettagliato -->
+  <div id="drawer-blocco1" class="hidden mt-2 bg-slate-50 border border-slate-200 rounded-xl p-4 shadow-inner">
+    <h3 class="text-md font-semibold text-slate-800 mb-2">Dettaglio Profilo Investitore</h3>
+    <p class="text-slate-700 mb-2">L’investitore mostra interesse per strumenti a basso rischio e preferenze per una diversificazione moderata. Alcune risposte indicano incoerenze tra obiettivi dichiarati e propensione al rischio.</p>
+    <p class="text-slate-700">Suggerimento operativo: costruire un portafoglio con una combinazione di ETF bilanciati, obbligazioni a breve termine e strumenti liquidi, monitorando periodicamente l’aderenza al profilo dichiarato.</p>
+    <button class="btn-close-drawer mt-3 bg-gray-200 hover:bg-gray-300 text-slate-800 font-medium py-1 px-3 rounded">Chiudi</button>
+  </div>
+</section>
+
+<!-- Script universale drawer -->
+<script>
+document.querySelectorAll('.btn-open-drawer').forEach(button => {
+  button.addEventListener('click', () => {
+    const drawerId = button.getAttribute('aria-controls');
+    const drawer = document.getElementById(drawerId);
+    const isOpen = drawer.classList.contains('block');
+    drawer.classList.toggle('hidden', isOpen);
+    drawer.classList.toggle('block', !isOpen);
+    button.setAttribute('aria-expanded', !isOpen);
+  });
+});
+
+document.querySelectorAll('.btn-close-drawer').forEach(button => {
+  button.addEventListener('click', () => {
+    const drawer = button.closest('div[id^="drawer-"]');
+    drawer.classList.add('hidden');
+    drawer.classList.remove('block');
+    const toggleButton = document.querySelector(`[aria-controls="${drawer.id}"]`);
+    if(toggleButton) toggleButton.setAttribute('aria-expanded', false);
+  });
+});
+</script>
