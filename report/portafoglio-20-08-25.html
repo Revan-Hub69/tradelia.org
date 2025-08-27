@@ -2273,12 +2273,14 @@ if (d.disclaimer) {
     <i data-lucide="arrow-up"></i>
   </button>
 
- <!-- Scripts -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   // Icons & animations
   if (window.lucide) lucide.createIcons();
-  if (window.AOS) { AOS.init({ once: true, duration: 350 }); document.documentElement.classList.add('aos-initialized'); }
+  if (window.AOS) { 
+    AOS.init({ once: true, duration: 350 }); 
+    document.documentElement.classList.add('aos-initialized'); 
+  }
 
   // Scroll progress & header shrink & back to top
   const sp = document.getElementById('scroll-progress');
@@ -2289,7 +2291,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (sp) sp.style.width = scrolled + '%';
     if (toTop) toTop.hidden = h.scrollTop < 600;
     const header = document.querySelector('header');
-    if (header) { if (h.scrollTop > 24) header.classList.add('shrink'); else header.classList.remove('shrink'); }
+    if (header) { 
+      if (h.scrollTop > 24) header.classList.add('shrink'); 
+      else header.classList.remove('shrink'); 
+    }
   }, { passive:true });
   toTop?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
@@ -2298,8 +2303,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const overlay = document.getElementById('toc-overlay');
   const openBtns = document.querySelectorAll('.btn-open-toc');
   const closeBtn = document.getElementById('close-toc-drawer');
-  function openDrawer(){ drawer?.classList.add('open'); overlay?.classList.remove('hidden'); drawer?.setAttribute('aria-hidden','false'); }
-  function closeDrawer(){ drawer?.classList.remove('open'); overlay?.classList.add('hidden'); drawer?.setAttribute('aria-hidden','true'); }
+  function openDrawer(){ 
+    drawer?.classList.add('open'); 
+    overlay?.classList.remove('hidden'); 
+    drawer?.setAttribute('aria-hidden','false'); 
+  }
+  function closeDrawer(){ 
+    drawer?.classList.remove('open'); 
+    overlay?.classList.add('hidden'); 
+    drawer?.setAttribute('aria-hidden','true'); 
+  }
   openBtns.forEach(b => b.addEventListener('click', openDrawer));
   overlay?.addEventListener('click', closeDrawer);
   closeBtn?.addEventListener('click', closeDrawer);
@@ -2308,15 +2321,43 @@ document.addEventListener('DOMContentLoaded', () => {
   // Tabs
   const tabs = document.querySelectorAll('.sv-tab');
   const panels = document.querySelectorAll('.sv-panel');
+
   function activateTab(targetId){
-    tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); t.setAttribute('tabindex','-1'); });
-    panels.forEach(p => { p.hidden = true; p.classList.add('hidden'); });
+    // Disattiva tutte le tab
+    tabs.forEach(t => { 
+      t.classList.remove('active'); 
+      t.setAttribute('aria-selected','false'); 
+      t.setAttribute('tabindex','-1'); 
+    });
+
+    // Nasconde tutti i pannelli
+    panels.forEach(p => { 
+      p.hidden = true; 
+      p.classList.add('hidden'); 
+    });
+
+    // Attiva tab e pannello corrispondente
     const tab = document.querySelector(`.sv-tab[data-target="${targetId}"]`);
     const panel = document.getElementById(targetId);
-    if (tab) { tab.classList.add('active'); tab.setAttribute('aria-selected','true'); tab.setAttribute('tabindex','0'); }
-    if (panel) { panel.hidden = false; panel.classList.remove('hidden'); }
+    if (tab) { 
+      tab.classList.add('active'); 
+      tab.setAttribute('aria-selected','true'); 
+      tab.setAttribute('tabindex','0'); 
+    }
+    if (panel) { 
+      panel.hidden = false; 
+      panel.classList.remove('hidden'); 
+
+      // Focus automatico sul pannello
+      panel.setAttribute('tabindex', '-1'); // rende il pannello focusable
+      panel.focus({ preventScroll: true }); 
+    }
+
+    // Aggiorna la URL (deep link)
     history.replaceState(null, '', '#' + targetId);
   }
+
+  // Evento click su tab
   tabs.forEach(tab => tab.addEventListener('click', () => activateTab(tab.getAttribute('data-target'))));
 
   // Drawer TOC -> attiva i tab (non solo anchor)
@@ -2334,7 +2375,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const hash = location.hash?.replace('#','');
   if (hash && document.getElementById(hash)) activateTab(hash);
   else if (!hash) {
-    // Garantisce che il pannello predefinito sia visibile (es. "sim-op")
     const active = document.querySelector('.sv-tab.active')?.getAttribute('data-target') || 'sim-op';
     activateTab(active);
   }
