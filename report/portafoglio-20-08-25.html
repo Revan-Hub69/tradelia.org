@@ -1315,23 +1315,32 @@ if (d.disclaimer) {
       <time id="macro-updated" datetime="2025-08-23" class="text-xs font-medium text-gray-700">23 Ago 2025</time>
     </div>
   </header>
-
-<!-- Scheda sintetica – PIL Reale & Potenziale -->
-<div class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm hover:shadow-md transition">
-  <h4 class="text-base font-semibold text-gray-900 mb-2">PIL Reale & Potenziale</h4>
-  <ul class="text-sm text-gray-700 space-y-1 mb-4">
-    <li>QoQ, YoY</li>
-    <li>PIL potenziale</li>
-    <li>Output Gap (%)</li>
-    <li>Trend ciclico</li>
-  </ul>
-  <button 
-    class="text-sm font-medium text-indigo-600 hover:underline"
-    onclick="document.getElementById('drawer-pil').classList.remove('translate-x-full')"
-  >
-    Leggi tutto →
-  </button>
+<div class="group border border-gray-300 rounded-xl bg-white shadow-sm hover:shadow-md transition flex flex-col justify-between p-5 sm:p-6">
+  <div>
+    <h4 class="text-[15px] font-semibold text-gray-900 mb-1">Blocco · PIL Reale & Potenziale</h4>
+    <p class="text-[13px] text-gray-600 mb-3 leading-snug">
+      Analisi del ciclo reale con metriche istituzionali e outlook forward.
+    </p>
+    <ul class="text-[13px] text-gray-700 space-y-1 border-t border-gray-200 pt-3">
+      <li><span class="font-medium text-gray-800">QoQ / YoY:</span> variazione PIL reale</li>
+      <li><span class="font-medium text-gray-800">Potenziale:</span> stima sostenibile</li>
+      <li><span class="font-medium text-gray-800">Output Gap:</span> scostamento dal trend</li>
+      <li><span class="font-medium text-gray-800">Trend:</span> direzione ciclica</li>
+    </ul>
+  </div>
+  <div class="mt-5">
+    <button 
+      class="inline-flex items-center text-[13px] font-medium text-indigo-600 hover:text-indigo-700 transition"
+      onclick="openDrawer('drawer-pil')"
+    >
+      Leggi tutto
+      <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  </div>
 </div>
+
 <!-- Overlay + Drawer -->
 <div id="drawer-pil-overlay" class="fixed inset-0 z-40 bg-black bg-opacity-60 hidden"></div>
 
