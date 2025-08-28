@@ -1332,28 +1332,33 @@ if (d.disclaimer) {
     Leggi tutto →
   </button>
 </div>
-<!-- Drawer laterale – PIL Reale & Potenziale -->
-<div id="drawer-pil" class="fixed top-0 right-0 w-full max-w-xl h-full bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 border-l border-gray-300 overflow-y-auto sm:p-6 lg:p-8">
-  <div>
-    <div class="flex justify-between items-center mb-4">
+<!-- Overlay + Drawer -->
+<div id="drawer-pil-overlay" class="fixed inset-0 z-40 bg-black bg-opacity-60 hidden"></div>
+
+<div id="drawer-pil" class="fixed top-0 right-0 h-full w-full max-w-3xl bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 border-l border-gray-300 overflow-y-auto">
+  <div class="relative px-4 py-6 sm:px-6 lg:px-8">
+    
+    <!-- Header con pulsante Torna indietro -->
+    <div class="sticky top-0 bg-white z-10 flex items-center justify-between pb-4 border-b border-gray-200">
       <h3 class="text-lg font-semibold text-gray-900">PIL Reale & Potenziale – Dettaglio</h3>
       <button 
-        class="text-gray-500 hover:text-gray-700 text-xl"
-        onclick="document.getElementById('drawer-pil').classList.add('translate-x-full')"
+        class="text-sm font-medium text-indigo-600 hover:underline"
+        onclick="closeDrawer('drawer-pil')"
       >
-        ✕
+        Torna indietro
       </button>
     </div>
 
     <!-- Metriche -->
-    <p class="text-sm text-gray-700 mb-2">Metriche trattate:</p>
-    <ul class="list-disc pl-5 text-sm text-gray-700 space-y-1 mb-4">
+    <p class="text-sm text-gray-700 mt-4 mb-2">Metriche trattate:</p>
+    <ul class="list-disc pl-5 text-sm text-gray-700 space-y-1 mb-6">
       <li>QoQ: variazione trimestrale destagionalizzata</li>
       <li>YoY: variazione annuale</li>
       <li>PIL potenziale: livello massimo sostenibile</li>
       <li>Output Gap: differenza tra PIL effettivo e potenziale</li>
       <li>Trend: direzione qualitativa del ciclo</li>
     </ul>
+ 
     <!-- Tabella Attuale -->
     <div class="overflow-x-auto mb-8">
       <table class="min-w-full text-sm text-left text-gray-800 border border-gray-400 rounded-xl">
@@ -1477,7 +1482,16 @@ if (d.disclaimer) {
     </aside>
   </div>
 </div>
-
+<script>
+  function openDrawer(id) {
+    document.getElementById(id).classList.remove('translate-x-full');
+    document.getElementById(id + '-overlay').classList.remove('hidden');
+  }
+  function closeDrawer(id) {
+    document.getElementById(id).classList.add('translate-x-full');
+    document.getElementById(id + '-overlay').classList.add('hidden');
+  }
+</script>
 
    
 
