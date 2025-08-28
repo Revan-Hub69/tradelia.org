@@ -1301,142 +1301,182 @@ if (d.disclaimer) {
   aria-labelledby="tab-blocco2"
   data-section="scenario-macro">
 
- <section id="pil-core-dm" class="py-8 border-t border-gray-300">
-  <!-- Header -->
-  <header class="mb-6">
-    <h3 class="text-xl font-semibold text-gray-900">PIL Reale & Potenziale – Core Developed Markets</h3>
-    <p class="text-sm text-gray-600 mt-1">
-      Dati as-of Q2 2025 (cut-off 23 Ago 2025) · Fonti: IMF WEO, OECD, BCE, Fed, BoE, BoJ
-    </p>
+    <header class="mb-8 border-b border-gray-200 pb-4 flex items-start justify-between gap-4">
+    <div>
+      <h2 class="text-[clamp(1.4rem,2vw,1.875rem)] font-semibold tracking-tight text-gray-900" id="heading-blocco2">
+        Blocco 2 · Scenario Macro
+      </h2>
+      <p class="mt-2 text-[clamp(.95rem,1.5vw,1rem)] text-gray-600 leading-relaxed max-w-3xl">
+        Analisi macro globale e regionale con metodo istituzionale, forward‑looking, con metriche numeriche e fonti istituzionali per ogni dato.
+      </p>
+    </div>
+    <div class="text-right shrink-0">
+      <p class="text-xs text-gray-500">Aggiornato al</p>
+      <time id="macro-updated" datetime="2025-08-23" class="text-xs font-medium text-gray-700">23 Ago 2025</time>
+    </div>
   </header>
 
-  <!-- Metriche -->
-  <div class="mb-6 text-sm text-gray-800 leading-relaxed">
-    <p><strong>Metriche coperte:</strong></p>
-    <ul class="list-disc pl-5 mt-2 space-y-1">
-      <li><strong>QoQ:</strong> Variazione del PIL reale rispetto al trimestre precedente, destagionalizzata.</li>
-      <li><strong>YoY:</strong> Variazione del PIL reale rispetto allo stesso trimestre dell’anno precedente.</li>
-      <li><strong>PIL Potenziale:</strong> Stima del livello massimo sostenibile di PIL senza pressioni inflazionistiche.</li>
-      <li><strong>Output Gap:</strong> Differenza tra PIL effettivo e potenziale. Positivo = sopra trend, Negativo = sotto trend.</li>
-      <li><strong>Trend:</strong> Direzione qualitativa del ciclo economico (ripresa, stagnazione, decelerazione, stabilità).</li>
+<!-- Scheda sintetica – PIL Reale & Potenziale -->
+<div class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm hover:shadow-md transition">
+  <h4 class="text-base font-semibold text-gray-900 mb-2">PIL Reale & Potenziale</h4>
+  <ul class="text-sm text-gray-700 space-y-1 mb-4">
+    <li>QoQ, YoY</li>
+    <li>PIL potenziale</li>
+    <li>Output Gap (%)</li>
+    <li>Trend ciclico</li>
+  </ul>
+  <button 
+    class="text-sm font-medium text-indigo-600 hover:underline"
+    onclick="document.getElementById('drawer-pil').classList.remove('translate-x-full')"
+  >
+    Leggi tutto →
+  </button>
+</div>
+<!-- Drawer laterale – PIL Reale & Potenziale -->
+<div id="drawer-pil" class="fixed top-0 right-0 w-full max-w-xl h-full bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 border-l border-gray-300 overflow-y-auto sm:p-6 lg:p-8">
+  <div>
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-semibold text-gray-900">PIL Reale & Potenziale – Dettaglio</h3>
+      <button 
+        class="text-gray-500 hover:text-gray-700 text-xl"
+        onclick="document.getElementById('drawer-pil').classList.add('translate-x-full')"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- Metriche -->
+    <p class="text-sm text-gray-700 mb-2">Metriche trattate:</p>
+    <ul class="list-disc pl-5 text-sm text-gray-700 space-y-1 mb-4">
+      <li>QoQ: variazione trimestrale destagionalizzata</li>
+      <li>YoY: variazione annuale</li>
+      <li>PIL potenziale: livello massimo sostenibile</li>
+      <li>Output Gap: differenza tra PIL effettivo e potenziale</li>
+      <li>Trend: direzione qualitativa del ciclo</li>
     </ul>
+    <!-- Tabella Attuale -->
+    <div class="overflow-x-auto mb-8">
+      <table class="min-w-full text-sm text-left text-gray-800 border border-gray-400 rounded-xl">
+        <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
+          <tr>
+            <th class="px-4 py-2 border-r border-gray-300">Regione</th>
+            <th class="px-4 py-2 border-r border-gray-300">QoQ</th>
+            <th class="px-4 py-2 border-r border-gray-300">YoY</th>
+            <th class="px-4 py-2 border-r border-gray-300">Potenziale</th>
+            <th class="px-4 py-2 border-r border-gray-300">Output Gap</th>
+            <th class="px-4 py-2">Trend</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium border-r border-gray-300">USA</td>
+            <td class="px-4 py-2 border-r border-gray-300">+0,6%</td>
+            <td class="px-4 py-2 border-r border-gray-300">+2,1%</td>
+            <td class="px-4 py-2 border-r border-gray-300">+1,8%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-green-600">+0,3%</td>
+            <td class="px-4 py-2">Decelerazione</td>
+          </tr>
+          <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium border-r border-gray-300">Eurozona</td>
+            <td class="px-4 py-2 border-r border-gray-300">+0,3%</td>
+            <td class="px-4 py-2 border-r border-gray-300">+1,2%</td>
+            <td class="px-4 py-2 border-r border-gray-300">+1,5%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-red-600">−0,3%</td>
+            <td class="px-4 py-2">Ripresa graduale</td>
+          </tr>
+          <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium border-r border-gray-300">UK</td>
+            <td class="px-4 py-2 border-r border-gray-300">+0,2%</td>
+            <td class="px-4 py-2 border-r border-gray-300">+0,9%</td>
+            <td class="px-4 py-2 border-r border-gray-300">+1,4%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-red-600">−0,5%</td>
+            <td class="px-4 py-2">Stagnante</td>
+          </tr>
+          <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium border-r border-gray-300">Giappone</td>
+            <td class="px-4 py-2 border-r border-gray-300">+0,4%</td>
+            <td class="px-4 py-2 border-r border-gray-300">+1,0%</td>
+            <td class="px-4 py-2 border-r border-gray-300">+0,9%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-green-600">+0,1%</td>
+            <td class="px-4 py-2">Stabile</td>
+          </tr>
+          <tr>
+            <td class="px-4 py-2 font-medium border-r border-gray-300">Italia</td>
+            <td class="px-4 py-2 border-r border-gray-300">+0,1%</td>
+            <td class="px-4 py-2 border-r border-gray-300">+0,8%</td>
+            <td class="px-4 py-2 border-r border-gray-300">+1,2%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-red-600">−0,4%</td>
+            <td class="px-4 py-2">Traino PNRR</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Forward Outlook -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <article class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
+        <h4 class="text-base font-semibold text-gray-900 mb-2">USA</h4>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li><strong>0–6m:</strong> <span class="text-green-600">+1,9%</span></li>
+          <li><strong>6–24m:</strong> +1,7%</li>
+          <li><strong>24–36m:</strong> +1,6%</li>
+          <li><strong>Scenario Base:</strong> Soft landing, consumi resilienti</li>
+        </ul>
+      </article>
+      <!-- Eurozona -->
+      <article class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
+        <h4 class="text-base font-semibold text-gray-900 mb-2">Eurozona</h4>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li><strong>0–6m:</strong> +1,0%</li>
+          <li><strong>6–24m:</strong> +1,3%</li>
+          <li><strong>24–36m:</strong> +1,5%</li>
+          <li><strong>Scenario Base:</strong> Ripresa ciclica, export in miglioramento</li>
+        </ul>
+      </article>
+            <!-- UK -->
+      <article class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
+        <h4 class="text-base font-semibold text-gray-900 mb-2">UK</h4>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li><strong>0–6m:</strong> <span class="text-red-600">+0,8%</span></li>
+          <li><strong>6–24m:</strong> +1,2%</li>
+          <li><strong>24–36m:</strong> +1,4%</li>
+          <li><strong>Scenario Base:</strong> Fiscal drag, stagnazione</li>
+        </ul>
+      </article>
+
+      <!-- Giappone -->
+      <article class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
+        <h4 class="text-base font-semibold text-gray-900 mb-2">Giappone</h4>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li><strong>0–6m:</strong> <span class="text-green-600">+1,1%</span></li>
+          <li><strong>6–24m:</strong> +1,0%</li>
+          <li><strong>24–36m:</strong> +0,9%</li>
+          <li><strong>Scenario Base:</strong> Stabilità ciclica, riforme strutturali</li>
+        </ul>
+      </article>
+
+      <!-- Italia -->
+      <article class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
+        <h4 class="text-base font-semibold text-gray-900 mb-2">Italia</h4>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li><strong>0–6m:</strong> +0,9%</li>
+          <li><strong>6–24m:</strong> +1,1%</li>
+          <li><strong>24–36m:</strong> +1,3%</li>
+          <li><strong>Scenario Base:</strong> Investimenti pubblici, PNRR</li>
+        </ul>
+      </article>
+    </div>
+
+    <!-- Commento finale Tradelia AI -->
+    <aside class="mt-6 p-4 border border-gray-300 border-l-4 border-l-gray-600 bg-gray-50 rounded-xl text-[14px] leading-relaxed">
+      <strong>Commento Tradelia AI – PIL Core DM:</strong><br>
+      I dati Q2 2025 confermano divergenze cicliche tra le principali economie sviluppate. Gli Stati Uniti mantengono una crescita sopra potenziale, ma con segnali di decelerazione nel medio termine. L’Eurozona mostra una ripresa graduale, trainata da export e normalizzazione energetica. Il Regno Unito resta stagnante, penalizzato da policy restrittive e debolezza interna. Il Giappone si distingue per stabilità ciclica, con upside da riforme. L’Italia beneficia del PNRR e di investimenti pubblici, con potenziale di convergenza nel 2026.
+
+      <br><br>
+      <strong>Implicazione allocativa:</strong> Overweight tattico su USA nel breve, tilt strategico verso Eurozona e Italia nel medio termine. Neutral su Giappone per profilo difensivo. Underweight UK per rischio stagnazione.
+    </aside>
   </div>
-
-  <!-- Tabella Attuale -->
-  <div class="overflow-x-auto mb-8">
-    <table class="min-w-full text-sm text-left text-gray-800 border border-gray-400 rounded-xl">
-      <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
-        <tr>
-          <th class="px-4 py-2 border-r border-gray-300">Regione</th>
-          <th class="px-4 py-2 border-r border-gray-300">QoQ</th>
-          <th class="px-4 py-2 border-r border-gray-300">YoY</th>
-          <th class="px-4 py-2 border-r border-gray-300">Potenziale</th>
-          <th class="px-4 py-2 border-r border-gray-300">Output Gap</th>
-          <th class="px-4 py-2">Trend</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="border-b border-gray-300">
-          <td class="px-4 py-2 font-medium border-r border-gray-300">USA</td>
-          <td class="px-4 py-2 border-r border-gray-300">+0,6%</td>
-          <td class="px-4 py-2 border-r border-gray-300">+2,1%</td>
-          <td class="px-4 py-2 border-r border-gray-300">+1,8%</td>
-          <td class="px-4 py-2 border-r border-gray-300 text-green-600">+0,3%</td>
-          <td class="px-4 py-2">Decelerazione</td>
-        </tr>
-        <tr class="border-b border-gray-300">
-          <td class="px-4 py-2 font-medium border-r border-gray-300">Eurozona</td>
-          <td class="px-4 py-2 border-r border-gray-300">+0,3%</td>
-          <td class="px-4 py-2 border-r border-gray-300">+1,2%</td>
-          <td class="px-4 py-2 border-r border-gray-300">+1,5%</td>
-          <td class="px-4 py-2 border-r border-gray-300 text-red-600">−0,3%</td>
-          <td class="px-4 py-2">Ripresa graduale</td>
-        </tr>
-        <tr class="border-b border-gray-300">
-          <td class="px-4 py-2 font-medium border-r border-gray-300">UK</td>
-          <td class="px-4 py-2 border-r border-gray-300">+0,2%</td>
-          <td class="px-4 py-2 border-r border-gray-300">+0,9%</td>
-          <td class="px-4 py-2 border-r border-gray-300">+1,4%</td>
-          <td class="px-4 py-2 border-r border-gray-300 text-red-600">−0,5%</td>
-          <td class="px-4 py-2">Stagnante</td>
-        </tr>
-        <tr class="border-b border-gray-300">
-          <td class="px-4 py-2 font-medium border-r border-gray-300">Giappone</td>
-          <td class="px-4 py-2 border-r border-gray-300">+0,4%</td>
-          <td class="px-4 py-2 border-r border-gray-300">+1,0%</td>
-          <td class="px-4 py-2 border-r border-gray-300">+0,9%</td>
-          <td class="px-4 py-2 border-r border-gray-300 text-green-600">+0,1%</td>
-          <td class="px-4 py-2">Stabile</td>
-        </tr>
-        <tr>
-          <td class="px-4 py-2 font-medium border-r border-gray-300">Italia</td>
-          <td class="px-4 py-2 border-r border-gray-300">+0,1%</td>
-          <td class="px-4 py-2 border-r border-gray-300">+0,8%</td>
-          <td class="px-4 py-2 border-r border-gray-300">+1,2%</td>
-          <td class="px-4 py-2 border-r border-gray-300 text-red-600">−0,4%</td>
-          <td class="px-4 py-2">Traino PNRR</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Forward Outlook – Mobile-friendly -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-    <article class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
-      <h4 class="text-base font-semibold text-gray-900 mb-2">USA</h4>
-      <ul class="text-sm text-gray-700 space-y-1">
-        <li><strong>0–6m:</strong> +1,9%</li>
-        <li><strong>6–24m:</strong> +1,7%</li>
-        <li><strong>24–36m:</strong> +1,6%</li>
-        <li><strong>Scenario Base:</strong> Soft landing, consumi resilienti</li>
-      </ul>
-    </article>
-    <article class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
-      <h4 class="text-base font-semibold text-gray-900 mb-2">Eurozona</h4>
-      <ul class="text-sm text-gray-700 space-y-1">
-        <li><strong>0–6m:</strong> +1,0%</li>
-        <li><strong>6–24m:</strong> +1,3%</li>
-        <li><strong>24–36m:</strong> +1,5%</li>
-        <li><strong>Scenario Base:</strong> Ripresa ciclica, export in miglioramento</li>
-      </ul>
-    </article>
-    <article class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
-      <h4 class="text-base font-semibold text-gray-900 mb-2">UK</h4>
-      <ul class="text-sm text-gray-700 space-y-1">
-        <li><strong>0–6m:</strong> +0,8%</li>
-        <li><strong>6–24m:</strong> +1,2%</li>
-        <li><strong>24–36m:</strong> +1,4%</li>
-        <li><strong>Scenario Base:</strong> Fiscal drag, stagnazione</li>
-      </ul>
-    </article>
-        <article class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
-      <h4 class="text-base font-semibold text-gray-900 mb-2">Giappone</h4>
-      <ul class="text-sm text-gray-700 space-y-1">
-        <li><strong>0–6m:</strong> +1,1%</li>
-        <li><strong>6–24m:</strong> +1,0%</li>
-        <li><strong>24–36m:</strong> +0,9%</li>
-        <li><strong>Scenario Base:</strong> Stabilità ciclica, riforme strutturali</li>
-      </ul>
-    </article>
-    <article class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
-      <h4 class="text-base font-semibold text-gray-900 mb-2">Italia</h4>
-      <ul class="text-sm text-gray-700 space-y-1">
-        <li><strong>0–6m:</strong> +0,9%</li>
-        <li><strong>6–24m:</strong> +1,1%</li>
-        <li><strong>24–36m:</strong> +1,3%</li>
-        <li><strong>Scenario Base:</strong> Investimenti pubblici, PNRR</li>
-      </ul>
-    </article>
-  </div>
-<aside class="mt-6 p-4 border border-gray-300 border-l-4 border-l-gray-600 bg-gray-50 rounded-xl text-[14px] leading-relaxed">
-  <strong>Commento Tradelia AI – PIL Core DM:</strong><br>
-  I dati Q2 2025 confermano divergenze cicliche tra le principali economie sviluppate. Gli Stati Uniti mantengono una crescita sopra potenziale, ma con segnali di decelerazione nel medio termine. L’Eurozona mostra una ripresa graduale, trainata da export e normalizzazione energetica. Il Regno Unito resta stagnante, penalizzato da policy restrittive e debolezza interna. Il Giappone si distingue per stabilità ciclica, con upside da riforme. L’Italia beneficia del PNRR e di investimenti pubblici, con potenziale di convergenza nel 2026.
-
-  <br><br>
-  <strong>Implicazione allocativa:</strong> 
-  Overweight tattico su USA nel breve, tilt strategico verso Eurozona e Italia nel medio termine. Neutral su Giappone per profilo difensivo. Underweight UK per rischio stagnazione.
-</aside>
-
+</div>
 
 
    
