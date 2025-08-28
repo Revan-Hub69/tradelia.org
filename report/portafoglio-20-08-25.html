@@ -1318,12 +1318,12 @@ if (d.disclaimer) {
   </header>
 
  
-<!-- Core DM: PIL attuale e Forward -->
+<!-- Core DM: PIL attuale & Forward -->
 <section id="core-dm" class="py-6">
   <header class="mb-5">
     <h3 class="text-lg sm:text-xl font-semibold text-gray-900">PIL Attuale & Forward – Core Developed Markets</h3>
     <p class="text-xs text-gray-500 mt-1">
-      Dati as-of Q2 2025 (cut-off 23 Ago 2025) · Metriche: QoQ, YoY, PIL potenziale, Output Gap · Forward: 6m, 24m, 36m · Fonti: IMF WEO, OECD, BCE, Fed, BoE, BoJ
+      Dati as-of Q2 2025 (cut-off 23 Ago 2025) · Metriche: QoQ, YoY, PIL potenziale, Output Gap · Forward: 0–6m, 6–24m, 24–36m · Fonti: IMF WEO, OECD, BCE, Fed, BoE, BoJ
     </p>
   </header>
 
@@ -1340,17 +1340,17 @@ if (d.disclaimer) {
         </tr>
       </thead>
       <tbody>
-        <tr><td class="px-4 py-2 font-medium">USA</td><td>+0,6%</td><td>+2,1%</td><td>+1,8%</td><td>+0,3%</td></tr>
-        <tr><td class="px-4 py-2 font-medium">Eurozona</td><td>+0,3%</td><td>+1,2%</td><td>+1,5%</td><td>−0,3%</td></tr>
-        <tr><td class="px-4 py-2 font-medium">UK</td><td>+0,2%</td><td>+0,9%</td><td>+1,4%</td><td>−0,5%</td></tr>
-        <tr><td class="px-4 py-2 font-medium">Giappone</td><td>+0,4%</td><td>+1,0%</td><td>+0,9%</td><td>+0,1%</td></tr>
-        <tr><td class="px-4 py-2 font-medium">Italia</td><td>+0,1%</td><td>+0,8%</td><td>+1,2%</td><td>−0,4%</td></tr>
+        <tr><td class="px-4 py-2 font-medium">🇺🇸 USA</td><td>+0,6%</td><td>+2,1%</td><td>+1,8%</td><td class="text-green-600">+0,3%</td></tr>
+        <tr><td class="px-4 py-2 font-medium">🇪🇺 Eurozona</td><td>+0,3%</td><td>+1,2%</td><td>+1,5%</td><td class="text-red-600">−0,3%</td></tr>
+        <tr><td class="px-4 py-2 font-medium">🇬🇧 UK</td><td>+0,2%</td><td>+0,9%</td><td>+1,4%</td><td class="text-red-600">−0,5%</td></tr>
+        <tr><td class="px-4 py-2 font-medium">🇯🇵 Giappone</td><td>+0,4%</td><td>+1,0%</td><td>+0,9%</td><td class="text-green-600">+0,1%</td></tr>
+        <tr><td class="px-4 py-2 font-medium">🇮🇹 Italia</td><td>+0,1%</td><td>+0,8%</td><td>+1,2%</td><td class="text-red-600">−0,4%</td></tr>
       </tbody>
     </table>
   </div>
 
   <!-- Tabella Forward -->
-  <div class="overflow-x-auto">
+  <div class="overflow-x-auto mb-6">
     <table class="min-w-full text-sm text-left text-gray-800 border border-gray-200 rounded-xl overflow-hidden">
       <thead class="bg-indigo-50 text-gray-700">
         <tr>
@@ -1358,23 +1358,30 @@ if (d.disclaimer) {
           <th class="px-4 py-2">0–6m</th>
           <th class="px-4 py-2">6–24m</th>
           <th class="px-4 py-2">24–36m</th>
-          <th class="px-4 py-2">Scenario Base</th>
+          <th class="px-4 py-2">Trend</th>
+          <th class="px-4 py-2">Macro Score</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td class="px-4 py-2 font-medium">USA</td><td>+1,9%</td><td>+1,7%</td><td>+1,6%</td><td>Soft landing, consumi resilienti</td></tr>
-        <tr><td class="px-4 py-2 font-medium">Eurozona</td><td>+1,0%</td><td>+1,3%</td><td>+1,5%</td><td>Ripresa graduale, export in miglioramento</td></tr>
-        <tr><td class="px-4 py-2 font-medium">UK</td><td>+0,8%</td><td>+1,2%</td><td>+1,4%</td><td>Rischio stagnazione, fiscal drag</td></tr>
-        <tr><td class="px-4 py-2 font-medium">Giappone</td><td>+1,1%</td><td>+1,0%</td><td>+0,9%</td><td>Stabilità ciclica, riforme strutturali</td></tr>
-        <tr><td class="px-4 py-2 font-medium">Italia</td><td>+0,9%</td><td>+1,1%</td><td>+1,3%</td><td>Traino da investimenti PNRR</td></tr>
+        <tr><td class="px-4 py-2 font-medium">🇺🇸 USA</td><td>+1,9%</td><td>+1,7%</td><td>+1,6%</td><td>↘</td><td>8/10</td></tr>
+        <tr><td class="px-4 py-2 font-medium">🇪🇺 Eurozona</td><td>+1,0%</td><td>+1,3%</td><td>+1,5%</td><td>↗</td><td>7/10</td></tr>
+        <tr><td class="px-4 py-2 font-medium">🇬🇧 UK</td><td>+0,8%</td><td>+1,2%</td><td>+1,4%</td><td>→</td><td>6/10</td></tr>
+        <tr><td class="px-4 py-2 font-medium">🇯🇵 Giappone</td><td>+1,1%</td><td>+1,0%</td><td>+0,9%</td><td>→</td><td>7/10</td></tr>
+        <tr><td class="px-4 py-2 font-medium">🇮🇹 Italia</td><td>+0,9%</td><td>+1,1%</td><td>+1,3%</td><td>↗</td><td>7/10</td></tr>
       </tbody>
     </table>
   </div>
 
-  <!-- Commento -->
+  <!-- Commento Multi-Orizzonte -->
   <aside class="mt-6 p-4 border border-indigo-200 border-l-4 border-l-indigo-600 bg-indigo-50 rounded-xl text-[13px] leading-relaxed">
-    <strong>Commento Desk – Forward PIL Core DM:</strong><br>
-    Il ciclo USA resta sopra trend nel breve, ma rallenta nel medio termine. L’Eurozona mostra segnali di ripresa post-stress energetico, mentre il Regno Unito resta fragile. Il Giappone mantiene stabilità, con potenziale upside da riforme. L’Italia beneficia di stimoli fiscali e investimenti pubblici. Implicazione: allocazione geografica da ribilanciare verso Eurozona e Italia nel medio termine.
+    <strong>Commento Tradelia AI – Ciclo Forward Core DM:</strong><br>
+    <ul class="list-disc pl-4 mt-2 space-y-1">
+      <li><strong>Breve termine (0–6m):</strong> USA sopra trend, Eurozona in stabilizzazione, Italia in ripresa. UK e Giappone stabili.</li>
+      <li><strong>Medio termine (6–24m):</strong> Rallentamento USA, accelerazione Eurozona e Italia. UK resta sotto potenziale.</li>
+      <li><strong>Lungo termine (24–36m):</strong> Divergenze strutturali: USA in decelerazione, Eurozona converge al potenziale, Italia beneficia di investimenti pubblici.</li>
+    </ul>
+    <br>
+    <strong>Implicazione allocativa:</strong> Favorire Eurozona e Italia nel medio termine, mantenere esposizione tattica su USA nel breve.
   </aside>
 </section>
 
