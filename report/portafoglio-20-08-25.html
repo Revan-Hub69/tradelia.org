@@ -1554,7 +1554,7 @@ if (d.disclaimer) {
       <li>Scenario base + rischi alternativi</li>
     </ul>
 
- <div class="overflow-x-auto mb-8">
+<div class="overflow-x-auto mb-8">
   <table class="min-w-full text-sm text-left text-gray-800 border border-gray-400 rounded-xl">
     <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
       <tr>
@@ -1566,45 +1566,89 @@ if (d.disclaimer) {
       </tr>
     </thead>
     <tbody>
-      <tr class="border-b border-gray-300">
+      <!-- USA -->
+      <tr class="border-b border-gray-300 align-top">
         <td class="px-4 py-2 font-medium border-r border-gray-300">USA</td>
         <td class="px-4 py-2 border-r border-gray-300 text-green-600">+3,2%</td>
         <td class="px-4 py-2 border-r border-gray-300 text-green-600">+3,4%</td>
         <td class="px-4 py-2 border-r border-gray-300">Disinflazione</td>
-        <td class="px-4 py-2 text-[13px] whitespace-normal">Servizi ↘, beni stabili</td>
+        <td class="px-4 py-2 text-[13px] whitespace-normal leading-snug">
+          <ul class="space-y-[2px] list-none">
+            <li><strong>Servizi:</strong> ↘</li>
+            <li><strong>Beni:</strong> stabili</li>
+            <li><strong>Energia:</strong> neutro</li>
+            <li><strong>Salari:</strong> moderati</li>
+          </ul>
+        </td>
       </tr>
-      <tr class="border-b border-gray-300">
+
+      <!-- Eurozona -->
+      <tr class="border-b border-gray-300 align-top">
         <td class="px-4 py-2 font-medium border-r border-gray-300">Eurozona</td>
         <td class="px-4 py-2 border-r border-gray-300 text-green-600">+2,6%</td>
         <td class="px-4 py-2 border-r border-gray-300 text-green-600">+3,0%</td>
         <td class="px-4 py-2 border-r border-gray-300">Normalizzazione</td>
-        <td class="px-4 py-2 text-[13px] whitespace-normal">Energia ↘, salari ↗</td>
+        <td class="px-4 py-2 text-[13px] whitespace-normal leading-snug">
+          <ul class="space-y-[2px] list-none">
+            <li><strong>Energia:</strong> ↘</li>
+            <li><strong>Salari:</strong> ↗</li>
+            <li><strong>Beni:</strong> stabili</li>
+            <li><strong>Servizi:</strong> in rallentamento</li>
+          </ul>
+        </td>
       </tr>
-      <tr class="border-b border-gray-300">
+
+      <!-- UK -->
+      <tr class="border-b border-gray-300 align-top">
         <td class="px-4 py-2 font-medium border-r border-gray-300">UK</td>
         <td class="px-4 py-2 border-r border-gray-300 text-red-600">+4,1%</td>
         <td class="px-4 py-2 border-r border-gray-300 text-red-600">+4,3%</td>
         <td class="px-4 py-2 border-r border-gray-300">Persistente</td>
-        <td class="px-4 py-2 text-[13px] whitespace-normal">Servizi ↗, salari rigidi</td>
+        <td class="px-4 py-2 text-[13px] whitespace-normal leading-snug">
+          <ul class="space-y-[2px] list-none">
+            <li><strong>Servizi:</strong> ↗</li>
+            <li><strong>Salari:</strong> rigidi</li>
+            <li><strong>Energia:</strong> neutro</li>
+            <li><strong>Beni:</strong> in rallentamento</li>
+          </ul>
+        </td>
       </tr>
-      <tr class="border-b border-gray-300">
+
+      <!-- Giappone -->
+      <tr class="border-b border-gray-300 align-top">
         <td class="px-4 py-2 font-medium border-r border-gray-300">Giappone</td>
         <td class="px-4 py-2 border-r border-gray-300 text-green-600">+2,2%</td>
         <td class="px-4 py-2 border-r border-gray-300 text-green-600">+2,5%</td>
         <td class="px-4 py-2 border-r border-gray-300">Stabile</td>
-        <td class="px-4 py-2 text-[13px] whitespace-normal">Import ↘, salari ↗</td>
+        <td class="px-4 py-2 text-[13px] whitespace-normal leading-snug">
+          <ul class="space-y-[2px] list-none">
+            <li><strong>Import:</strong> ↘</li>
+            <li><strong>Salari:</strong> ↗</li>
+            <li><strong>Beni:</strong> stabili</li>
+            <li><strong>Servizi:</strong> neutri</li>
+          </ul>
+        </td>
       </tr>
-      <tr>
+
+      <!-- Italia -->
+      <tr class="align-top">
         <td class="px-4 py-2 font-medium border-r border-gray-300">Italia</td>
         <td class="px-4 py-2 border-r border-gray-300 text-green-600">+2,4%</td>
         <td class="px-4 py-2 border-r border-gray-300 text-green-600">+2,7%</td>
         <td class="px-4 py-2 border-r border-gray-300">In linea</td>
-        <td class="px-4 py-2 text-[13px] whitespace-normal">Energia ↘, beni ↘</td>
+        <td class="px-4 py-2 text-[13px] whitespace-normal leading-snug">
+          <ul class="space-y-[2px] list-none">
+            <li><strong>Energia:</strong> ↘</li>
+            <li><strong>Beni:</strong> ↘</li>
+            <li><strong>Servizi:</strong> stabili</li>
+            <li><strong>Salari:</strong> contenuti</li>
+          </ul>
+        </td>
       </tr>
     </tbody>
   </table>
 </div>
-    <br>
+<br>
 
     
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
