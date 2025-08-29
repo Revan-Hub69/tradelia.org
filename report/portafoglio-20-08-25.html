@@ -1317,7 +1317,7 @@ if (d.disclaimer) {
   </header>
 <div class="group border border-gray-300 rounded-xl bg-white shadow-sm hover:shadow-md transition flex flex-col justify-between p-5 sm:p-6">
   <div>
-    <h4 class="text-[15px] font-semibold text-gray-900 mb-1">Blocco · PIL Reale & Potenziale</h4>
+    <h4 class="text-[15px] font-semibold text-gray-900 mb-1">2.1 · PIL Reale & Potenziale - Attuale + Foward </h4>
     <p class="text-[13px] text-gray-600 mb-3 leading-snug">
       Analisi del ciclo reale con metriche istituzionali e outlook forward.
     </p>
@@ -1491,7 +1491,158 @@ if (d.disclaimer) {
     </aside>
   </div>
 </div>
-<script>
+  <div class="group border border-gray-300 rounded-xl bg-white shadow-sm hover:shadow-md transition flex flex-col justify-between p-5 sm:p-6">
+  <div>
+    <h4 class="text-[15px] font-semibold text-gray-900 mb-1">2.2 · Inflazione Headline & Core – Attuale + Forward</h4>
+    <p class="text-[13px] text-gray-600 mb-3 leading-snug">
+      Analisi dell’inflazione generale e sottostante con outlook a 6–36 mesi.
+    </p>
+    <ul class="text-[13px] text-gray-700 space-y-1 border-t border-gray-200 pt-3">
+      <li><span class="font-medium text-gray-800">Headline / Core:</span> variazione prezzi al consumo</li>
+      <li><span class="font-medium text-gray-800">Forward:</span> proiezioni 6–36m</li>
+      <li><span class="font-medium text-gray-800">Drivers:</span> energia, salari, beni, servizi</li>
+      <li><span class="font-medium text-gray-800">Scenario:</span> base + rischi</li>
+    </ul>
+  </div>
+  <div class="mt-5">
+    <button 
+      class="inline-flex items-center text-[13px] font-medium text-indigo-600 hover:text-indigo-700 transition"
+      onclick="openDrawer('drawer-inflazione')"
+    >
+      Leggi tutto
+      <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  </div>
+</div>
+<!-- Overlay + Drawer -->
+<div id="drawer-inflazione-overlay" class="fixed inset-0 z-40 bg-black bg-opacity-60 hidden"></div>
+
+<div id="drawer-inflazione" class="fixed top-0 right-0 h-full w-full max-w-3xl bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 border-l border-gray-300 overflow-y-auto">
+  <div class="relative px-4 py-6 sm:px-6 lg:px-8">
+
+    <!-- Header con pulsante Torna indietro -->
+    <div class="sticky top-0 bg-white z-10 flex items-center justify-between pb-4 border-b border-gray-200">
+      <h3 class="text-lg font-semibold text-gray-900">Inflazione Headline & Core – Dettaglio</h3>
+      <button 
+        class="text-sm font-medium text-indigo-600 hover:underline"
+        onclick="closeDrawer('drawer-inflazione')"
+      >
+        Torna indietro
+      </button>
+    </div>
+
+    <!-- Metriche -->
+    <p class="text-sm text-gray-700 mt-4 mb-2">Metriche trattate:</p>
+    <ul class="list-disc pl-5 text-sm text-gray-700 space-y-1 mb-6">
+      <li>Inflazione headline: variazione complessiva dei prezzi al consumo</li>
+      <li>Inflazione core: esclusi energia e alimentari</li>
+      <li>Forward 6–36m: proiezioni istituzionali</li>
+      <li>Drivers settoriali: beni, servizi, salari, energia</li>
+      <li>Scenario base + rischi alternativi</li>
+    </ul>
+
+    <!-- Tabella Attuale -->
+    <div class="overflow-x-auto mb-8">
+      <table class="min-w-full text-sm text-left text-gray-800 border border-gray-400 rounded-xl">
+        <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
+          <tr>
+            <th class="px-4 py-2 border-r border-gray-300">Regione</th>
+            <th class="px-4 py-2 border-r border-gray-300">Headline</th>
+            <th class="px-4 py-2 border-r border-gray-300">Core</th>
+            <th class="px-4 py-2 border-r border-gray-300">Trend</th>
+            <th class="px-4 py-2">Drivers</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium border-r border-gray-300">USA</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-green-600">+3,2%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-green-600">+3,4%</td>
+            <td class="px-4 py-2 border-r border-gray-300">Disinflazione</td>
+            <td class="px-4 py-2">Servizi ↘, beni stabili</td>
+          </tr>
+          <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium border-r border-gray-300">Eurozona</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-green-600">+2,6%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-green-600">+3,0%</td>
+            <td class="px-4 py-2 border-r border-gray-300">Normalizzazione</td>
+            <td class="px-4 py-2">Energia ↘, salari ↗</td>
+          </tr>
+          <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium border-r border-gray-300">UK</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-red-600">+4,1%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-red-600">+4,3%</td>
+            <td class="px-4 py-2 border-r border-gray-300">Persistente</td>
+            <td class="px-4 py-2">Servizi ↗, salari rigidi</td>
+          </tr>
+          <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium border-r border-gray-300">Giappone</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-green-600">+2,2%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-green-600">+2,5%</td>
+            <td class="px-4 py-2 border-r border-gray-300">Stabile</td>
+            <td class="px-4 py-2">Import ↘, salari ↗</td>
+          </tr>
+          <tr>
+            <td class="px-4 py-2 font-medium border-r border-gray-300">Italia</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-green-600">+2,4%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-green-600">+2,7%</td>
+            <td class="px-4 py-2 border-r border-gray-300">In linea</td>
+            <td class="px-4 py-2">Energia ↘, beni ↘</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+          <article class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
+        <h4 class="text-base font-semibold text-gray-900 mb-2">Eurozona</h4>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li><strong>6–12m:</strong> +2,5%</li>
+          <li><strong>12–24m:</strong> +2,3%</li>
+          <li><strong>24–36m:</strong> +2,1%</li>
+          <li><strong>Scenario Base:</strong> Normalizzazione graduale, BCE in pausa</li>
+        </ul>
+      </article>
+
+      <article class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
+        <h4 class="text-base font-semibold text-gray-900 mb-2">UK</h4>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li><strong>6–12m:</strong> <span class="text-red-600">+3,9%</span></li>
+          <li><strong>12–24m:</strong> +3,5%</li>
+          <li><strong>24–36m:</strong> +3,2%</li>
+          <li><strong>Scenario Base:</strong> Inflazione persistente, BoE cauta</li>
+        </ul>
+      </article>
+
+      <article class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
+        <h4 class="text-base font-semibold text-gray-900 mb-2">Giappone</h4>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li><strong>6–12m:</strong> +2,3%</li>
+          <li><strong>12–24m:</strong> +2,2%</li>
+          <li><strong>24–36m:</strong> +2,0%</li>
+          <li><strong>Scenario Base:</strong> Stabilità, pressioni salariali moderate</li>
+        </ul>
+      </article>
+
+      <article class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
+        <h4 class="text-base font-semibold text-gray-900 mb-2">Italia</h4>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li><strong>6–12m:</strong> +2,4%</li>
+          <li><strong>12–24m:</strong> +2,2%</li>
+          <li><strong>24–36m:</strong> +2,0%</li>
+          <li><strong>Scenario Base:</strong> In linea con Eurozona, energia in calo</li>
+        </ul>
+      </article>
+    </div>
+  <aside class="mt-6 p-4 border border-gray-300 border-l-4 border-l-gray-600 bg-gray-50 rounded-xl text-[14px] leading-relaxed">
+  <strong>Commento Tradelia AI – Inflazione Headline & Core:</strong><br>
+  L’inflazione nei principali DM mostra segnali di convergenza verso i target, con dinamiche disinflazionistiche più evidenti in 🇺🇸 USA ed 🇪🇺 Eurozona. Il 🇬🇧 Regno Unito resta un outlier, con pressioni persistenti su servizi e salari. 🇯🇵 Giappone mantiene stabilità, mentre 🇮🇹 Italia segue il profilo europeo con un mix favorevole tra energia e beni.
+
+  <br><br>
+  <strong>Implicazione allocativa:</strong> Favorire duration in 🇺🇸 USA ed 🇪🇺 Eurozona nel medio termine. Neutral su 🇯🇵 Giappone per profilo difensivo. Cautela su 🇬🇧 UK per rischio inflattivo persistente. Monitoraggio attivo su forward CPI, breakeven e survey expectations.
+</aside>
+
+   <script>
   function openDrawer(id) {
     document.getElementById(id).classList.remove('translate-x-full');
     document.getElementById(id + '-overlay').classList.remove('hidden');
