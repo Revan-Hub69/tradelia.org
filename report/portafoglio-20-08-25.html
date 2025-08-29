@@ -1806,7 +1806,30 @@ if (d.disclaimer) {
   </div>
 </div>
 
-
+<div class="group border border-gray-300 rounded-xl bg-white shadow-sm hover:shadow-md transition flex flex-col justify-between p-5 sm:p-6">
+  <div>
+    <h4 class="text-[15px] font-semibold text-gray-900 mb-1">2.3 · Indicatori Leading, Coincident, Lagging</h4>
+    <p class="text-[13px] text-gray-600 mb-3 leading-snug">
+      Analisi ciclica multilivello con indicatori anticipatori, coincidenti e ritardati per le economie Core DM.
+    </p>
+    <ul class="text-[13px] text-gray-700 space-y-1 border-t border-gray-200 pt-3">
+      <li><span class="font-medium text-gray-800">Leading:</span> ISM, PMI, ZEW, LEI, CLI</li>
+      <li><span class="font-medium text-gray-800">Coincident:</span> Produzione industriale, occupazione, vendite retail</li>
+      <li><span class="font-medium text-gray-800">Lagging:</span> Disoccupazione, CPI, profitti corporate</li>
+      <li><span class="font-medium text-gray-800">Trend:</span> direzione qualitativa del ciclo</li>
+    </ul>
+  </div>
+  <div class="mt-5">
+    <button 
+      class="inline-flex items-center text-[13px] font-medium text-indigo-600 hover:text-indigo-700 transition"
+      onclick="openDrawer('drawer-indicatori')"
+    >
+      Leggi tutto
+      <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  </div>
   <hr class="my-6 border-t border-gray-200">
 <!-- Drawer Indicatori Ciclici -->
 <div id="drawer-indicatori" class="fixed top-0 right-0 h-full w-full max-w-3xl bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 border-l border-gray-300 overflow-y-auto">
