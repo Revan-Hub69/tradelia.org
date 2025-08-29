@@ -2328,13 +2328,17 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
-   <script>
+<script>
   function openDrawer(id) {
     document.getElementById(id).classList.remove('translate-x-full');
     document.getElementById(id + '-overlay').classList.remove('hidden');
+    document.body.classList.add('overflow-hidden'); // Disabilita scroll
   }
+
   function closeDrawer(id) {
     document.getElementById(id).classList.add('translate-x-full');
     document.getElementById(id + '-overlay').classList.add('hidden');
+    document.body.classList.remove('overflow-hidden'); // Riabilita scroll
   }
 </script>
+
