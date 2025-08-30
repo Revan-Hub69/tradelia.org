@@ -1321,29 +1321,44 @@ if (d.disclaimer) {
   
 <div class="group border border-gray-300 rounded-xl bg-white shadow-sm hover:shadow-md transition flex flex-col justify-between p-5 sm:p-6">
   <div>
-    <h4 class="text-[15px] font-semibold text-gray-900 mb-1">2.1 · PIL Reale & Potenziale - Attuale + Forward </h4>
+    <h4 class="text-[15px] font-semibold text-gray-900 mb-1 leading-tight">
+      <span class="block">2.1 · PIL Reale & Potenziale</span>
+      <span class="text-[13px] font-normal text-gray-600">Attuale + Forward Outlook</span>
+    </h4>
+
     <p class="text-[13px] text-gray-600 mb-3 leading-snug">
-      Analisi del ciclo reale con metriche istituzionali e outlook forward.
+      Analisi del ciclo economico reale basata su variazioni trimestrali e annuali del PIL, confronto con il potenziale di crescita e valutazione del divario di output. Include proiezioni forward per le principali economie sviluppate.
     </p>
-    <ul class="text-[13px] text-gray-700 space-y-1 border-t border-gray-200 pt-3">
-      <li><span class="font-medium text-gray-800">QoQ / YoY:</span> variazione PIL reale</li>
-      <li><span class="font-medium text-gray-800">Potenziale:</span> stima sostenibile</li>
-      <li><span class="font-medium text-gray-800">Output Gap:</span> scostamento dal trend</li>
-      <li><span class="font-medium text-gray-800">Trend:</span> direzione ciclica</li>
+
+    <ul class="text-[13px] text-gray-700 space-y-2 border-t border-gray-200 pt-3 leading-snug">
+      <li>
+        <span class="font-medium text-gray-800">QoQ / YoY:</span> variazione del PIL reale su base trimestrale e annuale, misura la crescita effettiva dell’economia.
+      </li>
+      <li>
+        <span class="font-medium text-gray-800">Potenziale:</span> stima del livello massimo sostenibile di output senza generare pressioni inflazionistiche.
+      </li>
+      <li>
+        <span class="font-medium text-gray-800">Output Gap:</span> differenza tra PIL effettivo e potenziale, utile per valutare tensioni cicliche e orientare la politica monetaria.
+      </li>
+      <li>
+        <span class="font-medium text-gray-800">Trend:</span> direzione qualitativa del ciclo (es. espansione, rallentamento, stagnazione), derivata dall’analisi combinata delle metriche.
+      </li>
     </ul>
   </div>
-  <div class="mt-5">
+
+  <div class="mt-6">
     <button 
-      class="inline-flex items-center text-[13px] font-medium text-indigo-600 hover:text-indigo-700 transition"
+      class="inline-flex items-center px-3 py-2 text-[13px] font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition group"
       onclick="openDrawer('drawer-pil')"
     >
       Leggi tutto
-      <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <svg class="ml-2 h-4 w-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
       </svg>
     </button>
   </div>
 </div>
+
   
 
 <!-- Overlay + Drawer -->
@@ -2669,20 +2684,57 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 <script>
   function openDrawer(id) {
-    document.getElementById(id).classList.remove('translate-x-full');
-    document.getElementById(id + '-overlay').classList.remove('hidden');
-    document.body.classList.add('overflow-hidden');
-    
-    // Attiva chiusura cliccando sull'overlay
+    const drawer = document.getElementById(id);
     const overlay = document.getElementById(id + '-overlay');
-    overlay.onclick = function () {
-      closeDrawer(id);
-    };
+
+    drawer.classList.remove('translate-x-full');
+    overlay.classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+
+    // Chiudi cliccando sull'overlay
+    overlay.onclick = () => closeDrawer(id);
+
+    // Aggiungi stato alla history per intercettare "indietro"
+    history.pushState({ drawerOpen: id }, '', '');
+
+    // Ascolta tasto ESC
+    document.addEventListener('keydown', escHandler);
+
+    // Ascolta evento "indietro"
+    window.addEventListener('popstate', popHandler);
+
+    function escHandler(e) {
+      if (e.key === 'Escape') {
+        closeDrawer(id);
+      }
+    }
+
+    function popHandler(e) {
+      if (e.state && e.state.drawerOpen === id) {
+        closeDrawer(id);
+      }
+    }
+
+    // Salva i listener per rimozione successiva
+    drawer._escHandler = escHandler;
+    drawer._popHandler = popHandler;
   }
 
   function closeDrawer(id) {
-    document.getElementById(id).classList.add('translate-x-full');
-    document.getElementById(id + '-overlay').classList.add('hidden');
+    const drawer = document.getElementById(id);
+    const overlay = document.getElementById(id + '-overlay');
+
+    drawer.classList.add('translate-x-full');
+    overlay.classList.add('hidden');
     document.body.classList.remove('overflow-hidden');
+
+    // Rimuovi listener
+    document.removeEventListener('keydown', drawer._escHandler);
+    window.removeEventListener('popstate', drawer._popHandler);
+
+    // Torna indietro nella history se necessario
+    if (history.state && history.state.drawerOpen === id) {
+      history.back();
+    }
   }
 </script>
