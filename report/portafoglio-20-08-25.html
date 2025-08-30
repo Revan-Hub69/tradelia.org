@@ -1330,26 +1330,28 @@ if (d.disclaimer) {
 <div class="group border border-gray-300 rounded-xl bg-white shadow-sm hover:shadow-md transition flex flex-col justify-between p-5 sm:p-6">
   <div>
     <h4 class="text-[15px] font-semibold text-gray-900 mb-1 leading-tight">
-      <span class="block">2.1 · PIL Reale & Potenziale</span>
-      <span class="text-[13px] font-normal text-gray-600">Attuale + Forward Outlook</span>
+      <span class="block">2.1 · Attività Reale</span>
+      <span class="text-[13px] font-normal text-gray-600">PIL, Indicatori Leading, PMI, Capacità Produttiva, Nowcasting</span>
     </h4>
 
     <p class="text-[13px] text-gray-600 mb-3 leading-snug">
-      Sintesi del ciclo economico reale con metriche chiave e outlook forward per le economie sviluppate.
+      Sintesi integrata dell’attività economica con dati attuali e proiezioni multi‑orizzonte per le economie sviluppate.
     </p>
 
     <ul class="text-[13px] text-gray-700 space-y-1 border-t border-gray-200 pt-3 leading-snug">
-      <li><span class="font-medium text-gray-800">QoQ / YoY:</span> variazione PIL reale</li>
-      <li><span class="font-medium text-gray-800">Potenziale:</span> stima sostenibile</li>
-      <li><span class="font-medium text-gray-800">Output Gap:</span> scostamento dal trend</li>
-      <li><span class="font-medium text-gray-800">Trend:</span> direzione ciclica</li>
+      <li><span class="font-medium text-gray-800">PIL reale & potenziale:</span> QoQ, YoY, output gap</li>
+      <li><span class="font-medium text-gray-800">Indicatori leading/coincident/lagging:</span> ISM, PMI, ZEW, LEI</li>
+      <li><span class="font-medium text-gray-800">PMI settoriali & compositi:</span> con nowcasting</li>
+      <li><span class="font-medium text-gray-800">Capacità produttiva:</span> % utilizzo impianti</li>
+      <li><span class="font-medium text-gray-800">Nowcasting & high‑frequency:</span> GDPNow, ECB Nowcasting</li>
+      <li><span class="font-medium text-gray-800">Trend vs stagionalità:</span> lettura qualitativa</li>
     </ul>
   </div>
 
   <div class="mt-6">
     <button 
       class="inline-flex items-center px-3 py-2 text-[13px] font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition group"
-      onclick="openDrawer('drawer-pil')"
+      onclick="openDrawer('drawer-attivita-reale')"
     >
       Leggi tutto
       <svg class="ml-2 h-4 w-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -1359,114 +1361,126 @@ if (d.disclaimer) {
   </div>
 </div>
 
- <!-- Overlay -->
-<div id="drawer-pil-overlay" class="fixed inset-0 z-40 bg-black bg-opacity-60 hidden"></div>
+<!-- Overlay -->
+<div id="drawer-attivita-reale-overlay" class="fixed inset-0 z-40 bg-black bg-opacity-60 hidden"></div>
 
 <!-- Drawer -->
-<div id="drawer-pil" class="fixed top-0 right-0 h-full w-full max-w-3xl bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 border-l border-gray-300">
+<div id="drawer-attivita-reale" class="fixed top-0 right-0 h-full w-full max-w-5xl bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 border-l border-gray-300">
 
-<button 
-  class="fixed top-[1.2rem] right-4 z-[60] px-2 py-1 text-[13px] font-medium text-indigo-600 hover:text-indigo-700 transition"
-  onclick="closeDrawer('drawer-pil')"
->
-  Chiudi
-</button>
-
-
+  <!-- Pulsante Chiudi -->
+  <button 
+    class="fixed top-[1.2rem] right-4 z-[60] px-2 py-1 text-[13px] font-medium text-indigo-600 hover:text-indigo-700 transition"
+    onclick="closeDrawer('drawer-attivita-reale')"
+  >
+    Chiudi
+  </button>
 
   <!-- Contenuto scrollabile -->
   <div class="overflow-y-auto h-full px-4 py-6 sm:px-6 lg:px-8">
     <h3 class="text-[15px] sm:text-lg font-semibold text-gray-900 leading-tight mb-4">
-      2.1 · PIL Reale & Potenziale – Dettaglio
+      2.1 · Attività Reale – Dettaglio
     </h3>
 
-
-
-
-    <!-- Introduzione didattica -->
-    <p class="text-[13px] sm:text-[14px] text-gray-700 leading-snug mt-4 mb-4">
-      Il PIL reale misura la produzione effettiva di beni e servizi, mentre il PIL potenziale rappresenta il livello massimo sostenibile senza pressioni inflazionistiche. Il confronto tra i due consente di valutare il grado di utilizzo delle risorse e l’orientamento del ciclo economico.
+    <p class="text-[13px] sm:text-[14px] text-gray-700 leading-snug mb-4">
+      Quadro integrato dell’attività economica: PIL reale e potenziale, indicatori anticipatori e coincidenti, PMI settoriali e compositi, utilizzo della capacità produttiva e stime di nowcasting ad alta frequenza.
     </p>
 
-    <!-- Metriche -->
-    <p class="text-[13px] sm:text-[14px] text-gray-700 leading-snug mb-2">Metriche trattate:</p>
-    <ul class="list-disc pl-5 text-[13px] sm:text-[14px] text-gray-700 space-y-1 leading-snug mb-6">
-      <li><strong>QoQ:</strong> variazione trimestrale destagionalizzata</li>
-      <li><strong>YoY:</strong> variazione annuale</li>
-      <li><strong>Attese YoY:</strong> consensus di mercato</li>
-      <li><strong>PIL potenziale:</strong> livello massimo sostenibile</li>
-      <li><strong>Output Gap:</strong> differenza tra PIL effettivo e potenziale</li>
-      <li><strong>Trend:</strong> direzione qualitativa del ciclo</li>
-    </ul>
+    <!-- Tabella unica attuale + forward -->
+    <div class="overflow-x-auto mb-4">
+      <table class="min-w-[1100px] table-auto text-[13px] sm:text-[14px] text-left text-gray-800 border border-gray-400 rounded-xl">
+        <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
+          <tr>
+            <th class="px-4 py-2 border-r border-gray-300">Regione</th>
+            <th class="px-4 py-2 border-r border-gray-300">PIL QoQ</th>
+            <th class="px-4 py-2 border-r border-gray-300">PIL YoY</th>
+            <th class="px-4 py-2 border-r border-gray-300">Output Gap</th>
+            <th class="px-4 py-2 border-r border-gray-300">PMI Composito</th>
+            <th class="px-4 py-2 border-r border-gray-300">Capacità Produttiva</th>
+            <th class="px-4 py-2 border-r border-gray-300">Nowcast GDP</th>
+            <th class="px-4 py-2 border-r border-gray-300">0–6m</th>
+            <th class="px-4 py-2 border-r border-gray-300">6–24m</th>
+            <th class="px-4 py-2">Trend</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium border-r border-gray-300">USA</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-green-600">+0,6%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-green-600">+2,1%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-green-600">+0,3%</td>
+            <td class="px-4 py-2 border-r border-gray-300">52,4</td>
+            <td class="px-4 py-2 border-r border-gray-300">77,7%</td>
+            <td class="px-4 py-2 border-r border-gray-300">+2,3% SAAR Q3</td>
+            <td class="px-4 py-2 border-r border-gray-300">+1,9%</td>
+            <td class="px-4 py-2 border-r border-gray-300">+1,7%</td>
+            <td class="px-4 py-2">Espansione moderata</td>
+          </tr>
+          <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium border-r border-gray-300">Eurozona</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-gray-700">+0,3%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-red-600">+1,2%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-red-600">−0,3%</td>
+            <td class="px-4 py-2 border-r border-gray-300">51,1</td>
+            <td class="px-4 py-2 border-r border-gray-300">77,8%</td>
+            <td class="px-4 py-2 border-r border-gray-300">+0,2% QoQ Q3</td>
+            <td class="px-4 py-2 border-r border-gray-300">+1,0%</td>
+            <td class="px-4 py-2 border-r border-gray-300">+1,3%</td>
+            <td class="px-4 py-2">Ripresa graduale</td>
+          </tr>
+           <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium border-r border-gray-300">UK</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-gray-700">+0,2%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-red-600">+0,9%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-red-600">−0,5%</td>
+            <td class="px-4 py-2 border-r border-gray-300">50,3</td>
+            <td class="px-4 py-2 border-r border-gray-300">n.d.</td>
+            <td class="px-4 py-2 border-r border-gray-300">n.d.</td>
+            <td class="px-4 py-2 border-r border-gray-300">+0,8%</td>
+            <td class="px-4 py-2 border-r border-gray-300">+1,2%</td>
+            <td class="px-4 py-2">Stagnante</td>
+          </tr>
+          <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium border-r border-gray-300">Giappone</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-gray-700">+0,4%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-green-600">+1,0%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-green-600">+0,1%</td>
+            <td class="px-4 py-2 border-r border-gray-300">52,0</td>
+            <td class="px-4 py-2 border-r border-gray-300">n.d.</td>
+            <td class="px-4 py-2 border-r border-gray-300">n.d.</td>
+            <td class="px-4 py-2 border-r border-gray-300">+1,1%</td>
+            <td class="px-4 py-2 border-r border-gray-300">+1,0%</td>
+            <td class="px-4 py-2">Stabile</td>
+          </tr>
+          <tr>
+            <td class="px-4 py-2 font-medium border-r border-gray-300">Italia</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-gray-700">+0,1%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-red-600">+0,8%</td>
+            <td class="px-4 py-2 border-r border-gray-300 text-red-600">−0,4%</td>
+            <td class="px-4 py-2 border-r border-gray-300">Manif. 50,2 / Serv. 49,8</td>
+            <td class="px-4 py-2 border-r border-gray-300">75,5%</td>
+            <td class="px-4 py-2 border-r border-gray-300">+0,2% QoQ Q3</td>
+            <td class="px-4 py-2 border-r border-gray-300">+0,9%</td>
+            <td class="px-4 py-2 border-r border-gray-300">+1,1%</td>
+            <td class="px-4 py-2">Miglioramento lieve</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-    <hr class="my-6 border-t border-gray-200">
+    <p class="text-[12px] text-gray-500 mt-2">
+      <strong>Nota:</strong> Dati aggiornati al 30 agosto 2025. Fonti: S&P Global, HCOB, au Jibun Bank, Federal Reserve, Eurostat, ECB, Atlanta Fed GDPNow, Banca d’Italia.
+    </p>
 
-    <div class="overflow-x-auto mb-2">
-  <table class="min-w-[1000px] table-auto text-[13px] sm:text-[14px] text-left text-gray-800 border border-gray-400 rounded-xl">
-    <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
-      <tr>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Regione</th>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">QoQ</th>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">YoY</th>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Attese YoY</th>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Potenziale</th>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Output Gap</th>
-        <th class="px-4 py-2 whitespace-nowrap">Trend</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">USA</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-green-600">+0,6%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-green-600">+2,1%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-gray-700">+1,8%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">+1,8%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-green-600">+0,3%</td>
-        <td class="px-4 py-2 whitespace-nowrap">Decelerazione</td>
-      </tr>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Eurozona</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-gray-700">+0,3%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-red-600">+1,2%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-gray-700">+1,5%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">+1,5%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-red-600">−0,3%</td>
-        <td class="px-4 py-2 whitespace-nowrap">Ripresa graduale</td>
-      </tr>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">UK</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-gray-700">+0,2%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-red-600">+0,9%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-gray-700">+1,4%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">+1,4%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-red-600">−0,5%</td>
-        <td class="px-4 py-2 whitespace-nowrap">Stagnante</td>
-      </tr>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Giappone</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-gray-700">+0,4%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-green-600">+1,0%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-gray-700">+0,9%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">+0,9%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-green-600">+0,1%</td>
-        <td class="px-4 py-2 whitespace-nowrap">Stabile</td>
-      </tr>
-      <tr>
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Italia</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-gray-700">+0,1%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-red-600">+0,8%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-gray-700">+1,2%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">+1,2%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-red-600">−0,4%</td>
-        <td class="px-4 py-2 whitespace-nowrap">Traino PNRR</td>
-      </tr>
-    </tbody>
-  </table>
-  <p class="text-[12px] text-gray-500 mt-2">
-    <strong>Nota:</strong> Le attese si basano su consensus aggiornato al T–3. Colorazione applicata in base alla deviazione rispetto alle attese YoY.
-  </p>
-</div>
+    <!-- Commento finale -->
+    <aside class="mt-4 p-4 border border-gray-300 border-l-4 border-l-gray-600 bg-gray-50 rounded-xl text-[13px] sm:text-[14px] leading-snug">
+      <strong>Commento Tradelia AI – Attività Reale:</strong><br>
+      USA e Giappone mantengono un ritmo di crescita sopra potenziale con PMI >50 e capacità produttiva elevata. Eurozona in ripresa graduale, manifattura in riaccensione. UK stagnante, Italia in miglioramento lieve grazie a PNRR e domanda interna.<br><br>
+      <strong>Trend vs stagionalità:</strong> la ripresa manifatturiera in EA e Italia è ciclica (ordini e tempi di consegna) più che stagionale; nei servizi si osserva normalizzazione post‑picchi estivi.<br><br>
+      <strong>Implicazione allocativa:</strong> Overweight su aree con PMI >50 e capacità in crescita (EA, USA, Giappone). Neutral su UK per rischio stagnazione. Italia in osservazione per upside ciclico.
+    </aside>
 
+    <br><br>
+  </div>
         <hr class="my-6 border-t border-gray-200">
 
     <!-- Forward Outlook -->
