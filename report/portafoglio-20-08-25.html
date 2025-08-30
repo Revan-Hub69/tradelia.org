@@ -1573,12 +1573,12 @@ if (d.disclaimer) {
         <td class="px-4 py-2 border-r border-gray-300 text-green-600">+3,4%</td>
         <td class="px-4 py-2 border-r border-gray-300">Disinflazione</td>
         <td class="px-4 py-2 text-[13px] whitespace-normal break-words leading-snug">
-          <ul class="space-y-[2px] list-none">
-            <li><strong>Servizi:</strong> ↘</li>
-            <li><strong>Beni:</strong> stabili</li>
-            <li><strong>Energia:</strong> neutro</li>
-            <li><strong>Salari:</strong> moderati</li>
-          </ul>
+          <div class="grid grid-cols-2 sm:grid-cols-1 gap-x-4 gap-y-1">
+            <div><strong>Servizi:</strong> ↘</div>
+            <div><strong>Beni:</strong> stabili</div>
+            <div><strong>Energia:</strong> neutro</div>
+            <div><strong>Salari:</strong> moderati</div>
+          </div>
         </td>
       </tr>
 
@@ -1589,12 +1589,12 @@ if (d.disclaimer) {
         <td class="px-4 py-2 border-r border-gray-300 text-green-600">+3,0%</td>
         <td class="px-4 py-2 border-r border-gray-300">Normalizzazione</td>
         <td class="px-4 py-2 text-[13px] whitespace-normal break-words leading-snug">
-          <ul class="space-y-[2px] list-none">
-            <li><strong>Energia:</strong> ↘</li>
-            <li><strong>Salari:</strong> ↗</li>
-            <li><strong>Beni:</strong> stabili</li>
-            <li><strong>Servizi:</strong> in rallentamento</li>
-          </ul>
+          <div class="grid grid-cols-2 sm:grid-cols-1 gap-x-4 gap-y-1">
+            <div><strong>Energia:</strong> ↘</div>
+            <div><strong>Salari:</strong> ↗</div>
+            <div><strong>Beni:</strong> stabili</div>
+            <div><strong>Servizi:</strong> in rallentamento</div>
+          </div>
         </td>
       </tr>
 
@@ -1605,12 +1605,12 @@ if (d.disclaimer) {
         <td class="px-4 py-2 border-r border-gray-300 text-red-600">+4,3%</td>
         <td class="px-4 py-2 border-r border-gray-300">Persistente</td>
         <td class="px-4 py-2 text-[13px] whitespace-normal break-words leading-snug">
-          <ul class="space-y-[2px] list-none">
-            <li><strong>Servizi:</strong> ↗</li>
-            <li><strong>Salari:</strong> rigidi</li>
-            <li><strong>Energia:</strong> neutro</li>
-            <li><strong>Beni:</strong> in rallentamento</li>
-          </ul>
+          <div class="grid grid-cols-2 sm:grid-cols-1 gap-x-4 gap-y-1">
+            <div><strong>Servizi:</strong> ↗</div>
+            <div><strong>Salari:</strong> rigidi</div>
+            <div><strong>Energia:</strong> neutro</div>
+            <div><strong>Beni:</strong> in rallentamento</div>
+          </div>
         </td>
       </tr>
 
@@ -1621,12 +1621,12 @@ if (d.disclaimer) {
         <td class="px-4 py-2 border-r border-gray-300 text-green-600">+2,5%</td>
         <td class="px-4 py-2 border-r border-gray-300">Stabile</td>
         <td class="px-4 py-2 text-[13px] whitespace-normal break-words leading-snug">
-          <ul class="space-y-[2px] list-none">
-            <li><strong>Import:</strong> ↘</li>
-            <li><strong>Salari:</strong> ↗</li>
-            <li><strong>Beni:</strong> stabili</li>
-            <li><strong>Servizi:</strong> neutri</li>
-          </ul>
+          <div class="grid grid-cols-2 sm:grid-cols-1 gap-x-4 gap-y-1">
+            <div><strong>Import:</strong> ↘</div>
+            <div><strong>Salari:</strong> ↗</div>
+            <div><strong>Beni:</strong> stabili</div>
+            <div><strong>Servizi:</strong> neutri</div>
+          </div>
         </td>
       </tr>
 
@@ -1637,12 +1637,12 @@ if (d.disclaimer) {
         <td class="px-4 py-2 border-r border-gray-300 text-green-600">+2,7%</td>
         <td class="px-4 py-2 border-r border-gray-300">In linea</td>
         <td class="px-4 py-2 text-[13px] whitespace-normal break-words leading-snug">
-          <ul class="space-y-[2px] list-none">
-            <li><strong>Energia:</strong> ↘</li>
-            <li><strong>Beni:</strong> ↘</li>
-            <li><strong>Servizi:</strong> stabili</li>
-            <li><strong>Salari:</strong> contenuti</li>
-          </ul>
+          <div class="grid grid-cols-2 sm:grid-cols-1 gap-x-4 gap-y-1">
+            <div><strong>Energia:</strong> ↘</div>
+            <div><strong>Beni:</strong> ↘</div>
+            <div><strong>Servizi:</strong> stabili</div>
+            <div><strong>Salari:</strong> contenuti</div>
+          </div>
         </td>
       </tr>
     </tbody>
@@ -1723,146 +1723,124 @@ if (d.disclaimer) {
   
 <hr class="my-6 border-t border-gray-200" aria-hidden="true">
 
-<section
-  id="blocco3"
-  class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-gray-200 rounded-xl shadow-md p-5 sm:p-8 md:p-12 print:p-6 print:shadow-none"
-  role="tabpanel"
-  aria-labelledby="tab-blocco3"
-  data-section="occupazione">
+<div class="group border border-gray-300 rounded-xl bg-white shadow-sm hover:shadow-md transition flex flex-col justify-between p-5 sm:p-6">
+  <div>
+    <h4 class="text-[15px] font-semibold text-gray-900 mb-1">2.3 · Occupazione – Disoccupazione, Partecipazione, E/P Ratio</h4>
+    <p class="text-[13px] text-gray-600 mb-3 leading-snug">
+      Analisi del mercato del lavoro con metriche istituzionali e trend forward per le economie Core DM.
+    </p>
+    <ul class="text-[13px] text-gray-700 space-y-1 border-t border-gray-200 pt-3">
+      <li><span class="font-medium text-gray-800">Disoccupazione:</span> % forza lavoro attiva</li>
+      <li><span class="font-medium text-gray-800">Partecipazione:</span> % popolazione in età lavorativa</li>
+      <li><span class="font-medium text-gray-800">E/P Ratio:</span> % occupati su popolazione totale</li>
+      <li><span class="font-medium text-gray-800">Trend:</span> direzione qualitativa del mercato del lavoro</li>
+    </ul>
+  </div>
+  <div class="mt-5">
+    <button 
+      class="inline-flex items-center text-[13px] font-medium text-indigo-600 hover:text-indigo-700 transition"
+      onclick="openDrawer('drawer-occupazione')"
+    >
+      Leggi tutto
+      <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  </div>
+</div>
 
-  <header class="mb-8 border-b border-gray-200 pb-4 flex items-start justify-between gap-4">
-    <div>
-      <h2 class="text-[clamp(1.4rem,2vw,1.875rem)] font-semibold tracking-tight text-gray-900" id="heading-blocco3">
-        Blocco 3 · Occupazione
-      </h2>
-      <p class="mt-2 text-[clamp(.95rem,1.5vw,1rem)] text-gray-600 leading-relaxed max-w-3xl">
-        Analisi del mercato del lavoro con metriche istituzionali e trend forward per le economie Core DM.
-      </p>
-    </div>
-    <div class="text-right shrink-0">
-      <p class="text-xs text-gray-500">Aggiornato al</p>
-      <time datetime="2025-08-23" class="text-xs font-medium text-gray-700">23 Ago 2025</time>
-    </div>
-  </header>
+<!-- Overlay + Drawer -->
+<div id="drawer-occupazione-overlay" class="fixed inset-0 z-40 bg-black bg-opacity-60 hidden"></div>
 
-  <div class="group border border-gray-300 rounded-xl bg-white shadow-sm hover:shadow-md transition flex flex-col justify-between p-5 sm:p-6">
-    <div>
-      <h4 class="text-[15px] font-semibold text-gray-900 mb-1">2.3 · Occupazione – Disoccupazione, Partecipazione, E/P Ratio</h4>
-      <p class="text-[13px] text-gray-600 mb-3 leading-snug">
-        Analisi del mercato del lavoro con metriche istituzionali e trend forward per le economie Core DM.
-      </p>
-      <ul class="text-[13px] text-gray-700 space-y-1 border-t border-gray-200 pt-3">
-        <li><span class="font-medium text-gray-800">Disoccupazione:</span> % forza lavoro attiva</li>
-        <li><span class="font-medium text-gray-800">Partecipazione:</span> % popolazione in età lavorativa</li>
-        <li><span class="font-medium text-gray-800">E/P Ratio:</span> % occupati su popolazione totale</li>
-        <li><span class="font-medium text-gray-800">Trend:</span> direzione qualitativa del mercato del lavoro</li>
-      </ul>
-    </div>
-    <div class="mt-5">
-      <button 
-        class="inline-flex items-center text-[13px] font-medium text-indigo-600 hover:text-indigo-700 transition"
-        onclick="openDrawer('drawer-occupazione')"
-      >
-        Leggi tutto
-        <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-        </svg>
+<div id="drawer-occupazione" class="fixed top-0 right-0 h-full w-full max-w-3xl bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 border-l border-gray-300 overflow-y-auto">
+  <div class="relative px-4 py-6 sm:px-6 lg:px-8">
+
+    <!-- Header -->
+    <div class="sticky top-0 bg-white z-10 flex items-center justify-between pb-4 border-b border-gray-200">
+      <h3 class="text-lg font-semibold text-gray-900">Occupazione – Dettaglio</h3>
+      <button class="text-sm font-medium text-indigo-600 hover:underline" onclick="closeDrawer('drawer-occupazione')">
+        Torna indietro
       </button>
     </div>
-  </div>
 
-  <!-- Overlay + Drawer -->
-  <div id="drawer-occupazione-overlay" class="fixed inset-0 z-40 bg-black bg-opacity-60 hidden"></div>
+    <!-- Metriche -->
+    <p class="text-sm text-gray-700 mt-4 mb-2">Metriche trattate:</p>
+    <ul class="list-disc pl-5 text-sm text-gray-700 space-y-1 mb-6">
+      <li>Disoccupazione: % forza lavoro attiva</li>
+      <li>Partecipazione: % popolazione in età lavorativa</li>
+      <li>E/P Ratio: % occupati su popolazione totale</li>
+      <li>Trend: direzione qualitativa del mercato del lavoro</li>
+    </ul>
 
-  <div id="drawer-occupazione" class="fixed top-0 right-0 h-full w-full max-w-3xl bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 border-l border-gray-300 overflow-y-auto">
-    <div class="relative px-4 py-6 sm:px-6 lg:px-8">
+    <!-- Tabella Attuale -->
+    <div class="overflow-x-auto mb-8">
+      <table class="min-w-full table-auto break-words text-sm text-left text-gray-800 border border-gray-400 rounded-xl">
+        <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
+          <tr>
+            <th class="px-4 py-2 border-r border-gray-300">Regione</th>
+            <th class="px-4 py-2 border-r border-gray-300">Disoccupazione</th>
+            <th class="px-4 py-2 border-r border-gray-300">Partecipazione</th>
+            <th class="px-4 py-2 border-r border-gray-300">E/P Ratio</th>
+            <th class="px-4 py-2">Trend</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium border-r border-gray-300">USA</td>
+            <td class="px-4 py-2 border-r border-gray-300">4,1%</td>
+            <td class="px-4 py-2 border-r border-gray-300">62,7%</td>
+            <td class="px-4 py-2 border-r border-gray-300">60,3%</td>
+            <td class="px-4 py-2 whitespace-normal break-words">Raffreddamento ciclico</td>
+          </tr>
+          <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium border-r border-gray-300">Eurozona</td>
+            <td class="px-4 py-2 border-r border-gray-300">6,2%</td>
+            <td class="px-4 py-2 border-r border-gray-300">75,5%</td>
+            <td class="px-4 py-2 border-r border-gray-300">58,9%</td>
+            <td class="px-4 py-2 whitespace-normal break-words">Stabilizzazione</td>
+          </tr>
+          <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium border-r border-gray-300">UK</td>
+            <td class="px-4 py-2 border-r border-gray-300">4,4%</td>
+            <td class="px-4 py-2 border-r border-gray-300">63,1%</td>
+            <td class="px-4 py-2 border-r border-gray-300">59,2%</td>
+            <td class="px-4 py-2 whitespace-normal break-words">Debolezza strutturale</td>
+          </tr>
+          <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium border-r border-gray-300">Giappone</td>
+            <td class="px-4 py-2 border-r border-gray-300">2,6%</td>
+            <td class="px-4 py-2 border-r border-gray-300">61,9%</td>
+            <td class="px-4 py-2 border-r border-gray-300">60,1%</td>
+            <td class="px-4 py-2 whitespace-normal break-words">Stabile, tensioni demografiche</td>
+          </tr>
+          <tr>
+            <td class="px-4 py-2 font-medium border-r border-gray-300">Italia</td>
+            <td class="px-4 py-2 border-r border-gray-300">6,3%</td>
+            <td class="px-4 py-2 border-r border-gray-300">59,8%</td>
+            <td class="px-4 py-2 border-r border-gray-300">57,4%</td>
+            <td class="px-4 py-2 whitespace-normal break-words">Miglioramento graduale</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-      <!-- Header -->
-      <div class="sticky top-0 bg-white z-10 flex items-center justify-between pb-4 border-b border-gray-200">
-        <h3 class="text-lg font-semibold text-gray-900">Occupazione – Dettaglio</h3>
-        <button class="text-sm font-medium text-indigo-600 hover:underline" onclick="closeDrawer('drawer-occupazione')">
-          Torna indietro
-        </button>
-      </div>
-
-      <!-- Metriche -->
-      <p class="text-sm text-gray-700 mt-4 mb-2">Metriche trattate:</p>
-      <ul class="list-disc pl-5 text-sm text-gray-700 space-y-1 mb-6">
-        <li>Disoccupazione: % forza lavoro attiva</li>
-        <li>Partecipazione: % popolazione in età lavorativa</li>
-        <li>E/P Ratio: % occupati su popolazione totale</li>
-        <li>Trend: direzione qualitativa del mercato del lavoro</li>
-      </ul>
-
-      <!-- Tabella Attuale -->
-      <div class="overflow-x-auto mb-8">
-        <table class="min-w-full table-auto break-words text-sm text-left text-gray-800 border border-gray-400 rounded-xl">
-          <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
-            <tr>
-              <th class="px-4 py-2 border-r border-gray-300">Regione</th>
-              <th class="px-4 py-2 border-r border-gray-300">Disoccupazione</th>
-              <th class="px-4 py-2 border-r border-gray-300">Partecipazione</th>
-              <th class="px-4 py-2 border-r border-gray-300">E/P Ratio</th>
-              <th class="px-4 py-2">Trend</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="border-b border-gray-300">
-              <td class="px-4 py-2 font-medium border-r border-gray-300">USA</td>
-              <td class="px-4 py-2 border-r border-gray-300">4,1%</td>
-              <td class="px-4 py-2 border-r border-gray-300">62,7%</td>
-              <td class="px-4 py-2 border-r border-gray-300">60,3%</td>
-              <td class="px-4 py-2 whitespace-normal break-words">Raffreddamento ciclico</td>
-            </tr>
-            <tr class="border-b border-gray-300">
-              <td class="px-4 py-2 font-medium border-r border-gray-300">Eurozona</td>
-              <td class="px-4 py-2 border-r border-gray-300">6,2%</td>
-              <td class="px-4 py-2 border-r border-gray-300">75,5%</td>
-              <td class="px-4 py-2 border-r border-gray-300">58,9%</td>
-              <td class="px-4 py-2 whitespace-normal break-words">Stabilizzazione</td>
-            </tr>
-            <tr class="border-b border-gray-300">
-              <td class="px-4 py-2 font-medium border-r border-gray-300">UK</td>
-              <td class="px-4 py-2 border-r border-gray-300">4,4%</td>
-              <td class="px-4 py-2 border-r border-gray-300">63,1%</td>
-              <td class="px-4 py-2 border-r border-gray-300">59,2%</td>
-              <td class="px-4 py-2 whitespace-normal break-words">Debolezza strutturale</td>
-            </tr>
-            <tr class="border-b border-gray-300">
-              <td class="px-4 py-2 font-medium border-r border-gray-300">Giappone</td>
-              <td class="px-4 py-2 border-r border-gray-300">2,6%</td>
-              <td class="px-4 py-2 border-r border-gray-300">61,9%</td>
-              <td class="px-4 py-2 border-r border-gray-300">60,1%</td>
-              <td class="px-4 py-2 whitespace-normal break-words">Stabile, tensioni demografiche</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-2 font-medium border-r border-gray-300">Italia</td>
-              <td class="px-4 py-2 border-r border-gray-300">6,3%</td>
-              <td class="px-4 py-2 border-r border-gray-300">59,8%</td>
-              <td class="px-4 py-2 border-r border-gray-300">57,4%</td>
-              <td class="px-4 py-2 whitespace-normal break-words">Miglioramento graduale</td>
-            </tr>
-          </tbody>
-                    </tbody>
-        </table>
-      </div>
-
-      <!-- Commento finale -->
-      <aside class="mt-6 p-4 border border-gray-300 border-l-4 border-l-gray-600 bg-gray-50 rounded-xl text-[14px] leading-relaxed" role="note" aria-labelledby="commento-occupazione">
-        <strong id="commento-occupazione">Commento Tradelia AI – Occupazione Core DM:</strong><br>
-        Il mercato del lavoro USA mostra segnali di raffreddamento, con disoccupazione in lieve aumento e partecipazione stabile. L’Eurozona mantiene una disoccupazione contenuta, ma con divergenze interne (Germania 3,7%, Italia 6,3%). Il Regno Unito resta fragile, penalizzato da bassa partecipazione e pressioni salariali. Il Giappone conferma la sua stabilità, ma con sfide demografiche persistenti. L’Italia mostra segnali di miglioramento, grazie al traino degli investimenti pubblici e alla tenuta dell’occupazione femminile.
-
-        <br><br>
-        <strong>Implicazione allocativa:</strong> Favorire equity USA e Giappone per resilienza occupazionale. Monitorare Eurozona per divergenze interne. Underweight UK per fragilità strutturale. Italia in osservazione per upside ciclico.
-      </aside>
+    <!-- Commento finale -->
+    <aside class="mt-6 p-4 border border-gray-300 border-l-4 border-l-gray-600 bg-gray-50 rounded-xl text-[13px] sm:text-[14px] leading-relaxed" role="note" aria-labelledby="commento-occupazione">
+      <strong id="commento-occupazione">Commento Tradelia AI – Occupazione Core DM:</strong><br>
+      Il mercato del lavoro USA mostra segnali di raffreddamento, con disoccupazione in lieve aumento e partecipazione stabile. L’Eurozona mantiene una disoccupazione contenuta, ma con divergenze interne (Germania 3,7%, Italia 6,3%). Il Regno Unito resta fragile, penalizzato da bassa partecipazione e pressioni salariali. Il Giappone conferma la sua stabilità, ma con sfide demografiche persistenti. L’Italia mostra segnali di miglioramento, grazie al traino degli investimenti pubblici e alla tenuta dell’occupazione femminile.
 
       <br><br>
-    </div>
+      <strong>Implicazione allocativa:</strong> Favorire equity USA e Giappone per resilienza occupazionale. Monitorare Eurozona per divergenze interne. Underweight UK per fragilità strutturale. Italia in osservazione per upside ciclico.
+    </aside>
+
+    <br><br>
   </div>
+</div>
+
 <hr class="my-6 border-t border-gray-200" aria-hidden="true">
 
+ <div class="group border border-gray-300 rounded-xl bg-white shadow-sm hover:shadow-md transition flex flex-col justify-between p-5 sm:p-6">
   <div>
-    
     <h4 class="text-[15px] font-semibold text-gray-900 mb-1">2.4 · Indicatori Leading, Coincident, Lagging</h4>
     <p class="text-[13px] text-gray-600 mb-3 leading-snug">
       Analisi ciclica multilivello con indicatori anticipatori, coincidenti e ritardati per le economie Core DM.
@@ -1885,8 +1863,11 @@ if (d.disclaimer) {
       </svg>
     </button>
   </div>
-  <hr class="my-6 border-t border-gray-200">
-<!-- Drawer Indicatori Ciclici -->
+</div>
+<hr class="my-6 border-t border-gray-200">
+<!-- Overlay + Drawer -->
+<div id="drawer-indicatori-overlay" class="fixed inset-0 z-40 bg-black bg-opacity-60 hidden"></div>
+
 <div id="drawer-indicatori" class="fixed top-0 right-0 h-full w-full max-w-3xl bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 border-l border-gray-300 overflow-y-auto">
   <div class="relative px-4 py-6 sm:px-6 lg:px-8">
 
@@ -1910,7 +1891,7 @@ if (d.disclaimer) {
     <!-- Tabella Leading -->
     <h4 class="text-base font-semibold text-gray-900 mb-2">Indicatori Leading</h4>
     <div class="overflow-x-auto mb-6">
-      <table class="min-w-full text-sm text-left text-gray-800 border border-gray-400 rounded-xl">
+      <table class="min-w-full table-auto break-words text-sm text-left text-gray-800 border border-gray-400 rounded-xl">
         <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
           <tr>
             <th class="px-4 py-2 border-r border-gray-300">Regione</th>
@@ -1925,28 +1906,28 @@ if (d.disclaimer) {
             <td class="px-4 py-2 font-medium border-r border-gray-300">USA</td>
             <td class="px-4 py-2 border-r border-gray-300">ISM: 49.5 / PMI: 51.2</td>
             <td class="px-4 py-2 border-r border-gray-300">—</td>
-            <td class="px-4 py-2 border-r border-gray-300">LEI: −0.4% MoM</td>
+            <td class="px-4 py-2 border-r border-gray-300">LEI: -0.4% MoM</td>
             <td class="px-4 py-2">Decelerazione</td>
           </tr>
           <tr class="border-b border-gray-300">
             <td class="px-4 py-2 font-medium border-r border-gray-300">Eurozona</td>
             <td class="px-4 py-2 border-r border-gray-300">PMI: 49.8</td>
-            <td class="px-4 py-2 border-r border-gray-300">−12.3</td>
-            <td class="px-4 py-2 border-r border-gray-300">CLI: −0.2% MoM</td>
+            <td class="px-4 py-2 border-r border-gray-300">-12.3</td>
+            <td class="px-4 py-2 border-r border-gray-300">CLI: -0.2% MoM</td>
             <td class="px-4 py-2">Ripresa fragile</td>
           </tr>
           <tr class="border-b border-gray-300">
             <td class="px-4 py-2 font-medium border-r border-gray-300">Italia</td>
             <td class="px-4 py-2 border-r border-gray-300">PMI: 47.5</td>
             <td class="px-4 py-2 border-r border-gray-300">—</td>
-            <td class="px-4 py-2 border-r border-gray-300">CLI: −0.3% MoM</td>
+            <td class="px-4 py-2 border-r border-gray-300">CLI: -0.3% MoM</td>
             <td class="px-4 py-2">In consolidamento</td>
           </tr>
           <tr class="border-b border-gray-300">
             <td class="px-4 py-2 font-medium border-r border-gray-300">UK</td>
             <td class="px-4 py-2 border-r border-gray-300">PMI: 50.1</td>
             <td class="px-4 py-2 border-r border-gray-300">—</td>
-            <td class="px-4 py-2 border-r border-gray-300">CLI: −0.5% MoM</td>
+            <td class="px-4 py-2 border-r border-gray-300">CLI: -0.5% MoM</td>
             <td class="px-4 py-2">Stagnante</td>
           </tr>
           <tr>
@@ -1963,7 +1944,7 @@ if (d.disclaimer) {
     <!-- Tabella Coincident -->
     <h4 class="text-base font-semibold text-gray-900 mb-2">Indicatori Coincident</h4>
     <div class="overflow-x-auto mb-6">
-      <table class="min-w-full text-sm text-left text-gray-800 border border-gray-400 rounded-xl">
+      <table class="min-w-full table-auto break-words text-sm text-left text-gray-800 border border-gray-400 rounded-xl">
         <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
           <tr>
             <th class="px-4 py-2 border-r border-gray-300">Regione</th>
@@ -1995,9 +1976,9 @@ if (d.disclaimer) {
             <td class="px-4 py-2 border-r border-gray-300">+0.9% YoY</td>
             <td class="px-4 py-2">Graduale</td>
           </tr>
-         <tr class="border-b border-gray-300">
+                    <tr class="border-b border-gray-300">
             <td class="px-4 py-2 font-medium border-r border-gray-300">UK</td>
-            <td class="px-4 py-2 border-r border-gray-300">−0.2% YoY</td>
+            <td class="px-4 py-2 border-r border-gray-300">-0.2% YoY</td>
             <td class="px-4 py-2 border-r border-gray-300">Debole</td>
             <td class="px-4 py-2 border-r border-gray-300">+0.5% YoY</td>
             <td class="px-4 py-2">Piattismo</td>
@@ -2016,7 +1997,7 @@ if (d.disclaimer) {
     <!-- Tabella Lagging -->
     <h4 class="text-base font-semibold text-gray-900 mb-2">Indicatori Lagging</h4>
     <div class="overflow-x-auto mb-6">
-      <table class="min-w-full text-sm text-left text-gray-800 border border-gray-400 rounded-xl">
+      <table class="min-w-full table-auto break-words text-sm text-left text-gray-800 border border-gray-400 rounded-xl">
         <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
           <tr>
             <th class="px-4 py-2 border-r border-gray-300">Regione</th>
@@ -2067,8 +2048,8 @@ if (d.disclaimer) {
     </div>
 
     <!-- Commento finale -->
-    <aside class="mt-6 p-4 border border-gray-300 border-l-4 border-l-gray-600 bg-gray-50 rounded-xl text-[14px] leading-relaxed">
-      <strong>Commento Tradelia AI – Indicatori Ciclici:</strong><br>
+    <aside class="mt-6 p-4 border border-gray-300 border-l-4 border-l-gray-600 bg-gray-50 rounded-xl text-[13px] sm:text-[14px] leading-relaxed" role="note" aria-labelledby="commento-indicatori">
+      <strong id="commento-indicatori">Commento Tradelia AI – Indicatori Ciclici:</strong><br>
       Gli indicatori leading segnalano una transizione ciclica: gli USA mostrano decelerazione, mentre l’Eurozona e l’Italia tentano una ripresa moderata. Il Giappone si conferma stabile, con PMI sopra soglia espansiva. Il Regno Unito resta il più fragile, con CLI negativi e stagnazione diffusa.
 
       Gli indicatori coincidenti confermano una tenuta dell’attività reale, ma con divergenze regionali. I lagging mostrano che l’inflazione resta elevata ma in discesa, con profitti aziendali in moderata ripresa.
@@ -2076,6 +2057,7 @@ if (d.disclaimer) {
       <br><br>
       <strong>Implicazione allocativa:</strong> Favorire asset ciclici in Eurozona e Italia nel medio termine. Mantenere esposizione difensiva su Giappone. Ridurre esposizione UK per rischio stagnazione.
     </aside>
+
     <br><br>
   </div>
 </div>
