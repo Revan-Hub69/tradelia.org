@@ -1359,20 +1359,18 @@ if (d.disclaimer) {
 <div id="drawer-pil" class="fixed top-0 right-0 h-full w-full max-w-3xl bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 border-l border-gray-300 overflow-y-auto">
   <div class="relative px-4 py-6 sm:px-6 lg:px-8">
 
-  <!-- Titolo statico dentro il drawer -->
-<div class="mb-4">
+<div class="sticky top-0 bg-white z-50 flex items-center justify-between py-3 border-b border-gray-200">
   <h3 class="text-[15px] sm:text-lg font-semibold text-gray-900 leading-tight">
     2.1 · PIL Reale & Potenziale – Dettaglio
   </h3>
+  <button 
+    class="text-[13px] font-medium text-indigo-600 hover:text-indigo-700 transition"
+    onclick="closeDrawer('drawer-pil')"
+  >
+    Chiudi
+  </button>
 </div>
 
-<!-- Pulsante Chiudi fluttuante, sempre visibile -->
-<button 
-  class="fixed top-4 right-4 z-[60] text-[13px] font-medium text-indigo-600 hover:text-indigo-700 transition"
-  onclick="closeDrawer('drawer-pil')"
->
-  Chiudi
-</button>
 
 
     <!-- Introduzione didattica -->
