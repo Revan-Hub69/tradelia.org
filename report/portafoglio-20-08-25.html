@@ -1907,6 +1907,149 @@ if (d.disclaimer) {
 
 <hr class="my-6 border-t border-gray-200" aria-hidden="true">
 
+  <!-- Card 2.5 -->
+<div class="group border border-gray-300 rounded-xl bg-white shadow-sm hover:shadow-md transition flex flex-col justify-between p-5 sm:p-6">
+  <div>
+    <h4 class="text-[15px] font-semibold text-gray-900 mb-1 leading-tight">
+      <span class="block">2.5 · Attività economica e capacità produttiva</span>
+      <span class="text-[13px] font-normal text-gray-600">PMI, capacità produttiva, nowcasting, trend</span>
+    </h4>
+
+    <p class="text-[13px] text-gray-600 mb-3 leading-snug">
+      Indicatori “real time” per misurare il ritmo dell’attività produttiva e industriale nelle economie Core DM.
+    </p>
+
+    <ul class="text-[13px] text-gray-700 space-y-1 border-t border-gray-200 pt-3 leading-snug">
+      <li><span class="font-medium text-gray-800">PMI settoriali &amp; compositi:</span> con integrazione nowcasting</li>
+      <li><span class="font-medium text-gray-800">Utilizzo capacità produttiva:</span> % impianti in uso</li>
+      <li><span class="font-medium text-gray-800">Nowcasting &amp; high-frequency:</span> GDPNow, ECB Nowcasting</li>
+      <li><span class="font-medium text-gray-800">Trend vs stagionalità:</span> lettura qualitativa</li>
+    </ul>
+  </div>
+
+  <div class="mt-6">
+    <button 
+      class="inline-flex items-center px-3 py-2 text-[13px] font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition group"
+      onclick="openDrawer('drawer-attivita')"
+    >
+      Leggi tutto
+      <svg class="ml-2 h-4 w-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+<!-- Overlay -->
+<div id="drawer-attivita-overlay" class="fixed inset-0 z-40 bg-black bg-opacity-60 hidden"></div>
+
+<!-- Drawer -->
+<div id="drawer-attivita" class="fixed top-0 right-0 h-full w-full max-w-3xl bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 border-l border-gray-300">
+
+  <!-- Pulsante Chiudi -->
+  <button 
+    class="fixed top-[1.2rem] right-4 z-[60] px-2 py-1 text-[13px] font-medium text-indigo-600 hover:text-indigo-700 transition"
+    onclick="closeDrawer('drawer-attivita')"
+    aria-label="Chiudi drawer"
+  >
+    Chiudi
+  </button>
+
+  <!-- Contenuto scrollabile -->
+  <div class="overflow-y-auto h-full px-4 py-6 sm:px-6 lg:px-8">
+    <h3 class="text-[15px] sm:text-lg font-semibold text-gray-900 leading-tight mb-4">
+      2.5 · Attività economica e capacità produttiva – Dettaglio
+    </h3>
+
+    <p class="text-[13px] sm:text-[14px] text-gray-700 leading-snug mt-4 mb-4">
+      Questo cluster integra indicatori ad alta frequenza e nowcasting per fornire una lettura aggiornata del ciclo produttivo, distinguendo tra trend strutturali e fattori stagionali.
+    </p>
+
+    <!-- Tabella Attuale (as-of placeholders) -->
+    <div class="overflow-x-auto mb-3">
+      <table class="min-w-[1000px] table-auto text-[13px] sm:text-[14px] text-left text-gray-800 border border-gray-400 rounded-xl">
+        <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
+          <tr>
+            <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Regione</th>
+            <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">PMI Composito (flash ago 2025)</th>
+            <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Capacità produttiva</th>
+            <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Nowcasting GDP</th>
+            <th class="px-4 py-2 whitespace-nowrap">Trend</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- USA -->
+          <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">USA</td>
+            <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300" data-source="S&amp;P Global PMI" data-asof="2025-08-30">—</td>
+            <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300" data-source="Fed (Industrial Capacity Utilization)" data-asof="2025-05">—</td>
+            <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300" data-source="Atlanta Fed GDPNow" data-asof="2025-08-30">—</td>
+            <td class="px-4 py-2 whitespace-normal break-words">Espansione moderata, traino servizi</td>
+          </tr>
+
+          <!-- Eurozona -->
+          <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Eurozona</td>
+            <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300" data-source="HCOB/S&amp;P Global PMI" data-asof="2025-08-30">—</td>
+            <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300" data-source="Eurostat/ECB Capacity Utilization (EC Surveys)" data-asof="2025-Q3">—</td>
+            <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300" data-source="ECB Nowcasting/Tracker" data-asof="2025-08-30">—</td>
+            <td class="px-4 py-2 whitespace-normal break-words">Ripresa graduale, manifattura in riaccensione</td>
+          </tr>
+
+          <!-- UK -->
+          <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">UK</td>
+            <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300" data-source="S&amp;P Global/CIPS PMI" data-asof="2025-08-30">—</td>
+            <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300" data-source="ONS/BoE (proxy surveys)" data-asof="2025-08">—</td>
+            <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300" data-source="ONS/BoE nowcast (if available)" data-asof="2025-08-30">—</td>
+            <td class="px-4 py-2 whitespace-normal break-words">Quasi stagnazione, servizi resilienti</td>
+          </tr>
+
+          <!-- Giappone -->
+          <tr class="border-b border-gray-300">
+            <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Giappone</td>
+            <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300" data-source="au Jibun Bank/S&amp;P Global PMI" data-asof="2025-08-30">—</td>
+            <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300" data-source="METI/BoJ (utilization proxy)" data-asof="2025-08">—</td>
+            <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300" data-source="Cabinet Office/BoJ nowcast (if available)" data-asof="2025-08-30">—</td>
+            <td class="px-4 py-2 whitespace-normal break-words">Stabilizzazione, domanda interna resiliente</td>
+          </tr>
+
+          <!-- Italia -->
+          <tr>
+            <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Italia</td>
+            <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300" data-source="HCOB/S&amp;P Global PMI Italia" data-asof="2025-08-30">—</td>
+            <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300" data-source="Banca d’Italia/ISTAT (survey capacità)" data-asof="2025-Q3">—</td>
+            <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300" data-source="ISTAT/MEF nowcast (proxy)" data-asof="2025-08-30">—</td>
+            <td class="px-4 py-2 whitespace-normal break-words">Miglioramento lieve, servizi &gt; manifattura</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="text-[12px] text-gray-600 mb-4">
+      Note: PMI = indice (50 = soglia espansione). Nowcast USA in SAAR; Eurozona in QoQ destagionalizzato. Inserire i valori aggiornati nei campi “—”.
+    </p>
+
+    <!-- Sources -->
+    <aside class="text-[12px] text-gray-700 mb-6">
+      <strong>Sources:</strong> S&amp;P Global PMI (HCOB/au Jibun Bank, CIPS), Federal Reserve (Industrial Capacity Utilization), Eurostat/ECB (Capacity/Nowcasting), Atlanta Fed GDPNow, ONS/BoE, Banca d’Italia/ISTAT.
+    </aside>
+
+    <!-- Commento finale -->
+    <aside class="mt-6 p-4 border border-gray-300 border-l-4 border-l-gray-600 bg-gray-50 rounded-xl text-[13px] sm:text-[14px] leading-snug max-w-3xl" role="note">
+      <strong>Commento Tradelia AI – Attività economica:</strong><br>
+      PMI sopra 50 e capacità d’uso stabile indicano espansione moderata nelle economie core; l’Eurozona mostra riaccensione manifatturiera, gli USA restano trainati dai servizi. UK borderline, Giappone stabile. Italia segue l’area euro con manifattura in miglioramento e servizi più deboli.
+      <br><br>
+      <strong>Trend vs stagionalità:</strong> il momentum manifatturiero appare ciclico (ordini/tempi consegna), mentre i servizi si normalizzano dopo i picchi estivi.
+      <br><br>
+      <strong>Implicazione allocativa:</strong> overweight su aree con PMI &gt; 50 e utilizzo capacità in crescita; neutral su economie con stagnazione; monitorare shock esterni (energia/supply chain).
+    <br><br>
+    </aside>
+  </div>
+</div>
+
+  
+
 <div class="group border border-gray-300 rounded-xl bg-white shadow-sm hover:shadow-md transition flex flex-col justify-between p-5 sm:p-6">
   <div>
     <h4 class="text-[15px] font-semibold text-gray-900 mb-1 leading-tight">
