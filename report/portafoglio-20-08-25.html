@@ -1351,25 +1351,27 @@ if (d.disclaimer) {
   </div>
 </div>
 
-  
-
-<!-- Overlay + Drawer -->
+ <!-- Overlay -->
 <div id="drawer-pil-overlay" class="fixed inset-0 z-40 bg-black bg-opacity-60 hidden"></div>
 
-<div id="drawer-pil" class="fixed top-0 right-0 h-full w-full max-w-3xl bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 border-l border-gray-300 overflow-y-auto">
-  <div class="relative px-4 py-6 sm:px-6 lg:px-8">
+<!-- Drawer -->
+<div id="drawer-pil" class="fixed top-0 right-0 h-full w-full max-w-3xl bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 border-l border-gray-300">
 
-<div class="sticky top-0 bg-white z-50 flex items-center justify-between py-3 border-b border-gray-200">
-  <h3 class="text-[15px] sm:text-lg font-semibold text-gray-900 leading-tight">
-    2.1 · PIL Reale & Potenziale – Dettaglio
-  </h3>
+  <!-- Pulsante Chiudi fluttuante -->
   <button 
-    class="text-[13px] font-medium text-indigo-600 hover:text-indigo-700 transition"
+    class="fixed top-[1.2rem] right-4 z-[60] px-2 py-1 text-[13px] font-medium text-indigo-600 hover:text-indigo-700 transition"
     onclick="closeDrawer('drawer-pil')"
+    aria-label="Chiudi drawer"
   >
     Chiudi
   </button>
-</div>
+
+  <!-- Contenuto scrollabile -->
+  <div class="overflow-y-auto h-full px-4 py-6 sm:px-6 lg:px-8">
+    <h3 class="text-[15px] sm:text-lg font-semibold text-gray-900 leading-tight mb-4">
+      2.1 · PIL Reale & Potenziale – Dettaglio
+    </h3>
+
 
 
 
@@ -2716,31 +2718,21 @@ document.addEventListener('DOMContentLoaded', () => {
     overlay.classList.remove('hidden');
     document.body.classList.add('overflow-hidden');
 
-    // Chiudi cliccando sull'overlay
     overlay.onclick = () => closeDrawer(id);
 
-    // Aggiungi stato alla history per intercettare "indietro"
     history.pushState({ drawerOpen: id }, '', '');
 
-    // Ascolta tasto ESC
-    document.addEventListener('keydown', escHandler);
+    const escHandler = (e) => {
+      if (e.key === 'Escape') closeDrawer(id);
+    };
 
-    // Ascolta evento "indietro"
+    const popHandler = () => {
+      closeDrawer(id);
+    };
+
+    document.addEventListener('keydown', escHandler);
     window.addEventListener('popstate', popHandler);
 
-    function escHandler(e) {
-      if (e.key === 'Escape') {
-        closeDrawer(id);
-      }
-    }
-
-    function popHandler(e) {
-      if (e.state && e.state.drawerOpen === id) {
-        closeDrawer(id);
-      }
-    }
-
-    // Salva i listener per rimozione successiva
     drawer._escHandler = escHandler;
     drawer._popHandler = popHandler;
   }
@@ -2753,13 +2745,9 @@ document.addEventListener('DOMContentLoaded', () => {
     overlay.classList.add('hidden');
     document.body.classList.remove('overflow-hidden');
 
-    // Rimuovi listener
     document.removeEventListener('keydown', drawer._escHandler);
     window.removeEventListener('popstate', drawer._popHandler);
 
-    // Torna indietro nella history se necessario
-    if (history.state && history.state.drawerOpen === id) {
-      history.back();
-    }
+    history.replaceState(null, '', '');
   }
 </script>
