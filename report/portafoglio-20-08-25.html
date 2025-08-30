@@ -1359,18 +1359,21 @@ if (d.disclaimer) {
 <div id="drawer-pil" class="fixed top-0 right-0 h-full w-full max-w-3xl bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 border-l border-gray-300 overflow-y-auto">
   <div class="relative px-4 py-6 sm:px-6 lg:px-8">
 
-    <!-- Header -->
-    <div class="sticky top-0 bg-white z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-4 border-b border-gray-200">
-      <h3 class="text-[15px] sm:text-lg font-semibold text-gray-900 leading-tight">
-        2.1 · PIL Reale & Potenziale – Dettaglio
-      </h3>
-      <button 
-        class="px-3 py-1 text-[13px] font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition"
-        onclick="closeDrawer('drawer-pil')"
-      >
-        Chiudi
-      </button>
-    </div>
+  <!-- Titolo statico dentro il drawer -->
+<div class="mb-4">
+  <h3 class="text-[15px] sm:text-lg font-semibold text-gray-900 leading-tight">
+    2.1 · PIL Reale & Potenziale – Dettaglio
+  </h3>
+</div>
+
+<!-- Pulsante Chiudi fluttuante, sempre visibile -->
+<button 
+  class="fixed top-4 right-4 z-[60] text-[13px] font-medium text-indigo-600 hover:text-indigo-700 transition"
+  onclick="closeDrawer('drawer-pil')"
+>
+  Chiudi
+</button>
+
 
     <!-- Introduzione didattica -->
     <p class="text-[13px] sm:text-[14px] text-gray-700 leading-snug mt-4 mb-4">
@@ -1391,9 +1394,6 @@ if (d.disclaimer) {
     <hr class="my-6 border-t border-gray-200">
 
     <div class="overflow-x-auto mb-2">
-  <div class="sticky top-[56px] bg-white z-10 text-[13px] font-medium text-gray-700 mb-2">
-    PIL Attuale – Q2 2025
-  </div>
   <table class="min-w-[1000px] table-auto text-[13px] sm:text-[14px] text-left text-gray-800 border border-gray-400 rounded-xl">
     <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
       <tr>
