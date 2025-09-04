@@ -307,27 +307,65 @@
         </div>
       </section>
 
-      <!-- STEP 1 – Dati anagrafici e fiscali -->
-      <section class="step hidden" data-step="1">
-        <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">1) Dati anagrafici e fiscali</h4>
-        <p class="text-[12px] text-slate-500 mb-3 md:mb-4">Servono solo per calibrare orizzonte e tassazione a livello generale.</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-          <label>Età *
-            <select name="eta" class="w-full border rounded px-3 py-2" required>
-              <option value="">Seleziona</option>
-              <option>18–30</option><option>31–45</option><option>46–60</option><option>61+</option>
-            </select>
-            <span class="text-[11px] text-slate-500">Fasce, non cifre precise.</span>
-          </label>
-          <label>Area fiscale *
-            <select name="area_fiscale" class="w-full border rounded px-3 py-2" required>
-              <option value="">Seleziona</option>
-              <option>Italia</option><option>UE (non IT)</option><option>UK</option><option>USA</option><option>Altro</option>
-            </select>
-          </label>
-          <div class="md:col-span-1"></div>
-        </div>
-      </section>
+  <!-- STEP 1 – Dati anagrafici e fiscali -->
+<section class="step hidden" data-step="1">
+  <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">
+    1) Dati anagrafici e fiscali
+  </h4>
+  <p class="text-[12px] text-slate-500 mb-3 md:mb-4">
+    Servono per calibrare orizzonte, tassazione e stabilità finanziaria a livello generale.
+  </p>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+    <!-- Età -->
+    <label>Età *
+      <select name="eta" class="w-full border rounded px-3 py-2" required>
+        <option value="">Seleziona</option>
+        <option>&lt;18</option>
+        <option>18–24</option>
+        <option>25–34</option>
+        <option>35–44</option>
+        <option>45–54</option>
+        <option>55–64</option>
+        <option>≥65</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        La fascia di età incide sull’orizzonte temporale e sulla tolleranza al rischio.
+        <em>Fonte: Bodie, Kane, Marcus – Investments, McGraw‑Hill</em>
+      </span>
+    </label>
+
+    <!-- Area fiscale -->
+    <label>Area fiscale *
+      <select name="area_fiscale" class="w-full border rounded px-3 py-2" required>
+        <option value="">Seleziona</option>
+        <option>Italia</option>
+        <option>UE (non IT)</option>
+        <option>UK</option>
+        <option>USA</option>
+        <option>Altro</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Determina il regime fiscale applicabile agli investimenti.
+      </span>
+    </label>
+
+    <!-- Stabilità reddito -->
+    <label>Stabilità reddito *
+      <select name="stabilita_reddito" class="w-full border rounded px-3 py-2" required>
+        <option value="">Seleziona</option>
+        <option>Stabile</option>
+        <option>Moderatamente variabile</option>
+        <option>Altamente variabile</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Indica quanto il reddito annuale è soggetto a variazioni: maggiore stabilità riduce il rischio di liquidità e consente strategie più aggressive.
+        <em>Fonte: Lusardi, A. & Mitchell, O.S. (2014). The Economic Importance of Financial Literacy. Journal of Economic Literature</em>
+      </span>
+    </label>
+  </div>
+</section>
+
 
       <!-- STEP 2 – Capitale -->
       <section class="step hidden" data-step="2">
