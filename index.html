@@ -1232,73 +1232,133 @@
   }
 
   // ===== Build Payload =====
-  function buildPayload(){
-    const fd = new FormData(document.getElementById('form-portafoglio'));
-    const strumenti = [];
-    document.querySelectorAll('input[name="strumenti_usati"]:checked')
-      .forEach(x=> strumenti.push(x.value));
+function buildPayload(){
+  const fd = new FormData(document.getElementById('form-portafoglio'));
 
-    const pos = [];
-    document.querySelectorAll('#val-positions > .border.rounded-xl, #val-positions > .border.rounded-lg')
-      .forEach(card=>{
-        const q = sel => card.querySelector(sel)?.value?.trim();
-        const pct = parseFloat(q('[name$="[pct]"]'));
-        const nome = q('[name$="[nome]"]');
-        if(nome || !isNaN(pct)){
-          pos.push({
-            nome: nome||null,
-            pct: isNaN(pct)?null:pct,
-            id: q('[name$="[id]"]')||null,
-            qty: q('[name$="[qty]"]')||null,
-            px: q('[name$="[px]"]')||null,
-            ccy: q('[name$="[ccy]"]')||null
-          });
-        }
-      });
+  // strumenti usati (checkbox multipli)
+  const strumenti = [];
+  document.querySelectorAll('input[name="strumenti_usati"]:checked')
+    .forEach(x=> strumenti.push(x.value));
 
-    const mode = document.querySelector('input[name=tipo_analisi]:checked')?.value || null;
-    const pacStato = fd.get('pac_stato') || null; // nuovo campo stato PAC
+  // posizioni portafoglio (step 9)
+  const pos = [];
+  document.querySelectorAll('#val-positions > .border.rounded-xl, #val-positions > .border.rounded-lg')
+    .forEach(card=>{
+      const q = sel => card.querySelector(sel)?.value?.trim();
+      const pct = parseFloat(q('[name$="[pct]"]'));
+      const nome = q('[name$="[nome]"]');
+      if(nome || !isNaN(pct)){
+        pos.push({
+          nome: nome||null,
+          pct: isNaN(pct)?null:pct,
+          id: q('[name$="[id]"]')||null,
+          qty: q('[name$="[qty]"]')||null,
+          px: q('[name$="[px]"]')||null,
+          ccy: q('[name$="[ccy]"]')||null
+        });
+      }
+    });
 
-    const Profilo_Investitore = {
-      dati_anagrafici: {
-        eta: readValue(fd,'eta'),
-        area_fiscale: readValue(fd,'area_fiscale'),
-        situazione_patrimoniale: { valore: null }
-      },
-      capitale_liquidita: {
-        capitale_totale: readValue(fd,'capitale_totale'),
-        capitale_investibile: readValue(fd,'capitale_investibile'),
-        cash_buffer: { valore: null }
-      },
-      orizzonte_temporale: {
-        anni_obiettivo: readValue(fd,'anni_obiettivo'),
-        milestone: { valore: (fd.get('milestone')||'').trim()||null }
-      },
-      rischio_rendimento: {
-        tolleranza_rischio: readValue(fd,'tolleranza_rischio'),
-        drawdown_tollerato: readValue(fd,'drawdown_tollerato'),
-        rendimento_obiettivo: readValue(fd,'rendimento_obiettivo'),
-        elasticita_drawdown: readValue(fd,'elasticita_drawdown'),
-        rnd_tipo: (fd.get('rnd_tipo')||'Nominale')
-      },
-      esperienza_conoscenza: {
-        anni_esperienza: readValue(fd,'anni_esperienza'),
-        strumenti_usati: { valore: strumenti },
-        competenza_prodotti_complessi: readValue(fd,'competenza_prodotti_complessi')
-      },
-      vincoli_preferenze: {
-        ESG: { valore: fd.get('ESG')||'Nessuno' },
-        ESG_note: { valore: (fd.get('ESG_note')||'').trim()||null },
-        preferenza_valutaria: { valore: fd.get('preferenza_valutaria')||'EUR' },
-        vincoli_asset_class: { valore:(fd.get('vincoli_asset_class')||'').trim()||null }
-      },
-      contesto_macro_personale: {
-        dipendenza_reddito: readValue(fd,'dipendenza_reddito'),
-        prospettiva_fiscale: { valore:(fd.get('prospettiva_fiscale')||'').trim()||null }
-      },
-      pac: (() => {
-        if (pacStato === 'attivo') {
-          return {
+  const mode = document.querySelector('input[name=tipo_analisi]:checked')?.value || null;
+  const pacStato = fd.get('pac_stato') || null; // attivo / nuovo / assente (se presente)
+
+  const Profilo_Investitore = {
+    // STEP 1 – Dati anagrafici e fiscali (+ stabilità reddito)
+    dati_anagrafici: {
+      eta: readValue(fd,'eta'),
+      area_fiscale: readValue(fd,'area_fiscale'),
+      stabilita_reddito: readValue(fd,'stabilita_reddito'),
+      situazione_patrimoniale: { valore: null }
+    },
+
+    // STEP 2 – Capitale (+ passività)
+    capitale_liquidita: {
+      capitale_totale: readValue(fd,'capitale_totale'),
+      capitale_investibile: readValue(fd,'capitale_investibile'),
+      passivita: readValue(fd,'passivita'),
+      cash_buffer: { valore: null }
+    },
+
+    // STEP 3 – Orizzonte (+ priorità temporale)
+    orizzonte_temporale: {
+      anni_obiettivo: readValue(fd,'anni_obiettivo'),
+      priorita_temporale: readValue(fd,'priorita_temporale'),
+      milestone: { valore: (fd.get('milestone')||'').trim()||null }
+    },
+
+    // STEP 4 – Rischio & rendimento
+    rischio_rendimento: {
+      propensione_rischio: readValue(fd,'propensione_rischio'),
+      capacita_perdita: readValue(fd,'capacita_perdita'),
+      tolleranza_rischio: readValue(fd,'tolleranza_rischio'),
+      drawdown_tollerato: readValue(fd,'drawdown_tollerato'),
+      rendimento_obiettivo: readValue(fd,'rendimento_obiettivo'),
+      elasticita_drawdown: readValue(fd,'elasticita_drawdown'),
+      rnd_tipo: (fd.get('rnd_tipo')||'Nominale')
+    },
+
+    // STEP 5 – Esperienza
+    esperienza_conoscenza: {
+      anni_esperienza: readValue(fd,'anni_esperienza'),
+      strumenti_usati: { valore: strumenti },
+      competenza_prodotti_complessi: readValue(fd,'competenza_prodotti_complessi'),
+      frequenza_operazioni: readValue(fd,'frequenza_operazioni')
+    },
+
+    // STEP 6 – Vincoli & preferenze
+    vincoli_preferenze: {
+      ESG: { valore: fd.get('ESG')||'Nessuno' },
+      ESG_note: { valore: (fd.get('ESG_note')||'').trim()||null },
+      preferenza_valutaria: { valore: fd.get('preferenza_valutaria')||'EUR' },
+      vincoli_asset_class: { valore:(fd.get('vincoli_asset_class')||'').trim()||null },
+      liquidita_immediata: readValue(fd,'liquidita_immediata'),
+      vincoli_legali_fiscali: { valore:(fd.get('vincoli_legali_fiscali')||'').trim()||null }
+    },
+
+    // STEP 7 – Reddito & fiscale
+    contesto_macro_personale: {
+      reddito_annuo_lordo: readValue(fd,'reddito_annuo_lordo'),
+      tasso_risparmio: readValue(fd,'tasso_risparmio'),
+      dipendenza_reddito: readValue(fd,'dipendenza_reddito'),
+      prospettiva_fiscale: { valore:(fd.get('prospettiva_fiscale')||'').trim()||null }
+    },
+
+    // STEP 8 – PAC
+    pac: (() => {
+      if (pacStato === 'attivo') {
+        return {
+          presenza: { valore: 'Sì' },
+          stato: { valore: 'Attivo' },
+          tipo: { valore: fd.get('pac_tipo')||null },
+          frequenza: { valore: fd.get('pac_frequenza')||null },
+          importo_rata: { valore: fd.get('pac_importo')||null },
+          durata: { valore: fd.get('pac_durata')||null },
+          rivalutazione_rata: { valore: fd.get('pac_rivalutazione')||null },
+          asset_target: { valore: (fd.get('pac_asset_target')||'').trim()||null },
+          note: { valore: (fd.get('pac_note')||'').trim()||null }
+        };
+      }
+      if (pacStato === 'nuovo') {
+        return {
+          presenza: { valore: 'No (in attivazione)' },
+          stato: { valore: 'Nuovo' },
+          reddito_lordo: { valore: fd.get('pac_reddito_lordo')||null },
+          tasso_risparmio: { valore: fd.get('pac_tasso_risparmio')||null },
+          buffer_emergenza: { valore: fd.get('pac_buffer_emergenza')||null },
+          quota_risparmio_PAC: { valore: fd.get('pac_quota_risparmio')||null },
+          frequenza_proposta: { valore: fd.get('pac_frequenza_new')||'Mensile' },
+          rata_suggerita: { valore: fd.get('pac_rata_suggerita')||null },
+          coerenza_orizzonte: { valore: fd.get('pac_coerenza_orizzonte')||null },
+          asset_target_idea: { valore: (fd.get('pac_asset_target_new')||'').trim()||null }
+        };
+      }
+      if (pacStato === 'nessuno' || pacStato === 'assente') {
+        return { presenza: { valore: 'No' }, stato: { valore: 'Assente' } };
+      }
+      // fallback vecchia logica
+      const pacOn = !!document.querySelector('input[name="pac_presenza"]')?.checked;
+      return pacOn
+        ? {
             presenza: { valore: 'Sì' },
             stato: { valore: 'Attivo' },
             tipo: { valore: fd.get('pac_tipo')||null },
@@ -1308,65 +1368,49 @@
             rivalutazione_rata: { valore: fd.get('pac_rivalutazione')||null },
             asset_target: { valore: (fd.get('pac_asset_target')||'').trim()||null },
             note: { valore: (fd.get('pac_note')||'').trim()||null }
-          };
-        }
-        if (pacStato === 'nuovo') {
-          return {
-            presenza: { valore: 'No (in attivazione)' },
-            stato: { valore: 'Nuovo' },
-            reddito_lordo: { valore: fd.get('pac_reddito_lordo')||null },
-            tasso_risparmio: { valore: fd.get('pac_tasso_risparmio')||null },
-            buffer_emergenza: { valore: fd.get('pac_buffer_emergenza')||null },
-            quota_risparmio_PAC: { valore: fd.get('pac_quota_risparmio')||null },
-            frequenza_proposta: { valore: fd.get('pac_frequenza_new')||'Mensile' },
-            rata_suggerita: { valore: fd.get('pac_rata_suggerita')||null },
-            coerenza_orizzonte: { valore: fd.get('pac_coerenza_orizzonte')||null },
-            asset_target_idea: { valore: (fd.get('pac_asset_target_new')||'').trim()||null }
-          };
-        }
-        if (pacStato === 'nessuno' || pacStato === 'assente') {
-          return { presenza: { valore: 'No' }, stato: { valore: 'Assente' } };
-        }
-        // fallback vecchia logica
-        const pacOn = !!document.querySelector('input[name="pac_presenza"]')?.checked;
-        return pacOn
-          ? {
-              presenza: { valore: 'Sì' },
-              stato: { valore: 'Attivo' },
-              tipo: { valore: fd.get('pac_tipo')||null },
-              frequenza: { valore: fd.get('pac_frequenza')||null },
-              importo_rata: { valore: fd.get('pac_importo')||null },
-              durata: { valore: fd.get('pac_durata')||null },
-              rivalutazione_rata: { valore: fd.get('pac_rivalutazione')||null },
-              asset_target: { valore: (fd.get('pac_asset_target')||'').trim()||null },
-              note: { valore: (fd.get('pac_note')||'').trim()||null }
-            }
-          : { presenza: { valore: 'No' }, stato: { valore: 'Assente' } };
-      })(),
-      portafoglio_attuale: (mode==='validazione') ? {
-        allocazione: { valore: fd.get('allocazione_core_satellite')||'n/d' },
-        performance_storica: { valore: null },
-        volatilita_drawdown: { valore: { vol: fd.get('volatilita_drawdown_vol')||'n/d', dd: fd.get('volatilita_drawdown_dd')||'n/d' } },
-        coperture: { valore:(fd.get('coperture')||'').trim()||null },
-        posizioni: { valore: pos },
-        controllo_coerenza: { esito: !!fd.get('controllo_coerenza_allocativa'), descrizione: null, validazione_colore: null }
-      } : null
-    };
-
-    return {
-      servizio: 'profilo_investitore',
-      tipo_analisi: mode,
-      Profilo_Investitore,
-      recapiti: {
-        email: (fd.get('email')||'').trim()||null,
-        whatsapp: (fd.get('whatsapp')||'').trim()||null
+          }
+        : { presenza: { valore: 'No' }, stato: { valore: 'Assente' } };
+    })(),
+    // STEP 9 – Portafoglio attuale
+    portafoglio_attuale: (mode==='validazione') ? {
+      allocazione: { valore: fd.get('allocazione_core_satellite')||'n/d' },
+      performance_storica: { valore: null },
+      volatilita_drawdown: { 
+        valore: { 
+          vol: fd.get('volatilita_drawdown_vol')||'n/d', 
+          dd: fd.get('volatilita_drawdown_dd')||'n/d' 
+        } 
       },
-      sharing: {
-        visibility: fd.get('share_visibility')||'pubblico',
-        password: (fd.get('share_visibility')==='privato' ? (fd.get('share_password')||null) : null)
+      coperture: { valore:(fd.get('coperture')||'').trim()||null },
+      posizioni: { valore: pos },
+      controllo_coerenza: { 
+        esito: !!fd.get('controllo_coerenza_allocativa'), 
+        descrizione: null, 
+        validazione_colore: null 
       }
-    };
-  }
+    } : null
+  };
+
+  return {
+    servizio: 'profilo_investitore',
+    tipo_analisi: mode,
+    Profilo_Investitore,
+    recapiti: {
+      email: (fd.get('email')||'').trim()||null,
+      whatsapp: (fd.get('whatsapp')||'').trim()||null
+    },
+    sharing: {
+      visibility: fd.get('share_visibility')||'pubblico',
+      password: (fd.get('share_visibility')==='privato' 
+        ? (fd.get('share_password')||null) 
+        : null)
+    }
+  };
+}
+
+
+
+    
   // ===== Anteprima payload =====
   function renderPayload(){
     const pre = document.getElementById('payload');
