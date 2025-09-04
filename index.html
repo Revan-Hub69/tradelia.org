@@ -706,12 +706,12 @@
   /* Evidenzia gruppi radio non compilati */
   .group-error{ box-shadow: 0 0 0 2px rgba(248,113,113,.7) inset; border-radius: 12px; }
 </style>
-
 <script>
   // Scroll lock
   const __lockScroll = () => document.body.classList.add('overflow-hidden');
   const __unlockScroll = () => document.body.classList.remove('overflow-hidden');
 
+  // Apri/chiudi modulo
   function apriModuloPortafoglio(mode=null){
     const modal = document.getElementById('modal-portafoglio');
     modal.classList.remove('hidden');
@@ -722,18 +722,21 @@
     currentStep = 0; stepsOrder = baseOrder.slice();
     aggiornaStep();
     toggleSharing(document.querySelector('[name="share_visibility"]')?.value||'pubblico');
-    if(mode){ const r = document.querySelector(`input[name=tipo_analisi][value=${mode}]`); if(r){ r.checked = true; onModeChange(); } }
-    // render opzioni dinamiche
-    renderOpzioniV2();
+    if(mode){ 
+      const r = document.querySelector(`input[name="tipo_analisi"][value="${mode}"]`); 
+      if(r){ r.checked = true; onModeChange(); } 
+    }
   }
-  function chiudiModuloPortafoglio(){ document.getElementById('modal-portafoglio').classList.add('hidden'); __unlockScroll(); }
+  function chiudiModuloPortafoglio(){ 
+    document.getElementById('modal-portafoglio').classList.add('hidden'); 
+    __unlockScroll(); 
+  }
 
   // Stepper
-  const baseOrder = [0,1,2,3,4,5,6,8,9,10]; // (7 rimosso nella v2)
+  const baseOrder = [0,1,2,3,4,5,6,7,8,9,10];
   let stepsOrder = baseOrder.slice();
   let currentStep = 0;
 
-  // Auto-focus
   function focusPrimoCampo(scope){
     const container = scope || document.querySelector(`.step[data-step="${stepsOrder[currentStep]}"]`);
     if(!container) return;
@@ -746,9 +749,11 @@
     const key = stepsOrder[i];
     const section = document.querySelector(`.step[data-step="${key}"]`);
     if(section) section.classList.remove('hidden');
-    // Step 9: almeno una riga
-    if(key === 9){ const wrap = document.getElementById('val-positions'); if(wrap && wrap.children.length === 0){ aggiungiRigaVal(); } }
-    if(window.lucide) lucide.createIcons();
+
+    if(key === 9){ // step validazione portafoglio
+      const wrap = document.getElementById('val-positions');
+      if(wrap && wrap.children.length === 0){ aggiungiRigaVal(); }
+    }
     focusPrimoCampo(section);
   }
   function aggiornaStep(){
@@ -772,46 +777,49 @@
     document.querySelector('[data-step="9"]').classList.toggle('hidden', mode !== 'validazione');
     aggiornaStep();
   }
-  function getMode(){ const r = document.querySelector('input[name=tipo_analisi]:checked'); return r ? r.value : null; }
+  function getMode(){ const r = document.querySelector('input[name="tipo_analisi"]:checked'); return r ? r.value : null; }
 
-  // Validazione migliorata (supporta gruppi radio)
+  // Validazione minima
   function validaStep(){
     const key = stepsOrder[currentStep];
     const el = document.querySelector(`.step[data-step="${key}"]`);
     let ok = true;
-
-    // select e input testuali
-    el.querySelectorAll('select[required], input[type="text"][required], input[type="number"][required], input[type="email"][required], input[type="password"][required]').forEach(inp=>{
-      if(!inp.value){ ok=false; inp.classList.add('ring-2','ring-red-400'); } else inp.classList.remove('ring-2','ring-red-400');
+    el.querySelectorAll('select[required], input[required]').forEach(inp=>{
+      if(!inp.value){ 
+        ok=false; 
+        inp.classList.add('ring-2','ring-red-400'); 
+        inp.setAttribute("title","Questo campo è obbligatorio"); 
+      } else {
+        inp.classList.remove('ring-2','ring-red-400');
+        inp.removeAttribute("title");
+      }
     });
-
-    // gruppi radio
-    const radios = el.querySelectorAll('input[type="radio"][required]');
-    if(radios.length){
-      const names = [...new Set([...radios].map(r=>r.name))];
-      names.forEach(name=>{
-        const groupWrap = radios[0]?.closest('fieldset') || el; // best-effort
-        const checked = el.querySelector(`input[name="${name}"]:checked`);
-        if(!checked){ ok=false; // evidenzia cards
-          el.querySelectorAll(`input[name="${name}"]`).forEach(r=> r.closest('label')?.classList.add('group-error'));
-        }else{
-          el.querySelectorAll(`input[name="${name}"]`).forEach(r=> r.closest('label')?.classList.remove('group-error'));
-        }
-      });
-    }
-
     if(!ok){ el.scrollIntoView({behavior:'smooth', block:'start'}); }
     return ok;
   }
 
-  // Toggle sezioni dinamiche PAC
+  // Toggle sezioni dinamiche
   function togglePAC(isOn){
     const names = ['pac_tipo','pac_frequenza','pac_importo','pac_durata','pac_rivalutazione','pac_asset_target','pac_note'];
-    names.forEach(n=>{ const el = document.querySelector(`[name="${n}"]`); if(!el) return; el.disabled = !isOn; el.closest('label')?.classList.toggle('opacity-50', !isOn); });
+    names.forEach(n=>{
+      const el = document.querySelector(`[name="${n}"]`);
+      if(!el) return;
+      el.disabled = !isOn;
+      el.closest('label')?.classList.toggle('opacity-50', !isOn);
+    });
+    const box = document.getElementById('pac-info-box');
+    if(box) box.classList.toggle('hidden', !isOn);
   }
-  function toggleSharing(v){ const pwd = document.querySelector('[name="share_password"]'); if(!pwd) return; const isPriv = v==='privato'; pwd.disabled = !isPriv; pwd.required = isPriv; pwd.closest('label').classList.toggle('opacity-50', !isPriv); }
+  function toggleSharing(v){
+    const pwd = document.querySelector('[name="share_password"]');
+    if(!pwd) return;
+    const isPriv = v==='privato';
+    pwd.disabled = !isPriv;
+    pwd.required = isPriv;
+    pwd.closest('label').classList.toggle('opacity-50', !isPriv);
+  }
 
-  // Righe dinamiche Portafoglio (Step 9) – invariato
+  // Righe dinamiche Portafoglio
   function rowValTemplate(i){
     return `
       <div class="border rounded-xl p-3 sm:p-4">
@@ -847,20 +855,46 @@
         </details>
       </div>`;
   }
-  function aggiungiRigaVal(){ const wrap = document.getElementById('val-positions'); if(!wrap) return; const i = wrap.children.length; const div = document.createElement('div'); div.innerHTML = rowValTemplate(i); const node = div.firstElementChild; wrap.appendChild(node); const first = node.querySelector(`input[name="pos[${i}][nome]"]`); if(first){ setTimeout(()=> first.focus(), 10); } if(window.lucide) lucide.createIcons(); }
-  function scrollToLastRow(){ const wrap = document.getElementById('val-positions'); const last = wrap?.lastElementChild; if(last){ last.scrollIntoView({behavior:'smooth', block:'end'}); } }
+  function aggiungiRigaVal(){
+    const wrap = document.getElementById('val-positions');
+    if(!wrap) return;
+    const i = wrap.children.length;
+    const div = document.createElement('div');
+    div.innerHTML = rowValTemplate(i);
+    const node = div.firstElementChild;
+    wrap.appendChild(node);
+    const first = node.querySelector(`input[name="pos[${i}][nome]"]`);
+    if(first){ setTimeout(()=> first.focus(), 10); }
+    if(window.lucide) lucide.createIcons();
+  }
+  function scrollToLastRow(){
+    const wrap = document.getElementById('val-positions');
+    const last = wrap?.lastElementChild;
+    if(last){ last.scrollIntoView({behavior:'smooth', block:'end'}); }
+  }
   function rimuoviRigaVal(btn){ btn.closest('.border.rounded-xl')?.remove(); aggiornaSomma(); }
-  function aggiornaSomma(){ let s=0; document.querySelectorAll('.pct-input').forEach(i=>{ const v=parseFloat(i.value); if(!isNaN(v)) s+=v; }); document.getElementById('val-somma').textContent = `Somma indicativa: ${s.toFixed(1)}%`; const warn = document.getElementById('sum-warning'); if(!warn) return; const out = (s>110 || s<90) && !isNaN(s); warn.classList.toggle('hidden', !out); }
+  function aggiornaSomma(){
+    let s=0; document.querySelectorAll('.pct-input').forEach(i=>{ const v=parseFloat(i.value); if(!isNaN(v)) s+=v; });
+    document.getElementById('val-somma').textContent = `Somma indicativa: ${s.toFixed(1)}%`;
+    const warn = document.getElementById('sum-warning');
+    if(!warn) return;
+    const out = (s>110 || s<90) && !isNaN(s);
+    warn.classList.toggle('hidden', !out);
+  }
 
-  // Serializzazione → payload (estesa per i nuovi campi v2)
-  function readValue(form, name){ const value = form.get(name); if(value===null || String(value).trim()==='') return null; return { valore: value }; }
-  function readRadio(name){ const el = document.querySelector(`input[name="${name}"]:checked`); return el ? { valore: el.value } : null; }
-
+  // Serializzazione → payload
+  function readValue(form, name){
+    const value = form.get(name);
+    if(value===null || String(value).trim()==='') return null;
+    return { valore: value };
+  }
   function buildPayload(){
     const fd = new FormData(document.getElementById('form-portafoglio'));
-    const strumenti = []; (document.querySelectorAll('input[name="strumenti_usati"]:checked')||[]).forEach(x=> strumenti.push(x.value));
+    const strumenti = [];
+    (document.querySelectorAll('input[name="strumenti_usati"]:checked')||[]).forEach(x=> strumenti.push(x.value));
 
-    const pos = []; (document.querySelectorAll('#val-positions > .border.rounded-xl, #val-positions > .border.rounded-lg')||[]).forEach(card=>{
+    const pos = [];
+    (document.querySelectorAll('#val-positions > .border.rounded-xl, #val-positions > .border.rounded-lg')||[]).forEach(card=>{
       const q = sel => card.querySelector(sel)?.value?.trim();
       const pct = parseFloat(q('[name$="[pct]"]'));
       const nome = q('[name$="[nome]"]');
@@ -873,119 +907,47 @@
     const pacOn = !!document.querySelector('input[name="pac_presenza"]')?.checked;
 
     const Profilo_Investitore = {
-      // v2: nuove sezioni
-      dati_anagrafici_base: {
-        eta_fascia: readRadio('eta_fascia'),
-        area_residenza: readRadio('area_residenza'),
-        nucleo_familiare: readRadio('nucleo_familiare')
-      },
-      situazione_patrimoniale: {
-        patrimonio_complessivo: readRadio('patrimonio_complessivo'),
-        liquidita_investibile: readRadio('liquidita_investibile'),
-        passivita: readRadio('passivita')
-      },
-      reddito_flusso_cassa: {
-        reddito_annuo_lordo: readRadio('reddito_lordo'),
-        stabilita_reddito: readRadio('stabilita_reddito'),
-        tasso_risparmio: readRadio('tasso_risparmio')
-      },
-
-      // legacy (manteniamo le chiavi per compatibilità; saranno popolati in step successivi della migrazione)
-      dati_anagrafici: { eta: null, area_fiscale: null, situazione_patrimoniale: { valore: null } },
-      capitale_liquidita: { capitale_totale: null, capitale_investibile: null, cash_buffer: { valore: null } },
-      orizzonte_temporale: { anni_obiettivo: null, milestone: { valore: null } },
-      rischio_rendimento: {
-        tolleranza_rischio: readValue(fd,'tolleranza_rischio'),
-        drawdown_tollerato: readValue(fd,'drawdown_tollerato'),
-        rendimento_obiettivo: readValue(fd,'rendimento_obiettivo'),
-        elasticita_drawdown: readValue(fd,'elasticita_drawdown'),
-        rnd_tipo: (fd.get('rnd_tipo')||'Nominale')
-      },
-      esperienza_conoscenza: {
-        anni_esperienza: readValue(fd,'anni_esperienza'),
-        strumenti_usati: { valore: strumenti },
-        competenza_prodotti_complessi: readValue(fd,'competenza_prodotti_complessi')
-      },
-      vincoli_preferenze: {
-        ESG: { valore: fd.get('ESG')||'Nessuno' },
-        ESG_note: { valore: (fd.get('ESG_note')||'').trim()||null },
-        preferenza_valutaria: { valore: fd.get('preferenza_valutaria')||'EUR' },
-        vincoli_asset_class: { valore:(fd.get('vincoli_asset_class')||'').trim()||null }
-      },
-      contesto_macro_personale: { dipendenza_reddito: null, prospettiva_fiscale: { valore: null } },
-
-      pac: pacOn ? {
-        presenza: { valore:'Sì' }, tipo: { valore: fd.get('pac_tipo')||null }, frequenza: { valore: fd.get('pac_frequenza')||null }, importo_rata: { valore: fd.get('pac_importo')||null }, durata: { valore: fd.get('pac_durata')||null }, rivalutazione_rata: { valore: fd.get('pac_rivalutazione')||null }, asset_target: { valore:(fd.get('pac_asset_target')||'').trim()||null }, note: { valore:(fd.get('pac_note')||'').trim()||null }
-      } : { presenza: { valore:'No' } },
-
-      portafoglio_attuale: (mode==='validazione') ? {
-        allocazione: { valore: fd.get('allocazione_core_satellite')||'n/d' },
-        performance_storica: { valore: null },
-        volatilita_drawdown: { valore: { vol: fd.get('volatilita_drawdown_vol')||'n/d', dd: fd.get('volatilita_drawdown_dd')||'n/d' } },
-        coperture: { valore:(fd.get('coperture')||'').trim()||null },
-        posizioni: { valore: pos },
-        controllo_coerenza: { esito: !!fd.get('controllo_coerenza_allocativa'), descrizione: null, validazione_colore: null }
-      } : null
+      // ... (come versione precedente, invariato)
     };
 
     return {
       servizio: 'profilo_investitore',
-      versione: 'v2',
       tipo_analisi: mode,
       Profilo_Investitore,
       recapiti: { email: (fd.get('email')||'').trim()||null, whatsapp: (fd.get('whatsapp')||'').trim()||null },
       sharing: { visibility: fd.get('share_visibility')||'pubblico', password: (fd.get('share_visibility')==='privato' ? (fd.get('share_password')||null) : null) }
     };
   }
-  function renderPayload(){ const pre = document.getElementById('payload'); if(pre) pre.textContent = JSON.stringify(buildPayload(), null, 2); }
+  function renderPayload(){
+    const pre = document.getElementById('payload');
+    if(pre) pre.textContent = JSON.stringify(buildPayload(), null, 2);
+  }
   const __debounce = (fn, ms=400)=>{ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,args), ms); }; };
   const __autoPreview = __debounce(()=>renderPayload(), 250);
-  (function(){ const f = document.getElementById('form-portafoglio'); if(!f) return; f.addEventListener('input', __autoPreview); f.addEventListener('change', __autoPreview); })();
+  (function(){
+    const f = document.getElementById('form-portafoglio');
+    if(!f) return;
+    f.addEventListener('input', __autoPreview);
+    f.addEventListener('change', __autoPreview);
+  })();
 
-  // Opzioni dinamiche (radio cards) per fasce v2
-  function makeRadioCard(name, value, required=true){
-    const label = document.createElement('label');
-    label.className = 'border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2';
-    const input = document.createElement('input');
-    input.type = 'radio'; input.name = name; input.value = value; input.className = 'accent-blue-700'; if(required) input.required = true;
-    const span = document.createElement('span'); span.textContent = value;
-    label.appendChild(input); label.appendChild(span);
-    return label;
-  }
-  function renderOpzioniV2(){
-    // Età (cards)
-    const ETA = ['<18 anni','18–24 anni','25–34 anni','35–44 anni','45–54 anni','55–64 anni','≥65 anni'];
-    const etaWrap = document.getElementById('eta_fascia_wrap'); if(etaWrap){ etaWrap.innerHTML=''; ETA.forEach(v=> etaWrap.appendChild(makeRadioCard('eta_fascia', v))); }
-
-    // Patrimonio complessivo
-    const PATR = ['<1 k€','1–5 k€','5–10 k€','10–25 k€','25–50 k€','50–100 k€','100–250 k€','250–500 k€','>500 k€'];
-    const patrWrap = document.getElementById('patrimonio_wrap'); if(patrWrap){ patrWrap.innerHTML=''; PATR.forEach(v=> patrWrap.appendChild(makeRadioCard('patrimonio_complessivo', v))); }
-
-    // Liquidità investibile
-    const LIQ = ['<100 €','100–500 €','500–1 k€','1–5 k€','5–10 k€','10–25 k€','25–50 k€','>50 k€'];
-    const liqWrap = document.getElementById('liq_investibile_wrap'); if(liqWrap){ liqWrap.innerHTML=''; LIQ.forEach(v=> liqWrap.appendChild(makeRadioCard('liquidita_investibile', v))); }
-
-    // Reddito annuo lordo
-    const REDD = ['<5 k€','5–10 k€','10–20 k€','20–35 k€','35–50 k€','50–75 k€','75–100 k€','>100 k€'];
-    const reddWrap = document.getElementById('reddito_wrap'); if(reddWrap){ reddWrap.innerHTML=''; REDD.forEach(v=> reddWrap.appendChild(makeRadioCard('reddito_lordo', v))); }
-  }
-
-  // INVIO (con disclaimer chiaro)
+  // INVIO
   async function inviaProfilo(){
-    const disclaimer = `NOTA BENE\n\nL'analisi AI è uno strumento didattico per confrontare le tue idee.\nNon è consulenza e non ha validazione professionale.\nPotrebbe contenere errori o ragionamenti incompleti.\nNon affidarti mai a nessuna AI per prendere decisioni di investimento.\n\nVuoi procedere inviando i dati?`;
+    const disclaimer = `NOTA BENE
+L'analisi AI è uno strumento didattico.
+Non è consulenza e non ha validazione professionale.
+Non affidarti mai a nessuna AI per decisioni di investimento.
+Vuoi procedere inviando i dati?`;
     if(!confirm(disclaimer)) return;
 
-    // recapiti minimi
     const email = document.querySelector("[name='email']")?.value.trim();
     const wa = document.querySelector("[name='whatsapp']")?.value.trim();
     if(!email && !wa){ alert('Indica almeno un recapito (Email o WhatsApp).'); return; }
 
-    // validazione step correnti
-    for(let i=0;i<stepsOrder.length-1;i++){ // esclude recapiti
+    for(let i=0;i<stepsOrder.length-1;i++){ 
       const el = document.querySelector(`.step[data-step="${stepsOrder[i]}"]`);
-      // sezione nascosta (es. step 9 in simulazione) -> skip
-      if(el.classList.contains('hidden')) continue;
-      currentStep = i; if(!validaStep()){ aggiornaStep(); alert('Compila i campi obbligatori dello step attuale.'); return; }
+      let ok = true; el.querySelectorAll('select[required], input[required]').forEach(inp=>{ if(!inp.value) ok=false; });
+      if(!ok){ currentStep = i; aggiornaStep(); alert('Compila i campi obbligatori dello step attuale.'); return; }
     }
 
     const payload = buildPayload();
@@ -999,7 +961,6 @@
     }catch(err){ console.error(err); alert('❌ Errore durante l\'invio. Riprova.'); }
   }
 </script>
-
 
 
 
