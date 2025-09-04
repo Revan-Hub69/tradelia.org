@@ -256,7 +256,7 @@
   });
 </script>
 
-<!-- MODALE – BLOCCO 1 PROFILO INVESTITORE (v1.2 Mobile-compact + PAC toggle) -->
+<!-- MODALE – PROFILO INVESTITORE v2 (Step 1–3 aggiornati + micro‑guida educativa) -->
 <div id="modal-portafoglio" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
   <div class="bg-white w-full max-w-5xl mx-auto rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[94vh]" role="dialog" aria-modal="true">
 
@@ -282,10 +282,10 @@
       </div>
     </div>
 
-    <!-- FORM (mobile-compact) -->
+    <!-- FORM -->
     <form id="form-portafoglio" class="p-4 md:p-8 overflow-y-auto flex-1 space-y-6 md:space-y-10 leading-relaxed" onsubmit="event.preventDefault(); inviaProfilo();">
 
-      <!-- STEP 0 – Modalità -->
+      <!-- STEP 0 – Modalità (invariato) -->
       <section class="step" data-step="0">
         <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">0) Seleziona modalità</h4>
         <p class="text-[12px] text-slate-500 mb-3">Scegli se vuoi <strong>validare</strong> un portafoglio esistente o <strong>simulare</strong> una nuova costruzione.</p>
@@ -301,73 +301,149 @@
             <input type="radio" name="tipo_analisi" value="simulazione" class="accent-blue-700 mt-1" required>
             <div>
               <div class="font-medium text-sm md:text-base">Simulazione Portafoglio</div>
-              <div class="text-[12px] text-slate-500">Costruzione ex-novo con vincoli e profilo rischio.</div>
+              <div class="text-[12px] text-slate-500">Costruzione ex‑novo con vincoli e profilo rischio.</div>
             </div>
           </label>
         </div>
       </section>
 
-      <!-- STEP 1 – Dati anagrafici e fiscali -->
+      <!-- STEP 1 – Dati anagrafici di base (NUOVO) -->
       <section class="step hidden" data-step="1">
-        <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">1) Dati anagrafici e fiscali</h4>
-        <p class="text-[12px] text-slate-500 mb-3 md:mb-4">Servono solo per calibrare orizzonte e tassazione a livello generale.</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-          <label>Età *
-            <select name="eta" class="w-full border rounded px-3 py-2" required>
-              <option value="">Seleziona</option>
-              <option>18–30</option><option>31–45</option><option>46–60</option><option>61+</option>
-            </select>
-            <span class="text-[11px] text-slate-500">Fasce, non cifre precise.</span>
-          </label>
-          <label>Area fiscale *
-            <select name="area_fiscale" class="w-full border rounded px-3 py-2" required>
-              <option value="">Seleziona</option>
-              <option>Italia</option><option>UE (non IT)</option><option>UK</option><option>USA</option><option>Altro</option>
-            </select>
-          </label>
-          <div class="md:col-span-1"></div>
+        <div class="flex items-center gap-2 mb-1">
+          <h4 class="text-[15px] md:text-base font-semibold text-slate-900">1) Dati anagrafici di base</h4>
         </div>
+        <p class="text-[12px] text-slate-500 mb-3">Usiamo fasce per privacy. Non servono dati identificativi personali.</p>
+
+        <!-- Età -->
+        <fieldset class="mb-4">
+          <legend class="text-sm font-medium text-slate-800 mb-2 flex items-center gap-2">Fascia età * <i data-lucide="help-circle" class="w-4 h-4 text-slate-500"></i></legend>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+            ["<18 anni","18–24 anni","25–34 anni","35–44 anni","45–54 anni","55–64 anni","≥65 anni"].forEach?.call(null)
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2" id="eta_fascia_wrap"></div>
+        </fieldset>
+
+        <!-- Area di residenza -->
+        <fieldset class="mb-4">
+          <legend class="text-sm font-medium text-slate-800 mb-2">Area di residenza * <i data-lucide="help-circle" class="w-4 h-4 text-slate-500" title="Area geografica prevalentemente di residenza fiscale."></i></legend>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2">
+              <input type="radio" name="area_residenza" value="Italia – Nord" class="accent-blue-700" required>
+              <span>Italia – Nord</span>
+            </label>
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2">
+              <input type="radio" name="area_residenza" value="Centro" class="accent-blue-700" required>
+              <span>Centro</span>
+            </label>
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2">
+              <input type="radio" name="area_residenza" value="Sud/Isole" class="accent-blue-700" required>
+              <span>Sud/Isole</span>
+            </label>
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2">
+              <input type="radio" name="area_residenza" value="Estero UE" class="accent-blue-700" required>
+              <span>Estero UE</span>
+            </label>
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2">
+              <input type="radio" name="area_residenza" value="Estero extra‑UE" class="accent-blue-700" required>
+              <span>Estero extra‑UE</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Nucleo familiare -->
+        <fieldset>
+          <legend class="text-sm font-medium text-slate-800 mb-2">Composizione nucleo familiare * <i data-lucide="help-circle" class="w-4 h-4 text-slate-500" title="Ci aiuta a stimare orizzonte e bisogni di liquidità."></i></legend>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2">
+              <input type="radio" name="nucleo_familiare" value="single" class="accent-blue-700" required>
+              <span>single</span>
+            </label>
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2">
+              <input type="radio" name="nucleo_familiare" value="coppia senza figli" class="accent-blue-700" required>
+              <span>coppia senza figli</span>
+            </label>
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2">
+              <input type="radio" name="nucleo_familiare" value="coppia con figli" class="accent-blue-700" required>
+              <span>coppia con figli</span>
+            </label>
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2">
+              <input type="radio" name="nucleo_familiare" value="altro" class="accent-blue-700" required>
+              <span>altro</span>
+            </label>
+          </div>
+        </fieldset>
       </section>
 
-      <!-- STEP 2 – Capitale -->
+      <!-- STEP 2 – Situazione patrimoniale (NUOVO) -->
       <section class="step hidden" data-step="2">
-        <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">2) Capitale</h4>
-        <p class="text-[12px] text-slate-500 mb-3 md:mb-4">Indica valori <strong>a fascia</strong> per privacy.</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-          <label>Capitale totale (fascia) *
-            <select name="capitale_totale" class="w-full border rounded px-3 py-2" required>
-              <option value="">Seleziona</option>
-              <option>&lt; 10k</option><option>10k–50k</option><option>50k–200k</option><option>200k–500k</option><option>&gt; 500k</option>
-            </select>
-            <span class="text-[11px] text-slate-500">Conti, investimenti, immobili, ecc.</span>
-          </label>
-          <label>Quota investibile ora (fascia) *
-            <select name="capitale_investibile" class="w-full border rounded px-3 py-2" required>
-              <option value="">Seleziona</option>
-              <option>&lt; 5k</option><option>5k–25k</option><option>25k–100k</option><option>100k–250k</option><option>&gt; 250k</option>
-            </select>
-            <span class="text-[11px] text-slate-500">Pronto da investire subito.</span>
-          </label>
+        <div class="flex items-center gap-2 mb-1">
+          <h4 class="text-[15px] md:text-base font-semibold text-slate-900">2) Situazione patrimoniale</h4>
         </div>
+        <p class="text-[12px] text-slate-500 mb-3">Indica valori a <strong>fasce</strong> per privacy. <em>Patrimonio complessivo</em> = liquidità + investimenti + immobili (lordo). Le <em>passività</em> si indicano separatamente.</p>
+
+        <!-- Patrimonio complessivo -->
+        <fieldset class="mb-4">
+          <legend class="text-sm font-medium text-slate-800 mb-2">Patrimonio complessivo * <i data-lucide="help-circle" class="w-4 h-4 text-slate-500" title="Somma di liquidità, investimenti e immobili al valore stimato. Non sottrarre i debiti: li indichi sotto."></i></legend>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <template id="tpl-patrimonio"></template>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2" id="patrimonio_wrap"></div>
+          </div>
+        </fieldset>
+
+        <!-- Liquidità investibile -->
+        <fieldset class="mb-4">
+          <legend class="text-sm font-medium text-slate-800 mb-2">Liquidità disponibile per investimento * <i data-lucide="help-circle" class="w-4 h-4 text-slate-500" title="Capitale che puoi investire subito, mantenendo il fondo emergenze."></i></legend>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2" id="liq_investibile_wrap"></div>
+        </fieldset>
+
+        <!-- Passività -->
+        <fieldset>
+          <legend class="text-sm font-medium text-slate-800 mb-2">Passività (mutui, prestiti) * <i data-lucide="help-circle" class="w-4 h-4 text-slate-500" title="Debiti in % sul patrimonio complessivo."></i></legend>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2"><input type="radio" name="passivita" value="nessuna" class="accent-blue-700" required><span>nessuna</span></label>
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2"><input type="radio" name="passivita" value="<20%" class="accent-blue-700" required><span>&lt;20%</span></label>
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2"><input type="radio" name="passivita" value="20–50%" class="accent-blue-700" required><span>20–50%</span></label>
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2"><input type="radio" name="passivita" value=">50%" class="accent-blue-700" required><span>&gt;50%</span></label>
+          </div>
+        </fieldset>
       </section>
 
-      <!-- STEP 3 – Orizzonte -->
+      <!-- STEP 3 – Reddito e flusso di cassa (NUOVO) -->
       <section class="step hidden" data-step="3">
-        <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">3) Orizzonte temporale</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-          <label>Anni fino all’obiettivo *
-            <select name="anni_obiettivo" class="w-full border rounded px-3 py-2" data-estimable required>
-              <option value="">Seleziona</option>
-              <option>Fino a 2</option><option>3–5</option><option>6–10</option><option>10+</option>
-            </select>
-          </label>
-          <label class="md:col-span-2">Milestone (facoltativo)
-            <input type="text" name="milestone" class="w-full border rounded px-3 py-2" placeholder="Es. acconto casa in 3 anni; università figli in 8 anni">
-          </label>
+        <div class="flex items-center gap-2 mb-1">
+          <h4 class="text-[15px] md:text-base font-semibold text-slate-900">3) Reddito e flusso di cassa</h4>
         </div>
+        <p class="text-[12px] text-slate-500 mb-3">Queste informazioni aiutano a calibrare rischio, liquidità e sostenibilità del piano.</p>
+
+        <!-- Reddito annuo lordo -->
+        <fieldset class="mb-4">
+          <legend class="text-sm font-medium text-slate-800 mb-2">Fascia reddito annuo lordo * <i data-lucide="help-circle" class="w-4 h-4 text-slate-500" title="Reddito complessivo prima delle imposte."></i></legend>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2" id="reddito_wrap"></div>
+        </fieldset>
+
+        <!-- Stabilità reddito -->
+        <fieldset class="mb-4">
+          <legend class="text-sm font-medium text-slate-800 mb-2">Stabilità del reddito * <i data-lucide="help-circle" class="w-4 h-4 text-slate-500" title="Quanto è regolare nel tempo (es. dipendente = stabile; freelance = variabile)."></i></legend>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2"><input type="radio" name="stabilita_reddito" value="stabile" class="accent-blue-700" required><span>stabile</span></label>
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2"><input type="radio" name="stabilita_reddito" value="moderatamente variabile" class="accent-blue-700" required><span>moderatamente variabile</span></label>
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2"><input type="radio" name="stabilita_reddito" value="altamente variabile" class="accent-blue-700" required><span>altamente variabile</span></label>
+          </div>
+        </fieldset>
+
+        <!-- Tasso di risparmio -->
+        <fieldset>
+          <legend class="text-sm font-medium text-slate-800 mb-2">Tasso di risparmio (% reddito) * <i data-lucide="help-circle" class="w-4 h-4 text-slate-500" title="Quota media del reddito che risparmi ogni mese."></i></legend>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2"><input type="radio" name="tasso_risparmio" value="<5%" class="accent-blue-700" required><span>&lt;5%</span></label>
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2"><input type="radio" name="tasso_risparmio" value="5–10%" class="accent-blue-700" required><span>5–10%</span></label>
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2"><input type="radio" name="tasso_risparmio" value="10–20%" class="accent-blue-700" required><span>10–20%</span></label>
+            <label class="border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2"><input type="radio" name="tasso_risparmio" value=">20%" class="accent-blue-700" required><span>&gt;20%</span></label>
+          </div>
+        </fieldset>
       </section>
 
-      <!-- STEP 4 – Rischio & rendimento -->
+      <!-- STEP 4 – Rischio & rendimento (temporaneamente invariato; verrà riallineato negli step successivi) -->
       <section class="step hidden" data-step="4">
         <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">4) Rischio e rendimento</h4>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
@@ -403,7 +479,7 @@
         </div>
       </section>
 
-      <!-- STEP 5 – Esperienza -->
+      <!-- STEP 5 – (placeholder dell'originale Orizzonte; verrà riprogettato nello step successivo della nostra iterazione) -->
       <section class="step hidden" data-step="5">
         <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">5) Esperienza e conoscenza</h4>
         <div class="space-y-5 md:space-y-6">
@@ -437,7 +513,7 @@
         </div>
       </section>
 
-      <!-- STEP 6 – Vincoli & preferenze -->
+      <!-- STEP 6 – Vincoli & preferenze (invariato per ora) -->
       <section class="step hidden" data-step="6">
         <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">6) Vincoli e preferenze</h4>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
@@ -459,23 +535,10 @@
         </div>
       </section>
 
-      <!-- STEP 7 – Reddito & fiscale -->
-      <section class="step hidden" data-step="7">
-        <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">7) Situazione reddituale e fiscale</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-          <label>Dipendenza dal reddito da lavoro *
-            <select name="dipendenza_reddito" class="w-full border rounded px-3 py-2" data-estimable required>
-              <option value="">Seleziona</option><option>Bassa</option><option>Media</option><option>Alta</option>
-            </select>
-            <span class="text-[11px] text-slate-500">Bassa = spese coperte da rendite/risparmi.</span>
-          </label>
-          <label class="md:col-span-2">Prospettiva fiscale 5–10 anni
-            <input type="text" name="prospettiva_fiscale" class="w-full border rounded px-3 py-2" placeholder="Es: cambio residenza, rientro in Italia, nuovi regimi.">
-          </label>
-        </div>
-      </section>
+      <!-- STEP 7 – Reddito & fiscale (SOSTITUITO nella v2; mantenuto per compatibilità ma nascosto) -->
+      <!-- (omesso) -->
 
-      <!-- STEP 8 – PAC (toggle) -->
+      <!-- STEP 8 – PAC (invariato, verrà reso super educativo nella prossima iterazione) -->
       <section class="step hidden" data-step="8">
         <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">8) Piano di Accumulo Capitale (PAC)</h4>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
@@ -496,12 +559,12 @@
           </label>
           <label>Frequenza versamenti
             <select name="pac_frequenza" class="w-full border rounded px-3 py-2" disabled>
-              <option>Mensile</option><option>Trimestrale</option><option>Semestrale</option><option>Annuale</option>
+              <option>Settimanale</option><option>Mensile</option><option>Trimestrale</option><option>Semestrale</option>
             </select>
           </label>
           <label>Importo rata (fascia)
             <select name="pac_importo" class="w-full border rounded px-3 py-2" disabled>
-              <option>&lt; 100</option><option>100–300</option><option>300–700</option><option>700–1500</option><option>&gt; 1500</option>
+              <option>&lt; 25 €</option><option>25–50 €</option><option>50–100 €</option><option>100–250 €</option><option>250–500 €</option><option>500–1.000 €</option><option>&gt; 1.000 €</option>
             </select>
           </label>
           <label>Durata prevista
@@ -520,10 +583,20 @@
           <label class="md:col-span-3">Note particolari
             <input type="text" name="pac_note" class="w-full border rounded px-3 py-2" placeholder="Es. solo ETF UCITS, esclusione energy…" disabled>
           </label>
+
+          <details class="md:col-span-3 border rounded p-3 text-sm text-slate-700">
+            <summary class="cursor-pointer font-medium">Cos'è un PAC? (spiegazione semplice)</summary>
+            <ul class="list-disc pl-5 mt-2 space-y-1">
+              <li><strong>Piano di Accumulo</strong>: investi a rate a intervalli regolari (es. mensile).</li>
+              <li><strong>Obiettivo</strong>: ridurre il rischio di entrare tutto in un momento sfavorevole.</li>
+              <li><strong>Adatto a</strong>: chi risparmia con costanza; orizzonte medio-lungo.</li>
+              <li><strong>Pro/Contro</strong>: disciplina e mediazione dei prezzi; non garantisce profitti.</li>
+            </ul>
+          </details>
         </div>
       </section>
 
-      <!-- STEP 9 – Portafoglio attuale (solo Validazione) -->
+      <!-- STEP 9 – Portafoglio attuale (solo Validazione) (invariato) -->
       <section class="step hidden" data-step="9">
         <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">9) Portafoglio attuale (solo Validazione)</h4>
         <p class="text-[12px] text-slate-500 mb-2">Inserisci in % per privacy; opzionalmente apri “Dettagli”.</p>
@@ -567,7 +640,7 @@
         </label>
       </section>
 
-      <!-- STEP 10 – Recapiti & Invio -->
+      <!-- STEP 10 – Condivisione & Invio (invariato, con disclaimer) -->
       <section class="step hidden" data-step="10">
         <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">10) Condivisione, recapiti & invio</h4>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-2">
@@ -594,6 +667,10 @@
           <p class="text-[12px] text-slate-500 mb-2">Vista tecnica del contenuto (JSON equivalente allo schema).</p>
           <pre id="payload" class="text-xs bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto"></pre>
         </details>
+
+        <p class="mt-4 text-[11px] text-slate-500 leading-relaxed">
+          <strong>Disclaimer CONSOB (finalità educativa)</strong> — Le informazioni raccolte sono elaborate unicamente in forma anonima e aggregata. Questo schema ha esclusiva finalità educativa, accademica e di ricerca. <strong>Non</strong> costituisce consulenza finanziaria personalizzata, né valutazione di adeguatezza o appropriatezza ai sensi della normativa MiFID II o CONSOB. Per decisioni di investimento si raccomanda di rivolgersi a consulenti finanziari indipendenti e professionisti abilitati.
+        </p>
       </section>
 
     </form>
@@ -611,7 +688,7 @@
 </div>
 
 <style>
-  /* Mobile compact: inputs più bassi, font leggermente più piccoli, spazi ridotti */
+  /* Mobile compact */
   @media (max-width:640px){
     #modal-portafoglio h4{ font-size:15px; }
     #modal-portafoglio select,
@@ -623,17 +700,11 @@
     #modal-portafoglio input[type="checkbox"],
     #modal-portafoglio input[type="radio"]{ width:18px; height:18px; }
   }
-  /* Micro-animazione focus ring */
-  #modal-portafoglio input, #modal-portafoglio select, #modal-portafoglio textarea{
-    transition: box-shadow .15s ease, border-color .15s ease, background-color .15s ease;
-  }
-  /* Sticky footer + sfumatura superiore */
+  #modal-portafoglio input, #modal-portafoglio select, #modal-portafoglio textarea{ transition: box-shadow .15s ease, border-color .15s ease, background-color .15s ease; }
   #modal-portafoglio .sticky-footer{ position: sticky; bottom: 0; background: #f8fafc; }
-  #modal-portafoglio .sticky-footer::before{
-    content:""; position:absolute; left:0; right:0; top:-16px; height:16px;
-    background: linear-gradient(to top, rgba(248,250,252,1), rgba(248,250,252,0));
-    pointer-events:none;
-  }
+  #modal-portafoglio .sticky-footer::before{ content:""; position:absolute; left:0; right:0; top:-16px; height:16px; background: linear-gradient(to top, rgba(248,250,252,1), rgba(248,250,252,0)); pointer-events:none; }
+  /* Evidenzia gruppi radio non compilati */
+  .group-error{ box-shadow: 0 0 0 2px rgba(248,113,113,.7) inset; border-radius: 12px; }
 </style>
 
 <script>
@@ -652,15 +723,17 @@
     aggiornaStep();
     toggleSharing(document.querySelector('[name="share_visibility"]')?.value||'pubblico');
     if(mode){ const r = document.querySelector(`input[name=tipo_analisi][value=${mode}]`); if(r){ r.checked = true; onModeChange(); } }
+    // render opzioni dinamiche
+    renderOpzioniV2();
   }
   function chiudiModuloPortafoglio(){ document.getElementById('modal-portafoglio').classList.add('hidden'); __unlockScroll(); }
 
   // Stepper
-  const baseOrder = [0,1,2,3,4,5,6,7,8,9,10];
+  const baseOrder = [0,1,2,3,4,5,6,8,9,10]; // (7 rimosso nella v2)
   let stepsOrder = baseOrder.slice();
   let currentStep = 0;
 
-  // Auto-focus primo campo dello step
+  // Auto-focus
   function focusPrimoCampo(scope){
     const container = scope || document.querySelector(`.step[data-step="${stepsOrder[currentStep]}"]`);
     if(!container) return;
@@ -673,12 +746,9 @@
     const key = stepsOrder[i];
     const section = document.querySelector(`.step[data-step="${key}"]`);
     if(section) section.classList.remove('hidden');
-
     // Step 9: almeno una riga
-    if(key === 9){
-      const wrap = document.getElementById('val-positions');
-      if(wrap && wrap.children.length === 0){ aggiungiRigaVal(); }
-    }
+    if(key === 9){ const wrap = document.getElementById('val-positions'); if(wrap && wrap.children.length === 0){ aggiungiRigaVal(); } }
+    if(window.lucide) lucide.createIcons();
     focusPrimoCampo(section);
   }
   function aggiornaStep(){
@@ -704,36 +774,44 @@
   }
   function getMode(){ const r = document.querySelector('input[name=tipo_analisi]:checked'); return r ? r.value : null; }
 
-  // Validazione minima
+  // Validazione migliorata (supporta gruppi radio)
   function validaStep(){
     const key = stepsOrder[currentStep];
     const el = document.querySelector(`.step[data-step="${key}"]`);
     let ok = true;
-    el.querySelectorAll('select[required], input[required]').forEach(inp=>{ if(!inp.value){ ok=false; inp.classList.add('ring-2','ring-red-400'); } else inp.classList.remove('ring-2','ring-red-400'); });
+
+    // select e input testuali
+    el.querySelectorAll('select[required], input[type="text"][required], input[type="number"][required], input[type="email"][required], input[type="password"][required]').forEach(inp=>{
+      if(!inp.value){ ok=false; inp.classList.add('ring-2','ring-red-400'); } else inp.classList.remove('ring-2','ring-red-400');
+    });
+
+    // gruppi radio
+    const radios = el.querySelectorAll('input[type="radio"][required]');
+    if(radios.length){
+      const names = [...new Set([...radios].map(r=>r.name))];
+      names.forEach(name=>{
+        const groupWrap = radios[0]?.closest('fieldset') || el; // best-effort
+        const checked = el.querySelector(`input[name="${name}"]:checked`);
+        if(!checked){ ok=false; // evidenzia cards
+          el.querySelectorAll(`input[name="${name}"]`).forEach(r=> r.closest('label')?.classList.add('group-error'));
+        }else{
+          el.querySelectorAll(`input[name="${name}"]`).forEach(r=> r.closest('label')?.classList.remove('group-error'));
+        }
+      });
+    }
+
     if(!ok){ el.scrollIntoView({behavior:'smooth', block:'start'}); }
     return ok;
   }
 
-  // Toggle sezioni dinamiche
+  // Toggle sezioni dinamiche PAC
   function togglePAC(isOn){
     const names = ['pac_tipo','pac_frequenza','pac_importo','pac_durata','pac_rivalutazione','pac_asset_target','pac_note'];
-    names.forEach(n=>{
-      const el = document.querySelector(`[name="${n}"]`);
-      if(!el) return;
-      el.disabled = !isOn;
-      el.closest('label')?.classList.toggle('opacity-50', !isOn);
-    });
+    names.forEach(n=>{ const el = document.querySelector(`[name="${n}"]`); if(!el) return; el.disabled = !isOn; el.closest('label')?.classList.toggle('opacity-50', !isOn); });
   }
-  function toggleSharing(v){
-    const pwd = document.querySelector('[name="share_password"]');
-    if(!pwd) return;
-    const isPriv = v==='privato';
-    pwd.disabled = !isPriv;
-    pwd.required = isPriv;
-    pwd.closest('label').classList.toggle('opacity-50', !isPriv);
-  }
+  function toggleSharing(v){ const pwd = document.querySelector('[name="share_password"]'); if(!pwd) return; const isPriv = v==='privato'; pwd.disabled = !isPriv; pwd.required = isPriv; pwd.closest('label').classList.toggle('opacity-50', !isPriv); }
 
-  // Righe dinamiche Portafoglio (Step 9)
+  // Righe dinamiche Portafoglio (Step 9) – invariato
   function rowValTemplate(i){
     return `
       <div class="border rounded-xl p-3 sm:p-4">
@@ -769,46 +847,20 @@
         </details>
       </div>`;
   }
-  function aggiungiRigaVal(){
-    const wrap = document.getElementById('val-positions');
-    if(!wrap) return;
-    const i = wrap.children.length;
-    const div = document.createElement('div');
-    div.innerHTML = rowValTemplate(i);
-    const node = div.firstElementChild;
-    wrap.appendChild(node);
-    const first = node.querySelector(`input[name="pos[${i}][nome]"]`);
-    if(first){ setTimeout(()=> first.focus(), 10); }
-    if(window.lucide) lucide.createIcons();
-  }
-  function scrollToLastRow(){
-    const wrap = document.getElementById('val-positions');
-    const last = wrap?.lastElementChild;
-    if(last){ last.scrollIntoView({behavior:'smooth', block:'end'}); }
-  }
+  function aggiungiRigaVal(){ const wrap = document.getElementById('val-positions'); if(!wrap) return; const i = wrap.children.length; const div = document.createElement('div'); div.innerHTML = rowValTemplate(i); const node = div.firstElementChild; wrap.appendChild(node); const first = node.querySelector(`input[name="pos[${i}][nome]"]`); if(first){ setTimeout(()=> first.focus(), 10); } if(window.lucide) lucide.createIcons(); }
+  function scrollToLastRow(){ const wrap = document.getElementById('val-positions'); const last = wrap?.lastElementChild; if(last){ last.scrollIntoView({behavior:'smooth', block:'end'}); } }
   function rimuoviRigaVal(btn){ btn.closest('.border.rounded-xl')?.remove(); aggiornaSomma(); }
-  function aggiornaSomma(){
-    let s=0; document.querySelectorAll('.pct-input').forEach(i=>{ const v=parseFloat(i.value); if(!isNaN(v)) s+=v; });
-    document.getElementById('val-somma').textContent = `Somma indicativa: ${s.toFixed(1)}%`;
-    const warn = document.getElementById('sum-warning');
-    if(!warn) return;
-    const out = (s>110 || s<90) && !isNaN(s);
-    warn.classList.toggle('hidden', !out);
-  }
+  function aggiornaSomma(){ let s=0; document.querySelectorAll('.pct-input').forEach(i=>{ const v=parseFloat(i.value); if(!isNaN(v)) s+=v; }); document.getElementById('val-somma').textContent = `Somma indicativa: ${s.toFixed(1)}%`; const warn = document.getElementById('sum-warning'); if(!warn) return; const out = (s>110 || s<90) && !isNaN(s); warn.classList.toggle('hidden', !out); }
 
-  // Serializzazione → payload
-  function readValue(form, name){
-    const value = form.get(name);
-    if(value===null || String(value).trim()==='') return null;
-    return { valore: value };
-  }
+  // Serializzazione → payload (estesa per i nuovi campi v2)
+  function readValue(form, name){ const value = form.get(name); if(value===null || String(value).trim()==='') return null; return { valore: value }; }
+  function readRadio(name){ const el = document.querySelector(`input[name="${name}"]:checked`); return el ? { valore: el.value } : null; }
+
   function buildPayload(){
     const fd = new FormData(document.getElementById('form-portafoglio'));
-    const strumenti = [];
-    (document.querySelectorAll('input[name="strumenti_usati"]:checked')||[]).forEach(x=> strumenti.push(x.value));
+    const strumenti = []; (document.querySelectorAll('input[name="strumenti_usati"]:checked')||[]).forEach(x=> strumenti.push(x.value));
 
-    const pos = [];
-    (document.querySelectorAll('#val-positions > .border.rounded-xl, #val-positions > .border.rounded-lg')||[]).forEach(card=>{
+    const pos = []; (document.querySelectorAll('#val-positions > .border.rounded-xl, #val-positions > .border.rounded-lg')||[]).forEach(card=>{
       const q = sel => card.querySelector(sel)?.value?.trim();
       const pct = parseFloat(q('[name$="[pct]"]'));
       const nome = q('[name$="[nome]"]');
@@ -821,20 +873,27 @@
     const pacOn = !!document.querySelector('input[name="pac_presenza"]')?.checked;
 
     const Profilo_Investitore = {
-      dati_anagrafici: {
-        eta: readValue(fd,'eta'),
-        area_fiscale: readValue(fd,'area_fiscale'),
-        situazione_patrimoniale: { valore: null }
+      // v2: nuove sezioni
+      dati_anagrafici_base: {
+        eta_fascia: readRadio('eta_fascia'),
+        area_residenza: readRadio('area_residenza'),
+        nucleo_familiare: readRadio('nucleo_familiare')
       },
-      capitale_liquidita: {
-        capitale_totale: readValue(fd,'capitale_totale'),
-        capitale_investibile: readValue(fd,'capitale_investibile'),
-        cash_buffer: { valore: null }
+      situazione_patrimoniale: {
+        patrimonio_complessivo: readRadio('patrimonio_complessivo'),
+        liquidita_investibile: readRadio('liquidita_investibile'),
+        passivita: readRadio('passivita')
       },
-      orizzonte_temporale: {
-        anni_obiettivo: readValue(fd,'anni_obiettivo'),
-        milestone: { valore: (fd.get('milestone')||'').trim()||null }
+      reddito_flusso_cassa: {
+        reddito_annuo_lordo: readRadio('reddito_lordo'),
+        stabilita_reddito: readRadio('stabilita_reddito'),
+        tasso_risparmio: readRadio('tasso_risparmio')
       },
+
+      // legacy (manteniamo le chiavi per compatibilità; saranno popolati in step successivi della migrazione)
+      dati_anagrafici: { eta: null, area_fiscale: null, situazione_patrimoniale: { valore: null } },
+      capitale_liquidita: { capitale_totale: null, capitale_investibile: null, cash_buffer: { valore: null } },
+      orizzonte_temporale: { anni_obiettivo: null, milestone: { valore: null } },
       rischio_rendimento: {
         tolleranza_rischio: readValue(fd,'tolleranza_rischio'),
         drawdown_tollerato: readValue(fd,'drawdown_tollerato'),
@@ -853,20 +912,12 @@
         preferenza_valutaria: { valore: fd.get('preferenza_valutaria')||'EUR' },
         vincoli_asset_class: { valore:(fd.get('vincoli_asset_class')||'').trim()||null }
       },
-      contesto_macro_personale: {
-        dipendenza_reddito: readValue(fd,'dipendenza_reddito'),
-        prospettiva_fiscale: { valore:(fd.get('prospettiva_fiscale')||'').trim()||null }
-      },
+      contesto_macro_personale: { dipendenza_reddito: null, prospettiva_fiscale: { valore: null } },
+
       pac: pacOn ? {
-        presenza: { valore:'Sì' },
-        tipo: { valore: fd.get('pac_tipo')||null },
-        frequenza: { valore: fd.get('pac_frequenza')||null },
-        importo_rata: { valore: fd.get('pac_importo')||null },
-        durata: { valore: fd.get('pac_durata')||null },
-        rivalutazione_rata: { valore: fd.get('pac_rivalutazione')||null },
-        asset_target: { valore:(fd.get('pac_asset_target')||'').trim()||null },
-        note: { valore:(fd.get('pac_note')||'').trim()||null }
+        presenza: { valore:'Sì' }, tipo: { valore: fd.get('pac_tipo')||null }, frequenza: { valore: fd.get('pac_frequenza')||null }, importo_rata: { valore: fd.get('pac_importo')||null }, durata: { valore: fd.get('pac_durata')||null }, rivalutazione_rata: { valore: fd.get('pac_rivalutazione')||null }, asset_target: { valore:(fd.get('pac_asset_target')||'').trim()||null }, note: { valore:(fd.get('pac_note')||'').trim()||null }
       } : { presenza: { valore:'No' } },
+
       portafoglio_attuale: (mode==='validazione') ? {
         allocazione: { valore: fd.get('allocazione_core_satellite')||'n/d' },
         performance_storica: { valore: null },
@@ -879,35 +930,49 @@
 
     return {
       servizio: 'profilo_investitore',
+      versione: 'v2',
       tipo_analisi: mode,
       Profilo_Investitore,
       recapiti: { email: (fd.get('email')||'').trim()||null, whatsapp: (fd.get('whatsapp')||'').trim()||null },
       sharing: { visibility: fd.get('share_visibility')||'pubblico', password: (fd.get('share_visibility')==='privato' ? (fd.get('share_password')||null) : null) }
     };
   }
-  function renderPayload(){
-    const pre = document.getElementById('payload');
-    if(pre) pre.textContent = JSON.stringify(buildPayload(), null, 2);
-  }
+  function renderPayload(){ const pre = document.getElementById('payload'); if(pre) pre.textContent = JSON.stringify(buildPayload(), null, 2); }
   const __debounce = (fn, ms=400)=>{ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,args), ms); }; };
   const __autoPreview = __debounce(()=>renderPayload(), 250);
-  (function(){
-    const f = document.getElementById('form-portafoglio');
-    if(!f) return;
-    f.addEventListener('input', __autoPreview);
-    f.addEventListener('change', __autoPreview);
-  })();
+  (function(){ const f = document.getElementById('form-portafoglio'); if(!f) return; f.addEventListener('input', __autoPreview); f.addEventListener('change', __autoPreview); })();
 
-  // INVIO (solo conferma, niente checkbox)
+  // Opzioni dinamiche (radio cards) per fasce v2
+  function makeRadioCard(name, value, required=true){
+    const label = document.createElement('label');
+    label.className = 'border rounded-lg p-3 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-center gap-2';
+    const input = document.createElement('input');
+    input.type = 'radio'; input.name = name; input.value = value; input.className = 'accent-blue-700'; if(required) input.required = true;
+    const span = document.createElement('span'); span.textContent = value;
+    label.appendChild(input); label.appendChild(span);
+    return label;
+  }
+  function renderOpzioniV2(){
+    // Età (cards)
+    const ETA = ['<18 anni','18–24 anni','25–34 anni','35–44 anni','45–54 anni','55–64 anni','≥65 anni'];
+    const etaWrap = document.getElementById('eta_fascia_wrap'); if(etaWrap){ etaWrap.innerHTML=''; ETA.forEach(v=> etaWrap.appendChild(makeRadioCard('eta_fascia', v))); }
+
+    // Patrimonio complessivo
+    const PATR = ['<1 k€','1–5 k€','5–10 k€','10–25 k€','25–50 k€','50–100 k€','100–250 k€','250–500 k€','>500 k€'];
+    const patrWrap = document.getElementById('patrimonio_wrap'); if(patrWrap){ patrWrap.innerHTML=''; PATR.forEach(v=> patrWrap.appendChild(makeRadioCard('patrimonio_complessivo', v))); }
+
+    // Liquidità investibile
+    const LIQ = ['<100 €','100–500 €','500–1 k€','1–5 k€','5–10 k€','10–25 k€','25–50 k€','>50 k€'];
+    const liqWrap = document.getElementById('liq_investibile_wrap'); if(liqWrap){ liqWrap.innerHTML=''; LIQ.forEach(v=> liqWrap.appendChild(makeRadioCard('liquidita_investibile', v))); }
+
+    // Reddito annuo lordo
+    const REDD = ['<5 k€','5–10 k€','10–20 k€','20–35 k€','35–50 k€','50–75 k€','75–100 k€','>100 k€'];
+    const reddWrap = document.getElementById('reddito_wrap'); if(reddWrap){ reddWrap.innerHTML=''; REDD.forEach(v=> reddWrap.appendChild(makeRadioCard('reddito_lordo', v))); }
+  }
+
+  // INVIO (con disclaimer chiaro)
   async function inviaProfilo(){
-    const disclaimer = `NOTA BENE
-
-L'analisi AI è uno strumento didattico per confrontare le tue idee.
-Non è consulenza e non ha validazione professionale.
-Potrebbe contenere errori o ragionamenti incompleti.
-Non affidarti mai a nessuna AI per prendere decisioni di investimento.
-
-Vuoi procedere inviando i dati?`;
+    const disclaimer = `NOTA BENE\n\nL'analisi AI è uno strumento didattico per confrontare le tue idee.\nNon è consulenza e non ha validazione professionale.\nPotrebbe contenere errori o ragionamenti incompleti.\nNon affidarti mai a nessuna AI per prendere decisioni di investimento.\n\nVuoi procedere inviando i dati?`;
     if(!confirm(disclaimer)) return;
 
     // recapiti minimi
@@ -918,8 +983,9 @@ Vuoi procedere inviando i dati?`;
     // validazione step correnti
     for(let i=0;i<stepsOrder.length-1;i++){ // esclude recapiti
       const el = document.querySelector(`.step[data-step="${stepsOrder[i]}"]`);
-      let ok = true; el.querySelectorAll('select[required], input[required]').forEach(inp=>{ if(!inp.value) ok=false; });
-      if(!ok){ currentStep = i; aggiornaStep(); alert('Compila i campi obbligatori dello step attuale.'); return; }
+      // sezione nascosta (es. step 9 in simulazione) -> skip
+      if(el.classList.contains('hidden')) continue;
+      currentStep = i; if(!validaStep()){ aggiornaStep(); alert('Compila i campi obbligatori dello step attuale.'); return; }
     }
 
     const payload = buildPayload();
@@ -933,6 +999,7 @@ Vuoi procedere inviando i dati?`;
     }catch(err){ console.error(err); alert('❌ Errore durante l\'invio. Riprova.'); }
   }
 </script>
+
 
 
 
