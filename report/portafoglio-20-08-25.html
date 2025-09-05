@@ -1455,223 +1455,123 @@ if (d.disclaimer) {
     </div>
     <div class="text-right shrink-0">
       <p class="text-xs text-gray-500">Aggiornato al</p>
-      <time id="macro-updated" datetime="2025-08-23" class="text-xs font-medium text-gray-700">23 Ago 2025</time>
+      <time id="macro-updated" datetime="2025-09-05" class="text-xs font-medium text-gray-700">05 Set 2025</time>
     </div>
   </header>
 
-  <!-- Scenari e probabilità -->
-  <div class="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-3 mb-8">
-    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
-      <div class="text-gray-700 font-semibold">Scenario Base</div>
-      <div class="text-gray-900 font-bold">Prob. 55% · IMS 3.2</div>
-      <p class="text-gray-600 text-sm">
-        Crescita moderata e disinflazione irregolare; tagli graduali dei tassi; commodities in range; rischio geopolitico gestibile.<br>
-        <em>Fonti: IMF WEO Jul-25; OECD EO Jun-25; World Bank GEP Jun-25; BIS AER 2025</em>
-      </p>
+  <!-- Contenuto -->
+  <div class="space-y-8">
+
+    <!-- Scenari -->
+    <div>
+      <h3 class="text-lg font-semibold text-gray-800 mb-3">Scenari Integrati</h3>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm text-left border border-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-2 border">Scenario</th>
+              <th class="px-4 py-2 border">Prob.</th>
+              <th class="px-4 py-2 border">0–6 mesi</th>
+              <th class="px-4 py-2 border">6–24 mesi</th>
+              <th class="px-4 py-2 border">Driver chiave</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="px-4 py-2 border font-medium">Base</td>
+              <td class="px-4 py-2 border">55%</td>
+              <td class="px-4 py-2 border">Disinflazione graduale; easing Fed/BCE; USD neutrale→debole; Brent 67–70$; oro laterale</td>
+              <td class="px-4 py-2 border">Crescita moderata; EPS +6–8%; spread IG stabili</td>
+              <td class="px-4 py-2 border">Tariffe stabili; assenza shock energetici</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 border font-medium">Upside</td>
+              <td class="px-4 py-2 border">25%</td>
+              <td class="px-4 py-2 border">Pace commerciale; inflazione a target; risk-on; USD debole</td>
+              <td class="px-4 py-2 border">Multipli in espansione; compressione spread</td>
+              <td class="px-4 py-2 border">Stimolo fiscale coordinato</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 border font-medium">Downside</td>
+              <td class="px-4 py-2 border">20%</td>
+              <td class="px-4 py-2 border">Shock tariffario/energetico; USD rifugio; oro +10–15%</td>
+              <td class="px-4 py-2 border">EPS in calo; spread HY/EM in allargamento</td>
+              <td class="px-4 py-2 border">Escalation conflitti; errori di policy</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
-      <div class="text-gray-700 font-semibold">Scenario Upside</div>
-      <div class="text-gray-900 font-bold">Prob. 20% · IMS 3.9</div>
-      <p class="text-gray-600 text-sm">
-        Riaccelerazione investimenti, allentamento tensioni commerciali; compressione spread; EPS sopra attese.<br>
-        <em>Fonti: IMF; JPM; BlackRock BII Mid-Year 2025</em>
-      </p>
+
+    <!-- Parametri macro -->
+    <div>
+      <h3 class="text-lg font-semibold text-gray-800 mb-3">Parametri Macro Regionali – Scenario Base</h3>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm text-left border border-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-2 border">Regione</th>
+              <th class="px-4 py-2 border">PIL reale</th>
+              <th class="px-4 py-2 border">Inflazione</th>
+              <th class="px-4 py-2 border">Policy rate</th>
+              <th class="px-4 py-2 border">FX bias</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="px-4 py-2 border font-medium">USA</td>
+              <td class="px-4 py-2 border">~2,4%</td>
+              <td class="px-4 py-2 border">PCE 2,6% / core 2,9%</td>
+              <td class="px-4 py-2 border">Easing atteso</td>
+              <td class="px-4 py-2 border">USD neutrale→debole</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 border font-medium">Area euro</td>
+              <td class="px-4 py-2 border">0,9%</td>
+              <td class="px-4 py-2 border">2,0% → 1,6%</td>
+              <td class="px-4 py-2 border">~2,0%</td>
+              <td class="px-4 py-2 border">EUR moderatamente forte</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 border font-medium">Giappone</td>
+              <td class="px-4 py-2 border">1,1%</td>
+              <td class="px-4 py-2 border">~2,4% core</td>
+              <td class="px-4 py-2 border">0,75% atteso</td>
+              <td class="px-4 py-2 border">JPY in apprezzamento</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
-      <div class="text-gray-700 font-semibold">Scenario Downside</div>
-      <div class="text-gray-900 font-bold">Prob. 25% · IMS 2.4</div>
-      <p class="text-gray-600 text-sm">
-        Frammentazione commerciale, shock energetici; crescita debole; inflazione “appiccicosa” su energia/cibo.<br>
-        <em>Fonti: IMF; OECD; IEA/OPEC; WGC</em>
-      </p>
+
+    <!-- IMS -->
+    <div>
+      <h3 class="text-lg font-semibold text-gray-800 mb-3">Integrated Macro Score (IMS) – Scenario Base</h3>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm text-left border border-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-2 border">Asset/Regione</th>
+              <th class="px-4 py-2 border">IMS (1–5)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="px-4 py-2 border">USA Equity</td><td class="px-4 py-2 border">3,5</td></tr>
+            <tr><td class="px-4 py-2 border">EU Equity</td><td class="px-4 py-2 border">2,5</td></tr>
+            <tr><td class="px-4 py-2 border">EM Equity</td><td class="px-4 py-2 border">3,5</td></tr>
+            <tr><td class="px-4 py-2 border">Gov Core</td><td class="px-4 py-2 border">2,75</td></tr>
+            <tr><td class="px-4 py-2 border">Credit IG</td><td class="px-4 py-2 border">3,25</td></tr>
+            <tr><td class="px-4 py-2 border">HY</td><td class="px-4 py-2 border">3,0</td></tr>
+            <tr><td class="px-4 py-2 border">Commodities</td><td class="px-4 py-2 border">3,0</td></tr>
+            <tr><td class="px-4 py-2 border">FX USD</td><td class="px-4 py-2 border">2,75</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
 
-  <!-- Matrice macro sintetica -->
-  <div class="overflow-x-auto mb-8">
-    <table class="min-w-full border border-gray-200 text-sm">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="p-2 text-left">Regione / Variabile</th>
-          <th class="p-2">Base</th>
-          <th class="p-2">Upside</th>
-          <th class="p-2">Downside</th>
-          <th class="p-2">Fonte</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="p-2 font-medium">U.S. — PIL reale % a/a</td>
-          <td class="p-2">2.3 / 1.9 / 1.8</td>
-          <td class="p-2">2.6 / 2.3 / 2.1</td>
-          <td class="p-2">1.5 / 1.2 / 1.4</td>
-          <td class="p-2">IMF WEO Jul-25 / JPM</td>
-        </tr>
-        <tr>
-          <td class="p-2 font-medium">Eurozona — Inflazione CPI % a/a</td>
-          <td class="p-2">2.3 / 2.0 / 1.9</td>
-          <td class="p-2">2.1 / 1.9 / 1.8</td>
-          <td class="p-2">2.7 / 2.4 / 2.2</td>
-          <td class="p-2">ECB Proj Jun-25</td>
-        </tr>
-        <tr>
-          <td class="p-2 font-medium">Brent $/bbl</td>
-          <td class="p-2">82 / 80 / 78</td>
-          <td class="p-2">78 / 76 / 75</td>
-          <td class="p-2">90 / 88 / 85</td>
-          <td class="p-2">IEA/OPEC Aug-25</td>
-        </tr>
-        <tr>
-          <td class="p-2 font-medium">Oro $/oz</td>
-          <td class="p-2">2 350 / 2 300 / 2 280</td>
-          <td class="p-2">2 250 / 2 200 / 2 180</td>
-          <td class="p-2">2 500 / 2 450 / 2 400</td>
-          <td class="p-2">WGC Mid-Year 2025</td>
-        </tr>
-      </tbody>
-    </table>
-    <p class="mt-2 text-xs text-gray-500">Nota: valori in sequenza breve/medio/lungo termine.</p>
   </div>
-
-  <!-- IMS e Range allocativi -->
-  <div class="overflow-x-auto mb-8">
-    <table class="min-w-full border border-gray-200 text-sm mb-6">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="p-2 text-left">Regione / Asset</th>
-          <th class="p-2">Base</th>
-          <th class="p-2">Upside</th>
-          <th class="p-2">Downside</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td class="p-2 font-medium">U.S. equity</td><td class="p-2">3.5</td><td class="p-2">4.2</td><td class="p-2">2.6</td></tr>
-        <tr><td class="p-2 font-medium">Euro equity</td><td class="p-2">3.0</td><td class="p-2">3.6</td><td class="p-2">2.3</td></tr>
-        <tr><td class="p-2 font-medium">Govies DM</td><td class="p-2">3.2</td><td class="p-2">2.6</td><td class="p-2">4.0</td></tr>
-        <tr><td class="p-2 font-medium">Oro</td><td class="p-2">3.3</td><td class="p-2">2.6</td><td class="p-2">4.2</td></tr>
-      </tbody>
-    </table>
-
-    <table class="min-w-full border border-gray-200 text-sm">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="p-2 text-left">Asset class</th>
-          <th class="p-2">Base %</th>
-          <th class="p-2">View</th>
-          <th class="p-2">Upside %</th>
-          <th class="p-2">View</th>
-          <th class="p-2">Downside %</th>
-          <th class="p-2">View</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td class="p-2 font-medium">Equity DM (U.S./EU/JP)</td><td class="p-2">42–52</td><td class="p-2">OW leggero U.S.</td><td class="p-2">48–58</td><td class="p-2">OW</td><td class="p-2">30–40</td><td class="p-2">UW</td></tr>
-        <tr><td class="p-2 font-medium">Equity EM</td><td class="p-2">6–10</td><td class="p-2">N selettivo</td><td class="p-2">8–12</td><td class="p-2">OW selettivo</td><td class="p-2">4–8</td><td class="p-2">UW</td></tr>
-        <tr><td class="p-2 font-medium">Govies DM (agg.)</td><td class="p-2">20–28</td><td class="p-2">N / OW core</td><td class="p-2">14–22</td><td class="p-2">UW duration</td><td class="p-2">28–36</td><td class="p-2">OW duration</td></tr>
-        <tr><td class="p-2 font-medium">Corporate IG</td><td class="p-2">10–16</td><td class="p-2">OW qualità</td><td class="p-2">8–12</td><td class="p-2">N</td><td class="p-2">12–18</td><td class="p-2">OW</td></tr>
-        <tr><td class="p-2 font-medium">High Yield</td><td class="p-2">3–7</td><td class="p-2">N</td><td class="p-2">5–9</td><td class="p-2">OW</td><td class="p-2">0–4</td><td class="p-2">UW</td></tr>
-        <tr><td class="p-2 font-medium">EM Debt (HC/LC)</td><td class="p-2">6–10</td><td class="p-2">N → HC&gt;LC</td><td class="p-2">8–12</td><td class="p-2">OW</td><td class="p-2">4–8</td><td class="p-2">UW → HC&gt;LC</td></tr>
-        <tr><td class="p-2 font-medium">Commodities broad</td><td class="p-2">3–7</td><td class="p-2">N</td><td class="p-2">2–6</td><td class="p-2">UW</td><td class="p-2">5–9</td><td class="p-2">OW</td></tr>
-        <tr><td class="p-2 font-medium">Oro</td><td class="p-2">1–4</td><td class="p-2">N / hedge</td><td class="p-2">1–3</td><td class="p-2">UW</td><td class="p-2">3–6</td><td class="p-2">OW hedge</td></tr>
-        <tr><td class="p-2 font-medium">Cash</td><td class="p-2">2–5</td><td class="p-2">Buffer</td><td class="p-2">1–4</td><td class="p-2">Min</td><td class="p-2">5–10</td><td class="p-2">Rialzo buffer</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Stress test multi-scenario -->
-  <div class="mb-8">
-    <h3 class="text-gray-800 font-semibold mb-2">Stress test multi-scenario</h3>
-    <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
-      <li><strong>+100 bps tassi:</strong> perdita MTM su govies/IG; compressione multipli equity growth; USD più forte; oro debole salvo rischio sistemico.</li>
-      <li><strong>−20% equity globali:</strong> drawdown maggiore su EM/HY; govies core in rally (flight-to-quality); oro in rialzo; USD/JPY bid difensivo.</li>
-      <li><strong>+30% oil:</strong> inflazione headline in rialzo; revisione percorsi di taglio tassi; penalità per importatori netti; energia in alfa.</li>
-    </ul>
-    <p class="mt-2 text-xs text-gray-500">
-      Fonti: BIS AER 2025; IMF WEO Jul-25; IEA/OPEC Aug-25; WGC Mid-Year 2025; desk outlook banche d’investimento.
-    </p>
-  </div>
-
-  <!-- Key conviction calls -->
-  <div class="mb-8">
-    <h3 class="text-gray-800 font-semibold mb-2">Key conviction calls</h3>
-    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-      <li>OW tattico U.S. equity (qualità, earnings durability) nel Base/Up; gestione del beta in Downside.</li>
-      <li>Duration intermedia nel Base; allungo duration in Downside come hedge macro.</li>
-      <li>Oro come hedge asimmetrico: N nel Base, OW in Downside; commodities broad OW solo in Downside.</li>
-    </ul>
-  </div>
-
-  <!-- Matrice macro completa -->
-  <div class="overflow-x-auto">
-    <table class="min-w-full border border-gray-200 text-sm">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="p-2 text-left">Regione / Variabile</th>
-          <th class="p-2">Base<br><span class="text-xs text-gray-500">0–6m / 6–24m / 24–36m</span></th>
-          <th class="p-2">Upside<br><span class="text-xs text-gray-500">0–6m / 6–24m / 24–36m</span></th>
-          <th class="p-2">Downside<br><span class="text-xs text-gray-500">0–6m / 6–24m / 24–36m</span></th>
-          <th class="p-2">Fonte</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- PIL reale -->
-        <tr><td class="p-2 font-medium">U.S. — PIL reale % a/a</td><td class="p-2">2.3 / 1.9 / 1.8</td><td class="p-2">2.6 / 2.3 / 2.1</td><td class="p-2">1.5 / 1.2 / 1.4</td><td class="p-2">IMF WEO Jul-25 / JPM</td></tr>
-        <tr><td class="p-2 font-medium">Eurozona — PIL reale % a/a</td><td class="p-2">0.9 / 1.1 / 1.2</td><td class="p-2">1.2 / 1.4 / 1.5</td><td class="p-2">0.4 / 0.6 / 0.9</td><td class="p-2">ECB Proj Jun-25 / OECD</td></tr>
-        <tr><td class="p-2 font-medium">Giappone — PIL reale % a/a</td><td class="p-2">1.0 / 1.0 / 0.9</td><td class="p-2">1.2 / 1.1 / 1.0</td><td class="p-2">0.6 / 0.7 / 0.8</td><td class="p-2">BoJ Outlook Jul-25</td></tr>
-        <tr><td class="p-2 font-medium">EM Asia ex-China — PIL reale % a/a</td><td class="p-2">4.8 / 4.9 / 5.0</td><td class="p-2">5.1 / 5.2 / 5.3</td><td class="p-2">4.2 / 4.3 / 4.5</td><td class="p-2">IMF / ADB</td></tr>
-        <tr><td class="p-2 font-medium">LatAm — PIL reale % a/a</td><td class="p-2">1.9 / 2.0 / 2.1</td><td class="p-2">2.3 / 2.4 / 2.5</td><td class="p-2">1.2 / 1.4 / 1.6</td><td class="p-2">World Bank GEP Jun-25</td></tr>
-        <tr><td class="p-2 font-medium">Cina — PIL reale % a/a</td><td class="p-2">4.5 / 4.3 / 4.0</td><td class="p-2">5.0 / 4.8 / 4.5</td><td class="p-2">3.5 / 3.8 / 4.0</td><td class="p-2">IMF WEO Jul-25 / NBS</td></tr>
-        <!-- Inflazione -->
-        <tr><td class="p-2 font-medium">U.S. — Inflazione PCE core % a/a</td><td class="p-2">2.4 / 2.2 / 2.0</td><td class="p-2">2.1 / 1.9 / 1.8</td><td class="p-2">2.7 / 2.4 / 2.2</td><td class="p-2">Fed SEP Jun-25</td></tr>
-        <tr><td class="p-2 font-medium">Eurozona — Inflazione CPI % a/a</td><td class="p-2">2.3 / 2.0 / 1.9</td><td class="p-2">2.1 / 1.9 / 1.8</td><td class="p-2">2.7 / 2.4 / 2.2</td><td class="p-2">ECB Proj Jun-25</td></tr>
-        <tr><td class="p-2 font-medium">Cina — Inflazione CPI % a/a</td><td class="p-2">1.4 / 1.7 / 1.9</td><td class="p-2">1.6 / 1.9 / 2.1</td><td class="p-2">0.9 / 1.2 / 1.5</td><td class="p-2">NBS / IMF</td></tr>
-        <!-- Policy rates -->
-        <tr><td class="p-2 font-medium">Fed Funds target %</td><td class="p-2">4.75 / 4.25 / 3.75</td><td class="p-2">4.50 / 4.00 / 3.50</td><td class="p-2">5.25 / 4.75 / 4.25</td><td class="p-2">Fed SEP Jun-25 / JPM</td></tr>
-        <tr><td class="p-2 font-medium">ECB depo rate %</td><td class="p-2">3.25 / 2.75 / 2.25</td><td class="p-2">3.00 / 2.50 / 2.00</td><td class="p-2">3.75 / 3.25 / 2.75</td><td class="p-2">ECB Proj Jun-25</td></tr>
-        <tr><td class="p-2 font-medium">BoJ policy rate %</td><td class="p-2">0.25 / 0.50 / 0.75</td><td class="p-2">0.25 / 0.50 / 0.75</td><td class="p-2">0.00 / 0.25 / 0.50</td><td class="p-2">BoJ Outlook Jul-25</td></tr>
-        <!-- Commodities -->
-        <tr><td class="p-2 font-medium">Brent $/bbl</td><td class="p-2">82 / 80 / 78</td><td class="p-2">78 / 76 / 75</td><td class="p-2">90 / 88 / 85</td><td class="p-2">IEA/OPEC Aug-25</td></tr>
-        <tr><td class="p-2 font-medium">Oro $/oz</td><td class="p-2">2 350 / 2 300 / 2 280</td><td class="p-2">2 250 / 2 200 / 2 180</td><td class="p-2">2 500 / 2 450 / 2 400</td><td class="p-2">WGC Mid-Year 2025</td></tr>
-      </tbody>
-    </table>
-  </div>
-<style>
-/* Responsive tables istituzionali */
-@media (max-width: 768px) {
-  table.responsive thead {
-    display: none;
-  }
-  table.responsive,
-  table.responsive tbody,
-  table.responsive tr,
-  table.responsive td {
-    display: block;
-    width: 100%;
-  }
-  table.responsive tr {
-    background: white;
-    border: 1px solid #e5e7eb; /* gray-200 */
-    border-radius: 0.75rem;    /* rounded-xl */
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-  }
-  table.responsive td {
-    text-align: right;
-    padding: 0.35rem 0;
-    font-size: 0.875rem;
-    border: none !important;
-  }
-  table.responsive td::before {
-    content: attr(data-label);
-    float: left;
-    font-weight: 600;
-    color: #374151; /* gray-700 */
-    text-align: left;
-  }
-}
-</style>
 </section>
+
 
   
 
