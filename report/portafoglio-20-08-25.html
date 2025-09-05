@@ -1462,116 +1462,153 @@ if (d.disclaimer) {
   <!-- Contenuto -->
   <div class="space-y-8">
 
-    <!-- Scenari -->
-    <div>
-      <h3 class="text-lg font-semibold text-gray-800 mb-3">Scenari Integrati</h3>
-      <div class="overflow-x-auto">
-        <table class="min-w-full text-sm text-left border border-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-4 py-2 border">Scenario</th>
-              <th class="px-4 py-2 border">Prob.</th>
-              <th class="px-4 py-2 border">0–6 mesi</th>
-              <th class="px-4 py-2 border">6–24 mesi</th>
-              <th class="px-4 py-2 border">Driver chiave</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="px-4 py-2 border font-medium">Base</td>
-              <td class="px-4 py-2 border">55%</td>
-              <td class="px-4 py-2 border">Disinflazione graduale; easing Fed/BCE; USD neutrale→debole; Brent 67–70$; oro laterale</td>
-              <td class="px-4 py-2 border">Crescita moderata; EPS +6–8%; spread IG stabili</td>
-              <td class="px-4 py-2 border">Tariffe stabili; assenza shock energetici</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-2 border font-medium">Upside</td>
-              <td class="px-4 py-2 border">25%</td>
-              <td class="px-4 py-2 border">Pace commerciale; inflazione a target; risk-on; USD debole</td>
-              <td class="px-4 py-2 border">Multipli in espansione; compressione spread</td>
-              <td class="px-4 py-2 border">Stimolo fiscale coordinato</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-2 border font-medium">Downside</td>
-              <td class="px-4 py-2 border">20%</td>
-              <td class="px-4 py-2 border">Shock tariffario/energetico; USD rifugio; oro +10–15%</td>
-              <td class="px-4 py-2 border">EPS in calo; spread HY/EM in allargamento</td>
-              <td class="px-4 py-2 border">Escalation conflitti; errori di policy</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+ <!-- Tabella Scenario Macro -->
+<div class="overflow-x-auto">
+  <table class="w-full text-sm text-left border border-gray-200 rounded-lg overflow-hidden">
+    <thead class="bg-gray-50 text-gray-700 text-xs uppercase">
+      <tr>
+        <th class="px-4 py-3">Regione / Asset</th>
+        <th class="px-4 py-3">IMS</th>
+        <th class="px-4 py-3">Allocazione Base</th>
+        <th class="px-4 py-3">Range Min–Max</th>
+        <th class="px-4 py-3">Note &amp; Fonti</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-100">
+      <!-- USA Equity -->
+      <tr class="hover:bg-gray-50">
+        <td class="px-4 py-3 font-medium text-gray-900">USA Equity</td>
+        <td class="px-4 py-3">3.0</td>
+        <td class="px-4 py-3">28%</td>
+        <td class="px-4 py-3">15–35%</td>
+        <td class="px-4 py-3 text-gray-600">
+          Leadership concentrata in tech e AI, ma crescita macro sopra media (2.5%). 
+          <span class="block text-xs text-gray-500">Fonti: Goldman Sachs (2025 Global Outlook); Morgan Stanley (Midyear Equity Outlook); BlackRock (Midyear Global Outlook)</span>
+        </td>
+      </tr>
 
-    <!-- Parametri macro -->
-    <div>
-      <h3 class="text-lg font-semibold text-gray-800 mb-3">Parametri Macro Regionali – Scenario Base</h3>
-      <div class="overflow-x-auto">
-        <table class="min-w-full text-sm text-left border border-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-4 py-2 border">Regione</th>
-              <th class="px-4 py-2 border">PIL reale</th>
-              <th class="px-4 py-2 border">Inflazione</th>
-              <th class="px-4 py-2 border">Policy rate</th>
-              <th class="px-4 py-2 border">FX bias</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="px-4 py-2 border font-medium">USA</td>
-              <td class="px-4 py-2 border">~2,4%</td>
-              <td class="px-4 py-2 border">PCE 2,6% / core 2,9%</td>
-              <td class="px-4 py-2 border">Easing atteso</td>
-              <td class="px-4 py-2 border">USD neutrale→debole</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-2 border font-medium">Area euro</td>
-              <td class="px-4 py-2 border">0,9%</td>
-              <td class="px-4 py-2 border">2,0% → 1,6%</td>
-              <td class="px-4 py-2 border">~2,0%</td>
-              <td class="px-4 py-2 border">EUR moderatamente forte</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-2 border font-medium">Giappone</td>
-              <td class="px-4 py-2 border">1,1%</td>
-              <td class="px-4 py-2 border">~2,4% core</td>
-              <td class="px-4 py-2 border">0,75% atteso</td>
-              <td class="px-4 py-2 border">JPY in apprezzamento</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+      <!-- Eurozona Equity -->
+      <tr class="hover:bg-gray-50">
+        <td class="px-4 py-3 font-medium text-gray-900">Eurozona Equity</td>
+        <td class="px-4 py-3">2.5</td>
+        <td class="px-4 py-3">10%</td>
+        <td class="px-4 py-3">4–15%</td>
+        <td class="px-4 py-3 text-gray-600">
+          Crescita lenta (~0.8%), benefici dai tassi in calo e politiche fiscali espansive. 
+          <span class="block text-xs text-gray-500">Fonti: Goldman Sachs; BlackRock Outlook; ECB data</span>
+        </td>
+      </tr>
 
-    <!-- IMS -->
-    <div>
-      <h3 class="text-lg font-semibold text-gray-800 mb-3">Integrated Macro Score (IMS) – Scenario Base</h3>
-      <div class="overflow-x-auto">
-        <table class="min-w-full text-sm text-left border border-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-4 py-2 border">Asset/Regione</th>
-              <th class="px-4 py-2 border">IMS (1–5)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td class="px-4 py-2 border">USA Equity</td><td class="px-4 py-2 border">3,5</td></tr>
-            <tr><td class="px-4 py-2 border">EU Equity</td><td class="px-4 py-2 border">2,5</td></tr>
-            <tr><td class="px-4 py-2 border">EM Equity</td><td class="px-4 py-2 border">3,5</td></tr>
-            <tr><td class="px-4 py-2 border">Gov Core</td><td class="px-4 py-2 border">2,75</td></tr>
-            <tr><td class="px-4 py-2 border">Credit IG</td><td class="px-4 py-2 border">3,25</td></tr>
-            <tr><td class="px-4 py-2 border">HY</td><td class="px-4 py-2 border">3,0</td></tr>
-            <tr><td class="px-4 py-2 border">Commodities</td><td class="px-4 py-2 border">3,0</td></tr>
-            <tr><td class="px-4 py-2 border">FX USD</td><td class="px-4 py-2 border">2,75</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+      <!-- Japan Equity -->
+      <tr class="hover:bg-gray-50">
+        <td class="px-4 py-3 font-medium text-gray-900">Giappone Equity</td>
+        <td class="px-4 py-3">2.8</td>
+        <td class="px-4 py-3">6%</td>
+        <td class="px-4 py-3">2–9%</td>
+        <td class="px-4 py-3 text-gray-600">
+          Output sopra tendenza, BoJ graduale su tassi, yen debole sostiene export. 
+          <span class="block text-xs text-gray-500">Fonti: Goldman Sachs; OECD Interim Outlook 2025</span>
+        </td>
+      </tr>
 
+      <!-- EM Equity -->
+      <tr class="hover:bg-gray-50">
+        <td class="px-4 py-3 font-medium text-gray-900">Emerging Markets Equity</td>
+        <td class="px-4 py-3">2.3</td>
+        <td class="px-4 py-3">11%</td>
+        <td class="px-4 py-3">6–15%</td>
+        <td class="px-4 py-3 text-gray-600">
+          Debolezze globali ma opportunità in local debt e valute emergenti (USD in calo). 
+          <span class="block text-xs text-gray-500">Fonti: BlackRock; IMF WEO 2025</span>
+        </td>
+      </tr>
+
+      <!-- Core Gov Bonds -->
+      <tr class="hover:bg-gray-50">
+        <td class="px-4 py-3 font-medium text-gray-900">Core Gov Bonds (US/EU)</td>
+        <td class="px-4 py-3">2.8</td>
+        <td class="px-4 py-3">12%</td>
+        <td class="px-4 py-3">10–18%</td>
+        <td class="px-4 py-3 text-gray-600">
+          Belly curve (3–7y) preferita; long duration meno attraente. 
+          <span class="block text-xs text-gray-500">Fonti: BlackRock Tactical View 2025; Morgan Stanley Fixed Income Outlook</span>
+        </td>
+      </tr>
+
+      <!-- Corporate IG -->
+      <tr class="hover:bg-gray-50">
+        <td class="px-4 py-3 font-medium text-gray-900">Corporate IG</td>
+        <td class="px-4 py-3">3.0</td>
+        <td class="px-4 py-3">8%</td>
+        <td class="px-4 py-3">6–12%</td>
+        <td class="px-4 py-3 text-gray-600">
+          Resilienza creditizia, spread contenuti, difensivo in scenari volatili. 
+          <span class="block text-xs text-gray-500">Fonti: Moody’s; Goldman Sachs Credit Research</span>
+        </td>
+      </tr>
+
+      <!-- HY -->
+      <tr class="hover:bg-gray-50">
+        <td class="px-4 py-3 font-medium text-gray-900">High Yield</td>
+        <td class="px-4 py-3">2.5</td>
+        <td class="px-4 py-3">3%</td>
+        <td class="px-4 py-3">1–5%</td>
+        <td class="px-4 py-3 text-gray-600">
+          Rendimento elevato ma rischio di default crescente in scenari shock. 
+          <span class="block text-xs text-gray-500">Fonti: S&P Global; Morgan Stanley Credit Outlook</span>
+        </td>
+      </tr>
+
+      <!-- Commodities -->
+      <tr class="hover:bg-gray-50">
+        <td class="px-4 py-3 font-medium text-gray-900">Commodities (ex Oro)</td>
+        <td class="px-4 py-3">3.0</td>
+        <td class="px-4 py-3">6%</td>
+        <td class="px-4 py-3">3–10%</td>
+        <td class="px-4 py-3 text-gray-600">
+          Rallentamento ciclico, ma oil/energy restano driver chiave. 
+          <span class="block text-xs text-gray-500">Fonti: Goldman Sachs Commodities Research; IEA 2025</span>
+        </td>
+      </tr>
+
+      <!-- Gold -->
+      <tr class="hover:bg-gray-50">
+        <td class="px-4 py-3 font-medium text-gray-900">Oro / Safe Haven</td>
+        <td class="px-4 py-3">3.0</td>
+        <td class="px-4 py-3">3%</td>
+        <td class="px-4 py-3">1–5%</td>
+        <td class="px-4 py-3 text-gray-600">
+          Protezione strategica contro inflazione e rischi Fed; stime fino a 5.000$/oz. 
+          <span class="block text-xs text-gray-500">Fonti: Goldman Sachs (Sep 2025); BlackRock Diversification Outlook</span>
+        </td>
+      </tr>
+
+      <!-- Alternatives -->
+      <tr class="hover:bg-gray-50">
+        <td class="px-4 py-3 font-medium text-gray-900">Alternatives / Alts</td>
+        <td class="px-4 py-3">2.8</td>
+        <td class="px-4 py-3">6%</td>
+        <td class="px-4 py-3">4–8%</td>
+        <td class="px-4 py-3 text-gray-600">
+          Hedge funds e private markets migliorano resilienza del portafoglio. 
+          <span class="block text-xs text-gray-500">Fonti: BlackRock Alts Outlook; Yale Endowment Model (Swensen)</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Nota accademica -->
+<div class="mt-6 text-sm text-gray-700 leading-relaxed">
+  <p>
+    <strong>Nota metodologica accademica:</strong> la costruzione dell’IMS e dei range allocativi si ispira alla letteratura di <em>Expected Returns</em> (Ilmanen, 2011) e alla teoria del <em>Mean-Variance Optimization</em> (Markowitz, 1952), 
+    adattata alle condizioni macro di regime shift (BlackRock Investment Institute, 2025). L’approccio integra dati forward-looking (banche di investimento: GS, MS, BlackRock) con modelli di equilibrio dinamico. 
+  </p>
+</div>
   </div>
 </section>
 
+    
 
   
 
@@ -1583,87 +1620,160 @@ if (d.disclaimer) {
 <section id="blocco3" class="sv-panel max-w-7xl mx-auto mb-12 bg-white border border-gray-300 rounded-3xl shadow-xl p-6 sm:p-10 md:p-14" role="tabpanel" aria-labelledby="tab-blocco3">
 
   <!-- Header -->
-  <header class="mb-12 border-b border-gray-300 pb-6">
-    <h2 class="text-[clamp(1.7rem,2.4vw,2.25rem)] font-extrabold tracking-tight text-gray-900">
-      B3 — Pre‑Alloc Framework & Quant Engine
-    </h2>
-    <p class="mt-4 text-gray-700 text-base md:text-lg leading-relaxed">
-      Trasformazione operativa e scientifica: dal profilo investitore (B1) e scenari macro (B2) a parametri quantitativi, punteggi e range allocativi pronti per simulazioni operative e stress test in BLOCCO 4, integrando evidenze accademiche aggiornate al 2025.
-    </p>
+  <header class="mb-8 border-b border-gray-200 pb-4 flex items-start justify-between gap-4">
+    <div>
+      <h2 class="text-[clamp(1.4rem,2vw,1.875rem)] font-semibold tracking-tight text-gray-900" id="heading-blocco3">
+        Blocco 3 · Pre-Alloc Framework & Quant Engine
+      </h2>
+      <p class="mt-2 text-[clamp(.95rem,1.5vw,1rem)] text-gray-600 leading-relaxed max-w-3xl">
+        Parametri quantitativi, punteggi multi-criterio e range allocativi dinamici derivati da profilo (B1) e scenari macro (B2). Output pronto per la costruzione di portafoglio (B4), con coerenza accademica e istituzionale.
+      </p>
+    </div>
+    <div class="text-right shrink-0">
+      <p class="text-xs text-gray-500">Aggiornato al</p>
+      <time id="quant-updated" datetime="2025-09-06" class="text-xs font-medium text-gray-700">06 Set 2025</time>
+    </div>
   </header>
 
-  <!-- Step-by-Step con dati concreti, spiegazioni e fonti accademiche -->
-  <ol class="list-decimal list-inside space-y-8 text-gray-800">
+  <!-- Contenuto -->
+  <div class="space-y-10">
 
-    <li>
-      <strong>Analisi preliminare del profilo (B1)</strong>
-      <ul class="list-disc list-inside ml-6 mt-3 space-y-2">
-        <li>Risk Appetite Score: <span class="font-semibold">35/100</span> (profilo conservativo, rischio dichiarato 3/10). <span class="text-gray-500 italic">Fonti: Grable & Lytton, 1999; CFA Institute 2023</span></li>
-        <li>Capacity Constraints Score: <span class="font-semibold">40/100</span> (capitale <5k EUR, orizzonte 6-10 anni). <span class="text-gray-500 italic">Fonte: Behavioral Finance Journal, 2022</span></li>
-        <li>Max Drawdown Tollerato: <span class="font-semibold">-5%</span>. <span class="text-gray-500 italic">Fonte: CFA Guidelines 2023</span></li>
-        <li>Obiettivo Rendimento: <span class="font-semibold">6–8% reale annuo</span>. <span class="text-gray-500 italic">Markowitz 1952; Campbell & Viceira 2002</span></li>
-        <li>Vincoli Valutari: <span class="font-semibold">EUR (hedging considerato)</span>. <span class="text-gray-500 italic">OECD FX Studies 2024</span></li>
+    <!-- Tabella parametri quantitativi -->
+    <div>
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Parametri Quantitativi per Asset Class</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left text-gray-700 border border-gray-200 rounded-lg overflow-hidden">
+          <thead class="bg-gray-100 text-gray-800 font-medium">
+            <tr>
+              <th class="px-4 py-3">Asset Class</th>
+              <th class="px-4 py-3">Rendimento Atteso</th>
+              <th class="px-4 py-3">Volatilità</th>
+              <th class="px-4 py-3">Correlazioni</th>
+              <th class="px-4 py-3">Macro-Sensitivity</th>
+              <th class="px-4 py-3">Tail Risk</th>
+              <th class="px-4 py-3">Liquidity Score</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr>
+              <td class="px-4 py-3 font-medium">Equity US</td>
+              <td class="px-4 py-3">5.5–6.5%</td>
+              <td class="px-4 py-3">15%</td>
+              <td class="px-4 py-3">Alta con rischio globale</td>
+              <td class="px-4 py-3">+ crescita / – tassi</td>
+              <td class="px-4 py-3">Medio</td>
+              <td class="px-4 py-3">Alto</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium">Equity EU</td>
+              <td class="px-4 py-3">4.5–5.5%</td>
+              <td class="px-4 py-3">14%</td>
+              <td class="px-4 py-3">Con energia & EUR/USD</td>
+              <td class="px-4 py-3">+ export / sens. inflazione</td>
+              <td class="px-4 py-3">Medio-alto</td>
+              <td class="px-4 py-3">Medio</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium">Gov Bond IG (EU)</td>
+              <td class="px-4 py-3">2–2.5%</td>
+              <td class="px-4 py-3">5%</td>
+              <td class="px-4 py-3">Negativa vs equity</td>
+              <td class="px-4 py-3">+ calo inflazione</td>
+              <td class="px-4 py-3">Basso</td>
+              <td class="px-4 py-3">Alto</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium">Gold</td>
+              <td class="px-4 py-3">2–3%</td>
+              <td class="px-4 py-3">12%</td>
+              <td class="px-4 py-3">Negativa con USD real rates</td>
+              <td class="px-4 py-3">+ risk aversion</td>
+              <td class="px-4 py-3">Basso-medio</td>
+              <td class="px-4 py-3">Alto</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium">Crypto</td>
+              <td class="px-4 py-3">15–20%</td>
+              <td class="px-4 py-3">60%</td>
+              <td class="px-4 py-3">Alta con equity tech</td>
+              <td class="px-4 py-3">+ liquidità globale</td>
+              <td class="px-4 py-3">Altissimo</td>
+              <td class="px-4 py-3">Medio-basso</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tabella scoring multi-criterio -->
+    <div>
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Scoring Multi-Criterio (0–100)</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left text-gray-700 border border-gray-200 rounded-lg overflow-hidden">
+          <thead class="bg-gray-100 text-gray-800 font-medium">
+            <tr>
+              <th class="px-4 py-3">Asset</th>
+              <th class="px-4 py-3">Rendimento</th>
+              <th class="px-4 py-3">Rischio</th>
+              <th class="px-4 py-3">Liquidità</th>
+              <th class="px-4 py-3">Tail Risk</th>
+              <th class="px-4 py-3">Conviction</th>
+              <th class="px-4 py-3">Score Totale</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr>
+              <td class="px-4 py-3 font-medium">Equity US</td>
+              <td class="px-4 py-3">65</td>
+              <td class="px-4 py-3">55</td>
+              <td class="px-4 py-3">90</td>
+              <td class="px-4 py-3">50</td>
+              <td class="px-4 py-3">70</td>
+              <td class="px-4 py-3 font-semibold text-green-700">68</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium">Gov Bond IG</td>
+              <td class="px-4 py-3">40</td>
+              <td class="px-4 py-3">90</td>
+              <td class="px-4 py-3">95</td>
+              <td class="px-4 py-3">85</td>
+              <td class="px-4 py-3">60</td>
+              <td class="px-4 py-3 font-semibold text-green-700">74</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium">Gold</td>
+              <td class="px-4 py-3">45</td>
+              <td class="px-4 py-3">70</td>
+              <td class="px-4 py-3">85</td>
+              <td class="px-4 py-3">75</td>
+              <td class="px-4 py-3">68</td>
+              <td class="px-4 py-3 font-semibold text-green-700">69</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium">Crypto</td>
+              <td class="px-4 py-3">90</td>
+              <td class="px-4 py-3">15</td>
+              <td class="px-4 py-3">40</td>
+              <td class="px-4 py-3">10</td>
+              <td class="px-4 py-3">45</td>
+              <td class="px-4 py-3 font-semibold text-red-700">40</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Range allocativi target -->
+    <div>
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Range Allocativi Target per Profilo</h3>
+      <ul class="space-y-3 text-sm md:text-base text-gray-700">
+        <li><strong>Profilo Base:</strong> Equity 30%, Bond 35%, Alt (Gold+Commodities) 10%, Crypto 2%, Cash 15%</li>
+        <li><strong>Profilo Cauto:</strong> Equity 25%, Bond 40%, Alt 8%, Crypto 1%, Cash 20%</li>
+        <li><strong>Profilo Dinamico:</strong> Equity 40%, Bond 25%, Alt 12%, Crypto 4%, Cash 10%</li>
       </ul>
-    </li>
+    </div>
 
-    <li>
-      <strong>Trasformazione scenari macro in parametri quantitativi (B2)</strong>
-      <ul class="list-disc list-inside ml-6 mt-3 space-y-2">
-        <li>Equities Global Expected Return 12M: <span class="font-semibold">5.8%</span>. <span class="text-gray-500 italic">IMF World Economic Outlook 2025</span></li>
-        <li>Fixed Income Volatility: <span class="font-semibold">3.2%</span> (Gov Bonds EUR, forward 12M). <span class="text-gray-500 italic">ECB Statistical Data Warehouse 2025</span></li>
-        <li>Correlation Equity-Bond: <span class="font-semibold">-0.15</span>. <span class="text-gray-500 italic">Bekaert et al., 2021</span></li>
-        <li>Tail Risk Stress Event: <span class="font-semibold">3% su Equities, 1% su Bonds</span>. <span class="text-gray-500 italic">Embrechts et al., 2005</span></li>
-        <li>Liquidity Score operativo: <span class="font-semibold">75/100</span> (Equities liquidabili entro 2 giorni). <span class="text-gray-500 italic">S&P Global Market Liquidity Reports 2025</span></li>
-        <li>Macro-Sensitivity Score Equities: Inflazione USA 3%, EZ 2%; tassi 2-3%. <span class="text-gray-500 italic">Campbell & Viceira 2002; IMF Data 2025</span></li>
-      </ul>
-    </li>
-
-    <li>
-      <strong>Definizione allocazione strategica preliminare</strong>
-      <ul class="list-disc list-inside ml-6 mt-3 space-y-2">
-        <li>Equities Global: <span class="font-semibold">45% (range operativo 40–50%)</span>. <span class="text-gray-500 italic">MPT adaptation 2025</span></li>
-        <li>Fixed Income EUR/US: <span class="font-semibold">40% (range 35–50%)</span>. <span class="text-gray-500 italic">Fabozzi 2024</span></li>
-        <li>Alternativi / Liquid Alternatives: <span class="font-semibold">10% (range 5–15%)</span>. <span class="text-gray-500 italic">Alternative Investment Research 2025</span></li>
-        <li>Cash / Short Term EUR: <span class="font-semibold">5% (range 5–10%)</span>. <span class="text-gray-500 italic">CFA Institute Guidelines 2023</span></li>
-      </ul>
-    </li>
-
-    <li>
-      <strong>Scoring multi-criterio operativo</strong>
-      <ul class="list-disc list-inside ml-6 mt-3 space-y-2">
-        <li>Equities US: Rischio 55, Rendimento 65, Correlazione 40, Liquidity 80 → Conviction Score <span class="font-semibold">62</span>. <span class="text-gray-500 italic">Risk-Return Scoring Models 2025</span></li>
-        <li>Government Bonds EUR: Rischio 30, Rendimento 40, Correlazione 25, Liquidity 90 → Conviction Score <span class="font-semibold">46</span>. <span class="text-gray-500 italic">ECB 2025</span></li>
-        <li>Alternativi: Rischio 50, Rendimento 55, Correlazione 20, Liquidity 70 → Conviction Score <span class="font-semibold">49</span>. <span class="text-gray-500 italic">Alt Investments Academic Studies 2025</span></li>
-      </ul>
-    </li>
-
-    <li>
-      <strong>Layer tattico operativo (1–12 mesi)</strong>
-      <ul class="list-disc list-inside ml-6 mt-3 space-y-2">
-        <li>Deviation Consensus T1 Equities: <span class="font-semibold">+1.5%</span>. <span class="text-gray-500 italic">Bloomberg Consensus Forecast 2025</span></li>
-        <li>Financial Conditions Index Forward: <span class="font-semibold">0.85</span> (moderato tightening USA). <span class="text-gray-500 italic">Fed Economic Data 2025</span></li>
-        <li>VIX Forward 12M: <span class="font-semibold">20%</span>. <span class="text-gray-500 italic">CBOE Market Volatility Index 2025</span></li>
-      </ul>
-    </li>
-
-    <li>
-      <strong>Parametri operativi per BLOCCO 4</strong>
-      <ul class="list-disc list-inside ml-6 mt-3 space-y-2">
-        <li>Max Concentration Equity: <span class="font-semibold">50–60%</span>. <span class="text-gray-500 italic">CFA 2023</span></li>
-        <li>Min Liquidity Cash: <span class="font-semibold">5%</span>. <span class="text-gray-500 italic">Institutional Liquidity Norms 2025</span></li>
-        <li>FX Hedge Coverage: <span class="font-semibold">50% EUR/USD</span>. <span class="text-gray-500 italic">OECD FX Studies 2024</span></li>
-        <li>Stress Test Shock: <span class="font-semibold">-15% Equities, -5% Bonds</span>. <span class="text-gray-500 italic">Basel III / Stress Testing 2025</span></li>
-        <li>Input quantitativi per simulazioni: Conviction Score, Expected Return, Volatilità, Correlazioni, Tail Risk. <span class="text-gray-500 italic">MPT + Academic Risk Models 2025</span></li>
-      </ul>
-    </li>
-
-  </ol>
-
-  <!-- Note metodologiche -->
-  <p class="mt-10 text-sm text-gray-500 leading-relaxed">
-    Tutti i dati e punteggi derivano da fonti istituzionali e accademiche selezionate: <strong>ECB, Fed, IMF, OECD, World Bank, S&P Global, Markit, Bloomberg</strong> e studi accademici (Markowitz 1952; Campbell & Viceira 2002; Embrechts et al. 2005; Bekaert et al. 2021), aggiornati al 2025. Le spiegazioni metodologiche accompagnano ogni parametro per garantire applicabilità pratica, compliance accademica e integrabilità con BLOCCO 4.
-  </p>
-
+  </div>
 </section>
 
 
