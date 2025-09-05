@@ -1186,9 +1186,8 @@ if (d.disclaimer) {
 </section>
 
 
-  <!-- Header -->
  <!-- BLOCCO 1 – PROFILO DELL’INVESTITORE (Tradelia • Istituzionale) -->
-<section id="blocco1" class="sv-panel hidden max-w-6xl mx-auto mb-12 bg-white border border-gray-200 rounded-xl shadow-sm p-5 sm:p-8 md:p-12" role="tabpanel" aria-labelledby="tab-blocco1">
+<section id="blocco1" class="sv-panel max-w-6xl mx-auto mb-12 bg-white border border-gray-200 rounded-xl shadow-sm p-5 sm:p-8 md:p-12" role="tabpanel" aria-labelledby="tab-blocco1">
 
   <!-- Header -->
   <header class="mb-8 border-b border-gray-200 pb-4">
@@ -1200,84 +1199,217 @@ if (d.disclaimer) {
     </p>
   </header>
 
-  <!-- Griglia responsive: 1 col (mobile) · 2 (tablet) · 3 (desktop) -->
+  <!-- Griglia -->
   <div class="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
 
     <!-- Età -->
-    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
       <div class="text-gray-700 font-semibold">Età</div>
-      <div class="text-gray-900 font-bold">31–45 anni</div>
-      <div class="text-gray-600 text-sm">Indica la fascia anagrafica per la definizione del profilo di rischio.</div>
+      <div class="text-gray-900 font-bold">35–44 anni</div>
+      <div class="text-gray-600 text-sm">
+        Fascia anagrafica per definizione del profilo di rischio.
+        <em>Fonte: MiFID II — Direttiva 2014/65/UE; ESMA Guidelines on suitability</em>
+      </div>
+    </div>
+
+    <!-- Nucleo familiare -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+      <div class="text-gray-700 font-semibold">Nucleo familiare</div>
+      <div class="text-gray-900 font-bold">Single</div>
+      <div class="text-gray-600 text-sm">
+        Struttura familiare, indicatore di esigenze di liquidità e propensione al rischio.
+        <em>Fonte: EFAMA Investor Profile Study</em>
+      </div>
+    </div>
+
+    <!-- Area fiscale -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+      <div class="text-gray-700 font-semibold">Area fiscale</div>
+      <div class="text-gray-900 font-bold">Italia</div>
+      <div class="text-gray-600 text-sm">
+        Residenza fiscale rilevante per regime fiscale e vincoli normativi.
+        <em>Fonte: CONSOB — Regolamento Intermediari; Agenzia delle Entrate</em>
+      </div>
+    </div>
+
+    <!-- Patrimonio complessivo -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+      <div class="text-gray-700 font-semibold">Patrimonio complessivo</div>
+      <div class="text-gray-900 font-bold">5–10 k€</div>
+      <div class="text-gray-600 text-sm">
+        Somma di liquidità, investimenti e immobili posseduti.
+        <em>Fonte: ESMA — Guidelines on complex debt instruments</em>
+      </div>
     </div>
 
     <!-- Capitale investibile -->
-    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
       <div class="text-gray-700 font-semibold">Capitale investibile</div>
-      <div class="text-gray-900 font-bold">&lt; 5k EUR</div>
-      <div class="text-gray-600 text-sm">Capitale disponibile per investimenti, al netto di liquidità di emergenza. Fonte: dati dichiarati.</div>
+      <div class="text-gray-900 font-bold">500–1 k€</div>
+      <div class="text-gray-600 text-sm">
+        Disponibile per investimenti, al netto di liquidità di emergenza.
+        <em>Fonte: MiFID II — Appropriateness assessment</em>
+      </div>
+    </div>
+
+    <!-- Passività -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+      <div class="text-gray-700 font-semibold">Passività</div>
+      <div class="text-gray-900 font-bold">&lt; 20% del patrimonio</div>
+      <div class="text-gray-600 text-sm">
+        Incidenza di mutui, prestiti o altre passività.
+        <em>Fonte: Banca d’Italia — Indagine sui bilanci delle famiglie</em>
+      </div>
+    </div>
+
+    <!-- Abitazione principale -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+      <div class="text-gray-700 font-semibold">Abitazione principale</div>
+      <div class="text-gray-900 font-bold">Di proprietà (senza mutuo)</div>
+      <div class="text-gray-600 text-sm">
+        Situazione abitativa rilevante per stabilità patrimoniale.
+        <em>Fonte: Banca d’Italia — Indagine sui bilanci delle famiglie</em>
+      </div>
+    </div>
+
+    <!-- Reddito annuo lordo -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+      <div class="text-gray-700 font-semibold">Reddito annuo lordo</div>
+      <div class="text-gray-900 font-bold">20–35 k€</div>
+      <div class="text-gray-600 text-sm">
+        Indicatore di capacità contributiva e sostenibilità investimenti.
+        <em>Fonte: OECD Household income statistics</em>
+      </div>
+    </div>
+
+    <!-- Tasso di risparmio -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+      <div class="text-gray-700 font-semibold">Tasso di risparmio</div>
+      <div class="text-gray-900 font-bold">5–10%</div>
+      <div class="text-gray-600 text-sm">
+        Quota percentuale del reddito destinata al risparmio.
+        <em>Fonte: Banca d’Italia — Relazione annuale</em>
+      </div>
     </div>
 
     <!-- Orizzonte temporale -->
-    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
       <div class="text-gray-700 font-semibold">Orizzonte temporale</div>
       <div class="text-gray-900 font-bold">6–10 anni</div>
-      <div class="text-gray-600 text-sm">Periodo previsto per raggiungere gli obiettivi finanziari. Fonte: dichiarazione utente.</div>
+      <div class="text-gray-600 text-sm">
+        Durata prevista dell’investimento.
+        <em>Fonte: ESMA — Guidelines on suitability</em>
+      </div>
     </div>
 
-    <!-- Tolleranza al rischio -->
-    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
-      <div class="text-gray-700 font-semibold">Tolleranza al rischio</div>
-      <div class="text-gray-900 font-bold">3/10</div>
-      <div class="text-gray-600 text-sm">Misura della propensione al rischio su scala 1–10, dove 10 indica massima tolleranza. Fonte: autovalutazione.</div>
+    <!-- Propensione al rischio -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+      <div class="text-gray-700 font-semibold">Propensione al rischio</div>
+      <div class="text-gray-900 font-bold">Moderata (5–10%)</div>
+      <div class="text-gray-600 text-sm">
+        Disponibilità ad accettare volatilità e oscillazioni di valore.
+        <em>Fonte: ESMA — Risk tolerance assessment</em>
+      </div>
     </div>
 
-    <!-- Drawdown massimo -->
-    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
-      <div class="text-gray-700 font-semibold">Drawdown tollerato</div>
-      <div class="text-gray-900 font-bold">Fino a −5%</div>
-      <div class="text-gray-600 text-sm">Massima perdita percentuale accettabile sul portafoglio. Fonte: autovalutazione.</div>
+    <!-- Capacità di perdita -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+      <div class="text-gray-700 font-semibold">Capacità di perdita</div>
+      <div class="text-gray-900 font-bold">5–10%</div>
+      <div class="text-gray-600 text-sm">
+        Perdita massima sostenibile senza compromettere obiettivi.
+        <em>Fonte: MiFID II — Adeguatezza</em>
+      </div>
     </div>
 
     <!-- Rendimento obiettivo -->
-    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
       <div class="text-gray-700 font-semibold">Rendimento obiettivo</div>
-      <div class="text-gray-900 font-bold">6–8% reale</div>
-      <div class="text-gray-600 text-sm">Obiettivo di rendimento netto inflazione su base annua. Fonte: dichiarazione utente.</div>
+      <div class="text-gray-900 font-bold">&gt; 8% nominale</div>
+      <div class="text-gray-600 text-sm">
+        Obiettivo di rendimento annuo lordo.
+        <em>Fonte: EFAMA Investor Profile Study</em>
+      </div>
     </div>
 
     <!-- Esperienza -->
-    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
       <div class="text-gray-700 font-semibold">Esperienza</div>
-      <div class="text-gray-900 font-bold">0 anni</div>
-      <div class="text-gray-600 text-sm">Anni di esperienza reale negli investimenti. Fonte: dichiarazione utente.</div>
+      <div class="text-gray-900 font-bold">1–2 anni</div>
+      <div class="text-gray-600 text-sm">
+        Anni di esperienza reale negli investimenti.
+        <em>Fonte: CONSOB — Rapporto sulle scelte di investimento</em>
+      </div>
     </div>
 
-    <!-- Strumenti usati -->
-    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+        <!-- Strumenti usati -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
       <div class="text-gray-700 font-semibold">Strumenti finanziari utilizzati</div>
       <div class="text-gray-900 font-bold">Crypto</div>
-      <div class="text-gray-600 text-sm">Tipologia di strumenti con cui l’utente ha esperienza. Fonte: dichiarazione utente.</div>
+      <div class="text-gray-600 text-sm">
+        Tipologia di strumenti con cui l’utente ha esperienza.
+        <em>Fonte: ESMA — Guidelines on complex products</em>
+      </div>
     </div>
 
     <!-- Competenza prodotti complessi -->
-    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
       <div class="text-gray-700 font-semibold">Competenza prodotti complessi</div>
       <div class="text-gray-900 font-bold">Bassa</div>
-      <div class="text-gray-600 text-sm">Livello di conoscenza su strumenti finanziari avanzati. Fonte: dichiarazione utente.</div>
+      <div class="text-gray-600 text-sm">
+        Livello di conoscenza su strumenti finanziari avanzati.
+        <em>Fonte: MiFID II — Allegato II</em>
+      </div>
     </div>
 
-    <!-- Vincoli ESG -->
-    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
-      <div class="text-gray-700 font-semibold">Vincoli ESG</div>
+    <!-- Liquidità immediata -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+      <div class="text-gray-700 font-semibold">Liquidità immediata</div>
+      <div class="text-gray-900 font-bold">Media</div>
+      <div class="text-gray-600 text-sm">
+        Necessità di poter disinvestire rapidamente.
+        <em>Fonte: ESMA — Liquidity risk guidelines</em>
+      </div>
+    </div>
+
+    <!-- Preferenze ESG -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+      <div class="text-gray-700 font-semibold">Preferenze ESG</div>
       <div class="text-gray-900 font-bold">Nessuno</div>
-      <div class="text-gray-600 text-sm">Preferenze di investimento in ambito ambientale, sociale e governance. Fonte: dichiarazione utente.</div>
+      <div class="text-gray-600 text-sm">
+        Preferenze ambientali, sociali e di governance negli investimenti.
+        <em>Fonte: Regolamento UE 2019/2088 (SFDR)</em>
+      </div>
     </div>
 
     <!-- Preferenza valutaria -->
-    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col gap-2">
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
       <div class="text-gray-700 font-semibold">Preferenza valutaria</div>
       <div class="text-gray-900 font-bold">EUR</div>
-      <div class="text-gray-600 text-sm">Valuta preferita per investimenti. Fonte: dichiarazione utente.</div>
+      <div class="text-gray-600 text-sm">
+        Valuta preferita per investimenti.
+        <em>Fonte: EFAMA Investor Profile Study</em>
+      </div>
+    </div>
+
+    <!-- Presenza PAC -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+      <div class="text-gray-700 font-semibold">Presenza PAC</div>
+      <div class="text-gray-900 font-bold">No (in attivazione)</div>
+      <div class="text-gray-600 text-sm">
+        Esistenza di un piano di accumulo capitale.
+        <em>Fonte: Banca d’Italia — Educazione finanziaria</em>
+      </div>
+    </div>
+
+    <!-- Frequenza PAC -->
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+      <div class="text-gray-700 font-semibold">Frequenza PAC</div>
+      <div class="text-gray-900 font-bold">Mensile</div>
+      <div class="text-gray-600 text-sm">
+        Periodicità dei versamenti del piano di accumulo.
+        <em>Fonte: EFAMA — Savings plans study</em>
+      </div>
     </div>
 
   </div> <!-- /griglia -->
@@ -1291,9 +1423,9 @@ if (d.disclaimer) {
       <strong class="text-gray-900">Tradelia AI – Analisi incongruenze</strong>
     </div>
     <ul class="text-gray-700 text-sm list-disc list-inside">
-      <li><strong>Esperienza vs. strumenti:</strong> l’utente dichiara 0 anni ma ha utilizzato Crypto, possibile incoerenza di competenza.</li>
-      <li><strong>Capitale investibile vs. Cash Buffer:</strong> cash buffer non dichiarato, riduce accuratezza valutazione rischio.</li>
-      <li><strong>Orizzonte temporale vs. Drawdown/Rendimento:</strong> obiettivo 6–10 anni ma drawdown massimo −5% e rischio 3/10, incoerenza tra durata e aggressività.</li>
+      <li><strong>Esperienza vs. strumenti:</strong> l’utente dichiara 1–2 anni ma ha utilizzato Crypto, possibile gap di competenza.</li>
+      <li><strong>Capitale investibile vs. cash buffer:</strong> cash buffer non dichiarato, riduce accuratezza valutazione rischio.</li>
+      <li><strong>Orizzonte temporale vs. drawdown/rendimento:</strong> obiettivo 6–10 anni ma capacità di perdita 5–10% e rendimento >8%, da verificare coerenza.</li>
       <li><strong>Vincoli ESG:</strong> assenti ma strumenti crypto possono non rispettare criteri ESG.</li>
       <li><strong>Prospettiva fiscale e milestone:</strong> non dichiarate, riduce precisione simulazione.</li>
     </ul>
@@ -1326,955 +1458,385 @@ if (d.disclaimer) {
     </div>
   </header>
 
-  
-<!-- Card 2.1A -->
-<div class="group border border-gray-300 rounded-xl bg-white shadow-sm hover:shadow-md transition flex flex-col justify-between p-5 sm:p-6">
-  <div>
-    <h4 class="text-[15px] font-semibold text-gray-900 mb-1 leading-tight">
-      <span class="block"><strong>2.1A</strong> Ciclo Economico</span>
-      <span class="text-[13px] font-normal text-gray-600">Attività reale & Prezzi</span>
-    </h4>
-    <p class="text-[13px] text-gray-600 mb-3 leading-snug">
-      Dati e proiezioni su PIL, indicatori anticipatori, PMI, capacità produttiva, inflazione e aspettative di prezzo.
-    </p>
-  </div>
-  <div class="mt-6">
-    <button 
-      class="inline-flex items-center px-3 py-2 text-[13px] font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition group"
-      onclick="openDrawer('drawer-ciclo-a')"
-    >
-      Leggi tutto
-      <svg class="ml-2 h-4 w-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-      </svg>
-    </button>
-  </div>
-</div>
-
-<!-- Overlay 2.1A -->
-<div id="drawer-ciclo-a-overlay" class="fixed inset-0 z-40 bg-black/60 hidden"></div>
-
-<!-- Drawer 2.1A -->
-<div id="drawer-ciclo-a" class="fixed top-0 right-0 h-full w-full max-w-6xl bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 border-l border-gray-300">
-  <button 
-    class="fixed top-[1.2rem] right-4 z-[60] px-2 py-1 text-[13px] font-medium text-indigo-600 hover:text-indigo-700 transition"
-    onclick="closeDrawer('drawer-ciclo-a')"
-  >
-    Chiudi
-  </button>
-
-  <div class="overflow-y-auto h-full px-4 py-6 sm:px-6 lg:px-8">
-    <h3 class="text-[15px] sm:text-lg font-semibold text-gray-900 leading-tight mb-4">
-      2.1A · Ciclo Economico — Attività reale & Prezzi
-    </h3>
-
-  <!-- Contenuto scrollabile -->
-  <div class="overflow-y-auto h-full px-4 py-6 sm:px-6 lg:px-8">
-    <h3 class="text-[15px] sm:text-lg font-semibold text-gray-900 leading-tight mb-4">
-      2.1.1 · PIL Reale & Potenziale – Dettaglio
-    </h3>
-
-    <!-- Introduzione -->
-    <p class="text-[13px] sm:text-[14px] text-gray-700 leading-snug mb-4">
-      Il PIL reale misura la produzione effettiva di beni e servizi, mentre il PIL potenziale rappresenta il livello massimo sostenibile senza pressioni inflazionistiche. L’output gap indica lo scostamento tra i due, utile per valutare la fase ciclica.
-    </p>
-
-    <!-- Legenda -->
-    <div class="mb-4 p-3 border border-gray-200 bg-gray-50 rounded-lg">
-      <h5 class="text-[13px] font-semibold text-gray-900 mb-2">Legenda metriche</h5>
-      <ul class="list-disc pl-5 text-[13px] text-gray-700 space-y-1 leading-snug">
-        <li><strong>PIL QoQ:</strong> variazione trimestrale destagionalizzata del PIL reale.</li>
-        <li><strong>PIL YoY:</strong> variazione annuale del PIL reale.</li>
-        <li><strong>Potenziale:</strong> stima del tasso di crescita sostenibile senza pressioni inflazionistiche.</li>
-        <li><strong>Output Gap:</strong> differenza % tra PIL effettivo e potenziale (positivo = sopra potenziale).</li>
-        <li><strong>0–6m / 6–24m / 24–36m:</strong> proiezioni di crescita reale su orizzonti breve, medio e lungo termine.</li>
-        <li><strong>Trend:</strong> lettura qualitativa della direzione ciclica.</li>
-      </ul>
+  <!-- Scenari e probabilità -->
+  <div class="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-3 mb-8">
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+      <div class="text-gray-700 font-semibold">Scenario Base</div>
+      <div class="text-gray-900 font-bold">Prob. 55% · IMS 3.2</div>
+      <div class="text-gray-600 text-sm">
+        Crescita moderata e disinflazione irregolare; tagli graduali dei tassi; commodities in range; rischio geopolitico gestibile.
+        <em>Fonti: IMF WEO Jul‑25; OECD EO Jun‑25; World Bank GEP Jun‑25; BIS AER 2025</em>
+      </div>
     </div>
-
-   <!-- Tabella -->
-<div class="overflow-x-auto mb-4">
-  <table class="min-w-[1100px] table-auto text-[13px] sm:text-[14px] text-left text-gray-800 border border-gray-400 rounded-xl">
-    <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
-      <tr>
-        <th class="sticky left-0 bg-gray-100 z-10">Regione</th>
-        <th>PIL QoQ</th>
-        <th>PIL YoY</th>
-        <th>Potenziale</th>
-        <th>Output Gap</th>
-        <th>0–6m</th>
-        <th>6–24m</th>
-        <th>24–36m</th>
-        <th>Trend</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="sticky left-0 bg-white z-10 font-medium">USA</td>
-        <td class="text-green-600">+0,6%</td>
-        <td class="text-green-600">+2,1%</td>
-        <td>+1,8%</td>
-        <td class="text-green-600">+0,3%</td>
-        <td>+1,9%</td>
-        <td>+1,7%</td>
-        <td>+1,6%</td>
-        <td>Espansione moderata</td>
-      </tr>
-      <tr>
-        <td class="sticky left-0 bg-white z-10 font-medium">Eurozona</td>
-        <td>+0,3%</td>
-        <td class="text-red-600">+1,2%</td>
-        <td>+1,5%</td>
-        <td class="text-red-600">−0,3%</td>
-        <td>+1,0%</td>
-        <td>+1,3%</td>
-        <td>+1,5%</td>
-        <td>Ripresa graduale</td>
-      </tr>
-      <tr>
-        <td class="sticky left-0 bg-white z-10 font-medium">Italia</td>
-        <td>+0,1%</td>
-        <td class="text-red-600">+0,8%</td>
-        <td>+1,2%</td>
-        <td class="text-red-600">−0,4%</td>
-        <td>+0,9%</td>
-        <td>+1,1%</td>
-        <td>+1,3%</td>
-        <td>Miglioramento lieve</td>
-      </tr>
-      <tr>
-        <td class="sticky left-0 bg-white z-10 font-medium">UK</td>
-        <td>+0,2%</td>
-        <td class="text-red-600">+0,9%</td>
-        <td>+1,4%</td>
-        <td class="text-red-600">−0,5%</td>
-        <td>+0,8%</td>
-        <td>+1,2%</td>
-        <td>+1,4%</td>
-        <td>Stagnante</td>
-      </tr>
-      <tr>
-        <td class="sticky left-0 bg-white z-10 font-medium">Giappone</td>
-        <td>+0,4%</td>
-        <td class="text-green-600">+1,0%</td>
-        <td>+0,9%</td>
-        <td class="text-green-600">+0,1%</td>
-        <td>+1,1%</td>
-        <td>+1,0%</td>
-        <td>+0,9%</td>
-        <td>Stabile</td>
-      </tr>
-      <tr>
-        <td class="sticky left-0 bg-white z-10 font-medium">Cina</td>
-        <td class="text-green-600">+1,0%</td>
-        <td class="text-green-600">+4,8%</td>
-        <td>+4,5%</td>
-        <td class="text-green-600">+0,3%</td>
-        <td>+4,7%</td>
-        <td>+4,5%</td>
-        <td>+4,3%</td>
-        <td>Espansione moderata</td>
-      </tr>
-      <tr>
-        <td class="sticky left-0 bg-white z-10 font-medium">India</td>
-        <td class="text-green-600">+1,2%</td>
-        <td class="text-green-600">+6,4%</td>
-        <td>+6,0%</td>
-        <td class="text-green-600">+0,4%</td>
-        <td>+6,2%</td>
-        <td>+6,0%</td>
-        <td>+5,8%</td>
-        <td>Forte espansione</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<p class="text-[12px] text-gray-500 mt-2">
-  <strong>Nota:</strong> Dati aggiornati al 30 agosto 2025. Fonti: S&P Global, HCOB, au Jibun Bank, NBS China, MOSPI India, Federal Reserve, Eurostat, ECB, Atlanta Fed GDPNow.
-</p>
-
-<!-- Commento finale -->
-<aside class="mt-4 p-4 border border-gray-300 border-l-4 border-l-gray-600 bg-gray-50 rounded-xl text-[13px] sm:text-[14px] leading-snug">
-  <strong>Commento Tradelia AI – PIL Reale & Potenziale:</strong><br>
-  Gli Stati Uniti restano sopra potenziale con crescita resiliente, mentre l’Eurozona mostra segnali di ripresa graduale. L’Italia beneficia di investimenti pubblici e PNRR, ma resta sotto potenziale. Il Regno Unito è stagnante, penalizzato da domanda interna debole. Il Giappone mantiene stabilità ciclica. Cina e India guidano la crescita globale tra gli EM, con output gap positivo e prospettive solide.<br><br>
-  <strong>Implicazione allocativa:</strong> Overweight tattico su India e USA per momentum, tilt strategico verso Eurozona e Italia in ottica di recupero. Neutral su Giappone per profilo difensivo, underweight UK per rischio stagnazione.
-</aside>
-<br>
-<br>
-  </div>
-<hr class="my-6 border-t border-gray-200">
-  
-<!-- Titolo sezione -->
-<h4 class="text-[15px] font-semibold text-gray-900 mb-1 leading-tight">
-  2.1.2 · Indicatori Leading / Coincident / Lagging
-</h4>
-<p class="text-[13px] text-gray-700 mb-3 leading-snug">
-  Sintesi degli indicatori anticipatori, coincidenti e ritardati per valutare il momentum economico: ISM, PMI composito e settoriali, ZEW e Leading Economic Index.
-</p>
-
-<!-- Legenda -->
-<div class="mb-4 p-3 border border-gray-200 bg-gray-50 rounded-lg">
-  <h5 class="text-[13px] font-semibold text-gray-900 mb-2">Legenda metriche</h5>
-  <ul class="list-disc pl-5 text-[13px] text-gray-700 space-y-1 leading-snug">
-    <li><strong>ISM Manifattura:</strong> indice USA >50 = espansione, <50 = contrazione.</li>
-    <li><strong>PMI Composito:</strong> media ponderata manifattura/servizi, 50 = soglia espansione.</li>
-    <li><strong>PMI Manifattura / Servizi:</strong> indici settoriali di attività economica.</li>
-    <li><strong>ZEW:</strong> indice di fiducia economica (Germania/Eurozona), valori positivi = ottimismo.</li>
-    <li><strong>LEI:</strong> Leading Economic Index (Conference Board), variazione m/m in punti indice.</li>
-  </ul>
-</div>
-
-<!-- Tabella -->
-<div class="overflow-x-auto mb-4">
-  <table class="min-w-[1100px] table-auto text-[13px] sm:text-[14px] text-left text-gray-800 border border-gray-400 rounded-xl">
-    <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
-      <tr>
-        <th class="sticky left-0 bg-gray-100 z-10">Regione</th>
-        <th>ISM Manif.</th>
-        <th>PMI Composito</th>
-        <th>PMI Manif.</th>
-        <th>PMI Servizi</th>
-        <th>ZEW</th>
-        <th>LEI m/m</th>
-        <th>Trend</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="sticky left-0 bg-white z-10 font-medium">USA</td>
-        <td class="text-red-600">47,8</td>
-        <td class="text-green-600">52,1</td>
-        <td class="text-red-600">48,3</td>
-        <td class="text-green-600">54,2</td>
-        <td>n.d.</td>
-        <td class="text-red-600">−0,1</td>
-        <td>Servizi in espansione, manifattura debole</td>
-      </tr>
-      <tr>
-        <td class="sticky left-0 bg-white z-10 font-medium">Eurozona</td>
-        <td>n.d.</td>
-        <td class="text-red-600">49,5</td>
-        <td class="text-red-600">46,8</td>
-        <td class="text-green-600">51,2</td>
-        <td class="text-green-600">12,4</td>
-        <td class="text-red-600">−0,3</td>
-        <td>Servizi sopra 50, manifattura in contrazione</td>
-      </tr>
-      <tr>
-        <td class="sticky left-0 bg-white z-10 font-medium">Italia</td>
-        <td>n.d.</td>
-        <td class="text-red-600">49,8</td>
-        <td class="text-red-600">47,1</td>
-        <td class="text-green-600">51,0</td>
-        <td>n.d.</td>
-        <td>n.d.</td>
-        <td>Leggera ripresa nei servizi</td>
-      </tr>
-      <tr>
-        <td class="sticky left-0 bg-white z-10 font-medium">UK</td>
-        <td>n.d.</td>
-        <td class="text-green-600">50,4</td>
-        <td class="text-red-600">48,9</td>
-        <td class="text-green-600">52,0</td>
-        <td>n.d.</td>
-        <td class="text-red-600">−0,1</td>
-        <td>Servizi trainano, manifattura debole</td>
-      </tr>
-      <tr>
-        <td class="sticky left-0 bg-white z-10 font-medium">Giappone</td>
-        <td>n.d.</td>
-        <td class="text-green-600">51,0</td>
-        <td class="text-red-600">49,2</td>
-        <td class="text-green-600">52,3</td>
-        <td>n.d.</td>
-        <td class="text-green-600">+0,3</td>
-        <td>Moderata espansione</td>
-      </tr>
-      <tr>
-        <td class="sticky left-0 bg-white z-10 font-medium">Cina</td>
-        <td>n.d.</td>
-        <td class="text-green-600">50,8</td>
-        <td class="text-green-600">50,2</td>
-        <td class="text-green-600">51,4</td>
-        <td>n.d.</td>
-        <td class="text-green-600">+0,2</td>
-        <td>Espansione lieve</td>
-      </tr>
-      <tr>
-        <td class="sticky left-0 bg-white z-10 font-medium">India</td>
-        <td>n.d.</td>
-        <td class="text-green-600">58,1</td>
-        <td class="text-green-600">57,4</td>
-        <td class="text-green-600">58,6</td>
-        <td>n.d.</td>
-        <td class="text-green-600">+0,5</td>
-        <td>Forte espansione</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<p class="text-[12px] text-gray-500 mt-2">
-  <strong>Nota:</strong> Dati aggiornati a T1 2025. Fonti: S&P Global PMI, ISM, ZEW, The Conference Board LEI.
-</p>
-
-<!-- Commento finale -->
-<aside class="mt-4 p-4 border border-gray-300 border-l-4 border-l-gray-600 bg-gray-50 rounded-xl text-[13px] sm:text-[14px] leading-snug">
-  <strong>Commento Tradelia AI – Indicatori Leading/Coincident/Lagging:</strong><br>
-  Il quadro globale mostra una netta divergenza tra manifattura e servizi: negli USA e in Europa i servizi restano sopra 50 mentre la manifattura è in contrazione. L’India mantiene un’espansione robusta su entrambi i fronti, la Cina è in lieve espansione. Il LEI segnala momentum debole in USA ed Eurozona, positivo in Asia.<br><br>
-  <strong>Implicazione allocativa:</strong> preferenza per economie con servizi resilienti e LEI in crescita (India, Giappone, Cina) rispetto a quelle con manifattura persistentemente sotto 50.
-</aside>
-
-<br><br>
-</div>
-  </div>
-<hr class="my-6 border-t border-gray-200">
-
-  
-
-
-<hr class="my-6 border-t border-gray-200">
-
-
-
-
-  
-
-
-
-  
-  <!-- Card 2.2 · Inflazione -->
-<div class="group border border-gray-300 rounded-xl bg-white shadow-sm hover:shadow-md transition flex flex-col justify-between p-5 sm:p-6">
-  <div>
-    <h4 class="text-[15px] font-semibold text-gray-900 mb-1 leading-tight">
-      <span class="block">2.2 · Inflazione Headline & Core</span>
-      <span class="text-[13px] font-normal text-gray-600">Attuale + Forward Outlook</span>
-    </h4>
-
-    <p class="text-[13px] text-gray-600 mb-3 leading-snug">
-      Analisi dell’inflazione generale e sottostante con outlook a 6–36 mesi.
-    </p>
-
-    <ul class="text-[13px] text-gray-700 space-y-1 border-t border-gray-200 pt-3 leading-snug">
-      <li><span class="font-medium text-gray-800">Headline / Core:</span> variazione prezzi al consumo</li>
-      <li><span class="font-medium text-gray-800">Forward:</span> proiezioni 6–36m</li>
-      <li><span class="font-medium text-gray-800">Drivers:</span> energia, salari, beni, servizi</li>
-      <li><span class="font-medium text-gray-800">Scenario:</span> base + rischi</li>
-    </ul>
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+      <div class="text-gray-700 font-semibold">Scenario Upside</div>
+      <div class="text-gray-900 font-bold">Prob. 20% · IMS 3.9</div>
+      <div class="text-gray-600 text-sm">
+        Riaccelerazione investimenti, allentamento tensioni commerciali; compressione spread; EPS sopra attese.
+        <em>Fonti: IMF; JPM; BlackRock BII Mid‑Year 2025</em>
+      </div>
+    </div>
+    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+      <div class="text-gray-700 font-semibold">Scenario Downside</div>
+      <div class="text-gray-900 font-bold">Prob. 25% · IMS 2.4</div>
+      <div class="text-gray-600 text-sm">
+        Frammentazione commerciale, shock energetici; crescita debole; inflazione “appiccicosa” su energia/cibo.
+        <em>Fonti: IMF; OECD; IEA/OPEC; WGC</em>
+      </div>
+    </div>
   </div>
 
-  <div class="mt-6">
-    <button 
-      class="inline-flex items-center px-3 py-2 text-[13px] font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition group"
-      onclick="openDrawer('drawer-inflazione')"
-    >
-      Leggi tutto
-      <svg class="ml-2 h-4 w-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-      </svg>
-    </button>
-  </div>
-</div>
-
-<!-- Overlay -->
-<div id="drawer-inflazione-overlay" class="fixed inset-0 z-40 bg-black bg-opacity-60 hidden"></div>
-
-<!-- Drawer -->
-<div id="drawer-inflazione" class="fixed top-0 right-0 h-full w-full max-w-3xl bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 border-l border-gray-300">
-
-<!-- Pulsante Chiudi fluttuante -->
-<button 
-  class="fixed top-[1.2rem] right-4 z-[60] px-2 py-1 text-[13px] font-medium text-indigo-600 hover:text-indigo-700 transition"
-  onclick="closeDrawer('drawer-inflazione')"
-  aria-label="Chiudi drawer"
->
-  Chiudi
-</button>
-
-
-<!-- Contenuto scrollabile -->
-<div class="overflow-y-auto h-full px-4 py-6 sm:px-6 lg:px-8">
-  <h3 class="text-[15px] sm:text-lg font-semibold text-gray-900 leading-tight mb-4">
-    2.2 · Inflazione Headline & Core – Dettaglio
-  </h3>
-
-  <hr class="my-6 border-t border-gray-200">
-
-  <!-- Introduzione -->
-  <p class="text-[13px] sm:text-[14px] text-gray-700 leading-snug mt-4 mb-4">
-    L’inflazione headline rappresenta la variazione complessiva dei prezzi al consumo, mentre la core esclude componenti volatili come energia e alimentari. L’analisi forward consente di anticipare pressioni inflazionistiche e orientare le politiche monetarie.
-  </p>
-
-  <hr class="my-6 border-t border-gray-200">
-
-  <!-- Metriche -->
-  <p class="text-[13px] sm:text-[14px] text-gray-700 leading-snug mb-2">Metriche trattate:</p>
-  <ul class="list-disc pl-5 text-[13px] sm:text-[14px] text-gray-700 space-y-1 leading-snug mb-6">
-    <li><strong>Headline:</strong> variazione complessiva dei prezzi</li>
-    <li><strong>Core:</strong> esclusi energia e alimentari</li>
-    <li><strong>Forward 6–36m:</strong> proiezioni istituzionali</li>
-    <li><strong>Drivers:</strong> beni, servizi, salari, energia</li>
-    <li><strong>Scenario:</strong> base + rischi alternativi</li>
-  </ul>
-
-  <hr class="my-6 border-t border-gray-200">
-
-  <!-- Tabella -->
+  <!-- Matrice macro sintetica -->
   <div class="overflow-x-auto mb-8">
-    <table class="min-w-[1000px] table-auto text-[13px] sm:text-[14px] text-left text-gray-800 border border-gray-400 rounded-xl">
-      <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
+    <table class="min-w-full border border-gray-200 text-sm">
+      <thead class="bg-gray-100">
         <tr>
-          <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Regione</th>
-          <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Headline</th>
-          <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Core</th>
-          <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Trend</th>
-          <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Servizi</th>
-          <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Beni</th>
-          <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Energia</th>
-          <th class="px-4 py-2 whitespace-nowrap">Salari</th>
+          <th class="p-2 text-left">Regione / Variabile</th>
+          <th class="p-2">Base</th>
+          <th class="p-2">Upside</th>
+          <th class="p-2">Downside</th>
+          <th class="p-2">Fonte</th>
         </tr>
       </thead>
       <tbody>
-        <tr class="border-b border-gray-300 align-top">
-          <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">USA</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-green-600">+3,2%</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-green-600">+3,4%</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Disinflazione</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">↘</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Stabili</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Neutro</td>
-          <td class="px-4 py-2 whitespace-nowrap">Moderati</td>
-        </tr>
-        <tr class="border-b border-gray-300 align-top">
-          <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Eurozona</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-green-600">+2,6%</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-green-600">+3,0%</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Normalizzazione</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">↘</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Stabili</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">↘</td>
-          <td class="px-4 py-2 whitespace-nowrap">↗</td>
-        </tr>
-        <tr class="border-b border-gray-300 align-top">
-          <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">UK</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-red-600">+4,1%</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-red-600">+4,3%</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Persistente</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">↗</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">In rallentamento</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Neutro</td>
-          <td class="px-4 py-2 whitespace-nowrap">Rigidi</td>
-        </tr>
-        <tr class="border-b border-gray-300 align-top">
-          <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Giappone</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-green-600">+2,2%</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-green-600">+2,5%</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Stabile</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Neutri</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Stabili</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">↘ (Import)</td>
-          <td class="px-4 py-2 whitespace-nowrap">↗</td>
+        <tr>
+          <td class="p-2 font-medium">U.S. — PIL reale % a/a</td>
+          <td class="p-2">2.3 / 1.9 / 1.8</td>
+          <td class="p-2">2.6 / 2.3 / 2.1</td>
+          <td class="p-2">1.5 / 1.2 / 1.4</td>
+          <td class="p-2">IMF WEO Jul‑25 / JPM</td>
         </tr>
         <tr>
-          <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Italia</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-green-600">+2,4%</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300 text-green-600">+2,7%</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">In linea</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Stabili</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">↘</td>
-          <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">↘</td>
-          <td class="px-4 py-2 whitespace-nowrap">Contenuti</td>
+          <td class="p-2 font-medium">Eurozona — Inflazione CPI % a/a</td>
+          <td class="p-2">2.3 / 2.0 / 1.9</td>
+          <td class="p-2">2.1 / 1.9 / 1.8</td>
+          <td class="p-2">2.7 / 2.4 / 2.2</td>
+          <td class="p-2">ECB Proj Jun‑25</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">Brent $/bbl</td>
+          <td class="p-2">82 / 80 / 78</td>
+          <td class="p-2">78 / 76 / 75</td>
+          <td class="p-2">90 / 88 / 85</td>
+          <td class="p-2">IEA/OPEC Aug‑25</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">Oro $/oz</td>
+          <td class="p-2">2 350 / 2 300 / 2 280</td>
+          <td class="p-2">2 250 / 2 200 / 2 180</td>
+          <td class="p-2">2 500 / 2 450 / 2 400</td>
+          <td class="p-2">WGC Mid‑Year 2025</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="mt-2 text-xs text-gray-500">Nota: valori in sequenza breve/medio/lungo termine.</p>
+  </div>
+
+  <!-- IMS -->
+  <div class="overflow-x-auto mb-8">
+    <table class="min-w-full border border-gray-200 text-sm">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="p-2 text-left">Regione / Asset</th>
+          <th class="p-2">Base</th>
+          <th class="p-2">Upside</th>
+          <th class="p-2">Downside</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="p-2 font-medium">U.S. equity</td><td class="p-2">3.5</td><td class="p-2">4.2</td><td class="p-2">2.6</td></tr>
+        <tr><td class="p-2 font-medium">Euro equity</td><td class="p-2">3.0</td><td class="p-2">3.6</td><td class="p-2">2.3</td></tr>
+        <tr><td class="p-2 font-medium">Govies DM</td><td class="p-2">3.2</td><td class="p-2">2.6</td><td class="p-2">4.0</td></tr>
+        <tr><td class="p-2 font-medium">Oro</td><td class="p-2">3.3</td><td class="p-2">2.6</td><td class="p-2">4.2</td></tr>
+      </tbody>
+    </table>
+    <!-- Range allocativi -->
+  <div class="overflow-x-auto mb-8">
+    <table class="min-w-full border border-gray-200 text-sm">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="p-2 text-left">Asset class</th>
+          <th class="p-2">Base %</th>
+          <th class="p-2">View</th>
+          <th class="p-2">Upside %</th>
+          <th class="p-2">View</th>
+          <th class="p-2">Downside %</th>
+          <th class="p-2">View</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="p-2 font-medium">Equity DM (U.S./EU/JP)</td>
+          <td class="p-2">42–52</td>
+          <td class="p-2">OW leggero U.S.</td>
+          <td class="p-2">48–58</td>
+          <td class="p-2">OW</td>
+          <td class="p-2">30–40</td>
+          <td class="p-2">UW</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">Equity EM</td>
+          <td class="p-2">6–10</td>
+          <td class="p-2">N selettivo</td>
+          <td class="p-2">8–12</td>
+          <td class="p-2">OW selettivo</td>
+          <td class="p-2">4–8</td>
+          <td class="p-2">UW</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">Govies DM (agg.)</td>
+          <td class="p-2">20–28</td>
+          <td class="p-2">N / OW core</td>
+          <td class="p-2">14–22</td>
+          <td class="p-2">UW duration</td>
+          <td class="p-2">28–36</td>
+          <td class="p-2">OW duration</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">Corporate IG</td>
+          <td class="p-2">10–16</td>
+          <td class="p-2">OW qualità</td>
+          <td class="p-2">8–12</td>
+          <td class="p-2">N</td>
+          <td class="p-2">12–18</td>
+          <td class="p-2">OW</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">High Yield</td>
+          <td class="p-2">3–7</td>
+          <td class="p-2">N</td>
+          <td class="p-2">5–9</td>
+          <td class="p-2">OW</td>
+          <td class="p-2">0–4</td>
+          <td class="p-2">UW</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">EM Debt (HC/LC)</td>
+          <td class="p-2">6–10</td>
+          <td class="p-2">N → HC&gt;LC</td>
+          <td class="p-2">8–12</td>
+          <td class="p-2">OW</td>
+          <td class="p-2">4–8</td>
+          <td class="p-2">UW → HC&gt;LC</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">Commodities broad</td>
+          <td class="p-2">3–7</td>
+          <td class="p-2">N</td>
+          <td class="p-2">2–6</td>
+          <td class="p-2">UW</td>
+          <td class="p-2">5–9</td>
+          <td class="p-2">OW</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">Oro</td>
+          <td class="p-2">1–4</td>
+          <td class="p-2">N / hedge</td>
+          <td class="p-2">1–3</td>
+          <td class="p-2">UW</td>
+          <td class="p-2">3–6</td>
+          <td class="p-2">OW hedge</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">Cash</td>
+          <td class="p-2">2–5</td>
+          <td class="p-2">Buffer</td>
+          <td class="p-2">1–4</td>
+          <td class="p-2">Min</td>
+          <td class="p-2">5–10</td>
+          <td class="p-2">Rialzo buffer</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <hr class="my-6 border-t border-gray-200">
-</div>
-
-    
-<!-- Forward Outlook -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-  <!-- USA -->
-  <article class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
-    <h4 class="text-[14px] font-semibold text-gray-900 mb-2">USA</h4>
-    <ul class="text-[13px] sm:text-[14px] text-gray-700 space-y-1 leading-snug">
-      <li><strong>0–6m:</strong> <span class="text-green-600">+2,8%</span></li>
-      <li><strong>6–24m:</strong> +2,5%</li>
-      <li><strong>24–36m:</strong> +2,3%</li>
-      <li><strong>Scenario Base:</strong> Disinflazione graduale, Fed in pausa</li>
+  <!-- Stress test multi-scenario -->
+  <div class="mb-8">
+    <h3 class="text-gray-800 font-semibold mb-2">Stress test multi‑scenario</h3>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+      <li><strong>+100 bps tassi:</strong> perdita MTM su govies/IG; compressione multipli equity growth; USD più forte; oro debole salvo rischio sistemico.</li>
+      <li><strong>−20% equity globali:</strong> drawdown maggiore su EM/HY; govies core in rally (flight‑to‑quality); oro in rialzo; USD/JPY bid difensivo.</li>
+      <li><strong>+30% oil:</strong> inflazione headline in rialzo; revisione percorsi di taglio tassi; penalità per importatori netti; energia in alfa.</li>
     </ul>
-  </article>
+    <p class="mt-2 text-xs text-gray-500">
+      Fonti: BIS AER 2025; IMF WEO Jul‑25; IEA/OPEC Aug‑25; WGC Mid‑Year 2025; desk outlook banche d’investimento.
+    </p>
+  </div>
 
-  <!-- Eurozona -->
-  <article class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
-    <h4 class="text-[14px] font-semibold text-gray-900 mb-2">Eurozona</h4>
-    <ul class="text-[13px] sm:text-[14px] text-gray-700 space-y-1 leading-snug">
-      <li><strong>0–6m:</strong> +2,5%</li>
-      <li><strong>6–24m:</strong> +2,3%</li>
-      <li><strong>24–36m:</strong> +2,1%</li>
-      <li><strong>Scenario Base:</strong> Normalizzazione graduale, BCE in pausa</li>
-    </ul>
-  </article>
-
-  <!-- UK -->
-  <article class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
-    <h4 class="text-[14px] font-semibold text-gray-900 mb-2">UK</h4>
-    <ul class="text-[13px] sm:text-[14px] text-gray-700 space-y-1 leading-snug">
-      <li><strong>0–6m:</strong> <span class="text-red-600">+3,9%</span></li>
-      <li><strong>6–24m:</strong> +3,5%</li>
-      <li><strong>24–36m:</strong> +3,2%</li>
-      <li><strong>Scenario Base:</strong> Inflazione persistente, BoE cauta</li>
-    </ul>
-  </article>
-
-  <!-- Giappone -->
-  <article class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
-    <h4 class="text-[14px] font-semibold text-gray-900 mb-2">Giappone</h4>
-    <ul class="text-[13px] sm:text-[14px] text-gray-700 space-y-1 leading-snug">
-      <li><strong>0–6m:</strong> +2,3%</li>
-      <li><strong>6–24m:</strong> +2,2%</li>
-      <li><strong>24–36m:</strong> +2,0%</li>
-      <li><strong>Scenario Base:</strong> Stabilità, pressioni salariali moderate</li>
-    </ul>
-  </article>
-
-  <!-- Italia -->
-  <article class="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
-    <h4 class="text-[14px] font-semibold text-gray-900 mb-2">Italia</h4>
-    <ul class="text-[13px] sm:text-[14px] text-gray-700 space-y-1 leading-snug">
-      <li><strong>0–6m:</strong> +2,4%</li>
-      <li><strong>6–24m:</strong> +2,2%</li>
-      <li><strong>24–36m:</strong> +2,0%</li>
-      <li><strong>Scenario Base:</strong> In linea con Eurozona, energia in calo</li>
-    </ul>
-  </article>
-</div>
-
-<hr class="my-6 border-t border-gray-200">
-
-<!-- Commento finale -->
-<aside class="mt-6 mb-8 p-4 border border-gray-300 border-l-4 border-l-gray-600 bg-gray-50 rounded-xl text-[13px] sm:text-[14px] leading-snug max-w-3xl">
-  <strong>Commento Tradelia AI – Inflazione Headline & Core:</strong><br>
-  Il quadro inflattivo nei principali mercati sviluppati evidenzia una progressiva convergenza verso i target monetari, con dinamiche disinflazionistiche più marcate negli Stati Uniti e nell’Eurozona. Il Regno Unito si conferma in controtendenza, con pressioni persistenti su servizi e salari. Il Giappone mantiene una stabilità ciclica, mentre l’Italia segue il profilo europeo con un mix favorevole tra energia e beni.
-
-  <br><br>
-  <strong>Implicazione allocativa:</strong><br>
-  Posizionamento favorevole sulla duration in Stati Uniti ed Eurozona nel medio termine, in vista di una normalizzazione monetaria. Neutral su Giappone per profilo difensivo e stabilità dei prezzi. Underweight su Regno Unito per rischio inflattivo strutturale. Monitoraggio attivo su forward CPI, breakeven e survey expectations per calibrare l’esposizione obbligazionaria.
-</aside>
-<br><br>
-</div>
-</div>
-  
-<hr class="my-6 border-t border-gray-200" aria-hidden="true">
-
-<div class="group border border-gray-300 rounded-xl bg-white shadow-sm hover:shadow-md transition flex flex-col justify-between p-5 sm:p-6">
+  <!-- Key conviction calls -->
   <div>
-    <h4 class="text-[15px] font-semibold text-gray-900 mb-1 leading-tight">
-      <span class="block">2.3 · Occupazione</span>
-      <span class="text-[13px] font-normal text-gray-600">Disoccupazione, Partecipazione, E/P Ratio</span>
-    </h4>
+    <h3 class="text-gray-800 font-semibold mb-2">Key conviction calls</h3>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+      <li>OW tattico U.S. equity (qualità, earnings durability) nel Base/Up; gestione del beta in Downside.</li>
+      <li>Duration intermedia nel Base; allungo duration in Downside come hedge macro.</li>
+      <li>Oro come hedge asimmetrico: N nel Base, OW in Downside; commodities broad OW solo in Downside.</li>
+    </ul>
+  </div>
 
-    <p class="text-[13px] text-gray-600 mb-3 leading-snug">
-      Analisi del mercato del lavoro con metriche istituzionali e trend forward per le economie Core DM.
+      <!-- Matrice macro completa -->
+  <div class="overflow-x-auto mb-8">
+    <table class="min-w-full border border-gray-200 text-sm">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="p-2 text-left">Regione / Variabile</th>
+          <th class="p-2">Base<br><span class="text-xs text-gray-500">0–6m / 6–24m / 24–36m</span></th>
+          <th class="p-2">Upside<br><span class="text-xs text-gray-500">0–6m / 6–24m / 24–36m</span></th>
+          <th class="p-2">Downside<br><span class="text-xs text-gray-500">0–6m / 6–24m / 24–36m</span></th>
+          <th class="p-2">Fonte</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- PIL reale -->
+        <tr>
+          <td class="p-2 font-medium">U.S. — PIL reale % a/a</td>
+          <td class="p-2">2.3 / 1.9 / 1.8</td>
+          <td class="p-2">2.6 / 2.3 / 2.1</td>
+          <td class="p-2">1.5 / 1.2 / 1.4</td>
+          <td class="p-2">IMF WEO Jul‑25 / JPM</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">Eurozona — PIL reale % a/a</td>
+          <td class="p-2">0.9 / 1.1 / 1.2</td>
+          <td class="p-2">1.2 / 1.4 / 1.5</td>
+          <td class="p-2">0.4 / 0.6 / 0.9</td>
+          <td class="p-2">ECB Proj Jun‑25 / OECD</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">Giappone — PIL reale % a/a</td>
+          <td class="p-2">1.0 / 1.0 / 0.9</td>
+          <td class="p-2">1.2 / 1.1 / 1.0</td>
+          <td class="p-2">0.6 / 0.7 / 0.8</td>
+          <td class="p-2">BoJ Outlook Jul‑25</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">EM Asia ex‑China — PIL reale % a/a</td>
+          <td class="p-2">4.8 / 4.9 / 5.0</td>
+          <td class="p-2">5.2 / 5.3 / 5.4</td>
+          <td class="p-2">4.2 / 4.4 / 4.6</td>
+          <td class="p-2">World Bank GEP Jun‑25</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">Cina — PIL reale % a/a</td>
+          <td class="p-2">4.5 / 4.4 / 4.3</td>
+          <td class="p-2">4.8 / 4.7 / 4.6</td>
+          <td class="p-2">4.0 / 3.9 / 4.0</td>
+          <td class="p-2">IMF WEO Jul‑25</td>
+        </tr>
+
+        <!-- Inflazione -->
+        <tr>
+          <td class="p-2 font-medium">U.S. — Inflazione CPI % a/a</td>
+          <td class="p-2">2.8 / 2.4 / 2.2</td>
+          <td class="p-2">2.5 / 2.2 / 2.0</td>
+          <td class="p-2">3.3 / 2.9 / 2.5</td>
+          <td class="p-2">Fed SEP / OECD</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">Eurozona — Inflazione CPI % a/a</td>
+          <td class="p-2">2.3 / 2.0 / 1.9</td>
+          <td class="p-2">2.1 / 1.9 / 1.8</td>
+          <td class="p-2">2.7 / 2.4 / 2.2</td>
+          <td class="p-2">ECB Proj Jun‑25</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">Giappone — Inflazione CPI % a/a</td>
+          <td class="p-2">2.0 / 1.9 / 1.8</td>
+          <td class="p-2">1.9 / 1.8 / 1.7</td>
+          <td class="p-2">2.3 / 2.1 / 2.0</td>
+          <td class="p-2">BoJ Outlook Jul‑25</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">EM Asia ex‑China — Inflazione CPI % a/a</td>
+          <td class="p-2">3.1 / 3.0 / 2.9</td>
+          <td class="p-2">2.9 / 2.8 / 2.7</td>
+          <td class="p-2">3.5 / 3.3 / 3.1</td>
+          <td class="p-2">World Bank / IMF</td>
+        </tr>
+
+        <!-- Tassi policy -->
+        <tr>
+          <td class="p-2 font-medium">Fed Funds %</td>
+          <td class="p-2">4.75 / 4.25 / 4.00</td>
+          <td class="p-2">4.50 / 4.00 / 3.75</td>
+          <td class="p-2">5.25 / 4.75 / 4.50</td>
+          <td class="p-2">FedWatch / JPM</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">BCE Dep. %</td>
+          <td class="p-2">3.25 / 2.75 / 2.50</td>
+          <td class="p-2">3.00 / 2.50 / 2.25</td>
+          <td class="p-2">3.50 / 3.00 / 2.75</td>
+          <td class="p-2">ECB Proj Jun‑25</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">BoJ Policy %</td>
+          <td class="p-2">0.25 / 0.50 / 0.75</td>
+          <td class="p-2">0.25 / 0.50 / 0.75</td>
+          <td class="p-2">0.25 / 0.50 / 0.75</td>
+          <td class="p-2">BoJ Outlook</td>
+        </tr>
+
+        <!-- FX -->
+        <tr>
+          <td class="p-2 font-medium">EUR/USD</td>
+          <td class="p-2">1.08 / 1.10 / 1.12</td>
+          <td class="p-2">1.10 / 1.12 / 1.14</td>
+          <td class="p-2">1.06 / 1.08 / 1.10</td>
+          <td class="p-2">Consensus Forecasts</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">USD/JPY</td>
+          <td class="p-2">150 / 145 / 140</td>
+          <td class="p-2">148 / 142 / 138</td>
+          <td class="p-2">152 / 148 / 144</td>
+          <td class="p-2">BoJ / FX Strategists</td>
+        </tr>
+
+              <!-- Commodities -->
+        <tr>
+          <td class="p-2 font-medium">Brent $/bbl</td>
+          <td class="p-2">82 / 80 / 78</td>
+          <td class="p-2">78 / 76 / 75</td>
+          <td class="p-2">90 / 88 / 85</td>
+          <td class="p-2">IEA/OPEC Aug‑25</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">Oro $/oz</td>
+          <td class="p-2">2 350 / 2 300 / 2 280</td>
+          <td class="p-2">2 250 / 2 200 / 2 180</td>
+          <td class="p-2">2 500 / 2 450 / 2 400</td>
+          <td class="p-2">WGC Mid‑Year 2025</td>
+        </tr>
+
+        <!-- EPS growth -->
+        <tr>
+          <td class="p-2 font-medium">S&P 500 — EPS growth % a/a</td>
+          <td class="p-2">8 / 6 / 5</td>
+          <td class="p-2">10 / 8 / 6</td>
+          <td class="p-2">2 / 4 / 5</td>
+          <td class="p-2">JPM / FactSet</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">EuroStoxx 600 — EPS growth % a/a</td>
+          <td class="p-2">5 / 4 / 4</td>
+          <td class="p-2">7 / 5 / 4</td>
+          <td class="p-2">0 / 2 / 3</td>
+          <td class="p-2">GS / Bloomberg</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-medium">Topix — EPS growth % a/a</td>
+          <td class="p-2">6 / 5 / 4</td>
+          <td class="p-2">8 / 6 / 5</td>
+          <td class="p-2">2 / 3 / 4</td>
+          <td class="p-2">Nomura / BoJ</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="mt-2 text-xs text-gray-500">
+      Nota: valori in sequenza breve / medio / lungo termine. Tutti i dati provengono da fonti Tier 1 (IMF, OECD, World Bank, BIS, BCE/Fed/BoJ, IEA/OPEC, WGC, banche d’investimento).
     </p>
-
-    <ul class="text-[13px] text-gray-700 space-y-1 border-t border-gray-200 pt-3 leading-snug">
-      <li><span class="font-medium text-gray-800">Disoccupazione:</span> % forza lavoro attiva</li>
-      <li><span class="font-medium text-gray-800">Partecipazione:</span> % popolazione in età lavorativa</li>
-      <li><span class="font-medium text-gray-800">E/P Ratio:</span> % occupati su popolazione totale</li>
-      <li><span class="font-medium text-gray-800">Trend:</span> direzione qualitativa del mercato del lavoro</li>
-    </ul>
   </div>
 
-  <div class="mt-6">
-    <button 
-      class="inline-flex items-center px-3 py-2 text-[13px] font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition group"
-      onclick="openDrawer('drawer-occupazione')"
-    >
-      Leggi tutto
-      <svg class="ml-2 h-4 w-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-      </svg>
-    </button>
-  </div>
-</div>
-
-<!-- Overlay -->
-<div id="drawer-occupazione-overlay" class="fixed inset-0 z-40 bg-black bg-opacity-60 hidden"></div>
-
-<!-- Drawer -->
-<div id="drawer-occupazione" class="fixed top-0 right-0 h-full w-full max-w-3xl bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 border-l border-gray-300">
-
-  <!-- Pulsante Chiudi -->
-  <button 
-    class="fixed top-[1.2rem] right-4 z-[60] px-2 py-1 text-[13px] font-medium text-indigo-600 hover:text-indigo-700 transition"
-    onclick="closeDrawer('drawer-occupazione')"
-    aria-label="Chiudi drawer"
-  >
-    Chiudi
-  </button>
-
-  <!-- Contenuto scrollabile -->
-  <div class="overflow-y-auto h-full px-4 py-6 sm:px-6 lg:px-8">
-    <h3 class="text-[15px] sm:text-lg font-semibold text-gray-900 leading-tight mb-4">
-      2.3 · Occupazione – Dettaglio
-    </h3>
-
-    <p class="text-[13px] sm:text-[14px] text-gray-700 leading-snug mt-4 mb-4">
-      Il mercato del lavoro è analizzato attraverso tre metriche chiave: disoccupazione, partecipazione e rapporto occupati/popolazione. Questi indicatori forniscono una lettura sintetica della dinamica occupazionale e del grado di inclusione economica.
-    </p>
-
-    <p class="text-[13px] sm:text-[14px] text-gray-700 leading-snug mb-2">Metriche trattate:</p>
-    <ul class="list-disc pl-5 text-[13px] sm:text-[14px] text-gray-700 space-y-1 leading-snug mb-6">
-      <li><strong>Disoccupazione:</strong> % forza lavoro attiva</li>
-      <li><strong>Partecipazione:</strong> % popolazione in età lavorativa</li>
-      <li><strong>E/P Ratio:</strong> % occupati su popolazione totale</li>
-      <li><strong>Trend:</strong> direzione qualitativa del mercato del lavoro</li>
-    </ul>
-
-<!-- Tabella Attuale -->
-<div class="overflow-x-auto mb-8">
-  <table class="min-w-[1000px] table-auto text-[13px] sm:text-[14px] text-left text-gray-800 border border-gray-400 rounded-xl">
-    <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
-      <tr>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Regione</th>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Disoccupazione</th>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Partecipazione</th>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">E/P Ratio</th>
-        <th class="px-4 py-2 whitespace-nowrap">Trend</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">USA</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">4,1%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">62,7%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">60,3%</td>
-        <td class="px-4 py-2 whitespace-normal break-words">Raffreddamento ciclico</td>
-      </tr>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Eurozona</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">6,2%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">75,5%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">58,9%</td>
-        <td class="px-4 py-2 whitespace-normal break-words">Stabilizzazione</td>
-      </tr>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">UK</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">4,4%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">63,1%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">59,2%</td>
-        <td class="px-4 py-2 whitespace-normal break-words">Debolezza strutturale</td>
-      </tr>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Giappone</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">2,6%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">61,9%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">60,1%</td>
-        <td class="px-4 py-2 whitespace-normal break-words">Stabile, tensioni demografiche</td>
-      </tr>
-      <tr>
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Italia</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">6,3%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">59,8%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">57,4%</td>
-        <td class="px-4 py-2 whitespace-normal break-words">Miglioramento graduale</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<!-- Commento finale -->
-<aside class="mt-6 p-4 border border-gray-300 border-l-4 border-l-gray-600 bg-gray-50 rounded-xl text-[13px] sm:text-[14px] leading-snug max-w-3xl" role="note" aria-labelledby="commento-occupazione">
-  <strong id="commento-occupazione">Commento Tradelia AI – Occupazione Core DM:</strong><br>
-  Il mercato del lavoro USA mostra segnali di raffreddamento, con disoccupazione in lieve aumento e partecipazione stabile. L’Eurozona mantiene una disoccupazione contenuta, ma con divergenze interne (Germania 3,7%, Italia 6,3%). Il Regno Unito resta fragile, penalizzato da bassa partecipazione e pressioni salariali. Il Giappone conferma la sua stabilità, ma con sfide demografiche persistenti. L’Italia mostra segnali di miglioramento, grazie al traino degli investimenti pubblici e alla tenuta dell’occupazione femminile.
-
-  <br><br>
-  <strong>Implicazione allocativa:</strong><br>
-  Favorire equity USA e Giappone per resilienza occupazionale. Monitorare Eurozona per divergenze interne. Underweight UK per fragilità strutturale. Italia in osservazione per upside ciclico.
-</aside>
-
-
-    <br><br>
-  </div>
-</div>
-
-<hr class="my-6 border-t border-gray-200" aria-hidden="true">
-
-<div class="group border border-gray-300 rounded-xl bg-white shadow-sm hover:shadow-md transition flex flex-col justify-between p-5 sm:p-6">
-  <div>
-    <h4 class="text-[15px] font-semibold text-gray-900 mb-1 leading-tight">
-      <span class="block">2.4 · Indicatori Leading, Coincident, Lagging</span>
-      <span class="text-[13px] font-normal text-gray-600">Analisi ciclica multilivello</span>
-    </h4>
-
-    <p class="text-[13px] text-gray-600 mb-3 leading-snug">
-      Analisi ciclica multilivello con indicatori anticipatori, coincidenti e ritardati per le economie Core DM.
-    </p>
-
-    <ul class="text-[13px] text-gray-700 space-y-1 border-t border-gray-200 pt-3 leading-snug">
-      <li><span class="font-medium text-gray-800">Leading:</span> ISM, PMI, ZEW, LEI, CLI</li>
-      <li><span class="font-medium text-gray-800">Coincident:</span> Produzione industriale, occupazione, vendite retail</li>
-      <li><span class="font-medium text-gray-800">Lagging:</span> Disoccupazione, CPI, profitti corporate</li>
-      <li><span class="font-medium text-gray-800">Trend:</span> direzione qualitativa del ciclo</li>
-    </ul>
-  </div>
-
-  <div class="mt-6">
-    <button 
-      class="inline-flex items-center px-3 py-2 text-[13px] font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition group"
-      onclick="openDrawer('drawer-indicatori')"
-    >
-      Leggi tutto
-      <svg class="ml-2 h-4 w-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-      </svg>
-    </button>
-  </div>
-</div>
-
-<hr class="my-6 border-t border-gray-200" aria-hidden="true">
-
-<!-- Overlay -->
-<div id="drawer-indicatori-overlay" class="fixed inset-0 z-40 bg-black bg-opacity-60 hidden"></div>
-
-<!-- Drawer -->
-<div id="drawer-indicatori" class="fixed top-0 right-0 h-full w-full max-w-3xl bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 border-l border-gray-300">
-
-  <!-- Pulsante Chiudi -->
-  <button 
-    class="fixed top-[1.2rem] right-4 z-[60] px-2 py-1 text-[13px] font-medium text-indigo-600 hover:text-indigo-700 transition"
-    onclick="closeDrawer('drawer-indicatori')"
-    aria-label="Chiudi drawer"
-  >
-    Chiudi
-  </button>
-
-  <!-- Contenuto scrollabile -->
-  <div class="overflow-y-auto h-full px-4 py-6 sm:px-6 lg:px-8">
-    <h3 class="text-[15px] sm:text-lg font-semibold text-gray-900 leading-tight mb-4">
-      2.4 · Indicatori Leading, Coincident, Lagging – Dettaglio
-    </h3>
-
-    <p class="text-[13px] sm:text-[14px] text-gray-700 leading-snug mt-4 mb-4">
-      Gli indicatori economici si suddividono in tre categorie: anticipatori (leading), coincidenti e ritardati (lagging). I primi segnalano l’orientamento futuro del ciclo, i secondi ne descrivono lo stato attuale, mentre i terzi confermano tendenze già in atto. L’analisi multilivello consente una lettura dinamica e tempestiva dell’evoluzione macroeconomica.
-    </p>
-
-    <p class="text-[13px] sm:text-[14px] text-gray-700 leading-snug mb-2">Metriche trattate:</p>
-    <ul class="list-disc pl-5 text-[13px] sm:text-[14px] text-gray-700 space-y-1 leading-snug mb-6">
-      <li><strong>Leading:</strong> ISM, PMI, ZEW, LEI, CLI</li>
-      <li><strong>Coincident:</strong> Produzione industriale, occupazione, vendite retail</li>
-      <li><strong>Lagging:</strong> Disoccupazione, CPI, profitti corporate</li>
-      <li><strong>Trend:</strong> direzione qualitativa del ciclo</li>
-    </ul>
-
-
- <p class="text-[13px] sm:text-[14px] text-gray-700 leading-snug mt-4 mb-2">Metriche trattate:</p>
-<ul class="list-disc pl-5 text-[13px] sm:text-[14px] text-gray-700 space-y-2 leading-snug mb-6">
-  <li>
-    <strong>Leading Indicators:</strong> Indicatori anticipatori che segnalano l’andamento futuro dell’economia. Utilizzati per prevedere inversioni di ciclo. Esempi:
-    <ul class="list-disc pl-5 space-y-1 mt-1">
-      <li><strong>ISM / PMI:</strong> Indici di fiducia dei responsabili acquisti, riflettono l’attività manifatturiera e dei servizi.</li>
-      <li><strong>ZEW:</strong> Sentiment degli analisti finanziari tedeschi, utile per anticipare trend europei.</li>
-      <li><strong>LEI (Leading Economic Index):</strong> Composito di vari indicatori USA, sintetizza la direzione dell’economia.</li>
-      <li><strong>CLI (Composite Leading Indicator):</strong> Versione OCSE per economie avanzate, utile per confronti internazionali.</li>
-    </ul>
-  </li>
-
-  <li>
-    <strong>Coincident Indicators:</strong> Indicatori che si muovono in sincronia con il ciclo economico. Misurano l’attività reale corrente.
-    <ul class="list-disc pl-5 space-y-1 mt-1">
-      <li><strong>Produzione industriale:</strong> Output fisico delle imprese manifatturiere, estrattive e utility.</li>
-      <li><strong>Occupazione:</strong> Numero di persone impiegate, riflette la salute del mercato del lavoro.</li>
-      <li><strong>Vendite retail:</strong> Consumi delle famiglie, indicatore chiave della domanda interna.</li>
-    </ul>
-  </li>
-
-  <li>
-    <strong>Lagging Indicators:</strong> Indicatori ritardati che confermano trend già in atto. Utili per validare la fase ciclica.
-    <ul class="list-disc pl-5 space-y-1 mt-1">
-      <li><strong>Disoccupazione:</strong> Tende a salire dopo una recessione e a scendere dopo una ripresa.</li>
-      <li><strong>CPI (Consumer Price Index):</strong> Misura l’inflazione, spesso reagisce con ritardo ai cambiamenti economici.</li>
-      <li><strong>Profitti corporate:</strong> Riflettono la redditività delle imprese, influenzati da costi e domanda passata.</li>
-    </ul>
-  </li>
-
-  <li>
-    <strong>Trend qualitativo:</strong> Valutazione sintetica della direzione del ciclo economico (es. “ripresa fragile”, “stagnazione”, “raffreddamento”). Derivata dall’interpretazione combinata degli indicatori.
-  </li>
-</ul>
-
-<div class="overflow-x-auto mb-6">
-  <table class="min-w-[1000px] table-auto text-[13px] sm:text-[14px] text-left text-gray-800 border border-gray-400 rounded-xl">
-    <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
-      <tr>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Regione</th>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">PMI / ISM</th>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">ZEW</th>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">LEI / CLI</th>
-        <th class="px-4 py-2 whitespace-nowrap">Trend</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">USA</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">ISM: 49.5 / PMI: 51.2</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">—</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">LEI: -0.4% MoM</td>
-        <td class="px-4 py-2 whitespace-nowrap">Decelerazione</td>
-      </tr>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Eurozona</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">PMI: 49.8</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">-12.3</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">CLI: -0.2% MoM</td>
-        <td class="px-4 py-2 whitespace-nowrap">Ripresa fragile</td>
-      </tr>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Italia</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">PMI: 47.5</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">—</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">CLI: -0.3% MoM</td>
-        <td class="px-4 py-2 whitespace-nowrap">In consolidamento</td>
-      </tr>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">UK</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">PMI: 50.1</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">—</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">CLI: -0.5% MoM</td>
-        <td class="px-4 py-2 whitespace-nowrap">Stagnante</td>
-      </tr>
-      <tr>
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Giappone</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">PMI: 52.0</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">—</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">CLI: +0.1% MoM</td>
-        <td class="px-4 py-2 whitespace-nowrap">Stabile</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<h4 class="text-[14px] font-semibold text-gray-900 mb-2">Indicatori Coincident</h4>
-<div class="overflow-x-auto mb-6">
-  <table class="min-w-[1000px] table-auto text-[13px] sm:text-[14px] text-left text-gray-800 border border-gray-400 rounded-xl">
-    <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
-      <tr>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Regione</th>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Produzione Industriale</th>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Occupazione</th>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Vendite Retail</th>
-        <th class="px-4 py-2 whitespace-nowrap">Trend</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">USA</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">+1.2% YoY</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Solida</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">+2.3% YoY</td>
-        <td class="px-4 py-2 whitespace-nowrap">In rallentamento</td>
-      </tr>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Eurozona</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">+0.6% YoY</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Stabile</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">+1.1% YoY</td>
-        <td class="px-4 py-2 whitespace-nowrap">In ripresa</td>
-      </tr>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Italia</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">+0.4% YoY</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">In miglioramento</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">+0.9% YoY</td>
-        <td class="px-4 py-2 whitespace-nowrap">Graduale</td>
-      </tr>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">UK</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">-0.2% YoY</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Debole</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">+0.5% YoY</td>
-        <td class="px-4 py-2 whitespace-nowrap">Piattismo</td>
-      </tr>
-      <tr>
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Giappone</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">+1.0% YoY</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Stabile</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">+1.4% YoY</td>
-        <td class="px-4 py-2 whitespace-nowrap">Resiliente</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<h4 class="text-[14px] font-semibold text-gray-900 mb-2">Indicatori Lagging</h4>
-<div class="overflow-x-auto mb-6">
-  <table class="min-w-[1000px] table-auto text-[13px] sm:text-[14px] text-left text-gray-800 border border-gray-400 rounded-xl">
-    <thead class="bg-gray-100 text-gray-700 border-b border-gray-400">
-      <tr>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Regione</th>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Disoccupazione</th>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">CPI YoY</th>
-        <th class="px-4 py-2 whitespace-nowrap border-r border-gray-300">Profitti Corporate</th>
-        <th class="px-4 py-2 whitespace-nowrap">Trend</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">USA</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">4.1%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">3.9%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">+3.1% YoY</td>
-        <td class="px-4 py-2 whitespace-nowrap">In raffreddamento</td>
-      </tr>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Eurozona</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">6.2%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">3.4%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">+1.8% YoY</td>
-        <td class="px-4 py-2 whitespace-nowrap">In stabilizzazione</td>
-      </tr>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Italia</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">6.3%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">3.2%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">+1.2% YoY</td>
-        <td class="px-4 py-2 whitespace-nowrap">In convergenza</td>
-      </tr>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">UK</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">4.4%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">3.7%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">+0.6% YoY</td>
-        <td class="px-4 py-2 whitespace-nowrap">In stagnazione</td>
-      </tr>
-      <tr>
-        <td class="px-4 py-2 font-medium whitespace-nowrap border-r border-gray-300">Giappone</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">2.6%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">2.1%</td>
-        <td class="px-4 py-2 whitespace-nowrap border-r border-gray-300">+2.4% YoY</td>
-        <td class="px-4 py-2 whitespace-nowrap">Stabile</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<!-- Commento finale -->
-<aside class="mt-6 p-4 border border-gray-300 border-l-4 border-l-gray-600 bg-gray-50 rounded-xl text-[13px] sm:text-[14px] leading-snug max-w-3xl" role="note" aria-labelledby="commento-indicatori">
-  <strong id="commento-indicatori">Commento Tradelia AI – Indicatori Ciclici:</strong><br>
-  Gli indicatori leading segnalano una transizione ciclica: gli USA mostrano decelerazione, mentre l’Eurozona e l’Italia tentano una ripresa moderata. Il Giappone si conferma stabile, con PMI sopra soglia espansiva. Il Regno Unito resta il più fragile, con CLI negativi e stagnazione diffusa.
-
-  Gli indicatori coincidenti confermano una tenuta dell’attività reale, ma con divergenze regionali. I lagging mostrano che l’inflazione resta elevata ma in discesa, con profitti aziendali in moderata ripresa.
-
-  <br><br>
-  <strong>Implicazione allocativa:</strong><br>
-  Favorire asset ciclici in Eurozona e Italia nel medio termine. Mantenere esposizione difensiva su Giappone. Ridurre esposizione UK per rischio stagnazione.
-</aside>
-<br><br>
-  </div>
-</div>
   
 
 
