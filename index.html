@@ -335,6 +335,20 @@
       </span>
     </label>
 
+    <label>Composizione nucleo familiare *
+  <select name="nucleo_familiare" class="w-full border rounded px-3 py-2" required>
+    <option value="">Seleziona</option>
+    <option>Single</option>
+    <option>Coppia senza figli</option>
+    <option>Coppia con figli</option>
+    <option>Altro</option>
+  </select>
+  <span class="text-[11px] text-slate-500">
+    Indica la struttura del nucleo familiare, utile per stimare esigenze di liquidità e propensione al rischio.
+    <em>Fonte: EFAMA Investor Profile Study</em>
+  </span>
+</label>
+
     <!-- Area fiscale -->
     <label>Area fiscale *
       <select name="area_fiscale" class="w-full border rounded px-3 py-2" required>
@@ -601,7 +615,7 @@
         <em>Fonte: ESMA – Guidelines on complex products</em>
       </span>
     </label>
-
+<br><br>
     <!-- Frequenza operazioni -->
     <label>Frequenza operazioni *
       <select name="frequenza_operazioni" class="w-full border rounded px-3 py-2" required>
@@ -1267,6 +1281,7 @@ function buildPayload(){
     dati_anagrafici: {
       eta: readValue(fd,'eta'),
       area_fiscale: readValue(fd,'area_fiscale'),
+      nucleo_familiare: readValue(fd, 'nucleo_familiare'),
       stabilita_reddito: readValue(fd,'stabilita_reddito'),
       situazione_patrimoniale: { valore: null }
     },
