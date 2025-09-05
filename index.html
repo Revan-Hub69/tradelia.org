@@ -727,6 +727,22 @@
         <em>Fonte: OECD – Household Income Statistics</em>
       </span>
     </label>
+<br>
+    <!-- Possesso abitazione principale -->
+<label>Abitazione principale *
+  <select name="abitazione_principale" class="w-full border rounded px-3 py-2" required>
+    <option value="">Seleziona</option>
+    <option>Di proprietà (senza mutuo)</option>
+    <option>Di proprietà (con mutuo)</option>
+    <option>In affitto</option>
+    <option>Altro</option>
+  </select>
+  <span class="text-[11px] text-slate-500">
+    Indica la situazione abitativa, utile per valutare stabilità patrimoniale e impegni finanziari.
+    <em>Fonte: Banca d’Italia – Indagine sui bilanci delle famiglie</em>
+  </span>
+</label>
+    
 
     <!-- Tasso di risparmio -->
     <label>Tasso di risparmio (% reddito) *
@@ -1335,6 +1351,7 @@ function buildPayload(){
       reddito_annuo_lordo: readValue(fd,'reddito_annuo_lordo'),
       tasso_risparmio: readValue(fd,'tasso_risparmio'),
       dipendenza_reddito: readValue(fd,'dipendenza_reddito'),
+        abitazione_principale: readValue(fd, 'abitazione_principale'), 
       prospettiva_fiscale: { valore:(fd.get('prospettiva_fiscale')||'').trim()||null }
     },
 
