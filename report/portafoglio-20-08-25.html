@@ -1452,45 +1452,183 @@ if (d.disclaimer) {
   <!-- Griglia Schede Macro -->
   <div class="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
 
-    <!-- USA -->
-    <div class="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
-      <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
-        🇺🇸 Stati Uniti
-        <span class="ml-auto text-sm font-medium px-2 py-0.5 rounded-full bg-green-100 text-green-800">IMS 4/5</span>
-      </h3>
+  <!-- USA -->
+<div class="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
+  <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
+    🇺🇸 Stati Uniti
+    <span class="ml-auto text-sm font-medium px-2 py-0.5 rounded-full bg-green-100 text-green-800">IMS 4/5</span>
+  </h3>
 
-      <ul class="space-y-2 text-sm text-gray-700">
-        <li><strong>PIL reale:</strong> 2,1% YoY <span class="text-green-600 font-medium">(+)</span></li>
-        <li><strong>Inflazione:</strong> Headline 3,4% / Core 3,1% <span class="text-yellow-600 font-medium">(⚠)</span></li>
-        <li><strong>Tassi Fed Funds:</strong> 5,25% <span class="text-green-600 font-medium">(+)</span></li>
-        <li><strong>FX:</strong> EUR/USD 1,09 · USD/JPY 145 · GBP/USD 1,27</li>
-        <li><strong>Commodities:</strong> Oil $78 · Gas $3,5 · Gold $2.050</li>
-        <li><strong>Equity:</strong> P/E 20x · EPS growth 8% YoY <span class="text-yellow-600 font-medium">(⚠)</span></li>
-        <li><strong>Bond:</strong> Treasury 10Y 4,1% · IG spread 125bps</li>
-      </ul>
+  <ul class="space-y-2 text-sm text-gray-700">
+    <li><strong>PIL reale:</strong> 2,1% YoY <span class="text-green-600 font-medium">(+)</span></li>
+    <li><strong>Inflazione:</strong> Headline 3,4% / Core 3,1% <span class="text-yellow-600 font-medium">(⚠)</span></li>
+    <li><strong>Tassi Fed Funds:</strong> 5,25% <span class="text-green-600 font-medium">(+)</span></li>
+    <li><strong>FX:</strong> EUR/USD 1,09 · USD/JPY 145 · GBP/USD 1,27</li>
+    <li><strong>Commodities:</strong> Oil $78 · Gas $3,5 · Gold $2.050</li>
+    <li><strong>Equity:</strong> P/E 20x · EPS growth 8% YoY <span class="text-yellow-600 font-medium">(⚠)</span></li>
+    <li><strong>Bond:</strong> Treasury 10Y 4,1% · IG spread 125bps</li>
+  </ul>
 
-      <div class="mt-4 text-sm text-gray-600 border-t border-gray-200 pt-3">
-        <p class="mb-2"><strong>Allocazione:</strong></p>
-        <ul class="list-disc list-inside space-y-1">
-          <li>Equity: 40–50% (Base) · 45–55% (Upside) · 30–40% (Downside)</li>
-          <li>Bond: 40–50% · 35–45% · 50–60%</li>
-          <li>Commodities: 5–10% · 5–12% · 3–8%</li>
-          <li>Cash: 0–5% in ogni scenario</li>
-        </ul>
-      </div>
-
-      <div class="mt-4 p-3 rounded-md bg-gray-50 border border-gray-200 text-sm leading-relaxed">
-        <strong>Commento Tradelia AI:</strong> crescita solida, inflazione core sopra target.
-        Leggero OW su equity (tech ed energia), duration obbligazionaria moderata.
-      </div>
-
-      <div class="mt-3 text-xs text-gray-500">
-        Fonti: IMF WEO (Sep 2025), Fed, BLS, IEA, WGC, JP Morgan Research, BofA Global Research.
-      </div>
-    </div>
-
+  <!-- Forward Outlook -->
+  <div class="mt-4 text-sm text-gray-700 border-t border-gray-200 pt-3">
+    <p><strong>Forward Outlook (6–12m):</strong> crescita in rallentamento al 1,7% (H2 2025), Fed in pausa → primi tagli Q2 2026, inflazione core in discesa lenta verso 2,5%. USD atteso stabile/forte su carry trade, equity sostenuto da buyback ma multipli sopra media storica.</p>
   </div>
-</section>
+
+  <!-- Allocazione -->
+  <div class="mt-4 text-sm text-gray-600 border-t border-gray-200 pt-3">
+    <p class="mb-2"><strong>Allocazione:</strong></p>
+    <ul class="list-disc list-inside space-y-1">
+      <li>Equity: 40–50% (Base) · 45–55% (Upside) · 30–40% (Downside)</li>
+      <li>Bond: 40–50% · 35–45% · 50–60%</li>
+      <li>Commodities: 5–10% · 5–12% · 3–8%</li>
+      <li>Cash: 0–5% in ogni scenario</li>
+    </ul>
+  </div>
+
+  <!-- Eventi futuri -->
+  <div class="mt-4 text-sm text-gray-700 border-t border-gray-200 pt-3">
+    <p class="mb-2"><strong>Prossimi avvenimenti impattanti:</strong></p>
+    <ul class="list-disc list-inside space-y-1">
+      <li>11 Set 2025: CPI Agosto (BLS)</li>
+      <li>17 Set 2025: FOMC decisione tassi</li>
+      <li>04 Nov 2025: Elezioni presidenziali USA</li>
+      <li>Q1 2026: possibile primo taglio Fed</li>
+    </ul>
+  </div>
+
+  <!-- Commento Tradelia AI -->
+  <div class="mt-4 p-3 rounded-md bg-gray-50 border border-gray-200 text-sm leading-relaxed">
+    <strong>Commento Tradelia AI:</strong> Scenario macro robusto ma in decelerazione.
+    OW leggero su equity USA (tech, energia), UW su duration lunga.
+    FX USD da tenere come hedge naturale contro shock globali.
+  </div>
+
+  <!-- Fonti -->
+  <div class="mt-3 text-xs text-gray-500">
+    Fonti: IMF WEO (Sep 2025), Fed, BLS, IEA, WGC, JP Morgan Research, BofA Global Research.
+  </div>
+</div>
+
+
+
+
+    <!-- Eurozona -->
+<div class="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
+  <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
+    🇪🇺 Eurozona
+    <span class="ml-auto text-sm font-medium px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800">IMS 3/5</span>
+  </h3>
+
+  <ul class="space-y-2 text-sm text-gray-700">
+    <li><strong>PIL reale:</strong> 0,8% YoY <span class="text-yellow-600 font-medium">(⚠)</span></li>
+    <li><strong>Inflazione:</strong> Headline 2,6% / Core 2,7% <span class="text-green-600 font-medium">(+)</span></li>
+    <li><strong>Tassi BCE:</strong> 3,75% <span class="text-green-600 font-medium">(+)</span></li>
+    <li><strong>FX:</strong> EUR/USD 1,09 · EUR/GBP 0,85</li>
+    <li><strong>Commodities:</strong> Gas €34/MWh · Brent $78</li>
+    <li><strong>Equity:</strong> Stoxx600 P/E 13x · EPS growth 4% YoY <span class="text-yellow-600 font-medium">(⚠)</span></li>
+    <li><strong>Bond:</strong> Bund 10Y 2,4% · BTP 10Y 3,9% · Spread IT/DE 150bps</li>
+  </ul>
+
+  <!-- Forward Outlook -->
+  <div class="mt-4 text-sm text-gray-700 border-t border-gray-200 pt-3">
+    <p><strong>Forward Outlook (6–12m):</strong> crescita fragile (0,6–0,9%), trainata da export e resilienza servizi. BCE in pausa, possibili primi tagli metà 2026. Inflazione core scende lentamente, vicina al 2% nel 2026. EUR sostenuto solo in caso di miglioramento export Cina/EM. Equity attraente per valutazioni ma momentum debole.</p>
+  </div>
+
+  <!-- Allocazione -->
+  <div class="mt-4 text-sm text-gray-600 border-t border-gray-200 pt-3">
+    <p class="mb-2"><strong>Allocazione:</strong></p>
+    <ul class="list-disc list-inside space-y-1">
+      <li>Equity: 20–30% (Base) · 25–35% (Upside) · 15–25% (Downside)</li>
+      <li>Bond: 50–60% · 45–55% · 55–65%</li>
+      <li>Commodities: 5–8% · 6–10% · 3–6%</li>
+      <li>Cash: 5–10% in ogni scenario</li>
+    </ul>
+  </div>
+
+  <!-- Eventi futuri -->
+  <div class="mt-4 text-sm text-gray-700 border-t border-gray-200 pt-3">
+    <p class="mb-2"><strong>Prossimi avvenimenti impattanti:</strong></p>
+    <ul class="list-disc list-inside space-y-1">
+      <li>12 Set 2025: BCE meeting tassi</li>
+      <li>18 Set 2025: HICP Flash (Agosto)</li>
+      <li>Ott–Nov 2025: aggiornamento previsioni Commissione UE</li>
+      <li>Q1 2026: primi segnali di easing BCE</li>
+    </ul>
+  </div>
+
+  <!-- Commento Tradelia AI -->
+  <div class="mt-4 p-3 rounded-md bg-gray-50 border border-gray-200 text-sm leading-relaxed">
+    <strong>Commento Tradelia AI:</strong> Momentum debole ma valutazioni favorevoli. Preferenza per bond core e semi-core, equity selettivo (financials, industriali esportatori). Opportunità tattiche legate a spread periferici se rischio politico contenuto.
+  </div>
+
+  <!-- Fonti -->
+  <div class="mt-3 text-xs text-gray-500">
+    Fonti: BCE (Sep 2025), Eurostat, IMF WEO (Sep 2025), Commissione UE, BofA Research, Goldman Sachs European Outlook.
+  </div>
+</div>
+
+
+
+
+    <!-- Italia -->
+<div class="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
+  <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
+    🇮🇹 Italia
+    <span class="ml-auto text-sm font-medium px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800">IMS 2.5/5</span>
+  </h3>
+
+  <ul class="space-y-2 text-sm text-gray-700">
+    <li><strong>PIL reale:</strong> +0,5% YoY <span class="text-yellow-600 font-medium">(⚠)</span></li>
+    <li><strong>Inflazione:</strong> Headline 2,1% / Core 2,3% <span class="text-green-600 font-medium">(+)</span></li>
+    <li><strong>Tassi BTP 10Y:</strong> 3,9% · Spread IT/DE: 150bps <span class="text-yellow-600 font-medium">(⚠)</span></li>
+    <li><strong>Debito/PIL:</strong> 137% <span class="text-red-600 font-medium">(-)</span></li>
+    <li><strong>Equity:</strong> FTSE MIB P/E 10,5x · EPS growth 3% YoY</li>
+    <li><strong>FX:</strong> EUR/ITL (N/A, Eurozona)</li>
+    <li><strong>Settori chiave:</strong> Banche, utilities, industria manifatturiera</li>
+  </ul>
+
+  <!-- Forward Outlook -->
+  <div class="mt-4 text-sm text-gray-700 border-t border-gray-200 pt-3">
+    <p><strong>Forward Outlook (6–12m):</strong> crescita fragile (0,5–0,7%) sostenuta da PNRR e export. Rischi al ribasso da debolezza Eurozona e tensioni politiche interne. Inflazione in convergenza al target BCE, ma sostenibilità debito resta tema centrale. Equity attraente per valutazioni ma sensibile a rischio spread.</p>
+  </div>
+
+  <!-- Allocazione -->
+  <div class="mt-4 text-sm text-gray-600 border-t border-gray-200 pt-3">
+    <p class="mb-2"><strong>Allocazione:</strong></p>
+    <ul class="list-disc list-inside space-y-1">
+      <li>Equity: 8–12% (Base) · 10–14% (Upside) · 5–9% (Downside)</li>
+      <li>Bond: 60–65% · 55–60% · 65–70%</li>
+      <li>Commodities: 2–4% · 3–5% · 1–3%</li>
+      <li>Cash: 8–10% in ogni scenario</li>
+    </ul>
+  </div>
+
+  <!-- Eventi futuri -->
+  <div class="mt-4 text-sm text-gray-700 border-t border-gray-200 pt-3">
+    <p class="mb-2"><strong>Prossimi avvenimenti impattanti:</strong></p>
+    <ul class="list-disc list-inside space-y-1">
+      <li>20 Set 2025: Aggiornamento DEF</li>
+      <li>27 Set 2025: Asta BTP decennali</li>
+      <li>Ott 2025: Rating review (Moody’s, S&P)</li>
+      <li>Q1 2026: Verifica milestones PNRR</li>
+    </ul>
+  </div>
+
+  <!-- Commento Tradelia AI -->
+  <div class="mt-4 p-3 rounded-md bg-gray-50 border border-gray-200 text-sm leading-relaxed">
+    <strong>Commento Tradelia AI:</strong> Italia resta un mercato tattico. Spread in area 150bps gestibile, ma rischio politico e debito alto limitano upside. Opportunità nei finanziari e nelle utilities regolamentate. Preferenza per approccio bilanciato equity-bond, con hedging sul rischio spread.
+  </div>
+
+  <!-- Fonti -->
+  <div class="mt-3 text-xs text-gray-500">
+    Fonti: MEF (DEF Sep 2025), Banca d’Italia, BCE, IMF WEO (Sep 2025), Moody’s, Goldman Sachs Southern Europe Outlook.
+  </div>
+</div>
+
+
+
+
+    
 
 
     
