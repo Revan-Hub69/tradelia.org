@@ -1624,116 +1624,133 @@ if (d.disclaimer) {
     Fonti: MEF (DEF Sep 2025), Banca d’Italia, BCE, IMF WEO (Sep 2025), Moody’s, Goldman Sachs Southern Europe Outlook.
   </div>
 </div>
-    <br><br>
-     <!-- Header -->
-  <header class="mb-6 border-b border-gray-200 pb-3">
-    <h2 class="text-[clamp(1.3rem,1.8vw,1.5rem)] font-semibold tracking-tight text-gray-900">
-      Riassunto sintetico – Altre principali zone
-    </h2>
-    <p class="mt-1 text-[clamp(.8rem,1.2vw,.9rem)] text-gray-600 leading-relaxed max-w-3xl">
-      Sintesi compatta per motivi di spazio. Fonti T1 e cutoff dati riportati sotto.
-    </p>
+
+
+      <header class="mb-3 border-b pb-2">
+    <h3 class="text-base font-semibold text-gray-900">Allocazioni forward – Principali macro-zone</h3>
+    <p class="text-xs text-gray-500 mt-1">Sintesi compatta: range % min–max (Equity / Bond / Commodities / Cash) • IMS (1-5) • Conviction. Cutoff dati: 06-Sep-2025.</p>
   </header>
 
-  <!-- Tabs -->
-  <div class="tabs-wrapper">
-    <ul class="flex border-b border-gray-200 mb-4" role="tablist">
-      <li class="mr-2">
-        <button class="tab-button text-sm font-medium text-gray-700 py-2 px-3" data-tab="tab-zones" role="tab">Zone</button>
-      </li>
-      <li class="mr-2">
-        <button class="tab-button text-sm font-medium text-gray-700 py-2 px-3" data-tab="tab-allocation" role="tab">Allocazione</button>
-      </li>
-      <li>
-        <button class="tab-button text-sm font-medium text-gray-700 py-2 px-3" data-tab="tab-comment" role="tab">Commento</button>
-      </li>
-      <li>
-        <button class="tab-button text-sm font-medium text-gray-700 py-2 px-3" data-tab="tab-calendar" role="tab">Prossimi eventi</button>
-      </li>
-    </ul>
-
-    <!-- Tab Contenuti -->
-    <div class="tab-content">
-
-      <!-- Zone sintetiche -->
-      <div id="tab-zones" class="tab-panel grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- Ogni zona -->
-        <div class="zone-row flex">
-          <div class="zone-name sticky left-0 bg-white font-semibold text-sm p-2 border border-gray-200">Giappone</div>
-          <div class="zone-data flex-1 text-sm p-2 border border-gray-200">Sintesi dati e punteggio IMS (1-5)</div>
-        </div>
-        <div class="zone-row flex">
-          <div class="zone-name sticky left-0 bg-white font-semibold text-sm p-2 border border-gray-200">Canada</div>
-          <div class="zone-data flex-1 text-sm p-2 border border-gray-200">Sintesi dati e punteggio IMS (1-5)</div>
-        </div>
-        <div class="zone-row flex">
-          <div class="zone-name sticky left-0 bg-white font-semibold text-sm p-2 border border-gray-200">Australia</div>
-          <div class="zone-data flex-1 text-sm p-2 border border-gray-200">Sintesi dati e punteggio IMS (1-5)</div>
-        </div>
-        <div class="zone-row flex">
-          <div class="zone-name sticky left-0 bg-white font-semibold text-sm p-2 border border-gray-200">India</div>
-          <div class="zone-data flex-1 text-sm p-2 border border-gray-200">Sintesi dati e punteggio IMS (1-5)</div>
-        </div>
-        <div class="zone-row flex">
-          <div class="zone-name sticky left-0 bg-white font-semibold text-sm p-2 border border-gray-200">Cina</div>
-          <div class="zone-data flex-1 text-sm p-2 border border-gray-200">Sintesi dati e punteggio IMS (1-5)</div>
-        </div>
-      </div>
-
-      <!-- Allocazione -->
-      <div id="tab-allocation" class="tab-panel hidden p-2">
-        <!-- Tabella compatta per allocazione min-max e OW/N/UW -->
-        <table class="w-full text-sm border-collapse">
-          <thead>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm border-collapse">
+      <thead>
+        <tr class="bg-gray-50">
+          <th class="border px-2 py-1 text-left">Zona</th>
+          <th class="border px-2 py-1 text-center">Equity %</th>
+          <th class="border px-2 py-1 text-center">Bond %</th>
+          <th class="border px-2 py-1 text-center">Commodities %</th>
+          <th class="border px-2 py-1 text-center">Cash %</th>
+          <th class="border px-2 py-1 text-center">IMS</th>
+          <th class="border px-2 py-1 text-center">Conviction</th>
+        </tr>
+      </thead>
+      <tbody>
             <tr>
-              <th class="border px-2 py-1 bg-gray-50 sticky top-0">Zona</th>
-              <th class="border px-2 py-1 bg-gray-50">Asset class</th>
-              <th class="border px-2 py-1 bg-gray-50">Min %</th>
-              <th class="border px-2 py-1 bg-gray-50">Max %</th>
-              <th class="border px-2 py-1 bg-gray-50">Conviction</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="border px-2 py-1">Giappone</td>
-              <td class="border px-2 py-1">Equity</td>
-              <td class="border px-2 py-1">5</td>
-              <td class="border px-2 py-1">10</td>
-              <td class="border px-2 py-1">OW</td>
-            </tr>
-            <!-- Altre righe per asset class / zona -->
-          </tbody>
-        </table>
-      </div>
+          <td class="border px-2 py-1">Regno Unito</td>
+          <td class="border px-2 py-1 text-center">18–24</td>
+          <td class="border px-2 py-1 text-center">50–56</td>
+          <td class="border px-2 py-1 text-center">4–6</td>
+          <td class="border px-2 py-1 text-center">6–10</td>
+          <td class="border px-2 py-1 text-center">3.0</td>
+          <td class="border px-2 py-1 text-center">N</td>
+        </tr>
 
-      <!-- Commento sintetico zona per zona -->
-      <div id="tab-comment" class="tab-panel hidden p-2 text-sm leading-snug">
-        <p><strong>Giappone:</strong> Scenario stabile, valutazioni moderate, crescita EPS contenuta. Fonte: IMF Japan Outlook 2025.</p>
-        <p><strong>Canada:</strong> Momentum positivo, rischio inflazione contenuto. Fonte: OECD Canada Macro 2025.</p>
-        <p><strong>Australia:</strong> Crescita stabile, commodities supportive. Fonte: World Bank Australia 2025.</p>
-        <p><strong>India:</strong> Potenziale upside su tech e consumer, volatilità politica moderata. Fonte: IMF India 2025.</p>
-        <p><strong>Cina:</strong> Crescita rallentata, rischi regolatori elevati. Fonte: BIS China 2025.</p>
-      </div>
+        <tr>
+          <td class="border px-2 py-1">Giappone</td>
+          <td class="border px-2 py-1 text-center">25–35</td>
+          <td class="border px-2 py-1 text-center">40–50</td>
+          <td class="border px-2 py-1 text-center">3–6</td>
+          <td class="border px-2 py-1 text-center">5–10</td>
+          <td class="border px-2 py-1 text-center">3.2</td>
+          <td class="border px-2 py-1 text-center">N</td>
+        </tr>
 
-      <!-- Calendario macro -->
-      <div id="tab-calendar" class="tab-panel hidden p-2 text-sm leading-snug">
-        <ul class="list-disc pl-4">
-          <li>12/09/2025 – Giappone CPI</li>
-          <li>15/09/2025 – India GDP QoQ</li>
-          <li>20/09/2025 – Cina PMI Manufacturing</li>
-          <li>22/09/2025 – Australia RBA Rate Decision</li>
-          <li>25/09/2025 – Canada Employment Report</li>
-        </ul>
-      </div>
+        <tr>
+          <td class="border px-2 py-1">Cina</td>
+          <td class="border px-2 py-1 text-center">35–45</td>
+          <td class="border px-2 py-1 text-center">35–45</td>
+          <td class="border px-2 py-1 text-center">5–10</td>
+          <td class="border px-2 py-1 text-center">5–10</td>
+          <td class="border px-2 py-1 text-center">3.0</td>
+          <td class="border px-2 py-1 text-center">N</td>
+        </tr>
 
-    </div>
+        <tr>
+          <td class="border px-2 py-1">India</td>
+          <td class="border px-2 py-1 text-center">40–50</td>
+          <td class="border px-2 py-1 text-center">25–35</td>
+          <td class="border px-2 py-1 text-center">3–6</td>
+          <td class="border px-2 py-1 text-center">5–10</td>
+          <td class="border px-2 py-1 text-center">4.2</td>
+          <td class="border px-2 py-1 text-center">OW</td>
+        </tr>
+
+        <tr>
+          <td class="border px-2 py-1">EM Core (ex-CN/IN)</td>
+          <td class="border px-2 py-1 text-center">30–40</td>
+          <td class="border px-2 py-1 text-center">30–40</td>
+          <td class="border px-2 py-1 text-center">6–12</td>
+          <td class="border px-2 py-1 text-center">5–10</td>
+          <td class="border px-2 py-1 text-center">3.1</td>
+          <td class="border px-2 py-1 text-center">N</td>
+        </tr>
+
+        <tr>
+          <td class="border px-2 py-1">Canada</td>
+          <td class="border px-2 py-1 text-center">30–40</td>
+          <td class="border px-2 py-1 text-center">35–45</td>
+          <td class="border px-2 py-1 text-center">6–10</td>
+          <td class="border px-2 py-1 text-center">5–10</td>
+          <td class="border px-2 py-1 text-center">3.3</td>
+          <td class="border px-2 py-1 text-center">OW</td>
+        </tr>
+
+        <tr>
+          <td class="border px-2 py-1">Australia</td>
+          <td class="border px-2 py-1 text-center">28–36</td>
+          <td class="border px-2 py-1 text-center">40–48</td>
+          <td class="border px-2 py-1 text-center">6–10</td>
+          <td class="border px-2 py-1 text-center">5–10</td>
+          <td class="border px-2 py-1 text-center">3.1</td>
+          <td class="border px-2 py-1 text-center">N</td>
+        </tr>
+
+        <tr>
+          <td class="border px-2 py-1">Svizzera</td>
+          <td class="border px-2 py-1 text-center">18–26</td>
+          <td class="border px-2 py-1 text-center">50–60</td>
+          <td class="border px-2 py-1 text-center">3–6</td>
+          <td class="border px-2 py-1 text-center">5–10</td>
+          <td class="border px-2 py-1 text-center">3.0</td>
+          <td class="border px-2 py-1 text-center">N</td>
+        </tr>
+
+        <tr>
+          <td class="border px-2 py-1">Nord Europa (aggregate)</td>
+          <td class="border px-2 py-1 text-center">28–36</td>
+          <td class="border px-2 py-1 text-center">40–50</td>
+          <td class="border px-2 py-1 text-center">3–6</td>
+          <td class="border px-2 py-1 text-center">5–10</td>
+          <td class="border px-2 py-1 text-center">3.4</td>
+          <td class="border px-2 py-1 text-center">N</td>
+        </tr>
+
+        <tr>
+          <td class="border px-2 py-1">Asia Developed (KR/TW/SG)</td>
+          <td class="border px-2 py-1 text-center">35–45</td>
+          <td class="border px-2 py-1 text-center">25–35</td>
+          <td class="border px-2 py-1 text-center">3–6</td>
+          <td class="border px-2 py-1 text-center">5–10</td>
+          <td class="border px-2 py-1 text-center">3.8</td>
+          <td class="border px-2 py-1 text-center">OW</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
-  <!-- Fonti e cutoff -->
-  <footer class="mt-4 text-xs text-gray-500">
-    Fonti: IMF, OECD, World Bank, BIS, Bank of Japan, Reserve Bank of Australia, Bank of Canada. Cutoff dati: 31/08/2025
+  <footer class="mt-3 text-xs text-gray-500">
+    Nota: range espressi come suggerimenti forward (0–12 mesi), derivati da sintesi desk delle ultime view T1 (policy, crescita, inflazione, rischi geopolitici). Per discussione operativa, possiamo convertire questi range in pesi portfolio vincolati (somme 100% e limiti per asset class) in BLOCCO-3.
   </footer>
-  </div>
 </section>
 
 
