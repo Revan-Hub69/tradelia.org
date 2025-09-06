@@ -1624,8 +1624,117 @@ if (d.disclaimer) {
     Fonti: MEF (DEF Sep 2025), Banca d’Italia, BCE, IMF WEO (Sep 2025), Moody’s, Goldman Sachs Southern Europe Outlook.
   </div>
 </div>
+    <br><br>
+     <!-- Header -->
+  <header class="mb-6 border-b border-gray-200 pb-3">
+    <h2 class="text-[clamp(1.3rem,1.8vw,1.5rem)] font-semibold tracking-tight text-gray-900">
+      Riassunto sintetico – Altre principali zone
+    </h2>
+    <p class="mt-1 text-[clamp(.8rem,1.2vw,.9rem)] text-gray-600 leading-relaxed max-w-3xl">
+      Sintesi compatta per motivi di spazio. Fonti T1 e cutoff dati riportati sotto.
+    </p>
+  </header>
 
+  <!-- Tabs -->
+  <div class="tabs-wrapper">
+    <ul class="flex border-b border-gray-200 mb-4" role="tablist">
+      <li class="mr-2">
+        <button class="tab-button text-sm font-medium text-gray-700 py-2 px-3" data-tab="tab-zones" role="tab">Zone</button>
+      </li>
+      <li class="mr-2">
+        <button class="tab-button text-sm font-medium text-gray-700 py-2 px-3" data-tab="tab-allocation" role="tab">Allocazione</button>
+      </li>
+      <li>
+        <button class="tab-button text-sm font-medium text-gray-700 py-2 px-3" data-tab="tab-comment" role="tab">Commento</button>
+      </li>
+      <li>
+        <button class="tab-button text-sm font-medium text-gray-700 py-2 px-3" data-tab="tab-calendar" role="tab">Prossimi eventi</button>
+      </li>
+    </ul>
 
+    <!-- Tab Contenuti -->
+    <div class="tab-content">
+
+      <!-- Zone sintetiche -->
+      <div id="tab-zones" class="tab-panel grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Ogni zona -->
+        <div class="zone-row flex">
+          <div class="zone-name sticky left-0 bg-white font-semibold text-sm p-2 border border-gray-200">Giappone</div>
+          <div class="zone-data flex-1 text-sm p-2 border border-gray-200">Sintesi dati e punteggio IMS (1-5)</div>
+        </div>
+        <div class="zone-row flex">
+          <div class="zone-name sticky left-0 bg-white font-semibold text-sm p-2 border border-gray-200">Canada</div>
+          <div class="zone-data flex-1 text-sm p-2 border border-gray-200">Sintesi dati e punteggio IMS (1-5)</div>
+        </div>
+        <div class="zone-row flex">
+          <div class="zone-name sticky left-0 bg-white font-semibold text-sm p-2 border border-gray-200">Australia</div>
+          <div class="zone-data flex-1 text-sm p-2 border border-gray-200">Sintesi dati e punteggio IMS (1-5)</div>
+        </div>
+        <div class="zone-row flex">
+          <div class="zone-name sticky left-0 bg-white font-semibold text-sm p-2 border border-gray-200">India</div>
+          <div class="zone-data flex-1 text-sm p-2 border border-gray-200">Sintesi dati e punteggio IMS (1-5)</div>
+        </div>
+        <div class="zone-row flex">
+          <div class="zone-name sticky left-0 bg-white font-semibold text-sm p-2 border border-gray-200">Cina</div>
+          <div class="zone-data flex-1 text-sm p-2 border border-gray-200">Sintesi dati e punteggio IMS (1-5)</div>
+        </div>
+      </div>
+
+      <!-- Allocazione -->
+      <div id="tab-allocation" class="tab-panel hidden p-2">
+        <!-- Tabella compatta per allocazione min-max e OW/N/UW -->
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr>
+              <th class="border px-2 py-1 bg-gray-50 sticky top-0">Zona</th>
+              <th class="border px-2 py-1 bg-gray-50">Asset class</th>
+              <th class="border px-2 py-1 bg-gray-50">Min %</th>
+              <th class="border px-2 py-1 bg-gray-50">Max %</th>
+              <th class="border px-2 py-1 bg-gray-50">Conviction</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="border px-2 py-1">Giappone</td>
+              <td class="border px-2 py-1">Equity</td>
+              <td class="border px-2 py-1">5</td>
+              <td class="border px-2 py-1">10</td>
+              <td class="border px-2 py-1">OW</td>
+            </tr>
+            <!-- Altre righe per asset class / zona -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Commento sintetico zona per zona -->
+      <div id="tab-comment" class="tab-panel hidden p-2 text-sm leading-snug">
+        <p><strong>Giappone:</strong> Scenario stabile, valutazioni moderate, crescita EPS contenuta. Fonte: IMF Japan Outlook 2025.</p>
+        <p><strong>Canada:</strong> Momentum positivo, rischio inflazione contenuto. Fonte: OECD Canada Macro 2025.</p>
+        <p><strong>Australia:</strong> Crescita stabile, commodities supportive. Fonte: World Bank Australia 2025.</p>
+        <p><strong>India:</strong> Potenziale upside su tech e consumer, volatilità politica moderata. Fonte: IMF India 2025.</p>
+        <p><strong>Cina:</strong> Crescita rallentata, rischi regolatori elevati. Fonte: BIS China 2025.</p>
+      </div>
+
+      <!-- Calendario macro -->
+      <div id="tab-calendar" class="tab-panel hidden p-2 text-sm leading-snug">
+        <ul class="list-disc pl-4">
+          <li>12/09/2025 – Giappone CPI</li>
+          <li>15/09/2025 – India GDP QoQ</li>
+          <li>20/09/2025 – Cina PMI Manufacturing</li>
+          <li>22/09/2025 – Australia RBA Rate Decision</li>
+          <li>25/09/2025 – Canada Employment Report</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Fonti e cutoff -->
+  <footer class="mt-4 text-xs text-gray-500">
+    Fonti: IMF, OECD, World Bank, BIS, Bank of Japan, Reserve Bank of Australia, Bank of Canada. Cutoff dati: 31/08/2025
+  </footer>
+  </div>
+</section>
 
 
     
