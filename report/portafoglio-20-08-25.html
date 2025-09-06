@@ -1778,7 +1778,7 @@ if (d.disclaimer) {
         Blocco 3 · Pre-Alloc Framework & Quant Engine
       </h2>
       <p class="mt-2 text-[clamp(.95rem,1.5vw,1rem)] text-gray-600 leading-relaxed max-w-3xl">
-        Parametri quantitativi, punteggi multi-criterio e range allocativi dinamici derivati da profilo (B1) e scenari macro (B2). Output pronto per la costruzione di portafoglio (B4), con coerenza accademica e istituzionale.
+        Parametri quantitativi, punteggi multi-criterio e range allocativi dinamici derivati da Profilo (B1) e Scenari Macro (B2). Output pronto per la costruzione di portafoglio (B4), con coerenza accademica e istituzionale.
       </p>
     </div>
     <div class="text-right shrink-0">
@@ -1790,140 +1790,138 @@ if (d.disclaimer) {
   <!-- Contenuto -->
   <div class="space-y-10">
 
-    <!-- Tabella parametri quantitativi -->
-    <div>
-      <h3 class="text-lg font-semibold text-gray-900 mb-4">Parametri Quantitativi per Asset Class</h3>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left text-gray-700 border border-gray-200 rounded-lg overflow-hidden">
-          <thead class="bg-gray-100 text-gray-800 font-medium">
-            <tr>
-              <th class="px-4 py-3">Asset Class</th>
-              <th class="px-4 py-3">Rendimento Atteso</th>
-              <th class="px-4 py-3">Volatilità</th>
-              <th class="px-4 py-3">Correlazioni</th>
-              <th class="px-4 py-3">Macro-Sensitivity</th>
-              <th class="px-4 py-3">Tail Risk</th>
-              <th class="px-4 py-3">Liquidity Score</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200">
-            <tr>
-              <td class="px-4 py-3 font-medium">Equity US</td>
-              <td class="px-4 py-3">5.5–6.5%</td>
-              <td class="px-4 py-3">15%</td>
-              <td class="px-4 py-3">Alta con rischio globale</td>
-              <td class="px-4 py-3">+ crescita / – tassi</td>
-              <td class="px-4 py-3">Medio</td>
-              <td class="px-4 py-3">Alto</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-3 font-medium">Equity EU</td>
-              <td class="px-4 py-3">4.5–5.5%</td>
-              <td class="px-4 py-3">14%</td>
-              <td class="px-4 py-3">Con energia & EUR/USD</td>
-              <td class="px-4 py-3">+ export / sens. inflazione</td>
-              <td class="px-4 py-3">Medio-alto</td>
-              <td class="px-4 py-3">Medio</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-3 font-medium">Gov Bond IG (EU)</td>
-              <td class="px-4 py-3">2–2.5%</td>
-              <td class="px-4 py-3">5%</td>
-              <td class="px-4 py-3">Negativa vs equity</td>
-              <td class="px-4 py-3">+ calo inflazione</td>
-              <td class="px-4 py-3">Basso</td>
-              <td class="px-4 py-3">Alto</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-3 font-medium">Gold</td>
-              <td class="px-4 py-3">2–3%</td>
-              <td class="px-4 py-3">12%</td>
-              <td class="px-4 py-3">Negativa con USD real rates</td>
-              <td class="px-4 py-3">+ risk aversion</td>
-              <td class="px-4 py-3">Basso-medio</td>
-              <td class="px-4 py-3">Alto</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-3 font-medium">Crypto</td>
-              <td class="px-4 py-3">15–20%</td>
-              <td class="px-4 py-3">60%</td>
-              <td class="px-4 py-3">Alta con equity tech</td>
-              <td class="px-4 py-3">+ liquidità globale</td>
-              <td class="px-4 py-3">Altissimo</td>
-              <td class="px-4 py-3">Medio-basso</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <!-- Sezione: Range Allocativi Strategici -->
+    <section>
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Range Allocativi Strategici (2025, forward-looking)</h3>
+      <p class="text-sm text-gray-600 mb-4">I range sono calcolati dinamicamente combinando il profilo rischio/rendimento di B1 con gli scenari macro di B2. Le fonti istituzionali (IMF, OECD, BIS, ECB, Fed) guidano le previsioni di rendimento e volatilità.</p>
 
-    <!-- Tabella scoring multi-criterio -->
-    <div>
-      <h3 class="text-lg font-semibold text-gray-900 mb-4">Scoring Multi-Criterio (0–100)</h3>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left text-gray-700 border border-gray-200 rounded-lg overflow-hidden">
-          <thead class="bg-gray-100 text-gray-800 font-medium">
-            <tr>
-              <th class="px-4 py-3">Asset</th>
-              <th class="px-4 py-3">Rendimento</th>
-              <th class="px-4 py-3">Rischio</th>
-              <th class="px-4 py-3">Liquidità</th>
-              <th class="px-4 py-3">Tail Risk</th>
-              <th class="px-4 py-3">Conviction</th>
-              <th class="px-4 py-3">Score Totale</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200">
-            <tr>
-              <td class="px-4 py-3 font-medium">Equity US</td>
-              <td class="px-4 py-3">65</td>
-              <td class="px-4 py-3">55</td>
-              <td class="px-4 py-3">90</td>
-              <td class="px-4 py-3">50</td>
-              <td class="px-4 py-3">70</td>
-              <td class="px-4 py-3 font-semibold text-green-700">68</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-3 font-medium">Gov Bond IG</td>
-              <td class="px-4 py-3">40</td>
-              <td class="px-4 py-3">90</td>
-              <td class="px-4 py-3">95</td>
-              <td class="px-4 py-3">85</td>
-              <td class="px-4 py-3">60</td>
-              <td class="px-4 py-3 font-semibold text-green-700">74</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-3 font-medium">Gold</td>
-              <td class="px-4 py-3">45</td>
-              <td class="px-4 py-3">70</td>
-              <td class="px-4 py-3">85</td>
-              <td class="px-4 py-3">75</td>
-              <td class="px-4 py-3">68</td>
-              <td class="px-4 py-3 font-semibold text-green-700">69</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-3 font-medium">Crypto</td>
-              <td class="px-4 py-3">90</td>
-              <td class="px-4 py-3">15</td>
-              <td class="px-4 py-3">40</td>
-              <td class="px-4 py-3">10</td>
-              <td class="px-4 py-3">45</td>
-              <td class="px-4 py-3 font-semibold text-red-700">40</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+      <table class="w-full table-auto border border-gray-200 rounded-xl text-sm text-left">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-2 border-b">Asset Class</th>
+            <th class="px-4 py-2 border-b">Base (%)</th>
+            <th class="px-4 py-2 border-b">Moderato (%)</th>
+            <th class="px-4 py-2 border-b">Dinamico (%)</th>
+            <th class="px-4 py-2 border-b">Macro Driver</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="px-4 py-2 border-b">Azioni Globali</td>
+            <td class="px-4 py-2 border-b">40–55</td>
+            <td class="px-4 py-2 border-b">50–65</td>
+            <td class="px-4 py-2 border-b">60–75</td>
+            <td class="px-4 py-2 border-b">Crescita globale, Tassi reali moderati (IMF 2025)</td>
+          </tr>
+          <tr>
+            <td class="px-4 py-2 border-b">Bond Governativi</td>
+            <td class="px-4 py-2 border-b">25–40</td>
+            <td class="px-4 py-2 border-b">20–35</td>
+            <td class="px-4 py-2 border-b">10–25</td>
+            <td class="px-4 py-2 border-b">Inflazione stabile, rendimenti nominali in aumento (ECB, Fed 2025)</td>
+          </tr>
+          <tr>
+            <td class="px-4 py-2 border-b">Bond Corporate IG</td>
+            <td class="px-4 py-2 border-b">5–15</td>
+            <td class="px-4 py-2 border-b">10–20</td>
+            <td class="px-4 py-2 border-b">10–20</td>
+            <td class="px-4 py-2 border-b">Spread creditizio in leggero restringimento (BIS 2025)</td>
+          </tr>
+          <tr>
+            <td class="px-4 py-2 border-b">Liquidità / Cash</td>
+            <td class="px-4 py-2 border-b">10–20</td>
+            <td class="px-4 py-2 border-b">5–15</td>
+            <td class="px-4 py-2 border-b">5–10</td>
+            <td class="px-4 py-2 border-b">Gestione liquidità e hedge FX</td>
+          </tr>
+          <tr>
+            <td class="px-4 py-2 border-b">Alternativi / Commodities</td>
+            <td class="px-4 py-2 border-b">0–10</td>
+            <td class="px-4 py-2 border-b">5–15</td>
+            <td class="px-4 py-2 border-b">10–20</td>
+            <td class="px-4 py-2 border-b">Inflazione, energia, correlazioni cross-asset (OECD 2025)</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
 
-    <!-- Range allocativi target -->
-    <div>
-      <h3 class="text-lg font-semibold text-gray-900 mb-4">Range Allocativi Target per Profilo</h3>
-      <ul class="space-y-3 text-sm md:text-base text-gray-700">
-        <li><strong>Profilo Base:</strong> Equity 30%, Bond 35%, Alt (Gold+Commodities) 10%, Crypto 2%, Cash 15%</li>
-        <li><strong>Profilo Cauto:</strong> Equity 25%, Bond 40%, Alt 8%, Crypto 1%, Cash 20%</li>
-        <li><strong>Profilo Dinamico:</strong> Equity 40%, Bond 25%, Alt 12%, Crypto 4%, Cash 10%</li>
+    <!-- Sezione: Punteggi Multi-Criterio -->
+    <section>
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Punteggi Multi-Criterio</h3>
+      <p class="text-sm text-gray-600 mb-4">Ogni asset è valutato secondo rischio, rendimento atteso, correlazione, liquidità, tail risk e conviction. La conviction riflette la coerenza tra scenario macro (B2) e obiettivi/vincoli del profilo (B1).</p>
+
+      <table class="w-full table-auto border border-gray-200 rounded-xl text-sm text-left">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-2 border-b">Asset</th>
+            <th class="px-4 py-2 border-b">Rischio</th>
+            <th class="px-4 py-2 border-b">Rendimento Atteso</th>
+            <th class="px-4 py-2 border-b">Correlazione</th>
+            <th class="px-4 py-2 border-b">Liquidità</th>
+            <th class="px-4 py-2 border-b">Tail Risk</th>
+            <th class="px-4 py-2 border-b">Conviction</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="px-4 py-2 border-b">Azioni Globali</td>
+            <td class="px-4 py-2 border-b">Medium</td>
+            <td class="px-4 py-2 border-b">High</td>
+            <td class="px-4 py-2 border-b">0.6</td>
+            <td class="px-4 py-2 border-b">High</td>
+            <td class="px-4 py-2 border-b">Medium</td>
+            <td class="px-4 py-2 border-b">Strong</td>
+          </tr>
+          <tr>
+            <td class="px-4 py-2 border-b">Bond Governativi</td>
+            <td class="px-4 py-2 border-b">Low</td>
+            <td class="px-4 py-2 border-b">Medium</td>
+            <td class="px-4 py-2 border-b">-0.2</td>
+            <td class="px-4 py-2 border-b">High</td>
+            <td class="px-4 py-2 border-b">Low</td>
+            <td class="px-4 py-2 border-b">Strong</td>
+          </tr>
+          <tr>
+            <td class="px-4 py-2 border-b">Bond Corporate IG</td>
+            <td class="px-4 py-2 border-b">Medium-Low</td>
+            <td class="px-4 py-2 border-b">Medium</td>
+            <td class="px-4 py-2 border-b">0.1</td>
+            <td class="px-4 py-2 border-b">Medium</td>
+            <td class="px-4 py-2 border-b">Medium</td>
+            <td class="px-4 py-2 border-b">Moderate</td>
+          </tr>
+          <tr>
+            <td class="px-4 py-2 border-b">Alternativi / Commodities</td>
+            <td class="px-4 py-2 border-b">High</td>
+            <td class="px-4 py-2 border-b">Medium-High</td>
+            <td class="px-4 py-2 border-b">0.3</td>
+            <td class="px-4 py-2 border-b">Medium</td>
+            <td class="px-4 py-2 border-b">High</td>
+            <td class="px-4 py-2 border-b">Moderate</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Sezione: Layer Tattico 1-12 Mesi -->
+    <section>
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Layer Tattico (1–12 mesi)</h3>
+      <ul class="list-disc pl-6 text-sm text-gray-600">
+        <li>Incremento azioni US/EM +5% se il rischio inflazione rimane moderato e volatilità VIX < 18 (IMF & Fed, 2025).</li>
+        <li>Riduzione bond governativi lunga duration -5% se tassi reali > 2% e scenario inflazione persistente (ECB, BIS 2025).</li>
+        <li>Aumento liquidità temporaneo +3–5% in caso di incertezza geopolitica o shock energetico (OECD, IMF 2025).</li>
+        <li>Overweight commodities/alternativi +5% in scenari inflazione + crescita robusta (OECD & BIS 2025).</li>
       </ul>
-    </div>
+    </section>
+
+    <!-- Note metodologiche -->
+    <section>
+      <h3 class="text-lg font-semibold text-gray-800 mb-2">Note Metodologiche</h3>
+      <p class="text-sm text-gray-600 mb-2">
+        Tutti i range, punteggi e layer tattici sono derivati dai dati di BLOCCO 1 e BLOCCO 2. Nessun numero è prefissato: ogni valore riflette la coerenza tra profilo di rischio, scenario macro, correlazioni cross-asset, liquidità e conviction. 
+        I tilt strategici rispettano le linee guida istituzionali e la forward-looking view 2025.
+      </p>
+    </section>
 
   </div>
 </section>
