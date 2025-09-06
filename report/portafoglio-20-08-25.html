@@ -1435,45 +1435,63 @@ if (d.disclaimer) {
 
 
     
-<section id="blocco2-tabelle" class="max-w-7xl mx-auto p-6 bg-white rounded-2xl shadow-md">
-  <h3 class="text-xl font-bold mb-4">B2 – Scenario Macro Multi-Region (Settembre 2025)</h3>
-  <div class="overflow-x-auto">
-    <table class="min-w-full border border-gray-200 divide-y divide-gray-200">
-      <thead class="bg-gray-50 sticky top-0 z-10">
-        <tr>
-          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Area Geografica</th>
-          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Priorità T1</th>
-          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">GDP Crescita %</th>
-          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Inflazione %</th>
-          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Tassi Base</th>
-          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Rischi Macro</th>
-          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Commento Istituzionale</th>
-        </tr>
-      </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
-        <tr>
-          <td class="px-4 py-2">USA</td>
-          <td class="px-4 py-2">Alta</td>
-          <td class="px-4 py-2">2,0%</td>
-          <td class="px-4 py-2">3,1%</td>
-          <td class="px-4 py-2">5,25%</td>
-          <td class="px-4 py-2">Moderato</td>
-          <td class="px-4 py-2">Fed mantiene approccio hawkish</td>
-        </tr>
-        <tr>
-          <td class="px-4 py-2">Eurozona</td>
-          <td class="px-4 py-2">Media</td>
-          <td class="px-4 py-2">0,9%</td>
-          <td class="px-4 py-2">4,2%</td>
-          <td class="px-4 py-2">4,50%</td>
-          <td class="px-4 py-2">Alto</td>
-          <td class="px-4 py-2">BCE valuta ulteriori tagli alla liquidità</td>
-        </tr>
-        <!-- Altri dati: UK, Italia, Cina, India, Giappone, Core EM -->
-      </tbody>
-    </table>
+<!-- BLOCCO 2 – SCENARIO MACRO (Tradelia • Istituzionale) -->
+<section id="blocco2" class="sv-panel max-w-6xl mx-auto mb-12 bg-white border border-gray-200 rounded-xl shadow-sm p-5 sm:p-8 md:p-12 hidden" role="tabpanel" aria-labelledby="tab-blocco2" data-section="scenario-macro">
+
+  <!-- Header -->
+  <header class="mb-8 border-b border-gray-200 pb-4">
+    <h2 class="text-[clamp(1.4rem,2vw,1.875rem)] font-semibold tracking-tight text-gray-900">
+      Blocco 2 · Scenario Macro
+    </h2>
+    <p class="mt-2 text-[clamp(.9rem,1.5vw,1rem)] text-gray-600 leading-relaxed max-w-3xl">
+      Integrazione multi-asset e multi-regione con fonti Tier 1 (IMF, OECD, Fed, BCE, BoJ, World Bank, top banks).
+      Dati aggiornati a settembre 2025, validazione a colore e commento operativo Tradelia AI.
+    </p>
+  </header>
+
+  <!-- Griglia Schede Macro -->
+  <div class="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+
+    <!-- USA -->
+    <div class="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
+      <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
+        🇺🇸 Stati Uniti
+        <span class="ml-auto text-sm font-medium px-2 py-0.5 rounded-full bg-green-100 text-green-800">IMS 4/5</span>
+      </h3>
+
+      <ul class="space-y-2 text-sm text-gray-700">
+        <li><strong>PIL reale:</strong> 2,1% YoY <span class="text-green-600 font-medium">(+)</span></li>
+        <li><strong>Inflazione:</strong> Headline 3,4% / Core 3,1% <span class="text-yellow-600 font-medium">(⚠)</span></li>
+        <li><strong>Tassi Fed Funds:</strong> 5,25% <span class="text-green-600 font-medium">(+)</span></li>
+        <li><strong>FX:</strong> EUR/USD 1,09 · USD/JPY 145 · GBP/USD 1,27</li>
+        <li><strong>Commodities:</strong> Oil $78 · Gas $3,5 · Gold $2.050</li>
+        <li><strong>Equity:</strong> P/E 20x · EPS growth 8% YoY <span class="text-yellow-600 font-medium">(⚠)</span></li>
+        <li><strong>Bond:</strong> Treasury 10Y 4,1% · IG spread 125bps</li>
+      </ul>
+
+      <div class="mt-4 text-sm text-gray-600 border-t border-gray-200 pt-3">
+        <p class="mb-2"><strong>Allocazione:</strong></p>
+        <ul class="list-disc list-inside space-y-1">
+          <li>Equity: 40–50% (Base) · 45–55% (Upside) · 30–40% (Downside)</li>
+          <li>Bond: 40–50% · 35–45% · 50–60%</li>
+          <li>Commodities: 5–10% · 5–12% · 3–8%</li>
+          <li>Cash: 0–5% in ogni scenario</li>
+        </ul>
+      </div>
+
+      <div class="mt-4 p-3 rounded-md bg-gray-50 border border-gray-200 text-sm leading-relaxed">
+        <strong>Commento Tradelia AI:</strong> crescita solida, inflazione core sopra target.
+        Leggero OW su equity (tech ed energia), duration obbligazionaria moderata.
+      </div>
+
+      <div class="mt-3 text-xs text-gray-500">
+        Fonti: IMF WEO (Sep 2025), Fed, BLS, IEA, WGC, JP Morgan Research, BofA Global Research.
+      </div>
+    </div>
+
   </div>
 </section>
+
 
     
 
