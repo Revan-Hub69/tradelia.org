@@ -417,6 +417,384 @@
   });
 })();
 </script>
+<!-- ===========================
+     SEZIONE — MODULI (framework avanzato, nessun F1–F5 qui)
+     =========================== -->
+<section id="moduli" class="pt-3">
+  <div class="max-w-7xl mx-auto px-3 sm:px-5">
+    <!-- Header sezione -->
+    <div class="flex items-end justify-between mb-3 sm:mb-4">
+      <div class="min-w-0">
+        <h2 class="text-base sm:text-lg font-semibold text-slate-800 tracking-tight">Moduli analitici</h2>
+        <p class="text-xs text-slate-500">Framework istituzionale · sequenziale · auditabile (F1–F5 verranno registrati dopo)</p>
+      </div>
+      <div class="hidden sm:flex items-center gap-2">
+        <button id="legendBtn" class="btn" aria-haspopup="dialog"><i data-lucide="info"></i><span class="hidden md:inline">Legenda</span></button>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
+      <div class="relative flex-1">
+        <input id="mod-search" type="search" inputmode="search" placeholder="Cerca modulo, SyncID…"
+               class="w-full rounded-lg border border-slate-200 bg-white/90 px-3 py-2 pr-9 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-300" />
+        <i data-lucide="search" class="w-4 h-4 absolute right-3 top-2.5 text-slate-400 pointer-events-none"></i>
+      </div>
+      <div class="flex items-center gap-2">
+        <label class="text-xs text-slate-500">Ordina</label>
+        <select id="mod-sort" class="rounded-lg border border-slate-200 bg-white/90 px-2.5 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-200">
+          <option value="seq">Sequenza (F1→F5)</option>
+          <option value="conf">Confidence</option>
+          <option value="state">Stato</option>
+          <option value="title">Titolo</option>
+        </select>
+        <div class="hidden sm:flex items-center">
+          <button id="view-grid" class="btn" aria-pressed="true" aria-label="Vista griglia"><i data-lucide="grid"></i></button>
+          <button id="view-list" class="btn" aria-pressed="false" aria-label="Vista lista"><i data-lucide="list"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenitore dinamico -->
+    <div id="mod-container" data-view="grid"
+         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4"
+         aria-label="Griglia moduli analitici">
+      <!-- popolato dal Registry -->
+    </div>
+  </div>
+</section>
+
+<!-- Drawer per contenuto modulo -->
+<div id="mod-drawer" class="fixed inset-0 z-[60] hidden">
+  <div class="absolute inset-0 bg-black/30 backdrop-blur-[1px]" data-close="backdrop"></div>
+  <aside class="absolute right-0 top-0 h-full w-[92%] sm:w-[560px] bg-white border-l border-slate-200 shadow-2xl
+                 translate-x-full will-change-transform transition-transform duration-200 ease-out">
+    <header class="h-12 sm:h-14 border-b border-slate-200 flex items-center justify-between px-3 sm:px-4">
+      <div class="min-w-0">
+        <div id="drawer-title" class="font-semibold text-slate-800 truncate">Modulo</div>
+        <div id="drawer-sub" class="text-xs text-slate-500 truncate">—</div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="drawer-print" class="btn" aria-label="Stampa sezione"><i data-lucide="printer"></i></button>
+        <button id="drawer-close" class="btn" aria-label="Chiudi"><i data-lucide="x"></i></button>
+      </div>
+    </header>
+    <div id="drawer-body" class="h-[calc(100%-3.25rem)] sm:h-[calc(100%-3.75rem)] overflow-auto p-3 sm:p-4">
+      <!-- Qui verrà montato il contenuto F1–F5 da render(el) -->
+    </div>
+  </aside>
+</div>
+
+<!-- Stili card / lista / badge -->
+<style>
+  .mdc{background:#fff;border:1px solid #e5e7eb;border-radius:14px;
+       box-shadow:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.02);transition:border-color .18s, box-shadow .18s, transform .12s}
+  .mdc:hover{border-color:#dbe3ea;box-shadow:0 4px 18px rgba(2,6,23,.08)}
+  .mdc:active{transform:translateY(1px)}
+  .mdc-h{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.7rem .85rem;border-bottom:1px solid #eef2f7}
+  .mdc-t{font-weight:700;color:#0f172a;font-size:14px;letter-spacing:.1px}
+  .mdc-b{padding:.75rem .85rem}
+  .mdc-kv{display:grid;grid-template-columns:auto 1fr;gap:.25rem .6rem;font-size:12px}
+  .mdc-kv dt{color:#64748b} .mdc-kv dd{font-weight:600;color:#0f172a}
+  .mdc-footer{display:flex;align-items:center;justify-content:space-between;margin-top:.6rem}
+  .mdc-cta{display:inline-flex;align-items:center;gap:.4rem;font-weight:600;font-size:12px;padding:.45rem .6rem;border-radius:.55rem;border:1px solid #e5e7eb;background:linear-gradient(#fff,#f8fafc)}
+  .mdc-cta:hover{background:linear-gradient(#fff,#f1f5f9)}
+  .mdc-spark{width:100%;height:32px}
+  /* badge stato */
+  .badge{font-size:11px;padding:.1rem .45rem;border-radius:999px;border:1px solid}
+  .b-active{color:#065f46;background:#ecfdf5;border-color:#a7f3d0}
+  .b-hold{color:#92400e;background:#fffbeb;border-color:#fcd34d}
+  .b-review{color:#7c2d12;background:#fef3c7;border-color:#fbbf24}
+  .b-neutral{color:#334155;background:#f1f5f9;border-color:#e5e7eb}
+  /* vista lista */
+  [data-view="list"] .mdc{display:flex}
+  [data-view="list"] .mdc .mdc-b{flex:1}
+  /* print: mostra solo contenuti */
+  @media print{
+    #mod-drawer{position:static;display:block !important;transform:none}
+    #mod-drawer aside{position:static;transform:none;width:auto;border:0;box-shadow:none}
+  }
+</style>
+
+<!-- Template di card -->
+<template id="tpl-mod-card">
+  <article class="mdc" role="group" aria-labelledby="m-title">
+    <header class="mdc-h">
+      <h3 id="m-title" class="mdc-t">Titolo modulo</h3>
+      <span class="badge b-neutral" data-field="badge">NEUTRO</span>
+    </header>
+    <div class="mdc-b">
+      <dl class="mdc-kv">
+        <dt>SyncID</dt><dd data-field="sync">—</dd>
+        <dt>Stato</dt><dd data-field="state">—</dd>
+        <dt>Confidence</dt><dd data-field="conf">—</dd>
+      </dl>
+      <svg class="mdc-spark mt-2" viewBox="0 0 100 20" preserveAspectRatio="none" data-spark=""></svg>
+      <div class="mdc-footer">
+        <div class="text-[11px] text-slate-500" data-field="meta">—</div>
+        <button class="mdc-cta" type="button" data-action="open"><i data-lucide="maximize-2" class="w-4 h-4"></i><span>Apri modulo</span></button>
+      </div>
+    </div>
+  </article>
+</template>
+
+<!-- Popup semplice per legenda -->
+<div id="legend-pop" class="hidden fixed inset-0 z-[70]">
+  <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]" data-close="legend"></div>
+  <div class="popup-card absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl shadow-2xl p-5 w-[92%] max-w-lg border border-slate-200">
+    <div class="flex items-start justify-between gap-3 mb-3">
+      <div>
+        <h2 class="font-semibold text-slate-800 leading-tight">Legenda</h2>
+        <p class="text-xs text-slate-500 mt-0.5">Badge e cromie (uso interno)</p>
+      </div>
+      <button class="btn" data-close="legend"><i data-lucide="x"></i><span class="hidden sm:inline">Chiudi</span></button>
+    </div>
+    <ul class="text-sm text-slate-700 space-y-1.5">
+      <li>🟩 <b>ACTIVE</b>: pronto per audit operativo</li>
+      <li>🟨 <b>HOLD</b>: attesa dati critici / freschezza</li>
+      <li>🟧 <b>REVIEW</b>: verifica manuale</li>
+      <li>— <b>NEUTRO</b>: placeholder / pre-registrazione</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ========== Runtime JS (Registry + UI) ========== -->
+<script>
+(function(){
+  /* --------- Utilities --------- */
+  const $ = (sel,root=document)=> root.querySelector(sel);
+  const $$ = (sel,root=document)=> Array.from(root.querySelectorAll(sel));
+  const fmtConf = (v)=> (v==null?'—':(Number(v).toFixed(2)));
+  const badgeClass = (state)=>{
+    switch(String(state||'').toUpperCase()){
+      case 'ACTIVE': return ['ACTIVE','badge b-active'];
+      case 'HOLD': return ['HOLD','badge b-hold'];
+      case 'REVIEW': return ['REVIEW','badge b-review'];
+      default: return ['NEUTRO','badge b-neutral'];
+    }
+  };
+  function sparkline(svg, arr){
+    if(!svg) return;
+    if(!arr || !arr.length){ svg.innerHTML=''; svg.setAttribute('data-spark',''); return; }
+    const min = Math.min(...arr), max = Math.max(...arr);
+    const norm = max-min || 1;
+    const pts = arr.map((v,i)=>{
+      const x = (i/(arr.length-1))*100;
+      const y = 20 - ((v-min)/norm)*18 - 1; // padding 1
+      return `${x},${y}`;
+    }).join(' ');
+    svg.innerHTML = `
+      <polyline fill="none" stroke="${arr[arr.length-1]>=arr[0]?'#16a34a':'#dc2626'}" stroke-width="1.25" points="${pts}" />
+    `;
+    svg.setAttribute('data-spark', 'ok');
+  }
+
+  /* --------- Drawer --------- */
+  const drawer = $('#mod-drawer');
+  const drawerPanel = $('#mod-drawer aside');
+  const drawerTitle = $('#drawer-title');
+  const drawerSub = $('#drawer-sub');
+  const drawerBody = $('#drawer-body');
+  function openDrawer({title, sub}){
+    drawerTitle.textContent = title || 'Modulo';
+    drawerSub.textContent = sub || '—';
+    drawer.classList.remove('hidden');
+    requestAnimationFrame(()=> drawerPanel.style.transform='translateX(0)');
+  }
+  function closeDrawer(){
+    drawerPanel.style.transform='translateX(100%)';
+    drawerPanel.addEventListener('transitionend', ()=> drawer.classList.add('hidden'), {once:true});
+  }
+  drawer.addEventListener('click', (e)=>{
+    if(e.target.dataset.close==='backdrop') closeDrawer();
+  });
+  $('#drawer-close')?.addEventListener('click', closeDrawer);
+  $('#drawer-print')?.addEventListener('click', ()=> window.print());
+
+  /* --------- Legend --------- */
+  const legendPop = $('#legend-pop');
+  $('#legendBtn')?.addEventListener('click', ()=> legendPop.classList.remove('hidden'));
+  legendPop?.addEventListener('click', (e)=>{ if(e.target.dataset.close==='legend') legendPop.classList.add('hidden'); });
+
+  /* --------- View switch --------- */
+  const container = $('#mod-container');
+  $('#view-grid')?.addEventListener('click', (e)=>{
+    container.dataset.view='grid';
+    e.currentTarget.setAttribute('aria-pressed','true');
+    $('#view-list').setAttribute('aria-pressed','false');
+    container.className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4';
+  });
+  $('#view-list')?.addEventListener('click', (e)=>{
+    container.dataset.view='list';
+    e.currentTarget.setAttribute('aria-pressed','true');
+    $('#view-grid').setAttribute('aria-pressed','false');
+    container.className='space-y-2.5';
+  });
+
+  /* --------- Registry --------- */
+  const tpl = $('#tpl-mod-card');
+  const modules = new Map();
+
+  function renderCard(def){
+    const node = tpl.content.cloneNode(true);
+    const root = node.firstElementChild;
+
+    root.dataset.id = def.id;
+    root.setAttribute('tabindex','0');
+    root.setAttribute('role','button');
+    root.setAttribute('aria-label', def.title);
+
+    root.querySelector('.mdc-t').textContent = def.title;
+    root.querySelector('[data-field="sync"]').textContent = def.syncID || '—';
+    const [label, cls] = badgeClass(def.state);
+    const badge = root.querySelector('[data-field="badge"]');
+    badge.textContent = label; badge.className = cls;
+    root.querySelector('[data-field="state"]').textContent = label;
+    root.querySelector('[data-field="conf"]').textContent = fmtConf(def.confidence);
+    root.querySelector('[data-field="meta"]').textContent = def.meta || '';
+
+    // spark
+    const svg = root.querySelector('[data-spark]');
+    sparkline(svg, Array.isArray(def.spark)?def.spark:[]);
+
+    // open handlers
+    const open = ()=> {
+      openDrawer({title:def.title, sub:def.syncID || ''});
+      // pulisci body e rendi contenuto
+      drawerBody.replaceChildren();
+      try{
+        if(typeof def.render === 'function') def.render(drawerBody);
+        else if(def.html){
+          const wrap = document.createElement('div');
+          wrap.innerHTML = def.html;
+          drawerBody.appendChild(wrap);
+          if(window.lucide) lucide.createIcons();
+        } else {
+          const p = document.createElement('p');
+          p.className='text-sm text-slate-600';
+          p.textContent='Nessun contenuto montato. Registra il modulo con { render(el) { … } }.';
+          drawerBody.appendChild(p);
+        }
+      }catch(err){
+        const errBox = document.createElement('pre');
+        errBox.className='text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg p-2 overflow-auto';
+        errBox.textContent = String(err);
+        drawerBody.appendChild(errBox);
+      }
+    };
+    root.querySelector('[data-action="open"]').addEventListener('click', open);
+    root.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); open(); } });
+    root.addEventListener('dblclick', open);
+
+    return root;
+  }
+
+  function mountAll(){
+    container.replaceChildren();
+    let list = Array.from(modules.values());
+    // filtro
+    const q = ($('#mod-search')?.value || '').trim().toLowerCase();
+    if(q){
+      list = list.filter(m =>
+        m.title.toLowerCase().includes(q) ||
+        (m.syncID||'').toLowerCase().includes(q) ||
+        (m.meta||'').toLowerCase().includes(q)
+      );
+    }
+    // sort
+    const sort = $('#mod-sort')?.value || 'seq';
+    const byState = {ACTIVE:0, REVIEW:1, HOLD:2, NEUTRO:3};
+    list.sort((a,b)=>{
+      if(sort==='title') return a.title.localeCompare(b.title);
+      if(sort==='state') return (byState[a.state?.toUpperCase()]??9)-(byState[b.state?.toUpperCase()]??9);
+      if(sort==='conf') return (b.confidence??-1)-(a.confidence??-1);
+      // seq default
+      return (a.seq??999)-(b.seq??999);
+    });
+    // mount
+    for(const m of list) container.appendChild(renderCard(m));
+    if(window.lucide) lucide.createIcons();
+  }
+
+  // public API
+  window.TradeliaModules = {
+    /** Registra un modulo (id univoco). Non monta contenuti F1–F5 qui: li aggiungerai dopo con questa funzione. */
+    register(def){
+      if(!def || !def.id) throw new Error('register() richiede { id }');
+      if(modules.has(def.id)) throw new Error('id già registrato: '+def.id);
+      // normalizza
+      const norm = {
+        id: def.id,
+        title: def.title || 'Modulo',
+        seq: def.seq ?? 999,
+        state: def.state || 'NEUTRO',
+        confidence: def.confidence ?? null,
+        syncID: def.syncID || null,
+        meta: def.meta || '',
+        spark: Array.isArray(def.spark)?def.spark:[],
+        render: def.render,
+        html: def.html
+      };
+      modules.set(norm.id, norm);
+      mountAll();
+      return norm.id;
+    },
+    /** Aggiorna un modulo esistente */
+    update(id, patch){
+      if(!modules.has(id)) throw new Error('id non trovato: '+id);
+      Object.assign(modules.get(id), patch||{});
+      mountAll();
+    },
+    /** Apre il modulo (per deep-link o dal tuo codice F1–F5) */
+    open(id){
+      const m = modules.get(id);
+      if(!m) throw new Error('id non trovato: '+id);
+      openDrawer({title:m.title, sub:m.syncID||''});
+      drawerBody.replaceChildren();
+      if(typeof m.render === 'function') m.render(drawerBody);
+      else if(m.html){ const wrap = document.createElement('div'); wrap.innerHTML=m.html; drawerBody.appendChild(wrap); }
+      if(window.lucide) lucide.createIcons();
+    },
+    /** Elenco */
+    list(){ return Array.from(modules.values()); }
+  };
+
+  /* ---- Search/Sort listeners ---- */
+  $('#mod-search')?.addEventListener('input', ()=> mountAll());
+  $('#mod-sort')?.addEventListener('change', ()=> mountAll());
+
+  // refresh icone iniziale (griglia vuota finché non registri moduli)
+  if(window.lucide) lucide.createIcons();
+
+  // Facoltativo: abilita deep-link #open=<id>
+  const url = new URL(window.location.href);
+  const openId = url.hash.startsWith('#open=') ? url.hash.slice(6) : null;
+  if(openId) {
+    // attende un tick per permettere al tuo codice successivo di registrare i moduli
+    setTimeout(()=> { try{ window.TradeliaModules.open(openId); }catch(_){} }, 0);
+  }
+})();
+</script>
+
+<!-- ========= ESEMPI (COMMENTATI) DI COME CONTINUERAI A SCRIVERE F1–F5 =========
+<script>
+  // 1) Registri i moduli (puoi farlo subito dopo questo blocco, senza modificare nulla sopra)
+  TradeliaModules.register({
+    id:'F1', title:'F1 · Screening', seq:1, state:'ACTIVE', confidence:0.83,
+    syncID:'TICK_20251020_F1', meta:'Freshness ≤ T-1', spark:[1,2,1.6,2.2,2.5],
+    render(el){
+      // qui inietti il contenuto vero del modulo F1
+      el.innerHTML = '<div class="prose prose-sm max-w-none">…contenuto F1…</div>';
+    }
+  });
+  // Ripeti per F2…F5 con seq:2..5
+
+  // 2) In qualunque momento puoi aprire via codice:
+  // TradeliaModules.open('F1');
+  // 3) Aggiornare badge/confidence:
+  // TradeliaModules.update('F1', { state:'HOLD', confidence:0.72 });
+</script>
+-->
 
   <!-- proseguirai qui con le sezioni del report (F1–F7, ecc.) -->
   <script src="/report/runtime.js" defer></script>
