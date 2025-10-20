@@ -22,14 +22,7 @@
     * { scrollbar-width:thin; scrollbar-color:rgba(80,160,200,.5) #e5e7eb }
 
     /* Pulsanti compatti + effetto push */
-    .btn {
-      display:inline-flex; align-items:center; gap:.45rem;
-      padding:.4rem .6rem; border-radius:.6rem; font-weight:600; font-size:14px;
-      border:1px solid #e5e7eb; background:linear-gradient(#fff,#f8fafc);
-      box-shadow:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.03);
-      transition:transform .08s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease;
-      -webkit-tap-highlight-color:transparent;
-    }
+    .btn { display:inline-flex; align-items:center; gap:.45rem; padding:.4rem .6rem; border-radius:.6rem; font-weight:600; font-size:14px; border:1px solid #e5e7eb; background:linear-gradient(#fff,#f8fafc); box-shadow:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.03); transition:transform .08s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease; -webkit-tap-highlight-color:transparent; }
     .btn:hover{ background:linear-gradient(#fff,#f1f5f9); border-color:#dbe3ea }
     .btn:active{ transform:translateY(1px); box-shadow:inset 0 1px 0 rgba(0,0,0,.06) }
     .btn:focus-visible{ outline:none; box-shadow:0 0 0 2px rgba(56,189,248,.5) }
@@ -40,12 +33,7 @@
     .hdr { backdrop-filter:saturate(1.2) blur(6px) }
 
     /* Share sheet desktop */
-    .sbtn{
-      display:inline-flex;align-items:center;gap:.5rem;
-      padding:.5rem .6rem;border-radius:.65rem;border:1px solid #e5e7eb;
-      background:#fff;font-weight:600;font-size:13px;
-      transition:transform .08s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease;
-    }
+    .sbtn{ display:inline-flex;align-items:center;gap:.5rem; padding:.5rem .6rem;border-radius:.65rem;border:1px solid #e5e7eb; background:#fff;font-weight:600;font-size:13px; transition:transform .08s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease; }
     .sbtn:hover{background:#f8fafc;border-color:#dbe3ea}
     .sbtn:active{transform:translateY(1px)}
     .sbtn i{width:18px;height:18px}
@@ -57,20 +45,23 @@
     /* Animazioni popup */
     @keyframes fadeBackdropIn { from { opacity: 0 } to { opacity: 1 } }
     @keyframes fadeBackdropOut { from { opacity: 1 } to { opacity: 0 } }
-    @keyframes popIn {
-      from { opacity: 0; transform: translateY(6px) scale(.98) }
-      to   { opacity: 1; transform: translateY(0) scale(1) }
-    }
-    @keyframes popOut {
-      from { opacity: 1; transform: translateY(0) scale(1) }
-      to   { opacity: 0; transform: translateY(4px) scale(.985) }
-    }
+    @keyframes popIn { from { opacity: 0; transform: translateY(6px) scale(.98) } to { opacity: 1; transform: translateY(0) scale(1) } }
+    @keyframes popOut { from { opacity: 1; transform: translateY(0) scale(1) } to { opacity: 0; transform: translateY(4px) scale(.985) } }
     .popup-backdrop { animation: fadeBackdropIn .18s ease forwards }
     .popup-backdrop.closing { animation: fadeBackdropOut .16s ease forwards }
     .popup-card { animation: popIn .20s cubic-bezier(.22,.61,.36,1) forwards }
     .popup-card.closing { animation: popOut .16s ease forwards }
 
     @media print { .noprint{display:none!important} }
+
+    /* Badge & stato */
+    .pill{display:inline-flex;align-items:center;gap:.35rem;padding:.2rem .5rem;border-radius:999px;font-weight:600;font-size:12px}
+    .pill i{width:14px;height:14px}
+    .pill-active{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
+    .pill-hold{background:#fffbeb;color:#92400e;border:1px solid #fde68a}
+    .pill-review{background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe}
+
+    .card{background:#fff;border:1px solid #e5e7eb;border-radius:1rem;box-shadow:0 1px 0 rgba(2,6,23,.04)}
   </style>
 </head>
 
@@ -78,16 +69,17 @@
   <!-- HEADER -->
   <header class="hdr sticky top-0 z-50 bg-white/90 border-b border-slate-200 noprint">
     <div class="max-w-7xl mx-auto px-3 sm:px-5 h-12 sm:h-14 flex items-center justify-between">
-      <!-- Brand + titolo -->
       <div class="flex items-center gap-2 sm:gap-3 min-w-0">
         <a href="/index.html" class="shrink-0 text-lg sm:text-xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
           <span class="text-slate-900">TRADELIA</span><span class="text-blue-600">&bull;AI</span>
         </a>
         <span class="text-slate-400 text-xs sm:text-sm truncate">Report Runtime</span>
       </div>
-
-      <!-- Azioni -->
       <div class="flex items-center gap-1.5 sm:gap-2">
+        <label class="btn btn-primary">
+          <input id="fileInput" type="file" accept="application/json" class="hidden" />
+          <i data-lucide="upload"></i><span class="hidden sm:inline">Importa JSON</span>
+        </label>
         <button id="btn-print" class="btn btn-primary" aria-label="Stampa / PDF">
           <i data-lucide="printer" aria-hidden="true"></i><span class="hidden sm:inline">Stampa / PDF</span>
         </button>
@@ -98,37 +90,49 @@
     </div>
   </header>
 
-  <!-- Script header + share (mobile nativo, desktop share sheet + is.gd) -->
+  <main class="max-w-7xl mx-auto px-3 sm:px-5 py-4 sm:py-6">
+    <div id="infoBanner" class="card p-3 sm:p-4 mb-4 flex items-start gap-3">
+      <i data-lucide="info" class="text-blue-600 shrink-0"></i>
+      <div class="text-sm leading-5">
+        <p class="font-semibold">Template dinamico da JSON</p>
+        <p>Carica un file JSON o passa <code>?id=&lt;report-id&gt;</code> nell'URL. In assenza, viene usato un <em>sample</em> dimostrativo. Tutte le sezioni F1–F7 sono renderizzate automaticamente.</p>
+      </div>
+    </div>
+
+    <section id="reportHeader" class="card p-4 sm:p-5 mb-4"></section>
+    <section id="sections" class="space-y-4"></section>
+    <section id="audit" class="card p-4 sm:p-5 mt-6"></section>
+  </main>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
 
       const btnPrint = document.getElementById('btn-print');
       const btnShare = document.getElementById('btn-share');
+      const fileInput = document.getElementById('fileInput');
 
       btnPrint?.addEventListener('click', () => window.print());
+      fileInput?.addEventListener('change', async (e) => {
+        const f = e.target.files?.[0];
+        if (!f) return;
+        try { const txt = await f.text(); const data = JSON.parse(txt); renderAll(data); }
+        catch (err){ alert('JSON non valido'); console.error(err); }
+      });
 
       btnShare?.addEventListener('click', async () => {
-        // URL completo corrente; se manca ?id=..., aggiunge fallback demo
         const urlObj = new URL(window.location.href);
-        if (!urlObj.searchParams.get('id')) {
-          urlObj.searchParams.set('id', 'sample-qyld-2025-10-20');
-        }
+        if (!urlObj.searchParams.get('id')) { urlObj.searchParams.set('id', 'sample-qyld-2025-10-20'); }
         const longUrl = urlObj.toString();
         const title = 'Tradelia · Report Runtime';
         const text  = 'Guarda il report completo su Tradelia AI';
         const isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
-
-        // 📱 Mobile → share nativa se disponibile
         if (isMobile && navigator.share) {
           try { await navigator.share({ title, text, url: longUrl }); return; } catch(_) {}
         }
-
-        // 💻 Desktop → share sheet con opzioni avanzate
         openShareSheet({ longUrl, title, text });
       });
 
-      /* ------ Shortener is.gd (gratuito, no API key) ------ */
       async function shortenUrl_isgd(longUrl, { timeoutMs = 5000 } = {}) {
         const ctrl = new AbortController();
         const t = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -142,7 +146,6 @@
         } finally { clearTimeout(t); }
       }
 
-      /* ------ Share Sheet desktop ------ */
       function openShareSheet({ longUrl, title, text }) {
         const backdrop = document.createElement('div');
         backdrop.className = 'popup-backdrop fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50';
@@ -181,21 +184,20 @@
             <span id="shortStatus" class="text-xs text-slate-400">(non attivo)</span>
           </div>
 
-          <div class="grid md:grid-cols-3 gap-4">
-            <div class="md:col-span-2">
-              <div id="shareGrid" class="share-grid mb-3"></div>
-
-              <div id="urlBox" class="badge-url text-[12px] p-2 rounded-md font-mono select-all break-all mb-2">${currentUrl}</div>
-              <div class="flex gap-2">
-                <button id="copyLink" class="sbtn"><i data-lucide="copy"></i><span>Copia link</span></button>
-                <a id="openNew" class="sbtn" href="${currentUrl}" target="_blank" rel="noopener"><i data-lucide="external-link"></i><span>Apri</span></a>
-              </div>
-              <p class="text-[11px] text-slate-500 mt-2">Suggerimento: usa i pulsanti sopra per aprire la condivisione del servizio scelto.</p>
-            </div>
-
-            <div class="qr-wrap flex md:block items-center justify-center">
+          <!-- QR SOPRA I PULSANTI DI CONDIVISIONE -->
+          <div class="space-y-3">
+            <div class="qr-wrap flex items-center justify-center">
               <img id="qrImg" alt="QR per condivisione" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(currentUrl)}" />
             </div>
+
+            <div id="shareGrid" class="share-grid"></div>
+
+            <div id="urlBox" class="badge-url text-[12px] p-2 rounded-md font-mono select-all break-all">${currentUrl}</div>
+            <div class="flex gap-2">
+              <button id="copyLink" class="sbtn"><i data-lucide="copy"></i><span>Copia link</span></button>
+              <a id="openNew" class="sbtn" href="${currentUrl}" target="_blank" rel="noopener"><i data-lucide="external-link"></i><span>Apri</span></a>
+            </div>
+            <p class="text-[11px] text-slate-500">Suggerimento: usa i pulsanti sopra per aprire la condivisione del servizio scelto.</p>
           </div>
         `;
 
@@ -203,7 +205,6 @@
         document.body.appendChild(backdrop);
         lucide.createIcons();
 
-        // Riferimenti DOM
         const shareGrid   = card.querySelector('#shareGrid');
         const urlBox      = card.querySelector('#urlBox');
         const qrImg       = card.querySelector('#qrImg');
@@ -221,7 +222,6 @@
         };
 
         const updateAll = (u) => {
-          currentUrl = u;
           urlBox.textContent = u;
           openNew.href = u;
           qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(u)}`;
@@ -230,7 +230,6 @@
 
         renderTargets(currentUrl);
 
-        // Chiudi popup
         const close = () => {
           backdrop.classList.add('closing'); card.classList.add('closing');
           card.addEventListener('animationend', () => backdrop.remove(), { once: true });
@@ -238,10 +237,9 @@
         backdrop.addEventListener('click', (e) => { if (e.target === backdrop) close(); });
         card.querySelector('#closePopup').addEventListener('click', close);
 
-        // Copia link
         card.querySelector('#copyLink').addEventListener('click', async () => {
           try{
-            await navigator.clipboard.writeText(currentUrl);
+            await navigator.clipboard.writeText(urlBox.textContent);
             const btn = card.querySelector('#copyLink');
             btn.innerHTML = '<i data-lucide="check"></i><span>Copiato</span>';
             lucide.createIcons(); setTimeout(close, 900);
@@ -251,7 +249,6 @@
           }
         });
 
-        // Toggle shortener is.gd (con cache)
         let cachedShort = null;
         useShort.addEventListener('change', async (e) => {
           if (e.target.checked) {
@@ -276,9 +273,167 @@
           }
         });
       }
+
+      const qs = new URLSearchParams(location.search);
+      const reportId = qs.get('id');
+      if (reportId) { loadById(reportId); } else { renderAll(sampleReport()); }
+
+      async function loadById(id){
+        try{
+          const res = await fetch(`/api/report?id=${encodeURIComponent(id)}`);
+          const data = await res.ok ? await res.json() : sampleReport();
+          renderAll(data);
+        }catch(err){ console.warn('API fallback → sample', err); renderAll(sampleReport()); }
+      }
+
+      function renderAll(data){
+        lucide.createIcons();
+        renderHeader(data); renderSections(data); renderAudit(data);
+        document.getElementById('infoBanner').style.display = 'none';
+      }
+
+      const fmt = {
+        pct:(v, d=2)=> (v==null? 'n/d' : (v*100).toFixed(d)+'%'),
+        num:(v, d=2)=> (v==null? 'n/d' : Number(v).toFixed(d)),
+        date:(s)=> s? new Date(s).toLocaleString() : 'n/d',
+        badge:(state)=>{ const map = {ACTIVE:'pill-active',HOLD:'pill-hold',REVIEW:'pill-review'}; const cls = map[state]||'pill-review'; const icon = state==='ACTIVE'?'check-circle':state==='HOLD'?'pause':'search'; return `<span class="pill ${cls}"><i data-lucide="${icon}"></i>${state||'N/D'}</span>` },
+        arrow:(s)=>({ '↑':'text-emerald-700','→':'text-slate-500','↓':'text-rose-700','—':'text-slate-400' }[s]||'text-slate-500'),
+        trendIcon:(s)=>({ '↑':'trending-up','→':'minus','↓':'trending-down','—':'dot' }[s]||'minus')
+      };
+
+      function renderHeader(d){
+        const el = document.getElementById('reportHeader');
+        const h = d.Header||{}; const meta = d.Meta||{};
+        el.innerHTML = `
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div class="min-w-0">
+              <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">${d.Ticker||'TICKER'} · <span class="text-slate-500">Runtime</span></h1>
+              <p class="text-sm text-slate-600 mt-1">Framework Swing Master · F1→F7 · Finalità educativa/informativa</p>
+              <div class="mt-2 flex flex-wrap gap-2 items-center">
+                ${fmt.badge(d.State||'REVIEW')}
+                <span class="text-xs text-slate-500">Confidence: <span class="font-semibold">${fmt.num(d.Confidence)}</span></span>
+                <span class="text-xs text-slate-500">FeedSync: <span class="font-semibold">${fmt.num(d.FeedSync)}</span></span>
+                <span class="text-xs text-slate-500">OCR_Conf: <span class="font-semibold">${fmt.num(d.OCR_Conf)}</span></span>
+              </div>
+            </div>
+            <div class="text-sm text-slate-600">
+              <div><span class="font-semibold">Periodo:</span> ${h.StartDate||'—'} → ${h.EndDate||'—'}</div>
+              <div><span class="font-semibold">AuditPathID:</span> ${d.AuditPathID||'—'}</div>
+              <div><span class="font-semibold">Versione:</span> ${d.VersionTag||'—'}</div>
+            </div>
+          </div>
+        `;
+        lucide.createIcons();
+      }
+
+      function renderSections(d){
+        const root = document.getElementById('sections');
+        root.innerHTML = '';
+        const blocks = [ sectionF1(d.F1), sectionF2(d.F2), sectionF3(d.F3), sectionF4(d.F4), sectionF5(d.F5), sectionF6(d.F6), sectionF7(d.F7) ].filter(Boolean);
+        blocks.forEach(b=> root.appendChild(b));
+        lucide.createIcons();
+      }
+
+      function wrapCard(title, subtitle, content){
+        const card = document.createElement('div');
+        card.className = 'card p-4 sm:p-5';
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-3 mb-3">
+            <div>
+              <h2 class="text-base sm:text-lg font-semibold text-slate-800">${title}</h2>
+              ${subtitle?`<p class="text-xs text-slate-500">${subtitle}</p>`:''}
+            </div>
+            <button class="btn toggle" aria-expanded="true"><i data-lucide="chevron-up"></i><span class="hidden sm:inline">Comprimi</span></button>
+          </div>
+          <div class="content">${content}</div>
+        `;
+        const btn = card.querySelector('.toggle');
+        const cnt = card.querySelector('.content');
+        btn.addEventListener('click',()=>{
+          const open = cnt.style.display!== 'none';
+          cnt.style.display = open? 'none':'block';
+          btn.innerHTML = open? '<i data-lucide="chevron-down"></i><span class="hidden sm:inline">Espandi</span>' : '<i data-lucide\"chevron-up\"></i><span class=\"hidden sm:inline\">Comprimi</span>';
+          lucide.createIcons();
+        });
+        return card;
+      }
+
+      function table(rows){
+        return `
+          <div class="overflow-x-auto -mx-2 sm:mx-0">
+            <table class="min-w-full text-sm"><tbody>
+              ${rows.map(r=>`<tr class="border-b border-slate-100"><td class="py-2 pr-3 text-slate-600">${r[0]}</td><td class="py-2 font-semibold">${r[1]}</td><td class="py-2 text-slate-500">${r[2]||''}</td></tr>`).join('')}
+            </tbody></table>
+          </div>`
+      }
+
+      function trendPill(t){ if(!t) return ''; const cls = fmt.arrow(t); const ic = fmt.trendIcon(t); return `<span class="inline-flex items-center gap-1 text-xs ${cls}"><i data-lucide="${ic}" class="w-4 h-4"></i>${t}</span>` }
+
+      function sectionF1(f){ if(!f) return null; 
+        const rows = [ ['MacroRegime', fmt.num(f.MacroRegime), trendPill(f.MacroTrend)], ['SCI (Sentiment)', fmt.num(f.SCI), trendPill(f.SCI_trend)], ['IPI (Positioning)', fmt.num(f.IPI), trendPill(f.IPI_trend)], ['OPI (Options macro)', fmt.num(f.OPI), trendPill(f.OPI_trend)], ['ICR_pre (Intermarket)', fmt.num(f.ICR_pre), trendPill(f.ICR_trend)], ['GeoRisk', fmt.num(f.GeoRisk), trendPill(f.GeoRisk_trend)], ['RiskWindow (±5g)', fmt.num(f.RiskWindow), ''] ];
+        const content = `${table(rows)}${f.Integrity? `<div class="mt-3 text-xs text-slate-500">Integrity: <span class="font-semibold">${fmt.num(f.Integrity)}</span> · Stato: ${fmt.badge(f.State)}</div>`:''}`;
+        return wrapCard('F1 — Contesto di Mercato', 'Macro · Sentiment · Positioning · Intermarket · Event', content);
+      }
+
+      function sectionF2(f){ if(!f) return null; 
+        const rows = [ ['Short Interest / Days to Cover', f.ShortInterest ?? 'n/d', 'proxy ticker-centrica'], ['Institutional Ownership %', f.InstitutionalOwn ?? 'n/d', '—'], ['ETF Exposure (n/peso)', f.ETFExposure ?? 'n/d', '—'], ['Peers coerenza', f.PeerSync ?? 'n/d', '—'], ['IV(ATM) / IV Rank', f.IV??'n/d', f.IVRank?`rank ${f.IVRank}`:'—'], ['Put/Call (vol/OI)', f.PutCall ?? 'n/d', '—'], ['ΔOI (ATM/OTM)', f.DeltaOI ?? 'n/d', '—'], ['Skew (25Δ) / ΔSkew', f.Skew ?? 'n/d', f.DeltaSkew??'' ], ['GSR (Γ/Vega)', f.GSR ?? 'n/d', '—'], ['News Tone · Analyst Δ', f.NewsTone ?? 'n/d', f.AnalystDelta??'—'] ];
+        const content = `${table(rows)}<div class="mt-3 text-xs text-slate-500">BiasNorm: <span class="font-semibold">${fmt.num(f.BiasNorm)}</span> · RiskWindow: ${fmt.num(f.RiskWindow)}</div>${f.Summary? `<p class="mt-3 text-sm text-slate-600">${f.Summary}</p>`:''}`;
+        return wrapCard('F2 — Macro & Sentiment Overlay', 'Ticker‑centrico (no options chain)', content);
+      }
+
+      function sectionF3(f){ if(!f) return null; 
+        const rows = [];
+        const addRow=(k,o)=> rows.push([k, o?.value ?? 'n/d', o?.note || '']);
+        addRow('MTF_Score', {value:fmt.num(f.MTF_Score), note:'W1=35%, D1=40%, H4=15%, H1=10%'});
+        addRow('P(SwingUp) / P(LTUp) / P(Breakout)', {value:`${fmt.num(f.Prob_SwingUp)} / ${fmt.num(f.Prob_LTUp)} / ${fmt.num(f.Prob_Breakout)}`, note:'σ‑logit'});
+        addRow('Volume composite / Options / Price', {value:`${fmt.num(f.VolumeComposite)} / ${fmt.num(f.OptionsComposite)} / ${fmt.num(f.PriceComposite)}`, note:f.Concordanza||''});
+        addRow('RSI/ADX/MACD (D1)', {value:f.D1?.RSI!=null? `${f.D1.RSI} / ${f.D1.ADX} / ${f.D1.MACD}` : 'n/d', note:f.D1?.Note||''});
+        addRow('OBV · CMF · RVOL (D1)', {value:f.D1?.OBV!=null? `${f.D1.OBV} · ${f.D1.CMF} · ${f.D1.RVOL}`:'n/d', note:'volumetrico'});
+        const content = `${table(rows)}${f.OptionsOverlay? blockOptionsOverlay(f.OptionsOverlay):''}`;
+        return wrapCard('F3 — Analisi Tecnica MTF', 'Volumetrico‑first · Options secondario', content);
+      }
+
+      function blockOptionsOverlay(o){
+        const rows = [ ['DTE bucket', o.DTE || 'n/d',''], ['IV(ATM) / ΔIV', o.IV!=null? o.IV : 'n/d', o.DeltaIV!=null? `Δ ${o.DeltaIV}`:''], ['Skew(25Δ) / ΔSkew', o.Skew ?? 'n/d', o.DeltaSkew ?? ''], ['OI tot / ΔOI (ATM/OTM)', o.OI ?? 'n/d', o.DeltaOI ?? ''], ['PCR (vol / OI)', o.PCR ?? 'n/d', ''], ['Gamma / Vega / GSR', o.Gamma??'n/d', o.Vega!=null?`Vega ${o.Vega} · GSR ${o.GSR??'n/d'}`:''] ];
+        return `<div class="mt-4"><h3 class="font-semibold text-slate-800 mb-2">Options Overlay</h3>${table(rows)}</div>`
+      }
+
+      function sectionF4(f){ if(!f) return null; 
+        const rows = [ ['BiasIntermarket', f.BiasIntermarket || 'n/d', f.Note||''], ['BiasIntermarketScore', fmt.num(f.BiasIntermarketScore), 'Concorde > 0.25 · Conflict < −0.25'], ['FeedSyncScore', fmt.num(f.FeedSyncScore), '≥0.90 OK · 0.75–0.90 Partial'], ['ICR_adj', fmt.num(f.ICR_adj), 'ICR × MTF_Score × sign(Bias)'], ['RiskWindow', fmt.num(f.RiskWindow), '0–1'] ];
+        const content = `${table(rows)}${f.MTF ? `<p class="text-sm text-slate-600 mt-3">${f.MTF}</p>`:''}`;
+        return wrapCard('F4 — Intermarket & Strutturale', 'Benchmark · Settore · Cross‑asset · Macro', content);
+      }
+
+      function sectionF5(f){ if(!f) return null; 
+        const rows = [ ['Strategia', f.Strategy || 'n/d', 'Momentum/Pullback'], ['Entry / Stop / TP1', f.EntryStopTP || 'n/d', 'unità ATR'], ['Regime (IV/HV/Trend)', f.Regime || 'n/d', 'RISK_ON / OFF / NEUTRAL'], ['Trail', f.Trail ?? 'n/d', 'dinamico'], ['FlowScore', fmt.num(f.FlowScore), 'Vol/Opt/Tape mix'] ];
+        const content = `${table(rows)}${f.Notes? `<p class="text-sm text-slate-600 mt-3">${f.Notes}</p>`:''}`;
+        return wrapCard('F5 — Setup Operativo (educativo)', 'Ordine pronto GTC (simulato)', content);
+      }
+
+      function sectionF6(f){ if(!f) return null; 
+        const rows = [ ['Sizing (educativo)', f.Sizing||'n/d','Kelly-lite / MaxLoss'], ['Piano di uscita', f.ExitPlan||'n/d','time‑based + event'], ['Regole di bordo', f.BoardRules||'n/d','no overtrading'] ];
+        const content = `${table(rows)}${f.Notes? `<p class="text-sm text-slate-600 mt-3">${f.Notes}</p>`:''}`;
+        return wrapCard('F6 — Gestione Dinamica', 'Riduzione rischio · Aggiunte · Trail', content);
+      }
+
+      function sectionF7(f){ if(!f) return null; 
+        const rows = [ ['Timestamp', f.Timestamp||'n/d','Europe/Rome'], ['Versione', f.Version||'—',''], ['Fonti', (f.Sources||[]).join(', ')||'—','Tier‑1'], ['Note', f.Note||'—',''] ];
+        const content = `${table(rows)}`;
+        return wrapCard('F7 — Audit & Feedback', 'Trasparenza calcoli e versioning', content);
+      }
+
+      function miniSpark(label, series){ if(!series?.length) return ''; const w = 160, h = 36; const min = Math.min(...series), max = Math.max(...series); const norm = v => (h - 4) * (1 - (v - min) / ((max-min)||1)) + 2; const step = (w-4) / (series.length-1); const pts = series.map((v,i)=> `${2 + i*step},${norm(v)}`).join(' '); return `<div class="mt-3"><div class="text-xs text-slate-500 mb-1">${label}</div><svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><polyline fill="none" stroke="#0ea5e9" stroke-width="2" points="${pts}"/></svg></div>` }
+
+      function renderAudit(d){
+        const el = document.getElementById('audit');
+        el.innerHTML = `<div class="text-xs text-slate-600 space-y-1"><div><span class="font-semibold">AuditPathID:</span> ${d.AuditPathID||'—'}</div><div><span class="font-semibold">Timestamp:</span> ${fmt.date(d.Timestamp)}</div><div><span class="font-semibold">Stato:</span> ${fmt.badge(d.State||'REVIEW')}</div><div><span class="font-semibold">Versione:</span> ${d.VersionTag||'—'}</div></div>`;
+        lucide.createIcons();
+      }
+
+      function sampleReport(){
+        return { Ticker:'QYLD', State:'REVIEW', Confidence:0.82, FeedSync:0.93, OCR_Conf:0.97, AuditPathID:'APID-20251020-QYLD-001', VersionTag:'v1.0.0', Timestamp:new Date().toISOString(), Header:{ StartDate:'2025-10-10', EndDate:'2025-10-20' }, F1:{ MacroRegime:0.41, MacroTrend:'→', SCI:0.18, SCI_trend:'↑', IPI:0.12, IPI_trend:'→', OPI:0.22, OPI_trend:'↓', ICR_pre:0.27, ICR_trend:'→', GeoRisk:0.31, GeoRisk_trend:'↑', RiskWindow:0.44, Integrity:0.96, State:'REVIEW' }, F2:{ ShortInterest:'low', InstitutionalOwn:'67%', ETFExposure:'11 / 34%', PeerSync:'coerente', IV:'17%', IVRank:23, PutCall:'0.85 / 0.72', DeltaOI:'+3%', Skew:'mild‑put', DeltaSkew:'flat', GSR:'0.42', NewsTone:'neutro‑positivo', AnalystDelta:'+1 revisione', BiasNorm:0.52, RiskWindow:0.35, Summary:'Overlay complessivamente neutro‑positivo; nessun rischio evento a T‑5' }, F3:{ MTF_Score:0.38, Prob_SwingUp:0.46, Prob_LTUp:0.51, Prob_Breakout:0.18, VolumeComposite:0.41, OptionsComposite:0.36, PriceComposite:0.39, Concordanza:'leggera divergenza volumi‑prezzo', D1:{ RSI:52, ADX:16, MACD:'flat', OBV:'+0.3σ', CMF:'+0.05', RVOL:'0.9x' }, History:{ Volume_z:[-0.8,-0.3,0.1,0.4,0.2,0.0,0.3,0.5,0.2,0.1] }, OptionsOverlay:{ DTE:'≤30g', IV:'17%', DeltaIV:'+0.4pp', Skew:'-5%', DeltaSkew:'+1pp', OI:'2.1M', DeltaOI:'+4%', PCR:'0.8 / 0.7', Gamma:'bassa', Vega:'media', GSR:'0.38' } }, F4:{ BiasIntermarket:'concorde lieve', BiasIntermarketScore:0.22, FeedSyncScore:0.91, ICR_adj:0.21, RiskWindow:0.33, MTF:'Settore income‑covered call in linea con benchmark high‑div.' }, F5:{ Strategy:'Momentum prudente', EntryStopTP:'1.0 / 1.6 / 1.4 ATR', Regime:'NEUTRAL', Trail:'ATR‑lite', FlowScore:0.37, Notes:'setup solo educativo (no MiFID)'} , F6:{ Sizing:'1R=0.5% NAV', ExitPlan:'tempo 12–15g; evento FOMC', BoardRules:'no add sopra -0.5R', Notes:'monitoraggio RVOL e skew' }, F7:{ Timestamp:new Date().toISOString(), Version:'1.0.0', Sources:['Bloomberg','Reuters','FRED','CFTC','SEC'], Note:'Uso didattico' } };
+      }
     });
   </script>
-
-  <!-- proseguirai qui con le sezioni del report (F1–F7, ecc.) -->
 </body>
 </html>
