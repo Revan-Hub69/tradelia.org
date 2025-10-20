@@ -275,108 +275,83 @@
 <!-- ===========================
      HEADER — TICKER (template vuoto)
      =========================== -->
-<section id="header-ticker" class="mb-5">
-  <div class="bg-white/90 rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
-    <div class="flex items-center justify-between mb-4">
-      <h2 class="text-base sm:text-lg font-semibold">Header – Dati generali</h2>
-      <div class="text-[11px] text-slate-500">Template vuoto · dati da JSON</div>
-    </div>
+<!-- riga 1 -->
+<div class="card">
+  <label>Sessione <button class="hx" data-k="Sessione">?</button></label>
+  <div id="H-Session" class="val">—</div>
+</div>
+<div class="card">
+  <label>Data inizio report <button class="hx" data-k="DataStart">?</button></label>
+  <div id="H-Start" class="val">—</div>
+</div>
+<div class="card">
+  <label>Data fine report <button class="hx" data-k="DataEnd">?</button></label>
+  <div id="H-End" class="val">—</div>
+</div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-      <!-- riga 1 -->
-      <div class="card">
-        <label>Sessione <button class="hx" data-k="Sessione">?</button></label>
-        <div class="val">REG (adjusted)</div>
-      </div>
-      <div class="card">
-        <label>Data inizio report <button class="hx" data-k="DataStart">?</button></label>
-        <div class="val">&lt;YYYY-MM-DD&gt;</div>
-      </div>
-      <div class="card">
-        <label>Data fine report <button class="hx" data-k="DataEnd">?</button></label>
-        <div class="val">&lt;YYYY-MM-DD&gt;</div>
-      </div>
+<!-- riga 2 -->
+<div class="card">
+  <label>Ticker <button class="hx" data-k="Ticker">?</button></label>
+  <div id="H-Ticker" class="val">—</div>
+</div>
+<div class="card">
+  <label>Borsa di negoziazione <button class="hx" data-k="Venue">?</button></label>
+  <div id="H-Venue" class="val">—</div>
+</div>
+<div class="card">
+  <label>Validazione ticker/venue <button class="hx" data-k="Validazione">?</button></label>
+  <div id="H-Validation" class="val">—</div>
+</div>
 
-      <!-- riga 2 -->
-      <div class="card">
-        <label>Ticker <button class="hx" data-k="Ticker">?</button></label>
-        <div class="val">&lt;TICKER&gt;</div>
-      </div>
-      <div class="card">
-        <label>Borsa di negoziazione <button class="hx" data-k="Venue">?</button></label>
-        <div class="val">&lt;VENUE&gt;</div>
-      </div>
-      <div class="card">
-        <label>Validazione ticker/venue <button class="hx" data-k="Validazione">?</button></label>
-        <div class="val">&lt;OK / ADR-venue: …&gt;</div>
-      </div>
+<!-- riga 3 -->
+<div class="card">
+  <label>VersionTag <button class="hx" data-k="VersionTag">?</button></label>
+  <div id="H-VersionTag" class="val">—</div>
+</div>
+<div class="card">
+  <label>SyncID <button class="hx" data-k="SyncID">?</button></label>
+  <div id="H-SyncID" class="val">—</div>
+</div>
+<div class="card">
+  <label>Freshness <button class="hx" data-k="Freshness">?</button></label>
+  <div id="H-Freshness" class="val">—</div>
+</div>
 
-      <!-- riga 3 -->
-      <div class="card">
-        <label>VersionTag <button class="hx" data-k="VersionTag">?</button></label>
-        <div class="val">F3-v7.3</div>
-      </div>
-      <div class="card">
-        <label>SyncID <button class="hx" data-k="SyncID">?</button></label>
-        <div class="val">&lt;TICKER&gt;_&lt;YYYYMMDD&gt;_F3</div>
-      </div>
-      <div class="card">
-        <label>Freshness <button class="hx" data-k="Freshness">?</button></label>
-        <div class="val">&lt;OK/HOLD&gt;</div>
-      </div>
+<!-- riga 4 -->
+<div class="card">
+  <label>OCR_Conf <button class="hx" data-k="OCR_Conf">?</button></label>
+  <div id="H-OCR" class="val">—</div>
+</div>
+<div class="card">
+  <label>DataIntegrity <button class="hx" data-k="DataIntegrity">?</button></label>
+  <div id="H-DataIntegrity" class="val">—</div>
+</div>
+<div class="card">
+  <label>FeedSync <button class="hx" data-k="FeedSync">?</button></label>
+  <div id="H-FeedSync" class="val">—</div>
+</div>
 
-      <!-- riga 4: qualità -->
-      <div class="card">
-        <label>OCR_Conf <button class="hx" data-k="OCR_Conf">?</button></label>
-        <div class="val">&lt;0.00–1.00&gt;</div>
-      </div>
-      <div class="card">
-        <label>DataIntegrity <button class="hx" data-k="DataIntegrity">?</button></label>
-        <div class="val">&lt;0.00–1.00&gt;</div>
-      </div>
-      <div class="card">
-        <label>FeedSync <button class="hx" data-k="FeedSync">?</button></label>
-        <div class="val">&lt;0.00–1.00&gt;</div>
-      </div>
+<!-- riga 5 -->
+<div class="card lg:col-span-2">
+  <label>Confidence (final) = min(OCR_Conf, DataIntegrity, FeedSync, Confidence_H4, Confidence_H1)
+    <button class="hx" data-k="ConfidenceFinal">?</button>
+  </label>
+  <div id="H-Confidence" class="val">—</div>
+</div>
+<div class="card">
+  <label>Stato report <button class="hx" data-k="StatoReport">?</button></label>
+  <div id="H-State" class="val">—</div>
+</div>
 
-      <!-- riga 5: confidence & stato -->
-      <div class="card lg:col-span-2">
-        <label>Confidence (final) = min(OCR_Conf, DataIntegrity, FeedSync, Confidence_H4, Confidence_H1)
-          <button class="hx" data-k="ConfidenceFinal">?</button>
-        </label>
-        <div class="val">&lt;0.00–1.00&gt;</div>
-      </div>
-      <div class="card">
-        <label>Stato report <button class="hx" data-k="StatoReport">?</button></label>
-        <div class="val">ACTIVE / HOLD / REVIEW</div>
-      </div>
-
-      <!-- riga 6: tape & missing -->
-      <div class="card lg:col-span-2">
-        <label>TapeNotes (REG close) <button class="hx" data-k="TapeNotes">?</button></label>
-        <div class="val">AuctionShare%=—; Intensity/min=—; LastMinuteVWAP=—; CloseStickiness=—</div>
-      </div>
-      <div class="card">
-        <label>Missing (critici) <button class="hx" data-k="Missing">?</button></label>
-        <div class="val">n/d</div>
-      </div>
-
-      <!-- riga 7: policy, cromatica, note -->
-      <div class="card">
-        <label>Policy N/D <button class="hx" data-k="PolicyND">?</button></label>
-        <div class="val">nessuna stima; HOLD se impatta Confidence</div>
-      </div>
-      <div class="card">
-        <label>Criteri cromatici <button class="hx" data-k="Cromatica">?</button></label>
-        <div class="val">Verde ↑ · Gialla → · Rossa ↓ · —</div>
-      </div>
-      <div class="card">
-        <label>Note header <button class="hx" data-k="NoteHeader">?</button></label>
-        <div class="val">—</div>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- riga 6 -->
+<div class="card lg:col-span-2">
+  <label>TapeNotes (REG close) <button class="hx" data-k="TapeNotes">?</button></label>
+  <div id="H-TapeNotes" class="val">—</div>
+</div>
+<div class="card">
+  <label>Missing (critici) <button class="hx" data-k="Missing">?</button></label>
+  <div id="H-Missing" class="val">—</div>
+</div>
 
 <!-- stile compatto per card + ? -->
 <style>
@@ -444,5 +419,7 @@
 </script>
 
   <!-- proseguirai qui con le sezioni del report (F1–F7, ecc.) -->
+  <script src="/report/runtime.js" defer></script>
+
 </body>
 </html>
