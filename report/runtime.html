@@ -3,385 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tradelia · Report Runtime v2</title>
+  <title>Tradelia · Report Runtime</title>
   <link rel="icon" href="/favicon.png" type="image/png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
   <style>
-    body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');background-size:280px;color:#0f172a}
-    ::-webkit-scrollbar { width:10px; height:10px }
-    ::-webkit-scrollbar-thumb { background:rgba(80,160,200,.4); border-radius:100vh }
-    ::-webkit-scrollbar-thumb:hover { background:rgba(80,160,200,.6) }
-    * { scrollbar-width:thin; scrollbar-color:rgba(80,160,200,.5) #e5e7eb }
-
-    .btn{display:inline-flex;align-items:center;gap:.45rem;padding:.4rem .6rem;border-radius:.6rem;font-weight:600;font-size:14px;border:1px solid #e5e7eb;background:linear-gradient(#fff,#f8fafc);box-shadow:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.03);transition:transform .08s, box-shadow .12s, background .2s, border-color .2s;-webkit-tap-highlight-color:transparent}
-    .btn:hover{background:linear-gradient(#fff,#f1f5f9);border-color:#dbe3ea}
-    .btn:active{transform:translateY(1px);box-shadow:inset 0 1px 0 rgba(0,0,0,.06)}
-    .btn:focus-visible{outline:none;box-shadow:0 0 0 2px rgba(56,189,248,.5)}
-    .btn i{width:18px;height:18px}
-    .hdr{backdrop-filter:saturate(1.2) blur(6px)}
-
-    .sbtn{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .6rem;border-radius:.65rem;border:1px solid #e5e7eb;background:#fff;font-weight:600;font-size:13px;transition:transform .08s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease}
-    .sbtn:hover{background:#f8fafc;border-color:#dbe3ea}
-    .sbtn:active{transform:translateY(1px)}
-    .sbtn i{width:18px;height:18px}
-    .share-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
-    @media (min-width:420px){ .share-grid{grid-template-columns:1fr 1fr 1fr} }
-    .badge-url{background:#f8fafc;border:1px solid #e5e7eb}
-    .qr-wrap img{width:180px;height:180px;border-radius:.75rem;border:1px solid #e5e7eb;background:#fff}
-
-    @keyframes fadeBackdropIn { from { opacity: 0 } to { opacity: 1 } }
-    @keyframes fadeBackdropOut { from { opacity: 1 } to { opacity: 0 } }
-    @keyframes popIn { from { opacity: 0; transform: translateY(6px) scale(.98) } to { opacity: 1; transform: translateY(0) scale(1) } }
-    @keyframes popOut { from { opacity: 1; transform: translateY(0) scale(1) } to { opacity: 0; transform: translateY(4px) scale(.985) } }
-    .popup-backdrop{animation: fadeBackdropIn .18s ease forwards}
-    .popup-backdrop.closing{animation: fadeBackdropOut .16s ease forwards}
-    .popup-card{animation: popIn .20s cubic-bezier(.22,.61,.36,1) forwards}
-    .popup-card.closing{animation: popOut .16s ease forwards}
-
-    @media print{.noprint{display:none!important}}
-
-    .pill{display:inline-flex;align-items:center;gap:.35rem;padding:.2rem .5rem;border-radius:999px;font-weight:600;font-size:12px}
-    .pill i{width:14px;height:14px}
-    .pill-active{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
-    .pill-hold{background:#fffbeb;color:#92400e;border:1px solid #fde68a}
-    .pill-review{background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe}
-
-    .card{background:#fff;border:1px solid #e5e7eb;border-radius:1rem;box-shadow:0 1px 0 rgba(2,6,23,.04)}
+    body{
+      font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:#f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+      background-size:280px; color:#0f172a;
+    }
+    .btn {
+      display:inline-flex; align-items:center; gap:.45rem;
+      padding:.4rem .6rem; border-radius:.6rem; font-weight:600; font-size:14px;
+      border:1px solid #e5e7eb; background:linear-gradient(#fff,#f8fafc);
+      transition:transform .08s ease, box-shadow .12s ease;
+    }
+    .btn:hover{ background:linear-gradient(#fff,#f1f5f9); border-color:#dbe3ea }
+    .btn:active{ transform:translateY(1px); }
+    .btn i{ width:18px; height:18px }
+    .hdr { backdrop-filter:saturate(1.2) blur(6px) }
   </style>
 </head>
+
 <body class="text-gray-900">
-  <!-- HEADER STICKY -->
   <header class="hdr sticky top-0 z-50 bg-white/90 border-b border-slate-200 noprint">
     <div class="max-w-7xl mx-auto px-3 sm:px-5 h-12 sm:h-14 flex items-center justify-between">
       <div class="flex items-center gap-2 sm:gap-3 min-w-0">
         <a href="/index.html" class="shrink-0 text-lg sm:text-xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
           <span class="text-slate-900">TRADELIA</span><span class="text-blue-600">&bull;AI</span>
         </a>
-        <span id="bar-title" class="text-slate-400 text-xs sm:text-sm truncate">Report Runtime</span>
+        <span class="text-slate-400 text-xs sm:text-sm truncate">Report Runtime</span>
       </div>
       <div class="flex items-center gap-1.5 sm:gap-2">
-        <span id="chip-state" class="hidden sm:inline"></span>
-        <label class="btn">
-          <input id="fileInput" type="file" accept="application/json" class="hidden" />
-          <i data-lucide="upload"></i><span class="hidden sm:inline">Importa JSON</span>
-        </label>
-        <button id="btn-print" class="btn" aria-label="Stampa / PDF">
-          <i data-lucide="printer" aria-hidden="true"></i><span class="hidden sm:inline">Stampa / PDF</span>
+        <button id="btn-print" class="btn btn-primary" aria-label="Stampa / PDF">
+          <i data-lucide="printer"></i><span class="hidden sm:inline">Stampa / PDF</span>
         </button>
-        <button id="btn-share" class="btn" aria-label="Condividi">
-          <i data-lucide="share-2" aria-hidden="true"></i><span class="hidden sm:inline">Condividi</span>
+        <button id="btn-share" class="btn btn-primary" aria-label="Condividi">
+          <i data-lucide="share-2"></i><span class="hidden sm:inline">Condividi</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- BODY -->
-  <main class="max-w-7xl mx-auto px-3 sm:px-5 py-4 sm:py-6">
-    <div id="infoBanner" class="card p-3 sm:p-4 mb-4 flex items-start gap-3">
-      <i data-lucide="info" class="text-blue-600 shrink-0"></i>
-      <div class="text-sm leading-5">
-        <p class="font-semibold">Template dinamico · Step 1/7: SOLO Header</p>
-        <p>Carica un file JSON o passa <code>?id=&lt;report-id&gt;</code>. In questa fase renderizziamo solo l'HEADER; i blocchi F1–F7 verranno aggiunti step‑by‑step.</p>
-      </div>
-    </div>
-
-    <section id="reportHeader" class="card p-4 sm:p-5 mb-4"></section>
-    <section id="sections" class="space-y-4"></section>
-    <section id="audit" class="card p-4 sm:p-5 mt-6"></section>
-  </main>
-
   <script>
-  (function(){
-    lucide.createIcons();
-
-    // ===== Utils =====
-    const $ = (id) => document.getElementById(id);
-    const fmt = {
-      pct:(v, d=2)=> (v==null? 'n/d' : (v*100).toFixed(d)+'%'),
-      num:(v, d=2)=> (v==null? 'n/d' : Number(v).toFixed(d)),
-      date:(s)=> s? new Date(s).toLocaleString() : 'n/d',
-      badge:(state)=>{ const map={ACTIVE:'pill-active',HOLD:'pill-hold',REVIEW:'pill-review'}; const cls=map[state]||'pill-review'; const icon= state==='ACTIVE'?'check-circle':state==='HOLD'?'pause':'search'; return `<span class="pill ${cls}"><i data-lucide="${icon}"></i>${state||'REVIEW'}</span>` },
-      arrow:(s)=>({ '↑':'text-emerald-700','→':'text-slate-500','↓':'text-rose-700','—':'text-slate-400' }[s]||'text-slate-500'),
-      trendIcon:(s)=>({ '↑':'trending-up','→':'minus','↓':'trending-down','—':'dot' }[s]||'minus')
-    };
-
-    // ===== Topbar actions =====
-    $('btn-print')?.addEventListener('click', () => window.print());
-    $('fileInput')?.addEventListener('change', async (e) => {
-      const f = e.target.files?.[0]; if (!f) return;
-      try{ const data = JSON.parse(await f.text()); renderAll(data) }catch(err){ alert('JSON non valido'); console.error(err) }
-    });
-
-    $('btn-share')?.addEventListener('click', async () => openShareSheet(initShare()));
-
-    function initShare(){
-      const urlObj = new URL(window.location.href);
-      if (!urlObj.searchParams.get('id')) urlObj.searchParams.set('id','sample-qyld-2025-10-20');
-      return { longUrl:urlObj.toString(), title:'Tradelia · Report Runtime', text:'Guarda il report completo su Tradelia AI' };
-    }
-
-    async function shorten_isgd(longUrl, timeoutMs=5000){
-      const ctrl=new AbortController(); const t=setTimeout(()=>ctrl.abort(), timeoutMs);
-      try{ const api=`https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`; const res=await fetch(api,{signal:ctrl.signal}); if(!res.ok) throw new Error('HTTP '+res.status); const data=await res.json(); if(data.shorturl) return data.shorturl; throw new Error(data.errormessage||'is.gd error'); } finally{ clearTimeout(t) }
-    }
-
-    function openShareSheet({ longUrl, title, text }){
-      const backdrop=document.createElement('div'); backdrop.className='popup-backdrop fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50';
-      const card=document.createElement('div'); card.className='popup-card bg-white rounded-xl shadow-2xl p-5 w-[92%] max-w-lg text-left border border-slate-200';
-      let currentUrl=longUrl; const enc=encodeURIComponent;
-      const targets=(u)=>([
-        { label:'WhatsApp',href:`https://wa.me/?text=${enc(text+' ')+enc(u)}`, icon:'message-square' },
-        { label:'Telegram',href:`https://t.me/share/url?url=${enc(u)}&text=${enc(text)}`, icon:'send' },
-        { label:'X (Twitter)',href:`https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(u)}`, icon:'twitter' },
-        { label:'LinkedIn',href:`https://www.linkedin.com/sharing/share-offsite/?url=${enc(u)}`, icon:'linkedin' },
-        { label:'Reddit',href:`https://www.reddit.com/submit?url=${enc(u)}&title=${enc(title)}`, icon:'square' },
-        { label:'Facebook',href:`https://www.facebook.com/sharer/sharer.php?u=${enc(u)}`, icon:'facebook' },
-        { label:'Email',href:`mailto:?subject=${enc(title)}&body=${enc(text)}%0A%0A${enc(u)}`, icon:'mail' },
-      ]);
-
-      card.innerHTML=`
-        <div class="flex items-start justify-between gap-3 mb-3">
-          <div>
-            <h2 class="font-semibold text-slate-800 leading-tight">${title}</h2>
-            <p class="text-xs text-slate-500 mt-0.5">Condividi il link del report</p>
-          </div>
-          <button id="closePopup" class="btn" aria-label="Chiudi"><i data-lucide="x"></i><span class="hidden sm:inline">Chiudi</span></button>
-        </div>
-        <div class="flex items-center gap-2 mb-3">
-          <label class="text-sm text-slate-700 flex items-center gap-2">
-            <input id="useShort" type="checkbox" class="h-4 w-4 accent-sky-600"><span>Usa link breve (is.gd)</span>
-          </label>
-          <span id="shortStatus" class="text-xs text-slate-400">(non attivo)</span>
-        </div>
-        <div class="space-y-3">
-          <div class="qr-wrap flex items-center justify-center"><img id="qrImg" alt="QR per condivisione" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(currentUrl)}" /></div>
-          <div id="shareGrid" class="share-grid"></div>
-          <div id="urlBox" class="badge-url text-[12px] p-2 rounded-md font-mono select-all break-all">${currentUrl}</div>
-          <div class="flex gap-2">
-            <button id="copyLink" class="sbtn"><i data-lucide="copy"></i><span>Copia link</span></button>
-            <a id="openNew" class="sbtn" href="${currentUrl}" target="_blank" rel="noopener"><i data-lucide="external-link"></i><span>Apri</span></a>
-          </div>
-          <p class="text-[11px] text-slate-500">Suggerimento: usa i pulsanti sopra per aprire la condivisione del servizio scelto.</p>
-        </div>`;
-
-      backdrop.appendChild(card); document.body.appendChild(backdrop); lucide.createIcons();
-      const shareGrid=card.querySelector('#shareGrid'); const urlBox=card.querySelector('#urlBox'); const qrImg=card.querySelector('#qrImg'); const openNew=card.querySelector('#openNew'); const useShort=card.querySelector('#useShort'); const shortStatus=card.querySelector('#shortStatus');
-      const renderTargets=(u)=>{ shareGrid.innerHTML = targets(u).map(t=>`<a class="sbtn" href="${t.href}" target="_blank" rel="noopener"><i data-lucide="${t.icon}"></i><span>${t.label}</span></a>`).join(''); lucide.createIcons(); };
-      const updateAll=(u)=>{ urlBox.textContent=u; openNew.href=u; qrImg.src=`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(u)}`; renderTargets(u); };
-      renderTargets(currentUrl);
-      const close=()=>{ backdrop.classList.add('closing'); card.classList.add('closing'); card.addEventListener('animationend',()=>backdrop.remove(),{once:true}); };
-      backdrop.addEventListener('click',(e)=>{ if(e.target===backdrop) close(); }); card.querySelector('#closePopup').addEventListener('click', close);
-      card.querySelector('#copyLink').addEventListener('click', async()=>{ try{ await navigator.clipboard.writeText(urlBox.textContent); const btn=card.querySelector('#copyLink'); btn.innerHTML='<i data-lucide="check"></i><span>Copiato</span>'; lucide.createIcons(); setTimeout(close,900);}catch{ const range=document.createRange(); range.selectNodeContents(urlBox); const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(range);} });
-      let cachedShort=null; useShort.addEventListener('change', async(e)=>{ if(e.target.checked){ shortStatus.textContent='creo link breve…'; shortStatus.className='text-xs text-sky-600'; try{ if(!cachedShort) cachedShort=await shorten_isgd(longUrl); updateAll(cachedShort); shortStatus.textContent='attivo (is.gd)'; shortStatus.className='text-xs text-emerald-600'; }catch(err){ updateAll(longUrl); useShort.checked=false; shortStatus.textContent='non disponibile (fallback)'; shortStatus.className='text-xs text-amber-600'; console.warn('is.gd failed:', err);} } else { updateAll(longUrl); shortStatus.textContent='(non attivo)'; shortStatus.className='text-xs text-slate-400'; } });
-    }
-
-    // ===== Data bootstrap =====
-    const qs = new URLSearchParams(location.search); const reportId = qs.get('id');
-    if (reportId) { loadById(reportId) } else { renderAll(sampleHeaderOnly()) }
-
-    async function loadById(id){
-      try{
-        // NB: se usi /report/ come path, i JSON stanno in /reports/
-        const res = await fetch(`/reports/${encodeURIComponent(id)}.json`, { cache:'no-store' });
-        const data = await (res.ok ? res.json() : sampleReport());
-        renderAll(data);
-      }catch(err){ console.warn('API fallback → sample', err); renderAll(sampleHeaderOnly()); }
-    }
-
-    // ===== Rendering =====
-    function renderAll(d){ renderHeader(d); document.getElementById('infoBanner').style.display='none'; lucide.createIcons(); }
-
-    function renderHeader(d){
-      const el=$('reportHeader'); const h=d.Header||{}; const meta=d.Meta||{};
-      $('bar-title').textContent = `${d.Ticker||h.Ticker||'TICKER'} · ${h.Date||h.EndDate||'—'}`;
-      $('chip-state').innerHTML = fmt.badge(d.State||'REVIEW');
-      el.innerHTML = `
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div class="min-w-0">
-            <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">${d.Ticker||h.Ticker||'TICKER'} · <span class="text-slate-500">Runtime</span></h1>
-            <p class="text-sm text-slate-600 mt-1">Framework Swing Master · F1→F7 · Finalità educativa/informativa</p>
-            <div class="mt-2 flex flex-wrap gap-2 items-center">
-              ${fmt.badge(d.State||'REVIEW')}
-              <span class="text-xs text-slate-500">Confidence: <span class="font-semibold">${fmt.num(d.Confidence)}</span></span>
-              <span class="text-xs text-slate-500">FeedSync: <span class="font-semibold">${fmt.num(d.FeedSync)}</span></span>
-              <span class="text-xs text-slate-500">OCR_Conf: <span class="font-semibold">${fmt.num(d.OCR_Conf)}</span></span>
-            </div>
-          </div>
-          <div class="text-sm text-slate-600">
-            <div><span class="font-semibold">Periodo:</span> ${h.StartDate||'—'} → ${h.EndDate||'—'}</div>
-            <div><span class="font-semibold">AuditPathID:</span> ${d.AuditPathID||h.AuditPathID||'—'}</div>
-            <div><span class="font-semibold">Versione:</span> ${d.VersionTag||h.Version||'—'}</div>
-          </div>
-        </div>`;
-    }
-
-    function wrapCard(title, subtitle, content){
-      const card=document.createElement('div'); card.className='card p-4 sm:p-5';
-      card.innerHTML = `
-        <div class="flex items-start justify-between gap-3 mb-3">
-          <div>
-            <h2 class="text-base sm:text-lg font-semibold text-slate-800">${title}</h2>
-            ${subtitle?`<p class="text-xs text-slate-500">${subtitle}</p>`:''}
-          </div>
-          <button class="btn toggle" aria-expanded="true"><i data-lucide="chevron-up"></i><span class="hidden sm:inline">Comprimi</span></button>
-        </div>
-        <div class="content">${content}</div>`;
-      const btn=card.querySelector('.toggle'); const cnt=card.querySelector('.content');
-      btn.addEventListener('click',()=>{ const open = cnt.style.display!== 'none'; cnt.style.display = open? 'none':'block'; btn.innerHTML = open? '<i data-lucide="chevron-down"></i><span class="hidden sm:inline">Espandi</span>' : '<i data-lucide="chevron-up"></i><span class="hidden sm:inline">Comprimi</span>'; lucide.createIcons(); });
-      return card;
-    }
-
-    function table(rows){
-      return `<div class="overflow-x-auto -mx-2 sm:mx-0"><table class="min-w-full text-sm"><tbody>${rows.map(r=>`<tr class="border-b border-slate-100"><td class="py-2 pr-3 text-slate-600">${r[0]}</td><td class="py-2 font-semibold">${r[1]}</td><td class="py-2 text-slate-500">${r[2]||''}</td></tr>`).join('')}</tbody></table></div>`
-    }
-
-    function trendPill(t){ if(!t) return ''; const cls=fmt.arrow(t); const ic=fmt.trendIcon(t); return `<span class="inline-flex items-center gap-1 text-xs ${cls}"><i data-lucide="${ic}" class="w-4 h-4"></i>${t}</span>` }
-
-    // disabilitato in Step 1 (solo header)
-function renderSections(d) { return; }
-
-    // === F1
-    function sectionF1(f){ if(!f) return null;
-  const rows=[
-    ['MacroRegime', fmt.num(f.MacroRegime), 'F1-B · top‑down'],
-    ['MBI (Macro Bias Index)', fmt.num(f.MBI), 'F1-B'],
-    ['SCI (Sentiment)', fmt.num(f.SCI), 'AAII/overlay'],
-    ['IPI (Institutional Positioning)', fmt.num(f.IPI), 'CFTC/CME'],
-    ['OPI_macro', fmt.num(f.OPI_macro||f.OPI), 'macro proxy'],
-    ['ICR_pre', fmt.num(f.ICR_pre), 'coerenza pre‑F4'],
-    ['GeoRisk', fmt.num(f.GeoRisk), 'event/geopolitica'],
-    ['RiskWindow (±5g)', fmt.num(f.RiskWindow||f.RiskWindow_F1), 'gateway'],
-    ['IntegrityScore', fmt.num(f.Integrity||f.IntegrityScore), '≥0.92 = OK'],
-    ['FreshnessGate', (f.Freshness||'≤T‑1'), 'governance']
-  ];
-  const content = `${table(rows)}<p class=\"mt-3 text-xs text-slate-500\">Fonti Tier‑1; AllBlocks.Numeric=true; Gate: Lag≤1d · Freshness≤T‑1 · Integrity≥0.92. </p>`;
-  return wrapCard('F1 — Contesto Istituzionale', 'Macro · Sentiment · Positioning · Intermarket · Event (spec v14)', content);
-}
-
-    // === F2
-    function sectionF2(f){ if(!f) return null;
-  const t = f.F2_Ticker||{};
-  const rows=[
-    ['IPI_tkr / SCI_tkr / ICR_tkr', `${fmt.num(t.IPI_tkr)} / ${fmt.num(t.SCI_tkr)} / ${fmt.num(t.ICR_tkr)}`, 'mix ticker‑centrico'],
-    ['MacroConcordance_F2', fmt.num(f.MacroConcordance_F2), '> +0.30 Concorde; < −0.30 Conflict'],
-    ['RiskWindow (local/global)', `${fmt.num(t.RiskWindow_local)} / ${fmt.num(f.RiskWindow)}`, 'gateway F1 pass‑through'],
-    ['RSI14 · ATR14 · RelVol', `${t.DPI_context?.RSI14??'n/d'} · ${t.DPI_context?.ATR14??'n/d'} · ${t.DPI_context?.RelVol??'n/d'}`, 'DPI context'],
-    ['Perf 5d/1m/3m', t.DPI_context? `${t.DPI_context.Perf?.['5d']||'n/d'} / ${t.DPI_context.Perf?.['1m']||'n/d'} / ${t.DPI_context.Perf?.['3m']||'n/d'}`:'n/d', 'performance non‑options'],
-    ['Peers/ETF', t.Peers_ETF || 'n/d', 'coerenza settore'],
-    ['Confidence_F2core', fmt.num(f.Confidence||f.Confidence_F2core), 'LagMax≤1d; Freshness ok'],
-    ['State', f.State||'REVIEW', 'ACTIVE/HOLD/REVIEW']
-  ];
-  const content = `${table(rows)}<p class=\"mt-3 text-xs text-slate-500\">Esclusi campi opzioni (IV/Skew/ΔOI ecc.). WebProbe solo Tier‑1 per campi mancanti. </p>`;
-  return wrapCard('F2 — Ticker Core (senza opzioni)', 'MacroConcordance · DPI · RiskWindow (spec v7.0)', content);
-}
-
-    // === F3
-    function sectionF3(f){ if(!f) return null;
-  const d1=f.D1||{};
-  const rows=[]; const add=(k,v,n='')=>rows.push([k,v,n]);
-  add('MTF_Score', fmt.num(f.MTF_Score), 'W1 35% · D1 40% · H4 15% · H1 10%');
-  add('Prob_SwingUp / LTUp / Breakout', `${fmt.num(f.Prob_SwingUp)} / ${fmt.num(f.Prob_LTUp)} / ${fmt.num(f.Prob_Breakout)}`, 'σ‑logit');
-  add('VolComposite / Price / Tape', `${fmt.num(f.VolumeComposite)} / ${fmt.num(f.PriceComposite)} / ${fmt.num(f.TapeComposite)}`, 'priorità volume');
-  add('RSI/ADX/MACD (D1)', (d1.RSI!=null?`${d1.RSI} / ${d1.ADX} / ${d1.MACD}`:'n/d'), d1.Note||'');
-  add('OBV · CMF · RVOL', (d1.OBV!=null?`${d1.OBV} · ${d1.CMF} · ${d1.RVOL}`:'n/d'), 'volumetrico');
-  const content = `${table(rows)}${f.OptionsOverlay? blockOptionsOverlay_F3Consensus(f.OptionsOverlay):''}<p class=\"mt-3 text-xs text-slate-500\">In F3 nessun setup operativo. Opzioni = consenso da F2 (IV/Skew/ΔOI, GSR). </p>`;
-  return wrapCard('F3 — Analisi Tecnica MTF (Hybrid)', 'Volumetrico‑first · Opzioni come consenso (spec v7.3)', content);
-}
-function blockOptionsOverlay_F3Consensus(o){
-  const rows=[ ['IV(ATM) / percentile', o.IV??'n/d', o.IV_rank?`rank ${o.IV_rank}`:''], ['ΔIV / ΔSkew', `${o.DeltaIV??'n/d'} / ${o.DeltaSkew??'n/d'}`, 'da F2-Options'], ['Skew (25Δ)', o.Skew??'n/d',''], ['OI tot / ΔOI (ATM/OTM)', o.OI??'n/d', o.DeltaOI??''], ['PCR (vol / OI)', o.PCR??'n/d',''], ['GSR (Γ/Vega)', o.GSR??'n/d','regime gamma'] ];
-  return `<div class=\"mt-4\"><h3 class=\"font-semibold text-slate-800 mb-2\">Consensus Opzioni (da F2)</h3>${table(rows)}</div>`
-}
-    function blockOptionsOverlay(o){
-      const rows=[ ['DTE bucket', o.DTE || 'n/d',''], ['IV(ATM) / ΔIV', o.IV!=null? o.IV : 'n/d', o.DeltaIV!=null? `Δ ${o.DeltaIV}`:''], ['Skew(25Δ) / ΔSkew', o.Skew ?? 'n/d', o.DeltaSkew ?? ''], ['OI tot / ΔOI (ATM/OTM)', o.OI ?? 'n/d', o.DeltaOI ?? ''], ['PCR (vol / OI)', o.PCR ?? 'n/d', ''], ['Gamma / Vega / GSR', o.Gamma??'n/d', o.Vega!=null?`Vega ${o.Vega} · GSR ${o.GSR??'n/d'}`:''] ];
-      return `<div class="mt-4"><h3 class="font-semibold text-slate-800 mb-2">Options Overlay</h3>${table(rows)}</div>`
-    }
-
-    // === F4
-    function sectionF4(f){ if(!f) return null;
-  const rows=[
-    ['BiasIntermarket', f.BiasIntermarket||'n/d', f.Note||''],
-    ['ICR / ICR_adj', `${fmt.num(f.ICR)} / ${fmt.num(f.ICR_adj)}`, 'ICR_adj = ICR × MTF_Score × sign(Bias)'],
-    ['MBI / SCI / IPI (feed F2)', `${fmt.num(f.MBI)} / ${fmt.num(f.SCI)} / ${fmt.num(f.IPI)}`, 'mix macro-sentiment-positioning'],
-    ['BiasIntermarketScore', fmt.num(f.BiasIntermarketScore), '>0.25 Concorde · <−0.25 Conflict'],
-    ['FeedSyncScore', fmt.num(f.FeedSyncScore), '≥0.90 OK · 0.75–0.90 Partial'],
-    ['RiskWindow', fmt.num(f.RiskWindow), 'evento ±5g'],
-    ['DataIntegrity', fmt.num(f.DataIntegrity||f.Integrity), '≥0.90 per bridge F5']
-  ];
-  const content = `${table(rows)}<p class=\"mt-3 text-xs text-slate-500\">Bridge F4→F5 attivo solo se DataIntegrity ≥ 0.90, FeedSyncScore ≥ 0.90, BiasIntermarket ≠ Conflict. </p>`;
-  return wrapCard('F4 — Intermarket & Strutturale', 'Benchmark · Settore · Cross‑asset · Macro (spec v6.1)', content);
-}
-
-    // === F5
-    function sectionF5(f){ if(!f) return null;
-  const rows=[
-    ['Strategy / Side', `${f.Strategy||'n/d'} / ${f.Side||'n/d'}`, 'Momentum / Pullback'],
-    ['Entry/Stop/TP1 (ATR)', f.EntryStopTP? f.EntryStopTP : `${fmt.num(f.Entry_ATR)} / ${fmt.num(f.Stop_ATR)} / ${fmt.num(f.TP1_ATR)}`, 'k·ATR(14)'],
-    ['TrailMult_ATR', fmt.num(f.TrailMult_ATR||f.Trail), 'dinamico'],
-    ['FlowScore / Trend_reg / VolRatio', `${fmt.num(f.FlowScore)} / ${fmt.num(f.Trend_reg)} / ${fmt.num(f.VolRatio)}`, 'composito flussi'],
-    ['Weight_sector / Days_to_Earnings', `${fmt.num(f.Weight_sector)} / ${f.Days_to_Earnings??'n/d'}`, 'modulazione'],
-    ['SetupScore / Class', `${fmt.num(f.SetupScore)} / ${f.Class||'n/d'}`, 'SUBLIME ≥0.80 · SOLIDO 0.65–0.80 · HOLD <0.65'],
-    ['RiskPct (NAV)', f.RiskPct!=null? fmt.num(f.RiskPct*100,2)+'%':'n/d', 'Kelly‑lite'],
-    ['Protected', String(!!f.Protected), 'se dati parziali'],
-  ];
-  const content=`${table(rows)}${f.Notes?`<p class=\"text-sm text-slate-600 mt-3\">${f.Notes}</p>`:''}`;
-  return wrapCard('F5 — Setup (educativo)', 'Ordine GTC simulato · v10.3', content);
-}
-
-    // === F6
-    function sectionF6(f){ if(!f) return null;
-  const rows=[ ['DisciplineScore', fmt.num(f.DisciplineScore),'rigore gestionale'], ['ConsistencyIndex', fmt.num(f.ConsistencyIndex),'coerenza partecipativa'], ['AggressivenessIndex', fmt.num(f.AggressivenessIndex),'intensità'], ['EducationalEfficiency', fmt.num(f.EducationalEfficiency),'media ibrida'], ['IntegrityScore', fmt.num(f.IntegrityScore||f.Integrity),'audit'] ];
-  const content = `${table(rows)}${f.Notes? `<p class=\"text-sm text-slate-600 mt-3\">${f.Notes}</p>`:''}`;
-  return wrapCard('F6 — Gestione Dinamica', 'Simulatore educativo · v7.1', content);
-}
-
-    // === F7
-    function sectionF7(f){ if(!f) return null;
-  const rows=[ ['Timestamp', f.Timestamp||'n/d','Europe/Rome'], ['Versione', f.Version||'—',''], ['Fonti (Tier‑1)', (f.Sources||[]).join(', ')||'—','Bloomberg/Reuters/FRED/CFTC/SEC'], ['Note', f.Note||'—',''], ['AuditTrail', f.AuditTrail? f.AuditTrail.length+' step':'—',''] ];
-  const content = `${table(rows)}`;
-  return wrapCard('F7 — Audit & Governance', 'Trasparenza calcoli e versioning', content);
-}
-
-    // disabilitato in Step 1 (solo header)
-function renderAudit(d){ return; }
-
-    function sampleReport(){
-      return {
-        Ticker:'QYLD', State:'REVIEW', Confidence:0.82, FeedSync:0.93, OCR_Conf:0.97,
-        AuditPathID:'APID-20251020-QYLD-001', VersionTag:'v1.0.0', Timestamp:new Date().toISOString(),
-        Header:{ StartDate:'2025-10-10', EndDate:'2025-10-20', Date:'2025-10-20', Analyst:'Swing Master AI' },
-        F1:{ MacroRegime:0.41, MacroTrend:'→', SCI:0.18, SCI_trend:'↑', IPI:0.12, IPI_trend:'→', OPI:0.22, OPI_trend:'↓', ICR_pre:0.27, ICR_trend:'→', GeoRisk:0.31, GeoRisk_trend:'↑', RiskWindow:0.44, Integrity:0.96, State:'REVIEW' },
-        F2:{ ShortInterest:'low', InstitutionalOwn:'67%', ETFExposure:'11 / 34%', PeerSync:'coerente', IV:'17%', IVRank:23, PutCall:'0.85 / 0.72', DeltaOI:'+3%', Skew:'mild‑put', DeltaSkew:'flat', GSR:'0.42', NewsTone:'neutro‑positivo', AnalystDelta:'+1 revisione', BiasNorm:0.52, RiskWindow:0.35, Summary:'Overlay complessivamente neutro‑positivo; nessun rischio evento a T‑5' },
-        F3:{ MTF_Score:0.38, Prob_SwingUp:0.46, Prob_LTUp:0.51, Prob_Breakout:0.18, VolumeComposite:0.41, OptionsComposite:0.36, PriceComposite:0.39, Concordanza:'leggera divergenza volumi‑prezzo', D1:{ RSI:52, ADX:16, MACD:'flat', OBV:'+0.3σ', CMF:'+0.05', RVOL:'0.9x', Note:'neutro-positivo' }, OptionsOverlay:{ DTE:'≤30g', IV:'17%', DeltaIV:'+0.4pp', Skew:'-5%', DeltaSkew:'+1pp', OI:'2.1M', DeltaOI:'+4%', PCR:'0.8 / 0.7', Gamma:'bassa', Vega:'media', GSR:'0.38' } },
-        F4:{ BiasIntermarket:'concorde lieve', BiasIntermarketScore:0.22, FeedSyncScore:0.91, ICR_adj:0.21, RiskWindow:0.33, MTF:'Settore income‑covered call in linea con benchmark high‑div.' },
-        F5:{ Strategy:'Momentum prudente', EntryStopTP:'1.0 / 1.6 / 1.4 ATR', Regime:'NEUTRAL', Trail:'ATR‑lite', FlowScore:0.37, Notes:'setup solo educativo (no MiFID)' },
-        F6:{ DisciplineScore:0.78, ConsistencyIndex:0.72, AggressivenessIndex:0.61, EducationalEfficiency:0.74, Notes:'monitoraggio RVOL e skew' },
-        F7:{ Timestamp:new Date().toISOString(), Version:'1.0.0', Sources:['Bloomberg','Reuters','FRED','CFTC','SEC'], Note:'Uso didattico' }
-      };
-    }
-  }function sampleReportV2(){
-  return {
-    Ticker:'XYZ', State:'REVIEW', Confidence:0.82, FeedSync:0.93, OCR_Conf:0.97,
-    AuditPathID:'APID-20251020-XYZ-001', VersionTag:'v1.0.0', Timestamp:new Date().toISOString(),
-    Header:{ StartDate:'2025-10-10', EndDate:'2025-10-20', Date:'2025-10-20', Analyst:'Swing Master AI' },
-    F1:{ MacroRegime:0.38, MBI:0.12, SCI:0.18, IPI:0.10, OPI_macro:0.22, ICR_pre:0.27, GeoRisk:0.31, RiskWindow:0.44, Integrity:0.96, Freshness:'≤T‑1', State:'REVIEW' },
-    F2:{ MacroConcordance_F2:0.25, RiskWindow:0.40, Confidence:0.81, State:'REVIEW', F2_Ticker:{ IPI_tkr:0.11, SCI_tkr:0.16, ICR_tkr:0.20, RiskWindow_local:0.42, DPI_context:{ RSI14:52, ATR14:'1.8%', RelVol:'0.9x', Perf:{'5d':'+0.4%','1m':'+1.2%','3m':'+2.1%'} }, Peers_ETF:'coerente' } },
-    F3:{ MTF_Score:0.62, Prob_SwingUp:0.54, Prob_LTUp:0.58, Prob_Breakout:0.19, VolumeComposite:0.47, PriceComposite:0.44, TapeComposite:0.40, D1:{ RSI:52, ADX:16, MACD:'flat', OBV:'+0.3σ', CMF:'+0.05', RVOL:'0.9x', Note:'neutro-positivo' }, OptionsOverlay:{ IV:'17%', IV_rank:23, DeltaIV:'+0.4pp', Skew:'-5%', DeltaSkew:'+1pp', OI:'2.1M', DeltaOI:'+4%', PCR:'0.8 / 0.7', GSR:'0.38' } },
-    F4:{ BiasIntermarket:'Concorde', ICR:0.81, ICR_adj:0.50, MBI:0.05, SCI:0.12, IPI:0.08, BiasIntermarketScore:0.26, FeedSyncScore:0.91, DataIntegrity:0.95, RiskWindow:0.33 },
-    F5:{ Strategy:'Momentum', Side:'Long', Entry_ATR:0.55, Stop_ATR:1.05, TP1_ATR:1.70, TrailMult_ATR:1.2, FlowScore:0.37, Trend_reg:0.58, VolRatio:1.17, Weight_sector:0.64, Days_to_Earnings:14, SetupScore:0.73, Class:'SOLIDO', RiskPct:0.006, Protected:false, Notes:'setup educativo (no MiFID)' },
-    F6:{ DisciplineScore:0.78, ConsistencyIndex:0.72, AggressivenessIndex:0.61, EducationalEfficiency:0.74, IntegrityScore:0.93, Notes:'monitoraggio RVOL e skew' },
-    F7:{ Timestamp:new Date().toISOString(), Version:'1.0.0', Sources:['Bloomberg','Reuters','FRED','CFTC','SEC'], Note:'Uso didattico', AuditTrail:[{Step:'Benchmark',Fields:5}] }
-  };
-}
-  }function sampleHeaderOnly(){
-  return {
-    Ticker:'XYZ', State:'REVIEW', Confidence:0.80, FeedSync:0.90, OCR_Conf:0.97,
-    AuditPathID:'APID-20251020-XYZ-HEADER', VersionTag:'v1.0.0', Timestamp:new Date().toISOString(),
-    Header:{ StartDate:'2025-10-10', EndDate:'2025-10-20', Date:'2025-10-20', Analyst:'Swing Master AI', AuditPathID:'APID-20251020-XYZ-HEADER', Version:'1.0.0' }
-  };
-}
-  })();
-</script>
+    document.addEventListener('DOMContentLoaded',()=>{ lucide.createIcons(); });
+  </script>
 </body>
 </html>
