@@ -272,6 +272,176 @@
       }
     });
   </script>
+<!-- ===========================
+     HEADER — TICKER (template vuoto)
+     =========================== -->
+<section id="header-ticker" class="mb-5">
+  <div class="bg-white/90 rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-base sm:text-lg font-semibold">Header – Dati generali</h2>
+      <div class="text-[11px] text-slate-500">Template vuoto · dati da JSON</div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <!-- riga 1 -->
+      <div class="card">
+        <label>Sessione <button class="hx" data-k="Sessione">?</button></label>
+        <div class="val">REG (adjusted)</div>
+      </div>
+      <div class="card">
+        <label>Data inizio report <button class="hx" data-k="DataStart">?</button></label>
+        <div class="val">&lt;YYYY-MM-DD&gt;</div>
+      </div>
+      <div class="card">
+        <label>Data fine report <button class="hx" data-k="DataEnd">?</button></label>
+        <div class="val">&lt;YYYY-MM-DD&gt;</div>
+      </div>
+
+      <!-- riga 2 -->
+      <div class="card">
+        <label>Ticker <button class="hx" data-k="Ticker">?</button></label>
+        <div class="val">&lt;TICKER&gt;</div>
+      </div>
+      <div class="card">
+        <label>Borsa di negoziazione <button class="hx" data-k="Venue">?</button></label>
+        <div class="val">&lt;VENUE&gt;</div>
+      </div>
+      <div class="card">
+        <label>Validazione ticker/venue <button class="hx" data-k="Validazione">?</button></label>
+        <div class="val">&lt;OK / ADR-venue: …&gt;</div>
+      </div>
+
+      <!-- riga 3 -->
+      <div class="card">
+        <label>VersionTag <button class="hx" data-k="VersionTag">?</button></label>
+        <div class="val">F3-v7.3</div>
+      </div>
+      <div class="card">
+        <label>SyncID <button class="hx" data-k="SyncID">?</button></label>
+        <div class="val">&lt;TICKER&gt;_&lt;YYYYMMDD&gt;_F3</div>
+      </div>
+      <div class="card">
+        <label>Freshness <button class="hx" data-k="Freshness">?</button></label>
+        <div class="val">&lt;OK/HOLD&gt;</div>
+      </div>
+
+      <!-- riga 4: qualità -->
+      <div class="card">
+        <label>OCR_Conf <button class="hx" data-k="OCR_Conf">?</button></label>
+        <div class="val">&lt;0.00–1.00&gt;</div>
+      </div>
+      <div class="card">
+        <label>DataIntegrity <button class="hx" data-k="DataIntegrity">?</button></label>
+        <div class="val">&lt;0.00–1.00&gt;</div>
+      </div>
+      <div class="card">
+        <label>FeedSync <button class="hx" data-k="FeedSync">?</button></label>
+        <div class="val">&lt;0.00–1.00&gt;</div>
+      </div>
+
+      <!-- riga 5: confidence & stato -->
+      <div class="card lg:col-span-2">
+        <label>Confidence (final) = min(OCR_Conf, DataIntegrity, FeedSync, Confidence_H4, Confidence_H1)
+          <button class="hx" data-k="ConfidenceFinal">?</button>
+        </label>
+        <div class="val">&lt;0.00–1.00&gt;</div>
+      </div>
+      <div class="card">
+        <label>Stato report <button class="hx" data-k="StatoReport">?</button></label>
+        <div class="val">ACTIVE / HOLD / REVIEW</div>
+      </div>
+
+      <!-- riga 6: tape & missing -->
+      <div class="card lg:col-span-2">
+        <label>TapeNotes (REG close) <button class="hx" data-k="TapeNotes">?</button></label>
+        <div class="val">AuctionShare%=—; Intensity/min=—; LastMinuteVWAP=—; CloseStickiness=—</div>
+      </div>
+      <div class="card">
+        <label>Missing (critici) <button class="hx" data-k="Missing">?</button></label>
+        <div class="val">n/d</div>
+      </div>
+
+      <!-- riga 7: policy, cromatica, note -->
+      <div class="card">
+        <label>Policy N/D <button class="hx" data-k="PolicyND">?</button></label>
+        <div class="val">nessuna stima; HOLD se impatta Confidence</div>
+      </div>
+      <div class="card">
+        <label>Criteri cromatici <button class="hx" data-k="Cromatica">?</button></label>
+        <div class="val">Verde ↑ · Gialla → · Rossa ↓ · —</div>
+      </div>
+      <div class="card">
+        <label>Note header <button class="hx" data-k="NoteHeader">?</button></label>
+        <div class="val">—</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- stile compatto per card + ? -->
+<style>
+  #header-ticker .card{border:1px solid #e5e7eb;border-radius:.75rem;padding:.75rem}
+  #header-ticker label{display:flex;align-items:center;gap:.4rem;font-size:11px;color:#64748b}
+  #header-ticker .val{font-weight:600}
+  .hx{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;
+      border-radius:999px;border:1px solid rgba(2,132,199,.6);font-size:10px;line-height:1;color:#0369a1}
+  .hx-pop{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(2px);
+          display:flex;align-items:center;justify-content:center;z-index:50}
+  .hx-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;max-width:560px;width:92%;
+           box-shadow:0 10px 30px rgba(0,0,0,.15)}
+  .hx-card h3{margin:0 0 4px;font-weight:600}
+  .hx-card .src{font-size:11px;color:#6b7280;margin-bottom:8px}
+  .hx-close{margin-left:auto}
+</style>
+
+<!-- popup accademico: solo testi, nessun link/dato -->
+<script>
+(function(){
+  // dizionario spiegazioni (accademiche / trattati / libri)
+  const EXPL = {
+    Sessione:{t:"Sessione REG (adjusted)", a:"Analisi sulla sola sessione regolare; serie prezzi adjusted per dividendi/split per coerenza storica.", s:"CMT Association · Market Data Conventions; CFA Institute – Quantitative Methods."},
+    DataStart:{t:"Data inizio report", a:"Timestamp di avvio finestra analitica per audit e replicabilità.", s:"Methodology & Audit Trail (interno)."},
+    DataEnd:{t:"Data fine report", a:"Timestamp di chiusura finestra; evita look-ahead bias.", s:"Methodology & Audit Trail (interno)."},
+    Ticker:{t:"Ticker", a:"Identificativo ufficiale dello strumento negoziato.", s:"Nasdaq/NYSE Listing Rules; SEC Form 8-A."},
+    Venue:{t:"Borsa di negoziazione", a:"Venue primario/mic di quotazione dello strumento.", s:"Microstructure: O’Hara (1995) · Hasbrouck (2007)."},
+    Validazione:{t:"Validazione ticker/venue", a:"Coerenza simbolo–venue (incl. ADR); requisito preliminare di qualità.", s:"Best practice di data governance (CFA QM)."},
+    VersionTag:{t:"VersionTag", a:"Versione del motore/metodo usato nel report.", s:"Governance & versioning (interno)."},
+    SyncID:{t:"SyncID", a:"Chiave audit: <TICKER>_<YYYYMMDD>_F3/F1.", s:"Audit Trail (interno)."},
+    Freshness:{t:"Freshness", a:"Controllo freschezza dati ≤ T-1 prima della validazione.", s:"Policy di qualità dati (interno)."},
+    OCR_Conf:{t:"OCR_Confidence", a:"Attendibilità dell’estrazione numerica (0–1).", s:"CFA Institute – Quantitative Methods; Kahn & Strong (1998) Data Quality."},
+    DataIntegrity:{t:"Data Integrity", a:"Completezza/consistenza del dataset (0–1).", s:"Kahn & Strong (1998); Pipino, Lee & Wang (2002)."},
+    FeedSync:{t:"Feed Sync", a:"Allineamento temporale tra feed e pannelli (0–1).", s:"Hasbrouck (2007) – sincronizzazione dati intraday."},
+    ConfidenceFinal:{t:"Confidence (final)", a:"Euristica conservativa: min(OCR_Conf, DataIntegrity, FeedSync, Confidence_H4, Confidence_H1).", s:"Heuristic gating per audit (metodo interno)."},
+    StatoReport:{t:"Stato report", a:"ACTIVE/HOLD/REVIEW in base a Confidence e copertura input.", s:"Policy stato (interno)."},
+    TapeNotes:{t:"TapeNotes (REG close)", a:"Note micro-strutturali sull’asta di chiusura (AuctionShare%, Intensity, VWAP, Stickiness).", s:"Hasbrouck (2007); O’Hara (1995)."},
+    Missing:{t:"Missing (critici)", a:"Elenco campi critici mancanti → N/D; se impattano Confidence ⇒ HOLD.", s:"Policy N/D (interno)."},
+    PolicyND:{t:"Policy N/D", a:"Non si stimano i mancanti; si documentano e si declassa lo stato se critici.", s:"Governance trasparenza (interno)."},
+    Cromatica:{t:"Criteri cromatici", a:"🟩 favorevole/sopra media · 🟨 neutro/attenzione · 🟥 sfavorevole/sotto media · — neutro/incompleto.", s:"Legenda cromatica standard del desk."},
+    NoteHeader:{t:"Note header", a:"Annotazioni qualitative utili alla lettura del report.", s:"Metodologia di reporting (interno)."}
+  };
+
+  // bind azione popup
+  document.addEventListener('click', (e)=>{
+    const b = e.target.closest('.hx');
+    if(!b) return;
+    const k = b.dataset.k, d = EXPL[k] || {t:k, a:"Descrizione non disponibile.", s:"—"};
+    const wrap = document.createElement('div');
+    wrap.className = 'hx-pop';
+    wrap.innerHTML = `
+      <div class="hx-card">
+        <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px">
+          <h3>${d.t}</h3>
+          <button class="hx hx-close" aria-label="Chiudi">×</button>
+        </div>
+        <div class="src">Fonte accademica: ${d.s}</div>
+        <div class="text-sm text-slate-800">${d.a}</div>
+      </div>`;
+    wrap.addEventListener('click', ev=>{ if(ev.target===wrap) wrap.remove(); });
+    wrap.querySelector('.hx-close').onclick = ()=> wrap.remove();
+    document.body.appendChild(wrap);
+  });
+})();
+</script>
 
   <!-- proseguirai qui con le sezioni del report (F1–F7, ecc.) -->
 </body>
