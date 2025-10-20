@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Swing Master · Report Runtime</title>
+  <!-- Tailwind CDN (no build) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @media print {
+      @page { size: A4 landscape; margin: 10mm; }
+      .noprint { display: none !important; }
+      .sticky { position: static !important; }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-b from-white to-gray-50 text-gray-900">
+  <!-- Top bar -->
+  <div class="sticky top-0 z-20 backdrop-blur bg-white/70 border-b border-gray-200 noprint">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-8 w-8 rounded-xl bg-gray-900 text-white grid place-content-center font-bold">SM</div>
+        <div>
+          <div class="text-sm text-gray-500">Swing Master · Report Runtime</div>
+          <div id="bar-title" class="font-semibold">—</div>
+        </div>
+        <div id="chip-state" class="ml-3"></div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="window.print()" class="px-3 py-1.5 rounded-lg border text-sm">Stampa / PDF</button>
+        <button id="btn-copy" class="px-3 py-1.5 rounded-lg border text-sm">Copia link</button>
+        <button id="btn-reload" class="px-3 py-1.5 rounded-lg border text-sm">Ricarica</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+    <!-- Header -->
+    <div class="rounded-2xl shadow-sm border border-gray-200">
+      <div class="p-4 border-b"><h2 class="text-lg font-semibold">Header · Dati generali</h2></div>
+      <div class="p-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+        <div class="space-y-2">
+          <div class="flex justify-between"><span class="text-gray-500">Ticker</span><span id="H-Ticker" class="font-semibold">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">Data</span><span id="H-Date" class="font-semibold text-gray-700">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">AuditPathID</span><span id="H-Audit" class="font-semibold text-gray-700">—</span></div>
+        </div>
+        <div class="space-y-2">
+          <div class="flex justify-between"><span class="text-gray-500">Versione</span><span id="H-Version" class="font-semibold text-gray-700">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">Analyst</span><span id="H-Analyst" class="font-semibold text-gray-700">Swing Master AI</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">Timestamp</span><span id="H-Ts" class="font-semibold text-gray-700">—</span></div>
+        </div>
+        <div class="space-y-2">
+          <div class="mb-2 flex justify-between"><span class="text-gray-500">RiskWindow</span>
+            <span id="F1-RiskWindow" class="font-semibold">—</span>
+          </div>
+          <div class="text-xs text-gray-500">Finalità educativa e informativa — non costituisce consulenza finanziaria (MiFID II).</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- F1–F2 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+      <div class="rounded-2xl shadow-sm border border-gray-200">
+        <div class="p-4 border-b"><h2 class="text-lg font-semibold">F1–F2 · Macro & Sentiment</h2></div>
+        <div class="p-4 grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+          <div class="flex justify-between"><span class="text-gray-500">MacroRegime</span><span id="F1-Macro">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">SCI</span><span id="F1-SCI">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">IPI</span><span id="F1-IPI">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">OPI</span><span id="F1-OPI">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">ICR</span><span id="F1-ICR">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">GeoRisk</span><span id="F1-Geo">—</span></div>
+        </div>
+      </div>
+
+      <div class="rounded-2xl shadow-sm border border-gray-200">
+        <div class="p-4 border-b"><h2 class="text-lg font-semibold">F3 · Analisi Tecnica (MTF)</h2></div>
+        <div class="p-4 grid grid-cols-2 gap-4 text-sm">
+          <div class="flex justify-between"><span class="text-gray-500">MTF_Score</span><span id="F3-MTF" class="font-semibold">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">Prob SwingUp</span><span id="F3-Pswing">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">Prob LTUp</span><span id="F3-Plt">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">Bias Intermarket Score (F4)</span><span id="F4-Bias">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- F5-F6-F7 -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6">
+      <div class="rounded-2xl shadow-sm border border-gray-200">
+        <div class="p-4 border-b"><h2 class="text-lg font-semibold">F5 · Setup (educativo)</h2></div>
+        <div class="p-4 grid grid-cols-2 gap-4 text-sm">
+          <div class="flex justify-between"><span class="text-gray-500">Bias</span><span id="F5-Bias" class="font-semibold">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">FlowScore</span><span id="F5-Flow">—</span></div>
+        </div>
+        <div class="px-4 pb-4 text-xs text-gray-500">Linguaggio descrittivo (no operatività / no raccomandazioni).</div>
+      </div>
+
+      <div class="rounded-2xl shadow-sm border border-gray-200">
+        <div class="p-4 border-b"><h2 class="text-lg font-semibold">F6 · Gestione Dinamica (metriche)</h2></div>
+        <div class="p-4 grid grid-cols-2 gap-4 text-sm">
+          <div class="flex justify-between"><span class="text-gray-500">DisciplineScore</span><span id="F6-Disc">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">ConsistencyIndex</span><span id="F6-Cons">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">EducationalEfficiency</span><span id="F6-Edu">—</span></div>
+        </div>
+      </div>
+
+      <div class="rounded-2xl shadow-sm border border-gray-200">
+        <div class="p-4 border-b"><h2 class="text-lg font-semibold">F7 · Audit & Feedback</h2></div>
+        <div class="p-4 text-sm">
+          <div class="mb-2"><span class="text-gray-500">Funziona:</span><ul id="F7-Ok" class="list-disc ml-5"></ul></div>
+          <div class="mb-2"><span class="text-gray-500">Non Funziona:</span><ul id="F7-Ko" class="list-disc ml-5"></ul></div>
+          <div><span class="text-gray-500">Lesson Learned:</span><ul id="F7-Ls" class="list-disc ml-5"></ul></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="mt-6 rounded-2xl shadow-sm border border-gray-200">
+      <div class="p-4 border-b"><h2 class="text-lg font-semibold">Note & Disclaimer</h2></div>
+      <div id="Notes" class="p-4 text-sm text-gray-700 leading-relaxed"></div>
+    </div>
+
+    <!-- Helper -->
+    <div class="mt-6 text-xs text-gray-500">
+      <div id="Alert" class="mb-2"></div>
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="font-mono">ID:</span><code id="DebugId" class="px-2 py-1 bg-gray-100 rounded">—</code>
+        <span class="font-mono">src:</span><code id="DebugSrc" class="px-2 py-1 bg-gray-100 rounded">—</code>
+      </div>
+    </div>
+  </div>
+
+  <script src="./runtime.js"></script>
+</body>
+</html>
