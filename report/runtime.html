@@ -52,19 +52,13 @@
     .share-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
     @media (min-width:420px){ .share-grid{grid-template-columns:1fr 1fr 1fr} }
     .badge-url{background:#f8fafc;border:1px solid #e5e7eb}
-    .qr-wrap img{width:180px;height:180px;border-radius:.75rem;border:1px solid #e5e7eb;background:#fff}
+    .qr-wrap img{border-radius:.75rem;border:1px solid #e5e7eb;background:#fff}
 
     /* Animazioni popup */
     @keyframes fadeBackdropIn { from { opacity: 0 } to { opacity: 1 } }
     @keyframes fadeBackdropOut { from { opacity: 1 } to { opacity: 0 } }
-    @keyframes popIn {
-      from { opacity: 0; transform: translateY(6px) scale(.98) }
-      to   { opacity: 1; transform: translateY(0) scale(1) }
-    }
-    @keyframes popOut {
-      from { opacity: 1; transform: translateY(0) scale(1) }
-      to   { opacity: 0; transform: translateY(4px) scale(.985) }
-    }
+    @keyframes popIn { from { opacity: 0; transform: translateY(6px) scale(.98) } to { opacity: 1; transform: translateY(0) scale(1) } }
+    @keyframes popOut { from { opacity: 1; transform: translateY(0) scale(1) } to { opacity: 0; transform: translateY(4px) scale(.985) } }
     .popup-backdrop { animation: fadeBackdropIn .18s ease forwards }
     .popup-backdrop.closing { animation: fadeBackdropOut .16s ease forwards }
     .popup-card { animation: popIn .20s cubic-bezier(.22,.61,.36,1) forwards }
@@ -98,7 +92,7 @@
     </div>
   </header>
 
-  <!-- Script header + share (mobile nativo, desktop share sheet + is.gd) -->
+  <!-- Script header + share (mobile nativo, desktop share sheet con QR sopra pulsanti) -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
@@ -109,7 +103,6 @@
       btnPrint?.addEventListener('click', () => window.print());
 
       btnShare?.addEventListener('click', async () => {
-        // URL completo corrente; se manca ?id=..., aggiunge fallback demo
         const urlObj = new URL(window.location.href);
         if (!urlObj.searchParams.get('id')) {
           urlObj.searchParams.set('id', 'sample-qyld-2025-10-20');
@@ -117,14 +110,14 @@
         const longUrl = urlObj.toString();
         const title = 'Tradelia · Report Runtime';
         const text  = 'Guarda il report completo su Tradelia AI';
-        const isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
 
         // 📱 Mobile → share nativa se disponibile
+        const isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
         if (isMobile && navigator.share) {
-          try { await navigator.share({ title, text, url: longUrl }); return; } catch(_) {}
+          try { await navigator.share({ title, text, url: longUrl }); return; } catch(_) { /* fallback desktop */ }
         }
 
-        // 💻 Desktop → share sheet con opzioni avanzate
+        // 💻 Desktop → share sheet custom con QR sopra ai pulsanti
         openShareSheet({ longUrl, title, text });
       });
 
@@ -142,7 +135,7 @@
         } finally { clearTimeout(t); }
       }
 
-      /* ------ Share Sheet desktop ------ */
+      /* ------ Share Sheet desktop migliorato ------ */
       function openShareSheet({ longUrl, title, text }) {
         const backdrop = document.createElement('div');
         backdrop.className = 'popup-backdrop fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50';
@@ -181,21 +174,23 @@
             <span id="shortStatus" class="text-xs text-slate-400">(non attivo)</span>
           </div>
 
-          <div class="grid md:grid-cols-3 gap-4">
-            <div class="md:col-span-2">
-              <div id="shareGrid" class="share-grid mb-3"></div>
-
-              <div id="urlBox" class="badge-url text-[12px] p-2 rounded-md font-mono select-all break-all mb-2">${currentUrl}</div>
-              <div class="flex gap-2">
-                <button id="copyLink" class="sbtn"><i data-lucide="copy"></i><span>Copia link</span></button>
-                <a id="openNew" class="sbtn" href="${currentUrl}" target="_blank" rel="noopener"><i data-lucide="external-link"></i><span>Apri</span></a>
-              </div>
-              <p class="text-[11px] text-slate-500 mt-2">Suggerimento: usa i pulsanti sopra per aprire la condivisione del servizio scelto.</p>
+          <!-- Wrapper verticale: QR sopra pulsanti, centrato -->
+          <div class="space-y-3 sm:space-y-4">
+            <!-- QR centrato e responsivo -->
+            <div class="qr-wrap mx-auto w-[164px] sm:w-[180px] md:w-[200px] lg:w-[220px]">
+              <img id="qrImg" alt="QR per condivisione" class="w-full h-auto rounded-lg border border-slate-200 shadow-sm bg-white p-2" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(currentUrl)}" />
             </div>
 
-            <div class="qr-wrap flex md:block items-center justify-center">
-              <img id="qrImg" alt="QR per condivisione" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(currentUrl)}" />
+            <!-- Pulsanti di condivisione -->
+            <div id="shareGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2 justify-items-center sm:justify-items-start"></div>
+
+            <!-- Link + azioni -->
+            <div id="urlBox" class="badge-url text-[12px] p-2 rounded-md font-mono select-all break-all">${currentUrl}</div>
+            <div class="flex gap-2">
+              <button id="copyLink" class="sbtn"><i data-lucide="copy"></i><span>Copia link</span></button>
+              <a id="openNew" class="sbtn" href="${currentUrl}" target="_blank" rel="noopener"><i data-lucide="external-link"></i><span>Apri</span></a>
             </div>
+            <p class="text-[11px] text-slate-500">Suggerimento: usa i pulsanti sopra per aprire la condivisione del servizio scelto.</p>
           </div>
         `;
 
@@ -221,10 +216,9 @@
         };
 
         const updateAll = (u) => {
-          currentUrl = u;
           urlBox.textContent = u;
           openNew.href = u;
-          qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(u)}`;
+          qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(u)}`;
           renderTargets(u);
         };
 
@@ -241,7 +235,7 @@
         // Copia link
         card.querySelector('#copyLink').addEventListener('click', async () => {
           try{
-            await navigator.clipboard.writeText(currentUrl);
+            await navigator.clipboard.writeText(urlBox.textContent);
             const btn = card.querySelector('#copyLink');
             btn.innerHTML = '<i data-lucide="check"></i><span>Copiato</span>';
             lucide.createIcons(); setTimeout(close, 900);
@@ -281,4 +275,4 @@
 
   <!-- proseguirai qui con le sezioni del report (F1–F7, ecc.) -->
 </body>
-</html>    
+</html>
