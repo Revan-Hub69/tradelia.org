@@ -1,81 +1,26 @@
 {
   "Header": {
-    "Ticker": "XXXX",
-    "Date": "YYYY-MM-DD",
-    "AuditPathID": "SWG25_ALL_XXXX_YYYYMMDD_0001",
+    "Ticker": "QYLD",
+    "Date": "2025-10-20",
+    "AuditPathID": "SWG25_ALL_QYLD_20251020_0001",
     "Version": "v1.0",
     "State": "ACTIVE",
-    "Timestamp": "YYYY-MM-DDTHH:MM:SSZ",
-    "Analyst": "Swing Master AI"
-  },
-  "Meta": {
-    "Timestamp_EuropeRome": "2025-10-20 12:30",
-    "AuditPathID": "SWG25F1_20251020_002",
-    "Version": "v14.2"
-  },
-  "FromF1_pass": {
-    "MacroRegime": "Neutro–Cauto",
-    "MBI": "Flat-to-Soft",
-    "SCI": "Negativo (retail)",
-    "IPI": "N/D (CFTC blackout)",
-    "OPI_macro": "n/d",
-    "ICR_pre": "Volatility-led stress",
-    "GeoRisk": "Shutdown + US–China trade",
-    "RiskWindow": 0.80
-  },
-  "MacroReading": {
-    "Rates": {
-      "UST10Y_pct": 4.05,
-      "Breakeven10Y_pct": 2.27,
-      "Real10Y_pct_approx": 1.78,
-      "Comment": "Tassi reali positivi e stabili → condizioni finanziarie non accomodanti."
-    },
-    "Credit": {
-      "HY_OAS_pct": 3.04,
-      "Regime": "OAS contenuto vs media storica",
-      "Comment": "Nessun segnale di stress sistemico dal credito high yield."
-    },
-    "InflationExpectations": {
-      "Anchoring": "Solida (area ~2.3%)",
-      "Bias": "Neutrale",
-      "Comment": "Aspettative di medio-lungo ancorate; rischio inflazionistico percepito moderato."
-    },
-    "Volatility": {
-      "VIX": 25.31,
-      "VIX3M": 24.87,
-      "TermStructure": "Backwardation",
-      "Comment": "Stress tattico di mercato, sensibile a newsflow macro/eventi."
-    },
-    "EventRisk": {
-      "Upcoming": ["CPI (T-4)", "FOMC (T-8)", "Shutdown attivo"],
-      "Comment": "Finestra di rischio elevata; probabile ampliamento intraday della volatilità."
-    },
-    "Synthesis": "Quadro macro complessivo neutro–cauto: tassi reali >0, OAS contenuto, inflazione attesa ancorata; il driver di breve è la volatilità/event risk."
-  },
-  "Intermarket": {
-    "VIX": 25.31,
-    "VIX3M": 24.87,
-    "VIXContango": -0.44,
-    "HY_OAS": 3.04,
-    "DGS10_pct": 4.05,
-    "T10YIE_pct": 2.27,
-    "Dates": {
-      "VIX/VIX3M": "2025-10-16",
-      "HY_OAS": "2025-10-16",
-      "DGS10": "2025-10-15",
-      "T10YIE": "2025-10-17"
-    }
-  },
-  "Events": {
-    "CPI_next": "2025-10-24",
-    "FOMC_next": "2025-10-28",
-    "Shutdown": "Active"
-  },
-  "QualityFlags": {
-    "AAII_mirror": true,
-    "CFTC_blackout": true
-  },
-  "Gates": {
-    "Freshness": "OK"
+    "Timestamp": "2025-10-20T10:00:00Z",
+    "Analyst": "Swing Master AI",
+
+    "Session": "REG (adjusted)",
+    "StartDate": "2025-10-14",
+    "EndDate": "2025-10-20",
+    "Venue": "NASDAQ",
+    "Validation": "OK / ADR-venue: —",
+    "VersionTag": "F3-v7.3",
+    "SyncID": "QYLD_20251020_F3",
+    "Freshness": "OK",
+    "OCR_Conf": 0.98,
+    "DataIntegrity": 0.94,
+    "FeedSync": 0.91,
+    "ConfidenceFinal": 0.91,
+    "TapeNotes": "AuctionShare%=12; Intensity/min=3.1; LastMinuteVWAP=ok; CloseStickiness=alto",
+    "Missing": "n/d"
   }
 }
