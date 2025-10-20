@@ -105,3 +105,43 @@
       setText("bar-title", "Demo · —");
     });
 })();
+// --- helper per leggere path annidati tipo "Header.StartDate"
+const get = (obj, path, fallback = "—") =>
+  path.split(".").reduce((o, k) => (o && o[k] != null ? o[k] : null), obj) ?? fallback;
+
+// --- mapping JSON -> ID DOM (header ticker)
+const HEADER_MAP = {
+  "H-Session":       "Header.Session",        // es: "REG (adjusted)"
+  "H-Start":         "Header.StartDate",      // "YYYY-MM-DD"
+  "H-End":           "Header.EndDate",        // "YYYY-MM-DD"
+  "H-Ticker":        "Header.Ticker",         // "QYLD"
+  "H-Venue":         "Header.Venue",          // "NASDAQ"
+  "H-Validation":    "Header.Validation",     // "OK / ADR-venue: —"
+  "H-VersionTag":    "Header.VersionTag",     // "F3-v7.3"
+  "H-SyncID":        "Header.SyncID",         // "TICKER_YYYYMMDD_F3"
+  "H-Freshness":     "Header.Freshness",      // "OK/HOLD"
+  "H-OCR":           "Header.OCR_Conf",       // 0.00–1.00
+  "H-DataIntegrity": "Header.DataIntegrity",  // 0.00–1.00
+  "H-FeedSync":      "Header.FeedSync",       // 0.00–1.00
+  "H-Confidence":    "Header.ConfidenceFinal",// 0.00–1.00
+  "H-State":         "Header.State",          // ACTIVE / HOLD / REVIEW
+  "H-TapeNotes":     "Header.TapeNotes",      // stringa descrittiva
+  "H-Missing":       "Header.Missing",        // "n/d" o lista
+  // opzionali (se li vuoi popolabili via JSON):
+  // "H-PolicyND":   "Header.PolicyND",
+  // "H-Cromatica":  "Header.Cromatica",
+  // "H-NoteHeader": "Header.NoteHeader",
+};
+
+// --- setter compatto
+const set = (id, v) => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (Array.isArray(v)) el.textContent = v.join(", ");
+  else el.textContent = (v ?? "—");
+};
+
+// --- call da eseguire dopo aver ottenuto `data` (il JSON del report)
+Object.entries(HEADER_MAP).forEach(([domId, jsonPath]) => {
+  set(domId, get(data, jsonPath, "—"));
+});
