@@ -31,9 +31,24 @@
     .btn i{ width:18px; height:18px; }
 
     /* Header compatto su mobile */
-    .hdr {
-      backdrop-filter:saturate(1.2) blur(6px);
+    .hdr { backdrop-filter:saturate(1.2) blur(6px); }
+
+    /* Animazioni popup desktop */
+    @keyframes fadeBackdropIn { from { opacity: 0 } to { opacity: 1 } }
+    @keyframes fadeBackdropOut { from { opacity: 1 } to { opacity: 0 } }
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(6px) scale(.98) }
+      to   { opacity: 1; transform: translateY(0) scale(1) }
     }
+    @keyframes popOut {
+      from { opacity: 1; transform: translateY(0) scale(1) }
+      to   { opacity: 0; transform: translateY(4px) scale(.985) }
+    }
+    .popup-backdrop { animation: fadeBackdropIn .18s ease forwards; }
+    .popup-backdrop.closing { animation: fadeBackdropOut .16s ease forwards; }
+    .popup-card { animation: popIn .20s cubic-bezier(.22,.61,.36,1) forwards; }
+    .popup-card.closing { animation: popOut .16s ease forwards; }
+
     @media print { .noprint{display:none!important} }
   </style>
 </head>
@@ -52,48 +67,100 @@
       <!-- Azioni (icone su mobile, testo da sm+) -->
       <div class="flex items-center gap-1.5 sm:gap-2">
         <button id="btn-print" class="btn btn-primary" aria-label="Stampa / PDF">
-          <i data-lucide="printer"></i><span class="hidden sm:inline">Stampa / PDF</span>
+          <i data-lucide="printer" aria-hidden="true"></i><span class="hidden sm:inline">Stampa / PDF</span>
         </button>
         <button id="btn-share" class="btn btn-primary" aria-label="Condividi">
-          <i data-lucide="share-2"></i><span class="hidden sm:inline">Condividi</span>
+          <i data-lucide="share-2" aria-hidden="true"></i><span class="hidden sm:inline">Condividi</span>
         </button>
       </div>
     </div>
   </header>
 
   <script>
-    // Inizializza icone
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
 
-      // Stampa
-      document.getElementById('btn-print')?.addEventListener('click', () => window.print());
+      const btnPrint = document.getElementById('btn-print');
+      const btnShare = document.getElementById('btn-share');
 
-      // Condividi
-      document.getElementById('btn-share')?.addEventListener('click', async () => {
+      btnPrint?.addEventListener('click', () => window.print());
+
+      btnShare?.addEventListener('click', async () => {
         const params = new URLSearchParams(window.location.search);
         const id = params.get('id') || 'sample-qyld-2025-10-20';
         const url = `https://tradelia.org/report/runtime.html?id=${id}`;
 
-        try {
-          if (navigator.share) {
+        const isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+
+        // 📱 mobile: share nativa se disponibile
+        if (isMobile && navigator.share) {
+          try {
             await navigator.share({
               title: 'Tradelia · Report Runtime',
               text: 'Guarda il report completo su Tradelia AI',
               url
             });
-          } else {
-            await navigator.clipboard.writeText(url);
-            // feedback discreto su mobile/desktop
-            const prev = document.getElementById('btn-share');
-            const old = prev.innerHTML;
-            prev.innerHTML = '<i data-lucide="check"></i><span class="hidden sm:inline">Copiato</span>';
-            lucide.createIcons();
-            setTimeout(() => { prev.innerHTML = old; lucide.createIcons(); }, 1400);
-          }
-        } catch (e) {
-          console.error(e);
+            return;
+          } catch (_) { /* utente annulla */ }
         }
+
+        // 💻 desktop (o mobile senza share nativa): popup elegante con animazioni
+        openSharePopup(url);
       });
+
+      function openSharePopup(url) {
+        const backdrop = document.createElement('div');
+        backdrop.className =
+          'popup-backdrop fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50';
+
+        const card = document.createElement('div');
+        card.className =
+          'popup-card bg-white rounded-xl shadow-2xl p-5 w-[92%] max-w-sm text-center border border-slate-200';
+
+        card.innerHTML = `
+          <h2 class="font-semibold text-slate-800 mb-2">Condividi report</h2>
+          <p class="text-sm text-slate-600 mb-4">Copia il link e invialo dove preferisci:</p>
+          <div class="bg-slate-50 border border-slate-200 text-[12px] p-2 rounded-md font-mono mb-4 select-all break-all">${url}</div>
+          <div class="flex justify-center gap-3">
+            <button id="copyLink" class="btn bg-blue-50 border-blue-200 text-blue-700">
+              <i data-lucide="copy"></i><span class="hidden sm:inline">Copia link</span>
+            </button>
+            <button id="closePopup" class="btn border-slate-300">
+              <i data-lucide="x"></i><span class="hidden sm:inline">Chiudi</span>
+            </button>
+          </div>
+        `;
+
+        backdrop.appendChild(card);
+        document.body.appendChild(backdrop);
+        lucide.createIcons();
+
+        const close = () => {
+          backdrop.classList.add('closing');
+          card.classList.add('closing');
+          card.addEventListener('animationend', () => backdrop.remove(), { once: true });
+        };
+
+        backdrop.addEventListener('click', (e) => { if (e.target === backdrop) close(); });
+        card.querySelector('#closePopup').addEventListener('click', close);
+
+        card.querySelector('#copyLink').addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(url);
+            const btn = card.querySelector('#copyLink');
+            btn.innerHTML = '<i data-lucide="check"></i><span class="hidden sm:inline">Copiato</span>';
+            lucide.createIcons();
+            setTimeout(close, 900);
+          } catch {
+            // fallback minimo: selezione del testo
+            const selection = window.getSelection();
+            const range = document.createRange();
+            const box = card.querySelector('div.font-mono');
+            range.selectNodeContents(box);
+            selection.removeAllRanges();
+            selection.addRange(range);
+          }
+        });
+      }
     });
   </script>
