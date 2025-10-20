@@ -1,0 +1,18 @@
+{
+  "Header": {
+    "Ticker": "QYLD",
+    "Date": "2025-10-20",
+    "AuditPathID": "SWG25_ALL_QYLD_20251020_0001",
+    "Version": "v1.0",
+    "State": "ACTIVE",
+    "Timestamp": "2025-10-20T10:00:00Z",
+    "Analyst": "Swing Master AI"
+  },
+  "F1": { "MacroRegime": 0.62, "SCI": 0.55, "IPI": 0.48, "OPI": 0.44, "ICR": 0.51, "GeoRisk": 0.33, "RiskWindow": 0.60 },
+  "F3": { "MTF_Score": 71, "Prob_SwingUp": 0.68, "Prob_LTUp": 0.59 },
+  "F4": { "BiasIntermarketScore": 0.32 },
+  "F5": { "Bias": "Costruttivo", "FlowScore": 0.72 },
+  "F6": { "DisciplineScore": 0.82, "ConsistencyIndex": 0.78, "EducationalEfficiency": 0.81 },
+  "F7": { "Feedback": { "Funziona": ["Coerenza volumi"], "NonFunziona": ["Up-side limitato"], "Lesson": ["Integrare peers/ETF"] } },
+  "Notes": "Analisi educativa — non costituisce consulenza finanziaria (MiFID II). Fonti: Bloomberg, Reuters, FRED, CFTC, ETFdb."
+}
