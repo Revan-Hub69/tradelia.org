@@ -10,46 +10,275 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 
   <style>
+    /* Base */
     body{
       font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
       background:#f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
       background-size:280px; color:#0f172a;
     }
+    ::-webkit-scrollbar { width:10px; height:10px }
+    ::-webkit-scrollbar-thumb { background:rgba(80,160,200,.4); border-radius:100vh }
+    ::-webkit-scrollbar-thumb:hover { background:rgba(80,160,200,.6) }
+    * { scrollbar-width:thin; scrollbar-color:rgba(80,160,200,.5) #e5e7eb }
+
+    /* Pulsanti compatti + effetto push */
     .btn {
       display:inline-flex; align-items:center; gap:.45rem;
       padding:.4rem .6rem; border-radius:.6rem; font-weight:600; font-size:14px;
       border:1px solid #e5e7eb; background:linear-gradient(#fff,#f8fafc);
-      transition:transform .08s ease, box-shadow .12s ease;
+      box-shadow:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.03);
+      transition:transform .08s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease;
+      -webkit-tap-highlight-color:transparent;
     }
     .btn:hover{ background:linear-gradient(#fff,#f1f5f9); border-color:#dbe3ea }
-    .btn:active{ transform:translateY(1px); }
+    .btn:active{ transform:translateY(1px); box-shadow:inset 0 1px 0 rgba(0,0,0,.06) }
+    .btn:focus-visible{ outline:none; box-shadow:0 0 0 2px rgba(56,189,248,.5) }
+    .btn-primary{ color:#0b2a3f }
     .btn i{ width:18px; height:18px }
+
+    /* Header compatto */
     .hdr { backdrop-filter:saturate(1.2) blur(6px) }
+
+    /* Share sheet desktop */
+    .sbtn{
+      display:inline-flex;align-items:center;gap:.5rem;
+      padding:.5rem .6rem;border-radius:.65rem;border:1px solid #e5e7eb;
+      background:#fff;font-weight:600;font-size:13px;
+      transition:transform .08s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease;
+    }
+    .sbtn:hover{background:#f8fafc;border-color:#dbe3ea}
+    .sbtn:active{transform:translateY(1px)}
+    .sbtn i{width:18px;height:18px}
+    .share-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+    @media (min-width:420px){ .share-grid{grid-template-columns:1fr 1fr 1fr} }
+    .badge-url{background:#f8fafc;border:1px solid #e5e7eb}
+    .qr-wrap img{width:180px;height:180px;border-radius:.75rem;border:1px solid #e5e7eb;background:#fff}
+
+    /* Animazioni popup */
+    @keyframes fadeBackdropIn { from { opacity: 0 } to { opacity: 1 } }
+    @keyframes fadeBackdropOut { from { opacity: 1 } to { opacity: 0 } }
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(6px) scale(.98) }
+      to   { opacity: 1; transform: translateY(0) scale(1) }
+    }
+    @keyframes popOut {
+      from { opacity: 1; transform: translateY(0) scale(1) }
+      to   { opacity: 0; transform: translateY(4px) scale(.985) }
+    }
+    .popup-backdrop { animation: fadeBackdropIn .18s ease forwards }
+    .popup-backdrop.closing { animation: fadeBackdropOut .16s ease forwards }
+    .popup-card { animation: popIn .20s cubic-bezier(.22,.61,.36,1) forwards }
+    .popup-card.closing { animation: popOut .16s ease forwards }
+
+    @media print { .noprint{display:none!important} }
   </style>
 </head>
 
 <body class="text-gray-900">
+  <!-- HEADER -->
   <header class="hdr sticky top-0 z-50 bg-white/90 border-b border-slate-200 noprint">
     <div class="max-w-7xl mx-auto px-3 sm:px-5 h-12 sm:h-14 flex items-center justify-between">
+      <!-- Brand + titolo -->
       <div class="flex items-center gap-2 sm:gap-3 min-w-0">
         <a href="/index.html" class="shrink-0 text-lg sm:text-xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
           <span class="text-slate-900">TRADELIA</span><span class="text-blue-600">&bull;AI</span>
         </a>
         <span class="text-slate-400 text-xs sm:text-sm truncate">Report Runtime</span>
       </div>
+
+      <!-- Azioni -->
       <div class="flex items-center gap-1.5 sm:gap-2">
         <button id="btn-print" class="btn btn-primary" aria-label="Stampa / PDF">
-          <i data-lucide="printer"></i><span class="hidden sm:inline">Stampa / PDF</span>
+          <i data-lucide="printer" aria-hidden="true"></i><span class="hidden sm:inline">Stampa / PDF</span>
         </button>
         <button id="btn-share" class="btn btn-primary" aria-label="Condividi">
-          <i data-lucide="share-2"></i><span class="hidden sm:inline">Condividi</span>
+          <i data-lucide="share-2" aria-hidden="true"></i><span class="hidden sm:inline">Condividi</span>
         </button>
       </div>
     </div>
   </header>
 
+  <!-- Script header + share (mobile nativo, desktop share sheet + is.gd) -->
   <script>
-    document.addEventListener('DOMContentLoaded',()=>{ lucide.createIcons(); });
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+
+      const btnPrint = document.getElementById('btn-print');
+      const btnShare = document.getElementById('btn-share');
+
+      btnPrint?.addEventListener('click', () => window.print());
+
+      btnShare?.addEventListener('click', async () => {
+        // URL completo corrente; se manca ?id=..., aggiunge fallback demo
+        const urlObj = new URL(window.location.href);
+        if (!urlObj.searchParams.get('id')) {
+          urlObj.searchParams.set('id', 'sample-qyld-2025-10-20');
+        }
+        const longUrl = urlObj.toString();
+        const title = 'Tradelia · Report Runtime';
+        const text  = 'Guarda il report completo su Tradelia AI';
+        const isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+
+        // 📱 Mobile → share nativa se disponibile
+        if (isMobile && navigator.share) {
+          try { await navigator.share({ title, text, url: longUrl }); return; } catch(_) {}
+        }
+
+        // 💻 Desktop → share sheet con opzioni avanzate
+        openShareSheet({ longUrl, title, text });
+      });
+
+      /* ------ Shortener is.gd (gratuito, no API key) ------ */
+      async function shortenUrl_isgd(longUrl, { timeoutMs = 5000 } = {}) {
+        const ctrl = new AbortController();
+        const t = setTimeout(() => ctrl.abort(), timeoutMs);
+        try {
+          const api = `https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`;
+          const res = await fetch(api, { signal: ctrl.signal });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const data = await res.json();
+          if (data.shorturl) return data.shorturl;
+          throw new Error(data.errormessage || 'is.gd error');
+        } finally { clearTimeout(t); }
+      }
+
+      /* ------ Share Sheet desktop ------ */
+      function openShareSheet({ longUrl, title, text }) {
+        const backdrop = document.createElement('div');
+        backdrop.className = 'popup-backdrop fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50';
+
+        const card = document.createElement('div');
+        card.className = 'popup-card bg-white rounded-xl shadow-2xl p-5 w-[92%] max-w-lg text-left border border-slate-200';
+
+        let currentUrl = longUrl;
+        const enc = encodeURIComponent;
+        const targets = (u) => ([
+          { label:'WhatsApp',   href:`https://wa.me/?text=${enc(text+' ') + enc(u)}`, icon:'message-square' },
+          { label:'Telegram',   href:`https://t.me/share/url?url=${enc(u)}&text=${enc(text)}`, icon:'send' },
+          { label:'X (Twitter)',href:`https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(u)}`, icon:'twitter' },
+          { label:'LinkedIn',   href:`https://www.linkedin.com/sharing/share-offsite/?url=${enc(u)}`, icon:'linkedin' },
+          { label:'Reddit',     href:`https://www.reddit.com/submit?url=${enc(u)}&title=${enc(title)}`, icon:'square' },
+          { label:'Facebook',   href:`https://www.facebook.com/sharer/sharer.php?u=${enc(u)}`, icon:'facebook' },
+          { label:'Email',      href:`mailto:?subject=${enc(title)}&body=${enc(text)}%0A%0A${enc(u)}`, icon:'mail' },
+        ]);
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-3 mb-3">
+            <div>
+              <h2 class="font-semibold text-slate-800 leading-tight">${title}</h2>
+              <p class="text-xs text-slate-500 mt-0.5">Condividi il link del report</p>
+            </div>
+            <button id="closePopup" class="btn" aria-label="Chiudi">
+              <i data-lucide="x"></i><span class="hidden sm:inline">Chiudi</span>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2 mb-3">
+            <label class="text-sm text-slate-700 flex items-center gap-2">
+              <input id="useShort" type="checkbox" class="h-4 w-4 accent-sky-600">
+              <span>Usa link breve (is.gd)</span>
+            </label>
+            <span id="shortStatus" class="text-xs text-slate-400">(non attivo)</span>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="md:col-span-2">
+              <div id="shareGrid" class="share-grid mb-3"></div>
+
+              <div id="urlBox" class="badge-url text-[12px] p-2 rounded-md font-mono select-all break-all mb-2">${currentUrl}</div>
+              <div class="flex gap-2">
+                <button id="copyLink" class="sbtn"><i data-lucide="copy"></i><span>Copia link</span></button>
+                <a id="openNew" class="sbtn" href="${currentUrl}" target="_blank" rel="noopener"><i data-lucide="external-link"></i><span>Apri</span></a>
+              </div>
+              <p class="text-[11px] text-slate-500 mt-2">Suggerimento: usa i pulsanti sopra per aprire la condivisione del servizio scelto.</p>
+            </div>
+
+            <div class="qr-wrap flex md:block items-center justify-center">
+              <img id="qrImg" alt="QR per condivisione" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(currentUrl)}" />
+            </div>
+          </div>
+        `;
+
+        backdrop.appendChild(card);
+        document.body.appendChild(backdrop);
+        lucide.createIcons();
+
+        // Riferimenti DOM
+        const shareGrid   = card.querySelector('#shareGrid');
+        const urlBox      = card.querySelector('#urlBox');
+        const qrImg       = card.querySelector('#qrImg');
+        const openNew     = card.querySelector('#openNew');
+        const useShort    = card.querySelector('#useShort');
+        const shortStatus = card.querySelector('#shortStatus');
+
+        const renderTargets = (u) => {
+          shareGrid.innerHTML = targets(u).map(t =>
+            `<a class="sbtn" href="${t.href}" target="_blank" rel="noopener">
+               <i data-lucide="${t.icon}"></i><span>${t.label}</span>
+             </a>`
+          ).join('');
+          lucide.createIcons();
+        };
+
+        const updateAll = (u) => {
+          currentUrl = u;
+          urlBox.textContent = u;
+          openNew.href = u;
+          qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(u)}`;
+          renderTargets(u);
+        };
+
+        renderTargets(currentUrl);
+
+        // Chiudi popup
+        const close = () => {
+          backdrop.classList.add('closing'); card.classList.add('closing');
+          card.addEventListener('animationend', () => backdrop.remove(), { once: true });
+        };
+        backdrop.addEventListener('click', (e) => { if (e.target === backdrop) close(); });
+        card.querySelector('#closePopup').addEventListener('click', close);
+
+        // Copia link
+        card.querySelector('#copyLink').addEventListener('click', async () => {
+          try{
+            await navigator.clipboard.writeText(currentUrl);
+            const btn = card.querySelector('#copyLink');
+            btn.innerHTML = '<i data-lucide="check"></i><span>Copiato</span>';
+            lucide.createIcons(); setTimeout(close, 900);
+          }catch{
+            const range = document.createRange(); range.selectNodeContents(urlBox);
+            const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+          }
+        });
+
+        // Toggle shortener is.gd (con cache)
+        let cachedShort = null;
+        useShort.addEventListener('change', async (e) => {
+          if (e.target.checked) {
+            shortStatus.textContent = 'creo link breve…';
+            shortStatus.className = 'text-xs text-sky-600';
+            try {
+              if (!cachedShort) cachedShort = await shortenUrl_isgd(longUrl);
+              updateAll(cachedShort);
+              shortStatus.textContent = 'attivo (is.gd)';
+              shortStatus.className = 'text-xs text-emerald-600';
+            } catch (err) {
+              updateAll(longUrl);
+              useShort.checked = false;
+              shortStatus.textContent = 'non disponibile (fallback)';
+              shortStatus.className = 'text-xs text-amber-600';
+              console.warn('is.gd failed:', err);
+            }
+          } else {
+            updateAll(longUrl);
+            shortStatus.textContent = '(non attivo)';
+            shortStatus.className = 'text-xs text-slate-400';
+          }
+        });
+      }
+    });
   </script>
+
+  <!-- proseguirai qui con le sezioni del report (F1–F7, ecc.) -->
 </body>
-</html>
+</html>    
