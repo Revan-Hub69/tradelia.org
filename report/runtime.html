@@ -521,277 +521,120 @@
      STEP 4/7 — HelpX unificato
      ========================= -->
 <!-- =========================
-     PATCH — HelpX unificato (microcopy semplice + fonte accademica)
-     sostituisce interamente STEP 4/7
+     STEP 4/7 — HelpX unificato (microcopy potenziata)
      ========================= -->
+<style>
+  /* Micro UI per la scheda help */
+  .hx-kv{ display:grid; grid-template-columns: auto 1fr; gap:.25rem .6rem; font-size:12px; color:#0f172a; margin:.5rem 0 }
+  .hx-kv dt{ color:#64748b }
+  .hx-badges{ display:flex; flex-wrap:wrap; gap:.35rem; margin:.35rem 0 }
+  .hx-tag{ font-size:11px; padding:.12rem .45rem; border-radius:999px; border:1px solid #e5e7eb; background:#f8fafc; color:#334155; font-weight:600 }
+  .hx-callout{ border-left:3px solid #7dd3fc; background:#f0f9ff; padding:.5rem .6rem; border-radius:.5rem; font-size:12px; color:#075985 }
+  .hx-rule{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            background:#f8fafc; border:1px solid #e5e7eb; border-radius:6px; padding:.45rem .55rem; font-size:12px; color:#0f172a }
+  .hx-list{ margin:.35rem 0 .1rem 1rem }
+  .hx-ex{ font-size:12px; color:#0f172a }
+  .hx-ok{ color:#065f46; font-weight:700 }
+  .hx-warn{ color:#92400e; font-weight:700 }
+  .hx-crit{ color:#7c2d12; font-weight:700 }
+</style>
+
 <script>
 (function(){
-  // Util: compone descrizioni con righe brevi + bullet opzionali
-  function mkDesc(lines=[], bullets=[]){
-    const p = lines.map(l => `<p class="mb-1">${l}</p>`).join("");
-    const ul = bullets.length
-      ? `<ul class="list-disc pl-5 space-y-1">${bullets.map(b=>`<li>${b}</li>`).join("")}</ul>`
-      : "";
-    return p + ul;
-  }
+  // Utilità per comporre blocchi ricchi
+  const P = (...s)=> s.map(x=>`<p class="mb-1.5">${x}</p>`).join("");
+  const UL = (arr)=> `<ul class="hx-list list-disc">${arr.map(x=>`<li>${x}</li>`).join("")}</ul>`;
+  const KV = (pairs)=> `<dl class="hx-kv">${pairs.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>`;
 
-  // Dizionario con microcopy in ITA e fonte sintetica
+  // Dizionario con microcopy chiarissima, soglie e fonte
   const HELP_DICT = {
-    // ======= HEADER / AUDIT =======
+    /* ======= HEADER / AUDIT ======= */
     DataStart: {
-      t: "Inizio report",
-      a: mkDesc(
-        ["Timestamp locale di avvio della finestra analitica.",
-         "Serve per audit e replicabilità del risultato."],
-        ["Formato consigliato: YYYY-MM-DD HH:mm (timezone locale)."]
-      ),
-      s: "Audit trail interno; CFA Institute (QM: Data Management)"
+      t: "Inizio report (timestamp)",
+      a: P(
+        "Istante locale da cui inizia la finestra analitica (serve per audit e replicabilità).",
+        "Usare il fuso dell’utente o indicare esplicitamente la timezone."
+      ) + KV([
+        ["Formato consigliato", "<code>YYYY-MM-DD HH:mm</code> (es. <code>2025-10-21 09:30</code>)"],
+        ["Perché è importante", "Evita ambiguità temporali e facilita l’audit trail."]
+      ]) + `<div class="hx-badges"><span class="hx-tag">Audit</span><span class="hx-tag">Best practice</span></div>`,
+      s: "CFA Institute — QM · Data Management; Policy interna Audit"
     },
     DataEnd: {
-      t: "Fine report",
-      a: mkDesc(
-        ["Timestamp locale di chiusura della finestra analitica.",
-         "Evita look-ahead bias (nessun dato oltre la fine)."]
-      ),
-      s: "Audit trail interno; CFA Institute (Ethics & Standards)"
+      t: "Fine report (timestamp)",
+      a: P(
+        "Istante locale di chiusura della finestra analitica.",
+        "<b>Non</b> includere dati successivi (evita look-ahead bias)."
+      ) + KV([
+        ["Formato consigliato", "<code>YYYY-MM-DD HH:mm</code>"],
+        ["Controllo qualità", "Verifica che tutti i calcoli usino solo dati ≤ Fine report."]
+      ]),
+      s: "CFA Institute — Ethics & Standards; Policy interna Audit"
     },
     Ticker: {
       t: "Ticker",
-      a: mkDesc(
-        ["Simbolo ufficiale dello strumento sul mercato primario.",
-         "Usa il simbolo di listing primario (no alias/MTF)."]
-      ),
+      a: P(
+        "Simbolo ufficiale sul mercato di listing primario.",
+        "Evita alias, MTF o simboli del broker."
+      ) + KV([
+        ["Esempio corretto", "<span class='hx-ex'>AAPL</span> (NASDAQ)"],
+        ["Esempio da evitare", "<span class='hx-ex'>AAPL.US</span> (formati vendor-specific)"]
+      ]),
       s: "Nasdaq/NYSE Listing Rules; SEC Form 8-A"
     },
     Venue: {
-      t: "Borsa di negoziazione",
-      a: mkDesc(
-        ["Venue/MIC primario dove lo strumento è quotato.",
-         "Utile per distinguere ADR/dual-listing."]
-      ),
-      s: "O’Hara (Market Microstructure); Hasbrouck (Empirical Market Microstructure)"
+      t: "Borsa di negoziazione (venue/MIC)",
+      a: P(
+        "Mercato di quotazione primario (MIC). Utile per distinguere ADR/dual-listing.",
+        "Assicurarsi che il dato prezzi sia coerente con il venue."
+      ) + KV([
+        ["Esempio", "<span class='hx-ex'>NASDAQ</span>, <span class='hx-ex'>XNYS</span>, <span class='hx-ex'>XLON</span>"]
+      ]),
+      s: "O’Hara — Market Microstructure; Hasbrouck — Empirical Market Microstructure"
     },
     Validazione: {
-      t: "Validazione ticker/venue",
-      a: mkDesc(
-        ["Controllo coerenza simbolo ↔ venue (inclusi ADR/dual).",
-         "Riduce errori di mappatura tra fonti."],
-        ["Se fallisce ⇒ flag di REVIEW/HOLD."]
-      ),
-      s: "Data Governance (interno); CFA Institute (QM)"
-    },
-    VersionTag: {
-      t: "VersionTag",
-      a: mkDesc(
-        ["Versione del motore/metodo usato per il report.",
-         "Garantisce tracciabilità tra esecuzioni."]
-      ),
-      s: "Software Governance (interno)"
-    },
-    SyncID: {
-      t: "SyncID",
-      a: mkDesc(
-        ["Chiave audit del job: <TICKER>_<YYYYMMDD>_F*.",
-         "Permette di ricostruire l’esecuzione esatta."]
-      ),
-      s: "Audit trail interno"
+      t: "Validazione ticker ↔ venue",
+      a: P(
+        "Controllo di coerenza tra simbolo e mercato. Riduce errori di mappatura tra fonti.",
+        "Se fallisce: marcare lo stato almeno <span class='hx-warn'>REVIEW</span>."
+      ) + `<div class="hx-badges"><span class="hx-tag">Data Governance</span></div>`,
+      s: "CFA Institute — QM; Policy interna Data Governance"
     },
     Freshness: {
-      t: "Freshness",
-      a: mkDesc(
-        ["Freschezza dati rispetto alla validazione (es. T-0, T-1).",
-         "T-0=oggi; T-1=ieri; T-2+ più datato ⇒ rischio ↑."],
-        ["Soglie colore: T-0=verde · T-1=giallo · T-2+=rosso."]
-      ),
-      s: "Policy qualità dati (interno)"
+      t: "Freshness (freschezza del dato)",
+      a: P(
+        "Scostamento temporale rispetto alla validazione (es. <code>T-0</code> = oggi, <code>T-1</code> = ieri)."
+      ) + UL([
+        "<span class='hx-ok'>T-0</span> = verde (ottimo)",
+        "<span class='hx-warn'>T-1</span> = giallo (accettabile)",
+        "<span class='hx-crit'>T-2+</span> = rosso (datato)"
+      ]),
+      s: "Policy Qualità Dati (interna)"
     },
     OCR_Conf: {
-      t: "OCR_Conf",
-      a: mkDesc(
-        ["Attendibilità estrazione numerica 0–1 dai documenti.",
-         ">0.85 buono · 0.65–0.85 discreto · <0.65 critico."]
-      ),
-      s: "Kahn & Strong (Data Quality); Pipino et al."
+      t: "OCR_Conf (0–1)",
+      a: P("Attendibilità estrazione numerica da documenti (OCR).") +
+         UL([
+           "<span class='hx-ok'>&ge; 0.85</span> buono",
+           "<span class='hx-warn'>0.65–0.85</span> discreto",
+           "<span class='hx-crit'>&lt; 0.65</span> critico"
+         ]),
+      s: "Kahn & Strong — Data Quality; Pipino et al."
     },
     DataIntegrity: {
-      t: "DataIntegrity",
-      a: mkDesc(
-        ["Completezza/consistenza dataset 0–1.",
-         "Misura se mancano campi/righe o se ci sono conflitti."]
-      ),
+      t: "DataIntegrity (0–1)",
+      a: P("Completezza/consistenza del dataset (mancanze, conflitti, duplicati).") +
+         UL([
+           "<span class='hx-ok'>&ge; 0.85</span> buono",
+           "<span class='hx-warn'>0.65–0.85</span> discreto",
+           "<span class='hx-crit'>&lt; 0.65</span> critico"
+         ]),
       s: "Kahn & Strong; Pipino et al."
     },
     FeedSync: {
-      t: "FeedSync",
-      a: mkDesc(
-        ["Allineamento temporale tra feed/pannelli 0–1.",
-         "Desincronizzazioni ⇒ interpretazioni fuorvianti."]
-      ),
-      s: "Hasbrouck (Market Microstructure)"
-    },
-    ConfidenceFinal: {
-      t: "Affidabilità complessiva",
-      a: mkDesc(
-        ["Metrica conservativa: MIN(OCR_Conf, DataIntegrity, FeedSync, conf H4, conf H1).",
-         "Valori: ≥0.80 verde · 0.60–0.80 giallo · <0.60 rosso."]
-      ),
-      s: "Metodo interno; CFA Institute (QM)"
-    },
-    StatoReport: {
-      t: "Stato report",
-      a: mkDesc(
-        ["ACTIVE (ok) · REVIEW (verifica) · HOLD (pausa).",
-         "Dipende da soglie qualità e copertura input."]
-      ),
-      s: "Policy interna"
-    },
-    TapeNotes: {
-      t: "TapeNotes",
-      a: mkDesc(
-        ["Osservazioni sull’asta di chiusura REG (volumi/prezzi).",
-         "Utile per capire anomalie micro-strutturali a fine sessione."]
-      ),
-      s: "O’Hara; Hasbrouck"
-    },
-    Missing: {
-      t: "Missing (critici)",
-      a: mkDesc(
-        ["Campi critici mancanti ⇒ N/D.",
-         "Se impattano la confidence ⇒ stato almeno REVIEW/HOLD."]
-      ),
-      s: "Policy N/D (interno)"
-    },
-
-    // ======= F1B / MACRO-SETTORIALE =======
-    F1B_VIX: {
-      t: "VIX (CBOE/FRED)",
-      a: mkDesc(
-        ["Volatilità implicita SPX (indicatore di rischio di mercato).",
-         "Regole lettura: <15 bassa · 15–22 moderata · >22 elevata."]
-      ),
-      s: "CBOE; FRED (VIXCLS)"
-    },
-    F1B_Breadth: {
-      t: "Breadth 1M",
-      a: mkDesc(
-        ["% settori SPDR con performance 1M > 0.",
-         "Sopra 50% = respiro positivo, sotto 50% = respiro debole."]
-      ),
-      s: "SSGA SPDR (sector ETFs)"
-    },
-    F1B_RiskTilt: {
-      t: "Risk Tilt (Ciclici − Difensivi)",
-      a: mkDesc(
-        ["Differenza media 1M tra gruppi ciclici e difensivi.",
-         "Positivo = propensione al rischio; negativo = difesa."]
-      ),
-      s: "Rotazione settoriale (metodo interno)"
-    },
-    F1B_FlowScore: {
-      t: "FlowScore",
-      a: mkDesc(
-        ["0.45·z(Inflow5D) + 0.35·z(Perf1M) + 0.20·z(RiskTilt).",
-         "Più alto ⇒ momentum/afflusso migliori."]
-      ),
-      s: "F1B v13.1 (interno)"
-    },
-    F1B_Regime: {
-      t: "RegimeScore",
-      a: mkDesc(
-        ["0.8·FlowScore + 0.2·sigm(−VIX).",
-         "Soglie: ≥0.35 Momentum · 0.10–0.35 Momentum-light · <0.10 Pullback."]
-      ),
-      s: "F1B v13.1 (interno)"
-    },
-    F1B_Mode: {
-      t: "StrategyMode",
-      a: mkDesc(
-        ["Classificazione operativa: Momentum / Momentum-light / Pullback.",
-         "Deriva dal RegimeScore e guida le azioni tattiche."]
-      ),
-      s: "Decision Rules v13.1 (interno)"
-    },
-    F1B_Notes: {
-      t: "Conformità & Fonti",
-      a: mkDesc(
-        ["Tier-1 (educativo): ETFdb/VettaFi; cross-check SSGA/Bloomberg; VIX da FRED/CBOE.",
-         "Obiettivo: trasparenza e replicabilità delle metriche."]
-      ),
-      s: "Governance Swing v5.0 (interno)"
-    }
-  };
-
-  // --- Modulo popup unico (no doppi) ---
-  const HelpX = {
-    dict: HELP_DICT,
-    _pop: null, _prevOverflow:'',
-    open(key){
-      const d = this.dict[key] || {
-        t: key,
-        a: mkDesc(
-          ["Descrizione non disponibile per questa voce."],
-          ["Suggerimento: aggiungi la definizione via Tradelia.HelpX.add(key, def)."]
-        ),
-        s: "—"
-      };
-      if(this._pop){
-        this._pop.h.textContent = d.t;
-        this._pop.src.textContent = "Fonte: " + d.s;
-        this._pop.text.innerHTML = d.a;
-        this._pop.wrap.focus();
-        return;
-      }
-      const wrap = document.createElement('div');
-      wrap.className = 'hx-pop'; wrap.role='dialog'; wrap.ariaModal='true'; wrap.tabIndex=-1;
-
-      const card = document.createElement('div');
-      card.className = 'hx-card';
-      card.addEventListener('click', ev => ev.stopPropagation());
-
-      const h = document.createElement('h3'); h.textContent = d.t;
-      const src = document.createElement('div'); src.className='src'; src.textContent='Fonte: ' + d.s;
-      const text = document.createElement('div'); text.className='text-sm text-slate-800'; text.innerHTML = d.a;
-
-      card.append(h, src, text); wrap.append(card); document.body.appendChild(wrap);
-
-      // lock scroll
-      this._prevOverflow = document.documentElement.style.overflow || '';
-      document.documentElement.style.overflow = 'hidden';
-
-      const close = () => this.close();
-      wrap.addEventListener('click', (e)=> { if (e.target === e.currentTarget) close(); });
-      document.addEventListener('keydown', this._onEsc = (e)=> {
-        if (e.key === 'Escape') { e.stopPropagation(); e.preventDefault(); close(); }
-      }, true);
-
-      wrap.focus();
-      this._pop = { wrap, card, h, src, text, close };
-    },
-    close(){
-      if(!this._pop) return;
-      const {wrap} = this._pop;
-      document.removeEventListener('keydown', this._onEsc, true);
-      document.documentElement.style.overflow = this._prevOverflow;
-      wrap.remove();
-      this._pop = null;
-    },
-    add(key, def){ this.dict[key] = def; }
-  };
-
-  // Listener UNICO (capturing) per tutti i bottoni .hx
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.hx');
-    if (!btn) return;
-    e.preventDefault();
-    e.stopPropagation(); // evita doppi popup in overlay/drawer
-    HelpX.open(btn.getAttribute('data-k'));
-  }, true);
-
-  // Espone API per aggiungere/correggere voci a runtime
-  window.Tradelia = window.Tradelia || {};
-  window.Tradelia.HelpX = HelpX;
-})();
-</script>
+      t: "FeedSync (0–1)",
+      a: P("Allineamento temporale tra feed e pannelli. Desincronizzazioni ⇒ letture fuorvianti.") +
+         UL([
 
 
 
