@@ -956,6 +956,7 @@
      ========================= -->
 <!-- =========================
      STEP 6/7 — MODULO F1B (card mobile ultra-compatta + drawer a TAB + resoconto)
+     >>> tab attiva con effetto "bottone premuto" + CTA più piccola in griglia desktop
      ========================= -->
 
 <style>
@@ -968,9 +969,15 @@
   .f1b-line{ display:flex; align-items:center; justify-content:space-between; gap:.75rem }
   .f1b-mode{ font-size:13px; font-weight:700; color:#0f172a }
   .f1b-sub{ font-size:11px; color:#64748b }
-  .f1b-cta .sbtn{ padding:.45rem .6rem }
 
-  /* su desktop, possiamo mostrare due micro-kpi extra */
+  /* CTA: base e ottimizzazioni per griglia desktop */
+  .f1b-cta .sbtn{ padding:.45rem .6rem; font-size:13px } /* default/mobile */
+  #mod-container[data-view="grid"] .f1b-cta .sbtn{ padding:.3rem .5rem; font-size:12px }
+  @media (min-width:1024px){
+    #mod-container[data-view="grid"] .f1b-cta .sbtn{ padding:.28rem .48rem; font-size:12px }
+  }
+
+  /* su desktop, due micro-kpi extra */
   @media (min-width:641px){
     .f1b-extras{ display:flex; gap:.5rem; align-items:center }
     .f1b-dot{ width:8px; height:8px; border-radius:999px; display:inline-block }
@@ -981,7 +988,39 @@
   /* === Drawer Tabs === */
   .tabbar{ position:sticky; top:0; z-index:10; display:flex; flex-wrap:wrap; gap:.35rem; background:#f8fafc;
     padding:.5rem; border-radius:10px; border:1px solid #e5e7eb; }
-  .tabbar .sbtn{ font-size:12px; padding:.4rem .55rem }
+  .tabbar .sbtn{
+    font-size:12px; padding:.4rem .55rem;
+    border:1px solid #e5e7eb; background:#fff;
+    box-shadow:0 1px 0 rgba(2,6,23,.04);
+    transition: background .18s ease, border-color .18s ease, color .18s ease, transform .06s ease, box-shadow .18s ease;
+  }
+  .tabbar .sbtn:hover{ background:#f1f5f9; border-color:#dbe3ea }
+  .tabbar .sbtn:focus-visible{ outline:none; box-shadow:0 0 0 2px rgba(14,165,233,.22) }
+
+  /* STATO ATTIVO/PREMUTO (professionale) */
+  .tabbar .sbtn.active,
+  .tabbar .sbtn[aria-pressed="true"]{
+    background:linear-gradient(#e0f2fe,#bae6fd);
+    border-color:#7dd3fc;
+    color:#075985;
+    font-weight:700;
+    transform: translateY(1px);               /* depressione */
+    box-shadow:
+      inset 0 1px 0 rgba(2,6,23,.10),         /* ombra interna */
+      0 0 0 2px rgba(14,165,233,.15);         /* soft ring */
+  }
+
+  /* Feedback on press (anche per non-attiva) */
+  .tabbar .sbtn:active{
+    transform: translateY(1px);
+    box-shadow: inset 0 1px 0 rgba(2,6,23,.10);
+  }
+
+  /* Riduci movimento se richiesto dal sistema */
+  @media (prefers-reduced-motion: reduce){
+    .tabbar .sbtn{ transition: none }
+  }
+
   .tab-sec{ display:none }
   .tab-sec.active{ display:block }
 
@@ -1004,7 +1043,7 @@
           <div class="f1b-mode" data-f1b="kpi-mode">—</div>
         </div>
 
-        <!-- su desktop mostriamo due micro badge; su mobile li nascondiamo (più pulito) -->
+        <!-- su desktop mostriamo due micro badge; su mobile li nascondiamo (pulito) -->
         <div class="f1b-extras hidden sm:flex">
           <span class="f1b-chip-mini" data-f1b="chip-vix"><span class="f1b-dot dot-n" aria-hidden="true"></span> VIX</span>
           <span class="f1b-chip-mini" data-f1b="chip-breadth">Breadth</span>
@@ -1057,11 +1096,9 @@
 
   /** ======== COMPOSE SUMMARY (fallback) ======== */
   function buildSummary(m){
-    // Se c'è un summary già pronto, usalo
     const pre = m?.Meta?.Summary || m?.Summary?.Text;
     if (pre && String(pre).trim().length) return String(pre).trim();
 
-    // Altrimenti componi un testo breve coerente con le metriche
     const mode = m?.Metrics?.Classification?.StrategyMode || '—';
     const rs   = m?.Metrics?.RegimeScore?.score;
     const fs   = m?.Metrics?.FlowScore?.score;
@@ -1081,10 +1118,7 @@
 
   /* ========= BINDER CARD (ultra-compatta) ========= */
   function bindF1BCard(card, m){
-    // Strategy mode visibile sempre
     $('[data-f1b="kpi-mode"]',card).textContent = m?.Metrics?.Classification?.StrategyMode ?? '—';
-
-    // Stato complessivo (badge)
     if(m?.Meta?.StateBadge){ setBadge($('[data-f1b="state-badge"]',card), m.Meta.StateBadge); }
 
     // Micro chip desktop: VIX dot + Breadth label
@@ -1131,13 +1165,13 @@
     body.innerHTML = `
       <div class="space-y-3">
         <div class="tabbar noprint">
-          <button class="sbtn" data-tab="#f1b-ov"><i data-lucide="layout-grid"></i><span>Overview</span></button>
-          <button class="sbtn" data-tab="#f1b-mx"><i data-lucide="activity"></i><span>Metriche</span></button>
-          <button class="sbtn" data-tab="#f1b-le"><i data-lucide="layers"></i><span>Leadership</span></button>
-          <button class="sbtn" data-tab="#f1b-se"><i data-lucide="chart-line"></i><span>Serie</span></button>
-          <button class="sbtn" data-tab="#f1b-in"><i data-lucide="table-2"></i><span>Inputs</span></button>
-          <button class="sbtn" data-tab="#f1b-au"><i data-lucide="badge-check"></i><span>Audit</span></button>
-          <button class="sbtn" data-tab="#f1b-rs"><i data-lucide="notes"></i><span>Resoconto</span></button>
+          <button class="sbtn" data-tab="#f1b-ov" aria-pressed="true"><i data-lucide="layout-grid"></i><span>Overview</span></button>
+          <button class="sbtn" data-tab="#f1b-mx" aria-pressed="false"><i data-lucide="activity"></i><span>Metriche</span></button>
+          <button class="sbtn" data-tab="#f1b-le" aria-pressed="false"><i data-lucide="layers"></i><span>Leadership</span></button>
+          <button class="sbtn" data-tab="#f1b-se" aria-pressed="false"><i data-lucide="chart-line"></i><span>Serie</span></button>
+          <button class="sbtn" data-tab="#f1b-in" aria-pressed="false"><i data-lucide="table-2"></i><span>Inputs</span></button>
+          <button class="sbtn" data-tab="#f1b-au" aria-pressed="false"><i data-lucide="badge-check"></i><span>Audit</span></button>
+          <button class="sbtn" data-tab="#f1b-rs" aria-pressed="false"><i data-lucide="notes"></i><span>Resoconto</span></button>
         </div>
 
         <!-- OVERVIEW -->
@@ -1239,7 +1273,7 @@
           </div>
         </section>
 
-        <!-- RESOCONTO (sempre disponibile anche in stampa) -->
+        <!-- RESOCONTO -->
         <section id="f1b-rs" class="tab-sec">
           <div class="card p-3">
             <div class="sec-h"><i data-lucide="notes"></i><span>Resoconto sintetico</span></div>
@@ -1255,13 +1289,19 @@
     const svg = document.getElementById('drawer-spark');
     if(svg && Array.isArray(m?.Series?.VIX_Sparkline)){ sparkline(svg, m.Series.VIX_Sparkline); }
 
-    // Tabs handler
+    // Tabs handler con stato "premuto"
     const tabsBtns = body.querySelectorAll('.tabbar [data-tab]');
     const sections = ['#f1b-ov','#f1b-mx','#f1b-le','#f1b-se','#f1b-in','#f1b-au','#f1b-rs'].map(s=> body.querySelector(s));
+
+    const firstBtn = body.querySelector('.tabbar [data-tab="#f1b-ov"]');
+    if (firstBtn){ firstBtn.classList.add('active'); firstBtn.setAttribute('aria-pressed','true'); }
+
     tabsBtns.forEach(btn=>{
       btn.addEventListener('click', ()=>{
         sections.forEach(sec=>sec?.classList.remove('active'));
         body.querySelector(btn.getAttribute('data-tab'))?.classList.add('active');
+        tabsBtns.forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
+        btn.classList.add('active'); btn.setAttribute('aria-pressed','true');
       });
     });
 
@@ -1292,4 +1332,5 @@
   }
 })();
 </script>
+
 
