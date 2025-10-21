@@ -534,3 +534,114 @@
 
 })();
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     <!-- =========================
+     STEP 4/7 — HelpX unificato
+     ========================= -->
+<script>
+(function(){
+  // Dizionario: chiave -> { t: titolo, a: descrizione, s: fonte }
+  const HELP_DICT = {
+    Sessione:{t:'Sessione REG (adjusted)', a:'Analisi sulla sola sessione regolare; serie prezzi adjusted per dividendi/split per coerenza storica.', s:'CMT Association; CFA Institute'},
+    DataStart:{t:'Inizio report', a:'Timestamp locale di avvio analisi. Serve per audit e replicabilità.', s:'Audit trail interno'},
+    DataEnd:{t:'Fine report', a:'Timestamp locale di chiusura analisi. Evita look-ahead bias.', s:'Audit trail interno'},
+    Ticker:{t:'Ticker', a:'Simbolo ufficiale dello strumento sul venue primario.', s:'Nasdaq/NYSE; SEC 8-A'},
+    Venue:{t:'Borsa di negoziazione', a:'MIC/venue primario di quotazione (no MTF).', s:'O’Hara; Hasbrouck'},
+    Validazione:{t:'Validazione ticker/venue', a:'Cross-check simbolo ⇄ venue; ADR/dual listing.', s:'Data governance'},
+    VersionTag:{t:'VersionTag', a:'Versione del motore/metodo per tracciabilità e audit.', s:'Governance interna'},
+    SyncID:{t:'SyncID', a:'Chiave audit: <TICKER>_<YYYYMMDD>_F*.', s:'Audit trail'},
+    Freshness:{t:'Freshness', a:'Freschezza dati rispetto alla validazione locale (es. T-0, T-1).', s:'Policy qualità'},
+    OCR_Conf:{t:'OCR_Conf', a:'Attendibilità estrazione numerica (0–1). >0.85 buono.', s:'Kahn & Strong; Pipino'},
+    DataIntegrity:{t:'DataIntegrity', a:'Completezza/consistenza dataset (0–1). >0.85 buono.', s:'Kahn & Strong; Pipino'},
+    FeedSync:{t:'FeedSync', a:'Allineamento temporale tra pannelli/feed (0–1).', s:'Hasbrouck'},
+    ConfidenceFinal:{t:'Affidabilità complessiva', a:'Metrica conservativa: MIN(OCR_Conf, DataIntegrity, FeedSync, conf H4, conf H1).', s:'Metodo interno'},
+    StatoReport:{t:'Stato report', a:'ACTIVE / REVIEW / HOLD secondo soglie qualità e copertura input.', s:'Policy interna'},
+    TapeNotes:{t:'TapeNotes', a:'Note micro-strutturali sull’asta di chiusura REG.', s:'Hasbrouck; O’Hara'},
+    Missing:{t:'Missing (critici)', a:'Campi critici mancanti ⇒ N/D; se impattano la confidence ⇒ HOLD.', s:'Policy N/D'}
+  };
+
+  // Modulo popup unico (evita doppi trigger anche dentro drawer/overlay)
+  const HelpX = {
+    dict: Object.assign(Object.create(null), HELP_DICT),
+    _pop: null, _prevOverflow:'',
+    open(key){
+      const d = this.dict[key] || { t:key, a:'Descrizione non disponibile.', s:'—' };
+      if (this._pop) {
+        this._pop.h.textContent = d.t;
+        this._pop.src.textContent = 'Fonte: ' + d.s;
+        this._pop.text.innerHTML = d.a;
+        this._pop.wrap.focus();
+        return;
+      }
+      const wrap = document.createElement('div');
+      wrap.className = 'hx-pop'; wrap.role='dialog'; wrap.ariaModal='true'; wrap.tabIndex=-1;
+
+      const card = document.createElement('div');
+      card.className = 'hx-card';
+      card.addEventListener('click', ev => ev.stopPropagation()); // non chiudere clic interno
+
+      const h = document.createElement('h3'); h.textContent = d.t;
+      const src = document.createElement('div'); src.className='src'; src.textContent='Fonte: ' + d.s;
+      const text = document.createElement('div'); text.className='text-sm text-slate-800'; text.innerHTML = d.a;
+
+      card.append(h, src, text); wrap.append(card); document.body.appendChild(wrap);
+
+      // lock scroll
+      this._prevOverflow = document.documentElement.style.overflow || '';
+      document.documentElement.style.overflow = 'hidden';
+
+      const close = () => this.close();
+      wrap.addEventListener('click', (e)=> { if (e.target === e.currentTarget) close(); });
+      document.addEventListener('keydown', this._onEsc = (e)=> {
+        if (e.key === 'Escape') { e.stopPropagation(); e.preventDefault(); close(); }
+      }, true);
+
+      wrap.focus();
+      this._pop = { wrap, card, h, src, text, close };
+    },
+    close(){
+      if (!this._pop) return;
+      const { wrap } = this._pop;
+      document.removeEventListener('keydown', this._onEsc, true);
+      document.documentElement.style.overflow = this._prevOverflow;
+      wrap.remove();
+      this._pop = null;
+    }
+  };
+
+  // Listener UNICO, in capturing, per tutti i bottoni .hx
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.hx');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();               // <-- niente doppi popup in overlay/drawer
+    const k = btn.getAttribute('data-k');
+    HelpX.open(k);
+  }, true);
+
+  // Espone global (se devi aggiungere voci a runtime)
+  window.Tradelia = window.Tradelia || {};
+  window.Tradelia.HelpX = HelpX;
+})();
+</script>
