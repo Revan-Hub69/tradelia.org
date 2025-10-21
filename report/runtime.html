@@ -90,11 +90,10 @@
     </div>
   </header>
 
-  <!-- Script header + share (mobile nativo, desktop share sheet con QR) -->
+  <!-- Script header + share -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
-
       document.getElementById('btn-print')?.addEventListener('click', () => window.print());
       document.getElementById('btn-share')?.addEventListener('click', async () => {
         const urlObj = new URL(window.location.href);
@@ -318,7 +317,7 @@
     </section>
   </main>
 
-  <!-- stile compatto per card + ? (aggiornato + robusto) -->
+  <!-- stile compatto per card + ? -->
   <style>
     #header-ticker .card{border:1px solid #e5e7eb;border-radius:.75rem;padding:.75rem}
     #header-ticker label{display:flex;align-items:center;gap:.4rem;font-size:11px;color:#64748b}
@@ -333,7 +332,7 @@
     .hx-card .src{font-size:11px;color:#6b7280;margin-bottom:8px}
   </style>
 
-  <!-- popup accademico: bugfix (niente X), backdrop+Esc, focus+scroll lock -->
+  <!-- popup accademico (no X; chiudi con backdrop o ESC) -->
   <script>
   (function(){
     const EXPL = {
@@ -348,14 +347,11 @@
       Freshness:{t:"Freshness", a:"Controllo freschezza dati ≤ T-1 prima della validazione.", s:"Policy di qualità dati (interno)."},
       OCR_Conf:{t:"OCR_Confidence", a:"Attendibilità dell’estrazione numerica (0–1).", s:"CFA Institute – Quantitative Methods; Kahn & Strong (1998) Data Quality."},
       DataIntegrity:{t:"Data Integrity", a:"Completezza/consistenza del dataset (0–1).", s:"Kahn & Strong (1998); Pipino, Lee & Wang (2002)."},
-      FeedSync:{t:"Feed Sync", a:"Allineamento temporale tra feed e pannelli (0–1).", s:"Hasbrouck (2007) – sincronizzazione dati intraday."},
-      ConfidenceFinal:{t:"Confidence (final)", a:"Euristica conservativa: min(OCR_Conf, DataIntegrity, FeedSync, Confidence_H4, Confidence_H1).", s:"Heuristic gating per audit (metodo interno)."},
+      FeedSync:{t:"Feed Sync", a:"Allineamento temporale tra feed e pannelli (0–1).", s:"Hasbrouck (2007)."},
+      ConfidenceFinal:{t:"Confidence (final)", a:"Euristica conservativa: min(OCR_Conf, DataIntegrity, FeedSync, Confidence_H4, Confidence_H1).", s:"Metodo interno."},
       StatoReport:{t:"Stato report", a:"ACTIVE/HOLD/REVIEW in base a Confidence e copertura input.", s:"Policy stato (interno)."},
-      TapeNotes:{t:"TapeNotes (REG close)", a:"Note micro-strutturali sull’asta di chiusura (AuctionShare%, Intensity, VWAP, Stickiness).", s:"Hasbrouck (2007); O’Hara (1995)."},
-      Missing:{t:"Missing (critici)", a:"Elenco campi critici mancanti → N/D; se impattano Confidence ⇒ HOLD.", s:"Policy N/D (interno)."},
-      PolicyND:{t:"Policy N/D", a:"Non si stimano i mancanti; si documentano e si declassa lo stato se critici.", s:"Governance trasparenza (interno)."},
-      Cromatica:{t:"Criteri cromatici", a:"🟩 favorevole/sopra media · 🟨 neutro/attenzione · 🟥 sfavorevole/sotto media · — neutro/incompleto.", s:"Legenda cromatica standard del desk."},
-      NoteHeader:{t:"Note header", a:"Annotazioni qualitative utili alla lettura del report.", s:"Metodologia di reporting (interno)."}
+      TapeNotes:{t:"TapeNotes (REG close)", a:"Note micro-strutturali sull’asta di chiusura.", s:"Hasbrouck (2007); O’Hara (1995)."},
+      Missing:{t:"Missing (critici)", a:"Campi critici mancanti → N/D; se impattano Confidence ⇒ HOLD.", s:"Policy N/D (interno)."}
     };
 
     let POP=null, prevOverflow='';
@@ -392,40 +388,19 @@
   </script>
 
   <!-- ===========================
-       SEZIONE — MODULI (framework avanzato, nessun F1–F5 qui)
+       SEZIONE — MODULI (framework, nessun modulo registrato ora)
        =========================== -->
   <section id="moduli" class="pt-3">
     <div class="max-w-7xl mx-auto px-3 sm:px-5">
-      <!-- Header sezione -->
       <div class="flex items-end justify-between mb-3 sm:mb-4">
         <div class="min-w-0">
           <h2 class="text-base sm:text-lg font-semibold text-slate-800 tracking-tight">Moduli analitici</h2>
-          <p class="text-xs text-slate-500">Framework istituzionale · sequenziale · auditabile (F1–F5 verranno registrati dopo)</p>
+          <p class="text-xs text-slate-500">Framework istituzionale · sequenziale · auditabile (F1–F5 + Broker in arrivo)</p>
         </div>
-        <div class="hidden sm:flex items-center gap-2">
-          <button id="legendBtn" class="btn" aria-haspopup="dialog"><i data-lucide="info"></i><span class="hidden md:inline">Legenda</span></button>
-        </div>
-      </div>
-
-      <!-- Toolbar -->
-      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
-        <div class="relative flex-1">
-          <input id="mod-search" type="search" inputmode="search" placeholder="Cerca modulo, SyncID…"
-                 class="w-full rounded-lg border border-slate-200 bg-white/90 px-3 py-2 pr-9 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-300" />
-          <i data-lucide="search" class="w-4 h-4 absolute right-3 top-2.5 text-slate-400 pointer-events-none"></i>
-        </div>
+        <!-- Toolbar (solo vista) -->
         <div class="flex items-center gap-2">
-          <label class="text-xs text-slate-500">Ordina</label>
-          <select id="mod-sort" class="rounded-lg border border-slate-200 bg-white/90 px-2.5 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-200">
-            <option value="seq">Sequenza (F1→F5)</option>
-            <option value="conf">Confidence</option>
-            <option value="state">Stato</option>
-            <option value="title">Titolo</option>
-          </select>
-          <div class="hidden sm:flex items-center">
-            <button id="view-grid" class="btn" aria-pressed="true" aria-label="Vista griglia"><i data-lucide="grid"></i></button>
-            <button id="view-list" class="btn" aria-pressed="false" aria-label="Vista lista"><i data-lucide="list"></i></button>
-          </div>
+          <button id="view-grid" class="btn" aria-pressed="true" aria-label="Vista griglia"><i data-lucide="grid"></i><span class="hidden sm:inline">Griglia</span></button>
+          <button id="view-list" class="btn" aria-pressed="false" aria-label="Vista lista"><i data-lucide="list"></i><span class="hidden sm:inline">Lista</span></button>
         </div>
       </div>
 
@@ -433,7 +408,7 @@
       <div id="mod-container" data-view="grid"
            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4"
            aria-label="Griglia moduli analitici">
-        <!-- popolato dal Registry -->
+        <!-- verrà popolato in seguito -->
       </div>
     </div>
   </section>
@@ -454,352 +429,61 @@
         </div>
       </header>
       <div id="drawer-body" class="h-[calc(100%-3.25rem)] sm:h-[calc(100%-3.75rem)] overflow-auto p-3 sm:p-4">
-        <!-- Qui verrà montato il contenuto F1–F5 da render(el) -->
+        <!-- Qui monteremo i contenuti dei moduli quando pronti -->
       </div>
     </aside>
   </div>
 
-  <!-- Stili card / lista / badge -->
+  <!-- Stili card/lista/badge base (riuso futuro quando aggiungeremo le card) -->
   <style>
     .mdc{background:#fff;border:1px solid #e5e7eb;border-radius:14px;
          box-shadow:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.02);transition:border-color .18s, box-shadow .18s, transform .12s}
     .mdc:hover{border-color:#dbe3ea;box-shadow:0 4px 18px rgba(2,6,23,.08)}
     .mdc:active{transform:translateY(1px)}
-    .mdc-h{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.7rem .85rem;border-bottom:1px solid #eef2f7}
-    .mdc-t{font-weight:700;color:#0f172a;font-size:14px;letter-spacing:.1px}
-    .mdc-b{padding:.75rem .85rem}
-    .mdc-kv{display:grid;grid-template-columns:auto 1fr;gap:.25rem .6rem;font-size:12px}
-    .mdc-kv dt{color:#64748b} .mdc-kv dd{font-weight:600;color:#0f172a}
-    .mdc-footer{display:flex;align-items:center;justify-content:space-between;margin-top:.6rem}
-    .mdc-cta{display:inline-flex;align-items:center;gap:.4rem;font-weight:600;font-size:12px;padding:.45rem .6rem;border-radius:.55rem;border:1px solid #e5e7eb;background:linear-gradient(#fff,#f8fafc)}
-    .mdc-cta:hover{background:linear-gradient(#fff,#f1f5f9)}
-    .mdc-spark{width:100%;height:32px}
-    /* badge stato/badge colore (già usati dal binder) */
     .badge{font-size:11px;padding:.1rem .45rem;border-radius:999px;border:1px solid}
     .b-active{color:#065f46;background:#ecfdf5;border-color:#a7f3d0}
     .b-hold{color:#92400e;background:#fffbeb;border-color:#fcd34d}
     .b-review{color:#7c2d12;background:#fef3c7;border-color:#fbbf24}
     .b-neutral{color:#334155;background:#f1f5f9;border-color:#e5e7eb}
-    /* vista lista */
     [data-view="list"] .mdc{display:flex}
     [data-view="list"] .mdc .mdc-b{flex:1}
-    /* print: mostra solo contenuti */
     @media print{
       #mod-drawer{position:static;display:block !important;transform:none}
       #mod-drawer aside{position:static;transform:none;width:auto;border:0;box-shadow:none}
     }
   </style>
 
-  <!-- Template di card -->
+  <!-- (facoltativo) Template di card già pronto per quando aggiungeremo i moduli -->
   <template id="tpl-mod-card">
     <article class="mdc" role="group" aria-labelledby="m-title">
-      <header class="mdc-h">
-        <h3 id="m-title" class="mdc-t">Titolo modulo</h3>
+      <header class="mdc-h flex items-center justify-between gap-2 border-b border-slate-100 px-3 py-2.5">
+        <h3 id="m-title" class="font-semibold text-slate-800 text-sm">Titolo modulo</h3>
         <span class="badge b-neutral" data-field="badge">NEUTRO</span>
       </header>
-      <div class="mdc-b">
-        <dl class="mdc-kv">
-          <dt>SyncID</dt><dd data-field="sync">—</dd>
-          <dt>Stato</dt><dd data-field="state">—</dd>
-          <dt>Confidence</dt><dd data-field="conf">—</dd>
-        </dl>
-        <svg class="mdc-spark mt-2" viewBox="0 0 100 20" preserveAspectRatio="none" data-spark=""></svg>
-        <div class="mdc-footer">
-          <div class="text-[11px] text-slate-500" data-field="meta">—</div>
-          <button class="mdc-cta" type="button" data-action="open"><i data-lucide="maximize-2" class="w-4 h-4"></i><span>Apri modulo</span></button>
-        </div>
+      <div class="mdc-b p-3 text-sm text-slate-600">
+        <!-- contenuto sintetico modulo -->
       </div>
     </article>
   </template>
 
-  <!-- Popup semplice per legenda -->
-  <div id="legend-pop" class="hidden fixed inset-0 z-[70]">
-    <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]" data-close="legend"></div>
-    <div class="popup-card absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl shadow-2xl p-5 w-[92%] max-w-lg border border-slate-200">
-      <div class="flex items-start justify-between gap-3 mb-3">
-        <div>
-          <h2 class="font-semibold text-slate-800 leading-tight">Legenda</h2>
-          <p class="text-xs text-slate-500 mt-0.5">Badge e cromie (uso interno)</p>
-        </div>
-        <button class="btn" data-close="legend"><i data-lucide="x"></i><span class="hidden sm:inline">Chiudi</span></button>
-      </div>
-      <ul class="text-sm text-slate-700 space-y-1.5">
-        <li>🟩 <b>ACTIVE</b></li>
-        <li>🟨 <b>HOLD</b></li>
-        <li>🟧 <b>REVIEW</b></li>
-        <li>— <b>NEUTRO</b></li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- ========== Runtime JS (Registry + UI) ========== -->
-  <script>
-  (function(){
-    /* --------- Utilities --------- */
-    const $ = (sel,root=document)=> root.querySelector(sel);
-    const $$ = (sel,root=document)=> Array.from(root.querySelectorAll(sel));
-    const fmtConf = (v)=> (v==null?'—':(Number(v).toFixed(2)));
-
-    // color mapping (card badge) — coerente con JSON colors
-    const colorToBadge = (c)=>{
-      switch(String(c||'').toLowerCase()){
-        case 'green': return ['ACTIVE','badge b-active'];
-        case 'yellow':return ['HOLD','badge b-hold'];
-        case 'red':   return ['REVIEW','badge b-review'];
-        default:      return ['NEUTRO','badge b-neutral'];
-      }
-    };
-    const stateToColor = (s)=>{
-      switch(String(s||'').toUpperCase()){
-        case 'ACTIVE': return 'green';
-        case 'HOLD':   return 'yellow';
-        case 'REVIEW': return 'red';
-        default:       return 'neutral';
-      }
-    };
-
-    function sparkline(svg, arr){
-      if(!svg) return;
-      if(!arr || !arr.length){ svg.innerHTML=''; svg.setAttribute('data-spark',''); return; }
-      const min = Math.min(...arr), max = Math.max(...arr);
-      const norm = max-min || 1;
-      const pts = arr.map((v,i)=>{
-        const x = (i/(arr.length-1))*100;
-        const y = 20 - ((v-min)/norm)*18 - 1;
-        return `${x},${y}`;
-      }).join(' ');
-      svg.innerHTML = `<polyline fill="none" stroke="${arr[arr.length-1]>=arr[0]?'#16a34a':'#dc2626'}" stroke-width="1.25" points="${pts}" />`;
-      svg.setAttribute('data-spark', 'ok');
-    }
-
-    /* --------- Drawer --------- */
-    const drawer = $('#mod-drawer');
-    const drawerPanel = $('#mod-drawer aside');
-    const drawerTitle = $('#drawer-title');
-    const drawerSub = $('#drawer-sub');
-    const drawerBody = $('#drawer-body');
-    function openDrawer({title, sub}){
-      drawerTitle.textContent = title || 'Modulo';
-      drawerSub.textContent = sub || '—';
-      drawer.classList.remove('hidden');
-      requestAnimationFrame(()=> drawerPanel.style.transform='translateX(0)');
-    }
-    function closeDrawer(){
-      drawerPanel.style.transform='translateX(100%)';
-      drawerPanel.addEventListener('transitionend', ()=> drawer.classList.add('hidden'), {once:true});
-    }
-    drawer.addEventListener('click', (e)=>{ if(e.target.dataset.close==='backdrop') closeDrawer(); });
-    $('#drawer-close')?.addEventListener('click', closeDrawer);
-    $('#drawer-print')?.addEventListener('click', ()=> window.print());
-
-    /* --------- Legend --------- */
-    const legendPop = $('#legend-pop');
-    $('#legendBtn')?.addEventListener('click', ()=> legendPop.classList.remove('hidden'));
-    legendPop?.addEventListener('click', (e)=>{ if(e.target.dataset.close==='legend') legendPop.classList.add('hidden'); });
-
-    /* --------- View switch --------- */
-    const container = $('#mod-container');
-    $('#view-grid')?.addEventListener('click', (e)=>{
-      container.dataset.view='grid';
-      e.currentTarget.setAttribute('aria-pressed','true');
-      $('#view-list').setAttribute('aria-pressed','false');
-      container.className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4';
-    });
-    $('#view-list')?.addEventListener('click', (e)=>{
-      container.dataset.view='list';
-      e.currentTarget.setAttribute('aria-pressed','true');
-      $('#view-grid').setAttribute('aria-pressed','false');
-      container.className='space-y-2.5';
-    });
-
-    /* --------- Registry --------- */
-    const tpl = $('#tpl-mod-card');
-    const modules = new Map();
-
-    function renderCard(def){
-      const node = tpl.content.cloneNode(true);
-      const root = node.firstElementChild;
-
-      root.dataset.id = def.id;
-      root.setAttribute('tabindex','0');
-      root.setAttribute('role','button');
-      root.setAttribute('aria-label', def.title);
-
-      root.querySelector('.mdc-t').textContent = def.title;
-      root.querySelector('[data-field="sync"]').textContent = def.syncID || '—';
-
-      // Badge: preferisci def.color (green/yellow/red/neutral) al posto di state
-      const color = def.color || stateToColor(def.state);
-      const [label, cls] = colorToBadge(color);
-      const badge = root.querySelector('[data-field="badge"]');
-      badge.textContent = label; badge.className = cls;
-
-      root.querySelector('[data-field="state"]').textContent = (def.state || label);
-      root.querySelector('[data-field="conf"]').textContent = fmtConf(def.confidence);
-      root.querySelector('[data-field="meta"]').textContent = def.meta || '';
-
-      // spark
-      const svg = root.querySelector('[data-spark]');
-      sparkline(svg, Array.isArray(def.spark)?def.spark:[]);
-
-      // open handlers
-      const open = ()=> {
-        openDrawer({title:def.title, sub:def.syncID || ''});
-        drawerBody.replaceChildren();
-        try{
-          if(typeof def.render === 'function') def.render(drawerBody);
-          else if(def.html){ const wrap = document.createElement('div'); wrap.innerHTML = def.html; drawerBody.appendChild(wrap); }
-          else { const p = document.createElement('p'); p.className='text-sm text-slate-600'; p.textContent='Nessun contenuto montato. Registra il modulo con { render(el) { … } }.'; drawerBody.appendChild(p); }
-        }catch(err){
-          const errBox = document.createElement('pre');
-          errBox.className='text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg p-2 overflow-auto';
-          errBox.textContent = String(err);
-          drawerBody.appendChild(errBox);
-        }
-        if(window.lucide) lucide.createIcons();
-      };
-      root.querySelector('[data-action="open"]').addEventListener('click', open);
-      root.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); open(); } });
-      root.addEventListener('dblclick', open);
-
-      return root;
-    }
-
-    function mountAll(){
-      container.replaceChildren();
-      let list = Array.from(modules.values());
-      // filtro
-      const q = ($('#mod-search')?.value || '').trim().toLowerCase();
-      if(q){
-        list = list.filter(m =>
-          m.title.toLowerCase().includes(q) ||
-          (m.syncID||'').toLowerCase().includes(q) ||
-          (m.meta||'').toLowerCase().includes(q)
-        );
-      }
-      // sort
-      const sort = $('#mod-sort')?.value || 'seq';
-      const byState = {ACTIVE:0, REVIEW:1, HOLD:2, NEUTRO:3};
-      list.sort((a,b)=>{
-        if(sort==='title') return a.title.localeCompare(b.title);
-        if(sort==='state') return (byState[(a.state||'').toUpperCase()]??9)-(byState[(b.state||'').toUpperCase()]??9);
-        if(sort==='conf') return (b.confidence??-1)-(a.confidence??-1);
-        return (a.seq??999)-(b.seq??999);
-      });
-      // mount
-      for(const m of list) container.appendChild(renderCard(m));
-      if(window.lucide) lucide.createIcons();
-    }
-
-    // public API
-    window.TradeliaModules = {
-      register(def){
-        if(!def || !def.id) throw new Error('register() richiede { id }');
-        if(modules.has(def.id)) throw new Error('id già registrato: '+def.id);
-        const norm = {
-          id: def.id,
-          title: def.title || 'Modulo',
-          seq: def.seq ?? 999,
-          state: def.state || 'NEUTRO',
-          color: def.color || null,        // << aggiunto: colore esplicito dal JSON dei moduli
-          confidence: def.confidence ?? null,
-          syncID: def.syncID || null,
-          meta: def.meta || '',
-          spark: Array.isArray(def.spark)?def.spark:[],
-          render: def.render,
-          html: def.html
-        };
-        modules.set(norm.id, norm);
-        mountAll();
-        return norm.id;
-      },
-      update(id, patch){
-        if(!modules.has(id)) throw new Error('id non trovato: '+id);
-        Object.assign(modules.get(id), patch||{});
-        mountAll();
-      },
-      open(id){
-        const m = modules.get(id);
-        if(!m) throw new Error('id non trovato: '+id);
-        openDrawer({title:m.title, sub:m.syncID||''});
-        drawerBody.replaceChildren();
-        if(typeof m.render === 'function') m.render(drawerBody);
-        else if(m.html){ const wrap = document.createElement('div'); wrap.innerHTML=m.html; drawerBody.appendChild(wrap); }
-        if(window.lucide) lucide.createIcons();
-      },
-      list(){ return Array.from(modules.values()); }
-    };
-
-    /* ---- Search/Sort listeners ---- */
-    $('#mod-search')?.addEventListener('input', ()=> mountAll());
-    $('#mod-sort')?.addEventListener('change', ()=> mountAll());
-
-    if(window.lucide) lucide.createIcons();
-
-    // Deep-link #open=<id>
-    const url = new URL(window.location.href);
-    const openId = url.hash.startsWith('#open=') ? url.hash.slice(6) : null;
-    if(openId) { setTimeout(()=> { try{ window.TradeliaModules.open(openId); }catch(_){} }, 0); }
-  })();
-  </script>
-
   <!-- ===========================
-       THEME PACK · Tradelia Desk (drop-in)
+       THEME PACK · Tradelia Desk
        =========================== -->
   <style>
   :root{
     --c-text:#0f172a; --c-meta:#64748b; --c-border:#e5e7eb; --c-bg:#ffffff;
-    --c-accent:#0ea5e9; --c-accent-dk:#0369a1;
     --shadow-0:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.02);
-    --shadow-1:0 2px 12px rgba(2,6,23,.06);
-    --shadow-2:0 4px 18px rgba(2,6,23,.08);
-    --r-card:14px;
-    --pad-card:.75rem; --pad-h:.7rem .85rem;
-    --g-gap:0.6rem;
   }
-  h1,h2,h3{letter-spacing:.1px}
-  .section-title{font-weight:600;color:#0f172a}
-  .section-meta{font-size:12px;color:var(--c-meta)}
-  .kpi-val{font-weight:700;color:var(--c-text)}
-  .kpi-meta{font-size:11px;color:#475569}
-
-  .card,.mdc{
-    background:#fff; border:1px solid var(--c-border); border-radius:var(--r-card);
-    box-shadow:var(--shadow-0); transition:border-color .18s, box-shadow .18s, transform .12s;
-  }
-  .card:hover,.mdc:hover{border-color:#dbe3ea; box-shadow:var(--shadow-1)}
-  .card:active,.mdc:active{transform:translateY(1px)}
-
   #header-ticker label{ font-weight:600; letter-spacing:.1px }
   #header-ticker .val{ font-weight:700; color:var(--c-text) }
-  #header-ticker .card:hover{ border-color:#dbe3ea; box-shadow:0 2px 12px rgba(2,6,23,.06) }
-
-  .badge{font-size:11px;padding:.1rem .45rem;border-radius:999px;border:1px solid}
+  .card,.mdc{
+    background:#fff; border:1px solid var(--c-border); border-radius:14px;
+    box-shadow:var(--shadow-0);
+  }
   .badge--active{color:#065f46;background:#ecfdf5;border-color:#a7f3d0}
   .badge--hold{color:#92400e;background:#fffbeb;border-color:#fcd34d}
   .badge--review{color:#7c2d12;background:#fef3c7;border-color:#fbbf24}
   .badge--neutral{color:#334155;background:#f1f5f9;border-color:#e5e7eb}
-
-  .btn:focus-visible{ outline:none; box-shadow:0 0 0 2px rgba(14,165,233,.45) }
-  i[data-lucide]{width:18px;height:18px}
-  .mdc-spark{height:32px}
-
-  .kpi-delta{font-size:11px;font-weight:600}
-  .kpi-delta.pos{color:#059669}
-  .kpi-delta.neg{color:#dc2626}
-
-  [data-view="list"] .mdc{display:flex}
-  [data-view="list"] .mdc .mdc-b{flex:1}
-
-  @media print{
-    .noprint, #legend-pop, #mod-drawer .btn{ display:none!important }
-    body{ background:#fff }
-    .card,.mdc{ break-inside:avoid; box-shadow:none; border-color:#cbd5e1 }
-    .badge{ background:transparent!important }
-    #mod-drawer{ position:static; display:block !important; transform:none }
-    #mod-drawer aside{ width:auto; border:0; box-shadow:none }
-  }
-
   .hx{border-color:rgba(2,132,199,.6); color:#0369a1}
   .hx:hover{background:#f0f9ff}
   </style>
@@ -816,7 +500,7 @@
        Binder JSON → UI (colori decisi dal JSON)
        =========================== -->
   <script>
-  /* TradeliaHeaderColors EXT — interpreta direttamente il tuo JSON */
+  /* TradeliaHeaderColors — interpreta direttamente il tuo JSON per l'header */
   (function(){
     const $  = (s)=> document.querySelector(s);
     const fmt = (v,d=2)=> (v==null || isNaN(v) ? 'N/D' : Number(v).toFixed(d));
@@ -865,54 +549,100 @@
   </script>
 
   <!-- ===========================
-       Helper SSE (chat streaming verso server locale opzionale)
+       Registry Moduli (senza registrazioni per ora)
        =========================== -->
   <script>
-  async function kamareraAsk(text, context={}){
-    const resp = await fetch('http://localhost:8787/api/chat', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ input:text, context })
-    });
-    const reader = resp.body.getReader(); const dec = new TextDecoder(); let buf='';
-    return { async *chunks(){ while(true){ const {value,done}=await reader.read(); if(done) break;
-      buf+=dec.decode(value,{stream:true}); const parts = buf.split('\n\n'); buf = parts.pop() || '';
-      for(const line of parts){ if(!line.startsWith('data:')) continue;
-        const payload=JSON.parse(line.slice(5).trim()); if(payload.delta) yield payload.delta; } } } };
-  }
-  </script>
+  (function(){
+    const $ = (sel,root=document)=> root.querySelector(sel);
+    const container = document.getElementById('mod-container');
 
-  <!-- ===========================
-       Modulo "Assistente" (facoltativo, per test runtime)
-       =========================== -->
-  <script>
-  if(window.TradeliaModules){
-    TradeliaModules.register({
-      id:'ASSIST', title:'Assistente · Swing master', seq:0, color:'green',
-      confidence:0.90, syncID:'ASSIST_'+new Date().toISOString().slice(0,10), meta:'Runtime helper',
-      render:(el)=>{
-        el.innerHTML=`<div class="space-y-2">
-          <div class="text-sm text-slate-600">Chat interna (solo informativa, non MiFID)</div>
-          <div class="flex gap-2">
-            <input id="assist-q" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm" placeholder="Chiedi: es. imposta F1 header…">
-            <button id="assist-send" class="btn"><i data-lucide="send"></i><span>Invia</span></button>
-          </div>
-          <pre id="assist-out" class="text-[12px] leading-relaxed bg-slate-50 border border-slate-200 rounded-lg p-2 h-[240px] overflow-auto"></pre>
-        </div>`;
-        if(window.lucide) lucide.createIcons();
-        const $=(s)=>el.querySelector(s);
-        $('#assist-send').addEventListener('click', async ()=>{
-          const q=$('#assist-q').value.trim(); if(!q) return;
-          const out=$('#assist-out'); out.textContent='';
-          try{
-            const stream=await kamareraAsk(q,{page:location.pathname,syncID:document.getElementById('H-SyncID')?.textContent||null});
-            for await (const chunk of stream.chunks()){ out.textContent+=chunk; out.scrollTop=out.scrollHeight; }
-          }catch(err){
-            out.textContent='[offline] Collega il server locale su http://localhost:8787 — '+String(err);
-          }
-        });
-      }
+    // Drawer base
+    const drawer = document.getElementById('mod-drawer');
+    const drawerPanel = drawer.querySelector('aside');
+    const drawerTitle = document.getElementById('drawer-title');
+    const drawerSub = document.getElementById('drawer-sub');
+    const drawerBody = document.getElementById('drawer-body');
+    function openDrawer({title, sub}){
+      drawerTitle.textContent = title || 'Modulo';
+      drawerSub.textContent = sub || '—';
+      drawer.classList.remove('hidden');
+      requestAnimationFrame(()=> drawerPanel.style.transform='translateX(0)');
+    }
+    function closeDrawer(){
+      drawerPanel.style.transform='translateX(100%)';
+      drawerPanel.addEventListener('transitionend', ()=> drawer.classList.add('hidden'), {once:true});
+    }
+    drawer.addEventListener('click', (e)=>{ if(e.target.dataset.close==='backdrop') closeDrawer(); });
+    document.getElementById('drawer-close')?.addEventListener('click', closeDrawer);
+    document.getElementById('drawer-print')?.addEventListener('click', ()=> window.print());
+
+    // Toggle vista
+    document.getElementById('view-grid')?.addEventListener('click', (e)=>{
+      container.dataset.view='grid';
+      e.currentTarget.setAttribute('aria-pressed','true');
+      document.getElementById('view-list').setAttribute('aria-pressed','false');
+      container.className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4';
     });
-  }
+    document.getElementById('view-list')?.addEventListener('click', (e)=>{
+      container.dataset.view='list';
+      e.currentTarget.setAttribute('aria-pressed','true');
+      document.getElementById('view-grid').setAttribute('aria-pressed','false');
+      container.className='space-y-2.5';
+    });
+
+    // Registry minimale (pronto per lo step successivo)
+    const modules = new Map();
+    const tpl = document.getElementById('tpl-mod-card');
+
+    function renderCard(def){
+      const node = tpl.content.cloneNode(true);
+      const root = node.firstElementChild;
+      root.dataset.id = def.id;
+      root.querySelector('#m-title').textContent = def.title || 'Modulo';
+      root.querySelector('[data-field="badge"]').textContent = 'NEUTRO';
+      root.querySelector('[data-field="badge"]').className = 'badge b-neutral';
+      // Apertura drawer con stub
+      root.addEventListener('click', ()=>{
+        openDrawer({title:def.title||'Modulo', sub:def.syncID||''});
+        drawerBody.replaceChildren();
+        const p = document.createElement('p');
+        p.className='text-sm text-slate-600';
+        p.textContent='Contenuto in arrivo (verrà montato allo step successivo).';
+        drawerBody.appendChild(p);
+      });
+      return root;
+    }
+
+    function mountAll(){
+      container.replaceChildren();
+      // Nessun modulo ancora: lasciamo vuoto (framework pronto)
+      // Quando pronti, useremo register() per inserire F1–F5 + Broker.
+    }
+
+    window.TradeliaModules = {
+      register(def){
+        if(!def || !def.id) throw new Error('register() richiede { id }');
+        modules.set(def.id, def);
+        container.appendChild(renderCard(def));
+        if(window.lucide) lucide.createIcons();
+        return def.id;
+      },
+      update(id, patch){
+        if(!modules.has(id)) throw new Error('id non trovato: '+id);
+        Object.assign(modules.get(id), patch||{});
+        // semplice remount: in questo step non necessario
+      },
+      open(id){
+        const m = modules.get(id); if(!m) return;
+        openDrawer({title:m.title, sub:m.syncID||''});
+        drawerBody.replaceChildren();
+      },
+      list(){ return Array.from(modules.values()); }
+    };
+
+    mountAll();
+    if(window.lucide) lucide.createIcons();
+  })();
   </script>
 
   <!-- Script placeholder per runtime personalizzato (opzionale) -->
