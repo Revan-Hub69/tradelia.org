@@ -1,28 +1,24 @@
 {
-  "session": "REG",
-  "dateStart": "2025-10-18",
-  "dateEnd": "2025-10-21",
-  "ticker": "QYLD",
-  "venue": "NASDAQ",
-
-  "validation": { "label": "OK", "color": "green" },
-
-  "versionTag": "swing-v5.0",
-  "syncID": "QYLD_20251021_F1",
-  "freshnessDays": 1,
-
-  "ocr_conf": 0.98,
-  "dataIntegrity": 0.95,
-  "feedSync": 0.97,
-
-  "confidence_final": { "value": 0.79, "color": "yellow" },
-  "state": { "label": "HOLD", "color": "yellow" },
-
-  "tapeNotes": "AuctionShare 21.3% · VWAP tight",
-  "missing": [],
-
-  "colorize": [
-    { "id": "#H-TapeNotes", "mode": "tone",  "color": "yellow", "text": "AuctionShare elevata (attenzione)" },
-    { "id": "#H-Missing",   "mode": "badge", "color": "green",  "label": "COMPLETO" }
-  ]
+  "Header": {
+    "Session": "REG",
+    "StartDate": "2025-10-18",
+    "EndDate": "2025-10-21",
+    "Ticker": "QYLD",
+    "Venue": "NASDAQ",
+    "Validation": { "label": "OK", "color": "green" },
+    "VersionTag": "swing-v5.0",
+    "SyncID": "QYLD_20251021_F1",
+    "Freshness": 1,
+    "OCR_Conf": 0.987654,
+    "DataIntegrity": 0.95321,
+    "FeedSync": 0.9973,
+    "ConfidenceFinal": { "value": 0.789456, "color": "yellow" },
+    "State": { "label": "HOLD", "color": "yellow" },
+    "TapeNotes": "AuctionShare 21.3% · VWAP tight · closing print stabile",
+    "Missing": [],
+    "Colorize": [
+      { "id": "#H-TapeNotes", "mode": "tone",  "color": "yellow", "text": "Asta vivace (attenzione)" },
+      { "id": "#H-Missing",   "mode": "badge", "color": "green",  "label": "COMPLETO" }
+    ]
+  }
 }
