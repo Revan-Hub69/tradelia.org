@@ -206,115 +206,112 @@
   <!-- ===========================
        HEADER — TICKER
        =========================== -->
-  <main class="max-w-7xl mx-auto px-3 sm:px-5 py-4">
-    <section id="header-ticker" class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4">
-    <!-- riga 1 -->
-<div class="card">
-  <label>Inizio report (data · ora) <button class="hx" data-k="DataStart">?</button></label>
-  <div id="H-Start" class="val">—</div>
-</div>
-<div class="card">
-  <label>Fine report (data · ora) <button class="hx" data-k="DataEnd">?</button></label>
-  <div id="H-End" class="val">—</div>
-</div>
-      <!-- riga 2 -->
-      <div class="card"><label>Ticker <button class="hx" data-k="Ticker">?</button></label><div id="H-Ticker" class="val">—</div></div>
-      <div class="card"><label>Borsa di negoziazione <button class="hx" data-k="Venue">?</button></label><div id="H-Venue" class="val">—</div></div>
-      <div class="card"><label>Validazione ticker/venue <button class="hx" data-k="Validazione">?</button></label><div id="H-Validation" class="val">—</div></div>
-      <!-- riga 3 -->
-      <div class="card"><label>VersionTag <button class="hx" data-k="VersionTag">?</button></label><div id="H-VersionTag" class="val">—</div></div>
-      <div class="card"><label>SyncID <button class="hx" data-k="SyncID">?</button></label><div id="H-SyncID" class="val">—</div></div>
-      <div class="card"><label>Freshness <button class="hx" data-k="Freshness">?</button></label><div id="H-Freshness" class="val">—</div></div>
-      <!-- riga 4 -->
-      <div class="card"><label>OCR_Conf <button class="hx" data-k="OCR_Conf">?</button></label><div id="H-OCR" class="val">—</div></div>
-      <div class="card"><label>DataIntegrity <button class="hx" data-k="DataIntegrity">?</button></label><div id="H-DataIntegrity" class="val">—</div></div>
-      <div class="card"><label>FeedSync <button class="hx" data-k="FeedSync">?</button></label><div id="H-FeedSync" class="val">—</div></div>
-    <!-- riga 5 (titolo metrica) -->
-<div class="card lg:col-span-2">
-  <label>Affidabilità complessiva dati (min: OCR_Conf, DataIntegrity, FeedSync, Confidence_H4, Confidence_H1)
-    <button class="hx" data-k="ConfidenceFinal">?</button>
-  </label>
-  <div id="H-Confidence" class="val">—</div>
-</div>
-      </div>
-      <div class="card"><label>Stato report <button class="hx" data-k="StatoReport">?</button></label><div id="H-State" class="val">—</div></div>
-      <!-- riga 6 -->
-      <div class="card lg:col-span-2"><label>TapeNotes (REG close) <button class="hx" data-k="TapeNotes">?</button></label><div id="H-TapeNotes" class="val">—</div></div>
-      <div class="card"><label>Missing (critici) <button class="hx" data-k="Missing">?</button></label><div id="H-Missing" class="val">—</div></div>
-    </section>
-  </main>
+<!-- === HEADER TICKER — stile + popup accademico (REPLACE) === -->
+<style>
+  /* Card header compatte */
+  #header-ticker .card{border:1px solid #e5e7eb;border-radius:.75rem;padding:.75rem;background:#fff}
+  #header-ticker label{display:flex;align-items:center;gap:.4rem;font-size:11px;color:#64748b}
+  #header-ticker .val{font-weight:700;color:#0f172a}
 
-  <!-- stile compatto per card + ? -->
-  <style>
-    #header-ticker .card{border:1px solid #e5e7eb;border-radius:.75rem;padding:.75rem}
-    #header-ticker label{display:flex;align-items:center;gap:.4rem;font-size:11px;color:#64748b}
-    #header-ticker .val{font-weight:600}
-    .hx{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:999px;border:1px solid rgba(2,132,199,.6);font-size:10px;line-height:1;color:#0369a1}
-    .hx-pop{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;z-index:50}
-    .hx-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;max-width:560px;width:92%;box-shadow:0 10px 30px rgba(0,0,0,.15)}
-    .hx-card h3{margin:0 0 4px;font-weight:600}
-    .hx-card .src{font-size:11px;color:#6b7280;margin-bottom:8px}
-  </style>
+  /* Bottone help "?" */
+  .hx{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:16px;height:16px;border-radius:999px;
+    border:1px solid rgba(2,132,199,.6);
+    font-size:10px;line-height:1;color:#0369a1;background:#fff
+  }
+  .hx:hover{background:#f0f9ff}
 
-  <!-- popup accademico -->
-  <script>
-  (function(){
-   const EXPL = {
-  Sessione:{t:"Sessione REG (adjusted)", a:"Analisi sulla sola sessione regolare; serie prezzi adjusted per dividendi/split per coerenza storica.", s:"CMT Association · Market Data Conventions; CFA Institute – Quantitative Methods."},
+  /* Popup overlay — SEMPRE sopra il drawer */
+  .hx-pop{
+    position:fixed;inset:0;
+    background:rgba(0,0,0,.45);
+    backdrop-filter:blur(2px);
+    display:flex;align-items:center;justify-content:center;
+    z-index:9999; /* sopra qualsiasi drawer/backdrop */
+  }
 
-  DataStart:{t:"Inizio report (data · ora)", a:"Timestamp di avvio finestra analitica, con orario locale (es. 2025-10-21 09:00). Serve per audit, replicabilità e allineamento feed.", s:"Methodology & Audit Trail (interno)."},
-  DataEnd:{t:"Fine report (data · ora)", a:"Timestamp di chiusura finestra analitica, con orario locale (es. 2025-10-21 10:00). Evita look-ahead bias e definisce esattamente il perimetro analizzato.", s:"Methodology & Audit Trail (interno)."},
+  /* Carta del popup (contenuto) */
+  .hx-card{
+    position:relative;z-index:10000;
+    background:#fff;border:1px solid #e5e7eb;border-radius:12px;
+    padding:16px;max-width:560px;width:92%;
+    box-shadow:0 10px 30px rgba(0,0,0,.18)
+  }
+  .hx-card h3{margin:0 0 4px;font-weight:700;color:#0f172a}
+  .hx-card .src{font-size:11px;color:#6b7280;margin-bottom:8px}
+</style>
 
-  Ticker:{t:"Ticker", a:"Identificativo ufficiale dello strumento negoziato.", s:"Nasdaq/NYSE Listing Rules; SEC Form 8-A."},
-  Venue:{t:"Borsa di negoziazione", a:"Venue primario/mic di quotazione dello strumento.", s:"Microstructure: O’Hara (1995) · Hasbrouck (2007)."},
-  Validazione:{t:"Validazione ticker/venue", a:"Coerenza simbolo–venue (incl. ADR); requisito preliminare di qualità.", s:"Best practice di data governance (CFA QM)."},
-  VersionTag:{t:"VersionTag", a:"Versione del motore/metodo usato nel report.", s:"Governance & versioning (interno)."},
-  SyncID:{t:"SyncID", a:"Chiave audit: <TICKER>_<YYYYMMDD>_F3/F1.", s:"Audit Trail (interno)."},
-  Freshness:{t:"Freshness", a:"Controllo freschezza dati ≤ T-1 prima della validazione.", s:"Policy di qualità dati (interno)."},
+<script>
+(function(){
+  // Dizionario spiegazioni (header)
+  const EXPL = {
+    Sessione:{t:"Sessione REG (adjusted)", a:"Analisi sulla sola sessione regolare; serie prezzi adjusted per dividendi/split per coerenza storica.", s:"CMT Association · Market Data Conventions; CFA Institute – Quantitative Methods."},
 
-  OCR_Conf:{t:"OCR_Confidence", a:"Attendibilità dell’estrazione numerica (0–1).", s:"CFA Institute – Quantitative Methods; Kahn & Strong (1998) Data Quality."},
-  DataIntegrity:{t:"Data Integrity", a:"Completezza/consistenza del dataset (0–1).", s:"Kahn & Strong (1998); Pipino, Lee & Wang (2002)."},
-  FeedSync:{t:"Feed Sync", a:"Allineamento temporale tra feed e pannelli (0–1).", s:"Hasbrouck (2007)."},
+    DataStart:{t:"Inizio report (data · ora)", a:"Timestamp di avvio finestra analitica, con orario locale (es. 2025-10-21 09:00). Serve per audit, replicabilità e allineamento feed.", s:"Methodology & Audit Trail (interno)."},
+    DataEnd:{t:"Fine report (data · ora)", a:"Timestamp di chiusura finestra analitica, con orario locale (es. 2025-10-21 10:00). Evita look-ahead bias e definisce esattamente il perimetro analizzato.", s:"Methodology & Audit Trail (interno)."},
 
-  ConfidenceFinal:{t:"Affidabilità complessiva dati", a:"Indice sintetico (0–1) che misura quanto ci fidiamo dei dati mostrati. È una metrica conservativa calcolata come il MINIMO tra: OCR_Conf (precisione estrazioni), DataIntegrity (completezza/consistenza), FeedSync (allineamento temporale) e le due confidence dei blocchi H4/H1. Valori più vicini a 1 indicano maggiore affidabilità.", s:"Metodo interno · Data Quality (Kahn & Strong, 1998)."},
+    Ticker:{t:"Ticker", a:"Identificativo ufficiale dello strumento negoziato.", s:"Nasdaq/NYSE Listing Rules; SEC Form 8-A."},
+    Venue:{t:"Borsa di negoziazione", a:"Venue primario/mic di quotazione dello strumento.", s:"Microstructure: O’Hara (1995) · Hasbrouck (2007)."},
+    Validazione:{t:"Validazione ticker/venue", a:"Coerenza simbolo–venue (incl. ADR); requisito preliminare di qualità.", s:"Best practice di data governance (CFA QM)."},
+    VersionTag:{t:"VersionTag", a:"Versione del motore/metodo usato nel report.", s:"Governance & versioning (interno)."},
+    SyncID:{t:"SyncID", a:"Chiave audit: <TICKER>_<YYYYMMDD>_F3/F1.", s:"Audit Trail (interno)."},
+    Freshness:{t:"Freshness", a:"Controllo freschezza dati ≤ T-1 prima della validazione.", s:"Policy di qualità dati (interno)."},
 
-  StatoReport:{t:"Stato report", a:"ACTIVE/HOLD/REVIEW in base a Confidence e copertura input.", s:"Policy stato (interno)."},
-  TapeNotes:{t:"TapeNotes (REG close)", a:"Note micro-strutturali sull’asta di chiusura.", s:"Hasbrouck (2007); O’Hara (1995)."},
-  Missing:{t:"Missing (critici)", a:"Campi critici mancanti → N/D; se impattano Confidence ⇒ HOLD.", s:"Policy N/D (interno)."}
-};
+    OCR_Conf:{t:"OCR_Confidence", a:"Attendibilità dell’estrazione numerica (0–1).", s:"CFA Institute – Quantitative Methods; Kahn & Strong (1998) Data Quality."},
+    DataIntegrity:{t:"Data Integrity", a:"Completezza/consistenza del dataset (0–1).", s:"Kahn & Strong (1998); Pipino, Lee & Wang (2002)."},
+    FeedSync:{t:"Feed Sync", a:"Allineamento temporale tra feed e pannelli (0–1).", s:"Hasbrouck (2007)."},
 
-    let POP=null, prevOverflow='';
-    function closePop(){
-      if(!POP) return;
-      POP.backdrop.removeEventListener('click', onBackdrop);
-      document.removeEventListener('keydown', onKeyEsc, true);
-      document.documentElement.style.overflow = prevOverflow;
-      POP.wrap.remove(); POP=null;
+    ConfidenceFinal:{t:"Affidabilità complessiva dati", a:"Indice sintetico (0–1). È il MINIMO tra: OCR_Conf, DataIntegrity, FeedSync e le confidence H4/H1.", s:"Metodo interno · Kahn & Strong (1998)."},
+    StatoReport:{t:"Stato report", a:"ACTIVE/HOLD/REVIEW in base a Confidence e copertura input.", s:"Policy stato (interno)."},
+    TapeNotes:{t:"TapeNotes (REG close)", a:"Note micro-strutturali sull’asta di chiusura (es. VWAP, auction share, slippage).", s:"Hasbrouck (2007); O’Hara (1995)."},
+    Missing:{t:"Missing (critici)", a:"Campi critici mancanti → N/D; se impattano Confidence ⇒ HOLD.", s:"Policy N/D (interno)."}
+  };
+
+  // Gestione popup
+  let POP=null, prevOverflow='';
+  function closePop(){
+    if(!POP) return;
+    POP.backdrop.removeEventListener('click', onBackdrop);
+    document.removeEventListener('keydown', onKeyEsc, true);
+    document.documentElement.style.overflow = prevOverflow;
+    POP.wrap.remove(); POP=null;
+  }
+  function onBackdrop(e){ if(e.target===e.currentTarget) closePop(); }
+  function onKeyEsc(e){ if(e.key==='Escape'){ e.stopPropagation(); e.preventDefault(); closePop(); } }
+
+  function openPop(d){
+    if(POP){
+      POP.title.textContent=d.t;
+      POP.src.textContent='Fonte accademica: '+d.s;
+      POP.text.innerHTML=d.a;
+      POP.wrap.focus(); return;
     }
-    function onBackdrop(e){ if(e.target===e.currentTarget) closePop(); }
-    function onKeyEsc(e){ if(e.key==='Escape'){ e.stopPropagation(); e.preventDefault(); closePop(); } }
+    const wrap=document.createElement('div');
+    wrap.className='hx-pop'; wrap.role='dialog'; wrap.ariaModal='true'; wrap.tabIndex=-1;
 
-    function openPop(d){
-      if(POP){ POP.title.textContent=d.t; POP.src.textContent='Fonte accademica: '+d.s; POP.text.innerHTML=d.a; POP.wrap.focus(); return; }
-      const wrap=document.createElement('div'); wrap.className='hx-pop'; wrap.role='dialog'; wrap.ariaModal='true'; wrap.tabIndex=-1;
-      const card=document.createElement('div'); card.className='hx-card'; card.addEventListener('click',ev=>ev.stopPropagation());
-      const h=document.createElement('h3'); h.textContent=d.t;
-      const src=document.createElement('div'); src.className='src'; src.textContent='Fonte accademica: '+d.s;
-      const text=document.createElement('div'); text.className='text-sm text-slate-800'; text.innerHTML=d.a;
-      card.append(h,src,text); wrap.append(card); document.body.appendChild(wrap);
-      prevOverflow=document.documentElement.style.overflow||''; document.documentElement.style.overflow='hidden';
-      wrap.addEventListener('click', onBackdrop); document.addEventListener('keydown', onKeyEsc, true);
-      wrap.focus(); POP={wrap, backdrop:wrap, title:h, src, text};
-    }
+    const card=document.createElement('div');
+    card.className='hx-card'; card.addEventListener('click',ev=>ev.stopPropagation());
 
-    document.addEventListener('click', (e)=>{
-      const btn=e.target.closest('.hx'); if(!btn) return;
-      if(POP && POP.wrap.contains(btn)) return;
-      const k=btn.dataset.k; const d=EXPL[k]||{t:k,a:"Descrizione non disponibile.",s:"—"};
-      openPop(d);
-    }, true);
-  })();
-  </script>
+    const h=document.createElement('h3'); h.textContent=d.t;
+    const src=document.createElement('div'); src.className='src'; src.textContent='Fonte accademica: '+d.s;
+    const text=document.createElement('div'); text.className='text-sm text-slate-800'; text.innerHTML=d.a;
+
+    card.append(h,src,text); wrap.append(card); document.body.appendChild(wrap);
+    prevOverflow=document.documentElement.style.overflow||''; document.documentElement.style.overflow='hidden';
+    wrap.addEventListener('click', onBackdrop); document.addEventListener('keydown', onKeyEsc, true);
+    wrap.focus(); POP={wrap, backdrop:wrap, title:h, src, text};
+  }
+
+  // Delegation click per tutti i bottoni .hx (header)
+  document.addEventListener('click', (e)=>{
+    const btn=e.target.closest('.hx'); if(!btn) return;
+    const k=btn.dataset.k; const d=EXPL[k]||{t:k,a:"Descrizione non disponibile.",s:"—"};
+    openPop(d);
+  }, true);
+})();
+</script>
+
 
   <!-- ===========================
        SEZIONE — MODULI (framework)
