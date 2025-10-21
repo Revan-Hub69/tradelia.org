@@ -55,7 +55,7 @@
   async function load(){
     const qp=new URLSearchParams(location.search);
     const id=qp.get("id")||"sample-qyld-2025-10-20";
-    const src=`/reports/${id}.json`;
+    const src=`../Reports/${id}.json?t=${Date.now()}`;
     try{
       const r=await fetch(src,{cache:"no-store"});
       if(!r.ok) throw new Error(`HTTP ${r.status}`);
