@@ -32,42 +32,64 @@
       { value: toNum(x), color: "neutral" };
     const fNum = toNum(h.Freshness);
     return {
-      session:h.Session,dateStart:h.StartDate,dateEnd:h.EndDate,ticker:h.Ticker,venue:h.Venue,
-      validation:toBadge(h.Validation),versionTag:h.VersionTag,syncID:h.SyncID,
+      session:h.Session, dateStart:h.StartDate, dateEnd:h.EndDate, ticker:h.Ticker, venue:h.Venue,
+      validation:toBadge(h.Validation), versionTag:h.VersionTag, syncID:h.SyncID,
       freshnessDays:fNum!=null?fNum:h.Freshness,
-      ocr_conf:toNum(h.OCR_Conf),dataIntegrity:toNum(h.DataIntegrity),feedSync:toNum(h.FeedSync),
-      confidence_final:toConf(h.ConfidenceFinal),state:toBadge(h.State),
-      tapeNotes:h.TapeNotes,missing:Array.isArray(h.Missing)?h.Missing:(h.Missing==null?[]:[h.Missing]),
+      ocr_conf:toNum(h.OCR_Conf), dataIntegrity:toNum(h.DataIntegrity), feedSync:toNum(h.FeedSync),
+      confidence_final:toConf(h.ConfidenceFinal), state:toBadge(h.State),
+      tapeNotes:h.TapeNotes, missing:Array.isArray(h.Missing)?h.Missing:(h.Missing==null?[]:[h.Missing]),
       colorize:Array.isArray(h.Colorize)?h.Colorize:undefined
     };
   }
 
   function fillPlainTexts(data){
     Object.entries(MAP).forEach(([domId, path])=>{
-      let v=get(data,path,"—");
-      if(["H-OCR","H-DataIntegrity","H-FeedSync"].includes(domId)) v=fmtNum(toNum(v));
-      if(domId==="H-Confidence"){ if(v&&typeof v==="object")v=fmtNum(toNum(v.value)); else v=fmtNum(toNum(v)); }
-      if(domId==="H-Freshness"){ const n=toNum(v); if(n!=null)v=(n<=1?"≤ T-1":`${n} giorni`); }
-      setText(domId,v);
+      let v = get(data, path, "—");
+
+      // se Validation è oggetto, mostra solo label nel fallback
+      if (domId === "H-Validation" && v && typeof v === "object") v = v.label ?? "—";
+
+      // numerici con formato
+      if (["H-OCR","H-DataIntegrity","H-FeedSync"].includes(domId)) v = fmtNum(toNum(v));
+
+      // confidence: può essere numero o oggetto {value}
+      if (domId === "H-Confidence"){
+        if (v && typeof v === "object") v = fmtNum(toNum(v.value));
+        else v = fmtNum(toNum(v));
+      }
+
+      // freshness → testo
+      if (domId === "H-Freshness"){
+        const n = toNum(v);
+        if (n != null) v = (n <= 1 ? "≤ T-1" : `${n} giorni`);
+      }
+
+      setText(domId, v);
     });
   }
 
   async function load(){
-    const qp=new URLSearchParams(location.search);
-    const id=qp.get("id")||"sample-qyld-2025-10-20";
-    const src=`../Reports/${id}.json?t=${Date.now()}`;
+    const qp = new URLSearchParams(location.search);
+    const id = qp.get("id") || "sample-qyld-2025-10-20";
+    // JSON in /reports (minuscolo), una cartella sopra /report
+    const src = `../reports/${id}.json?t=${Date.now()}`;
+
     try{
-      const r=await fetch(src,{cache:"no-store"});
+      const r = await fetch(src, { cache: "no-store" });
       if(!r.ok) throw new Error(`HTTP ${r.status}`);
-      const data=await r.json();
+      const data = await r.json();
+
+      // 1) Riempimento testo
       fillPlainTexts(data);
-      const payload=toBinderPayload(data);
+
+      // 2) Binder cromatico + evento
+      const payload = toBinderPayload(data);
       if(window.TradeliaHeaderColors?.apply) window.TradeliaHeaderColors.apply(payload);
-      window.dispatchEvent(new CustomEvent("tradelia:header:update",{detail:payload}));
+      window.dispatchEvent(new CustomEvent("tradelia:header:update", { detail: payload }));
     }catch(err){
-      console.error("Report JSON non trovato o invalido:",err);
+      console.error("Report JSON non trovato o invalido:", err);
     }
   }
 
-  document.addEventListener("DOMContentLoaded",load);
+  document.addEventListener("DOMContentLoaded", load);
 })();
