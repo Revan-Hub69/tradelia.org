@@ -8,43 +8,42 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-
   <style>
-    body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:#f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
-      background-size:280px;color:#0f172a}
-    ::-webkit-scrollbar{width:10px;height:10px}
-    ::-webkit-scrollbar-thumb{background:rgba(80,160,200,.4);border-radius:100vh}
-    ::-webkit-scrollbar-thumb:hover{background:rgba(80,160,200,.6)}
+    body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');background-size:280px;color:#0f172a}
+    ::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:rgba(80,160,200,.4);border-radius:100vh}::-webkit-scrollbar-thumb:hover{background:rgba(80,160,200,.6)}
     *{scrollbar-width:thin;scrollbar-color:rgba(80,160,200,.5) #e5e7eb}
-    .btn{display:inline-flex;align-items:center;gap:.45rem;padding:.4rem .6rem;border-radius:.6rem;font-weight:600;font-size:14px;
-      border:1px solid #e5e7eb;background:linear-gradient(#fff,#f8fafc);box-shadow:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.03);
-      transition:transform .08s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease;-webkit-tap-highlight-color:transparent}
-    .btn:hover{background:linear-gradient(#fff,#f1f5f9);border-color:#dbe3ea}
-    .btn:active{transform:translateY(1px);box-shadow:inset 0 1px 0 rgba(0,0,0,.06)}
-    .btn:focus-visible{outline:none;box-shadow:0 0 0 2px rgba(56,189,248,.5)}
-    .btn-primary{color:#0b2a3f}
-    .btn i{width:18px;height:18px}
+    .btn{display:inline-flex;align-items:center;gap:.45rem;padding:.4rem .6rem;border-radius:.6rem;font-weight:600;font-size:14px;border:1px solid #e5e7eb;background:linear-gradient(#fff,#f8fafc);box-shadow:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.03);transition:transform .08s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease;-webkit-tap-highlight-color:transparent}
+    .btn:hover{background:linear-gradient(#fff,#f1f5f9);border-color:#dbe3ea}.btn:active{transform:translateY(1px);box-shadow:inset 0 1px 0 rgba(0,0,0,.06)}
+    .btn:focus-visible{outline:none;box-shadow:0 0 0 2px rgba(56,189,248,.5)}.btn-primary{color:#0b2a3f}.btn i{width:18px;height:18px}
     .hdr{backdrop-filter:saturate(1.2) blur(6px)}
-    .sbtn{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .6rem;border-radius:.65rem;border:1px solid #e5e7eb;
-      background:#fff;font-weight:600;font-size:13px;transition:transform .08s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease}
-    .sbtn:hover{background:#f8fafc;border-color:#dbe3ea}
-    .sbtn:active{transform:translateY(1px)}
-    .sbtn i{width:18px;height:18px}
-    .badge-url{background:#f8fafc;border:1px solid #e5e7eb}
-    .qr-wrap img{border-radius:.75rem;border:1px solid #e5e7eb;background:#fff}
-    @keyframes fadeBackdropIn{from{opacity:0}to{opacity:1}}
-    @keyframes fadeBackdropOut{from{opacity:1}to{opacity:0}}
+    .sbtn{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .6rem;border-radius:.65rem;border:1px solid #e5e7eb;background:#fff;font-weight:600;font-size:13px;transition:transform .08s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease}
+    .sbtn:hover{background:#f8fafc;border-color:#dbe3ea}.sbtn:active{transform:translateY(1px)}.sbtn i{width:18px;height:18px}
+    .badge-url{background:#f8fafc;border:1px solid #e5e7eb}.qr-wrap img{border-radius:.75rem;border:1px solid #e5e7eb;background:#fff}
+    @keyframes fadeBackdropIn{from{opacity:0}to{opacity:1}}@keyframes fadeBackdropOut{from{opacity:1}to{opacity:0}}
     @keyframes popIn{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes popOut{from{opacity:1;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(4px) scale(.985)}}
-    .popup-backdrop{animation:fadeBackdropIn .18s ease forwards}
-    .popup-backdrop.closing{animation:fadeBackdropOut .16s ease forwards}
-    .popup-card{animation:popIn .20s cubic-bezier(.22,.61,.36,1) forwards}
-    .popup-card.closing{animation:popOut .16s ease forwards}
+    .popup-backdrop{animation:fadeBackdropIn .18s ease forwards}.popup-backdrop.closing{animation:fadeBackdropOut .16s ease forwards}
+    .popup-card{animation:popIn .20s cubic-bezier(.22,.61,.36,1) forwards}.popup-card.closing{animation:popOut .16s ease forwards}
     @media print{.noprint{display:none!important}}
+    /* theme bits */
+    :root{--c-text:#0f172a;--c-meta:#64748b;--c-border:#e5e7eb;--c-bg:#fff;--shadow-0:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.02)}
+    #header-ticker label{font-weight:600;letter-spacing:.1px} #header-ticker .val{font-weight:700;color:var(--c-text)}
+    .card{background:#fff;border:1px solid var(--c-border);border-radius:14px;box-shadow:var(--shadow-0)}
+    .hx{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:999px;border:1px solid rgba(2,132,199,.6);font-size:10px;line-height:1;color:#0369a1}
+    .hx:hover{background:#f0f9ff}
+    .tone--green{color:#065f46;font-weight:700}.tone--yellow{color:#92400e;font-weight:700}.tone--red{color:#7c2d12;font-weight:700}.tone--neutral{color:#334155;font-weight:700}
+    .badge{font-size:11px;padding:.1rem .45rem;border-radius:999px;border:1px solid}
+    .badge--active{color:#065f46;background:#ecfdf5;border-color:#a7f3d0}
+    .badge--hold{color:#92400e;background:#fffbeb;border-color:#fcd34d}
+    .badge--review{color:#7c2d12;background:#fef3c7;border-color:#fbbf24}
+    .badge--neutral{color:#334155;background:#f1f5f9;border-color:#e5e7eb}
+    /* modules list */
+    .mdc{background:#fff;border:1px solid #e5e7eb;border-radius:14px;box-shadow:var(--shadow-0);transition:border-color .18s, box-shadow .18s, transform .12s}
+    .mdc:hover{border-color:#dbe3ea;box-shadow:0 4px 18px rgba(2,6,23,.08)} .mdc:active{transform:translateY(1px)}
+    [data-view="list"] .mdc{display:flex} [data-view="list"] .mdc .mdc-b{flex:1}
+    @media print{#mod-drawer{position:static;display:block !important;transform:none}#mod-drawer aside{position:static;transform:none;width:auto;border:0;box-shadow:none}}
   </style>
 </head>
-
 <body class="text-gray-900">
   <!-- HEADER -->
   <header class="hdr sticky top-0 z-50 bg-white/90 border-b border-slate-200 noprint">
@@ -74,8 +73,7 @@
       document.getElementById('btn-share')?.addEventListener('click', async () => {
         const urlObj = new URL(window.location.href);
         if (!urlObj.searchParams.get('id')) urlObj.searchParams.set('id', 'sample-qyld-2025-10-20');
-        const longUrl = urlObj.toString();
-        openShareSheet({ longUrl, title:'Tradelia · Report Runtime', text:'Guarda il report completo su Tradelia AI' });
+        openShareSheet({ longUrl: urlObj.toString(), title:'Tradelia · Report Runtime', text:'Guarda il report completo su Tradelia AI' });
       });
 
       async function shortenUrl_isgd(longUrl, { timeoutMs = 5000 } = {}) {
@@ -93,7 +91,6 @@
       function openShareSheet({ longUrl, title, text }) {
         const backdrop = document.createElement('div');
         backdrop.className = 'popup-backdrop fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50';
-
         const card = document.createElement('div');
         card.className = 'popup-card bg-white rounded-xl shadow-2xl p-5 w-[92%] max-w-lg text-left border border-slate-200';
 
@@ -111,18 +108,13 @@
 
         card.innerHTML = `
           <div class="flex items-start justify-between gap-3 mb-3">
-            <div>
-              <h2 class="font-semibold text-slate-800 leading-tight">${title}</h2>
-              <p class="text-xs text-slate-500 mt-0.5">Condividi il link del report</p>
-            </div>
-            <button id="closePopup" class="btn" aria-label="Chiudi">
-              <i data-lucide="x"></i><span class="hidden sm:inline">Chiudi</span>
-            </button>
+            <div><h2 class="font-semibold text-slate-800 leading-tight">${title}</h2>
+                <p class="text-xs text-slate-500 mt-0.5">Condividi il link del report</p></div>
+            <button id="closePopup" class="btn" aria-label="Chiudi"><i data-lucide="x"></i><span class="hidden sm:inline">Chiudi</span></button>
           </div>
           <div class="flex items-center gap-2 mb-3">
             <label class="text-sm text-slate-700 flex items-center gap-2">
-              <input id="useShort" type="checkbox" class="h-4 w-4 accent-sky-600">
-              <span>Usa link breve (is.gd)</span>
+              <input id="useShort" type="checkbox" class="h-4 w-4 accent-sky-600"><span>Usa link breve (is.gd)</span>
             </label>
             <span id="shortStatus" class="text-xs text-slate-400">(non attivo)</span>
           </div>
@@ -137,18 +129,12 @@
               <a id="openNew" class="sbtn" href="${currentUrl}" target="_blank" rel="noopener"><i data-lucide="external-link"></i><span>Apri</span></a>
             </div>
             <p class="text-[11px] text-slate-500">Suggerimento: usa i pulsanti sopra per aprire la condivisione del servizio scelto.</p>
-          </div>
-        `;
-
+          </div>`;
         const renderTargets = (u) => {
           const grid = card.querySelector('#shareGrid');
-          grid.innerHTML = targets(u).map(t =>
-            `<a class="sbtn" href="${t.href}" target="_blank" rel="noopener">
-               <i data-lucide="${t.icon}"></i><span>${t.label}</span>
-             </a>`).join('');
+          grid.innerHTML = targets(u).map(t => `<a class="sbtn" href="${t.href}" target="_blank" rel="noopener"><i data-lucide="${t.icon}"></i><span>${t.label}</span></a>`).join('');
           lucide.createIcons();
         };
-
         const updateAll = (u) => {
           card.querySelector('#urlBox').textContent = u;
           card.querySelector('#openNew').href = u;
@@ -157,47 +143,25 @@
         };
 
         renderTargets(currentUrl);
-
-        const close = () => {
-          backdrop.classList.add('closing'); card.classList.add('closing');
-          card.addEventListener('animationend', () => backdrop.remove(), { once: true });
-        };
-        backdrop.appendChild(card);
-        document.body.appendChild(backdrop);
-        lucide.createIcons();
-
+        const close = () => { backdrop.classList.add('closing'); card.classList.add('closing'); card.addEventListener('animationend', () => backdrop.remove(), { once: true }); };
+        const backdrop = document.createElement('div'); backdrop.className = 'popup-backdrop fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50';
+        backdrop.appendChild(card); document.body.appendChild(backdrop); lucide.createIcons();
         backdrop.addEventListener('click', (e) => { if (e.target === backdrop) close(); });
         card.querySelector('#closePopup').addEventListener('click', close);
-
         card.querySelector('#copyLink').addEventListener('click', async () => {
-          try{
-            await navigator.clipboard.writeText(card.querySelector('#urlBox').textContent);
-            const btn = card.querySelector('#copyLink');
-            btn.innerHTML = '<i data-lucide="check"></i><span>Copiato</span>';
-            lucide.createIcons(); setTimeout(close, 900);
-          }catch{
-            const range = document.createRange(); range.selectNodeContents(card.querySelector('#urlBox'));
-            const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
-          }
+          try{ await navigator.clipboard.writeText(card.querySelector('#urlBox').textContent);
+               const btn = card.querySelector('#copyLink'); btn.innerHTML = '<i data-lucide="check"></i><span>Copiato</span>'; lucide.createIcons(); setTimeout(close, 900);
+          }catch{ const range = document.createRange(); range.selectNodeContents(card.querySelector('#urlBox')); const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range); }
         });
-
         let cachedShort = null;
         card.querySelector('#useShort').addEventListener('change', async (e) => {
           const shortStatus = card.querySelector('#shortStatus');
           if (e.target.checked) {
             shortStatus.textContent = 'creo link breve…'; shortStatus.className = 'text-xs text-sky-600';
-            try {
-              if (!cachedShort) cachedShort = await shortenUrl_isgd(longUrl);
-              updateAll(cachedShort);
-              shortStatus.textContent = 'attivo (is.gd)'; shortStatus.className = 'text-xs text-emerald-600';
-            } catch (err) {
-              updateAll(longUrl); e.target.checked = false;
-              shortStatus.textContent = 'non disponibile (fallback)'; shortStatus.className = 'text-xs text-amber-600';
-            }
-          } else {
-            updateAll(longUrl);
-            shortStatus.textContent = '(non attivo)'; shortStatus.className = 'text-xs text-slate-400';
-          }
+            try { if (!cachedShort) cachedShort = await shortenUrl_isgd(longUrl);
+                  updateAll(cachedShort); shortStatus.textContent = 'attivo (is.gd)'; shortStatus.className = 'text-xs text-emerald-600';
+            } catch { updateAll(longUrl); e.target.checked = false; shortStatus.textContent = 'non disponibile (fallback)'; shortStatus.className = 'text-xs text-amber-600'; }
+          } else { updateAll(longUrl); shortStatus.textContent = '(non attivo)'; shortStatus.className = 'text-xs text-slate-400'; }
         });
       }
     });
@@ -210,8 +174,8 @@
     <section id="header-ticker" class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4">
       <!-- riga 1 -->
       <div class="card"><label>Sessione <button class="hx" data-k="Sessione">?</button></label><div id="H-Session" class="val">—</div></div>
-      <div class="card"><label>Data inizio report <button class="hx" data-k="DataStart">?</button></label><div id="H-Start" class="val">—</div></div>
-      <div class="card"><label>Data fine report <button class="hx" data-k="DataEnd">?</button></label><div id="H-End" class="val">—</div></div>
+      <div class="card"><label>Data/ora inizio report <button class="hx" data-k="DataStart">?</button></label><div id="H-Start" class="val">—</div></div>
+      <div class="card"><label>Data/ora fine report <button class="hx" data-k="DataEnd">?</button></label><div id="H-End" class="val">—</div></div>
       <!-- riga 2 -->
       <div class="card"><label>Ticker <button class="hx" data-k="Ticker">?</button></label><div id="H-Ticker" class="val">—</div></div>
       <div class="card"><label>Borsa di negoziazione <button class="hx" data-k="Venue">?</button></label><div id="H-Venue" class="val">—</div></div>
@@ -226,8 +190,7 @@
       <div class="card"><label>FeedSync <button class="hx" data-k="FeedSync">?</button></label><div id="H-FeedSync" class="val">—</div></div>
       <!-- riga 5 -->
       <div class="card lg:col-span-2">
-        <label>Confidence (final) = min(OCR_Conf, DataIntegrity, FeedSync, Confidence_H4, Confidence_H1)
-          <button class="hx" data-k="ConfidenceFinal">?</button></label>
+        <label>Affidabilità complessiva dati <button class="hx" data-k="ConfidenceFinal">?</button></label>
         <div id="H-Confidence" class="val">—</div>
       </div>
       <div class="card"><label>Stato report <button class="hx" data-k="StatoReport">?</button></label><div id="H-State" class="val">—</div></div>
@@ -237,27 +200,15 @@
     </section>
   </main>
 
-  <!-- stile compatto per card + ? -->
-  <style>
-    #header-ticker .card{border:1px solid #e5e7eb;border-radius:.75rem;padding:.75rem}
-    #header-ticker label{display:flex;align-items:center;gap:.4rem;font-size:11px;color:#64748b}
-    #header-ticker .val{font-weight:600}
-    .hx{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:999px;border:1px solid rgba(2,132,199,.6);font-size:10px;line-height:1;color:#0369a1}
-    .hx-pop{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;z-index:50}
-    .hx-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;max-width:560px;width:92%;box-shadow:0 10px 30px rgba(0,0,0,.15)}
-    .hx-card h3{margin:0 0 4px;font-weight:600}
-    .hx-card .src{font-size:11px;color:#6b7280;margin-bottom:8px}
-  </style>
-
   <!-- popup accademico -->
   <script>
   (function(){
     const EXPL = {
       Sessione:{t:"Sessione REG (adjusted)", a:"Analisi sulla sola sessione regolare; serie prezzi adjusted per dividendi/split per coerenza storica.", s:"CMT Association · Market Data Conventions; CFA Institute – Quantitative Methods."},
-      DataStart:{t:"Data inizio report", a:"Timestamp di avvio finestra analitica per audit e replicabilità.", s:"Methodology & Audit Trail (interno)."},
-      DataEnd:{t:"Data fine report", a:"Timestamp di chiusura finestra; evita look-ahead bias.", s:"Methodology & Audit Trail (interno)."},
+      DataStart:{t:"Data/ora inizio report", a:"Timestamp di avvio della finestra analitica (con orario). Serve per audit e replicabilità.", s:"Methodology & Audit Trail (interno)."},
+      DataEnd:{t:"Data/ora fine report", a:"Timestamp di chiusura della finestra (con orario). Evita look-ahead bias.", s:"Methodology & Audit Trail (interno)."},
       Ticker:{t:"Ticker", a:"Identificativo ufficiale dello strumento negoziato.", s:"Nasdaq/NYSE Listing Rules; SEC Form 8-A."},
-      Venue:{t:"Borsa di negoziazione", a:"Venue primario/mic di quotazione dello strumento.", s:"Microstructure: O’Hara (1995) · Hasbrouck (2007)."},
+      Venue:{t:"Borsa di negoziazione", a:"Venue primario/MIC di quotazione dello strumento.", s:"Microstructure: O’Hara (1995) · Hasbrouck (2007)."},
       Validazione:{t:"Validazione ticker/venue", a:"Coerenza simbolo–venue (incl. ADR); requisito preliminare di qualità.", s:"Best practice di data governance (CFA QM)."},
       VersionTag:{t:"VersionTag", a:"Versione del motore/metodo usato nel report.", s:"Governance & versioning (interno)."},
       SyncID:{t:"SyncID", a:"Chiave audit: <TICKER>_<YYYYMMDD>_F3/F1.", s:"Audit Trail (interno)."},
@@ -265,54 +216,41 @@
       OCR_Conf:{t:"OCR_Confidence", a:"Attendibilità dell’estrazione numerica (0–1).", s:"CFA Institute – Quantitative Methods; Kahn & Strong (1998) Data Quality."},
       DataIntegrity:{t:"Data Integrity", a:"Completezza/consistenza del dataset (0–1).", s:"Kahn & Strong (1998); Pipino, Lee & Wang (2002)."},
       FeedSync:{t:"Feed Sync", a:"Allineamento temporale tra feed e pannelli (0–1).", s:"Hasbrouck (2007)."},
-      ConfidenceFinal:{t:"Confidence (final)", a:"Euristica conservativa: min(OCR_Conf, DataIntegrity, FeedSync, Confidence_H4, Confidence_H1).", s:"Metodo interno."},
-      StatoReport:{t:"Stato report", a:"ACTIVE/HOLD/REVIEW in base a Confidence e copertura input.", s:"Policy stato (interno)."},
+      ConfidenceFinal:{t:"Affidabilità complessiva dati", a:"Indice sintetico (0–1) calcolato in modo conservativo (min tra OCR_Conf, DataIntegrity, FeedSync e affidabilità H4/H1). Soglie: ≥0.90 Elevata, 0.75–0.89 Media, <0.75 Bassa.", s:"Metodo interno (risk-first)."},
+      StatoReport:{t:"Stato report", a:"ACTIVE/HOLD/REVIEW in base a Affidabilità e copertura input.", s:"Policy stato (interno)."},
       TapeNotes:{t:"TapeNotes (REG close)", a:"Note micro-strutturali sull’asta di chiusura.", s:"Hasbrouck (2007); O’Hara (1995)."},
-      Missing:{t:"Missing (critici)", a:"Campi critici mancanti → N/D; se impattano Confidence ⇒ HOLD.", s:"Policy N/D (interno)."}
+      Missing:{t:"Missing (critici)", a:"Campi critici mancanti → N/D; se impattano l’Affidabilità ⇒ HOLD.", s:"Policy N/D (interno)."}
     };
 
     let POP=null, prevOverflow='';
-    function closePop(){
-      if(!POP) return;
-      POP.backdrop.removeEventListener('click', onBackdrop);
-      document.removeEventListener('keydown', onKeyEsc, true);
-      document.documentElement.style.overflow = prevOverflow;
-      POP.wrap.remove(); POP=null;
-    }
+    function closePop(){ if(!POP) return; POP.backdrop.removeEventListener('click', onBackdrop); document.removeEventListener('keydown', onKeyEsc, true); document.documentElement.style.overflow = prevOverflow; POP.wrap.remove(); POP=null; }
     function onBackdrop(e){ if(e.target===e.currentTarget) closePop(); }
     function onKeyEsc(e){ if(e.key==='Escape'){ e.stopPropagation(); e.preventDefault(); closePop(); } }
-
     function openPop(d){
-      if(POP){ POP.title.textContent=d.t; POP.src.textContent='Fonte accademica: '+d.s; POP.text.innerHTML=d.a; POP.wrap.focus(); return; }
+      if(POP){ POP.title.textContent=d.t; POP.src.textContent='Fonte: '+d.s; POP.text.innerHTML=d.a; POP.wrap.focus(); return; }
       const wrap=document.createElement('div'); wrap.className='hx-pop'; wrap.role='dialog'; wrap.ariaModal='true'; wrap.tabIndex=-1;
       const card=document.createElement('div'); card.className='hx-card'; card.addEventListener('click',ev=>ev.stopPropagation());
       const h=document.createElement('h3'); h.textContent=d.t;
-      const src=document.createElement('div'); src.className='src'; src.textContent='Fonte accademica: '+d.s;
+      const src=document.createElement('div'); src.className='src'; src.textContent='Fonte: '+d.s;
       const text=document.createElement('div'); text.className='text-sm text-slate-800'; text.innerHTML=d.a;
       card.append(h,src,text); wrap.append(card); document.body.appendChild(wrap);
       prevOverflow=document.documentElement.style.overflow||''; document.documentElement.style.overflow='hidden';
       wrap.addEventListener('click', onBackdrop); document.addEventListener('keydown', onKeyEsc, true);
       wrap.focus(); POP={wrap, backdrop:wrap, title:h, src, text};
     }
-
-    document.addEventListener('click', (e)=>{
-      const btn=e.target.closest('.hx'); if(!btn) return;
-      if(POP && POP.wrap.contains(btn)) return;
-      const k=btn.dataset.k; const d=EXPL[k]||{t:k,a:"Descrizione non disponibile.",s:"—"};
-      openPop(d);
-    }, true);
+    document.addEventListener('click', (e)=>{ const btn=e.target.closest('.hx'); if(!btn) return; const k=btn.dataset.k; const d=EXPL[k]||{t:k,a:"Descrizione non disponibile.",s:"—"}; openPop(d); }, true);
   })();
   </script>
 
   <!-- ===========================
-       SEZIONE — MODULI (framework)
+       FRAMEWORK ANALITICO (stub)
        =========================== -->
   <section id="moduli" class="pt-3">
     <div class="max-w-7xl mx-auto px-3 sm:px-5">
       <div class="flex items-end justify-between mb-3 sm:mb-4">
         <div class="min-w-0">
-          <h2 class="text-base sm:text-lg font-semibold text-slate-800 tracking-tight">Moduli analitici</h2>
-          <p class="text-xs text-slate-500">Framework istituzionale · sequenziale · auditabile (F1–F5 + Broker in arrivo)</p>
+          <h2 class="text-base sm:text-lg font-semibold text-slate-800 tracking-tight">Framework analitico</h2>
+          <p class="text-xs text-slate-500">Metodo istituzionale, sequenziale, auditabile (F1–F5 + scheda broker)</p>
         </div>
         <div class="flex items-center gap-2">
           <button id="view-grid" class="btn" aria-pressed="true" aria-label="Vista griglia"><i data-lucide="grid"></i><span class="hidden sm:inline">Griglia</span></button>
@@ -320,9 +258,7 @@
         </div>
       </div>
 
-      <div id="mod-container" data-view="grid"
-           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4"
-           aria-label="Griglia moduli analitici">
+      <div id="mod-container" data-view="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4" aria-label="Framework analitico">
         <!-- verrà popolato in seguito -->
       </div>
     </div>
@@ -331,11 +267,10 @@
   <!-- Drawer -->
   <div id="mod-drawer" class="fixed inset-0 z-[60] hidden">
     <div class="absolute inset-0 bg-black/30 backdrop-blur-[1px]" data-close="backdrop"></div>
-    <aside class="absolute right-0 top-0 h-full w-[92%] sm:w-[560px] bg-white border-l border-slate-200 shadow-2xl
-                   translate-x-full will-change-transform transition-transform duration-200 ease-out">
+    <aside class="absolute right-0 top-0 h-full w-[92%] sm:w-[560px] bg-white border-l border-slate-200 shadow-2xl translate-x-full will-change-transform transition-transform duration-200 ease-out">
       <header class="h-12 sm:h-14 border-b border-slate-200 flex items-center justify-between px-3 sm:px-4">
         <div class="min-w-0">
-          <div id="drawer-title" class="font-semibold text-slate-800 truncate">Modulo</div>
+          <div id="drawer-title" class="font-semibold text-slate-800 truncate">Sezione</div>
           <div id="drawer-sub" class="text-xs text-slate-500 truncate">—</div>
         </div>
         <div class="flex items-center gap-2">
@@ -347,98 +282,7 @@
     </aside>
   </div>
 
-  <style>
-    .mdc{background:#fff;border:1px solid #e5e7eb;border-radius:14px;box-shadow:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.02);transition:border-color .18s, box-shadow .18s, transform .12s}
-    .mdc:hover{border-color:#dbe3ea;box-shadow:0 4px 18px rgba(2,6,23,.08)}
-    .mdc:active{transform:translateY(1px)}
-    .badge{font-size:11px;padding:.1rem .45rem;border-radius:999px;border:1px solid}
-    .b-active{color:#065f46;background:#ecfdf5;border-color:#a7f3d0}
-    .b-hold{color:#92400e;background:#fffbeb;border-color:#fcd34d}
-    .b-review{color:#7c2d12;background:#fef3c7;border-color:#fbbf24}
-    .b-neutral{color:#334155;background:#f1f5f9;border-color:#e5e7eb}
-    [data-view="list"] .mdc{display:flex}
-    [data-view="list"] .mdc .mdc-b{flex:1}
-    @media print{
-      #mod-drawer{position:static;display:block !important;transform:none}
-      #mod-drawer aside{position:static;transform:none;width:auto;border:0;box-shadow:none}
-    }
-  </style>
-
-  <template id="tpl-mod-card">
-    <article class="mdc" role="group" aria-labelledby="m-title">
-      <header class="mdc-h flex items-center justify-between gap-2 border-b border-slate-100 px-3 py-2.5">
-        <h3 id="m-title" class="font-semibold text-slate-800 text-sm">Titolo modulo</h3>
-        <span class="badge b-neutral" data-field="badge">NEUTRO</span>
-      </header>
-      <div class="mdc-b p-3 text-sm text-slate-600"></div>
-    </article>
-  </template>
-
-  <style>
-    :root{--c-text:#0f172a;--c-meta:#64748b;--c-border:#e5e7eb;--c-bg:#ffffff;--shadow-0:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.02)}
-    #header-ticker label{font-weight:600;letter-spacing:.1px}
-    #header-ticker .val{font-weight:700;color:var(--c-text)}
-    .card,.mdc{background:#fff;border:1px solid var(--c-border);border-radius:14px;box-shadow:var(--shadow-0)}
-    .badge--active{color:#065f46;background:#ecfdf5;border-color:#a7f3d0}
-    .badge--hold{color:#92400e;background:#fffbeb;border-color:#fcd34d}
-    .badge--review{color:#7c2d12;background:#fef3c7;border-color:#fbbf24}
-    .badge--neutral{color:#334155;background:#f1f5f9;border-color:#e5e7eb}
-    .hx{border-color:rgba(2,132,199,.6);color:#0369a1}
-    .hx:hover{background:#f0f9ff}
-  </style>
-
-  <style>
-    .tone--green{color:#065f46;font-weight:700}
-    .tone--yellow{color:#92400e;font-weight:700}
-    .tone--red{color:#7c2d12;font-weight:700}
-    .tone--neutral{color:#334155;font-weight:700}
-  </style>
-
-  <!-- Binder (interpreta JSON per l'header) -->
-  <script>
-  (function(){
-    const $  = (s)=> document.querySelector(s);
-    const fmt = (v,d=2)=> (v==null || isNaN(v) ? 'N/D' : Number(v).toFixed(d));
-    const clsBadge = (c)=>({green:'badge badge--active',yellow:'badge badge--hold',red:'badge badge--review'})[String(c||'').toLowerCase()]||'badge badge--neutral';
-    const clsTone  = (c)=>['green','yellow','red','neutral'].includes(String(c||'').toLowerCase())?`tone--${String(c).toLowerCase()}`:'tone--neutral';
-
-    const setText = (sel, v)=>{ const el=$(sel); if(el) el.textContent=(v==null||v==='')?'N/D':String(v); };
-    const setBadge=(sel, label, color)=>{ const el=$(sel); if(!el) return; const s=document.createElement('span'); s.className=clsBadge(color); s.textContent=(label??'N/D').toString().toUpperCase(); el.replaceChildren(s); };
-    const setTone =(sel, text, color)=>{ const el=$(sel); if(!el) return; const s=document.createElement('span'); s.className=clsTone(color); s.textContent=(text==null||text==='')?'N/D':String(text); el.replaceChildren(s); };
-
-    function applyColorize(list){
-      if(!Array.isArray(list)) return;
-      for(const it of list){
-        const t=it.id||it.sel; if(!t) continue;
-        if(it.mode==='badge') setBadge(t, it.label ?? it.text ?? it.value, it.color);
-        else if(it.mode==='tone'){
-          const content = (isFinite(it.value)? fmt(it.value, it.digits??2) : (it.text ?? it.label ?? it.value));
-          setTone(t, content, it.color);
-        } else setText(t, it.text ?? it.label ?? it.value);
-      }
-    }
-
-    function apply(j){
-      if(!j||typeof j!=='object') return;
-      setText('#H-Session', j.session); setText('#H-Start', j.dateStart); setText('#H-End', j.dateEnd);
-      setText('#H-Ticker', j.ticker); setText('#H-Venue', j.venue);
-      if(j.validation) setBadge('#H-Validation', j.validation.label, j.validation.color);
-      setText('#H-VersionTag', j.versionTag); setText('#H-SyncID', j.syncID);
-      setText('#H-Freshness', j.freshnessDays==null?'N/D':(j.freshnessDays<=1?'≤ T-1':`${j.freshnessDays} giorni`));
-      setText('#H-OCR', fmt(j.ocr_conf)); setText('#H-DataIntegrity', fmt(j.dataIntegrity)); setText('#H-FeedSync', fmt(j.feedSync));
-      if(j.confidence_final) setTone('#H-Confidence', fmt(j.confidence_final.value), j.confidence_final.color);
-      if(j.state) setBadge('#H-State', j.state.label, j.state.color);
-      setText('#H-TapeNotes', j.tapeNotes);
-      setText('#H-Missing', Array.isArray(j.missing)&&j.missing.length? j.missing.join(', ') : '—');
-      applyColorize(j.colorize);
-    }
-
-    window.TradeliaHeaderColors={ apply };
-    window.addEventListener('tradelia:header:update', (ev)=> apply(ev.detail||{}));
-  })();
-  </script>
-
-  <!-- Registry moduli (stub, senza moduli registrati) -->
+  <!-- Registry moduli (stub minimal) -->
   <script>
   (function(){
     const container = document.getElementById('mod-container');
@@ -448,38 +292,20 @@
     const drawerSub = document.getElementById('drawer-sub');
     const drawerBody = document.getElementById('drawer-body');
 
-    function openDrawer({title, sub}){
-      drawerTitle.textContent = title || 'Modulo';
-      drawerSub.textContent = sub || '—';
-      drawer.classList.remove('hidden');
-      requestAnimationFrame(()=> drawerPanel.style.transform='translateX(0)');
-    }
-    function closeDrawer(){
-      drawerPanel.style.transform='translateX(100%)';
-      drawerPanel.addEventListener('transitionend', ()=> drawer.classList.add('hidden'), {once:true});
-    }
+    function openDrawer({title, sub}){ drawerTitle.textContent = title || 'Sezione'; drawerSub.textContent = sub || '—'; drawer.classList.remove('hidden'); requestAnimationFrame(()=> drawerPanel.style.transform='translateX(0)'); }
+    function closeDrawer(){ drawerPanel.style.transform='translateX(100%)'; drawerPanel.addEventListener('transitionend', ()=> drawer.classList.add('hidden'), {once:true}); }
     drawer.addEventListener('click', (e)=>{ if(e.target.dataset.close==='backdrop') closeDrawer(); });
     document.getElementById('drawer-close')?.addEventListener('click', closeDrawer);
     document.getElementById('drawer-print')?.addEventListener('click', ()=> window.print());
 
-    document.getElementById('view-grid')?.addEventListener('click', (e)=>{
-      container.dataset.view='grid';
-      e.currentTarget.setAttribute('aria-pressed','true');
-      document.getElementById('view-list').setAttribute('aria-pressed','false');
-      container.className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4';
-    });
-    document.getElementById('view-list')?.addEventListener('click', (e)=>{
-      container.dataset.view='list';
-      e.currentTarget.setAttribute('aria-pressed','true');
-      document.getElementById('view-grid').setAttribute('aria-pressed','false');
-      container.className='space-y-2.5';
-    });
+    document.getElementById('view-grid')?.addEventListener('click', (e)=>{ container.dataset.view='grid'; e.currentTarget.setAttribute('aria-pressed','true'); document.getElementById('view-list').setAttribute('aria-pressed','false'); container.className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4'; });
+    document.getElementById('view-list')?.addEventListener('click', (e)=>{ container.dataset.view='list'; e.currentTarget.setAttribute('aria-pressed','true'); document.getElementById('view-grid').setAttribute('aria-pressed','false'); container.className='space-y-2.5'; });
 
     if(window.lucide) lucide.createIcons();
   })();
   </script>
 
   <!-- Carica il runtime JS (stesso livello del file HTML) -->
-  <script src="./runtime.js?v=1" defer></script>
+  <script src="./runtime.js?v=2" defer></script>
 </body>
 </html>
