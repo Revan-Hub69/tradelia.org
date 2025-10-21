@@ -954,31 +954,39 @@
      <!-- =========================
      STEP 6/7 — MODULO F1B (compact + color validation)
      ========================= -->
-
 <!-- =========================
-     STEP 6/7 — MODULO F1B (terminal compact + rich drawer)
+     STEP 6/7 — MODULO F1B (card mobile ultra-compatta + drawer a TAB + resoconto)
      ========================= -->
 
 <style>
-  /* mini stile terminale per la card F1B */
+  /* === Card F1B ultra-compatta (mobile-first) === */
   .f1b-card{ border:1px solid #e5e7eb; border-radius:14px; background:#fff; }
   .f1b-head{ display:flex; align-items:center; justify-content:space-between; gap:.5rem;
-    padding:8px 10px; background:linear-gradient(#fff,#fbfdff); border-bottom:1px solid #eef2f6;
-  }
+    padding:8px 10px; background:linear-gradient(#fff,#fbfdff); border-bottom:1px solid #eef2f6; }
   .f1b-title{ font-weight:600; font-size:13px; color:#0f172a }
-  .f1b-body{ padding:10px }
-  .f1b-row{ display:grid; grid-template-columns: 1fr auto; gap:.35rem; align-items:center; padding:.35rem .4rem; border-radius:8px }
-  .f1b-row:hover{ background:#f8fafc }
-  .f1b-lab{ font-size:11px; color:#64748b; display:flex; align-items:center; gap:.35rem; text-transform:uppercase; letter-spacing:.03em }
-  .f1b-val{ font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size:13px; font-weight:700; color:#0f172a }
-  .dot{ width:8px; height:8px; border-radius:999px; display:inline-block }
-  .dot-g{ background:#10b981 } .dot-y{ background:#f59e0b } .dot-r{ background:#ef4444 } .dot-n{ background:#94a3b8 }
+  .f1b-body{ padding:8px 10px }
+  .f1b-line{ display:flex; align-items:center; justify-content:space-between; gap:.75rem }
+  .f1b-mode{ font-size:13px; font-weight:700; color:#0f172a }
+  .f1b-sub{ font-size:11px; color:#64748b }
+  .f1b-cta .sbtn{ padding:.45rem .6rem }
 
-  .f1b-inline{ display:flex; flex-wrap:wrap; gap:.35rem .5rem; margin-top:.35rem }
-  .f1b-tag-s{ font-size:12px; border:1px dashed #cbd5e1; background:#f8fafc; border-radius:999px; padding:.15rem .55rem }
+  /* su desktop, possiamo mostrare due micro-kpi extra */
+  @media (min-width:641px){
+    .f1b-extras{ display:flex; gap:.5rem; align-items:center }
+    .f1b-dot{ width:8px; height:8px; border-radius:999px; display:inline-block }
+    .dot-g{ background:#10b981 } .dot-y{ background:#f59e0b } .dot-r{ background:#ef4444 } .dot-n{ background:#94a3b8 }
+    .f1b-chip-mini{ font-size:12px; border:1px dashed #cbd5e1; background:#f8fafc; border-radius:999px; padding:.15rem .55rem }
+  }
 
-  /* sparkline compatta */
-  .f1b-spark-mini{ width:100%; height:32px; display:block }
+  /* === Drawer Tabs === */
+  .tabbar{ position:sticky; top:0; z-index:10; display:flex; flex-wrap:wrap; gap:.35rem; background:#f8fafc;
+    padding:.5rem; border-radius:10px; border:1px solid #e5e7eb; }
+  .tabbar .sbtn{ font-size:12px; padding:.4rem .55rem }
+  .tab-sec{ display:none }
+  .tab-sec.active{ display:block }
+
+  /* Sparkline compatta condivisa */
+  .f1b-spark, .f1b-spark-mini{ width:100%; height:32px; display:block }
 </style>
 
 <!-- Template card F1B -->
@@ -990,51 +998,21 @@
     </header>
 
     <div class="f1b-body">
-      <!-- righe tipo terminale -->
-      <div class="f1b-row">
-        <div class="f1b-lab">VIX <button class="hx" data-k="F1B_VIX">?</button></div>
-        <div class="f1b-val" data-f1b="kpi-vix">—</div>
-      </div>
-      <div class="f1b-row">
-        <div class="f1b-lab">Breadth 1M <button class="hx" data-k="F1B_Breadth">?</button></div>
-        <div class="f1b-val" data-f1b="kpi-breadth">—</div>
-      </div>
-      <div class="f1b-row">
-        <div class="f1b-lab">Risk Tilt <button class="hx" data-k="F1B_RiskTilt">?</button></div>
-        <div class="f1b-val" data-f1b="kpi-risktilt">—</div>
-      </div>
-      <div class="f1b-row">
-        <div class="f1b-lab">FlowScore <button class="hx" data-k="F1B_FlowScore">?</button></div>
-        <div class="f1b-val" data-f1b="kpi-flowscore">—</div>
-      </div>
-      <div class="f1b-row">
-        <div class="f1b-lab">RegimeScore <button class="hx" data-k="F1B_Regime">?</button></div>
-        <div class="f1b-val" data-f1b="kpi-regimescore">—</div>
-      </div>
-      <div class="f1b-row">
-        <div class="f1b-lab">StrategyMode <button class="hx" data-k="F1B_Mode">?</button></div>
-        <div class="f1b-val" data-f1b="kpi-mode">—</div>
-      </div>
+      <div class="f1b-line">
+        <div>
+          <div class="f1b-sub">Modulo macro favorisce</div>
+          <div class="f1b-mode" data-f1b="kpi-mode">—</div>
+        </div>
 
-      <!-- sparkline -->
-      <div class="mt-1">
-        <svg class="f1b-spark-mini" preserveAspectRatio="none" viewBox="0 0 100 32" data-f1b="spark-vix" aria-label="VIX sparkline"></svg>
-        <div class="text-[11px] text-slate-500 mt-0.5" data-f1b="spark-meta">VIX · n/d</div>
-      </div>
+        <!-- su desktop mostriamo due micro badge; su mobile li nascondiamo (più pulito) -->
+        <div class="f1b-extras hidden sm:flex">
+          <span class="f1b-chip-mini" data-f1b="chip-vix"><span class="f1b-dot dot-n" aria-hidden="true"></span> VIX</span>
+          <span class="f1b-chip-mini" data-f1b="chip-breadth">Breadth</span>
+        </div>
 
-      <!-- leadership sintetica -->
-      <div class="f1b-inline">
-        <span class="f1b-tag-s" data-f1b="top1">—</span>
-        <span class="f1b-tag-s" data-f1b="top2">—</span>
-        <span class="f1b-tag-s" data-f1b="top3">—</span>
-        <span class="f1b-tag-s" data-f1b="weak1">—</span>
-        <span class="f1b-tag-s" data-f1b="weak2">—</span>
-        <span class="f1b-tag-s" data-f1b="weak3">—</span>
-      </div>
-
-      <div class="mt-2 flex items-center gap-1.5">
-        <button class="sbtn" data-f1b="open"><i data-lucide="panel-right-open"></i><span>Apri F1B</span></button>
-        <span class="text-[11px] text-slate-500">Audit: <button class="hx underline decoration-dotted" data-k="F1B_Notes">Note</button></span>
+        <div class="f1b-cta">
+          <button class="sbtn" data-f1b="open"><i data-lucide="panel-right-open"></i><span>Apri scheda</span></button>
+        </div>
       </div>
     </div>
   </article>
@@ -1051,9 +1029,9 @@
     neutral:'f1b-badge f1b-badge--neutral'
   };
   const toneByVIX = (v)=> (v==null||isNaN(v))?'neutral': v<15?'green': v<=22?'yellow':'red';
-  const dotClass = (t)=> ({green:'dot dot-g',yellow:'dot dot-y',red:'dot dot-r',neutral:'dot dot-n'}[t]||'dot dot-n');
+  const dotClass = (t)=> ({green:'f1b-dot dot-g',yellow:'f1b-dot dot-y',red:'f1b-dot dot-r',neutral:'f1b-dot dot-n'}[t]||'f1b-dot dot-n');
 
-  // Sparkline minimal (esportata per il drawer)
+  // Sparkline minimal (exported for drawer)
   function sparkline(svgEl, values){
     if(!svgEl) return;
     svgEl.innerHTML='';
@@ -1077,55 +1055,65 @@
     el.textContent = (badge && badge.label) || el.textContent || '—';
   }
 
-  /* ========= BINDER CARD ========= */
+  /** ======== COMPOSE SUMMARY (fallback) ======== */
+  function buildSummary(m){
+    // Se c'è un summary già pronto, usalo
+    const pre = m?.Meta?.Summary || m?.Summary?.Text;
+    if (pre && String(pre).trim().length) return String(pre).trim();
+
+    // Altrimenti componi un testo breve coerente con le metriche
+    const mode = m?.Metrics?.Classification?.StrategyMode || '—';
+    const rs   = m?.Metrics?.RegimeScore?.score;
+    const fs   = m?.Metrics?.FlowScore?.score;
+    const br   = m?.Metrics?.Breadth1M?.label;
+    const rt   = m?.Metrics?.RiskTilt?.label;
+    const vixL = m?.UI?.Display?.VIX_Label ?? m?.Inputs?.VIX_Close_T1;
+
+    const bits = [];
+    bits.push(`Il modulo macro favorisce **${mode}**${(rs!=null)?` (RegimeScore ${Number(rs).toFixed(2)})`:''}.`);
+    if (fs!=null) bits.push(`Il **FlowScore** è ${Number(fs).toFixed(2)}; ${rt?`il **Risk Tilt** è ${rt.toLowerCase()}`:'rotazione neutra'}.`);
+    if (br) bits.push(`La **breadth 1M** risulta ${br.toLowerCase()}.`);
+    if (vixL!=null) bits.push(`Il **VIX** è ${typeof vixL==='number'? vixL.toFixed(2): vixL}.`);
+    bits.push(`Consultare le tab per dettagli, input settoriali e note di audit.`);
+
+    return bits.join(' ');
+  }
+
+  /* ========= BINDER CARD (ultra-compatta) ========= */
   function bindF1BCard(card, m){
-    const fmt=(x,d=2)=> (x==null||x==='—') ? '—' : (typeof x==='number'? x.toFixed(d) : x);
-
-    // KPI
-    $('[data-f1b="kpi-vix"]',card).innerHTML =
-      `${m?.UI?.Display?.VIX_Label ?? (m?.Inputs?.VIX_Close_T1 ?? '—')}
-       <span class="${dotClass(toneByVIX(m?.Inputs?.VIX_Close_T1))}" aria-hidden="true"></span>`;
-
-    $('[data-f1b="kpi-breadth"]',card).textContent    = m?.Metrics?.Breadth1M?.label ?? '—';
-    $('[data-f1b="kpi-risktilt"]',card).textContent   = m?.Metrics?.RiskTilt?.label ?? '—';
-    $('[data-f1b="kpi-flowscore"]',card).textContent  = fmt(m?.Metrics?.FlowScore?.score);
-    $('[data-f1b="kpi-regimescore"]',card).textContent= fmt(m?.Metrics?.RegimeScore?.score);
-    $('[data-f1b="kpi-mode"]',card).textContent       = m?.Metrics?.Classification?.StrategyMode ?? '—';
+    // Strategy mode visibile sempre
+    $('[data-f1b="kpi-mode"]',card).textContent = m?.Metrics?.Classification?.StrategyMode ?? '—';
 
     // Stato complessivo (badge)
     if(m?.Meta?.StateBadge){ setBadge($('[data-f1b="state-badge"]',card), m.Meta.StateBadge); }
 
-    // Leadership sintetica
-    const top = m?.Leadership?.TopInflow || [], weak = m?.Leadership?.WeakSectors || [];
-    $('[data-f1b="top1"]',card).textContent  = top[0]? `${top[0].ticker} · ${top[0].name}` : '—';
-    $('[data-f1b="top2"]',card).textContent  = top[1]? `${top[1].ticker} · ${top[1].name}` : '—';
-    $('[data-f1b="top3"]',card).textContent  = top[2]? `${top[2].ticker} · ${top[2].name}` : '—';
-    $('[data-f1b="weak1"]',card).textContent = weak[0]? `${weak[0].ticker} · ${weak[0].name}` : '—';
-    $('[data-f1b="weak2"]',card).textContent = weak[1]? `${weak[1].ticker} · ${weak[1].name}` : '—';
-    $('[data-f1b="weak3"]',card).textContent = weak[2]? `${weak[2].ticker} · ${weak[2].name}` : '—';
+    // Micro chip desktop: VIX dot + Breadth label
+    const vixVal = m?.Inputs?.VIX_Close_T1;
+    const vixTone= toneByVIX(vixVal);
+    const chipVix= $('[data-f1b="chip-vix"]',card);
+    if (chipVix){
+      chipVix.innerHTML = `<span class="${dotClass(vixTone)}" aria-hidden="true"></span> VIX ${ (typeof vixVal==='number') ? vixVal.toFixed(2) : (m?.UI?.Display?.VIX_Label ?? '—') }`;
+    }
+    const chipBr = $('[data-f1b="chip-breadth"]',card);
+    if (chipBr){
+      chipBr.textContent = `Breadth ${m?.Metrics?.Breadth1M?.label ?? '—'}`;
+    }
 
-    // Spark mini
-    const series = Array.isArray(m?.Series?.VIX_Sparkline) ? m.Series.VIX_Sparkline : [];
-    sparkline($('[data-f1b="spark-vix"]',card), series);
-    $('[data-f1b="spark-meta"]',card).textContent = series.length
-      ? `VIX · ultimi ${series.length} gg · ${m?.Series?.Timebase||'daily'}`
-      : 'VIX · n/d';
-
-    // Drawer
+    // Drawer open
     $('[data-f1b="open"]',card).onclick=(ev)=>{
       ev.stopPropagation();
       if (window.Tradelia?.openDrawer) window.Tradelia.openDrawer();
-      renderF1BDrawer(m);
+      renderF1BDrawer(m); // con tabs + resoconto
     };
 
     if (window.lucide) lucide.createIcons();
   }
 
-  /* ========= DRAWER RICCO ========= */
+  /* ========= DRAWER A TAB + RESOCONTO ========= */
   function renderF1BDrawer(m){
     const body = document.getElementById('drawer-body');
     document.getElementById('drawer-title').textContent = 'F1B — Screening Macro-Settoriale';
-    document.getElementById('drawer-sub').textContent   = 'Panoramica completa · dati auditabili';
+    document.getElementById('drawer-sub').textContent   = 'Rotazione · Volatilità · Regime';
 
     const fmt=(x,d=2)=> (x==null||x==='—') ? '—' : (typeof x==='number'? x.toFixed(d):x);
     const rows=(m?.Inputs?.SectorETFs||[]).map(r=>`
@@ -1138,33 +1126,55 @@
         <td class="py-1 text-right">${r.rank_flow_5d??'—'}</td>
       </tr>`).join('');
 
+    const summaryText = buildSummary(m);
+
     body.innerHTML = `
       <div class="space-y-3">
-
-        <!-- OVERVIEW -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
-          <div class="card p-3">
-            <div class="sec-h"><i data-lucide="activity"></i><span>Classificazione & Regime</span></div>
-            <div><b>StrategyMode:</b> ${m?.Metrics?.Classification?.StrategyMode||'—'} <button class="hx" data-k="F1B_Mode">?</button></div>
-            <div class="mt-1"><b>RegimeScore:</b> ${fmt(m?.Metrics?.RegimeScore?.score)} <button class="hx" data-k="F1B_Regime">?</button></div>
-            <div class="mt-1"><b>FlowScore:</b> ${fmt(m?.Metrics?.FlowScore?.score)} <button class="hx" data-k="F1B_FlowScore">?</button></div>
-            <div class="mt-2 text-sm text-slate-600"><b>VIX:</b> ${m?.UI?.Display?.VIX_Label ?? (m?.Inputs?.VIX_Close_T1 ?? '—')} <button class="hx" data-k="F1B_VIX">?</button></div>
-          </div>
-
-          <div class="card p-3">
-            <div class="sec-h"><i data-lucide="shield-check"></i><span>Quality & Stato</span></div>
-            <div class="grid grid-cols-3 gap-2 text-sm">
-              <div><div class="text-slate-500 text-xs">OCR_Conf</div><div class="font-semibold">${fmt(m?.Quality?.OCR_Conf)}</div></div>
-              <div><div class="text-slate-500 text-xs">DataIntegrity</div><div class="font-semibold">${fmt(m?.Quality?.DataIntegrity)}</div></div>
-              <div><div class="text-slate-500 text-xs">FeedSync</div><div class="font-semibold">${fmt(m?.Quality?.FeedSync)}</div></div>
-            </div>
-            <div class="mt-2"><b>Confidence Local:</b> ${fmt(m?.Quality?.ConfidenceLocal?.value)} (${m?.Quality?.ConfidenceLocal?.color||'—'})</div>
-            <div class="mt-1"><b>Report State:</b> ${m?.Meta?.State||'—'} <button class="hx" data-k="StatoReport">?</button></div>
-          </div>
+        <div class="tabbar noprint">
+          <button class="sbtn" data-tab="#f1b-ov"><i data-lucide="layout-grid"></i><span>Overview</span></button>
+          <button class="sbtn" data-tab="#f1b-mx"><i data-lucide="activity"></i><span>Metriche</span></button>
+          <button class="sbtn" data-tab="#f1b-le"><i data-lucide="layers"></i><span>Leadership</span></button>
+          <button class="sbtn" data-tab="#f1b-se"><i data-lucide="chart-line"></i><span>Serie</span></button>
+          <button class="sbtn" data-tab="#f1b-in"><i data-lucide="table-2"></i><span>Inputs</span></button>
+          <button class="sbtn" data-tab="#f1b-au"><i data-lucide="badge-check"></i><span>Audit</span></button>
+          <button class="sbtn" data-tab="#f1b-rs"><i data-lucide="notes"></i><span>Resoconto</span></button>
         </div>
 
-        <!-- LEADERSHIP & BREADTH -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+        <!-- OVERVIEW -->
+        <section id="f1b-ov" class="tab-sec active">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            <div class="card p-3">
+              <div class="sec-h"><i data-lucide="sparkles"></i><span>Classificazione</span></div>
+              <div><b>StrategyMode:</b> ${m?.Metrics?.Classification?.StrategyMode||'—'} <button class="hx" data-k="F1B_Mode">?</button></div>
+              <div class="mt-1"><b>RegimeScore:</b> ${fmt(m?.Metrics?.RegimeScore?.score)} <button class="hx" data-k="F1B_Regime">?</button></div>
+              <div class="mt-1"><b>FlowScore:</b> ${fmt(m?.Metrics?.FlowScore?.score)} <button class="hx" data-k="F1B_FlowScore">?</button></div>
+            </div>
+            <div class="card p-3">
+              <div class="sec-h"><i data-lucide="list-tree"></i><span>Read-through</span></div>
+              <div class="text-sm text-slate-700 leading-relaxed">
+                ${summaryText}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- METRICHE -->
+        <section id="f1b-mx" class="tab-sec">
+          <div class="card p-3">
+            <div class="sec-h"><i data-lucide="activity"></i><span>Metriche & Stato</span></div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div class="f1b-kpi"><label>VIX <button class="hx" data-k="F1B_VIX">?</button></label><div class="v">${m?.UI?.Display?.VIX_Label ?? m?.Inputs?.VIX_Close_T1 ?? '—'}</div></div>
+              <div class="f1b-kpi"><label>Breadth 1M <button class="hx" data-k="F1B_Breadth">?</button></label><div class="v">${m?.Metrics?.Breadth1M?.label ?? '—'}</div></div>
+              <div class="f1b-kpi"><label>Risk Tilt <button class="hx" data-k="F1B_RiskTilt">?</button></label><div class="v">${m?.Metrics?.RiskTilt?.label ?? '—'}</div></div>
+              <div class="f1b-kpi"><label>FlowScore <button class="hx" data-k="F1B_FlowScore">?</button></label><div class="v">${fmt(m?.Metrics?.FlowScore?.score)}</div></div>
+              <div class="f1b-kpi"><label>RegimeScore <button class="hx" data-k="F1B_Regime">?</button></label><div class="v">${fmt(m?.Metrics?.RegimeScore?.score)}</div></div>
+              <div class="f1b-kpi"><label>State <button class="hx" data-k="StatoReport">?</button></label><div class="v">${m?.Meta?.State||'—'}</div></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- LEADERSHIP -->
+        <section id="f1b-le" class="tab-sec">
           <div class="card p-3">
             <div class="sec-h"><i data-lucide="layers"></i><span>Leadership settoriale</span></div>
             <div class="flex flex-wrap gap-1.5">
@@ -1174,69 +1184,87 @@
               ${(m?.Leadership?.WeakSectors||[]).slice(0,6).map(x=>`<span class="f1b-tag">${x.ticker||'—'} · ${x.name||'—'}</span>`).join(' ')}
             </div>
           </div>
+        </section>
 
+        <!-- SERIE -->
+        <section id="f1b-se" class="tab-sec">
           <div class="card p-3">
-            <div class="sec-h"><i data-lucide="list-tree"></i><span>Breadth & Risk Tilt</span></div>
-            <div><b>Breadth 1M:</b> ${m?.Metrics?.Breadth1M?.label ?? '—'} <button class="hx" data-k="F1B_Breadth">?</button></div>
-            <div class="mt-1"><b>Risk Tilt:</b> ${m?.Metrics?.RiskTilt?.label ?? '—'} <button class="hx" data-k="F1B_RiskTilt">?</button></div>
-            <div class="mt-2 text-[11px] text-slate-500">Interpretazione: breadth > 50% = respiro positivo; Risk Tilt > 0 = preferenza ciclici.</div>
+            <div class="sec-h"><i data-lucide="chart-line"></i><span>Serie VIX</span></div>
+            <svg class="f1b-spark" preserveAspectRatio="none" viewBox="0 0 100 32" id="drawer-spark"></svg>
+            <div class="text-[11px] text-slate-500 mt-0.5">
+              ${(Array.isArray(m?.Series?.VIX_Sparkline) && m.Series.VIX_Sparkline.length)
+                ? `VIX · ultimi ${m?.Series?.VIX_Sparkline.length} gg · ${m?.Series?.Timebase||'daily'}`
+                : 'VIX · n/d'}
+            </div>
           </div>
-        </div>
+        </section>
 
-        <!-- SERIE / SPARKLINE -->
-        <div class="card p-3">
-          <div class="sec-h"><i data-lucide="chart-line"></i><span>Serie VIX</span></div>
-          <svg class="f1b-spark" preserveAspectRatio="none" viewBox="0 0 100 32" id="drawer-spark"></svg>
-          <div class="text-[11px] text-slate-500 mt-0.5">
-            ${(Array.isArray(m?.Series?.VIX_Sparkline) && m.Series.VIX_Sparkline.length)
-              ? `VIX · ultimi ${m.Series.VIX_Sparkline.length} gg · ${m?.Series?.Timebase||'daily'}`
-              : 'VIX · n/d'}
+        <!-- INPUTS -->
+        <section id="f1b-in" class="tab-sec">
+          <div class="card p-3 overflow-auto">
+            <div class="sec-h"><i data-lucide="table-2"></i><span>Inputs (ETF settoriali)</span></div>
+            <table class="w-full text-sm">
+              <thead class="text-slate-500">
+                <tr class="border-b">
+                  <th class="text-left py-1 pr-2">Ticker</th>
+                  <th class="text-left py-1 pr-2">Nome</th>
+                  <th class="text-left py-1 pr-2">Gruppo</th>
+                  <th class="text-right py-1 pr-2">Perf 1M %</th>
+                  <th class="text-right py-1 pr-2">Flow 5D (M$)</th>
+                  <th class="text-right py-1">Rank Flow</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
           </div>
-        </div>
+        </section>
 
-        <!-- INPUTS TABELLA -->
-        <div class="card p-3 overflow-auto">
-          <div class="sec-h"><i data-lucide="table-2"></i><span>Inputs (ETF settoriali)</span></div>
-          <table class="w-full text-sm">
-            <thead class="text-slate-500">
-              <tr class="border-b">
-                <th class="text-left py-1 pr-2">Ticker</th>
-                <th class="text-left py-1 pr-2">Nome</th>
-                <th class="text-left py-1 pr-2">Gruppo</th>
-                <th class="text-right py-1 pr-2">Perf 1M %</th>
-                <th class="text-right py-1 pr-2">Flow 5D (M$)</th>
-                <th class="text-right py-1">Rank Flow</th>
-              </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-          </table>
-        </div>
-
-        <!-- AUDIT COMPLETO -->
-        <div class="card p-3">
-          <div class="sec-h"><i data-lucide="badge-check"></i><span>Audit & Metadati</span></div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm">
-            <div><b>VersionTag:</b> ${m?.Meta?.Version||m?.Meta?.VersionTag||'—'}</div>
-            <div><b>Timestamp:</b> ${m?.Meta?.Timestamp||'—'} (${m?.Meta?.Timezone||'—'})</div>
-            <div><b>AuditPathID:</b> ${m?.Meta?.AuditPathID||'—'}</div>
-            <div><b>Source Tier:</b> ${m?.Meta?.SourceTier||'—'}</div>
-            <div class="sm:col-span-2"><b>Sources:</b> ${(m?.Meta?.Sources||[]).join(', ')||'—'}</div>
-            <div><b>Freshness:</b> ${m?.Meta?.FreshnessLabel||m?.Meta?.Freshness||'—'}</div>
-            <div><b>Conformità:</b> ${m?.Audit?.Conformity||'—'}</div>
-            <div class="sm:col-span-2"><b>Note:</b> ${m?.Meta?.Notes||'—'}</div>
-            ${Array.isArray(m?.Audit?.Caveats)? `<div class="sm:col-span-2"><b>Caveat:</b> ${m.Audit.Caveats.join('; ')}</div>`:''}
-            <div class="sm:col-span-2"><b>TapeNotes (REG close):</b> ${m?.Meta?.TapeNotes||m?.TapeNotes||'—'}</div>
-            <div class="sm:col-span-2"><b>Missing (critici):</b> ${(m?.Meta?.MissingCritici||m?.MissingCritici||[]).join(', ')||'—'}</div>
+        <!-- AUDIT -->
+        <section id="f1b-au" class="tab-sec">
+          <div class="card p-3">
+            <div class="sec-h"><i data-lucide="badge-check"></i><span>Audit & Metadati</span></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm">
+              <div><b>VersionTag:</b> ${m?.Meta?.Version||m?.Meta?.VersionTag||'—'}</div>
+              <div><b>Timestamp:</b> ${m?.Meta?.Timestamp||'—'} (${m?.Meta?.Timezone||'—'})</div>
+              <div><b>AuditPathID:</b> ${m?.Meta?.AuditPathID||'—'}</div>
+              <div><b>Source Tier:</b> ${m?.Meta?.SourceTier||'—'}</div>
+              <div class="sm:col-span-2"><b>Sources:</b> ${(m?.Meta?.Sources||[]).join(', ')||'—'}</div>
+              <div><b>Freshness:</b> ${m?.Meta?.FreshnessLabel||m?.Meta?.Freshness||'—'}</div>
+              <div><b>Conformità:</b> ${m?.Audit?.Conformity||'—'}</div>
+              <div class="sm:col-span-2"><b>Note:</b> ${m?.Meta?.Notes||'—'}</div>
+              ${Array.isArray(m?.Audit?.Caveats)? `<div class="sm:col-span-2"><b>Caveat:</b> ${m.Audit.Caveats.join('; ')}</div>`:''}
+              <div class="sm:col-span-2"><b>TapeNotes (REG close):</b> ${m?.Meta?.TapeNotes||m?.TapeNotes||'—'}</div>
+              <div class="sm:col-span-2"><b>Missing (critici):</b> ${(m?.Meta?.MissingCritici||m?.MissingCritici||[]).join(', ')||'—'}</div>
+            </div>
           </div>
-        </div>
+        </section>
+
+        <!-- RESOCONTO (sempre disponibile anche in stampa) -->
+        <section id="f1b-rs" class="tab-sec">
+          <div class="card p-3">
+            <div class="sec-h"><i data-lucide="notes"></i><span>Resoconto sintetico</span></div>
+            <div class="text-sm text-slate-700 leading-relaxed">
+              ${summaryText}
+            </div>
+          </div>
+        </section>
       </div>
     `;
 
-    // Sparkline drawer
+    // Sparkline nel tab Serie
     const svg = document.getElementById('drawer-spark');
-    if(svg && Array.isArray(m?.Series?.VIX_Sparkline)){
-      sparkline(svg, m.Series.VIX_Sparkline);
-    }
+    if(svg && Array.isArray(m?.Series?.VIX_Sparkline)){ sparkline(svg, m.Series.VIX_Sparkline); }
+
+    // Tabs handler
+    const tabsBtns = body.querySelectorAll('.tabbar [data-tab]');
+    const sections = ['#f1b-ov','#f1b-mx','#f1b-le','#f1b-se','#f1b-in','#f1b-au','#f1b-rs'].map(s=> body.querySelector(s));
+    tabsBtns.forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        sections.forEach(sec=>sec?.classList.remove('active'));
+        body.querySelector(btn.getAttribute('data-tab'))?.classList.add('active');
+      });
+    });
+
     if (window.lucide) lucide.createIcons();
   }
 
@@ -1264,3 +1292,4 @@
   }
 })();
 </script>
+
