@@ -559,37 +559,223 @@
      <!-- =========================
      STEP 4/7 — HelpX unificato
      ========================= -->
+<!-- =========================
+     PATCH — HelpX unificato (microcopy semplice + fonte accademica)
+     sostituisce interamente STEP 4/7
+     ========================= -->
 <script>
 (function(){
-  // Dizionario: chiave -> { t: titolo, a: descrizione, s: fonte }
+  // Util: compone descrizioni con righe brevi + bullet opzionali
+  function mkDesc(lines=[], bullets=[]){
+    const p = lines.map(l => `<p class="mb-1">${l}</p>`).join("");
+    const ul = bullets.length
+      ? `<ul class="list-disc pl-5 space-y-1">${bullets.map(b=>`<li>${b}</li>`).join("")}</ul>`
+      : "";
+    return p + ul;
+  }
+
+  // Dizionario con microcopy in ITA e fonte sintetica
   const HELP_DICT = {
-    Sessione:{t:'Sessione REG (adjusted)', a:'Analisi sulla sola sessione regolare; serie prezzi adjusted per dividendi/split per coerenza storica.', s:'CMT Association; CFA Institute'},
-    DataStart:{t:'Inizio report', a:'Timestamp locale di avvio analisi. Serve per audit e replicabilità.', s:'Audit trail interno'},
-    DataEnd:{t:'Fine report', a:'Timestamp locale di chiusura analisi. Evita look-ahead bias.', s:'Audit trail interno'},
-    Ticker:{t:'Ticker', a:'Simbolo ufficiale dello strumento sul venue primario.', s:'Nasdaq/NYSE; SEC 8-A'},
-    Venue:{t:'Borsa di negoziazione', a:'MIC/venue primario di quotazione (no MTF).', s:'O’Hara; Hasbrouck'},
-    Validazione:{t:'Validazione ticker/venue', a:'Cross-check simbolo ⇄ venue; ADR/dual listing.', s:'Data governance'},
-    VersionTag:{t:'VersionTag', a:'Versione del motore/metodo per tracciabilità e audit.', s:'Governance interna'},
-    SyncID:{t:'SyncID', a:'Chiave audit: <TICKER>_<YYYYMMDD>_F*.', s:'Audit trail'},
-    Freshness:{t:'Freshness', a:'Freschezza dati rispetto alla validazione locale (es. T-0, T-1).', s:'Policy qualità'},
-    OCR_Conf:{t:'OCR_Conf', a:'Attendibilità estrazione numerica (0–1). >0.85 buono.', s:'Kahn & Strong; Pipino'},
-    DataIntegrity:{t:'DataIntegrity', a:'Completezza/consistenza dataset (0–1). >0.85 buono.', s:'Kahn & Strong; Pipino'},
-    FeedSync:{t:'FeedSync', a:'Allineamento temporale tra pannelli/feed (0–1).', s:'Hasbrouck'},
-    ConfidenceFinal:{t:'Affidabilità complessiva', a:'Metrica conservativa: MIN(OCR_Conf, DataIntegrity, FeedSync, conf H4, conf H1).', s:'Metodo interno'},
-    StatoReport:{t:'Stato report', a:'ACTIVE / REVIEW / HOLD secondo soglie qualità e copertura input.', s:'Policy interna'},
-    TapeNotes:{t:'TapeNotes', a:'Note micro-strutturali sull’asta di chiusura REG.', s:'Hasbrouck; O’Hara'},
-    Missing:{t:'Missing (critici)', a:'Campi critici mancanti ⇒ N/D; se impattano la confidence ⇒ HOLD.', s:'Policy N/D'}
+    // ======= HEADER / AUDIT =======
+    DataStart: {
+      t: "Inizio report",
+      a: mkDesc(
+        ["Timestamp locale di avvio della finestra analitica.",
+         "Serve per audit e replicabilità del risultato."],
+        ["Formato consigliato: YYYY-MM-DD HH:mm (timezone locale)."]
+      ),
+      s: "Audit trail interno; CFA Institute (QM: Data Management)"
+    },
+    DataEnd: {
+      t: "Fine report",
+      a: mkDesc(
+        ["Timestamp locale di chiusura della finestra analitica.",
+         "Evita look-ahead bias (nessun dato oltre la fine)."]
+      ),
+      s: "Audit trail interno; CFA Institute (Ethics & Standards)"
+    },
+    Ticker: {
+      t: "Ticker",
+      a: mkDesc(
+        ["Simbolo ufficiale dello strumento sul mercato primario.",
+         "Usa il simbolo di listing primario (no alias/MTF)."]
+      ),
+      s: "Nasdaq/NYSE Listing Rules; SEC Form 8-A"
+    },
+    Venue: {
+      t: "Borsa di negoziazione",
+      a: mkDesc(
+        ["Venue/MIC primario dove lo strumento è quotato.",
+         "Utile per distinguere ADR/dual-listing."]
+      ),
+      s: "O’Hara (Market Microstructure); Hasbrouck (Empirical Market Microstructure)"
+    },
+    Validazione: {
+      t: "Validazione ticker/venue",
+      a: mkDesc(
+        ["Controllo coerenza simbolo ↔ venue (inclusi ADR/dual).",
+         "Riduce errori di mappatura tra fonti."],
+        ["Se fallisce ⇒ flag di REVIEW/HOLD."]
+      ),
+      s: "Data Governance (interno); CFA Institute (QM)"
+    },
+    VersionTag: {
+      t: "VersionTag",
+      a: mkDesc(
+        ["Versione del motore/metodo usato per il report.",
+         "Garantisce tracciabilità tra esecuzioni."]
+      ),
+      s: "Software Governance (interno)"
+    },
+    SyncID: {
+      t: "SyncID",
+      a: mkDesc(
+        ["Chiave audit del job: <TICKER>_<YYYYMMDD>_F*.",
+         "Permette di ricostruire l’esecuzione esatta."]
+      ),
+      s: "Audit trail interno"
+    },
+    Freshness: {
+      t: "Freshness",
+      a: mkDesc(
+        ["Freschezza dati rispetto alla validazione (es. T-0, T-1).",
+         "T-0=oggi; T-1=ieri; T-2+ più datato ⇒ rischio ↑."],
+        ["Soglie colore: T-0=verde · T-1=giallo · T-2+=rosso."]
+      ),
+      s: "Policy qualità dati (interno)"
+    },
+    OCR_Conf: {
+      t: "OCR_Conf",
+      a: mkDesc(
+        ["Attendibilità estrazione numerica 0–1 dai documenti.",
+         ">0.85 buono · 0.65–0.85 discreto · <0.65 critico."]
+      ),
+      s: "Kahn & Strong (Data Quality); Pipino et al."
+    },
+    DataIntegrity: {
+      t: "DataIntegrity",
+      a: mkDesc(
+        ["Completezza/consistenza dataset 0–1.",
+         "Misura se mancano campi/righe o se ci sono conflitti."]
+      ),
+      s: "Kahn & Strong; Pipino et al."
+    },
+    FeedSync: {
+      t: "FeedSync",
+      a: mkDesc(
+        ["Allineamento temporale tra feed/pannelli 0–1.",
+         "Desincronizzazioni ⇒ interpretazioni fuorvianti."]
+      ),
+      s: "Hasbrouck (Market Microstructure)"
+    },
+    ConfidenceFinal: {
+      t: "Affidabilità complessiva",
+      a: mkDesc(
+        ["Metrica conservativa: MIN(OCR_Conf, DataIntegrity, FeedSync, conf H4, conf H1).",
+         "Valori: ≥0.80 verde · 0.60–0.80 giallo · <0.60 rosso."]
+      ),
+      s: "Metodo interno; CFA Institute (QM)"
+    },
+    StatoReport: {
+      t: "Stato report",
+      a: mkDesc(
+        ["ACTIVE (ok) · REVIEW (verifica) · HOLD (pausa).",
+         "Dipende da soglie qualità e copertura input."]
+      ),
+      s: "Policy interna"
+    },
+    TapeNotes: {
+      t: "TapeNotes",
+      a: mkDesc(
+        ["Osservazioni sull’asta di chiusura REG (volumi/prezzi).",
+         "Utile per capire anomalie micro-strutturali a fine sessione."]
+      ),
+      s: "O’Hara; Hasbrouck"
+    },
+    Missing: {
+      t: "Missing (critici)",
+      a: mkDesc(
+        ["Campi critici mancanti ⇒ N/D.",
+         "Se impattano la confidence ⇒ stato almeno REVIEW/HOLD."]
+      ),
+      s: "Policy N/D (interno)"
+    },
+
+    // ======= F1B / MACRO-SETTORIALE =======
+    F1B_VIX: {
+      t: "VIX (CBOE/FRED)",
+      a: mkDesc(
+        ["Volatilità implicita SPX (indicatore di rischio di mercato).",
+         "Regole lettura: <15 bassa · 15–22 moderata · >22 elevata."]
+      ),
+      s: "CBOE; FRED (VIXCLS)"
+    },
+    F1B_Breadth: {
+      t: "Breadth 1M",
+      a: mkDesc(
+        ["% settori SPDR con performance 1M > 0.",
+         "Sopra 50% = respiro positivo, sotto 50% = respiro debole."]
+      ),
+      s: "SSGA SPDR (sector ETFs)"
+    },
+    F1B_RiskTilt: {
+      t: "Risk Tilt (Ciclici − Difensivi)",
+      a: mkDesc(
+        ["Differenza media 1M tra gruppi ciclici e difensivi.",
+         "Positivo = propensione al rischio; negativo = difesa."]
+      ),
+      s: "Rotazione settoriale (metodo interno)"
+    },
+    F1B_FlowScore: {
+      t: "FlowScore",
+      a: mkDesc(
+        ["0.45·z(Inflow5D) + 0.35·z(Perf1M) + 0.20·z(RiskTilt).",
+         "Più alto ⇒ momentum/afflusso migliori."]
+      ),
+      s: "F1B v13.1 (interno)"
+    },
+    F1B_Regime: {
+      t: "RegimeScore",
+      a: mkDesc(
+        ["0.8·FlowScore + 0.2·sigm(−VIX).",
+         "Soglie: ≥0.35 Momentum · 0.10–0.35 Momentum-light · <0.10 Pullback."]
+      ),
+      s: "F1B v13.1 (interno)"
+    },
+    F1B_Mode: {
+      t: "StrategyMode",
+      a: mkDesc(
+        ["Classificazione operativa: Momentum / Momentum-light / Pullback.",
+         "Deriva dal RegimeScore e guida le azioni tattiche."]
+      ),
+      s: "Decision Rules v13.1 (interno)"
+    },
+    F1B_Notes: {
+      t: "Conformità & Fonti",
+      a: mkDesc(
+        ["Tier-1 (educativo): ETFdb/VettaFi; cross-check SSGA/Bloomberg; VIX da FRED/CBOE.",
+         "Obiettivo: trasparenza e replicabilità delle metriche."]
+      ),
+      s: "Governance Swing v5.0 (interno)"
+    }
   };
 
-  // Modulo popup unico (evita doppi trigger anche dentro drawer/overlay)
+  // --- Modulo popup unico (no doppi) ---
   const HelpX = {
-    dict: Object.assign(Object.create(null), HELP_DICT),
+    dict: HELP_DICT,
     _pop: null, _prevOverflow:'',
     open(key){
-      const d = this.dict[key] || { t:key, a:'Descrizione non disponibile.', s:'—' };
-      if (this._pop) {
+      const d = this.dict[key] || {
+        t: key,
+        a: mkDesc(
+          ["Descrizione non disponibile per questa voce."],
+          ["Suggerimento: aggiungi la definizione via Tradelia.HelpX.add(key, def)."]
+        ),
+        s: "—"
+      };
+      if(this._pop){
         this._pop.h.textContent = d.t;
-        this._pop.src.textContent = 'Fonte: ' + d.s;
+        this._pop.src.textContent = "Fonte: " + d.s;
         this._pop.text.innerHTML = d.a;
         this._pop.wrap.focus();
         return;
@@ -599,7 +785,7 @@
 
       const card = document.createElement('div');
       card.className = 'hx-card';
-      card.addEventListener('click', ev => ev.stopPropagation()); // non chiudere clic interno
+      card.addEventListener('click', ev => ev.stopPropagation());
 
       const h = document.createElement('h3'); h.textContent = d.t;
       const src = document.createElement('div'); src.className='src'; src.textContent='Fonte: ' + d.s;
@@ -621,26 +807,26 @@
       this._pop = { wrap, card, h, src, text, close };
     },
     close(){
-      if (!this._pop) return;
-      const { wrap } = this._pop;
+      if(!this._pop) return;
+      const {wrap} = this._pop;
       document.removeEventListener('keydown', this._onEsc, true);
       document.documentElement.style.overflow = this._prevOverflow;
       wrap.remove();
       this._pop = null;
-    }
+    },
+    add(key, def){ this.dict[key] = def; }
   };
 
-  // Listener UNICO, in capturing, per tutti i bottoni .hx
+  // Listener UNICO (capturing) per tutti i bottoni .hx
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.hx');
     if (!btn) return;
     e.preventDefault();
-    e.stopPropagation();               // <-- niente doppi popup in overlay/drawer
-    const k = btn.getAttribute('data-k');
-    HelpX.open(k);
+    e.stopPropagation(); // evita doppi popup in overlay/drawer
+    HelpX.open(btn.getAttribute('data-k'));
   }, true);
 
-  // Espone global (se devi aggiungere voci a runtime)
+  // Espone API per aggiungere/correggere voci a runtime
   window.Tradelia = window.Tradelia || {};
   window.Tradelia.HelpX = HelpX;
 })();
