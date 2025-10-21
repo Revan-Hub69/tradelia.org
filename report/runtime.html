@@ -10,59 +10,38 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 
   <style>
-    /* Base */
-    body{
-      font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
       background:#f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
-      background-size:280px; color:#0f172a;
-    }
-    ::-webkit-scrollbar { width:10px; height:10px }
-    ::-webkit-scrollbar-thumb { background:rgba(80,160,200,.4); border-radius:100vh }
-    ::-webkit-scrollbar-thumb:hover { background:rgba(80,160,200,.6) }
-    * { scrollbar-width:thin; scrollbar-color:rgba(80,160,200,.5) #e5e7eb }
-
-    /* Pulsanti */
-    .btn {
-      display:inline-flex; align-items:center; gap:.45rem;
-      padding:.4rem .6rem; border-radius:.6rem; font-weight:600; font-size:14px;
-      border:1px solid #e5e7eb; background:linear-gradient(#fff,#f8fafc);
-      box-shadow:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.03);
-      transition:transform .08s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease;
-      -webkit-tap-highlight-color:transparent;
-    }
-    .btn:hover{ background:linear-gradient(#fff,#f1f5f9); border-color:#dbe3ea }
-    .btn:active{ transform:translateY(1px); box-shadow:inset 0 1px 0 rgba(0,0,0,.06) }
-    .btn:focus-visible{ outline:none; box-shadow:0 0 0 2px rgba(56,189,248,.5) }
-    .btn-primary{ color:#0b2a3f }
-    .btn i{ width:18px; height:18px }
-
-    /* Header compatto */
-    .hdr { backdrop-filter:saturate(1.2) blur(6px) }
-
-    /* Share sheet desktop */
-    .sbtn{
-      display:inline-flex;align-items:center;gap:.5rem;
-      padding:.5rem .6rem;border-radius:.65rem;border:1px solid #e5e7eb;
-      background:#fff;font-weight:600;font-size:13px;
-      transition:transform .08s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease;
-    }
+      background-size:280px;color:#0f172a}
+    ::-webkit-scrollbar{width:10px;height:10px}
+    ::-webkit-scrollbar-thumb{background:rgba(80,160,200,.4);border-radius:100vh}
+    ::-webkit-scrollbar-thumb:hover{background:rgba(80,160,200,.6)}
+    *{scrollbar-width:thin;scrollbar-color:rgba(80,160,200,.5) #e5e7eb}
+    .btn{display:inline-flex;align-items:center;gap:.45rem;padding:.4rem .6rem;border-radius:.6rem;font-weight:600;font-size:14px;
+      border:1px solid #e5e7eb;background:linear-gradient(#fff,#f8fafc);box-shadow:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.03);
+      transition:transform .08s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease;-webkit-tap-highlight-color:transparent}
+    .btn:hover{background:linear-gradient(#fff,#f1f5f9);border-color:#dbe3ea}
+    .btn:active{transform:translateY(1px);box-shadow:inset 0 1px 0 rgba(0,0,0,.06)}
+    .btn:focus-visible{outline:none;box-shadow:0 0 0 2px rgba(56,189,248,.5)}
+    .btn-primary{color:#0b2a3f}
+    .btn i{width:18px;height:18px}
+    .hdr{backdrop-filter:saturate(1.2) blur(6px)}
+    .sbtn{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .6rem;border-radius:.65rem;border:1px solid #e5e7eb;
+      background:#fff;font-weight:600;font-size:13px;transition:transform .08s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease}
     .sbtn:hover{background:#f8fafc;border-color:#dbe3ea}
     .sbtn:active{transform:translateY(1px)}
     .sbtn i{width:18px;height:18px}
     .badge-url{background:#f8fafc;border:1px solid #e5e7eb}
     .qr-wrap img{border-radius:.75rem;border:1px solid #e5e7eb;background:#fff}
-
-    /* Animazioni popup share */
-    @keyframes fadeBackdropIn { from { opacity: 0 } to { opacity: 1 } }
-    @keyframes fadeBackdropOut { from { opacity: 1 } to { opacity: 0 } }
-    @keyframes popIn { from { opacity: 0; transform: translateY(6px) scale(.98) } to { opacity: 1; transform: translateY(0) scale(1) } }
-    @keyframes popOut { from { opacity: 1; transform: translateY(0) scale(1) } to { opacity: 0; transform: translateY(4px) scale(.985) } }
-    .popup-backdrop { animation: fadeBackdropIn .18s ease forwards }
-    .popup-backdrop.closing { animation: fadeBackdropOut .16s ease forwards }
-    .popup-card { animation: popIn .20s cubic-bezier(.22,.61,.36,1) forwards }
-    .popup-card.closing { animation: popOut .16s ease forwards }
-
-    @media print { .noprint{display:none!important} }
+    @keyframes fadeBackdropIn{from{opacity:0}to{opacity:1}}
+    @keyframes fadeBackdropOut{from{opacity:1}to{opacity:0}}
+    @keyframes popIn{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @keyframes popOut{from{opacity:1;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(4px) scale(.985)}}
+    .popup-backdrop{animation:fadeBackdropIn .18s ease forwards}
+    .popup-backdrop.closing{animation:fadeBackdropOut .16s ease forwards}
+    .popup-card{animation:popIn .20s cubic-bezier(.22,.61,.36,1) forwards}
+    .popup-card.closing{animation:popOut .16s ease forwards}
+    @media print{.noprint{display:none!important}}
   </style>
 </head>
 
@@ -70,15 +49,12 @@
   <!-- HEADER -->
   <header class="hdr sticky top-0 z-50 bg-white/90 border-b border-slate-200 noprint">
     <div class="max-w-7xl mx-auto px-3 sm:px-5 h-12 sm:h-14 flex items-center justify-between">
-      <!-- Brand + titolo -->
       <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-        <a href="./index.html" class="shrink-0 text-lg sm:text-xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+        <a href="/" class="shrink-0 text-lg sm:text-xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
           <span class="text-slate-900">TRADELIA</span><span class="text-blue-600">&bull;AI</span>
         </a>
         <span class="text-slate-400 text-xs sm:text-sm truncate">Report Runtime</span>
       </div>
-
-      <!-- Azioni -->
       <div class="flex items-center gap-1.5 sm:gap-2">
         <button id="btn-print" class="btn btn-primary" aria-label="Stampa / PDF">
           <i data-lucide="printer" aria-hidden="true"></i><span class="hidden sm:inline">Stampa / PDF</span>
@@ -143,7 +119,6 @@
               <i data-lucide="x"></i><span class="hidden sm:inline">Chiudi</span>
             </button>
           </div>
-
           <div class="flex items-center gap-2 mb-3">
             <label class="text-sm text-slate-700 flex items-center gap-2">
               <input id="useShort" type="checkbox" class="h-4 w-4 accent-sky-600">
@@ -151,14 +126,11 @@
             </label>
             <span id="shortStatus" class="text-xs text-slate-400">(non attivo)</span>
           </div>
-
           <div class="space-y-3 sm:space-y-4">
             <div class="qr-wrap mx-auto w-[164px] sm:w-[180px] md:w-[200px] lg:w-[220px]">
               <img id="qrImg" alt="QR per condivisione" class="w-full h-auto rounded-lg border border-slate-200 shadow-sm bg-white p-2" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(currentUrl)}" />
             </div>
-
             <div id="shareGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2 justify-items-center sm:justify-items-start"></div>
-
             <div id="urlBox" class="badge-url text-[12px] p-2 rounded-md font-mono select-all break-all">${currentUrl}</div>
             <div class="flex gap-2">
               <button id="copyLink" class="sbtn"><i data-lucide="copy"></i><span>Copia link</span></button>
@@ -173,8 +145,7 @@
           grid.innerHTML = targets(u).map(t =>
             `<a class="sbtn" href="${t.href}" target="_blank" rel="noopener">
                <i data-lucide="${t.icon}"></i><span>${t.label}</span>
-             </a>`
-          ).join('');
+             </a>`).join('');
           lucide.createIcons();
         };
 
@@ -233,87 +204,36 @@
   </script>
 
   <!-- ===========================
-       HEADER — TICKER (template vuoto)
+       HEADER — TICKER
        =========================== -->
   <main class="max-w-7xl mx-auto px-3 sm:px-5 py-4">
     <section id="header-ticker" class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4">
       <!-- riga 1 -->
-      <div class="card">
-        <label>Sessione <button class="hx" data-k="Sessione">?</button></label>
-        <div id="H-Session" class="val">—</div>
-      </div>
-      <div class="card">
-        <label>Data inizio report <button class="hx" data-k="DataStart">?</button></label>
-        <div id="H-Start" class="val">—</div>
-      </div>
-      <div class="card">
-        <label>Data fine report <button class="hx" data-k="DataEnd">?</button></label>
-        <div id="H-End" class="val">—</div>
-      </div>
-
+      <div class="card"><label>Sessione <button class="hx" data-k="Sessione">?</button></label><div id="H-Session" class="val">—</div></div>
+      <div class="card"><label>Data inizio report <button class="hx" data-k="DataStart">?</button></label><div id="H-Start" class="val">—</div></div>
+      <div class="card"><label>Data fine report <button class="hx" data-k="DataEnd">?</button></label><div id="H-End" class="val">—</div></div>
       <!-- riga 2 -->
-      <div class="card">
-        <label>Ticker <button class="hx" data-k="Ticker">?</button></label>
-        <div id="H-Ticker" class="val">—</div>
-      </div>
-      <div class="card">
-        <label>Borsa di negoziazione <button class="hx" data-k="Venue">?</button></label>
-        <div id="H-Venue" class="val">—</div>
-      </div>
-      <div class="card">
-        <label>Validazione ticker/venue <button class="hx" data-k="Validazione">?</button></label>
-        <div id="H-Validation" class="val">—</div>
-      </div>
-
+      <div class="card"><label>Ticker <button class="hx" data-k="Ticker">?</button></label><div id="H-Ticker" class="val">—</div></div>
+      <div class="card"><label>Borsa di negoziazione <button class="hx" data-k="Venue">?</button></label><div id="H-Venue" class="val">—</div></div>
+      <div class="card"><label>Validazione ticker/venue <button class="hx" data-k="Validazione">?</button></label><div id="H-Validation" class="val">—</div></div>
       <!-- riga 3 -->
-      <div class="card">
-        <label>VersionTag <button class="hx" data-k="VersionTag">?</button></label>
-        <div id="H-VersionTag" class="val">—</div>
-      </div>
-      <div class="card">
-        <label>SyncID <button class="hx" data-k="SyncID">?</button></label>
-        <div id="H-SyncID" class="val">—</div>
-      </div>
-      <div class="card">
-        <label>Freshness <button class="hx" data-k="Freshness">?</button></label>
-        <div id="H-Freshness" class="val">—</div>
-      </div>
-
+      <div class="card"><label>VersionTag <button class="hx" data-k="VersionTag">?</button></label><div id="H-VersionTag" class="val">—</div></div>
+      <div class="card"><label>SyncID <button class="hx" data-k="SyncID">?</button></label><div id="H-SyncID" class="val">—</div></div>
+      <div class="card"><label>Freshness <button class="hx" data-k="Freshness">?</button></label><div id="H-Freshness" class="val">—</div></div>
       <!-- riga 4 -->
-      <div class="card">
-        <label>OCR_Conf <button class="hx" data-k="OCR_Conf">?</button></label>
-        <div id="H-OCR" class="val">—</div>
-      </div>
-      <div class="card">
-        <label>DataIntegrity <button class="hx" data-k="DataIntegrity">?</button></label>
-        <div id="H-DataIntegrity" class="val">—</div>
-      </div>
-      <div class="card">
-        <label>FeedSync <button class="hx" data-k="FeedSync">?</button></label>
-        <div id="H-FeedSync" class="val">—</div>
-      </div>
-
+      <div class="card"><label>OCR_Conf <button class="hx" data-k="OCR_Conf">?</button></label><div id="H-OCR" class="val">—</div></div>
+      <div class="card"><label>DataIntegrity <button class="hx" data-k="DataIntegrity">?</button></label><div id="H-DataIntegrity" class="val">—</div></div>
+      <div class="card"><label>FeedSync <button class="hx" data-k="FeedSync">?</button></label><div id="H-FeedSync" class="val">—</div></div>
       <!-- riga 5 -->
       <div class="card lg:col-span-2">
         <label>Confidence (final) = min(OCR_Conf, DataIntegrity, FeedSync, Confidence_H4, Confidence_H1)
-          <button class="hx" data-k="ConfidenceFinal">?</button>
-        </label>
+          <button class="hx" data-k="ConfidenceFinal">?</button></label>
         <div id="H-Confidence" class="val">—</div>
       </div>
-      <div class="card">
-        <label>Stato report <button class="hx" data-k="StatoReport">?</button></label>
-        <div id="H-State" class="val">—</div>
-      </div>
-
+      <div class="card"><label>Stato report <button class="hx" data-k="StatoReport">?</button></label><div id="H-State" class="val">—</div></div>
       <!-- riga 6 -->
-      <div class="card lg:col-span-2">
-        <label>TapeNotes (REG close) <button class="hx" data-k="TapeNotes">?</button></label>
-        <div id="H-TapeNotes" class="val">—</div>
-      </div>
-      <div class="card">
-        <label>Missing (critici) <button class="hx" data-k="Missing">?</button></label>
-        <div id="H-Missing" class="val">—</div>
-      </div>
+      <div class="card lg:col-span-2"><label>TapeNotes (REG close) <button class="hx" data-k="TapeNotes">?</button></label><div id="H-TapeNotes" class="val">—</div></div>
+      <div class="card"><label>Missing (critici) <button class="hx" data-k="Missing">?</button></label><div id="H-Missing" class="val">—</div></div>
     </section>
   </main>
 
@@ -322,17 +242,14 @@
     #header-ticker .card{border:1px solid #e5e7eb;border-radius:.75rem;padding:.75rem}
     #header-ticker label{display:flex;align-items:center;gap:.4rem;font-size:11px;color:#64748b}
     #header-ticker .val{font-weight:600}
-    .hx{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;
-        border-radius:999px;border:1px solid rgba(2,132,199,.6);font-size:10px;line-height:1;color:#0369a1}
-    .hx-pop{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(2px);
-            display:flex;align-items:center;justify-content:center;z-index:50}
-    .hx-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;max-width:560px;width:92%;
-             box-shadow:0 10px 30px rgba(0,0,0,.15)}
+    .hx{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:999px;border:1px solid rgba(2,132,199,.6);font-size:10px;line-height:1;color:#0369a1}
+    .hx-pop{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;z-index:50}
+    .hx-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;max-width:560px;width:92%;box-shadow:0 10px 30px rgba(0,0,0,.15)}
     .hx-card h3{margin:0 0 4px;font-weight:600}
     .hx-card .src{font-size:11px;color:#6b7280;margin-bottom:8px}
   </style>
 
-  <!-- popup accademico (no X; chiudi con backdrop o ESC) -->
+  <!-- popup accademico -->
   <script>
   (function(){
     const EXPL = {
@@ -388,7 +305,7 @@
   </script>
 
   <!-- ===========================
-       SEZIONE — MODULI (framework, nessun modulo registrato ora)
+       SEZIONE — MODULI (framework)
        =========================== -->
   <section id="moduli" class="pt-3">
     <div class="max-w-7xl mx-auto px-3 sm:px-5">
@@ -397,14 +314,12 @@
           <h2 class="text-base sm:text-lg font-semibold text-slate-800 tracking-tight">Moduli analitici</h2>
           <p class="text-xs text-slate-500">Framework istituzionale · sequenziale · auditabile (F1–F5 + Broker in arrivo)</p>
         </div>
-        <!-- Toolbar (solo vista) -->
         <div class="flex items-center gap-2">
           <button id="view-grid" class="btn" aria-pressed="true" aria-label="Vista griglia"><i data-lucide="grid"></i><span class="hidden sm:inline">Griglia</span></button>
           <button id="view-list" class="btn" aria-pressed="false" aria-label="Vista lista"><i data-lucide="list"></i><span class="hidden sm:inline">Lista</span></button>
         </div>
       </div>
 
-      <!-- Contenitore dinamico -->
       <div id="mod-container" data-view="grid"
            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4"
            aria-label="Griglia moduli analitici">
@@ -413,7 +328,7 @@
     </div>
   </section>
 
-  <!-- Drawer per contenuto modulo -->
+  <!-- Drawer -->
   <div id="mod-drawer" class="fixed inset-0 z-[60] hidden">
     <div class="absolute inset-0 bg-black/30 backdrop-blur-[1px]" data-close="backdrop"></div>
     <aside class="absolute right-0 top-0 h-full w-[92%] sm:w-[560px] bg-white border-l border-slate-200 shadow-2xl
@@ -428,16 +343,12 @@
           <button id="drawer-close" class="btn" aria-label="Chiudi"><i data-lucide="x"></i></button>
         </div>
       </header>
-      <div id="drawer-body" class="h-[calc(100%-3.25rem)] sm:h-[calc(100%-3.75rem)] overflow-auto p-3 sm:p-4">
-        <!-- Qui monteremo i contenuti dei moduli quando pronti -->
-      </div>
+      <div id="drawer-body" class="h-[calc(100%-3.25rem)] sm:h-[calc(100%-3.75rem)] overflow-auto p-3 sm:p-4"></div>
     </aside>
   </div>
 
-  <!-- Stili card/lista/badge base (riuso futuro quando aggiungeremo le card) -->
   <style>
-    .mdc{background:#fff;border:1px solid #e5e7eb;border-radius:14px;
-         box-shadow:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.02);transition:border-color .18s, box-shadow .18s, transform .12s}
+    .mdc{background:#fff;border:1px solid #e5e7eb;border-radius:14px;box-shadow:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.02);transition:border-color .18s, box-shadow .18s, transform .12s}
     .mdc:hover{border-color:#dbe3ea;box-shadow:0 4px 18px rgba(2,6,23,.08)}
     .mdc:active{transform:translateY(1px)}
     .badge{font-size:11px;padding:.1rem .45rem;border-radius:999px;border:1px solid}
@@ -453,42 +364,29 @@
     }
   </style>
 
-  <!-- (facoltativo) Template di card già pronto per quando aggiungeremo i moduli -->
   <template id="tpl-mod-card">
     <article class="mdc" role="group" aria-labelledby="m-title">
       <header class="mdc-h flex items-center justify-between gap-2 border-b border-slate-100 px-3 py-2.5">
         <h3 id="m-title" class="font-semibold text-slate-800 text-sm">Titolo modulo</h3>
         <span class="badge b-neutral" data-field="badge">NEUTRO</span>
       </header>
-      <div class="mdc-b p-3 text-sm text-slate-600">
-        <!-- contenuto sintetico modulo -->
-      </div>
+      <div class="mdc-b p-3 text-sm text-slate-600"></div>
     </article>
   </template>
 
-  <!-- ===========================
-       THEME PACK · Tradelia Desk
-       =========================== -->
   <style>
-  :root{
-    --c-text:#0f172a; --c-meta:#64748b; --c-border:#e5e7eb; --c-bg:#ffffff;
-    --shadow-0:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.02);
-  }
-  #header-ticker label{ font-weight:600; letter-spacing:.1px }
-  #header-ticker .val{ font-weight:700; color:var(--c-text) }
-  .card,.mdc{
-    background:#fff; border:1px solid var(--c-border); border-radius:14px;
-    box-shadow:var(--shadow-0);
-  }
-  .badge--active{color:#065f46;background:#ecfdf5;border-color:#a7f3d0}
-  .badge--hold{color:#92400e;background:#fffbeb;border-color:#fcd34d}
-  .badge--review{color:#7c2d12;background:#fef3c7;border-color:#fbbf24}
-  .badge--neutral{color:#334155;background:#f1f5f9;border-color:#e5e7eb}
-  .hx{border-color:rgba(2,132,199,.6); color:#0369a1}
-  .hx:hover{background:#f0f9ff}
+    :root{--c-text:#0f172a;--c-meta:#64748b;--c-border:#e5e7eb;--c-bg:#ffffff;--shadow-0:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.02)}
+    #header-ticker label{font-weight:600;letter-spacing:.1px}
+    #header-ticker .val{font-weight:700;color:var(--c-text)}
+    .card,.mdc{background:#fff;border:1px solid var(--c-border);border-radius:14px;box-shadow:var(--shadow-0)}
+    .badge--active{color:#065f46;background:#ecfdf5;border-color:#a7f3d0}
+    .badge--hold{color:#92400e;background:#fffbeb;border-color:#fcd34d}
+    .badge--review{color:#7c2d12;background:#fef3c7;border-color:#fbbf24}
+    .badge--neutral{color:#334155;background:#f1f5f9;border-color:#e5e7eb}
+    .hx{border-color:rgba(2,132,199,.6);color:#0369a1}
+    .hx:hover{background:#f0f9ff}
   </style>
 
-  <!-- Toni testo pilotati da JSON -->
   <style>
     .tone--green{color:#065f46;font-weight:700}
     .tone--yellow{color:#92400e;font-weight:700}
@@ -496,11 +394,8 @@
     .tone--neutral{color:#334155;font-weight:700}
   </style>
 
-  <!-- ===========================
-       Binder JSON → UI (colori decisi dal JSON)
-       =========================== -->
+  <!-- Binder (interpreta JSON per l'header) -->
   <script>
-  /* TradeliaHeaderColors — interpreta direttamente il tuo JSON per l'header */
   (function(){
     const $  = (s)=> document.querySelector(s);
     const fmt = (v,d=2)=> (v==null || isNaN(v) ? 'N/D' : Number(v).toFixed(d));
@@ -516,30 +411,25 @@
       for(const it of list){
         const t=it.id||it.sel; if(!t) continue;
         if(it.mode==='badge') setBadge(t, it.label ?? it.text ?? it.value, it.color);
-        else if(it.mode==='tone'){ const content = (isFinite(it.value)? fmt(it.value, it.digits??2) : (it.text ?? it.label ?? it.value)); setTone(t, content, it.color); }
-        else setText(t, it.text ?? it.label ?? it.value);
+        else if(it.mode==='tone'){
+          const content = (isFinite(it.value)? fmt(it.value, it.digits??2) : (it.text ?? it.label ?? it.value));
+          setTone(t, content, it.color);
+        } else setText(t, it.text ?? it.label ?? it.value);
       }
     }
 
     function apply(j){
       if(!j||typeof j!=='object') return;
-      // riga 1
       setText('#H-Session', j.session); setText('#H-Start', j.dateStart); setText('#H-End', j.dateEnd);
-      // riga 2
       setText('#H-Ticker', j.ticker); setText('#H-Venue', j.venue);
       if(j.validation) setBadge('#H-Validation', j.validation.label, j.validation.color);
-      // riga 3
       setText('#H-VersionTag', j.versionTag); setText('#H-SyncID', j.syncID);
       setText('#H-Freshness', j.freshnessDays==null?'N/D':(j.freshnessDays<=1?'≤ T-1':`${j.freshnessDays} giorni`));
-      // riga 4
       setText('#H-OCR', fmt(j.ocr_conf)); setText('#H-DataIntegrity', fmt(j.dataIntegrity)); setText('#H-FeedSync', fmt(j.feedSync));
-      // riga 5
       if(j.confidence_final) setTone('#H-Confidence', fmt(j.confidence_final.value), j.confidence_final.color);
       if(j.state) setBadge('#H-State', j.state.label, j.state.color);
-      // riga 6
       setText('#H-TapeNotes', j.tapeNotes);
       setText('#H-Missing', Array.isArray(j.missing)&&j.missing.length? j.missing.join(', ') : '—');
-      // extra colorize arbitrario
       applyColorize(j.colorize);
     }
 
@@ -548,20 +438,16 @@
   })();
   </script>
 
-  <!-- ===========================
-       Registry Moduli (senza registrazioni per ora)
-       =========================== -->
+  <!-- Registry moduli (stub, senza moduli registrati) -->
   <script>
   (function(){
-    const $ = (sel,root=document)=> root.querySelector(sel);
     const container = document.getElementById('mod-container');
-
-    // Drawer base
     const drawer = document.getElementById('mod-drawer');
     const drawerPanel = drawer.querySelector('aside');
     const drawerTitle = document.getElementById('drawer-title');
     const drawerSub = document.getElementById('drawer-sub');
     const drawerBody = document.getElementById('drawer-body');
+
     function openDrawer({title, sub}){
       drawerTitle.textContent = title || 'Modulo';
       drawerSub.textContent = sub || '—';
@@ -576,7 +462,6 @@
     document.getElementById('drawer-close')?.addEventListener('click', closeDrawer);
     document.getElementById('drawer-print')?.addEventListener('click', ()=> window.print());
 
-    // Toggle vista
     document.getElementById('view-grid')?.addEventListener('click', (e)=>{
       container.dataset.view='grid';
       e.currentTarget.setAttribute('aria-pressed','true');
@@ -590,62 +475,11 @@
       container.className='space-y-2.5';
     });
 
-    // Registry minimale (pronto per lo step successivo)
-    const modules = new Map();
-    const tpl = document.getElementById('tpl-mod-card');
-
-    function renderCard(def){
-      const node = tpl.content.cloneNode(true);
-      const root = node.firstElementChild;
-      root.dataset.id = def.id;
-      root.querySelector('#m-title').textContent = def.title || 'Modulo';
-      root.querySelector('[data-field="badge"]').textContent = 'NEUTRO';
-      root.querySelector('[data-field="badge"]').className = 'badge b-neutral';
-      // Apertura drawer con stub
-      root.addEventListener('click', ()=>{
-        openDrawer({title:def.title||'Modulo', sub:def.syncID||''});
-        drawerBody.replaceChildren();
-        const p = document.createElement('p');
-        p.className='text-sm text-slate-600';
-        p.textContent='Contenuto in arrivo (verrà montato allo step successivo).';
-        drawerBody.appendChild(p);
-      });
-      return root;
-    }
-
-    function mountAll(){
-      container.replaceChildren();
-      // Nessun modulo ancora: lasciamo vuoto (framework pronto)
-      // Quando pronti, useremo register() per inserire F1–F5 + Broker.
-    }
-
-    window.TradeliaModules = {
-      register(def){
-        if(!def || !def.id) throw new Error('register() richiede { id }');
-        modules.set(def.id, def);
-        container.appendChild(renderCard(def));
-        if(window.lucide) lucide.createIcons();
-        return def.id;
-      },
-      update(id, patch){
-        if(!modules.has(id)) throw new Error('id non trovato: '+id);
-        Object.assign(modules.get(id), patch||{});
-        // semplice remount: in questo step non necessario
-      },
-      open(id){
-        const m = modules.get(id); if(!m) return;
-        openDrawer({title:m.title, sub:m.syncID||''});
-        drawerBody.replaceChildren();
-      },
-      list(){ return Array.from(modules.values()); }
-    };
-
-    mountAll();
     if(window.lucide) lucide.createIcons();
   })();
   </script>
 
-  <!-- Script placeholder per runtime personalizzato (opzionale) -->
+  <!-- Carica il runtime JS (stesso livello del file HTML) -->
   <script src="./runtime.js?v=1" defer></script>
 </body>
 </html>
