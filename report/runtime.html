@@ -645,3 +645,109 @@
   window.Tradelia.HelpX = HelpX;
 })();
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     <!-- =========================
+     STEP 5/7 — MODULI + DRAWER
+     ========================= -->
+<section id="moduli" class="pt-3">
+  <div class="max-w-7xl mx-auto px-3 sm:px-5">
+    <div class="flex items-end justify-between mb-3 sm:mb-4">
+      <div class="min-w-0">
+        <h2 class="text-base sm:text-lg font-semibold text-slate-800 tracking-tight">Moduli analitici</h2>
+        <p class="text-xs text-slate-500">Framework F1–F5 · schede auditabili</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="view-grid" class="btn" aria-pressed="true">
+          <i data-lucide="grid"></i><span class="hidden sm:inline">Griglia</span>
+        </button>
+        <button id="view-list" class="btn" aria-pressed="false">
+          <i data-lucide="list"></i><span class="hidden sm:inline">Lista</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Contenitore moduli -->
+    <div id="mod-container" data-view="grid"
+         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 sm:gap-2 lg:gap-3"
+         aria-label="Griglia moduli analitici">
+    </div>
+  </div>
+</section>
+
+<!-- Drawer riutilizzabile -->
+<div id="mod-drawer" class="fixed inset-0 z-[60] hidden">
+  <div class="absolute inset-0 bg-black/30 backdrop-blur-[1px]" data-close="backdrop"></div>
+  <aside class="absolute right-0 top-0 h-full w-[92%] sm:w-[560px]
+               translate-x-full will-change-transform transition-transform duration-200 ease-out">
+    <header class="h-12 sm:h-14 border-b border-slate-200 flex items-center justify-between px-3 sm:px-4 bg-white/95 backdrop-blur">
+      <div class="min-w-0">
+        <div id="drawer-title" class="font-semibold text-slate-800 truncate">Modulo</div>
+        <div id="drawer-sub" class="text-xs text-slate-500 truncate">—</div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="drawer-print" class="btn" aria-label="Stampa sezione"><i data-lucide="printer"></i></button>
+        <button id="drawer-close" class="btn" aria-label="Chiudi"><i data-lucide="x"></i></button>
+      </div>
+    </header>
+    <div id="drawer-body" class="h-[calc(100%-3.25rem)] sm:h-[calc(100%-3.75rem)] overflow-auto p-3 sm:p-4 bg-slate-50/40"></div>
+  </aside>
+</div>
+
+<script>
+(function(){
+  const container = document.getElementById('mod-container');
+  const drawer    = document.getElementById('mod-drawer');
+  const panel     = drawer.querySelector('aside');
+
+  // Toggle griglia/lista
+  document.getElementById('view-grid')?.addEventListener('click', (e)=>{
+    container.dataset.view='grid';
+    e.currentTarget.setAttribute('aria-pressed','true');
+    document.getElementById('view-list').setAttribute('aria-pressed','false');
+    container.className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 sm:gap-2 lg:gap-3';
+  });
+  document.getElementById('view-list')?.addEventListener('click', (e)=>{
+    container.dataset.view='list';
+    e.currentTarget.setAttribute('aria-pressed','true');
+    document.getElementById('view-grid').setAttribute('aria-pressed','false');
+    container.className='space-y-1.5';
+  });
+
+  // Apertura/chiusura drawer (senza doppi trigger)
+  const closeDrawer = ()=>{
+    panel.style.transform='translateX(100%)';
+    panel.addEventListener('transitionend', ()=> drawer.classList.add('hidden'), {once:true});
+  };
+  const openDrawer = ()=>{
+    drawer.classList.remove('hidden');
+    requestAnimationFrame(()=> panel.style.transform='translateX(0)');
+  };
+
+  drawer?.addEventListener('click', (e)=>{ if(e.target.dataset.close==='backdrop') closeDrawer(); });
+  document.getElementById('drawer-close')?.addEventListener('click', closeDrawer);
+  document.getElementById('drawer-print')?.addEventListener('click', ()=> window.print());
+
+  // Esporta API globali
+  window.Tradelia = window.Tradelia || {};
+  Object.assign(window.Tradelia, { openDrawer, closeDrawer });
+
+  if (window.lucide) lucide.createIcons();
+})();
+</script>
