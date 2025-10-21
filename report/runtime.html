@@ -320,9 +320,12 @@
 
 
 
-     <!-- =========================
-     STEP 3/7 — HEADER-TICKER (terminal compact + color validation)
-     ========================= -->
+
+
+
+
+
+     
 <!-- =========================
      STEP 3/7 — HEADER-TICKER (mobile pills + color validation)
      ========================= -->
@@ -520,180 +523,82 @@
      <!-- =========================
      STEP 4/7 — HelpX unificato
      ========================= -->
-<!<!-- =========================
-     STEP 4/7 — HelpX unificato (microcopy potenziata) — PATCH COMPLETA
+<!-- =========================
+     STEP 4/7 — HelpX unificato (microcopy potenziata) — BLOCCO COMPLETO
      ========================= -->
 <style>
-  .hx-kv{ display:grid; grid-template-columns: auto 1fr; gap:.25rem .6rem; font-size:12px; color:#0f172a; margin:.5rem 0 }
+  .hx-kv{ display:grid; grid-template-columns:auto 1fr; gap:.25rem .6rem; font-size:12px; color:#0f172a; margin:.5rem 0 }
   .hx-kv dt{ color:#64748b }
   .hx-badges{ display:flex; flex-wrap:wrap; gap:.35rem; margin:.35rem 0 }
   .hx-tag{ font-size:11px; padding:.12rem .45rem; border-radius:999px; border:1px solid #e5e7eb; background:#f8fafc; color:#334155; font-weight:600 }
   .hx-callout{ border-left:3px solid #7dd3fc; background:#f0f9ff; padding:.5rem .6rem; border-radius:.5rem; font-size:12px; color:#075985 }
-  .hx-rule{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-            background:#f8fafc; border:1px solid #e5e7eb; border-radius:6px; padding:.45rem .55rem; font-size:12px; color:#0f172a }
+  .hx-rule{ font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace; background:#f8fafc; border:1px solid #e5e7eb; border-radius:6px; padding:.45rem .55rem; font-size:12px; color:#0f172a }
   .hx-list{ margin:.35rem 0 .1rem 1rem }
   .hx-ex{ font-size:12px; color:#0f172a }
   .hx-ok{ color:#065f46; font-weight:700 }
   .hx-warn{ color:#92400e; font-weight:700 }
   .hx-crit{ color:#7c2d12; font-weight:700 }
+  .hx{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:999px;border:1px solid rgba(2,132,199,.6);font-size:10px;line-height:1;color:#0369a1;background:#fff}
+  .hx:hover{background:#f0f9ff}
+  .hx-pop{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;z-index:9999}
+  .hx-card{position:relative;z-index:10000;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:18px;max-width:720px;width:min(92%,720px);box-shadow:0 12px 34px rgba(0,0,0,.2)}
+  .hx-card h3{margin:0 0 6px;font-weight:700;color:#0f172a}
+  .hx-card .src{font-size:11px;color:#6b7280;margin-bottom:10px}
+  .hx-card p,.hx-card li{line-height:1.45}
 </style>
 
 <script>
 (function(){
-  const P = (...s)=> s.map(x=>`<p class="mb-1.5">${x}</p>`).join("");
+  const P  = (...s)=> s.map(x=>`<p class="mb-1.5">${x}</p>`).join("");
   const UL = (arr)=> `<ul class="hx-list list-disc">${arr.map(x=>`<li>${x}</li>`).join("")}</ul>`;
   const KV = (pairs)=> `<dl class="hx-kv">${pairs.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>`;
 
+  /* ===== Dizionario HelpX (header + F1B) ===== */
   const HELP_DICT = {
-    /* ======= HEADER / AUDIT ======= */
-    DataStart: {
-      t: "Inizio report (timestamp)",
-      a: P("Istante locale da cui inizia la finestra analitica (serve per audit e replicabilità).",
-           "Usare il fuso dell’utente o indicare esplicitamente la timezone.")
-        + KV([["Formato consigliato","<code>YYYY-MM-DD HH:mm</code> (es. <code>2025-10-21 09:30</code>)"],
-              ["Perché è importante","Evita ambiguità temporali e facilita l’audit trail."]])
-        + `<div class="hx-badges"><span class="hx-tag">Audit</span><span class="hx-tag">Best practice</span></div>`,
-      s: "CFA Institute — QM · Data Management; Policy interna Audit"
-    },
-    DataEnd: {
-      t: "Fine report (timestamp)",
-      a: P("Istante locale di chiusura della finestra analitica.",
-           "<b>Non</b> includere dati successivi (evita look-ahead bias).")
-        + KV([["Formato consigliato","<code>YYYY-MM-DD HH:mm</code>"],
-              ["Controllo qualità","Verifica che tutti i calcoli usino solo dati ≤ Fine report."]]),
-      s: "CFA Institute — Ethics & Standards; Policy interna Audit"
-    },
-    Ticker: {
-      t: "Ticker",
-      a: P("Simbolo ufficiale sul mercato di listing primario.","Evita alias, MTF o simboli del broker.")
-        + KV([["Esempio corretto","<span class='hx-ex'>AAPL</span> (NASDAQ)"],
-              ["Esempio da evitare","<span class='hx-ex'>AAPL.US</span> (formati vendor-specific)"]]),
-      s: "Nasdaq/NYSE Listing Rules; SEC Form 8-A"
-    },
-    Venue: {
-      t: "Borsa di negoziazione (venue/MIC)",
-      a: P("Mercato di quotazione primario (MIC). Utile per distinguere ADR/dual-listing.",
-           "Assicurarsi che il dato prezzi sia coerente con il venue.")
-        + KV([["Esempio","<span class='hx-ex'>NASDAQ</span>, <span class='hx-ex'>XNYS</span>, <span class='hx-ex'>XLON</span>"]]),
-      s: "O’Hara — Market Microstructure; Hasbrouck — Empirical Market Microstructure"
-    },
-    Validazione: {
-      t: "Validazione ticker ↔ venue",
-      a: P("Controllo di coerenza tra simbolo e mercato. Riduce errori di mappatura tra fonti.",
-           "Se fallisce: marcare lo stato almeno <span class='hx-warn'>REVIEW</span>.")
-        + `<div class="hx-badges"><span class="hx-tag">Data Governance</span></div>`,
-      s: "CFA Institute — QM; Policy interna Data Governance"
-    },
-    Freshness: {
-      t: "Freshness (freschezza del dato)",
-      a: P("Scostamento temporale rispetto alla validazione (es. <code>T-0</code>=oggi, <code>T-1</code>=ieri).")
-        + UL(["<span class='hx-ok'>T-0</span> = verde (ottimo)",
-              "<span class='hx-warn'>T-1</span> = giallo (accettabile)",
-              "<span class='hx-crit'>T-2+</span> = rosso (datato)"]),
-      s: "Policy Qualità Dati (interna)"
-    },
-    OCR_Conf: {
-      t: "OCR_Conf (0–1)",
-      a: P("Attendibilità estrazione numerica da documenti (OCR).")
-        + UL(["<span class='hx-ok'>&ge; 0.85</span> buono",
-              "<span class='hx-warn'>0.65–0.85</span> discreto",
-              "<span class='hx-crit'>&lt; 0.65</span> critico"]),
-      s: "Kahn & Strong — Data Quality; Pipino et al."
-    },
-    DataIntegrity: {
-      t: "DataIntegrity (0–1)",
-      a: P("Completezza/consistenza del dataset (mancanze, conflitti, duplicati).")
-        + UL(["<span class='hx-ok'>&ge; 0.85</span> buono",
-              "<span class='hx-warn'>0.65–0.85</span> discreto",
-              "<span class='hx-crit'>&lt; 0.65</span> critico"]),
-      s: "Kahn & Strong; Pipino et al."
-    },
-    FeedSync: {
-      t: "FeedSync (0–1)",
-      a: P("Allineamento temporale tra feed e pannelli. Desincronizzazioni ⇒ letture fuorvianti.")
-        + UL(["<span class='hx-ok'>&ge; 0.85</span> buono",
-              "<span class='hx-warn'>0.65–0.85</span> discreto",
-              "<span class='hx-crit'>&lt; 0.65</span> critico"]),
-      s: "Hasbrouck — Market Microstructure"
-    },
-    ConfidenceFinal: {
-      t: "Affidabilità complessiva",
-      a: P("Valore conservativo usato come semaforo di qualità.")
-        + `<div class="hx-rule">ConfidenceFinal = MIN(OCR_Conf, DataIntegrity, FeedSync, conf_H4, conf_H1)</div>`
-        + UL(["<span class='hx-ok'>&ge; 0.80</span> verde",
-              "<span class='hx-warn'>0.60–0.80</span> giallo",
-              "<span class='hx-crit'>&lt; 0.60</span> rosso"]),
-      s: "Metodo interno; CFA Institute — QM"
-    },
-    StatoReport: {
-      t: "Stato report",
-      a: UL(["<span class='hx-ok'>ACTIVE</span> = ok",
-             "<span class='hx-warn'>REVIEW</span> = controlli da fare",
-             "<span class='hx-crit'>HOLD</span> = in pausa finché non rientrano i problemi"])
-        + `<div class="hx-badges"><span class="hx-tag">Policy</span></div>`,
-      s: "Policy interna Stato"
-    },
-    TapeNotes: {
-      t: "TapeNotes (REG close)",
-      a: P("Osservazioni su asta di chiusura: volumi, slippage, anomalie micro-strutturali.")
-        + KV([["Suggerimento","Annota solo eventi spiegabili/replicabili."]]),
-      s: "O’Hara; Hasbrouck"
-    },
-    Missing: {
-      t: "Missing (critici)",
-      a: P("Campi critici mancanti ⇒ N/D. Se impattano la confidence: almeno REVIEW/HOLD."),
-      s: "Policy N/D (interna)"
-    },
+    DataStart:{ t:"Inizio report (timestamp)", a:P("Istante locale da cui inizia la finestra analitica.","Usare timezone esplicita.")+KV([["Formato","YYYY-MM-DD HH:mm"],["Motivo","Audit e replicabilità"]]), s:"Policy Audit" },
+    DataEnd:{ t:"Fine report (timestamp)", a:P("Istante di chiusura della finestra.","Evitare look-ahead bias."), s:"Ethics/Standards" },
+    Ticker:{ t:"Ticker", a:P("Simbolo di listing primario (no alias)."), s:"Listing Rules" },
+    Venue:{ t:"Venue/MIC", a:P("Mercato di quotazione primario.","Coerenza dati prezzi ↔ venue."), s:"Microstructure" },
+    Freshness:{ t:"Freshness", a:P("T-0=oggi; T-1=ieri; T-2+=datato.")+UL(["T-0 → verde","T-1 → giallo","T-2+ → rosso"]), s:"Qualità Dati" },
+    OCR_Conf:{ t:"OCR_Conf (0–1)", a:UL(["≥0.85 buono","0.65–0.85 discreto","<0.65 critico"]), s:"Data Quality" },
+    DataIntegrity:{ t:"DataIntegrity (0–1)", a:UL(["≥0.85 buono","0.65–0.85 discreto","<0.65 critico"]), s:"Data Quality" },
+    FeedSync:{ t:"FeedSync (0–1)", a:UL(["≥0.85 ok","0.65–0.85 discreto","<0.65 critico"]), s:"Microstructure" },
+    ConfidenceFinal:{ t:"Affidabilità complessiva", a:P("Semaforo qualità: MIN di tutti i sotto-indicatori.")+UL(["≥0.80 verde","0.60–0.80 giallo","<0.60 rosso"]), s:"Metodo interno" },
+    StatoReport:{ t:"Stato report", a:UL(["ACTIVE → ok","REVIEW → verifiche","HOLD → sospeso"]), s:"Policy Stato" },
 
-    /* ======= F1B / MACRO-SETTORIALE ======= */
-    F1B_VIX: {
-      t: "VIX (CBOE/FRED)",
-      a: P("Volatilità implicita SPX (rischio di mercato).")
-        + UL(["<span class='hx-ok'>&lt; 15</span> bassa",
-              "<span class='hx-warn'>15–22</span> moderata",
-              "<span class='hx-crit'>&gt; 22</span> elevata"])
-        + `<div class="hx-badges"><span class="hx-tag">Macro risk</span><span class="hx-tag">Daily close T-1</span></div>`,
-      s: "CBOE; FRED (VIXCLS)"
-    },
-    F1B_Breadth: {
-      t: "Breadth 1M",
-      a: P("% di settori SPDR con perf 1M > 0 (respiro del mercato).")
-        + UL(["<span class='hx-ok'>&ge; 50%</span> respiro positivo",
-              "<span class='hx-crit'>&lt; 50%</span> respiro debole"]),
-      s: "SSGA SPDR (sector ETFs)"
-    },
-    F1B_RiskTilt: {
-      t: "Risk Tilt (Ciclici − Difensivi)",
-      a: P("Δ media 1M tra gruppi ciclici e difensivi: >0 propensione al rischio; <0 difesa."),
-      s: "Metodo interno — Rotazione settoriale"
-    },
-    F1B_FlowScore: {
-      t: "FlowScore",
-      a: P("Score composito su flussi/price action/tilt.")
-        + `<div class="hx-rule">FlowScore = 0.45·z(Inflow5D) + 0.35·z(Perf1M) + 0.20·z(RiskTilt)</div>`
-        + P("Più alto ⇒ momentum e afflussi migliori."),
-      s: "F1B v13.1 (interno)"
-    },
-    F1B_Regime: {
-      t: "RegimeScore",
-      a: P("Classificatore di regime da FlowScore e VIX.")
-        + `<div class="hx-rule">RegimeScore = 0.8·FlowScore + 0.2·sigm(−VIX)</div>`
-        + UL(["<b>Momentum</b> &ge; 0.35","<b>Momentum-light</b> 0.10–0.35","<b>Pullback</b> &lt; 0.10"]),
-      s: "F1B v13.1 (interno)"
-    },
-    F1B_Mode: {
-      t: "StrategyMode",
-      a: P("Traduzione operativa del regime: Momentum / Momentum-light / Pullback. Guida le azioni tattiche."),
-      s: "Decision Rules v13.1 (interno)"
-    },
-    F1B_Notes: {
-      t: "Conformità & Fonti",
-      a: P("Tier educativo: ETFdb/VettaFi; cross-check SSGA/Bloomberg; VIX da FRED/CBOE. Obiettivo: trasparenza e replicabilità."),
-      s: "Governance Swing v5.0 (interno)"
-    }
+    /* F1B macro */
+    F1B_VIX:{ t:"VIX", a:UL(["<15 bassa","15–22 moderata",">22 elevata"]), s:"CBOE/FRED" },
+    F1B_Breadth:{ t:"Breadth 1M", a:P("% settori SPDR positivi a 1M."), s:"SSGA SPDR" },
+    F1B_RiskTilt:{ t:"Risk Tilt", a:P("Δ ciclici − difensivi (1M)."), s:"Metodo interno" },
+    F1B_FlowScore:{ t:"FlowScore", a:P("0.45·z(Inflow5D)+0.35·z(Perf1M)+0.20·z(RiskTilt)"), s:"Metodo interno" },
+    F1B_Regime:{ t:"RegimeScore", a:UL(["Momentum ≥0.35","Momentum-light 0.10–0.35","Pullback <0.10"]), s:"Metodo interno" },
+    F1B_Mode:{ t:"StrategyMode", a:P("Traduzione operativa del regime."), s:"Metodo interno" }
   };
 
-  // Popup unico (no doppi)
+  /* ===== Estensioni HelpX per F2 ===== */
+  const HELP_F2 = {
+    F2_Ticker:{ t:"Ticker (F2)", a:P("Mostrato solo per contesto, senza duplicare header."), s:"UI" },
+    F2_MacroConcordance:{ t:"Concordanza Macro", a:P("Allineamento al regime F1B.")+UL(["ALTA → tailwind","MEDIA → neutro","BASSA → headwind"]), s:"Metodo interno" },
+    F2_Conf:{ t:"Confidence (F2)", a:P("Affidabilità del modulo F2 (solo F2).")+UL(["≥0.80 verde","0.60–0.80 giallo","<0.60 rosso"]), s:"Qualità Dati" },
+    F2_IV:{ t:"Implied Volatility (IV)", a:P("Gauge di rischio di breve; near-term ATM."), s:"Options feed" },
+    F2_PCR:{ t:"Put/Call Ratio", a:P(">1 difensivo; <1 risk-on (contesto!)."), s:"Options feed" },
+    F2_Profile:{ t:"Profilo sintetico", a:P("Descrizione breve del business e posizionamento."), s:"Filing / vendor" },
+    F2_Upcoming:{ t:"Prossimi eventi", a:P("Earnings/guidance, EX-div, conferenze, rating, macro di settore.")+KV([["Formato","YYYY-MM-DD · hh:mm TZ"]]), s:"Calendari + web" },
+    F2_InstOwn:{ t:"Institutional Ownership %", a:UL(["≥70% elevata","40–70% media","<40% bassa"]), s:"13F aggregator" },
+    F2_InsidOwn:{ t:"Insider Ownership %", a:P("Quota management/board; attenzione a cluster di transazioni."), s:"SEC 3/4/5" },
+    F2_Float:{ t:"Float %", a:P("Azioni realmente negoziabili; base per short metrics."), s:"Vendor" },
+    F2_ShortFloat:{ t:"Short Float %", a:UL(["<5% basso","5–10% medio",">10% alto"]), s:"Exchange short" },
+    F2_ShortInterest:{ t:"Short Interest (Days to Cover)", a:UL(["<2 normale","2–5 attenzione",">5 sensibile"]), s:"Exchange+vendor" },
+    F2_InsiderTx:{ t:"Insider Transactions", a:P("Ultimi 3–6 mesi con segno e importi."), s:"SEC 4/5" },
+    F2_News:{ t:"Ultime news", a:P("Headline + fonte + orario + nota impatto."), s:"Web tier-1" },
+    F2_PriceHeadline:{ t:"Price Headline", a:P("Sintesi price action odierna e driver se noto."), s:"Tape+web" },
+    F2_AnalystTarget:{ t:"Target Analyst", a:P("High/Mean/Low; confronta con spot."), s:"Consensus" },
+    F2_AnalystTrend:{ t:"Trend rating", a:P("3m → 1m → current."), s:"Consensus" },
+    F2_ETFs:{ t:"ETF collegati", a:P("ETF con peso su titolo; utile per flussi passivi."), s:"Factsheets" },
+    F2_Peers:{ t:"Peer-set", a:P("Confronto multipli/momentum con comparabili diretti."), s:"Classificazioni" }
+  };
+
+  /* ===== Popup infrastructure (unico) ===== */
   let POP=null, prevOverflow='';
   function closePop(){
     if(!POP) return;
@@ -702,29 +607,32 @@
     POP.wrap.remove(); POP=null;
   }
   function openPop(d){
+    const def = d || { t:"Aiuto", a:P("Descrizione non disponibile."), s:"—" };
     if(POP){
-      POP.h.textContent = d.t; POP.src.textContent='Fonte: '+d.s; POP.text.innerHTML=d.a; POP.wrap.focus(); return;
+      POP.h.textContent = def.t; POP.src.textContent='Fonte: '+def.s; POP.text.innerHTML=def.a; return;
     }
     const wrap=document.createElement('div'); wrap.className='hx-pop'; wrap.role='dialog'; wrap.ariaModal='true'; wrap.tabIndex=-1;
-    const card=document.createElement('div'); card.className='hx-card'; card.addEventListener('click',ev=>ev.stopPropagation());
-    const h=document.createElement('h3'); h.textContent=d.t;
-    const src=document.createElement('div'); src.className='src'; src.textContent='Fonte: ' + d.s;
-    const text=document.createElement('div'); text.className='text-sm text-slate-800'; text.innerHTML=d.a;
-    const hint=document.createElement('div'); hint.className='hx-callout';
-    hint.innerHTML='Suggerimento: usa le soglie come semaforo operativo. Se un campo è rosso, verifica le fonti prima di procedere.';
+    const card=document.createElement('div'); card.className='hx-card'; card.addEventListener('click', ev=>ev.stopPropagation());
+    const h=document.createElement('h3'); h.textContent=def.t;
+    const src=document.createElement('div'); src.className='src'; src.textContent='Fonte: '+def.s;
+    const text=document.createElement('div'); text.className='text-sm text-slate-800'; text.innerHTML=def.a;
+    const hint=document.createElement('div'); hint.className='hx-callout'; hint.innerHTML='Usa le soglie come semaforo: se rosso, verifica le fonti.';
     card.append(h,src,text,hint); wrap.append(card); document.body.appendChild(wrap);
     prevOverflow=document.documentElement.style.overflow||''; document.documentElement.style.overflow='hidden';
     wrap.addEventListener('click', (e)=>{ if(e.target===wrap) closePop(); });
     const onEsc=(e)=>{ if(e.key==='Escape'){ e.stopPropagation(); e.preventDefault(); closePop(); } };
     document.addEventListener('keydown', onEsc, true);
-    wrap.focus(); POP={wrap,card,h,src,text,onEsc};
+    POP={wrap,card,h,src,text,onEsc}; wrap.focus();
   }
 
+  // Wiring globale
   const HelpX = {
-    dict: HELP_DICT,
-    open(key){ openPop(this.dict[key] || { t:key, a:P("Descrizione non disponibile."), s:"—" }); },
+    dict: Object.assign({}, HELP_DICT),
+    open(key){ openPop(this.dict[key] || window.Tradelia?.HelpX?.dict?.[key] || { t:key, a:P("—"), s:"—" }); },
     add(key, def){ this.dict[key]=def; }
   };
+  // registra F2
+  Object.entries(HELP_F2).forEach(([k,v])=> HelpX.add(k,v));
 
   document.addEventListener('click',(e)=>{
     const btn=e.target.closest('.hx'); if(!btn) return;
@@ -736,68 +644,7 @@
   window.Tradelia.HelpX = HelpX;
 })();
 </script>
-<style>
-.hx-kv{ display:grid; grid-template-columns: auto 1fr; gap:.25rem .6rem; font-size:12px; color:#0f172a; margin:.5rem 0 }
-.hx-kv dt{ color:#64748b }
-.hx-badges{ display:flex; flex-wrap:wrap; gap:.35rem; margin:.35rem 0 }
-.hx-tag{ font-size:11px; padding:.12rem .45rem; border-radius:999px; border:1px solid #e5e7eb; background:#f8fafc; color:#334155; font-weight:600 }
-.hx-callout{ border-left:3px solid #7dd3fc; background:#f0f9ff; padding:.5rem .6rem; border-radius:.5rem; font-size:12px; color:#075985 }
-.hx-rule{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-background:#f8fafc; border:1px solid #e5e7eb; border-radius:6px; padding:.45rem .55rem; font-size:12px; color:#0f172a }
-.hx-list{ margin:.35rem 0 .1rem 1rem }
-.hx-ex{ font-size:12px; color:#0f172a }
-.hx-ok{ color:#065f46; font-weight:700 }
-.hx-warn{ color:#92400e; font-weight:700 }
-.hx-crit{ color:#7c2d12; font-weight:700 }
-</style>
 
-
-<script>
-(function(){
-const P = (...s)=> s.map(x=>`<p class="mb-1.5">${x}</p>`).join("");
-const UL = (arr)=> `<ul class="hx-list list-disc">${arr.map(x=>`<li>${x}</li>`).join("")}</ul>`;
-const KV = (pairs)=> `<dl class="hx-kv">${pairs.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>`;
-
-
-// ——— Dizionario esteso per F2 (ownership/short/news/events/vol/options) ———
-const D = {
-// PROFILE
-F2_Profile:{ t:"Profilo sintetico",
-a:P("Descrizione breve del business e posizionamento settoriale/indice.",
-"Usata per contestualizzare news ed eventi prossimi."), s:"Nota metodologica F2" },
-F2_Upcoming:{ t:"Prossimi eventi",
-a:P("Eventi market-moving legati al titolo e al settore/geo.")+
-KV([["Esempi","Earnings, guidance, dividendo/EX, conference days, macro di settore (CPI assicurativo, cat bond)."],
-["Policy","Indicare data e orario locale, timezone in chiaro (ET/CEST)."]]), s:"Policy Eventi" },
-
-
-// OWNERSHIP & SHORT
-F2_InstOwn:{ t:"Institutional Ownership %",
-a:P("Quota capitale detenuta da istituzionali.", "Soglie: > 70% elevata · 40–70% media · < 40% bassa."), s:"13F/holder aggregati" },
-F2_InsidOwn:{ t:"Insider Ownership %",
-a:P("Quota detenuta da management/board.", "Movimenti anomali in acquisto/vendita sono segnali di attenzione."), s:"SEC Forms 3/4/5" },
-F2_Float:{ t:"Float %",
-a:P("Azioni negoziabili su float.", "Serve per leggere short float e liquidità effettiva."), s:"Vendor equity stats" },
-F2_ShortFloat:{ t:"Short Float %",
-a:P("Quote short su float.")+UL(["<span class='hx-ok'>&lt; 5%</span> basso","<span class='hx-warn'>5–10%</span> medio","<span class='hx-crit'>&gt; 10%</span> alto"]), s:"Exchange short interest" },
-F2_ShortInterest:{ t:"Short Interest Ratio",
-a:P("Giorni per coprire: short interest / avg daily volume.")+
-UL(["<span class='hx-ok'>&lt; 2</span> normale","<span class='hx-warn'>2–5</span> attenzione","<span class='hx-crit'>&gt; 5</span> sensibile"]), s:"Exchange + vendors" },
-F2_InsiderTx:{ t:"Insider Transactions",
-a:P("Ultimi movimenti insider (3–6 mesi) con segno/ammontare.", "Rilevare cluster in acquisto/vendita."), s:"SEC Form 4/5" },
-
-
-// NEWS & ANALYSTS
-F2_News:{ t:"Ultime news",
-a:P("Elenco headline con fonte, timestamp e breve nota di impatto.",
-"Non sostituisce i dati numerici; supporta il contesto."), s:"WebProbe / Tier-1" },
-F2_PriceHeadline:{ t:"Price Headline",
-a:P("Sintesi price action giornaliera con driver (se noto)."), s:"Tape + WebProbe" },
-F2_AnalystTarget:{ t:"Analyst Targets",
-a:KV([["High/Mean/Low","Obiettivi di prezzo (USD)."],["Rating scale","5=Strong Buy … 1=Strong Sell."]])+P("Confrontare target mean con prezzo corrente per upside/downside."), s:"Street consensus" },
-F2_AnalystTrend:{ t:"Evoluzione rating",
-a:P("Storico 3m → 1m → current del rating medio."), s:"Street consensus" },
-</script>
 
 
 
@@ -1391,74 +1238,312 @@ a:P("Storico 3m → 1m → current del rating medio."), s:"Street consensus" },
      STEP 7/7 — MODULO F2 (card ultra-compatta + drawer a TAB + resoconto)
      >>> blocco completo e autocontenuto
      ========================= -->
+<!-- =========================
+     STEP 7/7 — MODULO F2 (Sguardo Principale) — BLOCCO COMPLETO
+     ========================= -->
 <style>
-.f2-card{ border:1px solid #e5e7eb; border-radius:14px; background:#fff }
-.f2-head{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:8px 10px; background:linear-gradient(#fff,#fbfdff); border-bottom:1px solid #eef2f6 }
-.f2-title{ font-weight:600; font-size:13px; color:#0f172a }
-.f2-body{ padding:8px 10px }
-.f2-line{ display:flex; align-items:center; justify-content:space-between; gap:.75rem }
-.f2-left{ display:flex; align-items:center; gap:.65rem; min-width:0 }
-.f2-k{ display:flex; flex-direction:column; min-width:0 }
-.f2-lab{ font-size:11px; color:#64748b; display:flex; align-items:center; gap:.35rem }
-.f2-val{ font-size:13px; font-weight:700; color:#0f172a; font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace; white-space:nowrap }
-.f2-val.truncate{ overflow:hidden; text-overflow:ellipsis }
-.f2-dot{ width:10px; height:10px; border-radius:999px; flex:0 0 auto }
-.f2-dot-g{ background:#10b981 } .f2-dot-y{ background:#f59e0b } .f2-dot-r{ background:#ef4444 } .f2-dot-n{ background:#94a3b8 }
-.f2-cta .sbtn{ padding:.45rem .6rem; font-size:13px }
-#mod-container[data-view="grid"] .f2-cta .sbtn{ padding:.3rem .5rem; font-size:12px }
-@media (min-width:1024px){ #mod-container[data-view="grid"] .f2-cta .sbtn{ padding:.28rem .48rem; font-size:12px } }
-.f2-tabbar{ position:sticky; top:0; z-index:10; display:flex; flex-wrap:wrap; gap:.35rem; background:#f8fafc; padding:.5rem; border-radius:10px; border:1px solid #e5e7eb }
-.f2-tabbar .sbtn{ font-size:12px; padding:.4rem .55rem; border:1px solid #e5e7eb; background:#fff; box-shadow:0 1px 0 rgba(2,6,23,.04); transition: background .18s ease, border-color .18s ease, color .18s ease, transform .06s ease, box-shadow .18s ease }
-.f2-tabbar .sbtn:hover{ background:#f1f5f9; border-color:#dbe3ea }
-.f2-tabbar .sbtn.active, .f2-tabbar .sbtn[aria-pressed="true"]{ background:linear-gradient(#e0f2fe,#bae6fd); border-color:#7dd3fc; color:#075985; font-weight:700; transform: translateY(1px); box-shadow: inset 0 1px 0 rgba(2,6,23,.10), 0 0 0 2px rgba(14,165,233,.15) }
-.f2-tab{ display:none } .f2-tab.active{ display:block }
-.tbl-kv{ width:100%; font-size:13px; border-collapse:separate; border-spacing:0 .15rem }
-.tbl-kv td{ padding:.15rem .25rem .15rem 0; vertical-align:top }
-.tbl-kv td:first-child{ color:#64748b; width:44%; display:flex; align-items:center; gap:.35rem }
-.chip{ display:inline-flex; align-items:center; gap:.35rem; border:1px solid #e5e7eb; background:#fff; border-radius:999px; padding:.18rem .55rem; font-size:12px }
-.card{ background:#fff; border:1px solid #e5e7eb; border-radius:14px; box-shadow:0 1px 0 rgba(2,6,23,.04) }
-.f1b-badge{ font-size:11px; padding:.12rem .5rem; border-radius:999px; border:1px solid }
-.f1b-badge--green{ color:#065f46;background:#ecfdf5;border-color:#a7f3d0 }
-.f1b-badge--yellow{ color:#92400e;background:#fffbeb;border-color:#fcd34d }
-.f1b-badge--red{ color:#7c2d12;background:#fef3c7;border-color:#fbbf24 }
-.f1b-badge--neutral{ color:#334155;background:#f1f5f9;border-color:#e5e7eb }
+  .f2-card{ border:1px solid #e5e7eb; border-radius:14px; background:#fff }
+  .f2-head{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:8px 10px; background:linear-gradient(#fff,#fbfdff); border-bottom:1px solid #eef2f6 }
+  .f2-title{ font-weight:600; font-size:13px; color:#0f172a }
+  .f2-body{ padding:8px 10px }
+  .f2-line{ display:flex; align-items:center; justify-content:space-between; gap:.75rem }
+  .f2-left{ display:flex; align-items:center; gap:.65rem; min-width:0 }
+  .f2-k{ display:flex; flex-direction:column; min-width:0 }
+  .f2-lab{ font-size:11px; color:#64748b; display:flex; align-items:center; gap:.35rem }
+  .f2-val{ font-size:13px; font-weight:700; color:#0f172a; font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace; white-space:nowrap }
+  .f2-val.truncate{ overflow:hidden; text-overflow:ellipsis; max-width:36ch }
+  .f2-dot{ width:10px; height:10px; border-radius:999px; flex:0 0 auto }
+  .f2-dot-g{ background:#10b981 } .f2-dot-y{ background:#f59e0b } .f2-dot-r{ background:#ef4444 } .f2-dot-n{ background:#94a3b8 }
+  .f2-cta .sbtn{ padding:.45rem .6rem; font-size:13px }
+  #mod-container[data-view="grid"] .f2-cta .sbtn{ padding:.3rem .5rem; font-size:12px }
+  @media (min-width:1024px){ #mod-container[data-view="grid"] .f2-cta .sbtn{ padding:.28rem .48rem; font-size:12px } }
+
+  .f2-tabbar{ position:sticky; top:0; z-index:10; display:flex; flex-wrap:wrap; gap:.35rem; background:#f8fafc; padding:.5rem; border-radius:10px; border:1px solid #e5e7eb }
+  .f2-tabbar .sbtn{ font-size:12px; padding:.4rem .55rem; border:1px solid #e5e7eb; background:#fff; box-shadow:0 1px 0 rgba(2,6,23,.04); transition: background .18s ease, border-color .18s ease, color .18s ease, transform .06s ease, box-shadow .18s ease }
+  .f2-tabbar .sbtn:hover{ background:#f1f5f9; border-color:#dbe3ea }
+  .f2-tabbar .sbtn.active, .f2-tabbar .sbtn[aria-pressed="true"]{ background:linear-gradient(#e0f2fe,#bae6fd); border-color:#7dd3fc; color:#075985; font-weight:700; transform:translateY(1px); box-shadow:inset 0 1px 0 rgba(2,6,23,.10), 0 0 0 2px rgba(14,165,233,.15) }
+  .f2-tab{ display:none } .f2-tab.active{ display:block }
+
+  .tbl-kv{ width:100%; font-size:13px; border-collapse:separate; border-spacing:0 .15rem }
+  .tbl-kv td{ padding:.15rem .25rem .15rem 0; vertical-align:top }
+  .tbl-kv td:first-child{ color:#64748b; width:44%; display:flex; align-items:center; gap:.35rem }
+
+  .chip{ display:inline-flex; align-items:center; gap:.35rem; border:1px solid #e5e7eb; background:#fff; border-radius:999px; padding:.18rem .55rem; font-size:12px }
+  .card{ background:#fff; border:1px solid #e5e7eb; border-radius:14px; box-shadow:0 1px 0 rgba(2,6,23,.04) }
+
+  .badge{ font-size:11px; padding:.12rem .5rem; border-radius:999px; border:1px solid }
+  .badge--g{ color:#065f46;background:#ecfdf5;border-color:#a7f3d0 }
+  .badge--y{ color:#92400e;background:#fffbeb;border-color:#fcd34d }
+  .badge--r{ color:#7c2d12;background:#fef3c7;border-color:#fbbf24 }
+  .badge--n{ color:#334155;background:#f1f5f9;border-color:#e5e7eb }
 </style>
 
-
-<template id="tpl-f2-card-new">
-<article class="f2-card" role="group" aria-labelledby="f2-title">
-<header class="f2-head">
-<h3 id="f2-title" class="f2-title">F2 — Sguardo Principale (Macro · Ownership · News)</h3>
-<span class="f1b-badge f1b-badge--neutral" data-f2="state-badge">NEUTRO</span>
-</header>
-<div class="f2-body">
-<div class="f2-line">
-<div class="f2-left min-w-0">
-<span class="f2-dot f2-dot-n" aria-hidden="true" data-f2="mc-dot"></span>
-<div class="f2-k min-w-0">
-<div class="f2-lab">Ticker <button class="hx" data-k="F2_Ticker">?</button></div>
-<div class="f2-val truncate" data-f2="ticker">—</div>
-</div>
-</div>
-<div class="f2-k">
-<div class="f2-lab">Concordanza <button class="hx" data-k="F2_MacroConcordance">?</button></div>
-<div class="f2-val" data-f2="mc">—</div>
-</div>
-<div class="f2-cta">
-<button class="sbtn" data-f2="open"><i data-lucide="panel-right-open"></i><span>Apri scheda</span></button>
-</div>
-</div>
-<div class="mt-2 flex flex-wrap items-center gap-1.5">
-<span class="text-[11px] text-slate-500">Confidence <button class="hx" data-k="F2_Conf">?</button>:</span>
-<span class="f1b-badge f1b-badge--neutral" data-f2="conf">—</span>
-<span class="chip" data-f2="iv-chip">IV —</span>
-<span class="chip" data-f2="pcr-chip">PCR —</span>
-</div>
-</div>
-</article>
+<template id="tpl-f2-card">
+  <article class="f2-card" role="group" aria-labelledby="f2-title">
+    <header class="f2-head">
+      <h3 id="f2-title" class="f2-title">F2 — Sguardo Principale (Ownership · Short · News)</h3>
+      <span class="badge badge--n" data-f2="state-badge">NEUTRO</span>
+    </header>
+    <div class="f2-body">
+      <div class="f2-line">
+        <div class="f2-left min-w-0">
+          <span class="f2-dot f2-dot-n" aria-hidden="true" data-f2="mc-dot"></span>
+          <div class="f2-k min-w-0">
+            <div class="f2-lab">Ticker <button class="hx" data-k="F2_Ticker">?</button></div>
+            <div class="f2-val truncate" data-f2="ticker">—</div>
+          </div>
+        </div>
+        <div class="f2-k">
+          <div class="f2-lab">Concordanza <button class="hx" data-k="F2_MacroConcordance">?</button></div>
+          <div class="f2-val" data-f2="mc">—</div>
+        </div>
+        <div class="f2-cta">
+          <button class="sbtn" data-f2="open"><i data-lucide="panel-right-open"></i><span>Apri scheda</span></button>
+        </div>
+      </div>
+      <div class="mt-2 flex flex-wrap items-center gap-1.5">
+        <span class="text-[11px] text-slate-500">Confidence <button class="hx" data-k="F2_Conf">?</button>:</span>
+        <span class="badge badge--n" data-f2="conf">—</span>
+        <span class="chip" data-f2="iv-chip">IV —</span>
+        <span class="chip" data-f2="pcr-chip">PCR —</span>
+      </div>
+    </div>
+  </article>
 </template>
-
 
 <script>
 (function(){
+  const dotClass = (tone)=> ({g:'f2-dot f2-dot-g', y:'f2-dot f2-dot-y', r:'f2-dot f2-dot-r', n:'f2-dot f2-dot-n'}[tone]||'f2-dot f2-dot-n');
+  const badgeClass = (tone)=> ({g:'badge badge--g', y:'badge badge--y', r:'badge badge--r', n:'badge badge--n'}[tone]||'badge badge--n');
+  const toneByConcord = (s)=>{
+    const v=String(s||'').toLowerCase();
+    if(/alta|high|strong|bull/.test(v)) return 'g';
+    if(/media|mid|neutral|neutro/.test(v)) return 'y';
+    if(/bassa|low|weak|bear/.test(v)) return 'r';
+    return 'n';
+  };
+  const safe = (x)=> (x==null||x==='')?'—':x;
+
+  function renderDrawer(d){
+    const body = document.getElementById('drawer-body');
+    document.getElementById('drawer-title').textContent = `F2 — ${safe(d.ticker)}`;
+    document.getElementById('drawer-sub').textContent   = 'Ownership · Short · Options · News · Eventi · ETF · Peers';
+
+    const row = (k,v)=> `<tr class="border-b last:border-0"><td class="py-1 pr-2">${k}</td><td class="py-1 text-right">${safe(v)}</td></tr>`;
+    const tbl = (rows)=> rows && rows.length ? rows.map(([k,v])=>row(k,v)).join("") : row('n/d','');
+
+    const newsLi = (arr)=> (arr||[]).slice(0,10).map(n=>`
+      <li class="mb-1.5">
+        <span class="font-semibold">${safe(n.headline||n.title)}</span>
+        <span class="text-slate-500 text-xs"> · ${safe(n.source)} · ${safe(n.time)}</span>
+        ${n.note?`<div class="text-sm text-slate-700">${n.note}</div>`:''}
+      </li>`).join('') || '<li class="text-slate-400">n/d</li>';
+
+    body.innerHTML = `
+      <div class="space-y-3">
+        <div class="f2-tabbar noprint">
+          <button class="sbtn" data-tab="#f2-ov" aria-pressed="true"><i data-lucide="layout-grid"></i><span>Overview</span></button>
+          <button class="sbtn" data-tab="#f2-own"><i data-lucide="user-check"></i><span>Ownership</span></button>
+          <button class="sbtn" data-tab="#f2-short"><i data-lucide="shield-alert"></i><span>Short & Options</span></button>
+          <button class="sbtn" data-tab="#f2-news"><i data-lucide="newspaper"></i><span>News</span></button>
+          <button class="sbtn" data-tab="#f2-events"><i data-lucide="calendar-days"></i><span>Eventi</span></button>
+          <button class="sbtn" data-tab="#f2-etf"><i data-lucide="boxes"></i><span>ETF & Peers</span></button>
+          <button class="sbtn" data-tab="#f2-audit"><i data-lucide="badge-check"></i><span>Audit</span></button>
+        </div>
+
+        <!-- OVERVIEW -->
+        <section id="f2-ov" class="f2-tab active">
+          <div class="card p-3">
+            <table class="tbl-kv">
+              <tr><td>Ticker <button class="hx" data-k="F2_Ticker">?</button></td><td><b>${safe(d.ticker)}</b></td></tr>
+              <tr><td>Price headline <button class="hx" data-k="F2_PriceHeadline">?</button></td><td>${safe(d.price_headline)}</td></tr>
+              <tr><td>Concordanza Macro <button class="hx" data-k="F2_MacroConcordance">?</button></td><td>${safe(d.concordanza)}</td></tr>
+              <tr><td>Confidence (F2) <button class="hx" data-k="F2_Conf">?</button></td><td>${safe(d.confidence_label||d.confidence)}</td></tr>
+              <tr><td>IV / PCR <button class="hx" data-k="F2_IV">?</button></td><td>${safe(d.iv)} · ${safe(d.pcr)}</td></tr>
+              <tr><td>Profilo <button class="hx" data-k="F2_Profile">?</button></td><td>${safe(d.profile)}</td></tr>
+            </table>
+          </div>
+        </section>
+
+        <!-- OWNERSHIP -->
+        <section id="f2-own" class="f2-tab">
+          <div class="card p-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div>
+                <div class="font-semibold mb-1">Azionariato</div>
+                <table class="w-full text-sm">
+                  ${tbl([
+                    ['Institutional Ownership %', d.inst_own],
+                    ['Insider Ownership %',      d.insid_own],
+                    ['Float %',                  d.float_pct]
+                  ])}
+                </table>
+              </div>
+              <div>
+                <div class="font-semibold mb-1">Movimenti insider</div>
+                <ul class="list-disc ml-5 text-sm">
+                  ${(d.insider_tx||[]).slice(0,8).map(t=>`<li>${safe(t.when)} · ${safe(t.actor)} · ${safe(t.action)} · ${safe(t.amount)}</li>`).join('') || '<li class="text-slate-400">n/d</li>'}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SHORT & OPTIONS -->
+        <section id="f2-short" class="f2-tab">
+          <div class="card p-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div>
+                <div class="font-semibold mb-1">Short metrics</div>
+                <table class="w-full text-sm">
+                  ${tbl([
+                    ['Short Float %',          d.short_float],
+                    ['Short Interest (DTC)',   d.short_interest_ratio],
+                    ['Short Volume Ratio',     d.short_vol_ratio]
+                  ])}
+                </table>
+              </div>
+              <div>
+                <div class="font-semibold mb-1">Derivati (sentiment)</div>
+                <table class="w-full text-sm">
+                  ${tbl([
+                    ['Implied Volatility (IV)', d.iv],
+                    ['Put/Call Ratio (PCR)',    d.pcr],
+                    ['IV Percentile/Rank',      (d.iv_percentile||d.iv_rank)? `${safe(d.iv_percentile)} / ${safe(d.iv_rank)}` : '—']
+                  ])}
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- NEWS -->
+        <section id="f2-news" class="f2-tab">
+          <div class="card p-3">
+            <div class="font-semibold mb-1">Ultime news <button class="hx" data-k="F2_News">?</button></div>
+            <ul class="text-sm">${newsLi(d.news)}</ul>
+          </div>
+        </section>
+
+        <!-- EVENTI -->
+        <section id="f2-events" class="f2-tab">
+          <div class="card p-3">
+            <div class="font-semibold mb-1">Eventi vicini <button class="hx" data-k="F2_Upcoming">?</button></div>
+            <ul class="list-disc ml-5 text-sm">
+              ${(d.events||[]).slice(0,10).map(e=>`<li>${safe(e.when)} · ${safe(e.title)}${e.scope?` · <span class="text-slate-500">${safe(e.scope)}</span>`:''}</li>`).join('') || '<li class="text-slate-400">n/d</li>'}
+            </ul>
+          </div>
+        </section>
+
+        <!-- ETF & PEERS -->
+        <section id="f2-etf" class="f2-tab">
+          <div class="card p-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div>
+                <div class="font-semibold mb-1">ETF collegati <button class="hx" data-k="F2_ETFs">?</button></div>
+                <table class="w-full text-sm">
+                  ${tbl((d.etfs||[]).slice(0,12).map(e=>[`${safe(e.symbol)} · ${safe(e.name)}`, `${safe(e.weight)}%`]))}
+                </table>
+              </div>
+              <div>
+                <div class="font-semibold mb-1">Peers <button class="hx" data-k="F2_Peers">?</button></div>
+                <ul class="list-disc ml-5 text-sm">
+                  ${(d.peers||[]).slice(0,20).map(p=>`<li>${safe(p)}</li>`).join('') || '<li class="text-slate-400">n/d</li>'}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- AUDIT -->
+        <section id="f2-audit" class="f2-tab">
+          <div class="card p-3">
+            <table class="tbl-kv">
+              <tr><td>Freshness</td><td>${safe(d.freshness)}</td></tr>
+              <tr><td>Sources</td><td>${(d.sources||[]).join(', ')||'—'}</td></tr>
+              <tr><td>Note</td><td>${safe(d.notes)}</td></tr>
+            </table>
+          </div>
+        </section>
+      </div>
+    `;
+
+    // Tabs
+    const tabsBtns = body.querySelectorAll('.f2-tabbar [data-tab]');
+    const show = (sel)=>{
+      body.querySelectorAll('.f2-tab').forEach(s=>s.classList.remove('active'));
+      body.querySelector(sel)?.classList.add('active');
+      tabsBtns.forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
+      const btn=[...tabsBtns].find(b=>b.getAttribute('data-tab')===sel);
+      if(btn){ btn.classList.add('active'); btn.setAttribute('aria-pressed','true'); }
+    };
+    tabsBtns.forEach(b=> b.addEventListener('click', ()=> show(b.getAttribute('data-tab')) ));
+    show('#f2-ov');
+
+    if (window.lucide) lucide.createIcons();
+  }
+
+  function mountF2(){
+    const container=document.getElementById('mod-container');
+    const tpl=document.getElementById('tpl-f2-card');
+    if(!container||!tpl) return false;
+
+    const card = tpl.content.firstElementChild.cloneNode(true);
+    container.appendChild(card);
+
+    const $=(sel)=> card.querySelector(sel);
+    const setBadge=(el,tone,label)=>{ if(!el) return; el.className=badgeClass(tone); el.textContent=label??'—'; };
+
+    // Apri drawer
+    $('[data-f2="open"]').onclick=(e)=>{
+      e.stopPropagation();
+      window.Tradelia?.openDrawer?.();
+      renderDrawer(window.Tradelia?.F2?.__data||{});
+    };
+
+    // API pubblica
+    window.Tradelia = window.Tradelia || {};
+    window.Tradelia.F2 = {
+      __data:{},
+
+      // merge: web(base) + user(override campi chiave)
+      feed(webData={}, userData={}){
+        const merged = Object.assign({}, webData, userData);
+        this.update(merged);
+      },
+
+      update(d={}){
+        this.__data = d;
+
+        // Ticker & concordanza
+        $('[data-f2="ticker"]').textContent = d.ticker ?? '—';
+        const conc = d.concordanza ?? '—';
+        $('[data-f2="mc"]').textContent = conc;
+
+        // Tone
+        const tone = toneByConcord(conc);
+        const dot = $('[data-f2="mc-dot"]'); if(dot) dot.className = dotClass(tone);
+        setBadge($('[data-f2="state-badge"]'), tone, (d.state_label||'NEUTRO').toUpperCase());
+
+        // Confidence + IV/PCR
+        setBadge($('[data-f2="conf"]'), tone, d.confidence_label ?? (d.confidence!=null? String(d.confidence): '—'));
+        const ivChip  = $('[data-f2="iv-chip"]');  if(ivChip)  ivChip.textContent  = `IV ${safe(d.iv)}`;
+        const pcrChip = $('[data-f2="pcr-chip"]'); if(pcrChip) pcrChip.textContent = `PCR ${safe(d.pcr)}`;
+
+        if (window.lucide) lucide.createIcons();
+      }
+    };
+
+    // placeholder
+    window.Tradelia.F2.update({});
+    return true;
+  }
+
+  if(!mountF2()){
+    const obs = new MutationObserver(()=>{ if(mountF2()) obs.disconnect(); });
+    obs.observe(document.documentElement, {childList:true, subtree:true});
+    document.addEventListener('DOMContentLoaded', ()=> mountF2(), {once:true});
+  }
+})();
+</script>
 
