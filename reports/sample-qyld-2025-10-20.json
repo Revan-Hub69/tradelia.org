@@ -23,28 +23,6 @@
   }
 }
 {
-  "Header": {
-    "Session": "REG",
-    "StartDate": "2025-10-18",
-    "EndDate": "2025-10-21",
-    "Ticker": "QYLD",
-    "Venue": "NASDAQ",
-    "Validation": { "label": "OK", "color": "green" },
-    "VersionTag": "swing-v5.0",
-    "SyncID": "QYLD_20251021_F1",
-    "Freshness": 1,
-    "OCR_Conf": 0.987654,
-    "DataIntegrity": 0.95321,
-    "FeedSync": 0.9973,
-    "ConfidenceFinal": { "value": 0.789456, "color": "yellow" },
-    "State": { "label": "HOLD", "color": "yellow" },
-    "TapeNotes": "AuctionShare 21.3% · VWAP tight · closing print stabile",
-    "Missing": [],
-    "Colorize": [
-      { "id": "#H-TapeNotes", "mode": "tone",  "color": "yellow", "text": "Asta vivace (attenzione)" },
-      { "id": "#H-Missing",   "mode": "badge", "color": "green",  "label": "COMPLETO" }
-    ]
-  },
 
   "F1B": {
     "Meta": {
