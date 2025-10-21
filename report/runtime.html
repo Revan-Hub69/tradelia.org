@@ -115,6 +115,27 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
   <!-- =========================
      STEP 2/7 — HEADER + SHARE
      ========================= -->
@@ -285,3 +306,231 @@
       }
     });
   </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     <!-- =========================
+     STEP 3/7 — HEADER-TICKER (terminal compact + color validation)
+     ========================= -->
+<main class="max-w-7xl mx-auto px-3 sm:px-5 py-3">
+  <section id="header-ticker"
+           class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.5 sm:gap-2"
+           aria-label="Header Ticker (compact)">
+    <!-- item -->
+    <div class="group relative flex min-h-[54px] items-center gap-2 rounded-md border border-slate-200 bg-white
+                pl-2 pr-2.5 py-1.5 shadow-[0_1px_0_rgba(2,6,23,0.04)]">
+      <span class="absolute left-0 top-0 h-full w-1 rounded-l-md bg-slate-200"
+            data-tone="neutral" data-bind="tone:DataStart"></span>
+      <div class="min-w-0">
+        <div class="flex items-center gap-1 text-[10px] uppercase tracking-wide text-slate-500">
+          Inizio <button class="hx" data-k="DataStart">?</button>
+        </div>
+        <div class="truncate font-mono text-[13px] font-semibold text-slate-900"
+             data-bind="value:DataStart">—</div>
+      </div>
+    </div>
+
+    <div class="group relative flex min-h-[54px] items-center gap-2 rounded-md border border-slate-200 bg-white pl-2 pr-2.5 py-1.5">
+      <span class="absolute left-0 top-0 h-full w-1 rounded-l-md bg-slate-200"
+            data-tone="neutral" data-bind="tone:DataEnd"></span>
+      <div class="min-w-0">
+        <div class="flex items-center gap-1 text-[10px] uppercase tracking-wide text-slate-500">
+          Fine <button class="hx" data-k="DataEnd">?</button>
+        </div>
+        <div class="truncate font-mono text-[13px] font-semibold text-slate-900"
+             data-bind="value:DataEnd">—</div>
+      </div>
+    </div>
+
+    <div class="group relative flex min-h-[54px] items-center gap-2 rounded-md border border-slate-200 bg-white pl-2 pr-2.5 py-1.5">
+      <span class="absolute left-0 top-0 h-full w-1 rounded-l-md bg-slate-200"
+            data-tone="neutral" data-bind="tone:Ticker"></span>
+      <div class="min-w-0">
+        <div class="flex items-center gap-1 text-[10px] uppercase tracking-wide text-slate-500">
+          Ticker <button class="hx" data-k="Ticker">?</button>
+        </div>
+        <div class="truncate font-mono text-[13px] font-semibold" data-bind="value:Ticker">—</div>
+      </div>
+    </div>
+
+    <div class="group relative flex min-h-[54px] items-center gap-2 rounded-md border border-slate-200 bg-white pl-2 pr-2.5 py-1.5">
+      <span class="absolute left-0 top-0 h-full w-1 rounded-l-md bg-slate-200"
+            data-tone="neutral" data-bind="tone:Venue"></span>
+      <div class="min-w-0">
+        <div class="flex items-center gap-1 text-[10px] uppercase tracking-wide text-slate-500">
+          Venue <button class="hx" data-k="Venue">?</button>
+        </div>
+        <div class="truncate font-mono text-[13px] font-semibold" data-bind="value:Venue">—</div>
+      </div>
+    </div>
+
+    <div class="group relative flex min-h-[54px] items-center gap-2 rounded-md border border-slate-200 bg-white pl-2 pr-2.5 py-1.5">
+      <span class="absolute left-0 top-0 h-full w-1 rounded-l-md bg-slate-200"
+            data-tone="neutral" data-bind="tone:Freshness"></span>
+      <div class="min-w-0">
+        <div class="flex items-center gap-1 text-[10px] uppercase tracking-wide text-slate-500">
+          Freshness <button class="hx" data-k="Freshness">?</button>
+        </div>
+        <div class="truncate font-mono text-[13px] font-semibold" data-bind="value:Freshness">—</div>
+      </div>
+    </div>
+
+    <div class="group relative flex min-h-[54px] items-center gap-2 rounded-md border border-slate-200 bg-white pl-2 pr-2.5 py-1.5">
+      <span class="absolute left-0 top-0 h-full w-1 rounded-l-md bg-slate-200"
+            data-tone="neutral" data-bind="tone:State"></span>
+      <div class="min-w-0">
+        <div class="flex items-center gap-1 text-[10px] uppercase tracking-wide text-slate-500">
+          Stato <button class="hx" data-k="StatoReport">?</button>
+        </div>
+        <div class="truncate font-mono text-[13px] font-semibold" data-bind="value:State">—</div>
+      </div>
+    </div>
+
+    <!-- riga successiva -->
+    <div class="group relative flex min-h-[54px] items-center gap-2 rounded-md border border-slate-200 bg-white pl-2 pr-2.5 py-1.5 lg:col-span-2">
+      <span class="absolute left-0 top-0 h-full w-1 rounded-l-md bg-slate-200"
+            data-tone="neutral" data-bind="tone:ConfidenceFinal"></span>
+      <div class="min-w-0">
+        <div class="flex items-center gap-1 text-[10px] uppercase tracking-wide text-slate-500">
+          Confidence <button class="hx" data-k="ConfidenceFinal">?</button>
+        </div>
+        <div class="truncate font-mono text-[13px] font-semibold" data-bind="value:ConfidenceFinal">—</div>
+      </div>
+    </div>
+
+    <div class="group relative flex min-h-[54px] items-center gap-2 rounded-md border border-slate-200 bg-white pl-2 pr-2.5 py-1.5">
+      <span class="absolute left-0 top-0 h-full w-1 rounded-l-md bg-slate-200"
+            data-tone="neutral" data-bind="tone:OCR_Conf"></span>
+      <div class="min-w-0">
+        <div class="flex items-center gap-1 text-[10px] uppercase tracking-wide text-slate-500">
+          OCR <button class="hx" data-k="OCR_Conf">?</button>
+        </div>
+        <div class="truncate font-mono text-[13px] font-semibold" data-bind="value:OCR_Conf">—</div>
+      </div>
+    </div>
+
+    <div class="group relative flex min-h-[54px] items-center gap-2 rounded-md border border-slate-200 bg-white pl-2 pr-2.5 py-1.5">
+      <span class="absolute left-0 top-0 h-full w-1 rounded-l-md bg-slate-200"
+            data-tone="neutral" data-bind="tone:DataIntegrity"></span>
+      <div class="min-w-0">
+        <div class="flex items-center gap-1 text-[10px] uppercase tracking-wide text-slate-500">
+          DataInt <button class="hx" data-k="DataIntegrity">?</button>
+        </div>
+        <div class="truncate font-mono text-[13px] font-semibold" data-bind="value:DataIntegrity">—</div>
+      </div>
+    </div>
+
+    <div class="group relative flex min-h-[54px] items-center gap-2 rounded-md border border-slate-200 bg-white pl-2 pr-2.5 py-1.5">
+      <span class="absolute left-0 top-0 h-full w-1 rounded-l-md bg-slate-200"
+            data-tone="neutral" data-bind="tone:FeedSync"></span>
+      <div class="min-w-0">
+        <div class="flex items-center gap-1 text-[10px] uppercase tracking-wide text-slate-500">
+          FeedSync <button class="hx" data-k="FeedSync">?</button>
+        </div>
+        <div class="truncate font-mono text-[13px] font-semibold" data-bind="value:FeedSync">—</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Binder: applica JSON ai campi + colori -->
+<script>
+(function(){
+  const toneClass = (tone) => ({
+    green:'bg-emerald-500',
+    yellow:'bg-amber-400',
+    red:'bg-rose-500',
+    neutral:'bg-slate-300'
+  }[(tone||'neutral').toLowerCase()] || 'bg-slate-300');
+
+  // Regole di validazione -> tone
+  function toneByConfidence(v){
+    if (v==null || isNaN(v)) return 'neutral';
+    if (v >= 0.80) return 'green';
+    if (v >= 0.60) return 'yellow';
+    return 'red';
+  }
+  function toneByFreshness(label){ // es. "T-0", "T-1", "T-2+"
+    if (!label) return 'neutral';
+    if (/T-0/i.test(label)) return 'green';
+    if (/T-1/i.test(label)) return 'yellow';
+    return 'red';
+  }
+  function toneBySimple01(v){ // OCR, DataIntegrity, FeedSync (0..1)
+    if (v==null || isNaN(v)) return 'neutral';
+    if (v >= 0.85) return 'green';
+    if (v >= 0.65) return 'yellow';
+    return 'red';
+  }
+  function toneByState(s){ // ACTIVE/HOLD/REVIEW
+    const k=String(s||'').toUpperCase();
+    if (k==='ACTIVE') return 'green';
+    if (k==='REVIEW') return 'yellow';
+    if (k==='HOLD') return 'red';
+    return 'neutral';
+  }
+
+  // Applica value + barra colore per singolo campo
+  function setField(key, { value, tone }){
+    const valEl = document.querySelector(`[data-bind="value:${key}"]`);
+    const toneEl = document.querySelector(`[data-bind="tone:${key}"]`);
+    if (valEl) valEl.textContent = (value ?? '—');
+    if (toneEl){
+      // reset classi base + applica colore
+      toneEl.className = 'absolute left-0 top-0 h-full w-1 rounded-l-md ' + toneClass(tone);
+      toneEl.setAttribute('data-tone', tone);
+    }
+  }
+
+  // API pubblica: passa qui il JSON completo
+  function applyHeaderJSON(data){
+    // mapping: campo -> value + tone rule
+    setField('DataStart',     { value: data?.Start,        tone: 'neutral' });
+    setField('DataEnd',       { value: data?.End,          tone: 'neutral' });
+    setField('Ticker',        { value: data?.Ticker,       tone: 'neutral' });
+    setField('Venue',         { value: data?.Venue,        tone: 'neutral' });
+
+    const freshLabel = data?.FreshnessLabel ?? data?.Freshness; // es. "T-1"
+    setField('Freshness',     { value: freshLabel,         tone: toneByFreshness(freshLabel) });
+
+    const conf = Number(data?.ConfidenceFinal);
+    setField('ConfidenceFinal',{ value: isFinite(conf)? conf.toFixed(2) : '—', tone: toneByConfidence(conf) });
+
+    const ocr  = Number(data?.OCR_Conf);
+    const di   = Number(data?.DataIntegrity);
+    const fs   = Number(data?.FeedSync);
+    setField('OCR_Conf',      { value: isFinite(ocr)? ocr.toFixed(2) : '—', tone: toneBySimple01(ocr) });
+    setField('DataIntegrity', { value: isFinite(di)?  di.toFixed(2)  : '—', tone: toneBySimple01(di)  });
+    setField('FeedSync',      { value: isFinite(fs)?  fs.toFixed(2)  : '—', tone: toneBySimple01(fs)  });
+
+    const state = data?.State ?? data?.ReportState;
+    setField('State',         { value: state || '—',       tone: toneByState(state) });
+  }
+
+  // Espone global per il tuo runtime
+  window.Tradelia = window.Tradelia || {};
+  window.Tradelia.HeaderJSON = { apply: applyHeaderJSON };
+
+  // Placeholder demo (puoi rimuoverlo):
+  // window.Tradelia.HeaderJSON.apply({
+  //   Start: "2025-10-21 20:40", End: "2025-10-21 20:55",
+  //   Ticker: "QYLD", Venue: "NASDAQ",
+  //   FreshnessLabel: "T-1",
+  //   ConfidenceFinal: 0.78,
+  //   OCR_Conf: 0.91, DataIntegrity: 0.72, FeedSync: 0.58,
+  //   State: "REVIEW"
+  // });
+
+})();
+</script>
