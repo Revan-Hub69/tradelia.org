@@ -1,10 +1,12 @@
-(function(){
+(function () {
+  // ---------- utils ----------
   const $id = (id) => document.getElementById(id);
   const get = (obj, path, fb = null) =>
     path.split('.').reduce((o, k) => (o && o[k] != null ? o[k] : null), obj) ?? fb;
   const toNum = (v) => { const n = Number(v); return Number.isFinite(n) ? n : null; };
-  const fmtNum = (v) => { if (v == null || isNaN(v)) return "N/D"; const str = Number(v).toPrecision(6); return str.replace(/\.?0+$/, ""); };
+  const fmtNum = (v) => { if (v == null || isNaN(v)) return "N/D"; const s = Number(v).toPrecision(6); return s.replace(/\.?0+$/, ""); };
 
+  // ---------- header map (segna-posti) ----------
   const MAP = {
     "H-Session":"Header.Session","H-Start":"Header.StartDate","H-End":"Header.EndDate",
     "H-Ticker":"Header.Ticker","H-Venue":"Header.Venue","H-Validation":"Header.Validation",
@@ -22,6 +24,7 @@
     else el.textContent = String(v);
   };
 
+  // ---------- binder payload per stile cromatico header ----------
   function toBinderPayload(data){
     const h = data && data.Header ? data.Header : {};
     const toBadge = (x, c="neutral") =>
@@ -42,23 +45,19 @@
     };
   }
 
+  // ---------- riempie i segnaposti plain dell'header ----------
   function fillPlainTexts(data){
     Object.entries(MAP).forEach(([domId, path])=>{
       let v = get(data, path, "—");
 
-      // se Validation è oggetto, mostra solo label nel fallback
       if (domId === "H-Validation" && v && typeof v === "object") v = v.label ?? "—";
-
-      // numerici con formato
       if (["H-OCR","H-DataIntegrity","H-FeedSync"].includes(domId)) v = fmtNum(toNum(v));
 
-      // confidence: può essere numero o oggetto {value}
       if (domId === "H-Confidence"){
         if (v && typeof v === "object") v = fmtNum(toNum(v.value));
         else v = fmtNum(toNum(v));
       }
 
-      // freshness → testo
       if (domId === "H-Freshness"){
         const n = toNum(v);
         if (n != null) v = (n <= 1 ? "≤ T-1" : `${n} giorni`);
@@ -68,10 +67,10 @@
     });
   }
 
+  // ---------- main loader ----------
   async function load(){
     const qp = new URLSearchParams(location.search);
     const id = qp.get("id") || "sample-qyld-2025-10-20";
-    // JSON in /reports (minuscolo), una cartella sopra /report
     const src = `../reports/${id}.json?t=${Date.now()}`;
 
     try{
@@ -79,13 +78,23 @@
       if(!r.ok) throw new Error(`HTTP ${r.status}`);
       const data = await r.json();
 
-      // 1) Riempimento testo
+      // 1) Header plain
       fillPlainTexts(data);
 
-      // 2) Binder cromatico + evento
+      // 2) Header cromatico + evento ufficiale
       const payload = toBinderPayload(data);
       if(window.TradeliaHeaderColors?.apply) window.TradeliaHeaderColors.apply(payload);
       window.dispatchEvent(new CustomEvent("tradelia:header:update", { detail: payload }));
+
+      // 3) F1B (desk): aggiorna card/drawer dal JSON completo
+      if (window.TradeliaF1B && data.F1B) {
+        window.TradeliaF1B.update(data.F1B);
+      }
+
+      // 4) opzionale: auto-open drawer con ?open=f1b (solo se presenti i dati)
+      if (qp.get("open")==="f1b" && data.F1B) {
+        document.querySelector('[data-f1b="open"]')?.click();
+      }
     }catch(err){
       console.error("Report JSON non trovato o invalido:", err);
     }
@@ -93,22 +102,3 @@
 
   document.addEventListener("DOMContentLoaded", load);
 })();
-// apri drawer F1B
-window.TradeliaF1B.open();
-
-// aggiorna con il tuo payload
-window.TradeliaF1B.update({
-  state:'ACTIVE',
-  vix:18.23,
-  breadth:'60% positivi',
-  risktilt:'+5.17 pp verso difensivi',
-  flowScore:0.18,
-  regimeScore:0.22,
-  mode:'Momentum-light',
-  top1:'XLU · Utilities', top2:'XLV · Health Care', top3:'XLF · Financials',
-  weak1:'XLE · Energy', weak2:'XLI · Industrials', weak3:'XLK · Technology',
-  auditId:'F1B-20251021-IT-001', version:'v1.1', ts:'2025-10-21 09:45 CET'
-});
-
-// oppure via evento
-window.dispatchEvent(new CustomEvent('tradelia:f1b:update',{detail:{ /* ... */ }}));
