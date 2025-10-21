@@ -22,7 +22,6 @@
     else el.textContent = String(v);
   };
 
-  // adattatore per binder cromatico
   function toBinderPayload(data){
     const h = data && data.Header ? data.Header : {};
     const toBadge = (x, c="neutral") =>
@@ -43,63 +42,54 @@
     };
   }
 
-  // binder testuale fallback + micro formattazioni
   function fillPlainTexts(data){
     Object.entries(MAP).forEach(([domId, path])=>{
-      let v=get(data,path,"—");
-      if(["H-OCR","H-DataIntegrity","H-FeedSync"].includes(domId)) v=fmtNum(toNum(v));
-      if(domId==="H-Confidence"){
-        if(v && typeof v==="object"){
-          const num = toNum(v.value);
-          const label = (num==null ? "N/D" : `${fmtNum(num)} · ${qual(num)}`);
-          v = label;
-        } else {
-          const num = toNum(v);
-          v = (num==null ? "N/D" : `${fmtNum(num)} · ${qual(num)}`);
-        }
+      let v = get(data, path, "—");
+
+      // se Validation è oggetto, mostra solo label nel fallback
+      if (domId === "H-Validation" && v && typeof v === "object") v = v.label ?? "—";
+
+      // numerici con formato
+      if (["H-OCR","H-DataIntegrity","H-FeedSync"].includes(domId)) v = fmtNum(toNum(v));
+
+      // confidence: può essere numero o oggetto {value}
+      if (domId === "H-Confidence"){
+        if (v && typeof v === "object") v = fmtNum(toNum(v.value));
+        else v = fmtNum(toNum(v));
       }
-      if(domId==="H-Freshness"){ const n=toNum(v); if(n!=null) v=(n<=1?"≤ T-1":`${n} giorni`); }
-      setText(domId,v);
+
+      // freshness → testo
+      if (domId === "H-Freshness"){
+        const n = toNum(v);
+        if (n != null) v = (n <= 1 ? "≤ T-1" : `${n} giorni`);
+      }
+
+      setText(domId, v);
     });
   }
 
-  const qual = (x) => {
-    const v = Number(x);
-    if (!isFinite(v)) return '—';
-    if (v >= 0.90) return 'Elevata';
-    if (v >= 0.75) return 'Media';
-    return 'Bassa';
-  };
-
-  // robust fetch: prova /reports/ e poi /Reports/
-  async function fetchJSONById(id){
-    const ts = Date.now();
-    const candidates = [
-      `../reports/${id}.json?t=${ts}`,
-      `../Reports/${id}.json?t=${ts}`
-    ];
-    for(const url of candidates){
-      try{
-        const r = await fetch(url, { cache: "no-store" });
-        if(r.ok) return await r.json();
-      }catch{}
-    }
-    throw new Error("Nessun JSON trovato in /reports o /Reports");
-  }
-
   async function load(){
-    const qp=new URLSearchParams(location.search);
-    const id=qp.get("id")||"sample-qyld-2025-10-20";
+    const qp = new URLSearchParams(location.search);
+    const id = qp.get("id") || "sample-qyld-2025-10-20";
+    // JSON in /reports (minuscolo), una cartella sopra /report
+    const src = `../reports/${id}.json?t=${Date.now()}`;
+
     try{
-      const data = await fetchJSONById(id);
+      const r = await fetch(src, { cache: "no-store" });
+      if(!r.ok) throw new Error(`HTTP ${r.status}`);
+      const data = await r.json();
+
+      // 1) Riempimento testo
       fillPlainTexts(data);
-      const payload=toBinderPayload(data);
+
+      // 2) Binder cromatico + evento
+      const payload = toBinderPayload(data);
       if(window.TradeliaHeaderColors?.apply) window.TradeliaHeaderColors.apply(payload);
-      window.dispatchEvent(new CustomEvent("tradelia:header:update",{detail:payload}));
+      window.dispatchEvent(new CustomEvent("tradelia:header:update", { detail: payload }));
     }catch(err){
       console.error("Report JSON non trovato o invalido:", err);
     }
   }
 
-  document.addEventListener("DOMContentLoaded",load);
+  document.addEventListener("DOMContentLoaded", load);
 })();
