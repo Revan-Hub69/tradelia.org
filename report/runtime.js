@@ -6,7 +6,7 @@
   const toNum = (v) => { const n = Number(v); return Number.isFinite(n) ? n : null; };
   const fmtNum = (v) => { if (v == null || isNaN(v)) return "N/D"; const s = Number(v).toPrecision(6); return s.replace(/\.?0+$/, ""); };
 
-  // ---------- header map (segna-posti) ----------
+  // ---------- header map (segnaposti) ----------
   const MAP = {
     "H-Session":"Header.Session","H-Start":"Header.StartDate","H-End":"Header.EndDate",
     "H-Ticker":"Header.Ticker","H-Venue":"Header.Venue","H-Validation":"Header.Validation",
@@ -93,12 +93,19 @@
 
       // 4) opzionale: auto-open drawer con ?open=f1b (solo se presenti i dati)
       if (qp.get("open")==="f1b" && data.F1B) {
-        document.querySelector('[data-f1b="open"]')?.click();
+        // simula click sul bottone della card dopo mount
+        const tryOpen = ()=>{ document.querySelector('[data-f1b="open"]')?.click(); };
+        if (document.readyState === 'complete') tryOpen();
+        else setTimeout(tryOpen, 50);
       }
     }catch(err){
       console.error("Report JSON non trovato o invalido:", err);
     }
   }
 
-  document.addEventListener("DOMContentLoaded", load);
+  if (document.readyState === 'loading') {
+    document.addEventListener("DOMContentLoaded", load);
+  } else {
+    load();
+  }
 })();
