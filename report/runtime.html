@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tradelia · Report Runtime</title>
-  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link rel="icon" href="./favicon.png" type="image/png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -21,7 +21,7 @@
     ::-webkit-scrollbar-thumb:hover { background:rgba(80,160,200,.6) }
     * { scrollbar-width:thin; scrollbar-color:rgba(80,160,200,.5) #e5e7eb }
 
-    /* Pulsanti compatti + effetto push */
+    /* Pulsanti */
     .btn {
       display:inline-flex; align-items:center; gap:.45rem;
       padding:.4rem .6rem; border-radius:.6rem; font-weight:600; font-size:14px;
@@ -49,12 +49,10 @@
     .sbtn:hover{background:#f8fafc;border-color:#dbe3ea}
     .sbtn:active{transform:translateY(1px)}
     .sbtn i{width:18px;height:18px}
-    .share-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
-    @media (min-width:420px){ .share-grid{grid-template-columns:1fr 1fr 1fr} }
     .badge-url{background:#f8fafc;border:1px solid #e5e7eb}
     .qr-wrap img{border-radius:.75rem;border:1px solid #e5e7eb;background:#fff}
 
-    /* Animazioni popup */
+    /* Animazioni popup share */
     @keyframes fadeBackdropIn { from { opacity: 0 } to { opacity: 1 } }
     @keyframes fadeBackdropOut { from { opacity: 1 } to { opacity: 0 } }
     @keyframes popIn { from { opacity: 0; transform: translateY(6px) scale(.98) } to { opacity: 1; transform: translateY(0) scale(1) } }
@@ -74,7 +72,7 @@
     <div class="max-w-7xl mx-auto px-3 sm:px-5 h-12 sm:h-14 flex items-center justify-between">
       <!-- Brand + titolo -->
       <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-        <a href="/index.html" class="shrink-0 text-lg sm:text-xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+        <a href="./index.html" class="shrink-0 text-lg sm:text-xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
           <span class="text-slate-900">TRADELIA</span><span class="text-blue-600">&bull;AI</span>
         </a>
         <span class="text-slate-400 text-xs sm:text-sm truncate">Report Runtime</span>
@@ -92,39 +90,21 @@
     </div>
   </header>
 
-  <!-- Script header + share (mobile nativo, desktop share sheet con QR sopra pulsanti) -->
+  <!-- Script header + share (mobile nativo, desktop share sheet con QR) -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
 
-      const btnPrint = document.getElementById('btn-print');
-      const btnShare = document.getElementById('btn-share');
-
-      btnPrint?.addEventListener('click', () => window.print());
-
-      btnShare?.addEventListener('click', async () => {
+      document.getElementById('btn-print')?.addEventListener('click', () => window.print());
+      document.getElementById('btn-share')?.addEventListener('click', async () => {
         const urlObj = new URL(window.location.href);
-        if (!urlObj.searchParams.get('id')) {
-          urlObj.searchParams.set('id', 'sample-qyld-2025-10-20');
-        }
+        if (!urlObj.searchParams.get('id')) urlObj.searchParams.set('id', 'sample-qyld-2025-10-20');
         const longUrl = urlObj.toString();
-        const title = 'Tradelia · Report Runtime';
-        const text  = 'Guarda il report completo su Tradelia AI';
-
-        // 📱 Mobile → share nativa se disponibile
-        const isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
-        if (isMobile && navigator.share) {
-          try { await navigator.share({ title, text, url: longUrl }); return; } catch(_) { /* fallback desktop */ }
-        }
-
-        // 💻 Desktop → share sheet custom con QR sopra ai pulsanti
-        openShareSheet({ longUrl, title, text });
+        openShareSheet({ longUrl, title:'Tradelia · Report Runtime', text:'Guarda il report completo su Tradelia AI' });
       });
 
-      /* ------ Shortener is.gd (gratuito, no API key) ------ */
       async function shortenUrl_isgd(longUrl, { timeoutMs = 5000 } = {}) {
-        const ctrl = new AbortController();
-        const t = setTimeout(() => ctrl.abort(), timeoutMs);
+        const ctrl = new AbortController(), t = setTimeout(() => ctrl.abort(), timeoutMs);
         try {
           const api = `https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`;
           const res = await fetch(api, { signal: ctrl.signal });
@@ -135,7 +115,6 @@
         } finally { clearTimeout(t); }
       }
 
-      /* ------ Share Sheet desktop migliorato ------ */
       function openShareSheet({ longUrl, title, text }) {
         const backdrop = document.createElement('div');
         backdrop.className = 'popup-backdrop fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50';
@@ -174,17 +153,13 @@
             <span id="shortStatus" class="text-xs text-slate-400">(non attivo)</span>
           </div>
 
-          <!-- Wrapper verticale: QR sopra pulsanti, centrato -->
           <div class="space-y-3 sm:space-y-4">
-            <!-- QR centrato e responsivo -->
             <div class="qr-wrap mx-auto w-[164px] sm:w-[180px] md:w-[200px] lg:w-[220px]">
               <img id="qrImg" alt="QR per condivisione" class="w-full h-auto rounded-lg border border-slate-200 shadow-sm bg-white p-2" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(currentUrl)}" />
             </div>
 
-            <!-- Pulsanti di condivisione -->
             <div id="shareGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2 justify-items-center sm:justify-items-start"></div>
 
-            <!-- Link + azioni -->
             <div id="urlBox" class="badge-url text-[12px] p-2 rounded-md font-mono select-all break-all">${currentUrl}</div>
             <div class="flex gap-2">
               <button id="copyLink" class="sbtn"><i data-lucide="copy"></i><span>Copia link</span></button>
@@ -194,20 +169,9 @@
           </div>
         `;
 
-        backdrop.appendChild(card);
-        document.body.appendChild(backdrop);
-        lucide.createIcons();
-
-        // Riferimenti DOM
-        const shareGrid   = card.querySelector('#shareGrid');
-        const urlBox      = card.querySelector('#urlBox');
-        const qrImg       = card.querySelector('#qrImg');
-        const openNew     = card.querySelector('#openNew');
-        const useShort    = card.querySelector('#useShort');
-        const shortStatus = card.querySelector('#shortStatus');
-
         const renderTargets = (u) => {
-          shareGrid.innerHTML = targets(u).map(t =>
+          const grid = card.querySelector('#shareGrid');
+          grid.innerHTML = targets(u).map(t =>
             `<a class="sbtn" href="${t.href}" target="_blank" rel="noopener">
                <i data-lucide="${t.icon}"></i><span>${t.label}</span>
              </a>`
@@ -216,588 +180,742 @@
         };
 
         const updateAll = (u) => {
-          urlBox.textContent = u;
-          openNew.href = u;
-          qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(u)}`;
+          card.querySelector('#urlBox').textContent = u;
+          card.querySelector('#openNew').href = u;
+          card.querySelector('#qrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(u)}`;
           renderTargets(u);
         };
 
         renderTargets(currentUrl);
 
-        // Chiudi popup
         const close = () => {
           backdrop.classList.add('closing'); card.classList.add('closing');
           card.addEventListener('animationend', () => backdrop.remove(), { once: true });
         };
+        backdrop.appendChild(card);
+        document.body.appendChild(backdrop);
+        lucide.createIcons();
+
         backdrop.addEventListener('click', (e) => { if (e.target === backdrop) close(); });
         card.querySelector('#closePopup').addEventListener('click', close);
 
-        // Copia link
         card.querySelector('#copyLink').addEventListener('click', async () => {
           try{
-            await navigator.clipboard.writeText(urlBox.textContent);
+            await navigator.clipboard.writeText(card.querySelector('#urlBox').textContent);
             const btn = card.querySelector('#copyLink');
             btn.innerHTML = '<i data-lucide="check"></i><span>Copiato</span>';
             lucide.createIcons(); setTimeout(close, 900);
           }catch{
-            const range = document.createRange(); range.selectNodeContents(urlBox);
+            const range = document.createRange(); range.selectNodeContents(card.querySelector('#urlBox'));
             const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
           }
         });
 
-        // Toggle shortener is.gd (con cache)
         let cachedShort = null;
-        useShort.addEventListener('change', async (e) => {
+        card.querySelector('#useShort').addEventListener('change', async (e) => {
+          const shortStatus = card.querySelector('#shortStatus');
           if (e.target.checked) {
-            shortStatus.textContent = 'creo link breve…';
-            shortStatus.className = 'text-xs text-sky-600';
+            shortStatus.textContent = 'creo link breve…'; shortStatus.className = 'text-xs text-sky-600';
             try {
               if (!cachedShort) cachedShort = await shortenUrl_isgd(longUrl);
               updateAll(cachedShort);
-              shortStatus.textContent = 'attivo (is.gd)';
-              shortStatus.className = 'text-xs text-emerald-600';
+              shortStatus.textContent = 'attivo (is.gd)'; shortStatus.className = 'text-xs text-emerald-600';
             } catch (err) {
-              updateAll(longUrl);
-              useShort.checked = false;
-              shortStatus.textContent = 'non disponibile (fallback)';
-              shortStatus.className = 'text-xs text-amber-600';
-              console.warn('is.gd failed:', err);
+              updateAll(longUrl); e.target.checked = false;
+              shortStatus.textContent = 'non disponibile (fallback)'; shortStatus.className = 'text-xs text-amber-600';
             }
           } else {
             updateAll(longUrl);
-            shortStatus.textContent = '(non attivo)';
-            shortStatus.className = 'text-xs text-slate-400';
+            shortStatus.textContent = '(non attivo)'; shortStatus.className = 'text-xs text-slate-400';
           }
         });
       }
     });
   </script>
-<!-- ===========================
-     HEADER — TICKER (template vuoto)
-     =========================== -->
-<!-- riga 1 -->
-<div class="card">
-  <label>Sessione <button class="hx" data-k="Sessione">?</button></label>
-  <div id="H-Session" class="val">—</div>
-</div>
-<div class="card">
-  <label>Data inizio report <button class="hx" data-k="DataStart">?</button></label>
-  <div id="H-Start" class="val">—</div>
-</div>
-<div class="card">
-  <label>Data fine report <button class="hx" data-k="DataEnd">?</button></label>
-  <div id="H-End" class="val">—</div>
-</div>
 
-<!-- riga 2 -->
-<div class="card">
-  <label>Ticker <button class="hx" data-k="Ticker">?</button></label>
-  <div id="H-Ticker" class="val">—</div>
-</div>
-<div class="card">
-  <label>Borsa di negoziazione <button class="hx" data-k="Venue">?</button></label>
-  <div id="H-Venue" class="val">—</div>
-</div>
-<div class="card">
-  <label>Validazione ticker/venue <button class="hx" data-k="Validazione">?</button></label>
-  <div id="H-Validation" class="val">—</div>
-</div>
-
-<!-- riga 3 -->
-<div class="card">
-  <label>VersionTag <button class="hx" data-k="VersionTag">?</button></label>
-  <div id="H-VersionTag" class="val">—</div>
-</div>
-<div class="card">
-  <label>SyncID <button class="hx" data-k="SyncID">?</button></label>
-  <div id="H-SyncID" class="val">—</div>
-</div>
-<div class="card">
-  <label>Freshness <button class="hx" data-k="Freshness">?</button></label>
-  <div id="H-Freshness" class="val">—</div>
-</div>
-
-<!-- riga 4 -->
-<div class="card">
-  <label>OCR_Conf <button class="hx" data-k="OCR_Conf">?</button></label>
-  <div id="H-OCR" class="val">—</div>
-</div>
-<div class="card">
-  <label>DataIntegrity <button class="hx" data-k="DataIntegrity">?</button></label>
-  <div id="H-DataIntegrity" class="val">—</div>
-</div>
-<div class="card">
-  <label>FeedSync <button class="hx" data-k="FeedSync">?</button></label>
-  <div id="H-FeedSync" class="val">—</div>
-</div>
-
-<!-- riga 5 -->
-<div class="card lg:col-span-2">
-  <label>Confidence (final) = min(OCR_Conf, DataIntegrity, FeedSync, Confidence_H4, Confidence_H1)
-    <button class="hx" data-k="ConfidenceFinal">?</button>
-  </label>
-  <div id="H-Confidence" class="val">—</div>
-</div>
-<div class="card">
-  <label>Stato report <button class="hx" data-k="StatoReport">?</button></label>
-  <div id="H-State" class="val">—</div>
-</div>
-
-<!-- riga 6 -->
-<div class="card lg:col-span-2">
-  <label>TapeNotes (REG close) <button class="hx" data-k="TapeNotes">?</button></label>
-  <div id="H-TapeNotes" class="val">—</div>
-</div>
-<div class="card">
-  <label>Missing (critici) <button class="hx" data-k="Missing">?</button></label>
-  <div id="H-Missing" class="val">—</div>
-</div>
-
-<!-- stile compatto per card + ? -->
-<style>
-  #header-ticker .card{border:1px solid #e5e7eb;border-radius:.75rem;padding:.75rem}
-  #header-ticker label{display:flex;align-items:center;gap:.4rem;font-size:11px;color:#64748b}
-  #header-ticker .val{font-weight:600}
-  .hx{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;
-      border-radius:999px;border:1px solid rgba(2,132,199,.6);font-size:10px;line-height:1;color:#0369a1}
-  .hx-pop{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(2px);
-          display:flex;align-items:center;justify-content:center;z-index:50}
-  .hx-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;max-width:560px;width:92%;
-           box-shadow:0 10px 30px rgba(0,0,0,.15)}
-  .hx-card h3{margin:0 0 4px;font-weight:600}
-  .hx-card .src{font-size:11px;color:#6b7280;margin-bottom:8px}
-  .hx-close{margin-left:auto}
-</style>
-
-<!-- popup accademico: solo testi, nessun link/dato -->
-<script>
-(function(){
-  // dizionario spiegazioni (accademiche / trattati / libri)
-  const EXPL = {
-    Sessione:{t:"Sessione REG (adjusted)", a:"Analisi sulla sola sessione regolare; serie prezzi adjusted per dividendi/split per coerenza storica.", s:"CMT Association · Market Data Conventions; CFA Institute – Quantitative Methods."},
-    DataStart:{t:"Data inizio report", a:"Timestamp di avvio finestra analitica per audit e replicabilità.", s:"Methodology & Audit Trail (interno)."},
-    DataEnd:{t:"Data fine report", a:"Timestamp di chiusura finestra; evita look-ahead bias.", s:"Methodology & Audit Trail (interno)."},
-    Ticker:{t:"Ticker", a:"Identificativo ufficiale dello strumento negoziato.", s:"Nasdaq/NYSE Listing Rules; SEC Form 8-A."},
-    Venue:{t:"Borsa di negoziazione", a:"Venue primario/mic di quotazione dello strumento.", s:"Microstructure: O’Hara (1995) · Hasbrouck (2007)."},
-    Validazione:{t:"Validazione ticker/venue", a:"Coerenza simbolo–venue (incl. ADR); requisito preliminare di qualità.", s:"Best practice di data governance (CFA QM)."},
-    VersionTag:{t:"VersionTag", a:"Versione del motore/metodo usato nel report.", s:"Governance & versioning (interno)."},
-    SyncID:{t:"SyncID", a:"Chiave audit: <TICKER>_<YYYYMMDD>_F3/F1.", s:"Audit Trail (interno)."},
-    Freshness:{t:"Freshness", a:"Controllo freschezza dati ≤ T-1 prima della validazione.", s:"Policy di qualità dati (interno)."},
-    OCR_Conf:{t:"OCR_Confidence", a:"Attendibilità dell’estrazione numerica (0–1).", s:"CFA Institute – Quantitative Methods; Kahn & Strong (1998) Data Quality."},
-    DataIntegrity:{t:"Data Integrity", a:"Completezza/consistenza del dataset (0–1).", s:"Kahn & Strong (1998); Pipino, Lee & Wang (2002)."},
-    FeedSync:{t:"Feed Sync", a:"Allineamento temporale tra feed e pannelli (0–1).", s:"Hasbrouck (2007) – sincronizzazione dati intraday."},
-    ConfidenceFinal:{t:"Confidence (final)", a:"Euristica conservativa: min(OCR_Conf, DataIntegrity, FeedSync, Confidence_H4, Confidence_H1).", s:"Heuristic gating per audit (metodo interno)."},
-    StatoReport:{t:"Stato report", a:"ACTIVE/HOLD/REVIEW in base a Confidence e copertura input.", s:"Policy stato (interno)."},
-    TapeNotes:{t:"TapeNotes (REG close)", a:"Note micro-strutturali sull’asta di chiusura (AuctionShare%, Intensity, VWAP, Stickiness).", s:"Hasbrouck (2007); O’Hara (1995)."},
-    Missing:{t:"Missing (critici)", a:"Elenco campi critici mancanti → N/D; se impattano Confidence ⇒ HOLD.", s:"Policy N/D (interno)."},
-    PolicyND:{t:"Policy N/D", a:"Non si stimano i mancanti; si documentano e si declassa lo stato se critici.", s:"Governance trasparenza (interno)."},
-    Cromatica:{t:"Criteri cromatici", a:"🟩 favorevole/sopra media · 🟨 neutro/attenzione · 🟥 sfavorevole/sotto media · — neutro/incompleto.", s:"Legenda cromatica standard del desk."},
-    NoteHeader:{t:"Note header", a:"Annotazioni qualitative utili alla lettura del report.", s:"Metodologia di reporting (interno)."}
-  };
-
-  // bind azione popup
-  document.addEventListener('click', (e)=>{
-    const b = e.target.closest('.hx');
-    if(!b) return;
-    const k = b.dataset.k, d = EXPL[k] || {t:k, a:"Descrizione non disponibile.", s:"—"};
-    const wrap = document.createElement('div');
-    wrap.className = 'hx-pop';
-    wrap.innerHTML = `
-      <div class="hx-card">
-        <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px">
-          <h3>${d.t}</h3>
-          <button class="hx hx-close" aria-label="Chiudi">×</button>
-        </div>
-        <div class="src">Fonte accademica: ${d.s}</div>
-        <div class="text-sm text-slate-800">${d.a}</div>
-      </div>`;
-    wrap.addEventListener('click', ev=>{ if(ev.target===wrap) wrap.remove(); });
-    wrap.querySelector('.hx-close').onclick = ()=> wrap.remove();
-    document.body.appendChild(wrap);
-  });
-})();
-</script>
-<!-- ===========================
-     SEZIONE — MODULI (framework avanzato, nessun F1–F5 qui)
-     =========================== -->
-<section id="moduli" class="pt-3">
-  <div class="max-w-7xl mx-auto px-3 sm:px-5">
-    <!-- Header sezione -->
-    <div class="flex items-end justify-between mb-3 sm:mb-4">
-      <div class="min-w-0">
-        <h2 class="text-base sm:text-lg font-semibold text-slate-800 tracking-tight">Moduli analitici</h2>
-        <p class="text-xs text-slate-500">Framework istituzionale · sequenziale · auditabile (F1–F5 verranno registrati dopo)</p>
+  <!-- ===========================
+       HEADER — TICKER (template vuoto)
+       =========================== -->
+  <main class="max-w-7xl mx-auto px-3 sm:px-5 py-4">
+    <section id="header-ticker" class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4">
+      <!-- riga 1 -->
+      <div class="card">
+        <label>Sessione <button class="hx" data-k="Sessione">?</button></label>
+        <div id="H-Session" class="val">—</div>
       </div>
-      <div class="hidden sm:flex items-center gap-2">
-        <button id="legendBtn" class="btn" aria-haspopup="dialog"><i data-lucide="info"></i><span class="hidden md:inline">Legenda</span></button>
+      <div class="card">
+        <label>Data inizio report <button class="hx" data-k="DataStart">?</button></label>
+        <div id="H-Start" class="val">—</div>
       </div>
-    </div>
-
-    <!-- Toolbar -->
-    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
-      <div class="relative flex-1">
-        <input id="mod-search" type="search" inputmode="search" placeholder="Cerca modulo, SyncID…"
-               class="w-full rounded-lg border border-slate-200 bg-white/90 px-3 py-2 pr-9 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-300" />
-        <i data-lucide="search" class="w-4 h-4 absolute right-3 top-2.5 text-slate-400 pointer-events-none"></i>
+      <div class="card">
+        <label>Data fine report <button class="hx" data-k="DataEnd">?</button></label>
+        <div id="H-End" class="val">—</div>
       </div>
-      <div class="flex items-center gap-2">
-        <label class="text-xs text-slate-500">Ordina</label>
-        <select id="mod-sort" class="rounded-lg border border-slate-200 bg-white/90 px-2.5 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-200">
-          <option value="seq">Sequenza (F1→F5)</option>
-          <option value="conf">Confidence</option>
-          <option value="state">Stato</option>
-          <option value="title">Titolo</option>
-        </select>
-        <div class="hidden sm:flex items-center">
-          <button id="view-grid" class="btn" aria-pressed="true" aria-label="Vista griglia"><i data-lucide="grid"></i></button>
-          <button id="view-list" class="btn" aria-pressed="false" aria-label="Vista lista"><i data-lucide="list"></i></button>
-        </div>
+
+      <!-- riga 2 -->
+      <div class="card">
+        <label>Ticker <button class="hx" data-k="Ticker">?</button></label>
+        <div id="H-Ticker" class="val">—</div>
       </div>
-    </div>
-
-    <!-- Contenitore dinamico -->
-    <div id="mod-container" data-view="grid"
-         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4"
-         aria-label="Griglia moduli analitici">
-      <!-- popolato dal Registry -->
-    </div>
-  </div>
-</section>
-
-<!-- Drawer per contenuto modulo -->
-<div id="mod-drawer" class="fixed inset-0 z-[60] hidden">
-  <div class="absolute inset-0 bg-black/30 backdrop-blur-[1px]" data-close="backdrop"></div>
-  <aside class="absolute right-0 top-0 h-full w-[92%] sm:w-[560px] bg-white border-l border-slate-200 shadow-2xl
-                 translate-x-full will-change-transform transition-transform duration-200 ease-out">
-    <header class="h-12 sm:h-14 border-b border-slate-200 flex items-center justify-between px-3 sm:px-4">
-      <div class="min-w-0">
-        <div id="drawer-title" class="font-semibold text-slate-800 truncate">Modulo</div>
-        <div id="drawer-sub" class="text-xs text-slate-500 truncate">—</div>
+      <div class="card">
+        <label>Borsa di negoziazione <button class="hx" data-k="Venue">?</button></label>
+        <div id="H-Venue" class="val">—</div>
       </div>
-      <div class="flex items-center gap-2">
-        <button id="drawer-print" class="btn" aria-label="Stampa sezione"><i data-lucide="printer"></i></button>
-        <button id="drawer-close" class="btn" aria-label="Chiudi"><i data-lucide="x"></i></button>
+      <div class="card">
+        <label>Validazione ticker/venue <button class="hx" data-k="Validazione">?</button></label>
+        <div id="H-Validation" class="val">—</div>
       </div>
-    </header>
-    <div id="drawer-body" class="h-[calc(100%-3.25rem)] sm:h-[calc(100%-3.75rem)] overflow-auto p-3 sm:p-4">
-      <!-- Qui verrà montato il contenuto F1–F5 da render(el) -->
-    </div>
-  </aside>
-</div>
 
-<!-- Stili card / lista / badge -->
-<style>
-  .mdc{background:#fff;border:1px solid #e5e7eb;border-radius:14px;
-       box-shadow:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.02);transition:border-color .18s, box-shadow .18s, transform .12s}
-  .mdc:hover{border-color:#dbe3ea;box-shadow:0 4px 18px rgba(2,6,23,.08)}
-  .mdc:active{transform:translateY(1px)}
-  .mdc-h{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.7rem .85rem;border-bottom:1px solid #eef2f7}
-  .mdc-t{font-weight:700;color:#0f172a;font-size:14px;letter-spacing:.1px}
-  .mdc-b{padding:.75rem .85rem}
-  .mdc-kv{display:grid;grid-template-columns:auto 1fr;gap:.25rem .6rem;font-size:12px}
-  .mdc-kv dt{color:#64748b} .mdc-kv dd{font-weight:600;color:#0f172a}
-  .mdc-footer{display:flex;align-items:center;justify-content:space-between;margin-top:.6rem}
-  .mdc-cta{display:inline-flex;align-items:center;gap:.4rem;font-weight:600;font-size:12px;padding:.45rem .6rem;border-radius:.55rem;border:1px solid #e5e7eb;background:linear-gradient(#fff,#f8fafc)}
-  .mdc-cta:hover{background:linear-gradient(#fff,#f1f5f9)}
-  .mdc-spark{width:100%;height:32px}
-  /* badge stato */
-  .badge{font-size:11px;padding:.1rem .45rem;border-radius:999px;border:1px solid}
-  .b-active{color:#065f46;background:#ecfdf5;border-color:#a7f3d0}
-  .b-hold{color:#92400e;background:#fffbeb;border-color:#fcd34d}
-  .b-review{color:#7c2d12;background:#fef3c7;border-color:#fbbf24}
-  .b-neutral{color:#334155;background:#f1f5f9;border-color:#e5e7eb}
-  /* vista lista */
-  [data-view="list"] .mdc{display:flex}
-  [data-view="list"] .mdc .mdc-b{flex:1}
-  /* print: mostra solo contenuti */
-  @media print{
-    #mod-drawer{position:static;display:block !important;transform:none}
-    #mod-drawer aside{position:static;transform:none;width:auto;border:0;box-shadow:none}
-  }
-</style>
-
-<!-- Template di card -->
-<template id="tpl-mod-card">
-  <article class="mdc" role="group" aria-labelledby="m-title">
-    <header class="mdc-h">
-      <h3 id="m-title" class="mdc-t">Titolo modulo</h3>
-      <span class="badge b-neutral" data-field="badge">NEUTRO</span>
-    </header>
-    <div class="mdc-b">
-      <dl class="mdc-kv">
-        <dt>SyncID</dt><dd data-field="sync">—</dd>
-        <dt>Stato</dt><dd data-field="state">—</dd>
-        <dt>Confidence</dt><dd data-field="conf">—</dd>
-      </dl>
-      <svg class="mdc-spark mt-2" viewBox="0 0 100 20" preserveAspectRatio="none" data-spark=""></svg>
-      <div class="mdc-footer">
-        <div class="text-[11px] text-slate-500" data-field="meta">—</div>
-        <button class="mdc-cta" type="button" data-action="open"><i data-lucide="maximize-2" class="w-4 h-4"></i><span>Apri modulo</span></button>
+      <!-- riga 3 -->
+      <div class="card">
+        <label>VersionTag <button class="hx" data-k="VersionTag">?</button></label>
+        <div id="H-VersionTag" class="val">—</div>
       </div>
-    </div>
-  </article>
-</template>
-
-<!-- Popup semplice per legenda -->
-<div id="legend-pop" class="hidden fixed inset-0 z-[70]">
-  <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]" data-close="legend"></div>
-  <div class="popup-card absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl shadow-2xl p-5 w-[92%] max-w-lg border border-slate-200">
-    <div class="flex items-start justify-between gap-3 mb-3">
-      <div>
-        <h2 class="font-semibold text-slate-800 leading-tight">Legenda</h2>
-        <p class="text-xs text-slate-500 mt-0.5">Badge e cromie (uso interno)</p>
+      <div class="card">
+        <label>SyncID <button class="hx" data-k="SyncID">?</button></label>
+        <div id="H-SyncID" class="val">—</div>
       </div>
-      <button class="btn" data-close="legend"><i data-lucide="x"></i><span class="hidden sm:inline">Chiudi</span></button>
-    </div>
-    <ul class="text-sm text-slate-700 space-y-1.5">
-      <li>🟩 <b>ACTIVE</b>: pronto per audit operativo</li>
-      <li>🟨 <b>HOLD</b>: attesa dati critici / freschezza</li>
-      <li>🟧 <b>REVIEW</b>: verifica manuale</li>
-      <li>— <b>NEUTRO</b>: placeholder / pre-registrazione</li>
-    </ul>
-  </div>
-</div>
+      <div class="card">
+        <label>Freshness <button class="hx" data-k="Freshness">?</button></label>
+        <div id="H-Freshness" class="val">—</div>
+      </div>
 
-<!-- ========== Runtime JS (Registry + UI) ========== -->
-<script>
-(function(){
-  /* --------- Utilities --------- */
-  const $ = (sel,root=document)=> root.querySelector(sel);
-  const $$ = (sel,root=document)=> Array.from(root.querySelectorAll(sel));
-  const fmtConf = (v)=> (v==null?'—':(Number(v).toFixed(2)));
-  const badgeClass = (state)=>{
-    switch(String(state||'').toUpperCase()){
-      case 'ACTIVE': return ['ACTIVE','badge b-active'];
-      case 'HOLD': return ['HOLD','badge b-hold'];
-      case 'REVIEW': return ['REVIEW','badge b-review'];
-      default: return ['NEUTRO','badge b-neutral'];
+      <!-- riga 4 -->
+      <div class="card">
+        <label>OCR_Conf <button class="hx" data-k="OCR_Conf">?</button></label>
+        <div id="H-OCR" class="val">—</div>
+      </div>
+      <div class="card">
+        <label>DataIntegrity <button class="hx" data-k="DataIntegrity">?</button></label>
+        <div id="H-DataIntegrity" class="val">—</div>
+      </div>
+      <div class="card">
+        <label>FeedSync <button class="hx" data-k="FeedSync">?</button></label>
+        <div id="H-FeedSync" class="val">—</div>
+      </div>
+
+      <!-- riga 5 -->
+      <div class="card lg:col-span-2">
+        <label>Confidence (final) = min(OCR_Conf, DataIntegrity, FeedSync, Confidence_H4, Confidence_H1)
+          <button class="hx" data-k="ConfidenceFinal">?</button>
+        </label>
+        <div id="H-Confidence" class="val">—</div>
+      </div>
+      <div class="card">
+        <label>Stato report <button class="hx" data-k="StatoReport">?</button></label>
+        <div id="H-State" class="val">—</div>
+      </div>
+
+      <!-- riga 6 -->
+      <div class="card lg:col-span-2">
+        <label>TapeNotes (REG close) <button class="hx" data-k="TapeNotes">?</button></label>
+        <div id="H-TapeNotes" class="val">—</div>
+      </div>
+      <div class="card">
+        <label>Missing (critici) <button class="hx" data-k="Missing">?</button></label>
+        <div id="H-Missing" class="val">—</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- stile compatto per card + ? (aggiornato + robusto) -->
+  <style>
+    #header-ticker .card{border:1px solid #e5e7eb;border-radius:.75rem;padding:.75rem}
+    #header-ticker label{display:flex;align-items:center;gap:.4rem;font-size:11px;color:#64748b}
+    #header-ticker .val{font-weight:600}
+    .hx{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;
+        border-radius:999px;border:1px solid rgba(2,132,199,.6);font-size:10px;line-height:1;color:#0369a1}
+    .hx-pop{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(2px);
+            display:flex;align-items:center;justify-content:center;z-index:50}
+    .hx-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;max-width:560px;width:92%;
+             box-shadow:0 10px 30px rgba(0,0,0,.15)}
+    .hx-card h3{margin:0 0 4px;font-weight:600}
+    .hx-card .src{font-size:11px;color:#6b7280;margin-bottom:8px}
+  </style>
+
+  <!-- popup accademico: bugfix (niente X), backdrop+Esc, focus+scroll lock -->
+  <script>
+  (function(){
+    const EXPL = {
+      Sessione:{t:"Sessione REG (adjusted)", a:"Analisi sulla sola sessione regolare; serie prezzi adjusted per dividendi/split per coerenza storica.", s:"CMT Association · Market Data Conventions; CFA Institute – Quantitative Methods."},
+      DataStart:{t:"Data inizio report", a:"Timestamp di avvio finestra analitica per audit e replicabilità.", s:"Methodology & Audit Trail (interno)."},
+      DataEnd:{t:"Data fine report", a:"Timestamp di chiusura finestra; evita look-ahead bias.", s:"Methodology & Audit Trail (interno)."},
+      Ticker:{t:"Ticker", a:"Identificativo ufficiale dello strumento negoziato.", s:"Nasdaq/NYSE Listing Rules; SEC Form 8-A."},
+      Venue:{t:"Borsa di negoziazione", a:"Venue primario/mic di quotazione dello strumento.", s:"Microstructure: O’Hara (1995) · Hasbrouck (2007)."},
+      Validazione:{t:"Validazione ticker/venue", a:"Coerenza simbolo–venue (incl. ADR); requisito preliminare di qualità.", s:"Best practice di data governance (CFA QM)."},
+      VersionTag:{t:"VersionTag", a:"Versione del motore/metodo usato nel report.", s:"Governance & versioning (interno)."},
+      SyncID:{t:"SyncID", a:"Chiave audit: <TICKER>_<YYYYMMDD>_F3/F1.", s:"Audit Trail (interno)."},
+      Freshness:{t:"Freshness", a:"Controllo freschezza dati ≤ T-1 prima della validazione.", s:"Policy di qualità dati (interno)."},
+      OCR_Conf:{t:"OCR_Confidence", a:"Attendibilità dell’estrazione numerica (0–1).", s:"CFA Institute – Quantitative Methods; Kahn & Strong (1998) Data Quality."},
+      DataIntegrity:{t:"Data Integrity", a:"Completezza/consistenza del dataset (0–1).", s:"Kahn & Strong (1998); Pipino, Lee & Wang (2002)."},
+      FeedSync:{t:"Feed Sync", a:"Allineamento temporale tra feed e pannelli (0–1).", s:"Hasbrouck (2007) – sincronizzazione dati intraday."},
+      ConfidenceFinal:{t:"Confidence (final)", a:"Euristica conservativa: min(OCR_Conf, DataIntegrity, FeedSync, Confidence_H4, Confidence_H1).", s:"Heuristic gating per audit (metodo interno)."},
+      StatoReport:{t:"Stato report", a:"ACTIVE/HOLD/REVIEW in base a Confidence e copertura input.", s:"Policy stato (interno)."},
+      TapeNotes:{t:"TapeNotes (REG close)", a:"Note micro-strutturali sull’asta di chiusura (AuctionShare%, Intensity, VWAP, Stickiness).", s:"Hasbrouck (2007); O’Hara (1995)."},
+      Missing:{t:"Missing (critici)", a:"Elenco campi critici mancanti → N/D; se impattano Confidence ⇒ HOLD.", s:"Policy N/D (interno)."},
+      PolicyND:{t:"Policy N/D", a:"Non si stimano i mancanti; si documentano e si declassa lo stato se critici.", s:"Governance trasparenza (interno)."},
+      Cromatica:{t:"Criteri cromatici", a:"🟩 favorevole/sopra media · 🟨 neutro/attenzione · 🟥 sfavorevole/sotto media · — neutro/incompleto.", s:"Legenda cromatica standard del desk."},
+      NoteHeader:{t:"Note header", a:"Annotazioni qualitative utili alla lettura del report.", s:"Metodologia di reporting (interno)."}
+    };
+
+    let POP=null, prevOverflow='';
+    function closePop(){
+      if(!POP) return;
+      POP.backdrop.removeEventListener('click', onBackdrop);
+      document.removeEventListener('keydown', onKeyEsc, true);
+      document.documentElement.style.overflow = prevOverflow;
+      POP.wrap.remove(); POP=null;
     }
-  };
-  function sparkline(svg, arr){
-    if(!svg) return;
-    if(!arr || !arr.length){ svg.innerHTML=''; svg.setAttribute('data-spark',''); return; }
-    const min = Math.min(...arr), max = Math.max(...arr);
-    const norm = max-min || 1;
-    const pts = arr.map((v,i)=>{
-      const x = (i/(arr.length-1))*100;
-      const y = 20 - ((v-min)/norm)*18 - 1; // padding 1
-      return `${x},${y}`;
-    }).join(' ');
-    svg.innerHTML = `
-      <polyline fill="none" stroke="${arr[arr.length-1]>=arr[0]?'#16a34a':'#dc2626'}" stroke-width="1.25" points="${pts}" />
-    `;
-    svg.setAttribute('data-spark', 'ok');
-  }
+    function onBackdrop(e){ if(e.target===e.currentTarget) closePop(); }
+    function onKeyEsc(e){ if(e.key==='Escape'){ e.stopPropagation(); e.preventDefault(); closePop(); } }
 
-  /* --------- Drawer --------- */
-  const drawer = $('#mod-drawer');
-  const drawerPanel = $('#mod-drawer aside');
-  const drawerTitle = $('#drawer-title');
-  const drawerSub = $('#drawer-sub');
-  const drawerBody = $('#drawer-body');
-  function openDrawer({title, sub}){
-    drawerTitle.textContent = title || 'Modulo';
-    drawerSub.textContent = sub || '—';
-    drawer.classList.remove('hidden');
-    requestAnimationFrame(()=> drawerPanel.style.transform='translateX(0)');
-  }
-  function closeDrawer(){
-    drawerPanel.style.transform='translateX(100%)';
-    drawerPanel.addEventListener('transitionend', ()=> drawer.classList.add('hidden'), {once:true});
-  }
-  drawer.addEventListener('click', (e)=>{
-    if(e.target.dataset.close==='backdrop') closeDrawer();
-  });
-  $('#drawer-close')?.addEventListener('click', closeDrawer);
-  $('#drawer-print')?.addEventListener('click', ()=> window.print());
+    function openPop(d){
+      if(POP){ POP.title.textContent=d.t; POP.src.textContent='Fonte accademica: '+d.s; POP.text.innerHTML=d.a; POP.wrap.focus(); return; }
+      const wrap=document.createElement('div'); wrap.className='hx-pop'; wrap.role='dialog'; wrap.ariaModal='true'; wrap.tabIndex=-1;
+      const card=document.createElement('div'); card.className='hx-card'; card.addEventListener('click',ev=>ev.stopPropagation());
+      const h=document.createElement('h3'); h.textContent=d.t;
+      const src=document.createElement('div'); src.className='src'; src.textContent='Fonte accademica: '+d.s;
+      const text=document.createElement('div'); text.className='text-sm text-slate-800'; text.innerHTML=d.a;
+      card.append(h,src,text); wrap.append(card); document.body.appendChild(wrap);
+      prevOverflow=document.documentElement.style.overflow||''; document.documentElement.style.overflow='hidden';
+      wrap.addEventListener('click', onBackdrop); document.addEventListener('keydown', onKeyEsc, true);
+      wrap.focus(); POP={wrap, backdrop:wrap, title:h, src, text};
+    }
 
-  /* --------- Legend --------- */
-  const legendPop = $('#legend-pop');
-  $('#legendBtn')?.addEventListener('click', ()=> legendPop.classList.remove('hidden'));
-  legendPop?.addEventListener('click', (e)=>{ if(e.target.dataset.close==='legend') legendPop.classList.add('hidden'); });
+    document.addEventListener('click', (e)=>{
+      const btn=e.target.closest('.hx'); if(!btn) return;
+      if(POP && POP.wrap.contains(btn)) return;
+      const k=btn.dataset.k; const d=EXPL[k]||{t:k,a:"Descrizione non disponibile.",s:"—"};
+      openPop(d);
+    }, true);
+  })();
+  </script>
 
-  /* --------- View switch --------- */
-  const container = $('#mod-container');
-  $('#view-grid')?.addEventListener('click', (e)=>{
-    container.dataset.view='grid';
-    e.currentTarget.setAttribute('aria-pressed','true');
-    $('#view-list').setAttribute('aria-pressed','false');
-    container.className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4';
-  });
-  $('#view-list')?.addEventListener('click', (e)=>{
-    container.dataset.view='list';
-    e.currentTarget.setAttribute('aria-pressed','true');
-    $('#view-grid').setAttribute('aria-pressed','false');
-    container.className='space-y-2.5';
-  });
+  <!-- ===========================
+       SEZIONE — MODULI (framework avanzato, nessun F1–F5 qui)
+       =========================== -->
+  <section id="moduli" class="pt-3">
+    <div class="max-w-7xl mx-auto px-3 sm:px-5">
+      <!-- Header sezione -->
+      <div class="flex items-end justify-between mb-3 sm:mb-4">
+        <div class="min-w-0">
+          <h2 class="text-base sm:text-lg font-semibold text-slate-800 tracking-tight">Moduli analitici</h2>
+          <p class="text-xs text-slate-500">Framework istituzionale · sequenziale · auditabile (F1–F5 verranno registrati dopo)</p>
+        </div>
+        <div class="hidden sm:flex items-center gap-2">
+          <button id="legendBtn" class="btn" aria-haspopup="dialog"><i data-lucide="info"></i><span class="hidden md:inline">Legenda</span></button>
+        </div>
+      </div>
 
-  /* --------- Registry --------- */
-  const tpl = $('#tpl-mod-card');
-  const modules = new Map();
+      <!-- Toolbar -->
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
+        <div class="relative flex-1">
+          <input id="mod-search" type="search" inputmode="search" placeholder="Cerca modulo, SyncID…"
+                 class="w-full rounded-lg border border-slate-200 bg-white/90 px-3 py-2 pr-9 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-300" />
+          <i data-lucide="search" class="w-4 h-4 absolute right-3 top-2.5 text-slate-400 pointer-events-none"></i>
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="text-xs text-slate-500">Ordina</label>
+          <select id="mod-sort" class="rounded-lg border border-slate-200 bg-white/90 px-2.5 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-200">
+            <option value="seq">Sequenza (F1→F5)</option>
+            <option value="conf">Confidence</option>
+            <option value="state">Stato</option>
+            <option value="title">Titolo</option>
+          </select>
+          <div class="hidden sm:flex items-center">
+            <button id="view-grid" class="btn" aria-pressed="true" aria-label="Vista griglia"><i data-lucide="grid"></i></button>
+            <button id="view-list" class="btn" aria-pressed="false" aria-label="Vista lista"><i data-lucide="list"></i></button>
+          </div>
+        </div>
+      </div>
 
-  function renderCard(def){
-    const node = tpl.content.cloneNode(true);
-    const root = node.firstElementChild;
+      <!-- Contenitore dinamico -->
+      <div id="mod-container" data-view="grid"
+           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4"
+           aria-label="Griglia moduli analitici">
+        <!-- popolato dal Registry -->
+      </div>
+    </div>
+  </section>
 
-    root.dataset.id = def.id;
-    root.setAttribute('tabindex','0');
-    root.setAttribute('role','button');
-    root.setAttribute('aria-label', def.title);
+  <!-- Drawer per contenuto modulo -->
+  <div id="mod-drawer" class="fixed inset-0 z-[60] hidden">
+    <div class="absolute inset-0 bg-black/30 backdrop-blur-[1px]" data-close="backdrop"></div>
+    <aside class="absolute right-0 top-0 h-full w-[92%] sm:w-[560px] bg-white border-l border-slate-200 shadow-2xl
+                   translate-x-full will-change-transform transition-transform duration-200 ease-out">
+      <header class="h-12 sm:h-14 border-b border-slate-200 flex items-center justify-between px-3 sm:px-4">
+        <div class="min-w-0">
+          <div id="drawer-title" class="font-semibold text-slate-800 truncate">Modulo</div>
+          <div id="drawer-sub" class="text-xs text-slate-500 truncate">—</div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="drawer-print" class="btn" aria-label="Stampa sezione"><i data-lucide="printer"></i></button>
+          <button id="drawer-close" class="btn" aria-label="Chiudi"><i data-lucide="x"></i></button>
+        </div>
+      </header>
+      <div id="drawer-body" class="h-[calc(100%-3.25rem)] sm:h-[calc(100%-3.75rem)] overflow-auto p-3 sm:p-4">
+        <!-- Qui verrà montato il contenuto F1–F5 da render(el) -->
+      </div>
+    </aside>
+  </div>
 
-    root.querySelector('.mdc-t').textContent = def.title;
-    root.querySelector('[data-field="sync"]').textContent = def.syncID || '—';
-    const [label, cls] = badgeClass(def.state);
-    const badge = root.querySelector('[data-field="badge"]');
-    badge.textContent = label; badge.className = cls;
-    root.querySelector('[data-field="state"]').textContent = label;
-    root.querySelector('[data-field="conf"]').textContent = fmtConf(def.confidence);
-    root.querySelector('[data-field="meta"]').textContent = def.meta || '';
+  <!-- Stili card / lista / badge -->
+  <style>
+    .mdc{background:#fff;border:1px solid #e5e7eb;border-radius:14px;
+         box-shadow:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.02);transition:border-color .18s, box-shadow .18s, transform .12s}
+    .mdc:hover{border-color:#dbe3ea;box-shadow:0 4px 18px rgba(2,6,23,.08)}
+    .mdc:active{transform:translateY(1px)}
+    .mdc-h{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.7rem .85rem;border-bottom:1px solid #eef2f7}
+    .mdc-t{font-weight:700;color:#0f172a;font-size:14px;letter-spacing:.1px}
+    .mdc-b{padding:.75rem .85rem}
+    .mdc-kv{display:grid;grid-template-columns:auto 1fr;gap:.25rem .6rem;font-size:12px}
+    .mdc-kv dt{color:#64748b} .mdc-kv dd{font-weight:600;color:#0f172a}
+    .mdc-footer{display:flex;align-items:center;justify-content:space-between;margin-top:.6rem}
+    .mdc-cta{display:inline-flex;align-items:center;gap:.4rem;font-weight:600;font-size:12px;padding:.45rem .6rem;border-radius:.55rem;border:1px solid #e5e7eb;background:linear-gradient(#fff,#f8fafc)}
+    .mdc-cta:hover{background:linear-gradient(#fff,#f1f5f9)}
+    .mdc-spark{width:100%;height:32px}
+    /* badge stato/badge colore (già usati dal binder) */
+    .badge{font-size:11px;padding:.1rem .45rem;border-radius:999px;border:1px solid}
+    .b-active{color:#065f46;background:#ecfdf5;border-color:#a7f3d0}
+    .b-hold{color:#92400e;background:#fffbeb;border-color:#fcd34d}
+    .b-review{color:#7c2d12;background:#fef3c7;border-color:#fbbf24}
+    .b-neutral{color:#334155;background:#f1f5f9;border-color:#e5e7eb}
+    /* vista lista */
+    [data-view="list"] .mdc{display:flex}
+    [data-view="list"] .mdc .mdc-b{flex:1}
+    /* print: mostra solo contenuti */
+    @media print{
+      #mod-drawer{position:static;display:block !important;transform:none}
+      #mod-drawer aside{position:static;transform:none;width:auto;border:0;box-shadow:none}
+    }
+  </style>
 
-    // spark
-    const svg = root.querySelector('[data-spark]');
-    sparkline(svg, Array.isArray(def.spark)?def.spark:[]);
+  <!-- Template di card -->
+  <template id="tpl-mod-card">
+    <article class="mdc" role="group" aria-labelledby="m-title">
+      <header class="mdc-h">
+        <h3 id="m-title" class="mdc-t">Titolo modulo</h3>
+        <span class="badge b-neutral" data-field="badge">NEUTRO</span>
+      </header>
+      <div class="mdc-b">
+        <dl class="mdc-kv">
+          <dt>SyncID</dt><dd data-field="sync">—</dd>
+          <dt>Stato</dt><dd data-field="state">—</dd>
+          <dt>Confidence</dt><dd data-field="conf">—</dd>
+        </dl>
+        <svg class="mdc-spark mt-2" viewBox="0 0 100 20" preserveAspectRatio="none" data-spark=""></svg>
+        <div class="mdc-footer">
+          <div class="text-[11px] text-slate-500" data-field="meta">—</div>
+          <button class="mdc-cta" type="button" data-action="open"><i data-lucide="maximize-2" class="w-4 h-4"></i><span>Apri modulo</span></button>
+        </div>
+      </div>
+    </article>
+  </template>
 
-    // open handlers
-    const open = ()=> {
-      openDrawer({title:def.title, sub:def.syncID || ''});
-      // pulisci body e rendi contenuto
-      drawerBody.replaceChildren();
-      try{
-        if(typeof def.render === 'function') def.render(drawerBody);
-        else if(def.html){
-          const wrap = document.createElement('div');
-          wrap.innerHTML = def.html;
-          drawerBody.appendChild(wrap);
-          if(window.lucide) lucide.createIcons();
-        } else {
-          const p = document.createElement('p');
-          p.className='text-sm text-slate-600';
-          p.textContent='Nessun contenuto montato. Registra il modulo con { render(el) { … } }.';
-          drawerBody.appendChild(p);
-        }
-      }catch(err){
-        const errBox = document.createElement('pre');
-        errBox.className='text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg p-2 overflow-auto';
-        errBox.textContent = String(err);
-        drawerBody.appendChild(errBox);
+  <!-- Popup semplice per legenda -->
+  <div id="legend-pop" class="hidden fixed inset-0 z-[70]">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]" data-close="legend"></div>
+    <div class="popup-card absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl shadow-2xl p-5 w-[92%] max-w-lg border border-slate-200">
+      <div class="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <h2 class="font-semibold text-slate-800 leading-tight">Legenda</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Badge e cromie (uso interno)</p>
+        </div>
+        <button class="btn" data-close="legend"><i data-lucide="x"></i><span class="hidden sm:inline">Chiudi</span></button>
+      </div>
+      <ul class="text-sm text-slate-700 space-y-1.5">
+        <li>🟩 <b>ACTIVE</b></li>
+        <li>🟨 <b>HOLD</b></li>
+        <li>🟧 <b>REVIEW</b></li>
+        <li>— <b>NEUTRO</b></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ========== Runtime JS (Registry + UI) ========== -->
+  <script>
+  (function(){
+    /* --------- Utilities --------- */
+    const $ = (sel,root=document)=> root.querySelector(sel);
+    const $$ = (sel,root=document)=> Array.from(root.querySelectorAll(sel));
+    const fmtConf = (v)=> (v==null?'—':(Number(v).toFixed(2)));
+
+    // color mapping (card badge) — coerente con JSON colors
+    const colorToBadge = (c)=>{
+      switch(String(c||'').toLowerCase()){
+        case 'green': return ['ACTIVE','badge b-active'];
+        case 'yellow':return ['HOLD','badge b-hold'];
+        case 'red':   return ['REVIEW','badge b-review'];
+        default:      return ['NEUTRO','badge b-neutral'];
       }
     };
-    root.querySelector('[data-action="open"]').addEventListener('click', open);
-    root.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); open(); } });
-    root.addEventListener('dblclick', open);
+    const stateToColor = (s)=>{
+      switch(String(s||'').toUpperCase()){
+        case 'ACTIVE': return 'green';
+        case 'HOLD':   return 'yellow';
+        case 'REVIEW': return 'red';
+        default:       return 'neutral';
+      }
+    };
 
-    return root;
-  }
-
-  function mountAll(){
-    container.replaceChildren();
-    let list = Array.from(modules.values());
-    // filtro
-    const q = ($('#mod-search')?.value || '').trim().toLowerCase();
-    if(q){
-      list = list.filter(m =>
-        m.title.toLowerCase().includes(q) ||
-        (m.syncID||'').toLowerCase().includes(q) ||
-        (m.meta||'').toLowerCase().includes(q)
-      );
+    function sparkline(svg, arr){
+      if(!svg) return;
+      if(!arr || !arr.length){ svg.innerHTML=''; svg.setAttribute('data-spark',''); return; }
+      const min = Math.min(...arr), max = Math.max(...arr);
+      const norm = max-min || 1;
+      const pts = arr.map((v,i)=>{
+        const x = (i/(arr.length-1))*100;
+        const y = 20 - ((v-min)/norm)*18 - 1;
+        return `${x},${y}`;
+      }).join(' ');
+      svg.innerHTML = `<polyline fill="none" stroke="${arr[arr.length-1]>=arr[0]?'#16a34a':'#dc2626'}" stroke-width="1.25" points="${pts}" />`;
+      svg.setAttribute('data-spark', 'ok');
     }
-    // sort
-    const sort = $('#mod-sort')?.value || 'seq';
-    const byState = {ACTIVE:0, REVIEW:1, HOLD:2, NEUTRO:3};
-    list.sort((a,b)=>{
-      if(sort==='title') return a.title.localeCompare(b.title);
-      if(sort==='state') return (byState[a.state?.toUpperCase()]??9)-(byState[b.state?.toUpperCase()]??9);
-      if(sort==='conf') return (b.confidence??-1)-(a.confidence??-1);
-      // seq default
-      return (a.seq??999)-(b.seq??999);
+
+    /* --------- Drawer --------- */
+    const drawer = $('#mod-drawer');
+    const drawerPanel = $('#mod-drawer aside');
+    const drawerTitle = $('#drawer-title');
+    const drawerSub = $('#drawer-sub');
+    const drawerBody = $('#drawer-body');
+    function openDrawer({title, sub}){
+      drawerTitle.textContent = title || 'Modulo';
+      drawerSub.textContent = sub || '—';
+      drawer.classList.remove('hidden');
+      requestAnimationFrame(()=> drawerPanel.style.transform='translateX(0)');
+    }
+    function closeDrawer(){
+      drawerPanel.style.transform='translateX(100%)';
+      drawerPanel.addEventListener('transitionend', ()=> drawer.classList.add('hidden'), {once:true});
+    }
+    drawer.addEventListener('click', (e)=>{ if(e.target.dataset.close==='backdrop') closeDrawer(); });
+    $('#drawer-close')?.addEventListener('click', closeDrawer);
+    $('#drawer-print')?.addEventListener('click', ()=> window.print());
+
+    /* --------- Legend --------- */
+    const legendPop = $('#legend-pop');
+    $('#legendBtn')?.addEventListener('click', ()=> legendPop.classList.remove('hidden'));
+    legendPop?.addEventListener('click', (e)=>{ if(e.target.dataset.close==='legend') legendPop.classList.add('hidden'); });
+
+    /* --------- View switch --------- */
+    const container = $('#mod-container');
+    $('#view-grid')?.addEventListener('click', (e)=>{
+      container.dataset.view='grid';
+      e.currentTarget.setAttribute('aria-pressed','true');
+      $('#view-list').setAttribute('aria-pressed','false');
+      container.className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4';
     });
-    // mount
-    for(const m of list) container.appendChild(renderCard(m));
-    if(window.lucide) lucide.createIcons();
-  }
+    $('#view-list')?.addEventListener('click', (e)=>{
+      container.dataset.view='list';
+      e.currentTarget.setAttribute('aria-pressed','true');
+      $('#view-grid').setAttribute('aria-pressed','false');
+      container.className='space-y-2.5';
+    });
 
-  // public API
-  window.TradeliaModules = {
-    /** Registra un modulo (id univoco). Non monta contenuti F1–F5 qui: li aggiungerai dopo con questa funzione. */
-    register(def){
-      if(!def || !def.id) throw new Error('register() richiede { id }');
-      if(modules.has(def.id)) throw new Error('id già registrato: '+def.id);
-      // normalizza
-      const norm = {
-        id: def.id,
-        title: def.title || 'Modulo',
-        seq: def.seq ?? 999,
-        state: def.state || 'NEUTRO',
-        confidence: def.confidence ?? null,
-        syncID: def.syncID || null,
-        meta: def.meta || '',
-        spark: Array.isArray(def.spark)?def.spark:[],
-        render: def.render,
-        html: def.html
+    /* --------- Registry --------- */
+    const tpl = $('#tpl-mod-card');
+    const modules = new Map();
+
+    function renderCard(def){
+      const node = tpl.content.cloneNode(true);
+      const root = node.firstElementChild;
+
+      root.dataset.id = def.id;
+      root.setAttribute('tabindex','0');
+      root.setAttribute('role','button');
+      root.setAttribute('aria-label', def.title);
+
+      root.querySelector('.mdc-t').textContent = def.title;
+      root.querySelector('[data-field="sync"]').textContent = def.syncID || '—';
+
+      // Badge: preferisci def.color (green/yellow/red/neutral) al posto di state
+      const color = def.color || stateToColor(def.state);
+      const [label, cls] = colorToBadge(color);
+      const badge = root.querySelector('[data-field="badge"]');
+      badge.textContent = label; badge.className = cls;
+
+      root.querySelector('[data-field="state"]').textContent = (def.state || label);
+      root.querySelector('[data-field="conf"]').textContent = fmtConf(def.confidence);
+      root.querySelector('[data-field="meta"]').textContent = def.meta || '';
+
+      // spark
+      const svg = root.querySelector('[data-spark]');
+      sparkline(svg, Array.isArray(def.spark)?def.spark:[]);
+
+      // open handlers
+      const open = ()=> {
+        openDrawer({title:def.title, sub:def.syncID || ''});
+        drawerBody.replaceChildren();
+        try{
+          if(typeof def.render === 'function') def.render(drawerBody);
+          else if(def.html){ const wrap = document.createElement('div'); wrap.innerHTML = def.html; drawerBody.appendChild(wrap); }
+          else { const p = document.createElement('p'); p.className='text-sm text-slate-600'; p.textContent='Nessun contenuto montato. Registra il modulo con { render(el) { … } }.'; drawerBody.appendChild(p); }
+        }catch(err){
+          const errBox = document.createElement('pre');
+          errBox.className='text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg p-2 overflow-auto';
+          errBox.textContent = String(err);
+          drawerBody.appendChild(errBox);
+        }
+        if(window.lucide) lucide.createIcons();
       };
-      modules.set(norm.id, norm);
-      mountAll();
-      return norm.id;
-    },
-    /** Aggiorna un modulo esistente */
-    update(id, patch){
-      if(!modules.has(id)) throw new Error('id non trovato: '+id);
-      Object.assign(modules.get(id), patch||{});
-      mountAll();
-    },
-    /** Apre il modulo (per deep-link o dal tuo codice F1–F5) */
-    open(id){
-      const m = modules.get(id);
-      if(!m) throw new Error('id non trovato: '+id);
-      openDrawer({title:m.title, sub:m.syncID||''});
-      drawerBody.replaceChildren();
-      if(typeof m.render === 'function') m.render(drawerBody);
-      else if(m.html){ const wrap = document.createElement('div'); wrap.innerHTML=m.html; drawerBody.appendChild(wrap); }
-      if(window.lucide) lucide.createIcons();
-    },
-    /** Elenco */
-    list(){ return Array.from(modules.values()); }
-  };
+      root.querySelector('[data-action="open"]').addEventListener('click', open);
+      root.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); open(); } });
+      root.addEventListener('dblclick', open);
 
-  /* ---- Search/Sort listeners ---- */
-  $('#mod-search')?.addEventListener('input', ()=> mountAll());
-  $('#mod-sort')?.addEventListener('change', ()=> mountAll());
-
-  // refresh icone iniziale (griglia vuota finché non registri moduli)
-  if(window.lucide) lucide.createIcons();
-
-  // Facoltativo: abilita deep-link #open=<id>
-  const url = new URL(window.location.href);
-  const openId = url.hash.startsWith('#open=') ? url.hash.slice(6) : null;
-  if(openId) {
-    // attende un tick per permettere al tuo codice successivo di registrare i moduli
-    setTimeout(()=> { try{ window.TradeliaModules.open(openId); }catch(_){} }, 0);
-  }
-})();
-</script>
-
-<!-- ========= ESEMPI (COMMENTATI) DI COME CONTINUERAI A SCRIVERE F1–F5 =========
-<script>
-  // 1) Registri i moduli (puoi farlo subito dopo questo blocco, senza modificare nulla sopra)
-  TradeliaModules.register({
-    id:'F1', title:'F1 · Screening', seq:1, state:'ACTIVE', confidence:0.83,
-    syncID:'TICK_20251020_F1', meta:'Freshness ≤ T-1', spark:[1,2,1.6,2.2,2.5],
-    render(el){
-      // qui inietti il contenuto vero del modulo F1
-      el.innerHTML = '<div class="prose prose-sm max-w-none">…contenuto F1…</div>';
+      return root;
     }
-  });
-  // Ripeti per F2…F5 con seq:2..5
 
-  // 2) In qualunque momento puoi aprire via codice:
-  // TradeliaModules.open('F1');
-  // 3) Aggiornare badge/confidence:
-  // TradeliaModules.update('F1', { state:'HOLD', confidence:0.72 });
-</script>
--->
+    function mountAll(){
+      container.replaceChildren();
+      let list = Array.from(modules.values());
+      // filtro
+      const q = ($('#mod-search')?.value || '').trim().toLowerCase();
+      if(q){
+        list = list.filter(m =>
+          m.title.toLowerCase().includes(q) ||
+          (m.syncID||'').toLowerCase().includes(q) ||
+          (m.meta||'').toLowerCase().includes(q)
+        );
+      }
+      // sort
+      const sort = $('#mod-sort')?.value || 'seq';
+      const byState = {ACTIVE:0, REVIEW:1, HOLD:2, NEUTRO:3};
+      list.sort((a,b)=>{
+        if(sort==='title') return a.title.localeCompare(b.title);
+        if(sort==='state') return (byState[(a.state||'').toUpperCase()]??9)-(byState[(b.state||'').toUpperCase()]??9);
+        if(sort==='conf') return (b.confidence??-1)-(a.confidence??-1);
+        return (a.seq??999)-(b.seq??999);
+      });
+      // mount
+      for(const m of list) container.appendChild(renderCard(m));
+      if(window.lucide) lucide.createIcons();
+    }
 
-  <!-- proseguirai qui con le sezioni del report (F1–F7, ecc.) -->
-  <script src="/report/runtime.js" defer></script>
+    // public API
+    window.TradeliaModules = {
+      register(def){
+        if(!def || !def.id) throw new Error('register() richiede { id }');
+        if(modules.has(def.id)) throw new Error('id già registrato: '+def.id);
+        const norm = {
+          id: def.id,
+          title: def.title || 'Modulo',
+          seq: def.seq ?? 999,
+          state: def.state || 'NEUTRO',
+          color: def.color || null,        // << aggiunto: colore esplicito dal JSON dei moduli
+          confidence: def.confidence ?? null,
+          syncID: def.syncID || null,
+          meta: def.meta || '',
+          spark: Array.isArray(def.spark)?def.spark:[],
+          render: def.render,
+          html: def.html
+        };
+        modules.set(norm.id, norm);
+        mountAll();
+        return norm.id;
+      },
+      update(id, patch){
+        if(!modules.has(id)) throw new Error('id non trovato: '+id);
+        Object.assign(modules.get(id), patch||{});
+        mountAll();
+      },
+      open(id){
+        const m = modules.get(id);
+        if(!m) throw new Error('id non trovato: '+id);
+        openDrawer({title:m.title, sub:m.syncID||''});
+        drawerBody.replaceChildren();
+        if(typeof m.render === 'function') m.render(drawerBody);
+        else if(m.html){ const wrap = document.createElement('div'); wrap.innerHTML=m.html; drawerBody.appendChild(wrap); }
+        if(window.lucide) lucide.createIcons();
+      },
+      list(){ return Array.from(modules.values()); }
+    };
 
+    /* ---- Search/Sort listeners ---- */
+    $('#mod-search')?.addEventListener('input', ()=> mountAll());
+    $('#mod-sort')?.addEventListener('change', ()=> mountAll());
+
+    if(window.lucide) lucide.createIcons();
+
+    // Deep-link #open=<id>
+    const url = new URL(window.location.href);
+    const openId = url.hash.startsWith('#open=') ? url.hash.slice(6) : null;
+    if(openId) { setTimeout(()=> { try{ window.TradeliaModules.open(openId); }catch(_){} }, 0); }
+  })();
+  </script>
+
+  <!-- ===========================
+       THEME PACK · Tradelia Desk (drop-in)
+       =========================== -->
+  <style>
+  :root{
+    --c-text:#0f172a; --c-meta:#64748b; --c-border:#e5e7eb; --c-bg:#ffffff;
+    --c-accent:#0ea5e9; --c-accent-dk:#0369a1;
+    --shadow-0:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.02);
+    --shadow-1:0 2px 12px rgba(2,6,23,.06);
+    --shadow-2:0 4px 18px rgba(2,6,23,.08);
+    --r-card:14px;
+    --pad-card:.75rem; --pad-h:.7rem .85rem;
+    --g-gap:0.6rem;
+  }
+  h1,h2,h3{letter-spacing:.1px}
+  .section-title{font-weight:600;color:#0f172a}
+  .section-meta{font-size:12px;color:var(--c-meta)}
+  .kpi-val{font-weight:700;color:var(--c-text)}
+  .kpi-meta{font-size:11px;color:#475569}
+
+  .card,.mdc{
+    background:#fff; border:1px solid var(--c-border); border-radius:var(--r-card);
+    box-shadow:var(--shadow-0); transition:border-color .18s, box-shadow .18s, transform .12s;
+  }
+  .card:hover,.mdc:hover{border-color:#dbe3ea; box-shadow:var(--shadow-1)}
+  .card:active,.mdc:active{transform:translateY(1px)}
+
+  #header-ticker label{ font-weight:600; letter-spacing:.1px }
+  #header-ticker .val{ font-weight:700; color:var(--c-text) }
+  #header-ticker .card:hover{ border-color:#dbe3ea; box-shadow:0 2px 12px rgba(2,6,23,.06) }
+
+  .badge{font-size:11px;padding:.1rem .45rem;border-radius:999px;border:1px solid}
+  .badge--active{color:#065f46;background:#ecfdf5;border-color:#a7f3d0}
+  .badge--hold{color:#92400e;background:#fffbeb;border-color:#fcd34d}
+  .badge--review{color:#7c2d12;background:#fef3c7;border-color:#fbbf24}
+  .badge--neutral{color:#334155;background:#f1f5f9;border-color:#e5e7eb}
+
+  .btn:focus-visible{ outline:none; box-shadow:0 0 0 2px rgba(14,165,233,.45) }
+  i[data-lucide]{width:18px;height:18px}
+  .mdc-spark{height:32px}
+
+  .kpi-delta{font-size:11px;font-weight:600}
+  .kpi-delta.pos{color:#059669}
+  .kpi-delta.neg{color:#dc2626}
+
+  [data-view="list"] .mdc{display:flex}
+  [data-view="list"] .mdc .mdc-b{flex:1}
+
+  @media print{
+    .noprint, #legend-pop, #mod-drawer .btn{ display:none!important }
+    body{ background:#fff }
+    .card,.mdc{ break-inside:avoid; box-shadow:none; border-color:#cbd5e1 }
+    .badge{ background:transparent!important }
+    #mod-drawer{ position:static; display:block !important; transform:none }
+    #mod-drawer aside{ width:auto; border:0; box-shadow:none }
+  }
+
+  .hx{border-color:rgba(2,132,199,.6); color:#0369a1}
+  .hx:hover{background:#f0f9ff}
+  </style>
+
+  <!-- Toni testo pilotati da JSON -->
+  <style>
+    .tone--green{color:#065f46;font-weight:700}
+    .tone--yellow{color:#92400e;font-weight:700}
+    .tone--red{color:#7c2d12;font-weight:700}
+    .tone--neutral{color:#334155;font-weight:700}
+  </style>
+
+  <!-- ===========================
+       Binder JSON → UI (colori decisi dal JSON)
+       =========================== -->
+  <script>
+  /* TradeliaHeaderColors EXT — interpreta direttamente il tuo JSON */
+  (function(){
+    const $  = (s)=> document.querySelector(s);
+    const fmt = (v,d=2)=> (v==null || isNaN(v) ? 'N/D' : Number(v).toFixed(d));
+    const clsBadge = (c)=>({green:'badge badge--active',yellow:'badge badge--hold',red:'badge badge--review'})[String(c||'').toLowerCase()]||'badge badge--neutral';
+    const clsTone  = (c)=>['green','yellow','red','neutral'].includes(String(c||'').toLowerCase())?`tone--${String(c).toLowerCase()}`:'tone--neutral';
+
+    const setText = (sel, v)=>{ const el=$(sel); if(el) el.textContent=(v==null||v==='')?'N/D':String(v); };
+    const setBadge=(sel, label, color)=>{ const el=$(sel); if(!el) return; const s=document.createElement('span'); s.className=clsBadge(color); s.textContent=(label??'N/D').toString().toUpperCase(); el.replaceChildren(s); };
+    const setTone =(sel, text, color)=>{ const el=$(sel); if(!el) return; const s=document.createElement('span'); s.className=clsTone(color); s.textContent=(text==null||text==='')?'N/D':String(text); el.replaceChildren(s); };
+
+    function applyColorize(list){
+      if(!Array.isArray(list)) return;
+      for(const it of list){
+        const t=it.id||it.sel; if(!t) continue;
+        if(it.mode==='badge') setBadge(t, it.label ?? it.text ?? it.value, it.color);
+        else if(it.mode==='tone'){ const content = (isFinite(it.value)? fmt(it.value, it.digits??2) : (it.text ?? it.label ?? it.value)); setTone(t, content, it.color); }
+        else setText(t, it.text ?? it.label ?? it.value);
+      }
+    }
+
+    function apply(j){
+      if(!j||typeof j!=='object') return;
+      // riga 1
+      setText('#H-Session', j.session); setText('#H-Start', j.dateStart); setText('#H-End', j.dateEnd);
+      // riga 2
+      setText('#H-Ticker', j.ticker); setText('#H-Venue', j.venue);
+      if(j.validation) setBadge('#H-Validation', j.validation.label, j.validation.color);
+      // riga 3
+      setText('#H-VersionTag', j.versionTag); setText('#H-SyncID', j.syncID);
+      setText('#H-Freshness', j.freshnessDays==null?'N/D':(j.freshnessDays<=1?'≤ T-1':`${j.freshnessDays} giorni`));
+      // riga 4
+      setText('#H-OCR', fmt(j.ocr_conf)); setText('#H-DataIntegrity', fmt(j.dataIntegrity)); setText('#H-FeedSync', fmt(j.feedSync));
+      // riga 5
+      if(j.confidence_final) setTone('#H-Confidence', fmt(j.confidence_final.value), j.confidence_final.color);
+      if(j.state) setBadge('#H-State', j.state.label, j.state.color);
+      // riga 6
+      setText('#H-TapeNotes', j.tapeNotes);
+      setText('#H-Missing', Array.isArray(j.missing)&&j.missing.length? j.missing.join(', ') : '—');
+      // extra colorize arbitrario
+      applyColorize(j.colorize);
+    }
+
+    window.TradeliaHeaderColors={ apply };
+    window.addEventListener('tradelia:header:update', (ev)=> apply(ev.detail||{}));
+  })();
+  </script>
+
+  <!-- ===========================
+       Helper SSE (chat streaming verso server locale opzionale)
+       =========================== -->
+  <script>
+  async function kamareraAsk(text, context={}){
+    const resp = await fetch('http://localhost:8787/api/chat', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ input:text, context })
+    });
+    const reader = resp.body.getReader(); const dec = new TextDecoder(); let buf='';
+    return { async *chunks(){ while(true){ const {value,done}=await reader.read(); if(done) break;
+      buf+=dec.decode(value,{stream:true}); const parts = buf.split('\n\n'); buf = parts.pop() || '';
+      for(const line of parts){ if(!line.startsWith('data:')) continue;
+        const payload=JSON.parse(line.slice(5).trim()); if(payload.delta) yield payload.delta; } } } };
+  }
+  </script>
+
+  <!-- ===========================
+       Modulo "Assistente" (facoltativo, per test runtime)
+       =========================== -->
+  <script>
+  if(window.TradeliaModules){
+    TradeliaModules.register({
+      id:'ASSIST', title:'Assistente · Swing master', seq:0, color:'green',
+      confidence:0.90, syncID:'ASSIST_'+new Date().toISOString().slice(0,10), meta:'Runtime helper',
+      render:(el)=>{
+        el.innerHTML=`<div class="space-y-2">
+          <div class="text-sm text-slate-600">Chat interna (solo informativa, non MiFID)</div>
+          <div class="flex gap-2">
+            <input id="assist-q" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm" placeholder="Chiedi: es. imposta F1 header…">
+            <button id="assist-send" class="btn"><i data-lucide="send"></i><span>Invia</span></button>
+          </div>
+          <pre id="assist-out" class="text-[12px] leading-relaxed bg-slate-50 border border-slate-200 rounded-lg p-2 h-[240px] overflow-auto"></pre>
+        </div>`;
+        if(window.lucide) lucide.createIcons();
+        const $=(s)=>el.querySelector(s);
+        $('#assist-send').addEventListener('click', async ()=>{
+          const q=$('#assist-q').value.trim(); if(!q) return;
+          const out=$('#assist-out'); out.textContent='';
+          try{
+            const stream=await kamareraAsk(q,{page:location.pathname,syncID:document.getElementById('H-SyncID')?.textContent||null});
+            for await (const chunk of stream.chunks()){ out.textContent+=chunk; out.scrollTop=out.scrollHeight; }
+          }catch(err){
+            out.textContent='[offline] Collega il server locale su http://localhost:8787 — '+String(err);
+          }
+        });
+      }
+    });
+  }
+  </script>
+
+  <!-- Script placeholder per runtime personalizzato (opzionale) -->
+  <script src="./report/runtime.js" defer></script>
 </body>
 </html>
