@@ -736,7 +736,90 @@
   window.Tradelia.HelpX = HelpX;
 })();
 </script>
+<style>
+.hx-kv{ display:grid; grid-template-columns: auto 1fr; gap:.25rem .6rem; font-size:12px; color:#0f172a; margin:.5rem 0 }
+.hx-kv dt{ color:#64748b }
+.hx-badges{ display:flex; flex-wrap:wrap; gap:.35rem; margin:.35rem 0 }
+.hx-tag{ font-size:11px; padding:.12rem .45rem; border-radius:999px; border:1px solid #e5e7eb; background:#f8fafc; color:#334155; font-weight:600 }
+.hx-callout{ border-left:3px solid #7dd3fc; background:#f0f9ff; padding:.5rem .6rem; border-radius:.5rem; font-size:12px; color:#075985 }
+.hx-rule{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+background:#f8fafc; border:1px solid #e5e7eb; border-radius:6px; padding:.45rem .55rem; font-size:12px; color:#0f172a }
+.hx-list{ margin:.35rem 0 .1rem 1rem }
+.hx-ex{ font-size:12px; color:#0f172a }
+.hx-ok{ color:#065f46; font-weight:700 }
+.hx-warn{ color:#92400e; font-weight:700 }
+.hx-crit{ color:#7c2d12; font-weight:700 }
+</style>
 
+
+<script>
+(function(){
+const P = (...s)=> s.map(x=>`<p class="mb-1.5">${x}</p>`).join("");
+const UL = (arr)=> `<ul class="hx-list list-disc">${arr.map(x=>`<li>${x}</li>`).join("")}</ul>`;
+const KV = (pairs)=> `<dl class="hx-kv">${pairs.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>`;
+
+
+// ——— Dizionario esteso per F2 (ownership/short/news/events/vol/options) ———
+const D = {
+// PROFILE
+F2_Profile:{ t:"Profilo sintetico",
+a:P("Descrizione breve del business e posizionamento settoriale/indice.",
+"Usata per contestualizzare news ed eventi prossimi."), s:"Nota metodologica F2" },
+F2_Upcoming:{ t:"Prossimi eventi",
+a:P("Eventi market-moving legati al titolo e al settore/geo.")+
+KV([["Esempi","Earnings, guidance, dividendo/EX, conference days, macro di settore (CPI assicurativo, cat bond)."],
+["Policy","Indicare data e orario locale, timezone in chiaro (ET/CEST)."]]), s:"Policy Eventi" },
+
+
+// OWNERSHIP & SHORT
+F2_InstOwn:{ t:"Institutional Ownership %",
+a:P("Quota capitale detenuta da istituzionali.", "Soglie: > 70% elevata · 40–70% media · < 40% bassa."), s:"13F/holder aggregati" },
+F2_InsidOwn:{ t:"Insider Ownership %",
+a:P("Quota detenuta da management/board.", "Movimenti anomali in acquisto/vendita sono segnali di attenzione."), s:"SEC Forms 3/4/5" },
+F2_Float:{ t:"Float %",
+a:P("Azioni negoziabili su float.", "Serve per leggere short float e liquidità effettiva."), s:"Vendor equity stats" },
+F2_ShortFloat:{ t:"Short Float %",
+a:P("Quote short su float.")+UL(["<span class='hx-ok'>&lt; 5%</span> basso","<span class='hx-warn'>5–10%</span> medio","<span class='hx-crit'>&gt; 10%</span> alto"]), s:"Exchange short interest" },
+F2_ShortInterest:{ t:"Short Interest Ratio",
+a:P("Giorni per coprire: short interest / avg daily volume.")+
+UL(["<span class='hx-ok'>&lt; 2</span> normale","<span class='hx-warn'>2–5</span> attenzione","<span class='hx-crit'>&gt; 5</span> sensibile"]), s:"Exchange + vendors" },
+F2_InsiderTx:{ t:"Insider Transactions",
+a:P("Ultimi movimenti insider (3–6 mesi) con segno/ammontare.", "Rilevare cluster in acquisto/vendita."), s:"SEC Form 4/5" },
+
+
+// NEWS & ANALYSTS
+F2_News:{ t:"Ultime news",
+a:P("Elenco headline con fonte, timestamp e breve nota di impatto.",
+"Non sostituisce i dati numerici; supporta il contesto."), s:"WebProbe / Tier-1" },
+F2_PriceHeadline:{ t:"Price Headline",
+a:P("Sintesi price action giornaliera con driver (se noto)."), s:"Tape + WebProbe" },
+F2_AnalystTarget:{ t:"Analyst Targets",
+a:KV([["High/Mean/Low","Obiettivi di prezzo (USD)."],["Rating scale","5=Strong Buy … 1=Strong Sell."]])+P("Confrontare target mean con prezzo corrente per upside/downside."), s:"Street consensus" },
+F2_AnalystTrend:{ t:"Evoluzione rating",
+a:P("Storico 3m → 1m → current del rating medio."), s:"Street consensus" },
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
 
 
 
@@ -1308,494 +1391,74 @@
      STEP 7/7 — MODULO F2 (card ultra-compatta + drawer a TAB + resoconto)
      >>> blocco completo e autocontenuto
      ========================= -->
-<!-- =========================
-     STEP 7/7 — MODULO F2 (Sguardo Principale · Override)
-     >>> card ultra-compatta + drawer a TAB + resoconto + help "?" su tutte le voci
-     ========================= -->
-
 <style>
-  /* === F2 Card (mobile-first, ultra-compatta) === */
-  .f2-card{ border:1px solid #e5e7eb; border-radius:14px; background:#fff }
-  .f2-head{ display:flex; align-items:center; justify-content:space-between; gap:.5rem;
-    padding:8px 10px; background:linear-gradient(#fff,#fbfdff); border-bottom:1px solid #eef2f6 }
-  .f2-title{ font-weight:600; font-size:13px; color:#0f172a }
-  .f2-body{ padding:8px 10px }
-  .f2-line{ display:flex; align-items:center; justify-content:space-between; gap:.75rem }
-  .f2-left{ display:flex; align-items:center; gap:.65rem; min-width:0 }
-  .f2-k{ display:flex; flex-direction:column; min-width:0 }
-  .f2-lab{ font-size:11px; color:#64748b; display:flex; align-items:center; gap:.35rem }
-  .f2-val{ font-size:13px; font-weight:700; color:#0f172a; font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace; white-space:nowrap }
-  .f2-val.truncate{ overflow:hidden; text-overflow:ellipsis }
-
-  .f2-dot{ width:10px; height:10px; border-radius:999px; flex:0 0 auto }
-  .f2-dot-g{ background:#10b981 } /* green */
-  .f2-dot-y{ background:#f59e0b } /* yellow */
-  .f2-dot-r{ background:#ef4444 } /* red */
-  .f2-dot-n{ background:#94a3b8 } /* neutral */
-
-  /* CTA: default mobile; in griglia desktop diventa più piccola */
-  .f2-cta .sbtn{ padding:.45rem .6rem; font-size:13px }
-  #mod-container[data-view="grid"] .f2-cta .sbtn{ padding:.3rem .5rem; font-size:12px }
-  @media (min-width:1024px){
-    #mod-container[data-view="grid"] .f2-cta .sbtn{ padding:.28rem .48rem; font-size:12px }
-  }
-
-  /* === Drawer Tabs (effetto “premuto”, allineato a F1B) === */
-  .f2-tabbar{ position:sticky; top:0; z-index:10; display:flex; flex-wrap:wrap; gap:.35rem; background:#f8fafc;
-    padding:.5rem; border-radius:10px; border:1px solid #e5e7eb }
-  .f2-tabbar .sbtn{
-    font-size:12px; padding:.4rem .55rem; border:1px solid #e5e7eb; background:#fff;
-    box-shadow:0 1px 0 rgba(2,6,23,.04);
-    transition: background .18s ease, border-color .18s ease, color .18s ease, transform .06s ease, box-shadow .18s ease;
-  }
-  .f2-tabbar .sbtn:hover{ background:#f1f5f9; border-color:#dbe3ea }
-  .f2-tabbar .sbtn.active,
-  .f2-tabbar .sbtn[aria-pressed="true"]{
-    background:linear-gradient(#e0f2fe,#bae6fd);
-    border-color:#7dd3fc; color:#075985; font-weight:700;
-    transform: translateY(1px);
-    box-shadow: inset 0 1px 0 rgba(2,6,23,.10), 0 0 0 2px rgba(14,165,233,.15);
-  }
-  .f2-tab{ display:none } .f2-tab.active{ display:block }
-
-  /* Tabelle compatte nel drawer */
-  .tbl-kv{ width:100%; font-size:13px; border-collapse:separate; border-spacing:0 .15rem }
-  .tbl-kv td{ padding:.15rem .25rem .15rem 0; vertical-align:top }
-  .tbl-kv td:first-child{ color:#64748b; width:44%; display:flex; align-items:center; gap:.35rem }
-
-  /* Sparkline condivisa (se servisse) */
-  .f2-spark{ width:100%; height:32px; display:block }
+.f2-card{ border:1px solid #e5e7eb; border-radius:14px; background:#fff }
+.f2-head{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:8px 10px; background:linear-gradient(#fff,#fbfdff); border-bottom:1px solid #eef2f6 }
+.f2-title{ font-weight:600; font-size:13px; color:#0f172a }
+.f2-body{ padding:8px 10px }
+.f2-line{ display:flex; align-items:center; justify-content:space-between; gap:.75rem }
+.f2-left{ display:flex; align-items:center; gap:.65rem; min-width:0 }
+.f2-k{ display:flex; flex-direction:column; min-width:0 }
+.f2-lab{ font-size:11px; color:#64748b; display:flex; align-items:center; gap:.35rem }
+.f2-val{ font-size:13px; font-weight:700; color:#0f172a; font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace; white-space:nowrap }
+.f2-val.truncate{ overflow:hidden; text-overflow:ellipsis }
+.f2-dot{ width:10px; height:10px; border-radius:999px; flex:0 0 auto }
+.f2-dot-g{ background:#10b981 } .f2-dot-y{ background:#f59e0b } .f2-dot-r{ background:#ef4444 } .f2-dot-n{ background:#94a3b8 }
+.f2-cta .sbtn{ padding:.45rem .6rem; font-size:13px }
+#mod-container[data-view="grid"] .f2-cta .sbtn{ padding:.3rem .5rem; font-size:12px }
+@media (min-width:1024px){ #mod-container[data-view="grid"] .f2-cta .sbtn{ padding:.28rem .48rem; font-size:12px } }
+.f2-tabbar{ position:sticky; top:0; z-index:10; display:flex; flex-wrap:wrap; gap:.35rem; background:#f8fafc; padding:.5rem; border-radius:10px; border:1px solid #e5e7eb }
+.f2-tabbar .sbtn{ font-size:12px; padding:.4rem .55rem; border:1px solid #e5e7eb; background:#fff; box-shadow:0 1px 0 rgba(2,6,23,.04); transition: background .18s ease, border-color .18s ease, color .18s ease, transform .06s ease, box-shadow .18s ease }
+.f2-tabbar .sbtn:hover{ background:#f1f5f9; border-color:#dbe3ea }
+.f2-tabbar .sbtn.active, .f2-tabbar .sbtn[aria-pressed="true"]{ background:linear-gradient(#e0f2fe,#bae6fd); border-color:#7dd3fc; color:#075985; font-weight:700; transform: translateY(1px); box-shadow: inset 0 1px 0 rgba(2,6,23,.10), 0 0 0 2px rgba(14,165,233,.15) }
+.f2-tab{ display:none } .f2-tab.active{ display:block }
+.tbl-kv{ width:100%; font-size:13px; border-collapse:separate; border-spacing:0 .15rem }
+.tbl-kv td{ padding:.15rem .25rem .15rem 0; vertical-align:top }
+.tbl-kv td:first-child{ color:#64748b; width:44%; display:flex; align-items:center; gap:.35rem }
+.chip{ display:inline-flex; align-items:center; gap:.35rem; border:1px solid #e5e7eb; background:#fff; border-radius:999px; padding:.18rem .55rem; font-size:12px }
+.card{ background:#fff; border:1px solid #e5e7eb; border-radius:14px; box-shadow:0 1px 0 rgba(2,6,23,.04) }
+.f1b-badge{ font-size:11px; padding:.12rem .5rem; border-radius:999px; border:1px solid }
+.f1b-badge--green{ color:#065f46;background:#ecfdf5;border-color:#a7f3d0 }
+.f1b-badge--yellow{ color:#92400e;background:#fffbeb;border-color:#fcd34d }
+.f1b-badge--red{ color:#7c2d12;background:#fef3c7;border-color:#fbbf24 }
+.f1b-badge--neutral{ color:#334155;background:#f1f5f9;border-color:#e5e7eb }
 </style>
 
-<!-- Template card F2 -->
-<template id="tpl-f2-card">
-  <article class="f2-card" role="group" aria-labelledby="f2-title">
-    <header class="f2-head">
-      <h3 id="f2-title" class="f2-title">F2 — Sguardo Principale (Override)</h3>
-      <!-- riuso palette badge F1B: f1b-badge--* -->
-      <span class="f1b-badge f1b-badge--neutral" data-f2="state-badge">NEUTRO</span>
-    </header>
 
-    <div class="f2-body">
-      <div class="f2-line">
-        <div class="f2-left min-w-0">
-          <span class="f2-dot f2-dot-n" aria-hidden="true" data-f2="mc-dot"></span>
-          <div class="f2-k min-w-0">
-            <div class="f2-lab">Ticker <button class="hx" data-k="F2_Ticker">?</button></div>
-            <div class="f2-val truncate" data-f2="ticker">—</div>
-          </div>
-        </div>
-
-        <div class="f2-k">
-          <div class="f2-lab">Concordanza <button class="hx" data-k="F2_MacroConcordance">?</button></div>
-          <div class="f2-val" data-f2="mc">—</div>
-        </div>
-
-        <div class="f2-cta">
-          <button class="sbtn" data-f2="open"><i data-lucide="panel-right-open"></i><span>Apri scheda</span></button>
-        </div>
-      </div>
-
-      <div class="mt-2 flex items-center gap-1.5">
-        <span class="text-[11px] text-slate-500">Confidence <button class="hx" data-k="F2_Confidence">?</button>:</span>
-        <span class="f1b-badge f1b-badge--neutral" data-f2="conf">—</span>
-      </div>
-    </div>
-  </article>
+<template id="tpl-f2-card-new">
+<article class="f2-card" role="group" aria-labelledby="f2-title">
+<header class="f2-head">
+<h3 id="f2-title" class="f2-title">F2 — Sguardo Principale (Macro · Ownership · News)</h3>
+<span class="f1b-badge f1b-badge--neutral" data-f2="state-badge">NEUTRO</span>
+</header>
+<div class="f2-body">
+<div class="f2-line">
+<div class="f2-left min-w-0">
+<span class="f2-dot f2-dot-n" aria-hidden="true" data-f2="mc-dot"></span>
+<div class="f2-k min-w-0">
+<div class="f2-lab">Ticker <button class="hx" data-k="F2_Ticker">?</button></div>
+<div class="f2-val truncate" data-f2="ticker">—</div>
+</div>
+</div>
+<div class="f2-k">
+<div class="f2-lab">Concordanza <button class="hx" data-k="F2_MacroConcordance">?</button></div>
+<div class="f2-val" data-f2="mc">—</div>
+</div>
+<div class="f2-cta">
+<button class="sbtn" data-f2="open"><i data-lucide="panel-right-open"></i><span>Apri scheda</span></button>
+</div>
+</div>
+<div class="mt-2 flex flex-wrap items-center gap-1.5">
+<span class="text-[11px] text-slate-500">Confidence <button class="hx" data-k="F2_Conf">?</button>:</span>
+<span class="f1b-badge f1b-badge--neutral" data-f2="conf">—</span>
+<span class="chip" data-f2="iv-chip">IV —</span>
+<span class="chip" data-f2="pcr-chip">PCR —</span>
+</div>
+</div>
+</article>
 </template>
+
 
 <script>
 (function(){
-  // ===== Utilities
-  const $ = (s,root=document)=> root.querySelector(s);
-
-  const badgeMap = {
-    green:'f1b-badge f1b-badge--green',
-    yellow:'f1b-badge f1b-badge--yellow',
-    red:'f1b-badge f1b-badge--red',
-    neutral:'f1b-badge f1b-badge--neutral'
-  };
-  const dotClass = (t)=> ({
-    green:'f2-dot f2-dot-g',
-    yellow:'f2-dot f2-dot-y',
-    red:'f2-dot f2-dot-r',
-    neutral:'f2-dot f2-dot-n'
-  }[t] || 'f2-dot f2-dot-n');
-
-  // TONES
-  const toneByMC   = (v)=> (v==null||isNaN(v)) ? 'neutral' : (v> 0.30 ? 'green' : (v < -0.30 ? 'red' : 'yellow'));
-  const toneByConf = (v)=> (v==null||isNaN(v)) ? 'neutral' : (v>=0.80 ? 'green' : (v>=0.70 ? 'yellow' : 'red'));
-
-  function stateBadgeFrom(state, conf){
-    const c = Number(conf);
-    const forcedHold = isFinite(c) && c < 0.80;        // policy UI
-    const s = forcedHold ? 'HOLD' : String(state||'NEUTRO').toUpperCase();
-    if (s==='ACTIVE') return {label:'ATTIVO', color:'green'};
-    if (s==='REVIEW') return {label:'REVISIONE', color:'yellow'};
-    if (s==='HOLD')   return {label:'HOLD', color:'red'};
-    return {label:'NEUTRO', color:'neutral'};
-  }
-
-  // Sparkline minimale (riuso globale se presente)
-  function sparkline(svgEl, values){
-    if (window.Tradelia?.sparkline){ window.Tradelia.sparkline(svgEl, values); return; }
-    if(!svgEl) return;
-    svgEl.innerHTML='';
-    if(!Array.isArray(values)||values.length<2) return;
-    const w=100,h=32,p=2,min=Math.min(...values),max=Math.max(...values),rng=(max-min)||1;
-    const d=values.map((v,i)=>{
-      const x=p+(w-2*p)*(i/(values.length-1));
-      const y=h-p-(h-2*p)*((v-min)/rng);
-      return (i?'L':'M')+x.toFixed(2)+','+y.toFixed(2);
-    }).join(' ');
-    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-    path.setAttribute('d',d); path.setAttribute('fill','none');
-    path.setAttribute('stroke','#0284c7'); path.setAttribute('stroke-width','1.4');
-    svgEl.appendChild(path);
-  }
-
-  // SUMMARY (fallback se manca m.Summary.Text)
-  function buildSummary(m){
-    const pre = m?.Summary?.Text || m?.Meta?.Summary;
-    if (pre && String(pre).trim()) return String(pre).trim();
-
-    const tkr = m?.Ticker || '—';
-    const mc  = m?.MacroConcordance_F2;
-    const conf= m?.Confidence;
-    const reg = m?.FromF1_pass?.MacroRegime;
-    const sci = m?.F2_Ticker?.SCI_tkr;
-    const icr = m?.F2_Ticker?.ICR_tkr;
-    const ipi = m?.F2_Ticker?.IPI_tkr;
-    const perf1m = m?.F2_Ticker?.DPI_context?.Perf?.['1m'];
-    const distH  = m?.F2_Ticker?.DPI_context?.Dist52w?.fromHigh;
-    const comp   = m?.F2_Ticker?.DPI_context?.TechnicalOpinion?.Composite;
-
-    const bits=[];
-    bits.push(`F2 (Sguardo Principale) su ${tkr}: concordanza ${mc==null?'n/d': (mc>0?'positiva':'negativa/mista')} ${mc==null?'':'('+(Number(mc).toFixed(2))+')'}.`);
-    if (reg) bits.push(`Regime F1: **${reg}**.`);
-    if (sci!=null || icr!=null || ipi!=null){
-      bits.push(`Indic.: ${sci!=null?`SCI ${Number(sci).toFixed(2)}`:''}${(icr!=null||ipi!=null)?' · ':''}${icr!=null?`ICR ${Number(icr).toFixed(2)}`:''}${ipi!=null?' · IPI '+Number(ipi).toFixed(2):''}.`);
-    }
-    if (perf1m || distH || comp){
-      bits.push(`Contesto: ${perf1m?`1M ${perf1m}`:''}${distH?`${perf1m?', ':''}dist. 52wH ${distH}`:''}${comp?`${(perf1m||distH)?', ':''}tecnico ${comp}`:''}.`);
-    }
-    if (conf!=null) bits.push(`Confidence ${Number(conf).toFixed(2)} (HOLD UI se < 0.80).`);
-    return bits.join(' ');
-  }
-
-  // ===== BINDER: aggiorna la card
-  function bindF2Card(card, m){
-    const tkr = m?.Ticker || '—';
-    const mcN = (m?.MacroConcordance_F2!=null && !isNaN(m.MacroConcordance_F2)) ? Number(m.MacroConcordance_F2) : null;
-    const confN = (m?.Confidence!=null && !isNaN(m.Confidence)) ? Number(m.Confidence) : null;
-
-    $('[data-f2="ticker"]',card).textContent = tkr;
-    $('[data-f2="mc"]',card).textContent     = (mcN==null ? '—' : mcN.toFixed(2));
-
-    // Dot colore su concordanza
-    const dotTone = toneByMC(mcN);
-    const dotEl   = $('[data-f2="mc-dot"]',card);
-    if (dotEl){ dotEl.className = dotClass(dotTone); dotEl.setAttribute('data-tone', dotTone); }
-
-    // Confidence badge
-    const confTone = toneByConf(confN);
-    const confEl = $('[data-f2="conf"]',card);
-    if (confEl){
-      confEl.className = badgeMap[confTone]||badgeMap.neutral;
-      confEl.textContent = (confN==null ? '—' : confN.toFixed(2));
-    }
-
-    // State badge (con forzatura HOLD < 0.80)
-    const sb = m?.Meta?.StateBadge || stateBadgeFrom(m?.State, confN);
-    const sbEl = $('[data-f2="state-badge"]',card);
-    if (sbEl){ sbEl.className = badgeMap[sb.color]||badgeMap.neutral; sbEl.textContent = (sb.label||'NEUTRO').toUpperCase(); }
-
-    // Apri drawer
-    $('[data-f2="open"]',card).onclick=(ev)=>{
-      ev.stopPropagation();
-      if (window.Tradelia?.openDrawer) window.Tradelia.openDrawer();
-      renderF2Drawer(m);
-    };
-
-    if (window.lucide) lucide.createIcons();
-  }
-
-  // ===== Drawer Renderer (TAB + contenuti + ? su tutte le voci)
-  function renderF2Drawer(m){
-    const body = document.getElementById('drawer-body');
-    document.getElementById('drawer-title').textContent = 'F2 — Sguardo Principale (Override)';
-    document.getElementById('drawer-sub').textContent   = m?.Ticker ? m.Ticker : '—';
-
-    const fmt=(x,d=2)=> (x==null||x==='—') ? '—' : (typeof x==='number'? x.toFixed(d):x);
-    const mcTone = toneByMC(Number(m?.MacroConcordance_F2));
-    const confTone = toneByConf(Number(m?.Confidence));
-
-    const kv = (rows)=>`
-      <table class="tbl-kv">
-        ${rows.map(r=>`<tr><td><span>${r[0]}</span> ${r[2]||''}</td><td>${r[1]}</td></tr>`).join('')}
-      </table>`;
-
-    const passF1 = kv([
-      ['MacroRegime', (m?.FromF1_pass?.MacroRegime ?? '—'), `<button class="hx" data-k="F2_MacroRegime">?</button>`],
-      ['SCI (F1 pass)', fmt(m?.FromF1_pass?.SCI), `<button class="hx" data-k="F2_SCI">?</button>`],
-      ['IPI (F1 pass)', fmt(m?.FromF1_pass?.IPI), `<button class="hx" data-k="F2_IPI">?</button>`],
-      ['OPI (F1 pass)', fmt(m?.FromF1_pass?.OPI), `<button class="hx" data-k="F2_OPI">?</button>`],
-      ['ICR (pre, F1 pass)', fmt(m?.FromF1_pass?.ICR_pre), `<button class="hx" data-k="F2_ICR_pre">?</button>`],
-      ['GeoRisk', (m?.FromF1_pass?.GeoRisk ?? '—'), `<button class="hx" data-k="F2_GeoRisk">?</button>`],
-      ['RiskWindow_F1', fmt(m?.FromF1_pass?.RiskWindow_F1,0), `<button class="hx" data-k="F2_RiskWindow_F1">?</button>`],
-    ]);
-
-    const tickIndic = kv([
-      ['Ticker', (m?.Ticker || '—'), `<button class="hx" data-k="F2_Ticker">?</button>`],
-      ['Concordanza (F2)', (m?.MacroConcordance_F2!=null && !isNaN(m.MacroConcordance_F2)) ? Number(m.MacroConcordance_F2).toFixed(2) : '—', `<button class="hx" data-k="F2_MacroConcordance">?</button>`],
-      ['Confidence (F2)', (m?.Confidence!=null && !isNaN(m.Confidence)) ? Number(m.Confidence).toFixed(2) : '—', `<button class="hx" data-k="F2_Confidence">?</button>`],
-      ['SCI_tkr', fmt(m?.F2_Ticker?.SCI_tkr), `<button class="hx" data-k="F2_SCI_tkr">?</button>`],
-      ['IPI_tkr', fmt(m?.F2_Ticker?.IPI_tkr), `<button class="hx" data-k="F2_IPI_tkr">?</button>`],
-      ['ICR_tkr', fmt(m?.F2_Ticker?.ICR_tkr), `<button class="hx" data-k="F2_ICR_tkr">?</button>`],
-      ['RiskWindow_local', fmt(m?.F2_Ticker?.RiskWindow_local,0), `<button class="hx" data-k="F2_RiskWindow_local">?</button>`],
-      ['RiskWindow (globale)', fmt(m?.F2_Ticker?.RiskWindow,0), `<button class="hx" data-k="F2_RiskWindow">?</button>`],
-    ]);
-
-    const dpi = m?.F2_Ticker?.DPI_context || {};
-    const perf = dpi?.Perf || {};
-    const dist = dpi?.Dist52w || {};
-    const tfc  = Array.isArray(dpi?.TechnicalOpinion?.TF_components)? dpi.TechnicalOpinion.TF_components.slice(0,8):[];
-
-    const peers = Array.isArray(dpi?.Peers_ETF) ? dpi.Peers_ETF.slice(0,8) : [];
-    const peersHtml = peers.length
-      ? `<div class="flex flex-wrap gap-1.5 mt-1">${peers.map(p=>`<span class="f1b-badge f1b-badge--neutral">${(p.ticker||'—')} · ${(p.rel||'peer')}</span>`).join('')}</div>`
-      : '<div class="text-slate-400 text-sm">—</div>';
-
-    const webp = Array.isArray(m?.ExternalSupplement) ? m.ExternalSupplement.slice(0,8) : [];
-    const webRows = webp.length ? webp.map(x=>`
-      <tr class="border-b last:border-0">
-        <td class="py-1 pr-2 font-semibold">${x.source||'—'}</td>
-        <td class="py-1 pr-2">${x.title||'—'}</td>
-        <td class="py-1 pr-2 text-slate-500">${x.ts||'—'}</td>
-        <td class="py-1"><a class="text-sky-700 underline decoration-dotted" href="${x.url||'#'}" target="_blank" rel="noopener">apri</a></td>
-      </tr>`).join('') : '<tr><td class="py-1 text-slate-400" colspan="4">—</td></tr>';
-
-    const summaryText = buildSummary(m);
-
-    body.innerHTML = `
-      <div class="space-y-3">
-        <div class="f2-tabbar noprint">
-          <button class="sbtn" data-tab="#f2-ov" aria-pressed="true"><i data-lucide="layout-grid"></i><span>Overview</span></button>
-          <button class="sbtn" data-tab="#f2-f1" aria-pressed="false"><i data-lucide="arrow-left-right"></i><span>Pass-through F1</span></button>
-          <button class="sbtn" data-tab="#f2-tk" aria-pressed="false"><i data-lucide="cpu"></i><span>Indicatori Ticker</span></button>
-          <button class="sbtn" data-tab="#f2-dp" aria-pressed="false"><i data-lucide="layers"></i><span>DPI Context</span></button>
-          <button class="sbtn" data-tab="#f2-wp" aria-pressed="false"><i data-lucide="globe"></i><span>WebProbe</span></button>
-          <button class="sbtn" data-tab="#f2-au" aria-pressed="false"><i data-lucide="badge-check"></i><span>Audit</span></button>
-          <button class="sbtn" data-tab="#f2-rs" aria-pressed="false"><i data-lucide="notes"></i><span>Resoconto</span></button>
-        </div>
-
-        <!-- OVERVIEW -->
-        <section id="f2-ov" class="f2-tab active">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
-            <div class="card p-3">
-              <div class="sec-h"><i data-lucide="sparkles"></i><span>Stato & metriche</span></div>
-              <div class="flex items-center gap-2">
-                <span class="${badgeMap[mcTone]||badgeMap.neutral}">Concordanza <button class="hx" data-k="F2_MacroConcordance">?</button> ${ (m?.MacroConcordance_F2!=null && !isNaN(m.MacroConcordance_F2)) ? Number(m.MacroConcordance_F2).toFixed(2) : '—' }</span>
-                <span class="${badgeMap[confTone]||badgeMap.neutral}">Confidence <button class="hx" data-k="F2_Confidence">?</button> ${ (m?.Confidence!=null && !isNaN(m.Confidence)) ? Number(m.Confidence).toFixed(2) : '—' }</span>
-              </div>
-              ${kv([
-                ['Ticker', (m?.Ticker||'—'), `<button class="hx" data-k="F2_Ticker">?</button>`],
-                ['MacroRegime (F1)', (m?.FromF1_pass?.MacroRegime||'—'), `<button class="hx" data-k="F2_MacroRegime">?</button>`],
-                ['Freshness', (m?.Meta?.FreshnessLabel||m?.Meta?.Freshness||'—'), `<button class="hx" data-k="Freshness">?</button>`],
-              ])}
-            </div>
-            <div class="card p-3">
-              <div class="sec-h"><i data-lucide="list-tree"></i><span>Read-through</span></div>
-              <div class="text-sm text-slate-700 leading-relaxed">${summaryText}</div>
-            </div>
-          </div>
-        </section>
-
-        <!-- PASS-THROUGH F1 -->
-        <section id="f2-f1" class="f2-tab">
-          <div class="card p-3">
-            <div class="sec-h"><i data-lucide="arrow-left-right"></i><span>Dati F1 pass-through</span></div>
-            ${passF1}
-          </div>
-        </section>
-
-        <!-- INDICATORI TICKER -->
-        <section id="f2-tk" class="f2-tab">
-          <div class="card p-3">
-            <div class="sec-h"><i data-lucide="cpu"></i><span>Indicatori sul ticker</span></div>
-            ${tickIndic}
-          </div>
-        </section>
-
-        <!-- DPI CONTEXT -->
-        <section id="f2-dp" class="f2-tab">
-          <div class="card p-3 space-y-2">
-            <div class="sec-h"><i data-lucide="layers"></i><span>Performance & Tecnici</span></div>
-            ${kv([
-              ['Perf 5d', (perf['5d']??'—'), `<button class="hx" data-k="F2_Perf">?</button>`],
-              ['Perf 1m', (perf['1m']??'—'), `<button class="hx" data-k="F2_Perf">?</button>`],
-              ['Perf 3m', (perf['3m']??'—'), `<button class="hx" data-k="F2_Perf">?</button>`],
-              ['Perf 6m', (perf['6m']??'—'), `<button class="hx" data-k="F2_Perf">?</button>`],
-              ['Perf YTD',(perf['YTD']??'—'), `<button class="hx" data-k="F2_Perf">?</button>`],
-              ['Perf 1y',(perf['1y']??'—'), `<button class="hx" data-k="F2_Perf">?</button>`],
-            ])}
-            ${kv([
-              ['Dist. da 52w High', (dist.fromHigh??'—'), `<button class="hx" data-k="F2_Dist52w">?</button>`],
-              ['Dist. da 52w Low',  (dist.fromLow??'—'),  `<button class="hx" data-k="F2_Dist52w">?</button>`],
-              ['Technical (Composite)', (dpi?.TechnicalOpinion?.Composite ?? '—'), `<button class="hx" data-k="F2_TechnicalComposite">?</button>`],
-              ['Timeframe (segnali)', (tfc.length ? tfc.join(' · ') : '—'), `<button class="hx" data-k="F2_TFcomponents">?</button>`],
-            ])}
-            <div class="sec-h mt-1"><i data-lucide="group"></i><span>Peers / ETF <button class="hx" data-k="F2_PeersETF">?</button></span></div>
-            ${peersHtml}
-          </div>
-        </section>
-
-        <!-- WEBPROBE -->
-        <section id="f2-wp" class="f2-tab">
-          <div class="card p-3 overflow-auto">
-            <div class="sec-h"><i data-lucide="globe"></i><span>Supplementi esterni <button class="hx" data-k="F2_WebProbe">?</button></span></div>
-            <table class="w-full text-sm">
-              <thead class="text-slate-500">
-                <tr class="border-b">
-                  <th class="text-left py-1 pr-2">Fonte</th>
-                  <th class="text-left py-1 pr-2">Titolo</th>
-                  <th class="text-left py-1 pr-2">TS</th>
-                  <th class="text-left py-1">Link</th>
-                </tr>
-              </thead>
-              <tbody>${webRows}</tbody>
-            </table>
-          </div>
-        </section>
-
-        <!-- AUDIT -->
-        <section id="f2-au" class="f2-tab">
-          <div class="card p-3">
-            <div class="sec-h"><i data-lucide="badge-check"></i><span>Audit & Qualità</span></div>
-            ${kv([
-              ['Version', (m?.Audit?.Version||'—'), `<button class="hx" data-k="F2_Audit_Version">?</button>`],
-              ['Integrity', (m?.Audit?.Integrity||'—'), `<button class="hx" data-k="F2_Audit_Integrity">?</button>`],
-              ['LagMax', (m?.Audit?.LagMax||'—'), `<button class="hx" data-k="F2_Audit_LagMax">?</button>`],
-              ['Missing (critici)', (Array.isArray(m?.Audit?.Missing)&&m.Audit.Missing.length ? m.Audit.Missing.join(', ') : '—'), `<button class="hx" data-k="F2_Audit_Missing">?</button>`],
-              ['Confidence_panel.Finviz', (m?.Audit?.Confidence_panel?.Finviz!=null? Number(m.Audit.Confidence_panel.Finviz).toFixed(2):'—'), `<button class="hx" data-k="F2_Audit_CpFinviz">?</button>`],
-              ['Confidence_panel.Barchart', (m?.Audit?.Confidence_panel?.Barchart!=null? Number(m.Audit.Confidence_panel.Barchart).toFixed(2):'—'), `<button class="hx" data-k="F2_Audit_CpBarchart">?</button>`],
-            ])}
-            <div class="sec-h mt-3"><i data-lucide="info"></i><span>Meta</span></div>
-            ${kv([
-              ['VersionTag', (m?.Meta?.VersionTag||m?.Meta?.Version||'—'), `<button class="hx" data-k="F2_Meta_VersionTag">?</button>`],
-              ['Timestamp', (m?.Meta?.Timestamp||'—') + (m?.Meta?.Timezone? ' ('+m.Meta.Timezone+')':''),
-                `<button class="hx" data-k="F2_Meta_Timestamp">?</button>`],
-              ['Sources', (Array.isArray(m?.Meta?.Sources)&&m.Meta.Sources.length ? m.Meta.Sources.join(', ') : '—'),
-                `<button class="hx" data-k="F2_Meta_Sources">?</button>`],
-              ['TapeNotes', (m?.Meta?.TapeNotes||m?.TapeNotes||'—'), `<button class="hx" data-k="F2_Meta_TapeNotes">?</button>`],
-              ['Missing critici', (Array.isArray(m?.Meta?.MissingCritici)&&m.Meta.MissingCritici.length ? m.Meta.MissingCritici.join(', ') : '—'),
-                `<button class="hx" data-k="F2_Meta_MissingCritici">?</button>`],
-            ])}
-          </div>
-        </section>
-
-        <!-- RESOCONTO -->
-        <section id="f2-rs" class="f2-tab">
-          <div class="card p-3">
-            <div class="sec-h"><i data-lucide="notes"></i><span>Resoconto sintetico</span></div>
-            <div class="text-sm text-slate-700 leading-relaxed">${summaryText}</div>
-          </div>
-        </section>
-      </div>
-    `;
-
-    // Tabs handler con stato “premuto”
-    const tabsBtns = body.querySelectorAll('.f2-tabbar [data-tab]');
-    const sections = ['#f2-ov','#f2-f1','#f2-tk','#f2-dp','#f2-wp','#f2-au','#f2-rs'].map(s=> body.querySelector(s));
-    const setActive = (btn)=>{
-      sections.forEach(sec=>sec?.classList.remove('active'));
-      body.querySelector(btn.getAttribute('data-tab'))?.classList.add('active');
-      tabsBtns.forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
-      btn.classList.add('active'); btn.setAttribute('aria-pressed','true');
-    };
-    const firstBtn = body.querySelector('.f2-tabbar [data-tab="#f2-ov"]');
-    if (firstBtn) setActive(firstBtn);
-    tabsBtns.forEach(btn=> btn.addEventListener('click', ()=> setActive(btn)));
-
-    if (window.lucide) lucide.createIcons();
-  }
-
-  // ===== MOUNT + API
-  function mountF2(){
-    const container = document.getElementById('mod-container');
-    const tpl = document.getElementById('tpl-f2-card');
-    if(!container || !tpl) return false;
-    const card = tpl.content.firstElementChild.cloneNode(true);
-    container.appendChild(card);
-
-    window.Tradelia = window.Tradelia || {};
-    window.Tradelia.F2 = {
-      update: (data)=> bindF2Card(card, data || {})
-    };
-
-    // placeholder vuoto
-    window.Tradelia.F2.update({});
-    return true;
-  }
-
-  if(!mountF2()){
-    const obs = new MutationObserver(()=>{ if(mountF2()) obs.disconnect(); });
-    obs.observe(document.documentElement, {childList:true, subtree:true});
-    document.addEventListener('DOMContentLoaded', ()=> mountF2(), {once:true});
-  }
-
-  // ===== Help “?”: definizioni F2 (aggiunte all’HelpX esistente senza toccare STEP 4/7)
-  if (window.Tradelia?.HelpX?.add){
-    const H = window.Tradelia.HelpX.add;
-
-    // Overview
-    H('F2_Ticker', { t:'Ticker (F2)', a:'Simbolo oggetto dello “Sguardo Principale”. Deve coincidere con il listing primario. Evitare formati vendor-specific (es. suffissi .US).', s:'Policy Ticker · listing primario' });
-    H('F2_MacroConcordance', { t:'Concordanza Macro (F2)', a:'Coerenza tra regime/tilt F1 e segnali del ticker (SCI_tkr, IPI_tkr, ICR_tkr, DPI). Soglie: > 0.30 verde · −0.30…0.30 giallo · < −0.30 rosso.', s:'Metodo interno F2 core v7.0' });
-    H('F2_Confidence', { t:'Confidence (F2)', a:'min(Confidence_panel, FeedSync_F1). UI: ≥ 0.80 verde · 0.70–0.80 giallo · < 0.70 rosso. Se < 0.80 lo stato è forzato HOLD lato UI.', s:'Governance qualità · policy UI' });
-    H('F2_MacroRegime', { t:'MacroRegime (da F1)', a:'Classificazione di contesto (Momentum / Momentum-light / Pullback) ereditata da F1.', s:'F1B Regime' });
-    H('Freshness', { t:'Freshness', a:'Staleness temporale del dato: T-0=oggi (verde), T-1=ieri (giallo), T-2+=rosso.', s:'Policy Qualità Dati' });
-
-    // Pass-through F1
-    H('F2_SCI', { t:'SCI (F1 pass)', a:'Signal Composite Index a livello macro-settoriale. Z-score/score composito su price/flow.', s:'F1 pipeline' });
-    H('F2_IPI', { t:'IPI (F1 pass)', a:'Inflows/Price Index a livello macro. Proxy per “sponsorship”.', s:'F1 pipeline' });
-    H('F2_OPI', { t:'OPI (F1 pass)', a:'Options/Positioning Index macro (se disponibile).', s:'F1 pipeline' });
-    H('F2_ICR_pre', { t:'ICR (pre, F1 pass)', a:'Initial Coherence Readout prima della localizzazione sul ticker.', s:'F1 pipeline' });
-    H('F2_GeoRisk', { t:'GeoRisk', a:'Tag di rischio geografico (se pertinente).', s:'F1 pipeline' });
-    H('F2_RiskWindow_F1', { t:'RiskWindow_F1', a:'Finestra di rischio operativa stimata da F1 (giorni).', s:'F1 pipeline' });
-
-    // Indicatori Ticker
-    H('F2_SCI_tkr', { t:'SCI_tkr', a:'Score composito sul ticker (price/volume/flow), normalizzato.', s:'F2 core' });
-    H('F2_IPI_tkr', { t:'IPI_tkr', a:'Indice di “sponsorship”/inflow locale sul ticker.', s:'F2 core' });
-    H('F2_ICR_tkr', { t:'ICR_tkr', a:'Coerenza locale tra segnali del ticker e contesto macro.', s:'F2 core' });
-    H('F2_RiskWindow_local', { t:'RiskWindow_local', a:'Finestra operativa stimata sul singolo titolo (giorni).', s:'F2 core' });
-    H('F2_RiskWindow', { t:'RiskWindow (globale)', a:'Finestra operativa coerente con F1/F2 (giorni).', s:'F2 core' });
-
-    // DPI Context
-    H('F2_Perf', { t:'Performance (rolling)', a:'Rendimenti rolling (5d, 1m, 3m, 6m, YTD, 1y). Segno/entità aiutano a leggere il momentum.', s:'DPI context' });
-    H('F2_Dist52w', { t:'Distanza da 52wH/L', a:'Distanza % da massimo/minimo a 52 settimane. Vicinanza ai massimi favorisce trend-following; ai minimi, mean reversion.', s:'DPI context' });
-    H('F2_TechnicalComposite', { t:'Technical Composite', a:'Sintesi dei segnali tecnici (p.es. trend, breadth interna, oscillatori).', s:'DPI technical' });
-    H('F2_TFcomponents', { t:'Timeframe components', a:'Elenco dei timeframe da cui deriva il giudizio tecnico (es. D/W/M).', s:'DPI technical' });
-    H('F2_PeersETF', { t:'Peers / ETF', a:'Vicini settoriali/tematici come contesto comparativo.', s:'DPI peers' });
-
-    // WebProbe
-    H('F2_WebProbe', { t:'Supplementi esterni', a:'Link selezionati (news, note, ricerche) con timestamp. Uso: colorare contesto, non sostituire i dati numerici.', s:'WebProbe policy' });
-
-    // Audit & Meta
-    H('F2_Audit_Version', { t:'Audit · Version', a:'Versione del pannello F2 generato.', s:'Governance' });
-    H('F2_Audit_Integrity', { t:'Audit · Integrity', a:'Sintesi integrità dati (completezza/consistenza).', s:'Governance' });
-    H('F2_Audit_LagMax', { t:'Audit · LagMax', a:'Ritardo massimo atteso tra fonti (min/ore).', s:'Governance' });
-    H('F2_Audit_Missing', { t:'Audit · Missing critici', a:'Campi critici mancanti; se impattano la confidence ⇒ REVIEW/HOLD.', s:'Governance' });
-    H('F2_Audit_CpFinviz', { t:'Confidence_panel · Finviz', a:'Confidence del pannello Finviz (se usato) per F2.', s:'Governance' });
-    H('F2_Audit_CpBarchart', { t:'Confidence_panel · Barchart', a:'Confidence del pannello Barchart (se usato) per F2.', s:'Governance' });
-
-    H('F2_Meta_VersionTag', { t:'Meta · VersionTag', a:'Tag/commit/versione per replicabilità.', s:'Audit trail' });
-    H('F2_Meta_Timestamp', { t:'Meta · Timestamp', a:'Istante locale di generazione; indicare timezone.', s:'Audit trail' });
-    H('F2_Meta_Sources', { t:'Meta · Sources', a:'Elenco sintetico delle fonti dati usate.', s:'Audit trail' });
-    H('F2_Meta_TapeNotes', { t:'Meta · TapeNotes', a:'Note su REG close (asta, slippage, anomalie).', s:'Microstruttura' });
-    H('F2_Meta_MissingCritici', { t:'Meta · Missing critici', a:'Campi chiave mancanti lato meta.', s:'Governance' });
-  }
-})();
-</script>
-
-
 
