@@ -1,21 +1,28 @@
 {
   "session": "REG",
-  "dateStart": "2025-10-14",
+  "dateStart": "2025-10-18",
   "dateEnd": "2025-10-21",
-  "ticker": "AAPL",
+  "ticker": "QYLD",
   "venue": "NASDAQ",
+
   "validation": { "label": "OK", "color": "green" },
+
   "versionTag": "swing-v5.0",
-  "syncID": "AAPL_20251021_F1",
+  "syncID": "QYLD_20251021_F1",
   "freshnessDays": 1,
-  "ocr_conf": 0.99,
-  "dataIntegrity": 0.98,
-  "feedSync": 0.99,
-  "confidence_final": { "value": 0.86, "color": "green" },
-  "state": { "label": "ACTIVE", "color": "green" },
-  "tapeNotes": "AuctionShare 12.4% · Closing print stabile",
+
+  "ocr_conf": 0.98,
+  "dataIntegrity": 0.95,
+  "feedSync": 0.97,
+
+  "confidence_final": { "value": 0.79, "color": "yellow" },
+  "state": { "label": "HOLD", "color": "yellow" },
+
+  "tapeNotes": "AuctionShare 21.3% · VWAP tight",
   "missing": [],
+
   "colorize": [
-    { "id": "#H-TapeNotes", "mode": "tone", "color": "green", "text": "Asta regolare, slippage minimo" }
+    { "id": "#H-TapeNotes", "mode": "tone",  "color": "yellow", "text": "AuctionShare elevata (attenzione)" },
+    { "id": "#H-Missing",   "mode": "badge", "color": "green",  "label": "COMPLETO" }
   ]
 }
