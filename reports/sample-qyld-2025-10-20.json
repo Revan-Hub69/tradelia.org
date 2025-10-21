@@ -1,25 +1,21 @@
 {
-  "Header": {
-    "Ticker": "QYLD",
-    "Date": "2025-10-20",
-    "AuditPathID": "SWG25_ALL_QYLD_20251020_0001",
-    "Version": "v1.0",
-    "State": "ACTIVE",
-    "Timestamp": "2025-10-20T10:00:00Z",
-    "Analyst": "Swing Master AI",
-    "Session": "REG (adjusted)",
-    "StartDate": "2025-10-14",
-    "EndDate": "2025-10-20",
-    "Venue": "NASDAQ",
-    "Validation": "OK / ADR-venue: —",
-    "VersionTag": "F3-v7.3",
-    "SyncID": "QYLD_20251020_F3",
-    "Freshness": "OK",
-    "OCR_Conf": 0.98,
-    "DataIntegrity": 0.94,
-    "FeedSync": 0.91,
-    "ConfidenceFinal": 0.91,
-    "TapeNotes": "AuctionShare%=12; Intensity/min=3.1; LastMinuteVWAP=ok; CloseStickiness=alto",
-    "Missing": "n/d"
-  }
+  "session": "REG",
+  "dateStart": "2025-10-14",
+  "dateEnd": "2025-10-21",
+  "ticker": "AAPL",
+  "venue": "NASDAQ",
+  "validation": { "label": "OK", "color": "green" },
+  "versionTag": "swing-v5.0",
+  "syncID": "AAPL_20251021_F1",
+  "freshnessDays": 1,
+  "ocr_conf": 0.99,
+  "dataIntegrity": 0.98,
+  "feedSync": 0.99,
+  "confidence_final": { "value": 0.86, "color": "green" },
+  "state": { "label": "ACTIVE", "color": "green" },
+  "tapeNotes": "AuctionShare 12.4% · Closing print stabile",
+  "missing": [],
+  "colorize": [
+    { "id": "#H-TapeNotes", "mode": "tone", "color": "green", "text": "Asta regolare, slippage minimo" }
+  ]
 }
