@@ -1308,6 +1308,10 @@
      STEP 7/7 — MODULO F2 (card ultra-compatta + drawer a TAB + resoconto)
      >>> blocco completo e autocontenuto
      ========================= -->
+<!-- =========================
+     STEP 7/7 — MODULO F2 (Sguardo Principale · Override)
+     >>> card ultra-compatta + drawer a TAB + resoconto + help "?" su tutte le voci
+     ========================= -->
 
 <style>
   /* === F2 Card (mobile-first, ultra-compatta) === */
@@ -1319,7 +1323,7 @@
   .f2-line{ display:flex; align-items:center; justify-content:space-between; gap:.75rem }
   .f2-left{ display:flex; align-items:center; gap:.65rem; min-width:0 }
   .f2-k{ display:flex; flex-direction:column; min-width:0 }
-  .f2-lab{ font-size:11px; color:#64748b }
+  .f2-lab{ font-size:11px; color:#64748b; display:flex; align-items:center; gap:.35rem }
   .f2-val{ font-size:13px; font-weight:700; color:#0f172a; font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace; white-space:nowrap }
   .f2-val.truncate{ overflow:hidden; text-overflow:ellipsis }
 
@@ -1336,7 +1340,7 @@
     #mod-container[data-view="grid"] .f2-cta .sbtn{ padding:.28rem .48rem; font-size:12px }
   }
 
-  /* === Drawer Tabs (effetto “premuto” allineato a F1B) === */
+  /* === Drawer Tabs (effetto “premuto”, allineato a F1B) === */
   .f2-tabbar{ position:sticky; top:0; z-index:10; display:flex; flex-wrap:wrap; gap:.35rem; background:#f8fafc;
     padding:.5rem; border-radius:10px; border:1px solid #e5e7eb }
   .f2-tabbar .sbtn{
@@ -1357,9 +1361,9 @@
   /* Tabelle compatte nel drawer */
   .tbl-kv{ width:100%; font-size:13px; border-collapse:separate; border-spacing:0 .15rem }
   .tbl-kv td{ padding:.15rem .25rem .15rem 0; vertical-align:top }
-  .tbl-kv td:first-child{ color:#64748b; width:42% }
+  .tbl-kv td:first-child{ color:#64748b; width:44%; display:flex; align-items:center; gap:.35rem }
 
-  /* Sparkline condivisa */
+  /* Sparkline condivisa (se servisse) */
   .f2-spark{ width:100%; height:32px; display:block }
 </style>
 
@@ -1367,7 +1371,7 @@
 <template id="tpl-f2-card">
   <article class="f2-card" role="group" aria-labelledby="f2-title">
     <header class="f2-head">
-      <h3 id="f2-title" class="f2-title">F2 — Concordanza Macro · Ticker</h3>
+      <h3 id="f2-title" class="f2-title">F2 — Sguardo Principale (Override)</h3>
       <!-- riuso palette badge F1B: f1b-badge--* -->
       <span class="f1b-badge f1b-badge--neutral" data-f2="state-badge">NEUTRO</span>
     </header>
@@ -1377,13 +1381,13 @@
         <div class="f2-left min-w-0">
           <span class="f2-dot f2-dot-n" aria-hidden="true" data-f2="mc-dot"></span>
           <div class="f2-k min-w-0">
-            <div class="f2-lab">Ticker</div>
+            <div class="f2-lab">Ticker <button class="hx" data-k="F2_Ticker">?</button></div>
             <div class="f2-val truncate" data-f2="ticker">—</div>
           </div>
         </div>
 
         <div class="f2-k">
-          <div class="f2-lab">Concordanza</div>
+          <div class="f2-lab">Concordanza <button class="hx" data-k="F2_MacroConcordance">?</button></div>
           <div class="f2-val" data-f2="mc">—</div>
         </div>
 
@@ -1393,7 +1397,7 @@
       </div>
 
       <div class="mt-2 flex items-center gap-1.5">
-        <span class="text-[11px] text-slate-500">Confidence:</span>
+        <span class="text-[11px] text-slate-500">Confidence <button class="hx" data-k="F2_Confidence">?</button>:</span>
         <span class="f1b-badge f1b-badge--neutral" data-f2="conf">—</span>
       </div>
     </div>
@@ -1467,15 +1471,15 @@
     const comp   = m?.F2_Ticker?.DPI_context?.TechnicalOpinion?.Composite;
 
     const bits=[];
-    bits.push(`Per ${tkr} la concordanza macro è ${mc==null?'n/d': (mc>0?'positiva':'negativa/mista')} ${mc==null?'':'('+(Number(mc).toFixed(2))+')'}.`);
-    if (reg) bits.push(`Il regime F1 è **${reg}**.`);
+    bits.push(`F2 (Sguardo Principale) su ${tkr}: concordanza ${mc==null?'n/d': (mc>0?'positiva':'negativa/mista')} ${mc==null?'':'('+(Number(mc).toFixed(2))+')'}.`);
+    if (reg) bits.push(`Regime F1: **${reg}**.`);
     if (sci!=null || icr!=null || ipi!=null){
-      bits.push(`Indicatori ticker: ${sci!=null?`SCI ${Number(sci).toFixed(2)}`:''}${(icr!=null||ipi!=null)?' · ':''}${icr!=null?`ICR ${Number(icr).toFixed(2)}`:''}${ipi!=null?' · IPI '+Number(ipi).toFixed(2):''}.`);
+      bits.push(`Indic.: ${sci!=null?`SCI ${Number(sci).toFixed(2)}`:''}${(icr!=null||ipi!=null)?' · ':''}${icr!=null?`ICR ${Number(icr).toFixed(2)}`:''}${ipi!=null?' · IPI '+Number(ipi).toFixed(2):''}.`);
     }
     if (perf1m || distH || comp){
-      bits.push(`Contesto: ${perf1m?`1M ${perf1m}`:''}${distH?`${perf1m?', ':''}dist. da 52wH ${distH}`:''}${comp?`${(perf1m||distH)?', ':''}tecnico ${comp}`:''}.`);
+      bits.push(`Contesto: ${perf1m?`1M ${perf1m}`:''}${distH?`${perf1m?', ':''}dist. 52wH ${distH}`:''}${comp?`${(perf1m||distH)?', ':''}tecnico ${comp}`:''}.`);
     }
-    if (conf!=null) bits.push(`Confidence ${Number(conf).toFixed(2)} (policy HOLD se < 0.80).`);
+    if (conf!=null) bits.push(`Confidence ${Number(conf).toFixed(2)} (HOLD UI se < 0.80).`);
     return bits.join(' ');
   }
 
@@ -1516,10 +1520,10 @@
     if (window.lucide) lucide.createIcons();
   }
 
-  // ===== Drawer Renderer (TAB + contenuti)
+  // ===== Drawer Renderer (TAB + contenuti + ? su tutte le voci)
   function renderF2Drawer(m){
     const body = document.getElementById('drawer-body');
-    document.getElementById('drawer-title').textContent = 'F2 — Concordanza Macro · Ticker';
+    document.getElementById('drawer-title').textContent = 'F2 — Sguardo Principale (Override)';
     document.getElementById('drawer-sub').textContent   = m?.Ticker ? m.Ticker : '—';
 
     const fmt=(x,d=2)=> (x==null||x==='—') ? '—' : (typeof x==='number'? x.toFixed(d):x);
@@ -1528,38 +1532,41 @@
 
     const kv = (rows)=>`
       <table class="tbl-kv">
-        ${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}
+        ${rows.map(r=>`<tr><td><span>${r[0]}</span> ${r[2]||''}</td><td>${r[1]}</td></tr>`).join('')}
       </table>`;
 
     const passF1 = kv([
-      ['MacroRegime', (m?.FromF1_pass?.MacroRegime ?? '—')],
-      ['SCI', fmt(m?.FromF1_pass?.SCI)],
-      ['IPI', fmt(m?.FromF1_pass?.IPI)],
-      ['OPI', fmt(m?.FromF1_pass?.OPI)],
-      ['ICR (pre)', fmt(m?.FromF1_pass?.ICR_pre)],
-      ['GeoRisk', (m?.FromF1_pass?.GeoRisk ?? '—')],
-      ['RiskWindow_F1', fmt(m?.FromF1_pass?.RiskWindow_F1,0)]
+      ['MacroRegime', (m?.FromF1_pass?.MacroRegime ?? '—'), `<button class="hx" data-k="F2_MacroRegime">?</button>`],
+      ['SCI (F1 pass)', fmt(m?.FromF1_pass?.SCI), `<button class="hx" data-k="F2_SCI">?</button>`],
+      ['IPI (F1 pass)', fmt(m?.FromF1_pass?.IPI), `<button class="hx" data-k="F2_IPI">?</button>`],
+      ['OPI (F1 pass)', fmt(m?.FromF1_pass?.OPI), `<button class="hx" data-k="F2_OPI">?</button>`],
+      ['ICR (pre, F1 pass)', fmt(m?.FromF1_pass?.ICR_pre), `<button class="hx" data-k="F2_ICR_pre">?</button>`],
+      ['GeoRisk', (m?.FromF1_pass?.GeoRisk ?? '—'), `<button class="hx" data-k="F2_GeoRisk">?</button>`],
+      ['RiskWindow_F1', fmt(m?.FromF1_pass?.RiskWindow_F1,0), `<button class="hx" data-k="F2_RiskWindow_F1">?</button>`],
     ]);
 
     const tickIndic = kv([
-      ['IPI_tkr', fmt(m?.F2_Ticker?.IPI_tkr)],
-      ['SCI_tkr', fmt(m?.F2_Ticker?.SCI_tkr)],
-      ['ICR_tkr', fmt(m?.F2_Ticker?.ICR_tkr)],
-      ['RiskWindow_local', fmt(m?.F2_Ticker?.RiskWindow_local,0)],
-      ['RiskWindow', fmt(m?.F2_Ticker?.RiskWindow,0)]
+      ['Ticker', (m?.Ticker || '—'), `<button class="hx" data-k="F2_Ticker">?</button>`],
+      ['Concordanza (F2)', (m?.MacroConcordance_F2!=null && !isNaN(m.MacroConcordance_F2)) ? Number(m.MacroConcordance_F2).toFixed(2) : '—', `<button class="hx" data-k="F2_MacroConcordance">?</button>`],
+      ['Confidence (F2)', (m?.Confidence!=null && !isNaN(m.Confidence)) ? Number(m.Confidence).toFixed(2) : '—', `<button class="hx" data-k="F2_Confidence">?</button>`],
+      ['SCI_tkr', fmt(m?.F2_Ticker?.SCI_tkr), `<button class="hx" data-k="F2_SCI_tkr">?</button>`],
+      ['IPI_tkr', fmt(m?.F2_Ticker?.IPI_tkr), `<button class="hx" data-k="F2_IPI_tkr">?</button>`],
+      ['ICR_tkr', fmt(m?.F2_Ticker?.ICR_tkr), `<button class="hx" data-k="F2_ICR_tkr">?</button>`],
+      ['RiskWindow_local', fmt(m?.F2_Ticker?.RiskWindow_local,0), `<button class="hx" data-k="F2_RiskWindow_local">?</button>`],
+      ['RiskWindow (globale)', fmt(m?.F2_Ticker?.RiskWindow,0), `<button class="hx" data-k="F2_RiskWindow">?</button>`],
     ]);
 
     const dpi = m?.F2_Ticker?.DPI_context || {};
     const perf = dpi?.Perf || {};
     const dist = dpi?.Dist52w || {};
-    const tfc  = Array.isArray(dpi?.TechnicalOpinion?.TF_components)? dpi.TechnicalOpinion.TF_components.slice(0,6):[];
+    const tfc  = Array.isArray(dpi?.TechnicalOpinion?.TF_components)? dpi.TechnicalOpinion.TF_components.slice(0,8):[];
 
-    const peers = Array.isArray(dpi?.Peers_ETF) ? dpi.Peers_ETF.slice(0,6) : [];
+    const peers = Array.isArray(dpi?.Peers_ETF) ? dpi.Peers_ETF.slice(0,8) : [];
     const peersHtml = peers.length
       ? `<div class="flex flex-wrap gap-1.5 mt-1">${peers.map(p=>`<span class="f1b-badge f1b-badge--neutral">${(p.ticker||'—')} · ${(p.rel||'peer')}</span>`).join('')}</div>`
       : '<div class="text-slate-400 text-sm">—</div>';
 
-    const webp = Array.isArray(m?.ExternalSupplement) ? m.ExternalSupplement.slice(0,6) : [];
+    const webp = Array.isArray(m?.ExternalSupplement) ? m.ExternalSupplement.slice(0,8) : [];
     const webRows = webp.length ? webp.map(x=>`
       <tr class="border-b last:border-0">
         <td class="py-1 pr-2 font-semibold">${x.source||'—'}</td>
@@ -1588,14 +1595,14 @@
             <div class="card p-3">
               <div class="sec-h"><i data-lucide="sparkles"></i><span>Stato & metriche</span></div>
               <div class="flex items-center gap-2">
-                <span class="${badgeMap[mcTone]||badgeMap.neutral}">Concordanza ${ (m?.MacroConcordance_F2!=null && !isNaN(m.MacroConcordance_F2)) ? Number(m.MacroConcordance_F2).toFixed(2) : '—' }</span>
-                <span class="${badgeMap[confTone]||badgeMap.neutral}">Confidence ${ (m?.Confidence!=null && !isNaN(m.Confidence)) ? Number(m.Confidence).toFixed(2) : '—' }</span>
+                <span class="${badgeMap[mcTone]||badgeMap.neutral}">Concordanza <button class="hx" data-k="F2_MacroConcordance">?</button> ${ (m?.MacroConcordance_F2!=null && !isNaN(m.MacroConcordance_F2)) ? Number(m.MacroConcordance_F2).toFixed(2) : '—' }</span>
+                <span class="${badgeMap[confTone]||badgeMap.neutral}">Confidence <button class="hx" data-k="F2_Confidence">?</button> ${ (m?.Confidence!=null && !isNaN(m.Confidence)) ? Number(m.Confidence).toFixed(2) : '—' }</span>
               </div>
-              <div class="mt-2">${kv([
-                ['Ticker', (m?.Ticker||'—')],
-                ['MacroRegime (F1)', (m?.FromF1_pass?.MacroRegime||'—')],
-                ['Freshness', (m?.Meta?.FreshnessLabel||m?.Meta?.Freshness||'—')]
-              ])}</div>
+              ${kv([
+                ['Ticker', (m?.Ticker||'—'), `<button class="hx" data-k="F2_Ticker">?</button>`],
+                ['MacroRegime (F1)', (m?.FromF1_pass?.MacroRegime||'—'), `<button class="hx" data-k="F2_MacroRegime">?</button>`],
+                ['Freshness', (m?.Meta?.FreshnessLabel||m?.Meta?.Freshness||'—'), `<button class="hx" data-k="Freshness">?</button>`],
+              ])}
             </div>
             <div class="card p-3">
               <div class="sec-h"><i data-lucide="list-tree"></i><span>Read-through</span></div>
@@ -1625,15 +1632,20 @@
           <div class="card p-3 space-y-2">
             <div class="sec-h"><i data-lucide="layers"></i><span>Performance & Tecnici</span></div>
             ${kv([
-              ['Perf 5d', (perf['5d']??'—')], ['Perf 1m', (perf['1m']??'—')], ['Perf 3m', (perf['3m']??'—')],
-              ['Perf 6m', (perf['6m']??'—')], ['Perf YTD',(perf['YTD']??'—')], ['Perf 1y',(perf['1y']??'—')]
+              ['Perf 5d', (perf['5d']??'—'), `<button class="hx" data-k="F2_Perf">?</button>`],
+              ['Perf 1m', (perf['1m']??'—'), `<button class="hx" data-k="F2_Perf">?</button>`],
+              ['Perf 3m', (perf['3m']??'—'), `<button class="hx" data-k="F2_Perf">?</button>`],
+              ['Perf 6m', (perf['6m']??'—'), `<button class="hx" data-k="F2_Perf">?</button>`],
+              ['Perf YTD',(perf['YTD']??'—'), `<button class="hx" data-k="F2_Perf">?</button>`],
+              ['Perf 1y',(perf['1y']??'—'), `<button class="hx" data-k="F2_Perf">?</button>`],
             ])}
             ${kv([
-              ['Dist. da 52w High', (dist.fromHigh??'—')], ['Dist. da 52w Low', (dist.fromLow??'—')],
-              ['Technical (Composite)', (dpi?.TechnicalOpinion?.Composite ?? '—')],
-              ['Timeframe (segnali)', (tfc.length ? tfc.join(' · ') : '—')]
+              ['Dist. da 52w High', (dist.fromHigh??'—'), `<button class="hx" data-k="F2_Dist52w">?</button>`],
+              ['Dist. da 52w Low',  (dist.fromLow??'—'),  `<button class="hx" data-k="F2_Dist52w">?</button>`],
+              ['Technical (Composite)', (dpi?.TechnicalOpinion?.Composite ?? '—'), `<button class="hx" data-k="F2_TechnicalComposite">?</button>`],
+              ['Timeframe (segnali)', (tfc.length ? tfc.join(' · ') : '—'), `<button class="hx" data-k="F2_TFcomponents">?</button>`],
             ])}
-            <div class="sec-h mt-1"><i data-lucide="group"></i><span>Peers / ETF</span></div>
+            <div class="sec-h mt-1"><i data-lucide="group"></i><span>Peers / ETF <button class="hx" data-k="F2_PeersETF">?</button></span></div>
             ${peersHtml}
           </div>
         </section>
@@ -1641,7 +1653,7 @@
         <!-- WEBPROBE -->
         <section id="f2-wp" class="f2-tab">
           <div class="card p-3 overflow-auto">
-            <div class="sec-h"><i data-lucide="globe"></i><span>Supplementi esterni</span></div>
+            <div class="sec-h"><i data-lucide="globe"></i><span>Supplementi esterni <button class="hx" data-k="F2_WebProbe">?</button></span></div>
             <table class="w-full text-sm">
               <thead class="text-slate-500">
                 <tr class="border-b">
@@ -1661,24 +1673,23 @@
           <div class="card p-3">
             <div class="sec-h"><i data-lucide="badge-check"></i><span>Audit & Qualità</span></div>
             ${kv([
-              ['Version', (m?.Audit?.Version||'—')],
-              ['Integrity', (m?.Audit?.Integrity||'—')],
-              ['LagMax', (m?.Audit?.LagMax||'—')],
-              ['Missing (critici)', (Array.isArray(m?.Audit?.Missing)&&m.Audit.Missing.length ? m.Audit.Missing.join(', ') : '—')],
-              ['Confidence_panel.Finviz', (m?.Audit?.Confidence_panel?.Finviz!=null? Number(m.Audit.Confidence_panel.Finviz).toFixed(2):'—')],
-              ['Confidence_panel.Barchart', (m?.Audit?.Confidence_panel?.Barchart!=null? Number(m.Audit.Confidence_panel.Barchart).toFixed(2):'—')]
+              ['Version', (m?.Audit?.Version||'—'), `<button class="hx" data-k="F2_Audit_Version">?</button>`],
+              ['Integrity', (m?.Audit?.Integrity||'—'), `<button class="hx" data-k="F2_Audit_Integrity">?</button>`],
+              ['LagMax', (m?.Audit?.LagMax||'—'), `<button class="hx" data-k="F2_Audit_LagMax">?</button>`],
+              ['Missing (critici)', (Array.isArray(m?.Audit?.Missing)&&m.Audit.Missing.length ? m.Audit.Missing.join(', ') : '—'), `<button class="hx" data-k="F2_Audit_Missing">?</button>`],
+              ['Confidence_panel.Finviz', (m?.Audit?.Confidence_panel?.Finviz!=null? Number(m.Audit.Confidence_panel.Finviz).toFixed(2):'—'), `<button class="hx" data-k="F2_Audit_CpFinviz">?</button>`],
+              ['Confidence_panel.Barchart', (m?.Audit?.Confidence_panel?.Barchart!=null? Number(m.Audit.Confidence_panel.Barchart).toFixed(2):'—'), `<button class="hx" data-k="F2_Audit_CpBarchart">?</button>`],
             ])}
-            <div class="mt-2 text-[12px] text-slate-500">
-              Nota: la Confidence F2 è min(Confidence_panel, FeedSync_F1). Se &lt; 0.80, lo stato operativo è forzato a HOLD lato UI.
-            </div>
-
             <div class="sec-h mt-3"><i data-lucide="info"></i><span>Meta</span></div>
             ${kv([
-              ['VersionTag', (m?.Meta?.VersionTag||m?.Meta?.Version||'—')],
-              ['Timestamp', (m?.Meta?.Timestamp||'—') + (m?.Meta?.Timezone? ' ('+m.Meta.Timezone+')':'')],
-              ['Sources', (Array.isArray(m?.Meta?.Sources)&&m.Meta.Sources.length ? m.Meta.Sources.join(', ') : '—')],
-              ['TapeNotes', (m?.Meta?.TapeNotes||m?.TapeNotes||'—')],
-              ['Missing critici', (Array.isArray(m?.Meta?.MissingCritici)&&m.Meta.MissingCritici.length ? m.Meta.MissingCritici.join(', ') : '—')]
+              ['VersionTag', (m?.Meta?.VersionTag||m?.Meta?.Version||'—'), `<button class="hx" data-k="F2_Meta_VersionTag">?</button>`],
+              ['Timestamp', (m?.Meta?.Timestamp||'—') + (m?.Meta?.Timezone? ' ('+m.Meta.Timezone+')':''),
+                `<button class="hx" data-k="F2_Meta_Timestamp">?</button>`],
+              ['Sources', (Array.isArray(m?.Meta?.Sources)&&m.Meta.Sources.length ? m.Meta.Sources.join(', ') : '—'),
+                `<button class="hx" data-k="F2_Meta_Sources">?</button>`],
+              ['TapeNotes', (m?.Meta?.TapeNotes||m?.TapeNotes||'—'), `<button class="hx" data-k="F2_Meta_TapeNotes">?</button>`],
+              ['Missing critici', (Array.isArray(m?.Meta?.MissingCritici)&&m.Meta.MissingCritici.length ? m.Meta.MissingCritici.join(', ') : '—'),
+                `<button class="hx" data-k="F2_Meta_MissingCritici">?</button>`],
             ])}
           </div>
         </section>
@@ -1692,9 +1703,6 @@
         </section>
       </div>
     `;
-
-    // Sparkline (se hai serie F2, agganciale qui)
-    // const svg = body.querySelector('#f2-spark'); sparkline(svg, m?.Series?.Something || []);
 
     // Tabs handler con stato “premuto”
     const tabsBtns = body.querySelectorAll('.f2-tabbar [data-tab]');
@@ -1736,20 +1744,58 @@
     document.addEventListener('DOMContentLoaded', ()=> mountF2(), {once:true});
   }
 
-  // ===== Help “?”: definizioni F2 (se HelpX è presente)
+  // ===== Help “?”: definizioni F2 (aggiunte all’HelpX esistente senza toccare STEP 4/7)
   if (window.Tradelia?.HelpX?.add){
-    window.Tradelia.HelpX.add('F2_MacroConcordance', {
-      t:'Concordanza Macro (F2)',
-      a:'Misura di coerenza tra regime/tilt macro (F1) e segnali del ticker (SCI_tkr, IPI_tkr, ICR_tkr, DPI). Soglie: >0.30 verde · −0.30…0.30 giallo · <−0.30 rosso.',
-      s:'Metodo interno F2 core v7.0'
-    });
-    window.Tradelia.HelpX.add('F2_Confidence', {
-      t:'Confidence F2',
-      a:'min(Confidence_panel, FeedSync_F1). Soglie UI: ≥0.80 verde · 0.70–0.80 giallo · <0.70 rosso; se <0.80 lo stato è forzato HOLD.',
-      s:'Governance qualità · policy UI'
-    });
+    const H = window.Tradelia.HelpX.add;
+
+    // Overview
+    H('F2_Ticker', { t:'Ticker (F2)', a:'Simbolo oggetto dello “Sguardo Principale”. Deve coincidere con il listing primario. Evitare formati vendor-specific (es. suffissi .US).', s:'Policy Ticker · listing primario' });
+    H('F2_MacroConcordance', { t:'Concordanza Macro (F2)', a:'Coerenza tra regime/tilt F1 e segnali del ticker (SCI_tkr, IPI_tkr, ICR_tkr, DPI). Soglie: > 0.30 verde · −0.30…0.30 giallo · < −0.30 rosso.', s:'Metodo interno F2 core v7.0' });
+    H('F2_Confidence', { t:'Confidence (F2)', a:'min(Confidence_panel, FeedSync_F1). UI: ≥ 0.80 verde · 0.70–0.80 giallo · < 0.70 rosso. Se < 0.80 lo stato è forzato HOLD lato UI.', s:'Governance qualità · policy UI' });
+    H('F2_MacroRegime', { t:'MacroRegime (da F1)', a:'Classificazione di contesto (Momentum / Momentum-light / Pullback) ereditata da F1.', s:'F1B Regime' });
+    H('Freshness', { t:'Freshness', a:'Staleness temporale del dato: T-0=oggi (verde), T-1=ieri (giallo), T-2+=rosso.', s:'Policy Qualità Dati' });
+
+    // Pass-through F1
+    H('F2_SCI', { t:'SCI (F1 pass)', a:'Signal Composite Index a livello macro-settoriale. Z-score/score composito su price/flow.', s:'F1 pipeline' });
+    H('F2_IPI', { t:'IPI (F1 pass)', a:'Inflows/Price Index a livello macro. Proxy per “sponsorship”.', s:'F1 pipeline' });
+    H('F2_OPI', { t:'OPI (F1 pass)', a:'Options/Positioning Index macro (se disponibile).', s:'F1 pipeline' });
+    H('F2_ICR_pre', { t:'ICR (pre, F1 pass)', a:'Initial Coherence Readout prima della localizzazione sul ticker.', s:'F1 pipeline' });
+    H('F2_GeoRisk', { t:'GeoRisk', a:'Tag di rischio geografico (se pertinente).', s:'F1 pipeline' });
+    H('F2_RiskWindow_F1', { t:'RiskWindow_F1', a:'Finestra di rischio operativa stimata da F1 (giorni).', s:'F1 pipeline' });
+
+    // Indicatori Ticker
+    H('F2_SCI_tkr', { t:'SCI_tkr', a:'Score composito sul ticker (price/volume/flow), normalizzato.', s:'F2 core' });
+    H('F2_IPI_tkr', { t:'IPI_tkr', a:'Indice di “sponsorship”/inflow locale sul ticker.', s:'F2 core' });
+    H('F2_ICR_tkr', { t:'ICR_tkr', a:'Coerenza locale tra segnali del ticker e contesto macro.', s:'F2 core' });
+    H('F2_RiskWindow_local', { t:'RiskWindow_local', a:'Finestra operativa stimata sul singolo titolo (giorni).', s:'F2 core' });
+    H('F2_RiskWindow', { t:'RiskWindow (globale)', a:'Finestra operativa coerente con F1/F2 (giorni).', s:'F2 core' });
+
+    // DPI Context
+    H('F2_Perf', { t:'Performance (rolling)', a:'Rendimenti rolling (5d, 1m, 3m, 6m, YTD, 1y). Segno/entità aiutano a leggere il momentum.', s:'DPI context' });
+    H('F2_Dist52w', { t:'Distanza da 52wH/L', a:'Distanza % da massimo/minimo a 52 settimane. Vicinanza ai massimi favorisce trend-following; ai minimi, mean reversion.', s:'DPI context' });
+    H('F2_TechnicalComposite', { t:'Technical Composite', a:'Sintesi dei segnali tecnici (p.es. trend, breadth interna, oscillatori).', s:'DPI technical' });
+    H('F2_TFcomponents', { t:'Timeframe components', a:'Elenco dei timeframe da cui deriva il giudizio tecnico (es. D/W/M).', s:'DPI technical' });
+    H('F2_PeersETF', { t:'Peers / ETF', a:'Vicini settoriali/tematici come contesto comparativo.', s:'DPI peers' });
+
+    // WebProbe
+    H('F2_WebProbe', { t:'Supplementi esterni', a:'Link selezionati (news, note, ricerche) con timestamp. Uso: colorare contesto, non sostituire i dati numerici.', s:'WebProbe policy' });
+
+    // Audit & Meta
+    H('F2_Audit_Version', { t:'Audit · Version', a:'Versione del pannello F2 generato.', s:'Governance' });
+    H('F2_Audit_Integrity', { t:'Audit · Integrity', a:'Sintesi integrità dati (completezza/consistenza).', s:'Governance' });
+    H('F2_Audit_LagMax', { t:'Audit · LagMax', a:'Ritardo massimo atteso tra fonti (min/ore).', s:'Governance' });
+    H('F2_Audit_Missing', { t:'Audit · Missing critici', a:'Campi critici mancanti; se impattano la confidence ⇒ REVIEW/HOLD.', s:'Governance' });
+    H('F2_Audit_CpFinviz', { t:'Confidence_panel · Finviz', a:'Confidence del pannello Finviz (se usato) per F2.', s:'Governance' });
+    H('F2_Audit_CpBarchart', { t:'Confidence_panel · Barchart', a:'Confidence del pannello Barchart (se usato) per F2.', s:'Governance' });
+
+    H('F2_Meta_VersionTag', { t:'Meta · VersionTag', a:'Tag/commit/versione per replicabilità.', s:'Audit trail' });
+    H('F2_Meta_Timestamp', { t:'Meta · Timestamp', a:'Istante locale di generazione; indicare timezone.', s:'Audit trail' });
+    H('F2_Meta_Sources', { t:'Meta · Sources', a:'Elenco sintetico delle fonti dati usate.', s:'Audit trail' });
+    H('F2_Meta_TapeNotes', { t:'Meta · TapeNotes', a:'Note su REG close (asta, slippage, anomalie).', s:'Microstruttura' });
+    H('F2_Meta_MissingCritici', { t:'Meta · Missing critici', a:'Campi chiave mancanti lato meta.', s:'Governance' });
   }
 })();
 </script>
+
 
 
