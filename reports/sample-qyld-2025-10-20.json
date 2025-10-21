@@ -20,10 +20,7 @@
       { "id": "#H-TapeNotes", "mode": "tone",  "color": "yellow", "text": "Asta vivace (attenzione)" },
       { "id": "#H-Missing",   "mode": "badge", "color": "green",  "label": "COMPLETO" }
     ]
-  }
-}
-{
-
+  },
   "F1B": {
     "Meta": {
       "AuditPathID": "F1B-20251021-IT-001",
@@ -63,9 +60,9 @@
     "Metrics": {
       "Breadth1M": {
         "positive_count": 6,
-        "total": 10,
-        "ratio": 0.6,
-        "label": "60% positivi",
+        "total": 11,
+        "ratio": 0.545,
+        "label": "55% positivi",
         "badge": { "label": "POSITIVO", "color": "green" }
       },
       "RiskTilt": {
@@ -96,7 +93,7 @@
       },
       "Classification": {
         "StrategyMode": "Momentum-light",
-        "badge": { "label": "MOMENTUM-LIGHT", "color": "green" }
+        "badge": { "label": "MOMENTUM-LIGHT", "color": "yellow" }
       }
     },
     "Leadership": {
@@ -114,7 +111,7 @@
     "UI": {
       "Display": {
         "VIX_Label": "18.23",
-        "Breadth_Label": "60% positivi",
+        "Breadth_Label": "55% positivi",
         "RiskTilt_Label": "+5.17 pp verso difensivi"
       },
       "Badges": {
