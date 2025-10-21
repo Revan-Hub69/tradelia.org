@@ -93,3 +93,22 @@
 
   document.addEventListener("DOMContentLoaded", load);
 })();
+// apri drawer F1B
+window.TradeliaF1B.open();
+
+// aggiorna con il tuo payload
+window.TradeliaF1B.update({
+  state:'ACTIVE',
+  vix:18.23,
+  breadth:'60% positivi',
+  risktilt:'+5.17 pp verso difensivi',
+  flowScore:0.18,
+  regimeScore:0.22,
+  mode:'Momentum-light',
+  top1:'XLU · Utilities', top2:'XLV · Health Care', top3:'XLF · Financials',
+  weak1:'XLE · Energy', weak2:'XLI · Industrials', weak3:'XLK · Technology',
+  auditId:'F1B-20251021-IT-001', version:'v1.1', ts:'2025-10-21 09:45 CET'
+});
+
+// oppure via evento
+window.dispatchEvent(new CustomEvent('tradelia:f1b:update',{detail:{ /* ... */ }}));
