@@ -10,37 +10,68 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 
   <style>
-    body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    body{
+      font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
       background:#f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
-      background-size:280px;color:#0f172a}
+      background-size:280px;color:#0f172a
+    }
     ::-webkit-scrollbar{width:10px;height:10px}
     ::-webkit-scrollbar-thumb{background:rgba(80,160,200,.4);border-radius:100vh}
     ::-webkit-scrollbar-thumb:hover{background:rgba(80,160,200,.6)}
     *{scrollbar-width:thin;scrollbar-color:rgba(80,160,200,.5) #e5e7eb}
+
     .btn{display:inline-flex;align-items:center;gap:.45rem;padding:.4rem .6rem;border-radius:.6rem;font-weight:600;font-size:14px;
       border:1px solid #e5e7eb;background:linear-gradient(#fff,#f8fafc);box-shadow:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.03);
       transition:transform .08s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease;-webkit-tap-highlight-color:transparent}
     .btn:hover{background:linear-gradient(#fff,#f1f5f9);border-color:#dbe3ea}
     .btn:active{transform:translateY(1px);box-shadow:inset 0 1px 0 rgba(0,0,0,.06)}
     .btn:focus-visible{outline:none;box-shadow:0 0 0 2px rgba(56,189,248,.5)}
-    .btn-primary{color:#0b2a3f}
     .btn i{width:18px;height:18px}
     .hdr{backdrop-filter:saturate(1.2) blur(6px)}
+
     .sbtn{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .6rem;border-radius:.65rem;border:1px solid #e5e7eb;
       background:#fff;font-weight:600;font-size:13px;transition:transform .08s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease}
     .sbtn:hover{background:#f8fafc;border-color:#dbe3ea}
     .sbtn:active{transform:translateY(1px)}
     .sbtn i{width:18px;height:18px}
-    .badge-url{background:#f8fafc;border:1px solid #e5e7eb}
-    .qr-wrap img{border-radius:.75rem;border:1px solid #e5e7eb;background:#fff}
+
     @keyframes fadeBackdropIn{from{opacity:0}to{opacity:1}}
     @keyframes fadeBackdropOut{from{opacity:1}to{opacity:0}}
     @keyframes popIn{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes popOut{from{opacity:1;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(4px) scale(.985)}}
-    .popup-backdrop{animation:fadeBackdropIn .18s ease forwards}
-    .popup-backdrop.closing{animation:fadeBackdropOut .16s ease forwards}
-    .popup-card{animation:popIn .20s cubic-bezier(.22,.61,.36,1) forwards}
-    .popup-card.closing{animation:popOut .16s ease forwards}
+
+    /* Header Ticker */
+    #header-ticker .card{border:1px solid #e5e7eb;border-radius:.75rem;padding:.75rem;background:#fff}
+    #header-ticker label{display:flex;align-items:center;gap:.4rem;font-size:11px;color:#64748b}
+    #header-ticker .val{font-weight:700;color:#0f172a}
+
+    /* Help "?" */
+    .hx{
+      display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:999px;
+      border:1px solid rgba(2,132,199,.6);font-size:10px;line-height:1;color:#0369a1;background:#fff
+    }
+    .hx:hover{background:#f0f9ff}
+
+    /* Popup SEMPRE sopra il drawer */
+    .hx-pop{
+      position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(2px);
+      display:flex;align-items:center;justify-content:center;z-index:9999
+    }
+    .hx-card{
+      position:relative;z-index:10000;background:#fff;border:1px solid #e5e7eb;border-radius:12px;
+      padding:16px;max-width:560px;width:92%;box-shadow:0 10px 30px rgba(0,0,0,.18)
+    }
+    .hx-card h3{margin:0 0 4px;font-weight:700;color:#0f172a}
+    .hx-card .src{font-size:11px;color:#6b7280;margin-bottom:8px}
+
+    /* Moduli e drawer */
+    .mdc{background:#fff;border:1px solid #e5e7eb;border-radius:14px;box-shadow:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.02)}
+    .mdc-h{background:linear-gradient(#fff,#fbfdff)}
+    .badge{font-size:11px;padding:.1rem .45rem;border-radius:999px;border:1px solid}
+    .b-active{color:#065f46;background:#ecfdf5;border-color:#a7f3d0}
+    .b-hold{color:#92400e;background:#fffbeb;border-color:#fcd34d}
+    .b-review{color:#7c2d12;background:#fef3c7;border-color:#fbbf24}
+    .b-neutral{color:#334155;background:#f1f5f9;border-color:#e5e7eb}
     @media print{.noprint{display:none!important}}
   </style>
 </head>
@@ -56,17 +87,17 @@
         <span class="text-slate-400 text-xs sm:text-sm truncate">Report Runtime</span>
       </div>
       <div class="flex items-center gap-1.5 sm:gap-2">
-        <button id="btn-print" class="btn btn-primary" aria-label="Stampa / PDF">
+        <button id="btn-print" class="btn" aria-label="Stampa / PDF">
           <i data-lucide="printer" aria-hidden="true"></i><span class="hidden sm:inline">Stampa / PDF</span>
         </button>
-        <button id="btn-share" class="btn btn-primary" aria-label="Condividi">
+        <button id="btn-share" class="btn" aria-label="Condividi">
           <i data-lucide="share-2" aria-hidden="true"></i><span class="hidden sm:inline">Condividi</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Script header + share -->
+  <!-- Share sheet -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
@@ -93,20 +124,19 @@
       function openShareSheet({ longUrl, title, text }) {
         const backdrop = document.createElement('div');
         backdrop.className = 'popup-backdrop fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50';
-
         const card = document.createElement('div');
         card.className = 'popup-card bg-white rounded-xl shadow-2xl p-5 w-[92%] max-w-lg text-left border border-slate-200';
 
         let currentUrl = longUrl;
         const enc = encodeURIComponent;
         const targets = (u) => ([
-          { label:'WhatsApp',   href:`https://wa.me/?text=${enc(text+' ') + enc(u)}`, icon:'message-square' },
-          { label:'Telegram',   href:`https://t.me/share/url?url=${enc(u)}&text=${enc(text)}`, icon:'send' },
-          { label:'X (Twitter)',href:`https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(u)}`, icon:'twitter' },
-          { label:'LinkedIn',   href:`https://www.linkedin.com/sharing/share-offsite/?url=${enc(u)}`, icon:'linkedin' },
-          { label:'Reddit',     href:`https://www.reddit.com/submit?url=${enc(u)}&title=${enc(title)}`, icon:'square' },
-          { label:'Facebook',   href:`https://www.facebook.com/sharer/sharer.php?u=${enc(u)}`, icon:'facebook' },
-          { label:'Email',      href:`mailto:?subject=${enc(title)}&body=${enc(text)}%0A%0A${enc(u)}`, icon:'mail' },
+          { label:'WhatsApp', href:`https://wa.me/?text=${enc(text+' ') + enc(u)}`, icon:'message-square' },
+          { label:'Telegram', href:`https://t.me/share/url?url=${enc(u)}&text=${enc(text)}`, icon:'send' },
+          { label:'X (Twitter)', href:`https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(u)}`, icon:'twitter' },
+          { label:'LinkedIn', href:`https://www.linkedin.com/sharing/share-offsite/?url=${enc(u)}`, icon:'linkedin' },
+          { label:'Reddit', href:`https://www.reddit.com/submit?url=${enc(u)}&title=${enc(title)}`, icon:'square' },
+          { label:'Facebook', href:`https://www.facebook.com/sharer/sharer.php?u=${enc(u)}`, icon:'facebook' },
+          { label:'Email', href:`mailto:?subject=${enc(title)}&body=${enc(text)}%0A%0A${enc(u)}`, icon:'mail' },
         ]);
 
         card.innerHTML = `
@@ -127,11 +157,11 @@
             <span id="shortStatus" class="text-xs text-slate-400">(non attivo)</span>
           </div>
           <div class="space-y-3 sm:space-y-4">
-            <div class="qr-wrap mx-auto w-[164px] sm:w-[180px] md:w-[200px] lg:w-[220px]">
+            <div class="qr-wrap mx-auto w-[180px]">
               <img id="qrImg" alt="QR per condivisione" class="w-full h-auto rounded-lg border border-slate-200 shadow-sm bg-white p-2" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(currentUrl)}" />
             </div>
             <div id="shareGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2 justify-items-center sm:justify-items-start"></div>
-            <div id="urlBox" class="badge-url text-[12px] p-2 rounded-md font-mono select-all break-all">${currentUrl}</div>
+            <div id="urlBox" class="bg-slate-50 border border-slate-200 text-[12px] p-2 rounded-md font-mono select-all break-all">${currentUrl}</div>
             <div class="flex gap-2">
               <button id="copyLink" class="sbtn"><i data-lucide="copy"></i><span>Copia link</span></button>
               <a id="openNew" class="sbtn" href="${currentUrl}" target="_blank" rel="noopener"><i data-lucide="external-link"></i><span>Apri</span></a>
@@ -206,489 +236,506 @@
   <!-- ===========================
        HEADER — TICKER
        =========================== -->
-<!-- === HEADER TICKER — stile + popup accademico (REPLACE) === -->
-<style>
-  /* Card header compatte */
-  #header-ticker .card{border:1px solid #e5e7eb;border-radius:.75rem;padding:.75rem;background:#fff}
-  #header-ticker label{display:flex;align-items:center;gap:.4rem;font-size:11px;color:#64748b}
-  #header-ticker .val{font-weight:700;color:#0f172a}
+  <main class="max-w-7xl mx-auto px-3 sm:px-5 py-4">
+    <section id="header-ticker" class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4">
+      <!-- riga 1 -->
+      <div class="card">
+        <label>Inizio report (data · ora) <button class="hx" data-k="DataStart">?</button></label>
+        <div id="H-Start" class="val">—</div>
+      </div>
+      <div class="card">
+        <label>Fine report (data · ora) <button class="hx" data-k="DataEnd">?</button></label>
+        <div id="H-End" class="val">—</div>
+      </div>
 
-  /* Bottone help "?" */
-  .hx{
-    display:inline-flex;align-items:center;justify-content:center;
-    width:16px;height:16px;border-radius:999px;
-    border:1px solid rgba(2,132,199,.6);
-    font-size:10px;line-height:1;color:#0369a1;background:#fff
-  }
-  .hx:hover{background:#f0f9ff}
+      <!-- riga 2 -->
+      <div class="card"><label>Ticker <button class="hx" data-k="Ticker">?</button></label><div id="H-Ticker" class="val">—</div></div>
+      <div class="card"><label>Borsa di negoziazione <button class="hx" data-k="Venue">?</button></label><div id="H-Venue" class="val">—</div></div>
+      <div class="card"><label>Validazione ticker/venue <button class="hx" data-k="Validazione">?</button></label><div id="H-Validation" class="val">—</div></div>
 
-  /* Popup overlay — SEMPRE sopra il drawer */
-  .hx-pop{
-    position:fixed;inset:0;
-    background:rgba(0,0,0,.45);
-    backdrop-filter:blur(2px);
-    display:flex;align-items:center;justify-content:center;
-    z-index:9999; /* sopra qualsiasi drawer/backdrop */
-  }
+      <!-- riga 3 -->
+      <div class="card"><label>VersionTag <button class="hx" data-k="VersionTag">?</button></label><div id="H-VersionTag" class="val">—</div></div>
+      <div class="card"><label>SyncID <button class="hx" data-k="SyncID">?</button></label><div id="H-SyncID" class="val">—</div></div>
+      <div class="card"><label>Freshness <button class="hx" data-k="Freshness">?</button></label><div id="H-Freshness" class="val">—</div></div>
 
-  /* Carta del popup (contenuto) */
-  .hx-card{
-    position:relative;z-index:10000;
-    background:#fff;border:1px solid #e5e7eb;border-radius:12px;
-    padding:16px;max-width:560px;width:92%;
-    box-shadow:0 10px 30px rgba(0,0,0,.18)
-  }
-  .hx-card h3{margin:0 0 4px;font-weight:700;color:#0f172a}
-  .hx-card .src{font-size:11px;color:#6b7280;margin-bottom:8px}
-</style>
+      <!-- riga 4 -->
+      <div class="card"><label>OCR_Conf <button class="hx" data-k="OCR_Conf">?</button></label><div id="H-OCR" class="val">—</div></div>
+      <div class="card"><label>DataIntegrity <button class="hx" data-k="DataIntegrity">?</button></label><div id="H-DataIntegrity" class="val">—</div></div>
+      <div class="card"><label>FeedSync <button class="hx" data-k="FeedSync">?</button></label><div id="H-FeedSync" class="val">—</div></div>
 
-<script>
-(function(){
-  // Dizionario spiegazioni (header)
-  const EXPL = {
-    Sessione:{t:"Sessione REG (adjusted)", a:"Analisi sulla sola sessione regolare; serie prezzi adjusted per dividendi/split per coerenza storica.", s:"CMT Association · Market Data Conventions; CFA Institute – Quantitative Methods."},
+      <!-- riga 5 -->
+      <div class="card lg:col-span-2">
+        <label>Affidabilità complessiva dati (min: OCR_Conf, DataIntegrity, FeedSync, Confidence_H4, Confidence_H1)
+          <button class="hx" data-k="ConfidenceFinal">?</button>
+        </label>
+        <div id="H-Confidence" class="val">—</div>
+      </div>
+      <div class="card"><label>Stato report <button class="hx" data-k="StatoReport">?</button></label><div id="H-State" class="val">—</div></div>
 
-    DataStart:{t:"Inizio report (data · ora)", a:"Timestamp di avvio finestra analitica, con orario locale (es. 2025-10-21 09:00). Serve per audit, replicabilità e allineamento feed.", s:"Methodology & Audit Trail (interno)."},
-    DataEnd:{t:"Fine report (data · ora)", a:"Timestamp di chiusura finestra analitica, con orario locale (es. 2025-10-21 10:00). Evita look-ahead bias e definisce esattamente il perimetro analizzato.", s:"Methodology & Audit Trail (interno)."},
+      <!-- riga 6 -->
+      <div class="card lg:col-span-2"><label>TapeNotes (REG close) <button class="hx" data-k="TapeNotes">?</button></label><div id="H-TapeNotes" class="val">—</div></div>
+      <div class="card"><label>Missing (critici) <button class="hx" data-k="Missing">?</button></label><div id="H-Missing" class="val">—</div></div>
+    </section>
+  </main>
 
-    Ticker:{t:"Ticker", a:"Identificativo ufficiale dello strumento negoziato.", s:"Nasdaq/NYSE Listing Rules; SEC Form 8-A."},
-    Venue:{t:"Borsa di negoziazione", a:"Venue primario/mic di quotazione dello strumento.", s:"Microstructure: O’Hara (1995) · Hasbrouck (2007)."},
-    Validazione:{t:"Validazione ticker/venue", a:"Coerenza simbolo–venue (incl. ADR); requisito preliminare di qualità.", s:"Best practice di data governance (CFA QM)."},
-    VersionTag:{t:"VersionTag", a:"Versione del motore/metodo usato nel report.", s:"Governance & versioning (interno)."},
-    SyncID:{t:"SyncID", a:"Chiave audit: <TICKER>_<YYYYMMDD>_F3/F1.", s:"Audit Trail (interno)."},
-    Freshness:{t:"Freshness", a:"Controllo freschezza dati ≤ T-1 prima della validazione.", s:"Policy di qualità dati (interno)."},
+  <!-- Popup accademico (header) -->
+  <script>
+    (function(){
+      const EXPL = {
+        Sessione:{t:"Sessione REG (adjusted)", a:"Analisi sulla sola sessione regolare; serie prezzi adjusted per dividendi/split per coerenza storica.", s:"CMT Association · Market Data Conventions; CFA Institute – Quantitative Methods."},
+        DataStart:{t:"Inizio report (data · ora)", a:"Timestamp di avvio finestra analitica (locale). Audit e replicabilità.", s:"Methodology & Audit Trail (interno)."},
+        DataEnd:{t:"Fine report (data · ora)", a:"Timestamp di chiusura finestra analitica (locale). Evita look-ahead bias.", s:"Methodology & Audit Trail (interno)."},
+        Ticker:{t:"Ticker", a:"Identificativo ufficiale dello strumento.", s:"Nasdaq/NYSE Listing Rules; SEC Form 8-A."},
+        Venue:{t:"Borsa di negoziazione", a:"Venue primario/mic di quotazione.", s:"O’Hara (1995); Hasbrouck (2007)."},
+        Validazione:{t:"Validazione ticker/venue", a:"Coerenza simbolo–venue (incl. ADR).", s:"CFA QM · Data governance."},
+        VersionTag:{t:"VersionTag", a:"Versione del motore/metodo usato.", s:"Governance & versioning (interno)."},
+        SyncID:{t:"SyncID", a:"Chiave audit: <TICKER>_<YYYYMMDD>_F*.", s:"Audit Trail (interno)."},
+        Freshness:{t:"Freshness", a:"Controllo freschezza dati ≤ T-1 prima della validazione.", s:"Policy qualità dati (interno)."},
+        OCR_Conf:{t:"OCR_Confidence", a:"Attendibilità estrazione numerica (0–1).", s:"CFA QM; Kahn & Strong (1998)."},
+        DataIntegrity:{t:"Data Integrity", a:"Completezza/consistenza dataset (0–1).", s:"Kahn & Strong (1998); Pipino et al. (2002)."},
+        FeedSync:{t:"Feed Sync", a:"Allineamento temporale tra feed/pannelli (0–1).", s:"Hasbrouck (2007)."},
+        ConfidenceFinal:{t:"Affidabilità complessiva dati", a:"Metrica conservativa = MIN(OCR_Conf, DataIntegrity, FeedSync, conf H4, conf H1).", s:"Metodo interno."},
+        StatoReport:{t:"Stato report", a:"ACTIVE/HOLD/REVIEW in base a Confidence e copertura input.", s:"Policy stato (interno)."},
+        TapeNotes:{t:"TapeNotes (REG close)", a:"Note micro-strutturali sull’asta di chiusura.", s:"Hasbrouck (2007); O’Hara (1995)."},
+        Missing:{t:"Missing (critici)", a:"Campi critici mancanti ⇒ N/D; se impattano Confidence ⇒ HOLD.", s:"Policy N/D (interno)."}
+      };
 
-    OCR_Conf:{t:"OCR_Confidence", a:"Attendibilità dell’estrazione numerica (0–1).", s:"CFA Institute – Quantitative Methods; Kahn & Strong (1998) Data Quality."},
-    DataIntegrity:{t:"Data Integrity", a:"Completezza/consistenza del dataset (0–1).", s:"Kahn & Strong (1998); Pipino, Lee & Wang (2002)."},
-    FeedSync:{t:"Feed Sync", a:"Allineamento temporale tra feed e pannelli (0–1).", s:"Hasbrouck (2007)."},
-
-    ConfidenceFinal:{t:"Affidabilità complessiva dati", a:"Indice sintetico (0–1). È il MINIMO tra: OCR_Conf, DataIntegrity, FeedSync e le confidence H4/H1.", s:"Metodo interno · Kahn & Strong (1998)."},
-    StatoReport:{t:"Stato report", a:"ACTIVE/HOLD/REVIEW in base a Confidence e copertura input.", s:"Policy stato (interno)."},
-    TapeNotes:{t:"TapeNotes (REG close)", a:"Note micro-strutturali sull’asta di chiusura (es. VWAP, auction share, slippage).", s:"Hasbrouck (2007); O’Hara (1995)."},
-    Missing:{t:"Missing (critici)", a:"Campi critici mancanti → N/D; se impattano Confidence ⇒ HOLD.", s:"Policy N/D (interno)."}
-  };
-
-  // Gestione popup
-  let POP=null, prevOverflow='';
-  function closePop(){
-    if(!POP) return;
-    POP.backdrop.removeEventListener('click', onBackdrop);
-    document.removeEventListener('keydown', onKeyEsc, true);
-    document.documentElement.style.overflow = prevOverflow;
-    POP.wrap.remove(); POP=null;
-  }
-  function onBackdrop(e){ if(e.target===e.currentTarget) closePop(); }
-  function onKeyEsc(e){ if(e.key==='Escape'){ e.stopPropagation(); e.preventDefault(); closePop(); } }
-
-  function openPop(d){
-    if(POP){
-      POP.title.textContent=d.t;
-      POP.src.textContent='Fonte accademica: '+d.s;
-      POP.text.innerHTML=d.a;
-      POP.wrap.focus(); return;
-    }
-    const wrap=document.createElement('div');
-    wrap.className='hx-pop'; wrap.role='dialog'; wrap.ariaModal='true'; wrap.tabIndex=-1;
-
-    const card=document.createElement('div');
-    card.className='hx-card'; card.addEventListener('click',ev=>ev.stopPropagation());
-
-    const h=document.createElement('h3'); h.textContent=d.t;
-    const src=document.createElement('div'); src.className='src'; src.textContent='Fonte accademica: '+d.s;
-    const text=document.createElement('div'); text.className='text-sm text-slate-800'; text.innerHTML=d.a;
-
-    card.append(h,src,text); wrap.append(card); document.body.appendChild(wrap);
-    prevOverflow=document.documentElement.style.overflow||''; document.documentElement.style.overflow='hidden';
-    wrap.addEventListener('click', onBackdrop); document.addEventListener('keydown', onKeyEsc, true);
-    wrap.focus(); POP={wrap, backdrop:wrap, title:h, src, text};
-  }
-
-  // Delegation click per tutti i bottoni .hx (header)
-  document.addEventListener('click', (e)=>{
-    const btn=e.target.closest('.hx'); if(!btn) return;
-    const k=btn.dataset.k; const d=EXPL[k]||{t:k,a:"Descrizione non disponibile.",s:"—"};
-    openPop(d);
-  }, true);
-})();
-</script>
-
+      let POP=null, prevOverflow='';
+      function closePop(){
+        if(!POP) return;
+        POP.backdrop.removeEventListener('click', onBackdrop);
+        document.removeEventListener('keydown', onKeyEsc, true);
+        document.documentElement.style.overflow = prevOverflow;
+        POP.wrap.remove(); POP=null;
+      }
+      function onBackdrop(e){ if(e.target===e.currentTarget) closePop(); }
+      function onKeyEsc(e){ if(e.key==='Escape'){ e.stopPropagation(); e.preventDefault(); closePop(); } }
+      function openPop(d){
+        if(POP){ POP.title.textContent=d.t; POP.src.textContent='Fonte accademica: '+d.s; POP.text.innerHTML=d.a; POP.wrap.focus(); return; }
+        const wrap=document.createElement('div'); wrap.className='hx-pop'; wrap.role='dialog'; wrap.ariaModal='true'; wrap.tabIndex=-1;
+        const card=document.createElement('div'); card.className='hx-card'; card.addEventListener('click',ev=>ev.stopPropagation());
+        const h=document.createElement('h3'); h.textContent=d.t;
+        const src=document.createElement('div'); src.className='src'; src.textContent='Fonte accademica: '+d.s;
+        const text=document.createElement('div'); text.className='text-sm text-slate-800'; text.innerHTML=d.a;
+        card.append(h,src,text); wrap.append(card); document.body.appendChild(wrap);
+        prevOverflow=document.documentElement.style.overflow||''; document.documentElement.style.overflow='hidden';
+        wrap.addEventListener('click', onBackdrop); document.addEventListener('keydown', onKeyEsc, true);
+        wrap.focus(); POP={wrap, backdrop:wrap, title:h, src, text};
+      }
+      document.addEventListener('click', (e)=>{
+        const btn=e.target.closest('.hx'); if(!btn) return;
+        const k=btn.dataset.k; const d=EXPL[k]||{t:k,a:"Descrizione non disponibile.",s:"—"};
+        openPop(d);
+      }, true);
+    })();
+  </script>
 
   <!-- ===========================
-       SEZIONE — MODULI (framework)
+       SEZIONE — MODULI
        =========================== -->
   <section id="moduli" class="pt-3">
-  <div class="max-w-7xl mx-auto px-3 sm:px-5">
-    <div class="flex items-end justify-between mb-3 sm:mb-4">
-      <div class="min-w-0">
-        <h2 class="text-base sm:text-lg font-semibold text-slate-800 tracking-tight">Moduli analitici</h2>
-        <p class="text-xs text-slate-500">Framework F1–F5 · schede auditabili</p>
+    <div class="max-w-7xl mx-auto px-3 sm:px-5">
+      <div class="flex items-end justify-between mb-3 sm:mb-4">
+        <div class="min-w-0">
+          <h2 class="text-base sm:text-lg font-semibold text-slate-800 tracking-tight">Moduli analitici</h2>
+          <p class="text-xs text-slate-500">Framework F1–F5 · schede auditabili</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="view-grid" class="btn" aria-pressed="true"><i data-lucide="grid"></i><span class="hidden sm:inline">Griglia</span></button>
+          <button id="view-list" class="btn" aria-pressed="false"><i data-lucide="list"></i><span class="hidden sm:inline">Lista</span></button>
+        </div>
       </div>
-      <div class="flex items-center gap-2">
-        <button id="view-grid" class="btn" aria-pressed="true"><i data-lucide="grid"></i><span class="hidden sm:inline">Griglia</span></button>
-        <button id="view-list" class="btn" aria-pressed="false"><i data-lucide="list"></i><span class="hidden sm:inline">Lista</span></button>
+      <div id="mod-container" data-view="grid"
+           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4"
+           aria-label="Griglia moduli analitici">
       </div>
     </div>
-    <div id="mod-container" data-view="grid"
-         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4"
-         aria-label="Griglia moduli analitici">
-    </div>
+  </section>
+
+  <!-- Drawer -->
+  <div id="mod-drawer" class="fixed inset-0 z-[60] hidden">
+    <div class="absolute inset-0 bg-black/30 backdrop-blur-[1px]" data-close="backdrop"></div>
+    <aside class="absolute right-0 top-0 h-full w-[92%] sm:w-[560px] bg-white border-l border-slate-200 shadow-2xl
+                   translate-x-full will-change-transform transition-transform duration-200 ease-out">
+      <header class="h-12 sm:h-14 border-b border-slate-200 flex items-center justify-between px-3 sm:px-4">
+        <div class="min-w-0">
+          <div id="drawer-title" class="font-semibold text-slate-800 truncate">Modulo</div>
+          <div id="drawer-sub" class="text-xs text-slate-500 truncate">—</div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="drawer-print" class="btn" aria-label="Stampa sezione"><i data-lucide="printer"></i></button>
+          <button id="drawer-close" class="btn" aria-label="Chiudi"><i data-lucide="x"></i></button>
+        </div>
+      </header>
+      <div id="drawer-body" class="h-[calc(100%-3.25rem)] sm:h-[calc(100%-3.75rem)] overflow-auto p-3 sm:p-4"></div>
+    </aside>
   </div>
-</section>
 
-<div id="mod-drawer" class="fixed inset-0 z-[60] hidden">
-  <div class="absolute inset-0 bg-black/30 backdrop-blur-[1px]" data-close="backdrop"></div>
-  <aside class="absolute right-0 top-0 h-full w-[92%] sm:w-[560px] bg-white border-l border-slate-200 shadow-2xl
-                 translate-x-full will-change-transform transition-transform duration-200 ease-out">
-    <header class="h-12 sm:h-14 border-b border-slate-200 flex items-center justify-between px-3 sm:px-4">
-      <div class="min-w-0">
-        <div id="drawer-title" class="font-semibold text-slate-800 truncate">Modulo</div>
-        <div id="drawer-sub" class="text-xs text-slate-500 truncate">—</div>
-      </div>
-      <div class="flex items-center gap-2">
-        <button id="drawer-print" class="btn" aria-label="Stampa sezione"><i data-lucide="printer"></i></button>
-        <button id="drawer-close" class="btn" aria-label="Chiudi"><i data-lucide="x"></i></button>
-      </div>
-    </header>
-    <div id="drawer-body" class="h-[calc(100%-3.25rem)] sm:h-[calc(100%-3.75rem)] overflow-auto p-3 sm:p-4"></div>
-  </aside>
-</div>
+  <script>
+    (function(){
+      const container = document.getElementById('mod-container');
+      const drawer = document.getElementById('mod-drawer');
+      const panel  = drawer.querySelector('aside');
 
-  
-<!-- ===== F1B — Template modulo (desk-grade, placeholders only) ===== -->
-<style>
-  .f1b-kpi-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}
-  @media(min-width:640px){.f1b-kpi-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-  .f1b-kpi{border:1px solid #e5e7eb;border-radius:.75rem;padding:.6rem;background:#fff}
-  .f1b-kpi label{display:flex;align-items:center;gap:.35rem;font-size:11px;color:#64748b}
-  .f1b-kpi .v{font-weight:700;color:#0f172a}
-  .f1b-chip{display:inline-flex;align-items:center;gap:.35rem;border:1px solid #e5e7eb;background:#fff;border-radius:999px;padding:.2rem .5rem;font-size:12px}
-  .f1b-tag{display:inline-flex;align-items:center;gap:.35rem;border:1px dashed #cbd5e1;color:#0f172a;background:#f8fafc;border-radius:999px;padding:.15rem .5rem;font-size:12px}
-  .f1b-badge{font-size:11px;padding:.1rem .45rem;border-radius:999px;border:1px solid}
-  .f1b-badge--green{color:#065f46;background:#ecfdf5;border-color:#a7f3d0}
-  .f1b-badge--yellow{color:#92400e;background:#fffbeb;border-color:#fcd34d}
-  .f1b-badge--red{color:#7c2d12;background:#fef3c7;border-color:#fbbf24}
-  .f1b-badge--neutral{color:#334155;background:#f1f5f9;border-color:#e5e7eb}
-  .f1b-spark{display:block;width:100%;height:32px}
-  /* popups sopra il drawer */
-  .hx-pop{z-index:80}
-</style>
+      document.getElementById('view-grid')?.addEventListener('click', (e)=>{
+        container.dataset.view='grid';
+        e.currentTarget.setAttribute('aria-pressed','true');
+        document.getElementById('view-list').setAttribute('aria-pressed','false');
+        container.className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4';
+      });
+      document.getElementById('view-list')?.addEventListener('click', (e)=>{
+        container.dataset.view='list';
+        e.currentTarget.setAttribute('aria-pressed','true');
+        document.getElementById('view-grid').setAttribute('aria-pressed','false');
+        container.className='space-y-2.5';
+      });
 
-<template id="tpl-f1b-card">
-  <article class="mdc" role="group" aria-labelledby="f1b-title">
-    <header class="mdc-h flex items-center justify-between gap-2 border-b border-slate-100 px-3 py-2.5">
-      <h3 id="f1b-title" class="font-semibold text-slate-800 text-sm">F1B — Screening Macro-Settoriale</h3>
-      <span class="f1b-badge f1b-badge--neutral" data-f1b="state-badge">NEUTRO</span>
-    </header>
-    <div class="mdc-b p-3 text-sm text-slate-700 space-y-2">
-      <div class="f1b-kpi-grid">
-        <div class="f1b-kpi"><label>VIX <button class="hx" data-k="F1B_VIX">?</button></label><div class="v" data-f1b="kpi-vix">—</div></div>
-        <div class="f1b-kpi"><label>Breadth 1M <button class="hx" data-k="F1B_Breadth">?</button></label><div class="v" data-f1b="kpi-breadth">—</div></div>
-        <div class="f1b-kpi"><label>Risk Tilt <button class="hx" data-k="F1B_RiskTilt">?</button></label><div class="v" data-f1b="kpi-risktilt">—</div></div>
-        <div class="f1b-kpi"><label>FlowScore <button class="hx" data-k="F1B_FlowScore">?</button></label><div class="v" data-f1b="kpi-flowscore">—</div></div>
-        <div class="f1b-kpi"><label>RegimeScore <button class="hx" data-k="F1B_Regime">?</button></label><div class="v" data-f1b="kpi-regimescore">—</div></div>
-        <div class="f1b-kpi"><label>StrategyMode <button class="hx" data-k="F1B_Mode">?</button></label><div class="v" data-f1b="kpi-mode">—</div></div>
-      </div>
+      const close  = ()=>{ panel.style.transform='translateX(100%)'; panel.addEventListener('transitionend', ()=> drawer.classList.add('hidden'), {once:true}); };
+      drawer?.addEventListener('click', (e)=>{ if(e.target.dataset.close==='backdrop') close(); });
+      document.getElementById('drawer-close')?.addEventListener('click', close);
+      document.getElementById('drawer-print')?.addEventListener('click', ()=> window.print());
+      if(window.lucide) lucide.createIcons();
+    })();
+  </script>
 
-      <!-- sparkline VIX -->
-      <div class="mt-1">
-        <svg class="f1b-spark" preserveAspectRatio="none" viewBox="0 0 100 32" data-f1b="spark-vix" aria-label="VIX sparkline"></svg>
-        <div class="text-[11px] text-slate-500 mt-0.5" data-f1b="spark-meta">—</div>
-      </div>
+  <!-- ===== F1B — styles + template ===== -->
+  <style>
+    .f1b-kpi-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}
+    @media(min-width:640px){.f1b-kpi-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    .f1b-kpi{border:1px solid #e5e7eb;border-radius:.75rem;padding:.6rem;background:#fff}
+    .f1b-kpi label{display:flex;align-items:center;gap:.35rem;font-size:11px;color:#64748b}
+    .f1b-kpi .v{font-weight:700;color:#0f172a}
+    .f1b-chip{display:inline-flex;align-items:center;gap:.35rem;border:1px solid #e5e7eb;background:#fff;border-radius:999px;padding:.2rem .5rem;font-size:12px}
+    .f1b-tag{display:inline-flex;align-items:center;gap:.35rem;border:1px dashed #cbd5e1;color:#0f172a;background:#f8fafc;border-radius:999px;padding:.15rem .5rem;font-size:12px}
+    .f1b-badge{font-size:11px;padding:.1rem .45rem;border-radius:999px;border:1px solid}
+    .f1b-badge--green{color:#065f46;background:#ecfdf5;border-color:#a7f3d0}
+    .f1b-badge--yellow{color:#92400e;background:#fffbeb;border-color:#fcd34d}
+    .f1b-badge--red{color:#7c2d12;background:#fef3c7;border-color:#fbbf24}
+    .f1b-badge--neutral{color:#334155;background:#f1f5f9;border-color:#e5e7eb}
+    .f1b-spark{display:block;width:100%;height:32px}
+  </style>
 
-      <!-- badges rapidi -->
-      <div class="flex flex-wrap gap-1.5 mt-2">
-        <span class="f1b-badge f1b-badge--neutral" data-f1b="badge-vix">VIX</span>
-        <span class="f1b-badge f1b-badge--neutral" data-f1b="badge-breadth">BREADTH</span>
-        <span class="f1b-badge f1b-badge--neutral" data-f1b="badge-risktilt">RISK TILT</span>
-      </div>
-
-      <!-- leadership -->
-      <div class="flex flex-wrap gap-1.5 mt-2">
-        <span class="f1b-chip" data-f1b="top1">—</span>
-        <span class="f1b-chip" data-f1b="top2">—</span>
-        <span class="f1b-chip" data-f1b="top3">—</span>
-        <span class="f1b-tag" data-f1b="weak1">—</span>
-        <span class="f1b-tag" data-f1b="weak2">—</span>
-        <span class="f1b-tag" data-f1b="weak3">—</span>
-      </div>
-
-      <div class="text-[12px] text-slate-500 mt-1">
-        <span>Audit:</span> <button class="hx underline decoration-dotted" data-k="F1B_Notes">Note</button>
-      </div>
-
-      <div class="pt-2">
-        <button class="btn" data-f1b="open"><i data-lucide="panel-right-open"></i><span>Apri scheda F1B</span></button>
-      </div>
-    </div>
-  </article>
-</template>
-
-<script>
-(function(){
-  // ===== popup contenuti accademici =====
-  const EXPL_F1B = {
-    F1B_VIX:{t:"VIX (CBOE · FRED)",a:"Volatilità implicita su S&P 500. Usare T-1 close; 15–20: rischio moderato.",s:"CBOE · FRED (VIXCLS)"},
-    F1B_Breadth:{t:"Breadth settoriale 1M",a:"% di settori SPDR con performance 1M > 0. >50% = respiro positivo.",s:"SSGA SPDR · metodo interno"},
-    F1B_RiskTilt:{t:"Risk Tilt (Ciclici − Difensivi)",a:"Δ media 1M tra gruppi. Positivo: propensione al rischio; negativo: difesa.",s:"Rotazione settoriale — Swing v5.0"},
-    F1B_FlowScore:{t:"FlowScore",a:"0.45·z(Inflow5D) + 0.35·z(Perf1M) + 0.20·z(RiskTilt).",s:"F1B v13.1"},
-    F1B_Regime:{t:"RegimeScore",a:"0.8·FlowScore + 0.2·s(−VIX). Soglie: ≥0.35 Momentum; 0.10–0.35 Momentum-light; <0.10 Pullback.",s:"F1B v13.1"},
-    F1B_Mode:{t:"StrategyMode",a:"Classificazione di contesto (educativa): Momentum / Momentum-light / Pullback.",s:"F1B Decision Rules"},
-    F1B_Notes:{t:"Conformità & Fonti",a:"Tier-1 esteso (educ.): ETFdb/VettaFi; crosscheck SSGA/Bloomberg; VIX da FRED/CBOE.",s:"Governance Swing v5.0"}
-  };
-  let POP=null, prevOverflow='';
-  function closePop(){ if(!POP) return; POP.backdrop.removeEventListener('click', onBackdrop); document.removeEventListener('keydown', onKeyEsc, true); document.documentElement.style.overflow = prevOverflow; POP.wrap.remove(); POP=null; }
-  function onBackdrop(e){ if(e.target===e.currentTarget) closePop(); }
-  function onKeyEsc(e){ if(e.key==='Escape'){ e.stopPropagation(); e.preventDefault(); closePop(); } }
-  function openPop(d){
-    if(POP){ POP.title.textContent=d.t; POP.src.textContent='Fonte accademica: '+d.s; POP.text.innerHTML=d.a; POP.wrap.focus(); return; }
-    const wrap=document.createElement('div'); wrap.className='hx-pop'; wrap.role='dialog'; wrap.ariaModal='true'; wrap.tabIndex=-1;
-    const card=document.createElement('div'); card.className='hx-card'; card.addEventListener('click',ev=>ev.stopPropagation());
-    const h=document.createElement('h3'); h.textContent=d.t;
-    const src=document.createElement('div'); src.className='src'; src.textContent='Fonte accademica: '+d.s;
-    const text=document.createElement('div'); text.className='text-sm text-slate-800'; text.innerHTML=d.a;
-    card.append(h,src,text); wrap.append(card); document.body.appendChild(wrap);
-    prevOverflow=document.documentElement.style.overflow||''; document.documentElement.style.overflow='hidden';
-    wrap.addEventListener('click', onBackdrop); document.addEventListener('keydown', onKeyEsc, true); wrap.focus();
-    POP={wrap, backdrop:wrap, title:h, src, text};
-  }
-  document.addEventListener('click', (e)=>{
-    const b=e.target.closest('.hx'); if(!b) return;
-    const k=b.dataset.k; const d=EXPL_F1B[k]||{t:k,a:'Descrizione non disponibile.',s:'—'};
-    openPop(d);
-  }, true);
-
-  // ===== builder & binder =====
-  const $ = (s,root=document)=> root.querySelector(s);
-  const $$ = (s,root=document)=> Array.from(root.querySelectorAll(s));
-  const badgeCls = (c)=>({
-    green:'f1b-badge f1b-badge--green',
-    yellow:'f1b-badge f1b-badge--yellow',
-    red:'f1b-badge f1b-badge--red',
-    neutral:'f1b-badge f1b-badge--neutral'
-  }[(String(c||'neutral').toLowerCase()))];
-
-  function sparkline(svgEl, values){
-    if(!svgEl) return;
-    svgEl.innerHTML='';
-    if(!Array.isArray(values)||values.length<2){ return; }
-    const w=100, h=32, pad=2;
-    const min=Math.min(...values), max=Math.max(...values);
-    const rng = (max-min)||1;
-    const pts = values.map((v,i)=>{
-      const x = pad + (w-2*pad)*(i/(values.length-1));
-      const y = h-pad - (h-2*pad)*((v-min)/rng);
-      return [x,y];
-    });
-    const d = pts.map((p,i)=> (i?'L':'M')+p[0].toFixed(2)+','+p[1].toFixed(2)).join(' ');
-    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-    path.setAttribute('d', d);
-    path.setAttribute('fill','none');
-    path.setAttribute('stroke','#0284c7');
-    path.setAttribute('stroke-width','1.4');
-    svgEl.appendChild(path);
-  }
-
-  function makeCard(){
-    const tpl = document.getElementById('tpl-f1b-card');
-    return tpl.content.firstElementChild.cloneNode(true);
-  }
-
-  function bindCard(card, F1B){
-    const m = F1B||{};
-    // KPI
-    $('[data-f1b="kpi-vix"]',card).textContent = m.UI?.Display?.VIX_Label ?? (m.Inputs?.VIX_Close_T1 ?? '—');
-    $('[data-f1b="kpi-breadth"]',card).textContent = m.Metrics?.Breadth1M?.label ?? '—';
-    $('[data-f1b="kpi-risktilt"]',card).textContent = m.Metrics?.RiskTilt?.label ?? '—';
-    $('[data-f1b="kpi-flowscore"]',card).textContent = (m.Metrics?.FlowScore?.score ?? '—');
-    $('[data-f1b="kpi-regimescore"]',card).textContent = (m.Metrics?.RegimeScore?.score ?? '—');
-    $('[data-f1b="kpi-mode"]',card).textContent = m.Metrics?.Classification?.StrategyMode ?? '—';
-
-    // Badges rapidi
-    const bV = m.UI?.Badges?.VIX, bB = m.UI?.Badges?.Breadth, bR = m.UI?.Badges?.RiskTilt;
-    const sb = m.Meta?.StateBadge;
-    const sBadge = $('[data-f1b="state-badge"]',card);
-    if(sb){ sBadge.className = badgeCls(sb.color); sBadge.textContent = (sb.label||'NEUTRO').toUpperCase(); }
-    if(bV){ const el=$('[data-f1b="badge-vix"]',card); el.className=badgeCls(bV.color); el.textContent=bV.label||'VIX'; }
-    if(bB){ const el=$('[data-f1b="badge-breadth"]',card); el.className=badgeCls(bB.color); el.textContent=bB.label||'BREADTH'; }
-    if(bR){ const el=$('[data-f1b="badge-risktilt"]',card); el.className=badgeCls(bR.color); el.textContent=bR.label||'RISK TILT'; }
-
-    // Leadership
-    const tIn = (m.Leadership?.TopInflow||[]);
-    const wk  = (m.Leadership?.WeakSectors||[]);
-    $('[data-f1b="top1"]',card).textContent  = tIn[0]?(tIn[0].ticker+' · '+tIn[0].name):'—';
-    $('[data-f1b="top2"]',card).textContent  = tIn[1]?(tIn[1].ticker+' · '+tIn[1].name):'—';
-    $('[data-f1b="top3"]',card).textContent  = tIn[2]?(tIn[2].ticker+' · '+tIn[2].name):'—';
-    $('[data-f1b="weak1"]',card).textContent = wk[0]?(wk[0].ticker+' · '+wk[0].name):'—';
-    $('[data-f1b="weak2"]',card).textContent = wk[1]?(wk[1].ticker+' · '+wk[1].name):'—';
-    $('[data-f1b="weak3"]',card).textContent = wk[2]?(wk[2].ticker+' · '+wk[2].name):'—';
-
-    // Sparkline
-    const series = m.Series?.VIX_Sparkline;
-    sparkline($('[data-f1b="spark-vix"]',card), Array.isArray(series)? series : []);
-    $('[data-f1b="spark-meta"]',card).textContent =
-      Array.isArray(series)&&series.length ? `VIX · ultimi ${series.length} gg · timebase ${m.Series?.Timebase||'daily'}` : 'VIX · n/d';
-
-    // Drawer open
-    $('[data-f1b="open"]',card).onclick = ()=> renderDrawer(m);
-    if(window.lucide) lucide.createIcons();
-  }
-
-  // ===== Drawer =====
-  function renderDrawer(F1B){
-    const drawer = document.getElementById('mod-drawer');
-    const panel  = drawer.querySelector('aside');
-    const body   = document.getElementById('drawer-body');
-    document.getElementById('drawer-title').textContent = 'F1B — Screening Macro-Settoriale';
-    document.getElementById('drawer-sub').textContent   = 'Rotazione · Volatilità · Regime';
-    drawer.classList.remove('hidden');
-    requestAnimationFrame(()=> panel.style.transform='translateX(0)');
-
-    const m = F1B||{};
-    const fmt = (x, d=2)=> (x==null || x==='—') ? '—' : (typeof x==='number' ? x.toFixed(d) : x);
-
-    // Inputs table
-    const rows = (m.Inputs?.SectorETFs||[]).map(r=>`
-      <tr class="border-b last:border-0">
-        <td class="py-1.5 pr-2 font-semibold">${r.ticker||'—'}</td>
-        <td class="py-1.5 pr-2">${r.name||'—'}</td>
-        <td class="py-1.5 pr-2 text-slate-500">${r.group||'—'}</td>
-        <td class="py-1.5 pr-2 text-right">${fmt(r.perf_1m_pct,2)}%</td>
-        <td class="py-1.5 pr-2 text-right">${fmt(r.flow_5d_usd_M,2)} M</td>
-        <td class="py-1.5 text-right">${r.rank_flow_5d??'—'}</td>
-      </tr>`).join('');
-
-    body.innerHTML = `
-      <div class="space-y-4">
-        <div class="flex gap-1.5 text-sm noprint">
-          <button class="sbtn" data-tab="#f1b-ov"><i data-lucide="layout-grid"></i><span>Overview</span></button>
-          <button class="sbtn" data-tab="#f1b-mx"><i data-lucide="activity"></i><span>Metriche</span></button>
-          <button class="sbtn" data-tab="#f1b-in"><i data-lucide="table-2"></i><span>Inputs</span></button>
-          <button class="sbtn" data-tab="#f1b-md"><i data-lucide="beaker"></i><span>Metodo</span></button>
-          <button class="sbtn" data-tab="#f1b-au"><i data-lucide="shield-check"></i><span>Audit</span></button>
-          <button class="sbtn" data-tab="#f1b-qc"><i data-lucide="check-circle-2"></i><span>Quality</span></button>
+  <template id="tpl-f1b-card">
+    <article class="mdc" role="group" aria-labelledby="f1b-title">
+      <header class="mdc-h flex items-center justify-between gap-2 border-b border-slate-100 px-3 py-2.5">
+        <h3 id="f1b-title" class="font-semibold text-slate-800 text-sm">F1B — Screening Macro-Settoriale</h3>
+        <span class="f1b-badge f1b-badge--neutral" data-f1b="state-badge">NEUTRO</span>
+      </header>
+      <div class="mdc-b p-3 text-sm text-slate-700 space-y-2">
+        <div class="f1b-kpi-grid">
+          <div class="f1b-kpi"><label>VIX <button class="hx" data-k="F1B_VIX">?</button></label><div class="v" data-f1b="kpi-vix">—</div></div>
+          <div class="f1b-kpi"><label>Breadth 1M <button class="hx" data-k="F1B_Breadth">?</button></label><div class="v" data-f1b="kpi-breadth">—</div></div>
+          <div class="f1b-kpi"><label>Risk Tilt <button class="hx" data-k="F1B_RiskTilt">?</button></label><div class="v" data-f1b="kpi-risktilt">—</div></div>
+          <div class="f1b-kpi"><label>FlowScore <button class="hx" data-k="F1B_FlowScore">?</button></label><div class="v" data-f1b="kpi-flowscore">—</div></div>
+          <div class="f1b-kpi"><label>RegimeScore <button class="hx" data-k="F1B_Regime">?</button></label><div class="v" data-f1b="kpi-regimescore">—</div></div>
+          <div class="f1b-kpi"><label>StrategyMode <button class="hx" data-k="F1B_Mode">?</button></label><div class="v" data-f1b="kpi-mode">—</div></div>
         </div>
 
-        <section id="f1b-ov" class="space-y-3">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <div class="card p-3">
-              <h4 class="font-semibold mb-1">Classificazione</h4>
-              <div>StrategyMode: <b>${m.Metrics?.Classification?.StrategyMode||'—'}</b> <button class="hx" data-k="F1B_Mode">?</button></div>
-              <div class="mt-1 text-slate-700">RegimeScore: <b>${fmt(m.Metrics?.RegimeScore?.score)}</b> <button class="hx" data-k="F1B_Regime">?</button></div>
-              <div class="mt-2">
-                ${(m.Meta?.StateBadge)? `<span class="${badgeCls(m.Meta.StateBadge.color)}">${(m.Meta.StateBadge.label||'NEUTRO').toUpperCase()}</span>`:''}
-              </div>
-            </div>
-            <div class="card p-3">
-              <h4 class="font-semibold mb-1">Leadership settoriale</h4>
-              <div class="flex flex-wrap gap-1.5">
-                ${(m.Leadership?.TopInflow||[]).slice(0,3).map(x=>`<span class="f1b-chip">${x.ticker||'—'} · ${x.name||'—'}</span>`).join('')}
-              </div>
-              <div class="mt-2 text-sm text-slate-600">Deboli:
-                ${(m.Leadership?.WeakSectors||[]).slice(0,3).map(x=>`<span class="f1b-tag">${x.ticker||'—'} · ${x.name||'—'}</span>`).join(' ')}
-              </div>
-            </div>
-          </div>
-        </section>
+        <div class="mt-1">
+          <svg class="f1b-spark" preserveAspectRatio="none" viewBox="0 0 100 32" data-f1b="spark-vix" aria-label="VIX sparkline"></svg>
+          <div class="text-[11px] text-slate-500 mt-0.5" data-f1b="spark-meta">—</div>
+        </div>
 
-        <section id="f1b-mx" class="hidden space-y-3">
-          <div class="f1b-kpi-grid">
-            <div class="f1b-kpi"><label>VIX <button class="hx" data-k="F1B_VIX">?</button></label><div class="v">${m.UI?.Display?.VIX_Label ?? m.Inputs?.VIX_Close_T1 ?? '—'}</div></div>
-            <div class="f1b-kpi"><label>Breadth 1M <button class="hx" data-k="F1B_Breadth">?</button></label><div class="v">${m.Metrics?.Breadth1M?.label ?? '—'}</div></div>
-            <div class="f1b-kpi"><label>Risk Tilt <button class="hx" data-k="F1B_RiskTilt">?</button></label><div class="v">${m.Metrics?.RiskTilt?.label ?? '—'}</div></div>
-            <div class="f1b-kpi"><label>FlowScore <button class="hx" data-k="F1B_FlowScore">?</button></label><div class="v">${fmt(m.Metrics?.FlowScore?.score)}</div></div>
-            <div class="f1b-kpi"><label>RegimeScore <button class="hx" data-k="F1B_Regime">?</button></label><div class="v">${fmt(m.Metrics?.RegimeScore?.score)}</div></div>
-            <div class="f1b-kpi"><label>State <button class="hx" data-k="F1B_Notes">?</button></label><div class="v">${m.Meta?.State||'—'}</div></div>
-          </div>
-          <div class="mt-1">
-            <svg class="f1b-spark" preserveAspectRatio="none" viewBox="0 0 100 32" aria-label="VIX sparkline"></svg>
-          </div>
-        </section>
+        <div class="flex flex-wrap gap-1.5 mt-2">
+          <span class="f1b-badge f1b-badge--neutral" data-f1b="badge-vix">VIX</span>
+          <span class="f1b-badge f1b-badge--neutral" data-f1b="badge-breadth">BREADTH</span>
+          <span class="f1b-badge f1b-badge--neutral" data-f1b="badge-risktilt">RISK TILT</span>
+        </div>
 
-        <section id="f1b-in" class="hidden">
-          <div class="card p-3 overflow-auto">
-            <table class="w-full text-sm">
-              <thead class="text-slate-500">
-                <tr class="border-b">
-                  <th class="text-left py-1.5 pr-2">Ticker</th>
-                  <th class="text-left py-1.5 pr-2">Nome</th>
-                  <th class="text-left py-1.5 pr-2">Gruppo</th>
-                  <th class="text-right py-1.5 pr-2">Perf 1M %</th>
-                  <th class="text-right py-1.5 pr-2">Flow 5D (M$)</th>
-                  <th class="text-right py-1.5">Rank Flow</th>
-                </tr>
-              </thead>
-              <tbody>${rows||''}</tbody>
-            </table>
-          </div>
-        </section>
+        <div class="flex flex-wrap gap-1.5 mt-2">
+          <span class="f1b-chip" data-f1b="top1">—</span>
+          <span class="f1b-chip" data-f1b="top2">—</span>
+          <span class="f1b-chip" data-f1b="top3">—</span>
+          <span class="f1b-tag" data-f1b="weak1">—</span>
+          <span class="f1b-tag" data-f1b="weak2">—</span>
+          <span class="f1b-tag" data-f1b="weak3">—</span>
+        </div>
 
-        <section id="f1b-md" class="hidden text-sm text-slate-700">
-          <div class="card p-3">
-            <h4 class="font-semibold mb-1">Regole & Pesi</h4>
-            <ul class="list-disc pl-5 space-y-1">
-              <li><b>FlowScore</b> = 0.45·z(Inflow5D) + 0.35·z(Perf1M) + 0.20·z(RiskTilt) <button class="hx" data-k="F1B_FlowScore">?</button></li>
-              <li><b>RegimeScore</b> = 0.8·FlowScore + 0.2·s(−VIX) <button class="hx" data-k="F1B_Regime">?</button></li>
-              <li>Soglie → Momentum ≥ 0.35 · Momentum-light 0.10–0.35 · Pullback &lt; 0.10</li>
-            </ul>
-          </div>
-        </section>
+        <div class="text-[12px] text-slate-500 mt-1">
+          <span>Audit:</span> <button class="hx underline decoration-dotted" data-k="F1B_Notes">Note</button>
+        </div>
 
-        <section id="f1b-au" class="hidden text-sm">
-          <div class="card p-3 space-y-1.5">
-            <div><b>AuditPathID:</b> ${m.Meta?.AuditPathID||'—'}</div>
-            <div><b>Version:</b> ${m.Meta?.Version||'—'} · <b>Timestamp:</b> ${m.Meta?.Timestamp||'—'} (${m.Meta?.Timezone||'—'})</div>
-            <div><b>Tier:</b> ${m.Meta?.SourceTier||'—'}</div>
-            <div><b>Sources:</b> ${(m.Meta?.Sources||[]).join(', ')||'—'}</div>
-            <div><b>Conformità:</b> ${m.Audit?.Conformity||'—'}</div>
-            <div><b>Note:</b> ${m.Meta?.Notes||'—'}</div>
-            ${Array.isArray(m.Audit?.Caveats)? `<div class="text-slate-600"><b>Caveat:</b> ${m.Audit.Caveats.join('; ')}</div>`:''}
-          </div>
-        </section>
-
-        <section id="f1b-qc" class="hidden text-sm">
-          <div class="card p-3 grid grid-cols-1 sm:grid-cols-3 gap-2">
-            <div><div class="text-slate-500 text-xs">OCR_Conf</div><div class="font-semibold">${fmt(m.Quality?.OCR_Conf)}</div></div>
-            <div><div class="text-slate-500 text-xs">DataIntegrity</div><div class="font-semibold">${fmt(m.Quality?.DataIntegrity)}</div></div>
-            <div><div class="text-slate-500 text-xs">FeedSync</div><div class="font-semibold">${fmt(m.Quality?.FeedSync)}</div></div>
-            <div class="sm:col-span-3"><div class="text-slate-500 text-xs">Confidence Local</div>
-              <span class="${badgeCls(m.Quality?.ConfidenceLocal?.color)}">${fmt(m.Quality?.ConfidenceLocal?.value)}</span>
-            </div>
-          </div>
-        </section>
+        <div class="pt-2">
+          <button class="btn" data-f1b="open"><i data-lucide="panel-right-open"></i><span>Apri scheda F1B</span></button>
+        </div>
       </div>
-    `;
+    </article>
+  </template>
 
-    // sparkline in tab metriche
-    sparkline(body.querySelector('#f1b-mx svg'), Array.isArray(m.Series?.VIX_Sparkline)? m.Series.VIX_Sparkline : []);
+  <script>
+    (function(){
+      // ===== popup contenuti accademici (riusa .hx e .hx-pop) =====
+      const EXPL_F1B = {
+        F1B_VIX:{t:"VIX (CBOE · FRED)",a:"Volatilità implicita su S&P 500. Usare T-1 close; 15–20: rischio moderato.",s:"CBOE · FRED (VIXCLS)"},
+        F1B_Breadth:{t:"Breadth settoriale 1M",a:"% di settori SPDR con performance 1M > 0. >50% = respiro positivo.",s:"SSGA SPDR · metodo interno"},
+        F1B_RiskTilt:{t:"Risk Tilt (Ciclici − Difensivi)",a:"Δ media 1M tra gruppi. Positivo: propensione al rischio; negativo: difesa.",s:"Rotazione settoriale — Swing v5.0"},
+        F1B_FlowScore:{t:"FlowScore",a:"0.45·z(Inflow5D) + 0.35·z(Perf1M) + 0.20·z(RiskTilt).",s:"F1B v13.1"},
+        F1B_Regime:{t:"RegimeScore",a:"0.8·FlowScore + 0.2·s(−VIX). Soglie: ≥0.35 Momentum; 0.10–0.35 Momentum-light; <0.10 Pullback.",s:"F1B v13.1"},
+        F1B_Mode:{t:"StrategyMode",a:"Classificazione operativa: Momentum / Momentum-light / Pullback.",s:"Decision Rules v13.1"},
+        F1B_Notes:{t:"Conformità & Fonti",a:"Tier-1 esteso (educ.): ETFdb/VettaFi; crosscheck SSGA/Bloomberg; VIX da FRED/CBOE.",s:"Governance Swing v5.0"}
+      };
+      let POP=null, prevOverflow='';
+      function closePop(){ if(!POP) return; POP.backdrop.removeEventListener('click', onBackdrop); document.removeEventListener('keydown', onKeyEsc, true); document.documentElement.style.overflow = prevOverflow; POP.wrap.remove(); POP=null; }
+      function onBackdrop(e){ if(e.target===e.currentTarget) closePop(); }
+      function onKeyEsc(e){ if(e.key==='Escape'){ e.stopPropagation(); e.preventDefault(); closePop(); } }
+      function openPop(d){
+        if(POP){ POP.title.textContent=d.t; POP.src.textContent='Fonte accademica: '+d.s; POP.text.innerHTML=d.a; POP.wrap.focus(); return; }
+        const wrap=document.createElement('div'); wrap.className='hx-pop'; wrap.role='dialog'; wrap.ariaModal='true'; wrap.tabIndex=-1;
+        const card=document.createElement('div'); card.className='hx-card'; card.addEventListener('click',ev=>ev.stopPropagation());
+        const h=document.createElement('h3'); h.textContent=d.t;
+        const src=document.createElement('div'); src.className='src'; src.textContent='Fonte accademica: '+d.s;
+        const text=document.createElement('div'); text.className='text-sm text-slate-800'; text.innerHTML=d.a;
+        card.append(h,src,text); wrap.append(card); document.body.appendChild(wrap);
+        prevOverflow=document.documentElement.style.overflow||''; document.documentElement.style.overflow='hidden';
+        wrap.addEventListener('click', onBackdrop); document.addEventListener('keydown', onKeyEsc, true); wrap.focus();
+        POP={wrap, backdrop:wrap, title:h, src, text};
+      }
+      document.addEventListener('click', (e)=>{
+        const b=e.target.closest('.hx'); if(!b) return;
+        const k=b.dataset.k; const d=EXPL_F1B[k]||{t:k,a:'Descrizione non disponibile.',s:'—'};
+        openPop(d);
+      }, true);
 
-    // tabs
-    $$('.noprint [data-tab]', body).forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        ['#f1b-ov','#f1b-mx','#f1b-in','#f1b-md','#f1b-au','#f1b-qc'].forEach(s=> body.querySelector(s)?.classList.add('hidden'));
-        const sel=btn.getAttribute('data-tab'); const tgt=body.querySelector(sel); if(tgt) tgt.classList.remove('hidden');
-      });
-    });
-    if(window.lucide) lucide.createIcons();
-  }
+      // ===== builder & binder =====
+      const $ = (s,root=document)=> root.querySelector(s);
+      const $$ = (s,root=document)=> Array.from(root.querySelectorAll(s));
+      const badgeCls = (c)=>({
+        green:'f1b-badge f1b-badge--green',
+        yellow:'f1b-badge f1b-badge--yellow',
+        red:'f1b-badge f1b-badge--red',
+        neutral:'f1b-badge f1b-badge--neutral'
+      }[(String(c||'neutral').toLowerCase()))];
 
-  // ===== mount & API =====
-  (function mount(){
-    const container = document.getElementById('mod-container');
-    if(!container) return;
-    const card = makeCard(); container.appendChild(card);
-    window.TradeliaF1B = {
-      update:(data)=> bindCard(card, data||{})
-    };
-  })();
+      function sparkline(svgEl, values){
+        if(!svgEl) return;
+        svgEl.innerHTML='';
+        if(!Array.isArray(values)||values.length<2){ return; }
+        const w=100, h=32, pad=2;
+        const min=Math.min(...values), max=Math.max(...values);
+        const rng = (max-min)||1;
+        const pts = values.map((v,i)=>{
+          const x = pad + (w-2*pad)*(i/(values.length-1));
+          const y = h-pad - (h-2*pad)*((v-min)/rng);
+          return [x,y];
+        });
+        const d = pts.map((p,i)=> (i?'L':'M')+p[0].toFixed(2)+','+p[1].toFixed(2)).join(' ');
+        const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+        path.setAttribute('d', d);
+        path.setAttribute('fill','none');
+        path.setAttribute('stroke','#0284c7');
+        path.setAttribute('stroke-width','1.4');
+        svgEl.appendChild(path);
+      }
 
-  // Aggiornamento via evento standard
-  window.addEventListener('tradelia:f1b:update', (ev)=> window.TradeliaF1B?.update(ev.detail||{}));
-})();
-</script>
+      function makeCard(){
+        const tpl = document.getElementById('tpl-f1b-card');
+        return tpl.content.firstElementChild.cloneNode(true);
+      }
 
+      function bindCard(card, F1B){
+        const m = F1B||{};
+        // KPI
+        $('[data-f1b="kpi-vix"]',card).textContent = m.UI?.Display?.VIX_Label ?? (m.Inputs?.VIX_Close_T1 ?? '—');
+        $('[data-f1b="kpi-breadth"]',card).textContent = m.Metrics?.Breadth1M?.label ?? '—';
+        $('[data-f1b="kpi-risktilt"]',card).textContent = m.Metrics?.RiskTilt?.label ?? '—';
+        $('[data-f1b="kpi-flowscore"]',card).textContent = (m.Metrics?.FlowScore?.score ?? '—');
+        $('[data-f1b="kpi-regimescore"]',card).textContent = (m.Metrics?.RegimeScore?.score ?? '—');
+        $('[data-f1b="kpi-mode"]',card).textContent = m.Metrics?.Classification?.StrategyMode ?? '—';
 
+        // Badges rapidi
+        const bV = m.UI?.Badges?.VIX, bB = m.UI?.Badges?.Breadth, bR = m.UI?.Badges?.RiskTilt;
+        const sb = m.Meta?.StateBadge;
+        const sBadge = $('[data-f1b="state-badge"]',card);
+        if(sb){ sBadge.className = badgeCls(sb.color); sBadge.textContent = (sb.label||'NEUTRO').toUpperCase(); }
+        if(bV){ const el=$('[data-f1b="badge-vix"]',card); el.className=badgeCls(bV.color); el.textContent=bV.label||'VIX'; }
+        if(bB){ const el=$('[data-f1b="badge-breadth"]',card); el.className=badgeCls(bB.color); el.textContent=bB.label||'BREADTH'; }
+        if(bR){ const el=$('[data-f1b="badge-risktilt"]',card); el.className=badgeCls(bR.color); el.textContent=bR.label||'RISK TILT'; }
 
-  <!-- Carica il runtime JS (stesso livello del file HTML) -->
-  <script src="./runtime.js?v=1" defer></script>
+        // Leadership
+        const tIn = (m.Leadership?.TopInflow||[]);
+        const wk  = (m.Leadership?.WeakSectors||[]);
+        $('[data-f1b="top1"]',card).textContent  = tIn[0]?(tIn[0].ticker+' · '+tIn[0].name):'—';
+        $('[data-f1b="top2"]',card).textContent  = tIn[1]?(tIn[1].ticker+' · '+tIn[1].name):'—';
+        $('[data-f1b="top3"]',card).textContent  = tIn[2]?(tIn[2].ticker+' · '+tIn[2].name):'—';
+        $('[data-f1b="weak1"]',card).textContent = wk[0]?(wk[0].ticker+' · '+wk[0].name):'—';
+        $('[data-f1b="weak2"]',card).textContent = wk[1]?(wk[1].ticker+' · '+wk[1].name):'—';
+        $('[data-f1b="weak3"]',card).textContent = wk[2]?(wk[2].ticker+' · '+wk[2].name):'—';
+
+        // Sparkline
+        const series = m.Series?.VIX_Sparkline;
+        sparkline($('[data-f1b="spark-vix"]',card), Array.isArray(series)? series : []);
+        $('[data-f1b="spark-meta"]',card).textContent =
+          Array.isArray(series)&&series.length ? `VIX · ultimi ${series.length} gg · timebase ${m.Series?.Timebase||'daily'}` : 'VIX · n/d';
+
+        // Drawer open
+        $('[data-f1b="open"]',card).onclick = ()=> renderDrawer(m);
+        if(window.lucide) lucide.createIcons();
+      }
+
+      // ===== Drawer =====
+      function renderDrawer(F1B){
+        const drawer = document.getElementById('mod-drawer');
+        const panel  = drawer.querySelector('aside');
+        const body   = document.getElementById('drawer-body');
+        document.getElementById('drawer-title').textContent = 'F1B — Screening Macro-Settoriale';
+        document.getElementById('drawer-sub').textContent   = 'Rotazione · Volatilità · Regime';
+        drawer.classList.remove('hidden');
+        requestAnimationFrame(()=> panel.style.transform='translateX(0)');
+
+        const m = F1B||{};
+        const fmt = (x, d=2)=> (x==null || x==='—') ? '—' : (typeof x==='number' ? x.toFixed(d) : x);
+
+        const rows = (m.Inputs?.SectorETFs||[]).map(r=>`
+          <tr class="border-b last:border-0">
+            <td class="py-1.5 pr-2 font-semibold">${r.ticker||'—'}</td>
+            <td class="py-1.5 pr-2">${r.name||'—'}</td>
+            <td class="py-1.5 pr-2 text-slate-500">${r.group||'—'}</td>
+            <td class="py-1.5 pr-2 text-right">${fmt(r.perf_1m_pct,2)}%</td>
+            <td class="py-1.5 pr-2 text-right">${fmt(r.flow_5d_usd_M,2)} M</td>
+            <td class="py-1.5 text-right">${r.rank_flow_5d??'—'}</td>
+          </tr>`).join('');
+
+        body.innerHTML = `
+          <div class="space-y-4">
+            <div class="flex gap-1.5 text-sm noprint">
+              <button class="sbtn" data-tab="#f1b-ov"><i data-lucide="layout-grid"></i><span>Overview</span></button>
+              <button class="sbtn" data-tab="#f1b-mx"><i data-lucide="activity"></i><span>Metriche</span></button>
+              <button class="sbtn" data-tab="#f1b-in"><i data-lucide="table-2"></i><span>Inputs</span></button>
+              <button class="sbtn" data-tab="#f1b-md"><i data-lucide="beaker"></i><span>Metodo</span></button>
+              <button class="sbtn" data-tab="#f1b-au"><i data-lucide="shield-check"></i><span>Audit</span></button>
+              <button class="sbtn" data-tab="#f1b-qc"><i data-lucide="check-circle-2"></i><span>Quality</span></button>
+            </div>
+
+            <section id="f1b-ov" class="space-y-3">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div class="card p-3">
+                  <h4 class="font-semibold mb-1">Classificazione</h4>
+                  <div>StrategyMode: <b>${m.Metrics?.Classification?.StrategyMode||'—'}</b> <button class="hx" data-k="F1B_Mode">?</button></div>
+                  <div class="mt-1 text-slate-700">RegimeScore: <b>${fmt(m.Metrics?.RegimeScore?.score)}</b> <button class="hx" data-k="F1B_Regime">?</button></div>
+                  <div class="mt-2">
+                    ${(m.Meta?.StateBadge)? `<span class="${badgeCls(m.Meta.StateBadge.color)}">${(m.Meta.StateBadge.label||'NEUTRO').toUpperCase()}</span>`:''}
+                  </div>
+                </div>
+                <div class="card p-3">
+                  <h4 class="font-semibold mb-1">Leadership settoriale</h4>
+                  <div class="flex flex-wrap gap-1.5">
+                    ${(m.Leadership?.TopInflow||[]).slice(0,3).map(x=>`<span class="f1b-chip">${x.ticker||'—'} · ${x.name||'—'}</span>`).join('')}
+                  </div>
+                  <div class="mt-2 text-sm text-slate-600">Deboli:
+                    ${(m.Leadership?.WeakSectors||[]).slice(0,3).map(x=>`<span class="f1b-tag">${x.ticker||'—'} · ${x.name||'—'}</span>`).join(' ')}
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="f1b-mx" class="hidden space-y-3">
+              <div class="f1b-kpi-grid">
+                <div class="f1b-kpi"><label>VIX <button class="hx" data-k="F1B_VIX">?</button></label><div class="v">${m.UI?.Display?.VIX_Label ?? m.Inputs?.VIX_Close_T1 ?? '—'}</div></div>
+                <div class="f1b-kpi"><label>Breadth 1M <button class="hx" data-k="F1B_Breadth">?</button></label><div class="v">${m.Metrics?.Breadth1M?.label ?? '—'}</div></div>
+                <div class="f1b-kpi"><label>Risk Tilt <button class="hx" data-k="F1B_RiskTilt">?</button></label><div class="v">${m.Metrics?.RiskTilt?.label ?? '—'}</div></div>
+                <div class="f1b-kpi"><label>FlowScore <button class="hx" data-k="F1B_FlowScore">?</button></label><div class="v">${fmt(m.Metrics?.FlowScore?.score)}</div></div>
+                <div class="f1b-kpi"><label>RegimeScore <button class="hx" data-k="F1B_Regime">?</button></label><div class="v">${fmt(m.Metrics?.RegimeScore?.score)}</div></div>
+                <div class="f1b-kpi"><label>State <button class="hx" data-k="F1B_Notes">?</button></label><div class="v">${m.Meta?.State||'—'}</div></div>
+              </div>
+              <div class="mt-1">
+                <svg class="f1b-spark" preserveAspectRatio="none" viewBox="0 0 100 32" aria-label="VIX sparkline"></svg>
+              </div>
+            </section>
+
+            <section id="f1b-in" class="hidden">
+              <div class="card p-3 overflow-auto">
+                <table class="w-full text-sm">
+                  <thead class="text-slate-500">
+                    <tr class="border-b">
+                      <th class="text-left py-1.5 pr-2">Ticker</th>
+                      <th class="text-left py-1.5 pr-2">Nome</th>
+                      <th class="text-left py-1.5 pr-2">Gruppo</th>
+                      <th class="text-right py-1.5 pr-2">Perf 1M %</th>
+                      <th class="text-right py-1.5 pr-2">Flow 5D (M$)</th>
+                      <th class="text-right py-1.5">Rank Flow</th>
+                    </tr>
+                  </thead>
+                  <tbody>${rows||''}</tbody>
+                </table>
+              </div>
+            </section>
+
+            <section id="f1b-md" class="hidden text-sm text-slate-700">
+              <div class="card p-3">
+                <h4 class="font-semibold mb-1">Regole & Pesi</h4>
+                <ul class="list-disc pl-5 space-y-1">
+                  <li><b>FlowScore</b> = 0.45·z(Inflow5D) + 0.35·z(Perf1M) + 0.20·z(RiskTilt) <button class="hx" data-k="F1B_FlowScore">?</button></li>
+                  <li><b>RegimeScore</b> = 0.8·FlowScore + 0.2·s(−VIX) <button class="hx" data-k="F1B_Regime">?</button></li>
+                  <li>Soglie → Momentum ≥ 0.35 · Momentum-light 0.10–0.35 · Pullback &lt; 0.10</li>
+                </ul>
+              </div>
+            </section>
+
+            <section id="f1b-au" class="hidden text-sm">
+              <div class="card p-3 space-y-1.5">
+                <div><b>AuditPathID:</b> ${m.Meta?.AuditPathID||'—'}</div>
+                <div><b>Version:</b> ${m.Meta?.Version||'—'} · <b>Timestamp:</b> ${m.Meta?.Timestamp||'—'} (${m.Meta?.Timezone||'—'})</div>
+                <div><b>Tier:</b> ${m.Meta?.SourceTier||'—'}</div>
+                <div><b>Sources:</b> ${(m.Meta?.Sources||[]).join(', ')||'—'}</div>
+                <div><b>Conformità:</b> ${m.Audit?.Conformity||'—'}</div>
+                <div><b>Note:</b> ${m.Meta?.Notes||'—'}</div>
+                ${Array.isArray(m.Audit?.Caveats)? `<div class="text-slate-600"><b>Caveat:</b> ${m.Audit.Caveats.join('; ')}</div>`:''}
+              </div>
+            </section>
+
+            <section id="f1b-qc" class="hidden text-sm">
+              <div class="card p-3 grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div><div class="text-slate-500 text-xs">OCR_Conf</div><div class="font-semibold">${fmt(m.Quality?.OCR_Conf)}</div></div>
+                <div><div class="text-slate-500 text-xs">DataIntegrity</div><div class="font-semibold">${fmt(m.Quality?.DataIntegrity)}</div></div>
+                <div><div class="text-slate-500 text-xs">FeedSync</div><div class="font-semibold">${fmt(m.Quality?.FeedSync)}</div></div>
+                <div class="sm:col-span-3"><div class="text-slate-500 text-xs">Confidence Local</div>
+                  <span class="${badgeCls(m.Quality?.ConfidenceLocal?.color)}">${fmt(m.Quality?.ConfidenceLocal?.value)}</span>
+                </div>
+              </div>
+            </section>
+          </div>
+        `;
+
+        // sparkline in tab metriche
+        (function(){
+          const sv1 = body.querySelector('#f1b-mx svg');
+          const sv2 = body.querySelector('#f1b-ov ~ #f1b-mx svg'); // backup
+          const el = sv1 || sv2;
+          if(el) sparkline(el, Array.isArray(m.Series?.VIX_Sparkline)? m.Series.VIX_Sparkline : []);
+        })();
+
+        // tabs
+        (function(){
+          const tabsBtns = body.querySelectorAll('.noprint [data-tab]');
+          const sections = ['#f1b-ov','#f1b-mx','#f1b-in','#f1b-md','#f1b-au','#f1b-qc'].map(s=> body.querySelector(s));
+          tabsBtns.forEach(btn=>{
+            btn.addEventListener('click',()=>{
+              sections.forEach(sec=>sec?.classList.add('hidden'));
+              const sel=btn.getAttribute('data-tab'); body.querySelector(sel)?.classList.remove('hidden');
+            });
+          });
+        })();
+
+        if(window.lucide) lucide.createIcons();
+      }
+
+      // ===== mount & API (robusto) =====
+      function doMount(){
+        const container = document.getElementById('mod-container');
+        const tpl = document.getElementById('tpl-f1b-card');
+        if(!container || !tpl) return false;
+        const card = tpl.content.firstElementChild.cloneNode(true);
+        container.appendChild(card);
+        window.TradeliaF1B = { update:(data)=> bindCard(card, data||{}) };
+        return true;
+      }
+      if(!doMount()) document.addEventListener('DOMContentLoaded', doMount);
+
+      window.addEventListener('tradelia:f1b:update', (ev)=> window.TradeliaF1B?.update(ev.detail||{}));
+    })();
+  </script>
+
+  <!-- Carica il runtime JS -->
+  <script src="./runtime.js?v=2" defer></script>
 </body>
 </html>
