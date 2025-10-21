@@ -22,3 +22,140 @@
     ]
   }
 }
+{
+  "Header": {
+    "Session": "REG",
+    "StartDate": "2025-10-18",
+    "EndDate": "2025-10-21",
+    "Ticker": "QYLD",
+    "Venue": "NASDAQ",
+    "Validation": { "label": "OK", "color": "green" },
+    "VersionTag": "swing-v5.0",
+    "SyncID": "QYLD_20251021_F1",
+    "Freshness": 1,
+    "OCR_Conf": 0.987654,
+    "DataIntegrity": 0.95321,
+    "FeedSync": 0.9973,
+    "ConfidenceFinal": { "value": 0.789456, "color": "yellow" },
+    "State": { "label": "HOLD", "color": "yellow" },
+    "TapeNotes": "AuctionShare 21.3% · VWAP tight · closing print stabile",
+    "Missing": [],
+    "Colorize": [
+      { "id": "#H-TapeNotes", "mode": "tone",  "color": "yellow", "text": "Asta vivace (attenzione)" },
+      { "id": "#H-Missing",   "mode": "badge", "color": "green",  "label": "COMPLETO" }
+    ]
+  },
+
+  "F1B": {
+    "Meta": {
+      "AuditPathID": "F1B-20251021-IT-001",
+      "Version": "v1.1",
+      "Timestamp": "2025-10-21 09:45",
+      "Timezone": "Europe/Rome",
+      "LagDays": 1,
+      "Freshness": "T-1",
+      "State": "ACTIVE",
+      "StateBadge": { "label": "ACTIVE", "color": "green" },
+      "SourceTier": "Tier-1 esteso (educ.)",
+      "Sources": ["FRED:VIXCLS", "SSGA SPDR", "Bloomberg (crosscheck)", "VettaFi/ETFdb"],
+      "Notes": "Leadership difensiva, ampiezza moderata-positiva; regime Momentum-light"
+    },
+    "Quality": {
+      "OCR_Conf": 0.987654,
+      "DataIntegrity": 0.95321,
+      "FeedSync": 0.9973,
+      "ConfidenceLocal": { "value": 0.92, "color": "green" }
+    },
+    "Inputs": {
+      "VIX_Close_T1": 18.23,
+      "SectorETFs": [
+        { "ticker": "XLU",  "name": "Utilities",        "group": "defensive", "perf_1m_pct": 8.48,  "flow_5d_usd_M": 573.91, "rank_flow_5d": 1 },
+        { "ticker": "XLV",  "name": "Health Care",      "group": "defensive", "perf_1m_pct": 5.94,  "flow_5d_usd_M": 248.74, "rank_flow_5d": 2 },
+        { "ticker": "XLF",  "name": "Financials",       "group": "cyclical",  "perf_1m_pct": -2.38, "flow_5d_usd_M": 187.90, "rank_flow_5d": 3 },
+        { "ticker": "XLY",  "name": "Cons. Discretion.", "group": "cyclical", "perf_1m_pct": -1.95, "flow_5d_usd_M": 148.62, "rank_flow_5d": 4 },
+        { "ticker": "XLC",  "name": "Comm. Services",   "group": "cyclical",  "perf_1m_pct": -2.32, "flow_5d_usd_M": 23.10,  "rank_flow_5d": 5 },
+        { "ticker": "XLRE", "name": "Real Estate",      "group": "defensive", "perf_1m_pct": 2.27,  "flow_5d_usd_M": 30.07,  "rank_flow_5d": 6 },
+        { "ticker": "XLB",  "name": "Materials",        "group": "cyclical",  "perf_1m_pct": -1.63, "flow_5d_usd_M": 1.79,   "rank_flow_5d": 7 },
+        { "ticker": "XLP",  "name": "Cons. Staples",    "group": "defensive", "perf_1m_pct": 1.04,  "flow_5d_usd_M": -47.32, "rank_flow_5d": 8 },
+        { "ticker": "XLK",  "name": "Technology",       "group": "cyclical",  "perf_1m_pct": 3.46,  "flow_5d_usd_M": -64.94, "rank_flow_5d": 9 },
+        { "ticker": "XLI",  "name": "Industrials",      "group": "cyclical",  "perf_1m_pct": 0.67,  "flow_5d_usd_M": -95.52, "rank_flow_5d": 10 },
+        { "ticker": "XLE",  "name": "Energy",           "group": "cyclical",  "perf_1m_pct": -1.01, "flow_5d_usd_M": -406.02,"rank_flow_5d": 11 }
+      ]
+    },
+    "Metrics": {
+      "Breadth1M": {
+        "positive_count": 6,
+        "total": 10,
+        "ratio": 0.6,
+        "label": "60% positivi",
+        "badge": { "label": "POSITIVO", "color": "green" }
+      },
+      "RiskTilt": {
+        "cyclicals_mean_1m": -0.74,
+        "defensives_mean_1m": 4.43,
+        "delta_pp": 5.17,
+        "label": "+5.17 pp verso difensivi",
+        "badge": { "label": "DIFENSIVO", "color": "yellow" }
+      },
+      "FlowScore": {
+        "z_inflow5d": 0.32,
+        "z_perf1m": 0.21,
+        "z_risktilt": 0.15,
+        "score": 0.18,
+        "weights": { "inflow5d": 0.45, "perf1m": 0.35, "risktilt": 0.20 }
+      },
+      "RegimeScore": {
+        "flow_component": 0.144,
+        "sigmoid_neg_vix": 0.38,
+        "score": 0.22,
+        "weights": { "flow": 0.8, "s(-VIX)": 0.2 },
+        "thresholds": {
+          "momentum": 0.35,
+          "momentum_light_low": 0.10,
+          "momentum_light_high": 0.35,
+          "pullback": 0.10
+        }
+      },
+      "Classification": {
+        "StrategyMode": "Momentum-light",
+        "badge": { "label": "MOMENTUM-LIGHT", "color": "green" }
+      }
+    },
+    "Leadership": {
+      "TopInflow": [
+        { "ticker": "XLU", "name": "Utilities",   "flow_5d_usd_M": 573.91, "perf_1m_pct": 8.48 },
+        { "ticker": "XLV", "name": "Health Care", "flow_5d_usd_M": 248.74, "perf_1m_pct": 5.94 },
+        { "ticker": "XLF", "name": "Financials",  "flow_5d_usd_M": 187.90, "perf_1m_pct": -2.38 }
+      ],
+      "WeakSectors": [
+        { "ticker": "XLE", "name": "Energy",      "flow_5d_usd_M": -406.02, "perf_1m_pct": -1.01 },
+        { "ticker": "XLI", "name": "Industrials", "flow_5d_usd_M": -95.52,  "perf_1m_pct": 0.67 },
+        { "ticker": "XLK", "name": "Technology",  "flow_5d_usd_M": -64.94,  "perf_1m_pct": 3.46 }
+      ]
+    },
+    "UI": {
+      "Display": {
+        "VIX_Label": "18.23",
+        "Breadth_Label": "60% positivi",
+        "RiskTilt_Label": "+5.17 pp verso difensivi"
+      },
+      "Badges": {
+        "VIX": { "label": "BASSA-MEDIA", "color": "yellow" },
+        "Breadth": { "label": "POSITIVO", "color": "green" },
+        "RiskTilt": { "label": "DIFENSIVO", "color": "yellow" }
+      }
+    },
+    "Series": {
+      "VIX_Sparkline": [17.90, 18.10, 17.70, 18.60, 18.40, 18.20, 18.23],
+      "Timebase": "daily",
+      "LastN": 7
+    },
+    "Audit": {
+      "Conformity": "Tier-1 esteso (educ.) con crosscheck SSGA/Bloomberg; VIX da FRED/CBOE",
+      "Caveats": [
+        "Inflow 5D per ETF settoriali public-free: qualità dipende dal provider",
+        "Per uso istituzionale pieno richiede feed proprietari o terminal"
+      ]
+    }
+  }
+}
