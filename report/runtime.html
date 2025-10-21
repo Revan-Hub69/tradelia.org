@@ -1277,3 +1277,479 @@
 </script>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =========================
+     STEP 7/7 — MODULO F2 (card ultra-compatta + drawer a TAB + resoconto)
+     >>> blocco completo e autocontenuto
+     ========================= -->
+
+<style>
+  /* === F2 Card (mobile-first, ultra-compatta) === */
+  .f2-card{ border:1px solid #e5e7eb; border-radius:14px; background:#fff }
+  .f2-head{ display:flex; align-items:center; justify-content:space-between; gap:.5rem;
+    padding:8px 10px; background:linear-gradient(#fff,#fbfdff); border-bottom:1px solid #eef2f6 }
+  .f2-title{ font-weight:600; font-size:13px; color:#0f172a }
+  .f2-body{ padding:8px 10px }
+  .f2-line{ display:flex; align-items:center; justify-content:space-between; gap:.75rem }
+  .f2-left{ display:flex; align-items:center; gap:.65rem; min-width:0 }
+  .f2-k{ display:flex; flex-direction:column; min-width:0 }
+  .f2-lab{ font-size:11px; color:#64748b }
+  .f2-val{ font-size:13px; font-weight:700; color:#0f172a; font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace; white-space:nowrap }
+  .f2-val.truncate{ overflow:hidden; text-overflow:ellipsis }
+
+  .f2-dot{ width:10px; height:10px; border-radius:999px; flex:0 0 auto }
+  .f2-dot-g{ background:#10b981 } /* green */
+  .f2-dot-y{ background:#f59e0b } /* yellow */
+  .f2-dot-r{ background:#ef4444 } /* red */
+  .f2-dot-n{ background:#94a3b8 } /* neutral */
+
+  /* CTA: default mobile; in griglia desktop diventa più piccola */
+  .f2-cta .sbtn{ padding:.45rem .6rem; font-size:13px }
+  #mod-container[data-view="grid"] .f2-cta .sbtn{ padding:.3rem .5rem; font-size:12px }
+  @media (min-width:1024px){
+    #mod-container[data-view="grid"] .f2-cta .sbtn{ padding:.28rem .48rem; font-size:12px }
+  }
+
+  /* === Drawer Tabs (effetto “premuto” allineato a F1B) === */
+  .f2-tabbar{ position:sticky; top:0; z-index:10; display:flex; flex-wrap:wrap; gap:.35rem; background:#f8fafc;
+    padding:.5rem; border-radius:10px; border:1px solid #e5e7eb }
+  .f2-tabbar .sbtn{
+    font-size:12px; padding:.4rem .55rem; border:1px solid #e5e7eb; background:#fff;
+    box-shadow:0 1px 0 rgba(2,6,23,.04);
+    transition: background .18s ease, border-color .18s ease, color .18s ease, transform .06s ease, box-shadow .18s ease;
+  }
+  .f2-tabbar .sbtn:hover{ background:#f1f5f9; border-color:#dbe3ea }
+  .f2-tabbar .sbtn.active,
+  .f2-tabbar .sbtn[aria-pressed="true"]{
+    background:linear-gradient(#e0f2fe,#bae6fd);
+    border-color:#7dd3fc; color:#075985; font-weight:700;
+    transform: translateY(1px);
+    box-shadow: inset 0 1px 0 rgba(2,6,23,.10), 0 0 0 2px rgba(14,165,233,.15);
+  }
+  .f2-tab{ display:none } .f2-tab.active{ display:block }
+
+  /* Tabelle compatte nel drawer */
+  .tbl-kv{ width:100%; font-size:13px; border-collapse:separate; border-spacing:0 .15rem }
+  .tbl-kv td{ padding:.15rem .25rem .15rem 0; vertical-align:top }
+  .tbl-kv td:first-child{ color:#64748b; width:42% }
+
+  /* Sparkline condivisa */
+  .f2-spark{ width:100%; height:32px; display:block }
+</style>
+
+<!-- Template card F2 -->
+<template id="tpl-f2-card">
+  <article class="f2-card" role="group" aria-labelledby="f2-title">
+    <header class="f2-head">
+      <h3 id="f2-title" class="f2-title">F2 — Concordanza Macro · Ticker</h3>
+      <!-- riuso palette badge F1B: f1b-badge--* -->
+      <span class="f1b-badge f1b-badge--neutral" data-f2="state-badge">NEUTRO</span>
+    </header>
+
+    <div class="f2-body">
+      <div class="f2-line">
+        <div class="f2-left min-w-0">
+          <span class="f2-dot f2-dot-n" aria-hidden="true" data-f2="mc-dot"></span>
+          <div class="f2-k min-w-0">
+            <div class="f2-lab">Ticker</div>
+            <div class="f2-val truncate" data-f2="ticker">—</div>
+          </div>
+        </div>
+
+        <div class="f2-k">
+          <div class="f2-lab">Concordanza</div>
+          <div class="f2-val" data-f2="mc">—</div>
+        </div>
+
+        <div class="f2-cta">
+          <button class="sbtn" data-f2="open"><i data-lucide="panel-right-open"></i><span>Apri scheda</span></button>
+        </div>
+      </div>
+
+      <div class="mt-2 flex items-center gap-1.5">
+        <span class="text-[11px] text-slate-500">Confidence:</span>
+        <span class="f1b-badge f1b-badge--neutral" data-f2="conf">—</span>
+      </div>
+    </div>
+  </article>
+</template>
+
+<script>
+(function(){
+  // ===== Utilities
+  const $ = (s,root=document)=> root.querySelector(s);
+
+  const badgeMap = {
+    green:'f1b-badge f1b-badge--green',
+    yellow:'f1b-badge f1b-badge--yellow',
+    red:'f1b-badge f1b-badge--red',
+    neutral:'f1b-badge f1b-badge--neutral'
+  };
+  const dotClass = (t)=> ({
+    green:'f2-dot f2-dot-g',
+    yellow:'f2-dot f2-dot-y',
+    red:'f2-dot f2-dot-r',
+    neutral:'f2-dot f2-dot-n'
+  }[t] || 'f2-dot f2-dot-n');
+
+  // TONES
+  const toneByMC   = (v)=> (v==null||isNaN(v)) ? 'neutral' : (v> 0.30 ? 'green' : (v < -0.30 ? 'red' : 'yellow'));
+  const toneByConf = (v)=> (v==null||isNaN(v)) ? 'neutral' : (v>=0.80 ? 'green' : (v>=0.70 ? 'yellow' : 'red'));
+
+  function stateBadgeFrom(state, conf){
+    const c = Number(conf);
+    const forcedHold = isFinite(c) && c < 0.80;        // policy UI
+    const s = forcedHold ? 'HOLD' : String(state||'NEUTRO').toUpperCase();
+    if (s==='ACTIVE') return {label:'ATTIVO', color:'green'};
+    if (s==='REVIEW') return {label:'REVISIONE', color:'yellow'};
+    if (s==='HOLD')   return {label:'HOLD', color:'red'};
+    return {label:'NEUTRO', color:'neutral'};
+  }
+
+  // Sparkline minimale (riuso globale se presente)
+  function sparkline(svgEl, values){
+    if (window.Tradelia?.sparkline){ window.Tradelia.sparkline(svgEl, values); return; }
+    if(!svgEl) return;
+    svgEl.innerHTML='';
+    if(!Array.isArray(values)||values.length<2) return;
+    const w=100,h=32,p=2,min=Math.min(...values),max=Math.max(...values),rng=(max-min)||1;
+    const d=values.map((v,i)=>{
+      const x=p+(w-2*p)*(i/(values.length-1));
+      const y=h-p-(h-2*p)*((v-min)/rng);
+      return (i?'L':'M')+x.toFixed(2)+','+y.toFixed(2);
+    }).join(' ');
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',d); path.setAttribute('fill','none');
+    path.setAttribute('stroke','#0284c7'); path.setAttribute('stroke-width','1.4');
+    svgEl.appendChild(path);
+  }
+
+  // SUMMARY (fallback se manca m.Summary.Text)
+  function buildSummary(m){
+    const pre = m?.Summary?.Text || m?.Meta?.Summary;
+    if (pre && String(pre).trim()) return String(pre).trim();
+
+    const tkr = m?.Ticker || '—';
+    const mc  = m?.MacroConcordance_F2;
+    const conf= m?.Confidence;
+    const reg = m?.FromF1_pass?.MacroRegime;
+    const sci = m?.F2_Ticker?.SCI_tkr;
+    const icr = m?.F2_Ticker?.ICR_tkr;
+    const ipi = m?.F2_Ticker?.IPI_tkr;
+    const perf1m = m?.F2_Ticker?.DPI_context?.Perf?.['1m'];
+    const distH  = m?.F2_Ticker?.DPI_context?.Dist52w?.fromHigh;
+    const comp   = m?.F2_Ticker?.DPI_context?.TechnicalOpinion?.Composite;
+
+    const bits=[];
+    bits.push(`Per ${tkr} la concordanza macro è ${mc==null?'n/d': (mc>0?'positiva':'negativa/mista')} ${mc==null?'':'('+(Number(mc).toFixed(2))+')'}.`);
+    if (reg) bits.push(`Il regime F1 è **${reg}**.`);
+    if (sci!=null || icr!=null || ipi!=null){
+      bits.push(`Indicatori ticker: ${sci!=null?`SCI ${Number(sci).toFixed(2)}`:''}${(icr!=null||ipi!=null)?' · ':''}${icr!=null?`ICR ${Number(icr).toFixed(2)}`:''}${ipi!=null?' · IPI '+Number(ipi).toFixed(2):''}.`);
+    }
+    if (perf1m || distH || comp){
+      bits.push(`Contesto: ${perf1m?`1M ${perf1m}`:''}${distH?`${perf1m?', ':''}dist. da 52wH ${distH}`:''}${comp?`${(perf1m||distH)?', ':''}tecnico ${comp}`:''}.`);
+    }
+    if (conf!=null) bits.push(`Confidence ${Number(conf).toFixed(2)} (policy HOLD se < 0.80).`);
+    return bits.join(' ');
+  }
+
+  // ===== BINDER: aggiorna la card
+  function bindF2Card(card, m){
+    const tkr = m?.Ticker || '—';
+    const mcN = (m?.MacroConcordance_F2!=null && !isNaN(m.MacroConcordance_F2)) ? Number(m.MacroConcordance_F2) : null;
+    const confN = (m?.Confidence!=null && !isNaN(m.Confidence)) ? Number(m.Confidence) : null;
+
+    $('[data-f2="ticker"]',card).textContent = tkr;
+    $('[data-f2="mc"]',card).textContent     = (mcN==null ? '—' : mcN.toFixed(2));
+
+    // Dot colore su concordanza
+    const dotTone = toneByMC(mcN);
+    const dotEl   = $('[data-f2="mc-dot"]',card);
+    if (dotEl){ dotEl.className = dotClass(dotTone); dotEl.setAttribute('data-tone', dotTone); }
+
+    // Confidence badge
+    const confTone = toneByConf(confN);
+    const confEl = $('[data-f2="conf"]',card);
+    if (confEl){
+      confEl.className = badgeMap[confTone]||badgeMap.neutral;
+      confEl.textContent = (confN==null ? '—' : confN.toFixed(2));
+    }
+
+    // State badge (con forzatura HOLD < 0.80)
+    const sb = m?.Meta?.StateBadge || stateBadgeFrom(m?.State, confN);
+    const sbEl = $('[data-f2="state-badge"]',card);
+    if (sbEl){ sbEl.className = badgeMap[sb.color]||badgeMap.neutral; sbEl.textContent = (sb.label||'NEUTRO').toUpperCase(); }
+
+    // Apri drawer
+    $('[data-f2="open"]',card).onclick=(ev)=>{
+      ev.stopPropagation();
+      if (window.Tradelia?.openDrawer) window.Tradelia.openDrawer();
+      renderF2Drawer(m);
+    };
+
+    if (window.lucide) lucide.createIcons();
+  }
+
+  // ===== Drawer Renderer (TAB + contenuti)
+  function renderF2Drawer(m){
+    const body = document.getElementById('drawer-body');
+    document.getElementById('drawer-title').textContent = 'F2 — Concordanza Macro · Ticker';
+    document.getElementById('drawer-sub').textContent   = m?.Ticker ? m.Ticker : '—';
+
+    const fmt=(x,d=2)=> (x==null||x==='—') ? '—' : (typeof x==='number'? x.toFixed(d):x);
+    const mcTone = toneByMC(Number(m?.MacroConcordance_F2));
+    const confTone = toneByConf(Number(m?.Confidence));
+
+    const kv = (rows)=>`
+      <table class="tbl-kv">
+        ${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}
+      </table>`;
+
+    const passF1 = kv([
+      ['MacroRegime', (m?.FromF1_pass?.MacroRegime ?? '—')],
+      ['SCI', fmt(m?.FromF1_pass?.SCI)],
+      ['IPI', fmt(m?.FromF1_pass?.IPI)],
+      ['OPI', fmt(m?.FromF1_pass?.OPI)],
+      ['ICR (pre)', fmt(m?.FromF1_pass?.ICR_pre)],
+      ['GeoRisk', (m?.FromF1_pass?.GeoRisk ?? '—')],
+      ['RiskWindow_F1', fmt(m?.FromF1_pass?.RiskWindow_F1,0)]
+    ]);
+
+    const tickIndic = kv([
+      ['IPI_tkr', fmt(m?.F2_Ticker?.IPI_tkr)],
+      ['SCI_tkr', fmt(m?.F2_Ticker?.SCI_tkr)],
+      ['ICR_tkr', fmt(m?.F2_Ticker?.ICR_tkr)],
+      ['RiskWindow_local', fmt(m?.F2_Ticker?.RiskWindow_local,0)],
+      ['RiskWindow', fmt(m?.F2_Ticker?.RiskWindow,0)]
+    ]);
+
+    const dpi = m?.F2_Ticker?.DPI_context || {};
+    const perf = dpi?.Perf || {};
+    const dist = dpi?.Dist52w || {};
+    const tfc  = Array.isArray(dpi?.TechnicalOpinion?.TF_components)? dpi.TechnicalOpinion.TF_components.slice(0,6):[];
+
+    const peers = Array.isArray(dpi?.Peers_ETF) ? dpi.Peers_ETF.slice(0,6) : [];
+    const peersHtml = peers.length
+      ? `<div class="flex flex-wrap gap-1.5 mt-1">${peers.map(p=>`<span class="f1b-badge f1b-badge--neutral">${(p.ticker||'—')} · ${(p.rel||'peer')}</span>`).join('')}</div>`
+      : '<div class="text-slate-400 text-sm">—</div>';
+
+    const webp = Array.isArray(m?.ExternalSupplement) ? m.ExternalSupplement.slice(0,6) : [];
+    const webRows = webp.length ? webp.map(x=>`
+      <tr class="border-b last:border-0">
+        <td class="py-1 pr-2 font-semibold">${x.source||'—'}</td>
+        <td class="py-1 pr-2">${x.title||'—'}</td>
+        <td class="py-1 pr-2 text-slate-500">${x.ts||'—'}</td>
+        <td class="py-1"><a class="text-sky-700 underline decoration-dotted" href="${x.url||'#'}" target="_blank" rel="noopener">apri</a></td>
+      </tr>`).join('') : '<tr><td class="py-1 text-slate-400" colspan="4">—</td></tr>';
+
+    const summaryText = buildSummary(m);
+
+    body.innerHTML = `
+      <div class="space-y-3">
+        <div class="f2-tabbar noprint">
+          <button class="sbtn" data-tab="#f2-ov" aria-pressed="true"><i data-lucide="layout-grid"></i><span>Overview</span></button>
+          <button class="sbtn" data-tab="#f2-f1" aria-pressed="false"><i data-lucide="arrow-left-right"></i><span>Pass-through F1</span></button>
+          <button class="sbtn" data-tab="#f2-tk" aria-pressed="false"><i data-lucide="cpu"></i><span>Indicatori Ticker</span></button>
+          <button class="sbtn" data-tab="#f2-dp" aria-pressed="false"><i data-lucide="layers"></i><span>DPI Context</span></button>
+          <button class="sbtn" data-tab="#f2-wp" aria-pressed="false"><i data-lucide="globe"></i><span>WebProbe</span></button>
+          <button class="sbtn" data-tab="#f2-au" aria-pressed="false"><i data-lucide="badge-check"></i><span>Audit</span></button>
+          <button class="sbtn" data-tab="#f2-rs" aria-pressed="false"><i data-lucide="notes"></i><span>Resoconto</span></button>
+        </div>
+
+        <!-- OVERVIEW -->
+        <section id="f2-ov" class="f2-tab active">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            <div class="card p-3">
+              <div class="sec-h"><i data-lucide="sparkles"></i><span>Stato & metriche</span></div>
+              <div class="flex items-center gap-2">
+                <span class="${badgeMap[mcTone]||badgeMap.neutral}">Concordanza ${ (m?.MacroConcordance_F2!=null && !isNaN(m.MacroConcordance_F2)) ? Number(m.MacroConcordance_F2).toFixed(2) : '—' }</span>
+                <span class="${badgeMap[confTone]||badgeMap.neutral}">Confidence ${ (m?.Confidence!=null && !isNaN(m.Confidence)) ? Number(m.Confidence).toFixed(2) : '—' }</span>
+              </div>
+              <div class="mt-2">${kv([
+                ['Ticker', (m?.Ticker||'—')],
+                ['MacroRegime (F1)', (m?.FromF1_pass?.MacroRegime||'—')],
+                ['Freshness', (m?.Meta?.FreshnessLabel||m?.Meta?.Freshness||'—')]
+              ])}</div>
+            </div>
+            <div class="card p-3">
+              <div class="sec-h"><i data-lucide="list-tree"></i><span>Read-through</span></div>
+              <div class="text-sm text-slate-700 leading-relaxed">${summaryText}</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PASS-THROUGH F1 -->
+        <section id="f2-f1" class="f2-tab">
+          <div class="card p-3">
+            <div class="sec-h"><i data-lucide="arrow-left-right"></i><span>Dati F1 pass-through</span></div>
+            ${passF1}
+          </div>
+        </section>
+
+        <!-- INDICATORI TICKER -->
+        <section id="f2-tk" class="f2-tab">
+          <div class="card p-3">
+            <div class="sec-h"><i data-lucide="cpu"></i><span>Indicatori sul ticker</span></div>
+            ${tickIndic}
+          </div>
+        </section>
+
+        <!-- DPI CONTEXT -->
+        <section id="f2-dp" class="f2-tab">
+          <div class="card p-3 space-y-2">
+            <div class="sec-h"><i data-lucide="layers"></i><span>Performance & Tecnici</span></div>
+            ${kv([
+              ['Perf 5d', (perf['5d']??'—')], ['Perf 1m', (perf['1m']??'—')], ['Perf 3m', (perf['3m']??'—')],
+              ['Perf 6m', (perf['6m']??'—')], ['Perf YTD',(perf['YTD']??'—')], ['Perf 1y',(perf['1y']??'—')]
+            ])}
+            ${kv([
+              ['Dist. da 52w High', (dist.fromHigh??'—')], ['Dist. da 52w Low', (dist.fromLow??'—')],
+              ['Technical (Composite)', (dpi?.TechnicalOpinion?.Composite ?? '—')],
+              ['Timeframe (segnali)', (tfc.length ? tfc.join(' · ') : '—')]
+            ])}
+            <div class="sec-h mt-1"><i data-lucide="group"></i><span>Peers / ETF</span></div>
+            ${peersHtml}
+          </div>
+        </section>
+
+        <!-- WEBPROBE -->
+        <section id="f2-wp" class="f2-tab">
+          <div class="card p-3 overflow-auto">
+            <div class="sec-h"><i data-lucide="globe"></i><span>Supplementi esterni</span></div>
+            <table class="w-full text-sm">
+              <thead class="text-slate-500">
+                <tr class="border-b">
+                  <th class="text-left py-1 pr-2">Fonte</th>
+                  <th class="text-left py-1 pr-2">Titolo</th>
+                  <th class="text-left py-1 pr-2">TS</th>
+                  <th class="text-left py-1">Link</th>
+                </tr>
+              </thead>
+              <tbody>${webRows}</tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- AUDIT -->
+        <section id="f2-au" class="f2-tab">
+          <div class="card p-3">
+            <div class="sec-h"><i data-lucide="badge-check"></i><span>Audit & Qualità</span></div>
+            ${kv([
+              ['Version', (m?.Audit?.Version||'—')],
+              ['Integrity', (m?.Audit?.Integrity||'—')],
+              ['LagMax', (m?.Audit?.LagMax||'—')],
+              ['Missing (critici)', (Array.isArray(m?.Audit?.Missing)&&m.Audit.Missing.length ? m.Audit.Missing.join(', ') : '—')],
+              ['Confidence_panel.Finviz', (m?.Audit?.Confidence_panel?.Finviz!=null? Number(m.Audit.Confidence_panel.Finviz).toFixed(2):'—')],
+              ['Confidence_panel.Barchart', (m?.Audit?.Confidence_panel?.Barchart!=null? Number(m.Audit.Confidence_panel.Barchart).toFixed(2):'—')]
+            ])}
+            <div class="mt-2 text-[12px] text-slate-500">
+              Nota: la Confidence F2 è min(Confidence_panel, FeedSync_F1). Se &lt; 0.80, lo stato operativo è forzato a HOLD lato UI.
+            </div>
+
+            <div class="sec-h mt-3"><i data-lucide="info"></i><span>Meta</span></div>
+            ${kv([
+              ['VersionTag', (m?.Meta?.VersionTag||m?.Meta?.Version||'—')],
+              ['Timestamp', (m?.Meta?.Timestamp||'—') + (m?.Meta?.Timezone? ' ('+m.Meta.Timezone+')':'')],
+              ['Sources', (Array.isArray(m?.Meta?.Sources)&&m.Meta.Sources.length ? m.Meta.Sources.join(', ') : '—')],
+              ['TapeNotes', (m?.Meta?.TapeNotes||m?.TapeNotes||'—')],
+              ['Missing critici', (Array.isArray(m?.Meta?.MissingCritici)&&m.Meta.MissingCritici.length ? m.Meta.MissingCritici.join(', ') : '—')]
+            ])}
+          </div>
+        </section>
+
+        <!-- RESOCONTO -->
+        <section id="f2-rs" class="f2-tab">
+          <div class="card p-3">
+            <div class="sec-h"><i data-lucide="notes"></i><span>Resoconto sintetico</span></div>
+            <div class="text-sm text-slate-700 leading-relaxed">${summaryText}</div>
+          </div>
+        </section>
+      </div>
+    `;
+
+    // Sparkline (se hai serie F2, agganciale qui)
+    // const svg = body.querySelector('#f2-spark'); sparkline(svg, m?.Series?.Something || []);
+
+    // Tabs handler con stato “premuto”
+    const tabsBtns = body.querySelectorAll('.f2-tabbar [data-tab]');
+    const sections = ['#f2-ov','#f2-f1','#f2-tk','#f2-dp','#f2-wp','#f2-au','#f2-rs'].map(s=> body.querySelector(s));
+    const setActive = (btn)=>{
+      sections.forEach(sec=>sec?.classList.remove('active'));
+      body.querySelector(btn.getAttribute('data-tab'))?.classList.add('active');
+      tabsBtns.forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
+      btn.classList.add('active'); btn.setAttribute('aria-pressed','true');
+    };
+    const firstBtn = body.querySelector('.f2-tabbar [data-tab="#f2-ov"]');
+    if (firstBtn) setActive(firstBtn);
+    tabsBtns.forEach(btn=> btn.addEventListener('click', ()=> setActive(btn)));
+
+    if (window.lucide) lucide.createIcons();
+  }
+
+  // ===== MOUNT + API
+  function mountF2(){
+    const container = document.getElementById('mod-container');
+    const tpl = document.getElementById('tpl-f2-card');
+    if(!container || !tpl) return false;
+    const card = tpl.content.firstElementChild.cloneNode(true);
+    container.appendChild(card);
+
+    window.Tradelia = window.Tradelia || {};
+    window.Tradelia.F2 = {
+      update: (data)=> bindF2Card(card, data || {})
+    };
+
+    // placeholder vuoto
+    window.Tradelia.F2.update({});
+    return true;
+  }
+
+  if(!mountF2()){
+    const obs = new MutationObserver(()=>{ if(mountF2()) obs.disconnect(); });
+    obs.observe(document.documentElement, {childList:true, subtree:true});
+    document.addEventListener('DOMContentLoaded', ()=> mountF2(), {once:true});
+  }
+
+  // ===== Help “?”: definizioni F2 (se HelpX è presente)
+  if (window.Tradelia?.HelpX?.add){
+    window.Tradelia.HelpX.add('F2_MacroConcordance', {
+      t:'Concordanza Macro (F2)',
+      a:'Misura di coerenza tra regime/tilt macro (F1) e segnali del ticker (SCI_tkr, IPI_tkr, ICR_tkr, DPI). Soglie: >0.30 verde · −0.30…0.30 giallo · <−0.30 rosso.',
+      s:'Metodo interno F2 core v7.0'
+    });
+    window.Tradelia.HelpX.add('F2_Confidence', {
+      t:'Confidence F2',
+      a:'min(Confidence_panel, FeedSync_F1). Soglie UI: ≥0.80 verde · 0.70–0.80 giallo · <0.70 rosso; se <0.80 lo stato è forzato HOLD.',
+      s:'Governance qualità · policy UI'
+    });
+  }
+})();
+</script>
+
+
