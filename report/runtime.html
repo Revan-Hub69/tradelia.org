@@ -492,6 +492,257 @@
     if(window.lucide) lucide.createIcons();
   })();
   </script>
+<!-- ====== INSERTO: Modulo F1B — Screening Macro‑Settoriale ======
+
+NOTE: incolla questo blocco appena PRIMA della riga:
+  <script src="./runtime.js?v=1" defer></script>
+
+Non richiede librerie aggiuntive (usa già Tailwind + Lucide presenti nell'HTML).
+I dati sono inizializzati con l'ultimo F1B che abbiamo calcolato; potrai sovrascriverli in seguito via JSON.
+-->
+
+<!-- ===== EXPL F1B: popup stile accademico (stesso look & feel) ===== -->
+<style>
+  .kpi-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}
+  @media(min-width:640px){.kpi-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  .kpi{border:1px solid #e5e7eb;border-radius:.75rem;padding:.6rem;background:#fff}
+  .kpi label{display:flex;align-items:center;gap:.35rem;font-size:11px;color:#64748b}
+  .kpi .v{font-weight:700;color:#0f172a}
+  .chip{display:inline-flex;align-items:center;gap:.35rem;border:1px solid #e5e7eb;background:#fff;border-radius:999px;padding:.2rem .5rem;font-size:12px}
+  .tag{display:inline-flex;align-items:center;gap:.35rem;border:1px dashed #cbd5e1;color:#0f172a;background:#f8fafc;border-radius:999px;padding:.15rem .5rem;font-size:12px}
+</style>
+
+<script>
+(function(){
+  // Popup dedicato a F1B (replica stile esistente, classe diversa per non toccare l'handler .hx già in pagina)
+  const EXPL_F1B = {
+    F1B_State: {t:"Stato modulo", a:"ACTIVE/HOLD/REVIEW secondo copertura dati, qualità e coerenza con policy Swing.", s:"Swing Master v5.0 · Governance stato."},
+    F1B_VIX: {t:"VIX (CBOE · FRED)", a:"Indicatore di volatilità implicita su S&P 500. Valori 15–20: rischio moderato. Usa il dato T-1 close.", s:"CBOE · FRED (VIXCLS)."},
+    F1B_Breadth: {t:"Breadth settoriale (1M)", a:"% di settori SPDR con performance 1 mese > 0. Valori >50% indicano respiro positivo.", s:"SSGA SPDR · metodologia interna."},
+    F1B_RiskTilt: {t:"Risk Tilt (Ciclici − Difensivi)", a:"Differenza tra la media 1M dei settori ciclici (XLK, XLY, XLI, XLC, XLE, XLF, XLB) e difensivi (XLV, XLP, XLU, XLRE). Positivo: propensione al rischio.", s:"Intermarket & Rotazione settoriale — Swing v5.0."},
+    F1B_FlowScore: {t:"FlowScore (z‑mix)", a:"0.45·z(Inflow 5D) + 0.35·z(Perf 1M) + 0.20·z(RiskTilt). Normalizzato qualitativamente 0–1.", s:"Formula F1B v13.1."},
+    F1B_Regime: {t:"RegimeScore", a:"0.8·FlowScore + 0.2·s(−VIX). Soglie: ≥0.35 Momentum; 0.10–0.35 Momentum‑light; <0.10 Pullback.", s:"F1B v13.1 (policy)."},
+    F1B_Mode: {t:"StrategyMode", a:"Classificazione operativa di contesto (educativa): Momentum / Momentum‑light / Pullback.", s:"F1B Decision Rules v13.1."},
+    F1B_Top3: {t:"Top 3 settori per inflow 5D", a:"Ranking per afflussi netti (5 giorni) su ETF SPDR settoriali (fonti SSGA/VettaFi).", s:"SSGA · Bloomberg · VettaFi (educ.)."},
+    F1B_Avoid: {t:"Settori deboli (deflussi)", a:"Settori con deflussi/underperformance 1M: da monitorare o evitare in Momentum‑light.", s:"SSGA/VettaFi (educ.)."},
+    F1B_Notes: {t:"Nota di conformità", a:"Tier‑1 esteso educativo con crosscheck SSGA/Bloomberg. Per uso istituzionale pieno richiede fonte Tier‑1 diretta per ogni settore.", s:"Governance Swing v5.0."}
+  };
+
+  // Costruzione card modulo + binding
+  const container = document.getElementById('mod-container');
+  if(!container) return;
+
+  function badgeClass(state){
+    const m = {ACTIVE:'badge b-active', HOLD:'badge b-hold', REVIEW:'badge b-review'};
+    return m[String(state||'').toUpperCase()]||'badge b-neutral';
+  }
+
+  function createCard(){
+    const card = document.createElement('article');
+    card.className = 'mdc';
+    card.setAttribute('role','group');
+    card.innerHTML = `
+      <header class="mdc-h flex items-center justify-between gap-2 border-b border-slate-100 px-3 py-2.5">
+        <h3 class="font-semibold text-slate-800 text-sm">F1B — Screening Macro‑Settoriale</h3>
+        <span class="badge b-review" data-f1="state-badge">REVIEW</span>
+      </header>
+      <div class="mdc-b p-3 text-sm text-slate-700 space-y-2">
+        <div class="kpi-grid">
+          <div class="kpi"><label>VIX <button class="hx-f1" data-k="F1B_VIX">?</button></label><div class="v" data-f1="vix">—</div></div>
+          <div class="kpi"><label>Breadth 1M <button class="hx-f1" data-k="F1B_Breadth">?</button></label><div class="v" data-f1="breadth">—</div></div>
+          <div class="kpi"><label>Risk Tilt <button class="hx-f1" data-k="F1B_RiskTilt">?</button></label><div class="v" data-f1="risktilt">—</div></div>
+          <div class="kpi"><label>FlowScore <button class="hx-f1" data-k="F1B_FlowScore">?</button></label><div class="v" data-f1="flowscore">—</div></div>
+          <div class="kpi"><label>RegimeScore <button class="hx-f1" data-k="F1B_Regime">?</button></label><div class="v" data-f1="regimescore">—</div></div>
+          <div class="kpi"><label>StrategyMode <button class="hx-f1" data-k="F1B_Mode">?</button></label><div class="v" data-f1="mode">—</div></div>
+        </div>
+        <div class="flex flex-wrap gap-1.5 mt-2">
+          <span class="chip" title="Top inflow" data-f1="top1">—</span>
+          <span class="chip" title="Top inflow" data-f1="top2">—</span>
+          <span class="chip" title="Top inflow" data-f1="top3">—</span>
+          <span class="tag" title="Settore debole" data-f1="weak1">—</span>
+          <span class="tag" title="Settore debole" data-f1="weak2">—</span>
+          <span class="tag" title="Settore debole" data-f1="weak3">—</span>
+        </div>
+        <div class="text-[12px] text-slate-500 mt-1">
+          <span>Audit:</span> <button class="hx-f1 underline decoration-dotted" data-k="F1B_Notes">Tier‑1 esteso (educ.)</button>
+        </div>
+        <div class="pt-2">
+          <button class="btn" data-f1="open"> <i data-lucide="panel-right-open"></i><span>Apri scheda F1B</span></button>
+        </div>
+      </div>`;
+    return card;
+  }
+
+  // Drawer builder (schede laterali)
+  const drawer = document.getElementById('mod-drawer');
+  const drawerPanel = drawer?.querySelector('aside');
+  const drawerBody  = drawer?.querySelector('#drawer-body');
+  const drawerTitle = document.getElementById('drawer-title');
+  const drawerSub   = document.getElementById('drawer-sub');
+
+  function openDrawer(){
+    drawerTitle.textContent = 'F1B — Screening Macro‑Settoriale';
+    drawerSub.textContent   = 'Rotazione settoriale · Volatilità · Regime';
+    drawer.classList.remove('hidden');
+    requestAnimationFrame(()=> drawerPanel.style.transform='translateX(0)');
+  }
+
+  function renderDrawer(data){
+    const p = (v, d=2)=> (v==null||v==='—')? '—' : (typeof v==='number'? v.toFixed(d): v);
+    drawerBody.innerHTML = `
+      <div class="space-y-4">
+        <!-- Tabs -->
+        <div class="flex gap-1.5 text-sm">
+          <button class="sbtn" data-tab="#tab-overview"><i data-lucide="layout-grid"></i><span>Overview</span></button>
+          <button class="sbtn" data-tab="#tab-metrics"><i data-lucide="activity"></i><span>Metriche</span></button>
+          <button class="sbtn" data-tab="#tab-method"><i data-lucide="beaker"></i><span>Metodo</span></button>
+          <button class="sbtn" data-tab="#tab-audit"><i data-lucide="shield-check"></i><span>Audit</span></button>
+        </div>
+
+        <!-- OVERVIEW -->
+        <section id="tab-overview" class="space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div class="card p-3">
+              <h4 class="font-semibold mb-1">Classificazione</h4>
+              <div class="text-slate-700">StrategyMode: <b>${p(data.mode,0)}</b> <button class="hx-f1" data-k="F1B_Mode">?</button></div>
+              <div class="text-slate-700">RegimeScore: <b>${p(data.regimeScore)}</b> <button class="hx-f1" data-k="F1B_Regime">?</button></div>
+            </div>
+            <div class="card p-3">
+              <h4 class="font-semibold mb-1">Leadership settoriale</h4>
+              <div class="flex flex-wrap gap-1.5">
+                ${[data.top1,data.top2,data.top3].map(x=>`<span class='chip'>${x||'—'}</span>`).join('')}
+              </div>
+              <div class="mt-2 text-sm text-slate-600">Deboli: ${[data.weak1,data.weak2,data.weak3].map(x=>`<span class='tag'>${x||'—'}</span>`).join(' ')}</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- METRICS -->
+        <section id="tab-metrics" class="hidden space-y-3">
+          <div class="kpi-grid">
+            <div class="kpi"><label>VIX <button class="hx-f1" data-k="F1B_VIX">?</button></label><div class="v">${p(data.vix)}</div></div>
+            <div class="kpi"><label>Breadth 1M <button class="hx-f1" data-k="F1B_Breadth">?</button></label><div class="v">${p(data.breadth)}</div></div>
+            <div class="kpi"><label>Risk Tilt <button class="hx-f1" data-k="F1B_RiskTilt">?</button></label><div class="v">${p(data.risktilt)}</div></div>
+            <div class="kpi"><label>FlowScore <button class="hx-f1" data-k="F1B_FlowScore">?</button></label><div class="v">${p(data.flowScore)}</div></div>
+            <div class="kpi"><label>RegimeScore <button class="hx-f1" data-k="F1B_Regime">?</button></label><div class="v">${p(data.regimeScore)}</div></div>
+            <div class="kpi"><label>Stato <button class="hx-f1" data-k="F1B_State">?</button></label><div class="v">${data.state||'—'}</div></div>
+          </div>
+        </section>
+
+        <!-- METHOD -->
+        <section id="tab-method" class="hidden space-y-3 text-sm text-slate-700">
+          <div class="card p-3">
+            <h4 class="font-semibold mb-1">Regole di calcolo</h4>
+            <ul class="list-disc pl-5 space-y-1">
+              <li><b>FlowScore</b> = 0.45·z(Inflow 5D) + 0.35·z(Perf 1M) + 0.20·z(RiskTilt) <button class="hx-f1" data-k="F1B_FlowScore">?</button></li>
+              <li><b>RegimeScore</b> = 0.8·FlowScore + 0.2·s(−VIX) <button class="hx-f1" data-k="F1B_Regime">?</button></li>
+              <li>Soglie: ≥0.35 Momentum · 0.10–0.35 Momentum‑light · <0.10 Pullback</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- AUDIT -->
+        <section id="tab-audit" class="hidden space-y-3 text-sm">
+          <div class="card p-3">
+            <h4 class="font-semibold mb-1">Fonte & Conformità</h4>
+            <p class="text-slate-700">Tier‑1 esteso educativo (ETFdb/VettaFi) con crosscheck SSGA/Bloomberg; VIX da FRED/CBOE. <button class="hx-f1" data-k="F1B_Notes">?</button></p>
+            <div class="mt-2 text-xs text-slate-500">AuditPathID: ${data.auditId||'N/D'} · Versione: ${data.version||'N/D'} · Timestamp: ${data.ts||'N/D'}</div>
+          </div>
+        </section>
+      </div>`;
+
+    // Tab behaviour
+    const tabsBtns = drawerBody.querySelectorAll('[data-tab]');
+    const sections = ['#tab-overview','#tab-metrics','#tab-method','#tab-audit'].map(s=>drawerBody.querySelector(s));
+    tabsBtns.forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        sections.forEach(sec=>sec.classList.add('hidden'));
+        const sel = btn.getAttribute('data-tab');
+        const tgt = drawerBody.querySelector(sel);
+        if(tgt) tgt.classList.remove('hidden');
+      });
+    });
+    if(window.lucide) lucide.createIcons();
+  }
+
+  // Popup handler per .hx-f1
+  let POP=null, prevOverflow='';
+  function closePop(){ if(!POP) return; POP.backdrop.removeEventListener('click', onBackdrop); document.removeEventListener('keydown', onKeyEsc, true); document.documentElement.style.overflow = prevOverflow; POP.wrap.remove(); POP=null; }
+  function onBackdrop(e){ if(e.target===e.currentTarget) closePop(); }
+  function onKeyEsc(e){ if(e.key==='Escape'){ e.stopPropagation(); e.preventDefault(); closePop(); } }
+  function openPop(d){
+    if(POP){ POP.title.textContent=d.t; POP.src.textContent='Fonte accademica: '+d.s; POP.text.innerHTML=d.a; POP.wrap.focus(); return; }
+    const wrap=document.createElement('div'); wrap.className='hx-pop'; wrap.role='dialog'; wrap.ariaModal='true'; wrap.tabIndex=-1;
+    const card=document.createElement('div'); card.className='hx-card'; card.addEventListener('click',ev=>ev.stopPropagation());
+    const h=document.createElement('h3'); h.textContent=d.t;
+    const src=document.createElement('div'); src.className='src'; src.textContent='Fonte accademica: '+d.s;
+    const text=document.createElement('div'); text.className='text-sm text-slate-800'; text.innerHTML=d.a;
+    card.append(h,src,text); wrap.append(card); document.body.appendChild(wrap);
+    prevOverflow=document.documentElement.style.overflow||''; document.documentElement.style.overflow='hidden';
+    wrap.addEventListener('click', onBackdrop); document.addEventListener('keydown', onKeyEsc, true); wrap.focus();
+    POP={wrap, backdrop:wrap, title:h, src, text};
+  }
+  document.addEventListener('click', (e)=>{
+    const b = e.target.closest('.hx-f1'); if(!b) return;
+    const k = b.dataset.k; const d = EXPL_F1B[k] || {t:k, a:'Descrizione non disponibile.', s:'—'};
+    openPop(d);
+  }, true);
+
+  // Inizializzazione con i nostri dati F1B (sovrascrivibili via evento JSON)
+  const F1B_DATA_DEFAULT = {
+    state:'ACTIVE',
+    vix: 18.23,
+    breadth: '60% positivi',
+    risktilt: '+5.17 pp verso difensivi',
+    flowScore: +0.18,
+    regimeScore: +0.22,
+    mode: 'Momentum‑light',
+    top1: 'XLU · Utilities',
+    top2: 'XLV · Health Care',
+    top3: 'XLF · Financials',
+    weak1: 'XLE · Energy',
+    weak2: 'XLI · Industrials',
+    weak3: 'XLK · Technology',
+    auditId: 'F1B-20251021-IT-001',
+    version: 'v1.1',
+    ts: '2025-10-21 09:45 CET'
+  };
+
+  // Render card
+  const card = createCard();
+  container.appendChild(card);
+
+  function bindCard(data){
+    const $$ = (sel)=> card.querySelector(`[data-f1="${sel}"]`);
+    $$("vix").textContent = (data.vix!=null? data.vix.toFixed? data.vix.toFixed(2) : data.vix : '—');
+    $$("breadth").textContent = data.breadth ?? '—';
+    $$("risktilt").textContent = data.risktilt ?? '—';
+    $$("flowscore").textContent = (data.flowScore!=null? Number(data.flowScore).toFixed(2): '—');
+    $$("regimescore").textContent = (data.regimeScore!=null? Number(data.regimeScore).toFixed(2): '—');
+    $$("mode").textContent = data.mode ?? '—';
+    ["top1","top2","top3","weak1","weak2","weak3"].forEach(k=>{ const el=$$(k); if(el) el.textContent = data[k] ?? '—'; });
+    const b = card.querySelector('[data-f1="state-badge"]');
+    b.className = badgeClass(data.state); b.textContent = (data.state||'NEUTRO').toUpperCase();
+
+    // Bottone drawer
+    card.querySelector('[data-f1="open"]').onclick = ()=>{ renderDrawer(data); openDrawer(); };
+    if(window.lucide) lucide.createIcons();
+  }
+
+  bindCard(F1B_DATA_DEFAULT);
+
+  // API pubblica per aggiornare via JSON
+  window.TradeliaF1B = {
+    update(data){ bindCard(Object.assign({}, F1B_DATA_DEFAULT, data||{})); },
+    open(){ renderDrawer(Object.assign({}, F1B_DATA_DEFAULT)); openDrawer(); }
+  };
+
+  // Listener opzionale: puoi inviare un evento con i dati JSON quando pronto
+  window.addEventListener('tradelia:f1b:update', (ev)=>{
+    const d = ev.detail||{}; window.TradeliaF1B.update(d);
+  });
+})();
+</script>
 
   <!-- Carica il runtime JS (stesso livello del file HTML) -->
   <script src="./runtime.js?v=1" defer></script>
