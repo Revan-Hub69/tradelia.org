@@ -319,6 +319,44 @@
   <!-- ===========================
        SEZIONE — MODULI (framework)
        =========================== -->
+  <section id="moduli" class="pt-3">
+  <div class="max-w-7xl mx-auto px-3 sm:px-5">
+    <div class="flex items-end justify-between mb-3 sm:mb-4">
+      <div class="min-w-0">
+        <h2 class="text-base sm:text-lg font-semibold text-slate-800 tracking-tight">Moduli analitici</h2>
+        <p class="text-xs text-slate-500">Framework F1–F5 · schede auditabili</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="view-grid" class="btn" aria-pressed="true"><i data-lucide="grid"></i><span class="hidden sm:inline">Griglia</span></button>
+        <button id="view-list" class="btn" aria-pressed="false"><i data-lucide="list"></i><span class="hidden sm:inline">Lista</span></button>
+      </div>
+    </div>
+    <div id="mod-container" data-view="grid"
+         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4"
+         aria-label="Griglia moduli analitici">
+    </div>
+  </div>
+</section>
+
+<div id="mod-drawer" class="fixed inset-0 z-[60] hidden">
+  <div class="absolute inset-0 bg-black/30 backdrop-blur-[1px]" data-close="backdrop"></div>
+  <aside class="absolute right-0 top-0 h-full w-[92%] sm:w-[560px] bg-white border-l border-slate-200 shadow-2xl
+                 translate-x-full will-change-transform transition-transform duration-200 ease-out">
+    <header class="h-12 sm:h-14 border-b border-slate-200 flex items-center justify-between px-3 sm:px-4">
+      <div class="min-w-0">
+        <div id="drawer-title" class="font-semibold text-slate-800 truncate">Modulo</div>
+        <div id="drawer-sub" class="text-xs text-slate-500 truncate">—</div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="drawer-print" class="btn" aria-label="Stampa sezione"><i data-lucide="printer"></i></button>
+        <button id="drawer-close" class="btn" aria-label="Chiudi"><i data-lucide="x"></i></button>
+      </div>
+    </header>
+    <div id="drawer-body" class="h-[calc(100%-3.25rem)] sm:h-[calc(100%-3.75rem)] overflow-auto p-3 sm:p-4"></div>
+  </aside>
+</div>
+
+  
 <!-- ===== F1B — Template modulo (desk-grade, placeholders only) ===== -->
 <style>
   .f1b-kpi-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}
