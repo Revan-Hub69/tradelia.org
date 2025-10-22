@@ -1,9 +1,9 @@
 // /report/assets/js/app.js
-// Orchestratore + HeaderTicker fallback-safe
+// Tradelia · Report Runtime Orchestrator (F1–F6)
 
-/* =========================
-   Utils base
-   ========================= */
+// =========================
+// Utils base
+// =========================
 async function loadJSON(path){
   try{
     const r = await fetch(path, { cache: 'no-store' });
@@ -17,45 +17,40 @@ async function loadJSON(path){
 const $  = (sel, root=document) => root.querySelector(sel);
 const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
 
-/* =========================
-   HEADER TICKER (robusto)
-   - mostra pillole di default
-   - se esiste header.json => applica valori + colori
-   ========================= */
+// =========================
+// Header Ticker (skeleton + data apply)
+// =========================
 function renderHeaderTickerSkeleton(){
   const host = $('#header-ticker');
   if(!host) return;
+
+  // ordine ottimizzato per mobile: Inizio, Fine, Ticker, Price, Δ%, Stato, Currency, Freshness, Confidence, OCR, DataIntegrity, FeedSync
   const pills = [
-    {k:'Start',     lab:'Inizio'},
-    {k:'End',       lab:'Fine'},
-    {k:'Ticker',    lab:'Ticker'},
-    {k:'Venue',     lab:'Venue'},
+    {k:'Start', lab:'Inizio'},
+    {k:'End', lab:'Fine'},
+    {k:'Ticker', lab:'Ticker'},
+    {k:'Price', lab:'Price'},
+    {k:'ChangePct', lab:'Δ%'},
+    {k:'State', lab:'Stato'},
+    {k:'Currency', lab:'Currency'},
     {k:'Freshness', lab:'Freshness'},
-    {k:'State',     lab:'Stato'},
     {k:'ConfidenceFinal', lab:'Confidence'},
-    {k:'PriceChange', lab:'Price Δ'},
-    {k:'Currency',  lab:'Currency'}
+    {k:'OCR_Conf', lab:'OCR'},
+    {k:'DataIntegrity', lab:'DataInt'},
+    {k:'FeedSync', lab:'FeedSync'},
   ];
 
   host.innerHTML = `
-    <style>
-      #header-ticker{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
-      .pill{position:relative;display:flex;align-items:center;gap:.6rem;padding:.55rem .7rem .55rem .9rem;
-        border:1px solid var(--br);border-radius:12px;background:var(--card);box-shadow:var(--shadow-1);min-height:46px}
-      .pill .lab{display:flex;align-items:center;gap:.35rem;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
-      .pill .val{font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;font-size:13px;font-weight:700;color:var(--ink)}
-      .tonebar{position:absolute;left:0;top:0;bottom:0;width:4px;border-top-left-radius:12px;border-bottom-left-radius:12px;background:#cbd5e1}
-      @media (max-width:640px){#header-ticker{grid-auto-flow:column;grid-auto-columns:72%;overflow:auto;padding-bottom:.25rem}}
-    </style>
-  ` + pills.map(p => `
-    <div class="pill" data-pill="${p.k}">
-      <span class="tonebar" data-tone="${p.k}"></span>
-      <div class="min-w-0">
-        <div class="lab">${p.lab}</div>
-        <div class="val truncate" data-val="${p.k}">—</div>
+    ${pills.map(p => `
+      <div class="pill" data-pill="${p.k}">
+        <span class="tonebar" data-tone="${p.k}"></span>
+        <div class="min-w-0">
+          <div class="lab">${p.lab}</div>
+          <div class="val truncate" data-val="${p.k}">—</div>
+        </div>
       </div>
-    </div>
-  `).join('');
+    `).join('')}
+  `;
 }
 
 function toneToColor(t){ // g/y/r/n -> css color
@@ -66,11 +61,10 @@ function toneToColor(t){ // g/y/r/n -> css color
   return '#cbd5e1';
 }
 
-// mappa regole per alcuni campi, se presenti nel JSON
+// infer rules for tones
 function inferToneForKey(key, val){
   if(val==null) return 'n';
   const n = Number(val);
-
   switch(key){
     case 'Freshness':
     case 'FreshnessLabel': {
@@ -90,7 +84,7 @@ function inferToneForKey(key, val){
       if (s==='HOLD')   return 'r';
       return 'n';
     }
-    case 'PriceChange': {
+    case 'ChangePct': {
       const x = Number(val);
       if(isNaN(x)) return 'n';
       return x>0 ? 'g' : (x===0 ? 'y' : 'r');
@@ -104,30 +98,36 @@ function applyHeaderJSON(data){
   const setVal  = (k, v) => { const el = $(`[data-val="${k}"]`); if(el) el.textContent = (v ?? '—'); };
   const setTone = (k, t) => { const el = $(`[data-tone="${k}"]`); if(el) el.style.background = toneToColor(t); };
 
-  // campi più comuni attesi
+  const px = (data?.Price!=null && isFinite(Number(data.Price))) ? Number(data.Price).toFixed(2) : null;
+  const ch = (data?.ChangePct!=null && isFinite(Number(data.ChangePct))) ? Number(data.ChangePct).toFixed(2) : null;
+  const fresh = data?.FreshnessLabel ?? data?.Freshness;
+
   const fields = [
     ['Start',  data?.Start],
     ['End',    data?.End],
     ['Ticker', data?.Ticker],
-    ['Venue',  data?.Venue],
-    ['Freshness', data?.FreshnessLabel ?? data?.Freshness],
+    ['Price',  px],
+    ['ChangePct', ch!=null ? `${ch}%` : null],
     ['State',  data?.State ?? data?.ReportState],
-    ['ConfidenceFinal', (Number(data?.ConfidenceFinal)||Number.NaN)],
-    ['PriceChange', data?.PriceChange],       // es. +0.8% / -0.5% o numero
-    ['Currency', data?.Currency ?? data?.PxCcy]
+    ['Currency', data?.Currency ?? data?.PxCcy],
+    ['Freshness', fresh],
+    ['ConfidenceFinal', (isFinite(Number(data?.ConfidenceFinal)) ? Number(data?.ConfidenceFinal).toFixed(2) : null)],
+    ['OCR_Conf', (isFinite(Number(data?.OCR_Conf)) ? Number(data?.OCR_Conf).toFixed(2) : null)],
+    ['DataIntegrity', (isFinite(Number(data?.DataIntegrity)) ? Number(data?.DataIntegrity).toFixed(2) : null)],
+    ['FeedSync', (isFinite(Number(data?.FeedSync)) ? Number(data?.FeedSync).toFixed(2) : null)],
   ];
 
   for (const [k, v] of fields){
-    setVal(k, (typeof v==='number' && isFinite(v) && k!=='PriceChange')
-      ? (k==='ConfidenceFinal' ? v.toFixed(2) : v.toString())
-      : (v ?? '—'));
-    setTone(k, inferToneForKey(k, v));
+    setVal(k, v ?? '—');
+    // tone inference uses raw numeric where needed
+    const toneKey = (k==='Freshness' ? (data?.FreshnessLabel ?? data?.Freshness) : (k==='ChangePct' ? Number(data?.ChangePct) : (k==='ConfidenceFinal' ? Number(data?.ConfidenceFinal) : (k==='State' ? (data?.State ?? data?.ReportState) : null))));
+    setTone(k, inferToneForKey(k, toneKey));
   }
 }
 
-/* =========================
-   F1 chooser (A o B)
-   ========================= */
+// =========================
+// F1 chooser (A or B)
+// =========================
 function hasF1A(d){ return d && typeof d.strategy_mode_tkr === 'string'; }
 function hasF1B(d){ return d && typeof d.strategy_mode === 'string'; }
 
@@ -157,52 +157,88 @@ async function decideF1(base, cfg){
   return null;
 }
 
-/* =========================
-   Mount principale
-   ========================= */
+// =========================
+/* Mount principale */
+// =========================
 async function mountReport(reportId){
-  // 1) Header ticker skeleton subito (così "non sparisce")
+  // Expose namespace early
+  window.Tradelia = window.Tradelia || {};
+  window.Tradelia.Manifest = window.Tradelia.Manifest || {};
+
+  // 1) Header ticker skeleton
   renderHeaderTickerSkeleton();
 
   const base = `/report/reports/${reportId}`;
   const grid = $('#cards-grid');
   if (!grid){ console.error('#cards-grid non trovato'); return; }
 
-  // 2) Provo a caricare header.json (se c'è)
+  // 2) Header data (optional)
   const headerData = await loadJSON(`${base}/header.json`);
   if (headerData){ applyHeaderJSON(headerData); }
 
-  // 3) Manifest e F1
+  // 3) Manifest
   const manifest = await loadJSON(`${base}/manifest.json`) || {
-    order: ['f1'],
+    // default minimale: montiamo F1 auto->prefer B
+    order: ['F1'],
     f1: { mode: 'auto', prefer: 'b' }
   };
 
-  for (const slot of manifest.order){
-    if (slot !== 'f1') { continue; }
+  // Normalizza ordine a soli F1..F6 (niente F7)
+  const valid = new Set(['F1','F2','F3','F4','F5','F6']);
+  const order = (manifest.order || []).map(x=>String(x).toUpperCase()).filter(x=>valid.has(x));
+  if (order.length === 0) order.push('F1');
 
-    const pick = await decideF1(base, manifest.f1);
-    if (!pick){ console.warn('Nessun F1 valido trovato (f1a.json / f1b.json assenti o incompleti)'); continue; }
+  // Espone order per le chip in index.html
+  window.Tradelia.Manifest.order = order;
 
+  // 4) Mount dei moduli
+  for (const slot of order){
     try{
-      const mod = await import(`/report/assets/js/modules/${pick.key}.js`);
-      const el  = mod.renderCard(pick.data);
-      grid.appendChild(el);
-      mod.bindCard(el, pick.data, {
-        base,
-        openDrawer: (title, sub, html) => window.Tradelia?.Drawer?.open({ title, subtitle: sub, html })
-      });
+      if (slot === 'F1'){
+        // Decidi tra f1a/f1b
+        const pick = await decideF1(base, manifest.f1);
+        if (!pick){ console.warn('Nessun F1 valido trovato (f1a.json / f1b.json assenti o incompleti)'); continue; }
+
+        const mod = await import(`/report/assets/js/modules/${pick.key}.js`);
+        const el  = mod.renderCard(pick.data);
+        el.setAttribute('data-card','F1');          // <— per scroll-to
+        grid.appendChild(el);
+        mod.bindCard(el, pick.data, {
+          base,
+          openDrawer: (title, sub, html) => window.Tradelia?.Drawer?.open({ title, subtitle: sub, html })
+        });
+      } else {
+        // F2..F6: se esiste un modulo js, lo carico; altrimenti salto silenziosamente
+        const key = slot.toLowerCase();             // 'F2' -> 'f2'
+        try{
+          const mod = await import(`/report/assets/js/modules/${key}.js`);
+          // Carica il relativo JSON se presente (es. f2.json)
+          const data = await loadJSON(`${base}/${key}.json`);
+          const el   = mod.renderCard?.(data) || document.createElement('div');
+          el.setAttribute('data-card', slot);       // <— per scroll-to
+          if (!el.parentNode) grid.appendChild(el);
+          if (typeof mod.bindCard === 'function'){
+            mod.bindCard(el, data, {
+              base,
+              openDrawer: (title, sub, html) => window.Tradelia?.Drawer?.open({ title, subtitle: sub, html })
+            });
+          }
+        }catch(e){
+          // modulo non presente: ignoro
+          // console.info(`Modulo ${slot} non trovato, skip.`, e);
+        }
+      }
     }catch(e){
-      console.error(`Errore import modulo ${pick.key}`, e);
+      console.error(`Errore montando modulo ${slot}`, e);
     }
   }
 
   if (window.lucide) lucide.createIcons();
 }
 
-/* =========================
-   Bootstrap
-   ========================= */
+// =========================
+// Bootstrap
+// =========================
 (function(){
   const url = new URL(location.href);
   const reportId = url.searchParams.get('id') || 'sample-id';
