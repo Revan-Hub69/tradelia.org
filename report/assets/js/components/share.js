@@ -1,5 +1,6 @@
 // ======================================================
 // TRADELIA • AI — Full Share Sheet (desktop + mobile)
+// + Short link robusto (shrtco.de -> cleanuri -> is.gd -> tinyurl)
 // ======================================================
 export function initShareSystem() {
   const btn = document.getElementById('btn-share');
@@ -68,24 +69,56 @@ export function initShareSystem() {
     </button>`;
   }
 
-  // --- SHORTENER pubblico (is.gd -> tinyurl fallback) ---
+  // === SHORTENER pubblico (tutti HTTPS + CORS) ==========================
+  // 1) shrtco.de: https://api.shrtco.de/v2/shorten?url=<url>
+  async function short_shrtco(url) {
+    const r = await fetch(`https://api.shrtco.de/v2/shorten?url=${encodeURIComponent(url)}`);
+    if (!r.ok) throw new Error('shrtco HTTP');
+    const j = await r.json();
+    if (j && j.ok && j.result && j.result.full_short_link) return j.result.full_short_link;
+    throw new Error('shrtco bad payload');
+  }
+  // 2) cleanuri: POST form-encoded https://cleanuri.com/api/v1/shorten (returns JSON { result_url })
+  async function short_cleanuri(url) {
+    const r = await fetch(`https://cleanuri.com/api/v1/shorten`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+      body: `url=${encodeURIComponent(url)}`
+    });
+    if (!r.ok) throw new Error('cleanuri HTTP');
+    const j = await r.json();
+    if (j && j.result_url) return j.result_url;
+    throw new Error('cleanuri bad payload');
+  }
+  // 3) is.gd: https://is.gd/create.php?format=simple&url=<url> (text)
+  async function short_isgd(url) {
+    const r = await fetch(`https://is.gd/create.php?format=simple&url=${encodeURIComponent(url)}`);
+    if (!r.ok) throw new Error('is.gd HTTP');
+    const t = (await r.text()).trim();
+    if (/^https?:\/\//i.test(t)) return t;
+    throw new Error('is.gd bad payload');
+  }
+  // 4) tinyurl: https://tinyurl.com/api-create.php?url=<url> (text)
+  async function short_tiny(url) {
+    const r = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`);
+    if (!r.ok) throw new Error('tinyurl HTTP');
+    const t = (await r.text()).trim();
+    if (/^https?:\/\//i.test(t)) return t;
+    throw new Error('tinyurl bad payload');
+  }
+
   async function getShortUrl(longUrl) {
-    try {
-      if (/^(https?:\/\/)?(is\.gd|v\.gd|tinyurl\.com)\//i.test(longUrl)) return longUrl;
-      const r1 = await fetch(`https://is.gd/create.php?format=simple&url=${encodeURIComponent(longUrl)}`, { mode: 'cors' });
-      if (r1.ok) {
-        const short1 = (await r1.text()).trim();
-        if (/^https?:\/\//i.test(short1)) return short1;
-      }
-      const r2 = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`, { mode: 'cors' });
-      if (r2.ok) {
-        const short2 = (await r2.text()).trim();
-        if (/^https?:\/\//i.test(short2)) return short2;
-      }
-    } catch (e) {
-      console.warn('Shortener fail:', e);
+    // evita ri-short se già corto
+    if (/^(https?:\/\/)?(shrtco\.de|shortco\.de|9qr\.de|cleanuri\.com|is\.gd|v\.gd|tinyurl\.com)\//i.test(longUrl)) {
+      return longUrl;
     }
-    return longUrl;
+    // se la pagina è in HTTP, tutti gli endpoint sono HTTPS → ok.
+    // fallback chain con try…catch
+    try { return await short_shrtco(longUrl); } catch {}
+    try { return await short_cleanuri(longUrl); } catch {}
+    try { return await short_isgd(longUrl); } catch {}
+    try { return await short_tiny(longUrl); } catch {}
+    return longUrl; // fallback finale
   }
 
   async function generateQR(text) {
@@ -132,19 +165,30 @@ export function initShareSystem() {
     window.open(link, '_blank', 'noopener');
   });
 
-  // Short
+  // Short (con spinner + copia automatica se cambia)
   $('#btn-short').addEventListener('click', async () => {
     const current = $('#share-link').value;
-    $('#btn-short').disabled = true;
+    const btnShort = $('#btn-short');
+    if (!current) return;
+    btnShort.disabled = true;
+    const prevHTML = btnShort.innerHTML;
+    btnShort.innerHTML = `<svg class="spin" width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="3" opacity=".2"/><path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg><span>Short</span>`;
     try {
       const shorted = await getShortUrl(current);
       $('#share-link').value = shorted;
-      $('#btn-short').innerHTML = `<i data-lucide="check"></i><span>Short</span>`;
+      // Auto-copy se cambiato
+      if (shorted && shorted !== current) {
+        try { await navigator.clipboard.writeText(shorted); } catch {}
+      }
+      btnShort.innerHTML = `<i data-lucide="check"></i><span>Short</span>`;
       if (window.lucide) lucide.createIcons();
+    } catch (e) {
+      console.warn('Short error:', e);
+      btnShort.innerHTML = prevHTML;
     } finally {
       setTimeout(() => {
-        $('#btn-short').disabled = false;
-        $('#btn-short').innerHTML = `<i data-lucide="scissors"></i><span>Short</span>`;
+        btnShort.disabled = false;
+        btnShort.innerHTML = `<i data-lucide="scissors"></i><span>Short</span>`;
         if (window.lucide) lucide.createIcons();
       }, 1200);
     }
@@ -170,9 +214,7 @@ export function initShareSystem() {
       const text = encodeURIComponent('Guarda il report completo su Tradelia · AI');
 
       let shareUrl = base;
-      if (base.startsWith('mailto:')) {
-        shareUrl = `${base}${text}%20${url}`;
-      } else if (base.startsWith('sms:')) {
+      if (base.startsWith('mailto:') || base.startsWith('sms:')) {
         shareUrl = `${base}${text}%20${url}`;
       } else if (base.includes('t.me/share/url')) {
         shareUrl = `${base}${url}&text=${text}`;
@@ -185,11 +227,15 @@ export function initShareSystem() {
       } else if (base.includes('api.whatsapp.com/send')) {
         shareUrl = `${base}${text}%20${url}`;
       } else {
-        // fallback generico
         shareUrl = `${base}${url}`;
       }
 
       window.open(shareUrl, 'share', 'width=640,height=560,noopener');
     });
   });
+
+  // Micro CSS inline per spinner (no dipendenze)
+  const spinCSS = document.createElement('style');
+  spinCSS.textContent = `.spin{animation:tl-spin .9s linear infinite}@keyframes tl-spin{to{transform:rotate(360deg)}}`;
+  document.head.appendChild(spinCSS);
 }
