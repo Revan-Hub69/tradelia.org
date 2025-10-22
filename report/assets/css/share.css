@@ -2,76 +2,66 @@
    TRADELIA • AI — Share Sheet Styles
    ====================================================== */
 
-.share-sheet {
-  position: fixed; inset: 0; z-index: 70;
-  display: flex; align-items: center; justify-content: center;
-}
+.share-sheet { position: fixed; inset: 0; z-index: 70; display: flex; align-items: center; justify-content: center; }
 .share-sheet.hidden { display: none; }
 
-.share-backdrop {
-  position: absolute; inset: 0;
-  background: rgba(0,0,0,.45); backdrop-filter: blur(3px);
-  animation: fadeIn .2s ease;
-}
+.share-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.45); backdrop-filter: blur(3px); animation: fadeIn .2s ease; }
+
 .share-panel {
-  position: relative;
-  z-index: 1;
-  width: min(90%,420px);
-  background: var(--card);
-  border: 1px solid var(--br);
-  border-radius: 16px;
-  box-shadow: var(--shadow-2);
-  animation: slideUp .25s ease;
-  display: flex; flex-direction: column;
+  position: relative; z-index: 1; width: min(92%, 520px);
+  background: var(--card); border: 1px solid var(--br); border-radius: 16px; box-shadow: var(--shadow-2);
+  animation: slideUp .22s ease; display: flex; flex-direction: column;
 }
-.share-head {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 14px; border-bottom: 1px solid var(--br);
-}
-.share-head h3 {
-  font-weight: 700; font-size: 14px; color: var(--ink);
-}
-.share-body {
-  padding: 14px;
-  display: flex; flex-direction: column; gap: 10px;
-}
+
+.share-head { display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 10px 14px; border-bottom: 1px solid var(--br); background: color-mix(in oklab, var(--card) 94%, white 6%); }
+.share-title { display: flex; flex-direction: column; gap: 2px; }
+.share-head strong { font-size: 14px; color: var(--ink); }
+.share-sub { font-size: 11px; color: var(--muted); }
+
+.share-body { padding: 14px; display: flex; flex-direction: column; gap: 12px; }
 
 .share-linkbox {
-  display: flex; align-items: center; gap: 6px;
-  border: 1px solid var(--br); border-radius: 10px;
-  background: var(--neutral-bg);
-  padding: 4px 6px;
+  display: flex; align-items: center; gap: 6px; padding: 6px;
+  border: 1px solid var(--br); border-radius: 12px; background: var(--neutral-bg);
 }
 .share-linkbox input {
-  flex: 1; background: none; border: none; outline: none;
-  font-family: monospace; font-size: 13px; color: var(--ink);
+  flex: 1; background: transparent; border: none; outline: none;
+  font-family: ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 13px; color: var(--ink);
 }
-.share-linkbox button {
-  flex-shrink: 0;
+
+.share-actions { display: flex; gap: 8px; }
+.btn.btn-sm { padding: .35rem .6rem; font-size: 12.5px; border-radius: .55rem; }
+.btn.btn-ghost {
+  display: inline-flex; align-items: center; gap: .4rem; padding: .4rem .6rem; border-radius: .6rem;
+  background: color-mix(in oklab, var(--card) 96%, white 4%); border: 1px solid var(--br); font-weight: 600; font-size: 12.5px;
 }
+.btn.btn-ghost:hover { background: color-mix(in oklab, var(--card) 90%, white 10%); transform: translateY(-1px); }
 
 .share-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(110px,1fr));
-  gap: 8px; margin-top: 6px;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-top: 6px;
 }
 .share-item {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 10px 0;
-  border: 1px solid var(--br); border-radius: 12px;
-  background: color-mix(in oklab,var(--card) 94%,white 6%);
-  font-size: 12.5px; font-weight: 500; color: var(--ink);
-  transition: background .15s ease, transform .08s ease;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+  gap: 6px; padding: 12px 0; border: 1px solid var(--br); border-radius: 12px;
+  background: color-mix(in oklab, var(--card) 94%, white 6%); color: var(--ink); font-weight: 500; font-size: 12.5px;
+  transition: background .15s ease, transform .08s ease, box-shadow .15s ease;
 }
-.share-item:hover { background: color-mix(in oklab,var(--card) 88%,white 12%); transform: translateY(-1px); }
-.share-item i { width: 20px; height: 20px; margin-bottom: 4px; }
+.share-item:hover { background: color-mix(in oklab, var(--card) 88%, white 12%); transform: translateY(-1px); }
+.share-item i { width: 20px; height: 20px; }
 
 .qr-area {
-  display: flex; justify-content: center; margin-top: 10px;
-  padding: 8px; background: var(--neutral-bg);
-  border-radius: 10px; border: 1px solid var(--br);
+  display: flex; justify-content: center; align-items: center;
+  padding: 10px; border-radius: 12px; border: 1px solid var(--br); background: var(--neutral-bg);
 }
 .qr-area.hidden { display: none; }
+.qr-img { display: block; border-radius: 10px; background: var(--card); box-shadow: var(--shadow-1); }
 
-@keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
-@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@media (max-width: 480px) {
+  .share-panel { width: min(96%, 520px); }
+  .share-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Animations */
+@keyframes slideUp { from { transform: translateY(18px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
