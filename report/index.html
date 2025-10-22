@@ -20,13 +20,31 @@
   <link rel="stylesheet" href="/report/assets/css/share.css" />
 
   <style>
-    /* ===== Tradelia • AI — Institutional overrides ===== */
+    /* ===== Tradelia • AI — Institutional tokens ===== */
     :root{
       --bg:#f6f8fb; --card:#ffffff; --ink:#0f172a; --muted:#5b6b83; --br:#e6eaf0;
       --brand:#0e7ac7; --accent:#7cc5ff;
       --success-bg:#ecfdf5; --success-ink:#065f46; --success-br:#a7f3d0;
-      --warn-bg:#fff7ed; --warn-ink:#9a3412; --warn-br:#fed7aa;
-      --danger-bg:#fef2f2; --danger-ink:#7f1d1d; --danger-br:#fecaca;
+      --warn-bg:#fff7ed;    --warn-ink:#9a3412;   --warn-br:#fed7aa;
+      --danger-bg:#fef2f2;  --danger-ink:#7f1d1d; --danger-br:#fecaca;
+      --neutral-bg:#f1f5f9; --neutral-ink:#334155; --neutral-br:#e5e7eb;
+
+      --tone-g:#10b981; --tone-y:#f59e0b; --tone-r:#ef4444; --tone-n:#94a3b8;
+      --shadow-1:0 1px 0 rgba(2,6,23,.05);
+      --shadow-2:0 10px 30px rgba(2,6,23,.12);
+      --pop-w:300px;
+    }
+    html[data-theme="dark"]{
+      --bg:#0b1220; --card:#0f172a; --ink:#e5e7eb; --muted:#94a3b8; --br:#1f2937;
+      --brand:#38bdf8; --accent:#7cc5ff;
+      --success-bg:#052e2b; --success-ink:#86efac; --success-br:#134e4a;
+      --warn-bg:#3b2a17;    --warn-ink:#fcd34d;   --warn-br:#4a341d;
+      --danger-bg:#3a1d1d;  --danger-ink:#fca5a5; --danger-br:#4c2323;
+      --neutral-bg:#111827; --neutral-ink:#cbd5e1; --neutral-br:#253046;
+
+      --tone-g:#22c55e; --tone-y:#f59e0b; --tone-r:#ef4444; --tone-n:#64748b;
+      --shadow-1:0 1px 0 rgba(0,0,0,.4);
+      --shadow-2:0 10px 30px rgba(0,0,0,.35);
     }
 
     html,body{height:100%}
@@ -43,26 +61,20 @@
       display:inline-flex;align-items:center;gap:.45rem;
       padding:.45rem .65rem;border-radius:12px;font-weight:600;font-size:14px;
       border:1px solid var(--br); background:linear-gradient(#fff,#f8fafc);
-      box-shadow:0 1px 0 rgba(2,6,23,.05);
+      box-shadow:var(--shadow-1);
       transition:background .2s, transform .08s;
     }
+    html[data-theme="dark"] .btn{background:linear-gradient(#0f172a,#0b1220)}
     .btn:hover{background:color-mix(in oklab, var(--card) 90%, white 10%); transform:translateY(-1px)}
-    .btn:active{transform:translateY(0)}
     .btn i{width:18px;height:18px}
     .btn.btn-sm{padding:.35rem .6rem;font-size:12.5px;border-radius:.55rem}
-
     @media print{ .noprint{display:none!important} }
 
-    /* Scrollbar sobria */
+    /* Scrollbar */
     *{scrollbar-width:thin;scrollbar-color:rgba(120,138,160,.35) transparent}
     ::-webkit-scrollbar{width:8px;height:8px}
-    ::-webkit-scrollbar-thumb{
-      background:rgba(120,138,160,.35);
-      border-radius:999px;border:2px solid transparent;background-clip:content-box;
-    }
-    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:rgba(120,138,160,.35);border-radius:999px;border:2px solid transparent;background-clip:content-box}
 
-    /* Divider + grid */
     .divider{border:0;height:1px;width:100%;background:var(--br);margin:12px 0 14px}
     .cards-grid{
       display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
@@ -96,11 +108,14 @@
     .brand{font-weight:900; letter-spacing:0}
     .claim{font-size:12px; color:var(--muted)}
 
-    /* ===== HERO “copertina” ===== */
+    /* ===== HERO (Header Ticker “copertina”) ===== */
     .hero{
       margin-top:8px; border:1px solid var(--br); border-radius:16px;
       background: radial-gradient(1200px 600px at -10% -40%, #eff6ff 0%, #fff 40%);
-      padding:14px; box-shadow:0 1px 0 rgba(2,6,23,.04), 0 10px 30px rgba(2,6,23,.06);
+      padding:14px; box-shadow:var(--shadow-2);
+    }
+    html[data-theme="dark"] .hero{
+      background: radial-gradient(1200px 600px at -10% -40%, #0b2740 0%, #0f172a 40%);
     }
     .hero__top{display:flex;align-items:center;justify-content:space-between;gap:8px}
     .hero__id{display:flex;align-items:baseline;gap:10px;min-width:0}
@@ -109,32 +124,38 @@
     .hero__price{display:flex;align-items:baseline;gap:10px}
     .hero__px{font-weight:900;font-size:22px}
     .hero__chg{font-weight:800;font-size:13px}
-    .hero__chg--up{color:#0ea5e9}
-    .hero__chg--down{color:#ef4444}
-    .hero__badge{font-size:12px;border:1px solid var(--br);border-radius:999px;padding:.18rem .5rem;background:#fff}
-    .hero__meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .chg--up{color:var(--tone-g)}
+    .chg--down{color:var(--tone-r)}
+    .hero__badge{
+      font-size:12px;border:1px solid var(--br);border-radius:999px;padding:.18rem .5rem;background:var(--card);color:var(--ink)
+    }
+    .tone-g{ color:var(--success-ink); background:var(--success-bg); border-color:var(--success-br) }
+    .tone-y{ color:var(--warn-ink);    background:var(--warn-bg);    border-color:var(--warn-br) }
+    .tone-r{ color:var(--danger-ink);  background:var(--danger-bg);  border-color:var(--danger-br) }
+    .tone-n{ color:var(--neutral-ink); background:var(--neutral-bg); border-color:var(--neutral-br) }
+
+    .hero__meta{
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:8px; margin-top:10px;
+    }
     .meta-pill{
-      display:flex;align-items:center;gap:.4rem;
-      border:1px solid var(--br);border-radius:12px;padding:.4rem .6rem;background:#fff;
-      font-size:12.5px
+      position:relative;
+      display:flex;align-items:center;gap:.6rem;
+      border:1px solid var(--br);border-radius:12px;padding:.55rem .7rem .55rem .9rem;background:var(--card);
+      font-size:12.5px; box-shadow:var(--shadow-1);
+      min-height:52px;
+    }
+    .meta-pill .tonebar{
+      position:absolute;left:0;top:0;bottom:0;width:4px;border-top-left-radius:12px;border-bottom-left-radius:12px;background:var(--tone-n)
     }
     .meta-label{color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:11px}
     .meta-val{font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;font-weight:800}
+
     .info-btn{
       all:unset; cursor:pointer; margin-left:6px; display:inline-flex; align-items:center; justify-content:center;
-      width:18px;height:18px; border:1px solid var(--br); border-radius:999px; font-size:12px; line-height:1; color:var(--muted); background:#fff;
+      width:18px;height:18px; border:1px solid var(--br); border-radius:999px; font-size:12px; line-height:1; color:var(--muted); background:var(--card);
+      flex:0 0 auto;
     }
-
-    /* Tooltip (apre solo con click “?”) */
-    .popover{position:absolute; z-index:70; min-width:240px; max-width:320px;
-      background:#fff; color:var(--ink); border:1px solid var(--br); border-radius:10px; padding:10px 10px 8px;
-      box-shadow:0 10px 28px rgba(2,6,23,.14); display:none;
-    }
-    .popover__title{margin:0 0 6px; font-weight:800; font-size:13px}
-    .popover__text{font-size:12.5px; color:var(--ink)}
-    .popover__source{margin-top:6px; font-size:11px; color:var(--muted)}
-    .popover__actions{margin-top:8px; display:flex; gap:6px}
-    .popover.show{display:block}
 
     /* Chips F1–F6 (nav) */
     .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:12px 0 10px;padding:8px 0 10px;border-bottom:1px solid var(--br)}
@@ -156,6 +177,19 @@
     }
     .chip:hover{ background:color-mix(in oklab,var(--card) 90%, white 10%); transform:translateY(-1px) }
     .chip--on{ border-color:#9ae6b4; background:var(--success-bg); color:var(--success-ink) }
+
+    /* Popover (compatto, clamped, flip) */
+    .popover{
+      position:absolute; z-index:70; width:var(--pop-w); max-width:90vw;
+      background:var(--card); color:var(--ink); border:1px solid var(--br); border-radius:10px; padding:10px 10px 8px;
+      box-shadow:0 10px 28px rgba(2,6,23,.14); display:none;
+    }
+    html[data-theme="dark"] .popover{box-shadow:0 10px 28px rgba(0,0,0,.5)}
+    .popover__title{margin:0 0 6px; font-weight:800; font-size:13px}
+    .popover__text{font-size:12.5px; color:var(--ink); line-height:1.35}
+    .popover__source{margin-top:6px; font-size:11px; color:var(--muted)}
+    .popover__actions{margin-top:8px; display:flex; justify-content:flex-end}
+    .popover.show{display:block}
 
     @media (max-width:640px){
       .hero__top{flex-direction:column; align-items:flex-start}
@@ -195,35 +229,129 @@
         <div class="hero__price">
           <div class="hero__px" id="hero-price">—</div>
           <div class="hero__chg" id="hero-change">—</div>
-          <span class="hero__badge" id="hero-state">—</span>
+          <span class="hero__badge tone-n" id="hero-state">—</span>
         </div>
       </div>
 
+      <!-- META GRID: tutte le metriche con (?) -->
       <div class="hero__meta">
-        <div class="meta-pill">
-          <div>
-            <div class="meta-label">Snapshot</div>
-            <div class="meta-val"><span id="hero-start">—</span> → <span id="hero-end">—</span></div>
+        <!-- Snapshot (Start/End) -->
+        <div class="meta-pill" id="pill-snap">
+          <span class="tonebar" id="tone-snap"></span>
+          <div class="min-w-0">
+            <div class="flex items-center">
+              <div class="meta-label">Snapshot</div>
+              <button class="info-btn" data-metric="Snapshot" aria-label="Info Snapshot">?</button>
+            </div>
+            <div class="meta-val truncate"><span id="hero-start">—</span> → <span id="hero-end">—</span></div>
           </div>
         </div>
 
-        <div class="meta-pill">
-          <div class="flex items-center">
-            <div>
+        <!-- Price -->
+        <div class="meta-pill" id="pill-price">
+          <span class="tonebar" id="tone-price"></span>
+          <div class="min-w-0">
+            <div class="flex items-center">
+              <div class="meta-label">Price</div>
+              <button class="info-btn" data-metric="Price" aria-label="Info Price">?</button>
+            </div>
+            <div class="meta-val truncate" id="hero-price2">—</div>
+          </div>
+        </div>
+
+        <!-- Δ% -->
+        <div class="meta-pill" id="pill-chg">
+          <span class="tonebar" id="tone-chg"></span>
+          <div class="min-w-0">
+            <div class="flex items-center">
+              <div class="meta-label">Δ%</div>
+              <button class="info-btn" data-metric="ChangePct" aria-label="Info Δ%">?</button>
+            </div>
+            <div class="meta-val truncate" id="hero-change2">—</div>
+          </div>
+        </div>
+
+        <!-- Currency -->
+        <div class="meta-pill" id="pill-ccy">
+          <span class="tonebar" id="tone-ccy"></span>
+          <div class="min-w-0">
+            <div class="flex items-center">
+              <div class="meta-label">Currency</div>
+              <button class="info-btn" data-metric="Currency" aria-label="Info Currency">?</button>
+            </div>
+            <div class="meta-val truncate" id="hero-ccy">—</div>
+          </div>
+        </div>
+
+        <!-- Freshness -->
+        <div class="meta-pill" id="pill-fresh">
+          <span class="tonebar" id="tone-fresh"></span>
+          <div class="min-w-0">
+            <div class="flex items-center">
               <div class="meta-label">Freshness</div>
-              <div class="meta-val" id="hero-freshness">—</div>
+              <button class="info-btn" data-metric="Freshness" aria-label="Info Freshness">?</button>
             </div>
-            <button class="info-btn" data-metric="Freshness" aria-label="Info Freshness">?</button>
+            <div class="meta-val truncate" id="hero-freshness">—</div>
           </div>
         </div>
 
-        <div class="meta-pill">
-          <div class="flex items-center">
-            <div>
+        <!-- Confidence -->
+        <div class="meta-pill" id="pill-conf">
+          <span class="tonebar" id="tone-conf"></span>
+          <div class="min-w-0">
+            <div class="flex items-center">
               <div class="meta-label">Confidence</div>
-              <div class="meta-val" id="hero-confidence">—</div>
+              <button class="info-btn" data-metric="ConfidenceFinal" aria-label="Info Confidence">?</button>
             </div>
-            <button class="info-btn" data-metric="ConfidenceFinal" aria-label="Info Confidence">?</button>
+            <div class="meta-val truncate" id="hero-confidence">—</div>
+          </div>
+        </div>
+
+        <!-- OCR_Conf -->
+        <div class="meta-pill" id="pill-ocr">
+          <span class="tonebar" id="tone-ocr"></span>
+          <div class="min-w-0">
+            <div class="flex items-center">
+              <div class="meta-label">OCR</div>
+              <button class="info-btn" data-metric="OCR_Conf" aria-label="Info OCR">?</button>
+            </div>
+            <div class="meta-val truncate" id="hero-ocr">—</div>
+          </div>
+        </div>
+
+        <!-- DataIntegrity -->
+        <div class="meta-pill" id="pill-di">
+          <span class="tonebar" id="tone-di"></span>
+          <div class="min-w-0">
+            <div class="flex items-center">
+              <div class="meta-label">DataInt</div>
+              <button class="info-btn" data-metric="DataIntegrity" aria-label="Info Data Integrity">?</button>
+            </div>
+            <div class="meta-val truncate" id="hero-di">—</div>
+          </div>
+        </div>
+
+        <!-- FeedSync -->
+        <div class="meta-pill" id="pill-fs">
+          <span class="tonebar" id="tone-fs"></span>
+          <div class="min-w-0">
+            <div class="flex items-center">
+              <div class="meta-label">FeedSync</div>
+              <button class="info-btn" data-metric="FeedSync" aria-label="Info FeedSync">?</button>
+            </div>
+            <div class="meta-val truncate" id="hero-fs">—</div>
+          </div>
+        </div>
+
+        <!-- State -->
+        <div class="meta-pill" id="pill-state">
+          <span class="tonebar" id="tone-state"></span>
+          <div class="min-w-0">
+            <div class="flex items-center">
+              <div class="meta-label">State</div>
+              <button class="info-btn" data-metric="State" aria-label="Info State">?</button>
+            </div>
+            <div class="meta-val truncate" id="hero-state2">—</div>
           </div>
         </div>
       </div>
@@ -239,7 +367,7 @@
       </div>
     </section>
 
-    <!-- Chips F1–F6 scorrevoli -->
+    <!-- Chips F1–F6 -->
     <nav class="chips noprint" aria-label="Mappa moduli">
       <button class="chip" data-mod="F1" title="Panorama Macro"><i data-lucide="globe-2"></i>F1: Panorama Macro</button>
       <button class="chip" data-mod="F2" title="Overview Ticker"><i data-lucide="scan-line"></i>F2: Overview Ticker</button>
@@ -249,11 +377,11 @@
       <button class="chip" data-mod="F6" title="Broker Selezionati"><i data-lucide="briefcase"></i>F6: Broker Selezionati</button>
     </nav>
 
-    <!-- Contenitore cards -->
+    <!-- Cards -->
     <section id="cards-grid" class="cards-grid" aria-label="Schede analitiche"></section>
   </main>
 
-  <!-- DRAWER -->
+  <!-- DRAWER base (resta per altri usi, non per metriche) -->
   <div id="drawer" class="drawer noprint" aria-hidden="true">
     <div class="drawer__backdrop" data-drawer-close></div>
     <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
@@ -274,7 +402,6 @@
     <div class="popover__text" id="popover-text">—</div>
     <div class="popover__source" id="popover-source">—</div>
     <div class="popover__actions">
-      <button id="popover-more" class="btn btn-sm" type="button">Vedi dettaglio</button>
       <button id="popover-close" class="btn btn-sm" type="button">Chiudi</button>
     </div>
   </div>
@@ -288,7 +415,7 @@
     initShareSystem();
   </script>
 
-  <!-- Interazioni globali + Hero + Tooltip/Drawer + Chips -->
+  <!-- Interazioni globali + HERO bind + Popover safe + Chips -->
   <script>
     // Helpers
     const $  = (s,r=document)=>r.querySelector(s);
@@ -324,32 +451,100 @@
       window.Tradelia.Drawer = { open, close };
     })();
 
-    // ===== HERO: carica header.json e popola =====
+    // ===== Load header.json & color validation
     async function loadJSON(path){
       try{ const r=await fetch(path,{cache:'no-store'}); if(!r.ok) return null; return await r.json(); }
       catch{ return null; }
+    }
+    function setBadgeTone(el, state){
+      const s = String(state||'').toUpperCase();
+      el.classList.remove('tone-g','tone-y','tone-r','tone-n');
+      if (s==='ACTIVE') el.classList.add('tone-g');
+      else if (s==='REVIEW') el.classList.add('tone-y');
+      else if (s==='HOLD')   el.classList.add('tone-r');
+      else el.classList.add('tone-n');
+    }
+    function setToneBar(el, tone){ // 'g'|'y'|'r'|'n'
+      if(!el) return;
+      el.style.background = tone==='g' ? 'var(--tone-g)'
+                         : tone==='y' ? 'var(--tone-y)'
+                         : tone==='r' ? 'var(--tone-r)'
+                         : 'var(--tone-n)';
     }
     (async ()=>{
       const base = `/report/reports/${getReportId()}`;
       const h = await loadJSON(`${base}/header.json`);
       if(!h) return;
+
+      // Ticker / Venue
       $('#hero-ticker').textContent = h.Ticker ?? '—';
       $('#hero-venue').textContent  = h.Venue ? `· ${h.Venue}` : '· —';
-      $('#hero-price').textContent  = (h.Price!=null && isFinite(+h.Price)) ? (+h.Price).toFixed(2) : '—';
+
+      // Price (hero top) + Δ% + State
+      const price = (h.Price!=null && isFinite(+h.Price)) ? (+h.Price).toFixed(2) : '—';
+      $('#hero-price').textContent  = price;
       const chg = (h.ChangePct!=null && isFinite(+h.ChangePct)) ? (+h.ChangePct).toFixed(2)+'%' : '—';
       const chgEl = $('#hero-change');
       chgEl.textContent = chg;
-      chgEl.classList.toggle('hero__chg--up',  Number(h.ChangePct)>0);
-      chgEl.classList.toggle('hero__chg--down',Number(h.ChangePct)<0);
-      $('#hero-state').textContent = (h.State ?? h.ReportState ?? '—');
+      chgEl.classList.toggle('chg--up',  Number(h.ChangePct)>0);
+      chgEl.classList.toggle('chg--down',Number(h.ChangePct)<0);
+      const st = (h.State ?? h.ReportState ?? '—');
+      const stEl = $('#hero-state');
+      stEl.textContent = st;
+      setBadgeTone(stEl, st);
+
+      // Snapshot
       $('#hero-start').textContent = h.Start ?? '—';
       $('#hero-end').textContent   = h.End ?? '—';
-      $('#hero-freshness').textContent  = h.FreshnessLabel ?? h.Freshness ?? '—';
-      $('#hero-confidence').textContent = (isFinite(+h.ConfidenceFinal) ? (+h.ConfidenceFinal).toFixed(2) : '—');
+      setToneBar($('#tone-snap'),'n');
+
+      // Price (meta) + tones
+      $('#hero-price2').textContent = price;
+      setToneBar($('#tone-price'),'n');
+
+      // Δ% tone
+      $('#hero-change2').textContent = chg;
+      const toneChg = (h.ChangePct==null || isNaN(+h.ChangePct)) ? 'n' : (+h.ChangePct>0 ? 'g' : +h.ChangePct<0 ? 'r' : 'n');
+      setToneBar($('#tone-chg'), toneChg);
+
+      // Currency
+      $('#hero-ccy').textContent = h.Currency ?? h.PxCcy ?? '—';
+      setToneBar($('#tone-ccy'),'n');
+
+      // Freshness (T-0 g, T-1 y, else r)
+      const fresh = h.FreshnessLabel ?? h.Freshness ?? '—';
+      $('#hero-freshness').textContent = fresh;
+      const toneFresh = /T-0/i.test(fresh) ? 'g' : /T-1/i.test(fresh) ? 'y' : 'r';
+      setToneBar($('#tone-fresh'), toneFresh);
+
+      // Confidence (>=0.80 g, >=0.60 y, else r)
+      const conf = (isFinite(+h.ConfidenceFinal) ? +h.ConfidenceFinal : NaN);
+      $('#hero-confidence').textContent = isFinite(conf) ? conf.toFixed(2) : '—';
+      const toneConf = isFinite(conf) ? (conf>=0.80 ? 'g' : conf>=0.60 ? 'y' : 'r') : 'n';
+      setToneBar($('#tone-conf'), toneConf);
+
+      // OCR
+      const ocr = (isFinite(+h.OCR_Conf) ? +h.OCR_Conf : NaN);
+      $('#hero-ocr').textContent = isFinite(ocr) ? ocr.toFixed(2) : '—';
+      setToneBar($('#tone-ocr'), isFinite(ocr)? (ocr>=0.85?'g':ocr>=0.65?'y':'r') : 'n');
+
+      // DataIntegrity
+      const di = (isFinite(+h.DataIntegrity) ? +h.DataIntegrity : NaN);
+      $('#hero-di').textContent = isFinite(di) ? di.toFixed(2) : '—';
+      setToneBar($('#tone-di'), isFinite(di)? (di>=0.85?'g':di>=0.65?'y':'r') : 'n');
+
+      // FeedSync
+      const fs = (isFinite(+h.FeedSync) ? +h.FeedSync : NaN);
+      $('#hero-fs').textContent = isFinite(fs) ? fs.toFixed(2) : '—';
+      setToneBar($('#tone-fs'), isFinite(fs)? (fs>=0.85?'g':fs>=0.65?'y':'r') : 'n');
+
+      // State (bar mirrors badge)
+      setToneBar($('#tone-state'), (st==='ACTIVE'?'g':st==='REVIEW'?'y':st==='HOLD'?'r':'n'));
+
       if(window.lucide) lucide.createIcons();
     })();
 
-    // ===== Tooltip su click “(?)” con Glossary + Drawer =====
+    // ===== Popover (compact) — clamp + flip for mobile =====
     const pop = $('#popover'); let glossaryCache=null, currentMetric=null;
     async function getGlossary(){
       if (glossaryCache) return glossaryCache;
@@ -357,14 +552,38 @@
       catch{ glossaryCache={}; }
       return glossaryCache;
     }
+    function clamp(val,min,max){ return Math.max(min, Math.min(max, val)); }
     function placePopover(btn){
       const rect = btn.getBoundingClientRect();
-      const dx = rect.left + window.scrollX;
-      const dy = rect.bottom + window.scrollY + 8;
-      pop.style.left = `${Math.max(12, dx - 8)}px`;
-      pop.style.top  = `${dy}px`;
+      const scrollX = window.scrollX || document.documentElement.scrollLeft;
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      const vw = window.innerWidth, vh = window.innerHeight;
+
+      const popW = Math.min(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--pop-w'))||300, vw*0.9);
+      const popH = pop.offsetHeight || 140; // fallback
+
+      // Pre-posizione sotto al bottone
+      let left = rect.left + scrollX - 8;
+      let top  = rect.bottom + scrollY + 8;
+
+      // Clamp orizzontale
+      const margin = 12;
+      left = clamp(left, scrollX + margin, scrollX + vw - popW - margin);
+
+      // Flip verticale se non c'è spazio sotto
+      const spaceBelow = (scrollY + vh) - (rect.bottom + scrollY);
+      if (spaceBelow < popH + 20){
+        top = rect.top + scrollY - popH - 10; // sopra
+        // Se va sopra lo schermo, clamp in alto
+        if (top < scrollY + margin) top = scrollY + margin;
+      }
+
+      pop.style.width = popW + 'px';
+      pop.style.left  = `${left}px`;
+      pop.style.top   = `${top}px`;
     }
     function hidePopover(){ pop.classList.remove('show'); pop.setAttribute('aria-hidden','true'); currentMetric=null; }
+
     document.addEventListener('click', async (e)=>{
       if (e.target.closest('#popover')) return;
       const btn = e.target.closest('.info-btn');
@@ -378,24 +597,15 @@
       $('#popover-title').textContent  = entry.title || metric;
       $('#popover-text').textContent   = entry.short || '—';
       $('#popover-source').textContent = entry.source ? `Fonte: ${entry.source}` : '';
+      pop.style.visibility='hidden'; pop.classList.add('show'); // calcolo H esatto
       placePopover(btn);
-      pop.classList.add('show'); pop.setAttribute('aria-hidden','false');
+      pop.style.visibility='visible';
+      pop.setAttribute('aria-hidden','false');
     });
     $('#popover-close').addEventListener('click', hidePopover);
-    $('#popover-more').addEventListener('click', async ()=>{
-      if(!currentMetric) return;
-      const g = await getGlossary(); const e = g?.[currentMetric];
-      const html = `
-        <div>
-          <h3 style="margin:0 0 6px;font-weight:800">${e?.title || currentMetric}</h3>
-          <p style="margin:0 0 8px;line-height:1.5">${e?.long || e?.short || '—'}</p>
-          ${e?.source ? `<p style="margin:8px 0 0;color:var(--muted);font-size:12px"><em>Fonte: ${e.source}</em></p>` : ''}
-        </div>`;
-      window.Tradelia?.Drawer?.open({ title: e?.title || currentMetric, subtitle:'Glossario & Metodo', html });
-      hidePopover();
-    });
-    window.addEventListener('resize', ()=>{ if(pop.classList.contains('show')) hidePopover(); });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape') hidePopover(); });
+    window.addEventListener('resize', ()=>{ if(pop.classList.contains('show')) hidePopover(); });
+    window.addEventListener('scroll', ()=>{ if(pop.classList.contains('show')) hidePopover(); }, { passive:true });
 
     // ===== Chips: scroll-to card + accensione da Manifest =====
     document.addEventListener('DOMContentLoaded', ()=>{
@@ -406,7 +616,8 @@
           if(card){ card.scrollIntoView({behavior:'smooth', block:'start'}); }
         });
       });
-      // quando app.js espone Manifest.order -> accendi chip
+
+      // accendi chip quando Manifest.order è disponibile
       const iv = setInterval(()=>{
         const order = window.Tradelia?.Manifest?.order;
         if(Array.isArray(order)){
@@ -417,6 +628,7 @@
           clearInterval(iv);
         }
       }, 150);
+
       if(window.lucide) lucide.createIcons();
     });
   </script>
