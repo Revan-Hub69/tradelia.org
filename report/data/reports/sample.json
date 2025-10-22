@@ -1,0 +1,58 @@
+{
+  "Header": {
+    "Start": "2025-10-22 10:15",
+    "End": "2025-10-22 11:02",
+    "Ticker": "AAPL",
+    "Venue": "XNAS",
+    "FreshnessLabel": "T-0",
+    "ConfidenceFinal": 0.82,
+    "OCR_Conf": 0.90,
+    "DataIntegrity": 0.86,
+    "FeedSync": 0.88,
+    "State": "ACTIVE"
+  },
+
+  "F1B": {
+    "Meta": {
+      "MacroLabel": "Rischio Moderato (Risk-On selettivo)",
+      "StateBadge": { "label": "Attivo" },
+      "Confidence": 0.82,
+      "WinRateEstimate": 0.74,
+      "Version": "F1B v7.1",
+      "FreshnessLabel": "T-0",
+      "Sources": ["Bloomberg", "BofA ETF Flows", "CFTC", "Finviz"]
+    },
+
+    "Metrics": {
+      "Regime": "Expansionary",
+      "Classification": { "StrategyMode": "Trend-Following Pullback" },
+      "RegimeScore": { "score": 0.77 },
+      "FlowScore": { "score": 0.69 },
+      "Breadth1M": { "label": "Ampia (>65%)" },
+      "RiskTilt": { "label": "Neutrale" }
+    },
+
+    "Inputs": {
+      "VIX_Close_T1": 15.4,
+      "SectorETFs": [
+        { "ticker": "XLK", "name": "Tech Select", "group": "Growth", "perf_1m_pct": 6.4, "flow_5d_usd_M": 240, "rank_flow_5d": 1 },
+        { "ticker": "XLY", "name": "Consumer Discretionary", "group": "Growth", "perf_1m_pct": 4.8, "flow_5d_usd_M": 120, "rank_flow_5d": 2 },
+        { "ticker": "XLF", "name": "Financials", "group": "Value", "perf_1m_pct": 3.1, "flow_5d_usd_M": 75, "rank_flow_5d": 3 },
+        { "ticker": "XLE", "name": "Energy", "group": "Value", "perf_1m_pct": -1.2, "flow_5d_usd_M": -50, "rank_flow_5d": 9 }
+      ]
+    },
+
+    "Audit": {
+      "Caveats": [
+        "Copertura ETF flussi = 82%",
+        "Lag CFTC ≤ 2g"
+      ]
+    }
+  },
+
+  "F2": {},
+  "F3": {},
+  "F4": {},
+  "F5": {},
+  "Broker": {}
+}
