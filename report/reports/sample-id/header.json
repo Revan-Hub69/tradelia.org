@@ -3,6 +3,11 @@
   "End": "2025-10-22 16:00",
   "Ticker": "AAPL",
   "Venue": "NASDAQ",
+
+  "Price": 229.45,
+  "ChangePct": -0.62,
+  "Currency": "USD",
+
   "FreshnessLabel": "T-0",
   "ConfidenceFinal": 0.83,
   "OCR_Conf": 0.91,
