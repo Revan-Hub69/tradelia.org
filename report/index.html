@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tradelia · Report Runtime</title>
 
-  <!-- Favicon (percorso assoluto per Vercel) -->
+  <!-- Favicon assoluto -->
   <link rel="icon" href="/report/favicon.png" type="image/png" />
   <link rel="apple-touch-icon" href="/report/favicon.png" />
 
@@ -13,54 +13,78 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- Tokens -->
-  <link rel="stylesheet" href="./assets/css/tokens.css" />
+  <!-- Design tokens -->
+  <link rel="stylesheet" href="/report/assets/css/tokens.css" />
 
   <style>
-    /* Shell layout minimale */
+    html,body{height:100%}
     body{
       font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
       background:var(--bg); color:var(--ink);
       -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
-      scroll-behavior:smooth;
     }
     .container{max-width:72rem;margin-inline:auto;padding:0 12px}
+    .hdr{backdrop-filter:saturate(1.2) blur(6px)}
     .btn{
       display:inline-flex;align-items:center;gap:.45rem;
-      padding:.45rem .65rem;border-radius:.7rem;
-      font-weight:600;font-size:14px;
-      border:1px solid var(--br);
-      background:var(--btn-bg);
-      box-shadow:var(--btn-shadow);
-      transition:background .2s, transform .1s;
+      padding:.45rem .65rem;border-radius:.7rem;font-weight:600;font-size:14px;
+      border:1px solid var(--br); background:var(--btn-bg); box-shadow:var(--btn-shadow);
+      transition:background .2s, transform .08s;
     }
-    .btn:hover{background:rgba(255,255,255,.25);transform:translateY(-1px)}
+    .btn:hover{background:color-mix(in oklab, var(--card) 90%, white 10%); transform:translateY(-1px)}
+    .btn:active{transform:translateY(0)}
     .btn i{width:18px;height:18px}
-    .hdr{backdrop-filter:saturate(1.2) blur(6px)}
-    .noprint{}
     @media print{ .noprint{display:none!important} }
 
-    /* Scrollbar (WebKit + Firefox) */
-    *{scrollbar-width:thin;scrollbar-color:rgba(148,163,184,.4) transparent}
+    /* Scrollbars */
+    *{scrollbar-width:thin;scrollbar-color:rgba(148,163,184,.45) transparent}
     ::-webkit-scrollbar{width:10px;height:10px}
-    ::-webkit-scrollbar-track{background:transparent}
     ::-webkit-scrollbar-thumb{
-      background-color:rgba(148,163,184,.4);
-      border-radius:8px;border:2px solid transparent;background-clip:content-box;
+      background-color:rgba(148,163,184,.45);border-radius:8px;border:2px solid transparent;background-clip:content-box;
     }
-    ::-webkit-scrollbar-thumb:hover{background-color:rgba(100,116,139,.5)}
 
-    /* Responsive tweaks */
-    @media (max-width:640px){
-      .container{padding-inline:8px}
-      .btn span{display:none}
-      .btn i{width:20px;height:20px}
+    /* Grid & divider */
+    .divider{border:0;height:1px;width:100%;background:var(--br);margin:10px 0 12px}
+    .cards-grid{
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:10px; margin:8px 0 16px;
+      content-visibility:auto; contain-intrinsic-size:auto 320px;
     }
+
+    /* Drawer */
+    .drawer{position:fixed;inset:0;z-index:60;display:none}
+    .drawer[aria-hidden="false"]{display:block}
+    .drawer__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(1.5px);opacity:0;transition:opacity .18s ease}
+    .drawer__panel{
+      position:absolute;right:0;top:0;bottom:0;width:min(92%,560px);
+      background:var(--card); border-left:1px solid var(--br);
+      box-shadow:-10px 0 30px rgba(2,6,23,.15);
+      transform:translateX(100%); transition:transform .2s ease;
+      display:flex;flex-direction:column;
+    }
+    .drawer.is-open .drawer__backdrop{opacity:1}
+    .drawer.is-open .drawer__panel{transform:translateX(0)}
+    .drawer__header{
+      height:52px;display:flex;align-items:center;justify-content:space-between;gap:.5rem;
+      padding:0 12px;border-bottom:1px solid var(--br);
+      background:color-mix(in oklab, var(--card) 92%, white 8%); position:sticky;top:0;z-index:1;
+    }
+    .drawer__title{font-weight:700;color:var(--ink);margin:0;font-size:14px}
+    .drawer__subtitle{margin:2px 0 0;font-size:12px;color:var(--muted)}
+    .drawer__content{padding:10px 12px;overflow:auto;height:calc(100% - 52px);background:color-mix(in oklab, var(--bg) 96%, white 4%)}
+    @media (max-width:640px){
+      .drawer__panel{
+        left:0;right:0;width:100%;height:85vh;top:auto;bottom:0;border-left:none;border-top:1px solid var(--br);
+        border-top-left-radius:16px;border-top-right-radius:16px;transform:translateY(100%);
+      }
+      .drawer.is-open .drawer__panel{transform:translateY(0)}
+    }
+    @media print{ .drawer{display:none!important} }
   </style>
 </head>
 
 <body>
-  <!-- HEADER BAR -->
+  <!-- HEADER -->
   <header class="hdr sticky top-0 z-50 bg-[color:var(--card)]/90 border-b border-[color:var(--br)] noprint">
     <div class="container h-12 sm:h-14 flex items-center justify-between">
       <div class="flex items-center gap-2 sm:gap-3 min-w-0">
@@ -70,131 +94,85 @@
         <span class="text-[color:var(--muted)] text-xs sm:text-sm truncate">Report Runtime</span>
       </div>
       <div class="flex items-center gap-1.5 sm:gap-2">
-        <button id="btn-print" class="btn" aria-label="Stampa / PDF">
-          <i data-lucide="printer"></i><span class="hidden sm:inline">Stampa / PDF</span>
-        </button>
-        <button id="btn-share" class="btn" aria-label="Condividi">
-          <i data-lucide="share-2"></i><span class="hidden sm:inline">Condividi</span>
-        </button>
-        <button id="btn-theme" class="btn" aria-label="Tema">
-          <i data-lucide="sun"></i><span class="hidden sm:inline">Tema</span>
-        </button>
+        <button id="btn-print" class="btn" aria-label="Stampa / PDF"><i data-lucide="printer"></i><span class="hidden sm:inline">Stampa / PDF</span></button>
+        <button id="btn-share" class="btn" aria-label="Condividi"><i data-lucide="share-2"></i><span class="hidden sm:inline">Condividi</span></button>
+        <button id="btn-theme" class="btn" aria-label="Tema"><i data-lucide="sun"></i><span class="hidden sm:inline">Tema</span></button>
       </div>
     </div>
   </header>
 
-  <!-- MAIN SLOT -->
+  <!-- MAIN -->
   <main class="container py-3">
     <section id="header-ticker" aria-label="Header Ticker (pills)"></section>
+    <hr class="divider" />
+    <section class="flex items-center justify-between noprint mb-1">
+      <div class="text-sm font-semibold text-[color:var(--ink)]">Schede</div>
+      <div class="text-[11px] text-[color:var(--muted)]">F1 · F2 · …</div>
+    </section>
+    <section id="cards-grid" class="cards-grid" aria-label="Schede analitiche"></section>
   </main>
 
-  <!-- SHARE: Opzione B (nativo SOLO su vero mobile, altrimenti popup) -->
-  <script>
-  function isRealMobile(){
-    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) && ('ontouchstart' in window);
-  }
-
-  async function openShare({ title='Tradelia · Report', text='Guarda il report completo', url=location.href } = {}){
-    if (isRealMobile() && navigator.share) {
-      try { await navigator.share({ title, text, url }); return; }
-      catch(e){ /* se l'utente annulla, non apriamo il popup */ return; }
-    }
-    openSharePopup({ title, text, url }); // desktop → sempre popup elegante
-  }
-
-  function openSharePopup({ title, text, url }){
-    const wrap=document.createElement('div');
-    wrap.className='fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-[1000]';
-    const card=document.createElement('div');
-    card.className='bg-white rounded-xl shadow-2xl p-5 w-[92%] max-w-lg text-left border border-slate-200';
-
-    const enc = encodeURIComponent;
-    const targets = [
-      {l:'WhatsApp',  u:`https://wa.me/?text=${enc(url)}`,               i:'message-square'},
-      {l:'Telegram',  u:`https://t.me/share/url?url=${enc(url)}`,        i:'send'},
-      {l:'X',         u:`https://twitter.com/intent/tweet?url=${enc(url)}`, i:'twitter'},
-      {l:'LinkedIn',  u:`https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`, i:'linkedin'},
-      {l:'Reddit',    u:`https://www.reddit.com/submit?url=${enc(url)}`, i:'square'},
-      {l:'Facebook',  u:`https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`, i:'facebook'}
-    ];
-
-    card.innerHTML = `
-      <div class="flex items-start justify-between gap-3 mb-3">
-        <div>
-          <h2 class="font-semibold text-slate-800 leading-tight">${title}</h2>
-          <p class="text-xs text-slate-500 mt-0.5">Condividi il link del report</p>
+  <!-- DRAWER -->
+  <div id="drawer" class="drawer noprint" aria-hidden="true">
+    <div class="drawer__backdrop" data-drawer-close></div>
+    <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+      <header class="drawer__header">
+        <div class="min-w-0">
+          <h2 id="drawer-title" class="drawer__title">Dettagli</h2>
+          <p id="drawer-subtitle" class="drawer__subtitle">—</p>
         </div>
-        <button class="btn" data-act="close" aria-label="Chiudi"><i data-lucide="x"></i></button>
-      </div>
+        <button class="btn" data-drawer-close aria-label="Chiudi"><i data-lucide="x"></i><span class="hidden sm:inline">Chiudi</span></button>
+      </header>
+      <div id="drawer-content" class="drawer__content"></div>
+    </aside>
+  </div>
 
-      <div class="space-y-3">
-        <div class="mx-auto w-[180px]">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?data=${enc(url)}&size=180x180"
-               alt="QR" class="rounded-lg border border-slate-200 shadow-sm bg-white p-2 w-full h-auto"/>
-        </div>
+  <!-- APP -->
+  <script type="module" src="/report/assets/js/app.js"></script>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 justify-items-center sm:justify-items-start">
-          ${targets.map(t=>`
-            <a class="sbtn text-[13px] font-semibold flex gap-1 items-center px-2 py-1.5 border border-slate-200 rounded-md hover:bg-slate-100"
-               href="${t.u}" target="_blank" rel="noopener">
-              <i data-lucide="${t.i}" class="w-4 h-4"></i>${t.l}
-            </a>`).join('')}
-        </div>
-
-        <div class="bg-slate-50 border border-slate-200 text-[12px] p-2 rounded-md font-mono select-all break-all" data-el="linkbox">${url}</div>
-
-        <div class="flex gap-2">
-          <button class="sbtn btn" data-act="copy"><i data-lucide="copy"></i><span>Copia</span></button>
-          <button class="sbtn btn" data-act="short"><i data-lucide="link-2"></i><span>Short</span></button>
-          <a class="sbtn btn" href="${url}" target="_blank" rel="noopener"><i data-lucide="external-link"></i><span>Apri</span></a>
-        </div>
-      </div>
-    `;
-
-    wrap.appendChild(card);
-    document.body.appendChild(wrap);
-    if(window.lucide) lucide.createIcons();
-
-    wrap.addEventListener('click', e => { if (e.target === wrap) wrap.remove(); });
-    card.querySelector('[data-act="close"]').onclick = () => wrap.remove();
-
-    card.querySelector('[data-act="copy"]').onclick = async () => {
-      try{
-        await navigator.clipboard.writeText(url);
-        card.querySelector('[data-act="copy"]').innerHTML = '<i data-lucide="check"></i><span>Copiato</span>';
-        if(window.lucide) lucide.createIcons();
-      }catch{}
-    };
-
-    card.querySelector('[data-act="short"]').onclick = async () => {
-      try{
-        const r = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(url)}`);
-        const j = await r.json();
-        if (j.shorturl) card.querySelector('[data-el="linkbox"]').textContent = j.shorturl;
-      }catch{}
-    };
-  }
-  </script>
-
-  <!-- APP INIT -->
-  <script type="module" src="./assets/js/app.js"></script>
+  <!-- Interazioni globali -->
   <script>
     // Print
     document.getElementById('btn-print')?.addEventListener('click',()=>window.print());
 
-    // Theme toggle
-    const html=document.documentElement, btn=document.getElementById('btn-theme');
-    const icon=()=> html.dataset.theme==='dark' ? 'moon' : 'sun';
-    btn?.addEventListener('click',()=>{
+    // Tema
+    const html=document.documentElement, btnTheme=document.getElementById('btn-theme');
+    const themeIcon=()=> html.dataset.theme==='dark' ? 'moon' : 'sun';
+    btnTheme?.addEventListener('click',()=>{
       html.dataset.theme = (html.dataset.theme==='dark' ? 'light' : 'dark');
-      btn.innerHTML = `<i data-lucide="${icon()}"></i><span class="hidden sm:inline">Tema</span>`;
+      btnTheme.innerHTML = `<i data-lucide="${themeIcon()}"></i><span class="hidden sm:inline">Tema</span>`;
       if(window.lucide) lucide.createIcons();
     });
 
-    // Share (Opzione B)
+    // Share (mobile nativo, desktop popup minimal)
+    async function openShare({ title=document.title, text='Guarda il report completo', url=location.href } = {}){
+      const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) && ('ontouchstart' in window);
+      if(isMobile && navigator.share){ try{ await navigator.share({title,text,url}); return; }catch{} }
+      const w=600,h=540,l=(screen.width-w)/2,t=(screen.height-h)/2;
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,'share',`width=${w},height=${h},left=${l},top=${t}`);
+    }
     document.getElementById('btn-share')?.addEventListener('click',()=>openShare());
 
-    // Icons
+    // Drawer API
+    (() => {
+      const root = document.getElementById('drawer');
+      const title = root.querySelector('#drawer-title');
+      const subtitle = root.querySelector('#drawer-subtitle');
+      const content = root.querySelector('#drawer-content');
+      function open({ title:t='Dettagli', subtitle:s='—', html='' }={}){
+        title.textContent=t; subtitle.textContent=s; content.innerHTML=html;
+        root.setAttribute('aria-hidden','false'); requestAnimationFrame(()=>root.classList.add('is-open'));
+      }
+      function close(){
+        root.classList.remove('is-open');
+        root.addEventListener('transitionend',()=>root.setAttribute('aria-hidden','true'),{once:true});
+      }
+      root.addEventListener('click',e=>{ if(e.target.closest('[data-drawer-close]')) close(); });
+      document.addEventListener('keydown',e=>{ if(e.key==='Escape') close(); });
+      window.Tradelia = window.Tradelia || {};
+      window.Tradelia.Drawer = { open, close };
+    })();
+
     if(window.lucide) lucide.createIcons();
   </script>
 </body>
