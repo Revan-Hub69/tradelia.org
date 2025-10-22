@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tradelia · Report Runtime</title>
+  <link rel="icon" href="./favicon.png" type="image/png" />
+
+  <!-- Tailwind (no build) + Icons -->
+  <script src="https://cdn.tailwindcss.com" defer></script>
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+
+  <!-- Stili custom del REPORT (estratti dai vecchi <style>) -->
+  <link rel="stylesheet" href="./assets/styles.css" />
+
+  <!-- Preload leggero per UX -->
+  <link rel="preload" href="./assets/helpx.dict.json" as="fetch" crossorigin>
+
+  <!-- Meta print-friendly -->
+  <meta name="color-scheme" content="light" />
+</head>
+
+<body class="min-h-screen bg-slate-50 text-slate-900">
+  <!-- =========================
+       HEADER (sticky) + ACTIONS
+       ========================= -->
+  <header class="hdr sticky top-0 z-50 bg-white/90 border-b border-slate-200 backdrop-blur noprint">
+    <div class="max-w-7xl mx-auto px-3 sm:px-5 h-12 sm:h-14 flex items-center justify-between">
+      <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+        <a href="../" class="shrink-0 text-lg sm:text-xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition" title="Torna alla Home">
+          <span class="text-slate-900">TRADELIA</span><span class="text-blue-600">&bull;AI</span>
+        </a>
+        <span class="text-slate-400 text-xs sm:text-sm truncate">Report Runtime</span>
+      </div>
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <button id="btn-print" class="btn" aria-label="Stampa / PDF">
+          <i data-lucide="printer" aria-hidden="true"></i><span class="hidden sm:inline">Stampa / PDF</span>
+        </button>
+        <button id="btn-share" class="btn" aria-label="Condividi">
+          <i data-lucide="share-2" aria-hidden="true"></i><span class="hidden sm:inline">Condividi</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================
+       HERO / INFO TESTATA REPORT
+       (pills responsive – popolato via runtime)
+       ========================= -->
+  <main class="max-w-7xl mx-auto px-3 sm:px-5 py-3">
+    <!-- Header Ticker Pills (placeholders, verranno riempiti dal binder HeaderJSON) -->
+    <section id="header-ticker" aria-label="Header Ticker (pills)" class="mb-3">
+      <!-- Runtime inserirà qui le pill in base ai dati Header.* del JSON -->
+    </section>
+
+    <!-- =========================
+         MODULI ANALITICI (griglia/lista)
+         ========================= -->
+    <section id="moduli" class="pt-1">
+      <div class="flex items-end justify-between mb-3 sm:mb-4">
+        <div class="min-w-0">
+          <h2 class="text-base sm:text-lg font-semibold text-slate-800 tracking-tight">Moduli analitici</h2>
+          <p class="text-xs text-slate-500">Framework F1–F5 · schede auditabili</p>
+        </div>
+        <div class="flex items-center gap-2 noprint">
+          <button id="view-grid" class="btn" aria-pressed="true"><i data-lucide="grid"></i><span class="hidden sm:inline">Griglia</span></button>
+          <button id="view-list" class="btn" aria-pressed="false"><i data-lucide="list"></i><span class="hidden sm:inline">Lista</span></button>
+        </div>
+      </div>
+
+      <!-- Contenitore che il runtime userà per montare i moduli (islands) -->
+      <div id="mod-container" data-view="grid"
+           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 sm:gap-2 lg:gap-3"
+           aria-label="Griglia moduli analitici">
+        <!-- Il runtime carica /modules/<key>/view.html e binder.js in lazy quando entrano nel viewport -->
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================
+       DRAWER GLOBALE (side panel desktop / bottom-sheet mobile)
+       ========================= -->
+  <div id="mod-drawer" class="fixed inset-0 z-[60] hidden" aria-hidden="true">
+    <div class="absolute inset-0 bg-black/30 backdrop-blur-[1px]" data-close="backdrop"></div>
+    <aside class="absolute right-0 top-0 h-full w-[92%] sm:w-[560px]
+                 translate-x-full will-change-transform transition-transform duration-200 ease-out bg-white">
+      <header class="h-12 sm:h-14 border-b border-slate-200 flex items-center justify-between px-3 sm:px-4 bg-white/95 backdrop-blur">
+        <div class="min-w-0">
+          <div id="drawer-title" class="font-semibold text-slate-800 truncate">Modulo</div>
+          <div id="drawer-sub" class="text-xs text-slate-500 truncate">—</div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="drawer-print" class="btn" aria-label="Stampa sezione"><i data-lucide="printer"></i></button>
+          <button id="drawer-close" class="btn" aria-label="Chiudi"><i data-lucide="x"></i></button>
+        </div>
+      </header>
+      <div id="drawer-body" class="h-[calc(100%-3.25rem)] sm:h-[calc(100%-3.75rem)] overflow-auto p-3 sm:p-4 bg-slate-50/40"></div>
+    </aside>
+  </div>
+
+  <!-- =========================
+       NOSCRIPT + BASE VARS + RUNTIME
+       ========================= -->
+  <noscript>
+    <div class="max-w-3xl mx-auto my-6 p-3 border border-amber-300 bg-amber-50 text-amber-900 rounded">
+      Questo report richiede JavaScript per caricare i moduli e i dati. Abilita JavaScript nel browser.
+    </div>
+  </noscript>
+
+  <!-- Valori base per percorsi relativi (project pages) e ID report -->
+  <script>
+    window.Tradelia = window.Tradelia || {};
+    // BASE usato da runtime per costruire percorsi (sempre relativi)
+    window.Tradelia.BASE = '.';
+    // Estrai id dal querystring (?id=sample). Se manca, fallback "sample".
+    (function(){
+      try{
+        const url = new URL(window.location.href);
+        const id = url.searchParams.get('id') || 'sample';
+        window.Tradelia.REPORT_ID = id;
+      }catch{ window.Tradelia.REPORT_ID = 'sample'; }
+    })();
+  </script>
+
+  <!-- Loader unico del report (ES Modules) -->
+  <script type="module" src="./assets/runtime.js" defer></script>
+</body>
+</html>
