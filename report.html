@@ -10,47 +10,15 @@
   <link rel="stylesheet" href="./assets/css/report.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 
-  <!-- CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide UMD corretto: espone window.lucide -->
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" crossorigin="anonymous"></script>
+  <!-- CSS utility -->
+  <script src="https://cdn.tailwindcss.com" defer></script>
+  <!-- Lucide UMD (espone window.lucide) -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" crossorigin="anonymous" defer></script>
 
-  <!-- Overlay errori (temporaneo per debug) -->
-  <script>
-    (function(){
-      function show(msg){
-        var b=document.createElement('div');
-        b.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.55);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;padding:16px';
-        var c=document.createElement('div');
-        c.style.cssText='max-width:880px;width:92%;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:14px;font:14px/1.4 system-ui,Segoe UI,Arial';
-        c.innerHTML='<div style="font-weight:700;margin-bottom:6px;color:#991b1b">Errore runtime</div><pre style="white-space:pre-wrap;margin:0;color:#111827">'+String(msg)+'</pre>';
-        b.appendChild(c); document.body.appendChild(b);
-      }
-      window.addEventListener('error', e=>show(e.message || e.error || 'error'));
-      window.addEventListener('unhandledrejection', e=>show(e.reason || 'unhandledrejection'));
-    }());
-  </script>
-
-  <!-- Preflight: verifica moduli (deve stare in head o body, non fra head/body) -->
-  <script type="module">
-    const must = [
-      './assets/js/components/header.js',
-      './assets/js/components/helpx.js',
-      './assets/js/components/share.js',
-      './assets/js/components/drawer.js',
-      './assets/js/modules/headerTicker.js',
-      './assets/js/modules/f1b.js',
-      './assets/js/modules/f2.js',
-      './assets/js/utils/qs.js',
-      './assets/js/utils/tone.js',
-      './assets/js/utils/stateBadge.js'
-    ];
-    for (const p of must) {
-      try { await import(p); }
-      catch (e) { throw new Error(`Import fallito: ${p}\n${e?.message||e}`); }
-    }
-    console.log('Preflight OK: tutti i moduli importabili');
-  </script>
+  <!-- Bootstrap + Overlay (NO inline) -->
+  <script src="./assets/js/boot.js" defer></script>
+  <!-- App (ES module) -->
+  <script type="module" src="./assets/js/app.js"></script>
 </head>
 
 <body class="text-gray-900 bg-slate-100">
@@ -100,64 +68,5 @@
       <div id="drawer-body" class="h-[calc(100%-3.25rem)] sm:h-[calc(100%-3.75rem)] overflow-auto p-3 sm:p-4 bg-slate-50/40"></div>
     </aside>
   </div>
-
-  <!-- App -->
-  <script type="module">
-    import { initHeader }       from './assets/js/components/header.js';
-    import { initHelpX }        from './assets/js/components/helpx.js';
-    import { initShare }        from './assets/js/components/share.js';
-    import { initDrawerAPI }    from './assets/js/components/drawer.js';
-    import { initHeaderTicker } from './assets/js/modules/headerTicker.js';
-    import { mountF1B }         from './assets/js/modules/f1b.js';
-    import { mountF2 }          from './assets/js/modules/f2.js';
-    import { getDataURL }       from './assets/js/utils/qs.js';
-
-    // Boot: safe call a Lucide
-    try { window.lucide?.createIcons?.(); } catch {}
-
-    initDrawerAPI();
-    initHeader();    // stampa + condividi
-    initHelpX();     // dizionario “?”
-    initShare();     // share popup
-
-    // Layout controls
-    const cont = document.getElementById('mod-container');
-    document.getElementById('view-grid')?.addEventListener('click', (e)=>{
-      cont.dataset.view='grid'; e.currentTarget.setAttribute('aria-pressed','true');
-      document.getElementById('view-list')?.setAttribute('aria-pressed','false');
-      cont.className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 sm:gap-2 lg:gap-3';
-      try { window.lucide?.createIcons?.(); } catch {}
-    });
-    document.getElementById('view-list')?.addEventListener('click', (e)=>{
-      cont.dataset.view='list'; e.currentTarget.setAttribute('aria-pressed','true');
-      document.getElementById('view-grid')?.setAttribute('aria-pressed','false');
-      cont.className='space-y-1.5';
-      try { window.lucide?.createIcons?.(); } catch {}
-    });
-
-    // Data load
-    async function loadReport() {
-      const url = getDataURL();
-      const res = await fetch(url, { cache:'no-store' });
-      if (!res.ok) throw new Error('Fetch JSON: ' + res.status + ' @ ' + url);
-      const data = await res.json();
-
-      // Header ticker
-      initHeaderTicker(data?.Header || {});
-      // Moduli
-      const apiF1B = mountF1B(); apiF1B.update(data?.F1B || {});
-      const apiF2  = mountF2();  apiF2.update(data?.F2  || {});
-
-      try { window.lucide?.createIcons?.(); } catch {}
-    }
-
-    loadReport().catch(err=>{
-      const msg = `Errore caricamento dati: ${err.message}`;
-      const box = document.getElementById('header-ticker');
-      if (box) {
-        box.innerHTML = `<div class="text-sm text-red-700 bg-red-50 border border-red-200 p-2 rounded">${msg}</div>`;
-      }
-    });
-  </script>
 </body>
 </html>
