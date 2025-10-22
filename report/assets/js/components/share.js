@@ -5,6 +5,9 @@ export function initShareSystem() {
   const btn = document.getElementById('btn-share');
   if (!btn) return;
 
+  const $ = (sel, root = document) => root.querySelector(sel);
+
+  // Create sheet
   const sheet = document.createElement('div');
   sheet.id = 'share-sheet';
   sheet.className = 'share-sheet hidden noprint';
@@ -12,91 +15,139 @@ export function initShareSystem() {
     <div class="share-backdrop" data-close></div>
     <div class="share-panel">
       <header class="share-head">
-        <h3>Condividi Report</h3>
-        <button class="btn btn-sm" data-close><i data-lucide="x"></i></button>
+        <div class="share-title">
+          <strong>Condividi Report</strong>
+          <small class="share-sub">Link, QR e social</small>
+        </div>
+        <button class="btn btn-sm" data-close aria-label="Chiudi">
+          <i data-lucide="x"></i>
+        </button>
       </header>
 
       <div class="share-body">
         <div class="share-linkbox">
           <input id="share-link" type="text" readonly />
-          <button id="btn-copy" class="btn"><i data-lucide="copy"></i></button>
+          <button id="btn-copy" class="btn" aria-label="Copia">
+            <i data-lucide="copy"></i>
+          </button>
+        </div>
+
+        <div class="share-actions">
+          <button class="btn btn-ghost" id="btn-open" aria-label="Apri link">
+            <i data-lucide="external-link"></i><span>Apri</span>
+          </button>
+          <button class="btn btn-ghost" id="btn-short" aria-label="Short URL">
+            <i data-lucide="scissors"></i><span>Short</span>
+          </button>
+          <button class="btn btn-ghost" id="btn-qr" aria-label="QR Code">
+            <i data-lucide="qr-code"></i><span>QR</span>
+          </button>
         </div>
 
         <div class="share-grid">
-          ${renderPlatform('WhatsApp','whatsapp','https://api.whatsapp.com/send?text=')}
-          ${renderPlatform('Telegram','send','https://t.me/share/url?url=')}
-          ${renderPlatform('Discord','message-circle','https://discord.com/channels/@me')}
-          ${renderPlatform('Email','mail','mailto:?subject=Tradelia%20Report&body=')}
-          ${renderPlatform('LinkedIn','linkedin','https://www.linkedin.com/sharing/share-offsite/?url=')}
-          ${renderPlatform('X / Twitter','twitter','https://twitter.com/intent/tweet?url=')}
-          ${renderPlatform('SMS','sms','sms:?body=')}
-          <button id="btn-qr" class="share-item" data-type="qr"><i data-lucide="qr-code"></i><span>QR Code</span></button>
+          ${platform('WhatsApp','whatsapp','https://api.whatsapp.com/send?text=')}
+          ${platform('Telegram','send','https://t.me/share/url?url=')}
+          ${platform('Discord','message-circle','https://discord.com/channels/@me')}
+          ${platform('Email','mail','mailto:?subject=Tradelia%20Report&body=')}
+          ${platform('LinkedIn','linkedin','https://www.linkedin.com/sharing/share-offsite/?url=')}
+          ${platform('X / Twitter','twitter','https://twitter.com/intent/tweet?url=')}
+          ${platform('SMS','sms','sms:?body=')}
+          ${platform('Facebook','facebook','https://www.facebook.com/sharer/sharer.php?u=')}
         </div>
 
-        <div id="qr-area" class="qr-area hidden"></div>
+        <div id="qr-area" class="qr-area hidden" aria-live="polite"></div>
       </div>
     </div>
   `;
   document.body.appendChild(sheet);
 
-  // QR generator (usa libreria inline base64)
-  async function generateQR(text){
-    const api=`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(text)}`;
-    return `<img src="${api}" alt="QR code" class="mx-auto rounded-lg border border-[color:var(--br)] shadow-sm" />`;
-  }
-
-  function renderPlatform(name,icon,base){
-    return `<button class="share-item" data-url="${base}" data-name="${name}">
+  // Helpers
+  function platform(name, icon, base) {
+    return `<button class="share-item" data-url="${base}" data-name="${name}" aria-label="${name}">
       <i data-lucide="${icon}"></i><span>${name}</span>
     </button>`;
   }
 
-  // Toggle
-  const toggle = (show)=>{
-    sheet.classList.toggle('hidden',!show);
-    setTimeout(()=>lucide.createIcons(),50);
+  async function getShortUrl(longUrl) {
+    // Placeholder: restituisce il link originale.
+    // Integra qui Bitly/TinyURL/endpoint tuo e ritorna la short URL.
+    return longUrl;
+  }
+
+  async function generateQR(text) {
+    // QR via servizio pubblico; sostituibile con lib locale se preferisci
+    const api = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(text)}`;
+    return `<img src="${api}" width="180" height="180" alt="QR code" class="qr-img" />`;
+  }
+
+  const toggle = show => {
+    sheet.classList.toggle('hidden', !show);
+    if (window.lucide) setTimeout(() => lucide.createIcons(), 0);
   };
 
-  // Actions
-  btn.addEventListener('click',()=>{
-    $('#share-link').value = location.href;
+  // Open sheet
+  btn.addEventListener('click', () => {
+    const link = location.href;
+    $('#share-link').value = link;
     toggle(true);
   });
-  sheet.addEventListener('click',e=>{
-    if(e.target.closest('[data-close]')) toggle(false);
+
+  // Close sheet
+  sheet.addEventListener('click', e => {
+    if (e.target.closest('[data-close]')) toggle(false);
+  });
+  document.addEventListener('keydown', e => {
+    if (!sheet.classList.contains('hidden') && e.key === 'Escape') toggle(false);
   });
 
-  // Copy link
-  $('#btn-copy').addEventListener('click',async ()=>{
+  // Copy
+  $('#btn-copy').addEventListener('click', async () => {
     const link = $('#share-link').value;
-    try{
+    try {
       await navigator.clipboard.writeText(link);
       $('#btn-copy').innerHTML = `<i data-lucide="check"></i>`;
-      lucide.createIcons();
-      setTimeout(()=>$('#btn-copy').innerHTML=`<i data-lucide="copy"></i>`,1200);
-    }catch(e){ alert('Copia fallita'); }
-  });
-
-  // Share click
-  sheet.querySelectorAll('.share-item[data-url]').forEach(el=>{
-    el.addEventListener('click',()=>{
-      const base = el.dataset.url;
-      const url = encodeURIComponent(location.href);
-      const text = encodeURIComponent('Guarda il report completo su Tradelia · AI');
-      window.open(`${base}${text}%20${url}`,'share','width=600,height=500');
-    });
-  });
-
-  // QR toggle
-  $('#btn-qr').addEventListener('click',async ()=>{
-    const qra = $('#qr-area');
-    if(qra.classList.contains('hidden')){
-      qra.innerHTML = await generateQR(location.href);
-      qra.classList.remove('hidden');
-    }else{
-      qra.classList.add('hidden');
+      if (window.lucide) lucide.createIcons();
+      setTimeout(() => { $('#btn-copy').innerHTML = `<i data-lucide="copy"></i>`; if (window.lucide) lucide.createIcons(); }, 1200);
+    } catch {
+      alert('Impossibile copiare il link.');
     }
   });
 
-  const $=(sel,root=document)=>root.querySelector(sel);
+  // Open
+  $('#btn-open').addEventListener('click', () => {
+    const link = $('#share-link').value;
+    window.open(link, '_blank', 'noopener');
+  });
+
+  // Short
+  $('#btn-short').addEventListener('click', async () => {
+    const current = $('#share-link').value;
+    const shorted = await getShortUrl(current);
+    $('#share-link').value = shorted;
+  });
+
+  // QR
+  $('#btn-qr').addEventListener('click', async () => {
+    const qra = $('#qr-area');
+    if (qra.classList.contains('hidden')) {
+      qra.innerHTML = await generateQR($('#share-link').value);
+      qra.classList.remove('hidden');
+    } else {
+      qra.classList.add('hidden');
+      qra.innerHTML = '';
+    }
+  });
+
+  // Social buttons
+  sheet.querySelectorAll('.share-item[data-url]').forEach(el => {
+    el.addEventListener('click', () => {
+      const base = el.dataset.url;
+      const url = encodeURIComponent($('#share-link').value);
+      const text = encodeURIComponent('Guarda il report completo su Tradelia · AI');
+      const shareUrl = base.includes('mailto:') || base.startsWith('sms:')
+        ? `${base}${text}%20${url}`
+        : `${base}${url}&text=${text}`;
+      window.open(shareUrl, 'share', 'width=640,height=560,noopener');
+    });
+  });
 }
