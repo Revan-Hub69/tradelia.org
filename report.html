@@ -5,12 +5,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tradelia · Report Runtime</title>
+
   <link rel="icon" href="./favicon.png" type="image/png" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./assets/css/report.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide UMD: espone window.lucide -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" crossorigin="anonymous"></script>
 </head>
+
 <body class="text-gray-900 bg-slate-100">
   <!-- HEADER -->
   <header id="app-header" class="hdr sticky top-0 z-50 bg-white/90 border-b border-slate-200 noprint"></header>
@@ -33,14 +38,18 @@
           <button id="view-list" class="btn" aria-pressed="false"><i data-lucide="list"></i><span class="hidden sm:inline">Lista</span></button>
         </div>
       </div>
-      <div id="mod-container" data-view="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 sm:gap-2 lg:gap-3" aria-label="Griglia moduli analitici"></div>
+      <div id="mod-container" data-view="grid"
+           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 sm:gap-2 lg:gap-3"
+           aria-label="Griglia moduli analitici"></div>
     </div>
   </section>
 
   <!-- DRAWER (side / bottom-sheet) -->
   <div id="mod-drawer" class="fixed inset-0 z-[60] hidden">
     <div class="absolute inset-0 bg-black/30 backdrop-blur-[1px]" data-close="backdrop"></div>
-    <aside class="absolute right-0 top-0 h-full w-[92%] sm:w-[560px] translate-x-full will-change-transform transition-transform duration-200 ease-out bg-white border-l border-slate-200">
+    <aside class="absolute right-0 top-0 h-full w-[92%] sm:w-[560px]
+                  translate-x-full will-change-transform transition-transform duration-200 ease-out
+                  bg-white border-l border-slate-200">
       <header class="h-12 sm:h-14 border-b border-slate-200 flex items-center justify-between px-3 sm:px-4 bg-white/95 backdrop-blur">
         <div class="min-w-0">
           <div id="drawer-title" class="font-semibold text-slate-800 truncate">Modulo</div>
@@ -63,47 +72,64 @@
     import { initDrawerAPI }    from './assets/js/components/drawer.js';
     import { initHeaderTicker } from './assets/js/modules/headerTicker.js';
     import { mountF1B }         from './assets/js/modules/f1b.js';
-    import { mountF2 }         from './assets/js/modules/f2.js';
+    import { mountF2 }          from './assets/js/modules/f2.js';
     import { getDataURL }       from './assets/js/utils/qs.js';
 
-    // Boot
-    lucide.createIcons();
+    // Boot (icona Lucide solo se disponibile)
+    try { window.lucide?.createIcons?.(); } catch {}
+
     initDrawerAPI();
-    initHeader();    // stampa + condividi
-    initHelpX();     // dizionario “?”
-    initShare();     // API share.open(...)
+    initHeader();
+    initHelpX();
+    initShare();
 
     // Layout controls
     const cont = document.getElementById('mod-container');
     document.getElementById('view-grid')?.addEventListener('click', (e)=>{
-      cont.dataset.view='grid'; e.currentTarget.setAttribute('aria-pressed','true');
-      document.getElementById('view-list').setAttribute('aria-pressed','false');
+      cont.dataset.view='grid';
+      e.currentTarget.setAttribute('aria-pressed','true');
+      document.getElementById('view-list')?.setAttribute('aria-pressed','false');
       cont.className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 sm:gap-2 lg:gap-3';
+      try { window.lucide?.createIcons?.(); } catch {}
     });
     document.getElementById('view-list')?.addEventListener('click', (e)=>{
-      cont.dataset.view='list'; e.currentTarget.setAttribute('aria-pressed','true');
-      document.getElementById('view-grid').setAttribute('aria-pressed','false');
+      cont.dataset.view='list';
+      e.currentTarget.setAttribute('aria-pressed','true');
+      document.getElementById('view-grid')?.setAttribute('aria-pressed','false');
       cont.className='space-y-1.5';
+      try { window.lucide?.createIcons?.(); } catch {}
     });
 
-    // Data load
+    // Data load + hint non invasivo del data URL
     async function loadReport() {
       const url = getDataURL();
+
+      // piccolo hint visivo (utile se la console è bloccata)
+      const hint = document.createElement('div');
+      hint.className = 'text-[11px] text-slate-500 mb-1';
+      hint.textContent = `Data URL: ${url}`;
+      document.getElementById('header-ticker')?.prepend(hint);
+
       const res = await fetch(url, { cache:'no-store' });
-      if (!res.ok) throw new Error('Fetch JSON: ' + res.status);
+      if (!res.ok) throw new Error('Fetch JSON: ' + res.status + ' @ ' + url);
       const data = await res.json();
 
       // Header ticker
       initHeaderTicker(data?.Header || {});
+
       // Moduli
       const apiF1B = mountF1B(); apiF1B.update(data?.F1B || {});
       const apiF2  = mountF2();  apiF2.update(data?.F2  || {});
+
+      try { window.lucide?.createIcons?.(); } catch {}
     }
 
     loadReport().catch(err=>{
-      console.error(err);
-      document.getElementById('header-ticker').innerHTML =
-        `<div class="text-sm text-red-700 bg-red-50 border border-red-200 p-2 rounded">Errore caricamento dati: ${err.message}</div>`;
+      const msg = `Errore caricamento dati: ${err.message}`;
+      const box = document.getElementById('header-ticker');
+      if (box) {
+        box.innerHTML = `<div class="text-sm text-red-700 bg-red-50 border border-red-200 p-2 rounded">${msg}</div>`;
+      }
     });
   </script>
 </body>
