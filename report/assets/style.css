@@ -1,0 +1,99 @@
+/* Tradelia · Report Runtime — styles.css
+   NOTE: Manteniamo Tailwind per la base; qui solo utility condivise e skin.
+   Tutte le classi usate da view/binder sono qui centralizzate.
+*/
+
+:root{
+  --card-b:#fff; --card-br:#e5e7eb; --ink:#0f172a;
+}
+html,body{height:100%}
+body{
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  background:#f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+  background-size:280px; color:var(--ink);
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:rgba(80,160,200,.4);border-radius:100vh}
+::-webkit-scrollbar-thumb:hover{background:rgba(80,160,200,.6)}
+*{scrollbar-width:thin;scrollbar-color:rgba(80,160,200,.5) #e5e7eb}
+
+/* ===== Header (sticky) ===== */
+.hdr{backdrop-filter:saturate(1.2) blur(6px)}
+
+/* ===== Buttons ===== */
+.btn{display:inline-flex;align-items:center;gap:.45rem;padding:.45rem .65rem;border-radius:.7rem;font-weight:600;font-size:14px;border:1px solid #e5e7eb;background:linear-gradient(#fff,#f8fafc);box-shadow:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.03);transition:transform .08s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease;-webkit-tap-highlight-color:transparent}
+.btn:hover{background:linear-gradient(#fff,#f1f5f9);border-color:#dbe3ea}
+.btn:active{transform:translateY(1px);box-shadow:inset 0 1px 0 rgba(0,0,0,.06)}
+.btn:focus-visible{outline:none;box-shadow:0 0 0 2px rgba(56,189,248,.5)}
+.btn i{width:18px;height:18px}
+.sbtn{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .65rem;border-radius:.7rem;border:1px solid #e5e7eb;background:#fff;font-weight:600;font-size:13px;transition:transform .08s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease}
+.sbtn:hover{background:#f8fafc;border-color:#dbe3ea}
+.sbtn:active{transform:translateY(1px)}
+.sbtn i{width:18px;height:18px}
+
+/* ===== Share popup (fallback) ===== */
+.popup-backdrop{animation:fadeBackdropIn .18s ease forwards}
+.popup-backdrop.closing{animation:fadeBackdropOut .16s ease forwards}
+.popup-card{animation:popIn .20s cubic-bezier(.22,.61,.36,1) forwards}
+.popup-card.closing{animation:popOut .16s ease forwards}
+@keyframes fadeBackdropIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeBackdropOut{from{opacity:1}to{opacity:0}}
+@keyframes popIn{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes popOut{from{opacity:1;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(4px) scale(.985)}}
+
+/* ===== HelpX popup ===== */
+.hx{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:999px;border:1px solid rgba(2,132,199,.6);font-size:10px;line-height:1;color:#0369a1;background:#fff}
+.hx:hover{background:#f0f9ff}
+.hx-pop{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;z-index:9999}
+.hx-card{position:relative;z-index:10000;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:18px;max-width:720px;width:min(92%,720px);box-shadow:0 12px 34px rgba(0,0,0,.2)}
+.hx-card h3{margin:0 0 6px;font-weight:700;color:#0f172a}
+.hx-card .src{font-size:11px;color:#6b7280;margin-bottom:10px}
+.hx-card p,.hx-card li{line-height:1.45}
+.hx-callout{border-left:3px solid #7dd3fc;background:#f0f9ff;padding:.5rem .6rem;border-radius:.5rem;font-size:12px;color:#075985}
+
+/* ===== Header Ticker — pills ===== */
+#header-ticker .pill{position:relative;display:flex;align-items:center;gap:.6rem;padding:.55rem .7rem .55rem .9rem;border:1px solid #e5e7eb;border-radius:12px;background:#fff;box-shadow:0 1px 0 rgba(2,6,23,.04);min-height:46px}
+#header-ticker .pill .lab{display:flex;align-items:center;gap:.35rem;font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:#64748b}
+#header-ticker .pill .val{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:13px;font-weight:700;color:#0f172a}
+#header-ticker .tonebar{position:absolute;left:0;top:0;bottom:0;width:4px;border-top-left-radius:12px;border-bottom-left-radius:12px}
+@media (max-width:640px){#header-ticker{display:flex;gap:.6rem;overflow:auto;padding-bottom:.25rem;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}#header-ticker .pill{scroll-snap-align:center;min-width:72%}}
+@media (min-width:641px){#header-ticker{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}}
+.tone-g{background:#10b981}.tone-y{background:#f59e0b}.tone-r{background:#ef4444}.tone-n{background:#cbd5e1}
+
+/* ===== Cards & generic sections ===== */
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;box-shadow:0 1px 0 rgba(2,6,23,.04), inset 0 -1px 0 rgba(2,6,23,.02)}
+.sec-h{display:flex;align-items:center;gap:.5rem;font-weight:600;color:#0f172a;margin-bottom:.5rem}
+.sec-h i{width:18px;height:18px;color:#0284c7}
+
+/* ===== Drawer (desktop side / mobile sheet) ===== */
+#mod-drawer aside{background:#ffffff;border-left:1px solid #e5e7eb;box-shadow:-8px 0 24px rgba(2,6,23,.10);max-width:720px}
+@media (max-width:640px){#mod-drawer aside{left:0;right:0;width:100%!important;max-width:100%;bottom:0;top:auto;height:85vh;border-left:none;border-top:1px solid #e5e7eb;border-top-left-radius:16px;border-top-right-radius:16px;transform:translateY(100%);box-shadow:0 -16px 40px rgba(2,6,23,.18)}#mod-drawer header{height:48px}#mod-drawer header .btn{padding:.35rem .55rem}#drawer-body .card{padding:.75rem}#drawer-body table th,#drawer-body table td{padding-top:.4rem;padding-bottom:.4rem}}
+.sheet-handle{display:none;height:18px;position:relative}
+.sheet-handle:before{content:"";position:absolute;left:50%;transform:translateX(-50%);top:6px;width:44px;height:4px;border-radius:999px;background:#cbd5e1}
+@media (max-width:640px){#mod-drawer[data-mode="true"] .sheet-handle{display:block}}
+
+/* ===== Badges (tone) ===== */
+.badge{font-size:11px;padding:.12rem .5rem;border-radius:999px;border:1px solid;display:inline-flex;align-items:center;gap:.35rem}
+.badge--g{color:#065f46;background:#ecfdf5;border-color:#a7f3d0}
+.badge--y{color:#92400e;background:#fffbeb;border-color:#fcd34d}
+.badge--r{color:#7c2d12;background:#fef3c7;border-color:#fbbf24}
+.badge--n{color:#334155;background:#f1f5f9;border-color:#e5e7eb}
+
+/* ===== F1B quick styles ===== */
+.card-f1b .btn-open{display:inline-flex;align-items:center}
+.f1b-chip{display:inline-flex;align-items:center;gap:.35rem;border:1px solid #e5e7eb;background:#fff;border-radius:999px;padding:.2rem .55rem;font-size:12px}
+.f1b-tag{display:inline-flex;align-items:center;gap:.35rem;border:1px dashed #cbd5e1;color:#0f172a;background:#f8fafc;border-radius:999px;padding:.15rem .55rem;font-size:12px}
+
+/* ===== Mobile tweaks ===== */
+@media (max-width: 640px){
+  .btn,.sbtn{ padding:.6rem .8rem; gap:.6rem; font-size:14px }
+}
+
+/* ===== Print tweaks ===== */
+@media print{
+  @page { size: A4 portrait; margin: 10mm }
+  .noprint{ display:none !important }
+  .hdr{ position:static !important }
+}
