@@ -7,61 +7,30 @@
    1) Theme & typography
    --------------------------- */
 :root{
-  /* Base palette (neutri) */
-  --ink:        #0f172a;   /* slate-900 */
-  --ink-2:      #1f2937;   /* gray-800 */
-  --sub:        #475569;   /* slate-600 */
-  --muted:      #64748b;   /* slate-500 */
-  --line:       #e5e7eb;   /* slate-200 */
-  --line-2:     #eef2f6;   /* light */
-  --card:       #ffffff;
-  --bg:         #f1f5f9;   /* slate-100 */
+  --ink:#0f172a; --ink-2:#1f2937; --sub:#475569; --muted:#64748b;
+  --line:#e5e7eb; --line-2:#eef2f6; --card:#ffffff; --bg:#f1f5f9;
 
-  /* Accenti controllati */
-  --sky-50:     #f0f9ff;
-  --sky-100:    #e0f2fe;
-  --sky-200:    #bae6fd;
-  --sky-300:    #7dd3fc;
-  --sky-700:    #0369a1;
-  --sky-800:    #075985;
+  --sky-50:#f0f9ff; --sky-100:#e0f2fe; --sky-200:#bae6fd; --sky-300:#7dd3fc;
+  --sky-700:#0369a1; --sky-800:#075985;
 
-  /* Semaforo */
-  --green-700:  #065f46;
-  --green-50:   #ecfdf5;
-  --green-200:  #a7f3d0;
+  --green-700:#065f46; --green-50:#ecfdf5; --green-200:#a7f3d0;
+  --amber-700:#92400e; --amber-50:#fffbeb; --amber-200:#fcd34d;
+  --red-700:#7c2d12; --red-50:#fef3c7; --red-200:#fbbf24;
+  --neutral-700:#334155; --neutral-50:#f1f5f9; --neutral-200:#e5e7eb;
 
-  --amber-700:  #92400e;
-  --amber-50:   #fffbeb;
-  --amber-200:  #fcd34d;
+  --shadow-1:0 1px 0 rgba(2,6,23,.06);
+  --shadow-2:0 8px 26px rgba(2,6,23,.10);
+  --shadow-3:0 16px 48px rgba(2,6,23,.18);
 
-  --red-700:    #7c2d12;
-  --red-50:     #fef3c7;
-  --red-200:    #fbbf24;
+  --r-card:14px; --r-btn:10px;
 
-  --neutral-700:#334155;
-  --neutral-50: #f1f5f9;
-  --neutral-200:#e5e7eb;
-
-  /* Elevation */
-  --shadow-1: 0 1px 0 rgba(2,6,23,.06);
-  --shadow-2: 0 8px 26px rgba(2,6,23,.10);
-  --shadow-3: 0 16px 48px rgba(2,6,23,.18);
-
-  /* Radius */
-  --r-card: 14px;
-  --r-btn:  10px;
-
-  /* Animation */
-  --dur-1: .14s;
-  --dur-2: .20s;
-  --ease-1: cubic-bezier(.22,.61,.36,1);
+  --dur-1:.14s; --dur-2:.20s; --ease-1:cubic-bezier(.22,.61,.36,1);
 }
 
-html, body{ height:100% }
+html,body{height:100%}
 body{
   font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-  color:var(--ink);
-  background:var(--bg);
+  color:var(--ink); background:var(--bg);
   -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
 }
 
@@ -77,45 +46,35 @@ body{
 /* ---------------------------
    3) Header (glass, sobrio)
    --------------------------- */
-.hdr{
-  backdrop-filter:saturate(1.2) blur(6px);
-  background:rgba(255,255,255,.92);
-}
+.hdr{ backdrop-filter:saturate(1.2) blur(6px); background:rgba(255,255,255,.92) }
 
 /* ---------------------------
    4) Buttons (btn / sbtn)
    --------------------------- */
-.btn, .sbtn{
+.btn,.sbtn{
   display:inline-flex; align-items:center; gap:.5rem;
   padding:.5rem .7rem; border-radius:var(--r-btn);
   font-weight:600; font-size:14px; line-height:1;
   border:1px solid var(--line);
-  background:linear-gradient(#ffffff,#fbfdff);
+  background:linear-gradient(#fff,#fbfdff);
   box-shadow:var(--shadow-1), inset 0 -1px 0 rgba(2,6,23,.03);
   transition:transform .06s ease, box-shadow var(--dur-1) ease, background var(--dur-1) ease, border-color var(--dur-1) ease;
   -webkit-tap-highlight-color:transparent;
 }
-.btn:hover, .sbtn:hover{ background:linear-gradient(#fff,#f1f5f9); border-color:#dbe3ea }
-.btn:active, .sbtn:active{ transform:translateY(1px); box-shadow:inset 0 1px 0 rgba(0,0,0,.06) }
-.btn:focus-visible, .sbtn:focus-visible{ outline:none; box-shadow:0 0 0 3px rgba(14,165,233,.35) }
-.btn i, .sbtn i{ width:18px; height:18px }
-
+.btn:hover,.sbtn:hover{ background:linear-gradient(#fff,#f1f5f9); border-color:#dbe3ea }
+.btn:active,.sbtn:active{ transform:translateY(1px); box-shadow:inset 0 1px 0 rgba(0,0,0,.06) }
+.btn:focus-visible,.sbtn:focus-visible{ outline:none; box-shadow:0 0 0 3px rgba(14,165,233,.35) }
+.btn i,.sbtn i{ width:18px; height:18px }
 .sbtn{ font-size:13px; padding:.48rem .62rem }
-
-/* Emphasis button (optional utility) */
-.btn--primary{
-  border-color:var(--sky-300);
-  background:linear-gradient(var(--sky-100), #fff);
-  color:var(--sky-800);
-}
+.btn--primary{ border-color:var(--sky-300); background:linear-gradient(var(--sky-100),#fff); color:var(--sky-800) }
 
 /* ---------------------------
-   5) Help “?” → icona Lucide
+   5) Help badge (.hx)
    --------------------------- */
 .hx{
   display:inline-flex; align-items:center; justify-content:center;
-  width:20px; height:20px; line-height:1; font-weight:700;
-  font-size:12px; border-radius:999px; user-select:none; cursor:pointer;
+  width:20px; height:20px; line-height:1; font-weight:700; font-size:12px;
+  border-radius:999px; user-select:none; cursor:pointer;
   border:1.5px solid var(--sky-700); color:var(--sky-700); background:#fff;
   box-shadow:0 1px 0 rgba(2,6,23,.04);
   transition:transform .06s ease, box-shadow var(--dur-1) ease, background var(--dur-1) ease, border-color var(--dur-1) ease;
@@ -163,28 +122,21 @@ body{
   position:absolute; left:0; top:0; bottom:0; width:4px;
   border-top-left-radius:12px; border-bottom-left-radius:12px;
 }
-
-/* Responsive row vs grid */
 @media (max-width:640px){
   #header-ticker{ display:flex; overflow:auto; padding-bottom:.25rem; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch }
   #header-ticker .pill{ scroll-snap-align:center; min-width:72% }
 }
 @media (min-width:641px){
-  #header-ticker{ display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); }
+  #header-ticker{ display:grid; grid-template-columns:repeat(6,minmax(0,1fr)) }
 }
-
-/* Tone → class mapping (usate dal JS con .className) */
-.tone-g{ background:#10b981 }
-.tone-y{ background:#f59e0b }
-.tone-r{ background:#ef4444 }
-.tone-n{ background:#cbd5e1 }
+.tone-g{ background:#10b981 } .tone-y{ background:#f59e0b } .tone-r{ background:#ef4444 } .tone-n{ background:#cbd5e1 }
 
 /* ---------------------------
    8) Drawer (side/bottom sheet)
    --------------------------- */
 #mod-drawer aside{
-  background:#fff; border-left:1px solid var(--line); box-shadow:-8px 0 24px rgba(2,6,23,.10);
-  max-width:720px;
+  background:#fff; border-left:1px solid var(--line);
+  box-shadow:-8px 0 24px rgba(2,6,23,.10); max-width:720px;
 }
 @media (max-width:640px){
   #mod-drawer aside{
@@ -203,29 +155,24 @@ body{
   top:6px; width:44px; height:4px; border-radius:999px; background:#cbd5e1;
 }
 @media (max-width:640px){ #mod-drawer[data-mode="true"] .sheet-handle{ display:block } }
-
-/* Drawer header */
-#mod-drawer header{
-  background:rgba(255,255,255,.96); backdrop-filter:blur(6px);
-}
+#mod-drawer header{ background:rgba(255,255,255,.96); backdrop-filter:blur(6px) }
 
 /* ---------------------------
    9) Tab bar (pressed state)
    --------------------------- */
-.tabbar, .f2-tabbar{
-  position:sticky; top:0; z-index:10;
-  display:flex; flex-wrap:wrap; gap:.35rem;
+.tabbar,.f2-tabbar{
+  position:sticky; top:0; z-index:10; display:flex; flex-wrap:wrap; gap:.35rem;
   background:#f8fafc; padding:.5rem; border-radius:10px; border:1px solid var(--line);
 }
-.tabbar .sbtn, .f2-tabbar .sbtn{
+.tabbar .sbtn,.f2-tabbar .sbtn{
   font-size:12px; padding:.4rem .55rem; border:1px solid var(--line); background:#fff;
   box-shadow:0 1px 0 rgba(2,6,23,.04);
-  transition: background var(--dur-1) ease, border-color var(--dur-1) ease, color var(--dur-1) ease, transform .06s ease, box-shadow var(--dur-1) ease;
+  transition:background var(--dur-1) ease, border-color var(--dur-1) ease, color var(--dur-1) ease, transform .06s ease, box-shadow var(--dur-1) ease;
 }
-.tabbar .sbtn:hover, .f2-tabbar .sbtn:hover{ background:#f1f5f9; border-color:#dbe3ea }
-.tabbar .sbtn.active, .tabbar .sbtn[aria-pressed="true"],
-.f2-tabbar .sbtn.active, .f2-tabbar .sbtn[aria-pressed="true"]{
-  background:linear-gradient(var(--sky-100), var(--sky-200));
+.tabbar .sbtn:hover,.f2-tabbar .sbtn:hover{ background:#f1f5f9; border-color:#dbe3ea }
+.tabbar .sbtn.active,.tabbar .sbtn[aria-pressed="true"],
+.f2-tabbar .sbtn.active,.f2-tabbar .sbtn[aria-pressed="true"]{
+  background:linear-gradient(var(--sky-100),var(--sky-200));
   border-color:var(--sky-300); color:var(--sky-800); font-weight:700;
   transform:translateY(1px);
   box-shadow:inset 0 1px 0 rgba(2,6,23,.10), 0 0 0 2px rgba(14,165,233,.15);
@@ -234,26 +181,26 @@ body{
 /* ---------------------------
    10) Cards / Modules
    --------------------------- */
-.card, .f1b-card, .f2-card{
+.card,.f1b-card,.f2-card{
   background:var(--card); border:1px solid var(--line); border-radius:var(--r-card);
   box-shadow:0 1px 0 rgba(2,6,23,.04);
 }
-.f1b-head, .f2-head{
+.f1b-head,.f2-head{
   display:flex; align-items:center; justify-content:space-between; gap:.5rem;
   padding:8px 10px; background:linear-gradient(#fff,#fbfdff); border-bottom:1px solid var(--line-2);
 }
-.f1b-title, .f2-title{ font-weight:600; font-size:13px; color:var(--ink) }
-.f1b-body, .f2-body{ padding:8px 10px }
-.f1b-line, .f2-line{ display:flex; align-items:center; justify-content:space-between; gap:.75rem }
+.f1b-title,.f2-title{ font-weight:600; font-size:13px; color:var(--ink) }
+.f1b-body,.f2-body{ padding:8px 10px }
+.f1b-line,.f2-line{ display:flex; align-items:center; justify-content:space-between; gap:.75rem }
 .f1b-mode{ font-size:13px; font-weight:700; color:var(--ink) }
 .f1b-sub{ font-size:11px; color:var(--muted) }
 .f2-k{ display:flex; flex-direction:column; min-width:0 }
 .f2-lab{ font-size:11px; color:var(--muted); display:flex; align-items:center; gap:.35rem }
-.f2-val{ font-size:13px; font-weight:700; color:var(--ink); font-family:ui-monospace, Menlo, Consolas, monospace; white-space:nowrap }
+.f2-val{ font-size:13px; font-weight:700; color:var(--ink); font-family:ui-monospace,Menlo,Consolas,monospace; white-space:nowrap }
 .f2-val.truncate{ overflow:hidden; text-overflow:ellipsis; max-width:36ch }
 
 /* Chips / tags */
-.chip, .f1b-chip, .f1b-tag{
+.chip,.f1b-chip,.f1b-tag{
   display:inline-flex; align-items:center; gap:.35rem;
   border:1px solid var(--line); background:#fff; border-radius:999px;
   padding:.18rem .55rem; font-size:12px
@@ -261,15 +208,13 @@ body{
 .f1b-tag{ border-style:dashed; background:#f8fafc; color:var(--neutral-700) }
 
 /* ---------------------------
-   11) Badges (tono istituzionale)
+   11) Badges classiche
    --------------------------- */
-.badge, .f1b-badge{
-  font-size:11px; padding:.12rem .5rem; border-radius:999px; border:1px solid; font-weight:600;
-}
-.badge--g, .f1b-badge--green{ color:var(--green-700); background:var(--green-50); border-color:var(--green-200) }
-.badge--y, .f1b-badge--yellow{ color:var(--amber-700); background:var(--amber-50); border-color:var(--amber-200) }
-.badge--r, .f1b-badge--red{ color:var(--red-700); background:var(--red-50); border-color:var(--red-200) }
-.badge--n, .f1b-badge--neutral{ color:var(--neutral-700); background:var(--neutral-50); border-color:var(--neutral-200) }
+.badge,.f1b-badge{ font-size:11px; padding:.12rem .5rem; border-radius:999px; border:1px solid; font-weight:600 }
+.badge--g,.f1b-badge--green{ color:var(--green-700); background:var(--green-50); border-color:var(--green-200) }
+.badge--y,.f1b-badge--yellow{ color:var(--amber-700); background:var(--amber-50); border-color:var(--amber-200) }
+.badge--r,.f1b-badge--red{ color:var(--red-700); background:var(--red-50); border-color:var(--red-200) }
+.badge--n,.f1b-badge--neutral{ color:var(--neutral-700); background:var(--neutral-50); border-color:var(--neutral-200) }
 
 /* Dots */
 .f1b-dot{ width:8px; height:8px; border-radius:999px; display:inline-block }
@@ -279,25 +224,25 @@ body{
 
 /* KPI grid */
 .f1b-kpi-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.55rem }
-@media(min-width:640px){ .f1b-kpi-grid{ grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (min-width:640px){ .f1b-kpi-grid{ grid-template-columns:repeat(3,minmax(0,1fr))} }
 .f1b-kpi{ border:1px solid var(--line); border-radius:.75rem; padding:.65rem; background:#fff }
 .f1b-kpi label{ display:flex; align-items:center; gap:.35rem; font-size:11px; color:var(--muted) }
 .f1b-kpi .v{ font-weight:700; color:var(--ink) }
 
 /* Sparkline */
-.f1b-spark, .f1b-spark-mini{ width:100%; height:32px; display:block }
+.f1b-spark,.f1b-spark-mini{ width:100%; height:32px; display:block }
 
 /* ---------------------------
-   12) Tables (Inputs, Ownership)
+   12) Tables
    --------------------------- */
 table{ border-collapse:separate; border-spacing:0 }
-th, td{ padding:.5rem .5rem }
+th,td{ padding:.5rem .5rem }
 thead th{ font-size:12px; color:var(--muted); font-weight:600 }
 tbody tr{ border-bottom:1px solid var(--line) }
 tbody tr:last-child{ border-bottom:0 }
 
 /* ---------------------------
-   13) Utility headings & sections
+   13) Section headings
    --------------------------- */
 .sec-h{ display:flex; align-items:center; gap:.5rem; font-weight:600; color:var(--ink); margin-bottom:.5rem }
 .sec-h i{ width:18px; height:18px; color:#0284c7 }
@@ -306,49 +251,49 @@ tbody tr:last-child{ border-bottom:0 }
    14) Accessibility / Motion
    --------------------------- */
 @media (prefers-reduced-motion: reduce){
-  *, *::before, *::after{ animation:none !important; transition:none !important }
+  *,*::before,*::after{ animation:none !important; transition:none !important }
 }
 
 /* ---------------------------
-   15) Print (sobria)
+   15) Print
    --------------------------- */
 @media print{
-  .noprint, #mod-drawer{ display:none !important }
+  .noprint,#mod-drawer{ display:none !important }
   body{ background:#fff; color:#000 }
   .hdr{ position:static; border:none; box-shadow:none }
-  .btn, .sbtn, .hx{ border:1px solid #bbb; background:#fff; color:#000; box-shadow:none }
-  .card, .f1b-card, .f2-card{ box-shadow:none; border-color:#bbb }
+  .btn,.sbtn,.hx{ border:1px solid #bbb; background:#fff; color:#000; box-shadow:none }
+  .card,.f1b-card,.f2-card{ box-shadow:none; border-color:#bbb }
   a[href]:after{ content:" (" attr(href) ")"; font-size:10px }
 }
 
 /* ---------------------------
-   16) Dark mode (professionale)
+   16) Dark mode
    --------------------------- */
 @media (prefers-color-scheme: dark){
   :root{
     --ink:#e5e7eb; --ink-2:#e2e8f0; --sub:#94a3b8; --muted:#93a2b5;
     --line:#1f2937; --line-2:#263041; --card:#0b1220; --bg:#0a0f1a;
-    --shadow-1: 0 1px 0 rgba(0,0,0,.5);
-    --shadow-2: 0 8px 26px rgba(0,0,0,.5);
-    --shadow-3: 0 16px 48px rgba(0,0,0,.6);
+    --shadow-1:0 1px 0 rgba(0,0,0,.5);
+    --shadow-2:0 8px 26px rgba(0,0,0,.5);
+    --shadow-3:0 16px 48px rgba(0,0,0,.6);
   }
   body{ background:var(--bg); color:var(--ink) }
   .hdr{ background:rgba(15,23,42,.75) }
-  .btn, .sbtn{ background:linear-gradient(#0f172a,#0b1220); border-color:var(--line) }
-  .btn:hover, .sbtn:hover{ background:linear-gradient(#0f172a,#0f172a) }
+  .btn,.sbtn{ background:linear-gradient(#0f172a,#0b1220); border-color:var(--line) }
+  .btn:hover,.sbtn:hover{ background:linear-gradient(#0f172a,#0f172a) }
   .hx{ background:#0b1220; color:#7dd3fc; border-color:#7dd3fc }
   .hx:hover{ background:#082032 }
-  .card, .f1b-card, .f2-card{ background:#0b1220; border-color:var(--line) }
-  .f1b-head, .f2-head{ background:linear-gradient(#0b1220,#0a121f); border-bottom-color:var(--line-2) }
-  .tabbar, .f2-tabbar{ background:#0c1423; border-color:var(--line) }
+  .card,.f1b-card,.f2-card{ background:#0b1220; border-color:var(--line) }
+  .f1b-head,.f2-head{ background:linear-gradient(#0b1220,#0a121f); border-bottom-color:var(--line-2) }
+  .tabbar,.f2-tabbar{ background:#0c1423; border-color:var(--line) }
   thead th{ color:#9fb0c7 }
   tbody tr{ border-bottom-color:#223044 }
-  .chip, .f1b-kpi{ background:#0b1220; border-color:#253247 }
+  .chip,.f1b-kpi{ background:#0b1220; border-color:#253247 }
   .f1b-tag{ background:#0f192a; border-color:#2b3a55; color:#c7d2fe }
 }
 
 /* ---------------------------
-   17) Minor responsive polish
+   17) Mobile tweaks
    --------------------------- */
 @media (max-width:640px){
   .btn,.sbtn{ padding:.6rem .8rem; gap:.6rem; font-size:14px }
@@ -358,6 +303,9 @@ tbody tr:last-child{ border-bottom:0 }
   .hx{ width:18px; height:18px; font-size:11px }
 }
 
+/* ---------------------------
+   18) State Badge (.sb)
+   --------------------------- */
 .sb{
   display:inline-flex; align-items:center; gap:.4rem;
   font-size:11px; font-weight:700; letter-spacing:.02em;
@@ -371,70 +319,13 @@ tbody tr:last-child{ border-bottom:0 }
 .sb--amber{ color:#92400e; background:#fffbeb; border-color:#fcd34d }
 .sb--red{ color:#7c2d12; background:#fef3c7; border-color:#fbbf24 }
 .sb--neutral{ color:#334155; background:#f1f5f9; border-color:#e5e7eb }
+/* mini variant for dense tables */
+.sb--sm{ font-size:10px; padding:.12rem .45rem }
+.sb--sm .sb__ico svg{ width:12px; height:12px }
 
 @media (prefers-color-scheme: dark){
   .sb--green{ color:#34d399; background:#062d27; border-color:#115e59 }
   .sb--amber{ color:#fbbf24; background:#2b1f07; border-color:#b45309 }
   .sb--red{ color:#f87171; background:#3a0f0f; border-color:#b91c1c }
   .sb--neutral{ color:#cbd5e1; background:#111827; border-color:#334155 }
-}
-
-/* =========================================================================
-   PATCH: assets/js/modules/headerTicker.js  (usa badge per Stato)
-   ========================================================================= */
-import { tone } from '../utils/tone.js';
-import { mountStateBadge, stateToTone } from '../utils/stateBadge.js';
-
-export function initHeaderTicker(data){
-  const root = document.getElementById('header-ticker');
-  const pill = (key, label, opts={}) => `
-    <div class="pill">
-      <span class="tonebar ${tone.toClass('neutral')}" data-bind="tone:${key}"></span>
-      <div class="min-w-0">
-        <div class="lab">${label} ${opts.helpKey?`<button class="hx" data-k="${opts.helpKey}"></button>`:''}</div>
-        <div class="val truncate" data-bind="value:${key}" ${opts.asBadge?'data-as-badge="1"':''}>—</div>
-      </div>
-    </div>`;
-
-  root.innerHTML = [
-    pill('DataStart','Inizio',{helpKey:'DataStart'}), pill('DataEnd','Fine',{helpKey:'DataEnd'}),
-    pill('Ticker','Ticker',{helpKey:'Ticker'}),       pill('Venue','Venue',{helpKey:'Venue'}),
-    pill('Freshness','Freshness',{helpKey:'Freshness'}),
-    pill('State','Stato',{helpKey:'StatoReport', asBadge:true}),
-    pill('ConfidenceFinal','Confidence',{helpKey:'ConfidenceFinal'}),
-    pill('OCR_Conf','OCR',{helpKey:'OCR_Conf'}),
-    pill('DataIntegrity','DataInt',{helpKey:'DataIntegrity'}),
-    pill('FeedSync','FeedSync',{helpKey:'FeedSync'})
-  ].join('');
-
-  const setField = (key,{value,toneName})=>{
-    const v = root.querySelector(`[data-bind="value:${key}"]`);
-    const t = root.querySelector(`[data-bind="tone:${key}"]`);
-    if (key==='State' && v) {
-      mountStateBadge(v, { state:value, label:value });
-    } else if (v) {
-      v.textContent = (value ?? '—');
-    }
-    if (t){ t.className = 'tonebar ' + tone.toClass(toneName||'neutral'); t.dataset.tone = toneName||'neutral'; }
-  };
-
-  const fresh = data?.FreshnessLabel ?? data?.Freshness;
-  const conf  = Number(data?.ConfidenceFinal);
-  const ocr   = Number(data?.OCR_Conf);
-  const di    = Number(data?.DataIntegrity);
-  const fs    = Number(data?.FeedSync);
-  const state = data?.State ?? data?.ReportState;
-
-  setField('DataStart',      { value:data?.Start, toneName:'neutral' });
-  setField('DataEnd',        { value:data?.End, toneName:'neutral' });
-  setField('Ticker',         { value:data?.Ticker, toneName:'neutral' });
-  setField('Venue',          { value:data?.Venue, toneName:'neutral' });
-  setField('Freshness',      { value:fresh, toneName:tone.fromFreshness(fresh) });
-  setField('ConfidenceFinal',{ value:isFinite(conf)?conf.toFixed(2):'—', toneName:tone.fromConfidence(conf) });
-  setField('OCR_Conf',       { value:isFinite(ocr)?ocr.toFixed(2):'—', toneName:tone.simple01(ocr) });
-  setField('DataIntegrity',  { value:isFinite(di)?di.toFixed(2):'—', toneName:tone.simple01(di) });
-  setField('FeedSync',       { value:isFinite(fs)?fs.toFixed(2):'—', toneName:tone.simple01(fs) });
-  setField('State',          { value:state||'—', toneName:stateToTone(state) });
-
-  if (window.lucide) lucide.createIcons();
 }
