@@ -1,14 +1,13 @@
-// assets/js/app.js
-import { initHeader }       from '../js/components/header.js';
-import { initHelpX }        from '../js/components/helpx.js';
-import { initShare }        from '../js/components/share.js';
-import { initDrawerAPI }    from '../js/components/drawer.js';
-import { initHeaderTicker } from '../js/modules/headerTicker.js';
-import { mountF1B }         from '../js/modules/f1b.js';
-import { mountF2 }          from '../js/modules/f2.js';
-import { getDataURL }       from '../js/utils/qs.js';
+// assets/js/app.js  (ES module)
+import { initHeader }       from './components/header.js';
+import { initHelpX }        from './components/helpx.js';
+import { initShare }        from './components/share.js';
+import { initDrawerAPI }    from './components/drawer.js';
+import { initHeaderTicker } from './modules/headerTicker.js';
+import { mountF1B }         from './modules/f1b.js';
+import { mountF2 }          from './modules/f2.js';
+import { getDataURL }       from './utils/qs.js';
 
-// Lucide safe
 try { window.lucide?.createIcons?.(); } catch {}
 
 initDrawerAPI();
@@ -16,7 +15,6 @@ initHeader();
 initHelpX();
 initShare();
 
-// Layout controls
 const cont = document.getElementById('mod-container');
 document.getElementById('view-grid')?.addEventListener('click', (e)=>{
   cont.dataset.view='grid';
@@ -33,7 +31,6 @@ document.getElementById('view-list')?.addEventListener('click', (e)=>{
   try { window.lucide?.createIcons?.(); } catch {}
 });
 
-// Data load
 (async function loadReport(){
   try{
     const url  = getDataURL();
@@ -41,9 +38,7 @@ document.getElementById('view-list')?.addEventListener('click', (e)=>{
     if (!res.ok) throw new Error('Fetch JSON: ' + res.status + ' @ ' + url);
     const data = await res.json();
 
-    // Header ticker
     initHeaderTicker(data?.Header || {});
-    // Moduli
     const apiF1B = mountF1B(); apiF1B.update(data?.F1B || {});
     const apiF2  = mountF2();  apiF2.update(data?.F2  || {});
 
