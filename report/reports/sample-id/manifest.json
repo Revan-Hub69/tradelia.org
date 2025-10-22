@@ -1,0 +1,7 @@
+{
+"id": "sample-id",
+"title": "Tradelia · Report Runtime",
+"modules": [
+{ "name": "header", "src": "./header.json" }
+]
+}
