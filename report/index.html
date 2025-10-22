@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tradelia · Report Runtime</title>
 
-  <!-- Favicons: usiamo solo quelli REALI in root -->
+  <!-- Favicons (root) -->
   <link rel="icon" href="/favicon.ico?v=1">
   <link rel="icon" type="image/png" href="/favicon.png?v=1">
   <link rel="apple-touch-icon" href="/favicon.png?v=1">
@@ -22,17 +22,11 @@
   <style>
     /* ===== Tradelia • AI — Institutional overrides ===== */
     :root{
-      --bg:#f6f8fb;
-      --card:#ffffff;
-      --ink:#0f172a;
-      --muted:#5b6b83;
-      --br:#e6eaf0;
-      --brand:#0e7ac7;
-      --accent:#7cc5ff;
-
+      --bg:#f6f8fb; --card:#ffffff; --ink:#0f172a; --muted:#5b6b83; --br:#e6eaf0;
+      --brand:#0e7ac7; --accent:#7cc5ff;
       --success-bg:#ecfdf5; --success-ink:#065f46; --success-br:#a7f3d0;
-      --warn-bg:#fff7ed;    --warn-ink:#9a3412;   --warn-br:#fed7aa;
-      --danger-bg:#fef2f2;  --danger-ink:#7f1d1d; --danger-br:#fecaca;
+      --warn-bg:#fff7ed; --warn-ink:#9a3412; --warn-br:#fed7aa;
+      --danger-bg:#fef2f2; --danger-ink:#7f1d1d; --danger-br:#fecaca;
     }
 
     html,body{height:100%}
@@ -44,11 +38,12 @@
     .container{max-width:72rem;margin-inline:auto;padding:0 12px}
     .hdr{backdrop-filter:saturate(1.2) blur(6px)}
 
-    /* Bottoni base */
+    /* Buttons */
     .btn{
       display:inline-flex;align-items:center;gap:.45rem;
       padding:.45rem .65rem;border-radius:12px;font-weight:600;font-size:14px;
-      border:1px solid var(--br); background:var(--btn-bg,linear-gradient(#fff,#f8fafc)); box-shadow:var(--shadow-1,0 1px 0 rgba(2,6,23,.05));
+      border:1px solid var(--br); background:linear-gradient(#fff,#f8fafc);
+      box-shadow:0 1px 0 rgba(2,6,23,.05);
       transition:background .2s, transform .08s;
     }
     .btn:hover{background:color-mix(in oklab, var(--card) 90%, white 10%); transform:translateY(-1px)}
@@ -68,10 +63,10 @@
     ::-webkit-scrollbar-track{background:transparent}
 
     /* Divider + grid */
-    .divider{border:0;height:1px;width:100%;background:var(--br);margin:10px 0 12px}
+    .divider{border:0;height:1px;width:100%;background:var(--br);margin:12px 0 14px}
     .cards-grid{
       display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-      gap:12px; margin:8px 0 16px;
+      gap:12px; margin:10px 0 18px;
       content-visibility:auto; contain-intrinsic-size:auto 320px;
     }
 
@@ -89,78 +84,83 @@
     .drawer.is-open .drawer__backdrop{opacity:1}
     .drawer.is-open .drawer__panel{transform:translateX(0)}
     .drawer__header{
-      height:52px;display:flex;align-items:center;justify-content:space-between;gap:.5rem;
+      height:56px;display:flex;align-items:center;justify-content:space-between;gap:.5rem;
       padding:0 12px;border-bottom:1px solid var(--br);
       background:color-mix(in oklab, var(--card) 92%, white 8%); position:sticky;top:0;z-index:1;
     }
-    .drawer__title{font-weight:700;color:var(--ink);margin:0;font-size:14px}
+    .drawer__title{font-weight:800;color:var(--ink);margin:0;font-size:14px}
     .drawer__subtitle{margin:2px 0 0;font-size:12px;color:var(--muted)}
-    .drawer__content{padding:10px 12px;overflow:auto;height:calc(100% - 52px);background:color-mix(in oklab, var(--bg) 96%, white 4%)}
+    .drawer__content{padding:12px;overflow:auto;height:calc(100% - 56px);background:color-mix(in oklab, var(--bg) 96%, white 4%)}
 
-    /* Header brand refine */
+    /* Brand */
     .brand{font-weight:900; letter-spacing:0}
     .claim{font-size:12px; color:var(--muted)}
 
-    /* ===== Header Ticker — mobile-first, snap ===== */
-    #header-ticker{
-      display:grid; grid-template-columns:repeat(12,minmax(220px,1fr));
-      gap:10px; align-items:stretch;
-      overflow:auto; padding:2px 0 6px;
+    /* ===== HERO “copertina” ===== */
+    .hero{
+      margin-top:8px; border:1px solid var(--br); border-radius:16px;
+      background: radial-gradient(1200px 600px at -10% -40%, #eff6ff 0%, #fff 40%);
+      padding:14px; box-shadow:0 1px 0 rgba(2,6,23,.04), 0 10px 30px rgba(2,6,23,.06);
+    }
+    .hero__top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .hero__id{display:flex;align-items:baseline;gap:10px;min-width:0}
+    .hero__ticker{font-weight:900;font-size:18px;letter-spacing:.2px;color:var(--ink)}
+    .hero__venue{font-size:12px;color:var(--muted)}
+    .hero__price{display:flex;align-items:baseline;gap:10px}
+    .hero__px{font-weight:900;font-size:22px}
+    .hero__chg{font-weight:800;font-size:13px}
+    .hero__chg--up{color:#0ea5e9}
+    .hero__chg--down{color:#ef4444}
+    .hero__badge{font-size:12px;border:1px solid var(--br);border-radius:999px;padding:.18rem .5rem;background:#fff}
+    .hero__meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .meta-pill{
+      display:flex;align-items:center;gap:.4rem;
+      border:1px solid var(--br);border-radius:12px;padding:.4rem .6rem;background:#fff;
+      font-size:12.5px
+    }
+    .meta-label{color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:11px}
+    .meta-val{font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;font-weight:800}
+    .info-btn{
+      all:unset; cursor:pointer; margin-left:6px; display:inline-flex; align-items:center; justify-content:center;
+      width:18px;height:18px; border:1px solid var(--br); border-radius:999px; font-size:12px; line-height:1; color:var(--muted); background:#fff;
+    }
+
+    /* Tooltip (apre solo con click “?”) */
+    .popover{position:absolute; z-index:70; min-width:240px; max-width:320px;
+      background:#fff; color:var(--ink); border:1px solid var(--br); border-radius:10px; padding:10px 10px 8px;
+      box-shadow:0 10px 28px rgba(2,6,23,.14); display:none;
+    }
+    .popover__title{margin:0 0 6px; font-weight:800; font-size:13px}
+    .popover__text{font-size:12.5px; color:var(--ink)}
+    .popover__source{margin-top:6px; font-size:11px; color:var(--muted)}
+    .popover__actions{margin-top:8px; display:flex; gap:6px}
+    .popover.show{display:block}
+
+    /* Chips F1–F6 (nav) */
+    .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:12px 0 10px;padding:8px 0 10px;border-bottom:1px solid var(--br)}
+    .section-title{margin:0;font-weight:900;font-size:16px;color:var(--ink)}
+    .section-sub{margin:3px 0 0;font-size:12px;color:var(--muted)}
+    .chips{
+      display:grid; grid-auto-flow:column; grid-auto-columns:max-content; gap:8px; overflow:auto; padding-bottom:2px;
       scroll-snap-type:x mandatory;
     }
-    #header-ticker .pill{
-      scroll-snap-align:start;
-      display:flex; align-items:center; gap:.7rem;
-      min-height:56px; padding:.7rem .9rem .7rem 1rem;
-      border:1px solid var(--br); border-radius:14px; background:var(--card);
-      box-shadow:0 1px 0 rgba(2,6,23,.04), 0 8px 24px rgba(2,6,23,.08);
-    }
-    #header-ticker .lab{
-      font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted);
-    }
-    #header-ticker .val{
-      font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
-      font-weight:800; font-size:13.5px; color:var(--ink);
-    }
-    #header-ticker .tonebar{
-      width:4px; align-self:stretch; border-radius:10px; background:#cbd5e1; opacity:.9;
-    }
-    @media (min-width:960px){
-      #header-ticker{ grid-template-columns:repeat(6,minmax(220px,1fr)); overflow:visible; }
-    }
-
-    /* === Section head istituzionale (Schede) === */
-    .section-head{
-      display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
-      margin:8px 0 10px; padding:8px 0 10px;
-      border-bottom:1px solid var(--br);
-    }
-    .section-head__left{min-width:0}
-    .section-title{
-      margin:0; font-weight:900; font-size:16px; line-height:1.2; color:var(--ink);
-    }
-    .section-sub{ margin:3px 0 0; font-size:12px; color:var(--muted); }
-    .section-head__right{display:flex; flex-wrap:wrap; gap:6px}
-
     .chip{
+      scroll-snap-align:start;
       display:inline-flex; align-items:center; gap:.38rem;
-      padding:.34rem .72rem; border-radius:999px; cursor:pointer;
+      padding:.38rem .72rem; border-radius:999px; cursor:pointer;
       border:1px solid var(--br);
       background:color-mix(in oklab, var(--card) 96%, white 4%);
       font-weight:700; font-size:12px; color:var(--ink);
       transition:background .15s ease, transform .08s ease, border-color .15s ease;
+      white-space:nowrap;
     }
     .chip:hover{ background:color-mix(in oklab,var(--card) 90%, white 10%); transform:translateY(-1px) }
-    .chip i{ width:16px; height:16px }
     .chip--on{ border-color:#9ae6b4; background:var(--success-bg); color:var(--success-ink) }
 
     @media (max-width:640px){
+      .hero__top{flex-direction:column; align-items:flex-start}
+      .hero__price{margin-top:6px}
       .section-head{flex-direction:column; align-items:flex-start}
-      .section-head__right{margin-top:4px}
-    }
-    @media print{
-      .section-head{border-bottom-color:#ccc}
-      .chip{background:#fff}
     }
   </style>
 </head>
@@ -185,39 +185,71 @@
 
   <!-- MAIN -->
   <main class="container py-3">
-    <!-- Header Ticker -->
-    <section id="header-ticker" aria-label="Header Ticker (pills)"></section>
+    <!-- HERO (copertina) -->
+    <section id="hero" class="hero" aria-label="Copertina Report">
+      <div class="hero__top">
+        <div class="hero__id">
+          <div class="hero__ticker" id="hero-ticker">—</div>
+          <div class="hero__venue" id="hero-venue">—</div>
+        </div>
+        <div class="hero__price">
+          <div class="hero__px" id="hero-price">—</div>
+          <div class="hero__chg" id="hero-change">—</div>
+          <span class="hero__badge" id="hero-state">—</span>
+        </div>
+      </div>
+
+      <div class="hero__meta">
+        <div class="meta-pill">
+          <div>
+            <div class="meta-label">Snapshot</div>
+            <div class="meta-val"><span id="hero-start">—</span> → <span id="hero-end">—</span></div>
+          </div>
+        </div>
+
+        <div class="meta-pill">
+          <div class="flex items-center">
+            <div>
+              <div class="meta-label">Freshness</div>
+              <div class="meta-val" id="hero-freshness">—</div>
+            </div>
+            <button class="info-btn" data-metric="Freshness" aria-label="Info Freshness">?</button>
+          </div>
+        </div>
+
+        <div class="meta-pill">
+          <div class="flex items-center">
+            <div>
+              <div class="meta-label">Confidence</div>
+              <div class="meta-val" id="hero-confidence">—</div>
+            </div>
+            <button class="info-btn" data-metric="ConfidenceFinal" aria-label="Info Confidence">?</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <hr class="divider" />
 
-    <!-- Schede analitiche -->
+    <!-- Schede + payoff -->
     <section class="section-head noprint" aria-labelledby="sec-schede-title">
-      <div class="section-head__left">
+      <div>
         <h2 id="sec-schede-title" class="section-title">Schede analitiche</h2>
         <p class="section-sub">Metodo accademico, auditabile</p>
       </div>
-
-      <nav class="section-head__right" aria-label="Mappa moduli">
-        <button class="chip" data-mod="F1" title="Panorama Macro (top-down)">
-          <i data-lucide="globe-2"></i><span>F1: Panorama Macro</span>
-        </button>
-        <button class="chip" data-mod="F2" title="Overview del Ticker (profilo, venue, price-action)">
-          <i data-lucide="scan-line"></i><span>F2: Overview Ticker</span>
-        </button>
-        <button class="chip" data-mod="F3" title="Scheda Tecnica (multi-timeframe)">
-          <i data-lucide="line-chart"></i><span>F3: Scheda Tecnica</span>
-        </button>
-        <button class="chip" data-mod="F4" title="Intermarket & Intra-Market (correlazioni e spread)">
-          <i data-lucide="git-branch"></i><span>F4: Intermarket &amp; Intra-Market</span>
-        </button>
-        <button class="chip" data-mod="F5" title="Resoconto Finale (sintesi, rischio, bias)">
-          <i data-lucide="file-text"></i><span>F5: Resoconto Finale</span>
-        </button>
-        <button class="chip" data-mod="F6" title="Broker Selezionati (esecuzione, venue, costi)">
-          <i data-lucide="briefcase"></i><span>F6: Broker Selezionati</span>
-        </button>
-      </nav>
     </section>
 
+    <!-- Chips F1–F6 scorrevoli -->
+    <nav class="chips noprint" aria-label="Mappa moduli">
+      <button class="chip" data-mod="F1" title="Panorama Macro"><i data-lucide="globe-2"></i>F1: Panorama Macro</button>
+      <button class="chip" data-mod="F2" title="Overview Ticker"><i data-lucide="scan-line"></i>F2: Overview Ticker</button>
+      <button class="chip" data-mod="F3" title="Scheda Tecnica"><i data-lucide="line-chart"></i>F3: Scheda Tecnica</button>
+      <button class="chip" data-mod="F4" title="Intermarket & Intra-Market"><i data-lucide="git-branch"></i>F4: Intermarket &amp; Intra-Market</button>
+      <button class="chip" data-mod="F5" title="Resoconto Finale"><i data-lucide="file-text"></i>F5: Resoconto Finale</button>
+      <button class="chip" data-mod="F6" title="Broker Selezionati"><i data-lucide="briefcase"></i>F6: Broker Selezionati</button>
+    </nav>
+
+    <!-- Contenitore cards -->
     <section id="cards-grid" class="cards-grid" aria-label="Schede analitiche"></section>
   </main>
 
@@ -236,22 +268,38 @@
     </aside>
   </div>
 
-  <!-- JS principale -->
+  <!-- POPOVER (tooltip su click) -->
+  <div id="popover" class="popover noprint" role="tooltip" aria-hidden="true">
+    <h3 class="popover__title" id="popover-title">—</h3>
+    <div class="popover__text" id="popover-text">—</div>
+    <div class="popover__source" id="popover-source">—</div>
+    <div class="popover__actions">
+      <button id="popover-more" class="btn btn-sm" type="button">Vedi dettaglio</button>
+      <button id="popover-close" class="btn btn-sm" type="button">Chiudi</button>
+    </div>
+  </div>
+
+  <!-- JS principale (orchestratore moduli) -->
   <script type="module" src="/report/assets/js/app.js"></script>
 
-  <!-- Share sheet full -->
+  <!-- Share sheet -->
   <script type="module">
     import { initShareSystem } from '/report/assets/js/components/share.js';
     initShareSystem();
   </script>
 
-  <!-- Interazioni globali & wiring chip -->
+  <!-- Interazioni globali + Hero + Tooltip/Drawer + Chips -->
   <script>
+    // Helpers
+    const $  = (s,r=document)=>r.querySelector(s);
+    const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+    const getReportId = ()=> new URL(location.href).searchParams.get('id') || 'sample-id';
+
     // Print
-    document.getElementById('btn-print')?.addEventListener('click',()=>window.print());
+    $('#btn-print')?.addEventListener('click',()=>window.print());
 
     // Tema
-    const html=document.documentElement, btnTheme=document.getElementById('btn-theme');
+    const html=document.documentElement, btnTheme=$('#btn-theme');
     const themeIcon=()=> html.dataset.theme==='dark' ? 'moon' : 'sun';
     btnTheme?.addEventListener('click',()=>{
       html.dataset.theme = (html.dataset.theme==='dark' ? 'light' : 'dark');
@@ -261,10 +309,7 @@
 
     // Drawer API
     (() => {
-      const root = document.getElementById('drawer');
-      const title = root.querySelector('#drawer-title');
-      const subtitle = root.querySelector('#drawer-subtitle');
-      const content = root.querySelector('#drawer-content');
+      const root = $('#drawer'), title = $('#drawer-title'), subtitle = $('#drawer-subtitle'), content = $('#drawer-content');
       function open({ title:t='Dettagli', subtitle:s='—', html='' }={}) {
         title.textContent=t; subtitle.textContent=s; content.innerHTML=html;
         root.setAttribute('aria-hidden','false'); requestAnimationFrame(()=>root.classList.add('is-open'));
@@ -279,24 +324,99 @@
       window.Tradelia.Drawer = { open, close };
     })();
 
-    // Chip: accensione in base ai moduli realmente montati + scroll-to card
-    document.addEventListener('DOMContentLoaded', ()=>{
-      // Se app.js espone Manifest.order, accendiamo
-      const order = (window.Tradelia?.Manifest?.order)||[];
-      order.forEach(k=>{
-        const chip = [...document.querySelectorAll('.chip')].find(c=>c.dataset.mod===String(k).toUpperCase());
-        chip && chip.classList.add('chip--on');
-      });
+    // ===== HERO: carica header.json e popola =====
+    async function loadJSON(path){
+      try{ const r=await fetch(path,{cache:'no-store'}); if(!r.ok) return null; return await r.json(); }
+      catch{ return null; }
+    }
+    (async ()=>{
+      const base = `/report/reports/${getReportId()}`;
+      const h = await loadJSON(`${base}/header.json`);
+      if(!h) return;
+      $('#hero-ticker').textContent = h.Ticker ?? '—';
+      $('#hero-venue').textContent  = h.Venue ? `· ${h.Venue}` : '· —';
+      $('#hero-price').textContent  = (h.Price!=null && isFinite(+h.Price)) ? (+h.Price).toFixed(2) : '—';
+      const chg = (h.ChangePct!=null && isFinite(+h.ChangePct)) ? (+h.ChangePct).toFixed(2)+'%' : '—';
+      const chgEl = $('#hero-change');
+      chgEl.textContent = chg;
+      chgEl.classList.toggle('hero__chg--up',  Number(h.ChangePct)>0);
+      chgEl.classList.toggle('hero__chg--down',Number(h.ChangePct)<0);
+      $('#hero-state').textContent = (h.State ?? h.ReportState ?? '—');
+      $('#hero-start').textContent = h.Start ?? '—';
+      $('#hero-end').textContent   = h.End ?? '—';
+      $('#hero-freshness').textContent  = h.FreshnessLabel ?? h.Freshness ?? '—';
+      $('#hero-confidence').textContent = (isFinite(+h.ConfidenceFinal) ? (+h.ConfidenceFinal).toFixed(2) : '—');
+      if(window.lucide) lucide.createIcons();
+    })();
 
-      // Scroll delicato alla card se presente data-card="F1" etc.
-      document.querySelectorAll('.chip').forEach(btn=>{
+    // ===== Tooltip su click “(?)” con Glossary + Drawer =====
+    const pop = $('#popover'); let glossaryCache=null, currentMetric=null;
+    async function getGlossary(){
+      if (glossaryCache) return glossaryCache;
+      try{ const r=await fetch('/report/assets/glossary.json',{cache:'no-store'}); glossaryCache = r.ok ? await r.json() : {}; }
+      catch{ glossaryCache={}; }
+      return glossaryCache;
+    }
+    function placePopover(btn){
+      const rect = btn.getBoundingClientRect();
+      const dx = rect.left + window.scrollX;
+      const dy = rect.bottom + window.scrollY + 8;
+      pop.style.left = `${Math.max(12, dx - 8)}px`;
+      pop.style.top  = `${dy}px`;
+    }
+    function hidePopover(){ pop.classList.remove('show'); pop.setAttribute('aria-hidden','true'); currentMetric=null; }
+    document.addEventListener('click', async (e)=>{
+      if (e.target.closest('#popover')) return;
+      const btn = e.target.closest('.info-btn');
+      if (!btn){ hidePopover(); return; }
+
+      const metric = btn.dataset.metric;
+      currentMetric = metric;
+      const g = await getGlossary();
+      const entry = g?.[metric] || { title: metric, short: '—', source: '' };
+
+      $('#popover-title').textContent  = entry.title || metric;
+      $('#popover-text').textContent   = entry.short || '—';
+      $('#popover-source').textContent = entry.source ? `Fonte: ${entry.source}` : '';
+      placePopover(btn);
+      pop.classList.add('show'); pop.setAttribute('aria-hidden','false');
+    });
+    $('#popover-close').addEventListener('click', hidePopover);
+    $('#popover-more').addEventListener('click', async ()=>{
+      if(!currentMetric) return;
+      const g = await getGlossary(); const e = g?.[currentMetric];
+      const html = `
+        <div>
+          <h3 style="margin:0 0 6px;font-weight:800">${e?.title || currentMetric}</h3>
+          <p style="margin:0 0 8px;line-height:1.5">${e?.long || e?.short || '—'}</p>
+          ${e?.source ? `<p style="margin:8px 0 0;color:var(--muted);font-size:12px"><em>Fonte: ${e.source}</em></p>` : ''}
+        </div>`;
+      window.Tradelia?.Drawer?.open({ title: e?.title || currentMetric, subtitle:'Glossario & Metodo', html });
+      hidePopover();
+    });
+    window.addEventListener('resize', ()=>{ if(pop.classList.contains('show')) hidePopover(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape') hidePopover(); });
+
+    // ===== Chips: scroll-to card + accensione da Manifest =====
+    document.addEventListener('DOMContentLoaded', ()=>{
+      $$('.chip').forEach(btn=>{
         btn.addEventListener('click',()=>{
           const id = btn.dataset.mod?.toUpperCase();
           const card = document.querySelector(`[data-card="${id}"]`);
           if(card){ card.scrollIntoView({behavior:'smooth', block:'start'}); }
         });
       });
-
+      // quando app.js espone Manifest.order -> accendi chip
+      const iv = setInterval(()=>{
+        const order = window.Tradelia?.Manifest?.order;
+        if(Array.isArray(order)){
+          order.forEach(k=>{
+            const chip = [...document.querySelectorAll('.chip')].find(c => c.dataset.mod === String(k).toUpperCase());
+            chip && chip.classList.add('chip--on');
+          });
+          clearInterval(iv);
+        }
+      }, 150);
       if(window.lucide) lucide.createIcons();
     });
   </script>
