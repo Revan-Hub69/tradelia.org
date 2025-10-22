@@ -378,8 +378,7 @@ tbody tr:last-child{ border-bottom:0 }
   .sb--red{ color:#f87171; background:#3a0f0f; border-color:#b91c1c }
   .sb--neutral{ color:#cbd5e1; background:#111827; border-color:#334155 }
 }
-js
-Copia codice
+
 /* =========================================================================
    PATCH: assets/js/modules/headerTicker.js  (usa badge per Stato)
    ========================================================================= */
