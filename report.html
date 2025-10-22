@@ -11,6 +11,33 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./assets/css/report.css" />
 </head>
+  <script type="module">
+  // Verifica ES modules essenziali (stampa overlay se 404 o export errato)
+  const must = [
+    './assets/js/components/header.js',
+    './assets/js/components/helpx.js',
+    './assets/js/components/share.js',
+    './assets/js/components/drawer.js',
+    './assets/js/modules/headerTicker.js',
+    './assets/js/modules/f1b.js',
+    './assets/js/modules/f2.js',
+    './assets/js/utils/qs.js',
+    './assets/js/utils/tone.js',
+    './assets/js/utils/stateBadge.js'
+  ];
+  for (const p of must) {
+    try {
+      const m = await import(p);
+      // opzionale: controlla simboli chiave se servono
+      // es: if (p.endsWith('header.js') && !m.initHeader) throw new Error('initHeader mancante');
+    } catch (e) {
+      throw new Error(`Import fallito: ${p}\n${e?.message||e}`);
+    }
+  }
+  // Se arrivi qui, i path sono OK
+  console.log('Preflight OK: tutti i moduli importabili');
+</script>
+
 <body class="text-gray-900 bg-slate-100">
   <!-- HEADER -->
   <header id="app-header" class="hdr sticky top-0 z-50 bg-white/90 border-b border-slate-200 noprint"></header>
