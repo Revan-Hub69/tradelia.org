@@ -1,1 +1,57 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tradelia · Report Runtime</title>
+<link rel="icon" href="./favicon.png" type="image/png" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="stylesheet" href="./assets/css/tokens.css" />
+<style>
+/* Shell layout minimale */
+body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+.container{max-width:72rem;margin-inline:auto;padding:0 12px}
+.btn{display:inline-flex;align-items:center;gap:.45rem;padding:.45rem .65rem;border-radius:.7rem;font-weight:600;font-size:14px;border:1px solid var(--br);background:var(--btn-bg);box-shadow:var(--btn-shadow)}
+.btn i{width:18px;height:18px}
+.hdr{backdrop-filter:saturate(1.2) blur(6px)}
+.noprint{ }
+@media print{ .noprint{display:none!important} }
+</style>
+</head>
+<body>
+<!-- HEADER BAR -->
+<header class="hdr sticky top-0 z-50 bg-[color:var(--card)]/90 border-b border-[color:var(--br)] noprint">
+<div class="container h-12 sm:h-14 flex items-center justify-between">
+<div class="flex items-center gap-2 sm:gap-3 min-w-0">
+<a href="/" class="shrink-0 text-lg sm:text-xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+<span class="text-[color:var(--ink)]">TRADELIA</span><span class="text-blue-600">&bull;AI</span>
+</a>
+<span class="text-[color:var(--muted)] text-xs sm:text-sm truncate">Report Runtime</span>
+</div>
+<div class="flex items-center gap-1.5 sm:gap-2">
+<button id="btn-print" class="btn" aria-label="Stampa / PDF"><i data-lucide="printer"></i><span class="hidden sm:inline">Stampa / PDF</span></button>
+<button id="btn-theme" class="btn" aria-label="Tema"><i data-lucide="sun"></i><span class="hidden sm:inline">Tema</span></button>
+</div>
+</div>
+</header>
 
+
+<main class="container py-3">
+<!-- SLOT HEADER-TICKER -->
+<section id="header-ticker" aria-label="Header Ticker (pills)"></section>
+</main>
+
+
+<script type="module" src="./assets/js/app.js"></script>
+<script>
+document.getElementById('btn-print')?.addEventListener('click',()=>window.print());
+// tema chiaro/scuro — toggle var CSS sul <html>
+const html=document.documentElement; const btn=document.getElementById('btn-theme');
+const icon=()=> html.dataset.theme==='dark' ? 'moon' : 'sun';
+btn?.addEventListener('click',()=>{html.dataset.theme = (html.dataset.theme==='dark'?'light':'dark');
+btn.innerHTML = `<i data-lucide="${icon()}"></i><span class="hidden sm:inline">Tema</span>`; if(window.lucide) lucide.createIcons();});
+if(window.lucide) lucide.createIcons();
+</script>
+</body>
+</html>
