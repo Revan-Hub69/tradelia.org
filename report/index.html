@@ -5,23 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tradelia · Report Runtime</title>
 
-  <!-- === FAVICON === -->
+  <!-- Favicon (percorso assoluto per Vercel) -->
   <link rel="icon" href="/report/favicon.png" type="image/png" />
   <link rel="apple-touch-icon" href="/report/favicon.png" />
 
-  <!-- === FRAMEWORKS === -->
+  <!-- Frameworks -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- === TOKENS & STYLE === -->
+  <!-- Tokens -->
   <link rel="stylesheet" href="./assets/css/tokens.css" />
+
   <style>
-    /* =======================
-       SHELL LAYOUT MINIMALE
-       ======================= */
+    /* Shell layout minimale */
     body{
       font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:var(--bg);color:var(--ink);
+      background:var(--bg); color:var(--ink);
       -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
       scroll-behavior:smooth;
     }
@@ -30,18 +29,18 @@
       display:inline-flex;align-items:center;gap:.45rem;
       padding:.45rem .65rem;border-radius:.7rem;
       font-weight:600;font-size:14px;
-      border:1px solid var(--br);background:var(--btn-bg);box-shadow:var(--btn-shadow);
-      transition:background .2s,transform .1s;
+      border:1px solid var(--br);
+      background:var(--btn-bg);
+      box-shadow:var(--btn-shadow);
+      transition:background .2s, transform .1s;
     }
     .btn:hover{background:rgba(255,255,255,.25);transform:translateY(-1px)}
     .btn i{width:18px;height:18px}
     .hdr{backdrop-filter:saturate(1.2) blur(6px)}
     .noprint{}
-    @media print{.noprint{display:none!important}}
+    @media print{ .noprint{display:none!important} }
 
-    /* =======================
-       SCROLLBAR (WebKit + Firefox)
-       ======================= */
+    /* Scrollbar (WebKit + Firefox) */
     *{scrollbar-width:thin;scrollbar-color:rgba(148,163,184,.4) transparent}
     ::-webkit-scrollbar{width:10px;height:10px}
     ::-webkit-scrollbar-track{background:transparent}
@@ -51,9 +50,7 @@
     }
     ::-webkit-scrollbar-thumb:hover{background-color:rgba(100,116,139,.5)}
 
-    /* =======================
-       RESPONSIVE ADJUSTMENTS
-       ======================= */
+    /* Responsive tweaks */
     @media (max-width:640px){
       .container{padding-inline:8px}
       .btn span{display:none}
@@ -67,7 +64,7 @@
   <header class="hdr sticky top-0 z-50 bg-[color:var(--card)]/90 border-b border-[color:var(--br)] noprint">
     <div class="container h-12 sm:h-14 flex items-center justify-between">
       <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-        <a href="/" class="shrink-0 text-lg sm:text-xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+        <a href="/" class="shrink-0 text-lg sm:text-xl font-extrabold tracking-tight hover:opacity-90 transition">
           <span class="text-[color:var(--ink)]">TRADELIA</span><span class="text-blue-600">&bull;AI</span>
         </a>
         <span class="text-[color:var(--muted)] text-xs sm:text-sm truncate">Report Runtime</span>
@@ -91,52 +88,90 @@
     <section id="header-ticker" aria-label="Header Ticker (pills)"></section>
   </main>
 
-  <!-- SHARE POPUP (versione stabile) -->
+  <!-- SHARE: Opzione B (nativo SOLO su vero mobile, altrimenti popup) -->
   <script>
-  async function openShare({title='Tradelia · Report',text='Guarda il report completo',url=location.href}={}){
-    if(navigator.share){try{await navigator.share({title,text,url});return;}catch{}}
+  function isRealMobile(){
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) && ('ontouchstart' in window);
+  }
+
+  async function openShare({ title='Tradelia · Report', text='Guarda il report completo', url=location.href } = {}){
+    if (isRealMobile() && navigator.share) {
+      try { await navigator.share({ title, text, url }); return; }
+      catch(e){ /* se l'utente annulla, non apriamo il popup */ return; }
+    }
+    openSharePopup({ title, text, url }); // desktop → sempre popup elegante
+  }
+
+  function openSharePopup({ title, text, url }){
     const wrap=document.createElement('div');
     wrap.className='fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-[1000]';
     const card=document.createElement('div');
     card.className='bg-white rounded-xl shadow-2xl p-5 w-[92%] max-w-lg text-left border border-slate-200';
-    card.innerHTML=`
+
+    const enc = encodeURIComponent;
+    const targets = [
+      {l:'WhatsApp',  u:`https://wa.me/?text=${enc(url)}`,               i:'message-square'},
+      {l:'Telegram',  u:`https://t.me/share/url?url=${enc(url)}`,        i:'send'},
+      {l:'X',         u:`https://twitter.com/intent/tweet?url=${enc(url)}`, i:'twitter'},
+      {l:'LinkedIn',  u:`https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`, i:'linkedin'},
+      {l:'Reddit',    u:`https://www.reddit.com/submit?url=${enc(url)}`, i:'square'},
+      {l:'Facebook',  u:`https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`, i:'facebook'}
+    ];
+
+    card.innerHTML = `
       <div class="flex items-start justify-between gap-3 mb-3">
-        <div><h2 class="font-semibold text-slate-800">${title}</h2>
-        <p class="text-xs text-slate-500 mt-0.5">Condividi il link del report</p></div>
-        <button class="btn" data-act="close"><i data-lucide="x"></i></button>
+        <div>
+          <h2 class="font-semibold text-slate-800 leading-tight">${title}</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Condividi il link del report</p>
+        </div>
+        <button class="btn" data-act="close" aria-label="Chiudi"><i data-lucide="x"></i></button>
       </div>
+
       <div class="space-y-3">
         <div class="mx-auto w-[180px]">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(url)}&size=180x180"
+          <img src="https://api.qrserver.com/v1/create-qr-code/?data=${enc(url)}&size=180x180"
                alt="QR" class="rounded-lg border border-slate-200 shadow-sm bg-white p-2 w-full h-auto"/>
         </div>
+
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 justify-items-center sm:justify-items-start">
-          ${[{l:'WhatsApp',u:`https://wa.me/?text=${url}`,i:'message-square'},
-             {l:'Telegram',u:`https://t.me/share/url?url=${url}`,i:'send'},
-             {l:'X',u:`https://twitter.com/intent/tweet?url=${url}`,i:'twitter'},
-             {l:'LinkedIn',u:`https://www.linkedin.com/sharing/share-offsite/?url=${url}`,i:'linkedin'},
-             {l:'Reddit',u:`https://www.reddit.com/submit?url=${url}`,i:'square'},
-             {l:'Facebook',u:`https://www.facebook.com/sharer/sharer.php?u=${url}`,i:'facebook'}]
-             .map(t=>`<a class="sbtn text-[13px] font-semibold flex gap-1 items-center px-2 py-1.5 border border-slate-200 rounded-md hover:bg-slate-100" href="${t.u}" target="_blank"><i data-lucide="${t.i}" class="w-4 h-4"></i>${t.l}</a>`).join('')}
+          ${targets.map(t=>`
+            <a class="sbtn text-[13px] font-semibold flex gap-1 items-center px-2 py-1.5 border border-slate-200 rounded-md hover:bg-slate-100"
+               href="${t.u}" target="_blank" rel="noopener">
+              <i data-lucide="${t.i}" class="w-4 h-4"></i>${t.l}
+            </a>`).join('')}
         </div>
+
         <div class="bg-slate-50 border border-slate-200 text-[12px] p-2 rounded-md font-mono select-all break-all" data-el="linkbox">${url}</div>
+
         <div class="flex gap-2">
           <button class="sbtn btn" data-act="copy"><i data-lucide="copy"></i><span>Copia</span></button>
           <button class="sbtn btn" data-act="short"><i data-lucide="link-2"></i><span>Short</span></button>
+          <a class="sbtn btn" href="${url}" target="_blank" rel="noopener"><i data-lucide="external-link"></i><span>Apri</span></a>
         </div>
-      </div>`;
-    wrap.appendChild(card);document.body.appendChild(wrap);
-    if(window.lucide)lucide.createIcons();
-    wrap.addEventListener('click',e=>{if(e.target===wrap)wrap.remove()});
-    card.querySelector('[data-act="close"]').onclick=()=>wrap.remove();
-    card.querySelector('[data-act="copy"]').onclick=async()=>{
-      await navigator.clipboard.writeText(url);
-      card.querySelector('[data-act="copy"]').innerHTML='<i data-lucide="check"></i><span>Copiato</span>';
-      if(window.lucide)lucide.createIcons();
+      </div>
+    `;
+
+    wrap.appendChild(card);
+    document.body.appendChild(wrap);
+    if(window.lucide) lucide.createIcons();
+
+    wrap.addEventListener('click', e => { if (e.target === wrap) wrap.remove(); });
+    card.querySelector('[data-act="close"]').onclick = () => wrap.remove();
+
+    card.querySelector('[data-act="copy"]').onclick = async () => {
+      try{
+        await navigator.clipboard.writeText(url);
+        card.querySelector('[data-act="copy"]').innerHTML = '<i data-lucide="check"></i><span>Copiato</span>';
+        if(window.lucide) lucide.createIcons();
+      }catch{}
     };
-    card.querySelector('[data-act="short"]').onclick=async()=>{
-      try{const r=await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(url)}`);
-      const j=await r.json();if(j.shorturl){card.querySelector('[data-el="linkbox"]').textContent=j.shorturl;}}catch{}
+
+    card.querySelector('[data-act="short"]').onclick = async () => {
+      try{
+        const r = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(url)}`);
+        const j = await r.json();
+        if (j.shorturl) card.querySelector('[data-el="linkbox"]').textContent = j.shorturl;
+      }catch{}
     };
   }
   </script>
@@ -144,16 +179,23 @@
   <!-- APP INIT -->
   <script type="module" src="./assets/js/app.js"></script>
   <script>
+    // Print
     document.getElementById('btn-print')?.addEventListener('click',()=>window.print());
-    const html=document.documentElement,btn=document.getElementById('btn-theme');
-    const icon=()=>html.dataset.theme==='dark'?'moon':'sun';
+
+    // Theme toggle
+    const html=document.documentElement, btn=document.getElementById('btn-theme');
+    const icon=()=> html.dataset.theme==='dark' ? 'moon' : 'sun';
     btn?.addEventListener('click',()=>{
-      html.dataset.theme=(html.dataset.theme==='dark'?'light':'dark');
-      btn.innerHTML=`<i data-lucide="${icon()}"></i><span class='hidden sm:inline'>Tema</span>`;
-      if(window.lucide)lucide.createIcons();
+      html.dataset.theme = (html.dataset.theme==='dark' ? 'light' : 'dark');
+      btn.innerHTML = `<i data-lucide="${icon()}"></i><span class="hidden sm:inline">Tema</span>`;
+      if(window.lucide) lucide.createIcons();
     });
+
+    // Share (Opzione B)
     document.getElementById('btn-share')?.addEventListener('click',()=>openShare());
-    if(window.lucide)lucide.createIcons();
+
+    // Icons
+    if(window.lucide) lucide.createIcons();
   </script>
 </body>
 </html>
