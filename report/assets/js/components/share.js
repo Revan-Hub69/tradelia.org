@@ -68,14 +68,27 @@ export function initShareSystem() {
     </button>`;
   }
 
+  // --- SHORTENER pubblico (is.gd -> tinyurl fallback) ---
   async function getShortUrl(longUrl) {
-    // Placeholder: restituisce il link originale.
-    // Integra qui Bitly/TinyURL/endpoint tuo e ritorna la short URL.
+    try {
+      if (/^(https?:\/\/)?(is\.gd|v\.gd|tinyurl\.com)\//i.test(longUrl)) return longUrl;
+      const r1 = await fetch(`https://is.gd/create.php?format=simple&url=${encodeURIComponent(longUrl)}`, { mode: 'cors' });
+      if (r1.ok) {
+        const short1 = (await r1.text()).trim();
+        if (/^https?:\/\//i.test(short1)) return short1;
+      }
+      const r2 = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`, { mode: 'cors' });
+      if (r2.ok) {
+        const short2 = (await r2.text()).trim();
+        if (/^https?:\/\//i.test(short2)) return short2;
+      }
+    } catch (e) {
+      console.warn('Shortener fail:', e);
+    }
     return longUrl;
   }
 
   async function generateQR(text) {
-    // QR via servizio pubblico; sostituibile con lib locale se preferisci
     const api = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(text)}`;
     return `<img src="${api}" width="180" height="180" alt="QR code" class="qr-img" />`;
   }
@@ -122,8 +135,19 @@ export function initShareSystem() {
   // Short
   $('#btn-short').addEventListener('click', async () => {
     const current = $('#share-link').value;
-    const shorted = await getShortUrl(current);
-    $('#share-link').value = shorted;
+    $('#btn-short').disabled = true;
+    try {
+      const shorted = await getShortUrl(current);
+      $('#share-link').value = shorted;
+      $('#btn-short').innerHTML = `<i data-lucide="check"></i><span>Short</span>`;
+      if (window.lucide) lucide.createIcons();
+    } finally {
+      setTimeout(() => {
+        $('#btn-short').disabled = false;
+        $('#btn-short').innerHTML = `<i data-lucide="scissors"></i><span>Short</span>`;
+        if (window.lucide) lucide.createIcons();
+      }, 1200);
+    }
   });
 
   // QR
@@ -144,9 +168,27 @@ export function initShareSystem() {
       const base = el.dataset.url;
       const url = encodeURIComponent($('#share-link').value);
       const text = encodeURIComponent('Guarda il report completo su Tradelia · AI');
-      const shareUrl = base.includes('mailto:') || base.startsWith('sms:')
-        ? `${base}${text}%20${url}`
-        : `${base}${url}&text=${text}`;
+
+      let shareUrl = base;
+      if (base.startsWith('mailto:')) {
+        shareUrl = `${base}${text}%20${url}`;
+      } else if (base.startsWith('sms:')) {
+        shareUrl = `${base}${text}%20${url}`;
+      } else if (base.includes('t.me/share/url')) {
+        shareUrl = `${base}${url}&text=${text}`;
+      } else if (base.includes('twitter.com/intent/tweet')) {
+        shareUrl = `${base}${url}&text=${text}`;
+      } else if (base.includes('facebook.com/sharer/sharer.php')) {
+        shareUrl = `${base}${url}`;
+      } else if (base.includes('linkedin.com/sharing/share-offsite')) {
+        shareUrl = `${base}${url}`;
+      } else if (base.includes('api.whatsapp.com/send')) {
+        shareUrl = `${base}${text}%20${url}`;
+      } else {
+        // fallback generico
+        shareUrl = `${base}${url}`;
+      }
+
       window.open(shareUrl, 'share', 'width=640,height=560,noopener');
     });
   });
