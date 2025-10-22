@@ -1,0 +1,57 @@
+// /data/sample.json
+{
+  "Header": {
+    "Start": "2025-09-01 09:00",
+    "End": "2025-09-30 17:30",
+    "Ticker": "AAPL",
+    "Venue": "XNAS",
+    "Freshness": "T-0",
+    "ConfidenceFinal": 0.86,
+    "OCR_Conf": 0.92,
+    "DataIntegrity": 0.88,
+    "FeedSync": 0.91,
+    "State": "ACTIVE"
+  },
+  "F1B": {
+    "Meta": { "Version":"1.0.0", "StateBadge": { "color":"green", "label":"OK" } },
+    "Inputs": { "VIX_Close_T1": 14.8, "SectorETFs":[
+      {"ticker":"XLE","name":"Energy","group":"Ciclici","perf_1m_pct":2.5,"flow_5d_usd_M":320,"rank_flow_5d":2},
+      {"ticker":"XLK","name":"Technology","group":"Crescita","perf_1m_pct":1.4,"flow_5d_usd_M":150,"rank_flow_5d":5}
+    ]},
+    "Metrics": {
+      "Classification": { "StrategyMode":"Momentum" },
+      "RegimeScore": { "score": 0.41 },
+      "FlowScore": { "score": 0.36 },
+      "Breadth1M": { "label":"positiva" },
+      "RiskTilt": { "label":"pro-ciclici" }
+    },
+    "Series": { "VIX_Sparkline": [18,17,16,17,16,15,15,14.5,14.2,14.8,14.6,14.8] },
+    "Leadership": { "TopInflow":[{"ticker":"XLE","name":"Energy"},{"ticker":"XLF","name":"Financials"}], "WeakSectors":[{"ticker":"XLU","name":"Utilities"}] }
+  },
+  "F2": {
+    "ticker": "AAPL",
+    "concordanza": "ALTA",
+    "state_label": "BULL",
+    "confidence_label": "0.83",
+    "iv": "18%",
+    "pcr": "0.85",
+    "profile": "Consumer electronics & services.",
+    "inst_own": "62%",
+    "insid_own": "0.1%",
+    "float_pct": "99%",
+    "short_float": "0.6%",
+    "short_interest_ratio": "1.3",
+    "short_vol_ratio": "42%",
+    "news": [
+      {"headline":"Apple rilascia nuovi modelli","source":"Bloomberg","time":"2025-09-10 18:40Z","note":"Sentiment positivo"}
+    ],
+    "events": [
+      {"when":"2025-10-28 21:30 CET","title":"Earnings Q4 FY25","scope":"company"}
+    ],
+    "etfs":[{"symbol":"SPY","name":"SPDR S&P 500","weight":"7.1"}],
+    "peers":["MSFT","GOOGL","AMZN"],
+    "freshness":"T-0",
+    "sources":["SEC","Vendor X"],
+    "notes":"Dati consolidati"
+  }
+}
