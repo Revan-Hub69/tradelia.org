@@ -1,0 +1,12 @@
+{
+  "Start": "2025-10-22 15:00",
+  "End": "2025-10-22 16:00",
+  "Ticker": "AAPL",
+  "Venue": "NASDAQ",
+  "FreshnessLabel": "T-0",
+  "ConfidenceFinal": 0.83,
+  "OCR_Conf": 0.91,
+  "DataIntegrity": 0.88,
+  "FeedSync": 0.86,
+  "State": "ACTIVE"
+}
