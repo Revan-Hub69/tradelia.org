@@ -1,0 +1,77 @@
+/* ======================================================
+   TRADELIA • AI — Share Sheet Styles
+   ====================================================== */
+
+.share-sheet {
+  position: fixed; inset: 0; z-index: 70;
+  display: flex; align-items: center; justify-content: center;
+}
+.share-sheet.hidden { display: none; }
+
+.share-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.45); backdrop-filter: blur(3px);
+  animation: fadeIn .2s ease;
+}
+.share-panel {
+  position: relative;
+  z-index: 1;
+  width: min(90%,420px);
+  background: var(--card);
+  border: 1px solid var(--br);
+  border-radius: 16px;
+  box-shadow: var(--shadow-2);
+  animation: slideUp .25s ease;
+  display: flex; flex-direction: column;
+}
+.share-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; border-bottom: 1px solid var(--br);
+}
+.share-head h3 {
+  font-weight: 700; font-size: 14px; color: var(--ink);
+}
+.share-body {
+  padding: 14px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+.share-linkbox {
+  display: flex; align-items: center; gap: 6px;
+  border: 1px solid var(--br); border-radius: 10px;
+  background: var(--neutral-bg);
+  padding: 4px 6px;
+}
+.share-linkbox input {
+  flex: 1; background: none; border: none; outline: none;
+  font-family: monospace; font-size: 13px; color: var(--ink);
+}
+.share-linkbox button {
+  flex-shrink: 0;
+}
+
+.share-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(110px,1fr));
+  gap: 8px; margin-top: 6px;
+}
+.share-item {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 10px 0;
+  border: 1px solid var(--br); border-radius: 12px;
+  background: color-mix(in oklab,var(--card) 94%,white 6%);
+  font-size: 12.5px; font-weight: 500; color: var(--ink);
+  transition: background .15s ease, transform .08s ease;
+}
+.share-item:hover { background: color-mix(in oklab,var(--card) 88%,white 12%); transform: translateY(-1px); }
+.share-item i { width: 20px; height: 20px; margin-bottom: 4px; }
+
+.qr-area {
+  display: flex; justify-content: center; margin-top: 10px;
+  padding: 8px; background: var(--neutral-bg);
+  border-radius: 10px; border: 1px solid var(--br);
+}
+.qr-area.hidden { display: none; }
+
+@keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
