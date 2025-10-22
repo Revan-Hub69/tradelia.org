@@ -5,12 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tradelia · Report Runtime</title>
 
-  <!-- Favicons (file in root, HTML in /report) -->
-  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-  <link rel="manifest" href="../site.webmanifest">
-  <link rel="mask-icon" href="../safari-pinned-tab.svg" color="#0284c7">
+  <!-- Favicons (file reali in root) -->
+  <link rel="icon" href="/favicon.ico?v=1">
+  <link rel="icon" type="image/png" href="/favicon.png?v=1">
+  <link rel="apple-touch-icon" href="/favicon.png?v=1">
   <meta name="theme-color" content="#0b1220">
 
   <!-- Frameworks -->
@@ -30,6 +28,8 @@
     }
     .container{max-width:72rem;margin-inline:auto;padding:0 12px}
     .hdr{backdrop-filter:saturate(1.2) blur(6px)}
+
+    /* Bottoni base */
     .btn{
       display:inline-flex;align-items:center;gap:.45rem;
       padding:.45rem .65rem;border-radius:.7rem;font-weight:600;font-size:14px;
@@ -39,14 +39,18 @@
     .btn:hover{background:color-mix(in oklab, var(--card) 90%, white 10%); transform:translateY(-1px)}
     .btn:active{transform:translateY(0)}
     .btn i{width:18px;height:18px}
+    .btn.btn-sm{padding:.35rem .6rem;font-size:12.5px;border-radius:.55rem}
+
     @media print{ .noprint{display:none!important} }
 
+    /* Scrollbars */
     *{scrollbar-width:thin;scrollbar-color:rgba(148,163,184,.45) transparent}
     ::-webkit-scrollbar{width:10px;height:10px}
     ::-webkit-scrollbar-thumb{
       background-color:rgba(148,163,184,.45);border-radius:8px;border:2px solid transparent;background-clip:content-box;
     }
 
+    /* Divider + grid */
     .divider{border:0;height:1px;width:100%;background:var(--br);margin:10px 0 12px}
     .cards-grid{
       display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
@@ -75,6 +79,40 @@
     .drawer__title{font-weight:700;color:var(--ink);margin:0;font-size:14px}
     .drawer__subtitle{margin:2px 0 0;font-size:12px;color:var(--muted)}
     .drawer__content{padding:10px 12px;overflow:auto;height:calc(100% - 52px);background:color-mix(in oklab, var(--bg) 96%, white 4%)}
+
+    /* Header brand refine */
+    .brand{font-weight:900; letter-spacing:0}
+    .claim{font-size:12px; color:var(--muted)}
+
+    /* === Section head istituzionale (Schede) === */
+    .section-head{
+      display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
+      margin:8px 0 10px; padding:8px 0 10px;
+      border-bottom:1px solid var(--br);
+    }
+    .section-head__left{min-width:0}
+    .section-title{
+      margin:0; font-weight:800; font-size:15px; line-height:1.2; letter-spacing:.1px; color:var(--ink);
+    }
+    .section-sub{ margin:3px 0 0; font-size:12px; color:var(--muted); }
+    .section-head__right{display:flex; flex-wrap:wrap; gap:6px}
+    .chip{
+      display:inline-flex; align-items:center; gap:.35rem;
+      padding:.22rem .6rem; border-radius:999px;
+      border:1px solid var(--br);
+      background:color-mix(in oklab, var(--card) 96%, white 4%);
+      font-weight:600; font-size:12px; color:var(--ink);
+    }
+    .chip--on{ border-color:#86efac; background:var(--success-bg); color:var(--success-ink) }
+
+    @media (max-width:640px){
+      .section-head{flex-direction:column; align-items:flex-start}
+      .section-head__right{margin-top:4px}
+    }
+    @media print{
+      .section-head{border-bottom-color:#ccc}
+      .chip{background:#fff}
+    }
   </style>
 </head>
 
@@ -83,10 +121,10 @@
   <header class="hdr sticky top-0 z-50 bg-[color:var(--card)]/90 border-b border-[color:var(--br)] noprint">
     <div class="container h-12 sm:h-14 flex items-center justify-between">
       <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-        <a href="/" class="shrink-0 text-lg sm:text-xl font-extrabold tracking-tight hover:opacity-90 transition">
+        <a href="/" class="brand shrink-0 text-lg sm:text-xl tracking-tight hover:opacity-90 transition">
           <span class="text-[color:var(--ink)]">TRADELIA</span><span class="text-blue-600">&bull;AI</span>
         </a>
-        <span class="text-[color:var(--muted)] text-xs sm:text-sm truncate">Report Runtime</span>
+        <span class="claim truncate">Report Runtime</span>
       </div>
       <div class="flex items-center gap-1.5 sm:gap-2">
         <button id="btn-print" class="btn" aria-label="Stampa / PDF"><i data-lucide="printer"></i><span class="hidden sm:inline">Stampa / PDF</span></button>
@@ -100,10 +138,24 @@
   <main class="container py-3">
     <section id="header-ticker" aria-label="Header Ticker (pills)"></section>
     <hr class="divider" />
-    <section class="flex items-center justify-between noprint mb-1">
-      <div class="text-sm font-semibold text-[color:var(--ink)]">Schede</div>
-      <div class="text-[11px] text-[color:var(--muted)]">F1 · F2 · …</div>
+
+    <!-- Testata sezione Schede (istituzionale) -->
+    <section class="section-head noprint" aria-labelledby="sec-schede-title">
+      <div class="section-head__left">
+        <h2 id="sec-schede-title" class="section-title">Schede analitiche</h2>
+        <p class="section-sub">Quadro modulare del report</p>
+      </div>
+      <div class="section-head__right" aria-label="Moduli inclusi">
+        <span class="chip">F1</span>
+        <span class="chip">F2</span>
+        <span class="chip">F3</span>
+        <span class="chip">F4</span>
+        <span class="chip">F5</span>
+        <span class="chip">F6</span>
+        <span class="chip">F7</span>
+      </div>
     </section>
+
     <section id="cards-grid" class="cards-grid" aria-label="Schede analitiche"></section>
   </main>
 
@@ -116,7 +168,7 @@
           <h2 id="drawer-title" class="drawer__title">Dettagli</h2>
           <p id="drawer-subtitle" class="drawer__subtitle">—</p>
         </div>
-        <button class="btn" data-drawer-close aria-label="Chiudi"><i data-lucide="x"></i><span class="hidden sm:inline">Chiudi</span></button>
+        <button class="btn btn-sm" data-drawer-close aria-label="Chiudi"><i data-lucide="x"></i><span class="hidden sm:inline">Chiudi</span></button>
       </header>
       <div id="drawer-content" class="drawer__content"></div>
     </aside>
@@ -165,7 +217,16 @@
       window.Tradelia.Drawer = { open, close };
     })();
 
-    if(window.lucide) lucide.createIcons();
+    // (Opzionale) accendi chip per moduli realmente montati se app.js espone Manifest
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const order = (window.Tradelia?.Manifest?.order) || []; // se non c'è, non succede nulla
+      order.forEach(k=>{
+        const f = String(k||'').toUpperCase().replace('F','');
+        const chip = [...document.querySelectorAll('.chip')].find(c=>c.textContent.trim()===`F${f}`);
+        if(chip) chip.classList.add('chip--on');
+      });
+      if(window.lucide) lucide.createIcons();
+    });
   </script>
 </body>
 </html>
