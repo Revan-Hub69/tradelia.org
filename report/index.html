@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tradelia · Report Runtime</title>
 
-  <!-- Favicons (file reali in root) -->
+  <!-- Favicons: usiamo solo quelli REALI in root -->
   <link rel="icon" href="/favicon.ico?v=1">
   <link rel="icon" type="image/png" href="/favicon.png?v=1">
   <link rel="apple-touch-icon" href="/favicon.png?v=1">
@@ -20,6 +20,21 @@
   <link rel="stylesheet" href="/report/assets/css/share.css" />
 
   <style>
+    /* ===== Tradelia • AI — Institutional overrides ===== */
+    :root{
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --ink:#0f172a;
+      --muted:#5b6b83;
+      --br:#e6eaf0;
+      --brand:#0e7ac7;
+      --accent:#7cc5ff;
+
+      --success-bg:#ecfdf5; --success-ink:#065f46; --success-br:#a7f3d0;
+      --warn-bg:#fff7ed;    --warn-ink:#9a3412;   --warn-br:#fed7aa;
+      --danger-bg:#fef2f2;  --danger-ink:#7f1d1d; --danger-br:#fecaca;
+    }
+
     html,body{height:100%}
     body{
       font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
@@ -32,8 +47,8 @@
     /* Bottoni base */
     .btn{
       display:inline-flex;align-items:center;gap:.45rem;
-      padding:.45rem .65rem;border-radius:.7rem;font-weight:600;font-size:14px;
-      border:1px solid var(--br); background:var(--btn-bg); box-shadow:var(--btn-shadow);
+      padding:.45rem .65rem;border-radius:12px;font-weight:600;font-size:14px;
+      border:1px solid var(--br); background:var(--btn-bg,linear-gradient(#fff,#f8fafc)); box-shadow:var(--shadow-1,0 1px 0 rgba(2,6,23,.05));
       transition:background .2s, transform .08s;
     }
     .btn:hover{background:color-mix(in oklab, var(--card) 90%, white 10%); transform:translateY(-1px)}
@@ -43,18 +58,20 @@
 
     @media print{ .noprint{display:none!important} }
 
-    /* Scrollbars */
-    *{scrollbar-width:thin;scrollbar-color:rgba(148,163,184,.45) transparent}
-    ::-webkit-scrollbar{width:10px;height:10px}
+    /* Scrollbar sobria */
+    *{scrollbar-width:thin;scrollbar-color:rgba(120,138,160,.35) transparent}
+    ::-webkit-scrollbar{width:8px;height:8px}
     ::-webkit-scrollbar-thumb{
-      background-color:rgba(148,163,184,.45);border-radius:8px;border:2px solid transparent;background-clip:content-box;
+      background:rgba(120,138,160,.35);
+      border-radius:999px;border:2px solid transparent;background-clip:content-box;
     }
+    ::-webkit-scrollbar-track{background:transparent}
 
     /* Divider + grid */
     .divider{border:0;height:1px;width:100%;background:var(--br);margin:10px 0 12px}
     .cards-grid{
       display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-      gap:10px; margin:8px 0 16px;
+      gap:12px; margin:8px 0 16px;
       content-visibility:auto; contain-intrinsic-size:auto 320px;
     }
 
@@ -84,6 +101,34 @@
     .brand{font-weight:900; letter-spacing:0}
     .claim{font-size:12px; color:var(--muted)}
 
+    /* ===== Header Ticker — mobile-first, snap ===== */
+    #header-ticker{
+      display:grid; grid-template-columns:repeat(12,minmax(220px,1fr));
+      gap:10px; align-items:stretch;
+      overflow:auto; padding:2px 0 6px;
+      scroll-snap-type:x mandatory;
+    }
+    #header-ticker .pill{
+      scroll-snap-align:start;
+      display:flex; align-items:center; gap:.7rem;
+      min-height:56px; padding:.7rem .9rem .7rem 1rem;
+      border:1px solid var(--br); border-radius:14px; background:var(--card);
+      box-shadow:0 1px 0 rgba(2,6,23,.04), 0 8px 24px rgba(2,6,23,.08);
+    }
+    #header-ticker .lab{
+      font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted);
+    }
+    #header-ticker .val{
+      font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
+      font-weight:800; font-size:13.5px; color:var(--ink);
+    }
+    #header-ticker .tonebar{
+      width:4px; align-self:stretch; border-radius:10px; background:#cbd5e1; opacity:.9;
+    }
+    @media (min-width:960px){
+      #header-ticker{ grid-template-columns:repeat(6,minmax(220px,1fr)); overflow:visible; }
+    }
+
     /* === Section head istituzionale (Schede) === */
     .section-head{
       display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
@@ -92,18 +137,22 @@
     }
     .section-head__left{min-width:0}
     .section-title{
-      margin:0; font-weight:800; font-size:15px; line-height:1.2; letter-spacing:.1px; color:var(--ink);
+      margin:0; font-weight:900; font-size:16px; line-height:1.2; color:var(--ink);
     }
     .section-sub{ margin:3px 0 0; font-size:12px; color:var(--muted); }
     .section-head__right{display:flex; flex-wrap:wrap; gap:6px}
+
     .chip{
-      display:inline-flex; align-items:center; gap:.35rem;
-      padding:.22rem .6rem; border-radius:999px;
+      display:inline-flex; align-items:center; gap:.38rem;
+      padding:.34rem .72rem; border-radius:999px; cursor:pointer;
       border:1px solid var(--br);
       background:color-mix(in oklab, var(--card) 96%, white 4%);
-      font-weight:600; font-size:12px; color:var(--ink);
+      font-weight:700; font-size:12px; color:var(--ink);
+      transition:background .15s ease, transform .08s ease, border-color .15s ease;
     }
-    .chip--on{ border-color:#86efac; background:var(--success-bg); color:var(--success-ink) }
+    .chip:hover{ background:color-mix(in oklab,var(--card) 90%, white 10%); transform:translateY(-1px) }
+    .chip i{ width:16px; height:16px }
+    .chip--on{ border-color:#9ae6b4; background:var(--success-bg); color:var(--success-ink) }
 
     @media (max-width:640px){
       .section-head{flex-direction:column; align-items:flex-start}
@@ -136,24 +185,37 @@
 
   <!-- MAIN -->
   <main class="container py-3">
+    <!-- Header Ticker -->
     <section id="header-ticker" aria-label="Header Ticker (pills)"></section>
     <hr class="divider" />
 
-    <!-- Testata sezione Schede (istituzionale) -->
+    <!-- Schede analitiche -->
     <section class="section-head noprint" aria-labelledby="sec-schede-title">
       <div class="section-head__left">
         <h2 id="sec-schede-title" class="section-title">Schede analitiche</h2>
-        <p class="section-sub">Quadro modulare del report</p>
+        <p class="section-sub">Metodo accademico, auditabile</p>
       </div>
-      <div class="section-head__right" aria-label="Moduli inclusi">
-        <span class="chip">F1</span>
-        <span class="chip">F2</span>
-        <span class="chip">F3</span>
-        <span class="chip">F4</span>
-        <span class="chip">F5</span>
-        <span class="chip">F6</span>
-        <span class="chip">F7</span>
-      </div>
+
+      <nav class="section-head__right" aria-label="Mappa moduli">
+        <button class="chip" data-mod="F1" title="Panorama Macro (top-down)">
+          <i data-lucide="globe-2"></i><span>F1: Panorama Macro</span>
+        </button>
+        <button class="chip" data-mod="F2" title="Overview del Ticker (profilo, venue, price-action)">
+          <i data-lucide="scan-line"></i><span>F2: Overview Ticker</span>
+        </button>
+        <button class="chip" data-mod="F3" title="Scheda Tecnica (multi-timeframe)">
+          <i data-lucide="line-chart"></i><span>F3: Scheda Tecnica</span>
+        </button>
+        <button class="chip" data-mod="F4" title="Intermarket & Intra-Market (correlazioni e spread)">
+          <i data-lucide="git-branch"></i><span>F4: Intermarket &amp; Intra-Market</span>
+        </button>
+        <button class="chip" data-mod="F5" title="Resoconto Finale (sintesi, rischio, bias)">
+          <i data-lucide="file-text"></i><span>F5: Resoconto Finale</span>
+        </button>
+        <button class="chip" data-mod="F6" title="Broker Selezionati (esecuzione, venue, costi)">
+          <i data-lucide="briefcase"></i><span>F6: Broker Selezionati</span>
+        </button>
+      </nav>
     </section>
 
     <section id="cards-grid" class="cards-grid" aria-label="Schede analitiche"></section>
@@ -183,7 +245,7 @@
     initShareSystem();
   </script>
 
-  <!-- Interazioni globali -->
+  <!-- Interazioni globali & wiring chip -->
   <script>
     // Print
     document.getElementById('btn-print')?.addEventListener('click',()=>window.print());
@@ -217,14 +279,24 @@
       window.Tradelia.Drawer = { open, close };
     })();
 
-    // (Opzionale) accendi chip per moduli realmente montati se app.js espone Manifest
+    // Chip: accensione in base ai moduli realmente montati + scroll-to card
     document.addEventListener('DOMContentLoaded', ()=>{
-      const order = (window.Tradelia?.Manifest?.order) || []; // se non c'è, non succede nulla
+      // Se app.js espone Manifest.order, accendiamo
+      const order = (window.Tradelia?.Manifest?.order)||[];
       order.forEach(k=>{
-        const f = String(k||'').toUpperCase().replace('F','');
-        const chip = [...document.querySelectorAll('.chip')].find(c=>c.textContent.trim()===`F${f}`);
-        if(chip) chip.classList.add('chip--on');
+        const chip = [...document.querySelectorAll('.chip')].find(c=>c.dataset.mod===String(k).toUpperCase());
+        chip && chip.classList.add('chip--on');
       });
+
+      // Scroll delicato alla card se presente data-card="F1" etc.
+      document.querySelectorAll('.chip').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          const id = btn.dataset.mod?.toUpperCase();
+          const card = document.querySelector(`[data-card="${id}"]`);
+          if(card){ card.scrollIntoView({behavior:'smooth', block:'start'}); }
+        });
+      });
+
       if(window.lucide) lucide.createIcons();
     });
   </script>
