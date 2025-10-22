@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tradelia · Report Runtime</title>
 
-  <!-- Favicon (in root) -->
+  <!-- Favicons (file in root, HTML in /report) -->
   <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -17,7 +17,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- Design tokens e componenti -->
+  <!-- CSS -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
   <link rel="stylesheet" href="/report/assets/css/share.css" />
 
@@ -41,14 +41,12 @@
     .btn i{width:18px;height:18px}
     @media print{ .noprint{display:none!important} }
 
-    /* Scrollbars */
     *{scrollbar-width:thin;scrollbar-color:rgba(148,163,184,.45) transparent}
     ::-webkit-scrollbar{width:10px;height:10px}
     ::-webkit-scrollbar-thumb{
       background-color:rgba(148,163,184,.45);border-radius:8px;border:2px solid transparent;background-clip:content-box;
     }
 
-    /* Divider + grid */
     .divider{border:0;height:1px;width:100%;background:var(--br);margin:10px 0 12px}
     .cards-grid{
       display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
@@ -75,6 +73,8 @@
       background:color-mix(in oklab, var(--card) 92%, white 8%); position:sticky;top:0;z-index:1;
     }
     .drawer__title{font-weight:700;color:var(--ink);margin:0;font-size:14px}
+    .drawer__subtitle{margin:2px 0 0;font-size:12px;color:var(--muted)}
+    .drawer__content{padding:10px 12px;overflow:auto;height:calc(100% - 52px);background:color-mix(in oklab, var(--bg) 96%, white 4%)}
   </style>
 </head>
 
@@ -122,10 +122,10 @@
     </aside>
   </div>
 
-  <!-- JS PRINCIPALE -->
+  <!-- JS principale -->
   <script type="module" src="/report/assets/js/app.js"></script>
 
-  <!-- SHARE SHEET (full) -->
+  <!-- Share sheet full -->
   <script type="module">
     import { initShareSystem } from '/report/assets/js/components/share.js';
     initShareSystem();
