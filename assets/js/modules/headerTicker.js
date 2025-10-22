@@ -1,8 +1,11 @@
+// /assets/js/modules/headerTicker.js
 import { mountStateBadge, stateToTone } from '../utils/stateBadge.js';
-import { tone } from '../utils/tone.js'; // deve esistere: toClass(), fromFreshness(), fromConfidence(), simple01()
+import { tone } from '../utils/tone.js'; // toClass(), fromFreshness(), fromConfidence(), simple01()
 
 function pillHTML(key, label, { helpKey, asBadge } = {}) {
-  const help = helpKey ? `<button class="hx" data-k="${helpKey}" aria-label="Aiuto ${label}"></button>` : '';
+  const help = helpKey
+    ? `<button class="hx" data-k="${helpKey}" aria-label="Aiuto ${label}"></button>`
+    : '';
   return `
     <div class="pill">
       <span class="tonebar ${tone.toClass('neutral')}" data-bind="tone:${key}"></span>
@@ -14,18 +17,27 @@ function pillHTML(key, label, { helpKey, asBadge } = {}) {
   `;
 }
 
+/* amber -> yellow per la tonebar (tone.toClass non conosce 'amber') */
+function toneForBar(name) {
+  const n = String(name || 'neutral').toLowerCase();
+  return n === 'amber' ? 'yellow' : n;
+}
+
 function setField(root, key, { value, toneName, asBadge = false }) {
   const v = root.querySelector(`[data-bind="value:${key}"]`);
   const t = root.querySelector(`[data-bind="tone:${key}"]`);
+
   if (v) {
     if (asBadge) {
+      // Badge stato con palette istituzionale (supporta 'amber')
       mountStateBadge(v, { state: value, label: value });
     } else {
       v.textContent = value ?? '—';
     }
   }
+
   if (t) {
-    const tn = (toneName ?? 'neutral');
+    const tn = toneForBar(toneName ?? 'neutral'); // normalizza per la tonebar
     t.className = 'tonebar ' + tone.toClass(tn);
     t.setAttribute('data-tone', tn);
   }
@@ -35,7 +47,7 @@ export function initHeaderTicker(data = {}) {
   const root = document.getElementById('header-ticker');
   if (!root) return;
 
-  // Build structure
+  // Struttura pills
   root.innerHTML = [
     pillHTML('DataStart',       'Inizio',     { helpKey: 'DataStart' }),
     pillHTML('DataEnd',         'Fine',       { helpKey: 'DataEnd' }),
@@ -49,7 +61,7 @@ export function initHeaderTicker(data = {}) {
     pillHTML('FeedSync',        'FeedSync',   { helpKey: 'FeedSync' })
   ].join('');
 
-  // Values
+  // Valori
   const fresh = data?.FreshnessLabel ?? data?.Freshness;
   const conf  = Number(data?.ConfidenceFinal);
   const ocr   = Number(data?.OCR_Conf);
@@ -69,8 +81,8 @@ export function initHeaderTicker(data = {}) {
   setField(root, 'FeedSync',        { value: Number.isFinite(fs)  ? fs.toFixed(2)  : '—', toneName: tone.simple01(fs) });
   setField(root, 'State',           { value: state ?? '—', toneName: stateToTone(state), asBadge: true });
 
-  // Hydrate icons (Lucide) dopo iniezione dinamica
+  // Hydrate icone
   if (window.lucide?.createIcons) {
-    try { window.lucide.createIcons(); } catch { /* silent */ }
+    try { window.lucide.createIcons(); } catch { /* no-op */ }
   }
 }
