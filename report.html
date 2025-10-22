@@ -5,38 +5,53 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tradelia · Report Runtime</title>
+
   <link rel="icon" href="./favicon.png" type="image/png" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./assets/css/report.css" />
-</head>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide UMD corretto: espone window.lucide -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" crossorigin="anonymous"></script>
+
+  <!-- Overlay errori (temporaneo per debug) -->
+  <script>
+    (function(){
+      function show(msg){
+        var b=document.createElement('div');
+        b.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.55);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;padding:16px';
+        var c=document.createElement('div');
+        c.style.cssText='max-width:880px;width:92%;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:14px;font:14px/1.4 system-ui,Segoe UI,Arial';
+        c.innerHTML='<div style="font-weight:700;margin-bottom:6px;color:#991b1b">Errore runtime</div><pre style="white-space:pre-wrap;margin:0;color:#111827">'+String(msg)+'</pre>';
+        b.appendChild(c); document.body.appendChild(b);
+      }
+      window.addEventListener('error', e=>show(e.message || e.error || 'error'));
+      window.addEventListener('unhandledrejection', e=>show(e.reason || 'unhandledrejection'));
+    }());
+  </script>
+
+  <!-- Preflight: verifica moduli (deve stare in head o body, non fra head/body) -->
   <script type="module">
-  // Verifica ES modules essenziali (stampa overlay se 404 o export errato)
-  const must = [
-    './assets/js/components/header.js',
-    './assets/js/components/helpx.js',
-    './assets/js/components/share.js',
-    './assets/js/components/drawer.js',
-    './assets/js/modules/headerTicker.js',
-    './assets/js/modules/f1b.js',
-    './assets/js/modules/f2.js',
-    './assets/js/utils/qs.js',
-    './assets/js/utils/tone.js',
-    './assets/js/utils/stateBadge.js'
-  ];
-  for (const p of must) {
-    try {
-      const m = await import(p);
-      // opzionale: controlla simboli chiave se servono
-      // es: if (p.endsWith('header.js') && !m.initHeader) throw new Error('initHeader mancante');
-    } catch (e) {
-      throw new Error(`Import fallito: ${p}\n${e?.message||e}`);
+    const must = [
+      './assets/js/components/header.js',
+      './assets/js/components/helpx.js',
+      './assets/js/components/share.js',
+      './assets/js/components/drawer.js',
+      './assets/js/modules/headerTicker.js',
+      './assets/js/modules/f1b.js',
+      './assets/js/modules/f2.js',
+      './assets/js/utils/qs.js',
+      './assets/js/utils/tone.js',
+      './assets/js/utils/stateBadge.js'
+    ];
+    for (const p of must) {
+      try { await import(p); }
+      catch (e) { throw new Error(`Import fallito: ${p}\n${e?.message||e}`); }
     }
-  }
-  // Se arrivi qui, i path sono OK
-  console.log('Preflight OK: tutti i moduli importabili');
-</script>
+    console.log('Preflight OK: tutti i moduli importabili');
+  </script>
+</head>
 
 <body class="text-gray-900 bg-slate-100">
   <!-- HEADER -->
@@ -60,14 +75,18 @@
           <button id="view-list" class="btn" aria-pressed="false"><i data-lucide="list"></i><span class="hidden sm:inline">Lista</span></button>
         </div>
       </div>
-      <div id="mod-container" data-view="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 sm:gap-2 lg:gap-3" aria-label="Griglia moduli analitici"></div>
+      <div id="mod-container" data-view="grid"
+           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 sm:gap-2 lg:gap-3"
+           aria-label="Griglia moduli analitici"></div>
     </div>
   </section>
 
   <!-- DRAWER (side / bottom-sheet) -->
   <div id="mod-drawer" class="fixed inset-0 z-[60] hidden">
     <div class="absolute inset-0 bg-black/30 backdrop-blur-[1px]" data-close="backdrop"></div>
-    <aside class="absolute right-0 top-0 h-full w-[92%] sm:w-[560px] translate-x-full will-change-transform transition-transform duration-200 ease-out bg-white border-l border-slate-200">
+    <aside class="absolute right-0 top-0 h-full w-[92%] sm:w-[560px]
+                  translate-x-full will-change-transform transition-transform duration-200 ease-out
+                  bg-white border-l border-slate-200">
       <header class="h-12 sm:h-14 border-b border-slate-200 flex items-center justify-between px-3 sm:px-4 bg-white/95 backdrop-blur">
         <div class="min-w-0">
           <div id="drawer-title" class="font-semibold text-slate-800 truncate">Modulo</div>
@@ -90,34 +109,37 @@
     import { initDrawerAPI }    from './assets/js/components/drawer.js';
     import { initHeaderTicker } from './assets/js/modules/headerTicker.js';
     import { mountF1B }         from './assets/js/modules/f1b.js';
-    import { mountF2 }         from './assets/js/modules/f2.js';
+    import { mountF2 }          from './assets/js/modules/f2.js';
     import { getDataURL }       from './assets/js/utils/qs.js';
 
-    // Boot
-    lucide.createIcons();
+    // Boot: safe call a Lucide
+    try { window.lucide?.createIcons?.(); } catch {}
+
     initDrawerAPI();
     initHeader();    // stampa + condividi
     initHelpX();     // dizionario “?”
-    initShare();     // API share.open(...)
+    initShare();     // share popup
 
     // Layout controls
     const cont = document.getElementById('mod-container');
     document.getElementById('view-grid')?.addEventListener('click', (e)=>{
       cont.dataset.view='grid'; e.currentTarget.setAttribute('aria-pressed','true');
-      document.getElementById('view-list').setAttribute('aria-pressed','false');
+      document.getElementById('view-list')?.setAttribute('aria-pressed','false');
       cont.className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 sm:gap-2 lg:gap-3';
+      try { window.lucide?.createIcons?.(); } catch {}
     });
     document.getElementById('view-list')?.addEventListener('click', (e)=>{
       cont.dataset.view='list'; e.currentTarget.setAttribute('aria-pressed','true');
-      document.getElementById('view-grid').setAttribute('aria-pressed','false');
+      document.getElementById('view-grid')?.setAttribute('aria-pressed','false');
       cont.className='space-y-1.5';
+      try { window.lucide?.createIcons?.(); } catch {}
     });
 
     // Data load
     async function loadReport() {
       const url = getDataURL();
       const res = await fetch(url, { cache:'no-store' });
-      if (!res.ok) throw new Error('Fetch JSON: ' + res.status);
+      if (!res.ok) throw new Error('Fetch JSON: ' + res.status + ' @ ' + url);
       const data = await res.json();
 
       // Header ticker
@@ -125,12 +147,16 @@
       // Moduli
       const apiF1B = mountF1B(); apiF1B.update(data?.F1B || {});
       const apiF2  = mountF2();  apiF2.update(data?.F2  || {});
+
+      try { window.lucide?.createIcons?.(); } catch {}
     }
 
     loadReport().catch(err=>{
-      console.error(err);
-      document.getElementById('header-ticker').innerHTML =
-        `<div class="text-sm text-red-700 bg-red-50 border border-red-200 p-2 rounded">Errore caricamento dati: ${err.message}</div>`;
+      const msg = `Errore caricamento dati: ${err.message}`;
+      const box = document.getElementById('header-ticker');
+      if (box) {
+        box.innerHTML = `<div class="text-sm text-red-700 bg-red-50 border border-red-200 p-2 rounded">${msg}</div>`;
+      }
     });
   </script>
 </body>
