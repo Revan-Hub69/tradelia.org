@@ -1,35 +1,38 @@
 /* =========================================================
-   Tradelia · Design Tokens — v2026 Institutional
+   Tradelia · Design Tokens — v2026 Institutional (compact)
    Path: /report/assets/css/tokens.css
    ========================================================= */
 
 /* ---------- Palette Base (Light) ---------- */
 :root {
-  --bg:        #f6f8fb;
-  --card:      #ffffff;
-  --ink:       #0e172a;
-  --muted:     #64748b;
-  --br:        #e2e8f0;
-  $1
-  /* Bottoni (dark) */
-  --btn-bg:       linear-gradient(#0f172a, #0b1220);
-  --btn-bg-hover: linear-gradient(#111827, #0f172a);
-/* Brand */
-  --brand:     #0369a1;
-  $1
+  --bg:   #f6f8fb;
+  --card: #ffffff;
+  --ink:  #0e172a;
+  --muted:#64748b;
+  --br:   #e2e8f0;
+  --ring: #38bdf8;
 
-  /* Bottoni */
+  /* Brand */
+  --brand:  #0369a1;
+  --accent: #0ea5e9;
+
+  /* Bottoni (light) */
   --btn-bg:       linear-gradient(#fff, #f8fafc);
   --btn-bg-hover: linear-gradient(#fff, #f1f5f9);
-/* Stati */
-  --success-ink: #065f46; --success-bg: #ecfdf5; --success-br: #a7f3d0;
-  --warn-ink:    #92400e; --warn-bg: #fffbeb; --warn-br: #fcd34d;
-  --danger-ink:  #7f1d1d; --danger-bg: #fef2f2; --danger-br: #fecaca;
-  --neutral-ink: #334155; --neutral-bg: #f1f5f9; --neutral-br: #e2e8f0;
+
+  /* Stati */
+  --success-ink:#065f46; --success-bg:#ecfdf5; --success-br:#a7f3d0;
+  --warn-ink:#92400e;    --warn-bg:#fffbeb;   --warn-br:#fcd34d;
+  --danger-ink:#7f1d1d;  --danger-bg:#fef2f2; --danger-br:#fecaca;
+  --neutral-ink:#334155; --neutral-bg:#f1f5f9;--neutral-br:#e2e8f0;
 
   /* Elevation */
-  --shadow-1: 0 1px 2px rgba(15,23,42,.04);
-  --shadow-2: 0 10px 25px rgba(15,23,42,.1);
+  --shadow-1: 0 3px 10px rgba(2,6,23,.06);
+  --shadow-2: 0 14px 36px rgba(2,6,23,.12);
+
+  /* Tint & border per dare peso alle card */
+  --card-br-strong: color-mix(in oklab, var(--br) 92%, #0b1220 8%);
+  --card-bg-tint:   color-mix(in oklab, var(--card) 98%, #f6f6f9 2%);
 
   /* Tipografia */
   --fs-11: 11px; --fs-12: 12px; --fs-13: 13px; --fs-135: 13.5px; --fs-14: 14px;
@@ -41,11 +44,26 @@
 
 /* ---------- Dark Mode ---------- */
 html[data-theme="dark"] {
-  --bg: #0b1220; --card: #0f172a; --ink: #e5e7eb; --muted: #94a3b8; --br: #1e293b; --ring: #38bdf8;
-  --success-ink: #bbf7d0; --success-bg: #052e2b; --success-br: #134e4a;
-  --warn-ink: #fcd34d; --warn-bg: #3b2a17; --warn-br: #4a341d;
-  --danger-ink: #fca5a5; --danger-bg: #3a1d1d; --danger-br: #4c2323;
-  --neutral-bg: #111827; --neutral-br: #1f2937;
+  --bg:#0b1220; --card:#0f172a; --ink:#e5e7eb; --muted:#94a3b8; --br:#1e293b; --ring:#38bdf8;
+
+  /* Bottoni (dark) */
+  --btn-bg:       linear-gradient(#0f172a, #0b1220);
+  --btn-bg-hover: linear-gradient(#111827, #0f172a);
+
+  /* Stati dark */
+  --success-ink:#bbf7d0; --success-bg:#052e2b; --success-br:#134e4a;
+  --warn-ink:#fcd34d;    --warn-bg:#3b2a17;   --warn-br:#4a341d;
+  --danger-ink:#fca5a5;  --danger-bg:#3a1d1d; --danger-br:#4c2323;
+
+  /* Elevation dark */
+  --shadow-1: 0 2px 10px rgba(0,0,0,.35);
+  --shadow-2: 0 16px 44px rgba(0,0,0,.5);
+
+  /* Peso card */
+  --card-br-strong: color-mix(in oklab, var(--br) 88%, white 12%);
+  --card-bg-tint:   color-mix(in oklab, var(--card) 96%, white 4%);
+
+  /* Footer (dark) */
   --footer-bg: color-mix(in oklab, var(--card) 86%, white 14%);
   --footer-br: color-mix(in oklab, var(--br) 70%, white 30%);
 }
@@ -59,49 +77,85 @@ html[data-theme="dark"] {
    Componenti comuni · Card, KPI, Badge, Pulsanti
    ========================================================= */
 
+/* Card compatta con “peso” */
 .card-compact {
-  background: var(--card);
-  border: 1px solid var(--br);
-  border-radius: 16px;
-  padding: 14px 16px;
+  background: var(--card-bg-tint);
+  border: 1px solid var(--card-br-strong);
+  border-radius: 14px;
+  padding: 12px 14px;
   box-shadow: var(--shadow-1);
 }
+.card--emphasis { /* per F1B (prima card) */
+  box-shadow: var(--shadow-2);
+  border-color: color-mix(in oklab, var(--brand) 28%, var(--card-br-strong) 72%);
+}
+
+/* Rail superiore (tono regime) */
+.card-rail { height:4px; border-radius:12px 12px 0 0; margin:-12px -14px 10px; background: var(--neutral-bg); }
+.tone-g .card-rail{ background:#10b981 }
+.tone-y .card-rail{ background:#f59e0b }
+.tone-r .card-rail{ background:#ef4444 }
+.tone-n .card-rail{ background:#94a3b8 }
+
 .card-compact__head {
-  display:flex;justify-content:space-between;align-items:center;
-  padding-bottom:6px;border-bottom:1px solid color-mix(in srgb,var(--br) 70%,transparent);
+  display:flex; justify-content:space-between; align-items:center;
+  padding-bottom:6px;
+  border-bottom:1px solid color-mix(in oklab, var(--br) 70%, transparent);
 }
-.card-compact__title {font-weight:700;font-size:var(--fs-135);color:var(--ink);}
-.card-compact__body {padding-top:10px;}
+.card-compact__title { font-weight:800; font-size:14px; letter-spacing:.2px; color:var(--ink); }
+.card-compact__body  { padding-top:8px; }
 
-.kpi {display:flex;align-items:center;gap:.4rem;font-size:12.5px;color:var(--ink)}
-.kpi .dot{width:8px;height:8px;border-radius:999px}
-.dot-g{background:#10b981}.dot-y{background:#f59e0b}.dot-r{background:#ef4444}.dot-n{background:#94a3b8}
+/* KPI “pillole” */
+.kpi { display:flex; align-items:center; gap:.35rem; font-size:12.5px; color:var(--ink) }
+.kpi .dot { width:8px; height:8px; border-radius:999px }
+.dot-g{ background:#10b981 } .dot-y{ background:#f59e0b } .dot-r{ background:#ef4444 } .dot-n{ background:#94a3b8 }
 
-.badge {font-size:var(--fs-11);padding:.14rem .55rem;border-radius:999px;border:1px solid var(--br);background:var(--neutral-bg)}
-.badge--g{color:var(--success-ink);background:var(--success-bg);border-color:var(--success-br)}
-.badge--y{color:var(--warn-ink);background:var(--warn-bg);border-color:var(--warn-br)}
-.badge--r{color:var(--danger-ink);background:var(--danger-bg);border-color:var(--danger-br)}
-.badge--n{color:var(--neutral-ink);background:var(--neutral-bg);border-color:var(--neutral-br)}
+/* Badge semaforo */
+.badge {
+  font-size: var(--fs-11);
+  padding: .1rem .45rem;
+  border-radius: 999px;
+  border: 1px solid var(--br);
+  background: var(--neutral-bg);
+}
+.badge--g{ color:var(--success-ink); background:var(--success-bg); border-color:var(--success-br) }
+.badge--y{ color:var(--warn-ink);    background:var(--warn-bg);    border-color:var(--warn-br) }
+.badge--r{ color:var(--danger-ink);  background:var(--danger-bg);  border-color:var(--danger-br) }
+.badge--n{ color:var(--neutral-ink); background:var(--neutral-bg); border-color:var(--neutral-br) }
+.badge.badge--n code{ font-weight:800 } /* chip settoriali */
 
+/* Bottoni */
 .btn, .u-btn {
-  display:inline-flex;align-items:center;gap:.45rem;padding:.45rem .7rem;border-radius:.75rem;
-  font-weight:600;font-size:var(--fs-14);border:1px solid var(--br);
-  background:var(--btn-bg);box-shadow:var(--shadow-1);
-  transition:background .2s ease,transform .08s ease;
+  display:inline-flex; align-items:center; gap:.45rem;
+  padding:.38rem .6rem; border-radius:.6rem;
+  font-weight:600; font-size:13.5px;
+  border:1px solid var(--br);
+  background:var(--btn-bg); box-shadow:var(--shadow-1);
+  transition: background .2s ease, transform .08s ease;
 }
-.btn:hover,.u-btn:hover{background:var(--btn-bg-hover);transform:translateY(-1px)}
-.btn:active,.u-btn:active{transform:translateY(0)}
-.btn i,.u-btn i{width:18px;height:18px}
+.btn:hover,.u-btn:hover{ background:var(--btn-bg-hover); transform:translateY(-1px) }
+.btn:active,.u-btn:active{ transform:translateY(0) }
+.btn i,.u-btn i{ width:18px; height:18px }
 
-/* ---------- Tipografia e microtesti ---------- */
-.text-muted-11{font-size:var(--fs-11);color:var(--muted)}
-.text-muted-12{font-size:var(--fs-12);color:var(--muted)}
+/* Tipografia micro */
+.text-muted-11{ font-size:var(--fs-11); color:var(--muted) }
+.text-muted-12{ font-size:var(--fs-12); color:var(--muted) }
 
-/* ---------- Accessibilità & Focus ---------- */
+/* Accessibilità & Focus */
 :where(a,button,[role="button"],.btn,.u-btn):focus-visible{
-  outline:2px solid var(--ring);outline-offset:2px;box-shadow:0 0 0 3px color-mix(in oklab,var(--ring) 25%,transparent)
+  outline:2px solid var(--ring);
+  outline-offset:2px;
+  box-shadow:0 0 0 3px color-mix(in oklab, var(--ring) 25%, transparent)
 }
-.visually-hidden{position:absolute!important;clip:rect(1px,1px,1px,1px);width:1px;height:1px;overflow:hidden;white-space:nowrap}
+.visually-hidden{
+  position:absolute!important; clip:rect(1px,1px,1px,1px);
+  width:1px; height:1px; overflow:hidden; white-space:nowrap
+}
 
-/* ---------- Stampa ---------- */
-@media print {.badge,.kpi,.card-compact{box-shadow:none!important;border-color:#ccc!important}}
+/* Tabelle compatte (drawer) */
+.table-compact{ width:100%; border-collapse:collapse; font-size:13px }
+.table-compact th, .table-compact td{ padding:6px 8px; border-bottom:1px solid var(--br) }
+.table-compact thead th{ color:var(--muted); font-weight:700 }
+
+/* Stampa */
+@media print { .badge, .kpi, .card-compact { box-shadow:none!important; border-color:#ccc!important } }
