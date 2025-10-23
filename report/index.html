@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tradelia · Report Runtime</title>
 
-  <!-- Favicons (in root) -->
+  <!-- Favicons (root) -->
   <link rel="icon" href="/favicon.ico?v=1">
   <link rel="icon" type="image/png" href="/favicon.png?v=1">
-  <link rel="apple-touch-icon" href="/favicon.png?v=1">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
   <meta name="theme-color" content="#0b1220">
 
   <!-- Frameworks -->
@@ -20,42 +20,10 @@
   <link rel="stylesheet" href="/report/assets/css/share.css" />
 
   <style>
-    /* ===== Design tokens aggiuntivi locali ===== */
+    /* ===== Layout locali (hero/header/footer/chips) ===== */
     :root{
-      --bg:#f6f8fb; --card:#ffffff; --ink:#0f172a; --muted:#5b6b83; --br:#e6eaf0;
-      --brand:#0e7ac7; --accent:#7cc5ff;
-      --success-bg:#ecfdf5; --success-ink:#065f46; --success-br:#a7f3d0;
-      --warn-bg:#fff7ed;    --warn-ink:#9a3412;   --warn-br:#fed7aa;
-      --danger-bg:#fef2f2;  --danger-ink:#7f1d1d; --danger-br:#fecaca;
-      --neutral-bg:#f1f5f9; --neutral-ink:#334155; --neutral-br:#e5e7eb;
-
-      --tone-g:#10b981; --tone-y:#f59e0b; --tone-r:#ef4444; --tone-n:#94a3b8;
-      --shadow-1:0 1px 0 rgba(2,6,23,.05);
-      --shadow-2:0 12px 36px rgba(2,6,23,.12);
-
-      /* Footer più leggibile */
-      --footer-bg: color-mix(in oklab, var(--card) 88%, #0e1729 12%);
-      --footer-br: color-mix(in oklab, var(--br) 70%, #0e1729 30%);
-
-      /* Popover */
       --pop-w:300px;
     }
-    html[data-theme="dark"]{
-      --bg:#0b1220; --card:#0f172a; --ink:#e5e7eb; --muted:#94a3b8; --br:#1f2937;
-      --brand:#38bdf8; --accent:#7cc5ff;
-      --success-bg:#052e2b; --success-ink:#86efac; --success-br:#134e4a;
-      --warn-bg:#3b2a17;    --warn-ink:#fcd34d;   --warn-br:#4a341d;
-      --danger-bg:#3a1d1d;  --danger-ink:#fca5a5; --danger-br:#4c2323;
-      --neutral-bg:#111827; --neutral-ink:#cbd5e1; --neutral-br:#253046;
-
-      --tone-g:#22c55e; --tone-y:#f59e0b; --tone-r:#ef4444; --tone-n:#64748b;
-      --shadow-1:0 1px 0 rgba(0,0,0,.4);
-      --shadow-2:0 12px 36px rgba(0,0,0,.35);
-
-      --footer-bg: color-mix(in oklab, var(--card) 86%, white 14%);
-      --footer-br: color-mix(in oklab, var(--br) 70%, white 30%);
-    }
-
     html,body{height:100%}
     body{
       font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
@@ -63,46 +31,35 @@
       -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
       line-height:1.58;
     }
-
     .container{max-width:76rem;margin-inline:auto;padding:0 16px}
     main{padding-top:2.25rem;padding-bottom:3rem}
     @media(min-width:1024px){ main{padding-top:2.75rem;padding-bottom:3.75rem} }
 
     /* Header */
-    .hdr{backdrop-filter:saturate(1.15) blur(6px); box-shadow:var(--shadow-1)}
+    .hdr{backdrop-filter:saturate(1.15) blur(6px); box-shadow:0 1px 0 color-mix(in oklab, var(--br) 80%, transparent)}
     .brand{font-weight:900}
     .claim{font-size:12px; color:var(--muted)}
 
-    /* Buttons */
-    .btn{display:inline-flex;align-items:center;gap:.5rem;
-      padding:.5rem .8rem;border-radius:12px;font-weight:700;font-size:14px;
-      border:1px solid var(--br); background:linear-gradient(#fff,#f8fafc);
-      box-shadow:var(--shadow-1); transition:background .2s, transform .08s}
-    html[data-theme="dark"] .btn{background:linear-gradient(#0f172a,#0b1220)}
-    .btn:hover{background:color-mix(in oklab, var(--card) 90%, white 10%); transform:translateY(-1px)}
-    .btn i{width:18px;height:18px}
-    .btn.btn-sm{padding:.38rem .62rem;font-size:12.5px;border-radius:.55rem}
-
     /* Divider */
-    .divider{border:0;height:1px;width:100%;background:var(--br);margin:18px 0 16px}
+    .divider{border:0;height:1px;width:100%;background:color-mix(in oklab, var(--br) 80%, transparent);margin:18px 0 16px}
 
     /* HERO */
     .hero{
-      margin-top:12px; border:1px solid var(--br); border-radius:18px;
-      background: radial-gradient(1100px 520px at -10% -40%, #eff6ff 0%, #fff 45%);
-      padding:18px; box-shadow:var(--shadow-2)
+      margin-top:12px; border:1px solid color-mix(in oklab, var(--br) 88%, transparent); border-radius:18px;
+      background: radial-gradient(1100px 520px at -10% -40%, color-mix(in oklab, #eff6ff 60%, white 40%) 0%, var(--card) 45%);
+      padding:16px; box-shadow: var(--shadow-2)
     }
     html[data-theme="dark"] .hero{
-      background: radial-gradient(1100px 520px at -10% -40%, #0b2740 0%, #0f172a 45%)
+      background: radial-gradient(1100px 520px at -10% -40%, #0b2740 0%, var(--card) 45%)
     }
     .hero__top{display:flex;align-items:center;justify-content:space-between;gap:10px}
-    .hero__id{display:flex;align-items:baseline;gap:12px;min-width:0}
+    .hero__id{display:flex;align-items:baseline;gap:12px;min-w-0}
     .hero__ticker{font-weight:900;font-size:20px; letter-spacing:.2px}
     .hero__venue{font-size:12.5px;color:var(--muted)}
     .hero__price{display:flex;align-items:baseline;gap:12px}
     .hero__px{font-weight:900;font-size:24px}
     .hero__chg{font-weight:800;font-size:13.5px}
-    .chg--up{color:var(--tone-g)} .chg--down{color:var(--tone-r)}
+    .chg--up{color:#10b981} .chg--down{color:#ef4444}
     .hero__badge{font-size:12.5px;border:1px solid var(--br);border-radius:999px;padding:.22rem .6rem;background:var(--card);color:var(--ink)}
 
     .hero__meta{
@@ -114,10 +71,16 @@
       border:1px solid var(--br);border-radius:12px;padding:.6rem .8rem .6rem 1rem;
       background:var(--card); font-size:13px; box-shadow:var(--shadow-1); min-height:56px
     }
-    .meta-pill .tonebar{position:absolute;left:0;top:0;bottom:0;width:4px;border-top-left-radius:12px;border-bottom-left-radius:12px;background:var(--tone-n)}
+    .meta-pill .tonebar{position:absolute;left:0;top:0;bottom:0;width:4px;border-top-left-radius:12px;border-bottom-left-radius:12px;background:#94a3b8}
     .meta-label{color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:11.5px}
     .meta-val{font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;font-weight:800}
     .info-btn{all:unset; cursor:pointer; margin-left:6px; display:inline-flex; align-items:center; justify-content:center; width:18px;height:18px; border:1px solid var(--br); border-radius:999px; font-size:12px; line-height:1; color:var(--muted); background:var(--card); flex:0 0 auto}
+
+    /* Chips (icone corrette) */
+    .chips{display:grid; grid-auto-flow:column; grid-auto-columns:max-content; gap:10px; overflow:auto; padding-bottom:2px; scroll-snap-type:x mandatory}
+    .chip{scroll-snap-align:start; display:inline-flex; align-items:center; gap:.42rem; padding:.44rem .8rem; border-radius:999px; cursor:pointer; border:1px solid var(--br); background:color-mix(in oklab, var(--card) 96%, white 4%); font-weight:800; font-size:12.5px; transition:background .15s, transform .08s, border-color .15s; white-space:nowrap}
+    .chip:hover{ background:color-mix(in oklab,var(--card) 90%, white 10%); transform:translateY(-1px) }
+    .chip i{width:18px;height:18px}
 
     /* Cards grid */
     .cards-grid{
@@ -125,46 +88,47 @@
       gap:16px; margin:16px 0 26px; content-visibility:auto; contain-intrinsic-size:auto 340px
     }
 
-    /* Section head + chips */
-    .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin:14px 0 12px;padding:10px 0 12px;border-bottom:1px solid var(--br)}
-    .section-title{margin:0;font-weight:900;font-size:17px; letter-spacing:.15px}
-    .section-sub{margin:4px 0 0;font-size:12.5px;color:var(--muted)}
-    .chips{display:grid; grid-auto-flow:column; grid-auto-columns:max-content; gap:10px; overflow:auto; padding-bottom:2px; scroll-snap-type:x mandatory}
-    .chip{scroll-snap-align:start; display:inline-flex; align-items:center; gap:.42rem; padding:.44rem .8rem; border-radius:999px; cursor:pointer; border:1px solid var(--br); background:color-mix(in oklab, var(--card) 96%, white 4%); font-weight:800; font-size:12.5px; transition:background .15s, transform .08s, border-color .15s; white-space:nowrap}
-    .chip:hover{ background:color-mix(in oklab,var(--card) 90%, white 10%); transform:translateY(-1px) }
-    .chip--on{ border-color:#9ae6b4; background:var(--success-bg); color:var(--success-ink) }
-
-    /* Drawer (MiFID / contenuti) */
+    /* Drawer 2026 · compatto & istituzionale */
     .drawer{position:fixed;inset:0;z-index:70;display:none}
     .drawer[aria-hidden="false"]{display:block}
     .drawer__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(2px);opacity:0;transition:opacity .18s ease}
     .drawer__panel{
-      position:absolute;inset:0;background:var(--card); border-left:1px solid var(--br);
-      box-shadow:-10px 0 36px rgba(2,6,23,.18); transform:translateY(4%); opacity:0;
-      transition:transform .22s ease, opacity .22s ease; display:flex;flex-direction:column
+      position:absolute; inset:0;
+      background:var(--card); color:var(--ink);
+      border-left:1px solid color-mix(in oklab, var(--br) 88%, transparent);
+      box-shadow: var(--shadow-2);
+      transform: translateY(12px); opacity:0;
+      transition: transform .2s ease, opacity .2s ease;
+      display:flex; flex-direction:column; border-radius:14px 14px 0 0;
     }
     .drawer.is-open .drawer__backdrop{opacity:1}
-    .drawer.is-open .drawer__panel{transform:translateY(0); opacity:1}
-    .drawer__header{height:56px;display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:0 14px;border-bottom:1px solid var(--br);background:color-mix(in oklab, var(--card) 94%, white 6%); position:sticky;top:0;z-index:1}
-    .drawer__title{font-weight:900;color:var(--ink);margin:0;font-size:15px;display:flex;align-items:center;gap:8px}
-    .drawer__subtitle{margin:2px 0 0;font-size:12px;color:var(--muted)}
-    .drawer__content{padding:14px;overflow:auto;height:calc(100% - 56px);background:color-mix(in oklab, var(--bg) 96%, white 4%)}
-    @media (max-width:640px){
-      .hero__top{flex-direction:column; align-items:flex-start}
-      .hero__price{margin-top:8px}
-      .section-head{flex-direction:column; align-items:flex-start}
+    .drawer.is-open .drawer__panel{ transform:translateY(0); opacity:1 }
+    .drawer__header{
+      height:56px; display:flex; align-items:center; justify-content:space-between; gap:.6rem;
+      padding:0 14px; border-bottom:1px solid color-mix(in oklab, var(--br) 78%, transparent);
+      background: color-mix(in oklab, var(--card) 96%, white 4%); position:sticky;top:0;z-index:1;
     }
+    .drawer__title{ font-weight:900; font-size:15px; display:flex; align-items:center; gap:8px }
+    .drawer__subtitle{ margin:2px 0 0; font-size:12.5px; color:var(--muted) }
+    .drawer__content{ padding:14px; overflow:auto; height:calc(100% - 56px); background: color-mix(in oklab, var(--bg) 96%, white 4%) }
+    .drawer__content section + section{ margin-top:12px }
+    .drawer__content h4{ font-weight:800; margin:0 0 6px; letter-spacing:.2px }
 
-    /* Popover metriche */
-    .popover{position:absolute; z-index:80; width:var(--pop-w); max-width:90vw; background:var(--card); color:var(--ink); border:1px solid var(--br); border-radius:10px; padding:10px 10px 8px; box-shadow:0 12px 32px rgba(2,6,23,.16); display:none}
-    html[data-theme="dark"] .popover{box-shadow:0 12px 32px rgba(0,0,0,.55)}
-    .popover__title{margin:0 0 6px; font-weight:900; font-size:13.2px}
-    .popover__text{font-size:12.6px; line-height:1.35}
-    .popover__source{margin-top:6px; font-size:11.5px; color:var(--muted)}
-    .popover__actions{margin-top:8px; display:flex; justify-content:flex-end}
-    .popover.show{display:block}
+    /* Popover metrica (premium) */
+    .popover{
+      position:absolute; z-index:80; width:var(--pop-w); max-width:92vw;
+      background:var(--card); color:var(--ink);
+      border:1px solid color-mix(in oklab, var(--br) 85%, transparent);
+      border-radius:12px;
+      padding:12px 12px 10px;
+      box-shadow: 0 18px 44px rgba(2,6,23,.18);
+      display:none
+    }
+    .popover__title{ margin:0 0 6px; font-weight:900; font-size:13.5px; letter-spacing:.15px }
+    .popover__text{ font-size:12.8px; line-height:1.45 }
+    .popover__source{ margin-top:6px; font-size:11.5px; color:var(--muted) }
 
-    /* Privacy modal (atomico) */
+    /* Privacy modal */
     .modal{position:fixed;inset:0;z-index:90;display:none}
     .modal[aria-hidden="false"]{display:grid;place-items:center}
     .modal__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(2px)}
@@ -173,14 +137,17 @@
     .modal__text{font-size:13.6px;line-height:1.6}
     .modal__actions{margin-top:12px;display:flex;gap:10px;justify-content:flex-end}
 
-    /* Footer distinto */
+    /* Footer */
     .footer-wrap{background:var(--footer-bg); border-top:1px solid var(--footer-br); margin-top:24px}
     .site-footer{color:var(--muted)}
     .site-footer .heading{color:var(--ink); font-weight:800}
 
-    /* Print */
+    @media (max-width:640px){
+      .hero__top{flex-direction:column; align-items:flex-start}
+      .hero__price{margin-top:8px}
+    }
     @media print{
-      header,.btn,.noprint,.drawer,.popover,.modal{display:none!important}
+      header,.btn,.u-btn,.noprint,.drawer,.popover,.modal{display:none!important}
       .hero{page-break-after:always; border:1px solid #ddd; box-shadow:none!important}
       .cards-grid{gap:12px;margin:0}
       .meta-pill{box-shadow:none!important;border:1px solid #ddd}
@@ -218,7 +185,7 @@
         <div class="hero__price">
           <div class="hero__px" id="hero-price">—</div>
           <div class="hero__chg" id="hero-change">—</div>
-          <span class="hero__badge tone-n" id="hero-state">—</span>
+          <span class="hero__badge" id="hero-state">—</span>
         </div>
       </div>
 
@@ -301,15 +268,15 @@
     <!-- Section head -->
     <section class="section-head noprint" aria-labelledby="sec-schede-title">
       <div>
-        <h2 id="sec-schede-title" class="section-title">Schede analitiche</h2>
-        <p class="section-sub">
+        <h2 id="sec-schede-title" class="text-base font-black tracking-tight">Schede analitiche</h2>
+        <p class="section-sub text-[12.5px] text-[color:var(--muted)] mt-1">
           <span>Metodo accademico, auditabile · Snapshot indicato in testata · Nessuna consulenza personalizzata</span><br />
           <span>Framework top-down (F1–F4) · <strong>Resoconto Tecnico (F5)</strong> · Validazione di lungo periodo (F5b) · Broker Selezionati (F6)</span>
         </p>
       </div>
     </section>
 
-    <!-- Chips -->
+    <!-- Chips (icone allineate) -->
     <nav class="chips noprint" aria-label="Mappa moduli">
       <button class="chip" data-mod="F1"  title="Panorama Macro"><i data-lucide="globe-2"></i>F1: Panorama Macro</button>
       <button class="chip" data-mod="F2"  title="Overview Ticker"><i data-lucide="scan-line"></i>F2: Overview Ticker</button>
@@ -320,11 +287,11 @@
       <button class="chip" data-mod="F6"  title="Broker Selezionati"><i data-lucide="briefcase"></i>F6: Broker Selezionati</button>
     </nav>
 
-    <!-- Cards grid (popolata da app.js/modules) -->
+    <!-- Cards grid -->
     <section id="cards-grid" class="cards-grid" aria-label="Schede analitiche"></section>
   </main>
 
-  <!-- FOOTER distinto -->
+  <!-- FOOTER -->
   <div class="footer-wrap">
     <footer class="site-footer container py-4">
       <div class="border-t border-[color:var(--footer-br)] pt-3 grid gap-4 md:flex md:items-start md:justify-between">
@@ -380,10 +347,10 @@
     <h3 class="popover__title" id="popover-title">—</h3>
     <div class="popover__text" id="popover-text">—</div>
     <div class="popover__source" id="popover-source">—</div>
-    <div class="popover__actions"><button id="popover-close" class="btn btn-sm" type="button">Chiudi</button></div>
+    <div class="popover__actions mt-2 flex justify-end"><button id="popover-close" class="btn btn-sm" type="button">Chiudi</button></div>
   </div>
 
-  <!-- PRIVACY MODAL (unico, senza “Dettagli”) -->
+  <!-- PRIVACY MODAL -->
   <div id="privacy-modal" class="modal noprint" aria-hidden="true" aria-labelledby="privacy-title" role="dialog">
     <div class="modal__backdrop"></div>
     <section class="modal__panel">
@@ -404,7 +371,7 @@
     </section>
   </div>
 
-  <!-- JS principale (orchestratore moduli) -->
+  <!-- JS principale -->
   <script type="module" src="/report/assets/js/app.js"></script>
 
   <!-- Share sheet -->
@@ -438,7 +405,7 @@
     })();
     $('#btn-theme')?.addEventListener('click',()=> setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
 
-    // Drawer (MiFID / generico)
+    // Drawer API
     (() => {
       const root = $('#drawer'), title = $('#drawer-title'), subtitle = $('#drawer-subtitle'), content = $('#drawer-content');
       function open({ title:t='Dettagli', subtitle:s='—', html='', blocking=false }={}){
@@ -466,7 +433,7 @@
       el.classList.remove('tone-g','tone-y','tone-r','tone-n');
       if (s==='ACTIVE') el.classList.add('tone-g'); else if (s==='REVIEW') el.classList.add('tone-y'); else if (s==='HOLD') el.classList.add('tone-r'); else el.classList.add('tone-n');
     }
-    function setToneBar(el, tone){ if(!el) return; el.style.background = tone==='g' ? 'var(--tone-g)' : tone==='y' ? 'var(--tone-y)' : tone==='r' ? 'var(--tone-r)' : 'var(--tone-n)'; }
+    function setToneBar(el, tone){ if(!el) return; el.style.background = tone==='g' ? '#10b981' : tone==='y' ? '#f59e0b' : tone==='r' ? '#ef4444' : '#94a3b8'; }
 
     (async ()=>{
       const base = `/report/reports/${getReportId()}`;
@@ -507,15 +474,15 @@
     function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
     function placePopover(btn){
       const rect = btn.getBoundingClientRect(), sx = scrollX, sy = scrollY, vw = innerWidth, vh = innerHeight;
-      const popW = Math.min(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--pop-w'))||300, vw*0.9);
-      pop.style.width = popW + 'px'; pop.style.visibility='hidden'; pop.classList.add('show');
+      const popW = Math.min(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--pop-w'))||300, vw*0.92);
+      pop.style.width = popW + 'px'; pop.style.visibility='hidden'; pop.style.display='block';
       const ph = pop.offsetHeight || 140;
       let left = rect.left + sx - 8, top  = rect.bottom + sy + 8;
       const m = 12; left = clamp(left, sx + m, sx + vw - popW - m);
       const below = (sy + vh) - (rect.bottom + sy); if (below < ph + 20){ top = rect.top + sy - ph - 10; if (top < sy + m) top = sy + m; }
       pop.style.left = `${left}px`; pop.style.top  = `${top}px`; pop.style.visibility='visible'; pop.setAttribute('aria-hidden','false');
     }
-    function hidePopover(){ pop.classList.remove('show'); pop.setAttribute('aria-hidden','true'); }
+    function hidePopover(){ pop.style.display='none'; pop.setAttribute('aria-hidden','true'); }
     document.addEventListener('click', async (e)=>{
       if (e.target.closest('#popover')) return;
       const btn = e.target.closest('.info-btn'); if (!btn){ hidePopover(); return; }
@@ -527,8 +494,8 @@
     });
     $('#popover-close').addEventListener('click', hidePopover);
     addEventListener('keydown',e=>{ if(e.key==='Escape') hidePopover(); });
-    addEventListener('resize', ()=>{ if(pop.classList.contains('show')) hidePopover(); });
-    addEventListener('scroll', ()=>{ if(pop.classList.contains('show')) hidePopover(); }, { passive:true });
+    addEventListener('resize', ()=>{ if(pop.getAttribute('aria-hidden')==='false') hidePopover(); });
+    addEventListener('scroll', ()=>{ if(pop.getAttribute('aria-hidden')==='false') hidePopover(); }, { passive:true });
 
     // Chips → scroll a card se presente
     document.addEventListener('DOMContentLoaded', ()=>{
@@ -541,7 +508,7 @@
       if(window.lucide) lucide.createIcons();
     });
 
-    // Privacy popup + MiFID drawer (nessun “Dettagli Privacy”)
+    // Privacy popup + MiFID drawer
     const privacyModal = $('#privacy-modal');
     function openPrivacy(){ privacyModal.setAttribute('aria-hidden','false'); }
     function closePrivacy(){ privacyModal.setAttribute('aria-hidden','true'); }
@@ -583,9 +550,6 @@
       }, { once:true }); if(window.lucide) lucide.createIcons(); }, 0);
     }
     $('#btn-mifid-open').addEventListener('click', openMiFID);
-
-    // Share (hook già dentro share.js)
-    $('#btn-share')?.addEventListener('click', ()=>{}); // initShareSystem() già attiva
 
     // Gate iniziale
     (function gate(){
