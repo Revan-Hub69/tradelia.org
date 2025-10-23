@@ -1,207 +1,107 @@
 /* =========================================================
-   Tradelia · Design Tokens (light/dark)
+   Tradelia · Design Tokens — v2026 Institutional
    Path: /report/assets/css/tokens.css
    ========================================================= */
 
-/* ---------- Base (Light) ---------- */
+/* ---------- Palette Base (Light) ---------- */
 :root {
-  /* Palette principali */
-  --bg:        #f5f7fb;    /* sfondo app */
-  --card:      #ffffff;    /* superfici/pannelli */
-  --ink:       #0f172a;    /* testo principale */
-  --muted:     #64748b;    /* testo secondario */
-  --br:        #e5e7eb;    /* border neutro */
-  --ring:      #7dd3fc;    /* focus ring */
+  --bg:        #f6f8fb;
+  --card:      #ffffff;
+  --ink:       #0e172a;
+  --muted:     #64748b;
+  --br:        #e2e8f0;
+  $1
+  /* Bottoni (dark) */
+  --btn-bg:       linear-gradient(#0f172a, #0b1220);
+  --btn-bg-hover: linear-gradient(#111827, #0f172a);
+/* Brand */
+  --brand:     #0369a1;
+  $1
 
-  /* Brand/accent */
-  --brand:     #0284c7;    /* primary accent (blue-600) */
-  --accent:    #38bdf8;    /* sky-400 */
-
-  /* Semaforo / stati (light) */
-  --success-ink:  #065f46;
-  --success-bg:   #ecfdf5;
-  --success-br:   #a7f3d0;
-
-  --warn-ink:     #92400e;
-  --warn-bg:      #fffbeb;
-  --warn-br:      #fcd34d;
-
-  --danger-ink:   #7c2d12;
-  --danger-bg:    #fef3c7;
-  --danger-br:    #fbbf24;
-
-  --neutral-ink:  #334155;
-  --neutral-bg:   #f1f5f9;
-  --neutral-br:   #e5e7eb;
-
-  /* Elevation / ombre (istituzionali, sobrie) */
-  --shadow-1:  0 1px 0 rgba(2, 6, 23, .05);
-  --shadow-2:  0 10px 30px rgba(2, 6, 23, .15);
-
-  /* Bottoni / superfici interattive */
-  --btn-bg:      linear-gradient(#fff, #f8fafc);
-  --btn-shadow:  var(--shadow-1), inset 0 -1px 0 rgba(2, 6, 23, .03);
+  /* Bottoni */
+  --btn-bg:       linear-gradient(#fff, #f8fafc);
   --btn-bg-hover: linear-gradient(#fff, #f1f5f9);
+/* Stati */
+  --success-ink: #065f46; --success-bg: #ecfdf5; --success-br: #a7f3d0;
+  --warn-ink:    #92400e; --warn-bg: #fffbeb; --warn-br: #fcd34d;
+  --danger-ink:  #7f1d1d; --danger-bg: #fef2f2; --danger-br: #fecaca;
+  --neutral-ink: #334155; --neutral-bg: #f1f5f9; --neutral-br: #e2e8f0;
+
+  /* Elevation */
+  --shadow-1: 0 1px 2px rgba(15,23,42,.04);
+  --shadow-2: 0 10px 25px rgba(15,23,42,.1);
 
   /* Tipografia */
-  --fs-11: 11px;
-  --fs-12: 12px;
-  --fs-13: 13px;
-  --fs-135: 13.5px;
-  --fs-14: 14px;
+  --fs-11: 11px; --fs-12: 12px; --fs-13: 13px; --fs-135: 13.5px; --fs-14: 14px;
 
-  /* Footer tokens (coerenti con index) */
+  /* Footer */
   --footer-bg: color-mix(in oklab, var(--card) 88%, #0e1729 12%);
   --footer-br: color-mix(in oklab, var(--br) 70%, #0e1729 30%);
 }
 
-/* ---------- Dark ---------- */
+/* ---------- Dark Mode ---------- */
 html[data-theme="dark"] {
-  --bg:        #0b1220;
-  --card:      #0f172a;
-  --ink:       #e5e7eb;
-  --muted:     #94a3b8;
-  --br:        #1f2937;
-  --ring:      #38bdf8;
-
-  --btn-bg:      linear-gradient(#0f172a, #0b1220);
-  --btn-bg-hover: linear-gradient(#111827, #0f172a);
-  --btn-shadow:   0 1px 0 rgba(0,0,0,.4), inset 0 -1px 0 rgba(255,255,255,.03);
-
-  /* Stati in dark: contrasto adeguato */
-  --success-ink:  #86efac;
-  --success-bg:   #052e2b;
-  --success-br:   #134e4a;
-
-  --warn-ink:     #fcd34d;
-  --warn-bg:      #3b2a17;
-  --warn-br:      #4a341d;
-
-  --danger-ink:   #fca5a5;
-  --danger-bg:    #3a1d1d;
-  --danger-br:    #4c2323;
-
-  --neutral-bg:   #111827; /* ribadito per chiarezza */
-  --neutral-br:   #1f2937;
-
-  /* Footer (dark) */
+  --bg: #0b1220; --card: #0f172a; --ink: #e5e7eb; --muted: #94a3b8; --br: #1e293b; --ring: #38bdf8;
+  --success-ink: #bbf7d0; --success-bg: #052e2b; --success-br: #134e4a;
+  --warn-ink: #fcd34d; --warn-bg: #3b2a17; --warn-br: #4a341d;
+  --danger-ink: #fca5a5; --danger-bg: #3a1d1d; --danger-br: #4c2323;
+  --neutral-bg: #111827; --neutral-br: #1f2937;
   --footer-bg: color-mix(in oklab, var(--card) 86%, white 14%);
   --footer-br: color-mix(in oklab, var(--br) 70%, white 30%);
 }
 
-/* ---------- Preferenza OS (fallback se non setti data-theme) ---------- */
+/* ---------- Fallback preferenza OS ---------- */
 @media (prefers-color-scheme: dark) {
-  html:not([data-theme]) {
-    --bg:        #0b1220;
-    --card:      #0f172a;
-    --ink:       #e5e7eb;
-    --muted:     #94a3b8;
-    --br:        #1f2937;
-    --ring:      #38bdf8;
-
-    --btn-bg:      linear-gradient(#0f172a, #0b1220);
-    --btn-bg-hover: linear-gradient(#111827, #0f172a);
-    --btn-shadow:   0 1px 0 rgba(0,0,0,.4), inset 0 -1px 0 rgba(255,255,255,.03);
-
-    --success-ink:  #86efac;
-    --success-bg:   #052e2b;
-    --success-br:   #134e4a;
-
-    --warn-ink:     #fcd34d;
-    --warn-bg:      #3b2a17;
-    --warn-br:      #4a341d;
-
-    --danger-ink:   #fca5a5;
-    --danger-bg:    #3a1d1d;
-    --danger-br:    #4c2323;
-
-    --neutral-bg:   #111827;
-    --neutral-br:   #1f2937;
-
-    --footer-bg: color-mix(in oklab, var(--card) 86%, white 14%);
-    --footer-br: color-mix(in oklab, var(--br) 70%, white 30%);
-  }
+  html:not([data-theme]) { background: var(--bg); color: var(--ink); }
 }
 
 /* =========================================================
-   Utility componenti condivise (usate dalle card e dal drawer)
+   Componenti comuni · Card, KPI, Badge, Pulsanti
    ========================================================= */
 
-/* Card compatta (usata da F1 e futuri moduli) */
 .card-compact {
   background: var(--card);
   border: 1px solid var(--br);
-  border-radius: 14px;
-  padding: 10px 12px;
+  border-radius: 16px;
+  padding: 14px 16px;
   box-shadow: var(--shadow-1);
 }
 .card-compact__head {
-  display: flex; align-items: center; justify-content: space-between; gap: .5rem;
-  padding-bottom: 6px;
-  border-bottom: 1px solid rgba(148, 163, 184, .25);
+  display:flex;justify-content:space-between;align-items:center;
+  padding-bottom:6px;border-bottom:1px solid color-mix(in srgb,var(--br) 70%,transparent);
 }
-.card-compact__title {
-  font-weight: 600;
-  font-size: var(--fs-135);
-  color: var(--ink);
+.card-compact__title {font-weight:700;font-size:var(--fs-135);color:var(--ink);}
+.card-compact__body {padding-top:10px;}
+
+.kpi {display:flex;align-items:center;gap:.4rem;font-size:12.5px;color:var(--ink)}
+.kpi .dot{width:8px;height:8px;border-radius:999px}
+.dot-g{background:#10b981}.dot-y{background:#f59e0b}.dot-r{background:#ef4444}.dot-n{background:#94a3b8}
+
+.badge {font-size:var(--fs-11);padding:.14rem .55rem;border-radius:999px;border:1px solid var(--br);background:var(--neutral-bg)}
+.badge--g{color:var(--success-ink);background:var(--success-bg);border-color:var(--success-br)}
+.badge--y{color:var(--warn-ink);background:var(--warn-bg);border-color:var(--warn-br)}
+.badge--r{color:var(--danger-ink);background:var(--danger-bg);border-color:var(--danger-br)}
+.badge--n{color:var(--neutral-ink);background:var(--neutral-bg);border-color:var(--neutral-br)}
+
+.btn, .u-btn {
+  display:inline-flex;align-items:center;gap:.45rem;padding:.45rem .7rem;border-radius:.75rem;
+  font-weight:600;font-size:var(--fs-14);border:1px solid var(--br);
+  background:var(--btn-bg);box-shadow:var(--shadow-1);
+  transition:background .2s ease,transform .08s ease;
 }
-.card-compact__body { padding-top: 8px; }
+.btn:hover,.u-btn:hover{background:var(--btn-bg-hover);transform:translateY(-1px)}
+.btn:active,.u-btn:active{transform:translateY(0)}
+.btn i,.u-btn i{width:18px;height:18px}
 
-/* KPI “pillole” */
-.kpi { display: flex; align-items: center; gap: .35rem; font-size: 12.5px; color: var(--ink); }
-.kpi .dot { width: 8px; height: 8px; border-radius: 999px; }
-.dot-g { background: #10b981; }  /* emerald-500 */
-.dot-y { background: #f59e0b; }  /* amber-500  */
-.dot-r { background: #ef4444; }  /* red-500    */
-.dot-n { background: #94a3b8; }  /* slate-400  */
+/* ---------- Tipografia e microtesti ---------- */
+.text-muted-11{font-size:var(--fs-11);color:var(--muted)}
+.text-muted-12{font-size:var(--fs-12);color:var(--muted)}
 
-/* Badge neutro + semaforo */
-.badge {
-  font-size: var(--fs-11);
-  padding: .12rem .5rem;
-  border-radius: 999px;
-  border: 1px solid var(--br);
-  background: #fff;
+/* ---------- Accessibilità & Focus ---------- */
+:where(a,button,[role="button"],.btn,.u-btn):focus-visible{
+  outline:2px solid var(--ring);outline-offset:2px;box-shadow:0 0 0 3px color-mix(in oklab,var(--ring) 25%,transparent)
 }
-html[data-theme="dark"] .badge { background: #0f172a; }
-.badge--g { color: var(--success-ink); background: var(--success-bg); border-color: var(--success-br); }
-.badge--y { color: var(--warn-ink);    background: var(--warn-bg);    border-color: var(--warn-br); }
-.badge--r { color: var(--danger-ink);  background: var(--danger-bg);  border-color: var(--danger-br); }
-.badge--n { color: var(--neutral-ink); background: var(--neutral-bg); border-color: var(--neutral-br); }
+.visually-hidden{position:absolute!important;clip:rect(1px,1px,1px,1px);width:1px;height:1px;overflow:hidden;white-space:nowrap}
 
-/* Bottoni utility per i moduli (prefisso u- per evitare collisioni con .btn dell'index) */
-.u-btn {
-  display: inline-flex; align-items: center; gap: .45rem;
-  padding: .45rem .65rem; border-radius: .7rem;
-  font-weight: 600; font-size: var(--fs-14);
-  border: 1px solid var(--br);
-  background: var(--btn-bg); box-shadow: var(--btn-shadow);
-  transition: background .2s ease, transform .08s ease;
-}
-.u-btn:hover   { background: var(--btn-bg-hover); transform: translateY(-1px); }
-.u-btn:active  { transform: translateY(0); }
-.u-btn i       { width: 18px; height: 18px; }
-
-/* Focus ring coerente e accessibile */
-:where(a, button, [role="button"], .u-btn, .btn):focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 25%, transparent);
-}
-
-/* Micro testi */
-.text-muted-11 { font-size: var(--fs-11); color: var(--muted); }
-.text-muted-12 { font-size: var(--fs-12); color: var(--muted); }
-
-/* Accessibilità: helper per testi nascosti visivamente */
-.visually-hidden {
-  position: absolute !important;
-  clip: rect(1px, 1px, 1px, 1px);
-  width: 1px; height: 1px;
-  overflow: hidden; white-space: nowrap;
-}
-
-/* Print helpers */
-@media print {
-  .badge, .kpi, .card-compact { box-shadow: none !important; }
-}
+/* ---------- Stampa ---------- */
+@media print {.badge,.kpi,.card-compact{box-shadow:none!important;border-color:#ccc!important}}
