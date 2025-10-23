@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tradelia · Report Runtime</title>
 
-  <!-- Favicons (root) -->
+  <!-- Favicons (in root) -->
   <link rel="icon" href="/favicon.ico?v=1">
   <link rel="icon" type="image/png" href="/favicon.png?v=1">
   <link rel="apple-touch-icon" href="/favicon.png?v=1">
@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="/report/assets/css/share.css" />
 
   <style>
+    /* ===== Design tokens aggiuntivi locali ===== */
     :root{
       --bg:#f6f8fb; --card:#ffffff; --ink:#0f172a; --muted:#5b6b83; --br:#e6eaf0;
       --brand:#0e7ac7; --accent:#7cc5ff;
@@ -27,9 +28,16 @@
       --warn-bg:#fff7ed;    --warn-ink:#9a3412;   --warn-br:#fed7aa;
       --danger-bg:#fef2f2;  --danger-ink:#7f1d1d; --danger-br:#fecaca;
       --neutral-bg:#f1f5f9; --neutral-ink:#334155; --neutral-br:#e5e7eb;
+
       --tone-g:#10b981; --tone-y:#f59e0b; --tone-r:#ef4444; --tone-n:#94a3b8;
       --shadow-1:0 1px 0 rgba(2,6,23,.05);
-      --shadow-2:0 10px 30px rgba(2,6,23,.12);
+      --shadow-2:0 12px 36px rgba(2,6,23,.12);
+
+      /* Footer più leggibile */
+      --footer-bg: color-mix(in oklab, var(--card) 88%, #0e1729 12%);
+      --footer-br: color-mix(in oklab, var(--br) 70%, #0e1729 30%);
+
+      /* Popover */
       --pop-w:300px;
     }
     html[data-theme="dark"]{
@@ -39,109 +47,144 @@
       --warn-bg:#3b2a17;    --warn-ink:#fcd34d;   --warn-br:#4a341d;
       --danger-bg:#3a1d1d;  --danger-ink:#fca5a5; --danger-br:#4c2323;
       --neutral-bg:#111827; --neutral-ink:#cbd5e1; --neutral-br:#253046;
+
       --tone-g:#22c55e; --tone-y:#f59e0b; --tone-r:#ef4444; --tone-n:#64748b;
       --shadow-1:0 1px 0 rgba(0,0,0,.4);
-      --shadow-2:0 10px 30px rgba(0,0,0,.35);
+      --shadow-2:0 12px 36px rgba(0,0,0,.35);
+
+      --footer-bg: color-mix(in oklab, var(--card) 86%, white 14%);
+      --footer-br: color-mix(in oklab, var(--br) 70%, white 30%);
     }
+
     html,body{height:100%}
     body{
       font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
       background:var(--bg); color:var(--ink);
       -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+      line-height:1.58;
     }
-    .container{max-width:72rem;margin-inline:auto;padding:0 12px}
-    .hdr{backdrop-filter:saturate(1.2) blur(6px)}
-    .btn{
-      display:inline-flex;align-items:center;gap:.45rem;
-      padding:.45rem .65rem;border-radius:12px;font-weight:600;font-size:14px;
+
+    .container{max-width:76rem;margin-inline:auto;padding:0 16px}
+    main{padding-top:2.25rem;padding-bottom:3rem}
+    @media(min-width:1024px){ main{padding-top:2.75rem;padding-bottom:3.75rem} }
+
+    /* Header */
+    .hdr{backdrop-filter:saturate(1.15) blur(6px); box-shadow:var(--shadow-1)}
+    .brand{font-weight:900}
+    .claim{font-size:12px; color:var(--muted)}
+
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;gap:.5rem;
+      padding:.5rem .8rem;border-radius:12px;font-weight:700;font-size:14px;
       border:1px solid var(--br); background:linear-gradient(#fff,#f8fafc);
-      box-shadow:var(--shadow-1); transition:background .2s, transform .08s;
-    }
+      box-shadow:var(--shadow-1); transition:background .2s, transform .08s}
     html[data-theme="dark"] .btn{background:linear-gradient(#0f172a,#0b1220)}
     .btn:hover{background:color-mix(in oklab, var(--card) 90%, white 10%); transform:translateY(-1px)}
     .btn i{width:18px;height:18px}
-    .btn.btn-sm{padding:.35rem .6rem;font-size:12.5px;border-radius:.55rem}
-    @media print{ .noprint{display:none!important} }
-    *{scrollbar-width:thin;scrollbar-color:rgba(120,138,160,.35) transparent}
-    ::-webkit-scrollbar{width:8px;height:8px}
-    ::-webkit-scrollbar-thumb{background:rgba(120,138,160,.35);border-radius:999px;border:2px solid transparent;background-clip:content-box}
-    .divider{border:0;height:1px;width:100%;background:var(--br);margin:12px 0 14px}
-    .cards-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; margin:10px 0 18px; content-visibility:auto; contain-intrinsic-size:auto 320px}
+    .btn.btn-sm{padding:.38rem .62rem;font-size:12.5px;border-radius:.55rem}
 
-    /* Drawer (MiFID) */
+    /* Divider */
+    .divider{border:0;height:1px;width:100%;background:var(--br);margin:18px 0 16px}
+
+    /* HERO */
+    .hero{
+      margin-top:12px; border:1px solid var(--br); border-radius:18px;
+      background: radial-gradient(1100px 520px at -10% -40%, #eff6ff 0%, #fff 45%);
+      padding:18px; box-shadow:var(--shadow-2)
+    }
+    html[data-theme="dark"] .hero{
+      background: radial-gradient(1100px 520px at -10% -40%, #0b2740 0%, #0f172a 45%)
+    }
+    .hero__top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .hero__id{display:flex;align-items:baseline;gap:12px;min-width:0}
+    .hero__ticker{font-weight:900;font-size:20px; letter-spacing:.2px}
+    .hero__venue{font-size:12.5px;color:var(--muted)}
+    .hero__price{display:flex;align-items:baseline;gap:12px}
+    .hero__px{font-weight:900;font-size:24px}
+    .hero__chg{font-weight:800;font-size:13.5px}
+    .chg--up{color:var(--tone-g)} .chg--down{color:var(--tone-r)}
+    .hero__badge{font-size:12.5px;border:1px solid var(--br);border-radius:999px;padding:.22rem .6rem;background:var(--card);color:var(--ink)}
+
+    .hero__meta{
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:10px; margin-top:14px
+    }
+    .meta-pill{
+      position:relative; display:flex;align-items:center;gap:.65rem;
+      border:1px solid var(--br);border-radius:12px;padding:.6rem .8rem .6rem 1rem;
+      background:var(--card); font-size:13px; box-shadow:var(--shadow-1); min-height:56px
+    }
+    .meta-pill .tonebar{position:absolute;left:0;top:0;bottom:0;width:4px;border-top-left-radius:12px;border-bottom-left-radius:12px;background:var(--tone-n)}
+    .meta-label{color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:11.5px}
+    .meta-val{font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;font-weight:800}
+    .info-btn{all:unset; cursor:pointer; margin-left:6px; display:inline-flex; align-items:center; justify-content:center; width:18px;height:18px; border:1px solid var(--br); border-radius:999px; font-size:12px; line-height:1; color:var(--muted); background:var(--card); flex:0 0 auto}
+
+    /* Cards grid */
+    .cards-grid{
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+      gap:16px; margin:16px 0 26px; content-visibility:auto; contain-intrinsic-size:auto 340px
+    }
+
+    /* Section head + chips */
+    .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin:14px 0 12px;padding:10px 0 12px;border-bottom:1px solid var(--br)}
+    .section-title{margin:0;font-weight:900;font-size:17px; letter-spacing:.15px}
+    .section-sub{margin:4px 0 0;font-size:12.5px;color:var(--muted)}
+    .chips{display:grid; grid-auto-flow:column; grid-auto-columns:max-content; gap:10px; overflow:auto; padding-bottom:2px; scroll-snap-type:x mandatory}
+    .chip{scroll-snap-align:start; display:inline-flex; align-items:center; gap:.42rem; padding:.44rem .8rem; border-radius:999px; cursor:pointer; border:1px solid var(--br); background:color-mix(in oklab, var(--card) 96%, white 4%); font-weight:800; font-size:12.5px; transition:background .15s, transform .08s, border-color .15s; white-space:nowrap}
+    .chip:hover{ background:color-mix(in oklab,var(--card) 90%, white 10%); transform:translateY(-1px) }
+    .chip--on{ border-color:#9ae6b4; background:var(--success-bg); color:var(--success-ink) }
+
+    /* Drawer (MiFID / contenuti) */
     .drawer{position:fixed;inset:0;z-index:70;display:none}
     .drawer[aria-hidden="false"]{display:block}
     .drawer__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(2px);opacity:0;transition:opacity .18s ease}
     .drawer__panel{
       position:absolute;inset:0;background:var(--card); border-left:1px solid var(--br);
-      box-shadow:-10px 0 30px rgba(2,6,23,.15); transform:translateY(4%); opacity:0;
-      transition:transform .2s ease, opacity .2s ease; display:flex;flex-direction:column;
+      box-shadow:-10px 0 36px rgba(2,6,23,.18); transform:translateY(4%); opacity:0;
+      transition:transform .22s ease, opacity .22s ease; display:flex;flex-direction:column
     }
     .drawer.is-open .drawer__backdrop{opacity:1}
     .drawer.is-open .drawer__panel{transform:translateY(0); opacity:1}
-    .drawer__header{height:56px;display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:0 12px;border-bottom:1px solid var(--br);background:color-mix(in oklab, var(--card) 92%, white 8%); position:sticky;top:0;z-index:1}
-    .drawer__title{font-weight:800;color:var(--ink);margin:0;font-size:14px}
+    .drawer__header{height:56px;display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:0 14px;border-bottom:1px solid var(--br);background:color-mix(in oklab, var(--card) 94%, white 6%); position:sticky;top:0;z-index:1}
+    .drawer__title{font-weight:900;color:var(--ink);margin:0;font-size:15px;display:flex;align-items:center;gap:8px}
     .drawer__subtitle{margin:2px 0 0;font-size:12px;color:var(--muted)}
-    .drawer__content{padding:12px;overflow:auto;height:calc(100% - 56px);background:color-mix(in oklab, var(--bg) 96%, white 4%)}
+    .drawer__content{padding:14px;overflow:auto;height:calc(100% - 56px);background:color-mix(in oklab, var(--bg) 96%, white 4%)}
+    @media (max-width:640px){
+      .hero__top{flex-direction:column; align-items:flex-start}
+      .hero__price{margin-top:8px}
+      .section-head{flex-direction:column; align-items:flex-start}
+    }
 
-    .brand{font-weight:900}
-    .claim{font-size:12px; color:var(--muted)}
-
-    /* HERO */
-    .hero{margin-top:8px; border:1px solid var(--br); border-radius:16px; background: radial-gradient(1200px 600px at -10% -40%, #eff6ff 0%, #fff 40%); padding:14px; box-shadow:var(--shadow-2)}
-    html[data-theme="dark"] .hero{background: radial-gradient(1200px 600px at -10% -40%, #0b2740 0%, #0f172a 40%)}
-    .hero__top{display:flex;align-items:center;justify-content:space-between;gap:8px}
-    .hero__id{display:flex;align-items:baseline;gap:10px;min-width:0}
-    .hero__ticker{font-weight:900;font-size:18px}
-    .hero__venue{font-size:12px;color:var(--muted)}
-    .hero__price{display:flex;align-items:baseline;gap:10px}
-    .hero__px{font-weight:900;font-size:22px}
-    .hero__chg{font-weight:800;font-size:13px}
-    .chg--up{color:var(--tone-g)} .chg--down{color:var(--tone-r)}
-    .hero__badge{font-size:12px;border:1px solid var(--br);border-radius:999px;padding:.18rem .5rem;background:var(--card);color:var(--ink)}
-    .tone-g{ color:var(--success-ink); background:var(--success-bg); border-color:var(--success-br) }
-    .tone-y{ color:var(--warn-ink);    background:var(--warn-bg);    border-color:var(--warn-br) }
-    .tone-r{ color:var(--danger-ink);  background:var(--danger-bg);  border-color:var(--danger-br) }
-    .tone-n{ color:var(--neutral-ink); background:var(--neutral-bg); border-color:var(--neutral-br) }
-
-    .hero__meta{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:8px; margin-top:10px}
-    .meta-pill{position:relative; display:flex;align-items:center;gap:.6rem; border:1px solid var(--br);border-radius:12px;padding:.55rem .7rem .55rem .9rem;background:var(--card); font-size:12.5px; box-shadow:var(--shadow-1); min-height:52px}
-    .meta-pill .tonebar{position:absolute;left:0;top:0;bottom:0;width:4px;border-top-left-radius:12px;border-bottom-left-radius:12px;background:var(--tone-n)}
-    .meta-label{color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:11px}
-    .meta-val{font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;font-weight:800}
-    .info-btn{all:unset; cursor:pointer; margin-left:6px; display:inline-flex; align-items:center; justify-content:center; width:18px;height:18px; border:1px solid var(--br); border-radius:999px; font-size:12px; line-height:1; color:var(--muted); background:var(--card); flex:0 0 auto}
-
-    /* Section head + chips */
-    .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:12px 0 10px;padding:8px 0 10px;border-bottom:1px solid var(--br)}
-    .section-title{margin:0;font-weight:900;font-size:16px}
-    .section-sub{margin:3px 0 0;font-size:12px;color:var(--muted)}
-    .chips{display:grid; grid-auto-flow:column; grid-auto-columns:max-content; gap:8px; overflow:auto; padding-bottom:2px; scroll-snap-type:x mandatory}
-    .chip{scroll-snap-align:start; display:inline-flex; align-items:center; gap:.38rem; padding:.38rem .72rem; border-radius:999px; cursor:pointer; border:1px solid var(--br); background:color-mix(in oklab, var(--card) 96%, white 4%); font-weight:700; font-size:12px; transition:background .15s, transform .08s, border-color .15s; white-space:nowrap}
-    .chip:hover{ background:color-mix(in oklab,var(--card) 90%, white 10%); transform:translateY(-1px) }
-    .chip--on{ border-color:#9ae6b4; background:var(--success-bg); color:var(--success-ink) }
-
-    /* Popover */
-    .popover{position:absolute; z-index:80; width:var(--pop-w); max-width:90vw; background:var(--card); color:var(--ink); border:1px solid var(--br); border-radius:10px; padding:10px 10px 8px; box-shadow:0 10px 28px rgba(2,6,23,.14); display:none}
-    html[data-theme="dark"] .popover{box-shadow:0 10px 28px rgba(0,0,0,.5)}
-    .popover__title{margin:0 0 6px; font-weight:800; font-size:13px}
-    .popover__text{font-size:12.5px; line-height:1.35}
-    .popover__source{margin-top:6px; font-size:11px; color:var(--muted)}
+    /* Popover metriche */
+    .popover{position:absolute; z-index:80; width:var(--pop-w); max-width:90vw; background:var(--card); color:var(--ink); border:1px solid var(--br); border-radius:10px; padding:10px 10px 8px; box-shadow:0 12px 32px rgba(2,6,23,.16); display:none}
+    html[data-theme="dark"] .popover{box-shadow:0 12px 32px rgba(0,0,0,.55)}
+    .popover__title{margin:0 0 6px; font-weight:900; font-size:13.2px}
+    .popover__text{font-size:12.6px; line-height:1.35}
+    .popover__source{margin-top:6px; font-size:11.5px; color:var(--muted)}
     .popover__actions{margin-top:8px; display:flex; justify-content:flex-end}
     .popover.show{display:block}
 
-    /* Privacy modal */
+    /* Privacy modal (atomico) */
     .modal{position:fixed;inset:0;z-index:90;display:none}
     .modal[aria-hidden="false"]{display:grid;place-items:center}
     .modal__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(2px)}
-    .modal__panel{position:relative; z-index:1; width:min(680px,92vw); max-height:80vh; overflow:auto; background:var(--card); color:var(--ink); border:1px solid var(--br); border-radius:14px; padding:14px; box-shadow:var(--shadow-2)}
-    .modal__title{margin:0 0 6px;font-weight:900;font-size:16px}
-    .modal__text{font-size:13px;line-height:1.55}
-    .modal__actions{margin-top:10px;display:flex;gap:8px;justify-content:flex-end}
+    .modal__panel{position:relative; z-index:1; width:min(700px,92vw); max-height:80vh; overflow:auto; background:var(--card); color:var(--ink); border:1px solid var(--br); border-radius:16px; padding:18px; box-shadow:var(--shadow-2)}
+    .modal__title{margin:0 0 8px;font-weight:900;font-size:16px}
+    .modal__text{font-size:13.6px;line-height:1.6}
+    .modal__actions{margin-top:12px;display:flex;gap:10px;justify-content:flex-end}
 
-    /* Footer minor tweaks */
-    .site-footer p{line-height:1.55}
-    @media print{ .noprint{display:none!important} .site-footer .btn{display:none!important} }
-    @media (max-width:640px){ .hero__top{flex-direction:column; align-items:flex-start} .hero__price{margin-top:6px} .section-head{flex-direction:column; align-items:flex-start} }
+    /* Footer distinto */
+    .footer-wrap{background:var(--footer-bg); border-top:1px solid var(--footer-br); margin-top:24px}
+    .site-footer{color:var(--muted)}
+    .site-footer .heading{color:var(--ink); font-weight:800}
+
+    /* Print */
+    @media print{
+      header,.btn,.noprint,.drawer,.popover,.modal{display:none!important}
+      .hero{page-break-after:always; border:1px solid #ddd; box-shadow:none!important}
+      .cards-grid{gap:12px;margin:0}
+      .meta-pill{box-shadow:none!important;border:1px solid #ddd}
+    }
   </style>
 </head>
 
@@ -164,7 +207,7 @@
   </header>
 
   <!-- MAIN -->
-  <main class="container py-3">
+  <main class="container">
     <!-- HERO -->
     <section id="hero" class="hero" aria-label="Copertina Report">
       <div class="hero__top">
@@ -255,16 +298,18 @@
 
     <hr class="divider" />
 
+    <!-- Section head -->
     <section class="section-head noprint" aria-labelledby="sec-schede-title">
       <div>
         <h2 id="sec-schede-title" class="section-title">Schede analitiche</h2>
         <p class="section-sub">
           <span>Metodo accademico, auditabile · Snapshot indicato in testata · Nessuna consulenza personalizzata</span><br />
-          <span>Framework top-down (F1–F4) · <strong>Resoconto Tecnico (F5)</strong> · Validazione di lungo periodo (F5b)</span>
+          <span>Framework top-down (F1–F4) · <strong>Resoconto Tecnico (F5)</strong> · Validazione di lungo periodo (F5b) · Broker Selezionati (F6)</span>
         </p>
       </div>
     </section>
 
+    <!-- Chips -->
     <nav class="chips noprint" aria-label="Mappa moduli">
       <button class="chip" data-mod="F1"  title="Panorama Macro"><i data-lucide="globe-2"></i>F1: Panorama Macro</button>
       <button class="chip" data-mod="F2"  title="Overview Ticker"><i data-lucide="scan-line"></i>F2: Overview Ticker</button>
@@ -275,48 +320,53 @@
       <button class="chip" data-mod="F6"  title="Broker Selezionati"><i data-lucide="briefcase"></i>F6: Broker Selezionati</button>
     </nav>
 
+    <!-- Cards grid (popolata da app.js/modules) -->
     <section id="cards-grid" class="cards-grid" aria-label="Schede analitiche"></section>
+  </main>
 
-    <!-- FOOTER -->
-    <footer class="site-footer mt-6 mb-8 text-[13px] text-[color:var(--muted)]">
-      <div class="border-t border-[color:var(--br)] pt-3 grid gap-3 md:flex md:items-start md:justify-between">
+  <!-- FOOTER distinto -->
+  <div class="footer-wrap">
+    <footer class="site-footer container py-4">
+      <div class="border-t border-[color:var(--footer-br)] pt-3 grid gap-4 md:flex md:items-start md:justify-between">
         <div class="min-w-0">
-          <div class="font-extrabold tracking-tight text-[color:var(--ink)]">TRADELIA<span class="text-blue-600">&bull;AI</span></div>
+          <div class="heading">TRADELIA<span class="text-blue-600">&bull;AI</span></div>
           <div class="mt-1">Report Runtime · <span id="footer-version">v1.0</span></div>
           <div class="mt-1">Snapshot: <span id="footer-snapshot">—</span></div>
           <div class="mt-1">Ultimo aggiornamento: <span id="footer-updated">—</span></div>
         </div>
         <div class="min-w-0">
-          <div class="font-semibold text-[color:var(--ink)]">Metodo</div>
+          <div class="heading">Metodo</div>
           <p class="mt-1">
             Framework top-down (F1–F4), <strong>Resoconto Tecnico (F5)</strong>, Validazione di lungo periodo (F5b).
             Metriche di qualità dati in evidenza (Freshness, Confidence, OCR, Data Integrity, FeedSync).
           </p>
         </div>
         <div class="min-w-0">
-          <div class="font-semibold text-[color:var(--ink)]">Legale</div>
+          <div class="heading">Legale</div>
           <div class="mt-2 flex flex-wrap gap-6">
             <button class="btn btn-sm" id="btn-privacy-open" type="button">Privacy</button>
             <button class="btn btn-sm" id="btn-mifid-open" type="button">Informativa MiFID</button>
             <button class="btn btn-sm" id="btn-print-2" type="button">Stampa / PDF</button>
           </div>
-          <p class="mt-2 text-[12px]">Nessun cookie di profilazione. Preferenze salvate solo in locale (tema, consensi).</p>
+          <p class="mt-2 text-[12.5px] opacity-90">Nessun cookie di profilazione. Preferenze salvate solo in locale (tema, consensi).</p>
         </div>
       </div>
-      <div class="mt-3 text-[12px] opacity-80">
+      <div class="mt-3 text-[12.5px] opacity-90">
         © <span id="footer-year"></span> Tradelia. Tutti i diritti riservati. ·
-        Contatti: <a href="mailto:info@tradelia.ai" class="underline hover:opacity-80">info@tradelia.ai</a>
+        Contatti: <a href="mailto:info@tradelia.org" class="underline hover:opacity-80">info@tradelia.org</a>
       </div>
     </footer>
-  </main>
+  </div>
 
-  <!-- DRAWER (MiFID) -->
+  <!-- DRAWER -->
   <div id="drawer" class="drawer noprint" aria-hidden="true" data-blocking="false">
     <div class="drawer__backdrop" data-drawer-close></div>
     <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
       <header class="drawer__header">
         <div class="min-w-0">
-          <h2 id="drawer-title" class="drawer__title">Dettagli</h2>
+          <h2 id="drawer-title" class="drawer__title">
+            <i data-lucide="shield"></i><span>Dettagli</span>
+          </h2>
           <p id="drawer-subtitle" class="drawer__subtitle">—</p>
         </div>
         <button class="btn btn-sm" data-drawer-close aria-label="Chiudi"><i data-lucide="x"></i><span class="hidden sm:inline">Chiudi</span></button>
@@ -333,23 +383,22 @@
     <div class="popover__actions"><button id="popover-close" class="btn btn-sm" type="button">Chiudi</button></div>
   </div>
 
-  <!-- PRIVACY MODAL -->
+  <!-- PRIVACY MODAL (unico, senza “Dettagli”) -->
   <div id="privacy-modal" class="modal noprint" aria-hidden="true" aria-labelledby="privacy-title" role="dialog">
     <div class="modal__backdrop"></div>
     <section class="modal__panel">
       <h3 id="privacy-title" class="modal__title">Informativa Privacy e Trasparenza</h3>
       <div class="modal__text">
         <p>Tradelia AI adotta una politica di <strong>massima trasparenza</strong> e <strong>zero tracciamento</strong>:</p>
-        <ul style="margin:.4rem 0 .6rem 1.2rem;list-style:disc">
+        <ul style="margin:.45rem 0 .7rem 1.2rem;list-style:disc">
           <li>Nessun cookie di profilazione o pubblicità, nessun analytics esterno.</li>
           <li>Nessuna <strong>raccolta, vendita o condivisione</strong> di dati personali con terze parti.</li>
           <li>Salviamo solo preferenze locali (tema, consensi) in <code>localStorage</code>; non vengono trasmesse ai server.</li>
         </ul>
-        <p>I contenuti sono consultabili in forma anonima. Puoi rivedere questa informativa in qualsiasi momento dal menu “Privacy”.</p>
-        <p style="font-size:12px;color:var(--muted);margin-top:.5rem">Rif.: GDPR (UE 2016/679), Direttiva ePrivacy, Linee guida EDPB.</p>
+        <p>I contenuti sono consultabili in forma anonima. Puoi riaprire questa informativa in qualsiasi momento dal footer (“Privacy”).</p>
+        <p style="font-size:12.5px;color:var(--muted);margin-top:.55rem">Rif.: GDPR (UE 2016/679), Direttiva ePrivacy, Linee guida EDPB.</p>
       </div>
       <div class="modal__actions">
-        <button class="btn btn-sm" id="privacy-details">Dettagli Privacy</button>
         <button class="btn btn-sm" id="privacy-ok">OK</button>
       </div>
     </section>
@@ -375,7 +424,7 @@
     $('#btn-print')?.addEventListener('click',()=>window.print());
     $('#btn-print-2')?.addEventListener('click',()=>window.print());
 
-    // Theme
+    // Theme persistente
     function setTheme(t){
       document.documentElement.dataset.theme=t;
       localStorage.setItem(LS.theme,t);
@@ -383,17 +432,21 @@
       if(btn){ btn.innerHTML = `<i data-lucide="${t==='dark'?'moon':'sun'}"></i><span class="hidden sm:inline">Tema</span>`; }
       if(window.lucide) lucide.createIcons();
     }
-    (function initTheme(){ const t=localStorage.getItem(LS.theme); if(t==='light'||t==='dark') document.documentElement.dataset.theme=t; })();
+    (function initTheme(){
+      const t=localStorage.getItem(LS.theme);
+      if(t==='light'||t==='dark') document.documentElement.dataset.theme=t;
+    })();
     $('#btn-theme')?.addEventListener('click',()=> setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
 
-    // Drawer (MiFID)
+    // Drawer (MiFID / generico)
     (() => {
       const root = $('#drawer'), title = $('#drawer-title'), subtitle = $('#drawer-subtitle'), content = $('#drawer-content');
       function open({ title:t='Dettagli', subtitle:s='—', html='', blocking=false }={}){
-        title.textContent=t; subtitle.textContent=s; content.innerHTML=html;
+        title.querySelector('span').textContent=t; subtitle.textContent=s; content.innerHTML=html;
         root.dataset.blocking = blocking ? 'true' : 'false';
         root.setAttribute('aria-hidden','false'); requestAnimationFrame(()=>root.classList.add('is-open'));
         if(blocking){ document.body.style.overflow='hidden'; }
+        if(window.lucide) lucide.createIcons();
       }
       function close(){
         if(root.dataset.blocking==='true') return;
@@ -406,7 +459,7 @@
       window.Tradelia.Drawer = { open, close, root };
     })();
 
-    // Load header.json + tones
+    // Carica header.json (hero + footer)
     async function loadJSON(p){ try{ const r=await fetch(p,{cache:'no-store'}); return r.ok? r.json(): null; }catch{ return null; } }
     function setBadgeTone(el, state){
       const s = String(state||'').toUpperCase();
@@ -448,25 +501,24 @@
       if(window.lucide) lucide.createIcons();
     })();
 
-    // Tooltip popover
-    const pop = $('#popover'); let glossaryCache=null; let lastBtn=null;
+    // Popover metriche "(?)" con glossario
+    const pop = $('#popover'); let glossaryCache=null;
     async function getGlossary(){ if(glossaryCache) return glossaryCache; try{ const r=await fetch('/report/assets/glossary.json',{cache:'no-store'}); glossaryCache = r.ok ? await r.json() : {}; } catch{ glossaryCache={}; } return glossaryCache; }
     function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
     function placePopover(btn){
-      const rect = btn.getBoundingClientRect(), scrollX = window.scrollX||document.documentElement.scrollLeft, scrollY = window.scrollY||document.documentElement.scrollTop;
-      const vw = window.innerWidth, vh = window.innerHeight, popW = Math.min(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--pop-w'))||300, vw*0.9);
+      const rect = btn.getBoundingClientRect(), sx = scrollX, sy = scrollY, vw = innerWidth, vh = innerHeight;
+      const popW = Math.min(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--pop-w'))||300, vw*0.9);
       pop.style.width = popW + 'px'; pop.style.visibility='hidden'; pop.classList.add('show');
-      const popH = pop.offsetHeight || 140;
-      let left = rect.left + scrollX - 8, top  = rect.bottom + scrollY + 8;
-      const m = 12; left = clamp(left, scrollX + m, scrollX + vw - popW - m);
-      const below = (scrollY + vh) - (rect.bottom + scrollY); if (below < popH + 20){ top = rect.top + scrollY - popH - 10; if (top < scrollY + m) top = scrollY + m; }
+      const ph = pop.offsetHeight || 140;
+      let left = rect.left + sx - 8, top  = rect.bottom + sy + 8;
+      const m = 12; left = clamp(left, sx + m, sx + vw - popW - m);
+      const below = (sy + vh) - (rect.bottom + sy); if (below < ph + 20){ top = rect.top + sy - ph - 10; if (top < sy + m) top = sy + m; }
       pop.style.left = `${left}px`; pop.style.top  = `${top}px`; pop.style.visibility='visible'; pop.setAttribute('aria-hidden','false');
     }
-    function hidePopover(){ pop.classList.remove('show'); pop.setAttribute('aria-hidden','true'); lastBtn=null; }
+    function hidePopover(){ pop.classList.remove('show'); pop.setAttribute('aria-hidden','true'); }
     document.addEventListener('click', async (e)=>{
       if (e.target.closest('#popover')) return;
       const btn = e.target.closest('.info-btn'); if (!btn){ hidePopover(); return; }
-      lastBtn = btn;
       const metric = btn.dataset.metric; const g = await getGlossary(); const entry = g?.[metric] || { title: metric, short: '—', source: '' };
       $('#popover-title').textContent  = entry.title || metric;
       $('#popover-text').textContent   = entry.short || '—';
@@ -474,11 +526,11 @@
       placePopover(btn);
     });
     $('#popover-close').addEventListener('click', hidePopover);
-    document.addEventListener('keydown',e=>{ if(e.key==='Escape') hidePopover(); });
-    window.addEventListener('resize', ()=>{ if(pop.classList.contains('show')) hidePopover(); });
-    window.addEventListener('scroll', ()=>{ if(pop.classList.contains('show')) hidePopover(); }, { passive:true });
+    addEventListener('keydown',e=>{ if(e.key==='Escape') hidePopover(); });
+    addEventListener('resize', ()=>{ if(pop.classList.contains('show')) hidePopover(); });
+    addEventListener('scroll', ()=>{ if(pop.classList.contains('show')) hidePopover(); }, { passive:true });
 
-    // Chips
+    // Chips → scroll a card se presente
     document.addEventListener('DOMContentLoaded', ()=>{
       $$('.chip').forEach(btn=>{
         btn.addEventListener('click',()=>{
@@ -486,19 +538,10 @@
           if(card){ card.scrollIntoView({behavior:'smooth', block:'start'}); }
         });
       });
-      const iv = setInterval(()=>{
-        const order = window.Tradelia?.Manifest?.order;
-        if(Array.isArray(order)){
-          order.forEach(k=>{
-            const chip = [...document.querySelectorAll('.chip')].find(c => c.dataset.mod === String(k).toUpperCase());
-            chip && chip.classList.add('chip--on');
-          }); clearInterval(iv);
-        }
-      }, 150);
       if(window.lucide) lucide.createIcons();
     });
 
-    // Privacy popup + MiFID drawer
+    // Privacy popup + MiFID drawer (nessun “Dettagli Privacy”)
     const privacyModal = $('#privacy-modal');
     function openPrivacy(){ privacyModal.setAttribute('aria-hidden','false'); }
     function closePrivacy(){ privacyModal.setAttribute('aria-hidden','true'); }
@@ -506,58 +549,50 @@
       localStorage.setItem(LS.privacy,'1'); closePrivacy();
       if(localStorage.getItem(LS.mifid)!=='1'){ openMiFID(); }
     });
-    $('#privacy-details').addEventListener('click', ()=>{
-      window.Tradelia?.Drawer?.open({
-        title:'Dettagli Privacy', subtitle:'No cookie, no tracking',
-        html:`<div style="font-size:13px;line-height:1.55">
-          <p>Non utilizziamo cookie di profilazione né analytics esterni. Le preferenze (tema, consensi) sono salvate solo nel tuo browser tramite <code>localStorage</code> e non vengono inviate ai server.</p>
-          <p>Non raccogliamo, vendiamo o condividiamo dati personali con terze parti. La consultazione dei contenuti avviene in forma anonima.</p>
-          <p style="font-size:12px;color:var(--muted)">Rif.: GDPR (UE 2016/679), Direttiva ePrivacy, Linee guida EDPB.</p>
-        </div>`, blocking:false
-      });
-    });
     $('#btn-privacy-open').addEventListener('click', openPrivacy);
 
     function openMiFID(){
       const html = `
-      <div style="font-size:13px;line-height:1.6">
-        <h3 style="margin:0 0 6px;font-weight:900">Informativa MiFID II e limitazioni d’uso</h3>
+      <div style="font-size:13.6px;line-height:1.6">
+        <h3 style="margin:0 0 8px;font-weight:900;display:flex;align-items:center;gap:.5rem">
+          <i data-lucide="shield"></i>Informativa MiFID II e limitazioni d’uso
+        </h3>
         <p>Questo documento è prodotto e revisionato dal <strong>team Tradelia</strong>. Tradelia <strong>non è</strong> un intermediario autorizzato e <strong>non possiede licenze/abilitazioni MiFID</strong>.</p>
         <p>I contenuti hanno esclusiva <strong>finalità informative ed educative</strong> e <strong>non</strong> costituiscono consulenza in materia di investimenti, raccomandazioni personalizzate o sollecitazione al pubblico risparmio.</p>
 
-        <h4 style="margin:.8rem 0 .3rem;font-weight:800">Perché rivolgersi a un consulente abilitato</h4>
+        <h4 style="margin:.85rem 0 .35rem;font-weight:800">Perché rivolgersi a un consulente abilitato</h4>
         <p>Solo un <strong>consulente finanziario indipendente o abilitato</strong> può valutare la tua situazione personale (obiettivi, orizzonte, capacità di assorbire perdite) e verificare l’adeguatezza delle scelte.</p>
 
-        <h4 style="margin:.8rem 0 .3rem;font-weight:800">Limiti e rischi</h4>
-        <ul style="margin:.2rem 0 .6rem 1.1rem;list-style:disc">
+        <h4 style="margin:.85rem 0 .35rem;font-weight:800">Limiti e rischi</h4>
+        <ul style="margin:.2rem 0 .7rem 1.1rem;list-style:disc">
           <li>Fonti ritenute affidabili ma <strong>nessuna garanzia</strong> di accuratezza, completezza o aggiornamento continuo.</li>
           <li>Scenari e simulazioni sono <strong>ipotetici</strong> e non rappresentano risultati futuri.</li>
           <li>I mercati comportano rischi, inclusa la <strong>perdita totale o parziale</strong> del capitale; la leva <strong>amplifica</strong> tali rischi.</li>
         </ul>
 
         <p>L’uso delle informazioni avviene sotto <strong>esclusiva responsabilità</strong> dell’utente.</p>
-        <p style="font-size:12px;color:var(--muted);margin-top:.4rem">Rif.: MiFID II (2014/65/UE) · Reg. Delegato (UE) 2017/565 · Linee guida ESMA · Comunicazioni CONSOB.</p>
+        <p style="font-size:12.5px;color:var(--muted);margin-top:.5rem">Rif.: MiFID II (2014/65/UE) · Reg. Delegato (UE) 2017/565 · Linee guida ESMA · Comunicazioni CONSOB.</p>
 
-        <div style="margin-top:.8rem;display:flex;gap:8px;justify-content:flex-end">
+        <div style="margin-top:.9rem;display:flex;gap:10px;justify-content:flex-end">
           <button class="btn btn-sm" id="mifid-accept" type="button">Accetto</button>
         </div>
       </div>`;
       window.Tradelia?.Drawer?.open({ title:'Informativa MiFID', subtitle:'Obbligatoria alla prima apertura', html, blocking:true });
       setTimeout(()=>{ $('#mifid-accept')?.addEventListener('click', ()=>{
         localStorage.setItem(LS.mifid,'1'); const root=window.Tradelia?.Drawer?.root; if(root){ root.dataset.blocking='false'; } window.Tradelia?.Drawer?.close();
-      }, { once:true }); }, 0);
+      }, { once:true }); if(window.lucide) lucide.createIcons(); }, 0);
     }
     $('#btn-mifid-open').addEventListener('click', openMiFID);
 
-    // Share (hook già nel modulo share.js)
-    $('#btn-share')?.addEventListener('click', ()=>{}); // initShareSystem già attiva
+    // Share (hook già dentro share.js)
+    $('#btn-share')?.addEventListener('click', ()=>{}); // initShareSystem() già attiva
 
     // Gate iniziale
     (function gate(){
-      const privacyOk = localStorage.getItem(LS.privacy)==='1';
-      const mifidOk   = localStorage.getItem(LS.mifid)==='1';
-      if(!privacyOk){ openPrivacy(); return; }
-      if(!mifidOk){ openMiFID(); }
+      const p = localStorage.getItem(LS.privacy)==='1';
+      const m = localStorage.getItem(LS.mifid)==='1';
+      if(!p){ openPrivacy(); return; }
+      if(!m){ openMiFID(); }
     })();
   </script>
 </body>
