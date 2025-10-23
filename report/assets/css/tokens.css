@@ -17,7 +17,7 @@
   --brand:     #0284c7;    /* primary accent (blue-600) */
   --accent:    #38bdf8;    /* sky-400 */
 
-  /* Semaforo / stati */
+  /* Semaforo / stati (light) */
   --success-ink:  #065f46;
   --success-bg:   #ecfdf5;
   --success-br:   #a7f3d0;
@@ -49,6 +49,10 @@
   --fs-13: 13px;
   --fs-135: 13.5px;
   --fs-14: 14px;
+
+  /* Footer tokens (coerenti con index) */
+  --footer-bg: color-mix(in oklab, var(--card) 88%, #0e1729 12%);
+  --footer-br: color-mix(in oklab, var(--br) 70%, #0e1729 30%);
 }
 
 /* ---------- Dark ---------- */
@@ -64,9 +68,25 @@ html[data-theme="dark"] {
   --btn-bg-hover: linear-gradient(#111827, #0f172a);
   --btn-shadow:   0 1px 0 rgba(0,0,0,.4), inset 0 -1px 0 rgba(255,255,255,.03);
 
-  /* Stati in dark mantengono contrasto adeguato */
-  --neutral-bg:   #111827;
+  /* Stati in dark: contrasto adeguato */
+  --success-ink:  #86efac;
+  --success-bg:   #052e2b;
+  --success-br:   #134e4a;
+
+  --warn-ink:     #fcd34d;
+  --warn-bg:      #3b2a17;
+  --warn-br:      #4a341d;
+
+  --danger-ink:   #fca5a5;
+  --danger-bg:    #3a1d1d;
+  --danger-br:    #4c2323;
+
+  --neutral-bg:   #111827; /* ribadito per chiarezza */
   --neutral-br:   #1f2937;
+
+  /* Footer (dark) */
+  --footer-bg: color-mix(in oklab, var(--card) 86%, white 14%);
+  --footer-br: color-mix(in oklab, var(--br) 70%, white 30%);
 }
 
 /* ---------- Preferenza OS (fallback se non setti data-theme) ---------- */
@@ -83,13 +103,28 @@ html[data-theme="dark"] {
     --btn-bg-hover: linear-gradient(#111827, #0f172a);
     --btn-shadow:   0 1px 0 rgba(0,0,0,.4), inset 0 -1px 0 rgba(255,255,255,.03);
 
+    --success-ink:  #86efac;
+    --success-bg:   #052e2b;
+    --success-br:   #134e4a;
+
+    --warn-ink:     #fcd34d;
+    --warn-bg:      #3b2a17;
+    --warn-br:      #4a341d;
+
+    --danger-ink:   #fca5a5;
+    --danger-bg:    #3a1d1d;
+    --danger-br:    #4c2323;
+
     --neutral-bg:   #111827;
     --neutral-br:   #1f2937;
+
+    --footer-bg: color-mix(in oklab, var(--card) 86%, white 14%);
+    --footer-br: color-mix(in oklab, var(--br) 70%, white 30%);
   }
 }
 
 /* =========================================================
-   Utility component condivise (usate dalle card e dal drawer)
+   Utility componenti condivise (usate dalle card e dal drawer)
    ========================================================= */
 
 /* Card compatta (usata da F1 e futuri moduli) */
@@ -134,8 +169,8 @@ html[data-theme="dark"] .badge { background: #0f172a; }
 .badge--r { color: var(--danger-ink);  background: var(--danger-bg);  border-color: var(--danger-br); }
 .badge--n { color: var(--neutral-ink); background: var(--neutral-bg); border-color: var(--neutral-br); }
 
-/* Bottoni (coerenti coi token) — opzionale, in aggiunta a Tailwind */
-.btn {
+/* Bottoni utility per i moduli (prefisso u- per evitare collisioni con .btn dell'index) */
+.u-btn {
   display: inline-flex; align-items: center; gap: .45rem;
   padding: .45rem .65rem; border-radius: .7rem;
   font-weight: 600; font-size: var(--fs-14);
@@ -143,13 +178,28 @@ html[data-theme="dark"] .badge { background: #0f172a; }
   background: var(--btn-bg); box-shadow: var(--btn-shadow);
   transition: background .2s ease, transform .08s ease;
 }
-.btn:hover   { background: var(--btn-bg-hover); transform: translateY(-1px); }
-.btn:active  { transform: translateY(0); }
-.btn i       { width: 18px; height: 18px; }
+.u-btn:hover   { background: var(--btn-bg-hover); transform: translateY(-1px); }
+.u-btn:active  { transform: translateY(0); }
+.u-btn i       { width: 18px; height: 18px; }
+
+/* Focus ring coerente e accessibile */
+:where(a, button, [role="button"], .u-btn, .btn):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 25%, transparent);
+}
 
 /* Micro testi */
 .text-muted-11 { font-size: var(--fs-11); color: var(--muted); }
 .text-muted-12 { font-size: var(--fs-12); color: var(--muted); }
+
+/* Accessibilità: helper per testi nascosti visivamente */
+.visually-hidden {
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+  width: 1px; height: 1px;
+  overflow: hidden; white-space: nowrap;
+}
 
 /* Print helpers */
 @media print {
