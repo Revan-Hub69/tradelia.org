@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "asof": "2025-10-22",
+    "freshness": "T-1",
+    "coverage": 0.92,
+    "confidence": 0.87
+  },
+  "regime": {
+    "macro_regime": { "value": "RISK-ON", "tone": "g" },
+    "quadrant":     { "value": "Goldilocks", "tone": "g" },
+    "risk_window":  { "label": "OPEN", "days": 18, "tone": "g" }
+  },
+  "trends": {
+    "growth_momentum":    { "value": "up",   "score": 0.65 },
+    "inflation_momentum": { "value": "down", "score": -0.40 },
+    "liquidity_impulse":  { "value": "flat", "score": 0.05 },
+    "credit_hy_spread":   { "value": "down", "score": -0.35 }
+  },
+  "drivers": {
+    "dxy_trend":        { "value": "down", "score": -0.42 },
+    "ust10y_trend":     { "value": "down", "score": -0.25 },
+    "commodities_beta": { "value": "up",   "score": 0.28 },
+    "policy_stance_1m": { "value": "Pause" }
+  },
+  "sectors": [
+    { "symbol": "XLK", "name": "Technology",     "perf_1m": 3.8,  "inflow_5d": 520, "z_inflow": 0.95, "z_perf1m": 0.80 },
+    { "symbol": "XLY", "name": "Consumer Disc.", "perf_1m": 2.9,  "inflow_5d": 480, "z_inflow": 0.88, "z_perf1m": 0.66 },
+    { "symbol": "XLI", "name": "Industrials",    "perf_1m": 2.2,  "inflow_5d": 390, "z_inflow": 0.74, "z_perf1m": 0.55 },
+    { "symbol": "XLF", "name": "Financials",     "perf_1m": 1.6,  "inflow_5d": 280, "z_inflow": 0.42, "z_perf1m": 0.24 },
+    { "symbol": "XLE", "name": "Energy",         "perf_1m": -0.3, "inflow_5d": -90, "z_inflow": -0.62, "z_perf1m": -0.40 },
+    { "symbol": "XLU", "name": "Utilities",      "perf_1m": -1.2, "inflow_5d": -130,"z_inflow": -0.80, "z_perf1m": -0.55 },
+    { "symbol": "XLP", "name": "Staples",        "perf_1m": -0.7, "inflow_5d": -110,"z_inflow": -0.75, "z_perf1m": -0.48 },
+    { "symbol": "XLV", "name": "Healthcare",     "perf_1m": 0.1,  "inflow_5d": 60,  "z_inflow": -0.10, "z_perf1m": -0.05 },
+    { "symbol": "XLB", "name": "Materials",      "perf_1m": 1.9,  "inflow_5d": 330, "z_inflow": 0.58, "z_perf1m": 0.36 },
+    { "symbol": "XLRE","name": "Real Estate",    "perf_1m": 0.4,  "inflow_5d": 70,  "z_inflow": -0.05,"z_perf1m": 0.10 }
+  ],
+  "calc": {
+    "breadth": 0.70,
+    "risk_tilt": 0.33,
+    "z_risk_tilt": 0.36,
+    "flow_score": 0.42,
+    "regime_score": 0.46
+  },
+  "decision": {
+    "strategy_mode": "Momentum",
+    "top3_inflow": [
+      { "symbol": "XLK", "inflow_5d": 520 },
+      { "symbol": "XLY", "inflow_5d": 480 },
+      { "symbol": "XLI", "inflow_5d": 390 }
+    ]
+  },
+  "f2_filters": {
+    "filters": [
+      "Price > SMA50 & SMA200",
+      "RSI 55–65",
+      "RVOL ≥ 1.3",
+      "Perf Month ≥ 0%",
+      "Inst Own ≥ 60%"
+    ]
+  },
+  "audit": {
+    "path_id": "F1B-sample-id-20251022-a7d9f3",
+    "sources": ["CBOE/FRED", "ETFdb", "Reuters"]
+  }
+}
