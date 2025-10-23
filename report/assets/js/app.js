@@ -2,6 +2,7 @@
    Tradelia · Report Runtime
    Orchestratore moduli (F1…F6, F5b) — definitivo
    Path: /report/assets/js/app.js
+   Compatibile con index.html aggiornato (chips, drawer, hero separato)
    ========================================================= */
 
 const $  = (s, r = document) => r.querySelector(s);
@@ -26,16 +27,6 @@ function logDebug(...args) {
   } catch {}
 }
 
-function badge(tone = "n", text = "placeholder") {
-  const m = {
-    g: "badge--g",
-    y: "badge--y",
-    r: "badge--r",
-    n: "badge--n",
-  }[tone] || "badge--n";
-  return `<span class="badge ${m}">${text}</span>`;
-}
-
 function titleForKey(key) {
   const K = String(key).toUpperCase();
   switch (K) {
@@ -50,73 +41,135 @@ function titleForKey(key) {
   }
 }
 
-function placeholderCard(title, note) {
-  const el = document.createElement("article");
-  el.className = "card-compact";
+function placeholderCard(title, note, kind = "normal") {
+  const el = document.createElement(kind === "featured" ? "section" : "article");
+  if (kind === "featured") {
+    el.style.border    = "1px solid var(--br)";
+    el.style.borderRadius = "18px";
+    el.style.background   = "var(--card)";
+    el.style.boxShadow    = "var(--shadow-2)";
+    el.style.padding      = "14px";
+    el.style.marginBottom = "16px";
+  } else {
+    el.className = "card-compact";
+  }
   el.innerHTML = `
-    <div class="card-compact__head">
-      <div class="card-compact__title">${title}</div>
-      ${badge("n", "placeholder")}
+    <div class="card-compact__head" style="display:flex;align-items:center;justify-content:space-between;gap:.6rem">
+      <div class="card-compact__title" style="font-weight:800">${title}</div>
+      <span class="hero__badge" style="font-size:12.5px">${"placeholder"}</span>
     </div>
     <div class="card-compact__body">
-      <p class="text-muted-12">${note || "Modulo non disponibile o dati assenti."}</p>
+      <p class="text-muted-12" style="font-size:13px;opacity:.85">${note || "Modulo non disponibile o dati assenti."}</p>
     </div>`;
   return el;
 }
 
 /* -------------------------
-   Loader modulo singolo
+   Import dinamico di un modulo
 ------------------------- */
-async function mountModule(grid, base, key, manifest) {
-  const K = String(key).toUpperCase();           // es. "F5B"
-  const k = K.toLowerCase();                     // "f5b"
-  const modPath  = `/report/assets/js/modules/${k}.js`;
+async function importModuleRenderer(keyUpper) {
+  const k = String(keyUpper).toLowerCase();
+  const modPath = `/report/assets/js/modules/${k}.js`;
+  try {
+    const mod = await import(modPath);
+    return mod;
+  } catch (e) {
+    logDebug(`Import modulo fallito: ${keyUpper}`, e);
+    return null;
+  }
+}
+
+/* -------------------------
+   Montaggio modulo singolo
+------------------------- */
+async function mountModule({ grid, base, key, manifest, featuredKey }) {
+  const K = String(key).toUpperCase();
+
+  // path dati: se manifest.modules[K] presente, usa quello, altrimenti <base>/<k>.json
+  const k = K.toLowerCase();
   const dataPath = manifest?.modules?.[K]
     ? `${base}/${manifest.modules[K]}`
     : `${base}/${k}.json`;
 
-  // 1) Carico dati
+  // 1) Dati
   const data = await loadJSON(dataPath);
-  if (!data) {
-    logDebug(`Dati assenti per ${K}`, dataPath);
-    const el = placeholderCard(titleForKey(K), "Dati non presenti.");
-    el.setAttribute("data-card", K);
-    grid.appendChild(el);
-    return;
-  }
+  const isFeatured = (featuredKey && K === String(featuredKey).toUpperCase());
 
-  // 2) Import dinamico del renderer
-  let mod;
-  try {
-    mod = await import(modPath);
-  } catch (e) {
-    logDebug(`Import modulo fallito: ${K}`, e);
-    const el = placeholderCard(`${titleForKey(K)} (errore modulo)`, "Modulo non caricato.");
-    el.setAttribute("data-card", K);
-    grid.appendChild(el);
-    return;
-  }
+  // 2) Renderer
+  const mod = await importModuleRenderer(K);
 
   // 3) Render
   let el;
-  try {
-    el = (mod.renderCard && mod.renderCard(data)) || placeholderCard(titleForKey(K), "Modulo senza renderer.");
-  } catch (e) {
-    logDebug(`renderCard() ha generato un errore: ${K}`, e);
-    el = placeholderCard(`${titleForKey(K)} (errore renderer)`, "Contenuto non renderizzato.");
+  if (!data) {
+    el = placeholderCard(
+      titleForKey(K),
+      "Dati non presenti.",
+      isFeatured ? "featured" : "normal"
+    );
+  } else if (!mod || typeof mod.renderCard !== "function") {
+    el = placeholderCard(
+      `${titleForKey(K)}${mod ? "" : " (modulo mancante)"}`,
+      mod ? "renderCard() non disponibile." : "Modulo non caricato.",
+      isFeatured ? "featured" : "normal"
+    );
+  } else {
+    try {
+      // Passo un options per consentire ai moduli di rendere in "featured" mode
+      el = await mod.renderCard(data, {
+        featured: isFeatured,
+        title: titleForKey(K),
+      });
+      if (!(el instanceof Element)) {
+        // Il renderer ha restituito stringa → wrappo
+        const wrap = document.createElement(isFeatured ? "section" : "article");
+        if (isFeatured) {
+          wrap.style.border = "1px solid var(--br)";
+          wrap.style.borderRadius = "18px";
+          wrap.style.background = "var(--card)";
+          wrap.style.boxShadow = "var(--shadow-2)";
+          wrap.style.padding = "14px";
+          wrap.style.marginBottom = "16px";
+        } else {
+          wrap.className = "card-compact";
+        }
+        wrap.innerHTML = String(el || "");
+        el = wrap;
+      }
+    } catch (e) {
+      logDebug(`renderCard() errore: ${K}`, e);
+      el = placeholderCard(
+        `${titleForKey(K)} (errore renderer)`,
+        "Contenuto non renderizzato.",
+        isFeatured ? "featured" : "normal"
+      );
+    }
   }
-  el.setAttribute("data-card", K);
-  grid.appendChild(el);
 
-  // 4) Bind opzionale (drawer, azioni, ecc.)
+  el.setAttribute("data-card", K);
+  if (isFeatured) {
+    // inserisco il featured PRIMA della grid (se non già inserito)
+    const markerId = "tradelia-focus-anchor";
+    let anchor = document.getElementById(markerId);
+    if (!anchor) {
+      anchor = document.createElement("div");
+      anchor.id = markerId;
+      grid.parentNode.insertBefore(anchor, grid);
+    }
+    anchor.replaceWith(el);
+  } else {
+    grid.appendChild(el);
+  }
+
+  // 4) Bind opzionale
   try {
-    mod.bindCard && mod.bindCard(el, data, {
+    mod && typeof mod.bindCard === "function" && mod.bindCard(el, data, {
       base,
+      manifest,
       openDrawer: (title, subtitle, html) =>
         window.Tradelia?.Drawer?.open({ title, subtitle, html }),
     });
   } catch (e) {
-    logDebug(`bindCard() ha generato un errore: ${K}`, e);
+    logDebug(`bindCard() errore: ${K}`, e);
   }
 }
 
@@ -138,23 +191,31 @@ export async function mountReport(reportId) {
       title: "Tradelia · Report Runtime",
       order: ["F1", "F2", "F3", "F4", "F5", "F5B", "F6"],
       focus: "F5",
-      modules: {} // opzionale
+      modules: {} // opzionale: { F1: "custom-F1.json", ... }
     };
 
-  // Esponi per accensione chip (index se ne occupa)
+  // Esponi per chips e per altri script
   window.Tradelia = window.Tradelia || {};
   window.Tradelia.Manifest = manifest;
 
   // Ordine moduli
-  const order = Array.isArray(manifest.order) ? manifest.order : [];
+  const order = Array.isArray(manifest.order) ? manifest.order.filter(Boolean) : [];
   if (!order.length) {
     logDebug("Manifest.order vuoto: nessun modulo da montare");
     return;
   }
 
-  // Monta ogni modulo
+  // Focus (opzionale) — lo renderemo prima della griglia
+  const featuredKey = manifest.focus ? String(manifest.focus).toUpperCase() : null;
+
+  // Prima montiamo l'eventuale featured, poi gli altri (evitando duplicati)
+  if (featuredKey && order.includes(featuredKey)) {
+    await mountModule({ grid, base, key: featuredKey, manifest, featuredKey });
+  }
+
   for (const key of order) {
-    await mountModule(grid, base, key, manifest);
+    if (featuredKey && String(key).toUpperCase() === featuredKey) continue;
+    await mountModule({ grid, base, key, manifest, featuredKey });
   }
 
   // Icone Lucide dopo vernice
@@ -170,4 +231,12 @@ export async function mountReport(reportId) {
   const url = new URL(location.href);
   const reportId = url.searchParams.get("id") || "sample-id";
   mountReport(reportId).catch((e) => logDebug("mountReport() error", e));
+
+  // Espongo helper per debug: scroll a modulo
+  window.Tradelia = window.Tradelia || {};
+  window.Tradelia.scrollToModule = (key) => {
+    const K = String(key).toUpperCase();
+    const el = document.querySelector(`[data-card="${K}"]`);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 })();
