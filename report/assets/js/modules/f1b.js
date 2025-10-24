@@ -3,8 +3,7 @@
 // F1B · Regime di mercato / Contesto rischio
 //
 // Versione aggiornata 24 Ott 2025 per runtime istituzionale Tradelia.
-// Questa versione parla con ui-runtime.js (window.__TradeliaUI)
-// invece di usare openDrawer legacy.
+// Usa window.__TradeliaUI.openPanel() invece di drawer legacy.
 //
 // Esporta:
 //   renderCard(data, ctx)
@@ -107,33 +106,29 @@ export function bindCard(root, rawData, ctx = {}) {
   if (!root || !rawData) return;
   const data = normalizeData(rawData);
 
-  // 1. Aggancia "Dettagli regime"
+  // bottone "Dettagli regime"
   const btnDetails = root.querySelector('[data-open-f1b-details="true"]');
   if (btnDetails) {
     btnDetails.addEventListener("click", () => {
-      openF1BPanel(data, ctx);
+      openF1BPanel(data);
     });
   }
 
-  // 2. I tooltip "?" dentro la card
-  //    NOTA: i box KPI generano <button class="info-btn" data-metric="...">?</button>
-  //    Il runtime globale (ui-runtime.js) deve ri-bindare questi bottoni
-  //    dopo il mount del modulo. app.js lo chiamerà.
+  // Tooltip "?" nei KPI:
+  // Qui non attacchiamo noi gli handler, perché lo fa ui-runtime.js
+  // tramite window.__TradeliaUI.bindMetricInfoButtons() richiamata da app.js
 }
 
 // -------------------------------------------------------------
-// openF1BPanel(data, ctx)
 // Apre il pannello laterale / bottom sheet istituzionale
-// usando window.__TradeliaUI.openPanel().
 // -------------------------------------------------------------
 
-function openF1BPanel(data, ctx) {
+function openF1BPanel(data) {
   if (!window.__TradeliaUI || typeof window.__TradeliaUI.openPanel !== "function") {
     console.warn("openPanel non disponibile");
     return;
   }
 
-  // sezioni principali del pannello (sono quelle del vecchio drawer)
   const panelSections = buildPanelSections(data);
 
   window.__TradeliaUI.openPanel({
@@ -172,7 +167,6 @@ function buildPanelSections(data) {
     feedSyncScore
   } = data;
 
-  // -- Sezione 1: Regime attuale
   const secRegime = {
     title: "Regime attuale",
     body: `
@@ -225,7 +219,6 @@ function buildPanelSections(data) {
     `
   };
 
-  // -- Sezione 2: Rotazione & partecipazione
   const secRotation = {
     title: "Rotazione & partecipazione",
     body: `
@@ -276,7 +269,6 @@ function buildPanelSections(data) {
     `
   };
 
-  // -- Sezione 3: Note interpretative
   const secNotes = {
     title: "Note interpretative",
     body: renderInterpretation(interpretationNotes),
@@ -286,7 +278,6 @@ function buildPanelSections(data) {
     `
   };
 
-  // -- Sezione 4: Audit & Fonti
   const secAudit = {
     title: "Audit & Fonti",
     body: renderAuditBlock({
@@ -303,7 +294,6 @@ function buildPanelSections(data) {
     `
   };
 
-  // -- Sezione 5: Nota regolamentare
   const secMiFID = {
     title: "Nota regolamentare",
     body: renderMiFIDNotice(),
@@ -318,13 +308,10 @@ function buildPanelSections(data) {
 }
 
 // -------------------------------------------------------------
-// metricBox() aggiornato per usare data-metric="..." (compat ui-runtime)
+// KPI box con tooltip "?" (compat con ui-runtime bindMetricInfoButtons)
 // -------------------------------------------------------------
+
 function metricBox({ label, value, metricKey }) {
-  // Nel runtime nuovo, i tooltip metriche usano:
-  //   class="info-btn"
-  //   data-metric="RegimeScore" (ecc.)
-  // e poi ui-runtime.js (bindMetricInfoButtons) si occupa di gestirli.
   return `
     <div class="flex-1 min-w-[90px]"
          style="
@@ -356,7 +343,150 @@ function metricBox({ label, value, metricKey }) {
 }
 
 // -------------------------------------------------------------
-// Helpers (normalizzazione, tono, numerica, escape)
+// blocchi usati nel pannello
+// -------------------------------------------------------------
+
+function renderTopSectors(topSectors) {
+  if (!Array.isArray(topSectors) || !topSectors.length) {
+    return `
+      <div class="text-[12px] text-[color:var(--muted)] leading-[1.4]">
+        Dati settoriali non disponibili.
+      </div>
+    `;
+  }
+
+  return `
+    <ul class="list-disc pl-4 space-y-1">
+      ${topSectors.map(sec => {
+        const name   = sec.name || sec.sector || "—";
+        const inflow = sec.inflow5d !== undefined ? `${fmtNum(sec.inflow5d)} flow 5d` : "";
+        const perf   = sec.perf1m  !== undefined ? `${fmtPct(sec.perf1m)} 1m` : "";
+        return `
+          <li class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">
+            <span class="font-semibold">${escapeHtml(name)}</span>
+            <span class="text-[color:var(--muted)]"> ${escapeHtml(inflow)} ${escapeHtml(perf)}</span>
+          </li>
+        `;
+      }).join("")}
+    </ul>
+  `;
+}
+
+function renderInterpretation(notesArr) {
+  const arr = Array.isArray(notesArr) ? notesArr : [];
+  if (!arr.length) {
+    return `
+      <div class="text-[12.5px] leading-[1.4] text-[color:var(--muted)]">
+        Nessuna nota aggiuntiva.
+      </div>
+    `;
+  }
+
+  return `
+    <ul class="list-disc pl-4 space-y-1">
+      ${arr.map(n => `
+        <li class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">
+          ${escapeHtml(n)}
+        </li>
+      `).join("")}
+    </ul>
+  `;
+}
+
+function renderAuditBlock({
+  auditPathID,
+  sourcesTier1,
+  dataLagLabel,
+  confidenceFinal,
+  dataIntegrity,
+  feedSyncScore
+}) {
+  const srcList = Array.isArray(sourcesTier1)
+    ? sourcesTier1.join(", ")
+    : (sourcesTier1 || "—");
+
+  return `
+    <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)] space-y-3">
+
+      <div>
+        <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
+          AuditPathID
+        </div>
+        <div class="font-mono text-[13px] font-bold text-[color:var(--ink)]">
+          ${escapeHtml(auditPathID || "—")}
+        </div>
+      </div>
+
+      <div>
+        <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
+          Fonti
+        </div>
+        <div class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">
+          ${escapeHtml(srcList)}
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
+        <div>
+          <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold mb-1">
+            Freshness / Lag
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${escapeHtml(dataLagLabel || "T-1")}
+          </div>
+        </div>
+        <div>
+          <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold mb-1">
+            Confidence
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${fmtNum(confidenceFinal)}
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
+        <div>
+          <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold mb-1">
+            Integrità dataset
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${fmtNum(dataIntegrity)}
+          </div>
+        </div>
+        <div>
+          <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold mb-1">
+            Sync feed
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${fmtNum(feedSyncScore)}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  `;
+}
+
+function renderMiFIDNotice() {
+  return `
+    <div class="text-[12.5px] leading-[1.45] text-[color:var(--muted)] space-y-2">
+      <p>
+        Questo materiale descrive un contesto di mercato basato su dati quantitativi
+        e fonti finanziarie primarie. Ha finalità informative e formative.
+      </p>
+      <p>
+        Non costituisce una raccomandazione personalizzata, né un invito ad
+        eseguire operazioni o a allocare capitale. Prima di qualsiasi decisione
+        reale verifica adeguatezza e appropriatezza con un intermediario autorizzato
+        ai sensi MiFID II e della normativa locale.
+      </p>
+    </div>
+  `;
+}
+
+// -------------------------------------------------------------
+// Normalizzazione dati e tono
 // -------------------------------------------------------------
 
 function normalizeData(d) {
@@ -473,6 +603,10 @@ function computeTone(strategyMode, regimeScore) {
   return { toneColor, toneLabel };
 }
 
+// -------------------------------------------------------------
+// Utils numeriche e escape HTML
+// -------------------------------------------------------------
+
 function fmtNum(v) {
   if (!isNum(v)) return "—";
   const n = Number(v);
@@ -486,11 +620,11 @@ function fmtPct(v) {
   return sign + n.toFixed(1).replace('.', ',') + "%";
 }
 
-function isNum(v) {
+function isNum(v){
   return v !== null && v !== undefined && !Number.isNaN(Number(v));
 }
 
-function valueOrNull(v) {
+function valueOrNull(v){
   return isNum(v) ? Number(v) : null;
 }
 
