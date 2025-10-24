@@ -1,496 +1,610 @@
-/*
-  Tradelia · tokens.css (v1.1 istituzionale)
-  - Design tokens (light/dark)
-  - Primitives tipografici e utility
-  - Componenti core (btn, card, table, badge, strip)
-  - Barra fasi / sezione indice
-  - Skeleton loading, focus ring, print rules
+/* ===========================
+   TRADELIA DESIGN TOKENS
+   =========================== */
 
-  Nota:
-  Questo foglio ora contiene anche le classi usate nella nuova barra FASI
-  e il blocco F6 broker. È allineato con l'index aggiornato.
-*/
+/* LIGHT THEME */
+:root {
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --ink: #0b1220;
+  --muted: #6b7280;
+  --br: color-mix(in oklab, #0b1220 15%, transparent);
 
-/* ==========================================================
-   TOKENS — LIGHT THEME
-   ========================================================== */
-:root{
-  /* Brand scale */
-  --brand-50:#eef2ff;
-  --brand-100:#e0e7ff;
-  --brand-200:#c7d2fe;
-  --brand-300:#a5b4fc;
-  --brand-400:#818cf8;
-  --brand-500:#6366f1;
-  --brand-600:#4f46e5; /* primary interactive */
-  --brand-700:#4338ca;
-  --brand-800:#3730a3;
-  --brand-900:#312e81;
+  --brand-600: #2563eb; /* blu "azione" */
 
-  /* Text / BG / Border */
-  --ink:#0f172a;          /* testo principale */
-  --ink-2:#111827;        /* testo super forte */
-  --muted:#64748b;        /* testo secondario */
-  --bg:#f3f5f9;           /* sfondo app */
-  --card:#ffffff;         /* superfici / card */
-  --br:#e5e7eb;           /* bordo neutro */
+  --footer-bg: color-mix(in oklab, var(--bg) 96%, #0b1220 4%);
+  --footer-br: color-mix(in oklab, var(--br) 75%, transparent);
 
-  /* Footer */
-  --footer-bg:#f8fafc;
-  --footer-br:#e2e8f0;
+  --shadow-1: 0 6px 18px rgba(15,23,42,.06);
+  --shadow-2: 0 24px 48px rgba(2,6,23,.20);
 
-  /* Elevation */
-  --shadow-1:0 4px 16px rgba(2,6,23,.06);
-  --shadow-2:0 10px 30px rgba(2,6,23,.12);
+  /* Tipografia base */
+  --radius-card: 12px;
+  --radius-pill: 999px;
+  --radius-sheet: 16px;
+  --radius-drawer: 12px;
+  --radius-modal: 16px;
 
-  /* Status tones */
-  --tone-green:#10b981;
-  --tone-amber:#f59e0b;
-  --tone-red:#ef4444;
-  --tone-gray:#94a3b8;
-  --tone-blue:#3b82f6;
-
-  /* Buttons */
-  --btn-bg:#0b1220;
-  --btn-ink:#ffffff;
-  --btn-br:rgba(255,255,255,.08);
-  --btn-bg-ghost:#ffffff;
-  --btn-ink-ghost:#0b1220;
-  --btn-br-ghost:#e5e7eb;
-
-  /* Tables */
-  --row-alt:#fafbff;
-  --row-hover:rgba(2,6,23,.03);
+  --pop-w: 320px;
 }
 
-/* ==========================================================
-   TOKENS — DARK THEME
-   ========================================================== */
-html[data-theme="dark"]{
-  --ink:#e6e8ef;
-  --ink-2:#f1f2f7;
-  --muted:#a5adbd;
-  --bg:#0b1220;
-  --card:#0f182a;
-  --br:#1f2a44;
+/* DARK THEME */
+html[data-theme="dark"] {
+  --bg: #0f172a;
+  --card: #1e2535;
+  --ink: #eef2ff;
+  --muted: #94a3b8;
+  --br: color-mix(in oklab, #eef2ff 22%, transparent);
 
-  --footer-bg:#0c1426;
-  --footer-br:#1a2440;
+  --brand-600: #3b82f6;
 
-  --shadow-1:0 6px 18px rgba(0,0,0,.45);
-  --shadow-2:0 14px 34px rgba(0,0,0,.6);
+  --footer-bg: color-mix(in oklab, var(--bg) 90%, white 10%);
+  --footer-br: color-mix(in oklab, var(--br) 60%, transparent);
 
-  --btn-bg:#1c2b4a;
-  --btn-ink:#dfe7ff;
-  --btn-br:rgba(255,255,255,.08);
-  --btn-bg-ghost:#0f182a;
-  --btn-ink-ghost:#dfe7ff;
-  --btn-br-ghost:#203052;
-
-  --row-alt:rgba(255,255,255,.02);
-  --row-hover:rgba(255,255,255,.04);
+  --shadow-1: 0 12px 28px rgba(0,0,0,.45);
+  --shadow-2: 0 32px 64px rgba(0,0,0,.7);
 }
 
-/* ==========================================================
-   RESET / PRIMITIVES / UTILS
-   ========================================================== */
-*{box-sizing:border-box}
-img,svg{display:block;max-width:100%}
-code,kbd,pre,samp{font-family:ui-monospace,Menlo,Monaco,Consolas,"Courier New",monospace}
-.hr{height:1px;background:var(--br)}
-
-.u-muted{color:var(--muted)}
-.u-mono{font-family:ui-monospace,Menlo,Monaco,Consolas,"Courier New",monospace}
-.u-right{text-align:right}
-.u-nowrap{white-space:nowrap}
-.u-scroll{overflow:auto}
-
-/* Divider standard (usata come linea sottile orizzontale) */
-.divider{
-  border:0;
-  height:1px;
-  width:100%;
-  background:color-mix(in oklab,var(--br) 80%,transparent)
+/* Base reset-ish for elements that rely on tokens */
+body {
+  background: var(--bg);
+  color: var(--ink);
 }
 
-/* Link generico */
-a{
-  color:var(--brand-600);
-  text-decoration:none;
-  cursor:pointer;
-  transition:color .15s ease,opacity .15s ease;
-}
-a:hover{text-decoration:underline}
+/* ===========================
+   GENERIC UTILS / COMPONENTS
+   =========================== */
 
-/* Focus ring coerente AA */
-:focus-visible{
-  outline:2px solid var(--brand-600);
-  outline-offset:2px;
+/* Divider linea sottile tra blocchi principali */
+.divider {
+  border: 0;
+  height: 1px;
+  width: 100%;
+  background: color-mix(in oklab, var(--br) 80%, transparent);
+  margin: 18px 0 16px;
 }
 
-/* ==========================================================
-   BUTTONS
-   ========================================================== */
-.btn{
-  --_bg:var(--btn-bg);
-  --_ink:var(--btn-ink);
-  --_br:var(--btn-br);
-
-  display:inline-flex;
-  align-items:center;
-  gap:.5rem;
-  height:36px;
-  padding:0 .8rem;
-  border-radius:10px;
-
-  background:var(--_bg);
-  color:var(--_ink);
-  border:1px solid var(--_br);
-  box-shadow:0 1px 0 rgba(255,255,255,.04) inset;
-
-  font-weight:600;
-  font-size:13.5px;
-  letter-spacing:.1px;
-  cursor:pointer;
-  transition:transform .08s ease, box-shadow .15s ease, opacity .15s ease;
+/* Bottoni "Tradelia style" */
+.btn {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: 12.8px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--br);
+  border-radius: var(--radius-pill);
+  padding: .45rem .7rem;
+  box-shadow: var(--shadow-1);
+  cursor: pointer;
+  transition: opacity .15s ease, box-shadow .15s ease;
 }
-.btn:hover{opacity:.96}
-.btn:active{transform:translateY(1px)}
-.btn i{width:18px;height:18px}
-
-/* Varianti */
-.btn-secondary{
-  --_bg:var(--btn-bg-ghost);
-  --_ink:var(--btn-ink-ghost);
-  --_br:var(--btn-br-ghost);
+.btn:hover {
+  opacity: .9;
+  box-shadow: var(--shadow-2);
 }
-.btn-ghost{
-  background:transparent;
-  color:var(--ink);
-  border:1px dashed var(--br);
+.btn:active {
+  opacity: .8;
+  box-shadow: var(--shadow-1);
 }
 
-/* Size variants */
-.btn-sm{height:30px;padding:0 .65rem;border-radius:9px;font-size:12.5px}
-.btn-lg{height:42px;padding:0 1rem;border-radius:12px;font-size:14.5px}
-
-/* Pills / Badge */
-.badge{
-  display:inline-flex;
-  align-items:center;
-  gap:.4rem;
-  height:24px;
-  padding:0 .55rem;
-  border-radius:999px;
-  border:1px solid var(--br);
-  background:var(--card);
-  font-size:12px;
-  line-height:1.2;
-}
-.badge.green{
-  border-color:color-mix(in oklab,var(--tone-green) 40%,var(--br));
-  color:var(--tone-green);
-}
-.badge.amber{
-  border-color:color-mix(in oklab,var(--tone-amber) 40%,var(--br));
-  color:var(--tone-amber);
-}
-.badge.red{
-  border-color:color-mix(in oklab,var(--tone-red) 40%,var(--br));
-  color:var(--tone-red);
-}
-.badge.gray{
-  border-color:var(--br);
-  color:var(--muted);
+/* versione small */
+.btn-sm {
+  font-size: 12px;
+  padding: .35rem .6rem;
+  line-height: 1.2;
+  min-height: 28px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-1);
 }
 
-/* ==========================================================
-   CARDS, STRIPS, TERMINAL
-   ========================================================== */
-.card-compact{
-  background:var(--card);
-  border:1px solid var(--br);
-  border-radius:12px;
-  box-shadow:var(--shadow-1);
-  padding:10px 12px;
+/* Card compatte per moduli F2 / F4 / F5 */
+.card-compact {
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--br);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-1);
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.45;
+  min-height: 120px; /* baseline prima del contenuto reale */
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
 }
 
-.strip{
-  background:var(--card);
-  border:1px solid var(--br);
-  border-radius:12px;
-  box-shadow:var(--shadow-1);
-  padding:10px 12px;
+/* Terminal look per F1 macro (può essere usato come "big narrative block") */
+.terminal {
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--br);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-1);
+  padding: 12px 14px;
+  font-family: ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 12.8px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
 }
 
-.terminal{
-  background:var(--card);
-  border:1px solid var(--br);
-  border-radius:12px;
-  box-shadow:var(--shadow-1);
-  overflow:hidden;
+/* Strip valida per F5b (Validazione LT) */
+.strip {
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--br);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-1);
+  padding: 10px 12px 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
 }
 
-.card-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:.8rem;
-  margin:0 0 8px;
+/* Stato skeleton "in caricamento" */
+.is-loading {
+  position: relative;
+  color: transparent !important;
 }
-.card-title{
-  font-weight:800;
-  font-size:14px;
-  letter-spacing:.2px;
+.is-loading::before {
+  content: '';
+  display: block;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image:
+    repeating-linear-gradient(
+      -45deg,
+      color-mix(in oklab, var(--card) 92%, white 8%) 0px,
+      color-mix(in oklab, var(--card) 92%, white 8%) 10px,
+      color-mix(in oklab, var(--card) 88%, white 12%) 10px,
+      color-mix(in oklab, var(--card) 88%, white 12%) 20px
+    );
+  border: 1px solid var(--br);
+  box-shadow: var(--shadow-1);
+  animation: sk-pulse 1.4s infinite steps(30,end);
 }
-.card-sub{
-  color:var(--muted);
-  font-size:12.5px;
-}
-
-/* Sezione F6 broker spacing */
-.mod-f6{ margin-top:16px }
-
-/* ==========================================================
-   SECTION-HEAD / PHASE-NAV (indice fasi)
-   ========================================================== */
-.section-head{
-  margin:10px 0 14px;
-  border-bottom:1px solid color-mix(in oklab,var(--br) 75%,transparent);
-  padding-bottom:6px;
-}
-.section-title{
-  font-weight:800;
-  font-size:14px;
-  letter-spacing:.2px;
-  color:var(--ink);
-}
-.section-sub{
-  color:var(--muted);
-  font-size:12.5px;
-  margin-top:2px;
-}
-.phase-nav{
-  margin-top:8px;
-  font-size:12px;
-  text-transform:uppercase;
-  letter-spacing:.04em;
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  align-items:center;
-}
-.phase-nav a{
-  text-decoration:underline;
-  text-underline-offset:2px;
-  color:var(--brand-600);
-  font-weight:600;
-  transition:color .15s ease, opacity .15s ease;
-}
-.phase-nav a:hover{opacity:.8}
-.phase-nav .sep{
-  opacity:.6;
-  color:var(--muted);
+@keyframes sk-pulse {
+  0%   { filter: brightness(1);   }
+  50%  { filter: brightness(1.07);}
+  100% { filter: brightness(1);   }
 }
 
-/* ==========================================================
-   TABLES PRO
-   ========================================================== */
-.table-wrap{
-  position:relative;
-  overflow:auto;
-  border-radius:10px;
-  border:1px solid var(--br);
-  background:var(--card);
-  box-shadow:var(--shadow-1);
+/* ===========================
+   SECTION HEAD (Struttura del Report)
+   =========================== */
+
+.section-head {
+  text-align: center;
+  margin: 2.5rem 0 1.75rem;
 }
-.table{
-  width:100%;
-  border-collapse:separate;
-  border-spacing:0;
+.section-title {
+  font-weight: 900;
+  font-size: 1.4rem;
+  letter-spacing: .25px;
+  color: var(--ink);
+  line-height: 1.25;
 }
-.table th,
-.table td{
-  padding:10px 12px;
-  font-size:13px;
-  vertical-align:middle;
+.section-sub {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 13.8px;
+  line-height: 1.5;
 }
-.table thead th{
-  position:sticky;
-  top:0;
-  z-index:1;
-  background:color-mix(in oklab,var(--card) 96%,#fff 4%);
-  border-bottom:1px solid var(--br);
-  font-weight:800;
-  text-align:left;
-  color:var(--ink);
+.phase-nav {
+  margin-top: 1.1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .6rem 1.1rem;
 }
-.table tbody tr:nth-child(odd){
-  background:var(--row-alt);
+.phase-nav a {
+  font-size: 12.8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--brand-600);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  letter-spacing: .04em;
+  transition: opacity .15s ease;
 }
-.table tbody tr:hover{
-  background:var(--row-hover);
-}
-.table td.num,
-.table th.num{
-  text-align:right;
-  font-variant-numeric:tabular-nums;
+.phase-nav a:hover {
+  opacity: .8;
 }
 
-.table .chip{
-  display:inline-flex;
-  align-items:center;
-  gap:.35rem;
-  padding:.15rem .45rem;
-  border-radius:999px;
-  border:1px solid var(--br);
-  font-size:12px;
-  background:var(--card);
-  line-height:1.2;
+/* ===========================
+   DRAWER (usato anche per MiFID)
+   =========================== */
+
+.drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: none;
 }
-.table .chip.g{
-  color:var(--tone-green);
-  border-color:color-mix(in oklab,var(--tone-green) 35%,var(--br));
+.drawer[aria-hidden="false"] {
+  display: block;
 }
-.table .chip.y{
-  color:var(--tone-amber);
-  border-color:color-mix(in oklab,var(--tone-amber) 35%,var(--br));
+.drawer__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity .18s ease;
 }
-.table .chip.r{
-  color:var(--tone-red);
-  border-color:color-mix(in oklab,var(--tone-red) 35%,var(--br));
+.drawer__panel {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: min(540px,42vw);
+  max-width: 100%;
+  background: var(--card);
+  color: var(--ink);
+  border-left: 1px solid var(--br);
+  box-shadow: var(--shadow-2);
+  transform: translateX(12px);
+  opacity: 0;
+  transition: transform .2s ease, opacity .2s ease;
+  display: flex;
+  flex-direction: column;
+  border-top-left-radius: var(--radius-drawer);
+  border-bottom-left-radius: var(--radius-drawer);
+}
+.drawer.is-open .drawer__backdrop {
+  opacity: 1;
+}
+.drawer.is-open .drawer__panel {
+  transform: translateX(0);
+  opacity: 1;
 }
 
-/* Header colonna cliccabile per sort */
-.sortable{
-  cursor:pointer;
-  user-select:none;
+.drawer__header {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .6rem;
+  padding: 0 14px;
+  border-bottom: 1px solid color-mix(in oklab, var(--br) 78%, transparent);
+  background: color-mix(in oklab, var(--card) 96%, white 4%);
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
-.sortable::after{
-  content:"";
-  display:inline-block;
-  width:10px;
-  height:10px;
-  margin-left:4px;
-  background:currentColor;
-  clip-path:polygon(50% 25%,0 75%,100% 75%);
-  opacity:.25;
+.drawer__title {
+  font-weight: 900;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
 }
-.sortable.asc::after{
-  clip-path:polygon(50% 75%,0 25%,100% 25%);
+.drawer__subtitle {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  color: var(--muted);
 }
-
-/* Sticky helper per sub-header secondari */
-.sticky-sub{
-  position:sticky;
-  top:34px;
-  background:var(--card);
-  border-bottom:1px solid var(--br);
-  z-index:1;
+.drawer__content {
+  padding: 14px;
+  overflow: auto;
+  height: calc(100% - 56px);
+  background: color-mix(in oklab, var(--bg) 96%, white 4%);
+  color: var(--ink);
 }
-
-/* ==========================================================
-   SKELETON
-   ========================================================== */
-.is-loading{
-  position:relative;
-  overflow:hidden;
+.drawer__content section + section {
+  margin-top: 12px;
 }
-.is-loading::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.08) 50%,transparent 100%);
-  animation:shimmer 1.3s infinite;
-}
-@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-
-/* ==========================================================
-   FORMS MINIMALI (per futuri filtri tabelle)
-   ========================================================== */
-.input{
-  height:36px;
-  padding:0 .6rem;
-  border:1px solid var(--br);
-  border-radius:10px;
-  background:var(--card);
-  color:var(--ink);
-  font-size:13px;
-}
-.select{
-  height:36px;
-  padding:0 .6rem;
-  border:1px solid var(--br);
-  border-radius:10px;
-  background:var(--card);
-  color:var(--ink);
-  font-size:13px;
-}
-.checkbox{
-  width:16px;
-  height:16px;
-  accent-color:var(--brand-600);
+.drawer__content h4 {
+  font-weight: 800;
+  margin: 0 0 6px;
+  letter-spacing: .2px;
 }
 
-/* ==========================================================
-   POPOVER / OVERLAYS / DRAWER / MODAL base hooks
-   (le geometrie principali vivono inline su index per ora, 
-    qui solo armonizziamo border/shadow)
-   ========================================================== */
-.popover{
-  border:1px solid color-mix(in oklab,var(--br) 85%,transparent);
-  border-radius:12px;
-  box-shadow:0 18px 44px rgba(2,6,23,.18);
-  background:var(--card);
-  color:var(--ink);
-}
-.modal__panel{
-  border:1px solid var(--br);
-  box-shadow:var(--shadow-2);
-  background:var(--card);
-  color:var(--ink);
-}
-.drawer__panel{
-  border-left:1px solid var(--br);
-  box-shadow:var(--shadow-2);
-  background:var(--card);
-  color:var(--ink);
-}
-
-/* ==========================================================
-   PRINT HELPERS
-   ========================================================== */
-@media print{
-  :root{
-    --ink:#000;
-    --bg:#fff;
-    --card:#fff;
-    --br:#ddd;
+/* Drawer mobile (non-blocking) */
+@media(max-width:640px){
+  .drawer__panel {
+    left: auto;
+    right: 0;
+    width: 90vw;
+    max-width: 90vw;
+    border-radius: var(--radius-drawer) 0 0 var(--radius-drawer);
+    border-left: 1px solid var(--br);
+    transform: translateX(8px);
   }
-
-  body{background:#fff;color:#000}
-
-  a{text-decoration:none;color:inherit}
-
-  .table thead th{
-    background:#fff;
-    color:#000;
+  .drawer.is-open .drawer__panel {
+    transform: translateX(0);
   }
+}
 
+/* Drawer blocking (MiFID) fullscreen */
+.drawer--blocking .drawer__panel {
+  left: 0;
+  right: 0;
+  width: 100vw;
+  max-width: 100vw;
+  border-left: none;
+  border-radius: 0;
+  transform: translateX(0);
+  opacity: 1;
+  box-shadow: var(--shadow-2);
+}
+.drawer--blocking.is-open .drawer__backdrop {
+  opacity: 1;
+}
+.drawer--blocking.is-open .drawer__panel {
+  transform: none;
+  opacity: 1;
+}
+
+/* ===========================
+   SHARE SHEET overlay
+   (lo stile dettagliato sta in share.css, quindi qui solo base z-index)
+   =========================== */
+
+#share-overlay {
+  z-index: 100;
+}
+
+/* ===========================
+   METRIC POPUP (desktop tooltip)
+   =========================== */
+
+.popover {
+  position: absolute;
+  z-index: 80;
+  width: var(--pop-w,320px);
+  max-width: 92vw;
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid color-mix(in oklab, var(--br) 85%, transparent);
+  border-radius: var(--radius-card);
+  padding: 12px 12px 10px;
+  box-shadow: 0 18px 44px rgba(2,6,23,.18);
+  display: none;
+}
+.popover[aria-hidden="false"] {
+  display: block;
+}
+.popover__title {
+  margin: 0 0 6px;
+  font-weight: 800;
+  font-size: 13.5px;
+  letter-spacing: .15px;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.popover__text {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+.popover__source {
+  margin-top: 6px;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.popover__actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+#popover-close {
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid var(--br);
+  background: var(--card);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0 .6rem;
+  line-height: 1;
+  color: var(--ink);
+}
+
+/* ===========================
+   METRIC SHEET (mobile <640px)
+   =========================== */
+
+.metric-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 85;
+  display: none;
+}
+.metric-sheet-overlay[aria-hidden="false"] {
+  display: block;
+}
+.metric-sheet-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity .18s ease;
+}
+.metric-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100vw;
+  max-width: 480px;
+  max-height: 70vh;
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--br);
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  box-shadow: var(--shadow-2);
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform .2s ease, opacity .2s ease;
+  z-index: 86;
+  overflow: hidden;
+}
+.metric-sheet__header {
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid color-mix(in oklab, var(--br) 80%, transparent);
+  background: color-mix(in oklab, var(--card) 96%, white 4%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .75rem;
+}
+.metric-sheet__titlewrap {
+  min-width: 0;
+}
+.metric-sheet__title {
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  letter-spacing: .2px;
+}
+.metric-sheet__source {
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted);
+  word-break: break-word;
+}
+.metric-sheet__closebtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  min-width: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--br);
+  background: var(--card);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+.metric-sheet__closebtn i {
+  width: 16px;
+  height: 16px;
+}
+.metric-sheet__body {
+  padding: 14px 16px 16px;
+  overflow-y: auto;
+  font-size: 13.2px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.metric-sheet-overlay.is-open .metric-sheet-overlay__backdrop {
+  opacity: 1;
+}
+.metric-sheet-overlay.is-open .metric-sheet {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ===========================
+   MODAL BASE (Privacy)
+   =========================== */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: none;
+}
+.modal[aria-hidden="false"] {
+  display: grid;
+  place-items: center;
+}
+.modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(2px);
+}
+.modal__panel {
+  position: relative;
+  z-index: 1;
+  width: min(700px,92vw);
+  max-height: 80vh;
+  overflow: auto;
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--br);
+  border-radius: var(--radius-modal);
+  padding: 18px;
+  box-shadow: var(--shadow-2);
+}
+.modal__title {
+  margin: 0 0 8px;
+  font-weight: 900;
+  font-size: 16px;
+  color: var(--ink);
+}
+.modal__text {
+  font-size: 13.6px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.modal__actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* ===========================
+   FOOTER
+   =========================== */
+
+.footer-wrap {
+  background: var(--footer-bg);
+  border-top: 1px solid var(--footer-br);
+  margin-top: 24px;
+}
+.site-footer {
+  color: var(--muted);
+}
+.site-footer .heading {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+/* ===========================
+   PRINT
+   =========================== */
+
+@media print {
   header,
-  .btn,
-  .u-btn,
   .noprint,
   .drawer,
   .popover,
-  .modal{
-    display:none!important;
+  .metric-sheet-overlay,
+  #share-overlay,
+  .btn,
+  .btn-sm {
+    display: none !important;
   }
 
-  .card-compact,
-  .terminal,
-  .strip{
-    box-shadow:none;
-    border:1px solid #ddd;
+  .hero {
+    page-break-after: always;
+    border: 1px solid #ddd;
+    box-shadow: none !important;
   }
 }
