@@ -76,6 +76,15 @@
     .meta-pill .tonebar{position:absolute;left:0;top:0;bottom:0;width:4px;border-top-left-radius:12px;border-bottom-left-radius:12px;background:#94a3b8}
     .meta-label{color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:11.5px}
     .meta-val{font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;font-weight:800; font-variant-numeric: tabular-nums;}
+
+    /* Snapshot range: start/end su una o due righe senza overflow */
+    .meta-val.range{display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:baseline; gap:6px; min-width:0}
+    .meta-val.range span{min-width:0; overflow:hidden; text-overflow:ellipsis}
+    @media(max-width:560px){
+      .meta-val.range{grid-template-columns:1fr;}
+      .meta-val.range span[aria-hidden="true"]{display:none}
+    }
+
     .info-btn{all:unset; cursor:pointer; margin-left:6px; display:inline-flex; align-items:center; justify-content:center; width:18px;height:18px; border:1px solid var(--br); border-radius:999px; font-size:12px; line-height:1; color:var(--muted); background:var(--card); flex:0 0 auto}
 
     /* Quality strip sotto hero */
@@ -202,7 +211,7 @@
           <span class="tonebar" id="tone-snap"></span>
           <div class="min-w-0">
             <div class="flex items-center"><div class="meta-label">Snapshot</div><button class="info-btn" data-metric="Snapshot" aria-label="Info Snapshot">?</button></div>
-            <div class="meta-val truncate"><span id="hero-start">—</span> → <span id="hero-end">—</span></div>
+            <div class="meta-val range" id="hero-range"><span id="hero-start">—</span><span aria-hidden="true">→</span><span id="hero-end">—</span></div>
           </div>
         </div>
         <div class="meta-pill" id="pill-price">
@@ -376,10 +385,10 @@
     const getReportId = ()=> new URL(location.href).searchParams.get('id') || 'sample-id';
     const LS = { theme:'tradelia.theme', privacy:'tradelia.privacy.ack', mifid:'tradelia.mifid.accepted' };
 
-    // Formattatori locali
+    // Formattatori locali (data con orario)
     const fmtNum = (v,dec=2)=> (Number.isFinite(+v)? new Intl.NumberFormat('it-IT',{minimumFractionDigits:dec, maximumFractionDigits:dec}).format(+v) : '—');
     const fmtPct = (v,dec=2)=> (Number.isFinite(+v)? `${fmtNum(+v,dec)}%` : '—');
-    const fmtDate = (d)=>{ try{ return new Intl.DateTimeFormat('it-IT',{dateStyle:'medium', timeZone:'Europe/Rome'}).format(new Date(d)); }catch{return d||'—'} };
+    const fmtDate = (d)=>{ try{ return new Intl.DateTimeFormat('it-IT',{dateStyle:'medium', timeStyle:'short', timeZone:'Europe/Rome'}).format(new Date(d)); }catch{return d||'—'} };
 
     // Inizializza lucide appena pronto (icone anche senza header.json)
     document.addEventListener('DOMContentLoaded', () => { if (window.lucide) lucide.createIcons(); });
@@ -526,7 +535,7 @@
     addEventListener('resize', ()=>{ if(pop.getAttribute('aria-hidden')==='false') hidePopover(); });
     addEventListener('scroll', ()=>{ if(pop.getAttribute('aria-hidden')==='false') hidePopover(); }, { passive:true });
 
-    // Privacy + MiFID
+    // Privacy + MiFID (testo rafforzato su AI)
     const privacyModal = $('#privacy-modal');
     function openPrivacy(){ privacyModal.setAttribute('aria-hidden','false'); }
     function closePrivacy(){ privacyModal.setAttribute('aria-hidden','true'); }
@@ -540,12 +549,13 @@
       const html = `
       <div style="font-size:13.6px;line-height:1.6">
         <h3 style="margin:0 0 8px;font-weight:900;display:flex;align-items:center;gap:.5rem">
-          <i data-lucide="shield"></i>Informativa MiFID II e limitazioni d’uso
+          <i data-lucide="shield"></i>Informativa MiFID II, limiti d’uso e avvertenze su AI
         </h3>
         <p>Questo documento è prodotto dal <strong>team Tradelia</strong>. Tradelia non è un intermediario autorizzato e non possiede licenze MiFID.</p>
-        <p>Contenuti a fini <strong>informativi ed educativi</strong>. Non costituiscono consulenza in materia di investimenti.</p>
+        <p><strong>Non fare affidamento</strong> esclusivo su questo report né su sistemi di <strong>Intelligenza Artificiale</strong> (Tradelia inclusa) per prendere decisioni di investimento. Le analisi fornite sono da intendersi unicamente come <strong>strumento aggiuntivo di valutazione</strong>, da integrare con giudizio professionale e fonti indipendenti.</p>
+        <p>Per scelte d’investimento e per la verifica dell’adeguatezza rispetto al tuo profilo di rischio, rivolgiti sempre a un <strong>consulente finanziario abilitato</strong> o al tuo intermediario autorizzato.</p>
         <ul style="margin:.2rem 0 .7rem 1.1rem;list-style:disc">
-          <li>Fonti ritenute affidabili ma nessuna garanzia di accuratezza o aggiornamento continuo.</li>
+          <li>Fonti ritenute affidabili ma nessuna garanzia di accuratezza, completezza o aggiornamento continuo.</li>
           <li>Scenari e simulazioni sono ipotetici e non rappresentano risultati futuri.</li>
           <li>I mercati comportano rischi inclusa la perdita del capitale; la leva amplifica i rischi.</li>
         </ul>
