@@ -1,18 +1,17 @@
 /* ============================================================
-   Tradelia Runtime Tokens & Base Components
+   Tradelia Runtime Tokens & Components (rev mobile+mini-card)
    ============================================================ */
 
 /* ------------------------------------------------------------
    1. COLOR TOKENS (light / dark)
    ------------------------------------------------------------ */
 
-/* fallback (light) */
 :root {
-  /* Text / Ink */
+  /* Text */
   --ink: #0b1220;
   --muted: #6b7280;
 
-  /* Brand accent */
+  /* Brand / link accent */
   --brand: #4f46e5;
 
   /* Surfaces */
@@ -22,7 +21,7 @@
   --surface-footer: #f8fafc;
   --surface-card-elev: #ffffff;
 
-  /* Borders / dividers */
+  /* Borders */
   --br-soft: rgba(0,0,0,0.07);
   --br-card: rgba(0,0,0,0.08);
   --br-card-strong: rgba(0,0,0,0.12);
@@ -33,7 +32,7 @@
   --shadow-lg: 0 16px 32px -8px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06);
   --shadow-xl: 0 24px 48px -12px rgba(0,0,0,0.22), 0 8px 24px rgba(0,0,0,0.12);
 
-  /* Tone bars + states */
+  /* Tone */
   --tone-g: #16a34a;
   --tone-r: #dc2626;
   --tone-y: #facc15;
@@ -43,7 +42,7 @@
   --tint-hero: #dbeafe;
   --tint-hero-dark: #1e1e2e;
 
-  /* Radii */
+  /* Radius */
   --radius-card: 12px;
   --radius-chip: 8px;
   --radius-drawer: 16px;
@@ -51,38 +50,11 @@
   --radius-sheet: 16px;
 
   --transition-fast: .15s ease;
+
+  /* width for popover desktop */
+  --pop-w: 320px;
 }
 
-/* LIGHT THEME EXPLICIT */
-html[data-theme="light"] {
-  --ink: #0b1220;
-  --muted: #6b7280;
-
-  --surface-page: #f8fafc;
-  --surface-card: #ffffff;
-  --surface-card-alt: #f9fafb;
-  --surface-footer: #f8fafc;
-  --surface-card-elev: #ffffff;
-
-  --br-soft: rgba(0,0,0,0.07);
-  --br-card: rgba(0,0,0,0.08);
-  --br-card-strong: rgba(0,0,0,0.12);
-  --footer-br: rgba(0,0,0,0.07);
-
-  --shadow-card: 0 1px 2px rgba(0,0,0,0.06), 0 1px 1px rgba(0,0,0,0.03);
-  --shadow-lg: 0 16px 32px -8px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06);
-  --shadow-xl: 0 24px 48px -12px rgba(0,0,0,0.22), 0 8px 24px rgba(0,0,0,0.12);
-
-  --tone-g: #16a34a;
-  --tone-r: #dc2626;
-  --tone-y: #facc15;
-  --tone-n: #6b7280;
-
-  --tint-hero: #dbeafe;
-  --tint-hero-dark: #1e1e2e;
-}
-
-/* DARK THEME */
 html[data-theme="dark"] {
   --ink: #f8fafc;
   --muted: #9ca3af;
@@ -112,30 +84,33 @@ html[data-theme="dark"] {
 }
 
 /* ------------------------------------------------------------
-   2. TYPO / BASE UTILS
+   2. BASE TYPO / BODY / CODE
    ------------------------------------------------------------ */
 
 body {
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--ink);
-  background-color: var(--surface-page);
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  font-size:13.5px;
+  line-height:1.5;
+  color:var(--ink);
+  background-color:var(--surface-page);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
 }
 
 code {
   font-family: ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
-  font-size: .88em;
-  background: color-mix(in oklab, var(--ink) 5%, transparent);
-  color: var(--ink);
-  padding: .15rem .4rem;
-  border-radius: 4px;
-  border: 1px solid var(--br-soft);
+  font-size:.88em;
+  background:color-mix(in oklab, var(--ink) 5%, transparent);
+  color:var(--ink);
+  padding:.15rem .4rem;
+  border-radius:4px;
+  border:1px solid var(--br-soft);
 }
 
 hr.divider {
-  border: 0;
-  border-top: 1px solid var(--br-soft);
-  margin: 1.5rem 0;
+  border:0;
+  border-top:1px solid var(--br-soft);
+  margin:1.5rem 0;
 }
 
 /* ------------------------------------------------------------
@@ -143,470 +118,583 @@ hr.divider {
    ------------------------------------------------------------ */
 
 .btn {
-  all: unset;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
-  border-radius: var(--radius-chip);
-  border: 1px solid var(--br-soft);
-  background: var(--surface-card);
-  color: var(--ink);
-  font-size: 12.5px;
-  line-height: 1.2;
-  font-weight: 600;
-  padding: .5rem .6rem;
-  box-shadow: var(--shadow-card);
-  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+  all:unset;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  border-radius:var(--radius-chip);
+  border:1px solid var(--br-soft);
+  background:var(--surface-card);
+  color:var(--ink);
+  font-size:12.5px;
+  line-height:1.2;
+  font-weight:600;
+  padding:.5rem .6rem;
+  box-shadow:var(--shadow-card);
+  transition:background var(--transition-fast),color var(--transition-fast),border-color var(--transition-fast),box-shadow var(--transition-fast);
 }
-.btn:active {
-  opacity: .8;
+.btn:hover{
+  background:var(--surface-card-alt);
 }
-.btn:hover {
-  background: var(--surface-card-alt);
-}
-
-.btn-sm {
-  font-size: 12px;
-  padding: .4rem .5rem;
-  line-height: 1.2;
-  gap: .4rem;
+.btn:active{
+  opacity:.8;
 }
 
-/* icon helpers */
-.icon-16 {
-  width: 16px;
-  height: 16px;
-  line-height: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.btn-sm{
+  font-size:12.5px;
+  line-height:1.2;
+  font-weight:600;
+  padding:.4rem .5rem;
+  border-radius:var(--radius-chip);
+  border:1px solid var(--br-soft);
+  background:var(--surface-card);
+  box-shadow:var(--shadow-card);
+  gap:.4rem;
+  min-height:28px;
 }
 
-.theme-icon {
-  width: 16px;
-  height: 16px;
-  line-height: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.icon-16,
+.theme-icon{
+  width:16px;
+  height:16px;
+  line-height:0;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
 }
 
 /* ------------------------------------------------------------
-   4. CARD CONTAINERS
+   4. CARDS (mini-schede dashboard)
    ------------------------------------------------------------ */
 
-/* blocchi tipo F2/F4/F5 */
-.card-compact {
-  background: var(--surface-card);
-  border: 1px solid var(--br-card);
-  border-radius: var(--radius-card);
-  box-shadow: var(--shadow-card);
-  padding: 12px 14px;
-  color: var(--ink);
-  font-size: 13px;
-  line-height: 1.45;
-  min-height: 120px;
-  position: relative;
+/* card compatta modulare (F2/F4/F5 ecc.) */
+.card-compact{
+  background:var(--surface-card);
+  border:1px solid var(--br-card);
+  border-radius:var(--radius-card);
+  box-shadow:var(--shadow-card);
+  padding:12px 14px;
+  color:var(--ink);
+  font-size:13px;
+  line-height:1.45;
+  min-height:120px;
+  position:relative;
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
 }
 
-/* strip full-width tipo F5B, F6 */
-.strip {
-  background: var(--surface-card-alt);
-  border: 1px solid var(--br-card-strong);
-  border-radius: var(--radius-card);
-  box-shadow: var(--shadow-card);
-  padding: 14px 16px;
-  color: var(--ink);
-  font-size: 13px;
-  line-height: 1.45;
-  min-height: 120px;
-  position: relative;
+/* strip orizzontale (F5B, F6 magari full-width bottom row) */
+.strip{
+  background:var(--surface-card-alt);
+  border:1px solid var(--br-card-strong);
+  border-radius:var(--radius-card);
+  box-shadow:var(--shadow-card);
+  padding:14px 16px;
+  color:var(--ink);
+  font-size:13px;
+  line-height:1.45;
+  min-height:120px;
+  position:relative;
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
 }
 
-/* terminal-style (F1/F1B: contesto regime) */
-.terminal {
-  background: var(--surface-card);
-  border: 1px solid var(--br-card-strong);
-  border-radius: var(--radius-card);
-  box-shadow: var(--shadow-card);
-  color: var(--ink);
-  font-size: 13px;
-  line-height: 1.45;
-  padding: 14px 16px;
-  min-height: 120px;
-  position: relative;
-  font-family: ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
+/* terminal era super monospace: ora lo portiamo allo stesso look card,
+   ma con bordo leggermente più marcato perché è "regime / contesto"
+*/
+.terminal{
+  background:var(--surface-card);
+  border:1px solid var(--br-card-strong);
+  border-radius:var(--radius-card);
+  box-shadow:var(--shadow-card);
+  color:var(--ink);
+  font-size:13px;
+  line-height:1.45;
+  padding:14px 16px;
+  min-height:120px;
+  position:relative;
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
 }
 
-/* stato skeleton/loading */
-.is-loading {
-  position: relative;
-  color: var(--muted);
+/* stato "loading" (placeholder che avevi in pagina) */
+.is-loading{
+  position:relative;
+  color:var(--muted);
 }
-.is-loading::after {
-  content: "Caricamento…";
-  position: absolute;
-  inset: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-size: 12px;
-  line-height: 1.3;
-  color: var(--muted);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: color-mix(in oklab, var(--surface-card-elev) 60%, transparent);
-  border-radius: inherit;
-  border: 1px solid var(--br-soft);
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--br-soft) 60%, transparent);
-  pointer-events: none;
-  text-transform: uppercase;
-  letter-spacing: .05em;
-  font-weight: 600;
+.is-loading::after{
+  content:"CARICAMENTO…";
+  position:absolute;
+  inset:0;
+  font-size:12px;
+  line-height:1.3;
+  color:var(--muted);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:color-mix(in oklab, var(--surface-card-elev) 60%, transparent);
+  border-radius:inherit;
+  border:1px solid var(--br-soft);
+  box-shadow:inset 0 0 0 1px color-mix(in oklab, var(--br-soft) 60%, transparent);
+  pointer-events:none;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  font-weight:600;
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
 }
 
 /* ------------------------------------------------------------
-   5. DRAWER (MiFID / dettagli)
+   5. HERO / SNAPSHOT (leggibilità + mobile fix)
    ------------------------------------------------------------ */
 
-.drawer {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: none;
+/* hero wrapper ti rimane dal tuo index (gradient ecc.).
+   qui interveniamo sulle pilloline meta (.hero__meta e .meta-pill) */
+
+.hero__meta{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(140px,1fr));
+  gap:10px;
+  margin-top:14px;
 }
-.drawer[aria-hidden="false"] {
-  display: block;
+@media(max-width:1024px){
+  .hero__meta{
+    /* mobile/tablet: 2 colonne, ma wrap bene */
+    grid-template-columns:repeat(2,1fr);
+  }
 }
 
-.drawer__backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,.45);
-  backdrop-filter: blur(2px);
+/* singola pill */
+.meta-pill{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:.65rem;
+  border:1px solid var(--br-card);
+  border-radius:12px;
+  padding:.6rem .8rem .6rem 1rem;
+  background:var(--surface-card);
+  font-size:12.5px;
+  line-height:1.45;
+  box-shadow:var(--shadow-card);
+  min-height:54px;
+  color:var(--ink);
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+}
+.meta-pill .tonebar{
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:4px;
+  border-top-left-radius:12px;
+  border-bottom-left-radius:12px;
+  background:var(--tone-n);
 }
 
-.drawer__panel {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: min(400px, 90vw);
-  background: var(--surface-card);
-  color: var(--ink);
-  border-left: 1px solid var(--br-card);
-  border-top-left-radius: var(--radius-drawer);
-  border-bottom-left-radius: var(--radius-drawer);
-  box-shadow: var(--shadow-xl);
-  display: flex;
-  flex-direction: column;
-  max-height: 100%;
+.meta-label{
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  font-size:11px;
+  font-weight:600;
+  line-height:1.3;
+}
+.meta-val{
+  font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-weight:800;
+  display:flex;
+  flex-wrap:wrap;
+  column-gap:.25rem;
+  row-gap:0;
+  word-break:break-word;
+  line-height:1.4;
+  font-size:12.5px;
+  color:var(--ink);
 }
 
-/* header */
-.drawer__header {
-  border-bottom: 1px solid var(--br-soft);
-  padding: 16px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  color: var(--ink);
-}
-.drawer__title {
-  font-size: 14px;
-  font-weight: 800;
-  color: var(--ink);
-  line-height: 1.4;
-  display: flex;
-  align-items: flex-start;
-  gap: .5rem;
-}
-.drawer__subtitle {
-  font-size: 12.5px;
-  color: var(--muted);
-  line-height: 1.4;
-  margin-top: 2px;
+/* HERO PRICE / Δ% colori */
+.chg--up{color:var(--tone-g);}
+.chg--down{color:var(--tone-r);}
+
+/* Mobile hero special rule:
+   su schermi <400px le pill diventano più compatte e il testo scende a 12px
+*/
+@media(max-width:400px){
+  .meta-pill{
+    padding:.5rem .6rem .5rem .8rem;
+    min-height:auto;
+  }
+  .meta-label{
+    font-size:10px;
+  }
+  .meta-val{
+    font-size:12px;
+    line-height:1.4;
+  }
 }
 
-/* corpo scrollabile */
-.drawer__content {
-  flex: 1;
-  padding: 16px;
-  overflow-y: auto;
-  font-size: 13px;
-  line-height: 1.45;
-  color: var(--ink);
+/* ------------------------------------------------------------
+   6. DRAWER (Dettagli / MiFID)
+   ------------------------------------------------------------ */
+
+.drawer{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  display:none;
+}
+.drawer[aria-hidden="false"]{
+  display:block;
 }
 
-/* footer sticky con bottone Accetto */
-.drawer__footer {
-  border-top: 1px solid var(--br-soft);
-  background: var(--surface-card-alt);
-  padding: 12px 16px;
-  flex-shrink: 0;
-  display: flex;
-  justify-content: flex-end;
-}
-.drawer__footer .drawer-accept-btn {
-  background: var(--brand);
-  border-color: var(--brand);
-  color: #fff;
-  font-weight: 600;
-}
-.drawer__footer .drawer-accept-btn:hover {
-  filter: brightness(1.05);
+.drawer__backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  backdrop-filter:blur(2px);
 }
 
-/* Mobile: bottom sheet */
+/* desktop = side panel a destra
+   mobile = bottom-sheet
+*/
+.drawer__panel{
+  position:absolute;
+  right:0;
+  top:0;
+  bottom:0;
+  width:min(400px,90vw);
+  background:var(--surface-card);
+  color:var(--ink);
+  border-left:1px solid var(--br-card);
+  border-top-left-radius:var(--radius-drawer);
+  border-bottom-left-radius:var(--radius-drawer);
+  box-shadow:var(--shadow-xl);
+  display:flex;
+  flex-direction:column;
+  max-height:100%;
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+}
+
+/* header sticky */
+.drawer__header{
+  border-bottom:1px solid var(--br-soft);
+  padding:16px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  color:var(--ink);
+  flex-shrink:0;
+  background:var(--surface-card);
+  border-top-left-radius:var(--radius-drawer);
+}
+.drawer__title{
+  font-size:14px;
+  font-weight:800;
+  color:var(--ink);
+  line-height:1.4;
+  display:flex;
+  align-items:flex-start;
+  gap:.5rem;
+}
+.drawer__subtitle{
+  font-size:12.5px;
+  color:var(--muted);
+  line-height:1.4;
+  margin-top:2px;
+}
+
+/* body scrollabile */
+.drawer__content{
+  flex:1;
+  padding:16px;
+  overflow-y:auto;
+  font-size:13px;
+  line-height:1.5;
+  color:var(--ink);
+}
+
+/* footer sticky SEMPRE visibile, con bottone azione/chiudi/accetto */
+.drawer__footer{
+  border-top:1px solid var(--br-soft);
+  background:var(--surface-card-alt);
+  padding:12px 16px;
+  flex-shrink:0;
+  display:flex;
+  justify-content:flex-end;
+  gap:.5rem;
+  border-bottom-left-radius:var(--radius-drawer);
+}
+.drawer__footer .drawer-accept-btn{
+  background:var(--brand);
+  border:1px solid var(--brand);
+  color:#fff;
+  font-weight:600;
+  border-radius:var(--radius-chip);
+  font-size:12.5px;
+  line-height:1.2;
+  padding:.5rem .6rem;
+  box-shadow:var(--shadow-card);
+}
+.drawer__footer .drawer-close-btn{
+  background:var(--surface-card);
+  border:1px solid var(--br-soft);
+  color:var(--ink);
+  font-weight:600;
+  border-radius:var(--radius-chip);
+  font-size:12.5px;
+  line-height:1.2;
+  padding:.5rem .6rem;
+  box-shadow:var(--shadow-card);
+}
+
+/* mobile: il drawer diventa bottom-sheet e sta entro il viewport */
 @media(max-width:640px){
-  .drawer__panel {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: auto;
-    width: 100%;
-    max-height: 80vh;
-    border-left: none;
-    border-top-left-radius: var(--radius-drawer);
-    border-top-right-radius: var(--radius-drawer);
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    box-shadow: var(--shadow-xl);
+  .drawer__panel{
+    left:0;
+    right:0;
+    bottom:0;
+    top:auto;
+    width:100%;
+    max-height:90vh;
+    border-left:none;
+    border-top-left-radius:var(--radius-drawer);
+    border-top-right-radius:var(--radius-drawer);
+    border-bottom-left-radius:0;
+    border-bottom-right-radius:0;
+    box-shadow:var(--shadow-xl);
   }
-
-  .drawer__header {
-    border-top-left-radius: var(--radius-drawer);
-    border-top-right-radius: var(--radius-drawer);
+  .drawer__header{
+    border-top-right-radius:var(--radius-drawer);
+  }
+  .drawer__footer{
+    border-bottom-left-radius:0;
+    border-bottom-right-radius:0;
   }
 }
 
 /* ------------------------------------------------------------
-   6. POPOVER METRICHE (desktop)
+   7. POPOVER METRICHE (desktop)
    ------------------------------------------------------------ */
 
-.popover {
-  position: absolute;
-  z-index: 85;
-  width: var(--pop-w, 320px);
-  max-width: calc(100vw - 16px);
-  background: var(--surface-card);
-  color: var(--ink);
-  border: 1px solid var(--br-card);
-  border-radius: var(--radius-pop);
-  box-shadow: var(--shadow-xl);
-  padding: 12px 14px;
-  font-size: 12.5px;
-  line-height: 1.45;
-  box-sizing: border-box;
-  display: none;
+.popover{
+  position:absolute;
+  z-index:85;
+  width:var(--pop-w,320px);
+  max-width:calc(100vw - 16px);
+  background:var(--surface-card);
+  color:var(--ink);
+  border:1px solid var(--br-card);
+  border-radius:var(--radius-pop);
+  box-shadow:var(--shadow-xl);
+  padding:12px 14px;
+  font-size:12.5px;
+  line-height:1.45;
+  box-sizing:border-box;
+  display:none;
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
 }
-.popover[aria-hidden="false"] {
-  display: block;
-}
+.popover[aria-hidden="false"]{display:block;}
 
-.popover__title {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--ink);
-  line-height: 1.4;
-  margin-bottom: 4px;
+.popover__title{
+  font-size:13px;
+  font-weight:700;
+  color:var(--ink);
+  line-height:1.4;
+  margin-bottom:4px;
 }
-.popover__text {
-  color: var(--ink);
-  line-height: 1.45;
-  margin-bottom: 6px;
-  font-size: 12.5px;
+.popover__text{
+  color:var(--ink);
+  line-height:1.45;
+  margin-bottom:6px;
+  font-size:12.5px;
 }
-.popover__source {
-  color: var(--muted);
-  font-size: 11.5px;
-  line-height: 1.4;
-  margin-bottom: 10px;
+.popover__source{
+  color:var(--muted);
+  font-size:11.5px;
+  line-height:1.4;
+  margin-bottom:10px;
 }
-.popover__actions {
-  text-align: right;
+.popover__actions{
+  text-align:right;
 }
 
 /* ------------------------------------------------------------
-   7. METRIC SHEET OVERLAY (mobile per le metriche)
+   8. METRIC SHEET (mobile metriche, tipo tap su "?")
    ------------------------------------------------------------ */
 
-.metric-sheet-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  display: none;
+.metric-sheet-overlay{
+  position:fixed;
+  inset:0;
+  z-index:90;
+  display:none;
 }
-.metric-sheet-overlay[aria-hidden="false"] {
-  display: block;
+.metric-sheet-overlay[aria-hidden="false"]{display:block;}
+
+.metric-sheet-overlay__backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  backdrop-filter:blur(2px);
 }
 
-.metric-sheet-overlay__backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,.45);
-  backdrop-filter: blur(2px);
+.metric-sheet{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  max-height:70vh;
+  min-height:30vh;
+  background:var(--surface-card);
+  color:var(--ink);
+  border-top-left-radius:var(--radius-sheet);
+  border-top-right-radius:var(--radius-sheet);
+  border:1px solid var(--br-card);
+  box-shadow:var(--shadow-xl);
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
 }
 
-.metric-sheet {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  max-height: 70vh;
-  min-height: 30vh;
-  background: var(--surface-card);
-  color: var(--ink);
-  border-top-left-radius: var(--radius-sheet);
-  border-top-right-radius: var(--radius-sheet);
-  border: 1px solid var(--br-card);
-  box-shadow: var(--shadow-xl);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
+.metric-sheet__header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid var(--br-soft);
+  padding-bottom:12px;
+  margin-bottom:12px;
+  flex-shrink:0;
+}
+.metric-sheet__titlewrap{min-width:0;}
+.metric-sheet__title{
+  display:flex;
+  align-items:flex-start;
+  gap:.5rem;
+  color:var(--ink);
+  font-size:14px;
+  font-weight:700;
+  line-height:1.4;
+}
+.metric-sheet__source{
+  color:var(--muted);
+  font-size:11.5px;
+  line-height:1.4;
+  margin-top:4px;
+}
+.metric-sheet__closebtn{
+  all:unset;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:28px;
+  height:28px;
+  border-radius:var(--radius-chip);
+  border:1px solid var(--br-soft);
+  background:var(--surface-card-alt);
+  color:var(--muted);
+  flex-shrink:0;
 }
 
-.metric-sheet__header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  border-bottom: 1px solid var(--br-soft);
-  padding-bottom: 12px;
-  margin-bottom: 12px;
-}
-.metric-sheet__titlewrap {
-  min-width: 0;
-}
-.metric-sheet__title {
-  display: flex;
-  align-items: flex-start;
-  gap: .5rem;
-  color: var(--ink);
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.4;
-}
-.metric-sheet__source {
-  color: var(--muted);
-  font-size: 11.5px;
-  line-height: 1.4;
-  margin-top: 4px;
-}
-.metric-sheet__closebtn {
-  all: unset;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-chip);
-  border: 1px solid var(--br-soft);
-  background: var(--surface-card-alt);
-  color: var(--muted);
-  flex-shrink: 0;
-}
-
-.metric-sheet__body {
-  flex: 1;
-  overflow-y: auto;
-  color: var(--ink);
-  font-size: 13px;
-  line-height: 1.45;
+.metric-sheet__body{
+  flex:1;
+  overflow-y:auto;
+  color:var(--ink);
+  font-size:13px;
+  line-height:1.45;
 }
 
 /* ------------------------------------------------------------
-   8. MODAL PRIVACY
+   9. MODAL PRIVACY
    ------------------------------------------------------------ */
 
-.modal {
-  position: fixed;
-  inset: 0;
-  z-index: 80;
-  display: none;
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:80;
+  display:none;
 }
-.modal[aria-hidden="false"] {
-  display: block;
+.modal[aria-hidden="false"]{display:block;}
+
+.modal__backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  backdrop-filter:blur(2px);
 }
 
-.modal__backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,.45);
-  backdrop-filter: blur(2px);
+.modal__panel{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:min(400px,90vw);
+  max-height:80vh;
+  overflow-y:auto;
+  background:var(--surface-card);
+  color:var(--ink);
+  border:1px solid var(--br-card);
+  border-radius:var(--radius-card);
+  box-shadow:var(--shadow-xl);
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  font-size:13px;
+  line-height:1.45;
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
 }
 
-.modal__panel {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%,-50%);
-  width: min(400px, 90vw);
-  max-height: 80vh;
-  overflow-y: auto;
-  background: var(--surface-card);
-  color: var(--ink);
-  border: 1px solid var(--br-card);
-  border-radius: var(--radius-card);
-  box-shadow: var(--shadow-xl);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  font-size: 13px;
-  line-height: 1.45;
+.modal__title{
+  font-size:14px;
+  font-weight:800;
+  color:var(--ink);
+  line-height:1.4;
 }
-
-.modal__title {
-  font-size: 14px;
-  font-weight: 800;
-  color: var(--ink);
-  line-height: 1.4;
+.modal__text{
+  color:var(--ink);
+  font-size:13px;
+  line-height:1.45;
 }
-.modal__text {
-  color: var(--ink);
-  font-size: 13px;
-  line-height: 1.45;
+.modal__actions{
+  margin-top:8px;
+  text-align:right;
 }
-.modal__actions {
-  margin-top: 8px;
-  text-align: right;
-}
-
-/* ------------------------------------------------------------
-   9. RESPONSIVE HELPERS
-   ------------------------------------------------------------ */
-
-/* (drawer mobile già gestito sopra con @media) */
-
-/* share.css gestisce la parte "copied" e hover per share,
-   quindi qui non dupliamo */
 
 /* ------------------------------------------------------------
    10. PRINT OVERRIDES
    ------------------------------------------------------------ */
 
-@media print {
+@media print{
   .drawer,
   .popover,
   .metric-sheet-overlay,
-  .modal {
-    display: none !important;
+  .modal,
+  header,
+  .noprint{
+    display:none !important;
   }
 
   .card-compact,
   .strip,
-  .terminal {
-    box-shadow: none !important;
-    background: #fff !important;
-    border: 1px solid #ddd !important;
-    color: #000 !important;
+  .terminal{
+    box-shadow:none !important;
+    background:#fff !important;
+    border:1px solid #ddd !important;
+    color:#000 !important;
   }
 
-  body {
-    background: #fff !important;
-    color: #000 !important;
+  body{
+    background:#fff !important;
+    color:#000 !important;
   }
 }
