@@ -1,197 +1,234 @@
-/* =========================================================
-   Tradelia · Share Sheet
-   Gestione overlay di condivisione ("Condividi")
-   Path: /report/assets/js/components/share.js
-   ========================================================= */
+/*
+  Tradelia · components/share.js (v1.2 no short, no qr)
+  - Bottom sheet responsive
+  - Link copia
+  - Social puliti: LinkedIn, X, Reddit, Quora, Email
+  - Nessun tracking esterno automatico
 
-function safeCreateIcons() {
-  try {
-    if (window.lucide) {
-      window.lucide.createIcons();
-    }
-  } catch {}
-}
+  Accessibilità:
+  - role="dialog" aria-modal="true"
+  - ESC chiude
+  - focus iniziale sul bottone "Copia" all'apertura
+*/
 
-function buildOverlayMarkup() {
-  const wrap = document.createElement("div");
-  wrap.id = "share-overlay";
-  wrap.className = "share-overlay noprint";
-  wrap.setAttribute("aria-hidden", "true");
+export function initShareSystem() {
+  const BTN_ID = '#btn-share';
+  const EXISTING = document.querySelector('#share-overlay');
+  if (EXISTING) {
+    wireUpOverlay(EXISTING);
+    return;
+  }
 
-  wrap.innerHTML = `
+  // Costruzione overlay DOM
+  const overlay = document.createElement('div');
+  overlay.id = 'share-overlay';
+  overlay.setAttribute('aria-hidden', 'true');
+  overlay.innerHTML = `
     <div class="share-overlay__backdrop" data-share-close></div>
-
-    <section class="share-sheet" role="dialog" aria-modal="true" aria-labelledby="share-title">
+    <section class="share-sheet" role="dialog" aria-modal="true" aria-labelledby="share-sheet-title">
       <header class="share-sheet__header">
-        <div class="share-sheet__titlewrap">
+        <div class="share-sheet__title-wrap">
           <div class="share-sheet__title">
             <i data-lucide="share-2"></i>
-            <span id="share-title">Condividi il report</span>
+            <span id="share-sheet-title">Condividi il report</span>
           </div>
-          <div class="share-sheet__subtitle" id="share-sub">
-            Link diretto a questa vista del Report Runtime
+          <div class="share-sheet__sub">
+            Link diretto + condivisione social.
+            Nessun tracciamento di terze parti.
           </div>
         </div>
-
-        <button class="share-sheet__closebtn" data-share-close aria-label="Chiudi condividi">
+        <button class="share-close-btn" type="button" data-share-close aria-label="Chiudi pannello Condividi">
           <i data-lucide="x"></i>
         </button>
       </header>
 
       <div class="share-sheet__body">
-        <div class="share-row">
-          <label class="share-label" for="share-link">Link</label>
-          <div class="share-linkwrap">
-            <input id="share-link" class="share-input" type="text" readonly value="">
-            <button class="btn btn-sm share-copy-btn" id="share-copy" type="button">
-              <i data-lucide="link-2"></i>
-              <span>Copia link</span>
-            </button>
-          </div>
-        </div>
 
-        <div class="share-row">
-          <div class="share-hint">
-            Puoi inviarlo via chat / email. Il link include l’ID del report.
+        <!-- LINK COMPLETO -->
+        <section class="share-linkbox" aria-labelledby="share-linkbox-full-h">
+          <div class="share-linkbox__label" id="share-linkbox-full-h">Link completo</div>
+          <div class="share-linkbox__row">
+            <div class="share-linkbox__url" id="share-url-full">—</div>
+            <button class="share-copy-btn" id="share-copy-full" type="button">Copia</button>
           </div>
-        </div>
+        </section>
 
-        <div class="share-actions">
-          <button class="btn btn-sm w-full justify-center" id="share-native" type="button">
-            <i data-lucide="send"></i>
-            <span>Condividi…</span>
+        <!-- SOCIAL -->
+        <section class="share-social" aria-label="Condividi tramite">
+          <button class="share-social-btn" type="button" data-share="linkedin">
+            <i data-lucide="linkedin"></i><span>LinkedIn</span>
           </button>
-        </div>
+
+          <button class="share-social-btn" type="button" data-share="x">
+            <i data-lucide="twitter"></i><span>X / Twitter</span>
+          </button>
+
+          <button class="share-social-btn" type="button" data-share="reddit">
+            <i data-lucide="reddit"></i><span>Reddit</span>
+          </button>
+
+          <button class="share-social-btn" type="button" data-share="quora">
+            <i data-lucide="message-circle"></i><span>Quora</span>
+          </button>
+
+          <button class="share-social-btn" type="button" data-share="email">
+            <i data-lucide="mail"></i><span>Email</span>
+          </button>
+        </section>
+
       </div>
+
+      <footer class="share-sheet__footer">
+        <button class="share-done-btn" type="button" data-share-close>Chiudi</button>
+      </footer>
     </section>
   `;
 
-  return wrap;
-}
+  document.body.appendChild(overlay);
 
-function getCurrentShareURL() {
-  // usiamo direttamente l'URL corrente (con ?id=...)
-  try {
-    return new URL(location.href).toString();
-  } catch {
-    return location.href;
+  if (window.lucide) { window.lucide.createIcons(); }
+
+  wireUpOverlay(overlay);
+
+  const triggerBtn = document.querySelector(BTN_ID);
+  if (triggerBtn) {
+    triggerBtn.addEventListener('click', () => openShare(overlay));
   }
 }
 
-export function initShareSystem() {
-  // se è già stato inizializzato, basta uscire
-  if (window.Tradelia?.Share?.__ready) return;
+/* ==========================================================
+   Wiring / Behavior
+   ========================================================== */
+function wireUpOverlay(overlay) {
+  const triggerBtn   = document.querySelector('#btn-share');
+  const copyFullBtn  = overlay.querySelector('#share-copy-full');
+  const urlFullNode  = overlay.querySelector('#share-url-full');
 
-  // assicura namespace globale
-  window.Tradelia = window.Tradelia || {};
-  window.Tradelia.Share = window.Tradelia.Share || {};
-
-  // prendi / crea overlay nel DOM
-  let overlayEl = document.querySelector("#share-overlay");
-  if (!overlayEl) {
-    overlayEl = buildOverlayMarkup();
-    document.body.appendChild(overlayEl);
+  // Apri da pulsante header
+  if (triggerBtn) {
+    triggerBtn.addEventListener('click', () => openShare(overlay));
   }
 
-  const backdropEl   = overlayEl.querySelector(".share-overlay__backdrop");
-  const closeBtns    = overlayEl.querySelectorAll("[data-share-close]");
-  const copyBtn      = overlayEl.querySelector("#share-copy");
-  const nativeBtn    = overlayEl.querySelector("#share-native");
-  const inputEl      = overlayEl.querySelector("#share-link");
-
-  // bottone header "Condividi"
-  const triggerBtn   = document.querySelector("#btn-share");
-
-  function openOverlay() {
-    // aggiorna link
-    const url = getCurrentShareURL();
-    inputEl.value = url;
-
-    // mostra overlay
-    overlayEl.setAttribute("aria-hidden", "false");
-    requestAnimationFrame(() => {
-      overlayEl.classList.add("is-open");
-    });
-
-    safeCreateIcons();
-  }
-
-  function closeOverlay() {
-    overlayEl.classList.remove("is-open");
-    overlayEl.addEventListener(
-      "transitionend",
-      () => {
-        overlayEl.setAttribute("aria-hidden", "true");
-      },
-      { once: true }
-    );
-  }
-
-  async function copyLink() {
-    const url = getCurrentShareURL();
-    try {
-      await navigator.clipboard.writeText(url);
-      // feedback rapido nel bottone
-      const oldHtml = copyBtn.innerHTML;
-      copyBtn.innerHTML = `<i data-lucide="check"></i><span>Copiato</span>`;
-      safeCreateIcons();
-      setTimeout(() => {
-        copyBtn.innerHTML = oldHtml;
-        safeCreateIcons();
-      }, 1500);
-    } catch {
-      // fallback: seleziona input
-      inputEl.select();
-    }
-  }
-
-  async function nativeShare() {
-    const url = getCurrentShareURL();
-    const payload = {
-      title: "Tradelia · Report Runtime",
-      text: "Guarda questo report generato da Tradelia AI.",
-      url
-    };
-
-    if (navigator.share) {
-      try {
-        await navigator.share(payload);
-      } catch {
-        // annullato o errore → non facciamo nulla
-      }
-    } else {
-      // se Web Share API non c'è, fallback = copia link
-      copyLink();
-    }
-  }
-
-  // click backdrop o icona X chiude
-  backdropEl.addEventListener("click", closeOverlay);
-  closeBtns.forEach(btn => btn.addEventListener("click", closeOverlay));
-
-  // copy
-  copyBtn.addEventListener("click", copyLink);
-
-  // native share
-  nativeBtn.addEventListener("click", nativeShare);
-
-  // ESC chiude
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && overlayEl.getAttribute("aria-hidden") === "false") {
-      closeOverlay();
+  // Chiudi con backdrop o pulsanti con data-share-close
+  overlay.addEventListener('click', e => {
+    if (e.target.closest('[data-share-close]')) {
+      closeShare(overlay);
     }
   });
 
-  // trigger header
-  if (triggerBtn) {
-    triggerBtn.addEventListener("click", openOverlay);
+  // ESC chiude se aperto
+  document.addEventListener('keydown', e => {
+    if (overlay.getAttribute('aria-hidden') === 'false' && e.key === 'Escape') {
+      closeShare(overlay);
+    }
+  });
+
+  // Copy link completo
+  copyFullBtn?.addEventListener('click', async () => {
+    const link = getFullURL();
+    await tryCopy(link, copyFullBtn, urlFullNode);
+  });
+
+  // Social share
+  overlay.querySelectorAll('[data-share]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const linkFull = encodeURIComponent(getFullURL());
+      const title    = encodeURIComponent('Tradelia · Report Runtime');
+      const text     = encodeURIComponent('Analisi di mercato by Tradelia · Report Runtime');
+
+      let shareUrl = null;
+      const which = btn.getAttribute('data-share');
+
+      if (which === 'linkedin') {
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${linkFull}`;
+      } else if (which === 'x') {
+        shareUrl = `https://twitter.com/intent/tweet?url=${linkFull}&text=${text}`;
+      } else if (which === 'reddit') {
+        shareUrl = `https://www.reddit.com/submit?url=${linkFull}&title=${text}`;
+      } else if (which === 'quora') {
+        // Quora richiede login se non autenticato; non mettiamo pixel noi
+        shareUrl = `https://www.quora.com/share?url=${linkFull}&title=${text}`;
+      } else if (which === 'email') {
+        const subject = title;
+        const body    = encodeURIComponent(
+          `Guarda questo report:\n${decodeURIComponent(linkFull)}\n\nFonte: Tradelia · Report Runtime`
+        );
+        shareUrl = `mailto:?subject=${subject}&body=${body}`;
+      }
+
+      if (shareUrl) {
+        window.open(shareUrl, '_blank', 'noopener,noreferrer');
+      }
+    });
+  });
+
+  // Popola il link visibile
+  syncData();
+
+  function syncData() {
+    const full  = getFullURL();
+    urlFullNode.textContent = full;
+  }
+}
+
+/* Apertura */
+function openShare(overlay) {
+  overlay.setAttribute('aria-hidden', 'false');
+
+  requestAnimationFrame(() => {
+    overlay.classList.add('is-open');
+  });
+
+  // focus sul bottone copia, per UX mobile e accessibilità tastiera
+  const copyFullBtn = overlay.querySelector('#share-copy-full');
+  if (copyFullBtn) {
+    copyFullBtn.focus();
   }
 
-  // metti reference globale utile se serve
-  window.Tradelia.Share.open  = openOverlay;
-  window.Tradelia.Share.close = closeOverlay;
-  window.Tradelia.Share.__ready = true;
+  if (window.lucide) { window.lucide.createIcons(); }
+}
 
-  // prima pass icone
-  safeCreateIcons();
+/* Chiusura */
+function closeShare(overlay) {
+  overlay.classList.remove('is-open');
+  overlay.addEventListener('transitionend', () => {
+    overlay.setAttribute('aria-hidden', 'true');
+  }, { once: true });
+
+  // torna focus al pulsante share nell'header
+  const triggerBtn = document.querySelector('#btn-share');
+  if (triggerBtn) triggerBtn.focus();
+}
+
+/* ==========================================================
+   Helpers
+   ========================================================== */
+
+function getFullURL() {
+  const u = new URL(window.location.href);
+  u.hash = '';
+  return u.toString();
+}
+
+async function tryCopy(text, btn, fallbackNode) {
+  try {
+    await navigator.clipboard.writeText(text);
+    btn.classList.add('copied');
+    btn.textContent = 'Copiato';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.textContent = 'Copia';
+    }, 2000);
+  } catch {
+    // fallback: seleziona manualmente
+    selectText(fallbackNode);
+  }
+}
+
+function selectText(node) {
+  const range = document.createRange();
+  range.selectNodeContents(node);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
 }
