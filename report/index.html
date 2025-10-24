@@ -254,11 +254,12 @@
     .mod-grid{
       display:grid;
       grid-template-columns:1fr 1.6fr 1fr;
-      grid-template-rows:auto auto auto;
+      grid-template-rows:auto auto auto auto;
       grid-template-areas:
-        "f1 f3 f2"
-        "f4 f3 f5"
-        "f5b f5b f5b";
+        "f1  f3  f2"
+        "f4  f3  f5"
+        "f5b f5b f5b"
+        "f6  f6  f6";
       gap:16px;
       margin-top:18px;
     }
@@ -268,6 +269,7 @@
     .mod-f4{grid-area:f4}
     .mod-f5{grid-area:f5}
     .mod-f5b{grid-area:f5b}
+    .mod-f6{grid-area:f6}
 
     .f3-wrap{
       display:grid;
@@ -300,7 +302,8 @@
           "f2"
           "f4"
           "f5"
-          "f5b";
+          "f5b"
+          "f6";
       }
       .f3-tiles{grid-template-columns:1fr;}
     }
@@ -314,8 +317,7 @@
     .site-footer{color:var(--muted)}
     .site-footer .heading{color:var(--ink);font-weight:800}
 
-    /* SHARE OVERLAY DESKTOP (container visibile via JS) */
-    /* layout base della sheet principale centrale */
+    /* SHARE OVERLAY (desktop default, mobile override sotto) */
     .share-overlay{
       position:fixed;
       inset:0;
@@ -346,6 +348,8 @@
       display:flex;
       flex-direction:column;
       gap:12px;
+      max-height:80vh;
+      overflow-y:auto;
     }
     .share-sheet__head{
       display:flex;
@@ -441,10 +445,32 @@
       padding:6px 8px;
       box-shadow:var(--shadow-card);
       color:var(--ink);
+      align-self:flex-end;
     }
     .share-copy-action svg{
       width:14px;
       height:14px;
+    }
+
+    /* Mobile override: share sheet come bottom-sheet attaccata in basso */
+    @media(max-width:640px){
+      .share-sheet{
+        position:absolute;
+        left:0;
+        right:0;
+        bottom:0;
+        top:auto;
+        transform:none;
+        width:100%;
+        max-height:60vh;
+        overflow-y:auto;
+
+        border-radius:16px 16px 0 0;
+        border:1px solid var(--br-card);
+        padding:16px 16px 20px;
+        background:var(--surface-card);
+        box-shadow:var(--shadow-xl);
+      }
     }
 
     /* Print: hide popups */
@@ -618,7 +644,8 @@
         Il framework Tradelia procede top-down: regime di mercato / contesto del ticker (F1),
         sentiment e flussi (F2), multi-timeframe tecnico (F3),
         intermarket (F4), resoconto tecnico operativo (F5),
-        e validazione di lungo periodo (F6).
+        validazione di lungo periodo (F5B),
+        e profilo / broker regolamentati (F6).
       </p>
       <nav class="phase-nav" aria-label="Fasi del framework">
         <a href="#mod-f1">F1 · CONTESTO INIZIALE</a>
@@ -626,7 +653,8 @@
         <a href="#mod-f3">F3 · MULTI-TF TECNICO</a>
         <a href="#mod-f4">F4 · INTERMARKET</a>
         <a href="#mod-f5">F5 · RESOCONTO TECNICO</a>
-        <a href="#mod-f5b">F6 · VALIDAZIONE LT</a>
+        <a href="#mod-f5b">F5B · VALIDAZIONE LT</a>
+        <a href="#mod-f6">F6 · BROKER SELEZIONATI</a>
       </nav>
     </section>
 
@@ -635,7 +663,7 @@
       <!-- F1 (F1A o F1B montati qui) -->
       <section id="mod-f1" class="mod-f1 terminal is-loading" aria-label="F1 · Contesto Iniziale"></section>
 
-      <!-- F3 centrale -->
+      <!-- F3 centrale (con tiles sopra/sotto e core al centro) -->
       <section id="mod-f3" class="mod-f3" aria-label="F3 · Analisi Multi-TF">
         <div class="f3-wrap">
           <!-- mini tiles top -->
@@ -666,8 +694,11 @@
       <!-- F5 -->
       <section id="mod-f5" class="mod-f5 card-compact is-loading" aria-label="F5 · Resoconto Tecnico"></section>
 
-      <!-- F5b / Validazione LT -->
-      <section id="mod-f5b" class="mod-f5b strip is-loading" aria-label="F6 · Validazione LT"></section>
+      <!-- F5B / Validazione LT -->
+      <section id="mod-f5b" class="mod-f5b strip is-loading" aria-label="F5B · Validazione LT"></section>
+
+      <!-- F6 / Broker selezionati -->
+      <section id="mod-f6" class="mod-f6 strip is-loading" aria-label="F6 · Broker selezionati"></section>
     </section>
   </main>
 
@@ -688,8 +719,9 @@
             F2 = sentiment & flussi.<br/>
             F3 = lettura multi-timeframe.<br/>
             F4 = intermarket.<br/>
-            F5 = resoconto tecnico.<br/>
-            F6 = validazione LT.
+            F5 = resoconto tecnico operativo.<br/>
+            F5B = validazione lungo termine.<br/>
+            F6 = broker selezionati (profilazione & regolamentazione).
           </p>
         </div>
         <div class="min-w-0">
@@ -810,7 +842,7 @@
     </section>
   </div>
 
-  <!-- SHARE OVERLAY DESKTOP -->
+  <!-- SHARE OVERLAY (desktop modal / mobile bottom sheet) -->
   <div id="share-overlay" class="share-overlay noprint" aria-hidden="true">
     <div class="share-overlay__backdrop" data-share-close></div>
     <section class="share-sheet" role="dialog" aria-modal="true" aria-labelledby="share-title">
@@ -878,16 +910,188 @@
     </section>
   </div>
 
-  <!-- MAIN ORCHESTRATOR -->
+  <!-- ========== INLINE SCRIPT: Drawer / Privacy / MiFID / Print / Share Hook Basics ========== -->
+  <script type="module">
+    // drawer logic (MiFID / dettagli)
+    const drawer      = document.getElementById('drawer');
+    const drawerTitle = document.getElementById('drawer-title');
+    const drawerSub   = document.getElementById('drawer-subtitle');
+    const drawerBody  = document.getElementById('drawer-content');
+    const closeBtns   = drawer?.querySelectorAll('[data-drawer-close]');
+    const backdrop    = drawer?.querySelector('.drawer__backdrop');
+
+    function openDrawer({ title, subtitle, html, blocking=false }) {
+      if (!drawer) return;
+      drawer.setAttribute('aria-hidden','false');
+      drawer.setAttribute('data-blocking', blocking ? 'true' : 'false');
+
+      // titolo
+      if (drawerTitle) {
+        const span = drawerTitle.querySelector('span');
+        if (span) span.textContent = title || 'Dettagli';
+      }
+
+      if (drawerSub)  drawerSub.textContent = subtitle || '—';
+      if (drawerBody) drawerBody.innerHTML  = html || '';
+
+      if (blocking) {
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeDrawer() {
+      if (!drawer) return;
+      drawer.setAttribute('aria-hidden','true');
+      drawer.setAttribute('data-blocking','false');
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+    }
+
+    closeBtns?.forEach(btn => {
+      btn.addEventListener('click', closeDrawer);
+    });
+    backdrop?.addEventListener('click', closeDrawer);
+
+    // Privacy modal logic
+    const privacyModal = document.getElementById('privacy-modal');
+    const btnPrivacy   = document.getElementById('btn-privacy-open');
+    const btnPrivacyOk = document.getElementById('privacy-ok');
+
+    if (btnPrivacy && privacyModal) {
+      btnPrivacy.addEventListener('click', () => {
+        privacyModal.setAttribute('aria-hidden','false');
+      });
+    }
+    if (btnPrivacyOk && privacyModal) {
+      btnPrivacyOk.addEventListener('click', () => {
+        privacyModal.setAttribute('aria-hidden','true');
+      });
+    }
+    // close privacy modal also if user clicks backdrop
+    const privacyBackdrop = privacyModal?.querySelector('.modal__backdrop');
+    if (privacyBackdrop) {
+      privacyBackdrop.addEventListener('click', () => {
+        privacyModal.setAttribute('aria-hidden','true');
+      });
+    }
+
+    // MiFID drawer open
+    const btnMifid = document.getElementById('btn-mifid-open');
+    if (btnMifid) {
+      btnMifid.addEventListener('click', () => {
+        openDrawer({
+          title: 'Informativa MiFID',
+          subtitle: 'Avvertenze regolamentari',
+          blocking: true,
+          html: `
+            <p class="text-[13px] leading-[1.45] text-[color:var(--ink)]">
+              Questo materiale è informativo / educativo e non costituisce:
+              raccomandazione personalizzata, consulenza finanziaria, sollecitazione
+              al pubblico risparmio o offerta di strumenti finanziari.
+            </p>
+            <p class="mt-3 text-[12.5px] leading-[1.4] text-[color:var(--muted)]">
+              Riferimenti normativi: MiFID II, ESMA, CONSOB.
+              Verifica sempre adeguatezza e appropriatezza rispetto al tuo profilo
+              di rischio, alla tua esperienza, e alla tua situazione patrimoniale e fiscale.
+            </p>
+          `
+        });
+      });
+    }
+
+    // Print (header + footer button)
+    const btnPrint   = document.getElementById('btn-print');
+    const btnPrint2  = document.getElementById('btn-print-2');
+    function handlePrint(){ window.print(); }
+    if (btnPrint)  btnPrint.addEventListener('click', handlePrint);
+    if (btnPrint2) btnPrint2.addEventListener('click', handlePrint);
+
+    // Share basic open/close toggle (dettaglio avanzato handled da share.js)
+    const shareOverlay = document.getElementById('share-overlay');
+    const btnShare     = document.getElementById('btn-share');
+    const shareCloseEls= shareOverlay?.querySelectorAll('[data-share-close]');
+
+    function openShare(){
+      if (!shareOverlay) return;
+      shareOverlay.setAttribute('aria-hidden','false');
+    }
+    function closeShare(){
+      if (!shareOverlay) return;
+      shareOverlay.setAttribute('aria-hidden','true');
+    }
+    if (btnShare) {
+      btnShare.addEventListener('click', openShare);
+    }
+    shareCloseEls?.forEach(el => {
+      el.addEventListener('click', closeShare);
+    });
+
+    // Theme toggle stub (expects tokens.css to react to [data-theme])
+    const btnTheme = document.getElementById('btn-theme');
+    if (btnTheme){
+      btnTheme.addEventListener('click', () => {
+        const htmlEl = document.documentElement;
+        const current = htmlEl.getAttribute('data-theme') || 'light';
+        const next = current === 'light' ? 'dark' : 'light';
+        htmlEl.setAttribute('data-theme', next);
+
+        // icona tema (sun/moon)
+        const themeIconWrap = btnTheme.querySelector('.theme-icon');
+        if (themeIconWrap){
+          themeIconWrap.innerHTML = next === 'dark'
+            ? `<svg data-theme-icon="moon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`
+            : `<svg data-theme-icon="sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>`;
+        }
+
+        try {
+          localStorage.setItem('tradelia_theme', next);
+        } catch(e){}
+      });
+
+      // init theme from localStorage (optional)
+      try {
+        const savedTheme = localStorage.getItem('tradelia_theme');
+        if (savedTheme === 'dark' || savedTheme === 'light') {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+      } catch(e){}
+    }
+
+    // Footer year autopopola
+    const footerYear = document.getElementById('footer-year');
+    if (footerYear){
+      footerYear.textContent = new Date().getFullYear();
+    }
+  </script>
+
+  <!-- ========== MAPPATURA TARGET MODULI PRIMA DI app.js ========== -->
+  <script type="module">
+    // Espone mapping così app.js sa dove montare ogni blocco
+    window.Tradelia = window.Tradelia || {};
+    window.Tradelia.mountTarget = {
+      F1:  '#mod-f1',
+      F1A: '#mod-f1',
+      F1B: '#mod-f1',
+      F2:  '#mod-f2',
+      F3:  '#mod-f3-core',
+      F4:  '#mod-f4',
+      F5:  '#mod-f5',
+      F5B: '#mod-f5b',
+      F6:  '#mod-f6'
+    };
+  </script>
+
+  <!-- MAIN ORCHESTRATOR (carica dati report, monta F1..F6, popola hero, ecc.) -->
   <script type="module" src="/report/assets/js/app.js"></script>
 
-  <!-- Share controller -->
+  <!-- Share controller avanzato (copia link, social open ecc.) -->
   <script type="module">
     import { initShareSystem } from '/report/assets/js/components/share.js';
     initShareSystem();
   </script>
 
-  <!-- Inline runtime bootstrap -->
+  <!-- Inline runtime bootstrap aggiuntivo (se serve logica extra tipo hero header-ticker.js, mountReport(), ecc.) -->
   <script src="/report/assets/js/bootstrap-inline.js" type="module"></script>
 </body>
 </html>
