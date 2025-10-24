@@ -6,14 +6,14 @@
    1. COLOR TOKENS (light / dark)
    ------------------------------------------------------------ */
 
-/* default fallback (light as baseline) */
+/* fallback (light) */
 :root {
   /* Text / Ink */
   --ink: #0b1220;
   --muted: #6b7280;
 
   /* Brand accent */
-  --brand: #4f46e5; /* indigo-ish */
+  --brand: #4f46e5;
 
   /* Surfaces */
   --surface-page: #f8fafc;
@@ -40,10 +40,10 @@
   --tone-n: #6b7280;
 
   /* Hero tint */
-  --tint-hero: #dbeafe;       /* light bluish wash */
-  --tint-hero-dark: #1e1e2e;  /* dark variant */
+  --tint-hero: #dbeafe;
+  --tint-hero-dark: #1e1e2e;
 
-  /* Extra */
+  /* Radii */
   --radius-card: 12px;
   --radius-chip: 8px;
   --radius-drawer: 16px;
@@ -112,7 +112,7 @@ html[data-theme="dark"] {
 }
 
 /* ------------------------------------------------------------
-   2. TYPO / UTILITY TOKENS
+   2. TYPO / BASE UTILS
    ------------------------------------------------------------ */
 
 body {
@@ -173,7 +173,7 @@ hr.divider {
   gap: .4rem;
 }
 
-/* smaller icon wrapper, used in header bar */
+/* icon helpers */
 .icon-16 {
   width: 16px;
   height: 16px;
@@ -183,7 +183,6 @@ hr.divider {
   justify-content: center;
 }
 
-/* theme-icon just a flex wrapper so JS can swap SVG easily */
 .theme-icon {
   width: 16px;
   height: 16px;
@@ -197,7 +196,7 @@ hr.divider {
    4. CARD CONTAINERS
    ------------------------------------------------------------ */
 
-/* blocco principale dei moduli tipo F2, F4, F5 */
+/* blocchi tipo F2/F4/F5 */
 .card-compact {
   background: var(--surface-card);
   border: 1px solid var(--br-card);
@@ -211,7 +210,7 @@ hr.divider {
   position: relative;
 }
 
-/* blocco strip (F5B / F6) fullwidth visivo "band" */
+/* strip full-width tipo F5B, F6 */
 .strip {
   background: var(--surface-card-alt);
   border: 1px solid var(--br-card-strong);
@@ -225,7 +224,7 @@ hr.divider {
   position: relative;
 }
 
-/* stile "terminale" per F1/F1B (contesto iniziale / regime macro) */
+/* terminal-style (F1/F1B: contesto regime) */
 .terminal {
   background: var(--surface-card);
   border: 1px solid var(--br-card-strong);
@@ -240,7 +239,7 @@ hr.divider {
   font-family: ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-/* stato loading per qualsiasi blocco card/strip/terminal */
+/* stato skeleton/loading */
 .is-loading {
   position: relative;
   color: var(--muted);
@@ -276,7 +275,6 @@ hr.divider {
   z-index: 100;
   display: none;
 }
-
 .drawer[aria-hidden="false"] {
   display: block;
 }
@@ -305,6 +303,7 @@ hr.divider {
   max-height: 100%;
 }
 
+/* header */
 .drawer__header {
   border-bottom: 1px solid var(--br-soft);
   padding: 16px;
@@ -330,12 +329,56 @@ hr.divider {
   margin-top: 2px;
 }
 
+/* corpo scrollabile */
 .drawer__content {
+  flex: 1;
   padding: 16px;
   overflow-y: auto;
   font-size: 13px;
   line-height: 1.45;
   color: var(--ink);
+}
+
+/* footer sticky con bottone Accetto */
+.drawer__footer {
+  border-top: 1px solid var(--br-soft);
+  background: var(--surface-card-alt);
+  padding: 12px 16px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+.drawer__footer .drawer-accept-btn {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+  font-weight: 600;
+}
+.drawer__footer .drawer-accept-btn:hover {
+  filter: brightness(1.05);
+}
+
+/* Mobile: bottom sheet */
+@media(max-width:640px){
+  .drawer__panel {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    width: 100%;
+    max-height: 80vh;
+    border-left: none;
+    border-top-left-radius: var(--radius-drawer);
+    border-top-right-radius: var(--radius-drawer);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    box-shadow: var(--shadow-xl);
+  }
+
+  .drawer__header {
+    border-top-left-radius: var(--radius-drawer);
+    border-top-right-radius: var(--radius-drawer);
+  }
 }
 
 /* ------------------------------------------------------------
@@ -386,8 +429,7 @@ hr.divider {
 }
 
 /* ------------------------------------------------------------
-   7. METRIC SHEET OVERLAY (mobile <640px)
-   bottom sheet con info metrica estesa
+   7. METRIC SHEET OVERLAY (mobile per le metriche)
    ------------------------------------------------------------ */
 
 .metric-sheet-overlay {
@@ -537,25 +579,13 @@ hr.divider {
    9. RESPONSIVE HELPERS
    ------------------------------------------------------------ */
 
-/* il drawer su mobile può essere fullwidth per UX migliore */
-@media(max-width:640px){
-  .drawer__panel {
-    width: 100%;
-    border-left: none;
-    border-top-left-radius: var(--radius-drawer);
-    border-top-right-radius: var(--radius-drawer);
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    bottom: 0;
-    top: auto;
-    max-height: 70vh;
-  }
-}
+/* (drawer mobile già gestito sopra con @media) */
+
+/* share.css gestisce la parte "copied" e hover per share,
+   quindi qui non dupliamo */
 
 /* ------------------------------------------------------------
    10. PRINT OVERRIDES
-   (alcune classi le già gestisci via @media print in index,
-    questo è solo per coerenza se queste classi appaiono fuori)
    ------------------------------------------------------------ */
 
 @media print {
