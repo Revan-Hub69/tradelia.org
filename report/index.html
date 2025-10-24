@@ -11,36 +11,42 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
   <meta name="theme-color" content="#0b1220">
 
-  <!-- Tailwind -->
+  <!-- Tailwind (solo utility layout, spacing, flex ecc) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Lucide -->
+  <!-- Lucide icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- CSS core -->
+  <!-- CSS design system -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
   <link rel="stylesheet" href="/report/assets/css/share.css" />
 
   <style>
+    /* Piccole regole strutturali che NON vivono nei token */
     :root { --pop-w:320px; }
 
-    html,body{height:100%}
-    body{
-      font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:var(--surface-page);
-      color:var(--ink);
-      -webkit-font-smoothing:antialiased;
-      text-rendering:optimizeLegibility;
-      line-height:1.5;
+    html, body {
+      height: 100%;
     }
 
-    .container{max-width:90rem;margin-inline:auto;padding:0 16px}
-    main{padding-top:2.25rem;padding-bottom:3rem}
-    @media(min-width:1280px){
-      main{padding-top:2.75rem;padding-bottom:3.75rem}
+    .container {
+      max-width: 90rem;
+      margin-inline: auto;
+      padding: 0 16px;
     }
 
-    /* HEADER sticky */
+    main {
+      padding-top: 2.25rem;
+      padding-bottom: 3rem;
+    }
+    @media (min-width:1280px){
+      main {
+        padding-top: 2.75rem;
+        padding-bottom: 3.75rem;
+      }
+    }
+
+    /* HEADER sticky glass */
     .hdr{
       backdrop-filter:saturate(1.1) blur(6px);
       background:color-mix(in oklab, var(--surface-card) 90%, transparent);
@@ -48,814 +54,9 @@
       box-shadow:0 1px 0 var(--br-soft);
     }
     .brand{font-weight:900}
-    .claim{font-size:12px;color:var(--muted)}
-
-    /* HERO */
-    .hero{
-      margin-top:12px;
-      border:1px solid var(--br-card);
-      border-radius:16px;
-      background:
-        radial-gradient(
-          1100px 520px at -10% -40%,
-          color-mix(in oklab, var(--tint-hero) 55%, white 45%) 0%,
-          var(--surface-card) 45%
-        );
-      padding:16px;
-      box-shadow:var(--shadow-lg);
-    }
-    html[data-theme="dark"] .hero{
-      background:
-        radial-gradient(
-          1100px 520px at -10% -40%,
-          var(--tint-hero-dark) 0%,
-          var(--surface-card) 45%
-        );
-    }
-
-    .hero__top{
-      display:flex;
-      flex-wrap:wrap;
-      align-items:flex-start;
-      justify-content:space-between;
-      row-gap:12px;
-      column-gap:10px;
-    }
-
-    .hero__id{
-      display:flex;
-      flex-wrap:wrap;
-      align-items:baseline;
-      gap:8px 12px;
-      min-width:0;
-      max-width:100%;
-    }
-    .hero__ticker{
-      font-weight:900;
-      font-size:24px;
-      letter-spacing:.2px;
-      color:var(--ink);
-      line-height:1.2;
-      word-break:break-word;
-    }
-    .hero__venue{
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.3;
-      word-break:break-word;
-    }
-
-    .hero__price{
-      display:flex;
-      flex-wrap:wrap;
-      align-items:baseline;
-      gap:8px 12px;
-      min-width:0;
-      max-width:100%;
-    }
-    .hero__px{
-      font-weight:900;
-      font-size:24px;
-      line-height:1.2;
-      color:var(--ink);
-    }
-    .hero__chg{
-      font-weight:800;
-      font-size:13.5px;
-      line-height:1.2;
-    }
-    .chg--up{color:var(--tone-g)}
-    .chg--down{color:var(--tone-r)}
-    .hero__badge{
-      font-size:12.5px;
-      border:1px solid var(--br-soft);
-      border-radius:999px;
-      padding:.22rem .6rem;
-      background:var(--surface-card-alt);
-      color:var(--ink);
-      font-weight:600;
-      line-height:1.2;
-      box-shadow:var(--shadow-card);
-    }
-
-    /* hero meta pills */
-    .hero__meta{
-      display:grid;
-      grid-template-columns:repeat(6,minmax(160px,1fr));
-      gap:10px;
-      margin-top:14px
-    }
-    @media(max-width:1024px){
-      .hero__meta{grid-template-columns:repeat(2,1fr)}
-    }
-
-    .meta-pill{
-      position:relative;
-      display:flex;
-      align-items:center;
-      gap:.65rem;
-      border:1px solid var(--br-card);
-      border-radius:12px;
-      padding:.6rem .8rem .6rem 1rem;
-      background:var(--surface-card);
-      font-size:13px;
-      box-shadow:var(--shadow-card);
-      min-height:54px
-    }
-    .meta-pill .tonebar{
-      position:absolute;
-      left:0;top:0;bottom:0;
-      width:4px;
-      border-top-left-radius:12px;
-      border-bottom-left-radius:12px;
-      background:var(--tone-n);
-    }
-
-    .meta-label{
-      color:var(--muted);
-      text-transform:uppercase;
-      letter-spacing:.06em;
-      font-size:11.5px;
-      line-height:1.3;
-    }
-    .meta-val{
-      font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
-      font-weight:800;
-      display:flex;
-      flex-wrap:wrap;
-      column-gap:.25rem;
-      row-gap:0;
-      word-break:break-word;
-      line-height:1.4;
-      font-size:12.5px;
-      color:var(--ink);
-    }
-
-    .info-btn,
-    .metric-help{
-      all:unset;
-      cursor:pointer;
-      margin-left:6px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:22px;
-      height:22px;
-      border:1px solid var(--br-soft);
-      border-radius:999px;
+    .claim{
       font-size:12px;
-      line-height:1;
       color:var(--muted);
-      background:var(--surface-card);
-      flex:0 0 auto;
-      box-shadow:var(--shadow-card);
-    }
-    .info-btn:active,
-    .metric-help:active{opacity:.8}
-
-    /* SECTION HEAD (descrizione framework) */
-    .section-head{
-      text-align:center;
-      margin:2.5rem 0 1.75rem;
-    }
-    .section-title{
-      font-weight:900;
-      font-size:1.4rem;
-      letter-spacing:.25px;
-      color:var(--ink);
-      line-height:1.25;
-    }
-    .section-sub{
-      margin-top:4px;
-      color:var(--muted);
-      font-size:13.8px;
-      line-height:1.5;
-      max-width:56rem;
-      margin-left:auto;
-      margin-right:auto;
-    }
-    .phase-nav{
-      margin-top:1.1rem;
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      gap:.6rem 1.1rem;
-    }
-    .phase-nav a{
-      font-size:12.8px;
-      font-weight:700;
-      text-transform:uppercase;
-      color:var(--brand);
-      text-decoration:underline;
-      text-underline-offset:2px;
-      letter-spacing:.04em;
-      transition:opacity .15s ease;
-    }
-    .phase-nav a:hover{opacity:.8;}
-
-    /* === REPORT LAYOUT VERTICALE === */
-    .report-sections{
-      display:flex;
-      flex-direction:column;
-      gap:20px;
-      max-width:72rem;
-      margin-left:auto;
-      margin-right:auto;
-    }
-    .report-section-block{
-      background:var(--surface-card);
-      border:1px solid var(--br-card);
-      border-radius:14px;
-      box-shadow:var(--shadow-card);
-      padding:16px;
-      color:var(--ink);
-    }
-    @media(min-width:1280px){
-      .report-section-block{
-        padding:20px 24px;
-      }
-    }
-
-    .section-headline{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:space-between;
-      align-items:flex-start;
-      row-gap:.5rem;
-      column-gap:.75rem;
-      margin-bottom:1rem;
-    }
-    .section-head-left{
-      min-width:0;
-    }
-    .section-head-topline{
-      display:flex;
-      flex-wrap:wrap;
-      align-items:center;
-      gap:.5rem .75rem;
-      font-size:13px;
-      line-height:1.4;
-      color:var(--ink);
-      font-weight:600;
-    }
-    .section-badge{
-      font-size:12px;
-      font-weight:700;
-      line-height:1.2;
-      padding:.2rem .5rem;
-      border-radius:999px;
-      background:var(--surface-card-alt);
-      border:1px solid var(--br-card);
-      box-shadow:var(--shadow-card);
-      color:var(--ink);
-      flex-shrink:0;
-    }
-    .section-title-main{
-      font-size:14px;
-      font-weight:800;
-      line-height:1.35;
-      color:var(--ink);
-    }
-    .section-desc{
-      font-size:12.5px;
-      line-height:1.45;
-      color:var(--muted);
-      margin-top:.25rem;
-      max-width:60ch;
-    }
-
-    .section-head-right{
-      flex-shrink:0;
-    }
-
-    .module-status-pill{
-      font-size:11px;
-      font-weight:600;
-      line-height:1.2;
-      padding:.25rem .5rem;
-      border-radius:999px;
-      border:1px solid var(--br-soft);
-      background:var(--surface-card-alt);
-      color:var(--muted);
-      box-shadow:var(--shadow-card);
-    }
-    .module-status-pill[data-state="active"]{
-      color:var(--tone-g);
-      border-color:var(--tone-g);
-      background:color-mix(in oklab, var(--tone-g) 10%, transparent);
-    }
-
-    /* metric layout (F1 body) */
-    .metric-row{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(min(160px,100%),1fr));
-      gap:12px;
-      margin-top:1rem;
-    }
-    .metric-field{
-      background:var(--surface-card-alt);
-      border:1px solid var(--br-card);
-      border-radius:12px;
-      box-shadow:var(--shadow-card);
-      padding:.75rem .75rem .6rem;
-      min-height:80px;
-    }
-    .metric-label{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:.5rem;
-      font-size:11px;
-      line-height:1.3;
-      font-weight:600;
-      color:var(--muted);
-      text-transform:uppercase;
-      letter-spacing:.05em;
-      margin-bottom:.5rem;
-    }
-    .metric-value{
-      font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
-      font-size:13px;
-      line-height:1.4;
-      font-weight:700;
-      color:var(--ink);
-    }
-
-    .f1-mode-row{
-      display:flex;
-      flex-wrap:wrap;
-      align-items:center;
-      gap:.5rem .75rem;
-      font-size:13px;
-      line-height:1.4;
-      font-weight:600;
-      color:var(--ink);
-    }
-    .f1-mode-pill{
-      font-size:11px;
-      font-weight:600;
-      line-height:1.2;
-      padding:.3rem .5rem;
-      border-radius:8px;
-      border:1px solid var(--tone-n);
-      box-shadow:var(--shadow-card);
-      background:color-mix(in oklab, var(--tone-n) 10%, transparent);
-      color:var(--tone-n);
-    }
-
-    /* FOOTER */
-    .footer-wrap{
-      background:var(--surface-footer);
-      border-top:1px solid var(--footer-br);
-      margin-top:24px
-    }
-    .site-footer{color:var(--muted)}
-    .site-footer .heading{color:var(--ink);font-weight:800}
-
-    /* =========================
-       PANEL OVERLAY (drawer / MiFID / Audit / Privacy)
-       ========================= */
-
-    .tl-panel-overlay[aria-hidden="true"] {
-      display: none;
-    }
-    .tl-panel-overlay[aria-hidden="false"] {
-      display: block;
-      position: fixed;
-      inset: 0;
-      z-index: 120;
-    }
-
-    .tl-panel-backdrop {
-      position:absolute;
-      inset:0;
-      background:rgba(0,0,0,.45);
-      backdrop-filter:blur(2px);
-    }
-
-    .tl-panel {
-      position: absolute;
-      background: var(--surface-card);
-      color: var(--ink);
-      border:1px solid var(--br-card);
-      box-shadow: var(--shadow-xl);
-      border-radius:16px 16px 0 0;
-      display:flex;
-      flex-direction:column;
-      max-height:88vh;
-      width:100%;
-      left:50%;
-      transform:translateX(-50%);
-      bottom:0;
-    }
-
-    .tl-panel__header {
-      background:var(--surface-card-alt);
-      border-bottom:1px solid var(--br-soft);
-      padding:16px;
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:12px;
-    }
-    .tl-panel__title {
-      font-size:14px;
-      font-weight:800;
-      line-height:1.4;
-      color:var(--ink);
-    }
-    .tl-panel__subtitle {
-      font-size:12px;
-      line-height:1.4;
-      color:var(--muted);
-      margin-top:2px;
-      max-width:40ch;
-    }
-    .tl-panel__close {
-      all:unset;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:28px;
-      height:28px;
-      border-radius:8px;
-      border:1px solid var(--br-soft);
-      background:var(--surface-card);
-      color:var(--muted);
-      flex-shrink:0;
-    }
-
-    .tl-panel__body {
-      flex:1 1 auto;
-      overflow-y:auto;
-      padding:16px;
-      font-size:13px;
-      line-height:1.45;
-      color:var(--ink);
-      display:flex;
-      flex-direction:column;
-      gap:16px;
-    }
-
-    .tl-panel-section {
-      background:var(--surface-card);
-      border:1px solid var(--br-card);
-      border-radius:12px;
-      box-shadow:var(--shadow-card);
-      padding:12px 14px;
-    }
-    .tl-panel-section-title {
-      font-size:12.5px;
-      font-weight:700;
-      line-height:1.4;
-      color:var(--ink);
-      margin-bottom:4px;
-    }
-    .tl-panel-section-text {
-      font-size:12.5px;
-      line-height:1.45;
-      color:var(--ink);
-    }
-    .tl-panel-section-meta {
-      font-size:12px;
-      line-height:1.4;
-      color:var(--muted);
-      margin-top:6px;
-    }
-
-    .tl-panel__footer {
-      border-top:1px solid var(--br-soft);
-      background:var(--surface-card-alt);
-      padding:12px 16px;
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:8px;
-    }
-
-    /* DESKTOP variant: dock lato destro */
-    @media(min-width:768px){
-      .tl-panel--desktop {
-        display:flex;
-        right:0;
-        left:auto;
-        transform:none;
-        bottom:auto;
-        top:0;
-        height:100%;
-        max-height:100%;
-        width:min(480px,90vw);
-        border-radius:16px 0 0 16px;
-      }
-      .tl-panel--mobile {
-        display:none;
-      }
-    }
-    @media(max-width:767px){
-      .tl-panel--desktop {
-        display:none;
-      }
-      .tl-panel--mobile {
-        display:flex;
-      }
-    }
-
-    /* =========================
-       METRIC TOOLTIP ( ? ) - desktop popover
-       ========================= */
-
-    .tl-popover[aria-hidden="true"] {
-      display:none;
-    }
-    .tl-popover[aria-hidden="false"] {
-      display:block;
-      position:absolute;
-      z-index:200;
-      width:min(320px,90vw);
-      max-width:320px;
-      background:var(--surface-card);
-      border:1px solid var(--br-card);
-      border-radius:12px;
-      box-shadow:var(--shadow-xl);
-      padding:12px;
-      font-size:12.5px;
-      line-height:1.4;
-      color:var(--ink);
-    }
-    .tl-popover__head {
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:8px;
-    }
-    .tl-popover__title {
-      font-size:13px;
-      font-weight:700;
-      line-height:1.4;
-      color:var(--ink);
-    }
-    .tl-popover__close {
-      all:unset;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:24px;
-      height:24px;
-      border-radius:6px;
-      border:1px solid var(--br-soft);
-      background:var(--surface-card-alt);
-      color:var(--muted);
-    }
-    .tl-popover__body {
-      margin-top:.5rem;
-      color:var(--ink);
-      font-size:12.5px;
-      line-height:1.45;
-    }
-    .tl-popover__source {
-      margin-top:.75rem;
-      font-size:11.5px;
-      line-height:1.4;
-      color:var(--muted);
-    }
-
-    /* =========================
-       METRIC SHEET ( ? ) - mobile bottom sheet
-       ========================= */
-
-    .tl-metric-sheet-overlay[aria-hidden="true"] {
-      display:none;
-    }
-    .tl-metric-sheet-overlay[aria-hidden="false"] {
-      display:block;
-      position:fixed;
-      inset:0;
-      z-index:210;
-    }
-
-    .tl-metric-sheet-backdrop {
-      position:absolute;
-      inset:0;
-      background:rgba(0,0,0,.5);
-      backdrop-filter:blur(2px);
-    }
-
-    .tl-metric-sheet {
-      position:absolute;
-      left:50%;
-      bottom:0;
-      transform:translateX(-50%);
-      width:100%;
-      max-width:480px;
-      background:var(--surface-card);
-      border:1px solid var(--br-card);
-      border-radius:16px 16px 0 0;
-      box-shadow:var(--shadow-xl);
-      max-height:75vh;
-      display:flex;
-      flex-direction:column;
-    }
-
-    .tl-metric-sheet__header {
-      padding:16px;
-      border-bottom:1px solid var(--br-soft);
-      background:var(--surface-card-alt);
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:12px;
-    }
-    .tl-metric-sheet__title {
-      font-size:14px;
-      font-weight:800;
-      line-height:1.4;
-      color:var(--ink);
-    }
-    .tl-metric-sheet__source {
-      font-size:12px;
-      line-height:1.4;
-      color:var(--muted);
-      margin-top:2px;
-      max-width:40ch;
-    }
-    .tl-metric-sheet__closebtn {
-      all:unset;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:28px;
-      height:28px;
-      border-radius:8px;
-      border:1px solid var(--br-soft);
-      background:var(--surface-card);
-      color:var(--muted);
-      flex-shrink:0;
-    }
-    .tl-metric-sheet__body {
-      padding:16px;
-      overflow-y:auto;
-      font-size:13px;
-      line-height:1.45;
-      color:var(--ink);
-      max-height:calc(75vh - 64px);
-    }
-
-    /* Desktop: tooltip popover, Mobile: sheet bottom */
-    @media(min-width:768px){
-      .tl-metric-sheet-overlay{ display:none !important; }
-    }
-    @media(max-width:767px){
-      .tl-popover{ display:none !important; }
-    }
-
-    /* SHARE OVERLAY */
-    .share-overlay{
-      position:fixed;
-      inset:0;
-      z-index:95;
-      display:none;
-    }
-    .share-overlay[aria-hidden="false"]{
-      display:block;
-    }
-    .share-overlay__backdrop{
-      position:absolute;
-      inset:0;
-      background:rgba(0,0,0,.45);
-      backdrop-filter:blur(2px);
-    }
-    .share-sheet{
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      width:min(320px,90vw);
-      background:var(--surface-card);
-      color:var(--ink);
-      border:1px solid var(--br-card);
-      border-radius:16px;
-      box-shadow:var(--shadow-xl);
-      padding:16px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-    .share-sheet__head{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:8px;
-    }
-    .share-sheet__title{
-      font-size:14px;
-      font-weight:800;
-      line-height:1.4;
-      color:var(--ink);
-    }
-    .share-sheet__subtitle{
-      font-size:12.5px;
-      line-height:1.4;
-      color:var(--muted);
-    }
-    .share-close-btn{
-      all:unset;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:28px;
-      height:28px;
-      border-radius:8px;
-      border:1px solid var(--br-soft);
-      background:var(--surface-card-alt);
-      color:var(--muted);
-      flex-shrink:0;
-    }
-    .share-sheet__list{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
-    .share-btn{
-      all:unset;
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      border:1px solid var(--br-card);
-      border-radius:10px;
-      background:var(--surface-card-alt);
-      color:var(--ink);
-      font-size:13px;
-      font-weight:600;
-      line-height:1.3;
-      padding:10px 12px;
-      box-shadow:var(--shadow-card);
-    }
-    .share-btn svg{
-      width:16px;
-      height:16px;
-      flex-shrink:0;
-    }
-    .share-copy-row{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      font-size:12px;
-      line-height:1.4;
-    }
-    .share-copy-field{
-      display:flex;
-      align-items:center;
-      border:1px solid var(--br-card);
-      background:var(--surface-card-alt);
-      border-radius:8px;
-      padding:8px 10px;
-      font-size:12px;
-      line-height:1.4;
-      color:var(--ink);
-      word-break:break-all;
-      box-shadow:var(--shadow-card);
-      min-height:40px;
-    }
-    .share-copy-action{
-      all:unset;
-      cursor:pointer;
-      margin-left:auto;
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      font-size:12px;
-      font-weight:600;
-      line-height:1.2;
-      background:var(--surface-card);
-      border:1px solid var(--br-soft);
-      border-radius:8px;
-      padding:6px 8px;
-      box-shadow:var(--shadow-card);
-      color:var(--ink);
-    }
-    .share-copy-action svg{
-      width:14px;
-      height:14px;
-    }
-
-    /* PRINT */
-    @media print{
-      header,
-      .noprint,
-      .tl-panel-overlay,
-      .tl-popover,
-      .tl-metric-sheet-overlay,
-      #share-overlay {display:none !important;}
-      .hero{
-        page-break-after:always;
-        border:1px solid #ddd;
-        box-shadow:none!important
-      }
     }
   </style>
 </head>
@@ -870,6 +71,7 @@
         </a>
         <span class="claim truncate">Report Runtime</span>
       </div>
+
       <div class="flex items-center gap-1.5 sm:gap-2">
         <!-- PRINT BTN -->
         <button id="btn-print" class="btn" aria-label="Stampa / PDF">
@@ -894,6 +96,7 @@
         <!-- THEME BTN -->
         <button id="btn-theme" class="btn" aria-label="Tema">
           <span class="theme-icon" aria-hidden="true">
+            <!-- default sun icon; ui-runtime.js la può sostituire -->
             <svg data-theme-icon="sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="5"></circle>
               <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
@@ -923,6 +126,7 @@
       </div>
 
       <div class="hero__meta">
+        <!-- SNAPSHOT -->
         <div class="meta-pill" id="pill-snap">
           <span class="tonebar" id="tone-snap"></span>
           <div class="min-w-0">
@@ -938,6 +142,7 @@
           </div>
         </div>
 
+        <!-- PRICE -->
         <div class="meta-pill" id="pill-price">
           <span class="tonebar" id="tone-price"></span>
           <div class="min-w-0">
@@ -949,6 +154,7 @@
           </div>
         </div>
 
+        <!-- Δ% -->
         <div class="meta-pill" id="pill-chg">
           <span class="tonebar" id="tone-chg"></span>
           <div class="min-w-0">
@@ -960,6 +166,7 @@
           </div>
         </div>
 
+        <!-- CCY -->
         <div class="meta-pill" id="pill-ccy">
           <span class="tonebar" id="tone-ccy"></span>
           <div class="min-w-0">
@@ -971,6 +178,7 @@
           </div>
         </div>
 
+        <!-- FRESHNESS -->
         <div class="meta-pill" id="pill-fresh">
           <span class="tonebar" id="tone-fresh"></span>
           <div class="min-w-0">
@@ -982,6 +190,7 @@
           </div>
         </div>
 
+        <!-- CONF -->
         <div class="meta-pill" id="pill-conf">
           <span class="tonebar" id="tone-conf"></span>
           <div class="min-w-0">
@@ -995,7 +204,7 @@
       </div>
     </section>
 
-    <!-- FRAMEWORK OVERVIEW -->
+    <!-- DESCRIZIONE FRAMEWORK -->
     <section class="section-head" aria-label="Struttura del Report">
       <h2 class="section-title">Struttura del Report</h2>
       <p class="section-sub">
@@ -1016,9 +225,8 @@
       </nav>
     </section>
 
-    <!-- REPORT SECTIONS -->
+    <!-- SEZIONI DINAMICHE (popolate da app.js) -->
     <section class="report-sections" aria-label="Moduli del Report">
-
       <!-- F1 dinamico (F1A o F1B) -->
       <article id="sec-f1" class="report-section-block is-loading" aria-label="F1 · Contesto iniziale / Regime di mercato"></article>
 
@@ -1052,6 +260,7 @@
           <div class="mt-1">Snapshot: <span id="footer-snapshot">—</span></div>
           <div class="mt-1">Ultimo aggiornamento: <span id="footer-updated">—</span></div>
         </div>
+
         <div class="min-w-0">
           <div class="heading">Metodo</div>
           <p class="mt-1 text-[13px] leading-[1.45]">
@@ -1064,6 +273,7 @@
             F6 = broker selezionati.
           </p>
         </div>
+
         <div class="min-w-0">
           <div class="heading">Legale</div>
           <div class="mt-2 flex flex-wrap gap-6">
@@ -1076,6 +286,7 @@
           </p>
         </div>
       </div>
+
       <div class="mt-3 text-[12.5px] opacity-90">
         © <span id="footer-year"></span> Tradelia. Tutti i diritti riservati. ·
         Contatti:
@@ -1084,7 +295,7 @@
     </footer>
   </div>
 
-  <!-- PANEL OVERLAY RESPONSIVE (drawer MiFID / Audit / Privacy) -->
+  <!-- PANEL OVERLAY (MiFID / Privacy / Audit / Fonti) -->
   <div id="panel-overlay" class="tl-panel-overlay noprint" aria-hidden="true">
     <div class="tl-panel-backdrop" data-panel-close></div>
 
@@ -1137,7 +348,7 @@
     </aside>
   </div>
 
-  <!-- TOOLTIP DESKTOP POPOVER (metriche ?) -->
+  <!-- TOOLTIP DESKTOP (metriche ?) -->
   <div id="metric-popover" class="tl-popover noprint" role="tooltip" aria-hidden="true">
     <div class="tl-popover__head">
       <div id="metric-popover-title" class="tl-popover__title">—</div>
@@ -1152,31 +363,31 @@
     <div id="metric-popover-source" class="tl-popover__source">—</div>
   </div>
 
-<!-- TOOLTIP MOBILE MODAL (metriche ?) -->
-<div id="metric-modal" class="tl-metric-modal-overlay noprint" aria-hidden="true">
-  <div class="tl-metric-modal-backdrop" data-metric-close></div>
+  <!-- TOOLTIP MOBILE (metriche ?) -->
+  <div id="metric-modal" class="tl-metric-modal-overlay noprint" aria-hidden="true">
+    <div class="tl-metric-modal-backdrop" data-metric-close></div>
 
-  <div class="tl-metric-modal" role="dialog" aria-modal="true" aria-labelledby="metric-modal-title">
-    <header class="tl-metric-modal__header">
-      <div class="min-w-0">
-        <div id="metric-modal-title" class="tl-metric-modal__title">—</div>
-        <div id="metric-modal-source" class="tl-metric-modal__source">—</div>
-      </div>
-      <button class="tl-metric-modal__close" data-metric-close aria-label="Chiudi">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-    </header>
-    <div id="metric-modal-body" class="tl-metric-modal__body">—</div>
+    <div class="tl-metric-modal" role="dialog" aria-modal="true" aria-labelledby="metric-modal-title">
+      <header class="tl-metric-modal__header">
+        <div class="min-w-0">
+          <div id="metric-modal-title" class="tl-metric-modal__title">—</div>
+          <div id="metric-modal-source" class="tl-metric-modal__source">—</div>
+        </div>
+        <button class="tl-metric-modal__close" data-metric-close aria-label="Chiudi">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </header>
+      <div id="metric-modal-body" class="tl-metric-modal__body">—</div>
+    </div>
   </div>
-</div>
-
 
   <!-- SHARE OVERLAY -->
   <div id="share-overlay" class="share-overlay noprint" aria-hidden="true">
     <div class="share-overlay__backdrop" data-share-close></div>
+
     <section class="share-sheet" role="dialog" aria-modal="true" aria-labelledby="share-title">
       <header class="share-sheet__head">
         <div class="min-w-0">
@@ -1192,6 +403,7 @@
       </header>
 
       <div class="share-sheet__list">
+        <!-- LinkedIn -->
         <button class="share-btn" data-share-svc="linkedin" aria-label="Condividi su LinkedIn">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.4 8.4h4.1V24H.4zM8.34 8.4h3.93v2.12h.06c.55-1.04 1.9-2.12 3.9-2.12 4.17 0 4.94 2.74 4.94 6.3V24h-4.1v-7.5c0-1.79-.03-4.1-2.5-4.1-2.5 0-2.88 1.95-2.88 4v7.6H8.34z"/>
@@ -1199,6 +411,7 @@
           <span>LinkedIn</span>
         </button>
 
+        <!-- X / Twitter -->
         <button class="share-btn" data-share-svc="twitter" aria-label="Condividi su X">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M18.244 2H21.5l-7.51 8.59L22 22h-6.563l-5.15-6.543L4.66 22H1.4l8.06-9.21L2 2h6.69l4.66 5.907L18.245 2zm-2.43 17.14h1.82L8.29 4.72H6.34l9.47 14.42z"/>
@@ -1206,6 +419,7 @@
           <span>X</span>
         </button>
 
+        <!-- Reddit -->
         <button class="share-btn" data-share-svc="reddit" aria-label="Condividi su Reddit">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <circle cx="9.04" cy="13" r="1.5"></circle>
@@ -1215,6 +429,7 @@
           <span>Reddit</span>
         </button>
 
+        <!-- Copia link -->
         <button class="share-btn" data-share-svc="copy" aria-label="Copia link">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -1226,6 +441,7 @@
 
       <div class="share-copy-row">
         <div id="share-link-field" class="share-copy-field">https://example.tradelia/report?id=...</div>
+
         <button id="share-copy-btn" class="share-copy-action" data-share-svc="copy">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -1237,7 +453,7 @@
     </section>
   </div>
 
-  <!-- JS -->
+  <!-- JS runtime -->
   <script type="module" src="/report/assets/js/app.js"></script>
   <script type="module" src="/report/assets/js/ui-runtime.js"></script>
   <script type="module">
