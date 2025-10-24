@@ -1,8 +1,20 @@
 // /report/assets/js/app.js
+//
+// Orchestratore del Report Runtime (hero + sezioni F1..F6)
+//
+// Assunzioni:
+//  - index.html ha gli id:
+//      hero-* (per l'intestazione)
+//      sec-f1, sec-f2, sec-f3, sec-f4, sec-f5, sec-f5b, sec-f6 (contenitori moduli)
+//      footer-version, footer-snapshot, footer-updated, footer-year
+//  - report data sono in /report/reports/{reportId}/header.json, {f1b.json,...}, manifest.json
+//  - window.__TradeliaUI (da ui-runtime.js) esiste per attachAuditData
+//
+// Nota: questo file NON gestisce MiFID, tooltip, ecc. Quello è ui-runtime.js
 
-// ------------------------------------------------------------
-// Helpers base
-// ------------------------------------------------------------
+//--------------------------------------------------
+// Helpers
+//--------------------------------------------------
 
 function getReportIdFromURL() {
   const params = new URLSearchParams(window.location.search);
@@ -21,12 +33,12 @@ async function fetchJSON(url) {
   }
 }
 
-// format numeri per hero
 function fmtNum(v, decimals = 2) {
   if (v === null || v === undefined || Number.isNaN(v)) return "—";
   const n = Number(v);
   return n.toFixed(decimals).replace('.', ',');
 }
+
 function fmtPct(v, decimals = 2) {
   if (v === null || v === undefined || Number.isNaN(v)) return "—";
   const n = Number(v);
@@ -39,9 +51,18 @@ function setText(id, value) {
   if (el) el.textContent = value;
 }
 
-// ------------------------------------------------------------
+function setYearNow() {
+  const yEl = document.getElementById("footer-year");
+  if (yEl) {
+    const now = new Date();
+    yEl.textContent = now.getFullYear();
+  }
+}
+
+//--------------------------------------------------
 // HERO
-// ------------------------------------------------------------
+//--------------------------------------------------
+
 function mountHero(headerData) {
   if (!headerData) return;
 
@@ -55,41 +76,51 @@ function mountHero(headerData) {
     Currency,
     FreshnessLabel,
     ConfidenceFinal,
-    State
+    State,
+    Version,
+    UpdatedAt
   } = headerData;
 
-  // Ticker / venue
+  // ticker / venue
   setText("hero-ticker", Ticker || "—");
   setText("hero-venue", Venue || "—");
 
-  // Prezzo / Δ%
+  // price + change
   const chgPctStr = fmtPct(ChangePct, 2);
   setText("hero-price", Price !== undefined ? fmtNum(Price, 2) : "—");
   setText("hero-change", chgPctStr);
 
-  // Badge stato
+  // badge stato
   setText("hero-state", State || "—");
 
-  // Snapshot
+  // meta snapshot
   setText("hero-start", Start || "—");
   setText("hero-end", End || "—");
 
-  // Price (meta)
-  const heroPrice2 = document.getElementById("hero-price2");
-  if (heroPrice2) heroPrice2.textContent = (Price !== undefined ? fmtNum(Price,2) : "—");
+  // meta price
+  const hp2 = document.getElementById("hero-price2");
+  if (hp2) hp2.textContent = Price !== undefined ? fmtNum(Price, 2) : "—";
 
-  // Δ% (meta)
-  const heroChg2 = document.getElementById("hero-change2");
-  if (heroChg2) heroChg2.textContent = chgPctStr;
+  // meta Δ%
+  setText("hero-change2", chgPctStr);
 
-  // Currency / Freshness / Confidence
+  // meta currency
   setText("hero-ccy", Currency || "—");
+
+  // meta freshness
   setText("hero-freshness", FreshnessLabel || "—");
-  setText("hero-confidence", ConfidenceFinal !== undefined ? fmtNum(ConfidenceFinal,2) : "—");
+
+  // meta confidence
+  const confStr = ConfidenceFinal !== undefined ? fmtNum(ConfidenceFinal, 2) : "—";
+  setText("hero-confidence", confStr);
 
   // footer snapshot / updated
-  setText("footer-snapshot", Start || "—");
-  setText("footer-updated", End || Start || "—");
+  setText("footer-snapshot", Start && End ? `${Start} → ${End}` : (Start || "—"));
+  setText("footer-updated", UpdatedAt || End || Start || "—");
+  setText("footer-version", Version || "v1.0");
+
+  // footer year
+  setYearNow();
 
   // colore up/down per change
   const heroChangeEl  = document.getElementById("hero-change");
@@ -107,47 +138,49 @@ function mountHero(headerData) {
     }
   }
 
-  // tonebars
-  const toneChg  = document.getElementById("tone-chg");
-  const toneConf = document.getElementById("tone-conf");
-
-  if (toneChg) {
-    toneChg.style.backgroundColor =
-      typeof ChangePct === "number"
-        ? (ChangePct >= 0 ? "var(--tone-g)" : "var(--tone-r)")
-        : "var(--tone-n)";
-  }
-
-  if (toneConf) {
-    const cf = Number(ConfidenceFinal);
-    toneConf.style.backgroundColor =
-      !isNaN(cf)
-        ? (cf >= 0.75
-            ? "var(--tone-g)"
-            : (cf < 0.5 ? "var(--tone-r)" : "var(--tone-n)"))
-        : "var(--tone-n)";
-  }
-
-  // altri neutri
+  // tonebars semplici
+  const toneChg   = document.getElementById("tone-chg");
+  const toneConf  = document.getElementById("tone-conf");
   const toneSnap  = document.getElementById("tone-snap");
   const tonePrice = document.getElementById("tone-price");
   const toneCcy   = document.getElementById("tone-ccy");
   const toneFresh = document.getElementById("tone-fresh");
+
+  if (toneChg) {
+    if (typeof ChangePct === "number") {
+      toneChg.style.backgroundColor = ChangePct >= 0 ? "var(--tone-g)" : "var(--tone-r)";
+    } else {
+      toneChg.style.backgroundColor = "var(--tone-n)";
+    }
+  }
+  if (toneConf) {
+    const cf = Number(ConfidenceFinal);
+    if (!isNaN(cf)) {
+      toneConf.style.backgroundColor = (
+        cf >= 0.75 ? "var(--tone-g)" :
+        cf < 0.5   ? "var(--tone-r)" :
+                     "var(--tone-n)"
+      );
+    } else {
+      toneConf.style.backgroundColor = "var(--tone-n)";
+    }
+  }
   if (toneSnap)  toneSnap.style.backgroundColor  = "var(--tone-n)";
   if (tonePrice) tonePrice.style.backgroundColor = "var(--tone-n)";
   if (toneCcy)   toneCcy.style.backgroundColor   = "var(--tone-n)";
   if (toneFresh) toneFresh.style.backgroundColor = "var(--tone-n)";
 }
 
-// ------------------------------------------------------------
-// Manifest
-// ------------------------------------------------------------
+//--------------------------------------------------
+// MANIFEST
+//--------------------------------------------------
+
 async function loadManifest(reportId) {
   const url = `/report/reports/${reportId}/manifest.json`;
   const mf = await fetchJSON(url);
   if (mf) return mf;
 
-  // fallback se manca manifest.json
+  // fallback se manifest.json non esiste
   return {
     id: reportId,
     title: "Tradelia · Report Runtime",
@@ -164,11 +197,11 @@ async function loadManifest(reportId) {
   };
 }
 
+// normalizza percorsi moduli
 function normalizeManifest(manifest, reportId) {
   const order = Array.isArray(manifest.order)
     ? manifest.order.slice()
     : Object.keys(manifest.modules || {});
-
   const outMods = {};
   for (const key of Object.keys(manifest.modules || {})) {
     let path = manifest.modules[key];
@@ -177,239 +210,132 @@ function normalizeManifest(manifest, reportId) {
     }
     outMods[key] = path;
   }
-
   return {
     id: manifest.id || reportId,
+    title: manifest.title || "",
     order,
     modules: outMods
   };
 }
 
-// ------------------------------------------------------------
-// Sezione Header builder (riusabile per ogni capitolo F1..F6)
-// ------------------------------------------------------------
+//--------------------------------------------------
+// MOUNT MODULI
+//--------------------------------------------------
 
-function renderSectionHeader({ badge, title, desc, state }) {
-  // state: "active" | "dev"
-  // badge: "F1", "F2", ...
-  // title: es. "Contesto iniziale / Regime di mercato"
-  // desc:  paragrafo descrizione
-  // state pill:
-  const pillState = state === "active"
-    ? `<span class="module-status-pill" data-state="active">ATTIVO</span>`
-    : `<span class="module-status-pill">IN SVILUPPO</span>`;
-
-  return `
-    <header class="section-headline">
-      <div class="section-head-left">
-        <div class="section-head-topline">
-          <span class="section-badge">${escapeHtml(badge)}</span>
-          <span class="section-title-main">${escapeHtml(title)}</span>
-        </div>
-        <div class="section-desc">
-          ${escapeHtml(desc || "")}
-        </div>
-      </div>
-      <div class="section-head-right">
-        ${pillState}
-      </div>
-    </header>
-  `;
+function getSectionSelectorForModule(modId) {
+  // mappa modulo -> sezione nel nuovo layout verticale
+  // Nota:
+  //  - F1A e F1B montano SEMPRE su #sec-f1 (solo uno dei due verrà fornito in manifest)
+  //  - F5B monta su #sec-f5b
+  //  - F6 monta su #sec-f6
+  const lower = modId.toLowerCase(); // "f1a", "f2", ...
+  if (lower === "f1a" || lower === "f1b") return "#sec-f1";
+  if (lower === "f2")  return "#sec-f2";
+  if (lower === "f3")  return "#sec-f3";
+  if (lower === "f4")  return "#sec-f4";
+  if (lower === "f5")  return "#sec-f5";
+  if (lower === "f5b") return "#sec-f5b";
+  if (lower === "f6")  return "#sec-f6";
+  // fallback (non dovrebbe servire ma evitiamo crash)
+  return "#sec-f6";
 }
 
-// ------------------------------------------------------------
-// F1 content builder (usa F1A o F1B dinamico)
-// ------------------------------------------------------------
-
-async function mountF1Section(manifest, reportId) {
-  const sec = document.getElementById("sec-f1");
-  if (!sec) return;
-
-  // qual è il primo modulo in order? (F1A o F1B)
-  const firstModId = manifest.order[0] || "F1B";
-  const jsonUrl    = manifest.modules[firstModId];
-
-  // header della sezione F1 (sempre stesso titolo per l'utente)
-  const f1HeaderHTML = renderSectionHeader({
-    badge: "F1",
-    title: "Contesto iniziale / Regime di mercato",
-    desc: "Quadro di rischio e contesto del titolo/mercato al momento dello snapshot. Dati descrittivi, finalità informative.",
-    state: "active"
-  });
-
-  // proviamo a importare dinamicamente la logica del modulo vero
-  let modData = null;
-  if (jsonUrl) {
-    modData = await fetchJSON(jsonUrl);
+async function mountSingleModule(modId, jsonUrl, reportId) {
+  // target dom (nuovo layout verticale)
+  const selector = getSectionSelectorForModule(modId);
+  const container = document.querySelector(selector);
+  if (!container) {
+    console.warn(`Container ${selector} non trovato per ${modId}`);
+    return;
   }
 
-  let mod;
+  // dati modulo (es. f1b.json)
+  const data = await fetchJSON(jsonUrl);
+
+  // import del renderer dinamico
+  // convenzione: F1B -> /report/assets/js/modules/f1b.js
+  const moduleFile = modId.toLowerCase();
+  let renderer;
   try {
-    mod = await import(`/report/assets/js/modules/${firstModId.toLowerCase()}.js`);
+    renderer = await import(`/report/assets/js/modules/${moduleFile}.js`);
   } catch (err) {
-    console.warn("F1 import fallita per", firstModId, err);
-    mod = null;
+    console.error("Import modulo fallita:", modId, err);
+    container.innerHTML = `
+      <div class="text-body-sm">
+        <div class="font-extrabold text-[14px] leading-[1.4] mb-2">${modId}</div>
+        <p class="text-body-xs text-[color:var(--muted)]">
+          Modulo non disponibile.
+        </p>
+      </div>`;
+    container.classList.remove("is-loading");
+    return;
   }
 
-  let bodyHTML = "";
-  if (mod && typeof mod.renderCard === "function") {
-    // lasciamo al modulo F1A/F1B il compito di costruire il body
-    // ma ATTENZIONE: vogliamo solo il contenuto, non di nuovo l'intestazione F1.
-    bodyHTML = mod.renderCard(modData, { modId: firstModId, reportId });
-  } else {
-    bodyHTML = `
-      <div class="text-[13px] leading-[1.45] text-[color:var(--muted)]">
-        Dati di contesto non disponibili.
-      </div>
-    `;
-  }
+  // renderCard => HTML della sezione finita (titolo F1/F2..., metriche principali, tasto Audit ...)
+  if (typeof renderer.renderCard === "function") {
+    const html = renderer.renderCard(data, { modId, reportId });
+    container.innerHTML = html;
+    container.classList.remove("is-loading");
 
-  sec.innerHTML = f1HeaderHTML + bodyHTML;
-  sec.classList.remove("is-loading");
-
-  // se il modulo esporta bindCard lo eseguiamo (per drawer, tooltip, ecc.)
-  if (mod && typeof mod.bindCard === "function") {
-    try {
-      mod.bindCard(sec, modData, { modId: firstModId, reportId });
-    } catch (bindErr) {
-      console.warn("bindCard error in F1:", bindErr);
+    // bindCard => attacca eventi extra (es Audit / Fonti -> openAuditPanel)
+    if (typeof renderer.bindCard === "function") {
+      try {
+        renderer.bindCard(container, data, { modId, reportId });
+      } catch (bindErr) {
+        console.warn("bindCard error per", modId, bindErr);
+      }
     }
+  } else {
+    // modulo importato ma senza renderCard
+    container.innerHTML = `
+      <div class="text-body-sm">
+        <div class="font-extrabold text-[14px] leading-[1.4] mb-2">${modId}</div>
+        <p class="text-body-xs text-[color:var(--muted)]">
+          Modulo caricato ma nessun renderer disponibile.
+        </p>
+      </div>`;
+    container.classList.remove("is-loading");
   }
 }
 
-// ------------------------------------------------------------
-// Altre sezioni placeholder istituzionali
-// ------------------------------------------------------------
-
-function sectionCopy(modId) {
-  switch (modId) {
-    case "F2":
-      return {
-        title: "Sentiment e flussi",
-        desc:  "Sentiment aggregato e flussi rilevanti sul titolo / settore, per capire se il mercato sta accumulando rischio o riducendo esposizione. Nessuna raccomandazione operativa.",
-      };
-    case "F3":
-      return {
-        title: "Analisi tecnica multi-timeframe",
-        desc:  "Lettura tecnica su più orizzonti temporali (es. daily / weekly). Focus su struttura, momentum, zone di interesse. Linguaggio descrittivo, non esecutivo.",
-      };
-    case "F4":
-      return {
-        title: "Relazioni intermarket",
-        desc:  "Confronto fra equity, bond, FX e commodity per valutare dove si sta spostando il rischio macro e se il contesto favorisce o frena il tema osservato.",
-      };
-    case "F5":
-      return {
-        title: "Resoconto tecnico",
-        desc:  "Sintesi del quadro tecnico attuale: fattori di forza/debolezza da monitorare. Materiale a scopo informativo/formativo, senza indicazioni di entrata o uscita.",
-      };
-    case "F5B":
-      return {
-        title: "Validazione LT (orizzonte medio-lungo)",
-        desc:  "Verifica se il quadro è sostenibile nel tempo o se è puramente tattico. Attenzione a fattori macro-strutturali, non solo al movimento di breve.",
-      };
-    case "F6":
-      return {
-        title: "Broker selezionati",
-        desc:  "Panoramica di intermediari vigilati/autorizzati. Nessuna promozione commerciale. Prima di qualsiasi operatività reale valgono adeguatezza/appropriatezza MiFID.",
-      };
-    default:
-      return {
-        title: modId,
-        desc:  "Modulo in sviluppo.",
-      };
-  }
-}
-
-function mountGenericSection(modId) {
-  const secMap = {
-    "F2": "sec-f2",
-    "F3": "sec-f3",
-    "F4": "sec-f4",
-    "F5": "sec-f5",
-    "F5B":"sec-f5b",
-    "F6": "sec-f6"
-  };
-  const secId = secMap[modId];
-  if (!secId) return;
-
-  const secEl = document.getElementById(secId);
-  if (!secEl) return;
-
-  const { title, desc } = sectionCopy(modId);
-
-  const headerHTML = renderSectionHeader({
-    badge: modId,
-    title,
-    desc,
-    state: "dev"
-  });
-
-  // corpo placeholder istituzionale (descrizione soltanto)
-  const bodyHTML = `
-    <div class="text-[13px] leading-[1.45] text-[color:var(--muted)]">
-      Modulo in sviluppo.
-    </div>
-  `;
-
-  secEl.innerHTML = headerHTML + bodyHTML;
-  secEl.classList.remove("is-loading");
-}
-
-// ------------------------------------------------------------
-// MAIN ORCHESTRATION
-// ------------------------------------------------------------
+//--------------------------------------------------
+// MAIN BOOT
+//--------------------------------------------------
 
 async function mountReport() {
   const reportId = getReportIdFromURL();
 
-  // header.json -> hero
+  // 1. header (hero + footer info)
   const headerData = await fetchJSON(`/report/reports/${reportId}/header.json`);
   if (headerData) {
-    mountHero(headerData);
+    // salviamo in window.Tradelia (es. per glossary, timestamp, ecc.)
     window.Tradelia = window.Tradelia || {};
     window.Tradelia.headerData = headerData;
+    mountHero(headerData);
   } else {
     console.warn("Header mancante per", reportId);
+    setYearNow();
   }
 
-  // manifest
+  // 2. manifest
   const rawManifest = await loadManifest(reportId);
   const manifest = normalizeManifest(rawManifest, reportId);
 
-  // salva manifest globalmente (facoltativo, utile a debug)
-  window.Tradelia = window.Tradelia || {};
-  window.Tradelia.manifest = manifest;
+  // 3. loop moduli
+  for (const modId of manifest.order) {
+    const jsonUrl = manifest.modules[modId];
+    if (!jsonUrl) {
+      console.warn(`Nessun jsonUrl per ${modId}`);
+      continue;
+    }
+    mountSingleModule(modId, jsonUrl, reportId);
+  }
 
-  // F1 dinamico (F1A o F1B)
-  await mountF1Section(manifest, reportId);
-
-  // F2..F6 placeholder istituzionali
-  // Notare: anche se manifest.order è tipo ["F1B","F2","F3",...]
-  // noi montiamo sempre tutte le altre sezioni note, in ordine fisso.
-  ["F2","F3","F4","F5","F5B","F6"].forEach(id => {
-    mountGenericSection(id);
-  });
-
-  // footer year
-  const yearEl = document.getElementById('footer-year');
-  if (yearEl){
-    yearEl.textContent = new Date().getFullYear();
+  // 4. lucide icons (fallback, se serve)
+  if (window.lucide && typeof window.lucide.createIcons === "function") {
+    try { window.lucide.createIcons(); } catch(e){ console.warn("lucide error:",e); }
   }
 }
 
-// kick
+// kick immediato
 mountReport();
-
-// ------------------------------------------------------------
-// Escape helper (usato nei template di intestazione sezione)
-// ------------------------------------------------------------
-function escapeHtml(str) {
-  if (str === undefined || str === null) return "";
-  return String(str)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#39;");
-}
