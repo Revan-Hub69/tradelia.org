@@ -10,10 +10,10 @@
 // Convenzioni di path:
 // /report/reports/{reportId}/header.json
 // /report/reports/{reportId}/manifest.json
-// e poi i singoli dati modulo: es. f1b.json, f2.json...
+// poi i singoli dati modulo es. f1b.json, f2.json, ...
 //
-// Convenzioni dei moduli UI:
-// /report/assets/js/modules/f1b.js, f1a.js, f2.js, ...
+// Convenzioni moduli UI:
+// /report/assets/js/modules/f1b.js, f2.js, ...
 //   export function renderCard(data, ctx) -> string HTML
 //   export function bindCard(node, data, ctx) -> attach listeners (opzionale)
 //
@@ -39,7 +39,7 @@ async function fetchJSON(url) {
   }
 }
 
-// numeri / percentuali per hero
+// formattazioni numeriche
 function fmtNum(v, decimals = 2) {
   if (v === null || v === undefined || Number.isNaN(v)) return "—";
   const n = Number(v);
@@ -53,7 +53,7 @@ function fmtPct(v, decimals = 2) {
   return sign + n.toFixed(decimals).replace('.', ',') + "%";
 }
 
-function setText(id, value) {
+function setTextById(id, value) {
   const el = document.getElementById(id);
   if (el) el.textContent = value;
 }
@@ -81,35 +81,36 @@ function mountHero(headerData) {
   } = headerData;
 
   // ticker / venue
-  setText("hero-ticker", Ticker || "—");
-  setText("hero-venue", Venue || "—");
+  setTextById("hero-ticker", Ticker || "—");
+  setTextById("hero-venue", Venue || "—");
 
   // price + change
   const chgPctStr = fmtPct(ChangePct, 2);
-  setText("hero-price", Price !== undefined ? fmtNum(Price, 2) : "—");
-  setText("hero-change", chgPctStr);
+  setTextById("hero-price", Price !== undefined ? fmtNum(Price, 2) : "—");
+  setTextById("hero-change", chgPctStr);
 
   // badge stato
-  setText("hero-state", State || "—");
+  setTextById("hero-state", State || "—");
 
   // meta snapshot
-  setText("hero-start", Start || "—");
-  setText("hero-end", End || "—");
+  setTextById("hero-start", Start || "—");
+  setTextById("hero-end", End || "—");
 
   // meta price
-  setText("hero-price2", Price !== undefined ? fmtNum(Price, 2) : "—");
+  setTextById("hero-price2", Price !== undefined ? fmtNum(Price, 2) : "—");
 
   // meta Δ%
-  setText("hero-change2", chgPctStr);
+  setTextById("hero-change2", chgPctStr);
 
   // meta currency
-  setText("hero-ccy", Currency || "—");
+  setTextById("hero-ccy", Currency || "—");
 
   // meta freshness
-  setText("hero-freshness", FreshnessLabel || "—");
+  setTextById("hero-freshness", FreshnessLabel || "—");
 
   // meta confidence
-  setText("hero-confidence",
+  setTextById(
+    "hero-confidence",
     ConfidenceFinal !== undefined ? fmtNum(ConfidenceFinal, 2) : "—"
   );
 
@@ -130,8 +131,7 @@ function mountHero(headerData) {
     }
   }
 
-  // tonebars in hero
-  // snapshot neutro
+  // tonebars
   const toneSnap  = document.getElementById("tone-snap");
   const tonePrice = document.getElementById("tone-price");
   const toneChg   = document.getElementById("tone-chg");
@@ -144,7 +144,7 @@ function mountHero(headerData) {
   if (toneCcy)   toneCcy.style.backgroundColor   = "var(--tone-n)";
   if (toneFresh) toneFresh.style.backgroundColor = "var(--tone-n)";
 
-  // chg: verde se >=0 , rosso se <0
+  // Δ% tono semaforo
   if (toneChg) {
     if (typeof ChangePct === "number") {
       toneChg.style.backgroundColor =
@@ -154,7 +154,7 @@ function mountHero(headerData) {
     }
   }
 
-  // conf: >=0.75 verde, <0.5 rosso, altro neutro
+  // confidence tono semaforo
   if (toneConf) {
     const cf = Number(ConfidenceFinal);
     if (!isNaN(cf)) {
@@ -171,20 +171,18 @@ function mountHero(headerData) {
   }
 
   // footer info
-  // version
   if (Version) {
-    setText("footer-version", Version);
+    setTextById("footer-version", Version);
   }
-  // snapshot
-  setText("footer-snapshot",
+
+  setTextById(
+    "footer-snapshot",
     (Start && End) ? (Start + " → " + End) : (Start || End || "—")
   );
-  // updated
-  // preferisci UpdatedAt se presente, altrimenti End, altrimenti Start
-  const upd = UpdatedAt || End || Start || "—";
-  setText("footer-updated", upd);
 
-  // footer year dinamico
+  const upd = UpdatedAt || End || Start || "—";
+  setTextById("footer-updated", upd);
+
   const yearEl = document.getElementById("footer-year");
   if (yearEl) {
     const now = new Date();
@@ -197,13 +195,11 @@ function mountHero(headerData) {
 // ------------------------------------------------------------
 
 async function loadManifest(reportId) {
-  // tenta manifest.json custom del report
   const url = `/report/reports/${reportId}/manifest.json`;
   const mf = await fetchJSON(url);
   if (mf) return mf;
 
   // fallback se non esiste manifest.json
-  // ordine verticale F1 -> F6
   return {
     id: reportId,
     title: "Tradelia · Report Runtime",
@@ -221,7 +217,6 @@ async function loadManifest(reportId) {
 }
 
 // mappa modulo -> section DOM id
-// NOTA: sia F1A che F1B montano dentro #sec-f1
 function getSectionSelectorForModule(modId) {
   const upper = modId.toUpperCase();
 
@@ -233,7 +228,6 @@ function getSectionSelectorForModule(modId) {
   if (upper === "F5B") return "#sec-f5b";
   if (upper === "F6")  return "#sec-f6";
 
-  // default fallback se arriva roba sconosciuta
   return null;
 }
 
@@ -246,7 +240,6 @@ function normalizeManifest(manifest, reportId) {
   const outMods = {};
   for (const key of Object.keys(manifest.modules || {})) {
     let path = manifest.modules[key];
-    // se è relativo tipo "f1b.json", prepend cartella del report
     if (
       typeof path === "string" &&
       !path.startsWith("http") &&
@@ -270,7 +263,6 @@ function normalizeManifest(manifest, reportId) {
 // ------------------------------------------------------------
 
 async function mountSingleModule(modId, jsonUrl, reportId) {
-  // trova il contenitore giusto
   const selector = getSectionSelectorForModule(modId);
   if (!selector) {
     console.warn(`Nessun section selector per ${modId}`);
@@ -287,8 +279,7 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
   const data = await fetchJSON(jsonUrl);
 
   // importa dinamicamente il renderer JS del modulo
-  // convenzione: "F1B" -> "f1b.js", "F5B" -> "f5b.js"
-  const fileBase = modId.toLowerCase(); // "f1b"
+  const fileBase = modId.toLowerCase();
   let mod;
   try {
     mod = await import(`/report/assets/js/modules/${fileBase}.js`);
@@ -321,7 +312,7 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
     container.innerHTML = html;
     container.classList.remove("is-loading");
 
-    // bind interazioni (Audit / Fonti -> openPanel ecc.)
+    // bind interazioni modulo (Dettagli regime ecc.)
     if (typeof mod.bindCard === "function") {
       try {
         mod.bindCard(container, data, { modId, reportId });
@@ -329,6 +320,19 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
         console.warn("bindCard error per", modId, bindErr);
       }
     }
+
+    // >>> TOOLTIP "?" SU METRICHE (anche nelle card dinamiche)
+    if (
+      window.__TradeliaUI &&
+      typeof window.__TradeliaUI.bindMetricInfoButtons === "function"
+    ) {
+      try {
+        window.__TradeliaUI.bindMetricInfoButtons();
+      } catch (e) {
+        console.warn("bindMetricInfoButtons error:", e);
+      }
+    }
+
   } else {
     // modulo importato ma senza renderCard
     container.innerHTML = `
@@ -382,7 +386,7 @@ async function mountReport() {
 // kick immediato
 mountReport();
 
-// (opzionale) esponiamo qualcosa su window per debug
+// esponiamo debug
 window.TradeliaApp = {
   mountReport,
   getReportIdFromURL
