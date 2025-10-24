@@ -1152,26 +1152,27 @@
     <div id="metric-popover-source" class="tl-popover__source">—</div>
   </div>
 
-  <!-- TOOLTIP MOBILE SHEET (metriche ?) -->
-  <div id="metric-sheet" class="tl-metric-sheet-overlay noprint" aria-hidden="true">
-    <div class="tl-metric-sheet-backdrop" data-metric-close></div>
+<!-- TOOLTIP MOBILE MODAL (metriche ?) -->
+<div id="metric-modal" class="tl-metric-modal-overlay noprint" aria-hidden="true">
+  <div class="tl-metric-modal-backdrop" data-metric-close></div>
 
-    <section class="tl-metric-sheet" role="dialog" aria-modal="true" aria-labelledby="metric-sheet-h-title">
-      <header class="tl-metric-sheet__header">
-        <div class="min-w-0">
-          <div id="metric-sheet-h-title" class="tl-metric-sheet__title">—</div>
-          <div id="metric-sheet-h-source" class="tl-metric-sheet__source">—</div>
-        </div>
-        <button class="tl-metric-sheet__closebtn" data-metric-close aria-label="Chiudi">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </header>
-      <div id="metric-sheet-body" class="tl-metric-sheet__body">—</div>
-    </section>
+  <div class="tl-metric-modal" role="dialog" aria-modal="true" aria-labelledby="metric-modal-title">
+    <header class="tl-metric-modal__header">
+      <div class="min-w-0">
+        <div id="metric-modal-title" class="tl-metric-modal__title">—</div>
+        <div id="metric-modal-source" class="tl-metric-modal__source">—</div>
+      </div>
+      <button class="tl-metric-modal__close" data-metric-close aria-label="Chiudi">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </header>
+    <div id="metric-modal-body" class="tl-metric-modal__body">—</div>
   </div>
+</div>
+
 
   <!-- SHARE OVERLAY -->
   <div id="share-overlay" class="share-overlay noprint" aria-hidden="true">
