@@ -1,276 +1,43 @@
-function fmtPct(v) {
-  if (v == null || isNaN(v)) return "—";
-  return (Number(v) >= 0 ? "+" : "") + Number(v).toFixed(2) + "%";
-}
-function fmtMM(v) {
-  if (v == null || isNaN(v)) return "—";
-  const n = Number(v);
-  if (Math.abs(n) >= 1e9) return (n / 1e9).toFixed(2) + "B";
-  if (Math.abs(n) >= 1e6) return (n / 1e6).toFixed(2) + "M";
-  if (Math.abs(n) >= 1e3) return (n / 1e3).toFixed(2) + "K";
-  return n.toFixed(2);
-}
-function fmtNum(v, d=2) {
-  if (v == null || isNaN(v)) return "—";
-  return Number(v).toFixed(d);
-}
-function clsSignal(sig) {
-  const s = String(sig||"").toLowerCase();
-  if (s.includes("momentum") && !s.includes("light")) return "badge badge--g";
-  if (s.includes("momentum") && s.includes("light"))  return "badge badge--y";
-  if (s.includes("pullback"))                          return "badge badge--r";
-  return "badge badge--n";
-}
-function barPct(val, maxAbs=10) {
-  // val in %, clamp to [-maxAbs, maxAbs]
-  const v = Math.max(-maxAbs, Math.min(maxAbs, Number(val||0)));
-  const pct = Math.abs(v) / maxAbs * 100;
-  const pos = v >= 0;
-  return `
-  <div class="w-full h-3 rounded bg-[color:var(--neutral-bg)] border border-[color:var(--neutral-br)] overflow-hidden">
-    <div class="h-full ${pos?'bg-[#10b981]':'bg-[#ef4444]'}" style="width:${pct}%;"></div>
-  </div>`;
-}
-function barZ(val, maxAbs=2.5) {
-  const v = Math.max(-maxAbs, Math.min(maxAbs, Number(val||0)));
-  const pct = Math.abs(v) / maxAbs * 100;
-  const pos = v >= 0;
-  return `
-  <div class="w-full h-3 rounded bg-[color:var(--neutral-bg)] border border-[color:var(--neutral-br)] overflow-hidden">
-    <div class="h-full ${pos?'bg-[#10b981]':'bg-[#ef4444]'}" style="width:${pct}%;"></div>
-  </div>`;
-}
-
-export function renderCard(data) {
-  // struttura dati attesa (tollerante a campi mancanti)
-  const asOf       = data?.snapshot?.asOf       || data?.AsOf || "—";
-  const vix        = data?.snapshot?.vix        ?? data?.VIX;
-  const breadthPct = data?.snapshot?.breadthPct ?? data?.BreadthPct;
-  const regime     = data?.snapshot?.regimeScore?? data?.RegimeScore;
-  const mode       = data?.snapshot?.strategyMode || data?.StrategyMode || "—";
-
-  const sectors    = Array.isArray(data?.sectors) ? data.sectors : [];
-
-  const headerRows = `
-    <tr class="bg-[color:var(--neutral-bg)]">
-      <td class="px-3 py-2 font-semibold text-[12.5px] text-[color:var(--muted)]">
-        <span>StrategyMode</span>
-        <button class="info-btn align-middle ml-1" data-metric="StrategyMode" aria-label="Info StrategyMode">?</button>
-      </td>
-      <td class="px-3 py-2" colspan="2">
-        <span class="${clsSignal(mode)}">${mode}</span>
-      </td>
-      <td class="px-3 py-2 font-semibold text-[12.5px] text-[color:var(--muted)]">
-        RegimeScore
-        <button class="info-btn ml-1" data-metric="RegimeScore" aria-label="Info RegimeScore">?</button>
-      </td>
-      <td class="px-3 py-2">${fmtNum(regime,3)}</td>
-      <td class="px-3 py-2 font-semibold text-[12.5px] text-[color:var(--muted)]">
-        Breadth 1m
-        <button class="info-btn ml-1" data-metric="Breadth" aria-label="Info Breadth">?</button>
-      </td>
-      <td class="px-3 py-2">${fmtPct(breadthPct)}</td>
-      <td class="px-3 py-2 font-semibold text-[12.5px] text-[color:var(--muted)]">
-        VIX
-        <button class="info-btn ml-1" data-metric="VIX" aria-label="Info VIX">?</button>
-      </td>
-      <td class="px-3 py-2">${fmtNum(vix,2)}</td>
-    </tr>
-  `;
-
-  const rows = sectors.map((s, i) => {
-    const etf   = s.etf || s.ETF || "—";
-    const name  = s.name || s.Name || "—";
-    const p1m   = (s.perf1m ?? s.Perf1m);
-    const infl  = (s.inflow5d ?? s.Inflow5d);
-    const zI    = (s.zInflow ?? s.ZInflow ?? s.Z_inflow);
-    const zP    = (s.zPerf1m ?? s.ZPerf1m ?? s.Z_perf1m);
-    const rt    = (s.riskTiltContrib ?? s.RiskTiltContrib);
-    const sig   = s.signal || s.Signal || "—";
-    const asofR = s.asOf    || s.AsOf    || asOf;
-
-    return `
-      <tr class="group hover:bg-[color:var(--neutral-bg)] cursor-pointer" data-row-index="${i}" tabindex="0" role="row" aria-label="${etf} ${name}">
-        <td class="px-3 py-2 font-semibold whitespace-nowrap">${etf}</td>
-        <td class="px-3 py-2 text-[12.5px] text-[color:var(--muted)] truncate">${name}</td>
-        <td class="px-3 py-2 w-32">
-          <div class="flex items-center gap-2">
-            <span class="min-w-[54px] text-right">${fmtPct(p1m)}</span>
-            ${barPct(p1m, 12)}
-          </div>
-        </td>
-        <td class="px-3 py-2 w-32">
-          <div class="flex items-center gap-2">
-            <span class="min-w-[54px] text-right">${fmtMM(infl)}</span>
-            ${barPct(Math.max(0, Number(infl||0))/1e6, 50)} <!-- scala grezza MM -->
-          </div>
-        </td>
-        <td class="px-3 py-2 w-28">
-          <div class="flex items-center gap-2">
-            <span class="min-w-[42px] text-right">${fmtNum(zI,2)}</span>
-            ${barZ(zI, 3)}
-          </div>
-        </td>
-        <td class="px-3 py-2 w-28">
-          <div class="flex items-center gap-2">
-            <span class="min-w-[42px] text-right">${fmtNum(zP,2)}</span>
-            ${barZ(zP, 3)}
-          </div>
-        </td>
-        <td class="px-3 py-2 w-24">
-          <div class="flex items-center gap-1">
-            <i data-lucide="${Number(rt)>0?'trending-up':Number(rt)<0?'trending-down':'minus'}" class="w-4 h-4"></i>
-            <span>${fmtNum(rt,2)}</span>
-            <button class="info-btn ml-1" data-metric="RiskTilt" aria-label="Info RiskTilt">?</button>
-          </div>
-        </td>
-        <td class="px-3 py-2 w-36"><span class="${clsSignal(sig)}">${sig}</span></td>
-        <td class="px-3 py-2 text-[12.5px] text-[color:var(--muted)] whitespace-nowrap">${asofR}</td>
-      </tr>`;
-  }).join("");
-
-  const table = `
-    <section class="p-0" aria-label="F1B · Strategy Terminal">
-      <header class="px-3 py-2 border-b border-[color:var(--br)] flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <i data-lucide="globe-2" class="w-4 h-4"></i>
-          <h3 class="m-0 text-[13.5px] font-extrabold tracking-tight">F1B · Panorama Macro (Strategy)</h3>
-        </div>
-        <div class="text-[12.5px] text-[color:var(--muted)]">As of: ${asOf}</div>
-      </header>
-
-      <div class="overflow-auto">
-        <table class="w-full text-sm" role="table">
-          <thead class="text-left text-[12.5px] text-[color:var(--muted)] border-b border-[color:var(--br)]">
-            ${headerRows}
-            <tr>
-              <th class="px-3 py-2">ETF</th>
-              <th class="px-3 py-2">Nome</th>
-              <th class="px-3 py-2">Perf 1m <button class="info-btn ml-1" data-metric="Perf1m">?</button></th>
-              <th class="px-3 py-2">Inflow 5d <button class="info-btn ml-1" data-metric="Inflow5d">?</button></th>
-              <th class="px-3 py-2">z(Inflow) <button class="info-btn ml-1" data-metric="zInflow">?</button></th>
-              <th class="px-3 py-2">z(Perf1m) <button class="info-btn ml-1" data-metric="zPerf1m">?</button></th>
-              <th class="px-3 py-2">RiskTilt <button class="info-btn ml-1" data-metric="RiskTilt">?</button></th>
-              <th class="px-3 py-2">Segnale <button class="info-btn ml-1" data-metric="Signal">?</button></th>
-              <th class="px-3 py-2">As of</th>
-            </tr>
-          </thead>
-          <tbody id="f1b-tbody">
-            ${rows || ""}
-          </tbody>
-        </table>
-      </div>
-    </section>
-  `;
-
-  return toElement(table);
-}
-
-export function bindCard(root, data, ctx) {
-  const tbody = root.querySelector("#f1b-tbody");
-  if (!tbody) return;
-
-  function drawerHTML(row) {
-    const etf = row?.etf || row?.ETF || "—";
-    const name = row?.name || row?.Name || "—";
-    const p1m  = row?.perf1m ?? row?.Perf1m;
-    const infl = row?.inflow5d ?? row?.Inflow5d;
-    const zI   = row?.zInflow ?? row?.ZInflow;
-    const zP   = row?.zPerf1m ?? row?.ZPerf1m;
-    const rt   = row?.riskTiltContrib ?? row?.RiskTiltContrib;
-    const sig  = row?.signal || row?.Signal || "—";
-    const asofR= row?.asOf || row?.AsOf || (data?.snapshot?.asOf||"—");
-
-    const mode = data?.snapshot?.strategyMode || data?.StrategyMode || "—";
-    const reg  = data?.snapshot?.regimeScore ?? data?.RegimeScore;
-
-    const filters = (data?.audit?.filtersF2 || data?.FiltersF2 || []);
-    const topIn   = (data?.audit?.topInflow  || data?.TopInflow  || []).slice(0,3);
-    const auditId = data?.audit?.auditPathId || data?.AuditPathID || "—";
-
-    return `
-      <section>
-        <h4 class="flex items-center gap-2"><i data-lucide="file-text"></i>Dettaglio settore</h4>
-        <div class="text-[12.8px] leading-6">
-          <div><strong>${etf}</strong> · ${name}</div>
-          <div class="mt-1 grid grid-cols-2 gap-2">
-            <div>Perf 1m <button class="info-btn" data-metric="Perf1m">?</button>: <strong>${fmtPct(p1m)}</strong></div>
-            <div>Inflow 5d <button class="info-btn" data-metric="Inflow5d">?</button>: <strong>${fmtMM(infl)}</strong></div>
-            <div>z(Inflow) <button class="info-btn" data-metric="zInflow">?</button>: <strong>${fmtNum(zI,2)}</strong></div>
-            <div>z(Perf1m) <button class="info-btn" data-metric="zPerf1m">?</button>: <strong>${fmtNum(zP,2)}</strong></div>
-            <div>RiskTilt <button class="info-btn" data-metric="RiskTilt">?</button>: <strong>${fmtNum(rt,2)}</strong></div>
-            <div>Segnale <button class="info-btn" data-metric="Signal">?</button>: <span class="${clsSignal(sig)}">${sig}</span></div>
-          </div>
-          <div class="mt-1 text-[12.5px] text-[color:var(--muted)]">As of: ${asofR}</div>
-        </div>
-      </section>
-
-      <section>
-        <h4 class="flex items-center gap-2"><i data-lucide="gauge"></i>Decisione & Regole</h4>
-        <div class="text-[12.8px] leading-6">
-          <div>StrategyMode <button class="info-btn" data-metric="StrategyMode">?</button>: <span class="${clsSignal(mode)}">${mode}</span></div>
-          <div>RegimeScore <button class="info-btn" data-metric="RegimeScore">?</button>: <strong>${fmtNum(reg,3)}</strong></div>
-          <div class="text-[12.5px] text-[color:var(--muted)] mt-1">
-            Soglie: ≥ +0.35 → Momentum · +0.10–+0.35 → Momentum-light · < +0.10 → Pullback
-            <button class="info-btn ml-1" data-metric="F1B_Rules">?</button>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <h4 class="flex items-center gap-2"><i data-lucide="move-diagonal"></i>Flussi (Top)</h4>
-        <div class="text-[12.8px] leading-6">
-          ${(topIn||[]).map(t=>`<div>• <strong>${t?.etf||t?.ETF||"—"}</strong> — ${fmtMM(t?.inflow5d||t?.Inflow5d)} (5d)</div>`).join("") || "<div>—</div>"}
-        </div>
-      </section>
-
-      <section>
-        <h4 class="flex items-center gap-2"><i data-lucide="filter"></i>Filtri F2 coerenti</h4>
-        <ul class="list-disc ml-5 text-[12.8px]">${(filters||[]).map(f=>`<li>${f}</li>`).join("") || "<li>—</li>"}</ul>
-      </section>
-
-      <section>
-        <h4 class="flex items-center gap-2"><i data-lucide="shield"></i>Audit</h4>
-        <div class="text-[12.8px] leading-6">
-          AuditPathID: <code>${auditId}</code>
-          <button class="info-btn ml-1" data-metric="AuditPathID">?</button>
-        </div>
-      </section>
-    `;
+{
+  "as_of": "2025-10-22",
+  "variant": "F1B",
+  "module_title": "Market Strategy – Momentum Regime",
+  "strategy_mode": "Momentum",
+  "regime_score": 0.67,
+  "breadth_1m": 0.58,
+  "vix_level": 18.9,
+  "top_inflow_5d": [
+    { "sector": "Technology", "inflow": 2.6 },
+    { "sector": "Industrials", "inflow": 1.4 },
+    { "sector": "Healthcare", "inflow": 1.2 },
+    { "sector": "Financials", "inflow": 0.8 },
+    { "sector": "Energy", "inflow": 0.5 }
+  ],
+  "macro_trends": [
+    "Rallentamento moderato dei rendimenti obbligazionari USA",
+    "Flussi in ripresa su settori growth e large cap",
+    "Dollaro in consolidamento, risk-on in Europa"
+  ],
+  "drivers": [
+    "PMI compositi in miglioramento marginale",
+    "Inflazione core in discesa, ma consumi resilienti",
+    "Stime utili S&P500 +2.3% QoQ"
+  ],
+  "filters_f2_alignment": [
+    "SCI_tkr coerente con regime momentum",
+    "DPI_context = positivo in 3 su 4 macro-regioni",
+    "COT netto risk-on su equity index futures"
+  ],
+  "decision": {
+    "summary": "Regime Momentum attivo ma in fase di estensione",
+    "tone": "positive",
+    "score": 0.83,
+    "notes": "Preferenza per settori tecnologici e industriali; attenzione a volatilità crescente su breve periodo."
+  },
+  "audit": {
+    "source_sync": "Bloomberg, Finviz, Barchart, CFTC",
+    "feed_lag_days": 0,
+    "confidence": 0.9,
+    "integrity": 0.88
   }
-
-  function openRow(idx) {
-    const row = Array.isArray(data?.sectors) ? data.sectors[idx] : null;
-    const etf = row?.etf || row?.ETF || "—";
-    const name = row?.name || row?.Name || "—";
-    const html = drawerHTML(row);
-    const subtitle = `${etf} · ${name}`;
-    ctx?.openDrawer?.("Dettagli settore (F1B)", subtitle, html);
-  }
-
-  tbody.addEventListener("click", (e) => {
-    const tr = e.target.closest("tr[data-row-index]");
-    if (!tr) return;
-    openRow(Number(tr.dataset.rowIndex));
-  });
-
-  // keyboard nav
-  tbody.addEventListener("keydown", (e) => {
-    const tr = e.target.closest("tr[data-row-index]");
-    if (!tr) return;
-    if (e.key === "Enter") {
-      e.preventDefault();
-      openRow(Number(tr.dataset.rowIndex));
-    }
-    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-      e.preventDefault();
-      const dir = e.key === "ArrowDown" ? 1 : -1;
-      const idx = Number(tr.dataset.rowIndex) + dir;
-      const next = tbody.querySelector(`tr[data-row-index="${idx}"]`);
-      if (next) next.focus();
-    }
-  });
 }
-
-/* Helpers */
-function toElement(html){ const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content.firstElementChild; }
