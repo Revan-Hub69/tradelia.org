@@ -1,115 +1,87 @@
-/*
-  Tradelia · share.css (v1.2 mobile-first, no short link, no QR)
-  - Bottom sheet responsive "Condividi"
-  - Link copia + social puliti
-  - Nessun tracciamento esterno
-*/
+/* =========================================================
+   Tradelia · Share Sheet styles
+   Path: /report/assets/css/share.css
+   Dipende dai token definiti in tokens.css:
+   - --surface-card
+   - --surface-card-alt
+   - --ink
+   - --muted
+   - --br-card
+   - --br-card-strong
+   - --shadow-lg / --shadow-card
+   ========================================================= */
 
-:root {
-  --share-backdrop: rgba(0,0,0,.4);
-  --share-sheet-bg: var(--card);
-  --share-sheet-ink: var(--ink);
-  --share-border: var(--br);
-  --share-shadow: var(--shadow-2);
-}
-
-html[data-theme="dark"] {
-  --share-backdrop: rgba(0,0,0,.6);
-}
-
-/* === Overlay full-screen === */
-#share-overlay {
+.share-overlay {
   position: fixed;
   inset: 0;
-  z-index: 80;
+  z-index: 100;
   display: none;
 }
-#share-overlay[aria-hidden="false"] {
+.share-overlay[aria-hidden="false"] {
   display: block;
 }
 
 .share-overlay__backdrop {
   position: absolute;
   inset: 0;
-  background: var(--share-backdrop);
+  background: rgba(0,0,0,.45);
   backdrop-filter: blur(2px);
   opacity: 0;
   transition: opacity .18s ease;
 }
 
-#share-overlay.is-open .share-overlay__backdrop {
-  opacity: 1;
-}
-
-/* === Sheet / bottom sheet mobile + modal centrata desktop === */
+/* bottom sheet stile "mobile-first", ma va bene anche desktop */
 .share-sheet {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
 
-  /* stato chiuso mobile: fuori vista sotto */
-  transform: translateY(100%);
-  width: 100vw;
-  max-width: 480px;
-  max-height: 80vh;
-
   margin-left: auto;
   margin-right: auto;
 
-  border: 1px solid var(--share-border);
+  width: 100vw;
+  max-width: 400px;
+  max-height: 70vh;
+
+  background: var(--surface-card);
+  color: var(--ink);
+  border: 1px solid var(--br-card);
   border-radius: 16px 16px 0 0;
-  box-shadow: var(--share-shadow);
-  background: var(--share-sheet-bg);
-  color: var(--share-sheet-ink);
+  box-shadow: var(--shadow-lg);
 
-  display: grid;
-  grid-template-rows: auto 1fr auto;
+  display: flex;
+  flex-direction: column;
 
+  transform: translateY(100%);
   opacity: 0;
   transition: transform .2s ease, opacity .2s ease;
+
   overflow: hidden;
-  z-index: 81; /* sopra il backdrop */
+  z-index: 101;
 }
 
-/* Aperto mobile */
-#share-overlay.is-open .share-sheet {
+/* stato aperto */
+.share-overlay.is-open .share-overlay__backdrop {
+  opacity: 1;
+}
+.share-overlay.is-open .share-sheet {
   transform: translateY(0);
   opacity: 1;
 }
 
-/* Desktop / >=640px: dialog centrato */
-@media(min-width:640px){
-  .share-sheet {
-    top: 50%;
-    bottom: auto;
-    left: 0;
-    right: 0;
-    width: min(400px, 92vw);
-    max-height: 70vh;
-    border-radius: 16px;
-
-    /* stato chiuso desktop: un filo sotto il centro */
-    transform: translateY(calc(-50% + 12px));
-  }
-  #share-overlay.is-open .share-sheet {
-    /* aperto desktop: centrato perfetto */
-    transform: translateY(-50%);
-    opacity: 1;
-  }
-}
-
-/* Header */
 .share-sheet__header {
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid color-mix(in oklab, var(--br-card) 80%, transparent);
+  background: color-mix(in oklab, var(--surface-card) 96%, white 4%);
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: .75rem;
-  padding: 14px 16px 12px;
-  border-bottom: 1px solid color-mix(in oklab, var(--share-border) 80%, transparent);
-  background: color-mix(in oklab, var(--card) 96%, white 4%);
 }
-.share-sheet__title-wrap { min-width: 0; }
+.share-sheet__titlewrap {
+  min-width: 0;
+}
 .share-sheet__title {
   font-weight: 800;
   font-size: 14px;
@@ -120,169 +92,112 @@ html[data-theme="dark"] {
   gap: .5rem;
   letter-spacing: .2px;
 }
-.share-sheet__sub {
-  font-size: 12.5px;
+.share-sheet__subtitle {
+  margin-top: 2px;
+  font-size: 12px;
   line-height: 1.4;
   color: var(--muted);
-  margin-top: 2px;
+  word-break: break-word;
 }
 
-.share-close-btn {
+.share-sheet__closebtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   height: 30px;
   min-width: 30px;
   border-radius: 8px;
-  border: 1px solid var(--share-border);
-  background: var(--card);
+  border: 1px solid var(--br-card);
+  background: var(--surface-card);
   color: var(--muted);
   font-size: 12px;
   line-height: 1;
   cursor: pointer;
-  transition: background .15s ease, opacity .15s ease;
 }
-.share-close-btn:hover {
-  background: color-mix(in oklab, var(--card) 88%, white 12%);
-  opacity: .9;
-}
-.share-close-btn i{
-  width:16px;
-  height:16px;
+.share-sheet__closebtn i {
+  width: 16px;
+  height: 16px;
 }
 
-/* Body contenuti */
 .share-sheet__body {
-  padding: 14px 16px;
+  padding: 16px;
   overflow-y: auto;
-  background: var(--card);
-  color: var(--ink);
   font-size: 13px;
   line-height: 1.45;
+  color: var(--ink);
+  background: var(--surface-card);
   display: grid;
-  gap: 16px;
+  row-gap: 1rem;
 }
 
-/* Box link unico */
-.share-linkbox {
-  border: 1px solid var(--share-border);
-  border-radius: 10px;
-  background: var(--card);
-  box-shadow: var(--shadow-1);
-  padding: 10px 12px;
+/* blocchi riga */
+.share-row {
   display: grid;
-  gap: 8px;
+  row-gap: .4rem;
 }
-.share-linkbox__label {
+
+.share-label {
   font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
   font-weight: 600;
   color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: .05em;
 }
-.share-linkbox__row {
+
+.share-linkwrap {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: .75rem;
+  align-items: stretch;
+  gap: .5rem;
   flex-wrap: wrap;
 }
-.share-linkbox__url {
-  font-family: ui-monospace,Menlo,Monaco,Consolas,"Courier New",monospace;
-  font-size: 12.5px;
-  line-height: 1.4;
-  word-break: break-all;
-  color: var(--ink);
+
+.share-input {
   flex: 1 1 auto;
   min-width: 0;
+
+  background: var(--surface-card-alt);
+  color: var(--ink);
+  border: 1px solid var(--br-card);
+  border-radius: 10px;
+  padding: .5rem .6rem;
+  font-size: 12.8px;
+  line-height: 1.4;
+  font-family: ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-weight: 600;
+  box-shadow: var(--shadow-card);
 }
+
 .share-copy-btn {
   flex: 0 0 auto;
-  white-space: nowrap;
-  font-size: 12.5px;
-  font-weight: 600;
-  height: 30px;
-  padding: 0 .6rem;
-  border-radius: 8px;
-  border: 1px solid var(--brand-600);
-  background: var(--brand-600);
-  color: #fff;
-  cursor: pointer;
-  transition: opacity .15s ease;
-}
-.share-copy-btn:hover { opacity: .9; }
-.share-copy-btn.copied {
-  background: transparent;
-  color: var(--brand-600);
-  border-color: var(--brand-600);
-}
-
-/* Social row responsive */
-.share-social {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-@media(min-width:480px){
-  .share-social {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-}
-.share-social-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+/* hint sotto */
+.share-hint {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+/* actions finali */
+.share-actions {
+  display: flex;
+  flex-direction: column;
   gap: .5rem;
-  height: 44px;
-  padding: 0 .7rem;
-  border-radius: 10px;
-  font-size: 13px;
-  line-height: 1.1;
-  font-weight: 600;
-  background: var(--card);
-  color: var(--ink);
-  border: 1px solid var(--share-border);
-  box-shadow: var(--shadow-1);
-  cursor: pointer;
-  transition: background .15s ease, opacity .15s ease;
-  text-align: left;
-}
-.share-social-btn:hover {
-  background: color-mix(in oklab, var(--card) 88%, white 12%);
-  opacity: .95;
-}
-.share-social-btn i{
-  width:16px;
-  height:16px;
-  color: var(--brand-600);
 }
 
-/* Footer */
-.share-sheet__footer {
-  padding: 10px 16px 14px;
-  border-top: 1px solid color-mix(in oklab, var(--share-border) 80%, transparent);
-  background: color-mix(in oklab, var(--card) 96%, white 4%);
-  display:flex;
-  justify-content:flex-end;
-}
-.share-done-btn {
-  height: 32px;
-  padding: 0 .8rem;
-  border-radius: 8px;
-  border: 1px solid var(--share-border);
-  background: var(--card);
-  color: var(--ink);
-  font-size: 12.5px;
-  font-weight: 600;
-  line-height: 1;
-  cursor: pointer;
-  transition: background .15s ease, opacity .15s ease;
-}
-.share-done-btn:hover {
-  background: color-mix(in oklab, var(--card) 88%, white 12%);
-  opacity: .95;
+.share-actions .btn {
+  width: 100%;
+  justify-content: center;
+  text-align: center;
 }
 
-/* Stampa: non mostrare overlay */
-@media print {
-  #share-overlay { display:none !important; }
-}
+/* responsive desktop:
+   su viewport larghi la sheet rimane comunque bottom, ma visivamente va bene;
+   se vorrai "modal centrata", basta cambiare transform/position qui.
+*/
+
+/* print: già gestita dal print CSS globale (index/tokens) */
