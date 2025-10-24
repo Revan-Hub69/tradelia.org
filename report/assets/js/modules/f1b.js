@@ -1,265 +1,250 @@
-// Tradelia · F1B (Market Strategy) — V3 istituzionale 2026
-// Card chiusa essenziale + Drawer unico. Tutte le voci hanno tooltip.
-// Dipendenze: tokens.css (badge/kpi/btn/card-compact) + popover già in index.
+// /report/assets/js/modules/f1b.js
+//
+// Modulo F1B · Contesto iniziale / Regime di mercato
+// Montato su #mod-f1 (vedi window.Tradelia.mountTarget.F1B)
+//
+// Export richiesti dal runtime:
+// - renderCard(data, ctx) => string HTML
+// - bindCard(node, data, ctx) => attach listeners
 
-const safeNum = v => (Number.isFinite(+v) ? +v : null);
-const fmt = {
-  pct(v, d = 0) { const n = safeNum(v); return n == null ? "—" : `${n.toFixed(d)}%`; },
-  num(v, d = 2) { const n = safeNum(v); return n == null ? "—" : n.toFixed(d); },
-  moneyMM(v)    { const n = safeNum(v); return n == null ? "—" : `${n.toLocaleString(undefined,{maximumFractionDigits:0})}M`; },
-  date(s)       { return s || "—"; }
-};
-const toneDot   = t => ({g:"dot-g",y:"dot-y",r:"dot-r",n:"dot-n"}[String(t||"n").toLowerCase()]||"dot-n");
-const toneBadge = t => ({g:"badge--g",y:"badge--y",r:"badge--r",n:"badge--n"}[String(t||"n").toLowerCase()]||"badge--n");
-
-// semaforo coerente con le soglie F1B
-function toneForStrategy(mode, score){
-  const m = String(mode||"").toLowerCase();
-  if (m==="momentum") return "g";
-  if (m==="momentum-light") return "y";
-  if (m==="pullback") return "r";
-  const s = safeNum(score);
-  if (s==null) return "n";
-  if (s>=0.35) return "g";
-  if (s>=0.10) return "y";
-  return "r";
-}
-function toneForBreadth(b){
-  const n = safeNum(b);
-  if (n==null) return "n";
-  if (n>=0.60) return "g";
-  if (n>=0.40) return "y";
-  return "r";
-}
-
-/* ---------- micro componenti con tooltip ---------- */
-function infoBtn(key, labelA11y) {
-  return `<button class="info-btn" data-metric="${key}" aria-label="Info ${labelA11y}" title="Info">?</button>`;
-}
-function kv(label, key, valueHTML) {
-  // Riga “chiave : valore” con tooltip. Layout consistente da report.
-  return `
-    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:.75rem">
-      <div class="text-muted-12" style="display:inline-flex;align-items:center;gap:.35rem">
-        <span>${label}</span>${infoBtn(key, label)}
+export function renderCard(data, ctx = {}) {
+  // safety fallback
+  if (!data) {
+    return `
+      <div class="text-[13px] text-[color:var(--ink)]">
+        <div class="font-bold text-[14px] leading-[1.4] mb-2">
+          Dati F1B non disponibili
+        </div>
+        <p class="text-[12.5px] text-[color:var(--muted)] leading-[1.4]">
+          Impossibile caricare il regime di mercato.
+        </p>
       </div>
-      <div style="font-weight:700">${valueHTML}</div>
-    </div>`;
-}
-function table(rowsHTML) {
-  return `<table style="width:100%;border-collapse:collapse;font-size:13px"><tbody>${rowsHTML}</tbody></table>`;
-}
-function trow(label, key, valueHTML) {
-  return `
-  <tr>
-    <td style="padding:6px 8px;border-bottom:1px solid var(--br);width:42%;color:var(--muted)">
-      <div class="flex items-center gap-1"><span class="meta-label">${label}</span>${infoBtn(key,label)}</div>
-    </td>
-    <td style="padding:6px 8px;border-bottom:1px solid var(--br);color:var(--ink)">${valueHTML}</td>
-  </tr>`;
-}
-
-/* =========================
-   CARD CHIUSA — versione istituzionale
-========================= */
-export function renderCard(data, { featured=false, title="F1B · Market Strategy" } = {}) {
-  const wrap = document.createElement(featured ? "section" : "article");
-  if (featured) {
-    Object.assign(wrap.style, {
-      border:"1px solid var(--br)", borderRadius:"18px", background:"var(--card)",
-      boxShadow:"var(--shadow-2)", padding:"16px", marginBottom:"16px"
-    });
-  } else {
-    wrap.className = "card-compact";
+    `;
   }
 
-  const meta = data?.meta||{};
-  const calc = data?.calc||{};
-  const decision = data?.decision||{};
-  const asof = meta.asof||"—";
-  const fresh = meta.freshness||"—";
+  // estraggo i campi con fallback
+  const title          = data.module_title || "Market Strategy";
+  const mode           = data.strategy_mode || "—";
+  const regimeScore    = data.regime_score ?? null;
+  const breadth        = data.breadth_1m ?? null;
+  const vix            = data.vix_level ?? null;
 
-  const mode = decision?.strategy_mode || "—";
-  const toneS = toneForStrategy(mode, calc?.regime_score);
+  const macroTrends    = Array.isArray(data.macro_trends) ? data.macro_trends : [];
+  const drivers        = Array.isArray(data.drivers) ? data.drivers : [];
+  const filtersAlign   = Array.isArray(data.filters_f2_alignment) ? data.filters_f2_alignment : [];
 
-  const breadth = safeNum(calc?.breadth);
-  const breadthPct = breadth!=null ? fmt.pct(breadth*100,0) : "—";
-  const toneB = toneForBreadth(breadth);
+  const decision = data.decision || {};
+  const decisionSummary = decision.summary || "—";
+  const decisionTone    = decision.tone || "neutral";
+  const decisionScore   = decision.score ?? null;
+  const decisionNotes   = decision.notes || "";
 
-  const top3 = Array.isArray(decision?.top3_inflow) ? decision.top3_inflow.slice(0,3) : [];
-  const chips = top3.length
-    ? top3.map(x=>`<span class="badge badge--n" style="font-weight:700"><code>${x.symbol||'—'}</code></span>`).join(" ")
-    : `<span class="text-muted-12">—</span>`;
+  // tono -> badge
+  let toneColor = "var(--tone-n)";
+  if (decisionTone === "positive") toneColor = "var(--tone-g)";
+  if (decisionTone === "negative") toneColor = "var(--tone-r)";
 
-  // Testata sobria: titolo + pill di stato a destra
-  wrap.innerHTML = `
-    <div class="card-compact__head" style="align-items:center;padding-bottom:8px">
-      <div class="card-compact__title" style="font-weight:800">${title}</div>
-      <span class="badge ${toneBadge(toneS)}" style="font-weight:800">${mode}</span>
-    </div>
+  // helper per list rendering
+  function renderList(arr) {
+    if (!arr.length) {
+      return `<li class="text-[12.5px] text-[color:var(--muted)] leading-[1.4]">—</li>`;
+    }
+    return arr.map(item => `
+      <li class="leading-[1.45] text-[13px] text-[color:var(--ink)]">${item}</li>
+    `).join("");
+  }
 
-    <div class="card-compact__body" style="display:grid;gap:12px">
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px">
-        ${kv("StrategyMode","StrategyMode",
-            `<span class="kpi"><span class="dot ${toneDot(toneS)}"></span><span>${mode}</span></span>`)}
-        ${kv("Breadth (1m)","Breadth",
-            `<span class="kpi"><span class="dot ${toneDot(toneB)}"></span><span>${breadthPct}</span></span>`)}
-        <div>
-          <div class="text-muted-12" style="display:inline-flex;align-items:center;gap:.35rem;margin-bottom:6px">
-            <span>Top inflow (5d)</span>${infoBtn("Inflow5d","Top inflow (5d)")}
+  // "audit" link nel drawer: ci agganciamo via data-open-drawer
+  const auditHtml = `
+    <button
+      class="btn btn-sm"
+      data-open-drawer="audit-f1b"
+      type="button"
+    >
+      Audit / Fonti
+    </button>
+  `;
+
+  return `
+    <div class="text-[13px] leading-[1.45] text-[color:var(--ink)]">
+      <!-- Header titolo + mode -->
+      <div class="flex flex-wrap items-baseline justify-between gap-2 mb-3">
+        <div class="min-w-0">
+          <div class="text-[14px] font-extrabold leading-[1.4] text-[color:var(--ink)]">
+            ${escapeHtml(title)}
           </div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap">${chips}</div>
+          <div class="text-[12px] text-[color:var(--muted)] leading-[1.4]">
+            Regime attuale: <span class="font-semibold text-[color:var(--ink)]">${escapeHtml(mode)}</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <div
+            class="px-2 py-1 rounded-md text-[11px] font-semibold leading-none border"
+            style="
+              background: color-mix(in oklab, ${toneColor} 15%, transparent);
+              color:${toneColor};
+              border-color: ${toneColor};
+            "
+          >
+            ${escapeHtml(decisionTone)}
+          </div>
         </div>
       </div>
 
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:4px">
-        <div class="flex items-center gap-5">
-          <span class="text-muted-12" style="display:inline-flex;align-items:center;gap:.35rem">
-            <strong>${fmt.date(asof)}</strong>${infoBtn("AsOf","As of")}
-          </span>
-          <span class="text-muted-12" style="display:inline-flex;align-items:center;gap:.35rem">
-            <strong>${fresh}</strong>${infoBtn("Freshness","Freshness")}
-          </span>
+      <!-- Metrichette chiave -->
+      <div class="grid grid-cols-3 gap-3 mb-4 text-[12px] leading-[1.4]">
+        <div class="p-2 rounded-md border border-[color:var(--br-card)] bg-[color:var(--surface-card-alt)] shadow-[var(--shadow-card)]">
+          <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold mb-1">Regime Score</div>
+          <div class="font-mono font-bold text-[color:var(--ink)] text-[13px]">${fmtNum(regimeScore)}</div>
         </div>
-        <button class="btn btn-sm" type="button" data-act="details"><i data-lucide="file-text"></i><span>Dettagli</span></button>
+
+        <div class="p-2 rounded-md border border-[color:var(--br-card)] bg-[color:var(--surface-card-alt)] shadow-[var(--shadow-card)]">
+          <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold mb-1">Breadth 1M</div>
+          <div class="font-mono font-bold text-[color:var(--ink)] text-[13px]">${fmtNum(breadth)}</div>
+        </div>
+
+        <div class="p-2 rounded-md border border-[color:var(--br-card)] bg-[color:var(--surface-card-alt)] shadow-[var(--shadow-card)]">
+          <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold mb-1">VIX</div>
+          <div class="font-mono font-bold text-[color:var(--ink)] text-[13px]">${fmtNum(vix)}</div>
+        </div>
+      </div>
+
+      <!-- Macro trends / Drivers -->
+      <div class="grid sm:grid-cols-2 gap-4 mb-4">
+        <div class="min-w-0">
+          <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)] mb-1">
+            Macro trend in corso
+          </div>
+          <ul class="list-disc pl-4">
+            ${renderList(macroTrends)}
+          </ul>
+        </div>
+
+        <div class="min-w-0">
+          <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)] mb-1">
+            Driver principali
+          </div>
+          <ul class="list-disc pl-4">
+            ${renderList(drivers)}
+          </ul>
+        </div>
+      </div>
+
+      <!-- Allineamento F2 -->
+      <div class="mb-4">
+        <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)] mb-1">
+          Coerenza con sentiment / flussi (F2)
+        </div>
+        <ul class="list-disc pl-4">
+          ${renderList(filtersAlign)}
+        </ul>
+      </div>
+
+      <!-- Decision block -->
+      <div class="rounded-md border border-[color:var(--br-card)] bg-[color:var(--surface-card-alt)] shadow-[var(--shadow-card)] p-3">
+        <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)] mb-2">
+          Sintesi Regime
+        </div>
+        <div class="font-semibold text-[color:var(--ink)] text-[13px] leading-[1.4]">
+          ${escapeHtml(decisionSummary)}
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mt-3 text-[12px] leading-[1.4]">
+          <div>
+            <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold mb-1">Score</div>
+            <div class="font-mono font-bold text-[color:var(--ink)] text-[13px]">${fmtNum(decisionScore)}</div>
+          </div>
+          <div>
+            <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold mb-1">Note</div>
+            <div class="text-[color:var(--ink)] text-[12.5px] leading-[1.4]">${escapeHtml(decisionNotes)}</div>
+          </div>
+        </div>
+
+        <div class="mt-4 flex flex-wrap gap-2">
+          ${auditHtml}
+        </div>
       </div>
     </div>
   `;
-  return wrap;
 }
 
-/* =========================
-   DRAWER “Dettagli” — 7 sezioni, griglia da report
-========================= */
-export function bindCard(root, data, ctx) {
-  const meta = data?.meta||{};
-  const regime = data?.regime||{};
-  const trends = data?.trends||{};
-  const drivers = data?.drivers||{};
-  const sectors = Array.isArray(data?.sectors)? data.sectors: [];
-  const calc = data?.calc||{};
-  const decision = data?.decision||{};
-  const f2 = data?.f2_filters||{};
-  const audit = data?.audit||{};
+// attacca listener tipo "Audit / Fonti" -> apre drawer con audit info
+export function bindCard(node, data, ctx = {}) {
+  if (!node || !data) return;
 
-  // Sez. 1 — Decisione & Regole
-  const s1 = table(
-    trow("StrategyMode","StrategyMode", `<strong>${decision?.strategy_mode||"—"}</strong>`) +
-    trow("RegimeScore","RegimeScore", fmt.num(calc?.regime_score)) +
-    trow("FlowScore","FlowScore", fmt.num(calc?.flow_score)) +
-    trow("Soglie","StrategyThresholds","≥ +0.35 Momentum · +0.10–+0.35 Momentum-light · < +0.10 Pullback")
-  );
+  const auditBtn = node.querySelector('[data-open-drawer="audit-f1b"]');
+  if (auditBtn) {
+    auditBtn.addEventListener('click', () => {
+      // usiamo l'openDrawer globale definito nello script inline dell'index
+      if (typeof window.openDrawer === 'function') {
+        const a = data.audit || {};
+        const html = `
+          <div class="text-[13px] leading-[1.45] text-[color:var(--ink)] space-y-3">
+            <p class="text-[12px] text-[color:var(--muted)] leading-[1.4]">
+              Questo pannello ha finalità informative/formative. Non costituisce
+              consulenza personalizzata, raccomandazione esecutiva o sollecitazione
+              al pubblico risparmio.
+            </p>
 
-  // Sez. 2 — Input & Calcoli
-  const vixTier = (()=> {
-    const v = safeNum(data?.inputs?.vix?.value);
-    if (v==null) return "—";
-    if (v < 15) return `${fmt.num(v,1)} · basso`;
-    if (v <= 22) return `${fmt.num(v,1)} · medio`;
-    return `${fmt.num(v,1)} · alto`;
-  })();
-  const s2 = table(
-    trow("VIX (T-1)","VIX", vixTier) +
-    trow("Breadth (1m)","Breadth", (()=>{const b=safeNum(calc?.breadth); return b==null?"—":fmt.pct(b*100,0);})()) +
-    trow("Risk Tilt (z)","RiskTilt", fmt.num(calc?.z_risk_tilt)) +
-    trow("Z-score (def.)","ZScore","(valore − media)/σ sui 10 SPDR")
-  );
+            <div>
+              <div class="font-semibold text-[13px] text-[color:var(--ink)] leading-[1.4] mb-1">
+                Origine dati
+              </div>
+              <div class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">
+                ${escapeHtml(a.source_sync || "—")}
+              </div>
+            </div>
 
-  // Sez. 3 — Trends macro
-  const s3 = table(
-    trow("Growth Momentum","GrowthMomentum", trends?.growth_momentum?.value ?? "—") +
-    trow("Inflation Momentum","InflationMomentum", trends?.inflation_momentum?.value ?? "—") +
-    trow("Liquidity Impulse","LiquidityImpulse", `${fmt.num(trends?.liquidity_impulse?.score)} (${trends?.liquidity_impulse?.value ?? "—"})`) +
-    trow("Credit HY Spread","CreditHYSpread", `${fmt.num(trends?.credit_hy_spread?.score)} (${trends?.credit_hy_spread?.value ?? "—"})`)
-  );
+            <div class="grid grid-cols-2 gap-3">
+              <div class="text-[12px] leading-[1.4]">
+                <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold mb-1">Lag (giorni)</div>
+                <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">${fmtNum(a.feed_lag_days)}</div>
+              </div>
+              <div class="text-[12px] leading-[1.4]">
+                <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold mb-1">Confidence</div>
+                <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">${fmtNum(a.confidence)}</div>
+              </div>
+            </div>
 
-  // Sez. 4 — Drivers di mercato
-  const s4 = table(
-    trow("DXY Trend","DXYTrend", `${fmt.num(drivers?.dxy_trend?.score)} (${drivers?.dxy_trend?.value ?? "—"})`) +
-    trow("UST10Y Trend","UST10YTrend", `${fmt.num(drivers?.ust10y_trend?.score)} (${drivers?.ust10y_trend?.value ?? "—"})`) +
-    trow("Commodities Beta","CommoditiesBeta", `${fmt.num(drivers?.commodities_beta?.score)} (${drivers?.commodities_beta?.value ?? "—"})`) +
-    trow("Policy Stance (1M)","PolicyStance", drivers?.policy_stance_1m?.value ?? "—")
-  );
+            <div class="text-[12px] leading-[1.4]">
+              <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold mb-1">
+                Integrità dataset
+              </div>
+              <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">${fmtNum(a.integrity)}</div>
+            </div>
 
-  // Sez. 5 — Flussi settoriali (Top 10 SPDR)
-  const top3 = Array.isArray(decision?.top3_inflow) ? decision.top3_inflow : [];
-  const s5Head = `
-    <div style="margin-bottom:6px;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">
-      <div class="flex items-center gap-1">
-        <div class="meta-label">Top 3 inflow (5d)</div>${infoBtn("Inflow5d","Inflow 5d")}
-      </div>
-      <div>
-        ${top3.length ? top3.map(x=>`<span class="badge badge--n" style="font-weight:700"><code>${x.symbol}</code></span>`).join(" ") : "—"}
-      </div>
-    </div>`;
-  const s5Rows = sectors.map(s=>`
-    <tr>
-      <td style="padding:6px 8px;border-bottom:1px solid var(--br)"><code>${s.symbol||"—"}</code></td>
-      <td style="padding:6px 8px;border-bottom:1px solid var(--br)">${s.name||"—"}</td>
-      <td style="padding:6px 8px;border-bottom:1px solid var(--br)">${fmt.num(s.perf_1m,2)}%</td>
-      <td style="padding:6px 8px;border-bottom:1px solid var(--br)">${fmt.moneyMM(s.inflow_5d)}</td>
-      <td style="padding:6px 8px;border-bottom:1px solid var(--br)">${fmt.num(s.z_inflow)}</td>
-      <td style="padding:6px 8px;border-bottom:1px solid var(--br)">${fmt.num(s.z_perf1m)}</td>
-    </tr>`).join("");
-  const s5 = `
-    ${s5Head}
-    <div style="overflow:auto">
-      <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:560px">
-        <thead>
-          <tr style="text-align:left;color:var(--muted)">
-            <th style="padding:6px 8px;border-bottom:1px solid var(--br)">Ticker</th>
-            <th style="padding:6px 8px;border-bottom:1px solid var(--br)">Settore</th>
-            <th style="padding:6px 8px;border-bottom:1px solid var(--br)">
-              <div class="flex items-center gap-1"><span class="meta-label">Perf 1m</span>${infoBtn("Perf1m","Perf 1m")}</div>
-            </th>
-            <th style="padding:6px 8px;border-bottom:1px solid var(--br)">
-              <div class="flex items-center gap-1"><span class="meta-label">Inflow 5d</span>${infoBtn("Inflow5d","Inflow 5d")}</div>
-            </th>
-            <th style="padding:6px 8px;border-bottom:1px solid var(--br)">
-              <div class="flex items-center gap-1"><span class="meta-label">z(Inflow)</span>${infoBtn("ZInflow","z Inflow")}</div>
-            </th>
-            <th style="padding:6px 8px;border-bottom:1px solid var(--br)">
-              <div class="flex items-center gap-1"><span class="meta-label">z(Perf1m)</span>${infoBtn("ZPerf1m","z Perf1m")}</div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>${s5Rows || `<tr><td colspan="6" class="text-muted-12">—</td></tr>`}</tbody>
-      </table>
-    </div>`;
+            <p class="text-[12px] text-[color:var(--muted)] leading-[1.4]">
+              Prima di qualsiasi scelta reale verifica sempre adeguatezza / appropriatezza
+              con un consulente autorizzato, in linea con MiFID II.
+            </p>
+          </div>
+        `;
+        window.openDrawer({
+          title: 'Audit F1B',
+          subtitle: 'Fonti dati e qualità campione',
+          html,
+          blocking: false,
+          showAccept: false
+        });
+      }
+    });
+  }
+}
 
-  // Sez. 6 — Filtri F2 coerenti
-  const s6 = table(
-    trow("Preset screening (F2)","F2Filters",
-      (Array.isArray(f2?.filters)&&f2.filters.length)
-        ? `<ul style="margin:.25rem 0 .1rem 1.1rem;list-style:disc">${f2.filters.map(f=>`<li>${f}</li>`).join("")}</ul>`
-        : "—"
-    )
-  );
+/* -- helpers locali -- */
+function fmtNum(v) {
+  if (v === null || v === undefined || Number.isNaN(v)) return "—";
+  // mostriamo max 2 decimali
+  const n = Number(v);
+  return n.toFixed(2).replace('.', ',');
+}
 
-  // Sez. 7 — Audit (in coda, stesso drawer)
-  const s7 = table(
-    trow("AuditPathID","AuditPathID", audit?.path_id || "—") +
-    trow("Fonti","Sources", (audit?.sources||[]).join(", ") || "—") +
-    trow("As of","AsOf", meta?.asof || "—") +
-    trow("Freshness","Freshness", meta?.freshness || "—") +
-    trow("Coverage","Coverage", meta?.coverage!=null ? `${fmt.pct(meta.coverage*100,0)}` : "—") +
-    trow("Confidence","Confidence", meta?.confidence!=null ? fmt.num(meta.confidence,2) : (meta?.confidence_f1!=null? fmt.num(meta.confidence_f1,2) : "—"))
-  );
-
-  const html = `
-    <div style="display:grid;gap:14px">
-      <section><h4 style="margin:0 0 6px;font-weight:800">Decisione & Regole</h4>${s1}</section>
-      <section><h4 style="margin:6px 0;font-weight:800">Input & Calcoli</h4>${s2}</section>
-      <section><h4 style="margin:6px 0;font-weight:800">Trends macro</h4>${s3}</section>
-      <section><h4 style="margin:6px 0;font-weight:800">Drivers di mercato</h4>${s4}</section>
-      <section><h4 style="margin:6px 0;font-weight:800">Flussi settoriali (Top 10 SPDR)</h4>${s5}</section>
-      <section><h4 style="margin:6px 0;font-weight:800">Filtri F2 coerenti</h4>${s6}</section>
-      <section><h4 style="margin:6px 0;font-weight:800">Audit</h4>${s7}</section>
-    </div>`;
-
-  root.querySelector('[data-act="details"]')?.addEventListener("click", () => {
-    const subtitle = meta?.asof ? `As of ${fmt.date(meta.asof)}` : "—";
-    ctx.openDrawer?.("F1B · Dettagli", subtitle, html);
-    if (window.lucide) { try { window.lucide.createIcons(); } catch {} }
-  });
+function escapeHtml(str) {
+  if (str === undefined || str === null) return "";
+  return String(str)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#39;");
 }
