@@ -1,175 +1,496 @@
 /*
-  Tradelia · tokens.css (pro, responsive)
+  Tradelia · tokens.css (v1.1 istituzionale)
   - Design tokens (light/dark)
-  - Primitive utilities
-  - Components: btn, tables, cards, badges
-  - Skeleton + focus + print helpers
+  - Primitives tipografici e utility
+  - Componenti core (btn, card, table, badge, strip)
+  - Barra fasi / sezione indice
+  - Skeleton loading, focus ring, print rules
+
+  Nota:
+  Questo foglio ora contiene anche le classi usate nella nuova barra FASI
+  e il blocco F6 broker. È allineato con l'index aggiornato.
 */
 
-/* =========================
+/* ==========================================================
    TOKENS — LIGHT THEME
-   ========================= */
+   ========================================================== */
 :root{
-  /* Brand */
-  --brand-50:#eef2ff; --brand-100:#e0e7ff; --brand-200:#c7d2fe; --brand-300:#a5b4fc; --brand-400:#818cf8;
-  --brand-500:#6366f1; --brand-600:#4f46e5; --brand-700:#4338ca; --brand-800:#3730a3; --brand-900:#312e81;
+  /* Brand scale */
+  --brand-50:#eef2ff;
+  --brand-100:#e0e7ff;
+  --brand-200:#c7d2fe;
+  --brand-300:#a5b4fc;
+  --brand-400:#818cf8;
+  --brand-500:#6366f1;
+  --brand-600:#4f46e5; /* primary interactive */
+  --brand-700:#4338ca;
+  --brand-800:#3730a3;
+  --brand-900:#312e81;
 
-  /* Base Ink & BG */
-  --ink:#0f172a;         /* text */
-  --ink-2:#111827;       /* stronger */
-  --muted:#6b7280;       /* secondary text */
-  --bg:#f3f5f9;          /* app background */
-  --card:#ffffff;        /* surface */
-  --br:#e5e7eb;          /* border neutral */
-
-  /* Elevation */
-  --shadow-1: 0 4px 16px rgba(2,6,23,.06);
-  --shadow-2: 0 10px 30px rgba(2,6,23,.12);
-
-  /* Status tones */
-  --tone-green:#10b981; --tone-amber:#f59e0b; --tone-red:#ef4444; --tone-gray:#94a3b8; --tone-blue:#3b82f6;
+  /* Text / BG / Border */
+  --ink:#0f172a;          /* testo principale */
+  --ink-2:#111827;        /* testo super forte */
+  --muted:#64748b;        /* testo secondario */
+  --bg:#f3f5f9;           /* sfondo app */
+  --card:#ffffff;         /* superfici / card */
+  --br:#e5e7eb;           /* bordo neutro */
 
   /* Footer */
-  --footer-bg:#f8fafc; --footer-br:#e2e8f0;
+  --footer-bg:#f8fafc;
+  --footer-br:#e2e8f0;
+
+  /* Elevation */
+  --shadow-1:0 4px 16px rgba(2,6,23,.06);
+  --shadow-2:0 10px 30px rgba(2,6,23,.12);
+
+  /* Status tones */
+  --tone-green:#10b981;
+  --tone-amber:#f59e0b;
+  --tone-red:#ef4444;
+  --tone-gray:#94a3b8;
+  --tone-blue:#3b82f6;
 
   /* Buttons */
-  --btn-bg:#0b1220; --btn-ink:#ffffff; --btn-br:rgba(255,255,255,.08);
-  --btn-bg-ghost:#ffffff; --btn-ink-ghost:#0b1220; --btn-br-ghost:#e5e7eb;
+  --btn-bg:#0b1220;
+  --btn-ink:#ffffff;
+  --btn-br:rgba(255,255,255,.08);
+  --btn-bg-ghost:#ffffff;
+  --btn-ink-ghost:#0b1220;
+  --btn-br-ghost:#e5e7eb;
 
   /* Tables */
-  --row-alt:#fafbff; --row-hover:rgba(2,6,23,.03);
+  --row-alt:#fafbff;
+  --row-hover:rgba(2,6,23,.03);
 }
 
-/* =========================
+/* ==========================================================
    TOKENS — DARK THEME
-   ========================= */
+   ========================================================== */
 html[data-theme="dark"]{
-  --ink:#e6e8ef; --ink-2:#f1f2f7; --muted:#a5adbd;
-  --bg:#0b1220; --card:#0f182a; --br:#1f2a44;
-  --shadow-1: 0 6px 18px rgba(0,0,0,.45);
-  --shadow-2: 0 14px 34px rgba(0,0,0,.6);
-  --footer-bg:#0c1426; --footer-br:#1a2440;
-  --btn-bg:#1c2b4a; --btn-ink:#dfe7ff; --btn-br:rgba(255,255,255,.08);
-  --btn-bg-ghost:#0f182a; --btn-ink-ghost:#dfe7ff; --btn-br-ghost:#203052;
-  --row-alt:rgba(255,255,255,.02); --row-hover:rgba(255,255,255,.04);
+  --ink:#e6e8ef;
+  --ink-2:#f1f2f7;
+  --muted:#a5adbd;
+  --bg:#0b1220;
+  --card:#0f182a;
+  --br:#1f2a44;
+
+  --footer-bg:#0c1426;
+  --footer-br:#1a2440;
+
+  --shadow-1:0 6px 18px rgba(0,0,0,.45);
+  --shadow-2:0 14px 34px rgba(0,0,0,.6);
+
+  --btn-bg:#1c2b4a;
+  --btn-ink:#dfe7ff;
+  --btn-br:rgba(255,255,255,.08);
+  --btn-bg-ghost:#0f182a;
+  --btn-ink-ghost:#dfe7ff;
+  --btn-br-ghost:#203052;
+
+  --row-alt:rgba(255,255,255,.02);
+  --row-hover:rgba(255,255,255,.04);
 }
 
-/* =========================
-   PRIMITIVES & UTILS
-   ========================= */
+/* ==========================================================
+   RESET / PRIMITIVES / UTILS
+   ========================================================== */
 *{box-sizing:border-box}
 img,svg{display:block;max-width:100%}
 code,kbd,pre,samp{font-family:ui-monospace,Menlo,Monaco,Consolas,"Courier New",monospace}
 .hr{height:1px;background:var(--br)}
+
 .u-muted{color:var(--muted)}
 .u-mono{font-family:ui-monospace,Menlo,Monaco,Consolas,"Courier New",monospace}
 .u-right{text-align:right}
 .u-nowrap{white-space:nowrap}
 .u-scroll{overflow:auto}
 
-/* Focus ring coerente */
-:focus-visible{outline:2px solid var(--brand-600); outline-offset:2px}
+/* Divider standard (usata come linea sottile orizzontale) */
+.divider{
+  border:0;
+  height:1px;
+  width:100%;
+  background:color-mix(in oklab,var(--br) 80%,transparent)
+}
 
-/* Links */
-a{color:var(--brand-600); text-decoration:none}
+/* Link generico */
+a{
+  color:var(--brand-600);
+  text-decoration:none;
+  cursor:pointer;
+  transition:color .15s ease,opacity .15s ease;
+}
 a:hover{text-decoration:underline}
 
-/* =========================
+/* Focus ring coerente AA */
+:focus-visible{
+  outline:2px solid var(--brand-600);
+  outline-offset:2px;
+}
+
+/* ==========================================================
    BUTTONS
-   ========================= */
+   ========================================================== */
 .btn{
-  --_bg:var(--btn-bg); --_ink:var(--btn-ink); --_br:var(--btn-br);
-  display:inline-flex; align-items:center; gap:.5rem;
-  height:36px; padding:0 .8rem; border-radius:10px;
-  background:var(--_bg); color:var(--_ink);
-  border:1px solid var(--_br); box-shadow:0 1px 0 rgba(255,255,255,.04) inset;
-  font-weight:600; font-size:13.5px; letter-spacing:.1px; cursor:pointer;
+  --_bg:var(--btn-bg);
+  --_ink:var(--btn-ink);
+  --_br:var(--btn-br);
+
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  height:36px;
+  padding:0 .8rem;
+  border-radius:10px;
+
+  background:var(--_bg);
+  color:var(--_ink);
+  border:1px solid var(--_br);
+  box-shadow:0 1px 0 rgba(255,255,255,.04) inset;
+
+  font-weight:600;
+  font-size:13.5px;
+  letter-spacing:.1px;
+  cursor:pointer;
   transition:transform .08s ease, box-shadow .15s ease, opacity .15s ease;
 }
 .btn:hover{opacity:.96}
 .btn:active{transform:translateY(1px)}
 .btn i{width:18px;height:18px}
 
-.btn-secondary{ --_bg:var(--btn-bg-ghost); --_ink:var(--btn-ink-ghost); --_br:var(--btn-br-ghost) }
-.btn-ghost{ background:transparent; color:var(--ink); border:1px dashed var(--br) }
+/* Varianti */
+.btn-secondary{
+  --_bg:var(--btn-bg-ghost);
+  --_ink:var(--btn-ink-ghost);
+  --_br:var(--btn-br-ghost);
+}
+.btn-ghost{
+  background:transparent;
+  color:var(--ink);
+  border:1px dashed var(--br);
+}
 
-.btn-sm{ height:30px; padding:0 .65rem; border-radius:9px; font-size:12.5px }
-.btn-lg{ height:42px; padding:0 1rem; border-radius:12px; font-size:14.5px }
+/* Size variants */
+.btn-sm{height:30px;padding:0 .65rem;border-radius:9px;font-size:12.5px}
+.btn-lg{height:42px;padding:0 1rem;border-radius:12px;font-size:14.5px}
 
 /* Pills / Badge */
-.badge{ display:inline-flex; align-items:center; gap:.4rem; height:24px; padding:0 .55rem; border-radius:999px; border:1px solid var(--br); background:var(--card); font-size:12px }
-.badge.green{ border-color:color-mix(in oklab, var(--tone-green) 40%, var(--br)); color:var(--tone-green) }
-.badge.amber{ border-color:color-mix(in oklab, var(--tone-amber) 40%, var(--br)); color:var(--tone-amber) }
-.badge.red{ border-color:color-mix(in oklab, var(--tone-red) 40%, var(--br)); color:var(--tone-red) }
-.badge.gray{ border-color:var(--br); color:var(--muted) }
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
+  height:24px;
+  padding:0 .55rem;
+  border-radius:999px;
+  border:1px solid var(--br);
+  background:var(--card);
+  font-size:12px;
+  line-height:1.2;
+}
+.badge.green{
+  border-color:color-mix(in oklab,var(--tone-green) 40%,var(--br));
+  color:var(--tone-green);
+}
+.badge.amber{
+  border-color:color-mix(in oklab,var(--tone-amber) 40%,var(--br));
+  color:var(--tone-amber);
+}
+.badge.red{
+  border-color:color-mix(in oklab,var(--tone-red) 40%,var(--br));
+  color:var(--tone-red);
+}
+.badge.gray{
+  border-color:var(--br);
+  color:var(--muted);
+}
 
-/* =========================
-   CARDS & STRIPS
-   ========================= */
+/* ==========================================================
+   CARDS, STRIPS, TERMINAL
+   ========================================================== */
 .card-compact{
-  background:var(--card); border:1px solid var(--br); border-radius:12px; box-shadow:var(--shadow-1);
-  padding:10px 12px
+  background:var(--card);
+  border:1px solid var(--br);
+  border-radius:12px;
+  box-shadow:var(--shadow-1);
+  padding:10px 12px;
 }
-.strip{ background:var(--card); border:1px solid var(--br); border-radius:12px; box-shadow:var(--shadow-1); padding:10px 12px }
 
-.card-header{ display:flex; align-items:center; justify-content:space-between; gap:.8rem; margin:0 0 8px }
-.card-title{ font-weight:800; font-size:14px; letter-spacing:.2px }
-.card-sub{ color:var(--muted); font-size:12.5px }
+.strip{
+  background:var(--card);
+  border:1px solid var(--br);
+  border-radius:12px;
+  box-shadow:var(--shadow-1);
+  padding:10px 12px;
+}
 
-/* =========================
+.terminal{
+  background:var(--card);
+  border:1px solid var(--br);
+  border-radius:12px;
+  box-shadow:var(--shadow-1);
+  overflow:hidden;
+}
+
+.card-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:.8rem;
+  margin:0 0 8px;
+}
+.card-title{
+  font-weight:800;
+  font-size:14px;
+  letter-spacing:.2px;
+}
+.card-sub{
+  color:var(--muted);
+  font-size:12.5px;
+}
+
+/* Sezione F6 broker spacing */
+.mod-f6{ margin-top:16px }
+
+/* ==========================================================
+   SECTION-HEAD / PHASE-NAV (indice fasi)
+   ========================================================== */
+.section-head{
+  margin:10px 0 14px;
+  border-bottom:1px solid color-mix(in oklab,var(--br) 75%,transparent);
+  padding-bottom:6px;
+}
+.section-title{
+  font-weight:800;
+  font-size:14px;
+  letter-spacing:.2px;
+  color:var(--ink);
+}
+.section-sub{
+  color:var(--muted);
+  font-size:12.5px;
+  margin-top:2px;
+}
+.phase-nav{
+  margin-top:8px;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+}
+.phase-nav a{
+  text-decoration:underline;
+  text-underline-offset:2px;
+  color:var(--brand-600);
+  font-weight:600;
+  transition:color .15s ease, opacity .15s ease;
+}
+.phase-nav a:hover{opacity:.8}
+.phase-nav .sep{
+  opacity:.6;
+  color:var(--muted);
+}
+
+/* ==========================================================
    TABLES PRO
-   ========================= */
-.table-wrap{ position:relative; overflow:auto; border-radius:10px; border:1px solid var(--br); background:var(--card); box-shadow:var(--shadow-1) }
-.table{ width:100%; border-collapse:separate; border-spacing:0 }
-.table th,.table td{ padding:10px 12px; font-size:13px; vertical-align:middle }
-.table thead th{ position:sticky; top:0; z-index:1; background:color-mix(in oklab, var(--card) 96%, #fff 4%); border-bottom:1px solid var(--br); font-weight:800; text-align:left }
-.table tbody tr:nth-child(odd){ background:var(--row-alt) }
-.table tbody tr:hover{ background:var(--row-hover) }
-.table td.num, .table th.num{ text-align:right; font-variant-numeric:tabular-nums }
-.table .chip{ display:inline-flex; align-items:center; gap:.35rem; padding:.15rem .45rem; border-radius:999px; border:1px solid var(--br); font-size:12px; background:var(--card) }
-.table .chip.g{ color:var(--tone-green); border-color:color-mix(in oklab, var(--tone-green) 35%, var(--br)) }
-.table .chip.y{ color:var(--tone-amber); border-color:color-mix(in oklab, var(--tone-amber) 35%, var(--br)) }
-.table .chip.r{ color:var(--tone-red); border-color:color-mix(in oklab, var(--tone-red) 35%, var(--br)) }
-
-/* Sort arrows minimal */
-.sortable{ cursor:pointer; user-select:none }
-.sortable::after{ content:""; display:inline-block; width:10px; height:10px; margin-left:4px; background:currentColor; clip-path: polygon(50% 25%, 0 75%, 100% 75%) ; opacity:.25 }
-.sortable.asc::after{ clip-path: polygon(50% 75%, 0 25%, 100% 25%) }
-
-/* Sticky helper for inner sub-headers */
-.sticky-sub{ position:sticky; top:34px; background:var(--card); border-bottom:1px solid var(--br); z-index:1 }
-
-/* =========================
-   SKELETON
-   ========================= */
-.is-loading{ position:relative; overflow:hidden }
-.is-loading::after{
-  content:""; position:absolute; inset:0;
-  background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.08) 50%, transparent 100%);
-  animation: shimmer 1.3s infinite;
+   ========================================================== */
+.table-wrap{
+  position:relative;
+  overflow:auto;
+  border-radius:10px;
+  border:1px solid var(--br);
+  background:var(--card);
+  box-shadow:var(--shadow-1);
 }
-@keyframes shimmer{ 0%{ transform:translateX(-100%) } 100%{ transform:translateX(100%) } }
+.table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+}
+.table th,
+.table td{
+  padding:10px 12px;
+  font-size:13px;
+  vertical-align:middle;
+}
+.table thead th{
+  position:sticky;
+  top:0;
+  z-index:1;
+  background:color-mix(in oklab,var(--card) 96%,#fff 4%);
+  border-bottom:1px solid var(--br);
+  font-weight:800;
+  text-align:left;
+  color:var(--ink);
+}
+.table tbody tr:nth-child(odd){
+  background:var(--row-alt);
+}
+.table tbody tr:hover{
+  background:var(--row-hover);
+}
+.table td.num,
+.table th.num{
+  text-align:right;
+  font-variant-numeric:tabular-nums;
+}
 
-/* =========================
-   FORMS (minimi per filtri)
-   ========================= */
-.input{ height:36px; padding:0 .6rem; border:1px solid var(--br); border-radius:10px; background:var(--card); color:var(--ink); font-size:13px }
-.select{ height:36px; padding:0 .6rem; border:1px solid var(--br); border-radius:10px; background:var(--card); color:var(--ink); font-size:13px }
-.checkbox{ width:16px; height:16px; accent-color:var(--brand-600) }
+.table .chip{
+  display:inline-flex;
+  align-items:center;
+  gap:.35rem;
+  padding:.15rem .45rem;
+  border-radius:999px;
+  border:1px solid var(--br);
+  font-size:12px;
+  background:var(--card);
+  line-height:1.2;
+}
+.table .chip.g{
+  color:var(--tone-green);
+  border-color:color-mix(in oklab,var(--tone-green) 35%,var(--br));
+}
+.table .chip.y{
+  color:var(--tone-amber);
+  border-color:color-mix(in oklab,var(--tone-amber) 35%,var(--br));
+}
+.table .chip.r{
+  color:var(--tone-red);
+  border-color:color-mix(in oklab,var(--tone-red) 35%,var(--br));
+}
 
-/* =========================
-   POPOVER & OVERLAYS
-   ========================= */
-.popover{ border:1px solid color-mix(in oklab, var(--br) 85%, transparent); border-radius:12px; box-shadow:0 18px 44px rgba(2,6,23,.18) }
-.modal__panel{ border:1px solid var(--br); box-shadow:var(--shadow-2) }
-.drawer__panel{ border-left:1px solid var(--br); box-shadow:var(--shadow-2) }
+/* Header colonna cliccabile per sort */
+.sortable{
+  cursor:pointer;
+  user-select:none;
+}
+.sortable::after{
+  content:"";
+  display:inline-block;
+  width:10px;
+  height:10px;
+  margin-left:4px;
+  background:currentColor;
+  clip-path:polygon(50% 25%,0 75%,100% 75%);
+  opacity:.25;
+}
+.sortable.asc::after{
+  clip-path:polygon(50% 75%,0 25%,100% 25%);
+}
 
-/* =========================
+/* Sticky helper per sub-header secondari */
+.sticky-sub{
+  position:sticky;
+  top:34px;
+  background:var(--card);
+  border-bottom:1px solid var(--br);
+  z-index:1;
+}
+
+/* ==========================================================
+   SKELETON
+   ========================================================== */
+.is-loading{
+  position:relative;
+  overflow:hidden;
+}
+.is-loading::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.08) 50%,transparent 100%);
+  animation:shimmer 1.3s infinite;
+}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+/* ==========================================================
+   FORMS MINIMALI (per futuri filtri tabelle)
+   ========================================================== */
+.input{
+  height:36px;
+  padding:0 .6rem;
+  border:1px solid var(--br);
+  border-radius:10px;
+  background:var(--card);
+  color:var(--ink);
+  font-size:13px;
+}
+.select{
+  height:36px;
+  padding:0 .6rem;
+  border:1px solid var(--br);
+  border-radius:10px;
+  background:var(--card);
+  color:var(--ink);
+  font-size:13px;
+}
+.checkbox{
+  width:16px;
+  height:16px;
+  accent-color:var(--brand-600);
+}
+
+/* ==========================================================
+   POPOVER / OVERLAYS / DRAWER / MODAL base hooks
+   (le geometrie principali vivono inline su index per ora, 
+    qui solo armonizziamo border/shadow)
+   ========================================================== */
+.popover{
+  border:1px solid color-mix(in oklab,var(--br) 85%,transparent);
+  border-radius:12px;
+  box-shadow:0 18px 44px rgba(2,6,23,.18);
+  background:var(--card);
+  color:var(--ink);
+}
+.modal__panel{
+  border:1px solid var(--br);
+  box-shadow:var(--shadow-2);
+  background:var(--card);
+  color:var(--ink);
+}
+.drawer__panel{
+  border-left:1px solid var(--br);
+  box-shadow:var(--shadow-2);
+  background:var(--card);
+  color:var(--ink);
+}
+
+/* ==========================================================
    PRINT HELPERS
-   ========================= */
+   ========================================================== */
 @media print{
-  :root{ --ink:#000; --bg:#fff; --card:#fff; --br:#ddd }
-  a{text-decoration:none; color:inherit}
-  .table thead th{ background:#fff }
-  .btn,.badge{ display:none!important }
+  :root{
+    --ink:#000;
+    --bg:#fff;
+    --card:#fff;
+    --br:#ddd;
+  }
+
+  body{background:#fff;color:#000}
+
+  a{text-decoration:none;color:inherit}
+
+  .table thead th{
+    background:#fff;
+    color:#000;
+  }
+
+  header,
+  .btn,
+  .u-btn,
+  .noprint,
+  .drawer,
+  .popover,
+  .modal{
+    display:none!important;
+  }
+
+  .card-compact,
+  .terminal,
+  .strip{
+    box-shadow:none;
+    border:1px solid #ddd;
+  }
 }
