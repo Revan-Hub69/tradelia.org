@@ -118,13 +118,12 @@ function mountHero(headerData) {
   }
 
   // tonebars di base nel hero
-  // snapshot tone
-  const toneSnap = document.getElementById("tone-snap");
+  const toneSnap  = document.getElementById("tone-snap");
   const tonePrice = document.getElementById("tone-price");
-  const toneChg = document.getElementById("tone-chg");
-  const toneCcy = document.getElementById("tone-ccy");
+  const toneChg   = document.getElementById("tone-chg");
+  const toneCcy   = document.getElementById("tone-ccy");
   const toneFresh = document.getElementById("tone-fresh");
-  const toneConf = document.getElementById("tone-conf");
+  const toneConf  = document.getElementById("tone-conf");
 
   // logica semplice:
   // ChangePct >=0 -> verde, <0 -> rosso
@@ -146,11 +145,112 @@ function mountHero(headerData) {
         : "var(--tone-n)";
   }
 
-  // gli altri li mettiamo neutri o brand
+  // gli altri li mettiamo neutri
   if (toneSnap)  toneSnap.style.backgroundColor  = "var(--tone-n)";
   if (tonePrice) tonePrice.style.backgroundColor = "var(--tone-n)";
   if (toneCcy)   toneCcy.style.backgroundColor   = "var(--tone-n)";
   if (toneFresh) toneFresh.style.backgroundColor = "var(--tone-n)";
+}
+
+// ------------------------------------------------------------
+// PLACEHOLDER MODULES
+// ------------------------------------------------------------
+//
+// Quando un modulo (F2, F3, F4, F5, F5B, F6...) non è ancora implementato
+// o non ha dati, invece di lasciare "CARICAMENTO..." brutto
+// mostriamo una card pulita e consistente.
+//
+// L'idea è dare contesto ("cos'è questo modulo") e far capire che è in sviluppo.
+// ------------------------------------------------------------
+
+function renderModulePlaceholder(modId) {
+  // Contenuti descrittivi personalizzati per ciascun modulo.
+  // Qui ci mettiamo dei testi MiFID-safe e informativi.
+  let title   = modId;
+  let desc    = "Modulo in sviluppo.";
+  let pill    = "in sviluppo";
+  let pillClr = "var(--muted)"; // testo scuro su bg soft
+
+  switch (modId) {
+    case "F2":
+      title = "F2 · Sentiment / Flussi";
+      desc  = "Mostrerà sentiment aggregato e flussi sul ticker / settore per validare o contraddire il regime di mercato.";
+      break;
+    case "F3":
+      title = "F3 · Multi-TF Tecnico";
+      desc  = "Mostrerà la lettura tecnica su più timeframe (es. daily / weekly) senza raccomandazioni operative.";
+      break;
+    case "F4":
+      title = "F4 · Intermarket";
+      desc  = "Metterà in relazione equity, bond, FX e commodity per capire dove si sta spostando il rischio.";
+      break;
+    case "F5":
+      title = "F5 · Resoconto Tecnico";
+      desc  = "Riassumerà i punti tecnici chiave e le aree di attenzione, con linguaggio descrittivo MiFID-friendly.";
+      break;
+    case "F5B":
+      title = "F5B · Validazione LT";
+      desc  = "Valuterà se il quadro attuale è sostenibile nel medio-lungo periodo o se è solo tattico/temporaneo.";
+      break;
+    case "F6":
+      title = "F6 · Broker Regolamentati";
+      desc  = "Panoramica di intermediari autorizzati e requisiti di adeguatezza/appropriatezza. Nessuna promozione commerciale.";
+      break;
+    default:
+      // fallback generico
+      title = modId + " · In sviluppo";
+      desc  = "Questo modulo non è ancora disponibile in questa build.";
+      break;
+  }
+
+  // struttura visiva:
+  // - titolo bold + pill
+  // - testo descrizione
+  // - bottone disabled "Anteprima"
+  //
+  // card look coerente con le altre (border, radius, shadow)
+  // ma height contenuta (non pare un buco vuoto gigante)
+  return `
+    <div
+      class="flex flex-col justify-between h-full text-[13px] leading-[1.45] text-[color:var(--ink)]"
+      style="
+        min-height:140px;
+        font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      "
+    >
+      <div>
+        <div class="flex flex-wrap items-start gap-2 mb-2">
+          <div class="text-[14px] font-extrabold leading-[1.4] text-[color:var(--ink)]">
+            ${escapeHtml(title)}
+          </div>
+          <span
+            class="px-[6px] py-[3px] rounded-md text-[11px] font-semibold leading-none border"
+            style="
+              background:var(--surface-card-alt);
+              border:1px solid var(--br-card);
+              color:${pillClr};
+            "
+          >
+            ${escapeHtml(pill)}
+          </span>
+        </div>
+        <div class="text-[12.5px] text-[color:var(--muted)] leading-[1.45]">
+          ${escapeHtml(desc)}
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <button
+          class="btn btn-sm opacity-60 cursor-not-allowed"
+          type="button"
+          disabled
+          aria-disabled="true"
+        >
+          Anteprima
+        </button>
+      </div>
+    </div>
+  `;
 }
 
 // ------------------------------------------------------------
@@ -208,6 +308,13 @@ function normalizeManifest(manifest, reportId) {
 // ------------------------------------------------------------
 // MODULE MOUNT
 // ------------------------------------------------------------
+//
+// 1. recupera il container (#mod-f1, #mod-f2, ecc.) da window.Tradelia.mountTarget
+// 2. scarica i dati JSON del modulo
+// 3. prova ad importare dinamicamente /report/assets/js/modules/{modId in lower}.js
+// 4. se esiste renderCard() → usa il modulo vero
+//    se non esiste → card placeholder bella invece di "CARICAMENTO..." brutto
+// ------------------------------------------------------------
 
 async function mountModule(modId, jsonUrl, reportId) {
   // 1. trova container DOM
@@ -226,54 +333,38 @@ async function mountModule(modId, jsonUrl, reportId) {
   // 2. fetch dei dati del modulo (es. /report/reports/sample-id/f1b.json)
   const data = await fetchJSON(jsonUrl);
 
-  // 3. importa dinamicamente il renderer JS del modulo
-  //    convenzione: modId in minuscolo = nome file
-  //    F1B -> f1b.js, F5B -> f5b.js, ecc.
+  // 3. import dinamico del renderer specifico (F1B -> f1b.js, F5B -> f5b.js, ecc.)
   const moduleFile = modId.toLowerCase();
   let mod;
+  let importFailed = false;
+
   try {
     mod = await import(`/report/assets/js/modules/${moduleFile}.js`);
   } catch (err) {
-    console.error("Import modulo fallita:", modId, err);
-    container.innerHTML = `
-      <div class="text-[13px] text-[color:var(--ink)]">
-        <div class="text-[14px] font-extrabold leading-[1.4] mb-2">
-          ${modId}
-        </div>
-        <p class="text-[12.5px] text-[color:var(--muted)] leading-[1.4]">
-          Modulo non disponibile.
-        </p>
-      </div>
-    `;
+    importFailed = true;
+    console.warn("Import modulo fallita:", modId, err);
+  }
+
+  // Se l'import è fallito, o se il modulo importato NON espone renderCard,
+  // usiamo il placeholder "in sviluppo".
+  if (importFailed || !mod || typeof mod.renderCard !== "function") {
+    container.innerHTML = renderModulePlaceholder(modId);
     container.classList.remove("is-loading");
     return;
   }
 
-  // 4. render
-  if (typeof mod.renderCard === "function") {
-    const html = mod.renderCard(data, { modId, reportId });
-    container.innerHTML = html;
-    container.classList.remove("is-loading");
+  // 4. Se abbiamo renderCard(), usiamo il modulo vero
+  const html = mod.renderCard(data, { modId, reportId });
+  container.innerHTML = html;
+  container.classList.remove("is-loading");
 
-    // 5. bind interazioni (drawer audit ecc.)
-    if (typeof mod.bindCard === "function") {
-      try {
-        mod.bindCard(container, data, { modId, reportId });
-      } catch (bindErr) {
-        console.warn("bindCard error per", modId, bindErr);
-      }
+  // 5. bind interazioni (drawer audit ecc.)
+  if (typeof mod.bindCard === "function") {
+    try {
+      mod.bindCard(container, data, { modId, reportId });
+    } catch (bindErr) {
+      console.warn("bindCard error per", modId, bindErr);
     }
-  } else {
-    // modulo importato ma senza renderCard
-    container.innerHTML = `
-      <div class="text-[13px] text-[color:var(--ink)]">
-        <div class="text-[14px] font-extrabold leading-[1.4] mb-2">${modId}</div>
-        <p class="text-[12.5px] text-[color:var(--muted)] leading-[1.4]">
-          Modulo caricato ma nessun renderer disponibile.
-        </p>
-      </div>
-    `;
-    container.classList.remove("is-loading");
   }
 }
 
@@ -296,7 +387,7 @@ async function mountReport() {
   const rawManifest = await loadManifest(reportId);
   const manifest = normalizeManifest(rawManifest, reportId);
 
-  // 3. moduli
+  // 3. moduli in ordine
   for (const modId of manifest.order) {
     const jsonUrl = manifest.modules[modId];
     if (!jsonUrl) {
@@ -309,3 +400,18 @@ async function mountReport() {
 
 // kick
 mountReport();
+
+
+// ------------------------------------------------------------
+// MINI ESCAPE HELPERS USATI DA renderModulePlaceholder
+// ------------------------------------------------------------
+
+function escapeHtml(str) {
+  if (str === undefined || str === null) return "";
+  return String(str)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#39;");
+}
