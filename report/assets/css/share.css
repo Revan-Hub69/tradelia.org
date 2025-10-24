@@ -1,203 +1,61 @@
-/* =========================================================
-   Tradelia · Share Sheet styles
-   Path: /report/assets/css/share.css
-   Dipende dai token definiti in tokens.css:
-   - --surface-card
-   - --surface-card-alt
-   - --ink
-   - --muted
-   - --br-card
-   - --br-card-strong
-   - --shadow-lg / --shadow-card
-   ========================================================= */
+/* /report/assets/css/share.css
+   Micro-stati e piccoli miglioramenti per la share-sheet
+   (l'ossatura visiva principale l'abbiamo già in index.html + tokens.css)
+*/
 
-.share-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: none;
-}
-.share-overlay[aria-hidden="false"] {
-  display: block;
+/* Effetto quando il link è stato copiato */
+.share-copy-field.copied {
+  outline: 2px solid var(--tone-g);
+  outline-offset: 0;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--tone-g) 30%, transparent),
+              var(--shadow-card);
+  transition: box-shadow .15s ease, outline .15s ease;
 }
 
-.share-overlay__backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,.45);
-  backdrop-filter: blur(2px);
-  opacity: 0;
-  transition: opacity .18s ease;
+/* Stato "copiato" sul bottone copia */
+.share-copy-action.is-copied,
+.share-btn.is-copied {
+  background: var(--tone-g);
+  border-color: var(--tone-g);
+  color: #fff;
+  box-shadow: 0 8px 16px rgba(0,0,0,.25);
+  transition: background .15s ease, border-color .15s ease, color .15s ease;
 }
 
-/* bottom sheet stile "mobile-first", ma va bene anche desktop */
-.share-sheet {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-
-  margin-left: auto;
-  margin-right: auto;
-
-  width: 100vw;
-  max-width: 400px;
-  max-height: 70vh;
-
+/* Hover sugli share button */
+.share-btn:hover {
   background: var(--surface-card);
-  color: var(--ink);
-  border: 1px solid var(--br-card);
-  border-radius: 16px 16px 0 0;
-  box-shadow: var(--shadow-lg);
-
-  display: flex;
-  flex-direction: column;
-
-  transform: translateY(100%);
-  opacity: 0;
-  transition: transform .2s ease, opacity .2s ease;
-
-  overflow: hidden;
-  z-index: 101;
-}
-
-/* stato aperto */
-.share-overlay.is-open .share-overlay__backdrop {
-  opacity: 1;
-}
-.share-overlay.is-open .share-sheet {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-.share-sheet__header {
-  padding: 14px 16px 12px;
-  border-bottom: 1px solid color-mix(in oklab, var(--br-card) 80%, transparent);
-  background: color-mix(in oklab, var(--surface-card) 96%, white 4%);
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: .75rem;
-}
-.share-sheet__titlewrap {
-  min-width: 0;
-}
-.share-sheet__title {
-  font-weight: 800;
-  font-size: 14px;
-  line-height: 1.3;
-  color: var(--ink);
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-  letter-spacing: .2px;
-}
-.share-sheet__subtitle {
-  margin-top: 2px;
-  font-size: 12px;
-  line-height: 1.4;
-  color: var(--muted);
-  word-break: break-word;
-}
-
-.share-sheet__closebtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 30px;
-  min-width: 30px;
-  border-radius: 8px;
-  border: 1px solid var(--br-card);
-  background: var(--surface-card);
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1;
-  cursor: pointer;
-}
-.share-sheet__closebtn i {
-  width: 16px;
-  height: 16px;
-}
-
-.share-sheet__body {
-  padding: 16px;
-  overflow-y: auto;
-  font-size: 13px;
-  line-height: 1.45;
-  color: var(--ink);
-  background: var(--surface-card);
-  display: grid;
-  row-gap: 1rem;
-}
-
-/* blocchi riga */
-.share-row {
-  display: grid;
-  row-gap: .4rem;
-}
-
-.share-label {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  font-weight: 600;
-  color: var(--muted);
-}
-
-.share-linkwrap {
-  display: flex;
-  align-items: stretch;
-  gap: .5rem;
-  flex-wrap: wrap;
-}
-
-.share-input {
-  flex: 1 1 auto;
-  min-width: 0;
-
-  background: var(--surface-card-alt);
-  color: var(--ink);
-  border: 1px solid var(--br-card);
-  border-radius: 10px;
-  padding: .5rem .6rem;
-  font-size: 12.8px;
-  line-height: 1.4;
-  font-family: ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
-  font-weight: 600;
+  border-color: var(--br-card-strong);
   box-shadow: var(--shadow-card);
 }
 
-.share-copy-btn {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
+/* Hover sul bottone copia link */
+.share-copy-action:hover {
+  background: var(--surface-card);
+  border-color: var(--br-card-strong);
+  box-shadow: var(--shadow-card);
 }
 
-/* hint sotto */
-.share-hint {
-  font-size: 12px;
+/* campo link (dove c'è la URL da copiare): enforcement del wrapping bello */
+.share-copy-field {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
   line-height: 1.4;
-  color: var(--muted);
 }
 
-/* actions finali */
-.share-actions {
-  display: flex;
-  flex-direction: column;
-  gap: .5rem;
+/* un po' di respiro extra su mobile per la lista share */
+@media(max-width:640px){
+  .share-sheet__list {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 12px;
+    column-gap: 12px;
+  }
 }
 
-.share-actions .btn {
-  width: 100%;
-  justify-content: center;
-  text-align: center;
+/* riduci leggermente l'altezza max della share-sheet su schermi molto bassi */
+@media(max-height:500px){
+  .share-sheet {
+    max-height: 55vh;
+  }
 }
-
-/* responsive desktop:
-   su viewport larghi la sheet rimane comunque bottom, ma visivamente va bene;
-   se vorrai "modal centrata", basta cambiare transform/position qui.
-*/
-
-/* print: già gestita dal print CSS globale (index/tokens) */
