@@ -90,6 +90,14 @@
     /* Quality strip sotto hero */
     .quality-strip{ margin-top:10px; background:var(--card); border:1px solid var(--br); border-radius:12px; padding:10px 12px; box-shadow:var(--shadow-1); font-size:13px }
 
+    /* Section head + phase nav */
+    .section-head{ margin:10px 0 14px }
+    .section-title{ font-weight:800; font-size:14px; letter-spacing:.2px }
+    .section-sub{ color:var(--muted); font-size:12.5px; margin-top:2px }
+    .phase-nav{ margin-top:8px; font-size:12px; text-transform:uppercase; letter-spacing:.04em; display:flex; flex-wrap:wrap; gap:8px; align-items:center }
+    .phase-nav a{ text-decoration:underline; text-underline-offset:2px; color:var(--brand-600); font-weight:600 }
+    .phase-nav .sep{ opacity:.6; color:var(--muted) }
+
     /* GRID (F3 centrale più larga) */
     .mod-grid{ display:grid; grid-template-columns: 1fr 1.6fr 1fr; grid-template-rows: auto auto auto; grid-template-areas:
       "f1 f3 f2"
@@ -116,6 +124,8 @@
       .mod-grid{ grid-template-columns:1fr; grid-template-areas:"f3" "f1" "f2" "f4" "f5" "f5b"; }
       .f3-tiles{ grid-template-columns:1fr; }
     }
+
+    .mod-f6{ margin-top:16px }
 
     /* Drawer laterale destro */
     .drawer{position:fixed;inset:0;z-index:70;display:none}
@@ -257,13 +267,34 @@
 
     <hr class="divider" />
 
+    <!-- SECTION HEAD + PHASE NAV -->
+    <section class="section-head" aria-label="Indice sezioni">
+      <h3 class="section-title">Analisi del report</h3>
+      <p class="section-sub">Panoramica delle fasi e dei moduli</p>
+      <nav class="phase-nav" aria-label="Fasi">
+        <a href="#mod-f1">FASE 1 · MACRO</a>
+        <span class="sep">/</span>
+        <a href="#mod-f2">FASE 2 · OVERVIEW TICKER</a>
+        <span class="sep">/</span>
+        <a href="#mod-f3">FASE 3 · SCHEDA TECNICA</a>
+        <span class="sep">/</span>
+        <a href="#mod-f4">FASE 4 · INTERMARKET</a>
+        <span class="sep">/</span>
+        <a href="#mod-f5">FASE 5 · RESOCONTO TECNICO</a>
+        <span class="sep">/</span>
+        <a href="#mod-f5b">FASE 5B · VALIDAZIONE LT</a>
+        <span class="sep">/</span>
+        <a href="#mod-f6">FASE 6 · BROKER</a>
+      </nav>
+    </section>
+
     <!-- GRIGLIA MODULI -->
     <section class="mod-grid" aria-label="Moduli">
       <!-- F1: terminal (può restare vuoto) -->
       <section id="mod-f1" class="mod-f1 terminal is-loading" aria-label="F1 · Panorama Macro"></section>
 
       <!-- F3 centrale con 6 mini-tiles + core -->
-      <section class="mod-f3" aria-label="F3 · Scheda Tecnica">
+      <section id="mod-f3" class="mod-f3" aria-label="F3 · Scheda Tecnica">
         <div class="f3-wrap">
           <div id="f3-tiles-top" class="f3-tiles">
             <article class="mini-card is-loading" id="f3t-1"></article>
@@ -287,6 +318,9 @@
       <!-- F5b strip -->
       <section id="mod-f5b" class="mod-f5b strip is-loading" aria-label="F5b · Validazione LT"></section>
     </section>
+
+    <!-- F6 · Broker (sezione dedicata, prima del footer) -->
+    <section id="mod-f6" class="mod-f6 card-compact is-loading" aria-label="F6 · Broker"></section>
   </main>
 
   <!-- FOOTER -->
@@ -587,7 +621,8 @@
       F3:  '#mod-f3-core',
       F4:  '#mod-f4',
       F5:  '#mod-f5',
-      F5B: '#mod-f5b'
+      F5B: '#mod-f5b',
+      F6:  '#mod-f6'
     };
   </script>
 </body>
