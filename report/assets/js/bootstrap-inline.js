@@ -1,609 +1,229 @@
-/* /report/assets/js/bootstrap-inline.js
-   Bootstrap runtime globale Tradelia
-   - tema / localStorage
-   - drawer + MiFID gate
-   - privacy modal
-   - metric popover & sheet mobile
-   - hero/header.json hydration
-   - share overlay init
-   - mount dinamico F1…F6
-*/
+// /report/assets/js/bootstrap-inline.js
+// Ruolo: bootstrap finale del Report Runtime Tradelia
+// Dipendenze attese:
+// - window.Tradelia.mountReport(reportId) definita in app.js
+// - window.Tradelia.headerData valorizzata da app.js (header.json)
+// - window.Tradelia.glossary opzionale (glossary.json con spiegazioni metriche)
+// - lucide global (caricata via <script src="https://unpkg.com/lucide@latest"></script>)
 
-import { mountReport } from '/report/assets/js/app.js';
-import { initShareSystem } from '/report/assets/js/components/share.js';
+(function(){
 
-/* ---------------------------------
-   Mini helpers DOM / storage
---------------------------------- */
-const $  = (s,r=document)=>r.querySelector(s);
-const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
-const getReportId = ()=> new URL(location.href).searchParams.get('id') || 'sample-id';
-
-const LS = {
-  theme:'tradelia.theme',
-  privacy:'tradelia.privacy.ack',
-  mifid:'tradelia.mifid.accepted'
-};
-
-function safeCreateIcons(){
-  try{ if(window.lucide){ window.lucide.createIcons(); } }catch(e){}
-}
-
-/* soft fetch json no-store */
-async function loadJSON(p){
-  try{
-    const r=await fetch(p,{cache:'no-store'});
-    return r.ok? r.json(): null;
-  }catch{
-    return null;
-  }
-}
-
-/* utility per barre tono/metrica nel hero */
-function setToneBar(el, tone){
-  if(!el) return;
-  el.style.background =
-    tone==='g' ? 'var(--tone-g)' :
-    tone==='y' ? 'var(--tone-y)' :
-    tone==='r' ? 'var(--tone-r)' :
-    'var(--tone-n)';
-}
-
-/* format date/time stile Europa/Roma leggibile */
-function fmtDate(iso){
-  if(!iso) return '—';
-  // accettiamo formato "2025-10-22 15:00"
-  const d = new Date(String(iso).replace(' ', 'T')+'Z'); // trattiamolo come UTC-ish
-  const optsDate = { day:'2-digit', month:'2-digit', year:'numeric' };
-  const optsTime = { hour:'2-digit', minute:'2-digit' };
-  const ds = d.toLocaleDateString('it-IT', optsDate);
-  const ts = d.toLocaleTimeString('it-IT', optsTime);
-  return ds + ' ' + ts + ' CET';
-}
-
-/* ---------------------------------
-   THEME (light/dark) + print
---------------------------------- */
-function setupThemeAndPrint(){
-  // PRINT (header + footer)
-  $('#btn-print')?.addEventListener('click',()=>window.print());
-  $('#btn-print-2')?.addEventListener('click',()=>window.print());
-
-  function setTheme(t){
-    document.documentElement.dataset.theme=t;
-    localStorage.setItem(LS.theme,t);
-
-    // Aggiorna bottone tema con icona coerente
-    const btn=$('#btn-theme');
-    if(btn){
-      // dopo il toggle mettiamo markup lucide per coerenza
-      const iconName = (t==='dark'?'moon':'sun');
-      btn.innerHTML = `
-        <i data-lucide="${iconName}"></i>
-        <span class="hidden sm:inline">Tema</span>`;
-    }
-    safeCreateIcons();
+  // =========================
+  // 1. Utility per ricavare l'ID del report
+  // =========================
+  function getReportId(){
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    return id && id.trim() !== '' ? id.trim() : 'sample-id';
   }
 
-  // init: leggi localStorage e applica
-  (function initTheme(){
-    const stored=localStorage.getItem(LS.theme);
-    if(stored==='light' || stored==='dark'){
-      document.documentElement.dataset.theme=stored;
+  // =========================
+  // 2. Popola info nel footer
+  //    Usa headerData (che arriva da header.json del report)
+  //    Campi attesi:
+  //    - Version
+  //    - Start
+  //    - End
+  //    - UpdatedAt
+  // =========================
+  function populateFooterInfo(headerData){
+    if (!headerData) return;
+
+    const vEl   = document.getElementById('footer-version');
+    const snap  = document.getElementById('footer-snapshot');
+    const upEl  = document.getElementById('footer-updated');
+
+    if (vEl && headerData.Version) {
+      vEl.textContent = headerData.Version;
     }
-    const current = document.documentElement.dataset.theme || 'light';
-    setTheme(current);
-  })();
+    if (snap && headerData.Start && headerData.End){
+      snap.textContent = headerData.Start + " → " + headerData.End;
+    }
+    if (upEl && headerData.UpdatedAt){
+      upEl.textContent = headerData.UpdatedAt;
+    }
+  }
 
-  // click toggle
-  $('#btn-theme')?.addEventListener('click',()=>{
-    const next = document.documentElement.dataset.theme==='dark'?'light':'dark';
-    setTheme(next);
-  });
-}
+  // =========================
+  // 3. Sistema tooltip metriche (i bottoncini "?" con .info-btn)
+  //
+  //    Desktop:
+  //    - apre #popover vicino al bottone
+  //
+  //    Mobile (<640px):
+  //    - apre #metric-sheet-overlay come bottom sheet
+  //
+  //    Dati:
+  //    - window.Tradelia.glossary deve essere un oggetto tipo:
+  //        {
+  //          "Freshness": {
+  //            short: "Quanto è recente il dato",
+  //            long:  "Misura quanto tempo è passato dall'ultimo aggiornamento...",
+  //            source:"Internal / Header timestamp"
+  //          },
+  //          ...
+  //        }
+  //    Se non c'è glossary, mostriamo placeholder "—".
+  // =========================
+  function initMetricHelp(){
+    const popover         = document.getElementById('popover');
+    const popoverTitle    = document.getElementById('popover-title');
+    const popoverText     = document.getElementById('popover-text');
+    const popoverSource   = document.getElementById('popover-source');
+    const popoverCloseBtn = document.getElementById('popover-close');
 
-/* ---------------------------------
-   DRAWER (dettagli / MiFID blocking)
-   Rende disponibile window.Tradelia.Drawer
---------------------------------- */
-function setupDrawer(){
-  const root      = $('#drawer');
-  const panel     = root?.querySelector('.drawer__panel');
-  const backdrop  = root?.querySelector('.drawer__backdrop');
-  const titleEl   = $('#drawer-title');
-  const subtitleEl= $('#drawer-subtitle');
-  const contentEl = $('#drawer-content');
+    const sheetOverlay    = document.getElementById('metric-sheet-overlay');
+    const sheetTitle      = document.getElementById('metric-sheet-title');
+    const sheetSource     = document.getElementById('metric-sheet-source');
+    const sheetBody       = document.getElementById('metric-sheet-body');
+    const sheetCloseBtns  = document.querySelectorAll('[data-metric-close]');
 
-  let releaseFocusTrap = null;
-
-  function trapFocus(container){
-    const FOCUSABLE = 'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])';
-    const nodes = [...container.querySelectorAll(FOCUSABLE)]
-      .filter(el => !el.disabled && el.offsetParent !== null);
-
-    if(!nodes.length){
-      return () => {};
+    function getMetricInfo(key){
+      const g = window.Tradelia?.glossary || {};
+      // struttura attesa:
+      // g[key] = { short:"...", long:"...", source:"..." }
+      return g[key] || {
+        short: '—',
+        long: '—',
+        source: ''
+      };
     }
 
-    const first = nodes[0];
-    const last  = nodes[nodes.length - 1];
+    function openPopover(btn){
+      if (!popover || !btn) return;
+      const key = btn.getAttribute('data-metric');
+      const data = getMetricInfo(key);
 
-    function handle(e){
-      if(e.key !== 'Tab') return;
-      if(e.shiftKey){
-        if(document.activeElement === first){
-          e.preventDefault();
-          last.focus();
-        }
-      }else{
-        if(document.activeElement === last){
-          e.preventDefault();
-          first.focus();
-        }
+      if (popoverTitle)  popoverTitle.textContent  = key || '—';
+      if (popoverText)   popoverText.textContent   = data.short || '—';
+      if (popoverSource) popoverSource.textContent = data.source || '';
+
+      // posizioniamo il popover vicino al bottone
+      const rect = btn.getBoundingClientRect();
+      const popW = 320; // larghezza max stimata del popover (--pop-w)
+      const margin = 8;
+
+      let left = rect.left + window.scrollX;
+      let top  = rect.bottom + window.scrollY + margin;
+
+      // se sfora a destra, lo spostiamo a sinistra
+      const maxLeft = window.scrollX + window.innerWidth - popW - 8;
+      if (left > maxLeft){
+        left = maxLeft;
       }
-    }
-    container.addEventListener('keydown', handle);
 
-    requestAnimationFrame(()=> first.focus());
+      // stile inline per posizione
+      popover.style.position = 'absolute';
+      popover.style.left = left + 'px';
+      popover.style.top  = top + 'px';
 
-    return () => {
-      container.removeEventListener('keydown', handle);
-    };
-  }
-
-  function open({ title:t='Dettagli', subtitle:s='—', html='', blocking=false }={}){
-    if(!root) return;
-    titleEl.querySelector('span').textContent = t;
-    subtitleEl.textContent = s;
-    contentEl.innerHTML = html;
-
-    root.dataset.blocking = blocking ? 'true' : 'false';
-    if(blocking){
-      root.classList.add('drawer--blocking');
-      document.body.style.overflow='hidden';
-    }else{
-      root.classList.remove('drawer--blocking');
-      document.body.style.overflow='';
+      popover.setAttribute('aria-hidden','false');
     }
 
-    root.setAttribute('aria-hidden','false');
-    requestAnimationFrame(()=> root.classList.add('is-open'));
-
-    if(blocking){
-      releaseFocusTrap = trapFocus(panel);
-    }else{
-      releaseFocusTrap = null;
+    function closePopover(){
+      if (!popover) return;
+      popover.setAttribute('aria-hidden','true');
     }
 
-    safeCreateIcons();
-  }
+    function openSheet(btn){
+      if (!sheetOverlay || !btn) return;
+      const key  = btn.getAttribute('data-metric');
+      const data = getMetricInfo(key);
 
-  function reallyClose(){
-    if(!root) return;
-    root.setAttribute('aria-hidden','true');
-    document.body.style.overflow='';
-    if(releaseFocusTrap){
-      releaseFocusTrap();
-      releaseFocusTrap = null;
-    }
-  }
+      if (sheetTitle)  sheetTitle.textContent  = key || '—';
+      if (sheetBody)   sheetBody.textContent   = data.long || data.short || '—';
+      if (sheetSource) sheetSource.textContent = data.source || '';
 
-  function close(){
-    if(!root) return;
-    // se blocking=true non chiudiamo (MiFID pre-accettazione)
-    if(root.dataset.blocking==='true') return;
-
-    root.classList.remove('is-open');
-    root.addEventListener('transitionend',()=>{
-      reallyClose();
-    },{once:true});
-  }
-
-  // backdrop click o [data-drawer-close]
-  root?.addEventListener('click', e => {
-    const wantsClose = e.target === backdrop || e.target.closest('[data-drawer-close]');
-    if(wantsClose){
-      close();
-    }
-  });
-
-  // ESC chiude solo se non blocking
-  document.addEventListener('keydown', e => {
-    if(e.key==='Escape' && root?.dataset.blocking!=='true'){
-      if(root?.getAttribute('aria-hidden')==='false'){
-        close();
-      }
-    }
-  });
-
-  window.Tradelia = window.Tradelia || {};
-  window.Tradelia.Drawer = { open, close, root, reallyClose };
-}
-
-/* ---------------------------------
-   METRIC INFO:
-   - popover desktop (#popover)
-   - bottom sheet mobile (#metric-sheet-overlay)
---------------------------------- */
-function setupMetricInfo(){
-  const pop = $('#popover');
-  const metricSheetOverlay = $('#metric-sheet-overlay');
-  const metricSheetTitle   = $('#metric-sheet-title');
-  const metricSheetBody    = $('#metric-sheet-body');
-  const metricSheetSource  = $('#metric-sheet-source');
-  let glossaryCache = null;
-
-  async function getGlossary(){
-    if(glossaryCache) return glossaryCache;
-    try{
-      const r = await fetch('/report/assets/glossary.json',{cache:'no-store'});
-      glossaryCache = r.ok ? await r.json() : {};
-    }catch{
-      glossaryCache = {};
-    }
-    return glossaryCache;
-  }
-
-  function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
-
-  function hideDesktopPopover(){
-    if(!pop) return;
-    pop.style.display='none';
-    pop.setAttribute('aria-hidden','true');
-  }
-
-  function showDesktopPopover(btn, entry){
-    if(!pop) return;
-    $('#popover-title').textContent  = entry.title || '—';
-    $('#popover-text').textContent   = entry.short || '—';
-    $('#popover-source').textContent = entry.source ? `Fonte: ${entry.source}` : '';
-
-    const rect = btn.getBoundingClientRect();
-    const sx = scrollX, sy = scrollY, vw = innerWidth, vh = innerHeight;
-    const popW = Math.min(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--pop-w'))||320, vw*0.92);
-
-    pop.style.width = popW + 'px';
-    pop.style.visibility='hidden';
-    pop.setAttribute('aria-hidden','false');
-    pop.style.display='block';
-
-    const ph = pop.offsetHeight || 160;
-    let left = rect.left + sx - 8;
-    let top  = rect.bottom + sy + 8;
-    const m = 12;
-
-    left = clamp(left, sx + m, sx + vw - popW - m);
-
-    const spaceBelow = (sy + vh) - (rect.bottom + sy);
-    if (spaceBelow < ph + 20){
-      top = rect.top + sy - ph - 10;
-      if (top < sy + m) top = sy + m;
+      sheetOverlay.setAttribute('aria-hidden','false');
     }
 
-    pop.style.left = left + 'px';
-    pop.style.top  = top + 'px';
-    pop.style.visibility='visible';
-  }
+    function closeSheet(){
+      if (!sheetOverlay) return;
+      sheetOverlay.setAttribute('aria-hidden','true');
+    }
 
-  function hideMobileSheet(){
-    if(!metricSheetOverlay) return;
-    metricSheetOverlay.classList.remove('is-open');
-    metricSheetOverlay.addEventListener('transitionend',()=>{
-      metricSheetOverlay.setAttribute('aria-hidden','true');
-    }, { once:true });
-  }
+    // click sui bottoni "?"
+    const infoBtns = document.querySelectorAll('.info-btn');
+    infoBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // mobile -> bottom sheet
+        if (window.matchMedia('(max-width: 640px)').matches){
+          openSheet(btn);
+        } else {
+          openPopover(btn);
+        }
+      });
+    });
 
-  function showMobileSheet(entry){
-    if(!metricSheetOverlay) return;
-    metricSheetTitle.textContent  = entry.title || '—';
-    metricSheetBody.textContent   = entry.short || '—';
-    metricSheetSource.textContent = entry.source ? `Fonte: ${entry.source}` : '';
-    metricSheetOverlay.setAttribute('aria-hidden','false');
-    requestAnimationFrame(()=>{
-      metricSheetOverlay.classList.add('is-open');
+    // chiusura popover desktop
+    if (popoverCloseBtn){
+      popoverCloseBtn.addEventListener('click', closePopover);
+    }
+
+    // chiudi popover cliccando fuori
+    document.addEventListener('click', (ev) => {
+      if (!popover) return;
+      if (popover.getAttribute('aria-hidden') === 'true') return;
+
+      // se clicco dentro il popover, non chiudere
+      if (popover.contains(ev.target)) return;
+
+      // se clicco sul bottone info stesso, non chiudere prima di aprire
+      if (ev.target.classList?.contains('info-btn')) return;
+
+      // altrimenti chiudi
+      closePopover();
+    });
+
+    // chiusura bottom sheet mobile
+    sheetCloseBtns.forEach(btn => {
+      btn.addEventListener('click', closeSheet);
     });
   }
 
-  document.addEventListener('click', async (e)=>{
-    // fuori popover/sheet
-    if (e.target.closest('#popover')) return;
-    if (e.target.closest('#metric-sheet-overlay')) return;
+  // =========================
+  // 4. Boot principale
+  //
+  //    Passi:
+  //    - trova reportId
+  //    - chiama mountReport(reportId) (definito in app.js)
+  //    - popola footer con headerData
+  //    - attiva metric help
+  //    - rigenera icone lucide
+  // =========================
+  async function boot(){
+    const reportId = getReportId();
 
-    // chiusura sheet mobile
-    if (e.target.closest('[data-metric-close]')){
-      hideMobileSheet();
-      return;
-    }
-
-    // click su pulsante info "?"
-    const btn = e.target.closest('.info-btn');
-    if(!btn){
-      hideDesktopPopover();
-      return;
-    }
-
-    const metric = btn.dataset.metric;
-    const g = await getGlossary();
-    const entry = g?.[metric] || { title: metric, short:'—', source:'' };
-
-    if(window.matchMedia('(max-width:639px)').matches){
-      hideDesktopPopover();
-      showMobileSheet(entry);
+    // monta i moduli (F1..F6) e hero
+    if (window.Tradelia && typeof window.Tradelia.mountReport === 'function'){
+      try {
+        await window.Tradelia.mountReport(reportId);
+      } catch (err){
+        console.error('Errore in mountReport:', err);
+      }
     } else {
-      hideMobileSheet();
-      showDesktopPopover(btn, entry);
+      console.error('Tradelia.mountReport non disponibile. Controlla app.js');
     }
-  });
 
-  addEventListener('keydown', e=>{
-    if(e.key==='Escape'){
-      hideDesktopPopover();
-      hideMobileSheet();
+    // popola footer con info header.json
+    if (window.Tradelia && window.Tradelia.headerData){
+      populateFooterInfo(window.Tradelia.headerData);
     }
-  });
 
-  $('#popover-close')?.addEventListener('click', hideDesktopPopover);
+    // attiva gestione tooltip / metric sheet
+    initMetricHelp();
 
-  addEventListener('resize', ()=>{
-    hideDesktopPopover();
-    hideMobileSheet();
-  });
-  addEventListener('scroll', ()=>{
-    hideDesktopPopover();
-  }, { passive:true });
-}
-
-/* ---------------------------------
-   PRIVACY + MiFID GATE
-   - apre privacy modal se non accettata
-   - apre drawer MiFID bloccante se privacy ok ma MiFID non accettato
---------------------------------- */
-function setupGating(){
-  const privacyModal = $('#privacy-modal');
-
-  function openPrivacy(){
-    privacyModal?.setAttribute('aria-hidden','false');
-    safeCreateIcons();
-  }
-  function closePrivacy(){
-    privacyModal?.setAttribute('aria-hidden','true');
-  }
-
-  $('#privacy-ok')?.addEventListener('click', ()=>{
-    localStorage.setItem(LS.privacy,'1');
-    closePrivacy();
-    if(localStorage.getItem(LS.mifid)!=='1'){
-      openMiFID();
+    // icone lucide (se app.js non le ha già create)
+    if (window.lucide && typeof window.lucide.createIcons === 'function'){
+      try {
+        window.lucide.createIcons();
+      } catch(e){
+        console.warn('lucide.createIcons() ha dato errore:', e);
+      }
     }
-  });
-  $('#btn-privacy-open')?.addEventListener('click', openPrivacy);
-
-  function openMiFID(){
-    const html = `
-      <section style="font-size:13.6px;line-height:1.6">
-        <h3 style="margin:0 0 8px;font-weight:900;display:flex;align-items:center;gap:.5rem">
-          <i data-lucide="shield"></i>
-          <span>Informativa MiFID II e limitazioni d’uso</span>
-        </h3>
-
-        <p>
-          Questo documento è prodotto dal <strong>team Tradelia</strong>. Tradelia non è un intermediario autorizzato e non possiede licenze MiFID.
-        </p>
-
-        <p>
-          I contenuti sono forniti a fini <strong>informativi ed educativi</strong>. Non costituiscono consulenza in materia di investimenti,
-          raccomandazioni personalizzate, né un'offerta o sollecitazione ad acquistare o vendere strumenti finanziari.
-        </p>
-
-        <p>
-          Non fare affidamento esclusivo su sistemi di intelligenza artificiale (inclusa Tradelia).
-          Usa sempre queste analisi come <strong>strumento aggiuntivo di valutazione</strong>,
-          e confrontati con un consulente finanziario abilitato prima di prendere decisioni operative.
-        </p>
-
-        <ul style="margin:.2rem 0 .7rem 1.1rem;list-style:disc">
-          <li>Le fonti sono ritenute affidabili ma non garantiamo accuratezza, completezza o aggiornamento continuo.</li>
-          <li>Scenari e simulazioni sono ipotetici e non rappresentano risultati futuri né performance attese.</li>
-          <li>I mercati comportano rischi inclusa la perdita del capitale; la leva amplifica i rischi.</li>
-        </ul>
-
-        <p style="font-size:12.5px;color:var(--muted);margin-top:.5rem">
-          Rif.: MiFID II (2014/65/UE), Reg. Delegato (UE) 2017/565, ESMA, CONSOB.
-        </p>
-
-        <div style="margin-top:.9rem;display:flex;gap:10px;justify-content:flex-end">
-          <button class="btn btn-sm" id="mifid-accept" type="button">Accetto</button>
-        </div>
-      </section>
-    `;
-
-    // apri drawer in blocking
-    window.Tradelia?.Drawer?.open({
-      title:'Informativa MiFID',
-      subtitle:'Obbligatoria alla prima apertura',
-      html,
-      blocking:true
-    });
-
-    // attach listener Accetto
-    setTimeout(()=>{
-      $('#mifid-accept')?.addEventListener('click', ()=>{
-        localStorage.setItem(LS.mifid,'1');
-
-        // sblocca drawer
-        const root = window.Tradelia?.Drawer?.root;
-        if(root){
-          root.dataset.blocking='false';
-          root.classList.remove('drawer--blocking');
-        }
-
-        // chiudi drawer davvero
-        window.Tradelia?.Drawer?.close();
-        window.Tradelia?.Drawer?.reallyClose?.();
-
-        // riabilita scroll
-        document.body.style.overflow='';
-      }, { once:true });
-
-      safeCreateIcons();
-    },0);
   }
 
-  $('#btn-mifid-open')?.addEventListener('click', openMiFID);
+  // kickstart
+  boot();
 
-  // gating iniziale
-  (function gate(){
-    const acceptedPrivacy = localStorage.getItem(LS.privacy)==='1';
-    const acceptedMiFID   = localStorage.getItem(LS.mifid)==='1';
-    if(!acceptedPrivacy){
-      openPrivacy();
-      return;
-    }
-    if(!acceptedMiFID){
-      openMiFID();
-    }
-  })();
-}
-
-/* ---------------------------------
-   HEADER DATA (hero + footer)
-   carica /report/reports/<id>/header.json
-   popola hero ticker/prezzo/snapshot,
-   aggiorna footer
---------------------------------- */
-async function initHeaderData(){
-  const base = `/report/reports/${getReportId()}`;
-  const h = await loadJSON(`${base}/header.json`);
-
-  // almeno l'anno in footer
-  $('#footer-year').textContent = new Date().getFullYear();
-
-  if(!h){
-    safeCreateIcons();
-    return;
-  }
-
-  // ticker / venue
-  $('#hero-ticker').textContent = h.Ticker ?? '—';
-  $('#hero-venue').textContent  = h.Venue ? `· ${h.Venue}` : '· —';
-
-  // price
-  const priceNum = (h.Price!=null && isFinite(+h.Price)) ? (+h.Price) : NaN;
-  const priceStr = isFinite(priceNum) ? priceNum.toFixed(2) : '—';
-  $('#hero-price').textContent = priceStr;
-  $('#hero-price2').textContent= priceStr;
-
-  // change
-  const chgNum = (h.ChangePct!=null && isFinite(+h.ChangePct)) ? (+h.ChangePct) : NaN;
-  const chgStr = isFinite(chgNum) ? chgNum.toFixed(2)+'%' : '—';
-  const chgEl = $('#hero-change');
-  chgEl.textContent = chgStr;
-  chgEl.classList.toggle('chg--up',  chgNum>0);
-  chgEl.classList.toggle('chg--down',chgNum<0);
-  $('#hero-change2').textContent = chgStr;
-
-  // state badge
-  const st = (h.State ?? h.ReportState ?? '—');
-  $('#hero-state').textContent = st;
-
-  // snapshot start/end
-  $('#hero-start').textContent = fmtDate(h.Start) || (h.Start ?? '—');
-  $('#hero-end').textContent   = fmtDate(h.End)   || (h.End   ?? '—');
-  setToneBar($('#tone-snap'),'n');
-
-  // currency
-  $('#hero-ccy').textContent = h.Currency ?? h.PxCcy ?? '—';
-  setToneBar($('#tone-ccy'),'n');
-
-  // change tone
-  if(isFinite(chgNum)){
-    setToneBar($('#tone-chg'), chgNum>0?'g':chgNum<0?'r':'n');
-  }else{
-    setToneBar($('#tone-chg'),'n');
-  }
-
-  // price tone neutral
-  setToneBar($('#tone-price'),'n');
-
-  // Freshness
-  const fresh = h.FreshnessLabel ?? h.Freshness ?? '—';
-  $('#hero-freshness').textContent = fresh;
-  setToneBar(
-    $('#tone-fresh'),
-    /T-0/i.test(fresh) ? 'g' :
-    /T-1/i.test(fresh) ? 'y' : 'r'
-  );
-
-  // Confidence
-  const confNum = isFinite(+h.ConfidenceFinal) ? (+h.ConfidenceFinal) : NaN;
-  $('#hero-confidence').textContent = isFinite(confNum) ? confNum.toFixed(2) : '—';
-  if(isFinite(confNum)){
-    setToneBar(
-      $('#tone-conf'),
-      confNum>=0.80?'g':confNum>=0.60?'y':'r'
-    );
-  }else{
-    setToneBar($('#tone-conf'),'n');
-  }
-
-  // footer snapshot / updated / version
-  const snapLabel = (h.Start && h.End)
-    ? `${fmtDate(h.Start)} → ${fmtDate(h.End)}`
-    : (h.Start ? fmtDate(h.Start) : '—');
-  $('#footer-snapshot').textContent = snapLabel;
-  $('#footer-updated').textContent  = h.UpdatedAt || h.End || '—';
-  const v = h.Version || h.Build || h.ReportVersion;
-  if(v) $('#footer-version').textContent = v;
-
-  safeCreateIcons();
-}
-
-/* ---------------------------------
-   SHARE OVERLAY
-   (linkedin/x/reddit/copia link + Web Share API se mobile)
---------------------------------- */
-function setupShare(){
-  initShareSystem();
-}
-
-/* ---------------------------------
-   MOUNT DINAMICO MODULI (F1A/F1B, F2...F5B)
-   - definiamo mountTarget mapping
-   - chiamiamo mountReport(reportId)
---------------------------------- */
-async function mountDynamicModules(){
-  window.Tradelia = window.Tradelia || {};
-  window.Tradelia.mountTarget = {
-    F1:  '#mod-f1',
-    F1A: '#mod-f1',
-    F1B: '#mod-f1',
-    F2:  '#mod-f2',
-    F3:  '#mod-f3-core',
-    F4:  '#mod-f4',
-    F5:  '#mod-f5',
-    F5B: '#mod-f5b',
-    F6:  '#mod-f5b' // F6 lo possiamo mostrare in coda nella stessa strip
-  };
-
-  const reportId = getReportId();
-  try{
-    await mountReport(reportId);
-  }catch(e){
-    console.warn('[Tradelia][mountReport] errore', e);
-  }
-
-  // dopo il render moduli, rinfresca icone lucide
-  safeCreateIcons();
-}
-
-/* ---------------------------------
-   BOOTSTRAP SEQUENZA
---------------------------------- */
-
-setupDrawer();          // Drawer globale e finestra MiFID (serve prima di gating)
-setupThemeAndPrint();   // Tema, toggle, print
-setupShare();           // Tasto condividi / overlay social
-setupMetricInfo();      // Popover metriche e sheet mobile
-setupGating();          // Privacy + MiFID gate (usa Drawer)
-initHeaderData();       // Hero e footer dal JSON
-mountDynamicModules();  // Monta F1/F2/... nel layout
+})();
