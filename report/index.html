@@ -14,8 +14,8 @@
   <!-- Tailwind (CDN runtime JIT) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- Lucide icons UMD (espone window.lucide) -->
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <!-- Lucide (solo per icone dinamiche dentro i moduli/table) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 
   <!-- CSS core -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
@@ -305,10 +305,6 @@
       .f3-tiles{grid-template-columns:1fr;}
     }
 
-    /* Drawer / Metric Popover / Sheet / Modal 
-       NOTE: stili base sono in tokens.css.
-       Qui eventuali override minimi. */
-
     /* Footer wrapper */
     .footer-wrap{
       background:var(--surface-footer);
@@ -318,7 +314,140 @@
     .site-footer{color:var(--muted)}
     .site-footer .heading{color:var(--ink);font-weight:800}
 
-    /* Print: hidestuff in print */
+    /* SHARE OVERLAY DESKTOP (container visibile via JS) */
+    /* layout base della sheet principale centrale */
+    .share-overlay{
+      position:fixed;
+      inset:0;
+      z-index:95;
+      display:none;
+    }
+    .share-overlay[aria-hidden="false"]{
+      display:block;
+    }
+    .share-overlay__backdrop{
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,.45);
+      backdrop-filter:blur(2px);
+    }
+    .share-sheet{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      width:min(320px,90vw);
+      background:var(--surface-card);
+      color:var(--ink);
+      border:1px solid var(--br-card);
+      border-radius:16px;
+      box-shadow:var(--shadow-xl);
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .share-sheet__head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:8px;
+    }
+    .share-sheet__title{
+      font-size:14px;
+      font-weight:800;
+      line-height:1.4;
+      color:var(--ink);
+    }
+    .share-sheet__subtitle{
+      font-size:12.5px;
+      line-height:1.4;
+      color:var(--muted);
+    }
+    .share-close-btn{
+      all:unset;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:28px;
+      height:28px;
+      border-radius:8px;
+      border:1px solid var(--br-soft);
+      background:var(--surface-card-alt);
+      color:var(--muted);
+      flex-shrink:0;
+    }
+    .share-sheet__list{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    .share-btn{
+      all:unset;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      border:1px solid var(--br-card);
+      border-radius:10px;
+      background:var(--surface-card-alt);
+      color:var(--ink);
+      font-size:13px;
+      font-weight:600;
+      line-height:1.3;
+      padding:10px 12px;
+      box-shadow:var(--shadow-card);
+    }
+    .share-btn svg{
+      width:16px;
+      height:16px;
+      flex-shrink:0;
+    }
+    .share-copy-row{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      font-size:12px;
+      line-height:1.4;
+    }
+    .share-copy-field{
+      display:flex;
+      align-items:center;
+      border:1px solid var(--br-card);
+      background:var(--surface-card-alt);
+      border-radius:8px;
+      padding:8px 10px;
+      font-size:12px;
+      line-height:1.4;
+      color:var(--ink);
+      word-break:break-all;
+      box-shadow:var(--shadow-card);
+      min-height:40px;
+    }
+    .share-copy-action{
+      all:unset;
+      cursor:pointer;
+      margin-left:auto;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-size:12px;
+      font-weight:600;
+      line-height:1.2;
+      background:var(--surface-card);
+      border:1px solid var(--br-soft);
+      border-radius:8px;
+      padding:6px 8px;
+      box-shadow:var(--shadow-card);
+      color:var(--ink);
+    }
+    .share-copy-action svg{
+      width:14px;
+      height:14px;
+    }
+
+    /* Print: hide popups */
     @media print{
       .popover,
       .metric-sheet-overlay,
@@ -346,14 +475,38 @@
         <span class="claim truncate">Report Runtime</span>
       </div>
       <div class="flex items-center gap-1.5 sm:gap-2">
+        <!-- PRINT BTN -->
         <button id="btn-print" class="btn" aria-label="Stampa / PDF">
-          <i data-lucide="printer"></i><span class="hidden sm:inline">Stampa / PDF</span>
+          <span class="icon-16" aria-hidden="true">
+            <!-- printer icon inline -->
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/>
+            </svg>
+          </span>
+          <span class="hidden sm:inline">Stampa / PDF</span>
         </button>
+
+        <!-- SHARE BTN -->
         <button id="btn-share" class="btn" aria-label="Condividi">
-          <i data-lucide="share-2"></i><span class="hidden sm:inline">Condividi</span>
+          <span class="icon-16" aria-hidden="true">
+            <!-- share-2 icon inline -->
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98"/><path d="M15.41 6.51l-6.82 3.98"/>
+            </svg>
+          </span>
+          <span class="hidden sm:inline">Condividi</span>
         </button>
+
+        <!-- THEME BTN -->
         <button id="btn-theme" class="btn" aria-label="Tema">
-          <i data-lucide="sun"></i><span class="hidden sm:inline">Tema</span>
+          <span class="theme-icon" aria-hidden="true">
+            <!-- default sun icon; JS lo sostituisce se dark -->
+            <svg data-theme-icon="sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+            </svg>
+          </span>
+          <span class="hidden sm:inline">Tema</span>
         </button>
       </div>
     </div>
@@ -462,7 +615,7 @@
     <section class="section-head" aria-label="Struttura del Report">
       <h2 class="section-title">Struttura del Report</h2>
       <p class="section-sub">
-        Il framework Tradelia procede top-down: regime di mercato (F1),
+        Il framework Tradelia procede top-down: regime di mercato / contesto del ticker (F1),
         sentiment e flussi (F2), multi-timeframe tecnico (F3),
         intermarket (F4), resoconto tecnico operativo (F5),
         e validazione di lungo periodo (F6).
@@ -531,12 +684,12 @@
         <div class="min-w-0">
           <div class="heading">Metodo</div>
           <p class="mt-1 text-[13px] leading-[1.45]">
-            Fase 1: contesto macro (regime / settore del ticker richiesto).
-            Fase 2: sentiment e flussi.
-            Fase 3: lettura multi-timeframe.
-            Fase 4: intermarket.
-            Fase 5: resoconto tecnico.
-            Fase 6: validazione di lungo periodo.
+            F1 = regime / settore / contesto ticker richiesto.<br/>
+            F2 = sentiment & flussi.<br/>
+            F3 = lettura multi-timeframe.<br/>
+            F4 = intermarket.<br/>
+            F5 = resoconto tecnico.<br/>
+            F6 = validazione LT.
           </p>
         </div>
         <div class="min-w-0">
@@ -566,12 +719,21 @@
       <header class="drawer__header">
         <div class="min-w-0">
           <h2 id="drawer-title" class="drawer__title">
-            <i data-lucide="file-text"></i><span>Dettagli</span>
+            <!-- shield icon inline (per MiFID) default -->
+            <svg class="inline-block" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <span>Dettagli</span>
           </h2>
           <p id="drawer-subtitle" class="drawer__subtitle">—</p>
         </div>
         <button class="btn btn-sm" data-drawer-close aria-label="Chiudi">
-          <i data-lucide="x"></i><span class="hidden sm:inline">Chiudi</span>
+          <!-- x icon inline -->
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+          <span class="hidden sm:inline">Chiudi</span>
         </button>
       </header>
       <div id="drawer-content" class="drawer__content"></div>
@@ -584,7 +746,14 @@
     <div class="popover__text" id="popover-text">—</div>
     <div class="popover__source" id="popover-source">—</div>
     <div class="popover__actions">
-      <button id="popover-close" class="btn btn-sm" type="button">Chiudi</button>
+      <button id="popover-close" class="btn btn-sm" type="button">
+        <!-- x icon inline -->
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+        <span class="hidden sm:inline">Chiudi</span>
+      </button>
     </div>
   </div>
 
@@ -595,13 +764,22 @@
       <header class="metric-sheet__header">
         <div class="metric-sheet__titlewrap">
           <div class="metric-sheet__title">
-            <i data-lucide="info"></i>
+            <!-- info icon inline -->
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12" y2="8"></line>
+            </svg>
             <span id="metric-sheet-title">—</span>
           </div>
           <div class="metric-sheet__source" id="metric-sheet-source">—</div>
         </div>
         <button class="metric-sheet__closebtn" data-metric-close aria-label="Chiudi dettaglio metrica">
-          <i data-lucide="x"></i>
+          <!-- x icon inline -->
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
         </button>
       </header>
       <div class="metric-sheet__body" id="metric-sheet-body">—</div>
@@ -625,7 +803,77 @@
         </p>
       </div>
       <div class="modal__actions">
-        <button class="btn btn-sm" id="privacy-ok">OK</button>
+        <button class="btn btn-sm" id="privacy-ok" type="button">
+          OK
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <!-- SHARE OVERLAY DESKTOP -->
+  <div id="share-overlay" class="share-overlay noprint" aria-hidden="true">
+    <div class="share-overlay__backdrop" data-share-close></div>
+    <section class="share-sheet" role="dialog" aria-modal="true" aria-labelledby="share-title">
+      <header class="share-sheet__head">
+        <div class="min-w-0">
+          <div id="share-title" class="share-sheet__title">Condividi il report</div>
+          <div id="share-desc" class="share-sheet__subtitle">Link diretto + social</div>
+        </div>
+        <button class="share-close-btn" data-share-close aria-label="Chiudi condivisione">
+          <!-- x icon inline -->
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </header>
+
+      <div class="share-sheet__list">
+        <!-- LinkedIn -->
+        <button class="share-btn" data-share-svc="linkedin" aria-label="Condividi su LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.4 8.4h4.1V24H.4zM8.34 8.4h3.93v2.12h.06c.55-1.04 1.9-2.12 3.9-2.12 4.17 0 4.94 2.74 4.94 6.3V24h-4.1v-7.5c0-1.79-.03-4.1-2.5-4.1-2.5 0-2.88 1.95-2.88 4v7.6H8.34z"/>
+          </svg>
+          <span>LinkedIn</span>
+        </button>
+
+        <!-- X / Twitter -->
+        <button class="share-btn" data-share-svc="twitter" aria-label="Condividi su X">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2H21.5l-7.51 8.59L22 22h-6.563l-5.15-6.543L4.66 22H1.4l8.06-9.21L2 2h6.69l4.66 5.907L18.245 2zm-2.43 17.14h1.82L8.29 4.72H6.34l9.47 14.42z"/>
+          </svg>
+          <span>X</span>
+        </button>
+
+        <!-- Reddit -->
+        <button class="share-btn" data-share-svc="reddit" aria-label="Condividi su Reddit">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="9.04" cy="13" r="1.5"></circle>
+            <circle cx="14.96" cy="13" r="1.5"></circle>
+            <path d="M14.5 3.5l-1.4 5.1c1.23.08 2.35.4 3.33.9.42-.43 1-.7 1.64-.7 1.27 0 2.3 1.03 2.3 2.3 0 .8-.4 1.5-1 1.9.02.2.03.4.03.6 0 3.3-3.58 5.9-8.4 5.9s-8.4-2.6-8.4-5.9c0-.2 0-.4.03-.6-.6-.4-1-1.1-1-1.9 0-1.27 1.03-2.3 2.3-2.3.66 0 1.25.27 1.67.72 1-.52 2.2-.85 3.5-.93l1.4-5.08 2.67.67zM9.75 16.5c.7.45 1.96.5 2.25.5.3 0 1.57-.05 2.27-.5.25-.16.57-.1.73.15.16.24.1.57-.15.73-.96.62-2.45.67-2.85.67-.4 0-1.9-.05-2.86-.67a.54.54 0 01-.16-.74.54.54 0 01.77-.14z"/>
+          </svg>
+          <span>Reddit</span>
+        </button>
+
+        <!-- Copia link (anche fallback universale) -->
+        <button class="share-btn" data-share-svc="copy" aria-label="Copia link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          <span>Copia link</span>
+        </button>
+      </div>
+
+      <div class="share-copy-row">
+        <div id="share-link-field" class="share-copy-field">https://example.tradelia/report?id=...</div>
+        <button id="share-copy-btn" class="share-copy-action" data-share-svc="copy">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          <span>Copia</span>
+        </button>
       </div>
     </section>
   </div>
@@ -633,537 +881,13 @@
   <!-- MAIN ORCHESTRATOR -->
   <script type="module" src="/report/assets/js/app.js"></script>
 
-  <!-- Share sheet system -->
+  <!-- Share controller -->
   <script type="module">
     import { initShareSystem } from '/report/assets/js/components/share.js';
     initShareSystem();
   </script>
 
-  <!-- Inline runtime logic / bootstrap -->
-  <script>
-    // shorthand
-    const $  = (s,r=document)=>r.querySelector(s);
-    const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
-    const getReportId = ()=> new URL(location.href).searchParams.get('id') || 'sample-id';
-
-    const LS = {
-      theme:'tradelia.theme',
-      privacy:'tradelia.privacy.ack',
-      mifid:'tradelia.mifid.accepted'
-    };
-
-    // safe icon render
-    function safeCreateIcons(){
-      try{ if(window.lucide){ window.lucide.createIcons(); } }catch(e){}
-    }
-
-    // PRINT
-    $('#btn-print')?.addEventListener('click',()=>window.print());
-    $('#btn-print-2')?.addEventListener('click',()=>window.print());
-
-    // THEME persistente
-    function setTheme(t){
-      document.documentElement.dataset.theme=t;
-      localStorage.setItem(LS.theme,t);
-      const btn=$('#btn-theme');
-      if(btn){
-        btn.innerHTML = `
-          <i data-lucide="${t==='dark'?'moon':'sun'}"></i>
-          <span class="hidden sm:inline">Tema</span>`;
-      }
-      safeCreateIcons();
-    }
-
-    (function initTheme(){
-      const t=localStorage.getItem(LS.theme);
-      if(t==='light'||t==='dark'){
-        document.documentElement.dataset.theme=t;
-      }
-      // inizializza subito icona corretta
-      const current = document.documentElement.dataset.theme || 'light';
-      setTheme(current);
-    })();
-
-    $('#btn-theme')?.addEventListener('click',()=>{
-      const next = document.documentElement.dataset.theme==='dark'?'light':'dark';
-      setTheme(next);
-    });
-
-    /* Drawer API (MiFID / Dettagli) */
-    (function setupDrawer(){
-      const root      = $('#drawer');
-      const panel     = root.querySelector('.drawer__panel');
-      const backdrop  = root.querySelector('.drawer__backdrop');
-      const titleEl   = $('#drawer-title');
-      const subtitleEl= $('#drawer-subtitle');
-      const contentEl = $('#drawer-content');
-
-      let releaseFocusTrap = null;
-
-      function trapFocus(container){
-        const FOCUSABLE = 'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])';
-        const nodes = [...container.querySelectorAll(FOCUSABLE)]
-          .filter(el => !el.disabled && el.offsetParent !== null);
-
-        if(!nodes.length){
-          return () => {};
-        }
-
-        const first = nodes[0];
-        const last  = nodes[nodes.length - 1];
-
-        function handle(e){
-          if(e.key !== 'Tab') return;
-          if(e.shiftKey){
-            if(document.activeElement === first){
-              e.preventDefault();
-              last.focus();
-            }
-          }else{
-            if(document.activeElement === last){
-              e.preventDefault();
-              first.focus();
-            }
-          }
-        }
-        container.addEventListener('keydown', handle);
-
-        requestAnimationFrame(()=> first.focus());
-
-        return () => {
-          container.removeEventListener('keydown', handle);
-        };
-      }
-
-      function open({ title:t='Dettagli', subtitle:s='—', html='', blocking=false }={}){
-        titleEl.querySelector('span').textContent = t;
-        subtitleEl.textContent = s;
-        contentEl.innerHTML = html;
-
-        root.dataset.blocking = blocking ? 'true' : 'false';
-        if(blocking){
-          root.classList.add('drawer--blocking');
-          document.body.style.overflow='hidden';
-        }else{
-          root.classList.remove('drawer--blocking');
-          document.body.style.overflow='';
-        }
-
-        root.setAttribute('aria-hidden','false');
-        requestAnimationFrame(()=> root.classList.add('is-open'));
-
-        if(blocking){
-          releaseFocusTrap = trapFocus(panel);
-        }else{
-          releaseFocusTrap = null;
-        }
-
-        safeCreateIcons();
-      }
-
-      function reallyClose(){
-        root.setAttribute('aria-hidden','true');
-        document.body.style.overflow='';
-        if(releaseFocusTrap){
-          releaseFocusTrap();
-          releaseFocusTrap = null;
-        }
-      }
-
-      function close(){
-        // se blocking=true non chiudiamo (MiFID pre-accettazione)
-        if(root.dataset.blocking==='true') return;
-
-        root.classList.remove('is-open');
-        root.addEventListener('transitionend',()=>{
-          reallyClose();
-        },{once:true});
-      }
-
-      // backdrop click o [data-drawer-close]
-      root.addEventListener('click', e => {
-        const wantsClose = e.target === backdrop || e.target.closest('[data-drawer-close]');
-        if(wantsClose){
-          close();
-        }
-      });
-
-      // ESC chiude solo se non blocking
-      document.addEventListener('keydown', e => {
-        if(e.key==='Escape' && root.dataset.blocking!=='true'){
-          if(root.getAttribute('aria-hidden')==='false'){
-            close();
-          }
-        }
-      });
-
-      window.Tradelia = window.Tradelia || {};
-      window.Tradelia.Drawer = { open, close, root, reallyClose };
-    })();
-
-    // Fetch helper
-    async function loadJSON(p){
-      try{
-        const r=await fetch(p,{cache:'no-store'});
-        return r.ok? r.json(): null;
-      }catch{
-        return null;
-      }
-    }
-
-    // tonalità barre verticali nelle pill del hero
-    function setToneBar(el, tone){
-      if(!el) return;
-      el.style.background =
-        tone==='g' ? 'var(--tone-g)' :
-        tone==='y' ? 'var(--tone-y)' :
-        tone==='r' ? 'var(--tone-r)' :
-        'var(--tone-n)';
-    }
-
-    // format date/time in Europe/Rome human style
-    function fmtDate(iso){
-      if(!iso) return '—';
-      const d = new Date(iso.replace(' ', 'T')+'Z'); // assumiamo UTC-ish
-      const optsDate = { day:'2-digit', month:'2-digit', year:'numeric' };
-      const optsTime = { hour:'2-digit', minute:'2-digit' };
-      const ds = d.toLocaleDateString('it-IT', optsDate);
-      const ts = d.toLocaleTimeString('it-IT', optsTime);
-      return ds + ' ' + ts + ' CET';
-    }
-
-    /* === METRIC INFO POPUP / MOBILE SHEET === */
-    (function setupMetricInfo(){
-      const pop = $('#popover');
-      const metricSheetOverlay = $('#metric-sheet-overlay');
-      const metricSheetTitle   = $('#metric-sheet-title');
-      const metricSheetBody    = $('#metric-sheet-body');
-      const metricSheetSource  = $('#metric-sheet-source');
-      let glossaryCache = null;
-
-      async function getGlossary(){
-        if(glossaryCache) return glossaryCache;
-        try{
-          const r = await fetch('/report/assets/glossary.json',{cache:'no-store'});
-          glossaryCache = r.ok ? await r.json() : {};
-        }catch{
-          glossaryCache = {};
-        }
-        return glossaryCache;
-      }
-
-      function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
-
-      function hideDesktopPopover(){
-        pop.style.display='none';
-        pop.setAttribute('aria-hidden','true');
-      }
-
-      function showDesktopPopover(btn, entry){
-        $('#popover-title').textContent  = entry.title || '—';
-        $('#popover-text').textContent   = entry.short || '—';
-        $('#popover-source').textContent = entry.source ? `Fonte: ${entry.source}` : '';
-
-        const rect = btn.getBoundingClientRect();
-        const sx = scrollX, sy = scrollY, vw = innerWidth, vh = innerHeight;
-        const popW = Math.min(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--pop-w'))||320, vw*0.92);
-
-        pop.style.width = popW + 'px';
-        pop.style.visibility='hidden';
-        pop.setAttribute('aria-hidden','false');
-        pop.style.display='block';
-
-        const ph = pop.offsetHeight || 160;
-        let left = rect.left + sx - 8;
-        let top  = rect.bottom + sy + 8;
-        const m = 12;
-
-        left = clamp(left, sx + m, sx + vw - popW - m);
-
-        const spaceBelow = (sy + vh) - (rect.bottom + sy);
-        if (spaceBelow < ph + 20){
-          top = rect.top + sy - ph - 10;
-          if (top < sy + m) top = sy + m;
-        }
-
-        pop.style.left = left + 'px';
-        pop.style.top  = top + 'px';
-        pop.style.visibility='visible';
-      }
-
-      function hideMobileSheet(){
-        metricSheetOverlay.classList.remove('is-open');
-        metricSheetOverlay.addEventListener('transitionend',()=>{
-          metricSheetOverlay.setAttribute('aria-hidden','true');
-        }, { once:true });
-      }
-
-      function showMobileSheet(entry){
-        metricSheetTitle.textContent  = entry.title || '—';
-        metricSheetBody.textContent   = entry.short || '—';
-        metricSheetSource.textContent = entry.source ? `Fonte: ${entry.source}` : '';
-        metricSheetOverlay.setAttribute('aria-hidden','false');
-        requestAnimationFrame(()=>{
-          metricSheetOverlay.classList.add('is-open');
-        });
-      }
-
-      document.addEventListener('click', async (e)=>{
-        if (e.target.closest('#popover')) return;
-        if (e.target.closest('#metric-sheet-overlay')) return;
-
-        if (e.target.closest('[data-metric-close]')){
-          hideMobileSheet();
-          return;
-        }
-
-        const btn = e.target.closest('.info-btn');
-        if(!btn){
-          hideDesktopPopover();
-          return;
-        }
-
-        const metric = btn.dataset.metric;
-        const g = await getGlossary();
-        const entry = g?.[metric] || { title: metric, short:'—', source:'' };
-
-        if(window.matchMedia('(max-width:639px)').matches){
-          hideDesktopPopover();
-          showMobileSheet(entry);
-        } else {
-          hideMobileSheet();
-          showDesktopPopover(btn, entry);
-        }
-      });
-
-      addEventListener('keydown', e=>{
-        if(e.key==='Escape'){
-          hideDesktopPopover();
-          hideMobileSheet();
-        }
-      });
-
-      $('#popover-close').addEventListener('click', hideDesktopPopover);
-
-      addEventListener('resize', ()=>{
-        hideDesktopPopover();
-        hideMobileSheet();
-      });
-      addEventListener('scroll', ()=>{
-        hideDesktopPopover();
-      }, { passive:true });
-    })();
-
-    // PRIVACY + MiFID GATE
-    (function gating(){
-      const privacyModal = $('#privacy-modal');
-
-      function openPrivacy(){
-        privacyModal.setAttribute('aria-hidden','false');
-        safeCreateIcons();
-      }
-      function closePrivacy(){
-        privacyModal.setAttribute('aria-hidden','true');
-      }
-
-      $('#privacy-ok').addEventListener('click', ()=>{
-        localStorage.setItem(LS.privacy,'1');
-        closePrivacy();
-        if(localStorage.getItem(LS.mifid)!=='1'){
-          openMiFID();
-        }
-      });
-      $('#btn-privacy-open').addEventListener('click', openPrivacy);
-
-      function openMiFID(){
-        const html = `
-          <section style="font-size:13.6px;line-height:1.6">
-            <h3 style="margin:0 0 8px;font-weight:900;display:flex;align-items:center;gap:.5rem">
-              <i data-lucide="shield"></i>
-              <span>Informativa MiFID II e limitazioni d’uso</span>
-            </h3>
-
-            <p>
-              Questo documento è prodotto dal <strong>team Tradelia</strong>. Tradelia non è un intermediario autorizzato e non possiede licenze MiFID.
-            </p>
-
-            <p>
-              I contenuti sono forniti a fini <strong>informativi ed educativi</strong>. Non costituiscono consulenza in materia di investimenti,
-              raccomandazioni personalizzate, né un'offerta o sollecitazione ad acquistare o vendere strumenti finanziari.
-            </p>
-
-            <p>
-              Non fare affidamento esclusivo su sistemi di intelligenza artificiale (inclusa Tradelia).
-              Usa sempre queste analisi come <strong>strumento aggiuntivo di valutazione</strong>,
-              e confrontati con un consulente finanziario abilitato prima di prendere decisioni operative.
-            </p>
-
-            <ul style="margin:.2rem 0 .7rem 1.1rem;list-style:disc">
-              <li>Le fonti sono ritenute affidabili ma non garantiamo accuratezza, completezza o aggiornamento continuo.</li>
-              <li>Scenari e simulazioni sono ipotetici e non rappresentano risultati futuri né performance attese.</li>
-              <li>I mercati comportano rischi inclusa la perdita del capitale; la leva amplifica i rischi.</li>
-            </ul>
-
-            <p style="font-size:12.5px;color:var(--muted);margin-top:.5rem">
-              Rif.: MiFID II (2014/65/UE), Reg. Delegato (UE) 2017/565, ESMA, CONSOB.
-            </p>
-
-            <div style="margin-top:.9rem;display:flex;gap:10px;justify-content:flex-end">
-              <button class="btn btn-sm" id="mifid-accept" type="button">Accetto</button>
-            </div>
-          </section>
-        `;
-
-        // apri drawer in blocking
-        window.Tradelia?.Drawer?.open({
-          title:'Informativa MiFID',
-          subtitle:'Obbligatoria alla prima apertura',
-          html,
-          blocking:true
-        });
-
-        // attach listener Accetto (sempre, anche se lucide non è pronta)
-        setTimeout(()=>{
-          $('#mifid-accept')?.addEventListener('click', ()=>{
-            localStorage.setItem(LS.mifid,'1');
-
-            // sblocca drawer
-            const root = window.Tradelia?.Drawer?.root;
-            if(root){
-              root.dataset.blocking='false';
-              root.classList.remove('drawer--blocking');
-            }
-
-            // chiudi drawer davvero
-            window.Tradelia?.Drawer?.close();
-            window.Tradelia?.Drawer?.reallyClose?.();
-
-            // riabilita scroll
-            document.body.style.overflow='';
-          }, { once:true });
-
-          safeCreateIcons();
-        },0);
-      }
-
-      $('#btn-mifid-open').addEventListener('click', openMiFID);
-
-      // gating iniziale
-      (function gate(){
-        const acceptedPrivacy = localStorage.getItem(LS.privacy)==='1';
-        const acceptedMiFID   = localStorage.getItem(LS.mifid)==='1';
-        if(!acceptedPrivacy){
-          openPrivacy();
-          return;
-        }
-        if(!acceptedMiFID){
-          openMiFID();
-        }
-      })();
-    })();
-
-    // HEADER DATA: hero + footer
-    (async function initHeader(){
-      const base = `/report/reports/${getReportId()}`;
-      const h = await loadJSON(`${base}/header.json`);
-      if(!h){
-        $('#footer-year').textContent = new Date().getFullYear();
-        safeCreateIcons();
-        return;
-      }
-
-      // ticker / venue
-      $('#hero-ticker').textContent = h.Ticker ?? '—';
-      $('#hero-venue').textContent  = h.Venue ? `· ${h.Venue}` : '· —';
-
-      // price
-      const priceNum = (h.Price!=null && isFinite(+h.Price)) ? (+h.Price) : NaN;
-      const priceStr = isFinite(priceNum) ? priceNum.toFixed(2) : '—';
-      $('#hero-price').textContent = priceStr;
-      $('#hero-price2').textContent= priceStr;
-
-      // change
-      const chgNum = (h.ChangePct!=null && isFinite(+h.ChangePct)) ? (+h.ChangePct) : NaN;
-      const chgStr = isFinite(chgNum) ? chgNum.toFixed(2)+'%' : '—';
-      const chgEl = $('#hero-change');
-      chgEl.textContent = chgStr;
-      chgEl.classList.toggle('chg--up',  chgNum>0);
-      chgEl.classList.toggle('chg--down',chgNum<0);
-      $('#hero-change2').textContent = chgStr;
-
-      // state badge
-      const st = (h.State ?? h.ReportState ?? '—');
-      $('#hero-state').textContent = st;
-
-      // snapshot start/end
-      $('#hero-start').textContent = fmtDate(h.Start) || (h.Start ?? '—');
-      $('#hero-end').textContent   = fmtDate(h.End)   || (h.End   ?? '—');
-      setToneBar($('#tone-snap'),'n');
-
-      // currency
-      $('#hero-ccy').textContent = h.Currency ?? h.PxCcy ?? '—';
-      setToneBar($('#tone-ccy'),'n');
-
-      // change tone
-      if(isFinite(chgNum)){
-        setToneBar($('#tone-chg'), chgNum>0?'g':chgNum<0?'r':'n');
-      }else{
-        setToneBar($('#tone-chg'),'n');
-      }
-
-      // price tone neutral
-      setToneBar($('#tone-price'),'n');
-
-      // Freshness
-      const fresh = h.FreshnessLabel ?? h.Freshness ?? '—';
-      $('#hero-freshness').textContent = fresh;
-      setToneBar(
-        $('#tone-fresh'),
-        /T-0/i.test(fresh) ? 'g' :
-        /T-1/i.test(fresh) ? 'y' : 'r'
-      );
-
-      // Confidence
-      const confNum = isFinite(+h.ConfidenceFinal) ? (+h.ConfidenceFinal) : NaN;
-      $('#hero-confidence').textContent = isFinite(confNum) ? confNum.toFixed(2) : '—';
-      if(isFinite(confNum)){
-        setToneBar(
-          $('#tone-conf'),
-          confNum>=0.80?'g':confNum>=0.60?'y':'r'
-        );
-      }else{
-        setToneBar($('#tone-conf'),'n');
-      }
-
-      // footer
-      $('#footer-year').textContent = new Date().getFullYear();
-      const snapLabel = (h.Start && h.End)
-        ? `${fmtDate(h.Start)} → ${fmtDate(h.End)}`
-        : (h.Start ? fmtDate(h.Start) : '—');
-      $('#footer-snapshot').textContent = snapLabel;
-      $('#footer-updated').textContent  = h.UpdatedAt || h.End || '—';
-      const v = h.Version || h.Build || h.ReportVersion;
-      if(v) $('#footer-version').textContent = v;
-
-      safeCreateIcons();
-    })();
-
-    // Mount targets for dynamic modules (F1A / F1B etc.)
-    window.Tradelia = window.Tradelia || {};
-    window.Tradelia.mountTarget = {
-      F1:  '#mod-f1',
-      F1A: '#mod-f1',
-      F1B: '#mod-f1',
-      F2:  '#mod-f2',
-      F3:  '#mod-f3-core',
-      F4:  '#mod-f4',
-      F5:  '#mod-f5',
-      F5B: '#mod-f5b',
-      F6:  '#mod-f5b' // se lo esponiamo più avanti o in coda
-    };
-
-    // final icons pass
-    safeCreateIcons();
-  </script>
+  <!-- Inline runtime bootstrap -->
+  <script src="/report/assets/js/bootstrap-inline.js" type="module"></script>
 </body>
 </html>
