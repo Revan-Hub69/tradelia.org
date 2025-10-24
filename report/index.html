@@ -191,7 +191,8 @@
       color:var(--ink);
     }
 
-    .info-btn{
+    .info-btn,
+    .metric-help{
       all:unset;
       cursor:pointer;
       margin-left:6px;
@@ -209,7 +210,8 @@
       flex:0 0 auto;
       box-shadow:var(--shadow-card);
     }
-    .info-btn:active{opacity:.8}
+    .info-btn:active,
+    .metric-help:active{opacity:.8}
 
     /* SECTION HEAD (descrizione framework) */
     .section-head{
@@ -251,7 +253,7 @@
     }
     .phase-nav a:hover{opacity:.8;}
 
-    /* === NEW: LINEAR REPORT LAYOUT === */
+    /* === REPORT LAYOUT VERTICALE === */
     .report-sections{
       display:flex;
       flex-direction:column;
@@ -322,6 +324,10 @@
       max-width:60ch;
     }
 
+    .section-head-right{
+      flex-shrink:0;
+    }
+
     .module-status-pill{
       font-size:11px;
       font-weight:600;
@@ -332,7 +338,6 @@
       background:var(--surface-card-alt);
       color:var(--muted);
       box-shadow:var(--shadow-card);
-      flex-shrink:0;
     }
     .module-status-pill[data-state="active"]{
       color:var(--tone-g);
@@ -368,23 +373,6 @@
       letter-spacing:.05em;
       margin-bottom:.5rem;
     }
-    .metric-help{
-      all:unset;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:18px;
-      height:18px;
-      min-width:18px;
-      min-height:18px;
-      border-radius:999px;
-      border:1px solid var(--br-card);
-      background:var(--surface-card);
-      font-size:11px;
-      line-height:1;
-      color:var(--muted);
-    }
     .metric-value{
       font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
       font-size:13px;
@@ -415,7 +403,7 @@
       color:var(--tone-n);
     }
 
-    /* footer wrap */
+    /* FOOTER */
     .footer-wrap{
       background:var(--surface-footer);
       border-top:1px solid var(--footer-br);
@@ -424,8 +412,306 @@
     .site-footer{color:var(--muted)}
     .site-footer .heading{color:var(--ink);font-weight:800}
 
-    /* SHARE OVERLAY, DRAWER, POPOVER, SHEET ecc. (resto invariato) */
+    /* =========================
+       PANEL OVERLAY (drawer / MiFID / Audit / Privacy)
+       ========================= */
 
+    .tl-panel-overlay[aria-hidden="true"] {
+      display: none;
+    }
+    .tl-panel-overlay[aria-hidden="false"] {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+    }
+
+    .tl-panel-backdrop {
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,.45);
+      backdrop-filter:blur(2px);
+    }
+
+    .tl-panel {
+      position: absolute;
+      background: var(--surface-card);
+      color: var(--ink);
+      border:1px solid var(--br-card);
+      box-shadow: var(--shadow-xl);
+      border-radius:16px 16px 0 0;
+      display:flex;
+      flex-direction:column;
+      max-height:88vh;
+      width:100%;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:0;
+    }
+
+    .tl-panel__header {
+      background:var(--surface-card-alt);
+      border-bottom:1px solid var(--br-soft);
+      padding:16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+    }
+    .tl-panel__title {
+      font-size:14px;
+      font-weight:800;
+      line-height:1.4;
+      color:var(--ink);
+    }
+    .tl-panel__subtitle {
+      font-size:12px;
+      line-height:1.4;
+      color:var(--muted);
+      margin-top:2px;
+      max-width:40ch;
+    }
+    .tl-panel__close {
+      all:unset;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:28px;
+      height:28px;
+      border-radius:8px;
+      border:1px solid var(--br-soft);
+      background:var(--surface-card);
+      color:var(--muted);
+      flex-shrink:0;
+    }
+
+    .tl-panel__body {
+      flex:1 1 auto;
+      overflow-y:auto;
+      padding:16px;
+      font-size:13px;
+      line-height:1.45;
+      color:var(--ink);
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+
+    .tl-panel-section {
+      background:var(--surface-card);
+      border:1px solid var(--br-card);
+      border-radius:12px;
+      box-shadow:var(--shadow-card);
+      padding:12px 14px;
+    }
+    .tl-panel-section-title {
+      font-size:12.5px;
+      font-weight:700;
+      line-height:1.4;
+      color:var(--ink);
+      margin-bottom:4px;
+    }
+    .tl-panel-section-text {
+      font-size:12.5px;
+      line-height:1.45;
+      color:var(--ink);
+    }
+    .tl-panel-section-meta {
+      font-size:12px;
+      line-height:1.4;
+      color:var(--muted);
+      margin-top:6px;
+    }
+
+    .tl-panel__footer {
+      border-top:1px solid var(--br-soft);
+      background:var(--surface-card-alt);
+      padding:12px 16px;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:8px;
+    }
+
+    /* DESKTOP variant: dock lato destro */
+    @media(min-width:768px){
+      .tl-panel--desktop {
+        display:flex;
+        right:0;
+        left:auto;
+        transform:none;
+        bottom:auto;
+        top:0;
+        height:100%;
+        max-height:100%;
+        width:min(480px,90vw);
+        border-radius:16px 0 0 16px;
+      }
+      .tl-panel--mobile {
+        display:none;
+      }
+    }
+    @media(max-width:767px){
+      .tl-panel--desktop {
+        display:none;
+      }
+      .tl-panel--mobile {
+        display:flex;
+      }
+    }
+
+    /* =========================
+       METRIC TOOLTIP ( ? ) - desktop popover
+       ========================= */
+
+    .tl-popover[aria-hidden="true"] {
+      display:none;
+    }
+    .tl-popover[aria-hidden="false"] {
+      display:block;
+      position:absolute;
+      z-index:200;
+      width:min(320px,90vw);
+      max-width:320px;
+      background:var(--surface-card);
+      border:1px solid var(--br-card);
+      border-radius:12px;
+      box-shadow:var(--shadow-xl);
+      padding:12px;
+      font-size:12.5px;
+      line-height:1.4;
+      color:var(--ink);
+    }
+    .tl-popover__head {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:8px;
+    }
+    .tl-popover__title {
+      font-size:13px;
+      font-weight:700;
+      line-height:1.4;
+      color:var(--ink);
+    }
+    .tl-popover__close {
+      all:unset;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:24px;
+      height:24px;
+      border-radius:6px;
+      border:1px solid var(--br-soft);
+      background:var(--surface-card-alt);
+      color:var(--muted);
+    }
+    .tl-popover__body {
+      margin-top:.5rem;
+      color:var(--ink);
+      font-size:12.5px;
+      line-height:1.45;
+    }
+    .tl-popover__source {
+      margin-top:.75rem;
+      font-size:11.5px;
+      line-height:1.4;
+      color:var(--muted);
+    }
+
+    /* =========================
+       METRIC SHEET ( ? ) - mobile bottom sheet
+       ========================= */
+
+    .tl-metric-sheet-overlay[aria-hidden="true"] {
+      display:none;
+    }
+    .tl-metric-sheet-overlay[aria-hidden="false"] {
+      display:block;
+      position:fixed;
+      inset:0;
+      z-index:210;
+    }
+
+    .tl-metric-sheet-backdrop {
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,.5);
+      backdrop-filter:blur(2px);
+    }
+
+    .tl-metric-sheet {
+      position:absolute;
+      left:50%;
+      bottom:0;
+      transform:translateX(-50%);
+      width:100%;
+      max-width:480px;
+      background:var(--surface-card);
+      border:1px solid var(--br-card);
+      border-radius:16px 16px 0 0;
+      box-shadow:var(--shadow-xl);
+      max-height:75vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .tl-metric-sheet__header {
+      padding:16px;
+      border-bottom:1px solid var(--br-soft);
+      background:var(--surface-card-alt);
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+    }
+    .tl-metric-sheet__title {
+      font-size:14px;
+      font-weight:800;
+      line-height:1.4;
+      color:var(--ink);
+    }
+    .tl-metric-sheet__source {
+      font-size:12px;
+      line-height:1.4;
+      color:var(--muted);
+      margin-top:2px;
+      max-width:40ch;
+    }
+    .tl-metric-sheet__closebtn {
+      all:unset;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:28px;
+      height:28px;
+      border-radius:8px;
+      border:1px solid var(--br-soft);
+      background:var(--surface-card);
+      color:var(--muted);
+      flex-shrink:0;
+    }
+    .tl-metric-sheet__body {
+      padding:16px;
+      overflow-y:auto;
+      font-size:13px;
+      line-height:1.45;
+      color:var(--ink);
+      max-height:calc(75vh - 64px);
+    }
+
+    /* Desktop: tooltip popover, Mobile: sheet bottom */
+    @media(min-width:768px){
+      .tl-metric-sheet-overlay{ display:none !important; }
+    }
+    @media(max-width:767px){
+      .tl-popover{ display:none !important; }
+    }
+
+    /* SHARE OVERLAY */
     .share-overlay{
       position:fixed;
       inset:0;
@@ -557,215 +843,14 @@
       height:14px;
     }
 
-    /* Drawer (MiFID, Audit, ecc.) */
-    .drawer{
-      position:fixed;
-      inset:0;
-      z-index:90;
-      display:none;
-    }
-    .drawer[aria-hidden="false"]{
-      display:block;
-    }
-    .drawer__backdrop{
-      position:absolute;
-      inset:0;
-      background:rgba(0,0,0,.4);
-      backdrop-filter:blur(2px);
-    }
-    .drawer__panel{
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      width:min(480px,90vw);
-      max-height:90vh;
-      background:var(--surface-card);
-      border:1px solid var(--br-card);
-      border-radius:16px;
-      box-shadow:var(--shadow-xl);
-      display:flex;
-      flex-direction:column;
-    }
-    @media(min-width:640px){
-      .drawer__panel{
-        border-radius:16px;
-      }
-    }
-    .drawer__header{
-      padding:16px;
-      border-bottom:1px solid var(--br-soft);
-      background:var(--surface-card-alt);
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:12px;
-    }
-    .drawer__title{
-      font-size:14px;
-      font-weight:800;
-      line-height:1.4;
-      color:var(--ink);
-      display:flex;
-      flex-wrap:wrap;
-      align-items:flex-start;
-      gap:.5rem .6rem;
-    }
-    .drawer__subtitle{
-      font-size:12px;
-      line-height:1.4;
-      color:var(--muted);
-      margin-top:2px;
-      max-width:40ch;
-    }
-    .drawer__content{
-      padding:16px;
-      overflow:auto;
-      flex:1 1 auto;
-      font-size:13px;
-      line-height:1.45;
-      color:var(--ink);
-    }
-    .drawer__footer{
-      border-top:1px solid var(--br-soft);
-      background:var(--surface-card-alt);
-      padding:12px 16px;
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:8px;
-    }
-
-    /* tooltip popover desktop */
-    .popover{
-      position:absolute;
-      z-index:99;
-      width:var(--pop-w);
-      max-width:90vw;
-      background:var(--surface-card);
-      color:var(--ink);
-      border:1px solid var(--br-card);
-      border-radius:12px;
-      box-shadow:var(--shadow-xl);
-      padding:12px;
-      font-size:12.5px;
-      line-height:1.4;
-      max-height:60vh;
-      overflow:auto;
-      display:none;
-    }
-    .popover[aria-hidden="false"]{display:block}
-    .popover__title{
-      font-weight:700;
-      font-size:13px;
-      line-height:1.4;
-      color:var(--ink);
-    }
-    .popover__text{
-      margin-top:.4rem;
-      color:var(--ink);
-    }
-    .popover__source{
-      margin-top:.6rem;
-      font-size:11.5px;
-      color:var(--muted);
-      line-height:1.4;
-    }
-    .popover__actions{
-      margin-top:.75rem;
-      display:flex;
-      justify-content:flex-end;
-    }
-
-    /* metric-sheet bottom (mobile tooltip) */
-    .metric-sheet-overlay{
-      position:fixed;
-      inset:0;
-      z-index:95;
-      display:none;
-    }
-    .metric-sheet-overlay[aria-hidden="false"]{
-      display:block;
-    }
-    .metric-sheet-overlay__backdrop{
-      position:absolute;
-      inset:0;
-      background:rgba(0,0,0,.45);
-      backdrop-filter:blur(2px);
-    }
-    .metric-sheet{
-      position:absolute;
-      left:50%;
-      bottom:0;
-      transform:translateX(-50%);
-      background:var(--surface-card);
-      border:1px solid var(--br-card);
-      border-radius:16px 16px 0 0;
-      box-shadow:var(--shadow-xl);
-      max-height:75vh;
-      width:min(480px,100vw);
-      display:flex;
-      flex-direction:column;
-    }
-    .metric-sheet__header{
-      padding:16px;
-      border-bottom:1px solid var(--br-soft);
-      background:var(--surface-card-alt);
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:12px;
-    }
-    .metric-sheet__titlewrap{
-      min-width:0;
-    }
-    .metric-sheet__title{
-      font-size:14px;
-      font-weight:800;
-      line-height:1.4;
-      color:var(--ink);
-      display:flex;
-      flex-wrap:wrap;
-      align-items:flex-start;
-      gap:.5rem .6rem;
-    }
-    .metric-sheet__source{
-      font-size:12px;
-      line-height:1.4;
-      color:var(--muted);
-      margin-top:2px;
-      max-width:40ch;
-    }
-    .metric-sheet__closebtn{
-      all:unset;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:28px;
-      height:28px;
-      border-radius:8px;
-      border:1px solid var(--br-soft);
-      background:var(--surface-card);
-      color:var(--muted);
-      flex-shrink:0;
-    }
-    .metric-sheet__body{
-      padding:16px;
-      overflow:auto;
-      font-size:13px;
-      line-height:1.45;
-      color:var(--ink);
-    }
-
-    /* Print tweaks */
+    /* PRINT */
     @media print{
-      .popover,
-      .metric-sheet-overlay,
-      .drawer,
-      #share-overlay,
       header,
-      .noprint {display:none !important;}
+      .noprint,
+      .tl-panel-overlay,
+      .tl-popover,
+      .tl-metric-sheet-overlay,
+      #share-overlay {display:none !important;}
       .hero{
         page-break-after:always;
         border:1px solid #ddd;
@@ -917,8 +1002,8 @@
         Il framework Tradelia procede top-down: F1 (contesto iniziale / regime di mercato),
         F2 (sentiment e flussi), F3 (analisi tecnica multi-timeframe),
         F4 (relazioni intermarket), F5 (resoconto tecnico),
-        F6 (broker selezionati).
-        Tutto in ottica informativa e non promozionale.
+        F5B (validazione LT), F6 (broker selezionati).
+        Contenuti a scopo informativo/formativo. Nessuna raccomandazione operativa.
       </p>
       <nav class="phase-nav" aria-label="Fasi del framework">
         <a href="#sec-f1">F1</a>
@@ -931,7 +1016,7 @@
       </nav>
     </section>
 
-    <!-- REPORT SECTIONS (lineare, istituzionale) -->
+    <!-- REPORT SECTIONS -->
     <section class="report-sections" aria-label="Moduli del Report">
 
       <!-- F1 dinamico (F1A o F1B) -->
@@ -950,7 +1035,7 @@
       <article id="sec-f5" class="report-section-block is-loading" aria-label="F5 · Resoconto tecnico"></article>
 
       <!-- F5B Validazione LT -->
-      <article id="sec-f5b" class="report-section-block is-loading" aria-label="F5B · Validazione LT"></article>
+      <article id="sec-f5b" class="report-section-block is-loading" aria-label="F5B · Validazione LT (orizzonte medio-lungo)"></article>
 
       <!-- F6 Broker selezionati -->
       <article id="sec-f6" class="report-section-block is-loading" aria-label="F6 · Broker selezionati"></article>
@@ -975,6 +1060,7 @@
             F3 = analisi tecnica multi-timeframe.<br/>
             F4 = relazioni intermarket.<br/>
             F5 = resoconto tecnico.<br/>
+            F5B = validazione LT.<br/>
             F6 = broker selezionati.
           </p>
         </div>
@@ -998,75 +1084,92 @@
     </footer>
   </div>
 
-  <!-- DRAWER -->
-  <div id="drawer" class="drawer noprint" aria-hidden="true" data-blocking="false" aria-label="Pannello dettagli">
-    <div class="drawer__backdrop" data-drawer-close></div>
-    <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
-      <header class="drawer__header">
+  <!-- PANEL OVERLAY RESPONSIVE (drawer MiFID / Audit / Privacy) -->
+  <div id="panel-overlay" class="tl-panel-overlay noprint" aria-hidden="true">
+    <div class="tl-panel-backdrop" data-panel-close></div>
+
+    <!-- desktop: side panel a destra -->
+    <aside class="tl-panel tl-panel--desktop" role="dialog" aria-modal="true" aria-labelledby="panel-title">
+      <header class="tl-panel__header">
         <div class="min-w-0">
-          <h2 id="drawer-title" class="drawer__title">
-            <svg class="inline-block" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-            </svg>
-            <span>Dettagli</span>
-          </h2>
-          <p id="drawer-subtitle" class="drawer__subtitle">—</p>
+          <h2 id="panel-title" class="tl-panel__title">—</h2>
+          <p id="panel-subtitle" class="tl-panel__subtitle">—</p>
         </div>
-        <button class="btn btn-sm" data-drawer-close aria-label="Chiudi">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-          <span class="hidden sm:inline">Chiudi</span>
-        </button>
-      </header>
-      <div id="drawer-content" class="drawer__content"></div>
-      <footer class="drawer__footer">
-        <button class="btn btn-sm" data-drawer-close type="button">Chiudi</button>
-      </footer>
-    </aside>
-  </div>
-
-  <!-- POPOVER tooltip DESKTOP -->
-  <div id="popover" class="popover noprint" role="tooltip" aria-hidden="true">
-    <h3 class="popover__title" id="popover-title">—</h3>
-    <div class="popover__text" id="popover-text">—</div>
-    <div class="popover__source" id="popover-source">—</div>
-    <div class="popover__actions">
-      <button id="popover-close" class="btn btn-sm" type="button">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-        <span class="hidden sm:inline">Chiudi</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- METRIC SHEET MOBILE -->
-  <div id="metric-sheet-overlay" class="metric-sheet-overlay noprint" aria-hidden="true">
-    <div class="metric-sheet-overlay__backdrop" data-metric-close></div>
-    <section class="metric-sheet" role="dialog" aria-modal="true" aria-labelledby="metric-sheet-title">
-      <header class="metric-sheet__header">
-        <div class="metric-sheet__titlewrap">
-          <div class="metric-sheet__title">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="16" x2="12" y2="12"></line>
-              <line x1="12" y1="8" x2="12" y2="8"></line>
-            </svg>
-            <span id="metric-sheet-title">—</span>
-          </div>
-          <div class="metric-sheet__source" id="metric-sheet-source">—</div>
-        </div>
-        <button class="metric-sheet__closebtn" data-metric-close aria-label="Chiudi dettaglio metrica">
+        <button class="tl-panel__close" data-panel-close aria-label="Chiudi">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
         </button>
       </header>
-      <div class="metric-sheet__body" id="metric-sheet-body">—</div>
+
+      <div id="panel-body" class="tl-panel__body">
+        <!-- sezioni dinamiche -->
+      </div>
+
+      <footer class="tl-panel__footer" id="panel-footer">
+        <button class="btn btn-sm" data-panel-close>Chiudi</button>
+      </footer>
+    </aside>
+
+    <!-- mobile: bottom sheet quasi full-height -->
+    <aside class="tl-panel tl-panel--mobile" role="dialog" aria-modal="true" aria-labelledby="panel-title-mobile">
+      <header class="tl-panel__header">
+        <div class="min-w-0">
+          <h2 id="panel-title-mobile" class="tl-panel__title">—</h2>
+          <p id="panel-subtitle-mobile" class="tl-panel__subtitle">—</p>
+        </div>
+        <button class="tl-panel__close" data-panel-close aria-label="Chiudi">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </header>
+
+      <div id="panel-body-mobile" class="tl-panel__body">
+        <!-- sezioni dinamiche -->
+      </div>
+
+      <footer class="tl-panel__footer" id="panel-footer-mobile">
+        <button class="btn btn-sm" data-panel-close>Chiudi</button>
+      </footer>
+    </aside>
+  </div>
+
+  <!-- TOOLTIP DESKTOP POPOVER (metriche ?) -->
+  <div id="metric-popover" class="tl-popover noprint" role="tooltip" aria-hidden="true">
+    <div class="tl-popover__head">
+      <div id="metric-popover-title" class="tl-popover__title">—</div>
+      <button id="metric-popover-close" class="tl-popover__close" aria-label="Chiudi">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div id="metric-popover-body" class="tl-popover__body">—</div>
+    <div id="metric-popover-source" class="tl-popover__source">—</div>
+  </div>
+
+  <!-- TOOLTIP MOBILE SHEET (metriche ?) -->
+  <div id="metric-sheet" class="tl-metric-sheet-overlay noprint" aria-hidden="true">
+    <div class="tl-metric-sheet-backdrop" data-metric-close></div>
+
+    <section class="tl-metric-sheet" role="dialog" aria-modal="true" aria-labelledby="metric-sheet-h-title">
+      <header class="tl-metric-sheet__header">
+        <div class="min-w-0">
+          <div id="metric-sheet-h-title" class="tl-metric-sheet__title">—</div>
+          <div id="metric-sheet-h-source" class="tl-metric-sheet__source">—</div>
+        </div>
+        <button class="tl-metric-sheet__closebtn" data-metric-close aria-label="Chiudi">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </header>
+      <div id="metric-sheet-body" class="tl-metric-sheet__body">—</div>
     </section>
   </div>
 
@@ -1133,16 +1236,12 @@
     </section>
   </div>
 
-  <!-- MAIN ORCHESTRATOR -->
+  <!-- JS -->
   <script type="module" src="/report/assets/js/app.js"></script>
-
-  <!-- Share controller -->
+  <script type="module" src="/report/assets/js/ui-runtime.js"></script>
   <script type="module">
     import { initShareSystem } from '/report/assets/js/components/share.js';
     initShareSystem();
   </script>
-
-  <!-- Inline runtime bootstrap -->
-  <script src="/report/assets/js/bootstrap-inline.js" type="module"></script>
 </body>
 </html>
