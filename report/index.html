@@ -5,29 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tradelia · Report Runtime</title>
 
+  <!-- SEO & Open Graph -->
+  <meta name="description" content="Tradelia · Report Runtime — framework istituzionale F1–F5b con validazione macro, tecnico e intermarket." />
+  <meta property="og:title" content="Tradelia · Report Runtime" />
+  <meta property="og:description" content="Report istituzionale: F1–F4 top‑down, F5 tecnico, F5b LT. Freshness, Confidence, Data Integrity." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tradelia.org/report/" />
+  <meta property="og:image" content="/report/og-preview.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#0b1220" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+
   <!-- Favicons (root) -->
   <link rel="icon" href="/favicon.ico?v=1">
   <link rel="icon" type="image/png" href="/favicon.png?v=1">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
-  <meta name="theme-color" content="#0b1220">
 
   <!-- Frameworks -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <script defer src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- CSS -->
+  <!-- CSS esterni -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
   <link rel="stylesheet" href="/report/assets/css/share.css" />
 
   <style>
-    :root{ --pop-w: 320px; }
+    :root{ --pop-w:320px }
 
     html,body{height:100%}
     body{
       font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
       background:var(--bg); color:var(--ink);
-      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
-      line-height:1.58;
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; line-height:1.58;
     }
     .container{max-width:90rem;margin-inline:auto;padding:0 16px}
     main{padding-top:2.25rem;padding-bottom:3rem}
@@ -39,7 +48,10 @@
     .claim{font-size:12px; color:var(--muted)}
 
     /* Divider */
-    .divider{border:0;height:1px;width:100%;background:color-mix(in oklab, var(--br) 80%, transparent);margin:18px 0 16px}
+    .divider{border:0;height:1px;width:100%;background:#e5e7eb}
+    @supports (background: color-mix(in oklab, white, black)){
+      .divider{background:color-mix(in oklab, var(--br) 80%, transparent)}
+    }
 
     /* HERO */
     .hero{
@@ -47,9 +59,7 @@
       background:radial-gradient(1100px 520px at -10% -40%, color-mix(in oklab, #eaf2ff 55%, white 45%) 0%, var(--card) 45%);
       padding:16px; box-shadow: var(--shadow-2)
     }
-    html[data-theme="dark"] .hero{
-      background: radial-gradient(1100px 520px at -10% -40%, #0b2740 0%, var(--card) 45%)
-    }
+    html[data-theme="dark"] .hero{ background:radial-gradient(1100px 520px at -10% -40%, #0b2740 0%, var(--card) 45%) }
     .hero__top{display:flex;align-items:center;justify-content:space-between;gap:10px}
     .hero__id{display:flex;align-items:baseline;gap:12px;min-w-0}
     .hero__ticker{font-weight:900;font-size:20px; letter-spacing:.2px}
@@ -60,32 +70,22 @@
     .chg--up{color:#10b981} .chg--down{color:#ef4444}
     .hero__badge{font-size:12.5px;border:1px solid var(--br);border-radius:999px;padding:.22rem .6rem;background:var(--card);color:var(--ink)}
 
-    .hero__meta{
-      display:grid; grid-template-columns:repeat(6,minmax(160px,1fr));
-      gap:10px; margin-top:14px
-    }
+    .hero__meta{ display:grid; grid-template-columns:repeat(6,minmax(160px,1fr)); gap:10px; margin-top:14px }
     @media(max-width:1024px){ .hero__meta{ grid-template-columns:repeat(2,1fr) } }
-    .meta-pill{
-      position:relative; display:flex;align-items:center;gap:.65rem;
-      border:1px solid var(--br);border-radius:12px;padding:.6rem .8rem .6rem 1rem;
-      background:var(--card); font-size:13px; box-shadow:var(--shadow-1); min-height:54px
-    }
+    .meta-pill{ position:relative; display:flex;align-items:center;gap:.65rem; border:1px solid var(--br);border-radius:12px;padding:.6rem .8rem .6rem 1rem; background:var(--card); font-size:13px; box-shadow:var(--shadow-1); min-height:54px }
     .meta-pill .tonebar{position:absolute;left:0;top:0;bottom:0;width:4px;border-top-left-radius:12px;border-bottom-left-radius:12px;background:#94a3b8}
     .meta-label{color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:11.5px}
-    .meta-val{font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;font-weight:800}
+    .meta-val{font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;font-weight:800; font-variant-numeric: tabular-nums;}
     .info-btn{all:unset; cursor:pointer; margin-left:6px; display:inline-flex; align-items:center; justify-content:center; width:18px;height:18px; border:1px solid var(--br); border-radius:999px; font-size:12px; line-height:1; color:var(--muted); background:var(--card); flex:0 0 auto}
 
-    /* === GRID B (F3 centrale più larga) === */
-    .mod-grid{
-      display:grid;
-      grid-template-columns: 1fr 1.6fr 1fr;
-      grid-template-rows: auto auto auto;
-      grid-template-areas:
-        "f1 f3 f2"
-        "f4 f3 f5"
-        "f5b f5b f5b";
-      gap:16px; margin-top:18px;
-    }
+    /* Quality strip sotto hero */
+    .quality-strip{ margin-top:10px; background:var(--card); border:1px solid var(--br); border-radius:12px; padding:10px 12px; box-shadow:var(--shadow-1); font-size:13px }
+
+    /* GRID (F3 centrale più larga) */
+    .mod-grid{ display:grid; grid-template-columns: 1fr 1.6fr 1fr; grid-template-rows: auto auto auto; grid-template-areas:
+      "f1 f3 f2"
+      "f4 f3 f5"
+      "f5b f5b f5b"; gap:16px; margin-top:18px; }
     .mod-f1{grid-area:f1}
     .mod-f2{grid-area:f2}
     .mod-f3{grid-area:f3}
@@ -93,57 +93,29 @@
     .mod-f5{grid-area:f5}
     .mod-f5b{grid-area:f5b}
 
-    .terminal{
-      background: var(--card); border:1px solid var(--br); border-radius:12px; box-shadow:var(--shadow-1); overflow:hidden;
-    }
+    .terminal{ background: var(--card); border:1px solid var(--br); border-radius:12px; box-shadow:var(--shadow-1); overflow:hidden; }
 
     .f3-wrap{ display:grid; grid-template-rows:auto 1fr auto; gap:12px; }
     .f3-tiles{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
-    .mini-card{
-      background: color-mix(in oklab, var(--card) 96%, #f6f6f9 4%);
-      border: 1px solid color-mix(in oklab, var(--br) 88%, #0b1220 12%);
-      border-radius: 12px; padding: 10px 12px; box-shadow: 0 6px 18px rgba(15,23,42,.06);
-    }
-    html[data-theme="dark"] .mini-card{
-      background: color-mix(in oklab, var(--card) 96%, white 4%);
-      border-color: color-mix(in oklab, var(--br) 82%, white 18%);
-      box-shadow: 0 12px 28px rgba(0,0,0,.45);
-    }
+    .mini-card{ background: color-mix(in oklab, var(--card) 96%, #f6f6f9 4%); border: 1px solid color-mix(in oklab, var(--br) 88%, #0b1220 12%); border-radius: 12px; padding: 10px 12px; box-shadow: 0 6px 18px rgba(15,23,42,.06); }
+    html[data-theme="dark"] .mini-card{ background: color-mix(in oklab, var(--card) 96%, white 4%); border-color: color-mix(in oklab, var(--br) 82%, white 18%); box-shadow: 0 12px 28px rgba(0,0,0,.45); }
 
-    .strip{ background: var(--card); border:1px solid var(--br); border-radius:12px; box-shadow:var(--shadow-1); padding:10px 12px; }
+    .card-compact{ background: var(--card); border:1px solid var(--br); border-radius:12px; box-shadow:var(--shadow-1); padding:10px 12px }
+    .strip{ background: var(--card); border:1px solid var(--br); border-radius:12px; box-shadow:var(--shadow-1); padding:10px 12px }
 
     @media (max-width: 1024px){
-      .mod-grid{
-        grid-template-columns:1fr;
-        grid-template-areas:
-          "f3" "f1" "f2" "f4" "f5" "f5b";
-      }
+      .mod-grid{ grid-template-columns:1fr; grid-template-areas:"f3" "f1" "f2" "f4" "f5" "f5b"; }
       .f3-tiles{ grid-template-columns:1fr; }
     }
 
-    /* === Drawer laterale destro (istituzionale) === */
+    /* Drawer laterale destro */
     .drawer{position:fixed;inset:0;z-index:70;display:none}
     .drawer[aria-hidden="false"]{display:block}
-    .drawer__backdrop{
-      position:absolute;inset:0;background:rgba(0,0,0,.25);
-      backdrop-filter:blur(2px);opacity:0;transition:opacity .18s ease
-    }
-    .drawer__panel{
-      position:fixed; top:0; right:0; bottom:0; width:min(540px,42vw);
-      background:var(--card); color:var(--ink);
-      border-left:1px solid var(--br);
-      box-shadow: var(--shadow-2);
-      transform: translateX(12px); opacity:0;
-      transition: transform .2s ease, opacity .2s ease;
-      display:flex; flex-direction:column;
-    }
+    .drawer__backdrop{ position:absolute;inset:0;background:rgba(0,0,0,.25); backdrop-filter:blur(2px);opacity:0;transition:opacity .18s ease }
+    .drawer__panel{ position:fixed; top:0; right:0; bottom:0; width:min(540px,42vw); background:var(--card); color:var(--ink); border-left:1px solid var(--br); box-shadow: var(--shadow-2); transform: translateX(12px); opacity:0; transition: transform .2s ease, opacity .2s ease; display:flex; flex-direction:column; }
     .drawer.is-open .drawer__backdrop{opacity:1}
     .drawer.is-open .drawer__panel{ transform:translateX(0); opacity:1 }
-    .drawer__header{
-      height:56px; display:flex; align-items:center; justify-content:space-between; gap:.6rem;
-      padding:0 14px; border-bottom:1px solid color-mix(in oklab, var(--br) 78%, transparent);
-      background: color-mix(in oklab, var(--card) 96%, white 4%); position:sticky;top:0;z-index:1;
-    }
+    .drawer__header{ height:56px; display:flex; align-items:center; justify-content:space-between; gap:.6rem; padding:0 14px; border-bottom:1px solid color-mix(in oklab, var(--br) 78%, transparent); background: color-mix(in oklab, var(--card) 96%, white 4%); position:sticky;top:0;z-index:1; }
     .drawer__title{ font-weight:900; font-size:15px; display:flex; align-items:center; gap:8px }
     .drawer__subtitle{ margin:2px 0 0; font-size:12.5px; color:var(--muted) }
     .drawer__content{ padding:14px; overflow:auto; height:calc(100% - 56px); background: color-mix(in oklab, var(--bg) 96%, white 4%) }
@@ -151,43 +123,49 @@
     .drawer__content h4{ font-weight:800; margin:0 0 6px; letter-spacing:.2px }
 
     /* Popover metrica */
-    .popover{
-      position:absolute; z-index:80; width:var(--pop-w); max-width:92vw;
-      background:var(--card); color:var(--ink);
-      border:1px solid color-mix(in oklab, var(--br) 85%, transparent);
-      border-radius:12px;
-      padding:12px 12px 10px;
-      box-shadow: 0 18px 44px rgba(2,6,23,.18);
-      display:none
-    }
+    .popover{ position:absolute; z-index:80; width:var(--pop-w); max-width:92vw; background:var(--card); color:var(--ink); border:1px solid color-mix(in oklab, var(--br) 85%, transparent); border-radius:12px; padding:12px 12px 10px; box-shadow: 0 18px 44px rgba(2,6,23,.18); display:none; max-height:60vh; overflow:auto }
     .popover__title{ margin:0 0 6px; font-weight:900; font-size:13.5px; letter-spacing:.15px }
     .popover__text{ font-size:12.8px; line-height:1.45 }
     .popover__source{ margin-top:6px; font-size:11.5px; color:var(--muted) }
 
-    /* Privacy modal */
+    /* Modal privacy */
     .modal{position:fixed;inset:0;z-index:90;display:none}
     .modal[aria-hidden="false"]{display:grid;place-items:center}
     .modal__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(2px)}
     .modal__panel{position:relative; z-index:1; width:min(700px,92vw); max-height:80vh; overflow:auto; background:var(--card); color:var(--ink); border:1px solid var(--br); border-radius:16px; padding:18px; box-shadow:var(--shadow-2)}
     .modal__title{margin:0 0 8px;font-weight:900;font-size:16px}
     .modal__text{font-size:13.6px;line-height:1.6}
-    .modal__actions{margin-top:12px;display:flex;gap:10px;justify-content:flex-end}
 
     /* Footer */
     .footer-wrap{background:var(--footer-bg); border-top:1px solid var(--footer-br); margin-top:24px}
     .site-footer{color:var(--muted)}
     .site-footer .heading{color:var(--ink); font-weight:800}
 
+    /* Skeleton (non invasivo) */
+    .is-loading{ position:relative; overflow:hidden }
+    .is-loading::after{ content:""; position:absolute; inset:0; background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.08) 50%, transparent 100%); animation: shimmer 1.3s infinite; }
+    @keyframes shimmer{ 0%{ transform:translateX(-100%) } 100%{ transform:translateX(100%) } }
+
+    /* Focus visibile */
+    :where(button,a).btn:focus-visible, :where(button,a)[role="button"]:focus-visible{ outline:2px solid var(--brand-600); outline-offset:2px }
+
+    /* Print */
     @media print{
       header,.btn,.u-btn,.noprint,.drawer,.popover,.modal{display:none!important}
-      .hero{page-break-after:always; border:1px solid #ddd; box-shadow:none!important}
+      body{ background:white; color:black }
+      .hero{ page-break-after:always; border:1px solid #ddd; box-shadow:none!important }
+      .quality-strip{ border:1px solid #ddd }
+      .card-compact,.terminal,.strip{ box-shadow:none; border:1px solid #ddd }
     }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){ *{ animation:none!important; transition:none!important } .hdr{ backdrop-filter:none } }
   </style>
 </head>
 
 <body>
   <!-- HEADER -->
-  <header class="hdr sticky top-0 z-50 bg-[color:var(--card)]/90 border-b border-[color:var(--br)] noprint">
+  <header class="hdr sticky top-0 z-50 bg-[color:var(--card)]/90 border-b border-[color:var(--br)] noprint" role="banner">
     <div class="container h-12 sm:h-14 flex items-center justify-between">
       <div class="flex items-center gap-2 sm:gap-3 min-w-0">
         <a href="/" class="brand shrink-0 text-lg sm:text-xl tracking-tight hover:opacity-90 transition">
@@ -204,7 +182,7 @@
   </header>
 
   <!-- MAIN -->
-  <main class="container">
+  <main class="container" role="main">
     <!-- HERO -->
     <section id="hero" class="hero" aria-label="Copertina Report">
       <div class="hero__top">
@@ -263,47 +241,47 @@
           </div>
         </div>
       </div>
+
+      <!-- Quality banner -->
+      <div id="hero-quality" class="quality-strip noprint" aria-live="polite"></div>
     </section>
 
     <hr class="divider" />
 
-    <!-- GRIGLIA MODULI (no pills) -->
+    <!-- GRIGLIA MODULI -->
     <section class="mod-grid" aria-label="Moduli">
       <!-- F1: terminal (può restare vuoto) -->
-      <section id="mod-f1" class="mod-f1 terminal" aria-label="F1 · Panorama Macro"></section>
+      <section id="mod-f1" class="mod-f1 terminal is-loading" aria-label="F1 · Panorama Macro"></section>
 
-      <!-- F3: centrale grande con 6 mini-tiles + core -->
+      <!-- F3 centrale con 6 mini-tiles + core -->
       <section class="mod-f3" aria-label="F3 · Scheda Tecnica">
         <div class="f3-wrap">
-          <!-- top tiles (3) -->
           <div id="f3-tiles-top" class="f3-tiles">
-            <article class="mini-card" id="f3t-1"></article>
-            <article class="mini-card" id="f3t-2"></article>
-            <article class="mini-card" id="f3t-3"></article>
+            <article class="mini-card is-loading" id="f3t-1"></article>
+            <article class="mini-card is-loading" id="f3t-2"></article>
+            <article class="mini-card is-loading" id="f3t-3"></article>
           </div>
-          <!-- core (tabella/analisi F3) -->
-          <div id="mod-f3-core" class="card-compact" aria-label="F3 · Core"></div>
-          <!-- bottom tiles (3) -->
+          <div id="mod-f3-core" class="card-compact is-loading" aria-label="F3 · Core"></div>
           <div id="f3-tiles-bottom" class="f3-tiles">
-            <article class="mini-card" id="f3b-1"></article>
-            <article class="mini-card" id="f3b-2"></article>
-            <article class="mini-card" id="f3b-3"></article>
+            <article class="mini-card is-loading" id="f3b-1"></article>
+            <article class="mini-card is-loading" id="f3b-2"></article>
+            <article class="mini-card is-loading" id="f3b-3"></article>
           </div>
         </div>
       </section>
 
       <!-- F2 / F4 / F5 come tabelle compatte -->
-      <section id="mod-f2" class="mod-f2 card-compact" aria-label="F2 · Overview Ticker"></section>
-      <section id="mod-f4" class="mod-f4 card-compact" aria-label="F4 · Intermarket & Intra-Market"></section>
-      <section id="mod-f5" class="mod-f5 card-compact" aria-label="F5 · Resoconto Tecnico"></section>
+      <section id="mod-f2" class="mod-f2 card-compact is-loading" aria-label="F2 · Overview Ticker"></section>
+      <section id="mod-f4" class="mod-f4 card-compact is-loading" aria-label="F4 · Intermarket & Intra-Market"></section>
+      <section id="mod-f5" class="mod-f5 card-compact is-loading" aria-label="F5 · Resoconto Tecnico"></section>
 
       <!-- F5b strip -->
-      <section id="mod-f5b" class="mod-f5b strip" aria-label="F5b · Validazione LT"></section>
+      <section id="mod-f5b" class="mod-f5b strip is-loading" aria-label="F5b · Validazione LT"></section>
     </section>
   </main>
 
   <!-- FOOTER -->
-  <div class="footer-wrap">
+  <div class="footer-wrap" role="contentinfo">
     <footer class="site-footer container py-4">
       <div class="border-t border-[color:var(--footer-br)] pt-3 grid gap-4 md:flex md:items-start md:justify-between">
         <div class="min-w-0">
@@ -381,27 +359,36 @@
     </section>
   </div>
 
-  <!-- JS principale -->
+  <!-- JS principale dell'app -->
   <script type="module" src="/report/assets/js/app.js"></script>
 
-  <!-- Share sheet -->
+  <!-- Share sheet boot -->
   <script type="module">
     import { initShareSystem } from '/report/assets/js/components/share.js';
     initShareSystem();
   </script>
 
-  <!-- Script pagina -->
+  <!-- Script pagina (robusto e responsive) -->
   <script>
+    // Helpers
     const $  = (s,r=document)=>r.querySelector(s);
     const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
     const getReportId = ()=> new URL(location.href).searchParams.get('id') || 'sample-id';
     const LS = { theme:'tradelia.theme', privacy:'tradelia.privacy.ack', mifid:'tradelia.mifid.accepted' };
 
+    // Formattatori locali
+    const fmtNum = (v,dec=2)=> (Number.isFinite(+v)? new Intl.NumberFormat('it-IT',{minimumFractionDigits:dec, maximumFractionDigits:dec}).format(+v) : '—');
+    const fmtPct = (v,dec=2)=> (Number.isFinite(+v)? `${fmtNum(+v,dec)}%` : '—');
+    const fmtDate = (d)=>{ try{ return new Intl.DateTimeFormat('it-IT',{dateStyle:'medium', timeZone:'Europe/Rome'}).format(new Date(d)); }catch{return d||'—'} };
+
+    // Inizializza lucide appena pronto (icone anche senza header.json)
+    document.addEventListener('DOMContentLoaded', () => { if (window.lucide) lucide.createIcons(); });
+
     // Print
     $('#btn-print')?.addEventListener('click',()=>window.print());
     $('#btn-print-2')?.addEventListener('click',()=>window.print());
 
-    // Theme persistente
+    // Theme persistente + icona coerente
     function setTheme(t){
       document.documentElement.dataset.theme=t;
       localStorage.setItem(LS.theme,t);
@@ -413,9 +400,10 @@
       const t=localStorage.getItem(LS.theme);
       if(t==='light'||t==='dark') document.documentElement.dataset.theme=t;
     })();
+    setTheme(document.documentElement.dataset.theme || 'light');
     $('#btn-theme')?.addEventListener('click',()=> setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
 
-    // Drawer API (laterale)
+    // Drawer API
     (() => {
       const root = $('#drawer'), title = $('#drawer-title'), subtitle = $('#drawer-subtitle'), content = $('#drawer-content');
       function open({ title:t='Dettagli', subtitle:s='—', html='', blocking=false }={}){
@@ -430,56 +418,97 @@
         root.classList.remove('is-open');
         root.addEventListener('transitionend',()=>{ root.setAttribute('aria-hidden','true'); document.body.style.overflow=''; },{once:true});
       }
-      root.addEventListener('click',e=>{ if(e.target.closest('[data-drawer-close]') && root.dataset.blocking!=='true') close(); });
+      root.addEventListener('click',e=>{
+        if((e.target === root.querySelector('.drawer__backdrop') || e.target.closest('[data-drawer-close]')) && root.dataset.blocking!=='true') close();
+      });
       document.addEventListener('keydown',e=>{ if(e.key==='Escape' && root.dataset.blocking!=='true') close(); });
       window.Tradelia = window.Tradelia || {};
       window.Tradelia.Drawer = { open, close, root };
     })();
 
-    // Carica header.json (hero + footer)
-    async function loadJSON(p){ try{ const r=await fetch(p,{cache:'no-store'}); return r.ok? r.json(): null; }catch{ return null; } }
-    function setToneBar(el, tone){ if(!el) return; el.style.background = tone==='g' ? '#10b981' : tone==='y' ? '#f59e0b' : tone==='r' ? '#ef4444' : '#94a3b8'; }
+    // Fetch robusto (timeout + retry) per JSON
+    async function fetchJSON(url,{timeout=5000,retries=1}={}){
+      for(let attempt=0; attempt<=retries; attempt++){
+        const ctl = new AbortController();
+        const to = setTimeout(()=>ctl.abort(), timeout);
+        try{
+          const r = await fetch(url,{cache:'no-store', signal:ctl.signal});
+          clearTimeout(to);
+          if(!r.ok) throw new Error('HTTP '+r.status);
+          return await r.json();
+        }catch(err){
+          clearTimeout(to);
+          if(attempt===retries) return null;
+          await new Promise(res=>setTimeout(res, 300 + attempt*400));
+        }
+      }
+      return null;
+    }
 
+    function setToneBar(el, tone){ if(!el) return; const map = { g:'#10b981', y:'#f59e0b', r:'#ef4444', n:'#94a3b8' }; el.style.background = map[tone] || map.n; }
+
+    // Carica header.json (hero + footer + quality)
     (async ()=>{
       const base = `/report/reports/${getReportId()}`;
-      const h = await loadJSON(`${base}/header.json`); if(!h) { if(window.lucide) lucide.createIcons(); return; }
+      const h = await fetchJSON(`${base}/header.json`,{timeout:6000,retries:1});
+      if(!h){ if(window.lucide) lucide.createIcons(); return; }
 
+      // Hero ID
       $('#hero-ticker').textContent = h.Ticker ?? '—';
       $('#hero-venue').textContent  = h.Venue ? `· ${h.Venue}` : '· —';
-      const price = (h.Price!=null && isFinite(+h.Price)) ? (+h.Price).toFixed(2) : '—';
-      $('#hero-price').textContent = price;
-      const chg = (h.ChangePct!=null && isFinite(+h.ChangePct)) ? (+h.ChangePct).toFixed(2)+'%' : '—';
-      const chgEl = $('#hero-change'); chgEl.textContent = chg; chgEl.classList.toggle('chg--up',  Number(h.ChangePct)>0); chgEl.classList.toggle('chg--down',Number(h.ChangePct)<0);
+
+      // Prezzi
+      const priceNum = (h.Price!=null && Number.isFinite(+h.Price)) ? +h.Price : NaN;
+      $('#hero-price').textContent = Number.isFinite(priceNum) ? fmtNum(priceNum, 2) : '—';
+      $('#hero-price2').textContent = Number.isFinite(priceNum) ? fmtNum(priceNum, 2) : '—';
+
+      const chgNum = (h.ChangePct!=null && Number.isFinite(+h.ChangePct)) ? +h.ChangePct : NaN;
+      const chgEl = $('#hero-change');
+      chgEl.textContent = Number.isFinite(chgNum)? fmtPct(chgNum,2) : '—';
+      chgEl.classList.toggle('chg--up',  Number.isFinite(chgNum) && chgNum>0);
+      chgEl.classList.toggle('chg--down',Number.isFinite(chgNum) && chgNum<0);
+      $('#hero-change2').textContent= Number.isFinite(chgNum)? fmtPct(chgNum,2) : '—';
+
+      // Stato & meta
       const st = (h.State ?? h.ReportState ?? '—'); $('#hero-state').textContent = st;
+      $('#hero-start').textContent = h.Start ? fmtDate(h.Start) : '—';
+      $('#hero-end').textContent   = h.End ? fmtDate(h.End) : '—'; setToneBar($('#tone-snap'),'n');
+      $('#hero-ccy').textContent   = h.Currency ?? h.PxCcy ?? '—'; setToneBar($('#tone-ccy'),'n');
 
-      $('#hero-start').textContent = h.Start ?? '—';  $('#hero-end').textContent = h.End ?? '—'; setToneBar($('#tone-snap'),'n');
-      $('#hero-price2').textContent = price;           setToneBar($('#tone-price'),'n');
-      $('#hero-change2').textContent= chg;             setToneBar($('#tone-chg'), (h.ChangePct==null||isNaN(+h.ChangePct))?'n':(+h.ChangePct>0?'g':+h.ChangePct<0?'r':'n'));
-      $('#hero-ccy').textContent    = h.Currency ?? h.PxCcy ?? '—'; setToneBar($('#tone-ccy'),'n');
+      const fresh = h.FreshnessLabel ?? h.Freshness ?? '—';
+      $('#hero-freshness').textContent = fresh; setToneBar($('#tone-fresh'), /T-0/i.test(fresh) ? 'g' : /T-1/i.test(fresh) ? 'y' : 'r');
+      const conf = Number.isFinite(+h.ConfidenceFinal) ? +h.ConfidenceFinal : NaN;
+      $('#hero-confidence').textContent = Number.isFinite(conf) ? fmtNum(conf,2) : '—';
+      setToneBar($('#tone-conf'), Number.isFinite(conf)? (conf>=0.80?'g':conf>=0.60?'y':'r') : 'n');
 
-      const fresh = h.FreshnessLabel ?? h.Freshness ?? '—'; $('#hero-freshness').textContent = fresh; setToneBar($('#tone-fresh'), /T-0/i.test(fresh) ? 'g' : /T-1/i.test(fresh) ? 'y' : 'r');
-      const conf = isFinite(+h.ConfidenceFinal) ? +h.ConfidenceFinal : NaN; $('#hero-confidence').textContent = isFinite(conf) ? conf.toFixed(2) : '—'; setToneBar($('#tone-conf'), isFinite(conf)? (conf>=0.80?'g':conf>=0.60?'y':'r') : 'n');
+      // Quality banner (FeedSync, Integrity)
+      const q = [];
+      if(h.FeedSync) q.push(`FeedSync: ${h.FeedSync}`);
+      if(h.DataIntegrity!=null) q.push(`Integrity: ${h.DataIntegrity===true||h.DataIntegrity==='OK'?'OK':'Check'}`);
+      if(h.MissingFields?.length) q.push(`Missing: ${h.MissingFields.length}`);
+      if(h.Build||h.ReportVersion) q.push(`Build: ${h.Build||h.ReportVersion}`);
+      $('#hero-quality').textContent = q.length? q.join(' · ') : '';
 
+      // Footer
       $('#footer-year').textContent = new Date().getFullYear();
-      $('#footer-snapshot').textContent = (h.Start && h.End) ? `${h.Start} → ${h.End}` : (h.Start || '—');
-      $('#footer-updated').textContent  = h.UpdatedAt || h.End || '—';
+      $('#footer-snapshot').textContent = (h.Start && h.End) ? `${fmtDate(h.Start)} → ${fmtDate(h.End)}` : (h.Start? fmtDate(h.Start) : '—');
+      $('#footer-updated').textContent  = h.UpdatedAt ? fmtDate(h.UpdatedAt) : (h.End? fmtDate(h.End) : '—');
       const v = h.Version || h.Build || h.ReportVersion; if(v) $('#footer-version').textContent = v;
 
       if(window.lucide) lucide.createIcons();
     })();
 
-    // Popover metriche "(?)" con glossario
+    // Popover metriche con glossario
     const pop = $('#popover'); let glossaryCache=null;
-    async function getGlossary(){ if(glossaryCache) return glossaryCache; try{ const r=await fetch('/report/assets/glossary.json',{cache:'no-store'}); glossaryCache = r.ok ? await r.json() : {}; } catch{ glossaryCache={}; } return glossaryCache; }
+    async function getGlossary(){ if(glossaryCache) return glossaryCache; const g = await fetchJSON('/report/assets/glossary.json',{timeout:4000,retries:1}); glossaryCache = g||{}; return glossaryCache; }
     function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
     function placePopover(btn){
       const rect = btn.getBoundingClientRect(), sx = scrollX, sy = scrollY, vw = innerWidth, vh = innerHeight;
       const popW = Math.min(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--pop-w'))||320, vw*0.92);
       pop.style.width = popW + 'px'; pop.style.visibility='hidden'; pop.style.display='block';
-      const ph = pop.offsetHeight || 160;
-      let left = rect.left + sx - 8, top  = rect.bottom + sy + 8;
-      const m = 12; left = clamp(left, sx + m, sx + vw - popW - m);
-      const below = (sy + vh) - (rect.bottom + sy); if (below < ph + 20){ top = rect.top + sy - ph - 10; if (top < sy + m) top = sy + m; }
+      const ph = pop.offsetHeight || 160; let left = rect.left + sx - 8, top  = rect.bottom + sy + 8; const m = 12;
+      left = clamp(left, sx + m, sx + vw - popW - m); const below = (sy + vh) - (rect.bottom + sy);
+      if (below < ph + 20){ top = rect.top + sy - ph - 10; if (top < sy + m) top = sy + m; }
       pop.style.left = `${left}px`; pop.style.top  = `${top}px`; pop.style.visibility='visible'; pop.setAttribute('aria-hidden','false');
     }
     function hidePopover(){ pop.style.display='none'; pop.setAttribute('aria-hidden','true'); }
@@ -539,7 +568,7 @@
       if(!m){ openMiFID(); }
     })();
 
-    // Mount routing target per moduli
+    // Mount target per moduli (usato da app.js)
     window.Tradelia = window.Tradelia || {};
     window.Tradelia.mountTarget = {
       F1:  '#mod-f1',
