@@ -1,731 +1,582 @@
-/* =========================================================
-   TRADELIA DESIGN TOKENS / COMPONENT LIB
-   Path: /report/assets/css/tokens.css
-   Questa versione è coerente con index.html corrente
-   ========================================================= */
+/* ============================================================
+   Tradelia Runtime Tokens & Base Components
+   ============================================================ */
 
+/* ------------------------------------------------------------
+   1. COLOR TOKENS (light / dark)
+   ------------------------------------------------------------ */
 
-/* ---------------------------------------------------------
-   PALETTE E TOKEN GLOBALI
-   --------------------------------------------------------- */
-
-/* LIGHT THEME */
+/* default fallback (light as baseline) */
 :root {
-  /* superfici */
-  --surface-page: #f8fafc;
-  --surface-card: #ffffff;
-  --surface-card-alt: color-mix(in oklab, #ffffff 96%, #f6f6f9 4%);
-  --surface-footer: color-mix(in oklab, #f8fafc 96%, #0b1220 4%);
-
-  /* testo */
+  /* Text / Ink */
   --ink: #0b1220;
   --muted: #6b7280;
 
-  /* bordi / outline */
-  --br-base: color-mix(in oklab, #0b1220 15%, transparent);
-  --br-soft: color-mix(in oklab, var(--br-base) 80%, transparent);
-  --br-card: color-mix(in oklab, var(--br-base) 88%, transparent);
-  --br-card-strong: color-mix(in oklab, var(--br-base) 82%, #0b1220 18%);
-  --footer-br: color-mix(in oklab, var(--br-base) 75%, transparent);
+  /* Brand accent */
+  --brand: #4f46e5; /* indigo-ish */
 
-  /* brand / accent */
-  --brand: #2563eb;
+  /* Surfaces */
+  --surface-page: #f8fafc;
+  --surface-card: #ffffff;
+  --surface-card-alt: #f9fafb;
+  --surface-footer: #f8fafc;
+  --surface-card-elev: #ffffff;
 
-  /* tone-semafori */
-  --tone-g: #10b981;
-  --tone-y: #f59e0b;
-  --tone-r: #ef4444;
-  --tone-n: #94a3b8;
+  /* Borders / dividers */
+  --br-soft: rgba(0,0,0,0.07);
+  --br-card: rgba(0,0,0,0.08);
+  --br-card-strong: rgba(0,0,0,0.12);
+  --footer-br: rgba(0,0,0,0.07);
 
-  /* hero radial tints */
-  --tint-hero: #eaf2ff;
-  --tint-hero-dark: #0b2740; /* usata in dark, qui solo definita per coerenza */
+  /* Shadows */
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.06), 0 1px 1px rgba(0,0,0,0.03);
+  --shadow-lg: 0 16px 32px -8px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-xl: 0 24px 48px -12px rgba(0,0,0,0.22), 0 8px 24px rgba(0,0,0,0.12);
 
-  /* shadow */
-  --shadow-card: 0 6px 18px rgba(15,23,42,.06);
-  --shadow-lg: 0 24px 48px rgba(2,6,23,.20);
+  /* Tone bars + states */
+  --tone-g: #16a34a;
+  --tone-r: #dc2626;
+  --tone-y: #facc15;
+  --tone-n: #6b7280;
 
-  /* component radii */
+  /* Hero tint */
+  --tint-hero: #dbeafe;       /* light bluish wash */
+  --tint-hero-dark: #1e1e2e;  /* dark variant */
+
+  /* Extra */
   --radius-card: 12px;
-  --radius-pill: 999px;
+  --radius-chip: 8px;
+  --radius-drawer: 16px;
+  --radius-pop: 12px;
   --radius-sheet: 16px;
-  --radius-drawer: 12px;
-  --radius-modal: 16px;
 
-  /* dimensioni popover */
-  --pop-w: 320px;
+  --transition-fast: .15s ease;
+}
+
+/* LIGHT THEME EXPLICIT */
+html[data-theme="light"] {
+  --ink: #0b1220;
+  --muted: #6b7280;
+
+  --surface-page: #f8fafc;
+  --surface-card: #ffffff;
+  --surface-card-alt: #f9fafb;
+  --surface-footer: #f8fafc;
+  --surface-card-elev: #ffffff;
+
+  --br-soft: rgba(0,0,0,0.07);
+  --br-card: rgba(0,0,0,0.08);
+  --br-card-strong: rgba(0,0,0,0.12);
+  --footer-br: rgba(0,0,0,0.07);
+
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.06), 0 1px 1px rgba(0,0,0,0.03);
+  --shadow-lg: 0 16px 32px -8px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-xl: 0 24px 48px -12px rgba(0,0,0,0.22), 0 8px 24px rgba(0,0,0,0.12);
+
+  --tone-g: #16a34a;
+  --tone-r: #dc2626;
+  --tone-y: #facc15;
+  --tone-n: #6b7280;
+
+  --tint-hero: #dbeafe;
+  --tint-hero-dark: #1e1e2e;
 }
 
 /* DARK THEME */
 html[data-theme="dark"] {
-  --surface-page: #0f172a;
-  --surface-card: #1e2535;
-  --surface-card-alt: color-mix(in oklab, #1e2535 96%, white 4%);
-  --surface-footer: color-mix(in oklab, #0f172a 90%, white 10%);
+  --ink: #f8fafc;
+  --muted: #9ca3af;
 
-  --ink: #eef2ff;
-  --muted: #94a3b8;
+  --surface-page: #0b1220;
+  --surface-card: #1a1f2e;
+  --surface-card-alt: #1f2537;
+  --surface-footer: #0f172a;
+  --surface-card-elev: #1f2537;
 
-  --br-base: color-mix(in oklab, #eef2ff 22%, transparent);
-  --br-soft: color-mix(in oklab, var(--br-base) 78%, transparent);
-  --br-card: color-mix(in oklab, var(--br-base) 88%, transparent);
-  --br-card-strong: color-mix(in oklab, var(--br-base) 82%, white 18%);
-  --footer-br: color-mix(in oklab, var(--br-base) 60%, transparent);
+  --br-soft: rgba(255,255,255,0.12);
+  --br-card: rgba(255,255,255,0.16);
+  --br-card-strong: rgba(255,255,255,0.22);
+  --footer-br: rgba(255,255,255,0.12);
 
-  --brand: #3b82f6;
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.7), 0 1px 1px rgba(0,0,0,0.5);
+  --shadow-lg: 0 16px 32px -8px rgba(0,0,0,0.9), 0 4px 16px rgba(0,0,0,0.8);
+  --shadow-xl: 0 24px 48px -12px rgba(0,0,0,1), 0 8px 24px rgba(0,0,0,0.9);
 
-  --tone-g: #10b981;
-  --tone-y: #facc15;
+  --tone-g: #4ade80;
   --tone-r: #f87171;
-  --tone-n: #64748b;
+  --tone-y: #fde047;
+  --tone-n: #9ca3af;
 
-  --tint-hero: #0b2740;
-  --tint-hero-dark: #0b2740;
-
-  --shadow-card: 0 12px 28px rgba(0,0,0,.45);
-  --shadow-lg: 0 32px 64px rgba(0,0,0,.7);
+  --tint-hero: #1e1e2e;
+  --tint-hero-dark: #1e1e2e;
 }
 
+/* ------------------------------------------------------------
+   2. TYPO / UTILITY TOKENS
+   ------------------------------------------------------------ */
 
-/* ---------------------------------------------------------
-   BASE ELEMENTS / RESET MINIMO
-   --------------------------------------------------------- */
-
-html, body {
-  background: var(--surface-page);
-  color: var(--ink);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+body {
+  font-size: 14px;
   line-height: 1.5;
-  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  color: var(--ink);
+  background-color: var(--surface-page);
 }
 
-.divider {
+code {
+  font-family: ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: .88em;
+  background: color-mix(in oklab, var(--ink) 5%, transparent);
+  color: var(--ink);
+  padding: .15rem .4rem;
+  border-radius: 4px;
+  border: 1px solid var(--br-soft);
+}
+
+hr.divider {
   border: 0;
-  height: 1px;
-  width: 100%;
-  background: var(--br-soft);
-  margin: 18px 0 16px;
+  border-top: 1px solid var(--br-soft);
+  margin: 1.5rem 0;
 }
 
-
-/* ---------------------------------------------------------
-   BUTTONS
-   --------------------------------------------------------- */
+/* ------------------------------------------------------------
+   3. BUTTONS
+   ------------------------------------------------------------ */
 
 .btn {
   all: unset;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: .5rem;
-  font-size: 12.8px;
-  font-weight: 600;
-  line-height: 1.2;
-  color: var(--ink);
-  background: var(--surface-card);
+  border-radius: var(--radius-chip);
   border: 1px solid var(--br-soft);
-  border-radius: var(--radius-pill);
-  padding: .45rem .7rem;
+  background: var(--surface-card);
+  color: var(--ink);
+  font-size: 12.5px;
+  line-height: 1.2;
+  font-weight: 600;
+  padding: .5rem .6rem;
   box-shadow: var(--shadow-card);
-  cursor: pointer;
-  transition: opacity .15s ease, box-shadow .15s ease;
-}
-.btn:hover {
-  opacity: .9;
-  box-shadow: var(--shadow-lg);
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 .btn:active {
   opacity: .8;
-  box-shadow: var(--shadow-card);
+}
+.btn:hover {
+  background: var(--surface-card-alt);
 }
 
 .btn-sm {
   font-size: 12px;
-  padding: .35rem .6rem;
+  padding: .4rem .5rem;
   line-height: 1.2;
-  min-height: 28px;
-  border-radius: var(--radius-pill);
-  background: var(--surface-card);
-  color: var(--ink);
-  border: 1px solid var(--br-soft);
-  box-shadow: var(--shadow-card);
-  cursor: pointer;
+  gap: .4rem;
+}
+
+/* smaller icon wrapper, used in header bar */
+.icon-16 {
+  width: 16px;
+  height: 16px;
+  line-height: 0;
   display: inline-flex;
   align-items: center;
-  gap: .4rem;
-  font-weight: 600;
+  justify-content: center;
 }
 
-
-/* ---------------------------------------------------------
-   BADGES (segnali strategia, ecc.)
-   --------------------------------------------------------- */
-
-.badge {
-  display:inline-flex;
-  align-items:center;
-  border-radius:var(--radius-pill);
-  font-size:12px;
-  font-weight:600;
-  line-height:1.2;
-  padding:.2rem .5rem;
-  border:1px solid var(--br-soft);
-  background:var(--surface-card);
-  color:var(--ink);
-  white-space:nowrap;
-}
-.badge--g {
-  background:var(--tone-g);
-  color:#fff;
-  border:1px solid var(--tone-g);
-}
-.badge--y {
-  background:var(--tone-y);
-  color:#0b1220;
-  border:1px solid var(--tone-y);
-}
-.badge--r {
-  background:var(--tone-r);
-  color:#fff;
-  border:1px solid var(--tone-r);
-}
-.badge--n {
-  background:var(--surface-card);
-  border:1px solid var(--br-soft);
-  color:var(--ink);
+/* theme-icon just a flex wrapper so JS can swap SVG easily */
+.theme-icon {
+  width: 16px;
+  height: 16px;
+  line-height: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* ------------------------------------------------------------
+   4. CARD CONTAINERS
+   ------------------------------------------------------------ */
 
-/* ---------------------------------------------------------
-   CARDS
-   --------------------------------------------------------- */
-
+/* blocco principale dei moduli tipo F2, F4, F5 */
 .card-compact {
   background: var(--surface-card);
-  color: var(--ink);
   border: 1px solid var(--br-card);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
   padding: 12px 14px;
+  color: var(--ink);
   font-size: 13px;
   line-height: 1.45;
   min-height: 120px;
-  display: flex;
-  flex-direction: column;
-  gap: .5rem;
+  position: relative;
 }
 
-.card-compact__head {
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  flex-wrap:wrap;
-  gap:.5rem .75rem;
-}
-.card-compact__title {
-  font-weight:800;
-  font-size:13.5px;
-  color:var(--ink);
-  line-height:1.3;
-  letter-spacing:.2px;
-}
-.card-compact__body {
-  font-size:13px;
-  line-height:1.5;
-  color:var(--ink);
-}
-
-/* "terminal" look (per F1 narrative / regime console style) */
-.terminal {
-  background: var(--surface-card);
-  color: var(--ink);
-  border: 1px solid var(--br-card);
-  border-radius: var(--radius-card);
-  box-shadow: var(--shadow-card);
-  padding: 12px 14px;
-  font-family: ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
-  font-size: 12.8px;
-  line-height: 1.5;
-  white-space: pre-wrap;
-  word-break: break-word;
-  min-height: 160px;
-  display: flex;
-  flex-direction: column;
-  gap: .5rem;
-}
-
-/* strip (per validazione LT F5B) */
+/* blocco strip (F5B / F6) fullwidth visivo "band" */
 .strip {
-  background: var(--surface-card);
-  color: var(--ink);
-  border: 1px solid var(--br-card);
+  background: var(--surface-card-alt);
+  border: 1px solid var(--br-card-strong);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
-  padding: 10px 12px 12px;
+  padding: 14px 16px;
+  color: var(--ink);
   font-size: 13px;
   line-height: 1.45;
-  min-height: 100px;
-  display: flex;
-  flex-direction: column;
-  gap: .5rem;
+  min-height: 120px;
+  position: relative;
 }
 
+/* stile "terminale" per F1/F1B (contesto iniziale / regime macro) */
+.terminal {
+  background: var(--surface-card);
+  border: 1px solid var(--br-card-strong);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.45;
+  padding: 14px 16px;
+  min-height: 120px;
+  position: relative;
+  font-family: ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
 
-/* ---------------------------------------------------------
-   SKELETON LOADING STATE
-   --------------------------------------------------------- */
-
+/* stato loading per qualsiasi blocco card/strip/terminal */
 .is-loading {
   position: relative;
-  color: transparent !important;
+  color: var(--muted);
 }
-.is-loading > * {
-  visibility: hidden;
-}
-.is-loading::before {
-  content: '';
-  display: block;
+.is-loading::after {
+  content: "Caricamento…";
   position: absolute;
   inset: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in oklab, var(--surface-card-elev) 60%, transparent);
   border-radius: inherit;
-  background-image:
-    repeating-linear-gradient(
-      -45deg,
-      color-mix(in oklab, var(--surface-card) 92%, white 8%) 0px,
-      color-mix(in oklab, var(--surface-card) 92%, white 8%) 10px,
-      color-mix(in oklab, var(--surface-card) 88%, white 12%) 10px,
-      color-mix(in oklab, var(--surface-card) 88%, white 12%) 20px
-    );
-  border: 1px solid var(--br-card);
-  box-shadow: var(--shadow-card);
-  animation: sk-pulse 1.4s infinite steps(30,end);
+  border: 1px solid var(--br-soft);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--br-soft) 60%, transparent);
+  pointer-events: none;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  font-weight: 600;
 }
 
-@media (prefers-color-scheme: dark) {
-  html[data-theme="dark"] .is-loading::before {
-    background-image:
-      repeating-linear-gradient(
-        -45deg,
-        color-mix(in oklab, var(--surface-card) 92%, #ffffff 8%) 0px,
-        color-mix(in oklab, var(--surface-card) 92%, #ffffff 8%) 10px,
-        color-mix(in oklab, var(--surface-card) 88%, #ffffff 12%) 10px,
-        color-mix(in oklab, var(--surface-card) 88%, #ffffff 12%) 20px
-      );
-  }
-}
-
-@keyframes sk-pulse {
-  0%   { filter: brightness(1);   }
-  50%  { filter: brightness(1.07);}
-  100% { filter: brightness(1);   }
-}
-
-
-/* ---------------------------------------------------------
-   DRAWER (dettagli, MiFID)
-   --------------------------------------------------------- */
+/* ------------------------------------------------------------
+   5. DRAWER (MiFID / dettagli)
+   ------------------------------------------------------------ */
 
 .drawer {
   position: fixed;
   inset: 0;
-  z-index: 70;
+  z-index: 100;
   display: none;
 }
+
 .drawer[aria-hidden="false"] {
   display: block;
 }
+
 .drawer__backdrop {
   position: absolute;
   inset: 0;
   background: rgba(0,0,0,.45);
   backdrop-filter: blur(2px);
-  opacity: 0;
-  transition: opacity .18s ease;
 }
+
 .drawer__panel {
-  position: fixed;
-  top: 0; right: 0; bottom: 0;
-  width: min(540px,42vw);
-  max-width: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: min(400px, 90vw);
   background: var(--surface-card);
   color: var(--ink);
   border-left: 1px solid var(--br-card);
-  box-shadow: var(--shadow-lg);
-  transform: translateX(12px);
-  opacity: 0;
-  transition: transform .2s ease, opacity .2s ease;
-  display: flex;
-  flex-direction: column;
   border-top-left-radius: var(--radius-drawer);
   border-bottom-left-radius: var(--radius-drawer);
-}
-.drawer.is-open .drawer__backdrop {
-  opacity: 1;
-}
-.drawer.is-open .drawer__panel {
-  transform: translateX(0);
-  opacity: 1;
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
 }
 
 .drawer__header {
-  height: 56px;
+  border-bottom: 1px solid var(--br-soft);
+  padding: 16px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: .6rem;
-  padding: 0 14px;
-  border-bottom: 1px solid color-mix(in oklab, var(--br-base) 78%, transparent);
-  background: color-mix(in oklab, var(--surface-card) 96%, white 4%);
-  position: sticky;
-  top: 0;
-  z-index: 1;
+  gap: 12px;
+  color: var(--ink);
 }
 .drawer__title {
-  font-weight: 900;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  font-size: 14px;
+  font-weight: 800;
   color: var(--ink);
+  line-height: 1.4;
+  display: flex;
+  align-items: flex-start;
+  gap: .5rem;
 }
 .drawer__subtitle {
-  margin: 2px 0 0;
   font-size: 12.5px;
   color: var(--muted);
+  line-height: 1.4;
+  margin-top: 2px;
 }
+
 .drawer__content {
-  padding: 14px;
-  overflow: auto;
-  height: calc(100% - 56px);
-  background: color-mix(in oklab, var(--surface-page) 96%, white 4%);
-  color: var(--ink);
+  padding: 16px;
+  overflow-y: auto;
   font-size: 13px;
-  line-height: 1.5;
-}
-.drawer__content section + section {
-  margin-top: 12px;
-}
-.drawer__content h4 {
-  font-weight: 800;
-  margin: 0 0 6px;
-  letter-spacing: .2px;
+  line-height: 1.45;
   color: var(--ink);
-  font-size: 13px;
-  line-height:1.4;
 }
 
-/* Drawer mobile (<640px): panel come sheet laterale stretto */
-@media(max-width:640px){
-  .drawer__panel {
-    left: auto;
-    right: 0;
-    width: 90vw;
-    max-width: 90vw;
-    border-radius: var(--radius-drawer) 0 0 var(--radius-drawer);
-    border-left: 1px solid var(--br-card);
-    transform: translateX(8px);
-  }
-  .drawer.is-open .drawer__panel {
-    transform: translateX(0);
-  }
-}
-
-/* Drawer "blocking" (MiFID): fullscreen bloccante */
-.drawer--blocking .drawer__panel {
-  left: 0;
-  right: 0;
-  width: 100vw;
-  max-width: 100vw;
-  border-left: none;
-  border-radius: 0;
-  transform: translateX(0);
-  opacity: 1;
-  box-shadow: var(--shadow-lg);
-}
-.drawer--blocking.is-open .drawer__backdrop {
-  opacity: 1;
-}
-.drawer--blocking.is-open .drawer__panel {
-  transform: none;
-  opacity: 1;
-}
-
-
-/* ---------------------------------------------------------
-   SHARE OVERLAY (sheet di condivisione)
-   - lo stile dettagliato sta in share.css
-   - qui ci limitiamo allo z-index "ufficiale"
-   --------------------------------------------------------- */
-
-#share-overlay {
-  z-index: 100;
-}
-
-
-/* ---------------------------------------------------------
-   METRIC POPOVER (desktop tooltip)
-   --------------------------------------------------------- */
+/* ------------------------------------------------------------
+   6. POPOVER METRICHE (desktop)
+   ------------------------------------------------------------ */
 
 .popover {
   position: absolute;
-  z-index: 80;
-  width: var(--pop-w);
-  max-width: 92vw;
+  z-index: 85;
+  width: var(--pop-w, 320px);
+  max-width: calc(100vw - 16px);
   background: var(--surface-card);
   color: var(--ink);
-  border: 1px solid color-mix(in oklab, var(--br-base) 85%, transparent);
-  border-radius: var(--radius-card);
-  padding: 12px 12px 10px;
-  box-shadow: 0 18px 44px rgba(2,6,23,.18);
+  border: 1px solid var(--br-card);
+  border-radius: var(--radius-pop);
+  box-shadow: var(--shadow-xl);
+  padding: 12px 14px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  box-sizing: border-box;
   display: none;
 }
 .popover[aria-hidden="false"] {
   display: block;
 }
+
 .popover__title {
-  margin: 0 0 6px;
-  font-weight: 800;
-  font-size: 13.5px;
-  letter-spacing: .15px;
+  font-size: 13px;
+  font-weight: 700;
   color: var(--ink);
-  display: flex;
-  align-items: center;
-  gap: .5rem;
+  line-height: 1.4;
+  margin-bottom: 4px;
 }
 .popover__text {
-  font-size: 13px;
-  line-height: 1.45;
   color: var(--ink);
+  line-height: 1.45;
+  margin-bottom: 6px;
+  font-size: 12.5px;
 }
 .popover__source {
-  margin-top: 6px;
-  font-size: 11.5px;
   color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.4;
+  margin-bottom: 10px;
 }
 .popover__actions {
-  margin-top: 10px;
-  display: flex;
-  justify-content: flex-end;
-}
-#popover-close {
-  height: 28px;
-  border-radius: 8px;
-  border: 1px solid var(--br-soft);
-  background: var(--surface-card);
-  font-size: 12px;
-  font-weight: 600;
-  padding: 0 .6rem;
-  line-height: 1;
-  color: var(--ink);
-  cursor:pointer;
-  display:inline-flex;
-  align-items:center;
-  gap:.4rem;
+  text-align: right;
 }
 
-
-/* ---------------------------------------------------------
-   METRIC SHEET (mobile bottom sheet <640px)
-   --------------------------------------------------------- */
+/* ------------------------------------------------------------
+   7. METRIC SHEET OVERLAY (mobile <640px)
+   bottom sheet con info metrica estesa
+   ------------------------------------------------------------ */
 
 .metric-sheet-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 85;
-  display: none;
-}
-.metric-sheet-overlay[aria-hidden="false"] {
-  display: block;
-}
-.metric-sheet-overlay__backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,.4);
-  backdrop-filter: blur(2px);
-  opacity: 0;
-  transition: opacity .18s ease;
-}
-.metric-sheet {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin-left: auto;
-  margin-right: auto;
-  width: 100vw;
-  max-width: 480px;
-  max-height: 70vh;
-  background: var(--surface-card);
-  color: var(--ink);
-  border: 1px solid var(--br-card);
-  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
-  box-shadow: var(--shadow-lg);
-  display: flex;
-  flex-direction: column;
-  transform: translateY(100%);
-  opacity: 0;
-  transition: transform .2s ease, opacity .2s ease;
-  z-index: 86;
-  overflow: hidden;
-}
-.metric-sheet__header {
-  padding: 14px 16px 12px;
-  border-bottom: 1px solid color-mix(in oklab, var(--br-base) 80%, transparent);
-  background: color-mix(in oklab, var(--surface-card) 96%, white 4%);
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: .75rem;
-}
-.metric-sheet__titlewrap {
-  min-width: 0;
-}
-.metric-sheet__title {
-  font-weight: 800;
-  font-size: 14px;
-  line-height: 1.3;
-  color: var(--ink);
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-  letter-spacing: .2px;
-}
-.metric-sheet__source {
-  margin-top: 2px;
-  font-size: 12px;
-  line-height: 1.4;
-  color: var(--muted);
-  word-break: break-word;
-}
-.metric-sheet__closebtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 30px;
-  min-width: 30px;
-  border-radius: 8px;
-  border: 1px solid var(--br-soft);
-  background: var(--surface-card);
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1;
-  cursor: pointer;
-}
-.metric-sheet__closebtn i {
-  width: 16px;
-  height: 16px;
-}
-.metric-sheet__body {
-  padding: 14px 16px 16px;
-  overflow-y: auto;
-  font-size: 13.2px;
-  line-height: 1.5;
-  color: var(--ink);
-}
-
-.metric-sheet-overlay.is-open .metric-sheet-overlay__backdrop {
-  opacity: 1;
-}
-.metric-sheet-overlay.is-open .metric-sheet {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-
-/* ---------------------------------------------------------
-   MODAL BASE (Privacy)
-   --------------------------------------------------------- */
-
-.modal {
   position: fixed;
   inset: 0;
   z-index: 90;
   display: none;
 }
-.modal[aria-hidden="false"] {
-  display: grid;
-  place-items: center;
+.metric-sheet-overlay[aria-hidden="false"] {
+  display: block;
 }
+
+.metric-sheet-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(2px);
+}
+
+.metric-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 70vh;
+  min-height: 30vh;
+  background: var(--surface-card);
+  color: var(--ink);
+  border-top-left-radius: var(--radius-sheet);
+  border-top-right-radius: var(--radius-sheet);
+  border: 1px solid var(--br-card);
+  box-shadow: var(--shadow-xl);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.metric-sheet__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--br-soft);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+.metric-sheet__titlewrap {
+  min-width: 0;
+}
+.metric-sheet__title {
+  display: flex;
+  align-items: flex-start;
+  gap: .5rem;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.metric-sheet__source {
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.4;
+  margin-top: 4px;
+}
+.metric-sheet__closebtn {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-chip);
+  border: 1px solid var(--br-soft);
+  background: var(--surface-card-alt);
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.metric-sheet__body {
+  flex: 1;
+  overflow-y: auto;
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+/* ------------------------------------------------------------
+   8. MODAL PRIVACY
+   ------------------------------------------------------------ */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: none;
+}
+.modal[aria-hidden="false"] {
+  display: block;
+}
+
 .modal__backdrop {
   position: absolute;
   inset: 0;
   background: rgba(0,0,0,.45);
   backdrop-filter: blur(2px);
 }
+
 .modal__panel {
-  position: relative;
-  z-index: 1;
-  width: min(700px,92vw);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  width: min(400px, 90vw);
   max-height: 80vh;
-  overflow: auto;
+  overflow-y: auto;
   background: var(--surface-card);
   color: var(--ink);
   border: 1px solid var(--br-card);
-  border-radius: var(--radius-modal);
-  padding: 18px;
-  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-xl);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 13px;
+  line-height: 1.45;
 }
+
 .modal__title {
-  margin: 0 0 8px;
-  font-weight: 900;
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: 800;
   color: var(--ink);
-  line-height:1.3;
+  line-height: 1.4;
 }
 .modal__text {
-  font-size: 13.6px;
-  line-height: 1.6;
   color: var(--ink);
+  font-size: 13px;
+  line-height: 1.45;
 }
 .modal__actions {
-  margin-top: 12px;
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
+  margin-top: 8px;
+  text-align: right;
 }
 
+/* ------------------------------------------------------------
+   9. RESPONSIVE HELPERS
+   ------------------------------------------------------------ */
 
-/* ---------------------------------------------------------
-   FOOTER
-   --------------------------------------------------------- */
-
-.footer-wrap {
-  background: var(--surface-footer);
-  border-top: 1px solid var(--footer-br);
-  margin-top: 24px;
-}
-.site-footer {
-  color: var(--muted);
-  font-size:13px;
-  line-height:1.5;
-}
-.site-footer .heading {
-  color: var(--ink);
-  font-weight: 800;
-  font-size:13px;
-  line-height:1.4;
+/* il drawer su mobile può essere fullwidth per UX migliore */
+@media(max-width:640px){
+  .drawer__panel {
+    width: 100%;
+    border-left: none;
+    border-top-left-radius: var(--radius-drawer);
+    border-top-right-radius: var(--radius-drawer);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    bottom: 0;
+    top: auto;
+    max-height: 70vh;
+  }
 }
 
-
-/* ---------------------------------------------------------
-   PRINT OVERRIDES
-   --------------------------------------------------------- */
+/* ------------------------------------------------------------
+   10. PRINT OVERRIDES
+   (alcune classi le già gestisci via @media print in index,
+    questo è solo per coerenza se queste classi appaiono fuori)
+   ------------------------------------------------------------ */
 
 @media print {
-  header,
-  .noprint,
   .drawer,
   .popover,
   .metric-sheet-overlay,
-  #share-overlay,
-  .btn,
-  .btn-sm {
+  .modal {
     display: none !important;
   }
 
-  .hero {
-    page-break-after: always;
-    border: 1px solid #ddd;
+  .card-compact,
+  .strip,
+  .terminal {
     box-shadow: none !important;
+    background: #fff !important;
+    border: 1px solid #ddd !important;
+    color: #000 !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
   }
 }
