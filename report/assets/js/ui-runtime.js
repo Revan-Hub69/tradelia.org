@@ -120,7 +120,6 @@ function openPanel(opts) {
       return `<button class="btn btn-sm" data-panel-close>Chiudi</button>`;
     }
     return arr.map((btn, idx) => {
-      // creeremo data-panel-btn-<idx> per callback dinamica
       return `<button class="btn btn-sm" data-panel-btn="${idx}">${btn.label || "OK"}</button>`;
     }).join("");
   }
@@ -150,6 +149,10 @@ function openPanel(opts) {
     overlayEl.removeAttribute("data-blocking");
   }
 
+  // blocca scroll sotto al pannello
+  document.body.style.overflow = "hidden";
+  document.documentElement.style.overflow = "hidden";
+
   // mostra overlay
   overlayEl.setAttribute("aria-hidden", "false");
 }
@@ -157,6 +160,11 @@ function openPanel(opts) {
 function closePanel() {
   const overlayEl = qs("#panel-overlay");
   if (!overlayEl) return;
+
+  // ripristina scroll
+  document.body.style.overflow = "";
+  document.documentElement.style.overflow = "";
+
   overlayEl.setAttribute("aria-hidden", "true");
 }
 
@@ -225,14 +233,6 @@ function openPrivacyPanel() {
 // ------------------------------------------------------------
 // CONTENUTO: MiFID PANEL
 // ------------------------------------------------------------
-//
-// Questo è molto importante: tono istituzionale, non "due righe random".
-// Deve chiarire:
-// - Tradelia AI = strumento informativo/formativo
-// - Non è consulenza personalizzata / non è sollecitazione investimento
-// - Verifica adeguatezza/appropriatezza con un intermediario autorizzato
-// - Rischi di mercato
-//
 
 function openMifidPanel() {
   openPanel({
@@ -307,29 +307,15 @@ function openMifidPanel() {
         action: () => closePanel()
       }
     ],
-    blocking: true // qui vogliamo evitare tap fuori per chiudere senza aver letto
+    blocking: true // eviti tap fuori per chiudere
   });
 }
 
 // ------------------------------------------------------------
 // AUDIT PANEL (per i moduli tipo F1B -> "Audit / Fonti")
 // ------------------------------------------------------------
-//
-// I moduli possono chiamare window.__TradeliaUI.openAuditPanel(auditObj)
-// oppure possiamo passare da bindCard -> openPanel custom.
-// Qui forniamo una utility standard.
-//
 
 function openAuditPanel(auditData) {
-  // auditData si aspetta:
-  // {
-  //   source_sync: "...",
-  //   feed_lag_days: number,
-  //   confidence: number,
-  //   integrity: number,
-  //   notes: "..."
-  // }
-
   const a = auditData || {};
   const lag   = (a.feed_lag_days ?? "—");
   const conf  = (a.confidence    ?? "—");
@@ -485,7 +471,6 @@ function openMetricDesktop(btnEl) {
   let left = rect.left + scrollX;
   let top  = rect.bottom + scrollY + margin;
 
-  // se sfora a destra, lo sposto
   const maxLeft = scrollX + window.innerWidth - popW - 8;
   if (left > maxLeft) left = maxLeft;
 
@@ -522,7 +507,6 @@ function openMetricMobile(btnEl) {
 
   setText(titleEl, info.title || key || "—");
   setText(sourceEl, info.source || "");
-  // testo lungo nella body
   bodyEl.innerHTML = escapeHtml(info.long || info.short || "—");
 
   modal.setAttribute("aria-hidden","false");
@@ -538,6 +522,10 @@ function closeMetricMobile() {
 function bindMetricInfoButtons() {
   // click sui bottoni "?"
   qsa(".info-btn").forEach(btn => {
+    // evitiamo di bindare due volte lo stesso bottone
+    if (btn.__tlBound) return;
+    btn.__tlBound = true;
+
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
       if (isMobile()) {
@@ -555,7 +543,8 @@ function bindMetricInfoButtons() {
 
   // chiusura popover desktop (icona X)
   const popClose = qs("#metric-popover-close");
-  if (popClose) {
+  if (popClose && !popClose.__tlBound) {
+    popClose.__tlBound = true;
     popClose.addEventListener("click", (e) => {
       e.stopPropagation();
       closeMetricDesktop();
@@ -563,21 +552,24 @@ function bindMetricInfoButtons() {
   }
 
   // chiusura tapping fuori popover desktop
-  document.addEventListener("click", (ev) => {
-    const pop = qs("#metric-popover");
-    if (!pop) return;
-    if (pop.getAttribute("aria-hidden") === "true") return;
+  if (!document.__tlGlobalMetricOutsideClick) {
+    document.__tlGlobalMetricOutsideClick = true;
+    document.addEventListener("click", (ev) => {
+      const pop = qs("#metric-popover");
+      if (!pop) return;
+      if (pop.getAttribute("aria-hidden") === "true") return;
 
-    // se clicco dentro il popover, non chiudere
-    if (pop.contains(ev.target)) return;
-    // se clicco lo stesso bottone lo gestiamo già sopra
-    if (ev.target.closest(".info-btn")) return;
+      if (pop.contains(ev.target)) return;
+      if (ev.target.closest(".info-btn")) return;
 
-    closeMetricDesktop();
-  });
+      closeMetricDesktop();
+    });
+  }
 
   // chiusura mobile modal (X o backdrop)
   qsa("[data-metric-close]").forEach(btn => {
+    if (btn.__tlBound) return;
+    btn.__tlBound = true;
     btn.addEventListener("click", () => {
       closeMetricMobile();
     });
@@ -599,7 +591,6 @@ function initThemeToggle() {
     } catch(e){}
   }
 
-  // init from localStorage
   (function initFromStorage(){
     try {
       const saved = localStorage.getItem("tradelia-theme");
@@ -644,7 +635,6 @@ function initShareOverlay() {
   const copyBtns   = qsa("[data-share-svc='copy'], #share-copy-btn", overlay);
 
   function openShare() {
-    // aggiorna link corrente
     const linkField = qs("#share-link-field");
     if (linkField) {
       linkField.textContent = window.location.href;
@@ -658,14 +648,13 @@ function initShareOverlay() {
   btnOpen.addEventListener("click", openShare);
   closeElems.forEach(el => el.addEventListener("click", closeShare));
 
-  // copia link
   copyBtns.forEach(el => {
     el.addEventListener("click", () => {
       const url = window.location.href;
       try {
         navigator.clipboard.writeText(url);
       } catch(e){}
-      // feedback semplice (testuale nel bottone? toast in futuro?)
+      // TODO: eventuale feedback utente
     });
   });
 }
@@ -695,17 +684,18 @@ function initLegalButtons() {
 // ------------------------------------------------------------
 //
 // I moduli possono fare:
-// window.__TradeliaUI.openAuditPanel(data)
 // window.__TradeliaUI.openPanel({ ... })
+// window.__TradeliaUI.openAuditPanel(data)
+// window.__TradeliaUI.bindMetricInfoButtons()
 //
-// e anche i legacy che fanno window.openPanel(...) continueranno ad andare.
 
 window.__TradeliaUI = {
   openPanel,
   closePanel,
   openPrivacyPanel,
   openMifidPanel,
-  openAuditPanel
+  openAuditPanel,
+  bindMetricInfoButtons
 };
 
 // compat legacy
