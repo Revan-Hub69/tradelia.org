@@ -1,7 +1,6 @@
 {
   "id": "sample-id",
   "title": "Tradelia · Report Runtime",
-  "focus": "F1B",
   "order": ["F1B", "F2", "F3", "F4", "F5", "F5B", "F6"],
   "modules": {
     "F1B": "f1b.json",
