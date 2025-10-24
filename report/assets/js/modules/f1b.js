@@ -1,18 +1,20 @@
 // /report/assets/js/modules/f1b.js
 //
 // F1B · Regime di mercato / Contesto rischio
+//
 // - Card breve con StrategyMode + KPI chiave
 // - Drawer con sezioni modulari (Regime attuale / Rotazione / Note / Audit / MiFID)
 // - Tooltip ? sia nella card sia nel drawer
 //
-// Questo modulo è MiFID-friendly: descrive contesto, non dà call operative.
-// Non menziona F2 (F2 è responsabile del sentiment sul ticker).
+// Compliance:
+// - descrittivo/formativo, nessuna raccomandazione operativa
+// - NON parla di F2
 //
-// Requisiti esterni:
+// Dipendenze globali che già esistono:
 // - window.openDrawer (definita in bootstrap-inline.js)
-// - #popover + #metric-sheet-overlay (presenti nell'index)
+// - popover / metric-sheet-overlay presenti in index
 //
-// Exports richiesti dal runtime
+// Export richiesti dal runtime:
 // - renderCard(data, ctx)
 // - bindCard(node, data, ctx)
 
@@ -33,16 +35,16 @@ export function renderCard(rawData, ctx = {}) {
          style="font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
 
       <!-- Header regime -->
-      <div class="mb-4">
+      <div>
         <div class="text-[12px] font-semibold text-[color:var(--muted)] leading-[1.4]">
           Regime di mercato
         </div>
         <div class="text-[14px] font-bold leading-[1.4] text-[color:var(--ink)] flex flex-wrap items-center gap-2 mt-1">
-          <span>StrategyMode:&nbsp;${escapeHtml(strategyMode || "—")}</span>
+          <span>StrategyMode: ${escapeHtml(strategyMode || "—")}</span>
           <span
             class="px-[6px] py-[4px] rounded-md text-[11px] font-semibold leading-none border"
             style="
-              background: color-mix(in oklab, ${toneColor} 15%, transparent);
+              background: color-mix(in oklab, ${toneColor} 10%, transparent);
               color:${toneColor};
               border-color:${toneColor};
             "
@@ -53,8 +55,7 @@ export function renderCard(rawData, ctx = {}) {
       </div>
 
       <!-- KPI row -->
-      <div class="flex flex-wrap gap-3 mb-4">
-
+      <div class="flex flex-wrap gap-3 mt-4">
         ${metricBox({
           label: "RegimeScore",
           value: fmtNum(regimeScore),
@@ -72,11 +73,10 @@ export function renderCard(rawData, ctx = {}) {
           value: fmtNum(riskTilt),
           metricKey: "RiskTilt",
         })}
-
       </div>
 
       <!-- CTA -->
-      <div class="flex flex-wrap gap-2">
+      <div class="flex flex-wrap gap-2 mt-4">
         <button
           class="btn btn-sm"
           data-open-f1b-details="true"
@@ -113,11 +113,14 @@ export function bindCard(node, rawData, ctx = {}) {
           showAccept: false
         });
 
-        // dopo che il drawer è stato montato, attacchiamo i tooltip dentro al drawer
-        const drawerContent = document.getElementById('drawer-content');
-        if (drawerContent) {
-          attachTooltipHandlers(drawerContent);
-        }
+        // dopo l'apertura, il drawer è nel DOM.
+        // aspettiamo il prossimo tick per selezionarlo e agganciarci i tooltip
+        setTimeout(() => {
+          const drawerContent = document.getElementById('drawer-content');
+          if (drawerContent) {
+            attachTooltipHandlers(drawerContent);
+          }
+        }, 0);
       }
     });
   }
@@ -167,8 +170,12 @@ function renderDrawerHTML(data) {
         </div>
 
         <div class="text-[13px] text-[color:var(--ink)] leading-[1.45] font-semibold flex flex-wrap items-center gap-2">
-          <span>StrategyMode:&nbsp;${escapeHtml(strategyMode || "—")}</span>
-          <button class="info-btn" data-tooltip="StrategyMode" aria-label="Info StrategyMode">?</button>
+          <span>StrategyMode: ${escapeHtml(strategyMode || "—")}</span>
+          <button
+            class="info-btn info-btn--mini"
+            data-tooltip="StrategyMode"
+            aria-label="Info StrategyMode"
+          >?</button>
         </div>
 
         <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
@@ -183,7 +190,11 @@ function renderDrawerHTML(data) {
               <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
                 RegimeScore
               </div>
-              <button class="info-btn" data-tooltip="RegimeScore" aria-label="Info RegimeScore">?</button>
+              <button
+                class="info-btn info-btn--mini"
+                data-tooltip="RegimeScore"
+                aria-label="Info RegimeScore"
+              >?</button>
             </div>
             <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
               ${fmtNum(regimeScore)}
@@ -201,7 +212,11 @@ function renderDrawerHTML(data) {
               <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
                 VIX
               </div>
-              <button class="info-btn" data-tooltip="VIX" aria-label="Info VIX">?</button>
+              <button
+                class="info-btn info-btn--mini"
+                data-tooltip="VIX"
+                aria-label="Info VIX"
+              >?</button>
             </div>
             <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
               ${fmtNum(vixLevel)}
@@ -228,7 +243,11 @@ function renderDrawerHTML(data) {
               <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
                 Breadth (1M)
               </div>
-              <button class="info-btn" data-tooltip="Breadth" aria-label="Info Breadth">?</button>
+              <button
+                class="info-btn info-btn--mini"
+                data-tooltip="Breadth"
+                aria-label="Info Breadth"
+              >?</button>
             </div>
             <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
               ${breadthPct !== null ? fmtPct(breadthPct) : "—"}
@@ -246,7 +265,11 @@ function renderDrawerHTML(data) {
               <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
                 RiskTilt
               </div>
-              <button class="info-btn" data-tooltip="RiskTilt" aria-label="Info RiskTilt">?</button>
+              <button
+                class="info-btn info-btn--mini"
+                data-tooltip="RiskTilt"
+                aria-label="Info RiskTilt"
+              >?</button>
             </div>
             <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
               ${fmtNum(riskTilt)}
@@ -291,7 +314,9 @@ function renderDrawerHTML(data) {
 }
 
 /* -------------------------------------------------
-   Tooltip system
+   Tooltip system per i bottoni data-tooltip (F1B)
+   - Desktop → popover
+   - Mobile  → bottom sheet
 ------------------------------------------------- */
 
 function getTooltipContent(metricKey) {
@@ -300,7 +325,7 @@ function getTooltipContent(metricKey) {
       title: "StrategyMode",
       text: [
         "Classificazione del regime corrente di mercato basata su flussi settoriali, ampiezza del rialzo e volatilità implicita.",
-        "≥ +0.35 → Momentum • +0.10–+0.35 → Momentum-light • < +0.10 → Pullback.",
+        "≥ +0.35 → Momentum · +0.10–+0.35 → Momentum-light · < +0.10 → Pullback.",
         "Valori calcolati su dati T-1."
       ].join(" "),
       source: "Fonti: ETFdb (flussi settoriali), CBOE (volatilità), Reuters."
@@ -310,8 +335,8 @@ function getTooltipContent(metricKey) {
       text: [
         "Indice sintetico di 'risk-on vs risk-off'.",
         "Formula: 0.8·FlowScore + 0.2·s(-VIX).",
-        "FlowScore riflette afflussi di capitale nei settori e preferenza per asset ciclici/growth.",
-        "Valori più alti = mercato in modalità rischio."
+        "FlowScore riflette afflussi nei settori ciclici/growth rispetto ai difensivi.",
+        "Valori più alti = mercato orientato al rischio."
       ].join(" "),
       source: "Fonti: ETFdb (flussi), CBOE (VIX), Reuters."
     },
@@ -322,12 +347,13 @@ function getTooltipContent(metricKey) {
         "Breadth alta ⇒ rialzo ampio e partecipato.",
         "Breadth bassa ⇒ rialzo concentrato in poche aree."
       ].join(" "),
-      source: "Fonti: SPDR sector ETFs performance 1M."
+      source: "Fonti: SPDR sector ETFs (performance 1M)."
     },
     "RiskTilt": {
       title: "RiskTilt",
       text: [
-        "Differenza fra la forza media dei settori ciclici/growth (Tech, Discretionary, Industrials, Communications)",
+        "Differenza fra la forza media dei settori ciclici/growth",
+        "(Tech, Discretionary, Industrials, Communications)",
         "e la forza dei settori difensivi (Staples, Utilities, Healthcare).",
         "Valori > 0 ⇒ appetito per rischio.",
         "Valori < 0 ⇒ rotazione difensiva."
@@ -337,9 +363,9 @@ function getTooltipContent(metricKey) {
     "VIX": {
       title: "VIX",
       text: [
-        "Volatilità implicita sull'S&P500 (orizzonte ~30 giorni).",
+        "Volatilità implicita sull'S&P500 (~30 giorni).",
         "Valori alti ⇒ mercato prezza stress / rischio evento.",
-        "Valori bassi ⇒ mercato prezza stabilità / calma relativa."
+        "Valori bassi ⇒ mercato prezza stabilità."
       ].join(" "),
       source: "Fonte: CBOE."
     }
@@ -367,6 +393,7 @@ function openMetricTooltip(targetEl, tip) {
   const isMobile = window.matchMedia("(max-width: 640px)").matches;
 
   if (isMobile) {
+    // bottom sheet mobile
     const overlay = document.getElementById('metric-sheet-overlay');
     const body    = document.getElementById('metric-sheet-body');
     const titleEl = document.getElementById('metric-sheet-title');
@@ -379,6 +406,7 @@ function openMetricTooltip(targetEl, tip) {
       overlay.setAttribute('aria-hidden','false');
     }
   } else {
+    // popover desktop
     const pop = document.getElementById('popover');
     const popTitle  = document.getElementById('popover-title');
     const popText   = document.getElementById('popover-text');
@@ -406,11 +434,10 @@ function openMetricTooltip(targetEl, tip) {
 }
 
 /* -------------------------------------------------
-   UI helpers
+   Helpers UI
 ------------------------------------------------- */
 
 function metricBox({ label, value, metricKey }) {
-  // KPI mini-card
   return `
     <div class="flex-1 min-w-[90px]"
          style="
@@ -420,12 +447,18 @@ function metricBox({ label, value, metricKey }) {
            box-shadow:var(--shadow-card);
            padding:0.6rem 0.75rem;
          ">
+
       <div class="flex items-start justify-between gap-1 mb-1">
         <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold leading-[1.3]">
           ${escapeHtml(label)}
         </div>
-        <button class="info-btn" data-tooltip="${escapeAttr(metricKey)}" aria-label="Info ${escapeAttr(metricKey)}">?</button>
+        <button
+          class="info-btn info-btn--mini"
+          data-tooltip="${escapeAttr(metricKey)}"
+          aria-label="Info ${escapeAttr(metricKey)}"
+        >?</button>
       </div>
+
       <div class="font-mono font-bold text-[color:var(--ink)] text-[13px] leading-[1.4]">
         ${escapeHtml(value)}
       </div>
@@ -691,7 +724,7 @@ function computeTone(strategyMode, regimeScore) {
 }
 
 /* -------------------------------------------------
-   Utils
+   Utils numeriche e escape HTML
 ------------------------------------------------- */
 
 function fmtNum(v) {
