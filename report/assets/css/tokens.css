@@ -715,3 +715,20 @@ hr.divider {
   justify-content:center;
   cursor:pointer;
 }
+/* Variante compatta dell'icona "?" per i KPI box F1B */
+.info-btn--mini{
+  width:18px;
+  height:18px;
+  border-radius:999px;
+  font-size:11px;
+  line-height:1;
+  padding:0;
+  background:var(--surface-card-alt);
+  border:1px solid var(--br-card);
+  box-shadow:none;
+  color:var(--muted);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
