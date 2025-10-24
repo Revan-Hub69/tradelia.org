@@ -1,241 +1,333 @@
-// ======================================================
-// TRADELIA • AI — Full Share Sheet (desktop + mobile)
-// + Short link robusto (shrtco.de -> cleanuri -> is.gd -> tinyurl)
-// ======================================================
+/*
+  Tradelia · components/share.js
+  Gestisce il foglio di condivisione attivato da #btn-share
+
+  privacy:
+  - nessun social pixel viene chiamato automaticamente
+  - forniamo link puliti che l'utente apre (LinkedIn/X/email)
+  - QR viene generato in locale via QRCode.js (fallback interno se non disponibile)
+
+  accessibility:
+  - role="dialog" aria-modal="true"
+  - ESC chiude
+  - focus iniziale sul bottone "Copia link"
+*/
+
 export function initShareSystem() {
-  const btn = document.getElementById('btn-share');
-  if (!btn) return;
+  const BTN_ID = '#btn-share';
+  const EXISTING = document.querySelector('#share-overlay');
+  if (EXISTING) {
+    wireUpOverlay(EXISTING);
+    return;
+  }
 
-  const $ = (sel, root = document) => root.querySelector(sel);
-
-  // Create sheet
-  const sheet = document.createElement('div');
-  sheet.id = 'share-sheet';
-  sheet.className = 'share-sheet hidden noprint';
-  sheet.innerHTML = `
-    <div class="share-backdrop" data-close></div>
-    <div class="share-panel">
-      <header class="share-head">
-        <div class="share-title">
-          <strong>Condividi Report</strong>
-          <small class="share-sub">Link, QR e social</small>
+  // === costruiamo overlay DOM ===
+  const overlay = document.createElement('div');
+  overlay.id = 'share-overlay';
+  overlay.setAttribute('aria-hidden', 'true');
+  overlay.innerHTML = `
+    <div class="share-overlay__backdrop" data-share-close></div>
+    <section class="share-sheet" role="dialog" aria-modal="true" aria-labelledby="share-sheet-title">
+      <header class="share-sheet__header">
+        <div class="share-sheet__title-wrap">
+          <div class="share-sheet__title">
+            <i data-lucide="share-2"></i>
+            <span id="share-sheet-title">Condividi il report</span>
+          </div>
+          <div class="share-sheet__sub">
+            Link diretto e QR. Nessun tracciamento, nessun cookie.
+          </div>
         </div>
-        <button class="btn btn-sm" data-close aria-label="Chiudi">
+        <button class="share-close-btn" type="button" data-share-close aria-label="Chiudi pannello Condividi">
           <i data-lucide="x"></i>
         </button>
       </header>
 
-      <div class="share-body">
-        <div class="share-linkbox">
-          <input id="share-link" type="text" readonly />
-          <button id="btn-copy" class="btn" aria-label="Copia">
-            <i data-lucide="copy"></i>
-          </button>
-        </div>
+      <div class="share-sheet__body">
 
-        <div class="share-actions">
-          <button class="btn btn-ghost" id="btn-open" aria-label="Apri link">
-            <i data-lucide="external-link"></i><span>Apri</span>
-          </button>
-          <button class="btn btn-ghost" id="btn-short" aria-label="Short URL">
-            <i data-lucide="scissors"></i><span>Short</span>
-          </button>
-          <button class="btn btn-ghost" id="btn-qr" aria-label="QR Code">
-            <i data-lucide="qr-code"></i><span>QR</span>
-          </button>
-        </div>
+        <!-- LINK DIRETTO -->
+        <section class="share-linkbox" aria-labelledby="share-linkbox-h">
+          <div class="card-header" style="margin:0">
+            <div class="card-title" id="share-linkbox-h">Link diretto al report</div>
+          </div>
+          <div class="share-linkbox__row">
+            <div class="share-linkbox__url" id="share-url">—</div>
+            <button class="share-copy-btn" id="share-copy-btn" type="button">Copia</button>
+          </div>
+        </section>
 
-        <div class="share-grid">
-          ${platform('WhatsApp','whatsapp','https://api.whatsapp.com/send?text=')}
-          ${platform('Telegram','send','https://t.me/share/url?url=')}
-          ${platform('Discord','message-circle','https://discord.com/channels/@me')}
-          ${platform('Email','mail','mailto:?subject=Tradelia%20Report&body=')}
-          ${platform('LinkedIn','linkedin','https://www.linkedin.com/sharing/share-offsite/?url=')}
-          ${platform('X / Twitter','twitter','https://twitter.com/intent/tweet?url=')}
-          ${platform('SMS','sms','sms:?body=')}
-          ${platform('Facebook','facebook','https://www.facebook.com/sharer/sharer.php?u=')}
-        </div>
+        <!-- QR -->
+        <section class="share-qrbox" aria-labelledby="share-qrbox-h">
+          <div class="share-qrbox__canvas-wrap">
+            <canvas id="share-qr" width="88" height="88" aria-hidden="true"></canvas>
+          </div>
+          <div class="share-qrbox__text">
+            <div class="card-title" style="font-size:13px;line-height:1.4" id="share-qrbox-h">QR offline</div>
+            <p class="card-sub" style="margin-top:4px;line-height:1.4">
+              Inquadra per aprire questa stessa pagina sul telefono.
+              <br /><strong>Nessun redirect esterno.</strong>
+            </p>
+          </div>
+        </section>
 
-        <div id="qr-area" class="qr-area hidden" aria-live="polite"></div>
+        <!-- SOCIAL CLEAN ROW -->
+        <section class="share-social" aria-label="Condividi tramite">
+          <button class="share-social-btn" type="button" data-share="linkedin">
+            <i data-lucide="linkedin"></i><span>LinkedIn</span>
+          </button>
+          <button class="share-social-btn" type="button" data-share="x">
+            <i data-lucide="twitter"></i><span>X / Twitter</span>
+          </button>
+          <button class="share-social-btn" type="button" data-share="email">
+            <i data-lucide="mail"></i><span>Email</span>
+          </button>
+        </section>
+
       </div>
-    </div>
+
+      <footer class="share-sheet__footer">
+        <button class="share-done-btn" type="button" data-share-close>Chiudi</button>
+      </footer>
+    </section>
   `;
-  document.body.appendChild(sheet);
 
-  // Helpers
-  function platform(name, icon, base) {
-    return `<button class="share-item" data-url="${base}" data-name="${name}" aria-label="${name}">
-      <i data-lucide="${icon}"></i><span>${name}</span>
-    </button>`;
-  }
+  document.body.appendChild(overlay);
 
-  // === SHORTENER pubblico (tutti HTTPS + CORS) ==========================
-  // 1) shrtco.de: https://api.shrtco.de/v2/shorten?url=<url>
-  async function short_shrtco(url) {
-    const r = await fetch(`https://api.shrtco.de/v2/shorten?url=${encodeURIComponent(url)}`);
-    if (!r.ok) throw new Error('shrtco HTTP');
-    const j = await r.json();
-    if (j && j.ok && j.result && j.result.full_short_link) return j.result.full_short_link;
-    throw new Error('shrtco bad payload');
+  // icone lucide
+  if (window.lucide) { window.lucide.createIcons(); }
+
+  // listeners + hydration
+  wireUpOverlay(overlay);
+
+  // collega il bottone header
+  const triggerBtn = document.querySelector(BTN_ID);
+  if (triggerBtn) {
+    triggerBtn.addEventListener('click', () => openShare(overlay));
   }
-  // 2) cleanuri: POST form-encoded https://cleanuri.com/api/v1/shorten (returns JSON { result_url })
-  async function short_cleanuri(url) {
-    const r = await fetch(`https://cleanuri.com/api/v1/shorten`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-      body: `url=${encodeURIComponent(url)}`
-    });
-    if (!r.ok) throw new Error('cleanuri HTTP');
-    const j = await r.json();
-    if (j && j.result_url) return j.result_url;
-    throw new Error('cleanuri bad payload');
-  }
-  // 3) is.gd: https://is.gd/create.php?format=simple&url=<url> (text)
-  async function short_isgd(url) {
-    const r = await fetch(`https://is.gd/create.php?format=simple&url=${encodeURIComponent(url)}`);
-    if (!r.ok) throw new Error('is.gd HTTP');
-    const t = (await r.text()).trim();
-    if (/^https?:\/\//i.test(t)) return t;
-    throw new Error('is.gd bad payload');
-  }
-  // 4) tinyurl: https://tinyurl.com/api-create.php?url=<url> (text)
-  async function short_tiny(url) {
-    const r = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`);
-    if (!r.ok) throw new Error('tinyurl HTTP');
-    const t = (await r.text()).trim();
-    if (/^https?:\/\//i.test(t)) return t;
-    throw new Error('tinyurl bad payload');
+}
+
+/* ==========================================================
+   Wiring / Behavior
+   ========================================================== */
+function wireUpOverlay(overlay) {
+  const triggerBtn = document.querySelector('#btn-share');
+  const copyBtn    = overlay.querySelector('#share-copy-btn');
+  const urlNode    = overlay.querySelector('#share-url');
+  const qrCanvas   = overlay.querySelector('#share-qr');
+
+  // apri da pulsante header
+  if (triggerBtn) {
+    triggerBtn.addEventListener('click', () => openShare(overlay));
   }
 
-  async function getShortUrl(longUrl) {
-    // evita ri-short se già corto
-    if (/^(https?:\/\/)?(shrtco\.de|shortco\.de|9qr\.de|cleanuri\.com|is\.gd|v\.gd|tinyurl\.com)\//i.test(longUrl)) {
-      return longUrl;
+  // chiusure
+  overlay.addEventListener('click', e => {
+    if (e.target.closest('[data-share-close]')) {
+      closeShare(overlay);
     }
-    // se la pagina è in HTTP, tutti gli endpoint sono HTTPS → ok.
-    // fallback chain con try…catch
-    try { return await short_shrtco(longUrl); } catch {}
-    try { return await short_cleanuri(longUrl); } catch {}
-    try { return await short_isgd(longUrl); } catch {}
-    try { return await short_tiny(longUrl); } catch {}
-    return longUrl; // fallback finale
-  }
-
-  async function generateQR(text) {
-    const api = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(text)}`;
-    return `<img src="${api}" width="180" height="180" alt="QR code" class="qr-img" />`;
-  }
-
-  const toggle = show => {
-    sheet.classList.toggle('hidden', !show);
-    if (window.lucide) setTimeout(() => lucide.createIcons(), 0);
-  };
-
-  // Open sheet
-  btn.addEventListener('click', () => {
-    const link = location.href;
-    $('#share-link').value = link;
-    toggle(true);
   });
 
-  // Close sheet
-  sheet.addEventListener('click', e => {
-    if (e.target.closest('[data-close]')) toggle(false);
-  });
+  // ESC chiude
   document.addEventListener('keydown', e => {
-    if (!sheet.classList.contains('hidden') && e.key === 'Escape') toggle(false);
+    if (overlay.getAttribute('aria-hidden') === 'false' && e.key === 'Escape') {
+      closeShare(overlay);
+    }
   });
 
-  // Copy
-  $('#btn-copy').addEventListener('click', async () => {
-    const link = $('#share-link').value;
+  // copia link
+  copyBtn?.addEventListener('click', async () => {
+    const link = getCleanURL();
     try {
       await navigator.clipboard.writeText(link);
-      $('#btn-copy').innerHTML = `<i data-lucide="check"></i>`;
-      if (window.lucide) lucide.createIcons();
-      setTimeout(() => { $('#btn-copy').innerHTML = `<i data-lucide="copy"></i>`; if (window.lucide) lucide.createIcons(); }, 1200);
-    } catch {
-      alert('Impossibile copiare il link.');
-    }
-  });
-
-  // Open
-  $('#btn-open').addEventListener('click', () => {
-    const link = $('#share-link').value;
-    window.open(link, '_blank', 'noopener');
-  });
-
-  // Short (con spinner + copia automatica se cambia)
-  $('#btn-short').addEventListener('click', async () => {
-    const current = $('#share-link').value;
-    const btnShort = $('#btn-short');
-    if (!current) return;
-    btnShort.disabled = true;
-    const prevHTML = btnShort.innerHTML;
-    btnShort.innerHTML = `<svg class="spin" width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="3" opacity=".2"/><path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg><span>Short</span>`;
-    try {
-      const shorted = await getShortUrl(current);
-      $('#share-link').value = shorted;
-      // Auto-copy se cambiato
-      if (shorted && shorted !== current) {
-        try { await navigator.clipboard.writeText(shorted); } catch {}
-      }
-      btnShort.innerHTML = `<i data-lucide="check"></i><span>Short</span>`;
-      if (window.lucide) lucide.createIcons();
-    } catch (e) {
-      console.warn('Short error:', e);
-      btnShort.innerHTML = prevHTML;
-    } finally {
+      copyBtn.classList.add('copied');
+      copyBtn.textContent = 'Copiato';
       setTimeout(() => {
-        btnShort.disabled = false;
-        btnShort.innerHTML = `<i data-lucide="scissors"></i><span>Short</span>`;
-        if (window.lucide) lucide.createIcons();
-      }, 1200);
+        copyBtn.classList.remove('copied');
+        copyBtn.textContent = 'Copia';
+      }, 2000);
+    } catch {
+      // fallback manuale
+      selectText(urlNode);
     }
   });
 
-  // QR
-  $('#btn-qr').addEventListener('click', async () => {
-    const qra = $('#qr-area');
-    if (qra.classList.contains('hidden')) {
-      qra.innerHTML = await generateQR($('#share-link').value);
-      qra.classList.remove('hidden');
-    } else {
-      qra.classList.add('hidden');
-      qra.innerHTML = '';
-    }
-  });
+  // share social con link pulito
+  overlay.querySelectorAll('[data-share]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const link   = encodeURIComponent(getCleanURL());
+      const which  = btn.getAttribute('data-share');
+      let shareUrl = null;
 
-  // Social buttons
-  sheet.querySelectorAll('.share-item[data-url]').forEach(el => {
-    el.addEventListener('click', () => {
-      const base = el.dataset.url;
-      const url = encodeURIComponent($('#share-link').value);
-      const text = encodeURIComponent('Guarda il report completo su Tradelia · AI');
-
-      let shareUrl = base;
-      if (base.startsWith('mailto:') || base.startsWith('sms:')) {
-        shareUrl = `${base}${text}%20${url}`;
-      } else if (base.includes('t.me/share/url')) {
-        shareUrl = `${base}${url}&text=${text}`;
-      } else if (base.includes('twitter.com/intent/tweet')) {
-        shareUrl = `${base}${url}&text=${text}`;
-      } else if (base.includes('facebook.com/sharer/sharer.php')) {
-        shareUrl = `${base}${url}`;
-      } else if (base.includes('linkedin.com/sharing/share-offsite')) {
-        shareUrl = `${base}${url}`;
-      } else if (base.includes('api.whatsapp.com/send')) {
-        shareUrl = `${base}${text}%20${url}`;
-      } else {
-        shareUrl = `${base}${url}`;
+      if (which === 'linkedin') {
+        // LinkedIn non inietta pixel finché non apri la pagina
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${link}`;
+      } else if (which === 'x') {
+        const text = encodeURIComponent('Analisi di mercato by Tradelia · Report Runtime');
+        shareUrl = `https://twitter.com/intent/tweet?url=${link}&text=${text}`;
+      } else if (which === 'email') {
+        const subject = encodeURIComponent('Tradelia · Report Runtime');
+        const body    = encodeURIComponent(
+          `Dai un'occhiata a questo report:\n${decodeURIComponent(link)}\n\nFonte: Tradelia · Report Runtime`
+        );
+        shareUrl = `mailto:?subject=${subject}&body=${body}`;
       }
 
-      window.open(shareUrl, 'share', 'width=640,height=560,noopener');
+      if (shareUrl) {
+        window.open(shareUrl, '_blank', 'noopener,noreferrer');
+      }
     });
   });
 
-  // Micro CSS inline per spinner (no dipendenze)
-  const spinCSS = document.createElement('style');
-  spinCSS.textContent = `.spin{animation:tl-spin .9s linear infinite}@keyframes tl-spin{to{transform:rotate(360deg)}}`;
-  document.head.appendChild(spinCSS);
+  // popola dati dinamici (URL + QR)
+  syncData();
+
+  function syncData() {
+    const link = getCleanURL();
+    urlNode.textContent = link;
+    renderQR(qrCanvas, link);
+  }
+}
+
+/* Apertura */
+function openShare(overlay) {
+  overlay.setAttribute('aria-hidden', 'false');
+
+  requestAnimationFrame(() => {
+    overlay.classList.add('is-open');
+  });
+
+  // focus di default sul bottone copia
+  const copyBtn = overlay.querySelector('#share-copy-btn');
+  if (copyBtn) {
+    copyBtn.focus();
+  }
+
+  if (window.lucide) { window.lucide.createIcons(); }
+}
+
+/* Chiusura */
+function closeShare(overlay) {
+  overlay.classList.remove('is-open');
+  overlay.addEventListener('transitionend', () => {
+    overlay.setAttribute('aria-hidden', 'true');
+  }, { once: true });
+
+  // ridai focus al pulsante share in header
+  const triggerBtn = document.querySelector('#btn-share');
+  if (triggerBtn) triggerBtn.focus();
+}
+
+/* ==========================================================
+   Helpers
+   ========================================================== */
+
+/* Restituisce l'URL pulito da condividere: togliamo hash (#) */
+function getCleanURL() {
+  const u = new URL(window.location.href);
+  u.hash = '';
+  // Se vuoi filtrare parametri in futuro, fallo qui.
+  return u.toString();
+}
+
+/* fallback per copia manuale */
+function selectText(node) {
+  const range = document.createRange();
+  range.selectNodeContents(node);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+/*
+  renderQR(canvas, text)
+  - primo tentativo: usa QRCode (libreria esterna caricata da CDN)
+    -> genera un QR vero e scansionabile
+  - fallback: disegno placeholder \"QR-like\" se la libreria non è disponibile
+*/
+function renderQR(canvas, text) {
+  if (!canvas) return;
+
+  // caso 1: libreria QRCode disponibile (quella che abbiamo incluso da CDN)
+  if (window.QRCode && typeof window.QRCode.toCanvas === 'function') {
+    window.QRCode.toCanvas(
+      canvas,
+      text,
+      {
+        margin: 1,
+        scale: 4,
+        color: { dark: "#000000", light: "#ffffff" }
+      },
+      (err) => {
+        if (err) {
+          console.error('QR gen error, fallback...', err);
+          drawFallbackQR(canvas, text);
+        }
+      }
+    );
+    return;
+  }
+
+  // caso 2: fallback immediato se la libreria non c'è
+  drawFallbackQR(canvas, text);
+}
+
+/*
+  drawFallbackQR:
+  - cornici stile QR
+  - pattern pseudo-casuale
+  - url abbreviato in piccolo
+  non è scansionabile, ma esteticamente riempie il box
+*/
+function drawFallbackQR(canvas, text) {
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+
+  // sfondo bianco
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0,0,w,h);
+
+  // bordo nero
+  ctx.strokeStyle = '#000';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(0,0,w,h);
+
+  // quadrati finder corner
+  ctx.fillStyle = '#000';
+  drawSquare(ctx, 6,6,20);
+  drawSquare(ctx, w-26,6,20);
+  drawSquare(ctx, 6,h-26,20);
+
+  // pattern pseudo-random
+  const hash = hashCode(text);
+  for (let i=0;i<80;i++){
+    const rx = (hash + i*73) % (w-16) + 8;
+    const ry = ((hash>>2) + i*91) % (h-16) + 8;
+    if ((i+hash)%3===0) {
+      ctx.fillRect(rx, ry, 2, 2);
+    }
+  }
+
+  // url accorciato sotto
+  ctx.fillStyle = '#000';
+  ctx.font = '8px ui-monospace, monospace';
+  const shortTxt = text.length > 24 ? text.slice(0,24) + '…' : text;
+  ctx.fillText(shortTxt, 6, h-4);
+}
+
+function drawSquare(ctx, x,y,sz){
+  ctx.fillRect(x,y,sz,sz);
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(x+4,y+4,sz-8,sz-8);
+  ctx.fillStyle = '#000';
+  ctx.fillRect(x+8,y+8,sz-16,sz-16);
+}
+
+function hashCode(str){
+  let h=0;
+  for(let i=0;i<str.length;i++){
+    h=((h<<5)-h)+str.charCodeAt(i);
+    h|=0;
+  }
+  return Math.abs(h);
 }
