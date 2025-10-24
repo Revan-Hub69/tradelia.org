@@ -1,8 +1,3 @@
-/* =========================================================
-   Tradelia · Modulo F1B (Strategy / Terminal)
-   Path: /report/assets/js/modules/f1b.js
-   ========================================================= */
-
 function fmtPct(v) {
   if (v == null || isNaN(v)) return "—";
   return (Number(v) >= 0 ? "+" : "") + Number(v).toFixed(2) + "%";
