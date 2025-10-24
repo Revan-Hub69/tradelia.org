@@ -1,83 +1,118 @@
-/* ===========================
-   TRADELIA DESIGN TOKENS
-   v2026-IST
-   =========================== */
+/* =========================================================
+   TRADELIA DESIGN TOKENS / COMPONENT LIB
+   Path: /report/assets/css/tokens.css
+   Questa versione è coerente con index.html corrente
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   PALETTE E TOKEN GLOBALI
+   --------------------------------------------------------- */
 
 /* LIGHT THEME */
 :root {
-  --bg: #f8fafc;
-  --card: #ffffff;
+  /* superfici */
+  --surface-page: #f8fafc;
+  --surface-card: #ffffff;
+  --surface-card-alt: color-mix(in oklab, #ffffff 96%, #f6f6f9 4%);
+  --surface-footer: color-mix(in oklab, #f8fafc 96%, #0b1220 4%);
+
+  /* testo */
   --ink: #0b1220;
   --muted: #6b7280;
-  --br: color-mix(in oklab, #0b1220 15%, transparent);
 
-  --brand-600: #2563eb; /* blu "azione / link" istituzionale */
+  /* bordi / outline */
+  --br-base: color-mix(in oklab, #0b1220 15%, transparent);
+  --br-soft: color-mix(in oklab, var(--br-base) 80%, transparent);
+  --br-card: color-mix(in oklab, var(--br-base) 88%, transparent);
+  --br-card-strong: color-mix(in oklab, var(--br-base) 82%, #0b1220 18%);
+  --footer-br: color-mix(in oklab, var(--br-base) 75%, transparent);
 
-  --footer-bg: color-mix(in oklab, var(--bg) 96%, #0b1220 4%);
-  --footer-br: color-mix(in oklab, var(--br) 75%, transparent);
+  /* brand / accent */
+  --brand: #2563eb;
 
-  --shadow-1: 0 6px 18px rgba(15,23,42,.06);
-  --shadow-2: 0 24px 48px rgba(2,6,23,.20);
+  /* tone-semafori */
+  --tone-g: #10b981;
+  --tone-y: #f59e0b;
+  --tone-r: #ef4444;
+  --tone-n: #94a3b8;
 
-  /* Raggi / superfici */
+  /* hero radial tints */
+  --tint-hero: #eaf2ff;
+  --tint-hero-dark: #0b2740; /* usata in dark, qui solo definita per coerenza */
+
+  /* shadow */
+  --shadow-card: 0 6px 18px rgba(15,23,42,.06);
+  --shadow-lg: 0 24px 48px rgba(2,6,23,.20);
+
+  /* component radii */
   --radius-card: 12px;
   --radius-pill: 999px;
   --radius-sheet: 16px;
   --radius-drawer: 12px;
   --radius-modal: 16px;
 
-  /* Tooltip / popover width */
+  /* dimensioni popover */
   --pop-w: 320px;
-
-  /* Barre neutre (grafici orizzontali in F1B) */
-  --neutral-bg: color-mix(in oklab, var(--card) 92%, #0b1220 8%);
-  --neutral-br: color-mix(in oklab, var(--br) 70%, transparent);
 }
 
 /* DARK THEME */
 html[data-theme="dark"] {
-  --bg: #0f172a;
-  --card: #1e2535;
+  --surface-page: #0f172a;
+  --surface-card: #1e2535;
+  --surface-card-alt: color-mix(in oklab, #1e2535 96%, white 4%);
+  --surface-footer: color-mix(in oklab, #0f172a 90%, white 10%);
+
   --ink: #eef2ff;
   --muted: #94a3b8;
-  --br: color-mix(in oklab, #eef2ff 22%, transparent);
 
-  --brand-600: #3b82f6;
+  --br-base: color-mix(in oklab, #eef2ff 22%, transparent);
+  --br-soft: color-mix(in oklab, var(--br-base) 78%, transparent);
+  --br-card: color-mix(in oklab, var(--br-base) 88%, transparent);
+  --br-card-strong: color-mix(in oklab, var(--br-base) 82%, white 18%);
+  --footer-br: color-mix(in oklab, var(--br-base) 60%, transparent);
 
-  --footer-bg: color-mix(in oklab, var(--bg) 90%, white 10%);
-  --footer-br: color-mix(in oklab, var(--br) 60%, transparent);
+  --brand: #3b82f6;
 
-  --shadow-1: 0 12px 28px rgba(0,0,0,.45);
-  --shadow-2: 0 32px 64px rgba(0,0,0,.7);
+  --tone-g: #10b981;
+  --tone-y: #facc15;
+  --tone-r: #f87171;
+  --tone-n: #64748b;
 
-  --neutral-bg: color-mix(in oklab, var(--card) 80%, black 20%);
-  --neutral-br: color-mix(in oklab, var(--br) 80%, transparent);
+  --tint-hero: #0b2740;
+  --tint-hero-dark: #0b2740;
+
+  --shadow-card: 0 12px 28px rgba(0,0,0,.45);
+  --shadow-lg: 0 32px 64px rgba(0,0,0,.7);
 }
 
-/* Base reset-ish for elements that rely on tokens */
-body {
-  background: var(--bg);
+
+/* ---------------------------------------------------------
+   BASE ELEMENTS / RESET MINIMO
+   --------------------------------------------------------- */
+
+html, body {
+  background: var(--surface-page);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  line-height: 1.58;
+  line-height: 1.5;
   font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* ===========================
-   GENERIC UTILS / COMPONENTS
-   =========================== */
-
-/* Divider linea sottile tra blocchi principali */
 .divider {
   border: 0;
   height: 1px;
   width: 100%;
-  background: color-mix(in oklab, var(--br) 80%, transparent);
+  background: var(--br-soft);
   margin: 18px 0 16px;
 }
 
-/* Bottoni "Tradelia style" */
+
+/* ---------------------------------------------------------
+   BUTTONS
+   --------------------------------------------------------- */
+
 .btn {
   all: unset;
   display: inline-flex;
@@ -87,66 +122,126 @@ body {
   font-weight: 600;
   line-height: 1.2;
   color: var(--ink);
-  background: var(--card);
-  border: 1px solid var(--br);
+  background: var(--surface-card);
+  border: 1px solid var(--br-soft);
   border-radius: var(--radius-pill);
   padding: .45rem .7rem;
-  box-shadow: var(--shadow-1);
+  box-shadow: var(--shadow-card);
   cursor: pointer;
   transition: opacity .15s ease, box-shadow .15s ease;
 }
 .btn:hover {
   opacity: .9;
-  box-shadow: var(--shadow-2);
+  box-shadow: var(--shadow-lg);
 }
 .btn:active {
   opacity: .8;
-  box-shadow: var(--shadow-1);
+  box-shadow: var(--shadow-card);
 }
 
-/* versione small */
 .btn-sm {
   font-size: 12px;
   padding: .35rem .6rem;
   line-height: 1.2;
   min-height: 28px;
   border-radius: var(--radius-pill);
-  box-shadow: var(--shadow-1);
-  background: var(--card);
-  border: 1px solid var(--br);
+  background: var(--surface-card);
   color: var(--ink);
-  font-weight: 600;
+  border: 1px solid var(--br-soft);
+  box-shadow: var(--shadow-card);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: .5rem;
+  gap: .4rem;
+  font-weight: 600;
 }
 
-/* Card compatte per moduli F2 / F4 / F5 / F3 core */
+
+/* ---------------------------------------------------------
+   BADGES (segnali strategia, ecc.)
+   --------------------------------------------------------- */
+
+.badge {
+  display:inline-flex;
+  align-items:center;
+  border-radius:var(--radius-pill);
+  font-size:12px;
+  font-weight:600;
+  line-height:1.2;
+  padding:.2rem .5rem;
+  border:1px solid var(--br-soft);
+  background:var(--surface-card);
+  color:var(--ink);
+  white-space:nowrap;
+}
+.badge--g {
+  background:var(--tone-g);
+  color:#fff;
+  border:1px solid var(--tone-g);
+}
+.badge--y {
+  background:var(--tone-y);
+  color:#0b1220;
+  border:1px solid var(--tone-y);
+}
+.badge--r {
+  background:var(--tone-r);
+  color:#fff;
+  border:1px solid var(--tone-r);
+}
+.badge--n {
+  background:var(--surface-card);
+  border:1px solid var(--br-soft);
+  color:var(--ink);
+}
+
+
+/* ---------------------------------------------------------
+   CARDS
+   --------------------------------------------------------- */
+
 .card-compact {
-  background: var(--card);
+  background: var(--surface-card);
   color: var(--ink);
-  border: 1px solid var(--br);
+  border: 1px solid var(--br-card);
   border-radius: var(--radius-card);
-  box-shadow: var(--shadow-1);
+  box-shadow: var(--shadow-card);
   padding: 12px 14px;
   font-size: 13px;
   line-height: 1.45;
-  min-height: 120px; /* baseline prima del contenuto reale */
+  min-height: 120px;
   display: flex;
   flex-direction: column;
   gap: .5rem;
 }
 
-/* Terminal look per F1 macro
-   Nota: attualmente usata come placeholder F1 nel layout.
-   Se vogliamo look più "report istituzionale", basterà rimuovere il monospace qui e rimane coerente. */
+.card-compact__head {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:.5rem .75rem;
+}
+.card-compact__title {
+  font-weight:800;
+  font-size:13.5px;
+  color:var(--ink);
+  line-height:1.3;
+  letter-spacing:.2px;
+}
+.card-compact__body {
+  font-size:13px;
+  line-height:1.5;
+  color:var(--ink);
+}
+
+/* "terminal" look (per F1 narrative / regime console style) */
 .terminal {
-  background: var(--card);
+  background: var(--surface-card);
   color: var(--ink);
-  border: 1px solid var(--br);
+  border: 1px solid var(--br-card);
   border-radius: var(--radius-card);
-  box-shadow: var(--shadow-1);
+  box-shadow: var(--shadow-card);
   padding: 12px 14px;
   font-family: ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
   font-size: 12.8px;
@@ -159,13 +254,13 @@ body {
   gap: .5rem;
 }
 
-/* Strip valida per F5b (Validazione LT) */
+/* strip (per validazione LT F5B) */
 .strip {
-  background: var(--card);
+  background: var(--surface-card);
   color: var(--ink);
-  border: 1px solid var(--br);
+  border: 1px solid var(--br-card);
   border-radius: var(--radius-card);
-  box-shadow: var(--shadow-1);
+  box-shadow: var(--shadow-card);
   padding: 10px 12px 12px;
   font-size: 13px;
   line-height: 1.45;
@@ -175,10 +270,17 @@ body {
   gap: .5rem;
 }
 
-/* Stato skeleton "in caricamento" */
+
+/* ---------------------------------------------------------
+   SKELETON LOADING STATE
+   --------------------------------------------------------- */
+
 .is-loading {
   position: relative;
   color: transparent !important;
+}
+.is-loading > * {
+  visibility: hidden;
 }
 .is-loading::before {
   content: '';
@@ -189,169 +291,39 @@ body {
   background-image:
     repeating-linear-gradient(
       -45deg,
-      color-mix(in oklab, var(--card) 92%, white 8%) 0px,
-      color-mix(in oklab, var(--card) 92%, white 8%) 10px,
-      color-mix(in oklab, var(--card) 88%, white 12%) 10px,
-      color-mix(in oklab, var(--card) 88%, white 12%) 20px
+      color-mix(in oklab, var(--surface-card) 92%, white 8%) 0px,
+      color-mix(in oklab, var(--surface-card) 92%, white 8%) 10px,
+      color-mix(in oklab, var(--surface-card) 88%, white 12%) 10px,
+      color-mix(in oklab, var(--surface-card) 88%, white 12%) 20px
     );
-  border: 1px solid var(--br);
-  box-shadow: var(--shadow-1);
+  border: 1px solid var(--br-card);
+  box-shadow: var(--shadow-card);
   animation: sk-pulse 1.4s infinite steps(30,end);
 }
+
+@media (prefers-color-scheme: dark) {
+  html[data-theme="dark"] .is-loading::before {
+    background-image:
+      repeating-linear-gradient(
+        -45deg,
+        color-mix(in oklab, var(--surface-card) 92%, #ffffff 8%) 0px,
+        color-mix(in oklab, var(--surface-card) 92%, #ffffff 8%) 10px,
+        color-mix(in oklab, var(--surface-card) 88%, #ffffff 12%) 10px,
+        color-mix(in oklab, var(--surface-card) 88%, #ffffff 12%) 20px
+      );
+  }
+}
+
 @keyframes sk-pulse {
   0%   { filter: brightness(1);   }
   50%  { filter: brightness(1.07);}
   100% { filter: brightness(1);   }
 }
 
-/* ===========================
-   BADGE / STATUS PILL
-   (StrategyMode, Segnale, ecc.)
-   =========================== */
 
-.badge {
-  display: inline-flex;
-  align-items: center;
-  font-size: 12px;
-  line-height: 1.2;
-  font-weight: 700;
-  border-radius: var(--radius-pill);
-  padding: .25rem .6rem;
-  border: 1px solid var(--br);
-  background: var(--card);
-  color: var(--ink);
-  box-shadow: var(--shadow-1);
-  white-space: nowrap;
-}
-
-/* Verde = favorevole / momentum */
-.badge--g {
-  background: #10b9811a; /* verde con alpha */
-  border-color: #10b98166;
-  color: #10b981;
-}
-
-/* Giallo = cautela / momentum-light */
-.badge--y {
-  background: #f59e0b1a;
-  border-color: #f59e0b66;
-  color: #f59e0b;
-}
-
-/* Rosso = rischio / pullback */
-.badge--r {
-  background: #ef44441a;
-  border-color: #ef444466;
-  color: #ef4444;
-}
-
-/* Neutro / n.d. */
-.badge--n {
-  background: color-mix(in oklab, var(--card) 94%, #6b7280 6%);
-  border-color: color-mix(in oklab, var(--br) 80%, transparent);
-  color: var(--muted);
-}
-
-/* ===========================
-   KPI INLINE
-   (dot + valore in card F1B compatta)
-   =========================== */
-
-.kpi {
-  display: inline-flex;
-  align-items: center;
-  gap: .4rem;
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1.3;
-  color: var(--ink);
-}
-
-/* Piccolo pallino semaforo */
-.dot {
-  width: .6rem;
-  height: .6rem;
-  border-radius: 999px;
-  box-shadow: 0 0 0 1px color-mix(in oklab, var(--bg) 60%, black 40%) inset;
-  flex-shrink: 0;
-}
-
-/* Stati semaforo usati per Breadth, Confidence, ecc. */
-.dot-g { background-color: #10b981; } /* verde */
-.dot-y { background-color: #f59e0b; } /* giallo */
-.dot-r { background-color: #ef4444; } /* rosso  */
-.dot-n { background-color: #94a3b8; } /* grigio neutro */
-
-/* ===========================
-   META LABEL / SUBTEXT
-   (piccoli label tabellari e hero meta)
-   =========================== */
-
-.meta-label {
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  font-size: 11.5px;
-  line-height: 1.3;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: .35rem;
-}
-
-/* usato spesso per testo tecnico o attrae attenzione ridotta */
-.text-muted-12 {
-  font-size: 12.5px;
-  line-height: 1.4;
-  color: var(--muted);
-  font-weight: 500;
-}
-
-/* ===========================
-   SECTION HEAD (Struttura del Report)
-   =========================== */
-
-.section-head {
-  text-align: center;
-  margin: 2.5rem 0 1.75rem;
-}
-.section-title {
-  font-weight: 900;
-  font-size: 1.4rem;
-  letter-spacing: .25px;
-  color: var(--ink);
-  line-height: 1.25;
-}
-.section-sub {
-  margin-top: 4px;
-  color: var(--muted);
-  font-size: 13.8px;
-  line-height: 1.5;
-}
-.phase-nav {
-  margin-top: 1.1rem;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: .6rem 1.1rem;
-}
-.phase-nav a {
-  font-size: 12.8px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--brand-600);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  letter-spacing: .04em;
-  transition: opacity .15s ease;
-}
-.phase-nav a:hover {
-  opacity: .8;
-}
-
-/* ===========================
-   DRAWER (usato anche per MiFID)
-   =========================== */
+/* ---------------------------------------------------------
+   DRAWER (dettagli, MiFID)
+   --------------------------------------------------------- */
 
 .drawer {
   position: fixed;
@@ -375,10 +347,10 @@ body {
   top: 0; right: 0; bottom: 0;
   width: min(540px,42vw);
   max-width: 100%;
-  background: var(--card);
+  background: var(--surface-card);
   color: var(--ink);
-  border-left: 1px solid var(--br);
-  box-shadow: var(--shadow-2);
+  border-left: 1px solid var(--br-card);
+  box-shadow: var(--shadow-lg);
   transform: translateX(12px);
   opacity: 0;
   transition: transform .2s ease, opacity .2s ease;
@@ -402,8 +374,8 @@ body {
   justify-content: space-between;
   gap: .6rem;
   padding: 0 14px;
-  border-bottom: 1px solid color-mix(in oklab, var(--br) 78%, transparent);
-  background: color-mix(in oklab, var(--card) 96%, white 4%);
+  border-bottom: 1px solid color-mix(in oklab, var(--br-base) 78%, transparent);
+  background: color-mix(in oklab, var(--surface-card) 96%, white 4%);
   position: sticky;
   top: 0;
   z-index: 1;
@@ -425,8 +397,10 @@ body {
   padding: 14px;
   overflow: auto;
   height: calc(100% - 56px);
-  background: color-mix(in oklab, var(--bg) 96%, white 4%);
+  background: color-mix(in oklab, var(--surface-page) 96%, white 4%);
   color: var(--ink);
+  font-size: 13px;
+  line-height: 1.5;
 }
 .drawer__content section + section {
   margin-top: 12px;
@@ -435,9 +409,12 @@ body {
   font-weight: 800;
   margin: 0 0 6px;
   letter-spacing: .2px;
+  color: var(--ink);
+  font-size: 13px;
+  line-height:1.4;
 }
 
-/* Drawer mobile (non-blocking) */
+/* Drawer mobile (<640px): panel come sheet laterale stretto */
 @media(max-width:640px){
   .drawer__panel {
     left: auto;
@@ -445,7 +422,7 @@ body {
     width: 90vw;
     max-width: 90vw;
     border-radius: var(--radius-drawer) 0 0 var(--radius-drawer);
-    border-left: 1px solid var(--br);
+    border-left: 1px solid var(--br-card);
     transform: translateX(8px);
   }
   .drawer.is-open .drawer__panel {
@@ -453,7 +430,7 @@ body {
   }
 }
 
-/* Drawer blocking (MiFID) fullscreen */
+/* Drawer "blocking" (MiFID): fullscreen bloccante */
 .drawer--blocking .drawer__panel {
   left: 0;
   right: 0;
@@ -463,7 +440,7 @@ body {
   border-radius: 0;
   transform: translateX(0);
   opacity: 1;
-  box-shadow: var(--shadow-2);
+  box-shadow: var(--shadow-lg);
 }
 .drawer--blocking.is-open .drawer__backdrop {
   opacity: 1;
@@ -473,27 +450,30 @@ body {
   opacity: 1;
 }
 
-/* ===========================
-   SHARE SHEET overlay
-   (lo stile dettagliato sta in share.css, quindi qui solo base z-index)
-   =========================== */
+
+/* ---------------------------------------------------------
+   SHARE OVERLAY (sheet di condivisione)
+   - lo stile dettagliato sta in share.css
+   - qui ci limitiamo allo z-index "ufficiale"
+   --------------------------------------------------------- */
 
 #share-overlay {
   z-index: 100;
 }
 
-/* ===========================
-   METRIC POPUP (desktop tooltip)
-   =========================== */
+
+/* ---------------------------------------------------------
+   METRIC POPOVER (desktop tooltip)
+   --------------------------------------------------------- */
 
 .popover {
   position: absolute;
   z-index: 80;
-  width: var(--pop-w,320px);
+  width: var(--pop-w);
   max-width: 92vw;
-  background: var(--card);
+  background: var(--surface-card);
   color: var(--ink);
-  border: 1px solid color-mix(in oklab, var(--br) 85%, transparent);
+  border: 1px solid color-mix(in oklab, var(--br-base) 85%, transparent);
   border-radius: var(--radius-card);
   padding: 12px 12px 10px;
   box-shadow: 0 18px 44px rgba(2,6,23,.18);
@@ -530,18 +510,23 @@ body {
 #popover-close {
   height: 28px;
   border-radius: 8px;
-  border: 1px solid var(--br);
-  background: var(--card);
+  border: 1px solid var(--br-soft);
+  background: var(--surface-card);
   font-size: 12px;
   font-weight: 600;
   padding: 0 .6rem;
   line-height: 1;
   color: var(--ink);
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
 }
 
-/* ===========================
-   METRIC SHEET (mobile <640px)
-   =========================== */
+
+/* ---------------------------------------------------------
+   METRIC SHEET (mobile bottom sheet <640px)
+   --------------------------------------------------------- */
 
 .metric-sheet-overlay {
   position: fixed;
@@ -570,11 +555,11 @@ body {
   width: 100vw;
   max-width: 480px;
   max-height: 70vh;
-  background: var(--card);
+  background: var(--surface-card);
   color: var(--ink);
-  border: 1px solid var(--br);
+  border: 1px solid var(--br-card);
   border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
-  box-shadow: var(--shadow-2);
+  box-shadow: var(--shadow-lg);
   display: flex;
   flex-direction: column;
   transform: translateY(100%);
@@ -585,8 +570,8 @@ body {
 }
 .metric-sheet__header {
   padding: 14px 16px 12px;
-  border-bottom: 1px solid color-mix(in oklab, var(--br) 80%, transparent);
-  background: color-mix(in oklab, var(--card) 96%, white 4%);
+  border-bottom: 1px solid color-mix(in oklab, var(--br-base) 80%, transparent);
+  background: color-mix(in oklab, var(--surface-card) 96%, white 4%);
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -619,8 +604,8 @@ body {
   height: 30px;
   min-width: 30px;
   border-radius: 8px;
-  border: 1px solid var(--br);
-  background: var(--card);
+  border: 1px solid var(--br-soft);
+  background: var(--surface-card);
   color: var(--muted);
   font-size: 12px;
   line-height: 1;
@@ -637,6 +622,7 @@ body {
   line-height: 1.5;
   color: var(--ink);
 }
+
 .metric-sheet-overlay.is-open .metric-sheet-overlay__backdrop {
   opacity: 1;
 }
@@ -645,9 +631,11 @@ body {
   opacity: 1;
 }
 
-/* ===========================
+
+/* ---------------------------------------------------------
    MODAL BASE (Privacy)
-   =========================== */
+   --------------------------------------------------------- */
+
 .modal {
   position: fixed;
   inset: 0;
@@ -670,18 +658,19 @@ body {
   width: min(700px,92vw);
   max-height: 80vh;
   overflow: auto;
-  background: var(--card);
+  background: var(--surface-card);
   color: var(--ink);
-  border: 1px solid var(--br);
+  border: 1px solid var(--br-card);
   border-radius: var(--radius-modal);
   padding: 18px;
-  box-shadow: var(--shadow-2);
+  box-shadow: var(--shadow-lg);
 }
 .modal__title {
   margin: 0 0 8px;
   font-weight: 900;
   font-size: 16px;
   color: var(--ink);
+  line-height:1.3;
 }
 .modal__text {
   font-size: 13.6px;
@@ -695,26 +684,32 @@ body {
   justify-content: flex-end;
 }
 
-/* ===========================
+
+/* ---------------------------------------------------------
    FOOTER
-   =========================== */
+   --------------------------------------------------------- */
 
 .footer-wrap {
-  background: var(--footer-bg);
+  background: var(--surface-footer);
   border-top: 1px solid var(--footer-br);
   margin-top: 24px;
 }
 .site-footer {
   color: var(--muted);
+  font-size:13px;
+  line-height:1.5;
 }
 .site-footer .heading {
   color: var(--ink);
   font-weight: 800;
+  font-size:13px;
+  line-height:1.4;
 }
 
-/* ===========================
-   PRINT
-   =========================== */
+
+/* ---------------------------------------------------------
+   PRINT OVERRIDES
+   --------------------------------------------------------- */
 
 @media print {
   header,
