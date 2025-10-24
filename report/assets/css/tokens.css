@@ -1,5 +1,6 @@
 /* ===========================
    TRADELIA DESIGN TOKENS
+   v2026-IST
    =========================== */
 
 /* LIGHT THEME */
@@ -10,7 +11,7 @@
   --muted: #6b7280;
   --br: color-mix(in oklab, #0b1220 15%, transparent);
 
-  --brand-600: #2563eb; /* blu "azione" */
+  --brand-600: #2563eb; /* blu "azione / link" istituzionale */
 
   --footer-bg: color-mix(in oklab, var(--bg) 96%, #0b1220 4%);
   --footer-br: color-mix(in oklab, var(--br) 75%, transparent);
@@ -18,14 +19,19 @@
   --shadow-1: 0 6px 18px rgba(15,23,42,.06);
   --shadow-2: 0 24px 48px rgba(2,6,23,.20);
 
-  /* Tipografia base */
+  /* Raggi / superfici */
   --radius-card: 12px;
   --radius-pill: 999px;
   --radius-sheet: 16px;
   --radius-drawer: 12px;
   --radius-modal: 16px;
 
+  /* Tooltip / popover width */
   --pop-w: 320px;
+
+  /* Barre neutre (grafici orizzontali in F1B) */
+  --neutral-bg: color-mix(in oklab, var(--card) 92%, #0b1220 8%);
+  --neutral-br: color-mix(in oklab, var(--br) 70%, transparent);
 }
 
 /* DARK THEME */
@@ -43,12 +49,19 @@ html[data-theme="dark"] {
 
   --shadow-1: 0 12px 28px rgba(0,0,0,.45);
   --shadow-2: 0 32px 64px rgba(0,0,0,.7);
+
+  --neutral-bg: color-mix(in oklab, var(--card) 80%, black 20%);
+  --neutral-br: color-mix(in oklab, var(--br) 80%, transparent);
 }
 
 /* Base reset-ish for elements that rely on tokens */
 body {
   background: var(--bg);
   color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  line-height: 1.58;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
 }
 
 /* ===========================
@@ -99,9 +112,17 @@ body {
   min-height: 28px;
   border-radius: var(--radius-pill);
   box-shadow: var(--shadow-1);
+  background: var(--card);
+  border: 1px solid var(--br);
+  color: var(--ink);
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
 }
 
-/* Card compatte per moduli F2 / F4 / F5 */
+/* Card compatte per moduli F2 / F4 / F5 / F3 core */
 .card-compact {
   background: var(--card);
   color: var(--ink);
@@ -117,7 +138,9 @@ body {
   gap: .5rem;
 }
 
-/* Terminal look per F1 macro (può essere usato come "big narrative block") */
+/* Terminal look per F1 macro
+   Nota: attualmente usata come placeholder F1 nel layout.
+   Se vogliamo look più "report istituzionale", basterà rimuovere il monospace qui e rimane coerente. */
 .terminal {
   background: var(--card);
   color: var(--ink);
@@ -179,6 +202,109 @@ body {
   0%   { filter: brightness(1);   }
   50%  { filter: brightness(1.07);}
   100% { filter: brightness(1);   }
+}
+
+/* ===========================
+   BADGE / STATUS PILL
+   (StrategyMode, Segnale, ecc.)
+   =========================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  padding: .25rem .6rem;
+  border: 1px solid var(--br);
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: var(--shadow-1);
+  white-space: nowrap;
+}
+
+/* Verde = favorevole / momentum */
+.badge--g {
+  background: #10b9811a; /* verde con alpha */
+  border-color: #10b98166;
+  color: #10b981;
+}
+
+/* Giallo = cautela / momentum-light */
+.badge--y {
+  background: #f59e0b1a;
+  border-color: #f59e0b66;
+  color: #f59e0b;
+}
+
+/* Rosso = rischio / pullback */
+.badge--r {
+  background: #ef44441a;
+  border-color: #ef444466;
+  color: #ef4444;
+}
+
+/* Neutro / n.d. */
+.badge--n {
+  background: color-mix(in oklab, var(--card) 94%, #6b7280 6%);
+  border-color: color-mix(in oklab, var(--br) 80%, transparent);
+  color: var(--muted);
+}
+
+/* ===========================
+   KPI INLINE
+   (dot + valore in card F1B compatta)
+   =========================== */
+
+.kpi {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+/* Piccolo pallino semaforo */
+.dot {
+  width: .6rem;
+  height: .6rem;
+  border-radius: 999px;
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--bg) 60%, black 40%) inset;
+  flex-shrink: 0;
+}
+
+/* Stati semaforo usati per Breadth, Confidence, ecc. */
+.dot-g { background-color: #10b981; } /* verde */
+.dot-y { background-color: #f59e0b; } /* giallo */
+.dot-r { background-color: #ef4444; } /* rosso  */
+.dot-n { background-color: #94a3b8; } /* grigio neutro */
+
+/* ===========================
+   META LABEL / SUBTEXT
+   (piccoli label tabellari e hero meta)
+   =========================== */
+
+.meta-label {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-size: 11.5px;
+  line-height: 1.3;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+}
+
+/* usato spesso per testo tecnico o attrae attenzione ridotta */
+.text-muted-12 {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--muted);
+  font-weight: 500;
 }
 
 /* ===========================
