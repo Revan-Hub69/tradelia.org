@@ -1,8 +1,4 @@
-// /report/assets/js/ui-runtime.js
-
-// =====================================================
-// UTILITIES
-// =====================================================
+// /report/assets/js/ui-runtime.js — versione corretta con metric modal e MiFID Tradelia
 
 function escapeHtml(str) {
   if (str === undefined || str === null) return "";
@@ -13,486 +9,202 @@ function escapeHtml(str) {
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#39;");
 }
+function numFmt(v){ if(v==null||Number.isNaN(v))return"—"; return Number(v).toFixed(2).replace('.',','); }
+function getGlossary(){ return (window.Tradelia && window.Tradelia.glossary) || {}; }
+function isMobile(){ return window.matchMedia("(max-width: 767px)").matches; }
 
-function numFmt(v){
-  if (v === null || v === undefined || Number.isNaN(v)) return "—";
-  const n = Number(v);
-  return n.toFixed(2).replace('.', ',');
+// ------------------------------------------------------------
+// PANEL (MiFID / Privacy / Audit)
+// ------------------------------------------------------------
+function openPanel({ title, subtitle, sections, footerButtons }){
+  const ov=document.getElementById("panel-overlay"); if(!ov)return;
+  const fill=(id,html)=>{const e=document.getElementById(id);if(e)e.innerHTML=html;};
+  fill("panel-title",escapeHtml(title||"—"));
+  fill("panel-subtitle",escapeHtml(subtitle||""));
+  fill("panel-title-mobile",escapeHtml(title||"—"));
+  fill("panel-subtitle-mobile",escapeHtml(subtitle||""));
+  const sectHTML=(sections||[]).map(s=>`
+    <section class="tl-panel-section">
+      <div class="tl-panel-section-title">${escapeHtml(s.heading||"")}</div>
+      <div class="tl-panel-section-text">${s.bodyHtml||""}</div>
+      ${s.metaHtml?`<div class="tl-panel-section-meta">${s.metaHtml}</div>`:""}
+    </section>`).join("");
+  fill("panel-body",sectHTML);
+  fill("panel-body-mobile",sectHTML);
+  const footerHTML=(footerButtons||[{label:"Chiudi",role:"close"}]).map(b=>
+    `<button class="btn btn-sm"${b.role==="close"?' data-panel-close':''}>${escapeHtml(b.label)}</button>`
+  ).join("");
+  fill("panel-footer",footerHTML); fill("panel-footer-mobile",footerHTML);
+  ov.setAttribute("aria-hidden","false");
 }
-
-// Glossario metriche ("Freshness", "ConfidenceFinal", ecc.)
-function getGlossary() {
-  return (window.Tradelia && window.Tradelia.glossary) || {};
-}
-
-// Mobile check
-function isMobile() {
-  return window.matchMedia("(max-width: 767px)").matches;
-}
-
-
-// =====================================================
-// PANEL OVERLAY (MiFID / Privacy / Audit / ecc.)
-// =====================================================
-//
-// Apriamo un pannello istituzionale con sezioni leggibili.
-// Desktop = side panel a destra.
-// Mobile = bottom sheet alta 80-90% viewport.
-// -----------------------------------------------------
-
-function openPanel({ title, subtitle, sections, footerButtons }) {
-  const overlay = document.getElementById("panel-overlay");
-  if (!overlay) return;
-
-  // desktop refs
-  const tDesk = document.getElementById("panel-title");
-  const sDesk = document.getElementById("panel-subtitle");
-  const bDesk = document.getElementById("panel-body");
-  const fDesk = document.getElementById("panel-footer");
-
-  // mobile refs
-  const tMob = document.getElementById("panel-title-mobile");
-  const sMob = document.getElementById("panel-subtitle-mobile");
-  const bMob = document.getElementById("panel-body-mobile");
-  const fMob = document.getElementById("panel-footer-mobile");
-
-  // costruiamo le sezioni HTML
-  const htmlSections = (sections || []).map(sec => {
-    return `
-      <section class="tl-panel-section">
-        <div class="tl-panel-section-title">${escapeHtml(sec.heading || "")}</div>
-        <div class="tl-panel-section-text">${sec.bodyHtml || ""}</div>
-        ${sec.metaHtml
-          ? `<div class="tl-panel-section-meta">${sec.metaHtml}</div>`
-          : ""
-        }
-      </section>
-    `;
-  }).join("");
-
-  // footer buttons
-  const footerHtml = (footerButtons || []).map(btn => {
-    // btn = {label, role} role could be "close" or "ack"
-    if (btn.role === "close") {
-      return `<button class="btn btn-sm" data-panel-close>${escapeHtml(btn.label)}</button>`;
-    } else {
-      return `<button class="btn btn-sm">${escapeHtml(btn.label)}</button>`;
-    }
-  }).join("") || `<button class="btn btn-sm" data-panel-close>Chiudi</button>`;
-
-  // riempi desktop
-  if (tDesk) tDesk.textContent = title || "—";
-  if (sDesk) sDesk.textContent = subtitle || "";
-  if (bDesk) bDesk.innerHTML = htmlSections;
-  if (fDesk) fDesk.innerHTML = footerHtml;
-
-  // riempi mobile
-  if (tMob) tMob.textContent = title || "—";
-  if (sMob) sMob.textContent = subtitle || "";
-  if (bMob) bMob.innerHTML = htmlSections;
-  if (fMob) fMob.innerHTML = footerHtml;
-
-  overlay.setAttribute("aria-hidden", "false");
-}
-
-function closePanel() {
-  const overlay = document.getElementById("panel-overlay");
-  if (!overlay) return;
-  overlay.setAttribute("aria-hidden","true");
-}
-
-// chiusura panel: backdrop, X, bottoni footer con data-panel-close
-document.addEventListener("click", (ev) => {
-  if (ev.target.matches("[data-panel-close]")) {
-    closePanel();
-  }
-  if (ev.target.closest && ev.target.closest("[data-panel-close]")) {
-    closePanel();
-  }
-  if (ev.target.matches(".tl-panel-backdrop")) {
-    closePanel();
-  }
+function closePanel(){ const ov=document.getElementById("panel-overlay"); if(ov)ov.setAttribute("aria-hidden","true"); }
+document.addEventListener("click",e=>{
+  if(e.target.matches("[data-panel-close],.tl-panel-backdrop")||e.target.closest?.("[data-panel-close]"))closePanel();
 });
+window.openPanel=openPanel; window.closePanel=closePanel;
 
-// esponi globalmente così i moduli possono usarlo se vogliono
-window.openPanel = openPanel;
-window.closePanel = closePanel;
-
-
-// =====================================================
-// PANEL CONTENT HELPERS (MiFID / Privacy / Audit F1)
-// =====================================================
-
-function openMifidPanel() {
+// ------------------------------------------------------------
+// PANEL CONTENUTI — MIFID / PRIVACY / AUDIT
+// ------------------------------------------------------------
+function openMifidPanel(){
   openPanel({
-    title: "Informativa MiFID",
-    subtitle: "Uso informativo/formativo. Nessuna sollecitazione al pubblico risparmio.",
-    sections: [
+    title:"Informativa MiFID · Tradelia AI",
+    subtitle:"Documento educativo, non operativo — rispetta la direttiva MiFID II",
+    sections:[
       {
-        heading: "Finalità",
+        heading:"Ruolo di Tradelia AI",
         bodyHtml:
-          "Il contenuto presentato ha scopo puramente informativo e didattico. " +
-          "Non costituisce consulenza personalizzata, raccomandazione d’investimento, " +
-          "o proposta di acquisto/vendita di strumenti finanziari."
+        "Tradelia AI è una piattaforma informativa e formativa. I report, le analisi e le strategie " +
+        "sono generati con finalità <strong>educative, analitiche e di ricerca di mercato</strong>. " +
+        "Non rappresentano consulenza personalizzata o raccomandazione di investimento. " +
+        "Tradelia non raccoglie dati personali, obiettivi finanziari o profili di rischio degli utenti."
       },
       {
-        heading: "Adeguatezza e Appropriatezza",
+        heading:"Consulenti e soggetti autorizzati",
         bodyHtml:
-          "Qualsiasi operatività reale richiede verifica preventiva di adeguatezza e " +
-          "appropriatezza con un intermediario autorizzato, come previsto dalla Direttiva MiFID II.",
+        "Qualsiasi decisione reale d’investimento deve essere discussa con un <strong>consulente finanziario autorizzato</strong> " +
+        "o un intermediario abilitato, che valuterà l’adeguatezza e l’appropriatezza in base al profilo individuale " +
+        "come richiesto dalla <em>Direttiva MiFID II</em>.",
         metaHtml:
-          "In assenza di tale verifica, le informazioni non possono essere intese come suggerimento operativo."
+        "Tradelia AI non effettua profilazione, non gestisce capitali e non sollecita il pubblico risparmio."
       },
       {
-        heading: "Rischi",
+        heading:"Rischi e responsabilità",
         bodyHtml:
-          "I mercati finanziari comportano rischio di perdita totale o parziale del capitale. " +
-          "Le performance passate non sono indicative di risultati futuri."
-      }
-    ],
-    footerButtons: [
-      { label: "Ho letto", role: "close" }
-    ]
-  });
-}
-
-function openPrivacyPanel() {
-  openPanel({
-    title: "Privacy & Trasparenza",
-    subtitle: "Zero profilazione. Preferenze salvate solo in locale.",
-    sections: [
+        "I mercati finanziari comportano <strong>rischio di perdita totale o parziale del capitale</strong>. " +
+        "Le performance passate non sono indicative di risultati futuri. Ogni operazione reale " +
+        "deve considerare l’orizzonte temporale, la tolleranza al rischio e la situazione patrimoniale personale. " +
+        "La fiscalità varia in base al Paese e alla condizione soggettiva del contribuente."
+      },
       {
-        heading: "Cookie e Tracciamento",
+        heading:"Broker e riferimenti operativi",
         bodyHtml:
-          "Non utilizziamo cookie di profilazione o pubblicità comportamentale. " +
-          "Non cediamo dati personali a terze parti per fini commerciali.",
+        "I broker o intermediari citati nella sezione F6 (<em>Broker Selezionati</em>) sono forniti solo a titolo informativo " +
+        "per agevolare la ricerca di controparti regolamentate. La loro menzione non costituisce raccomandazione " +
+        "di apertura o utilizzo dei servizi.",
         metaHtml:
-          "Rif.: GDPR (UE 2016/679), Direttiva ePrivacy, Linee guida EDPB."
+        "È responsabilità dell’utente verificare la conformità, la licenza e le condizioni economiche di ciascun broker."
       },
       {
-        heading: "Dati Locali",
+        heading:"Licenze e trasparenza",
         bodyHtml:
-          "Le uniche preferenze salvate (tema, consensi) restano nel tuo browser " +
-          "via localStorage e non vengono inviate a server esterni."
+        "Tradelia AI opera come strumento informativo indipendente e non è soggetto a licenza MiFID. " +
+        "I contenuti possono citare fonti istituzionali (Bloomberg, Reuters, CFTC, BCE, FMI, ecc.) " +
+        "e report accademici per scopi di analisi macro e formativa. Tutti i marchi citati appartengono ai rispettivi titolari."
       }
     ],
-    footerButtons: [
-      { label: "Chiudi", role: "close" }
-    ]
+    footerButtons:[{label:"Ho letto e comprendo i limiti",role:"close"}]
   });
 }
-
-function openAuditPanel(auditData = {}) {
-  // auditData viene attaccato al bottone dal modulo (F1A/F1B)
-  const {
-    source_sync,
-    feed_lag_days,
-    confidence,
-    integrity
-  } = auditData;
-
+function openPrivacyPanel(){
   openPanel({
-    title: "Audit dati F1",
-    subtitle: "Fonti, qualità campione e limiti d'uso",
-    sections: [
+    title:"Privacy & Trasparenza",
+    subtitle:"Nessuna profilazione — preferenze salvate in locale.",
+    sections:[
       {
-        heading: "Origine dati",
+        heading:"Cookie e tracciamento",
         bodyHtml:
-          `<div><strong>Fonte:</strong> ${escapeHtml(source_sync || "—")}</div>` +
-          `<div><strong>Lag (giorni):</strong> ${escapeHtml(numFmt(feed_lag_days))}</div>` +
-          `<div><strong>Confidence:</strong> ${escapeHtml(numFmt(confidence))}</div>` +
-          `<div><strong>Integrità dataset:</strong> ${escapeHtml(numFmt(integrity))}</div>`
+        "Tradelia AI non utilizza cookie di profilazione né sistemi di advertising comportamentale. " +
+        "Non condividiamo dati con terze parti per fini commerciali."
       },
       {
-        heading: "Avvertenze MiFID",
+        heading:"Dati locali",
         bodyHtml:
-          "Questo contenuto descrive condizioni di mercato in chiave formativa. " +
-          "Non è una raccomandazione esecutiva. " +
-          "Prima di qualsiasi scelta reale rivolgiti a un soggetto autorizzato."
+        "Le uniche preferenze salvate (tema, consensi) restano nel tuo browser " +
+        "tramite localStorage e non vengono trasmesse a server esterni."
       }
     ],
-    footerButtons: [
-      { label: "Chiudi", role: "close" }
-    ]
+    footerButtons:[{label:"Chiudi",role:"close"}]
+  });
+}
+function openAuditPanel(a={}){
+  openPanel({
+    title:"Audit dati F1",
+    subtitle:"Fonti e qualità del campione",
+    sections:[
+      {
+        heading:"Origine dati",
+        bodyHtml:
+        `<div><strong>Fonte:</strong> ${escapeHtml(a.source_sync||"—")}</div>`+
+        `<div><strong>Lag (giorni):</strong> ${escapeHtml(numFmt(a.feed_lag_days))}</div>`+
+        `<div><strong>Confidence:</strong> ${escapeHtml(numFmt(a.confidence))}</div>`+
+        `<div><strong>Integrità:</strong> ${escapeHtml(numFmt(a.integrity))}</div>`
+      },
+      {
+        heading:"Avvertenze MiFID",
+        bodyHtml:
+        "Il modulo F1 mostra una fotografia di mercato a fini formativi. " +
+        "Non è una raccomandazione esecutiva. Prima di qualsiasi operatività, " +
+        "rivolgiti a un consulente o intermediario autorizzato."
+      }
+    ],
+    footerButtons:[{label:"Chiudi",role:"close"}]
   });
 }
 
-
-// =====================================================
-// METRIC TOOLTIP (icone "?")
-// =====================================================
-//
-// Desktop -> popover posizionato vicino al bottone.
-// Mobile  -> bottom sheet metrica con titolo / testo.
-// -----------------------------------------------------
-
-function openMetricPopover(btnEl, { title, body, source }) {
-  const pop = document.getElementById("metric-popover");
-  if (!pop) return;
-
-  const tEl = document.getElementById("metric-popover-title");
-  const bEl = document.getElementById("metric-popover-body");
-  const sEl = document.getElementById("metric-popover-source");
-
-  if (tEl) tEl.textContent = title || "—";
-  if (bEl) bEl.textContent = body || "—";
-  if (sEl) sEl.textContent = source || "";
-
-  // Posizionamento intelligente
-  const rect = btnEl.getBoundingClientRect();
-  const margin = 8;
-  const approxHeight = 200; // stima altezza
-  const popW = 320;
-
-  let left = rect.left + window.scrollX;
-  let top  = rect.bottom + window.scrollY + margin;
-
-  // limite destro
-  const maxLeft = window.scrollX + window.innerWidth - popW - 8;
-  if (left > maxLeft) {
-    left = maxLeft;
-  }
-
-  // se andrebbe fuori in basso, prova sopra
-  const estBottom = top + approxHeight;
-  const viewportBottom = window.scrollY + window.innerHeight;
-  if (estBottom > viewportBottom) {
-    top = rect.top + window.scrollY - approxHeight - margin;
-    // controllo che non vada sopra il top viewport
-    if (top < window.scrollY + 8) {
-      top = window.scrollY + 8;
-    }
-  }
-
-  pop.style.left = left + "px";
-  pop.style.top  = top + "px";
-  pop.setAttribute("aria-hidden","false");
+// ------------------------------------------------------------
+// METRIC TOOLTIP
+// ------------------------------------------------------------
+function openMetricPopover(btn,{title,body,source}){
+  const p=document.getElementById("metric-popover"); if(!p)return;
+  document.getElementById("metric-popover-title").textContent=title||"—";
+  document.getElementById("metric-popover-body").textContent=body||"—";
+  document.getElementById("metric-popover-source").textContent=source||"";
+  const r=btn.getBoundingClientRect(); let left=r.left+window.scrollX, top=r.bottom+window.scrollY+8;
+  const popW=320; const maxLeft=window.scrollX+window.innerWidth-popW-8;
+  if(left>maxLeft)left=maxLeft;
+  if(top+200>window.scrollY+window.innerHeight)top=r.top+window.scrollY-200-8;
+  p.style.left=left+"px"; p.style.top=top+"px"; p.setAttribute("aria-hidden","false");
 }
-
-function closeMetricPopover() {
-  const pop = document.getElementById("metric-popover");
-  if (!pop) return;
-  pop.setAttribute("aria-hidden","true");
+function closeMetricPopover(){const p=document.getElementById("metric-popover");if(p)p.setAttribute("aria-hidden","true");}
+function openMetricModal({title,body,source}){
+  const m=document.getElementById("metric-modal"); if(!m)return;
+  document.getElementById("metric-modal-title").textContent=title||"—";
+  document.getElementById("metric-modal-body").textContent=body||"—";
+  document.getElementById("metric-modal-source").textContent=source||"";
+  m.setAttribute("aria-hidden","false");
 }
+function closeMetricModal(){const m=document.getElementById("metric-modal");if(m)m.setAttribute("aria-hidden","true");}
 
-function openMetricSheet({ title, body, source }) {
-  const sheet = document.getElementById("metric-sheet");
-  if (!sheet) return;
-
-  const tEl = document.getElementById("metric-sheet-h-title");
-  const sEl = document.getElementById("metric-sheet-h-source");
-  const bEl = document.getElementById("metric-sheet-body");
-
-  if (tEl) tEl.textContent = title || "—";
-  if (bEl) bEl.textContent = body || "—";
-  if (sEl) sEl.textContent = source || "";
-
-  sheet.setAttribute("aria-hidden","false");
-}
-
-function closeMetricSheet() {
-  const sheet = document.getElementById("metric-sheet");
-  if (!sheet) return;
-  sheet.setAttribute("aria-hidden","true");
-}
-
-// click su X del popover
-document.addEventListener("click", (ev) => {
-  if (ev.target.id === "metric-popover-close" ||
-      (ev.target.closest && ev.target.closest("#metric-popover-close"))) {
-    closeMetricPopover();
-  }
+document.addEventListener("click",e=>{
+  if(e.target.id==="metric-popover-close"||e.target.closest?.("#metric-popover-close"))closeMetricPopover();
+  if(e.target.matches("[data-metric-close],.tl-metric-modal-backdrop")||e.target.closest?.("[data-metric-close]"))closeMetricModal();
+});
+document.addEventListener("click",e=>{
+  const btn=e.target.closest?.(".info-btn,.metric-help"); if(!btn)return;
+  const k=btn.getAttribute("data-metric"); const g=getGlossary();
+  const d=g[k]||{title:k||"—",short:"—",long:"—",source:""};
+  const title=d.title||k||"—"; const body=d.long||d.short||"—"; const src=d.source||"";
+  if(isMobile())openMetricModal({title,body,source:src}); else openMetricPopover(btn,{title,body,source:src});
+});
+document.addEventListener("click",e=>{
+  const p=document.getElementById("metric-popover");
+  if(p&&p.getAttribute("aria-hidden")==="false"&&!p.contains(e.target)&&!e.target.classList?.contains("info-btn"))closeMetricPopover();
 });
 
-// chiusura sheet mobile (backdrop e pulsante chiudi)
-document.addEventListener("click", (ev) => {
-  if (ev.target.matches("[data-metric-close]") ||
-      (ev.target.closest && ev.target.closest("[data-metric-close]")) ||
-      ev.target.matches(".tl-metric-sheet-backdrop")) {
-    closeMetricSheet();
-  }
-});
-
-// chiusura popover cliccando fuori (desktop only)
-document.addEventListener("click", (ev) => {
-  const pop = document.getElementById("metric-popover");
-  if (!pop) return;
-  if (pop.getAttribute("aria-hidden") === "true") return;
-
-  // se clic dentro popover, non chiudere
-  if (pop.contains(ev.target)) return;
-
-  // se clicco proprio sul bottone metrica che ha appena aperto, non chiudere qui
-  if (ev.target.classList?.contains("info-btn") ||
-      ev.target.classList?.contains("metric-help") ||
-      (ev.target.closest && (ev.target.closest(".info-btn") || ev.target.closest(".metric-help")))) {
-    return;
-  }
-
-  closeMetricPopover();
-});
-
-
-// Quando clicchiamo su una icona "?" .info-btn o .metric-help
-function handleMetricClick(btnEl) {
-  const key = btnEl.getAttribute("data-metric");
-
-  const glossary = getGlossary();
-  // struttura attesa in glossary:
-  // glossary[key] = {
-  //   title: "ConfidenceFinal",
-  //   short: "Quanto ci fidiamo del dato.",
-  //   long: "Spiegazione estesa ...",
-  //   source: "Interno / calcolo proprietario"
-  // }
-  const data = glossary[key] || {
-    title: key || "—",
-    short: "—",
-    long: "—",
-    source: ""
-  };
-
-  const title  = data.title || key || "—";
-  const body   = data.long || data.short || "—";
-  const source = data.source || "";
-
-  if (isMobile()) {
-    openMetricSheet({ title, body, source });
-  } else {
-    openMetricPopover(btnEl, { title, body, source });
-  }
+// ------------------------------------------------------------
+// BOTTONI GLOBALI
+// ------------------------------------------------------------
+function toggleTheme(){
+  const html=document.documentElement;
+  const curr=html.getAttribute("data-theme")||"light";
+  const next=curr==="light"?"dark":"light";
+  html.setAttribute("data-theme",next);
+  try{localStorage.setItem("tradelia-theme",next);}catch(e){}
 }
-
-// delega click sulle icone ?
-document.addEventListener("click", (ev) => {
-  const btn = ev.target.closest?.(".info-btn, .metric-help");
-  if (!btn) return;
-  handleMetricClick(btn);
+document.addEventListener("click",e=>{
+  if(e.target.id==="btn-mifid-open")openMifidPanel();
+  if(e.target.id==="btn-privacy-open")openPrivacyPanel();
+  if(e.target.id==="btn-print")window.print();
+  if(e.target.id==="btn-theme"||e.target.closest?.("#btn-theme"))toggleTheme();
+  const auditBtn=e.target.closest?.("[data-open-drawer]");
+  if(auditBtn&&(auditBtn.getAttribute("data-open-drawer")==="audit-f1a"||auditBtn.getAttribute("data-open-drawer")==="audit-f1b"))
+    openAuditPanel(auditBtn.__auditData||{});
 });
 
-
-// =====================================================
-// SHARE, THEME, PRINT, FOOTER BUTTONS, AUDIT BTN
-// =====================================================
-
-// toggla tema light/dark e salva preferenza
-function toggleTheme() {
-  const html = document.documentElement;
-  const curr = html.getAttribute("data-theme") || "light";
-  const next = curr === "light" ? "dark" : "light";
-  html.setAttribute("data-theme", next);
-  try {
-    localStorage.setItem("tradelia-theme", next);
-  } catch(e){}
-}
-
-// carica tema salvato (se c'è)
-(function initThemeFromStorage(){
-  try {
-    const saved = localStorage.getItem("tradelia-theme");
-    if (saved === "dark" || saved === "light") {
-      document.documentElement.setAttribute("data-theme", saved);
-    }
-  } catch(e){}
-})();
-
-// listener globali su click
-document.addEventListener("click", (ev) => {
-  // MiFID
-  if (ev.target.id === "btn-mifid-open") {
-    openMifidPanel();
-  }
-
-  // Privacy
-  if (ev.target.id === "btn-privacy-open") {
-    openPrivacyPanel();
-  }
-
-  // Stampa
-  if (ev.target.id === "btn-print" || ev.target.id === "btn-print-2") {
-    window.print();
-  }
-
-  // Tema
-  if (ev.target.id === "btn-theme" || (ev.target.closest && ev.target.closest("#btn-theme"))) {
-    toggleTheme();
-  }
-
-  // Share open
-  if (ev.target.id === "btn-share") {
-    const ov = document.getElementById("share-overlay");
-    if (ov) ov.setAttribute("aria-hidden","false");
-  }
-
-  // Share close
-  if (
-    ev.target.matches("[data-share-close]") ||
-    (ev.target.closest && ev.target.closest("[data-share-close]"))
-  ) {
-    const ov = document.getElementById("share-overlay");
-    if (ov) ov.setAttribute("aria-hidden","true");
-  }
-
-  // Share service click (linkedin/twitter/reddit/copy)
-  if (ev.target.matches(".share-btn,[data-share-svc]") ||
-      (ev.target.closest && ev.target.closest(".share-btn,[data-share-svc]"))) {
-    const btn = ev.target.closest
-      ? ev.target.closest(".share-btn,[data-share-svc]")
-      : ev.target;
-    const svc = btn.getAttribute("data-share-svc");
-    handleShareAction(svc);
-  }
-
-  // open-drawer personalizzati, tipo Audit / Fonti
-  const auditTrigger = ev.target.closest?.("[data-open-drawer]");
-  if (auditTrigger) {
-    const drawerKey = auditTrigger.getAttribute("data-open-drawer");
-    if (drawerKey === "audit-f1b" || drawerKey === "audit-f1a") {
-      openAuditPanel(auditTrigger.__auditData || {});
-    }
-  }
-});
-
-function handleShareAction(svc){
-  const linkField = document.getElementById("share-link-field");
-  const urlToShare = linkField ? linkField.textContent.trim() : window.location.href;
-
-  if (svc === "copy") {
-    try {
-      navigator.clipboard.writeText(urlToShare);
-    } catch(e){}
-    return;
-  }
-
-  if (svc === "linkedin") {
-    const u = encodeURIComponent(urlToShare);
-    window.open("https://www.linkedin.com/sharing/share-offsite/?url=" + u, "_blank","noopener");
-    return;
-  }
-
-  if (svc === "twitter") {
-    const u = encodeURIComponent(urlToShare);
-    window.open("https://twitter.com/intent/tweet?url=" + u, "_blank","noopener");
-    return;
-  }
-
-  if (svc === "reddit") {
-    const u = encodeURIComponent(urlToShare);
-    window.open("https://www.reddit.com/submit?url=" + u, "_blank","noopener");
-    return;
-  }
-}
-
-// =====================================================
-// API per i moduli
-// I moduli (es. F1A/F1B) possono chiamare:
-//   window.__TradeliaUI.attachAuditData(btn, auditObj)
-// per passare al drawer Audit i dati grezzi
-// =====================================================
-
-window.__TradeliaUI = {
-  attachAuditData(btn, auditObj){
-    if (!btn) return;
-    btn.__auditData = auditObj || {};
-  }
+// ------------------------------------------------------------
+// API per moduli (attach dati audit)
+// ------------------------------------------------------------
+window.__TradeliaUI={
+  attachAuditData(btn,a){ if(btn)btn.__auditData=a||{}; }
 };
