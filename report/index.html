@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tradelia AI · Runtime Report — Uso informativo</title>
+  <title>Tradelia · Report Runtime</title>
 
   <!-- Favicons -->
   <link rel="icon" href="/favicon.ico?v=1">
@@ -11,31 +11,27 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
   <meta name="theme-color" content="#0b1220">
 
-  <!-- Frameworks -->
+  <!-- Tailwind (CDN runtime JIT) -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script defer src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- CSS tokens + share -->
+  <!-- Lucide icons (non-defer, così è pronto prima degli script inline) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- CSS core -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
   <link rel="stylesheet" href="/report/assets/css/share.css" />
 
-  <!-- Page-specific CSS -->
   <style>
-    :root{
-      --pop-w:320px;
-
-      /* supporto barre neutre nei grafici a barre mini (F1B table view) */
-      --neutral-bg: color-mix(in oklab, var(--card) 92%, white 8%);
-      --neutral-br: color-mix(in oklab, var(--br) 80%, transparent);
-    }
+    :root { --pop-w:320px; }
 
     html,body{height:100%}
     body{
       font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:var(--bg); color:var(--ink);
+      background:var(--surface-page);
+      color:var(--ink);
       -webkit-font-smoothing:antialiased;
       text-rendering:optimizeLegibility;
-      line-height:1.58;
+      line-height:1.5;
     }
 
     .container{max-width:90rem;margin-inline:auto;padding:0 16px}
@@ -47,29 +43,36 @@
     /* HEADER sticky */
     .hdr{
       backdrop-filter:saturate(1.1) blur(6px);
-      box-shadow:0 1px 0 color-mix(in oklab, var(--br) 80%, transparent)
+      background:color-mix(in oklab, var(--surface-card) 90%, transparent);
+      border-bottom:1px solid var(--br-soft);
+      box-shadow:0 1px 0 var(--br-soft);
     }
-    .brand{font-weight:900;line-height:1.1;}
-    .claim{
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.3;
-    }
+    .brand{font-weight:900}
+    .claim{font-size:12px;color:var(--muted)}
 
-    /* HERO: istituzionale (document cover, non marketing card) */
+    /* HERO */
     .hero{
       margin-top:12px;
-      border:1px solid color-mix(in oklab, var(--br) 88%, transparent);
+      border:1px solid var(--br-card);
       border-radius:16px;
-      background:var(--card);
+      background:
+        radial-gradient(
+          1100px 520px at -10% -40%,
+          color-mix(in oklab, var(--tint-hero) 55%, white 45%) 0%,
+          var(--surface-card) 45%
+        );
       padding:16px;
-      box-shadow:var(--shadow-2)
+      box-shadow:var(--shadow-lg);
     }
     html[data-theme="dark"] .hero{
-      background:var(--card);
+      background:
+        radial-gradient(
+          1100px 520px at -10% -40%,
+          var(--tint-hero-dark) 0%,
+          var(--surface-card) 45%
+        );
     }
 
-    /* top riga hero */
     .hero__top{
       display:flex;
       flex-wrap:wrap;
@@ -79,7 +82,6 @@
       column-gap:10px;
     }
 
-    /* blocco ticker/venue */
     .hero__id{
       display:flex;
       flex-wrap:wrap;
@@ -103,55 +105,41 @@
       word-break:break-word;
     }
 
-    /* blocco prezzo / change / stato */
     .hero__price{
       display:flex;
       flex-wrap:wrap;
-      align-items:flex-start;
+      align-items:baseline;
       justify-content:flex-start;
       gap:8px 12px;
       min-width:0;
       max-width:100%;
-      text-align:right;
     }
     .hero__px{
-      font-weight:700; /* abbassiamo il tono da 900 a 700 */
-      font-size:20px;
+      font-weight:900;
+      font-size:24px;
       line-height:1.2;
       color:var(--ink);
     }
     .hero__chg{
-      font-weight:600;
-      font-size:13px;
+      font-weight:800;
+      font-size:13.5px;
       line-height:1.2;
     }
-    .chg--up{color:#10b981}
-    .chg--down{color:#ef4444}
-
-    /* stato report: meno "pill action", più etichetta documentale */
+    .chg--up{color:var(--tone-g)}
+    .chg--down{color:var(--tone-r)}
     .hero__badge{
-      font-size:12px;
-      border:1px solid var(--br);
-      border-radius:8px;
-      padding:.3rem .6rem;
-      background:var(--card);
+      font-size:12.5px;
+      border:1px solid var(--br-soft);
+      border-radius:999px;
+      padding:.22rem .6rem;
+      background:var(--surface-card-alt);
       color:var(--ink);
       font-weight:600;
       line-height:1.2;
-      display:inline-flex;
-      align-items:center;
-      gap:.4rem;
-    }
-    .hero__badge-label{
-      text-transform:uppercase;
-      font-size:11px;
-      font-weight:600;
-      color:var(--muted);
-      line-height:1.2;
-      letter-spacing:.04em;
+      box-shadow:var(--shadow-card);
     }
 
-    /* meta pills sotto */
+    /* hero meta grid */
     .hero__meta{
       display:grid;
       grid-template-columns:repeat(6,minmax(160px,1fr));
@@ -167,12 +155,12 @@
       display:flex;
       align-items:center;
       gap:.65rem;
-      border:1px solid var(--br);
+      border:1px solid var(--br-card);
       border-radius:12px;
       padding:.6rem .8rem .6rem 1rem;
-      background:var(--card);
+      background:var(--surface-card);
       font-size:13px;
-      box-shadow:var(--shadow-1);
+      box-shadow:var(--shadow-card);
       min-height:54px
     }
     .meta-pill .tonebar{
@@ -181,19 +169,19 @@
       width:4px;
       border-top-left-radius:12px;
       border-bottom-left-radius:12px;
-      background:#94a3b8
+      background:var(--tone-n);
     }
+
     .meta-label{
       color:var(--muted);
       text-transform:uppercase;
       letter-spacing:.06em;
       font-size:11.5px;
       line-height:1.3;
-      font-weight:600;
     }
     .meta-val{
       font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
-      font-weight:700;
+      font-weight:800;
       display:flex;
       flex-wrap:wrap;
       column-gap:.25rem;
@@ -204,7 +192,7 @@
       color:var(--ink);
     }
 
-    /* tappable info */
+    /* tappable ? */
     .info-btn{
       all:unset;
       cursor:pointer;
@@ -212,40 +200,36 @@
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      width:20px;
-      height:20px;
-      border:1px solid var(--br);
+      width:22px;
+      height:22px;
+      border:1px solid var(--br-soft);
       border-radius:999px;
-      font-size:11px;
+      font-size:12px;
       line-height:1;
       color:var(--muted);
-      background:var(--card);
+      background:var(--surface-card);
       flex:0 0 auto;
-      box-shadow:var(--shadow-1);
-      font-weight:600;
+      box-shadow:var(--shadow-card);
     }
     .info-btn:active{opacity:.8}
 
-    /* SEZIONE FASI / STRUTTURA REPORT */
+    /* STRUCTURE SECTION */
     .section-head{
       text-align:center;
       margin:2.5rem 0 1.75rem;
     }
     .section-title{
-      font-weight:700;
-      font-size:1.25rem;
-      letter-spacing:.2px;
+      font-weight:900;
+      font-size:1.4rem;
+      letter-spacing:.25px;
       color:var(--ink);
-      line-height:1.3;
+      line-height:1.25;
     }
     .section-sub{
       margin-top:4px;
       color:var(--muted);
-      font-size:13.5px;
+      font-size:13.8px;
       line-height:1.5;
-      max-width:720px;
-      margin-left:auto;
-      margin-right:auto;
     }
     .phase-nav{
       margin-top:1.1rem;
@@ -255,10 +239,10 @@
       gap:.6rem 1.1rem;
     }
     .phase-nav a{
-      font-size:12.5px;
-      font-weight:600;
+      font-size:12.8px;
+      font-weight:700;
       text-transform:uppercase;
-      color:var(--brand-600);
+      color:var(--brand);
       text-decoration:underline;
       text-underline-offset:2px;
       letter-spacing:.04em;
@@ -266,9 +250,7 @@
     }
     .phase-nav a:hover{opacity:.8;}
 
-    /* GRID moduli
-       desktop: F3 centrale larga
-    */
+    /* GRID (moduli principali) */
     .mod-grid{
       display:grid;
       grid-template-columns:1fr 1.6fr 1fr;
@@ -298,16 +280,15 @@
       gap:12px;
     }
     .mini-card{
-      background:color-mix(in oklab, var(--card) 96%, #f6f6f9 4%);
-      border:1px solid color-mix(in oklab, var(--br) 88%, #0b1220 12%);
+      background:var(--surface-card-alt);
+      border:1px solid var(--br-card-strong);
       border-radius:12px;
       padding:10px 12px;
-      box-shadow:0 6px 18px rgba(15,23,42,.06);
-    }
-    html[data-theme="dark"] .mini-card{
-      background:color-mix(in oklab, var(--card) 96%, white 4%);
-      border-color:color-mix(in oklab, var(--br) 82%, white 18%);
-      box-shadow:0 12px 28px rgba(0,0,0,.45);
+      box-shadow:var(--shadow-card);
+      font-size:13px;
+      line-height:1.45;
+      min-height:80px;
+      color:var(--ink);
     }
 
     @media(max-width:1024px){
@@ -324,295 +305,20 @@
       .f3-tiles{grid-template-columns:1fr;}
     }
 
-    /* Drawer (laterale / MiFID blocking fullscreen) */
-    .drawer{
-      position:fixed;
-      inset:0;
-      z-index:70;
-      display:none;
-    }
-    .drawer[aria-hidden="false"]{
-      display:block;
-    }
-    .drawer__backdrop{
-      position:absolute;
-      inset:0;
-      background:rgba(0,0,0,.45);
-      backdrop-filter:blur(2px);
-      opacity:0;
-      transition:opacity .18s ease;
-    }
-    .drawer__panel{
-      position:fixed;
-      top:0; right:0; bottom:0;
-      width:min(540px,42vw);
-      max-width:100%;
-      background:var(--card);
-      color:var(--ink);
-      border-left:1px solid var(--br);
-      box-shadow:var(--shadow-2);
-      transform: translateX(12px);
-      opacity:0;
-      transition: transform .2s ease, opacity .2s ease;
-      display:flex;
-      flex-direction:column;
-      border-top-left-radius:12px;
-      border-bottom-left-radius:12px;
-    }
-    .drawer.is-open .drawer__backdrop{
-      opacity:1;
-    }
-    .drawer.is-open .drawer__panel{
-      transform:translateX(0);
-      opacity:1;
-    }
-    .drawer__header{
-      height:56px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:.6rem;
-      padding:0 14px;
-      border-bottom:1px solid color-mix(in oklab, var(--br) 78%, transparent);
-      background:color-mix(in oklab, var(--card) 96%, white 4%);
-      position:sticky;
-      top:0;
-      z-index:1;
-    }
-    .drawer__title{
-      font-weight:700;
-      font-size:15px;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      color:var(--ink);
-    }
-    .drawer__subtitle{
-      margin:2px 0 0;
-      font-size:12.5px;
-      color:var(--muted);
-    }
-    .drawer__content{
-      padding:14px;
-      overflow:auto;
-      height:calc(100% - 56px);
-      background:color-mix(in oklab, var(--bg) 96%, white 4%);
-      color:var(--ink);
-      font-size:13px;
-      line-height:1.5;
-    }
-    .drawer__content section + section{
-      margin-top:12px;
-    }
-    .drawer__content h4{
-      font-weight:700;
-      margin:0 0 6px;
-      letter-spacing:.2px;
-      font-size:13px;
-      line-height:1.4;
-    }
+    /* Drawer / Metric Popover / Sheet / Modal 
+       NOTE: stili base sono in tokens.css.
+       Qui eventuali override minimi. */
 
-    @media(max-width:640px){
-      .drawer__panel{
-        left:auto;
-        right:0;
-        width:90vw;
-        max-width:90vw;
-        border-radius:12px 0 0 12px;
-        border-left:1px solid var(--br);
-        transform:translateX(8px);
-      }
-      .drawer.is-open .drawer__panel{
-        transform:translateX(0);
-      }
-    }
-
-    /* Drawer blocking (MiFID): fullscreen, no radius */
-    .drawer--blocking .drawer__panel{
-      left:0;
-      right:0;
-      width:100vw;
-      max-width:100vw;
-      border-left:none;
-      border-radius:0;
-      transform:translateX(0);
-      opacity:1;
-      box-shadow:var(--shadow-2);
-    }
-    .drawer--blocking.is-open .drawer__backdrop{
-      opacity:1;
-    }
-    .drawer--blocking.is-open .drawer__panel{
-      transform:none;
-      opacity:1;
-    }
-
-    /* === METRIC INFO POPUP / DESKTOP TOOLTIP === */
-    .popover{
-      position:absolute;
-      z-index:80;
-      width:var(--pop-w,320px);
-      max-width:92vw;
-      background:var(--card);
-      color:var(--ink);
-      border:1px solid color-mix(in oklab, var(--br) 85%, transparent);
-      border-radius:12px;
-      padding:12px 12px 10px;
-      box-shadow:0 18px 44px rgba(2,6,23,.18);
-      display:none;
-    }
-    .popover[aria-hidden="false"]{display:block;}
-    .popover__title{
-      margin:0 0 6px;
-      font-weight:700;
-      font-size:13.5px;
-      letter-spacing:.15px;
-      color:var(--ink);
-      display:flex;
-      align-items:center;
-      gap:.5rem;
-      line-height:1.4;
-    }
-    .popover__text{
-      font-size:13px;
-      line-height:1.45;
-      color:var(--ink);
-    }
-    .popover__source{
-      margin-top:6px;
-      font-size:11.5px;
-      color:var(--muted);
-      line-height:1.4;
-    }
-    .popover__actions{
-      margin-top:10px;
-      display:flex;
-      justify-content:flex-end;
-    }
-    #popover-close{
-      height:28px;
-      border-radius:8px;
-      border:1px solid var(--br);
-      background:var(--card);
-      font-size:12px;
-      font-weight:600;
-      padding:0 .6rem;
-      line-height:1;
-      color:var(--ink);
-    }
-
-    /* === METRIC INFO / MOBILE SHEET === */
-    .metric-sheet-overlay{
-      position:fixed;
-      inset:0;
-      z-index:85;
-      display:none;
-    }
-    .metric-sheet-overlay[aria-hidden="false"]{
-      display:block;
-    }
-    .metric-sheet-overlay__backdrop{
-      position:absolute;
-      inset:0;
-      background:rgba(0,0,0,.4);
-      backdrop-filter:blur(2px);
-      opacity:0;
-      transition:opacity .18s ease;
-    }
-    .metric-sheet{
-      position:fixed;
-      left:0;
-      right:0;
-      bottom:0;
-      margin-left:auto;
-      margin-right:auto;
-      width:100vw;
-      max-width:480px;
-      max-height:70vh;
-      background:var(--card);
-      color:var(--ink);
-      border:1px solid var(--br);
-      border-radius:16px 16px 0 0;
-      box-shadow:var(--shadow-2);
-      display:flex;
-      flex-direction:column;
-      transform:translateY(100%);
-      opacity:0;
-      transition:transform .2s ease, opacity .2s ease;
-      z-index:86;
-      overflow:hidden;
-    }
-    .metric-sheet__header{
-      padding:14px 16px 12px;
-      border-bottom:1px solid color-mix(in oklab, var(--br) 80%, transparent);
-      background:color-mix(in oklab, var(--card) 96%, white 4%);
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:.75rem;
-    }
-    .metric-sheet__titlewrap{min-width:0;}
-    .metric-sheet__title{
-      font-weight:700;
-      font-size:14px;
-      line-height:1.3;
-      color:var(--ink);
-      display:flex;
-      align-items:center;
-      gap:.5rem;
-      letter-spacing:.2px;
-    }
-    .metric-sheet__source{
-      margin-top:2px;
-      font-size:12px;
-      line-height:1.4;
-      color:var(--muted);
-      word-break:break-word;
-    }
-    .metric-sheet__closebtn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      height:30px;
-      min-width:30px;
-      border-radius:8px;
-      border:1px solid var(--br);
-      background:var(--card);
-      color:var(--muted);
-      font-size:12px;
-      line-height:1;
-      cursor:pointer;
-    }
-    .metric-sheet__closebtn i{
-      width:16px;
-      height:16px;
-    }
-    .metric-sheet__body{
-      padding:14px 16px 16px;
-      overflow-y:auto;
-      font-size:13.2px;
-      line-height:1.5;
-      color:var(--ink);
-    }
-
-    .metric-sheet-overlay.is-open .metric-sheet-overlay__backdrop{
-      opacity:1;
-    }
-    .metric-sheet-overlay.is-open .metric-sheet{
-      transform:translateY(0);
-      opacity:1;
-    }
-
-    /* Footer bg/border */
+    /* Footer wrapper */
     .footer-wrap{
-      background:var(--footer-bg);
+      background:var(--surface-footer);
       border-top:1px solid var(--footer-br);
       margin-top:24px
     }
     .site-footer{color:var(--muted)}
-    .site-footer .heading{color:var(--ink);font-weight:700;line-height:1.3;}
+    .site-footer .heading{color:var(--ink);font-weight:800}
 
-    /* Print: i popup non appaiono */
+    /* Print: hidestuff in print */
     @media print{
       .popover,
       .metric-sheet-overlay,
@@ -620,7 +326,6 @@
       #share-overlay,
       header,
       .noprint {display:none !important;}
-
       .hero{
         page-break-after:always;
         border:1px solid #ddd;
@@ -632,13 +337,13 @@
 
 <body>
   <!-- HEADER -->
-  <header class="hdr sticky top-0 z-50 bg-[color:var(--card)]/90 border-b border-[color:var(--br)] noprint">
+  <header class="hdr sticky top-0 z-50 noprint">
     <div class="container h-12 sm:h-14 flex items-center justify-between">
       <div class="flex items-center gap-2 sm:gap-3 min-w-0">
         <a href="/" class="brand shrink-0 text-lg sm:text-xl tracking-tight hover:opacity-90 transition">
-          <span class="text-[color:var(--ink)]">TRADELIA</span><span class="text-blue-600">&bull;AI</span>
+          <span class="text-[color:var(--ink)]">TRADELIA</span><span class="text-[color:var(--brand)]">&bull;AI</span>
         </a>
-        <span class="claim truncate">Runtime Report — Uso informativo</span>
+        <span class="claim truncate">Report Runtime</span>
       </div>
       <div class="flex items-center gap-1.5 sm:gap-2">
         <button id="btn-print" class="btn" aria-label="Stampa / PDF">
@@ -656,8 +361,8 @@
 
   <!-- MAIN -->
   <main class="container">
-    <!-- HERO -->
-    <section id="hero" class="hero" aria-label="Dati di riferimento del report">
+    <!-- HERO / HEADER DATI REPORT -->
+    <section id="hero" class="hero" aria-label="Copertina Report">
       <div class="hero__top">
         <div class="hero__id">
           <div class="hero__ticker" id="hero-ticker">—</div>
@@ -665,25 +370,20 @@
         </div>
 
         <div class="hero__price">
-          <div class="text-right">
-            <div class="hero__px" id="hero-price">—</div>
-            <div class="hero__chg" id="hero-change">—</div>
-          </div>
-          <span class="hero__badge" id="hero-state">
-            <span class="hero__badge-label">STATO</span>
-            <span id="hero-state-text">—</span>
-          </span>
+          <div class="hero__px" id="hero-price">—</div>
+          <div class="hero__chg" id="hero-change">—</div>
+          <span class="hero__badge" id="hero-state">—</span>
         </div>
       </div>
 
       <div class="hero__meta">
-        <!-- PERIODO ANALISI -->
+        <!-- SNAPSHOT -->
         <div class="meta-pill" id="pill-snap">
           <span class="tonebar" id="tone-snap"></span>
           <div class="min-w-0">
-            <div class="flex items-center flex-wrap">
-              <div class="meta-label">Periodo di analisi</div>
-              <button class="info-btn" data-metric="Snapshot" aria-label="Info Periodo di analisi">i</button>
+            <div class="flex items-center">
+              <div class="meta-label">Snapshot</div>
+              <button class="info-btn" data-metric="Snapshot" aria-label="Info Snapshot">?</button>
             </div>
             <div class="meta-val">
               <span id="hero-start">—</span>
@@ -693,69 +393,65 @@
           </div>
         </div>
 
-        <!-- PREZZO -->
+        <!-- PRICE -->
         <div class="meta-pill" id="pill-price">
           <span class="tonebar" id="tone-price"></span>
           <div class="min-w-0">
-            <div class="flex items-center flex-wrap">
-              <div class="meta-label">Prezzo</div>
-              <button class="info-btn" data-metric="Price" aria-label="Info Prezzo">i</button>
+            <div class="flex items-center">
+              <div class="meta-label">Price</div>
+              <button class="info-btn" data-metric="Price" aria-label="Info Price">?</button>
             </div>
             <div class="meta-val" id="hero-price2">—</div>
           </div>
         </div>
 
-        <!-- VARIAZIONE % -->
+        <!-- Δ% -->
         <div class="meta-pill" id="pill-chg">
           <span class="tonebar" id="tone-chg"></span>
           <div class="min-w-0">
-            <div class="flex items-center flex-wrap">
+            <div class="flex items-center">
               <div class="meta-label">Δ%</div>
-              <button class="info-btn" data-metric="ChangePct" aria-label="Info Δ%">i</button>
+              <button class="info-btn" data-metric="ChangePct" aria-label="Info Δ%">?</button>
             </div>
             <div class="meta-val" id="hero-change2">—</div>
           </div>
         </div>
 
-        <!-- VALUTA -->
+        <!-- CCY -->
         <div class="meta-pill" id="pill-ccy">
           <span class="tonebar" id="tone-ccy"></span>
           <div class="min-w-0">
-            <div class="flex items-center flex-wrap">
-              <div class="meta-label">Valuta</div>
-              <button class="info-btn" data-metric="Currency" aria-label="Info Valuta">i</button>
+            <div class="flex items-center">
+              <div class="meta-label">Currency</div>
+              <button class="info-btn" data-metric="Currency" aria-label="Info Currency">?</button>
             </div>
             <div class="meta-val" id="hero-ccy">—</div>
           </div>
         </div>
 
-        <!-- FRESHNESS (quanto è recente il dato) -->
+        <!-- FRESHNESS -->
         <div class="meta-pill" id="pill-fresh">
           <span class="tonebar" id="tone-fresh"></span>
           <div class="min-w-0">
-            <div class="flex items-center flex-wrap">
+            <div class="flex items-center">
               <div class="meta-label">Freshness</div>
-              <button class="info-btn" data-metric="Freshness" aria-label="Info Freshness">i</button>
+              <button class="info-btn" data-metric="Freshness" aria-label="Info Freshness">?</button>
             </div>
             <div class="meta-val" id="hero-freshness">—</div>
           </div>
         </div>
 
-        <!-- AFFIDABILITÀ -->
+        <!-- CONF -->
         <div class="meta-pill" id="pill-conf">
           <span class="tonebar" id="tone-conf"></span>
           <div class="min-w-0">
-            <div class="flex items-center flex-wrap">
-              <div class="meta-label">Affidabilità</div>
-              <button class="info-btn" data-metric="ConfidenceFinal" aria-label="Info Affidabilità">i</button>
+            <div class="flex items-center">
+              <div class="meta-label">Confidence</div>
+              <button class="info-btn" data-metric="ConfidenceFinal" aria-label="Info Confidence">?</button>
             </div>
             <div class="meta-val" id="hero-confidence">—</div>
           </div>
         </div>
-      </div>
-
-      <div class="mt-3 text-[12.5px] leading-5 text-[color:var(--muted)]">
-        Documento informativo basato su dati tecnici e di flusso. Non rappresenta raccomandazioni personalizzate di investimento.
       </div>
     </section>
 
@@ -766,38 +462,40 @@
     <section class="section-head" aria-label="Struttura del Report">
       <h2 class="section-title">Struttura del Report</h2>
       <p class="section-sub">
-        Il Runtime Report sintetizza la lettura tecnica e di flusso, evidenziando
-        regime del mercato, forze settoriali e rischi tattici.
-        Le sezioni sono pensate per supportare la valutazione del contesto,
-        non per formulare istruzioni operative.
+        Il framework Tradelia procede top-down: regime di mercato (F1),
+        sentiment e flussi (F2), multi-timeframe tecnico (F3),
+        intermarket (F4), resoconto tecnico operativo (F5),
+        e validazione di lungo periodo (F6).
       </p>
       <nav class="phase-nav" aria-label="Fasi del framework">
-        <a href="#mod-f1">Fase 1 · Contesto macro e regime tecnico</a>
-        <a href="#mod-f2">Fase 2 · Struttura di flussi e posizionamento</a>
-        <a href="#mod-f3">Fase 3 · Analisi multi-timeframe dell’asset</a>
-        <a href="#mod-f4">Fase 4 · Dinamiche intermarket</a>
-        <a href="#mod-f5">Fase 5 · Sintesi tecnica</a>
-        <a href="#mod-f5b">Fase 6 · Validazione di lungo periodo</a>
+        <a href="#mod-f1">F1 · CONTESTO INIZIALE</a>
+        <a href="#mod-f2">F2 · SENTIMENT / TICKER</a>
+        <a href="#mod-f3">F3 · MULTI-TF TECNICO</a>
+        <a href="#mod-f4">F4 · INTERMARKET</a>
+        <a href="#mod-f5">F5 · RESOCONTO TECNICO</a>
+        <a href="#mod-f5b">F6 · VALIDAZIONE LT</a>
       </nav>
     </section>
 
     <!-- GRIGLIA MODULI -->
     <section class="mod-grid" aria-label="Moduli del Report">
-      <!-- F1 (Panorama macro / regime tecnico / breadth / flussi settoriali) -->
-      <section id="mod-f1" class="mod-f1 terminal is-loading" aria-label="F1 · Contesto macro e regime tecnico"></section>
+      <!-- F1 (F1A o F1B montati qui) -->
+      <section id="mod-f1" class="mod-f1 terminal is-loading" aria-label="F1 · Contesto Iniziale"></section>
 
-      <!-- F3 centrale (analisi multi-timeframe asset) -->
-      <section id="mod-f3" class="mod-f3" aria-label="F3 · Analisi multi-timeframe dell’asset">
+      <!-- F3 centrale -->
+      <section id="mod-f3" class="mod-f3" aria-label="F3 · Analisi Multi-TF">
         <div class="f3-wrap">
-          <!-- tiles top -->
+          <!-- mini tiles top -->
           <div id="f3-tiles-top" class="f3-tiles">
             <article class="mini-card is-loading" id="f3t-1"></article>
             <article class="mini-card is-loading" id="f3t-2"></article>
             <article class="mini-card is-loading" id="f3t-3"></article>
           </div>
-          <!-- core -->
-          <div id="mod-f3-core" class="card-compact is-loading" aria-label="F3 · Core tecnico"></div>
-          <!-- tiles bottom -->
+
+          <!-- core F3 -->
+          <div id="mod-f3-core" class="card-compact is-loading" aria-label="F3 · Core"></div>
+
+          <!-- mini tiles bottom -->
           <div id="f3-tiles-bottom" class="f3-tiles">
             <article class="mini-card is-loading" id="f3b-1"></article>
             <article class="mini-card is-loading" id="f3b-2"></article>
@@ -807,16 +505,16 @@
       </section>
 
       <!-- F2 -->
-      <section id="mod-f2" class="mod-f2 card-compact is-loading" aria-label="F2 · Struttura di flussi e posizionamento"></section>
+      <section id="mod-f2" class="mod-f2 card-compact is-loading" aria-label="F2 · Sentiment e Ticker"></section>
 
       <!-- F4 -->
-      <section id="mod-f4" class="mod-f4 card-compact is-loading" aria-label="F4 · Dinamiche intermarket"></section>
+      <section id="mod-f4" class="mod-f4 card-compact is-loading" aria-label="F4 · Intermarket & Intra-Market"></section>
 
       <!-- F5 -->
-      <section id="mod-f5" class="mod-f5 card-compact is-loading" aria-label="F5 · Sintesi tecnica"></section>
+      <section id="mod-f5" class="mod-f5 card-compact is-loading" aria-label="F5 · Resoconto Tecnico"></section>
 
-      <!-- F5b / Validazione lungo periodo -->
-      <section id="mod-f5b" class="mod-f5b strip is-loading" aria-label="F6 · Validazione di lungo periodo"></section>
+      <!-- F5b / Validazione LT -->
+      <section id="mod-f5b" class="mod-f5b strip is-loading" aria-label="F6 · Validazione LT"></section>
     </section>
   </main>
 
@@ -825,25 +523,22 @@
     <footer class="site-footer container py-4">
       <div class="border-t border-[color:var(--footer-br)] pt-3 grid gap-4 md:flex md:items-start md:justify-between">
         <div class="min-w-0">
-          <div class="heading">TRADELIA<span class="text-blue-600">&bull;AI</span></div>
-          <div class="mt-1">Runtime Report · <span id="footer-version">v1.0</span></div>
-          <div class="mt-1">Periodo di analisi: <span id="footer-snapshot">—</span></div>
+          <div class="heading">TRADELIA<span class="text-[color:var(--brand)]">&bull;AI</span></div>
+          <div class="mt-1">Report Runtime · <span id="footer-version">v1.0</span></div>
+          <div class="mt-1">Snapshot: <span id="footer-snapshot">—</span></div>
           <div class="mt-1">Ultimo aggiornamento: <span id="footer-updated">—</span></div>
         </div>
-
         <div class="min-w-0">
           <div class="heading">Metodo</div>
-          <p class="mt-1 text-[13px] leading-[1.45] text-[color:var(--ink)]">
-            Lettura del regime tecnico e della forza settoriale (Fasi 1–2),
-            analisi multi-timeframe dell’asset (Fase 3),
-            dinamiche intermarket (Fase 4),
-            sintesi tecnica (Fase 5),
-            validazione di lungo periodo (Fase 6).
-            Le metriche di qualità dati (Freshness, Affidabilità, Data Integrity, FeedSync)
-            indicano tempestività e affidabilità delle fonti.
+          <p class="mt-1 text-[13px] leading-[1.45]">
+            Fase 1: contesto macro (regime / settore del ticker richiesto).
+            Fase 2: sentiment e flussi.
+            Fase 3: lettura multi-timeframe.
+            Fase 4: intermarket.
+            Fase 5: resoconto tecnico.
+            Fase 6: validazione di lungo periodo.
           </p>
         </div>
-
         <div class="min-w-0">
           <div class="heading">Legale</div>
           <div class="mt-2 flex flex-wrap gap-6">
@@ -851,19 +546,15 @@
             <button class="btn btn-sm" id="btn-mifid-open" type="button">Informativa MiFID</button>
             <button class="btn btn-sm" id="btn-print-2" type="button">Stampa / PDF</button>
           </div>
-          <p class="mt-2 text-[12.5px] opacity-90 text-[color:var(--muted)] leading-[1.45]">
-            Documento ad uso informativo ed educativo. Non costituisce consulenza finanziaria personalizzata,
-            né raccomandazione d'investimento ai sensi della Direttiva 2014/65/UE (MiFID II).
-            Dati e stimoli di analisi possono includere componenti AI.
-          </p>
-          <p class="mt-2 text-[12.5px] opacity-90 text-[color:var(--muted)] leading-[1.45]">
+          <p class="mt-2 text-[12.5px] opacity-90">
             Nessun cookie di profilazione. Preferenze salvate solo in locale.
           </p>
         </div>
       </div>
-      <div class="mt-3 text-[12.5px] opacity-90 leading-[1.45]">
+      <div class="mt-3 text-[12.5px] opacity-90">
         © <span id="footer-year"></span> Tradelia. Tutti i diritti riservati. ·
-        Contatto compliance: <a href="mailto:info@tradelia.org" class="underline hover:opacity-80">info@tradelia.org</a>
+        Contatti:
+        <a href="mailto:info@tradelia.org" class="underline hover:opacity-80">info@tradelia.org</a>
       </div>
     </footer>
   </div>
@@ -923,38 +614,23 @@
     <section class="modal__panel">
       <h3 id="privacy-title" class="modal__title">Informativa Privacy e Trasparenza</h3>
       <div class="modal__text">
-        <p>Il presente documento è prodotto da <strong>Tradelia</strong>. Tradelia non utilizza cookie di profilazione o strumenti di tracciamento pubblicitario.</p>
+        <p>Tradelia AI adotta una politica di <strong>massima trasparenza</strong> e <strong>zero tracciamento</strong>:</p>
         <ul style="margin:.45rem 0 .7rem 1.2rem;list-style:disc">
-          <li>Nessun analytics di terze parti o pixel esterno.</li>
-          <li>Nessuna vendita o condivisione di dati personali a soggetti terzi.</li>
-          <li>Le uniche preferenze memorizzate localmente (tema, consensi) sono salvate in <code>localStorage</code>.</li>
+          <li>Nessun cookie di profilazione o pubblicità, nessun analytics esterno.</li>
+          <li>Nessuna raccolta, vendita o condivisione di dati personali con terze parti.</li>
+          <li>Salviamo solo preferenze locali (tema, consensi) in <code>localStorage</code>.</li>
         </ul>
-        <p style="font-size:12.5px;color:var(--muted);margin-top:.55rem;line-height:1.5">
-          Riferimenti normativi: GDPR (UE 2016/679), Direttiva ePrivacy, Linee guida EDPB.
+        <p style="font-size:12.5px;color:var(--muted);margin-top:.55rem">
+          Rif.: GDPR (UE 2016/679), Direttiva ePrivacy, Linee guida EDPB.
         </p>
       </div>
       <div class="modal__actions">
-        <button class="btn btn-sm" id="privacy-ok" type="button">OK</button>
+        <button class="btn btn-sm" id="privacy-ok">OK</button>
       </div>
     </section>
   </div>
 
-  <!-- FIRST: mountTarget must exist before app.js runs -->
-  <script>
-    window.Tradelia = window.Tradelia || {};
-    window.Tradelia.mountTarget = {
-      F1:  '#mod-f1',     /* F1A/F1B etc. */
-      F1B: '#mod-f1',
-      F2:  '#mod-f2',
-      F3:  '#mod-f3-core',
-      F4:  '#mod-f4',
-      F5:  '#mod-f5',
-      F5B: '#mod-f5b',
-      F6:  '#mod-f5b'     /* se mai lo esponiamo separato o lo agganciamo sotto F5b */
-    };
-  </script>
-
-  <!-- Orchestratore report -->
+  <!-- MAIN ORCHESTRATOR -->
   <script type="module" src="/report/assets/js/app.js"></script>
 
   <!-- Share sheet system -->
@@ -963,18 +639,25 @@
     initShareSystem();
   </script>
 
-  <!-- Inline runtime logic -->
+  <!-- Inline runtime logic / bootstrap -->
   <script>
+    // shorthand
     const $  = (s,r=document)=>r.querySelector(s);
     const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
     const getReportId = ()=> new URL(location.href).searchParams.get('id') || 'sample-id';
+
     const LS = {
       theme:'tradelia.theme',
       privacy:'tradelia.privacy.ack',
       mifid:'tradelia.mifid.accepted'
     };
 
-    // Print
+    // safe icon render
+    function safeCreateIcons(){
+      try{ if(window.lucide){ window.lucide.createIcons(); } }catch(e){}
+    }
+
+    // PRINT
     $('#btn-print')?.addEventListener('click',()=>window.print());
     $('#btn-print-2')?.addEventListener('click',()=>window.print());
 
@@ -984,22 +667,30 @@
       localStorage.setItem(LS.theme,t);
       const btn=$('#btn-theme');
       if(btn){
-        btn.innerHTML = `<i data-lucide="${t==='dark'?'moon':'sun'}"></i><span class="hidden sm:inline">Tema</span>`;
+        btn.innerHTML = `
+          <i data-lucide="${t==='dark'?'moon':'sun'}"></i>
+          <span class="hidden sm:inline">Tema</span>`;
       }
-      if(window.lucide) lucide.createIcons();
+      safeCreateIcons();
     }
+
     (function initTheme(){
       const t=localStorage.getItem(LS.theme);
       if(t==='light'||t==='dark'){
         document.documentElement.dataset.theme=t;
       }
+      // inizializza subito icona corretta
+      const current = document.documentElement.dataset.theme || 'light';
+      setTheme(current);
     })();
+
     $('#btn-theme')?.addEventListener('click',()=>{
-      setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark')
+      const next = document.documentElement.dataset.theme==='dark'?'light':'dark';
+      setTheme(next);
     });
 
-    /* Drawer API (laterale / blocking MiFID) con focus trap */
-    (() => {
+    /* Drawer API (MiFID / Dettagli) */
+    (function setupDrawer(){
       const root      = $('#drawer');
       const panel     = root.querySelector('.drawer__panel');
       const backdrop  = root.querySelector('.drawer__backdrop');
@@ -1049,12 +740,11 @@
         subtitleEl.textContent = s;
         contentEl.innerHTML = html;
 
-        // stato blocking (es. MiFID)
         root.dataset.blocking = blocking ? 'true' : 'false';
-        if (blocking){
+        if(blocking){
           root.classList.add('drawer--blocking');
           document.body.style.overflow='hidden';
-        } else {
+        }else{
           root.classList.remove('drawer--blocking');
           document.body.style.overflow='';
         }
@@ -1062,38 +752,43 @@
         root.setAttribute('aria-hidden','false');
         requestAnimationFrame(()=> root.classList.add('is-open'));
 
-        if (blocking){
+        if(blocking){
           releaseFocusTrap = trapFocus(panel);
-        } else {
+        }else{
           releaseFocusTrap = null;
         }
 
-        if (window.lucide) lucide.createIcons();
+        safeCreateIcons();
+      }
+
+      function reallyClose(){
+        root.setAttribute('aria-hidden','true');
+        document.body.style.overflow='';
+        if(releaseFocusTrap){
+          releaseFocusTrap();
+          releaseFocusTrap = null;
+        }
       }
 
       function close(){
-        if(root.dataset.blocking === 'true') return;
+        // se blocking=true non chiudiamo (MiFID pre-accettazione)
+        if(root.dataset.blocking==='true') return;
 
         root.classList.remove('is-open');
         root.addEventListener('transitionend',()=>{
-          root.setAttribute('aria-hidden','true');
-          document.body.style.overflow='';
-          if (releaseFocusTrap){
-            releaseFocusTrap();
-            releaseFocusTrap = null;
-          }
+          reallyClose();
         },{once:true});
       }
 
       // backdrop click o [data-drawer-close]
       root.addEventListener('click', e => {
         const wantsClose = e.target === backdrop || e.target.closest('[data-drawer-close]');
-        if(wantsClose && root.dataset.blocking!=='true'){
+        if(wantsClose){
           close();
         }
       });
 
-      // ESC chiude se non blocking
+      // ESC chiude solo se non blocking
       document.addEventListener('keydown', e => {
         if(e.key==='Escape' && root.dataset.blocking!=='true'){
           if(root.getAttribute('aria-hidden')==='false'){
@@ -1103,7 +798,7 @@
       });
 
       window.Tradelia = window.Tradelia || {};
-      window.Tradelia.Drawer = { open, close, root };
+      window.Tradelia.Drawer = { open, close, root, reallyClose };
     })();
 
     // Fetch helper
@@ -1120,16 +815,16 @@
     function setToneBar(el, tone){
       if(!el) return;
       el.style.background =
-        tone==='g' ? '#10b981' :
-        tone==='y' ? '#f59e0b' :
-        tone==='r' ? '#ef4444' :
-        '#94a3b8';
+        tone==='g' ? 'var(--tone-g)' :
+        tone==='y' ? 'var(--tone-y)' :
+        tone==='r' ? 'var(--tone-r)' :
+        'var(--tone-n)';
     }
 
     // format date/time in Europe/Rome human style
     function fmtDate(iso){
       if(!iso) return '—';
-      const d = new Date(iso);
+      const d = new Date(iso.replace(' ', 'T')+'Z'); // assumiamo UTC-ish
       const optsDate = { day:'2-digit', month:'2-digit', year:'numeric' };
       const optsTime = { hour:'2-digit', minute:'2-digit' };
       const ds = d.toLocaleDateString('it-IT', optsDate);
@@ -1137,226 +832,243 @@
       return ds + ' ' + ts + ' CET';
     }
 
-    // === METRIC INFO POPUP / MOBILE SHEET ===
-    const pop = $('#popover');
-    const metricSheetOverlay = $('#metric-sheet-overlay');
-    const metricSheetTitle   = $('#metric-sheet-title');
-    const metricSheetBody    = $('#metric-sheet-body');
-    const metricSheetSource  = $('#metric-sheet-source');
-    let glossaryCache = null;
+    /* === METRIC INFO POPUP / MOBILE SHEET === */
+    (function setupMetricInfo(){
+      const pop = $('#popover');
+      const metricSheetOverlay = $('#metric-sheet-overlay');
+      const metricSheetTitle   = $('#metric-sheet-title');
+      const metricSheetBody    = $('#metric-sheet-body');
+      const metricSheetSource  = $('#metric-sheet-source');
+      let glossaryCache = null;
 
-    async function getGlossary(){
-      if(glossaryCache) return glossaryCache;
-      try{
-        const r = await fetch('/report/assets/glossary.json',{cache:'no-store'});
-        glossaryCache = r.ok ? await r.json() : {};
-      }catch{
-        glossaryCache = {};
-      }
-      return glossaryCache;
-    }
-
-    function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
-
-    function showDesktopPopover(btn, entry){
-      $('#popover-title').textContent  = entry.title || '—';
-      $('#popover-text').textContent   = entry.short || '—';
-      $('#popover-source').textContent = entry.source ? `Fonte: ${entry.source}` : '';
-
-      const rect = btn.getBoundingClientRect();
-      const sx = scrollX, sy = scrollY, vw = innerWidth, vh = innerHeight;
-      const popW = Math.min(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--pop-w'))||320, vw*0.92);
-
-      pop.style.width = popW + 'px';
-      pop.style.visibility='hidden';
-      pop.setAttribute('aria-hidden','false');
-      pop.style.display='block';
-
-      const ph = pop.offsetHeight || 160;
-      let left = rect.left + sx - 8;
-      let top  = rect.bottom + sy + 8;
-      const m = 12;
-
-      left = clamp(left, sx + m, sx + vw - popW - m);
-
-      const spaceBelow = (sy + vh) - (rect.bottom + sy);
-      if (spaceBelow < ph + 20){
-        top = rect.top + sy - ph - 10;
-        if (top < sy + m) top = sy + m;
+      async function getGlossary(){
+        if(glossaryCache) return glossaryCache;
+        try{
+          const r = await fetch('/report/assets/glossary.json',{cache:'no-store'});
+          glossaryCache = r.ok ? await r.json() : {};
+        }catch{
+          glossaryCache = {};
+        }
+        return glossaryCache;
       }
 
-      pop.style.left = left + 'px';
-      pop.style.top  = top + 'px';
-      pop.style.visibility='visible';
-    }
+      function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
 
-    function hideDesktopPopover(){
-      pop.style.display='none';
-      pop.setAttribute('aria-hidden','true');
-    }
-
-    function showMobileSheet(entry){
-      metricSheetTitle.textContent  = entry.title || '—';
-      metricSheetBody.textContent   = entry.short || '—';
-      metricSheetSource.textContent = entry.source ? `Fonte: ${entry.source}` : '';
-      metricSheetOverlay.setAttribute('aria-hidden','false');
-      requestAnimationFrame(()=>{
-        metricSheetOverlay.classList.add('is-open');
-      });
-    }
-
-    function hideMobileSheet(){
-      metricSheetOverlay.classList.remove('is-open');
-      metricSheetOverlay.addEventListener('transitionend',()=>{
-        metricSheetOverlay.setAttribute('aria-hidden','true');
-      }, { once:true });
-    }
-
-    document.addEventListener('click', async (e)=>{
-      if (e.target.closest('#popover')) return;
-      if (e.target.closest('#metric-sheet-overlay')) return;
-
-      if (e.target.closest('[data-metric-close]')){
-        hideMobileSheet();
-        return;
+      function hideDesktopPopover(){
+        pop.style.display='none';
+        pop.setAttribute('aria-hidden','true');
       }
 
-      const btn = e.target.closest('.info-btn');
-      if(!btn){
-        hideDesktopPopover();
-        return;
+      function showDesktopPopover(btn, entry){
+        $('#popover-title').textContent  = entry.title || '—';
+        $('#popover-text').textContent   = entry.short || '—';
+        $('#popover-source').textContent = entry.source ? `Fonte: ${entry.source}` : '';
+
+        const rect = btn.getBoundingClientRect();
+        const sx = scrollX, sy = scrollY, vw = innerWidth, vh = innerHeight;
+        const popW = Math.min(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--pop-w'))||320, vw*0.92);
+
+        pop.style.width = popW + 'px';
+        pop.style.visibility='hidden';
+        pop.setAttribute('aria-hidden','false');
+        pop.style.display='block';
+
+        const ph = pop.offsetHeight || 160;
+        let left = rect.left + sx - 8;
+        let top  = rect.bottom + sy + 8;
+        const m = 12;
+
+        left = clamp(left, sx + m, sx + vw - popW - m);
+
+        const spaceBelow = (sy + vh) - (rect.bottom + sy);
+        if (spaceBelow < ph + 20){
+          top = rect.top + sy - ph - 10;
+          if (top < sy + m) top = sy + m;
+        }
+
+        pop.style.left = left + 'px';
+        pop.style.top  = top + 'px';
+        pop.style.visibility='visible';
       }
 
-      const metric = btn.dataset.metric;
-      const g = await getGlossary();
-      const entry = g?.[metric] || { title: metric, short:'—', source:'' };
-
-      if(window.matchMedia('(max-width:639px)').matches){
-        hideDesktopPopover();
-        showMobileSheet(entry);
-      } else {
-        hideMobileSheet();
-        showDesktopPopover(btn, entry);
-      }
-    });
-
-    addEventListener('keydown', e=>{
-      if(e.key==='Escape'){
-        hideDesktopPopover();
-        hideMobileSheet();
-      }
-    });
-
-    $('#popover-close').addEventListener('click', hideDesktopPopover);
-
-    addEventListener('resize', ()=>{
-      hideDesktopPopover();
-      hideMobileSheet();
-    });
-    addEventListener('scroll', ()=>{
-      hideDesktopPopover();
-    }, { passive:true });
-
-    // PRIVACY + MiFID GATE
-    const privacyModal = $('#privacy-modal');
-    function openPrivacy(){
-      privacyModal.setAttribute('aria-hidden','false');
-    }
-    function closePrivacy(){
-      privacyModal.setAttribute('aria-hidden','true');
-    }
-    $('#privacy-ok').addEventListener('click', ()=>{
-      localStorage.setItem(LS.privacy,'1');
-      closePrivacy();
-      if(localStorage.getItem(LS.mifid)!=='1'){
-        openMiFID();
-      }
-    });
-    $('#btn-privacy-open').addEventListener('click', openPrivacy);
-
-    function openMiFID(){
-      const html = `
-        <section style="font-size:13.2px;line-height:1.55">
-          <h3 style="margin:0 0 8px;font-weight:700;display:flex;align-items:center;gap:.5rem">
-            <i data-lucide="shield"></i>
-            <span>Informativa MiFID II e limitazioni d’uso</span>
-          </h3>
-
-          <p>
-            Il presente documento è prodotto da <strong>Tradelia</strong>. Tradelia non è un intermediario autorizzato e non possiede licenze MiFID.
-          </p>
-
-          <p>
-            I contenuti hanno finalità esclusivamente <strong>informativa ed educativa</strong>.
-            Non costituiscono consulenza in materia di investimenti,
-            non sono raccomandazioni personalizzate,
-            e non rappresentano un'offerta o sollecitazione ad acquistare o vendere strumenti finanziari.
-          </p>
-
-          <p>
-            Le analisi, incluse quelle supportate da modelli di intelligenza artificiale, rappresentano valutazioni tecniche e di contesto.
-            Tali analisi non sostituiscono il giudizio professionale di un consulente finanziario abilitato, né devono essere considerate
-            come unica base decisionale.
-          </p>
-
-          <ul style="margin:.2rem 0 .7rem 1.1rem;list-style:disc">
-            <li>Le fonti sono ritenute affidabili ma non si garantiscono accuratezza, completezza o aggiornamento continuo.</li>
-            <li>Scenari e simulazioni sono ipotetici e non rappresentano risultati futuri o performance attese.</li>
-            <li>I mercati finanziari comportano rischi, inclusa la perdita del capitale; l’uso della leva amplifica tali rischi.</li>
-          </ul>
-
-          <p style="font-size:12.5px;color:var(--muted);margin-top:.5rem;line-height:1.5">
-            Riferimenti normativi: MiFID II (2014/65/UE), Reg. Delegato (UE) 2017/565, ESMA, CONSOB.
-          </p>
-
-          <div style="margin-top:.9rem;display:flex;gap:10px;justify-content:flex-end">
-            <button class="btn btn-sm" id="mifid-accept" type="button">Accetto</button>
-          </div>
-        </section>
-      `;
-
-      window.Tradelia?.Drawer?.open({
-        title:'Informativa MiFID',
-        subtitle:'Accesso e limitazioni d’uso',
-        html,
-        blocking:true
-      });
-
-      setTimeout(()=>{
-        $('#mifid-accept')?.addEventListener('click', ()=>{
-          localStorage.setItem(LS.mifid,'1');
-          const root=window.Tradelia?.Drawer?.root;
-          if(root){
-            root.dataset.blocking='false';
-            root.classList.remove('drawer--blocking');
-          }
-          window.Tradelia?.Drawer?.close();
+      function hideMobileSheet(){
+        metricSheetOverlay.classList.remove('is-open');
+        metricSheetOverlay.addEventListener('transitionend',()=>{
+          metricSheetOverlay.setAttribute('aria-hidden','true');
         }, { once:true });
-
-        if(window.lucide) lucide.createIcons();
-      },0);
-    }
-    $('#btn-mifid-open').addEventListener('click', openMiFID);
-
-    // Gating iniziale privacy/MiFID
-    (function gate(){
-      const acceptedPrivacy = localStorage.getItem(LS.privacy)==='1';
-      const acceptedMiFID   = localStorage.getItem(LS.mifid)==='1';
-      if(!acceptedPrivacy){
-        openPrivacy();
-        return;
       }
-      if(!acceptedMiFID){
-        openMiFID();
+
+      function showMobileSheet(entry){
+        metricSheetTitle.textContent  = entry.title || '—';
+        metricSheetBody.textContent   = entry.short || '—';
+        metricSheetSource.textContent = entry.source ? `Fonte: ${entry.source}` : '';
+        metricSheetOverlay.setAttribute('aria-hidden','false');
+        requestAnimationFrame(()=>{
+          metricSheetOverlay.classList.add('is-open');
+        });
       }
+
+      document.addEventListener('click', async (e)=>{
+        if (e.target.closest('#popover')) return;
+        if (e.target.closest('#metric-sheet-overlay')) return;
+
+        if (e.target.closest('[data-metric-close]')){
+          hideMobileSheet();
+          return;
+        }
+
+        const btn = e.target.closest('.info-btn');
+        if(!btn){
+          hideDesktopPopover();
+          return;
+        }
+
+        const metric = btn.dataset.metric;
+        const g = await getGlossary();
+        const entry = g?.[metric] || { title: metric, short:'—', source:'' };
+
+        if(window.matchMedia('(max-width:639px)').matches){
+          hideDesktopPopover();
+          showMobileSheet(entry);
+        } else {
+          hideMobileSheet();
+          showDesktopPopover(btn, entry);
+        }
+      });
+
+      addEventListener('keydown', e=>{
+        if(e.key==='Escape'){
+          hideDesktopPopover();
+          hideMobileSheet();
+        }
+      });
+
+      $('#popover-close').addEventListener('click', hideDesktopPopover);
+
+      addEventListener('resize', ()=>{
+        hideDesktopPopover();
+        hideMobileSheet();
+      });
+      addEventListener('scroll', ()=>{
+        hideDesktopPopover();
+      }, { passive:true });
     })();
 
-    // Carica header.json (hero + footer)
-    (async ()=>{
+    // PRIVACY + MiFID GATE
+    (function gating(){
+      const privacyModal = $('#privacy-modal');
+
+      function openPrivacy(){
+        privacyModal.setAttribute('aria-hidden','false');
+        safeCreateIcons();
+      }
+      function closePrivacy(){
+        privacyModal.setAttribute('aria-hidden','true');
+      }
+
+      $('#privacy-ok').addEventListener('click', ()=>{
+        localStorage.setItem(LS.privacy,'1');
+        closePrivacy();
+        if(localStorage.getItem(LS.mifid)!=='1'){
+          openMiFID();
+        }
+      });
+      $('#btn-privacy-open').addEventListener('click', openPrivacy);
+
+      function openMiFID(){
+        const html = `
+          <section style="font-size:13.6px;line-height:1.6">
+            <h3 style="margin:0 0 8px;font-weight:900;display:flex;align-items:center;gap:.5rem">
+              <i data-lucide="shield"></i>
+              <span>Informativa MiFID II e limitazioni d’uso</span>
+            </h3>
+
+            <p>
+              Questo documento è prodotto dal <strong>team Tradelia</strong>. Tradelia non è un intermediario autorizzato e non possiede licenze MiFID.
+            </p>
+
+            <p>
+              I contenuti sono forniti a fini <strong>informativi ed educativi</strong>. Non costituiscono consulenza in materia di investimenti,
+              raccomandazioni personalizzate, né un'offerta o sollecitazione ad acquistare o vendere strumenti finanziari.
+            </p>
+
+            <p>
+              Non fare affidamento esclusivo su sistemi di intelligenza artificiale (inclusa Tradelia).
+              Usa sempre queste analisi come <strong>strumento aggiuntivo di valutazione</strong>,
+              e confrontati con un consulente finanziario abilitato prima di prendere decisioni operative.
+            </p>
+
+            <ul style="margin:.2rem 0 .7rem 1.1rem;list-style:disc">
+              <li>Le fonti sono ritenute affidabili ma non garantiamo accuratezza, completezza o aggiornamento continuo.</li>
+              <li>Scenari e simulazioni sono ipotetici e non rappresentano risultati futuri né performance attese.</li>
+              <li>I mercati comportano rischi inclusa la perdita del capitale; la leva amplifica i rischi.</li>
+            </ul>
+
+            <p style="font-size:12.5px;color:var(--muted);margin-top:.5rem">
+              Rif.: MiFID II (2014/65/UE), Reg. Delegato (UE) 2017/565, ESMA, CONSOB.
+            </p>
+
+            <div style="margin-top:.9rem;display:flex;gap:10px;justify-content:flex-end">
+              <button class="btn btn-sm" id="mifid-accept" type="button">Accetto</button>
+            </div>
+          </section>
+        `;
+
+        // apri drawer in blocking
+        window.Tradelia?.Drawer?.open({
+          title:'Informativa MiFID',
+          subtitle:'Obbligatoria alla prima apertura',
+          html,
+          blocking:true
+        });
+
+        // attach listener Accetto (sempre, anche se lucide non è pronta)
+        setTimeout(()=>{
+          $('#mifid-accept')?.addEventListener('click', ()=>{
+            localStorage.setItem(LS.mifid,'1');
+
+            // sblocca drawer
+            const root = window.Tradelia?.Drawer?.root;
+            if(root){
+              root.dataset.blocking='false';
+              root.classList.remove('drawer--blocking');
+            }
+
+            // chiudi drawer davvero
+            window.Tradelia?.Drawer?.close();
+            window.Tradelia?.Drawer?.reallyClose?.();
+
+            // riabilita scroll
+            document.body.style.overflow='';
+          }, { once:true });
+
+          safeCreateIcons();
+        },0);
+      }
+
+      $('#btn-mifid-open').addEventListener('click', openMiFID);
+
+      // gating iniziale
+      (function gate(){
+        const acceptedPrivacy = localStorage.getItem(LS.privacy)==='1';
+        const acceptedMiFID   = localStorage.getItem(LS.mifid)==='1';
+        if(!acceptedPrivacy){
+          openPrivacy();
+          return;
+        }
+        if(!acceptedMiFID){
+          openMiFID();
+        }
+      })();
+    })();
+
+    // HEADER DATA: hero + footer
+    (async function initHeader(){
       const base = `/report/reports/${getReportId()}`;
       const h = await loadJSON(`${base}/header.json`);
       if(!h){
-        if(window.lucide) lucide.createIcons();
+        $('#footer-year').textContent = new Date().getFullYear();
+        safeCreateIcons();
         return;
       }
 
@@ -1381,9 +1093,9 @@
 
       // state badge
       const st = (h.State ?? h.ReportState ?? '—');
-      $('#hero-state-text').textContent = st;
+      $('#hero-state').textContent = st;
 
-      // snapshot / periodo analisi
+      // snapshot start/end
       $('#hero-start').textContent = fmtDate(h.Start) || (h.Start ?? '—');
       $('#hero-end').textContent   = fmtDate(h.End)   || (h.End   ?? '—');
       setToneBar($('#tone-snap'),'n');
@@ -1399,7 +1111,7 @@
         setToneBar($('#tone-chg'),'n');
       }
 
-      // price tone always neutral
+      // price tone neutral
       setToneBar($('#tone-price'),'n');
 
       // Freshness
@@ -1411,7 +1123,7 @@
         /T-1/i.test(fresh) ? 'y' : 'r'
       );
 
-      // Confidence / Affidabilità
+      // Confidence
       const confNum = isFinite(+h.ConfidenceFinal) ? (+h.ConfidenceFinal) : NaN;
       $('#hero-confidence').textContent = isFinite(confNum) ? confNum.toFixed(2) : '—';
       if(isFinite(confNum)){
@@ -1433,8 +1145,25 @@
       const v = h.Version || h.Build || h.ReportVersion;
       if(v) $('#footer-version').textContent = v;
 
-      if(window.lucide) lucide.createIcons();
+      safeCreateIcons();
     })();
+
+    // Mount targets for dynamic modules (F1A / F1B etc.)
+    window.Tradelia = window.Tradelia || {};
+    window.Tradelia.mountTarget = {
+      F1:  '#mod-f1',
+      F1A: '#mod-f1',
+      F1B: '#mod-f1',
+      F2:  '#mod-f2',
+      F3:  '#mod-f3-core',
+      F4:  '#mod-f4',
+      F5:  '#mod-f5',
+      F5B: '#mod-f5b',
+      F6:  '#mod-f5b' // se lo esponiamo più avanti o in coda
+    };
+
+    // final icons pass
+    safeCreateIcons();
   </script>
 </body>
 </html>
