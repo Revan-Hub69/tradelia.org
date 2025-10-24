@@ -4,25 +4,26 @@
 //
 // Cosa fa:
 // - recupera l'id del report e chiama mountReport(id) (app.js)
-// - aggiorna footer con headerData
-// - inizializza help tooltip per le metriche "globali" (quelle con data-metric)
+// - aggiorna il footer con headerData
+// - inizializza i tooltip "globali" con data-metric (Freshness, Confidence...)
 // - espone openDrawer/closeDrawer per i moduli (es. F1B)
 // - gestisce chiusura drawer, popover e bottom sheet
 //
-// Nota importante:
-//   F1B gestisce da solo i propri tooltip con data-tooltip.
+// NOTE IMPORTANTI:
+// - F1B usa data-tooltip e gestisce i suoi tooltip da solo (openMetricTooltip in f1b.js).
 //   Qui NON tocchiamo data-tooltip. Qui tocchiamo SOLO data-metric.
-//   Così non sovrascriviamo la logica di F1B.
+// - Il listener che chiude il popover su desktop è stato aggiornato per NON chiudere
+//   quando clicchi un bottone data-tooltip (F1B).
 //
-// Requisiti nel DOM (già presenti in index.html):
+// Requisiti nel DOM:
 //   #drawer
 //   #popover
 //   #metric-sheet-overlay
 //
 // Requisiti globali:
 //   window.Tradelia.mountReport(reportId) definita in app.js
-//   window.Tradelia.headerData valorizzata da app.js
-//   window.Tradelia.glossary opzionale (per i tooltip "data-metric")
+//   window.Tradelia.headerData valorizzata in app.js
+//   window.Tradelia.glossary opzionale (per data-metric)
 //   lucide (icone)
 
 (function(){
@@ -57,7 +58,6 @@
       upEl.textContent = headerData.UpdatedAt;
     }
 
-    // anno footer
     const yearEl = document.getElementById('footer-year');
     if (yearEl){
       yearEl.textContent = new Date().getFullYear();
@@ -65,8 +65,7 @@
   }
 
   /* ---------------------------------------
-   * 3. DRAWER (pannello laterale/bottom che usiamo
-   *    per "Dettagli regime", MiFID, Audit ecc.)
+   * 3. DRAWER (Dettagli regime, MiFID, Audit ecc.)
    * ------------------------------------- */
 
   const drawerEl = document.getElementById('drawer');
@@ -76,15 +75,13 @@
     const panelEl = drawerEl.querySelector('.drawer__panel');
     if (!panelEl) return;
 
-    // se non esiste un footer .drawer__footer aggiungilo in fondo al panel
     let footerEl = drawerEl.querySelector('.drawer__footer');
     if (!footerEl) {
-        footerEl = document.createElement('footer');
-        footerEl.className = 'drawer__footer';
-        panelEl.appendChild(footerEl);
+      footerEl = document.createElement('footer');
+      footerEl.className = 'drawer__footer';
+      panelEl.appendChild(footerEl);
     }
 
-    // render pulsanti footer
     footerEl.innerHTML = `
       ${showAccept ? `
         <button class="drawer-accept-btn btn btn-sm" data-drawer-accept type="button">
@@ -97,17 +94,15 @@
       </button>
     `;
 
-    // click "Chiudi"
     const closeBtn = footerEl.querySelector('[data-drawer-close]');
     if (closeBtn) {
       closeBtn.addEventListener('click', closeDrawer);
     }
 
-    // click "Accetto" (se presente)
     const acceptBtn = footerEl.querySelector('[data-drawer-accept]');
     if (acceptBtn) {
       acceptBtn.addEventListener('click', () => {
-        // per ora: chiude soltanto
+        // per ora "Accetto" = chiudi
         closeDrawer();
       });
     }
@@ -116,25 +111,26 @@
   function openDrawer({ title, subtitle, html, blocking = false, showAccept = false }) {
     if (!drawerEl) return;
 
-    // header -> titolo e sottotitolo
+    // titolo
     const titleWrap = drawerEl.querySelector('#drawer-title');
     const titleSpan = titleWrap ? titleWrap.querySelector('span') : null;
     if (titleSpan){
       titleSpan.textContent = title || 'Dettagli';
     }
 
+    // sottotitolo
     const subEl = drawerEl.querySelector('#drawer-subtitle');
     if (subEl){
       subEl.textContent = subtitle || '';
     }
 
-    // contenuto corpo
+    // contenuto
     const contentEl = drawerEl.querySelector('#drawer-content');
     if (contentEl){
       contentEl.innerHTML = html || '';
     }
 
-    // attributi ARIA / stato
+    // mostra drawer
     drawerEl.setAttribute('aria-hidden','false');
     drawerEl.setAttribute('data-blocking', blocking ? 'true' : 'false');
 
@@ -147,12 +143,12 @@
     drawerEl.setAttribute('aria-hidden','true');
   }
 
-  // chiusura drawer cliccando backdrop o bottoni data-drawer-close
+  // chiusura drawer cliccando backdrop o pulsanti con data-drawer-close
   if (drawerEl){
     drawerEl.addEventListener('click', (ev) => {
       const wantsClose =
         ev.target.matches('[data-drawer-close]') ||
-        ev.target.closest?.('[data-drawer-close]') ||
+        (ev.target.closest && ev.target.closest('[data-drawer-close]')) ||
         ev.target.matches('.drawer__backdrop');
 
       if (wantsClose){
@@ -161,24 +157,21 @@
     });
   }
 
-  // esportiamo globalmente, così i moduli (tipo f1b.js) possono chiamare window.openDrawer()
+  // esponi global
   window.openDrawer = openDrawer;
   window.closeDrawer = closeDrawer;
 
   /* ---------------------------------------
-   * 4. Tooltip "vecchi" con data-metric
-   *    (hero, snapshot, Freshness, Confidence...)
+   * 4. Tooltip "globali" con data-metric
+   *    (Freshness, Confidence nell'hero, ecc.)
    *
-   *    Funziona così:
-   *    - su desktop → #popover vicino al bottone
-   *    - su mobile  → #metric-sheet-overlay come bottom sheet
+   *    Desktop → #popover vicino al bottone
+   *    Mobile  → #metric-sheet-overlay come bottom sheet
    *
-   *    Questo blocco NON tocca i bottoni F1B,
-   *    perché F1B usa data-tooltip e si autogestisce.
+   *    Questo blocco NON tocca i bottoni con data-tooltip (F1B).
+   *    F1B si gestisce da solo.
    * ------------------------------------- */
-
   function initMetricHelp(){
-    // DOM global tooltip elements
     const popover         = document.getElementById('popover');
     const popoverTitle    = document.getElementById('popover-title');
     const popoverText     = document.getElementById('popover-text');
@@ -190,9 +183,8 @@
     const sheetSource     = document.getElementById('metric-sheet-source');
     const sheetBody       = document.getElementById('metric-sheet-body');
 
-    // helper: prendi testo metrica dal glossary globale
-    // window.Tradelia.glossary è opzionale e ha forma tipo:
-    // glossary["Freshness"] = { short:"...", long:"...", source:"..." }
+    // glossary globale:
+    // Tradelia.glossary["Freshness"] = { short:"...", long:"...", source:"..." }
     function getMetricInfo(key){
       const g = window.Tradelia?.glossary || {};
       return g[key] || {
@@ -211,15 +203,15 @@
       if (popoverText)   popoverText.textContent   = data.short || '—';
       if (popoverSource) popoverSource.textContent = data.source || '';
 
-      // posizione popover vicino al bottone
+      // posiziona popover sotto il bottone
       const rect   = btn.getBoundingClientRect();
-      const popW   = 320; // stimato = --pop-w
+      const popW   = 320; // approx --pop-w
       const margin = 8;
 
       let left = rect.left + window.scrollX;
       let top  = rect.bottom + window.scrollY + margin;
 
-      // clamp a destra
+      // evita overflow a destra
       const maxLeft = window.scrollX + window.innerWidth - popW - 8;
       if (left > maxLeft){
         left = maxLeft;
@@ -256,9 +248,7 @@
       }
     }
 
-    // 4a. bind click SOLO sui bottoni con data-metric
-    // (questo è importante per non interferire con F1B,
-    //  che usa data-tooltip e li gestisce da solo)
+    // bind click SOLO ai bottoni globali (hero ecc.) che hanno data-metric
     const infoBtns = document.querySelectorAll('.info-btn[data-metric]');
     infoBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -271,22 +261,27 @@
       });
     });
 
-    // 4b. chiusura popover (desktop)
+    // chiusura popover manuale
     if (popoverCloseBtn){
       popoverCloseBtn.addEventListener('click', closePopover);
     }
 
-    // chiudi popover cliccando fuori / scroll
+    // chiudi popover cliccando fuori o scrollando
     document.addEventListener('click', (ev) => {
       if (!popover) return;
       if (popover.getAttribute('aria-hidden') === 'true') return;
 
-      // se clicco dentro al popover → non chiudere
+      // se clicco DENTRO il popover, non chiudere
       if (popover.contains(ev.target)) return;
 
-      // se clicco su .info-btn[data-metric] → gestito sopra, non chiudere prima
+      // se clicco su un bottone info-btn[data-metric] (hero) -> non chiudere in anticipo
       if (ev.target.closest && ev.target.closest('.info-btn[data-metric]')) return;
 
+      // se clicco su un bottone info-btn[data-tooltip] (F1B) -> non chiudere in anticipo
+      // questo evita che il popover dei tooltip F1B si chiuda immediatamente su desktop
+      if (ev.target.closest && ev.target.closest('.info-btn[data-tooltip]')) return;
+
+      // altrimenti chiudi
       closePopover();
     });
 
@@ -296,13 +291,13 @@
       }
     }, { passive: true });
 
-    // 4c. chiusura bottom sheet (mobile)
-    // elementi che chiudono: [data-metric-close] e il backdrop sheet stesso
+    // bottom sheet mobile chiusura:
+    // chiudiamo se clicco backdrop o pulsante con data-metric-close
     if (sheetOverlay){
       sheetOverlay.addEventListener('click', (ev) => {
         const wantsClose =
           ev.target.matches('[data-metric-close]') ||
-          ev.target.closest?.('[data-metric-close]') ||
+          (ev.target.closest && ev.target.closest('[data-metric-close]')) ||
           ev.target === sheetOverlay;
 
         if (wantsClose){
@@ -313,12 +308,10 @@
   }
 
   /* ---------------------------------------
-   * 5. Avvio complessivo ("boot")
-   *
-   *    - Legge reportId
-   *    - mountReport(reportId)
-   *    - popola footer
-   *    - setup tooltip metriche globali
+   * 5. Boot totale:
+   *    - mountReport
+   *    - footer
+   *    - tooltip globali
    *    - lucide icons
    * ------------------------------------- */
   async function boot(){
@@ -335,12 +328,12 @@
       console.error('Tradelia.mountReport non disponibile. Controlla app.js');
     }
 
-    // aggiorna footer (Version, snapshot, updatedAt)
+    // aggiorna footer
     if (window.Tradelia && window.Tradelia.headerData){
       populateFooterInfo(window.Tradelia.headerData);
     }
 
-    // attiva tooltip per metriche globali (Freshness, Confidence ecc.)
+    // attiva tooltip globali (Freshness, Confidence...)
     initMetricHelp();
 
     // lucide icons refresh
@@ -353,7 +346,7 @@
     }
   }
 
-  // kickstart immediato
+  // kickstart
   boot();
 
 })();
