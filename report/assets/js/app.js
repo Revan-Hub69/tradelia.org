@@ -21,13 +21,12 @@ async function fetchJSON(url) {
   }
 }
 
-// formattazioni base numeriche (hero ecc.)
+// format numeri per hero
 function fmtNum(v, decimals = 2) {
   if (v === null || v === undefined || Number.isNaN(v)) return "—";
   const n = Number(v);
   return n.toFixed(decimals).replace('.', ',');
 }
-
 function fmtPct(v, decimals = 2) {
   if (v === null || v === undefined || Number.isNaN(v)) return "—";
   const n = Number(v);
@@ -40,15 +39,9 @@ function setText(id, value) {
   if (el) el.textContent = value;
 }
 
-function setHTML(id, value) {
-  const el = document.getElementById(id);
-  if (el) el.innerHTML = value;
-}
-
 // ------------------------------------------------------------
-// HERO MOUNT
+// HERO
 // ------------------------------------------------------------
-
 function mountHero(headerData) {
   if (!headerData) return;
 
@@ -65,40 +58,37 @@ function mountHero(headerData) {
     State
   } = headerData;
 
-  // ticker / venue
+  // Ticker / venue
   setText("hero-ticker", Ticker || "—");
   setText("hero-venue", Venue || "—");
 
-  // price + change
+  // Prezzo / Δ%
   const chgPctStr = fmtPct(ChangePct, 2);
   setText("hero-price", Price !== undefined ? fmtNum(Price, 2) : "—");
   setText("hero-change", chgPctStr);
 
-  // badge stato
+  // Badge stato
   setText("hero-state", State || "—");
 
-  // meta snapshot
+  // Snapshot
   setText("hero-start", Start || "—");
   setText("hero-end", End || "—");
 
-  // meta price
-  setText("hero-price2", Price !== undefined ? fmtNum(Price, 2) : "—");
+  // Price (meta)
+  const heroPrice2 = document.getElementById("hero-price2");
+  if (heroPrice2) heroPrice2.textContent = (Price !== undefined ? fmtNum(Price,2) : "—");
 
-  // meta Δ%
-  setText("hero-change2", chgPctStr);
+  // Δ% (meta)
+  const heroChg2 = document.getElementById("hero-change2");
+  if (heroChg2) heroChg2.textContent = chgPctStr;
 
-  // meta currency
+  // Currency / Freshness / Confidence
   setText("hero-ccy", Currency || "—");
-
-  // meta freshness
   setText("hero-freshness", FreshnessLabel || "—");
-
-  // meta confidence
   setText("hero-confidence", ConfidenceFinal !== undefined ? fmtNum(ConfidenceFinal,2) : "—");
 
   // footer snapshot / updated
   setText("footer-snapshot", Start || "—");
-  // "Ultimo aggiornamento": se abbiamo End mettiamo End, sennò Start
   setText("footer-updated", End || Start || "—");
 
   // colore up/down per change
@@ -117,16 +107,10 @@ function mountHero(headerData) {
     }
   }
 
-  // tonebars di base nel hero
-  const toneSnap  = document.getElementById("tone-snap");
-  const tonePrice = document.getElementById("tone-price");
-  const toneChg   = document.getElementById("tone-chg");
-  const toneCcy   = document.getElementById("tone-ccy");
-  const toneFresh = document.getElementById("tone-fresh");
-  const toneConf  = document.getElementById("tone-conf");
+  // tonebars
+  const toneChg  = document.getElementById("tone-chg");
+  const toneConf = document.getElementById("tone-conf");
 
-  // logica semplice:
-  // ChangePct >=0 -> verde, <0 -> rosso
   if (toneChg) {
     toneChg.style.backgroundColor =
       typeof ChangePct === "number"
@@ -134,7 +118,6 @@ function mountHero(headerData) {
         : "var(--tone-n)";
   }
 
-  // ConfidenceFinal >=0.75 -> verde, <0.5 -> rosso, altrimenti neutro
   if (toneConf) {
     const cf = Number(ConfidenceFinal);
     toneConf.style.backgroundColor =
@@ -145,7 +128,11 @@ function mountHero(headerData) {
         : "var(--tone-n)";
   }
 
-  // gli altri li mettiamo neutri
+  // altri neutri
+  const toneSnap  = document.getElementById("tone-snap");
+  const tonePrice = document.getElementById("tone-price");
+  const toneCcy   = document.getElementById("tone-ccy");
+  const toneFresh = document.getElementById("tone-fresh");
   if (toneSnap)  toneSnap.style.backgroundColor  = "var(--tone-n)";
   if (tonePrice) tonePrice.style.backgroundColor = "var(--tone-n)";
   if (toneCcy)   toneCcy.style.backgroundColor   = "var(--tone-n)";
@@ -153,117 +140,14 @@ function mountHero(headerData) {
 }
 
 // ------------------------------------------------------------
-// PLACEHOLDER MODULES
+// Manifest
 // ------------------------------------------------------------
-//
-// Quando un modulo (F2, F3, F4, F5, F5B, F6...) non è ancora implementato
-// o non ha dati, invece di lasciare "CARICAMENTO..." brutto
-// mostriamo una card pulita e consistente.
-//
-// L'idea è dare contesto ("cos'è questo modulo") e far capire che è in sviluppo.
-// ------------------------------------------------------------
-
-function renderModulePlaceholder(modId) {
-  // Contenuti descrittivi personalizzati per ciascun modulo.
-  // Qui ci mettiamo dei testi MiFID-safe e informativi.
-  let title   = modId;
-  let desc    = "Modulo in sviluppo.";
-  let pill    = "in sviluppo";
-  let pillClr = "var(--muted)"; // testo scuro su bg soft
-
-  switch (modId) {
-    case "F2":
-      title = "F2 · Sentiment / Flussi";
-      desc  = "Mostrerà sentiment aggregato e flussi sul ticker / settore per validare o contraddire il regime di mercato.";
-      break;
-    case "F3":
-      title = "F3 · Multi-TF Tecnico";
-      desc  = "Mostrerà la lettura tecnica su più timeframe (es. daily / weekly) senza raccomandazioni operative.";
-      break;
-    case "F4":
-      title = "F4 · Intermarket";
-      desc  = "Metterà in relazione equity, bond, FX e commodity per capire dove si sta spostando il rischio.";
-      break;
-    case "F5":
-      title = "F5 · Resoconto Tecnico";
-      desc  = "Riassumerà i punti tecnici chiave e le aree di attenzione, con linguaggio descrittivo MiFID-friendly.";
-      break;
-    case "F5B":
-      title = "F5B · Validazione LT";
-      desc  = "Valuterà se il quadro attuale è sostenibile nel medio-lungo periodo o se è solo tattico/temporaneo.";
-      break;
-    case "F6":
-      title = "F6 · Broker Regolamentati";
-      desc  = "Panoramica di intermediari autorizzati e requisiti di adeguatezza/appropriatezza. Nessuna promozione commerciale.";
-      break;
-    default:
-      // fallback generico
-      title = modId + " · In sviluppo";
-      desc  = "Questo modulo non è ancora disponibile in questa build.";
-      break;
-  }
-
-  // struttura visiva:
-  // - titolo bold + pill
-  // - testo descrizione
-  // - bottone disabled "Anteprima"
-  //
-  // card look coerente con le altre (border, radius, shadow)
-  // ma height contenuta (non pare un buco vuoto gigante)
-  return `
-    <div
-      class="flex flex-col justify-between h-full text-[13px] leading-[1.45] text-[color:var(--ink)]"
-      style="
-        min-height:140px;
-        font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      "
-    >
-      <div>
-        <div class="flex flex-wrap items-start gap-2 mb-2">
-          <div class="text-[14px] font-extrabold leading-[1.4] text-[color:var(--ink)]">
-            ${escapeHtml(title)}
-          </div>
-          <span
-            class="px-[6px] py-[3px] rounded-md text-[11px] font-semibold leading-none border"
-            style="
-              background:var(--surface-card-alt);
-              border:1px solid var(--br-card);
-              color:${pillClr};
-            "
-          >
-            ${escapeHtml(pill)}
-          </span>
-        </div>
-        <div class="text-[12.5px] text-[color:var(--muted)] leading-[1.45]">
-          ${escapeHtml(desc)}
-        </div>
-      </div>
-
-      <div class="mt-4">
-        <button
-          class="btn btn-sm opacity-60 cursor-not-allowed"
-          type="button"
-          disabled
-          aria-disabled="true"
-        >
-          Anteprima
-        </button>
-      </div>
-    </div>
-  `;
-}
-
-// ------------------------------------------------------------
-// MANIFEST LOADING / NORMALIZATION
-// ------------------------------------------------------------
-
 async function loadManifest(reportId) {
-  // prova a leggere manifest.json dal report
   const url = `/report/reports/${reportId}/manifest.json`;
   const mf = await fetchJSON(url);
   if (mf) return mf;
 
-  // fallback se non esiste manifest.json
+  // fallback se manca manifest.json
   return {
     id: reportId,
     title: "Tradelia · Report Runtime",
@@ -281,16 +165,13 @@ async function loadManifest(reportId) {
 }
 
 function normalizeManifest(manifest, reportId) {
-  // costruiamo lista finale dei moduli in ordine
   const order = Array.isArray(manifest.order)
     ? manifest.order.slice()
     : Object.keys(manifest.modules || {});
 
-  // normalizziamo i path json per modulo
   const outMods = {};
   for (const key of Object.keys(manifest.modules || {})) {
     let path = manifest.modules[key];
-    // se è un path relativo tipo "f1b.json", prepend della cartella report
     if (typeof path === "string" && !path.startsWith("http") && !path.startsWith("/")) {
       path = `/report/reports/${reportId}/${path}`;
     }
@@ -299,73 +180,180 @@ function normalizeManifest(manifest, reportId) {
 
   return {
     id: manifest.id || reportId,
-    title: manifest.title || "",
     order,
     modules: outMods
   };
 }
 
 // ------------------------------------------------------------
-// MODULE MOUNT
-// ------------------------------------------------------------
-//
-// 1. recupera il container (#mod-f1, #mod-f2, ecc.) da window.Tradelia.mountTarget
-// 2. scarica i dati JSON del modulo
-// 3. prova ad importare dinamicamente /report/assets/js/modules/{modId in lower}.js
-// 4. se esiste renderCard() → usa il modulo vero
-//    se non esiste → card placeholder bella invece di "CARICAMENTO..." brutto
+// Sezione Header builder (riusabile per ogni capitolo F1..F6)
 // ------------------------------------------------------------
 
-async function mountModule(modId, jsonUrl, reportId) {
-  // 1. trova container DOM
-  const targetMap = (window.Tradelia && window.Tradelia.mountTarget) || {};
-  const selector = targetMap[modId];
-  if (!selector) {
-    console.warn(`Nessun mountTarget per ${modId}`);
-    return;
-  }
-  const container = document.querySelector(selector);
-  if (!container) {
-    console.warn(`Container ${selector} non trovato per ${modId}`);
-    return;
+function renderSectionHeader({ badge, title, desc, state }) {
+  // state: "active" | "dev"
+  // badge: "F1", "F2", ...
+  // title: es. "Contesto iniziale / Regime di mercato"
+  // desc:  paragrafo descrizione
+  // state pill:
+  const pillState = state === "active"
+    ? `<span class="module-status-pill" data-state="active">ATTIVO</span>`
+    : `<span class="module-status-pill">IN SVILUPPO</span>`;
+
+  return `
+    <header class="section-headline">
+      <div class="section-head-left">
+        <div class="section-head-topline">
+          <span class="section-badge">${escapeHtml(badge)}</span>
+          <span class="section-title-main">${escapeHtml(title)}</span>
+        </div>
+        <div class="section-desc">
+          ${escapeHtml(desc || "")}
+        </div>
+      </div>
+      <div class="section-head-right">
+        ${pillState}
+      </div>
+    </header>
+  `;
+}
+
+// ------------------------------------------------------------
+// F1 content builder (usa F1A o F1B dinamico)
+// ------------------------------------------------------------
+
+async function mountF1Section(manifest, reportId) {
+  const sec = document.getElementById("sec-f1");
+  if (!sec) return;
+
+  // qual è il primo modulo in order? (F1A o F1B)
+  const firstModId = manifest.order[0] || "F1B";
+  const jsonUrl    = manifest.modules[firstModId];
+
+  // header della sezione F1 (sempre stesso titolo per l'utente)
+  const f1HeaderHTML = renderSectionHeader({
+    badge: "F1",
+    title: "Contesto iniziale / Regime di mercato",
+    desc: "Quadro di rischio e contesto del titolo/mercato al momento dello snapshot. Dati descrittivi, finalità informative.",
+    state: "active"
+  });
+
+  // proviamo a importare dinamicamente la logica del modulo vero
+  let modData = null;
+  if (jsonUrl) {
+    modData = await fetchJSON(jsonUrl);
   }
 
-  // 2. fetch dei dati del modulo (es. /report/reports/sample-id/f1b.json)
-  const data = await fetchJSON(jsonUrl);
-
-  // 3. import dinamico del renderer specifico (F1B -> f1b.js, F5B -> f5b.js, ecc.)
-  const moduleFile = modId.toLowerCase();
   let mod;
-  let importFailed = false;
-
   try {
-    mod = await import(`/report/assets/js/modules/${moduleFile}.js`);
+    mod = await import(`/report/assets/js/modules/${firstModId.toLowerCase()}.js`);
   } catch (err) {
-    importFailed = true;
-    console.warn("Import modulo fallita:", modId, err);
+    console.warn("F1 import fallita per", firstModId, err);
+    mod = null;
   }
 
-  // Se l'import è fallito, o se il modulo importato NON espone renderCard,
-  // usiamo il placeholder "in sviluppo".
-  if (importFailed || !mod || typeof mod.renderCard !== "function") {
-    container.innerHTML = renderModulePlaceholder(modId);
-    container.classList.remove("is-loading");
-    return;
+  let bodyHTML = "";
+  if (mod && typeof mod.renderCard === "function") {
+    // lasciamo al modulo F1A/F1B il compito di costruire il body
+    // ma ATTENZIONE: vogliamo solo il contenuto, non di nuovo l'intestazione F1.
+    bodyHTML = mod.renderCard(modData, { modId: firstModId, reportId });
+  } else {
+    bodyHTML = `
+      <div class="text-[13px] leading-[1.45] text-[color:var(--muted)]">
+        Dati di contesto non disponibili.
+      </div>
+    `;
   }
 
-  // 4. Se abbiamo renderCard(), usiamo il modulo vero
-  const html = mod.renderCard(data, { modId, reportId });
-  container.innerHTML = html;
-  container.classList.remove("is-loading");
+  sec.innerHTML = f1HeaderHTML + bodyHTML;
+  sec.classList.remove("is-loading");
 
-  // 5. bind interazioni (drawer audit ecc.)
-  if (typeof mod.bindCard === "function") {
+  // se il modulo esporta bindCard lo eseguiamo (per drawer, tooltip, ecc.)
+  if (mod && typeof mod.bindCard === "function") {
     try {
-      mod.bindCard(container, data, { modId, reportId });
+      mod.bindCard(sec, modData, { modId: firstModId, reportId });
     } catch (bindErr) {
-      console.warn("bindCard error per", modId, bindErr);
+      console.warn("bindCard error in F1:", bindErr);
     }
   }
+}
+
+// ------------------------------------------------------------
+// Altre sezioni placeholder istituzionali
+// ------------------------------------------------------------
+
+function sectionCopy(modId) {
+  switch (modId) {
+    case "F2":
+      return {
+        title: "Sentiment e flussi",
+        desc:  "Sentiment aggregato e flussi rilevanti sul titolo / settore, per capire se il mercato sta accumulando rischio o riducendo esposizione. Nessuna raccomandazione operativa.",
+      };
+    case "F3":
+      return {
+        title: "Analisi tecnica multi-timeframe",
+        desc:  "Lettura tecnica su più orizzonti temporali (es. daily / weekly). Focus su struttura, momentum, zone di interesse. Linguaggio descrittivo, non esecutivo.",
+      };
+    case "F4":
+      return {
+        title: "Relazioni intermarket",
+        desc:  "Confronto fra equity, bond, FX e commodity per valutare dove si sta spostando il rischio macro e se il contesto favorisce o frena il tema osservato.",
+      };
+    case "F5":
+      return {
+        title: "Resoconto tecnico",
+        desc:  "Sintesi del quadro tecnico attuale: fattori di forza/debolezza da monitorare. Materiale a scopo informativo/formativo, senza indicazioni di entrata o uscita.",
+      };
+    case "F5B":
+      return {
+        title: "Validazione LT (orizzonte medio-lungo)",
+        desc:  "Verifica se il quadro è sostenibile nel tempo o se è puramente tattico. Attenzione a fattori macro-strutturali, non solo al movimento di breve.",
+      };
+    case "F6":
+      return {
+        title: "Broker selezionati",
+        desc:  "Panoramica di intermediari vigilati/autorizzati. Nessuna promozione commerciale. Prima di qualsiasi operatività reale valgono adeguatezza/appropriatezza MiFID.",
+      };
+    default:
+      return {
+        title: modId,
+        desc:  "Modulo in sviluppo.",
+      };
+  }
+}
+
+function mountGenericSection(modId) {
+  const secMap = {
+    "F2": "sec-f2",
+    "F3": "sec-f3",
+    "F4": "sec-f4",
+    "F5": "sec-f5",
+    "F5B":"sec-f5b",
+    "F6": "sec-f6"
+  };
+  const secId = secMap[modId];
+  if (!secId) return;
+
+  const secEl = document.getElementById(secId);
+  if (!secEl) return;
+
+  const { title, desc } = sectionCopy(modId);
+
+  const headerHTML = renderSectionHeader({
+    badge: modId,
+    title,
+    desc,
+    state: "dev"
+  });
+
+  // corpo placeholder istituzionale (descrizione soltanto)
+  const bodyHTML = `
+    <div class="text-[13px] leading-[1.45] text-[color:var(--muted)]">
+      Modulo in sviluppo.
+    </div>
+  `;
+
+  secEl.innerHTML = headerHTML + bodyHTML;
+  secEl.classList.remove("is-loading");
 }
 
 // ------------------------------------------------------------
@@ -375,37 +363,47 @@ async function mountModule(modId, jsonUrl, reportId) {
 async function mountReport() {
   const reportId = getReportIdFromURL();
 
-  // 1. header
+  // header.json -> hero
   const headerData = await fetchJSON(`/report/reports/${reportId}/header.json`);
   if (headerData) {
     mountHero(headerData);
+    window.Tradelia = window.Tradelia || {};
+    window.Tradelia.headerData = headerData;
   } else {
     console.warn("Header mancante per", reportId);
   }
 
-  // 2. manifest
+  // manifest
   const rawManifest = await loadManifest(reportId);
   const manifest = normalizeManifest(rawManifest, reportId);
 
-  // 3. moduli in ordine
-  for (const modId of manifest.order) {
-    const jsonUrl = manifest.modules[modId];
-    if (!jsonUrl) {
-      console.warn(`Nessun jsonUrl per ${modId}`);
-      continue;
-    }
-    mountModule(modId, jsonUrl, reportId);
+  // salva manifest globalmente (facoltativo, utile a debug)
+  window.Tradelia = window.Tradelia || {};
+  window.Tradelia.manifest = manifest;
+
+  // F1 dinamico (F1A o F1B)
+  await mountF1Section(manifest, reportId);
+
+  // F2..F6 placeholder istituzionali
+  // Notare: anche se manifest.order è tipo ["F1B","F2","F3",...]
+  // noi montiamo sempre tutte le altre sezioni note, in ordine fisso.
+  ["F2","F3","F4","F5","F5B","F6"].forEach(id => {
+    mountGenericSection(id);
+  });
+
+  // footer year
+  const yearEl = document.getElementById('footer-year');
+  if (yearEl){
+    yearEl.textContent = new Date().getFullYear();
   }
 }
 
 // kick
 mountReport();
 
-
 // ------------------------------------------------------------
-// MINI ESCAPE HELPERS USATI DA renderModulePlaceholder
+// Escape helper (usato nei template di intestazione sezione)
 // ------------------------------------------------------------
-
 function escapeHtml(str) {
   if (str === undefined || str === null) return "";
   return String(str)
