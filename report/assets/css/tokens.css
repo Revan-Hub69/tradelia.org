@@ -1,161 +1,175 @@
-/* =========================================================
-   Tradelia · Design Tokens — v2026 Institutional (compact)
-   Path: /report/assets/css/tokens.css
-   ========================================================= */
+/*
+  Tradelia · tokens.css (pro, responsive)
+  - Design tokens (light/dark)
+  - Primitive utilities
+  - Components: btn, tables, cards, badges
+  - Skeleton + focus + print helpers
+*/
 
-/* ---------- Palette Base (Light) ---------- */
-:root {
-  --bg:   #f6f8fb;
-  --card: #ffffff;
-  --ink:  #0e172a;
-  --muted:#64748b;
-  --br:   #e2e8f0;
-  --ring: #38bdf8;
-
+/* =========================
+   TOKENS — LIGHT THEME
+   ========================= */
+:root{
   /* Brand */
-  --brand:  #0369a1;
-  --accent: #0ea5e9;
+  --brand-50:#eef2ff; --brand-100:#e0e7ff; --brand-200:#c7d2fe; --brand-300:#a5b4fc; --brand-400:#818cf8;
+  --brand-500:#6366f1; --brand-600:#4f46e5; --brand-700:#4338ca; --brand-800:#3730a3; --brand-900:#312e81;
 
-  /* Bottoni (light) */
-  --btn-bg:       linear-gradient(#fff, #f8fafc);
-  --btn-bg-hover: linear-gradient(#fff, #f1f5f9);
-
-  /* Stati */
-  --success-ink:#065f46; --success-bg:#ecfdf5; --success-br:#a7f3d0;
-  --warn-ink:#92400e;    --warn-bg:#fffbeb;   --warn-br:#fcd34d;
-  --danger-ink:#7f1d1d;  --danger-bg:#fef2f2; --danger-br:#fecaca;
-  --neutral-ink:#334155; --neutral-bg:#f1f5f9;--neutral-br:#e2e8f0;
+  /* Base Ink & BG */
+  --ink:#0f172a;         /* text */
+  --ink-2:#111827;       /* stronger */
+  --muted:#6b7280;       /* secondary text */
+  --bg:#f3f5f9;          /* app background */
+  --card:#ffffff;        /* surface */
+  --br:#e5e7eb;          /* border neutral */
 
   /* Elevation */
-  --shadow-1: 0 3px 10px rgba(2,6,23,.06);
-  --shadow-2: 0 14px 36px rgba(2,6,23,.12);
+  --shadow-1: 0 4px 16px rgba(2,6,23,.06);
+  --shadow-2: 0 10px 30px rgba(2,6,23,.12);
 
-  /* Tint & border per dare peso alle card */
-  --card-br-strong: color-mix(in oklab, var(--br) 92%, #0b1220 8%);
-  --card-bg-tint:   color-mix(in oklab, var(--card) 98%, #f6f6f9 2%);
-
-  /* Tipografia */
-  --fs-11: 11px; --fs-12: 12px; --fs-13: 13px; --fs-135: 13.5px; --fs-14: 14px;
+  /* Status tones */
+  --tone-green:#10b981; --tone-amber:#f59e0b; --tone-red:#ef4444; --tone-gray:#94a3b8; --tone-blue:#3b82f6;
 
   /* Footer */
-  --footer-bg: color-mix(in oklab, var(--card) 88%, #0e1729 12%);
-  --footer-br: color-mix(in oklab, var(--br) 70%, #0e1729 30%);
+  --footer-bg:#f8fafc; --footer-br:#e2e8f0;
+
+  /* Buttons */
+  --btn-bg:#0b1220; --btn-ink:#ffffff; --btn-br:rgba(255,255,255,.08);
+  --btn-bg-ghost:#ffffff; --btn-ink-ghost:#0b1220; --btn-br-ghost:#e5e7eb;
+
+  /* Tables */
+  --row-alt:#fafbff; --row-hover:rgba(2,6,23,.03);
 }
 
-/* ---------- Dark Mode ---------- */
-html[data-theme="dark"] {
-  --bg:#0b1220; --card:#0f172a; --ink:#e5e7eb; --muted:#94a3b8; --br:#1e293b; --ring:#38bdf8;
-
-  /* Bottoni (dark) */
-  --btn-bg:       linear-gradient(#0f172a, #0b1220);
-  --btn-bg-hover: linear-gradient(#111827, #0f172a);
-
-  /* Stati dark */
-  --success-ink:#bbf7d0; --success-bg:#052e2b; --success-br:#134e4a;
-  --warn-ink:#fcd34d;    --warn-bg:#3b2a17;   --warn-br:#4a341d;
-  --danger-ink:#fca5a5;  --danger-bg:#3a1d1d; --danger-br:#4c2323;
-
-  /* Elevation dark */
-  --shadow-1: 0 2px 10px rgba(0,0,0,.35);
-  --shadow-2: 0 16px 44px rgba(0,0,0,.5);
-
-  /* Peso card */
-  --card-br-strong: color-mix(in oklab, var(--br) 88%, white 12%);
-  --card-bg-tint:   color-mix(in oklab, var(--card) 96%, white 4%);
-
-  /* Footer (dark) */
-  --footer-bg: color-mix(in oklab, var(--card) 86%, white 14%);
-  --footer-br: color-mix(in oklab, var(--br) 70%, white 30%);
+/* =========================
+   TOKENS — DARK THEME
+   ========================= */
+html[data-theme="dark"]{
+  --ink:#e6e8ef; --ink-2:#f1f2f7; --muted:#a5adbd;
+  --bg:#0b1220; --card:#0f182a; --br:#1f2a44;
+  --shadow-1: 0 6px 18px rgba(0,0,0,.45);
+  --shadow-2: 0 14px 34px rgba(0,0,0,.6);
+  --footer-bg:#0c1426; --footer-br:#1a2440;
+  --btn-bg:#1c2b4a; --btn-ink:#dfe7ff; --btn-br:rgba(255,255,255,.08);
+  --btn-bg-ghost:#0f182a; --btn-ink-ghost:#dfe7ff; --btn-br-ghost:#203052;
+  --row-alt:rgba(255,255,255,.02); --row-hover:rgba(255,255,255,.04);
 }
 
-/* ---------- Fallback preferenza OS ---------- */
-@media (prefers-color-scheme: dark) {
-  html:not([data-theme]) { background: var(--bg); color: var(--ink); }
+/* =========================
+   PRIMITIVES & UTILS
+   ========================= */
+*{box-sizing:border-box}
+img,svg{display:block;max-width:100%}
+code,kbd,pre,samp{font-family:ui-monospace,Menlo,Monaco,Consolas,"Courier New",monospace}
+.hr{height:1px;background:var(--br)}
+.u-muted{color:var(--muted)}
+.u-mono{font-family:ui-monospace,Menlo,Monaco,Consolas,"Courier New",monospace}
+.u-right{text-align:right}
+.u-nowrap{white-space:nowrap}
+.u-scroll{overflow:auto}
+
+/* Focus ring coerente */
+:focus-visible{outline:2px solid var(--brand-600); outline-offset:2px}
+
+/* Links */
+a{color:var(--brand-600); text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* =========================
+   BUTTONS
+   ========================= */
+.btn{
+  --_bg:var(--btn-bg); --_ink:var(--btn-ink); --_br:var(--btn-br);
+  display:inline-flex; align-items:center; gap:.5rem;
+  height:36px; padding:0 .8rem; border-radius:10px;
+  background:var(--_bg); color:var(--_ink);
+  border:1px solid var(--_br); box-shadow:0 1px 0 rgba(255,255,255,.04) inset;
+  font-weight:600; font-size:13.5px; letter-spacing:.1px; cursor:pointer;
+  transition:transform .08s ease, box-shadow .15s ease, opacity .15s ease;
 }
+.btn:hover{opacity:.96}
+.btn:active{transform:translateY(1px)}
+.btn i{width:18px;height:18px}
 
-/* =========================================================
-   Componenti comuni · Card, KPI, Badge, Pulsanti
-   ========================================================= */
+.btn-secondary{ --_bg:var(--btn-bg-ghost); --_ink:var(--btn-ink-ghost); --_br:var(--btn-br-ghost) }
+.btn-ghost{ background:transparent; color:var(--ink); border:1px dashed var(--br) }
 
-/* Card compatta con “peso” */
-.card-compact {
-  background: var(--card-bg-tint);
-  border: 1px solid var(--card-br-strong);
-  border-radius: 14px;
-  padding: 12px 14px;
-  box-shadow: var(--shadow-1);
+.btn-sm{ height:30px; padding:0 .65rem; border-radius:9px; font-size:12.5px }
+.btn-lg{ height:42px; padding:0 1rem; border-radius:12px; font-size:14.5px }
+
+/* Pills / Badge */
+.badge{ display:inline-flex; align-items:center; gap:.4rem; height:24px; padding:0 .55rem; border-radius:999px; border:1px solid var(--br); background:var(--card); font-size:12px }
+.badge.green{ border-color:color-mix(in oklab, var(--tone-green) 40%, var(--br)); color:var(--tone-green) }
+.badge.amber{ border-color:color-mix(in oklab, var(--tone-amber) 40%, var(--br)); color:var(--tone-amber) }
+.badge.red{ border-color:color-mix(in oklab, var(--tone-red) 40%, var(--br)); color:var(--tone-red) }
+.badge.gray{ border-color:var(--br); color:var(--muted) }
+
+/* =========================
+   CARDS & STRIPS
+   ========================= */
+.card-compact{
+  background:var(--card); border:1px solid var(--br); border-radius:12px; box-shadow:var(--shadow-1);
+  padding:10px 12px
 }
-.card--emphasis { /* per F1B (prima card) */
-  box-shadow: var(--shadow-2);
-  border-color: color-mix(in oklab, var(--brand) 28%, var(--card-br-strong) 72%);
+.strip{ background:var(--card); border:1px solid var(--br); border-radius:12px; box-shadow:var(--shadow-1); padding:10px 12px }
+
+.card-header{ display:flex; align-items:center; justify-content:space-between; gap:.8rem; margin:0 0 8px }
+.card-title{ font-weight:800; font-size:14px; letter-spacing:.2px }
+.card-sub{ color:var(--muted); font-size:12.5px }
+
+/* =========================
+   TABLES PRO
+   ========================= */
+.table-wrap{ position:relative; overflow:auto; border-radius:10px; border:1px solid var(--br); background:var(--card); box-shadow:var(--shadow-1) }
+.table{ width:100%; border-collapse:separate; border-spacing:0 }
+.table th,.table td{ padding:10px 12px; font-size:13px; vertical-align:middle }
+.table thead th{ position:sticky; top:0; z-index:1; background:color-mix(in oklab, var(--card) 96%, #fff 4%); border-bottom:1px solid var(--br); font-weight:800; text-align:left }
+.table tbody tr:nth-child(odd){ background:var(--row-alt) }
+.table tbody tr:hover{ background:var(--row-hover) }
+.table td.num, .table th.num{ text-align:right; font-variant-numeric:tabular-nums }
+.table .chip{ display:inline-flex; align-items:center; gap:.35rem; padding:.15rem .45rem; border-radius:999px; border:1px solid var(--br); font-size:12px; background:var(--card) }
+.table .chip.g{ color:var(--tone-green); border-color:color-mix(in oklab, var(--tone-green) 35%, var(--br)) }
+.table .chip.y{ color:var(--tone-amber); border-color:color-mix(in oklab, var(--tone-amber) 35%, var(--br)) }
+.table .chip.r{ color:var(--tone-red); border-color:color-mix(in oklab, var(--tone-red) 35%, var(--br)) }
+
+/* Sort arrows minimal */
+.sortable{ cursor:pointer; user-select:none }
+.sortable::after{ content:""; display:inline-block; width:10px; height:10px; margin-left:4px; background:currentColor; clip-path: polygon(50% 25%, 0 75%, 100% 75%) ; opacity:.25 }
+.sortable.asc::after{ clip-path: polygon(50% 75%, 0 25%, 100% 25%) }
+
+/* Sticky helper for inner sub-headers */
+.sticky-sub{ position:sticky; top:34px; background:var(--card); border-bottom:1px solid var(--br); z-index:1 }
+
+/* =========================
+   SKELETON
+   ========================= */
+.is-loading{ position:relative; overflow:hidden }
+.is-loading::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.08) 50%, transparent 100%);
+  animation: shimmer 1.3s infinite;
 }
+@keyframes shimmer{ 0%{ transform:translateX(-100%) } 100%{ transform:translateX(100%) } }
 
-/* Rail superiore (tono regime) */
-.card-rail { height:4px; border-radius:12px 12px 0 0; margin:-12px -14px 10px; background: var(--neutral-bg); }
-.tone-g .card-rail{ background:#10b981 }
-.tone-y .card-rail{ background:#f59e0b }
-.tone-r .card-rail{ background:#ef4444 }
-.tone-n .card-rail{ background:#94a3b8 }
+/* =========================
+   FORMS (minimi per filtri)
+   ========================= */
+.input{ height:36px; padding:0 .6rem; border:1px solid var(--br); border-radius:10px; background:var(--card); color:var(--ink); font-size:13px }
+.select{ height:36px; padding:0 .6rem; border:1px solid var(--br); border-radius:10px; background:var(--card); color:var(--ink); font-size:13px }
+.checkbox{ width:16px; height:16px; accent-color:var(--brand-600) }
 
-.card-compact__head {
-  display:flex; justify-content:space-between; align-items:center;
-  padding-bottom:6px;
-  border-bottom:1px solid color-mix(in oklab, var(--br) 70%, transparent);
+/* =========================
+   POPOVER & OVERLAYS
+   ========================= */
+.popover{ border:1px solid color-mix(in oklab, var(--br) 85%, transparent); border-radius:12px; box-shadow:0 18px 44px rgba(2,6,23,.18) }
+.modal__panel{ border:1px solid var(--br); box-shadow:var(--shadow-2) }
+.drawer__panel{ border-left:1px solid var(--br); box-shadow:var(--shadow-2) }
+
+/* =========================
+   PRINT HELPERS
+   ========================= */
+@media print{
+  :root{ --ink:#000; --bg:#fff; --card:#fff; --br:#ddd }
+  a{text-decoration:none; color:inherit}
+  .table thead th{ background:#fff }
+  .btn,.badge{ display:none!important }
 }
-.card-compact__title { font-weight:800; font-size:14px; letter-spacing:.2px; color:var(--ink); }
-.card-compact__body  { padding-top:8px; }
-
-/* KPI “pillole” */
-.kpi { display:flex; align-items:center; gap:.35rem; font-size:12.5px; color:var(--ink) }
-.kpi .dot { width:8px; height:8px; border-radius:999px }
-.dot-g{ background:#10b981 } .dot-y{ background:#f59e0b } .dot-r{ background:#ef4444 } .dot-n{ background:#94a3b8 }
-
-/* Badge semaforo */
-.badge {
-  font-size: var(--fs-11);
-  padding: .1rem .45rem;
-  border-radius: 999px;
-  border: 1px solid var(--br);
-  background: var(--neutral-bg);
-}
-.badge--g{ color:var(--success-ink); background:var(--success-bg); border-color:var(--success-br) }
-.badge--y{ color:var(--warn-ink);    background:var(--warn-bg);    border-color:var(--warn-br) }
-.badge--r{ color:var(--danger-ink);  background:var(--danger-bg);  border-color:var(--danger-br) }
-.badge--n{ color:var(--neutral-ink); background:var(--neutral-bg); border-color:var(--neutral-br) }
-.badge.badge--n code{ font-weight:800 } /* chip settoriali */
-
-/* Bottoni */
-.btn, .u-btn {
-  display:inline-flex; align-items:center; gap:.45rem;
-  padding:.38rem .6rem; border-radius:.6rem;
-  font-weight:600; font-size:13.5px;
-  border:1px solid var(--br);
-  background:var(--btn-bg); box-shadow:var(--shadow-1);
-  transition: background .2s ease, transform .08s ease;
-}
-.btn:hover,.u-btn:hover{ background:var(--btn-bg-hover); transform:translateY(-1px) }
-.btn:active,.u-btn:active{ transform:translateY(0) }
-.btn i,.u-btn i{ width:18px; height:18px }
-
-/* Tipografia micro */
-.text-muted-11{ font-size:var(--fs-11); color:var(--muted) }
-.text-muted-12{ font-size:var(--fs-12); color:var(--muted) }
-
-/* Accessibilità & Focus */
-:where(a,button,[role="button"],.btn,.u-btn):focus-visible{
-  outline:2px solid var(--ring);
-  outline-offset:2px;
-  box-shadow:0 0 0 3px color-mix(in oklab, var(--ring) 25%, transparent)
-}
-.visually-hidden{
-  position:absolute!important; clip:rect(1px,1px,1px,1px);
-  width:1px; height:1px; overflow:hidden; white-space:nowrap
-}
-
-/* Tabelle compatte (drawer) */
-.table-compact{ width:100%; border-collapse:collapse; font-size:13px }
-.table-compact th, .table-compact td{ padding:6px 8px; border-bottom:1px solid var(--br) }
-.table-compact thead th{ color:var(--muted); font-weight:700 }
-
-/* Stampa */
-@media print { .badge, .kpi, .card-compact { box-shadow:none!important; border-color:#ccc!important } }
