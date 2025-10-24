@@ -14,7 +14,7 @@
   <!-- Tailwind (CDN runtime JIT) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Lucide (solo per icone dinamiche dentro i moduli/table) -->
+  <!-- Lucide (icone runtime) -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <!-- CSS core -->
@@ -308,15 +308,6 @@
       .f3-tiles{grid-template-columns:1fr;}
     }
 
-    /* Footer wrapper */
-    .footer-wrap{
-      background:var(--surface-footer);
-      border-top:1px solid var(--footer-br);
-      margin-top:24px
-    }
-    .site-footer{color:var(--muted)}
-    .site-footer .heading{color:var(--ink);font-weight:800}
-
     /* SHARE OVERLAY (desktop default, mobile override sotto) */
     .share-overlay{
       position:fixed;
@@ -452,7 +443,7 @@
       height:14px;
     }
 
-    /* Mobile override: share sheet come bottom-sheet attaccata in basso */
+    /* Mobile override: share sheet bottom-sheet */
     @media(max-width:640px){
       .share-sheet{
         position:absolute;
@@ -504,7 +495,6 @@
         <!-- PRINT BTN -->
         <button id="btn-print" class="btn" aria-label="Stampa / PDF">
           <span class="icon-16" aria-hidden="true">
-            <!-- printer icon inline -->
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/>
             </svg>
@@ -515,7 +505,6 @@
         <!-- SHARE BTN -->
         <button id="btn-share" class="btn" aria-label="Condividi">
           <span class="icon-16" aria-hidden="true">
-            <!-- share-2 icon inline -->
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98"/><path d="M15.41 6.51l-6.82 3.98"/>
             </svg>
@@ -526,7 +515,6 @@
         <!-- THEME BTN -->
         <button id="btn-theme" class="btn" aria-label="Tema">
           <span class="theme-icon" aria-hidden="true">
-            <!-- default sun icon; JS lo sostituisce se dark -->
             <svg data-theme-icon="sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="5"></circle>
               <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
@@ -643,9 +631,9 @@
       <p class="section-sub">
         Il framework Tradelia procede top-down: regime di mercato / contesto del ticker (F1),
         sentiment e flussi (F2), multi-timeframe tecnico (F3),
-        intermarket (F4), resoconto tecnico operativo (F5),
+        intermarket (F4), resoconto tecnico (F5),
         validazione di lungo periodo (F5B),
-        e profilo / broker regolamentati (F6).
+        e panoramica dei broker regolamentati (F6).
       </p>
       <nav class="phase-nav" aria-label="Fasi del framework">
         <a href="#mod-f1">F1 · CONTESTO INIZIALE</a>
@@ -654,16 +642,16 @@
         <a href="#mod-f4">F4 · INTERMARKET</a>
         <a href="#mod-f5">F5 · RESOCONTO TECNICO</a>
         <a href="#mod-f5b">F5B · VALIDAZIONE LT</a>
-        <a href="#mod-f6">F6 · BROKER SELEZIONATI</a>
+        <a href="#mod-f6">F6 · BROKER REGOLAMENTATI</a>
       </nav>
     </section>
 
     <!-- GRIGLIA MODULI -->
     <section class="mod-grid" aria-label="Moduli del Report">
-      <!-- F1 (F1A o F1B montati qui) -->
+      <!-- F1 -->
       <section id="mod-f1" class="mod-f1 terminal is-loading" aria-label="F1 · Contesto Iniziale"></section>
 
-      <!-- F3 centrale (con tiles sopra/sotto e core al centro) -->
+      <!-- F3 centrale -->
       <section id="mod-f3" class="mod-f3" aria-label="F3 · Analisi Multi-TF">
         <div class="f3-wrap">
           <!-- mini tiles top -->
@@ -694,11 +682,11 @@
       <!-- F5 -->
       <section id="mod-f5" class="mod-f5 card-compact is-loading" aria-label="F5 · Resoconto Tecnico"></section>
 
-      <!-- F5B / Validazione LT -->
+      <!-- F5B -->
       <section id="mod-f5b" class="mod-f5b strip is-loading" aria-label="F5B · Validazione LT"></section>
 
-      <!-- F6 / Broker selezionati -->
-      <section id="mod-f6" class="mod-f6 strip is-loading" aria-label="F6 · Broker selezionati"></section>
+      <!-- F6 -->
+      <section id="mod-f6" class="mod-f6 strip is-loading" aria-label="F6 · Broker Regolamentati"></section>
     </section>
   </main>
 
@@ -707,25 +695,25 @@
     <footer class="site-footer container py-4">
       <div class="border-t border-[color:var(--footer-br)] pt-3 grid gap-4 md:flex md:items-start md:justify-between">
         <div class="min-w-0">
-          <div class="heading">TRADELIA<span class="text-[color:var(--brand)]">&bull;AI</span></div>
+          <div class="heading text-[color:var(--ink)] font-extrabold">TRADELIA<span class="text-[color:var(--brand)]">&bull;AI</span></div>
           <div class="mt-1">Report Runtime · <span id="footer-version">v1.0</span></div>
           <div class="mt-1">Snapshot: <span id="footer-snapshot">—</span></div>
           <div class="mt-1">Ultimo aggiornamento: <span id="footer-updated">—</span></div>
         </div>
         <div class="min-w-0">
-          <div class="heading">Metodo</div>
+          <div class="heading text-[color:var(--ink)] font-extrabold">Metodo</div>
           <p class="mt-1 text-[13px] leading-[1.45]">
             F1 = regime / settore / contesto ticker richiesto.<br/>
             F2 = sentiment & flussi.<br/>
             F3 = lettura multi-timeframe.<br/>
             F4 = intermarket.<br/>
-            F5 = resoconto tecnico operativo.<br/>
+            F5 = resoconto tecnico.<br/>
             F5B = validazione lungo termine.<br/>
-            F6 = broker selezionati (profilazione & regolamentazione).
+            F6 = broker regolamentati (panoramica canali autorizzati, non consulenza personalizzata).
           </p>
         </div>
         <div class="min-w-0">
-          <div class="heading">Legale</div>
+          <div class="heading text-[color:var(--ink)] font-extrabold">Legale</div>
           <div class="mt-2 flex flex-wrap gap-6">
             <button class="btn btn-sm" id="btn-privacy-open" type="button">Privacy</button>
             <button class="btn btn-sm" id="btn-mifid-open" type="button">Informativa MiFID</button>
@@ -744,14 +732,14 @@
     </footer>
   </div>
 
-  <!-- DRAWER (dettagli / MiFID blocking) -->
+  <!-- DRAWER (MiFID / Dettagli) -->
   <div id="drawer" class="drawer noprint" aria-hidden="true" data-blocking="false" aria-label="Pannello dettagli">
     <div class="drawer__backdrop" data-drawer-close></div>
+
     <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
       <header class="drawer__header">
         <div class="min-w-0">
           <h2 id="drawer-title" class="drawer__title">
-            <!-- shield icon inline (per MiFID) default -->
             <svg class="inline-block" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
             </svg>
@@ -759,8 +747,8 @@
           </h2>
           <p id="drawer-subtitle" class="drawer__subtitle">—</p>
         </div>
+
         <button class="btn btn-sm" data-drawer-close aria-label="Chiudi">
-          <!-- x icon inline -->
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -768,7 +756,14 @@
           <span class="hidden sm:inline">Chiudi</span>
         </button>
       </header>
+
       <div id="drawer-content" class="drawer__content"></div>
+
+      <footer class="drawer__footer">
+        <button class="btn btn-sm drawer-accept-btn" type="button">
+          Accetto e continuo
+        </button>
+      </footer>
     </aside>
   </div>
 
@@ -779,7 +774,6 @@
     <div class="popover__source" id="popover-source">—</div>
     <div class="popover__actions">
       <button id="popover-close" class="btn btn-sm" type="button">
-        <!-- x icon inline -->
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -796,7 +790,6 @@
       <header class="metric-sheet__header">
         <div class="metric-sheet__titlewrap">
           <div class="metric-sheet__title">
-            <!-- info icon inline -->
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"></circle>
               <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -807,7 +800,6 @@
           <div class="metric-sheet__source" id="metric-sheet-source">—</div>
         </div>
         <button class="metric-sheet__closebtn" data-metric-close aria-label="Chiudi dettaglio metrica">
-          <!-- x icon inline -->
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -842,7 +834,7 @@
     </section>
   </div>
 
-  <!-- SHARE OVERLAY (desktop modal / mobile bottom sheet) -->
+  <!-- SHARE OVERLAY -->
   <div id="share-overlay" class="share-overlay noprint" aria-hidden="true">
     <div class="share-overlay__backdrop" data-share-close></div>
     <section class="share-sheet" role="dialog" aria-modal="true" aria-labelledby="share-title">
@@ -852,7 +844,6 @@
           <div id="share-desc" class="share-sheet__subtitle">Link diretto + social</div>
         </div>
         <button class="share-close-btn" data-share-close aria-label="Chiudi condivisione">
-          <!-- x icon inline -->
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -861,7 +852,6 @@
       </header>
 
       <div class="share-sheet__list">
-        <!-- LinkedIn -->
         <button class="share-btn" data-share-svc="linkedin" aria-label="Condividi su LinkedIn">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.4 8.4h4.1V24H.4zM8.34 8.4h3.93v2.12h.06c.55-1.04 1.9-2.12 3.9-2.12 4.17 0 4.94 2.74 4.94 6.3V24h-4.1v-7.5c0-1.79-.03-4.1-2.5-4.1-2.5 0-2.88 1.95-2.88 4v7.6H8.34z"/>
@@ -869,7 +859,6 @@
           <span>LinkedIn</span>
         </button>
 
-        <!-- X / Twitter -->
         <button class="share-btn" data-share-svc="twitter" aria-label="Condividi su X">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M18.244 2H21.5l-7.51 8.59L22 22h-6.563l-5.15-6.543L4.66 22H1.4l8.06-9.21L2 2h6.69l4.66 5.907L18.245 2zm-2.43 17.14h1.82L8.29 4.72H6.34l9.47 14.42z"/>
@@ -877,7 +866,6 @@
           <span>X</span>
         </button>
 
-        <!-- Reddit -->
         <button class="share-btn" data-share-svc="reddit" aria-label="Condividi su Reddit">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <circle cx="9.04" cy="13" r="1.5"></circle>
@@ -887,7 +875,6 @@
           <span>Reddit</span>
         </button>
 
-        <!-- Copia link (anche fallback universale) -->
         <button class="share-btn" data-share-svc="copy" aria-label="Copia link">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -910,7 +897,7 @@
     </section>
   </div>
 
-  <!-- ========== INLINE SCRIPT: Drawer / Privacy / MiFID / Print / Share Hook Basics ========== -->
+  <!-- ========== INLINE SCRIPT CORE: Drawer / Privacy / MiFID / Print / Share / Theme ========== -->
   <script type="module">
     // drawer logic (MiFID / dettagli)
     const drawer      = document.getElementById('drawer');
@@ -919,24 +906,32 @@
     const drawerBody  = document.getElementById('drawer-content');
     const closeBtns   = drawer?.querySelectorAll('[data-drawer-close]');
     const backdrop    = drawer?.querySelector('.drawer__backdrop');
+    const acceptBtn   = drawer?.querySelector('.drawer-accept-btn');
 
-    function openDrawer({ title, subtitle, html, blocking=false }) {
+    function openDrawer({ title, subtitle, html, blocking=false, showAccept=false }) {
       if (!drawer) return;
+
+      // blocca scroll pagina e porta viewport in alto
+      if (blocking) {
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+        // scrollTo instant fallback
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      }
+
       drawer.setAttribute('aria-hidden','false');
       drawer.setAttribute('data-blocking', blocking ? 'true' : 'false');
 
-      // titolo
-      if (drawerTitle) {
-        const span = drawerTitle.querySelector('span');
-        if (span) span.textContent = title || 'Dettagli';
-      }
+      const span = drawerTitle?.querySelector('span');
+      if (span) span.textContent = title || 'Dettagli';
 
       if (drawerSub)  drawerSub.textContent = subtitle || '—';
       if (drawerBody) drawerBody.innerHTML  = html || '';
 
-      if (blocking) {
-        document.documentElement.style.overflow = 'hidden';
-        document.body.style.overflow = 'hidden';
+      // mostra/nascondi footer con "Accetto"
+      const footerEl = drawer.querySelector('.drawer__footer');
+      if (footerEl) {
+        footerEl.style.display = showAccept ? 'flex' : 'none';
       }
     }
 
@@ -948,10 +943,16 @@
       document.body.style.overflow = '';
     }
 
+    // chiusura drawer da [data-drawer-close] e backdrop
     closeBtns?.forEach(btn => {
       btn.addEventListener('click', closeDrawer);
     });
     backdrop?.addEventListener('click', closeDrawer);
+
+    // chiusura drawer da "Accetto e continuo"
+    if (acceptBtn) {
+      acceptBtn.addEventListener('click', closeDrawer);
+    }
 
     // Privacy modal logic
     const privacyModal = document.getElementById('privacy-modal');
@@ -968,7 +969,7 @@
         privacyModal.setAttribute('aria-hidden','true');
       });
     }
-    // close privacy modal also if user clicks backdrop
+    // chiudi privacy cliccando backdrop
     const privacyBackdrop = privacyModal?.querySelector('.modal__backdrop');
     if (privacyBackdrop) {
       privacyBackdrop.addEventListener('click', () => {
@@ -982,19 +983,46 @@
       btnMifid.addEventListener('click', () => {
         openDrawer({
           title: 'Informativa MiFID',
-          subtitle: 'Avvertenze regolamentari',
+          subtitle: 'Avvertenze regolamentari e limiti di responsabilità',
           blocking: true,
+          showAccept: true,
           html: `
-            <p class="text-[13px] leading-[1.45] text-[color:var(--ink)]">
-              Questo materiale è informativo / educativo e non costituisce:
-              raccomandazione personalizzata, consulenza finanziaria, sollecitazione
-              al pubblico risparmio o offerta di strumenti finanziari.
-            </p>
-            <p class="mt-3 text-[12.5px] leading-[1.4] text-[color:var(--muted)]">
-              Riferimenti normativi: MiFID II, ESMA, CONSOB.
-              Verifica sempre adeguatezza e appropriatezza rispetto al tuo profilo
-              di rischio, alla tua esperienza, e alla tua situazione patrimoniale e fiscale.
-            </p>
+            <div class="text-[13px] leading-[1.45] text-[color:var(--ink)] space-y-3">
+              <p>
+                Il contenuto fornito da Tradelia ha finalità <strong>informative e formative</strong>.
+                Non costituisce in alcun modo:
+              </p>
+              <ul class="list-disc pl-4">
+                <li><strong>raccomandazione personalizzata</strong> o consulenza in materia di investimenti;</li>
+                <li><strong>consulenza finanziaria individuale</strong> adeguata al profilo del singolo utente;</li>
+                <li><strong>sollecitazione al pubblico risparmio</strong>, offerta al pubblico o invito diretto all'acquisto/vendita di strumenti finanziari;</li>
+                <li><strong>istruzione operativa/esecutiva</strong> su come e quando intervenire sul mercato.</li>
+              </ul>
+
+              <p>
+                Le valutazioni su strumenti, settori, volatilità, liquidità, sentiment, rischio evento,
+                intermarket e broker regolamentati sono presentate come
+                <strong>scenari di mercato di carattere generale</strong>.
+                Non tengono conto della tua situazione personale, patrimoniale o fiscale,
+                della tua esperienza e conoscenza finanziaria, del tuo orizzonte temporale
+                o della tua tolleranza al rischio.
+              </p>
+
+              <p>
+                Prima di qualunque decisione reale, è tua responsabilità verificare (in autonomia
+                o con un consulente abilitato) l'<strong>adeguatezza</strong> e l'<strong>appropriatezza</strong>
+                rispetto al tuo profilo MiFID II, inclusi: capacità di sostenere perdite,
+                obiettivi finanziari, situazione reddituale/patrimoniale, esigenze fiscali.
+              </p>
+
+              <p class="text-[12.5px] text-[color:var(--muted)] leading-[1.4]">
+                Riferimenti normativi: MiFID II, ESMA, CONSOB.
+                Tradelia non è un intermediario autorizzato alla prestazione di consulenza personalizzata.
+                Questo materiale non sostituisce test di appropriatezza/suitability,
+                né procedure KYC/AML. L'uso delle informazioni implica l'accettazione
+                di questi limiti.
+              </p>
+            </div>
           `
         });
       });
@@ -1007,7 +1035,7 @@
     if (btnPrint)  btnPrint.addEventListener('click', handlePrint);
     if (btnPrint2) btnPrint2.addEventListener('click', handlePrint);
 
-    // Share basic open/close toggle (dettaglio avanzato handled da share.js)
+    // Share open/close
     const shareOverlay = document.getElementById('share-overlay');
     const btnShare     = document.getElementById('btn-share');
     const shareCloseEls= shareOverlay?.querySelectorAll('[data-share-close]');
@@ -1027,7 +1055,7 @@
       el.addEventListener('click', closeShare);
     });
 
-    // Theme toggle stub (expects tokens.css to react to [data-theme])
+    // Theme toggle
     const btnTheme = document.getElementById('btn-theme');
     if (btnTheme){
       btnTheme.addEventListener('click', () => {
@@ -1036,7 +1064,7 @@
         const next = current === 'light' ? 'dark' : 'light';
         htmlEl.setAttribute('data-theme', next);
 
-        // icona tema (sun/moon)
+        // icona tema swap
         const themeIconWrap = btnTheme.querySelector('.theme-icon');
         if (themeIconWrap){
           themeIconWrap.innerHTML = next === 'dark'
@@ -1067,7 +1095,6 @@
 
   <!-- ========== MAPPATURA TARGET MODULI PRIMA DI app.js ========== -->
   <script type="module">
-    // Espone mapping così app.js sa dove montare ogni blocco
     window.Tradelia = window.Tradelia || {};
     window.Tradelia.mountTarget = {
       F1:  '#mod-f1',
@@ -1082,16 +1109,16 @@
     };
   </script>
 
-  <!-- MAIN ORCHESTRATOR (carica dati report, monta F1..F6, popola hero, ecc.) -->
+  <!-- MAIN ORCHESTRATOR -->
   <script type="module" src="/report/assets/js/app.js"></script>
 
-  <!-- Share controller avanzato (copia link, social open ecc.) -->
+  <!-- Share controller avanzato -->
   <script type="module">
     import { initShareSystem } from '/report/assets/js/components/share.js';
     initShareSystem();
   </script>
 
-  <!-- Inline runtime bootstrap aggiuntivo (se serve logica extra tipo hero header-ticker.js, mountReport(), ecc.) -->
+  <!-- Bootstrap finale runtime -->
   <script src="/report/assets/js/bootstrap-inline.js" type="module"></script>
 </body>
 </html>
