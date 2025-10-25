@@ -24,7 +24,7 @@
   --surface-page:        oklab(98% 0 0);
   --surface-card:        oklab(100% 0 0);
   --surface-card-alt:    oklab(98% 0 0);
-  --surface-card-elev:   oklab(100% 0 0 / .9); /* per overlay elevati */
+  --surface-card-elev:   oklab(100% 0 0 / .9); /* overlay elevati */
   --surface-panel-bg:    oklab(99% 0 0);       /* corpo drawer */
   --surface-panel-head:  oklab(97% 0 0);       /* header drawer */
   --surface-footer:      oklab(97% 0 0);
@@ -53,7 +53,7 @@
   --tone-g:       oklab(55% -0.1 0.1);   /* verde istituzionale */
   --tone-r:       oklab(55% 0.13 0.04);  /* rosso rischio */
   --tone-n:       oklab(55% 0 0);        /* neutro / grafite */
-  --tone-warn:    oklab(75% 0.05 0.10);  /* amber per attenzione */
+  --tone-warn:    oklab(75% 0.05 0.10);  /* amber / attenzione */
 
   /* layout tokens */
   --radius-card:     12px;
@@ -83,9 +83,9 @@ html[data-theme="dark"] {
   --surface-page:        oklab(18% 0 0);
   --surface-card:        oklab(22% 0 0);
   --surface-card-alt:    oklab(24% 0 0);
-  --surface-card-elev:   oklab(26% 0 0);        /* sopra card base */
-  --surface-panel-bg:    oklab(22% 0 0);        /* corpo drawer */
-  --surface-panel-head:  oklab(26% 0 0 / .8);   /* header drawer */
+  --surface-card-elev:   oklab(26% 0 0);
+  --surface-panel-bg:    oklab(22% 0 0);
+  --surface-panel-head:  oklab(26% 0 0 / .8);
   --surface-footer:      oklab(20% 0 0);
 
   --br-soft:          oklab(32% 0 0);
@@ -125,7 +125,8 @@ body {
 
 /* lock scrolling when drawers / metric modal open */
 body.body--lock {
-  overflow: hidden;
+  overflow:hidden;
+  touch-action:none;
 }
 
 /* =========================================================
@@ -215,19 +216,10 @@ body.body--lock {
   height:16px;
   display:block;
 }
+.metric-flag--pos   { color: var(--tone-g); }
+.metric-flag--warn  { color: var(--tone-warn); }
+.metric-flag--neg   { color: var(--tone-r); }
 
-/* color semantic via parent class */
-.metric-flag--pos {
-  color: var(--tone-g);
-}
-.metric-flag--warn {
-  color: var(--tone-warn);
-}
-.metric-flag--neg {
-  color: var(--tone-r);
-}
-
-/* stroke styles used inside the inline SVGs */
 .metric-flag svg .ring-stroke-1 {
   fill:none;
   stroke:currentColor;
@@ -272,25 +264,6 @@ body.body--lock {
   stroke-opacity:.9;
 }
 
-/* stampa → icone piccole in nero */
-@media print {
-  .metric-flag,
-  .metric-flag--pos,
-  .metric-flag--warn,
-  .metric-flag--neg {
-    color:#000 !important;
-    stroke:#000 !important;
-  }
-  .metric-flag svg .ring-stroke-1,
-  .metric-flag svg .ring-stroke-2,
-  .metric-flag svg .mark-stroke-1,
-  .metric-flag svg .mark-stroke-2,
-  .metric-flag svg .dot-stroke-1 {
-    stroke:#000 !important;
-    stroke-opacity:.6 !important;
-  }
-}
-
 /* =========================================================
    SKETCH STATUS BADGE (icona "a mano" grande in F1 / drawer)
    ========================================================= */
@@ -310,29 +283,9 @@ body.body--lock {
   height:32px;
   display:block;
 }
-.regime-sketch-icon--pos {
-  color: var(--tone-g);
-}
-.regime-sketch-icon--warn {
-  color: var(--tone-warn);
-}
-.regime-sketch-icon--neg {
-  color: var(--tone-r);
-}
-
-/* stampa → tratto nero/grigio */
-@media print {
-  .regime-sketch-icon,
-  .regime-sketch-icon--pos,
-  .regime-sketch-icon--warn,
-  .regime-sketch-icon--neg {
-    color:#000 !important;
-  }
-  .regime-sketch-icon svg path {
-    stroke:#000 !important;
-    stroke-opacity:.6 !important;
-  }
-}
+.regime-sketch-icon--pos  { color: var(--tone-g); }
+.regime-sketch-icon--warn { color: var(--tone-warn); }
+.regime-sketch-icon--neg  { color: var(--tone-r); }
 
 /* =========================================================
    PILL STANCE REGIME (StrategyMode stance badge)
@@ -347,15 +300,10 @@ body.body--lock {
   line-height:1.2;
   border-radius:var(--radius-card-sm);
   padding:.3rem .5rem;
-  border:1px solid var(--br-card);
-  background:var(--surface-card-alt);
-  color:var(--ink);
-  box-shadow:var(--shadow-card);
-
-  /* default neutro */
-  border-color:var(--tone-n);
-  color:var(--tone-n);
+  border:1px solid var(--tone-n);
   background:color-mix(in oklab, var(--tone-n) 10%, transparent);
+  color:var(--tone-n);
+  box-shadow:var(--shadow-card);
 }
 .regime-stance-pill--pos {
   border-color:var(--tone-g);
@@ -376,20 +324,6 @@ body.body--lock {
   border-color:var(--tone-n);
   color:var(--tone-n);
   background:color-mix(in oklab, var(--tone-n) 10%, transparent);
-}
-
-/* stampa → tutto neutro nero */
-@media print {
-  .regime-stance-pill,
-  .regime-stance-pill--pos,
-  .regime-stance-pill--warn,
-  .regime-stance-pill--neg,
-  .regime-stance-pill--neutral {
-    border-color:#000 !important;
-    color:#000 !important;
-    background:#fff !important;
-    box-shadow:none !important;
-  }
 }
 
 /* =========================================================
@@ -759,14 +693,16 @@ html[data-theme="dark"] .hero{
    PANEL OVERLAY (drawer / audit / MiFID / Privacy / F1 console)
    ========================================================= */
 
+.tl-panel-overlay {
+  position:fixed;
+  inset:0;
+  z-index:9999;
+}
 .tl-panel-overlay[aria-hidden="true"] {
-  display: none;
+  display:none;
 }
 .tl-panel-overlay[aria-hidden="false"] {
-  display: block;
-  position: fixed;
-  inset: 0;
-  z-index: 120;
+  display:block;
 }
 
 .tl-panel-backdrop {
@@ -883,7 +819,7 @@ html[data-theme="dark"] .hero{
   gap:8px;
 }
 
-/* desktop: dock laterale destra con larghezze dedicate */
+/* desktop panel dock right */
 @media(min-width:768px){
   .tl-panel--desktop {
     display:flex;
@@ -934,36 +870,13 @@ html[data-theme="dark"] .hero{
   }
 }
 
-/* tab list (desktop sidebar nel drawer F1) */
-.f1b-panel-menu .is-active {
-  border-left:3px solid var(--brand) !important;
-  background:var(--accent-dim) !important;
-  font-weight:600 !important;
-  color:var(--ink) !important;
-  border-radius:var(--radius-card-sm);
-}
-
-/* bottom tab mobile (drawer F1) */
-.f1b-mobile-tabbar {
-  background:var(--surface-panel-head);
-  border-top:1px solid var(--br-panel-divider);
-}
-.f1b-mobile-tabbar .is-active {
-  background:var(--accent-dim) !important;
-  font-weight:600 !important;
-  color:var(--ink) !important;
-  border-radius:var(--radius-card-sm);
-}
-
 /* =========================================================
    METRIC TOOLTIP (? button) - DESKTOP POPOVER
    ========================================================= */
 
-.tl-popover[aria-hidden="true"] { display:none; }
-.tl-popover[aria-hidden="false"] {
-  display:block;
+.tl-popover {
   position:fixed;
-  z-index:200;
+  z-index:10000;
   width:min(320px,90vw);
   max-width:320px;
   background:var(--surface-card-elev);
@@ -975,6 +888,9 @@ html[data-theme="dark"] .hero{
   font-size:12.5px;
   line-height:1.45;
 }
+.tl-popover[aria-hidden="true"] { display:none; }
+.tl-popover[aria-hidden="false"] { display:block; }
+
 .tl-popover__head {
   display:flex;
   justify-content:space-between;
@@ -1017,13 +933,13 @@ html[data-theme="dark"] .hero{
    METRIC MODAL (? button) - MOBILE
    ========================================================= */
 
-.tl-metric-modal-overlay[aria-hidden="true"] { display:none; }
-.tl-metric-modal-overlay[aria-hidden="false"] {
-  display:block;
+.tl-metric-modal-overlay {
   position:fixed;
   inset:0;
-  z-index:210;
+  z-index:10000;
 }
+.tl-metric-modal-overlay[aria-hidden="true"] { display:none; }
+.tl-metric-modal-overlay[aria-hidden="false"] { display:block; }
 
 .tl-metric-modal-backdrop {
   position:absolute;
@@ -1115,7 +1031,7 @@ html[data-theme="dark"] .hero{
 .share-overlay{
   position:fixed;
   inset:0;
-  z-index:95;
+  z-index:10000;
   display:none;
 }
 .share-overlay[aria-hidden="false"]{
@@ -1244,37 +1160,85 @@ html[data-theme="dark"] .hero{
 }
 
 /* =========================================================
-   FOOTER
+   FOOTER (WEB)
    ========================================================= */
 
 .footer-wrap{
-  background:var(--surface-footer);
-  border-top:1px solid var(--footer-br);
-  margin-top:24px
+  background:color-mix(in oklab, var(--surface-page) 94%, black);
+  border-top:1px solid color-mix(in oklab, var(--surface-page) 80%, black);
+  margin-top:24px;
 }
 .site-footer{
-  color:var(--muted);
-  font-size:14px;
+  font-size:13px;
   line-height:1.45;
+  color:var(--ink);
 }
 .site-footer .heading{
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:-0.03em;
   color:var(--ink);
-  font-weight:800;
+}
+.site-footer a{
+  color:var(--ink);
+  text-decoration:underline;
+}
+
+/* =========================================================
+   ACCESSIBILITÀ / VISIBILITÀ WEB vs PRINT
+   ========================================================= */
+
+/* utility per elementi solo stampa / solo web */
+@media screen {
+  .onlyprint { display:none !important; }
+}
+
+.sr-only {
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
 }
 
 /* =========================================================
    PRINT / PDF
    ========================================================= */
 
-/* in stampa vogliamo: copertina hero -> disclaimer -> indice -> contenuto -> appendix finale
-   più watermark diagonale e nessun bottone/overlay UI */
-
 @media print {
 
-  /* nascondi UI interattiva / runtime web */
+  /* sfondo carta + testo nero */
+  html,
+  body {
+    background:#fff !important;
+    color:#000 !important;
+  }
+
+  /* watermark diagonale su tutte le pagine */
+  body::after {
+    content:"TRADELIA•AI  |  INSTITUTIONAL MODEL REPORT  |  USO RISERVATO";
+    font: var(--wm-font);
+    color: var(--wm-color);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width:200%;
+    text-align:center;
+    transform: translate(-50%, -50%) rotate(var(--wm-rotate));
+    pointer-events:none;
+    z-index:-1;
+    white-space:nowrap;
+  }
+
+  /* nascondi runtime interattivo e header/footer web */
   .noprint,
   header,
   .hdr,
+  .footer-wrap,
   .tl-panel-overlay,
   .tl-popover,
   .tl-metric-modal-overlay,
@@ -1285,18 +1249,24 @@ html[data-theme="dark"] .hero{
   [id="btn-theme"],
   [id="btn-privacy-open"],
   [id="btn-mifid-open"],
-  .share-overlay,
-  .share-sheet,
-  .share-close-btn,
   .btn,
   .btn-sm,
   .f1b-panel-menu,
-  .f1b-mobile-tabbar,
-  .footer-wrap {
+  .f1b-mobile-tabbar {
     display:none !important;
   }
 
-  /* copertina */
+  /* mostra tutto ciò che è marcato onlyprint */
+  .onlyprint {
+    display:block !important;
+  }
+
+  /* corpo non bloccato */
+  body.body--lock {
+    overflow:visible !important;
+  }
+
+  /* HERO come copertina, forzata b/n */
   .hero{
     page-break-after:always;
     border:1px solid #000;
@@ -1321,45 +1291,27 @@ html[data-theme="dark"] .hero{
     background:#000 !important;
   }
 
-  /* watermark diagonale su OGNI pagina */
-  body::after {
-    content:"TRADELIA•AI  |  INSTITUTIONAL MODEL REPORT  |  USO RISERVATO";
-    font: var(--wm-font);
-    color: var(--wm-color);
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width:200%;
-    text-align:center;
-    transform: translate(-50%, -50%) rotate(var(--wm-rotate));
-    pointer-events:none;
-    z-index:-1;
-    white-space:nowrap;
-  }
-
-  /* disclaimer legale (MiFID completo) subito dopo la copertina */
-  #print-disclaimer {
+  /* H1 sr-only diventa visibile in stampa */
+  .sr-only.print\:block {
+    position:static !important;
+    width:auto !important;
+    height:auto !important;
+    margin:0 !important;
+    overflow:visible !important;
+    clip:auto !important;
+    white-space:normal !important;
+    border:0 !important;
     display:block !important;
-    font-size:12px;
-    line-height:1.45;
-    color:#000;
-    page-break-after:always;
-    border:1px solid #000;
-    border-radius:0;
-    padding:16px;
-    background:#fff !important;
   }
 
-  /* indice report */
-  #print-toc {
-    display:block !important;
-    page-break-after:always;
-    color:#000;
-    font-size:12px;
-    line-height:1.45;
-  }
+  /* page flow PDF:
+     disclaimer -> indice -> contenuto -> appendice -> footer finale */
+  #print-disclaimer   { page-break-before: always; page-break-after:always; color:#000; border:1px solid #000; border-radius:0; padding:16px; background:#fff !important; font-size:12px; line-height:1.45; }
+  #print-toc          { page-break-before: always; page-break-after:always; color:#000; font-size:12px; line-height:1.45; }
+  #print-appendix     { page-break-before: always; page-break-after:always; color:#000; font-size:11.5px; line-height:1.45; border-top:1px solid #000; padding-top:12px; }
+  #print-footer       { page-break-before: always; color:#000; font-size:11px; line-height:1.4; border-top:1px solid #000; padding-top:8px; }
 
-  /* sezioni contenuto principali F1..F6 */
+  /* sezioni F1..F6 e blocchi metriche in stile report legale b/n */
   .report-section-block,
   .metric-field,
   .section-badge,
@@ -1382,7 +1334,7 @@ html[data-theme="dark"] .hero{
     box-shadow:none !important;
   }
 
-  /* stance pills, status icon, metric flags in nero */
+  /* stance pill & icone sketch / flag: tutte nere */
   .regime-stance-pill,
   .regime-stance-pill--pos,
   .regime-stance-pill--warn,
@@ -1418,118 +1370,7 @@ html[data-theme="dark"] .hero{
     stroke:#000 !important;
     stroke-opacity:.6 !important;
   }
-
-  /* appendice finale con MiFID esteso / audit fonti */
-  #print-appendix {
-    display:block !important;
-    font-size:11.5px;
-    line-height:1.45;
-    color:#000;
-    border-top:1px solid #000;
-    padding-top:12px;
-    page-break-after:always;
-  }
-
-  /* footer legale finale per stampa */
-  #print-footer {
-    display:block !important;
-    font-size:11px;
-    line-height:1.4;
-    color:#000;
-    border-top:1px solid #000;
-    padding-top:8px;
-  }
-   
 }
-/* ====== ACCESSIBILITÀ SR-ONLY ====== */
-.sr-only {
-  position:absolute;
-  width:1px;
-  height:1px;
-  padding:0;
-  margin:-1px;
-  overflow:hidden;
-  clip:rect(0,0,0,0);
-  white-space:nowrap;
-  border:0;
-}
-
-/* ====== STATO BODY LOCK QUANDO OVERLAY APERTO ====== */
-.body--lock {
-  overflow:hidden;
-  touch-action:none;
-}
-
-/* ====== PRINT / SCREEN VISIBILITY ====== */
-@media screen {
-  .onlyprint { display:none !important; }
-}
-
-@media print {
-  .noprint { display:none !important; }
-  .onlyprint { display:block !important; }
-
-  body.body--lock { overflow:visible !important; }
-
-  html, body {
-    background:#fff !important;
-    color:#000 !important;
-  }
-
-  #print-disclaimer   { page-break-before: always; }
-  #print-toc          { page-break-before: always; }
-  #print-appendix     { page-break-before: always; }
-  #print-footer       { page-break-before: always; }
-
-  /* rendi visibile l'H1 sr-only nella stampa */
-  .sr-only.print\:block {
-    position:static !important;
-    width:auto !important;
-    height:auto !important;
-    margin:0 !important;
-    overflow:visible !important;
-    clip:auto !important;
-    white-space:normal !important;
-    border:0 !important;
-    display:block !important;
-  }
-}
-
-/* ====== FOOTER LOOK ISTITUZIONALE (fallback se non già definito) ====== */
-.footer-wrap{
-  background:color-mix(in oklab, var(--surface-page) 94%, black);
-  border-top:1px solid color-mix(in oklab, var(--surface-page) 80%, black);
-}
-.site-footer{
-  font-size:13px;
-  line-height:1.45;
-  color:var(--ink);
-}
-.site-footer .heading{
-  font-size:13px;
-  font-weight:600;
-  letter-spacing:-0.03em;
-  color:var(--ink);
-}
-.site-footer a{
-  color:var(--ink);
-  text-decoration:underline;
-}
-
-/* assicurati che overlay, popover, sheet siano sopra il resto */
-.tl-panel-overlay,
-.tl-metric-modal-overlay,
-.share-overlay {
-  position:fixed;
-  inset:0;
-  z-index:9999;
-}
-.tl-panel-overlay[aria-hidden="true"],
-.tl-metric-modal-overlay[aria-hidden="true"],
-.share-overlay[aria-hidden="true"] {
-  display:none;
-}
-
 
 /* =========================================================
    FINE
