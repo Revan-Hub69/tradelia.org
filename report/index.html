@@ -13,14 +13,18 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
   <meta name="theme-color" content="#0b1220">
 
-  <!-- Tailwind for layout utilities -->
+  <!-- Tailwind (utility layout) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Lucide icons -->
+  <!-- Lucide icons (per drawer dinamici e icone runtime) -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <!-- Design system / tokens -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+
+  <!-- Patch runtime (print utils, footer bg, sr-only ecc.)
+       Incollare il contenuto che ti do dopo in tokens.css.
+  -->
 
   <style>
     :root { --pop-w:320px; }
@@ -49,7 +53,7 @@
       }
     }
 
-    /* HEADER sticky glass */
+    /* HEADER sticky glass (solo web, .noprint lo toglie in stampa) */
     .hdr{
       backdrop-filter:saturate(1.1) blur(6px);
       background:color-mix(in oklab, var(--surface-card) 90%, transparent);
@@ -62,23 +66,87 @@
       color:var(--muted);
     }
 
+    /* footer visual separation, fallback se tokens.css non li ha ancora */
     .footer-wrap{
-      background:var(--surface-footer,transparent);
-      border-top:1px solid var(--footer-br);
+      background:color-mix(in oklab, var(--surface-page) 94%, black);
+      border-top:1px solid color-mix(in oklab, var(--surface-page) 80%, black);
+    }
+    .site-footer .heading{
+      font-size:13px;
+      font-weight:600;
+      letter-spacing:-0.03em;
+      color:var(--ink);
+    }
+    .site-footer{
+      font-size:13px;
+      line-height:1.45;
+      color:var(--ink);
+    }
+    .site-footer a{
+      color:var(--ink);
+      text-decoration:underline;
     }
 
-    /* Nodi di stampa nascosti sul web, visibili @media print */
-    #print-disclaimer,
-    #print-toc,
-    #print-appendix,
-    #print-footer {
-      display:none;
+    /* sr-only utility + versione print:block */
+    .sr-only {
+      position:absolute;
+      width:1px;
+      height:1px;
+      padding:0;
+      margin:-1px;
+      overflow:hidden;
+      clip:rect(0,0,0,0);
+      white-space:nowrap;
+      border:0;
+    }
+
+    /* default: nascondi blocchi solo-print sullo schermo */
+    @media screen {
+      .onlyprint { display:none !important; }
+    }
+
+    /* stampa */
+    @media print {
+      /* nascondi tutto quello marcato noprint */
+      .noprint { display:none !important; }
+
+      /* mostra i blocchi che sono solo per stampa */
+      .onlyprint { display:block !important; }
+
+      /* sblocca scroll corpo */
+      body.body--lock { overflow: visible !important; }
+
+      /* sfondo bianco carta */
+      html,
+      body {
+        background:#fff !important;
+        color:#000 !important;
+      }
+
+      /* page breaks per le sezioni istituzionali */
+      #print-disclaimer   { page-break-before: always; }
+      #print-toc          { page-break-before: always; }
+      #print-appendix     { page-break-before: always; }
+      #print-footer       { page-break-before: always; }
+
+      /* sr-only.print:block => rendi visibile in PDF il titolo principale */
+      .sr-only.print\:block {
+        position:static !important;
+        width:auto !important;
+        height:auto !important;
+        margin:0 !important;
+        overflow:visible !important;
+        clip:auto !important;
+        white-space:normal !important;
+        border:0 !important;
+        display:block !important;
+      }
     }
   </style>
 </head>
 
 <body>
-  <!-- HEADER (solo web, nascosto in stampa via @media print in tokens.css) -->
+  <!-- HEADER (solo web) -->
   <header class="hdr sticky top-0 z-50 noprint">
     <div class="container h-12 sm:h-14 flex items-center justify-between">
       <div class="flex items-center gap-2 sm:gap-3 min-w-0">
@@ -116,7 +184,7 @@
         <!-- THEME BTN -->
         <button id="btn-theme" class="btn" aria-label="Tema">
           <span class="theme-icon" aria-hidden="true">
-            <!-- sole / luna gestite via data-theme -->
+            <!-- sole / luna gestite via JS -->
             <svg data-theme-icon="sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="5"></circle>
               <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
@@ -128,10 +196,15 @@
     </div>
   </header>
 
-  <!-- MAIN WEB CONTENT -->
+  <!-- MAIN -->
   <main class="container">
-    <!-- HERO (copertina del report) -->
+    <!-- HERO -->
     <section id="hero" class="hero" aria-label="Copertina Report">
+      <!-- H1 istituzionale invisibile sul web ma visibile in PDF -->
+      <h1 class="sr-only print:block text-[16px] font-bold leading-tight mb-2 text-[color:var(--ink)]">
+        Tradelia AI · Report {NOME AZIENDA}
+      </h1>
+
       <div class="hero__top">
         <div class="hero__id">
           <div class="hero__ticker" id="hero-ticker">—</div>
@@ -230,12 +303,8 @@
       </div>
     </section>
 
-    <!-- 👇 DISCLAIMER PER LA STAMPA
-         Questo blocco è visibile SOLO nel PDF (print) e viene messo
-         SUBITO DOPO la hero come pagina 2 nel documento finale.
-         A schermo è hidden via inline style / noprint.
-    -->
-    <section id="print-disclaimer" class="noprint" aria-label="Avvertenze regolamentari">
+    <!-- DISCLAIMER SOLO PDF -->
+    <section id="print-disclaimer" class="onlyprint" aria-label="Avvertenze regolamentari">
       <h2 class="text-[14px] font-bold leading-[1.4] mb-2 text-[color:var(--ink)]">
         Uso riservato · Informativa MiFID / Compliance
       </h2>
@@ -272,13 +341,10 @@
       </p>
     </section>
 
-    <!-- ✅ TOC (Indice del Report)
-         Questa sezione è pensata per la stampa come pagina successiva.
-         Sul web possiamo anche lasciarla nascosta via CSS, è ok.
-    -->
-    <section id="print-toc" aria-label="Indice del Report">
-      <h2>Indice del Report</h2>
-      <ol>
+    <!-- INDICE SOLO PDF -->
+    <section id="print-toc" class="onlyprint" aria-label="Indice del Report">
+      <h2 class="text-[14px] font-bold leading-[1.4] mb-2 text-[color:var(--ink)]">Indice del Report</h2>
+      <ol class="text-[12px] leading-[1.45] text-[color:var(--ink)] list-decimal list-inside space-y-1">
         <li>F1 · Contesto iniziale / Regime di mercato</li>
         <li>F2 · Sentiment e flussi</li>
         <li>F3 · Analisi tecnica multi-timeframe</li>
@@ -311,7 +377,7 @@
       </nav>
     </section>
 
-    <!-- SEZIONI DINAMICHE (popolate da app.js / moduli F1..F6) -->
+    <!-- SEZIONI DINAMICHE -->
     <section class="report-sections" aria-label="Moduli del Report">
       <article id="sec-f1"  class="report-section-block is-loading" aria-label="F1 · Contesto iniziale / Regime di mercato"></article>
       <article id="sec-f2"  class="report-section-block is-loading" aria-label="F2 · Sentiment e flussi"></article>
@@ -322,10 +388,8 @@
       <article id="sec-f6"  class="report-section-block is-loading" aria-label="F6 · Broker selezionati"></article>
     </section>
 
-    <!-- APPENDICE AUDIT (solo stampa, ultima pagina nel PDF).
-         Qui diamo trasparenza su fonti/dati, lag, confidenza.
-    -->
-    <section id="print-appendix" class="noprint" aria-label="Appendice · Audit & Fonti">
+    <!-- APPENDICE SOLO PDF -->
+    <section id="print-appendix" class="onlyprint" aria-label="Appendice · Audit & Fonti">
       <h2 class="text-[13px] font-bold leading-[1.4] mb-2 text-[color:var(--ink)]">
         Appendice · Audit dati e Fonti
       </h2>
@@ -361,10 +425,10 @@
     </section>
   </main>
 
-  <!-- FOOTER WEB -->
-  <div class="footer-wrap">
+  <!-- FOOTER WEB (noprint) -->
+  <div class="footer-wrap noprint">
     <footer class="site-footer container py-4">
-      <div class="border-t border-[color:var(--footer-br)] pt-3 grid gap-4 md:flex md:items-start md:justify-between">
+      <div class="pt-3 grid gap-4 md:flex md:items-start md:justify-between">
         <div class="min-w-0">
           <div class="heading">
             TRADELIA<span class="text-[color:var(--brand)]">&bull;AI</span>
@@ -421,10 +485,8 @@
     </footer>
   </div>
 
-  <!-- FOOTER STAMPA (solo PDF). 
-       Compare in coda al PDF per chiudere il documento.
-  -->
-  <footer id="print-footer" class="noprint" aria-label="Chiosa legale finale">
+  <!-- FOOTER SOLO PDF -->
+  <footer id="print-footer" class="onlyprint" aria-label="Chiosa legale finale">
     <div class="text-[11px] leading-[1.4] text-[color:var(--ink)]">
       © Tradelia. Tutti i diritti riservati.
       Documento strettamente riservato, non destinato alla redistribuzione o rimarchiatura.
@@ -435,9 +497,7 @@
     </div>
   </footer>
 
-  <!-- PANEL OVERLAY (MiFID / Privacy / Audit / Drawer F1B ecc.)
-       Nascosto in stampa da tokens.css (.noprint e regole @media print)
-  -->
+  <!-- PANEL OVERLAY (MiFID / Privacy / Drawer F1B ecc.) -->
   <div
     id="panel-overlay"
     class="tl-panel-overlay noprint"
@@ -461,11 +521,9 @@
         </button>
       </header>
 
-      <!-- body dinamico (può essere drawer wide tipo console F1B) -->
       <div id="panel-body" class="tl-panel__body"></div>
 
       <footer class="tl-panel__footer" id="panel-footer">
-        <!-- fallback default, può venire sovrascritto da ui-runtime.js -->
         <button class="btn btn-sm" data-panel-close>Chiudi</button>
       </footer>
     </aside>
@@ -488,7 +546,6 @@
       <div id="panel-body-mobile" class="tl-panel__body"></div>
 
       <footer class="tl-panel__footer" id="panel-footer-mobile">
-        <!-- fallback default mobile -->
         <button class="btn btn-sm" data-panel-close>Chiudi</button>
       </footer>
     </aside>
@@ -531,7 +588,7 @@
     </div>
   </div>
 
-  <!-- SHARE OVERLAY (web only) -->
+  <!-- SHARE OVERLAY -->
   <div id="share-overlay" class="share-overlay noprint" aria-hidden="true">
     <div class="share-overlay__backdrop" data-share-close></div>
 
