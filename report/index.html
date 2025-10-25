@@ -13,13 +13,13 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
   <meta name="theme-color" content="#0b1220">
 
-  <!-- Tailwind (solo utility layout, spacing, flex ecc) -->
+  <!-- Tailwind (utility layout, spacing, flex ecc) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Lucide icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- CSS design system -->
+  <!-- CSS design system / tokens -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
 
   <style>
@@ -27,6 +27,12 @@
 
     html, body {
       height: 100%;
+    }
+
+    /* quando apriamo il panel overlay aggiungiamo .body--lock via JS */
+    .body--lock {
+      overflow: hidden;
+      touch-action: none;
     }
 
     .container {
@@ -59,19 +65,19 @@
       color:var(--muted);
     }
 
-    /* Footer visual refinement base (dettaglio colore finale lo mettiamo in tokens.css print-aware) */
+    /* Footer visual refinement base */
     .footer-wrap{
       background:var(--surface-footer,transparent);
       border-top:1px solid var(--footer-br);
     }
 
-    /* Placeholder: "Indice del Report" SOLO per stampa.
-       Lo teniamo display:none a schermo, lo esporremo in @media print in CSS globale */
+    /* Placeholder: "Indice del Report" solo per stampa.
+       Lo teniamo display:none a schermo; lo esponiamo con @media print nel CSS globale */
     #print-toc {
       display:none;
     }
 
-    /* Watermark node for print (visibile solo in @media print) */
+    /* Watermark node for print (visibile solo @media print) */
     #print-watermark {
       display:none;
     }
@@ -90,7 +96,7 @@
           <span class="text-[color:var(--ink)]">TRADELIA</span><span class="text-[color:var(--brand)]">&bull;AI</span>
         </a>
 
-        <!-- ✅ qui aggiorniamo la claim -->
+        <!-- ✅ claim cliente / titolo report -->
         <span class="claim truncate">
           Report {NOME AZIENDA}
         </span>
@@ -120,6 +126,7 @@
         <!-- THEME BTN -->
         <button id="btn-theme" class="btn" aria-label="Tema">
           <span class="theme-icon" aria-hidden="true">
+            <!-- sole (light) / luna (dark) gestiti via CSS + data-theme -->
             <svg data-theme-icon="sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="5"></circle>
               <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
@@ -140,7 +147,7 @@
           <div class="hero__ticker" id="hero-ticker">—</div>
           <div class="hero__venue" id="hero-venue">—</div>
 
-          <!-- ✅ nuovo meta cliente / tipo report -->
+          <!-- ✅ meta cliente / tipo report -->
           <div class="hero__client text-[11px] leading-[1.3] text-[color:var(--muted)] mt-1">
             <span id="hero-client">Client: {NOME AZIENDA}</span> ·
             <span class="uppercase tracking-wide">Institutional Model Report</span>
@@ -161,7 +168,7 @@
           <div class="min-w-0">
             <div class="flex items-center">
               <div class="meta-label">Snapshot</div>
-              <button class="info-btn" data-metric="Snapshot" aria-label="Info Snapshot">?</button>
+              <button class="info-btn info-btn--mini" data-metric="Snapshot" aria-label="Info Snapshot">?</button>
             </div>
             <div class="meta-val">
               <span id="hero-start">—</span>
@@ -177,7 +184,7 @@
           <div class="min-w-0">
             <div class="flex items-center">
               <div class="meta-label">Price</div>
-              <button class="info-btn" data-metric="Price" aria-label="Info Price">?</button>
+              <button class="info-btn info-btn--mini" data-metric="Price" aria-label="Info Price">?</button>
             </div>
             <div class="meta-val" id="hero-price2">—</div>
           </div>
@@ -189,7 +196,7 @@
           <div class="min-w-0">
             <div class="flex items-center">
               <div class="meta-label">Δ%</div>
-              <button class="info-btn" data-metric="ChangePct" aria-label="Info Δ%">?</button>
+              <button class="info-btn info-btn--mini" data-metric="ChangePct" aria-label="Info Δ%">?</button>
             </div>
             <div class="meta-val" id="hero-change2">—</div>
           </div>
@@ -201,7 +208,7 @@
           <div class="min-w-0">
             <div class="flex items-center">
               <div class="meta-label">Currency</div>
-              <button class="info-btn" data-metric="Currency" aria-label="Info Currency">?</button>
+              <button class="info-btn info-btn--mini" data-metric="Currency" aria-label="Info Currency">?</button>
             </div>
             <div class="meta-val" id="hero-ccy">—</div>
           </div>
@@ -213,7 +220,7 @@
           <div class="min-w-0">
             <div class="flex items-center">
               <div class="meta-label">Freshness</div>
-              <button class="info-btn" data-metric="Freshness" aria-label="Info Freshness">?</button>
+              <button class="info-btn info-btn--mini" data-metric="Freshness" aria-label="Info Freshness">?</button>
             </div>
             <div class="meta-val" id="hero-freshness">—</div>
           </div>
@@ -225,7 +232,7 @@
           <div class="min-w-0">
             <div class="flex items-center">
               <div class="meta-label">Confidence</div>
-              <button class="info-btn" data-metric="ConfidenceFinal" aria-label="Info Confidence">?</button>
+              <button class="info-btn info-btn--mini" data-metric="ConfidenceFinal" aria-label="Info Confidence">?</button>
             </div>
             <div class="meta-val" id="hero-confidence">—</div>
           </div>
@@ -233,7 +240,7 @@
       </div>
     </section>
 
-    <!-- ✅ TOC di stampa (nascosto sul web, esposto solo in @media print) -->
+    <!-- ✅ TOC di stampa (hidden on screen, visible only @media print via CSS globale) -->
     <section id="print-toc" aria-label="Indice del Report">
       <h2>Indice del Report</h2>
       <ol>
@@ -270,13 +277,13 @@
 
     <!-- SEZIONI DINAMICHE (popolate da app.js) -->
     <section class="report-sections" aria-label="Moduli del Report">
-      <article id="sec-f1" class="report-section-block is-loading" aria-label="F1 · Contesto iniziale / Regime di mercato"></article>
-      <article id="sec-f2" class="report-section-block is-loading" aria-label="F2 · Sentiment e flussi"></article>
-      <article id="sec-f3" class="report-section-block is-loading" aria-label="F3 · Analisi tecnica multi-timeframe"></article>
-      <article id="sec-f4" class="report-section-block is-loading" aria-label="F4 · Relazioni intermarket"></article>
-      <article id="sec-f5" class="report-section-block is-loading" aria-label="F5 · Resoconto tecnico"></article>
+      <article id="sec-f1"  class="report-section-block is-loading" aria-label="F1 · Contesto iniziale / Regime di mercato"></article>
+      <article id="sec-f2"  class="report-section-block is-loading" aria-label="F2 · Sentiment e flussi"></article>
+      <article id="sec-f3"  class="report-section-block is-loading" aria-label="F3 · Analisi tecnica multi-timeframe"></article>
+      <article id="sec-f4"  class="report-section-block is-loading" aria-label="F4 · Relazioni intermarket"></article>
+      <article id="sec-f5"  class="report-section-block is-loading" aria-label="F5 · Resoconto tecnico"></article>
       <article id="sec-f5b" class="report-section-block is-loading" aria-label="F5B · Validazione LT (orizzonte medio-lungo)"></article>
-      <article id="sec-f6" class="report-section-block is-loading" aria-label="F6 · Broker selezionati"></article>
+      <article id="sec-f6"  class="report-section-block is-loading" aria-label="F6 · Broker selezionati"></article>
     </section>
   </main>
 
@@ -340,11 +347,16 @@
     </footer>
   </div>
 
-  <!-- PANEL OVERLAY (MiFID / Privacy / Audit / Fonti) -->
-  <div id="panel-overlay" class="tl-panel-overlay noprint" aria-hidden="true">
+  <!-- PANEL OVERLAY (MiFID / Privacy / Audit / Fonti / Drawer F1B) -->
+  <div
+    id="panel-overlay"
+    class="tl-panel-overlay noprint"
+    aria-hidden="true"
+    data-blocking="false"
+  >
     <div class="tl-panel-backdrop" data-panel-close></div>
 
-    <!-- desktop -->
+    <!-- desktop panel -->
     <aside class="tl-panel tl-panel--desktop" role="dialog" aria-modal="true" aria-labelledby="panel-title">
       <header class="tl-panel__header">
         <div class="min-w-0">
@@ -359,14 +371,16 @@
         </button>
       </header>
 
+      <!-- il body dinamico (può essere drawer wide tipo console) -->
       <div id="panel-body" class="tl-panel__body"></div>
 
       <footer class="tl-panel__footer" id="panel-footer">
+        <!-- fallback default, può venire sovrascritto da ui-runtime.js -->
         <button class="btn btn-sm" data-panel-close>Chiudi</button>
       </footer>
     </aside>
 
-    <!-- mobile -->
+    <!-- mobile panel -->
     <aside class="tl-panel tl-panel--mobile" role="dialog" aria-modal="true" aria-labelledby="panel-title-mobile">
       <header class="tl-panel__header">
         <div class="min-w-0">
@@ -384,12 +398,13 @@
       <div id="panel-body-mobile" class="tl-panel__body"></div>
 
       <footer class="tl-panel__footer" id="panel-footer-mobile">
+        <!-- fallback default mobile -->
         <button class="btn btn-sm" data-panel-close>Chiudi</button>
       </footer>
     </aside>
   </div>
 
-  <!-- TOOLTIP DESKTOP -->
+  <!-- TOOLTIP DESKTOP (metriche) -->
   <div id="metric-popover" class="tl-popover noprint" role="tooltip" aria-hidden="true">
     <div class="tl-popover__head">
       <div id="metric-popover-title" class="tl-popover__title">—</div>
@@ -400,11 +415,13 @@
         </svg>
       </button>
     </div>
+
     <div id="metric-popover-body" class="tl-popover__body">—</div>
+
     <div id="metric-popover-source" class="tl-popover__source">—</div>
   </div>
 
-  <!-- TOOLTIP MOBILE -->
+  <!-- TOOLTIP MOBILE (metriche) -->
   <div id="metric-modal" class="tl-metric-modal-overlay noprint" aria-hidden="true">
     <div class="tl-metric-modal-backdrop" data-metric-close></div>
 
@@ -421,6 +438,7 @@
           </svg>
         </button>
       </header>
+
       <div id="metric-modal-body" class="tl-metric-modal__body">—</div>
     </div>
   </div>
@@ -493,6 +511,5 @@
   <!-- JS runtime -->
   <script type="module" src="/report/assets/js/app.js"></script>
   <script type="module" src="/report/assets/js/ui-runtime.js"></script>
- 
 </body>
 </html>
