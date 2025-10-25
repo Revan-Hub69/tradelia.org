@@ -1439,7 +1439,97 @@ html[data-theme="dark"] .hero{
     border-top:1px solid #000;
     padding-top:8px;
   }
+   
 }
+/* ====== ACCESSIBILITÀ SR-ONLY ====== */
+.sr-only {
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
+}
+
+/* ====== STATO BODY LOCK QUANDO OVERLAY APERTO ====== */
+.body--lock {
+  overflow:hidden;
+  touch-action:none;
+}
+
+/* ====== PRINT / SCREEN VISIBILITY ====== */
+@media screen {
+  .onlyprint { display:none !important; }
+}
+
+@media print {
+  .noprint { display:none !important; }
+  .onlyprint { display:block !important; }
+
+  body.body--lock { overflow:visible !important; }
+
+  html, body {
+    background:#fff !important;
+    color:#000 !important;
+  }
+
+  #print-disclaimer   { page-break-before: always; }
+  #print-toc          { page-break-before: always; }
+  #print-appendix     { page-break-before: always; }
+  #print-footer       { page-break-before: always; }
+
+  /* rendi visibile l'H1 sr-only nella stampa */
+  .sr-only.print\:block {
+    position:static !important;
+    width:auto !important;
+    height:auto !important;
+    margin:0 !important;
+    overflow:visible !important;
+    clip:auto !important;
+    white-space:normal !important;
+    border:0 !important;
+    display:block !important;
+  }
+}
+
+/* ====== FOOTER LOOK ISTITUZIONALE (fallback se non già definito) ====== */
+.footer-wrap{
+  background:color-mix(in oklab, var(--surface-page) 94%, black);
+  border-top:1px solid color-mix(in oklab, var(--surface-page) 80%, black);
+}
+.site-footer{
+  font-size:13px;
+  line-height:1.45;
+  color:var(--ink);
+}
+.site-footer .heading{
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:-0.03em;
+  color:var(--ink);
+}
+.site-footer a{
+  color:var(--ink);
+  text-decoration:underline;
+}
+
+/* assicurati che overlay, popover, sheet siano sopra il resto */
+.tl-panel-overlay,
+.tl-metric-modal-overlay,
+.share-overlay {
+  position:fixed;
+  inset:0;
+  z-index:9999;
+}
+.tl-panel-overlay[aria-hidden="true"],
+.tl-metric-modal-overlay[aria-hidden="true"],
+.share-overlay[aria-hidden="true"] {
+  display:none;
+}
+
 
 /* =========================================================
    FINE
