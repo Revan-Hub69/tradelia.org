@@ -5,17 +5,18 @@
 // - popola hero e footer base
 // - monta le sezioni F1...F6 caricando i moduli dinamici
 //
-// Dipendenze: nessuna libreria esterna, solo fetch + dynamic import
+// Dipendenze richieste già caricate in index.html PRIMA di questo file:
+//   - /report/assets/js/ui-runtime.js  (per __TradeliaUI.bindMetricInfoButtons)
 //
-// Convenzioni di path:
+// Convenzioni path dati:
 //   /report/reports/{reportId}/header.json
 //   /report/reports/{reportId}/manifest.json
-//   poi i singoli dati modulo es. f1b.json, f2.json, ...
+//   poi i singoli moduli es. f1b.json, f2.json, ...
 //
-// Convenzioni moduli UI:
-//   /report/assets/js/modules/f1b.js, f2.js, ...
+// Convenzioni renderer modulo:
+//   /report/assets/js/modules/f1b.js (o f2.js, ...)
 //   export function renderCard(data, ctx) -> string HTML
-//   export function bindCard(node, data, ctx) -> attach listeners (opzionale)
+//   export function bindCard(node, data, ctx) -> opzionale, per listener ecc.
 
 // ------------------------------------------------------------
 // Helpers base
@@ -42,14 +43,18 @@ async function fetchJSON(url) {
 function fmtNum(v, decimals = 2) {
   if (v === null || v === undefined || Number.isNaN(v)) return "—";
   const n = Number(v);
-  return n.toFixed(decimals).replace('.', ',');
+  return n
+    .toFixed(decimals)
+    .replace('.', ',');
 }
 
 function fmtPct(v, decimals = 2) {
   if (v === null || v === undefined || Number.isNaN(v)) return "—";
   const n = Number(v);
   const sign = n > 0 ? "+" : "";
-  return sign + n.toFixed(decimals).replace('.', ',') + "%";
+  return sign +
+    n.toFixed(decimals).replace('.', ',') +
+    "%";
 }
 
 function setTextById(id, value) {
@@ -91,7 +96,7 @@ function mountHero(headerData) {
   // badge stato
   setTextById("hero-state", State || "—");
 
-  // meta snapshot
+  // snapshot intervallo
   setTextById("hero-start", Start || "—");
   setTextById("hero-end", End || "—");
 
@@ -130,7 +135,7 @@ function mountHero(headerData) {
     }
   }
 
-  // tonebars
+  // tonebars default neutre
   const toneSnap  = document.getElementById("tone-snap");
   const tonePrice = document.getElementById("tone-price");
   const toneChg   = document.getElementById("tone-chg");
@@ -182,8 +187,9 @@ function mountHero(headerData) {
   const upd = UpdatedAt || End || Start || "—";
   setTextById("footer-updated", upd);
 
+  // anno footer, se non già impostato da ui-runtime
   const yearEl = document.getElementById("footer-year");
-  if (yearEl) {
+  if (yearEl && !yearEl.textContent.trim()) {
     const now = new Date();
     yearEl.textContent = now.getFullYear();
   }
@@ -230,7 +236,7 @@ function getSectionSelectorForModule(modId) {
   return null;
 }
 
-// normalizza i path dei json modulo
+// normalizza i path dei json modulo rispetto al reportId
 function normalizeManifest(manifest, reportId) {
   const order = Array.isArray(manifest.order)
     ? manifest.order.slice()
@@ -244,7 +250,7 @@ function normalizeManifest(manifest, reportId) {
       !path.startsWith("http") &&
       !path.startsWith("/")
     ) {
-      // relativo -> montalo sotto /report/reports/{id}/
+      // path relativo -> sotto /report/reports/{id}/
       path = `/report/reports/${reportId}/${path}`;
     }
     outMods[key] = path;
@@ -282,7 +288,7 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
   const fileBase = modId.toLowerCase();
   let mod;
   try {
-    // ⚠ aggiungo ?v=2 per forzare il browser a prendere la versione aggiornata
+    // aggiungo ?v=2 per cache-busting in prod
     mod = await import(`/report/assets/js/modules/${fileBase}.js?v=2`);
   } catch (err) {
     console.error("Import modulo fallita:", modId, err);
@@ -313,7 +319,7 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
     container.innerHTML = html;
     container.classList.remove("is-loading");
 
-    // bind interazioni modulo (Dettagli regime ecc.)
+    // bind interazioni modulo (detach overlay, pulsanti interni, ecc.)
     if (typeof mod.bindCard === "function") {
       try {
         mod.bindCard(container, data, { modId, reportId });
@@ -322,13 +328,13 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
       }
     }
 
-    // Tooltip "?" su metriche dentro la card
+    // Tooltip "?" su metriche dentro la card (usa __TradeliaUI dal runtime globale)
     if (
       window.__TradeliaUI &&
       typeof window.__TradeliaUI.bindMetricInfoButtons === "function"
     ) {
       try {
-        window.__TradeliaUI.bindMetricInfoButtons();
+        window.__TradeliaUI.bindMetricInfoButtons(container);
       } catch (e) {
         console.warn("bindMetricInfoButtons error:", e);
       }
@@ -373,21 +379,24 @@ async function mountReport() {
   const rawManifest = await loadManifest(reportId);
   const manifest = normalizeManifest(rawManifest, reportId);
 
-  // 3. scorri i moduli in ordine e montali
-  for (const modId of manifest.order) {
+  // 3. montaggio moduli in parallelo (performance):
+  //    ogni sezione (#sec-f1,#sec-f2,...) già esiste, quindi possiamo lanciare tutto insieme
+  const promises = manifest.order.map(modId => {
     const jsonUrl = manifest.modules[modId];
     if (!jsonUrl) {
       console.warn(`Nessun jsonUrl per ${modId}`);
-      continue;
+      return Promise.resolve();
     }
-    await mountSingleModule(modId, jsonUrl, reportId);
-  }
+    return mountSingleModule(modId, jsonUrl, reportId);
+  });
+
+  await Promise.all(promises);
 }
 
 // kick immediato
 mountReport();
 
-// esponiamo debug
+// debug globale
 window.TradeliaApp = {
   mountReport,
   getReportIdFromURL
