@@ -2,30 +2,22 @@
 //
 // F1B · Regime di mercato / Contesto rischio
 //
-// Questa versione è "institutional-ready":
-// - Card con KPI regime e CTA primaria "Dettagli regime" in basso a destra
-// - Drawer (panel) con TOC interno e sezioni distinte
-// - Tooltip unificati su data-metric="..." (niente più sistema tooltip locale)
-// - Testo MiFID/educational integrato
+// Versione "Institutional Model Report":
+// - Card con KPI e CTA primaria "Dettagli regime →"
+// - Drawer istituzionale:
+//    * Desktop: layout largo tipo console, sidebar sinistra con tab + contenuto a destra
+//    * Mobile: fullscreen/bottom sheet con barra tab fissa in basso, contenuto singolo visibile
+// - Tooltip unificati con data-metric="..." (niente sistema duplicato locale)
+// - Aperto via window.__TradeliaUI.openPanel({ ... })
 //
-// Dipendenze globali richieste:
-// - window.__TradeliaUI.openPanel(opts)
-// - window.__TradeliaUI.closePanel()
-//   (fornite da ui-runtime.js)
-// - ui-runtime.js deve già avere il binding globale dei tooltip .info-btn[data-metric]
+// Requisiti lato ui-runtime.js (lo sistemiamo nel prossimo step):
+// - openPanel(opts) deve accettare opts.panelSize === "wide" per aggiungere classe wide al pannello desktop
+// - chiusura panel blocca/riattiva scroll del body
+// - bindMetricInfoButtons(root) deve essere esposta su window.__TradeliaUI
 //
-// Runtime richiesto dal core (app.js):
+// Export richiesti dal runtime principale (app.js):
 // - renderCard(data, ctx)
 // - bindCard(node, data, ctx)
-//
-// NOTE IMPORTANTI
-// ----------------
-// 1. Tutte le metriche con "?" usano data-metric="<Key>"
-//    Key deve essere presente nel glossary globale ui-runtime.js, e poi nel futuro glossary.json.
-// 2. Il drawer qui non crea un overlay separato: riusa lo stesso panel overlay
-//    già usato per Privacy/MiFID, ma con contenuto dinamico e TOC interno.
-// 3. Lo scroll lock e i tooltip dentro il panel saranno gestiti da ui-runtime.js
-//    quando aggiorniamo quel file (prossimo step).
 
 export function renderCard(rawData, ctx = {}) {
   const data = normalizeData(rawData);
@@ -38,14 +30,6 @@ export function renderCard(rawData, ctx = {}) {
   } = data;
 
   const { toneLabel, toneColor } = computeTone(strategyMode, regimeScore);
-
-  // Card F1B:
-  // - header titolo "Regime di mercato"
-  // - StrategyMode + pill tono
-  // - KPI row
-  // - CTA primaria in basso a destra
-  //
-  // Nota: classi tipo f1b-card-container / f1b-cta-btn sono utili per styling dedicato via CSS.
 
   return `
     <section class="f1b-card-container text-[13px] leading-[1.5] text-[color:var(--ink)]"
@@ -80,7 +64,7 @@ export function renderCard(rawData, ctx = {}) {
           border:1px solid var(--br-card);
           border-radius:var(--radius-card);
           box-shadow:var(--shadow-card);
-          padding:1rem 1rem 3.25rem 1rem; /* extra bottom space per CTA */
+          padding:1rem 1rem 3.25rem 1rem; /* spazio extra per CTA fixed in basso */
         ">
 
         <!-- StrategyMode + tono -->
@@ -134,7 +118,7 @@ export function renderCard(rawData, ctx = {}) {
           })}
         </div>
 
-        <!-- CTA primaria fissata in basso a destra -->
+        <!-- CTA primaria fissa in basso a destra -->
         <div class="absolute bottom-3 right-4 flex justify-end">
           <button
             class="f1b-cta-btn btn btn-sm"
@@ -171,7 +155,7 @@ export function bindCard(node, rawData, ctx = {}) {
 
   const data = normalizeData(rawData);
 
-  // 1. Bind CTA "Dettagli regime"
+  // CTA -> apre pannello dettagli
   const btnDetails = node.querySelector('[data-open-f1b-details="true"]');
   if (btnDetails) {
     btnDetails.addEventListener("click", () => {
@@ -179,20 +163,18 @@ export function bindCard(node, rawData, ctx = {}) {
     });
   }
 
-  // 2. I tooltip "?" nella card usano data-metric="..."
-  // ui-runtime.js già fa il bind globale su document, ma per sicurezza
-  // possiamo richiamare un eventuale hook globale se esiste:
+  // Tooltip "?" nella card
   if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
     try {
       window.__TradeliaUI.bindMetricInfoButtons(node);
-    } catch(e){
-      /* no-op fallback */
-    }
+    } catch(e){}
   }
 }
 
 /* -------------------------------------------------
-   Drawer / Panel con TOC
+   Drawer / Panel con tab responsive
+   Desktop: sidebar sinistra + contenuto a destra
+   Mobile: contenuto + barra tab sticky in basso
 ------------------------------------------------- */
 
 function openF1Drawer(data) {
@@ -201,18 +183,16 @@ function openF1Drawer(data) {
     return;
   }
 
-  // Generiamo le sezioni di dettaglio
-  const panelSections = buildDrawerSections(data);
+  const sectionsObj = buildDrawerSections(data);
 
-  // openPanel accetta:
-  // { title, subtitle, sections[], footerButtons[], blocking }
-  // ma noi vogliamo un layout più ricco col TOC.
-  //
-  // Quindi facciamo una leggera estensione:
-  // - La prima "section" conterrà l'Indice + le altre sezioni rese in blocco unico html.
+  // shell desktop + shell mobile (costruiamo entrambe; ui-runtime mostrerà la giusta
+  // oppure possiamo decidere noi qui in base al viewport)
+  const mobileMode = isMobileViewport();
+  const drawerHTML = mobileMode
+    ? renderDrawerMobileShell(sectionsObj)
+    : renderDrawerDesktopShell(sectionsObj);
 
-  const drawerHTML = renderDrawerHTML(panelSections);
-
+  // Apri pannello
   window.__TradeliaUI.openPanel({
     title: "F1 · Regime di mercato",
     subtitle: "Flussi settoriali, ampiezza del rialzo e volatilità (T-1)",
@@ -231,32 +211,42 @@ function openF1Drawer(data) {
         }
       }
     ],
-    blocking: false
+    blocking: false,
+    panelSize: "wide" // <-- per desktop vogliamo pannello più largo (lo gestiremo in ui-runtime.js)
   });
 
-  // dopo apertura del panel, ri-bind tooltip anche lì
-  if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
-    // timeout micro per assicurarsi che il DOM del panel sia in pagina
-    setTimeout(() => {
-      const panelBody = document.getElementById("panel-body");
-      const panelBodyMobile = document.getElementById("panel-body-mobile");
+  // Dopo apertura: bind eventi tab + tooltip su contenuto del panel
+  setTimeout(() => {
+    const panelBody = document.getElementById("panel-body");
+    const panelBodyMobile = document.getElementById("panel-body-mobile");
 
-      if (panelBody) {
+    // bind tabs e tooltip su desktop panel body
+    if (panelBody) {
+      bindDrawerTabs(panelBody);
+      if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
         try { window.__TradeliaUI.bindMetricInfoButtons(panelBody); } catch(e){}
       }
-      if (panelBodyMobile) {
+    }
+
+    // bind tabs e tooltip su mobile panel body
+    if (panelBodyMobile) {
+      bindDrawerTabs(panelBodyMobile);
+      if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
         try { window.__TradeliaUI.bindMetricInfoButtons(panelBodyMobile); } catch(e){}
       }
-
-      // Bind TOC anchor scroll interno
-      bindDrawerTOC(panelBody);
-      bindDrawerTOC(panelBodyMobile);
-
-    }, 0);
-  }
+    }
+  }, 0);
 }
 
-// Costruiamo i "pezzi logici" che andranno nelle sezioni del drawer
+// Controlla viewport "mobile"
+function isMobileViewport() {
+  return window.matchMedia("(max-width: 767px)").matches;
+}
+
+/* -------------------------------------------------
+   Sezioni logiche (contenuti già formattati)
+------------------------------------------------- */
+
 function buildDrawerSections(data) {
   const {
     strategyMode,
@@ -274,225 +264,348 @@ function buildDrawerSections(data) {
     feedSyncScore
   } = data;
 
+  const regimeHTML = `
+    <div class="space-y-2">
+      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
+        Regime attuale
+      </div>
+
+      <div class="text-[13px] text-[color:var(--ink)] leading-[1.45] font-semibold flex flex-wrap items-center gap-2">
+        <span>StrategyMode: ${escapeHtml(strategyMode || "—")}</span>
+        <button
+          class="info-btn info-btn--mini"
+          data-metric="StrategyMode"
+          aria-label="Info StrategyMode"
+        >?</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
+        <div class="p-2"
+          style="
+            background:var(--surface-card-alt);
+            border:1px solid var(--br-card);
+            border-radius:var(--radius-card);
+            box-shadow:var(--shadow-card);
+          ">
+          <div class="flex items-start justify-between gap-1 mb-1">
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              RegimeScore
+            </div>
+            <button
+              class="info-btn info-btn--mini"
+              data-metric="RegimeScore"
+              aria-label="Info RegimeScore"
+            >?</button>
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${fmtNum(regimeScore)}
+          </div>
+        </div>
+
+        <div class="p-2"
+          style="
+            background:var(--surface-card-alt);
+            border:1px solid var(--br-card);
+            border-radius:var(--radius-card);
+            box-shadow:var(--shadow-card);
+          ">
+          <div class="flex items-start justify-between gap-1 mb-1">
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              VIX
+            </div>
+            <button
+              class="info-btn info-btn--mini"
+              data-metric="VIX"
+              aria-label="Info VIX"
+            >?</button>
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${fmtNum(vixLevel)}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const rotationHTML = `
+    <div class="space-y-2">
+      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
+        Rotazione &amp; partecipazione
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
+        <div class="p-2"
+          style="
+            background:var(--surface-card-alt);
+            border:1px solid var(--br-card);
+            border-radius:var(--radius-card);
+            box-shadow:var(--shadow-card);
+          ">
+          <div class="flex items-start justify-between gap-1 mb-1">
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              Breadth (1M)
+            </div>
+            <button
+              class="info-btn info-btn--mini"
+              data-metric="Breadth"
+              aria-label="Info Breadth"
+            >?</button>
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${breadthPct !== null ? fmtPct(breadthPct) : "—"}
+          </div>
+        </div>
+
+        <div class="p-2"
+          style="
+            background:var(--surface-card-alt);
+            border:1px solid var(--br-card);
+            border-radius:var(--radius-card);
+            box-shadow:var(--shadow-card);
+          ">
+          <div class="flex items-start justify-between gap-1 mb-1">
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              RiskTilt
+            </div>
+            <button
+              class="info-btn info-btn--mini"
+              data-metric="RiskTilt"
+              aria-label="Info RiskTilt"
+            >?</button>
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${fmtNum(riskTilt)}
+          </div>
+        </div>
+      </div>
+
+      <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)]">
+        <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
+          Top settori per inflow (5d)
+        </div>
+        ${renderTopSectors(topSectors)}
+      </div>
+    </div>
+  `;
+
+  const notesHTML = `
+    <div class="space-y-2">
+      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
+        Note interpretative
+      </div>
+      ${renderInterpretation(interpretationNotes)}
+    </div>
+  `;
+
+  const auditHTML = `
+    <div class="space-y-2">
+      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
+        Audit &amp; Fonti
+      </div>
+      ${renderAuditBlock({
+        auditPathID,
+        sourcesTier1,
+        dataLagLabel,
+        confidenceFinal,
+        dataIntegrity,
+        feedSyncScore
+      })}
+    </div>
+  `;
+
+  const mifidHTML = `
+    <div class="space-y-2">
+      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
+        Nota regolamentare
+      </div>
+      ${renderMiFIDNotice()}
+    </div>
+  `;
+
   return {
-    regimeHTML: `
-      <section id="f1-sec-regime" class="f1-sec-block space-y-2">
-        <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-          Regime attuale
-        </div>
-
-        <div class="text-[13px] text-[color:var(--ink)] leading-[1.45] font-semibold flex flex-wrap items-center gap-2">
-          <span>StrategyMode: ${escapeHtml(strategyMode || "—")}</span>
-          <button
-            class="info-btn info-btn--mini"
-            data-metric="StrategyMode"
-            aria-label="Info StrategyMode"
-          >?</button>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
-          <div class="p-2"
-            style="
-              background:var(--surface-card-alt);
-              border:1px solid var(--br-card);
-              border-radius:var(--radius-card);
-              box-shadow:var(--shadow-card);
-            ">
-            <div class="flex items-start justify-between gap-1 mb-1">
-              <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
-                RegimeScore
-              </div>
-              <button
-                class="info-btn info-btn--mini"
-                data-metric="RegimeScore"
-                aria-label="Info RegimeScore"
-              >?</button>
-            </div>
-            <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
-              ${fmtNum(regimeScore)}
-            </div>
-          </div>
-
-          <div class="p-2"
-            style="
-              background:var(--surface-card-alt);
-              border:1px solid var(--br-card);
-              border-radius:var(--radius-card);
-              box-shadow:var(--shadow-card);
-            ">
-            <div class="flex items-start justify-between gap-1 mb-1">
-              <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
-                VIX
-              </div>
-              <button
-                class="info-btn info-btn--mini"
-                data-metric="VIX"
-                aria-label="Info VIX"
-              >?</button>
-            </div>
-            <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
-              ${fmtNum(vixLevel)}
-            </div>
-          </div>
-        </div>
-      </section>
-    `,
-
-    rotationHTML: `
-      <section id="f1-sec-rotation" class="f1-sec-block space-y-2">
-        <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-          Rotazione &amp; partecipazione
-        </div>
-
-        <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
-          <div class="p-2"
-            style="
-              background:var(--surface-card-alt);
-              border:1px solid var(--br-card);
-              border-radius:var(--radius-card);
-              box-shadow:var(--shadow-card);
-            ">
-            <div class="flex items-start justify-between gap-1 mb-1">
-              <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
-                Breadth (1M)
-              </div>
-              <button
-                class="info-btn info-btn--mini"
-                data-metric="Breadth"
-                aria-label="Info Breadth"
-              >?</button>
-            </div>
-            <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
-              ${breadthPct !== null ? fmtPct(breadthPct) : "—"}
-            </div>
-          </div>
-
-          <div class="p-2"
-            style="
-              background:var(--surface-card-alt);
-              border:1px solid var(--br-card);
-              border-radius:var(--radius-card);
-              box-shadow:var(--shadow-card);
-            ">
-            <div class="flex items-start justify-between gap-1 mb-1">
-              <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
-                RiskTilt
-              </div>
-              <button
-                class="info-btn info-btn--mini"
-                data-metric="RiskTilt"
-                aria-label="Info RiskTilt"
-              >?</button>
-            </div>
-            <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
-              ${fmtNum(riskTilt)}
-            </div>
-          </div>
-        </div>
-
-        <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)]">
-          <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
-            Top settori per inflow (5d)
-          </div>
-          ${renderTopSectors(topSectors)}
-        </div>
-      </section>
-    `,
-
-    notesHTML: `
-      <section id="f1-sec-notes" class="f1-sec-block space-y-2">
-        <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-          Note interpretative
-        </div>
-        ${renderInterpretation(interpretationNotes)}
-      </section>
-    `,
-
-    auditHTML: `
-      <section id="f1-sec-audit" class="f1-sec-block space-y-2">
-        <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-          Audit &amp; Fonti
-        </div>
-        ${renderAuditBlock({
-          auditPathID,
-          sourcesTier1,
-          dataLagLabel,
-          confidenceFinal,
-          dataIntegrity,
-          feedSyncScore
-        })}
-      </section>
-    `,
-
-    mifidHTML: `
-      <section id="f1-sec-mifid" class="f1-sec-block space-y-2">
-        <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-          Nota regolamentare
-        </div>
-        ${renderMiFIDNotice()}
-      </section>
-    `
+    regimeHTML,
+    rotationHTML,
+    notesHTML,
+    auditHTML,
+    mifidHTML
   };
 }
 
-// Drawer finale con TOC + sezioni
-function renderDrawerHTML(sectionsObj) {
-  // TOC interno: scrolla alle sezioni
-  const tocHTML = `
-    <nav class="f1b-drawer-toc text-[12px] leading-[1.45] text-[color:var(--ink)] mb-4"
-      style="
-        background:var(--surface-card-alt);
-        border:1px solid var(--br-card);
-        border-radius:var(--radius-card);
-        box-shadow:var(--shadow-card);
-        padding:0.75rem;
-      ">
-      <div class="text-[11px] font-semibold text-[color:var(--muted)] uppercase tracking-wide leading-[1.3] mb-2">
-        Indice
-      </div>
-      <ol class="space-y-1">
-        <li><a href="#f1-sec-regime"   class="f1b-toc-link underline hover:opacity-80">Regime attuale</a></li>
-        <li><a href="#f1-sec-rotation" class="f1b-toc-link underline hover:opacity-80">Rotazione &amp; partecipazione</a></li>
-        <li><a href="#f1-sec-notes"    class="f1b-toc-link underline hover:opacity-80">Note interpretative</a></li>
-        <li><a href="#f1-sec-audit"    class="f1b-toc-link underline hover:opacity-80">Audit &amp; Fonti</a></li>
-        <li><a href="#f1-sec-mifid"    class="f1b-toc-link underline hover:opacity-80">Nota regolamentare</a></li>
-      </ol>
-    </nav>
-  `;
+/* -------------------------------------------------
+   Shell DESKTOP:
+   sidebar sinistra (tab list) + area contenuto destra
+   Con render di TUTTE le sezioni ma una sola visibile alla volta
+------------------------------------------------- */
 
+function renderDrawerDesktopShell(sectionsObj) {
   return `
-    <div class="text-[13px] leading-[1.5] text-[color:var(--ink)] space-y-6"
-      style="font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
+    <div class="f1b-panel-desktop"
+      style="
+        display:flex;
+        flex-direction:row;
+        gap:1rem;
+        min-height:300px;
+      ">
 
-      ${tocHTML}
+      <!-- Sidebar tab -->
+      <aside class="f1b-panel-menu"
+        style="
+          min-width:160px;
+          max-width:180px;
+          border-right:1px solid var(--br-card);
+        ">
 
-      ${sectionsObj.regimeHTML}
-      ${sectionsObj.rotationHTML}
-      ${sectionsObj.notesHTML}
-      ${sectionsObj.auditHTML}
-      ${sectionsObj.mifidHTML}
+        ${drawerMenuButton("regime","Regime attuale", true)}
+        ${drawerMenuButton("rotation","Rotazione &amp; partecipazione", false)}
+        ${drawerMenuButton("notes","Note interpretative", false)}
+        ${drawerMenuButton("audit","Audit &amp; Fonti", false)}
+        ${drawerMenuButton("mifid","Nota regolamentare", false)}
+      </aside>
+
+      <!-- Content area -->
+      <main class="f1b-panel-content flex-1 min-w-0"
+        style="max-height:60vh;overflow:auto;">
+        <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
+        <div data-f1b-view="rotation" hidden>${sectionsObj.rotationHTML}</div>
+        <div data-f1b-view="notes" hidden>${sectionsObj.notesHTML}</div>
+        <div data-f1b-view="audit" hidden>${sectionsObj.auditHTML}</div>
+        <div data-f1b-view="mifid" hidden>${sectionsObj.mifidHTML}</div>
+      </main>
     </div>
   `;
 }
 
-// click TOC -> scroll alle sezioni interne del panel
-function bindDrawerTOC(panelRoot) {
-  if (!panelRoot) return;
-  const links = panelRoot.querySelectorAll(".f1b-toc-link");
-  links.forEach(a => {
-    a.addEventListener("click", (ev) => {
-      ev.preventDefault();
-      const href = a.getAttribute("href");
-      if (!href || !href.startsWith("#")) return;
-      const target = panelRoot.querySelector(href);
-      if (!target) return;
-      target.scrollIntoView({ behavior:"smooth", block:"start" });
+/* -------------------------------------------------
+   Shell MOBILE:
+   content on top + bottom tab bar sticky
+------------------------------------------------- */
+
+function renderDrawerMobileShell(sectionsObj) {
+  return `
+    <div class="f1b-panel-mobile"
+      style="
+        position:relative;
+        padding-bottom:3.5rem; /* spazio per la bottom bar */
+        min-height:300px;
+      ">
+
+      <!-- Content area (scrollable) -->
+      <main class="f1b-panel-content-mobile"
+        style="max-height:60vh;overflow:auto;">
+        <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
+        <div data-f1b-view="rotation" hidden>${sectionsObj.rotationHTML}</div>
+        <div data-f1b-view="notes" hidden>${sectionsObj.notesHTML}</div>
+        <div data-f1b-view="audit" hidden>${sectionsObj.auditHTML}</div>
+        <div data-f1b-view="mifid" hidden>${sectionsObj.mifidHTML}</div>
+      </main>
+
+      <!-- Bottom mobile bar -->
+      <nav class="f1b-mobile-tabbar"
+        style="
+          position:absolute;
+          left:0;right:0;bottom:0;
+          display:flex;
+          justify-content:space-between;
+          gap:0.25rem;
+          border-top:1px solid var(--br-card);
+          background:var(--surface-card);
+          padding:0.5rem 0.75rem;
+          font-size:11px;
+          line-height:1.2;
+        ">
+
+        ${drawerMobileTabButton("regime","Regime", true)}
+        ${drawerMobileTabButton("rotation","Rotaz.", false)}
+        ${drawerMobileTabButton("notes","Note", false)}
+        ${drawerMobileTabButton("audit","Fonti", false)}
+        ${drawerMobileTabButton("mifid","MiFID", false)}
+      </nav>
+    </div>
+  `;
+}
+
+/* -------------------------------------------------
+   Helpers per i bottoni tab
+------------------------------------------------- */
+
+function drawerMenuButton(key, label, active) {
+  return `
+    <button
+      class="f1b-tab-btn block w-full text-left text-[12px] leading-[1.4] px-2 py-2 ${active ? "is-active" : ""}"
+      data-f1b-tab="${key}"
+      style="
+        border-radius:var(--radius-card-sm);
+        border-left:3px solid ${active ? "var(--brand)" : "transparent"};
+        background:${active ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)" : "transparent"};
+        font-weight:${active ? "600" : "500"};
+        color:var(--ink);
+      "
+    >
+      ${label}
+    </button>
+  `;
+}
+
+function drawerMobileTabButton(key, label, active) {
+  return `
+    <button
+      class="f1b-tab-btn-mobile flex-1 text-center ${active ? "is-active" : ""}"
+      data-f1b-tab="${key}"
+      style="
+        border-radius:var(--radius-card-sm);
+        font-weight:${active ? "600" : "500"};
+        color:var(--ink);
+        background:${active ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)" : "transparent"};
+        padding:0.4rem 0.25rem;
+      "
+    >
+      ${label}
+    </button>
+  `;
+}
+
+/* -------------------------------------------------
+   bind drawer tab switching (desktop e mobile)
+------------------------------------------------- */
+
+function bindDrawerTabs(root) {
+  if (!root) return;
+
+  const tabButtons = root.querySelectorAll("[data-f1b-tab]");
+  const views = root.querySelectorAll("[data-f1b-view]");
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const key = btn.getAttribute("data-f1b-tab");
+      if (!key) return;
+
+      // 1. attiva/deattiva bottoni
+      tabButtons.forEach(b => {
+        const isActive = b.getAttribute("data-f1b-tab") === key;
+        b.classList.toggle("is-active", isActive);
+        // aggiorna inline styles visivi base
+        b.style.borderLeftColor = isActive ? "var(--brand)" : "transparent";
+        b.style.background = isActive
+          ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)"
+          : "transparent";
+        b.style.fontWeight = isActive ? "600" : "500";
+      });
+
+      // 2. mostra/nascondi viste
+      views.forEach(viewEl => {
+        const viewKey = viewEl.getAttribute("data-f1b-view");
+        if (viewKey === key) {
+          viewEl.hidden = false;
+        } else {
+          viewEl.hidden = true;
+        }
+      });
     });
   });
 }
 
 /* -------------------------------------------------
-   Helpers UI
+   Helpers UI per la card
 ------------------------------------------------- */
 
 function metricBox({ label, metricKey, value, desc }) {
@@ -541,8 +654,8 @@ function renderTopSectors(topSectors) {
     <ul class="list-disc pl-4 space-y-1">
       ${topSectors.map(sec => {
         const name   = sec.name || sec.sector || "—";
-        const inflow = isNum(sec.inflow5d) ? `${fmtNum(sec.inflow5d)} flow 5d` : "";
-        const perf   = isNum(sec.perf1m)   ? `${fmtPct(sec.perf1m)} 1m`       : "";
+        const inflow = isNum(sec.inflow5d) ? \`\${fmtNum(sec.inflow5d)} flow 5d\` : "";
+        const perf   = isNum(sec.perf1m)   ? \`\${fmtPct(sec.perf1m)} 1m\`       : "";
         return `
           <li class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">
             <span class="font-semibold">${escapeHtml(name)}</span>
