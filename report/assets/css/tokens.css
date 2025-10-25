@@ -361,7 +361,7 @@ html[data-theme="dark"] .hero{
 }
 .section-title{
   font-weight:800;
-  font-size:15px;        /* era 1.4rem: versione premium ma più istituzionale */
+  font-size:15px;        /* premium ma istituzionale */
   letter-spacing:.25px;
   color:var(--ink);
   line-height:1.35;
@@ -634,7 +634,7 @@ html[data-theme="dark"] .hero{
 .tl-panel__body {
   flex:1 1 auto;
   overflow-y:auto;
-  padding:16px;
+  padding:18px; /* più confortevole */
   font-size:13px;
   line-height:1.45;
   color:var(--ink);
@@ -649,7 +649,7 @@ html[data-theme="dark"] .hero{
   border:1px solid var(--br-card);
   border-radius:var(--radius-card);
   box-shadow:var(--shadow-card);
-  padding:12px 14px;
+  padding:14px 16px;
 }
 .tl-panel-section-title {
   font-size:12.5px;
@@ -692,11 +692,11 @@ html[data-theme="dark"] .hero{
     top:0;
     height:100%;
     max-height:100%;
-    width:min(360px,90vw); /* default stretta */
+    width:min(420px,90vw); /* +contrast visivo, un filo più larga */
     border-radius:16px 0 0 16px;
   }
   .tl-panel--desktop.tl-panel--wide {
-    width:min(560px,90vw); /* console larga */
+    width:min(680px,92vw); /* console larga migliorata */
   }
   .tl-panel--mobile { display:none; }
 }
@@ -745,7 +745,7 @@ html[data-theme="dark"] .hero{
 .tl-popover[aria-hidden="true"] { display:none; }
 .tl-popover[aria-hidden="false"] {
   display:block;
-  position:fixed; /* coerente col posizionamento vicino al bottone in JS */
+  position:fixed; /* posizionato vicino al bottone via JS */
   z-index:200;
   width:min(320px,90vw);
   max-width:320px;
@@ -1068,3 +1068,71 @@ html[data-theme="dark"] .hero{
 
 /* Blocco scroll sotto drawer/panel */
 body.body--lock { overflow: hidden; }
+
+/* =========================================================
+   DARK DRAWER · leggibilità potenziata
+   ========================================================= */
+
+html[data-theme="dark"] .tl-panel {
+  background: oklab(30% 0 0);
+  border-color: oklab(42% 0 0);
+  box-shadow: 0 24px 48px rgba(0,0,0,.85);
+  color: oklab(88% 0 0);
+}
+html[data-theme="dark"] .tl-panel__header,
+html[data-theme="dark"] .tl-panel__footer {
+  background: oklab(34% 0 0);
+  border-color: oklab(46% 0 0);
+  color: oklab(88% 0 0);
+}
+html[data-theme="dark"] .tl-panel__body {
+  background: oklab(29% 0 0);
+  color: oklab(90% 0 0);
+}
+html[data-theme="dark"] .tl-panel-section {
+  background: oklab(32% 0 0);
+  border-color: oklab(45% 0 0);
+  box-shadow: 0 8px 16px rgba(0,0,0,.65);
+  color: oklab(90% 0 0);
+}
+html[data-theme="dark"] .tl-panel-section-title {
+  color: oklab(95% 0 0);
+}
+html[data-theme="dark"] .tl-panel-section-text,
+html[data-theme="dark"] .tl-panel-section-meta {
+  color: oklab(85% 0 0 / .9);
+}
+
+/* Pulsanti footer in dark */
+html[data-theme="dark"] .tl-panel__footer .btn,
+html[data-theme="dark"] .tl-panel__footer .btn-sm {
+  background: oklab(38% 0 0);
+  border-color: oklab(50% 0 0);
+  color: oklab(95% 0 0);
+}
+html[data-theme="dark"] .tl-panel__footer .btn:hover {
+  background: oklab(42% 0 0);
+}
+
+/* Sidebar tab F1B dark */
+html[data-theme="dark"] .f1b-panel-menu {
+  border-right: 1px solid oklab(44% 0 0);
+  background: oklab(30% 0 0);
+}
+html[data-theme="dark"] .f1b-panel-menu button { color: oklab(90% 0 0); }
+html[data-theme="dark"] .f1b-panel-menu button.is-active {
+  background: color-mix(in oklab, var(--surface-card-alt) 70%, transparent);
+  border-left: 3px solid var(--brand);
+  font-weight: 600;
+}
+
+/* Bottom tabbar mobile dark */
+html[data-theme="dark"] .f1b-mobile-tabbar {
+  background: oklab(34% 0 0);
+  border-top: 1px solid oklab(46% 0 0);
+}
+html[data-theme="dark"] .f1b-mobile-tabbar button { color: oklab(88% 0 0); }
+html[data-theme="dark"] .f1b-mobile-tabbar button.is-active {
+  background: color-mix(in oklab, var(--surface-card-alt) 70%, transparent);
+  font-weight: 600;
+}
