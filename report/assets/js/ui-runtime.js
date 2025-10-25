@@ -9,28 +9,12 @@
 //
 // VERSIONE REV FINAL
 // ------------------
-// Aggiornamenti chiave rispetto alla bozza precedente:
-// 1. Glossario dinamico: carichiamo /report/assets/glossary.json a boot e lo mettiamo
-//    in memoria. Tutti i tooltip leggono da lì.
-// 2. Tooltip strutturato: sezioni "Cos'è", "Come leggerla", "Fonti / Metodo".
-// 3. Placeholder istituzionale se la metrica non è ancora definita nel glossario.
-// 4. Popover desktop posizionato vicino al bottone cliccato (non fisso in alto a dx).
-// 5. Mobile metric modal blocca lo scroll del body finché aperta.
-// 6. openPanel(panelSize:"wide") aggiunge classe larga e blocca scroll,
-//    closePanel() rimuove sia lo scroll lock sia la classe wide.
-// 7. openPanel() dopo aver montato il contenuto fa già bindMetricInfoButtons()
-//    e lucide.createIcons() sul contenuto appena iniettato, quindi i moduli
-//    non devono re-bindare a mano (possono comunque farlo senza effetti collaterali).
 //
-// NOTE CSS da assicurare in tokens.css / share.css:
-//   .body--lock { overflow: hidden; }
-//   .tl-panel--desktop.tl-panel--wide { width:560px; max-width:90vw; }
-//
-// HTML richiesto in index.html resta quello che hai già:
-// - #panel-overlay con .tl-panel--desktop / .tl-panel--mobile
-// - #metric-popover (desktop)
-// - #metric-modal (mobile)
-// - overlay share, bottoni tema/print/privacy/mifid
+// NOTE IMPORTANTI:
+// - Assumiamo che index.html abbia gli ID esatti usati qui
+//   (#btn-print, #panel-overlay, #metric-popover, ecc).
+// - Assumiamo che tokens.css sia quello "pulito" finale che gestisce
+//   .onlyprint / .noprint / body--lock / z-index overlay.
 //
 // ---------------------------------------------------------------------------
 // Utility DOM
@@ -54,7 +38,7 @@ function isMobile() {
   return window.matchMedia("(max-width: 767px)").matches;
 }
 
-// safe escape per testo puro
+// Safe escape (contro injection nel panel / tooltip)
 function escapeHtml(str) {
   if (str === undefined || str === null) return "";
   return String(str)
@@ -69,29 +53,17 @@ function escapeHtml(str) {
 // GLOSSARIO METRICHE
 // ---------------------------------------------------------------------------
 //
-// Carichiamo una sola volta il glossario globale delle metriche.
-// Formato atteso di /report/assets/glossary.json:
-//
+// /report/assets/glossary.json (esempio):
 // {
 //   "RiskTilt": {
 //     "label": "RiskTilt",
 //     "academic_def": "Indicatore oggettivo...",
 //     "interpretation": "Se cresce → ...",
 //     "source": "CBOE / FRED / paper etc"
-//   },
-//   "Breadth": {
-//     "label": "Breadth (1M)",
-//     "academic_def": "...",
-//     "interpretation": "...",
-//     "source": "..."
 //   }
 // }
 //
-// Se una metrica NON è nel glossario, mostriamo un placeholder
-// istituzionale tipo "in fase di definizione".
-//
-// Nota: teniamo glossary in una variabile chiusa nel file + anche in window
-// per debug (facilita QA live in browser).
+// Se una metrica non esiste nel glossario, mostriamo un placeholder istituzionale.
 //
 
 let __TradeliaGlossary = {};
@@ -110,11 +82,10 @@ async function loadGlossary() {
     __TradeliaGlossary = {};
   }
 
-  // esponi anche per debug manuale in console
+  // debug console
   window.__TradeliaGlossary = __TradeliaGlossary;
 }
 
-// helper per ottenere i testi del tooltip di una metrica
 function getMetricInfo(metricKey) {
   const raw = __TradeliaGlossary?.[metricKey];
 
@@ -127,7 +98,7 @@ function getMetricInfo(metricKey) {
     };
   }
 
-  // placeholder istituzionale se la metrica non è definita ancora
+  // fallback placeholder se non definita
   return {
     label:          metricKey || "—",
     academic_def:   "Questa metrica è in fase di definizione. Sarà documentata nel Glossario Tecnico Tradelia AI v1.",
@@ -136,11 +107,8 @@ function getMetricInfo(metricKey) {
   };
 }
 
-// costruisce markup HTML (safe) per corpo tooltip
+// markup per tooltip corpo
 function buildMetricHTML(info) {
-  // blocchi:
-  // Cos'è / Come leggerla / Fonti / Metodo
-  // NB: usiamo escapeHtml su tutti i campi, così evitiamo injection.
   return `
     <div class="tl-metric-block text-[13px] leading-[1.45] text-[color:var(--ink)]">
       <div class="font-semibold text-[11px] uppercase tracking-wide text-[color:var(--muted)] mb-1">
@@ -172,26 +140,8 @@ function buildMetricHTML(info) {
 }
 
 // ---------------------------------------------------------------------------
-// PANEL OVERLAY (drawer / legal / etc.)
+// PANEL OVERLAY (drawer Privacy / MiFID / Audit / F1 console)
 // ---------------------------------------------------------------------------
-//
-// HTML (già presente in index.html):
-//
-// <div id="panel-overlay" class="tl-panel-overlay noprint" aria-hidden="true">
-//   <div class="tl-panel-backdrop" data-panel-close></div>
-//
-//   <aside class="tl-panel tl-panel--desktop" ...>
-//     <header>...</header>
-//     <div id="panel-body" class="tl-panel__body"></div>
-//     <footer id="panel-footer" class="tl-panel__footer"></footer>
-//   </aside>
-//
-//   <aside class="tl-panel tl-panel--mobile" ...>
-//     <header>...</header>
-//     <div id="panel-body-mobile" class="tl-panel__body"></div>
-//     <footer id="panel-footer-mobile" class="tl-panel__footer"></footer>
-//   </aside>
-// </div>
 //
 // openPanel(opts):
 //   {
@@ -202,8 +152,6 @@ function buildMetricHTML(info) {
 //     blocking: bool,
 //     panelSize: "wide" | undefined
 //   }
-//
-// closePanel(): chiude overlay, riabilita scroll e rimuove 'wide'.
 //
 
 function openPanel(opts) {
@@ -237,19 +185,13 @@ function openPanel(opts) {
   setText(titleMobEl, title);
   setText(subMobEl, subtitle);
 
-  // corpo:
-  //
-  // Caso "wide" console/drawer (es. F1B):
-  //   - ci aspettiamo UNA sola section già strutturata internamente (sidebar + content)
-  //   - NON wrappiamo con altri <section> per non rompere flex e sticky tab bar
-  //
-  // Caso standard (MiFID/Privacy/Audit generico):
-  //   - ogni voce di `sections` viene wrappata in blocchi con titolo/body/meta
-  //
+  // corpo
   let bodyHTML = "";
   if (panelSize === "wide" && sections.length === 1) {
+    // caso speciale F1B / console interna: prendiamo body raw
     bodyHTML = sections[0].body || "";
   } else {
+    // caso standard: blocchetti tl-panel-section
     bodyHTML = sections.map(section => {
       const st  = section.title   || "";
       const bd  = section.body    || "";
@@ -287,7 +229,7 @@ function openPanel(opts) {
   setHTML(footerDeskEl, renderFooterBtns(footerButtons));
   setHTML(footerMobEl,  renderFooterBtns(footerButtons));
 
-  // bind footer custom actions
+  // bind footer actions custom
   qsa("[data-panel-btn]", footerDeskEl).forEach(btnEl => {
     const i = btnEl.getAttribute("data-panel-btn");
     if (footerButtons[i] && typeof footerButtons[i].action === "function") {
@@ -301,14 +243,14 @@ function openPanel(opts) {
     }
   });
 
-  // blocking (true = niente close su backdrop)
+  // blocking (se true: niente chiusura con click backdrop)
   if (blocking) {
     overlayEl.setAttribute("data-blocking", "true");
   } else {
     overlayEl.removeAttribute("data-blocking");
   }
 
-  // panelSize wide -> aggiungi classe di larghezza sulla versione desktop
+  // panelSize wide -> classe larga sul desktop
   const panelDesktop = qs(".tl-panel--desktop", overlayEl);
   if (panelDesktop) {
     if (panelSize === "wide") {
@@ -318,18 +260,17 @@ function openPanel(opts) {
     }
   }
 
-  // impedisci scroll del body dietro al panel
+  // blocca scroll della pagina dietro
   document.body.classList.add("body--lock");
 
   // mostra overlay
   overlayEl.setAttribute("aria-hidden", "false");
 
-  // appena aperto il panel: bind dei tooltip (?) dentro il panel
-  // così i drawer complessi (F1B etc.) non devono farlo da soli.
+  // rebind dei tooltip "?" all'interno del panel appena creato
   bindMetricInfoButtons(bodyDeskEl);
   bindMetricInfoButtons(bodyMobEl);
 
-  // lucide icons render (se presente) anche dentro al panel
+  // icone lucide dentro al panel (se usate nel contenuto)
   if (window.lucide && typeof window.lucide.createIcons === "function") {
     try {
       window.lucide.createIcons();
@@ -345,17 +286,17 @@ function closePanel() {
 
   overlayEl.setAttribute("aria-hidden", "true");
 
-  // riattiva scroll della pagina sotto
+  // riabilita scroll del body
   document.body.classList.remove("body--lock");
 
-  // rimuovi eventuale classe wide dal pannello desktop
+  // rimuovi wide dal pannello desktop
   const panelDesktop = qs(".tl-panel--desktop", overlayEl);
   if (panelDesktop) {
     panelDesktop.classList.remove("tl-panel--wide");
   }
 }
 
-// click global per chiudere pannello
+// chiusura panel su click backdrop / [data-panel-close]
 document.addEventListener("click", (ev) => {
   const overlayEl = qs("#panel-overlay");
   if (!overlayEl) return;
@@ -363,14 +304,14 @@ document.addEventListener("click", (ev) => {
 
   const blocking = overlayEl.getAttribute("data-blocking") === "true";
 
-  // chiudi se clicco qualcosa con data-panel-close
+  // 1. bottoni con data-panel-close
   const closeBtn = ev.target.closest("[data-panel-close]");
   if (closeBtn) {
     closePanel();
     return;
   }
 
-  // se backdrop click e non blocking -> close
+  // 2. click sul backdrop (solo se non blocking)
   const backdrop = ev.target.closest(".tl-panel-backdrop");
   if (backdrop && !blocking) {
     closePanel();
@@ -417,7 +358,6 @@ function openPrivacyPanel() {
   });
 }
 
-// blocking: true perché è roba regolamentare
 function openMifidPanel() {
   openPanel({
     title: "Informativa MiFID",
@@ -495,7 +435,7 @@ function openMifidPanel() {
   });
 }
 
-// audit generico (richiamabile dai moduli se serve)
+// Audit panel generico richiamabile da moduli
 function openAuditPanel(auditData) {
   const a = auditData || {};
   const lag   = (a.feed_lag_days ?? "—");
@@ -517,10 +457,9 @@ function openAuditPanel(auditData) {
             <strong>Confidence (0-1):</strong> ${escapeHtml(String(conf))}<br/>
             <strong>Integrità dataset:</strong> ${escapeHtml(String(integ))}
           </p>
-          ${
-            notes
-              ? `<p style="margin-top:.5rem;">${escapeHtml(notes)}</p>`
-              : ``
+          ${notes
+            ? `<p style="margin-top:.5rem;">${escapeHtml(notes)}</p>`
+            : ``
           }
         `,
         meta: `
@@ -555,16 +494,16 @@ function openAuditPanel(auditData) {
 }
 
 // ---------------------------------------------------------------------------
-// METRIC TOOLTIP SYSTEM
+// METRIC TOOLTIP SYSTEM (?)
 // ---------------------------------------------------------------------------
 //
-// HTML esistente in index.html:
+// index.html deve avere:
 //
 // Desktop popover:
 // <div id="metric-popover" class="tl-popover noprint" role="tooltip" aria-hidden="true">
 //   <div class="tl-popover__head">
 //     <div id="metric-popover-title" class="tl-popover__title">—</div>
-//     <button id="metric-popover-close" ...>X</button>
+//     <button id="metric-popover-close" class="tl-popover__close" aria-label="Chiudi">…</button>
 //   </div>
 //   <div id="metric-popover-body" class="tl-popover__body">—</div>
 // </div>
@@ -572,50 +511,43 @@ function openAuditPanel(auditData) {
 // Mobile modal:
 // <div id="metric-modal" class="tl-metric-modal-overlay noprint" aria-hidden="true">
 //   <div class="tl-metric-modal-backdrop" data-metric-close></div>
-//   <div class="tl-metric-modal" ...>
-//     <header>
-//       <div id="metric-modal-title" class="tl-metric-modal__title">—</div>
-//       <button class="tl-metric-modal__close" data-metric-close>...</button>
+//   <div class="tl-metric-modal">
+//     <header class="tl-metric-modal__header">
+//       <div class="min-w-0">
+//         <div id="metric-modal-title" class="tl-metric-modal__title">—</div>
+//       </div>
+//       <button class="tl-metric-modal__close" data-metric-close aria-label="Chiudi">…</button>
 //     </header>
 //     <div id="metric-modal-body" class="tl-metric-modal__body">—</div>
 //   </div>
 // </div>
 //
-// NOTA: nella tua index.html avevi anche metric-modal-source / popover-source.
-// In questa versione NON mostriamo più la "source" come nodo separato,
-// la includiamo dentro il body costruito da buildMetricHTML() sotto la sezione
-// "Fonti / Metodo". Quindi metric-modal-source e metric-popover-source diventano
-// non più necessari. Se restano nel DOM non fanno danni.
-//
 
 let currentPopoverOpen = false;
 
-// Desktop: popover contestuale vicino al bottone
 function openMetricDesktop(btnEl) {
   const pop = qs("#metric-popover");
   if (!pop) return;
 
-  const key = btnEl.getAttribute("data-metric");
+  const key  = btnEl.getAttribute("data-metric");
   const info = getMetricInfo(key);
 
-  const titleEl  = qs("#metric-popover-title");
-  const bodyEl   = qs("#metric-popover-body");
+  const titleEl = qs("#metric-popover-title");
+  const bodyEl  = qs("#metric-popover-body");
 
   setText(titleEl, info.label || key || "—");
-  bodyEl.innerHTML = buildMetricHTML(info);
+  setHTML(bodyEl, buildMetricHTML(info));
 
-  // posizionamento vicino al bottone "?"
-  // calcoliamo bounding box del bottone relativo al viewport (fixed positioning)
+  // posizione vicino al bottone "?"
   const rect = btnEl.getBoundingClientRect();
-
   pop.style.position = "fixed";
   pop.style.maxWidth = "min(320px, 90vw)";
   pop.style.left = rect.left + "px";
   pop.style.top  = (rect.bottom + 8) + "px";
 
-  // correzione se sfora a destra
-  const popRectFakeWidth = 320; // stima massima
-  const overflowX = rect.left + popRectFakeWidth + 16 - window.innerWidth;
+  // se sfora a destra, shiftala
+  const estWidth = 320;
+  const overflowX = rect.left + estWidth + 16 - window.innerWidth;
   if (overflowX > 0) {
     const newLeft = Math.max(16, rect.left - overflowX);
     pop.style.left = newLeft + "px";
@@ -632,23 +564,22 @@ function closeMetricDesktop() {
   currentPopoverOpen = false;
 }
 
-// Mobile: modal fullscreen-ish
 function openMetricMobile(btnEl) {
   const modal = qs("#metric-modal");
   if (!modal) return;
 
-  const key = btnEl.getAttribute("data-metric");
+  const key  = btnEl.getAttribute("data-metric");
   const info = getMetricInfo(key);
 
-  const titleEl  = qs("#metric-modal-title");
-  const bodyEl   = qs("#metric-modal-body");
+  const titleEl = qs("#metric-modal-title");
+  const bodyEl  = qs("#metric-modal-body");
 
   setText(titleEl, info.label || key || "—");
-  bodyEl.innerHTML = buildMetricHTML(info);
+  setHTML(bodyEl, buildMetricHTML(info));
 
   modal.setAttribute("aria-hidden","false");
 
-  // blocca scroll della pagina dietro al modal metrica
+  // blocca scroll pagina dietro
   document.body.classList.add("body--lock");
 }
 
@@ -657,11 +588,12 @@ function closeMetricMobile() {
   if (!modal) return;
   modal.setAttribute("aria-hidden","true");
 
-  // riabilita scroll della pagina
+  // riabilita scroll
   document.body.classList.remove("body--lock");
 }
 
-// bindMetricInfoButtons(root) -> aggancia i click sui bottoni "?"
+// bind (?)
+// evita doppio bind con flag __metricBound
 function bindMetricInfoButtons(rootScope) {
   const scope = rootScope || document;
 
@@ -675,10 +607,8 @@ function bindMetricInfoButtons(rootScope) {
       if (isMobile()) {
         openMetricMobile(btn);
       } else {
-        // toggle base: se clicchi una nuova metrica rimpiazzi i contenuti
-        // Se clicchi altrove fuori dal popover poi lo chiudiamo nel listener globale
+        // rimpiazzo popover se già aperto
         if (currentPopoverOpen) {
-          // chiudo prima per forzare refresh pulito
           closeMetricDesktop();
         }
         openMetricDesktop(btn);
@@ -687,7 +617,7 @@ function bindMetricInfoButtons(rootScope) {
   });
 }
 
-// chiusura popover desktop (icona X)
+// chiusura popover desktop (X)
 const popClose = qs("#metric-popover-close");
 if (popClose) {
   popClose.addEventListener("click", (e) => {
@@ -696,22 +626,19 @@ if (popClose) {
   });
 }
 
-// click fuori: chiudi popover desktop se aperto
+// click fuori dal popover desktop → chiudi
 document.addEventListener("click", (ev) => {
   const pop = qs("#metric-popover");
   if (!pop) return;
   if (pop.getAttribute("aria-hidden") === "true") return;
 
-  // Se clicco DENTRO il popover, non chiudere
-  if (pop.contains(ev.target)) return;
-
-  // Se clicco su un .info-btn lo gestiamo al suo listener (non chiudere qui prima)
-  if (ev.target.closest(".info-btn")) return;
+  if (pop.contains(ev.target)) return;            // clic dentro, ok
+  if (ev.target.closest(".info-btn")) return;     // clic su un altro "?", gestito sopra
 
   closeMetricDesktop();
 });
 
-// chiusura mobile modal metric (X o backdrop)
+// chiusura modal mobile metrica (X o backdrop)
 qsa("[data-metric-close]").forEach(btn => {
   btn.addEventListener("click", () => {
     closeMetricMobile();
@@ -733,7 +660,7 @@ function initThemeToggle() {
     } catch(e){}
   }
 
-  // init from localStorage
+  // init tema da localStorage
   (function initFromStorage(){
     try {
       const saved = localStorage.getItem("tradelia-theme");
@@ -784,6 +711,7 @@ function initShareOverlay() {
     }
     overlay.setAttribute("aria-hidden","false");
   }
+
   function closeShare() {
     overlay.setAttribute("aria-hidden","true");
   }
@@ -797,8 +725,8 @@ function initShareOverlay() {
       const url = window.location.href;
       try {
         navigator.clipboard.writeText(url);
+        // opzionale: micro feedback visivo
       } catch(e){}
-      // TODO: micro feedback tipo "Copiato!"
     });
   });
 }
@@ -826,14 +754,6 @@ function initLegalButtons() {
 // ---------------------------------------------------------------------------
 // EXPORT API GLOBALE
 // ---------------------------------------------------------------------------
-//
-// I moduli (es. F1B) usano queste funzioni:
-// - openPanel / closePanel
-// - openPrivacyPanel / openMifidPanel / openAuditPanel
-// - bindMetricInfoButtons
-//
-// Inoltre expose anche __TradeliaGlossary per debug.
-//
 
 window.__TradeliaUI = {
   openPanel,
@@ -844,7 +764,7 @@ window.__TradeliaUI = {
   bindMetricInfoButtons
 };
 
-// retrocompat
+// retrocompat eventuale
 window.openPanel  = openPanel;
 window.closePanel = closePanel;
 
@@ -853,19 +773,19 @@ window.closePanel = closePanel;
 // ---------------------------------------------------------------------------
 
 async function bootUIRuntime() {
-  // 1. carica glossary
+  // 1. carica glossary (await per evitare tooltip vuoti sul primo click subito)
   await loadGlossary();
 
-  // 2. init sistemi UI globali
+  // 2. init sistemi globali
   initThemeToggle();
   initPrintButtons();
   initShareOverlay();
   initLegalButtons();
 
-  // 3. bind tooltip (?) su tutto quello già presente in pagina
+  // 3. bind tooltip (?) per contenuto già presente
   bindMetricInfoButtons(document);
 
-  // 4. lucide icons render globale
+  // 4. lucide icons global
   if (window.lucide && typeof window.lucide.createIcons === "function") {
     try {
       window.lucide.createIcons();
@@ -874,7 +794,7 @@ async function bootUIRuntime() {
     }
   }
 
-  // 5. init footer year se non già settato da app.js
+  // 5. footer year se vuoto
   const footerYearEl = qs("#footer-year");
   if (footerYearEl && !footerYearEl.textContent.trim()) {
     const now = new Date();
@@ -882,5 +802,5 @@ async function bootUIRuntime() {
   }
 }
 
-// esegui subito
+// fire subito
 bootUIRuntime();
