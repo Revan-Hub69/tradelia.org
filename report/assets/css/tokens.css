@@ -1,10 +1,15 @@
 /* /report/assets/css/tokens.css
-   Tradelia Report Design System
-   - palette & theme (light/dark)
-   - buttons / cards / panel
-   - hero / sections / drawer
-   - tooltip metriche / share overlay
-   - print mode istituzionale (PDF ready)
+   Design system + componenti runtime Tradelia Report
+   -------------------------------------------------
+   - palette CSS vars (light/dark)
+   - bottoni base
+   - hero header
+   - sezioni report (F1..F6)
+   - pannelli/drawer (Privacy / MiFID / Audit / F1 console)
+   - tooltip metriche
+   - share overlay
+   - footer base
+   - stampa istituzionale PDF con watermark e appendici
 */
 
 /* =========================================================
@@ -12,52 +17,50 @@
    ========================================================= */
 
 :root {
-  /* testo */
-  --ink:           oklab(18% 0 0);         /* primario */
-  --muted:         oklab(45% 0 0 / .7);    /* attenuato */
+  /* Testi */
+  --ink:           oklab(18% 0 0);        /* testo primario */
+  --muted:         oklab(45% 0 0 / .7);   /* testo attenuato */
 
-  /* superfici base app */
+  /* Superfici */
   --surface-page:        oklab(98% 0 0);
   --surface-card:        oklab(100% 0 0);
   --surface-card-alt:    oklab(98% 0 0);
   --surface-footer:      oklab(97% 0 0);
 
-  /* superfici panel/drawer (lievemente più scure per stacco su light) */
-  --surface-panel:       oklab(97% 0 0);
-  --surface-panel-alt:   oklab(95% 0 0);
+  /* Bordi */
+  --br-soft:        oklab(88% 0 0);
+  --br-card:        oklab(86% 0 0);
+  --br-card-strong: oklab(80% 0 0 / .9);
+  --footer-br:      oklab(85% 0 0);
 
-  /* bordi / separatori */
-  --br-soft:          oklab(88% 0 0);
-  --br-card:          oklab(86% 0 0);
-  --br-card-strong:   oklab(80% 0 0 / .9);
-  --footer-br:        oklab(85% 0 0);
-  --panel-br:         oklab(80% 0 0);
-
-  /* ombre (screen) */
+  /* Ombre */
   --shadow-card: 0 1px 2px rgba(0,0,0,.05),0 1px 1px rgba(0,0,0,.03);
   --shadow-lg:   0 16px 32px rgba(0,0,0,.07);
   --shadow-xl:   0 24px 48px rgba(0,0,0,.12);
 
-  /* brand */
-  --brand:        oklab(60% 0.08 0.08);  /* acceso ma serio, non fosforescente */
-  --tint-hero:    oklab(88% 0.03 0.03);
+  /* Brand / accenti */
+  --brand:          oklab(60% 0.08 0.08);
+  --tint-hero:      oklab(88% 0.03 0.03);
   --tint-hero-dark: oklab(35% 0.06 0.06);
 
-  /* tonalità stato */
-  --tone-g: oklab(55% -0.1 0.1);  /* verde-ish controllo rischio ok */
-  --tone-r: oklab(55% 0.13 0.04); /* rosso-ish alert */
-  --tone-n: oklab(55% 0 0);       /* neutro */
+  /* Tonalità semaforo */
+  --tone-g: oklab(55% -0.1 0.1);  /* verde-ish */
+  --tone-r: oklab(55% 0.13 0.04); /* rosso-ish */
+  --tone-n: oklab(55% 0 0);       /* neutro/brand neutro */
 
-  /* per stampa (nero/grigio quasi puro, usata in @media print) */
-  --print-ink:    #000;
-  --print-muted:  #666;
-  --print-line:   #999;
-  --print-bg:     #fff;
+  /* Drawer bg overlay states */
+  --panel-bg:          oklab(100% 0 0 / 0.9);
+  --panel-bg-alt:      oklab(98% 0 0 / 1);
+  --panel-border:      oklab(86% 0 0);
+
+  --panel-bg-dark:     oklab(24% 0 0 / 0.9);
+  --panel-bg-alt-dark: oklab(26% 0 0 / 1);
+  --panel-border-dark: oklab(30% 0 0);
 
   color-scheme: light;
 }
 
-/* Tema dark: miglior contrasto drawer e pannelli */
+/* Tema dark */
 html[data-theme="dark"] {
   --ink:           oklab(90% 0 0);
   --muted:         oklab(75% 0 0 / .7);
@@ -67,27 +70,27 @@ html[data-theme="dark"] {
   --surface-card-alt:    oklab(24% 0 0);
   --surface-footer:      oklab(20% 0 0);
 
-  /* drawer/panel in dark = leggermente più chiaro per leggibilità */
-  --surface-panel:       oklab(26% 0 0);
-  --surface-panel-alt:   oklab(30% 0 0);
+  --br-soft:        oklab(32% 0 0);
+  --br-card:        oklab(30% 0 0);
+  --br-card-strong: oklab(28% 0 0);
+  --footer-br:      oklab(32% 0 0);
 
-  --br-soft:          oklab(32% 0 0);
-  --br-card:          oklab(30% 0 0);
-  --br-card-strong:   oklab(28% 0 0);
-  --footer-br:        oklab(32% 0 0);
-  --panel-br:         oklab(40% 0 0); /* più chiaro in dark per stacco visivo */
-
-  --shadow-card: 0 2px 4px rgba(0,0,0,.8),0 1px 1px rgba(0,0,0,.6);
+  --shadow-card: 0 1px 2px rgba(0,0,0,.8),0 1px 1px rgba(0,0,0,.6);
   --shadow-lg:   0 24px 48px rgba(0,0,0,.9);
   --shadow-xl:   0 32px 64px rgba(0,0,0,1);
 
-  --brand:        oklab(70% 0.05 0.05);
-  --tint-hero:    oklab(30% 0.02 0.02);
+  --brand:          oklab(70% 0.05 0.05);
+  --tint-hero:      oklab(30% 0.02 0.02);
   --tint-hero-dark: oklab(30% 0.02 0.02);
 
   --tone-g: oklab(75% -0.08 0.08);
   --tone-r: oklab(70% 0.14 0.04);
   --tone-n: oklab(70% 0 0);
+
+  /* panel tones for dark drawer */
+  --panel-bg:          var(--panel-bg-dark);
+  --panel-bg-alt:      var(--panel-bg-alt-dark);
+  --panel-border:      var(--panel-border-dark);
 
   color-scheme: dark;
 }
@@ -104,7 +107,7 @@ body {
 }
 
 /* =========================================================
-   BUTTON PRIMITIVES (screen only, hidden print)
+   BUTTON PRIMITIVES
    ========================================================= */
 
 .btn {
@@ -174,6 +177,22 @@ body {
 }
 .info-btn:active,
 .metric-help:active{opacity:.8}
+
+/* =========================================================
+   HEADER sticky glass
+   ========================================================= */
+
+.hdr{
+  backdrop-filter:saturate(1.1) blur(6px);
+  background:color-mix(in oklab, var(--surface-card) 90%, transparent);
+  border-bottom:1px solid var(--br-soft);
+  box-shadow:0 1px 0 var(--br-soft);
+}
+.brand{font-weight:900}
+.claim{
+  font-size:12px;
+  color:var(--muted);
+}
 
 /* =========================================================
    HERO HEADER (ticker, prezzo, metriche snapshot)
@@ -325,8 +344,6 @@ html[data-theme="dark"] .hero{
 .section-head{
   text-align:center;
   margin:2.5rem 0 1.75rem;
-  position:relative;
-  z-index:1;
 }
 .section-title{
   font-weight:900;
@@ -364,7 +381,7 @@ html[data-theme="dark"] .hero{
 .phase-nav a:hover{opacity:.8;}
 
 /* =========================================================
-   REPORT SECTIONS (F1..F6) blocchi verticali (screen)
+   REPORT SECTIONS (F1..F6)
    ========================================================= */
 
 .report-sections{
@@ -374,8 +391,6 @@ html[data-theme="dark"] .hero{
   max-width:72rem;
   margin-left:auto;
   margin-right:auto;
-  position:relative;
-  z-index:1;
 }
 
 .report-section-block{
@@ -392,7 +407,7 @@ html[data-theme="dark"] .hero{
   }
 }
 
-/* Header interno di ogni sezione modulo */
+/* Header interno sezione modulo */
 .section-headline{
   display:flex;
   flex-wrap:wrap;
@@ -463,7 +478,7 @@ html[data-theme="dark"] .hero{
   max-width:60ch;
 }
 
-/* righe di metriche nelle card F1/F2... (screen) */
+/* righe di metriche nei moduli */
 .metric-row{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(min(160px,100%),1fr));
@@ -499,9 +514,27 @@ html[data-theme="dark"] .hero{
   color:var(--ink);
 }
 
-/* CTA in fondo a F1 card */
-.f1b-cta-btn{
+/* "strategia attuale" pill nel modulo F1 */
+.f1-mode-row{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:.5rem .75rem;
+  font-size:13px;
+  line-height:1.4;
+  font-weight:600;
+  color:var(--ink);
+}
+.f1-mode-pill{
+  font-size:11px;
+  font-weight:600;
+  line-height:1.2;
+  padding:.3rem .5rem;
+  border-radius:8px;
+  border:1px solid var(--tone-n);
   box-shadow:var(--shadow-card);
+  background:color-mix(in oklab, var(--tone-n) 10%, transparent);
+  color:var(--tone-n);
 }
 
 /* stato iniziale di caricamento */
@@ -511,9 +544,10 @@ html[data-theme="dark"] .hero{
 }
 
 /* =========================================================
-   PANEL OVERLAY / DRAWER
+   PANEL OVERLAY (drawer / console F1 / MiFID / Audit)
    ========================================================= */
 
+/* overlay container */
 .tl-panel-overlay[aria-hidden="true"] {
   display: none;
 }
@@ -524,6 +558,7 @@ html[data-theme="dark"] .hero{
   z-index: 120;
 }
 
+/* backdrop */
 .tl-panel-backdrop {
   position:absolute;
   inset:0;
@@ -531,11 +566,12 @@ html[data-theme="dark"] .hero{
   backdrop-filter:blur(2px);
 }
 
+/* pannello base */
 .tl-panel {
   position: absolute;
-  background: var(--surface-panel);
+  background: var(--panel-bg);
   color: var(--ink);
-  border:1px solid var(--panel-br);
+  border:1px solid var(--panel-border);
   box-shadow: var(--shadow-xl);
   border-radius:16px 16px 0 0;
   display:flex;
@@ -545,11 +581,13 @@ html[data-theme="dark"] .hero{
   left:50%;
   transform:translateX(-50%);
   bottom:0;
+  backdrop-filter:blur(12px) saturate(1.2);
 }
 
+/* header del pannello */
 .tl-panel__header {
-  background:var(--surface-panel-alt);
-  border-bottom:1px solid var(--panel-br);
+  background:var(--panel-bg-alt);
+  border-bottom:1px solid var(--panel-border);
   padding:16px;
   display:flex;
   justify-content:space-between;
@@ -578,12 +616,14 @@ html[data-theme="dark"] .hero{
   width:28px;
   height:28px;
   border-radius:8px;
-  border:1px solid var(--panel-br);
-  background:var(--surface-card);
+  border:1px solid var(--panel-border);
+  background:var(--panel-bg-alt);
   color:var(--muted);
   flex-shrink:0;
+  box-shadow:var(--shadow-card);
 }
 
+/* corpo scrollabile del pannello */
 .tl-panel__body {
   flex:1 1 auto;
   overflow-y:auto;
@@ -594,12 +634,12 @@ html[data-theme="dark"] .hero{
   display:flex;
   flex-direction:column;
   gap:16px;
-  background:var(--surface-panel);
 }
 
+/* blocchi/sezioni nel pannello */
 .tl-panel-section {
-  background:var(--surface-card);
-  border:1px solid var(--br-card);
+  background:var(--panel-bg-alt);
+  border:1px solid var(--panel-border);
   border-radius:12px;
   box-shadow:var(--shadow-card);
   padding:12px 14px;
@@ -623,9 +663,10 @@ html[data-theme="dark"] .hero{
   margin-top:6px;
 }
 
+/* footer con bottoni */
 .tl-panel__footer {
-  border-top:1px solid var(--panel-br);
-  background:var(--surface-panel-alt);
+  border-top:1px solid var(--panel-border);
+  background:var(--panel-bg-alt);
   padding:12px 16px;
   display:flex;
   flex-wrap:wrap;
@@ -633,7 +674,7 @@ html[data-theme="dark"] .hero{
   gap:8px;
 }
 
-/* desktop dock right + wide mode */
+/* Desktop variant: dock lato destro (console istituzionale) */
 @media(min-width:768px){
   .tl-panel--desktop {
     display:flex;
@@ -646,31 +687,42 @@ html[data-theme="dark"] .hero{
     max-height:100%;
     width:min(360px,90vw); /* default stretta */
     border-radius:16px 0 0 16px;
-    background:var(--surface-panel);
+    backdrop-filter:blur(16px) saturate(1.3);
   }
   .tl-panel--desktop.tl-panel--wide {
-    width:min(560px,90vw); /* console larga istituzionale */
+    width:min(560px,90vw); /* console larga */
   }
-
   .tl-panel--mobile {
     display:none;
   }
+
+  .tl-panel__body {
+    flex:1 1 auto;
+    min-height:0;
+    overflow:auto;
+    padding:16px;
+  }
+  .tl-panel__footer {
+    flex-shrink:0;
+    padding:12px 16px;
+    border-top:1px solid var(--panel-border);
+    background:var(--panel-bg-alt);
+  }
 }
+
+/* Mobile bottom sheet */
 @media(max-width:767px){
   .tl-panel--desktop {
     display:none;
   }
   .tl-panel--mobile {
     display:flex;
-  }
-  .tl-panel--mobile {
     width:100%;
     max-height:90vh;
     border-top-left-radius:16px;
     border-top-right-radius:16px;
     overflow:hidden;
     flex-direction:column;
-    background:var(--surface-panel);
   }
   .tl-panel--mobile .tl-panel__body {
     flex:1 1 auto;
@@ -681,44 +733,114 @@ html[data-theme="dark"] .hero{
   .tl-panel--mobile .tl-panel__footer {
     flex-shrink:0;
     padding:12px 16px;
-    border-top:1px solid var(--panel-br);
-    background:var(--surface-panel-alt);
+    border-top:1px solid var(--panel-border);
+    background:var(--panel-bg-alt);
   }
 }
 
 /* Sidebar tab attiva nel drawer desktop */
-.f1b-panel-menu .is-active {
+.f1b-panel-menu .f1b-tab-btn {
+  all:unset;
+  cursor:pointer;
+  display:block;
+  width:100%;
+  text-align:left;
+  font-size:12px;
+  line-height:1.4;
+  padding:0.75rem .5rem;
+  border-radius:var(--radius-card-sm,8px);
+  border-left:3px solid transparent;
+  font-weight:500;
+  color:var(--muted);
+  background:transparent;
+}
+.f1b-panel-menu .f1b-tab-btn.is-active{
   border-left:3px solid var(--brand) !important;
-  background:color-mix(in oklab, var(--surface-card-alt) 60%, transparent) !important;
+  background:color-mix(in oklab, var(--brand) 10%, transparent) !important;
   font-weight:600 !important;
   color:var(--ink) !important;
+  box-shadow:0 12px 32px rgba(0,0,0,.18);
 }
 
-/* Bottom tab attiva nel drawer mobile */
-.f1b-mobile-tabbar .is-active {
-  background:color-mix(in oklab, var(--surface-card-alt) 60%, transparent) !important;
-  font-weight:600 !important;
-  color:var(--ink) !important;
-}
-
-/* bottom tabbar (mobile drawer) */
+/* Bottom tab bar mobile (drawer F1) */
 .f1b-mobile-tabbar {
   position:absolute;
-  left:0;right:0;bottom:0;
+  left:0;
+  right:0;
+  bottom:0;
   display:flex;
   justify-content:space-between;
   gap:0.25rem;
-  border-top:1px solid var(--panel-br);
-  background:var(--surface-panel-alt);
+  border-top:1px solid var(--panel-border);
+  background:var(--panel-bg-alt);
   padding:0.5rem 0.75rem;
   font-size:11px;
   line-height:1.2;
+  z-index:10;
+}
+
+/* bottone tab mobile base */
+.f1b-tab-btn-mobile {
+  all:unset;
+  cursor:pointer;
+  flex:1 1 auto;
+  text-align:center;
+  border-radius:var(--radius-card-sm,8px);
+  padding:0.5rem 0.4rem 0.45rem;
+  font-size:11px;
+  line-height:1.25;
+  font-weight:500;
+  color:var(--muted);
+  border:1px solid transparent;
+  position:relative;
+  box-shadow:0 0 0 rgba(0,0,0,0);
+}
+
+/* stato attivo mobile */
+.f1b-tab-btn-mobile.is-active {
+  font-weight:600;
   color:var(--ink);
-  box-shadow:0 -8px 24px rgba(0,0,0,.4);
+  border:1px solid color-mix(in oklab, var(--brand) 40%, transparent);
+  background:
+    color-mix(
+      in oklab,
+      var(--brand) 8%,
+      var(--panel-bg-alt) 92%
+    );
+  box-shadow:0 6px 16px rgba(0,0,0,.18);
+}
+
+/* highlight bar sopra il tab attivo */
+.f1b-tab-btn-mobile.is-active::before {
+  content:"";
+  position:absolute;
+  top:-0.5rem;
+  left:50%;
+  transform:translateX(-50%);
+  height:2px;
+  width:24px;
+  border-radius:999px;
+  background:var(--brand);
+}
+
+/* dark tune */
+html[data-theme="dark"] .f1b-tab-btn-mobile.is-active {
+  border:1px solid color-mix(in oklab, var(--brand) 60%, transparent);
+  background:
+    color-mix(
+      in oklab,
+      var(--brand) 14%,
+      var(--panel-bg-alt) 86%
+    );
+  box-shadow:0 16px 32px rgba(0,0,0,.9);
+}
+
+html[data-theme="dark"] .f1b-tab-btn-mobile {
+  color:var(--muted);
 }
 
 /* =========================================================
-   TOOLTIP METRICA ( ? ) DESKTOP
+   METRIC TOOLTIP ( ? ) DESKTOP
    ========================================================= */
 
 .tl-popover[aria-hidden="true"] {
@@ -777,13 +899,6 @@ html[data-theme="dark"] .hero{
   color:var(--muted);
 }
 
-/* tooltip on mobile = none (use modal) */
-@media(max-width:767px){
-  .tl-popover{
-    display:none !important;
-  }
-}
-
 /* =========================================================
    METRIC MODAL ( ? ) MOBILE
    ========================================================= */
@@ -813,19 +928,18 @@ html[data-theme="dark"] .hero{
   width:100%;
   max-width:480px;
   max-height:80vh;
-  background:var(--surface-panel);
-  border:1px solid var(--panel-br);
+  background:var(--surface-card);
+  border:1px solid var(--br-card);
   border-radius:16px;
   box-shadow:var(--shadow-xl);
   display:flex;
   flex-direction:column;
-  color:var(--ink);
 }
 
 .tl-metric-modal__header {
   padding:16px;
-  border-bottom:1px solid var(--panel-br);
-  background:var(--surface-panel-alt);
+  border-bottom:1px solid var(--br-soft);
+  background:var(--surface-card-alt);
   display:flex;
   justify-content:space-between;
   align-items:flex-start;
@@ -853,7 +967,7 @@ html[data-theme="dark"] .hero{
   width:28px;
   height:28px;
   border-radius:8px;
-  border:1px solid var(--panel-br);
+  border:1px solid var(--br-soft);
   background:var(--surface-card);
   color:var(--muted);
   flex-shrink:0;
@@ -868,15 +982,20 @@ html[data-theme="dark"] .hero{
   max-height:calc(80vh - 64px);
 }
 
-/* desktop: non mostrare metric modal */
+/* desktop usa popover, mobile usa modal */
 @media(min-width:768px){
   .tl-metric-modal-overlay{
     display:none !important;
   }
 }
+@media(max-width:767px){
+  .tl-popover{
+    display:none !important;
+  }
+}
 
 /* =========================================================
-   SHARE OVERLAY (screen only)
+   SHARE OVERLAY
    ========================================================= */
 
 .share-overlay{
@@ -900,9 +1019,9 @@ html[data-theme="dark"] .hero{
   top:50%;
   transform:translate(-50%,-50%);
   width:min(320px,90vw);
-  background:var(--surface-panel);
+  background:var(--surface-card);
   color:var(--ink);
-  border:1px solid var(--panel-br);
+  border:1px solid var(--br-card);
   border-radius:16px;
   box-shadow:var(--shadow-xl);
   padding:16px;
@@ -936,10 +1055,11 @@ html[data-theme="dark"] .hero{
   width:28px;
   height:28px;
   border-radius:8px;
-  border:1px solid var(--panel-br);
-  background:var(--surface-card);
+  border:1px solid var(--br-soft);
+  background:var(--surface-card-alt);
   color:var(--muted);
   flex-shrink:0;
+  box-shadow:var(--shadow-card);
 }
 .share-sheet__list{
   display:grid;
@@ -952,7 +1072,7 @@ html[data-theme="dark"] .hero{
   display:flex;
   align-items:center;
   gap:8px;
-  border:1px solid var(--panel-br);
+  border:1px solid var(--br-card);
   border-radius:10px;
   background:var(--surface-card-alt);
   color:var(--ink);
@@ -977,7 +1097,7 @@ html[data-theme="dark"] .hero{
 .share-copy-field{
   display:flex;
   align-items:center;
-  border:1px solid var(--panel-br);
+  border:1px solid var(--br-card);
   background:var(--surface-card-alt);
   border-radius:8px;
   padding:8px 10px;
@@ -999,7 +1119,7 @@ html[data-theme="dark"] .hero{
   font-weight:600;
   line-height:1.2;
   background:var(--surface-card);
-  border:1px solid var(--panel-br);
+  border:1px solid var(--br-soft);
   border-radius:8px;
   padding:6px 8px;
   box-shadow:var(--shadow-card);
@@ -1011,15 +1131,13 @@ html[data-theme="dark"] .hero{
 }
 
 /* =========================================================
-   FOOTER (screen)
+   FOOTER
    ========================================================= */
 
 .footer-wrap{
   background:var(--surface-footer);
   border-top:1px solid var(--footer-br);
-  margin-top:24px;
-  position:relative;
-  z-index:1;
+  margin-top:24px
 }
 .site-footer{
   color:var(--muted);
@@ -1032,304 +1150,236 @@ html[data-theme="dark"] .hero{
 }
 
 /* =========================================================
-   PRINT OVERRIDES (PDF MODE)
+   PRINT OVERRIDES (PDF istituzionale)
    ========================================================= */
 
 @media print{
 
-  /* Reset generale: bianco e nero pulito */
-  html, body {
-    background: #fff !important;
-    color: var(--print-ink) !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-    font-size: 12px !important;
-    line-height: 1.45 !important;
+  /* Colori stampa: tutto nero/grigio su bianco */
+  body,
+  html {
+    background:#fff !important;
+    color:#000 !important;
   }
 
-  /* Watermark diagonale istituzionale */
-  #print-watermark {
-    display:block !important;
-    position:fixed;
-    inset:0;
-    margin:0;
-    padding:0;
-    z-index:0;
-    font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    font-weight:700;
-    font-size:42px;
-    line-height:1.2;
-    letter-spacing:.08em;
-    text-align:center;
-    color:rgba(0,0,0,.06);
-    white-space:nowrap;
-    transform:rotate(-32deg) translateY(-10%);
-    transform-origin:center;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    pointer-events:none;
-  }
-
-  /* Tutto il contenuto vero deve stare SOPRA il watermark */
-  main,
-  .report-sections,
-  .report-section-block,
-  .hero,
-  #print-f1-appendix,
-  .print-disclaimer,
-  .site-footer,
-  .section-head,
-  #print-toc {
-    position:relative;
-    z-index:1;
-  }
-
-  /* Niente header sticky, share overlay, drawer, tooltip, bottoni, ecc */
+  /* Niente overlay/modali/CTA/pulsanti/footer marketing */
   .noprint,
   header,
   .hdr,
-  .tl-panel-overlay,
-  .tl-popover,
-  .tl-metric-modal-overlay,
-  #share-overlay,
   .btn,
   .btn-sm,
   .f1b-cta-btn,
-  .module-status-pill,
-  .phase-nav,
-  .info-btn,
-  .metric-help {
+  .share-overlay,
+  #share-overlay,
+  .tl-panel-overlay,
+  .tl-popover,
+  .tl-metric-modal-overlay,
+  .f1b-mobile-tabbar,
+  .tl-panel__footer,
+  .footer-wrap,
+  .site-footer,
+  #btn-privacy-open,
+  #btn-mifid-open,
+  #btn-print,
+  #btn-print-2,
+  #btn-share,
+  #btn-theme {
     display:none !important;
   }
 
-  /* Card style -> documento pulito
-     via: rimuovi bordi arrotondati, ombre, fondi colorati app */
-  .hero,
-  .report-section-block,
-  .tl-panel-section,
-  .metric-field {
-    box-shadow:none !important;
-    background:#fff !important;
-    border:0 !important;
-    border-radius:0 !important;
+  /* Watermark diagonale premium, su tutte le pagine */
+  #print-watermark {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 0;
+    transform: rotate(-33deg);
+    opacity: 1 !important;
+  }
+  #print-watermark::before {
+    content: "TRADELIA AI — PROPRIETARY MATERIAL · INTERNAL USE ONLY";
+    font-family: "Inter", system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 40px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.06);
   }
 
-  /* Hero come front-page header */
+  /* Hero: togli gradient/ombre/bordi pieni troppo digital */
   .hero{
     page-break-after:always;
-    padding:0 !important;
-    margin-top:0 !important;
-  }
-  .hero__ticker{
-    font-size:20px !important;
-    font-weight:700 !important;
+    border:1px solid #bbb !important;
+    box-shadow:none!important;
+    background:#fff !important;
     color:#000 !important;
   }
+  .hero__ticker,
   .hero__px{
-    font-size:20px !important;
-    font-weight:700 !important;
     color:#000 !important;
   }
-  .hero__chg{
-    font-size:12px !important;
-    font-weight:600 !important;
+  .hero__venue,
+  .hero__chg,
+  .hero__badge,
+  .meta-label,
+  .meta-val{
     color:#000 !important;
   }
   .hero__badge{
     border:1px solid #000 !important;
-    background:#fff !important;
-    color:#000 !important;
-    font-size:11px !important;
-    font-weight:600 !important;
-    box-shadow:none !important;
-  }
-  .hero__venue,
-  .hero__client,
-  .meta-label,
-  .meta-pill .tonebar {
-    color:#444 !important;
-    background:transparent !important;
-  }
-  .meta-pill{
-    border:0 !important;
-    border-radius:0 !important;
-    padding:0 !important;
-    min-height:auto !important;
     box-shadow:none !important;
     background:#fff !important;
   }
-  .meta-pill .tonebar{
-    display:none !important;
-  }
-  .hero__meta{
-    display:block !important;
-    margin-top:12px !important;
-  }
+
   .hero__meta .meta-pill{
-    margin-bottom:6px !important;
-  }
-  .meta-label{
-    font-size:10px !important;
-    font-weight:600 !important;
-    text-transform:uppercase !important;
-    letter-spacing:.05em !important;
-    line-height:1.3 !important;
-    color:#666 !important;
-  }
-  .meta-val{
-    font-size:12px !important;
-    font-weight:700 !important;
-    line-height:1.4 !important;
-    color:#000 !important;
-    font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace !important;
-  }
-
-  /* Sezione "Struttura del Report" deve restare dopo il front page hero */
-  .section-head{
-    page-break-inside:avoid;
-    margin-top:0 !important;
-    margin-bottom:1rem !important;
-    text-align:left !important;
-  }
-  .section-title{
-    font-size:14px !important;
-    font-weight:700 !important;
+    background:#fff !important;
+    border:1px solid #000 !important;
+    box-shadow:none !important;
     color:#000 !important;
   }
-  .section-sub{
-    font-size:11px !important;
-    line-height:1.45 !important;
-    color:#444 !important;
-    max-width:100% !important;
-    margin-top:.25rem !important;
-    text-align:left !important;
+  .hero__meta .meta-pill .tonebar{
+    background:#000 !important;
   }
 
-  /* Nascondiamo da stampa l'elenco fase-nav linkabile */
-  .phase-nav{
-    display:none !important;
-  }
-
-  /* Ogni sezione F1..F6 diventa un blocco testo */
-  .report-sections{
-    max-width:100% !important;
-    gap:0 !important;
-  }
+  /* Sezioni report: niente card look, diventano blocchi puliti */
   .report-section-block{
+    background:#fff !important;
+    border:0 !important;
+    box-shadow:none !important;
+    color:#000 !important;
     padding:0 !important;
-    margin:0 0 1.5rem 0 !important;
+    page-break-inside:avoid;
   }
 
-  /* Header interno sezione in stile capitolo */
   .section-headline{
     margin-bottom:.5rem !important;
   }
   .section-badge{
-    display:inline-block !important;
     background:#fff !important;
     border:1px solid #000 !important;
-    border-radius:0 !important;
     box-shadow:none !important;
-    font-size:10px !important;
-    font-weight:700 !important;
-    padding:.15rem .4rem !important;
-    line-height:1.2 !important;
     color:#000 !important;
   }
-  .section-title-main{
-    font-size:13px !important;
-    font-weight:700 !important;
-    line-height:1.35 !important;
+  .module-status-pill{
+    background:#fff !important;
+    border:1px solid #000 !important;
     color:#000 !important;
-  }
-  .section-desc{
-    font-size:11px !important;
-    line-height:1.45 !important;
-    color:#444 !important;
-    max-width:100% !important;
-    margin-top:.25rem !important;
+    box-shadow:none !important;
   }
 
-  /* Righe metrica nelle card -> tabella testo sobria senza box */
-  .metric-row{
-    display:block !important;
-    margin-top:.75rem !important;
+  .section-desc,
+  .section-title-main,
+  .section-head-topline,
+  .section-head-left,
+  .section-head-topline span{
+    color:#000 !important;
   }
+
   .metric-field{
-    padding:0 !important;
-    min-height:auto !important;
+    background:#fff !important;
     border:0 !important;
-    background:transparent !important;
-    margin-bottom:.5rem !important;
+    box-shadow:none !important;
+    min-height:auto !important;
+    padding:0 0 .5rem 0 !important;
   }
   .metric-label{
-    border:0 !important;
-    border-radius:0 !important;
-    background:transparent !important;
     font-size:10px !important;
-    font-weight:600 !important;
     line-height:1.3 !important;
-    letter-spacing:.05em !important;
-    color:#666 !important;
-    text-transform:uppercase !important;
-    margin-bottom:.15rem !important;
-  }
-  .metric-value{
-    font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace !important;
-    font-size:12px !important;
     font-weight:700 !important;
     color:#000 !important;
+    letter-spacing:.05em !important;
+    text-transform:uppercase !important;
+    margin-bottom:.25rem !important;
+  }
+  .metric-value{
+    font-size:11px !important;
     line-height:1.4 !important;
+    font-weight:700 !important;
+    color:#000 !important;
   }
 
-  /* CTA "Dettagli regime →" non deve apparire */
-  .f1b-cta-btn{
+  .info-btn,
+  .metric-help{
     display:none !important;
   }
 
-  /* TOC per stampa:
-     lo mostriamo (se vuoi tenerlo) subito dopo la copertina,
-     o lo puoi lasciare nascosto se non serve.
-  */
-  #print-toc{
+  /* Appendice A · Disclaimer legale
+     Deve comparire SUBITO DOPO il corpo principale F1..F6 */
+  #print-disclaimer {
     display:block !important;
-    page-break-after:always;
+    page-break-before:always;
+    background:#fff !important;
+    color:#000 !important;
+    font-size:11px !important;
+    line-height:1.45 !important;
+    max-width:70ch !important;
+    position:relative;
+    z-index:1;
+  }
+
+  #print-disclaimer .print-disclaimer__head{
+    margin-bottom:.75rem !important;
+    padding-bottom:.5rem !important;
+    border-bottom:1px solid #999 !important;
+  }
+
+  #print-disclaimer .print-disclaimer__title{
+    font-size:12px !important;
+    font-weight:700 !important;
+    line-height:1.4 !important;
+    color:#000 !important;
+    text-transform:uppercase !important;
+    letter-spacing:.06em !important;
+  }
+
+  #print-disclaimer .print-disclaimer__body p{
+    margin:0 0 .75rem 0 !important;
     font-size:11px !important;
     line-height:1.45 !important;
     color:#000 !important;
   }
-  #print-toc h2{
-    font-size:12px !important;
+
+  #print-disclaimer .print-disclaimer__body p strong{
     font-weight:700 !important;
-    margin-bottom:.5rem !important;
-    color:#000 !important;
-  }
-  #print-toc ol{
-    padding-left:1rem !important;
-  }
-  #print-toc li{
-    margin-bottom:.25rem !important;
   }
 
-  /* Appendice tecnica F1 come allegato dedicato */
-  #print-f1-appendix{
+  #print-disclaimer .print-disclaimer__footerline{
+    border-top:1px solid #999 !important;
+    padding-top:.75rem !important;
+    margin-top:1rem !important;
+    font-size:10.5px !important;
+    line-height:1.4 !important;
+    color:#000 !important;
+    font-weight:600 !important;
+  }
+
+  /* Appendice B · Audit tecnico F1
+     Viene DOPO il disclaimer. Se non la vuoi nel PDF finale,
+     metti display:none !important qui sotto.
+  */
+  #print-f1-appendix {
     display:block !important;
     page-break-before:always;
-    page-break-after:always;
     background:#fff !important;
     color:#000 !important;
     font-size:11px !important;
     line-height:1.45 !important;
     max-width:100% !important;
+    position:relative;
+    z-index:1;
   }
 
-  .print-panel-dump__head{
-    border-bottom:1px solid var(--print-line) !important;
+  #print-f1-appendix .print-panel-dump__head{
+    border-bottom:1px solid #999 !important;
     margin-bottom:1rem !important;
     padding-bottom:.5rem !important;
   }
-  .print-panel-dump__badge{
+  #print-f1-appendix .print-panel-dump__badge{
     font-size:10px !important;
     font-weight:700 !important;
     line-height:1.3 !important;
@@ -1340,7 +1390,7 @@ html[data-theme="dark"] .hero{
     padding:.15rem .4rem !important;
     display:inline-block !important;
   }
-  .print-panel-dump__title{
+  #print-f1-appendix .print-panel-dump__title{
     margin-top:.5rem !important;
     font-size:12px !important;
     font-weight:700 !important;
@@ -1349,23 +1399,23 @@ html[data-theme="dark"] .hero{
     max-width:70ch !important;
   }
 
-  .print-panel-dump__block{
+  #print-f1-appendix .print-panel-dump__block{
     margin-top:1rem !important;
     page-break-inside:avoid !important;
   }
-  .print-panel-dump__block-title{
+  #print-f1-appendix .print-panel-dump__block-title{
     font-size:11px !important;
     font-weight:700 !important;
     line-height:1.4 !important;
     color:#000 !important;
     text-transform:uppercase !important;
     letter-spacing:.05em !important;
-    border-bottom:1px solid var(--print-line) !important;
+    border-bottom:1px solid #999 !important;
     padding-bottom:.25rem !important;
     margin-bottom:.5rem !important;
   }
 
-  .print-panel-dump__row{
+  #print-f1-appendix .print-panel-dump__row{
     display:flex !important;
     flex-wrap:nowrap !important;
     align-items:baseline !important;
@@ -1373,7 +1423,7 @@ html[data-theme="dark"] .hero{
     line-height:1.45 !important;
     margin-bottom:.35rem !important;
   }
-  .print-panel-dump__label{
+  #print-f1-appendix .print-panel-dump__label{
     min-width:130px !important;
     max-width:130px !important;
     font-size:9.5px !important;
@@ -1383,7 +1433,7 @@ html[data-theme="dark"] .hero{
     letter-spacing:.05em !important;
     color:#666 !important;
   }
-  .print-panel-dump__val{
+  #print-f1-appendix .print-panel-dump__val{
     flex:1 1 auto !important;
     font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace !important;
     font-size:11px !important;
@@ -1392,7 +1442,7 @@ html[data-theme="dark"] .hero{
     color:#000 !important;
   }
 
-  .print-panel-dump__subhead{
+  #print-f1-appendix .print-panel-dump__subhead{
     font-size:10px !important;
     line-height:1.4 !important;
     font-weight:600 !important;
@@ -1403,105 +1453,21 @@ html[data-theme="dark"] .hero{
     margin-bottom:.4rem !important;
   }
 
-  .print-panel-dump__list,
-  .print-panel-dump__notes{
+  #print-f1-appendix .print-panel-dump__list,
+  #print-f1-appendix .print-panel-dump__notes{
     padding-left:1rem !important;
     margin:0 !important;
   }
-  .print-panel-dump__list li,
-  .print-panel-dump__notes li{
+  #print-f1-appendix .print-panel-dump__list li,
+  #print-f1-appendix .print-panel-dump__notes li{
     font-size:11px !important;
     line-height:1.45 !important;
     color:#000 !important;
     margin-bottom:.3rem !important;
   }
-
-  .print-panel-dump__legal{
-    font-size:10.5px !important;
-    line-height:1.45 !important;
-    color:#444 !important;
-    max-width:70ch !important;
-  }
-
-  /* Footer web -> NO pulsanti, NO "Privacy / MiFID" UI.
-     Rimpiazziamo con disclaimer finale strutturato.
-  */
-  .footer-wrap{
-    border-top:0 !important;
-    background:#fff !important;
-    margin-top:0 !important;
-  }
-  .site-footer{
-    font-size:11px !important;
-    line-height:1.45 !important;
-    color:#000 !important;
-  }
-
-  /* nascondi parti marketing/interactive del footer in stampa */
-  .site-footer .heading,
-  .site-footer button,
-  .site-footer .btn,
-  .site-footer .btn-sm,
-  .site-footer .border-t,
-  .site-footer .mt-2.flex,
-  .site-footer [id="btn-privacy-open"],
-  .site-footer [id="btn-mifid-open"],
-  .site-footer [id="btn-print-2"] {
-    display:none !important;
-  }
-
-  /* Disclaimer finale pagina dedicata */
-  .print-disclaimer{
-    display:block !important;
-    page-break-before:always;
-    font-size:11px !important;
-    line-height:1.45 !important;
-    max-width:70ch !important;
-    color:#000 !important;
-  }
-  .print-disclaimer::before{
-    content:"DISCLAIMER LEGALE / USO CONSENTITO";
-    display:block;
-    font-size:12px;
-    line-height:1.4;
-    font-weight:700;
-    color:#000;
-    text-transform:uppercase;
-    letter-spacing:.06em;
-    margin-bottom:.75rem;
-    border-bottom:1px solid var(--print-line);
-    padding-bottom:.4rem;
-  }
-
-  /* Ultimo paragrafo footer, contatti */
-  #footer-year,
-  #footer-version,
-  #footer-snapshot,
-  #footer-updated {
-    color:#000 !important;
-    font-weight:600 !important;
-  }
-
-  /* Link email in stampa = normale testo sottolineato nero */
-  a[href^="mailto:"],
-  a[href^="mailto:"] * {
-    color:#000 !important;
-    text-decoration:underline !important;
-  }
-
-  /* Rimuovi sticky/positioned stuff per evitare errori di flusso pagina */
-  .hdr,
-  header.hdr {
-    position:static !important;
-  }
-
-  /* Nascondi watermark extra duplicati (browser a volte ripete il DOM nel footer/headers of page preview) */
-  @page {
-    margin: 16mm;
-  }
 }
 
-/* Scroll lock quando panel aperto */
+/* Blocco scroll lock sotto drawer/panel */
 body.body--lock {
   overflow: hidden;
 }
