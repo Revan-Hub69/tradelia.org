@@ -18,10 +18,10 @@
 //   export function renderCard(data, ctx) -> string HTML
 //   export function bindCard(node, data, ctx) -> opzionale, per listener ecc.
 
+//
 // ------------------------------------------------------------
 // Helpers base
 // ------------------------------------------------------------
-
 function getReportIdFromURL() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
@@ -39,7 +39,7 @@ async function fetchJSON(url) {
   }
 }
 
-// formattazioni numeriche base
+// format numeri
 function fmtNum(v, decimals = 2) {
   if (v === null || v === undefined || Number.isNaN(v)) return "—";
   const n = Number(v);
@@ -52,9 +52,11 @@ function fmtPct(v, decimals = 2) {
   if (v === null || v === undefined || Number.isNaN(v)) return "—";
   const n = Number(v);
   const sign = n > 0 ? "+" : "";
-  return sign +
+  return (
+    sign +
     n.toFixed(decimals).replace('.', ',') +
-    "%";
+    "%"
+  );
 }
 
 function setTextById(id, value) {
@@ -62,10 +64,24 @@ function setTextById(id, value) {
   if (el) el.textContent = value;
 }
 
+// piccolo helper per color bar "tonebar" nel hero in stile premium
+// invece di scrivere inline style.backgroundColor, usiamo data-tone
+// e poi nel CSS (se vuoi) puoi fare:
+//   .tonebar[data-tone="pos"]  { background:var(--tone-g); }
+//   .tonebar[data-tone="neg"]  { background:var(--tone-r); }
+//   ecc.
+function setTone(el, tone) {
+  if (!el) return;
+  if (!tone) {
+    el.removeAttribute("data-tone");
+  } else {
+    el.setAttribute("data-tone", tone);
+  }
+}
+
 // ------------------------------------------------------------
 // HERO + footer snapshot
 // ------------------------------------------------------------
-
 function mountHero(headerData) {
   if (!headerData) return;
 
@@ -118,7 +134,7 @@ function mountHero(headerData) {
     ConfidenceFinal !== undefined ? fmtNum(ConfidenceFinal, 2) : "—"
   );
 
-  // colorazione up/down su Δ%
+  // colorazione up/down sul testo Δ%
   const heroChangeEl  = document.getElementById("hero-change");
   const heroChangeEl2 = document.getElementById("hero-change2");
 
@@ -135,7 +151,7 @@ function mountHero(headerData) {
     }
   }
 
-  // tonebars default neutre
+  // tonebars nel hero
   const toneSnap  = document.getElementById("tone-snap");
   const tonePrice = document.getElementById("tone-price");
   const toneChg   = document.getElementById("tone-chg");
@@ -143,35 +159,31 @@ function mountHero(headerData) {
   const toneFresh = document.getElementById("tone-fresh");
   const toneConf  = document.getElementById("tone-conf");
 
-  if (toneSnap)  toneSnap.style.backgroundColor  = "var(--tone-n)";
-  if (tonePrice) tonePrice.style.backgroundColor = "var(--tone-n)";
-  if (toneCcy)   toneCcy.style.backgroundColor   = "var(--tone-n)";
-  if (toneFresh) toneFresh.style.backgroundColor = "var(--tone-n)";
+  // default neutro
+  setTone(toneSnap,  "neu");
+  setTone(tonePrice, "neu");
+  setTone(toneCcy,   "neu");
+  setTone(toneFresh, "neu");
 
-  // Δ% tono semaforo
-  if (toneChg) {
-    if (typeof ChangePct === "number") {
-      toneChg.style.backgroundColor =
-        ChangePct >= 0 ? "var(--tone-g)" : "var(--tone-r)";
-    } else {
-      toneChg.style.backgroundColor = "var(--tone-n)";
-    }
+  // Δ% -> verde/rosso
+  if (typeof ChangePct === "number") {
+    setTone(toneChg, ChangePct >= 0 ? "pos" : "neg");
+  } else {
+    setTone(toneChg, "neu");
   }
 
-  // confidence tono semaforo
-  if (toneConf) {
-    const cf = Number(ConfidenceFinal);
-    if (!isNaN(cf)) {
-      if (cf >= 0.75) {
-        toneConf.style.backgroundColor = "var(--tone-g)";
-      } else if (cf < 0.5) {
-        toneConf.style.backgroundColor = "var(--tone-r)";
-      } else {
-        toneConf.style.backgroundColor = "var(--tone-n)";
-      }
+  // Confidence -> g / n / r
+  const cf = Number(ConfidenceFinal);
+  if (!isNaN(cf)) {
+    if (cf >= 0.75) {
+      setTone(toneConf, "pos");
+    } else if (cf < 0.5) {
+      setTone(toneConf, "neg");
     } else {
-      toneConf.style.backgroundColor = "var(--tone-n)";
+      setTone(toneConf, "neu");
     }
+  } else {
+    setTone(toneConf, "neu");
   }
 
   // footer info
@@ -187,7 +199,7 @@ function mountHero(headerData) {
   const upd = UpdatedAt || End || Start || "—";
   setTextById("footer-updated", upd);
 
-  // anno footer, se non già impostato da ui-runtime
+  // anno footer se non già messo da ui-runtime
   const yearEl = document.getElementById("footer-year");
   if (yearEl && !yearEl.textContent.trim()) {
     const now = new Date();
@@ -198,7 +210,6 @@ function mountHero(headerData) {
 // ------------------------------------------------------------
 // MANIFEST LOADING / NORMALIZATION
 // ------------------------------------------------------------
-
 async function loadManifest(reportId) {
   const url = `/report/reports/${reportId}/manifest.json`;
   const mf = await fetchJSON(url);
@@ -236,7 +247,7 @@ function getSectionSelectorForModule(modId) {
   return null;
 }
 
-// normalizza i path dei json modulo rispetto al reportId
+// normalizza i path json modulo rispetto al reportId
 function normalizeManifest(manifest, reportId) {
   const order = Array.isArray(manifest.order)
     ? manifest.order.slice()
@@ -267,7 +278,6 @@ function normalizeManifest(manifest, reportId) {
 // ------------------------------------------------------------
 // MOUNT DI UN SINGOLO MODULO (F1B/F2/...)
 // ------------------------------------------------------------
-
 async function mountSingleModule(modId, jsonUrl, reportId) {
   const selector = getSectionSelectorForModule(modId);
   if (!selector) {
@@ -288,7 +298,7 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
   const fileBase = modId.toLowerCase();
   let mod;
   try {
-    // aggiungo ?v=2 per cache-busting in prod
+    // cache-busting minimo
     mod = await import(`/report/assets/js/modules/${fileBase}.js?v=2`);
   } catch (err) {
     console.error("Import modulo fallita:", modId, err);
@@ -301,12 +311,12 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
           </div>
           <div class="section-title-main">${modId}</div>
           <div class="section-desc">
-            Modulo non disponibile.
+            Modulo non disponibile o renderer mancante.
           </div>
         </div>
       </div>
       <div class="tl-panel-section-text text-[13px] leading-[1.45] text-[color:var(--muted)]">
-        Impossibile caricare il renderer ${fileBase}.js
+        Impossibile caricare <code>${fileBase}.js</code>.
       </div>
     `;
     container.classList.remove("is-loading");
@@ -319,7 +329,7 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
     container.innerHTML = html;
     container.classList.remove("is-loading");
 
-    // bind interazioni modulo (detach overlay, pulsanti interni, ecc.)
+    // hook interazione modulo
     if (typeof mod.bindCard === "function") {
       try {
         mod.bindCard(container, data, { modId, reportId });
@@ -328,7 +338,7 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
       }
     }
 
-    // Tooltip "?" su metriche dentro la card (usa __TradeliaUI dal runtime globale)
+    // Tooltip "?" sulle metriche interne
     if (
       window.__TradeliaUI &&
       typeof window.__TradeliaUI.bindMetricInfoButtons === "function"
@@ -355,6 +365,10 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
           </div>
         </div>
       </div>
+      <div class="tl-panel-section-text text-[13px] leading-[1.45] text-[color:var(--muted)]">
+        Definisci <code>renderCard()</code> in /report/assets/js/modules/${fileBase}.js
+        per renderizzare questo blocco.
+      </div>
     `;
     container.classList.remove("is-loading");
   }
@@ -363,7 +377,6 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
 // ------------------------------------------------------------
 // FLUSSO PRINCIPALE
 // ------------------------------------------------------------
-
 async function mountReport() {
   const reportId = getReportIdFromURL();
 
@@ -379,8 +392,7 @@ async function mountReport() {
   const rawManifest = await loadManifest(reportId);
   const manifest = normalizeManifest(rawManifest, reportId);
 
-  // 3. montaggio moduli in parallelo (performance):
-  //    ogni sezione (#sec-f1,#sec-f2,...) già esiste, quindi possiamo lanciare tutto insieme
+  // 3. montaggio moduli in parallelo
   const promises = manifest.order.map(modId => {
     const jsonUrl = manifest.modules[modId];
     if (!jsonUrl) {
