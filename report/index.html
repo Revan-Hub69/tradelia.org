@@ -77,16 +77,33 @@
       display:none;
     }
 
-    /* Watermark node for print (visibile solo @media print) */
+    /* Watermark node per print:
+       in @media print in tokens.css lo rendiamo visibile + stile diagonale */
     #print-watermark {
+      display:none;
+    }
+
+    /* Appendice tecnica stampa F1 (dump del drawer F1B).
+       A schermo non visibile: la rendiamo visibile solo @media print
+       attraverso tokens.css */
+    #print-f1-appendix {
+      display:none;
+    }
+
+    /* Disclaimer stampa finale, nascosto su schermo.
+       In @media print -> block */
+    .print-disclaimer {
       display:none;
     }
   </style>
 </head>
 
 <body>
-  <!-- ✅ nodo watermark stampa -->
-  <div id="print-watermark" aria-hidden="true">TRADELIA AI · INSTITUTIONAL MODEL REPORT</div>
+  <!-- ✅ nodo watermark stampa (verrà reso visibile e ruotato in @media print) -->
+  <div id="print-watermark" aria-hidden="true">
+    TRADELIA AI — PROPRIETARY MATERIAL
+    SOLO USO INFORMATIVO · VIETATA RIMARCHIATURA
+  </div>
 
   <!-- HEADER -->
   <header class="hdr sticky top-0 z-50 noprint">
@@ -240,7 +257,7 @@
       </div>
     </section>
 
-    <!-- ✅ TOC di stampa (hidden on screen, visible only @media print via CSS globale) -->
+    <!-- ✅ TOC di stampa (hidden on screen, visible only @media print via tokens.css print layer) -->
     <section id="print-toc" aria-label="Indice del Report">
       <h2>Indice del Report</h2>
       <ol>
@@ -251,6 +268,8 @@
         <li>F5 · Resoconto tecnico</li>
         <li>F5B · Validazione LT (medio-lungo)</li>
         <li>F6 · Broker selezionati</li>
+        <li>Appendice F1 · Contesto rischio esteso</li>
+        <li>Disclaimer legale</li>
       </ol>
     </section>
 
@@ -285,6 +304,111 @@
       <article id="sec-f5b" class="report-section-block is-loading" aria-label="F5B · Validazione LT (orizzonte medio-lungo)"></article>
       <article id="sec-f6"  class="report-section-block is-loading" aria-label="F6 · Broker selezionati"></article>
     </section>
+
+    <!-- 🔎 APPENDICE TECNICA PER STAMPA
+         Questa viene popolata dinamicamente da f1b.js (fillPrintAppendix)
+         e nascosta a schermo. In stampa invece è mostrata (vedi tokens.css @media print)
+    -->
+    <section
+      id="print-f1-appendix"
+      class="print-panel-dump"
+      aria-label="Appendice Tecnica F1 · Regime di mercato (uso istituzionale)"
+    >
+      <header class="print-panel-dump__head">
+        <div class="print-panel-dump__badge">F1 · APPENDICE TECNICA</div>
+        <div class="print-panel-dump__title">
+          Contesto rischio esteso (StrategyMode, ampiezza mercato, fonti dati)
+        </div>
+      </header>
+
+      <!-- blocchi dinamici -->
+      <div id="print-f1-sezione-regime" class="print-panel-dump__block">
+        <div class="print-panel-dump__block-title">Regime attuale</div>
+        <div class="print-panel-dump__row">
+          <div class="print-panel-dump__label">StrategyMode</div>
+          <div class="print-panel-dump__val" id="print-f1-strategyMode">—</div>
+        </div>
+        <div class="print-panel-dump__row">
+          <div class="print-panel-dump__label">RegimeScore</div>
+          <div class="print-panel-dump__val" id="print-f1-regimeScore">—</div>
+        </div>
+        <div class="print-panel-dump__row">
+          <div class="print-panel-dump__label">VIX</div>
+          <div class="print-panel-dump__val" id="print-f1-vixLevel">—</div>
+        </div>
+      </div>
+
+      <div id="print-f1-sezione-rotazione" class="print-panel-dump__block">
+        <div class="print-panel-dump__block-title">Rotazione &amp; partecipazione</div>
+
+        <div class="print-panel-dump__row">
+          <div class="print-panel-dump__label">Breadth (1M)</div>
+          <div class="print-panel-dump__val" id="print-f1-breadthPct">—</div>
+        </div>
+
+        <div class="print-panel-dump__row">
+          <div class="print-panel-dump__label">RiskTilt</div>
+          <div class="print-panel-dump__val" id="print-f1-riskTilt">—</div>
+        </div>
+
+        <div class="print-panel-dump__subhead">Top settori per inflow (5d)</div>
+        <ul class="print-panel-dump__list" id="print-f1-topSectors">
+          <!-- li dinamici -->
+        </ul>
+      </div>
+
+      <div id="print-f1-sezione-note" class="print-panel-dump__block">
+        <div class="print-panel-dump__block-title">Note interpretative</div>
+        <ul class="print-panel-dump__notes" id="print-f1-interpretationNotes">
+          <!-- li dinamici -->
+        </ul>
+      </div>
+
+      <div id="print-f1-sezione-audit" class="print-panel-dump__block">
+        <div class="print-panel-dump__block-title">Audit &amp; Fonti</div>
+
+        <div class="print-panel-dump__row">
+          <div class="print-panel-dump__label">AuditPathID</div>
+          <div class="print-panel-dump__val" id="print-f1-auditPathID">—</div>
+        </div>
+
+        <div class="print-panel-dump__row">
+          <div class="print-panel-dump__label">Fonti</div>
+          <div class="print-panel-dump__val" id="print-f1-sourcesTier1">—</div>
+        </div>
+
+        <div class="print-panel-dump__row">
+          <div class="print-panel-dump__label">Freshness / Lag</div>
+          <div class="print-panel-dump__val" id="print-f1-dataLagLabel">—</div>
+        </div>
+
+        <div class="print-panel-dump__row">
+          <div class="print-panel-dump__label">Confidence</div>
+          <div class="print-panel-dump__val" id="print-f1-confidenceFinal">—</div>
+        </div>
+
+        <div class="print-panel-dump__row">
+          <div class="print-panel-dump__label">Integrità dataset</div>
+          <div class="print-panel-dump__val" id="print-f1-dataIntegrity">—</div>
+        </div>
+
+        <div class="print-panel-dump__row">
+          <div class="print-panel-dump__label">Sync feed</div>
+          <div class="print-panel-dump__val" id="print-f1-feedSyncScore">—</div>
+        </div>
+
+        <div class="print-panel-dump__subhead">Nota MiFID</div>
+        <div class="print-panel-dump__legal" id="print-f1-mifidNote">
+          Questo materiale descrive uno scenario di mercato basato su dati quantitativi
+          e fonti finanziarie primarie. Ha finalità informative e formative.
+          Non costituisce una raccomandazione personalizzata,
+          né un invito ad aprire/chiudere posizioni o allocare capitale.
+          Prima di qualsiasi decisione reale verifica adeguatezza e appropriatezza
+          con un intermediario autorizzato ai sensi MiFID II.
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- FOOTER -->
@@ -344,10 +468,19 @@
         Contatti:
         <a href="mailto:info@tradelia.org" class="underline hover:opacity-80">info@tradelia.org</a>
       </div>
+
+      <!-- BLOCK: Disclaimer stampa finale (print only via tokens.css @media print) -->
+      <div class="print-disclaimer" id="print-disclaimer">
+        Questo documento è fornito da Tradelia AI esclusivamente a fini informativi e formativi.
+        Non costituisce consulenza finanziaria personalizzata, sollecitazione al pubblico risparmio,
+        raccomandazione operativa o invito ad acquistare/vendere strumenti finanziari.
+        Vietata la distribuzione commerciale, la rivendita e la ripubblicazione parziale o totale
+        del presente contenuto senza autorizzazione scritta di Tradelia AI.
+      </div>
     </footer>
   </div>
 
-  <!-- PANEL OVERLAY (MiFID / Privacy / Audit / Fonti / Drawer F1B) -->
+  <!-- PANEL OVERLAY (MiFID / Privacy / Audit / Drawer F1B) -->
   <div
     id="panel-overlay"
     class="tl-panel-overlay noprint"
@@ -418,6 +551,8 @@
 
     <div id="metric-popover-body" class="tl-popover__body">—</div>
 
+    <!-- source node non più usato attivamente nei nuovi tooltip,
+         ma lasciamo in DOM per retrocompat -->
     <div id="metric-popover-source" class="tl-popover__source">—</div>
   </div>
 
