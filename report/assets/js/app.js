@@ -8,15 +8,14 @@
 // Dipendenze: nessuna libreria esterna, solo fetch + dynamic import
 //
 // Convenzioni di path:
-// /report/reports/{reportId}/header.json
-// /report/reports/{reportId}/manifest.json
-// poi i singoli dati modulo es. f1b.json, f2.json, ...
+//   /report/reports/{reportId}/header.json
+//   /report/reports/{reportId}/manifest.json
+//   poi i singoli dati modulo es. f1b.json, f2.json, ...
 //
 // Convenzioni moduli UI:
-// /report/assets/js/modules/f1b.js, f2.js, ...
+//   /report/assets/js/modules/f1b.js, f2.js, ...
 //   export function renderCard(data, ctx) -> string HTML
 //   export function bindCard(node, data, ctx) -> attach listeners (opzionale)
-//
 
 // ------------------------------------------------------------
 // Helpers base
@@ -39,7 +38,7 @@ async function fetchJSON(url) {
   }
 }
 
-// formattazioni numeriche
+// formattazioni numeriche base
 function fmtNum(v, decimals = 2) {
   if (v === null || v === undefined || Number.isNaN(v)) return "—";
   const n = Number(v);
@@ -114,7 +113,7 @@ function mountHero(headerData) {
     ConfidenceFinal !== undefined ? fmtNum(ConfidenceFinal, 2) : "—"
   );
 
-  // colorazione up/down
+  // colorazione up/down su Δ%
   const heroChangeEl  = document.getElementById("hero-change");
   const heroChangeEl2 = document.getElementById("hero-change2");
 
@@ -245,6 +244,7 @@ function normalizeManifest(manifest, reportId) {
       !path.startsWith("http") &&
       !path.startsWith("/")
     ) {
+      // relativo -> montalo sotto /report/reports/{id}/
       path = `/report/reports/${reportId}/${path}`;
     }
     outMods[key] = path;
@@ -259,7 +259,7 @@ function normalizeManifest(manifest, reportId) {
 }
 
 // ------------------------------------------------------------
-// MOUNT DI UN SINGOLO MODULO (F1A/F1B/F2/...)
+// MOUNT DI UN SINGOLO MODULO (F1B/F2/...)
 // ------------------------------------------------------------
 
 async function mountSingleModule(modId, jsonUrl, reportId) {
@@ -282,7 +282,8 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
   const fileBase = modId.toLowerCase();
   let mod;
   try {
-    mod = await import(`/report/assets/js/modules/${fileBase}.js`);
+    // ⚠ aggiungo ?v=2 per forzare il browser a prendere la versione aggiornata
+    mod = await import(`/report/assets/js/modules/${fileBase}.js?v=2`);
   } catch (err) {
     console.error("Import modulo fallita:", modId, err);
     container.innerHTML = `
@@ -321,7 +322,7 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
       }
     }
 
-    // >>> TOOLTIP "?" SU METRICHE (anche nelle card dinamiche)
+    // Tooltip "?" su metriche dentro la card
     if (
       window.__TradeliaUI &&
       typeof window.__TradeliaUI.bindMetricInfoButtons === "function"
