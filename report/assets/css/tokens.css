@@ -1,15 +1,13 @@
 /* /report/assets/css/tokens.css
-   Design system + componenti runtime Tradelia Report
-   -------------------------------------------------
-   - palette CSS vars (light/dark)
-   - bottoni base
-   - hero header
-   - sezioni report (F1..F6)
-   - pannelli/drawer (Privacy / MiFID / Audit / F1 console)
-   - tooltip metriche
+   Tradelia Report Design System
+   --------------------------------
+   - palette + theme vars
+   - header hero
+   - sezioni F1..F6
+   - drawer/panel e tooltip metriche
    - share overlay
-   - footer base
-   - stampa istituzionale PDF con watermark e appendici
+   - footer
+   - print/PDF layout istituzionale
 */
 
 /* =========================================================
@@ -17,45 +15,63 @@
    ========================================================= */
 
 :root {
-  /* Testi */
-  --ink:           oklab(18% 0 0);        /* testo primario */
-  --muted:         oklab(45% 0 0 / .7);   /* testo attenuato */
+  /* testo / ink */
+  --ink:           oklab(18% 0 0);         /* testo primario */
+  --ink-soft:      oklab(30% 0 0);
+  --muted:         oklab(45% 0 0 / .7);    /* testo attenuato */
 
-  /* Superfici */
+  /* superfici */
   --surface-page:        oklab(98% 0 0);
   --surface-card:        oklab(100% 0 0);
   --surface-card-alt:    oklab(98% 0 0);
+  --surface-card-elev:   oklab(100% 0 0 / .9); /* per drawer */
+  --surface-panel-bg:    oklab(99% 0 0);       /* corpo drawer */
+  --surface-panel-head:  oklab(97% 0 0);       /* header drawer */
   --surface-footer:      oklab(97% 0 0);
 
-  /* Bordi */
-  --br-soft:        oklab(88% 0 0);
-  --br-card:        oklab(86% 0 0);
-  --br-card-strong: oklab(80% 0 0 / .9);
-  --footer-br:      oklab(85% 0 0);
+  /* bordi / separatori */
+  --br-soft:          oklab(88% 0 0);
+  --br-card:          oklab(86% 0 0);
+  --br-card-strong:   oklab(80% 0 0 / .9);
+  --br-panel-divider: oklab(82% 0 0);
+  --footer-br:        oklab(85% 0 0);
 
-  /* Ombre */
+  /* ombre */
   --shadow-card: 0 1px 2px rgba(0,0,0,.05),0 1px 1px rgba(0,0,0,.03);
   --shadow-lg:   0 16px 32px rgba(0,0,0,.07);
   --shadow-xl:   0 24px 48px rgba(0,0,0,.12);
 
-  /* Brand / accenti */
-  --brand:          oklab(60% 0.08 0.08);
-  --tint-hero:      oklab(88% 0.03 0.03);
-  --tint-hero-dark: oklab(35% 0.06 0.06);
+  /* brand / accent */
+  --brand:        oklab(60% 0.08 0.08);
+  --accent-dim:   color-mix(in oklab, var(--brand) 10%, transparent);
 
-  /* Tonalità semaforo */
-  --tone-g: oklab(55% -0.1 0.1);  /* verde-ish */
-  --tone-r: oklab(55% 0.13 0.04); /* rosso-ish */
-  --tone-n: oklab(55% 0 0);       /* neutro/brand neutro */
+  /* hero tint */
+  --tint-hero:        oklab(88% 0.03 0.03);
+  --tint-hero-dark:   oklab(35% 0.06 0.06);
 
-  /* Drawer bg overlay states */
-  --panel-bg:          oklab(100% 0 0 / 0.9);
-  --panel-bg-alt:      oklab(98% 0 0 / 1);
-  --panel-border:      oklab(86% 0 0);
+  /* tonalità stato semaforo */
+  --tone-g:       oklab(55% -0.1 0.1);  /* verde-ish sobrio */
+  --tone-r:       oklab(55% 0.13 0.04); /* rosso-ish sobrio */
+  --tone-n:       oklab(55% 0 0);       /* neutro/graphite */
 
-  --panel-bg-dark:     oklab(24% 0 0 / 0.9);
-  --panel-bg-alt-dark: oklab(26% 0 0 / 1);
-  --panel-border-dark: oklab(30% 0 0);
+  /* amber/warn (non troppo neon) */
+  --tone-warn:    oklab(75% 0.05 0.10);
+
+  /* layout tokens */
+  --radius-card:     12px;
+  --radius-card-sm:  8px;
+  --panel-radius:    16px;
+  --panel-radius-desktop: 16px;
+
+  --panel-width-desktop:        min(400px,90vw);
+  --panel-width-desktop-wide:   min(560px,90vw);
+  --panel-maxheight-mobile:     90vh;
+  --panel-maxheight-desktop:    100vh;
+
+  /* watermark print */
+  --wm-color: rgba(0,0,0,.04);
+  --wm-font:  700 48px/1.1 "Inter", system-ui, sans-serif;
+  --wm-rotate: -24deg;
 
   color-scheme: light;
 }
@@ -63,34 +79,37 @@
 /* Tema dark */
 html[data-theme="dark"] {
   --ink:           oklab(90% 0 0);
+  --ink-soft:      oklab(80% 0 0 / .9);
   --muted:         oklab(75% 0 0 / .7);
 
   --surface-page:        oklab(18% 0 0);
   --surface-card:        oklab(22% 0 0);
   --surface-card-alt:    oklab(24% 0 0);
+  --surface-card-elev:   oklab(26% 0 0); /* leggermente sopra card */
+  --surface-panel-bg:    oklab(22% 0 0);
+  --surface-panel-head:  oklab(26% 0 0 / .8);
   --surface-footer:      oklab(20% 0 0);
 
-  --br-soft:        oklab(32% 0 0);
-  --br-card:        oklab(30% 0 0);
-  --br-card-strong: oklab(28% 0 0);
-  --footer-br:      oklab(32% 0 0);
+  --br-soft:          oklab(32% 0 0);
+  --br-card:          oklab(30% 0 0);
+  --br-card-strong:   oklab(28% 0 0);
+  --br-panel-divider: oklab(34% 0 0 / .9);
+  --footer-br:        oklab(32% 0 0);
 
   --shadow-card: 0 1px 2px rgba(0,0,0,.8),0 1px 1px rgba(0,0,0,.6);
   --shadow-lg:   0 24px 48px rgba(0,0,0,.9);
   --shadow-xl:   0 32px 64px rgba(0,0,0,1);
 
-  --brand:          oklab(70% 0.05 0.05);
-  --tint-hero:      oklab(30% 0.02 0.02);
-  --tint-hero-dark: oklab(30% 0.02 0.02);
+  --brand:        oklab(70% 0.05 0.05);
+  --accent-dim:   color-mix(in oklab, var(--brand) 12%, transparent);
 
-  --tone-g: oklab(75% -0.08 0.08);
-  --tone-r: oklab(70% 0.14 0.04);
-  --tone-n: oklab(70% 0 0);
+  --tint-hero:        oklab(30% 0.02 0.02);
+  --tint-hero-dark:   oklab(30% 0.02 0.02);
 
-  /* panel tones for dark drawer */
-  --panel-bg:          var(--panel-bg-dark);
-  --panel-bg-alt:      var(--panel-bg-alt-dark);
-  --panel-border:      var(--panel-border-dark);
+  --tone-g:       oklab(75% -0.08 0.08);
+  --tone-r:       oklab(70% 0.14 0.04);
+  --tone-n:       oklab(70% 0 0);
+  --tone-warn:    oklab(80% 0.06 0.12);
 
   color-scheme: dark;
 }
@@ -104,6 +123,11 @@ body {
   text-rendering:optimizeLegibility;
   line-height:1.5;
   font-size:14px;
+}
+
+/* lock scrolling when drawers / metric modal open */
+body.body--lock {
+  overflow: hidden;
 }
 
 /* =========================================================
@@ -155,7 +179,7 @@ body {
   color:var(--ink);
 }
 
-/* metric "?" button and generic info-button look */
+/* tiny "?" info buttons */
 .info-btn,
 .metric-help{
   all:unset;
@@ -179,7 +203,80 @@ body {
 .metric-help:active{opacity:.8}
 
 /* =========================================================
-   HEADER sticky glass
+   METRIC STATUS FLAGS (✓ / ! / ✕) SMALL, INLINE
+   ========================================================= */
+
+.metric-flag {
+  flex-shrink: 0;
+  display: inline-flex;
+  vertical-align: middle;
+}
+.metric-flag--pos {
+  color: var(--tone-g);
+}
+.metric-flag--warn {
+  color: var(--tone-warn);
+}
+.metric-flag--neg {
+  color: var(--tone-r);
+}
+
+/* stampa → icone piccole in nero */
+@media print {
+  .metric-flag,
+  .metric-flag--pos,
+  .metric-flag--warn,
+  .metric-flag--neg {
+    color:#000 !important;
+    stroke:#000 !important;
+  }
+}
+
+/* =========================================================
+   SKETCH STATUS BADGE (icona "a mano" grande in F1 / drawer)
+   ========================================================= */
+
+.regime-sketch-icon {
+  width:32px;
+  height:32px;
+  flex-shrink:0;
+  line-height:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--tone-n); /* default neutro se non sovrascritto */
+}
+.regime-sketch-icon svg {
+  width:32px;
+  height:32px;
+  display:block;
+}
+.regime-sketch-icon--pos {
+  color: var(--tone-g);
+}
+.regime-sketch-icon--warn {
+  color: var(--tone-warn);
+}
+.regime-sketch-icon--neg {
+  color: var(--tone-r);
+}
+
+/* stampa → tratto nero/grigio */
+@media print {
+  .regime-sketch-icon,
+  .regime-sketch-icon--pos,
+  .regime-sketch-icon--warn,
+  .regime-sketch-icon--neg {
+    color:#000 !important;
+  }
+  .regime-sketch-icon svg path {
+    stroke:#000 !important;
+    stroke-opacity:.6 !important;
+  }
+}
+
+/* =========================================================
+   HEADER STICKY (top nav brand)
    ========================================================= */
 
 .hdr{
@@ -338,7 +435,7 @@ html[data-theme="dark"] .hero{
 }
 
 /* =========================================================
-   SECTION HEAD (descrizione framework globale)
+   INTRO SEZIONE "Struttura del Report"
    ========================================================= */
 
 .section-head{
@@ -407,7 +504,6 @@ html[data-theme="dark"] .hero{
   }
 }
 
-/* Header interno sezione modulo */
 .section-headline{
   display:flex;
   flex-wrap:wrap;
@@ -478,7 +574,6 @@ html[data-theme="dark"] .hero{
   max-width:60ch;
 }
 
-/* righe di metriche nei moduli */
 .metric-row{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(min(160px,100%),1fr));
@@ -514,7 +609,7 @@ html[data-theme="dark"] .hero{
   color:var(--ink);
 }
 
-/* "strategia attuale" pill nel modulo F1 */
+/* evidenziatore StrategyMode pill */
 .f1-mode-row{
   display:flex;
   flex-wrap:wrap;
@@ -537,17 +632,16 @@ html[data-theme="dark"] .hero{
   color:var(--tone-n);
 }
 
-/* stato iniziale di caricamento */
+/* stato iniziale caricamento sezione */
 .is-loading{
   opacity:.5;
   filter:grayscale(20%);
 }
 
 /* =========================================================
-   PANEL OVERLAY (drawer / console F1 / MiFID / Audit)
+   PANEL OVERLAY (drawer / audit / MiFID / Privacy / F1 console)
    ========================================================= */
 
-/* overlay container */
 .tl-panel-overlay[aria-hidden="true"] {
   display: none;
 }
@@ -558,7 +652,6 @@ html[data-theme="dark"] .hero{
   z-index: 120;
 }
 
-/* backdrop */
 .tl-panel-backdrop {
   position:absolute;
   inset:0;
@@ -569,11 +662,11 @@ html[data-theme="dark"] .hero{
 /* pannello base */
 .tl-panel {
   position: absolute;
-  background: var(--panel-bg);
+  background: var(--surface-panel-bg);
   color: var(--ink);
-  border:1px solid var(--panel-border);
+  border:1px solid var(--br-card);
   box-shadow: var(--shadow-xl);
-  border-radius:16px 16px 0 0;
+  border-radius:var(--panel-radius) var(--panel-radius) 0 0;
   display:flex;
   flex-direction:column;
   max-height:88vh;
@@ -581,13 +674,12 @@ html[data-theme="dark"] .hero{
   left:50%;
   transform:translateX(-50%);
   bottom:0;
-  backdrop-filter:blur(12px) saturate(1.2);
 }
 
-/* header del pannello */
+/* header panel */
 .tl-panel__header {
-  background:var(--panel-bg-alt);
-  border-bottom:1px solid var(--panel-border);
+  background:var(--surface-panel-head);
+  border-bottom:1px solid var(--br-panel-divider);
   padding:16px;
   display:flex;
   justify-content:space-between;
@@ -616,14 +708,13 @@ html[data-theme="dark"] .hero{
   width:28px;
   height:28px;
   border-radius:8px;
-  border:1px solid var(--panel-border);
-  background:var(--panel-bg-alt);
+  border:1px solid var(--br-soft);
+  background:var(--surface-card-elev);
   color:var(--muted);
   flex-shrink:0;
-  box-shadow:var(--shadow-card);
 }
 
-/* corpo scrollabile del pannello */
+/* corpo scrollabile */
 .tl-panel__body {
   flex:1 1 auto;
   overflow-y:auto;
@@ -634,12 +725,13 @@ html[data-theme="dark"] .hero{
   display:flex;
   flex-direction:column;
   gap:16px;
+  background:var(--surface-panel-bg);
 }
 
-/* blocchi/sezioni nel pannello */
+/* sezioni interne al drawer */
 .tl-panel-section {
-  background:var(--panel-bg-alt);
-  border:1px solid var(--panel-border);
+  background:var(--surface-card);
+  border:1px solid var(--br-card);
   border-radius:12px;
   box-shadow:var(--shadow-card);
   padding:12px 14px;
@@ -663,10 +755,10 @@ html[data-theme="dark"] .hero{
   margin-top:6px;
 }
 
-/* footer con bottoni */
+/* footer drawer */
 .tl-panel__footer {
-  border-top:1px solid var(--panel-border);
-  background:var(--panel-bg-alt);
+  border-top:1px solid var(--br-panel-divider);
+  background:var(--surface-panel-head);
   padding:12px 16px;
   display:flex;
   flex-wrap:wrap;
@@ -674,7 +766,7 @@ html[data-theme="dark"] .hero{
   gap:8px;
 }
 
-/* Desktop variant: dock lato destro (console istituzionale) */
+/* desktop: dock laterale destra con larghezze dedicate */
 @media(min-width:768px){
   .tl-panel--desktop {
     display:flex;
@@ -683,183 +775,88 @@ html[data-theme="dark"] .hero{
     transform:none;
     bottom:auto;
     top:0;
-    height:100%;
-    max-height:100%;
-    width:min(360px,90vw); /* default stretta */
-    border-radius:16px 0 0 16px;
-    backdrop-filter:blur(16px) saturate(1.3);
+    height:var(--panel-maxheight-desktop);
+    max-height:var(--panel-maxheight-desktop);
+    width:var(--panel-width-desktop);
+    border-radius:var(--panel-radius-desktop) 0 0 var(--panel-radius-desktop);
+    background:var(--surface-panel-bg);
+    border:1px solid var(--br-card);
+    box-shadow:var(--shadow-xl);
   }
   .tl-panel--desktop.tl-panel--wide {
-    width:min(560px,90vw); /* console larga */
+    width:var(--panel-width-desktop-wide);
   }
-  .tl-panel--mobile {
-    display:none;
-  }
-
-  .tl-panel__body {
-    flex:1 1 auto;
-    min-height:0;
-    overflow:auto;
-    padding:16px;
-  }
-  .tl-panel__footer {
-    flex-shrink:0;
-    padding:12px 16px;
-    border-top:1px solid var(--panel-border);
-    background:var(--panel-bg-alt);
-  }
+  .tl-panel--mobile { display:none; }
 }
 
-/* Mobile bottom sheet */
+/* mobile bottom sheet */
 @media(max-width:767px){
-  .tl-panel--desktop {
-    display:none;
-  }
+  .tl-panel--desktop { display:none; }
   .tl-panel--mobile {
     display:flex;
-    width:100%;
-    max-height:90vh;
-    border-top-left-radius:16px;
-    border-top-right-radius:16px;
-    overflow:hidden;
     flex-direction:column;
+    width:100%;
+    max-height:var(--panel-maxheight-mobile);
+    border-top-left-radius:var(--panel-radius);
+    border-top-right-radius:var(--panel-radius);
+    overflow:hidden;
+    background:var(--surface-panel-bg);
   }
   .tl-panel--mobile .tl-panel__body {
     flex:1 1 auto;
     min-height:0;
     overflow:auto;
     padding:16px;
+    background:var(--surface-panel-bg);
   }
   .tl-panel--mobile .tl-panel__footer {
     flex-shrink:0;
     padding:12px 16px;
-    border-top:1px solid var(--panel-border);
-    background:var(--panel-bg-alt);
+    border-top:1px solid var(--br-panel-divider);
+    background:var(--surface-panel-head);
   }
 }
 
-/* Sidebar tab attiva nel drawer desktop */
-.f1b-panel-menu .f1b-tab-btn {
-  all:unset;
-  cursor:pointer;
-  display:block;
-  width:100%;
-  text-align:left;
-  font-size:12px;
-  line-height:1.4;
-  padding:0.75rem .5rem;
-  border-radius:var(--radius-card-sm,8px);
-  border-left:3px solid transparent;
-  font-weight:500;
-  color:var(--muted);
-  background:transparent;
-}
-.f1b-panel-menu .f1b-tab-btn.is-active{
+/* tab list (desktop sidebar nel drawer F1) */
+.f1b-panel-menu .is-active {
   border-left:3px solid var(--brand) !important;
-  background:color-mix(in oklab, var(--brand) 10%, transparent) !important;
+  background:var(--accent-dim) !important;
   font-weight:600 !important;
   color:var(--ink) !important;
-  box-shadow:0 12px 32px rgba(0,0,0,.18);
+  border-radius:var(--radius-card-sm);
 }
 
-/* Bottom tab bar mobile (drawer F1) */
+/* bottom tab mobile (drawer F1) */
 .f1b-mobile-tabbar {
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  display:flex;
-  justify-content:space-between;
-  gap:0.25rem;
-  border-top:1px solid var(--panel-border);
-  background:var(--panel-bg-alt);
-  padding:0.5rem 0.75rem;
-  font-size:11px;
-  line-height:1.2;
-  z-index:10;
+  background:var(--surface-panel-head);
+  border-top:1px solid var(--br-panel-divider);
 }
-
-/* bottone tab mobile base */
-.f1b-tab-btn-mobile {
-  all:unset;
-  cursor:pointer;
-  flex:1 1 auto;
-  text-align:center;
-  border-radius:var(--radius-card-sm,8px);
-  padding:0.5rem 0.4rem 0.45rem;
-  font-size:11px;
-  line-height:1.25;
-  font-weight:500;
-  color:var(--muted);
-  border:1px solid transparent;
-  position:relative;
-  box-shadow:0 0 0 rgba(0,0,0,0);
-}
-
-/* stato attivo mobile */
-.f1b-tab-btn-mobile.is-active {
-  font-weight:600;
-  color:var(--ink);
-  border:1px solid color-mix(in oklab, var(--brand) 40%, transparent);
-  background:
-    color-mix(
-      in oklab,
-      var(--brand) 8%,
-      var(--panel-bg-alt) 92%
-    );
-  box-shadow:0 6px 16px rgba(0,0,0,.18);
-}
-
-/* highlight bar sopra il tab attivo */
-.f1b-tab-btn-mobile.is-active::before {
-  content:"";
-  position:absolute;
-  top:-0.5rem;
-  left:50%;
-  transform:translateX(-50%);
-  height:2px;
-  width:24px;
-  border-radius:999px;
-  background:var(--brand);
-}
-
-/* dark tune */
-html[data-theme="dark"] .f1b-tab-btn-mobile.is-active {
-  border:1px solid color-mix(in oklab, var(--brand) 60%, transparent);
-  background:
-    color-mix(
-      in oklab,
-      var(--brand) 14%,
-      var(--panel-bg-alt) 86%
-    );
-  box-shadow:0 16px 32px rgba(0,0,0,.9);
-}
-
-html[data-theme="dark"] .f1b-tab-btn-mobile {
-  color:var(--muted);
+.f1b-mobile-tabbar .is-active {
+  background:var(--accent-dim) !important;
+  font-weight:600 !important;
+  color:var(--ink) !important;
+  border-radius:var(--radius-card-sm);
 }
 
 /* =========================================================
-   METRIC TOOLTIP ( ? ) DESKTOP
+   METRIC TOOLTIP (? button) - DESKTOP POPOVER
    ========================================================= */
 
-.tl-popover[aria-hidden="true"] {
-  display:none;
-}
+.tl-popover[aria-hidden="true"] { display:none; }
 .tl-popover[aria-hidden="false"] {
   display:block;
-  position:absolute;
+  position:fixed;
   z-index:200;
   width:min(320px,90vw);
   max-width:320px;
-  background:var(--surface-card);
-  border:1px solid var(--br-card);
+  background:var(--surface-card-elev);
+  border:1px solid var(--br-card-strong);
   border-radius:12px;
   box-shadow:var(--shadow-xl);
   padding:12px;
-  font-size:12.5px;
-  line-height:1.4;
   color:var(--ink);
+  font-size:12.5px;
+  line-height:1.45;
 }
 .tl-popover__head {
   display:flex;
@@ -900,12 +897,10 @@ html[data-theme="dark"] .f1b-tab-btn-mobile {
 }
 
 /* =========================================================
-   METRIC MODAL ( ? ) MOBILE
+   METRIC MODAL (? button) - MOBILE
    ========================================================= */
 
-.tl-metric-modal-overlay[aria-hidden="true"] {
-  display:none;
-}
+.tl-metric-modal-overlay[aria-hidden="true"] { display:none; }
 .tl-metric-modal-overlay[aria-hidden="false"] {
   display:block;
   position:fixed;
@@ -928,18 +923,19 @@ html[data-theme="dark"] .f1b-tab-btn-mobile {
   width:100%;
   max-width:480px;
   max-height:80vh;
-  background:var(--surface-card);
-  border:1px solid var(--br-card);
+  background:var(--surface-card-elev);
+  border:1px solid var(--br-card-strong);
   border-radius:16px;
   box-shadow:var(--shadow-xl);
   display:flex;
   flex-direction:column;
+  color:var(--ink);
 }
 
 .tl-metric-modal__header {
   padding:16px;
-  border-bottom:1px solid var(--br-soft);
-  background:var(--surface-card-alt);
+  border-bottom:1px solid var(--br-panel-divider);
+  background:var(--surface-panel-head);
   display:flex;
   justify-content:space-between;
   align-items:flex-start;
@@ -968,7 +964,7 @@ html[data-theme="dark"] .f1b-tab-btn-mobile {
   height:28px;
   border-radius:8px;
   border:1px solid var(--br-soft);
-  background:var(--surface-card);
+  background:var(--surface-card-elev);
   color:var(--muted);
   flex-shrink:0;
 }
@@ -982,12 +978,13 @@ html[data-theme="dark"] .f1b-tab-btn-mobile {
   max-height:calc(80vh - 64px);
 }
 
-/* desktop usa popover, mobile usa modal */
+/* desktop usa popover, non mostra modale */
 @media(min-width:768px){
   .tl-metric-modal-overlay{
     display:none !important;
   }
 }
+/* mobile nasconde popover */
 @media(max-width:767px){
   .tl-popover{
     display:none !important;
@@ -1019,9 +1016,9 @@ html[data-theme="dark"] .f1b-tab-btn-mobile {
   top:50%;
   transform:translate(-50%,-50%);
   width:min(320px,90vw);
-  background:var(--surface-card);
+  background:var(--surface-card-elev);
   color:var(--ink);
-  border:1px solid var(--br-card);
+  border:1px solid var(--br-card-strong);
   border-radius:16px;
   box-shadow:var(--shadow-xl);
   padding:16px;
@@ -1059,7 +1056,6 @@ html[data-theme="dark"] .f1b-tab-btn-mobile {
   background:var(--surface-card-alt);
   color:var(--muted);
   flex-shrink:0;
-  box-shadow:var(--shadow-card);
 }
 .share-sheet__list{
   display:grid;
@@ -1150,324 +1146,159 @@ html[data-theme="dark"] .f1b-tab-btn-mobile {
 }
 
 /* =========================================================
-   PRINT OVERRIDES (PDF istituzionale)
+   PRINT / PDF
    ========================================================= */
 
-@media print{
+/* Nascondiamo tutto ciò che è interattivo / runtime da web */
+@media print {
 
-  /* Colori stampa: tutto nero/grigio su bianco */
-  body,
-  html {
-    background:#fff !important;
-    color:#000 !important;
-  }
-
-  /* Niente overlay/modali/CTA/pulsanti/footer marketing */
+  /* no header sticky toolbar, no buttons share/tema, no overlay, no popover, no tab bar, no footer buttons */
   .noprint,
   header,
   .hdr,
-  .btn,
-  .btn-sm,
-  .f1b-cta-btn,
-  .share-overlay,
-  #share-overlay,
   .tl-panel-overlay,
   .tl-popover,
   .tl-metric-modal-overlay,
-  .f1b-mobile-tabbar,
-  .tl-panel__footer,
-  .footer-wrap,
-  .site-footer,
-  #btn-privacy-open,
-  #btn-mifid-open,
-  #btn-print,
-  #btn-print-2,
-  #btn-share,
-  #btn-theme {
+  #share-overlay,
+  [id="btn-print"],
+  [id="btn-print-2"],
+  [id="btn-share"],
+  [id="btn-theme"],
+  [id="btn-privacy-open"],
+  [id="btn-mifid-open"],
+  .share-overlay,
+  .share-sheet,
+  .share-close-btn,
+  .btn,
+  .btn-sm {
     display:none !important;
   }
 
-  /* Watermark diagonale premium, su tutte le pagine */
-  #print-watermark {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-    z-index: 0;
-    transform: rotate(-33deg);
-    opacity: 1 !important;
-  }
-  #print-watermark::before {
-    content: "TRADELIA AI — PROPRIETARY MATERIAL · INTERNAL USE ONLY";
-    font-family: "Inter", system-ui, sans-serif;
-    font-weight: 800;
-    font-size: 40px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: rgba(0, 0, 0, 0.06);
-  }
-
-  /* Hero: togli gradient/ombre/bordi pieni troppo digital */
+  /* Hero = front page cover */
   .hero{
     page-break-after:always;
-    border:1px solid #bbb !important;
-    box-shadow:none!important;
+    border:1px solid #000;
     background:#fff !important;
-    color:#000 !important;
+    box-shadow:none!important;
+    position:relative;
   }
-  .hero__ticker,
-  .hero__px{
-    color:#000 !important;
+
+  /* Watermark istituzionale su OGNI pagina stampata */
+  body::after {
+    content:"TRADELIA•AI  |  INSTITUTIONAL MODEL REPORT  |  USO RISERVATO";
+    font: var(--wm-font);
+    color: var(--wm-color);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width:200%;
+    text-align:center;
+    transform: translate(-50%, -50%) rotate(var(--wm-rotate));
+    pointer-events:none;
+    z-index:-1;
+    white-space:nowrap;
   }
-  .hero__venue,
-  .hero__chg,
-  .hero__badge,
-  .meta-label,
-  .meta-val{
-    color:#000 !important;
-  }
-  .hero__badge{
-    border:1px solid #000 !important;
-    box-shadow:none !important;
+
+  /* pagina Disclaimer/Aviso MiFID piazzata SUBITO dopo la cover:
+     Suggerito: clona contenuto MiFID drawer (testo completo regolamentare)
+     in un <section id="print-disclaimer"> nel DOM e poi lo mostri qui */
+  #print-disclaimer {
+    display:block !important;
+    font-size:12px;
+    line-height:1.45;
+    color:#000;
+    page-break-after:always;
+    border:1px solid #000;
+    border-radius:0;
+    padding:16px;
     background:#fff !important;
   }
 
-  .hero__meta .meta-pill{
+  /* eventuale "Indice del Report" (TOC) */
+  #print-toc {
+    display:block !important;
+    page-break-after:always;
+    color:#000;
+    font-size:12px;
+    line-height:1.45;
+  }
+
+  /* Last page: appendice MiFID completa + versione audit fonti
+     Puoi avere #print-appendix nel DOM */
+  #print-appendix {
+    display:block !important;
+    font-size:11.5px;
+    line-height:1.45;
+    color:#000;
+    border-top:1px solid #000;
+    padding-top:12px;
+    page-break-after:always;
+  }
+
+  /* togli border radius e ombre per mood "paper" */
+  .report-section-block,
+  .meta-pill,
+  .tl-panel-section,
+  .share-btn,
+  .section-badge,
+  .module-status-pill,
+  .metric-field {
+    border-radius:0 !important;
+    box-shadow:none !important;
     background:#fff !important;
     border:1px solid #000 !important;
-    box-shadow:none !important;
     color:#000 !important;
   }
-  .hero__meta .meta-pill .tonebar{
+
+  /* testo e titoli full nero */
+  body,
+  .section-title,
+  .section-head-left,
+  .section-title-main,
+  .section-desc,
+  .hero__ticker,
+  .hero__px,
+  .hero__badge,
+  .meta-label,
+  .meta-val,
+  .metric-value,
+  .metric-label,
+  .module-status-pill,
+  .module-status-pill[data-state="active"],
+  .module-status-pill[data-state="error"] {
+    color:#000 !important;
+    border-color:#000 !important;
+    background:#fff !important;
+  }
+
+  /* pillar della hero info (Snapshot / Price / Δ%) -> linee nere */
+  .meta-pill .tonebar {
     background:#000 !important;
   }
 
-  /* Sezioni report: niente card look, diventano blocchi puliti */
-  .report-section-block{
-    background:#fff !important;
-    border:0 !important;
-    box-shadow:none !important;
-    color:#000 !important;
-    padding:0 !important;
-    page-break-inside:avoid;
-  }
-
-  .section-headline{
-    margin-bottom:.5rem !important;
-  }
-  .section-badge{
-    background:#fff !important;
-    border:1px solid #000 !important;
-    box-shadow:none !important;
-    color:#000 !important;
-  }
-  .module-status-pill{
-    background:#fff !important;
-    border:1px solid #000 !important;
-    color:#000 !important;
-    box-shadow:none !important;
-  }
-
-  .section-desc,
-  .section-title-main,
-  .section-head-topline,
-  .section-head-left,
-  .section-head-topline span{
-    color:#000 !important;
-  }
-
-  .metric-field{
-    background:#fff !important;
-    border:0 !important;
-    box-shadow:none !important;
-    min-height:auto !important;
-    padding:0 0 .5rem 0 !important;
-  }
-  .metric-label{
-    font-size:10px !important;
-    line-height:1.3 !important;
-    font-weight:700 !important;
-    color:#000 !important;
-    letter-spacing:.05em !important;
-    text-transform:uppercase !important;
-    margin-bottom:.25rem !important;
-  }
-  .metric-value{
-    font-size:11px !important;
-    line-height:1.4 !important;
-    font-weight:700 !important;
-    color:#000 !important;
-  }
-
-  .info-btn,
-  .metric-help{
+  /* tab attivi nei drawer in print non servono (drawer non stampiamo se non espanso) */
+  .f1b-panel-menu,
+  .f1b-mobile-tabbar {
     display:none !important;
   }
 
-  /* Appendice A · Disclaimer legale
-     Deve comparire SUBITO DOPO il corpo principale F1..F6 */
-  #print-disclaimer {
+  /* icona sketch regime in nero/grigio (già fatto sopra) */
+
+  /* footer: niente bottoni, solo la parte legale e contatti va in fondo all'ultima pagina,
+     quindi puoi avere #print-footer dedicato */
+  .footer-wrap {
+    display:none !important;
+  }
+  #print-footer {
     display:block !important;
-    page-break-before:always;
-    background:#fff !important;
-    color:#000 !important;
-    font-size:11px !important;
-    line-height:1.45 !important;
-    max-width:70ch !important;
-    position:relative;
-    z-index:1;
-  }
-
-  #print-disclaimer .print-disclaimer__head{
-    margin-bottom:.75rem !important;
-    padding-bottom:.5rem !important;
-    border-bottom:1px solid #999 !important;
-  }
-
-  #print-disclaimer .print-disclaimer__title{
-    font-size:12px !important;
-    font-weight:700 !important;
-    line-height:1.4 !important;
-    color:#000 !important;
-    text-transform:uppercase !important;
-    letter-spacing:.06em !important;
-  }
-
-  #print-disclaimer .print-disclaimer__body p{
-    margin:0 0 .75rem 0 !important;
-    font-size:11px !important;
-    line-height:1.45 !important;
-    color:#000 !important;
-  }
-
-  #print-disclaimer .print-disclaimer__body p strong{
-    font-weight:700 !important;
-  }
-
-  #print-disclaimer .print-disclaimer__footerline{
-    border-top:1px solid #999 !important;
-    padding-top:.75rem !important;
-    margin-top:1rem !important;
-    font-size:10.5px !important;
-    line-height:1.4 !important;
-    color:#000 !important;
-    font-weight:600 !important;
-  }
-
-  /* Appendice B · Audit tecnico F1
-     Viene DOPO il disclaimer. Se non la vuoi nel PDF finale,
-     metti display:none !important qui sotto.
-  */
-  #print-f1-appendix {
-    display:block !important;
-    page-break-before:always;
-    background:#fff !important;
-    color:#000 !important;
-    font-size:11px !important;
-    line-height:1.45 !important;
-    max-width:100% !important;
-    position:relative;
-    z-index:1;
-  }
-
-  #print-f1-appendix .print-panel-dump__head{
-    border-bottom:1px solid #999 !important;
-    margin-bottom:1rem !important;
-    padding-bottom:.5rem !important;
-  }
-  #print-f1-appendix .print-panel-dump__badge{
-    font-size:10px !important;
-    font-weight:700 !important;
-    line-height:1.3 !important;
-    text-transform:uppercase !important;
-    letter-spacing:.05em !important;
-    color:#000 !important;
-    border:1px solid #000 !important;
-    padding:.15rem .4rem !important;
-    display:inline-block !important;
-  }
-  #print-f1-appendix .print-panel-dump__title{
-    margin-top:.5rem !important;
-    font-size:12px !important;
-    font-weight:700 !important;
-    line-height:1.4 !important;
-    color:#000 !important;
-    max-width:70ch !important;
-  }
-
-  #print-f1-appendix .print-panel-dump__block{
-    margin-top:1rem !important;
-    page-break-inside:avoid !important;
-  }
-  #print-f1-appendix .print-panel-dump__block-title{
-    font-size:11px !important;
-    font-weight:700 !important;
-    line-height:1.4 !important;
-    color:#000 !important;
-    text-transform:uppercase !important;
-    letter-spacing:.05em !important;
-    border-bottom:1px solid #999 !important;
-    padding-bottom:.25rem !important;
-    margin-bottom:.5rem !important;
-  }
-
-  #print-f1-appendix .print-panel-dump__row{
-    display:flex !important;
-    flex-wrap:nowrap !important;
-    align-items:baseline !important;
-    font-size:11px !important;
-    line-height:1.45 !important;
-    margin-bottom:.35rem !important;
-  }
-  #print-f1-appendix .print-panel-dump__label{
-    min-width:130px !important;
-    max-width:130px !important;
-    font-size:9.5px !important;
-    line-height:1.3 !important;
-    font-weight:600 !important;
-    text-transform:uppercase !important;
-    letter-spacing:.05em !important;
-    color:#666 !important;
-  }
-  #print-f1-appendix .print-panel-dump__val{
-    flex:1 1 auto !important;
-    font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace !important;
-    font-size:11px !important;
-    line-height:1.4 !important;
-    font-weight:700 !important;
-    color:#000 !important;
-  }
-
-  #print-f1-appendix .print-panel-dump__subhead{
-    font-size:10px !important;
-    line-height:1.4 !important;
-    font-weight:600 !important;
-    text-transform:uppercase !important;
-    letter-spacing:.05em !important;
-    color:#000 !important;
-    margin-top:.75rem !important;
-    margin-bottom:.4rem !important;
-  }
-
-  #print-f1-appendix .print-panel-dump__list,
-  #print-f1-appendix .print-panel-dump__notes{
-    padding-left:1rem !important;
-    margin:0 !important;
-  }
-  #print-f1-appendix .print-panel-dump__list li,
-  #print-f1-appendix .print-panel-dump__notes li{
-    font-size:11px !important;
-    line-height:1.45 !important;
-    color:#000 !important;
-    margin-bottom:.3rem !important;
+    font-size:11px;
+    line-height:1.4;
+    color:#000;
+    border-top:1px solid #000;
+    padding-top:8px;
   }
 }
 
-/* Blocco scroll lock sotto drawer/panel */
-body.body--lock {
-  overflow: hidden;
-}
+/* =========================================================
+   FINE
+   ========================================================= */
