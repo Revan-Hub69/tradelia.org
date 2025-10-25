@@ -11,9 +11,10 @@
 // - Aperto via window.__TradeliaUI.openPanel({ ... })
 //
 // Requisiti lato ui-runtime.js :
-// - openPanel(opts) deve accettare opts.panelSize === "wide" per aggiungere classe wide al pannello desktop
-// - chiusura panel blocca/riattiva scroll del body
-// - bindMetricInfoButtons(root) deve essere esposta su window.__TradeliaUI
+// - openPanel(opts) accetta opts.panelSize === "wide" per pannello largo
+// - openPanel/closePanel gestiscono body--lock (scroll lock del body)
+// - bindMetricInfoButtons(root) è esposta su window.__TradeliaUI e viene già
+//   chiamata automaticamente quando apriamo il panel
 //
 // Export richiesti dal runtime principale (app.js):
 // - renderCard(data, ctx)
@@ -163,7 +164,8 @@ export function bindCard(node, rawData, ctx = {}) {
     });
   }
 
-  // Tooltip "?" nella card
+  // Tooltip "?" nella card (prima vista pagina):
+  // qui restiamo difensivi: se il runtime è già partito, questo è safe.
   if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
     try {
       window.__TradeliaUI.bindMetricInfoButtons(node);
@@ -191,7 +193,7 @@ function openF1Drawer(data) {
     ? renderDrawerMobileShell(sectionsObj)
     : renderDrawerDesktopShell(sectionsObj);
 
-  // Apri pannello
+  // Apri pannello (ui-runtime gestisce già scroll lock, tooltip bind, ecc.)
   window.__TradeliaUI.openPanel({
     title: "F1 · Regime di mercato",
     subtitle: "Flussi settoriali, ampiezza del rialzo e volatilità (T-1)",
@@ -214,23 +216,18 @@ function openF1Drawer(data) {
     panelSize: "wide" // pannello largo desktop
   });
 
-  // Dopo apertura: bind eventi tab + tooltip sul contenuto del panel
+  // Dopo apertura: bind SOLO la logica di switching tab,
+  // NON ribindiamo i tooltip (il runtime lo ha già fatto all'openPanel).
   setTimeout(() => {
     const panelBody = document.getElementById("panel-body");
     const panelBodyMobile = document.getElementById("panel-body-mobile");
 
     if (panelBody) {
       bindDrawerTabs(panelBody);
-      if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
-        try { window.__TradeliaUI.bindMetricInfoButtons(panelBody); } catch (e) {}
-      }
     }
 
     if (panelBodyMobile) {
       bindDrawerTabs(panelBodyMobile);
-      if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
-        try { window.__TradeliaUI.bindMetricInfoButtons(panelBodyMobile); } catch (e) {}
-      }
     }
   }, 0);
 }
