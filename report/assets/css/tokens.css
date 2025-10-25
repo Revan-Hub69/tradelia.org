@@ -24,7 +24,7 @@
   --surface-page:        oklab(98% 0 0);
   --surface-card:        oklab(100% 0 0);
   --surface-card-alt:    oklab(98% 0 0);
-  --surface-card-elev:   oklab(100% 0 0 / .9); /* per drawer */
+  --surface-card-elev:   oklab(100% 0 0 / .9); /* per overlay elevati */
   --surface-panel-bg:    oklab(99% 0 0);       /* corpo drawer */
   --surface-panel-head:  oklab(97% 0 0);       /* header drawer */
   --surface-footer:      oklab(97% 0 0);
@@ -49,13 +49,11 @@
   --tint-hero:        oklab(88% 0.03 0.03);
   --tint-hero-dark:   oklab(35% 0.06 0.06);
 
-  /* tonalità stato semaforo */
-  --tone-g:       oklab(55% -0.1 0.1);  /* verde-ish sobrio */
-  --tone-r:       oklab(55% 0.13 0.04); /* rosso-ish sobrio */
-  --tone-n:       oklab(55% 0 0);       /* neutro/graphite */
-
-  /* amber/warn (non troppo neon) */
-  --tone-warn:    oklab(75% 0.05 0.10);
+  /* tonalità stato */
+  --tone-g:       oklab(55% -0.1 0.1);   /* verde istituzionale */
+  --tone-r:       oklab(55% 0.13 0.04);  /* rosso rischio */
+  --tone-n:       oklab(55% 0 0);        /* neutro / grafite */
+  --tone-warn:    oklab(75% 0.05 0.10);  /* amber per attenzione */
 
   /* layout tokens */
   --radius-card:     12px;
@@ -85,9 +83,9 @@ html[data-theme="dark"] {
   --surface-page:        oklab(18% 0 0);
   --surface-card:        oklab(22% 0 0);
   --surface-card-alt:    oklab(24% 0 0);
-  --surface-card-elev:   oklab(26% 0 0); /* leggermente sopra card */
-  --surface-panel-bg:    oklab(22% 0 0);
-  --surface-panel-head:  oklab(26% 0 0 / .8);
+  --surface-card-elev:   oklab(26% 0 0);        /* sopra card base */
+  --surface-panel-bg:    oklab(22% 0 0);        /* corpo drawer */
+  --surface-panel-head:  oklab(26% 0 0 / .8);   /* header drawer */
   --surface-footer:      oklab(20% 0 0);
 
   --br-soft:          oklab(32% 0 0);
@@ -210,7 +208,15 @@ body.body--lock {
   flex-shrink: 0;
   display: inline-flex;
   vertical-align: middle;
+  line-height:0;
 }
+.metric-flag svg {
+  width:16px;
+  height:16px;
+  display:block;
+}
+
+/* color semantic via parent class */
 .metric-flag--pos {
   color: var(--tone-g);
 }
@@ -221,6 +227,51 @@ body.body--lock {
   color: var(--tone-r);
 }
 
+/* stroke styles used inside the inline SVGs */
+.metric-flag svg .ring-stroke-1 {
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2.5;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-opacity:.7;
+  stroke-dasharray:2 1.2 .5 1.4;
+}
+.metric-flag svg .ring-stroke-2 {
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.4;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-opacity:.4;
+  stroke-dasharray:.6 1.1;
+}
+.metric-flag svg .mark-stroke-1 {
+  fill:none;
+  stroke:currentColor;
+  stroke-width:4;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-opacity:.9;
+}
+.metric-flag svg .mark-stroke-2 {
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2.2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-opacity:.5;
+  stroke-dasharray:1 1.2 .4 1;
+}
+.metric-flag svg .dot-stroke-1 {
+  fill:none;
+  stroke:currentColor;
+  stroke-width:3.5;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-opacity:.9;
+}
+
 /* stampa → icone piccole in nero */
 @media print {
   .metric-flag,
@@ -229,6 +280,14 @@ body.body--lock {
   .metric-flag--neg {
     color:#000 !important;
     stroke:#000 !important;
+  }
+  .metric-flag svg .ring-stroke-1,
+  .metric-flag svg .ring-stroke-2,
+  .metric-flag svg .mark-stroke-1,
+  .metric-flag svg .mark-stroke-2,
+  .metric-flag svg .dot-stroke-1 {
+    stroke:#000 !important;
+    stroke-opacity:.6 !important;
   }
 }
 
@@ -244,7 +303,7 @@ body.body--lock {
   display:flex;
   align-items:center;
   justify-content:center;
-  color:var(--tone-n); /* default neutro se non sovrascritto */
+  color:var(--tone-n); /* default neutro */
 }
 .regime-sketch-icon svg {
   width:32px;
@@ -272,6 +331,64 @@ body.body--lock {
   .regime-sketch-icon svg path {
     stroke:#000 !important;
     stroke-opacity:.6 !important;
+  }
+}
+
+/* =========================================================
+   PILL STANCE REGIME (StrategyMode stance badge)
+   ========================================================= */
+
+.regime-stance-pill {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  font-weight:600;
+  line-height:1.2;
+  border-radius:var(--radius-card-sm);
+  padding:.3rem .5rem;
+  border:1px solid var(--br-card);
+  background:var(--surface-card-alt);
+  color:var(--ink);
+  box-shadow:var(--shadow-card);
+
+  /* default neutro */
+  border-color:var(--tone-n);
+  color:var(--tone-n);
+  background:color-mix(in oklab, var(--tone-n) 10%, transparent);
+}
+.regime-stance-pill--pos {
+  border-color:var(--tone-g);
+  color:var(--tone-g);
+  background:color-mix(in oklab, var(--tone-g) 10%, transparent);
+}
+.regime-stance-pill--warn {
+  border-color:var(--tone-warn);
+  color:var(--tone-warn);
+  background:color-mix(in oklab, var(--tone-warn) 10%, transparent);
+}
+.regime-stance-pill--neg {
+  border-color:var(--tone-r);
+  color:var(--tone-r);
+  background:color-mix(in oklab, var(--tone-r) 10%, transparent);
+}
+.regime-stance-pill--neutral {
+  border-color:var(--tone-n);
+  color:var(--tone-n);
+  background:color-mix(in oklab, var(--tone-n) 10%, transparent);
+}
+
+/* stampa → tutto neutro nero */
+@media print {
+  .regime-stance-pill,
+  .regime-stance-pill--pos,
+  .regime-stance-pill--warn,
+  .regime-stance-pill--neg,
+  .regime-stance-pill--neutral {
+    border-color:#000 !important;
+    color:#000 !important;
+    background:#fff !important;
+    box-shadow:none !important;
   }
 }
 
@@ -1149,10 +1266,12 @@ html[data-theme="dark"] .hero{
    PRINT / PDF
    ========================================================= */
 
-/* Nascondiamo tutto ciò che è interattivo / runtime da web */
+/* in stampa vogliamo: copertina hero -> disclaimer -> indice -> contenuto -> appendix finale
+   più watermark diagonale e nessun bottone/overlay UI */
+
 @media print {
 
-  /* no header sticky toolbar, no buttons share/tema, no overlay, no popover, no tab bar, no footer buttons */
+  /* nascondi UI interattiva / runtime web */
   .noprint,
   header,
   .hdr,
@@ -1170,20 +1289,39 @@ html[data-theme="dark"] .hero{
   .share-sheet,
   .share-close-btn,
   .btn,
-  .btn-sm {
+  .btn-sm,
+  .f1b-panel-menu,
+  .f1b-mobile-tabbar,
+  .footer-wrap {
     display:none !important;
   }
 
-  /* Hero = front page cover */
+  /* copertina */
   .hero{
     page-break-after:always;
     border:1px solid #000;
     background:#fff !important;
     box-shadow:none!important;
     position:relative;
+    color:#000 !important;
+  }
+  .hero * {
+    color:#000 !important;
+    border-color:#000 !important;
+    background:#fff !important;
+    box-shadow:none !important;
+  }
+  .meta-pill{
+    border-radius:0 !important;
+    border:1px solid #000 !important;
+    background:#fff !important;
+    box-shadow:none !important;
+  }
+  .meta-pill .tonebar {
+    background:#000 !important;
   }
 
-  /* Watermark istituzionale su OGNI pagina stampata */
+  /* watermark diagonale su OGNI pagina */
   body::after {
     content:"TRADELIA•AI  |  INSTITUTIONAL MODEL REPORT  |  USO RISERVATO";
     font: var(--wm-font);
@@ -1199,9 +1337,7 @@ html[data-theme="dark"] .hero{
     white-space:nowrap;
   }
 
-  /* pagina Disclaimer/Aviso MiFID piazzata SUBITO dopo la cover:
-     Suggerito: clona contenuto MiFID drawer (testo completo regolamentare)
-     in un <section id="print-disclaimer"> nel DOM e poi lo mostri qui */
+  /* disclaimer legale (MiFID completo) subito dopo la copertina */
   #print-disclaimer {
     display:block !important;
     font-size:12px;
@@ -1214,7 +1350,7 @@ html[data-theme="dark"] .hero{
     background:#fff !important;
   }
 
-  /* eventuale "Indice del Report" (TOC) */
+  /* indice report */
   #print-toc {
     display:block !important;
     page-break-after:always;
@@ -1223,8 +1359,67 @@ html[data-theme="dark"] .hero{
     line-height:1.45;
   }
 
-  /* Last page: appendice MiFID completa + versione audit fonti
-     Puoi avere #print-appendix nel DOM */
+  /* sezioni contenuto principali F1..F6 */
+  .report-section-block,
+  .metric-field,
+  .section-badge,
+  .module-status-pill,
+  .tl-panel-section {
+    border-radius:0 !important;
+    box-shadow:none !important;
+    background:#fff !important;
+    border:1px solid #000 !important;
+    color:#000 !important;
+  }
+  .report-section-block *,
+  .metric-field *,
+  .tl-panel-section *,
+  .section-badge *,
+  .module-status-pill * {
+    color:#000 !important;
+    border-color:#000 !important;
+    background:#fff !important;
+    box-shadow:none !important;
+  }
+
+  /* stance pills, status icon, metric flags in nero */
+  .regime-stance-pill,
+  .regime-stance-pill--pos,
+  .regime-stance-pill--warn,
+  .regime-stance-pill--neg,
+  .regime-stance-pill--neutral {
+    border-color:#000 !important;
+    color:#000 !important;
+    background:#fff !important;
+    box-shadow:none !important;
+  }
+  .regime-sketch-icon,
+  .regime-sketch-icon--pos,
+  .regime-sketch-icon--warn,
+  .regime-sketch-icon--neg {
+    color:#000 !important;
+  }
+  .regime-sketch-icon svg path {
+    stroke:#000 !important;
+    stroke-opacity:.6 !important;
+  }
+  .metric-flag,
+  .metric-flag--pos,
+  .metric-flag--warn,
+  .metric-flag--neg {
+    color:#000 !important;
+    stroke:#000 !important;
+  }
+  .metric-flag svg .ring-stroke-1,
+  .metric-flag svg .ring-stroke-2,
+  .metric-flag svg .mark-stroke-1,
+  .metric-flag svg .mark-stroke-2,
+  .metric-flag svg .dot-stroke-1 {
+    stroke:#000 !important;
+    stroke-opacity:.6 !important;
+  }
+
+  /* appendice finale con MiFID esteso / audit fonti */
   #print-appendix {
     display:block !important;
     font-size:11.5px;
@@ -1235,60 +1430,7 @@ html[data-theme="dark"] .hero{
     page-break-after:always;
   }
 
-  /* togli border radius e ombre per mood "paper" */
-  .report-section-block,
-  .meta-pill,
-  .tl-panel-section,
-  .share-btn,
-  .section-badge,
-  .module-status-pill,
-  .metric-field {
-    border-radius:0 !important;
-    box-shadow:none !important;
-    background:#fff !important;
-    border:1px solid #000 !important;
-    color:#000 !important;
-  }
-
-  /* testo e titoli full nero */
-  body,
-  .section-title,
-  .section-head-left,
-  .section-title-main,
-  .section-desc,
-  .hero__ticker,
-  .hero__px,
-  .hero__badge,
-  .meta-label,
-  .meta-val,
-  .metric-value,
-  .metric-label,
-  .module-status-pill,
-  .module-status-pill[data-state="active"],
-  .module-status-pill[data-state="error"] {
-    color:#000 !important;
-    border-color:#000 !important;
-    background:#fff !important;
-  }
-
-  /* pillar della hero info (Snapshot / Price / Δ%) -> linee nere */
-  .meta-pill .tonebar {
-    background:#000 !important;
-  }
-
-  /* tab attivi nei drawer in print non servono (drawer non stampiamo se non espanso) */
-  .f1b-panel-menu,
-  .f1b-mobile-tabbar {
-    display:none !important;
-  }
-
-  /* icona sketch regime in nero/grigio (già fatto sopra) */
-
-  /* footer: niente bottoni, solo la parte legale e contatti va in fondo all'ultima pagina,
-     quindi puoi avere #print-footer dedicato */
-  .footer-wrap {
-    display:none !important;
-  }
+  /* footer legale finale per stampa */
   #print-footer {
     display:block !important;
     font-size:11px;
