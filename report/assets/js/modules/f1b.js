@@ -2,13 +2,33 @@
 //
 // F1B · Regime di mercato / Contesto rischio
 //
-// Versione "Institutional Model Report"
-// ✅ Fix compatibilità parsing (rimosse template annidate in renderTopSectors)
-// ✅ Pensato per essere importato come ES module dinamico da app.js
+// Versione "Institutional Model Report":
+// - Card con KPI e CTA primaria "Dettagli regime →"
+// - Drawer istituzionale:
+//    * Desktop: layout largo tipo console, sidebar sinistra con tab + contenuto a destra
+//    * Mobile: fullscreen/bottom sheet con barra tab fissa in basso, contenuto singolo visibile
+// - Tooltip unificati con data-metric="..." (niente sistema duplicato locale)
+// - Aperto via window.__TradeliaUI.openPanel({ ... })
+//
+// Requisiti lato ui-runtime.js :
+// - openPanel(opts) deve accettare opts.panelSize === "wide" per aggiungere classe wide al pannello desktop
+// - chiusura panel blocca/riattiva scroll del body
+// - bindMetricInfoButtons(root) deve essere esposta su window.__TradeliaUI
+//
+// Export richiesti dal runtime principale (app.js):
+// - renderCard(data, ctx)
+// - bindCard(node, data, ctx)
 
 export function renderCard(rawData, ctx = {}) {
   const data = normalizeData(rawData);
-  const { strategyMode, regimeScore, breadthPct, riskTilt } = data;
+
+  const {
+    strategyMode,
+    regimeScore,
+    breadthPct,
+    riskTilt
+  } = data;
+
   const { toneLabel, toneColor } = computeTone(strategyMode, regimeScore);
 
   return `
@@ -98,7 +118,7 @@ export function renderCard(rawData, ctx = {}) {
           })}
         </div>
 
-        <!-- CTA primaria fissa -->
+        <!-- CTA primaria fissa in basso a destra -->
         <div class="absolute bottom-3 right-4 flex justify-end">
           <button
             class="f1b-cta-btn btn btn-sm"
@@ -143,11 +163,11 @@ export function bindCard(node, rawData, ctx = {}) {
     });
   }
 
-  // Tooltip "?" nella card (metriche)
+  // Tooltip "?" nella card
   if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
     try {
       window.__TradeliaUI.bindMetricInfoButtons(node);
-    } catch(e){}
+    } catch (e) {}
   }
 }
 
@@ -165,11 +185,13 @@ function openF1Drawer(data) {
 
   const sectionsObj = buildDrawerSections(data);
 
+  // shell desktop + shell mobile
   const mobileMode = isMobileViewport();
   const drawerHTML = mobileMode
     ? renderDrawerMobileShell(sectionsObj)
     : renderDrawerDesktopShell(sectionsObj);
 
+  // Apri pannello
   window.__TradeliaUI.openPanel({
     title: "F1 · Regime di mercato",
     subtitle: "Flussi settoriali, ampiezza del rialzo e volatilità (T-1)",
@@ -189,10 +211,10 @@ function openF1Drawer(data) {
       }
     ],
     blocking: false,
-    panelSize: "wide"
+    panelSize: "wide" // pannello largo desktop
   });
 
-  // bind interattività tab dopo apertura
+  // Dopo apertura: bind eventi tab + tooltip sul contenuto del panel
   setTimeout(() => {
     const panelBody = document.getElementById("panel-body");
     const panelBodyMobile = document.getElementById("panel-body-mobile");
@@ -200,14 +222,14 @@ function openF1Drawer(data) {
     if (panelBody) {
       bindDrawerTabs(panelBody);
       if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
-        try { window.__TradeliaUI.bindMetricInfoButtons(panelBody); } catch(e){}
+        try { window.__TradeliaUI.bindMetricInfoButtons(panelBody); } catch (e) {}
       }
     }
 
     if (panelBodyMobile) {
       bindDrawerTabs(panelBodyMobile);
       if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
-        try { window.__TradeliaUI.bindMetricInfoButtons(panelBodyMobile); } catch(e){}
+        try { window.__TradeliaUI.bindMetricInfoButtons(panelBodyMobile); } catch (e) {}
       }
     }
   }, 0);
@@ -255,17 +277,49 @@ function buildDrawerSections(data) {
       </div>
 
       <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
-        ${metricBox({
-          label: "RegimeScore",
-          metricKey: "RegimeScore",
-          value: fmtNum(regimeScore)
-        })}
+        <div class="p-2"
+          style="
+            background:var(--surface-card-alt);
+            border:1px solid var(--br-card);
+            border-radius:var(--radius-card);
+            box-shadow:var(--shadow-card);
+          ">
+          <div class="flex items-start justify-between gap-1 mb-1">
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              RegimeScore
+            </div>
+            <button
+              class="info-btn info-btn--mini"
+              data-metric="RegimeScore"
+              aria-label="Info RegimeScore"
+            >?</button>
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${fmtNum(regimeScore)}
+          </div>
+        </div>
 
-        ${metricBox({
-          label: "VIX",
-          metricKey: "VIX",
-          value: fmtNum(vixLevel)
-        })}
+        <div class="p-2"
+          style="
+            background:var(--surface-card-alt);
+            border:1px solid var(--br-card);
+            border-radius:var(--radius-card);
+            box-shadow:var(--shadow-card);
+          ">
+          <div class="flex items-start justify-between gap-1 mb-1">
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              VIX
+            </div>
+            <button
+              class="info-btn info-btn--mini"
+              data-metric="VIX"
+              aria-label="Info VIX"
+            >?</button>
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${fmtNum(vixLevel)}
+          </div>
+        </div>
       </div>
     </div>
   `;
@@ -277,17 +331,49 @@ function buildDrawerSections(data) {
       </div>
 
       <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
-        ${metricBox({
-          label: "Breadth (1M)",
-          metricKey: "Breadth",
-          value: breadthPct !== null ? fmtPct(breadthPct) : "—"
-        })}
+        <div class="p-2"
+          style="
+            background:var(--surface-card-alt);
+            border:1px solid var(--br-card);
+            border-radius:var(--radius-card);
+            box-shadow:var(--shadow-card);
+          ">
+          <div class="flex items-start justify-between gap-1 mb-1">
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              Breadth (1M)
+            </div>
+            <button
+              class="info-btn info-btn--mini"
+              data-metric="Breadth"
+              aria-label="Info Breadth"
+            >?</button>
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${breadthPct !== null ? fmtPct(breadthPct) : "—"}
+          </div>
+        </div>
 
-        ${metricBox({
-          label: "RiskTilt",
-          metricKey: "RiskTilt",
-          value: fmtNum(riskTilt)
-        })}
+        <div class="p-2"
+          style="
+            background:var(--surface-card-alt);
+            border:1px solid var(--br-card);
+            border-radius:var(--radius-card);
+            box-shadow:var(--shadow-card);
+          ">
+          <div class="flex items-start justify-between gap-1 mb-1">
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              RiskTilt
+            </div>
+            <button
+              class="info-btn info-btn--mini"
+              data-metric="RiskTilt"
+              aria-label="Info RiskTilt"
+            >?</button>
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${fmtNum(riskTilt)}
+          </div>
+        </div>
       </div>
 
       <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)]">
@@ -433,7 +519,7 @@ function renderDrawerMobileShell(sectionsObj) {
 }
 
 /* -------------------------------------------------
-   Helpers per i bottoni tab
+   Helper bottoni tab
 ------------------------------------------------- */
 
 function drawerMenuButton(key, label, active) {
@@ -473,7 +559,7 @@ function drawerMobileTabButton(key, label, active) {
 }
 
 /* -------------------------------------------------
-   bind drawer tab switching (desktop e mobile)
+   Tab switching (desktop e mobile)
 ------------------------------------------------- */
 
 function bindDrawerTabs(root) {
@@ -487,10 +573,11 @@ function bindDrawerTabs(root) {
       const key = btn.getAttribute("data-f1b-tab");
       if (!key) return;
 
-      // 1. attiva/deattiva bottoni
+      // attiva/deattiva bottoni
       tabButtons.forEach(b => {
         const isActive = b.getAttribute("data-f1b-tab") === key;
         b.classList.toggle("is-active", isActive);
+
         b.style.borderLeftColor = isActive ? "var(--brand)" : "transparent";
         b.style.background = isActive
           ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)"
@@ -498,7 +585,7 @@ function bindDrawerTabs(root) {
         b.style.fontWeight = isActive ? "600" : "500";
       });
 
-      // 2. mostra/nascondi viste
+      // mostra/nascondi viste
       views.forEach(viewEl => {
         const viewKey = viewEl.getAttribute("data-f1b-view");
         viewEl.hidden = viewKey !== key;
@@ -508,7 +595,7 @@ function bindDrawerTabs(root) {
 }
 
 /* -------------------------------------------------
-   Helpers UI per la card
+   Helpers UI singole sezioni
 ------------------------------------------------- */
 
 function metricBox({ label, metricKey, value, desc }) {
@@ -537,17 +624,12 @@ function metricBox({ label, metricKey, value, desc }) {
         ${escapeHtml(value)}
       </div>
 
-      ${desc ? `
       <div class="text-[11px] leading-[1.3] text-[color:var(--muted)] mt-1">
-        ${escapeHtml(desc)}
-      </div>` : ""}
+        ${escapeHtml(desc || "")}
+      </div>
     </div>
   `;
 }
-
-/* -------------------------------------------------
-   VERSIONE SAFE: niente backtick annidati
-------------------------------------------------- */
 
 function renderTopSectors(topSectors) {
   if (!Array.isArray(topSectors) || !topSectors.length) {
@@ -559,29 +641,23 @@ function renderTopSectors(topSectors) {
   }
 
   const items = topSectors.map(sec => {
-    const name = sec.name || sec.sector || "—";
+    const name   = sec.name || sec.sector || "—";
+    const inflow = isNum(sec.inflow5d) ? (fmtNum(sec.inflow5d) + " flow 5d") : "";
+    const perf   = isNum(sec.perf1m)   ? (fmtPct(sec.perf1m)   + " 1m")      : "";
 
-    let inflow = "";
-    if (isNum(sec.inflow5d)) {
-      inflow = fmtNum(sec.inflow5d) + " flow 5d";
-    }
-
-    let perf = "";
-    if (isNum(sec.perf1m)) {
-      perf = fmtPct(sec.perf1m) + " 1m";
-    }
-
-    return (
-      '<li class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">' +
-        '<span class="font-semibold">' + escapeHtml(name) + '</span>' +
-        '<span class="text-[color:var(--muted)]"> ' +
-          escapeHtml(inflow) + ' ' + escapeHtml(perf) +
-        '</span>' +
-      '</li>'
-    );
+    return `
+      <li class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">
+        <span class="font-semibold">${escapeHtml(name)}</span>
+        <span class="text-[color:var(--muted)]"> ${escapeHtml(inflow)} ${escapeHtml(perf)}</span>
+      </li>
+    `;
   }).join("");
 
-  return '<ul class="list-disc pl-4 space-y-1">' + items + '</ul>';
+  return `
+    <ul class="list-disc pl-4 space-y-1">
+      ${items}
+    </ul>
+  `;
 }
 
 function renderInterpretation(notesArr) {
@@ -594,13 +670,17 @@ function renderInterpretation(notesArr) {
     `;
   }
 
-  const lis = arr.map(n => (
-    '<li class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">' +
-      escapeHtml(n) +
-    '</li>'
-  )).join("");
+  const lis = arr.map(n => `
+    <li class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">
+      ${escapeHtml(n)}
+    </li>
+  `).join("");
 
-  return '<ul class="list-disc pl-4 space-y-1">' + lis + '</ul>';
+  return `
+    <ul class="list-disc pl-4 space-y-1">
+      ${lis}
+    </ul>
+  `;
 }
 
 function renderAuditBlock({
@@ -745,8 +825,7 @@ function normalizeData(d) {
     d.audit?.AuditPathID ||
     "—";
 
-  const sourcesTier1 =
-    d.sourcesTier1 ||
+  const sourcesTier1 = d.sourcesTier1 ||
     d.sources ||
     ["FRED", "CBOE", "ETFdb", "Reuters"];
 
@@ -814,7 +893,7 @@ function computeTone(strategyMode, regimeScore) {
 }
 
 /* -------------------------------------------------
-   Utils numeriche e escape HTML
+   Utils numeriche + escape HTML
 ------------------------------------------------- */
 
 function fmtNum(v) {
@@ -826,15 +905,15 @@ function fmtNum(v) {
 function fmtPct(v) {
   if (!isNum(v)) return "—";
   const n = Number(v) * 100;
-  const sign = n > 0 ? "+"" : "";
+  const sign = n > 0 ? "+" : "";
   return sign + n.toFixed(1).replace('.', ',') + "%";
 }
 
-function isNum(v){
+function isNum(v) {
   return v !== null && v !== undefined && !Number.isNaN(Number(v));
 }
 
-function valueOrNull(v){
+function valueOrNull(v) {
   return isNum(v) ? Number(v) : null;
 }
 
@@ -848,7 +927,7 @@ function escapeHtml(str) {
     .replace(/'/g,"&#39;");
 }
 
-function escapeAttr(str){
+function escapeAttr(str) {
   if (str === undefined || str === null) return "";
   return String(str)
     .replace(/"/g,"&quot;")
