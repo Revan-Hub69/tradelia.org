@@ -805,3 +805,9 @@ function bootUIRuntime() {
 
 // esegui subito
 bootUIRuntime();
+if (!window.__TradeliaUI) window.__TradeliaUI = {};
+window.__TradeliaUI.openPanel = openPanel;
+window.__TradeliaUI.closePanel = closePanel;
+window.__TradeliaUI.openPrivacyPanel = openPrivacyPanel;
+window.__TradeliaUI.openMifidPanel = openMifidPanel;
+window.__TradeliaUI.bindMetricInfoButtons = bindMetricInfoButtons;
