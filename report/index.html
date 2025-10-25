@@ -16,12 +16,13 @@
   <!-- Tailwind (utility layout) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Lucide icons (per drawer dinamici e icone runtime) -->
+  <!-- Lucide icons (per icone runtime, se vuoi usarle nei moduli dinamici) -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <!-- Design system / tokens -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
 
+  <!-- Inline layout glue / print helpers specifici della pagina -->
   <style>
     :root { --pop-w:320px; }
     html, body { height: 100%; }
@@ -62,7 +63,7 @@
       color:var(--muted);
     }
 
-    /* footer visual separation */
+    /* footer visual separation fallback */
     .footer-wrap{
       background:color-mix(in oklab, var(--surface-page) 94%, black);
       border-top:1px solid color-mix(in oklab, var(--surface-page) 80%, black);
@@ -507,7 +508,21 @@
         </button>
       </header>
 
-      <div id="panel-body" class="tl-panel__body"></div>
+      <!-- barra tab sticky DESKTOP -->
+      <nav class="tl-panel-tabs" id="panel-tabs-desktop" aria-label="Sezioni di dettaglio">
+        <!-- JS inserisce:
+          <button class="tl-panel-tab is-active" data-panel-tab="overview">
+            <span class="tl-panel-tab-label">Overview</span>
+            <span class="tl-panel-tab-pill tl-panel-tab-pill--pos">POS</span>
+          </button>
+          ...
+        -->
+      </nav>
+
+      <!-- corpo DESKTOP -->
+      <div id="panel-body" class="tl-panel__body">
+        <!-- JS inserisce le varie <section class="tl-panel-section" data-panel-section="overview"> ... -->
+      </div>
 
       <footer class="tl-panel__footer" id="panel-footer">
         <button class="btn btn-sm" data-panel-close>Chiudi</button>
@@ -529,7 +544,15 @@
         </button>
       </header>
 
-      <div id="panel-body-mobile" class="tl-panel__body"></div>
+      <!-- barra tab MOBILE scrollabile -->
+      <nav class="tl-panel-tabs tl-panel-tabs--mobile" id="panel-tabs-mobile" aria-label="Sezioni di dettaglio">
+        <!-- JS inserisce i bottoni tab come sopra -->
+      </nav>
+
+      <!-- corpo MOBILE -->
+      <div id="panel-body-mobile" class="tl-panel__body">
+        <!-- JS inserisce le <section class="tl-panel-section" ...> corrispondenti -->
+      </div>
 
       <footer class="tl-panel__footer" id="panel-footer-mobile">
         <button class="btn btn-sm" data-panel-close>Chiudi</button>
