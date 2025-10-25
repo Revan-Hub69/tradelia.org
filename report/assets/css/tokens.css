@@ -1,15 +1,15 @@
 /* /report/assets/css/tokens.css
-   Design system + componenti runtime Tradelia Report (Institutional premium)
-   -------------------------------------------------------------------------
-   - palette CSS vars (light/dark) + token radius
-   - bottoni base
-   - hero header
-   - sezioni report (F1..F6)
-   - pannello informativo (MiFID / Privacy / Audit) + drawer wide
-   - tooltip metriche desktop/mobile
+   Design system + runtime components Tradelia Report
+   -------------------------------------------------
+   - palette CSS vars (light/dark)
+   - layout base
+   - bottoni
+   - hero
+   - sezioni report F1..F6
+   - panel/drawer + tooltip metriche
    - share overlay
    - footer
-   - stampa istituzionale (A4/PDF)
+   - stampa istituzionale PDF
 */
 
 /* =========================================================
@@ -17,9 +17,9 @@
    ========================================================= */
 
 :root {
-  /* tipografia / colori base */
-  --ink:           oklab(18% 0 0);
-  --muted:         oklab(45% 0 0 / .7);
+  /* testo */
+  --ink:           oklab(18% 0 0);         /* testo primario */
+  --muted:         oklab(45% 0 0 / .7);    /* testo attenuato */
 
   /* superfici */
   --surface-page:        oklab(98% 0 0);
@@ -28,64 +28,75 @@
   --surface-footer:      oklab(97% 0 0);
 
   /* bordi / separatori */
-  --br-soft:      oklab(88% 0 0);
-  --br-card:      oklab(86% 0 0);
-  --br-card-strong:oklab(80% 0 0 / .9);
-  --footer-br:    oklab(85% 0 0);
+  --br-soft:        oklab(88% 0 0);
+  --br-card:        oklab(86% 0 0);
+  --br-card-strong: oklab(80% 0 0 / .9);
+  --footer-br:      oklab(85% 0 0);
 
   /* ombre */
-  --shadow-card:  0 1px 2px rgba(0,0,0,.05), 0 1px 1px rgba(0,0,0,.03);
-  --shadow-lg:    0 12px 24px rgba(0,0,0,.06);
-  --shadow-xl:    0 20px 40px rgba(0,0,0,.10);
+  --shadow-card: 0 1px 2px rgba(0,0,0,.05),0 1px 1px rgba(0,0,0,.03);
+  --shadow-lg:   0 16px 32px rgba(0,0,0,.07);
+  --shadow-xl:   0 24px 48px rgba(0,0,0,.12);
 
-  /* brand & accent soft */
-  --brand:              oklab(60% 0.08 0.08);
-  --brand-soft:         color-mix(in oklab, var(--brand) 12%, transparent);
-  --tint-hero:          oklab(93% 0.02 0.02);
+  /* brand / accent */
+  --brand:        oklab(60% 0.08 0.08);
 
-  /* tonalità stato */
-  --tone-g:             oklab(55% -0.10 0.10);
-  --tone-y:             oklab(68%  0.03 0.08);
-  --tone-r:             oklab(55%  0.13 0.04);
-  --tone-n:             oklab(55%  0     0);
+  /* tinte hero / panel */
+  --tint-hero:       oklab(88% 0.03 0.03);
+  --tint-hero-dark:  oklab(35% 0.06 0.06);
 
-  /* radius token */
-  --radius-card:        12px;
-  --radius-card-sm:     8px;
+  /* tonalità stato / semaforo */
+  --tone-g: oklab(55% -0.1 0.1); /* verde-ish */
+  --tone-r: oklab(55%  0.13 0.04);/* rosso-ish */
+  --tone-n: oklab(55%  0    0);   /* neutro */
 
-  /* tooltip width */
-  --pop-w:              320px;
+  /* panel bg layering (light) */
+  --panel-bg:        oklab(100% 0 0);
+  --panel-bg-alt:    oklab(98% 0 0);
+  --panel-border:    oklab(86% 0 0);
+
+  /* mobile tab / sidebar highlight */
+  --panel-highlight-bg: color-mix(in oklab, var(--surface-card-alt) 60%, transparent);
 
   color-scheme: light;
 }
 
-/* Tema dark */
+/* Tema dark con forte leggibilità per i drawer */
 html[data-theme="dark"] {
-  --ink:                oklab(90% 0 0);
-  --muted:              oklab(75% 0 0 / .7);
+  --ink:           oklab(90% 0 0);
+  --muted:         oklab(75% 0 0 / .7);
 
-  --surface-page:       oklab(18% 0 0);
-  --surface-card:       oklab(22% 0 0);
-  --surface-card-alt:   oklab(24% 0 0);
-  --surface-footer:     oklab(20% 0 0);
+  --surface-page:        oklab(19% 0 0);
+  --surface-card:        oklab(22% 0 0);
+  --surface-card-alt:    oklab(24% 0 0);
+  --surface-footer:      oklab(20% 0 0);
 
-  --br-soft:            oklab(32% 0 0);
-  --br-card:            oklab(30% 0 0);
-  --br-card-strong:     oklab(28% 0 0);
-  --footer-br:          oklab(32% 0 0);
+  --br-soft:        oklab(32% 0 0);
+  --br-card:        oklab(30% 0 0 / .9);
+  --br-card-strong: oklab(28% 0 0 / .9);
+  --footer-br:      oklab(32% 0 0);
 
-  --shadow-card:        0 1px 2px rgba(0,0,0,.6), 0 1px 1px rgba(0,0,0,.5);
-  --shadow-lg:          0 18px 36px rgba(0,0,0,.75);
-  --shadow-xl:          0 24px 48px rgba(0,0,0,.9);
+  --shadow-card: 0 1px 2px rgba(0,0,0,.8),0 1px 1px rgba(0,0,0,.6);
+  --shadow-lg:   0 24px 48px rgba(0,0,0,.9);
+  --shadow-xl:   0 32px 64px rgba(0,0,0,1);
 
-  --brand:              oklab(70% 0.05 0.05);
-  --brand-soft:         color-mix(in oklab, var(--brand) 16%, transparent);
-  --tint-hero:          oklab(30% 0.02 0.02);
+  --brand:        oklab(70% 0.05 0.05);
 
-  --tone-g:             oklab(75% -0.08 0.08);
-  --tone-y:             oklab(78%  0.02 0.06);
-  --tone-r:             oklab(70%  0.14 0.04);
-  --tone-n:             oklab(70%  0     0);
+  --tint-hero:       oklab(30% 0.02 0.02);
+  --tint-hero-dark:  oklab(30% 0.02 0.02);
+
+  --tone-g: oklab(75% -0.08 0.08);
+  --tone-r: oklab(70%  0.14 0.04);
+  --tone-n: oklab(70%  0     0);
+
+  /* panel layering (dark) :
+     - sfondo panel leggermente più chiaro del page per staccare
+     - header/body separati da linee interne più chiare */
+  --panel-bg:        oklab(26% 0 0);
+  --panel-bg-alt:    oklab(30% 0 0 / .9);
+  --panel-border:    oklab(36% 0 0 / .9);
+
+  --panel-highlight-bg: color-mix(in oklab, oklab(34% 0 0) 60%, transparent);
 
   color-scheme: dark;
 }
@@ -99,6 +110,11 @@ body {
   text-rendering:optimizeLegibility;
   line-height:1.5;
   font-size:14px;
+}
+
+.body--lock {
+  overflow:hidden;
+  touch-action:none;
 }
 
 /* =========================================================
@@ -117,11 +133,11 @@ body {
   background:var(--surface-card);
   color:var(--ink);
   border:1px solid var(--br-soft);
-  border-radius:var(--radius-card-sm);
+  border-radius:8px;
   padding:.5rem .6rem;
   box-shadow:var(--shadow-card);
 }
-.btn:active{opacity:.85}
+.btn:active{opacity:.8}
 
 .btn-sm {
   all:unset;
@@ -136,11 +152,11 @@ body {
   background:var(--surface-card);
   color:var(--ink);
   border:1px solid var(--br-soft);
-  border-radius:var(--radius-card-sm);
-  padding:.35rem .5rem;
+  border-radius:8px;
+  padding:.4rem .5rem;
   box-shadow:var(--shadow-card);
 }
-.btn-sm:active{opacity:.85}
+.btn-sm:active{opacity:.8}
 
 .icon-16 {
   display:inline-flex;
@@ -150,7 +166,7 @@ body {
   color:var(--ink);
 }
 
-/* metric "?" button / info */
+/* metric "?" button  */
 .info-btn,
 .metric-help{
   all:unset;
@@ -171,10 +187,10 @@ body {
   box-shadow:var(--shadow-card);
 }
 .info-btn:active,
-.metric-help:active{opacity:.85}
+.metric-help:active{opacity:.8}
 
 /* =========================================================
-   HERO HEADER
+   HERO HEADER (ticker, prezzo, metriche snapshot)
    ========================================================= */
 
 .hero{
@@ -182,15 +198,21 @@ body {
   border:1px solid var(--br-card);
   border-radius:16px;
   background:
-    radial-gradient(900px 380px at 2% -30%, var(--brand-soft) 0%, transparent 55%),
-    linear-gradient(0deg, var(--tint-hero), var(--surface-card) 38%);
+    radial-gradient(
+      1100px 520px at -10% -40%,
+      color-mix(in oklab, var(--tint-hero) 55%, white 45%) 0%,
+      var(--surface-card) 45%
+    );
   padding:16px;
   box-shadow:var(--shadow-lg);
 }
 html[data-theme="dark"] .hero{
   background:
-    radial-gradient(900px 380px at 2% -30%, var(--brand-soft) 0%, transparent 55%),
-    linear-gradient(0deg, var(--tint-hero), var(--surface-card) 38%);
+    radial-gradient(
+      1100px 520px at -10% -40%,
+      var(--tint-hero-dark) 0%,
+      var(--surface-card) 45%
+    );
 }
 
 .hero__top{
@@ -258,7 +280,6 @@ html[data-theme="dark"] .hero{
   box-shadow:var(--shadow-card);
 }
 
-/* meta pill grid */
 .hero__meta{
   display:grid;
   grid-template-columns:repeat(6,minmax(160px,1fr));
@@ -275,7 +296,7 @@ html[data-theme="dark"] .hero{
   align-items:center;
   gap:.65rem;
   border:1px solid var(--br-card);
-  border-radius:var(--radius-card);
+  border-radius:12px;
   padding:.6rem .8rem .6rem 1rem;
   background:var(--surface-card);
   font-size:13px;
@@ -286,10 +307,11 @@ html[data-theme="dark"] .hero{
   position:absolute;
   left:0;top:0;bottom:0;
   width:4px;
-  border-top-left-radius:var(--radius-card);
-  border-bottom-left-radius:var(--radius-card);
+  border-top-left-radius:12px;
+  border-bottom-left-radius:12px;
   background:var(--tone-n);
 }
+
 .meta-label{
   color:var(--muted);
   text-transform:uppercase;
@@ -311,78 +333,38 @@ html[data-theme="dark"] .hero{
 }
 
 /* =========================================================
-   HEADER-TICKER pills (riutilizzabili)
-   ========================================================= */
-
-.pill{
-  position:relative;
-  display:flex;
-  align-items:center;
-  gap:.65rem;
-  border:1px solid var(--br-card);
-  border-radius:var(--radius-card);
-  padding:.6rem .8rem .6rem 1rem;
-  background:var(--surface-card);
-  font-size:13px;
-  box-shadow:var(--shadow-card);
-  min-height:54px;
-}
-.pill .tonebar{
-  position:absolute;
-  left:0;top:0;bottom:0;
-  width:4px;
-  border-top-left-radius:var(--radius-card);
-  border-bottom-left-radius:var(--radius-card);
-  background:var(--tone-n);
-}
-.pill .lab{
-  color:var(--muted);
-  text-transform:uppercase;
-  letter-spacing:.06em;
-  font-size:11.5px;
-  line-height:1.3;
-}
-.pill .val{
-  font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
-  font-weight:800;
-  line-height:1.4;
-  font-size:12.5px;
-  color:var(--ink);
-}
-
-/* =========================================================
-   SECTION HEAD (descrizione framework globale)
+   SECTION HEAD (Struttura del Report intro)
    ========================================================= */
 
 .section-head{
   text-align:center;
-  margin:2.2rem 0 1.5rem;
+  margin:2.5rem 0 1.75rem;
 }
 .section-title{
-  font-weight:800;
-  font-size:15px;
+  font-weight:900;
+  font-size:1.4rem;
   letter-spacing:.25px;
   color:var(--ink);
-  line-height:1.35;
+  line-height:1.25;
 }
 .section-sub{
   margin-top:4px;
   color:var(--muted);
-  font-size:13px;
+  font-size:13.8px;
   line-height:1.5;
   max-width:56rem;
   margin-left:auto;
   margin-right:auto;
 }
 .phase-nav{
-  margin-top:1rem;
+  margin-top:1.1rem;
   display:flex;
   flex-wrap:wrap;
   justify-content:center;
   gap:.6rem 1.1rem;
 }
 .phase-nav a{
-  font-size:12.6px;
+  font-size:12.8px;
   font-weight:700;
   text-transform:uppercase;
   color:var(--brand);
@@ -391,10 +373,10 @@ html[data-theme="dark"] .hero{
   letter-spacing:.04em;
   transition:opacity .15s ease;
 }
-.phase-nav a:hover{opacity:.85}
+.phase-nav a:hover{opacity:.8;}
 
 /* =========================================================
-   REPORT SECTIONS (F1..F6)
+   REPORT SECTIONS (F1..F6) blocchi verticali
    ========================================================= */
 
 .report-sections{
@@ -420,6 +402,7 @@ html[data-theme="dark"] .hero{
   }
 }
 
+/* intestazione interna ogni modulo */
 .section-headline{
   display:flex;
   flex-wrap:wrap;
@@ -429,7 +412,9 @@ html[data-theme="dark"] .hero{
   column-gap:.75rem;
   margin-bottom:1rem;
 }
-.section-head-left{min-width:0;}
+.section-head-left{
+  min-width:0;
+}
 .section-head-topline{
   display:flex;
   flex-wrap:wrap;
@@ -488,7 +473,7 @@ html[data-theme="dark"] .hero{
   max-width:60ch;
 }
 
-/* metriche grid */
+/* righe di metriche (RegimeScore, Breadth, ...) */
 .metric-row{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(min(160px,100%),1fr));
@@ -498,7 +483,7 @@ html[data-theme="dark"] .hero{
 .metric-field{
   background:var(--surface-card-alt);
   border:1px solid var(--br-card);
-  border-radius:var(--radius-card);
+  border-radius:12px;
   box-shadow:var(--shadow-card);
   padding:.75rem .75rem .6rem;
   min-height:80px;
@@ -524,7 +509,7 @@ html[data-theme="dark"] .hero{
   color:var(--ink);
 }
 
-/* “strategia attuale” pill nel modulo F1 */
+/* StrategyMode pill */
 .f1-mode-row{
   display:flex;
   flex-wrap:wrap;
@@ -540,7 +525,7 @@ html[data-theme="dark"] .hero{
   font-weight:600;
   line-height:1.2;
   padding:.3rem .5rem;
-  border-radius:var(--radius-card-sm);
+  border-radius:8px;
   border:1px solid var(--tone-n);
   box-shadow:var(--shadow-card);
   background:color-mix(in oklab, var(--tone-n) 10%, transparent);
@@ -554,15 +539,17 @@ html[data-theme="dark"] .hero{
 }
 
 /* =========================================================
-   PANEL OVERLAY / DRAWER
+   PANEL OVERLAY (drawer / bottom sheet / audit console)
    ========================================================= */
 
-.tl-panel-overlay[aria-hidden="true"] { display: none; }
+.tl-panel-overlay[aria-hidden="true"] {
+  display:none;
+}
 .tl-panel-overlay[aria-hidden="false"] {
-  display: block;
-  position: fixed;
-  inset: 0;
-  z-index: 120;
+  display:block;
+  position:fixed;
+  inset:0;
+  z-index:120;
 }
 
 /* backdrop */
@@ -575,11 +562,11 @@ html[data-theme="dark"] .hero{
 
 /* pannello base */
 .tl-panel {
-  position: absolute;
-  background: var(--surface-card);
-  color: var(--ink);
-  border:1px solid var(--br-card);
-  box-shadow: var(--shadow-xl);
+  position:absolute;
+  background:var(--panel-bg);
+  color:var(--ink);
+  border:1px solid var(--panel-border);
+  box-shadow:var(--shadow-xl);
   border-radius:16px 16px 0 0;
   display:flex;
   flex-direction:column;
@@ -590,10 +577,10 @@ html[data-theme="dark"] .hero{
   bottom:0;
 }
 
-/* header */
+/* header del pannello */
 .tl-panel__header {
-  background:var(--surface-card-alt);
-  border-bottom:1px solid var(--br-soft);
+  background:var(--panel-bg-alt);
+  border-bottom:1px solid var(--panel-border);
   padding:16px;
   display:flex;
   justify-content:space-between;
@@ -621,33 +608,34 @@ html[data-theme="dark"] .hero{
   justify-content:center;
   width:28px;
   height:28px;
-  border-radius:var(--radius-card-sm);
-  border:1px solid var(--br-soft);
-  background:var(--surface-card);
+  border-radius:8px;
+  border:1px solid var(--panel-border);
+  background:var(--panel-bg);
   color:var(--muted);
   flex-shrink:0;
 }
 
-/* body */
+/* corpo scrollabile del pannello */
 .tl-panel__body {
   flex:1 1 auto;
   overflow-y:auto;
-  padding:18px;
+  padding:16px;
   font-size:13px;
   line-height:1.45;
   color:var(--ink);
   display:flex;
   flex-direction:column;
   gap:16px;
+  min-height:0;
 }
 
-/* blocchi sezione nel panel */
+/* blocchi/sezioni nel pannello */
 .tl-panel-section {
-  background:var(--surface-card);
-  border:1px solid var(--br-card);
-  border-radius:var(--radius-card);
+  background:var(--panel-bg);
+  border:1px solid var(--panel-border);
+  border-radius:12px;
   box-shadow:var(--shadow-card);
-  padding:14px 16px;
+  padding:12px 14px;
 }
 .tl-panel-section-title {
   font-size:12.5px;
@@ -668,10 +656,10 @@ html[data-theme="dark"] .hero{
   margin-top:6px;
 }
 
-/* footer */
+/* footer del pannello */
 .tl-panel__footer {
-  border-top:1px solid var(--br-soft);
-  background:var(--surface-card-alt);
+  border-top:1px solid var(--panel-border);
+  background:var(--panel-bg-alt);
   padding:12px 16px;
   display:flex;
   flex-wrap:wrap;
@@ -679,7 +667,7 @@ html[data-theme="dark"] .hero{
   gap:8px;
 }
 
-/* desktop dock + wide */
+/* variante desktop docked */
 @media(min-width:768px){
   .tl-panel--desktop {
     display:flex;
@@ -690,16 +678,22 @@ html[data-theme="dark"] .hero{
     top:0;
     height:100%;
     max-height:100%;
-    width:min(420px,90vw);
+    width:min(360px,90vw); /* default stretta */
     border-radius:16px 0 0 16px;
   }
   .tl-panel--desktop.tl-panel--wide {
-    width:min(680px,92vw);
+    width:min(560px,90vw); /* console larga istituzionale */
   }
-  .tl-panel--mobile { display:none; }
+  .tl-panel--mobile {
+    display:none;
+  }
 }
+
+/* mobile bottom sheet */
 @media(max-width:767px){
-  .tl-panel--desktop { display:none; }
+  .tl-panel--desktop {
+    display:none;
+  }
   .tl-panel--mobile {
     display:flex;
     width:100%;
@@ -718,38 +712,119 @@ html[data-theme="dark"] .hero{
   .tl-panel--mobile .tl-panel__footer {
     flex-shrink:0;
     padding:12px 16px;
-    border-top:1px solid var(--br-soft);
-    background:var(--surface-card-alt);
+    border-top:1px solid var(--panel-border);
+    background:var(--panel-bg-alt);
   }
 }
 
-/* F1B tab evidenziata */
+/* Sidebar tab attiva nel drawer desktop */
 .f1b-panel-menu .is-active {
   border-left:3px solid var(--brand) !important;
-  background:color-mix(in oklab, var(--surface-card-alt) 60%, transparent) !important;
+  background:var(--panel-highlight-bg) !important;
   font-weight:600 !important;
   color:var(--ink) !important;
 }
+
+/* Bottom tab attiva nel drawer mobile */
 .f1b-mobile-tabbar .is-active {
-  background:color-mix(in oklab, var(--surface-card-alt) 60%, transparent) !important;
+  background:var(--panel-highlight-bg) !important;
   font-weight:600 !important;
   color:var(--ink) !important;
+}
+
+/* Tab scaffolding */
+.f1b-panel-desktop{
+  display:flex;
+  flex-direction:row;
+  gap:1rem;
+  min-height:300px;
+}
+.f1b-panel-menu{
+  min-width:160px;
+  max-width:180px;
+  border-right:1px solid var(--panel-border);
+}
+.f1b-panel-content{
+  flex:1;
+  min-width:0;
+  max-height:60vh;
+  overflow:auto;
+}
+.f1b-panel-mobile{
+  position:relative;
+  padding-bottom:3.5rem;
+  min-height:300px;
+}
+.f1b-panel-content-mobile{
+  max-height:60vh;
+  overflow:auto;
+}
+.f1b-mobile-tabbar{
+  position:absolute;
+  left:0;right:0;bottom:0;
+  display:flex;
+  justify-content:space-between;
+  gap:.25rem;
+  border-top:1px solid var(--panel-border);
+  background:var(--panel-bg);
+  padding:0.5rem 0.75rem;
+  font-size:11px;
+  line-height:1.2;
+}
+.f1b-tab-btn{
+  border-radius:var(--radius-card-sm,8px);
+  border-left:3px solid transparent;
+  background:transparent;
+  font-weight:500;
+  color:var(--ink);
+  font-size:12px;
+  line-height:1.4;
+  width:100%;
+  text-align:left;
+  padding:0.5rem 0.5rem;
+}
+.f1b-tab-btn-mobile{
+  flex:1;
+  border-radius:var(--radius-card-sm,8px);
+  font-weight:500;
+  color:var(--ink);
+  background:transparent;
+  padding:.4rem .25rem;
+  font-size:11px;
+  line-height:1.3;
+  text-align:center;
+}
+
+/* CTA "Dettagli regime →" nella card F1 */
+.f1b-cta-btn{
+  background:var(--ink);
+  color:var(--surface-page);
+  font-weight:600;
+  font-size:12px;
+  line-height:1.3;
+  border-radius:8px;
+  padding:.5rem .75rem;
+  min-width:max-content;
+  border:1px solid var(--ink);
+  box-shadow:var(--shadow-card);
 }
 
 /* =========================================================
-   TOOLTIP METRICHE DESKTOP
+   METRIC TOOLTIP (? )
    ========================================================= */
 
-.tl-popover[aria-hidden="true"] { display:none; }
+/* desktop popover */
+.tl-popover[aria-hidden="true"] {
+  display:none;
+}
 .tl-popover[aria-hidden="false"] {
   display:block;
-  position:fixed;
+  position:fixed;        /* posizionato via JS accanto al bottone */
   z-index:200;
-  width:min(320px,90vw);
-  max-width:320px;
-  background:var(--surface-card);
-  border:1px solid var(--br-card);
-  border-radius:var(--radius-card);
+  max-width:min(320px,90vw);
+  background:var(--panel-bg);
+  border:1px solid var(--panel-border);
+  border-radius:12px;
   box-shadow:var(--shadow-xl);
   padding:12px;
   font-size:12.5px;
@@ -776,9 +851,9 @@ html[data-theme="dark"] .hero{
   justify-content:center;
   width:24px;
   height:24px;
-  border-radius:var(--radius-card-sm);
-  border:1px solid var(--br-soft);
-  background:var(--surface-card-alt);
+  border-radius:6px;
+  border:1px solid var(--panel-border);
+  background:var(--panel-bg-alt);
   color:var(--muted);
 }
 .tl-popover__body {
@@ -794,11 +869,10 @@ html[data-theme="dark"] .hero{
   color:var(--muted);
 }
 
-/* =========================================================
-   TOOLTIP MOBILE (MODAL)
-   ========================================================= */
-
-.tl-metric-modal-overlay[aria-hidden="true"] { display:none; }
+/* mobile metric modal */
+.tl-metric-modal-overlay[aria-hidden="true"] {
+  display:none;
+}
 .tl-metric-modal-overlay[aria-hidden="false"] {
   display:block;
   position:fixed;
@@ -819,8 +893,8 @@ html[data-theme="dark"] .hero{
   width:100%;
   max-width:480px;
   max-height:80vh;
-  background:var(--surface-card);
-  border:1px solid var(--br-card);
+  background:var(--panel-bg);
+  border:1px solid var(--panel-border);
   border-radius:16px;
   box-shadow:var(--shadow-xl);
   display:flex;
@@ -828,8 +902,8 @@ html[data-theme="dark"] .hero{
 }
 .tl-metric-modal__header {
   padding:16px;
-  border-bottom:1px solid var(--br-soft);
-  background:var(--surface-card-alt);
+  border-bottom:1px solid var(--panel-border);
+  background:var(--panel-bg-alt);
   display:flex;
   justify-content:space-between;
   align-items:flex-start;
@@ -856,9 +930,9 @@ html[data-theme="dark"] .hero{
   justify-content:center;
   width:28px;
   height:28px;
-  border-radius:var(--radius-card-sm);
-  border:1px solid var(--br-soft);
-  background:var(--surface-card);
+  border-radius:8px;
+  border:1px solid var(--panel-border);
+  background:var(--panel-bg);
   color:var(--muted);
   flex-shrink:0;
 }
@@ -871,12 +945,17 @@ html[data-theme="dark"] .hero{
   max-height:calc(80vh - 64px);
 }
 
-/* desktop usa popover, mobile la modale */
+/* desktop usa popover, non la modale */
 @media(min-width:768px){
-  .tl-metric-modal-overlay{ display:none !important; }
+  .tl-metric-modal-overlay{
+    display:none !important;
+  }
 }
+/* mobile nasconde popover */
 @media(max-width:767px){
-  .tl-popover{ display:none !important; }
+  .tl-popover{
+    display:none !important;
+  }
 }
 
 /* =========================================================
@@ -889,7 +968,9 @@ html[data-theme="dark"] .hero{
   z-index:95;
   display:none;
 }
-.share-overlay[aria-hidden="false"]{ display:block; }
+.share-overlay[aria-hidden="false"]{
+  display:block;
+}
 .share-overlay__backdrop{
   position:absolute;
   inset:0;
@@ -937,7 +1018,7 @@ html[data-theme="dark"] .hero{
   justify-content:center;
   width:28px;
   height:28px;
-  border-radius:var(--radius-card-sm);
+  border-radius:8px;
   border:1px solid var(--br-soft);
   background:var(--surface-card-alt);
   color:var(--muted);
@@ -1002,12 +1083,15 @@ html[data-theme="dark"] .hero{
   line-height:1.2;
   background:var(--surface-card);
   border:1px solid var(--br-soft);
-  border-radius:var(--radius-card-sm);
+  border-radius:8px;
   padding:6px 8px;
   box-shadow:var(--shadow-card);
   color:var(--ink);
 }
-.share-copy-action svg{ width:14px; height:14px; }
+.share-copy-action svg{
+  width:14px;
+  height:14px;
+}
 
 /* =========================================================
    FOOTER
@@ -1016,7 +1100,7 @@ html[data-theme="dark"] .hero{
 .footer-wrap{
   background:var(--surface-footer);
   border-top:1px solid var(--footer-br);
-  margin-top:24px;
+  margin-top:24px
 }
 .site-footer{
   color:var(--muted);
@@ -1028,447 +1112,322 @@ html[data-theme="dark"] .hero{
   font-weight:800;
 }
 
-/* =========================================================
-   UTILS
-   ========================================================= */
-
-/* Blocco scroll sotto drawer/panel */
-body.body--lock { overflow: hidden; }
-
-/* DARK drawer contrast / leggibilità */
-html[data-theme="dark"] .tl-panel {
-  background: oklab(30% 0 0);
-  border-color: oklab(42% 0 0);
-  box-shadow: 0 24px 48px rgba(0,0,0,.85);
-  color: oklab(88% 0 0);
-}
-html[data-theme="dark"] .tl-panel__header,
-html[data-theme="dark"] .tl-panel__footer {
-  background: oklab(34% 0 0);
-  border-color: oklab(46% 0 0);
-  color: oklab(88% 0 0);
-}
-html[data-theme="dark"] .tl-panel__body {
-  background: oklab(29% 0 0);
-  color: oklab(90% 0 0);
-}
-html[data-theme="dark"] .tl-panel-section {
-  background: oklab(32% 0 0);
-  border-color: oklab(45% 0 0);
-  box-shadow: 0 8px 16px rgba(0,0,0,.65);
-  color: oklab(90% 0 0);
-}
-html[data-theme="dark"] .tl-panel-section-title {
-  color: oklab(95% 0 0);
-}
-html[data-theme="dark"] .tl-panel-section-text,
-html[data-theme="dark"] .tl-panel-section-meta {
-  color: oklab(85% 0 0 / .9);
-}
-html[data-theme="dark"] .tl-panel__footer .btn,
-html[data-theme="dark"] .tl-panel__footer .btn-sm {
-  background: oklab(38% 0 0);
-  border-color: oklab(50% 0 0);
-  color: oklab(95% 0 0);
-}
-html[data-theme="dark"] .tl-panel__footer .btn:hover {
-  background: oklab(42% 0 0);
-}
-html[data-theme="dark"] .f1b-panel-menu {
-  border-right: 1px solid oklab(44% 0 0);
-  background: oklab(30% 0 0);
-}
-html[data-theme="dark"] .f1b-panel-menu button { color: oklab(90% 0 0); }
-html[data-theme="dark"] .f1b-panel-menu button.is-active {
-  background: color-mix(in oklab, var(--surface-card-alt) 70%, transparent);
-  border-left: 3px solid var(--brand);
-  font-weight: 600;
-}
-html[data-theme="dark"] .f1b-mobile-tabbar {
-  background: oklab(34% 0 0);
-  border-top: 1px solid oklab(46% 0 0);
-}
-html[data-theme="dark"] .f1b-mobile-tabbar button { color: oklab(88% 0 0); }
-html[data-theme="dark"] .f1b-mobile-tabbar button.is-active {
-  background: color-mix(in oklab, var(--surface-card-alt) 70%, transparent);
-  font-weight: 600;
+/* disclaimer stampa: di default non visibile su schermo */
+.print-disclaimer {
+  display:none;
 }
 
 /* =========================================================
-   PRINT OVERRIDES · Institutional PDF mode
+   PRINT OVERRIDES / INSTITUTIONAL PDF LAYER v1.0
    ========================================================= */
 
 @media print {
 
-  :root {
-    color-scheme: light;
+  /* carta: bianco, nero quasi pieno */
+  html, body {
+    background:#fff !important;
+    color:#111 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
-  body {
-    background: #fff !important;
-    color: #000 !important;
-    font-size: 12px !important;
-    line-height: 1.45 !important;
+  /* pagina A4 e margini */
+  @page {
+    margin:20mm;
+    size:A4;
   }
 
-  /* elementi solo web -> via */
-  .noprint,
+  /* UI runtime non va su PDF */
   header,
+  nav,
+  .noprint,
   .tl-panel-overlay,
   .tl-popover,
   .tl-metric-modal-overlay,
   #share-overlay,
-  .f1b-mobile-tabbar,
-  .f1b-panel-menu,
-  .f1b-cta-btn,
-  .btn,
-  .btn-sm,
-  .info-btn,
-  [data-open-f1b-details],
-  [data-share-svc],
-  #btn-print,
-  #btn-print-2,
   #btn-share,
-  #btn-theme {
-    display: none !important;
+  #btn-theme,
+  #btn-print,
+  #btn-print-2 {
+    display:none !important;
   }
 
-  @page {
-    margin: 20mm 16mm 20mm 16mm;
+  /* hero in PDF: bordo sottile e niente shadow */
+  .hero{
+    page-break-after:always;
+    border:1px solid #ccc !important;
+    box-shadow:none!important;
+    background:#fff !important;
+    border-radius:8px !important;
+    padding:16px !important;
   }
-
-  /* HERO -> Executive Snapshot */
-  .hero {
-    background: #fff !important;
-    border: 1px solid #ccc !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    padding: 12px 16px !important;
-    page-break-after: avoid;
-  }
-
-  .hero__ticker {
-    font-size: 18px !important;
-    font-weight: 700 !important;
-    color: #000 !important;
-  }
-
-  .hero__px {
-    font-size: 18px !important;
-    font-weight: 700 !important;
-    color: #000 !important;
-  }
-
-  .hero__chg {
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    color: #000 !important;
-  }
-  .chg--up,
-  .chg--down {
-    color: #000 !important;
-  }
-
-  .hero__badge {
-    border-radius: 0 !important;
-    border: 1px solid #999 !important;
-    background: #fff !important;
-    color: #000 !important;
-    font-size: 11px !important;
-    line-height: 1.2 !important;
-    font-weight: 600 !important;
-    box-shadow: none !important;
-    padding: 2px 6px !important;
-  }
-
-  .hero__venue,
-  .hero__client,
-  .claim,
-  .meta-label,
-  .meta-val,
-  .hero__client *,
-  .hero__meta,
-  .meta-pill,
-  .meta-pill .tonebar {
-    color: #000 !important;
-    border-color: #ccc !important;
-    background: #fff !important;
-    box-shadow: none !important;
-  }
-
-  /* meta -> stile righe */
-  .hero__meta {
-    display: block !important;
-    margin-top: 12px !important;
-  }
-
-  .meta-pill {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: baseline !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    padding: 0 !important;
-    min-height: auto !important;
-    font-size: 12px !important;
-    margin-bottom: 4px !important;
-    position: static !important;
-    box-shadow: none !important;
-  }
-
-  .meta-pill .tonebar {
-    display: none !important;
-  }
-
-  .meta-label {
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    line-height: 1.3 !important;
-    text-transform: uppercase !important;
-    letter-spacing: .04em !important;
-    min-width: 80px;
-    color: #333 !important;
-  }
-
-  .meta-val {
-    font-family: ui-monospace, Menlo, monospace !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    line-height: 1.4 !important;
-    color: #000 !important;
-  }
-
-  /* TOC / Indice del Report */
-  #print-toc {
-    display: block !important;
-    page-break-after: avoid;
-    margin: 20px 0 24px 0 !important;
-    color: #000 !important;
-  }
-
-  #print-toc h2 {
-    font-size: 14px !important;
-    line-height: 1.3 !important;
-    font-weight: 700 !important;
-    text-transform: uppercase;
-    color: #000 !important;
-    margin: 0 0 8px 0 !important;
-    letter-spacing: .04em;
-  }
-
-  #print-toc ol {
-    margin: 0;
-    padding-left: 20px;
-    font-size: 12px !important;
-    line-height: 1.45 !important;
-    color: #000 !important;
-  }
-
-  #print-toc li {
-    margin-bottom: 4px;
-    color: #000 !important;
-    font-weight: 500;
-  }
-
-  /* SEZIONI REPORT F1..F6 */
-  .report-sections {
-    max-width: 100% !important;
-    gap: 16px !important;
-  }
-
-  .report-section-block {
-    border: 1px solid #ccc !important;
-    background: #fff !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    padding: 12px 16px !important;
-    color: #000 !important;
-    page-break-inside: avoid;
-  }
-
-  .section-headline {
-    margin-bottom: 8px !important;
-    color: #000 !important;
-  }
-
-  .section-badge {
-    background: #fff !important;
-    border: 1px solid #000 !important;
-    color: #000 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    line-height: 1.2 !important;
-    padding: 2px 6px !important;
-  }
-
-  .module-status-pill {
-    border: 1px solid #000 !important;
-    background: #fff !important;
-    color: #000 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    font-size: 10px !important;
-    font-weight: 600 !important;
-    line-height: 1.2 !important;
-    padding: 2px 6px !important;
-  }
-
-  .module-status-pill[data-state="active"],
-  .module-status-pill[data-state="error"] {
-    border-color: #000 !important;
-    background: #fff !important;
-    color: #000 !important;
-  }
-
-  /* titolo sezione stampato con prefisso F1 / F2... */
-  .section-title-main {
-    font-size: 13px !important;
-    font-weight: 700 !important;
-    line-height: 1.4 !important;
-    color: #000 !important;
-    text-transform: uppercase;
-    letter-spacing: .04em;
-    position: relative;
-    padding-left: 0 !important;
-  }
-
-  /* numerazione: usiamo l'etichetta F1.. già presente nella .section-badge.
-     Per robustezza stampiamo di nuovo il badge come prefisso tipografico: */
-  .section-title-main::before {
-    content: attr(data-print-prefix) " · ";
-    font-weight: 700;
-    color: #000;
-  }
-
-  .section-desc {
-    font-size: 11px !important;
-    line-height: 1.4 !important;
-    color: #333 !important;
-    max-width: 100% !important;
-    margin-top: 4px !important;
-  }
-
-  /* blocchi metriche -> tabellare semplice */
-  .metric-row {
-    display: block !important;
-    margin-top: 8px !important;
-    gap: 0 !important;
-  }
-
-  .metric-field {
-    background: #fff !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    min-height: auto !important;
-    page-break-inside: avoid;
-    margin-bottom: 8px !important;
-  }
-
-  .metric-label {
-    font-size: 10px !important;
-    font-weight: 600 !important;
-    line-height: 1.3 !important;
-    color: #000 !important;
-    text-transform: uppercase !important;
-    margin-bottom: 2px !important;
-    letter-spacing: .05em !important;
-  }
-
-  .metric-value {
-    font-family: ui-monospace, Menlo, monospace !important;
-    font-size: 12px !important;
-    line-height: 1.4 !important;
-    font-weight: 600 !important;
-    color: #000 !important;
-  }
-
-  /* pannelli MiFID / Audit -> testo regolamentare nel PDF */
-  .tl-panel-section,
-  .tl-panel-section-title,
-  .tl-panel-section-text,
-  .tl-panel-section-meta {
-    background: #fff !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    color: #000 !important;
-  }
-
-  .tl-panel-section-title {
-    font-size: 12px !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: .04em !important;
-    line-height: 1.3 !important;
-    margin: 12px 0 4px 0 !important;
-    color: #000 !important;
-  }
-
-  .tl-panel-section-text,
-  .tl-panel-section-meta {
-    font-size: 11px !important;
-    line-height: 1.45 !important;
-    color: #000 !important;
-  }
-
-  /* footer come sezione legale finale */
-  .footer-wrap {
-    background: #fff !important;
-    border-top: 1px solid #ccc !important;
-    margin-top: 24px !important;
-    page-break-before: avoid;
-  }
-
-  .site-footer {
-    color: #000 !important;
-    font-size: 11px !important;
-    line-height: 1.4 !important;
-  }
-
-  .site-footer .heading {
-    color: #000 !important;
-    font-size: 12px !important;
-    font-weight: 700 !important;
-    line-height: 1.3 !important;
-    text-transform: uppercase;
-    letter-spacing: .04em;
-  }
-
-  /* FILIGRANA ANTI-DIFFUSIONE / ANTI-REBRAND
-     visibile su tutte le pagine del PDF/print.
-     testo chiaro e diagonale.
-  */
-  #print-watermark {
-    display:block !important;
-    position:fixed !important;
-    left:0;
-    top:0;
-    right:0;
-    bottom:0;
-    margin:auto;
-    width:100%;
-    height:100%;
-    font-size:32px !important;
+  .hero__ticker{
+    font-size:20pt !important;
     font-weight:700 !important;
-    font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif !important;
-    letter-spacing:.1em !important;
-    line-height:1.25 !important;
     color:#000 !important;
-    opacity:.05 !important;
-    text-align:center;
-    white-space:pre-line;
-    transform:rotate(-30deg);
-    transform-origin:center;
-    pointer-events:none;
+  }
+  .hero__px{
+    font-size:16pt !important;
+    font-weight:700 !important;
+    color:#000 !important;
+  }
+  .hero__chg{
+    font-size:11pt !important;
+    font-weight:600 !important;
+  }
+  .hero__badge{
+    font-size:10pt !important;
+    border:1px solid #999 !important;
+    background:#fff !important;
+    color:#000 !important;
+    box-shadow:none !important;
+  }
+  .hero__venue{
+    font-size:10pt !important;
+    color:#333 !important;
+  }
+  .hero__meta{
+    grid-template-columns:repeat(3,1fr) !important;
+    gap:8px !important;
+  }
+  .meta-pill{
+    background:#fff !important;
+    border:1px solid #ccc !important;
+    box-shadow:none !important;
+    border-radius:6px !important;
+    min-height:auto !important;
+    padding:.5rem .6rem .5rem .8rem !important;
+  }
+  .meta-pill .tonebar{
+    background:#000 !important;
+    border-top-left-radius:6px !important;
+    border-bottom-left-radius:6px !important;
+    width:3px !important;
+  }
+  .meta-label{
+    font-size:8.5pt !important;
+    color:#444 !important;
+    letter-spacing:.05em !important;
+  }
+  .meta-val{
+    font-size:9.5pt !important;
+    line-height:1.35 !important;
+    color:#000 !important;
+    font-weight:600 !important;
   }
 
-  /* consigliato valore:
-     "TRADELIA AI — CONFIDENTIAL\nNO REDISTRIBUTION / NO REBRANDING"
-     Lo metti via JS al mount stampa se vuoi.
-  */
+  /* blocchi F1..F6 in PDF */
+  .report-sections{
+    max-width:100% !important;
+    gap:14mm !important;
+  }
+  .report-section-block{
+    border:1px solid #ccc !important;
+    border-radius:8px !important;
+    box-shadow:none !important;
+    padding:12mm 12mm 10mm !important;
+    page-break-inside:avoid;
+    background:#fff !important;
+    color:#000 !important;
+  }
+  .section-headline{
+    margin-bottom:4mm !important;
+  }
+  .section-badge{
+    background:#fff !important;
+    border:1px solid #999 !important;
+    box-shadow:none !important;
+    color:#000 !important;
+    font-size:9pt !important;
+    font-weight:600 !important;
+    line-height:1.2 !important;
+  }
+  .module-status-pill{
+    background:#fff !important;
+    border:1px solid #999 !important;
+    color:#000 !important;
+    box-shadow:none !important;
+    font-size:8pt !important;
+    padding:2px 6px !important;
+  }
+  .section-title-main{
+    font-size:12pt !important;
+    font-weight:700 !important;
+    line-height:1.35 !important;
+    color:#000 !important;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+  }
+  .section-desc{
+    font-size:9.5pt !important;
+    color:#333 !important;
+    margin-top:2mm !important;
+    line-height:1.45 !important;
+    max-width:none !important;
+  }
+
+  .metric-field{
+    background:#fff !important;
+    border:1px solid #ccc !important;
+    box-shadow:none !important;
+    border-radius:6px !important;
+    padding:10px !important;
+    min-height:auto !important;
+  }
+  .metric-label{
+    font-size:8pt !important;
+    font-weight:600 !important;
+    color:#444 !important;
+    letter-spacing:.05em !important;
+    margin-bottom:3px !important;
+  }
+  .metric-value{
+    font-size:10pt !important;
+    line-height:1.3 !important;
+    color:#000 !important;
+    font-weight:600 !important;
+  }
+
+  /* appendice tecnica F1 (contenuto drawer) */
+  .print-panel-dump{
+    display:block !important;
+    page-break-before:always;
+    border-top:2px solid #000;
+    padding-top:5mm;
+    margin-top:20mm;
+    color:#000 !important;
+  }
+  .print-panel-dump__head{
+    margin-bottom:4mm;
+  }
+  .print-panel-dump__badge{
+    font-size:10pt;
+    font-weight:700;
+    line-height:1.2;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:#000;
+  }
+  .print-panel-dump__title{
+    font-size:11pt;
+    font-weight:700;
+    line-height:1.4;
+    color:#000;
+    margin-top:2mm;
+  }
+  .print-panel-dump__block{
+    margin-top:6mm;
+    page-break-inside:avoid;
+  }
+  .print-panel-dump__block-title{
+    font-size:10pt;
+    font-weight:700;
+    line-height:1.3;
+    color:#000;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    margin:0 0 3mm 0;
+    border-left:3px solid #000;
+    padding-left:3mm;
+  }
+  .print-panel-dump__row{
+    display:flex;
+    flex-wrap:nowrap;
+    align-items:baseline;
+    font-size:9.5pt;
+    line-height:1.4;
+    margin-bottom:2mm;
+    color:#000;
+  }
+  .print-panel-dump__label{
+    min-width:32mm;
+    font-weight:600;
+    color:#000;
+  }
+  .print-panel-dump__val{
+    color:#000;
+    font-weight:500;
+    font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
+  }
+  .print-panel-dump__subhead{
+    font-size:9.5pt;
+    font-weight:600;
+    line-height:1.4;
+    color:#000;
+    margin-top:4mm;
+    margin-bottom:2mm;
+  }
+  .print-panel-dump__list,
+  .print-panel-dump__notes{
+    margin:0 0 0 5mm;
+    padding:0;
+    font-size:9.5pt;
+    line-height:1.4;
+    color:#000;
+  }
+  .print-panel-dump__list-item,
+  .print-panel-dump__notes li{
+    margin-bottom:2mm;
+    color:#000;
+    font-weight:500;
+  }
+  .print-panel-dump__legal{
+    font-size:9pt;
+    line-height:1.4;
+    color:#000;
+    border-left:2px solid #000;
+    padding-left:3mm;
+    white-space:pre-line;
+  }
+
+  /* footer + disclaimer legale */
+  .footer-wrap{
+    background:#fff !important;
+    border-top:1px solid #ccc !important;
+    margin-top:24px !important;
+    page-break-before:avoid;
+  }
+  .site-footer{
+    color:#000 !important;
+    font-size:10pt !important;
+    line-height:1.4 !important;
+  }
+  .site-footer .heading{
+    color:#000 !important;
+    font-size:11pt !important;
+    font-weight:700 !important;
+    line-height:1.3 !important;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    margin-bottom:4px !important;
+  }
+
+  .print-disclaimer{
+    display:block !important;
+    font-size:9pt !important;
+    line-height:1.45 !important;
+    color:#000 !important;
+    margin-top:12px !important;
+    border-top:1px solid #ccc;
+    padding-top:8px;
+    white-space:pre-line;
+  }
+
+  /* watermark diagonale anti-ribrand */
+  #print-watermark{
+    display:block !important;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%) rotate(-35deg);
+    transform-origin:center;
+    font-size:28pt;
+    font-weight:800;
+    letter-spacing:3px;
+    color:oklab(80% 0 0 / .06);
+    white-space:pre-line;
+    text-align:center;
+    z-index:-1;
+    user-select:none;
+  }
 }
