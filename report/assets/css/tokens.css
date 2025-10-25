@@ -1,14 +1,15 @@
 /* /report/assets/css/tokens.css
-   Design system + componenti runtime Tradelia Report
-   -------------------------------------------------
-   - palette CSS vars (light/dark)
+   Design system + componenti runtime Tradelia Report (Institutional premium)
+   -------------------------------------------------------------------------
+   - palette CSS vars (light/dark) + token radius
    - bottoni base
-   - hero header
-   - sezioni report verticali (F1..F6)
-   - pannello informativo (MiFID / Privacy / Audit)
-   - tooltip metriche ? (desktop & mobile)
+   - hero header (brand soft, sobrio)
+   - sezioni report (F1..F6) e metriche/pill unificate
+   - pannello informativo (MiFID / Privacy / Audit) + drawer wide
+   - tooltip metriche desktop/mobile
    - share overlay
-   - footer base
+   - footer
+   - stampa (TOC + watermark)
 */
 
 /* =========================================================
@@ -16,9 +17,9 @@
    ========================================================= */
 
 :root {
-  /* inchiostro / testo */
-  --ink:           oklab(18% 0 0);         /* testo primario */
-  --muted:         oklab(45% 0 0 / .7);    /* testo attenuato */
+  /* tipografia / colori base */
+  --ink:           oklab(18% 0 0);
+  --muted:         oklab(45% 0 0 / .7);
 
   /* superfici */
   --surface-page:        oklab(98% 0 0);
@@ -33,49 +34,58 @@
   --footer-br:    oklab(85% 0 0);
 
   /* ombre */
-  --shadow-card: 0 1px 2px rgba(0,0,0,.05),0 1px 1px rgba(0,0,0,.03);
-  --shadow-lg:   0 16px 32px rgba(0,0,0,.07);
-  --shadow-xl:   0 24px 48px rgba(0,0,0,.12);
+  --shadow-card:  0 1px 2px rgba(0,0,0,.05), 0 1px 1px rgba(0,0,0,.03);
+  --shadow-lg:    0 12px 24px rgba(0,0,0,.06);
+  --shadow-xl:    0 20px 40px rgba(0,0,0,.10);
 
-  /* brand */
-  --brand:        oklab(60% 0.08 0.08);
-  --tint-hero:    oklab(88% 0.03 0.03);
-  --tint-hero-dark: oklab(35% 0.06 0.06);
+  /* brand & accent soft per hero */
+  --brand:              oklab(60% 0.08 0.08);
+  --brand-soft:         color-mix(in oklab, var(--brand) 12%, transparent);
+  --tint-hero:          oklab(93% 0.02 0.02);
 
-  /* tonalità stato */
-  --tone-g: oklab(55% -0.1 0.1); /* verde-ish */
-  --tone-r: oklab(55% 0.13 0.04);/* rosso-ish */
-  --tone-n: oklab(55% 0 0);      /* neutro/brand neutro */
+  /* tonalità stato (semaforo) */
+  --tone-g:             oklab(55% -0.10 0.10);
+  --tone-y:             oklab(68%  0.03 0.08);
+  --tone-r:             oklab(55%  0.13 0.04);
+  --tone-n:             oklab(55%  0     0);
+
+  /* radius token */
+  --radius-card:        12px;
+  --radius-card-sm:     8px;
+
+  /* metric pop width */
+  --pop-w:              320px;
 
   color-scheme: light;
 }
 
 /* Tema dark */
 html[data-theme="dark"] {
-  --ink:           oklab(90% 0 0);
-  --muted:         oklab(75% 0 0 / .7);
+  --ink:                oklab(90% 0 0);
+  --muted:              oklab(75% 0 0 / .7);
 
-  --surface-page:        oklab(18% 0 0);
-  --surface-card:        oklab(22% 0 0);
-  --surface-card-alt:    oklab(24% 0 0);
-  --surface-footer:      oklab(20% 0 0);
+  --surface-page:       oklab(18% 0 0);
+  --surface-card:       oklab(22% 0 0);
+  --surface-card-alt:   oklab(24% 0 0);
+  --surface-footer:     oklab(20% 0 0);
 
-  --br-soft:      oklab(32% 0 0);
-  --br-card:      oklab(30% 0 0);
-  --br-card-strong:oklab(28% 0 0);
-  --footer-br:    oklab(32% 0 0);
+  --br-soft:            oklab(32% 0 0);
+  --br-card:            oklab(30% 0 0);
+  --br-card-strong:     oklab(28% 0 0);
+  --footer-br:          oklab(32% 0 0);
 
-  --shadow-card: 0 1px 2px rgba(0,0,0,.8),0 1px 1px rgba(0,0,0,.6);
-  --shadow-lg:   0 24px 48px rgba(0,0,0,.9);
-  --shadow-xl:   0 32px 64px rgba(0,0,0,1);
+  --shadow-card:        0 1px 2px rgba(0,0,0,.6), 0 1px 1px rgba(0,0,0,.5);
+  --shadow-lg:          0 18px 36px rgba(0,0,0,.75);
+  --shadow-xl:          0 24px 48px rgba(0,0,0,.9);
 
-  --brand:        oklab(70% 0.05 0.05);
-  --tint-hero:    oklab(30% 0.02 0.02);
-  --tint-hero-dark: oklab(30% 0.02 0.02);
+  --brand:              oklab(70% 0.05 0.05);
+  --brand-soft:         color-mix(in oklab, var(--brand) 16%, transparent);
+  --tint-hero:          oklab(30% 0.02 0.02);
 
-  --tone-g: oklab(75% -0.08 0.08);
-  --tone-r: oklab(70% 0.14 0.04);
-  --tone-n: oklab(70% 0 0);
+  --tone-g:             oklab(75% -0.08 0.08);
+  --tone-y:             oklab(78%  0.02 0.06);
+  --tone-r:             oklab(70%  0.14 0.04);
+  --tone-n:             oklab(70%  0     0);
 
   color-scheme: dark;
 }
@@ -107,11 +117,11 @@ body {
   background:var(--surface-card);
   color:var(--ink);
   border:1px solid var(--br-soft);
-  border-radius:8px;
+  border-radius:var(--radius-card-sm);
   padding:.5rem .6rem;
   box-shadow:var(--shadow-card);
 }
-.btn:active{opacity:.8}
+.btn:active{opacity:.85}
 
 .btn-sm {
   all:unset;
@@ -126,11 +136,11 @@ body {
   background:var(--surface-card);
   color:var(--ink);
   border:1px solid var(--br-soft);
-  border-radius:8px;
-  padding:.4rem .5rem;
+  border-radius:var(--radius-card-sm);
+  padding:.35rem .5rem;
   box-shadow:var(--shadow-card);
 }
-.btn-sm:active{opacity:.8}
+.btn-sm:active{opacity:.85}
 
 .icon-16 {
   display:inline-flex;
@@ -140,7 +150,7 @@ body {
   color:var(--ink);
 }
 
-/* metric "?" button and generic info-button look */
+/* metric "?" button / info */
 .info-btn,
 .metric-help{
   all:unset;
@@ -161,7 +171,7 @@ body {
   box-shadow:var(--shadow-card);
 }
 .info-btn:active,
-.metric-help:active{opacity:.8}
+.metric-help:active{opacity:.85}
 
 /* =========================================================
    HERO HEADER (ticker, prezzo, metriche snapshot)
@@ -171,22 +181,17 @@ body {
   margin-top:12px;
   border:1px solid var(--br-card);
   border-radius:16px;
+  /* Premium: leggero velo brand, non gradientone invadente */
   background:
-    radial-gradient(
-      1100px 520px at -10% -40%,
-      color-mix(in oklab, var(--tint-hero) 55%, white 45%) 0%,
-      var(--surface-card) 45%
-    );
+    radial-gradient(900px 380px at 2% -30%, var(--brand-soft) 0%, transparent 55%),
+    linear-gradient(0deg, var(--tint-hero), var(--surface-card) 38%);
   padding:16px;
   box-shadow:var(--shadow-lg);
 }
 html[data-theme="dark"] .hero{
   background:
-    radial-gradient(
-      1100px 520px at -10% -40%,
-      var(--tint-hero-dark) 0%,
-      var(--surface-card) 45%
-    );
+    radial-gradient(900px 380px at 2% -30%, var(--brand-soft) 0%, transparent 55%),
+    linear-gradient(0deg, var(--tint-hero), var(--surface-card) 38%);
 }
 
 .hero__top{
@@ -254,6 +259,7 @@ html[data-theme="dark"] .hero{
   box-shadow:var(--shadow-card);
 }
 
+/* Meta pill – allineata al linguaggio delle .pill del header-ticker */
 .hero__meta{
   display:grid;
   grid-template-columns:repeat(6,minmax(160px,1fr));
@@ -270,7 +276,7 @@ html[data-theme="dark"] .hero{
   align-items:center;
   gap:.65rem;
   border:1px solid var(--br-card);
-  border-radius:12px;
+  border-radius:var(--radius-card);
   padding:.6rem .8rem .6rem 1rem;
   background:var(--surface-card);
   font-size:13px;
@@ -281,11 +287,10 @@ html[data-theme="dark"] .hero{
   position:absolute;
   left:0;top:0;bottom:0;
   width:4px;
-  border-top-left-radius:12px;
-  border-bottom-left-radius:12px;
+  border-top-left-radius:var(--radius-card);
+  border-bottom-left-radius:var(--radius-card);
   background:var(--tone-n);
 }
-
 .meta-label{
   color:var(--muted);
   text-transform:uppercase;
@@ -307,38 +312,78 @@ html[data-theme="dark"] .hero{
 }
 
 /* =========================================================
-   SECTION HEAD (descrizione framework globale)
+   HEADER-TICKER pills (usate anche come linguaggio generale)
+   ========================================================= */
+
+.pill{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:.65rem;
+  border:1px solid var(--br-card);
+  border-radius:var(--radius-card);
+  padding:.6rem .8rem .6rem 1rem;
+  background:var(--surface-card);
+  font-size:13px;
+  box-shadow:var(--shadow-card);
+  min-height:54px;
+}
+.pill .tonebar{
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:4px;
+  border-top-left-radius:var(--radius-card);
+  border-bottom-left-radius:var(--radius-card);
+  background:var(--tone-n);
+}
+.pill .lab{
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  font-size:11.5px;
+  line-height:1.3;
+}
+.pill .val{
+  font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-weight:800;
+  line-height:1.4;
+  font-size:12.5px;
+  color:var(--ink);
+}
+
+/* =========================================================
+   SECTION HEAD (descrizione framework)
    ========================================================= */
 
 .section-head{
   text-align:center;
-  margin:2.5rem 0 1.75rem;
+  margin:2.2rem 0 1.5rem;
 }
 .section-title{
-  font-weight:900;
-  font-size:1.4rem;
+  font-weight:800;
+  font-size:15px;        /* era 1.4rem: versione premium ma più istituzionale */
   letter-spacing:.25px;
   color:var(--ink);
-  line-height:1.25;
+  line-height:1.35;
 }
 .section-sub{
   margin-top:4px;
   color:var(--muted);
-  font-size:13.8px;
+  font-size:13px;
   line-height:1.5;
   max-width:56rem;
   margin-left:auto;
   margin-right:auto;
 }
 .phase-nav{
-  margin-top:1.1rem;
+  margin-top:1rem;
   display:flex;
   flex-wrap:wrap;
   justify-content:center;
   gap:.6rem 1.1rem;
 }
 .phase-nav a{
-  font-size:12.8px;
+  font-size:12.6px;
   font-weight:700;
   text-transform:uppercase;
   color:var(--brand);
@@ -347,10 +392,10 @@ html[data-theme="dark"] .hero{
   letter-spacing:.04em;
   transition:opacity .15s ease;
 }
-.phase-nav a:hover{opacity:.8;}
+.phase-nav a:hover{opacity:.85}
 
 /* =========================================================
-   REPORT SECTIONS (F1..F6) blocchi verticali
+   REPORT SECTIONS (F1..F6)
    ========================================================= */
 
 .report-sections{
@@ -376,7 +421,7 @@ html[data-theme="dark"] .hero{
   }
 }
 
-/* Header interno di ogni sezione modulo (titolo F1, badge, descrizione breve) */
+/* Header interno di ogni sezione modulo */
 .section-headline{
   display:flex;
   flex-wrap:wrap;
@@ -386,9 +431,7 @@ html[data-theme="dark"] .hero{
   column-gap:.75rem;
   margin-bottom:1rem;
 }
-.section-head-left{
-  min-width:0;
-}
+.section-head-left{min-width:0;}
 .section-head-topline{
   display:flex;
   flex-wrap:wrap;
@@ -447,7 +490,7 @@ html[data-theme="dark"] .hero{
   max-width:60ch;
 }
 
-/* righe di metriche dentro le sezioni (tipo regime score, breadth, ecc.) */
+/* metriche in griglia */
 .metric-row{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(min(160px,100%),1fr));
@@ -457,7 +500,7 @@ html[data-theme="dark"] .hero{
 .metric-field{
   background:var(--surface-card-alt);
   border:1px solid var(--br-card);
-  border-radius:12px;
+  border-radius:var(--radius-card);
   box-shadow:var(--shadow-card);
   padding:.75rem .75rem .6rem;
   min-height:80px;
@@ -483,7 +526,7 @@ html[data-theme="dark"] .hero{
   color:var(--ink);
 }
 
-/* "strategia attuale" pill nel modulo F1 */
+/* “Strategia attuale” pill nel modulo F1 */
 .f1-mode-row{
   display:flex;
   flex-wrap:wrap;
@@ -499,7 +542,7 @@ html[data-theme="dark"] .hero{
   font-weight:600;
   line-height:1.2;
   padding:.3rem .5rem;
-  border-radius:8px;
+  border-radius:var(--radius-card-sm);
   border:1px solid var(--tone-n);
   box-shadow:var(--shadow-card);
   background:color-mix(in oklab, var(--tone-n) 10%, transparent);
@@ -513,13 +556,10 @@ html[data-theme="dark"] .hero{
 }
 
 /* =========================================================
-   PANEL OVERLAY (drawer / bottom sheet) - MiFID / Privacy / Audit
+   PANEL OVERLAY (drawer / bottom sheet)
    ========================================================= */
 
-/* overlay container */
-.tl-panel-overlay[aria-hidden="true"] {
-  display: none;
-}
+.tl-panel-overlay[aria-hidden="true"] { display: none; }
 .tl-panel-overlay[aria-hidden="false"] {
   display: block;
   position: fixed;
@@ -527,7 +567,7 @@ html[data-theme="dark"] .hero{
   z-index: 120;
 }
 
-/* backdrop cliccabile */
+/* backdrop */
 .tl-panel-backdrop {
   position:absolute;
   inset:0;
@@ -552,7 +592,7 @@ html[data-theme="dark"] .hero{
   bottom:0;
 }
 
-/* header del pannello */
+/* header */
 .tl-panel__header {
   background:var(--surface-card-alt);
   border-bottom:1px solid var(--br-soft);
@@ -583,14 +623,14 @@ html[data-theme="dark"] .hero{
   justify-content:center;
   width:28px;
   height:28px;
-  border-radius:8px;
+  border-radius:var(--radius-card-sm);
   border:1px solid var(--br-soft);
   background:var(--surface-card);
   color:var(--muted);
   flex-shrink:0;
 }
 
-/* corpo scrollabile del pannello */
+/* body */
 .tl-panel__body {
   flex:1 1 auto;
   overflow-y:auto;
@@ -603,11 +643,11 @@ html[data-theme="dark"] .hero{
   gap:16px;
 }
 
-/* blocchi/sezioni nel pannello */
+/* blocchi sezione */
 .tl-panel-section {
   background:var(--surface-card);
   border:1px solid var(--br-card);
-  border-radius:12px;
+  border-radius:var(--radius-card);
   box-shadow:var(--shadow-card);
   padding:12px 14px;
 }
@@ -630,7 +670,7 @@ html[data-theme="dark"] .hero{
   margin-top:6px;
 }
 
-/* footer con bottoni */
+/* footer */
 .tl-panel__footer {
   border-top:1px solid var(--br-soft);
   background:var(--surface-card-alt);
@@ -641,7 +681,7 @@ html[data-theme="dark"] .hero{
   gap:8px;
 }
 
-/* variante desktop: dock laterale destra */
+/* variante desktop dock + wide */
 @media(min-width:768px){
   .tl-panel--desktop {
     display:flex;
@@ -652,38 +692,66 @@ html[data-theme="dark"] .hero{
     top:0;
     height:100%;
     max-height:100%;
-    width:min(480px,90vw);
+    width:min(360px,90vw); /* default stretta */
     border-radius:16px 0 0 16px;
   }
-  .tl-panel--mobile {
-    display:none;
+  .tl-panel--desktop.tl-panel--wide {
+    width:min(560px,90vw); /* console larga */
   }
+  .tl-panel--mobile { display:none; }
 }
 @media(max-width:767px){
-  .tl-panel--desktop {
-    display:none;
-  }
+  .tl-panel--desktop { display:none; }
   .tl-panel--mobile {
     display:flex;
+    width:100%;
+    max-height:90vh;
+    border-top-left-radius:16px;
+    border-top-right-radius:16px;
+    overflow:hidden;
+    flex-direction:column;
   }
+  .tl-panel--mobile .tl-panel__body {
+    flex:1 1 auto;
+    min-height:0;
+    overflow:auto;
+    padding:16px;
+  }
+  .tl-panel--mobile .tl-panel__footer {
+    flex-shrink:0;
+    padding:12px 16px;
+    border-top:1px solid var(--br-soft);
+    background:var(--surface-card-alt);
+  }
+}
+
+/* Drawer F1B: stato attivo */
+.f1b-panel-menu .is-active {
+  border-left:3px solid var(--brand) !important;
+  background:color-mix(in oklab, var(--surface-card-alt) 60%, transparent) !important;
+  font-weight:600 !important;
+  color:var(--ink) !important;
+}
+.f1b-mobile-tabbar .is-active {
+  background:color-mix(in oklab, var(--surface-card-alt) 60%, transparent) !important;
+  font-weight:600 !important;
+  color:var(--ink) !important;
 }
 
 /* =========================================================
    METRIC TOOLTIP ( ? ) DESKTOP
    ========================================================= */
 
-.tl-popover[aria-hidden="true"] {
-  display:none;
-}
+.tl-popover[aria-hidden="true"] { display:none; }
 .tl-popover[aria-hidden="false"] {
   display:block;
-  position:absolute;
+  position:fixed; /* coerente col posizionamento vicino al bottone in JS */
   z-index:200;
   width:min(320px,90vw);
   max-width:320px;
   background:var(--surface-card);
   border:1px solid var(--br-card);
-  border-radius:12px;
+  border-radius:var(--radius-card);
   box-shadow:var(--shadow-xl);
   padding:12px;
   font-size:12.5px;
@@ -710,7 +778,7 @@ html[data-theme="dark"] .hero{
   justify-content:center;
   width:24px;
   height:24px;
-  border-radius:6px;
+  border-radius:var(--radius-card-sm);
   border:1px solid var(--br-soft);
   background:var(--surface-card-alt);
   color:var(--muted);
@@ -732,25 +800,19 @@ html[data-theme="dark"] .hero{
    METRIC MODAL ( ? ) MOBILE
    ========================================================= */
 
-/* overlay */
-.tl-metric-modal-overlay[aria-hidden="true"] {
-  display:none;
-}
+.tl-metric-modal-overlay[aria-hidden="true"] { display:none; }
 .tl-metric-modal-overlay[aria-hidden="false"] {
   display:block;
   position:fixed;
   inset:0;
   z-index:210;
 }
-
 .tl-metric-modal-backdrop {
   position:absolute;
   inset:0;
   background:rgba(0,0,0,.5);
   backdrop-filter:blur(2px);
 }
-
-/* pannello centrale scale mobile */
 .tl-metric-modal {
   position:absolute;
   left:50%;
@@ -766,7 +828,6 @@ html[data-theme="dark"] .hero{
   display:flex;
   flex-direction:column;
 }
-
 .tl-metric-modal__header {
   padding:16px;
   border-bottom:1px solid var(--br-soft);
@@ -797,13 +858,12 @@ html[data-theme="dark"] .hero{
   justify-content:center;
   width:28px;
   height:28px;
-  border-radius:8px;
+  border-radius:var(--radius-card-sm);
   border:1px solid var(--br-soft);
   background:var(--surface-card);
   color:var(--muted);
   flex-shrink:0;
 }
-
 .tl-metric-modal__body {
   padding:16px;
   overflow-y:auto;
@@ -813,17 +873,12 @@ html[data-theme="dark"] .hero{
   max-height:calc(80vh - 64px);
 }
 
-/* desktop: usiamo popover, non questa modale */
+/* desktop: usiamo popover, non la modale; mobile: nascondi popover */
 @media(min-width:768px){
-  .tl-metric-modal-overlay{
-    display:none !important;
-  }
+  .tl-metric-modal-overlay{ display:none !important; }
 }
-/* mobile: nascondi popover */
 @media(max-width:767px){
-  .tl-popover{
-    display:none !important;
-  }
+  .tl-popover{ display:none !important; }
 }
 
 /* =========================================================
@@ -836,9 +891,7 @@ html[data-theme="dark"] .hero{
   z-index:95;
   display:none;
 }
-.share-overlay[aria-hidden="false"]{
-  display:block;
-}
+.share-overlay[aria-hidden="false"]{ display:block; }
 .share-overlay__backdrop{
   position:absolute;
   inset:0;
@@ -886,7 +939,7 @@ html[data-theme="dark"] .hero{
   justify-content:center;
   width:28px;
   height:28px;
-  border-radius:8px;
+  border-radius:var(--radius-card-sm);
   border:1px solid var(--br-soft);
   background:var(--surface-card-alt);
   color:var(--muted);
@@ -951,15 +1004,12 @@ html[data-theme="dark"] .hero{
   line-height:1.2;
   background:var(--surface-card);
   border:1px solid var(--br-soft);
-  border-radius:8px;
+  border-radius:var(--radius-card-sm);
   padding:6px 8px;
   box-shadow:var(--shadow-card);
   color:var(--ink);
 }
-.share-copy-action svg{
-  width:14px;
-  height:14px;
-}
+.share-copy-action svg{ width:14px; height:14px; }
 
 /* =========================================================
    FOOTER
@@ -968,7 +1018,7 @@ html[data-theme="dark"] .hero{
 .footer-wrap{
   background:var(--surface-footer);
   border-top:1px solid var(--footer-br);
-  margin-top:24px
+  margin-top:24px;
 }
 .site-footer{
   color:var(--muted);
@@ -981,114 +1031,40 @@ html[data-theme="dark"] .hero{
 }
 
 /* =========================================================
-   PRINT OVERRIDES
+   PRINT OVERRIDES (TOC + watermark)
    ========================================================= */
 
 @media print{
-  /* niente overlay/modali/tooltips in stampa */
+  /* nascondi overlay/modali/tooltips */
   .noprint,
   header,
   .tl-panel-overlay,
   .tl-popover,
   .tl-metric-modal-overlay,
-  #share-overlay {
-    display:none !important;
+  #share-overlay { display:none !important; }
+
+  /* mostra indice e watermark */
+  #print-toc { display:block !important; margin:12px 0 16px; }
+  #print-toc h2 { font-size:14px; font-weight:800; margin:0 0 6px; }
+  #print-watermark {
+    display:block !important;
+    position:fixed;
+    top:10px; right:16px;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.08em;
+    color:#999;
+    opacity:.45;
   }
 
+  /* neutralizza hero gradient in stampa */
   .hero{
     page-break-after:always;
+    background:white !important;
     border:1px solid #ddd;
     box-shadow:none!important;
   }
 }
 
 /* Blocco scroll sotto drawer/panel */
-body.body--lock {
-  overflow: hidden;
-}
-
-/* Pannello desktop wide stile console ("Institutional console") */
-@media(min-width:768px){
-  .tl-panel--desktop {
-    display:flex;
-    right:0;
-    left:auto;
-    transform:none;
-    bottom:auto;
-    top:0;
-    height:100%;
-    max-height:100%;
-    width:min(360px,90vw); /* default stretta */
-    border-radius:16px 0 0 16px;
-  }
-  .tl-panel--desktop.tl-panel--wide {
-    width:min(560px,90vw); /* console larga */
-  }
-  .tl-panel__body {
-    flex:1 1 auto;
-    min-height:0;
-    overflow:auto;
-    padding:16px;
-  }
-  .tl-panel__footer {
-    flex-shrink:0;
-    padding:12px 16px;
-    border-top:1px solid var(--br-soft);
-    background:var(--surface-card-alt);
-  }
-}
-
-/* Mobile bottom sheet già presente ma ribadiamo */
-@media(max-width:767px){
-  .tl-panel--mobile {
-    width:100%;
-    max-height:90vh;
-    border-top-left-radius:16px;
-    border-top-right-radius:16px;
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-  }
-  .tl-panel--mobile .tl-panel__body {
-    flex:1 1 auto;
-    min-height:0;
-    overflow:auto;
-    padding:16px;
-  }
-  .tl-panel--mobile .tl-panel__footer {
-    flex-shrink:0;
-    padding:12px 16px;
-    border-top:1px solid var(--br-soft);
-    background:var(--surface-card-alt);
-  }
-}
-
-/* Sidebar tab attiva nel drawer desktop */
-.f1b-panel-menu .is-active {
-  border-left:3px solid var(--brand) !important;
-  background:color-mix(in oklab, var(--surface-card-alt) 60%, transparent) !important;
-  font-weight:600 !important;
-  color:var(--ink) !important;
-}
-
-/* Bottom tab attiva nel drawer mobile */
-.f1b-mobile-tabbar .is-active {
-  background:color-mix(in oklab, var(--surface-card-alt) 60%, transparent) !important;
-  font-weight:600 !important;
-  color:var(--ink) !important;
-}
-
-/* Tooltip popover desktop in posizione fissa */
-#metric-popover[aria-hidden="false"] {
-  position:fixed;
-  top:72px;
-  right:16px;
-  max-width:var(--pop-w,320px);
-  width:min(320px,90vw);
-  z-index:9999;
-  background:var(--surface-card);
-  border:1px solid var(--br-card);
-  border-radius:12px;
-  box-shadow:var(--shadow-xl);
-  padding:12px;
-}
+body.body--lock { overflow: hidden; }
