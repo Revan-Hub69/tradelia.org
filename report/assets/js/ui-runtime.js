@@ -1,20 +1,25 @@
 // /report/assets/js/ui-runtime.js
 //
-// UI runtime globale (no dati di mercato):
-// - pannello informativo (Privacy / MiFID / Drawer F1B ecc.)
-// - tooltip metriche ("?") desktop/mobile, alimentato da glossary.json
-// - tema light/dark
-// - share overlay
-// - stampa
+// Runtime UI globale Tradelia Premium (coerente con tokens.css premium + index.html riservato)
 //
-// VERSIONE REV FINAL
-// ------------------
+// Gestisce:
+// - Drawer/panel (Privacy / MiFID / Audit / console F1B ecc.)
+// - Tab strip sticky del drawer, pill di stato, sezione attiva
+// - Tooltip metriche ("?") desktop/mobile con glossary.json
+// - Tema light/dark
+// - Stampa
+// - Footer year
 //
-// NOTE IMPORTANTI:
-// - Assumiamo che index.html abbia gli ID esatti usati qui
-//   (#btn-print, #panel-overlay, #metric-popover, ecc).
-// - Assumiamo che tokens.css sia quello "pulito" finale che gestisce
-//   .onlyprint / .noprint / body--lock / z-index overlay.
+// IMPORTANTE
+// ----------
+// Assumiamo l'index con:
+//  - #panel-overlay, .tl-panel--desktop, .tl-panel--mobile, ecc.
+//  - #metric-popover / #metric-modal
+//  - #btn-print, #btn-print-2
+//  - #btn-theme
+//  - #btn-privacy-open, #btn-mifid-open
+//
+// Assumiamo tokens.css premium.
 //
 // ---------------------------------------------------------------------------
 // Utility DOM
@@ -38,7 +43,7 @@ function isMobile() {
   return window.matchMedia("(max-width: 767px)").matches;
 }
 
-// Safe escape (contro injection nel panel / tooltip)
+// Escape anti-injection (inutile per testo nostro statico, ma per sicurezza su dati runtime)
 function escapeHtml(str) {
   if (str === undefined || str === null) return "";
   return String(str)
@@ -53,17 +58,17 @@ function escapeHtml(str) {
 // GLOSSARIO METRICHE
 // ---------------------------------------------------------------------------
 //
-// /report/assets/glossary.json (esempio):
+// /report/assets/glossary.json esempio:
 // {
-//   "RiskTilt": {
-//     "label": "RiskTilt",
-//     "academic_def": "Indicatore oggettivo...",
-//     "interpretation": "Se cresce → ...",
-//     "source": "CBOE / FRED / paper etc"
+//   "Snapshot": {
+//     "label":"Snapshot",
+//     "academic_def":"Indicatore sulla fase di mercato...",
+//     "interpretation":"Se aumenta → risk-on...",
+//     "source":"CBOE / FRED / feed proprietari"
 //   }
 // }
 //
-// Se una metrica non esiste nel glossario, mostriamo un placeholder istituzionale.
+// Se la chiave manca usiamo fallback istituzionale.
 //
 
 let __TradeliaGlossary = {};
@@ -82,7 +87,7 @@ async function loadGlossary() {
     __TradeliaGlossary = {};
   }
 
-  // debug console
+  // debug dev
   window.__TradeliaGlossary = __TradeliaGlossary;
 }
 
@@ -98,16 +103,16 @@ function getMetricInfo(metricKey) {
     };
   }
 
-  // fallback placeholder se non definita
+  // fallback dignitoso
   return {
     label:          metricKey || "—",
-    academic_def:   "Questa metrica è in fase di definizione. Sarà documentata nel Glossario Tecnico Tradelia AI v1.",
-    interpretation: "Interpretazione in corso di validazione.",
-    source:         "In corso di validazione."
+    academic_def:   "Metrica proprietaria in validazione interna. Sarà inserita nel Glossario Tecnico Tradelia AI.",
+    interpretation: "Indicazione interpretativa in corso di calibrazione.",
+    source:         "Fonte e metodologia in fase di audit."
   };
 }
 
-// markup per tooltip corpo
+// markup corpo tooltip/overlay metrica
 function buildMetricHTML(info) {
   return `
     <div class="tl-metric-block text-[13px] leading-[1.45] text-[color:var(--ink)]">
@@ -140,18 +145,45 @@ function buildMetricHTML(info) {
 }
 
 // ---------------------------------------------------------------------------
-// PANEL OVERLAY (drawer Privacy / MiFID / Audit / F1 console)
+// PANEL OVERLAY / DRAWER
 // ---------------------------------------------------------------------------
 //
-// openPanel(opts):
-//   {
-//     title: "string",
-//     subtitle: "string",
-//     sections: [ { title, body, meta }, ... ],
-//     footerButtons: [ { label, action }, ... ],
-//     blocking: bool,
-//     panelSize: "wide" | undefined
-//   }
+// openPanel(opts)
+// opts = {
+//   title: "string",
+//   subtitle: "string",
+//   blocking: bool,              // se true non chiudi cliccando backdrop
+//   panelSize: "wide"|undefined, // se "wide" aggiunge .tl-panel--wide al desktop
+//
+//   mode: "simple" | "sections",
+//
+//   // mode:"simple"  -> sezioni stile blocchetti base (Privacy, MiFID)
+//   //   simpleSections: [ { title, body, meta }, ... ]
+//
+//   // mode:"sections" -> stile premium con tab sticky, pill stato, ecc.
+//   //   tabs: [
+//   //     { id:"sec-f1b", label:"F1 Regime", badge:"OK", tone:"pos", active:true },
+//   //     { id:"sec-risk", label:"Rischio", badge:"High", tone:"warn" },
+//   //     ...
+//   //   ]
+//   //
+//   //   sections: [
+//   //     {
+//   //       id:"sec-f1b",
+//   //       active:true,
+//   //       title:"Regime attuale",
+//   //       pill:{ tone:"pos", label:"Stabile / OK" },
+//   //       bodyHTML:"<p>...</p>",
+//   //       metaHTML:"<p>Audit feed...</p>"
+//   //     },
+//   //     ...
+//   //   ]
+//   //
+//   //   NOTE: tone può essere "pos" | "warn" | "neg" | "neu"
+//   //
+// }
+//
+// In entrambi i casi bindiamo metric "?" interni e lucide icons.
 //
 
 function openPanel(opts) {
@@ -161,96 +193,40 @@ function openPanel(opts) {
   const {
     title = "Dettagli",
     subtitle = "",
-    sections = [],
-    footerButtons = [],
     blocking = false,
-    panelSize // "wide" opzionale
+    panelSize,
+    mode = "simple",
+
+    simpleSections = [],
+
+    tabs = [],
+    sections = []
   } = opts || {};
 
-  // desktop refs
+  // refs desktop
   const titleDeskEl    = qs("#panel-title");
   const subDeskEl      = qs("#panel-subtitle");
   const bodyDeskEl     = qs("#panel-body");
   const footerDeskEl   = qs("#panel-footer");
 
-  // mobile refs
+  // refs mobile
   const titleMobEl     = qs("#panel-title-mobile");
   const subMobEl       = qs("#panel-subtitle-mobile");
   const bodyMobEl      = qs("#panel-body-mobile");
   const footerMobEl    = qs("#panel-footer-mobile");
 
-  // header
+  // header text
   setText(titleDeskEl, title);
   setText(subDeskEl, subtitle);
   setText(titleMobEl, title);
   setText(subMobEl, subtitle);
 
-  // corpo
-  let bodyHTML = "";
-  if (panelSize === "wide" && sections.length === 1) {
-    // caso speciale F1B / console interna: prendiamo body raw
-    bodyHTML = sections[0].body || "";
-  } else {
-    // caso standard: blocchetti tl-panel-section
-    bodyHTML = sections.map(section => {
-      const st  = section.title   || "";
-      const bd  = section.body    || "";
-      const mta = section.meta    || "";
-      return `
-        <section class="tl-panel-section" style="margin-bottom:1rem;">
-          ${st
-            ? `<div class="tl-panel-section-title text-[12px] font-semibold mb-1 text-[color:var(--ink)]">${st}</div>`
-            : ``
-          }
-          <div class="tl-panel-section-text text-[13px] leading-[1.45] text-[color:var(--ink)]">${bd}</div>
-          ${
-            mta
-              ? `<div class="tl-panel-section-meta text-[11px] leading-[1.4] text-[color:var(--muted)] mt-2">${mta}</div>`
-              : ``
-          }
-        </section>
-      `;
-    }).join("");
-  }
+  // build footer (per ora: solo bottone Chiudi)
+  const footerHTML = `<button class="btn btn-sm" data-panel-close>Chiudi</button>`;
+  setHTML(footerDeskEl, footerHTML);
+  setHTML(footerMobEl,  footerHTML);
 
-  setHTML(bodyDeskEl, bodyHTML);
-  setHTML(bodyMobEl,  bodyHTML);
-
-  // footer bottoni
-  function renderFooterBtns(arr) {
-    if (!arr || !arr.length) {
-      return `<button class="btn btn-sm" data-panel-close>Chiudi</button>`;
-    }
-    return arr.map((btn, idx) => {
-      return `<button class="btn btn-sm" data-panel-btn="${idx}">${escapeHtml(btn.label || "OK")}</button>`;
-    }).join("");
-  }
-
-  setHTML(footerDeskEl, renderFooterBtns(footerButtons));
-  setHTML(footerMobEl,  renderFooterBtns(footerButtons));
-
-  // bind footer actions custom
-  qsa("[data-panel-btn]", footerDeskEl).forEach(btnEl => {
-    const i = btnEl.getAttribute("data-panel-btn");
-    if (footerButtons[i] && typeof footerButtons[i].action === "function") {
-      btnEl.addEventListener("click", footerButtons[i].action);
-    }
-  });
-  qsa("[data-panel-btn]", footerMobEl).forEach(btnEl => {
-    const i = btnEl.getAttribute("data-panel-btn");
-    if (footerButtons[i] && typeof footerButtons[i].action === "function") {
-      btnEl.addEventListener("click", footerButtons[i].action);
-    }
-  });
-
-  // blocking (se true: niente chiusura con click backdrop)
-  if (blocking) {
-    overlayEl.setAttribute("data-blocking", "true");
-  } else {
-    overlayEl.removeAttribute("data-blocking");
-  }
-
-  // panelSize wide -> classe larga sul desktop
+  // panelSize wide?
   const panelDesktop = qs(".tl-panel--desktop", overlayEl);
   if (panelDesktop) {
     if (panelSize === "wide") {
@@ -260,17 +236,38 @@ function openPanel(opts) {
     }
   }
 
-  // blocca scroll della pagina dietro
-  document.body.classList.add("body--lock");
+  // blocking?
+  if (blocking) {
+    overlayEl.setAttribute("data-blocking", "true");
+  } else {
+    overlayEl.removeAttribute("data-blocking");
+  }
 
-  // mostra overlay
+  // CONTENT BUILD
+  let builtHTML = "";
+
+  if (mode === "sections") {
+    // premium: tab sticky + wrapper sezioni
+    builtHTML = buildPanelWithTabsHTML({ tabs, sections });
+  } else {
+    // fallback semplice: blocchi informativi stacked
+    builtHTML = buildPanelSimpleHTML(simpleSections);
+  }
+
+  // inject contenuto
+  setHTML(bodyDeskEl, builtHTML);
+  setHTML(bodyMobEl,  builtHTML);
+
+  // blocca scroll body esterno
+  document.body.classList.add("body--lock");
   overlayEl.setAttribute("aria-hidden", "false");
 
-  // rebind dei tooltip "?" all'interno del panel appena creato
+  // attacca comportamenti interni al panel:
   bindMetricInfoButtons(bodyDeskEl);
   bindMetricInfoButtons(bodyMobEl);
+  initPanelTabsNavigation(overlayEl);
 
-  // icone lucide dentro al panel (se usate nel contenuto)
+  // icone lucide nel drawer (se usi <i data-lucide="..."></i>)
   if (window.lucide && typeof window.lucide.createIcons === "function") {
     try {
       window.lucide.createIcons();
@@ -280,23 +277,200 @@ function openPanel(opts) {
   }
 }
 
+// genera HTML per mode:"simple"
+function buildPanelSimpleHTML(simpleSections) {
+  if (!simpleSections || !simpleSections.length) {
+    return `
+      <section class="tl-panel-section">
+        <div class="tl-panel-section-title text-[12px] font-semibold mb-1 text-[color:var(--ink)]">
+          Informazioni
+        </div>
+        <div class="tl-panel-section-text text-[13px] leading-[1.45] text-[color:var(--ink)]">
+          Contenuto non disponibile.
+        </div>
+      </section>
+    `;
+  }
+
+  return `
+    <div class="tl-panel-sections-wrapper">
+      ${simpleSections.map(sec => {
+        const st  = sec.title   || "";
+        const bd  = sec.body    || "";
+        const mta = sec.meta    || "";
+
+        return `
+          <section class="tl-panel-section" style="margin-bottom:.5rem;">
+            <header class="tl-panel-section-title">
+              <div class="tl-panel-section-title-text">
+                ${escapeHtml(st)}
+              </div>
+            </header>
+
+            <div class="tl-panel-section-text">${bd}</div>
+
+            ${mta
+              ? `<div class="tl-panel-section-meta">${mta}</div>`
+              : ``
+            }
+          </section>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
+
+// genera HTML per mode:"sections" (tabs premium + sezioni con pill stato)
+function buildPanelWithTabsHTML({ tabs = [], sections = [] }) {
+
+  // nav tabs
+  const tabsHTML = `
+    <nav class="tl-panel-tabs" role="tablist">
+      ${tabs.map(t => {
+        const isAct = !!t.active;
+        const tone  = t.tone || "neu";
+        return `
+          <button
+            class="tl-panel-tab ${isAct ? "is-active" : ""}"
+            role="tab"
+            data-panel-tab="${escapeHtml(t.id || "")}"
+            data-tone="${escapeHtml(tone)}"
+            aria-selected="${isAct ? "true" : "false"}"
+          >
+            <span class="truncate">${escapeHtml(t.label || "")}</span>
+            ${t.badge
+              ? `<span class="tl-panel-tab-badge">${escapeHtml(t.badge)}</span>`
+              : ``
+            }
+          </button>
+        `;
+      }).join("")}
+    </nav>
+  `;
+
+  // sezioni dettagliate
+  const secsHTML = `
+    <div class="tl-panel-sections-wrapper">
+      ${sections.map(sec => {
+        const isAct   = !!sec.active;
+        const tone    = sec.pill?.tone || "neu";
+        const pillLbl = sec.pill?.label || "";
+        const idAttr  = sec.id ? `id="${escapeHtml(sec.id)}"` : "";
+
+        // mini icona "sketch" tono
+        const iconSVG = getMiniSketchSVG(tone);
+
+        return `
+          <section
+            class="tl-panel-section ${isAct ? "is-active" : ""}"
+            ${idAttr}
+          >
+            <header class="tl-panel-section-title">
+              <div class="tl-panel-section-title-text">
+                ${escapeHtml(sec.title || "")}
+              </div>
+
+              ${
+                pillLbl
+                  ? `
+                    <div class="tl-panel-section-pill">
+                      <span class="pill-icon" data-tone="${escapeHtml(tone)}">
+                        ${iconSVG}
+                      </span>
+
+                      <span class="tl-panel-section-pill-dot" data-tone="${escapeHtml(tone)}"></span>
+
+                      <span>${escapeHtml(pillLbl)}</span>
+                    </div>
+                  `
+                  : ``
+              }
+            </header>
+
+            <div class="tl-panel-section-text">
+              ${sec.bodyHTML || ""}
+            </div>
+
+            ${
+              sec.metaHTML
+                ? `<div class="tl-panel-section-meta">${sec.metaHTML}</div>`
+                : ``
+            }
+          </section>
+        `;
+      }).join("")}
+    </div>
+  `;
+
+  return tabsHTML + secsHTML;
+}
+
+// piccola icona tono stato (match pill-icon / regime-sketch-icon mood)
+function getMiniSketchSVG(tone) {
+  // niente lucide qui: disegniamo un segnale "hand-drawn" / 2-path
+  // neutro = linee grigie, pos = up arrow, warn = !, neg = x
+  // noi usiamo stroke="currentColor" e lasciamo che CSS colori .pill-icon[data-tone]
+
+  if (tone === "pos") {
+    // check / arrowish
+    return `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 12l5 5 11-11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M4 12l5 5 11-11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".5" stroke-dasharray="2 2"/>
+      </svg>
+    `;
+  }
+  if (tone === "warn") {
+    // !
+    return `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".7" stroke-dasharray="2 1.2 .5 1.4"/>
+        <path d="M12 8v5" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 17h0" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `;
+  }
+  if (tone === "neg") {
+    // X
+    return `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".7" stroke-dasharray="2 1.2 .5 1.4"/>
+        <path d="M9 9l6 6M15 9l-6 6"
+              stroke="currentColor"
+              stroke-width="3.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+      </svg>
+    `;
+  }
+  // neu
+  return `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".7" stroke-dasharray="2 1.2 .5 1.4"/>
+      <path d="M9 12h6"
+            stroke="currentColor"
+            stroke-width="3.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+    </svg>
+  `;
+}
+
+// chiusura panel
 function closePanel() {
   const overlayEl = qs("#panel-overlay");
   if (!overlayEl) return;
 
   overlayEl.setAttribute("aria-hidden", "true");
-
-  // riabilita scroll del body
   document.body.classList.remove("body--lock");
 
-  // rimuovi wide dal pannello desktop
   const panelDesktop = qs(".tl-panel--desktop", overlayEl);
   if (panelDesktop) {
     panelDesktop.classList.remove("tl-panel--wide");
   }
 }
 
-// chiusura panel su click backdrop / [data-panel-close]
+// backdrop / [data-panel-close]
 document.addEventListener("click", (ev) => {
   const overlayEl = qs("#panel-overlay");
   if (!overlayEl) return;
@@ -304,42 +478,133 @@ document.addEventListener("click", (ev) => {
 
   const blocking = overlayEl.getAttribute("data-blocking") === "true";
 
-  // 1. bottoni con data-panel-close
-  const closeBtn = ev.target.closest("[data-panel-close]");
-  if (closeBtn) {
+  // close button
+  if (ev.target.closest("[data-panel-close]")) {
     closePanel();
     return;
   }
 
-  // 2. click sul backdrop (solo se non blocking)
-  const backdrop = ev.target.closest(".tl-panel-backdrop");
-  if (backdrop && !blocking) {
+  // backdrop click (se non blocking)
+  if (ev.target.closest(".tl-panel-backdrop") && !blocking) {
     closePanel();
     return;
   }
 });
 
 // ---------------------------------------------------------------------------
-// CONTENUTO LEGAL (Privacy / MiFID) + Audit
+// PANEL TABS BEHAVIOR
+// ---------------------------------------------------------------------------
+//
+// - click su .tl-panel-tab => scroll alla sezione corrispondente e highlight
+// - mentre scrolli nel body del panel, aggiorna is-active tab + sezione
+//
+
+function initPanelTabsNavigation(overlayEl) {
+  if (!overlayEl) return;
+
+  const desktopBody = qs("#panel-body", overlayEl);
+  const mobileBody  = qs("#panel-body-mobile", overlayEl);
+
+  [desktopBody, mobileBody].forEach(panelBody => {
+    if (!panelBody) return;
+
+    const tabBar = qs(".tl-panel-tabs", panelBody);
+    if (!tabBar) return; // se è un panel "simple" non abbiamo tabs
+
+    const tabs = qsa(".tl-panel-tab", tabBar);
+    const sections = qsa(".tl-panel-section", panelBody);
+
+    // click tab -> scrollIntoView
+    tabs.forEach(tabEl => {
+      if (tabEl.__tabBound) return;
+      tabEl.__tabBound = true;
+
+      tabEl.addEventListener("click", () => {
+        const targetId = tabEl.getAttribute("data-panel-tab");
+        if (!targetId) return;
+        const tgt = qs(`#${CSS.escape(targetId)}`, panelBody);
+        if (!tgt) return;
+
+        tgt.scrollIntoView({ behavior: "smooth", block: "start" });
+        // highlight immediata
+        setActiveSection(panelBody, tgt.id);
+      });
+    });
+
+    // scroll listener -> attiva sezione visibile
+    panelBody.addEventListener("scroll", () => {
+      const topY = panelBody.getBoundingClientRect().top;
+
+      // troviamo la sezione più vicina al top del body
+      let currentId = null;
+      let minDist = Infinity;
+      sections.forEach(sec => {
+        const r = sec.getBoundingClientRect();
+        const dist = Math.abs(r.top - topY - 60); // offset sticky tabs ~56px
+        if (dist < minDist) {
+          minDist = dist;
+          currentId = sec.id || null;
+        }
+      });
+
+      if (currentId) {
+        setActiveSection(panelBody, currentId);
+      }
+    });
+  });
+}
+
+// helper: aggiorna classi .is-active su sezioni e tab
+function setActiveSection(panelBodyEl, activeId) {
+  if (!panelBodyEl) return;
+
+  const allSections = qsa(".tl-panel-section", panelBodyEl);
+  const allTabs     = qsa(".tl-panel-tab", panelBodyEl);
+
+  allSections.forEach(sec => {
+    if (sec.id === activeId) {
+      sec.classList.add("is-active");
+    } else {
+      sec.classList.remove("is-active");
+    }
+  });
+
+  allTabs.forEach(tab => {
+    const tId = tab.getAttribute("data-panel-tab");
+    if (tId === activeId) {
+      tab.classList.add("is-active");
+      tab.setAttribute("aria-selected","true");
+    } else {
+      tab.classList.remove("is-active");
+      tab.setAttribute("aria-selected","false");
+    }
+  });
+}
+
+// ---------------------------------------------------------------------------
+// CONTENUTO LEGAL STANDARD
 // ---------------------------------------------------------------------------
 
 function openPrivacyPanel() {
   openPanel({
     title: "Privacy & Trasparenza",
-    subtitle: "Nessun tracciamento di profilazione. Preferenze salvate solo in locale.",
-    sections: [
+    subtitle: "Zero profilazione. Preferenze salvate localmente sul tuo browser.",
+    blocking: false,
+    panelSize: undefined,
+    mode: "simple",
+    simpleSections: [
       {
         title: "Come gestiamo i dati",
         body: `
           <p>
             Tradelia AI adotta una politica di massima trasparenza e
-            <strong>zero tracciamento di profilazione</strong>.
+            <strong>nessuna profilazione pubblicitaria</strong>.
           </p>
           <ul style="margin:.5rem 0 .5rem 1rem;list-style:disc;font-size:12.5px;line-height:1.45;">
-            <li>Nessun cookie di profilazione o advertising.</li>
-            <li>Nessuna vendita o condivisione di dati personali con terze parti.</li>
-            <li>Nessun analytics esterno invasivo.</li>
-            <li>Le preferenze di tema, consenso, ecc. vivono solo nel tuo browser (<code>localStorage</code>).</li>
+            <li>Nessun cookie di advertising.</li>
+            <li>Nessuna vendita di dati personali a terzi.</li>
+            <li>Nessun analytics invasivo esterno.</li>
+            <li>Le preferenze (tema, ack normativo, ecc.) restano in <code>localStorage</code>.</li>
           </ul>
         `,
         meta: `
@@ -347,114 +612,102 @@ function openPrivacyPanel() {
           Linee Guida EDPB.
         `
       }
-    ],
-    footerButtons: [
-      {
-        label: "Chiudi",
-        action: () => closePanel()
-      }
-    ],
-    blocking: false
+    ]
   });
 }
 
 function openMifidPanel() {
   openPanel({
     title: "Informativa MiFID",
-    subtitle: "Contenuto a scopo informativo/formativo. Non è consulenza personalizzata.",
-    sections: [
+    subtitle: "Contenuto esclusivamente informativo/formativo. Non è consulenza personalizzata.",
+    blocking: true,
+    panelSize: undefined,
+    mode: "simple",
+    simpleSections: [
       {
         title: "Chi è Tradelia AI",
         body: `
           <p>
             Tradelia AI è una piattaforma di analisi e alfabetizzazione finanziaria.
-            L'obiettivo è aiutare l'utente a comprendere contesto di mercato,
-            fattori di rischio e dinamiche tecniche, in modo chiaro e tracciabile.
+            Obiettivo: contestualizzare regime di mercato, sentiment, fattori tecnici,
+            rischio e struttura di liquidità.
           </p>
           <p style="margin-top:.5rem;">
             <strong>Non siamo un consulente finanziario abilitato all’offerta di raccomandazioni personalizzate.</strong>
-            Non effettuiamo gestione di portafogli, non raccogliamo ordini di negoziazione,
-            non sollecitiamo l’investimento in strumenti finanziari.
+            Non raccogliamo ordini, non gestiamo capitali per conto terzi.
           </p>
         `,
         meta: `
-          Rif. Direttiva MiFID II, regolamentazione ESMA su consulenza in materia di investimenti.
+          Rif. Direttiva MiFID II e linee guida ESMA su consulenza in materia di investimenti.
         `
       },
       {
         title: "Nessuna raccomandazione operativa",
         body: `
           <p>
-            Le informazioni mostrate (F1, F2, F3, F4, F5, F5B, F6) descrivono scenari di mercato,
-            forze di sentiment/flusso, fattori tecnici e riferimenti storici.
-            Non costituiscono indicazione ad aprire/chiudere posizioni,
-            né suggeriscono una strategia adatta a te come singolo investitore.
+            I moduli F1…F6 descrivono scenari e fattori di rischio/contesto.
+            Non sono un invito ad aprire o chiudere posizioni né a utilizzare
+            un intermediario specifico.
           </p>
           <p style="margin-top:.5rem;">
-            Qualsiasi riferimento a livelli tecnici, volatilità, momentum,
-            liquidità o broker esistenti è da intendersi
-            come <strong>osservazione di mercato</strong> e non come invito operativo.
+            Qualsiasi riferimento a livelli tecnici, momentum, volatilità
+            o nomi broker è da intendersi come <strong>osservazione di mercato</strong>,
+            non come istruzione operativa su misura per te.
           </p>
         `,
         meta: `
-          Prima di prendere decisioni reali, verifica sempre la tua situazione
-          personale (obiettivi, orizzonte temporale, propensione al rischio)
-          con un intermediario autorizzato o un consulente finanziario abilitato.
+          Prima di agire, confronta sempre orizzonte temporale,
+          propensione al rischio e obiettivi con un intermediario regolamentato.
         `
       },
       {
         title: "Rischio e responsabilità",
         body: `
           <p>
-            I mercati finanziari comportano rischio di perdita totale o parziale del capitale.
-            La volatilità, gli shock macro, le condizioni di liquidità e gli eventi esogeni
-            possono generare movimenti estremi in tempi molto brevi.
+            I mercati finanziari comportano rischio di perdita totale o parziale
+            del capitale. Shock macro, volatilità, liquidità ridotta
+            possono portare a movimenti estremi.
           </p>
           <p style="margin-top:.5rem;">
-            <strong>Nulla di quanto visualizzato garantisce risultati futuri.</strong>
-            Le performance storiche o gli scenari ipotetici non sono indicativi
-            di rendimenti futuri.
+            <strong>Nulla garantisce risultati futuri.</strong>
+            Le performance storiche o gli scenari ipotetici non sono predittivi.
           </p>
           <p style="margin-top:.5rem;">
-            L’utente rimane sempre l’unico responsabile delle proprie decisioni.
+            L’utente resta l’unico responsabile delle proprie decisioni.
           </p>
         `,
         meta: `
-          Usa sempre un intermediario regolamentato e verifica condizioni di costo,
-          protezioni, regime fiscale e aderenza normativa del servizio che utilizzi.
+          Usa sempre un intermediario autorizzato e verifica costi,
+          protezioni, fiscalità e compliance MiFID.
         `
       }
-    ],
-    footerButtons: [
-      {
-        label: "Ho letto",
-        action: () => closePanel()
-      }
-    ],
-    blocking: true
+    ]
   });
 }
 
-// Audit panel generico richiamabile da moduli
+// Pannello Audit fonte dati (richiamabile da codice dati F1/F2/... tipo "Vedi audit")
 function openAuditPanel(auditData) {
   const a = auditData || {};
   const lag   = (a.feed_lag_days ?? "—");
   const conf  = (a.confidence    ?? "—");
   const integ = (a.integrity     ?? "—");
-  const src   = (a.source_sync   || "—");
+  const sync  = (a.source_sync   || "—");
   const notes = (a.notes         || "");
 
   openPanel({
     title: "Audit dati / Fonti",
-    subtitle: "Qualità campione e latenza feed",
-    sections: [
+    subtitle: "Qualità campione, coerenza feed e latenza.",
+    blocking: false,
+    panelSize: "wide",
+    mode: "simple",
+    simpleSections: [
       {
         title: "Origine dati",
         body: `
           <p>
-            <strong>Fonte primaria:</strong> ${escapeHtml(src)}<br/>
+            <strong>Fonte primaria:</strong> ${escapeHtml(sync)}<br/>
             <strong>Lag feed (giorni):</strong> ${escapeHtml(String(lag))}<br/>
-            <strong>Confidence (0-1):</strong> ${escapeHtml(String(conf))}<br/>
+            <strong>Confidence (0–1):</strong> ${escapeHtml(String(conf))}<br/>
             <strong>Integrità dataset:</strong> ${escapeHtml(String(integ))}
           </p>
           ${notes
@@ -463,65 +716,31 @@ function openAuditPanel(auditData) {
           }
         `,
         meta: `
-          Questo pannello ha finalità informative/formative.
-          Non è una validazione regolamentare e non sostituisce
-          la due diligence dell'investitore.
+          Questo pannello è informativo/formativo.
+          Non sostituisce la due diligence dell’investitore e non costituisce
+          validazione regolamentare.
         `
       },
       {
         title: "Avvertenza MiFID",
         body: `
           <p>
-            Prima di qualsiasi scelta reale verifica sempre adeguatezza / appropriatezza
-            con un consulente autorizzato in linea con MiFID II.
+            Prima di qualsiasi azione reale: verifica adeguatezza/appropriatezza
+            con un consulente autorizzato (MiFID II).
           </p>
-        `,
-        meta: `
-          Tradelia AI non fornisce consulenza personalizzata
-          e non raccoglie ordini o capitali.
+          <p style="margin-top:.5rem;">
+            Tradelia AI non fornisce consulenza personalizzata,
+            non raccoglie ordini e non gestisce capitali di terzi.
+          </p>
         `
       }
-    ],
-    footerButtons: [
-      {
-        label: "Chiudi",
-        action: () => closePanel()
-      }
-    ],
-    blocking: false,
-    panelSize: "wide"
+    ]
   });
 }
 
 // ---------------------------------------------------------------------------
 // METRIC TOOLTIP SYSTEM (?)
 // ---------------------------------------------------------------------------
-//
-// index.html deve avere:
-//
-// Desktop popover:
-// <div id="metric-popover" class="tl-popover noprint" role="tooltip" aria-hidden="true">
-//   <div class="tl-popover__head">
-//     <div id="metric-popover-title" class="tl-popover__title">—</div>
-//     <button id="metric-popover-close" class="tl-popover__close" aria-label="Chiudi">…</button>
-//   </div>
-//   <div id="metric-popover-body" class="tl-popover__body">—</div>
-// </div>
-//
-// Mobile modal:
-// <div id="metric-modal" class="tl-metric-modal-overlay noprint" aria-hidden="true">
-//   <div class="tl-metric-modal-backdrop" data-metric-close></div>
-//   <div class="tl-metric-modal">
-//     <header class="tl-metric-modal__header">
-//       <div class="min-w-0">
-//         <div id="metric-modal-title" class="tl-metric-modal__title">—</div>
-//       </div>
-//       <button class="tl-metric-modal__close" data-metric-close aria-label="Chiudi">…</button>
-//     </header>
-//     <div id="metric-modal-body" class="tl-metric-modal__body">—</div>
-//   </div>
-// </div>
-//
 
 let currentPopoverOpen = false;
 
@@ -538,14 +757,14 @@ function openMetricDesktop(btnEl) {
   setText(titleEl, info.label || key || "—");
   setHTML(bodyEl, buildMetricHTML(info));
 
-  // posizione vicino al bottone "?"
+  // posiziona vicino al bottone
   const rect = btnEl.getBoundingClientRect();
   pop.style.position = "fixed";
   pop.style.maxWidth = "min(320px, 90vw)";
   pop.style.left = rect.left + "px";
   pop.style.top  = (rect.bottom + 8) + "px";
 
-  // se sfora a destra, shiftala
+  // evita overflow destra
   const estWidth = 320;
   const overflowX = rect.left + estWidth + 16 - window.innerWidth;
   if (overflowX > 0) {
@@ -592,8 +811,7 @@ function closeMetricMobile() {
   document.body.classList.remove("body--lock");
 }
 
-// bind (?)
-// evita doppio bind con flag __metricBound
+// bind "(?)" alle metriche
 function bindMetricInfoButtons(rootScope) {
   const scope = rootScope || document;
 
@@ -607,7 +825,6 @@ function bindMetricInfoButtons(rootScope) {
       if (isMobile()) {
         openMetricMobile(btn);
       } else {
-        // rimpiazzo popover se già aperto
         if (currentPopoverOpen) {
           closeMetricDesktop();
         }
@@ -617,7 +834,7 @@ function bindMetricInfoButtons(rootScope) {
   });
 }
 
-// chiusura popover desktop (X)
+// chiudi popover desktop (X)
 const popClose = qs("#metric-popover-close");
 if (popClose) {
   popClose.addEventListener("click", (e) => {
@@ -626,19 +843,19 @@ if (popClose) {
   });
 }
 
-// click fuori dal popover desktop → chiudi
+// click fuori popover desktop => chiudi
 document.addEventListener("click", (ev) => {
   const pop = qs("#metric-popover");
   if (!pop) return;
   if (pop.getAttribute("aria-hidden") === "true") return;
 
-  if (pop.contains(ev.target)) return;            // clic dentro, ok
-  if (ev.target.closest(".info-btn")) return;     // clic su un altro "?", gestito sopra
+  if (pop.contains(ev.target)) return;        // click dentro popover ok
+  if (ev.target.closest(".info-btn")) return; // click su altro "?" -> gestito sopra
 
   closeMetricDesktop();
 });
 
-// chiusura modal mobile metrica (X o backdrop)
+// chiusura modal metric mobile (X o backdrop)
 qsa("[data-metric-close]").forEach(btn => {
   btn.addEventListener("click", () => {
     closeMetricMobile();
@@ -646,7 +863,7 @@ qsa("[data-metric-close]").forEach(btn => {
 });
 
 // ---------------------------------------------------------------------------
-// THEME SWITCH (light / dark)
+// THEME SWITCH (light/dark)
 // ---------------------------------------------------------------------------
 
 function initThemeToggle() {
@@ -660,15 +877,13 @@ function initThemeToggle() {
     } catch(e){}
   }
 
-  // init tema da localStorage
-  (function initFromStorage(){
-    try {
-      const saved = localStorage.getItem("tradelia-theme");
-      if (saved === "dark" || saved === "light") {
-        applyTheme(saved);
-      }
-    } catch(e){}
-  })();
+  // init da localStorage se presente
+  try {
+    const saved = localStorage.getItem("tradelia-theme");
+    if (saved === "dark" || saved === "light") {
+      applyTheme(saved);
+    }
+  } catch(e){}
 
   btnTheme.addEventListener("click", () => {
     const cur = document.documentElement.getAttribute("data-theme") || "light";
@@ -678,7 +893,7 @@ function initThemeToggle() {
 }
 
 // ---------------------------------------------------------------------------
-// PRINT
+// PRINT BUTTONS
 // ---------------------------------------------------------------------------
 
 function initPrintButtons() {
@@ -693,58 +908,21 @@ function initPrintButtons() {
 }
 
 // ---------------------------------------------------------------------------
-// SHARE OVERLAY
-// ---------------------------------------------------------------------------
-
-function initShareOverlay() {
-  const overlay = qs("#share-overlay");
-  const btnOpen = qs("#btn-share");
-  if (!overlay || !btnOpen) return;
-
-  const closeElems = qsa("[data-share-close]", overlay);
-  const copyBtns   = qsa("[data-share-svc='copy'], #share-copy-btn", overlay);
-
-  function openShare() {
-    const linkField = qs("#share-link-field");
-    if (linkField) {
-      linkField.textContent = window.location.href;
-    }
-    overlay.setAttribute("aria-hidden","false");
-  }
-
-  function closeShare() {
-    overlay.setAttribute("aria-hidden","true");
-  }
-
-  btnOpen.addEventListener("click", openShare);
-  closeElems.forEach(el => el.addEventListener("click", closeShare));
-
-  // copia link
-  copyBtns.forEach(el => {
-    el.addEventListener("click", () => {
-      const url = window.location.href;
-      try {
-        navigator.clipboard.writeText(url);
-        // opzionale: micro feedback visivo
-      } catch(e){}
-    });
-  });
-}
-
-// ---------------------------------------------------------------------------
-// BUTTON BINDING: Privacy / MiFID
+// LEGAL BUTTONS (Privacy / MiFID)
 // ---------------------------------------------------------------------------
 
 function initLegalButtons() {
   const privBtn = qs("#btn-privacy-open");
-  if (privBtn) {
+  if (privBtn && !privBtn.__legalBound) {
+    privBtn.__legalBound = true;
     privBtn.addEventListener("click", () => {
       openPrivacyPanel();
     });
   }
 
   const mifidBtn = qs("#btn-mifid-open");
-  if (mifidBtn) {
+  if (mifidBtn && !mifidBtn.__legalBound) {
+    mifidBtn.__legalBound = true;
     mifidBtn.addEventListener("click", () => {
       openMifidPanel();
     });
@@ -764,28 +942,26 @@ window.__TradeliaUI = {
   bindMetricInfoButtons
 };
 
-// retrocompat eventuale
+// retrocompat se ci sono vecchie chiamate
 window.openPanel  = openPanel;
 window.closePanel = closePanel;
 
 // ---------------------------------------------------------------------------
-// BOOT
+// BOOTSTRAP
 // ---------------------------------------------------------------------------
 
 async function bootUIRuntime() {
-  // 1. carica glossary (await per evitare tooltip vuoti sul primo click subito)
+  // carica il glossario prima che clicchino sul primo "?"
   await loadGlossary();
 
-  // 2. init sistemi globali
   initThemeToggle();
   initPrintButtons();
-  initShareOverlay();
   initLegalButtons();
 
-  // 3. bind tooltip (?) per contenuto già presente
+  // bind tooltip (?) per il DOM già presente
   bindMetricInfoButtons(document);
 
-  // 4. lucide icons global
+  // lucide icons global (solo se presente)
   if (window.lucide && typeof window.lucide.createIcons === "function") {
     try {
       window.lucide.createIcons();
@@ -794,13 +970,12 @@ async function bootUIRuntime() {
     }
   }
 
-  // 5. footer year se vuoto
+  // footer anno (se vuoto)
   const footerYearEl = qs("#footer-year");
   if (footerYearEl && !footerYearEl.textContent.trim()) {
-    const now = new Date();
-    footerYearEl.textContent = now.getFullYear();
+    footerYearEl.textContent = new Date().getFullYear();
   }
 }
 
-// fire subito
+// kick
 bootUIRuntime();
