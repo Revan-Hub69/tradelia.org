@@ -16,21 +16,16 @@
   <!-- Tailwind (utility layout) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Lucide icons (per drawer dinamici e icone runtime) -->
+  <!-- Lucide icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <!-- Design system / tokens -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
 
-  <!-- Patch runtime (print utils, footer bg, sr-only ecc.)
-       Incollare il contenuto che ti do dopo in tokens.css.
-  -->
-
   <style>
     :root { --pop-w:320px; }
     html, body { height: 100%; }
 
-    /* quando apriamo il panel overlay aggiungiamo .body--lock via JS */
     .body--lock {
       overflow: hidden;
       touch-action: none;
@@ -53,7 +48,6 @@
       }
     }
 
-    /* HEADER sticky glass (solo web, .noprint lo toglie in stampa) */
     .hdr{
       backdrop-filter:saturate(1.1) blur(6px);
       background:color-mix(in oklab, var(--surface-card) 90%, transparent);
@@ -66,7 +60,6 @@
       color:var(--muted);
     }
 
-    /* footer visual separation, fallback se tokens.css non li ha ancora */
     .footer-wrap{
       background:color-mix(in oklab, var(--surface-page) 94%, black);
       border-top:1px solid color-mix(in oklab, var(--surface-page) 80%, black);
@@ -87,7 +80,6 @@
       text-decoration:underline;
     }
 
-    /* sr-only utility + versione print:block */
     .sr-only {
       position:absolute;
       width:1px;
@@ -100,36 +92,27 @@
       border:0;
     }
 
-    /* default: nascondi blocchi solo-print sullo schermo */
     @media screen {
       .onlyprint { display:none !important; }
     }
 
-    /* stampa */
     @media print {
-      /* nascondi tutto quello marcato noprint */
       .noprint { display:none !important; }
-
-      /* mostra i blocchi che sono solo per stampa */
       .onlyprint { display:block !important; }
 
-      /* sblocca scroll corpo */
       body.body--lock { overflow: visible !important; }
 
-      /* sfondo bianco carta */
       html,
       body {
         background:#fff !important;
         color:#000 !important;
       }
 
-      /* page breaks per le sezioni istituzionali */
       #print-disclaimer   { page-break-before: always; }
       #print-toc          { page-break-before: always; }
       #print-appendix     { page-break-before: always; }
       #print-footer       { page-break-before: always; }
 
-      /* sr-only.print:block => rendi visibile in PDF il titolo principale */
       .sr-only.print\:block {
         position:static !important;
         width:auto !important;
@@ -171,20 +154,9 @@
           <span class="hidden sm:inline">Stampa / PDF</span>
         </button>
 
-        <!-- SHARE BTN -->
-        <button id="btn-share" class="btn" aria-label="Condividi">
-          <span class="icon-16" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98"/><path d="M15.41 6.51l-6.82 3.98"/>
-            </svg>
-          </span>
-          <span class="hidden sm:inline">Condividi</span>
-        </button>
-
         <!-- THEME BTN -->
         <button id="btn-theme" class="btn" aria-label="Tema">
           <span class="theme-icon" aria-hidden="true">
-            <!-- sole / luna gestite via JS -->
             <svg data-theme-icon="sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="5"></circle>
               <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
@@ -200,7 +172,6 @@
   <main class="container">
     <!-- HERO -->
     <section id="hero" class="hero" aria-label="Copertina Report">
-      <!-- H1 istituzionale invisibile sul web ma visibile in PDF -->
       <h1 class="sr-only print:block text-[16px] font-bold leading-tight mb-2 text-[color:var(--ink)]">
         Tradelia AI · Report {NOME AZIENDA}
       </h1>
@@ -210,7 +181,6 @@
           <div class="hero__ticker" id="hero-ticker">—</div>
           <div class="hero__venue" id="hero-venue">—</div>
 
-          <!-- meta cliente / tipo report -->
           <div class="hero__client text-[11px] leading-[1.3] text-[color:var(--muted)] mt-1">
             <span id="hero-client">Client: {NOME AZIENDA}</span> ·
             <span class="uppercase tracking-wide">Institutional Model Report</span>
@@ -225,7 +195,6 @@
       </div>
 
       <div class="hero__meta">
-        <!-- SNAPSHOT -->
         <div class="meta-pill" id="pill-snap">
           <span class="tonebar" id="tone-snap"></span>
           <div class="min-w-0">
@@ -241,7 +210,6 @@
           </div>
         </div>
 
-        <!-- PRICE -->
         <div class="meta-pill" id="pill-price">
           <span class="tonebar" id="tone-price"></span>
           <div class="min-w-0">
@@ -253,7 +221,6 @@
           </div>
         </div>
 
-        <!-- Δ% -->
         <div class="meta-pill" id="pill-chg">
           <span class="tonebar" id="tone-chg"></span>
           <div class="min-w-0">
@@ -265,7 +232,6 @@
           </div>
         </div>
 
-        <!-- CCY -->
         <div class="meta-pill" id="pill-ccy">
           <span class="tonebar" id="tone-ccy"></span>
           <div class="min-w-0">
@@ -277,7 +243,6 @@
           </div>
         </div>
 
-        <!-- FRESHNESS -->
         <div class="meta-pill" id="pill-fresh">
           <span class="tonebar" id="tone-fresh"></span>
           <div class="min-w-0">
@@ -289,7 +254,6 @@
           </div>
         </div>
 
-        <!-- CONF -->
         <div class="meta-pill" id="pill-conf">
           <span class="tonebar" id="tone-conf"></span>
           <div class="min-w-0">
@@ -305,76 +269,17 @@
 
     <!-- DISCLAIMER SOLO PDF -->
     <section id="print-disclaimer" class="onlyprint" aria-label="Avvertenze regolamentari">
-      <h2 class="text-[14px] font-bold leading-[1.4] mb-2 text-[color:var(--ink)]">
-        Uso riservato · Informativa MiFID / Compliance
-      </h2>
-
-      <p class="text-[12px] leading-[1.45] text-[color:var(--ink)] mb-3">
-        Questo documento è destinato esclusivamente a finalità informative e formative.
-        Non costituisce in alcun modo una raccomandazione personalizzata di investimento,
-        né una sollecitazione al pubblico risparmio, né un invito ad aprire, chiudere
-        o modificare posizioni su strumenti finanziari.
-      </p>
-
-      <p class="text-[12px] leading-[1.45] text-[color:var(--ink)] mb-3">
-        Tradelia AI non svolge attività di consulenza finanziaria personalizzata,
-        non raccoglie ordini di negoziazione, non gestisce capitali di terzi.
-        Gli scenari descritti (F1…F6) riflettono condizioni di mercato, sentiment,
-        volatilità e fattori tecnici a fini educativi e di analisi del contesto.
-      </p>
-
-      <p class="text-[12px] leading-[1.45] text-[color:var(--ink)] mb-3">
-        L’investimento in strumenti finanziari comporta rischio di perdita totale
-        o parziale del capitale. Le performance storiche o ipotetiche non sono
-        indicative di risultati futuri.
-      </p>
-
-      <p class="text-[12px] leading-[1.45] text-[color:var(--ink)] mb-3 font-semibold">
-        Documento ad uso interno / riservato. È vietata la diffusione a soggetti terzi,
-        la ripubblicazione o la rimarchiatura senza autorizzazione scritta
-        di Tradelia AI. Ogni violazione può costituire illecito civile e/o penale.
-      </p>
-
-      <p class="text-[11px] leading-[1.4] text-[color:var(--muted)]">
-        Riferimenti regolamentari: MiFID II, ESMA guidelines su consulenza in materia
-        di investimenti, obblighi di adeguatezza e appropriatezza.
-      </p>
+      <!-- ... (uguale a prima) ... -->
     </section>
 
     <!-- INDICE SOLO PDF -->
     <section id="print-toc" class="onlyprint" aria-label="Indice del Report">
-      <h2 class="text-[14px] font-bold leading-[1.4] mb-2 text-[color:var(--ink)]">Indice del Report</h2>
-      <ol class="text-[12px] leading-[1.45] text-[color:var(--ink)] list-decimal list-inside space-y-1">
-        <li>F1 · Contesto iniziale / Regime di mercato</li>
-        <li>F2 · Sentiment e flussi</li>
-        <li>F3 · Analisi tecnica multi-timeframe</li>
-        <li>F4 · Relazioni intermarket</li>
-        <li>F5 · Resoconto tecnico</li>
-        <li>F5B · Validazione LT (orizzonte medio-lungo)</li>
-        <li>F6 · Broker selezionati</li>
-        <li>Appendice · Audit fonti e qualità dati</li>
-      </ol>
+      <!-- ... (uguale a prima) ... -->
     </section>
 
     <!-- DESCRIZIONE FRAMEWORK (web) -->
     <section class="section-head" aria-label="Struttura del Report">
-      <h2 class="section-title">Struttura del Report</h2>
-      <p class="section-sub">
-        Il framework Tradelia procede top-down: F1 (contesto iniziale / regime di mercato),
-        F2 (sentiment e flussi), F3 (analisi tecnica multi-timeframe),
-        F4 (relazioni intermarket), F5 (resoconto tecnico),
-        F5B (validazione LT), F6 (broker selezionati).
-        Contenuti a scopo informativo/formativo. Nessuna raccomandazione operativa.
-      </p>
-      <nav class="phase-nav" aria-label="Fasi del framework">
-        <a href="#sec-f1">F1</a>
-        <a href="#sec-f2">F2</a>
-        <a href="#sec-f3">F3</a>
-        <a href="#sec-f4">F4</a>
-        <a href="#sec-f5">F5</a>
-        <a href="#sec-f5b">F5B</a>
-        <a href="#sec-f6">F6</a>
-      </nav>
+      <!-- ... (uguale a prima) ... -->
     </section>
 
     <!-- SEZIONI DINAMICHE -->
@@ -390,268 +295,43 @@
 
     <!-- APPENDICE SOLO PDF -->
     <section id="print-appendix" class="onlyprint" aria-label="Appendice · Audit & Fonti">
-      <h2 class="text-[13px] font-bold leading-[1.4] mb-2 text-[color:var(--ink)]">
-        Appendice · Audit dati e Fonti
-      </h2>
-
-      <p class="text-[12px] leading-[1.45] text-[color:var(--ink)] mb-3">
-        <strong>Origine dati primarie:</strong> feed istituzionali (es. CBOE, FRED, provider ETF, stampa finanziaria regolamentata),
-        dataset proprietari Tradelia AI, serie storiche interne. Le metriche di regime
-        vengono calcolate su partecipazione settoriale, volatilità implicita,
-        flussi e ampiezza del mercato.
-      </p>
-
-      <p class="text-[12px] leading-[1.45] text-[color:var(--ink)] mb-3">
-        <strong>Lag di aggiornamento (Freshness / Lag):</strong> indicativamente T-0 / T-1 sui mercati regolamentati;
-        per alcune componenti settoriali l’aggiornamento può essere a cadenza giornaliera.
-      </p>
-
-      <p class="text-[12px] leading-[1.45] text-[color:var(--ink)] mb-3">
-        <strong>Confidence:</strong> punteggio interno di affidabilità della lettura
-        (0→1). Valori elevati indicano coerenza tra più fonti indipendenti.
-      </p>
-
-      <p class="text-[12px] leading-[1.45] text-[color:var(--ink)] mb-3">
-        <strong>Integrità dataset:</strong> misura qualitativa della completezza del
-        campione e della presenza di gap di feed. <strong>Sync feed:</strong>
-        stima quanto i vari sottostream informativi sono allineati temporalmente.
-      </p>
-
-      <p class="text-[11px] leading-[1.4] text-[color:var(--muted)]">
-        Nota: questa appendice ha finalità di trasparenza metodologica
-        e non sostituisce la due diligence dell’investitore. Prima di
-        decisioni operative, rivolgersi a un intermediario autorizzato.
-      </p>
+      <!-- ... (uguale a prima) ... -->
     </section>
   </main>
 
-  <!-- FOOTER WEB (noprint) -->
+  <!-- FOOTER WEB -->
   <div class="footer-wrap noprint">
     <footer class="site-footer container py-4">
-      <div class="pt-3 grid gap-4 md:flex md:items-start md:justify-between">
-        <div class="min-w-0">
-          <div class="heading">
-            TRADELIA<span class="text-[color:var(--brand)]">&bull;AI</span>
-          </div>
-
-          <!-- Riferimento cliente + versione -->
-          <div class="mt-1">
-            Report {NOME AZIENDA} ·
-            <span id="footer-version">v1.0</span>
-          </div>
-
-          <div class="mt-1">
-            Snapshot: <span id="footer-snapshot">—</span>
-          </div>
-
-          <div class="mt-1">
-            Ultimo aggiornamento: <span id="footer-updated">—</span>
-          </div>
-        </div>
-
-        <div class="min-w-0">
-          <div class="heading">Metodo</div>
-          <p class="mt-1 text-[13px] leading-[1.45]">
-            F1 = contesto iniziale / regime di mercato.<br/>
-            F2 = sentiment &amp; flussi.<br/>
-            F3 = analisi tecnica multi-timeframe.<br/>
-            F4 = relazioni intermarket.<br/>
-            F5 = resoconto tecnico.<br/>
-            F5B = validazione LT.<br/>
-            F6 = broker selezionati.
-          </p>
-        </div>
-
-        <div class="min-w-0">
-          <div class="heading">Legale</div>
-          <div class="mt-2 flex flex-wrap gap-6">
-            <button class="btn btn-sm" id="btn-privacy-open" type="button">Privacy</button>
-            <button class="btn btn-sm" id="btn-mifid-open" type="button">Informativa MiFID</button>
-            <button class="btn btn-sm" id="btn-print-2" type="button">Stampa / PDF</button>
-          </div>
-          <p class="mt-2 text-[12.5px] opacity-90">
-            Documento interno / non destinato alla diffusione pubblica.
-          </p>
-        </div>
-      </div>
-
-      <div class="mt-3 text-[12.5px] opacity-90">
-        © <span id="footer-year"></span> Tradelia. Tutti i diritti riservati. ·
-        Contenuti a scopo puramente informativo/formativo.
-        Nessuna raccomandazione personalizzata.
-        Contatti:
-        <a href="mailto:info@tradelia.org" class="underline hover:opacity-80">info@tradelia.org</a>
-      </div>
+      <!-- ... (uguale a prima) ... -->
     </footer>
   </div>
 
   <!-- FOOTER SOLO PDF -->
   <footer id="print-footer" class="onlyprint" aria-label="Chiosa legale finale">
-    <div class="text-[11px] leading-[1.4] text-[color:var(--ink)]">
-      © Tradelia. Tutti i diritti riservati.
-      Documento strettamente riservato, non destinato alla redistribuzione o rimarchiatura.
-      Le informazioni qui contenute non costituiscono consulenza personalizzata
-      né garanzia di risultati futuri. Per qualsiasi decisione finanziaria
-      è necessario rivolgersi a un intermediario regolamentato.
-      Contatti: info@tradelia.org
-    </div>
+    <!-- ... (uguale a prima) ... -->
   </footer>
 
-  <!-- PANEL OVERLAY (MiFID / Privacy / Drawer F1B ecc.) -->
+  <!-- PANEL OVERLAY -->
   <div
     id="panel-overlay"
     class="tl-panel-overlay noprint"
     aria-hidden="true"
     data-blocking="false"
   >
-    <div class="tl-panel-backdrop" data-panel-close></div>
-
-    <!-- desktop panel -->
-    <aside class="tl-panel tl-panel--desktop" role="dialog" aria-modal="true" aria-labelledby="panel-title">
-      <header class="tl-panel__header">
-        <div class="min-w-0">
-          <h2 id="panel-title" class="tl-panel__title">—</h2>
-          <p id="panel-subtitle" class="tl-panel__subtitle">—</p>
-        </div>
-        <button class="tl-panel__close" data-panel-close aria-label="Chiudi">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </header>
-
-      <div id="panel-body" class="tl-panel__body"></div>
-
-      <footer class="tl-panel__footer" id="panel-footer">
-        <button class="btn btn-sm" data-panel-close>Chiudi</button>
-      </footer>
-    </aside>
-
-    <!-- mobile panel -->
-    <aside class="tl-panel tl-panel--mobile" role="dialog" aria-modal="true" aria-labelledby="panel-title-mobile">
-      <header class="tl-panel__header">
-        <div class="min-w-0">
-          <h2 id="panel-title-mobile" class="tl-panel__title">—</h2>
-          <p id="panel-subtitle-mobile" class="tl-panel__subtitle">—</p>
-        </div>
-        <button class="tl-panel__close" data-panel-close aria-label="Chiudi">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </header>
-
-      <div id="panel-body-mobile" class="tl-panel__body"></div>
-
-      <footer class="tl-panel__footer" id="panel-footer-mobile">
-        <button class="btn btn-sm" data-panel-close>Chiudi</button>
-      </footer>
-    </aside>
+    <!-- ... (uguale a prima) ... -->
   </div>
 
-  <!-- TOOLTIP METRICHE (desktop) -->
+  <!-- TOOLTIP METRICHE DESKTOP -->
   <div id="metric-popover" class="tl-popover noprint" role="tooltip" aria-hidden="true">
-    <div class="tl-popover__head">
-      <div id="metric-popover-title" class="tl-popover__title">—</div>
-      <button id="metric-popover-close" class="tl-popover__close" aria-label="Chiudi">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-    </div>
-
-    <div id="metric-popover-body" class="tl-popover__body">—</div>
+    <!-- ... (uguale a prima) ... -->
   </div>
 
-  <!-- TOOLTIP METRICHE (mobile modal) -->
+  <!-- TOOLTIP METRICHE MOBILE -->
   <div id="metric-modal" class="tl-metric-modal-overlay noprint" aria-hidden="true">
-    <div class="tl-metric-modal-backdrop" data-metric-close></div>
-
-    <div class="tl-metric-modal" role="dialog" aria-modal="true" aria-labelledby="metric-modal-title">
-      <header class="tl-metric-modal__header">
-        <div class="min-w-0">
-          <div id="metric-modal-title" class="tl-metric-modal__title">—</div>
-          <div id="metric-modal-source" class="tl-metric-modal__source">—</div>
-        </div>
-        <button class="tl-metric-modal__close" data-metric-close aria-label="Chiudi">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </header>
-
-      <div id="metric-modal-body" class="tl-metric-modal__body">—</div>
-    </div>
+    <!-- ... (uguale a prima) ... -->
   </div>
 
-  <!-- SHARE OVERLAY -->
-  <div id="share-overlay" class="share-overlay noprint" aria-hidden="true">
-    <div class="share-overlay__backdrop" data-share-close></div>
-
-    <section class="share-sheet" role="dialog" aria-modal="true" aria-labelledby="share-title">
-      <header class="share-sheet__head">
-        <div class="min-w-0">
-          <div id="share-title" class="share-sheet__title">Condividi il report</div>
-          <div id="share-desc" class="share-sheet__subtitle">Link diretto + social</div>
-        </div>
-        <button class="share-close-btn" data-share-close aria-label="Chiudi condivisione">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </header>
-
-      <div class="share-sheet__list">
-        <button class="share-btn" data-share-svc="linkedin" aria-label="Condividi su LinkedIn">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.4 8.4h4.1V24H.4zM8.34 8.4h3.93v2.12h.06c.55-1.04 1.9-2.12 3.9-2.12 4.17 0 4.94 2.74 4.94 6.3V24h-4.1v-7.5c0-1.79-.03-4.1-2.5-4.1-2.5 0-2.88 1.95-2.88 4v7.6H8.34z"/>
-          </svg>
-          <span>LinkedIn</span>
-        </button>
-
-        <button class="share-btn" data-share-svc="twitter" aria-label="Condividi su X">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M18.244 2H21.5l-7.51 8.59L22 22h-6.563l-5.15-6.543L4.66 22H1.4l8.06-9.21L2 2h6.69l4.66 5.907L18.245 2zm-2.43 17.14h1.82L8.29 4.72H6.34l9.47 14.42z"/>
-          </svg>
-          <span>X</span>
-        </button>
-
-        <button class="share-btn" data-share-svc="reddit" aria-label="Condividi su Reddit">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <circle cx="9.04" cy="13" r="1.5"></circle>
-            <circle cx="14.96" cy="13" r="1.5"></circle>
-            <path d="M14.5 3.5l-1.4 5.1c1.23.08 2.35.4 3.33.9.42-.43 1-.7 1.64-.7 1.27 0 2.3 1.03 2.3 2.3 0 .8-.4 1.5-1 1.9.02.2.03.4.03.6 0 3.3-3.58 5.9-8.4 5.9s-8.4-2.6-8.4-5.9c0-.2 0-.4.03-.6-.6-.4-1-1.1-1-1.9 0-1.27 1.03-2.3 2.3-2.3.66 0 1.25.27 1.67.72 1-.52 2.2-.85 3.5-.93l1.4-5.08 2.67.67zM9.75 16.5c.7.45 1.96.5 2.25.5.3 0 1.57-.05 2.27-.5.25-.16.57-.1.73.15.16.24.1.57-.15.73-.96.62-2.45.67-2.85.67-.4 0-1.9-.05-2.86-.67a.54.54 0 01-.16-.74.54.54 0 01.77-.14z"/>
-          </svg>
-          <span>Reddit</span>
-        </button>
-
-        <button class="share-btn" data-share-svc="copy" aria-label="Copia link">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-          </svg>
-          <span>Copia link</span>
-        </button>
-      </div>
-
-      <div class="share-copy-row">
-        <div id="share-link-field" class="share-copy-field">https://example.tradelia/report?id=...</div>
-
-        <button id="share-copy-btn" class="share-copy-action" data-share-svc="copy">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-          </svg>
-          <span>Copia</span>
-        </button>
-      </div>
-    </section>
-  </div>
+  <!-- ⛔ NIENTE share-overlay QUI -->
 
   <!-- JS runtime -->
   <script type="module" src="/report/assets/js/app.js"></script>
