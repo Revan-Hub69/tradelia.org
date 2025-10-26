@@ -7,7 +7,7 @@
 // - share overlay
 // - stampa
 //
-// Questo file NON monta i moduli F1/F2/..., quello resta app.js
+// Questo file NON monta i moduli F1/F2/...: quello è app.js
 
 // ------------------------------------------------------------
 // Utility DOM
@@ -30,7 +30,7 @@ function isMobile() {
   return window.matchMedia("(max-width: 767px)").matches;
 }
 
-// escaper per evitare XSS quando riempiamo dinamico
+// escape base per prevenire XSS nei testi dinamici
 function escapeHtml(str) {
   if (str === undefined || str === null) return "";
   return String(str)
@@ -42,23 +42,42 @@ function escapeHtml(str) {
 }
 
 // ------------------------------------------------------------
-// PANEL OVERLAY (drawer / legal / etc.)
+// PANEL OVERLAY (drawer / legal / ecc.)
 // ------------------------------------------------------------
 //
-// Struttura HTML in index:
-// <div id="panel-overlay" class="tl-panel-overlay" aria-hidden="true" data-blocking="false">
+// Struttura HTML attesa in index.html:
+//
+// <div id="panel-overlay" class="tl-panel-overlay noprint" aria-hidden="true">
 //   <div class="tl-panel-backdrop" data-panel-close></div>
 //
-//   <aside class="tl-panel tl-panel--desktop" ...>
-//     <header>...</header>
+//   <!-- desktop -->
+//   <aside class="tl-panel tl-panel--desktop" role="dialog" aria-modal="true">
+//     <header class="tl-panel__header">
+//       <div class="min-w-0">
+//         <h2 id="panel-title" class="tl-panel__title">—</h2>
+//         <p id="panel-subtitle" class="tl-panel__subtitle">—</p>
+//       </div>
+//       <button class="tl-panel__close" data-panel-close aria-label="Chiudi">…</button>
+//     </header>
+//
 //     <div id="panel-body" class="tl-panel__body"></div>
-//     <footer id="panel-footer" class="tl-panel__footer"></footer>
+//
+//     <footer class="tl-panel__footer" id="panel-footer"></footer>
 //   </aside>
 //
-//   <aside class="tl-panel tl-panel--mobile" ...>
-//     <header>...</header>
+//   <!-- mobile -->
+//   <aside class="tl-panel tl-panel--mobile" role="dialog" aria-modal="true">
+//     <header class="tl-panel__header">
+//       <div class="min-w-0">
+//         <h2 id="panel-title-mobile" class="tl-panel__title">—</h2>
+//         <p id="panel-subtitle-mobile" class="tl-panel__subtitle">—</p>
+//       </div>
+//       <button class="tl-panel__close" data-panel-close aria-label="Chiudi">…</button>
+//     </header>
+//
 //     <div id="panel-body-mobile" class="tl-panel__body"></div>
-//     <footer id="panel-footer-mobile" class="tl-panel__footer"></footer>
+//
+//     <footer class="tl-panel__footer" id="panel-footer-mobile"></footer>
 //   </aside>
 // </div>
 //
@@ -66,14 +85,22 @@ function escapeHtml(str) {
 //   {
 //     title: "string",
 //     subtitle: "string",
-//     sections: [ { title, body, meta }, ... ],
-//     blocking: bool,
-//     panelSize: "wide" | undefined,
-//     footerButtons: [ { label, action }, ... ],   // usato per DESKTOP
-//     footerTabs:    [ { key,label }, ... ]        // usato per MOBILE
+//     sections: [
+//       { title:"...", body:"<p>html</p>", meta:"<small>html</small>" },
+//       ...
+//     ],
+//     blocking: bool,          // se true non puoi chiudere toccando backdrop
+//     panelSize: "wide" | undefined, // "wide" = pannello desktop largo
+//
+//     // footerDesktop = bottoni azione a destra nel footer desktop
+//     footerButtons: [ { label:"Chiudi", action: fn }, ... ]
+//
+//     // footerTabsMobile = pill scrollabili sticky in basso SOLO mobile
+//     //   [{ key:"regime", label:"Regime attuale" }, ...]
+//     footerTabs:    [ { key:"...", label:"..." }, ... ]
 //   }
 //
-// closePanel(): chiude overlay, riabilita scroll.
+// closePanel(): chiude overlay, riabilita scroll body
 
 function openPanel(opts) {
   const overlayEl = qs("#panel-overlay");
@@ -84,22 +111,22 @@ function openPanel(opts) {
     subtitle = "",
     sections = [],
     blocking = false,
-    panelSize, // "wide" opzionale
-    footerButtons = [], // desktop
-    footerTabs = []     // mobile tabbar scrollabile
+    panelSize,           // "wide" (es. F1B console)
+    footerButtons = [],  // desktop footer buttons
+    footerTabs = []      // mobile scroll tabs
   } = opts || {};
 
-  // desktop refs
-  const titleDeskEl    = qs("#panel-title");
-  const subDeskEl      = qs("#panel-subtitle");
-  const bodyDeskEl     = qs("#panel-body");
-  const footerDeskEl   = qs("#panel-footer");
+  // refs desktop
+  const titleDeskEl  = qs("#panel-title");
+  const subDeskEl    = qs("#panel-subtitle");
+  const bodyDeskEl   = qs("#panel-body");
+  const footerDeskEl = qs("#panel-footer");
 
-  // mobile refs
-  const titleMobEl     = qs("#panel-title-mobile");
-  const subMobEl       = qs("#panel-subtitle-mobile");
-  const bodyMobEl      = qs("#panel-body-mobile");
-  const footerMobEl    = qs("#panel-footer-mobile");
+  // refs mobile
+  const titleMobEl   = qs("#panel-title-mobile");
+  const subMobEl     = qs("#panel-subtitle-mobile");
+  const bodyMobEl    = qs("#panel-body-mobile");
+  const footerMobEl  = qs("#panel-footer-mobile");
 
   // header
   setText(titleDeskEl, title);
@@ -108,14 +135,8 @@ function openPanel(opts) {
   setText(subMobEl, subtitle);
 
   // corpo:
-  //
-  // Caso standard (legal/privacy/MiFID standalone):
-  //   - mappiamo ogni section in un blocco .tl-panel-section con titolo/body/meta
-  //
-  // Caso "wide"/console (es. F1B drawer):
-  //   - l'app ci passa UNA sola sezione già strutturata (html intero con sidebar/tab ecc.)
-  //   - non vogliamo wrapper extra che rompano layout
-  //
+  // - caso "wide" con UNA sezione => usiamo direttamente section.body (layout libero)
+  // - altrimenti generiamo blocchi tl-panel-section standard
   let bodyHTML = "";
   if (panelSize === "wide" && sections.length === 1) {
     bodyHTML = sections[0].body || "";
@@ -128,13 +149,15 @@ function openPanel(opts) {
         <section class="tl-panel-section" style="margin-bottom:1rem;">
           ${
             st
-              ? `<div class="tl-panel-section-title text-[12px] font-semibold mb-1 text-[color:var(--ink)]">${st}</div>`
+              ? `<div class="tl-panel-section-title">
+                   <div class="tl-panel-section-title-text">${escapeHtml(st)}</div>
+                 </div>`
               : ``
           }
-          <div class="tl-panel-section-text text-[13px] leading-[1.45] text-[color:var(--ink)]">${bd}</div>
+          <div class="tl-panel-section-text">${bd}</div>
           ${
             mta
-              ? `<div class="tl-panel-section-meta text-[11px] leading-[1.4] text-[color:var(--muted)] mt-2">${mta}</div>`
+              ? `<div class="tl-panel-section-meta">${mta}</div>`
               : ``
           }
         </section>
@@ -157,15 +180,15 @@ function openPanel(opts) {
     }).join("");
   }
 
-  // helper: footer mobile con tab scrollabili e pulsante Chiudi sticky
-  // footerTabs è [{key:"regime", label:"Regime"}, ...]
+  // helper: footer mobile con tab scrollabili e bottone Chiudi sticky
+  // footerTabs = [{key:"regime", label:"Regime attuale"}, ...]
   function renderFooterTabs(tabsArr) {
-    // se non esistono tab → ricadiamo sul footer classico
     if (!tabsArr || !tabsArr.length) {
+      // se non hai tab, ricadi al footerButtons classico
       return renderFooterBtns(footerButtons);
     }
 
-    // pill per ognuna
+    // costruiamo pill per ciascun tab
     const pills = tabsArr.map(t => {
       return `
         <button
@@ -190,7 +213,7 @@ function openPanel(opts) {
       `;
     }).join("");
 
-    // bottone Chiudi sticky a destra
+    // bottone Chiudi sticky
     const closeBtnHTML = `
       <button
         class="f1b-footer-close-btn"
@@ -217,7 +240,7 @@ function openPanel(opts) {
       </button>
     `;
 
-    // wrapper scrollabile orizzontale + sticky Chiudi
+    // wrapper scrollabile + Chiudi
     return `
       <div
         class="f1b-footer-tabs-wrap"
@@ -263,16 +286,15 @@ function openPanel(opts) {
     `;
   }
 
-  // scegli markup da mettere in ciascun footer
-  // MOBILE: usa footerTabs se presenti, altrimenti footerButtons
-  // DESKTOP: sempre e solo footerButtons
+  // mobile: usa footerTabs se definite, altrimenti footerButtons
+  // desktop: solo footerButtons
   const mobileFooterHTML  = renderFooterTabs(footerTabs);
   const desktopFooterHTML = renderFooterBtns(footerButtons);
 
   setHTML(footerMobEl,  mobileFooterHTML);
   setHTML(footerDeskEl, desktopFooterHTML);
 
-  // bind azioni custom dei bottoni desktop footerButtons
+  // bind azioni custom dei bottoni desktop
   qsa("[data-panel-btn]", footerDeskEl).forEach(btnEl => {
     const i = btnEl.getAttribute("data-panel-btn");
     if (footerButtons[i] && typeof footerButtons[i].action === "function") {
@@ -280,14 +302,14 @@ function openPanel(opts) {
     }
   });
 
-  // blocking (true = niente close su backdrop)
+  // blocking mode
   if (blocking) {
     overlayEl.setAttribute("data-blocking", "true");
   } else {
     overlayEl.removeAttribute("data-blocking");
   }
 
-  // panelSize wide -> aggiungi classe di larghezza sulla versione desktop
+  // panelSize "wide" -> aggiungi classe tl-panel--wide al desktop panel
   const panelDesktop = qs(".tl-panel--desktop", overlayEl);
   if (panelDesktop) {
     if (panelSize === "wide") {
@@ -297,24 +319,27 @@ function openPanel(opts) {
     }
   }
 
-  // impedisci scroll del body dietro al panel
+  // lock scroll pagina dietro
   document.body.classList.add("body--lock");
 
   // mostra overlay
   overlayEl.setAttribute("aria-hidden", "false");
+
+  // IMPORTANTISSIMO:
+  // il drawer può contenere nuovi "?" inside → li bindiamo adesso
+  bindMetricInfoButtons(overlayEl);
 }
 
 function closePanel() {
   const overlayEl = qs("#panel-overlay");
   if (!overlayEl) return;
-
   overlayEl.setAttribute("aria-hidden", "true");
 
-  // riattiva scroll della pagina sotto
+  // sblocca scroll
   document.body.classList.remove("body--lock");
 }
 
-// click global per chiudere pannello
+// global listener: chiudi panel su click backdrop / chiudi
 document.addEventListener("click", (ev) => {
   const overlayEl = qs("#panel-overlay");
   if (!overlayEl) return;
@@ -323,13 +348,13 @@ document.addEventListener("click", (ev) => {
   const blocking = overlayEl.getAttribute("data-blocking") === "true";
 
   // chiudi se clicco qualcosa con data-panel-close
-  const closeBtn = ev.target.closest("[data-panel-close]");
-  if (closeBtn) {
+  const btnClose = ev.target.closest("[data-panel-close]");
+  if (btnClose) {
     closePanel();
     return;
   }
 
-  // se backdrop click e non blocking -> close
+  // se clic sul backdrop e non blocking -> chiudi
   const backdrop = ev.target.closest(".tl-panel-backdrop");
   if (backdrop && !blocking) {
     closePanel();
@@ -338,8 +363,9 @@ document.addEventListener("click", (ev) => {
 });
 
 // ------------------------------------------------------------
-// CONTENUTO: PRIVACY PANEL
+// PANNELLI: PRIVACY / MIFID / AUDIT
 // ------------------------------------------------------------
+
 function openPrivacyPanel() {
   openPanel({
     title: "Privacy & Trasparenza",
@@ -356,7 +382,7 @@ function openPrivacyPanel() {
             <li>Nessun cookie di profilazione o advertising.</li>
             <li>Nessuna vendita o condivisione di dati personali con terze parti.</li>
             <li>Nessun analytics esterno invasivo.</li>
-            <li>Le preferenze di tema, consenso, ecc. vivono solo nel tuo browser (<code>localStorage</code>).</li>
+            <li>Le preferenze di tema/consenso vivono solo nel tuo browser (<code>localStorage</code>).</li>
           </ul>
         `,
         meta: `
@@ -368,20 +394,13 @@ function openPrivacyPanel() {
     blocking: false,
     panelSize: undefined,
     footerButtons: [
-      {
-        label: "Chiudi",
-        action: () => closePanel()
-      }
+      { label: "Chiudi", action: () => closePanel() }
     ],
-    footerTabs: [] // niente tab nel footer mobile per Privacy
+    footerTabs: []
   });
 }
 
-// ------------------------------------------------------------
-// CONTENUTO: MiFID PANEL
-// ------------------------------------------------------------
-//
-// blocking: true → niente tap fuori per chiudere, devi esplicitamente tappare "Ho letto"
+// blocking: true → l'utente deve premere "Ho letto"
 function openMifidPanel() {
   openPanel({
     title: "Informativa MiFID",
@@ -410,14 +429,15 @@ function openMifidPanel() {
         body: `
           <p>
             Le informazioni mostrate (F1, F2, F3, F4, F5, F5B, F6) descrivono scenari di mercato,
-            forze di sentiment/flusso, fattori tecnici e riferimenti storici.
-            Non costituiscono indicazione ad aprire/chiudere posizioni,
+            sentiment/flussi, fattori tecnici e riferimenti storici.
+            Non costituiscono indicazione ad aprire o chiudere posizioni,
             né suggeriscono una strategia adatta a te come singolo investitore.
           </p>
           <p style="margin-top:.5rem;">
             Qualsiasi riferimento a livelli tecnici, volatilità, momentum,
             liquidità o broker esistenti è da intendersi
-            come <strong>osservazione di mercato</strong> e non come invito operativo.
+            come <strong>osservazione di mercato</strong>
+            e non come invito operativo.
           </p>
         `,
         meta: `
@@ -452,18 +472,13 @@ function openMifidPanel() {
     blocking: true,
     panelSize: undefined,
     footerButtons: [
-      {
-        label: "Ho letto",
-        action: () => closePanel()
-      }
+      { label: "Ho letto", action: () => closePanel() }
     ],
-    footerTabs: [] // niente tab mobile qui
+    footerTabs: []
   });
 }
 
-// ------------------------------------------------------------
-// AUDIT PANEL utility (richiamabile dai moduli F* se serve)
-// ------------------------------------------------------------
+// pannello Audit/Qualità dati generico richiamabile dai moduli
 function openAuditPanel(auditData) {
   const a = auditData || {};
   const lag   = (a.feed_lag_days ?? "—");
@@ -485,11 +500,9 @@ function openAuditPanel(auditData) {
             <strong>Confidence (0-1):</strong> ${escapeHtml(String(conf))}<br/>
             <strong>Integrità dataset:</strong> ${escapeHtml(String(integ))}
           </p>
-          ${
-            notes
+          ${ notes
               ? `<p style="margin-top:.5rem;">${escapeHtml(notes)}</p>`
-              : ``
-          }
+              : `` }
         `,
         meta: `
           Questo pannello ha finalità informative/formative.
@@ -512,48 +525,44 @@ function openAuditPanel(auditData) {
       }
     ],
     blocking: false,
-    panelSize: "wide", // look console se serve
+    panelSize: "wide",
     footerButtons: [
-      {
-        label: "Chiudi",
-        action: () => closePanel()
-      }
+      { label: "Chiudi", action: () => closePanel() }
     ],
-    footerTabs: [] // niente tab mobile qui
+    footerTabs: []
   });
 }
 
 // ------------------------------------------------------------
-// METRIC TOOLTIP SYSTEM (usa glossary.json esterno)
+// METRIC TOOLTIP SYSTEM
 // ------------------------------------------------------------
 //
-// Il glossario delle metriche NON è più hardcoded qui.
-// Viene caricato da /report/assets/glossary.json.
-//
-// Formato atteso del JSON:
+// Glossario esterno JSON: /report/assets/glossary.json
+// Formato atteso:
 // {
-//   "MetricKey": {
-//     "title": "Titolo breve",
-//     "long": "Spiegazione lunga da mostrare nel popup",
-//     "source": "Fonte / origine del dato"
+//   "Snapshot": {
+//     "title": "Snapshot",
+//     "long": "Periodo di osservazione...",
+//     "source": "Tradelia AI / Dataset interno"
 //   },
-//   ...
+//   "Price": { ... },
+//   etc.
 // }
 
-let __TradeliaGlossary = {}; // popolato da loadGlossary()
+let __TradeliaGlossary = {};
 
 async function loadGlossary() {
   try {
     const res = await fetch("/report/assets/glossary.json", { cache: "no-cache" });
     if (!res.ok) throw new Error("HTTP " + res.status);
-    const json = await res.json();
-    if (json && typeof json === "object") {
-      __TradeliaGlossary = json;
+    const data = await res.json();
+    if (data && typeof data === "object") {
+      __TradeliaGlossary = data;
     } else {
       __TradeliaGlossary = {};
     }
-  } catch (e) {
-    console.warn("⚠️ Glossary non caricato /report/assets/glossary.json", e);
+  } catch (err) {
+    console.warn("⚠️ Impossibile caricare /report/assets/glossary.json", err);
     __TradeliaGlossary = {};
   }
 }
@@ -566,10 +575,10 @@ function getGlossaryEntry(key) {
   };
 }
 
-// Stato corrente popover desktop (per gestione toggle/close)
+// stato popover desktop aperto
 let currentPopoverOpen = false;
 
-// Desktop: pop vicino al bottone cliccato, MA clampato al viewport
+// --- desktop popover ---
 function openMetricDesktop(btnEl) {
   const pop = qs("#metric-popover");
   if (!pop) return;
@@ -593,7 +602,7 @@ function openMetricDesktop(btnEl) {
   let left = rect.left + window.scrollX + OFFSET_X;
   let top  = rect.bottom + window.scrollY + OFFSET_Y;
 
-  // posizione preliminare
+  // piazza provvisorio
   pop.style.position = "absolute";
   pop.style.maxWidth = "320px";
   pop.style.left = left + "px";
@@ -602,31 +611,30 @@ function openMetricDesktop(btnEl) {
   pop.style.bottom = "auto";
   pop.setAttribute("aria-hidden", "false");
 
-  // calcolo bounding e clamp
+  // clamp nel viewport
   const vpW = window.innerWidth;
   const vpH = window.innerHeight;
   const popRect = pop.getBoundingClientRect();
 
-  // se esce a destra -> shift a sinistra
+  // se esce a destra → shift
   if (popRect.right > vpW - 8) {
     const diffX = popRect.right - (vpW - 8);
     left = left - diffX;
   }
-  // se va fuori a sinistra -> clamp 8px
+  // se va troppo a sinistra → 8px margine
   if (left < window.scrollX + 8) {
     left = window.scrollX + 8;
   }
 
-  // se esce in basso -> apri sopra
+  // se esce in basso → sopra
   if (popRect.bottom > vpH - 8) {
     top = rect.top + window.scrollY - popRect.height - OFFSET_Y;
   }
-  // se va troppo su -> clamp 8px dall'alto viewport
+  // clamp top
   if (top < window.scrollY + 8) {
     top = window.scrollY + 8;
   }
 
-  // applica correzioni
   pop.style.left = left + "px";
   pop.style.top  = top  + "px";
 
@@ -640,7 +648,7 @@ function closeMetricDesktop() {
   currentPopoverOpen = false;
 }
 
-// Mobile: modal centrale/bottom
+// --- mobile modal ---
 function openMetricMobile(btnEl) {
   const modal = qs("#metric-modal");
   if (!modal) return;
@@ -654,6 +662,8 @@ function openMetricMobile(btnEl) {
 
   setText(titleEl, info.title || key || "—");
   setText(sourceEl, info.source || "");
+
+  // long lo metto come HTML sicuro -> ma prima escape
   bodyEl.innerHTML = escapeHtml(info.long || "—");
 
   modal.setAttribute("aria-hidden","false");
@@ -665,8 +675,7 @@ function closeMetricMobile() {
   modal.setAttribute("aria-hidden","true");
 }
 
-// bindMetricInfoButtons(root) -> aggancia i click sui bottoni "?"
-// può essere chiamata su un subtree specifico (es. panel appena aperto)
+// bind dei bottoni "?" in uno scope (document, overlay ecc.)
 function bindMetricInfoButtons(rootScope) {
   const scope = rootScope || document;
 
@@ -680,7 +689,7 @@ function bindMetricInfoButtons(rootScope) {
       if (isMobile()) {
         openMetricMobile(btn);
       } else {
-        // toggle semplice: chiudo se aperto, poi riapro sul nuovo click
+        // toggle semplice: se un popover è aperto lo chiudo e poi apro su questo
         if (currentPopoverOpen) {
           closeMetricDesktop();
           currentPopoverOpen = false;
@@ -691,7 +700,7 @@ function bindMetricInfoButtons(rootScope) {
   });
 }
 
-// chiusura popover desktop (icona X)
+// chiusura popover desktop (bottone X nel popover)
 const popClose = qs("#metric-popover-close");
 if (popClose) {
   popClose.addEventListener("click", (e) => {
@@ -700,19 +709,21 @@ if (popClose) {
   });
 }
 
-// click fuori: chiudi popover desktop
+// chiusura popover desktop clic fuori
 document.addEventListener("click", (ev) => {
   const pop = qs("#metric-popover");
   if (!pop) return;
   if (pop.getAttribute("aria-hidden") === "true") return;
 
-  if (pop.contains(ev.target)) return;            // clic dentro → niente
-  if (ev.target.closest(".info-btn")) return;     // clic su altro ? → lo gestiamo lì
+  // se clicco dentro il popover → ignora
+  if (pop.contains(ev.target)) return;
+  // se clicco un altro bottone ? → lascio gestire lì
+  if (ev.target.closest(".info-btn")) return;
 
   closeMetricDesktop();
 });
 
-// chiusura mobile modal (X o backdrop)
+// chiusura modal mobile (backdrop o [data-metric-close])
 qsa("[data-metric-close]").forEach(btn => {
   btn.addEventListener("click", () => {
     closeMetricMobile();
@@ -733,7 +744,7 @@ function initThemeToggle() {
     } catch(e){}
   }
 
-  // init from localStorage
+  // init da localStorage se presente
   (function initFromStorage(){
     try {
       const saved = localStorage.getItem("tradelia-theme");
@@ -767,6 +778,22 @@ function initPrintButtons() {
 // ------------------------------------------------------------
 // SHARE OVERLAY
 // ------------------------------------------------------------
+//
+// HTML atteso opzionale:
+//
+// <div id="share-overlay" class="share-overlay" aria-hidden="true">
+//   <div class="share-overlay__backdrop" data-share-close></div>
+//   <div class="share-sheet">
+//     ...
+//     <button class="share-close-btn" data-share-close>Chiudi</button>
+//     ...
+//     <div id="share-link-field" class="share-copy-field"></div>
+//     <button id="share-copy-btn" class="share-copy-action">Copia link</button>
+//   </div>
+// </div>
+//
+// <button id="btn-share">Condividi</button>
+
 function initShareOverlay() {
   const overlay = qs("#share-overlay");
   const btnOpen = qs("#btn-share");
@@ -801,7 +828,7 @@ function initShareOverlay() {
 }
 
 // ------------------------------------------------------------
-// BUTTON BINDING: Privacy / MiFID
+// BOTTONI LEGALI (Privacy / MiFID)
 // ------------------------------------------------------------
 function initLegalButtons() {
   const privBtn = qs("#btn-privacy-open");
@@ -823,12 +850,10 @@ function initLegalButtons() {
 // EXPORT API GLOBALE
 // ------------------------------------------------------------
 //
-// I moduli (es. F1B) useranno queste funzioni:
+// I moduli (tipo F1B) useranno:
 // - openPanel / closePanel
 // - openPrivacyPanel / openMifidPanel / openAuditPanel
 // - bindMetricInfoButtons
-//
-// compat legacy: esponiamo anche su window.openPanel / window.closePanel
 
 window.__TradeliaUI = {
   openPanel,
@@ -839,7 +864,7 @@ window.__TradeliaUI = {
   bindMetricInfoButtons
 };
 
-// compat legacy
+// retrocompat
 window.openPanel = openPanel;
 window.closePanel = closePanel;
 
@@ -847,19 +872,19 @@ window.closePanel = closePanel;
 // BOOT
 // ------------------------------------------------------------
 async function bootUIRuntime() {
-  // 1. carica glossary.json prima di bindare i tooltip
+  // 1. carichiamo il glossario PRIMA di bindare i tooltip
   await loadGlossary();
 
-  // 2. init vari sistemi UI
+  // 2. init sistemi UI globali
   initThemeToggle();
   initPrintButtons();
   initShareOverlay();
   initLegalButtons();
 
-  // 3. bind tooltip sui contenuti già presenti in pagina (hero, card, ecc.)
+  // 3. bind tooltip "?" su tutti i nodi già presenti (hero, sezioni già montate)
   bindMetricInfoButtons(document);
 
-  // 4. lucide icons render (se presente)
+  // 4. lucide icons render (se lucide presente)
   if (window.lucide && typeof window.lucide.createIcons === "function") {
     try {
       window.lucide.createIcons();
@@ -868,7 +893,7 @@ async function bootUIRuntime() {
     }
   }
 
-  // 5. init footer year se non già settato da app.js
+  // 5. footer year auto se vuoto
   const footerYearEl = qs("#footer-year");
   if (footerYearEl && !footerYearEl.textContent.trim()) {
     const now = new Date();
@@ -876,13 +901,14 @@ async function bootUIRuntime() {
   }
 }
 
-// esegui subito
+// run subito
 bootUIRuntime();
 
-// ridichiariamo nel caso qualcuno sovrascriva window.__TradeliaUI dopo
+// harden export se qualcuno resetta window.__TradeliaUI dopo
 if (!window.__TradeliaUI) window.__TradeliaUI = {};
 window.__TradeliaUI.openPanel = openPanel;
 window.__TradeliaUI.closePanel = closePanel;
 window.__TradeliaUI.openPrivacyPanel = openPrivacyPanel;
 window.__TradeliaUI.openMifidPanel = openMifidPanel;
+window.__TradeliaUI.openAuditPanel = openAuditPanel;
 window.__TradeliaUI.bindMetricInfoButtons = bindMetricInfoButtons;
