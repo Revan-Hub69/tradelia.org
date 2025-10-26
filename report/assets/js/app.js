@@ -4,43 +4,23 @@
 // - legge header.json e manifest.json dal report corrente
 // - popola hero e footer base
 // - monta le sezioni F1...F6 caricando i moduli dinamici
-// - collega le sezioni al drawer premium (panel overlay)
 //
-// Dipendenze richieste già caricate in index.html PRIMA di questo file:
-//   - /report/assets/js/ui-runtime.js  (per __TradeliaUI.bindMetricInfoButtons)
+// Dipendenze: nessuna libreria esterna, solo fetch + dynamic import
 //
-// Convenzioni path dati:
+// Convenzioni di path:
 //   /report/reports/{reportId}/header.json
 //   /report/reports/{reportId}/manifest.json
-//   poi i singoli moduli es. f1b.json, f2.json, ...
+//   poi i singoli dati modulo es. f1b.json, f2.json, ...
 //
-// Convenzioni renderer modulo (modules/f1b.js, ecc):
-//   export function renderCard(data, ctx) -> string HTML (il blocco nella pagina principale)
-//   export function bindCard(node, data, ctx) -> opzionale, per listener ecc.
-//
-//   [opzionale premium drawer]
-//   export function buildPanelData(data, ctx) -> {
-//       title: string,
-//       subtitle: string,
-//       tabs: Array<{ id:string, label:string, tone?:'pos'|'warn'|'neg'|'neu', badge?:string }>,
-//       sectionsByTab: {
-//          [tabId]: Array<{
-//              title:string,
-//              tone?:'pos'|'warn'|'neg'|'neu',
-//              pillLabel?:string,
-//              pillTone?:'pos'|'warn'|'neg'|'neu'|'neu',
-//              bodyHtml:string,
-//              metaHtml?:string
-//          }>
-//       }
-//   }
-//
-// Se buildPanelData non esiste, usiamo un fallback generico.
-//
+// Convenzioni moduli UI:
+//   /report/assets/js/modules/f1b.js, f2.js, ...
+//   export function renderCard(data, ctx) -> string HTML
+//   export function bindCard(node, data, ctx) -> attach listeners (opzionale)
 
 // ------------------------------------------------------------
 // Helpers base
 // ------------------------------------------------------------
+
 function getReportIdFromURL() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
@@ -58,24 +38,18 @@ async function fetchJSON(url) {
   }
 }
 
-// format numeri
+// formattazioni numeriche base
 function fmtNum(v, decimals = 2) {
   if (v === null || v === undefined || Number.isNaN(v)) return "—";
   const n = Number(v);
-  return n
-    .toFixed(decimals)
-    .replace('.', ',');
+  return n.toFixed(decimals).replace('.', ',');
 }
 
 function fmtPct(v, decimals = 2) {
   if (v === null || v === undefined || Number.isNaN(v)) return "—";
   const n = Number(v);
   const sign = n > 0 ? "+" : "";
-  return (
-    sign +
-    n.toFixed(decimals).replace('.', ',') +
-    "%"
-  );
+  return sign + n.toFixed(decimals).replace('.', ',') + "%";
 }
 
 function setTextById(id, value) {
@@ -83,287 +57,10 @@ function setTextById(id, value) {
   if (el) el.textContent = value;
 }
 
-// premium tone: usiamo data-tone, CSS fa il resto
-function setTone(el, tone) {
-  if (!el) return;
-  if (!tone) {
-    el.removeAttribute("data-tone");
-  } else {
-    el.setAttribute("data-tone", tone);
-  }
-}
-
-// ------------------------------------------------------------
-// PANEL CONTROLLER (drawer premium)
-// ------------------------------------------------------------
-
-// DOM refs del panel (desktop/mobile sono due copie dello stesso contenuto logico)
-const panelOverlayEl         = document.getElementById("panel-overlay");
-const panelBackdropEl        = document.querySelector(".tl-panel-backdrop");
-
-const panelDesktopEl         = document.querySelector(".tl-panel--desktop");
-const panelMobileEl          = document.querySelector(".tl-panel--mobile");
-
-const panelCloseBtns         = document.querySelectorAll("[data-panel-close]");
-
-const panelTitleDesktopEl    = document.getElementById("panel-title");
-const panelSubtitleDesktopEl = document.getElementById("panel-subtitle");
-const panelTabsDesktopEl     = document.getElementById("panel-tabs-desktop");
-const panelBodyDesktopEl     = document.getElementById("panel-body");
-
-const panelTitleMobileEl     = document.getElementById("panel-title-mobile");
-const panelSubtitleMobileEl  = document.getElementById("panel-subtitle-mobile");
-const panelTabsMobileEl      = document.getElementById("panel-tabs-mobile");
-const panelBodyMobileEl      = document.getElementById("panel-body-mobile");
-
-// helper: costruisce HTML di una tab
-function renderTabButton(tab) {
-  // tab: {id,label,tone?,badge?}
-  const toneAttr = tab.tone ? ` data-tone="${tab.tone}"` : "";
-  const badge = tab.badge
-    ? `<span class="tl-panel-tab-badge">${tab.badge}</span>`
-    : "";
-  return `
-    <button
-      class="tl-panel-tab"
-      data-panel-tab="${tab.id}"
-      ${toneAttr}
-      type="button"
-    >
-      <span class="tl-panel-tab-label">${tab.label}</span>
-      ${badge}
-    </button>
-  `;
-}
-
-// helper: costruisce HTML delle sezioni dentro il tab
-function renderTabSections(sectionsArr) {
-  // each section: {title, tone?, pillLabel?, pillTone?, bodyHtml, metaHtml?}
-  const blocks = (sectionsArr || []).map(sec => {
-    const pillToneAttr = sec.pillTone ? ` data-tone="${sec.pillTone}"` : ` data-tone="neu"`;
-    const pillHtml = sec.pillLabel
-      ? `
-        <span class="tl-panel-section-pill"${pillToneAttr}>
-          <span class="pill-icon" data-tone="${sec.pillTone || 'neu'}">
-            <!-- icona mini può essere iniettata dal modulo oppure fallback -->
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M12 8v4" />
-              <path d="M12 16h.01" />
-            </svg>
-          </span>
-          <span class="tl-panel-section-pill-dot" data-tone="${sec.pillTone || 'neu'}"></span>
-          <span>${sec.pillLabel}</span>
-        </span>
-      `
-      : "";
-
-    return `
-      <section class="tl-panel-section" data-panel-section="${sec.title}">
-        <header class="tl-panel-section-title">
-          <div class="tl-panel-section-title-text">${sec.title}</div>
-          ${pillHtml}
-        </header>
-        <div class="tl-panel-section-text">
-          ${sec.bodyHtml || ""}
-        </div>
-        ${
-          sec.metaHtml
-            ? `<div class="tl-panel-section-meta">${sec.metaHtml}</div>`
-            : ""
-        }
-      </section>
-    `;
-  });
-
-  return `
-    <div class="tl-panel-sections-wrapper">
-      ${blocks.join("")}
-    </div>
-  `;
-}
-
-// costruisce un oggetto dati di fallback per il panel se il modulo non fornisce buildPanelData
-function buildPanelDataFallback(modId, data) {
-  return {
-    title: `${modId} · Dettaglio`,
-    subtitle: "Analisi approfondita del modulo",
-    tabs: [
-      {
-        id: "overview",
-        label: "Overview",
-        tone: "neu",
-        badge: "BASE"
-      }
-    ],
-    sectionsByTab: {
-      "overview": [
-        {
-          title: "Contenuto",
-          pillLabel: "INFO",
-          pillTone: "neu",
-          bodyHtml: `<pre style="white-space:pre-wrap;font-size:12px;line-height:1.45;">${escapeHtml(
-            JSON.stringify(data, null, 2)
-          )}</pre>`
-        }
-      ]
-    }
-  };
-}
-
-// basic escaper per fallback pre
-function escapeHtml(str) {
-  return (str || "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;");
-}
-
-// riempie il panel DOM con i dati preparati
-function fillPanelContent(panelData) {
-  if (!panelData) return;
-
-  const {
-    title,
-    subtitle,
-    tabs,
-    sectionsByTab
-  } = panelData;
-
-  // header copy
-  if (panelTitleDesktopEl)    panelTitleDesktopEl.textContent    = title || "—";
-  if (panelSubtitleDesktopEl) panelSubtitleDesktopEl.textContent = subtitle || "—";
-  if (panelTitleMobileEl)     panelTitleMobileEl.textContent     = title || "—";
-  if (panelSubtitleMobileEl)  panelSubtitleMobileEl.textContent  = subtitle || "—";
-
-  // tabs
-  const tabsHTML = (tabs || []).map(renderTabButton).join("");
-  if (panelTabsDesktopEl) panelTabsDesktopEl.innerHTML = tabsHTML;
-  if (panelTabsMobileEl)  panelTabsMobileEl.innerHTML  = tabsHTML;
-
-  // body: di default montiamo il primo tab
-  const firstTabId = tabs && tabs.length ? tabs[0].id : null;
-  mountTabContent(firstTabId, {tabs, sectionsByTab});
-
-  // bind click sulle tab per cambiare sezione
-  bindTabSwitching({tabs, sectionsByTab});
-}
-
-// attiva visivamente una tab e mostra le sue sezioni
-function mountTabContent(tabId, ctx) {
-  if (!tabId) {
-    if (panelBodyDesktopEl) panelBodyDesktopEl.innerHTML = "";
-    if (panelBodyMobileEl)  panelBodyMobileEl.innerHTML  = "";
-    return;
-  }
-
-  const { sectionsByTab } = ctx;
-  const sects = sectionsByTab[tabId] || [];
-  const html = renderTabSections(sects);
-
-  if (panelBodyDesktopEl) panelBodyDesktopEl.innerHTML = html;
-  if (panelBodyMobileEl)  panelBodyMobileEl.innerHTML  = html;
-
-  // highlight tab attiva
-  const allTabs = document.querySelectorAll('.tl-panel-tab');
-  allTabs.forEach(btn => {
-    const thisId = btn.getAttribute('data-panel-tab');
-    if (thisId === tabId) {
-      btn.classList.add('is-active');
-    } else {
-      btn.classList.remove('is-active');
-    }
-  });
-
-  // se la tab attiva ha un data-tone, lo vogliamo mantenere sulla .is-active
-  // (CSS gestisce il colore in base al data-tone)
-  const activeTab = document.querySelector(`.tl-panel-tab[data-panel-tab="${tabId}"]`);
-  if (activeTab) {
-    const tone = activeTab.getAttribute("data-tone") || "neu";
-    activeTab.classList.add("is-active");
-    activeTab.setAttribute("data-tone", tone);
-  }
-
-  // NB: se nelle sezioni ci sono bottoni "?" metriche interne,
-  // rilanciamo i binder tooltips
-  if (
-    window.__TradeliaUI &&
-    typeof window.__TradeliaUI.bindMetricInfoButtons === "function"
-  ) {
-    try {
-      // usa body desktop che ha appena ricevuto html
-      window.__TradeliaUI.bindMetricInfoButtons(panelBodyDesktopEl || document);
-    } catch (e) {
-      console.warn("bindMetricInfoButtons (panel body) error:", e);
-    }
-  }
-}
-
-// click sui tab
-function bindTabSwitching(ctx) {
-  const tabButtons = document.querySelectorAll('.tl-panel-tab');
-  tabButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const tabId = btn.getAttribute('data-panel-tab');
-      mountTabContent(tabId, ctx);
-    });
-  });
-}
-
-// open / close overlay
-function openPanel(panelData) {
-  fillPanelContent(panelData);
-
-  // lock scroll sotto
-  document.body.classList.add("body--lock");
-
-  // mostra overlay
-  if (panelOverlayEl) {
-    panelOverlayEl.setAttribute("aria-hidden", "false");
-    panelOverlayEl.dataset.blocking = "true";
-  }
-}
-
-function closePanel() {
-  // nascondi overlay
-  if (panelOverlayEl) {
-    panelOverlayEl.setAttribute("aria-hidden", "true");
-    panelOverlayEl.dataset.blocking = "false";
-  }
-
-  // sblocca scroll
-  document.body.classList.remove("body--lock");
-
-  // pulizia base body per evitare vecchi contenuti lampeggiando al prossimo open
-  if (panelBodyDesktopEl) panelBodyDesktopEl.innerHTML = "";
-  if (panelBodyMobileEl)  panelBodyMobileEl.innerHTML  = "";
-  if (panelTabsDesktopEl) panelTabsDesktopEl.innerHTML = "";
-  if (panelTabsMobileEl)  panelTabsMobileEl.innerHTML  = "";
-  if (panelTitleDesktopEl)    panelTitleDesktopEl.textContent    = "—";
-  if (panelSubtitleDesktopEl) panelSubtitleDesktopEl.textContent = "—";
-  if (panelTitleMobileEl)     panelTitleMobileEl.textContent     = "—";
-  if (panelSubtitleMobileEl)  panelSubtitleMobileEl.textContent  = "—";
-}
-
-// chiusura overlay su X, su backdrop ecc.
-if (panelBackdropEl) {
-  panelBackdropEl.addEventListener("click", closePanel);
-}
-panelCloseBtns.forEach(btn=>{
-  btn.addEventListener("click", closePanel);
-});
-
-// Esponiamo controller globale (debug / eventuale richiamo dai moduli)
-const PanelController = {
-  openPanel,
-  closePanel
-};
-window.TradeliaPanel = PanelController;
-
-
 // ------------------------------------------------------------
 // HERO + footer snapshot
 // ------------------------------------------------------------
+
 function mountHero(headerData) {
   if (!headerData) return;
 
@@ -394,7 +91,7 @@ function mountHero(headerData) {
   // badge stato
   setTextById("hero-state", State || "—");
 
-  // snapshot intervallo
+  // meta snapshot
   setTextById("hero-start", Start || "—");
   setTextById("hero-end", End || "—");
 
@@ -416,7 +113,7 @@ function mountHero(headerData) {
     ConfidenceFinal !== undefined ? fmtNum(ConfidenceFinal, 2) : "—"
   );
 
-  // colorazione up/down sul testo Δ%
+  // colorazione up/down su Δ%
   const heroChangeEl  = document.getElementById("hero-change");
   const heroChangeEl2 = document.getElementById("hero-change2");
 
@@ -433,7 +130,7 @@ function mountHero(headerData) {
     }
   }
 
-  // tonebars nel hero
+  // tonebars
   const toneSnap  = document.getElementById("tone-snap");
   const tonePrice = document.getElementById("tone-price");
   const toneChg   = document.getElementById("tone-chg");
@@ -441,31 +138,35 @@ function mountHero(headerData) {
   const toneFresh = document.getElementById("tone-fresh");
   const toneConf  = document.getElementById("tone-conf");
 
-  // default neutro
-  setTone(toneSnap,  "neu");
-  setTone(tonePrice, "neu");
-  setTone(toneCcy,   "neu");
-  setTone(toneFresh, "neu");
+  if (toneSnap)  toneSnap.style.backgroundColor  = "var(--tone-n)";
+  if (tonePrice) tonePrice.style.backgroundColor = "var(--tone-n)";
+  if (toneCcy)   toneCcy.style.backgroundColor   = "var(--tone-n)";
+  if (toneFresh) toneFresh.style.backgroundColor = "var(--tone-n)";
 
-  // Δ% -> verde/rosso
-  if (typeof ChangePct === "number") {
-    setTone(toneChg, ChangePct >= 0 ? "pos" : "neg");
-  } else {
-    setTone(toneChg, "neu");
+  // Δ% tono semaforo
+  if (toneChg) {
+    if (typeof ChangePct === "number") {
+      toneChg.style.backgroundColor =
+        ChangePct >= 0 ? "var(--tone-g)" : "var(--tone-r)";
+    } else {
+      toneChg.style.backgroundColor = "var(--tone-n)";
+    }
   }
 
-  // Confidence -> pos / neu / neg
-  const cf = Number(ConfidenceFinal);
-  if (!isNaN(cf)) {
-    if (cf >= 0.75) {
-      setTone(toneConf, "pos");
-    } else if (cf < 0.5) {
-      setTone(toneConf, "neg");
+  // confidence tono semaforo
+  if (toneConf) {
+    const cf = Number(ConfidenceFinal);
+    if (!isNaN(cf)) {
+      if (cf >= 0.75) {
+        toneConf.style.backgroundColor = "var(--tone-g)";
+      } else if (cf < 0.5) {
+        toneConf.style.backgroundColor = "var(--tone-r)";
+      } else {
+        toneConf.style.backgroundColor = "var(--tone-n)";
+      }
     } else {
-      setTone(toneConf, "neu");
+      toneConf.style.backgroundColor = "var(--tone-n)";
     }
-  } else {
-    setTone(toneConf, "neu");
   }
 
   // footer info
@@ -481,9 +182,8 @@ function mountHero(headerData) {
   const upd = UpdatedAt || End || Start || "—";
   setTextById("footer-updated", upd);
 
-  // anno footer se non già messo da ui-runtime
   const yearEl = document.getElementById("footer-year");
-  if (yearEl && !yearEl.textContent.trim()) {
+  if (yearEl) {
     const now = new Date();
     yearEl.textContent = now.getFullYear();
   }
@@ -492,6 +192,7 @@ function mountHero(headerData) {
 // ------------------------------------------------------------
 // MANIFEST LOADING / NORMALIZATION
 // ------------------------------------------------------------
+
 async function loadManifest(reportId) {
   const url = `/report/reports/${reportId}/manifest.json`;
   const mf = await fetchJSON(url);
@@ -529,7 +230,7 @@ function getSectionSelectorForModule(modId) {
   return null;
 }
 
-// normalizza i path json modulo rispetto al reportId
+// normalizza i path dei json modulo
 function normalizeManifest(manifest, reportId) {
   const order = Array.isArray(manifest.order)
     ? manifest.order.slice()
@@ -543,7 +244,7 @@ function normalizeManifest(manifest, reportId) {
       !path.startsWith("http") &&
       !path.startsWith("/")
     ) {
-      // path relativo -> sotto /report/reports/{id}/
+      // relativo -> montalo sotto /report/reports/{id}/
       path = `/report/reports/${reportId}/${path}`;
     }
     outMods[key] = path;
@@ -558,36 +259,9 @@ function normalizeManifest(manifest, reportId) {
 }
 
 // ------------------------------------------------------------
-// COLLEGA LA CARD DEL MODULO AL PANEL PREMIUM
-// ------------------------------------------------------------
-function attachOpenPanelHandler(container, data, ctx, mod) {
-  // container è <article id="sec-fX" ...>
-  if (!container) return;
-
-  // di default apriamo panel cliccando tutto il blocco
-  container.addEventListener("click", () => {
-    // 1. chiediamo al modulo i dati per il panel
-    let panelData;
-    if (mod && typeof mod.buildPanelData === "function") {
-      try {
-        panelData = mod.buildPanelData(data, ctx);
-      } catch (err) {
-        console.warn("buildPanelData error", ctx.modId, err);
-      }
-    }
-
-    if (!panelData) {
-      panelData = buildPanelDataFallback(ctx.modId, data);
-    }
-
-    // 2. apriamo overlay con quei dati
-    PanelController.openPanel(panelData);
-  }, { once:false }); // vogliamo che funzioni a ogni click
-}
-
-// ------------------------------------------------------------
 // MOUNT DI UN SINGOLO MODULO (F1B/F2/...)
 // ------------------------------------------------------------
+
 async function mountSingleModule(modId, jsonUrl, reportId) {
   const selector = getSectionSelectorForModule(modId);
   if (!selector) {
@@ -608,7 +282,7 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
   const fileBase = modId.toLowerCase();
   let mod;
   try {
-    // cache-busting minimo
+    // ⚠ aggiungo ?v=2 per forzare il browser a prendere la versione aggiornata
     mod = await import(`/report/assets/js/modules/${fileBase}.js?v=2`);
   } catch (err) {
     console.error("Import modulo fallita:", modId, err);
@@ -621,12 +295,12 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
           </div>
           <div class="section-title-main">${modId}</div>
           <div class="section-desc">
-            Modulo non disponibile o renderer mancante.
+            Modulo non disponibile.
           </div>
         </div>
       </div>
       <div class="tl-panel-section-text text-[13px] leading-[1.45] text-[color:var(--muted)]">
-        Impossibile caricare <code>${fileBase}.js</code>.
+        Impossibile caricare il renderer ${fileBase}.js
       </div>
     `;
     container.classList.remove("is-loading");
@@ -639,7 +313,7 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
     container.innerHTML = html;
     container.classList.remove("is-loading");
 
-    // hook interazione modulo custom
+    // bind interazioni modulo (Dettagli regime ecc.)
     if (typeof mod.bindCard === "function") {
       try {
         mod.bindCard(container, data, { modId, reportId });
@@ -648,16 +322,13 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
       }
     }
 
-    // collega apertura panel premium
-    attachOpenPanelHandler(container, data, { modId, reportId }, mod);
-
-    // Tooltip "?" sulle metriche interne (MAIN PAGE)
+    // Tooltip "?" su metriche dentro la card
     if (
       window.__TradeliaUI &&
       typeof window.__TradeliaUI.bindMetricInfoButtons === "function"
     ) {
       try {
-        window.__TradeliaUI.bindMetricInfoButtons(container);
+        window.__TradeliaUI.bindMetricInfoButtons();
       } catch (e) {
         console.warn("bindMetricInfoButtons error:", e);
       }
@@ -678,21 +349,15 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
           </div>
         </div>
       </div>
-      <div class="tl-panel-section-text text-[13px] leading-[1.45] text-[color:var(--muted)]">
-        Definisci <code>renderCard()</code> in /report/assets/js/modules/${fileBase}.js
-        per renderizzare questo blocco.
-      </div>
     `;
     container.classList.remove("is-loading");
-
-    // anche qui comunque aggancio apertura panel fallback
-    attachOpenPanelHandler(container, data, { modId, reportId }, mod);
   }
 }
 
 // ------------------------------------------------------------
 // FLUSSO PRINCIPALE
 // ------------------------------------------------------------
+
 async function mountReport() {
   const reportId = getReportIdFromURL();
 
@@ -708,25 +373,22 @@ async function mountReport() {
   const rawManifest = await loadManifest(reportId);
   const manifest = normalizeManifest(rawManifest, reportId);
 
-  // 3. montaggio moduli in parallelo
-  const promises = manifest.order.map(modId => {
+  // 3. scorri i moduli in ordine e montali
+  for (const modId of manifest.order) {
     const jsonUrl = manifest.modules[modId];
     if (!jsonUrl) {
       console.warn(`Nessun jsonUrl per ${modId}`);
-      return Promise.resolve();
+      continue;
     }
-    return mountSingleModule(modId, jsonUrl, reportId);
-  });
-
-  await Promise.all(promises);
+    await mountSingleModule(modId, jsonUrl, reportId);
+  }
 }
 
 // kick immediato
 mountReport();
 
-// debug globale
+// esponiamo debug
 window.TradeliaApp = {
   mountReport,
-  getReportIdFromURL,
-  PanelController // esponiamo così eventualmente i moduli possono aprire/chiudere panel da soli
+  getReportIdFromURL
 };
