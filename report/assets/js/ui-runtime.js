@@ -7,33 +7,6 @@
 // - share overlay
 // - stampa
 //
-// NOVITÀ VS VERSIONE PRECEDENTE
-// -----------------------------
-// 1. openPanel() ora accetta opts.panelSize ("wide") per pannello largo tipo console
-//    e blocca lo scroll del body quando è aperto.
-// 2. closePanel() rimuove il blocco scroll.
-// 3. body del panel: se panelSize === "wide" non wrappiamo il contenuto con troppi layer
-//    per non rompere il layout flex del drawer desktop e la nav bottom mobile.
-// 4. Tooltip unificati:
-//    - tutte le .info-btn[data-metric="..."] usano binding comune
-//    - DESKTOP: ora il popover viene ancorato visualmente vicino al bottone "?" cliccato
-//      (prima era fisso in alto a destra)
-//    - MOBILE: usiamo la modal verticale
-// 5. bindMetricInfoButtons(root) è esposta globalmente in window.__TradeliaUI
-//    così i moduli (tipo f1b.js) possono richiamarla dopo aver aperto il panel.
-// 6. Miglior gestione blocking: se blocking===true ignora click sul backdrop.
-//
-// NOTE
-// ----
-// - Alcune classi usate qui (.body--lock, .tl-panel--wide) vanno definite a livello CSS/tokens:
-//   .body--lock { overflow:hidden; }
-//   .tl-panel--desktop.tl-panel--wide { width:560px; max-width:90vw; }
-//   (Puoi metterle in share.css o tokens.css.)
-// - Le strutture HTML base (panel-overlay, metric-popover, metric-modal, ecc.)
-//   restano le stesse definite in index.html.
-//
-// ATTENZIONE
-// ----------
 // Questo file NON monta i moduli F1/F2/..., quello resta app.js
 //
 
@@ -139,8 +112,8 @@ function openPanel(opts) {
   //   - mappiamo ogni section in un blocco .tl-panel-section con titolo/body/meta
   //
   // Caso "wide"/console (es. F1B drawer):
-  //   - l'applicazione ci passa UNA sola sezione già strutturata internamente con layout complesso
-  //   - non vogliamo ulteriori wrapper che rompano il flex (sidebar+content, bottom nav, ecc.)
+  //   - l'app ci passa UNA sola sezione già strutturata con layout complesso
+  //   - non vogliamo wrapper extra che rompano flex/tabbar ecc.
   //
   let bodyHTML = "";
   if (panelSize === "wide" && sections.length === 1) {
@@ -443,6 +416,7 @@ function openAuditPanel(auditData) {
 //
 // Glossario centrale delle metriche.
 // Le chiavi devono combaciare con data-metric="Chiave" nei bottoni "?".
+
 const glossary = {
   Snapshot: {
     title: "Snapshot",
@@ -504,7 +478,7 @@ const glossary = {
 // Stato corrente popover desktop (per gestione toggle/close)
 let currentPopoverOpen = false;
 
-// Desktop: pop vicino al bottone cliccato
+// Desktop: pop vicino al bottone cliccato, MA clampato al viewport
 function openMetricDesktop(btnEl) {
   const pop = qs("#metric-popover");
   if (!pop) return;
@@ -524,23 +498,51 @@ function openMetricDesktop(btnEl) {
   setText(bodyEl,  info.long  || "—");
   setText(sourceEl, info.source || "");
 
-  // calcoliamo posizione dell'icona "?"
   const rect = btnEl.getBoundingClientRect();
 
-  // offset per non coprire il bottone
   const OFFSET_X = 8;
   const OFFSET_Y = 4;
 
-  const left = rect.left + window.scrollX + OFFSET_X;
-  const top  = rect.bottom + window.scrollY + OFFSET_Y;
+  let left = rect.left + window.scrollX + OFFSET_X;
+  let top  = rect.bottom + window.scrollY + OFFSET_Y;
 
-  // posizioniamo il popover accanto al bottone
+  // posizione preliminare
   pop.style.position = "absolute";
+  pop.style.maxWidth = "320px";
   pop.style.left = left + "px";
   pop.style.top  = top  + "px";
   pop.style.right = "auto";
-
+  pop.style.bottom = "auto";
   pop.setAttribute("aria-hidden", "false");
+
+  // calcolo bounding e clamp
+  const vpW = window.innerWidth;
+  const vpH = window.innerHeight;
+  const popRect = pop.getBoundingClientRect();
+
+  // se esce a destra -> shift a sinistra
+  if (popRect.right > vpW - 8) {
+    const diffX = popRect.right - (vpW - 8);
+    left = left - diffX;
+  }
+  // se va fuori a sinistra -> clamp 8px
+  if (left < window.scrollX + 8) {
+    left = window.scrollX + 8;
+  }
+
+  // se esce in basso -> apri sopra
+  if (popRect.bottom > vpH - 8) {
+    top = rect.top + window.scrollY - popRect.height - OFFSET_Y;
+  }
+  // se va troppo su -> clamp 8px dall'alto viewport
+  if (top < window.scrollY + 8) {
+    top = window.scrollY + 8;
+  }
+
+  // applica correzioni
+  pop.style.left = left + "px";
+  pop.style.top  = top  + "px";
+
   currentPopoverOpen = true;
 }
 
@@ -621,7 +623,7 @@ document.addEventListener("click", (ev) => {
   if (pop.getAttribute("aria-hidden") === "true") return;
 
   if (pop.contains(ev.target)) return;            // clic dentro → niente
-  if (ev.target.closest(".info-btn")) return;     // clic su altro ? → gestito sopra
+  if (ev.target.closest(".info-btn")) return;     // clic su altro ? → lo gestiamo lì
 
   closeMetricDesktop();
 });
