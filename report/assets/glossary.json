@@ -1,32 +1,43 @@
 {
   "Snapshot": {
     "title": "Snapshot",
-    "long": "<p><strong>Cosa mostra</strong><br/>Intervallo temporale coperto dal report: momento in cui è iniziata la raccolta o validazione dei dati e momento in cui è stata generata la versione finale.</p><p><strong>Perché conta</strong><br/>Serve per capire il contesto temporale dell'analisi. Ti dice se stai guardando una fotografia recente o un quadro costruito su dati che hanno vissuto un certo mercato (volatilità, news, eventi macro) nel frattempo.</p>",
-    "source": "<strong>Fonte</strong><br/>Timestamp interni Tradelia AI (pipeline dati proprietaria)."
+    "what": "Intervallo temporale coperto dal report. Indica da quando è iniziata la raccolta/validazione dei dati per questo titolo e quando è stata generata la versione finale del report.",
+    "how": "Ti dice se stai guardando una fotografia molto recente oppure un quadro costruito su dati che hanno già vissuto potenziale volatilità, notizie o shock macro nel frattempo. Serve a capire il contesto temporale dell'analisi.",
+    "source": "Timestamp interni Tradelia AI (pipeline dati proprietaria)."
   },
+
   "Price": {
     "title": "Price",
-    "long": "<p><strong>Cosa mostra</strong><br/>Ultimo prezzo ufficiale disponibile sul mercato principale del titolo al momento di generazione del report.</p><p><strong>Perché conta</strong><br/>È il riferimento di base per tutte le altre misure: Δ%, livelli tecnici, volatilità, rischio. È il numero che usiamo per dire \"il mercato adesso prezza questo\".</p>",
-    "source": "<strong>Fonte</strong><br/>Feed di mercato regolamentato / consolidato (es. venue primaria, Barchart, ecc.)."
+    "what": "Ultimo prezzo di riferimento del titolo. In genere: ultimo prezzo ufficiale di chiusura del mercato regolamentato. Se disponibile e più aggiornato, può riflettere l'ultimo prezzo post-market fornito dal feed.",
+    "how": "È il livello di prezzo usato come base per le altre metriche mostrate (variazione % giornaliera, confronto con livelli tecnici, ecc.). Quando confronti più report o più ticker, usa sempre lo stesso tipo di prezzo (close ufficiale vs post-market) per non mischiare mele e pere.",
+    "source": "Feed di mercato / Barchart e consolidamento Tradelia AI."
   },
+
   "ChangePct": {
     "title": "Δ%",
-    "long": "<p><strong>Cosa mostra</strong><br/>Variazione percentuale del prezzo rispetto al riferimento precedente (tipicamente la chiusura ufficiale della sessione precedente).</p><p><strong>Perché conta</strong><br/>Misura direzione e intensità del movimento recente. Positivo = rialzo, negativo = ribasso. È usata per leggere momentum di breve e pressione immediata (acquisto/vendita).</p>",
-    "source": "<strong>Fonte</strong><br/>Calcolo interno Tradelia AI su dati ufficiali di prezzo (es. ultimo prezzo vs close precedente)."
+    "what": "Variazione percentuale del prezzo rispetto alla chiusura precedente. Indica quanto è salito o sceso il titolo nell'ultima sessione (o nell'ultima sessione + after hours, se quella è la fonte corrente).",
+    "how": "Ti dà il sentiment immediato del mercato sul nome: verde → pressione rialzista recente, rosso → pressione ribassista recente. Non è una previsione futura, è termometro del movimento più vicino al 'now'.",
+    "source": "Calcolo su dati di prezzo di breve periodo (close precedente vs ultimo prezzo disponibile) da feed di mercato / Barchart."
   },
+
   "Currency": {
     "title": "Currency",
-    "long": "<p><strong>Cosa mostra</strong><br/>La valuta in cui è quotato il prezzo riportato (es. USD, EUR, GBP).</p><p><strong>Perché conta</strong><br/>Se confronti strumenti quotati in valute diverse o ragioni in una valuta base tua, il rischio FX può amplificare o ridurre il rendimento reale. La stessa azione in USD non equivale alla stessa azione vista da un investitore EUR.</p>",
-    "source": "<strong>Fonte</strong><br/>Dati ufficiali del mercato di quotazione."
+    "what": "La valuta (ccy) in cui è quotato il titolo e in cui sono espressi i prezzi e le variazioni che vedi nel report.",
+    "how": "Serve per non confondere valori nominali tra mercati diversi. Esempio: il prezzo in USD di un titolo US non è direttamente confrontabile 1:1 con il prezzo in EUR di un titolo europeo se non consideri il cambio.",
+    "source": "Dati di quotazione ufficiale dello strumento dal marketplace di riferimento (es. NASDAQ in USD)."
   },
+
   "Freshness": {
     "title": "Freshness",
-    "long": "<p><strong>Cosa mostra</strong><br/>Quanto sono aggiornati i dati usati nel report. Esempio: T-0 = dati del giorno stesso; T-1 = dati fino alla chiusura di ieri; T-2/T-3 = più ritardo.</p><p><strong>Perché conta</strong><br/>Più il dato è vecchio, più aumenta il rischio che il quadro tecnico descritto non rifletta la situazione reale attuale. Se vedi Freshness alto (ritardo), devi fidarti meno del segnale tattico brevissimo.</p>",
-    "source": "<strong>Fonte</strong><br/>Pipeline di aggiornamento Tradelia AI. Valore calcolato sul feed più lento (worst-lag)."
+    "what": "Quanto è 'fresca' l'informazione operativa usata nel report. Indica l'età effettiva dei dati di prezzo / sentiment / tecnica rispetto al momento in cui stai leggendo.",
+    "how": "Più è alta la freschezza (es. 'T-0', 'live', 'ultime ore'), più il quadro riflette lo stato corrente del mercato. Se la freschezza è bassa (es. 'T-1', 'T-2', 'ritardato'), devi considerare che il mercato potrebbe già essersi mosso oltre quei livelli.",
+    "source": "Timestamp interni Tradelia AI + latenza feed esterno (mercato cash / post-market / sentiment feed)."
   },
+
   "ConfidenceFinal": {
     "title": "Confidence",
-    "long": "<p><strong>Cosa mostra</strong><br/>Punteggio interno di qualità/coerenza del dataset usato nel report. Scala 0 → 1. Tiene conto di: integrità delle fonti, latenze, rumore statistico, divergenze tra timeframe.</p><p><strong>Come leggerlo</strong><br/>Valore alto = segnali puliti e dataset allineato. Valore basso = rumore, feed asincroni o segnali tecnici/non-tecnici che non concordano tra loro. Non è garanzia di risultato, ma è un termometro di affidabilità del quadro attuale.</p>",
-    "source": "<strong>Fonte</strong><br/>Modello proprietario Tradelia AI di validazione e coerenza dati multi-timeframe."
+    "what": "Confidenza interna del sistema sulla qualità del dato e sulla coerenza del quadro tecnico/contestuale mostrato. Integra qualità del feed di prezzo, copertura volumi, continuità serie storiche e assenza di buchi dati.",
+    "how": "È una misura di affidabilità del report, NON una previsione di profitto. Valori alti = i dati sono puliti, allineati e completi; valori bassi = i dati potrebbero essere parziali (es. mercato illiquido, fuori orario, spike anomali, gap di volume).",
+    "source": "Heuristics proprietari Tradelia AI su integrità feed, continuità serie e stabilità del segnale tecnico."
   }
 }
