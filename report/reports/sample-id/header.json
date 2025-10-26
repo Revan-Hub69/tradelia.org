@@ -1,21 +1,14 @@
 {
   "Ticker": "NVDA",
-  "InstrumentName": "NVIDIA Corporation",
-  "SecurityType": "Equity",
-  "ISIN": "US67066G1040",
   "Venue": "NASDAQ",
-  "MarketStatus": "AFTERHOURS",
-
   "Price": 123.45,
   "ChangePct": -2.13,
   "Currency": "USD",
-
   "Start": "2025-10-21",
   "End": "2025-10-25",
   "FreshnessLabel": "T-0 / latest close + AH",
   "ConfidenceFinal": 0.82,
-
   "State": "LIVE SNAPSHOT",
   "Version": "v2025.10.25-rc3",
-  "UpdatedAt": "2025-10-25T22:14Z"
+  "UpdatedAt": "2025-10-25 22:14 UTC"
 }
