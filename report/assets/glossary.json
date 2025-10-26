@@ -1,1 +1,37 @@
-{}
+{
+  "Snapshot": {
+    "short": "Intervallo effettivo coperto dal report.",
+    "long": "Rappresenta l’intervallo temporale tra l’inizio e la fine della finestra analizzata o validata dal sistema. Mostra quando è iniziata la raccolta e quando si è conclusa la generazione del report. Serve a indicare la durata effettiva del periodo operativo osservato, non la performance dei prezzi nel tempo.",
+    "source": "Tradelia AI · Report Timestamp Window"
+  },
+
+  "Price": {
+    "short": "Ultimo prezzo di chiusura ufficiale.",
+    "long": "Prezzo di chiusura più recente fornito da Barchart per lo strumento analizzato. È tratto dal mercato principale di quotazione (es. NASDAQ) e rappresenta il valore ufficiale dell’ultima sessione chiusa. In presenza di mercati aperti, può coincidere con l’ultimo last disponibile ma non è un dato in tempo reale.",
+    "source": "Fonte dati: Barchart"
+  },
+
+  "ChangePct": {
+    "short": "Variazione percentuale rispetto alla chiusura precedente.",
+    "long": "Misura la variazione percentuale del prezzo rispetto alla chiusura precedente ufficiale. È calcolata come (ultimo prezzo − chiusura precedente) / chiusura precedente × 100. Indica l’andamento giornaliero (day-over-day) e non riflette il rendimento dell’intero periodo Snapshot.",
+    "source": "Calcolo Tradelia AI su dati Barchart"
+  },
+
+  "Currency": {
+    "short": "Valuta di quotazione dello strumento.",
+    "long": "Specifica la valuta in cui è espresso il prezzo di mercato. È utile per interpretare correttamente i rendimenti e per valutare eventuali effetti di cambio nel caso di strumenti quotati in divise diverse da quella base del portafoglio.",
+    "source": "Fonte dati: mercato di quotazione / Barchart"
+  },
+
+  "Freshness": {
+    "short": "Aggiornamento e latenza dei dati.",
+    "long": "Indica quanto i dati sono aggiornati rispetto al momento di pubblicazione del report. 'T-0' significa dati del giorno stesso, 'T-1' indica un ritardo di un giorno, e così via. È una metrica di trasparenza richiesta da MiFID II / ESMA per informare sull’attualità delle informazioni utilizzate.",
+    "source": "Tradelia AI · Data Integrity & Lag Audit"
+  },
+
+  "ConfidenceFinal": {
+    "short": "Indice di affidabilità complessiva dei dati.",
+    "long": "Valore compreso tra 0 e 1 che sintetizza la qualità, la copertura e la sincronizzazione dei feed provenienti dai moduli F1–F6. Un valore ≥ 0,8 segnala elevata affidabilità informativa e coerenza dell’intero dataset.",
+    "source": "Tradelia AI · Data Quality Framework"
+  }
+}
