@@ -1,6 +1,7 @@
 {
   "Ticker": "NVDA",
   "Venue": "NASDAQ",
+  "CompanyName": "NVIDIA Corporation",
   "Price": 123.45,
   "ChangePct": -2.13,
   "Currency": "USD",
