@@ -2,17 +2,16 @@
 //
 // F1B · Regime di mercato / Contesto rischio
 //
-// Questa versione parla con ui-runtime.js (openPanelPremium)
-// e con tokens.css premium.
+// Versione finale con:
+// - card F1 in pagina
+// - drawer laterale stile legacy (sidebar desktop / bottom tabbar mobile)
+//   ma aperto tramite ui-runtime.openPanelLegacySidebar()
+// - token premium (var(--ink), var(--surface-card), ecc.)
+// - tooltip "?" integrati
 //
-// Esporta:
+// Export:
 //   renderCard(data, ctx)
 //   bindCard(node, data, ctx)
-//
-// Requisiti runtime globali:
-//   window.__TradeliaUI.openPanelPremium()
-//   window.__TradeliaUI.closePanel()
-//   window.__TradeliaUI.bindMetricInfoButtons()
 
 export function renderCard(rawData, ctx = {}) {
   const norm = normalizeData(rawData);
@@ -45,7 +44,7 @@ export function renderCard(rawData, ctx = {}) {
         </div>
       </header>
 
-      <!-- Card corpo -->
+      <!-- Card principale -->
       <div class="relative flex flex-col gap-4
                   bg-[color:var(--surface-card)]
                   border border-[color:var(--br-card)]
@@ -129,42 +128,44 @@ export function renderCard(rawData, ctx = {}) {
 
 export function bindCard(node, rawData, ctx = {}) {
   if (!node || !rawData) return;
-
   const norm = normalizeData(rawData);
   const view = decorateForView(norm);
 
-  // CTA -> drawer premium
   const btn = node.querySelector('[data-open-f1b-details="true"]');
   if (btn) {
     btn.addEventListener("click", () => {
-      openF1DrawerPremium(norm, view);
+      openF1Drawer(norm, view);
     });
   }
 
-  // tooltip (?) in questa card
+  // bind tooltip "?" dentro la card
   if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
     window.__TradeliaUI.bindMetricInfoButtons(node);
   }
 }
 
-// -----------------------------------------------------
-// Drawer premium (usa openPanelPremium)
-// -----------------------------------------------------
-function openF1DrawerPremium(norm, view) {
+// ---------------------------------------------------------
+// Drawer stile legacy sidebar/bottom-tabbar
+// ---------------------------------------------------------
+
+function openF1Drawer(norm, view){
   if (
     !window.__TradeliaUI ||
-    typeof window.__TradeliaUI.openPanelPremium !== "function"
+    typeof window.__TradeliaUI.openPanelLegacySidebar !== "function"
   ) {
-    console.warn("openPanelPremium non disponibile");
+    console.warn("openPanelLegacySidebar non disponibile");
     return;
   }
 
-  const tabs = buildF1Tabs(norm, view);
+  // costruiamo HTML desktop e mobile
+  const desktopHTML = renderDrawerDesktopShell(norm, view);
+  const mobileHTML  = renderDrawerMobileShell(norm, view);
 
-  window.__TradeliaUI.openPanelPremium({
+  window.__TradeliaUI.openPanelLegacySidebar({
     title: "F1 · Regime di mercato",
     subtitle: "Flussi settoriali, ampiezza del rialzo e volatilità (T-1)",
-    tabs,
+    desktopHTML,
+    mobileHTML,
     footerButtons: [
       {
         label:"Chiudi",
@@ -176,90 +177,128 @@ function openF1DrawerPremium(norm, view) {
   });
 }
 
-// Costruiamo le tab premium per F1
-function buildF1Tabs(norm, view) {
-  return [
-    {
-      id: "regime",
-      label: "Regime attuale",
-      active: true,
-      sections: [
-        {
-          title: "Stato regime / StrategyMode",
-          tone: toneToKey(view.toneClass),
-          pillLabel: view.toneLabel,
-          bodyHTML: sectionRegimeHTML(norm, view),
-          metaHTML: ""
-        }
-      ]
-    },
-    {
-      id: "rotation",
-      label: "Rotazione & partecipazione",
-      active: false,
-      sections: [
-        {
-          title: "Breadth, RiskTilt e flussi settoriali",
-          tone: "neu",
-          pillLabel: "breadth / flow",
-          bodyHTML: sectionRotationHTML(norm, view),
-          metaHTML: ""
-        }
-      ]
-    },
-    {
-      id: "notes",
-      label: "Note interpretative",
-      active: false,
-      sections: [
-        {
-          title: "Chiave di lettura",
-          tone: "warn",
-          pillLabel: "interpretazione",
-          bodyHTML: sectionNotesHTML(view),
-          metaHTML: ""
-        }
-      ]
-    },
-    {
-      id: "audit",
-      label: "Audit & Fonti",
-      active: false,
-      sections: [
-        {
-          title: "Latenza feed e coerenza fonti",
-          tone: "neu",
-          pillLabel: "audit",
-          bodyHTML: sectionAuditHTML(norm),
-          metaHTML: ""
-        }
-      ]
-    },
-    {
-      id: "mifid",
-      label: "Nota regolamentare",
-      active: false,
-      sections: [
-        {
-          title: "Avvertenze MiFID",
-          tone: "neg",
-          pillLabel: "rischio",
-          bodyHTML: sectionMiFIDHTML(),
-          metaHTML: ""
-        }
-      ]
-    }
-  ];
+// Desktop shell: sidebar sinistra + content destra
+function renderDrawerDesktopShell(norm, view){
+  return `
+    <div class="f1b-panel-desktop flex flex-row gap-4 min-h-[300px]">
+
+      <aside class="f1b-panel-menu min-w-[160px] max-w-[180px] border-r border-[color:var(--br-card)] pr-2">
+        ${drawerMenuButton("regime","Regime attuale", true)}
+        ${drawerMenuButton("rotation","Rotazione &amp; partecipazione", false)}
+        ${drawerMenuButton("notes","Note interpretative", false)}
+        ${drawerMenuButton("audit","Audit &amp; Fonti", false)}
+        ${drawerMenuButton("mifid","Nota regolamentare", false)}
+      </aside>
+
+      <main class="f1b-panel-content flex-1 min-w-0 max-h-[60vh] overflow-auto space-y-4">
+        <div data-f1b-view="regime">
+          ${sectionRegimeBlock(norm, view)}
+        </div>
+        <div data-f1b-view="rotation" hidden>
+          ${sectionRotationBlock(norm, view)}
+        </div>
+        <div data-f1b-view="notes" hidden>
+          ${sectionNotesBlock(view)}
+        </div>
+        <div data-f1b-view="audit" hidden>
+          ${sectionAuditBlock(norm)}
+        </div>
+        <div data-f1b-view="mifid" hidden>
+          ${sectionMiFIDBlock()}
+        </div>
+      </main>
+    </div>
+  `;
 }
 
-// -----------------------------------------------------
-// Blocchi HTML delle sezioni (drawer)
-// -----------------------------------------------------
-function sectionRegimeHTML(norm, view) {
+// Mobile shell: contenuto + bottom tabbar
+function renderDrawerMobileShell(norm, view){
   return `
-    <div class="text-[12px] leading-[1.45] text-[color:var(--ink)] space-y-3">
+    <div class="f1b-panel-mobile relative pb-14 min-h-[300px]">
 
-      <div class="flex flex-wrap items-center gap-2 text-[13px] font-semibold leading-[1.45]">
+      <main class="f1b-panel-content-mobile max-h-[60vh] overflow-auto space-y-4">
+        <div data-f1b-view="regime">
+          ${sectionRegimeBlock(norm, view)}
+        </div>
+        <div data-f1b-view="rotation" hidden>
+          ${sectionRotationBlock(norm, view)}
+        </div>
+        <div data-f1b-view="notes" hidden>
+          ${sectionNotesBlock(view)}
+        </div>
+        <div data-f1b-view="audit" hidden>
+          ${sectionAuditBlock(norm)}
+        </div>
+        <div data-f1b-view="mifid" hidden>
+          ${sectionMiFIDBlock()}
+        </div>
+      </main>
+
+      <nav class="f1b-mobile-tabbar absolute left-0 right-0 bottom-0 flex justify-between gap-1
+                  border-t border-[color:var(--br-card)]
+                  bg-[color:var(--surface-card)]
+                  px-3 py-2 text-[11px] leading-[1.2]">
+        ${drawerMobileTabButton("regime","Regime", true)}
+        ${drawerMobileTabButton("rotation","Rotaz.", false)}
+        ${drawerMobileTabButton("notes","Note", false)}
+        ${drawerMobileTabButton("audit","Fonti", false)}
+        ${drawerMobileTabButton("mifid","MiFID", false)}
+      </nav>
+    </div>
+  `;
+}
+
+// Bottoni nav desktop
+function drawerMenuButton(key, label, active){
+  return `
+    <button
+      class="f1b-tab-btn block w-full text-left text-[12px] leading-[1.4] px-2 py-2
+             rounded-[var(--radius-card-sm)]
+             border-l-[3px] border-l-transparent
+             ${active ? "is-active" : ""}"
+      data-f1b-tab="${key}"
+      type="button"
+    >
+      ${label}
+    </button>
+  `;
+}
+
+// Bottoni nav mobile
+function drawerMobileTabButton(key, label, active){
+  return `
+    <button
+      class="f1b-tab-btn-mobile flex-1 text-center
+             rounded-[var(--radius-card-sm)]
+             px-1 py-[0.4rem]
+             ${active ? "is-active" : ""}"
+      data-f1b-tab="${key}"
+      type="button"
+    >
+      ${label}
+    </button>
+  `;
+}
+
+// ---------------------------------------------------------
+// Section blocks (contenuto per ogni tab)
+// Usa i token premium (var(--surface-card-alt) ecc.)
+// ---------------------------------------------------------
+
+function sectionRegimeBlock(norm, view){
+  return `
+    <section class="space-y-3
+                    bg-[color:var(--surface-card-alt)]
+                    border border-[color:var(--br-card)]
+                    rounded-[var(--radius-card)]
+                    shadow-[var(--shadow-card)]
+                    p-3">
+
+      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
+        Regime attuale
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2 text-[13px] text-[color:var(--ink)] leading-[1.45] font-semibold">
         <span>StrategyMode: ${escapeHtml(view.strategyMode || "—")}</span>
         <button
           class="info-btn info-btn--mini"
@@ -292,15 +331,24 @@ function sectionRegimeHTML(norm, view) {
         Numeri calcolati combinando volatilità implicita, ampiezza del rialzo e
         posizione dei flussi rispetto alla difensiva.
       </div>
-    </div>
+    </section>
   `;
 }
 
-function sectionRotationHTML(norm, view) {
+function sectionRotationBlock(norm, view){
   return `
-    <div class="text-[12px] leading-[1.45] text-[color:var(--ink)] space-y-3">
+    <section class="space-y-3
+                    bg-[color:var(--surface-card-alt)]
+                    border border-[color:var(--br-card)]
+                    rounded-[var(--radius-card)]
+                    shadow-[var(--shadow-card)]
+                    p-3">
 
-      <div class="grid grid-cols-2 gap-3">
+      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
+        Rotazione &amp; partecipazione
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
         ${smallMetricBlock({
           title: "Breadth (1M)",
           metricKey: "Breadth",
@@ -316,8 +364,8 @@ function sectionRotationHTML(norm, view) {
         })}
       </div>
 
-      <div>
-        <div class="text-[11px] font-semibold text-[color:var(--muted)] uppercase tracking-wide leading-[1.3] mb-1">
+      <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)]">
+        <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
           Top settori per inflow (5d)
         </div>
         ${renderTopSectors(view.topSectors)}
@@ -327,47 +375,83 @@ function sectionRotationHTML(norm, view) {
         Breadth &gt;50% = rialzo distribuito. RiskTilt alto = preferenza ciclica
         rispetto a difensivi.
       </div>
-    </div>
+    </section>
   `;
 }
 
-function sectionNotesHTML(view) {
+function sectionNotesBlock(view){
   return `
-    <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)]">
-      ${renderInterpretation(view.interpretationNotes)}
-    </div>
+    <section class="space-y-3
+                    bg-[color:var(--surface-card-alt)]
+                    border border-[color:var(--br-card)]
+                    rounded-[var(--radius-card)]
+                    shadow-[var(--shadow-card)]
+                    p-3">
+
+      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
+        Note interpretative
+      </div>
+
+      <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)]">
+        ${renderInterpretation(view.interpretationNotes)}
+      </div>
+    </section>
   `;
 }
 
-function sectionAuditHTML(norm) {
+function sectionAuditBlock(norm){
   return `
-    <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)] space-y-3">
-      ${renderAudit(norm)}
-    </div>
+    <section class="space-y-3
+                    bg-[color:var(--surface-card-alt)]
+                    border border-[color:var(--br-card)]
+                    rounded-[var(--radius-card)]
+                    shadow-[var(--shadow-card)]
+                    p-3">
+
+      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
+        Audit &amp; Fonti
+      </div>
+
+      <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)] space-y-3">
+        ${renderAudit(norm)}
+      </div>
+    </section>
   `;
 }
 
-function sectionMiFIDHTML() {
+function sectionMiFIDBlock(){
   return `
-    <div class="text-[12.5px] leading-[1.45] text-[color:var(--muted)] space-y-2">
-      <p>
-        Questo materiale descrive uno scenario di mercato basato su dati quantitativi
-        e fonti finanziarie primarie. Ha finalità esclusivamente informative e formative.
-      </p>
+    <section class="space-y-3
+                    bg-[color:var(--surface-card-alt)]
+                    border border-[color:var(--br-card)]
+                    rounded-[var(--radius-card)]
+                    shadow-[var(--shadow-card)]
+                    p-3">
 
-      <p>
-        Non costituisce una raccomandazione personalizzata né un invito ad aprire/chiudere
-        posizioni o allocare capitale. Prima di qualsiasi decisione reale verifica
-        adeguatezza e appropriatezza con un intermediario autorizzato
-        (MiFID II / ESMA).
-      </p>
-    </div>
+      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
+        Nota regolamentare
+      </div>
+
+      <div class="text-[12.5px] leading-[1.45] text-[color:var(--muted)] space-y-2">
+        <p>
+          Questo materiale descrive uno scenario di mercato basato su dati quantitativi
+          e fonti finanziarie primarie. Ha finalità esclusivamente informative e formative.
+        </p>
+        <p>
+          Non costituisce raccomandazione personalizzata né invito ad aprire/chiudere
+          posizioni o allocare capitale. Prima di qualsiasi decisione reale verifica
+          adeguatezza e appropriatezza con un intermediario autorizzato
+          (MiFID II / ESMA).
+        </p>
+      </div>
+    </section>
   `;
 }
 
-// -----------------------------------------------------
-// Pezzi riusabili (metriche piccole, flag, liste, audit…)
-// -----------------------------------------------------
+// ---------------------------------------------------------
+// Frammenti comuni (metriche piccole, flag, liste, audit…)
+// ---------------------------------------------------------
+
 function metricBox({ label, metricKey, value, desc, flagStatus }) {
   return `
     <div class="flex-1 min-w-[90px]
@@ -433,18 +517,22 @@ function smallMetricBlock({ title, metricKey, value, flagStatus }) {
   `;
 }
 
-// flag ✓ / ! / ✕ inline
-function flagIcon(flagStatus) {
+// icone ✓ / ! / ✕
+function flagIcon(flagStatus){
   if (!flagStatus || flagStatus === "neutral") return "";
 
   if (flagStatus === "pos") {
     return `
       <span class="metric-flag metric-flag--pos" aria-label="positivo">
         <svg viewBox="0 0 64 64" aria-hidden="true">
-          <path d="M32 8C20 8 10 18 10 31C10 44 20.5 56 33 56C45 56 54 46 54 33C54 20 45 10 35 9" class="ring-stroke-1"/>
-          <path d="M31 8.5C19 9 11 18.5 11 31C11 43 20 55 33 55C45 55 53 46 53 34C53 22 45 12 36 10" class="ring-stroke-2"/>
-          <path d="M20 32 C23 35.5, 26.5 39, 28.5 41.5 C32.5 36, 37 30, 44 24" class="mark-stroke-1"/>
-          <path d="M20.5 32.5 C23.2 35.7, 26.8 39.1, 28.8 41.2 C32.8 35.8, 37.2 29.8, 43.5 24.5" class="mark-stroke-2"/>
+          <path d="M32 8C20 8 10 18 10 31C10 44 20.5 56 33 56C45 56 54 46 54 33C54 20 45 10 35 9"
+            class="ring-stroke-1"/>
+          <path d="M31 8.5C19 9 11 18.5 11 31C11 43 20 55 33 55C45 55 53 46 53 34C53 22 45 12 36 10"
+            class="ring-stroke-2"/>
+          <path d="M20 32 C23 35.5, 26.5 39, 28.5 41.5 C32.5 36, 37 30, 44 24"
+            class="mark-stroke-1"/>
+          <path d="M20.5 32.5 C23.2 35.7, 26.8 39.1, 28.8 41.2 C32.8 35.8, 37.2 29.8, 43.5 24.5"
+            class="mark-stroke-2"/>
         </svg>
       </span>`;
   }
@@ -453,11 +541,16 @@ function flagIcon(flagStatus) {
     return `
       <span class="metric-flag metric-flag--warn" aria-label="attenzione">
         <svg viewBox="0 0 64 64" aria-hidden="true">
-          <path d="M32 8C20 8 10 18 10 31C10 44 20.5 56 33 56C45 56 54 46 54 33C54 20 45 10 35 9" class="ring-stroke-1"/>
-          <path d="M31 8.5C19 9 11 18.5 11 31C11 43 20 55 33 55C45 55 53 46 53 34C53 22 45 12 36 10" class="ring-stroke-2"/>
-          <path d="M32 20 C31.5 24, 31 28, 31 32 C31 33 33 33 33 32 C33 28 33.5 24 34 20" class="mark-stroke-1"/>
-          <path d="M32.5 20.5 C32 24, 31.6 28, 31.6 31.5" class="mark-stroke-2"/>
-          <path d="M32 38.5 C31.5 39.8, 32.5 41, 33 40 C33.5 38.8, 32.5 37.8, 32 38.5" class="dot-stroke-1"/>
+          <path d="M32 8C20 8 10 18 10 31C10 44 20.5 56 33 56C45 56 54 46 54 33C54 20 45 10 35 9"
+            class="ring-stroke-1"/>
+          <path d="M31 8.5C19 9 11 18.5 11 31C11 43 20 55 33 55C45 55 53 46 53 34C53 22 45 12 36 10"
+            class="ring-stroke-2"/>
+          <path d="M32 20 C31.5 24, 31 28, 31 32 C31 33 33 33 33 32 C33 28 33.5 24 34 20"
+            class="mark-stroke-1"/>
+          <path d="M32.5 20.5 C32 24, 31.6 28, 31.6 31.5"
+            class="mark-stroke-2"/>
+          <path d="M32 38.5 C31.5 39.8, 32.5 41, 33 40 C33.5 38.8, 32.5 37.8, 32 38.5"
+            class="dot-stroke-1"/>
         </svg>
       </span>`;
   }
@@ -466,12 +559,18 @@ function flagIcon(flagStatus) {
     return `
       <span class="metric-flag metric-flag--neg" aria-label="negativo">
         <svg viewBox="0 0 64 64" aria-hidden="true">
-          <path d="M32 8C20 8 10 18 10 31C10 44 20.5 56 33 56C45 56 54 46 54 33C54 20 45 10 35 9" class="ring-stroke-1"/>
-          <path d="M31 8.5C19 9 11 18.5 11 31C11 43 20 55 33 55C45 55 53 46 53 34C53 22 45 12 36 10" class="ring-stroke-2"/>
-          <path d="M24 24 C27 27, 30 30, 33 33 C35 35, 37 37, 40 40" class="mark-stroke-1"/>
-          <path d="M24.5 24.5 C27.2 27.2, 30.2 30.2, 33.2 33.2 C35.2 35.2, 37.5 37.5, 39.5 39.5" class="mark-stroke-2"/>
-          <path d="M40 24 C37 27, 34 30, 31 33 C29 35, 27 37, 24 40" class="mark-stroke-1"/>
-          <path d="M39.5 24.5 C36.8 27.2, 33.8 30.2, 30.8 33.2 C28.8 35.2, 26.5 37.5, 24.5 39.5" class="mark-stroke-2"/>
+          <path d="M32 8C20 8 10 18 10 31C10 44 20.5 56 33 56C45 56 54 46 54 33C54 20 45 10 35 9"
+            class="ring-stroke-1"/>
+          <path d="M31 8.5C19 9 11 18.5 11 31C11 43 20 55 33 55C45 55 53 46 53 34C53 22 45 12 36 10"
+            class="ring-stroke-2"/>
+          <path d="M24 24 C27 27, 30 30, 33 33 C35 35, 37 37, 40 40"
+            class="mark-stroke-1"/>
+          <path d="M24.5 24.5 C27.2 27.2, 30.2 30.2, 33.2 33.2 C35.2 35.2, 37.5 37.5, 39.5 39.5"
+            class="mark-stroke-2"/>
+          <path d="M40 24 C37 27, 34 30, 31 33 C29 35, 27 37, 24 40"
+            class="mark-stroke-1"/>
+          <path d="M39.5 24.5 C36.8 27.2, 33.8 30.2, 30.8 33.2 C28.8 35.2, 26.5 37.5, 24.5 39.5"
+            class="mark-stroke-2"/>
         </svg>
       </span>`;
   }
@@ -479,14 +578,12 @@ function flagIcon(flagStatus) {
   return "";
 }
 
-// lista settori
-function renderTopSectors(topSectors) {
+function renderTopSectors(topSectors){
   if (!Array.isArray(topSectors) || !topSectors.length) {
     return `
       <div class="text-[12px] text-[color:var(--muted)] leading-[1.4]">
         Dati settoriali non disponibili.
-      </div>
-    `;
+      </div>`;
   }
 
   const items = topSectors.map(sec => {
@@ -499,15 +596,13 @@ function renderTopSectors(topSectors) {
         <span class="text-[color:var(--muted)]">
           ${escapeHtml(inflow)} ${escapeHtml(perf)}
         </span>
-      </li>
-    `;
+      </li>`;
   }).join("");
 
   return `<ul class="list-disc pl-4 space-y-1">${items}</ul>`;
 }
 
-// note interpretative elenco
-function renderInterpretation(notesArr) {
+function renderInterpretation(notesArr){
   const arr = Array.isArray(notesArr) ? notesArr : [];
   if (!arr.length) {
     return `
@@ -518,19 +613,19 @@ function renderInterpretation(notesArr) {
   const lis = arr.map(n => `
     <li class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">
       ${escapeHtml(n)}
-    </li>
-  `).join("");
+    </li>`).join("");
+
   return `<ul class="list-disc pl-4 space-y-1">${lis}</ul>`;
 }
 
-// audit blocco
-function renderAudit(norm) {
+function renderAudit(norm){
   const srcList = Array.isArray(norm.sourcesTier1)
     ? norm.sourcesTier1.join(", ")
     : (norm.sourcesTier1 || "—");
 
   return `
-    <div class="space-y-3">
+    <div class="space-y-3 text-[12.5px] leading-[1.45] text-[color:var(--ink)]">
+
       <div>
         <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
           AuditPathID
@@ -596,10 +691,11 @@ function renderAudit(norm) {
   `;
 }
 
-// -----------------------------------------------------
-// Data normalization + tone decoration
-// -----------------------------------------------------
-function normalizeData(d) {
+// ---------------------------------------------------------
+// Data normalization + tone decoration (come prima)
+// ---------------------------------------------------------
+
+function normalizeData(d){
   if (!d) d = {};
 
   const strategyMode =
@@ -636,7 +732,7 @@ function normalizeData(d) {
     Array.isArray(d.interpretationNotes) ? d.interpretationNotes :
     Array.isArray(d.decision?.notes_list) ? d.decision.notes_list :
     d.decision?.summary ? [ d.decision.summary ] :
-    d.decision?.notes ?   [ d.decision.notes ] :
+    d.decision?.notes ? [ d.decision.notes ] :
     [];
 
   const auditPathID =
@@ -698,18 +794,13 @@ function normalizeData(d) {
   };
 }
 
-function decorateForView(norm) {
+function decorateForView(norm){
   const {strategyMode, regimeScore} = norm;
-  const { toneLabel, toneClass } = computeTone(strategyMode, regimeScore);
-  return {
-    ...norm,
-    toneLabel,
-    toneClass
-  };
+  const {toneLabel, toneClass} = computeTone(strategyMode, regimeScore);
+  return {...norm, toneLabel, toneClass};
 }
 
-// decide tono pill
-function computeTone(strategyMode, regimeScore) {
+function computeTone(strategyMode, regimeScore){
   let toneLabel = "neutral";
   let toneClass = "regime-stance-pill--neutral";
 
@@ -735,35 +826,27 @@ function computeTone(strategyMode, regimeScore) {
   return { toneLabel, toneClass };
 }
 
-// mappa classe pill -> chiave tono per dot/icona della pill della sezione
-function toneToKey(toneClass) {
-  if (toneClass.includes("--pos")) return "pos";
-  if (toneClass.includes("--warn")) return "warn";
-  if (toneClass.includes("--neg")) return "neg";
-  return "neu";
-}
-
-// -----------------------------------------------------
+// ---------------------------------------------------------
 // Utils numeriche / escape
-// -----------------------------------------------------
-function fmtNum(v) {
+// ---------------------------------------------------------
+function fmtNum(v){
   if (!isNum(v)) return "—";
   const n = Number(v);
   return n.toFixed(2).replace('.', ',');
 }
-function fmtPct(v) {
+function fmtPct(v){
   if (!isNum(v)) return "—";
   const n = Number(v)*100;
   const sign = n > 0 ? "+" : "";
   return sign + n.toFixed(1).replace('.', ',') + "%";
 }
-function isNum(v) {
+function isNum(v){
   return v !== null && v !== undefined && !Number.isNaN(Number(v));
 }
-function valueOrNull(v) {
+function valueOrNull(v){
   return isNum(v) ? Number(v) : null;
 }
-function escapeHtml(str) {
+function escapeHtml(str){
   if (str === undefined || str === null) return "";
   return String(str)
     .replace(/&/g,"&amp;")
@@ -772,7 +855,7 @@ function escapeHtml(str) {
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#39;");
 }
-function escapeAttr(str) {
+function escapeAttr(str){
   if (str === undefined || str === null) return "";
   return String(str)
     .replace(/"/g,"&quot;")
