@@ -4,16 +4,10 @@
 //
 // Versione "Institutional Model Report":
 // - Card con KPI e CTA primaria "Dettagli regime →"
-// - Drawer istituzionale:
-//    * Desktop: layout largo tipo console, sidebar sinistra con tab + contenuto a destra
-//    * Mobile: fullscreen/bottom sheet con barra tab fissa in basso, contenuto singolo visibile
-// - Tooltip unificati con data-metric="..." (niente sistema duplicato locale)
-// - Aperto via window.__TradeliaUI.openPanel({ ... })
+// - Drawer istituzionale con tab responsive
+// - Tooltip unificati con data-metric="..."
+// - Apertura via window.__TradeliaUI.openPanel(...)
 //
-// Requisiti lato ui-runtime.js :
-// - openPanel(opts) deve accettare opts.panelSize === "wide" per aggiungere classe wide al pannello desktop
-// - chiusura panel blocca/riattiva scroll del body
-// - bindMetricInfoButtons(root) deve essere esposta su window.__TradeliaUI
 //
 // Export richiesti dal runtime principale (app.js):
 // - renderCard(data, ctx)
@@ -64,7 +58,7 @@ export function renderCard(rawData, ctx = {}) {
           border:1px solid var(--br-card);
           border-radius:var(--radius-card);
           box-shadow:var(--shadow-card);
-          padding:1rem 1rem 3.25rem 1rem; /* spazio extra per CTA fixed in basso */
+          padding:1rem;
         ">
 
         <!-- StrategyMode + tono -->
@@ -118,33 +112,35 @@ export function renderCard(rawData, ctx = {}) {
           })}
         </div>
 
-        <!-- CTA primaria fissa in basso a destra -->
-        <div class="absolute bottom-3 right-4 flex justify-end">
-          <button
-            class="f1b-cta-btn btn btn-sm"
-            data-open-f1b-details="true"
-            type="button"
-            style="
-              background:var(--ink);
-              color:var(--surface-page);
-              font-weight:600;
-              font-size:12px;
-              line-height:1.3;
-              border-radius:var(--radius-card-sm);
-              padding:0.5rem 0.75rem;
-              min-width:max-content;
-              border:1px solid var(--ink);
-            "
-          >
-            Dettagli regime →
-          </button>
-        </div>
-      </div>
+        <!-- DISCLAIMER + CTA ROW -->
+        <div class="mt-2 flex flex-col gap-3 lg:flex-row lg:items-start">
+          <p class="text-[11px] leading-[1.4] text-[color:var(--muted)] flex-1">
+            Indicatori costruiti su flussi settoriali, ampiezza del rialzo e volatilità implicita.
+            Nessuna raccomandazione operativa.
+          </p>
 
-      <!-- Nota metrica/metodo -->
-      <div class="text-[11px] leading-[1.45] text-[color:var(--muted)] mt-3">
-        Indicatori costruiti su flussi settoriali, ampiezza del rialzo e volatilità implicita.
-        Nessuna raccomandazione operativa.
+          <div class="flex lg:justify-end">
+            <button
+              class="f1b-cta-btn"
+              data-open-f1b-details="true"
+              type="button"
+              style="
+                background:var(--ink);
+                color:var(--surface-page);
+                font-weight:600;
+                font-size:12px;
+                line-height:1.3;
+                border-radius:var(--radius-card-sm);
+                padding:0.5rem 0.75rem;
+                min-width:max-content;
+                border:1px solid var(--ink);
+                box-shadow:var(--shadow-card);
+              "
+            >
+              Dettagli regime →
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   `;
@@ -174,7 +170,7 @@ export function bindCard(node, rawData, ctx = {}) {
 /* -------------------------------------------------
    Drawer / Panel con tab responsive
    Desktop: sidebar sinistra + contenuto a destra
-   Mobile: contenuto + barra tab sticky in basso
+   Mobile: fullscreen/bottom sheet con barra tab fissa in basso
 ------------------------------------------------- */
 
 function openF1Drawer(data) {
@@ -241,7 +237,7 @@ function isMobileViewport() {
 }
 
 /* -------------------------------------------------
-   Sezioni logiche (contenuti già formattati)
+   Sezioni logiche per il drawer
 ------------------------------------------------- */
 
 function buildDrawerSections(data) {
@@ -905,7 +901,7 @@ function fmtNum(v) {
 function fmtPct(v) {
   if (!isNum(v)) return "—";
   const n = Number(v) * 100;
-  const sign = n > 0 ? "+" : "";
+  const sign = n > 0 ? "+": "";
   return sign + n.toFixed(1).replace('.', ',') + "%";
 }
 
