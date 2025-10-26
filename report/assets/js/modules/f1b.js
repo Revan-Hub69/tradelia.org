@@ -5,8 +5,8 @@
 // - Card riassuntiva con CTA "Dettagli regime →"
 // - Drawer (panel) con tab responsive
 //   • Desktop: sidebar sinistra + contenuto scrollabile a destra
-//   • Mobile: fullscreen, header fisso in alto, contenuto scrollabile,
-//             tabbar sticky in basso sempre visibile
+//   • Mobile: fullscreen, contenuto scrollabile,
+//             footer sticky in basso con TAB + Chiudi (ombre leggere)
 // - Tooltip "?" unificati (usa window.__TradeliaUI.bindMetricInfoButtons)
 //
 // Esposti al runtime principale (app.js):
@@ -175,7 +175,7 @@ export function bindCard(node, rawData, ctx = {}) {
 /* -------------------------------------------------
    Drawer / Panel con tab responsive
    Desktop: sidebar sinistra + contenuto a destra
-   Mobile: fullscreen con tabbar sticky in basso
+   Mobile: fullscreen con footer sticky tab+chiudi
 ------------------------------------------------- */
 
 function openF1Drawer(data) {
@@ -484,10 +484,10 @@ function renderDrawerDesktopShell(sectionsObj) {
 
 /* -------------------------------------------------
    Shell MOBILE
-   -------------------------------------------------
-   - fullscreen pannello
-   - contenuto scrolla
-   - tabbar sticky in basso SEMPRE visibile
+   - fullscreen
+   - contenuto scroll
+   - footer sticky in basso con tab + Chiudi
+   - ombra soft (no overlay nero pesante)
 ------------------------------------------------- */
 
 function renderDrawerMobileShell(sectionsObj) {
@@ -500,6 +500,7 @@ function renderDrawerMobileShell(sectionsObj) {
         min-height:300px;
         display:flex;
         flex-direction:column;
+        background:var(--surface-panel-head);
       ">
 
       <!-- Content area scrollable -->
@@ -507,8 +508,9 @@ function renderDrawerMobileShell(sectionsObj) {
         style="
           overflow:auto;
           -webkit-overflow-scrolling:touch;
-          padding-bottom:4.5rem; /* spazio per tabbar */
+          padding-bottom:4.5rem; /* spazio per footer sticky */
         ">
+
         <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
         <div data-f1b-view="rotation" hidden>${sectionsObj.rotationHTML}</div>
         <div data-f1b-view="notes" hidden>${sectionsObj.notesHTML}</div>
@@ -516,38 +518,61 @@ function renderDrawerMobileShell(sectionsObj) {
         <div data-f1b-view="mifid" hidden>${sectionsObj.mifidHTML}</div>
       </main>
 
-      <!-- Sticky Bottom mobile tabbar -->
-      <nav class="f1b-mobile-tabbar"
+      <!-- Sticky Bottom footer (tab + Chiudi) -->
+      <footer class="f1b-mobile-footer"
         style="
           position:absolute;
           left:0;
           right:0;
           bottom:0;
+
           display:flex;
-          justify-content:space-between;
-          gap:0.25rem;
+          align-items:center;
+          gap:0.5rem;
 
-          background:var(--surface-panel-head);
-          background-image:
-            radial-gradient(circle at 0% 0%,
-              color-mix(in oklab, var(--surface-panel-head) 90%, var(--brand) 2%) 0%,
-              transparent 60%);
-
-          border-top:1px solid var(--br-panel-divider);
-          box-shadow:0 -16px 32px rgba(0,0,0,.6);
+          background:var(--surface-card);
+          border-top:1px solid var(--br-soft);
 
           padding:0.6rem 0.75rem;
           font-size:11px;
           line-height:1.2;
           z-index:10;
+
+          /* ombra molto più morbida verso l'alto */
+          box-shadow:0 -6px 12px rgba(0,0,0,.12);
         ">
 
-        ${drawerMobileTabButton("regime","Regime", true)}
-        ${drawerMobileTabButton("rotation","Rotaz.", false)}
-        ${drawerMobileTabButton("notes","Note", false)}
-        ${drawerMobileTabButton("audit","Fonti", false)}
-        ${drawerMobileTabButton("mifid","MiFID", false)}
-      </nav>
+        <!-- NAV TABS -->
+        <nav class="f1b-mobile-tabbar flex-1 flex justify-between gap-1.5"
+          style="min-width:0;">
+
+          ${drawerMobileTabButton("regime","Regime", true)}
+          ${drawerMobileTabButton("rotation","Rotaz.", false)}
+          ${drawerMobileTabButton("notes","Note", false)}
+          ${drawerMobileTabButton("audit","Fonti", false)}
+          ${drawerMobileTabButton("mifid","MiFID", false)}
+        </nav>
+
+        <!-- CHIUDI -->
+        <button
+          type="button"
+          data-panel-close
+          style="
+            flex-shrink:0;
+            font-size:12px;
+            line-height:1.2;
+            font-weight:600;
+            color:var(--surface-page);
+            background:var(--ink);
+            border:1px solid var(--ink);
+            border-radius:var(--radius-card-sm);
+            padding:.6rem .6rem;
+            min-width:max-content;
+            box-shadow:var(--shadow-card);
+          ">
+          Chiudi
+        </button>
+      </footer>
     </div>
   `;
 }
@@ -590,11 +615,11 @@ function drawerMobileTabButton(key, label, active) {
         border:1px solid ${active ? "var(--tone-neu-fg)" : "var(--br-soft)"};
         background:${
           active
-            ? `radial-gradient(circle at 0% 0%,
+            ? \`radial-gradient(circle at 0% 0%,
                 var(--tone-neu-bg-hard) 0%,
                 transparent 60%
               ),
-              var(--surface-card-alt)`
+              var(--surface-card-alt)\`
             : "var(--surface-card)"
         };
         color:${active ? "var(--tone-neu-fg)" : "var(--muted)"};
@@ -613,7 +638,6 @@ function drawerMobileTabButton(key, label, active) {
 
 /* -------------------------------------------------
    Tab switching (desktop e mobile)
-   -------------------------------------------------
    - aggiorna stile tab attivo/inattivo
    - mostra / nasconde le viste
 ------------------------------------------------- */
@@ -629,7 +653,7 @@ function bindDrawerTabs(root) {
       const key = btn.getAttribute("data-f1b-tab");
       if (!key) return;
 
-      // attiva/deattiva bottoni (desktop sidebar + mobile tabbar)
+      // attiva/deattiva bottoni (desktop sidebar + mobile footer tabbar)
       tabButtons.forEach(b => {
         const isActive = b.getAttribute("data-f1b-tab") === key;
         b.classList.toggle("is-active", isActive);
@@ -645,7 +669,7 @@ function bindDrawerTabs(root) {
         }
 
         if (b.classList.contains("f1b-tab-btn-mobile")) {
-          // MOBILE bottom nav pill
+          // MOBILE footer pill
           b.style.fontWeight = isActive ? "600" : "500";
           b.style.border = isActive
             ? "1px solid var(--tone-neu-fg)"
