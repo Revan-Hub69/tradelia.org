@@ -2,34 +2,47 @@
 //
 // F1B · Regime di mercato / Contesto rischio
 //
-// Versione finale con:
-// - card F1 in pagina
-// - drawer laterale stile legacy (sidebar desktop / bottom tabbar mobile)
-//   ma aperto tramite ui-runtime.openPanelLegacySidebar()
-// - token premium (var(--ink), var(--surface-card), ecc.)
-// - tooltip "?" integrati
+// Versione "Institutional Model Report":
+// - Card con KPI e CTA primaria "Dettagli regime →"
+// - Drawer istituzionale:
+//    * Desktop: layout largo tipo console, sidebar sinistra con tab + contenuto a destra
+//    * Mobile: fullscreen/bottom sheet con barra tab fissa in basso, contenuto singolo visibile
+// - Tooltip unificati con data-metric="..." (niente sistema duplicato locale)
+// - Aperto via window.__TradeliaUI.openPanel({ ... })
 //
-// Export:
-//   renderCard(data, ctx)
-//   bindCard(node, data, ctx)
+// Requisiti lato ui-runtime.js :
+// - openPanel(opts) deve accettare opts.panelSize === "wide" per aggiungere classe wide al pannello desktop
+// - chiusura panel blocca/riattiva scroll del body
+// - bindMetricInfoButtons(root) deve essere esposta su window.__TradeliaUI
+//
+// Export richiesti dal runtime principale (app.js):
+// - renderCard(data, ctx)
+// - bindCard(node, data, ctx)
 
 export function renderCard(rawData, ctx = {}) {
-  const norm = normalizeData(rawData);
-  const view = decorateForView(norm);
+  const data = normalizeData(rawData);
+
+  const {
+    strategyMode,
+    regimeScore,
+    breadthPct,
+    riskTilt
+  } = data;
+
+  const { toneLabel, toneColor } = computeTone(strategyMode, regimeScore);
 
   return `
-    <section class="text-[13px] leading-[1.5] text-[color:var(--ink)] font-sans">
+    <section class="f1b-card-container text-[13px] leading-[1.5] text-[color:var(--ink)]"
+      style="font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
 
       <!-- Headline sezione -->
       <header class="section-headline mb-4">
         <div class="section-head-left">
           <div class="section-head-topline flex items-center flex-wrap gap-2">
             <span class="section-badge">F1</span>
-
             <span class="text-[10px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
               Regime di mercato
             </span>
-
             <span class="module-status-pill" data-state="active">ACTIVE</span>
           </div>
 
@@ -44,18 +57,20 @@ export function renderCard(rawData, ctx = {}) {
         </div>
       </header>
 
-      <!-- Card principale -->
-      <div class="relative flex flex-col gap-4
-                  bg-[color:var(--surface-card)]
-                  border border-[color:var(--br-card)]
-                  rounded-[var(--radius-card)]
-                  shadow-[var(--shadow-card)]
-                  p-4 pb-14 sm:pb-16">
+      <!-- Corpo card principale -->
+      <div class="relative flex flex-col gap-4 card-compact"
+        style="
+          background:var(--surface-card);
+          border:1px solid var(--br-card);
+          border-radius:var(--radius-card);
+          box-shadow:var(--shadow-card);
+          padding:1rem 1rem 3.25rem 1rem; /* spazio extra per CTA fixed in basso */
+        ">
 
-        <!-- StrategyMode / stance -->
+        <!-- StrategyMode + tono -->
         <div>
-          <div class="text-[12px] font-semibold text-[color:var(--muted)] leading-[1.4] flex items-center flex-wrap gap-1">
-            <span>StrategyMode</span>
+          <div class="text-[12px] font-semibold text-[color:var(--muted)] leading-[1.4]">
+            StrategyMode
             <button
               class="info-btn info-btn--mini align-middle"
               data-metric="StrategyMode"
@@ -63,13 +78,18 @@ export function renderCard(rawData, ctx = {}) {
             >?</button>
           </div>
 
-          <div class="flex flex-wrap items-center gap-2 mt-1">
-            <span class="text-[14px] font-bold leading-[1.4] text-[color:var(--ink)]">
-              ${escapeHtml(view.strategyMode || "—")}
-            </span>
+          <div class="text-[14px] font-bold leading-[1.4] text-[color:var(--ink)] flex flex-wrap items-center gap-2 mt-1">
+            <span>${escapeHtml(strategyMode || "—")}</span>
 
-            <span class="regime-stance-pill ${view.toneClass}" role="status">
-              ${escapeHtml(view.toneLabel)}
+            <span
+              class="px-[6px] py-[4px] rounded-md text-[11px] font-semibold leading-none border"
+              style="
+                background: color-mix(in oklab, ${toneColor} 10%, transparent);
+                color:${toneColor};
+                border-color:${toneColor};
+              "
+            >
+              ${escapeHtml(toneLabel)}
             </span>
           </div>
         </div>
@@ -79,45 +99,49 @@ export function renderCard(rawData, ctx = {}) {
           ${metricBox({
             label: "RegimeScore",
             metricKey: "RegimeScore",
-            value: fmtNum(norm.regimeScore),
-            desc: "Propensione al rischio sintetica",
-            flagStatus: norm.regimeScoreFlag
+            value: fmtNum(regimeScore),
+            desc: "Propensione al rischio sintetica"
           })}
 
           ${metricBox({
             label: "Breadth (1M)",
             metricKey: "Breadth",
-            value: norm.breadthPct !== null ? fmtPct(norm.breadthPct) : "—",
-            desc: "% settori positivi su 30g",
-            flagStatus: norm.breadthFlag
+            value: breadthPct !== null ? fmtPct(breadthPct) : "—",
+            desc: "% settori positivi su 30g"
           })}
 
           ${metricBox({
             label: "RiskTilt",
             metricKey: "RiskTilt",
-            value: fmtNum(norm.riskTilt),
-            desc: "Ciclici vs Difensivi",
-            flagStatus: norm.riskTiltFlag
+            value: fmtNum(riskTilt),
+            desc: "Ciclici vs Difensivi"
           })}
         </div>
 
-        <!-- CTA -->
+        <!-- CTA primaria fissa in basso a destra -->
         <div class="absolute bottom-3 right-4 flex justify-end">
           <button
-            class="f1b-cta-btn btn btn-sm text-[12px] font-semibold leading-[1.3] min-w-max
-                   bg-[color:var(--ink)]
-                   text-[color:var(--surface-page)]
-                   border border-[color:var(--ink)]
-                   rounded-[var(--radius-card-sm)]
-                   shadow-[var(--shadow-card)]"
+            class="f1b-cta-btn btn btn-sm"
             data-open-f1b-details="true"
             type="button"
+            style="
+              background:var(--ink);
+              color:var(--surface-page);
+              font-weight:600;
+              font-size:12px;
+              line-height:1.3;
+              border-radius:var(--radius-card-sm);
+              padding:0.5rem 0.75rem;
+              min-width:max-content;
+              border:1px solid var(--ink);
+            "
           >
             Dettagli regime →
           </button>
         </div>
       </div>
 
+      <!-- Nota metrica/metodo -->
       <div class="text-[11px] leading-[1.45] text-[color:var(--muted)] mt-3">
         Indicatori costruiti su flussi settoriali, ampiezza del rialzo e volatilità implicita.
         Nessuna raccomandazione operativa.
@@ -128,61 +152,304 @@ export function renderCard(rawData, ctx = {}) {
 
 export function bindCard(node, rawData, ctx = {}) {
   if (!node || !rawData) return;
-  const norm = normalizeData(rawData);
-  const view = decorateForView(norm);
 
-  const btn = node.querySelector('[data-open-f1b-details="true"]');
-  if (btn) {
-    btn.addEventListener("click", () => {
-      openF1Drawer(norm, view);
+  const data = normalizeData(rawData);
+
+  // CTA -> apre pannello dettagli
+  const btnDetails = node.querySelector('[data-open-f1b-details="true"]');
+  if (btnDetails) {
+    btnDetails.addEventListener("click", () => {
+      openF1Drawer(data);
     });
   }
 
-  // bind tooltip "?" dentro la card
+  // Tooltip "?" nella card
   if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
-    window.__TradeliaUI.bindMetricInfoButtons(node);
+    try {
+      window.__TradeliaUI.bindMetricInfoButtons(node);
+    } catch (e) {}
   }
 }
 
-// ---------------------------------------------------------
-// Drawer stile legacy sidebar/bottom-tabbar
-// ---------------------------------------------------------
+/* -------------------------------------------------
+   Drawer / Panel con tab responsive
+   Desktop: sidebar sinistra + contenuto a destra
+   Mobile: contenuto + barra tab sticky in basso
+------------------------------------------------- */
 
-function openF1Drawer(norm, view){
-  if (
-    !window.__TradeliaUI ||
-    typeof window.__TradeliaUI.openPanelLegacySidebar !== "function"
-  ) {
-    console.warn("openPanelLegacySidebar non disponibile");
+function openF1Drawer(data) {
+  if (!window.__TradeliaUI || typeof window.__TradeliaUI.openPanel !== "function") {
+    console.warn("openPanel non disponibile");
     return;
   }
 
-  // costruiamo HTML desktop e mobile
-  const desktopHTML = renderDrawerDesktopShell(norm, view);
-  const mobileHTML  = renderDrawerMobileShell(norm, view);
+  const sectionsObj = buildDrawerSections(data);
 
-  window.__TradeliaUI.openPanelLegacySidebar({
+  // shell desktop + shell mobile
+  const mobileMode = isMobileViewport();
+  const drawerHTML = mobileMode
+    ? renderDrawerMobileShell(sectionsObj)
+    : renderDrawerDesktopShell(sectionsObj);
+
+  // Apri pannello
+  window.__TradeliaUI.openPanel({
     title: "F1 · Regime di mercato",
     subtitle: "Flussi settoriali, ampiezza del rialzo e volatilità (T-1)",
-    desktopHTML,
-    mobileHTML,
-    footerButtons: [
+    sections: [
       {
-        label:"Chiudi",
-        action: () => window.__TradeliaUI.closePanel()
+        title: "",
+        body: drawerHTML,
+        meta: ""
       }
     ],
-    blocking:false,
-    wide:true
+    footerButtons: [
+      {
+        label: "Chiudi",
+        action: () => {
+          window.__TradeliaUI.closePanel();
+        }
+      }
+    ],
+    blocking: false,
+    panelSize: "wide" // pannello largo desktop
   });
+
+  // Dopo apertura: bind eventi tab + tooltip sul contenuto del panel
+  setTimeout(() => {
+    const panelBody = document.getElementById("panel-body");
+    const panelBodyMobile = document.getElementById("panel-body-mobile");
+
+    if (panelBody) {
+      bindDrawerTabs(panelBody);
+      if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
+        try { window.__TradeliaUI.bindMetricInfoButtons(panelBody); } catch (e) {}
+      }
+    }
+
+    if (panelBodyMobile) {
+      bindDrawerTabs(panelBodyMobile);
+      if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
+        try { window.__TradeliaUI.bindMetricInfoButtons(panelBodyMobile); } catch (e) {}
+      }
+    }
+  }, 0);
 }
 
-// Desktop shell: sidebar sinistra + content destra
-function renderDrawerDesktopShell(norm, view){
-  return `
-    <div class="f1b-panel-desktop flex flex-row gap-4 min-h-[300px]">
+// Controlla viewport "mobile"
+function isMobileViewport() {
+  return window.matchMedia("(max-width: 767px)").matches;
+}
 
-      <aside class="f1b-panel-menu min-w-[160px] max-w-[180px] border-r border-[color:var(--br-card)] pr-2">
+/* -------------------------------------------------
+   Sezioni logiche (contenuti già formattati)
+------------------------------------------------- */
+
+function buildDrawerSections(data) {
+  const {
+    strategyMode,
+    regimeScore,
+    vixLevel,
+    breadthPct,
+    riskTilt,
+    topSectors,
+    interpretationNotes,
+    auditPathID,
+    sourcesTier1,
+    dataLagLabel,
+    confidenceFinal,
+    dataIntegrity,
+    feedSyncScore
+  } = data;
+
+  const regimeHTML = `
+    <div class="space-y-2">
+      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
+        Regime attuale
+      </div>
+
+      <div class="text-[13px] text-[color:var(--ink)] leading-[1.45] font-semibold flex flex-wrap items-center gap-2">
+        <span>StrategyMode: ${escapeHtml(strategyMode || "—")}</span>
+        <button
+          class="info-btn info-btn--mini"
+          data-metric="StrategyMode"
+          aria-label="Info StrategyMode"
+        >?</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
+        <div class="p-2"
+          style="
+            background:var(--surface-card-alt);
+            border:1px solid var(--br-card);
+            border-radius:var(--radius-card);
+            box-shadow:var(--shadow-card);
+          ">
+          <div class="flex items-start justify-between gap-1 mb-1">
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              RegimeScore
+            </div>
+            <button
+              class="info-btn info-btn--mini"
+              data-metric="RegimeScore"
+              aria-label="Info RegimeScore"
+            >?</button>
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${fmtNum(regimeScore)}
+          </div>
+        </div>
+
+        <div class="p-2"
+          style="
+            background:var(--surface-card-alt);
+            border:1px solid var(--br-card);
+            border-radius:var(--radius-card);
+            box-shadow:var(--shadow-card);
+          ">
+          <div class="flex items-start justify-between gap-1 mb-1">
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              VIX
+            </div>
+            <button
+              class="info-btn info-btn--mini"
+              data-metric="VIX"
+              aria-label="Info VIX"
+            >?</button>
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${fmtNum(vixLevel)}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const rotationHTML = `
+    <div class="space-y-2">
+      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
+        Rotazione &amp; partecipazione
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
+        <div class="p-2"
+          style="
+            background:var(--surface-card-alt);
+            border:1px solid var(--br-card);
+            border-radius:var(--radius-card);
+            box-shadow:var(--shadow-card);
+          ">
+          <div class="flex items-start justify-between gap-1 mb-1">
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              Breadth (1M)
+            </div>
+            <button
+              class="info-btn info-btn--mini"
+              data-metric="Breadth"
+              aria-label="Info Breadth"
+            >?</button>
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${breadthPct !== null ? fmtPct(breadthPct) : "—"}
+          </div>
+        </div>
+
+        <div class="p-2"
+          style="
+            background:var(--surface-card-alt);
+            border:1px solid var(--br-card);
+            border-radius:var(--radius-card);
+            box-shadow:var(--shadow-card);
+          ">
+          <div class="flex items-start justify-between gap-1 mb-1">
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              RiskTilt
+            </div>
+            <button
+              class="info-btn info-btn--mini"
+              data-metric="RiskTilt"
+              aria-label="Info RiskTilt"
+            >?</button>
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${fmtNum(riskTilt)}
+          </div>
+        </div>
+      </div>
+
+      <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)]">
+        <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
+          Top settori per inflow (5d)
+        </div>
+        ${renderTopSectors(topSectors)}
+      </div>
+    </div>
+  `;
+
+  const notesHTML = `
+    <div class="space-y-2">
+      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
+        Note interpretative
+      </div>
+      ${renderInterpretation(interpretationNotes)}
+    </div>
+  `;
+
+  const auditHTML = `
+    <div class="space-y-2">
+      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
+        Audit &amp; Fonti
+      </div>
+      ${renderAuditBlock({
+        auditPathID,
+        sourcesTier1,
+        dataLagLabel,
+        confidenceFinal,
+        dataIntegrity,
+        feedSyncScore
+      })}
+    </div>
+  `;
+
+  const mifidHTML = `
+    <div class="space-y-2">
+      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
+        Nota regolamentare
+      </div>
+      ${renderMiFIDNotice()}
+    </div>
+  `;
+
+  return {
+    regimeHTML,
+    rotationHTML,
+    notesHTML,
+    auditHTML,
+    mifidHTML
+  };
+}
+
+/* -------------------------------------------------
+   Shell DESKTOP
+------------------------------------------------- */
+
+function renderDrawerDesktopShell(sectionsObj) {
+  return `
+    <div class="f1b-panel-desktop"
+      style="
+        display:flex;
+        flex-direction:row;
+        gap:1rem;
+        min-height:300px;
+      ">
+
+      <!-- Sidebar tab -->
+      <aside class="f1b-panel-menu"
+        style="
+          min-width:160px;
+          max-width:180px;
+          border-right:1px solid var(--br-card);
+        ">
+
         ${drawerMenuButton("regime","Regime attuale", true)}
         ${drawerMenuButton("rotation","Rotazione &amp; partecipazione", false)}
         ${drawerMenuButton("notes","Note interpretative", false)}
@@ -190,54 +457,57 @@ function renderDrawerDesktopShell(norm, view){
         ${drawerMenuButton("mifid","Nota regolamentare", false)}
       </aside>
 
-      <main class="f1b-panel-content flex-1 min-w-0 max-h-[60vh] overflow-auto space-y-4">
-        <div data-f1b-view="regime">
-          ${sectionRegimeBlock(norm, view)}
-        </div>
-        <div data-f1b-view="rotation" hidden>
-          ${sectionRotationBlock(norm, view)}
-        </div>
-        <div data-f1b-view="notes" hidden>
-          ${sectionNotesBlock(view)}
-        </div>
-        <div data-f1b-view="audit" hidden>
-          ${sectionAuditBlock(norm)}
-        </div>
-        <div data-f1b-view="mifid" hidden>
-          ${sectionMiFIDBlock()}
-        </div>
+      <!-- Content area -->
+      <main class="f1b-panel-content flex-1 min-w-0"
+        style="max-height:60vh;overflow:auto;">
+        <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
+        <div data-f1b-view="rotation" hidden>${sectionsObj.rotationHTML}</div>
+        <div data-f1b-view="notes" hidden>${sectionsObj.notesHTML}</div>
+        <div data-f1b-view="audit" hidden>${sectionsObj.auditHTML}</div>
+        <div data-f1b-view="mifid" hidden>${sectionsObj.mifidHTML}</div>
       </main>
     </div>
   `;
 }
 
-// Mobile shell: contenuto + bottom tabbar
-function renderDrawerMobileShell(norm, view){
-  return `
-    <div class="f1b-panel-mobile relative pb-14 min-h-[300px]">
+/* -------------------------------------------------
+   Shell MOBILE
+------------------------------------------------- */
 
-      <main class="f1b-panel-content-mobile max-h-[60vh] overflow-auto space-y-4">
-        <div data-f1b-view="regime">
-          ${sectionRegimeBlock(norm, view)}
-        </div>
-        <div data-f1b-view="rotation" hidden>
-          ${sectionRotationBlock(norm, view)}
-        </div>
-        <div data-f1b-view="notes" hidden>
-          ${sectionNotesBlock(view)}
-        </div>
-        <div data-f1b-view="audit" hidden>
-          ${sectionAuditBlock(norm)}
-        </div>
-        <div data-f1b-view="mifid" hidden>
-          ${sectionMiFIDBlock()}
-        </div>
+function renderDrawerMobileShell(sectionsObj) {
+  return `
+    <div class="f1b-panel-mobile"
+      style="
+        position:relative;
+        padding-bottom:3.5rem; /* spazio per la bottom bar */
+        min-height:300px;
+      ">
+
+      <!-- Content area (scrollable) -->
+      <main class="f1b-panel-content-mobile"
+        style="max-height:60vh;overflow:auto;">
+        <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
+        <div data-f1b-view="rotation" hidden>${sectionsObj.rotationHTML}</div>
+        <div data-f1b-view="notes" hidden>${sectionsObj.notesHTML}</div>
+        <div data-f1b-view="audit" hidden>${sectionsObj.auditHTML}</div>
+        <div data-f1b-view="mifid" hidden>${sectionsObj.mifidHTML}</div>
       </main>
 
-      <nav class="f1b-mobile-tabbar absolute left-0 right-0 bottom-0 flex justify-between gap-1
-                  border-t border-[color:var(--br-card)]
-                  bg-[color:var(--surface-card)]
-                  px-3 py-2 text-[11px] leading-[1.2]">
+      <!-- Bottom mobile bar -->
+      <nav class="f1b-mobile-tabbar"
+        style="
+          position:absolute;
+          left:0;right:0;bottom:0;
+          display:flex;
+          justify-content:space-between;
+          gap:0.25rem;
+          border-top:1px solid var(--br-card);
+          background:var(--surface-card);
+          padding:0.5rem 0.75rem;
+          font-size:11px;
+          line-height:1.2;
+        ">
+
         ${drawerMobileTabButton("regime","Regime", true)}
         ${drawerMobileTabButton("rotation","Rotaz.", false)}
         ${drawerMobileTabButton("notes","Note", false)}
@@ -248,227 +518,101 @@ function renderDrawerMobileShell(norm, view){
   `;
 }
 
-// Bottoni nav desktop
-function drawerMenuButton(key, label, active){
+/* -------------------------------------------------
+   Helper bottoni tab
+------------------------------------------------- */
+
+function drawerMenuButton(key, label, active) {
   return `
     <button
-      class="f1b-tab-btn block w-full text-left text-[12px] leading-[1.4] px-2 py-2
-             rounded-[var(--radius-card-sm)]
-             border-l-[3px] border-l-transparent
-             ${active ? "is-active" : ""}"
+      class="f1b-tab-btn block w-full text-left text-[12px] leading-[1.4] px-2 py-2 ${active ? "is-active" : ""}"
       data-f1b-tab="${key}"
-      type="button"
+      style="
+        border-radius:var(--radius-card-sm);
+        border-left:3px solid ${active ? "var(--brand)" : "transparent"};
+        background:${active ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)" : "transparent"};
+        font-weight:${active ? "600" : "500"};
+        color:var(--ink);
+      "
     >
       ${label}
     </button>
   `;
 }
 
-// Bottoni nav mobile
-function drawerMobileTabButton(key, label, active){
+function drawerMobileTabButton(key, label, active) {
   return `
     <button
-      class="f1b-tab-btn-mobile flex-1 text-center
-             rounded-[var(--radius-card-sm)]
-             px-1 py-[0.4rem]
-             ${active ? "is-active" : ""}"
+      class="f1b-tab-btn-mobile flex-1 text-center ${active ? "is-active" : ""}"
       data-f1b-tab="${key}"
-      type="button"
+      style="
+        border-radius:var(--radius-card-sm);
+        font-weight:${active ? "600" : "500"};
+        color:var(--ink);
+        background:${active ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)" : "transparent"};
+        padding:0.4rem 0.25rem;
+      "
     >
       ${label}
     </button>
   `;
 }
 
-// ---------------------------------------------------------
-// Section blocks (contenuto per ogni tab)
-// Usa i token premium (var(--surface-card-alt) ecc.)
-// ---------------------------------------------------------
+/* -------------------------------------------------
+   Tab switching (desktop e mobile)
+------------------------------------------------- */
 
-function sectionRegimeBlock(norm, view){
-  return `
-    <section class="space-y-3
-                    bg-[color:var(--surface-card-alt)]
-                    border border-[color:var(--br-card)]
-                    rounded-[var(--radius-card)]
-                    shadow-[var(--shadow-card)]
-                    p-3">
+function bindDrawerTabs(root) {
+  if (!root) return;
 
-      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-        Regime attuale
-      </div>
+  const tabButtons = root.querySelectorAll("[data-f1b-tab]");
+  const views = root.querySelectorAll("[data-f1b-view]");
 
-      <div class="flex flex-wrap items-center gap-2 text-[13px] text-[color:var(--ink)] leading-[1.45] font-semibold">
-        <span>StrategyMode: ${escapeHtml(view.strategyMode || "—")}</span>
-        <button
-          class="info-btn info-btn--mini"
-          data-metric="StrategyMode"
-          aria-label="Info StrategyMode"
-        >?</button>
+  tabButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const key = btn.getAttribute("data-f1b-tab");
+      if (!key) return;
 
-        <span class="regime-stance-pill ${view.toneClass}">
-          ${escapeHtml(view.toneLabel)}
-        </span>
-      </div>
+      // attiva/deattiva bottoni
+      tabButtons.forEach(b => {
+        const isActive = b.getAttribute("data-f1b-tab") === key;
+        b.classList.toggle("is-active", isActive);
 
-      <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
-        ${smallMetricBlock({
-          title: "RegimeScore",
-          metricKey: "RegimeScore",
-          value: fmtNum(norm.regimeScore),
-          flagStatus: norm.regimeScoreFlag
-        })}
+        b.style.borderLeftColor = isActive ? "var(--brand)" : "transparent";
+        b.style.background = isActive
+          ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)"
+          : "transparent";
+        b.style.fontWeight = isActive ? "600" : "500";
+      });
 
-        ${smallMetricBlock({
-          title: "VIX",
-          metricKey: "VIX",
-          value: fmtNum(norm.vixLevel),
-          flagStatus: norm.vixFlag
-        })}
-      </div>
-
-      <div class="text-[11px] leading-[1.4] text-[color:var(--muted)]">
-        Numeri calcolati combinando volatilità implicita, ampiezza del rialzo e
-        posizione dei flussi rispetto alla difensiva.
-      </div>
-    </section>
-  `;
+      // mostra/nascondi viste
+      views.forEach(viewEl => {
+        const viewKey = viewEl.getAttribute("data-f1b-view");
+        viewEl.hidden = viewKey !== key;
+      });
+    });
+  });
 }
 
-function sectionRotationBlock(norm, view){
+/* -------------------------------------------------
+   Helpers UI singole sezioni
+------------------------------------------------- */
+
+function metricBox({ label, metricKey, value, desc }) {
   return `
-    <section class="space-y-3
-                    bg-[color:var(--surface-card-alt)]
-                    border border-[color:var(--br-card)]
-                    rounded-[var(--radius-card)]
-                    shadow-[var(--shadow-card)]
-                    p-3">
-
-      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-        Rotazione &amp; partecipazione
-      </div>
-
-      <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
-        ${smallMetricBlock({
-          title: "Breadth (1M)",
-          metricKey: "Breadth",
-          value: norm.breadthPct !== null ? fmtPct(norm.breadthPct) : "—",
-          flagStatus: norm.breadthFlag
-        })}
-
-        ${smallMetricBlock({
-          title: "RiskTilt",
-          metricKey: "RiskTilt",
-          value: fmtNum(norm.riskTilt),
-          flagStatus: norm.riskTiltFlag
-        })}
-      </div>
-
-      <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)]">
-        <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
-          Top settori per inflow (5d)
-        </div>
-        ${renderTopSectors(view.topSectors)}
-      </div>
-
-      <div class="text-[11px] leading-[1.4] text-[color:var(--muted)]">
-        Breadth &gt;50% = rialzo distribuito. RiskTilt alto = preferenza ciclica
-        rispetto a difensivi.
-      </div>
-    </section>
-  `;
-}
-
-function sectionNotesBlock(view){
-  return `
-    <section class="space-y-3
-                    bg-[color:var(--surface-card-alt)]
-                    border border-[color:var(--br-card)]
-                    rounded-[var(--radius-card)]
-                    shadow-[var(--shadow-card)]
-                    p-3">
-
-      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-        Note interpretative
-      </div>
-
-      <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)]">
-        ${renderInterpretation(view.interpretationNotes)}
-      </div>
-    </section>
-  `;
-}
-
-function sectionAuditBlock(norm){
-  return `
-    <section class="space-y-3
-                    bg-[color:var(--surface-card-alt)]
-                    border border-[color:var(--br-card)]
-                    rounded-[var(--radius-card)]
-                    shadow-[var(--shadow-card)]
-                    p-3">
-
-      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-        Audit &amp; Fonti
-      </div>
-
-      <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)] space-y-3">
-        ${renderAudit(norm)}
-      </div>
-    </section>
-  `;
-}
-
-function sectionMiFIDBlock(){
-  return `
-    <section class="space-y-3
-                    bg-[color:var(--surface-card-alt)]
-                    border border-[color:var(--br-card)]
-                    rounded-[var(--radius-card)]
-                    shadow-[var(--shadow-card)]
-                    p-3">
-
-      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-        Nota regolamentare
-      </div>
-
-      <div class="text-[12.5px] leading-[1.45] text-[color:var(--muted)] space-y-2">
-        <p>
-          Questo materiale descrive uno scenario di mercato basato su dati quantitativi
-          e fonti finanziarie primarie. Ha finalità esclusivamente informative e formative.
-        </p>
-        <p>
-          Non costituisce raccomandazione personalizzata né invito ad aprire/chiudere
-          posizioni o allocare capitale. Prima di qualsiasi decisione reale verifica
-          adeguatezza e appropriatezza con un intermediario autorizzato
-          (MiFID II / ESMA).
-        </p>
-      </div>
-    </section>
-  `;
-}
-
-// ---------------------------------------------------------
-// Frammenti comuni (metriche piccole, flag, liste, audit…)
-// ---------------------------------------------------------
-
-function metricBox({ label, metricKey, value, desc, flagStatus }) {
-  return `
-    <div class="flex-1 min-w-[90px]
-                bg-[color:var(--surface-card-alt)]
-                border border-[color:var(--br-card)]
-                rounded-[var(--radius-card)]
-                shadow-[var(--shadow-card)]
-                p-3">
+    <div class="flex-1 min-w-[90px]"
+      style="
+        background:var(--surface-card-alt);
+        border:1px solid var(--br-card);
+        border-radius:var(--radius-card);
+        box-shadow:var(--shadow-card);
+        padding:0.6rem 0.75rem;
+      ">
 
       <div class="flex items-start justify-between gap-1 mb-1">
-        <div class="flex items-start gap-1">
-          <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold leading-[1.3]">
-            ${escapeHtml(label)}
-          </div>
-          ${flagIcon(flagStatus)}
+        <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold leading-[1.3]">
+          ${escapeHtml(label)}
         </div>
-
         <button
           class="info-btn info-btn--mini"
           data-metric="${escapeAttr(metricKey)}"
@@ -487,151 +631,79 @@ function metricBox({ label, metricKey, value, desc, flagStatus }) {
   `;
 }
 
-function smallMetricBlock({ title, metricKey, value, flagStatus }) {
-  return `
-    <div class="bg-[color:var(--surface-card)]
-                border border-[color:var(--br-card)]
-                rounded-[var(--radius-card-sm)]
-                shadow-[var(--shadow-card)]
-                p-2">
-
-      <div class="flex items-start justify-between gap-1 mb-1">
-        <div class="flex items-start gap-1">
-          <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
-            ${escapeHtml(title)}
-          </div>
-          ${flagIcon(flagStatus)}
-        </div>
-
-        <button
-          class="info-btn info-btn--mini"
-          data-metric="${escapeAttr(metricKey)}"
-          aria-label="Info ${escapeAttr(metricKey)}"
-        >?</button>
-      </div>
-
-      <div class="font-mono font-bold text-[13px] text-[color:var(--ink)] leading-[1.4]">
-        ${escapeHtml(value)}
-      </div>
-    </div>
-  `;
-}
-
-// icone ✓ / ! / ✕
-function flagIcon(flagStatus){
-  if (!flagStatus || flagStatus === "neutral") return "";
-
-  if (flagStatus === "pos") {
-    return `
-      <span class="metric-flag metric-flag--pos" aria-label="positivo">
-        <svg viewBox="0 0 64 64" aria-hidden="true">
-          <path d="M32 8C20 8 10 18 10 31C10 44 20.5 56 33 56C45 56 54 46 54 33C54 20 45 10 35 9"
-            class="ring-stroke-1"/>
-          <path d="M31 8.5C19 9 11 18.5 11 31C11 43 20 55 33 55C45 55 53 46 53 34C53 22 45 12 36 10"
-            class="ring-stroke-2"/>
-          <path d="M20 32 C23 35.5, 26.5 39, 28.5 41.5 C32.5 36, 37 30, 44 24"
-            class="mark-stroke-1"/>
-          <path d="M20.5 32.5 C23.2 35.7, 26.8 39.1, 28.8 41.2 C32.8 35.8, 37.2 29.8, 43.5 24.5"
-            class="mark-stroke-2"/>
-        </svg>
-      </span>`;
-  }
-
-  if (flagStatus === "warn") {
-    return `
-      <span class="metric-flag metric-flag--warn" aria-label="attenzione">
-        <svg viewBox="0 0 64 64" aria-hidden="true">
-          <path d="M32 8C20 8 10 18 10 31C10 44 20.5 56 33 56C45 56 54 46 54 33C54 20 45 10 35 9"
-            class="ring-stroke-1"/>
-          <path d="M31 8.5C19 9 11 18.5 11 31C11 43 20 55 33 55C45 55 53 46 53 34C53 22 45 12 36 10"
-            class="ring-stroke-2"/>
-          <path d="M32 20 C31.5 24, 31 28, 31 32 C31 33 33 33 33 32 C33 28 33.5 24 34 20"
-            class="mark-stroke-1"/>
-          <path d="M32.5 20.5 C32 24, 31.6 28, 31.6 31.5"
-            class="mark-stroke-2"/>
-          <path d="M32 38.5 C31.5 39.8, 32.5 41, 33 40 C33.5 38.8, 32.5 37.8, 32 38.5"
-            class="dot-stroke-1"/>
-        </svg>
-      </span>`;
-  }
-
-  if (flagStatus === "neg") {
-    return `
-      <span class="metric-flag metric-flag--neg" aria-label="negativo">
-        <svg viewBox="0 0 64 64" aria-hidden="true">
-          <path d="M32 8C20 8 10 18 10 31C10 44 20.5 56 33 56C45 56 54 46 54 33C54 20 45 10 35 9"
-            class="ring-stroke-1"/>
-          <path d="M31 8.5C19 9 11 18.5 11 31C11 43 20 55 33 55C45 55 53 46 53 34C53 22 45 12 36 10"
-            class="ring-stroke-2"/>
-          <path d="M24 24 C27 27, 30 30, 33 33 C35 35, 37 37, 40 40"
-            class="mark-stroke-1"/>
-          <path d="M24.5 24.5 C27.2 27.2, 30.2 30.2, 33.2 33.2 C35.2 35.2, 37.5 37.5, 39.5 39.5"
-            class="mark-stroke-2"/>
-          <path d="M40 24 C37 27, 34 30, 31 33 C29 35, 27 37, 24 40"
-            class="mark-stroke-1"/>
-          <path d="M39.5 24.5 C36.8 27.2, 33.8 30.2, 30.8 33.2 C28.8 35.2, 26.5 37.5, 24.5 39.5"
-            class="mark-stroke-2"/>
-        </svg>
-      </span>`;
-  }
-
-  return "";
-}
-
-function renderTopSectors(topSectors){
+function renderTopSectors(topSectors) {
   if (!Array.isArray(topSectors) || !topSectors.length) {
     return `
       <div class="text-[12px] text-[color:var(--muted)] leading-[1.4]">
         Dati settoriali non disponibili.
-      </div>`;
+      </div>
+    `;
   }
 
   const items = topSectors.map(sec => {
     const name   = sec.name || sec.sector || "—";
     const inflow = isNum(sec.inflow5d) ? (fmtNum(sec.inflow5d) + " flow 5d") : "";
     const perf   = isNum(sec.perf1m)   ? (fmtPct(sec.perf1m)   + " 1m")      : "";
+
     return `
       <li class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">
         <span class="font-semibold">${escapeHtml(name)}</span>
-        <span class="text-[color:var(--muted)]">
-          ${escapeHtml(inflow)} ${escapeHtml(perf)}
-        </span>
-      </li>`;
+        <span class="text-[color:var(--muted)]"> ${escapeHtml(inflow)} ${escapeHtml(perf)}</span>
+      </li>
+    `;
   }).join("");
 
-  return `<ul class="list-disc pl-4 space-y-1">${items}</ul>`;
+  return `
+    <ul class="list-disc pl-4 space-y-1">
+      ${items}
+    </ul>
+  `;
 }
 
-function renderInterpretation(notesArr){
+function renderInterpretation(notesArr) {
   const arr = Array.isArray(notesArr) ? notesArr : [];
   if (!arr.length) {
     return `
       <div class="text-[12.5px] leading-[1.4] text-[color:var(--muted)]">
         Nessuna nota aggiuntiva.
-      </div>`;
+      </div>
+    `;
   }
+
   const lis = arr.map(n => `
     <li class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">
       ${escapeHtml(n)}
-    </li>`).join("");
-
-  return `<ul class="list-disc pl-4 space-y-1">${lis}</ul>`;
-}
-
-function renderAudit(norm){
-  const srcList = Array.isArray(norm.sourcesTier1)
-    ? norm.sourcesTier1.join(", ")
-    : (norm.sourcesTier1 || "—");
+    </li>
+  `).join("");
 
   return `
-    <div class="space-y-3 text-[12.5px] leading-[1.45] text-[color:var(--ink)]">
+    <ul class="list-disc pl-4 space-y-1">
+      ${lis}
+    </ul>
+  `;
+}
+
+function renderAuditBlock({
+  auditPathID,
+  sourcesTier1,
+  dataLagLabel,
+  confidenceFinal,
+  dataIntegrity,
+  feedSyncScore
+}) {
+  const srcList = Array.isArray(sourcesTier1)
+    ? sourcesTier1.join(", ")
+    : (sourcesTier1 || "—");
+
+  return `
+    <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)] space-y-3">
 
       <div>
         <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
           AuditPathID
         </div>
         <div class="font-mono text-[13px] font-bold text-[color:var(--ink)]">
-          ${escapeHtml(norm.auditPathID || "—")}
+          ${escapeHtml(auditPathID || "—")}
         </div>
       </div>
 
@@ -650,7 +722,7 @@ function renderAudit(norm){
             Freshness / Lag
           </div>
           <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
-            ${escapeHtml(norm.dataLagLabel || "T-1")}
+            ${escapeHtml(dataLagLabel || "T-1")}
           </div>
         </div>
         <div>
@@ -658,7 +730,7 @@ function renderAudit(norm){
             Confidence
           </div>
           <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
-            ${fmtNum(norm.confidenceFinal)}
+            ${fmtNum(confidenceFinal)}
           </div>
         </div>
       </div>
@@ -669,7 +741,7 @@ function renderAudit(norm){
             Integrità dataset
           </div>
           <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
-            ${fmtNum(norm.dataIntegrity)}
+            ${fmtNum(dataIntegrity)}
           </div>
         </div>
         <div>
@@ -677,32 +749,43 @@ function renderAudit(norm){
             Sync feed
           </div>
           <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
-            ${fmtNum(norm.feedSyncScore)}
+            ${fmtNum(feedSyncScore)}
           </div>
         </div>
-      </div>
-
-      <div class="text-[11px] leading-[1.4] text-[color:var(--muted)]">
-        Questo pannello è informativo/formativo.
-        Non sostituisce la due diligence dell'investitore
-        né costituisce attestazione regolamentare.
       </div>
     </div>
   `;
 }
 
-// ---------------------------------------------------------
-// Data normalization + tone decoration (come prima)
-// ---------------------------------------------------------
+function renderMiFIDNotice() {
+  return `
+    <div class="text-[12.5px] leading-[1.45] text-[color:var(--muted)] space-y-2">
+      <p>
+        Questo materiale descrive uno scenario di mercato basato su dati quantitativi
+        e fonti finanziarie primarie. Ha finalità informative e formative.
+      </p>
+      <p>
+        Non costituisce una raccomandazione personalizzata,
+        né un invito ad aprire/chiudere posizioni o allocare capitale.
+        Prima di qualsiasi decisione reale verifica adeguatezza e appropriatezza
+        con un intermediario autorizzato ai sensi MiFID II e della normativa locale.
+      </p>
+    </div>
+  `;
+}
 
-function normalizeData(d){
+/* -------------------------------------------------
+   Normalizzazione dati e tono
+------------------------------------------------- */
+
+function normalizeData(d) {
   if (!d) d = {};
 
   const strategyMode =
-    d.StrategyMode ??
-    d.strategy_mode ??
-    d.strategyMode ??
-    d.decision?.tone ??
+    d.StrategyMode ||
+    d.strategy_mode ||
+    d.strategyMode ||
+    d.decision?.tone ||
     "—";
 
   const regimeScore =
@@ -736,21 +819,20 @@ function normalizeData(d){
     [];
 
   const auditPathID =
-    d.AuditPathID ??
-    d.auditPathID ??
-    d.audit?.path_id ??
-    d.audit?.AuditPathID ??
+    d.AuditPathID ||
+    d.auditPathID ||
+    d.audit?.path_id ||
+    d.audit?.AuditPathID ||
     "—";
 
-  const sourcesTier1 =
-    d.sourcesTier1 ??
-    d.sources ??
-    ["FRED","CBOE","ETFdb","Reuters"];
+  const sourcesTier1 = d.sourcesTier1 ||
+    d.sources ||
+    ["FRED", "CBOE", "ETFdb", "Reuters"];
 
   const dataLagLabel =
-    d.dataLagLabel ??
-    d.FreshnessLabel ??
-    d.freshness_label ??
+    d.dataLagLabel ||
+    d.FreshnessLabel ||
+    d.freshness_label ||
     "T-1";
 
   const confidenceFinal =
@@ -768,11 +850,6 @@ function normalizeData(d){
     valueOrNull(d.feed_sync) ??
     valueOrNull(d.audit?.feedSync);
 
-  const regimeScoreFlag = d.RegimeScoreFlag || d.regimeScoreFlag || "neutral";
-  const breadthFlag     = d.BreadthFlag     || d.breadthFlag     || "neutral";
-  const riskTiltFlag    = d.RiskTiltFlag    || d.riskTiltFlag    || "neutral";
-  const vixFlag         = d.VIXFlag         || d.vixFlag         || "neutral";
-
   return {
     strategyMode,
     regimeScore,
@@ -786,67 +863,61 @@ function normalizeData(d){
     dataLagLabel,
     confidenceFinal,
     dataIntegrity,
-    feedSyncScore,
-    regimeScoreFlag,
-    breadthFlag,
-    riskTiltFlag,
-    vixFlag
+    feedSyncScore
   };
 }
 
-function decorateForView(norm){
-  const {strategyMode, regimeScore} = norm;
-  const {toneLabel, toneClass} = computeTone(strategyMode, regimeScore);
-  return {...norm, toneLabel, toneClass};
-}
-
-function computeTone(strategyMode, regimeScore){
+function computeTone(strategyMode, regimeScore) {
+  let toneColor = "var(--tone-n)";
   let toneLabel = "neutral";
-  let toneClass = "regime-stance-pill--neutral";
 
   const modeLow = (strategyMode || "").toLowerCase();
-  const scoreNum = isNum(regimeScore) ? Number(regimeScore) : null;
 
   if (modeLow.includes("momentum") && !modeLow.includes("light")) {
+    toneColor = "var(--tone-g)";
     toneLabel = "positive";
-    toneClass = "regime-stance-pill--pos";
   } else if (modeLow.includes("momentum-light")) {
-    toneLabel = "caution";
-    toneClass = "regime-stance-pill--warn";
+    toneColor = "var(--tone-y)";
+    toneLabel = "neutral";
   } else if (modeLow.includes("pullback")) {
+    toneColor = "var(--tone-r)";
     toneLabel = "alert";
-    toneClass = "regime-stance-pill--neg";
   } else {
-    if (scoreNum !== null && scoreNum < 0.1) {
+    if (isNum(regimeScore) && regimeScore < 0.1) {
+      toneColor = "var(--tone-r)";
       toneLabel = "alert";
-      toneClass = "regime-stance-pill--neg";
     }
   }
 
-  return { toneLabel, toneClass };
+  return { toneColor, toneLabel };
 }
 
-// ---------------------------------------------------------
-// Utils numeriche / escape
-// ---------------------------------------------------------
-function fmtNum(v){
+/* -------------------------------------------------
+   Utils numeriche + escape HTML
+------------------------------------------------- */
+
+function fmtNum(v) {
   if (!isNum(v)) return "—";
   const n = Number(v);
   return n.toFixed(2).replace('.', ',');
 }
-function fmtPct(v){
+
+function fmtPct(v) {
   if (!isNum(v)) return "—";
-  const n = Number(v)*100;
+  const n = Number(v) * 100;
   const sign = n > 0 ? "+" : "";
   return sign + n.toFixed(1).replace('.', ',') + "%";
 }
-function isNum(v){
+
+function isNum(v) {
   return v !== null && v !== undefined && !Number.isNaN(Number(v));
 }
-function valueOrNull(v){
+
+function valueOrNull(v) {
   return isNum(v) ? Number(v) : null;
 }
-function escapeHtml(str){
+
+function escapeHtml(str) {
   if (str === undefined || str === null) return "";
   return String(str)
     .replace(/&/g,"&amp;")
@@ -855,7 +926,8 @@ function escapeHtml(str){
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#39;");
 }
-function escapeAttr(str){
+
+function escapeAttr(str) {
   if (str === undefined || str === null) return "";
   return String(str)
     .replace(/"/g,"&quot;")
