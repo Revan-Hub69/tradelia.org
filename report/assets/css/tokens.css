@@ -1,5 +1,5 @@
 /* /report/assets/css/tokens.css
-   Tradelia Report Design System · PREMIUM
+   Tradelia Report Design System · SUPER PREMIUM
    ------------------------------------------------
    - palette + theme vars
    - typo scale
@@ -7,7 +7,7 @@
    - header sticky, hero, sezioni F1..F6
    - metriche, tone, stance
    - drawer / panel overlay (tabs, sezioni, pill stato)
-   - metric popover desktop, metric modal mobile
+   - metric popover desktop, metric modal mobile (badge "i", blocchi 'Cosa mostra')
    - share overlay
    - footer web
    - print/PDF istituzionale
@@ -58,15 +58,6 @@
   --tone-n:     oklab(55% 0 0);        /* neutro / grafite */
   --tone-warn:  oklab(75% 0.05 0.10);  /* amber / attenzione */
 
-  /* === VARIABILI CHIP (bottoncini "?" / chiudi) === */
-  --chip-bg:          var(--surface-card);
-  --chip-bg-hover:    var(--surface-card-alt);
-  --chip-br:          var(--br-soft);
-  --chip-br-hover:    var(--br-card);
-  --chip-fg:          var(--muted);
-  --chip-fg-hover:    var(--ink);
-  --chip-shadow:      var(--shadow-card);
-
   /* === TYPO SCALE (px) === */
   --fs-xl:   24px;   /* headline prezzo / ticker */
   --fs-lg:   16px;   /* titoli sezione / panel */
@@ -96,11 +87,20 @@
   --tone-neu-bg-soft:  color-mix(in oklab, var(--tone-n) 10%, transparent);
   --tone-neu-bg-hard:  color-mix(in oklab, var(--tone-n) 22%, transparent);
 
-  /* === SURFACE GLASS LEVELS === */
-  --glass-backdrop-dark: rgba(0,0,0,.45);
+  /* === CHIP / BADGE / CLOSE ('?','X','info') === */
+  --chip-bg:          var(--surface-card);
+  --chip-bg-hover:    var(--surface-card-alt);
+  --chip-br:          var(--br-soft);
+  --chip-br-hover:    var(--br-card);
+  --chip-fg:          var(--muted);
+  --chip-fg-hover:    var(--ink);
+  --chip-shadow:      var(--shadow-card);
+
+  /* === SURFACE GLASS LEVELS (layer premium) === */
+  --glass-backdrop-dark:  rgba(0,0,0,.45);
   --glass-backdrop-light: rgba(255,255,255,.08);
-  --glass-blur-sm: blur(2px) saturate(1.05);
-  --glass-blur-lg: blur(16px) saturate(1.15);
+  --glass-blur-sm:        blur(2px) saturate(1.05);
+  --glass-blur-lg:        blur(16px) saturate(1.15);
 
   /* layout tokens */
   --radius-card:           12px;
@@ -117,8 +117,8 @@
   --panel-maxheight-desktop:   100vh;
 
   /* watermark print */
-  --wm-color: rgba(0,0,0,.04);
-  --wm-font:  700 48px/1.1 "Inter", system-ui, sans-serif;
+  --wm-color:   rgba(0,0,0,.04);
+  --wm-font:    700 48px/1.1 "Inter", system-ui, sans-serif;
   --wm-rotate: -24deg;
 
   color-scheme: light;
@@ -307,7 +307,10 @@ main {
 
 /* mini info / metric help ("?" / X stile pill) */
 .info-btn,
-.metric-help{
+.metric-help,
+.tl-popover__close,
+.tl-metric-modal__close,
+.share-close-btn {
   all:unset;
   cursor:pointer;
   display:inline-flex;
@@ -322,7 +325,7 @@ main {
   line-height:1;
   font-weight:600;
 
-  border-radius:999px;
+  border-radius:8px;
   background:var(--chip-bg);
   color:var(--chip-fg);
   border:1px solid var(--chip-br);
@@ -331,7 +334,10 @@ main {
   transition:all .12s ease;
 }
 .info-btn:hover,
-.metric-help:hover{
+.metric-help:hover,
+.tl-popover__close:hover,
+.tl-metric-modal__close:hover,
+.share-close-btn:hover{
   background:var(--chip-bg-hover);
   color:var(--chip-fg-hover);
   border-color:var(--chip-br-hover);
@@ -340,7 +346,12 @@ main {
     var(--chip-shadow);
 }
 .info-btn:active,
-.metric-help:active{opacity:.8}
+.metric-help:active,
+.tl-popover__close:active,
+.tl-metric-modal__close:active,
+.share-close-btn:active{
+  opacity:.8
+}
 
 /* =========================================================
    METRIC STATUS FLAGS (inline ✓ / ! / ✕)
@@ -358,7 +369,7 @@ main {
   display:block;
 }
 .metric-flag--pos   { color: var(--tone-pos-fg); }
-metric-flag--warn  { color: var(--tone-warn-fg); }
+.metric-flag--warn  { color: var(--tone-warn-fg); }
 .metric-flag--neg   { color: var(--tone-neg-fg); }
 
 .metric-flag svg .ring-stroke-1 {
@@ -803,11 +814,17 @@ html[data-theme="dark"] .hero{
   color:var(--tone-pos-fg);
   border-color:var(--tone-pos-fg);
   background:var(--tone-pos-bg-soft);
+  box-shadow:
+    0 0 8px var(--tone-pos-bg-hard),
+    var(--shadow-card);
 }
 .module-status-pill[data-state="error"]{
   color:var(--tone-neg-fg);
   border-color:var(--tone-neg-fg);
   background:var(--tone-neg-bg-soft);
+  box-shadow:
+    0 0 8px var(--tone-neg-bg-hard),
+    var(--shadow-card);
 }
 
 .section-title-main{
@@ -974,39 +991,6 @@ html[data-theme="dark"] .hero{
   text-wrap:balance;
 }
 
-/* close = stesso look dei chip */
-.tl-panel__close {
-  all:unset;
-  cursor:pointer;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-
-  min-width:24px;
-  min-height:24px;
-  padding:0 6px;
-
-  font-size:12px;
-  line-height:1;
-  font-weight:600;
-
-  border-radius:8px;
-  background:var(--chip-bg);
-  color:var(--chip-fg);
-  border:1px solid var(--chip-br);
-  box-shadow:var(--chip-shadow);
-
-  transition:all .12s ease;
-}
-.tl-panel__close:hover{
-  background:var(--chip-bg-hover);
-  color:var(--chip-fg-hover);
-  border-color:var(--chip-br-hover);
-  box-shadow:
-    0 0 0 2px var(--accent-dim),
-    var(--chip-shadow);
-}
-
 /* corpo scrollabile */
 .tl-panel__body {
   flex:1 1 auto;
@@ -1032,7 +1016,6 @@ html[data-theme="dark"] .hero{
   padding:12px 16px;
   box-shadow:0 -8px 24px rgba(0,0,0,.06);
 
-  /* nuovo layout footer: wrapper flex con tab scroll + chiudi sticky */
   display:flex;
   flex-direction:row;
   align-items:center;
@@ -1166,7 +1149,6 @@ html[data-theme="dark"] .hero{
   }
   .tl-panel--mobile { display:none; }
 
-  /* desktop footer: i tab possono anche stare in alto (sticky) ma qui teniamo versione "footer buttons right" */
   .tl-panel__footer {
     flex-wrap:wrap;
     justify-content:flex-end;
@@ -1220,7 +1202,7 @@ html[data-theme="dark"] .hero{
     background:var(--surface-panel-bg);
   }
 
-  /* footer rimane sticky in basso: tab scrollabili + Chiudi */
+  /* footer sticky in basso, pill scrollabili + Chiudi sticky */
   .tl-panel--mobile .tl-panel__footer {
     flex-shrink:0;
     padding:12px 16px;
@@ -1626,20 +1608,36 @@ html[data-theme="dark"] .hero{
    METRIC TOOLTIP (? button) - DESKTOP POPOVER
    ========================================================= */
 
-/* versione compatta premium */
+/*
+ struttura attesa nel DOM:
+ <aside id="metric-popover" class="tl-popover" aria-hidden="true">
+   <header class="tl-popover__head">
+     <div class="tl-popover__title-row">
+       <span class="tl-popover__badge">i</span>
+       <h3 id="metric-popover-title" class="tl-popover__title">—</h3>
+     </div>
+     <button id="metric-popover-close" class="tl-popover__close" ...>✕</button>
+   </header>
+
+   <div id="metric-popover-body" class="tl-popover__body">…</div>
+   <footer id="metric-popover-source" class="tl-popover__source">…</footer>
+ </aside>
+*/
+
 .tl-popover {
   position: fixed;
   z-index: 10000;
 
-  max-width: 280px;
+  max-width: 320px;
   width: max-content;
   min-width: 220px;
 
-  background: var(--surface-card);
+  background: var(--surface-card-elev);
   border: 1px solid var(--br-soft);
-  border-radius: 10px;
+  border-radius: 12px;
   box-shadow:
-    0 12px 32px rgba(0,0,0,.12),
+    0 24px 64px rgba(0,0,0,.18),
+    0 0 80px rgba(0,0,0,.12),
     var(--shadow-card);
 
   padding: 12px 12px 10px;
@@ -1648,7 +1646,11 @@ html[data-theme="dark"] .hero{
   font-size: var(--fs-sm);
   line-height: var(--lh-body);
 
-  backdrop-filter: blur(4px) saturate(1.05);
+  backdrop-filter: var(--glass-blur-lg);
+  background-image:
+    radial-gradient(circle at 0% 0%,
+      color-mix(in oklab, var(--surface-card-elev) 80%, var(--brand) 6%) 0%,
+      var(--surface-card-elev) 60%);
 }
 
 .tl-popover[aria-hidden="true"] { display: none; }
@@ -1659,7 +1661,36 @@ html[data-theme="dark"] .hero{
   align-items: flex-start;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+}
+.tl-popover__title-row{
+  display:flex;
+  align-items:flex-start;
+  gap:6px;
+  min-width:0;
+}
+
+.tl-popover__badge{
+  flex-shrink:0;
+  font-size:10px;
+  line-height:1;
+  font-weight:600;
+  border-radius:6px;
+  padding:.25rem .4rem .3rem;
+  border:1px solid var(--tone-neu-fg);
+  background:
+    radial-gradient(circle at 0% 0%,
+      var(--tone-neu-bg-hard) 0%,
+      transparent 60%)
+    ,
+    var(--surface-card-alt);
+  color:var(--tone-neu-fg);
+  box-shadow:
+    0 0 8px var(--tone-neu-bg-hard),
+    0 0 0 2px var(--tone-neu-bg-soft),
+    var(--shadow-card);
+  text-transform:uppercase;
+  letter-spacing:.05em;
 }
 
 .tl-popover__title {
@@ -1673,35 +1704,10 @@ html[data-theme="dark"] .hero{
 }
 
 .tl-popover__close {
-  all: unset;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  min-width: 20px;
-  min-height: 20px;
-  padding: 0 6px;
-
+  min-width: 22px;
+  min-height: 22px;
   font-size: 11px;
-  line-height: 1;
-  font-weight: 600;
-
-  border-radius: 6px;
-  background: var(--chip-bg);
-  color: var(--chip-fg);
-  border: 1px solid var(--chip-br);
-  box-shadow: var(--chip-shadow);
-
-  transition: all .12s ease;
-}
-.tl-popover__close:hover {
-  background: var(--chip-bg-hover);
-  color: var(--chip-fg-hover);
-  border-color: var(--chip-br-hover);
-  box-shadow:
-    0 0 0 2px var(--accent-dim),
-    var(--chip-shadow);
+  border-radius:8px;
 }
 
 .tl-popover__body {
@@ -1712,6 +1718,42 @@ html[data-theme="dark"] .hero{
   margin: 0 0 8px 0;
 }
 
+/* blocchi interni "Cosa mostra" / "Come si usa" */
+.tl-metric-block {
+  margin-bottom:.75rem;
+  font-size:13px;
+  line-height:1.45;
+  color:var(--ink);
+}
+.tl-metric-block:last-child{
+  margin-bottom:0;
+}
+.tl-metric-blocklabel{
+  font-weight:600;
+  color:var(--ink);
+  margin-bottom:.25rem;
+  font-size:11.5px;
+  line-height:1.3;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  display:flex;
+  align-items:center;
+  gap:.4rem;
+}
+.tl-metric-blocklabel-bullet{
+  flex-shrink:0;
+  width:6px;
+  height:6px;
+  border-radius:999px;
+  background-color:var(--tone-neu-fg);
+  box-shadow:0 0 6px currentColor;
+}
+.tl-metric-blocktext{
+  color:var(--ink);
+  font-size:12.5px;
+  line-height:1.45;
+}
+
 .tl-popover__source {
   font-size: 11px;
   line-height: var(--lh-mid);
@@ -1719,7 +1761,7 @@ html[data-theme="dark"] .hero{
 
   border-top: 1px solid var(--br-soft);
   padding-top: 6px;
-  margin-top: 4px;
+  margin-top: 8px;
 
   word-break: break-word;
 }
@@ -1727,6 +1769,30 @@ html[data-theme="dark"] .hero{
 /* =========================================================
    METRIC MODAL (? button) - MOBILE
    ========================================================= */
+
+/*
+ struttura attesa nel DOM:
+ <div id="metric-modal" class="tl-metric-modal-overlay" aria-hidden="true">
+   <div class="tl-metric-modal-backdrop" data-metric-close></div>
+   <article class="tl-metric-modal">
+     <header class="tl-metric-modal__header">
+       <div class="min-w-0">
+         <div class="tl-metric-modal__badge-row">
+           <span class="tl-metric-modal__badge">i</span>
+           <h3 id="metric-modal-title" class="tl-metric-modal__title">—</h3>
+         </div>
+         <p id="metric-modal-source" class="tl-metric-modal__source"></p>
+       </div>
+       <button
+         class="tl-metric-modal__close"
+         data-metric-close
+         aria-label="Chiudi"
+       >✕</button>
+     </header>
+     <div id="metric-modal-body" class="tl-metric-modal__body">…</div>
+   </article>
+ </div>
+*/
 
 .tl-metric-modal-overlay {
   position:fixed;
@@ -1755,12 +1821,20 @@ html[data-theme="dark"] .hero{
   background:var(--surface-card-elev);
   border:1px solid var(--br-card);
   border-radius:16px;
-  box-shadow:var(--shadow-lg);
+  box-shadow:
+    0 24px 64px rgba(0,0,0,.18),
+    0 0 80px rgba(0,0,0,.12),
+    var(--shadow-card);
+
   display:flex;
   flex-direction:column;
   color:var(--ink);
 
-  backdrop-filter:blur(12px) saturate(1.2);
+  backdrop-filter:var(--glass-blur-lg);
+  background-image:
+    radial-gradient(circle at 0% 0%,
+      color-mix(in oklab, var(--surface-card-elev) 80%, var(--brand) 6%) 0%,
+      var(--surface-card-elev) 60%);
 }
 
 .tl-metric-modal__header {
@@ -1768,8 +1842,12 @@ html[data-theme="dark"] .hero{
   border-bottom:1px solid var(--br-panel-divider);
 
   background:var(--surface-card);
-  background-image:none;
-  box-shadow:0 8px 24px rgba(0,0,0,.04);
+  background-image:
+    radial-gradient(circle at 0% 0%,
+      color-mix(in oklab, var(--surface-card) 90%, var(--brand) 3%) 0%,
+      transparent 60%);
+
+  box-shadow:0 12px 32px rgba(0,0,0,.12);
 
   display:flex;
   justify-content:space-between;
@@ -1777,6 +1855,35 @@ html[data-theme="dark"] .hero{
   gap:12px;
   border-top-left-radius:16px;
   border-top-right-radius:16px;
+}
+.tl-metric-modal__badge-row{
+  display:flex;
+  align-items:flex-start;
+  flex-wrap:wrap;
+  row-gap:4px;
+  column-gap:8px;
+}
+.tl-metric-modal__badge{
+  flex-shrink:0;
+  font-size:10px;
+  line-height:1;
+  font-weight:600;
+  border-radius:6px;
+  padding:.25rem .4rem .3rem;
+  border:1px solid var(--tone-neu-fg);
+  background:
+    radial-gradient(circle at 0% 0%,
+      var(--tone-neu-bg-hard) 0%,
+      transparent 60%)
+    ,
+    var(--surface-card-alt);
+  color:var(--tone-neu-fg);
+  box-shadow:
+    0 0 8px var(--tone-neu-bg-hard),
+    0 0 0 2px var(--tone-neu-bg-soft),
+    var(--shadow-card);
+  text-transform:uppercase;
+  letter-spacing:.05em;
 }
 .tl-metric-modal__title {
   font-size:var(--fs-md);
@@ -1794,35 +1901,14 @@ html[data-theme="dark"] .hero{
   max-width:44ch;
   text-wrap:balance;
   word-break:break-word;
+  border-top:1px solid var(--br-soft);
+  padding-top:6px;
 }
 .tl-metric-modal__close {
-  all:unset;
-  cursor:pointer;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-
   min-width:28px;
   min-height:28px;
-  padding:0 6px;
-
   font-size:12px;
-  line-height:1;
-  font-weight:600;
-
   border-radius:8px;
-  background:var(--chip-bg);
-  color:var(--chip-fg);
-  border:1px solid var(--chip-br);
-  box-shadow:var(--chip-shadow);
-}
-.tl-metric-modal__close:hover{
-  background:var(--chip-bg-hover);
-  color:var(--chip-fg-hover);
-  border-color:var(--chip-br-hover);
-  box-shadow:
-    0 0 0 2px var(--accent-dim),
-    var(--chip-shadow);
 }
 
 .tl-metric-modal__body {
@@ -1877,12 +1963,19 @@ html[data-theme="dark"] .hero{
   color:var(--ink);
   border:1px solid var(--br-card-strong);
   border-radius:16px;
-  box-shadow:var(--shadow-xl);
+  box-shadow:
+    0 24px 64px rgba(0,0,0,.18),
+    0 0 80px rgba(0,0,0,.12),
+    var(--shadow-card);
   padding:16px;
   display:flex;
   flex-direction:column;
   gap:12px;
-  backdrop-filter:blur(12px) saturate(1.2);
+  backdrop-filter:var(--glass-blur-lg);
+  background-image:
+    radial-gradient(circle at 0% 0%,
+      color-mix(in oklab, var(--surface-card-elev) 80%, var(--brand) 6%) 0%,
+      var(--surface-card-elev) 60%);
 }
 .share-sheet__head{
   display:flex;
@@ -1903,34 +1996,10 @@ html[data-theme="dark"] .hero{
   color:var(--muted);
 }
 .share-close-btn{
-  all:unset;
-  cursor:pointer;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-
   min-width:28px;
   min-height:28px;
-  padding:0 6px;
-
   font-size:12px;
-  line-height:1;
-  font-weight:600;
-
   border-radius:8px;
-  background:var(--chip-bg);
-  color:var(--chip-fg);
-  border:1px solid var(--chip-br);
-  box-shadow:var(--chip-shadow);
-  transition:all .12s ease;
-}
-.share-close-btn:hover{
-  background:var(--chip-bg-hover);
-  color:var(--chip-fg-hover);
-  border-color:var(--chip-br-hover);
-  box-shadow:
-    0 0 0 2px var(--accent-dim),
-    var(--chip-shadow);
 }
 .share-sheet__list{
   display:grid;
