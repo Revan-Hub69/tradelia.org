@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- ✅ Branding aggiornato -->
   <title>Tradelia AI · Report {NOME AZIENDA}</title>
 
   <!-- Favicons -->
@@ -13,13 +12,13 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
   <meta name="theme-color" content="#0b1220">
 
-  <!-- Tailwind (solo utility layout, spacing, flex ecc) -->
+  <!-- Tailwind utility -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Lucide icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- CSS design system -->
+  <!-- Design system -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
 
   <style>
@@ -59,19 +58,16 @@
       color:var(--muted);
     }
 
-    /* Footer visual refinement base (dettaglio colore finale lo mettiamo in tokens.css print-aware) */
+    /* Footer refinement */
     .footer-wrap{
       background:var(--surface-footer,transparent);
       border-top:1px solid var(--footer-br);
     }
 
-    /* Placeholder: "Indice del Report" SOLO per stampa.
-       Lo teniamo display:none a schermo, lo esporremo in @media print in CSS globale */
+    /* print-only nodes hidden onscreen */
     #print-toc {
       display:none;
     }
-
-    /* Watermark node for print (visibile solo in @media print) */
     #print-watermark {
       display:none;
     }
@@ -79,7 +75,7 @@
 </head>
 
 <body>
-  <!-- ✅ nodo watermark stampa -->
+  <!-- watermark solo stampa -->
   <div id="print-watermark" aria-hidden="true">TRADELIA AI · INSTITUTIONAL MODEL REPORT</div>
 
   <!-- HEADER -->
@@ -90,7 +86,7 @@
           <span class="text-[color:var(--ink)]">TRADELIA</span><span class="text-[color:var(--brand)]">&bull;AI</span>
         </a>
 
-        <!-- ✅ qui aggiorniamo la claim -->
+        <!-- claim -->
         <span class="claim truncate">
           Report {NOME AZIENDA}
         </span>
@@ -105,16 +101,6 @@
             </svg>
           </span>
           <span class="hidden sm:inline">Stampa / PDF</span>
-        </button>
-
-        <!-- SHARE BTN -->
-        <button id="btn-share" class="btn" aria-label="Condividi">
-          <span class="icon-16" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98"/><path d="M15.41 6.51l-6.82 3.98"/>
-            </svg>
-          </span>
-          <span class="hidden sm:inline">Condividi</span>
         </button>
 
         <!-- THEME BTN -->
@@ -140,10 +126,11 @@
           <div class="hero__ticker" id="hero-ticker">—</div>
           <div class="hero__venue" id="hero-venue">—</div>
 
-          <!-- ✅ nuovo meta cliente / tipo report -->
+          <!-- testo premium/non-consulenziale -->
           <div class="hero__client text-[11px] leading-[1.3] text-[color:var(--muted)] mt-1">
-            <span id="hero-client">Client: {NOME AZIENDA}</span> ·
-            <span class="uppercase tracking-wide">Institutional Model Report</span>
+            <span class="uppercase tracking-wide">Tradelia AI / Premium Edition</span>
+            <span> · </span>
+            <span id="hero-client">Analisi indipendente su {NOME AZIENDA}</span>
           </div>
         </div>
 
@@ -233,7 +220,7 @@
       </div>
     </section>
 
-    <!-- ✅ TOC di stampa (nascosto sul web, esposto solo in @media print) -->
+    <!-- TOC di stampa -->
     <section id="print-toc" aria-label="Indice del Report">
       <h2>Indice del Report</h2>
       <ol>
@@ -247,7 +234,7 @@
       </ol>
     </section>
 
-    <!-- DESCRIZIONE FRAMEWORK -->
+    <!-- STRUTTURA DEL REPORT -->
     <section class="section-head" aria-label="Struttura del Report">
       <h2 class="section-title">Struttura del Report</h2>
       <p class="section-sub">
@@ -268,7 +255,7 @@
       </nav>
     </section>
 
-    <!-- SEZIONI DINAMICHE (popolate da app.js) -->
+    <!-- SEZIONI DINAMICHE -->
     <section class="report-sections" aria-label="Moduli del Report">
       <article id="sec-f1" class="report-section-block is-loading" aria-label="F1 · Contesto iniziale / Regime di mercato"></article>
       <article id="sec-f2" class="report-section-block is-loading" aria-label="F2 · Sentiment e flussi"></article>
@@ -289,7 +276,6 @@
             TRADELIA<span class="text-[color:var(--brand)]">&bull;AI</span>
           </div>
 
-          <!-- ✅ Riferimento cliente + versione -->
           <div class="mt-1">
             Report {NOME AZIENDA} ·
             <span id="footer-version">v1.0</span>
@@ -340,7 +326,7 @@
     </footer>
   </div>
 
-  <!-- PANEL OVERLAY (MiFID / Privacy / Audit / Fonti) -->
+  <!-- PANEL OVERLAY -->
   <div id="panel-overlay" class="tl-panel-overlay noprint" aria-hidden="true">
     <div class="tl-panel-backdrop" data-panel-close></div>
 
@@ -425,74 +411,9 @@
     </div>
   </div>
 
-  <!-- SHARE OVERLAY -->
-  <div id="share-overlay" class="share-overlay noprint" aria-hidden="true">
-    <div class="share-overlay__backdrop" data-share-close></div>
-
-    <section class="share-sheet" role="dialog" aria-modal="true" aria-labelledby="share-title">
-      <header class="share-sheet__head">
-        <div class="min-w-0">
-          <div id="share-title" class="share-sheet__title">Condividi il report</div>
-          <div id="share-desc" class="share-sheet__subtitle">Link diretto + social</div>
-        </div>
-        <button class="share-close-btn" data-share-close aria-label="Chiudi condivisione">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </header>
-
-      <div class="share-sheet__list">
-        <button class="share-btn" data-share-svc="linkedin" aria-label="Condividi su LinkedIn">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.4 8.4h4.1V24H.4zM8.34 8.4h3.93v2.12h.06c.55-1.04 1.9-2.12 3.9-2.12 4.17 0 4.94 2.74 4.94 6.3V24h-4.1v-7.5c0-1.79-.03-4.1-2.5-4.1-2.5 0-2.88 1.95-2.88 4v7.6H8.34z"/>
-          </svg>
-          <span>LinkedIn</span>
-        </button>
-
-        <button class="share-btn" data-share-svc="twitter" aria-label="Condividi su X">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M18.244 2H21.5l-7.51 8.59L22 22h-6.563l-5.15-6.543L4.66 22H1.4l8.06-9.21L2 2h6.69l4.66 5.907L18.245 2zm-2.43 17.14h1.82L8.29 4.72H6.34l9.47 14.42z"/>
-          </svg>
-          <span>X</span>
-        </button>
-
-        <button class="share-btn" data-share-svc="reddit" aria-label="Condividi su Reddit">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <circle cx="9.04" cy="13" r="1.5"></circle>
-            <circle cx="14.96" cy="13" r="1.5"></circle>
-            <path d="M14.5 3.5l-1.4 5.1c1.23.08 2.35.4 3.33.9.42-.43 1-.7 1.64-.7 1.27 0 2.3 1.03 2.3 2.3 0 .8-.4 1.5-1 1.9.02.2.03.4.03.6 0 3.3-3.58 5.9-8.4 5.9s-8.4-2.6-8.4-5.9c0-.2 0-.4.03-.6-.6-.4-1-1.1-1-1.9 0-1.27 1.03-2.3 2.3-2.3.66 0 1.25.27 1.67.72 1-.52 2.2-.85 3.5-.93l1.4-5.08 2.67.67zM9.75 16.5c.7.45 1.96.5 2.25.5.3 0 1.57-.05 2.27-.5.25-.16.57-.1.73.15.16.24.1.57-.15.73-.96.62-2.45.67-2.85.67-.4 0-1.9-.05-2.86-.67a.54.54 0 01-.16-.74.54.54 0 01.77-.14z"/>
-          </svg>
-          <span>Reddit</span>
-        </button>
-
-        <button class="share-btn" data-share-svc="copy" aria-label="Copia link">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-          </svg>
-          <span>Copia link</span>
-        </button>
-      </div>
-
-      <div class="share-copy-row">
-        <div id="share-link-field" class="share-copy-field">https://example.tradelia/report?id=...</div>
-
-        <button id="share-copy-btn" class="share-copy-action" data-share-svc="copy">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-          </svg>
-          <span>Copia</span>
-        </button>
-      </div>
-    </section>
-  </div>
-
   <!-- JS runtime -->
   <script type="module" src="/report/assets/js/app.js"></script>
   <script type="module" src="/report/assets/js/ui-runtime.js"></script>
- 
+
 </body>
 </html>
