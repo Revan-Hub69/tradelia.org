@@ -1,85 +1,32 @@
 {
   "Snapshot": {
     "title": "Snapshot",
-    "long": "
-      <p><strong>Cosa mostra</strong><br/>
-      Intervallo temporale coperto dal report: momento in cui è iniziata la raccolta o validazione dei dati e momento in cui è stata generata la versione finale.</p>
-
-      <p><strong>Perché conta</strong><br/>
-      Definisce l’arco temporale di riferimento dell’analisi. Serve per distinguere tra movimenti storici già consolidati e segnali ancora in formazione.</p>
-    ",
-    "source": "
-      <strong>Fonte</strong><br/>
-      Timestamp interni Tradelia AI (pipeline dati proprietaria)."
+    "long": "<p><strong>Cosa mostra</strong><br/>Intervallo temporale coperto dal report: momento in cui è iniziata la raccolta o validazione dei dati e momento in cui è stata generata la versione finale.</p><p><strong>Perché conta</strong><br/>Serve per capire il contesto temporale dell'analisi. Ti dice se stai guardando una fotografia recente o un quadro costruito su dati che hanno vissuto un certo mercato (volatilità, news, eventi macro) nel frattempo.</p>",
+    "source": "<strong>Fonte</strong><br/>Timestamp interni Tradelia AI (pipeline dati proprietaria)."
   },
-
   "Price": {
     "title": "Price",
-    "long": "
-      <p><strong>Cosa mostra</strong><br/>
-      Ultimo prezzo ufficiale disponibile sul mercato principale del titolo alla data di generazione del report.</p>
-
-      <p><strong>Perché conta</strong><br/>
-      È il riferimento base per tutte le altre metriche (Δ%, volatilità, supporti/resistenze) e per la validazione multi-timeframe.</p>
-    ",
-    "source": "
-      <strong>Fonte</strong><br/>
-      Dati ufficiali del mercato di quotazione / feed consolidato."
+    "long": "<p><strong>Cosa mostra</strong><br/>Ultimo prezzo ufficiale disponibile sul mercato principale del titolo al momento di generazione del report.</p><p><strong>Perché conta</strong><br/>È il riferimento di base per tutte le altre misure: Δ%, livelli tecnici, volatilità, rischio. È il numero che usiamo per dire \"il mercato adesso prezza questo\".</p>",
+    "source": "<strong>Fonte</strong><br/>Feed di mercato regolamentato / consolidato (es. venue primaria, Barchart, ecc.)."
   },
-
   "ChangePct": {
     "title": "Δ%",
-    "long": "
-      <p><strong>Cosa mostra</strong><br/>
-      Variazione percentuale del prezzo rispetto al riferimento precedente (tipicamente la chiusura ufficiale del giorno precedente).</p>
-
-      <p><strong>Perché conta</strong><br/>
-      Indica direzione e intensità del movimento recente. Positivo = rialzo, negativo = ribasso. Utilizzato per stimare momentum di breve e forza relativa.</p>
-    ",
-    "source": "
-      <strong>Fonte</strong><br/>
-      Calcolo Tradelia AI su dati di mercato ufficiali (Barchart / Bloomberg / venue primaria)."
+    "long": "<p><strong>Cosa mostra</strong><br/>Variazione percentuale del prezzo rispetto al riferimento precedente (tipicamente la chiusura ufficiale della sessione precedente).</p><p><strong>Perché conta</strong><br/>Misura direzione e intensità del movimento recente. Positivo = rialzo, negativo = ribasso. È usata per leggere momentum di breve e pressione immediata (acquisto/vendita).</p>",
+    "source": "<strong>Fonte</strong><br/>Calcolo interno Tradelia AI su dati ufficiali di prezzo (es. ultimo prezzo vs close precedente)."
   },
-
   "Currency": {
     "title": "Currency",
-    "long": "
-      <p><strong>Cosa mostra</strong><br/>
-      Valuta in cui è espresso il prezzo visualizzato (es. USD, EUR, GBP, CHF).</p>
-
-      <p><strong>Perché conta</strong><br/>
-      Serve a valutare l’impatto di eventuali variazioni valutarie quando si confrontano strumenti quotati su mercati diversi o si calcolano performance in valuta base.</p>
-    ",
-    "source": "
-      <strong>Fonte</strong><br/>
-      Dati ufficiali della venue di quotazione."
+    "long": "<p><strong>Cosa mostra</strong><br/>La valuta in cui è quotato il prezzo riportato (es. USD, EUR, GBP).</p><p><strong>Perché conta</strong><br/>Se confronti strumenti quotati in valute diverse o ragioni in una valuta base tua, il rischio FX può amplificare o ridurre il rendimento reale. La stessa azione in USD non equivale alla stessa azione vista da un investitore EUR.</p>",
+    "source": "<strong>Fonte</strong><br/>Dati ufficiali del mercato di quotazione."
   },
-
   "Freshness": {
     "title": "Freshness",
-    "long": "
-      <p><strong>Cosa mostra</strong><br/>
-      Grado di aggiornamento dei dati utilizzati nel report. T-0 = aggiornati al giorno stesso; T-1 = aggiornati al giorno precedente; T-2, T-3 = ritardi maggiori.</p>
-
-      <p><strong>Perché conta</strong><br/>
-      Indica la tempestività dell’analisi: valori più bassi significano dati meno recenti e quindi maggiore incertezza sul quadro tecnico attuale.</p>
-    ",
-    "source": "
-      <strong>Fonte</strong><br/>
-      Pipeline di aggiornamento Tradelia AI (worst-lag del dataset più lento)."
+    "long": "<p><strong>Cosa mostra</strong><br/>Quanto sono aggiornati i dati usati nel report. Esempio: T-0 = dati del giorno stesso; T-1 = dati fino alla chiusura di ieri; T-2/T-3 = più ritardo.</p><p><strong>Perché conta</strong><br/>Più il dato è vecchio, più aumenta il rischio che il quadro tecnico descritto non rifletta la situazione reale attuale. Se vedi Freshness alto (ritardo), devi fidarti meno del segnale tattico brevissimo.</p>",
+    "source": "<strong>Fonte</strong><br/>Pipeline di aggiornamento Tradelia AI. Valore calcolato sul feed più lento (worst-lag)."
   },
-
   "ConfidenceFinal": {
     "title": "Confidence",
-    "long": "
-      <p><strong>Cosa mostra</strong><br/>
-      Punteggio interno di qualità del dataset e coerenza tra fonti, timeframe e segnali quantitativi. Valore compreso tra 0 (bassa affidabilità) e 1 (alta qualità e coerenza).</p>
-
-      <p><strong>Come leggerlo</strong><br/>
-      Valori elevati indicano dati coerenti, feed sincronizzati e segnali chiari; valori bassi indicano rumore, divergenze o latenze elevate.</p>
-    ",
-    "source": "
-      <strong>Fonte</strong><br/>
-      Modello proprietario Tradelia AI di validazione feed, sincronizzazione e outlier check."
+    "long": "<p><strong>Cosa mostra</strong><br/>Punteggio interno di qualità/coerenza del dataset usato nel report. Scala 0 → 1. Tiene conto di: integrità delle fonti, latenze, rumore statistico, divergenze tra timeframe.</p><p><strong>Come leggerlo</strong><br/>Valore alto = segnali puliti e dataset allineato. Valore basso = rumore, feed asincroni o segnali tecnici/non-tecnici che non concordano tra loro. Non è garanzia di risultato, ma è un termometro di affidabilità del quadro attuale.</p>",
+    "source": "<strong>Fonte</strong><br/>Modello proprietario Tradelia AI di validazione e coerenza dati multi-timeframe."
   }
 }
