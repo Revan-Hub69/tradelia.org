@@ -1,36 +1,961 @@
-// /report/assets/js/ui-runtime.js
+// /report/assets/js/modules/f1b.js
 //
-// UI runtime globale (no dati di mercato):
-// - pannello informativo (Privacy / MiFID / Drawer F1B ecc.)
-// - metric help ("?" tooltip) desktop/mobile
-// - tema light/dark
-// - share overlay
-// - stampa
+// F1B · Regime di mercato / Contesto rischio
 //
-// Questo file NON monta i moduli F1/F2/..., quello resta app.js
+// - Card riassuntiva con CTA "Dettagli regime →"
+// - Drawer (panel) con tab responsive
+//   • Desktop: sidebar sinistra + contenuto scrollabile a destra
+//   • Mobile: fullscreen, contenuto scrollabile,
+//             tabbar ORA nel footer nativo del panel (scrollabile orizzontale)
+//             con pulsante Chiudi sticky
+// - Tooltip "?" unificati (usa window.__TradeliaUI.bindMetricInfoButtons)
+//
+// Esposti al runtime principale (app.js):
+//   renderCard(data, ctx)
+//   bindCard(node, data, ctx)
 
-// ------------------------------------------------------------
-// Utility DOM
-// ------------------------------------------------------------
-function qs(sel, root = document) {
-  return root.querySelector(sel);
+export function renderCard(rawData, ctx = {}) {
+  const data = normalizeData(rawData);
+
+  const {
+    strategyMode,
+    regimeScore,
+    breadthPct,
+    riskTilt
+  } = data;
+
+  const { toneLabel, toneColor } = computeTone(strategyMode, regimeScore);
+
+  return `
+    <section class="f1b-card-container text-[13px] leading-[1.5] text-[color:var(--ink)]"
+      style="font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
+
+      <!-- Headline sezione -->
+      <header class="section-headline mb-4">
+        <div class="section-head-left">
+          <div class="section-head-topline flex items-center flex-wrap gap-2">
+            <span class="section-badge">F1</span>
+            <span class="text-[10px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
+              Regime di mercato
+            </span>
+            <span class="module-status-pill" data-state="active">ACTIVE</span>
+          </div>
+
+          <div class="section-title-main text-[14px] font-bold leading-[1.4] text-[color:var(--ink)] mt-1">
+            Contesto rischio &amp; ampiezza del mercato
+          </div>
+
+          <div class="section-desc text-[12px] text-[color:var(--muted)] leading-[1.45] mt-1">
+            Classificazione del regime corrente, qualità della partecipazione al rialzo
+            e inclinazione rischio/difensivo. Dati T-1.
+          </div>
+        </div>
+      </header>
+
+      <!-- Corpo card principale -->
+      <div class="relative flex flex-col gap-4 card-compact"
+        style="
+          background:var(--surface-card);
+          border:1px solid var(--br-card);
+          border-radius:var(--radius-card);
+          box-shadow:var(--shadow-card);
+          padding:1rem;
+        ">
+
+        <!-- StrategyMode + tono -->
+        <div>
+          <div class="text-[12px] font-semibold text-[color:var(--muted)] leading-[1.4] flex flex-wrap items-center gap-1.5">
+            <span>StrategyMode</span>
+            <button
+              class="info-btn align-middle"
+              data-metric="StrategyMode"
+              aria-label="Info StrategyMode"
+            >?</button>
+          </div>
+
+          <div class="text-[14px] font-bold leading-[1.4] text-[color:var(--ink)] flex flex-wrap items-center gap-2 mt-1">
+            <span>${escapeHtml(strategyMode || "—")}</span>
+
+            <span
+              class="px-[6px] py-[4px] rounded-md text-[11px] font-semibold leading-none border"
+              style="
+                background: radial-gradient(circle at 0% 0%,
+                  color-mix(in oklab, ${toneColor} 18%, transparent) 0%,
+                  transparent 60%
+                ),
+                var(--surface-card);
+                color:${toneColor};
+                border-color:${toneColor};
+                box-shadow:var(--shadow-card);
+              "
+            >
+              ${escapeHtml(toneLabel)}
+            </span>
+          </div>
+        </div>
+
+        <!-- KPI row -->
+        <div class="flex flex-wrap gap-3">
+          ${metricBox({
+            label: "RegimeScore",
+            metricKey: "RegimeScore",
+            value: fmtNum(regimeScore),
+            desc: "Propensione al rischio sintetica"
+          })}
+
+          ${metricBox({
+            label: "Breadth (1M)",
+            metricKey: "Breadth",
+            value: breadthPct !== null ? fmtPct(breadthPct) : "—",
+            desc: "% settori positivi su 30g"
+          })}
+
+          ${metricBox({
+            label: "RiskTilt",
+            metricKey: "RiskTilt",
+            value: fmtNum(riskTilt),
+            desc: "Ciclici vs Difensivi"
+          })}
+        </div>
+
+        <!-- DISCLAIMER + CTA ROW -->
+        <div class="mt-2 flex flex-col gap-3 lg:flex-row lg:items-start">
+          <p class="text-[11px] leading-[1.4] text-[color:var(--muted)] flex-1">
+            Indicatori costruiti su flussi settoriali, ampiezza del rialzo e volatilità implicita.
+            Nessuna raccomandazione operativa.
+          </p>
+
+          <div class="flex lg:justify-end">
+            <button
+              class="f1b-cta-btn"
+              data-open-f1b-details="true"
+              type="button"
+              style="
+                background:var(--ink);
+                color:var(--surface-page);
+                font-weight:600;
+                font-size:12px;
+                line-height:1.3;
+                border-radius:var(--radius-card-sm);
+                padding:0.5rem 0.75rem;
+                min-width:max-content;
+                border:1px solid var(--ink);
+                box-shadow:var(--shadow-card);
+              "
+            >
+              Dettagli regime →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
 }
-function qsa(sel, root = document) {
-  return [...root.querySelectorAll(sel)];
+
+export function bindCard(node, rawData, ctx = {}) {
+  if (!node || !rawData) return;
+
+  const data = normalizeData(rawData);
+
+  // CTA -> apre pannello dettagli
+  const btnDetails = node.querySelector('[data-open-f1b-details="true"]');
+  if (btnDetails) {
+    btnDetails.addEventListener("click", () => {
+      openF1Drawer(data);
+    });
+  }
+
+  // Tooltip "?" nella card
+  if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
+    try {
+      window.__TradeliaUI.bindMetricInfoButtons(node);
+    } catch (e) {}
+  }
 }
-function setText(el, txt) {
-  if (!el) return;
-  el.textContent = txt;
+
+/* -------------------------------------------------
+   Drawer / Panel con tab responsive
+   Desktop: sidebar sinistra + contenuto a destra
+   Mobile: fullscreen, NIENTE navbar extra interna,
+           tab di navigazione messi nel footer nativo (scrollabile),
+           pulsante Chiudi sticky nel footer.
+------------------------------------------------- */
+
+function openF1Drawer(data) {
+  if (!window.__TradeliaUI || typeof window.__TradeliaUI.openPanel !== "function") {
+    console.warn("openPanel non disponibile");
+    return;
+  }
+
+  const sectionsObj = buildDrawerSections(data);
+
+  // scegli shell mobile/desktop
+  const mobileMode = isMobileViewport();
+  const drawerHTML = mobileMode
+    ? renderDrawerMobileShell(sectionsObj)
+    : renderDrawerDesktopShell(sectionsObj);
+
+  // definiamo le TAB che vanno nel footer mobile scrollabile
+  // key deve combaciare con data-f1b-view
+  const tabDefs = [
+    { key: "regime",   label: "Regime" },
+    { key: "rotation", label: "Rotaz." },
+    { key: "notes",    label: "Note" },
+    { key: "audit",    label: "Fonti" },
+    { key: "mifid",    label: "MiFID" }
+  ];
+
+  // footerButtons desktop:
+  // - su desktop teniamo solo Chiudi nel footer nativo del panel
+  // - su mobile quel footer desktop viene ignorato e usiamo footerTabs
+  const footerButtonsDesktop = [
+    {
+      label: "Chiudi",
+      action: () => {
+        window.__TradeliaUI.closePanel();
+      }
+    }
+  ];
+
+  // Apri pannello
+  window.__TradeliaUI.openPanel({
+    title: "F1 · Regime di mercato",
+    subtitle: "Flussi settoriali, ampiezza del rialzo e volatilità (T-1)",
+    sections: [
+      {
+        title: "",
+        body: drawerHTML,
+        meta: ""
+      }
+    ],
+    blocking: false,
+    panelSize: "wide", // pannello largo desktop
+    footerButtons: mobileMode ? [] : footerButtonsDesktop,
+    footerTabs: mobileMode ? tabDefs : []
+  });
+
+  // Dopo apertura: bind eventi tab + tooltip sul contenuto del panel
+  setTimeout(() => {
+    const panelBody = document.getElementById("panel-body");
+    const panelBodyMobile = document.getElementById("panel-body-mobile");
+    const footerMobEl = document.getElementById("panel-footer-mobile");
+
+    if (panelBody) {
+      bindDrawerTabs(panelBody);
+      if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
+        try { window.__TradeliaUI.bindMetricInfoButtons(panelBody); } catch (e) {}
+      }
+    }
+
+    if (panelBodyMobile) {
+      bindDrawerTabs(panelBodyMobile);
+      if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
+        try { window.__TradeliaUI.bindMetricInfoButtons(panelBodyMobile); } catch (e) {}
+      }
+    }
+
+    // importantissimo: i tab nel footer mobile controllano il contenuto nel main
+    if (footerMobEl) {
+      bindDrawerTabs(footerMobEl);
+    }
+  }, 0);
 }
-function setHTML(el, html) {
-  if (!el) return;
-  el.innerHTML = html;
-}
-function isMobile() {
+
+// Controlla viewport "mobile"
+function isMobileViewport() {
   return window.matchMedia("(max-width: 767px)").matches;
 }
 
-// escaper per evitare XSS quando riempiamo dinamico
+/* -------------------------------------------------
+   Sezioni logiche per il drawer
+------------------------------------------------- */
+
+function buildDrawerSections(data) {
+  const {
+    strategyMode,
+    regimeScore,
+    vixLevel,
+    breadthPct,
+    riskTilt,
+    topSectors,
+    interpretationNotes,
+    auditPathID,
+    sourcesTier1,
+    dataLagLabel,
+    confidenceFinal,
+    dataIntegrity,
+    feedSyncScore
+  } = data;
+
+  const regimeHTML = `
+    <section class="tl-panel-section" data-f1b-section="regime">
+      <header class="tl-panel-section-title">
+        <div class="tl-panel-section-title-text">
+          Regime attuale
+        </div>
+      </header>
+
+      <div class="text-[13px] text-[color:var(--ink)] leading-[1.45] font-semibold flex flex-wrap items-center gap-2 mb-3">
+        <span>StrategyMode: ${escapeHtml(strategyMode || "—")}</span>
+        <button
+          class="info-btn"
+          data-metric="StrategyMode"
+          aria-label="Info StrategyMode"
+        >?</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
+        <div class="p-2"
+          style="
+            background:var(--surface-card-alt);
+            border:1px solid var(--br-card);
+            border-radius:var(--radius-card);
+            box-shadow:var(--shadow-card);
+          ">
+          <div class="flex items-start justify-between gap-1 mb-1">
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              RegimeScore
+            </div>
+            <button
+              class="info-btn"
+              data-metric="RegimeScore"
+              aria-label="Info RegimeScore"
+            >?</button>
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${fmtNum(regimeScore)}
+          </div>
+        </div>
+
+        <div class="p-2"
+          style="
+            background:var(--surface-card-alt);
+            border:1px solid var(--br-card);
+            border-radius:var(--radius-card);
+            box-shadow:var(--shadow-card);
+          ">
+          <div class="flex items-start justify-between gap-1 mb-1">
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              VIX
+            </div>
+            <button
+              class="info-btn"
+              data-metric="VIX"
+              aria-label="Info VIX"
+            >?</button>
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${fmtNum(vixLevel)}
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+
+  const rotationHTML = `
+    <section class="tl-panel-section" data-f1b-section="rotation">
+      <header class="tl-panel-section-title">
+        <div class="tl-panel-section-title-text">
+          Rotazione &amp; partecipazione
+        </div>
+      </header>
+
+      <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4] mb-3">
+        <div class="p-2"
+          style="
+            background:var(--surface-card-alt);
+            border:1px solid var(--br-card);
+            border-radius:var(--radius-card);
+            box-shadow:var(--shadow-card);
+          ">
+          <div class="flex items-start justify-between gap-1 mb-1">
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              Breadth (1M)
+            </div>
+            <button
+              class="info-btn"
+              data-metric="Breadth"
+              aria-label="Info Breadth"
+            >?</button>
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${breadthPct !== null ? fmtPct(breadthPct) : "—"}
+          </div>
+        </div>
+
+        <div class="p-2"
+          style="
+            background:var(--surface-card-alt);
+            border:1px solid var(--br-card);
+            border-radius:var(--radius-card);
+            box-shadow:var(--shadow-card);
+          ">
+          <div class="flex items-start justify-between gap-1 mb-1">
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              RiskTilt
+            </div>
+            <button
+              class="info-btn"
+              data-metric="RiskTilt"
+              aria-label="Info RiskTilt"
+            >?</button>
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${fmtNum(riskTilt)}
+          </div>
+        </div>
+      </div>
+
+      <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)]">
+        <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
+          Top settori per inflow (5d)
+        </div>
+        ${renderTopSectors(topSectors)}
+      </div>
+    </section>
+  `;
+
+  const notesHTML = `
+    <section class="tl-panel-section" data-f1b-section="notes">
+      <header class="tl-panel-section-title">
+        <div class="tl-panel-section-title-text">
+          Note interpretative
+        </div>
+      </header>
+      ${renderInterpretation(interpretationNotes)}
+    </section>
+  `;
+
+  const auditHTML = `
+    <section class="tl-panel-section" data-f1b-section="audit">
+      <header class="tl-panel-section-title">
+        <div class="tl-panel-section-title-text">
+          Audit &amp; Fonti
+        </div>
+      </header>
+      ${renderAuditBlock({
+        auditPathID,
+        sourcesTier1,
+        dataLagLabel,
+        confidenceFinal,
+        dataIntegrity,
+        feedSyncScore
+      })}
+    </section>
+  `;
+
+  const mifidHTML = `
+    <section class="tl-panel-section" data-f1b-section="mifid">
+      <header class="tl-panel-section-title">
+        <div class="tl-panel-section-title-text">
+          Nota regolamentare
+        </div>
+      </header>
+      ${renderMiFIDNotice()}
+    </section>
+  `;
+
+  return {
+    regimeHTML,
+    rotationHTML,
+    notesHTML,
+    auditHTML,
+    mifidHTML
+  };
+}
+
+/* -------------------------------------------------
+   Shell DESKTOP
+------------------------------------------------- */
+
+function renderDrawerDesktopShell(sectionsObj) {
+  // sidebar sinistra, contenuto scroll a destra
+  return `
+    <div class="f1b-panel-desktop"
+      style="
+        display:flex;
+        flex-direction:row;
+        gap:1rem;
+        min-height:300px;
+      ">
+
+      <!-- Sidebar tab -->
+      <aside class="f1b-panel-menu"
+        style="
+          min-width:160px;
+          max-width:180px;
+          border-right:1px solid var(--br-card);
+        ">
+
+        ${drawerMenuButton("regime","Regime attuale", true)}
+        ${drawerMenuButton("rotation","Rotazione &amp; partecipazione", false)}
+        ${drawerMenuButton("notes","Note interpretative", false)}
+        ${drawerMenuButton("audit","Audit &amp; Fonti", false)}
+        ${drawerMenuButton("mifid","Nota regolamentare", false)}
+      </aside>
+
+      <!-- Content area -->
+      <main class="f1b-panel-content flex-1 min-w-0"
+        style="max-height:60vh;overflow:auto;padding:1rem;">
+        <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
+        <div data-f1b-view="rotation" hidden>${sectionsObj.rotationHTML}</div>
+        <div data-f1b-view="notes" hidden>${sectionsObj.notesHTML}</div>
+        <div data-f1b-view="audit" hidden>${sectionsObj.auditHTML}</div>
+        <div data-f1b-view="mifid" hidden>${sectionsObj.mifidHTML}</div>
+      </main>
+    </div>
+  `;
+}
+
+/* -------------------------------------------------
+   Shell MOBILE
+   -------------------------------------------------
+   - fullscreen pannello
+   - contenuto scrolla
+   - NESSUNA tabbar sticky qui
+   - il footer nativo (panel-footer-mobile) contiene le tab scrollabili + Chiudi
+------------------------------------------------- */
+
+function renderDrawerMobileShell(sectionsObj) {
+  return `
+    <div class="f1b-drawer-mobile"
+      style="
+        display:flex;
+        flex-direction:column;
+        height:calc(100vh - 110px); /* header panel approssimato */
+        max-height:calc(100vh - 110px);
+        min-height:300px;
+      ">
+
+      <!-- Content area scrollable -->
+      <main class="f1b-panel-content-mobile flex-1 min-w-0"
+        style="
+          overflow:auto;
+          -webkit-overflow-scrolling:touch;
+          padding:1rem;
+        ">
+        <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
+        <div data-f1b-view="rotation" hidden>${sectionsObj.rotationHTML}</div>
+        <div data-f1b-view="notes" hidden>${sectionsObj.notesHTML}</div>
+        <div data-f1b-view="audit" hidden>${sectionsObj.auditHTML}</div>
+        <div data-f1b-view="mifid" hidden>${sectionsObj.mifidHTML}</div>
+      </main>
+    </div>
+  `;
+}
+
+/* -------------------------------------------------
+   Helper bottoni tab
+------------------------------------------------- */
+
+function drawerMenuButton(key, label, active) {
+  return `
+    <button
+      class="f1b-tab-btn block w-full text-left text-[12px] leading-[1.4] px-2 py-2 ${active ? "is-active" : ""}"
+      data-f1b-tab="${key}"
+      style="
+        border-radius:var(--radius-card-sm);
+        border-left:3px solid ${active ? "var(--brand)" : "transparent"};
+        background:${active ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)" : "transparent"};
+        font-weight:${active ? "600" : "500"};
+        color:var(--ink);
+        text-align:left;
+      "
+    >
+      ${label}
+    </button>
+  `;
+}
+
+/* -------------------------------------------------
+   Tab switching (desktop sidebar e footer mobile)
+   -------------------------------------------------
+   - aggiorna stile tab attivo/inattivo
+   - mostra / nasconde le viste
+------------------------------------------------- */
+
+function bindDrawerTabs(root) {
+  if (!root) return;
+
+  const tabButtons = root.querySelectorAll("[data-f1b-tab]");
+  const views = document.querySelectorAll("[data-f1b-view]"); // importante: guardiamo nel documento/pannello
+
+  tabButtons.forEach(btn => {
+    if (btn.__f1bBound) return;
+    btn.__f1bBound = true;
+
+    btn.addEventListener("click", () => {
+      const key = btn.getAttribute("data-f1b-tab");
+      if (!key) return;
+
+      // attiva/deattiva bottoni (desktop sidebar + footer mobile pills)
+      // prendi TUTTI i bottoni presenti nel DOM attuale
+      const allBtns = document.querySelectorAll("[data-f1b-tab]");
+      allBtns.forEach(b => {
+        const isActive = b.getAttribute("data-f1b-tab") === key;
+        b.classList.toggle("is-active", isActive);
+
+        // stile dinamico desktop sidebar
+        if (b.classList.contains("f1b-tab-btn")) {
+          b.style.borderLeftColor = isActive ? "var(--brand)" : "transparent";
+          b.style.background = isActive
+            ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)"
+            : "transparent";
+          b.style.fontWeight = isActive ? "600" : "500";
+        }
+
+        // stile dinamico mobile pills nel footer
+        if (b.classList.contains("f1b-footer-tab-btn")) {
+          b.style.fontWeight = isActive ? "600" : "500";
+          b.style.border = isActive
+            ? "1px solid var(--tone-neu-fg)"
+            : "1px solid var(--br-soft)";
+          b.style.background = isActive
+            ? `radial-gradient(circle at 0% 0%,
+                var(--tone-neu-bg-hard) 0%,
+                transparent 60%
+              ),
+              var(--surface-card-alt)`
+            : "var(--surface-card)";
+          b.style.color = isActive
+            ? "var(--tone-neu-fg)"
+            : "var(--muted)";
+          b.style.boxShadow = "var(--shadow-card)";
+        }
+      });
+
+      // mostra/nascondi viste
+      views.forEach(viewEl => {
+        const viewKey = viewEl.getAttribute("data-f1b-view");
+        viewEl.hidden = viewKey !== key;
+      });
+    });
+  });
+}
+
+/* -------------------------------------------------
+   Helpers UI singole sezioni
+------------------------------------------------- */
+
+function metricBox({ label, metricKey, value, desc }) {
+  return `
+    <div class="flex-1 min-w-[90px]"
+      style="
+        background:var(--surface-card-alt);
+        border:1px solid var(--br-card);
+        border-radius:var(--radius-card);
+        box-shadow:var(--shadow-card);
+        padding:0.6rem 0.75rem;
+      ">
+
+      <div class="flex items-start justify-between gap-1 mb-1">
+        <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold leading-[1.3]">
+          ${escapeHtml(label)}
+        </div>
+        <button
+          class="info-btn"
+          data-metric="${escapeAttr(metricKey)}"
+          aria-label="Info ${escapeAttr(metricKey)}"
+        >?</button>
+      </div>
+
+      <div class="font-mono font-bold text-[color:var(--ink)] text-[13px] leading-[1.4]">
+        ${escapeHtml(value)}
+      </div>
+
+      <div class="text-[11px] leading-[1.3] text-[color:var(--muted)] mt-1">
+        ${escapeHtml(desc || "")}
+      </div>
+    </div>
+  `;
+}
+
+function renderTopSectors(topSectors) {
+  if (!Array.isArray(topSectors) || !topSectors.length) {
+    return `
+      <div class="text-[12px] text-[color:var(--muted)] leading-[1.4]">
+        Dati settoriali non disponibili.
+      </div>
+    `;
+  }
+
+  const items = topSectors.map(sec => {
+    const name   = sec.name || sec.sector || "—";
+    const inflow = isNum(sec.inflow5d) ? (fmtNum(sec.inflow5d) + " flow 5d") : "";
+    const perf   = isNum(sec.perf1m)   ? (fmtPct(sec.perf1m)   + " 1m")      : "";
+
+    return `
+      <li class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">
+        <span class="font-semibold">${escapeHtml(name)}</span>
+        <span class="text-[color:var(--muted)]"> ${escapeHtml(inflow)} ${escapeHtml(perf)}</span>
+      </li>
+    `;
+  }).join("");
+
+  return `
+    <ul class="list-disc pl-4 space-y-1">
+      ${items}
+    </ul>
+  `;
+}
+
+function renderInterpretation(notesArr) {
+  const arr = Array.isArray(notesArr) ? notesArr : [];
+  if (!arr.length) {
+    return `
+      <div class="text-[12.5px] leading-[1.4] text-[color:var(--muted)]">
+        Nessuna nota aggiuntiva.
+      </div>
+    `;
+  }
+
+  const lis = arr.map(n => `
+    <li class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">
+      ${escapeHtml(n)}
+    </li>
+  `).join("");
+
+  return `
+    <ul class="list-disc pl-4 space-y-1">
+      ${lis}
+    </ul>
+  `;
+}
+
+function renderAuditBlock({
+  auditPathID,
+  sourcesTier1,
+  dataLagLabel,
+  confidenceFinal,
+  dataIntegrity,
+  feedSyncScore
+}) {
+  const srcList = Array.isArray(sourcesTier1)
+    ? sourcesTier1.join(", ")
+    : (sourcesTier1 || "—");
+
+  return `
+    <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)] space-y-3">
+
+      <div>
+        <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
+          AuditPathID
+        </div>
+        <div class="font-mono text-[13px] font-bold text-[color:var(--ink)]">
+          ${escapeHtml(auditPathID || "—")}
+        </div>
+      </div>
+
+      <div>
+        <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
+          Fonti
+        </div>
+        <div class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">
+          ${escapeHtml(srcList)}
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
+        <div>
+          <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold mb-1">
+            Freshness / Lag
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${escapeHtml(dataLagLabel || "T-1")}
+          </div>
+        </div>
+        <div>
+          <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold mb-1">
+            Confidence
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${fmtNum(confidenceFinal)}
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
+        <div>
+          <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold mb-1">
+            Integrità dataset
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${fmtNum(dataIntegrity)}
+          </div>
+        </div>
+        <div>
+          <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold mb-1">
+            Sync feed
+          </div>
+          <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
+            ${fmtNum(feedSyncScore)}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderMiFIDNotice() {
+  return `
+    <div class="text-[12.5px] leading-[1.45] text-[color:var(--muted)] space-y-2">
+      <p>
+        Questo materiale descrive uno scenario di mercato basato su dati quantitativi
+        e fonti finanziarie primarie. Ha finalità informative e formative.
+      </p>
+      <p>
+        Non costituisce una raccomandazione personalizzata,
+        né un invito ad aprire/chiudere posizioni o allocare capitale.
+        Prima di qualsiasi decisione reale verifica adeguatezza e appropriatezza
+        con un intermediario autorizzato ai sensi MiFID II e della normativa locale.
+      </p>
+    </div>
+  `;
+}
+
+/* -------------------------------------------------
+   Normalizzazione dati e tono
+------------------------------------------------- */
+
+function normalizeData(d) {
+  if (!d) d = {};
+
+  const strategyMode =
+    d.StrategyMode ||
+    d.strategy_mode ||
+    d.strategyMode ||
+    d.decision?.tone ||
+    "—";
+
+  const regimeScore =
+    valueOrNull(d.RegimeScore) ??
+    valueOrNull(d.regime_score) ??
+    valueOrNull(d.decision?.score);
+
+  const breadthPct =
+    valueOrNull(d.Breadth) ??
+    valueOrNull(d.breadth_1m);
+
+  const riskTilt =
+    valueOrNull(d.RiskTilt) ??
+    valueOrNull(d.risk_tilt);
+
+  const vixLevel =
+    valueOrNull(d.VIX) ??
+    valueOrNull(d.vix_level);
+
+  const topSectors =
+    Array.isArray(d.TopSectors) ? d.TopSectors :
+    Array.isArray(d.top_sectors_inflow) ? d.top_sectors_inflow :
+    Array.isArray(d.top_sectors) ? d.top_sectors :
+    [];
+
+  const interpretationNotes =
+    Array.isArray(d.interpretationNotes) ? d.interpretationNotes :
+    Array.isArray(d.decision?.notes_list) ? d.decision.notes_list :
+    d.decision?.summary ? [ d.decision.summary ] :
+    d.decision?.notes ? [ d.decision.notes ] :
+    [];
+
+  const auditPathID =
+    d.AuditPathID ||
+    d.auditPathID ||
+    d.audit?.path_id ||
+    d.audit?.AuditPathID ||
+    "—";
+
+  const sourcesTier1 = d.sourcesTier1 ||
+    d.sources ||
+    ["FRED", "CBOE", "ETFdb", "Reuters"];
+
+  const dataLagLabel =
+    d.dataLagLabel ||
+    d.FreshnessLabel ||
+    d.freshness_label ||
+    "T-1";
+
+  const confidenceFinal =
+    valueOrNull(d.ConfidenceFinal) ??
+    valueOrNull(d.confidenceFinal) ??
+    valueOrNull(d.audit?.confidence);
+
+  const dataIntegrity =
+    valueOrNull(d.DataIntegrity) ??
+    valueOrNull(d.data_integrity) ??
+    valueOrNull(d.audit?.integrity);
+
+  const feedSyncScore =
+    valueOrNull(d.FeedSync) ??
+    valueOrNull(d.feed_sync) ??
+    valueOrNull(d.audit?.feedSync);
+
+  return {
+    strategyMode,
+    regimeScore,
+    breadthPct,
+    riskTilt,
+    vixLevel,
+    topSectors,
+    interpretationNotes,
+    auditPathID,
+    sourcesTier1,
+    dataLagLabel,
+    confidenceFinal,
+    dataIntegrity,
+    feedSyncScore
+  };
+}
+
+function computeTone(strategyMode, regimeScore) {
+  let toneColor = "var(--tone-neu-fg)";
+  let toneLabel = "neutral";
+
+  const modeLow = (strategyMode || "").toLowerCase();
+
+  if (modeLow.includes("momentum") && !modeLow.includes("light")) {
+    toneColor = "var(--tone-pos-fg)";
+    toneLabel = "positive";
+  } else if (modeLow.includes("momentum-light")) {
+    toneColor = "var(--tone-warn-fg)";
+    toneLabel = "neutral";
+  } else if (modeLow.includes("pullback")) {
+    toneColor = "var(--tone-neg-fg)";
+    toneLabel = "alert";
+  } else {
+    if (isNum(regimeScore) && regimeScore < 0.1) {
+      toneColor = "var(--tone-neg-fg)";
+      toneLabel = "alert";
+    }
+  }
+
+  return { toneColor, toneLabel };
+}
+
+/* -------------------------------------------------
+   Utils numeriche + escape HTML
+------------------------------------------------- */
+
+function fmtNum(v) {
+  if (!isNum(v)) return "—";
+  const n = Number(v);
+  return n.toFixed(2).replace('.', ',');
+}
+
+function fmtPct(v) {
+  if (!isNum(v)) return "—";
+  const n = Number(v) * 100;
+  const sign = n > 0 ? "+" : "";
+  return sign + n.toFixed(1).replace('.', ',') + "%";
+}
+
+function isNum(v) {
+  return v !== null && v !== undefined && !Number.isNaN(Number(v));
+}
+
+function valueOrNull(v) {
+  return isNum(v) ? Number(v) : null;
+}
+
 function escapeHtml(str) {
   if (str === undefined || str === null) return "";
   return String(str)
@@ -41,848 +966,9 @@ function escapeHtml(str) {
     .replace(/'/g,"&#39;");
 }
 
-// ------------------------------------------------------------
-// PANEL OVERLAY (drawer / legal / etc.)
-// ------------------------------------------------------------
-//
-// Struttura HTML in index:
-// <div id="panel-overlay" class="tl-panel-overlay" aria-hidden="true" data-blocking="false">
-//   <div class="tl-panel-backdrop" data-panel-close></div>
-//
-//   <aside class="tl-panel tl-panel--desktop" ...>
-//     <header>...</header>
-//     <div id="panel-body" class="tl-panel__body"></div>
-//     <footer id="panel-footer" class="tl-panel__footer"></footer>
-//   </aside>
-//
-//   <aside class="tl-panel tl-panel--mobile" ...>
-//     <header>...</header>
-//     <div id="panel-body-mobile" class="tl-panel__body"></div>
-//     <footer id="panel-footer-mobile" class="tl-panel__footer"></footer>
-//   </aside>
-// </div>
-//
-// openPanel(opts):
-//   {
-//     title: "string",
-//     subtitle: "string",
-//     sections: [ { title, body, meta }, ... ],
-//     blocking: bool,
-//     panelSize: "wide" | undefined,
-//     footerButtons: [ { label, action }, ... ],   // usato per DESKTOP
-//     footerTabs:    [ { key,label }, ... ]        // usato per MOBILE
-//   }
-//
-// closePanel(): chiude overlay, riabilita scroll.
-
-function openPanel(opts) {
-  const overlayEl = qs("#panel-overlay");
-  if (!overlayEl) return;
-
-  const {
-    title = "Dettagli",
-    subtitle = "",
-    sections = [],
-    blocking = false,
-    panelSize, // "wide" opzionale
-    footerButtons = [], // desktop
-    footerTabs = []     // mobile tabbar scrollabile
-  } = opts || {};
-
-  // desktop refs
-  const titleDeskEl    = qs("#panel-title");
-  const subDeskEl      = qs("#panel-subtitle");
-  const bodyDeskEl     = qs("#panel-body");
-  const footerDeskEl   = qs("#panel-footer");
-
-  // mobile refs
-  const titleMobEl     = qs("#panel-title-mobile");
-  const subMobEl       = qs("#panel-subtitle-mobile");
-  const bodyMobEl      = qs("#panel-body-mobile");
-  const footerMobEl    = qs("#panel-footer-mobile");
-
-  // header
-  setText(titleDeskEl, title);
-  setText(subDeskEl, subtitle);
-  setText(titleMobEl, title);
-  setText(subMobEl, subtitle);
-
-  // corpo:
-  //
-  // Caso standard (legal/privacy/MiFID standalone):
-  //   - mappiamo ogni section in un blocco .tl-panel-section con titolo/body/meta
-  //
-  // Caso "wide"/console (es. F1B drawer):
-  //   - l'app ci passa UNA sola sezione già strutturata (html intero con sidebar/tab ecc.)
-  //   - non vogliamo wrapper extra che rompano layout
-  //
-  let bodyHTML = "";
-  if (panelSize === "wide" && sections.length === 1) {
-    bodyHTML = sections[0].body || "";
-  } else {
-    bodyHTML = sections.map(section => {
-      const st  = section.title   || "";
-      const bd  = section.body    || "";
-      const mta = section.meta    || "";
-      return `
-        <section class="tl-panel-section" style="margin-bottom:1rem;">
-          ${
-            st
-              ? `<div class="tl-panel-section-title text-[12px] font-semibold mb-1 text-[color:var(--ink)]">${st}</div>`
-              : ``
-          }
-          <div class="tl-panel-section-text text-[13px] leading-[1.45] text-[color:var(--ink)]">${bd}</div>
-          ${
-            mta
-              ? `<div class="tl-panel-section-meta text-[11px] leading-[1.4] text-[color:var(--muted)] mt-2">${mta}</div>`
-              : ``
-          }
-        </section>
-      `;
-    }).join("");
-  }
-
-  setHTML(bodyDeskEl, bodyHTML);
-  setHTML(bodyMobEl,  bodyHTML);
-
-  // ---------- FOOTER RENDERING ----------
-
-  // helper: footer classico (desktop o fallback mobile se niente tabs)
-  function renderFooterBtns(arr) {
-    if (!arr || !arr.length) {
-      return `<button class="btn btn-sm" data-panel-close>Chiudi</button>`;
-    }
-    return arr.map((btn, idx) => {
-      return `<button class="btn btn-sm" data-panel-btn="${idx}">${escapeHtml(btn.label || "OK")}</button>`;
-    }).join("");
-  }
-
-  // helper: footer mobile con tab scrollabili e pulsante Chiudi sticky
-  // footerTabs è [{key:"regime", label:"Regime"}, ...]
-  function renderFooterTabs(tabsArr) {
-    // se non esistono tab → ricadiamo sul footer classico
-    if (!tabsArr || !tabsArr.length) {
-      return renderFooterBtns(footerButtons);
-    }
-
-    // pill per ognuna
-    const pills = tabsArr.map(t => {
-      return `
-        <button
-          class="f1b-footer-tab-btn"
-          data-f1b-tab="${escapeHtml(t.key)}"
-          style="
-            flex:0 0 auto;
-            white-space:nowrap;
-            font-size:11px;
-            line-height:1.2;
-            font-weight:500;
-            border-radius:8px;
-            border:1px solid var(--br-soft);
-            background:var(--surface-card);
-            color:var(--muted);
-            padding:.45rem .7rem;
-            box-shadow:var(--shadow-card);
-          "
-        >
-          ${escapeHtml(t.label)}
-        </button>
-      `;
-    }).join("");
-
-    // bottone Chiudi sticky a destra
-    const closeBtnHTML = `
-      <button
-        class="f1b-footer-close-btn"
-        data-panel-close
-        style="
-          position:sticky;
-          right:0;
-          flex-shrink:0;
-
-          font-size:11.5px;
-          line-height:1.2;
-          font-weight:600;
-
-          border-radius:8px;
-          border:1px solid var(--ink);
-          background:var(--ink);
-          color:var(--surface-page);
-
-          padding:.45rem .8rem;
-          box-shadow:var(--shadow-card);
-        "
-      >
-        Chiudi
-      </button>
-    `;
-
-    // wrapper scrollabile orizzontale + sticky Chiudi
-    return `
-      <div
-        class="f1b-footer-tabs-wrap"
-        style="
-          display:flex;
-          align-items:center;
-
-          border-top:1px solid var(--br-panel-divider);
-          background:var(--surface-panel-head);
-          background-image:
-            radial-gradient(
-              circle at 0% 0%,
-              color-mix(in oklab, var(--surface-panel-head) 90%, var(--brand) 2%) 0%,
-              transparent 60%
-            );
-
-          padding:.6rem .75rem;
-          box-shadow:0 -6px 12px rgba(0,0,0,.12);
-          max-width:100%;
-          overflow:hidden;
-          gap:.5rem;
-        "
-      >
-        <div
-          class="f1b-footer-tabs-scroll"
-          style="
-            flex:1 1 auto;
-            min-width:0;
-            display:flex;
-            align-items:center;
-            gap:.5rem;
-
-            overflow-x:auto;
-            -webkit-overflow-scrolling:touch;
-            scrollbar-width:none;
-          "
-        >
-          ${pills}
-        </div>
-
-        ${closeBtnHTML}
-      </div>
-    `;
-  }
-
-  // scegli markup da mettere in ciascun footer
-  // MOBILE: usa footerTabs se presenti, altrimenti footerButtons
-  // DESKTOP: sempre e solo footerButtons
-  const mobileFooterHTML  = renderFooterTabs(footerTabs);
-  const desktopFooterHTML = renderFooterBtns(footerButtons);
-
-  setHTML(footerMobEl,  mobileFooterHTML);
-  setHTML(footerDeskEl, desktopFooterHTML);
-
-  // bind azioni custom dei bottoni desktop footerButtons
-  qsa("[data-panel-btn]", footerDeskEl).forEach(btnEl => {
-    const i = btnEl.getAttribute("data-panel-btn");
-    if (footerButtons[i] && typeof footerButtons[i].action === "function") {
-      btnEl.addEventListener("click", footerButtons[i].action);
-    }
-  });
-
-  // blocking (true = niente close su backdrop)
-  if (blocking) {
-    overlayEl.setAttribute("data-blocking", "true");
-  } else {
-    overlayEl.removeAttribute("data-blocking");
-  }
-
-  // panelSize wide -> aggiungi classe di larghezza sulla versione desktop
-  const panelDesktop = qs(".tl-panel--desktop", overlayEl);
-  if (panelDesktop) {
-    if (panelSize === "wide") {
-      panelDesktop.classList.add("tl-panel--wide");
-    } else {
-      panelDesktop.classList.remove("tl-panel--wide");
-    }
-  }
-
-  // impedisci scroll del body dietro al panel
-  document.body.classList.add("body--lock");
-
-  // mostra overlay
-  overlayEl.setAttribute("aria-hidden", "false");
+function escapeAttr(str) {
+  if (str === undefined || str === null) return "";
+  return String(str)
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#39;");
 }
-
-function closePanel() {
-  const overlayEl = qs("#panel-overlay");
-  if (!overlayEl) return;
-
-  overlayEl.setAttribute("aria-hidden", "true");
-
-  // riattiva scroll della pagina sotto
-  document.body.classList.remove("body--lock");
-}
-
-// click global per chiudere pannello
-document.addEventListener("click", (ev) => {
-  const overlayEl = qs("#panel-overlay");
-  if (!overlayEl) return;
-  if (overlayEl.getAttribute("aria-hidden") === "true") return;
-
-  const blocking = overlayEl.getAttribute("data-blocking") === "true";
-
-  // chiudi se clicco qualcosa con data-panel-close
-  const closeBtn = ev.target.closest("[data-panel-close]");
-  if (closeBtn) {
-    closePanel();
-    return;
-  }
-
-  // se backdrop click e non blocking -> close
-  const backdrop = ev.target.closest(".tl-panel-backdrop");
-  if (backdrop && !blocking) {
-    closePanel();
-    return;
-  }
-});
-
-// ------------------------------------------------------------
-// CONTENUTO: PRIVACY PANEL
-// ------------------------------------------------------------
-function openPrivacyPanel() {
-  openPanel({
-    title: "Privacy & Trasparenza",
-    subtitle: "Nessun tracciamento di profilazione. Preferenze salvate solo in locale.",
-    sections: [
-      {
-        title: "Come gestiamo i dati",
-        body: `
-          <p>
-            Tradelia AI adotta una politica di massima trasparenza e
-            <strong>zero tracciamento di profilazione</strong>.
-          </p>
-          <ul style="margin:.5rem 0 .5rem 1rem;list-style:disc;font-size:12.5px;line-height:1.45;">
-            <li>Nessun cookie di profilazione o advertising.</li>
-            <li>Nessuna vendita o condivisione di dati personali con terze parti.</li>
-            <li>Nessun analytics esterno invasivo.</li>
-            <li>Le preferenze di tema, consenso, ecc. vivono solo nel tuo browser (<code>localStorage</code>).</li>
-          </ul>
-        `,
-        meta: `
-          Riferimenti normativi: GDPR (UE 2016/679), Direttiva ePrivacy,
-          Linee Guida EDPB.
-        `
-      }
-    ],
-    blocking: false,
-    panelSize: undefined,
-    footerButtons: [
-      {
-        label: "Chiudi",
-        action: () => closePanel()
-      }
-    ],
-    footerTabs: [] // niente tab nel footer mobile per Privacy
-  });
-}
-
-// ------------------------------------------------------------
-// CONTENUTO: MiFID PANEL
-// ------------------------------------------------------------
-//
-// blocking: true → niente tap fuori per chiudere, devi esplicitamente tappare "Ho letto"
-function openMifidPanel() {
-  openPanel({
-    title: "Informativa MiFID",
-    subtitle: "Contenuto a scopo informativo/formativo. Non è consulenza personalizzata.",
-    sections: [
-      {
-        title: "Chi è Tradelia AI",
-        body: `
-          <p>
-            Tradelia AI è una piattaforma di analisi e alfabetizzazione finanziaria.
-            L'obiettivo è aiutare l'utente a comprendere contesto di mercato,
-            fattori di rischio e dinamiche tecniche, in modo chiaro e tracciabile.
-          </p>
-          <p style="margin-top:.5rem;">
-            <strong>Non siamo un consulente finanziario abilitato all’offerta di raccomandazioni personalizzate.</strong>
-            Non effettuiamo gestione di portafogli, non raccogliamo ordini di negoziazione,
-            non sollecitiamo l’investimento in strumenti finanziari.
-          </p>
-        `,
-        meta: `
-          Rif. Direttiva MiFID II, regolamentazione ESMA su consulenza in materia di investimenti.
-        `
-      },
-      {
-        title: "Nessuna raccomandazione operativa",
-        body: `
-          <p>
-            Le informazioni mostrate (F1, F2, F3, F4, F5, F5B, F6) descrivono scenari di mercato,
-            forze di sentiment/flusso, fattori tecnici e riferimenti storici.
-            Non costituiscono indicazione ad aprire/chiudere posizioni,
-            né suggeriscono una strategia adatta a te come singolo investitore.
-          </p>
-          <p style="margin-top:.5rem;">
-            Qualsiasi riferimento a livelli tecnici, volatilità, momentum,
-            liquidità o broker esistenti è da intendersi
-            come <strong>osservazione di mercato</strong> e non come invito operativo.
-          </p>
-        `,
-        meta: `
-          Prima di prendere decisioni reali, verifica sempre la tua situazione
-          personale (obiettivi, orizzonte temporale, propensione al rischio)
-          con un intermediario autorizzato o un consulente finanziario abilitato.
-        `
-      },
-      {
-        title: "Rischio e responsabilità",
-        body: `
-          <p>
-            I mercati finanziari comportano rischio di perdita totale o parziale del capitale.
-            La volatilità, gli shock macro, le condizioni di liquidità e gli eventi esogeni
-            possono generare movimenti estremi in tempi molto brevi.
-          </p>
-          <p style="margin-top:.5rem;">
-            <strong>Nulla di quanto visualizzato garantisce risultati futuri.</strong>
-            Le performance storiche o gli scenari ipotetici non sono indicativi
-            di rendimenti futuri.
-          </p>
-          <p style="margin-top:.5rem;">
-            L’utente rimane sempre l’unico responsabile delle proprie decisioni.
-          </p>
-        `,
-        meta: `
-          Usa sempre un intermediario regolamentato e verifica condizioni di costo,
-          protezioni, regime fiscale e aderenza normativa del servizio che utilizzi.
-        `
-      }
-    ],
-    blocking: true,
-    panelSize: undefined,
-    footerButtons: [
-      {
-        label: "Ho letto",
-        action: () => closePanel()
-      }
-    ],
-    footerTabs: [] // niente tab mobile qui
-  });
-}
-
-// ------------------------------------------------------------
-// AUDIT PANEL utility (richiamabile dai moduli F* se serve)
-// ------------------------------------------------------------
-function openAuditPanel(auditData) {
-  const a = auditData || {};
-  const lag   = (a.feed_lag_days ?? "—");
-  const conf  = (a.confidence    ?? "—");
-  const integ = (a.integrity     ?? "—");
-  const src   = (a.source_sync   || "—");
-  const notes = (a.notes         || "");
-
-  openPanel({
-    title: "Audit dati / Fonti",
-    subtitle: "Qualità campione e latenza feed",
-    sections: [
-      {
-        title: "Origine dati",
-        body: `
-          <p>
-            <strong>Fonte primaria:</strong> ${escapeHtml(src)}<br/>
-            <strong>Lag feed (giorni):</strong> ${escapeHtml(String(lag))}<br/>
-            <strong>Confidence (0-1):</strong> ${escapeHtml(String(conf))}<br/>
-            <strong>Integrità dataset:</strong> ${escapeHtml(String(integ))}
-          </p>
-          ${
-            notes
-              ? `<p style="margin-top:.5rem;">${escapeHtml(notes)}</p>`
-              : ``
-          }
-        `,
-        meta: `
-          Questo pannello ha finalità informative/formative.
-          Non è una validazione regolamentare e non sostituisce
-          la due diligence dell'investitore.
-        `
-      },
-      {
-        title: "Avvertenza MiFID",
-        body: `
-          <p>
-            Prima di qualsiasi scelta reale verifica sempre adeguatezza / appropriatezza
-            con un consulente autorizzato in linea con MiFID II.
-          </p>
-        `,
-        meta: `
-          Tradelia AI non fornisce consulenza personalizzata
-          e non raccoglie ordini o capitali.
-        `
-      }
-    ],
-    blocking: false,
-    panelSize: "wide", // look console se serve
-    footerButtons: [
-      {
-        label: "Chiudi",
-        action: () => closePanel()
-      }
-    ],
-    footerTabs: [] // niente tab mobile qui
-  });
-}
-
-// ------------------------------------------------------------
-// METRIC TOOLTIP SYSTEM (usa glossary.json esterno)
-// ------------------------------------------------------------
-//
-// Il glossario delle metriche NON è più hardcoded qui.
-// Viene caricato da /report/assets/glossary.json.
-//
-// Formato atteso del JSON:
-// {
-//   "MetricKey": {
-//     "title": "Titolo breve",
-//     "long": "Spiegazione lunga da mostrare nel popup",
-//     "source": "Fonte / origine del dato"
-//   },
-//   ...
-// }
-
-let __TradeliaGlossary = {}; // popolato da loadGlossary()
-
-async function loadGlossary() {
-  try {
-    const res = await fetch("/report/assets/glossary.json", { cache: "no-cache" });
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    const json = await res.json();
-    if (json && typeof json === "object") {
-      __TradeliaGlossary = json;
-    } else {
-      __TradeliaGlossary = {};
-    }
-  } catch (e) {
-    console.warn("⚠️ Glossary non caricato /report/assets/glossary.json", e);
-    __TradeliaGlossary = {};
-  }
-}
-
-function getGlossaryEntry(key) {
-  return __TradeliaGlossary[key] || {
-    title: key || "—",
-    long:  "—",
-    source:""
-  };
-}
-
-// Stato corrente popover desktop (per gestione toggle/close)
-let currentPopoverOpen = false;
-
-// Desktop: pop vicino al bottone cliccato, MA clampato al viewport
-function openMetricDesktop(btnEl) {
-  const pop = qs("#metric-popover");
-  if (!pop) return;
-
-  const key = btnEl.getAttribute("data-metric");
-  const info = getGlossaryEntry(key);
-
-  const titleEl  = qs("#metric-popover-title");
-  const bodyEl   = qs("#metric-popover-body");
-  const sourceEl = qs("#metric-popover-source");
-
-  setText(titleEl, info.title || key || "—");
-  setText(bodyEl,  info.long  || "—");
-  setText(sourceEl, info.source || "");
-
-  const rect = btnEl.getBoundingClientRect();
-
-  const OFFSET_X = 8;
-  const OFFSET_Y = 4;
-
-  let left = rect.left + window.scrollX + OFFSET_X;
-  let top  = rect.bottom + window.scrollY + OFFSET_Y;
-
-  // posizione preliminare
-  pop.style.position = "absolute";
-  pop.style.maxWidth = "320px";
-  pop.style.left = left + "px";
-  pop.style.top  = top  + "px";
-  pop.style.right = "auto";
-  pop.style.bottom = "auto";
-  pop.setAttribute("aria-hidden", "false");
-
-  // calcolo bounding e clamp
-  const vpW = window.innerWidth;
-  const vpH = window.innerHeight;
-  const popRect = pop.getBoundingClientRect();
-
-  // se esce a destra -> shift a sinistra
-  if (popRect.right > vpW - 8) {
-    const diffX = popRect.right - (vpW - 8);
-    left = left - diffX;
-  }
-  // se va fuori a sinistra -> clamp 8px
-  if (left < window.scrollX + 8) {
-    left = window.scrollX + 8;
-  }
-
-  // se esce in basso -> apri sopra
-  if (popRect.bottom > vpH - 8) {
-    top = rect.top + window.scrollY - popRect.height - OFFSET_Y;
-  }
-  // se va troppo su -> clamp 8px dall'alto viewport
-  if (top < window.scrollY + 8) {
-    top = window.scrollY + 8;
-  }
-
-  // applica correzioni
-  pop.style.left = left + "px";
-  pop.style.top  = top  + "px";
-
-  currentPopoverOpen = true;
-}
-
-function closeMetricDesktop() {
-  const pop = qs("#metric-popover");
-  if (!pop) return;
-  pop.setAttribute("aria-hidden", "true");
-  currentPopoverOpen = false;
-}
-
-// Mobile: modal centrale/bottom
-function openMetricMobile(btnEl) {
-  const modal = qs("#metric-modal");
-  if (!modal) return;
-
-  const key = btnEl.getAttribute("data-metric");
-  const info = getGlossaryEntry(key);
-
-  const titleEl  = qs("#metric-modal-title");
-  const bodyEl   = qs("#metric-modal-body");
-  const sourceEl = qs("#metric-modal-source");
-
-  setText(titleEl, info.title || key || "—");
-  setText(sourceEl, info.source || "");
-  bodyEl.innerHTML = escapeHtml(info.long || "—");
-
-  modal.setAttribute("aria-hidden","false");
-}
-
-function closeMetricMobile() {
-  const modal = qs("#metric-modal");
-  if (!modal) return;
-  modal.setAttribute("aria-hidden","true");
-}
-
-// bindMetricInfoButtons(root) -> aggancia i click sui bottoni "?"
-// può essere chiamata su un subtree specifico (es. panel appena aperto)
-function bindMetricInfoButtons(rootScope) {
-  const scope = rootScope || document;
-
-  qsa(".info-btn", scope).forEach(btn => {
-    if (btn.__metricBound) return;
-    btn.__metricBound = true;
-
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-
-      if (isMobile()) {
-        openMetricMobile(btn);
-      } else {
-        // toggle semplice: chiudo se aperto, poi riapro sul nuovo click
-        if (currentPopoverOpen) {
-          closeMetricDesktop();
-          currentPopoverOpen = false;
-        }
-        openMetricDesktop(btn);
-      }
-    });
-  });
-}
-
-// chiusura popover desktop (icona X)
-const popClose = qs("#metric-popover-close");
-if (popClose) {
-  popClose.addEventListener("click", (e) => {
-    e.stopPropagation();
-    closeMetricDesktop();
-  });
-}
-
-// click fuori: chiudi popover desktop
-document.addEventListener("click", (ev) => {
-  const pop = qs("#metric-popover");
-  if (!pop) return;
-  if (pop.getAttribute("aria-hidden") === "true") return;
-
-  if (pop.contains(ev.target)) return;            // clic dentro → niente
-  if (ev.target.closest(".info-btn")) return;     // clic su altro ? → lo gestiamo lì
-
-  closeMetricDesktop();
-});
-
-// chiusura mobile modal (X o backdrop)
-qsa("[data-metric-close]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    closeMetricMobile();
-  });
-});
-
-// ------------------------------------------------------------
-// THEME SWITCH (light / dark)
-// ------------------------------------------------------------
-function initThemeToggle() {
-  const btnTheme = qs("#btn-theme");
-  if (!btnTheme) return;
-
-  function applyTheme(theme) {
-    document.documentElement.setAttribute("data-theme", theme);
-    try {
-      localStorage.setItem("tradelia-theme", theme);
-    } catch(e){}
-  }
-
-  // init from localStorage
-  (function initFromStorage(){
-    try {
-      const saved = localStorage.getItem("tradelia-theme");
-      if (saved === "dark" || saved === "light") {
-        applyTheme(saved);
-      }
-    } catch(e){}
-  })();
-
-  btnTheme.addEventListener("click", () => {
-    const cur = document.documentElement.getAttribute("data-theme") || "light";
-    const next = (cur === "light" ? "dark" : "light");
-    applyTheme(next);
-  });
-}
-
-// ------------------------------------------------------------
-// PRINT
-// ------------------------------------------------------------
-function initPrintButtons() {
-  const p1 = qs("#btn-print");
-  const p2 = qs("#btn-print-2");
-  [p1,p2].forEach(btn => {
-    if (!btn) return;
-    btn.addEventListener("click", () => {
-      window.print();
-    });
-  });
-}
-
-// ------------------------------------------------------------
-// SHARE OVERLAY
-// ------------------------------------------------------------
-function initShareOverlay() {
-  const overlay = qs("#share-overlay");
-  const btnOpen = qs("#btn-share");
-  if (!overlay || !btnOpen) return;
-
-  const closeElems = qsa("[data-share-close]", overlay);
-  const copyBtns   = qsa("[data-share-svc='copy'], #share-copy-btn", overlay);
-
-  function openShare() {
-    const linkField = qs("#share-link-field");
-    if (linkField) {
-      linkField.textContent = window.location.href;
-    }
-    overlay.setAttribute("aria-hidden","false");
-  }
-  function closeShare() {
-    overlay.setAttribute("aria-hidden","true");
-  }
-
-  btnOpen.addEventListener("click", openShare);
-  closeElems.forEach(el => el.addEventListener("click", closeShare));
-
-  // copia link
-  copyBtns.forEach(el => {
-    el.addEventListener("click", () => {
-      const url = window.location.href;
-      try {
-        navigator.clipboard.writeText(url);
-      } catch(e){}
-    });
-  });
-}
-
-// ------------------------------------------------------------
-// BUTTON BINDING: Privacy / MiFID
-// ------------------------------------------------------------
-function initLegalButtons() {
-  const privBtn = qs("#btn-privacy-open");
-  if (privBtn) {
-    privBtn.addEventListener("click", () => {
-      openPrivacyPanel();
-    });
-  }
-
-  const mifidBtn = qs("#btn-mifid-open");
-  if (mifidBtn) {
-    mifidBtn.addEventListener("click", () => {
-      openMifidPanel();
-    });
-  }
-}
-
-// ------------------------------------------------------------
-// EXPORT API GLOBALE
-// ------------------------------------------------------------
-//
-// I moduli (es. F1B) useranno queste funzioni:
-// - openPanel / closePanel
-// - openPrivacyPanel / openMifidPanel / openAuditPanel
-// - bindMetricInfoButtons
-//
-// compat legacy: esponiamo anche su window.openPanel / window.closePanel
-
-window.__TradeliaUI = {
-  openPanel,
-  closePanel,
-  openPrivacyPanel,
-  openMifidPanel,
-  openAuditPanel,
-  bindMetricInfoButtons
-};
-
-// compat legacy
-window.openPanel = openPanel;
-window.closePanel = closePanel;
-
-// ------------------------------------------------------------
-// BOOT
-// ------------------------------------------------------------
-async function bootUIRuntime() {
-  // 1. carica glossary.json prima di bindare i tooltip
-  await loadGlossary();
-
-  // 2. init vari sistemi UI
-  initThemeToggle();
-  initPrintButtons();
-  initShareOverlay();
-  initLegalButtons();
-
-  // 3. bind tooltip sui contenuti già presenti in pagina (hero, card, ecc.)
-  bindMetricInfoButtons(document);
-
-  // 4. lucide icons render (se presente)
-  if (window.lucide && typeof window.lucide.createIcons === "function") {
-    try {
-      window.lucide.createIcons();
-    } catch(e){
-      console.warn("lucide.createIcons() error:", e);
-    }
-  }
-
-  // 5. init footer year se non già settato da app.js
-  const footerYearEl = qs("#footer-year");
-  if (footerYearEl && !footerYearEl.textContent.trim()) {
-    const now = new Date();
-    footerYearEl.textContent = now.getFullYear();
-  }
-}
-
-// esegui subito
-bootUIRuntime();
-
-// ridichiariamo nel caso qualcuno sovrascriva window.__TradeliaUI dopo
-if (!window.__TradeliaUI) window.__TradeliaUI = {};
-window.__TradeliaUI.openPanel = openPanel;
-window.__TradeliaUI.closePanel = closePanel;
-window.__TradeliaUI.openPrivacyPanel = openPrivacyPanel;
-window.__TradeliaUI.openMifidPanel = openMifidPanel;
-window.__TradeliaUI.bindMetricInfoButtons = bindMetricInfoButtons;
