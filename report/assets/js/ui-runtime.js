@@ -126,9 +126,10 @@ function openPanel(opts) {
       const mta = section.meta    || "";
       return `
         <section class="tl-panel-section" style="margin-bottom:1rem;">
-          ${st
-            ? `<div class="tl-panel-section-title text-[12px] font-semibold mb-1 text-[color:var(--ink)]">${st}</div>`
-            : ``
+          ${
+            st
+              ? `<div class="tl-panel-section-title text-[12px] font-semibold mb-1 text-[color:var(--ink)]">${st}</div>`
+              : ``
           }
           <div class="tl-panel-section-text text-[13px] leading-[1.45] text-[color:var(--ink)]">${bd}</div>
           ${
@@ -411,69 +412,47 @@ function openAuditPanel(auditData) {
 }
 
 // ------------------------------------------------------------
-// METRIC TOOLTIP SYSTEM
+// METRIC TOOLTIP SYSTEM (usa glossary.json esterno)
 // ------------------------------------------------------------
 //
-// Glossario centrale delle metriche.
-// Le chiavi devono combaciare con data-metric="Chiave" nei bottoni "?".
+// Il glossario delle metriche NON è più hardcoded qui.
+// Viene caricato da /report/assets/glossary.json.
+//
+// Formato atteso del JSON:
+// {
+//   "MetricKey": {
+//     "title": "Titolo breve",
+//     "long": "Spiegazione lunga da mostrare nel popup",
+//     "source": "Fonte / origine del dato"
+//   },
+//   ...
+// }
 
-const glossary = {
-  Snapshot: {
-    title: "Snapshot",
-    long:  "Intervallo di osservazione dei dati mostrati nel report. Tipicamente Start → End nel fuso richiesto.",
-    source:"Timestamp interno di acquisizione / normalizzazione feed."
-  },
-  Price: {
-    title: "Price",
-    long:  "Ultimo prezzo disponibile al momento dello snapshot, non necessariamente la chiusura ufficiale.",
-    source:"Feed di mercato · fonte esterna tier-1."
-  },
-  ChangePct: {
-    title: "Δ%",
-    long:  "Rendimento relativo rispetto allo snapshot di partenza. Positivo = rialzo, negativo = ribasso.",
-    source:"Calcolo interno sul differenziale di prezzo."
-  },
-  Currency: {
-    title: "Currency",
-    long:  "Valuta base in cui è espresso il prezzo. Serve per confronti cross-market.",
-    source:"Mercato di negoziazione indicato."
-  },
-  Freshness: {
-    title: "Freshness",
-    long:  "Quanto è recente il dato rispetto ad ora. 'T-0' = dato odierno. Valori più alti = feed più aggiornato.",
-    source:"Timestamp interno + lag feed."
-  },
-  ConfidenceFinal: {
-    title: "Confidence",
-    long:  "Stima interna della robustezza del campione e dell'allineamento tra più fonti (0-1). Non è una garanzia.",
-    source:"Heuristics interne."
-  },
-  StrategyMode: {
-    title: "StrategyMode",
-    long:  "Classificazione del regime corrente di mercato basata su flussi settoriali, ampiezza del rialzo e volatilità implicita.",
-    source:"Elaborazione interna da fonti ETFdb / CBOE / Reuters."
-  },
-  RegimeScore: {
-    title: "RegimeScore",
-    long:  "Indice sintetico risk-on vs risk-off. Valori più alti indicano maggiore appetito per il rischio.",
-    source:"Flows settoriali + volatilità implicita."
-  },
-  Breadth: {
-    title: "Breadth (1M)",
-    long:  "Percentuale dei principali settori azionari positivi negli ultimi 30 giorni. Alta = rialzo ampio.",
-    source:"Performance settoriale rolling 1M."
-  },
-  RiskTilt: {
-    title: "RiskTilt",
-    long:  "Forza relativa dei settori ciclici/growth rispetto ai difensivi. >0 = mercato orientato al rischio.",
-    source:"ETF settoriali (ciclici vs difensivi)."
-  },
-  VIX: {
-    title: "VIX",
-    long:  "Volatilità implicita sull’S&P500 (~30 giorni). Alto = mercato prezza stress, Basso = mercato prezza stabilità.",
-    source:"CBOE."
+let __TradeliaGlossary = {}; // popolato da loadGlossary()
+
+async function loadGlossary() {
+  try {
+    const res = await fetch("/report/assets/glossary.json", { cache: "no-cache" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const json = await res.json();
+    if (json && typeof json === "object") {
+      __TradeliaGlossary = json;
+    } else {
+      __TradeliaGlossary = {};
+    }
+  } catch (e) {
+    console.warn("⚠️ Glossary non caricato /report/assets/glossary.json", e);
+    __TradeliaGlossary = {};
   }
-};
+}
+
+function getGlossaryEntry(key) {
+  return __TradeliaGlossary[key] || {
+    title: key || "—",
+    long:  "—",
+    source:""
+  };
+}
 
 // Stato corrente popover desktop (per gestione toggle/close)
 let currentPopoverOpen = false;
@@ -484,11 +463,7 @@ function openMetricDesktop(btnEl) {
   if (!pop) return;
 
   const key = btnEl.getAttribute("data-metric");
-  const info = glossary[key] || {
-    title: key || "—",
-    long:  "—",
-    source:""
-  };
+  const info = getGlossaryEntry(key);
 
   const titleEl  = qs("#metric-popover-title");
   const bodyEl   = qs("#metric-popover-body");
@@ -559,11 +534,7 @@ function openMetricMobile(btnEl) {
   if (!modal) return;
 
   const key = btnEl.getAttribute("data-metric");
-  const info = glossary[key] || {
-    title: key || "—",
-    long:  "—",
-    source:""
-  };
+  const info = getGlossaryEntry(key);
 
   const titleEl  = qs("#metric-modal-title");
   const bodyEl   = qs("#metric-modal-body");
@@ -762,16 +733,20 @@ window.closePanel = closePanel;
 // ------------------------------------------------------------
 // BOOT
 // ------------------------------------------------------------
-function bootUIRuntime() {
+async function bootUIRuntime() {
+  // 1. carica glossary.json prima di bindare i tooltip
+  await loadGlossary();
+
+  // 2. init vari sistemi UI
   initThemeToggle();
   initPrintButtons();
   initShareOverlay();
   initLegalButtons();
 
-  // bind tooltip sui contenuti già presenti in pagina (hero, card, ecc.)
+  // 3. bind tooltip sui contenuti già presenti in pagina (hero, card, ecc.)
   bindMetricInfoButtons(document);
 
-  // lucide icons render (se presente)
+  // 4. lucide icons render (se presente)
   if (window.lucide && typeof window.lucide.createIcons === "function") {
     try {
       window.lucide.createIcons();
@@ -780,7 +755,7 @@ function bootUIRuntime() {
     }
   }
 
-  // init footer year se non già settato da app.js
+  // 5. init footer year se non già settato da app.js
   const footerYearEl = qs("#footer-year");
   if (footerYearEl && !footerYearEl.textContent.trim()) {
     const now = new Date();
