@@ -151,9 +151,9 @@
           <span class="text-[color:var(--ink)]">TRADELIA</span><span class="text-[color:var(--brand)]">&bull;AI</span>
         </a>
 
-        <!-- claim cliente / titolo report -->
+        <!-- positioning del report -->
         <span class="claim truncate">
-          Report {NOME AZIENDA}
+          Equity Intelligence · {NOME AZIENDA}
         </span>
       </div>
 
@@ -189,7 +189,7 @@
     <section id="hero" class="hero" aria-label="Copertina Report">
       <!-- H1 istituzionale invisibile sul web ma visibile in PDF -->
       <h1 class="sr-only print:block text-[16px] font-bold leading-tight mb-2 text-[color:var(--ink)]">
-        Tradelia AI · Report {NOME AZIENDA}
+        Tradelia AI · Institutional Model Report · {NOME AZIENDA}
       </h1>
 
       <div class="hero__top">
@@ -197,10 +197,11 @@
           <div class="hero__ticker" id="hero-ticker">—</div>
           <div class="hero__venue" id="hero-venue">—</div>
 
-          <!-- meta cliente / tipo report -->
+          <!-- meta prodotto -->
           <div class="hero__client text-[11px] leading-[1.3] text-[color:var(--muted)] mt-1">
-            <span id="hero-client">Client: {NOME AZIENDA}</span> ·
-            <span class="uppercase tracking-wide">Institutional Model Report</span>
+            <span class="uppercase tracking-wide">TRADELIA AI · Institutional Model Report</span>
+            ·
+            <span id="hero-client">{NOME AZIENDA}</span>
           </div>
         </div>
 
@@ -293,38 +294,33 @@
     <!-- DISCLAIMER SOLO PDF -->
     <section id="print-disclaimer" class="onlyprint" aria-label="Avvertenze regolamentari">
       <h2 class="text-[14px] font-bold leading-[1.4] mb-2 text-[color:var(--ink)]">
-        Uso riservato · Informativa MiFID / Compliance
+        Informativa regolamentare · MiFID / Uso Professionale
       </h2>
 
       <p class="text-[12px] leading-[1.45] text-[color:var(--ink)] mb-3">
-        Questo documento è destinato esclusivamente a finalità informative e formative.
-        Non costituisce in alcun modo una raccomandazione personalizzata di investimento,
-        né una sollecitazione al pubblico risparmio, né un invito ad aprire, chiudere
-        o modificare posizioni su strumenti finanziari.
+        Questo report è materiale informativo e formativo a carattere generale,
+        preparato da Tradelia AI su base proprietaria. Non costituisce
+        raccomandazione personalizzata di investimento, né proposta o sollecitazione
+        all'acquisto o vendita di strumenti finanziari, né servizio di consulenza individuale.
       </p>
 
       <p class="text-[12px] leading-[1.45] text-[color:var(--ink)] mb-3">
-        Tradelia AI non svolge attività di consulenza finanziaria personalizzata,
-        non raccoglie ordini di negoziazione, non gestisce capitali di terzi.
-        Gli scenari descritti (F1…F6) riflettono condizioni di mercato, sentiment,
-        volatilità e fattori tecnici a fini educativi e di analisi del contesto.
+        Le analisi riflettono scenari di mercato, rischio, sentiment e fattori tecnici
+        alla data di redazione. Le view, le metriche di regime (F1…F6) e gli esempi
+        operativi hanno finalità esclusivamente illustrative. Le performance passate,
+        simulate o ipotetiche non garantiscono risultati futuri.
       </p>
 
       <p class="text-[12px] leading-[1.45] text-[color:var(--ink)] mb-3">
-        L’investimento in strumenti finanziari comporta rischio di perdita totale
-        o parziale del capitale. Le performance storiche o ipotetiche non sono
-        indicative di risultati futuri.
-      </p>
-
-      <p class="text-[12px] leading-[1.45] text-[color:var(--ink)] mb-3 font-semibold">
-        Documento ad uso interno / riservato. È vietata la diffusione a soggetti terzi,
-        la ripubblicazione o la rimarchiatura senza autorizzazione scritta
-        di Tradelia AI. Ogni violazione può costituire illecito civile e/o penale.
+        Tradelia AI non raccoglie ordini, non gestisce capitali di terzi e non valuta
+        l’adeguatezza o l’appropriatezza per il singolo lettore. Chi utilizza questo
+        materiale resta pienamente responsabile delle proprie decisioni finanziarie
+        e deve rivolgersi a intermediari autorizzati e regolamentati.
       </p>
 
       <p class="text-[11px] leading-[1.4] text-[color:var(--muted)]">
-        Riferimenti regolamentari: MiFID II, ESMA guidelines su consulenza in materia
-        di investimenti, obblighi di adeguatezza e appropriatezza.
+        Riferimenti quadro normativo: MiFID II, ESMA – definizione di consulenza in
+        materia di investimenti, obblighi di trasparenza e risk disclosure verso l’investitore.
       </p>
     </section>
 
@@ -332,13 +328,13 @@
     <section id="print-toc" class="onlyprint" aria-label="Indice del Report">
       <h2 class="text-[14px] font-bold leading-[1.4] mb-2 text-[color:var(--ink)]">Indice del Report</h2>
       <ol class="text-[12px] leading-[1.45] text-[color:var(--ink)] list-decimal list-inside space-y-1">
-        <li>F1 · Contesto iniziale / Regime di mercato</li>
+        <li>F1 · Regime di mercato / Contesto macro</li>
         <li>F2 · Sentiment e flussi</li>
         <li>F3 · Analisi tecnica multi-timeframe</li>
         <li>F4 · Relazioni intermarket</li>
-        <li>F5 · Resoconto tecnico</li>
-        <li>F5B · Validazione LT (orizzonte medio-lungo)</li>
-        <li>F6 · Broker selezionati</li>
+        <li>F5 · Sintesi tecnica e segnali</li>
+        <li>F5B · Validazione medio-lungo periodo</li>
+        <li>F6 · Intermediari regolamentati</li>
         <li>Appendice · Audit fonti e qualità dati</li>
       </ol>
     </section>
@@ -347,11 +343,15 @@
     <section class="section-head" aria-label="Struttura del Report">
       <h2 class="section-title">Struttura del Report</h2>
       <p class="section-sub">
-        Il framework Tradelia procede top-down: F1 (contesto iniziale / regime di mercato),
-        F2 (sentiment e flussi), F3 (analisi tecnica multi-timeframe),
-        F4 (relazioni intermarket), F5 (resoconto tecnico),
-        F5B (validazione LT), F6 (broker selezionati).
-        Contenuti a scopo informativo/formativo. Nessuna raccomandazione operativa.
+        Il framework Tradelia AI è suddiviso in moduli F1–F6.
+        F1: regime di mercato e contesto macro.
+        F2: sentiment, flussi e posizionamento.
+        F3: analisi tecnica multi–timeframe.
+        F4: segnali intermarket e rischio sistemico.
+        F5: sintesi operativa tecnica.
+        F5B: validazione di medio-lungo periodo.
+        F6: intermediari regolamentati per l’accesso al mercato.
+        Tutte le sezioni hanno finalità informative/formative.
       </p>
       <nav class="phase-nav" aria-label="Fasi del framework">
         <a href="#sec-f1">F1</a>
@@ -366,13 +366,13 @@
 
     <!-- SEZIONI DINAMICHE -->
     <section class="report-sections" aria-label="Moduli del Report">
-      <article id="sec-f1"  class="report-section-block is-loading" aria-label="F1 · Contesto iniziale / Regime di mercato"></article>
+      <article id="sec-f1"  class="report-section-block is-loading" aria-label="F1 · Regime di mercato / Contesto macro"></article>
       <article id="sec-f2"  class="report-section-block is-loading" aria-label="F2 · Sentiment e flussi"></article>
       <article id="sec-f3"  class="report-section-block is-loading" aria-label="F3 · Analisi tecnica multi-timeframe"></article>
       <article id="sec-f4"  class="report-section-block is-loading" aria-label="F4 · Relazioni intermarket"></article>
-      <article id="sec-f5"  class="report-section-block is-loading" aria-label="F5 · Resoconto tecnico"></article>
-      <article id="sec-f5b" class="report-section-block is-loading" aria-label="F5B · Validazione LT (orizzonte medio-lungo)"></article>
-      <article id="sec-f6"  class="report-section-block is-loading" aria-label="F6 · Broker selezionati"></article>
+      <article id="sec-f5"  class="report-section-block is-loading" aria-label="F5 · Sintesi tecnica e segnali"></article>
+      <article id="sec-f5b" class="report-section-block is-loading" aria-label="F5B · Validazione medio-lungo periodo"></article>
+      <article id="sec-f6"  class="report-section-block is-loading" aria-label="F6 · Intermediari regolamentati"></article>
     </section>
 
     <!-- APPENDICE SOLO PDF -->
@@ -405,9 +405,12 @@
       </p>
 
       <p class="text-[11px] leading-[1.4] text-[color:var(--muted)]">
-        Nota: questa appendice ha finalità di trasparenza metodologica
-        e non sostituisce la due diligence dell’investitore. Prima di
-        decisioni operative, rivolgersi a un intermediario autorizzato.
+        Nota: questa appendice descrive metodologia e qualità del dato
+        utilizzati per la presente analisi proprietaria Tradelia AI.
+        Non costituisce due diligence completa su singoli strumenti
+        né sostituisce la valutazione di idoneità/appropriatezza
+        richiesta da normativa vigente. Prima di qualsiasi operatività
+        è necessario rivolgersi a un intermediario autorizzato.
       </p>
     </section>
   </main>
@@ -421,9 +424,9 @@
             TRADELIA<span class="text-[color:var(--brand)]">&bull;AI</span>
           </div>
 
-          <!-- Riferimento cliente + versione -->
+          <!-- Riferimento e versione -->
           <div class="mt-1">
-            Report {NOME AZIENDA} ·
+            Institutional Model Report · <span id="hero-client-footer">{NOME AZIENDA}</span> ·
             <span id="footer-version">v1.0</span>
           </div>
 
@@ -439,33 +442,34 @@
         <div class="min-w-0">
           <div class="heading">Metodo</div>
           <p class="mt-1 text-[13px] leading-[1.45]">
-            F1 = contesto iniziale / regime di mercato.<br/>
+            F1 = regime di mercato / contesto macro.<br/>
             F2 = sentiment &amp; flussi.<br/>
-            F3 = analisi tecnica multi-timeframe.<br/>
-            F4 = relazioni intermarket.<br/>
-            F5 = resoconto tecnico.<br/>
-            F5B = validazione LT.<br/>
-            F6 = broker selezionati.
+            F3 = tecnica multi-timeframe.<br/>
+            F4 = segnali intermarket.<br/>
+            F5 = sintesi tecnica e segnali.<br/>
+            F5B = validazione medio-lungo periodo.<br/>
+            F6 = intermediari regolamentati.
           </p>
         </div>
 
         <div class="min-w-0">
-          <div class="heading">Legale</div>
+          <div class="heading">Conformità</div>
           <div class="mt-2 flex flex-wrap gap-6">
             <button class="btn btn-sm" id="btn-privacy-open" type="button">Privacy</button>
             <button class="btn btn-sm" id="btn-mifid-open" type="button">Informativa MiFID</button>
             <button class="btn btn-sm" id="btn-print-2" type="button">Stampa / PDF</button>
           </div>
           <p class="mt-2 text-[12.5px] opacity-90">
-            Documento interno / non destinato alla diffusione pubblica.
+            Ricerca proprietaria Tradelia AI. Distribuzione a uso professionale e formativo.
+            Non è consulenza finanziaria personalizzata.
           </p>
         </div>
       </div>
 
       <div class="mt-3 text-[12.5px] opacity-90">
         © <span id="footer-year"></span> Tradelia. Tutti i diritti riservati. ·
-        Contenuti a scopo puramente informativo/formativo.
-        Nessuna raccomandazione personalizzata.
+        Analisi e contenuti a scopo informativo e formativo.
+        Non costituiscono consulenza individuale d'investimento.
         Contatti:
         <a href="mailto:info@tradelia.org" class="underline hover:opacity-80">info@tradelia.org</a>
       </div>
@@ -473,18 +477,19 @@
   </div>
 
   <!-- FOOTER SOLO PDF -->
-  <footer id="print-footer" class="onlyprint" aria-label="Chiosa legale finale">
+  <footer id="print-footer" class="onlyprint" aria-label="Note finali di conformità">
     <div class="text-[11px] leading-[1.4] text-[color:var(--ink)]">
       © Tradelia. Tutti i diritti riservati.
-      Documento strettamente riservato, non destinato alla redistribuzione o rimarchiatura.
-      Le informazioni qui contenute non costituiscono consulenza personalizzata
-      né garanzia di risultati futuri. Per qualsiasi decisione finanziaria
-      è necessario rivolgersi a un intermediario regolamentato.
+      Questo report è una pubblicazione proprietaria Tradelia AI
+      destinata a uso informativo e formativo.
+      Non è consulenza finanziaria personalizzata, non è un invito
+      all'investimento né garantisce risultati futuri.
+      Prima di qualsiasi decisione operativa rivolgersi a un intermediario regolamentato.
       Contatti: info@tradelia.org
     </div>
   </footer>
 
-  <!-- PANEL OVERLAY (MiFID / Privacy / Drawer F1B ecc.) -->
+  <!-- PANEL OVERLAY (MiFID / Privacy / Drawer moduli F1..F5B / Dettagli rischio) -->
   <div
     id="panel-overlay"
     class="tl-panel-overlay noprint"
@@ -498,7 +503,11 @@
       <header class="tl-panel__header">
         <div class="min-w-0">
           <h2 id="panel-title" class="tl-panel__title">—</h2>
-          <p id="panel-subtitle" class="tl-panel__subtitle">—</p>
+          <p id="panel-subtitle" class="tl-panel__subtitle">
+            <!-- esempio JS target:
+                 Aggiornato: T-0 | Confidence: High | Risk Window: 3-5 giorni -->
+            —
+          </p>
         </div>
         <button class="tl-panel__close" data-panel-close aria-label="Chiudi">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -513,15 +522,22 @@
         <!-- JS inserisce:
           <button class="tl-panel-tab is-active" data-panel-tab="overview">
             <span class="tl-panel-tab-label">Overview</span>
-            <span class="tl-panel-tab-pill tl-panel-tab-pill--pos">POS</span>
+            <span class="tl-panel-tab-pill tl-panel-tab-pill--pos">
+              <span class="tl-panel-tab-ico" aria-hidden="true"><!-- svg check verde pastello --></span>
+              BUY
+            </span>
           </button>
-          ...
         -->
       </nav>
 
       <!-- corpo DESKTOP -->
       <div id="panel-body" class="tl-panel__body">
-        <!-- JS inserisce le varie <section class="tl-panel-section" data-panel-section="overview"> ... -->
+        <!-- JS inserisce le varie
+             <section class="tl-panel-section" data-panel-section="overview">
+               <h3 class="tl-panel-section-title">Decisione & Regole</h3>
+               ...
+             </section>
+        -->
       </div>
 
       <footer class="tl-panel__footer" id="panel-footer">
@@ -534,7 +550,10 @@
       <header class="tl-panel__header">
         <div class="min-w-0">
           <h2 id="panel-title-mobile" class="tl-panel__title">—</h2>
-          <p id="panel-subtitle-mobile" class="tl-panel__subtitle">—</p>
+          <p id="panel-subtitle-mobile" class="tl-panel__subtitle">
+            <!-- stesso schema metadati -->
+            —
+          </p>
         </div>
         <button class="tl-panel__close" data-panel-close aria-label="Chiudi">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
