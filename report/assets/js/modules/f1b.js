@@ -2,14 +2,10 @@
 //
 // F1B · Regime di mercato / Contesto rischio
 //
-// - Card riassuntiva con CTA "Dettagli regime →"
-// - Drawer (panel) con tab responsive
-//   • Desktop: sidebar sinistra + contenuto scrollabile a destra
-//   • Mobile: fullscreen, contenuto scrollabile,
-//             footer sticky in basso con TAB + Chiudi (ombre leggere)
-// - Tooltip "?" unificati (usa window.__TradeliaUI.bindMetricInfoButtons)
+// Card riassuntiva F1 + drawer dettagliabile (desktop / mobile)
+// Mobile: footer sticky con tab + pulsante Chiudi, ombra soft
 //
-// Esposti al runtime principale (app.js):
+// Esposti ad app.js:
 //   renderCard(data, ctx)
 //   bindCard(node, data, ctx)
 
@@ -444,7 +440,6 @@ function buildDrawerSections(data) {
 ------------------------------------------------- */
 
 function renderDrawerDesktopShell(sectionsObj) {
-  // sidebar sinistra, contenuto scroll a destra
   return `
     <div class="f1b-panel-desktop"
       style="
@@ -484,10 +479,7 @@ function renderDrawerDesktopShell(sectionsObj) {
 
 /* -------------------------------------------------
    Shell MOBILE
-   - fullscreen
-   - contenuto scroll
-   - footer sticky in basso con tab + Chiudi
-   - ombra soft (no overlay nero pesante)
+   footer sticky con tab + Chiudi, ombra soft
 ------------------------------------------------- */
 
 function renderDrawerMobileShell(sectionsObj) {
@@ -495,7 +487,7 @@ function renderDrawerMobileShell(sectionsObj) {
     <div class="f1b-panel-mobile"
       style="
         position:relative;
-        height:calc(100vh - 110px); /* header panel (~110px) */
+        height:calc(100vh - 110px);
         max-height:calc(100vh - 110px);
         min-height:300px;
         display:flex;
@@ -538,7 +530,6 @@ function renderDrawerMobileShell(sectionsObj) {
           line-height:1.2;
           z-index:10;
 
-          /* ombra molto più morbida verso l'alto */
           box-shadow:0 -6px 12px rgba(0,0,0,.12);
         ">
 
@@ -589,7 +580,9 @@ function drawerMenuButton(key, label, active) {
       style="
         border-radius:var(--radius-card-sm);
         border-left:3px solid ${active ? "var(--brand)" : "transparent"};
-        background:${active ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)" : "transparent"};
+        background:${active
+          ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)"
+          : "transparent"};
         font-weight:${active ? "600" : "500"};
         color:var(--ink);
         text-align:left;
@@ -601,39 +594,39 @@ function drawerMenuButton(key, label, active) {
 }
 
 function drawerMobileTabButton(key, label, active) {
-  // Ogni tab è un pulsante 'pill' cliccabile
-  return `
-    <button
-      class="f1b-tab-btn-mobile flex-1 text-center ${active ? "is-active" : ""}"
-      data-f1b-tab="${key}"
-      style="
-        border-radius:10px;
-        font-weight:${active ? "600" : "500"};
-        font-size:12px;
-        line-height:1.2;
-        padding:.6rem .4rem;
-        border:1px solid ${active ? "var(--tone-neu-fg)" : "var(--br-soft)"};
-        background:${
-          active
-            ? \`radial-gradient(circle at 0% 0%,
-                var(--tone-neu-bg-hard) 0%,
-                transparent 60%
-              ),
-              var(--surface-card-alt)\`
-            : "var(--surface-card)"
-        };
-        color:${active ? "var(--tone-neu-fg)" : "var(--muted)"};
-        box-shadow:var(--shadow-card);
-        min-width:0;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        white-space:nowrap;
-      "
-    >
-      ${label}
-    </button>
-  `;
+  // costruisco dinamicamente gli stili senza usare backtick annidati
+  const borderColor = active ? "var(--tone-neu-fg)" : "var(--br-soft)";
+  const bgActive =
+    "radial-gradient(circle at 0% 0%, var(--tone-neu-bg-hard) 0%, transparent 60%), var(--surface-card-alt)";
+  const bgInactive = "var(--surface-card)";
+  const bg = active ? bgActive : bgInactive;
+  const colorText = active ? "var(--tone-neu-fg)" : "var(--muted)";
+  const fontW = active ? "600" : "500";
+
+  return (
+    '<button ' +
+      'class="f1b-tab-btn-mobile flex-1 text-center ' + (active ? 'is-active' : '') + '" ' +
+      'data-f1b-tab="' + escapeAttr(key) + '" ' +
+      'style="' +
+        'border-radius:10px;' +
+        'font-weight:'+ fontW +';' +
+        'font-size:12px;' +
+        'line-height:1.2;' +
+        'padding:.6rem .4rem;' +
+        'border:1px solid '+ borderColor +';' +
+        'background:'+ bg +';' +
+        'color:'+ colorText +';' +
+        'box-shadow:var(--shadow-card);' +
+        'min-width:0;' +
+        'display:flex;' +
+        'align-items:center;' +
+        'justify-content:center;' +
+        'white-space:nowrap;' +
+      '"' +
+    '>' +
+      escapeHtml(label) +
+    '</button>'
+  );
 }
 
 /* -------------------------------------------------
@@ -653,13 +646,15 @@ function bindDrawerTabs(root) {
       const key = btn.getAttribute("data-f1b-tab");
       if (!key) return;
 
-      // attiva/deattiva bottoni (desktop sidebar + mobile footer tabbar)
+      // attiva/deattiva bottoni
       tabButtons.forEach(b => {
         const isActive = b.getAttribute("data-f1b-tab") === key;
         b.classList.toggle("is-active", isActive);
 
-        // stile dinamico desktop vs mobile
-        if (b.classList.contains("f1b-tab-btn")) {
+        const isDesktopBtn = b.classList.contains("f1b-tab-btn");
+        const isMobileBtn  = b.classList.contains("f1b-tab-btn-mobile");
+
+        if (isDesktopBtn) {
           // DESKTOP sidebar
           b.style.borderLeftColor = isActive ? "var(--brand)" : "transparent";
           b.style.background = isActive
@@ -668,18 +663,14 @@ function bindDrawerTabs(root) {
           b.style.fontWeight = isActive ? "600" : "500";
         }
 
-        if (b.classList.contains("f1b-tab-btn-mobile")) {
+        if (isMobileBtn) {
           // MOBILE footer pill
           b.style.fontWeight = isActive ? "600" : "500";
           b.style.border = isActive
             ? "1px solid var(--tone-neu-fg)"
             : "1px solid var(--br-soft)";
           b.style.background = isActive
-            ? `radial-gradient(circle at 0% 0%,
-                var(--tone-neu-bg-hard) 0%,
-                transparent 60%
-              ),
-              var(--surface-card-alt)`
+            ? "radial-gradient(circle at 0% 0%, var(--tone-neu-bg-hard) 0%, transparent 60%), var(--surface-card-alt)"
             : "var(--surface-card)";
           b.style.color = isActive
             ? "var(--tone-neu-fg)"
