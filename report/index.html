@@ -518,23 +518,33 @@
     </aside>
   </div>
 
-  <!-- TOOLTIP DESKTOP -->
-  <div id="metric-popover" class="tl-popover noprint" role="tooltip" aria-hidden="true">
-    <div class="tl-popover__head" style="display:flex;align-items:flex-start;gap:0.5rem;">
-      <button id="metric-popover-close" class="tl-popover__close" aria-label="Chiudi" style="flex-shrink:0;">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
+<div id="metric-popover"
+     class="tl-popover noprint"
+     role="tooltip"
+     aria-hidden="true"
+     style="max-width:320px;">
+  <div class="tl-popover__head"
+       style="display:flex;align-items:flex-start;gap:.5rem;">
+    <button id="metric-popover-close"
+            class="tl-popover__close"
+            aria-label="Chiudi"
+            style="order:0;flex-shrink:0;">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
 
-      <div id="metric-popover-title" class="tl-popover__title" style="font-weight:600;">
-        —
-      </div>
+    <div id="metric-popover-title"
+         class="tl-popover__title"
+         style="order:1;font-weight:600;font-size:14px;line-height:1.4;color:var(--ink);">
+      —
     </div>
-    <div id="metric-popover-body" class="tl-popover__body">—</div>
-    <div id="metric-popover-source" class="tl-popover__source">—</div>
   </div>
+
+  <div id="metric-popover-body" class="tl-popover__body">—</div>
+  <div id="metric-popover-source" class="tl-popover__source">—</div>
+</div>
 
   <!-- TOOLTIP MOBILE -->
   <div id="metric-modal" class="tl-metric-modal-overlay noprint" aria-hidden="true">
