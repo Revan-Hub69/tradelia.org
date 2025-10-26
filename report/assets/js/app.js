@@ -17,9 +17,9 @@
 //   export function renderCard(data, ctx) -> string HTML
 //   export function bindCard(node, data, ctx) -> attach listeners (opzionale)
 
-// ------------------------------------------------------------
+/////////////////////////////
 // Helpers base
-// ------------------------------------------------------------
+/////////////////////////////
 
 function getReportIdFromURL() {
   const params = new URLSearchParams(window.location.search);
@@ -57,9 +57,9 @@ function setTextById(id, value) {
   if (el) el.textContent = value;
 }
 
-// ------------------------------------------------------------
+/////////////////////////////
 // HERO + footer snapshot
-// ------------------------------------------------------------
+/////////////////////////////
 
 function mountHero(headerData) {
   if (!headerData) return;
@@ -189,9 +189,9 @@ function mountHero(headerData) {
   }
 }
 
-// ------------------------------------------------------------
+/////////////////////////////
 // MANIFEST LOADING / NORMALIZATION
-// ------------------------------------------------------------
+/////////////////////////////
 
 async function loadManifest(reportId) {
   const url = `/report/reports/${reportId}/manifest.json`;
@@ -258,9 +258,9 @@ function normalizeManifest(manifest, reportId) {
   };
 }
 
-// ------------------------------------------------------------
+/////////////////////////////
 // MOUNT DI UN SINGOLO MODULO (F1B/F2/...)
-// ------------------------------------------------------------
+/////////////////////////////
 
 async function mountSingleModule(modId, jsonUrl, reportId) {
   const selector = getSectionSelectorForModule(modId);
@@ -282,7 +282,7 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
   const fileBase = modId.toLowerCase();
   let mod;
   try {
-    // ⚠ aggiungo ?v=2 per forzare il browser a prendere la versione aggiornata
+    // cache-bust minimo
     mod = await import(`/report/assets/js/modules/${fileBase}.js?v=2`);
   } catch (err) {
     console.error("Import modulo fallita:", modId, err);
@@ -313,7 +313,7 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
     container.innerHTML = html;
     container.classList.remove("is-loading");
 
-    // bind interazioni modulo (Dettagli regime ecc.)
+    // bind interazioni modulo
     if (typeof mod.bindCard === "function") {
       try {
         mod.bindCard(container, data, { modId, reportId });
@@ -354,9 +354,9 @@ async function mountSingleModule(modId, jsonUrl, reportId) {
   }
 }
 
-// ------------------------------------------------------------
+/////////////////////////////
 // FLUSSO PRINCIPALE
-// ------------------------------------------------------------
+/////////////////////////////
 
 async function mountReport() {
   const reportId = getReportIdFromURL();
@@ -365,6 +365,25 @@ async function mountReport() {
   const headerData = await fetchJSON(`/report/reports/${reportId}/header.json`);
   if (headerData) {
     mountHero(headerData);
+
+    // ==== NEW: inserisci CompanyName/Ticker in UI chrome ====
+    const name = headerData.CompanyName || headerData.Ticker || "—";
+
+    // <title>
+    document.title = `Tradelia AI · Report ${name}`;
+
+    // header sticky claim ("Report {NOME AZIENDA}")
+    const claimEl = document.querySelector(".claim");
+    if (claimEl) {
+      claimEl.textContent = `Report ${name}`;
+    }
+
+    // tagline hero "Analisi indipendente su ..."
+    const heroClientEl = document.getElementById("hero-client");
+    if (heroClientEl) {
+      heroClientEl.textContent = `Analisi indipendente su ${name}`;
+    }
+    // =========================================================
   } else {
     console.warn("Header mancante per", reportId);
   }
