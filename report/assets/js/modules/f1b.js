@@ -8,7 +8,6 @@
 // - Tooltip unificati con data-metric="..."
 // - Apertura via window.__TradeliaUI.openPanel(...)
 //
-//
 // Export richiesti dal runtime principale (app.js):
 // - renderCard(data, ctx)
 // - bindCard(node, data, ctx)
@@ -63,13 +62,14 @@ export function renderCard(rawData, ctx = {}) {
 
         <!-- StrategyMode + tono -->
         <div>
-          <div class="text-[12px] font-semibold text-[color:var(--muted)] leading-[1.4]">
-            StrategyMode
+          <!-- riga label con ? a sinistra -->
+          <div class="flex items-start gap-1 text-[12px] font-semibold text-[color:var(--muted)] leading-[1.4]">
             <button
               class="info-btn info-btn--mini align-middle"
               data-metric="StrategyMode"
               aria-label="Info StrategyMode"
             >?</button>
+            <div class="leading-[1.4]">StrategyMode</div>
           </div>
 
           <div class="text-[14px] font-bold leading-[1.4] text-[color:var(--ink)] flex flex-wrap items-center gap-2 mt-1">
@@ -170,7 +170,7 @@ export function bindCard(node, rawData, ctx = {}) {
 /* -------------------------------------------------
    Drawer / Panel con tab responsive
    Desktop: sidebar sinistra + contenuto a destra
-   Mobile: fullscreen/bottom sheet con barra tab fissa in basso
+   Mobile: fullscreen/bottom sheet (per ora) con barra tab in basso
 ------------------------------------------------- */
 
 function openF1Drawer(data) {
@@ -181,13 +181,11 @@ function openF1Drawer(data) {
 
   const sectionsObj = buildDrawerSections(data);
 
-  // shell desktop + shell mobile
   const mobileMode = isMobileViewport();
   const drawerHTML = mobileMode
     ? renderDrawerMobileShell(sectionsObj)
     : renderDrawerDesktopShell(sectionsObj);
 
-  // Apri pannello
   window.__TradeliaUI.openPanel({
     title: "F1 · Regime di mercato",
     subtitle: "Flussi settoriali, ampiezza del rialzo e volatilità (T-1)",
@@ -207,10 +205,10 @@ function openF1Drawer(data) {
       }
     ],
     blocking: false,
-    panelSize: "wide" // pannello largo desktop
+    panelSize: "wide"
   });
 
-  // Dopo apertura: bind eventi tab + tooltip sul contenuto del panel
+  // dopo apertura montiamo tab + tooltip
   setTimeout(() => {
     const panelBody = document.getElementById("panel-body");
     const panelBodyMobile = document.getElementById("panel-body-mobile");
@@ -231,7 +229,6 @@ function openF1Drawer(data) {
   }, 0);
 }
 
-// Controlla viewport "mobile"
 function isMobileViewport() {
   return window.matchMedia("(max-width: 767px)").matches;
 }
@@ -257,22 +254,25 @@ function buildDrawerSections(data) {
     feedSyncScore
   } = data;
 
+  // REGIME ATTUALE
   const regimeHTML = `
     <div class="space-y-2">
       <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
         Regime attuale
       </div>
 
-      <div class="text-[13px] text-[color:var(--ink)] leading-[1.45] font-semibold flex flex-wrap items-center gap-2">
-        <span>StrategyMode: ${escapeHtml(strategyMode || "—")}</span>
+      <!-- StrategyMode riga: ? a sinistra -->
+      <div class="flex flex-wrap items-start gap-2 text-[13px] text-[color:var(--ink)] leading-[1.45] font-semibold">
         <button
           class="info-btn info-btn--mini"
           data-metric="StrategyMode"
           aria-label="Info StrategyMode"
         >?</button>
+        <span>StrategyMode: ${escapeHtml(strategyMode || "—")}</span>
       </div>
 
       <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
+        <!-- RegimeScore box -->
         <div class="p-2"
           style="
             background:var(--surface-card-alt);
@@ -280,21 +280,22 @@ function buildDrawerSections(data) {
             border-radius:var(--radius-card);
             box-shadow:var(--shadow-card);
           ">
-          <div class="flex items-start justify-between gap-1 mb-1">
-            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
-              RegimeScore
-            </div>
+          <div class="mb-1 flex items-start gap-1">
             <button
               class="info-btn info-btn--mini"
               data-metric="RegimeScore"
               aria-label="Info RegimeScore"
             >?</button>
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              RegimeScore
+            </div>
           </div>
           <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
             ${fmtNum(regimeScore)}
           </div>
         </div>
 
+        <!-- VIX box -->
         <div class="p-2"
           style="
             background:var(--surface-card-alt);
@@ -302,15 +303,15 @@ function buildDrawerSections(data) {
             border-radius:var(--radius-card);
             box-shadow:var(--shadow-card);
           ">
-          <div class="flex items-start justify-between gap-1 mb-1">
-            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
-              VIX
-            </div>
+          <div class="mb-1 flex items-start gap-1">
             <button
               class="info-btn info-btn--mini"
               data-metric="VIX"
               aria-label="Info VIX"
             >?</button>
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              VIX
+            </div>
           </div>
           <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
             ${fmtNum(vixLevel)}
@@ -320,6 +321,7 @@ function buildDrawerSections(data) {
     </div>
   `;
 
+  // ROTAZIONE & PARTECIPAZIONE
   const rotationHTML = `
     <div class="space-y-2">
       <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
@@ -327,6 +329,7 @@ function buildDrawerSections(data) {
       </div>
 
       <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
+        <!-- Breadth box -->
         <div class="p-2"
           style="
             background:var(--surface-card-alt);
@@ -334,21 +337,22 @@ function buildDrawerSections(data) {
             border-radius:var(--radius-card);
             box-shadow:var(--shadow-card);
           ">
-          <div class="flex items-start justify-between gap-1 mb-1">
-            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
-              Breadth (1M)
-            </div>
+          <div class="mb-1 flex items-start gap-1">
             <button
               class="info-btn info-btn--mini"
               data-metric="Breadth"
               aria-label="Info Breadth"
             >?</button>
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              Breadth (1M)
+            </div>
           </div>
           <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
             ${breadthPct !== null ? fmtPct(breadthPct) : "—"}
           </div>
         </div>
 
+        <!-- RiskTilt box -->
         <div class="p-2"
           style="
             background:var(--surface-card-alt);
@@ -356,15 +360,15 @@ function buildDrawerSections(data) {
             border-radius:var(--radius-card);
             box-shadow:var(--shadow-card);
           ">
-          <div class="flex items-start justify-between gap-1 mb-1">
-            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
-              RiskTilt
-            </div>
+          <div class="mb-1 flex items-start gap-1">
             <button
               class="info-btn info-btn--mini"
               data-metric="RiskTilt"
               aria-label="Info RiskTilt"
             >?</button>
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+              RiskTilt
+            </div>
           </div>
           <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
             ${fmtNum(riskTilt)}
@@ -468,6 +472,7 @@ function renderDrawerDesktopShell(sectionsObj) {
 
 /* -------------------------------------------------
    Shell MOBILE
+   (full-screen mobile lo facciamo nel CSS/panel, per ora bottom bar)
 ------------------------------------------------- */
 
 function renderDrawerMobileShell(sectionsObj) {
@@ -591,7 +596,8 @@ function bindDrawerTabs(root) {
 }
 
 /* -------------------------------------------------
-   Helpers UI singole sezioni
+   Helpers UI singole metriche nella CARD principale
+   (queste sono i tre box RegimeScore, Breadth, RiskTilt sopra la CTA)
 ------------------------------------------------- */
 
 function metricBox({ label, metricKey, value, desc }) {
@@ -605,15 +611,16 @@ function metricBox({ label, metricKey, value, desc }) {
         padding:0.6rem 0.75rem;
       ">
 
-      <div class="flex items-start justify-between gap-1 mb-1">
-        <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold leading-[1.3]">
-          ${escapeHtml(label)}
-        </div>
+      <!-- header box con ? a sinistra -->
+      <div class="mb-1 flex items-start gap-1">
         <button
           class="info-btn info-btn--mini"
           data-metric="${escapeAttr(metricKey)}"
           aria-label="Info ${escapeAttr(metricKey)}"
         >?</button>
+        <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold leading-[1.3]">
+          ${escapeHtml(label)}
+        </div>
       </div>
 
       <div class="font-mono font-bold text-[color:var(--ink)] text-[13px] leading-[1.4]">
@@ -901,7 +908,7 @@ function fmtNum(v) {
 function fmtPct(v) {
   if (!isNum(v)) return "—";
   const n = Number(v) * 100;
-  const sign = n > 0 ? "+": "";
+  const sign = n > 0 ? "+" : "";
   return sign + n.toFixed(1).replace('.', ',') + "%";
 }
 
