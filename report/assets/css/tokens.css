@@ -10,11 +10,11 @@
    - metric popover desktop, metric modal mobile
    - share overlay
    - footer web
-   - print/PDF istituzionale b/n con watermark
+   - print/PDF istituzionale
 */
 
 /* =========================================================
-   PALETTE & THEME
+   PALETTE & THEME (LIGHT)
    ========================================================= */
 
 :root {
@@ -58,9 +58,18 @@
   --tone-n:     oklab(55% 0 0);        /* neutro / grafite */
   --tone-warn:  oklab(75% 0.05 0.10);  /* amber / attenzione */
 
+  /* === VARIABILI CHIP (bottoncini "?" / chiudi) === */
+  --chip-bg:          var(--surface-card);
+  --chip-bg-hover:    var(--surface-card-alt);
+  --chip-br:          var(--br-soft);
+  --chip-br-hover:    var(--br-card);
+  --chip-fg:          var(--muted);
+  --chip-fg-hover:    var(--ink);
+  --chip-shadow:      var(--shadow-card);
+
   /* === TYPO SCALE (px) === */
-  --fs-xl:   24px;   /* headline numeri prezzo / ticker */
-  --fs-lg:   16px;   /* titoli sezione/panel */
+  --fs-xl:   24px;   /* headline prezzo / ticker */
+  --fs-lg:   16px;   /* titoli sezione / panel */
   --fs-md:   14px;   /* testo primario blocchi */
   --fs-sm:   12.5px; /* testo descrittivo / metric body */
   --fs-xs:   11.5px; /* label uppercase / meta */
@@ -101,7 +110,10 @@
 
   --panel-width-desktop:       min(400px,90vw);
   --panel-width-desktop-wide:  min(560px,90vw);
-  --panel-maxheight-mobile:    90vh;
+
+  /* fullscreen mobile drawer */
+  --panel-height-mobile:       100%;
+  --panel-maxheight-mobile:    100%;
   --panel-maxheight-desktop:   100vh;
 
   /* watermark print */
@@ -112,59 +124,79 @@
   color-scheme: light;
 }
 
-/* Tema dark */
+/* =========================================================
+   THEME DARK (high-contrast leggibile)
+   ========================================================= */
+
 html[data-theme="dark"] {
-  --ink:           oklab(90% 0 0);
-  --ink-soft:      oklab(80% 0 0 / .9);
-  --muted:         oklab(75% 0 0 / .7);
+  /* testo chiaro su sfondo scuro */
+  --ink:           oklab(92% 0 0);             /* testo primario */
+  --ink-soft:      oklab(82% 0 0 / .9);
+  --muted:         oklab(80% 0 0 / .65);       /* etichette */
 
-  --surface-page:        oklab(18% 0 0);
-  --surface-card:        oklab(22% 0 0);
-  --surface-card-alt:    oklab(24% 0 0);
-  --surface-card-elev:   oklab(28% 0 0 / .9);
-  --surface-panel-bg:    oklab(22% 0 0 / .8);
-  --surface-panel-head:  oklab(26% 0 0 / .55);
-  --surface-footer:      oklab(20% 0 0);
+  /* superfici scure ma pulite */
+  --surface-page:        oklab(22% 0 0);       /* bg body */
+  --surface-card:        oklab(26% 0 0);       /* card */
+  --surface-card-alt:    oklab(28% 0 0);       /* hover/alt */
+  --surface-card-elev:   oklab(30% 0 0 / .9);  /* overlay vetro */
+  --surface-panel-bg:    oklab(24% 0 0);       /* pannello/drawer bg */
+  --surface-panel-head:  oklab(28% 0 0 / .8);  /* header pannello */
+  --surface-footer:      oklab(24% 0 0);
 
-  --br-soft:            oklab(32% 0 0);
-  --br-card:            oklab(30% 0 0);
-  --br-card-strong:     oklab(28% 0 0);
-  --br-panel-divider:   oklab(34% 0 0 / .9);
-  --footer-br:          oklab(32% 0 0);
+  /* bordi chiari per contrasto */
+  --br-soft:            oklab(40% 0 0 / .6);
+  --br-card:            oklab(38% 0 0 / .8);
+  --br-card-strong:     oklab(55% 0 0 / .9);
+  --br-panel-divider:   oklab(45% 0 0 / .8);
+  --footer-br:          oklab(40% 0 0 / .7);
 
-  --shadow-card: 0 1px 2px rgba(0,0,0,.8),0 1px 1px rgba(0,0,0,.6);
-  --shadow-lg:   0 24px 48px rgba(0,0,0,.9);
-  --shadow-xl:   0 48px 96px rgba(0,0,0,1), 0 0 120px rgba(0,0,0,.8);
+  /* ombre/glow */
+  --shadow-card: 0 1px 2px rgba(0,0,0,.9),0 0 16px rgba(0,0,0,.8);
+  --shadow-lg:   0 24px 48px rgba(0,0,0,1),0 0 64px rgba(0,0,0,.8);
+  --shadow-xl:   0 48px 96px rgba(0,0,0,1),0 0 120px rgba(0,0,0,.9);
 
-  --brand:        oklab(70% 0.05 0.05);
-  --accent-dim:   color-mix(in oklab, var(--brand) 12%, transparent);
+  /* brand su dark un filo più saturo */
+  --brand:        oklab(70% 0.07 0.07);
+  --accent-dim:   color-mix(in oklab, var(--brand) 18%, transparent);
 
-  --tint-hero:        oklab(30% 0.02 0.02);
-  --tint-hero-dark:   oklab(30% 0.02 0.02);
+  /* hero tint scuro */
+  --tint-hero:        oklab(32% 0.02 0.02);
+  --tint-hero-dark:   oklab(32% 0.02 0.02);
 
-  --tone-g:       oklab(75% -0.08 0.08);
-  --tone-r:       oklab(70% 0.14 0.04);
-  --tone-n:       oklab(70% 0 0);
-  --tone-warn:    oklab(80% 0.06 0.12);
+  /* tonalità / semaforo */
+  --tone-g:       oklab(75% -0.08 0.1);   /* verde più vivo */
+  --tone-r:       oklab(70% 0.16 0.05);   /* rosso vivo */
+  --tone-n:       oklab(80% 0 0);         /* neutro chiaro */
+  --tone-warn:    oklab(82% 0.07 0.12);   /* amber saturo */
 
   --tone-pos-fg:       var(--tone-g);
-  --tone-pos-bg-soft:  color-mix(in oklab, var(--tone-g) 16%, transparent);
-  --tone-pos-bg-hard:  color-mix(in oklab, var(--tone-g) 30%, transparent);
+  --tone-pos-bg-soft:  color-mix(in oklab, var(--tone-g) 20%, transparent);
+  --tone-pos-bg-hard:  color-mix(in oklab, var(--tone-g) 35%, transparent);
 
   --tone-warn-fg:      var(--tone-warn);
-  --tone-warn-bg-soft: color-mix(in oklab, var(--tone-warn) 16%, transparent);
-  --tone-warn-bg-hard: color-mix(in oklab, var(--tone-warn) 30%, transparent);
+  --tone-warn-bg-soft: color-mix(in oklab, var(--tone-warn) 20%, transparent);
+  --tone-warn-bg-hard: color-mix(in oklab, var(--tone-warn) 35%, transparent);
 
   --tone-neg-fg:       var(--tone-r);
-  --tone-neg-bg-soft:  color-mix(in oklab, var(--tone-r) 16%, transparent);
-  --tone-neg-bg-hard:  color-mix(in oklab, var(--tone-r) 30%, transparent);
+  --tone-neg-bg-soft:  color-mix(in oklab, var(--tone-r) 20%, transparent);
+  --tone-neg-bg-hard:  color-mix(in oklab, var(--tone-r) 35%, transparent);
 
   --tone-neu-fg:       var(--tone-n);
-  --tone-neu-bg-soft:  color-mix(in oklab, var(--tone-n) 16%, transparent);
-  --tone-neu-bg-hard:  color-mix(in oklab, var(--tone-n) 30%, transparent);
+  --tone-neu-bg-soft:  color-mix(in oklab, var(--tone-n) 20%, transparent);
+  --tone-neu-bg-hard:  color-mix(in oklab, var(--tone-n) 35%, transparent);
 
-  --glass-backdrop-dark: rgba(0,0,0,.55);
-  --glass-backdrop-light: rgba(255,255,255,.1);
+  /* chip ? / X sul dark */
+  --chip-bg:          oklab(32% 0 0);
+  --chip-bg-hover:    oklab(36% 0 0);
+  --chip-br:          oklab(48% 0 0 / .6);
+  --chip-br-hover:    oklab(60% 0 0 / .8);
+  --chip-fg:          oklab(80% 0 0 / .7);
+  --chip-fg-hover:    oklab(92% 0 0);
+  --chip-shadow:      0 0 16px rgba(0,0,0,.9);
+
+  /* backdrop vetroso più forte */
+  --glass-backdrop-dark: rgba(0,0,0,.6);
+  --glass-backdrop-light: rgba(255,255,255,.06);
 
   color-scheme: dark;
 }
@@ -273,41 +305,45 @@ main {
   color:var(--ink);
 }
 
-/* mini info / metric help */
+/* mini info / metric help  ("?" / X stile pill */
 .info-btn,
 .metric-help{
   all:unset;
   cursor:pointer;
-  margin-left:6px;
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:22px;
-  height:22px;
-  border:1px solid var(--br-soft);
-  border-radius:999px;
-  font-size:12px;
+
+  min-width:20px;
+  min-height:20px;
+  padding:0 6px;
+
+  font-size:11px;
   line-height:1;
-  color:var(--muted);
-  background:var(--surface-card);
-  flex:0 0 auto;
-  box-shadow:var(--shadow-card);
+  font-weight:600;
+
+  border-radius:999px;
+  background:var(--chip-bg);
+  color:var(--chip-fg);
+  border:1px solid var(--chip-br);
+  box-shadow:var(--chip-shadow);
+
   transition:all .12s ease;
 }
 .info-btn:hover,
 .metric-help:hover{
-  color:var(--ink);
-  background:var(--surface-card-alt);
-  border-color:var(--br-card);
+  background:var(--chip-bg-hover);
+  color:var(--chip-fg-hover);
+  border-color:var(--chip-br-hover);
   box-shadow:
     0 0 0 2px var(--accent-dim),
-    var(--shadow-card);
+    var(--chip-shadow);
 }
 .info-btn:active,
 .metric-help:active{opacity:.8}
 
 /* =========================================================
-   METRIC STATUS FLAGS (inline ✓ / ! / ✕ a matita)
+   METRIC STATUS FLAGS (inline ✓ / ! / ✕)
    ========================================================= */
 
 .metric-flag {
@@ -370,7 +406,7 @@ main {
 }
 
 /* =========================================================
-   SKETCH STATUS BADGE (icona grande tipo F1 regime)
+   SKETCH STATUS BADGE
    ========================================================= */
 
 .regime-sketch-icon {
@@ -394,7 +430,7 @@ main {
 .regime-sketch-icon--neg  { color: var(--tone-neg-fg); }
 
 /* =========================================================
-   STANCE / STRATEGY PILL (BUY / ALERT / SELL)
+   STANCE / STRATEGY PILL
    ========================================================= */
 
 .regime-stance-pill {
@@ -458,7 +494,7 @@ main {
 }
 
 /* =========================================================
-   HEADER STICKY (top nav brand)
+   HEADER STICKY
    ========================================================= */
 
 .hdr{
@@ -479,7 +515,7 @@ main {
 }
 
 /* =========================================================
-   HERO HEADER (ticker, prezzo, metriche snapshot)
+   HERO HEADER
    ========================================================= */
 
 .hero{
@@ -610,7 +646,6 @@ html[data-theme="dark"] .hero{
   border-bottom-left-radius:12px;
   background:var(--tone-neu-fg); /* fallback */
 }
-/* tonebar dinamica col data-tone */
 .tonebar[data-tone="pos"]  { background: var(--tone-pos-fg);  }
 .tonebar[data-tone="warn"] { background: var(--tone-warn-fg); }
 .tonebar[data-tone="neg"]  { background: var(--tone-neg-fg);  }
@@ -890,23 +925,17 @@ html[data-theme="dark"] .hero{
   backdrop-filter:var(--glass-blur-sm);
 }
 
-/* pannello base */
+/* pannello base neutro */
 .tl-panel {
   position: absolute;
   background: var(--surface-panel-bg);
   color: var(--ink);
   border:1px solid var(--br-card);
-  border-radius:var(--panel-radius) var(--panel-radius) 0 0;
+  border-radius:var(--panel-radius);
   box-shadow: var(--shadow-xl);
 
   display:flex;
   flex-direction:column;
-  max-height:88vh;
-  width:100%;
-
-  left:50%;
-  transform:translateX(-50%);
-  bottom:0;
 
   backdrop-filter:var(--glass-blur-lg);
   background-image:
@@ -944,29 +973,38 @@ html[data-theme="dark"] .hero{
   max-width:40ch;
   text-wrap:balance;
 }
+
+/* close = stesso look dei chip */
 .tl-panel__close {
   all:unset;
   cursor:pointer;
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:28px;
-  height:28px;
+
+  min-width:24px;
+  min-height:24px;
+  padding:0 6px;
+
+  font-size:12px;
+  line-height:1;
+  font-weight:600;
+
   border-radius:8px;
-  border:1px solid var(--br-soft);
-  background:var(--surface-card-elev);
-  color:var(--muted);
-  flex-shrink:0;
-  box-shadow:var(--shadow-card);
+  background:var(--chip-bg);
+  color:var(--chip-fg);
+  border:1px solid var(--chip-br);
+  box-shadow:var(--chip-shadow);
+
   transition:all .12s ease;
 }
 .tl-panel__close:hover{
-  color:var(--ink);
-  background:var(--surface-card-alt);
-  border-color:var(--br-card);
+  background:var(--chip-bg-hover);
+  color:var(--chip-fg-hover);
+  border-color:var(--chip-br-hover);
   box-shadow:
     0 0 0 2px var(--accent-dim),
-    var(--shadow-card);
+    var(--chip-shadow);
 }
 
 /* corpo scrollabile */
@@ -999,19 +1037,17 @@ html[data-theme="dark"] .hero{
   box-shadow:0 -8px 24px rgba(0,0,0,.06);
 }
 
-/* desktop panel dock right */
+/* DESKTOP: dock right */
 @media(min-width:768px){
   .tl-panel--desktop {
-    display:flex;
-    right:0;
-    left:auto;
-    transform:none;
-    bottom:auto;
+    position:absolute;
     top:0;
+    right:0;
     height:var(--panel-maxheight-desktop);
     max-height:var(--panel-maxheight-desktop);
     width:var(--panel-width-desktop);
     border-radius:var(--panel-radius-desktop) 0 0 var(--panel-radius-desktop);
+    overflow:hidden;
   }
   .tl-panel--desktop.tl-panel--wide {
     width:var(--panel-width-desktop-wide);
@@ -1019,19 +1055,34 @@ html[data-theme="dark"] .hero{
   .tl-panel--mobile { display:none; }
 }
 
-/* mobile bottom sheet */
+/* MOBILE: FULLSCREEN (non più bottom sheet) */
 @media(max-width:767px){
   .tl-panel--desktop { display:none; }
+
   .tl-panel--mobile {
     display:flex;
     flex-direction:column;
+
+    position:fixed;
+    inset:0;
     width:100%;
+    height:var(--panel-height-mobile);
     max-height:var(--panel-maxheight-mobile);
-    border-top-left-radius:var(--panel-radius);
-    border-top-right-radius:var(--panel-radius);
-    overflow:hidden;
+
+    border-radius:0;
+    border:1px solid var(--br-card);
     background:var(--surface-panel-bg);
+    box-shadow:var(--shadow-xl);
+
+    z-index:10001;
   }
+
+  .tl-panel--mobile .tl-panel__header {
+    flex-shrink:0;
+    border-top-left-radius:0;
+    border-top-right-radius:0;
+  }
+
   .tl-panel--mobile .tl-panel__body {
     flex:1 1 auto;
     min-height:0;
@@ -1039,12 +1090,13 @@ html[data-theme="dark"] .hero{
     padding:16px;
     background:var(--surface-panel-bg);
   }
+
   .tl-panel--mobile .tl-panel__footer {
     flex-shrink:0;
     padding:12px 16px;
     border-top:1px solid var(--br-panel-divider);
     background:var(--surface-panel-head);
-    box-shadow:0 -8px 24px rgba(0,0,0,.4);
+    box-shadow:0 -8px 24px rgba(0,0,0,.6);
   }
 }
 
@@ -1052,7 +1104,6 @@ html[data-theme="dark"] .hero{
    PANEL · TAB STRIP / SEZIONI INTERNE
    ========================================================= */
 
-/* tabs sticky sopra le sezioni */
 .tl-panel-tabs {
   display: flex;
   flex-wrap: wrap;
@@ -1110,7 +1161,6 @@ html[data-theme="dark"] .hero{
     var(--shadow-card);
 }
 
-/* tab attiva con tone dinamico */
 .tl-panel-tab.is-active {
   color: var(--tone-neu-fg);
   border-color: var(--tone-neu-fg);
@@ -1201,14 +1251,13 @@ html[data-theme="dark"] .hero{
   background: var(--tone-neg-bg-soft);
 }
 
-/* wrapper sezioni */
 .tl-panel-sections-wrapper {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-/* card sezione */
+/* card sezione dentro drawer */
 .tl-panel-section {
   background: var(--surface-card);
   border: 1px solid var(--br-card);
@@ -1263,7 +1312,7 @@ html[data-theme="dark"] .hero{
     var(--shadow-card);
 }
 
-/* tonalità dinamica per la pill nella sezione */
+/* tonalità dinamica per pill sezione */
 .tl-panel-section-pill[data-tone="pos"] {
   border-color: var(--tone-pos-fg);
   color: var(--tone-pos-fg);
@@ -1338,7 +1387,7 @@ html[data-theme="dark"] .hero{
   flex: 1 1 auto;
 }
 
-/* pill di stato (icon + dot + label) */
+/* pill di stato sezione */
 .tl-panel-section-pill {
   display: inline-flex;
   align-items: center;
@@ -1478,13 +1527,30 @@ html[data-theme="dark"] .hero{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:24px;
-  height:24px;
-  border-radius:6px;
-  border:1px solid var(--br-soft);
-  background:var(--surface-card-alt);
-  color:var(--muted);
-  box-shadow:var(--shadow-card);
+
+  min-width:24px;
+  min-height:24px;
+  padding:0 6px;
+
+  font-size:12px;
+  line-height:1;
+  font-weight:600;
+
+  border-radius:8px;
+  background:var(--chip-bg);
+  color:var(--chip-fg);
+  border:1px solid var(--chip-br);
+  box-shadow:var(--chip-shadow);
+
+  transition:all .12s ease;
+}
+.tl-popover__close:hover {
+  background:var(--chip-bg-hover);
+  color:var(--chip-fg-hover);
+  border-color:var(--chip-br-hover);
+  box-shadow:
+    0 0 0 2px var(--accent-dim),
+    var(--chip-shadow);
 }
 .tl-popover__body {
   margin-top:.5rem;
@@ -1570,14 +1636,28 @@ html[data-theme="dark"] .hero{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:28px;
-  height:28px;
+
+  min-width:28px;
+  min-height:28px;
+  padding:0 6px;
+
+  font-size:12px;
+  line-height:1;
+  font-weight:600;
+
   border-radius:8px;
-  border:1px solid var(--br-soft);
-  background:var(--surface-card-elev);
-  color:var(--muted);
-  flex-shrink:0;
-  box-shadow:var(--shadow-card);
+  background:var(--chip-bg);
+  color:var(--chip-fg);
+  border:1px solid var(--chip-br);
+  box-shadow:var(--chip-shadow);
+}
+.tl-metric-modal__close:hover{
+  background:var(--chip-bg-hover);
+  color:var(--chip-fg-hover);
+  border-color:var(--chip-br-hover);
+  box-shadow:
+    0 0 0 2px var(--accent-dim),
+    var(--chip-shadow);
 }
 
 .tl-metric-modal__body {
@@ -1662,23 +1742,29 @@ html[data-theme="dark"] .hero{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:28px;
-  height:28px;
+
+  min-width:28px;
+  min-height:28px;
+  padding:0 6px;
+
+  font-size:12px;
+  line-height:1;
+  font-weight:600;
+
   border-radius:8px;
-  border:1px solid var(--br-soft);
-  background:var(--surface-card-alt);
-  color:var(--muted);
-  flex-shrink:0;
-  box-shadow:var(--shadow-card);
+  background:var(--chip-bg);
+  color:var(--chip-fg);
+  border:1px solid var(--chip-br);
+  box-shadow:var(--chip-shadow);
   transition:all .12s ease;
 }
 .share-close-btn:hover{
-  color:var(--ink);
-  background:var(--surface-card);
-  border-color:var(--br-card);
+  background:var(--chip-bg-hover);
+  color:var(--chip-fg-hover);
+  border-color:var(--chip-br-hover);
   box-shadow:
     0 0 0 2px var(--accent-dim),
-    var(--shadow-card);
+    var(--chip-shadow);
 }
 .share-sheet__list{
   display:grid;
