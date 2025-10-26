@@ -2,15 +2,16 @@
 //
 // F1B · Regime di mercato / Contesto rischio
 //
-// Versione "Institutional Model Report":
-// - Card con KPI e CTA primaria "Dettagli regime →"
-// - Drawer istituzionale con tab responsive
-// - Tooltip unificati con data-metric="..."
-// - Apertura via window.__TradeliaUI.openPanel(...)
+// - Card riassuntiva con CTA "Dettagli regime →"
+// - Drawer (panel) con tab responsive
+//   • Desktop: sidebar sinistra + contenuto scrollabile a destra
+//   • Mobile: fullscreen, header fisso in alto, contenuto scrollabile,
+//             tabbar sticky in basso sempre visibile
+// - Tooltip "?" unificati (usa window.__TradeliaUI.bindMetricInfoButtons)
 //
-// Export richiesti dal runtime principale (app.js):
-// - renderCard(data, ctx)
-// - bindCard(node, data, ctx)
+// Esposti al runtime principale (app.js):
+//   renderCard(data, ctx)
+//   bindCard(node, data, ctx)
 
 export function renderCard(rawData, ctx = {}) {
   const data = normalizeData(rawData);
@@ -62,14 +63,13 @@ export function renderCard(rawData, ctx = {}) {
 
         <!-- StrategyMode + tono -->
         <div>
-          <!-- riga label con ? a sinistra -->
-          <div class="flex items-start gap-1 text-[12px] font-semibold text-[color:var(--muted)] leading-[1.4]">
+          <div class="text-[12px] font-semibold text-[color:var(--muted)] leading-[1.4] flex flex-wrap items-center gap-1.5">
+            <span>StrategyMode</span>
             <button
-              class="info-btn info-btn--mini align-middle"
+              class="info-btn align-middle"
               data-metric="StrategyMode"
               aria-label="Info StrategyMode"
             >?</button>
-            <div class="leading-[1.4]">StrategyMode</div>
           </div>
 
           <div class="text-[14px] font-bold leading-[1.4] text-[color:var(--ink)] flex flex-wrap items-center gap-2 mt-1">
@@ -78,9 +78,14 @@ export function renderCard(rawData, ctx = {}) {
             <span
               class="px-[6px] py-[4px] rounded-md text-[11px] font-semibold leading-none border"
               style="
-                background: color-mix(in oklab, ${toneColor} 10%, transparent);
+                background: radial-gradient(circle at 0% 0%,
+                  color-mix(in oklab, ${toneColor} 18%, transparent) 0%,
+                  transparent 60%
+                ),
+                var(--surface-card);
                 color:${toneColor};
                 border-color:${toneColor};
+                box-shadow:var(--shadow-card);
               "
             >
               ${escapeHtml(toneLabel)}
@@ -170,7 +175,7 @@ export function bindCard(node, rawData, ctx = {}) {
 /* -------------------------------------------------
    Drawer / Panel con tab responsive
    Desktop: sidebar sinistra + contenuto a destra
-   Mobile: fullscreen/bottom sheet (per ora) con barra tab in basso
+   Mobile: fullscreen con tabbar sticky in basso
 ------------------------------------------------- */
 
 function openF1Drawer(data) {
@@ -181,11 +186,13 @@ function openF1Drawer(data) {
 
   const sectionsObj = buildDrawerSections(data);
 
+  // scegli shell mobile/desktop
   const mobileMode = isMobileViewport();
   const drawerHTML = mobileMode
     ? renderDrawerMobileShell(sectionsObj)
     : renderDrawerDesktopShell(sectionsObj);
 
+  // Apri pannello
   window.__TradeliaUI.openPanel({
     title: "F1 · Regime di mercato",
     subtitle: "Flussi settoriali, ampiezza del rialzo e volatilità (T-1)",
@@ -205,10 +212,10 @@ function openF1Drawer(data) {
       }
     ],
     blocking: false,
-    panelSize: "wide"
+    panelSize: "wide" // pannello largo desktop
   });
 
-  // dopo apertura montiamo tab + tooltip
+  // Dopo apertura: bind eventi tab + tooltip sul contenuto del panel
   setTimeout(() => {
     const panelBody = document.getElementById("panel-body");
     const panelBodyMobile = document.getElementById("panel-body-mobile");
@@ -229,6 +236,7 @@ function openF1Drawer(data) {
   }, 0);
 }
 
+// Controlla viewport "mobile"
 function isMobileViewport() {
   return window.matchMedia("(max-width: 767px)").matches;
 }
@@ -254,25 +262,24 @@ function buildDrawerSections(data) {
     feedSyncScore
   } = data;
 
-  // REGIME ATTUALE
   const regimeHTML = `
-    <div class="space-y-2">
-      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-        Regime attuale
-      </div>
+    <section class="tl-panel-section" data-f1b-section="regime">
+      <header class="tl-panel-section-title">
+        <div class="tl-panel-section-title-text">
+          Regime attuale
+        </div>
+      </header>
 
-      <!-- StrategyMode riga: ? a sinistra -->
-      <div class="flex flex-wrap items-start gap-2 text-[13px] text-[color:var(--ink)] leading-[1.45] font-semibold">
+      <div class="text-[13px] text-[color:var(--ink)] leading-[1.45] font-semibold flex flex-wrap items-center gap-2 mb-3">
+        <span>StrategyMode: ${escapeHtml(strategyMode || "—")}</span>
         <button
-          class="info-btn info-btn--mini"
+          class="info-btn"
           data-metric="StrategyMode"
           aria-label="Info StrategyMode"
         >?</button>
-        <span>StrategyMode: ${escapeHtml(strategyMode || "—")}</span>
       </div>
 
       <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
-        <!-- RegimeScore box -->
         <div class="p-2"
           style="
             background:var(--surface-card-alt);
@@ -280,22 +287,21 @@ function buildDrawerSections(data) {
             border-radius:var(--radius-card);
             box-shadow:var(--shadow-card);
           ">
-          <div class="mb-1 flex items-start gap-1">
-            <button
-              class="info-btn info-btn--mini"
-              data-metric="RegimeScore"
-              aria-label="Info RegimeScore"
-            >?</button>
+          <div class="flex items-start justify-between gap-1 mb-1">
             <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
               RegimeScore
             </div>
+            <button
+              class="info-btn"
+              data-metric="RegimeScore"
+              aria-label="Info RegimeScore"
+            >?</button>
           </div>
           <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
             ${fmtNum(regimeScore)}
           </div>
         </div>
 
-        <!-- VIX box -->
         <div class="p-2"
           style="
             background:var(--surface-card-alt);
@@ -303,33 +309,33 @@ function buildDrawerSections(data) {
             border-radius:var(--radius-card);
             box-shadow:var(--shadow-card);
           ">
-          <div class="mb-1 flex items-start gap-1">
-            <button
-              class="info-btn info-btn--mini"
-              data-metric="VIX"
-              aria-label="Info VIX"
-            >?</button>
+          <div class="flex items-start justify-between gap-1 mb-1">
             <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
               VIX
             </div>
+            <button
+              class="info-btn"
+              data-metric="VIX"
+              aria-label="Info VIX"
+            >?</button>
           </div>
           <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
             ${fmtNum(vixLevel)}
           </div>
         </div>
       </div>
-    </div>
+    </section>
   `;
 
-  // ROTAZIONE & PARTECIPAZIONE
   const rotationHTML = `
-    <div class="space-y-2">
-      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-        Rotazione &amp; partecipazione
-      </div>
+    <section class="tl-panel-section" data-f1b-section="rotation">
+      <header class="tl-panel-section-title">
+        <div class="tl-panel-section-title-text">
+          Rotazione &amp; partecipazione
+        </div>
+      </header>
 
-      <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
-        <!-- Breadth box -->
+      <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4] mb-3">
         <div class="p-2"
           style="
             background:var(--surface-card-alt);
@@ -337,22 +343,21 @@ function buildDrawerSections(data) {
             border-radius:var(--radius-card);
             box-shadow:var(--shadow-card);
           ">
-          <div class="mb-1 flex items-start gap-1">
-            <button
-              class="info-btn info-btn--mini"
-              data-metric="Breadth"
-              aria-label="Info Breadth"
-            >?</button>
+          <div class="flex items-start justify-between gap-1 mb-1">
             <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
               Breadth (1M)
             </div>
+            <button
+              class="info-btn"
+              data-metric="Breadth"
+              aria-label="Info Breadth"
+            >?</button>
           </div>
           <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
             ${breadthPct !== null ? fmtPct(breadthPct) : "—"}
           </div>
         </div>
 
-        <!-- RiskTilt box -->
         <div class="p-2"
           style="
             background:var(--surface-card-alt);
@@ -360,15 +365,15 @@ function buildDrawerSections(data) {
             border-radius:var(--radius-card);
             box-shadow:var(--shadow-card);
           ">
-          <div class="mb-1 flex items-start gap-1">
-            <button
-              class="info-btn info-btn--mini"
-              data-metric="RiskTilt"
-              aria-label="Info RiskTilt"
-            >?</button>
+          <div class="flex items-start justify-between gap-1 mb-1">
             <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
               RiskTilt
             </div>
+            <button
+              class="info-btn"
+              data-metric="RiskTilt"
+              aria-label="Info RiskTilt"
+            >?</button>
           </div>
           <div class="font-mono font-bold text-[13px] text-[color:var(--ink)]">
             ${fmtNum(riskTilt)}
@@ -382,23 +387,27 @@ function buildDrawerSections(data) {
         </div>
         ${renderTopSectors(topSectors)}
       </div>
-    </div>
+    </section>
   `;
 
   const notesHTML = `
-    <div class="space-y-2">
-      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-        Note interpretative
-      </div>
+    <section class="tl-panel-section" data-f1b-section="notes">
+      <header class="tl-panel-section-title">
+        <div class="tl-panel-section-title-text">
+          Note interpretative
+        </div>
+      </header>
       ${renderInterpretation(interpretationNotes)}
-    </div>
+    </section>
   `;
 
   const auditHTML = `
-    <div class="space-y-2">
-      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-        Audit &amp; Fonti
-      </div>
+    <section class="tl-panel-section" data-f1b-section="audit">
+      <header class="tl-panel-section-title">
+        <div class="tl-panel-section-title-text">
+          Audit &amp; Fonti
+        </div>
+      </header>
       ${renderAuditBlock({
         auditPathID,
         sourcesTier1,
@@ -407,16 +416,18 @@ function buildDrawerSections(data) {
         dataIntegrity,
         feedSyncScore
       })}
-    </div>
+    </section>
   `;
 
   const mifidHTML = `
-    <div class="space-y-2">
-      <div class="text-[12px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-        Nota regolamentare
-      </div>
+    <section class="tl-panel-section" data-f1b-section="mifid">
+      <header class="tl-panel-section-title">
+        <div class="tl-panel-section-title-text">
+          Nota regolamentare
+        </div>
+      </header>
       ${renderMiFIDNotice()}
-    </div>
+    </section>
   `;
 
   return {
@@ -433,6 +444,7 @@ function buildDrawerSections(data) {
 ------------------------------------------------- */
 
 function renderDrawerDesktopShell(sectionsObj) {
+  // sidebar sinistra, contenuto scroll a destra
   return `
     <div class="f1b-panel-desktop"
       style="
@@ -472,7 +484,10 @@ function renderDrawerDesktopShell(sectionsObj) {
 
 /* -------------------------------------------------
    Shell MOBILE
-   (full-screen mobile lo facciamo nel CSS/panel, per ora bottom bar)
+   -------------------------------------------------
+   - fullscreen pannello
+   - contenuto scrolla
+   - tabbar sticky in basso SEMPRE visibile
 ------------------------------------------------- */
 
 function renderDrawerMobileShell(sectionsObj) {
@@ -480,13 +495,20 @@ function renderDrawerMobileShell(sectionsObj) {
     <div class="f1b-panel-mobile"
       style="
         position:relative;
-        padding-bottom:3.5rem; /* spazio per la bottom bar */
+        height:calc(100vh - 110px); /* header panel (~110px) */
+        max-height:calc(100vh - 110px);
         min-height:300px;
+        display:flex;
+        flex-direction:column;
       ">
 
-      <!-- Content area (scrollable) -->
-      <main class="f1b-panel-content-mobile"
-        style="max-height:60vh;overflow:auto;">
+      <!-- Content area scrollable -->
+      <main class="f1b-panel-content-mobile flex-1 min-w-0"
+        style="
+          overflow:auto;
+          -webkit-overflow-scrolling:touch;
+          padding-bottom:4.5rem; /* spazio per tabbar */
+        ">
         <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
         <div data-f1b-view="rotation" hidden>${sectionsObj.rotationHTML}</div>
         <div data-f1b-view="notes" hidden>${sectionsObj.notesHTML}</div>
@@ -494,19 +516,30 @@ function renderDrawerMobileShell(sectionsObj) {
         <div data-f1b-view="mifid" hidden>${sectionsObj.mifidHTML}</div>
       </main>
 
-      <!-- Bottom mobile bar -->
+      <!-- Sticky Bottom mobile tabbar -->
       <nav class="f1b-mobile-tabbar"
         style="
           position:absolute;
-          left:0;right:0;bottom:0;
+          left:0;
+          right:0;
+          bottom:0;
           display:flex;
           justify-content:space-between;
           gap:0.25rem;
-          border-top:1px solid var(--br-card);
-          background:var(--surface-card);
-          padding:0.5rem 0.75rem;
+
+          background:var(--surface-panel-head);
+          background-image:
+            radial-gradient(circle at 0% 0%,
+              color-mix(in oklab, var(--surface-panel-head) 90%, var(--brand) 2%) 0%,
+              transparent 60%);
+
+          border-top:1px solid var(--br-panel-divider);
+          box-shadow:0 -16px 32px rgba(0,0,0,.6);
+
+          padding:0.6rem 0.75rem;
           font-size:11px;
           line-height:1.2;
+          z-index:10;
         ">
 
         ${drawerMobileTabButton("regime","Regime", true)}
@@ -534,6 +567,7 @@ function drawerMenuButton(key, label, active) {
         background:${active ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)" : "transparent"};
         font-weight:${active ? "600" : "500"};
         color:var(--ink);
+        text-align:left;
       "
     >
       ${label}
@@ -542,16 +576,34 @@ function drawerMenuButton(key, label, active) {
 }
 
 function drawerMobileTabButton(key, label, active) {
+  // Ogni tab è un pulsante 'pill' cliccabile
   return `
     <button
       class="f1b-tab-btn-mobile flex-1 text-center ${active ? "is-active" : ""}"
       data-f1b-tab="${key}"
       style="
-        border-radius:var(--radius-card-sm);
+        border-radius:10px;
         font-weight:${active ? "600" : "500"};
-        color:var(--ink);
-        background:${active ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)" : "transparent"};
-        padding:0.4rem 0.25rem;
+        font-size:12px;
+        line-height:1.2;
+        padding:.6rem .4rem;
+        border:1px solid ${active ? "var(--tone-neu-fg)" : "var(--br-soft)"};
+        background:${
+          active
+            ? `radial-gradient(circle at 0% 0%,
+                var(--tone-neu-bg-hard) 0%,
+                transparent 60%
+              ),
+              var(--surface-card-alt)`
+            : "var(--surface-card)"
+        };
+        color:${active ? "var(--tone-neu-fg)" : "var(--muted)"};
+        box-shadow:var(--shadow-card);
+        min-width:0;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        white-space:nowrap;
       "
     >
       ${label}
@@ -561,6 +613,9 @@ function drawerMobileTabButton(key, label, active) {
 
 /* -------------------------------------------------
    Tab switching (desktop e mobile)
+   -------------------------------------------------
+   - aggiorna stile tab attivo/inattivo
+   - mostra / nasconde le viste
 ------------------------------------------------- */
 
 function bindDrawerTabs(root) {
@@ -574,16 +629,39 @@ function bindDrawerTabs(root) {
       const key = btn.getAttribute("data-f1b-tab");
       if (!key) return;
 
-      // attiva/deattiva bottoni
+      // attiva/deattiva bottoni (desktop sidebar + mobile tabbar)
       tabButtons.forEach(b => {
         const isActive = b.getAttribute("data-f1b-tab") === key;
         b.classList.toggle("is-active", isActive);
 
-        b.style.borderLeftColor = isActive ? "var(--brand)" : "transparent";
-        b.style.background = isActive
-          ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)"
-          : "transparent";
-        b.style.fontWeight = isActive ? "600" : "500";
+        // stile dinamico desktop vs mobile
+        if (b.classList.contains("f1b-tab-btn")) {
+          // DESKTOP sidebar
+          b.style.borderLeftColor = isActive ? "var(--brand)" : "transparent";
+          b.style.background = isActive
+            ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)"
+            : "transparent";
+          b.style.fontWeight = isActive ? "600" : "500";
+        }
+
+        if (b.classList.contains("f1b-tab-btn-mobile")) {
+          // MOBILE bottom nav pill
+          b.style.fontWeight = isActive ? "600" : "500";
+          b.style.border = isActive
+            ? "1px solid var(--tone-neu-fg)"
+            : "1px solid var(--br-soft)";
+          b.style.background = isActive
+            ? `radial-gradient(circle at 0% 0%,
+                var(--tone-neu-bg-hard) 0%,
+                transparent 60%
+              ),
+              var(--surface-card-alt)`
+            : "var(--surface-card)";
+          b.style.color = isActive
+            ? "var(--tone-neu-fg)"
+            : "var(--muted)";
+          b.style.boxShadow = "var(--shadow-card)";
+        }
       });
 
       // mostra/nascondi viste
@@ -596,8 +674,7 @@ function bindDrawerTabs(root) {
 }
 
 /* -------------------------------------------------
-   Helpers UI singole metriche nella CARD principale
-   (queste sono i tre box RegimeScore, Breadth, RiskTilt sopra la CTA)
+   Helpers UI singole sezioni
 ------------------------------------------------- */
 
 function metricBox({ label, metricKey, value, desc }) {
@@ -611,16 +688,15 @@ function metricBox({ label, metricKey, value, desc }) {
         padding:0.6rem 0.75rem;
       ">
 
-      <!-- header box con ? a sinistra -->
-      <div class="mb-1 flex items-start gap-1">
-        <button
-          class="info-btn info-btn--mini"
-          data-metric="${escapeAttr(metricKey)}"
-          aria-label="Info ${escapeAttr(metricKey)}"
-        >?</button>
+      <div class="flex items-start justify-between gap-1 mb-1">
         <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold leading-[1.3]">
           ${escapeHtml(label)}
         </div>
+        <button
+          class="info-btn"
+          data-metric="${escapeAttr(metricKey)}"
+          aria-label="Info ${escapeAttr(metricKey)}"
+        >?</button>
       </div>
 
       <div class="font-mono font-bold text-[color:var(--ink)] text-[13px] leading-[1.4]">
@@ -871,23 +947,23 @@ function normalizeData(d) {
 }
 
 function computeTone(strategyMode, regimeScore) {
-  let toneColor = "var(--tone-n)";
+  let toneColor = "var(--tone-neu-fg)";
   let toneLabel = "neutral";
 
   const modeLow = (strategyMode || "").toLowerCase();
 
   if (modeLow.includes("momentum") && !modeLow.includes("light")) {
-    toneColor = "var(--tone-g)";
+    toneColor = "var(--tone-pos-fg)";
     toneLabel = "positive";
   } else if (modeLow.includes("momentum-light")) {
-    toneColor = "var(--tone-y)";
+    toneColor = "var(--tone-warn-fg)";
     toneLabel = "neutral";
   } else if (modeLow.includes("pullback")) {
-    toneColor = "var(--tone-r)";
+    toneColor = "var(--tone-neg-fg)";
     toneLabel = "alert";
   } else {
     if (isNum(regimeScore) && regimeScore < 0.1) {
-      toneColor = "var(--tone-r)";
+      toneColor = "var(--tone-neg-fg)";
       toneLabel = "alert";
     }
   }
