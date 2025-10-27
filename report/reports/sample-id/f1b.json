@@ -1,89 +1,205 @@
 {
-  "Timestamp": "2025-10-27 10:25 ET",
-  "AuditPathID": "SWG25F1B_20251027",
-  "Stato modulo": "ACTIVE",
-  "Freshness": "≤ T-1 (27 Oct 2025 10:20 ET)",
-
-  "StrategyMode_macro": "Momentum",
-  "RegimeScore": "Positivo (>0)",
-
-  "Breadth_1M": "Ampia ↑",
-  "RiskTilt_1M": "Pro-rischio ↑",
-  "VolRegime": "Rischio-on (+1)",
-  "LiquidityRegimeScore": "Favorable →",
-  "CreditRiskBlock": "Benigno →",
-  "FX_Regime": "USD lievemente forte →",
-
-  "RiskWindow": "Oil(+8% W/W), Gold(−7.8% W/W), USD(+0.2% W/W), 2s10s spread ~+0.5pp, Credit benigno, VIX −7.6% W/W",
-
-  "SizeBias": "Barbell MegaCap + Nano; MicroCap stress",
-  "LeadersMultiTF": [
-    "Technology · +1.5% 1D / +2.5% 1W / +6.4% 1M / +13.0% 3M / +43.9% 6M",
-    "Communication Services · +1.09% 1D / +1.0% 1W / +4.1% 1M / +14.7% 3M / +34.2% 6M",
-    "Consumer Discretionary · +1.18% 1D / +2.8% 1W / positivo 1M",
-    "Healthcare · +7.3% 1M"
-  ],
-  "DefensiveLeadership": [
-    "Healthcare forte 1M (~+7.3%)",
-    "Utilities ~+5.6% 1M ma debole 1W (~−0.12%)"
-  ],
-  "Lagging": [
-    "Energy (equity) ~−3.1% 1W / −3.3% 1M",
-    "Basic Materials ~−0.39% 1W"
-  ],
-
-  "ANALYSIS_T1_HEADLINES": {
-    "T1_MacroNews": "Treasury 10Y verso ~4.0%, Fed percepita più morbida...",
-    "T1_SellSideNotes": "Sell-side (Goldman, Yardeni) dice: rendimenti più bassi = supporto a growth/tech...",
-    "T1_ConsensusTone": "Consenso: soft landing + easing finanziario graduale.",
-    "T1_AuditSrc": [
-      "Bloomberg rates & crude narrative 2025-10-22/27",
-      "Barron’s UST yields lowest YTD 2025-10-16",
-      "Goldman Sachs US rates outlook",
-      "UST curve data FRED / Treasury 2025-10-24 / 2025-10-27"
-    ]
+  "meta": {
+    "timestampET": "2025-10-27 10:25 ET",
+    "module": "F1B · Market Regime",
+    "moduleVersion": "v19-Dynamic",
+    "moduleStatus": "ACTIVE",
+    "freshness": "≤ T-1 (27 Oct 2025 10:20 ET)"
   },
 
-  "FEEDTOF2": {
-    "FocusSectors": [
-      "Technology",
-      "Communication Services",
-      "Consumer Discretionary",
-      "Healthcare"
-    ],
-    "RiskWindow": "Oil(+8% W/W)... VIX −7.6% W/W",
-    "Notes": "Momentum su growth USA large cap; microcap funding stress. Filtro cap ≥Mid."
-  },
-
-  "FINVIZ_FILTERS": {
-    "QueryString": "sector:(Technology OR CommunicationServices OR ConsumerDiscretionary OR Healthcare) AND marketcap:(Mid OR Large OR Mega) AND performance:(WeekUp OR MonthUp) AND RSI(14)<70 AND beta>1.0 AND avgvolume>800000 AND price>10 AND country:USA",
-    "FilterType": "Momentum",
-    "AuditSrc": [
-      "Finviz Premium 2025-10-27 10:20 ET",
-      "ETFdb sector flows T-1"
-    ]
-  },
-
-  "QUALITY": {
-    "FreshnessScore": {
-      "label": "Freshness / Lag",
-      "value": "≤ T-1",
-      "tone": "green" 
+  "regime_and_risk": {
+    "StrategyMode_macro": {
+      "raw": "Momentum",
+      "tone": "green",
+      "ai_note": "Mercato orientato al rischio: leadership growth/ciclici, volatilità implicita che scende."
     },
-    "ConfidenceFinal": {
-      "label": "Confidence",
-      "value": "0.92",
-      "tone": "green"
+    "RegimeScore": {
+      "raw": "Positivo (>0)",
+      "tone": "green",
+      "ai_note": "Score sintetico appetito rischio (volatilità, curva tassi, credito). Sopra 0 = risk-on."
     },
-    "DataIntegrity": {
-      "label": "Integrità dataset",
-      "value": "0.88",
-      "tone": "yellow"
+    "VolRegime": {
+      "raw": "VIX −7.6% 1W / Oro −7.8% 1W",
+      "tone": "green",
+      "ai_note": "Volatilità implicita in contrazione e oro venduto → meno bisogno di hedge difensivi."
     },
-    "FeedSync": {
-      "label": "Sync feed",
-      "value": "T-1 OK",
-      "tone": "green"
+    "LiquidityRegimeScore": {
+      "raw": "Curva 2s10s ~+0.5pp, 10Y ~4.0% (giù dai picchi >4.8%)",
+      "tone": "green",
+      "ai_note": "Tassi lunghi un filo più bassi: costo del capitale leggermente meno oppressivo sui multipli equity."
+    },
+    "CreditRiskBlock": {
+      "raw": "Benigno →",
+      "tone": "green",
+      "ai_note": "Nessun segnale di flight-to-safety: il mercato credito/high beta non prezza stress immediato."
+    },
+    "FX_Regime": {
+      "raw": "USD +0.2% 1W (tono forte ma non panic bid)",
+      "tone": "yellow",
+      "ai_note": "Dollar bid moderato: narrativa 'crescita USA', non corsa al cash per paura."
+    },
+    "RiskWindow": {
+      "raw": "Oil +8% W/W · Heating Oil +11% W/W · VIX −7.6% 1W · curva +0.5pp · USD +0.2% 1W",
+      "tone": "green",
+      "ai_note": "Driver macro prossimi 3–10 giorni: spike energia fisica, ma volatilità equity compressa e curva meno invertita."
     }
+  },
+
+  "breadth_rotation": {
+    "Breadth_1M": {
+      "raw": "Ampia ↑ (Healthcare +7.3% 1M, Tech +6.4% 1M, Utilities +5.6% 1M)",
+      "tone": "green",
+      "ai_note": "Più settori sono verdi su 1M, quindi il rialzo è diffuso e non dipende solo da Mega Tech."
+    },
+    "RiskTilt_1M": {
+      "raw": "Pro-rischio ↑ (growth/ciclici > difensivi)",
+      "tone": "green",
+      "ai_note": "Communication Services ~+14.7% 3M, Technology ~+13.0% 3M → mercato preferisce crescita rispetto ai difensivi classici."
+    },
+    "SmallCapPressure_1W": {
+      "raw": "Microcap −1.77% 1W / −23% YTD; Mid/Large ~+1% 1W",
+      "tone": "red",
+      "ai_note": "Le microcap restano sotto pressione strutturale (funding risk elevato, liquidità bassa). Il mercato evita la fascia di capitalizzazione più fragile."
+    },
+    "IndexMomentum_1W": {
+      "raw": "NDX +2.16% 1W · SPX +1.69% 1W · Dow +1.65% 1W · R2K +1.20% 1W · BTC +3.3% 1W",
+      "tone": "green",
+      "ai_note": "Momentum di breve è positivo su più indici azionari e anche cripto: appetito rischio multi-asset."
+    },
+    "SizeBias": {
+      "raw": "Barbell: Mega/Large liquide + Nano speculative ↑; Micro strutturali scaricate",
+      "tone": "yellow",
+      "ai_note": "Flusso polarizzato: capitali istituzionali su nomi grandi e liquidi, e speculazione estrema in ultra-piccole; la fascia micro 'normale' viene venduta."
+    },
+    "Leadership": {
+      "LeadersMultiTF": [
+        "Technology · +1.5% 1D / +2.5% 1W / +6.4% 1M / +13.0% 3M / +43.9% 6M",
+        "Communication Services · +1.09% 1D / +1.0% 1W / +4.1% 1M / +14.7% 3M / +34.2% 6M",
+        "Consumer Discretionary · +1.18% 1D / +2.8% 1W / positivo 1M",
+        "Healthcare · +7.3% 1M"
+      ],
+      "DefensiveLeadership": [
+        "Healthcare: forza difensiva di qualità (cassa, margini)",
+        "Utilities: +5.6% 1M ma ~flat 1W"
+      ],
+      "Lagging": [
+        "Energy equity −3.3% 1M / −3.1% 1W",
+        "Basic Materials −0.39% 1W"
+      ],
+      "ai_note": "Leadership combinata tra crescita USA (Tech / Comm Services / Discretionary) e qualità bilancio (Healthcare). Vengono alleggeriti gli hedge inflattivi puri (Energy) e i materiali ciclici pesanti."
+    }
+  },
+
+  "internals_raw": {
+    "Indices_1W": [
+      "Nasdaq 100 ~+2.16% 1W",
+      "S&P 500 ~+1.69% 1W",
+      "Dow Jones ~+1.65% 1W",
+      "Russell 2000 ~+1.20% 1W",
+      "Bitcoin ~+3.3% 1W"
+    ],
+    "Futures_Move_1W": [
+      "Heating Oil ~+11% 1W",
+      "Crude Oil WTI ~+8.05% 1W",
+      "Crude Oil Brent ~+8.06% 1W",
+      "Gold ~−7.8% 1W"
+    ],
+    "Curve_UST": [
+      "2Y ≈ 3.5%",
+      "10Y ≈ 4.0%",
+      "2s10s spread ≈ +0.5pp (ri-steepening)"
+    ],
+    "Vol_USD": [
+      "VIX ~−3.5% 1D / ~−7.6% 1W",
+      "USD Index ~+0.23% 1W"
+    ],
+    "ai_note": "Dati grezzi multi-asset di volatilità, tassi, commodity e indici. Sono la base quantitativa delle letture di regime. Nessuna raccomandazione."
+  },
+
+  "street_view": {
+    "T1_MacroNews": "Rendimenti Treasury verso ~4.0% sul 10Y sono letti come segnale di Fed più morbida e rallentamento della domanda energia: costo del capitale leggermente più basso rispetto ai picchi di tensione.",
+    "T1_SellSideNotes": "Sell-side (Goldman, Yardeni) evidenzia che rendimenti sovrani più bassi e petrolio meno teso riducono pressione sui multipli azionari e sostengono growth/tech. Cautela persistente sulle microcap per via del costo di funding.",
+    "T1_ConsensusTone": "Narrativa di consenso = soft landing con easing finanziario graduale. Il mercato legge il calo dei rendimenti come tailwind per l'azionario, non come segnale di crisi imminente.",
+    "ai_note": "Tono istituzionale: 'rallentamento controllato' più che 'rischio sistemico imminente'."
+  },
+
+  "sintesi_ai": {
+    "points": [
+      {
+        "title": "Regime complessivo",
+        "raw": "StrategyMode_macro = Momentum / RegimeScore >0",
+        "ai_note": "Il contesto è favorevole al rischio finché la volatilità resta compressa e la curva non torna a stressare il costo del capitale."
+      },
+      {
+        "title": "Ampiezza del rialzo",
+        "raw": "Breadth_1M = Ampia ↑ (settori Healthcare, Tech, Utilities positivi 1M)",
+        "ai_note": "Il rialzo è distribuito e quindi più difficile da smontare con un singolo sell-off di mega-cap."
+      },
+      {
+        "title": "Leadership settoriale",
+        "raw": "Technology · Communication Services · Consumer Discretionary · Healthcare",
+        "ai_note": "Il mercato sta comprando crescita USA e consumo discrezionale, mantenendo allo stesso tempo esposizione a cassa & qualità (Healthcare)."
+      },
+      {
+        "title": "Microcap e funding risk",
+        "raw": "Microcap −1.77% 1W / −23% YTD (pressione finanziamento); Mid/Large ~+1% 1W",
+        "ai_note": "Il capitale evita le fasce più piccole e meno liquide: rischio di rifinanziamento percepito alto. Questo è un punto di debolezza strutturale nella struttura del mercato."
+      },
+      {
+        "title": "Debolezza settoriale",
+        "raw": "Energy −3.3% 1M; Basic Materials leggermente negativa 1W",
+        "ai_note": "Il mercato sta riducendo esposizione a hedge inflattivi puri e settori ciclici legati a materie prime pesanti."
+      },
+      {
+        "title": "Tassi & credito",
+        "raw": "2s10s ~+0.5pp; 10Y ~4.0%; Credit = benigno",
+        "ai_note": "La curva USA sta ri-steepening e il decennale è sceso dai picchi >4.8%. Segnali di stress di funding sistemico contenuti."
+      },
+      {
+        "title": "Finestra 3–10 giorni",
+        "raw": "Oil +8% W/W · Heating Oil +11% W/W · VIX −7.6% 1W · USD +0.2% 1W",
+        "ai_note": "Driver tattici: energia fisica in spike, ma l'equity non sta chiedendo coperture aggressive (vol bassa)."
+      }
+    ]
+  },
+
+  "audit_quality": {
+    "AuditPathID": "SWG25F1B_20251027",
+    "SourcesTier1": [
+      "Bloomberg (rates & crude narrative 2025-10-22/27)",
+      "Barron's (UST yields lowest YTD 2025-10-16)",
+      "CBOE (VIX)",
+      "FRED / UST (Treasury curve)",
+      "Finviz Premium (settori / size / futures)",
+      "ETFdb (sector flows)"
+    ],
+    "Freshness": "≤ T-1",
+    "ModuleStatus": "ACTIVE",
+    "QualityMetrics": {
+      "FreshnessScore": {
+        "raw": "≤ T-1",
+        "tone": "green",
+        "ai_note": "Dati aggiornati a T-1 o meglio."
+      },
+      "ConfidenceFinal": {
+        "raw": "0.92",
+        "tone": "green",
+        "ai_note": "Feed coerente e senza buchi critici."
+      },
+      "DataIntegrity": {
+        "raw": "0.88",
+        "tone": "yellow",
+        "ai_note": "Alcune serie (microcap/funding) sono rumorose ma usabili."
+      },
+      "FeedSync": {
+        "raw": "T-1 OK",
+        "tone": "green",
+        "ai_note": "Allineamento delle fonti coerente con la snapshot corrente."
+      }
+    }
+  },
+
+  "mifid": {
+    "disclaimer": "Questo materiale descrive uno scenario di mercato basato su dati quantitativi e fonti finanziarie primarie. Ha finalità informative e formative. Non costituisce una raccomandazione personalizzata, né un invito ad aprire/chiudere posizioni o allocare capitale. Prima di qualsiasi decisione reale verifica adeguatezza e appropriatezza con un intermediario autorizzato ai sensi MiFID II e della normativa locale."
   }
 }
