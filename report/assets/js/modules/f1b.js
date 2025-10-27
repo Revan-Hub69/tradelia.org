@@ -547,25 +547,52 @@ function renderDrawerMobileShellPublic(sectionsObj) {
 ------------------------------------------------- */
 
 function drawerMenuButtonPublic(key, label, active) {
-  return `
+  const isActiveStyles = active
+    ? `
+      background:color-mix(in oklab, var(--surface-card-alt) 60%, transparent);
+      border-left:3px solid var(--tone-neu-fg);
+      color:var(--ink);
+      font-weight:600;
+    `
+    : `
+      background:transparent;
+      border-left:3px solid transparent;
+      color:var(--ink);
+      font-weight:500;
+    `;
+
+   return `
     <button
-      class="f1b-tab-btn block w-full text-left text-[12px] leading-[1.4] px-2 py-2 ${active ? "is-active" : ""}"
+      class="f1b-tab-btn block w-full text-left text-[13px] leading-[1.4] px-3 py-2"
       data-f1b-tab="${key}"
       style="
+        position:relative;
         border-radius:var(--radius-card-sm);
-        border-left:3px solid ${active ? "var(--brand-600)" : "transparent"};
-        background:${active
-          ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)"
-          : "transparent"};
-        font-weight:${active ? "600" : "500"};
-        color:var(--ink);
-        text-align:left;
+        ${isActiveStyles}
+      "
+      onmouseover="
+        if(!this.classList.contains('is-active')){
+          this.style.background='color-mix(in oklab, var(--surface-card-alt) 30%, transparent)';
+        }
+      "
+      onmouseout="
+        if(!this.classList.contains('is-active')){
+          this.style.background='transparent';
+        }
       "
     >
-      ${label}
+      <span
+        style="
+          display:block;
+          border-bottom:1px solid color-mix(in oklab, var(--ink) 15%, transparent);
+          padding-bottom:2px;
+        "
+      >
+        ${label}
+      </span>
     </button>
   `;
-}
+
 
 function bindDrawerTabsPublic(root) {
   if (!root) return;
@@ -582,37 +609,46 @@ function bindDrawerTabsPublic(root) {
       if (!key) return;
 
       // attiva/deattiva bottoni ovunque (sidebar desktop + footer mobile)
-      const allBtns = document.querySelectorAll("[data-f1b-tab]");
-      allBtns.forEach(b => {
-        const isActive = b.getAttribute("data-f1b-tab") === key;
-        b.classList.toggle("is-active", isActive);
+  const allBtns = document.querySelectorAll("[data-f1b-tab]");
+allBtns.forEach(b => {
+  const isActive = b.getAttribute("data-f1b-tab") === key;
+  b.classList.toggle("is-active", isActive);
 
-        if (b.classList.contains("f1b-tab-btn")) {
-          b.style.borderLeftColor = isActive ? "var(--brand-600)" : "transparent";
-          b.style.background = isActive
-            ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)"
-            : "transparent";
-          b.style.fontWeight = isActive ? "600" : "500";
-        }
+  // stile sidebar desktop
+  if (b.classList.contains("f1b-tab-btn")) {
+    if (isActive) {
+      b.style.background = "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)";
+      b.style.borderLeft = "3px solid var(--tone-neu-fg)";
+      b.style.fontWeight = "600";
+      b.style.color = "var(--ink)";
+    } else {
+      b.style.background = "transparent";
+      b.style.borderLeft = "3px solid transparent";
+      b.style.fontWeight = "500";
+      b.style.color = "var(--ink)";
+    }
+  }
 
-        if (b.classList.contains("f1b-footer-tab-btn")) {
-          b.style.fontWeight = isActive ? "600" : "500";
-          b.style.border = isActive
-            ? "1px solid var(--tone-neu-fg)"
-            : "1px solid var(--br-soft)";
-          b.style.background = isActive
-            ? `radial-gradient(circle at 0% 0%,
-                var(--tone-neu-bg-hard) 0%,
-                transparent 60%
-              ),
-              var(--surface-card-alt)`
-            : "var(--surface-card)";
-          b.style.color = isActive
-            ? "var(--tone-neu-fg)"
-            : "var(--muted)";
-          b.style.boxShadow = "var(--shadow-card)";
-        }
-      });
+  // stile footer mobile (pills)
+  if (b.classList.contains("f1b-footer-tab-btn")) {
+    b.style.fontWeight = isActive ? "600" : "500";
+    b.style.border = isActive
+      ? "1px solid var(--tone-neu-fg)"
+      : "1px solid var(--br-soft)";
+    b.style.background = isActive
+      ? `radial-gradient(circle at 0% 0%,
+          var(--tone-neu-bg-hard) 0%,
+          transparent 60%
+        ),
+        var(--surface-card-alt)`
+      : "var(--surface-card)";
+    b.style.color = isActive
+      ? "var(--tone-neu-fg)"
+      : "var(--muted)";
+    b.style.boxShadow = "var(--shadow-card)";
+  }
+});
+
 
       // mostra/nascondi viste
       views.forEach(viewEl => {
@@ -621,6 +657,16 @@ function bindDrawerTabsPublic(root) {
       });
     });
   });
+  // reset scroll del contenitore principale dopo il cambio tab
+const scrollContainers = [
+  document.getElementById("panel-body"),
+  document.getElementById("panel-body-mobile")
+].filter(Boolean);
+
+scrollContainers.forEach(sc => {
+  sc.scrollTop = 0;
+});
+
 }
 
 /* -------------------------------------------------
