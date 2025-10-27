@@ -256,22 +256,23 @@ function openF1DrawerPublic(data) {
     footerButtons: mobileMode ? [] : footerButtonsDesktop,
     footerTabs: []
   });
-// post-mount binding (tab switching + tooltip binding interno)
-setTimeout(() => {
-  const roots = [
-    document.getElementById("panel-body"),
-    document.getElementById("panel-body-mobile"),
-    document.querySelector(".f1b-footer-tabs-wrap") // <-- AGGIUNTO
-  ].filter(Boolean);
 
-  roots.forEach(r => {
-    bindDrawerTabsPublic(r);
-    if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
-      try { window.__TradeliaUI.bindMetricInfoButtons(r); } catch (e) {}
-    }
-  });
-}, 0);
+  // post-mount binding (tab switching + tooltip binding interno)
+  setTimeout(() => {
+    const roots = [
+      document.getElementById("panel-body"),
+      document.getElementById("panel-body-mobile"),
+      document.getElementById("panel-footer-mobile")
+    ].filter(Boolean);
 
+    roots.forEach(r => {
+      bindDrawerTabsPublic(r);
+      if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
+        try { window.__TradeliaUI.bindMetricInfoButtons(r); } catch (e) {}
+      }
+    });
+  }, 0);
+}
 
 function isMobileViewport() {
   return window.matchMedia("(max-width: 767px)").matches;
@@ -579,13 +580,11 @@ function renderDrawerMobileShellPublic(sectionsObj) {
             transparent 60%
           );
 
-        padding:.4rem .75rem;
-        box-shadow:0 3px 6px rgba(0,0,0,.08);
+        padding:.6rem .75rem;
+        box-shadow:0 6px 12px rgba(0,0,0,.12);
         max-width:100%;
         overflow:hidden;
         gap:.5rem;
-        margin-bottom:0;
-
       "
     >
       <div
