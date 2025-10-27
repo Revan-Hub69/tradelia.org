@@ -254,7 +254,7 @@ function openF1DrawerPublic(data) {
     blocking: false,
   panelSize: mobileMode ? "wide" : "xl",
     footerButtons: mobileMode ? [] : footerButtonsDesktop,
-    footerTabs: mobileMode ? tabDefs : []
+    footerTabs: []
   });
 
   // post-mount binding (tab switching + tooltip binding interno)
