@@ -301,15 +301,22 @@ function openPanel(opts) {
     overlayEl.removeAttribute("data-blocking");
   }
 
-  // panelSize "wide" -> aggiungi classe tl-panel--wide al desktop panel
-  const panelDesktop = qs(".tl-panel--desktop", overlayEl);
-  if (panelDesktop) {
-    if (panelSize === "wide") {
-      panelDesktop.classList.add("tl-panel--wide");
-    } else {
-      panelDesktop.classList.remove("tl-panel--wide");
-    }
+// gestisci varianti di larghezza desktop ("wide", "xl", default)
+const panelDesktop = qs(".tl-panel--desktop", overlayEl);
+if (panelDesktop) {
+  // rimuove eventuali classi precedenti per sicurezza
+  panelDesktop.classList.remove("tl-panel--wide");
+  panelDesktop.classList.remove("tl-panel--xl");
+
+  if (panelSize === "wide") {
+    // legacy (~560px)
+    panelDesktop.classList.add("tl-panel--wide");
+  } else if (panelSize === "xl") {
+    // nuova misura larga (~50vw)
+    panelDesktop.classList.add("tl-panel--xl");
   }
+}
+
 
   // lock scroll pagina dietro + mostra overlay
   document.body.classList.add("body--lock");
