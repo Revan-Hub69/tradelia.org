@@ -1,63 +1,89 @@
-function toneClassFromJSON(tone) {
-  // tone = "green" | "yellow" | "red" | anything else
-  switch ((tone || "").toLowerCase()) {
-    case "green":
-      return {
-        dotColor: "var(--tone-pos-fg)",
-        textColor: "var(--tone-pos-fg)"
-      };
-    case "yellow":
-      return {
-        dotColor: "var(--tone-warn-fg)",
-        textColor: "var(--tone-warn-fg)"
-      };
-    case "red":
-      return {
-        dotColor: "var(--tone-neg-fg)",
-        textColor: "var(--tone-neg-fg)"
-      };
-    default:
-      return {
-        dotColor: "var(--tone-neu-fg)",
-        textColor: "var(--tone-neu-fg)"
-      };
+{
+  "Timestamp": "2025-10-27 10:25 ET",
+  "AuditPathID": "SWG25F1B_20251027",
+  "Stato modulo": "ACTIVE",
+  "Freshness": "≤ T-1 (27 Oct 2025 10:20 ET)",
+
+  "StrategyMode_macro": "Momentum",
+  "RegimeScore": "Positivo (>0)",
+
+  "Breadth_1M": "Ampia ↑",
+  "RiskTilt_1M": "Pro-rischio ↑",
+  "VolRegime": "Rischio-on (+1)",
+  "LiquidityRegimeScore": "Favorable →",
+  "CreditRiskBlock": "Benigno →",
+  "FX_Regime": "USD lievemente forte →",
+
+  "RiskWindow": "Oil(+8% W/W), Gold(−7.8% W/W), USD(+0.2% W/W), 2s10s spread ~+0.5pp, Credit benigno, VIX −7.6% W/W",
+
+  "SizeBias": "Barbell MegaCap + Nano; MicroCap stress",
+  "LeadersMultiTF": [
+    "Technology · +1.5% 1D / +2.5% 1W / +6.4% 1M / +13.0% 3M / +43.9% 6M",
+    "Communication Services · +1.09% 1D / +1.0% 1W / +4.1% 1M / +14.7% 3M / +34.2% 6M",
+    "Consumer Discretionary · +1.18% 1D / +2.8% 1W / positivo 1M",
+    "Healthcare · +7.3% 1M"
+  ],
+  "DefensiveLeadership": [
+    "Healthcare forte 1M (~+7.3%)",
+    "Utilities ~+5.6% 1M ma debole 1W (~−0.12%)"
+  ],
+  "Lagging": [
+    "Energy (equity) ~−3.1% 1W / −3.3% 1M",
+    "Basic Materials ~−0.39% 1W"
+  ],
+
+  "ANALYSIS_T1_HEADLINES": {
+    "T1_MacroNews": "Treasury 10Y verso ~4.0%, Fed percepita più morbida...",
+    "T1_SellSideNotes": "Sell-side (Goldman, Yardeni) dice: rendimenti più bassi = supporto a growth/tech...",
+    "T1_ConsensusTone": "Consenso: soft landing + easing finanziario graduale.",
+    "T1_AuditSrc": [
+      "Bloomberg rates & crude narrative 2025-10-22/27",
+      "Barron’s UST yields lowest YTD 2025-10-16",
+      "Goldman Sachs US rates outlook",
+      "UST curve data FRED / Treasury 2025-10-24 / 2025-10-27"
+    ]
+  },
+
+  "FEEDTOF2": {
+    "FocusSectors": [
+      "Technology",
+      "Communication Services",
+      "Consumer Discretionary",
+      "Healthcare"
+    ],
+    "RiskWindow": "Oil(+8% W/W)... VIX −7.6% W/W",
+    "Notes": "Momentum su growth USA large cap; microcap funding stress. Filtro cap ≥Mid."
+  },
+
+  "FINVIZ_FILTERS": {
+    "QueryString": "sector:(Technology OR CommunicationServices OR ConsumerDiscretionary OR Healthcare) AND marketcap:(Mid OR Large OR Mega) AND performance:(WeekUp OR MonthUp) AND RSI(14)<70 AND beta>1.0 AND avgvolume>800000 AND price>10 AND country:USA",
+    "FilterType": "Momentum",
+    "AuditSrc": [
+      "Finviz Premium 2025-10-27 10:20 ET",
+      "ETFdb sector flows T-1"
+    ]
+  },
+
+  "QUALITY": {
+    "FreshnessScore": {
+      "label": "Freshness / Lag",
+      "value": "≤ T-1",
+      "tone": "green" 
+    },
+    "ConfidenceFinal": {
+      "label": "Confidence",
+      "value": "0.92",
+      "tone": "green"
+    },
+    "DataIntegrity": {
+      "label": "Integrità dataset",
+      "value": "0.88",
+      "tone": "yellow"
+    },
+    "FeedSync": {
+      "label": "Sync feed",
+      "value": "T-1 OK",
+      "tone": "green"
+    }
   }
-}
-
-function metricChip(keyName, qObj) {
-  if (!qObj) return "";
-  const { label, value, tone } = qObj;
-  const { dotColor, textColor } = toneClassFromJSON(tone);
-
-  return `
-    <div class="p-2"
-      style="
-        background:var(--surface-card-alt);
-        border:1px solid var(--br-card);
-        border-radius:var(--radius-card);
-        box-shadow:var(--shadow-card);
-      ">
-      <div class="flex items-start justify-between gap-2 mb-1">
-        <div class="flex items-center gap-2">
-          <span class="inline-block w-[8px] h-[8px] rounded-full"
-            style="background:${dotColor};"></span>
-
-          <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
-            ${escapeHtml(label || keyName || "")}
-          </div>
-        </div>
-
-        <button
-          class="info-btn"
-          data-metric="${escapeAttr(keyName)}"
-          aria-label="Info ${escapeAttr(keyName)}"
-        >?</button>
-      </div>
-
-      <div class="font-mono font-bold text-[13px] leading-[1.4]"
-        style="color:${textColor};">
-        ${escapeHtml(value || "—")}
-      </div>
-    </div>
-  `;
 }
