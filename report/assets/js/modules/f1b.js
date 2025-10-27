@@ -561,6 +561,194 @@ function renderDrawerDesktopShellPublic(sectionsObj) {
 }
 
 function renderDrawerMobileShellPublic(sectionsObj) {
+  // barra tab scrollabile in alto (Regime attivo di default)
+  const mobileTabsBar = `
+    <div
+      class="f1b-footer-tabs-wrap"
+      style="
+        flex-shrink:0;
+
+        display:flex;
+        align-items:center;
+
+        border-bottom:1px solid var(--br-panel-divider);
+        background:var(--surface-panel-head);
+        background-image:
+          radial-gradient(
+            circle at 0% 0%,
+            color-mix(in oklab, var(--surface-panel-head) 90%, var(--brand) 2%) 0%,
+            transparent 60%
+          );
+
+        padding:.6rem .75rem;
+        box-shadow:0 6px 12px rgba(0,0,0,.12);
+        max-width:100%;
+        overflow:hidden;
+        gap:.5rem;
+      "
+    >
+      <div
+        class="f1b-footer-tabs-scroll"
+        style="
+          flex:1 1 auto;
+          min-width:0;
+          display:flex;
+          align-items:center;
+          gap:.5rem;
+          overflow-x:auto;
+          -webkit-overflow-scrolling:touch;
+          scrollbar-width:none;
+        "
+      >
+        <button
+          class="f1b-footer-tab-btn"
+          data-f1b-tab="regime"
+          style="
+            flex:0 0 auto;
+            white-space:nowrap;
+            font-size:11px;
+            line-height:1.2;
+            font-weight:600;
+            border-radius:8px;
+            border:1px solid var(--ink);
+            background:
+              radial-gradient(
+                circle at 0% 0%,
+                color-mix(in oklab, var(--ink) 12%, transparent) 0%,
+                transparent 60%
+              ),
+              var(--surface-card-alt);
+            color:var(--ink);
+            padding:.45rem .7rem;
+            box-shadow:var(--shadow-card);
+          "
+        >
+          Regime
+        </button>
+
+        <button
+          class="f1b-footer-tab-btn"
+          data-f1b-tab="breadth"
+          style="
+            flex:0 0 auto;
+            white-space:nowrap;
+            font-size:11px;
+            line-height:1.2;
+            font-weight:500;
+            border-radius:8px;
+            border:1px solid var(--br-soft);
+            background:var(--surface-card);
+            color:var(--muted);
+            padding:.45rem .7rem;
+            box-shadow:var(--shadow-card);
+          "
+        >
+          Breadth
+        </button>
+
+        <button
+          class="f1b-footer-tab-btn"
+          data-f1b-tab="internals"
+          style="
+            flex:0 0 auto;
+            white-space:nowrap;
+            font-size:11px;
+            line-height:1.2;
+            font-weight:500;
+            border-radius:8px;
+            border:1px solid var(--br-soft);
+            background:var(--surface-card);
+            color:var(--muted);
+            padding:.45rem .7rem;
+            box-shadow:var(--shadow-card);
+          "
+        >
+          Internals
+        </button>
+
+        <button
+          class="f1b-footer-tab-btn"
+          data-f1b-tab="street"
+          style="
+            flex:0 0 auto;
+            white-space:nowrap;
+            font-size:11px;
+            line-height:1.2;
+            font-weight:500;
+            border-radius:8px;
+            border:1px solid var(--br-soft);
+            background:var(--surface-card);
+            color:var(--muted);
+            padding:.45rem .7rem;
+            box-shadow:var(--shadow-card);
+          "
+        >
+          Street
+        </button>
+
+        <button
+          class="f1b-footer-tab-btn"
+          data-f1b-tab="sintesi"
+          style="
+            flex:0 0 auto;
+            white-space:nowrap;
+            font-size:11px;
+            line-height:1.2;
+            font-weight:500;
+            border-radius:8px;
+            border:1px solid var(--br-soft);
+            background:var(--surface-card);
+            color:var(--muted);
+            padding:.45rem .7rem;
+            box-shadow:var(--shadow-card);
+          "
+        >
+          Sintesi AI
+        </button>
+
+        <button
+          class="f1b-footer-tab-btn"
+          data-f1b-tab="audit"
+          style="
+            flex:0 0 auto;
+            white-space:nowrap;
+            font-size:11px;
+            line-height:1.2;
+            font-weight:500;
+            border-radius:8px;
+            border:1px solid var(--br-soft);
+            background:var(--surface-card);
+            color:var(--muted);
+            padding:.45rem .7rem;
+            box-shadow:var(--shadow-card);
+          "
+        >
+          Audit
+        </button>
+
+        <button
+          class="f1b-footer-tab-btn"
+          data-f1b-tab="mifid"
+          style="
+            flex:0 0 auto;
+            white-space:nowrap;
+            font-size:11px;
+            line-height:1.2;
+            font-weight:500;
+            border-radius:8px;
+            border:1px solid var(--br-soft);
+            background:var(--surface-card);
+            color:var(--muted);
+            padding:.45rem .7rem;
+            box-shadow:var(--shadow-card);
+          "
+        >
+          MiFID
+        </button>
+      </div>
+    </div>
+  `;
+
   return `
     <div class="f1b-drawer-mobile"
       style="
@@ -569,16 +757,20 @@ function renderDrawerMobileShellPublic(sectionsObj) {
         height:calc(100vh - 110px);
         max-height:calc(100vh - 110px);
         min-height:300px;
-      ">
+      "
+    >
 
-      <main class="f1b-panel-content-mobile flex-1 min-w-0"
-     style="
-  overflow:auto;
-  -webkit-overflow-scrolling:touch;
-  padding:1rem;
-  padding-bottom:4.5rem;
-"
-        id="panel-body-mobile">
+      ${mobileTabsBar}
+
+      <main
+        class="f1b-panel-content-mobile flex-1 min-w-0"
+        style="
+          overflow:auto;
+          -webkit-overflow-scrolling:touch;
+          padding:1rem;
+        "
+        id="panel-body-mobile"
+      >
         <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
         <div data-f1b-view="breadth" hidden>${sectionsObj.breadthHTML}</div>
         <div data-f1b-view="internals" hidden>${sectionsObj.internalsHTML}</div>
