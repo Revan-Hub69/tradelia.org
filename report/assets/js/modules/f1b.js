@@ -143,13 +143,10 @@ export function renderCard(rawData, ctx = {}) {
         </div>
 
 <!-- KPI row semaforiche -->
-<div class="
-  grid gap-3
-  grid-cols-2
-  md:grid-cols-3
-">
+<div class="grid gap-3 grid-cols-2 md:grid-cols-3">
   ${kpis.map(k => metricBoxTrafficLight(k)).join("")}
 </div>
+
 
         <!-- DISCLAIMER + CTA ROW -->
         <div class="mt-2 flex flex-col gap-3 lg:flex-row lg:items-start">
@@ -417,16 +414,13 @@ function buildDrawerSectionsPublic(d) {
         </div>
       </header>
 
-     <div class="
-  grid gap-3 text-[12px] leading-[1.4]
-  grid-cols-1
-  md:grid-cols-2
-">
+   <div class="grid gap-3 text-[12px] leading-[1.4] grid-cols-1 md:grid-cols-2">
   ${qualityChip("FreshnessScore", d.audit_quality.QualityMetrics?.FreshnessScore)}
   ${qualityChip("ConfidenceFinal", d.audit_quality.QualityMetrics?.ConfidenceFinal)}
   ${qualityChip("DataIntegrity", d.audit_quality.QualityMetrics?.DataIntegrity)}
   ${qualityChip("FeedSync", d.audit_quality.QualityMetrics?.FeedSync)}
 </div>
+
 
 
       <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-2 uppercase tracking-wide">
@@ -596,6 +590,7 @@ function bindDrawerTabsPublic(root) {
         const isActive = b.getAttribute("data-f1b-tab") === key;
         b.classList.toggle("is-active", isActive);
 
+        // stile tab nella sidebar desktop
         if (b.classList.contains("f1b-tab-btn")) {
           b.style.borderLeftColor = isActive ? "var(--brand-600)" : "transparent";
           b.style.background = isActive
@@ -604,31 +599,25 @@ function bindDrawerTabsPublic(root) {
           b.style.fontWeight = isActive ? "600" : "500";
         }
 
-       if (b.classList.contains("f1b-footer-tab-btn")) {
-  if (isActive) {
-    // STATO ATTIVO (tab selezionata)
-    b.style.fontWeight   = "600";
-    b.style.border       = "1px solid var(--ink)";
-    b.style.background   = `
-      radial-gradient(
-        circle at 0% 0%,
-        color-mix(in oklab, var(--ink) 12%, transparent) 0%,
-        transparent 60%
-      ),
-      var(--surface-card-alt)
-    `;
-    b.style.color        = "var(--ink)";
-    b.style.boxShadow    = "var(--shadow-card)";
-  } else {
-    // STATO NON ATTIVO
-    b.style.fontWeight   = "500";
-    b.style.border       = "1px solid var(--br-soft)";
-    b.style.background   = "var(--surface-card)";
-    b.style.color        = "var(--muted)";
-    b.style.boxShadow    = "var(--shadow-card)";
-  }
-}
-
+        // stile tab nella footer-bar mobile
+        if (b.classList.contains("f1b-footer-tab-btn")) {
+          if (isActive) {
+            // ATTIVA
+            b.style.fontWeight = "600";
+            b.style.border = "1px solid var(--ink)";
+            b.style.background = "radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--ink) 12%, transparent) 0%, transparent 60%), var(--surface-card-alt)";
+            b.style.color = "var(--ink)";
+            b.style.boxShadow = "var(--shadow-card)";
+          } else {
+            // NON ATTIVA
+            b.style.fontWeight = "500";
+            b.style.border = "1px solid var(--br-soft)";
+            b.style.background = "var(--surface-card)";
+            b.style.color = "var(--muted)";
+            b.style.boxShadow = "var(--shadow-card)";
+          }
+        }
+      });
 
       // mostra/nascondi viste
       views.forEach(viewEl => {
@@ -638,6 +627,7 @@ function bindDrawerTabsPublic(root) {
     });
   });
 }
+
 
 /* -------------------------------------------------
    Blocchi UI riutilizzabili
