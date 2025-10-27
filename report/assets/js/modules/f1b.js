@@ -252,7 +252,7 @@ function openF1DrawerPublic(data) {
       }
     ],
     blocking: false,
-    panelSize: "wide",
+  panelSize: mobileMode ? "wide" : "xl",
     footerButtons: mobileMode ? [] : footerButtonsDesktop,
     footerTabs: mobileMode ? tabDefs : []
   });
