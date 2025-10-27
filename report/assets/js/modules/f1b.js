@@ -1,60 +1,61 @@
 // /report/assets/js/modules/f1b.js
 //
-// F1B · Regime di mercato / Contesto rischio (public dashboard)
-// Snapshot swing 3–10 giorni
+// F1B · Regime di mercato / Contesto rischio (v19-Public compatibile)
+// Swing window 3–10 giorni
 //
-// Questo modulo renderizza:
-//  - Card riassuntiva con CTA "Dettagli regime →"
-//  - Drawer/panel con 7 sezioni/tab:
-//      1. Regime & Rischio
-//      2. Breadth & Rotazione
-//      3. Internals (dati grezzi)
-//      4. Street View (narrativa istituzionale)
-//      5. Sintesi Tradelia AI
-//      6. Audit & Qualità
-//      7. MiFID
+// Questo file è compatibile con IL JSON CHE HAI GIÀ (Breadth_1M, RiskTilt_1M,
+// SmallCapPressure_1W, VolRegime, LiquidityRegimeScore, CreditRiskBlock,
+// FX_Regime, RegimeScore, StrategyMode_macro, ecc.).
 //
-// Ogni metrica ha {raw, tone, ai_note} e un "?" che punta al glossario
-// tramite window.__TradeliaUI.bindMetricInfoButtons.
+// Non richiede FocusSectors, niente pipeline F2, niente sintesi AI custom.
 //
-// Esportiamo per app.js runtime:
+// SEZIONI DRAWER (tab):
+//  - Regime & Rischio
+//  - Breadth & Rotazione
+//  - Internals (size bias / microcap stress)
+//  - Street View (ANALYSIS_T1_HEADLINES)
+//  - Audit
+//  - MiFID
+//
+// Mobile:
+//  - tab bar scrollabile in alto
+//  - niente footer "Chiudi"
+// Desktop:
+//  - sidebar stile desk con barra colorata a sinistra
+//
+// PUBLIC API richiesto da app.js:
 //   renderCard(data, ctx)
 //   bindCard(node, data, ctx)
 
-export function renderCard(rawData, ctx = {}) {
-  const d = normalizeDataPublicF1B(rawData);
+///////////////////////
+// RENDER CARD (snapshot nel report)
+///////////////////////
 
-  // Per la card breve mostriamo:
-  // - StrategyMode_macro
-  // - RegimeScore
-  // - VolRegime
-  // (tutte con semaforo e "?" tooltip)
+export function renderCard(rawData, ctx = {}) {
+  const d = normalizeDataPublic(rawData);
+  const { toneLabel, toneColor } = computeTone(d.strategyModeMacro, d.regimeScoreLabel);
+
+  // KPI rapidi in card
   const kpis = [
     {
-      key: "StrategyMode_macro",
-      label: "StrategyMode",
-      desc: "Modalità regime (Momentum / Pullback / Neutral)",
-      metric: d.regime_and_risk.StrategyMode_macro
+      label: "Breadth (1M)",
+      metricKey: "Breadth_1M",
+      value: d.breadth1M,
+      desc: "Ampiezza partecipazione al rialzo"
     },
     {
-      key: "RegimeScore",
-      label: "RegimeScore",
-      desc: "Appetito rischio sintetico",
-      metric: d.regime_and_risk.RegimeScore
+      label: "RiskTilt",
+      metricKey: "RiskTilt_1M",
+      value: d.riskTilt1M,
+      desc: "Ciclici/Growth vs Difensivi"
     },
     {
-      key: "VolRegime",
       label: "Volatilità",
-      desc: "VIX / oro / hedge appetite",
-      metric: d.regime_and_risk.VolRegime
+      metricKey: "VolRegime",
+      value: d.volRegime,
+      desc: "VIX / oro / hedge appetite"
     }
   ];
-
-  // Pill tono generale = StrategyMode_macro
-  const { toneLabel, toneColor } = computeHighLevelTone(
-    d.regime_and_risk.StrategyMode_macro,
-    d.regime_and_risk.RegimeScore
-  );
 
   return `
     <section class="f1b-card-container text-[13px] leading-[1.5] text-[color:var(--ink)]"
@@ -71,17 +72,17 @@ export function renderCard(rawData, ctx = {}) {
             </span>
 
             <span class="module-status-pill text-[10px] font-semibold leading-[1.2] px-[6px] py-[2px] rounded-[4px] border"
-              data-state="${escapeAttr(d.meta.moduleStatus || 'ACTIVE')}"
+              data-state="${escapeAttr(d.moduleState)}"
               style="
                 background:var(--surface-card-alt);
                 border-color:var(--br-card);
                 color:var(--ink);
               ">
-              ${escapeHtml(d.meta.moduleStatus || "ACTIVE")}
+              ${escapeHtml(d.moduleState)}
             </span>
 
             <span class="text-[10px] leading-[1.3] text-[color:var(--muted)]">
-              ${escapeHtml(d.meta.freshness || "≤ T-1")}
+              ${escapeHtml(d.freshnessLabel)}
             </span>
           </div>
 
@@ -90,8 +91,8 @@ export function renderCard(rawData, ctx = {}) {
           </div>
 
           <div class="section-desc text-[12px] text-[color:var(--muted)] leading-[1.45] mt-1">
-            Regime corrente (Momentum / Pullback), partecipazione al rialzo
-            e stato del credito/curve. Dati educativi, non operativi.
+            Momentum del mercato, volatilità implicita, rotazione settoriale e pressione sulle microcap.
+            Nessuna raccomandazione operativa.
           </div>
         </div>
       </header>
@@ -106,19 +107,19 @@ export function renderCard(rawData, ctx = {}) {
           padding:1rem;
         ">
 
-        <!-- StrategyMode + tono pill -->
+        <!-- StrategyMode + tono -->
         <div>
           <div class="text-[12px] font-semibold text-[color:var(--muted)] leading-[1.4] flex flex-wrap items-center gap-1.5">
             <span>StrategyMode</span>
             <button
               class="info-btn align-middle"
               data-metric="StrategyMode_macro"
-              aria-label="Info StrategyMode"
+              aria-label="Info StrategyMode_macro"
             >?</button>
           </div>
 
           <div class="text-[14px] font-bold leading-[1.4] text-[color:var(--ink)] flex flex-wrap items-center gap-2 mt-1">
-            <span>${escapeHtml(d.regime_and_risk.StrategyMode_macro.raw || "—")}</span>
+            <span>${escapeHtml(d.strategyModeMacro)}</span>
 
             <span
               class="px-[6px] py-[4px] rounded-md text-[11px] font-semibold leading-none border"
@@ -136,23 +137,18 @@ export function renderCard(rawData, ctx = {}) {
               ${escapeHtml(toneLabel)}
             </span>
           </div>
-
-          <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">
-            ${escapeHtml(d.regime_and_risk.StrategyMode_macro.ai_note || "")}
-          </div>
         </div>
 
-        <!-- KPI row semaforiche -->
+        <!-- KPI row -->
         <div class="flex flex-wrap gap-3">
-          ${kpis.map(k => metricBoxTrafficLight(k)).join("")}
+          ${kpis.map(k => metricBoxSnapshot(k)).join("")}
         </div>
 
-        <!-- DISCLAIMER + CTA ROW -->
+        <!-- DISCLAIMER + CTA -->
         <div class="mt-2 flex flex-col gap-3 lg:flex-row lg:items-start">
           <p class="text-[11px] leading-[1.4] text-[color:var(--muted)] flex-1">
-            F1B è un quadro informativo sul regime di mercato (volatilità, credito,
-            curva tassi, breadth settoriale). Nessuna raccomandazione personale.
-            Fonti: Bloomberg, Reuters, CBOE, FRED, Finviz Premium, ETFdb.
+            Fonte: Bloomberg · Reuters · FRED · CBOE · Finviz Premium · Treasury curve.
+            Dati T-1. Nessuna raccomandazione operativa.
           </p>
 
           <div class="flex lg:justify-end">
@@ -182,12 +178,11 @@ export function renderCard(rawData, ctx = {}) {
   `;
 }
 
-// bindCard: apre il drawer e lega tooltip
 export function bindCard(node, rawData, ctx = {}) {
   if (!node || !rawData) return;
-  const data = normalizeDataPublicF1B(rawData);
+  const data = normalizeDataPublic(rawData);
 
-  // CTA -> apre pannello dettagli
+  // Apri drawer
   const btnDetails = node.querySelector('[data-open-f1b-details="true"]');
   if (btnDetails) {
     btnDetails.addEventListener("click", () => {
@@ -195,7 +190,7 @@ export function bindCard(node, rawData, ctx = {}) {
     });
   }
 
-  // Tooltip "?" nella card
+  // Tooltip "?"
   if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
     try {
       window.__TradeliaUI.bindMetricInfoButtons(node);
@@ -203,9 +198,9 @@ export function bindCard(node, rawData, ctx = {}) {
   }
 }
 
-/* -------------------------------------------------
-   Drawer / Panel con sezioni pubbliche
-------------------------------------------------- */
+///////////////////////
+// DRAWER OPEN
+///////////////////////
 
 function openF1DrawerPublic(data) {
   if (!window.__TradeliaUI || typeof window.__TradeliaUI.openPanel !== "function") {
@@ -214,31 +209,11 @@ function openF1DrawerPublic(data) {
   }
 
   const sectionsObj = buildDrawerSectionsPublic(data);
-
   const mobileMode = isMobileViewport();
+
   const drawerHTML = mobileMode
     ? renderDrawerMobileShellPublic(sectionsObj)
     : renderDrawerDesktopShellPublic(sectionsObj);
-
-  // Tab bar (mobile footer) e mapping sezione->etichetta
-  const tabDefs = [
-    { key: "regime",    label: "Regime" },
-    { key: "breadth",   label: "Breadth" },
-    { key: "internals", label: "Internals" },
-    { key: "street",    label: "Street" },
-    { key: "sintesi",   label: "Sintesi AI" },
-    { key: "audit",     label: "Audit" },
-    { key: "mifid",     label: "MiFID" }
-  ];
-
-  const footerButtonsDesktop = [
-    {
-      label: "Chiudi",
-      action: () => {
-        window.__TradeliaUI.closePanel();
-      }
-    }
-  ];
 
   window.__TradeliaUI.openPanel({
     title: "F1B · Regime di mercato",
@@ -252,16 +227,17 @@ function openF1DrawerPublic(data) {
     ],
     blocking: false,
     panelSize: "wide",
-    footerButtons: mobileMode ? [] : footerButtonsDesktop,
-    footerTabs: mobileMode ? tabDefs : []
+    footerButtons: [], // niente bottone "Chiudi"
+    footerTabs: []     // niente footer nav, mobile usa la sua nav in alto
   });
 
-  // post-mount binding (tab switching + tooltip binding interno)
+  // bind tab + tooltips
   setTimeout(() => {
     const roots = [
-      document.getElementById("panel-body"),
+      document.getElementById("panel-body-desktop"),
       document.getElementById("panel-body-mobile"),
-      document.getElementById("panel-footer-mobile")
+      document.getElementById("f1b-mobile-tabbar"),
+      document.getElementById("f1b-sidebar")
     ].filter(Boolean);
 
     roots.forEach(r => {
@@ -277,182 +253,214 @@ function isMobileViewport() {
   return window.matchMedia("(max-width: 767px)").matches;
 }
 
-/* -------------------------------------------------
-   Sezioni logiche drawer (pubbliche)
-------------------------------------------------- */
+///////////////////////
+// SEZIONI DRAWER
+///////////////////////
+//
+// NOTA: TUTTE QUESTE SEZIONI USANO SOLO CHIAVI CHE HAI GIÀ:
+//   StrategyMode_macro
+//   RegimeScore
+//   VolRegime
+//   LiquidityRegimeScore
+//   CreditRiskBlock
+//   FX_Regime
+//   Breadth_1M
+//   RiskTilt_1M
+//   SizeBias
+//   SmallCapPressure_1W
+//   ANALYSIS_T1_HEADLINES{T1_MacroNews, T1_SellSideNotes, T1_ConsensusTone, T1_AuditSrc}
+//   AuditPathID
+//   Timestamp
+//   Freshness
+//   StatoModulo
+//   QUALITY{FreshnessScore, ConfidenceFinal, DataIntegrity, FeedSync}
+//
+// Se un campo manca verrà mostrato "—". Nessun crash.
 
 function buildDrawerSectionsPublic(d) {
-  // 1. Regime & Rischio
+  // REGIME & RISCHIO
   const regimeHTML = `
     <section class="tl-panel-section" data-f1b-section="regime">
-      <header class="tl-panel-section-title">
-        <div class="tl-panel-section-title-text">
-          Regime &amp; Rischio
-        </div>
-      </header>
+      ${sectionTitle("Regime & Rischio")}
 
-      <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4]">
-        ${metricBlock("StrategyMode_macro", "StrategyMode", "Modalità corrente del mercato", d.regime_and_risk.StrategyMode_macro)}
-        ${metricBlock("RegimeScore", "RegimeScore", "Appetito rischio sintetico", d.regime_and_risk.RegimeScore)}
-        ${metricBlock("VolRegime", "Volatilità / Hedge", "VIX, oro, appetito hedge", d.regime_and_risk.VolRegime)}
-        ${metricBlock("LiquidityRegimeScore", "Curva & Costo capitale", "Curve Treasury / funding stress", d.regime_and_risk.LiquidityRegimeScore)}
-        ${metricBlock("CreditRiskBlock", "Credito", "Flight-to-safety / high beta credit", d.regime_and_risk.CreditRiskBlock)}
-        ${metricBlock("FX_Regime", "FX / USD", "Dollar tone", d.regime_and_risk.FX_Regime)}
+      <div class="f1b-grid-metrics">
+        ${metricBlock({
+          tone: d.toneStrategyMode,
+          title: "StrategyMode",
+          metricKey: "StrategyMode_macro",
+          value: d.strategyModeMacro,
+          body: "Stato prevalente: Momentum / Momentum-light / Pullback.\nMomentum = mercato orientato al rischio, volatilità implicita compressa."
+        })}
+
+        ${metricBlock({
+          tone: d.toneRegimeScore,
+          title: "RegimeScore",
+          metricKey: "RegimeScore",
+          value: d.regimeScoreLabel,
+          body: "Score di appetito rischio sintetico (>0 = risk-on): combina volatilità, curva tassi, credito, beta equity."
+        })}
+
+        ${metricBlock({
+          tone: d.toneVol,
+          title: "Volatilità / Hedge",
+          metricKey: "VolRegime",
+          value: d.volRegime,
+          body: "VIX in contrazione? Oro venduto? → mercato sta togliendo coperture difensive e accetta rischio."
+        })}
+
+        ${metricBlock({
+          tone: d.toneCurve,
+          title: "Curva & Costo capitale",
+          metricKey: "LiquidityRegimeScore",
+          value: d.liquidityRegimeScore,
+          body: "Curva Treasury (2Y vs 10Y) e livello dei rendimenti.\nCurva meno stressata = costo del capitale meno punitivo per l'equity."
+        })}
+
+        ${metricBlock({
+          tone: d.toneCredit,
+          title: "Credito",
+          metricKey: "CreditRiskBlock",
+          value: d.creditRiskBlock,
+          body: "Flight to safety sì/no. Se 'benigno', il mercato credito/high beta non sta prezzando crisi imminente."
+        })}
+
+        ${metricBlock({
+          tone: d.toneFX,
+          title: "FX / USD",
+          metricKey: "FX_Regime",
+          value: d.fxRegime,
+          body: "USD leggermente forte → narrativa 'crescita USA' più che panic dollar bid."
+        })}
       </div>
 
-      <div class="mt-4">
-        ${metricBlock("RiskWindow", "RiskWindow (3–10g)", "Driver macro monitorati a breve", d.regime_and_risk.RiskWindow)}
-      </div>
+      ${textBlock({
+        label: "RiskWindow (3–10g)",
+        text: d.riskWindow
+      })}
     </section>
   `;
 
-  // 2. Breadth & Rotazione
+  // BREADTH & ROTAZIONE
   const breadthHTML = `
     <section class="tl-panel-section" data-f1b-section="breadth">
-      <header class="tl-panel-section-title">
-        <div class="tl-panel-section-title-text">
-          Breadth &amp; Rotazione Equity
-        </div>
-      </header>
+      ${sectionTitle("Breadth & Rotazione")}
 
-      <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4] mb-4">
-        ${metricBlock("Breadth_1M", "Breadth (1M)", "% settori verdi su 30g", d.breadth_rotation.Breadth_1M)}
-        ${metricBlock("RiskTilt_1M", "RiskTilt (1M)", "Ciclici/growth vs difensivi", d.breadth_rotation.RiskTilt_1M)}
-        ${metricBlock("SmallCapPressure_1W", "SmallCap Pressure (1W)", "Microcap vs Mid/Large", d.breadth_rotation.SmallCapPressure_1W)}
-        ${metricBlock("IndexMomentum_1W", "Index Momentum (1W)", "Momentum cross-indici e crypto", d.breadth_rotation.IndexMomentum_1W)}
-        ${metricBlock("SizeBias", "Size Bias", "Preferenza di capitalizzazione", d.breadth_rotation.SizeBias)}
+      <div class="f1b-grid-metrics">
+        ${metricBlock({
+          tone: d.toneBreadth,
+          title: "Breadth (1M)",
+          metricKey: "Breadth_1M",
+          value: d.breadth1M,
+          body: "Ampiezza del rialzo.\n'Ampia' = forza distribuita su più settori, non solo mega-cap Tech."
+        })}
+
+        ${metricBlock({
+          tone: d.toneRiskTilt,
+          title: "RiskTilt",
+          metricKey: "RiskTilt_1M",
+          value: d.riskTilt1M,
+          body: "Ciclici/Growth vs Difensivi puri.\n'Pro-rischio' = denaro su Technology / Discretionary / Comm Services più che su Consumer Defensive."
+        })}
       </div>
 
-      <div class="grid gap-4 text-[12.5px] leading-[1.45] text-[color:var(--ink)]">
-        ${sectorListDetailed(
-          "Leadership multi-timeframe",
-          d.breadth_rotation.Leadership?.LeadersMultiTF
-        )}
-        ${sectorListDetailed(
-          "Leadership difensiva qualitativa",
-          d.breadth_rotation.Leadership?.DefensiveLeadership
-        )}
-        ${sectorListDetailed(
-          "Settori in ritardo",
-          d.breadth_rotation.Leadership?.Lagging
-        )}
-      </div>
+      ${listBlock({
+        label: "Leadership settoriale",
+        arr: d.leadersMultiTF,
+        helper: "Settori con forza coerente su più timeframe (1D / 1W / 1M / 3M)."
+      })}
 
-      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-3">
-        ${escapeHtml(d.breadth_rotation.Leadership?.ai_note || "")}
-      </div>
+      ${listBlock({
+        label: "Difesa qualitativa",
+        arr: d.defensiveLeadership,
+        helper: "Difesa 'di qualità bilancio' (Healthcare) vs difesa 'basso beta puro' (Utilities)."
+      })}
+
+      ${listBlock({
+        label: "Settori in ritardo",
+        arr: d.lagging,
+        helper: "Settori venduti / hedge inflattivo scaricato."
+      })}
     </section>
   `;
 
-  // 3. Market Internals (dati grezzi)
+  // INTERNALS (size bias, microcap stress)
   const internalsHTML = `
     <section class="tl-panel-section" data-f1b-section="internals">
-      <header class="tl-panel-section-title">
-        <div class="tl-panel-section-title-text">
-          Market Internals (dati grezzi)
-        </div>
-      </header>
+      ${sectionTitle("Internals")}
 
-      ${listBlock("Indici (1W)", d.internals_raw.Indices_1W)}
-      ${listBlock("Futures / Commodities (1W)", d.internals_raw.Futures_Move_1W)}
-      ${listBlock("Curva Treasury", d.internals_raw.Curve_UST)}
-      ${listBlock("Volatilità & USD", d.internals_raw.Vol_USD)}
+      <div class="f1b-grid-metrics">
+        ${metricBlock({
+          tone: d.toneSizeBias,
+          title: "Bias dimensionale",
+          metricKey: "SizeBias",
+          value: d.sizeBias,
+          body: "Flusso tra bucket di capitalizzazione.\nEsempio: 'Mid/Large privilegiate; micro scaricate'."
+        })}
 
-      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-3">
-        ${escapeHtml(d.internals_raw.ai_note || "")}
+        ${metricBlock({
+          tone: d.toneSmallCapStress,
+          title: "SmallCap / Microcap Stress",
+          metricKey: "SmallCapPressure_1W",
+          value: d.smallCapHeadline,
+          body: "Osserva se le microcap sono sotto pressione (drawdown YTD pesante, funding cost alto) mentre mid/large restano comprate."
+        })}
       </div>
     </section>
   `;
 
-  // 4. Street View (narrativa istituzionale)
+  // STREET VIEW (ANALYSIS_T1_HEADLINES)
   const streetHTML = `
     <section class="tl-panel-section" data-f1b-section="street">
-      <header class="tl-panel-section-title">
-        <div class="tl-panel-section-title-text">
-          Street View · Narrativa istituzionale
-        </div>
-      </header>
+      ${sectionTitle("Street View")}
 
-      ${headlineBlock("Macro (Bloomberg / Reuters / Barron's)", d.street_view.T1_MacroNews)}
-      ${headlineBlock("Sell-Side / Street View (Goldman / JPM / ecc.)", d.street_view.T1_SellSideNotes)}
-      ${headlineBlock("Consensus Tone", d.street_view.T1_ConsensusTone)}
+      ${headlineBlock("Macro (Bloomberg / Reuters / Barron's)", d.t1MacroNews)}
+      ${headlineBlock("Sell-Side / Street View", d.t1SellSideNotes)}
+      ${headlineBlock("Consensus Tone", d.t1ConsensusTone)}
 
-      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4]">
-        ${escapeHtml(d.street_view.ai_note || "")}
+      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-3">
+        Narrativa istituzionale giornaliera (T-1). Nessuna raccomandazione.
       </div>
     </section>
   `;
 
-  // 5. Sintesi Tradelia AI (conclusione educativa)
-  const sintesiHTML = `
-    <section class="tl-panel-section" data-f1b-section="sintesi">
-      <header class="tl-panel-section-title">
-        <div class="tl-panel-section-title-text">
-          Sintesi Tradelia AI
-        </div>
-      </header>
-
-      ${Array.isArray(d.sintesi_ai.points)
-        ? d.sintesi_ai.points.map(point => conclusionPointBlock(point)).join("")
-        : ""
-      }
-
-      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-4">
-        Questa sintesi ha finalità informative/formative. Non è un invito a prendere posizione
-        o a modificare allocazioni. Consulta sempre un intermediario autorizzato.
-      </div>
-    </section>
-  `;
-
-  // 6. Audit & Qualità
+  // AUDIT (meta + QUALITÀ feed)
   const auditHTML = `
     <section class="tl-panel-section" data-f1b-section="audit">
-      <header class="tl-panel-section-title">
-        <div class="tl-panel-section-title-text">
-          Audit &amp; Qualità dati
-        </div>
-      </header>
+      ${sectionTitle("Audit & Qualità")}
 
       <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)] space-y-3 mb-4">
-        ${auditRow("AuditPathID", d.audit_quality.AuditPathID)}
-        ${auditRow("Timestamp", d.meta.timestampET)}
-        ${auditRow("Freshness dati", d.meta.freshness)}
-        ${auditRow("Stato modulo", d.meta.moduleStatus)}
-        ${auditRow("Fonti", (d.audit_quality.SourcesTier1 || []).join(", "))}
+        ${auditRow("AuditPathID", d.auditPathID)}
+        ${auditRow("Timestamp", d.timestamp)}
+        ${auditRow("Freshness dati", d.freshnessLabel)}
+        ${auditRow("Stato modulo", d.moduleState)}
+        ${auditRow("Fonti", (d.sourcesTier1 || []).join(", "))}
       </div>
 
       <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-2 uppercase tracking-wide">
-        Qualità e coerenza feed
+        Qualità feed (semaforo interno)
       </div>
 
-      <div class="grid grid-cols-2 gap-3 text-[12px] leading-[1.4]">
-        ${qualityChip("FreshnessScore", d.audit_quality.QualityMetrics?.FreshnessScore)}
-        ${qualityChip("ConfidenceFinal", d.audit_quality.QualityMetrics?.ConfidenceFinal)}
-        ${qualityChip("DataIntegrity", d.audit_quality.QualityMetrics?.DataIntegrity)}
-        ${qualityChip("FeedSync", d.audit_quality.QualityMetrics?.FeedSync)}
+      <div class="f1b-grid-quality">
+        ${qualityChip("FreshnessScore", d.quality?.FreshnessScore, "Freschezza feed (T-1 ok).")}
+        ${qualityChip("ConfidenceFinal", d.quality?.ConfidenceFinal, "Affidabilità consolidata dei dati negoziati.")}
+        ${qualityChip("DataIntegrity", d.quality?.DataIntegrity, "Coerenza serie (microcap possono essere noisy).")}
+        ${qualityChip("FeedSync", d.quality?.FeedSync, "Allineamento tra fonti (equity / curve / vol).")}
       </div>
 
       <div class="mt-4 text-[11px] leading-[1.4] text-[color:var(--muted)]">
-        Semaforo interno:
-        verde = dati coerenti/aggiornati,
-        giallo = parziale/debole,
-        rosso = incompleto o rumoroso.
+        Verde = dati coerenti e aggiornati.
+        Giallo = parziale/debole.
+        Rosso = dati rumorosi o incompleti.
         Nessuna raccomandazione operativa.
       </div>
     </section>
   `;
 
-  // 7. MiFID
+  // MiFID
   const mifidHTML = `
     <section class="tl-panel-section" data-f1b-section="mifid">
-      <header class="tl-panel-section-title">
-        <div class="tl-panel-section-title-text">
-          Nota regolamentare
-        </div>
-      </header>
-      <div class="text-[12.5px] leading-[1.45] text-[color:var(--muted)] space-y-2">
-        <p>${escapeHtml(d.mifid.disclaimer || "")}</p>
-      </div>
+      ${sectionTitle("MiFID")}
+      ${renderMiFIDNotice()}
     </section>
   `;
 
@@ -461,15 +469,14 @@ function buildDrawerSectionsPublic(d) {
     breadthHTML,
     internalsHTML,
     streetHTML,
-    sintesiHTML,
     auditHTML,
     mifidHTML
   };
 }
 
-/* -------------------------------------------------
-   Shell desktop / mobile
-------------------------------------------------- */
+///////////////////////
+// SHELL DESKTOP
+///////////////////////
 
 function renderDrawerDesktopShellPublic(sectionsObj) {
   return `
@@ -481,36 +488,42 @@ function renderDrawerDesktopShellPublic(sectionsObj) {
         min-height:300px;
       ">
 
-      <aside class="f1b-panel-menu"
+      <!-- Sidebar tab desktop -->
+      <aside id="f1b-sidebar"
         style="
-          min-width:180px;
-          max-width:200px;
+          min-width:160px;
+          max-width:180px;
           border-right:1px solid var(--br-card);
         ">
-
-        ${drawerMenuButtonPublic("regime","Regime & Rischio", true)}
-        ${drawerMenuButtonPublic("breadth","Breadth & Rotazione", false)}
-        ${drawerMenuButtonPublic("internals","Internals", false)}
-        ${drawerMenuButtonPublic("street","Street View", false)}
-        ${drawerMenuButtonPublic("sintesi","Sintesi AI", false)}
-        ${drawerMenuButtonPublic("audit","Audit", false)}
-        ${drawerMenuButtonPublic("mifid","MiFID", false)}
+        ${desktopTabButton("regime","Regime & Rischio", true)}
+        ${desktopTabButton("breadth","Breadth & Rotazione", false)}
+        ${desktopTabButton("internals","Internals", false)}
+        ${desktopTabButton("street","Street View", false)}
+        ${desktopTabButton("audit","Audit", false)}
+        ${desktopTabButton("mifid","MiFID", false)}
       </aside>
 
+      <!-- Content -->
       <main class="f1b-panel-content flex-1 min-w-0"
-        style="max-height:60vh;overflow:auto;padding:1rem;"
-        id="panel-body">
+        id="panel-body-desktop"
+        style="max-height:75vh;overflow:auto;padding:1rem;">
         <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
         <div data-f1b-view="breadth" hidden>${sectionsObj.breadthHTML}</div>
         <div data-f1b-view="internals" hidden>${sectionsObj.internalsHTML}</div>
         <div data-f1b-view="street" hidden>${sectionsObj.streetHTML}</div>
-        <div data-f1b-view="sintesi" hidden>${sectionsObj.sintesiHTML}</div>
         <div data-f1b-view="audit" hidden>${sectionsObj.auditHTML}</div>
         <div data-f1b-view="mifid" hidden>${sectionsObj.mifidHTML}</div>
       </main>
     </div>
   `;
 }
+
+///////////////////////
+// SHELL MOBILE
+///////////////////////
+//
+// Barra tab orizzontale scrollabile in alto.
+// Nessun footer con pulsante "Chiudi".
 
 function renderDrawerMobileShellPublic(sectionsObj) {
   return `
@@ -518,23 +531,40 @@ function renderDrawerMobileShellPublic(sectionsObj) {
       style="
         display:flex;
         flex-direction:column;
-        height:calc(100vh - 110px);
-        max-height:calc(100vh - 110px);
-        min-height:300px;
+        height:100vh;
+        max-height:100vh;
       ">
 
+      <nav id="f1b-mobile-tabbar"
+        style="
+          display:flex;
+          flex-wrap:nowrap;
+          gap:.5rem;
+          overflow-x:auto;
+          -webkit-overflow-scrolling:touch;
+          padding:.5rem .75rem;
+          border-bottom:1px solid var(--br-card);
+          background:var(--surface-panel);
+        ">
+        ${mobileTabButton("regime","Regime", true)}
+        ${mobileTabButton("breadth","Breadth", false)}
+        ${mobileTabButton("internals","Internals", false)}
+        ${mobileTabButton("street","Street", false)}
+        ${mobileTabButton("audit","Audit", false)}
+        ${mobileTabButton("mifid","MiFID", false)}
+      </nav>
+
       <main class="f1b-panel-content-mobile flex-1 min-w-0"
+        id="panel-body-mobile"
         style="
           overflow:auto;
           -webkit-overflow-scrolling:touch;
           padding:1rem;
-        "
-        id="panel-body-mobile">
+        ">
         <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
         <div data-f1b-view="breadth" hidden>${sectionsObj.breadthHTML}</div>
         <div data-f1b-view="internals" hidden>${sectionsObj.internalsHTML}</div>
         <div data-f1b-view="street" hidden>${sectionsObj.streetHTML}</div>
-        <div data-f1b-view="sintesi" hidden>${sectionsObj.sintesiHTML}</div>
         <div data-f1b-view="audit" hidden>${sectionsObj.auditHTML}</div>
         <div data-f1b-view="mifid" hidden>${sectionsObj.mifidHTML}</div>
       </main>
@@ -542,24 +572,43 @@ function renderDrawerMobileShellPublic(sectionsObj) {
   `;
 }
 
-/* -------------------------------------------------
-   Tab switching
-------------------------------------------------- */
+///////////////////////
+// TAB SWITCHING
+///////////////////////
 
-function drawerMenuButtonPublic(key, label, active) {
+function desktopTabButton(key, label, active) {
   return `
     <button
-      class="f1b-tab-btn block w-full text-left text-[12px] leading-[1.4] px-2 py-2 ${active ? "is-active" : ""}"
+      class="f1b-tab-btn block w-full text-left text-[12px] leading-[1.4] px-2 py-[6px] ${active ? "is-active" : ""}"
       data-f1b-tab="${key}"
       style="
-        border-radius:var(--radius-card-sm);
+        border-radius:0;
         border-left:3px solid ${active ? "var(--brand-600)" : "transparent"};
-        background:${active
-          ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)"
-          : "transparent"};
+        background:transparent;
         font-weight:${active ? "600" : "500"};
-        color:var(--ink);
+        color:${active ? "var(--ink)" : "var(--muted)"};
         text-align:left;
+        width:100%;
+      "
+    >
+      ${label}
+    </button>
+  `;
+}
+
+function mobileTabButton(key, label, active) {
+  return `
+    <button
+      class="f1b-footer-tab-btn whitespace-nowrap text-[12px] px-2 py-[6px] rounded-md ${active ? "is-active" : ""}"
+      data-f1b-tab="${key}"
+      style="
+        font-weight:${active ? "600" : "500"};
+        border:1px solid ${active ? "var(--tone-neu-fg)" : "var(--br-soft)"};
+        background:${active
+          ? "var(--surface-card-alt)"
+          : "var(--surface-card)"};
+        color:${active ? "var(--tone-neu-fg)" : "var(--muted)"};
+        box-shadow:var(--shadow-card);
       "
     >
       ${label}
@@ -581,18 +630,15 @@ function bindDrawerTabsPublic(root) {
       const key = btn.getAttribute("data-f1b-tab");
       if (!key) return;
 
-      // attiva/deattiva bottoni ovunque (sidebar desktop + footer mobile)
+      // sincronizza stato attivo su TUTTI i bottoni tab (desktop + mobile)
       const allBtns = document.querySelectorAll("[data-f1b-tab]");
       allBtns.forEach(b => {
         const isActive = b.getAttribute("data-f1b-tab") === key;
-        b.classList.toggle("is-active", isActive);
 
         if (b.classList.contains("f1b-tab-btn")) {
           b.style.borderLeftColor = isActive ? "var(--brand-600)" : "transparent";
-          b.style.background = isActive
-            ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)"
-            : "transparent";
           b.style.fontWeight = isActive ? "600" : "500";
+          b.style.color = isActive ? "var(--ink)" : "var(--muted)";
         }
 
         if (b.classList.contains("f1b-footer-tab-btn")) {
@@ -601,11 +647,7 @@ function bindDrawerTabsPublic(root) {
             ? "1px solid var(--tone-neu-fg)"
             : "1px solid var(--br-soft)";
           b.style.background = isActive
-            ? `radial-gradient(circle at 0% 0%,
-                var(--tone-neu-bg-hard) 0%,
-                transparent 60%
-              ),
-              var(--surface-card-alt)`
+            ? "var(--surface-card-alt)"
             : "var(--surface-card)";
           b.style.color = isActive
             ? "var(--tone-neu-fg)"
@@ -614,7 +656,7 @@ function bindDrawerTabsPublic(root) {
         }
       });
 
-      // mostra/nascondi viste
+      // mostra la vista giusta
       views.forEach(viewEl => {
         const viewKey = viewEl.getAttribute("data-f1b-view");
         viewEl.hidden = viewKey !== key;
@@ -623,156 +665,108 @@ function bindDrawerTabsPublic(root) {
   });
 }
 
-/* -------------------------------------------------
-   Blocchi UI riutilizzabili
-------------------------------------------------- */
+///////////////////////
+// BLOCCHI UI INTERNI
+///////////////////////
 
-// KPI in card compatta (3 box nella card top-level)
-function metricBoxTrafficLight({ key, label, desc, metric }) {
-  const { dotColor, textColor } = toneColors(metric?.tone);
+// Titolo sezione dentro il contenuto
+function sectionTitle(txt) {
   return `
-    <div class="flex-1 min-w-[90px]"
-      style="
-        background:var(--surface-card-alt);
-        border:1px solid var(--br-card);
-        border-radius:var(--radius-card);
-        box-shadow:var(--shadow-card);
-        padding:0.6rem 0.75rem;
-      ">
-
-      <div class="flex items-start justify-between gap-1 mb-1">
-        <div class="flex items-start gap-2">
-          <span class="inline-block w-[8px] h-[8px] rounded-full"
-            style="background:${dotColor};"></span>
-          <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold leading-[1.3]">
-            ${escapeHtml(label)}
-          </div>
-        </div>
-        <button
-          class="info-btn"
-          data-metric="${escapeAttr(key)}"
-          aria-label="Info ${escapeAttr(key)}"
-        >?</button>
+    <header class="tl-panel-section-title mb-3">
+      <div class="tl-panel-section-title-text text-[14px] font-semibold text-[color:var(--ink)] leading-[1.4]">
+        ${escapeHtml(txt)}
       </div>
-
-      <div class="font-mono font-bold text-[13px] leading-[1.4]"
-        style="color:${textColor};">
-        ${escapeHtml(metric?.raw || "—")}
-      </div>
-
-      <div class="text-[11px] leading-[1.3] text-[color:var(--muted)] mt-1">
-        ${escapeHtml(desc || "")}
-      </div>
-    </div>
+    </header>
   `;
 }
 
-// metricBlock = card semaforica completa (drawer)
-function metricBlock(metricKey, title, desc, metricObj) {
-  const { dotColor, textColor } = toneColors(metricObj?.tone);
+// card metrica semaforica
+function metricBlock({ tone, title, metricKey, value, body }) {
+  const { dotColor } = toneColors(tone);
+
   return `
-    <div class="p-2"
+    <div class="f1b-metric-card"
       style="
         background:var(--surface-card-alt);
         border:1px solid var(--br-card);
         border-radius:var(--radius-card);
         box-shadow:var(--shadow-card);
+        padding:0.75rem;
+        min-width:0;
       ">
-      <div class="flex items-start justify-between gap-2 mb-1">
-        <div class="flex items-center gap-2">
+      <div class="flex items-start justify-between gap-2 mb-1 flex-wrap">
+        <div class="flex items-center gap-2 min-w-0">
           <span class="inline-block w-[8px] h-[8px] rounded-full"
             style="background:${dotColor};"></span>
-          <div class="text-[11px] font-semibold leading-[1.3] text-[color:var(--muted)]">
+
+          <div class="text-[12px] font-semibold leading-[1.3] text-[color:var(--ink)] break-words">
             ${escapeHtml(title)}
           </div>
         </div>
+
         <button
-          class="info-btn"
+          class="info-btn text-[11px] leading-none px-[6px] py-[2px] rounded-md border border-[color:var(--br-card)] bg-[color:var(--surface-card)]"
           data-metric="${escapeAttr(metricKey)}"
           aria-label="Info ${escapeAttr(metricKey)}"
+          style="color:var(--muted);box-shadow:var(--shadow-card);"
         >?</button>
       </div>
 
-      <div class="font-mono font-bold text-[13px] text-[color:var(--ink)] leading-[1.4]"
-        style="color:${textColor};">
-        ${escapeHtml(metricObj?.raw || "—")}
+      <div class="font-mono font-bold text-[13px] leading-[1.4] text-[color:var(--ink)] break-words mb-1">
+        ${escapeHtml(value)}
       </div>
 
-      <div class="text-[11px] leading-[1.3] text-[color:var(--muted)] mt-1">
-        ${escapeHtml(desc || "")}
-      </div>
-
-      <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">
-        ${escapeHtml(metricObj?.ai_note || "")}
+      <div class="text-[12px] leading-[1.4] text-[color:var(--muted)] whitespace-pre-line">
+        ${escapeHtml(body)}
       </div>
     </div>
   `;
 }
 
-function sectorListDetailed(title, arr) {
-  if (!Array.isArray(arr) || !arr.length) {
-    return `
-      <div>
-        <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
-          ${escapeHtml(title)}
-        </div>
-        <div class="text-[12.5px] leading-[1.4] text-[color:var(--muted)]">
-          Nessun dato.
-        </div>
+// blocco testo "risk window"
+function textBlock({ label, text }) {
+  if (!text) return "";
+  return `
+    <div class="mt-4">
+      <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
+        ${escapeHtml(label)}
       </div>
-    `;
-  }
+      <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)] whitespace-pre-line">
+        ${escapeHtml(text)}
+      </div>
+    </div>
+  `;
+}
 
-  const items = arr.map(item => `
-    <li class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">
-      ${escapeHtml(item)}
-    </li>
-  `).join("");
+// lista settoriale
+function listBlock({ label, arr, helper }) {
+  const items = (Array.isArray(arr) && arr.length)
+    ? arr.map(it => {
+        if (typeof it === "string") return `<li>${escapeHtml(it)}</li>`;
+        // fallback oggetto {name, lines[]}
+        const lines = [];
+        if (it && it.name) lines.push(it.name);
+        if (it && Array.isArray(it.lines)) lines.push(...it.lines);
+        return `<li>${escapeHtml(lines.join(" · "))}</li>`;
+      }).join("")
+    : `<li class="text-[color:var(--muted)]">—</li>`;
 
   return `
-    <div>
+    <div class="mt-4">
       <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
-        ${escapeHtml(title)}
+        ${escapeHtml(label)}
       </div>
-      <ul class="list-disc pl-4 space-y-1">
+      <ul class="list-disc pl-4 space-y-1 text-[12.5px] leading-[1.45] text-[color:var(--ink)]">
         ${items}
       </ul>
+      <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-2">
+        ${escapeHtml(helper || "")}
+      </div>
     </div>
   `;
 }
 
-function listBlock(title, rowsArr) {
-  if (!Array.isArray(rowsArr) || !rowsArr.length) {
-    return `
-      <div class="mb-4">
-        <div class="text-[11px] font-semibold text-[color:var(--muted)] mb-1 uppercase tracking-wide leading-[1.3]">
-          ${escapeHtml(title)}
-        </div>
-        <div class="text-[12.5px] text-[color:var(--muted)] leading-[1.4]">
-          N/A
-        </div>
-      </div>
-    `;
-  }
-
-  const li = rowsArr.map(r => `
-    <li class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)]">
-      ${escapeHtml(r)}
-    </li>`
-  ).join("");
-
-  return `
-    <div class="mb-4">
-      <div class="text-[11px] font-semibold text-[color:var(--muted)] mb-1 uppercase tracking-wide leading-[1.3]">
-        ${escapeHtml(title)}
-      </div>
-      <ul class="pl-4 list-disc space-y-1">
-        ${li}
-      </ul>
-    </div>
-  `;
-}
-
+// blocco narrativa istituzionale
 function headlineBlock(title, body) {
   if (!body) return "";
   return `
@@ -787,28 +781,7 @@ function headlineBlock(title, body) {
   `;
 }
 
-function conclusionPointBlock(pointObj = {}) {
-  return `
-    <div class="mb-4 p-2"
-      style="
-        background:var(--surface-card-alt);
-        border:1px solid var(--br-card);
-        border-radius:var(--radius-card);
-        box-shadow:var(--shadow-card);
-      ">
-      <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide mb-1">
-        ${escapeHtml(pointObj.title || "")}
-      </div>
-      <div class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)]">
-        ${escapeHtml(pointObj.raw || "")}
-      </div>
-      <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">
-        ${escapeHtml(pointObj.ai_note || "")}
-      </div>
-    </div>
-  `;
-}
-
+// righe audit (AuditPathID, Timestamp, ecc.)
 function auditRow(label, value) {
   return `
     <div>
@@ -822,52 +795,94 @@ function auditRow(label, value) {
   `;
 }
 
-// Quality metrics con semaforo (FreshnessScore, ConfidenceFinal, ...)
-function qualityChip(keyName, qObj) {
+// quality chip (FreshnessScore ecc.)
+function qualityChip(metricKey, qObj, helperText) {
   if (!qObj) return "";
   const { dotColor, textColor } = toneColors(qObj.tone);
+  const label  = qObj.label || metricKey;
+  const value  = qObj.value || "—";
 
   return `
-    <div class="p-2"
+    <div class="f1b-quality-card"
       style="
         background:var(--surface-card-alt);
         border:1px solid var(--br-card);
         border-radius:var(--radius-card);
         box-shadow:var(--shadow-card);
+        padding:0.75rem;
+        min-width:0;
       ">
 
-      <div class="flex items-start justify-between gap-2 mb-1">
-        <div class="flex items-center gap-2">
+      <div class="flex items-start justify-between gap-2 mb-1 flex-wrap">
+        <div class="flex items-center gap-2 min-w-0">
           <span class="inline-block w-[8px] h-[8px] rounded-full"
             style="background:${dotColor};"></span>
 
-          <div class="text-[11px] font-semibold leading-[1.3] text-[color:var(--muted)]">
-            ${escapeHtml(keyName || "")}
+          <div class="text-[11px] font-semibold leading-[1.3] text-[color:var(--ink)] break-words uppercase tracking-wide">
+            ${escapeHtml(label)}
           </div>
         </div>
 
         <button
-          class="info-btn"
-          data-metric="${escapeAttr(keyName)}"
-          aria-label="Info ${escapeAttr(keyName)}"
+          class="info-btn text-[11px] leading-none px-[6px] py-[2px] rounded-md border border-[color:var(--br-card)] bg-[color:var(--surface-card)]"
+          data-metric="${escapeAttr(metricKey)}"
+          aria-label="Info ${escapeAttr(metricKey)}"
+          style="color:var(--muted);box-shadow:var(--shadow-card);"
         >?</button>
       </div>
 
-      <div class="font-mono font-bold text-[13px] leading-[1.4]"
+      <div class="font-mono font-bold text-[13px] leading-[1.4] mb-1"
         style="color:${textColor};">
-        ${escapeHtml(qObj.raw || "—")}
+        ${escapeHtml(value)}
       </div>
 
-      <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">
-        ${escapeHtml(qObj.ai_note || "")}
+      <div class="text-[12px] leading-[1.4] text-[color:var(--muted)] whitespace-pre-line">
+        ${escapeHtml(helperText || "")}
       </div>
     </div>
   `;
 }
 
-/* -------------------------------------------------
-   Tone utilities
-------------------------------------------------- */
+///////////////////////
+// GRID RESPONSIVE
+///////////////////////
+//
+// metriche principali: mobile 1 col, desktop 2 col
+// quality audit: mobile 2 col, desktop 4 col
+
+(function injectF1BGridStyles(){
+  if (document.getElementById("f1b-grid-styles")) return;
+  const styleTag = document.createElement("style");
+  styleTag.id = "f1b-grid-styles";
+  styleTag.textContent = `
+    .f1b-grid-metrics{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:0.75rem;
+    }
+    @media(min-width:768px){
+      .f1b-grid-metrics{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    .f1b-grid-quality{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:0.75rem;
+    }
+    @media(min-width:768px){
+      .f1b-grid-quality{
+        grid-template-columns:1fr 1fr 1fr 1fr;
+      }
+    }
+  `;
+  document.head.appendChild(styleTag);
+})();
+
+///////////////////////
+// SEMAFORO COLORI
+///////////////////////
 
 function toneColors(tone) {
   switch ((tone || "").toLowerCase()) {
@@ -894,107 +909,175 @@ function toneColors(tone) {
   }
 }
 
-// computeHighLevelTone: pill grande accanto a StrategyMode nella card
-function computeHighLevelTone(strategyModeMacroObj, regimeScoreObj) {
-  // Fallbacks
-  const stratRaw = (strategyModeMacroObj && strategyModeMacroObj.raw || "").toLowerCase();
+///////////////////////
+// NORMALIZZAZIONE DATI
+///////////////////////
+//
+// Mapping diretto dal tuo dump reale:
+//  - StrategyMode_macro
+//  - RegimeScore
+//  - Breadth_1M
+//  - RiskTilt_1M
+//  - SmallCapPressure_1W
+//  - SizeBias
+//  - VolRegime
+//  - LiquidityRegimeScore
+//  - CreditRiskBlock
+//  - FX_Regime
+//  - RiskWindow (FEEDTOF2.RiskWindow o RiskWindow)
+//  - ANALYSIS_T1_HEADLINES.*
+//  - AuditPathID
+//  - Freshness
+//  - Stato modulo / StatoModulo
+//  - Timestamp
+//  - QUALITY{FreshnessScore, ConfidenceFinal, DataIntegrity, FeedSync}
+//  - Tone (se ce lo passi) tipo { Breadth_1M:"green", ... }
+// Se Tone manca → neutral.
+
+function normalizeDataPublic(src = {}) {
+  const d = {};
+
+  d.strategyModeMacro = src.StrategyMode_macro || "—";
+  d.regimeScoreLabel  = src.RegimeScore || "—";
+
+  d.breadth1M  = src.Breadth_1M || "—";
+  d.riskTilt1M = src.RiskTilt_1M || "—";
+
+  d.sizeBias         = src.SizeBias || "—";
+  d.smallCapHeadline = src.SmallCapPressure_1W || "—";
+
+  d.volRegime            = src.VolRegime || "—";
+  d.liquidityRegimeScore = src.LiquidityRegimeScore || "—";
+  d.creditRiskBlock      = src.CreditRiskBlock || "—";
+  d.fxRegime             = src.FX_Regime || "—";
+
+  d.riskWindow =
+    (src.FEEDTOF2 && src.FEEDTOF2.RiskWindow) ||
+    src.RiskWindow ||
+    "";
+
+  d.leadersMultiTF = Array.isArray(src.LeadersMultiTF)
+    ? src.LeadersMultiTF
+    : (Array.isArray(src.SECTORS?.LeadersMultiTF) ? src.SECTORS.LeadersMultiTF : []);
+
+  d.defensiveLeadership = Array.isArray(src.DefensiveLeadership)
+    ? src.DefensiveLeadership
+    : (Array.isArray(src.SECTORS?.DefensiveLeadership) ? src.SECTORS.DefensiveLeadership : []);
+
+  d.lagging = Array.isArray(src.Lagging)
+    ? src.Lagging
+    : (Array.isArray(src.SECTORS?.Lagging) ? src.SECTORS.Lagging : []);
+
+  // Street View
+  d.t1MacroNews     = src.ANALYSIS_T1_HEADLINES?.T1_MacroNews     || "";
+  d.t1SellSideNotes = src.ANALYSIS_T1_HEADLINES?.T1_SellSideNotes || "";
+  d.t1ConsensusTone = src.ANALYSIS_T1_HEADLINES?.T1_ConsensusTone || "";
+
+  d.sourcesTier1 = Array.isArray(src.ANALYSIS_T1_HEADLINES?.T1_AuditSrc)
+    ? src.ANALYSIS_T1_HEADLINES.T1_AuditSrc
+    : [];
+
+  // Audit meta
+  d.auditPathID    = src.AuditPathID || "—";
+  d.timestamp      = src.Timestamp || "—";
+  d.freshnessLabel = src.Freshness || "≤ T-1";
+  d.moduleState    = src["Stato modulo"] || src.StatoModulo || "ACTIVE";
+
+  // QUALITY blocco
+  d.quality = src.QUALITY || {};
+
+  // toni semaforo: se non arrivano da backend → neutral
+  d.toneStrategyMode   = src.Tone?.StrategyMode_macro   || "neutral";
+  d.toneRegimeScore    = src.Tone?.RegimeScore          || "neutral";
+  d.toneVol            = src.Tone?.VolRegime            || "neutral";
+  d.toneCurve          = src.Tone?.LiquidityRegimeScore || "neutral";
+  d.toneCredit         = src.Tone?.CreditRiskBlock      || "neutral";
+  d.toneFX             = src.Tone?.FX_Regime            || "neutral";
+  d.toneBreadth        = src.Tone?.Breadth_1M           || "neutral";
+  d.toneRiskTilt       = src.Tone?.RiskTilt_1M          || "neutral";
+  d.toneSizeBias       = src.Tone?.SizeBias             || "neutral";
+  d.toneSmallCapStress = src.Tone?.SmallCapPressure_1W  || "neutral";
+
+  return d;
+}
+
+///////////////////////
+// TONE PILL PER STRATEGYMODE
+///////////////////////
+
+function computeTone(strategyModeMacro, regimeScoreLabel) {
   let toneColor = "var(--tone-neu-fg)";
   let toneLabel = "neutral";
 
-  if (stratRaw.includes("momentum") && !stratRaw.includes("light")) {
+  const modeLow = (strategyModeMacro || "").toLowerCase();
+
+  if (modeLow.includes("momentum") && !modeLow.includes("light")) {
     toneColor = "var(--tone-pos-fg)";
     toneLabel = "positive";
-  } else if (stratRaw.includes("momentum-light")) {
+  } else if (modeLow.includes("momentum-light")) {
     toneColor = "var(--tone-warn-fg)";
     toneLabel = "neutral";
-  } else if (stratRaw.includes("pullback")) {
+  } else if (modeLow.includes("pullback")) {
     toneColor = "var(--tone-neg-fg)";
     toneLabel = "alert";
   } else {
-    // se StrategyMode non basta, guardiamo RegimeScore
-    const regimeTone = (regimeScoreObj && regimeScoreObj.tone) || "";
-    const colors = toneColors(regimeTone);
-    // map neutrals sensati:
-    if (regimeTone) {
-      toneColor = colors.textColor;
-      if (regimeTone === "green") toneLabel = "positive";
-      else if (regimeTone === "yellow") toneLabel = "neutral";
-      else if (regimeTone === "red") toneLabel = "alert";
+    if (
+      typeof regimeScoreLabel === "string" &&
+      regimeScoreLabel.toLowerCase().includes("neg")
+    ) {
+      toneColor = "var(--tone-neg-fg)";
+      toneLabel = "alert";
     }
   }
 
   return { toneColor, toneLabel };
 }
 
-/* -------------------------------------------------
-   Normalizzazione dati
-------------------------------------------------- */
+///////////////////////
+// KPI BOX NELLA CARD SNAPSHOT
+///////////////////////
 
-function normalizeDataPublicF1B(src = {}) {
-  // Assumiamo che src abbia la struttura pubblica concordata:
-  // {
-  //   meta: {...},
-  //   regime_and_risk: {...},
-  //   breadth_rotation: {...},
-  //   internals_raw: {...},
-  //   street_view: {...},
-  //   sintesi_ai: {...},
-  //   audit_quality: {...},
-  //   mifid: {...}
-  // }
+function metricBoxSnapshot({ label, metricKey, value, desc }) {
+  return `
+    <div class="flex-1 min-w-[90px]"
+      style="
+        background:var(--surface-card-alt);
+        border:1px solid var(--br-card);
+        border-radius:var(--radius-card);
+        box-shadow:var(--shadow-card);
+        padding:0.6rem 0.75rem;
+        min-width:0;
+      ">
 
-  return {
-    meta: src.meta || {
-      timestampET: "—",
-      module: "F1B · Market Regime",
-      moduleVersion: "vX",
-      moduleStatus: "ACTIVE",
-      freshness: "≤ T-1"
-    },
+      <div class="flex items-start justify-between gap-1 mb-1">
+        <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold leading-[1.3]">
+          ${escapeHtml(label)}
+        </div>
+        <button
+          class="info-btn text-[10px] leading-none px-[4px] py-[1px] rounded-sm border border-[color:var(--br-card)] bg-[color:var(--surface-card)]"
+          data-metric="${escapeAttr(metricKey)}"
+          aria-label="Info ${escapeAttr(metricKey)}"
+          style="color:var(--muted);box-shadow:var(--shadow-card);"
+        >?</button>
+      </div>
 
-    regime_and_risk: src.regime_and_risk || {},
+      <div class="font-mono font-bold text-[color:var(--ink)] text-[13px] leading-[1.4] break-words">
+        ${escapeHtml(value || "—")}
+      </div>
 
-    breadth_rotation: src.breadth_rotation || {},
-
-    internals_raw: src.internals_raw || {
-      Indices_1W: [],
-      Futures_Move_1W: [],
-      Curve_UST: [],
-      Vol_USD: [],
-      ai_note: ""
-    },
-
-    street_view: src.street_view || {
-      T1_MacroNews: "",
-      T1_SellSideNotes: "",
-      T1_ConsensusTone: "",
-      ai_note: ""
-    },
-
-    sintesi_ai: src.sintesi_ai || {
-      points: []
-    },
-
-    audit_quality: src.audit_quality || {
-      AuditPathID: "—",
-      SourcesTier1: [],
-      Freshness: "—",
-      ModuleStatus: "—",
-      QualityMetrics: {}
-    },
-
-    mifid: src.mifid || {
-      disclaimer: ""
-    }
-  };
+      <div class="text-[11px] leading-[1.3] text-[color:var(--muted)] mt-1 whitespace-pre-line">
+        ${escapeHtml(desc || "")}
+      </div>
+    </div>
+  `;
 }
 
-/* -------------------------------------------------
-   Escape utils
-------------------------------------------------- */
+///////////////////////
+// UTILS HTML / MiFID
+///////////////////////
 
 function escapeHtml(str) {
-  if (str === undefined || str === null) return "";
+  if (str === undefined || str === null) return "—";
   return String(str)
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
@@ -1008,4 +1091,21 @@ function escapeAttr(str) {
   return String(str)
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#39;");
+}
+
+function renderMiFIDNotice() {
+  return `
+    <div class="text-[12.5px] leading-[1.45] text-[color:var(--muted)] space-y-2">
+      <p>
+        Questo materiale descrive uno scenario di mercato basato su dati quantitativi
+        e fonti finanziarie primarie. Ha finalità informative e formative.
+      </p>
+      <p>
+        Non costituisce una raccomandazione personalizzata,
+        né un invito ad aprire/chiudere posizioni o allocare capitale.
+        Prima di qualsiasi decisione reale verifica adeguatezza e appropriatezza
+        con un intermediario autorizzato ai sensi MiFID II e della normativa locale.
+      </p>
+    </div>
+  `;
 }
