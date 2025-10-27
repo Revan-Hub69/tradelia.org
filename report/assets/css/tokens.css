@@ -1148,10 +1148,10 @@ html[data-theme="dark"] .hero{
     width:var(--panel-width-desktop-wide);
   }  /* variant XL (pannello molto più largo ~50vw clampato) */
   .tl-panel--desktop.tl-panel--xl {
-    width:clamp(540px,50vw,800px);
-    max-width:800px;
-    border-radius:var(--panel-radius-desktop) 0 0 var(--panel-radius-desktop);
-  }
+  width:clamp(640px,70vw,1040px);
+  max-width:1040px;
+}
+
 
    
   .tl-panel--mobile { display:none; }
