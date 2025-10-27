@@ -243,7 +243,7 @@ function openF1DrawerPublic(data) {
 
   window.__TradeliaUI.openPanel({
     title: "F1B · Regime di mercato",
-    subtitle: "Volatilità, curva tassi, breadth settoriale e narrativa istituzionale (T-1)",
+    subtitle: "",
     sections: [
       {
         title: "",
