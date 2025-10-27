@@ -142,10 +142,14 @@ export function renderCard(rawData, ctx = {}) {
           </div>
         </div>
 
-        <!-- KPI row semaforiche -->
-        <div class="flex flex-wrap gap-3">
-          ${kpis.map(k => metricBoxTrafficLight(k)).join("")}
-        </div>
+<!-- KPI row semaforiche -->
+<div class="
+  grid gap-3
+  grid-cols-2
+  md:grid-cols-3
+">
+  ${kpis.map(k => metricBoxTrafficLight(k)).join("")}
+</div>
 
         <!-- DISCLAIMER + CTA ROW -->
         <div class="mt-2 flex flex-col gap-3 lg:flex-row lg:items-start">
@@ -413,13 +417,17 @@ function buildDrawerSectionsPublic(d) {
         </div>
       </header>
 
-      <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)] space-y-3 mb-4">
-        ${auditRow("AuditPathID", d.audit_quality.AuditPathID)}
-        ${auditRow("Timestamp", d.meta.timestampET)}
-        ${auditRow("Freshness dati", d.meta.freshness)}
-        ${auditRow("Stato modulo", d.meta.moduleStatus)}
-        ${auditRow("Fonti", (d.audit_quality.SourcesTier1 || []).join(", "))}
-      </div>
+     <div class="
+  grid gap-3 text-[12px] leading-[1.4]
+  grid-cols-1
+  md:grid-cols-2
+">
+  ${qualityChip("FreshnessScore", d.audit_quality.QualityMetrics?.FreshnessScore)}
+  ${qualityChip("ConfidenceFinal", d.audit_quality.QualityMetrics?.ConfidenceFinal)}
+  ${qualityChip("DataIntegrity", d.audit_quality.QualityMetrics?.DataIntegrity)}
+  ${qualityChip("FeedSync", d.audit_quality.QualityMetrics?.FeedSync)}
+</div>
+
 
       <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-2 uppercase tracking-wide">
         Qualità e coerenza feed
@@ -524,11 +532,12 @@ function renderDrawerMobileShellPublic(sectionsObj) {
       ">
 
       <main class="f1b-panel-content-mobile flex-1 min-w-0"
-        style="
-          overflow:auto;
-          -webkit-overflow-scrolling:touch;
-          padding:1rem;
-        "
+     style="
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+  padding:1rem;
+  padding-bottom:4.5rem;
+"
         id="panel-body-mobile">
         <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
         <div data-f1b-view="breadth" hidden>${sectionsObj.breadthHTML}</div>
@@ -595,24 +604,31 @@ function bindDrawerTabsPublic(root) {
           b.style.fontWeight = isActive ? "600" : "500";
         }
 
-        if (b.classList.contains("f1b-footer-tab-btn")) {
-          b.style.fontWeight = isActive ? "600" : "500";
-          b.style.border = isActive
-            ? "1px solid var(--tone-neu-fg)"
-            : "1px solid var(--br-soft)";
-          b.style.background = isActive
-            ? `radial-gradient(circle at 0% 0%,
-                var(--tone-neu-bg-hard) 0%,
-                transparent 60%
-              ),
-              var(--surface-card-alt)`
-            : "var(--surface-card)";
-          b.style.color = isActive
-            ? "var(--tone-neu-fg)"
-            : "var(--muted)";
-          b.style.boxShadow = "var(--shadow-card)";
-        }
-      });
+       if (b.classList.contains("f1b-footer-tab-btn")) {
+  if (isActive) {
+    // STATO ATTIVO (tab selezionata)
+    b.style.fontWeight   = "600";
+    b.style.border       = "1px solid var(--ink)";
+    b.style.background   = `
+      radial-gradient(
+        circle at 0% 0%,
+        color-mix(in oklab, var(--ink) 12%, transparent) 0%,
+        transparent 60%
+      ),
+      var(--surface-card-alt)
+    `;
+    b.style.color        = "var(--ink)";
+    b.style.boxShadow    = "var(--shadow-card)";
+  } else {
+    // STATO NON ATTIVO
+    b.style.fontWeight   = "500";
+    b.style.border       = "1px solid var(--br-soft)";
+    b.style.background   = "var(--surface-card)";
+    b.style.color        = "var(--muted)";
+    b.style.boxShadow    = "var(--shadow-card)";
+  }
+}
+
 
       // mostra/nascondi viste
       views.forEach(viewEl => {
