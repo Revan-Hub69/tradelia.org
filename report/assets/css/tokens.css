@@ -1224,6 +1224,22 @@ html[data-theme="dark"] .hero{
     max-width:100%;
   }
 }
+@media(min-width:768px){
+  /* aumenta font solo dentro il body scrollabile del pannello F1B */
+  .f1b-panel-content,
+  .f1b-panel-content-mobile {
+    font-size:13px;
+    line-height:1.45;
+  }
+
+  /* alza i micro-testi da 11px a ~12px per non sembrare "debug" */
+  .f1b-panel-content .text-[11px],
+  .f1b-panel-content-mobile .text-[11px] {
+    font-size:12px;
+    line-height:1.4;
+  }
+}
+
 
 /* =========================================================
    PANEL · TAB STRIP / SEZIONI INTERNE
