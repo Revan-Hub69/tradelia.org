@@ -1,43 +1,63 @@
-{
-  "as_of": "2025-10-22",
-  "variant": "F1B",
-  "module_title": "Market Strategy – Momentum Regime",
-  "strategy_mode": "Momentum",
-  "regime_score": 0.67,
-  "breadth_1m": 0.58,
-  "vix_level": 18.9,
-  "top_inflow_5d": [
-    { "sector": "Technology", "inflow": 2.6 },
-    { "sector": "Industrials", "inflow": 1.4 },
-    { "sector": "Healthcare", "inflow": 1.2 },
-    { "sector": "Financials", "inflow": 0.8 },
-    { "sector": "Energy", "inflow": 0.5 }
-  ],
-  "macro_trends": [
-    "Rallentamento moderato dei rendimenti obbligazionari USA",
-    "Flussi in ripresa su settori growth e large cap",
-    "Dollaro in consolidamento, risk-on in Europa"
-  ],
-  "drivers": [
-    "PMI compositi in miglioramento marginale",
-    "Inflazione core in discesa, ma consumi resilienti",
-    "Stime utili S&P500 +2.3% QoQ"
-  ],
-  "filters_f2_alignment": [
-    "SCI_tkr coerente con regime momentum",
-    "DPI_context = positivo in 3 su 4 macro-regioni",
-    "COT netto risk-on su equity index futures"
-  ],
-  "decision": {
-    "summary": "Regime Momentum attivo ma in fase di estensione",
-    "tone": "positive",
-    "score": 0.83,
-    "notes": "Preferenza per settori tecnologici e industriali; attenzione a volatilità crescente su breve periodo."
-  },
-  "audit": {
-    "source_sync": "Bloomberg, Finviz, Barchart, CFTC",
-    "feed_lag_days": 0,
-    "confidence": 0.9,
-    "integrity": 0.88
+function toneClassFromJSON(tone) {
+  // tone = "green" | "yellow" | "red" | anything else
+  switch ((tone || "").toLowerCase()) {
+    case "green":
+      return {
+        dotColor: "var(--tone-pos-fg)",
+        textColor: "var(--tone-pos-fg)"
+      };
+    case "yellow":
+      return {
+        dotColor: "var(--tone-warn-fg)",
+        textColor: "var(--tone-warn-fg)"
+      };
+    case "red":
+      return {
+        dotColor: "var(--tone-neg-fg)",
+        textColor: "var(--tone-neg-fg)"
+      };
+    default:
+      return {
+        dotColor: "var(--tone-neu-fg)",
+        textColor: "var(--tone-neu-fg)"
+      };
   }
+}
+
+function metricChip(keyName, qObj) {
+  if (!qObj) return "";
+  const { label, value, tone } = qObj;
+  const { dotColor, textColor } = toneClassFromJSON(tone);
+
+  return `
+    <div class="p-2"
+      style="
+        background:var(--surface-card-alt);
+        border:1px solid var(--br-card);
+        border-radius:var(--radius-card);
+        box-shadow:var(--shadow-card);
+      ">
+      <div class="flex items-start justify-between gap-2 mb-1">
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-[8px] h-[8px] rounded-full"
+            style="background:${dotColor};"></span>
+
+          <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3]">
+            ${escapeHtml(label || keyName || "")}
+          </div>
+        </div>
+
+        <button
+          class="info-btn"
+          data-metric="${escapeAttr(keyName)}"
+          aria-label="Info ${escapeAttr(keyName)}"
+        >?</button>
+      </div>
+
+      <div class="font-mono font-bold text-[13px] leading-[1.4]"
+        style="color:${textColor};">
+        ${escapeHtml(value || "—")}
+      </div>
+    </div>
+  `;
 }
