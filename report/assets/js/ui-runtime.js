@@ -894,32 +894,22 @@ qsa("[data-metric-close]").forEach(btn => {
 // ------------------------------------------------------------
 // THEME SWITCH (light / dark)
 // ------------------------------------------------------------
-function initThemeToggle() {
-  const btnTheme = qs("#btn-theme");
-  if (!btnTheme) return;
+(function initFromStorage(){
+  try {
+    const saved = localStorage.getItem("tradelia-theme");
 
-  function applyTheme(theme) {
-    document.documentElement.setAttribute("data-theme", theme);
-    try {
-      localStorage.setItem("tradelia-theme", theme);
-    } catch(e){}
+    if (saved === "dark" || saved === "light") {
+      // se l'utente ha già scelto, rispettiamo la sua preferenza
+      applyTheme(saved);
+    } else {
+      // nessuna preferenza salvata → default dark
+      applyTheme("dark");
+    }
+  } catch(e){
+    // se localStorage non è accessibile, fallback dark
+    applyTheme("dark");
   }
-
-  (function initFromStorage(){
-    try {
-      const saved = localStorage.getItem("tradelia-theme");
-      if (saved === "dark" || saved === "light") {
-        applyTheme(saved);
-      }
-    } catch(e){}
-  })();
-
-  btnTheme.addEventListener("click", () => {
-    const cur = document.documentElement.getAttribute("data-theme") || "light";
-    const next = (cur === "light" ? "dark" : "light");
-    applyTheme(next);
-  });
-}
+})();
 
 // ------------------------------------------------------------
 // PRINT
