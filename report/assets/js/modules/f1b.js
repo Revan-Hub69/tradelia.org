@@ -568,38 +568,8 @@ function renderDrawerDesktopShellPublic(sectionsObj) {
 
 function renderDrawerMobileShellPublic(sectionsObj) {
   const mobileTabsBar = `
-    <div
-      class="f1b-mobile-tabs-fixed"
-      style="
-        flex-shrink:0;
-        width:100%;
-        display:flex;
-        align-items:center;
-        border-bottom:1px solid var(--br-panel-divider);
-        background:var(--surface-panel-head);
-        background-image:
-          radial-gradient(
-            circle at 0% 0%,
-            color-mix(in oklab, var(--surface-panel-head) 90%, var(--brand) 2%) 0%,
-            transparent 60%
-          );
-        box-shadow:0 6px 12px rgba(0,0,0,.12);
-        padding:.6rem .75rem;
-      "
-    >
-      <div
-        class="f1b-footer-tabs-scroll"
-        style="
-          flex:1 1 auto;
-          min-width:0;
-          display:flex;
-          align-items:center;
-          gap:.5rem;
-          overflow-x:auto;
-          -webkit-overflow-scrolling:touch;
-          scrollbar-width:none;
-        "
-      >
+    <div class="f1b-mobile-tabs-fixed" ...>
+      <div class="f1b-footer-tabs-scroll" ...>
         ${mobileTabButton("regime","Regime")}
         ${mobileTabButton("breadth","Breadth")}
         ${mobileTabButton("internals","Internals")}
@@ -610,6 +580,44 @@ function renderDrawerMobileShellPublic(sectionsObj) {
       </div>
     </div>
   `;
+
+  // 🔹 PATCH: wrapper .f1b-mobile-shell
+  return `
+    <div class="f1b-mobile-shell">
+      <div class="f1b-drawer-mobile"
+        style="
+          display:flex;
+          flex-direction:column;
+          height:calc(100vh - 110px);
+          max-height:calc(100vh - 110px);
+          min-height:300px;
+          background:var(--surface-panel-head);
+          background-image:
+            radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--surface-panel-head) 90%, var(--brand) 2%) 0%, transparent 60%);
+        ">
+        ${mobileTabsBar}
+
+        <main class="f1b-panel-content-mobile flex-1 min-w-0"
+          style="
+            overflow:auto;
+            -webkit-overflow-scrolling:touch;
+            padding:1rem;
+            background:var(--surface-page);
+            background-image:none;
+          "
+          id="panel-body-mobile">
+          <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
+          <div data-f1b-view="breadth" hidden>${sectionsObj.breadthHTML}</div>
+          <div data-f1b-view="internals" hidden>${sectionsObj.internalsHTML}</div>
+          <div data-f1b-view="street" hidden>${sectionsObj.streetHTML}</div>
+          <div data-f1b-view="sintesi" hidden>${sectionsObj.sintesiHTML}</div>
+          <div data-f1b-view="audit" hidden>${sectionsObj.auditHTML}</div>
+          <div data-f1b-view="mifid" hidden>${sectionsObj.mifidHTML}</div>
+        </main>
+      </div>
+    </div>
+  `;
+}
 
   return `
     <div class="f1b-drawer-mobile"
@@ -696,29 +704,54 @@ function mobileTabButton(key, label) {
 }
 
 function bindDrawerTabsPublic(root) {
-  const tabButtons = document.querySelectorAll("[data-f1b-tab]");
-  const views = document.querySelectorAll("[data-f1b-view]");
+  if (!root) return;
+
+  // 🔹 PATCH: limitiamo il binding SOLO all’interno del drawer F1B
+  const shell = root.closest(".f1b-mobile-shell, .f1b-panel-desktop") || root;
+  const tabButtons = shell.querySelectorAll("[data-f1b-tab]");
+  const views = root.querySelectorAll("[data-f1b-view]");
 
   tabButtons.forEach(btn => {
     if (btn.__f1bBound) return;
     btn.__f1bBound = true;
 
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", evt => {
+      // 🔹 blocca la propagazione: evita di triggerare il MiFID globale del footer
+      evt.stopPropagation();
+
       const key = btn.getAttribute("data-f1b-tab");
       if (!key) return;
 
-      // attiva/deattiva bottoni ovunque
+      // attiva/deattiva solo i bottoni di questo drawer
       tabButtons.forEach(b => {
         const isActive = b.getAttribute("data-f1b-tab") === key;
+        b.classList.toggle("is-active", isActive);
 
-        // DESKTOP SIDEBAR
-        if (b.classList.contains("f1b-tab-btn")) {
+        // stile mobile pill
+        if (b.classList.contains("f1b-footer-tab-btn")) {
           if (isActive) {
-            b.classList.add("is-active");
+            b.style.fontWeight = "600";
+            b.style.border = "1px solid var(--ink)";
+            b.style.background =
+              "radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--ink) 12%, transparent) 0%, transparent 60%), var(--surface-card-alt)";
+            b.style.color = "var(--ink)";
           } else {
-            b.classList.remove("is-active");
+            b.style.fontWeight = "500";
+            b.style.border = "1px solid var(--br-soft)";
+            b.style.background = "var(--surface-card)";
+            b.style.color = "var(--muted)";
           }
         }
+      });
+
+      // mostra solo la view corrispondente dentro al drawer F1B
+      views.forEach(viewEl => {
+        viewEl.hidden = viewEl.getAttribute("data-f1b-view") !== key;
+      });
+    });
+  });
+}
+
 
         // MOBILE FOOTER TABS (pill orizzontali)
         if (b.classList.contains("f1b-footer-tab-btn")) {
