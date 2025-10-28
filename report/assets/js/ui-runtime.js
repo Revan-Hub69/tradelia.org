@@ -1,7 +1,8 @@
 // /report/assets/js/ui-runtime.js
 //
 // UI runtime globale (no dati di mercato):
-// - pannello informativo (Privacy / MiFID / Drawer F1B ecc.)
+// - pannello informativo analitico (drawer F1B ecc.) -> #panel-overlay
+// - pannello legale separato (Privacy / MiFID)       -> #legal-overlay
 // - metric help ("?" tooltip) desktop/mobile
 // - tema light/dark
 // - share overlay
@@ -42,41 +43,26 @@ function escapeHtml(str) {
 }
 
 // ------------------------------------------------------------
-// PANEL OVERLAY (drawer / legal / ecc.)
+// PANEL OVERLAY ANALITICO (drawer / audit / F1B ecc.)
+//   Usa #panel-overlay
 // ------------------------------------------------------------
 //
-// Struttura HTML attesa in index.html:
+// Struttura HTML attesa in index.html per #panel-overlay:
 //
 // <div id="panel-overlay" class="tl-panel-overlay noprint" aria-hidden="true">
 //   <div class="tl-panel-backdrop" data-panel-close></div>
 //
 //   <!-- desktop -->
 //   <aside class="tl-panel tl-panel--desktop" role="dialog" aria-modal="true">
-//     <header class="tl-panel__header">
-//       <div class="min-w-0">
-//         <h2 id="panel-title" class="tl-panel__title">—</h2>
-//         <p id="panel-subtitle" class="tl-panel__subtitle">—</p>
-//       </div>
-//       <button class="tl-panel__close" data-panel-close aria-label="Chiudi">…</button>
-//     </header>
-//
+//     <header class="tl-panel__header">...</header>
 //     <div id="panel-body" class="tl-panel__body"></div>
-//
 //     <footer class="tl-panel__footer" id="panel-footer"></footer>
 //   </aside>
 //
 //   <!-- mobile -->
 //   <aside class="tl-panel tl-panel--mobile" role="dialog" aria-modal="true">
-//     <header class="tl-panel__header">
-//       <div class="min-w-0">
-//         <h2 id="panel-title-mobile" class="tl-panel__title">—</h2>
-//         <p id="panel-subtitle-mobile" class="tl-panel__subtitle">—</p>
-//       </div>
-//       <button class="tl-panel__close" data-panel-close aria-label="Chiudi">…</button>
-//     </header>
-//
+//     <header class="tl-panel__header">...</header>
 //     <div id="panel-body-mobile" class="tl-panel__body"></div>
-//
 //     <footer class="tl-panel__footer" id="panel-footer-mobile"></footer>
 //   </aside>
 // </div>
@@ -90,19 +76,15 @@ function escapeHtml(str) {
 //       ...
 //     ],
 //     blocking: bool,          // se true non puoi chiudere toccando backdrop
-//     panelSize: "wide" | undefined, // "wide" = pannello desktop largo
-//
-//     // footerDesktop = bottoni azione a destra nel footer desktop
-//     footerButtons: [ { label:"Chiudi", action: fn }, ... ]
-//
-//     // footerTabsMobile = pill scrollabili sticky in basso SOLO mobile
-//     //   [{ key:"regime", label:"Regime attuale" }, ...]
-//     footerTabs:    [ { key:"...", label:"..." }, ... ]
+//     panelSize: "wide" | "xl" | undefined,
+//     footerButtons: [ { label:"Chiudi", action: fn }, ... ],
+//     footerTabs:    [ { key:"regime", label:"Regime attuale" }, ... ] // mobile tabbar sticky
 //   }
-//
-// closePanel(): chiude overlay, riabilita scroll body
 
 function openPanel(opts) {
+  // prima di aprire un nuovo pannello analitico, chiudiamo se qualcosa è rimasto aperto
+  closePanel();
+
   const overlayEl = qs("#panel-overlay");
   if (!overlayEl) return;
 
@@ -136,7 +118,7 @@ function openPanel(opts) {
 
   // corpo:
   // - caso "wide" con UNA sezione => usiamo direttamente section.body (layout libero)
-  // - altrimenti generiamo blocchi tl-panel-section standard
+  // - altrimenti costruiamo blocchi tl-panel-section standard
   let bodyHTML = "";
   if (panelSize === "wide" && sections.length === 1) {
     bodyHTML = sections[0].body || "";
@@ -169,8 +151,9 @@ function openPanel(opts) {
   setHTML(bodyMobEl,  bodyHTML);
 
   // ---------- FOOTER RENDERING ----------
+  // footerTabs = barra pill scrollabile sticky mobile (per F1B)
+  // footerButtons = bottoni "Chiudi", ecc.
 
-  // helper: footer classico (desktop o fallback mobile se niente tabs)
   function renderFooterBtns(arr) {
     if (!arr || !arr.length) {
       return `<button class="btn btn-sm" data-panel-close>Chiudi</button>`;
@@ -180,8 +163,8 @@ function openPanel(opts) {
     }).join("");
   }
 
-  // helper: footer mobile con tab scrollabili e bottone Chiudi sticky
   function renderFooterTabs(tabsArr) {
+    // se non ci sono tab mobile, fallback ai bottoni standard
     if (!tabsArr || !tabsArr.length) {
       return renderFooterBtns(footerButtons);
     }
@@ -286,13 +269,32 @@ function openPanel(opts) {
   setHTML(footerMobEl,  mobileFooterHTML);
   setHTML(footerDeskEl, desktopFooterHTML);
 
-  // bind azioni custom dei bottoni desktop
-  qsa("[data-panel-btn]", footerDeskEl).forEach(btnEl => {
-    const i = btnEl.getAttribute("data-panel-btn");
-    if (footerButtons[i] && typeof footerButtons[i].action === "function") {
-      btnEl.addEventListener("click", footerButtons[i].action);
-    }
-  });
+  // bind azioni custom + chiudi, sia desktop che mobile
+  function bindFooterButtons(scopeEl, buttonsDefArr) {
+    if (!scopeEl) return;
+
+    // custom actions tipo data-panel-btn="0"
+    qsa("[data-panel-btn]", scopeEl).forEach(btnEl => {
+      const i = btnEl.getAttribute("data-panel-btn");
+      if (buttonsDefArr[i] && typeof buttonsDefArr[i].action === "function") {
+        btnEl.addEventListener("click", (ev) => {
+          ev.stopPropagation();
+          buttonsDefArr[i].action();
+        });
+      }
+    });
+
+    // fallback data-panel-close
+    qsa("[data-panel-close]", scopeEl).forEach(btnEl => {
+      btnEl.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        closePanel();
+      });
+    });
+  }
+
+  bindFooterButtons(footerDeskEl, footerButtons);
+  bindFooterButtons(footerMobEl,  footerButtons);
 
   // blocking mode
   if (blocking) {
@@ -301,28 +303,26 @@ function openPanel(opts) {
     overlayEl.removeAttribute("data-blocking");
   }
 
-// gestisci varianti di larghezza desktop ("wide", "xl", default)
-const panelDesktop = qs(".tl-panel--desktop", overlayEl);
-if (panelDesktop) {
-  // rimuove eventuali classi precedenti per sicurezza
-  panelDesktop.classList.remove("tl-panel--wide");
-  panelDesktop.classList.remove("tl-panel--xl");
+  // gestisci varianti di larghezza desktop ("wide", "xl", default)
+  const panelDesktop = qs(".tl-panel--desktop", overlayEl);
+  if (panelDesktop) {
+    panelDesktop.classList.remove("tl-panel--wide");
+    panelDesktop.classList.remove("tl-panel--xl");
 
-  if (panelSize === "wide") {
-    // legacy (~560px)
-    panelDesktop.classList.add("tl-panel--wide");
-  } else if (panelSize === "xl") {
-    // nuova misura larga (~50vw)
-    panelDesktop.classList.add("tl-panel--xl");
+    if (panelSize === "wide") {
+      // legacy (~560px)
+      panelDesktop.classList.add("tl-panel--wide");
+    } else if (panelSize === "xl") {
+      // nuova misura larga (~50vw)
+      panelDesktop.classList.add("tl-panel--xl");
+    }
   }
-}
-
 
   // lock scroll pagina dietro + mostra overlay
   document.body.classList.add("body--lock");
   overlayEl.setAttribute("aria-hidden", "false");
 
-  // bind dei nuovi "?" apparsi dentro il drawer
+  // bind dei nuovi "?" apparsi dentro il drawer analitico
   bindMetricInfoButtons(overlayEl);
 }
 
@@ -333,7 +333,7 @@ function closePanel() {
   document.body.classList.remove("body--lock");
 }
 
-// listener globale: chiudi panel su backdrop o [data-panel-close]
+// listener globale overlay analitico: chiudi panel su backdrop o [data-panel-close]
 document.addEventListener("click", (ev) => {
   const overlayEl = qs("#panel-overlay");
   if (!overlayEl) return;
@@ -355,117 +355,206 @@ document.addEventListener("click", (ev) => {
 });
 
 // ------------------------------------------------------------
+// LEGAL OVERLAY (Privacy / MiFID separato dal drawer F1B)
+//   Usa #legal-overlay
+// ------------------------------------------------------------
+//
+// Struttura HTML attesa in index.html per #legal-overlay:
+// (copia di panel-overlay ma con ID "legal-*", e data-legal-close)
+
+function openLegalPanel(opts) {
+  // chiudiamo eventuale legale aperto, così non si accumula
+  closeLegalPanel();
+
+  const overlayEl = qs("#legal-overlay");
+  if (!overlayEl) return;
+
+  const {
+    title = "Informativa",
+    subtitle = "",
+    body = "",
+    blocking = false,
+    footerButtons = []
+  } = opts || {};
+
+  // refs desktop
+  const tDesk  = qs("#legal-title");
+  const sDesk  = qs("#legal-subtitle");
+  const bDesk  = qs("#legal-body");
+  const fDesk  = qs("#legal-footer");
+
+  // refs mobile
+  const tMob   = qs("#legal-title-mobile");
+  const sMob   = qs("#legal-subtitle-mobile");
+  const bMob   = qs("#legal-body-mobile");
+  const fMob   = qs("#legal-footer-mobile");
+
+  setText(tDesk, title);
+  setText(sDesk, subtitle);
+  setText(tMob,  title);
+  setText(sMob,  subtitle);
+
+  setHTML(bDesk, body);
+  setHTML(bMob,  body);
+
+  function renderFooter(arr) {
+    if (!arr || !arr.length) {
+      return `<button class="btn btn-sm" data-legal-close>Chiudi</button>`;
+    }
+    return arr.map((b,i)=>
+      `<button class="btn btn-sm" data-legal-btn="${i}">${escapeHtml(b.label||"OK")}</button>`
+    ).join("");
+  }
+
+  const footerHTML = renderFooter(footerButtons);
+  setHTML(fDesk, footerHTML);
+  setHTML(fMob,  footerHTML);
+
+  // bind pulsanti nel footer (desktop e mobile)
+  function bindLegalFooterButtons(scope, defs) {
+    if (!scope) return;
+
+    // azioni custom (es. "Ho letto")
+    qsa("[data-legal-btn]", scope).forEach(btn=>{
+      const i = btn.getAttribute("data-legal-btn");
+      if (defs[i] && typeof defs[i].action==="function") {
+        btn.addEventListener("click", ev=>{
+          ev.stopPropagation();
+          defs[i].action();
+        });
+      }
+    });
+
+    // chiudi overlay legale
+    qsa("[data-legal-close]", scope).forEach(btn=>{
+      btn.addEventListener("click", ev=>{
+        ev.stopPropagation();
+        closeLegalPanel();
+      });
+    });
+  }
+
+  bindLegalFooterButtons(fDesk, footerButtons);
+  bindLegalFooterButtons(fMob,  footerButtons);
+
+  // blocking
+  if (blocking) {
+    overlayEl.setAttribute("data-blocking","true");
+  } else {
+    overlayEl.removeAttribute("data-blocking");
+  }
+
+  // lock scroll body & mostra overlay legale
+  document.body.classList.add("body--lock");
+  overlayEl.setAttribute("aria-hidden","false");
+
+  // i pannelli Privacy/MiFID non hanno tooltip "?" metriche di mercato,
+  // quindi NON richiamiamo bindMetricInfoButtons qui.
+}
+
+function closeLegalPanel() {
+  const overlayEl = qs("#legal-overlay");
+  if (!overlayEl) return;
+  overlayEl.setAttribute("aria-hidden","true");
+  document.body.classList.remove("body--lock");
+}
+
+// listener globale overlay legale: chiudi su backdrop o [data-legal-close]
+document.addEventListener("click", ev=>{
+  const overlayEl = qs("#legal-overlay");
+  if (!overlayEl) return;
+  if (overlayEl.getAttribute("aria-hidden")==="true") return;
+
+  const blocking = overlayEl.getAttribute("data-blocking")==="true";
+
+  if (ev.target.closest("[data-legal-close]")) {
+    closeLegalPanel();
+    return;
+  }
+
+  const backdrop = ev.target.closest(".tl-panel-backdrop");
+  if (backdrop && !blocking && overlayEl.contains(backdrop)) {
+    closeLegalPanel();
+    return;
+  }
+});
+
+// ------------------------------------------------------------
 // PANNELLI: PRIVACY / MIFID / AUDIT
 // ------------------------------------------------------------
+//
+// NOTA IMPORTANTE:
+// - Privacy e MiFID ORA usano openLegalPanel(), quindi sono separati dal drawer F1B.
+// - Audit (qualità dati) resta nel pannello analitico -> openPanel().
+
 function openPrivacyPanel() {
-  openPanel({
+  openLegalPanel({
     title: "Privacy & Trasparenza",
     subtitle: "Nessun tracciamento di profilazione. Preferenze salvate solo in locale.",
-    sections: [
-      {
-        title: "Come gestiamo i dati",
-        body: `
-          <p>
-            Tradelia AI adotta una politica di massima trasparenza e
-            <strong>zero tracciamento di profilazione</strong>.
-          </p>
-          <ul style="margin:.5rem 0 .5rem 1rem;list-style:disc;font-size:12.5px;line-height:1.45;">
-            <li>Nessun cookie di profilazione o advertising.</li>
-            <li>Nessuna vendita o condivisione di dati personali con terze parti.</li>
-            <li>Nessun analytics esterno invasivo.</li>
-            <li>Le preferenze di tema/consenso vivono solo nel tuo browser (<code>localStorage</code>).</li>
-          </ul>
-        `,
-        meta: `
-          Riferimenti normativi: GDPR (UE 2016/679), Direttiva ePrivacy,
-          Linee Guida EDPB.
-        `
-      }
-    ],
+    body: `
+      <p>
+        Tradelia AI adotta una politica di massima trasparenza e
+        <strong>zero tracciamento di profilazione</strong>.
+      </p>
+      <ul style="margin:.5rem 0 .5rem 1rem;list-style:disc;font-size:12.5px;line-height:1.45;">
+        <li>Nessun cookie di profilazione o advertising.</li>
+        <li>Nessuna vendita o condivisione di dati personali con terze parti.</li>
+        <li>Nessun analytics esterno invasivo.</li>
+        <li>Le preferenze di tema/consenso vivono solo nel tuo browser (<code>localStorage</code>).</li>
+      </ul>
+      <p style="font-size:11px;line-height:1.4;color:var(--muted);margin-top:1rem;">
+        Riferimenti normativi: GDPR (UE 2016/679), Direttiva ePrivacy,
+        Linee Guida EDPB.
+      </p>
+    `,
     blocking: false,
-    panelSize: undefined,
     footerButtons: [
-      { label: "Chiudi", action: () => closePanel() }
-    ],
-    footerTabs: []
+      { label: "Chiudi", action: () => closeLegalPanel() }
+    ]
   });
 }
 
-// blocking: true → l'utente deve premere "Ho letto"
+// MiFID usa blocking: true e bottone "Ho letto"
 function openMifidPanel() {
-  openPanel({
+  openLegalPanel({
     title: "Informativa MiFID",
     subtitle: "Contenuto a scopo informativo/formativo. Non è consulenza personalizzata.",
-    sections: [
-      {
-        title: "Chi è Tradelia AI",
-        body: `
-          <p>
-            Tradelia AI è una piattaforma di analisi e alfabetizzazione finanziaria.
-            L'obiettivo è aiutare l'utente a comprendere contesto di mercato,
-            fattori di rischio e dinamiche tecniche, in modo chiaro e tracciabile.
-          </p>
-          <p style="margin-top:.5rem;">
-            <strong>Non siamo un consulente finanziario abilitato all’offerta di raccomandazioni personalizzate.</strong>
-            Non effettuiamo gestione di portafogli, non raccogliamo ordini di negoziazione,
-            non sollecitiamo l’investimento in strumenti finanziari.
-          </p>
-        `,
-        meta: `
-          Rif. Direttiva MiFID II, regolamentazione ESMA su consulenza in materia di investimenti.
-        `
-      },
-      {
-        title: "Nessuna raccomandazione operativa",
-        body: `
-          <p>
-            Le informazioni mostrate (F1, F2, F3, F4, F5, F5B, F6) descrivono scenari di mercato,
-            sentiment/flussi, fattori tecnici e riferimenti storici.
-            Non costituiscono indicazione ad aprire o chiudere posizioni,
-            né suggeriscono una strategia adatta a te come singolo investitore.
-          </p>
-          <p style="margin-top:.5rem;">
-            Qualsiasi riferimento a livelli tecnici, volatilità, momentum,
-            liquidità o broker esistenti è da intendersi
-            come <strong>osservazione di mercato</strong>
-            e non come invito operativo.
-          </p>
-        `,
-        meta: `
-          Prima di prendere decisioni reali, verifica sempre la tua situazione
-          personale (obiettivi, orizzonte temporale, propensione al rischio)
-          con un intermediario autorizzato o un consulente finanziario abilitato.
-        `
-      },
-      {
-        title: "Rischio e responsabilità",
-        body: `
-          <p>
-            I mercati finanziari comportano rischio di perdita totale o parziale del capitale.
-            La volatilità, gli shock macro, le condizioni di liquidità e gli eventi esogeni
-            possono generare movimenti estremi in tempi molto brevi.
-          </p>
-          <p style="margin-top:.5rem;">
-            <strong>Nulla di quanto visualizzato garantisce risultati futuri.</strong>
-            Le performance storiche o gli scenari ipotetici non sono indicativi
-            di rendimenti futuri.
-          </p>
-          <p style="margin-top:.5rem;">
-            L’utente rimane sempre l’unico responsabile delle proprie decisioni.
-          </p>
-        `,
-        meta: `
-          Usa sempre un intermediario regolamentato e verifica condizioni di costo,
-          protezioni, regime fiscale e aderenza normativa del servizio che utilizzi.
-        `
-      }
-    ],
+    body: `
+      <p>
+        Tradelia AI è una piattaforma di analisi e alfabetizzazione finanziaria.
+        L'obiettivo è aiutare l'utente a comprendere contesto di mercato,
+        fattori di rischio e dinamiche tecniche, in modo chiaro e tracciabile.
+      </p>
+
+      <p style="margin-top:.5rem;">
+        <strong>Non siamo un consulente finanziario abilitato all’offerta di raccomandazioni personalizzate.</strong>
+        Non effettuiamo gestione di portafogli, non raccogliamo ordini di negoziazione,
+        non sollecitiamo l’investimento in strumenti finanziari.
+      </p>
+
+      <p style="margin-top:1rem;">
+        Le informazioni mostrate (F1, F2, F3, F4, F5, F5B, F6) descrivono scenari di mercato,
+        sentiment/flussi, fattori tecnici e riferimenti storici.
+        Non costituiscono indicazione ad aprire o chiudere posizioni,
+        né suggeriscono una strategia adatta a te come singolo investitore.
+      </p>
+
+      <p style="margin-top:.5rem;">
+        <strong>Nulla di quanto visualizzato garantisce risultati futuri.</strong>
+        La volatilità, gli shock macro, la liquidità e gli eventi esogeni
+        possono generare movimenti estremi in tempi molto brevi.
+      </p>
+
+      <p style="margin-top:1rem;font-size:11px;line-height:1.4;color:var(--muted);">
+        Prima di prendere decisioni reali verifica sempre la tua situazione
+        personale (obiettivi, orizzonte, propensione al rischio)
+        con un intermediario autorizzato in linea con MiFID II / ESMA.
+      </p>
+    `,
     blocking: true,
-    panelSize: undefined,
     footerButtons: [
-      { label: "Ho letto", action: () => closePanel() }
-    ],
-    footerTabs: []
+      { label: "Ho letto", action: () => closeLegalPanel() }
+    ]
   });
 }
 
@@ -528,16 +617,10 @@ function openAuditPanel(auditData) {
 // METRIC TOOLTIP SYSTEM
 // ------------------------------------------------------------
 //
-// NUOVO FORMATO GLOSSARIO ( /report/assets/glossary.json )
-//
+// /report/assets/glossary.json :
 // {
-//   "Snapshot": {
-//     "title":  "Snapshot",
-//     "what":   "Testo 'Cosa mostra' ...",
-//     "how":    "Testo 'Come si usa' ...",
-//     "source": "Fonte / provenienza"
-//   },
-//   "Price": { ... },
+//   "Snapshot": { "title": "...", "what": "...", "how": "...", "source": "..." },
+//   "Price":    { ... },
 //   ...
 // }
 
@@ -572,9 +655,8 @@ function getGlossaryEntry(key) {
 // stato popover desktop aperto
 let currentPopoverOpen = false;
 
-// helper: costruisce l'HTML strutturato del contenuto tooltip
+// helper: costruisce HTML per corpo tooltip (what/how)
 function buildMetricHTML(info) {
-  // blocco "Cosa mostra" + "Come si usa" + footer fonte
   const whatHTML = `
     <div style="font-size:13px;line-height:1.45;color:var(--ink);margin-bottom:.75rem;">
       <div style="font-weight:600;color:var(--ink);margin-bottom:.25rem;">Cosa mostra</div>
@@ -604,13 +686,9 @@ function openMetricDesktop(btnEl) {
   const bodyEl   = qs("#metric-popover-body");
   const sourceEl = qs("#metric-popover-source");
 
-  // titolo a sinistra
   setText(titleEl, info.title || key || "—");
-
-  // corpo (what/how) come blocchi separati
   bodyEl.innerHTML = buildMetricHTML(info);
 
-  // fonte nel footer piccolo grigio
   sourceEl.innerHTML = info.source
     ? `<span style="font-weight:600;">Fonte</span>: ${escapeHtml(info.source)}`
     : "";
@@ -677,11 +755,8 @@ function openMetricMobile(btnEl) {
   const sourceEl = qs("#metric-modal-source");
 
   setText(titleEl, info.title || key || "—");
-
-  // testo corpo = what + how formattati
   bodyEl.innerHTML = buildMetricHTML(info);
 
-  // fonte
   sourceEl.innerHTML = info.source
     ? `<span style="font-weight:600;">Fonte</span>: ${escapeHtml(info.source)}`
     : "";
@@ -695,7 +770,7 @@ function closeMetricMobile() {
   modal.setAttribute("aria-hidden","true");
 }
 
-// bind dei bottoni "?" in uno scope (document, overlay ecc.)
+// bind dei bottoni "?" in uno scope (card, drawer ecc.)
 function bindMetricInfoButtons(rootScope) {
   const scope = rootScope || document;
 
@@ -719,7 +794,7 @@ function bindMetricInfoButtons(rootScope) {
   });
 }
 
-// chiusura popover desktop (bottone X nel popover)
+// chiusura popover desktop con X
 const popClose = qs("#metric-popover-close");
 if (popClose) {
   popClose.addEventListener("click", (e) => {
@@ -859,7 +934,9 @@ window.__TradeliaUI = {
   openPrivacyPanel,
   openMifidPanel,
   openAuditPanel,
-  bindMetricInfoButtons
+  bindMetricInfoButtons,
+  openLegalPanel,
+  closeLegalPanel
 };
 
 // retrocompat
@@ -902,7 +979,7 @@ async function bootUIRuntime() {
 // run
 bootUIRuntime();
 
-// Harden export in caso qualcuno sovrascriva
+// Harden export di nuovo, in caso venga sovrascritto
 if (!window.__TradeliaUI) window.__TradeliaUI = {};
 window.__TradeliaUI.openPanel = openPanel;
 window.__TradeliaUI.closePanel = closePanel;
@@ -910,3 +987,5 @@ window.__TradeliaUI.openPrivacyPanel = openPrivacyPanel;
 window.__TradeliaUI.openMifidPanel = openMifidPanel;
 window.__TradeliaUI.openAuditPanel = openAuditPanel;
 window.__TradeliaUI.bindMetricInfoButtons = bindMetricInfoButtons;
+window.__TradeliaUI.openLegalPanel = openLegalPanel;
+window.__TradeliaUI.closeLegalPanel = closeLegalPanel;
