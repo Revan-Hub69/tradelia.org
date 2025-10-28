@@ -2431,51 +2431,75 @@ html[data-theme="dark"] .hero{
   text-shadow: none;
 }
 /* Pannello legale: tono più neutro, leggibile anche in dark */
+/* LEGAL OVERLAY SKIN — migliorata per dark mode */
 #legal-overlay .tl-panel {
   background: var(--surface-page);
   background-image: none;
-  box-shadow: var(--shadow-card, 0 16px 40px rgba(0,0,0,.6));
   color: var(--ink);
+  box-shadow: 0 0 40px rgba(0,0,0,.65);
 }
 
+/* header */
 #legal-overlay .tl-panel__header {
-  background: var(--surface-card);
-  background-image: none;
+  background: color-mix(in oklab, var(--surface-card) 92%, transparent);
+  backdrop-filter: saturate(1.2) blur(8px);
   border-bottom: 1px solid var(--br-soft);
-  box-shadow: 0 2px 4px rgba(0,0,0,.4);
-  color: var(--ink);
+  box-shadow: 0 2px 6px rgba(0,0,0,.4);
 }
 
+/* footer */
 #legal-overlay .tl-panel__footer {
-  background: var(--surface-card);
-  background-image: none;
+  background: color-mix(in oklab, var(--surface-card) 94%, transparent);
+  backdrop-filter: saturate(1.1) blur(8px);
   border-top: 1px solid var(--br-soft);
-  box-shadow: 0 -2px 4px rgba(0,0,0,.4);
-  color: var(--ink);
+  box-shadow: 0 -2px 6px rgba(0,0,0,.4);
 }
 
-/* testo nel body legale */
+/* corpo testo */
 #legal-overlay section {
-  color: var(--ink);
+  color: oklab(95% 0 0);
+  line-height: 1.55;
+  letter-spacing: 0.01em;
 }
+
+html[data-theme="dark"] #legal-overlay section {
+  color: oklab(95% 0 0); /* quasi bianco */
+}
+
 #legal-overlay section p {
-  color: var(--ink);
+  margin-top: 0.9rem;
+  margin-bottom: 0;
 }
+
 #legal-overlay section strong {
-  color: var(--ink);
-  font-weight: 600;
+  color: oklab(98% 0 0);
+  font-weight: 650;
 }
+
 #legal-overlay section em {
   font-style: italic;
-  color: var(--ink);
+  color: oklab(92% 0 0);
 }
+
 #legal-overlay section code {
   font-size: 12px;
-  background: var(--surface-card-alt);
+  background: color-mix(in oklab, var(--surface-card) 85%, transparent);
   border: 1px solid var(--br-card);
   border-radius: 4px;
-  padding: .1rem .3rem;
-  color: var(--ink);
+  padding: .15rem .35rem;
+  color: oklab(95% 0 0);
+}
+
+/* pulsante footer */
+#legal-overlay .btn {
+  background: var(--brand-600);
+  color: white;
+  border: none;
+  font-weight: 600;
+  transition: background .2s ease;
+}
+#legal-overlay .btn:hover {
+  background: color-mix(in oklab, var(--brand-600) 80%, white 20%);
 }
 
 /* =========================================================
