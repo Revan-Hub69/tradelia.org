@@ -513,7 +513,9 @@ function renderDrawerDesktopShellPublic(sectionsObj) {
         display:flex;
         flex-direction:row;
         gap:1rem;
-        min-height:300px;
+
+        /* altezza fissa del blocco: resta stabile tra le tab */
+        height:80vh;
       ">
 
       <aside class="f1b-panel-menu"
@@ -521,6 +523,10 @@ function renderDrawerDesktopShellPublic(sectionsObj) {
           min-width:180px;
           max-width:200px;
           border-right:1px solid var(--br-card);
+
+          /* la colonna sinistra riempie tutta l'altezza e può scrollare se serve */
+          height:100%;
+          overflow:auto;
         ">
 
         ${drawerMenuButtonPublic("regime","Regime & Rischio", true)}
@@ -533,7 +539,16 @@ function renderDrawerDesktopShellPublic(sectionsObj) {
       </aside>
 
       <main class="f1b-panel-content flex-1 min-w-0"
-        style="max-height:60vh;overflow:auto;padding:1rem;"
+        style="
+          /* stessa altezza del contenitore padre */
+          height:100%;
+
+          /* lo scroll verticale è solo qui */
+          overflow:auto;
+          -webkit-overflow-scrolling:touch;
+
+          padding:1rem;
+        "
         id="panel-body">
         <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
         <div data-f1b-view="breadth" hidden>${sectionsObj.breadthHTML}</div>
