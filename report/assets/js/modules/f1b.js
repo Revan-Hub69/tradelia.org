@@ -789,47 +789,25 @@ function renderDrawerMobileShellPublic(sectionsObj) {
 ------------------------------------------------- */
 
 function drawerMenuButtonPublic(key, label, active) {
-  // colori di base
-  const bgActive = "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)";
-  const bgHover  = "color-mix(in oklab, var(--surface-card-alt) 40%, transparent)";
-  const bgIdle   = "transparent";
-
   return `
     <button
-      class="f1b-tab-btn block w-full text-left text-[13px] leading-[1.4] px-3 py-2 ${
-        active ? "is-active" : ""
-      }"
+      class="f1b-tab-btn block w-full text-left text-[12px] leading-[1.4] px-2 py-2 ${active ? "is-active" : ""}"
       data-f1b-tab="${key}"
       style="
-        position:relative;
-        width:100%;
-        text-align:left;
-
         border-radius:var(--radius-card-sm);
         border-left:3px solid ${active ? "var(--brand-600)" : "transparent"};
-
-        background:${active ? bgActive : bgIdle};
+        background:${active
+          ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)"
+          : "transparent"};
         font-weight:${active ? "600" : "500"};
         color:var(--ink);
-
-        transition:background .12s ease,border-color .12s ease;
-      "
-      onmouseenter="
-        this.style.background='${bgHover}';
-        if(!this.classList.contains('is-active')){
-          this.style.borderLeftColor='var(--br-soft)';
-        }
-      "
-      onmouseleave="
-        this.style.background='${active ? bgActive : bgIdle}';
-        this.style.borderLeftColor='${active ? 'var(--brand-600)' : 'transparent'}';
+        text-align:left;
       "
     >
       ${label}
     </button>
   `;
 }
-
 
 function bindDrawerTabsPublic(root) {
   // raccogliamo tutti i bottoni (desktop sidebar + barra mobile sticky)
@@ -1052,28 +1030,19 @@ function headlineBlock(title, body) {
 
 function conclusionPointBlock(pointObj = {}) {
   return `
-    <div class="mb-4 p-3"
+    <div class="mb-4 p-2"
       style="
         background:var(--surface-card-alt);
         border:1px solid var(--br-card);
         border-radius:var(--radius-card);
         box-shadow:var(--shadow-card);
       ">
-
-      <div class="flex items-start justify-between gap-2 mb-1">
-        <div class="flex items-center gap-2">
-          <div class="text-[11px] font-semibold leading-[1.3] text-[color:var(--muted)] uppercase tracking-wide">
-            ${escapeHtml(pointObj.title || "")}
-          </div>
-        </div>
-        <!-- non mettiamo il pulsante "?" per ora per non overfit di compliance,
-             ma potremmo introdurlo se vogliamo glossario -->
+      <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide mb-1">
+        ${escapeHtml(pointObj.title || "")}
       </div>
-
-      <div class="font-mono font-bold text-[13px] leading-[1.4] text-[color:var(--ink)]">
+      <div class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)]">
         ${escapeHtml(pointObj.raw || "")}
       </div>
-
       <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">
         ${escapeHtml(pointObj.ai_note || "")}
       </div>
