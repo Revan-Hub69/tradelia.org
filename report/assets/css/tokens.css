@@ -2339,6 +2339,84 @@ html[data-theme="dark"] .hero{
     stroke-opacity:.6 !important;
   }
 }
+/* =========================================================
+   F1B · SIDEBAR TABS (desktop menu a sinistra nel drawer)
+   ========================================================= */
+
+.f1b-panel-menu {
+  /* la colonna sinistra del drawer è già dark in dark mode e chiara in light.
+     Qui non forziamo bg, usiamo quello che hai già dal panel.
+     Solo padding verticale un filo respirato */
+  padding: 8px 0;
+}
+
+.f1b-tab-btn {
+  all: unset;
+  cursor: pointer;
+
+  display: block;
+  width: 100%;
+  text-align: left;
+
+  /* typo */
+  font-size: var(--fs-sm);
+  line-height: var(--lh-mid);
+  font-weight: 500;
+  color: var(--muted);
+
+  /* spacing + shape */
+  padding: 8px 12px 8px 16px;
+  border-radius: var(--radius-card-sm);
+
+  /* barra sinistra = simuliamo la tonebar delle meta-pill */
+  border-left: 3px solid transparent;
+
+  /* smooth feel */
+  transition:
+    background .14s ease,
+    color .14s ease,
+    border-color .14s ease,
+    box-shadow .14s ease,
+    text-shadow .14s ease;
+}
+
+/* Hover preview (non selezionata ma sotto il mouse) */
+.f1b-tab-btn:hover {
+  background:
+    radial-gradient(
+      circle at 0% 0%,
+      color-mix(in oklab, var(--surface-card-alt) 80%, var(--brand) 6%) 0%,
+      var(--surface-card-alt) 60%
+    );
+  box-shadow:
+    0 0 0 2px var(--accent-dim),
+    var(--shadow-card);
+
+  border-left: 3px solid color-mix(in oklab, var(--brand) 60%, transparent);
+
+  color: var(--ink);
+  font-weight: 600;
+  text-shadow: 0 1px 1px rgba(0,0,0,.4);
+}
+
+/* Stato attivo (= tab corrente) */
+.f1b-tab-btn.is-active {
+  background:
+    radial-gradient(
+      circle at 0% 0%,
+      color-mix(in oklab, var(--surface-card-alt) 80%, var(--brand) 10%) 0%,
+      var(--surface-card-alt) 60%
+    );
+  box-shadow:
+    0 0 0 2px var(--accent-dim),
+    var(--shadow-card);
+
+  border-left: 3px solid var(--brand);
+
+  color: var(--ink);
+  font-weight: 700;
+  text-shadow: 0 1px 1px rgba(0,0,0,.5);
+}
 
 /* =========================================================
    FINE
