@@ -383,6 +383,13 @@ async function mountReport() {
     if (heroClientEl) {
       heroClientEl.textContent = `Analisi indipendente su ${name}`;
     }
+        // === NEW: aggiorna anche il footer ===
+    const footerCompanyEl = document.getElementById("footer-company");
+    if (footerCompanyEl) {
+      footerCompanyEl.textContent = name;
+    }
+    // =====================================
+
     // =========================================================
   } else {
     console.warn("Header mancante per", reportId);
