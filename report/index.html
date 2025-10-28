@@ -469,7 +469,7 @@
     </footer>
   </div>
 
-  <!-- PANEL OVERLAY -->
+  <!-- PANEL OVERLAY (analitico: F1B, Audit, ecc.) -->
   <div id="panel-overlay" class="tl-panel-overlay noprint" aria-hidden="true">
     <div class="tl-panel-backdrop" data-panel-close></div>
 
@@ -518,33 +518,79 @@
     </aside>
   </div>
 
-<div id="metric-popover"
-     class="tl-popover noprint"
-     role="tooltip"
-     aria-hidden="true"
-     style="max-width:320px;">
-  <div class="tl-popover__head"
-       style="display:flex;align-items:flex-start;gap:.5rem;">
-    <button id="metric-popover-close"
-            class="tl-popover__close"
-            aria-label="Chiudi"
-            style="order:0;flex-shrink:0;">
-      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18"></line>
-        <line x1="6" y1="6" x2="18" y2="18"></line>
-      </svg>
-    </button>
+  <!-- LEGAL OVERLAY (Privacy / MiFID separato, non tocca F1B) -->
+  <div id="legal-overlay" class="tl-panel-overlay noprint" aria-hidden="true">
+    <div class="tl-panel-backdrop" data-legal-close></div>
 
-    <div id="metric-popover-title"
-         class="tl-popover__title"
-         style="order:1;font-weight:600;font-size:14px;line-height:1.4;color:var(--ink);">
-      —
-    </div>
+    <!-- desktop -->
+    <aside class="tl-panel tl-panel--desktop" role="dialog" aria-modal="true">
+      <header class="tl-panel__header">
+        <div class="min-w-0">
+          <h2 id="legal-title" class="tl-panel__title">—</h2>
+          <p id="legal-subtitle" class="tl-panel__subtitle">—</p>
+        </div>
+        <button class="tl-panel__close" data-legal-close aria-label="Chiudi">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </header>
+
+      <div id="legal-body" class="tl-panel__body"></div>
+
+      <footer class="tl-panel__footer" id="legal-footer"></footer>
+    </aside>
+
+    <!-- mobile -->
+    <aside class="tl-panel tl-panel--mobile" role="dialog" aria-modal="true">
+      <header class="tl-panel__header">
+        <div class="min-w-0">
+          <h2 id="legal-title-mobile" class="tl-panel__title">—</h2>
+          <p id="legal-subtitle-mobile" class="tl-panel__subtitle">—</p>
+        </div>
+        <button class="tl-panel__close" data-legal-close aria-label="Chiudi">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </header>
+
+      <div id="legal-body-mobile" class="tl-panel__body"></div>
+
+      <footer class="tl-panel__footer" id="legal-footer-mobile"></footer>
+    </aside>
   </div>
 
-  <div id="metric-popover-body" class="tl-popover__body">—</div>
-  <div id="metric-popover-source" class="tl-popover__source">—</div>
-</div>
+  <!-- TOOLTIP DESKTOP -->
+  <div id="metric-popover"
+       class="tl-popover noprint"
+       role="tooltip"
+       aria-hidden="true"
+       style="max-width:320px;">
+    <div class="tl-popover__head"
+         style="display:flex;align-items:flex-start;gap:.5rem;">
+      <button id="metric-popover-close"
+              class="tl-popover__close"
+              aria-label="Chiudi"
+              style="order:0;flex-shrink:0;">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div id="metric-popover-title"
+           class="tl-popover__title"
+           style="order:1;font-weight:600;font-size:14px;line-height:1.4;color:var(--ink);">
+        —
+      </div>
+    </div>
+
+    <div id="metric-popover-body" class="tl-popover__body">—</div>
+    <div id="metric-popover-source" class="tl-popover__source">—</div>
+  </div>
 
   <!-- TOOLTIP MOBILE -->
   <div id="metric-modal" class="tl-metric-modal-overlay noprint" aria-hidden="true">
