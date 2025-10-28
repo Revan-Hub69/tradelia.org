@@ -7,30 +7,25 @@
 //   renderCard(data, ctx)
 //   bindCard(node, data, ctx)
 //
-// Flow runtime:
-//   - renderCard() → genera la card riassuntiva con CTA "Dettagli regime →"
-//   - bindCard()   → attacca listener alla CTA e ai tooltip
-//   - openF1DrawerPublic() → apre il pannello/drawer responsive
-//   - bindDrawerTabsPublic() → gestisce le tab desktop (sidebar) + mobile (pill orizzontali)
+// Runtime flow:
+//   - renderCard() genera la card riassuntiva con CTA "Dettagli regime →"
+//   - bindCard() attacca listener alla CTA e ai tooltip
+//   - openF1DrawerPublic() apre il pannello/drawer responsive
+//   - bindDrawerTabsPublic() gestisce le tab sia desktop (sidebar sinistra) che mobile (pill scrollabili)
 //
-// Dettagli importanti:
-//   • Desktop: tab nella colonna sx hanno classe .f1b-tab-btn
-//       - stile base/hover/attivo lo dai da CSS/tokens (idle, :hover, .is-active)
-//       - JS setta/toglie solo .is-active
+// NOTE STYLING IMPORTANTI:
+//   • Sidebar desktop usa classi .f1b-panel-menu / .f1b-tab-btn
+//     Lo stile base/hover/attivo viene da tokens.css:
+//       .f1b-tab-btn { idle }
+//       .f1b-tab-btn:hover { hover preview }
+//       .f1b-tab-btn.is-active { tab corrente, barra sinistra brand, glow, testo forte }
+//     → JS si limita a togglare .is-active
 //
-//   • Mobile: le tab sono pill orizzontali scrollabili
-//       - wrapper con classe .f1b-mobile-shell
-//       - stile via inline style e JS
-//       - click sulle tab fa stopPropagation per NON toccare i bottoni footer globali tipo “Informativa MiFID”
+//   • Mobile footer tabs (pill orizzontali):
+//     Non hanno ancora classi globali nei token, quindi per ora le stilizziamo inline da JS
 //
-//   • Ogni vista è in <div data-f1b-view="..."> dentro il panel body (desktop o mobile)
+//   • I contenuti delle viste sono in <div data-f1b-view="..."> e li mostriamo/nascondiamo via hidden=...
 //
-//   • Questo modulo è completamente standalone, non deve toccare altro markup esterno (footer, ecc.)
-//
-
-/* -------------------------------------------------
-   Public API
-------------------------------------------------- */
 
 export function renderCard(rawData, ctx = {}) {
   const d = normalizeDataPublicF1B(rawData);
@@ -189,6 +184,7 @@ export function renderCard(rawData, ctx = {}) {
   `;
 }
 
+// bindCard: apre il drawer e lega tooltip
 export function bindCard(node, rawData, ctx = {}) {
   if (!node || !rawData) return;
   const data = normalizeDataPublicF1B(rawData);
@@ -265,7 +261,7 @@ function openF1DrawerPublic(data) {
       }
     });
 
-    // forza lo stato iniziale "Regime"
+    // stato iniziale "Regime"
     const firstTabBtn = document.querySelector('[data-f1b-tab="regime"]');
     if (firstTabBtn && typeof firstTabBtn.click === "function") {
       firstTabBtn.click();
@@ -615,49 +611,44 @@ function renderDrawerMobileShellPublic(sectionsObj) {
     </div>
   `;
 
-  // wrapper .f1b-mobile-shell = importantissimo:
-  // ci serve per limitare querySelectorAll e stopPropagation SOLO qui,
-  // così il tap "MiFID" del drawer non triggera il bottone footer globale.
   return `
-    <div class="f1b-mobile-shell">
-      <div class="f1b-drawer-mobile"
-        style="
-          display:flex;
-          flex-direction:column;
-          height:calc(100vh - 110px);
-          max-height:calc(100vh - 110px);
-          min-height:300px;
-          background:var(--surface-panel-head);
-          background-image:
-            radial-gradient(
-              circle at 0% 0%,
-              color-mix(in oklab, var(--surface-panel-head) 90%, var(--brand) 2%) 0%,
-              transparent 60%
-            );
-        "
-      >
-        ${mobileTabsBar}
+    <div class="f1b-drawer-mobile"
+      style="
+        display:flex;
+        flex-direction:column;
+        height:calc(100vh - 110px);
+        max-height:calc(100vh - 110px);
+        min-height:300px;
+        background:var(--surface-panel-head);
+        background-image:
+          radial-gradient(
+            circle at 0% 0%,
+            color-mix(in oklab, var(--surface-panel-head) 90%, var(--brand) 2%) 0%,
+            transparent 60%
+          );
+      "
+    >
+      ${mobileTabsBar}
 
-        <main
-          class="f1b-panel-content-mobile flex-1 min-w-0"
-          style="
-            overflow:auto;
-            -webkit-overflow-scrolling:touch;
-            padding:1rem;
-            background:var(--surface-page);
-            background-image:none;
-          "
-          id="panel-body-mobile"
-        >
-          <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
-          <div data-f1b-view="breadth" hidden>${sectionsObj.breadthHTML}</div>
-          <div data-f1b-view="internals" hidden>${sectionsObj.internalsHTML}</div>
-          <div data-f1b-view="street" hidden>${sectionsObj.streetHTML}</div>
-          <div data-f1b-view="sintesi" hidden>${sectionsObj.sintesiHTML}</div>
-          <div data-f1b-view="audit" hidden>${sectionsObj.auditHTML}</div>
-          <div data-f1b-view="mifid" hidden>${sectionsObj.mifidHTML}</div>
-        </main>
-      </div>
+      <main
+        class="f1b-panel-content-mobile flex-1 min-w-0"
+        style="
+          overflow:auto;
+          -webkit-overflow-scrolling:touch;
+          padding:1rem;
+          background:var(--surface-page);
+          background-image:none;
+        "
+        id="panel-body-mobile"
+      >
+        <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
+        <div data-f1b-view="breadth" hidden>${sectionsObj.breadthHTML}</div>
+        <div data-f1b-view="internals" hidden>${sectionsObj.internalsHTML}</div>
+        <div data-f1b-view="street" hidden>${sectionsObj.streetHTML}</div>
+        <div data-f1b-view="sintesi" hidden>${sectionsObj.sintesiHTML}</div>
+        <div data-f1b-view="audit" hidden>${sectionsObj.auditHTML}</div>
+        <div data-f1b-view="mifid" hidden>${sectionsObj.mifidHTML}</div>
+      </main>
     </div>
   `;
 }
@@ -671,7 +662,7 @@ function drawerMenuButtonPublic(key, label) {
   return `
     <button
       class="f1b-tab-btn"
-      data-f1b-tab="${escapeAttr(key)}"
+      data-f1b-tab="${key}"
     >
       ${escapeHtml(label)}
     </button>
@@ -679,12 +670,12 @@ function drawerMenuButtonPublic(key, label) {
 }
 
 function mobileTabButton(key, label) {
-  // pill mobile orizzontale
-  // (stile di base, lo stato active lo gestiamo via JS inline)
+  // mobile pill "footer tab" (scroll orizzontale)
+  // per ora inline style perché non abbiamo classe dedicata nei token
   return `
     <button
       class="f1b-footer-tab-btn"
-      data-f1b-tab="${escapeAttr(key)}"
+      data-f1b-tab="${key}"
       style="
         flex:0 0 auto;
         white-space:nowrap;
@@ -705,31 +696,22 @@ function mobileTabButton(key, label) {
 }
 
 function bindDrawerTabsPublic(root) {
-  if (!root) return;
-
-  // limita il binding SOLO al drawer F1B aperto
-  // (mobile usa .f1b-mobile-shell, desktop usa .f1b-panel-desktop)
-  const shell = root.closest(".f1b-mobile-shell, .f1b-panel-desktop") || root;
-
-  const tabButtons = shell.querySelectorAll("[data-f1b-tab]");
-  const views = root.querySelectorAll("[data-f1b-view]");
+  const tabButtons = document.querySelectorAll("[data-f1b-tab]");
+  const views = document.querySelectorAll("[data-f1b-view]");
 
   tabButtons.forEach(btn => {
     if (btn.__f1bBound) return;
     btn.__f1bBound = true;
 
-    btn.addEventListener("click", evt => {
-      // evita che il tap su "MiFID" nel drawer mobile attivi il bottone MiFID footer pagina
-      evt.stopPropagation();
-
+    btn.addEventListener("click", () => {
       const key = btn.getAttribute("data-f1b-tab");
       if (!key) return;
 
-      // aggiorna stato visivo tab
+      // attiva/deattiva bottoni ovunque
       tabButtons.forEach(b => {
         const isActive = b.getAttribute("data-f1b-tab") === key;
 
-        // desktop tab: toggle classe .is-active
+        // DESKTOP SIDEBAR
         if (b.classList.contains("f1b-tab-btn")) {
           if (isActive) {
             b.classList.add("is-active");
@@ -738,16 +720,18 @@ function bindDrawerTabsPublic(root) {
           }
         }
 
-        // mobile pill: settiamo inline style active/inactive
+        // MOBILE FOOTER TABS (pill orizzontali)
         if (b.classList.contains("f1b-footer-tab-btn")) {
           if (isActive) {
+            // attivo mobile
             b.style.fontWeight = "600";
             b.style.border = "1px solid var(--ink)";
             b.style.background =
-              "radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--ink) 12%, transparent) 0%, transparent 60%), var(--surface-card-alt)";
+              "radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--ink) 14%, transparent) 0%, transparent 60%), var(--surface-card-alt)";
             b.style.color = "var(--ink)";
             b.style.boxShadow = "0 4px 10px rgba(0,0,0,.18)";
           } else {
+            // inattivo mobile
             b.style.fontWeight = "500";
             b.style.border = "1px solid var(--br-soft)";
             b.style.background = "var(--surface-card)";
@@ -757,9 +741,10 @@ function bindDrawerTabsPublic(root) {
         }
       });
 
-      // mostra solo la vista scelta
+      // mostra/nascondi viste
       views.forEach(viewEl => {
-        viewEl.hidden = viewEl.getAttribute("data-f1b-view") !== key;
+        const viewKey = viewEl.getAttribute("data-f1b-view");
+        viewEl.hidden = viewKey !== key;
       });
     });
   });
@@ -769,6 +754,7 @@ function bindDrawerTabsPublic(root) {
    Blocchi UI riutilizzabili
 ------------------------------------------------- */
 
+// KPI in card compatta (3 box nella card top-level)
 function metricBoxTrafficLight({ key, label, desc, metric }) {
   const { dotColor, textColor } = toneColors(metric?.tone);
   return `
@@ -808,6 +794,7 @@ function metricBoxTrafficLight({ key, label, desc, metric }) {
   `;
 }
 
+// metricBlock = card semaforica completa (drawer)
 function metricBlock(metricKey, title, desc, metricObj) {
   const { dotColor, textColor } = toneColors(metricObj?.tone);
   return `
@@ -1050,7 +1037,7 @@ function computeHighLevelTone(strategyModeMacroObj, regimeScoreObj) {
     toneColor = "var(--tone-neg-fg)";
     toneLabel = "alert";
   } else {
-    // fallback su RegimeScore.tone
+    // fallback su RegimeScore.tone se definita
     const regimeTone = (regimeScoreObj && regimeScoreObj.tone) || "";
     const colors = toneColors(regimeTone);
     if (regimeTone) {
