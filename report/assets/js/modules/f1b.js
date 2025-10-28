@@ -114,7 +114,7 @@ export function renderCard(rawData, ctx = {}) {
           </div>
 
           <div class="text-[14px] font-bold leading-[1.4] text-[color:var(--ink)] flex flex-wrap items-center gap-2 mt-1">
-            <span>${escapeHtml(d.regime_and_risk.StrategyMode_macro.raw || "—")}</span>
+            <span>${escapeHtml(d.regime_and_risk.StrategyMode_macro?.raw || "—")}</span>
 
             <span
               class="px-[6px] py-[4px] rounded-md text-[11px] font-semibold leading-none border"
@@ -134,7 +134,7 @@ export function renderCard(rawData, ctx = {}) {
           </div>
 
           <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">
-            ${escapeHtml(d.regime_and_risk.StrategyMode_macro.ai_note || "")}
+            ${escapeHtml(d.regime_and_risk.StrategyMode_macro?.ai_note || "")}
           </div>
         </div>
 
@@ -253,15 +253,14 @@ function openF1DrawerPublic(data) {
       if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
         try { window.__TradeliaUI.bindMetricInfoButtons(r); } catch (e) {}
       }
-        // forza lo stato visuale iniziale "Regime" come attivo
+    });
+
+    // forza lo stato visuale iniziale "Regime"
     const firstTabBtn = document.querySelector('[data-f1b-tab="regime"]');
     if (firstTabBtn && typeof firstTabBtn.click === "function") {
       firstTabBtn.click();
     }
-    });
   }, 0);
-    
-
 }
 
 function isMobileViewport() {
@@ -536,13 +535,13 @@ function renderDrawerDesktopShellPublic(sectionsObj) {
           overflow:auto;
         ">
 
-        ${drawerMenuButtonPublic("regime","Regime & Rischio", true)}
-        ${drawerMenuButtonPublic("breadth","Breadth & Rotazione", false)}
-        ${drawerMenuButtonPublic("internals","Internals", false)}
-        ${drawerMenuButtonPublic("street","Street View", false)}
-        ${drawerMenuButtonPublic("sintesi","Conclusione", false)}
-        ${drawerMenuButtonPublic("audit","Audit", false)}
-        ${drawerMenuButtonPublic("mifid","MiFID", false)}
+        ${drawerMenuButtonPublic("regime","Regime & Rischio")}
+        ${drawerMenuButtonPublic("breadth","Breadth & Rotazione")}
+        ${drawerMenuButtonPublic("internals","Internals")}
+        ${drawerMenuButtonPublic("street","Street View")}
+        ${drawerMenuButtonPublic("sintesi","Conclusione")}
+        ${drawerMenuButtonPublic("audit","Audit")}
+        ${drawerMenuButtonPublic("mifid","MiFID")}
       </aside>
 
       <main class="f1b-panel-content flex-1 min-w-0"
@@ -610,151 +609,13 @@ function renderDrawerMobileShellPublic(sectionsObj) {
           scrollbar-width:none;
         "
       >
-        <button
-          class="f1b-footer-tab-btn"
-          data-f1b-tab="regime"
-          style="
-            flex:0 0 auto;
-            white-space:nowrap;
-            font-size:11px;
-            line-height:1.2;
-            font-weight:600;
-            border-radius:8px;
-            border:1px solid var(--ink);
-            background:
-              radial-gradient(
-                circle at 0% 0%,
-                color-mix(in oklab, var(--ink) 12%, transparent) 0%,
-                transparent 60%
-              ),
-              var(--surface-card-alt);
-            color:var(--ink);
-            padding:.45rem .7rem;
-            box-shadow:var(--shadow-card);
-          "
-        >
-          Regime
-        </button>
-
-        <button
-          class="f1b-footer-tab-btn"
-          data-f1b-tab="breadth"
-          style="
-            flex:0 0 auto;
-            white-space:nowrap;
-            font-size:11px;
-            line-height:1.2;
-            font-weight:500;
-            border-radius:8px;
-            border:1px solid var(--br-soft);
-            background:var(--surface-card);
-            color:var(--muted);
-            padding:.45rem .7rem;
-            box-shadow:var(--shadow-card);
-          "
-        >
-          Breadth
-        </button>
-
-        <button
-          class="f1b-footer-tab-btn"
-          data-f1b-tab="internals"
-          style="
-            flex:0 0 auto;
-            white-space:nowrap;
-            font-size:11px;
-            line-height:1.2;
-            font-weight:500;
-            border-radius:8px;
-            border:1px solid var(--br-soft);
-            background:var(--surface-card);
-            color:var(--muted);
-            padding:.45rem .7rem;
-            box-shadow:var(--shadow-card);
-          "
-        >
-          Internals
-        </button>
-
-        <button
-          class="f1b-footer-tab-btn"
-          data-f1b-tab="street"
-          style="
-            flex:0 0 auto;
-            white-space:nowrap;
-            font-size:11px;
-            line-height:1.2;
-            font-weight:500;
-            border-radius:8px;
-            border:1px solid var(--br-soft);
-            background:var(--surface-card);
-            color:var(--muted);
-            padding:.45rem .7rem;
-            box-shadow:var(--shadow-card);
-          "
-        >
-          Street
-        </button>
-
-        <button
-          class="f1b-footer-tab-btn"
-          data-f1b-tab="sintesi"
-          style="
-            flex:0 0 auto;
-            white-space:nowrap;
-            font-size:11px;
-            line-height:1.2;
-            font-weight:500;
-            border-radius:8px;
-            border:1px solid var(--br-soft);
-            background:var(--surface-card);
-            color:var(--muted);
-            padding:.45rem .7rem;
-            box-shadow:var(--shadow-card);
-          "
-        >
-          Conclusione
-        </button>
-
-        <button
-          class="f1b-footer-tab-btn"
-          data-f1b-tab="audit"
-          style="
-            flex:0 0 auto;
-            white-space:nowrap;
-            font-size:11px;
-            line-height:1.2;
-            font-weight:500;
-            border-radius:8px;
-            border:1px solid var(--br-soft);
-            background:var(--surface-card);
-            color:var(--muted);
-            padding:.45rem .7rem;
-            box-shadow:var(--shadow-card);
-          "
-        >
-          Audit
-        </button>
-
-        <button
-          class="f1b-footer-tab-btn"
-          data-f1b-tab="mifid"
-          style="
-            flex:0 0 auto;
-            white-space:nowrap;
-            font-size:11px;
-            line-height:1.2;
-            font-weight:500;
-            border-radius:8px;
-            border:1px solid var(--br-soft);
-            background:var(--surface-card);
-            color:var(--muted);
-            padding:.45rem .7rem;
-            box-shadow:var(--shadow-card);
-          "
-        >
-          MiFID
-        </button>
+        ${mobileTabButton("regime","Regime")}
+        ${mobileTabButton("breadth","Breadth")}
+        ${mobileTabButton("internals","Internals")}
+        ${mobileTabButton("street","Street")}
+        ${mobileTabButton("sintesi","Conclusione")}
+        ${mobileTabButton("audit","Audit")}
+        ${mobileTabButton("mifid","MiFID")}
       </div>
     </div>
   `;
@@ -810,18 +671,17 @@ function renderDrawerMobileShellPublic(sectionsObj) {
    Tab switching
 ------------------------------------------------- */
 
-function drawerMenuButtonPublic(key, label, active) {
+function drawerMenuButtonPublic(key, label) {
+  // stato iniziale SEMPRE neutro, lo stile attivo viene messo via JS
   return `
     <button
-      class="f1b-tab-btn block w-full text-left text-[12px] leading-[1.4] px-2 py-2 ${active ? "is-active" : ""}"
+      class="f1b-tab-btn block w-full text-left text-[12px] leading-[1.4] px-2 py-2"
       data-f1b-tab="${key}"
       style="
         border-radius:var(--radius-card-sm);
-        border-left:3px solid ${active ? "var(--brand-600)" : "transparent"};
-        background:${active
-          ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)"
-          : "transparent"};
-        font-weight:${active ? "600" : "500"};
+        border-left:3px solid transparent;
+        background:transparent;
+        font-weight:500;
         color:var(--ink);
         text-align:left;
       "
@@ -831,8 +691,31 @@ function drawerMenuButtonPublic(key, label, active) {
   `;
 }
 
+function mobileTabButton(key, label) {
+  return `
+    <button
+      class="f1b-footer-tab-btn"
+      data-f1b-tab="${key}"
+      style="
+        flex:0 0 auto;
+        white-space:nowrap;
+        font-size:11px;
+        line-height:1.2;
+        font-weight:500;
+        border-radius:8px;
+        border:1px solid var(--br-soft);
+        background:var(--surface-card);
+        color:var(--muted);
+        padding:.45rem .7rem;
+        box-shadow:var(--shadow-card);
+      "
+    >
+      ${label}
+    </button>
+  `;
+}
+
 function bindDrawerTabsPublic(root) {
-  // raccogliamo tutti i bottoni (desktop sidebar + barra mobile sticky)
   const tabButtons = document.querySelectorAll("[data-f1b-tab]");
   const views = document.querySelectorAll("[data-f1b-view]");
 
@@ -849,16 +732,23 @@ function bindDrawerTabsPublic(root) {
         const isActive = b.getAttribute("data-f1b-tab") === key;
         b.classList.toggle("is-active", isActive);
 
-        // stile tab nella sidebar desktop
+        // DESKTOP SIDEBAR (f1b-tab-btn)
         if (b.classList.contains("f1b-tab-btn")) {
-          b.style.borderLeftColor = isActive ? "var(--brand-600)" : "transparent";
-          b.style.background = isActive
-            ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)"
-            : "transparent";
-          b.style.fontWeight = isActive ? "600" : "500";
+          if (isActive) {
+            b.style.borderLeft = "3px solid var(--brand-600)";
+            b.style.background =
+              "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)";
+            b.style.fontWeight = "600";
+            b.style.color = "var(--ink)";
+          } else {
+            b.style.borderLeft = "3px solid transparent";
+            b.style.background = "transparent";
+            b.style.fontWeight = "500";
+            b.style.color = "var(--ink)";
+          }
         }
 
-        // stile tab nella barra mobile sticky
+        // MOBILE FOOTER TABS (f1b-footer-tab-btn)
         if (b.classList.contains("f1b-footer-tab-btn")) {
           if (isActive) {
             b.style.fontWeight = "600";
@@ -1098,7 +988,6 @@ function qualityChip(keyName, qObj) {
         border-radius:var(--radius-card);
         box-shadow:var(--shadow-card);
       ">
-
       <div class="flex items-start justify-between gap-2 mb-1">
         <div class="flex items-center gap-2">
           <span class="inline-block w-[8px] h-[8px] rounded-full"
@@ -1173,7 +1062,7 @@ function computeHighLevelTone(strategyModeMacroObj, regimeScoreObj) {
     toneColor = "var(--tone-neg-fg)";
     toneLabel = "alert";
   } else {
-    // fallback su RegimeScore.tone
+    // fallback su RegimeScore.tone se definita
     const regimeTone = (regimeScoreObj && regimeScoreObj.tone) || "";
     const colors = toneColors(regimeTone);
     if (regimeTone) {
