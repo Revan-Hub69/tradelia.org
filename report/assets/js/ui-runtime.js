@@ -1059,30 +1059,22 @@ window.__TradeliaUI.bindMetricInfoButtons = bindMetricInfoButtons;
 window.__TradeliaUI.openLegalPanel = openLegalPanel;
 window.__TradeliaUI.closeLegalPanel = closeLegalPanel;
 
-// --- Mostra MiFID/Privacy solo al primo accesso ---
-(function autoOpenLegalOnFirstVisit() {
+// --- Mostra MiFID solo al primo accesso (obbligatorio) ---
+(function enforceMifidFirstVisit() {
   try {
     const hasAcceptedMifid = localStorage.getItem("mifidAcknowledged");
-    const hasAcceptedPrivacy = localStorage.getItem("privacyAcknowledged");
-
-    if (!hasAcceptedPrivacy) {
-      setTimeout(() => {
-        if (window.__TradeliaUI && typeof window.__TradeliaUI.openPrivacyPanel === "function") {
-          window.__TradeliaUI.openPrivacyPanel();
-          localStorage.setItem("privacyAcknowledged", "true");
-        }
-      }, 1000);
-    }
 
     if (!hasAcceptedMifid) {
-      setTimeout(() => {
-        if (window.__TradeliaUI && typeof window.__TradeliaUI.openMifidPanel === "function") {
-          window.__TradeliaUI.openMifidPanel();
-          localStorage.setItem("mifidAcknowledged", "true");
-        }
-      }, 3000); // leggero ritardo dopo la privacy
+      // apri informativa MiFID in modalità blocking
+      if (window.__TradeliaUI && typeof window.__TradeliaUI.openMifidPanel === "function") {
+        window.__TradeliaUI.openMifidPanel();
+      }
+
+      // IMPORTANTISSIMO:
+      // NON salviamo subito il flag, lo salviamo QUANDO l'utente clicca "Ho letto".
+      // Quindi niente localStorage.setItem qui.
     }
   } catch (e) {
-    console.warn("autoOpenLegalOnFirstVisit error:", e);
+    console.warn("enforceMifidFirstVisit error:", e);
   }
 })();
