@@ -515,7 +515,7 @@ function renderDrawerDesktopShellPublic(sectionsObj) {
         gap:1rem;
 
         /* altezza fissa del blocco: resta stabile tra le tab */
-        height:60vh;
+        height:70vh;
       ">
 
       <aside class="f1b-panel-menu"
