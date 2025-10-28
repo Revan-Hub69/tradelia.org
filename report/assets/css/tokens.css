@@ -2430,6 +2430,53 @@ html[data-theme="dark"] .hero{
   /* questo è il punto chiave: niente alone nero sul testo */
   text-shadow: none;
 }
+/* Pannello legale: tono più neutro, leggibile anche in dark */
+#legal-overlay .tl-panel {
+  background: var(--surface-page);
+  background-image: none;
+  box-shadow: var(--shadow-card, 0 16px 40px rgba(0,0,0,.6));
+  color: var(--ink);
+}
+
+#legal-overlay .tl-panel__header {
+  background: var(--surface-card);
+  background-image: none;
+  border-bottom: 1px solid var(--br-soft);
+  box-shadow: 0 2px 4px rgba(0,0,0,.4);
+  color: var(--ink);
+}
+
+#legal-overlay .tl-panel__footer {
+  background: var(--surface-card);
+  background-image: none;
+  border-top: 1px solid var(--br-soft);
+  box-shadow: 0 -2px 4px rgba(0,0,0,.4);
+  color: var(--ink);
+}
+
+/* testo nel body legale */
+#legal-overlay section {
+  color: var(--ink);
+}
+#legal-overlay section p {
+  color: var(--ink);
+}
+#legal-overlay section strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+#legal-overlay section em {
+  font-style: italic;
+  color: var(--ink);
+}
+#legal-overlay section code {
+  font-size: 12px;
+  background: var(--surface-card-alt);
+  border: 1px solid var(--br-card);
+  border-radius: 4px;
+  padding: .1rem .3rem;
+  color: var(--ink);
+}
 
 /* =========================================================
    FINE
