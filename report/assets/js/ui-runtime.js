@@ -4,7 +4,7 @@
 // - pannello informativo analitico (drawer F1B ecc.) -> #panel-overlay
 // - pannello legale separato (Privacy / MiFID)       -> #legal-overlay
 // - metric help ("?" tooltip) desktop/mobile
-// - tema light/dark
+// - tema light/dark (dark forzato al primo accesso)
 // - share overlay
 // - stampa
 //
@@ -54,14 +54,28 @@ function escapeHtml(str) {
 //
 //   <!-- desktop -->
 //   <aside class="tl-panel tl-panel--desktop" role="dialog" aria-modal="true">
-//     <header class="tl-panel__header">...</header>
+//     <header class="tl-panel__header">
+//       <div>
+//         <div id="panel-title" class="tl-panel__title"></div>
+//         <div id="panel-subtitle" class="tl-panel__subtitle"></div>
+//       </div>
+//       <button class="btn btn-sm" data-panel-close>Chiudi</button>
+//     </header>
+//
 //     <div id="panel-body" class="tl-panel__body"></div>
 //     <footer class="tl-panel__footer" id="panel-footer"></footer>
 //   </aside>
 //
 //   <!-- mobile -->
 //   <aside class="tl-panel tl-panel--mobile" role="dialog" aria-modal="true">
-//     <header class="tl-panel__header">...</header>
+//     <header class="tl-panel__header">
+//       <div>
+//         <div id="panel-title-mobile" class="tl-panel__title"></div>
+//         <div id="panel-subtitle-mobile" class="tl-panel__subtitle"></div>
+//       </div>
+//       <button class="btn btn-sm" data-panel-close>Chiudi</button>
+//     </header>
+//
 //     <div id="panel-body-mobile" class="tl-panel__body"></div>
 //     <footer class="tl-panel__footer" id="panel-footer-mobile"></footer>
 //   </aside>
@@ -82,8 +96,7 @@ function escapeHtml(str) {
 //   }
 
 function openPanel(opts) {
-  // prima di aprire un nuovo pannello analitico, chiudiamo se qualcosa è rimasto aperto
-  closePanel();
+  closePanel(); // pulizia se per caso è rimasto aperto
 
   const overlayEl = qs("#panel-overlay");
   if (!overlayEl) return;
@@ -116,9 +129,9 @@ function openPanel(opts) {
   setText(titleMobEl, title);
   setText(subMobEl, subtitle);
 
-  // corpo:
-  // - caso "wide" con UNA sezione => usiamo direttamente section.body (layout libero)
-  // - altrimenti costruiamo blocchi tl-panel-section standard
+  // corpo
+  // - se panelSize === "wide" e c'è UNA sola sezione → prendi direttamente section.body
+  // - altrimenti fai blocchi standard tl-panel-section
   let bodyHTML = "";
   if (panelSize === "wide" && sections.length === 1) {
     bodyHTML = sections[0].body || "";
@@ -269,7 +282,7 @@ function openPanel(opts) {
   setHTML(footerMobEl,  mobileFooterHTML);
   setHTML(footerDeskEl, desktopFooterHTML);
 
-  // bind azioni custom + chiudi, sia desktop che mobile
+  // bind footer actions
   function bindFooterButtons(scopeEl, buttonsDefArr) {
     if (!scopeEl) return;
 
@@ -284,7 +297,7 @@ function openPanel(opts) {
       }
     });
 
-    // fallback data-panel-close
+    // data-panel-close -> chiudi
     qsa("[data-panel-close]", scopeEl).forEach(btnEl => {
       btnEl.addEventListener("click", (ev) => {
         ev.stopPropagation();
@@ -303,22 +316,18 @@ function openPanel(opts) {
     overlayEl.removeAttribute("data-blocking");
   }
 
-  // gestisci varianti di larghezza desktop ("wide", "xl", default)
+  // larghezza desktop ("wide", "xl", default)
   const panelDesktop = qs(".tl-panel--desktop", overlayEl);
   if (panelDesktop) {
-    panelDesktop.classList.remove("tl-panel--wide");
-    panelDesktop.classList.remove("tl-panel--xl");
-
+    panelDesktop.classList.remove("tl-panel--wide","tl-panel--xl");
     if (panelSize === "wide") {
-      // legacy (~560px)
       panelDesktop.classList.add("tl-panel--wide");
     } else if (panelSize === "xl") {
-      // nuova misura larga (~50vw)
       panelDesktop.classList.add("tl-panel--xl");
     }
   }
 
-  // lock scroll pagina dietro + mostra overlay
+  // lock scroll + mostra overlay
   document.body.classList.add("body--lock");
   overlayEl.setAttribute("aria-hidden", "false");
 
@@ -333,7 +342,7 @@ function closePanel() {
   document.body.classList.remove("body--lock");
 }
 
-// listener globale overlay analitico: chiudi panel su backdrop o [data-panel-close]
+// chiusura panel su backdrop o [data-panel-close]
 document.addEventListener("click", (ev) => {
   const overlayEl = qs("#panel-overlay");
   if (!overlayEl) return;
@@ -359,12 +368,11 @@ document.addEventListener("click", (ev) => {
 //   Usa #legal-overlay
 // ------------------------------------------------------------
 //
-// Struttura HTML attesa in index.html per #legal-overlay:
-// (copia di panel-overlay ma con ID "legal-*", e data-legal-close)
+// Stessa struttura generale di panel-overlay ma con ID "legal-*"
+// e attributi data-legal-close invece di data-panel-close.
 
 function openLegalPanel(opts) {
-  // chiudiamo eventuale legale aperto, così non si accumula
-  closeLegalPanel();
+  closeLegalPanel(); // pulizia
 
   const overlayEl = qs("#legal-overlay");
   if (!overlayEl) return;
@@ -410,7 +418,7 @@ function openLegalPanel(opts) {
   setHTML(fDesk, footerHTML);
   setHTML(fMob,  footerHTML);
 
-  // bind pulsanti nel footer (desktop e mobile)
+  // bind footer (desktop e mobile)
   function bindLegalFooterButtons(scope, defs) {
     if (!scope) return;
 
@@ -447,9 +455,6 @@ function openLegalPanel(opts) {
   // lock scroll body & mostra overlay legale
   document.body.classList.add("body--lock");
   overlayEl.setAttribute("aria-hidden","false");
-
-  // i pannelli Privacy/MiFID non hanno tooltip "?" metriche di mercato,
-  // quindi NON richiamiamo bindMetricInfoButtons qui.
 }
 
 function closeLegalPanel() {
@@ -459,7 +464,7 @@ function closeLegalPanel() {
   document.body.classList.remove("body--lock");
 }
 
-// listener globale overlay legale: chiudi su backdrop o [data-legal-close]
+// chiusura legal su backdrop o [data-legal-close]
 document.addEventListener("click", ev=>{
   const overlayEl = qs("#legal-overlay");
   if (!overlayEl) return;
@@ -480,18 +485,14 @@ document.addEventListener("click", ev=>{
 });
 
 // ------------------------------------------------------------
-// PANNELLI: PRIVACY / MIFID / AUDIT
+// PANNELLI PREDEFINITI: PRIVACY / MIFID / AUDIT
 // ------------------------------------------------------------
-//
-// NOTA IMPORTANTE:
-// - Privacy e MiFID ORA usano openLegalPanel(), quindi sono separati dal drawer F1B.
-// - Audit (qualità dati) resta nel pannello analitico -> openPanel().
 
 function openPrivacyPanel() {
   openLegalPanel({
     title: "Privacy & Trasparenza",
     subtitle: "Dati minimi. Nessun tracciamento pubblicitario.",
-  body: `
+    body: `
   <section style="font-size:13px;line-height:1.5;color:var(--ink);">
 
     <div class="legal-callout">
@@ -542,8 +543,7 @@ function openPrivacyPanel() {
       Linee Guida EDPB su trasparenza e minimizzazione.
     </p>
   </section>
-`
-,
+`,
     blocking: false,
     footerButtons: [
       { label: "Chiudi", action: () => closeLegalPanel() }
@@ -551,13 +551,12 @@ function openPrivacyPanel() {
   });
 }
 
-
-// MiFID usa blocking: true e bottone "Ho letto"
+// MiFID con blocking: true e bottone "Ho letto" che salva consenso
 function openMifidPanel() {
   openLegalPanel({
     title: "Informativa MiFID",
     subtitle: "Contenuto educativo / informativo. Non è consulenza personalizzata.",
-   body: `
+    body: `
   <section style="font-size:13px;line-height:1.5;color:var(--ink);">
 
     <div class="legal-callout">
@@ -617,17 +616,23 @@ function openMifidPanel() {
       consulenza in materia di investimenti e tutela dell’investitore retail.
     </p>
   </section>
-`
-    ,
+`,
     blocking: true,
     footerButtons: [
-      { label: "Ho letto", action: () => closeLegalPanel() }
+      {
+        label: "Ho letto",
+        action: () => {
+          try {
+            localStorage.setItem("mifidAcknowledged", "yes");
+          } catch(e){}
+          closeLegalPanel();
+        }
+      }
     ]
   });
 }
 
-
-// pannello Audit/Qualità dati generico richiamabile dai moduli
+// pannello Audit/Qualità dati richiamabile dai moduli
 function openAuditPanel(auditData) {
   const a = auditData || {};
   const lag   = (a.feed_lag_days ?? "—");
@@ -724,7 +729,7 @@ function getGlossaryEntry(key) {
 // stato popover desktop aperto
 let currentPopoverOpen = false;
 
-// helper: costruisce HTML per corpo tooltip (what/how)
+// markup interno del tooltip
 function buildMetricHTML(info) {
   const whatHTML = `
     <div style="font-size:13px;line-height:1.45;color:var(--ink);margin-bottom:.75rem;">
@@ -762,7 +767,7 @@ function openMetricDesktop(btnEl) {
     ? `<span style="font-weight:600;">Fonte</span>: ${escapeHtml(info.source)}`
     : "";
 
-  // posizionamento
+  // posizionamento vicino al bottone
   const rect = btnEl.getBoundingClientRect();
   const OFFSET_X = 8;
   const OFFSET_Y = 4;
@@ -785,7 +790,7 @@ function openMetricDesktop(btnEl) {
 
   if (popRect.right > vpW - 8) {
     const diffX = popRect.right - (vpW - 8);
-    left = left - diffX;
+    left -= diffX;
   }
   if (left < window.scrollX + 8) {
     left = window.scrollX + 8;
@@ -892,12 +897,12 @@ qsa("[data-metric-close]").forEach(btn => {
 });
 
 // ------------------------------------------------------------
-// THEME SWITCH (light / dark)
+// THEME SWITCH (light / dark) con forzatura dark al primo avvio
 // ------------------------------------------------------------
 function initThemeToggle() {
   const btnTheme = qs("#btn-theme");
-  if (!btnTheme) return;
 
+  // helper per impostare e salvare
   function applyTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
     try {
@@ -905,20 +910,30 @@ function initThemeToggle() {
     } catch(e){}
   }
 
-  (function initFromStorage(){
+  // 1. fase init: decidiamo quale tema mettere SUBITO
+  (function initThemeFirstLoad(){
+    let stored = null;
     try {
-      const saved = localStorage.getItem("tradelia-theme");
-      if (saved === "dark" || saved === "light") {
-        applyTheme(saved);
-      }
-    } catch(e){}
+      stored = localStorage.getItem("tradelia-theme");
+    } catch(e){ stored = null; }
+
+    if (stored === "dark" || stored === "light") {
+      // utente già ha una scelta → rispettiamo
+      applyTheme(stored);
+    } else {
+      // prima visita vera: forziamo dark e lo persistiamo
+      applyTheme("dark");
+    }
   })();
 
-  btnTheme.addEventListener("click", () => {
-    const cur = document.documentElement.getAttribute("data-theme") || "light";
-    const next = (cur === "light" ? "dark" : "light");
-    applyTheme(next);
-  });
+  // 2. bind del toggle
+  if (btnTheme) {
+    btnTheme.addEventListener("click", () => {
+      const cur = document.documentElement.getAttribute("data-theme") || "dark";
+      const next = (cur === "light" ? "dark" : "light");
+      applyTheme(next);
+    });
+  }
 }
 
 // ------------------------------------------------------------
@@ -1059,7 +1074,9 @@ window.__TradeliaUI.bindMetricInfoButtons = bindMetricInfoButtons;
 window.__TradeliaUI.openLegalPanel = openLegalPanel;
 window.__TradeliaUI.closeLegalPanel = closeLegalPanel;
 
-// --- Mostra MiFID solo al primo accesso (obbligatorio) ---
+// ------------------------------------------------------------
+// MiFID obbligatorio al primo accesso
+// ------------------------------------------------------------
 (function enforceMifidFirstVisit() {
   try {
     const hasAcceptedMifid = localStorage.getItem("mifidAcknowledged");
@@ -1069,10 +1086,9 @@ window.__TradeliaUI.closeLegalPanel = closeLegalPanel;
       if (window.__TradeliaUI && typeof window.__TradeliaUI.openMifidPanel === "function") {
         window.__TradeliaUI.openMifidPanel();
       }
-
-      // IMPORTANTISSIMO:
-      // NON salviamo subito il flag, lo salviamo QUANDO l'utente clicca "Ho letto".
-      // Quindi niente localStorage.setItem qui.
+      // Nota: NON salviamo subito il flag.
+      // Lo salviamo solo quando l'utente clicca "Ho letto" nel footerButtons,
+      // dove facciamo localStorage.setItem("mifidAcknowledged","yes");
     }
   } catch (e) {
     console.warn("enforceMifidFirstVisit error:", e);
