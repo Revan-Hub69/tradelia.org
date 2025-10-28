@@ -91,18 +91,24 @@ function escapeHtml(str) {
 //     ],
 //     blocking: bool,          // se true non puoi chiudere toccando backdrop
 //     panelSize: "wide" | "xl" | undefined,
-//
-//     // footerDesktop = bottoni azione a destra nel footer desktop
-//     footerButtons: [ { label:"Chiudi", action: fn }, ... ]
-//
-//     // footerTabsMobile = pill scrollabili sticky in basso SOLO mobile
-//     //   [{ key:"regime", label:"Regime attuale" }, ...]
-//     footerTabs:    [ { key:"...", label:"..." }, ... ]
+//     footerButtons: [ { label:"Chiudi", action: fn }, ... ],
+//     footerTabs:    [ { key:"...", label:"..." }, ... ] // solo mobile
 //   }
 //
 // closePanel(): chiude overlay, riabilita scroll body
 
+function closePanel() {
+  const overlayEl = qs("#panel-overlay");
+  if (!overlayEl) return;
+  overlayEl.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("body--lock");
+}
+
+// PATCH PRINCIPALE MOBILE
 function openPanel(opts) {
+  // 1. sempre resettiamo lo stato del pannello precedente
+  closePanel();
+
   const overlayEl = qs("#panel-overlay");
   if (!overlayEl) return;
 
@@ -127,24 +133,6 @@ function openPanel(opts) {
   const subMobEl     = qs("#panel-subtitle-mobile");
   const bodyMobEl    = qs("#panel-body-mobile");
   const footerMobEl  = qs("#panel-footer-mobile");
-
-  // pannello desktop root (per classi wide/xl)
-  const panelDesktop = qs(".tl-panel--desktop", overlayEl);
-
-  // ------------------------------------------------
-  // HARD RESET DEL CONTENUTO PRECEDENTE
-  // (evita bleed tra F1B e pannelli legali, e listener zombie)
-  // ------------------------------------------------
-  if (bodyDeskEl)  bodyDeskEl.innerHTML  = "";
-  if (bodyMobEl)   bodyMobEl.innerHTML   = "";
-  if (footerDeskEl) footerDeskEl.innerHTML = "";
-  if (footerMobEl)  footerMobEl.innerHTML  = "";
-
-  // ripulisci classi size sul desktop panel prima di riapplicare
-  if (panelDesktop) {
-    panelDesktop.classList.remove("tl-panel--wide");
-    panelDesktop.classList.remove("tl-panel--xl");
-  }
 
   // header
   setText(titleDeskEl, title);
@@ -191,7 +179,6 @@ function openPanel(opts) {
   // helper: footer classico (desktop o fallback mobile se niente tabs)
   function renderFooterBtns(arr) {
     if (!arr || !arr.length) {
-      // default: bottone Chiudi semplice
       return `<button class="btn btn-sm" data-panel-close>Chiudi</button>`;
     }
     return arr.map((btn, idx) => {
@@ -237,13 +224,16 @@ function openPanel(opts) {
           position:sticky;
           right:0;
           flex-shrink:0;
+
           font-size:11.5px;
           line-height:1.2;
           font-weight:600;
+
           border-radius:8px;
           border:1px solid var(--ink);
           background:var(--ink);
           color:var(--surface-page);
+
           padding:.45rem .8rem;
           box-shadow:var(--shadow-card);
         "
@@ -258,6 +248,7 @@ function openPanel(opts) {
         style="
           display:flex;
           align-items:center;
+
           border-top:1px solid var(--br-panel-divider);
           background:var(--surface-panel-head);
           background-image:
@@ -266,6 +257,7 @@ function openPanel(opts) {
               color-mix(in oklab, var(--surface-panel-head) 90%, var(--brand) 2%) 0%,
               transparent 60%
             );
+
           padding:.6rem .75rem;
           box-shadow:0 -6px 12px rgba(0,0,0,.12);
           max-width:100%;
@@ -316,7 +308,12 @@ function openPanel(opts) {
   }
 
   // gestisci varianti di larghezza desktop ("wide", "xl", default)
+  const panelDesktop = qs(".tl-panel--desktop", overlayEl);
   if (panelDesktop) {
+    // pulizia classi vecchie
+    panelDesktop.classList.remove("tl-panel--wide");
+    panelDesktop.classList.remove("tl-panel--xl");
+
     if (panelSize === "wide") {
       panelDesktop.classList.add("tl-panel--wide");
     } else if (panelSize === "xl") {
@@ -330,13 +327,6 @@ function openPanel(opts) {
 
   // bind dei nuovi "?" apparsi dentro il drawer
   bindMetricInfoButtons(overlayEl);
-}
-
-function closePanel() {
-  const overlayEl = qs("#panel-overlay");
-  if (!overlayEl) return;
-  overlayEl.setAttribute("aria-hidden", "true");
-  document.body.classList.remove("body--lock");
 }
 
 // listener globale: chiudi panel su backdrop o [data-panel-close]
@@ -580,7 +570,7 @@ let currentPopoverOpen = false;
 
 // helper: costruisce l'HTML strutturato del contenuto tooltip
 function buildMetricHTML(info) {
-  // blocco "Cosa mostra" + "Come si usa" + footer fonte
+  // blocco "Cosa mostra" + "Come si usa"
   const whatHTML = `
     <div style="font-size:13px;line-height:1.45;color:var(--ink);margin-bottom:.75rem;">
       <div style="font-weight:600;color:var(--ink);margin-bottom:.25rem;">Cosa mostra</div>
@@ -610,13 +600,13 @@ function openMetricDesktop(btnEl) {
   const bodyEl   = qs("#metric-popover-body");
   const sourceEl = qs("#metric-popover-source");
 
-  // titolo a sinistra
+  // titolo
   setText(titleEl, info.title || key || "—");
 
-  // corpo (what/how) come blocchi separati
+  // corpo
   bodyEl.innerHTML = buildMetricHTML(info);
 
-  // fonte nel footer piccolo grigio
+  // fonte
   sourceEl.innerHTML = info.source
     ? `<span style="font-weight:600;">Fonte</span>: ${escapeHtml(info.source)}`
     : "";
@@ -637,7 +627,7 @@ function openMetricDesktop(btnEl) {
   pop.style.bottom = "auto";
   pop.setAttribute("aria-hidden", "false");
 
-  // clamp nel viewport
+  // clamp a viewport
   const vpW = window.innerWidth;
   const vpH = window.innerHeight;
   const popRect = pop.getBoundingClientRect();
@@ -684,7 +674,7 @@ function openMetricMobile(btnEl) {
 
   setText(titleEl, info.title || key || "—");
 
-  // testo corpo = what + how formattati
+  // corpo = what + how
   bodyEl.innerHTML = buildMetricHTML(info);
 
   // fonte
