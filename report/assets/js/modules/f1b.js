@@ -253,8 +253,15 @@ function openF1DrawerPublic(data) {
       if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
         try { window.__TradeliaUI.bindMetricInfoButtons(r); } catch (e) {}
       }
+        // forza lo stato visuale iniziale "Regime" come attivo
+    const firstTabBtn = document.querySelector('[data-f1b-tab="regime"]');
+    if (firstTabBtn && typeof firstTabBtn.click === "function") {
+      firstTabBtn.click();
+    }
     });
   }, 0);
+    
+
 }
 
 function isMobileViewport() {
