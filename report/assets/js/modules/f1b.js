@@ -3,23 +3,29 @@
 // F1B · Regime di mercato / Contesto rischio (public dashboard)
 // Snapshot swing 3–10 giorni
 //
-// Questo modulo renderizza:
-//  - Card riassuntiva con CTA "Dettagli regime →"
-//  - Drawer/panel con 7 sezioni/tab:
-//      1. Regime & Rischio
-//      2. Breadth & Rotazione
-//      3. Internals (dati grezzi)
-//      4. Street View (narrativa istituzionale)
-//      5. Conclusione · Tradelia AI (educational)
-//      6. Audit & Qualità
-//      7. MiFID
-//
-// Ogni metrica ha {raw, tone, ai_note} e un "?" che punta al glossario
-// tramite window.__TradeliaUI.bindMetricInfoButtons.
-//
-// Esportiamo per app.js runtime:
+// Esporta:
 //   renderCard(data, ctx)
 //   bindCard(node, data, ctx)
+//
+// Runtime flow:
+//   - renderCard() genera la card riassuntiva con CTA "Dettagli regime →"
+//   - bindCard() attacca listener alla CTA e ai tooltip
+//   - openF1DrawerPublic() apre il pannello/drawer responsive
+//   - bindDrawerTabsPublic() gestisce le tab sia desktop (sidebar sinistra) che mobile (pill scrollabili)
+//
+// NOTE STYLING IMPORTANTI:
+//   • Sidebar desktop usa classi .f1b-panel-menu / .f1b-tab-btn
+//     Lo stile base/hover/attivo viene da tokens.css:
+//       .f1b-tab-btn { idle }
+//       .f1b-tab-btn:hover { hover preview }
+//       .f1b-tab-btn.is-active { tab corrente, barra sinistra brand, glow, testo forte }
+//     → JS si limita a togglare .is-active
+//
+//   • Mobile footer tabs (pill orizzontali):
+//     Non hanno ancora classi globali nei token, quindi per ora le stilizziamo inline da JS
+//
+//   • I contenuti delle viste sono in <div data-f1b-view="..."> e li mostriamo/nascondiamo via hidden=...
+//
 
 export function renderCard(rawData, ctx = {}) {
   const d = normalizeDataPublicF1B(rawData);
@@ -255,7 +261,7 @@ function openF1DrawerPublic(data) {
       }
     });
 
-    // forza lo stato visuale iniziale "Regime"
+    // stato iniziale "Regime"
     const firstTabBtn = document.querySelector('[data-f1b-tab="regime"]');
     if (firstTabBtn && typeof firstTabBtn.click === "function") {
       firstTabBtn.click();
@@ -519,8 +525,6 @@ function renderDrawerDesktopShellPublic(sectionsObj) {
         display:flex;
         flex-direction:row;
         gap:1rem;
-
-        /* altezza fissa del blocco: resta stabile tra le tab */
         height:66vh;
       ">
 
@@ -529,8 +533,6 @@ function renderDrawerDesktopShellPublic(sectionsObj) {
           min-width:180px;
           max-width:200px;
           border-right:1px solid var(--br-card);
-
-          /* la colonna sinistra riempie tutta l'altezza e può scrollare se serve */
           height:100%;
           overflow:auto;
         ">
@@ -546,13 +548,9 @@ function renderDrawerDesktopShellPublic(sectionsObj) {
 
       <main class="f1b-panel-content flex-1 min-w-0"
         style="
-          /* stessa altezza del contenitore padre */
           height:100%;
-
-          /* lo scroll verticale è solo qui */
           overflow:auto;
           -webkit-overflow-scrolling:touch;
-
           padding:1rem;
         "
         id="panel-body">
@@ -569,17 +567,14 @@ function renderDrawerDesktopShellPublic(sectionsObj) {
 }
 
 function renderDrawerMobileShellPublic(sectionsObj) {
-  // Barra tab mobile fissata sopra l'area scrollabile
   const mobileTabsBar = `
     <div
       class="f1b-mobile-tabs-fixed"
       style="
         flex-shrink:0;
         width:100%;
-
         display:flex;
         align-items:center;
-
         border-bottom:1px solid var(--br-panel-divider);
         background:var(--surface-panel-head);
         background-image:
@@ -588,9 +583,7 @@ function renderDrawerMobileShellPublic(sectionsObj) {
             color-mix(in oklab, var(--surface-panel-head) 90%, var(--brand) 2%) 0%,
             transparent 60%
           );
-
         box-shadow:0 6px 12px rgba(0,0,0,.12);
-
         padding:.6rem .75rem;
       "
     >
@@ -599,11 +592,9 @@ function renderDrawerMobileShellPublic(sectionsObj) {
         style="
           flex:1 1 auto;
           min-width:0;
-
           display:flex;
           align-items:center;
           gap:.5rem;
-
           overflow-x:auto;
           -webkit-overflow-scrolling:touch;
           scrollbar-width:none;
@@ -628,8 +619,6 @@ function renderDrawerMobileShellPublic(sectionsObj) {
         height:calc(100vh - 110px);
         max-height:calc(100vh - 110px);
         min-height:300px;
-
-        /* full-bleed background prende quello del panel */
         background:var(--surface-panel-head);
         background-image:
           radial-gradient(
@@ -644,11 +633,8 @@ function renderDrawerMobileShellPublic(sectionsObj) {
       <main
         class="f1b-panel-content-mobile flex-1 min-w-0"
         style="
-          /* lo scroll è SOLO qui */
           overflow:auto;
           -webkit-overflow-scrolling:touch;
-
-          /* padding interno del contenuto vero */
           padding:1rem;
           background:var(--surface-page);
           background-image:none;
@@ -672,26 +658,20 @@ function renderDrawerMobileShellPublic(sectionsObj) {
 ------------------------------------------------- */
 
 function drawerMenuButtonPublic(key, label) {
-  // stato iniziale SEMPRE neutro, lo stile attivo viene messo via JS
+  // desktop tab button: stile visuale viene da tokens.css (.f1b-tab-btn)
   return `
     <button
-      class="f1b-tab-btn block w-full text-left text-[12px] leading-[1.4] px-2 py-2"
+      class="f1b-tab-btn"
       data-f1b-tab="${key}"
-      style="
-        border-radius:var(--radius-card-sm);
-        border-left:3px solid transparent;
-        background:transparent;
-        font-weight:500;
-        color:var(--ink);
-        text-align:left;
-      "
     >
-      ${label}
+      ${escapeHtml(label)}
     </button>
   `;
 }
 
 function mobileTabButton(key, label) {
+  // mobile pill "footer tab" (scroll orizzontale)
+  // per ora inline style perché non abbiamo classe dedicata nei token
   return `
     <button
       class="f1b-footer-tab-btn"
@@ -710,7 +690,7 @@ function mobileTabButton(key, label) {
         box-shadow:var(--shadow-card);
       "
     >
-      ${label}
+      ${escapeHtml(label)}
     </button>
   `;
 }
@@ -730,34 +710,28 @@ function bindDrawerTabsPublic(root) {
       // attiva/deattiva bottoni ovunque
       tabButtons.forEach(b => {
         const isActive = b.getAttribute("data-f1b-tab") === key;
-        b.classList.toggle("is-active", isActive);
 
-        // DESKTOP SIDEBAR (f1b-tab-btn)
+        // DESKTOP SIDEBAR
         if (b.classList.contains("f1b-tab-btn")) {
           if (isActive) {
-            b.style.borderLeft = "3px solid var(--brand-600)";
-            b.style.background =
-              "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)";
-            b.style.fontWeight = "600";
-            b.style.color = "var(--ink)";
+            b.classList.add("is-active");
           } else {
-            b.style.borderLeft = "3px solid transparent";
-            b.style.background = "transparent";
-            b.style.fontWeight = "500";
-            b.style.color = "var(--ink)";
+            b.classList.remove("is-active");
           }
         }
 
-        // MOBILE FOOTER TABS (f1b-footer-tab-btn)
+        // MOBILE FOOTER TABS (pill orizzontali)
         if (b.classList.contains("f1b-footer-tab-btn")) {
           if (isActive) {
+            // attivo mobile
             b.style.fontWeight = "600";
             b.style.border = "1px solid var(--ink)";
             b.style.background =
-              "radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--ink) 12%, transparent) 0%, transparent 60%), var(--surface-card-alt)";
+              "radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--ink) 14%, transparent) 0%, transparent 60%), var(--surface-card-alt)";
             b.style.color = "var(--ink)";
-            b.style.boxShadow = "var(--shadow-card)";
+            b.style.boxShadow = "0 4px 10px rgba(0,0,0,.18)";
           } else {
+            // inattivo mobile
             b.style.fontWeight = "500";
             b.style.border = "1px solid var(--br-soft)";
             b.style.background = "var(--surface-card)";
@@ -968,7 +942,7 @@ function auditRow(label, value) {
       <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
         ${escapeHtml(label)}
       </div>
-      <div class="font-mono font-bold text-[13px] font-bold text-[color:var(--ink)] break-words">
+      <div class="font-mono font-bold text-[13px] text-[color:var(--ink)] break-words">
         ${escapeHtml(value || "—")}
       </div>
     </div>
@@ -988,6 +962,7 @@ function qualityChip(keyName, qObj) {
         border-radius:var(--radius-card);
         box-shadow:var(--shadow-card);
       ">
+
       <div class="flex items-start justify-between gap-2 mb-1">
         <div class="flex items-center gap-2">
           <span class="inline-block w-[8px] h-[8px] rounded-full"
@@ -1081,18 +1056,6 @@ function computeHighLevelTone(strategyModeMacroObj, regimeScoreObj) {
 ------------------------------------------------- */
 
 function normalizeDataPublicF1B(src = {}) {
-  // Struttura pubblica attesa:
-  // {
-  //   meta: {...},
-  //   regime_and_risk: {...},
-  //   breadth_rotation: {...},
-  //   internals_raw: {...},
-  //   street_view: {...},
-  //   sintesi_ai: {...},
-  //   audit_quality: {...},
-  //   mifid: {...}
-  // }
-
   return {
     meta: src.meta || {
       timestampET: "—",
