@@ -7,28 +7,25 @@
 //   renderCard(data, ctx)
 //   bindCard(node, data, ctx)
 //
-// Flow:
+// Runtime flow:
 //   - renderCard() genera la card riassuntiva con CTA "Dettagli regime →"
 //   - bindCard() attacca listener alla CTA e ai tooltip
 //   - openF1DrawerPublic() apre il pannello/drawer responsive
 //   - bindDrawerTabsPublic() gestisce le tab sia desktop (sidebar sinistra) che mobile (pill scrollabili)
 //
-// NOTE UI IMPORTANTI
-//   Desktop:
-//     sidebar sinistra = .f1b-panel-menu con bottoni .f1b-tab-btn
-//     lo stile (idle / hover / is-active) è in tokens.css
+// NOTE STYLING IMPORTANTI:
+//   • Sidebar desktop usa classi .f1b-panel-menu / .f1b-tab-btn
+//     Lo stile base/hover/attivo viene da tokens.css:
+//       .f1b-tab-btn { idle }
+//       .f1b-tab-btn:hover { hover preview }
+//       .f1b-tab-btn.is-active { tab corrente, barra sinistra brand, glow, testo forte }
+//     → JS si limita a togglare .is-active
 //
-//   Mobile:
-//     tab orizzontali scrollabili = .f1b-footer-tab-btn
-//     lo stile attivo/inattivo lo forziamo inline via JS
+//   • Mobile footer tabs (pill orizzontali):
+//     Non hanno ancora classi globali nei token, quindi per ora le stilizziamo inline da JS
 //
-//   Importantissimo per i bug mobile:
-//     - bindDrawerTabsPublic ora binda SOLO dentro il pannello F1B aperto,
-//       non su tutto document. Questo evita che click "MiFID" del footer
-//       richiami roba residua di F1B.
-//     - Non usiamo più querySelectorAll globale.
+//   • I contenuti delle viste sono in <div data-f1b-view="..."> e li mostriamo/nascondiamo via hidden=...
 //
-// ------------------------------------------------------------
 
 export function renderCard(rawData, ctx = {}) {
   const d = normalizeDataPublicF1B(rawData);
@@ -55,7 +52,7 @@ export function renderCard(rawData, ctx = {}) {
     }
   ];
 
-  // Pill tono generale
+  // Pill tono generale = StrategyMode_macro / RegimeScore
   const { toneLabel, toneColor } = computeHighLevelTone(
     d.regime_and_risk.StrategyMode_macro,
     d.regime_and_risk.RegimeScore
@@ -187,9 +184,7 @@ export function renderCard(rawData, ctx = {}) {
   `;
 }
 
-// ------------------------------------------------------------
 // bindCard: apre il drawer e lega tooltip
-// ------------------------------------------------------------
 export function bindCard(node, rawData, ctx = {}) {
   if (!node || !rawData) return;
   const data = normalizeDataPublicF1B(rawData);
@@ -210,9 +205,10 @@ export function bindCard(node, rawData, ctx = {}) {
   }
 }
 
-// ------------------------------------------------------------
-// Drawer / Panel con sezioni pubbliche
-// ------------------------------------------------------------
+/* -------------------------------------------------
+   Drawer / Panel con sezioni pubbliche
+------------------------------------------------- */
+
 function openF1DrawerPublic(data) {
   if (!window.__TradeliaUI || typeof window.__TradeliaUI.openPanel !== "function") {
     console.warn("openPanel non disponibile");
@@ -248,28 +244,25 @@ function openF1DrawerPublic(data) {
             }
           }
         ],
-    footerTabs: [] // le pill mobile per cambiare tab le rendiamo noi in renderDrawerMobileShellPublic
+    footerTabs: []
   });
 
-  // post-mount: bind tab switching + tooltip dentro il drawer
+  // post-mount binding (tab switching + tooltip binding interno)
   setTimeout(() => {
-    // desktop body OR mobile body
     const roots = [
       document.getElementById("panel-body"),
       document.getElementById("panel-body-mobile")
     ].filter(Boolean);
 
     roots.forEach(r => {
-      bindDrawerTabsPublic(r); // <-- fix: bind solo dentro questo drawer
+      bindDrawerTabsPublic(r);
       if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
         try { window.__TradeliaUI.bindMetricInfoButtons(r); } catch (e) {}
       }
     });
 
     // stato iniziale "Regime"
-    const firstTabBtn = document.querySelector(
-      ".f1b-mobile-shell [data-f1b-tab='regime'], .f1b-panel-desktop [data-f1b-tab='regime']"
-    );
+    const firstTabBtn = document.querySelector('[data-f1b-tab="regime"]');
     if (firstTabBtn && typeof firstTabBtn.click === "function") {
       firstTabBtn.click();
     }
@@ -280,9 +273,10 @@ function isMobileViewport() {
   return window.matchMedia("(max-width: 767px)").matches;
 }
 
-// ------------------------------------------------------------
-// Sezioni logiche drawer (pubbliche)
-// ------------------------------------------------------------
+/* -------------------------------------------------
+   Sezioni logiche drawer (pubbliche)
+------------------------------------------------- */
+
 function buildDrawerSectionsPublic(d) {
   // 1. Regime & Rischio
   const regimeHTML = `
@@ -520,9 +514,10 @@ function buildDrawerSectionsPublic(d) {
   };
 }
 
-// ------------------------------------------------------------
-// Shell DESKTOP
-// ------------------------------------------------------------
+/* -------------------------------------------------
+   Shell desktop / mobile
+------------------------------------------------- */
+
 function renderDrawerDesktopShellPublic(sectionsObj) {
   return `
     <div class="f1b-panel-desktop"
@@ -571,9 +566,6 @@ function renderDrawerDesktopShellPublic(sectionsObj) {
   `;
 }
 
-// ------------------------------------------------------------
-// Shell MOBILE
-// ------------------------------------------------------------
 function renderDrawerMobileShellPublic(sectionsObj) {
   const mobileTabsBar = `
     <div
@@ -616,81 +608,57 @@ function renderDrawerMobileShellPublic(sectionsObj) {
         ${mobileTabButton("audit","Audit")}
         ${mobileTabButton("mifid","MiFID")}
       </div>
-
-      <!-- bottone Chiudi panel -->
-      <button
-        class="f1b-footer-close-btn"
-        data-panel-close
-        style="
-          flex-shrink:0;
-          font-size:11.5px;
-          line-height:1.2;
-          font-weight:600;
-
-          border-radius:8px;
-          border:1px solid var(--ink);
-          background:var(--ink);
-          color:var(--surface-page);
-
-          padding:.45rem .8rem;
-          box-shadow:var(--shadow-card);
-          margin-left:.5rem;
-        "
-      >
-        Chiudi
-      </button>
     </div>
   `;
 
   return `
-    <div class="f1b-mobile-shell">
-      <div class="f1b-drawer-mobile"
-        style="
-          display:flex;
-          flex-direction:column;
-          height:calc(100vh - 110px);
-          max-height:calc(100vh - 110px);
-          min-height:300px;
-          background:var(--surface-panel-head);
-          background-image:
-            radial-gradient(
-              circle at 0% 0%,
-              color-mix(in oklab, var(--surface-panel-head) 90%, var(--brand) 2%) 0%,
-              transparent 60%
-            );
-        "
-      >
-        ${mobileTabsBar}
+    <div class="f1b-drawer-mobile"
+      style="
+        display:flex;
+        flex-direction:column;
+        height:calc(100vh - 110px);
+        max-height:calc(100vh - 110px);
+        min-height:300px;
+        background:var(--surface-panel-head);
+        background-image:
+          radial-gradient(
+            circle at 0% 0%,
+            color-mix(in oklab, var(--surface-panel-head) 90%, var(--brand) 2%) 0%,
+            transparent 60%
+          );
+      "
+    >
+      ${mobileTabsBar}
 
-        <main
-          class="f1b-panel-content-mobile flex-1 min-w-0"
-          style="
-            overflow:auto;
-            -webkit-overflow-scrolling:touch;
-            padding:1rem;
-            background:var(--surface-page);
-            background-image:none;
-          "
-          id="panel-body-mobile"
-        >
-          <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
-          <div data-f1b-view="breadth" hidden>${sectionsObj.breadthHTML}</div>
-          <div data-f1b-view="internals" hidden>${sectionsObj.internalsHTML}</div>
-          <div data-f1b-view="street" hidden>${sectionsObj.streetHTML}</div>
-          <div data-f1b-view="sintesi" hidden>${sectionsObj.sintesiHTML}</div>
-          <div data-f1b-view="audit" hidden>${sectionsObj.auditHTML}</div>
-          <div data-f1b-view="mifid" hidden>${sectionsObj.mifidHTML}</div>
-        </main>
-      </div>
+      <main
+        class="f1b-panel-content-mobile flex-1 min-w-0"
+        style="
+          overflow:auto;
+          -webkit-overflow-scrolling:touch;
+          padding:1rem;
+          background:var(--surface-page);
+          background-image:none;
+        "
+        id="panel-body-mobile"
+      >
+        <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
+        <div data-f1b-view="breadth" hidden>${sectionsObj.breadthHTML}</div>
+        <div data-f1b-view="internals" hidden>${sectionsObj.internalsHTML}</div>
+        <div data-f1b-view="street" hidden>${sectionsObj.streetHTML}</div>
+        <div data-f1b-view="sintesi" hidden>${sectionsObj.sintesiHTML}</div>
+        <div data-f1b-view="audit" hidden>${sectionsObj.auditHTML}</div>
+        <div data-f1b-view="mifid" hidden>${sectionsObj.mifidHTML}</div>
+      </main>
     </div>
   `;
 }
 
-// ------------------------------------------------------------
-// Tab switching
-// ------------------------------------------------------------
+/* -------------------------------------------------
+   Tab switching
+------------------------------------------------- */
+
 function drawerMenuButtonPublic(key, label) {
-  // desktop tab button (classe stilizzata da tokens.css)
+  // desktop tab button: stile visuale viene da tokens.css (.f1b-tab-btn)
   return `
     <button
       class="f1b-tab-btn"
@@ -702,7 +670,8 @@ function drawerMenuButtonPublic(key, label) {
 }
 
 function mobileTabButton(key, label) {
-  // mobile pill
+  // mobile pill "footer tab" (scroll orizzontale)
+  // per ora inline style perché non abbiamo classe dedicata nei token
   return `
     <button
       class="f1b-footer-tab-btn"
@@ -727,31 +696,22 @@ function mobileTabButton(key, label) {
 }
 
 function bindDrawerTabsPublic(root) {
-  if (!root) return;
-
-  // individua il contenitore del drawer F1B (mobile-shell o desktop wrapper)
-  const shell = root.closest(".f1b-mobile-shell, .f1b-panel-desktop") || root;
-
-  const tabButtons = shell.querySelectorAll("[data-f1b-tab]");
-  const views = root.querySelectorAll("[data-f1b-view]");
+  const tabButtons = document.querySelectorAll("[data-f1b-tab]");
+  const views = document.querySelectorAll("[data-f1b-view]");
 
   tabButtons.forEach(btn => {
     if (btn.__f1bBound) return;
     btn.__f1bBound = true;
 
-    btn.addEventListener("click", (evt) => {
-      // blocca propagazione, così il click sulle pill MiFID dentro F1B
-      // NON rimbalza sull'handler MiFID globale nel footer
-      evt.stopPropagation();
-
+    btn.addEventListener("click", () => {
       const key = btn.getAttribute("data-f1b-tab");
       if (!key) return;
 
-      // attiva/deattiva SOLO i bottoni di questo drawer
+      // attiva/deattiva bottoni ovunque
       tabButtons.forEach(b => {
         const isActive = b.getAttribute("data-f1b-tab") === key;
 
-        // desktop
+        // DESKTOP SIDEBAR
         if (b.classList.contains("f1b-tab-btn")) {
           if (isActive) {
             b.classList.add("is-active");
@@ -760,9 +720,10 @@ function bindDrawerTabsPublic(root) {
           }
         }
 
-        // mobile pill
+        // MOBILE FOOTER TABS (pill orizzontali)
         if (b.classList.contains("f1b-footer-tab-btn")) {
           if (isActive) {
+            // attivo mobile
             b.style.fontWeight = "600";
             b.style.border = "1px solid var(--ink)";
             b.style.background =
@@ -770,6 +731,7 @@ function bindDrawerTabsPublic(root) {
             b.style.color = "var(--ink)";
             b.style.boxShadow = "0 4px 10px rgba(0,0,0,.18)";
           } else {
+            // inattivo mobile
             b.style.fontWeight = "500";
             b.style.border = "1px solid var(--br-soft)";
             b.style.background = "var(--surface-card)";
@@ -779,7 +741,7 @@ function bindDrawerTabsPublic(root) {
         }
       });
 
-      // mostra solo la view giusta dentro a 'root'
+      // mostra/nascondi viste
       views.forEach(viewEl => {
         const viewKey = viewEl.getAttribute("data-f1b-view");
         viewEl.hidden = viewKey !== key;
@@ -788,9 +750,11 @@ function bindDrawerTabsPublic(root) {
   });
 }
 
-// ------------------------------------------------------------
-// Blocchi UI riutilizzabili
-// ------------------------------------------------------------
+/* -------------------------------------------------
+   Blocchi UI riutilizzabili
+------------------------------------------------- */
+
+// KPI in card compatta (3 box nella card top-level)
 function metricBoxTrafficLight({ key, label, desc, metric }) {
   const { dotColor, textColor } = toneColors(metric?.tone);
   return `
@@ -830,7 +794,7 @@ function metricBoxTrafficLight({ key, label, desc, metric }) {
   `;
 }
 
-// card semaforo drawer
+// metricBlock = card semaforica completa (drawer)
 function metricBlock(metricKey, title, desc, metricObj) {
   const { dotColor, textColor } = toneColors(metricObj?.tone);
   return `
@@ -972,7 +936,20 @@ function conclusionPointBlock(pointObj = {}) {
   `;
 }
 
-// Quality metrics con semaforo
+function auditRow(label, value) {
+  return `
+    <div>
+      <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
+        ${escapeHtml(label)}
+      </div>
+      <div class="font-mono font-bold text-[13px] text-[color:var(--ink)] break-words">
+        ${escapeHtml(value || "—")}
+      </div>
+    </div>
+  `;
+}
+
+// Quality metrics con semaforo (FreshnessScore, ConfidenceFinal, ...)
 function qualityChip(keyName, qObj) {
   if (!qObj) return "";
   const { dotColor, textColor } = toneColors(qObj.tone);
@@ -1015,9 +992,10 @@ function qualityChip(keyName, qObj) {
   `;
 }
 
-// ------------------------------------------------------------
-// Tone utilities
-// ------------------------------------------------------------
+/* -------------------------------------------------
+   Tone utilities
+------------------------------------------------- */
+
 function toneColors(tone) {
   switch ((tone || "").toLowerCase()) {
     case "green":
@@ -1073,9 +1051,10 @@ function computeHighLevelTone(strategyModeMacroObj, regimeScoreObj) {
   return { toneColor, toneLabel };
 }
 
-// ------------------------------------------------------------
-// Normalizzazione dati
-// ------------------------------------------------------------
+/* -------------------------------------------------
+   Normalizzazione dati
+------------------------------------------------- */
+
 function normalizeDataPublicF1B(src = {}) {
   return {
     meta: src.meta || {
@@ -1123,9 +1102,10 @@ function normalizeDataPublicF1B(src = {}) {
   };
 }
 
-// ------------------------------------------------------------
-// Escape utils
-// ------------------------------------------------------------
+/* -------------------------------------------------
+   Escape utils
+------------------------------------------------- */
+
 function escapeHtml(str) {
   if (str === undefined || str === null) return "";
   return String(str)
