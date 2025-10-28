@@ -490,22 +490,51 @@ document.addEventListener("click", ev=>{
 function openPrivacyPanel() {
   openLegalPanel({
     title: "Privacy & Trasparenza",
-    subtitle: "Nessun tracciamento di profilazione. Preferenze salvate solo in locale.",
+    subtitle: "Dati minimi. Nessun tracciamento pubblicitario.",
     body: `
-      <p>
-        Tradelia AI adotta una politica di massima trasparenza e
-        <strong>zero tracciamento di profilazione</strong>.
-      </p>
-      <ul style="margin:.5rem 0 .5rem 1rem;list-style:disc;font-size:12.5px;line-height:1.45;">
-        <li>Nessun cookie di profilazione o advertising.</li>
-        <li>Nessuna vendita o condivisione di dati personali con terze parti.</li>
-        <li>Nessun analytics esterno invasivo.</li>
-        <li>Le preferenze di tema/consenso vivono solo nel tuo browser (<code>localStorage</code>).</li>
-      </ul>
-      <p style="font-size:11px;line-height:1.4;color:var(--muted);margin-top:1rem;">
-        Riferimenti normativi: GDPR (UE 2016/679), Direttiva ePrivacy,
-        Linee Guida EDPB.
-      </p>
+      <section style="font-size:13px;line-height:1.5;color:var(--ink);">
+        <p>
+          Tradelia AI adotta un approccio “privacy first”.
+          L’obiettivo è fornirti analisi e didattica finanziaria
+          con il minimo indispensabile di dati personali.
+        </p>
+
+        <p style="margin-top:1rem;">
+          <strong>Nessun cookie di profilazione pubblicitaria.</strong><br/>
+          Non facciamo behavioral advertising, retargeting, remarketing,
+          segmentazione commerciale o vendita di liste utente a terze parti.
+        </p>
+
+        <p style="margin-top:1rem;">
+          <strong>Preferenze locali.</strong><br/>
+          Tema (light/dark), eventuali consensi espliciti e alcune impostazioni
+          dell’interfaccia possono essere salvati nel tuo browser
+          (<code>localStorage</code>) per darti continuità visiva tra una visita e l’altra.
+          Questi dati restano sul tuo dispositivo.
+        </p>
+
+        <p style="margin-top:1rem;">
+          <strong>Dati sensibili / finanziari personali.</strong><br/>
+          Non raccogliamo in automatico il tuo patrimonio personale,
+          obiettivi di rischio, posizione finanziaria, ordini o esecuzioni.
+          Se tu ci fornisci volontariamente testo libero (es. “ho il 70% in equity USA”),
+          quello è un input che stai condividendo attivamente per la parte educativa,
+          ma <em>non</em> viene usato per creare un profilo commerciale rivendibile.
+        </p>
+
+        <p style="margin-top:1rem;">
+          <strong>Trasparenza sulle fonti.</strong><br/>
+          Alcune metriche e riferimenti di mercato derivano da fonti esterne
+          (es. Bloomberg, Reuters, CBOE, FRED, ecc.) e possono essere sintetizzati
+          o riaggregati ai fini didattici. I dati di mercato restano proprietà
+          delle rispettive fonti.
+        </p>
+
+        <p style="margin-top:1rem;font-size:12px;color:var(--muted);line-height:1.4;">
+          Riferimenti normativi principali: GDPR (UE 2016/679), Direttiva ePrivacy,
+          Linee guida EDPB su trasparenza e minimizzazione.
+        </p>
+      </section>
     `,
     blocking: false,
     footerButtons: [
@@ -514,42 +543,62 @@ function openPrivacyPanel() {
   });
 }
 
+
 // MiFID usa blocking: true e bottone "Ho letto"
 function openMifidPanel() {
   openLegalPanel({
     title: "Informativa MiFID",
-    subtitle: "Contenuto a scopo informativo/formativo. Non è consulenza personalizzata.",
+    subtitle: "Contenuto educativo / informativo. Non è consulenza personalizzata.",
     body: `
-      <p>
-        Tradelia AI è una piattaforma di analisi e alfabetizzazione finanziaria.
-        L'obiettivo è aiutare l'utente a comprendere contesto di mercato,
-        fattori di rischio e dinamiche tecniche, in modo chiaro e tracciabile.
-      </p>
+      <section style="font-size:13px;line-height:1.5;color:var(--ink);">
+        <p>
+          Tradelia AI è una piattaforma di analisi e alfabetizzazione finanziaria.
+          L'obiettivo è aiutarti a capire contesto di mercato, fattori di rischio,
+          dinamiche tecniche e narrativa istituzionale in modo trasparente e tracciabile.
+        </p>
 
-      <p style="margin-top:.5rem;">
-        <strong>Non siamo un consulente finanziario abilitato all’offerta di raccomandazioni personalizzate.</strong>
-        Non effettuiamo gestione di portafogli, non raccogliamo ordini di negoziazione,
-        non sollecitiamo l’investimento in strumenti finanziari.
-      </p>
+        <p style="margin-top:1rem;">
+          <strong>Non forniamo raccomandazioni personalizzate di investimento ai sensi di MiFID II.</strong>
+          Il contenuto mostrato (F1, F2, F3, F4, F5, F5B, F6) ha finalità esclusivamente
+          <em>informativa / formativa</em> e descrive scenari di rischio, momentum,
+          sentiment e struttura tecnica del mercato.
+        </p>
 
-      <p style="margin-top:1rem;">
-        Le informazioni mostrate (F1, F2, F3, F4, F5, F5B, F6) descrivono scenari di mercato,
-        sentiment/flussi, fattori tecnici e riferimenti storici.
-        Non costituiscono indicazione ad aprire o chiudere posizioni,
-        né suggeriscono una strategia adatta a te come singolo investitore.
-      </p>
+        <p style="margin-top:1rem;">
+          Non effettuiamo gestione di portafogli, non prendiamo in carico capitali,
+          non eseguiamo ordini, non sollecitiamo l'acquisto o la vendita di strumenti
+          finanziari, non facciamo suitability o appropriateness test sull’investitore.
+          Non raccogliamo la tua situazione patrimoniale o i tuoi obiettivi individuali.
+        </p>
 
-      <p style="margin-top:.5rem;">
-        <strong>Nulla di quanto visualizzato garantisce risultati futuri.</strong>
-        La volatilità, gli shock macro, la liquidità e gli eventi esogeni
-        possono generare movimenti estremi in tempi molto brevi.
-      </p>
+        <p style="margin-top:1rem;">
+          Alcuni riferimenti numerici, livelli tecnici, “tonalità” (verde / giallo / rosso),
+          bias di rischio, ampiezza di mercato, volatilità implicita, curve tassi o credito
+          sono strumenti didattici sintetici. <strong>Non sono una strategia operativa e
+          non sono una garanzia di risultato futuro.</strong> Possono cambiare rapidamente
+          in funzione di shock macro, liquidità, news flow, condizioni di funding, ecc.
+        </p>
 
-      <p style="margin-top:1rem;font-size:11px;line-height:1.4;color:var(--muted);">
-        Prima di prendere decisioni reali verifica sempre la tua situazione
-        personale (obiettivi, orizzonte, propensione al rischio)
-        con un intermediario autorizzato in linea con MiFID II / ESMA.
-      </p>
+        <p style="margin-top:1rem;">
+          I mercati finanziari comportano rischio di perdita parziale o totale del capitale.
+          Movimenti estremi possono avvenire in modo improvviso e senza preavviso.
+          Le performance storiche o le simulazioni ipotetiche non sono indicative di
+          performance future.
+        </p>
+
+        <p style="margin-top:1rem;">
+          <strong>Prima di assumere decisioni effettive di investimento o di rischio,
+          valuta adeguatezza e appropriatezza con un intermediario regolamentato
+          o un consulente finanziario abilitato.</strong> Le tue scelte restano
+          sotto la tua responsabilità esclusiva.
+        </p>
+
+        <p style="margin-top:1rem;font-size:12px;color:var(--muted);line-height:1.4;">
+          Riferimenti normativi: Direttiva MiFID II, regolamentazione ESMA su
+          consulenza in materia di investimenti, disciplina UE su tutela
+          degli investitori al dettaglio.
+        </p>
+      </section>
     `,
     blocking: true,
     footerButtons: [
@@ -557,6 +606,7 @@ function openMifidPanel() {
     ]
   });
 }
+
 
 // pannello Audit/Qualità dati generico richiamabile dai moduli
 function openAuditPanel(auditData) {
