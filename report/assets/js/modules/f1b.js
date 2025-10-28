@@ -548,7 +548,7 @@ function renderDrawerDesktopShellPublic(sectionsObj) {
 }
 
 function renderDrawerMobileShellPublic(sectionsObj) {
-  // barra tab scrollabile sticky in alto del main scrollabile
+  // barra tab sticky a larghezza piena (full bleed), agganciata al top del drawer scrollabile
   const mobileTabsBar = `
     <div
       class="f1b-footer-tabs-wrap"
@@ -557,8 +557,14 @@ function renderDrawerMobileShellPublic(sectionsObj) {
         top:0;
         z-index:10;
 
+        /* full bleed: allarga oltre il padding orizzontale del main */
+        margin:0 -1rem 0;
+
         display:flex;
         align-items:center;
+        max-width:100%;
+        overflow:hidden;
+        gap:.5rem;
 
         border-bottom:1px solid var(--br-panel-divider);
         background:var(--surface-panel-head);
@@ -568,13 +574,9 @@ function renderDrawerMobileShellPublic(sectionsObj) {
             color-mix(in oklab, var(--surface-panel-head) 90%, var(--brand) 2%) 0%,
             transparent 60%
           );
-
-        padding:.6rem .75rem;
         box-shadow:0 6px 12px rgba(0,0,0,.12);
 
-        max-width:100%;
-        overflow:hidden;
-        gap:.5rem;
+        padding:.6rem .75rem;
       "
     >
       <div
