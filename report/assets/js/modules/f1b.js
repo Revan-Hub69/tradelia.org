@@ -844,28 +844,43 @@ function bindDrawerTabsPublic(root) {
       const key = btn.getAttribute("data-f1b-tab");
       if (!key) return;
 
-      tabButtons.forEach(b => {
-        const isActive = b.getAttribute("data-f1b-tab") === key;
-        b.classList.toggle("is-active", isActive);
+tabButtons.forEach(b => {
+  const isActive = b.getAttribute("data-f1b-tab") === key;
+  b.classList.toggle("is-active", isActive);
 
-        // DESKTOP sidebar
-        if (b.classList.contains("f1b-tab-btn")) {
-          // forza TUTTA la shorthand border-left per battere lo style iniziale
-          b.style.borderLeft = isActive
-            ? "3px solid var(--brand-600)"
-            : "3px solid transparent";
+  const isMobileBtn = b.classList.contains("f1b-footer-tab-btn");
 
-          // forza background pieno
-          b.style.background = isActive
-            ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)"
-            : "transparent";
+  if (isMobileBtn) {
+    // stile versione mobile sticky
+    if (isActive) {
+      b.style.fontWeight = "600";
+      b.style.border = "1px solid var(--ink)";
+      b.style.background =
+        "radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--ink) 12%, transparent) 0%, transparent 60%), var(--surface-card-alt)";
+      b.style.color = "var(--ink)";
+      b.style.boxShadow = "var(--shadow-card)";
+    } else {
+      b.style.fontWeight = "500";
+      b.style.border = "1px solid var(--br-soft)";
+      b.style.background = "var(--surface-card)";
+      b.style.color = "var(--muted)";
+      b.style.boxShadow = "var(--shadow-card)";
+    }
+  } else {
+    // TUTTI gli altri (sidebar desktop ecc), anche se manca la classe f1b-tab-btn,
+    // li trattiamo come desktop
+    if (isActive) {
+      b.style.borderLeft = "3px solid var(--brand)";
+      b.style.background = "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)";
+      b.style.fontWeight = "600";
+    } else {
+      b.style.borderLeft = "3px solid transparent";
+      b.style.background = "transparent";
+      b.style.fontWeight = "500";
+    }
+  }
+});
 
-          // forza font-weight
-          b.style.fontWeight = isActive ? "600" : "500";
-
-          // colore testo fisso
-          b.style.color = "var(--ink)";
-        }
 
         // MOBILE sticky tabs
         if (b.classList.contains("f1b-footer-tab-btn")) {
