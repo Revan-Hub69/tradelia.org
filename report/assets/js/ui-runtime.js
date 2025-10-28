@@ -90,25 +90,19 @@ function escapeHtml(str) {
 //       ...
 //     ],
 //     blocking: bool,          // se true non puoi chiudere toccando backdrop
-//     panelSize: "wide" | "xl" | undefined,
-//     footerButtons: [ { label:"Chiudi", action: fn }, ... ],
-//     footerTabs:    [ { key:"...", label:"..." }, ... ] // solo mobile
+//     panelSize: "wide" | undefined, // "wide" = pannello desktop largo
+//
+//     // footerDesktop = bottoni azione a destra nel footer desktop
+//     footerButtons: [ { label:"Chiudi", action: fn }, ... ]
+//
+//     // footerTabsMobile = pill scrollabili sticky in basso SOLO mobile
+//     //   [{ key:"regime", label:"Regime attuale" }, ...]
+//     footerTabs:    [ { key:"...", label:"..." }, ... ]
 //   }
 //
 // closePanel(): chiude overlay, riabilita scroll body
 
-function closePanel() {
-  const overlayEl = qs("#panel-overlay");
-  if (!overlayEl) return;
-  overlayEl.setAttribute("aria-hidden", "true");
-  document.body.classList.remove("body--lock");
-}
-
-// PATCH PRINCIPALE MOBILE
 function openPanel(opts) {
-  // 1. sempre resettiamo lo stato del pannello precedente
-  closePanel();
-
   const overlayEl = qs("#panel-overlay");
   if (!overlayEl) return;
 
@@ -307,19 +301,22 @@ function openPanel(opts) {
     overlayEl.removeAttribute("data-blocking");
   }
 
-  // gestisci varianti di larghezza desktop ("wide", "xl", default)
-  const panelDesktop = qs(".tl-panel--desktop", overlayEl);
-  if (panelDesktop) {
-    // pulizia classi vecchie
-    panelDesktop.classList.remove("tl-panel--wide");
-    panelDesktop.classList.remove("tl-panel--xl");
+// gestisci varianti di larghezza desktop ("wide", "xl", default)
+const panelDesktop = qs(".tl-panel--desktop", overlayEl);
+if (panelDesktop) {
+  // rimuove eventuali classi precedenti per sicurezza
+  panelDesktop.classList.remove("tl-panel--wide");
+  panelDesktop.classList.remove("tl-panel--xl");
 
-    if (panelSize === "wide") {
-      panelDesktop.classList.add("tl-panel--wide");
-    } else if (panelSize === "xl") {
-      panelDesktop.classList.add("tl-panel--xl");
-    }
+  if (panelSize === "wide") {
+    // legacy (~560px)
+    panelDesktop.classList.add("tl-panel--wide");
+  } else if (panelSize === "xl") {
+    // nuova misura larga (~50vw)
+    panelDesktop.classList.add("tl-panel--xl");
   }
+}
+
 
   // lock scroll pagina dietro + mostra overlay
   document.body.classList.add("body--lock");
@@ -327,6 +324,13 @@ function openPanel(opts) {
 
   // bind dei nuovi "?" apparsi dentro il drawer
   bindMetricInfoButtons(overlayEl);
+}
+
+function closePanel() {
+  const overlayEl = qs("#panel-overlay");
+  if (!overlayEl) return;
+  overlayEl.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("body--lock");
 }
 
 // listener globale: chiudi panel su backdrop o [data-panel-close]
@@ -570,7 +574,7 @@ let currentPopoverOpen = false;
 
 // helper: costruisce l'HTML strutturato del contenuto tooltip
 function buildMetricHTML(info) {
-  // blocco "Cosa mostra" + "Come si usa"
+  // blocco "Cosa mostra" + "Come si usa" + footer fonte
   const whatHTML = `
     <div style="font-size:13px;line-height:1.45;color:var(--ink);margin-bottom:.75rem;">
       <div style="font-weight:600;color:var(--ink);margin-bottom:.25rem;">Cosa mostra</div>
@@ -600,13 +604,13 @@ function openMetricDesktop(btnEl) {
   const bodyEl   = qs("#metric-popover-body");
   const sourceEl = qs("#metric-popover-source");
 
-  // titolo
+  // titolo a sinistra
   setText(titleEl, info.title || key || "—");
 
-  // corpo
+  // corpo (what/how) come blocchi separati
   bodyEl.innerHTML = buildMetricHTML(info);
 
-  // fonte
+  // fonte nel footer piccolo grigio
   sourceEl.innerHTML = info.source
     ? `<span style="font-weight:600;">Fonte</span>: ${escapeHtml(info.source)}`
     : "";
@@ -627,7 +631,7 @@ function openMetricDesktop(btnEl) {
   pop.style.bottom = "auto";
   pop.setAttribute("aria-hidden", "false");
 
-  // clamp a viewport
+  // clamp nel viewport
   const vpW = window.innerWidth;
   const vpH = window.innerHeight;
   const popRect = pop.getBoundingClientRect();
@@ -674,7 +678,7 @@ function openMetricMobile(btnEl) {
 
   setText(titleEl, info.title || key || "—");
 
-  // corpo = what + how
+  // testo corpo = what + how formattati
   bodyEl.innerHTML = buildMetricHTML(info);
 
   // fonte
