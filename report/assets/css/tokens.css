@@ -2343,13 +2343,14 @@ html[data-theme="dark"] .hero{
    F1B · SIDEBAR TABS (desktop menu a sinistra nel drawer)
    ========================================================= */
 
+/* Colonna sinistra: padding verticale minimo.
+   NB: overflow-x:hidden e padding laterale li stiamo già mettendo inline in f1b.js
+   per evitare la scrollbar orizzontale. Qui non tocchiamo bg: resta quello del panel. */
 .f1b-panel-menu {
-  /* la colonna sinistra del drawer è già dark in dark mode e chiara in light.
-     Qui non forziamo bg, usiamo quello che hai già dal panel.
-     Solo padding verticale un filo respirato */
   padding: 8px 0;
 }
 
+/* Bottone tab base (stato neutro) */
 .f1b-tab-btn {
   all: unset;
   cursor: pointer;
@@ -2357,6 +2358,7 @@ html[data-theme="dark"] .hero{
   display: block;
   width: 100%;
   text-align: left;
+  box-sizing: border-box;
 
   /* typo */
   font-size: var(--fs-sm);
@@ -2364,58 +2366,69 @@ html[data-theme="dark"] .hero{
   font-weight: 500;
   color: var(--muted);
 
-  /* spacing + shape */
+  /* shape & spacing */
   padding: 8px 12px 8px 16px;
   border-radius: var(--radius-card-sm);
 
-  /* barra sinistra = simuliamo la tonebar delle meta-pill */
+  /* barra sinistra stile "tonebar" */
   border-left: 3px solid transparent;
 
-  /* smooth feel */
+  /* stato base: niente ombra, niente glow */
+  background: transparent;
+  box-shadow: none;
+  text-shadow: none;
+
   transition:
     background .14s ease,
     color .14s ease,
     border-color .14s ease,
     box-shadow .14s ease,
-    text-shadow .14s ease;
+    font-weight .14s ease;
 }
 
-/* Hover preview (non selezionata ma sotto il mouse) */
+/* Hover (tab non selezionata ma sotto il mouse) */
 .f1b-tab-btn:hover {
   background:
     radial-gradient(
       circle at 0% 0%,
-      color-mix(in oklab, var(--surface-card-alt) 80%, var(--brand) 6%) 0%,
+      color-mix(in oklab, var(--surface-card-alt) 70%, var(--brand) 4%) 0%,
       var(--surface-card-alt) 60%
     );
+
   box-shadow:
     0 0 0 2px var(--accent-dim),
     var(--shadow-card);
 
-  border-left: 3px solid color-mix(in oklab, var(--brand) 60%, transparent);
+  border-left-color: var(--brand);
 
   color: var(--ink);
   font-weight: 600;
-  text-shadow: 0 1px 1px rgba(0,0,0,.4);
+
+  /* niente text-shadow sul light, resta pulito anche sul dark */
+  text-shadow: none;
 }
 
-/* Stato attivo (= tab corrente) */
+/* Stato attivo (tab corrente) */
 .f1b-tab-btn.is-active {
   background:
     radial-gradient(
       circle at 0% 0%,
-      color-mix(in oklab, var(--surface-card-alt) 80%, var(--brand) 10%) 0%,
+      color-mix(in oklab, var(--surface-card-alt) 85%, var(--brand) 6%) 0%,
       var(--surface-card-alt) 60%
-    );
+    ),
+    var(--surface-card);
+
   box-shadow:
     0 0 0 2px var(--accent-dim),
     var(--shadow-card);
 
-  border-left: 3px solid var(--brand);
+  border-left-color: var(--brand);
 
   color: var(--ink);
-  font-weight: 700;
-  text-shadow: 0 1px 1px rgba(0,0,0,.5);
+  font-weight: 600;
+
+  /* questo è il punto chiave: niente alone nero sul testo */
+  text-shadow: none;
 }
 
 /* =========================================================
