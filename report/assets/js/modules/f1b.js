@@ -508,33 +508,13 @@ function buildDrawerSectionsPublic(d) {
 
 function renderDrawerDesktopShellPublic(sectionsObj) {
   return `
-function renderDrawerDesktopShellPublic(sectionsObj) {
-  return `
     <div class="f1b-panel-desktop"
       style="
         display:flex;
         flex-direction:row;
         gap:1rem;
-
-        /* altezza fissa del blocco, sempre uguale */
-        height:80vh;
+        min-height:300px;
       ">
-
-      <aside class="f1b-panel-menu"
-        style="
-          min-width:180px;
-          max-width:200px;
-          border-right:1px solid var(--br-card);
-
-          /* la sidebar riempie tutta l’altezza del contenitore */
-          height:100%;
-          overflow:auto;
-        ">
-
-        ${drawerMenuButtonPublic("regime","Regime & Rischio", true)}
-        ${drawerMenuButtonPublic("breadth","Breadth & Rotazione",
-
-
 
       <aside class="f1b-panel-menu"
         style="
