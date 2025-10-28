@@ -6,7 +6,7 @@
 // - metric help ("?" tooltip) desktop/mobile
 // - tema light/dark
 // - share overlay
-// - stampa (disattivata nell'UI premium)
+// - stampa
 //
 // Questo file NON monta i moduli F1/F2/...: quello è app.js
 
@@ -491,7 +491,7 @@ function openPrivacyPanel() {
   openLegalPanel({
     title: "Privacy & Trasparenza",
     subtitle: "Dati minimi. Nessun tracciamento pubblicitario.",
-    body: `
+  body: `
   <section style="font-size:13px;line-height:1.5;color:var(--ink);">
 
     <div class="legal-callout">
@@ -542,7 +542,8 @@ function openPrivacyPanel() {
       Linee Guida EDPB su trasparenza e minimizzazione.
     </p>
   </section>
-`,
+`
+,
     blocking: false,
     footerButtons: [
       { label: "Chiudi", action: () => closeLegalPanel() }
@@ -551,12 +552,12 @@ function openPrivacyPanel() {
 }
 
 
-// MiFID è blocking: true, e "Ho letto" salva il flag
+// MiFID usa blocking: true e bottone "Ho letto"
 function openMifidPanel() {
   openLegalPanel({
     title: "Informativa MiFID",
-    subtitle: "Prima di visualizzare il report: contenuto educativo, non è una raccomandazione operativa.",
-    body: `
+    subtitle: "Contenuto educativo / informativo. Non è consulenza personalizzata.",
+   body: `
   <section style="font-size:13px;line-height:1.5;color:var(--ink);">
 
     <div class="legal-callout">
@@ -616,18 +617,11 @@ function openMifidPanel() {
       consulenza in materia di investimenti e tutela dell’investitore retail.
     </p>
   </section>
-`,
+`
+    ,
     blocking: true,
     footerButtons: [
-      { 
-        label: "Ho letto", 
-        action: () => {
-          try {
-            localStorage.setItem("mifidAcknowledged", "true");
-          } catch(e){}
-          closeLegalPanel();
-        }
-      }
+      { label: "Ho letto", action: () => closeLegalPanel() }
     ]
   });
 }
@@ -827,7 +821,7 @@ function openMetricMobile(btnEl) {
 
   const titleEl  = qs("#metric-modal-title");
   const bodyEl   = qs("#metric-modal-body");
-  the sourceEl = qs("#metric-modal-source");
+  const sourceEl = qs("#metric-modal-source");
 
   setText(titleEl, info.title || key || "—");
   bodyEl.innerHTML = buildMetricHTML(info);
@@ -902,7 +896,7 @@ qsa("[data-metric-close]").forEach(btn => {
 // ------------------------------------------------------------
 function initThemeToggle() {
   const btnTheme = qs("#btn-theme");
-  // può anche non esserci su alcune pagine, quindi non usciamo subito
+  if (!btnTheme) return;
 
   function applyTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
@@ -911,35 +905,24 @@ function initThemeToggle() {
     } catch(e){}
   }
 
-  // inizializzazione preferenza utente o default dark
   (function initFromStorage(){
     try {
       const saved = localStorage.getItem("tradelia-theme");
       if (saved === "dark" || saved === "light") {
-        // l'utente aveva già scelto → rispetta
         applyTheme(saved);
-      } else {
-        // prima visita → forza dark come default premium
-        applyTheme("dark");
       }
-    } catch(e){
-        // se localStorage non è accessibile, fallback dark
-        applyTheme("dark");
-    }
+    } catch(e){}
   })();
 
-  // se il bottone esiste, abilita toggle manuale
-  if (btnTheme) {
-    btnTheme.addEventListener("click", () => {
-      const cur = document.documentElement.getAttribute("data-theme") || "dark";
-      const next = (cur === "light" ? "dark" : "light");
-      applyTheme(next);
-    });
-  }
+  btnTheme.addEventListener("click", () => {
+    const cur = document.documentElement.getAttribute("data-theme") || "light";
+    const next = (cur === "light" ? "dark" : "light");
+    applyTheme(next);
+  });
 }
 
 // ------------------------------------------------------------
-// PRINT (disattivata per versione premium - funzione lasciata per futuro)
+// PRINT
 // ------------------------------------------------------------
 function initPrintButtons() {
   const p1 = qs("#btn-print");
@@ -1038,7 +1021,7 @@ async function bootUIRuntime() {
 
   // 2. init UI globali
   initThemeToggle();
-  // initPrintButtons(); // disattivato per versione premium
+  initPrintButtons();
   initShareOverlay();
   initLegalButtons();
 
@@ -1082,10 +1065,14 @@ window.__TradeliaUI.closeLegalPanel = closeLegalPanel;
     const hasAcceptedMifid = localStorage.getItem("mifidAcknowledged");
 
     if (!hasAcceptedMifid) {
+      // apri informativa MiFID in modalità blocking
       if (window.__TradeliaUI && typeof window.__TradeliaUI.openMifidPanel === "function") {
         window.__TradeliaUI.openMifidPanel();
       }
-      // NON salviamo qui. Salviamo solo su "Ho letto".
+
+      // IMPORTANTISSIMO:
+      // NON salviamo subito il flag, lo salviamo QUANDO l'utente clicca "Ho letto".
+      // Quindi niente localStorage.setItem qui.
     }
   } catch (e) {
     console.warn("enforceMifidFirstVisit error:", e);
