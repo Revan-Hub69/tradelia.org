@@ -548,23 +548,16 @@ function renderDrawerDesktopShellPublic(sectionsObj) {
 }
 
 function renderDrawerMobileShellPublic(sectionsObj) {
-  // barra tab sticky a larghezza piena (full bleed), agganciata al top del drawer scrollabile
+  // Barra tab mobile fissata sopra l'area scrollabile
   const mobileTabsBar = `
     <div
-      class="f1b-footer-tabs-wrap"
+      class="f1b-mobile-tabs-fixed"
       style="
-        position:sticky;
-        top:0;
-        z-index:10;
-
-        /* full bleed: allarga oltre il padding orizzontale del main */
-        margin:0 -1rem 0;
+        flex-shrink:0;
+        width:100%;
 
         display:flex;
         align-items:center;
-        max-width:100%;
-        overflow:hidden;
-        gap:.5rem;
 
         border-bottom:1px solid var(--br-panel-divider);
         background:var(--surface-panel-head);
@@ -574,6 +567,7 @@ function renderDrawerMobileShellPublic(sectionsObj) {
             color-mix(in oklab, var(--surface-panel-head) 90%, var(--brand) 2%) 0%,
             transparent 60%
           );
+
         box-shadow:0 6px 12px rgba(0,0,0,.12);
 
         padding:.6rem .75rem;
@@ -584,9 +578,11 @@ function renderDrawerMobileShellPublic(sectionsObj) {
         style="
           flex:1 1 auto;
           min-width:0;
+
           display:flex;
           align-items:center;
           gap:.5rem;
+
           overflow-x:auto;
           -webkit-overflow-scrolling:touch;
           scrollbar-width:none;
@@ -749,26 +745,40 @@ function renderDrawerMobileShellPublic(sectionsObj) {
         height:calc(100vh - 110px);
         max-height:calc(100vh - 110px);
         min-height:300px;
+
+        /* full-bleed background prende quello del panel */
+        background:var(--surface-panel-head);
+        background-image:
+          radial-gradient(
+            circle at 0% 0%,
+            color-mix(in oklab, var(--surface-panel-head) 90%, var(--brand) 2%) 0%,
+            transparent 60%
+          );
       "
     >
+      ${mobileTabsBar}
+
       <main
         class="f1b-panel-content-mobile flex-1 min-w-0"
         style="
+          /* lo scroll è SOLO qui */
           overflow:auto;
           -webkit-overflow-scrolling:touch;
-          padding:0 1rem 1rem;
+
+          /* padding interno del contenuto vero */
+          padding:1rem;
+          background:var(--surface-page);
+          background-image:none;
         "
         id="panel-body-mobile"
       >
-        ${mobileTabsBar}
-
-        <div data-f1b-view="regime" style="padding-top:1rem;">${sectionsObj.regimeHTML}</div>
-        <div data-f1b-view="breadth" hidden style="padding-top:1rem;">${sectionsObj.breadthHTML}</div>
-        <div data-f1b-view="internals" hidden style="padding-top:1rem;">${sectionsObj.internalsHTML}</div>
-        <div data-f1b-view="street" hidden style="padding-top:1rem;">${sectionsObj.streetHTML}</div>
-        <div data-f1b-view="sintesi" hidden style="padding-top:1rem;">${sectionsObj.sintesiHTML}</div>
-        <div data-f1b-view="audit" hidden style="padding-top:1rem;">${sectionsObj.auditHTML}</div>
-        <div data-f1b-view="mifid" hidden style="padding-top:1rem;">${sectionsObj.mifidHTML}</div>
+        <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
+        <div data-f1b-view="breadth" hidden>${sectionsObj.breadthHTML}</div>
+        <div data-f1b-view="internals" hidden>${sectionsObj.internalsHTML}</div>
+        <div data-f1b-view="street" hidden>${sectionsObj.streetHTML}</div>
+        <div data-f1b-view="sintesi" hidden>${sectionsObj.sintesiHTML}</div>
+        <div data-f1b-view="audit" hidden>${sectionsObj.auditHTML}</div>
+        <div data-f1b-view="mifid" hidden>${sectionsObj.mifidHTML}</div>
       </main>
     </div>
   `;
