@@ -832,7 +832,7 @@ function drawerMenuButtonPublic(key, label, active) {
 }
 
 function bindDrawerTabsPublic(root) {
-  // raccogliamo tutti i bottoni (desktop sidebar + barra mobile sticky)
+  // prendiamo tutti i bottoni tab (sidebar desktop + barra mobile)
   const tabButtons = document.querySelectorAll("[data-f1b-tab]");
   const views = document.querySelectorAll("[data-f1b-view]");
 
@@ -844,21 +844,30 @@ function bindDrawerTabsPublic(root) {
       const key = btn.getAttribute("data-f1b-tab");
       if (!key) return;
 
-      // attiva/deattiva bottoni ovunque
       tabButtons.forEach(b => {
         const isActive = b.getAttribute("data-f1b-tab") === key;
         b.classList.toggle("is-active", isActive);
 
-        // stile tab nella sidebar desktop
+        // DESKTOP sidebar
         if (b.classList.contains("f1b-tab-btn")) {
-          b.style.borderLeftColor = isActive ? "var(--brand-600)" : "transparent";
+          // forza TUTTA la shorthand border-left per battere lo style iniziale
+          b.style.borderLeft = isActive
+            ? "3px solid var(--brand-600)"
+            : "3px solid transparent";
+
+          // forza background pieno
           b.style.background = isActive
             ? "color-mix(in oklab, var(--surface-card-alt) 60%, transparent)"
             : "transparent";
+
+          // forza font-weight
           b.style.fontWeight = isActive ? "600" : "500";
+
+          // colore testo fisso
+          b.style.color = "var(--ink)";
         }
 
-        // stile tab nella barra mobile sticky
+        // MOBILE sticky tabs
         if (b.classList.contains("f1b-footer-tab-btn")) {
           if (isActive) {
             b.style.fontWeight = "600";
@@ -877,7 +886,7 @@ function bindDrawerTabsPublic(root) {
         }
       });
 
-      // mostra/nascondi viste
+      // mostra / nascondi viste
       views.forEach(viewEl => {
         const viewKey = viewEl.getAttribute("data-f1b-view");
         viewEl.hidden = viewKey !== key;
