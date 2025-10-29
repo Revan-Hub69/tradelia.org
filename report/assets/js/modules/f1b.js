@@ -261,9 +261,9 @@ function openF1DrawerPublic(data) {
 
     if (!scrollBox || !fadeRight) return;
 
-    // se non c'è overflow, nascondi i fade/hint
     const needsScroll = scrollBox.scrollWidth > scrollBox.clientWidth + 2;
     if (!needsScroll) {
+      // se non serve scroll orizzontale, nascondi fade/hint
       fadeRight.style.display = "none";
       const fadeLeftNoScroll = document.querySelector(".f1b-tabs-fade-left");
       if (fadeLeftNoScroll) {
@@ -279,7 +279,7 @@ function openF1DrawerPublic(data) {
         scrollBox.scrollLeft + scrollBox.clientWidth >=
         scrollBox.scrollWidth - 4;
 
-      // se sei in fondo → freccina dx sparisce
+      // se sei alla fine → freccina dx sparisce
       if (hintEl) {
         hintEl.style.opacity = atEnd ? "0" : ".9";
       }
@@ -368,7 +368,6 @@ function buildDrawerSectionsPublic(d) {
   `;
 
   // 2. Breadth & Rotazione
-  // Leadership ora può avere tone separato per ciascun blocco
   const breadthHTML = `
     <section class="tl-panel-section" data-f1b-section="breadth"
       style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -403,7 +402,7 @@ function buildDrawerSectionsPublic(d) {
     </section>
   `;
 
-  // 3. Market Internals (dati grezzi) — con tone
+  // 3. Market Internals (dati grezzi)
   const internalsHTML = `
     <section class="tl-panel-section" data-f1b-section="internals"
       style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -440,7 +439,7 @@ function buildDrawerSectionsPublic(d) {
     </section>
   `;
 
-  // 5. Conclusione · Tradelia AI (educational) — tone per punti e summary
+  // 5. Conclusione · Tradelia AI (educational)
   const sintesiHTML = `
     <section class="tl-panel-section" data-f1b-section="sintesi"
       style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -805,7 +804,7 @@ function bindDrawerTabsPublic(root) {
 }
 
 /* -----------------------------------------------------------------------------
-// CARD SYSTEM (look coerente ovunque nel drawer)
+// CARD SYSTEM
 // ----------------------------------------------------------------------------*/
 
 function f1bCard({ tone, title, bodyHtml, noteHtml }) {
@@ -916,9 +915,7 @@ function metricBlock(metricKey, title, desc, metricObj) {
 }
 
 // Leadership settoriale
-// Supporta:
-// - vecchio: ["Tech","Energy",...]
-// - nuovo: { tone:"green", items:[...], ai_note:"..." }
+// Supporta sia array semplice che oggetto { tone, items, ai_note }
 function sectorListDetailed(title, leadershipBlock) {
   let tone = "neutral";
   let itemsArr = [];
@@ -949,6 +946,17 @@ function sectorListDetailed(title, leadershipBlock) {
     `;
 
   const bodyHtml = `
+    <div class="flex items-start justify-between gap-2 mb-1">
+      <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide">
+        ${escapeHtml(title || "")}
+      </div>
+      <button
+        class="info-btn"
+        data-metric="${escapeAttr(title || "Leadership")}"
+        aria-label="Info ${escapeAttr(title || "Leadership")}"
+      >?</button>
+    </div>
+
     <ul class="list-disc pl-4 space-y-1">
       ${listHtml}
     </ul>
@@ -956,7 +964,7 @@ function sectorListDetailed(title, leadershipBlock) {
 
   return f1bCard({
     tone,
-    title,
+    title: "",
     bodyHtml,
     noteHtml: extraNote
       ? `<span class="text-[11px] text-[color:var(--muted)] leading-[1.4]">${escapeHtml(extraNote)}</span>`
@@ -965,9 +973,7 @@ function sectorListDetailed(title, leadershipBlock) {
 }
 
 // Liste grezze dal mercato (internals)
-// Supporta:
-// - vecchio: ["SPX +1.6%", "NDX +1.9%"]
-// - nuovo: { tone:"green", items:[...], ai_note:"..." }
+// Supporta array semplice o { tone, items, ai_note }
 function listBlockCard(title, block) {
   let tone = "neutral";
   let rowsArr = [];
@@ -996,6 +1002,17 @@ function listBlockCard(title, block) {
     `;
 
   const bodyHtml = `
+    <div class="flex items-start justify-between gap-2 mb-1">
+      <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide">
+        ${escapeHtml(title || "")}
+      </div>
+      <button
+        class="info-btn"
+        data-metric="${escapeAttr(title || "Internals")}"
+        aria-label="Info ${escapeAttr(title || "Internals")}"
+      >?</button>
+    </div>
+
     <ul class="pl-4 list-disc space-y-1">
       ${listItems}
     </ul>
@@ -1007,16 +1024,14 @@ function listBlockCard(title, block) {
 
   return f1bCard({
     tone,
-    title,
+    title: "",
     bodyHtml,
     noteHtml
   });
 }
 
-// Blocchi narrativi istituzionali (Street View, Sintesi summary)
-// Supporta:
-// - stringa semplice
-// - oggetto { raw:"...", tone:"green", ai_note:"..." }
+// Blocchi narrativi istituzionali / MiFID
+// Supporta stringa o oggetto { raw, tone, ai_note }
 function headlineBlockCard(title, body) {
   if (!body && body !== 0) return "";
 
@@ -1032,7 +1047,33 @@ function headlineBlockCard(title, body) {
     aiNoteLocal = body.ai_note || "";
   }
 
+  // Header:
+  // - Se è "Informativa" (MiFID) → includi bottone ?
+  // - Per gli altri casi Street View, Consensus Tone ecc → solo titolo (com’era prima)
+  let headingHtml = "";
+  if (title === "Informativa") {
+    headingHtml = `
+      <div class="flex items-start justify-between gap-2 mb-2">
+        <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide">
+          ${escapeHtml(title)}
+        </div>
+        <button
+          class="info-btn"
+          data-metric="MiFID_disclaimer"
+          aria-label="Info MiFID"
+        >?</button>
+      </div>
+    `;
+  } else {
+    headingHtml = `
+      <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide mb-2">
+        ${escapeHtml(title || "")}
+      </div>
+    `;
+  }
+
   const bodyHtml = `
+    ${headingHtml}
     <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)] whitespace-pre-line">
       ${escapeHtml(rawText)}
     </div>
@@ -1044,7 +1085,7 @@ function headlineBlockCard(title, body) {
 
   return f1bCard({
     tone,
-    title,
+    title: "",
     bodyHtml,
     noteHtml
   });
