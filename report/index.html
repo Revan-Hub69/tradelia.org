@@ -402,64 +402,102 @@
   </main>
 
   <!-- FOOTER -->
-  <div class="footer-wrap">
-    <footer class="site-footer container py-4">
-      <div class="border-t border-[color:var(--footer-br)] pt-3 grid gap-4 md:flex md:items-start md:justify-between">
-        <div class="min-w-0">
-          <div class="heading">
-            TRADELIA<span class="text-[color:var(--brand)]">&bull;AI</span>
-          </div>
+<div class="footer-wrap">
+  <footer class="site-footer container py-4">
+    <div class="border-t border-[color:var(--footer-br)] pt-3 grid gap-6 md:flex md:items-start md:justify-between">
 
-  <div class="mt-1">
-  Report <span id="footer-company">{NOME AZIENDA}</span> ·
-  <span id="footer-version">v1.0</span>
-</div>
-
-
-          <div class="mt-1">
-            Snapshot: <span id="footer-snapshot">—</span>
-          </div>
-
-          <div class="mt-1">
-            Ultimo aggiornamento: <span id="footer-updated">—</span>
-          </div>
+      <!-- COLONNA 1 · Identità / Snapshot -->
+      <div class="min-w-0">
+        <div class="heading">
+          TRADELIA<span class="text-[color:var(--brand)]">&bull;AI</span>
         </div>
 
-        <div class="min-w-0">
-          <div class="heading">Metodo</div>
-          <p class="mt-1 text-[13px] leading-[1.45]">
-            F1 = contesto iniziale / regime di mercato.<br/>
-            F2 = sentiment &amp; flussi.<br/>
-            F3 = analisi tecnica multi-timeframe.<br/>
-            F4 = relazioni intermarket.<br/>
-            F5 = resoconto tecnico.<br/>
-            F5B = validazione LT.<br/>
-            F6 = broker selezionati.
-          </p>
+        <div class="mt-1 text-[13px] leading-[1.45] text-[color:var(--ink)]">
+          Report <span id="footer-company">{NOME AZIENDA}</span><br/>
+          Versione <span id="footer-version">v1.0</span>
         </div>
 
-        <div class="min-w-0">
-          <div class="heading">Legale</div>
-          <div class="mt-2 flex flex-wrap gap-6">
-            <button class="btn btn-sm" id="btn-privacy-open" type="button">Privacy</button>
-            <button class="btn btn-sm" id="btn-mifid-open" type="button">Informativa MiFID</button>
-            
-          </div>
-          <p class="mt-2 text-[12.5px] opacity-90">
-            Nessun cookie di profilazione. Preferenze salvate solo in locale.
-          </p>
+        <div class="mt-2 text-[12.5px] leading-[1.45] opacity-90">
+          Finestra analizzata:
+          <span id="footer-snapshot">—</span><br/>
+          Ultimo aggiornamento:
+          <span id="footer-updated">—</span>
         </div>
       </div>
 
-      <div class="mt-3 text-[12.5px] opacity-90">
-        © <span id="footer-year"></span> Tradelia. Tutti i diritti riservati. ·
-        Contenuti a scopo puramente informativo/formativo.
-        Nessuna raccomandazione personalizzata.
+      <!-- COLONNA 2 · Fonti -->
+      <div class="min-w-0">
+        <div class="heading">Fonti e dati</div>
+        <p class="mt-2 text-[12.5px] leading-[1.45] opacity-90">
+          Le analisi utilizzano informazioni raccolte da fonti pubbliche e professionali ritenute affidabili,
+          tra cui:
+        </p>
+        <ul class="mt-2 text-[12.5px] leading-[1.45] opacity-90 space-y-1">
+          <li><a href="https://www.bloomberg.com" target="_blank" rel="noopener" class="underline hover:opacity-80">Bloomberg</a></li>
+          <li><a href="https://www.reuters.com" target="_blank" rel="noopener" class="underline hover:opacity-80">Reuters</a></li>
+          <li><a href="https://finviz.com" target="_blank" rel="noopener" class="underline hover:opacity-80">Finviz Premium</a></li>
+          <li><a href="https://www.barchart.com" target="_blank" rel="noopener" class="underline hover:opacity-80">Barchart</a></li>
+          <li><a href="https://fred.stlouisfed.org" target="_blank" rel="noopener" class="underline hover:opacity-80">FRED (Federal Reserve)</a></li>
+          <li><a href="https://www.cmegroup.com" target="_blank" rel="noopener" class="underline hover:opacity-80">CME Group</a></li>
+          <li><a href="https://www.imf.org" target="_blank" rel="noopener" class="underline hover:opacity-80">IMF</a></li>
+          <li><a href="https://data.worldbank.org" target="_blank" rel="noopener" class="underline hover:opacity-80">World Bank</a></li>
+        </ul>
+        <p class="mt-2 text-[12.5px] leading-[1.45] opacity-90">
+          Tutti i diritti appartengono ai rispettivi proprietari.
+          Screenshot e loghi sono usati a fini informativi, educativi e di ricerca.
+        </p>
+      </div>
+
+      <!-- COLONNA 3 · Disclaimer / Legal -->
+      <div class="min-w-0">
+        <div class="heading">Avvertenza</div>
+
+        <p class="mt-2 text-[12.5px] leading-[1.45] opacity-90">
+          <strong>Tradelia AI</strong> è un’iniziativa educativa e indipendente di analisi e divulgazione economico-finanziaria.
+          Non è un intermediario finanziario, non è una testata giornalistica e non fornisce consulenza personalizzata.
+        </p>
+
+        <p class="mt-2 text-[12.5px] leading-[1.45] opacity-90">
+          Le informazioni hanno esclusivamente scopo informativo e didattico.
+          Non costituiscono raccomandazioni operative o inviti all’investimento ai sensi della direttiva
+          <strong>MiFID II</strong> e della normativa <strong>ESMA</strong>.
+        </p>
+
+        <p class="mt-2 text-[12.5px] leading-[1.45] opacity-90">
+          Le analisi riflettono interpretazioni soggettive, basate su fonti ritenute affidabili
+          ma che possono contenere errori, omissioni o ritardi. Non garantiamo accuratezza,
+          completezza o affidabilità dei dati. Ogni decisione finanziaria comporta rischio di perdita,
+          anche totale, del capitale.
+        </p>
+
+        <div class="mt-3 flex flex-wrap gap-6">
+          <button class="btn btn-sm" id="btn-privacy-open" type="button">Privacy</button>
+          <button class="btn btn-sm" id="btn-mifid-open" type="button">Informativa MiFID</button>
+        </div>
+
+        <p class="mt-2 text-[12.5px] opacity-90">
+          Nessun cookie di profilazione. Le preferenze utente (es. tema chiaro/scuro)
+          vengono salvate solo in locale sul dispositivo.
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-6 text-[12.5px] leading-[1.45] opacity-90 md:flex md:items-baseline md:justify-between gap-4">
+      <div class="min-w-0">
+        © <span id="footer-year"></span> <strong>Tradelia AI</strong>.
+        Tutti i diritti riservati.
         Contatti:
         <a href="mailto:info@tradelia.org" class="underline hover:opacity-80">info@tradelia.org</a>
       </div>
-    </footer>
-  </div>
+
+      <div class="min-w-0 mt-2 md:mt-0 text-[12.5px] leading-[1.45] opacity-90">
+        Missione: diffondere conoscenza, metodo e consapevolezza finanziaria
+        in modo indipendente e senza sponsor.
+      </div>
+    </div>
+  </footer>
+</div>
+
 
   <!-- PANEL OVERLAY (analitico: F1B, Audit, ecc.) -->
   <div id="panel-overlay" class="tl-panel-overlay noprint" aria-hidden="true">
