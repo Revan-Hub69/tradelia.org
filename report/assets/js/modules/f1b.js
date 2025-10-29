@@ -11,7 +11,7 @@
 //
 // Architettura
 // - Tutti i contenuti dinamici arrivano da rawData (JSON back-end / feed dati)
-// - Il codice definisce solo layout, stile visivo, tassonomia F1B e disclaimer legale
+// - Il codice definisce layout, stile visivo, tassonomia F1B e disclaimer
 //
 // Export
 //   renderCard(rawData, ctx?)
@@ -21,7 +21,7 @@
 //   window.__TradeliaUI.openPanel()
 //   window.__TradeliaUI.closePanel()
 //   window.__TradeliaUI.bindMetricInfoButtons()
-//
+
 // -----------------------------------------------------------------------------
 // RENDER CARD PRINCIPALE (F1B snapshot pubblico)
 // -----------------------------------------------------------------------------
@@ -254,51 +254,81 @@ function openF1DrawerPublic(data) {
     footerTabs: []
   });
 
-  // post-mount binding (tab switching + tooltip binding interno)
+  // helper per hint di scroll orizzontale tab mobile
   function initScrollableTabsHint() {
-  // prendi la barra scrollabile e l'hint
-  const scrollBox = document.querySelector(".f1b-footer-tabs-scroll");
-  const fadeRight = document.querySelector(".f1b-tabs-fade-right");
+    const scrollBox = document.querySelector(".f1b-footer-tabs-scroll");
+    const fadeRight = document.querySelector(".f1b-tabs-fade-right");
 
-  if (!scrollBox || !fadeRight) return;
+    if (!scrollBox || !fadeRight) return;
 
-  // se non c'è overflow (cioè tutto entra), togliamo proprio la freccia+fade dx
-  const needsScroll = scrollBox.scrollWidth > scrollBox.clientWidth + 2;
-  if (!needsScroll) {
-    fadeRight.style.display = "none";
-    return;
-  }
-
-  // se l'utente scrolla un po', nascondi l'hint di freccia per non dare fastidio
-  const hintEl = fadeRight.querySelector(".f1b-tabs-scroll-hint");
-
-  function updateHint() {
-    const atEnd = scrollBox.scrollLeft + scrollBox.clientWidth >= scrollBox.scrollWidth - 4;
-    // se siamo molto a destra, la freccia non serve più
-    if (hintEl) {
-      hintEl.style.opacity = atEnd ? "0" : ".9";
+    // se non c'è overflow, nascondi i fade/hint
+    const needsScroll = scrollBox.scrollWidth > scrollBox.clientWidth + 2;
+    if (!needsScroll) {
+      fadeRight.style.display = "none";
+      const fadeLeftNoScroll = document.querySelector(".f1b-tabs-fade-left");
+      if (fadeLeftNoScroll) {
+        fadeLeftNoScroll.style.display = "none";
+      }
+      return;
     }
-    // fade-left visibile solo se NON siamo all'inizio
-    const fadeLeft = document.querySelector(".f1b-tabs-fade-left");
-    if (fadeLeft) {
-      fadeLeft.style.opacity = scrollBox.scrollLeft > 2 ? ".6" : "0";
+
+    const hintEl = fadeRight.querySelector(".f1b-tabs-scroll-hint");
+
+    function updateHint() {
+      const atEnd =
+        scrollBox.scrollLeft + scrollBox.clientWidth >=
+        scrollBox.scrollWidth - 4;
+
+      // se sei in fondo → freccina dx sparisce
+      if (hintEl) {
+        hintEl.style.opacity = atEnd ? "0" : ".9";
+      }
+
+      // fade sinistra solo dopo che hai iniziato a scrollare
+      const fadeLeft = document.querySelector(".f1b-tabs-fade-left");
+      if (fadeLeft) {
+        fadeLeft.style.opacity = scrollBox.scrollLeft > 2 ? ".6" : "0";
+      }
     }
-  }
 
-  // prima chiamata
-  updateHint();
-
-  scrollBox.addEventListener("scroll", () => {
+    // sync iniziale
     updateHint();
-  }, { passive: true });
-}
 
+    scrollBox.addEventListener(
+      "scroll",
+      () => {
+        updateHint();
+      },
+      { passive: true }
+    );
+  }
 
-    // stato iniziale
+  // post-mount: bind tab, tooltip interno, stato iniziale tab, hint scroll
+  setTimeout(() => {
+    const roots = [
+      document.getElementById("panel-body"),
+      document.getElementById("panel-body-mobile")
+    ].filter(Boolean);
+
+    roots.forEach(r => {
+      bindDrawerTabsPublic(r);
+      if (
+        window.__TradeliaUI &&
+        typeof window.__TradeliaUI.bindMetricInfoButtons === "function"
+      ) {
+        try {
+          window.__TradeliaUI.bindMetricInfoButtons(r);
+        } catch (e) {}
+      }
+    });
+
+    // stato iniziale → tab "regime"
     const firstTabBtn = document.querySelector('[data-f1b-tab="regime"]');
     if (firstTabBtn && typeof firstTabBtn.click === "function") {
       firstTabBtn.click();
     }
+
+    initScrollableTabsHint();
   }, 0);
 }
 
@@ -307,7 +337,7 @@ function isMobileViewport() {
 }
 
 /* -----------------------------------------------------------------------------
-// CONTENUTO DEL DRAWER (TUTTO DINAMICO DAI DATI)
+// CONTENUTO DEL DRAWER
 // ----------------------------------------------------------------------------*/
 
 function buildDrawerSectionsPublic(d) {
@@ -373,7 +403,7 @@ function buildDrawerSectionsPublic(d) {
     </section>
   `;
 
-  // 3. Market Internals (dati grezzi) — ORA con tone
+  // 3. Market Internals (dati grezzi) — con tone
   const internalsHTML = `
     <section class="tl-panel-section" data-f1b-section="internals"
       style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -410,7 +440,7 @@ function buildDrawerSectionsPublic(d) {
     </section>
   `;
 
-  // 5. Conclusione · Tradelia AI (educational) — ora con tone sui punti e summary
+  // 5. Conclusione · Tradelia AI (educational) — tone per punti e summary
   const sintesiHTML = `
     <section class="tl-panel-section" data-f1b-section="sintesi"
       style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -437,7 +467,7 @@ function buildDrawerSectionsPublic(d) {
     </section>
   `;
 
-  // 6. Audit & Qualità dati (già semaforico)
+  // 6. Audit & Qualità dati
   const auditHTML = `
     <section class="tl-panel-section" data-f1b-section="audit"
       style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -684,7 +714,7 @@ function renderDrawerMobileShellPublic(sectionsObj) {
 // ----------------------------------------------------------------------------*/
 
 function drawerMenuButtonPublic(key, label) {
-  // desktop tab button, stile controllato da tokens.css (.f1b-tab-btn)
+  // desktop tab button (sidebar)
   return `
     <button
       class="f1b-tab-btn"
@@ -720,7 +750,6 @@ function mobileTabButton(key, label) {
     </button>
   `;
 }
-
 
 function bindDrawerTabsPublic(root) {
   const tabButtons = document.querySelectorAll("[data-f1b-tab]");
@@ -779,7 +808,6 @@ function bindDrawerTabsPublic(root) {
 // CARD SYSTEM (look coerente ovunque nel drawer)
 // ----------------------------------------------------------------------------*/
 
-// Card base riutilizzabile
 function f1bCard({ tone, title, bodyHtml, noteHtml }) {
   const { dotColor } = toneColors(tone);
   return `
@@ -811,7 +839,7 @@ function f1bCard({ tone, title, bodyHtml, noteHtml }) {
   `;
 }
 
-// KPI compatte nella hero principale (fuori dal drawer)
+// KPI compatte nella hero principale
 function metricBoxTrafficLight({ key, label, desc, metric }) {
   const { dotColor, textColor } = toneColors(metric?.tone);
   return `
@@ -888,7 +916,7 @@ function metricBlock(metricKey, title, desc, metricObj) {
 }
 
 // Leadership settoriale
-// PATCH: ora supporta due formati:
+// Supporta:
 // - vecchio: ["Tech","Energy",...]
 // - nuovo: { tone:"green", items:[...], ai_note:"..." }
 function sectorListDetailed(title, leadershipBlock) {
@@ -897,7 +925,6 @@ function sectorListDetailed(title, leadershipBlock) {
   let extraNote = "";
 
   if (Array.isArray(leadershipBlock)) {
-    // backward compatibility
     itemsArr = leadershipBlock;
   } else if (leadershipBlock && typeof leadershipBlock === "object") {
     tone = leadershipBlock.tone || "neutral";
@@ -938,7 +965,7 @@ function sectorListDetailed(title, leadershipBlock) {
 }
 
 // Liste grezze dal mercato (internals)
-// PATCH: ora accetta:
+// Supporta:
 // - vecchio: ["SPX +1.6%", "NDX +1.9%"]
 // - nuovo: { tone:"green", items:[...], ai_note:"..." }
 function listBlockCard(title, block) {
@@ -987,7 +1014,7 @@ function listBlockCard(title, block) {
 }
 
 // Blocchi narrativi istituzionali (Street View, Sintesi summary)
-// PATCH: ora può ricevere:
+// Supporta:
 // - stringa semplice
 // - oggetto { raw:"...", tone:"green", ai_note:"..." }
 function headlineBlockCard(title, body) {
@@ -1024,7 +1051,6 @@ function headlineBlockCard(title, body) {
 }
 
 // Punti sintetici AI
-// PATCH: ora supporta tone per ogni punto
 // { title, raw, tone, ai_note }
 function conclusionPointBlock(pointObj = {}) {
   const tone = pointObj.tone || "neutral";
@@ -1046,7 +1072,7 @@ function conclusionPointBlock(pointObj = {}) {
   });
 }
 
-// Audit & Qualità dati (già semaforico)
+// Audit & Qualità dati
 function qualityChip(keyName, qObj) {
   if (!qObj) return "";
   const { textColor } = toneColors(qObj.tone);
@@ -1137,7 +1163,7 @@ function computeHighLevelTone(strategyModeMacroObj, regimeScoreObj) {
 }
 
 /* -----------------------------------------------------------------------------
-// NORMALIZZAZIONE DATI (TUTTO QUI È DINAMICO)
+// NORMALIZZAZIONE DATI
 // ----------------------------------------------------------------------------*/
 
 function normalizeDataPublicF1B(src = {}) {
