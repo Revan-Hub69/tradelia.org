@@ -39,5 +39,253 @@
     "what": "Confidenza interna del sistema sulla qualità del dato e sulla coerenza del quadro tecnico/contestuale mostrato. Integra qualità del feed di prezzo, copertura volumi, continuità serie storiche e assenza di buchi dati.",
     "how": "È una misura di affidabilità del report, NON una previsione di profitto. Valori alti = i dati sono puliti, allineati e completi; valori bassi = i dati potrebbero essere parziali (es. mercato illiquido, fuori orario, spike anomali, gap di volume).",
     "source": "Heuristics proprietari Tradelia AI su integrità feed, continuità serie e stabilità del segnale tecnico."
+  },
+  const F1B_GLOSSARIO = {
+  // --- META / CONTESTO ---
+
+  "ModuleStatus": {
+    "title": "ModuleStatus",
+    "what": "Stato operativo del modulo F1B al momento della pubblicazione (es. ACTIVE, DEGRADED, PARTIAL).",
+    "how": "Se non è ACTIVE significa che uno o più input potrebbero essere incompleti o meno affidabili (es. feed hedge rotto, ritardo su curva tassi).",
+    "source": "Sistema di monitoraggio interno Tradelia AI sullo stato dei feed e delle pipeline."
+  },
+
+  "Freshness": {
+    "title": "Freshness",
+    "what": "Quanto sono recenti i dati sottostanti (prezzi, volatilità, curva tassi, sentiment risk) rispetto all’orario di generazione del report.",
+    "how": "Freshness alta (tipo '≤ T-1' o 'live') = lettura molto vicina allo stato corrente del mercato. Freshness bassa (es. 'T-2') = il mercato potrebbe essersi già mosso.",
+    "source": "Timestamp interni di ingestione Tradelia AI + latenza feed esterni (Bloomberg/Reuters/CBOE ecc.)."
+  },
+
+  "HeroDisclaimer": {
+    "title": "Disclaimer",
+    "what": "Questo modulo è materiale informativo/educativo sul contesto rischio.",
+    "how": "Non tiene conto dei tuoi obiettivi personali, profilo di rischio o orizzonte temporale. Non è una raccomandazione a comprare/vendere strumenti finanziari.",
+    "source": "Linee guida MiFID II / ESMA su comunicazioni non-personalizzate e materiale di marketing."
+  },
+
+
+  // --- REGIME & RISCHIO ---
+
+  "StrategyMode_macro": {
+    "title": "StrategyMode",
+    "what": "Classificazione sintetica del regime corrente di mercato a 3–10 giorni. Tipicamente: Momentum, Neutral / Range, Pullback.",
+    "how": "‘Momentum’ = mercato che tende a premiare il rischio, bid diffuso su asset di rischio e volatilità sotto controllo. ‘Pullback’ = mercato in fase di stress o scarico rischio, con domanda di hedge/qualità. Serve a capire il tono dominante, NON è un segnale operativo.",
+    "source": "Combinazione proprietaria di volatilità implicita, flussi rischio, breadth e spread credito strutturata da Tradelia AI."
+  },
+
+  "RegimeScore": {
+    "title": "RegimeScore",
+    "what": "Indice sintetico di appetito al rischio. Verde = appetito rischio costruttivo, Rosso = avversione al rischio / flight to safety.",
+    "how": "È utile come ‘termometro’ di quanto il mercato è disposto a sopportare drawdown di breve in cambio di upside. Non è una view direzionale, è un’interpretazione del clima rischio.",
+    "source": "Ponderazione di volatilità, credito, liquidità, leadership settoriale high beta/ciclica vs difensiva."
+  },
+
+  "VolRegime": {
+    "title": "Volatilità / Hedge",
+    "what": "Stato della domanda di protezione: volatilità implicita (es. VIX), ricerca di hedge, bid su beni rifugio come oro/USD.",
+    "how": "Tono verde = bassa domanda di protezione; tono rosso = mercato sta pagando per proteggersi. Utile per capire se il mercato è rilassato o nervoso.",
+    "source": "CBOE vol surfaces, future su volatilità, prezzi oro, comportamento cross-asset monitorato da Tradelia AI."
+  },
+
+  "LiquidityRegimeScore": {
+    "title": "Curva & Costo capitale",
+    "what": "Quanto le condizioni di funding e la struttura della curva tassi (es. Treasury) stanno aiutando o frenando il rischio.",
+    "how": "Curve accomodanti → facilita equity/speculazione; curve tese / stress di funding → rischio più difficile da sostenere. È una proxy macro-finanziaria del freno/acceleratore.",
+    "source": "Curve Treasury USA, stress su funding a breve, misure interne di tightness/slope calcolate da Tradelia AI."
+  },
+
+  "CreditRiskBlock": {
+    "title": "Credito",
+    "what": "Segnali del mercato del credito tra rischio alto beta e qualità investment grade. Se il rischio credito 'debole' scappa, è spesso un early warning.",
+    "how": "Serve per intercettare flight-to-quality: se gli spread sul credito high beta si allargano rispetto alla qualità, il mercato equity spesso si fa più difensivo.",
+    "source": "Spread HY vs IG, flussi su bond corporate, desk tone sell-side, letti e sintetizzati da Tradelia AI."
+  },
+
+  "FX_Regime": {
+    "title": "FX / USD",
+    "what": "Tono del dollaro USA e delle major FX come proxy di rischio globale.",
+    "how": "USD forte spesso = risk-off globale (costo finanziamento in USD sale). USD morbido spesso = condizioni rischio più facili. È un ‘macro mood check’.",
+    "source": "Cross FX principali (DXY, EUR/USD, USD/JPY) e metriche liquidità USD monitorate da Tradelia AI."
+  },
+
+  "RiskWindow": {
+    "title": "RiskWindow (3–10g)",
+    "what": "Driver macro che riteniamo potenzialmente sensibili nel prossimo orizzonte tattico (3–10 giorni).",
+    "how": "È una lista di fattori di rischio imminenti (dati macro, eventi politici, rollover liquidità, ecc.). NON è una call direzionale, è un elenco di cose da cui ci aspettiamo movimento.",
+    "source": "Calendario macro, flussi sistemici osservati e shock potenziali in arrivo raccolti da Tradelia AI."
+  },
+
+
+  // --- BREADTH & ROTAZIONE EQUITY ---
+
+  "Breadth_1M": {
+    "title": "Breadth (1M)",
+    "what": "Percentuale di settori / gruppi tematici che sono positivi nell’ultimo ~mese.",
+    "how": "Breadth ampia = rialzo ‘sano’, sostenuto dal mercato allargato. Breadth stretta = poche megacap/temi stanno tirando su tutto il resto (più fragile).",
+    "source": "Aggregazione performance settoriali / tematiche su base 1M, pesata e classificata internamente."
+  },
+
+  "RiskTilt_1M": {
+    "title": "RiskTilt (1M)",
+    "what": "Rotazione rischio: ciclici/high beta/growth vs settori difensivi/high quality nello stesso periodo (~1 mese).",
+    "how": "Se prevalgono ciclici/growth → mercato sta comprando rischio. Se prevalgono difensivi → mercato si sta schermando. Utile per leggere il posizionamento qualitativo, non per stock picking.",
+    "source": "Spread di performance tra panieri fattoriali risk-on vs difensivi costruiti da Tradelia AI."
+  },
+
+  "SmallCapPressure_1W": {
+    "title": "SmallCap Pressure (1W)",
+    "what": "Pressione relativa su small/micro cap vs mid/large cap negli ultimi ~5 giorni di mercato.",
+    "how": "Small cap deboli rispetto alle large cap spesso = mercato che sta togliendo rischio marginale. Small cap forti = appetito rischio più profondo.",
+    "source": "Confronto tra indici/panieri small-cap e large-cap monitorati internamente."
+  },
+
+  "IndexMomentum_1W": {
+    "title": "Index Momentum (1W)",
+    "what": "Momentum tattico cross-indici (equity, a volte crypto beta, altri asset rischio) nell’ultima settimana circa.",
+    "how": "Dice se il flusso recente è coerente (risk-on generalizzato) o isolato (solo un indice specifico). Quando è coerente è più credibile come tono macro.",
+    "source": "Performance relativa e co-movimento tra indici equity principali, crypto beta e altri proxy rischio raccolti da Tradelia AI."
+  },
+
+  "SizeBias": {
+    "title": "Size Bias",
+    "what": "Preferenza del mercato per una certa fascia di capitalizzazione (mega/large vs mid vs small).",
+    "how": "Se il mercato predilige solo mega-cap è spesso un rischio di concentrazione. Se il bid arriva anche su fascia più piccola → breadth migliore.",
+    "source": "Analisi della leadership relativa tra panieri per dimensione aziendale."
+  },
+
+  "Leadership multi-timeframe": {
+    "title": "Leadership multi-timeframe",
+    "what": "Settori/temi che guidano il mercato su più orizzonti (breve+medio).",
+    "how": "Se gli stessi temi vincono su più timeframe, spesso è un trend strutturale e non solo rumore intraday.",
+    "source": "Ranking interno Tradelia AI di performance combinata su orizzonti diversi (es. 1W + 1M)."
+  },
+
+  "Leadership difensiva qualitativa": {
+    "title": "Leadership difensiva qualitativa",
+    "what": "Settori considerati 'rifugio' (qualità, stabilità flussi di cassa, pricing power) che stanno sovraperformando.",
+    "how": "Quando questa leadership domina vuol dire che il mercato sta privilegiando sicurezza e resilienza rispetto a crescita aggressiva.",
+    "source": "Analisi proprietaria fattori quality / low-vol / defensives vs mercato generale."
+  },
+
+  "Settori in ritardo": {
+    "title": "Settori in ritardo",
+    "what": "Temi/settori che stanno sottoperformando in modo persistente.",
+    "how": "Coda debole del mercato: spesso coincide con aree cicliche più sensibili al ciclo macro o con temi hype scarichi.",
+    "source": "Ranking bottom performers multi-timeframe calcolato da Tradelia AI."
+  },
+
+
+  // --- MARKET INTERNALS / DATI GREZZI ---
+
+  "Indici (1W)": {
+    "title": "Indici (1W)",
+    "what": "Movimento settimanale sintetico dei principali indici (es. SPX, NDX...).",
+    "how": "Serve per contestualizzare il tono risk-on/off più immediato. Non è una raccomandazione, è solo stato recente.",
+    "source": "Dati di mercato su indici equity blue-chip consolidati da Tradelia AI."
+  },
+
+  "Futures / Commodities (1W)": {
+    "title": "Futures / Commodities (1W)",
+    "what": "Move recente su future chiave e materie prime sensibili a macro (energia, metalli, ecc.).",
+    "how": "Aiuta a capire se il mercato sta prezzando stress inflattivo, crescita, o rischio geopolitico.",
+    "source": "Feed futures/commodities (energia, metalli industriali, oro) osservati su base ~1W."
+  },
+
+  "Curva Treasury": {
+    "title": "Curva Treasury",
+    "what": "Forma e movimenti della curva dei tassi governativi USA.",
+    "how": "Curva ripida in su lato breve/lungo, inversione, bear steepening… sono tutte letture che impattano costo del capitale e sentiment rischio globale.",
+    "source": "US Treasury yield curve e relative variazioni giorno/settimanali, rielaborate da Tradelia AI."
+  },
+
+  "Volatilità & USD": {
+    "title": "Volatilità & USD",
+    "what": "Quadro combinato tra volatilità implicita e forza del dollaro.",
+    "how": "Vol alta + USD forte spesso = risk-off globale (corsa alla protezione). Vol contenuta + USD morbido spesso = contesto più disteso.",
+    "source": "CBOE vol indices, cross FX USD e proxy di liquidità USD monitorati da Tradelia AI."
+  },
+
+
+  // --- STREET VIEW / NARRATIVA ---
+
+  "T1_MacroNews": {
+    "title": "Macro (Street / Media pro)",
+    "what": "Sintesi dei driver macro dominanti (crescita, inflazione, banche centrali, geopolitica) come emergono da flussi Reuters/Bloomberg/Barron's e desk macro.",
+    "how": "Serve per capire 'di cosa parla la sala trading' oggi. È narrativa, non è verità assoluta.",
+    "source": "Headline macro-tier1 e sintesi sell-side raccolte da Tradelia AI."
+  },
+
+  "T1_SellSideNotes": {
+    "title": "Sell-Side / Street View",
+    "what": "Appunti sintetici dalle note di case d'investimento / banche d'affari (Goldman, JPM, ecc.).",
+    "how": "Dà il tono istituzionale: dove sta andando il consenso professionale su rischio, settori caldi, posizionamento.",
+    "source": "Note sell-side e circolari desk risk, lette e ridotte da Tradelia AI."
+  },
+
+  "T1_ConsensusTone": {
+    "title": "Consensus Tone",
+    "what": "Come si sta muovendo il consenso mainstream: più costruttivo, più prudente, oppure apertamente difensivo.",
+    "how": "Ti fa capire se il mercato è 'tutto dalla stessa parte' (crowded view) o se è ancora bilanciato.",
+    "source": "Lettura qualitativa delle narrative prevalenti su macro, equity risk, credito e liquidità."
+  },
+
+
+  // --- SINTESI AI (EDUCATIONAL) ---
+
+  "AI_Point": {
+    "title": "Punto chiave AI",
+    "what": "Osservazione sintetica generata/riassunta da Tradelia AI su uno specifico driver di rischio.",
+    "how": "Non è un segnale operativo. È letteralmente 'cosa sta succedendo secondo noi' in linguaggio umano, per aiutarti a leggere il contesto.",
+    "source": "Modelli interni di sintesi che incrociano volatilità, credito, breadth, curva tassi e narrativa istituzionale."
+  },
+
+  "AI_Summary": {
+    "title": "Lettura di contesto",
+    "what": "Riassunto didattico finale del quadro rischio a 3–10 giorni.",
+    "how": "Ti dà un frame mentale di cosa sta guidando il mercato ORA. Non ti dice cosa fare, non è personalizzato, non valuta il tuo profilo rischio.",
+    "source": "Sintesi multilivello di tutto F1B in linguaggio naturale controllato da policy MiFID (educational only)."
+  },
+
+
+  // --- AUDIT & QUALITÀ DATI ---
+
+  "FreshnessScore": {
+    "title": "FreshnessScore",
+    "what": "Quanto sono aggiornate le singole fonti dati critiche (prezzi, curva tassi, volatilità, credito, breadth).",
+    "how": "Verde = dati molto recenti / coerenti. Giallo = parziale ritardo. Rosso = potenziale stale data o gap di feed. È un semaforo interno sulla tempestività del segnale.",
+    "source": "Controlli automatici Tradelia AI sulla latenza delle sorgenti e l’allineamento temporale tra loro."
+  },
+
+  "ConfidenceFinal": {
+    "title": "ConfidenceFinal",
+    "what": "Confidenza interna sulla qualità complessiva del quadro mostrato.",
+    "how": "Alto = feed completi e stabili. Basso = rumore (illiquidità, spike fuori orario, discrepanze tra fonti). IMPORTANTE: è affidabilità del dato, NON probabilità di guadagno.",
+    "source": "Heuristics proprietari Tradelia AI su integrità feed, volumi, continuità serie, shock tecnici."
+  },
+
+  "DataIntegrity": {
+    "title": "DataIntegrity",
+    "what": "Valutazione del fatto che i dati usati siano consistenti fra loro (niente buchi, niente numeri impossibili).",
+    "how": "Se è giallo/rosso vuol dire che alcuni pezzi potrebbero non essere lineari (es. un future che non ha quotato regolarmente, una curva UST in rollover).",
+    "source": "Controlli di validazione su serie storiche, allineamento ticker e fallback di emergenza del feed."
+  },
+
+  "FeedSync": {
+    "title": "FeedSync",
+    "what": "Allineamento temporale tra le varie fonti (prezzi cash, future, vol, FX, curva tassi).",
+    "how": "Se i feed non sono sincronizzati potresti vedere segmenti che appartengono a snapshot temporali leggermente diversi → quadro meno affidabile.",
+    "source": "Scheduler interno Tradelia AI che confronta timestamp cross-asset e marca eventuali drift tra sorgenti."
+  },
+
+
+  // --- MIFID / COMPLIANCE ---
+
+  "MiFID_disclaimer": {
+    "title": "Informativa MiFID",
+    "what": "Il contenuto di F1B è informativo e formativo. Non è consulenza personalizzata e non è ricerca di investimento destinata a un singolo cliente.",
+    "how": "Devi sempre contestualizzare con il tuo profilo di rischio, orizzonte temporale, situazione patrimoniale. Questo modulo non li conosce e non li considera.",
+    "source": "Linee guida MiFID II / ESMA su comunicazioni a carattere informativo vs consulenza personalizzata."
   }
-}
+};
+
