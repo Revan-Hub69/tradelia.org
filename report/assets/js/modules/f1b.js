@@ -211,7 +211,7 @@ export function bindCard(node, rawData, ctx = {}) {
 
 /* -----------------------------------------------------------------------------
 // PANEL / DRAWER
-// ----------------------------------------------------------------------------*/
+// -----------------------------------------------------------------------------*/
 
 function openF1DrawerPublic(data) {
   if (
@@ -314,10 +314,10 @@ function openF1DrawerPublic(data) {
       typeof window.__TradeliaUI.bindMetricInfoButtons === "function"
     ) {
       try {
-        const desktopRoot = document.getElementById("panel-body");
-        const mobileRoot = document.getElementById("panel-body-mobile");
-        if (desktopRoot) window.__TradeliaUI.bindMetricInfoButtons(desktopRoot);
-        if (mobileRoot) window.__TradeliaUI.bindMetricInfoButtons(mobileRoot);
+        const dRoot = document.getElementById("f1b-scroll-desktop");
+        const mRoot = document.getElementById("f1b-scroll-mobile");
+        if (dRoot) window.__TradeliaUI.bindMetricInfoButtons(dRoot);
+        if (mRoot) window.__TradeliaUI.bindMetricInfoButtons(mRoot);
       } catch (e) {}
     }
 
@@ -337,7 +337,7 @@ function isMobileViewport() {
 
 /* -----------------------------------------------------------------------------
 // CONTENUTO DEL DRAWER
-// ----------------------------------------------------------------------------*/
+// -----------------------------------------------------------------------------*/
 
 function buildDrawerSectionsPublic(d) {
   // 1. Regime & Rischio
@@ -518,7 +518,7 @@ function buildDrawerSectionsPublic(d) {
 
 /* -----------------------------------------------------------------------------
 // SHELLS DESKTOP / MOBILE
-// ----------------------------------------------------------------------------*/
+// -----------------------------------------------------------------------------*/
 
 function renderDrawerDesktopShellPublic(sectionsObj) {
   return `
@@ -550,7 +550,7 @@ function renderDrawerDesktopShellPublic(sectionsObj) {
           -webkit-overflow-scrolling:touch;
           padding:1rem;
         "
-        id="panel-body">
+        id="f1b-scroll-desktop">
         <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
         <div data-f1b-view="breadth" hidden>${sectionsObj.breadthHTML}</div>
         <div data-f1b-view="internals" hidden>${sectionsObj.internalsHTML}</div>
@@ -616,7 +616,7 @@ function renderDrawerMobileShellPublic(sectionsObj) {
           -webkit-overflow-scrolling:touch;
           scrollbar-width:none;
           scroll-behavior:smooth;
-          padding-right:2rem; /* spazio per la freccina hint */
+          padding-right:2rem;
         "
       >
         ${mobileTabButton("regime","Regime")}
@@ -693,7 +693,7 @@ function renderDrawerMobileShellPublic(sectionsObj) {
           background:var(--surface-page);
           background-image:none;
         "
-        id="panel-body-mobile"
+        id="f1b-scroll-mobile"
       >
         <div data-f1b-view="regime">${sectionsObj.regimeHTML}</div>
         <div data-f1b-view="breadth" hidden>${sectionsObj.breadthHTML}</div>
@@ -709,7 +709,7 @@ function renderDrawerMobileShellPublic(sectionsObj) {
 
 /* -----------------------------------------------------------------------------
 // TAB SWITCHING
-// ----------------------------------------------------------------------------*/
+// -----------------------------------------------------------------------------*/
 
 function drawerMenuButtonPublic(key, label) {
   // desktop tab button (sidebar)
@@ -749,14 +749,16 @@ function mobileTabButton(key, label) {
   `;
 }
 
-// versione definitiva con scroll reset post-repaint
+// versione definitiva con scroll reset post-repaint e id univoci
 function bindDrawerTabsPublic() {
   const tabButtons = document.querySelectorAll("[data-f1b-tab]");
   const views = document.querySelectorAll("[data-f1b-view]");
 
-  const desktopScrollEl = document.getElementById("panel-body");
-  const mobileScrollEl = document.getElementById("panel-body-mobile");
-  const sidebarEl = document.querySelector(".f1b-panel-menu"); // opzionale: reset anche sidebar
+  // prendiamo gli scroll container REALI del layout F1B,
+  // non quelli dell'overlay runtime
+  const desktopScrollEl = document.getElementById("f1b-scroll-desktop");
+  const mobileScrollEl  = document.getElementById("f1b-scroll-mobile");
+  const sidebarEl       = document.querySelector(".f1b-panel-menu"); // reset anche sidebar
 
   function hardResetScroll() {
     [desktopScrollEl, mobileScrollEl, sidebarEl].forEach(el => {
@@ -852,7 +854,7 @@ function bindDrawerTabsPublic() {
 
 /* -----------------------------------------------------------------------------
 // CARD SYSTEM
-// ----------------------------------------------------------------------------*/
+// -----------------------------------------------------------------------------*/
 
 function f1bCard({ tone, title, bodyHtml, noteHtml }) {
   const { dotColor } = toneColors(tone);
@@ -1094,9 +1096,7 @@ function headlineBlockCard(title, body) {
     aiNoteLocal = body.ai_note || "";
   }
 
-  // Header:
-  // - Se è "Informativa" (MiFID) → includi bottone ?
-  // - Per gli altri casi Street View, Consensus Tone ecc → solo titolo
+  // Header con eventuale bottone "?" (MiFID)
   let headingHtml = "";
   if (title === "Informativa") {
     headingHtml = `
@@ -1193,7 +1193,7 @@ function qualityChip(keyName, qObj) {
 
 /* -----------------------------------------------------------------------------
 // TONE HELPERS
-// ----------------------------------------------------------------------------*/
+// -----------------------------------------------------------------------------*/
 
 function toneColors(tone) {
   switch ((tone || "").toLowerCase()) {
@@ -1252,7 +1252,7 @@ function computeHighLevelTone(strategyModeMacroObj, regimeScoreObj) {
 
 /* -----------------------------------------------------------------------------
 // NORMALIZZAZIONE DATI
-// ----------------------------------------------------------------------------*/
+// -----------------------------------------------------------------------------*/
 
 function normalizeDataPublicF1B(src = {}) {
   return {
@@ -1306,7 +1306,7 @@ function normalizeDataPublicF1B(src = {}) {
 
 /* -----------------------------------------------------------------------------
 // ESCAPE UTILS
-// ----------------------------------------------------------------------------*/
+// -----------------------------------------------------------------------------*/
 
 function escapeHtml(str) {
   if (str === undefined || str === null) return "";
