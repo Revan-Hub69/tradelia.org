@@ -754,6 +754,78 @@ function bindDrawerTabsPublic(root) {
   const tabButtons = document.querySelectorAll("[data-f1b-tab]");
   const views = document.querySelectorAll("[data-f1b-view]");
 
+  // contenitore scrollabile del contenuto (desktop o mobile)
+  const scrollContainer =
+    document.getElementById("panel-body") ||
+    document.getElementById("panel-body-mobile") ||
+    root;
+
+  function activateTab(key) {
+    // 1. Aggiorna stato visivo dei bottoni tab
+    tabButtons.forEach(b => {
+      const isActive = b.getAttribute("data-f1b-tab") === key;
+
+      // DESKTOP sidebar
+      if (b.classList.contains("f1b-tab-btn")) {
+        if (isActive) {
+          b.classList.add("is-active");
+        } else {
+          b.classList.remove("is-active");
+        }
+      }
+
+      // MOBILE pills
+      if (b.classList.contains("f1b-footer-tab-btn")) {
+        if (isActive) {
+          b.style.fontWeight = "600";
+          b.style.border = "1px solid var(--ink)";
+          b.style.background =
+            "radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--ink) 14%, transparent) 0%, transparent 60%), var(--surface-card-alt)";
+          b.style.color = "var(--ink)";
+          b.style.boxShadow = "0 4px 10px rgba(0,0,0,.18)";
+        } else {
+          b.style.fontWeight = "500";
+          b.style.border = "1px solid var(--br-soft)";
+          b.style.background = "var(--surface-card)";
+          b.style.color = "var(--muted)";
+          b.style.boxShadow = "var(--shadow-card)";
+        }
+      }
+    });
+
+    // 2. Mostra/nascondi le sezioni e gestisci scroll reset
+    views.forEach(viewEl => {
+      const viewKey = viewEl.getAttribute("data-f1b-view");
+      const show = viewKey === key;
+      viewEl.hidden = !show;
+
+      if (show) {
+        // a) resetta scroll del contenitore principale del drawer
+        if (scrollContainer && typeof scrollContainer.scrollTo === "function") {
+          scrollContainer.scrollTo({ top: 0, left: 0, behavior: "instant" });
+        } else if (scrollContainer) {
+          scrollContainer.scrollTop = 0;
+          scrollContainer.scrollLeft = 0;
+        }
+
+        // b) opzionale/accessibility: porta focus al titolo se esiste
+        const header = viewEl.querySelector(".tl-panel-section-title-text");
+        if (header) {
+          header.setAttribute("tabindex", "-1");
+          // preventScroll:true evita che il browser provi a ri-scrollare mentre noi stiamo appena rimessi a 0
+          header.focus({ preventScroll: true });
+        }
+
+        // c) se dentro la vista ci sono sotto-scroller dichiarati, li riportiamo su
+        viewEl.querySelectorAll("[data-scrollable]").forEach(sc => {
+          sc.scrollTop = 0;
+          sc.scrollLeft = 0;
+        });
+      }
+    });
+  }
+
+  // 3. Bind click ai tab buttons
   tabButtons.forEach(btn => {
     if (btn.__f1bBound) return;
     btn.__f1bBound = true;
@@ -761,47 +833,11 @@ function bindDrawerTabsPublic(root) {
     btn.addEventListener("click", () => {
       const key = btn.getAttribute("data-f1b-tab");
       if (!key) return;
-
-      // attiva/deattiva bottoni
-      tabButtons.forEach(b => {
-        const isActive = b.getAttribute("data-f1b-tab") === key;
-
-        // DESKTOP sidebar
-        if (b.classList.contains("f1b-tab-btn")) {
-          if (isActive) {
-            b.classList.add("is-active");
-          } else {
-            b.classList.remove("is-active");
-          }
-        }
-
-        // MOBILE pills
-        if (b.classList.contains("f1b-footer-tab-btn")) {
-          if (isActive) {
-            b.style.fontWeight = "600";
-            b.style.border = "1px solid var(--ink)";
-            b.style.background =
-              "radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--ink) 14%, transparent) 0%, transparent 60%), var(--surface-card-alt)";
-            b.style.color = "var(--ink)";
-            b.style.boxShadow = "0 4px 10px rgba(0,0,0,.18)";
-          } else {
-            b.style.fontWeight = "500";
-            b.style.border = "1px solid var(--br-soft)";
-            b.style.background = "var(--surface-card)";
-            b.style.color = "var(--muted)";
-            b.style.boxShadow = "var(--shadow-card)";
-          }
-        }
-      });
-
-      // mostra/nascondi viste
-      views.forEach(viewEl => {
-        const viewKey = viewEl.getAttribute("data-f1b-view");
-        viewEl.hidden = viewKey !== key;
-      });
+      activateTab(key);
     });
   });
 }
+
 
 /* -----------------------------------------------------------------------------
 // CARD SYSTEM
