@@ -754,11 +754,27 @@ function bindDrawerTabsPublic(root) {
   const tabButtons = document.querySelectorAll("[data-f1b-tab]");
   const views = document.querySelectorAll("[data-f1b-view]");
 
-  // contenitore scrollabile del contenuto (desktop o mobile)
-  const scrollContainer =
-    document.getElementById("panel-body") ||
-    document.getElementById("panel-body-mobile") ||
-    root;
+  // scegliamo il contenitore scroll giusto IN BASE AL BREAKPOINT
+  // (non "primo che trovo nel DOM")
+  const mobile = isMobileViewport();
+  const scrollContainer = mobile
+    ? document.getElementById("panel-body-mobile")
+    : document.getElementById("panel-body");
+
+  function resetScroll(containerEl) {
+    if (!containerEl) return;
+    if (typeof containerEl.scrollTo === "function") {
+      try {
+        containerEl.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      } catch (err) {
+        containerEl.scrollTop = 0;
+        containerEl.scrollLeft = 0;
+      }
+    } else {
+      containerEl.scrollTop = 0;
+      containerEl.scrollLeft = 0;
+    }
+  }
 
   function activateTab(key) {
     // 1. Aggiorna stato visivo dei bottoni tab
@@ -793,30 +809,28 @@ function bindDrawerTabsPublic(root) {
       }
     });
 
-    // 2. Mostra/nascondi le sezioni e gestisci scroll reset
+    // 2. Mostra/nascondi viste
     views.forEach(viewEl => {
       const viewKey = viewEl.getAttribute("data-f1b-view");
       const show = viewKey === key;
       viewEl.hidden = !show;
 
       if (show) {
-        // a) resetta scroll del contenitore principale del drawer
-        if (scrollContainer && typeof scrollContainer.scrollTo === "function") {
-          scrollContainer.scrollTo({ top: 0, left: 0, behavior: "instant" });
-        } else if (scrollContainer) {
-          scrollContainer.scrollTop = 0;
-          scrollContainer.scrollLeft = 0;
-        }
+        // a) reset scroll del contenitore visibile giusto
+        resetScroll(scrollContainer);
 
-        // b) opzionale/accessibility: porta focus al titolo se esiste
+        // b) accessibilità: focus sul titolo senza rompere iOS
         const header = viewEl.querySelector(".tl-panel-section-title-text");
         if (header) {
           header.setAttribute("tabindex", "-1");
-          // preventScroll:true evita che il browser provi a ri-scrollare mentre noi stiamo appena rimessi a 0
-          header.focus({ preventScroll: true });
+          try {
+            header.focus({ preventScroll: true });
+          } catch (err) {
+            header.focus();
+          }
         }
 
-        // c) se dentro la vista ci sono sotto-scroller dichiarati, li riportiamo su
+        // c) se abbiamo sotto-scroll dichiarati
         viewEl.querySelectorAll("[data-scrollable]").forEach(sc => {
           sc.scrollTop = 0;
           sc.scrollLeft = 0;
@@ -825,7 +839,7 @@ function bindDrawerTabsPublic(root) {
     });
   }
 
-  // 3. Bind click ai tab buttons
+  // 3. bind ai bottoni tab
   tabButtons.forEach(btn => {
     if (btn.__f1bBound) return;
     btn.__f1bBound = true;
@@ -837,7 +851,6 @@ function bindDrawerTabsPublic(root) {
     });
   });
 }
-
 
 /* -----------------------------------------------------------------------------
 // CARD SYSTEM
