@@ -305,22 +305,21 @@ function openF1DrawerPublic(data) {
 
   // post-mount: bind tab, tooltip interno, stato iniziale tab, hint scroll
   setTimeout(() => {
-    const roots = [
-      document.getElementById("panel-body"),
-      document.getElementById("panel-body-mobile")
-    ].filter(Boolean);
+    // bind tabs UNA VOLTA globale
+    bindDrawerTabsPublic();
 
-    roots.forEach(r => {
-      bindDrawerTabsPublic(r);
-      if (
-        window.__TradeliaUI &&
-        typeof window.__TradeliaUI.bindMetricInfoButtons === "function"
-      ) {
-        try {
-          window.__TradeliaUI.bindMetricInfoButtons(r);
-        } catch (e) {}
-      }
-    });
+    // tooltip ? dentro il drawer
+    if (
+      window.__TradeliaUI &&
+      typeof window.__TradeliaUI.bindMetricInfoButtons === "function"
+    ) {
+      try {
+        const desktopRoot = document.getElementById("panel-body");
+        const mobileRoot = document.getElementById("panel-body-mobile");
+        if (desktopRoot) window.__TradeliaUI.bindMetricInfoButtons(desktopRoot);
+        if (mobileRoot) window.__TradeliaUI.bindMetricInfoButtons(mobileRoot);
+      } catch (e) {}
+    }
 
     // stato iniziale → tab "regime"
     const firstTabBtn = document.querySelector('[data-f1b-tab="regime"]');
@@ -750,44 +749,35 @@ function mobileTabButton(key, label) {
   `;
 }
 
-function bindDrawerTabsPublic(root) {
+// versione definitiva con scroll reset post-repaint
+function bindDrawerTabsPublic() {
   const tabButtons = document.querySelectorAll("[data-f1b-tab]");
   const views = document.querySelectorAll("[data-f1b-view]");
 
-  // scegliamo il contenitore scroll giusto IN BASE AL BREAKPOINT
-  // (non "primo che trovo nel DOM")
-  const mobile = isMobileViewport();
-  const scrollContainer = mobile
-    ? document.getElementById("panel-body-mobile")
-    : document.getElementById("panel-body");
+  const desktopScrollEl = document.getElementById("panel-body");
+  const mobileScrollEl = document.getElementById("panel-body-mobile");
+  const sidebarEl = document.querySelector(".f1b-panel-menu"); // opzionale: reset anche sidebar
 
-  function resetScroll(containerEl) {
-    if (!containerEl) return;
-    if (typeof containerEl.scrollTo === "function") {
-      try {
-        containerEl.scrollTo({ top: 0, left: 0, behavior: "auto" });
-      } catch (err) {
-        containerEl.scrollTop = 0;
-        containerEl.scrollLeft = 0;
+  function hardResetScroll() {
+    [desktopScrollEl, mobileScrollEl, sidebarEl].forEach(el => {
+      if (!el) return;
+      el.scrollTop = 0;
+      el.scrollLeft = 0;
+      if (typeof el.scrollTo === "function") {
+        try {
+          el.scrollTo({ top: 0, left: 0, behavior: "auto" });
+        } catch (_) {}
       }
-    } else {
-      containerEl.scrollTop = 0;
-      containerEl.scrollLeft = 0;
-    }
+    });
   }
 
-  function activateTab(key) {
-    // 1. Aggiorna stato visivo dei bottoni tab
+  function styleTabs(activeKey) {
     tabButtons.forEach(b => {
-      const isActive = b.getAttribute("data-f1b-tab") === key;
+      const isActive = b.getAttribute("data-f1b-tab") === activeKey;
 
       // DESKTOP sidebar
       if (b.classList.contains("f1b-tab-btn")) {
-        if (isActive) {
-          b.classList.add("is-active");
-        } else {
-          b.classList.remove("is-active");
-        }
+        b.classList.toggle("is-active", isActive);
       }
 
       // MOBILE pills
@@ -808,38 +798,46 @@ function bindDrawerTabsPublic(root) {
         }
       }
     });
+  }
 
-    // 2. Mostra/nascondi viste
+  function showView(activeKey) {
     views.forEach(viewEl => {
-      const viewKey = viewEl.getAttribute("data-f1b-view");
-      const show = viewKey === key;
-      viewEl.hidden = !show;
+      const key = viewEl.getAttribute("data-f1b-view");
+      const shouldShow = key === activeKey;
 
-      if (show) {
-        // a) reset scroll del contenitore visibile giusto
-        resetScroll(scrollContainer);
+      // toggle visibilità subito
+      viewEl.hidden = !shouldShow;
 
-        // b) accessibilità: focus sul titolo senza rompere iOS
-        const header = viewEl.querySelector(".tl-panel-section-title-text");
-        if (header) {
-          header.setAttribute("tabindex", "-1");
-          try {
-            header.focus({ preventScroll: true });
-          } catch (err) {
-            header.focus();
+      if (shouldShow) {
+        // reset scroll e focus nel frame successivo
+        requestAnimationFrame(() => {
+          hardResetScroll();
+
+          const header = viewEl.querySelector(".tl-panel-section-title-text");
+          if (header) {
+            header.setAttribute("tabindex", "-1");
+            try {
+              header.focus({ preventScroll: true });
+            } catch {
+              header.focus();
+            }
           }
-        }
 
-        // c) se abbiamo sotto-scroll dichiarati
-        viewEl.querySelectorAll("[data-scrollable]").forEach(sc => {
-          sc.scrollTop = 0;
-          sc.scrollLeft = 0;
+          // sotto-scroll dichiarati
+          viewEl.querySelectorAll("[data-scrollable]").forEach(sc => {
+            sc.scrollTop = 0;
+            sc.scrollLeft = 0;
+          });
         });
       }
     });
   }
 
-  // 3. bind ai bottoni tab
+  function activateTab(key) {
+    styleTabs(key);
+    showView(key);
+  }
+
   tabButtons.forEach(btn => {
     if (btn.__f1bBound) return;
     btn.__f1bBound = true;
@@ -1098,7 +1096,7 @@ function headlineBlockCard(title, body) {
 
   // Header:
   // - Se è "Informativa" (MiFID) → includi bottone ?
-  // - Per gli altri casi Street View, Consensus Tone ecc → solo titolo (com’era prima)
+  // - Per gli altri casi Street View, Consensus Tone ecc → solo titolo
   let headingHtml = "";
   if (title === "Informativa") {
     headingHtml = `
