@@ -290,168 +290,159 @@ function isMobileViewport() {
 // ----------------------------------------------------------------------------*/
 
 function buildDrawerSectionsPublic(d) {
+  // helper per singola metrica uniforme
+  const metricRow = (key, label, desc, metricObj) => {
+    const val = metricObj?.raw ?? "—";
+    const tone = (metricObj?.tone || "").toLowerCase();
+    const color = tone === "green"
+      ? "var(--tone-pos-fg)"
+      : tone === "yellow"
+      ? "var(--tone-warn-fg)"
+      : tone === "red"
+      ? "var(--tone-neg-fg)"
+      : "var(--tone-neu-fg)";
+    return `
+      <div class="metric-row flex items-start justify-between gap-2 py-[4px] border-b border-[color:var(--br-soft)]">
+        <div class="metric-field flex-1 min-w-0">
+          <div class="text-[12px] font-semibold text-[color:var(--ink)]">${escapeHtml(label)}</div>
+          <div class="text-[11px] text-[color:var(--muted)]">${escapeHtml(desc || "")}</div>
+        </div>
+        <div class="metric-val font-mono font-bold text-[13px]" style="color:${color};">${escapeHtml(val)}</div>
+      </div>
+    `;
+  };
+
+  // helper per blocco testo / lista
+  const sectionText = (html) => `
+    <div class="tl-panel-section-text text-[12.5px] leading-[1.5] text-[color:var(--ink)] mt-2 whitespace-pre-line">
+      ${escapeHtml(html || "")}
+    </div>
+  `;
+
+  // helper lista semplice
+  const listBlock = (title, arr) => {
+    if (!arr || !arr.length) return "";
+    return `
+      <div class="mt-2">
+        <div class="text-[11px] font-semibold uppercase text-[color:var(--muted)] mb-1">${escapeHtml(title)}</div>
+        <ul class="list-disc pl-4 space-y-1 text-[12.5px] text-[color:var(--ink)]">
+          ${arr.map(x => `<li>${escapeHtml(x)}</li>`).join("")}
+        </ul>
+      </div>
+    `;
+  };
+
+  // helper headline sintetica
+  const headline = (title, body) => {
+    if (!body) return "";
+    return `
+      <div class="mt-3">
+        <div class="text-[11px] font-semibold uppercase text-[color:var(--muted)] mb-1">${escapeHtml(title)}</div>
+        <div class="text-[12.5px] leading-[1.5] text-[color:var(--ink)] whitespace-pre-line">${escapeHtml(body)}</div>
+      </div>
+    `;
+  };
+
   // 1. Regime & Rischio
   const regimeHTML = `
-    <section class="tl-panel-section" data-f1b-section="regime"
-      style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+    <section class="tl-panel-section">
       <header class="tl-panel-section-title">
         <div class="tl-panel-section-title-text">Regime &amp; Rischio</div>
       </header>
-
-      <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4]">
-        ${metricBlock("StrategyMode_macro","StrategyMode","Modalità corrente del mercato",d.regime_and_risk.StrategyMode_macro)}
-        ${metricBlock("RegimeScore","RegimeScore","Appetito rischio sintetico",d.regime_and_risk.RegimeScore)}
-        ${metricBlock("VolRegime","Volatilità / Hedge","VIX, oro, ricerca hedge",d.regime_and_risk.VolRegime)}
-        ${metricBlock("LiquidityRegimeScore","Curva & Costo capitale","Curve Treasury / funding stress",d.regime_and_risk.LiquidityRegimeScore)}
-        ${metricBlock("CreditRiskBlock","Credito","Flight-to-safety / high beta credit",d.regime_and_risk.CreditRiskBlock)}
-        ${metricBlock("FX_Regime","FX / USD","Dollar tone",d.regime_and_risk.FX_Regime)}
-      </div>
-
-      ${metricBlock(
-        "RiskWindow",
-        "RiskWindow (3–10g)",
-        "Driver macro monitorati a breve (orizzonte 3–10 giorni). Non operativo.",
-        d.regime_and_risk.RiskWindow
-      )}
+      ${metricRow("StrategyMode_macro","StrategyMode","Modalità di mercato",d.regime_and_risk.StrategyMode_macro)}
+      ${metricRow("RegimeScore","RegimeScore","Appetito al rischio sintetico",d.regime_and_risk.RegimeScore)}
+      ${metricRow("VolRegime","Volatilità / Hedge","VIX / Oro / domanda protezione",d.regime_and_risk.VolRegime)}
+      ${metricRow("LiquidityRegimeScore","Curva & Costo capitale","Curva Treasury / funding stress",d.regime_and_risk.LiquidityRegimeScore)}
+      ${metricRow("CreditRiskBlock","Credito","High-beta credit / spread flight-to-safety",d.regime_and_risk.CreditRiskBlock)}
+      ${metricRow("FX_Regime","FX / USD","Dinamica Dollaro e cross chiave",d.regime_and_risk.FX_Regime)}
+      ${headline("RiskWindow (3–10g)", d.regime_and_risk.RiskWindow?.ai_note || "")}
     </section>
   `;
 
   // 2. Breadth & Rotazione
   const breadthHTML = `
-    <section class="tl-panel-section" data-f1b-section="breadth"
-      style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+    <section class="tl-panel-section">
       <header class="tl-panel-section-title">
         <div class="tl-panel-section-title-text">Breadth &amp; Rotazione Equity</div>
       </header>
-
-      <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4] mb-4">
-        ${metricBlock("Breadth_1M","Breadth (1M)","% settori positivi su ~30 giorni",d.breadth_rotation.Breadth_1M)}
-        ${metricBlock("RiskTilt_1M","RiskTilt (1M)","Ciclici/growth vs difensivi",d.breadth_rotation.RiskTilt_1M)}
-        ${metricBlock("SmallCapPressure_1W","SmallCap Pressure (1W)","Microcap vs Mid/Large",d.breadth_rotation.SmallCapPressure_1W)}
-        ${metricBlock("IndexMomentum_1W","Index Momentum (1W)","Momentum cross-indici / crypto",d.breadth_rotation.IndexMomentum_1W)}
-        ${metricBlock("SizeBias","Size Bias","Preferenza di capitalizzazione",d.breadth_rotation.SizeBias)}
-      </div>
-
-      ${sectorListDetailed(
-        "Leadership multi-timeframe",
-        d.breadth_rotation.Leadership?.LeadersMultiTF
-      )}
-      ${sectorListDetailed(
-        "Leadership difensiva qualitativa",
-        d.breadth_rotation.Leadership?.DefensiveLeadership
-      )}
-      ${sectorListDetailed(
-        "Settori in ritardo",
-        d.breadth_rotation.Leadership?.Lagging
-      )}
-
-      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-3">
-        ${escapeHtml(d.breadth_rotation.Leadership?.ai_note || "")}
-      </div>
+      ${metricRow("Breadth_1M","Breadth (1M)","% settori positivi su ~30 giorni",d.breadth_rotation.Breadth_1M)}
+      ${metricRow("RiskTilt_1M","RiskTilt (1M)","Ciclici/growth vs difensivi",d.breadth_rotation.RiskTilt_1M)}
+      ${metricRow("SmallCapPressure_1W","SmallCap Pressure (1W)","Microcap vs Mid/Large",d.breadth_rotation.SmallCapPressure_1W)}
+      ${metricRow("IndexMomentum_1W","Index Momentum (1W)","Momentum cross-indici / crypto",d.breadth_rotation.IndexMomentum_1W)}
+      ${listBlock("Leadership multi-timeframe", d.breadth_rotation.Leadership?.LeadersMultiTF)}
+      ${listBlock("Leadership difensiva", d.breadth_rotation.Leadership?.DefensiveLeadership)}
+      ${listBlock("Settori in ritardo", d.breadth_rotation.Leadership?.Lagging)}
+      ${sectionText(d.breadth_rotation.Leadership?.ai_note)}
     </section>
   `;
 
-  // 3. Market Internals (dati grezzi)
+  // 3. Internals
   const internalsHTML = `
-    <section class="tl-panel-section" data-f1b-section="internals"
-      style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+    <section class="tl-panel-section">
       <header class="tl-panel-section-title">
         <div class="tl-panel-section-title-text">Market Internals (dati grezzi)</div>
       </header>
-
-      ${listBlockCard("Indici (1W)", d.internals_raw.Indices_1W)}
-      ${listBlockCard("Futures / Commodities (1W)", d.internals_raw.Futures_Move_1W)}
-      ${listBlockCard("Curva Treasury", d.internals_raw.Curve_UST)}
-      ${listBlockCard("Volatilità & USD", d.internals_raw.Vol_USD)}
-
-      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-3">
-        ${escapeHtml(d.internals_raw.ai_note || "")}
-      </div>
+      ${listBlock("Indici (1W)", d.internals_raw.Indices_1W)}
+      ${listBlock("Futures / Commodities (1W)", d.internals_raw.Futures_Move_1W)}
+      ${listBlock("Curva Treasury", d.internals_raw.Curve_UST)}
+      ${listBlock("Volatilità & USD", d.internals_raw.Vol_USD)}
+      ${sectionText(d.internals_raw.ai_note)}
     </section>
   `;
 
-  // 4. Street View · Narrativa istituzionale
+  // 4. Street View
   const streetHTML = `
-    <section class="tl-panel-section" data-f1b-section="street"
-      style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+    <section class="tl-panel-section">
       <header class="tl-panel-section-title">
         <div class="tl-panel-section-title-text">Street View · Narrativa istituzionale</div>
       </header>
-
-      ${headlineBlockCard("Macro (Bloomberg / Reuters / Barron's)", d.street_view.T1_MacroNews)}
-      ${headlineBlockCard("Sell-Side / Street View (Goldman / JPM / ecc.)", d.street_view.T1_SellSideNotes)}
-      ${headlineBlockCard("Consensus Tone", d.street_view.T1_ConsensusTone)}
-
-      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4]">
-        ${escapeHtml(d.street_view.ai_note || "")}
-      </div>
+      ${headline("Macro (Bloomberg / Reuters / Barron's)", d.street_view.T1_MacroNews)}
+      ${headline("Sell-Side / Street View", d.street_view.T1_SellSideNotes)}
+      ${headline("Consensus Tone", d.street_view.T1_ConsensusTone)}
+      ${sectionText(d.street_view.ai_note)}
     </section>
   `;
 
-  // 5. Conclusione · Tradelia AI (educational)
+  // 5. Conclusione
   const sintesiHTML = `
-    <section class="tl-panel-section" data-f1b-section="sintesi"
-      style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+    <section class="tl-panel-section">
       <header class="tl-panel-section-title">
         <div class="tl-panel-section-title-text">Conclusione · Tradelia AI (educational)</div>
       </header>
-
       ${
         Array.isArray(d.sintesi_ai.points)
-          ? d.sintesi_ai.points.map(point => conclusionPointBlock(point)).join("")
+          ? d.sintesi_ai.points.map(p => headline(p.title || "", p.raw || "")).join("")
           : ""
       }
-
-      ${headlineBlockCard(
-        "Lettura di contesto (non istruzioni operative)",
-        d.sintesi_ai.summary || ""
-      )}
-
-      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-2">
+      ${headline("Sintesi generale", d.sintesi_ai.summary)}
+      <div class="text-[11px] text-[color:var(--muted)] mt-3">
         Questa conclusione ha esclusivamente finalità informative e formative.
-        Non è un invito a prendere posizione o modificare allocazioni.
-        Consulta sempre un intermediario autorizzato.
+        Nessuna raccomandazione o consulenza personalizzata.
       </div>
     </section>
   `;
 
-  // 6. Audit & Qualità dati
+  // 6. Audit
   const auditHTML = `
-    <section class="tl-panel-section" data-f1b-section="audit"
-      style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+    <section class="tl-panel-section">
       <header class="tl-panel-section-title">
         <div class="tl-panel-section-title-text">Audit &amp; Qualità dati</div>
       </header>
-
-      <div class="grid gap-3 text-[12px] leading-[1.4] grid-cols-1 md:grid-cols-2">
-        ${qualityChip("FreshnessScore", d.audit_quality.QualityMetrics?.FreshnessScore)}
-        ${qualityChip("ConfidenceFinal", d.audit_quality.QualityMetrics?.ConfidenceFinal)}
-        ${qualityChip("DataIntegrity", d.audit_quality.QualityMetrics?.DataIntegrity)}
-        ${qualityChip("FeedSync", d.audit_quality.QualityMetrics?.FeedSync)}
-      </div>
-
-      <div class="mt-4 text-[11px] leading-[1.4] text-[color:var(--muted)]">
-        Semaforo interno:
-        verde = dati coerenti/aggiornati;
-        giallo = parziale/debole;
-        rosso = incompleto o rumoroso.
-        Queste valutazioni sono soggettive e non operative.
-      </div>
+      ${metricRow("FreshnessScore","Freshness","Aggiornamento dati",d.audit_quality.QualityMetrics?.FreshnessScore)}
+      ${metricRow("ConfidenceFinal","Confidence","Affidabilità stima",d.audit_quality.QualityMetrics?.ConfidenceFinal)}
+      ${metricRow("DataIntegrity","DataIntegrity","Completezza / Coerenza",d.audit_quality.QualityMetrics?.DataIntegrity)}
+      ${metricRow("FeedSync","FeedSync","Allineamento feed T-1",d.audit_quality.QualityMetrics?.FeedSync)}
+      ${sectionText("Semaforo: verde = aggiornato, giallo = parziale, rosso = incompleto.")}
     </section>
   `;
 
-  // 7. Nota regolamentare (MiFID / ESMA)
+  // 7. MiFID
   const mifidHTML = `
-    <section class="tl-panel-section" data-f1b-section="mifid"
-      style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+    <section class="tl-panel-section">
       <header class="tl-panel-section-title">
         <div class="tl-panel-section-title-text">Nota regolamentare</div>
       </header>
-
-      ${headlineBlockCard(
-        "Informativa",
-        d.mifid.disclaimer || ""
-      )}
+      ${sectionText(d.mifid.disclaimer)}
     </section>
   `;
 
@@ -465,6 +456,7 @@ function buildDrawerSectionsPublic(d) {
     mifidHTML
   };
 }
+
 
 /* -----------------------------------------------------------------------------
 // SHELLS DESKTOP / MOBILE
