@@ -255,23 +255,44 @@ function openF1DrawerPublic(data) {
   });
 
   // post-mount binding (tab switching + tooltip binding interno)
-  setTimeout(() => {
-    const roots = [
-      document.getElementById("panel-body"),
-      document.getElementById("panel-body-mobile")
-    ].filter(Boolean);
+  function initScrollableTabsHint() {
+  // prendi la barra scrollabile e l'hint
+  const scrollBox = document.querySelector(".f1b-footer-tabs-scroll");
+  const fadeRight = document.querySelector(".f1b-tabs-fade-right");
 
-    roots.forEach(r => {
-      bindDrawerTabsPublic(r);
-      if (
-        window.__TradeliaUI &&
-        typeof window.__TradeliaUI.bindMetricInfoButtons === "function"
-      ) {
-        try {
-          window.__TradeliaUI.bindMetricInfoButtons(r);
-        } catch (e) {}
-      }
-    });
+  if (!scrollBox || !fadeRight) return;
+
+  // se non c'è overflow (cioè tutto entra), togliamo proprio la freccia+fade dx
+  const needsScroll = scrollBox.scrollWidth > scrollBox.clientWidth + 2;
+  if (!needsScroll) {
+    fadeRight.style.display = "none";
+    return;
+  }
+
+  // se l'utente scrolla un po', nascondi l'hint di freccia per non dare fastidio
+  const hintEl = fadeRight.querySelector(".f1b-tabs-scroll-hint");
+
+  function updateHint() {
+    const atEnd = scrollBox.scrollLeft + scrollBox.clientWidth >= scrollBox.scrollWidth - 4;
+    // se siamo molto a destra, la freccia non serve più
+    if (hintEl) {
+      hintEl.style.opacity = atEnd ? "0" : ".9";
+    }
+    // fade-left visibile solo se NON siamo all'inizio
+    const fadeLeft = document.querySelector(".f1b-tabs-fade-left");
+    if (fadeLeft) {
+      fadeLeft.style.opacity = scrollBox.scrollLeft > 2 ? ".6" : "0";
+    }
+  }
+
+  // prima chiamata
+  updateHint();
+
+  scrollBox.addEventListener("scroll", () => {
+    updateHint();
+  }, { passive: true });
+}
+
 
     // stato iniziale
     const firstTabBtn = document.querySelector('[data-f1b-tab="regime"]');
@@ -519,6 +540,7 @@ function renderDrawerMobileShellPublic(sectionsObj) {
     <div
       class="f1b-mobile-tabs-fixed"
       style="
+        position:relative;
         flex-shrink:0;
         width:100%;
         display:flex;
@@ -535,6 +557,25 @@ function renderDrawerMobileShellPublic(sectionsObj) {
         padding:.6rem .75rem;
       "
     >
+      <!-- fade sinistra -->
+      <div
+        class="f1b-tabs-fade-left"
+        style="
+          position:absolute;
+          left:0;
+          top:0;
+          bottom:0;
+          width:24px;
+          pointer-events:none;
+          background:linear-gradient(
+            to right,
+            var(--surface-panel-head) 0%,
+            rgba(0,0,0,0) 80%
+          );
+          opacity:.6;
+        "
+      ></div>
+
       <div
         class="f1b-footer-tabs-scroll"
         style="
@@ -546,6 +587,8 @@ function renderDrawerMobileShellPublic(sectionsObj) {
           overflow-x:auto;
           -webkit-overflow-scrolling:touch;
           scrollbar-width:none;
+          scroll-behavior:smooth;
+          padding-right:2rem; /* spazio per la freccina hint */
         "
       >
         ${mobileTabButton("regime","Regime")}
@@ -555,6 +598,41 @@ function renderDrawerMobileShellPublic(sectionsObj) {
         ${mobileTabButton("sintesi","Conclusione")}
         ${mobileTabButton("audit","Audit")}
         ${mobileTabButton("mifid","MiFID")}
+      </div>
+
+      <!-- fade destra + hint freccia -->
+      <div
+        class="f1b-tabs-fade-right"
+        style="
+          position:absolute;
+          right:0;
+          top:0;
+          bottom:0;
+          width:48px;
+          display:flex;
+          align-items:center;
+          justify-content:flex-end;
+          pointer-events:none;
+          background:linear-gradient(
+            to left,
+            var(--surface-panel-head) 0%,
+            rgba(0,0,0,0) 70%
+          );
+          opacity:.6;
+          font-size:10px;
+          line-height:1;
+          font-weight:600;
+          color:var(--muted);
+          text-shadow:0 1px 2px rgba(0,0,0,.4);
+        "
+      >
+        <span
+          class="f1b-tabs-scroll-hint"
+          style="
+            display:inline-block;
+            transform:translateY(1px);
+          "
+        >⇠ ⇢</span>
       </div>
     </div>
   `;
@@ -618,7 +696,6 @@ function drawerMenuButtonPublic(key, label) {
 }
 
 function mobileTabButton(key, label) {
-  // mobile pills
   return `
     <button
       class="f1b-footer-tab-btn"
@@ -629,18 +706,21 @@ function mobileTabButton(key, label) {
         font-size:11px;
         line-height:1.2;
         font-weight:500;
-        border-radius:8px;
+        border-radius:999px;
         border:1px solid var(--br-soft);
         background:var(--surface-card);
         color:var(--muted);
         padding:.45rem .7rem;
         box-shadow:var(--shadow-card);
+        min-width:max-content;
+        -webkit-tap-highlight-color:rgba(0,0,0,0);
       "
     >
       ${escapeHtml(label)}
     </button>
   `;
 }
+
 
 function bindDrawerTabsPublic(root) {
   const tabButtons = document.querySelectorAll("[data-f1b-tab]");
