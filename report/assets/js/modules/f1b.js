@@ -2,37 +2,42 @@
 //
 // F1B · Regime di mercato / Contesto rischio (public dashboard)
 //
-// Ruolo:
-// - Fornire lettura sintetica del regime di mercato e del rischio percepito
-//   nell'orizzonte 3–10 giorni.
-// - Contesto macro (volatilità, credito, curva tassi, USD), ampiezza del mercato
-//   e narrativa istituzionale (sell-side / agenzie).
-// - Fine esclusivamente informativo / educativo. Non contiene raccomandazioni operative.
+// Scopo
+// - Lettura di contesto sul rischio di mercato nell'orizzonte 3–10 giorni
+// - Volatilità, credito, curva tassi, breadth, rotazione settoriale,
+//   narrativa istituzionale e qualità dati
+// - Finalità esclusivamente informativa e didattica
+// - Nessuna raccomandazione operativa / personale
 //
-// Esporta:
+// Punti chiave design
+// - Tutti i blocchi informativi interni al drawer usano LO STESSO COMPONENT VISIVO: f1bCard()
+//   • header con pallino tono (verde/giallo/rosso/neutro)
+//   • titolo uppercase 11px muted
+//   • corpo testo/metriche in 12px/mono
+//   • nota finale 11px muted
+// - Stesso layer visivo ovunque:
+//   background: var(--surface-card-alt)
+//   border: 1px solid var(--br-card)
+//   border-radius: var(--radius-card)
+//   box-shadow: var(--shadow-card)
+//
+// Export API
 //   renderCard(data, ctx)
 //   bindCard(node, data, ctx)
 //
-// Flusso runtime:
-//   - renderCard() genera la card riassuntiva con CTA "Dettagli regime →"
-//   - bindCard() collega CTA e tooltip
-//   - openF1DrawerPublic() apre il pannello/drawer responsive
-//   - bindDrawerTabsPublic() gestisce le tab (desktop sidebar, mobile tab-bar sticky)
+// Runtime flow
+//   - renderCard() crea il blocco riassuntivo con CTA "Dettagli regime →"
+//   - bindCard() aggancia CTA + tooltip
+//   - openF1DrawerPublic() apre il pannello responsive (desktop sidebar / mobile tabbar)
+//   - bindDrawerTabsPublic() gestisce le tab
 //
-// Stile / Design system:
-//   - Tutte le sezioni usano lo stesso linguaggio visivo:
-//       background: var(--surface-card-alt)
-//       border:     1px solid var(--br-card)
-//       radius:     var(--radius-card)
-//       shadow:     var(--shadow-card)
-//   - Tone semaforico verde/giallo/rosso dove disponibile (toneColors()).
-//   - NESSUNA menzione di "swing trading". Usiamo "lettura di contesto 3–10 giorni".
-//   - Disclaimer educativo ovunque, non solo nel footer.
+// Nota legale incorporata in più punti: "materiale educativo, non istruzione operativa".
+//
 
 export function renderCard(rawData, ctx = {}) {
   const d = normalizeDataPublicF1B(rawData);
 
-  // KPI in header card
+  // KPI principali mostrati nella card hero
   const kpis = [
     {
       key: "StrategyMode_macro",
@@ -54,7 +59,7 @@ export function renderCard(rawData, ctx = {}) {
     }
   ];
 
-  // Pill tono generale
+  // Pill tono generale accanto a StrategyMode
   const { toneLabel, toneColor } = computeHighLevelTone(
     d.regime_and_risk.StrategyMode_macro,
     d.regime_and_risk.RegimeScore
@@ -64,7 +69,7 @@ export function renderCard(rawData, ctx = {}) {
     <section class="f1b-card-container text-[13px] leading-[1.5] text-[color:var(--ink)]"
       style="font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
 
-      <!-- HEADLINE -->
+      <!-- HEAD -->
       <header class="section-headline mb-4">
         <div class="section-head-left">
           <div class="section-head-topline flex items-center flex-wrap gap-2">
@@ -94,8 +99,8 @@ export function renderCard(rawData, ctx = {}) {
           </div>
 
           <div class="section-desc text-[12px] text-[color:var(--muted)] leading-[1.45] mt-1">
-            Volatilità, credito, curva tassi, partecipazione al rialzo e segnali macro dominanti.
-            Lettura di contesto. Non è una istruzione operativa.
+            Volatilità, credito, curva tassi, partecipazione al rialzo e narrativa macro dominante.
+            Lettura di contesto. Non è un'istruzione operativa.
           </div>
         </div>
       </header>
@@ -110,7 +115,7 @@ export function renderCard(rawData, ctx = {}) {
           padding:1rem;
         ">
 
-        <!-- StrategyMode + pill tono -->
+        <!-- StrategyMode + tono -->
         <div>
           <div class="text-[12px] font-semibold text-[color:var(--muted)] leading-[1.4] flex flex-wrap items-center gap-1.5">
             <span>StrategyMode</span>
@@ -146,7 +151,7 @@ export function renderCard(rawData, ctx = {}) {
           </div>
         </div>
 
-        <!-- KPI semaforo -->
+        <!-- KPI semaforiche -->
         <div class="grid gap-3 grid-cols-2 md:grid-cols-3">
           ${kpis.map(k => metricBoxTrafficLight(k)).join("")}
         </div>
@@ -154,8 +159,8 @@ export function renderCard(rawData, ctx = {}) {
         <!-- DISCLAIMER + CTA -->
         <div class="mt-2 flex flex-col gap-3 lg:flex-row lg:items-start">
           <p class="text-[11px] leading-[1.4] text-[color:var(--muted)] flex-1">
-            F1B descrive lo stato corrente del mercato (volatilità, credito, curva tassi,
-            partecipazione settoriale). È materiale educativo e informativo.
+            F1B descrive stato del rischio di mercato (volatilità, credito, curva tassi,
+            ampiezza settoriale). Materiale educativo/informativo.
             Nessuna raccomandazione personale.
             Fonti: Bloomberg, Reuters, CBOE, FRED, Finviz Premium, ETFdb.
           </p>
@@ -200,7 +205,10 @@ export function bindCard(node, rawData, ctx = {}) {
   }
 
   // Tooltip "?" nella card
-  if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
+  if (
+    window.__TradeliaUI &&
+    typeof window.__TradeliaUI.bindMetricInfoButtons === "function"
+  ) {
     try {
       window.__TradeliaUI.bindMetricInfoButtons(node);
     } catch (e) {}
@@ -212,7 +220,10 @@ export function bindCard(node, rawData, ctx = {}) {
 ------------------------------------------------- */
 
 function openF1DrawerPublic(data) {
-  if (!window.__TradeliaUI || typeof window.__TradeliaUI.openPanel !== "function") {
+  if (
+    !window.__TradeliaUI ||
+    typeof window.__TradeliaUI.openPanel !== "function"
+  ) {
     console.warn("openPanel non disponibile");
     return;
   }
@@ -249,7 +260,7 @@ function openF1DrawerPublic(data) {
     footerTabs: []
   });
 
-  // post-mount binding (tab switching + tooltip binding interno)
+  // post-mount: tab binding + tooltip binding interno
   setTimeout(() => {
     const roots = [
       document.getElementById("panel-body"),
@@ -268,7 +279,7 @@ function openF1DrawerPublic(data) {
       }
     });
 
-    // stato iniziale "Regime"
+    // stato iniziale
     const firstTabBtn = document.querySelector('[data-f1b-tab="regime"]');
     if (firstTabBtn && typeof firstTabBtn.click === "function") {
       firstTabBtn.click();
@@ -281,7 +292,8 @@ function isMobileViewport() {
 }
 
 /* -------------------------------------------------
-   Sezioni logiche drawer (con stile UNIFORME)
+   Sezioni logiche drawer
+   (tutte basate su f1bCard() per look coerente)
 ------------------------------------------------- */
 
 function buildDrawerSectionsPublic(d) {
@@ -290,23 +302,24 @@ function buildDrawerSectionsPublic(d) {
     <section class="tl-panel-section" data-f1b-section="regime"
       style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title">
-        <div class="tl-panel-section-title-text">
-          Regime &amp; Rischio
-        </div>
+        <div class="tl-panel-section-title-text">Regime &amp; Rischio</div>
       </header>
 
       <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4]">
-        ${metricBlock("StrategyMode_macro", "StrategyMode", "Modalità corrente del mercato", d.regime_and_risk.StrategyMode_macro)}
-        ${metricBlock("RegimeScore", "RegimeScore", "Appetito rischio sintetico", d.regime_and_risk.RegimeScore)}
-        ${metricBlock("VolRegime", "Volatilità / Hedge", "VIX, oro, ricerca hedge", d.regime_and_risk.VolRegime)}
-        ${metricBlock("LiquidityRegimeScore", "Curva & Costo capitale", "Curve Treasury / funding stress", d.regime_and_risk.LiquidityRegimeScore)}
-        ${metricBlock("CreditRiskBlock", "Credito", "Flight-to-safety / high beta credit", d.regime_and_risk.CreditRiskBlock)}
-        ${metricBlock("FX_Regime", "FX / USD", "Dollar tone", d.regime_and_risk.FX_Regime)}
+        ${metricBlock("StrategyMode_macro","StrategyMode","Modalità corrente del mercato",d.regime_and_risk.StrategyMode_macro)}
+        ${metricBlock("RegimeScore","RegimeScore","Appetito rischio sintetico",d.regime_and_risk.RegimeScore)}
+        ${metricBlock("VolRegime","Volatilità / Hedge","VIX, oro, ricerca hedge",d.regime_and_risk.VolRegime)}
+        ${metricBlock("LiquidityRegimeScore","Curva & Costo capitale","Curve Treasury / funding stress",d.regime_and_risk.LiquidityRegimeScore)}
+        ${metricBlock("CreditRiskBlock","Credito","Flight-to-safety / high beta credit",d.regime_and_risk.CreditRiskBlock)}
+        ${metricBlock("FX_Regime","FX / USD","Dollar tone",d.regime_and_risk.FX_Regime)}
       </div>
 
-      <div class="mt-4">
-        ${metricBlock("RiskWindow", "RiskWindow (3–10g)", "Driver macro monitorati a breve", d.regime_and_risk.RiskWindow)}
-      </div>
+      ${metricBlock(
+        "RiskWindow",
+        "RiskWindow (3–10g)",
+        "Driver macro monitorati a breve (orizzonte 3–10 giorni). Non operativo.",
+        d.regime_and_risk.RiskWindow
+      )}
     </section>
   `;
 
@@ -315,24 +328,29 @@ function buildDrawerSectionsPublic(d) {
     <section class="tl-panel-section" data-f1b-section="breadth"
       style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title">
-        <div class="tl-panel-section-title-text">
-          Breadth &amp; Rotazione Equity
-        </div>
+        <div class="tl-panel-section-title-text">Breadth &amp; Rotazione Equity</div>
       </header>
 
       <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4] mb-4">
-        ${metricBlock("Breadth_1M", "Breadth (1M)", "% settori positivi su ~30 giorni", d.breadth_rotation.Breadth_1M)}
-        ${metricBlock("RiskTilt_1M", "RiskTilt (1M)", "Ciclici/growth vs difensivi", d.breadth_rotation.RiskTilt_1M)}
-        ${metricBlock("SmallCapPressure_1W", "SmallCap Pressure (1W)", "Microcap vs Mid/Large", d.breadth_rotation.SmallCapPressure_1W)}
-        ${metricBlock("IndexMomentum_1W", "Index Momentum (1W)", "Momentum cross-indici / crypto", d.breadth_rotation.IndexMomentum_1W)}
-        ${metricBlock("SizeBias", "Size Bias", "Preferenza di capitalizzazione", d.breadth_rotation.SizeBias)}
+        ${metricBlock("Breadth_1M","Breadth (1M)","% settori positivi su ~30 giorni",d.breadth_rotation.Breadth_1M)}
+        ${metricBlock("RiskTilt_1M","RiskTilt (1M)","Ciclici/growth vs difensivi",d.breadth_rotation.RiskTilt_1M)}
+        ${metricBlock("SmallCapPressure_1W","SmallCap Pressure (1W)","Microcap vs Mid/Large",d.breadth_rotation.SmallCapPressure_1W)}
+        ${metricBlock("IndexMomentum_1W","Index Momentum (1W)","Momentum cross-indici / crypto",d.breadth_rotation.IndexMomentum_1W)}
+        ${metricBlock("SizeBias","Size Bias","Preferenza di capitalizzazione",d.breadth_rotation.SizeBias)}
       </div>
 
-      <div class="grid gap-4 text-[12.5px] leading-[1.45] text-[color:var(--ink)]">
-        ${sectorListDetailed("Leadership multi-timeframe", d.breadth_rotation.Leadership?.LeadersMultiTF)}
-        ${sectorListDetailed("Leadership difensiva qualitativa", d.breadth_rotation.Leadership?.DefensiveLeadership)}
-        ${sectorListDetailed("Settori in ritardo", d.breadth_rotation.Leadership?.Lagging)}
-      </div>
+      ${sectorListDetailed(
+        "Leadership multi-timeframe",
+        d.breadth_rotation.Leadership?.LeadersMultiTF
+      )}
+      ${sectorListDetailed(
+        "Leadership difensiva qualitativa",
+        d.breadth_rotation.Leadership?.DefensiveLeadership
+      )}
+      ${sectorListDetailed(
+        "Settori in ritardo",
+        d.breadth_rotation.Leadership?.Lagging
+      )}
 
       <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-3">
         ${escapeHtml(d.breadth_rotation.Leadership?.ai_note || "")}
@@ -340,14 +358,12 @@ function buildDrawerSectionsPublic(d) {
     </section>
   `;
 
-  // 3. Market Internals (dati grezzi) — ora card-based
+  // 3. Market Internals (dati grezzi)
   const internalsHTML = `
     <section class="tl-panel-section" data-f1b-section="internals"
       style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title">
-        <div class="tl-panel-section-title-text">
-          Market Internals (dati grezzi)
-        </div>
+        <div class="tl-panel-section-title-text">Market Internals (dati grezzi)</div>
       </header>
 
       ${listBlockCard("Indici (1W)", d.internals_raw.Indices_1W)}
@@ -361,14 +377,12 @@ function buildDrawerSectionsPublic(d) {
     </section>
   `;
 
-  // 4. Street View · narrativa istituzionale — ora card-based
+  // 4. Street View · Narrativa istituzionale
   const streetHTML = `
     <section class="tl-panel-section" data-f1b-section="street"
       style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title">
-        <div class="tl-panel-section-title-text">
-          Street View · Narrativa istituzionale
-        </div>
+        <div class="tl-panel-section-title-text">Street View · Narrativa istituzionale</div>
       </header>
 
       ${headlineBlockCard("Macro (Bloomberg / Reuters / Barron's)", d.street_view.T1_MacroNews)}
@@ -381,14 +395,12 @@ function buildDrawerSectionsPublic(d) {
     </section>
   `;
 
-  // 5. Conclusione · Tradelia AI (educational) — tutto card-based
+  // 5. Conclusione · Tradelia AI (educational)
   const sintesiHTML = `
     <section class="tl-panel-section" data-f1b-section="sintesi"
       style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title">
-        <div class="tl-panel-section-title-text">
-          Conclusione · Tradelia AI (educational)
-        </div>
+        <div class="tl-panel-section-title-text">Conclusione · Tradelia AI (educational)</div>
       </header>
 
       ${
@@ -397,22 +409,11 @@ function buildDrawerSectionsPublic(d) {
           : ""
       }
 
-      <div class="mb-4 p-2"
-        style="
-          background:var(--surface-card-alt);
-          border:1px solid var(--br-card);
-          border-radius:var(--radius-card);
-          box-shadow:var(--shadow-card);
-        ">
-        <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide mb-1">
-          Lettura di contesto (non istruzioni operative)
-        </div>
-        <div class="text-[12px] font-semibold leading-[1.4] text-[color:var(--ink)]">
-          In sintesi: il regime appare ancora guidato da dinamiche Momentum,
-          con ampiezza costruttiva e rischio sistemico contenuto.
-          La finestra 3–10 giorni resta favorevole ma resta esposta a shock macro imprevisti.
-        </div>
-      </div>
+      ${headlineBlockCard(
+        "Lettura di contesto (non istruzioni operative)",
+        "Il regime appare guidato da dinamiche Momentum con ampiezza costruttiva e rischio sistemico contenuto. " +
+        "La finestra 3–10 giorni rimane favorevole, ma resta esposta a shock macro imprevisti."
+      )}
 
       <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-2">
         Questa conclusione ha esclusivamente finalità informative e formative.
@@ -422,14 +423,12 @@ function buildDrawerSectionsPublic(d) {
     </section>
   `;
 
-  // 6. Audit & Qualità
+  // 6. Audit & Qualità dati
   const auditHTML = `
     <section class="tl-panel-section" data-f1b-section="audit"
       style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title">
-        <div class="tl-panel-section-title-text">
-          Audit &amp; Qualità dati
-        </div>
+        <div class="tl-panel-section-title-text">Audit &amp; Qualità dati</div>
       </header>
 
       <div class="grid gap-3 text-[12px] leading-[1.4] grid-cols-1 md:grid-cols-2">
@@ -444,24 +443,23 @@ function buildDrawerSectionsPublic(d) {
         verde = dati coerenti/aggiornati;
         giallo = parziale/debole;
         rosso = incompleto o rumoroso.
-        Queste valutazioni sono qualitative, soggettive e non operative.
+        Queste valutazioni sono soggettive e non operative.
       </div>
     </section>
   `;
 
-  // 7. Nota regolamentare / MiFID
+  // 7. Nota regolamentare (MiFID / ESMA)
   const mifidHTML = `
     <section class="tl-panel-section" data-f1b-section="mifid"
       style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title">
-        <div class="tl-panel-section-title-text">
-          Nota regolamentare
-        </div>
+        <div class="tl-panel-section-title-text">Nota regolamentare</div>
       </header>
 
-      <div class="text-[12.5px] leading-[1.45] text-[color:var(--muted)] space-y-2">
-        <p>${escapeHtml(d.mifid.disclaimer || "")}</p>
-      </div>
+      ${headlineBlockCard(
+        "Informativa",
+        d.mifid.disclaimer || ""
+      )}
     </section>
   `;
 
@@ -615,7 +613,7 @@ function renderDrawerMobileShellPublic(sectionsObj) {
 ------------------------------------------------- */
 
 function drawerMenuButtonPublic(key, label) {
-  // desktop tab button: stile base/hover/attivo viene da tokens.css (.f1b-tab-btn)
+  // desktop tab button, stile dato da .f1b-tab-btn in tokens.css
   return `
     <button
       class="f1b-tab-btn"
@@ -663,11 +661,11 @@ function bindDrawerTabsPublic(root) {
       const key = btn.getAttribute("data-f1b-tab");
       if (!key) return;
 
-      // attiva/deattiva bottoni ovunque
+      // attiva/deattiva bottoni
       tabButtons.forEach(b => {
         const isActive = b.getAttribute("data-f1b-tab") === key;
 
-        // DESKTOP SIDEBAR
+        // DESKTOP sidebar
         if (b.classList.contains("f1b-tab-btn")) {
           if (isActive) {
             b.classList.add("is-active");
@@ -676,10 +674,9 @@ function bindDrawerTabsPublic(root) {
           }
         }
 
-        // MOBILE TABS
+        // MOBILE pills
         if (b.classList.contains("f1b-footer-tab-btn")) {
           if (isActive) {
-            // attivo mobile
             b.style.fontWeight = "600";
             b.style.border = "1px solid var(--ink)";
             b.style.background =
@@ -687,7 +684,6 @@ function bindDrawerTabsPublic(root) {
             b.style.color = "var(--ink)";
             b.style.boxShadow = "0 4px 10px rgba(0,0,0,.18)";
           } else {
-            // inattivo mobile
             b.style.fontWeight = "500";
             b.style.border = "1px solid var(--br-soft)";
             b.style.background = "var(--surface-card)";
@@ -708,9 +704,43 @@ function bindDrawerTabsPublic(root) {
 
 /* -------------------------------------------------
    Blocchi UI riutilizzabili
+   Tutti basati sullo stesso schema visivo
 ------------------------------------------------- */
 
-// KPI compatti nella card principale
+// 1. Card base
+function f1bCard({ tone, title, bodyHtml, noteHtml }) {
+  const { dotColor } = toneColors(tone);
+  return `
+    <div class="mb-4 p-2"
+      style="
+        background:var(--surface-card-alt);
+        border:1px solid var(--br-card);
+        border-radius:var(--radius-card);
+        box-shadow:var(--shadow-card);
+      ">
+      <div class="flex items-start gap-2 mb-1">
+        <span class="inline-block w-[8px] h-[8px] rounded-full"
+          style="background:${dotColor};flex-shrink:0;"></span>
+        <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide">
+          ${escapeHtml(title || "")}
+        </div>
+      </div>
+
+      <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)]">
+        ${bodyHtml || ""}
+      </div>
+
+      ${
+        noteHtml
+          ? `<div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-2">${noteHtml}</div>`
+          : ""
+      }
+    </div>
+  `;
+}
+
+// 2. metricBoxTrafficLight (card compatta nella hero principale)
+//    → rimane com'è perché è nella card hero, fuori dal drawer
 function metricBoxTrafficLight({ key, label, desc, metric }) {
   const { dotColor, textColor } = toneColors(metric?.tone);
   return `
@@ -750,206 +780,159 @@ function metricBoxTrafficLight({ key, label, desc, metric }) {
   `;
 }
 
-// Blocco metrica con semaforo per il drawer
+// 3. metricBlock -> wrapper che usa f1bCard
 function metricBlock(metricKey, title, desc, metricObj) {
-  const { dotColor, textColor } = toneColors(metricObj?.tone);
-  return `
-    <div class="p-2"
-      style="
-        background:var(--surface-card-alt);
-        border:1px solid var(--br-card);
-        border-radius:var(--radius-card);
-        box-shadow:var(--shadow-card);
-      ">
-      <div class="flex items-start justify-between gap-2 mb-1">
-        <div class="flex items-center gap-2">
-          <span class="inline-block w-[8px] h-[8px] rounded-full"
-            style="background:${dotColor};"></span>
-          <div class="text-[11px] font-semibold leading-[1.3] text-[color:var(--muted)]">
-            ${escapeHtml(title)}
-          </div>
-        </div>
-        <button
-          class="info-btn"
-          data-metric="${escapeAttr(metricKey)}"
-          aria-label="Info ${escapeAttr(metricKey)}"
-        >?</button>
-      </div>
+  const { textColor } = toneColors(metricObj?.tone);
+  const value = escapeHtml(metricObj?.raw || "—");
 
-      <div class="font-mono font-bold text-[13px] leading-[1.4]"
-        style="color:${textColor};">
-        ${escapeHtml(metricObj?.raw || "—")}
+  const bodyHtml = `
+    <div class="flex items-start justify-between gap-2 mb-1">
+      <div class="flex items-center gap-2">
+        <span class="font-mono font-bold text-[13px] leading-[1.4]" style="color:${textColor};">
+          ${value}
+        </span>
       </div>
+      <button
+        class="info-btn"
+        data-metric="${escapeAttr(metricKey)}"
+        aria-label="Info ${escapeAttr(metricKey)}"
+      >?</button>
+    </div>
 
-      <div class="text-[11px] leading-[1.3] text-[color:var(--muted)] mt-1">
-        ${escapeHtml(desc || "")}
-      </div>
+    <div class="text-[11px] leading-[1.3] text-[color:var(--muted)]">
+      ${escapeHtml(desc || "")}
+    </div>
 
-      <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">
-        ${escapeHtml(metricObj?.ai_note || "")}
-      </div>
+    <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">
+      ${escapeHtml(metricObj?.ai_note || "")}
     </div>
   `;
+
+  return f1bCard({
+    tone: metricObj?.tone,
+    title,
+    bodyHtml,
+    noteHtml: ""
+  });
 }
 
-// Lista dati grezzi (internals) con card uniforme
-function listBlockCard(title, rowsArr) {
-  const body = Array.isArray(rowsArr) && rowsArr.length
-    ? rowsArr.map(r => `
-        <li class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)]">
-          ${escapeHtml(r)}
-        </li>`
-      ).join("")
-    : `<li class="text-[12.5px] leading-[1.4] text-[color:var(--muted)]">N/A</li>`;
-
-  return `
-    <div class="mb-4 p-2"
-      style="
-        background:var(--surface-card-alt);
-        border:1px solid var(--br-card);
-        border-radius:var(--radius-card);
-        box-shadow:var(--shadow-card);
-      ">
-      <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide mb-1">
-        ${escapeHtml(title)}
-      </div>
-      <ul class="pl-4 list-disc space-y-1">
-        ${body}
-      </ul>
-    </div>
-  `;
-}
-
-// Headlines istituzionali (Street View) con card uniforme
-function headlineBlockCard(title, body) {
-  if (!body) return "";
-  return `
-    <div class="mb-4 p-2"
-      style="
-        background:var(--surface-card-alt);
-        border:1px solid var(--br-card);
-        border-radius:var(--radius-card);
-        box-shadow:var(--shadow-card);
-      ">
-      <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide mb-1">
-        ${escapeHtml(title)}
-      </div>
-      <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)] whitespace-pre-line">
-        ${escapeHtml(body)}
-      </div>
-    </div>
-  `;
-}
-
-// Lista leadership settoriale (già cardizzata semanticamente)
+// 4. sectorListDetailed -> stessa card base
 function sectorListDetailed(title, arr) {
+  let bodyHtml;
   if (!Array.isArray(arr) || !arr.length) {
-    return `
-      <div class="mb-4 p-2"
-        style="
-          background:var(--surface-card-alt);
-          border:1px solid var(--br-card);
-          border-radius:var(--radius-card);
-          box-shadow:var(--shadow-card);
-        ">
-        <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
-          ${escapeHtml(title)}
-        </div>
-        <div class="text-[12.5px] leading-[1.4] text-[color:var(--muted)]">
-          Nessun dato.
-        </div>
+    bodyHtml = `
+      <div class="text-[12.5px] leading-[1.4] text-[color:var(--muted)]">
+        Nessun dato.
       </div>
     `;
-  }
+  } else {
+    const items = arr.map(item => `
+      <li class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">
+        ${escapeHtml(item)}
+      </li>
+    `).join("");
 
-  const items = arr.map(item => `
-    <li class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">
-      ${escapeHtml(item)}
-    </li>
-  `).join("");
-
-  return `
-    <div class="mb-4 p-2"
-      style="
-        background:var(--surface-card-alt);
-        border:1px solid var(--br-card);
-        border-radius:var(--radius-card);
-        box-shadow:var(--shadow-card);
-      ">
-      <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
-        ${escapeHtml(title)}
-      </div>
+    bodyHtml = `
       <ul class="list-disc pl-4 space-y-1">
         ${items}
       </ul>
-    </div>
-  `;
+    `;
+  }
+
+  return f1bCard({
+    tone: "neutral",
+    title,
+    bodyHtml,
+    noteHtml: ""
+  });
 }
 
-// Punto conclusione AI (già card style)
+// 5. listBlockCard (internals grezzi) -> stessa card base
+function listBlockCard(title, rowsArr) {
+  const listItems = Array.isArray(rowsArr) && rowsArr.length
+    ? rowsArr.map(r => `
+        <li class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)]">
+          ${escapeHtml(r)}
+        </li>
+      `).join("")
+    : `<li class="text-[12.5px] leading-[1.4] text-[color:var(--muted)]">N/A</li>`;
+
+  const bodyHtml = `
+    <ul class="pl-4 list-disc space-y-1">
+      ${listItems}
+    </ul>
+  `;
+
+  return f1bCard({
+    tone: "neutral",
+    title,
+    bodyHtml,
+    noteHtml: ""
+  });
+}
+
+// 6. headlineBlockCard (Street View / Conclusioni narrative) -> stessa card base
+function headlineBlockCard(title, body) {
+  if (!body) return "";
+  const bodyHtml = `
+    <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)] whitespace-pre-line">
+      ${escapeHtml(body)}
+    </div>
+  `;
+  return f1bCard({
+    tone: "neutral",
+    title,
+    bodyHtml,
+    noteHtml: ""
+  });
+}
+
+// 7. conclusionPointBlock -> stessa card base
 function conclusionPointBlock(pointObj = {}) {
-  return `
-    <div class="mb-4 p-2"
-      style="
-        background:var(--surface-card-alt);
-        border:1px solid var(--br-card);
-        border-radius:var(--radius-card);
-        box-shadow:var(--shadow-card);
-      ">
-      <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide mb-1">
-        ${escapeHtml(pointObj.title || "")}
-      </div>
-      <div class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)]">
-        ${escapeHtml(pointObj.raw || "")}
-      </div>
-      <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">
-        ${escapeHtml(pointObj.ai_note || "")}
-      </div>
+  const bodyHtml = `
+    <div class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)] mb-1">
+      ${escapeHtml(pointObj.raw || "")}
+    </div>
+    <div class="text-[11px] leading-[1.4] text-[color:var(--muted)]">
+      ${escapeHtml(pointObj.ai_note || "")}
     </div>
   `;
+  return f1bCard({
+    tone: "neutral",
+    title: pointObj.title || "",
+    bodyHtml,
+    noteHtml: ""
+  });
 }
 
-// Quality / Audit
+// 8. qualityChip -> wrapper card con tono
 function qualityChip(keyName, qObj) {
   if (!qObj) return "";
-  const { dotColor, textColor } = toneColors(qObj.tone);
-
-  return `
-    <div class="p-2"
-      style="
-        background:var(--surface-card-alt);
-        border:1px solid var(--br-card);
-        border-radius:var(--radius-card);
-        box-shadow:var(--shadow-card);
-      ">
-
-      <div class="flex items-start justify-between gap-2 mb-1">
-        <div class="flex items-center gap-2">
-          <span class="inline-block w-[8px] h-[8px] rounded-full"
-            style="background:${dotColor};"></span>
-
-          <div class="text-[11px] font-semibold leading-[1.3] text-[color:var(--muted)]">
-            ${escapeHtml(keyName || "")}
-          </div>
-        </div>
-
-        <button
-          class="info-btn"
-          data-metric="${escapeAttr(keyName)}"
-          aria-label="Info ${escapeAttr(keyName)}"
-        >?</button>
-      </div>
-
+  const bodyHtml = `
+    <div class="flex items-start justify-between gap-2 mb-1">
       <div class="font-mono font-bold text-[13px] leading-[1.4]"
-        style="color:${textColor};">
+        style="color:${toneColors(qObj.tone).textColor};">
         ${escapeHtml(qObj.raw || "—")}
       </div>
 
-      <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">
-        ${escapeHtml(qObj.ai_note || "")}
-      </div>
+      <button
+        class="info-btn"
+        data-metric="${escapeAttr(keyName)}"
+        aria-label="Info ${escapeAttr(keyName)}"
+      >?</button>
+    </div>
+
+    <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">
+      ${escapeHtml(qObj.ai_note || "")}
     </div>
   `;
+
+  return f1bCard({
+    tone: qObj.tone,
+    title: keyName || "",
+    bodyHtml,
+    noteHtml: ""
+  });
 }
 
 /* -------------------------------------------------
@@ -981,7 +964,7 @@ function toneColors(tone) {
   }
 }
 
-// Pill tono in header card accanto a StrategyMode
+// Pill tono in hero accanto a StrategyMode
 function computeHighLevelTone(strategyModeMacroObj, regimeScoreObj) {
   const stratRaw = (strategyModeMacroObj && strategyModeMacroObj.raw || "").toLowerCase();
   let toneColor = "var(--tone-neu-fg)";
