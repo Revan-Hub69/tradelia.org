@@ -38,12 +38,12 @@
     "FX_Regime": {
       "raw": "USD forte moderato",
       "tone": "yellow",
-      "ai_note": "Dollaro in rafforzamento contenuto; non sta ancora strangolando il rischio."
+      "ai_note": "Dollaro in rafforzamento contenuto; non sta ancora soffocando il rischio globale."
     },
     "RiskWindow": {
       "raw": "Oil +8% W/W, VIX < 15, curva in normalizzazione → finestra 3–10g favorevole",
       "tone": "green",
-      "ai_note": "Contesto tecnico-macro ancora positivo ma monitorare energia/geopolitica."
+      "ai_note": "Contesto tecnico-macro positivo ma monitorare energia/geopolitica."
     }
   },
 
@@ -66,7 +66,7 @@
     "IndexMomentum_1W": {
       "raw": "SPX +1.6%, NDX +1.9%, RUT +0.4%",
       "tone": "green",
-      "ai_note": "Momentum positivo cross-index; possibilità rotazione verso laggard."
+      "ai_note": "Momentum positivo cross-index; possibilità rotazione verso i laggard."
     },
     "SizeBias": {
       "raw": "Large > Small",
@@ -92,7 +92,7 @@
           "Staples",
           "Utilities"
         ],
-        "ai_note": "Difensivi non in controllo, più 'tenuta' che 'dominio'."
+        "ai_note": "Difensivi presenti ma non dominanti."
       },
       "Lagging": {
         "tone": "red",
@@ -100,7 +100,7 @@
           "Energy",
           "Materials"
         ],
-        "ai_note": "Settori ciclici legati a commodity hard restano indietro."
+        "ai_note": "Settori legati a commodity hard restano indietro."
       },
       "ai_note": "Leadership coerente con Momentum; Energy in ritardo nonostante oil forte."
     }
@@ -153,9 +153,9 @@
     "T1_ConsensusTone": {
       "raw": "Positive",
       "tone": "green",
-      "ai_note": "Consensus costruttivo sul rischio, ma con sorveglianza su petrolio e geopolitica."
+      "ai_note": "Consensus costruttivo sul rischio, con sorveglianza su petrolio e geopolitica."
     },
-    "ai_note": "Narrativa istituzionale coerente con regime Momentum, nessun segnale di stress sistemico immediato."
+    "ai_note": "Narrativa istituzionale coerente con regime Momentum, senza segnali di stress sistemico immediato."
   },
 
   "sintesi_ai": {
@@ -188,7 +188,7 @@
         "title": "Energia",
         "raw": "Energy debole nonostante oil forte.",
         "tone": "red",
-        "ai_note": "Segnale di divergenza da monitorare (profit taking / tema specifico)."
+        "ai_note": "Divergenza anomala: prese di profitto / specificità di settore."
       },
       {
         "title": "Tassi e credito",
@@ -200,7 +200,7 @@
         "title": "Finestra temporale",
         "raw": "Bias positivo 3–10g.",
         "tone": "green",
-        "ai_note": "Principali rischi: reversal energia / shock geopolitico."
+        "ai_note": "Rischi principali: reversal energia / shock geopolitico."
       }
     ],
     "summary": {
@@ -247,6 +247,7 @@
   },
 
   "mifid": {
-    "disclaimer": "Questo modulo è destinato a finalità informative e didattiche. Non costituisce raccomandazione d’investimento o consulenza personalizzata ai sensi MiFID II. I dati derivano da fonti ritenute affidabili ma non si garantisce accuratezza o completezza. Le opinioni riflettono un'interpretazione di contesto di Tradelia AI e possono cambiare senza preavviso."
+    "disclaimer": "Questo modulo è destinato a finalità informative e didattiche. Non costituisce raccomandazione d’investimento o consulenza personalizzata ai sensi MiFID II. I dati derivano da fonti ritenute affidabili ma non si garantisce accuratezza o completezza. Le opinioni riflettono un’interpretazione di contesto di Tradelia AI e possono cambiare senza preavviso."
   }
 }
+
