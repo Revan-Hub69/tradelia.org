@@ -1,36 +1,38 @@
 // /report/assets/js/modules/f1b.js
 //
 // F1B · Regime di mercato / Contesto rischio (public dashboard)
-// Snapshot swing 3–10 giorni
+//
+// Ruolo:
+// - Fornire lettura sintetica del regime di mercato e del rischio percepito
+//   nell'orizzonte 3–10 giorni.
+// - Contesto macro (volatilità, credito, curva tassi, USD), ampiezza del mercato
+//   e narrativa istituzionale (sell-side / agenzie).
+// - Fine esclusivamente informativo / educativo. Non contiene raccomandazioni operative.
 //
 // Esporta:
 //   renderCard(data, ctx)
 //   bindCard(node, data, ctx)
 //
-// Runtime flow:
+// Flusso runtime:
 //   - renderCard() genera la card riassuntiva con CTA "Dettagli regime →"
-//   - bindCard() attacca listener alla CTA e ai tooltip
+//   - bindCard() collega CTA e tooltip
 //   - openF1DrawerPublic() apre il pannello/drawer responsive
-//   - bindDrawerTabsPublic() gestisce le tab sia desktop (sidebar sinistra) che mobile (pill scrollabili)
+//   - bindDrawerTabsPublic() gestisce le tab (desktop sidebar, mobile tab-bar sticky)
 //
-// NOTE STYLING IMPORTANTI:
-//   • Sidebar desktop usa classi .f1b-panel-menu / .f1b-tab-btn
-//     Lo stile base/hover/attivo viene da tokens.css:
-//       .f1b-tab-btn { idle }
-//       .f1b-tab-btn:hover { hover preview }
-//       .f1b-tab-btn.is-active { tab corrente, barra sinistra brand, glow, testo forte }
-//     → JS si limita a togglare .is-active
-//
-//   • Mobile footer tabs (pill orizzontali):
-//     Non hanno ancora classi globali nei token, quindi per ora le stilizziamo inline da JS
-//
-//   • I contenuti delle viste sono in <div data-f1b-view="..."> e li mostriamo/nascondiamo via hidden=...
-//
+// Stile / Design system:
+//   - Tutte le sezioni usano lo stesso linguaggio visivo:
+//       background: var(--surface-card-alt)
+//       border:     1px solid var(--br-card)
+//       radius:     var(--radius-card)
+//       shadow:     var(--shadow-card)
+//   - Tone semaforico verde/giallo/rosso dove disponibile (toneColors()).
+//   - NESSUNA menzione di "swing trading". Usiamo "lettura di contesto 3–10 giorni".
+//   - Disclaimer educativo ovunque, non solo nel footer.
 
 export function renderCard(rawData, ctx = {}) {
   const d = normalizeDataPublicF1B(rawData);
 
-  // KPI card riassunta
+  // KPI in header card
   const kpis = [
     {
       key: "StrategyMode_macro",
@@ -47,12 +49,12 @@ export function renderCard(rawData, ctx = {}) {
     {
       key: "VolRegime",
       label: "Volatilità",
-      desc: "VIX / oro / hedge appetite",
+      desc: "VIX / oro / ricerca hedge",
       metric: d.regime_and_risk.VolRegime
     }
   ];
 
-  // Pill tono generale = StrategyMode_macro / RegimeScore
+  // Pill tono generale
   const { toneLabel, toneColor } = computeHighLevelTone(
     d.regime_and_risk.StrategyMode_macro,
     d.regime_and_risk.RegimeScore
@@ -62,14 +64,14 @@ export function renderCard(rawData, ctx = {}) {
     <section class="f1b-card-container text-[13px] leading-[1.5] text-[color:var(--ink)]"
       style="font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
 
-      <!-- Headline sezione -->
+      <!-- HEADLINE -->
       <header class="section-headline mb-4">
         <div class="section-head-left">
           <div class="section-head-topline flex items-center flex-wrap gap-2">
             <span class="section-badge">F1B</span>
 
             <span class="text-[10px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-              Regime di mercato (swing 3–10g)
+              Regime di mercato · Orizzonte 3–10 giorni
             </span>
 
             <span class="module-status-pill text-[10px] font-semibold leading-[1.2] px-[6px] py-[2px] rounded-[4px] border"
@@ -92,13 +94,13 @@ export function renderCard(rawData, ctx = {}) {
           </div>
 
           <div class="section-desc text-[12px] text-[color:var(--muted)] leading-[1.45] mt-1">
-            Regime corrente (Momentum / Pullback), partecipazione al rialzo
-            e stato del credito/curve. Dati educativi, non operativi.
+            Volatilità, credito, curva tassi, partecipazione al rialzo e segnali macro dominanti.
+            Lettura di contesto. Non è una istruzione operativa.
           </div>
         </div>
       </header>
 
-      <!-- Corpo card principale -->
+      <!-- CARD PRINCIPALE -->
       <div class="relative flex flex-col gap-4 card-compact"
         style="
           background:var(--surface-card);
@@ -144,16 +146,17 @@ export function renderCard(rawData, ctx = {}) {
           </div>
         </div>
 
-        <!-- KPI row semaforiche -->
+        <!-- KPI semaforo -->
         <div class="grid gap-3 grid-cols-2 md:grid-cols-3">
           ${kpis.map(k => metricBoxTrafficLight(k)).join("")}
         </div>
 
-        <!-- DISCLAIMER + CTA ROW -->
+        <!-- DISCLAIMER + CTA -->
         <div class="mt-2 flex flex-col gap-3 lg:flex-row lg:items-start">
           <p class="text-[11px] leading-[1.4] text-[color:var(--muted)] flex-1">
-            F1B è un quadro informativo sul regime di mercato (volatilità, credito,
-            curva tassi, breadth settoriale). Nessuna raccomandazione personale.
+            F1B descrive lo stato corrente del mercato (volatilità, credito, curva tassi,
+            partecipazione settoriale). È materiale educativo e informativo.
+            Nessuna raccomandazione personale.
             Fonti: Bloomberg, Reuters, CBOE, FRED, Finviz Premium, ETFdb.
           </p>
 
@@ -184,7 +187,6 @@ export function renderCard(rawData, ctx = {}) {
   `;
 }
 
-// bindCard: apre il drawer e lega tooltip
 export function bindCard(node, rawData, ctx = {}) {
   if (!node || !rawData) return;
   const data = normalizeDataPublicF1B(rawData);
@@ -206,7 +208,7 @@ export function bindCard(node, rawData, ctx = {}) {
 }
 
 /* -------------------------------------------------
-   Drawer / Panel con sezioni pubbliche
+   Drawer / Panel
 ------------------------------------------------- */
 
 function openF1DrawerPublic(data) {
@@ -256,8 +258,13 @@ function openF1DrawerPublic(data) {
 
     roots.forEach(r => {
       bindDrawerTabsPublic(r);
-      if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
-        try { window.__TradeliaUI.bindMetricInfoButtons(r); } catch (e) {}
+      if (
+        window.__TradeliaUI &&
+        typeof window.__TradeliaUI.bindMetricInfoButtons === "function"
+      ) {
+        try {
+          window.__TradeliaUI.bindMetricInfoButtons(r);
+        } catch (e) {}
       }
     });
 
@@ -274,21 +281,14 @@ function isMobileViewport() {
 }
 
 /* -------------------------------------------------
-   Sezioni logiche drawer (pubbliche)
+   Sezioni logiche drawer (con stile UNIFORME)
 ------------------------------------------------- */
 
 function buildDrawerSectionsPublic(d) {
   // 1. Regime & Rischio
   const regimeHTML = `
     <section class="tl-panel-section" data-f1b-section="regime"
-      style="
-        background:transparent;
-        border:0;
-        border-radius:0;
-        box-shadow:none;
-        padding:0;
-      "
-    >
+      style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title">
         <div class="tl-panel-section-title-text">
           Regime &amp; Rischio
@@ -298,7 +298,7 @@ function buildDrawerSectionsPublic(d) {
       <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4]">
         ${metricBlock("StrategyMode_macro", "StrategyMode", "Modalità corrente del mercato", d.regime_and_risk.StrategyMode_macro)}
         ${metricBlock("RegimeScore", "RegimeScore", "Appetito rischio sintetico", d.regime_and_risk.RegimeScore)}
-        ${metricBlock("VolRegime", "Volatilità / Hedge", "VIX, oro, appetito hedge", d.regime_and_risk.VolRegime)}
+        ${metricBlock("VolRegime", "Volatilità / Hedge", "VIX, oro, ricerca hedge", d.regime_and_risk.VolRegime)}
         ${metricBlock("LiquidityRegimeScore", "Curva & Costo capitale", "Curve Treasury / funding stress", d.regime_and_risk.LiquidityRegimeScore)}
         ${metricBlock("CreditRiskBlock", "Credito", "Flight-to-safety / high beta credit", d.regime_and_risk.CreditRiskBlock)}
         ${metricBlock("FX_Regime", "FX / USD", "Dollar tone", d.regime_and_risk.FX_Regime)}
@@ -313,14 +313,7 @@ function buildDrawerSectionsPublic(d) {
   // 2. Breadth & Rotazione
   const breadthHTML = `
     <section class="tl-panel-section" data-f1b-section="breadth"
-      style="
-        background:transparent;
-        border:0;
-        border-radius:0;
-        box-shadow:none;
-        padding:0;
-      "
-    >
+      style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title">
         <div class="tl-panel-section-title-text">
           Breadth &amp; Rotazione Equity
@@ -328,26 +321,17 @@ function buildDrawerSectionsPublic(d) {
       </header>
 
       <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4] mb-4">
-        ${metricBlock("Breadth_1M", "Breadth (1M)", "% settori verdi su 30g", d.breadth_rotation.Breadth_1M)}
+        ${metricBlock("Breadth_1M", "Breadth (1M)", "% settori positivi su ~30 giorni", d.breadth_rotation.Breadth_1M)}
         ${metricBlock("RiskTilt_1M", "RiskTilt (1M)", "Ciclici/growth vs difensivi", d.breadth_rotation.RiskTilt_1M)}
         ${metricBlock("SmallCapPressure_1W", "SmallCap Pressure (1W)", "Microcap vs Mid/Large", d.breadth_rotation.SmallCapPressure_1W)}
-        ${metricBlock("IndexMomentum_1W", "Index Momentum (1W)", "Momentum cross-indici e crypto", d.breadth_rotation.IndexMomentum_1W)}
+        ${metricBlock("IndexMomentum_1W", "Index Momentum (1W)", "Momentum cross-indici / crypto", d.breadth_rotation.IndexMomentum_1W)}
         ${metricBlock("SizeBias", "Size Bias", "Preferenza di capitalizzazione", d.breadth_rotation.SizeBias)}
       </div>
 
       <div class="grid gap-4 text-[12.5px] leading-[1.45] text-[color:var(--ink)]">
-        ${sectorListDetailed(
-          "Leadership multi-timeframe",
-          d.breadth_rotation.Leadership?.LeadersMultiTF
-        )}
-        ${sectorListDetailed(
-          "Leadership difensiva qualitativa",
-          d.breadth_rotation.Leadership?.DefensiveLeadership
-        )}
-        ${sectorListDetailed(
-          "Settori in ritardo",
-          d.breadth_rotation.Leadership?.Lagging
-        )}
+        ${sectorListDetailed("Leadership multi-timeframe", d.breadth_rotation.Leadership?.LeadersMultiTF)}
+        ${sectorListDetailed("Leadership difensiva qualitativa", d.breadth_rotation.Leadership?.DefensiveLeadership)}
+        ${sectorListDetailed("Settori in ritardo", d.breadth_rotation.Leadership?.Lagging)}
       </div>
 
       <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-3">
@@ -356,27 +340,20 @@ function buildDrawerSectionsPublic(d) {
     </section>
   `;
 
-  // 3. Market Internals (dati grezzi)
+  // 3. Market Internals (dati grezzi) — ora card-based
   const internalsHTML = `
     <section class="tl-panel-section" data-f1b-section="internals"
-      style="
-        background:transparent;
-        border:0;
-        border-radius:0;
-        box-shadow:none;
-        padding:0;
-      "
-    >
+      style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title">
         <div class="tl-panel-section-title-text">
           Market Internals (dati grezzi)
         </div>
       </header>
 
-      ${listBlock("Indici (1W)", d.internals_raw.Indices_1W)}
-      ${listBlock("Futures / Commodities (1W)", d.internals_raw.Futures_Move_1W)}
-      ${listBlock("Curva Treasury", d.internals_raw.Curve_UST)}
-      ${listBlock("Volatilità & USD", d.internals_raw.Vol_USD)}
+      ${listBlockCard("Indici (1W)", d.internals_raw.Indices_1W)}
+      ${listBlockCard("Futures / Commodities (1W)", d.internals_raw.Futures_Move_1W)}
+      ${listBlockCard("Curva Treasury", d.internals_raw.Curve_UST)}
+      ${listBlockCard("Volatilità & USD", d.internals_raw.Vol_USD)}
 
       <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-3">
         ${escapeHtml(d.internals_raw.ai_note || "")}
@@ -384,26 +361,19 @@ function buildDrawerSectionsPublic(d) {
     </section>
   `;
 
-  // 4. Street View · Narrativa istituzionale
+  // 4. Street View · narrativa istituzionale — ora card-based
   const streetHTML = `
     <section class="tl-panel-section" data-f1b-section="street"
-      style="
-        background:transparent;
-        border:0;
-        border-radius:0;
-        box-shadow:none;
-        padding:0;
-      "
-    >
+      style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title">
         <div class="tl-panel-section-title-text">
           Street View · Narrativa istituzionale
         </div>
       </header>
 
-      ${headlineBlock("Macro (Bloomberg / Reuters / Barron's)", d.street_view.T1_MacroNews)}
-      ${headlineBlock("Sell-Side / Street View (Goldman / JPM / ecc.)", d.street_view.T1_SellSideNotes)}
-      ${headlineBlock("Consensus Tone", d.street_view.T1_ConsensusTone)}
+      ${headlineBlockCard("Macro (Bloomberg / Reuters / Barron's)", d.street_view.T1_MacroNews)}
+      ${headlineBlockCard("Sell-Side / Street View (Goldman / JPM / ecc.)", d.street_view.T1_SellSideNotes)}
+      ${headlineBlockCard("Consensus Tone", d.street_view.T1_ConsensusTone)}
 
       <div class="text-[11px] text-[color:var(--muted)] leading-[1.4]">
         ${escapeHtml(d.street_view.ai_note || "")}
@@ -411,37 +381,43 @@ function buildDrawerSectionsPublic(d) {
     </section>
   `;
 
-  // 5. Conclusione Tradelia AI (educational)
+  // 5. Conclusione · Tradelia AI (educational) — tutto card-based
   const sintesiHTML = `
     <section class="tl-panel-section" data-f1b-section="sintesi"
-      style="
-        background:transparent;
-        border:0;
-        border-radius:0;
-        box-shadow:none;
-        padding:0;
-      "
-    >
+      style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title">
         <div class="tl-panel-section-title-text">
           Conclusione · Tradelia AI (educational)
         </div>
       </header>
 
-      ${Array.isArray(d.sintesi_ai.points)
-        ? d.sintesi_ai.points.map(point => conclusionPointBlock(point)).join("")
-        : ""
+      ${
+        Array.isArray(d.sintesi_ai.points)
+          ? d.sintesi_ai.points.map(point => conclusionPointBlock(point)).join("")
+          : ""
       }
 
-      <div class="text-[12px] font-semibold leading-[1.4] text-[color:var(--ink)] mt-2">
-        In sintesi: il regime resta Momentum con ampiezza ancora costruttiva
-        e rischio sistemico contenuto. La finestra 3–10 giorni rimane favorevole,
-        ma resta soggetta a shock macro imprevisti.
+      <div class="mb-4 p-2"
+        style="
+          background:var(--surface-card-alt);
+          border:1px solid var(--br-card);
+          border-radius:var(--radius-card);
+          box-shadow:var(--shadow-card);
+        ">
+        <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide mb-1">
+          Lettura di contesto (non istruzioni operative)
+        </div>
+        <div class="text-[12px] font-semibold leading-[1.4] text-[color:var(--ink)]">
+          In sintesi: il regime appare ancora guidato da dinamiche Momentum,
+          con ampiezza costruttiva e rischio sistemico contenuto.
+          La finestra 3–10 giorni resta favorevole ma resta esposta a shock macro imprevisti.
+        </div>
       </div>
 
-      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-4">
-        Questa conclusione ha finalità informative/formative. Non è un invito a prendere posizione
-        o a modificare allocazioni. Consulta sempre un intermediario autorizzato.
+      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-2">
+        Questa conclusione ha esclusivamente finalità informative e formative.
+        Non è un invito a prendere posizione o modificare allocazioni.
+        Consulta sempre un intermediario autorizzato.
       </div>
     </section>
   `;
@@ -449,14 +425,7 @@ function buildDrawerSectionsPublic(d) {
   // 6. Audit & Qualità
   const auditHTML = `
     <section class="tl-panel-section" data-f1b-section="audit"
-      style="
-        background:transparent;
-        border:0;
-        border-radius:0;
-        box-shadow:none;
-        padding:0;
-      "
-    >
+      style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title">
         <div class="tl-panel-section-title-text">
           Audit &amp; Qualità dati
@@ -472,25 +441,18 @@ function buildDrawerSectionsPublic(d) {
 
       <div class="mt-4 text-[11px] leading-[1.4] text-[color:var(--muted)]">
         Semaforo interno:
-        verde = dati coerenti/aggiornati,
-        giallo = parziale/debole,
+        verde = dati coerenti/aggiornati;
+        giallo = parziale/debole;
         rosso = incompleto o rumoroso.
-        Nessuna raccomandazione operativa.
+        Queste valutazioni sono qualitative, soggettive e non operative.
       </div>
     </section>
   `;
 
-  // 7. MiFID
+  // 7. Nota regolamentare / MiFID
   const mifidHTML = `
     <section class="tl-panel-section" data-f1b-section="mifid"
-      style="
-        background:transparent;
-        border:0;
-        border-radius:0;
-        box-shadow:none;
-        padding:0;
-      "
-    >
+      style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title">
         <div class="tl-panel-section-title-text">
           Nota regolamentare
@@ -521,12 +483,7 @@ function buildDrawerSectionsPublic(d) {
 function renderDrawerDesktopShellPublic(sectionsObj) {
   return `
     <div class="f1b-panel-desktop"
-      style="
-        display:flex;
-        flex-direction:row;
-        gap:1rem;
-        height:66vh;
-      ">
+      style="display:flex;flex-direction:row;gap:1rem;height:66vh;">
 
       <aside class="f1b-panel-menu"
         style="
@@ -658,7 +615,7 @@ function renderDrawerMobileShellPublic(sectionsObj) {
 ------------------------------------------------- */
 
 function drawerMenuButtonPublic(key, label) {
-  // desktop tab button: stile visuale viene da tokens.css (.f1b-tab-btn)
+  // desktop tab button: stile base/hover/attivo viene da tokens.css (.f1b-tab-btn)
   return `
     <button
       class="f1b-tab-btn"
@@ -670,8 +627,7 @@ function drawerMenuButtonPublic(key, label) {
 }
 
 function mobileTabButton(key, label) {
-  // mobile pill "footer tab" (scroll orizzontale)
-  // per ora inline style perché non abbiamo classe dedicata nei token
+  // mobile pill
   return `
     <button
       class="f1b-footer-tab-btn"
@@ -720,7 +676,7 @@ function bindDrawerTabsPublic(root) {
           }
         }
 
-        // MOBILE FOOTER TABS (pill orizzontali)
+        // MOBILE TABS
         if (b.classList.contains("f1b-footer-tab-btn")) {
           if (isActive) {
             // attivo mobile
@@ -754,7 +710,7 @@ function bindDrawerTabsPublic(root) {
    Blocchi UI riutilizzabili
 ------------------------------------------------- */
 
-// KPI in card compatta (3 box nella card top-level)
+// KPI compatti nella card principale
 function metricBoxTrafficLight({ key, label, desc, metric }) {
   const { dotColor, textColor } = toneColors(metric?.tone);
   return `
@@ -794,7 +750,7 @@ function metricBoxTrafficLight({ key, label, desc, metric }) {
   `;
 }
 
-// metricBlock = card semaforica completa (drawer)
+// Blocco metrica con semaforo per il drawer
 function metricBlock(metricKey, title, desc, metricObj) {
   const { dotColor, textColor } = toneColors(metricObj?.tone);
   return `
@@ -820,7 +776,7 @@ function metricBlock(metricKey, title, desc, metricObj) {
         >?</button>
       </div>
 
-      <div class="font-mono font-bold text-[13px] text-[color:var(--ink)] leading-[1.4]"
+      <div class="font-mono font-bold text-[13px] leading-[1.4]"
         style="color:${textColor};">
         ${escapeHtml(metricObj?.raw || "—")}
       </div>
@@ -836,10 +792,66 @@ function metricBlock(metricKey, title, desc, metricObj) {
   `;
 }
 
+// Lista dati grezzi (internals) con card uniforme
+function listBlockCard(title, rowsArr) {
+  const body = Array.isArray(rowsArr) && rowsArr.length
+    ? rowsArr.map(r => `
+        <li class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)]">
+          ${escapeHtml(r)}
+        </li>`
+      ).join("")
+    : `<li class="text-[12.5px] leading-[1.4] text-[color:var(--muted)]">N/A</li>`;
+
+  return `
+    <div class="mb-4 p-2"
+      style="
+        background:var(--surface-card-alt);
+        border:1px solid var(--br-card);
+        border-radius:var(--radius-card);
+        box-shadow:var(--shadow-card);
+      ">
+      <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide mb-1">
+        ${escapeHtml(title)}
+      </div>
+      <ul class="pl-4 list-disc space-y-1">
+        ${body}
+      </ul>
+    </div>
+  `;
+}
+
+// Headlines istituzionali (Street View) con card uniforme
+function headlineBlockCard(title, body) {
+  if (!body) return "";
+  return `
+    <div class="mb-4 p-2"
+      style="
+        background:var(--surface-card-alt);
+        border:1px solid var(--br-card);
+        border-radius:var(--radius-card);
+        box-shadow:var(--shadow-card);
+      ">
+      <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide mb-1">
+        ${escapeHtml(title)}
+      </div>
+      <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)] whitespace-pre-line">
+        ${escapeHtml(body)}
+      </div>
+    </div>
+  `;
+}
+
+// Lista leadership settoriale (già cardizzata semanticamente)
 function sectorListDetailed(title, arr) {
   if (!Array.isArray(arr) || !arr.length) {
     return `
-      <div>
+      <div class="mb-4 p-2"
+        style="
+          background:var(--surface-card-alt);
+          border:1px solid var(--br-card);
+          border-radius:var(--radius-card);
+          box-shadow:var(--shadow-card);
+        ">
         <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
           ${escapeHtml(title)}
         </div>
@@ -857,7 +869,13 @@ function sectorListDetailed(title, arr) {
   `).join("");
 
   return `
-    <div>
+    <div class="mb-4 p-2"
+      style="
+        background:var(--surface-card-alt);
+        border:1px solid var(--br-card);
+        border-radius:var(--radius-card);
+        box-shadow:var(--shadow-card);
+      ">
       <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
         ${escapeHtml(title)}
       </div>
@@ -868,52 +886,7 @@ function sectorListDetailed(title, arr) {
   `;
 }
 
-function listBlock(title, rowsArr) {
-  if (!Array.isArray(rowsArr) || !rowsArr.length) {
-    return `
-      <div class="mb-4">
-        <div class="text-[11px] font-semibold text-[color:var(--muted)] mb-1 uppercase tracking-wide leading-[1.3]">
-          ${escapeHtml(title)}
-        </div>
-        <div class="text-[12.5px] text-[color:var(--muted)] leading-[1.4]">
-          N/A
-        </div>
-      </div>
-    `;
-  }
-
-  const li = rowsArr.map(r => `
-    <li class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)]">
-      ${escapeHtml(r)}
-    </li>`
-  ).join("");
-
-  return `
-    <div class="mb-4">
-      <div class="text-[11px] font-semibold text-[color:var(--muted)] mb-1 uppercase tracking-wide leading-[1.3]">
-        ${escapeHtml(title)}
-      </div>
-      <ul class="pl-4 list-disc space-y-1">
-        ${li}
-      </ul>
-    </div>
-  `;
-}
-
-function headlineBlock(title, body) {
-  if (!body) return "";
-  return `
-    <div class="mb-4">
-      <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
-        ${escapeHtml(title)}
-      </div>
-      <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)] whitespace-pre-line">
-        ${escapeHtml(body)}
-      </div>
-    </div>
-  `;
-}
-
+// Punto conclusione AI (già card style)
 function conclusionPointBlock(pointObj = {}) {
   return `
     <div class="mb-4 p-2"
@@ -936,20 +909,7 @@ function conclusionPointBlock(pointObj = {}) {
   `;
 }
 
-function auditRow(label, value) {
-  return `
-    <div>
-      <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] mb-1 uppercase tracking-wide">
-        ${escapeHtml(label)}
-      </div>
-      <div class="font-mono font-bold text-[13px] text-[color:var(--ink)] break-words">
-        ${escapeHtml(value || "—")}
-      </div>
-    </div>
-  `;
-}
-
-// Quality metrics con semaforo (FreshnessScore, ConfidenceFinal, ...)
+// Quality / Audit
 function qualityChip(keyName, qObj) {
   if (!qObj) return "";
   const { dotColor, textColor } = toneColors(qObj.tone);
@@ -1021,7 +981,7 @@ function toneColors(tone) {
   }
 }
 
-// computeHighLevelTone: pill grande accanto a StrategyMode nella card
+// Pill tono in header card accanto a StrategyMode
 function computeHighLevelTone(strategyModeMacroObj, regimeScoreObj) {
   const stratRaw = (strategyModeMacroObj && strategyModeMacroObj.raw || "").toLowerCase();
   let toneColor = "var(--tone-neu-fg)";
@@ -1037,7 +997,7 @@ function computeHighLevelTone(strategyModeMacroObj, regimeScoreObj) {
     toneColor = "var(--tone-neg-fg)";
     toneLabel = "alert";
   } else {
-    // fallback su RegimeScore.tone se definita
+    // fallback su RegimeScore.tone
     const regimeTone = (regimeScoreObj && regimeScoreObj.tone) || "";
     const colors = toneColors(regimeTone);
     if (regimeTone) {
