@@ -9,35 +9,27 @@
 // - Finalità esclusivamente informativa e didattica
 // - Nessuna raccomandazione operativa / personale
 //
-// Punti chiave design
-// - Tutti i blocchi informativi interni al drawer usano LO STESSO COMPONENT VISIVO: f1bCard()
-//   • header con pallino tono (verde/giallo/rosso/neutro)
-//   • titolo uppercase 11px muted
-//   • corpo testo/metriche in 12px/mono
-//   • nota finale 11px muted
-// - Stesso layer visivo ovunque:
-//   background: var(--surface-card-alt)
-//   border: 1px solid var(--br-card)
-//   border-radius: var(--radius-card)
-//   box-shadow: var(--shadow-card)
+// Architettura
+// - Tutti i contenuti dinamici arrivano da rawData (JSON back-end / feed dati)
+// - Il codice definisce solo layout, stile visivo, tassonomia F1B e disclaimer legale
 //
-// Export API
-//   renderCard(data, ctx)
-//   bindCard(node, data, ctx)
+// Export
+//   renderCard(rawData, ctx?)
+//   bindCard(node, rawData, ctx?)
 //
-// Runtime flow
-//   - renderCard() crea il blocco riassuntivo con CTA "Dettagli regime →"
-//   - bindCard() aggancia CTA + tooltip
-//   - openF1DrawerPublic() apre il pannello responsive (desktop sidebar / mobile tabbar)
-//   - bindDrawerTabsPublic() gestisce le tab
+// Dipendenze globali attese
+//   window.__TradeliaUI.openPanel()
+//   window.__TradeliaUI.closePanel()
+//   window.__TradeliaUI.bindMetricInfoButtons()
 //
-// Nota legale incorporata in più punti: "materiale educativo, non istruzione operativa".
-//
+// -----------------------------------------------------------------------------
+// RENDER CARD PRINCIPALE (F1B snapshot pubblico)
+// -----------------------------------------------------------------------------
 
 export function renderCard(rawData, ctx = {}) {
   const d = normalizeDataPublicF1B(rawData);
 
-  // KPI principali mostrati nella card hero
+  // KPI principali per la hero
   const kpis = [
     {
       key: "StrategyMode_macro",
@@ -99,8 +91,11 @@ export function renderCard(rawData, ctx = {}) {
           </div>
 
           <div class="section-desc text-[12px] text-[color:var(--muted)] leading-[1.45] mt-1">
-            Volatilità, credito, curva tassi, partecipazione al rialzo e narrativa macro dominante.
-            Lettura di contesto. Non è un'istruzione operativa.
+            ${escapeHtml(d.meta.hero_intro || "")}
+            <br/>
+            <span class="text-[11px] text-[color:var(--muted)]">
+              Lettura di contesto. Non è un'istruzione operativa.
+            </span>
           </div>
         </div>
       </header>
@@ -159,10 +154,9 @@ export function renderCard(rawData, ctx = {}) {
         <!-- DISCLAIMER + CTA -->
         <div class="mt-2 flex flex-col gap-3 lg:flex-row lg:items-start">
           <p class="text-[11px] leading-[1.4] text-[color:var(--muted)] flex-1">
-            F1B descrive stato del rischio di mercato (volatilità, credito, curva tassi,
-            ampiezza settoriale). Materiale educativo/informativo.
-            Nessuna raccomandazione personale.
-            Fonti: Bloomberg, Reuters, CBOE, FRED, Finviz Premium, ETFdb.
+            ${escapeHtml(d.meta.hero_disclaimer || "")}
+            <br/><br/>
+            Materiale educativo e informativo. Nessuna raccomandazione personale.
           </p>
 
           <div class="flex lg:justify-end">
@@ -215,9 +209,9 @@ export function bindCard(node, rawData, ctx = {}) {
   }
 }
 
-/* -------------------------------------------------
-   Drawer / Panel
-------------------------------------------------- */
+/* -----------------------------------------------------------------------------
+// PANEL / DRAWER
+// ----------------------------------------------------------------------------*/
 
 function openF1DrawerPublic(data) {
   if (
@@ -291,10 +285,9 @@ function isMobileViewport() {
   return window.matchMedia("(max-width: 767px)").matches;
 }
 
-/* -------------------------------------------------
-   Sezioni logiche drawer
-   (tutte basate su f1bCard() per look coerente)
-------------------------------------------------- */
+/* -----------------------------------------------------------------------------
+// CONTENUTO DEL DRAWER (TUTTO DINAMICO DAI DATI)
+// ----------------------------------------------------------------------------*/
 
 function buildDrawerSectionsPublic(d) {
   // 1. Regime & Rischio
@@ -411,8 +404,7 @@ function buildDrawerSectionsPublic(d) {
 
       ${headlineBlockCard(
         "Lettura di contesto (non istruzioni operative)",
-        "Il regime appare guidato da dinamiche Momentum con ampiezza costruttiva e rischio sistemico contenuto. " +
-        "La finestra 3–10 giorni rimane favorevole, ma resta esposta a shock macro imprevisti."
+        d.sintesi_ai.summary || ""
       )}
 
       <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-2">
@@ -474,9 +466,9 @@ function buildDrawerSectionsPublic(d) {
   };
 }
 
-/* -------------------------------------------------
-   Shell desktop / mobile
-------------------------------------------------- */
+/* -----------------------------------------------------------------------------
+// SHELLS DESKTOP / MOBILE
+// ----------------------------------------------------------------------------*/
 
 function renderDrawerDesktopShellPublic(sectionsObj) {
   return `
@@ -608,12 +600,12 @@ function renderDrawerMobileShellPublic(sectionsObj) {
   `;
 }
 
-/* -------------------------------------------------
-   Tab switching
-------------------------------------------------- */
+/* -----------------------------------------------------------------------------
+// TAB SWITCHING
+// ----------------------------------------------------------------------------*/
 
 function drawerMenuButtonPublic(key, label) {
-  // desktop tab button, stile dato da .f1b-tab-btn in tokens.css
+  // desktop tab button, stile controllato da tokens.css (.f1b-tab-btn)
   return `
     <button
       class="f1b-tab-btn"
@@ -625,7 +617,7 @@ function drawerMenuButtonPublic(key, label) {
 }
 
 function mobileTabButton(key, label) {
-  // mobile pill
+  // mobile pills
   return `
     <button
       class="f1b-footer-tab-btn"
@@ -702,12 +694,11 @@ function bindDrawerTabsPublic(root) {
   });
 }
 
-/* -------------------------------------------------
-   Blocchi UI riutilizzabili
-   Tutti basati sullo stesso schema visivo
-------------------------------------------------- */
+/* -----------------------------------------------------------------------------
+// CARD SYSTEM (look coerente ovunque nel drawer)
+// ----------------------------------------------------------------------------*/
 
-// 1. Card base
+// Card base riutilizzabile
 function f1bCard({ tone, title, bodyHtml, noteHtml }) {
   const { dotColor } = toneColors(tone);
   return `
@@ -739,8 +730,7 @@ function f1bCard({ tone, title, bodyHtml, noteHtml }) {
   `;
 }
 
-// 2. metricBoxTrafficLight (card compatta nella hero principale)
-//    → rimane com'è perché è nella card hero, fuori dal drawer
+// KPI compatte nella hero principale (fuori dal drawer)
 function metricBoxTrafficLight({ key, label, desc, metric }) {
   const { dotColor, textColor } = toneColors(metric?.tone);
   return `
@@ -780,7 +770,7 @@ function metricBoxTrafficLight({ key, label, desc, metric }) {
   `;
 }
 
-// 3. metricBlock -> wrapper che usa f1bCard
+// Metric card nel drawer
 function metricBlock(metricKey, title, desc, metricObj) {
   const { textColor } = toneColors(metricObj?.tone);
   const value = escapeHtml(metricObj?.raw || "—");
@@ -816,7 +806,7 @@ function metricBlock(metricKey, title, desc, metricObj) {
   });
 }
 
-// 4. sectorListDetailed -> stessa card base
+// Leadership settoriale
 function sectorListDetailed(title, arr) {
   let bodyHtml;
   if (!Array.isArray(arr) || !arr.length) {
@@ -847,7 +837,7 @@ function sectorListDetailed(title, arr) {
   });
 }
 
-// 5. listBlockCard (internals grezzi) -> stessa card base
+// Liste grezze dal mercato (internals)
 function listBlockCard(title, rowsArr) {
   const listItems = Array.isArray(rowsArr) && rowsArr.length
     ? rowsArr.map(r => `
@@ -871,7 +861,7 @@ function listBlockCard(title, rowsArr) {
   });
 }
 
-// 6. headlineBlockCard (Street View / Conclusioni narrative) -> stessa card base
+// Blocchi narrativi istituzionali (Street View, ecc.)
 function headlineBlockCard(title, body) {
   if (!body) return "";
   const bodyHtml = `
@@ -887,7 +877,7 @@ function headlineBlockCard(title, body) {
   });
 }
 
-// 7. conclusionPointBlock -> stessa card base
+// Punti sintetici AI
 function conclusionPointBlock(pointObj = {}) {
   const bodyHtml = `
     <div class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)] mb-1">
@@ -905,13 +895,14 @@ function conclusionPointBlock(pointObj = {}) {
   });
 }
 
-// 8. qualityChip -> wrapper card con tono
+// Audit & Qualità dati
 function qualityChip(keyName, qObj) {
   if (!qObj) return "";
+  const { textColor } = toneColors(qObj.tone);
+
   const bodyHtml = `
     <div class="flex items-start justify-between gap-2 mb-1">
-      <div class="font-mono font-bold text-[13px] leading-[1.4]"
-        style="color:${toneColors(qObj.tone).textColor};">
+      <div class="font-mono font-bold text-[13px] leading-[1.4]" style="color:${textColor};">
         ${escapeHtml(qObj.raw || "—")}
       </div>
 
@@ -935,9 +926,9 @@ function qualityChip(keyName, qObj) {
   });
 }
 
-/* -------------------------------------------------
-   Tone utilities
-------------------------------------------------- */
+/* -----------------------------------------------------------------------------
+// TONE HELPERS
+// ----------------------------------------------------------------------------*/
 
 function toneColors(tone) {
   switch ((tone || "").toLowerCase()) {
@@ -994,18 +985,20 @@ function computeHighLevelTone(strategyModeMacroObj, regimeScoreObj) {
   return { toneColor, toneLabel };
 }
 
-/* -------------------------------------------------
-   Normalizzazione dati
-------------------------------------------------- */
+/* -----------------------------------------------------------------------------
+// NORMALIZZAZIONE DATI (TUTTO QUI È DINAMICO)
+// ----------------------------------------------------------------------------*/
 
 function normalizeDataPublicF1B(src = {}) {
   return {
-    meta: src.meta || {
-      timestampET: "—",
-      module: "F1B · Market Regime",
-      moduleVersion: "vX",
-      moduleStatus: "ACTIVE",
-      freshness: "≤ T-1"
+    meta: {
+      timestampET: src?.meta?.timestampET ?? "—",
+      module: src?.meta?.module ?? "F1B · Market Regime",
+      moduleVersion: src?.meta?.moduleVersion ?? "vX",
+      moduleStatus: src?.meta?.moduleStatus ?? "ACTIVE",
+      freshness: src?.meta?.freshness ?? "≤ T-1",
+      hero_intro: src?.meta?.hero_intro ?? "Volatilità, credito, curva tassi, partecipazione al rialzo e narrativa macro dominante.",
+      hero_disclaimer: src?.meta?.hero_disclaimer ?? "F1B descrive lo stato del rischio di mercato nell'orizzonte 3–10 giorni, basandosi su volatilità, credito, struttura curva tassi e ampiezza settoriale. Fonti primarie: Bloomberg, Reuters, CBOE, FRED, Finviz Premium, ETFdb."
     },
 
     regime_and_risk: src.regime_and_risk || {},
@@ -1028,7 +1021,8 @@ function normalizeDataPublicF1B(src = {}) {
     },
 
     sintesi_ai: src.sintesi_ai || {
-      points: []
+      points: [],
+      summary: ""
     },
 
     audit_quality: src.audit_quality || {
@@ -1045,9 +1039,9 @@ function normalizeDataPublicF1B(src = {}) {
   };
 }
 
-/* -------------------------------------------------
-   Escape utils
-------------------------------------------------- */
+/* -----------------------------------------------------------------------------
+// ESCAPE UTILS
+// ----------------------------------------------------------------------------*/
 
 function escapeHtml(str) {
   if (str === undefined || str === null) return "";
