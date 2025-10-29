@@ -254,7 +254,7 @@ function openF1DrawerPublic(data) {
     footerTabs: []
   });
 
-  // post-mount: tab binding + tooltip binding interno
+  // post-mount binding (tab switching + tooltip binding interno)
   setTimeout(() => {
     const roots = [
       document.getElementById("panel-body"),
@@ -317,6 +317,7 @@ function buildDrawerSectionsPublic(d) {
   `;
 
   // 2. Breadth & Rotazione
+  // Leadership ora può avere tone separato per ciascun blocco
   const breadthHTML = `
     <section class="tl-panel-section" data-f1b-section="breadth"
       style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -351,7 +352,7 @@ function buildDrawerSectionsPublic(d) {
     </section>
   `;
 
-  // 3. Market Internals (dati grezzi)
+  // 3. Market Internals (dati grezzi) — ORA con tone
   const internalsHTML = `
     <section class="tl-panel-section" data-f1b-section="internals"
       style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -388,7 +389,7 @@ function buildDrawerSectionsPublic(d) {
     </section>
   `;
 
-  // 5. Conclusione · Tradelia AI (educational)
+  // 5. Conclusione · Tradelia AI (educational) — ora con tone sui punti e summary
   const sintesiHTML = `
     <section class="tl-panel-section" data-f1b-section="sintesi"
       style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -404,7 +405,7 @@ function buildDrawerSectionsPublic(d) {
 
       ${headlineBlockCard(
         "Lettura di contesto (non istruzioni operative)",
-        d.sintesi_ai.summary || ""
+        d.sintesi_ai.summary
       )}
 
       <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-2">
@@ -415,7 +416,7 @@ function buildDrawerSectionsPublic(d) {
     </section>
   `;
 
-  // 6. Audit & Qualità dati
+  // 6. Audit & Qualità dati (già semaforico)
   const auditHTML = `
     <section class="tl-panel-section" data-f1b-section="audit"
       style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -450,7 +451,7 @@ function buildDrawerSectionsPublic(d) {
 
       ${headlineBlockCard(
         "Informativa",
-        d.mifid.disclaimer || ""
+        d.mifid.disclaimer
       )}
     </section>
   `;
@@ -807,45 +808,85 @@ function metricBlock(metricKey, title, desc, metricObj) {
 }
 
 // Leadership settoriale
-function sectorListDetailed(title, arr) {
-  let bodyHtml;
-  if (!Array.isArray(arr) || !arr.length) {
-    bodyHtml = `
-      <div class="text-[12.5px] leading-[1.4] text-[color:var(--muted)]">
-        Nessun dato.
-      </div>
-    `;
-  } else {
-    const items = arr.map(item => `
-      <li class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">
-        ${escapeHtml(item)}
-      </li>
-    `).join("");
+// PATCH: ora supporta due formati:
+// - vecchio: ["Tech","Energy",...]
+// - nuovo: { tone:"green", items:[...], ai_note:"..." }
+function sectorListDetailed(title, leadershipBlock) {
+  let tone = "neutral";
+  let itemsArr = [];
+  let extraNote = "";
 
-    bodyHtml = `
-      <ul class="list-disc pl-4 space-y-1">
-        ${items}
-      </ul>
-    `;
+  if (Array.isArray(leadershipBlock)) {
+    // backward compatibility
+    itemsArr = leadershipBlock;
+  } else if (leadershipBlock && typeof leadershipBlock === "object") {
+    tone = leadershipBlock.tone || "neutral";
+    itemsArr = Array.isArray(leadershipBlock.items)
+      ? leadershipBlock.items
+      : [];
+    extraNote = leadershipBlock.ai_note || "";
   }
 
+  const listHtml = itemsArr.length
+    ? itemsArr
+        .map(item => `
+          <li class="text-[12.5px] leading-[1.4] text-[color:var(--ink)]">
+            ${escapeHtml(item)}
+          </li>
+        `)
+        .join("")
+    : `
+      <li class="text-[12.5px] leading-[1.4] text-[color:var(--muted)]">
+        Nessun dato.
+      </li>
+    `;
+
+  const bodyHtml = `
+    <ul class="list-disc pl-4 space-y-1">
+      ${listHtml}
+    </ul>
+  `;
+
   return f1bCard({
-    tone: "neutral",
+    tone,
     title,
     bodyHtml,
-    noteHtml: ""
+    noteHtml: extraNote
+      ? `<span class="text-[11px] text-[color:var(--muted)] leading-[1.4]">${escapeHtml(extraNote)}</span>`
+      : ""
   });
 }
 
 // Liste grezze dal mercato (internals)
-function listBlockCard(title, rowsArr) {
-  const listItems = Array.isArray(rowsArr) && rowsArr.length
-    ? rowsArr.map(r => `
-        <li class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)]">
-          ${escapeHtml(r)}
-        </li>
-      `).join("")
-    : `<li class="text-[12.5px] leading-[1.4] text-[color:var(--muted)]">N/A</li>`;
+// PATCH: ora accetta:
+// - vecchio: ["SPX +1.6%", "NDX +1.9%"]
+// - nuovo: { tone:"green", items:[...], ai_note:"..." }
+function listBlockCard(title, block) {
+  let tone = "neutral";
+  let rowsArr = [];
+  let aiNoteLocal = "";
+
+  if (Array.isArray(block)) {
+    rowsArr = block;
+  } else if (block && typeof block === "object") {
+    tone = block.tone || "neutral";
+    rowsArr = Array.isArray(block.items) ? block.items : [];
+    aiNoteLocal = block.ai_note || "";
+  }
+
+  const listItems = rowsArr.length
+    ? rowsArr
+        .map(r => `
+          <li class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)]">
+            ${escapeHtml(r)}
+          </li>
+        `)
+        .join("")
+    : `
+      <li class="text-[12.5px] leading-[1.4] text-[color:var(--muted)]">
+        N/A
+      </li>
+    `;
 
   const bodyHtml = `
     <ul class="pl-4 list-disc space-y-1">
@@ -853,32 +894,61 @@ function listBlockCard(title, rowsArr) {
     </ul>
   `;
 
+  const noteHtml = aiNoteLocal
+    ? `<div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-2">${escapeHtml(aiNoteLocal)}</div>`
+    : "";
+
   return f1bCard({
-    tone: "neutral",
+    tone,
     title,
     bodyHtml,
-    noteHtml: ""
+    noteHtml
   });
 }
 
-// Blocchi narrativi istituzionali (Street View, ecc.)
+// Blocchi narrativi istituzionali (Street View, Sintesi summary)
+// PATCH: ora può ricevere:
+// - stringa semplice
+// - oggetto { raw:"...", tone:"green", ai_note:"..." }
 function headlineBlockCard(title, body) {
-  if (!body) return "";
+  if (!body && body !== 0) return "";
+
+  let tone = "neutral";
+  let rawText = "";
+  let aiNoteLocal = "";
+
+  if (typeof body === "string") {
+    rawText = body;
+  } else if (body && typeof body === "object") {
+    tone = body.tone || "neutral";
+    rawText = body.raw || "";
+    aiNoteLocal = body.ai_note || "";
+  }
+
   const bodyHtml = `
     <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)] whitespace-pre-line">
-      ${escapeHtml(body)}
+      ${escapeHtml(rawText)}
     </div>
   `;
+
+  const noteHtml = aiNoteLocal
+    ? `<div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-2">${escapeHtml(aiNoteLocal)}</div>`
+    : "";
+
   return f1bCard({
-    tone: "neutral",
+    tone,
     title,
     bodyHtml,
-    noteHtml: ""
+    noteHtml
   });
 }
 
 // Punti sintetici AI
+// PATCH: ora supporta tone per ogni punto
+// { title, raw, tone, ai_note }
 function conclusionPointBlock(pointObj = {}) {
+  const tone = pointObj.tone || "neutral";
+
   const bodyHtml = `
     <div class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)] mb-1">
       ${escapeHtml(pointObj.raw || "")}
@@ -887,15 +957,16 @@ function conclusionPointBlock(pointObj = {}) {
       ${escapeHtml(pointObj.ai_note || "")}
     </div>
   `;
+
   return f1bCard({
-    tone: "neutral",
+    tone,
     title: pointObj.title || "",
     bodyHtml,
     noteHtml: ""
   });
 }
 
-// Audit & Qualità dati
+// Audit & Qualità dati (già semaforico)
 function qualityChip(keyName, qObj) {
   if (!qObj) return "";
   const { textColor } = toneColors(qObj.tone);
