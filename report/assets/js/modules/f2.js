@@ -1,67 +1,41 @@
 // /report/assets/js/modules/f2.js
 //
 // F2 · Macro & Sentiment Overlay (3–10 giorni)
-// — allineato a stile/UX di F1B (stesse classi, tokens e pattern UI)
+// Allineato al design F1B (stesse classi, stesso card system)
 //
 // Scopo
-// - Gate macro (Step 1 WebProbe) e overlay ticker-level deterministico
-// - Feature builders da pannelli user-provided (Finviz, Barchart, Nasdaq, SEC Form 4)
-// - Nessuna logica operativa; sola etichettatura/contesto
-// - Output (SCI_tkr, DPI_context, ICR_tkr, metadata, stato, Confidence, AuditPathID)
+// - Lettura sintetica di: MacroGate (WebProbe), Sentiment ticker‑level (SCI/DPI), ETF exposure, Newsflow,
+//   Positioning/Short/Ownership, Survey, Audit, MiFID.
+// - Nessun output JSON hard-coded nel codice. Tutto arriva da rawData.
+// - Target: utenza retail base/intermedio/avanzato ⇒ linguaggio semplice, sezioni chiare.
+// - Nessun duplicato del bridge F1B (StrategyMode/Regime ecc. già in F1B).
 //
 // Export
-//   renderCard(rawData, ctx?)
+//   renderCard(rawData, ctx?) -> string HTML
 //   bindCard(node, rawData, ctx?)
 //
-// Dipendenze globali attese (come F1B)
+// Dipendenze globali attese
 //   window.__TradeliaUI.openPanel()
 //   window.__TradeliaUI.closePanel()
 //   window.__TradeliaUI.bindMetricInfoButtons()
 
-// -----------------------------------------------------------------------------
-// RENDER CARD (snapshot pubblico F2)
-// -----------------------------------------------------------------------------
-
-export function renderCard(rawData, ctx = {}) {
+export function renderCard(rawData, ctx = {}){
   const d = normalizeDataF2Public(rawData);
 
-  // KPI hero (compatti, no bridge da F1B)
-  const heroKpis = [
-    {
-      key: "MacroGate",
-      label: "MacroGate",
-      desc: "Controllo eventi imminenti (Tier‑1)",
-      metric: mapMacroGateToMetric(d.MacroGate, d.MacroNotes?.[0])
-    },
-    {
-      key: "TECH_SIGNAL",
-      label: "Tech Signal",
-      desc: "Barchart Technical Opinion (−1/0/+1)",
-      metric: wrapMetric(d?.SCI_tkr?.TECH_SIGNAL)
-    },
-    {
-      key: "CONSENSUS_LEVEL",
-      label: "Consensus",
-      desc: "Analyst rating bucket (1–5)",
-      metric: wrapMetric(d?.SCI_tkr?.CONSENSUS_LEVEL)
-    }
+  // HERO KPI (semplice, leggibile)
+  // 1) MacroGate come semaforo principale
+  // 2) Sentiment composito (se presente) – facoltativo ma utile per retail
+  // 3) ETF Flow Tone – snelletta
+  const kpis = [
+    { key:"MacroGate", label:"MacroGate", desc:"Esito controlli evento (48–72h)", metric: d.step1?.MacroGate },
+    { key:"SentimentComposite", label:"Sentiment", desc:"Sintesi multi‑fonte (es. news/analyst/tecnico)", metric: d.sentiment_flows?.SentimentComposite },
+    { key:"ETF_FlowTone", label:"ETF Flussi", desc:"Bias flussi & breadth (1W–1M)", metric: d.sentiment_flows?.ETF_FlowTone }
   ];
 
-  // opzionale 4° chip: NEWS_TONE se presente
-  if (d?.SCI_tkr?.NEWS_TONE) {
-    heroKpis.push({
-      key: "NEWS_TONE",
-      label: "News Tone",
-      desc: "Ultime 24–48h (headlines)",
-      metric: wrapMetric(d?.SCI_tkr?.NEWS_TONE)
-    });
-  }
-
-  // pill accanto a MacroGate (label + colore coerente)
-  const { toneLabel, toneColor } = computeHighLevelToneF2Hero(d.MacroGate);
+  const { toneLabel, toneColor } = toneFromMacroGate(d.step1?.MacroGate);
 
   return `
-    <section class="f2-card-container text-[13px] leading-[1.5] text-[color:var(--ink)]"
+    <section class="f1b-card-container text-[13px] leading-[1.5] text-[color:var(--ink)]"
       style="font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
 
       <!-- HEAD -->
@@ -69,22 +43,22 @@ export function renderCard(rawData, ctx = {}) {
         <div class="section-head-left">
           <div class="section-head-topline flex items-center flex-wrap gap-2">
             <span class="section-badge">F2</span>
-            <span class="text-[10px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">Macro & Sentiment Overlay · 3–10 giorni</span>
+            <span class="text-[10px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">Macro & Sentiment · 3–10 giorni</span>
             <span class="module-status-pill text-[10px] font-semibold leading-[1.2] px-[6px] py-[2px] rounded-[4px] border"
-              data-state="${escapeAttr(d.meta.state || 'ACTIVE')}"
+              data-state="${escapeAttr(d.meta.moduleStatus || 'ACTIVE')}"
               style="background:var(--surface-card-alt);border-color:var(--br-card);color:var(--ink);">
-              ${escapeHtml(d.meta.state || 'ACTIVE')}
+              ${escapeHtml(d.meta.moduleStatus || 'ACTIVE')}
             </span>
             <span class="text-[10px] leading-[1.3] text-[color:var(--muted)]">${escapeHtml(d.meta.freshness || '≤ T-1')}</span>
           </div>
 
           <div class="section-title-main text-[14px] font-bold leading-[1.4] text-[color:var(--ink)] mt-1">
-            Gate macro & overlay ticker-level (deterministico)
+            Sentiment & dinamica flussi (ticker‑level)
           </div>
 
           <div class="section-desc text-[12px] text-[color:var(--muted)] leading-[1.45] mt-1">
-            ${escapeHtml(d.meta.hero_intro || 'Valida rischi macro (WebProbe) e, se accettabili, compone SCI/DPI/ICR da pannelli Tier‑1 user‑provided.')}<br/>
-            <span class="text-[11px] text-[color:var(--muted)]">Sola finalità informativa/formativa. Nessuna istruzione operativa.</span>
+            ${escapeHtml(d.meta.hero_intro || 'Contesto sintetico per lettura non operativa del sentiment, dei flussi ETF e del newsflow.')}<br/>
+            <span class="text-[11px] text-[color:var(--muted)]">Materiale educativo/informativo. Nessuna raccomandazione personale.</span>
           </div>
         </div>
       </header>
@@ -93,25 +67,25 @@ export function renderCard(rawData, ctx = {}) {
       <div class="relative flex flex-col gap-4 card-compact"
         style="background:var(--surface-card);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:1rem;">
 
-        <!-- MacroGate + tono -->
+        <!-- MacroGate (pill tono) -->
         <div>
           <div class="text-[12px] font-semibold text-[color:var(--muted)] leading-[1.4] flex flex-wrap items-center gap-1.5">
             <span>MacroGate</span>
             <button class="info-btn align-middle" data-metric="MacroGate" aria-label="Info MacroGate">?</button>
           </div>
           <div class="text-[14px] font-bold leading-[1.4] text-[color:var(--ink)] flex flex-wrap items-center gap-2 mt-1">
-            <span>${escapeHtml(String(d.MacroGate || '—'))}</span>
+            <span>${escapeHtml(d.step1?.MacroGate?.raw || '—')}</span>
             <span class="px-[6px] py-[4px] rounded-md text-[11px] font-semibold leading-none border"
               style="background:radial-gradient(circle at 0% 0%, color-mix(in oklab, ${toneColor} 18%, transparent) 0%, transparent 60%), var(--surface-card);color:${toneColor};border-color:${toneColor};box-shadow:var(--shadow-card);">
               ${escapeHtml(toneLabel)}
             </span>
           </div>
-          <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">${escapeHtml((d.MacroNotes && d.MacroNotes[0]) || '')}</div>
+          <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">${escapeHtml(d.step1?.ai_note || '')}</div>
         </div>
 
         <!-- KPI semaforiche -->
-        <div class="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          ${heroKpis.map(k => metricBoxTrafficLightF2(k)).join("")}
+        <div class="grid gap-3 grid-cols-2 md:grid-cols-3">
+          ${kpis.map(k=>metricBoxTrafficLightF2(k)).join('')}
         </div>
 
         <!-- DISCLAIMER + CTA -->
@@ -120,292 +94,241 @@ export function renderCard(rawData, ctx = {}) {
           <div class="flex lg:justify-end">
             <button class="f2-cta-btn" data-open-f2-details="true" type="button"
               style="background:var(--ink);color:var(--surface-page);font-weight:600;font-size:12px;line-height:1.3;border-radius:var(--radius-card-sm);padding:0.5rem 0.75rem;min-width:max-content;border:1px solid var(--ink);box-shadow:var(--shadow-card);">
-              Dettagli overlay →
+              Dettagli sentiment →
             </button>
           </div>
         </div>
       </div>
-    </section>
-  `;
+    </section>`;
 }
 
-export function bindCard(node, rawData, ctx = {}) {
-  if (!node || !rawData) return;
+export function bindCard(node, rawData, ctx = {}){
+  if(!node || !rawData) return;
   const data = normalizeDataF2Public(rawData);
 
   const btn = node.querySelector('[data-open-f2-details="true"]');
-  if (btn) btn.addEventListener('click', () => openF2Drawer(data));
+  if (btn) btn.addEventListener('click', ()=> openF2DrawerPublic(data));
 
-  if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === 'function') {
+  if (window.__TradeliaUI?.bindMetricInfoButtons){
     try { window.__TradeliaUI.bindMetricInfoButtons(node); } catch(e){}
   }
 }
 
-// -----------------------------------------------------------------------------
-// DRAWER (dettaglio analitico, stesso shell/UX di F1B)
-// -----------------------------------------------------------------------------
-function openF2Drawer(d){
-  if (!window.__TradeliaUI || typeof window.__TradeliaUI.openPanel !== 'function') return;
-  const sections = buildF2Sections(d);
+/* -----------------------------------------------------------------------------
+// DRAWER (struttura leggibile per retail; sezioni autonome ETF/News; Audit e MiFID separati)
+// -----------------------------------------------------------------------------*/
+function openF2DrawerPublic(d){
+  if(!window.__TradeliaUI?.openPanel) return;
+  const sections = buildF2SectionsPublic(d);
   const mobile = isMobileViewport();
+  const shell = mobile ? renderF2MobileShell(sections) : renderF2DesktopShell(sections);
 
   window.__TradeliaUI.openPanel({
-    title: 'F2 · Macro & Sentiment Overlay',
+    title: 'F2 · Macro & Sentiment',
     subtitle: '',
-    sections: [ { title:'', body: mobile ? renderF2MobileShell(sections) : renderF2DesktopShell(sections), meta:'' } ],
+    sections: [{ title:'', body:shell, meta:'' }],
     blocking: false,
     panelSize: mobile ? 'wide' : 'xl',
-    footerButtons: mobile ? [] : [ { label:'Chiudi', action: ()=> window.__TradeliaUI.closePanel() } ],
+    footerButtons: mobile ? [] : [{ label:'Chiudi', action: ()=> window.__TradeliaUI.closePanel() }],
     footerTabs: []
   });
 
   setTimeout(()=>{
-    bindF2Tabs();
+    bindF2TabsPublic();
     if (window.__TradeliaUI?.bindMetricInfoButtons){
       try { window.__TradeliaUI.bindMetricInfoButtons(document.getElementById('f2-scroll-desktop')); } catch(e){}
       try { window.__TradeliaUI.bindMetricInfoButtons(document.getElementById('f2-scroll-mobile')); } catch(e){}
     }
-    const first = document.querySelector('[data-f2-tab="macro"]');
+    const first = document.querySelector('[data-f2-tab="sentiment"]');
     if (first?.click) first.click();
   },0);
 }
 
 function isMobileViewport(){ return window.matchMedia('(max-width: 767px)').matches; }
 
-// -----------------------------------------------------------------------------
-// SEZIONI ANALITICHE (ordine coerente con prompt v7.2)
-// -----------------------------------------------------------------------------
-function buildF2Sections(d){
-  // 1) MacroGate · WebProbe (Tier‑1)
+/* -----------------------------------------------------------------------------
+// SEZIONI ANALITICHE (orientate alla leggibilità)
+// -----------------------------------------------------------------------------*/
+function buildF2SectionsPublic(d){
+  // 1) Rischi macro/societari (WebProbe)
   const macroHTML = `
     <section class="tl-panel-section" data-f2-section="macro" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Controlli qualitativi · MacroGate</div></header>
-      ${metricBlockF2('MacroGate','Stato MacroGate','PASS/REVIEW/FAIL secondo regole temporali evento', mapMacroGateToMetric(d.MacroGate, (d.MacroNotes||[]).join(' \n')))}
-      ${listBlockCardF2('MacroNotes', { raw: (d.MacroNotes||[]).join('\n'), tone: macroToneFromGate(d.MacroGate) })}
-    </section>
-  `;
+      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Controlli rischio (ultime 72h)</div></header>
+      ${metricBlockF2('MacroGate','MacroGate','Semaforo eventi macro/societari ravvicinati', d.step1?.MacroGate)}
+      ${listBlockCardF2('Note di controllo', d.step1?.MacroNotes)}
+      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4]">Se FAIL: la pipeline F2 non prosegue (stato HOLD). In caso di REVIEW: si procede con confidenza ridotta.</div>
+    </section>`;
 
-  // 2) SCI_tkr · etichette discrete
-  const sci = d?.SCI_tkr || {};
-  const sciHTML = `
-    <section class="tl-panel-section" data-f2-section="sci" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">SCI_tkr · Segnali sintetici</div></header>
+  // 2) Sentiment sintetico (SCI/DPI digest semplificato)
+  const sci = d.sci_dpi || {};
+  const sentimentHTML = `
+    <section class="tl-panel-section" data-f2-section="sentiment" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Sentiment sintetico (ticker‑level)</div></header>
       <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4]">
-        ${metricBlockF2('SI_LEVEL','Short Interest · livello','Bucket short float pct', wrapMetric(sci.SI_LEVEL))}
-        ${metricBlockF2('DTC_BUCKET','Days to Cover · bucket','Bucket DTC', wrapMetric(sci.DTC_BUCKET))}
-        ${metricBlockF2('SI_TREND','SI trend','Slope ultime 6 settlement', wrapMetric(sci.SI_TREND))}
-        ${metricBlockF2('SI_PRESSURE','Short pressure','Regola combinata livello/DTC', wrapMetric(sci.SI_PRESSURE))}
-        ${metricBlockF2('INST_FLOW','Institutional flow','Sign(Inst Trans)', wrapMetric(sci.INST_FLOW))}
-        ${metricBlockF2('INSIDER_FLOW','Insider flow','Sign(Insider Trans)', wrapMetric(sci.INSIDER_FLOW))}
-        ${metricBlockF2('TECH_SIGNAL','Technical opinion','Barchart mapping (−1/0/+1)', wrapMetric(sci.TECH_SIGNAL))}
-        ${metricBlockF2('CONSENSUS_LEVEL','Consensus level','Analyst avg rating bucket', wrapMetric(sci.CONSENSUS_LEVEL))}
-        ${metricBlockF2('CONSISTENCY','Consistency','Stabilità rating 3m', wrapMetric(sci.CONSISTENCY))}
-        ${metricBlockF2('NEWS_TONE','News tone','Majority vote 24–48h', wrapMetric(sci.NEWS_TONE))}
-        ${metricBlockF2('ANALYST_DELTA','Analyst delta','Segno variazione mediana PT', wrapMetric(sci.ANALYST_DELTA))}
-        ${metricBlockF2('IV_STATE','IV state','Percentile IV 52w bucket', wrapMetric(sci.IV_STATE))}
-        ${metricBlockF2('PUTCALL_BIAS','Put/Call bias','>1 bearish / <1 bullish', wrapMetric(sci.PUTCALL_BIAS))}
+        ${metricBlockF2('TECH_SIGNAL','Tecnico (Barchart)','Segnale sintetico buy/hold/sell', sci?.TECH_SIGNAL)}
+        ${metricBlockF2('NEWS_TONE','News · Tono','Ultime 24–48h', sci?.NEWS_TONE)}
+        ${metricBlockF2('CONSENSUS_LEVEL','Analyst · Consenso','Media valutazioni', sci?.CONSENSUS_LEVEL)}
+        ${metricBlockF2('CONSISTENCY','Analyst · Stabilità','Trend rating 3m', sci?.CONSISTENCY)}
       </div>
-    </section>
-  `;
-
-  // 3) DPI_context · descrittivo
-  const dpi = d?.DPI_context || {};
-  const dpiHTML = `
-    <section class="tl-panel-section" data-f2-section="dpi" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">DPI_context · Contesto prezzo/fondamentali</div></header>
-      <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4]">
-        ${metricBlockF2('PRICE_TREND','Price trend','Segno della variazione', wrapMetric(dpi.PRICE_TREND))}
-        ${metricBlockF2('VOLUME_STATE','Volume state','RelVolume bucket', wrapMetric(dpi.VOLUME_STATE))}
-        ${metricBlockF2('MOMENTUM_LABEL','Momentum label','RSI + posizione nel range', wrapMetric(dpi.MOMENTUM_LABEL))}
-        ${metricBlockF2('RANGE_LOC','Range location','Bucket del range 52w', wrapMetric(dpi.RANGE_LOC))}
-        ${metricBlockF2('MARGIN_HEALTH','Margin health','Media margini bucket', wrapMetric(dpi.MARGIN_HEALTH || dpi.MARGINS_SNAPSHOT))}
-        ${metricBlockF2('PROFITABILITY_CLASS','Profitability','ROE/ROA class', wrapMetric(dpi.PROFITABILITY_CLASS))}
-        ${metricBlockF2('EARNINGS_TREND','Earnings trend','Direzione vendite/utile', wrapMetric(dpi.EARNINGS_TREND))}
-        ${metricBlockF2('BALANCE_SHEET_STRENGTH','Balance sheet','Trend debito/attivo', wrapMetric(dpi.BALANCE_SHEET_STRENGTH))}
-        ${metricBlockF2('CASHFLOW_MOMENTUM','Cash‑flow','OCF momentum', wrapMetric(dpi.CASHFLOW_MOMENTUM))}
+      <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4] mt-2">
+        ${metricBlockF2('IV_STATE','Volatilità implicita','Percentile 52w', sci?.IV_STATE)}
+        ${metricBlockF2('PUTCALL_BIAS','Flusso opzioni','Put/Call bias', sci?.PUTCALL_BIAS)}
       </div>
-      ${listBlockCardF2('VALUATION_SNAPSHOT', { raw: stringifyKV(dpi.VALUATION_SNAPSHOT) })}
-      ${listBlockCardF2('MARGINS_SNAPSHOT', { raw: stringifyKV(dpi.MARGINS_SNAPSHOT) })}
-      ${listBlockCardF2('PERF_VECTOR', { raw: Array.isArray(d?.metadata?.PERF_VECTOR)? d.metadata.PERF_VECTOR.join(' | ') : '' })}
-    </section>
-  `;
-
-  // 4) ICR_tkr · peers & ETF
-  const icr = d?.ICR_tkr || {};
-  const icrHTML = `
-    <section class="tl-panel-section" data-f2-section="icr" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">ICR_tkr · Peers & ETF overlay</div></header>
-      ${listBlockCardF2('Peers', { raw: (Array.isArray(icr.PEER_LIST)? icr.PEER_LIST : []).join(', ') })}
-      ${listBlockCardF2('ETF List', { raw: (Array.isArray(icr.ETF_LIST)? icr.ETF_LIST : []).join(', ') })}
-      ${metricBlockF2('SECTOR_BREADTH','Sector breadth','% peers positivi', wrapMetric(icr.SECTOR_BREADTH))}
-      ${metricBlockF2('ETF_FLOW_BIAS','ETF flow bias','Media 1M %Chg', wrapMetric(icr.ETF_FLOW_BIAS))}
-    </section>
-  `;
-
-  // 5) Barchart · Market & Options (tecnico + vol regime)
-  const barchartHTML = `
-    <section class="tl-panel-section" data-f2-section="barchart" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Barchart · Market & Options</div></header>
-      <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4]">
-        ${metricBlockF2('TECH_SIGNAL','Technical opinion','Mapping Buy/Hold/Sell', wrapMetric(d?.SCI_tkr?.TECH_SIGNAL))}
-        ${metricBlockF2('REL_VOLUME','Rel Volume','Volume/AvgVolume', wrapMetric(d?.DPI_context?.VOLUME_STATE))}
-        ${metricBlockF2('IV_STATE','IV State','Percentile 52w bucket', wrapMetric(d?.SCI_tkr?.IV_STATE))}
-        ${metricBlockF2('PUTCALL_BIAS','Put/Call bias','>1 bearish / <1 bullish', wrapMetric(d?.SCI_tkr?.PUTCALL_BIAS))}
+      <div class="grid md:grid-cols-3 gap-3 text-[12px] leading-[1.4] mt-2">
+        ${metricBlockF2('VOLUME_STATE','Volumi','Rel. volume', d.dpi?.VOLUME_STATE)}
+        ${metricBlockF2('MOMENTUM_LABEL','Momentum','Bias RSI/posizione range', d.dpi?.MOMENTUM_LABEL)}
+        ${metricBlockF2('RANGE_LOC','Range 52w','Posizione nel range', d.dpi?.RANGE_LOC)}
       </div>
-    </section>
-  `;
+    </section>`;
 
-  // 6) Finviz · Ownership & Insiders
-  const finvizHTML = `
-    <section class="tl-panel-section" data-f2-section="finviz" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Finviz · Ownership & Insiders</div></header>
-      <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4]">
-        ${metricBlockF2('INST_FLOW','Institutional flow','Inst Trans sign', wrapMetric(d?.SCI_tkr?.INST_FLOW))}
-        ${metricBlockF2('INSIDER_FLOW','Insider flow','Net buying/selling', wrapMetric(d?.SCI_tkr?.INSIDER_FLOW))}
-      </div>
-      ${listBlockCardF2('Insider notes', { raw: d?.insider_notes || '' })}
-    </section>
-  `;
+  // 3) ETF · esposizione & flussi (SEZIONE DEDICATA)
+  const etf = d.etf_exposure || {};
+  const etfTable = tableCardF2('ETF principali (top 10 per \u0025 holdings)', etf?.Top10);
+  const etfHTML = `
+    <section class="tl-panel-section" data-f2-section="etf" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">ETF · Esposizione & Flussi</div></header>
+      ${metricBlockF2('ETF_FLOW_BIAS','Bias flussi (1M)','Media/ponderata 1M %Chg', etf?.ETF_FLOW_BIAS)}
+      ${metricBlockF2('SECTOR_BREADTH','Breadth settore/peers','Quota titoli in positivo', etf?.SECTOR_BREADTH)}
+      ${metricBlockF2('TOP_HOLDING_ETF','Top holding ETF','Maggiore \u0025 holdings', etf?.TOP_HOLDING_ETF)}
+      ${etfTable}
+      ${listBlockCardF2('Sintesi ETF (massimo 10)', etf?.ai_note)}
+    </section>`;
 
-  // 7) News & Analysts
+  // 4) Newsflow (SEZIONE DEDICATA)
+  const news = d.newsflow || {};
   const newsHTML = `
     <section class="tl-panel-section" data-f2-section="news" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">News & Analysts</div></header>
+      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Newsflow · ultime 24–48h</div></header>
+      ${headlineBlockCardF2('Sintesi (top 10 headlines)', news?.Summary)}
+      ${tableCardF2('Top 10 headlines', news?.Top10)}
+      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4]">Le etichette sono descrittive (positive/negative/neutral) per un pubblico retail.</div>
+    </section>`;
+
+  // 5) Positioning & Short/Ownership (digest chiaro)
+  const pos = d.positioning || {};
+  const positioningHTML = `
+    <section class="tl-panel-section" data-f2-section="positioning" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Positioning · Short / Ownership</div></header>
       <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4]">
-        ${metricBlockF2('NEWS_TONE','News tone','Majority vote 24–48h', wrapMetric(d?.SCI_tkr?.NEWS_TONE))}
-        ${metricBlockF2('ANALYST_DELTA','Analyst delta','Segno variazione mediana PT', wrapMetric(d?.SCI_tkr?.ANALYST_DELTA))}
-        ${metricBlockF2('CONSENSUS_LEVEL','Consensus level','Avg rating bucket', wrapMetric(d?.SCI_tkr?.CONSENSUS_LEVEL))}
-        ${metricBlockF2('CONSISTENCY','Consistency','Stabilità 3m', wrapMetric(d?.SCI_tkr?.CONSISTENCY))}
+        ${metricBlockF2('SI_LEVEL','Short Float','Livello stimato', pos?.SI_LEVEL)}
+        ${metricBlockF2('DTC_BUCKET','Days to Cover','Bucket', pos?.DTC_BUCKET)}
+        ${metricBlockF2('SI_TREND','Trend short','Direzione 6 date', pos?.SI_TREND)}
+        ${metricBlockF2('INST_FLOW','Istituzionali','Flusso (3–6m)', pos?.INST_FLOW)}
+        ${metricBlockF2('INSIDER_FLOW','Insider','Bias ultimo trimestre', pos?.INSIDER_FLOW)}
       </div>
-      ${metricBlockF2('HEADLINE_DENSITY','Headline density','Conteggio news/24h', wrapMetric(d?.metadata?.HEADLINE_DENSITY))}
-      ${listBlockCardF2('Dominant topic', { raw: d?.metadata?.NEWS_DOMINANT_TOPIC || '' })}
-    </section>
-  `;
+      ${listBlockCardF2('Osservazioni', pos?.ai_note)}
+    </section>`;
 
-  // 8) Fundamentals (contesto, non valutazione)
-  const fundHTML = `
-    <section class="tl-panel-section" data-f2-section="fundamentals" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Fundamentals (contesto)</div></header>
-      ${listBlockCardF2('VALUATION_SNAPSHOT', { raw: stringifyKV(d?.DPI_context?.VALUATION_SNAPSHOT) })}
-      ${listBlockCardF2('MARGINS_SNAPSHOT', { raw: stringifyKV(d?.DPI_context?.MARGINS_SNAPSHOT) })}
-      ${metricBlockF2('PROFITABILITY_CLASS','Profitability','ROE/ROA class', wrapMetric(d?.DPI_context?.PROFITABILITY_CLASS))}
-      <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4] mt-2">
-        ${metricBlockF2('TARGET_SPREAD','Target spread','(High-Low)/Mean', wrapMetric(d?.metadata?.TARGET_SPREAD))}
-        ${metricBlockF2('UPSIDE_PCT','Upside %','(MeanTarget-Price)/Price', wrapMetric(d?.metadata?.UPSIDE_PCT))}
+  // 6) Survey & Sentiment retail/pro
+  const surv = d.surveys || {};
+  const surveysHTML = `
+    <section class="tl-panel-section" data-f2-section="surveys" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Survey · retail/pro</div></header>
+      <div class="grid md:grid-cols-3 gap-3 text-[12px] leading-[1.4]">
+        ${metricBlockF2('AAII','AAII Bulls‑Bears','Spread e z‑score', surv?.AAII)}
+        ${metricBlockF2('NAAIM','NAAIM Exposure','Exposure medio', surv?.NAAIM)}
+        ${metricBlockF2('FearGreed','Fear & Greed','Indice e componenti', surv?.FearGreed)}
       </div>
-    </section>
-  `;
+      ${listBlockCardF2('Note survey', surv?.ai_note)}
+    </section>`;
 
-  // 9) Output Composer (preview JSON contract)
-  const outHTML = `
-    <section class="tl-panel-section" data-f2-section="output" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Output · Contract JSON</div></header>
-      ${jsonPreviewCard('Output JSON', buildOutputContractPreview(d))}
-    </section>
-  `;
-
-  // 10) Audit & MiFID
+  // 7) Audit (SEZIONE SEPARATA)
+  const audit = d.audit_quality || {};
   const auditHTML = `
     <section class="tl-panel-section" data-f2-section="audit" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Audit & Qualità dati</div></header>
       <div class="grid gap-3 text-[12px] leading-[1.4] grid-cols-1 md:grid-cols-2">
-        ${qualityChipF2('Confidence', wrapMetric(d?.Confidence))}
-        ${qualityChipF2('Coverage', wrapMetric(d?.Quality?.Coverage))}
-        ${qualityChipF2('CriticalFields', wrapMetric(d?.Quality?.CriticalFields))}
-        ${qualityChipF2('FeedSync', wrapMetric(d?.Quality?.FeedSync))}
+        ${qualityChipF2('Coverage', audit?.QualityMetrics?.Coverage)}
+        ${qualityChipF2('ConfidenceFinal', audit?.QualityMetrics?.ConfidenceFinal)}
+        ${qualityChipF2('DataIntegrity', audit?.QualityMetrics?.DataIntegrity)}
+        ${qualityChipF2('FeedSync', audit?.QualityMetrics?.FeedSync)}
       </div>
-      ${headlineBlockCardF2('MiFID', d?.mifid?.disclaimer)}
-      ${listBlockCardF2('AuditPathID', { raw: d?.AuditPathID || d?.meta?.audit_path_id || '' })}
-    </section>
-  `;
+      ${headlineBlockCardF2('AuditPath', audit?.AuditPathID)}
+    </section>`;
 
-  return { macroHTML, sciHTML, dpiHTML, icrHTML, barchartHTML, finvizHTML, newsHTML, fundHTML, outHTML, auditHTML };
+  // 8) MiFID (SEZIONE SEPARATA)
+  const mifidHTML = `
+    <section class="tl-panel-section" data-f2-section="mifid" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Nota regolamentare</div></header>
+      ${headlineBlockCardF2('Informativa', d.mifid?.disclaimer)}
+    </section>`;
+
+  return { macroHTML, sentimentHTML, etfHTML, newsHTML, positioningHTML, surveysHTML, auditHTML, mifidHTML };
 }
 
-// -----------------------------------------------------------------------------
-// SHELL DESKTOP / MOBILE + TAB (stesso pattern F1B)
-// -----------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------
+// SHELL DESKTOP / MOBILE + TABS (stile F1B)
+// -----------------------------------------------------------------------------*/
 function renderF2DesktopShell(sections){
   return `
-    <div class="f2-panel-desktop" style="display:flex;flex-direction:row;gap:1rem;height:66vh;">
-      <aside class="f2-panel-menu" style="min-width:180px;max-width:200px;border-right:1px solid var(--br-card);height:100%;overflow:auto;">
-        ${drawerBtn('macro','MacroGate')}
-        ${drawerBtn('sci','SCI_tkr')}
-        ${drawerBtn('dpi','DPI_context')}
-        ${drawerBtn('icr','ICR_tkr')}
-        ${drawerBtn('barchart','Barchart · Market & Options')}
-        ${drawerBtn('finviz','Finviz · Ownership & Insiders')}
-        ${drawerBtn('news','News & Analysts')}
-        ${drawerBtn('fundamentals','Fundamentals')}
-        ${drawerBtn('output','Output JSON')}
-        ${drawerBtn('audit','Audit / MiFID')}
+    <div class="f1b-panel-desktop" style="display:flex;flex-direction:row;gap:1rem;height:66vh;">
+      <aside class="f1b-panel-menu" style="min-width:180px;max-width:200px;border-right:1px solid var(--br-card);height:100%;overflow:auto;">
+        ${drawerBtnF2('sentiment','Sentiment')}
+        ${drawerBtnF2('etf','ETF')}
+        ${drawerBtnF2('news','Newsflow')}
+        ${drawerBtnF2('positioning','Positioning')}
+        ${drawerBtnF2('surveys','Survey')}
+        ${drawerBtnF2('macro','Controlli rischio')}
+        ${drawerBtnF2('audit','Audit')}
+        ${drawerBtnF2('mifid','MiFID')}
       </aside>
-      <main id="f2-scroll-desktop" class="f2-panel-content flex-1 min-w-0" style="height:100%;overflow:auto;-webkit-overflow-scrolling:touch;padding:1rem;">
-        <div data-f2-view="macro">${sections.macroHTML}</div>
-        <div data-f2-view="sci" hidden>${sections.sciHTML}</div>
-        <div data-f2-view="dpi" hidden>${sections.dpiHTML}</div>
-        <div data-f2-view="icr" hidden>${sections.icrHTML}</div>
-        <div data-f2-view="barchart" hidden>${sections.barchartHTML}</div>
-        <div data-f2-view="finviz" hidden>${sections.finvizHTML}</div>
+      <main id="f2-scroll-desktop" class="f1b-panel-content flex-1 min-w-0" style="height:100%;overflow:auto;-webkit-overflow-scrolling:touch;padding:1rem;">
+        <div data-f2-view="sentiment">${sections.sentimentHTML}</div>
+        <div data-f2-view="etf" hidden>${sections.etfHTML}</div>
         <div data-f2-view="news" hidden>${sections.newsHTML}</div>
-        <div data-f2-view="fundamentals" hidden>${sections.fundHTML}</div>
-        <div data-f2-view="output" hidden>${sections.outHTML}</div>
+        <div data-f2-view="positioning" hidden>${sections.positioningHTML}</div>
+        <div data-f2-view="surveys" hidden>${sections.surveysHTML}</div>
+        <div data-f2-view="macro" hidden>${sections.macroHTML}</div>
         <div data-f2-view="audit" hidden>${sections.auditHTML}</div>
+        <div data-f2-view="mifid" hidden>${sections.mifidHTML}</div>
       </main>
     </div>`;
 }
 
 function renderF2MobileShell(sections){
-  const tabs = ['macro','sci','dpi','icr','barchart','finviz','news','fundamentals','output','audit'];
-  const pills = tabs.map(k=>mobileTabBtnF2(k, labelForTab(k))).join('');
+  const tabs = [
+    ['sentiment','Sentiment'],
+    ['etf','ETF'],
+    ['news','News'],
+    ['positioning','Positioning'],
+    ['surveys','Survey'],
+    ['macro','Controlli'],
+    ['audit','Audit'],
+    ['mifid','MiFID']
+  ];
+  const pills = tabs.map(([k,l])=>mobileTabBtnF2(k,l)).join('');
   return `
-    <div class="f2-drawer-mobile" style="display:flex;flex-direction:column;height:calc(100vh - 110px);max-height:calc(100vh - 110px);min-height:300px;background:var(--surface-panel-head);">
-      <div class="f2-mobile-tabs" style="display:flex;align-items:center;gap:.5rem;overflow:auto;border-bottom:1px solid var(--br-panel-divider);padding:.6rem .75rem;">${pills}</div>
-      <main id="f2-scroll-mobile" class="f2-panel-content-mobile flex-1 min-w-0" style="overflow:auto;-webkit-overflow-scrolling:touch;padding:1rem;background:var(--surface-page);">
-        <div data-f2-view="macro">${sections.macroHTML}</div>
-        <div data-f2-view="sci" hidden>${sections.sciHTML}</div>
-        <div data-f2-view="dpi" hidden>${sections.dpiHTML}</div>
-        <div data-f2-view="icr" hidden>${sections.icrHTML}</div>
-        <div data-f2-view="barchart" hidden>${sections.barchartHTML}</div>
-        <div data-f2-view="finviz" hidden>${sections.finvizHTML}</div>
+    <div class="f1b-drawer-mobile" style="display:flex;flex-direction:column;height:calc(100vh - 110px);max-height:calc(100vh - 110px);min-height:300px;background:var(--surface-panel-head);">
+      <div class="f1b-mobile-tabs-fixed" style="position:relative;flex-shrink:0;width:100%;display:flex;align-items:center;border-bottom:1px solid var(--br-panel-divider);background:var(--surface-panel-head);padding:.6rem .75rem;">
+        <div class="f1b-footer-tabs-scroll" style="flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:.5rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">${pills}</div>
+      </div>
+      <main id="f2-scroll-mobile" class="f1b-panel-content-mobile flex-1 min-w-0" style="overflow:auto;-webkit-overflow-scrolling:touch;padding:1rem;background:var(--surface-page);">
+        <div data-f2-view="sentiment">${sections.sentimentHTML}</div>
+        <div data-f2-view="etf" hidden>${sections.etfHTML}</div>
         <div data-f2-view="news" hidden>${sections.newsHTML}</div>
-        <div data-f2-view="fundamentals" hidden>${sections.fundHTML}</div>
-        <div data-f2-view="output" hidden>${sections.outHTML}</div>
+        <div data-f2-view="positioning" hidden>${sections.positioningHTML}</div>
+        <div data-f2-view="surveys" hidden>${sections.surveysHTML}</div>
+        <div data-f2-view="macro" hidden>${sections.macroHTML}</div>
         <div data-f2-view="audit" hidden>${sections.auditHTML}</div>
+        <div data-f2-view="mifid" hidden>${sections.mifidHTML}</div>
       </main>
     </div>`;
 }
 
-function drawerBtn(key,label){
+function drawerBtnF2(key,label){
   return `<button class="f1b-tab-btn" data-f2-tab="${escapeAttr(key)}">${escapeHtml(label)}</button>`;
 }
 function mobileTabBtnF2(key,label){
   return `<button class="f1b-footer-tab-btn" data-f2-tab="${escapeAttr(key)}" style="flex:0 0 auto;white-space:nowrap;font-size:11px;line-height:1.2;font-weight:500;border-radius:999px;border:1px solid var(--br-soft);background:var(--surface-card);color:var(--muted);padding:.45rem .7rem;box-shadow:var(--shadow-card);min-width:max-content;">${escapeHtml(label)}</button>`;
 }
-function labelForTab(k){
-  switch(k){
-    case 'macro': return 'MacroGate';
-    case 'sci': return 'SCI_tkr';
-    case 'dpi': return 'DPI_context';
-    case 'icr': return 'ICR_tkr';
-    case 'barchart': return 'Barchart · Market & Options';
-    case 'finviz': return 'Finviz · Ownership & Insiders';
-    case 'news': return 'News & Analysts';
-    case 'fundamentals': return 'Fundamentals';
-    case 'output': return 'Output JSON';
-    case 'audit': return 'Audit/MiFID';
-    default: return k;
-  }
-}
 
-function bindF2Tabs(){
+function bindF2TabsPublic(){
   const btns = document.querySelectorAll('[data-f2-tab]');
   const views = document.querySelectorAll('[data-f2-view]');
   const desk = document.getElementById('f2-scroll-desktop');
   const mob  = document.getElementById('f2-scroll-mobile');
-  const sidebar = document.querySelector('.f2-panel-menu');
 
-  function resetScroll(){ [desk,mob,sidebar].forEach(el=>{ if(!el) return; el.scrollTop=0; el.scrollLeft=0; }); }
+  function resetScroll(){ [desk,mob].forEach(el=>{ if(!el) return; el.scrollTop=0; el.scrollLeft=0; }); }
   function styleTabs(active){
     btns.forEach(b=>{
       const on = b.getAttribute('data-f2-tab')===active;
@@ -417,15 +340,15 @@ function bindF2Tabs(){
     });
   }
   function show(active){
-    views.forEach(v=>{ const k=v.getAttribute('data-f2-view'); const show = (k===active); v.hidden = !show; if(show){ requestAnimationFrame(()=>{ resetScroll(); const header=v.querySelector('.tl-panel-section-title-text'); if(header){ header.setAttribute('tabindex','-1'); try{ header.focus({preventScroll:true}); }catch{} } v.querySelectorAll('[data-scrollable]').forEach(sc=>{ sc.scrollTop=0; sc.scrollLeft=0; }); }); }});
+    views.forEach(v=>{ const k=v.getAttribute('data-f2-view'); v.hidden = (k!==active); if(!v.hidden){ requestAnimationFrame(()=>{ resetScroll(); v.querySelectorAll('[data-scrollable]').forEach(sc=>{sc.scrollTop=0;sc.scrollLeft=0;}); }); }});
   }
   function activate(k){ styleTabs(k); show(k);} 
   btns.forEach(b=>{ if(b.__f2Bound) return; b.__f2Bound=true; b.addEventListener('click',()=>{ activate(b.getAttribute('data-f2-tab')); }); });
 }
 
-// -----------------------------------------------------------------------------
-// CARD BUILDERS (stile F1B)
-// -----------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------
+// CARD BUILDERS (riuso stile F1B)
+// -----------------------------------------------------------------------------*/
 function f2Card({ tone, title, bodyHtml, noteHtml }){
   const { dotColor } = toneColorsF2(tone);
   return `
@@ -460,7 +383,9 @@ function metricBlockF2(metricKey, title, desc, metricObj){
   const value = escapeHtml(metricObj?.raw || '—');
   const bodyHtml = `
     <div class="flex items-start justify-between gap-2 mb-1">
-      <div class="flex items-center gap-2"><span class="font-mono font-bold text-[13px] leading-[1.4]" style="color:${textColor};">${value}</span></div>
+      <div class="flex items-center gap-2">
+        <span class="font-mono font-bold text-[13px] leading-[1.4]" style="color:${textColor};">${value}</span>
+      </div>
       <button class="info-btn" data-metric="${escapeAttr(metricKey)}" aria-label="Info ${escapeAttr(metricKey)}">?</button>
     </div>
     <div class="text-[11px] leading-[1.3] text-[color:var(--muted)]">${escapeHtml(desc || '')}</div>
@@ -468,26 +393,43 @@ function metricBlockF2(metricKey, title, desc, metricObj){
   return f2Card({ tone: metricObj?.tone, title, bodyHtml, noteHtml: '' });
 }
 
+function tableCardF2(title, tbl){
+  // tbl: { tone, columns:[...], rows:[[...]], ai_note? }
+  const tone = tbl?.tone || 'neutral';
+  const cols = Array.isArray(tbl?.columns) ? tbl.columns : [];
+  const rows = Array.isArray(tbl?.rows) ? tbl.rows : [];
+  const head = cols.map(c=>`<th class="text-left px-2 py-1 text-[11px] uppercase tracking-wide text-[color:var(--muted)]">${escapeHtml(String(c))}</th>`).join('');
+  const body = rows.map(r=>`<tr>${r.map((cell,i)=>`<td class="px-2 py-1 text-[12px] ${i>0?'font-mono':''}">${escapeHtml(String(cell))}</td>`).join('')}</tr>`).join('');
+  const tableHtml = `
+    <div class="overflow-auto" data-scrollable>
+      <table class="min-w-full border-separate" style="border-spacing:0;">
+        <thead><tr>${head}</tr></thead>
+        <tbody>${body || `<tr><td class='px-2 py-1 text-[12px] text-[color:var(--muted)]'>N/A</td></tr>`}</tbody>
+      </table>
+    </div>`;
+  return f2Card({ tone, title, bodyHtml: tableHtml, noteHtml: tbl?.ai_note ? escapeHtml(tbl.ai_note) : '' });
+}
+
 function listBlockCardF2(title, body){
-  if (body===undefined || body===null) return '';
+  if (!body && body !== 0) return '';
   let tone='neutral', raw='';
-  if (typeof body==='string'){ raw=body; }
-  else { tone=body?.tone||'neutral'; raw=body?.raw||''; }
+  if (Array.isArray(body)){
+    raw = body.map(x=>`• ${String(x)}`).join('\n');
+  } else if (typeof body==='object'){
+    tone = body?.tone || 'neutral';
+    raw = body?.raw || '';
+  } else {
+    raw = String(body);
+  }
   return f2Card({ tone, title, bodyHtml:`<div class='whitespace-pre-line'>${escapeHtml(raw)}</div>`, noteHtml:'' });
 }
 
 function headlineBlockCardF2(title, obj){
-  if (obj===undefined || obj===null || obj==='') return '';
+  if (obj===undefined || obj===null) return '';
   let tone='neutral', raw='';
   if (typeof obj==='string'){ raw=obj; }
   else { tone=obj?.tone||'neutral'; raw=obj?.raw||''; }
   return f2Card({ tone, title, bodyHtml:`<div class='whitespace-pre-line'>${escapeHtml(raw)}</div>`, noteHtml:'' });
-}
-
-function jsonPreviewCard(title, jsonObj){
-  const pretty = escapeHtml(JSON.stringify(jsonObj, null, 2));
-  const bodyHtml = `<pre class="text-[11.5px] leading-[1.45]">${pretty}</pre>`;
-  return f2Card({ tone:'neutral', title, bodyHtml, noteHtml:'' });
 }
 
 function qualityChipF2(key, q){
@@ -502,9 +444,9 @@ function qualityChipF2(key, q){
   return f2Card({ tone: q.tone, title: key||'', bodyHtml, noteHtml:'' });
 }
 
-// -----------------------------------------------------------------------------
-// TONE & MAPPINGS
-// -----------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------
+// TONE HELPERS
+// -----------------------------------------------------------------------------*/
 function toneColorsF2(tone){
   switch((tone||'').toLowerCase()){
     case 'green': return { dotColor:'var(--tone-pos-fg)', textColor:'var(--tone-pos-fg)' };
@@ -514,110 +456,60 @@ function toneColorsF2(tone){
   }
 }
 
-function computeHighLevelToneF2Hero(macroGate){
-  const g = (macroGate||'').toUpperCase();
-  if (g==='PASS')   return { toneLabel:'positive', toneColor:'var(--tone-pos-fg)' };
-  if (g==='REVIEW') return { toneLabel:'neutral',  toneColor:'var(--tone-warn-fg)' };
-  if (g==='FAIL')   return { toneLabel:'alert',    toneColor:'var(--tone-neg-fg)' };
-  return { toneLabel:'neutral', toneColor:'var(--tone-neu-fg)' };
+function toneFromMacroGate(m){
+  const raw = (m?.raw || m || '').toString().toUpperCase();
+  let toneLabel='neutral', toneColor='var(--tone-neu-fg)';
+  if (raw==='PASS'){ toneLabel='ok'; toneColor='var(--tone-pos-fg)'; }
+  else if (raw==='REVIEW'){ toneLabel='review'; toneColor='var(--tone-warn-fg)'; }
+  else if (raw==='FAIL'){ toneLabel='stop'; toneColor='var(--tone-neg-fg)'; }
+  return { toneLabel, toneColor };
 }
 
-function macroToneFromGate(g){
-  const t=(g||'').toUpperCase();
-  return t==='PASS'?'green': t==='REVIEW'?'yellow': t==='FAIL'?'red':'neutral';
-}
-
-function mapMacroGateToMetric(gate, note){
-  const tone = macroToneFromGate(gate);
-  return { raw: gate || '—', tone, ai_note: note||'' };
-}
-
-function wrapMetric(val){
-  if (val===undefined || val===null || val==='') return { raw:'—', tone:'neutral' };
-  // tono euristico minimo per discrete: green/yellow/red/neutral se già validato a monte
-  if (typeof val==='object' && (val.raw!==undefined || val.tone!==undefined)) return val;
-  const raw = String(val);
-  let tone='neutral';
-  const lower = raw.toLowerCase();
-  if (['buy','strong_buy','positive','up','+1','bullish_bias'].includes(lower)) tone='green';
-  else if (['sell','strong_sell','negative','down','-1','bearish_bias'].includes(lower)) tone='red';
-  else if (['hold','flat','neutral','0'].includes(lower)) tone='yellow';
-  return { raw, tone };
-}
-
-// -----------------------------------------------------------------------------
-// OUTPUT PREVIEW BUILDER
-// -----------------------------------------------------------------------------
-function buildOutputContractPreview(d){
-  return {
-    Ticker: d?.meta?.ticker || d?.Ticker || '—',
-    MacroGate: d?.MacroGate || '—',
-    MacroNotes: d?.MacroNotes || [],
-    State: d?.State || d?.meta?.state || '—',
-    SCI_tkr: d?.MacroGate==='FAIL' ? {} : (d?.SCI_tkr || {}),
-    DPI_context: d?.MacroGate==='FAIL' ? {} : (d?.DPI_context || {}),
-    ICR_tkr: d?.MacroGate==='FAIL' ? {} : (d?.ICR_tkr || {}),
-    metadata: {
-      EVENT_LAST_EARNINGS: d?.metadata?.EVENT_LAST_EARNINGS || '',
-      POST_EARNINGS_WINDOW: d?.metadata?.POST_EARNINGS_WINDOW || '',
-      TARGET_SPREAD: d?.metadata?.TARGET_SPREAD || '',
-      UPSIDE_PCT: d?.metadata?.UPSIDE_PCT || '',
-      HEADLINE_DENSITY: d?.metadata?.HEADLINE_DENSITY || '',
-      NEWS_DOMINANT_TOPIC: d?.metadata?.NEWS_DOMINANT_TOPIC || ''
-    },
-    Confidence: typeof d?.Confidence==='number' ? d.Confidence : 0.0,
-    AuditPathID: d?.AuditPathID || (d?.meta?.audit_path_id || '')
-  };
-}
-
-function stringifyKV(obj){
-  if (!obj || typeof obj!=='object') return '';
-  try { return Object.entries(obj).map(([k,v])=>`${k}: ${v}`).join(' | '); } catch { return ''; }
-}
-
-// -----------------------------------------------------------------------------
-// NORMALIZZAZIONE DATI (schema pubblico F2)
-// -----------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------
+// NORMALIZZAZIONE DATI (solo tassonomia; nessun valore di calcolo hard-coded)
+// -----------------------------------------------------------------------------*/
 function normalizeDataF2Public(src={}){
-  // fallback intelligenti per mantenere la UI pulita anche con dati scarsi
   return {
     meta: {
-      module: src?.meta?.module ?? 'F2_MacroSentiment',
-      ticker: src?.meta?.ticker ?? src?.Ticker ?? '—',
-      version: src?.meta?.version ?? 'F2.v7.2',
-      timestamp_utc: src?.meta?.timestamp_utc ?? '—',
-      audit_path_id: src?.meta?.audit_path_id ?? '',
-      state: src?.State ?? src?.meta?.state ?? 'ACTIVE',
+      timestampET: src?.meta?.timestampET ?? '—',
+      module: src?.meta?.module ?? 'F2 · Macro & Sentiment',
+      moduleVersion: src?.meta?.moduleVersion ?? 'v7.2',
+      moduleStatus: src?.meta?.moduleStatus ?? 'ACTIVE',
       freshness: src?.meta?.freshness ?? '≤ T-1',
       hero_intro: src?.meta?.hero_intro ?? '',
-      hero_disclaimer: src?.meta?.hero_disclaimer ?? 'Fonti: dati user‑provided Tier‑1 (Finviz, Barchart, Nasdaq, SEC Form 4). Nessun dato web esterno.'
+      hero_disclaimer: src?.meta?.hero_disclaimer ?? 'Contenuto informativo/formativo. Nessuna istruzione operativa.'
     },
 
-    // Contract 7) Output
-    Ticker: src?.Ticker ?? src?.meta?.ticker ?? '—',
-    MacroGate: src?.MacroGate ?? 'PASS',
-    MacroNotes: Array.isArray(src?.MacroNotes)? src.MacroNotes : (src?.MacroNotes? [String(src.MacroNotes)] : []),
-    State: src?.State ?? 'ACTIVE',
+    // STEP 1: WebProbe (macro/societario)
+    step1: src?.step1_f2_webprobe || { MacroGate:{ raw:'—', tone:'neutral', ai_note:'' }, MacroNotes:[], ai_note:'' },
 
-    SCI_tkr: src?.SCI_tkr || {},
-    DPI_context: src?.DPI_context || {},
-    ICR_tkr: src?.ICR_tkr || {},
-    metadata: src?.metadata || {},
+    // SCI/DPI digest per retail
+    sci_dpi: src?.SCI_tkr || {},
+    dpi: src?.DPI_context || {},
 
-    Confidence: typeof src?.Confidence==='number' ? src.Confidence : 0.90,
-    AuditPathID: src?.AuditPathID ?? src?.meta?.audit_path_id ?? '',
+    // ETF exposure (Top10 + sintesi)
+    etf_exposure: src?.etf_exposure || { Top10:{ tone:'neutral', columns:['ETF','%Hold','1W %','1M %','Leverage'], rows:[] }, ETF_FLOW_BIAS:{ raw:'—', tone:'neutral' }, SECTOR_BREADTH:{ raw:'—', tone:'neutral' }, TOP_HOLDING_ETF:{ raw:'—', tone:'neutral' }, ai_note:'' },
 
-    // quality (opzionale)
-    Quality: src?.Quality || { Coverage:{ raw:'≥70%', tone:'green' }, CriticalFields:{ raw:'OK', tone:'green' }, FeedSync:{ raw:'OK', tone:'green' }},
+    // Newsflow: top 10 + sintesi
+    newsflow: src?.news_stream || { Summary:{ raw:'', tone:'neutral' }, Top10:{ tone:'neutral', columns:['Time','Publisher','Headline','Tone'], rows:[] } },
 
-    // note opzionali (es. insider table synth)
-    insider_notes: src?.insider_notes || '',
-    mifid: src?.mifid || { disclaimer: '' }
+    // Positioning/Short/Ownership
+    positioning: src?.positioning || { SI_LEVEL:{ raw:'—', tone:'neutral' }, DTC_BUCKET:{ raw:'—', tone:'neutral' }, SI_TREND:{ raw:'—', tone:'neutral' }, INST_FLOW:{ raw:'—', tone:'neutral' }, INSIDER_FLOW:{ raw:'—', tone:'neutral' }, ai_note:'' },
+
+    // Surveys
+    surveys: src?.surveys || { AAII:{ raw:'—', tone:'neutral' }, NAAIM:{ raw:'—', tone:'neutral' }, FearGreed:{ raw:'—', tone:'neutral' }, ai_note:'' },
+
+    // Sentiment/Flows headline KPI
+    sentiment_flows: src?.sentiment_flows || { SentimentComposite:{ raw:'—', tone:'neutral' }, ETF_FlowTone:{ raw:'—', tone:'neutral' } },
+
+    // Audit & MiFID separati
+    audit_quality: src?.audit_quality || { AuditPathID:'—', QualityMetrics:{} },
+    mifid: src?.mifid || { disclaimer:'' }
   };
 }
 
-// -----------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------
 // UTILS
-// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------*/
 function escapeHtml(str){ if(str===undefined||str===null) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function escapeAttr(str){ if(str===undefined||str===null) return ''; return String(str).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
