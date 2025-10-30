@@ -173,13 +173,16 @@ function isMobileViewport(){ return window.matchMedia('(max-width: 767px)').matc
 // -----------------------------------------------------------------------------*/
 function buildF2SectionsPublic(d){
   // 1) Controlli rischio — ampliato
-  const macroHTML = `
-    <section class="tl-panel-section" data-f2-section="macro" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Controlli rischio (ultime 72h)</div></header>
-      ${metricBlockF2('MacroGate','MacroGate','Semaforo eventi macro/societari ravvicinati', d.step1?.MacroGate)}
-      ${listBlockCardF2('Note di controllo', d.step1?.MacroNotes)}
-      ${headlineBlockCardF2('Policy Finestra 3–10g',{tone:'neutral',raw:'PASS: pipeline completa. REVIEW: continuare con confidenza ridotta e monitoraggio eventi T/T+2. FAIL: interruzione F2 (HOLD).'})}
-    </section>`;
+const macroHTML = `
+  <section class="tl-panel-section" data-f2-section="macro" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+    <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Controlli rischio (ultime 72h)</div></header>
+    ${metricBlockF2('MacroGate','MacroGate','Semaforo eventi macro/societari ravvicinati', d.step1?.MacroGate)}
+    ${listBlockCardF2('Note di controllo', d.step1?.MacroNotes)}
+    ${listBlockCardF2('Eventi macro (watchlist 10g)', d.step1?.MacroEvents)}
+    ${listBlockCardF2('Eventi aziendali (≤10g)', d.step1?.CorpEvents)}
+    ${headlineBlockCardF2('Policy Finestra 3–10g',{tone:'neutral',raw:'PASS: pipeline completa. REVIEW: continuare con confidenza ridotta e monitoraggio eventi T/T+2. FAIL: interruzione F2 (HOLD).'})}
+  </section>`;
+
 
   // 2) Sentiment sintetico (SCI/DPI)
   const sci = d.sci_dpi || {};
@@ -525,6 +528,8 @@ function metricsInternalGrid(mi={}){
     'HEADLINE_DENSITY','NEWS_DOMINANT_TOPIC','ANALYST_DELTA','CONSENSUS_LEVEL','CONSISTENCY',
     // price/tech & breadth
     'TECH_SIGNAL','PRICE_TREND','SECTOR_BREADTH','ETF_AVG_1M_RET',
+    // fundamentals trend / quality
+    'VALUATION_TAG','MARGIN_HEALTH','PROFITABILITY_CLASS','EARNINGS_TREND','BALANCE_SHEET_STRENGTH','CASHFLOW_MOMENTUM',
     // metadata & exposure
     'TARGET_SPREAD','UPSIDE_PCT','POST_EARNINGS_WINDOW',
     // coverage/confidence
@@ -532,19 +537,25 @@ function metricsInternalGrid(mi={}){
     // counts
     'PEERS_COUNT','ETFS_COUNT'
   ];
+
   const chips = keys.map(k=>{
     const q = mi?.[k];
     if (!q) return '';
     const { textColor } = toneColorsF2(q.tone);
     return `
       <div class="min-w-[120px]" style="background:var(--surface-card-alt);border:1px solid var(--br-card);border-radius:10px;box-shadow:var(--shadow-card);padding:.55rem .7rem;">
-        <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] mb-1">${escapeHtml(k)}</div>
+        <div class="flex items-start justify-between gap-2 mb-1">
+          <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)]">${escapeHtml(k)}</div>
+          <button class="info-btn" data-metric="${escapeAttr(k)}" aria-label="Info ${escapeAttr(k)}">?</button>
+        </div>
         <div class="font-mono font-bold text-[13px]" style="color:${textColor};">${escapeHtml(q.raw ?? '—')}</div>
         ${ q.ai_note ? `<div class='text-[10px] text-[color:var(--muted)] mt-[2px]'>${escapeHtml(q.ai_note)}</div>` : '' }
       </div>`;
   }).join('');
+
   return `<div class="grid gap-2 md:grid-cols-3">${chips || `<div class='text-[12px] text-[color:var(--muted)]'>N/A</div>`}</div>`;
 }
+
 
 /* -----------------------------------------------------------------------------
 // HELPERS
@@ -653,8 +664,19 @@ function normalizeDataF2Public(src={}){
       hero_disclaimer: src?.meta?.hero_disclaimer ?? 'Contenuto informativo/formativo. Nessuna istruzione operativa.'
     },
 
-    // STEP 1: WebProbe
-    step1: src?.step1_f2_webprobe || { MacroGate:{ raw:'—', tone:'neutral', ai_note:'' }, MacroNotes:[], ai_note:'' },
+ // STEP 1: WebProbe
+step1: (function(){
+  const s = src?.step1_f2_webprobe || {};
+  return {
+    MacroGate: s.MacroGate || { raw:'—', tone:'neutral', ai_note:'' },
+    MacroNotes: Array.isArray(s.MacroNotes) ? s.MacroNotes : [],
+    // nuovi campi per elenchi separati (fallback -> [])
+    MacroEvents: Array.isArray(s.MacroEvents) ? s.MacroEvents : [],
+    CorpEvents:  Array.isArray(s.CorpEvents)  ? s.CorpEvents  : [],
+    ai_note: s.ai_note || ''
+  };
+})(),
+
 
     // SCI/DPI digest
     sci_dpi: src?.SCI_tkr || {},
