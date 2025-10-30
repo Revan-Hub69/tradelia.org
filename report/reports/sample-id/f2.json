@@ -1,137 +1,117 @@
 {
   "meta": {
     "timestampET": "2025-10-29 18:05",
-    "module": "F2 · Sentiment & Flussi",
+    "module": "F2 · Macro & Sentiment",
     "moduleVersion": "v7.2",
     "moduleStatus": "ACTIVE",
     "freshness": "≤ T-1",
-    "hero_intro": "Lettura sintetica del sentiment multi-sorgente e della dinamica dei flussi (ETF, opzioni, positioning).",
-    "hero_disclaimer": "Contenuto informativo/educativo. Non è consulenza personalizzata."
+    "hero_intro": "Lettura sintetica non operativa di sentiment ticker-level, flussi ETF e news.",
+    "hero_disclaimer": "Materiale informativo/educativo. Nessuna raccomandazione personale."
   },
 
-  "macro_gate": {
-    "MacroGate": "PASS",
-    "tone": "green",
-    "ai_note": "Nessun evento macro di livello 1 entro 48h; calendario tranquillo fino a inizio settimana.",
+  "step1_f2_webprobe": {
+    "MacroGate": { "raw": "PASS", "tone": "green", "ai_note": "Nessun evento market-moving entro 48h." },
     "MacroNotes": [
-      "PMI/ISM in calendario tra 72–96h → non bloccante",
-      "Nessuna conferenza straordinaria banche centrali segnalata",
-      "Roll futures principale oltre la finestra 10g"
-    ]
+      "PMI/ISM oltre 72h",
+      "Nessuna call straordinaria segnalata",
+      "CME futures roll fuori finestra 10g"
+    ],
+    "ai_note": "WebProbe Tier-1: calendario regolare, nessuna criticità intraday."
   },
 
-  "sentiment_flows": {
-    "SentimentComposite": {
-      "raw": "Neutrale-positivo",
-      "tone": "green",
-      "ai_note": "Convergenza favorevole tra news tone, consensus analisti e breadth ETF."
-    },
-    "OptionsTone": {
-      "raw": "IV neutrale, Put/Call < 1",
-      "tone": "green",
-      "ai_note": "IV percentile ~35; bias da flussi call moderato."
-    },
-    "ETF_FlowTone": {
-      "raw": "Flussi 1M positivi",
-      "tone": "green",
-      "ai_note": "Media ponderata 1M > 0 su ETF con esposizione significativa."
-    },
-    "RiskWindow_F2": {
-      "raw": "Calendario ordinario (3–10g)",
-      "tone": "yellow",
-      "ai_note": "Sorvegliare PMI/ISM e primi commenti post-earnings dei mega-cap."
-    }
+  "SCI_tkr": {
+    "TECH_SIGNAL":     { "raw": "Buy",        "tone": "green",  "ai_note": "Barchart opinion favorevole." },
+    "NEWS_TONE":       { "raw": "Positive",   "tone": "green",  "ai_note": "Prevalenza titoli positivi 24–48h." },
+    "CONSENSUS_LEVEL": { "raw": "Buy",        "tone": "green",  "ai_note": "Media rating > Buy." },
+    "CONSISTENCY":     { "raw": "Stable",     "tone": "green",  "ai_note": "Rating stabili su 3 mesi." },
+    "IV_STATE":        { "raw": "Neutral",    "tone": "yellow", "ai_note": "IV percentile medio." },
+    "PUTCALL_BIAS":    { "raw": "Bullish",    "tone": "green",  "ai_note": "Put/Call < 1." }
+  },
+
+  "DPI_context": {
+    "VOLUME_STATE":   { "raw": "Normal",        "tone": "green",  "ai_note": "RelVolume ~1.1" },
+    "MOMENTUM_LABEL": { "raw": "Bullish bias",  "tone": "green",  "ai_note": "RSI ≥ 55 e prezzo alto nel range." },
+    "RANGE_LOC":      { "raw": "Upper",         "tone": "green",  "ai_note": "Nel quartile superiore del 52w." }
   },
 
   "etf_exposure": {
-    "Top10": [
-      { "symbol": "QQQ",   "name": "Invesco QQQ",                "holding_pct": 3.9, "chg_1W": 1.2, "chg_1M": 4.5, "note": "Mega-cap growth" },
-      { "symbol": "XLK",   "name": "Technology Select Sector",   "holding_pct": 3.4, "chg_1W": 1.0, "chg_1M": 3.8, "note": "Tech US large cap" },
-      { "symbol": "VOO",   "name": "Vanguard S&P 500",           "holding_pct": 2.2, "chg_1W": 0.7, "chg_1M": 2.9, "note": "Broad market" },
-      { "symbol": "VGT",   "name": "Vanguard Info Tech",         "holding_pct": 3.7, "chg_1W": 1.3, "chg_1M": 4.1, "note": "Software & semis" },
-      { "symbol": "XLC",   "name": "Communication Services",     "holding_pct": 4.8, "chg_1W": 1.5, "chg_1M": 5.2, "note": "Comm services tilt" },
-      { "symbol": "MGK",   "name": "Vanguard Mega Cap Growth",   "holding_pct": 4.1, "chg_1W": 1.1, "chg_1M": 4.6, "note": "Mega-cap momentum" },
-      { "symbol": "SPYG",  "name": "SPDR S&P 500 Growth",        "holding_pct": 2.6, "chg_1W": 0.9, "chg_1M": 3.4, "note": "Growth screen" },
-      { "symbol": "IWF",   "name": "iShares Russell 1000 Growth","holding_pct": 2.8, "chg_1W": 1.0, "chg_1M": 3.9, "note": "Large growth" },
-      { "symbol": "SCHG",  "name": "Schwab U.S. Large-Cap Growth","holding_pct": 2.5, "chg_1W": 0.8, "chg_1M": 3.1, "note": "Large growth low-fee" },
-      { "symbol": "FDN",   "name": "First Trust Internet",       "holding_pct": 3.0, "chg_1W": 1.7, "chg_1M": 6.0, "note": "Internet/e-commerce" }
-    ],
-    "summary": {
+    "ETF_FLOW_BIAS":   { "raw": "Positive flows", "tone": "green",  "ai_note": "Media ponderata 1M positiva." },
+    "SECTOR_BREADTH":  { "raw": "0.68",           "tone": "green",  "ai_note": "≈68% dei peer in positivo." },
+    "TOP_HOLDING_ETF": { "raw": "XLC",            "tone": "green",  "ai_note": "Maggior % holdings sul ticker." },
+    "Top10": {
       "tone": "green",
-      "raw": "Esposizione concentrata su growth/communication con performance 1M > 0 nella maggioranza dei veicoli.",
-      "ai_note": "Breadth positiva nei principali ETF tematici; nessuna anomalia di leverage rilevante."
+      "columns": ["ETF","%Hold","1W %","1M %","Leverage"],
+      "rows": [
+        ["QQQ", 3.9, 1.2, 4.5, "Long"],
+        ["XLK", 3.4, 1.0, 3.8, "Long"],
+        ["XLC", 4.8, 1.5, 5.2, "Long"],
+        ["VGT", 3.7, 1.3, 4.1, "Long"],
+        ["MGK", 4.1, 1.1, 4.6, "Long"],
+        ["IWF", 2.8, 1.0, 3.9, "Long"],
+        ["SPYG",2.6, 0.9, 3.4, "Long"],
+        ["FDN", 3.0, 1.7, 6.0, "Long"],
+        ["VOO", 2.2, 0.7, 2.9, "Long"],
+        ["SCHG",2.5, 0.8, 3.1, "Long"]
+      ],
+      "ai_note": "Elenco limitato a 10 ETF con esposizione significativa; assenza di inverse/leveraged rilevanti."
     }
   },
 
-  "newsflow": {
-    "Top10": [
-      { "ts": "2025-10-29T14:05Z", "source": "Reuters",   "title": "Mega-cap beats; cost discipline offsets opex",         "tone": "positive" },
-      { "ts": "2025-10-29T13:20Z", "source": "Bloomberg", "title": "AI product cadence keeps revenue mix favorable",       "tone": "positive" },
-      { "ts": "2025-10-29T12:55Z", "source": "Nasdaq",    "title": "Analyst roundup: PT revisions skew up",               "tone": "positive" },
-      { "ts": "2025-10-29T11:10Z", "source": "Barron’s",  "title": "Ad market steady into holiday season",                "tone": "neutral"  },
-      { "ts": "2025-10-29T10:40Z", "source": "FT",        "title": "Regulatory fine largely anticipated",                 "tone": "neutral"  },
-      { "ts": "2025-10-29T09:50Z", "source": "Bloomberg", "title": "Capex guide trimmed; AI infra still priority",        "tone": "neutral"  },
-      { "ts": "2025-10-29T09:05Z", "source": "Reuters",   "title": "Mgmt reiterates margin framework FY",                 "tone": "positive" },
-      { "ts": "2025-10-28T20:15Z", "source": "CNBC",      "title": "Stock holds gains into close on light volumes",       "tone": "neutral"  },
-      { "ts": "2025-10-28T19:45Z", "source": "WSJ",       "title": "Competition headlines weigh briefly, sentiment steady","tone": "neutral"  },
-      { "ts": "2025-10-28T18:05Z", "source": "MarketWatch","title": "Options activity tilts call-side pre-event",         "tone": "positive" }
-    ],
-    "summary": {
+  "news_stream": {
+    "Summary": {
+      "raw": "Densità notizie medio-alta con prevalenza positiva (PT in rialzo e ricavi resilienti).",
       "tone": "green",
-      "raw": "Densità headline medio-alta, prevalenza positiva (PT su/ricavi resilienti).",
-      "ai_note": "Le notizie negative restano episodiche; narrativa dominante su AI e disciplina dei costi."
+      "ai_note": "Narrativa dominante su AI e disciplina costi; negatività episodica."
+    },
+    "Top10": {
+      "tone": "neutral",
+      "columns": ["Time","Publisher","Headline","Tone"],
+      "rows": [
+        ["2025-10-29 14:05Z","Reuters","Mega-cap beats; cost discipline offsets opex","positive"],
+        ["2025-10-29 13:20Z","Bloomberg","AI product cadence keeps revenue mix favorable","positive"],
+        ["2025-10-29 12:55Z","Nasdaq","Analyst roundup: PT revisions skew up","positive"],
+        ["2025-10-29 11:10Z","Barron’s","Ad market steady into holiday season","neutral"],
+        ["2025-10-29 10:40Z","FT","Regulatory fine largely anticipated","neutral"],
+        ["2025-10-29 09:50Z","Bloomberg","Capex guide trimmed; AI infra still priority","neutral"],
+        ["2025-10-29 09:05Z","Reuters","Mgmt reiterates margin framework FY","positive"],
+        ["2025-10-28 20:15Z","CNBC","Stock holds gains on light volumes","neutral"],
+        ["2025-10-28 19:45Z","WSJ","Competition headlines weigh briefly","neutral"],
+        ["2025-10-28 18:05Z","MarketWatch","Options activity tilts call-side pre-event","positive"]
+      ]
     }
-  },
-
-  "options_data": {
-    "PCR_Total":   { "raw": "0.85", "tone": "green",  "ai_note": "Bias call moderato vs media 3m." },
-    "PCR_Equity":  { "raw": "0.90", "tone": "green",  "ai_note": "Segmento equity allineato al totale." },
-    "Skew_25d":    { "raw": "-0.3σ", "tone": "yellow", "ai_note": "Leggera preferenza downside hedging su scadenze lunghe." },
-    "IV_Rank":     { "raw": "35/100", "tone": "yellow","ai_note": "IV medio-bassa; opportunità relative limitate in F2." },
-    "VIX_Term":    { "raw": "Contango lieve", "tone": "green", "ai_note": "Struttura coerente con risk-on moderato." },
-    "VVIX":        { "raw": "Low-mid", "tone": "green", "ai_note": "Vol di VIX contenuta." },
-    "ZeroDTE":     { "raw": "Elevazione episodica", "tone": "yellow", "ai_note": "Flussi intraday non strutturali." }
   },
 
   "positioning": {
-    "CFTC_EquityIdx": { "raw": "Net long in aumento (Δ WoW +2%)", "tone": "green",  "ai_note": "Netto miglioramento su E-mini." },
-    "DealersGamma":   { "raw": "Gamma positiva (market-wide)",    "tone": "green",  "ai_note": "Stabilizzante su ribassi moderati." },
-    "CTA_Tilt":       { "raw": "Long bias leggero",               "tone": "yellow", "ai_note": "Signal non estremo." },
-    "HF_Beta":        { "raw": "Beta ~0.9 vs SPX",                "tone": "yellow", "ai_note": "Gestione rischio prudente." }
+    "SI_LEVEL":     { "raw": "Low",           "tone": "green",  "ai_note": "Short float contenuto." },
+    "DTC_BUCKET":   { "raw": "Low",           "tone": "green",  "ai_note": "Days to cover basso." },
+    "SI_TREND":     { "raw": "Down",          "tone": "green",  "ai_note": "Trend short in calo (6 date)." },
+    "INST_FLOW":    { "raw": "Inflows",       "tone": "green",  "ai_note": "Transazioni istituzionali nette positive." },
+    "INSIDER_FLOW": { "raw": "Flat",          "tone": "yellow", "ai_note": "Attività insider neutra / programmatica." },
+    "ai_note": "Quadro di posizionamento costruttivo; nessun segnale di stress lato short."
   },
 
   "surveys": {
-    "AAII":       { "raw": "Bulls-Bears = +8",     "tone": "yellow", "ai_note": "Area neutra-ottimista, non eccesso." },
-    "NAAIM":      { "raw": "Exposure 68",         "tone": "yellow", "ai_note": "Sovrappeso moderato." },
-    "FearGreed":  { "raw": "65/100",              "tone": "yellow", "ai_note": "Greed moderato, non estremo." }
+    "AAII":      { "raw": "Bulls-Bears +8", "tone": "yellow", "ai_note": "Ottimismo moderato." },
+    "NAAIM":     { "raw": "Exposure 68",   "tone": "yellow", "ai_note": "Sovrappeso non estremo." },
+    "FearGreed": { "raw": "65/100",        "tone": "yellow", "ai_note": "Greed moderato." }
   },
 
-  "sintesi_ai": {
-    "points": [
-      { "title": "Sentiment headline", "raw": "Bias favorevole senza euforia.", "tone": "green", "ai_note": "Allineamento news/consenso/ETF." },
-      { "title": "Rischi in osservazione", "raw": "PMI/ISM entro 4g.", "tone": "yellow", "ai_note": "Impatto potenziale medio." }
-    ],
-    "summary": {
-      "raw": "Contesto costruttivo a 3–10 giorni con supporto da flussi ETF e news. Volatilità contenuta.",
-      "tone": "green",
-      "ai_note": "Materiale informativo; nessuna istruzione operativa."
-    }
+  "sentiment_flows": {
+    "SentimentComposite": { "raw": "Neutrale-positivo", "tone": "green",  "ai_note": "Convergenza news/analyst/tecnico." },
+    "ETF_FlowTone":       { "raw": "Positivo (1M)",     "tone": "green",  "ai_note": "Flussi recenti favorevoli." }
   },
 
   "audit_quality": {
     "AuditPathID": "SWG25F2_META_20251029",
-    "SourcesTier1": ["Finviz Premium", "Barchart", "Nasdaq", "Reuters"],
-    "Freshness": "All feeds ≤ T-1 (options T-0)",
-    "ModuleStatus": "ACTIVE",
     "QualityMetrics": {
-      "FreshnessScore":   { "raw": "A", "tone": "green",  "ai_note": "Pannelli aggiornati a ieri sera." },
-      "ConfidenceFinal":  { "raw": "0.85", "tone": "green", "ai_note": "MacroGate=PASS (base 0.90, nessuna penalità critica)." },
-      "DataIntegrity":    { "raw": "OK", "tone": "green", "ai_note": "Coerenza campi core ≥ 90%." },
-      "FeedSync":         { "raw": "In-sync", "tone": "green", "ai_note": "Nessun lag rilevato." }
+      "Coverage":        { "raw": "≥90%",   "tone": "green",  "ai_note": "Campi critici coperti." },
+      "ConfidenceFinal": { "raw": "0.85",   "tone": "green",  "ai_note": "Base 0.90, nessuna penalità MacroGate." },
+      "DataIntegrity":   { "raw": "OK",     "tone": "green",  "ai_note": "Consistenze interne superate." },
+      "FeedSync":        { "raw": "In-sync","tone": "green",  "ai_note": "Aggiornamento T-1/T-0." }
     }
   },
 
   "mifid": {
-    "disclaimer": "Materiale informativo e didattico. Non costituisce consulenza in materia di investimenti né raccomandazione personalizzata. Verifica sempre fonti e coerenza rispetto al tuo profilo di rischio."
+    "disclaimer": "Materiale informativo e didattico. Non costituisce consulenza in materia di investimenti né raccomandazione personalizzata."
   }
 }
