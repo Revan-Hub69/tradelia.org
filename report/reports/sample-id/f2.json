@@ -1,77 +1,84 @@
 {
   "meta": {
-    "timestampET": "2025-10-30T18:00:00Z",
-    "module": "F2 · Sentiment & Flussi",
-    "moduleVersion": "v1.0",
-    "moduleStatus": "ACTIVE",
+    "module": "F2 · Macro & Sentiment Overlay",
+    "ticker": "AAPL",
+    "version": "v7.2",
+    "timestamp_utc": "2025-10-29T21:00:00Z",
+    "audit_path_id": "SWG25_F2_20251029",
+    "state": "ACTIVE",
     "freshness": "≤ T-1",
-    "hero_intro": "Analisi del sentiment aggregato e dei flussi globali.",
-    "hero_disclaimer": "Contenuti informativi/formativi. Nessuna raccomandazione operativa."
+    "hero_intro": "MacroGate PASS con contesto neutro-positivo; nessun evento sistemico imminente.",
+    "hero_disclaimer": "Solo finalità educativa e informativa. Fonti: Finviz, Barchart, Nasdaq, SEC Form 4 (dati user-provided)."
   },
-  "sentiment_flows": {
-    "SentimentComposite": { "raw": "+0.42", "tone": "green", "ai_note": "Il sentiment aggregato risulta positivo, sostenuto da miglioramento breadth e vol in calo." },
-    "OptionsTone": { "raw": "neutrale", "tone": "yellow", "ai_note": "PCR in normalizzazione, IV rank medio, nessun eccesso di copertura." },
-    "ETF_FlowTone": { "raw": "+2.1σ", "tone": "green", "ai_note": "Inflows consistenti su ETF azionari, in particolare large cap USA." },
-    "RiskWindow_F2": { "raw": "Fed meeting, payrolls, CPI core", "tone": "yellow", "ai_note": "Finestra di rischio macro a 5 giorni con eventi ad alta sensibilità tasso." },
-    "Bridge_F1": { "raw": "Regime neutro‑positivo, volatilità in contrazione", "tone": "green", "ai_note": "Allineamento con F1B su regime stabile e risk‑on controllato." }
+
+  "MacroGate": "PASS",
+  "MacroNotes": [
+    "Fed speakers neutri, curva 2s10s stabile >0%",
+    "CPI e PCE in linea con attese, nessun rischio imminente."
+  ],
+
+  "SCI_tkr": {
+    "TECH_SIGNAL": { "raw": "+1", "tone": "green", "ai_note": "Barchart Strong Buy; prezzo > SMA50/200." },
+    "CONSENSUS_LEVEL": { "raw": "Buy", "tone": "green" },
+    "NEWS_TONE": { "raw": "Positive", "tone": "green" },
+    "CONSISTENCY": { "raw": "Stable", "tone": "green" },
+    "ANALYST_DELTA": { "raw": "Up", "tone": "green" },
+    "INST_FLOW": { "raw": "Inflow", "tone": "green" },
+    "INSIDER_FLOW": { "raw": "Neutral", "tone": "yellow" },
+    "IV_STATE": { "raw": "Low (p25)", "tone": "green" },
+    "PUTCALL_BIAS": { "raw": "0.85", "tone": "green" },
+    "SI_PRESSURE": { "raw": "Light", "tone": "green" },
+    "SI_TREND": { "raw": "Down", "tone": "green" },
+    "DTC_BUCKET": { "raw": "Low", "tone": "green" }
   },
-  "etf_flows": {
-    "Breadth_1M": { "raw": "68% ETF sopra SMA50", "tone": "green", "ai_note": "Ampiezza positiva, miglioramento progressivo vs mese precedente." },
-    "Flows_1D": { "tone": "neutral", "columns": ["ETF","Flow $M","z","Note"], "rows": [["SPY","+720","1.8","Inflow forte"],["QQQ","+430","1.3","Tech leadership"],["IWM","‑120","‑0.6","Small cap outflow"]]},
-    "Flows_1W": { "tone": "green", "columns": ["ETF","Flow $M","z","Note"], "rows": [["SPY","+2,800","2.1","Accumulo istituzionale"],["HYG","+550","1.1","Risk appetite su credito"]]},
-    "Flows_1M": { "tone": "green", "columns": ["ETF","Flow $M","z","Note"], "rows": [["SPY","+8,500","2.3","Riallocazioni azionarie"],["TLT","‑1,200","‑1.4","Outflow bond lungo"]]},
-    "ByThemeSector": { "tone": "yellow", "columns": ["Tema/Sector","Net Flow $M","Breadth %","Note"], "rows": [["Tech","+1,200","74%","Leader"],["Energy","‑350","48%","In calo"],["Finanziari","+410","61%","Neutro"]]},
-    "ai_note": "Flussi coerenti con contesto risk‑on controllato. ETF growth dominanti."
-  },
-  "options_data": {
-    "PCR_Total": { "raw": "0.84", "tone": "green", "ai_note": "PCR sotto media storica, bias moderatamente bullish." },
-    "PCR_Equity": { "raw": "0.72", "tone": "green", "ai_note": "Riduzione coperture su singoli titoli." },
-    "Skew_25d": { "raw": "‑0.9σ", "tone": "green", "ai_note": "Skew in compressione, ridotta domanda di put out‑of‑the‑money." },
-    "IV_Rank": { "raw": "35%", "tone": "neutral", "ai_note": "Volatilità implicita su livelli medi." },
-    "VIX_Term": { "raw": "Contango 3.2pt", "tone": "green", "ai_note": "Struttura contango stabile, conferma sentiment positivo." },
-    "VVIX": { "raw": "‑4.1% WoW", "tone": "green", "ai_note": "Volatilità della volatilità in calo." },
-    "ZeroDTE": { "raw": "18% volumi", "tone": "yellow", "ai_note": "Quota 0DTE elevata ma sotto picchi estremi di agosto." },
-    "ai_note": "Tone complessivo costruttivo: skew e IV convergono verso risk‑on moderato."
-  },
-  "positioning": {
-    "CFTC_EquityIdx": { "raw": "+18k contratti net long", "tone": "green", "ai_note": "Crescita net long S&P, conferma del momentum." },
-    "DealersGamma": { "raw": "+1.8σ", "tone": "green", "ai_note": "Dealer gamma positiva → stabilizzazione intraday." },
-    "CTA_Tilt": { "raw": "+0.6β", "tone": "green", "ai_note": "CTA in risk‑on progressivo su equity e commodity." },
-    "HF_Beta": { "raw": "0.42", "tone": "yellow", "ai_note": "Hedge fund ancora prudenti ma in accumulo." },
-    "ai_note": "Exposure crescente ma non eccessiva. Nessun segnale di crowdedness."
-  },
-  "surveys": {
-    "AAII": { "raw": "+18 Bulls‑Bears", "tone": "green", "ai_note": "Migliora il sentiment retail USA." },
-    "NAAIM": { "raw": "73", "tone": "yellow", "ai_note": "Gestori pro ancora sotto pieno rischio ma in crescita." },
-    "FearGreed": { "raw": "67/100", "tone": "green", "ai_note": "Zona greed ma sotto soglia euforia." },
-    "ai_note": "Survey coerenti con sentiment costruttivo ma non estremo."
-  },
-  "street_view": {
-    "T1_MacroNews": "Revisione GDPNow +2.7%, PMI >50, inflazione core in raffreddamento.",
-    "T1_SellSideNotes": "Upgrade utili Q4 da JP Morgan e Citi su large cap growth.",
-    "T1_ConsensusTone": "Leggermente positivo su guidance trimestrali.",
-    "ai_note": "Flusso notizie favorevole ma vigilanza su Fed speakers."
-  },
-  "sintesi_ai": {
-    "points": [
-      { "title": "Tone prevalente", "raw": "Risk‑on controllato con supporto da flussi ETF e opzioni.", "tone": "green" },
-      { "title": "Short term", "raw": "Possibili prese di profitto a 5–7 giorni su ipercomprato tecnico.", "tone": "yellow" }
-    ],
-    "summary": "Contesto positivo ma sensibile ai dati macro imminenti (CPI/Fed)."
-  },
-  "audit_quality": {
-    "AuditPathID": "F2_2025W44",
-    "SourcesTier1": ["Bloomberg","Reuters","CFTC","CME","FRED"],
-    "Freshness": "≤T‑1",
-    "ModuleStatus": "OK",
-    "QualityMetrics": {
-      "FreshnessScore": { "raw": "0.96", "tone": "green", "ai_note": "Aggiornato al giorno precedente." },
-      "ConfidenceFinal": { "raw": "0.82", "tone": "green", "ai_note": "Dati consistenti cross‑asset." },
-      "DataIntegrity": { "raw": "OK", "tone": "green", "ai_note": "Tutti i feed sincronizzati." },
-      "FeedSync": { "raw": "99.1%", "tone": "green", "ai_note": "Minimi ritardi su serie ETF minori." }
+
+  "DPI_context": {
+    "PRICE_TREND": { "raw": "up", "tone": "green" },
+    "VOLUME_STATE": { "raw": "normal", "tone": "neutral" },
+    "MOMENTUM_LABEL": { "raw": "bullish_bias", "tone": "green" },
+    "RANGE_LOC": { "raw": "upper", "tone": "green" },
+    "MARGIN_HEALTH": { "raw": "solid", "tone": "green" },
+    "PROFITABILITY_CLASS": { "raw": "High", "tone": "green" },
+    "EARNINGS_TREND": { "raw": "positive", "tone": "green" },
+    "BALANCE_SHEET_STRENGTH": { "raw": "Strong", "tone": "green" },
+    "CASHFLOW_MOMENTUM": { "raw": "Improving", "tone": "green" },
+    "VALUATION_SNAPSHOT": {
+      "PE": "27.4x",
+      "ForwardPE": "25.1x",
+      "PEG": "1.7",
+      "EV/EBITDA": "20.3"
+    },
+    "MARGINS_SNAPSHOT": {
+      "GrossMargin": "44%",
+      "OperatingMargin": "28%",
+      "NetMargin": "25%"
     }
   },
+
+  "ICR_tkr": {
+    "PEER_LIST": ["MSFT", "GOOGL", "NVDA", "AMZN"],
+    "ETF_LIST": ["XLK", "QQQ", "VGT"],
+    "SECTOR_BREADTH": { "raw": "0.78", "tone": "green" },
+    "ETF_FLOW_BIAS": { "raw": "Inflow 1.2B 1M", "tone": "green" }
+  },
+
+  "metadata": {
+    "EVENT_LAST_EARNINGS": "2025-10-24",
+    "POST_EARNINGS_WINDOW": "T+5",
+    "TARGET_SPREAD": "12%",
+    "UPSIDE_PCT": "8.4%",
+    "HEADLINE_DENSITY": "High",
+    "NEWS_DOMINANT_TOPIC": "AI devices, strong iPhone cycle"
+  },
+
+  "Confidence": 0.92,
+  "Quality": {
+    "Coverage": { "raw": "≥80%", "tone": "green" },
+    "CriticalFields": { "raw": "OK", "tone": "green" },
+    "FeedSync": { "raw": "T-1 aligned", "tone": "green" }
+  },
+
   "mifid": {
-    "disclaimer": "Questo modulo ha finalità informativa e didattica. Non costituisce raccomandazione operativa ai sensi MiFID II."
+    "disclaimer": "Contenuto educativo e informativo. Non costituisce consulenza personalizzata o raccomandazione ai sensi MiFID II."
   }
 }
