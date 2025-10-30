@@ -9,6 +9,8 @@
 // - Nessun output JSON hard-coded nel codice. Tutto arriva da rawData.
 // - Target: utenza retail base/intermedio/avanzato ⇒ linguaggio semplice, sezioni chiare.
 // - Nessun duplicato del bridge F1B (StrategyMode/Regime ecc. già in F1B).
+// - Redesign Newsflow: card compatte mobile-first (tone, titolo, estratto, fonte/orario, commento AI).
+// - Nuova sezione: Metriche interne (solo metriche F2 — niente opzioni/derivati F3).
 //
 // Export
 //   renderCard(rawData, ctx?) -> string HTML
@@ -22,14 +24,11 @@
 export function renderCard(rawData, ctx = {}){
   const d = normalizeDataF2Public(rawData);
 
-  // HERO KPI (semplice, leggibile)
-  // 1) MacroGate come semaforo principale
-  // 2) Sentiment composito (se presente) – facoltativo ma utile per retail
-  // 3) ETF Flow Tone – snelletta
+  // KPI HERO (leggibili)
   const kpis = [
     { key:"MacroGate", label:"MacroGate", desc:"Esito controlli evento (48–72h)", metric: d.step1?.MacroGate },
-    { key:"SentimentComposite", label:"Sentiment", desc:"Sintesi multi‑fonte (es. news/analyst/tecnico)", metric: d.sentiment_flows?.SentimentComposite },
-    { key:"ETF_FlowTone", label:"ETF Flussi", desc:"Bias flussi & breadth (1W–1M)", metric: d.sentiment_flows?.ETF_FlowTone }
+    { key:"SentimentComposite", label:"Sentiment", desc:"Sintesi multi‑fonte", metric: d.sentiment_flows?.SentimentComposite },
+    { key:"ETF_FlowTone", label:"ETF Flussi", desc:"Bias flussi & breadth", metric: d.sentiment_flows?.ETF_FlowTone }
   ];
 
   const { toneLabel, toneColor } = toneFromMacroGate(d.step1?.MacroGate);
@@ -115,7 +114,7 @@ export function bindCard(node, rawData, ctx = {}){
 }
 
 /* -----------------------------------------------------------------------------
-// DRAWER (struttura leggibile per retail; sezioni autonome ETF/News; Audit e MiFID separati)
+// DRAWER (con Newsflow redesign + Metriche interne)
 // -----------------------------------------------------------------------------*/
 function openF2DrawerPublic(d){
   if(!window.__TradeliaUI?.openPanel) return;
@@ -147,10 +146,10 @@ function openF2DrawerPublic(d){
 function isMobileViewport(){ return window.matchMedia('(max-width: 767px)').matches; }
 
 /* -----------------------------------------------------------------------------
-// SEZIONI ANALITICHE (orientate alla leggibilità)
+// SEZIONI
 // -----------------------------------------------------------------------------*/
 function buildF2SectionsPublic(d){
-  // 1) Rischi macro/societari (WebProbe)
+  // 1) Controlli rischio
   const macroHTML = `
     <section class="tl-panel-section" data-f2-section="macro" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Controlli rischio (ultime 72h)</div></header>
@@ -159,7 +158,7 @@ function buildF2SectionsPublic(d){
       <div class="text-[11px] text-[color:var(--muted)] leading-[1.4]">Se FAIL: la pipeline F2 non prosegue (stato HOLD). In caso di REVIEW: si procede con confidenza ridotta.</div>
     </section>`;
 
-  // 2) Sentiment sintetico (SCI/DPI digest semplificato)
+  // 2) Sentiment sintetico (SCI/DPI)
   const sci = d.sci_dpi || {};
   const sentimentHTML = `
     <section class="tl-panel-section" data-f2-section="sentiment" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -170,10 +169,6 @@ function buildF2SectionsPublic(d){
         ${metricBlockF2('CONSENSUS_LEVEL','Analyst · Consenso','Media valutazioni', sci?.CONSENSUS_LEVEL)}
         ${metricBlockF2('CONSISTENCY','Analyst · Stabilità','Trend rating 3m', sci?.CONSISTENCY)}
       </div>
-      <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4] mt-2">
-        ${metricBlockF2('IV_STATE','Volatilità implicita','Percentile 52w', sci?.IV_STATE)}
-        ${metricBlockF2('PUTCALL_BIAS','Flusso opzioni','Put/Call bias', sci?.PUTCALL_BIAS)}
-      </div>
       <div class="grid md:grid-cols-3 gap-3 text-[12px] leading-[1.4] mt-2">
         ${metricBlockF2('VOLUME_STATE','Volumi','Rel. volume', d.dpi?.VOLUME_STATE)}
         ${metricBlockF2('MOMENTUM_LABEL','Momentum','Bias RSI/posizione range', d.dpi?.MOMENTUM_LABEL)}
@@ -181,30 +176,43 @@ function buildF2SectionsPublic(d){
       </div>
     </section>`;
 
-  // 3) ETF · esposizione & flussi (SEZIONE DEDICATA)
+  // 3) Metriche interne (solo F2 — niente opzioni F3)
+  // Accetta rawData.metrics_internal
+  const mi = d.metrics_internal || {};
+  const metricsGrid = metricsInternalGrid(mi);
+  const internalHTML = `
+    <section class="tl-panel-section" data-f2-section="metrics" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Metriche interne</div></header>
+      ${metricsGrid}
+      ${listBlockCardF2('Note metriche', mi?.ai_note)}
+    </section>`;
+
+  // 4) ETF · esposizione & flussi (Top 10 come card compatte su mobile)
   const etf = d.etf_exposure || {};
-  const etfTable = tableCardF2('ETF principali (top 10 per \u0025 holdings)', etf?.Top10);
+  const etfCards = etfCardListF2(etf?.Top10);
   const etfHTML = `
     <section class="tl-panel-section" data-f2-section="etf" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">ETF · Esposizione & Flussi</div></header>
-      ${metricBlockF2('ETF_FLOW_BIAS','Bias flussi (1M)','Media/ponderata 1M %Chg', etf?.ETF_FLOW_BIAS)}
-      ${metricBlockF2('SECTOR_BREADTH','Breadth settore/peers','Quota titoli in positivo', etf?.SECTOR_BREADTH)}
-      ${metricBlockF2('TOP_HOLDING_ETF','Top holding ETF','Maggiore \u0025 holdings', etf?.TOP_HOLDING_ETF)}
-      ${etfTable}
+      <div class="grid md:grid-cols-3 gap-3 text-[12px] leading-[1.4]">
+        ${metricBlockF2('ETF_FLOW_BIAS','Bias flussi (1M)','Media/ponderata 1M %Chg', etf?.ETF_FLOW_BIAS)}
+        ${metricBlockF2('SECTOR_BREADTH','Breadth settore/peers','Quota titoli in positivo', etf?.SECTOR_BREADTH)}
+        ${metricBlockF2('TOP_HOLDING_ETF','Top holding ETF','Maggiore % holdings', etf?.TOP_HOLDING_ETF)}
+      </div>
+      ${etfCards}
       ${listBlockCardF2('Sintesi ETF (massimo 10)', etf?.ai_note)}
     </section>`;
 
-  // 4) Newsflow (SEZIONE DEDICATA)
+  // 5) Newsflow (RE-DESIGN: card compatte, max 10, mobile first)
   const news = d.newsflow || {};
+  const newsCards = newsCardListF2(news?.Top10, news?.Summary);
   const newsHTML = `
     <section class="tl-panel-section" data-f2-section="news" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Newsflow · ultime 24–48h</div></header>
-      ${headlineBlockCardF2('Sintesi (top 10 headlines)', news?.Summary)}
-      ${tableCardF2('Top 10 headlines', news?.Top10)}
-      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4]">Le etichette sono descrittive (positive/negative/neutral) per un pubblico retail.</div>
+      ${newsCards}
+      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-2">Le etichette sono descrittive (positive/negative/neutral). Card compatte per massima leggibilità su mobile.</div>
     </section>`;
 
-  // 5) Positioning & Short/Ownership (digest chiaro)
+  // 6) Positioning & Short/Ownership
   const pos = d.positioning || {};
   const positioningHTML = `
     <section class="tl-panel-section" data-f2-section="positioning" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -219,7 +227,7 @@ function buildF2SectionsPublic(d){
       ${listBlockCardF2('Osservazioni', pos?.ai_note)}
     </section>`;
 
-  // 6) Survey & Sentiment retail/pro
+  // 7) Survey
   const surv = d.surveys || {};
   const surveysHTML = `
     <section class="tl-panel-section" data-f2-section="surveys" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -232,7 +240,7 @@ function buildF2SectionsPublic(d){
       ${listBlockCardF2('Note survey', surv?.ai_note)}
     </section>`;
 
-  // 7) Audit (SEZIONE SEPARATA)
+  // 8) Audit
   const audit = d.audit_quality || {};
   const auditHTML = `
     <section class="tl-panel-section" data-f2-section="audit" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -246,14 +254,14 @@ function buildF2SectionsPublic(d){
       ${headlineBlockCardF2('AuditPath', audit?.AuditPathID)}
     </section>`;
 
-  // 8) MiFID (SEZIONE SEPARATA)
+  // 9) MiFID
   const mifidHTML = `
     <section class="tl-panel-section" data-f2-section="mifid" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Nota regolamentare</div></header>
       ${headlineBlockCardF2('Informativa', d.mifid?.disclaimer)}
     </section>`;
 
-  return { macroHTML, sentimentHTML, etfHTML, newsHTML, positioningHTML, surveysHTML, auditHTML, mifidHTML };
+  return { macroHTML, sentimentHTML, internalHTML, etfHTML, newsHTML, positioningHTML, surveysHTML, auditHTML, mifidHTML };
 }
 
 /* -----------------------------------------------------------------------------
@@ -264,6 +272,7 @@ function renderF2DesktopShell(sections){
     <div class="f1b-panel-desktop" style="display:flex;flex-direction:row;gap:1rem;height:66vh;">
       <aside class="f1b-panel-menu" style="min-width:180px;max-width:200px;border-right:1px solid var(--br-card);height:100%;overflow:auto;">
         ${drawerBtnF2('sentiment','Sentiment')}
+        ${drawerBtnF2('metrics','Metriche interne')}
         ${drawerBtnF2('etf','ETF')}
         ${drawerBtnF2('news','Newsflow')}
         ${drawerBtnF2('positioning','Positioning')}
@@ -274,6 +283,7 @@ function renderF2DesktopShell(sections){
       </aside>
       <main id="f2-scroll-desktop" class="f1b-panel-content flex-1 min-w-0" style="height:100%;overflow:auto;-webkit-overflow-scrolling:touch;padding:1rem;">
         <div data-f2-view="sentiment">${sections.sentimentHTML}</div>
+        <div data-f2-view="metrics" hidden>${sections.internalHTML}</div>
         <div data-f2-view="etf" hidden>${sections.etfHTML}</div>
         <div data-f2-view="news" hidden>${sections.newsHTML}</div>
         <div data-f2-view="positioning" hidden>${sections.positioningHTML}</div>
@@ -288,6 +298,7 @@ function renderF2DesktopShell(sections){
 function renderF2MobileShell(sections){
   const tabs = [
     ['sentiment','Sentiment'],
+    ['metrics','Metriche'],
     ['etf','ETF'],
     ['news','News'],
     ['positioning','Positioning'],
@@ -304,6 +315,7 @@ function renderF2MobileShell(sections){
       </div>
       <main id="f2-scroll-mobile" class="f1b-panel-content-mobile flex-1 min-w-0" style="overflow:auto;-webkit-overflow-scrolling:touch;padding:1rem;background:var(--surface-page);">
         <div data-f2-view="sentiment">${sections.sentimentHTML}</div>
+        <div data-f2-view="metrics" hidden>${sections.internalHTML}</div>
         <div data-f2-view="etf" hidden>${sections.etfHTML}</div>
         <div data-f2-view="news" hidden>${sections.newsHTML}</div>
         <div data-f2-view="positioning" hidden>${sections.positioningHTML}</div>
@@ -393,23 +405,115 @@ function metricBlockF2(metricKey, title, desc, metricObj){
   return f2Card({ tone: metricObj?.tone, title, bodyHtml, noteHtml: '' });
 }
 
-function tableCardF2(title, tbl){
-  // tbl: { tone, columns:[...], rows:[[...]], ai_note? }
-  const tone = tbl?.tone || 'neutral';
-  const cols = Array.isArray(tbl?.columns) ? tbl.columns : [];
-  const rows = Array.isArray(tbl?.rows) ? tbl.rows : [];
-  const head = cols.map(c=>`<th class="text-left px-2 py-1 text-[11px] uppercase tracking-wide text-[color:var(--muted)]">${escapeHtml(String(c))}</th>`).join('');
-  const body = rows.map(r=>`<tr>${r.map((cell,i)=>`<td class="px-2 py-1 text-[12px] ${i>0?'font-mono':''}">${escapeHtml(String(cell))}</td>`).join('')}</tr>`).join('');
-  const tableHtml = `
-    <div class="overflow-auto" data-scrollable>
-      <table class="min-w-full border-separate" style="border-spacing:0;">
-        <thead><tr>${head}</tr></thead>
-        <tbody>${body || `<tr><td class='px-2 py-1 text-[12px] text-[color:var(--muted)]'>N/A</td></tr>`}</tbody>
-      </table>
+// --- Newsflow: card list compatto (max 10) ---
+function newsCardListF2(top10, summary){
+  const items = Array.isArray(top10?.rows) ? top10.rows : [];
+  const tone = top10?.tone || 'neutral';
+  const cols = Array.isArray(top10?.columns) ? top10.columns : ['Time','Publisher','Headline','Tone','Comment'];
+  // Atteso: [timeISO, publisher, title, tone, comment?]
+  const cards = items.slice(0,10).map(r=>{
+    const time = escapeHtml(String(r[0] ?? ''));
+    const source = escapeHtml(String(r[1] ?? ''));
+    const titleFull = String(r[2] ?? '');
+    const toneRow = String(r[3] ?? 'neutral');
+    const comment = String(r[4] ?? '');
+    const title = escapeHtml(truncate(titleFull, 80));
+    const snippet = escapeHtml(truncate(comment || titleFull, 200));
+    const { dotColor, textColor, bgSoft, brColor } = toneColorsCard(toneRow);
+    return `
+      <article class="newsflow-card" style="border:1px solid ${brColor};border-radius:12px;background:${bgSoft};box-shadow:var(--shadow-card);padding:.6rem .7rem;display:flex;flex-direction:column;gap:.25rem;">
+        <div class="flex items-start justify-between gap-2">
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="inline-block w-[8px] h-[8px] rounded-full" style="background:${dotColor};flex-shrink:0;"></span>
+            <h4 class="text-[12.5px] font-semibold leading-[1.35] text-[color:var(--ink)] truncate" title="${escapeAttr(titleFull)}">${title}</h4>
+          </div>
+          <span class="text-[10px] font-mono text-[color:var(--muted)]" title="${escapeAttr(time)}">${escapeHtml(formatTimeTiny(time))}</span>
+        </div>
+        <p class="text-[12px] leading-[1.45] text-[color:${textColor}]">${snippet}</p>
+        <div class="text-[11px] text-[color:var(--muted)] flex items-center justify-between">
+          <span>${source}</span>
+          <span class="uppercase tracking-wide text-[10px]">${escapeHtml(toneRow)}</span>
+        </div>
+      </article>`;
+  }).join('');
+
+  const summaryCard = summary ? f2Card({ tone: summary.tone || 'neutral', title:'Sintesi (top 10)', bodyHtml:`<div class='whitespace-pre-line'>${escapeHtml(summary.raw || '')}</div>` }) : '';
+
+  const grid = `
+    <div class="grid gap-2" style="grid-template-columns:repeat(1,minmax(0,1fr));">
+      ${cards || `<div class='text-[12px] text-[color:var(--muted)]'>Nessuna headline disponibile.</div>`}
     </div>`;
-  return f2Card({ tone, title, bodyHtml: tableHtml, noteHtml: tbl?.ai_note ? escapeHtml(tbl.ai_note) : '' });
+
+  // su schermi larghi, 2 colonne
+  const responsiveWrap = `
+    <div class="hidden md:block">
+      <div class="grid gap-2 md:grid-cols-2">${cards}</div>
+    </div>
+    <div class="md:hidden">
+      ${grid}
+    </div>`;
+
+  return summaryCard + responsiveWrap;
 }
 
+// --- ETF: card list compatto (Top10) ---
+function etfCardListF2(top10){
+  const cols = Array.isArray(top10?.columns) ? top10.columns : ['ETF','%Hold','1W %','1M %','Leverage'];
+  const rows = Array.isArray(top10?.rows) ? top10.rows.slice(0,10) : [];
+  if (!rows.length) return f2Card({ tone:'neutral', title:'ETF principali (top 10)', bodyHtml:`<div class='text-[12px] text-[color:var(--muted)]'>N/A</div>` });
+  const cards = rows.map(r=>{
+    const [sym, hold, w1, m1, lev] = [r[0], r[1], r[2], r[3], r[4]];
+    const levTag = lev && /inverse/i.test(String(lev)) ? 'Inverse' : (lev || 'Long');
+    const levTone = /inverse/i.test(String(lev)) ? 'red' : 'green';
+    const { dotColor, brColor } = toneColorsCard(levTone);
+    return `
+      <div class="etf-card" style="border:1px solid ${brColor};border-radius:12px;background:var(--surface-card-alt);box-shadow:var(--shadow-card);padding:.55rem .7rem;display:flex;flex-direction:column;gap:.2rem;">
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="inline-block w-[8px] h-[8px] rounded-full" style="background:${dotColor};"></span>
+            <div class="text-[12.5px] font-semibold">${escapeHtml(String(sym))}</div>
+          </div>
+          <span class="text-[10px] uppercase tracking-wide text-[color:var(--muted)]">${escapeHtml(String(levTag))}</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-[12px]">
+          <div><div class="text-[10px] text-[color:var(--muted)]">%Hold</div><div class="font-mono">${escapeHtml(String(hold))}</div></div>
+          <div><div class="text-[10px] text-[color:var(--muted)]">1W %</div><div class="font-mono">${escapeHtml(String(w1))}</div></div>
+          <div><div class="text-[10px] text-[color:var(--muted)]">1M %</div><div class="font-mono">${escapeHtml(String(m1))}</div></div>
+        </div>
+      </div>`;
+  }).join('');
+
+  return f2Card({ tone: top10?.tone || 'neutral', title:'ETF principali (top 10 per % holdings)', bodyHtml:`<div class='grid gap-2 md:grid-cols-2'>${cards}</div>` });
+}
+
+// --- Metriche interne grid ---
+function metricsInternalGrid(mi={}){
+  // Accettiamo un oggetto key->{ raw, tone, ai_note? };
+  // Esempi tipici F2 (no opzioni F3): HEADLINE_DENSITY, NEWS_DOMINANT_TOPIC, ANALYST_DELTA, CONSENSUS_LEVEL,
+  // TECH_SIGNAL, PRICE_TREND, SECTOR_BREADTH_VAL, ETF_AVG_1M_RET, PEERS_COUNT, ETFS_COUNT, POST_EARNINGS_WINDOW,
+  // MISSING_CRITICAL_COUNT, CONFIDENCE, COVERAGE_CRITICAL.
+  const keys = mi?.itemsOrder || [
+    'HEADLINE_DENSITY','NEWS_DOMINANT_TOPIC','ANALYST_DELTA','CONSENSUS_LEVEL','TECH_SIGNAL','PRICE_TREND',
+    'SECTOR_BREADTH_VAL','ETF_AVG_1M_RET','PEERS_COUNT','ETFS_COUNT','POST_EARNINGS_WINDOW','MISSING_CRITICAL_COUNT',
+    'CONFIDENCE','COVERAGE_CRITICAL'
+  ];
+  const chips = keys.map(k=>{
+    const q = mi?.[k];
+    if (!q) return '';
+    const { textColor } = toneColorsF2(q.tone);
+    return `
+      <div class="min-w-[120px]" style="background:var(--surface-card-alt);border:1px solid var(--br-card);border-radius:10px;box-shadow:var(--shadow-card);padding:.55rem .7rem;">
+        <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] mb-1">${escapeHtml(k)}</div>
+        <div class="font-mono font-bold text-[13px]" style="color:${textColor};">${escapeHtml(q.raw ?? '—')}</div>
+        ${ q.ai_note ? `<div class='text-[10px] text-[color:var(--muted)] mt-[2px]'>${escapeHtml(q.ai_note)}</div>` : '' }
+      </div>`;
+  }).join('');
+  return `<div class="grid gap-2 md:grid-cols-3">${chips || `<div class='text-[12px] text-[color:var(--muted)]'>N/A</div>`}</div>`;
+}
+
+/* -----------------------------------------------------------------------------
+// HELPERS
+// -----------------------------------------------------------------------------*/
 function listBlockCardF2(title, body){
   if (!body && body !== 0) return '';
   let tone='neutral', raw='';
@@ -437,16 +541,13 @@ function qualityChipF2(key, q){
   const { textColor } = toneColorsF2(q.tone);
   const bodyHtml = `
     <div class="flex items-start justify-between gap-2 mb-1">
-      <div class="font-mono font-bold text-[13px] leading-[1.4]" style="color:${textColor};">${escapeHtml(q.raw||'—')}</div>
+      <div class="font-mono font-bold text-[13px] leading-[1.4]" style="color:${textColor};">${escapeHtml(q.raw || '—')}</div>
       <button class="info-btn" data-metric="${escapeAttr(key)}" aria-label="Info ${escapeAttr(key)}">?</button>
     </div>
-    <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">${escapeHtml(q.ai_note||'')}</div>`;
-  return f2Card({ tone: q.tone, title: key||'', bodyHtml, noteHtml:'' });
+    <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">${escapeHtml(q.ai_note || '')}</div>`;
+  return f2Card({ tone: q.tone, title: key || '', bodyHtml, noteHtml: '' });
 }
 
-/* -----------------------------------------------------------------------------
-// TONE HELPERS
-// -----------------------------------------------------------------------------*/
 function toneColorsF2(tone){
   switch((tone||'').toLowerCase()){
     case 'green': return { dotColor:'var(--tone-pos-fg)', textColor:'var(--tone-pos-fg)' };
@@ -465,8 +566,34 @@ function toneFromMacroGate(m){
   return { toneLabel, toneColor };
 }
 
+function toneColorsCard(tone){
+  const t = (tone||'').toLowerCase();
+  if (t==='green' || t==='positive') return { dotColor:'var(--tone-pos-fg)', textColor:'var(--ink)', bgSoft:'color-mix(in oklab, var(--tone-pos-fg) 8%, var(--surface-card))', brColor:'color-mix(in oklab, var(--tone-pos-fg) 40%, var(--br-card))' };
+  if (t==='red' || t==='negative') return { dotColor:'var(--tone-neg-fg)', textColor:'var(--ink)', bgSoft:'color-mix(in oklab, var(--tone-neg-fg) 8%, var(--surface-card))', brColor:'color-mix(in oklab, var(--tone-neg-fg) 40%, var(--br-card))' };
+  if (t==='yellow' || t==='neutral') return { dotColor:'var(--tone-warn-fg)', textColor:'var(--ink)', bgSoft:'color-mix(in oklab, var(--tone-warn-fg) 8%, var(--surface-card))', brColor:'color-mix(in oklab, var(--tone-warn-fg) 40%, var(--br-card))' };
+  return { dotColor:'var(--tone-neu-fg)', textColor:'var(--ink)', bgSoft:'var(--surface-card-alt)', brColor:'var(--br-card)' };
+}
+
+function truncate(s, n){
+  const str = String(s || '');
+  return str.length>n ? str.slice(0,n-1)+'…' : str;
+}
+
+function formatTimeTiny(ts){
+  // accetta ISO o testo; restituisce HH:MM (locale) o data corta
+  try{
+    const d = new Date(ts);
+    if (!isNaN(d.getTime())){
+      const h = String(d.getHours()).padStart(2,'0');
+      const m = String(d.getMinutes()).padStart(2,'0');
+      return `${h}:${m}`;
+    }
+  } catch(_){ }
+  return String(ts);
+}
+
 /* -----------------------------------------------------------------------------
-// NORMALIZZAZIONE DATI (solo tassonomia; nessun valore di calcolo hard-coded)
+// NORMALIZZAZIONE DATI (tassonomia; niente valori hard-coded)
 // -----------------------------------------------------------------------------*/
 function normalizeDataF2Public(src={}){
   return {
@@ -480,18 +607,21 @@ function normalizeDataF2Public(src={}){
       hero_disclaimer: src?.meta?.hero_disclaimer ?? 'Contenuto informativo/formativo. Nessuna istruzione operativa.'
     },
 
-    // STEP 1: WebProbe (macro/societario)
+    // STEP 1: WebProbe
     step1: src?.step1_f2_webprobe || { MacroGate:{ raw:'—', tone:'neutral', ai_note:'' }, MacroNotes:[], ai_note:'' },
 
-    // SCI/DPI digest per retail
+    // SCI/DPI digest
     sci_dpi: src?.SCI_tkr || {},
     dpi: src?.DPI_context || {},
+
+    // Metriche interne (solo F2)
+    metrics_internal: src?.metrics_internal || {},
 
     // ETF exposure (Top10 + sintesi)
     etf_exposure: src?.etf_exposure || { Top10:{ tone:'neutral', columns:['ETF','%Hold','1W %','1M %','Leverage'], rows:[] }, ETF_FLOW_BIAS:{ raw:'—', tone:'neutral' }, SECTOR_BREADTH:{ raw:'—', tone:'neutral' }, TOP_HOLDING_ETF:{ raw:'—', tone:'neutral' }, ai_note:'' },
 
     // Newsflow: top 10 + sintesi
-    newsflow: src?.news_stream || { Summary:{ raw:'', tone:'neutral' }, Top10:{ tone:'neutral', columns:['Time','Publisher','Headline','Tone'], rows:[] } },
+    newsflow: src?.news_stream || { Summary:{ raw:'', tone:'neutral' }, Top10:{ tone:'neutral', columns:['Time','Publisher','Headline','Tone','Comment'], rows:[] } },
 
     // Positioning/Short/Ownership
     positioning: src?.positioning || { SI_LEVEL:{ raw:'—', tone:'neutral' }, DTC_BUCKET:{ raw:'—', tone:'neutral' }, SI_TREND:{ raw:'—', tone:'neutral' }, INST_FLOW:{ raw:'—', tone:'neutral' }, INSIDER_FLOW:{ raw:'—', tone:'neutral' }, ai_note:'' },
@@ -499,10 +629,10 @@ function normalizeDataF2Public(src={}){
     // Surveys
     surveys: src?.surveys || { AAII:{ raw:'—', tone:'neutral' }, NAAIM:{ raw:'—', tone:'neutral' }, FearGreed:{ raw:'—', tone:'neutral' }, ai_note:'' },
 
-    // Sentiment/Flows headline KPI
+    // Headline KPI
     sentiment_flows: src?.sentiment_flows || { SentimentComposite:{ raw:'—', tone:'neutral' }, ETF_FlowTone:{ raw:'—', tone:'neutral' } },
 
-    // Audit & MiFID separati
+    // Audit & MiFID
     audit_quality: src?.audit_quality || { AuditPathID:'—', QualityMetrics:{} },
     mifid: src?.mifid || { disclaimer:'' }
   };
