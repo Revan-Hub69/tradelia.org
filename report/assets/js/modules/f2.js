@@ -132,14 +132,37 @@ function openF2DrawerPublic(d){
     footerTabs: []
   });
 
+  function initScrollableTabsHint(){
+    const scrollBox = document.querySelector('.f1b-footer-tabs-scroll');
+    const fadeRight = document.querySelector('.f1b-tabs-fade-right');
+    if(!scrollBox || !fadeRight) return;
+    const needsScroll = scrollBox.scrollWidth > scrollBox.clientWidth + 2;
+    if(!needsScroll){
+      fadeRight.style.display = 'none';
+      const fadeLeft = document.querySelector('.f1b-tabs-fade-left');
+      if(fadeLeft) fadeLeft.style.display = 'none';
+      return;
+    }
+    const hintEl = fadeRight.querySelector('.f1b-tabs-scroll-hint');
+    function updateHint(){
+      const atEnd = scrollBox.scrollLeft + scrollBox.clientWidth >= scrollBox.scrollWidth - 4;
+      if(hintEl) hintEl.style.opacity = atEnd ? '0' : '.9';
+      const fadeLeft = document.querySelector('.f1b-tabs-fade-left');
+      if(fadeLeft) fadeLeft.style.opacity = scrollBox.scrollLeft > 2 ? '.6' : '0';
+    }
+    updateHint();
+    scrollBox.addEventListener('scroll', ()=> updateHint(), { passive:true });
+  }
+
   setTimeout(()=>{
     bindF2TabsPublic();
     if (window.__TradeliaUI?.bindMetricInfoButtons){
       try { window.__TradeliaUI.bindMetricInfoButtons(document.getElementById('f2-scroll-desktop')); } catch(e){}
       try { window.__TradeliaUI.bindMetricInfoButtons(document.getElementById('f2-scroll-mobile')); } catch(e){}
     }
-    const first = document.querySelector('[data-f2-tab="sentiment"]');
+    const first = document.querySelector('[data-f2-tab="macro"]');
     if (first?.click) first.click();
+    initScrollableTabsHint();
   },0);
 }
 
@@ -149,13 +172,13 @@ function isMobileViewport(){ return window.matchMedia('(max-width: 767px)').matc
 // SEZIONI
 // -----------------------------------------------------------------------------*/
 function buildF2SectionsPublic(d){
-  // 1) Controlli rischio
+  // 1) Controlli rischio — ampliato
   const macroHTML = `
     <section class="tl-panel-section" data-f2-section="macro" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Controlli rischio (ultime 72h)</div></header>
       ${metricBlockF2('MacroGate','MacroGate','Semaforo eventi macro/societari ravvicinati', d.step1?.MacroGate)}
       ${listBlockCardF2('Note di controllo', d.step1?.MacroNotes)}
-      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4]">Se FAIL: la pipeline F2 non prosegue (stato HOLD). In caso di REVIEW: si procede con confidenza ridotta.</div>
+      ${headlineBlockCardF2('Policy Finestra 3–10g',{tone:'neutral',raw:'PASS: pipeline completa. REVIEW: continuare con confidenza ridotta e monitoraggio eventi T/T+2. FAIL: interruzione F2 (HOLD).'})}
     </section>`;
 
   // 2) Sentiment sintetico (SCI/DPI)
@@ -177,7 +200,6 @@ function buildF2SectionsPublic(d){
     </section>`;
 
   // 3) Metriche interne (solo F2 — niente opzioni F3)
-  // Accetta rawData.metrics_internal
   const mi = d.metrics_internal || {};
   const metricsGrid = metricsInternalGrid(mi);
   const internalHTML = `
@@ -187,7 +209,7 @@ function buildF2SectionsPublic(d){
       ${listBlockCardF2('Note metriche', mi?.ai_note)}
     </section>`;
 
-  // 4) ETF · esposizione & flussi (Top 10 come card compatte su mobile)
+  // 4) ETF · esposizione & flussi (Top 10)
   const etf = d.etf_exposure || {};
   const etfCards = etfCardListF2(etf?.Top10);
   const etfHTML = `
@@ -202,7 +224,7 @@ function buildF2SectionsPublic(d){
       ${listBlockCardF2('Sintesi ETF (massimo 10)', etf?.ai_note)}
     </section>`;
 
-  // 5) Newsflow (RE-DESIGN: card compatte, max 10, mobile first)
+  // 5) Newsflow — card con riassunto ampliato
   const news = d.newsflow || {};
   const newsCards = newsCardListF2(news?.Top10, news?.Summary);
   const newsHTML = `
@@ -240,16 +262,17 @@ function buildF2SectionsPublic(d){
       ${listBlockCardF2('Note survey', surv?.ai_note)}
     </section>`;
 
-  // 8) Audit
+  // 8) Audit — allineato a F1B
   const audit = d.audit_quality || {};
+  const q = audit?.QualityMetrics || {};
   const auditHTML = `
     <section class="tl-panel-section" data-f2-section="audit" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Audit & Qualità dati</div></header>
       <div class="grid gap-3 text-[12px] leading-[1.4] grid-cols-1 md:grid-cols-2">
-        ${qualityChipF2('Coverage', audit?.QualityMetrics?.Coverage)}
-        ${qualityChipF2('ConfidenceFinal', audit?.QualityMetrics?.ConfidenceFinal)}
-        ${qualityChipF2('DataIntegrity', audit?.QualityMetrics?.DataIntegrity)}
-        ${qualityChipF2('FeedSync', audit?.QualityMetrics?.FeedSync)}
+        ${qualityChipF2('FreshnessScore', q?.FreshnessScore || q?.Coverage)}
+        ${qualityChipF2('ConfidenceFinal', q?.ConfidenceFinal)}
+        ${qualityChipF2('DataIntegrity', q?.DataIntegrity)}
+        ${qualityChipF2('FeedSync', q?.FeedSync)}
       </div>
       ${headlineBlockCardF2('AuditPath', audit?.AuditPathID)}
     </section>`;
@@ -261,7 +284,18 @@ function buildF2SectionsPublic(d){
       ${headlineBlockCardF2('Informativa', d.mifid?.disclaimer)}
     </section>`;
 
-  return { macroHTML, sentimentHTML, internalHTML, etfHTML, newsHTML, positioningHTML, surveysHTML, auditHTML, mifidHTML };
+  // 10) Conclusione · Tradelia AI (educational)
+  const s = d.sintesi_ai || {};
+  const points = Array.isArray(s.points) ? s.points.map(p=>conclusionPointBlockF2(p)).join('') : '';
+  const sintesiHTML = `
+    <section class="tl-panel-section" data-f2-section="sintesi" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Conclusione · Tradelia AI (educational)</div></header>
+      ${points}
+      ${headlineBlockCardF2('Lettura di contesto (non istruzioni operative)', s.summary)}
+      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-2">Questa sezione ha esclusivamente finalità informative e formative. Nessuna raccomandazione personale.</div>
+    </section>`;
+
+  return { macroHTML, sentimentHTML, internalHTML, etfHTML, newsHTML, positioningHTML, surveysHTML, auditHTML, mifidHTML, sintesiHTML };
 }
 
 /* -----------------------------------------------------------------------------
@@ -271,57 +305,68 @@ function renderF2DesktopShell(sections){
   return `
     <div class="f1b-panel-desktop" style="display:flex;flex-direction:row;gap:1rem;height:66vh;">
       <aside class="f1b-panel-menu" style="min-width:180px;max-width:200px;border-right:1px solid var(--br-card);height:100%;overflow:auto;">
+        ${drawerBtnF2('macro','Controlli rischio')}
         ${drawerBtnF2('sentiment','Sentiment')}
         ${drawerBtnF2('metrics','Metriche interne')}
         ${drawerBtnF2('etf','ETF')}
         ${drawerBtnF2('news','Newsflow')}
         ${drawerBtnF2('positioning','Positioning')}
         ${drawerBtnF2('surveys','Survey')}
-        ${drawerBtnF2('macro','Controlli rischio')}
         ${drawerBtnF2('audit','Audit')}
+        ${drawerBtnF2('sintesi','Conclusione')}
         ${drawerBtnF2('mifid','MiFID')}
       </aside>
       <main id="f2-scroll-desktop" class="f1b-panel-content flex-1 min-w-0" style="height:100%;overflow:auto;-webkit-overflow-scrolling:touch;padding:1rem;">
-        <div data-f2-view="sentiment">${sections.sentimentHTML}</div>
+        <div data-f2-view="macro">${sections.macroHTML}</div>
+        <div data-f2-view="sentiment" hidden>${sections.sentimentHTML}</div>
         <div data-f2-view="metrics" hidden>${sections.internalHTML}</div>
         <div data-f2-view="etf" hidden>${sections.etfHTML}</div>
         <div data-f2-view="news" hidden>${sections.newsHTML}</div>
         <div data-f2-view="positioning" hidden>${sections.positioningHTML}</div>
         <div data-f2-view="surveys" hidden>${sections.surveysHTML}</div>
-        <div data-f2-view="macro" hidden>${sections.macroHTML}</div>
         <div data-f2-view="audit" hidden>${sections.auditHTML}</div>
+        <div data-f2-view="sintesi" hidden>${sections.sintesiHTML}</div>
         <div data-f2-view="mifid" hidden>${sections.mifidHTML}</div>
       </main>
     </div>`;
 }
 
 function renderF2MobileShell(sections){
-  const tabs = [
+  const pills = [
+    ['macro','Controlli'],
     ['sentiment','Sentiment'],
     ['metrics','Metriche'],
     ['etf','ETF'],
     ['news','News'],
     ['positioning','Positioning'],
     ['surveys','Survey'],
-    ['macro','Controlli'],
     ['audit','Audit'],
+    ['sintesi','Conclusione'],
     ['mifid','MiFID']
-  ];
-  const pills = tabs.map(([k,l])=>mobileTabBtnF2(k,l)).join('');
+  ].map(([k,l])=>mobileTabBtnF2(k,l)).join('');
+  const mobileTabsBar = `
+    <div class="f1b-mobile-tabs-fixed" style="position:relative;flex-shrink:0;width:100%;display:flex;align-items:center;border-bottom:1px solid var(--br-panel-divider);background:var(--surface-panel-head);box-shadow:0 6px 12px rgba(0,0,0,.12);padding:.6rem .75rem;">
+      <div class="f1b-tabs-fade-left" style="position:absolute;left:0;top:0;bottom:0;width:24px;pointer-events:none;background:linear-gradient(to right,var(--surface-panel-head) 0%, rgba(0,0,0,0) 80%);opacity:.6;"></div>
+      <div class="f1b-footer-tabs-scroll" style="flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:.5rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-right:2rem;">
+        ${pills}
+      </div>
+      <div class="f1b-tabs-fade-right" style="position:absolute;right:0;top:0;bottom:0;width:48px;display:flex;align-items:center;justify-content:flex-end;pointer-events:none;background:linear-gradient(to left,var(--surface-panel-head) 0%, rgba(0,0,0,0) 70%);opacity:.6;font-size:10px;line-height:1;font-weight:600;color:var(--muted);text-shadow:0 1px 2px rgba(0,0,0,.4);">
+        <span class="f1b-tabs-scroll-hint" style="display:inline-block;transform:translateY(1px);">⇠ ⇢</span>
+      </div>
+    </div>`;
   return `
     <div class="f1b-drawer-mobile" style="display:flex;flex-direction:column;height:calc(100vh - 110px);max-height:calc(100vh - 110px);min-height:300px;background:var(--surface-panel-head);">
-      <div class="f1b-mobile-tabs-fixed" style="position:relative;flex-shrink:0;width:100%;display:flex;align-items:center;border-bottom:1px solid var(--br-panel-divider);background:var(--surface-panel-head);padding:.6rem .75rem;">
-        <div class="f1b-footer-tabs-scroll" style="flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:.5rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">${pills}</div>
-      </div>
+      ${mobileTabsBar}
       <main id="f2-scroll-mobile" class="f1b-panel-content-mobile flex-1 min-w-0" style="overflow:auto;-webkit-overflow-scrolling:touch;padding:1rem;background:var(--surface-page);">
-        <div data-f2-view="sentiment">${sections.sentimentHTML}</div>
+        <div data-f2-view="macro">${sections.macroHTML}</div>
+        <div data-f2-view="sentiment" hidden>${sections.sentimentHTML}</div>
         <div data-f2-view="metrics" hidden>${sections.internalHTML}</div>
         <div data-f2-view="etf" hidden>${sections.etfHTML}</div>
         <div data-f2-view="news" hidden>${sections.newsHTML}</div>
         <div data-f2-view="positioning" hidden>${sections.positioningHTML}</div>
         <div data-f2-view="surveys" hidden>${sections.surveysHTML}</div>
-        <div data-f2-view="macro" hidden>${sections.macroHTML}</div>
         <div data-f2-view="audit" hidden>${sections.auditHTML}</div>
+        <div data-f2-view="sintesi" hidden>${sections.sintesiHTML}</div>
         <div data-f2-view="mifid" hidden>${sections.mifidHTML}</div>
       </main>
     </div>`;
@@ -408,28 +453,25 @@ function metricBlockF2(metricKey, title, desc, metricObj){
 // --- Newsflow: card list compatto (max 10) ---
 function newsCardListF2(top10, summary){
   const items = Array.isArray(top10?.rows) ? top10.rows : [];
-  const tone = top10?.tone || 'neutral';
-  const cols = Array.isArray(top10?.columns) ? top10.columns : ['Time','Publisher','Headline','Tone','Comment'];
-  // Atteso: [timeISO, publisher, title, tone, comment?]
   const cards = items.slice(0,10).map(r=>{
     const time = escapeHtml(String(r[0] ?? ''));
     const source = escapeHtml(String(r[1] ?? ''));
     const titleFull = String(r[2] ?? '');
     const toneRow = String(r[3] ?? 'neutral');
     const comment = String(r[4] ?? '');
-    const title = escapeHtml(truncate(titleFull, 80));
-    const snippet = escapeHtml(truncate(comment || titleFull, 200));
+    const title = escapeHtml(truncate(titleFull, 100));
+    const snippet = escapeHtml(truncate(comment || titleFull, 320));
     const { dotColor, textColor, bgSoft, brColor } = toneColorsCard(toneRow);
     return `
-      <article class="newsflow-card" style="border:1px solid ${brColor};border-radius:12px;background:${bgSoft};box-shadow:var(--shadow-card);padding:.6rem .7rem;display:flex;flex-direction:column;gap:.25rem;">
+      <article class="newsflow-card" style="border:1px solid ${brColor};border-radius:12px;background:${bgSoft};box-shadow:var(--shadow-card);padding:.75rem .85rem;display:flex;flex-direction:column;gap:.35rem;">
         <div class="flex items-start justify-between gap-2">
           <div class="flex items-center gap-2 min-w-0">
             <span class="inline-block w-[8px] h-[8px] rounded-full" style="background:${dotColor};flex-shrink:0;"></span>
-            <h4 class="text-[12.5px] font-semibold leading-[1.35] text-[color:var(--ink)] truncate" title="${escapeAttr(titleFull)}">${title}</h4>
+            <h4 class="text-[13px] font-semibold leading-[1.35] text-[color:var(--ink)] truncate" title="${escapeAttr(titleFull)}">${title}</h4>
           </div>
           <span class="text-[10px] font-mono text-[color:var(--muted)]" title="${escapeAttr(time)}">${escapeHtml(formatTimeTiny(time))}</span>
         </div>
-        <p class="text-[12px] leading-[1.45] text-[color:${textColor}]">${snippet}</p>
+        <p class="text-[12.5px] leading-[1.5] text-[color:${textColor}]">${snippet}</p>
         <div class="text-[11px] text-[color:var(--muted)] flex items-center justify-between">
           <span>${source}</span>
           <span class="uppercase tracking-wide text-[10px]">${escapeHtml(toneRow)}</span>
@@ -439,21 +481,11 @@ function newsCardListF2(top10, summary){
 
   const summaryCard = summary ? f2Card({ tone: summary.tone || 'neutral', title:'Sintesi (top 10)', bodyHtml:`<div class='whitespace-pre-line'>${escapeHtml(summary.raw || '')}</div>` }) : '';
 
-  const grid = `
-    <div class="grid gap-2" style="grid-template-columns:repeat(1,minmax(0,1fr));">
-      ${cards || `<div class='text-[12px] text-[color:var(--muted)]'>Nessuna headline disponibile.</div>`}
-    </div>`;
-
-  // su schermi larghi, 2 colonne
-  const responsiveWrap = `
-    <div class="hidden md:block">
-      <div class="grid gap-2 md:grid-cols-2">${cards}</div>
-    </div>
-    <div class="md:hidden">
-      ${grid}
-    </div>`;
-
-  return summaryCard + responsiveWrap;
+  return `
+    ${summaryCard}
+    <div class="hidden md:block"><div class="grid gap-2 md:grid-cols-2">${cards}</div></div>
+    <div class="md:hidden"><div class="grid gap-2" style="grid-template-columns:repeat(1,minmax(0,1fr));">${cards || `<div class='text-[12px] text-[color:var(--muted)]'>Nessuna headline disponibile.</div>`}</div></div>
+  `;
 }
 
 // --- ETF: card list compatto (Top10) ---
@@ -488,14 +520,17 @@ function etfCardListF2(top10){
 
 // --- Metriche interne grid ---
 function metricsInternalGrid(mi={}){
-  // Accettiamo un oggetto key->{ raw, tone, ai_note? };
-  // Esempi tipici F2 (no opzioni F3): HEADLINE_DENSITY, NEWS_DOMINANT_TOPIC, ANALYST_DELTA, CONSENSUS_LEVEL,
-  // TECH_SIGNAL, PRICE_TREND, SECTOR_BREADTH_VAL, ETF_AVG_1M_RET, PEERS_COUNT, ETFS_COUNT, POST_EARNINGS_WINDOW,
-  // MISSING_CRITICAL_COUNT, CONFIDENCE, COVERAGE_CRITICAL.
   const keys = mi?.itemsOrder || [
-    'HEADLINE_DENSITY','NEWS_DOMINANT_TOPIC','ANALYST_DELTA','CONSENSUS_LEVEL','TECH_SIGNAL','PRICE_TREND',
-    'SECTOR_BREADTH_VAL','ETF_AVG_1M_RET','PEERS_COUNT','ETFS_COUNT','POST_EARNINGS_WINDOW','MISSING_CRITICAL_COUNT',
-    'CONFIDENCE','COVERAGE_CRITICAL'
+    // news & analyst
+    'HEADLINE_DENSITY','NEWS_DOMINANT_TOPIC','ANALYST_DELTA','CONSENSUS_LEVEL','CONSISTENCY',
+    // price/tech & breadth
+    'TECH_SIGNAL','PRICE_TREND','SECTOR_BREADTH','ETF_AVG_1M_RET',
+    // metadata & exposure
+    'TARGET_SPREAD','UPSIDE_PCT','POST_EARNINGS_WINDOW',
+    // coverage/confidence
+    'MISSING_CRITICAL_COUNT','COVERAGE_CRITICAL','CONFIDENCE',
+    // counts
+    'PEERS_COUNT','ETFS_COUNT'
   ];
   const chips = keys.map(k=>{
     const q = mi?.[k];
@@ -509,6 +544,17 @@ function metricsInternalGrid(mi={}){
       </div>`;
   }).join('');
   return `<div class="grid gap-2 md:grid-cols-3">${chips || `<div class='text-[12px] text-[color:var(--muted)]'>N/A</div>`}</div>`;
+}
+
+/* -----------------------------------------------------------------------------
+// HELPERS
+// -----------------------------------------------------------------------------*/
+function conclusionPointBlockF2(pointObj={}){
+  const tone = pointObj.tone || 'neutral';
+  const bodyHtml = `
+    <div class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)] mb-1">${escapeHtml(pointObj.raw||'')}</div>
+    <div class="text-[11px] leading-[1.4] text-[color:var(--muted)]">${escapeHtml(pointObj.ai_note||'')}</div>`;
+  return f2Card({ tone, title: pointObj.title||'', bodyHtml, noteHtml:'' });
 }
 
 /* -----------------------------------------------------------------------------
@@ -632,9 +678,18 @@ function normalizeDataF2Public(src={}){
     // Headline KPI
     sentiment_flows: src?.sentiment_flows || { SentimentComposite:{ raw:'—', tone:'neutral' }, ETF_FlowTone:{ raw:'—', tone:'neutral' } },
 
-    // Audit & MiFID
-    audit_quality: src?.audit_quality || { AuditPathID:'—', QualityMetrics:{} },
-    mifid: src?.mifid || { disclaimer:'' }
+    // Audit & MiFID (allineato a F1B; mapping fallback)
+    audit_quality: (function(){
+      const aq = src?.audit_quality || { AuditPathID:'—', QualityMetrics:{} };
+      const qm = aq?.QualityMetrics || {};
+      // fallback mapping Coverage->FreshnessScore se necessario
+      if(qm.Coverage && !qm.FreshnessScore){ qm.FreshnessScore = qm.Coverage; }
+      return { ...aq, QualityMetrics: qm };
+    })(),
+    mifid: src?.mifid || { disclaimer:'' },
+
+    // Conclusione educativa
+    sintesi_ai: src?.sintesi_ai || { points:[], summary:'' }
   };
 }
 
