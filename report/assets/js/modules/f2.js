@@ -203,14 +203,14 @@ const macroHTML = `
     </section>`;
 
   // 3) Metriche interne (solo F2 — niente opzioni F3)
-  const mi = d.metrics_internal || {};
-  const metricsGrid = metricsInternalGrid(mi);
-  const internalHTML = `
-    <section class="tl-panel-section" data-f2-section="metrics" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Metriche interne</div></header>
-      ${metricsGrid}
-      ${listBlockCardF2('Note metriche', mi?.ai_note)}
-    </section>`;
+  // 3) Metriche interne (SOLO §4 Feature Builders)
+const metricsGrid = metricsInternalGridF4Only(d);
+const internalHTML = `
+  <section class="tl-panel-section" data-f2-section="metrics" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+    <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Metriche interne (Feature Builders §4)</div></header>
+    ${metricsGrid}
+  </section>`;
+
 
   // 4) ETF · esposizione & flussi (Top 10)
   const etf = d.etf_exposure || {};
@@ -522,21 +522,60 @@ function etfCardListF2(top10){
 }
 
 // --- Metriche interne grid ---
-function metricsInternalGrid(mi={}){
-  const keys = mi?.itemsOrder || [
-    // news & analyst
-    'HEADLINE_DENSITY','NEWS_DOMINANT_TOPIC','ANALYST_DELTA','CONSENSUS_LEVEL','CONSISTENCY',
-    // price/tech & breadth
-    'TECH_SIGNAL','PRICE_TREND','SECTOR_BREADTH','ETF_AVG_1M_RET',
-    // fundamentals trend / quality
-    'VALUATION_TAG','MARGIN_HEALTH','PROFITABILITY_CLASS','EARNINGS_TREND','BALANCE_SHEET_STRENGTH','CASHFLOW_MOMENTUM',
-    // metadata & exposure
-    'TARGET_SPREAD','UPSIDE_PCT','POST_EARNINGS_WINDOW',
-    // coverage/confidence
-    'MISSING_CRITICAL_COUNT','COVERAGE_CRITICAL','CONFIDENCE',
-    // counts
-    'PEERS_COUNT','ETFS_COUNT'
-  ];
+function metricsInternalGridF4Only(d){
+  // §4 buckets
+  const SCI_FINVIZ = ['SI_LEVEL','DTC_BUCKET','SI_TREND','INST_FLOW','INSIDER_FLOW','NEWS_TONE'];
+  const SCI_BARCH  = ['TECH_SIGNAL','CONSENSUS_LEVEL','CONSISTENCY'];
+
+  const DPI_FINVIZ = ['VOLUME_STATE','MOMENTUM_LABEL','RANGE_LOC','PERF_VECTOR','VALUATION_SNAPSHOT','MARGINS_SNAPSHOT'];
+  const DPI_BARCH  = ['PRICE_TREND','MARGIN_HEALTH','PROFITABILITY_CLASS','EARNINGS_TREND','BALANCE_SHEET_STRENGTH','CASHFLOW_MOMENTUM'];
+
+  const ICR_FINVIZ = ['PEER_LIST','ETF_LIST'];
+  const ICR_BARCH  = ['PEER_LEADERS','PEER_LAGGARDS','SECTOR_BREADTH','ETF_FLOW_BIAS'];
+
+  function chip(k, obj){
+    if (!obj) return '';
+    const { textColor } = toneColorsF2(obj.tone);
+    const value = formatMetricValue(obj);
+    return `
+      <div class="min-w-[160px]"
+           style="background:var(--surface-card-alt);border:1px solid var(--br-card);border-radius:12px;box-shadow:var(--shadow-card);padding:.65rem .8rem;">
+        <div class="flex items-start justify-between gap-2 mb-1">
+          <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)]">${escapeHtml(k)}</div>
+          <button class="info-btn" data-metric="${escapeAttr(k)}" aria-label="Info ${escapeAttr(k)}">?</button>
+        </div>
+        <div class="font-mono font-bold text-[13px]" style="color:${textColor};">${value}</div>
+        ${ obj.ai_note ? `<div class="text-[10px] text-[color:var(--muted)] mt-[4px]">${escapeHtml(obj.ai_note)}</div>` : '' }
+      </div>`;
+  }
+
+  function block(title, items, source){
+    const rows = items.map(k => chip(k, source?.[k])).filter(Boolean).join('');
+    return `
+      <div class="mb-2">
+        <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide mb-1">${escapeHtml(title)}</div>
+        <div class="grid gap-2.5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">${rows || `<div class="text-[12px] text-[color:var(--muted)]">N/A</div>`}</div>
+      </div>`;
+  }
+
+  // Sorgenti
+  const SCI = d.sci_dpi || {};
+  const DPI = d.dpi || {};
+  const ICR = d.icr || {};
+
+  // Render grouping con maggior respiro
+  return `
+    ${block('SCI · Finviz',  SCI_FINVIZ, SCI)}
+    ${block('SCI · Barchart', SCI_BARCH,  SCI)}
+    <div class="h-[2px] my-2" style="background:var(--br-card);opacity:.4;border-radius:1px;"></div>
+    ${block('DPI · Finviz',  DPI_FINVIZ, DPI)}
+    ${block('DPI · Barchart',DPI_BARCH,  DPI)}
+    <div class="h-[2px] my-2" style="background:var(--br-card);opacity:.4;border-radius:1px;"></div>
+    ${block('ICR · Finviz',  ICR_FINVIZ, ICR)}
+    ${block('ICR · Barchart',ICR_BARCH,  ICR)}
+  `;
+}
+
 
   const chips = keys.map(k=>{
     const q = mi?.[k];
@@ -556,6 +595,24 @@ function metricsInternalGrid(mi={}){
   return `<div class="grid gap-2 md:grid-cols-3">${chips || `<div class='text-[12px] text-[color:var(--muted)]'>N/A</div>`}</div>`;
 }
 
+function formatMetricValue(obj){
+  // accetta {raw,tone} dove raw può essere string|number|array|object
+  const v = obj?.raw;
+  if (v === null || v === undefined) return '—';
+
+  if (Array.isArray(v)){
+    return escapeHtml(JSON.stringify(v)).slice(0, 80) + (JSON.stringify(v).length>80 ? '…' : '');
+  }
+  if (typeof v === 'object'){
+    // snapshot compatti (VAL/MARGINS, liste peer/etf)
+    const keys = Object.keys(v);
+    if (keys.length === 0) return '{}';
+    const compact = keys.slice(0,5).reduce((acc,k)=>{ acc[k]=v[k]; return acc; },{});
+    const s = JSON.stringify(compact);
+    return escapeHtml(s.length>100 ? s.slice(0,100)+'…' : s);
+  }
+  return escapeHtml(String(v));
+}
 
 /* -----------------------------------------------------------------------------
 // HELPERS
@@ -664,47 +721,69 @@ function normalizeDataF2Public(src={}){
       hero_disclaimer: src?.meta?.hero_disclaimer ?? 'Contenuto informativo/formativo. Nessuna istruzione operativa.'
     },
 
- // STEP 1: WebProbe
-step1: (function(){
-  const s = src?.step1_f2_webprobe || {};
-  return {
-    MacroGate: s.MacroGate || { raw:'—', tone:'neutral', ai_note:'' },
-    MacroNotes: Array.isArray(s.MacroNotes) ? s.MacroNotes : [],
-    // nuovi campi per elenchi separati (fallback -> [])
-    MacroEvents: Array.isArray(s.MacroEvents) ? s.MacroEvents : [],
-    CorpEvents:  Array.isArray(s.CorpEvents)  ? s.CorpEvents  : [],
-    ai_note: s.ai_note || ''
-  };
-})(),
+    // STEP 1: WebProbe
+    step1: (function(){
+      const s = src?.step1_f2_webprobe || {};
+      return {
+        MacroGate: s.MacroGate || { raw:'—', tone:'neutral', ai_note:'' },
+        MacroNotes: Array.isArray(s.MacroNotes) ? s.MacroNotes : [],
+        MacroEvents: Array.isArray(s.MacroEvents) ? s.MacroEvents : [],
+        CorpEvents:  Array.isArray(s.CorpEvents)  ? s.CorpEvents  : [],
+        ai_note: s.ai_note || ''
+      };
+    })(),
 
+    // §4 FEATURE BUILDERS
+    sci_dpi: src?.SCI_tkr || {},            // SCI (discrete labels)
+    dpi:     src?.DPI_context || {},        // DPI (descrittivo)
+    icr:     src?.ICR_tkr || {},            // ICR overlay peers/ETF  << NEW
 
-    // SCI/DPI digest
-    sci_dpi: src?.SCI_tkr || {},
-    dpi: src?.DPI_context || {},
-
-    // Metriche interne (solo F2)
+    // Metriche interne (fallback: opzionale per extra chips)
     metrics_internal: src?.metrics_internal || {},
 
     // ETF exposure (Top10 + sintesi)
-    etf_exposure: src?.etf_exposure || { Top10:{ tone:'neutral', columns:['ETF','%Hold','1W %','1M %','Leverage'], rows:[] }, ETF_FLOW_BIAS:{ raw:'—', tone:'neutral' }, SECTOR_BREADTH:{ raw:'—', tone:'neutral' }, TOP_HOLDING_ETF:{ raw:'—', tone:'neutral' }, ai_note:'' },
+    etf_exposure: src?.etf_exposure || {
+      Top10:{ tone:'neutral', columns:['ETF','%Hold','1W %','1M %','Leverage'], rows:[] },
+      ETF_FLOW_BIAS:{ raw:'—', tone:'neutral' },
+      SECTOR_BREADTH:{ raw:'—', tone:'neutral' },
+      TOP_HOLDING_ETF:{ raw:'—', tone:'neutral' },
+      ai_note:''
+    },
 
-    // Newsflow: top 10 + sintesi
-    newsflow: src?.news_stream || { Summary:{ raw:'', tone:'neutral' }, Top10:{ tone:'neutral', columns:['Time','Publisher','Headline','Tone','Comment'], rows:[] } },
+    // Newsflow
+    newsflow: src?.news_stream || {
+      Summary:{ raw:'', tone:'neutral' },
+      Top10:{ tone:'neutral', columns:['Time','Publisher','Headline','Tone','Comment'], rows:[] }
+    },
 
     // Positioning/Short/Ownership
-    positioning: src?.positioning || { SI_LEVEL:{ raw:'—', tone:'neutral' }, DTC_BUCKET:{ raw:'—', tone:'neutral' }, SI_TREND:{ raw:'—', tone:'neutral' }, INST_FLOW:{ raw:'—', tone:'neutral' }, INSIDER_FLOW:{ raw:'—', tone:'neutral' }, ai_note:'' },
+    positioning: src?.positioning || {
+      SI_LEVEL:{ raw:'—', tone:'neutral' },
+      DTC_BUCKET:{ raw:'—', tone:'neutral' },
+      SI_TREND:{ raw:'—', tone:'neutral' },
+      INST_FLOW:{ raw:'—', tone:'neutral' },
+      INSIDER_FLOW:{ raw:'—', tone:'neutral' },
+      ai_note:''
+    },
 
     // Surveys
-    surveys: src?.surveys || { AAII:{ raw:'—', tone:'neutral' }, NAAIM:{ raw:'—', tone:'neutral' }, FearGreed:{ raw:'—', tone:'neutral' }, ai_note:'' },
+    surveys: src?.surveys || {
+      AAII:{ raw:'—', tone:'neutral' },
+      NAAIM:{ raw:'—', tone:'neutral' },
+      FearGreed:{ raw:'—', tone:'neutral' },
+      ai_note:''
+    },
 
     // Headline KPI
-    sentiment_flows: src?.sentiment_flows || { SentimentComposite:{ raw:'—', tone:'neutral' }, ETF_FlowTone:{ raw:'—', tone:'neutral' } },
+    sentiment_flows: src?.sentiment_flows || {
+      SentimentComposite:{ raw:'—', tone:'neutral' },
+      ETF_FlowTone:{ raw:'—', tone:'neutral' }
+    },
 
-    // Audit & MiFID (allineato a F1B; mapping fallback)
+    // Audit & MiFID
     audit_quality: (function(){
       const aq = src?.audit_quality || { AuditPathID:'—', QualityMetrics:{} };
       const qm = aq?.QualityMetrics || {};
-      // fallback mapping Coverage->FreshnessScore se necessario
       if(qm.Coverage && !qm.FreshnessScore){ qm.FreshnessScore = qm.Coverage; }
       return { ...aq, QualityMetrics: qm };
     })(),
