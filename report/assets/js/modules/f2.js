@@ -138,9 +138,26 @@ function openF2DrawerPublic(d){
       try { window.__TradeliaUI.bindMetricInfoButtons(document.getElementById('f2-scroll-desktop')); } catch(e){}
       try { window.__TradeliaUI.bindMetricInfoButtons(document.getElementById('f2-scroll-mobile')); } catch(e){}
     }
-    const first = document.querySelector('[data-f2-tab="sentiment"]');
+    const first = document.querySelector('[data-f2-tab="macro"]');
     if (first?.click) first.click();
+    initScrollableTabsHintF2();
   },0);
+
+  function initScrollableTabsHintF2(){
+    const scrollBox = document.querySelector('.f2-footer-tabs-scroll');
+    const fadeRight = document.querySelector('.f2-tabs-fade-right');
+    const fadeLeft = document.querySelector('.f2-tabs-fade-left');
+    if (!scrollBox || !fadeRight || !fadeLeft) return;
+    function update(){
+      const atStart = scrollBox.scrollLeft <= 2;
+      const atEnd = scrollBox.scrollLeft + scrollBox.clientWidth >= scrollBox.scrollWidth - 4;
+      fadeLeft.style.opacity = atStart ? '0' : '.6';
+      fadeRight.style.opacity = atEnd ? '0' : '.6';
+    }
+    update();
+    scrollBox.addEventListener('scroll', update, { passive:true });
+    window.addEventListener('resize', update, { passive:true });
+  }
 }
 
 function isMobileViewport(){ return window.matchMedia('(max-width: 767px)').matches; }
@@ -240,13 +257,23 @@ function buildF2SectionsPublic(d){
       ${listBlockCardF2('Note survey', surv?.ai_note)}
     </section>`;
 
-  // 8) Audit
+  // 8) Conclusione (stile F1)
+  const sintesi = d.sintesi_ai || {};
+  const sintesiHTML = `
+    <section class="tl-panel-section" data-f2-section="sintesi" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Conclusione · Tradelia AI (educational)</div></header>
+      ${Array.isArray(sintesi.points) ? sintesi.points.map(p=>conclusionPointBlockF2(p)).join('') : ''}
+      ${headlineBlockCardF2('Lettura di contesto (non istruzioni operative)', sintesi.summary)}
+      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-2">Questa conclusione ha finalità informative/formative. Non è un invito operativo.</div>
+    </section>`;
+
+  // 9) Audit (allineato a F1)
   const audit = d.audit_quality || {};
   const auditHTML = `
     <section class="tl-panel-section" data-f2-section="audit" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Audit & Qualità dati</div></header>
       <div class="grid gap-3 text-[12px] leading-[1.4] grid-cols-1 md:grid-cols-2">
-        ${qualityChipF2('Coverage', audit?.QualityMetrics?.Coverage)}
+        ${qualityChipF2('FreshnessScore', audit?.QualityMetrics?.FreshnessScore)}
         ${qualityChipF2('ConfidenceFinal', audit?.QualityMetrics?.ConfidenceFinal)}
         ${qualityChipF2('DataIntegrity', audit?.QualityMetrics?.DataIntegrity)}
         ${qualityChipF2('FeedSync', audit?.QualityMetrics?.FeedSync)}
@@ -254,14 +281,21 @@ function buildF2SectionsPublic(d){
       ${headlineBlockCardF2('AuditPath', audit?.AuditPathID)}
     </section>`;
 
-  // 9) MiFID
+  // 10) MiFID
   const mifidHTML = `
     <section class="tl-panel-section" data-f2-section="mifid" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Nota regolamentare</div></header>
       ${headlineBlockCardF2('Informativa', d.mifid?.disclaimer)}
     </section>`;
 
-  return { macroHTML, sentimentHTML, internalHTML, etfHTML, newsHTML, positioningHTML, surveysHTML, auditHTML, mifidHTML };
+  return { macroHTML, sentimentHTML, internalHTML, etfHTML, newsHTML, positioningHTML, surveysHTML, sintesiHTML, auditHTML, mifidHTML };
+  const mifidHTML = `
+    <section class="tl-panel-section" data-f2-section="mifid" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Nota regolamentare</div></header>
+      ${headlineBlockCardF2('Informativa', d.mifid?.disclaimer)}
+    </section>`;
+
+  return { macroHTML, sentimentHTML, internalHTML, etfHTML, newsHTML, positioningHTML, surveysHTML, sintesiHTML, auditHTML, mifidHTML };
 }
 
 /* -----------------------------------------------------------------------------
@@ -271,8 +305,32 @@ function renderF2DesktopShell(sections){
   return `
     <div class="f1b-panel-desktop" style="display:flex;flex-direction:row;gap:1rem;height:66vh;">
       <aside class="f1b-panel-menu" style="min-width:180px;max-width:200px;border-right:1px solid var(--br-card);height:100%;overflow:auto;">
+        ${drawerBtnF2('macro','Controlli rischio')}
         ${drawerBtnF2('sentiment','Sentiment')}
         ${drawerBtnF2('metrics','Metriche interne')}
+        ${drawerBtnF2('etf','ETF')}
+        ${drawerBtnF2('news','Newsflow')}
+        ${drawerBtnF2('positioning','Positioning')}
+        ${drawerBtnF2('surveys','Survey')}
+        ${drawerBtnF2('sintesi','Conclusione')}
+        ${drawerBtnF2('audit','Audit')}
+        ${drawerBtnF2('mifid','MiFID')}
+      </aside>
+      <main id="f2-scroll-desktop" class="f1b-panel-content flex-1 min-w-0" style="height:100%;overflow:auto;-webkit-overflow-scrolling:touch;padding:1rem;">
+        <div data-f2-view="macro">${sections.macroHTML}</div>
+        <div data-f2-view="sentiment" hidden>${sections.sentimentHTML}</div>
+        <div data-f2-view="metrics" hidden>${sections.internalHTML}</div>
+        <div data-f2-view="etf" hidden>${sections.etfHTML}</div>
+        <div data-f2-view="news" hidden>${sections.newsHTML}</div>
+        <div data-f2-view="positioning" hidden>${sections.positioningHTML}</div>
+        <div data-f2-view="surveys" hidden>${sections.surveysHTML}</div>
+        <div data-f2-view="sintesi" hidden>${sections.sintesiHTML}</div>
+        <div data-f2-view="audit" hidden>${sections.auditHTML}</div>
+        <div data-f2-view="mifid" hidden>${sections.mifidHTML}</div>
+      </main>
+    </div>`;
+}
+${drawerBtnF2('metrics','Metriche interne')}
         ${drawerBtnF2('etf','ETF')}
         ${drawerBtnF2('news','Newsflow')}
         ${drawerBtnF2('positioning','Positioning')}
@@ -297,13 +355,14 @@ function renderF2DesktopShell(sections){
 
 function renderF2MobileShell(sections){
   const tabs = [
+    ['macro','Controlli'],
     ['sentiment','Sentiment'],
     ['metrics','Metriche'],
     ['etf','ETF'],
     ['news','News'],
     ['positioning','Positioning'],
     ['surveys','Survey'],
-    ['macro','Controlli'],
+    ['sintesi','Conclusione'],
     ['audit','Audit'],
     ['mifid','MiFID']
   ];
@@ -311,7 +370,27 @@ function renderF2MobileShell(sections){
   return `
     <div class="f1b-drawer-mobile" style="display:flex;flex-direction:column;height:calc(100vh - 110px);max-height:calc(100vh - 110px);min-height:300px;background:var(--surface-panel-head);">
       <div class="f1b-mobile-tabs-fixed" style="position:relative;flex-shrink:0;width:100%;display:flex;align-items:center;border-bottom:1px solid var(--br-panel-divider);background:var(--surface-panel-head);padding:.6rem .75rem;">
-        <div class="f1b-footer-tabs-scroll" style="flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:.5rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">${pills}</div>
+        <div class="f2-tabs-fade-left" style="position:absolute;left:0;top:0;bottom:0;width:24px;pointer-events:none;background:linear-gradient(to right,var(--surface-panel-head) 0%, rgba(0,0,0,0) 80%);opacity:0;"></div>
+        <div class="f2-footer-tabs-scroll" style="flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:.5rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-right:2rem;">${pills}</div>
+        <div class="f2-tabs-fade-right" style="position:absolute;right:0;top:0;bottom:0;width:48px;display:flex;align-items:center;justify-content:flex-end;pointer-events:none;background:linear-gradient(to left,var(--surface-panel-head) 0%, rgba(0,0,0,0) 70%);opacity:.6;color:var(--muted);font-size:10px;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.4);">
+          <span style="transform:translateY(1px);">⇠ ⇢</span>
+        </div>
+      </div>
+      <main id="f2-scroll-mobile" class="f1b-panel-content-mobile flex-1 min-w-0" style="overflow:auto;-webkit-overflow-scrolling:touch;padding:1rem;background:var(--surface-page);">
+        <div data-f2-view="macro">${sections.macroHTML}</div>
+        <div data-f2-view="sentiment" hidden>${sections.sentimentHTML}</div>
+        <div data-f2-view="metrics" hidden>${sections.internalHTML}</div>
+        <div data-f2-view="etf" hidden>${sections.etfHTML}</div>
+        <div data-f2-view="news" hidden>${sections.newsHTML}</div>
+        <div data-f2-view="positioning" hidden>${sections.positioningHTML}</div>
+        <div data-f2-view="surveys" hidden>${sections.surveysHTML}</div>
+        <div data-f2-view="sintesi" hidden>${sections.sintesiHTML}</div>
+        <div data-f2-view="audit" hidden>${sections.auditHTML}</div>
+        <div data-f2-view="mifid" hidden>${sections.mifidHTML}</div>
+      </main>
+    </div>`;
+}
+</div>
       </div>
       <main id="f2-scroll-mobile" class="f1b-panel-content-mobile flex-1 min-w-0" style="overflow:auto;-webkit-overflow-scrolling:touch;padding:1rem;background:var(--surface-page);">
         <div data-f2-view="sentiment">${sections.sentimentHTML}</div>
@@ -595,51 +674,134 @@ function formatTimeTiny(ts){
 /* -----------------------------------------------------------------------------
 // NORMALIZZAZIONE DATI (tassonomia; niente valori hard-coded)
 // -----------------------------------------------------------------------------*/
-function normalizeDataF2Public(src={}){
+function normalizeDataF2Public(src = {}) {
   return {
     meta: {
-      timestampET: src?.meta?.timestampET ?? '—',
-      module: src?.meta?.module ?? 'F2 · Macro & Sentiment',
-      moduleVersion: src?.meta?.moduleVersion ?? 'v7.2',
-      moduleStatus: src?.meta?.moduleStatus ?? 'ACTIVE',
-      freshness: src?.meta?.freshness ?? '≤ T-1',
-      hero_intro: src?.meta?.hero_intro ?? '',
-      hero_disclaimer: src?.meta?.hero_disclaimer ?? 'Contenuto informativo/formativo. Nessuna istruzione operativa.'
+      timestampET: src?.meta?.timestampET ?? "—",
+      module: src?.meta?.module ?? "F2 · Macro & Sentiment",
+      moduleVersion: src?.meta?.moduleVersion ?? "v7.2",
+      moduleStatus: src?.meta?.moduleStatus ?? "ACTIVE",
+      freshness: src?.meta?.freshness ?? "≤ T-1",
+      hero_intro: src?.meta?.hero_intro ?? "",
+      hero_disclaimer:
+        src?.meta?.hero_disclaimer ??
+        "Contenuto informativo/formativo. Nessuna istruzione operativa.",
     },
 
-    // STEP 1: WebProbe
-    step1: src?.step1_f2_webprobe || { MacroGate:{ raw:'—', tone:'neutral', ai_note:'' }, MacroNotes:[], ai_note:'' },
+    // STEP 1: WebProbe (controlli rischio)
+    step1:
+      src?.step1_f2_webprobe ?? {
+        MacroGate: { raw: "—", tone: "neutral", ai_note: "" },
+        MacroNotes: [],
+        ai_note: "",
+      },
 
     // SCI/DPI digest
-    sci_dpi: src?.SCI_tkr || {},
-    dpi: src?.DPI_context || {},
+    sci_dpi: src?.SCI_tkr ?? {},
+    dpi: src?.DPI_context ?? {},
 
     // Metriche interne (solo F2)
-    metrics_internal: src?.metrics_internal || {},
+    metrics_internal: src?.metrics_internal ?? {},
 
     // ETF exposure (Top10 + sintesi)
-    etf_exposure: src?.etf_exposure || { Top10:{ tone:'neutral', columns:['ETF','%Hold','1W %','1M %','Leverage'], rows:[] }, ETF_FLOW_BIAS:{ raw:'—', tone:'neutral' }, SECTOR_BREADTH:{ raw:'—', tone:'neutral' }, TOP_HOLDING_ETF:{ raw:'—', tone:'neutral' }, ai_note:'' },
+    etf_exposure:
+      src?.etf_exposure ?? {
+        Top10: {
+          tone: "neutral",
+          columns: ["ETF", "%Hold", "1W %", "1M %", "Leverage"],
+          rows: [],
+        },
+        ETF_FLOW_BIAS: { raw: "—", tone: "neutral" },
+        SECTOR_BREADTH: { raw: "—", tone: "neutral" },
+        TOP_HOLDING_ETF: { raw: "—", tone: "neutral" },
+        ai_note: "",
+      },
 
-    // Newsflow: top 10 + sintesi
-    newsflow: src?.news_stream || { Summary:{ raw:'', tone:'neutral' }, Top10:{ tone:'neutral', columns:['Time','Publisher','Headline','Tone','Comment'], rows:[] } },
+    // Newsflow (top 10 + sintesi) – per card compatte mobile-first
+    newsflow:
+      src?.news_stream ?? {
+        Summary: { raw: "", tone: "neutral" },
+        Top10: {
+          tone: "neutral",
+          columns: ["Time", "Publisher", "Headline", "Tone", "Comment"],
+          rows: [],
+        },
+      },
 
-    // Positioning/Short/Ownership
-    positioning: src?.positioning || { SI_LEVEL:{ raw:'—', tone:'neutral' }, DTC_BUCKET:{ raw:'—', tone:'neutral' }, SI_TREND:{ raw:'—', tone:'neutral' }, INST_FLOW:{ raw:'—', tone:'neutral' }, INSIDER_FLOW:{ raw:'—', tone:'neutral' }, ai_note:'' },
+    // Positioning / Short / Ownership
+    positioning:
+      src?.positioning ?? {
+        SI_LEVEL: { raw: "—", tone: "neutral" },
+        DTC_BUCKET: { raw: "—", tone: "neutral" },
+        SI_TREND: { raw: "—", tone: "neutral" },
+        INST_FLOW: { raw: "—", tone: "neutral" },
+        INSIDER_FLOW: { raw: "—", tone: "neutral" },
+        ai_note: "",
+      },
 
     // Surveys
-    surveys: src?.surveys || { AAII:{ raw:'—', tone:'neutral' }, NAAIM:{ raw:'—', tone:'neutral' }, FearGreed:{ raw:'—', tone:'neutral' }, ai_note:'' },
+    surveys:
+      src?.surveys ?? {
+        AAII: { raw: "—", tone: "neutral" },
+        NAAIM: { raw: "—", tone: "neutral" },
+        FearGreed: { raw: "—", tone: "neutral" },
+        ai_note: "",
+      },
 
-    // Headline KPI
-    sentiment_flows: src?.sentiment_flows || { SentimentComposite:{ raw:'—', tone:'neutral' }, ETF_FlowTone:{ raw:'—', tone:'neutral' } },
+    // KPI headline
+    sentiment_flows:
+      src?.sentiment_flows ?? {
+        SentimentComposite: { raw: "—", tone: "neutral" },
+        ETF_FlowTone: { raw: "—", tone: "neutral" },
+      },
 
-    // Audit & MiFID
-    audit_quality: src?.audit_quality || { AuditPathID:'—', QualityMetrics:{} },
-    mifid: src?.mifid || { disclaimer:'' }
+    // Conclusione (stile F1)
+    sintesi_ai:
+      src?.sintesi_ai ?? {
+        points: [],
+        summary: { raw: "", tone: "neutral" },
+      },
+
+    // Audit & MiFID (allineato a F1)
+    audit_quality:
+      src?.audit_quality ?? {
+        AuditPathID: "—",
+        QualityMetrics: {
+          FreshnessScore: { raw: "—", tone: "neutral" },
+          ConfidenceFinal: { raw: "—", tone: "neutral" },
+          DataIntegrity: { raw: "—", tone: "neutral" },
+          FeedSync: { raw: "—", tone: "neutral" },
+        },
+      },
+
+    mifid: src?.mifid ?? { disclaimer: "" },
   };
 }
-
 /* -----------------------------------------------------------------------------
-// UTILS
+// UTILS & CONCLUSION (replace this tail if corrotto)
 // -----------------------------------------------------------------------------*/
-function escapeHtml(str){ if(str===undefined||str===null) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
-function escapeAttr(str){ if(str===undefined||str===null) return ''; return String(str).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function conclusionPointBlockF2(pointObj = {}) {
+  const tone = pointObj.tone || "neutral";
+  const bodyHtml = `
+    <div class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)] mb-1">
+      ${escapeHtml(pointObj.raw || "")}
+    </div>
+    <div class="text-[11px] leading-[1.4] text-[color:var(--muted)]">
+      ${escapeHtml(pointObj.ai_note || "")}
+    </div>`;
+  return f2Card({ tone, title: pointObj.title || "", bodyHtml, noteHtml: "" });
+}
+
+function escapeHtml(str) {
+  if (str === undefined || str === null) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+function escapeAttr(str) {
+  if (str === undefined || str === null) return "";
+  return String(str).replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
