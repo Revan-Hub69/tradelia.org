@@ -533,7 +533,6 @@ function renderDrawerDesktopShellPublic(sectionsObj) {
           height:100%;
           overflow:auto;
         ">
-// Sidebar (desktop)
 ${drawerMenuButtonPublic("regime","Regime di Mercato")}
 ${drawerMenuButtonPublic("breadth","Ampiezza e Rotazione")}
 ${drawerMenuButtonPublic("internals","Market Internals")}
