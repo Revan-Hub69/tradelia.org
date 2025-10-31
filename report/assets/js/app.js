@@ -198,21 +198,22 @@ async function loadManifest(reportId) {
   const mf = await fetchJSON(url);
   if (mf) return mf;
 
-  // fallback se non esiste manifest.json
-  return {
-    id: reportId,
-    title: "Tradelia · Report Runtime",
-    order: ["F1B","F2","F3","F4","F5","F5B","F6"],
-    modules: {
-      "F1B": "f1b.json",
-      "F2":  "f2.json",
-      "F3":  "f3.json",
-      "F4":  "f4.json",
-      "F5":  "f5.json",
-      "F5B": "f5b.json",
-      "F6":  "f6.json"
-    }
-  };
+// fallback se non esiste manifest.json
+return {
+  id: reportId,
+  title: "Tradelia · Report Runtime",
+  order: ["F1B","F2","F3","F4","F5","F5B","F6","F7"], // +F7
+  modules: {
+    "F1B": "f1b.json",
+    "F2":  "f2.json",
+    "F3":  "f3.json",
+    "F4":  "f4.json",
+    "F5":  "f5.json",
+    "F5B": "f5b.json",
+    "F6":  "f6.json",
+    "F7":  "f7.json" // +F7
+  }
+};
 }
 
 // mappa modulo -> section DOM id
@@ -226,9 +227,11 @@ function getSectionSelectorForModule(modId) {
   if (upper === "F5")  return "#sec-f5";
   if (upper === "F5B") return "#sec-f5b";
   if (upper === "F6")  return "#sec-f6";
+  if (upper === "F7")  return "#sec-f7"; // +F7
 
   return null;
 }
+
 
 // normalizza i path dei json modulo
 function normalizeManifest(manifest, reportId) {
