@@ -405,5 +405,82 @@
     "what": "Indice sintetico di paura/avidità multi-componente.",
     "how": "Zone estreme utili come contesto di rischio, non come timing.",
     "source": "Approcci compositi al sentiment; confronti con misure accademiche (Baker & Wurgler, 2006)."
+  },
+  
+  "Governance_info": {
+    "title": "Governance",
+    "what": "Trasparenza su versione, fonti e qualità dati del modulo.",
+    "how": "Mostra audit trail (AuditPathID), metriche di qualità (Freshness/Confidence/DataIntegrity/FeedSync) e informative regolamentari.",
+    "source": "BCBS 239; ESMA – Supervisory Briefings."
+  },
+
+  "AuditPathID_info": {
+    "title": "AuditPathID",
+    "what": "Identificativo univoco dello snapshot/log riproducibile.",
+    "how": "Collega versione modulo e dataset usati per questa pubblicazione.",
+    "source": "Best practice data lineage."
+  },
+
+  "FreshnessScore_info": {
+    "title": "FreshnessScore",
+    "what": "Aggiornamento/latenza delle fonti chiave.",
+    "how": "Confronta i timestamp dei feed con quello del report; più alto = dati più freschi/sincroni.",
+    "source": "BCBS 239 – timeliness."
+  },
+  "ConfidenceFinal_info": {
+    "title": "ConfidenceFinal",
+    "what": "Confidenza complessiva nella qualità del quadro.",
+    "how": "Integra copertura, coerenza inter-asset, outlier e drift.",
+    "source": "Framework QA interno."
+  },
+  "DataIntegrity_info": {
+    "title": "DataIntegrity",
+    "what": "Consistenza interna dei dati.",
+    "how": "Verifiche di validazione e riconciliazione cross-fonte.",
+    "source": "BCBS 239 – accuracy & integrity."
+  },
+  "FeedSync_info": {
+    "title": "FeedSync",
+    "what": "Sincronizzazione temporale tra sorgenti.",
+    "how": "Mis-alignment tra cash/futures/FX/vol/curve ⇒ affidabilità tattica ridotta.",
+    "source": "Pattern integrazione market data."
+  },
+
+  "ModuleVersion_info": {
+    "title": "ModuleVersion",
+    "what": "Version tag della logica (es. v7.2).",
+    "how": "Ogni modifica sostanziale incrementa la versione e aggiorna l’audit.",
+    "source": "Versioning & change-log."
+  },
+  "ModuleStatus_policy_info": {
+    "title": "Policy stato modulo",
+    "what": "Significato di ACTIVE / REVIEW / HOLD.",
+    "how": "ACTIVE: input adeguati; REVIEW: qualità parziale; HOLD: sospeso.",
+    "source": "Policy operativa."
+  },
+  "Freshness_policy_info": {
+    "title": "Policy Freshness",
+    "what": "Soglie minime di freschezza richieste.",
+    "how": "‘≤ T-1’ richiesto; oltre T-1 ⇒ REVIEW/HOLD finché non riallineato.",
+    "source": "BCBS 239 – timeliness."
+  },
+  "Sources_Tier1_info": {
+    "title": "Fonti Tier-1",
+    "what": "Ambito fonti consentite per F2.",
+    "how": "Reuters, Bloomberg, Nasdaq, SEC/EDGAR. Finviz/Barchart solo rassegna (no opzioni).",
+    "source": "Policy fonti Tradelia AI."
+  },
+  "EducationalScope_info": {
+    "title": "Scopo educativo",
+    "what": "Contenuti informativi non personalizzati.",
+    "how": "Non costituiscono consulenza o raccomandazioni individuali.",
+    "source": "MiFID II / ESMA."
+  },
+  "Compliance_ESMA_info": {
+    "title": "Compliance (ESMA)",
+    "what": "Linee guida su comunicazioni e tutela investitori.",
+    "how": "Richiede trasparenza su rischi, limiti e finalità del materiale.",
+    "source": "ESMA – marketing communications."
   }
 }
+
