@@ -481,6 +481,30 @@
     "what": "Linee guida su comunicazioni e tutela investitori.",
     "how": "Richiede trasparenza su rischi, limiti e finalità del materiale.",
     "source": "ESMA – marketing communications."
+  },
+  "Snapshot": {
+    "title": "Snapshot",
+    "what": "Finestra temporale dello snapshot del report (inizio → fine).",
+    "how": "Definisce l’intervallo su cui vengono calcolati prezzo e Δ% per garantire coerenza temporale dei dati.",
+    "source": "Hamilton, J.D. (1994), *Time Series Analysis*, Princeton University Press."
+  },
+  "Price": {
+    "title": "Price",
+    "what": "Prezzo di riferimento coerente con la finestra di snapshot (ultimo o close).",
+    "how": "Variabili di prezzo sono trattate come processi stocastici; il prezzo mostrato serve da contesto descrittivo, non operativo.",
+    "source": "Campbell, J.Y., Lo, A.W., & MacKinlay, A.C. (1997), *The Econometrics of Financial Markets*, Princeton University Press."
+  },
+  "ChangePct": {
+    "title": "ChangePct",
+    "what": "Variazione percentuale del prezzo sulla finestra di snapshot.",
+    "how": "Calcolata come rendimento percentuale su intervallo definito; indicatore descrittivo del tono direzionale.",
+    "source": "Campbell, J.Y., Lo, A.W., & MacKinlay, A.C. (1997), *The Econometrics of Financial Markets*, Princeton University Press."
+  },
+  "Currency": {
+    "title": "Currency",
+    "what": "Valuta di quotazione del prezzo mostrato.",
+    "how": "Esplicitare la valuta evita ambiguità in presenza di multi-listing/FX; la metrica è informativa, senza conversione implicita.",
+    "source": "Obstfeld, M., & Rogoff, K. (1996), *Foundations of International Macroeconomics*, MIT Press."
   }
-}
+  }
 
