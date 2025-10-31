@@ -494,7 +494,7 @@
     "how": "Variabili di prezzo sono trattate come processi stocastici; il prezzo mostrato serve da contesto descrittivo, non operativo.",
     "source": "Campbell, J.Y., Lo, A.W., & MacKinlay, A.C. (1997), *The Econometrics of Financial Markets*, Princeton University Press."
   },
-{
+
   "ChangePct": {
     "title": "ChangePct",
     "what": "Variazione percentuale del prezzo tra l’inizio della finestra di analisi (Start) e l’ultima chiusura precedente (End).",
