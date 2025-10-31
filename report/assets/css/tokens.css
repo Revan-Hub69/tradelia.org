@@ -2758,6 +2758,136 @@ html[data-theme="light"] #legal-overlay em {
   .ftr-col, .ftr-bottom{ border:1px solid #000 !important; border-radius:0 !important; box-shadow:none !important; background:#fff !important; }
   .ftr-socials a{ border:1px solid #000 !important; background:#fff !important; }
 }
+/* === LEGAL DRAWER · TONI UNIFICATI (light/dark) =================== */
+:root{
+  --legal-bg:            var(--surface-page);
+  --legal-head-bg:       color-mix(in oklab, var(--surface-card) 92%, transparent);
+  --legal-body-fg:       var(--ink);
+  --legal-divider:       var(--br-soft);
+  --legal-callout-bg:    color-mix(in oklab, var(--tone-warn-fg) 8%, transparent);
+  --legal-callout-br:    color-mix(in oklab, var(--tone-warn-fg) 55%, black 20%);
+  --legal-btn-fg:        var(--surface-page);
+  --legal-btn-bg:        var(--ink);
+  --legal-btn-br:        var(--ink);
+}
+
+html[data-theme="dark"]{
+  --legal-bg:            var(--surface-page);
+  --legal-head-bg:       color-mix(in oklab, var(--surface-card) 90%, transparent);
+  --legal-body-fg:       oklab(92% 0 0);
+  --legal-divider:       var(--br-panel-divider);
+  --legal-callout-bg:    color-mix(in oklab, var(--tone-warn-fg) 12%, transparent);
+  --legal-callout-br:    color-mix(in oklab, var(--tone-warn-fg) 70%, black 10%);
+  --legal-btn-fg:        var(--surface-page);
+  --legal-btn-bg:        var(--ink);
+  --legal-btn-br:        var(--ink);
+}
+
+/* Wrapper pannello */
+#legal-overlay .tl-panel{
+  background: var(--legal-bg);
+  background-image: none;
+  color: var(--legal-body-fg);
+  border-radius: var(--panel-radius, 14px);
+  border: 1px solid var(--legal-divider);
+  box-shadow: 0 24px 64px rgba(0,0,0,.35);
+  overflow:hidden;
+}
+/* Header */
+#legal-overlay .tl-panel__header{
+  background: var(--legal-head-bg);
+  backdrop-filter: saturate(1.1) blur(8px);
+  border-bottom: 1px solid var(--legal-divider);
+  box-shadow: 0 2px 8px rgba(0,0,0,.10);
+}
+#legal-overlay .tl-panel__title{
+  font-size: 16px; font-weight: 800; color: var(--legal-body-fg);
+}
+#legal-overlay .tl-panel__subtitle{
+  font-size: 13px; color: var(--muted);
+}
+
+/* Body leggibile e centrato */
+#legal-overlay .tl-panel__body{
+  max-width: 70ch; margin: 0 auto; color: var(--legal-body-fg);
+}
+#legal-overlay .tl-panel__body p{ margin: .9rem 0 0; }
+#legal-overlay .tl-panel__body hr{
+  border:0; border-top:1px solid var(--legal-divider); margin: .9rem 0;
+}
+
+/* Callout “Importante” */
+#legal-overlay .legal-callout{
+  background: var(--legal-callout-bg);
+  border: 1px solid var(--legal-callout-br);
+  border-radius: 10px;
+  padding: .9rem .9rem .85rem;
+}
+#legal-overlay .legal-callout-title{
+  color: var(--tone-warn-fg);
+  font-weight: 700;
+}
+
+/* Footer + primario */
+#legal-overlay .tl-panel__footer{
+  background: var(--legal-head-bg);
+  border-top: 1px solid var(--legal-divider);
+  box-shadow: 0 -6px 18px rgba(0,0,0,.08);
+}
+#legal-overlay .tl-panel__footer .btn{
+  background: var(--legal-btn-bg);
+  color: var(--legal-btn-fg);
+  border: 1px solid var(--legal-btn-br);
+  border-radius: 8px;
+  padding: .55rem .9rem;
+}
+#legal-overlay .tl-panel__footer .btn:hover{ filter: brightness(1.06); }
+
+/* === METRIC POPOVER · TONI UNIFICATI =============================== */
+:root{
+  --mp-bg:          var(--surface-card-elev);
+  --mp-br:          var(--br-soft);
+  --mp-title-fg:    var(--ink);
+  --mp-text-fg:     var(--ink);
+  --mp-source-fg:   var(--muted);
+  --mp-shadow:      0 24px 64px rgba(0,0,0,.18), 0 0 80px rgba(0,0,0,.10), var(--shadow-card);
+}
+html[data-theme="dark"]{
+  --mp-bg:          var(--surface-card-elev);
+  --mp-br:          var(--br-card);
+  --mp-title-fg:    oklab(96% 0 0);
+  --mp-text-fg:     oklab(92% 0 0);
+  --mp-source-fg:   oklab(82% 0 0 / .7);
+  --mp-shadow:      0 28px 72px rgba(0,0,0,.55), 0 0 96px rgba(0,0,0,.40);
+}
+
+.tl-popover{
+  background: var(--mp-bg);
+  border: 1px solid var(--mp-br);
+  box-shadow: var(--mp-shadow);
+}
+.tl-popover__title{ color: var(--mp-title-fg); font-size: 13px; font-weight: 700; }
+.tl-popover__body { color: var(--mp-text-fg);  font-size: 13px; }
+.tl-popover__source{ color: var(--mp-source-fg); }
+
+/* Close + badge più leggibili */
+.tl-popover__close{
+  border-color: var(--mp-br);
+}
+.tl-popover__badge{
+  border-color: var(--tone-neu-fg);
+}
+/* === METRIC MODAL (mobile) ======================================== */
+.tl-metric-modal{
+  background: var(--mp-bg);
+  border: 1px solid var(--mp-br);
+  box-shadow: var(--mp-shadow);
+}
+.tl-metric-modal__title  { color: var(--mp-title-fg); }
+.tl-metric-modal__body   { color: var(--mp-text-fg); }
+.tl-metric-modal__source { color: var(--mp-source-fg); }
+.tl-metric-modal__close  { border-color: var(--mp-br); }
+
 
 /* =========================================================
    FINE
