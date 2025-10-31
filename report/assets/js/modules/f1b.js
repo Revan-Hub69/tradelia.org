@@ -533,16 +533,15 @@ function renderDrawerDesktopShellPublic(sectionsObj) {
           height:100%;
           overflow:auto;
         ">
-
-        ${drawerMenuButtonPublic("regime","Regime & Rischio")}
-        ${drawerMenuButtonPublic("breadth","Breadth & Rotazione")}
-        ${drawerMenuButtonPublic("internals","Internals")}
-        ${drawerMenuButtonPublic("street","Street View")}
-        ${drawerMenuButtonPublic("sintesi","Conclusione")}
-        ${drawerMenuButtonPublic("audit","Audit")}
-        ${drawerMenuButtonPublic("mifid","MiFID")}
-      </aside>
-
+// Sidebar (desktop)
+${drawerMenuButtonPublic("regime","Regime di Mercato")}
+${drawerMenuButtonPublic("breadth","Ampiezza e Rotazione")}
+${drawerMenuButtonPublic("internals","Market Internals")}
+${drawerMenuButtonPublic("street","Narrativa Istituzionale")}
+${drawerMenuButtonPublic("sintesi","Sintesi Educativa")}
+${drawerMenuButtonPublic("audit","Qualità Dati")}
+${drawerMenuButtonPublic("mifid","Informativa MiFID")}
+>
       <main class="f1b-panel-content flex-1 min-w-0"
         style="
           height:100%;
@@ -619,13 +618,15 @@ function renderDrawerMobileShellPublic(sectionsObj) {
           padding-right:2rem;
         "
       >
-        ${mobileTabButton("regime","Regime")}
-        ${mobileTabButton("breadth","Breadth")}
-        ${mobileTabButton("internals","Internals")}
-        ${mobileTabButton("street","Street")}
-        ${mobileTabButton("sintesi","Conclusione")}
-        ${mobileTabButton("audit","Audit")}
-        ${mobileTabButton("mifid","MiFID")}
+    // Mobile tabs
+${mobileTabButton("regime","Regime di Mercato")}
+${mobileTabButton("breadth","Ampiezza e Rotazione")}
+${mobileTabButton("internals","Market Internals")}
+${mobileTabButton("street","Narrativa Istituzionale")}
+${mobileTabButton("sintesi","Sintesi Educativa")}
+${mobileTabButton("audit","Qualità Dati")}
+${mobileTabButton("mifid","Informativa MiFID")}
+
       </div>
 
       <!-- fade destra + hint freccia -->
