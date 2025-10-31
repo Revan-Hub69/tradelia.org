@@ -315,16 +315,17 @@ function renderF2DesktopShell(sections){
   return `
     <div class="f1b-panel-desktop" style="display:flex;flex-direction:row;gap:1rem;height:66vh;">
       <aside class="f1b-panel-menu" style="min-width:180px;max-width:200px;border-right:1px solid var(--br-card);height:100%;overflow:auto;">
-        ${drawerBtnF2('macro','Controlli rischio')}
-        ${drawerBtnF2('sci','SCI')}
-        ${drawerBtnF2('dpi','DPI')}
-        ${drawerBtnF2('fundamentals','Fundamentals')}
-        ${drawerBtnF2('icr','ICR')}
-        ${drawerBtnF2('etfpos','ETF & Positioning')}
-        ${drawerBtnF2('news','Newsflow')}
-        ${drawerBtnF2('surveys','Survey')}
-        ${drawerBtnF2('sintesi','Conclusione')}
-        ${drawerBtnF2('governance','Governance')}
+    ${drawerBtnF2('macro','Controlli Rischio')}
+${drawerBtnF2('sci','Sentiment sintetico')}
+${drawerBtnF2('dpi','Fondamentali (profilo)')}
+${drawerBtnF2('fundamentals','Fondamentali · Trend')}
+${drawerBtnF2('icr','Confronto Peers & ETF')}
+${drawerBtnF2('etfpos','ETF & Posizionamento')}
+${drawerBtnF2('news','Newsflow 24–48h')}
+${drawerBtnF2('surveys','Sondaggi')}
+${drawerBtnF2('sintesi','Sintesi Educativa')}
+${drawerBtnF2('governance','Governance')}
+
       </aside>
       <main id="f2-scroll-desktop" class="f1b-panel-content flex-1 min-w-0" style="height:100%;overflow:auto;-webkit-overflow-scrolling:touch;padding:1rem;">
         <div data-f2-view="macro">${sections.macroHTML}</div>
@@ -342,18 +343,19 @@ function renderF2DesktopShell(sections){
 }
 
 function renderF2MobileShell(sections){
-  const pills = [
-    ['macro','Controlli'],
-    ['sci','SCI'],
-    ['dpi','DPI'],
-    ['fundamentals','Fundamentals'],
-    ['icr','ICR'],
-    ['etfpos','ETF & Pos'],
-    ['news','News'],
-    ['surveys','Survey'],
-    ['sintesi','Conclusione'],
-    ['governance','Governance']
-  ].map(([k,l])=>mobileTabBtnF2(k,l)).join('');
+const pills = [
+  ['macro','Controlli'],
+  ['sci','Sentiment'],
+  ['dpi','Profilo Fondam.'],
+  ['fundamentals','Trend Fondam.'],
+  ['icr','Peers & ETF'],
+  ['etfpos','ETF & Posiz.'],
+  ['news','News 24–48h'],
+  ['surveys','Sondaggi'],
+  ['sintesi','Sintesi'],
+  ['governance','Governance']
+].map(([k,l])=>mobileTabBtnF2(k,l)).join('');
+
   const mobileTabsBar = `
     <div class="f1b-mobile-tabs-fixed" style="position:relative;flex-shrink:0;width:100%;display:flex;align-items:center;border-bottom:1px solid var(--br-panel-divider);background:var(--surface-panel-head);box-shadow:0 6px 12px rgba(0,0,0,.12);padding:.6rem .75rem;">
       <div class="f1b-tabs-fade-left" style="position:absolute;left:0;top:0;bottom:0;width:24px;pointer-events:none;background:linear-gradient(to right,var(--surface-panel-head) 0%, rgba(0,0,0,0) 80%);opacity:.6;"></div>
