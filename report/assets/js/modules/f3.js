@@ -76,15 +76,24 @@ export function renderCard(rawData, ctx = {}){
     </section>`;
 }
 
-export function bindCard(node, rawData, ctx = {}){
-  if(!node || !rawData) return;
+export function bindCard(node, rawData, ctx = {}) {
+  if (!node) return;
   const data = normalizeDataF3Public(rawData);
 
-  const btn = node.querySelector('[data-open-f3-details="true"]');
-  if (btn) btn.addEventListener('click', ()=> openF3DrawerPublic(data));
+  // Delegation: intercetta click su QUALSIASI discendente con l'attributo data-open-f3-details
+  if (!node.__f3Delegated) {
+    node.__f3Delegated = true;
+    node.addEventListener('click', (ev) => {
+      const btn = ev.target && ev.target.closest('[data-open-f3-details="true"]');
+      if (!btn) return;
+      // apre il drawer in modo affidabile
+      try { openF3DrawerPublic(data); } catch (e) { console.error('F3 drawer open error:', e); }
+    }, { passive: true });
+  }
 
-  if (window.__TradeliaUI?.bindMetricInfoButtons){
-    try { window.__TradeliaUI.bindMetricInfoButtons(node); } catch(e){}
+  // Tooltip "?" (safe-guard)
+  if (window.__TradeliaUI?.bindMetricInfoButtons) {
+    try { window.__TradeliaUI.bindMetricInfoButtons(node); } catch (_) {}
   }
 }
 
