@@ -186,9 +186,8 @@
     "what": "Il contenuto di F1B è informativo e formativo. Non è consulenza personalizzata.",
     "how": "Devi sempre sovrapporre il tuo orizzonte temporale, la tua tolleranza al rischio e la tua situazione patrimoniale. Questo modulo non li conosce.",
     "source": "Linee guida MiFID II / ESMA su materiale informativo vs raccomandazione personalizzata."
-  }
-}
-{
+  },
+  
   "ModuleStatus": {
     "title": "ModuleStatus",
     "what": "Stato operativo del modulo al momento della pubblicazione (es. ACTIVE, REVIEW, HOLD).",
