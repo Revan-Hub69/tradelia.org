@@ -541,7 +541,7 @@ ${drawerMenuButtonPublic("street","Narrativa Istituzionale")}
 ${drawerMenuButtonPublic("sintesi","Sintesi Educativa")}
 ${drawerMenuButtonPublic("audit","Qualità Dati")}
 ${drawerMenuButtonPublic("mifid","Informativa MiFID")}
->
+</aside> 
       <main class="f1b-panel-content flex-1 min-w-0"
         style="
           height:100%;
