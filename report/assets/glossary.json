@@ -1,623 +1,409 @@
 {
+  "_v": "2025-10-31-F2",
   "ModuleStatus": {
     "title": "ModuleStatus",
-    "what": "Stato operativo del modulo F1B al momento della pubblicazione (es. ACTIVE, DEGRADED, PARTIAL).",
-    "how": "Se non è ACTIVE significa che uno o più input potrebbero essere incompleti o meno affidabili (es. ritardo su curva tassi, feed hedge parziale).",
-    "source": "Monitoraggio interno Tradelia AI sullo stato dei feed e delle pipeline."
+    "what": "Stato operativo del modulo al momento della pubblicazione (ACTIVE/REVIEW/HOLD).",
+    "how": "Se non è ACTIVE, alcuni input possono essere parziali o degradati; la lettura resta informativa.",
+    "source": "Best practice di governance dei dati (BCBS 239; ESMA Supervisory Briefings)."
   },
-
   "Freshness": {
     "title": "Freshness",
-    "what": "Quanto sono recenti i dati sottostanti (prezzi, volatilità, curva tassi, sentiment rischio) rispetto all’orario di generazione del report.",
-    "how": "Freshness alta ('≤ T-1', 'live') = fotografia quasi in tempo reale. Freshness bassa ('T-2') = il mercato potrebbe già essere andato altrove.",
-    "source": "Timestamp interni di ingestione Tradelia AI + latenza feed esterni."
+    "what": "Allineamento temporale delle fonti rispetto al timestamp del report.",
+    "how": "‘≤ T-1’/‘live’ = dati aggiornati; ‘T-2’ o oltre = rischio di ‘staleness’ e minor affidabilità tattica.",
+    "source": "Principi di qualità dati (BCBS 239); data latency & timeliness in risk reporting."
   },
-
   "HeroDisclaimer": {
     "title": "Disclaimer",
-    "what": "Questo modulo è materiale informativo/educativo sul contesto rischio.",
-    "how": "Non tiene conto dei tuoi obiettivi personali, del tuo profilo di rischio o del tuo orizzonte temporale. Non è una raccomandazione operativa.",
-    "source": "Linee guida MiFID II / ESMA su comunicazioni non personalizzate."
+    "what": "Materiale informativo/educativo non personalizzato.",
+    "how": "Non costituisce consulenza o raccomandazione; non considera obiettivi, conoscenze ed esperienza del lettore.",
+    "source": "MiFID II/ESMA – Guidelines on marketing communications & investor protection."
   },
 
   "StrategyMode_macro": {
     "title": "StrategyMode",
-    "what": "Regime tattico di mercato a 3–10 giorni (es. Momentum, Neutral/Range, Pullback).",
-    "how": "Momentum = mercato che premia il rischio e accetta volatilità controllata. Pullback = fase di stress/risk-off con domanda di hedge e qualità. È il tono dominante, non è un segnale di ingresso/uscita.",
-    "source": "Modello proprietario Tradelia AI su volatilità implicita, flussi rischio, breadth e credito."
+    "what": "Regime tattico 3–10 giorni (Momentum / Neutral / Pullback).",
+    "how": "Classifica il contesto di rischio combinando volatilità, credito, breadth e flussi; non è un segnale di trading.",
+    "source": "Carhart (1997) Momentum; Asness et al. (2013) Quality/Momentum; approcci regime-switching."
   },
-
   "RegimeScore": {
     "title": "RegimeScore",
-    "what": "Indicatore sintetico dell'appetito al rischio. Verde = mercato disposto a rischiare; Rosso = mercato difensivo / flight to safety.",
-    "how": "Serve come termometro del clima 'risk-on vs risk-off'. Non è direzionale sul prezzo, ma ti dice quanto il mercato è comodo a portare rischio di breve periodo.",
-    "source": "Ponderazione interna di volatilità, credito, liquidità e leadership settoriale high beta vs difensiva."
+    "what": "Indicatore sintetico dell’appetito al rischio (risk-on vs risk-off).",
+    "how": "Pondera volatilitá, credito e leadership fattoriale per stimare il tono di mercato.",
+    "source": "Adrian, Crump & Moench (2013) Risk Premia; Lettau & Ludvigson (2010) macro risk factors."
   },
-
   "VolRegime": {
     "title": "Volatilità / Hedge",
-    "what": "Domanda di protezione: esempi includono VIX, future di volatilità, acquisto oro/beni rifugio.",
-    "how": "Verde = poca domanda di protezione → mercato rilassato. Rosso = coperture care/attive → mercato nervoso. Indica stress, non direzione obbligata.",
-    "source": "CBOE surface di volatilità, future sulla vol, comportamento cross-asset monitorato da Tradelia AI."
+    "what": "Domanda di copertura rilevata via indici/term structure di volatilità.",
+    "how": "Vol alta e term structure compressa implicano maggiore domanda di hedge e stress.",
+    "source": "Whaley (2009) Understanding VIX; Carr & Wu (2006) volatility risk premia."
   },
-
   "LiquidityRegimeScore": {
     "title": "Curva & Costo capitale",
-    "what": "Quanto le condizioni di funding e la struttura della curva tassi (Treasury) favoriscono o frenano il rischio.",
-    "how": "Curve accomodanti = capitale più facile, più supporto per equity/speculazione. Curve tese = freno macro, rischio più costoso da sostenere.",
-    "source": "Curva Treasury USA, stress sul funding a breve, metriche di tightness calcolate da Tradelia AI."
+    "what": "Condizioni finanziarie implicate dalla curva tassi e dal funding.",
+    "how": "Curve tese e funding costoso scoraggiano il rischio; curve accomodanti lo favoriscono.",
+    "source": "Brunnermeier & Pedersen (2009) Market & funding liquidity; Hanson & Stein (2015)."
   },
-
   "CreditRiskBlock": {
     "title": "Credito",
-    "what": "Segnali dal mercato del credito tra rischio alto beta e qualità investment grade.",
-    "how": "Se il credito high beta soffre rispetto alla qualità, è spesso un early warning di risk-off imminente in equity.",
-    "source": "Spread HY vs IG, flussi su bond corporate, tono desk istituzionali sintetizzati da Tradelia AI."
+    "what": "Segnale dal credito (HY vs IG) come proxy di stress/benignità.",
+    "how": "Allargamento HY vs IG spesso segnala deterioramento dell’appetito al rischio.",
+    "source": "Gilchrist & Zakrajšek (2012) Credit spreads & economic activity."
   },
-
   "FX_Regime": {
     "title": "FX / USD",
-    "what": "Forza del dollaro e tono FX come proxy del rischio globale.",
-    "how": "USD forte = condizioni finanziarie più dure → spesso risk-off globale. USD morbido = condizioni più facili → spesso più appetito rischio.",
-    "source": "Cross FX principali (DXY, EUR/USD, USD/JPY) e segnali di liquidità USD monitorati da Tradelia AI."
+    "what": "Ruolo del dollaro nelle condizioni finanziarie globali.",
+    "how": "USD forte tende a irrigidire le condizioni globali; USD debole le allenta.",
+    "source": "Rey (2013) Dilemma not Trilemma; Bruno & Shin (2015) Global dollar cycle."
   },
-
   "RiskWindow": {
     "title": "RiskWindow (3–10g)",
-    "what": "Fattori/eventi macro che possono muovere il mercato nell’orizzonte tattico imminente (3–10 giorni).",
-    "how": "È una watchlist di driver potenzialmente sensibili (dati macro, policy, rollover liquidità). Non è una call direzionale, è 'cose da cui ci aspettiamo movimento'.",
-    "source": "Calendario macro, rischio sistemico, temi di policy monitorati da Tradelia AI."
+    "what": "Driver/eventi potenzialmente market-moving nell’orizzonte tattico.",
+    "how": "Lista di sorveglianza di dati macro/policy/rollover; non è una call direzionale.",
+    "source": "Letteratura su announcement risk e macro news (e.g., Savor & Wilson, 2013)."
   },
-
   "Breadth_1M": {
     "title": "Breadth (1M)",
-    "what": "Percentuale di settori/temi che sono positivi nell’ultimo ~mese.",
-    "how": "Breadth ampia = rialzo 'sano' e diffuso. Breadth stretta = poche megacap tirano su tutto, struttura più fragile.",
-    "source": "Aggregazione performance settoriali/tematiche su base 1M da modelli interni."
+    "what": "Diffusione cross-sectional della forza di mercato su ~1 mese.",
+    "how": "Partecipazione ampia rafforza la robustezza del trend rispetto a concentrazioni su poche mega-cap.",
+    "source": "Stivers (2003) Return dispersion & breadth; concetti di diffusion index."
   },
-
   "RiskTilt_1M": {
     "title": "RiskTilt (1M)",
-    "what": "Rotazione tra ciclici/high beta/growth e settori difensivi/high quality nell’ultimo mese.",
-    "how": "Se vincono ciclici/growth → mercato compra rischio. Se vincono difensivi → mercato sta cercando protezione e resilienza.",
-    "source": "Spread di performance tra panieri fattoriali risk-on vs difensivi costruiti da Tradelia AI."
+    "what": "Rotazione tra fattori pro-ciclo/high-beta e difensivi/quality.",
+    "how": "Prevalenza di growth/high-beta → maggiore propensione al rischio; difensivi/quality → cautela.",
+    "source": "Fama & French (1993, 2015) factor models; Asness, Frazzini & Pedersen (2013) Quality."
   },
-
   "SmallCapPressure_1W": {
     "title": "SmallCap Pressure (1W)",
-    "what": "Pressione relativa sulle small/micro cap contro mid/large cap negli ultimi ~5 giorni di mercato.",
-    "how": "Small cap deboli = mercato sta togliendo rischio marginale. Small cap forti = appetito rischio più profondo, non solo mega-cap.",
-    "source": "Confronto tra panieri small-cap e large-cap monitorato internamente."
+    "what": "Forza/debolezza relativa di small/micro vs large cap a 1 settimana.",
+    "how": "Debolezza small suggerisce ritiro del rischio marginale.",
+    "source": "Banz (1981) size effect; Hou, Xue & Zhang (2015) q-factor model."
   },
-
   "IndexMomentum_1W": {
     "title": "Index Momentum (1W)",
-    "what": "Momentum tattico tra indici chiave (equity, talvolta crypto beta / altri asset rischio) nell’ultima settimana.",
-    "how": "Se diversi indici stanno andando nella stessa direzione risk-on, il tono è coerente e più credibile. Se è solo un indice isolato, più fragile.",
-    "source": "Performance relativa cross-indici e co-movimento settimanale analizzato da Tradelia AI."
+    "what": "Co-movimento direzionale breve tra indici chiave.",
+    "how": "Coerenza su più indici rafforza la lettura del regime rispetto a segnali isolati.",
+    "source": "Jegadeesh & Titman (1993) momentum; riferimenti su comovimento intermarket."
   },
-
   "SizeBias": {
     "title": "Size Bias",
-    "what": "Preferenza del mercato per una fascia di capitalizzazione (mega/large vs mid vs small).",
-    "how": "Solo mega-cap forti = concentrazione, rischio di mercato 'stretto'. Participation anche su cap più piccole = breadth migliore.",
-    "source": "Leadership relativa tra panieri per dimensione aziendale."
+    "what": "Preferenza del mercato per specifiche classi di capitalizzazione.",
+    "how": "Leadership solo mega-cap implica concentrazione e maggiore fragilità del trend.",
+    "source": "Fama & French (1993) SMB factor."
   },
-
   "Leadership multi-timeframe": {
     "title": "Leadership multi-timeframe",
-    "what": "Settori/temi che guidano il mercato sia sul breve che sul medio orizzonte.",
-    "how": "Se lo stesso tema domina su più timeframe (es. 1W + 1M) è più probabile che sia un trend strutturale, non solo rumore giornaliero.",
-    "source": "Ranking interno Tradelia AI sulle performance combinate multi-timeframe."
+    "what": "Temi/settori leader sia breve che medio orizzonte.",
+    "how": "Persistenza su più orizzonti aumenta la probabilità che il trend sia strutturale.",
+    "source": "Asness et al. (2013) factor momentum; Barroso & Santa-Clara (2015)."
   },
-
   "Leadership difensiva qualitativa": {
     "title": "Leadership difensiva qualitativa",
-    "what": "Sovraperformance di settori considerati 'rifugio' (qualità, stabilità flussi di cassa, pricing power).",
-    "how": "Quando domina questa leadership vuol dire che il mercato privilegia sicurezza/robustezza più che crescita aggressiva.",
-    "source": "Analisi fattori quality / low-vol / defensives vs mercato aggregato."
+    "what": "Sovraperformance di quality/low-vol/defensives.",
+    "how": "Indica ricerca di resilienza (cash-flow/stabilità) più che crescita aggressiva.",
+    "source": "Asness, Frazzini & Pedersen (2013) Quality; Ang et al. (2006) Low-vol."
   },
-
   "Settori in ritardo": {
     "title": "Settori in ritardo",
-    "what": "Temi/settori che stanno sottoperformando in modo persistente.",
-    "how": "Spesso coincide con aree cicliche più fragili o temi hype scarichi. È la coda debole della market structure.",
-    "source": "Ranking bottom-performers su più timeframe calcolato da Tradelia AI."
+    "what": "Sottoperformance persistente di temi/settori.",
+    "how": "Often coda debole della struttura; utile per misurare asimmetrie del regime.",
+    "source": "Cross-sectional asset pricing & dispersion (Stivers, 2003)."
   },
-
   "Indici (1W)": {
     "title": "Indici (1W)",
-    "what": "Movimento recente (~1 settimana) dei principali indici azionari (es. SPX, NDX...).",
-    "how": "Contestualizza se il tono è risk-on o risk-off nell’ultimissimo orizzonte. È stato recente, non una raccomandazione.",
-    "source": "Feed indice equity blue-chip, consolidati da Tradelia AI."
+    "what": "Movimento recente dei principali indici azionari.",
+    "how": "Serve a contestualizzare il tono tattico; non è indicazione operativa.",
+    "source": "Metodologia indici benchmark; letteratura su announcement/momentum breve."
   },
-
   "Futures / Commodities (1W)": {
     "title": "Futures / Commodities (1W)",
-    "what": "Move settimanale su future e materie prime macro-sensibili (energia, metalli, ecc.).",
-    "how": "Aiuta a capire se il mercato sta prezzando inflazione, crescita, tensione geopolitica o stress energetico.",
-    "source": "Feed futures/commodities (energia, industriali, oro) analizzati su base ~1W."
+    "what": "Dinamica settimanale di energia/metalli/altre materie prime.",
+    "how": "Segnala pressioni su inflazione/crescita o shock geopolitici.",
+    "source": "Gorton & Rouwenhorst (2006) commodities as an asset class."
   },
-
   "Curva Treasury": {
     "title": "Curva Treasury",
-    "what": "Forma e spostamenti della curva dei rendimenti governativi USA.",
-    "how": "Slope/inversione/steepening influenzano costo del capitale, condizioni finanziarie e quindi appetito rischio globale.",
-    "source": "US Treasury yield curve, variazioni giornaliere/settimanali rielaborate da Tradelia AI."
+    "what": "Forma/spostamenti della curva UST come segnale macro-finanziario.",
+    "how": "Steepening/inversione modulano costo del capitale e condizioni finanziarie.",
+    "source": "Estrella & Hardouvelis (1991) yield curve & cycles."
   },
-
   "Volatilità & USD": {
     "title": "Volatilità & USD",
-    "what": "Quadro combinato tra volatilità implicita e forza del dollaro.",
-    "how": "Vol alta + USD forte → spesso risk-off globale (corsa alla protezione). Vol bassa + USD morbido → contesto più disteso.",
-    "source": "Indici CBOE di volatilità, FX USD e segnali di liquidità USD."
+    "what": "Quadro combinato tra rischio implicito (vol) e ciclo del dollaro.",
+    "how": "Vol elevata + USD forte = condizioni più rigide e risk-off.",
+    "source": "Whaley (2009) VIX; Rey (2013) global financial cycle."
   },
 
   "FreshnessScore": {
     "title": "FreshnessScore",
-    "what": "Grado di aggiornamento delle fonti chiave (prezzi, curva tassi, vol, credito, breadth).",
-    "how": "Verde = dati molto freschi/coerenti. Giallo = parziale ritardo. Rosso = possibile dato stantio o feed rumoroso.",
-    "source": "Controlli automatici Tradelia AI sulla latenza e l’allineamento temporale tra sorgenti."
-  },
-
-  "ConfidenceFinal": {
-    "title": "ConfidenceFinal",
-    "what": "Confidenza interna sulla qualità e coerenza del quadro mostrato.",
-    "how": "Alto = feed stabili/completi. Basso = rumore (illiquidità, after hours strano, mismatch tra fonti). Non è probabilità di profitto.",
-    "source": "Heuristics Tradelia AI su integrità feed, volumi, continuità serie, shock tecnici."
-  },
-
-  "DataIntegrity": {
-    "title": "DataIntegrity",
-    "what": "Quanto i dati usati sono consistenti fra loro (niente buchi, niente numeri impossibili).",
-    "how": "Se giallo/rosso: alcuni pezzi potrebbero essere parziali o incoerenti (es. future illiquido, curva in rollover tecnico).",
-    "source": "Controlli di validazione serie storiche e fallback feed Tradelia AI."
-  },
-
-  "FeedSync": {
-    "title": "FeedSync",
-    "what": "Allineamento temporale tra le varie sorgenti (cash market, future, vol, FX, curva tassi).",
-    "how": "Se le sorgenti sono disallineate temporalmente, stai guardando un mosaico non perfettamente sincrono → lettura meno affidabile.",
-    "source": "Scheduler interno Tradelia AI che confronta timestamp cross-asset e marca eventuali drift."
-  },
-
-  "MiFID_disclaimer": {
-    "title": "Informativa MiFID",
-    "what": "Il contenuto di F1B è informativo e formativo. Non è consulenza personalizzata.",
-    "how": "Devi sempre sovrapporre il tuo orizzonte temporale, la tua tolleranza al rischio e la tua situazione patrimoniale. Questo modulo non li conosce.",
-    "source": "Linee guida MiFID II / ESMA su materiale informativo vs raccomandazione personalizzata."
-  },
-  
-  "ModuleStatus": {
-    "title": "ModuleStatus",
-    "what": "Stato operativo del modulo al momento della pubblicazione (es. ACTIVE, REVIEW, HOLD).",
-    "how": "Se non è ACTIVE, uno o più input potrebbero essere incompleti o meno affidabili.",
-    "source": "Monitoraggio interno Tradelia AI sullo stato dei feed e pipeline."
-  },
-  "Freshness": {
-    "title": "Freshness",
-    "what": "Quanto sono recenti i dati rispetto all’orario di generazione del report.",
-    "how": "‘≤ T-1’/‘live’ = fotografia aggiornata; ‘T-2’ = possibile scostamento dal mercato attuale.",
-    "source": "Timestamp interni + latenze feed esterni."
-  },
-  "HeroDisclaimer": {
-    "title": "Disclaimer",
-    "what": "Materiale informativo/educativo.",
-    "how": "Non considera obiettivi personali o profilo di rischio. Non è raccomandazione.",
-    "source": "Linee guida MiFID II / ESMA."
-  },
-
-  "StrategyMode_macro": {
-    "title": "StrategyMode",
-    "what": "Regime tattico 3–10g (Momentum / Neutral / Pullback).",
-    "how": "Tono dominante del contesto; non è un segnale di trading.",
-    "source": "Modello proprietario su vol, breadth, credito e flussi."
-  },
-  "RegimeScore": {
-    "title": "RegimeScore",
-    "what": "Appetito al rischio sintetico.",
-    "how": "Verde=risk-on; Rosso=risk-off. Non è direzionale sul prezzo.",
-    "source": "Ponderazione di vol, credito, liquidità e leadership settoriale."
-  },
-  "VolRegime": {
-    "title": "Volatilità / Hedge",
-    "what": "Domanda di protezione (es. VIX, future vol).",
-    "how": "Verde=poca protezione; Rosso=coperture elevate → stress.",
-    "source": "CBOE e surface di volatilità; analisi Tradelia AI."
-  },
-  "LiquidityRegimeScore": {
-    "title": "Curva & Costo capitale",
-    "what": "Condizioni di funding e struttura curva tassi.",
-    "how": "Curve accomodanti favoriscono rischio; curve tese lo frenano.",
-    "source": "Curva UST e metriche di tightness."
-  },
-  "CreditRiskBlock": {
-    "title": "Credito",
-    "what": "Segnali dal mercato del credito (HY vs IG).",
-    "how": "HY debole vs IG = early warning risk-off.",
-    "source": "Spread HY/IG, flussi corporate."
-  },
-  "FX_Regime": {
-    "title": "FX / USD",
-    "what": "Forza USD come proxy rischio globale.",
-    "how": "USD forte spesso = condizioni finanziarie più dure.",
-    "source": "DXY, EURUSD, USDJPY."
-  },
-  "RiskWindow": {
-    "title": "RiskWindow (3–10g)",
-    "what": "Driver/eventi sensibili prossimi.",
-    "how": "Watchlist di possibili catalizzatori; non è call direzionale.",
-    "source": "Calendari macro/policy e monitoraggio sistemico."
-  },
-  "Breadth_1M": {
-    "title": "Breadth (1M)",
-    "what": "Diffusione del rialzo nel mese.",
-    "how": "Ampia = struttura sana; stretta = concentrazione su poche mega-cap.",
-    "source": "Aggregazione performance settoriali/tematiche."
-  },
-  "RiskTilt_1M": {
-    "title": "RiskTilt (1M)",
-    "what": "Rotazione tra high beta/ciclici e difensivi.",
-    "how": "Ciclici/growth vincenti = mercato compra rischio.",
-    "source": "Spread tra panieri fattoriali."
-  },
-  "SmallCapPressure_1W": {
-    "title": "SmallCap Pressure (1W)",
-    "what": "Pressione su small/micro vs large cap.",
-    "how": "Small deboli = rimozione rischio marginale.",
-    "source": "Confronti panieri per capitalizzazione."
-  },
-  "IndexMomentum_1W": {
-    "title": "Index Momentum (1W)",
-    "what": "Momentum tattico degli indici chiave.",
-    "how": "Co-movimento ampio = tono più credibile.",
-    "source": "Performance cross-indici."
-  },
-  "SizeBias": {
-    "title": "Size Bias",
-    "what": "Preferenza per una fascia di market cap.",
-    "how": "Leadership solo mega = concentrazione; ampia = migliore breadth.",
-    "source": "Ranking per dimensione."
-  },
-  "Leadership multi-timeframe": {
-    "title": "Leadership multi-timeframe",
-    "what": "Temi leader su più timeframe.",
-    "how": "Coerenza 1W+1M suggerisce trend più strutturale.",
-    "source": "Ranking combinato Tradelia AI."
-  },
-  "Leadership difensiva qualitativa": {
-    "title": "Leadership difensiva qualitativa",
-    "what": "Sovraperformance settori rifugio/quality.",
-    "how": "Mercato privilegia resilienza e stabilità.",
-    "source": "Fattori quality/low-vol vs mercato."
-  },
-  "Settori in ritardo": {
-    "title": "Settori in ritardo",
-    "what": "Sottoperformers persistenti.",
-    "how": "Aree cicliche fragili o temi hype scarichi.",
-    "source": "Ranking bottom multi-timeframe."
-  },
-  "Indici (1W)": {
-    "title": "Indici (1W)",
-    "what": "Movimento recente dei principali indici.",
-    "how": "Contestualizza il tono più immediato.",
-    "source": "Feed indici equity."
-  },
-  "Futures / Commodities (1W)": {
-    "title": "Futures / Commodities (1W)",
-    "what": "Move settimanale su future/commodities.",
-    "how": "Segnali su inflazione/crescita/energia.",
-    "source": "Feed futures/commodities."
-  },
-  "Curva Treasury": {
-    "title": "Curva Treasury",
-    "what": "Forma/spostamenti della curva UST.",
-    "how": "Slope/steepening influenza costo capitale.",
-    "source": "US Treasury yield curve."
-  },
-  "Volatilità & USD": {
-    "title": "Volatilità & USD",
-    "what": "Quadro combinato vol implicita + USD.",
-    "how": "Vol alta + USD forte = spesso risk-off.",
-    "source": "CBOE + FX USD."
-  },
-  "FreshnessScore": {
-    "title": "FreshnessScore",
-    "what": "Grado di aggiornamento delle fonti chiave.",
-    "how": "Verde=fresco; Giallo=parziale; Rosso=stale/rumoroso.",
-    "source": "Controlli automatici di latenza/allineamento."
+    "what": "Grado di aggiornamento/sincronia delle fonti chiave usate dal modulo.",
+    "how": "Valuta latenza e coerenza temporale tra feed eterogenei.",
+    "source": "BCBS 239 – accuracy, timeliness & integrity in risk data."
   },
   "ConfidenceFinal": {
     "title": "ConfidenceFinal",
-    "what": "Confidenza sulla qualità/coerenza del quadro.",
-    "how": "Alto=feed stabili; Basso=rumore/disallineamenti.",
-    "source": "Heuristics Tradelia AI."
+    "what": "Confidenza interna nella qualità/completezza del quadro.",
+    "how": "Tiene conto di drift, outlier, lacune di copertura e coerenza inter-asset.",
+    "source": "Metodi di data quality & reliability in risk systems (BCBS 239; QA frameworks)."
   },
   "DataIntegrity": {
     "title": "DataIntegrity",
-    "what": "Consistenza (assenza buchi/outlier impossibili).",
-    "how": "Giallo/rosso = parzialità o incoerenze.",
-    "source": "Validazioni serie + fallback."
+    "what": "Consistenza interna dei dati (assenza di buchi/valori impossibili).",
+    "how": "Controlli di validazione e reconciliazione cross-fonte.",
+    "source": "BCBS 239 – integrity & reconciliation controls."
   },
   "FeedSync": {
     "title": "FeedSync",
-    "what": "Allineamento temporale tra sorgenti.",
-    "how": "Drift temporale riduce affidabilità della lettura.",
-    "source": "Scheduler e confronti timestamp interni."
+    "what": "Sincronizzazione temporale tra sorgenti (cash, futures, FX, vol, curve).",
+    "how": "Desincronizzazioni riducono l’affidabilità del quadro tattico.",
+    "source": "Design pattern di market data integration & timestamp alignment."
   },
   "MiFID_disclaimer": {
     "title": "Informativa MiFID",
-    "what": "Contenuto informativo/formativo, non consulenza.",
-    "how": "Sovrapponi orizzonte e rischio personali.",
-    "source": "MiFID II / ESMA."
+    "what": "Contenuti non personalizzati, scopo informativo/educativo.",
+    "how": "Non costituiscono consulenza; l’utente deve valutare situazione e obiettivi.",
+    "source": "MiFID II / ESMA – Investor protection & marketing communications."
   },
 
   "MacroGate_info": {
     "title": "MacroGate",
-    "what": "Semaforo rischio eventi vicini (48–72h).",
-    "how": "PASS=ok; REVIEW=attenzione; FAIL=interrompere analisi operativa.",
-    "source": "WebProbe Tier-1 (Reuters/Bloomberg/SEC/Nasdaq)."
+    "what": "Semaforo eventi macro/policy vicini (48–72h) sensibili al prezzo.",
+    "how": "PASS/REVIEW/FAIL in base a densità e rilevanza dei catalizzatori.",
+    "source": "Letteratura su announcement risk (Savor & Wilson, 2013); policy surprise."
   },
 
   "SentimentComposite_info": {
     "title": "SentimentComposite",
-    "what": "Sintesi qualitativa del sentiment ticker-level.",
-    "how": "Integra tecnico/news/consenso in un indicatore descrittivo.",
-    "source": "F2 · SCI + DPI (no opzioni)."
+    "what": "Composito qualitativo di sentiment ticker-level.",
+    "how": "Integra tecnico, news e consenso per descrivere il tono; non opera su opzioni.",
+    "source": "Baker & Wurgler (2006) investor sentiment; Tetlock (2007) news tone."
   },
   "ETF_FlowTone_info": {
     "title": "ETF Flow Tone",
-    "what": "Tono dei flussi ETF collegati al titolo/settore.",
-    "how": "Inflow=acquisti netti; Outflow=uscite; neutro=bilanciato.",
-    "source": "Pannelli ETF (1W/1M) consolidati."
+    "what": "Bias dei flussi (in/out) negli ETF più esposti al titolo/settore.",
+    "how": "Flussi passivi influenzano domanda offerta e co-movimento col paniere.",
+    "source": "Ben-David, Franzoni & Moussawi (2018) ETF & market quality."
   },
 
   "TECH_SIGNAL_info": {
-    "title": "Tecnico (Barchart)",
-    "what": "Lettura tecnica sintetica multi-TF.",
-    "how": "Non è un segnale F3; è un contesto (Buy/Hold/Sell).",
-    "source": "Barchart Technical Opinion (riassunto)."
+    "title": "Tecnico (multi-TF)",
+    "what": "Lettura tecnica sintetica su più timeframe.",
+    "how": "Indicatore descrittivo (Buy/Hold/Sell) non operativo.",
+    "source": "Evidence su trend/momentum: Jegadeesh & Titman (1993); Moskowitz et al. (2012)."
   },
   "NEWS_TONE_info": {
     "title": "News · Tono",
-    "what": "Polarità media delle headline recenti.",
-    "how": "Positive/Negative/Neutral sul perimetro ultimo 1–3 giorni.",
-    "source": "Rassegna news Tier-1."
+    "what": "Polarità media di headline recenti.",
+    "how": "Il tono informativo influenza temporaneamente i rendimenti attesi.",
+    "source": "Tetlock (2007) media content & stock returns."
   },
   "CONSENSUS_LEVEL_info": {
     "title": "Consenso analisti",
-    "what": "Livello sintetico (OW/Neutral/UW).",
-    "how": "Descrittivo, non prescrittivo.",
-    "source": "Consensus sell-side consolidato."
+    "what": "Livello sintetico del consenso sell-side.",
+    "how": "Utile per contesto; può riflettere informazioni diffusive.",
+    "source": "Womack (1996) analyst recommendations; Bradshaw (2011)."
   },
   "CONSISTENCY_info": {
     "title": "Stabilità consenso",
-    "what": "Quanto è stabile/varia il consenso (30–60g).",
-    "how": "Alta stabilità = narrativa più robusta.",
-    "source": "Serie storiche di revisioni e rating."
+    "what": "Stabilità/variazione recente di rating/target.",
+    "how": "Maggiore stabilità = narrativa più robusta.",
+    "source": "Letteratura su revisions e dispersion (Diether, Malloy & Scherbina, 2002)."
   },
 
   "PERF_VECTOR_info": {
     "title": "Performance vector",
-    "what": "Sintesi 1W/1M/3M descrittiva.",
-    "how": "Contestualizza il posizionamento recente.",
-    "source": "Pannelli price-only (no F3)."
+    "what": "Sintesi 1W/1M/3M a sola informazione di prezzo.",
+    "how": "Serve a contestualizzare momentum/mean-reversion di breve.",
+    "source": "Jegadeesh (1990) short-term reversals; Jegadeesh & Titman (1993) momentum."
   },
   "VALUATION_SNAPSHOT_info": {
     "title": "Valuation snapshot",
-    "what": "Multipli chiave vs peers/settore.",
-    "how": "Premio/sconto informativo, non target price.",
-    "source": "Dati fondamentali consolidati."
+    "what": "Multipli (PE/EV/EBITDA/PS) vs storia/peers.",
+    "how": "Premi/sconti informativi sulle aspettative implicite.",
+    "source": "Penman (2010) valuation; Koller et al. (McKinsey Valuation)."
   },
   "MARGINS_SNAPSHOT_info": {
     "title": "Margins snapshot",
-    "what": "Margini lordi/operativi.",
-    "how": "Quadro statico di redditività.",
-    "source": "Bilanci/riclassificazioni."
+    "what": "Margini lordi/operativi attuali.",
+    "how": "Misura resilienza/efficienza operativa.",
+    "source": "Beaver (1966) accounting info & performance; analisi fundamental standard."
   },
   "PRICE_TREND_info": {
     "title": "Price trend (descrittivo)",
-    "what": "Relazione con SMA50/200, swing recente.",
-    "how": "Descrittivo, non segnale F3.",
-    "source": "Serie prezzo daily."
+    "what": "Relazione con medie mobili/swing recenti.",
+    "how": "Contesto non operativo, utile per regime di fondo.",
+    "source": "Letteratura su trend following (Hurst, Ooi & Pedersen, 2013)."
   },
   "MARGIN_HEALTH_info": {
     "title": "Margin health",
-    "what": "Qualità/sostenibilità margini.",
-    "how": "Trend e resilienza a shock costi.",
-    "source": "Bilanci + note MGMT."
+    "what": "Qualità/sostenibilità dei margini.",
+    "how": "Valuta mix prezzi-costi e leverage operativo.",
+    "source": "Novy-Marx (2013) profitability; Fama & French (2015) profitability factor."
   },
   "PROFITABILITY_CLASS_info": {
     "title": "Profitability class",
-    "what": "Classe di redditività (ROIC/ROE).",
-    "how": "Indicatore qualitativo.",
-    "source": "Fundamentals consolidati."
+    "what": "Classe di redditività (ROIC/ROE e affini).",
+    "how": "Migliore qualità operativa → premio atteso più elevato.",
+    "source": "Novy-Marx (2013) profitability."
   },
   "EARNINGS_TREND_info": {
     "title": "Earnings trend",
-    "what": "Direzione/revisioni EPS/ricavi.",
-    "how": "Trend YoY/seq e revisioni sell-side.",
-    "source": "Consensus e storici.",
-  "source_note_ignore": "formatter requires trailing comma fix"
+    "what": "Direzione di EPS/ricavi e loro revisioni.",
+    "how": "Upgrade netti spesso anticipano sorprese positive.",
+    "source": "Abarbanell & Bushee (1997); Chan, Karceski & Lakonishok (2003)."
   },
-
   "BALANCE_SHEET_STRENGTH_info": {
     "title": "BS strength",
-    "what": "Solidità patrimoniale/leverage.",
-    "how": "Debito/EBITDA, liquidità, covenant.",
-    "source": "Bilanci, rating, note."
+    "what": "Solidità patrimoniale e leva finanziaria.",
+    "how": "Bilanci robusti mitigano drawdown in fasi di stress.",
+    "source": "Ohlson (1980s) financial ratios & distress; Altman (1968) z-score."
   },
   "CASHFLOW_MOMENTUM_info": {
     "title": "Cash-flow momentum",
-    "what": "Dinamica FCF e qualità utili.",
-    "how": "FCF vs utile contabile.",
-    "source": "Rendiconto finanziario."
+    "what": "Dinamica/qualità dei flussi di cassa liberi.",
+    "how": "FCF sostenibile supporta investimenti e resilienza.",
+    "source": "Dechow, Kothari & Watts (1998) accruals; Richardson et al. (2005)."
   },
 
   "VAL_MULTIPLES_info": {
     "title": "Valuation multiples",
-    "what": "PE/EV-EBITDA/PS vs storia/peers.",
-    "how": "Serve per contesto, non per target.",
-    "source": "Fundamentals consolidati."
+    "what": "PE/EV/EBITDA/PS rispetto a storia/peers.",
+    "how": "Misura pricing relativo del titolo nel settore.",
+    "source": "Penman (2010); Koller et al., Valuation."
   },
   "MARGINS_TREND_info": {
     "title": "Margins trend",
     "what": "Direzione recente di GM/OM/NP.",
-    "how": "Compressione/espansione margini.",
-    "source": "Bilanci trimestrali."
+    "how": "Espansione/contrazione legate a mix prezzo-costi.",
+    "source": "Analisi fundamental standard; Novy-Marx (2013)."
   },
   "EARNINGS_REV_info": {
     "title": "Revisions",
-    "what": "Revisione stime EPS/ricavi.",
-    "how": "Upgrade/downgrade netti.",
-    "source": "Consensus provider."
+    "what": "Revisione netta di stime EPS/ricavi.",
+    "how": "Upgrade/downgrade sintetizzano informazione diffusa.",
+    "source": "Chan, Karceski & Lakonishok (2003) analyst activity."
   },
   "QUALITY_BS_CF_info": {
     "title": "Quality (BS & CF)",
-    "what": "Qualità bilancio e flussi cassa.",
-    "how": "Copertura capex/dividendi da FCF.",
-    "source": "Bilanci."
+    "what": "Qualità del bilancio e copertura dei flussi.",
+    "how": "Confronta fabbisogni (capex/dividendi) con FCF.",
+    "source": "Asness et al. (2013) Quality."
   },
   "TARGET_SPREAD_info": {
     "title": "Target spread",
-    "what": "Distanza da TP mediano.",
-    "how": "Solo descrittivo (non raccomandazione).",
-    "source": "Consensus target price."
+    "what": "Scostamento dal target price mediano.",
+    "how": "Indicatore informativo sul consenso, non raccomandazione.",
+    "source": "Bradshaw (2011) Analyst forecasts & valuation."
   },
   "UPSIDE_PCT_info": {
     "title": "Upside %",
-    "what": "Upside vs TP mediano.",
-    "how": "Indicazione potenziale, non promessa.",
-    "source": "Consensus TP."
+    "what": "Upside implicito rispetto al target mediano.",
+    "how": "Usare come contesto; dispersione dei target è rilevante.",
+    "source": "Womack (1996); Bradshaw (2011)."
   },
   "EVENT_LAST_EARNINGS_info": {
     "title": "Ultimo earnings",
-    "what": "Data ultimo rilascio risultati.",
-    "how": "Serve per finestra post-earnings.",
-    "source": "Nasdaq/SEC/IR issuer."
+    "what": "Data dell’ultimo rilascio risultati.",
+    "how": "Rilevante per la finestra post-annuncio e drift post-earnings.",
+    "source": "Bernard & Thomas (1989) post-earnings announcement drift."
   },
   "POST_EARNINGS_WINDOW_info": {
     "title": "Post-earnings window",
-    "what": "Finestra tattica post risultati.",
-    "how": "Spesso 5–10 sedute per assorbimento news.",
-    "source": "Heuristics Tradelia AI."
+    "what": "Finestra tattica post risultati (assorbimento news).",
+    "how": "Volumi/volatilità anomali possono protrarsi 5–10 sedute.",
+    "source": "PEAD: Bernard & Thomas (1989)."
   },
 
   "PEER_LIST_info": {
     "title": "Peer list",
-    "what": "Elenco comparables principali.",
-    "how": "Per contesto competitivo.",
-    "source": "Classificazioni GICS/analisi interna."
+    "what": "Comparables principali per il titolo.",
+    "how": "Serve per confronti relativi (valutazione/performance).",
+    "source": "Metodologie comparables (Damodaran; Penman)."
   },
   "ETF_LIST_info": {
     "title": "ETF list",
-    "what": "ETF più esposti al titolo/tema.",
-    "how": "Per capire portata flussi passivi.",
-    "source": "Holdings ETF provider."
+    "what": "ETF maggiormente esposti al titolo/tema.",
+    "how": "I flussi passivi possono generare co-movimenti.",
+    "source": "Ben-David, Franzoni & Moussawi (2018)."
   },
   "PEER_LEADERS_info": {
     "title": "Peer leaders",
-    "what": "Peers leader recenti.",
-    "how": "Momentum/forza relativa.",
-    "source": "Performance cross-peer."
+    "what": "Peers in outperformance recente.",
+    "how": "Segnalano leadership tematica settoriale.",
+    "source": "Letteratura su relative strength/momentum cross-sectional."
   },
   "PEER_LAGGARDS_info": {
     "title": "Peer laggards",
-    "what": "Peers in ritardo.",
-    "how": "Debolezza/temi in raffreddamento.",
-    "source": "Performance cross-peer."
+    "what": "Peers in sotto-performance.",
+    "how": "Evidenziano coda debole/temi in raffreddamento.",
+    "source": "Cross-sectional asset pricing evidence."
   },
   "SECTOR_BREADTH_info": {
     "title": "Sector breadth",
-    "what": "Diffusione forza nel settore.",
-    "how": "Quota titoli in rialzo vs in calo.",
-    "source": "Aggregazioni settore/tema."
+    "what": "Diffusione della forza all’interno del settore.",
+    "how": "Quota di titoli in rialzo vs in calo su orizzonte definito.",
+    "source": "Concetti di diffusion/breadth (Stivers, 2003)."
   },
   "ETF_FLOW_BIAS_info": {
     "title": "ETF flow bias",
-    "what": "Bias flussi ETF (1W/1M).",
-    "how": "Inflow/Outflow netti.",
-    "source": "Dati flussi ETF."
+    "what": "Bias dei flussi su 1W/1M (in/out).",
+    "how": "Misura la direzione netta della domanda passiva.",
+    "source": "Ben-David, Franzoni & Moussawi (2018)."
   },
   "TOP_HOLDING_ETF_info": {
     "title": "Top holding ETF",
     "what": "ETF con peso maggiore sul titolo.",
-    "how": "Per sensibilità a movimenti del paniere.",
-    "source": "Holdings ETF."
+    "how": "Maggiore sensibilità ai flussi del paniere.",
+    "source": "Methodology disclosures dei provider ETF."
   },
 
   "SI_LEVEL_info": {
     "title": "Short Float",
-    "what": "Quota azioni shortate sul float.",
-    "how": "Valori bassi = minore rischio squeeze.",
-    "source": "Finviz/Exchange short interest."
+    "what": "Quota del float venduta allo scoperto.",
+    "how": "Valori elevati implicano rischio squeeze; valori bassi, minore pressione.",
+    "source": "Asquith, Pathak & Ritter (2005) short interest & returns."
   },
   "DTC_BUCKET_info": {
     "title": "Days to Cover",
-    "what": "Giorni necessari per coprire lo short.",
-    "how": "Calcolato su volume medio.",
-    "source": "Short interest / vol medio."
+    "what": "Giorni necessari per coprire lo short (short interest / vol medio).",
+    "how": "Più alto = potenziale frizione in caso di news inattese.",
+    "source": "Short interest literature (e.g., Boccone & Smith, survey)."
   },
   "SI_TREND_info": {
     "title": "Trend short",
-    "what": "Direzione dello short interest.",
-    "how": "Crescente/diminuente/flat.",
-    "source": "Serie short interest."
+    "what": "Direzione recente dello short interest.",
+    "how": "Incrementi persistenti spesso segnalano pressioni downside o hedging.",
+    "source": "Asquith, Pathak & Ritter (2005)."
   },
   "INST_FLOW_info": {
     "title": "Istituzionali",
-    "what": "Segnale di flusso/posizionamento istituzionale.",
-    "how": "In ingresso/uscita descrittivo.",
-    "source": "13F/ownership + provider terzi."
+    "what": "Segnali da flussi/posizionamento istituzionale.",
+    "how": "Mutamenti di ownership possono riflettere ribilanciamenti informati.",
+    "source": "Bushee (1998) institutional ownership & monitoring."
   },
   "INSIDER_FLOW_info": {
     "title": "Insider",
-    "what": "Segnale da transazioni insider.",
-    "how": "Acquisti/vendite recenti.",
-    "source": "SEC Form 4 / IR issuer."
+    "what": "Attività recente di acquisti/vendite insider.",
+    "how": "Acquisti concentrati spesso associati a prospettive migliorative.",
+    "source": "Seyhun (1986, 1998) insider trading & returns."
   },
 
   "AAII_info": {
     "title": "AAII Bulls-Bears",
-    "what": "Differenziale sentiment investitori retail USA.",
-    "how": "Estremi possono anticipare mean-reversion.",
-    "source": "AAII survey."
+    "what": "Differenziale sentiment investitori retail USA (survey).",
+    "how": "Estremi possono anticipare mean-reversion di breve.",
+    "source": "Fisher & Statman (2000) investor sentiment; uso accademico di AAII."
   },
   "NAAIM_info": {
     "title": "NAAIM Exposure",
-    "what": "Esposizione media gestori attivi.",
-    "how": "Valori molto alti/bassi = estremi tattici.",
-    "source": "NAAIM survey."
+    "what": "Esposizione media dichiarata dai money manager attivi (survey).",
+    "how": "Valori molto elevati/bassi segnalano eccessi tattici.",
+    "source": "Letteratura su survey-based sentiment & positioning (Baker & Wurgler, 2006)."
   },
   "FearGreed_info": {
     "title": "Fear & Greed",
-    "what": "Indicatore sintetico paura/avidità.",
-    "how": "Zone estreme utili per contesto, non timing.",
-    "source": "Provider pubblico (CNN/altro)."
-  },
-
-  "FreshnessScore_info": {
-    "title": "FreshnessScore",
-    "what": "Grado di aggiornamento delle fonti in F2.",
-    "how": "Verde=fresco; Giallo=parziale; Rosso=stale.",
-    "source": "Controlli automatici Tradelia AI."
-  },
-  "ConfidenceFinal_info": {
-    "title": "ConfidenceFinal",
-    "what": "Confidenza sulla qualità del quadro F2.",
-    "how": "Alto=stima robusta; Basso=rumore.",
-    "source": "Heuristics Tradelia AI."
-  },
-  "DataIntegrity_info": {
-    "title": "DataIntegrity",
-    "what": "Consistenza dati F2.",
-    "how": "Segnala buchi/outlier/incoerenze.",
-    "source": "Validator interni."
-  },
-  "FeedSync_info": {
-    "title": "FeedSync",
-    "what": "Sincronia temporale sorgenti F2.",
-    "how": "Drift riduce affidabilità della lettura.",
-    "source": "Scheduler interno."
+    "what": "Indice sintetico di paura/avidità multi-componente.",
+    "how": "Zone estreme utili come contesto di rischio, non come timing.",
+    "source": "Approcci compositi al sentiment; confronti con misure accademiche (Baker & Wurgler, 2006)."
   }
 }
