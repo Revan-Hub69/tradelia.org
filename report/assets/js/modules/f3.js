@@ -1,20 +1,13 @@
-// /report/assets/js/modules/f3.js
+// /report/assets/js/modules/f3.js (rewritten)
 //
 // F3 · Analisi Tecnica MTF (3–10 giorni)
-// UI allineata al template F1B/F2 (stesse classi, card system, drawer tabs)
+// UI allineata a F1B/F2 con drawer/tabs "scoped" al root per evitare race
 //
-// Scopo (UI/utente)
-// - Lettura tecnica multi‑timeframe (W1/D1/H4/H1) con priorità volumetrica
-// - Overlay derivati (da F2‑Options): IV/Skew/ΔOI/OPI/GSR/regime dealer
-// - Pattern Board MTF (qualitativo) + Consolidamento & Probabilità (quantitativo)
-// - Dataset & Sync (OCR/DataIntegrity/FeedSync) + Governance (Audit & MiFID)
-// - Nessun contenuto operativo, nessun bridge F3→F4, nessun TapeNotes
-//
-// Export
+// Export:
 //   renderCard(rawData, ctx?) -> string HTML
-//   bindCard(node, rawData, ctx?)
+//   bindCard(node, rawData, ctx?) -> attach listeners
 //
-// Dipendenze globali attese
+// Dipendenze globali attese:
 //   window.__TradeliaUI.openPanel()
 //   window.__TradeliaUI.closePanel()
 //   window.__TradeliaUI.bindMetricInfoButtons()
@@ -22,13 +15,13 @@
 export function renderCard(rawData, ctx = {}){
   const d = normalizeDataF3Public(rawData);
 
-  // KPI HERO (leggibili)
   const kpis = [
-    { key: "BiasMTF", label: "Bias MTF", desc: "", metric: d.head?.BiasMTF },
-    { key: "MTF_Score", label: "MTF Score", desc: "", metric: d.head?.MTF_Score },
+    { key: "BiasMTF",   label: "Bias MTF",   desc: "", metric: d.head?.BiasMTF },
+    { key: "MTF_Score", label: "MTF Score",  desc: "", metric: d.head?.MTF_Score },
     { key: "P_SwingUp", label: "P(SwingUp)", desc: "", metric: d.head?.P_SwingUp },
-    // mostra OPI_tkr, altrimenti GSR_tkr
-    d.options?.OPI_tkr ? { key: "OPI_tkr", label: "OPI", desc: "", metric: d.options?.OPI_tkr } : { key: "GSR_tkr", label: "GSR", desc: "", metric: d.options?.GSR_tkr }
+    d.options?.OPI_tkr
+      ? { key: "OPI_tkr", label: "OPI", desc: "", metric: d.options?.OPI_tkr }
+      : { key: "GSR_tkr", label: "GSR", desc: "", metric: d.options?.GSR_tkr }
   ];
 
   return `
@@ -96,7 +89,7 @@ export function bindCard(node, rawData, ctx = {}){
 }
 
 /* -----------------------------------------------------------------------------
-// DRAWER (10 sezioni) — niente Bridge, niente TapeNotes
+// DRAWER (10 sezioni) — scoped root + safe activation
 // -----------------------------------------------------------------------------*/
 function openF3DrawerPublic(d){
   if(!window.__TradeliaUI?.openPanel) return;
@@ -114,14 +107,16 @@ function openF3DrawerPublic(d){
     footerTabs: []
   });
 
+  // hint scroll per tabs mobile
   function initScrollableTabsHint(){
-    const scrollBox = document.querySelector('.f1b-footer-tabs-scroll');
-    const fadeRight = document.querySelector('.f1b-tabs-fade-right');
+    const root = document.getElementById('f3-root');
+    const scrollBox = root?.querySelector('.f1b-footer-tabs-scroll');
+    const fadeRight = root?.querySelector('.f1b-tabs-fade-right');
     if(!scrollBox || !fadeRight) return;
     const needsScroll = scrollBox.scrollWidth > scrollBox.clientWidth + 2;
     if(!needsScroll){
       fadeRight.style.display = 'none';
-      const fadeLeft = document.querySelector('.f1b-tabs-fade-left');
+      const fadeLeft = root?.querySelector('.f1b-tabs-fade-left');
       if(fadeLeft) fadeLeft.style.display = 'none';
       return;
     }
@@ -129,23 +124,29 @@ function openF3DrawerPublic(d){
     function updateHint(){
       const atEnd = scrollBox.scrollLeft + scrollBox.clientWidth >= scrollBox.scrollWidth - 4;
       if(hintEl) hintEl.style.opacity = atEnd ? '0' : '.9';
-      const fadeLeft = document.querySelector('.f1b-tabs-fade-left');
-      if(fadeLeft) fadeLeft.style.opacity = scrollBox.scrollLeft > 2 ? '.6' : '0';
+      const fadeLeft = root?.querySelector('.f1b-tabs-fade-left');
+      if (fadeLeft) fadeLeft.style.opacity = scrollBox.scrollLeft > 2 ? '.6' : '0';
     }
     updateHint();
     scrollBox.addEventListener('scroll', ()=> updateHint(), { passive:true });
   }
 
+  // Post-mount: scope binding e attivazione tab iniziale quando DOM è pronto
   setTimeout(()=>{
-    bindF3TabsPublic();
+    const root = document.getElementById('f3-root');
+    bindF3TabsPublic(root);
+
     if (window.__TradeliaUI?.bindMetricInfoButtons){
-      try { window.__TradeliaUI.bindMetricInfoButtons(document.getElementById('f3-scroll-desktop')); } catch(e){}
-      try { window.__TradeliaUI.bindMetricInfoButtons(document.getElementById('f3-scroll-mobile')); } catch(e){}
+      try { window.__TradeliaUI.bindMetricInfoButtons(root?.querySelector('#f3-scroll-desktop')); } catch(e){}
+      try { window.__TradeliaUI.bindMetricInfoButtons(root?.querySelector('#f3-scroll-mobile')); } catch(e){}
     }
-    const first = document.querySelector('[data-f3-tab="dataset"]');
-    if (first?.click) first.click();
-    initScrollableTabsHint();
-  },0);
+
+    requestAnimationFrame(()=>{
+      const first = root?.querySelector('[data-f3-tab="dataset"]');
+      if (first && typeof first.click === 'function') first.click();
+      initScrollableTabsHint();
+    });
+  }, 0);
 }
 
 function isMobileViewport(){ return window.matchMedia('(max-width: 767px)').matches; }
@@ -267,7 +268,7 @@ function buildF3SectionsPublic(d){
       </div>
     </section>`;
 
-  // 8) Pattern MTF Board (volumetrico-first) — qualitativo
+  // 8) Pattern MTF Board — qualitativo
   const pb = d.pattern_mtf || {};
   const patternHTML = `
     <section class="tl-panel-section" data-f3-section="patterns" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -315,11 +316,11 @@ function buildF3SectionsPublic(d){
 }
 
 /* -----------------------------------------------------------------------------
-// SHELL DESKTOP / MOBILE + TABS (stile F1B/F2)
+// SHELL DESKTOP / MOBILE + TABS (scoped root id="f3-root")
 // -----------------------------------------------------------------------------*/
 function renderF3DesktopShell(sections){
   return `
-    <div class="f1b-panel-desktop" style="display:flex;flex-direction:row;gap:1rem;height:66vh;">
+    <div id="f3-root" class="f1b-panel-desktop" style="display:flex;flex-direction:row;gap:1rem;height:66vh;">
       <aside class="f1b-panel-menu" style="min-width:180px;max-width:200px;border-right:1px solid var(--br-card);height:100%;overflow:auto;">
 ${drawerBtnF3('dataset','Dataset & Sync')}
 ${drawerBtnF3('w1','W1 · Direzionale')}
@@ -349,16 +350,8 @@ ${drawerBtnF3('governance','Governance')}
 
 function renderF3MobileShell(sections){
   const pills = [
-    ['dataset','Dataset'],
-    ['w1','W1'],
-    ['d1','D1'],
-    ['h4','H4'],
-    ['h1','H1'],
-    ['options','Options'],
-    ['price','Price'],
-    ['patterns','Pattern'],
-    ['mtf','MTF'],
-    ['governance','Gov']
+    ['dataset','Dataset'],['w1','W1'],['d1','D1'],['h4','H4'],['h1','H1'],
+    ['options','Options'],['price','Price'],['patterns','Pattern'],['mtf','MTF'],['governance','Gov']
   ].map(([k,l])=>mobileTabBtnF3(k,l)).join('');
 
   const mobileTabsBar = `
@@ -371,8 +364,9 @@ function renderF3MobileShell(sections){
         <span class="f1b-tabs-scroll-hint" style="display:inline-block;transform:translateY(1px);">⇠ ⇢</span>
       </div>
     </div>`;
+
   return `
-    <div class="f1b-drawer-mobile" style="display:flex;flex-direction:column;height:calc(100vh - 110px);max-height:calc(100vh - 110px);min-height:300px;background:var(--surface-panel-head);">
+    <div id="f3-root" class="f1b-drawer-mobile" style="display:flex;flex-direction:column;height:calc(100vh - 110px);max-height:calc(100vh - 110px);min-height:300px;background:var(--surface-panel-head);">
       ${mobileTabsBar}
       <main id="f3-scroll-mobile" class="f1b-panel-content-mobile flex-1 min-w-0" style="overflow:auto;-webkit-overflow-scrolling:touch;padding:1rem;background:var(--surface-page);">
         <div data-f3-view="dataset">${sections.datasetHTML}</div>
@@ -396,13 +390,15 @@ function mobileTabBtnF3(key,label){
   return `<button class="f1b-footer-tab-btn" data-f3-tab="${escapeAttr(key)}" style="flex:0 0 auto;white-space:nowrap;font-size:11px;line-height:1.2;font-weight:500;border-radius:999px;border:1px solid var(--br-soft);background:var(--surface-card);color:var(--muted);padding:.45rem .7rem;box-shadow:var(--shadow-card);min-width:max-content;">${escapeHtml(label)}</button>`;
 }
 
-function bindF3TabsPublic(){
-  const btns = document.querySelectorAll('[data-f3-tab]');
-  const views = document.querySelectorAll('[data-f3-view]');
-  const desk = document.getElementById('f3-scroll-desktop');
-  const mob  = document.getElementById('f3-scroll-mobile');
+function bindF3TabsPublic(root){
+  const scope = root || document.getElementById('f3-root') || document;
+  const btns  = scope.querySelectorAll('[data-f3-tab]');
+  const views = scope.querySelectorAll('[data-f3-view]');
+  const desk  = scope.querySelector('#f3-scroll-desktop');
+  const mob   = scope.querySelector('#f3-scroll-mobile');
 
-  function resetScroll(){ [desk,mob].forEach(el=>{ if(!el) return; el.scrollTop=0; el.scrollLeft=0; }); }
+  function resetScroll(){ [desk, mob].forEach(el=>{ if(!el) return; el.scrollTop=0; el.scrollLeft=0; }); }
+
   function styleTabs(active){
     btns.forEach(b=>{
       const on = b.getAttribute('data-f3-tab')===active;
@@ -413,9 +409,20 @@ function bindF3TabsPublic(){
       }
     });
   }
+
   function show(active){
-    views.forEach(v=>{ const k=v.getAttribute('data-f3-view'); v.hidden = (k!==active); if(!v.hidden){ requestAnimationFrame(()=>{ resetScroll(); v.querySelectorAll('[data-scrollable]').forEach(sc=>{sc.scrollTop=0;sc.scrollLeft=0;}); }); }});
+    views.forEach(v=>{
+      const k=v.getAttribute('data-f3-view');
+      v.hidden = (k!==active);
+      if(!v.hidden){
+        requestAnimationFrame(()=>{
+          resetScroll();
+          v.querySelectorAll('[data-scrollable]').forEach(sc=>{ sc.scrollTop=0; sc.scrollLeft=0; });
+        });
+      }
+    });
   }
+
   function activate(k){ styleTabs(k); show(k);} 
   btns.forEach(b=>{ if(b.__f3Bound) return; b.__f3Bound=true; b.addEventListener('click',()=>{ activate(b.getAttribute('data-f3-tab')); }); });
 }
@@ -468,7 +475,6 @@ function metricBlockF3(metricKey, title, desc, metricObj){
 }
 
 function patternBoardF3(pb={}){
-  // pb: { W1:{patterns:[], composites:{}}, D1:{...}, H4:{...}, H1:{...}, heatmap:[], ai_note_pattern }
   const tfOrder = ['W1','D1','H4','H1'];
   const blocks = tfOrder.map(tf=>{
     const node = pb?.[tf] || {};
@@ -501,7 +507,6 @@ function patternBoardF3(pb={}){
     return f3Card({ tone:'neutral', title, bodyHtml:`<div class='grid md:grid-cols-2 gap-2'>${rows || `<div class='text-[12px] text-[color:var(--muted)]'>N/A</div>`}</div>` });
   }).join('');
 
-  // heatmap compatta (TF × Conf)
   const heat = Array.isArray(pb.heatmap) ? pb.heatmap : [];
   const heatCells = heat.map(h=>{
     const tf = escapeHtml(String(h?.tf||''));
@@ -515,8 +520,6 @@ function patternBoardF3(pb={}){
 
   return `${blocks}${heatBlock}`;
 }
-
-function newsCardListF3(){ return ''; } // non usato in F3
 
 function listBlockCardF3(title, body){
   if (!body && body !== 0) return '';
@@ -595,10 +598,9 @@ function escapeHtml(str){ if(str===undefined||str===null) return ''; return Stri
 function escapeAttr(str){ if(str===undefined||str===null) return ''; return String(str).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
 /* -----------------------------------------------------------------------------
-// NORMALIZZAZIONE DATI (F3) — tassonomia stabile per UI
+// NORMALIZZAZIONE DATI (F3)
 // -----------------------------------------------------------------------------*/
 function normalizeDataF3Public(src={}){
-  // meta
   const meta = {
     timestampET: src?.meta?.timestampET ?? '—',
     module: src?.meta?.module ?? 'F3 · Analisi Tecnica MTF',
@@ -610,14 +612,12 @@ function normalizeDataF3Public(src={}){
     mifid_disclaimer: src?.meta?.mifid_disclaimer ?? ''
   };
 
-  // head KPIs
   const head = {
-    BiasMTF: src?.head?.BiasMTF || { raw:'—', tone:'neutral' },
+    BiasMTF:   src?.head?.BiasMTF   || { raw:'—', tone:'neutral' },
     MTF_Score: src?.head?.MTF_Score || { raw:'—', tone:'neutral' },
     P_SwingUp: src?.head?.P_SwingUp || { raw:'—', tone:'neutral' }
   };
 
-  // dataset & sync
   const dataset = (function(){
     const s = src?.dataset || {};
     return {
@@ -630,7 +630,6 @@ function normalizeDataF3Public(src={}){
     };
   })();
 
-  // timeframe blocks
   function tfBlock(k){
     const t = src?.[k] || {};
     return {
@@ -659,7 +658,6 @@ function normalizeDataF3Public(src={}){
   const H4 = tfBlock('H4');
   const H1 = tfBlock('H1');
 
-  // options overlay
   const options = (function(){
     const o = src?.options || {};
     return {
@@ -678,7 +676,6 @@ function normalizeDataF3Public(src={}){
     };
   })();
 
-  // price history
   const price_history = (function(){
     const p = src?.price_history || {};
     return {
@@ -689,7 +686,6 @@ function normalizeDataF3Public(src={}){
     };
   })();
 
-  // pattern board
   const pattern_mtf = (function(){
     const pb = src?.pattern_mtf || {};
     const defTF = ()=>({ patterns:[], composites:{} });
@@ -703,7 +699,6 @@ function normalizeDataF3Public(src={}){
     };
   })();
 
-  // consolidation
   const mtf_consolidation = (function(){
     const m = src?.mtf_consolidation || {};
     return {
@@ -720,7 +715,6 @@ function normalizeDataF3Public(src={}){
     };
   })();
 
-  // governance
   const governance = (function(){
     const g = src?.governance || {};
     const qm = g?.QualityMetrics || {};
