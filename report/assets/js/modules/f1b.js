@@ -618,7 +618,7 @@ function renderDrawerMobileShellPublic(sectionsObj) {
           padding-right:2rem;
         "
       >
-    // Mobile tabs
+  
 ${mobileTabButton("regime","Regime di Mercato")}
 ${mobileTabButton("breadth","Ampiezza e Rotazione")}
 ${mobileTabButton("internals","Market Internals")}
