@@ -30,8 +30,12 @@
     /* === FOOTER v2 (mobile-first, leggibile, simmetrico) === */
     .footer-wrap{background:var(--surface-footer,transparent);border-top:1px solid var(--footer-br)}
     .site-footer{color:var(--ink)}
-    /* FIX: niente display qui, lasciamo gestire a Tailwind (flex) */
-    .ftr-top{gap:16px}
+    .ftr-top{display:grid;gap:16px}
+    .ftr-kpis{display:flex;gap:10px}
+    .ftr-kpi{flex:1 1 0%;min-width:0;border:1px solid var(--footer-br);border-radius:12px;background:var(--surface-card);box-shadow:var(--shadow-card);padding:.6rem .7rem}
+    .ftr-kpi h4{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 .25rem}
+    .ftr-kpi .v{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco; font-size:13px}
+
     .ftr-grid{display:grid;grid-template-columns:1fr;gap:20px}
     @media(min-width:900px){.ftr-grid{grid-template-columns:repeat(3,1fr);gap:28px}}
 
@@ -40,19 +44,7 @@
     .ftr-text{font-size:13px;line-height:1.5;color:var(--ink);opacity:.92;margin-top:.5rem}
 
     .socials{display:flex;flex-wrap:wrap;gap:8px;margin-top:.75rem}
-    /* Pulsanti social: versione “pill” piena scura */
-    .socials a.social-btn{
-      display:inline-flex;align-items:center;gap:6px;
-      font-size:12.5px;font-weight:600;
-      padding:.45rem .7rem;border-radius:10px;border:none;
-      background:var(--ink);color:var(--surface-page);
-      box-shadow:var(--shadow-card);
-      transition:background .2s ease, transform .1s ease;
-    }
-    .socials a.social-btn:hover{
-      background:color-mix(in oklab, var(--ink) 90%, var(--brand) 10%);
-      transform:translateY(-1px);
-    }
+    .socials a{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;padding:.5rem .6rem;border-radius:10px;border:1px solid var(--br-soft);background:var(--surface-card);color:var(--ink);box-shadow:var(--shadow-card)}
     .icon-16{width:16px;height:16px}
 
     .ftr-bottom{display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--footer-br);padding-top:14px;color:var(--muted)}
@@ -81,8 +73,95 @@
 
   <!-- MAIN -->
   <main class="container">
-    <!-- HERO (omesso per brevità: invariato) -->
-    <section id="hero" class="hero" aria-label="Copertina Report">…</section>
+    <!-- HERO -->
+    <section id="hero" class="hero" aria-label="Copertina Report">
+      <div class="hero__top">
+        <div class="hero__id">
+          <div class="hero__ticker" id="hero-ticker">—</div>
+          <div class="hero__venue" id="hero-venue">—</div>
+          <div class="text-[11px] leading-[1.3] text-[color:var(--muted)] mt-1">
+            <span class="uppercase tracking-wide">Tradelia AI / Premium Edition</span>
+            <span> · </span>
+            <span id="hero-client">Analisi indipendente su {NOME AZIENDA}</span>
+          </div>
+        </div>
+        <div class="hero__price">
+          <div class="hero__px" id="hero-price">—</div>
+          <div class="hero__chg" id="hero-change">—</div>
+          <span class="hero__badge" id="hero-state">—</span>
+        </div>
+      </div>
+
+      <!-- KPI -->
+      <div class="hero__meta grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- SNAPSHOT -->
+        <div class="meta-pill relative">
+          <span class="tonebar" id="tone-snap"></span>
+          <div class="min-w-0">
+            <div class="flex items-start gap-1 mb-2">
+              <button class="info-btn info-btn--mini" data-metric="Snapshot" aria-label="Info Snapshot">?</button>
+              <div class="meta-label">Snapshot</div>
+            </div>
+            <div class="meta-val"><span id="hero-start">—</span><span> → </span><span id="hero-end">—</span></div>
+          </div>
+        </div>
+        <!-- PRICE -->
+        <div class="meta-pill relative">
+          <span class="tonebar" id="tone-price"></span>
+          <div class="min-w-0">
+            <div class="flex items-start gap-1 mb-2">
+              <button class="info-btn info-btn--mini" data-metric="Price" aria-label="Info Price">?</button>
+              <div class="meta-label">Price</div>
+            </div>
+            <div class="meta-val" id="hero-price2">—</div>
+          </div>
+        </div>
+        <!-- Δ% -->
+        <div class="meta-pill relative">
+          <span class="tonebar" id="tone-chg"></span>
+          <div class="min-w-0">
+            <div class="flex items-start gap-1 mb-2">
+              <button class="info-btn info-btn--mini" data-metric="ChangePct" aria-label="Info Δ%">?</button>
+              <div class="meta-label">Δ%</div>
+            </div>
+            <div class="meta-val" id="hero-change2">—</div>
+          </div>
+        </div>
+        <!-- CCY -->
+        <div class="meta-pill relative">
+          <span class="tonebar" id="tone-ccy"></span>
+          <div class="min-w-0">
+            <div class="flex items-start gap-1 mb-2">
+              <button class="info-btn info-btn--mini" data-metric="Currency" aria-label="Info Currency">?</button>
+              <div class="meta-label">Currency</div>
+            </div>
+            <div class="meta-val" id="hero-ccy">—</div>
+          </div>
+        </div>
+        <!-- FRESHNESS -->
+        <div class="meta-pill relative">
+          <span class="tonebar" id="tone-fresh"></span>
+          <div class="min-w-0">
+            <div class="flex items-start gap-1 mb-2">
+              <button class="info-btn info-btn--mini" data-metric="Freshness" aria-label="Info Freshness">?</button>
+              <div class="meta-label">Freshness</div>
+            </div>
+            <div class="meta-val" id="hero-freshness">—</div>
+          </div>
+        </div>
+        <!-- CONFIDENCE -->
+        <div class="meta-pill relative">
+          <span class="tonebar" id="tone-conf"></span>
+          <div class="min-w-0">
+            <div class="flex items-start gap-1 mb-2">
+              <button class="info-btn info-btn--mini" data-metric="ConfidenceFinal" aria-label="Info Confidence">?</button>
+              <div class="meta-label">Confidence</div>
+            </div>
+            <div class="meta-val" id="hero-confidence">—</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- STRUTTURA / NAV -->
     <section class="section-head" aria-label="Struttura del Report">
@@ -107,91 +186,155 @@
     </section>
   </main>
 
-  <!-- FOOTER -->
-  <footer class="site-footer noprint" style="padding:3rem 1rem 2rem; background:var(--footer-bg); border-top:1px solid var(--footer-br); color:var(--ink);">
-    <div class="footer-wrap max-w-6xl mx-auto flex flex-col gap-8">
+  <!-- FOOTER v2 -->
+  <div class="footer-wrap mt-12">
+    <footer class="site-footer container py-8 text-[13px] leading-[1.5]">
 
-      <!-- Strip superiore -->
-      <div class="ftr-top flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-[13px] text-[color:var(--muted)]">
-        <div><span id="footer-version" class="font-semibold text-[color:var(--ink)]">v2025-10-31</span></div>
-        <div id="footer-snapshot" class="opacity-80">—</div>
-        <div id="footer-updated" class="opacity-80">Aggiornato —</div>
-      </div>
-
-      <!-- Colonne principali -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-
-        <!-- Fonti dati -->
-        <div class="ftr-card rounded-2xl p-5 bg-[color:var(--surface-card)] shadow-sm border border-[color:var(--br-soft)]">
-          <h3 class="text-[15px] font-semibold mb-1 flex items-center gap-2">
-            <i data-lucide="database" class="w-4 h-4"></i> Fonti dati
-          </h3>
-          <p class="text-[13px] leading-[1.5] text-[color:var(--muted)]">
-            Bloomberg, Reuters, Nasdaq, Finviz Premium, Barchart, CBOE, FRED.
-            Dati rielaborati a fini educativi.
-          </p>
-        </div>
-
-        <!-- Compliance & Risk -->
-        <div class="ftr-card rounded-2xl p-5 bg-[color:var(--surface-card)] shadow-sm border border-[color:var(--br-soft)]">
-          <h3 class="text-[15px] font-semibold mb-1 flex items-center gap-2">
-            <i data-lucide="shield" class="w-4 h-4"></i> Compliance & Rischio
-          </h3>
-          <p class="text-[13px] leading-[1.5] text-[color:var(--muted)] mb-3">
-            Finalità esclusivamente informative ed educative. Nessuna consulenza personalizzata (MiFID II).
-          </p>
-          <div class="flex flex-wrap gap-2">
-            <button id="btn-mifid-open" class="btn btn-sm">Informativa MiFID</button>
-            <button id="btn-privacy-open" class="btn btn-sm">Privacy</button>
+      <!-- strip brand + kpi -->
+      <section class="ftr-top">
+        <div class="flex items-center justify-between gap-4">
+          <div class="min-w-0">
+            <div class="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">Report</div>
+            <div class="mt-1 text-[13px] font-semibold">
+              TRADELIA<span class="text-[color:var(--brand)]">&bull;AI</span>
+              <span class="opacity-70">·</span> <span id="footer-company">{NOME AZIENDA}</span>
+            </div>
+          </div>
+          <div class="ftr-kpis w-full sm:w-auto">
+            <div class="ftr-kpi"><h4>Freshness</h4><div id="footer-freshness" class="v">—</div></div>
+            <div class="ftr-kpi"><h4>Confidence</h4><div id="footer-confidence" class="v">—</div></div>
+            <div class="ftr-kpi hidden sm:block"><h4>DataIntegrity</h4><div id="footer-integrity" class="v">—</div></div>
           </div>
         </div>
-
-        <!-- Seguici -->
-        <div class="ftr-card rounded-2xl p-5 bg-[color:var(--surface-card)] shadow-sm border border-[color:var(--br-soft)]">
-          <h3 class="text-[15px] font-semibold mb-1 flex items-center gap-2">
-            <i data-lucide="share-2" class="w-4 h-4"></i> Seguici
-          </h3>
-          <p class="text-[13px] leading-[1.5] text-[color:var(--muted)] mb-3">
-            Metodologia, release, contenuti educativi.
-          </p>
-          <div class="socials flex flex-wrap gap-2">
-            <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener" aria-label="LinkedIn" class="social-btn">
-              <i data-lucide="linkedin" class="w-4 h-4"></i><span>LinkedIn</span>
-            </a>
-            <a href="https://x.com/tradelia" target="_blank" rel="noopener" aria-label="X" class="social-btn">
-              <i data-lucide="twitter" class="w-4 h-4"></i><span>X</span>
-            </a>
-            <a href="https://www.reddit.com" target="_blank" rel="noopener" aria-label="Reddit" class="social-btn">
-              <svg viewBox="0 0 512 512" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false" style="display:block">
-                <path d="M440.7 203.5c-15.6 0-29.6 6.4-39.7 16.6-36.9-25.7-86.6-42.3-141.6-44.2l28.3-63.6 88.1 19.8c0 21.8 17.9 39.7 39.7 39.7 22.1 0 39.7-17.9 39.7-39.7s-17.9-39.7-39.7-39.7c-15.6 0-29.6 9.3-35.8 22.9l-98.3-22.1c-4.4-1.1-8.8 1.1-10.9 5.5l-32.8 73.8c-56.7 1.1-107.6 18.7-145.7 45.3-10.1-10.1-25.1-16.6-40.7-16.6-50.1 0-66.9 67.9-21.8 90.4-1.1 5.5-1.1 9.9-1.1 15.4 0 74.9 86.6 135.1 193.2 135.1s193.2-60.2 193.2-135.1c0-5.5 0-10.1-1.1-15.4 44.2-22.5 27.4-90.4-22.1-90.4zM178.8 294.9c0-22.1 17.9-39.7 39.7-39.7s39.7 17.9 39.7 39.7-17.9 39.7-39.7 39.7-39.7-17.9-39.7-39.7zm153.3 84.8c-24.1 24.1-67.9 25.1-75.9 25.1s-52.9-1.1-75.9-25.1c-4.4-4.4-4.4-10.9 0-15.4 4.4-4.4 10.9-4.4 15.4 0 16.6 16.6 47.4 20.9 60.2 20.9 12.9 0 43.6-3.3 60.2-20.9 4.4-4.4 10.9-4.4 15.4 0 5.5 4.4 5.5 10.9 1.1 15.4zm-1.1-45.2c-22.1 0-39.7-17.9-39.7-39.7s17.9-39.7 39.7-39.7 39.7 17.9 39.7 39.7-17.8 39.7-39.7 39.7z"/>
-              </svg>
-              <span>Reddit</span>
-            </a>
-            <a href="https://www.quora.com" target="_blank" rel="noopener" aria-label="Quora" class="social-btn">
-              <i data-lucide="book-open" class="w-4 h-4"></i><span>Quora</span>
-            </a>
-          </div>
+        <div class="text-[12.5px] text-[color:var(--muted)]">
+          <span>Versione: <strong id="footer-version">—</strong></span>
+          <span class="mx-2">|</span>
+          <span>Finestra: <span id="footer-snapshot">—</span></span>
+          <span class="mx-2">|</span>
+          <span>Ultimo aggiornamento: <span id="footer-updated">—</span></span>
         </div>
+      </section>
+
+      <!-- 3 cards simmetriche -->
+      <div class="ftr-grid mt-6">
+        <section class="ftr-card">
+          <h3 class="ftr-head"><i data-lucide="database" class="icon-16"></i> Fonti dati</h3>
+          <p class="ftr-text">Metriche e serie storiche da provider macro/finanziari (Bloomberg, Reuters, CME, FRED, World Bank, IMF). Dati soggetti a ritardi/revisioni.</p>
+          <p class="ftr-text">Marchi citati proprietà dei rispettivi titolari. Uso didattico.</p>
+        </section>
+
+        <section class="ftr-card">
+          <h3 class="ftr-head"><i data-lucide="shield" class="icon-16"></i> Compliance & Risk</h3>
+          <p class="ftr-text">Documento a fini educativi/informativi. Non è consulenza personalizzata, raccomandazione o sollecitazione (MiFID II / ESMA).</p>
+          <p class="ftr-text">Tradelia AI non gestisce capitali, non esegue ordini e non profila a fini pubblicitari.</p>
+          <div class="mt-3 flex flex-wrap gap-3 noprint">
+            <button class="btn btn-sm" id="btn-privacy-open" type="button">Privacy</button>
+            <button class="btn btn-sm" id="btn-mifid-open" type="button">Informativa MiFID</button>
+          </div>
+        </section>
+
+        <section class="ftr-card">
+          <h3 class="ftr-head"><i data-lucide="share-2" class="icon-16"></i> Seguici</h3>
+          <p class="ftr-text">Metodologia, release, contenuti educativi.</p>
+          <nav class="socials">
+            <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i data-lucide="linkedin" class="icon-16"></i><span>LinkedIn</span></a>
+            <a href="https://x.com" target="_blank" rel="noopener" aria-label="X"><i data-lucide="twitter" class="icon-16"></i><span>X</span></a>
+            <a href="https://www.reddit.com" target="_blank" rel="noopener" aria-label="Reddit"><i data-lucide="reddit" class="icon-16"></i><span>Reddit</span></a>
+            <a href="https://www.quora.com" target="_blank" rel="noopener" aria-label="Quora"><i data-lucide="book-open" class="icon-16"></i><span>Quora</span></a>
+          </nav>
+        </section>
       </div>
 
-      <!-- Bottom strip -->
-      <div class="ftr-bottom mt-6 text-[12px] text-center text-[color:var(--muted)]">
-        © <span id="footer-year"></span> Tradelia AI — Materiale educativo, non costituisce consulenza d’investimento.
+      <!-- bottom line -->
+      <div class="ftr-bottom mt-6 text-[12.5px]">
+        <div>© <span id="footer-year"></span> <strong class="text-[color:var(--ink)]">Tradelia AI</strong>. Tutti i diritti riservati. Contatti: <a href="mailto:info@tradelia.org" class="underline hover:opacity-80 text-[color:var(--ink)]">info@tradelia.org</a></div>
+        <div><span class="text-[color:var(--ink)]">Missione:</span> alfabetizzazione finanziaria indipendente.</div>
       </div>
-    </div>
-  </footer>
+    </footer>
+  </div>
 
   <!-- PANEL OVERLAY (analitico) -->
-  <div id="panel-overlay" class="tl-panel-overlay noprint" aria-hidden="true">…</div>
+  <div id="panel-overlay" class="tl-panel-overlay noprint" aria-hidden="true">
+    <div class="tl-panel-backdrop" data-panel-close></div>
+    <aside class="tl-panel tl-panel--desktop" role="dialog" aria-modal="true" aria-labelledby="panel-title">
+      <header class="tl-panel__header">
+        <div class="min-w-0">
+          <h2 id="panel-title" class="tl-panel__title">—</h2>
+          <p id="panel-subtitle" class="tl-panel__subtitle">—</p>
+        </div>
+        <button class="tl-panel__close" data-panel-close aria-label="Chiudi"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </header>
+      <div id="panel-body" class="tl-panel__body"></div>
+      <footer class="tl-panel__footer" id="panel-footer"><button class="btn btn-sm" data-panel-close>Chiudi</button></footer>
+    </aside>
+    <aside class="tl-panel tl-panel--mobile" role="dialog" aria-modal="true" aria-labelledby="panel-title-mobile">
+      <header class="tl-panel__header">
+        <div class="min-w-0">
+          <h2 id="panel-title-mobile" class="tl-panel__title">—</h2>
+          <p id="panel-subtitle-mobile" class="tl-panel__subtitle">—</p>
+        </div>
+        <button class="tl-panel__close" data-panel-close aria-label="Chiudi"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </header>
+      <div id="panel-body-mobile" class="tl-panel__body"></div>
+      <footer class="tl-panel__footer" id="panel-footer-mobile"><button class="btn btn-sm" data-panel-close>Chiudi</button></footer>
+    </aside>
+  </div>
 
   <!-- LEGAL OVERLAY (privacy/mifid) -->
-  <div id="legal-overlay" class="tl-panel-overlay noprint" aria-hidden="true">…</div>
+  <div id="legal-overlay" class="tl-panel-overlay noprint" aria-hidden="true">
+    <div class="tl-panel-backdrop" data-legal-close></div>
+    <aside class="tl-panel tl-panel--desktop" role="dialog" aria-modal="true" aria-labelledby="legal-title">
+      <header class="tl-panel__header">
+        <div class="min-w-0">
+          <h2 id="legal-title" class="tl-panel__title">—</h2>
+          <p id="legal-subtitle" class="tl-panel__subtitle">—</p>
+        </div>
+        <button class="tl-panel__close" data-legal-close aria-label="Chiudi"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </header>
+      <div id="legal-body" class="tl-panel__body"></div>
+      <footer class="tl-panel__footer" id="legal-footer"><button class="btn btn-sm" data-legal-close>Chiudi</button></footer>
+    </aside>
+    <aside class="tl-panel tl-panel--mobile" role="dialog" aria-modal="true" aria-labelledby="legal-title-mobile">
+      <header class="tl-panel__header">
+        <div class="min-w-0">
+          <h2 id="legal-title-mobile" class="tl-panel__title">—</h2>
+          <p id="legal-subtitle-mobile" class="tl-panel__subtitle">—</p>
+        </div>
+        <button class="tl-panel__close" data-legal-close aria-label="Chiudi"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </header>
+      <div id="legal-body-mobile" class="tl-panel__body"></div>
+      <footer class="tl-panel__footer" id="legal-footer-mobile"><button class="btn btn-sm" data-legal-close>Chiudi</button></footer>
+    </aside>
+  </div>
 
   <!-- TOOLTIP DESKTOP -->
-  <div id="metric-popover" class="tl-popover noprint" role="tooltip" aria-hidden="true" style="max-width:320px;">…</div>
+  <div id="metric-popover" class="tl-popover noprint" role="tooltip" aria-hidden="true" style="max-width:320px;">
+    <div class="tl-popover__head" style="display:flex;align-items:flex-start;gap:.5rem;">
+      <button id="metric-popover-close" class="tl-popover__close" aria-label="Chiudi">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      <div id="metric-popover-title" class="tl-popover__title">—</div>
+    </div>
+    <div id="metric-popover-body" class="tl-popover__body">—</div>
+    <div id="metric-popover-source" class="tl-popover__source">—</div>
+  </div>
 
   <!-- TOOLTIP MOBILE -->
-  <div id="metric-modal" class="tl-metric-modal-overlay noprint" aria-hidden="true">…</div>
+  <div id="metric-modal" class="tl-metric-modal-overlay noprint" aria-hidden="true">
+    <div class="tl-metric-modal-backdrop" data-metric-close></div>
+    <div class="tl-metric-modal" role="dialog" aria-modal="true" aria-labelledby="metric-modal-title">
+      <header class="tl-metric-modal__header">
+        <div class="min-w-0">
+          <div id="metric-modal-title" class="tl-metric-modal__title">—</div>
+          <div id="metric-modal-source" class="tl-metric-modal__source">—</div>
+        </div>
+        <button class="tl-metric-modal__close" data-metric-close aria-label="Chiudi">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </header>
+      <div id="metric-modal-body" class="tl-metric-modal__body">—</div>
+    </div>
+  </div>
 
   <!-- JS runtime -->
   <script type="module" src="/report/assets/js/app.js"></script>
