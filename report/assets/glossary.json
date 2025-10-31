@@ -1,4 +1,5 @@
 {
+  "_v": "2025-10-31-F2",
   "ModuleStatus": {
     "title": "ModuleStatus",
     "what": "Stato operativo del modulo al momento della pubblicazione (ACTIVE/REVIEW/HOLD).",
@@ -404,79 +405,5 @@
     "what": "Indice sintetico di paura/avidità multi-componente.",
     "how": "Zone estreme utili come contesto di rischio, non come timing.",
     "source": "Approcci compositi al sentiment; confronti con misure accademiche (Baker & Wurgler, 2006)."
-  },
-  {
-  "Governance_info": {
-    "title": "Governance",
-    "what": "Trasparenza di versione, fonti, qualità dati e regole d’uso del modulo.",
-    "how": "Raccoglie audit trail, metriche qualità (Freshness/Confidence/DataIntegrity/FeedSync) e informative regolamentari.",
-    "source": "BCBS 239; ESMA – Supervisory Briefings su data governance."
-  },
-  "AuditPathID_info": {
-    "title": "AuditPathID",
-    "what": "Identificativo del percorso di audit (snapshot/log) per riproducibilità.",
-    "how": "Consente di risalire a dataset/versioni e controlli applicati.",
-    "source": "Principi di tracciabilità e lineage dei dati (BCBS 239)."
-  },
-  "FreshnessScore_info": {
-    "title": "FreshnessScore",
-    "what": "Indice di aggiornamento e latenza delle fonti usate dal modulo.",
-    "how": "Combina eterogeneità dei feed e loro timestamp rispetto al report.",
-    "source": "BCBS 239 – timeliness; metriche interne Tradelia AI."
-  },
-  "ConfidenceFinal_info": {
-    "title": "ConfidenceFinal",
-    "what": "Confidenza complessiva nella qualità/completezza del quadro.",
-    "how": "Include coerenza intermarket, copertura, outlier e drift.",
-    "source": "Framework QA interno; best practice di reliability reporting."
-  },
-  "DataIntegrity_info": {
-    "title": "DataIntegrity",
-    "what": "Coerenza interna e assenza di buchi/valori impossibili.",
-    "how": "Controlli di validazione e reconciliazione cross-fonte.",
-    "source": "BCBS 239 – accuracy & integrity controls."
-  },
-  "FeedSync_info": {
-    "title": "FeedSync",
-    "what": "Allineamento temporale tra sorgenti (cash, futures, FX, vol, curve).",
-    "how": "Desincronizzazioni degradano l’affidabilità tattica.",
-    "source": "Pattern d’integrazione dati di mercato; timestamp alignment."
-  },
-  "ModuleVersion_info": {
-    "title": "ModuleVersion",
-    "what": "Version tag della logica del modulo (es. v7.2).",
-    "how": "Ogni modifica sostanziale incrementa la versione e aggiorna l’audit.",
-    "source": "Versioning & change-log interni Tradelia AI."
-  },
-  "ModuleStatus_policy_info": {
-    "title": "Policy stato modulo",
-    "what": "Significato di ACTIVE/REVIEW/HOLD.",
-    "how": "ACTIVE: input adeguati; REVIEW: qualità parziale/da verificare; HOLD: sospensione tattica.",
-    "source": "Policy operativa Tradelia AI; data quality thresholds."
-  },
-  "Freshness_policy_info": {
-    "title": "Policy Freshness",
-    "what": "Soglie di freschezza accettate per la pubblicazione.",
-    "how": "‘≤ T-1’ richiesto; oltre T-1 → REVIEW/HOLD a discrezione del controllo qualità.",
-    "source": "BCBS 239 – timeliness; standard interni."
-  },
-  "Sources_Tier1_info": {
-    "title": "Fonti Tier-1",
-    "what": "Ambito di fonti consentite per F2.",
-    "how": "Reuters, Bloomberg, Nasdaq, SEC/EDGAR. Finviz/Barchart come rassegna (no opzioni in F2).",
-    "source": "Policy fonti Tradelia AI (trasparenza e replicabilità)."
-  },
-  "EducationalScope_info": {
-    "title": "Scopo educativo",
-    "what": "Natura non personalizzata dei contenuti.",
-    "how": "Letture di contesto; non forniscono indicazioni operative individuali.",
-    "source": "MiFID II/ESMA – investor protection."
-  },
-  "Compliance_ESMA_info": {
-    "title": "Compliance (ESMA)",
-    "what": "Linee guida su comunicazioni e tutela investitori.",
-    "how": "Richiama trasparenza su rischi, limiti e finalità dei materiali.",
-    "source": "ESMA Guidelines on marketing communications."
   }
 }
-
