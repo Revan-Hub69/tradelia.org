@@ -1,5 +1,4 @@
 {
-  "_v": "2025-10-31-F2",
   "ModuleStatus": {
     "title": "ModuleStatus",
     "what": "Stato operativo del modulo al momento della pubblicazione (ACTIVE/REVIEW/HOLD).",
