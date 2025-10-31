@@ -494,11 +494,12 @@
     "how": "Variabili di prezzo sono trattate come processi stocastici; il prezzo mostrato serve da contesto descrittivo, non operativo.",
     "source": "Campbell, J.Y., Lo, A.W., & MacKinlay, A.C. (1997), *The Econometrics of Financial Markets*, Princeton University Press."
   },
+{
   "ChangePct": {
     "title": "ChangePct",
-    "what": "Variazione percentuale del prezzo sulla finestra di snapshot.",
-    "how": "Calcolata come rendimento percentuale su intervallo definito; indicatore descrittivo del tono direzionale.",
-    "source": "Campbell, J.Y., Lo, A.W., & MacKinlay, A.C. (1997), *The Econometrics of Financial Markets*, Princeton University Press."
+    "what": "Variazione percentuale del prezzo tra l’inizio della finestra di analisi (Start) e l’ultima chiusura precedente (End).",
+    "how": "Calcolata come rendimento percentuale semplice: Δ% = [(End − Start) / Start] × 100. Indica la variazione direzionale sul periodo di osservazione; non rappresenta movimenti intraday 'live'.",
+    "source": "Campbell, J.Y., Lo, A.W., & MacKinlay, A.C. (1997). The Econometrics of Financial Markets. Princeton University Press."
   },
   "Currency": {
     "title": "Currency",
