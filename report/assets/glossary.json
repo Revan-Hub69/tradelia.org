@@ -188,3 +188,437 @@
     "source": "Linee guida MiFID II / ESMA su materiale informativo vs raccomandazione personalizzata."
   }
 }
+{
+  "ModuleStatus": {
+    "title": "ModuleStatus",
+    "what": "Stato operativo del modulo al momento della pubblicazione (es. ACTIVE, REVIEW, HOLD).",
+    "how": "Se non è ACTIVE, uno o più input potrebbero essere incompleti o meno affidabili.",
+    "source": "Monitoraggio interno Tradelia AI sullo stato dei feed e pipeline."
+  },
+  "Freshness": {
+    "title": "Freshness",
+    "what": "Quanto sono recenti i dati rispetto all’orario di generazione del report.",
+    "how": "‘≤ T-1’/‘live’ = fotografia aggiornata; ‘T-2’ = possibile scostamento dal mercato attuale.",
+    "source": "Timestamp interni + latenze feed esterni."
+  },
+  "HeroDisclaimer": {
+    "title": "Disclaimer",
+    "what": "Materiale informativo/educativo.",
+    "how": "Non considera obiettivi personali o profilo di rischio. Non è raccomandazione.",
+    "source": "Linee guida MiFID II / ESMA."
+  },
+
+  "StrategyMode_macro": {
+    "title": "StrategyMode",
+    "what": "Regime tattico 3–10g (Momentum / Neutral / Pullback).",
+    "how": "Tono dominante del contesto; non è un segnale di trading.",
+    "source": "Modello proprietario su vol, breadth, credito e flussi."
+  },
+  "RegimeScore": {
+    "title": "RegimeScore",
+    "what": "Appetito al rischio sintetico.",
+    "how": "Verde=risk-on; Rosso=risk-off. Non è direzionale sul prezzo.",
+    "source": "Ponderazione di vol, credito, liquidità e leadership settoriale."
+  },
+  "VolRegime": {
+    "title": "Volatilità / Hedge",
+    "what": "Domanda di protezione (es. VIX, future vol).",
+    "how": "Verde=poca protezione; Rosso=coperture elevate → stress.",
+    "source": "CBOE e surface di volatilità; analisi Tradelia AI."
+  },
+  "LiquidityRegimeScore": {
+    "title": "Curva & Costo capitale",
+    "what": "Condizioni di funding e struttura curva tassi.",
+    "how": "Curve accomodanti favoriscono rischio; curve tese lo frenano.",
+    "source": "Curva UST e metriche di tightness."
+  },
+  "CreditRiskBlock": {
+    "title": "Credito",
+    "what": "Segnali dal mercato del credito (HY vs IG).",
+    "how": "HY debole vs IG = early warning risk-off.",
+    "source": "Spread HY/IG, flussi corporate."
+  },
+  "FX_Regime": {
+    "title": "FX / USD",
+    "what": "Forza USD come proxy rischio globale.",
+    "how": "USD forte spesso = condizioni finanziarie più dure.",
+    "source": "DXY, EURUSD, USDJPY."
+  },
+  "RiskWindow": {
+    "title": "RiskWindow (3–10g)",
+    "what": "Driver/eventi sensibili prossimi.",
+    "how": "Watchlist di possibili catalizzatori; non è call direzionale.",
+    "source": "Calendari macro/policy e monitoraggio sistemico."
+  },
+  "Breadth_1M": {
+    "title": "Breadth (1M)",
+    "what": "Diffusione del rialzo nel mese.",
+    "how": "Ampia = struttura sana; stretta = concentrazione su poche mega-cap.",
+    "source": "Aggregazione performance settoriali/tematiche."
+  },
+  "RiskTilt_1M": {
+    "title": "RiskTilt (1M)",
+    "what": "Rotazione tra high beta/ciclici e difensivi.",
+    "how": "Ciclici/growth vincenti = mercato compra rischio.",
+    "source": "Spread tra panieri fattoriali."
+  },
+  "SmallCapPressure_1W": {
+    "title": "SmallCap Pressure (1W)",
+    "what": "Pressione su small/micro vs large cap.",
+    "how": "Small deboli = rimozione rischio marginale.",
+    "source": "Confronti panieri per capitalizzazione."
+  },
+  "IndexMomentum_1W": {
+    "title": "Index Momentum (1W)",
+    "what": "Momentum tattico degli indici chiave.",
+    "how": "Co-movimento ampio = tono più credibile.",
+    "source": "Performance cross-indici."
+  },
+  "SizeBias": {
+    "title": "Size Bias",
+    "what": "Preferenza per una fascia di market cap.",
+    "how": "Leadership solo mega = concentrazione; ampia = migliore breadth.",
+    "source": "Ranking per dimensione."
+  },
+  "Leadership multi-timeframe": {
+    "title": "Leadership multi-timeframe",
+    "what": "Temi leader su più timeframe.",
+    "how": "Coerenza 1W+1M suggerisce trend più strutturale.",
+    "source": "Ranking combinato Tradelia AI."
+  },
+  "Leadership difensiva qualitativa": {
+    "title": "Leadership difensiva qualitativa",
+    "what": "Sovraperformance settori rifugio/quality.",
+    "how": "Mercato privilegia resilienza e stabilità.",
+    "source": "Fattori quality/low-vol vs mercato."
+  },
+  "Settori in ritardo": {
+    "title": "Settori in ritardo",
+    "what": "Sottoperformers persistenti.",
+    "how": "Aree cicliche fragili o temi hype scarichi.",
+    "source": "Ranking bottom multi-timeframe."
+  },
+  "Indici (1W)": {
+    "title": "Indici (1W)",
+    "what": "Movimento recente dei principali indici.",
+    "how": "Contestualizza il tono più immediato.",
+    "source": "Feed indici equity."
+  },
+  "Futures / Commodities (1W)": {
+    "title": "Futures / Commodities (1W)",
+    "what": "Move settimanale su future/commodities.",
+    "how": "Segnali su inflazione/crescita/energia.",
+    "source": "Feed futures/commodities."
+  },
+  "Curva Treasury": {
+    "title": "Curva Treasury",
+    "what": "Forma/spostamenti della curva UST.",
+    "how": "Slope/steepening influenza costo capitale.",
+    "source": "US Treasury yield curve."
+  },
+  "Volatilità & USD": {
+    "title": "Volatilità & USD",
+    "what": "Quadro combinato vol implicita + USD.",
+    "how": "Vol alta + USD forte = spesso risk-off.",
+    "source": "CBOE + FX USD."
+  },
+  "FreshnessScore": {
+    "title": "FreshnessScore",
+    "what": "Grado di aggiornamento delle fonti chiave.",
+    "how": "Verde=fresco; Giallo=parziale; Rosso=stale/rumoroso.",
+    "source": "Controlli automatici di latenza/allineamento."
+  },
+  "ConfidenceFinal": {
+    "title": "ConfidenceFinal",
+    "what": "Confidenza sulla qualità/coerenza del quadro.",
+    "how": "Alto=feed stabili; Basso=rumore/disallineamenti.",
+    "source": "Heuristics Tradelia AI."
+  },
+  "DataIntegrity": {
+    "title": "DataIntegrity",
+    "what": "Consistenza (assenza buchi/outlier impossibili).",
+    "how": "Giallo/rosso = parzialità o incoerenze.",
+    "source": "Validazioni serie + fallback."
+  },
+  "FeedSync": {
+    "title": "FeedSync",
+    "what": "Allineamento temporale tra sorgenti.",
+    "how": "Drift temporale riduce affidabilità della lettura.",
+    "source": "Scheduler e confronti timestamp interni."
+  },
+  "MiFID_disclaimer": {
+    "title": "Informativa MiFID",
+    "what": "Contenuto informativo/formativo, non consulenza.",
+    "how": "Sovrapponi orizzonte e rischio personali.",
+    "source": "MiFID II / ESMA."
+  },
+
+  "MacroGate_info": {
+    "title": "MacroGate",
+    "what": "Semaforo rischio eventi vicini (48–72h).",
+    "how": "PASS=ok; REVIEW=attenzione; FAIL=interrompere analisi operativa.",
+    "source": "WebProbe Tier-1 (Reuters/Bloomberg/SEC/Nasdaq)."
+  },
+
+  "SentimentComposite_info": {
+    "title": "SentimentComposite",
+    "what": "Sintesi qualitativa del sentiment ticker-level.",
+    "how": "Integra tecnico/news/consenso in un indicatore descrittivo.",
+    "source": "F2 · SCI + DPI (no opzioni)."
+  },
+  "ETF_FlowTone_info": {
+    "title": "ETF Flow Tone",
+    "what": "Tono dei flussi ETF collegati al titolo/settore.",
+    "how": "Inflow=acquisti netti; Outflow=uscite; neutro=bilanciato.",
+    "source": "Pannelli ETF (1W/1M) consolidati."
+  },
+
+  "TECH_SIGNAL_info": {
+    "title": "Tecnico (Barchart)",
+    "what": "Lettura tecnica sintetica multi-TF.",
+    "how": "Non è un segnale F3; è un contesto (Buy/Hold/Sell).",
+    "source": "Barchart Technical Opinion (riassunto)."
+  },
+  "NEWS_TONE_info": {
+    "title": "News · Tono",
+    "what": "Polarità media delle headline recenti.",
+    "how": "Positive/Negative/Neutral sul perimetro ultimo 1–3 giorni.",
+    "source": "Rassegna news Tier-1."
+  },
+  "CONSENSUS_LEVEL_info": {
+    "title": "Consenso analisti",
+    "what": "Livello sintetico (OW/Neutral/UW).",
+    "how": "Descrittivo, non prescrittivo.",
+    "source": "Consensus sell-side consolidato."
+  },
+  "CONSISTENCY_info": {
+    "title": "Stabilità consenso",
+    "what": "Quanto è stabile/varia il consenso (30–60g).",
+    "how": "Alta stabilità = narrativa più robusta.",
+    "source": "Serie storiche di revisioni e rating."
+  },
+
+  "PERF_VECTOR_info": {
+    "title": "Performance vector",
+    "what": "Sintesi 1W/1M/3M descrittiva.",
+    "how": "Contestualizza il posizionamento recente.",
+    "source": "Pannelli price-only (no F3)."
+  },
+  "VALUATION_SNAPSHOT_info": {
+    "title": "Valuation snapshot",
+    "what": "Multipli chiave vs peers/settore.",
+    "how": "Premio/sconto informativo, non target price.",
+    "source": "Dati fondamentali consolidati."
+  },
+  "MARGINS_SNAPSHOT_info": {
+    "title": "Margins snapshot",
+    "what": "Margini lordi/operativi.",
+    "how": "Quadro statico di redditività.",
+    "source": "Bilanci/riclassificazioni."
+  },
+  "PRICE_TREND_info": {
+    "title": "Price trend (descrittivo)",
+    "what": "Relazione con SMA50/200, swing recente.",
+    "how": "Descrittivo, non segnale F3.",
+    "source": "Serie prezzo daily."
+  },
+  "MARGIN_HEALTH_info": {
+    "title": "Margin health",
+    "what": "Qualità/sostenibilità margini.",
+    "how": "Trend e resilienza a shock costi.",
+    "source": "Bilanci + note MGMT."
+  },
+  "PROFITABILITY_CLASS_info": {
+    "title": "Profitability class",
+    "what": "Classe di redditività (ROIC/ROE).",
+    "how": "Indicatore qualitativo.",
+    "source": "Fundamentals consolidati."
+  },
+  "EARNINGS_TREND_info": {
+    "title": "Earnings trend",
+    "what": "Direzione/revisioni EPS/ricavi.",
+    "how": "Trend YoY/seq e revisioni sell-side.",
+    "source": "Consensus e storici.",
+  "source_note_ignore": "formatter requires trailing comma fix"
+  },
+
+  "BALANCE_SHEET_STRENGTH_info": {
+    "title": "BS strength",
+    "what": "Solidità patrimoniale/leverage.",
+    "how": "Debito/EBITDA, liquidità, covenant.",
+    "source": "Bilanci, rating, note."
+  },
+  "CASHFLOW_MOMENTUM_info": {
+    "title": "Cash-flow momentum",
+    "what": "Dinamica FCF e qualità utili.",
+    "how": "FCF vs utile contabile.",
+    "source": "Rendiconto finanziario."
+  },
+
+  "VAL_MULTIPLES_info": {
+    "title": "Valuation multiples",
+    "what": "PE/EV-EBITDA/PS vs storia/peers.",
+    "how": "Serve per contesto, non per target.",
+    "source": "Fundamentals consolidati."
+  },
+  "MARGINS_TREND_info": {
+    "title": "Margins trend",
+    "what": "Direzione recente di GM/OM/NP.",
+    "how": "Compressione/espansione margini.",
+    "source": "Bilanci trimestrali."
+  },
+  "EARNINGS_REV_info": {
+    "title": "Revisions",
+    "what": "Revisione stime EPS/ricavi.",
+    "how": "Upgrade/downgrade netti.",
+    "source": "Consensus provider."
+  },
+  "QUALITY_BS_CF_info": {
+    "title": "Quality (BS & CF)",
+    "what": "Qualità bilancio e flussi cassa.",
+    "how": "Copertura capex/dividendi da FCF.",
+    "source": "Bilanci."
+  },
+  "TARGET_SPREAD_info": {
+    "title": "Target spread",
+    "what": "Distanza da TP mediano.",
+    "how": "Solo descrittivo (non raccomandazione).",
+    "source": "Consensus target price."
+  },
+  "UPSIDE_PCT_info": {
+    "title": "Upside %",
+    "what": "Upside vs TP mediano.",
+    "how": "Indicazione potenziale, non promessa.",
+    "source": "Consensus TP."
+  },
+  "EVENT_LAST_EARNINGS_info": {
+    "title": "Ultimo earnings",
+    "what": "Data ultimo rilascio risultati.",
+    "how": "Serve per finestra post-earnings.",
+    "source": "Nasdaq/SEC/IR issuer."
+  },
+  "POST_EARNINGS_WINDOW_info": {
+    "title": "Post-earnings window",
+    "what": "Finestra tattica post risultati.",
+    "how": "Spesso 5–10 sedute per assorbimento news.",
+    "source": "Heuristics Tradelia AI."
+  },
+
+  "PEER_LIST_info": {
+    "title": "Peer list",
+    "what": "Elenco comparables principali.",
+    "how": "Per contesto competitivo.",
+    "source": "Classificazioni GICS/analisi interna."
+  },
+  "ETF_LIST_info": {
+    "title": "ETF list",
+    "what": "ETF più esposti al titolo/tema.",
+    "how": "Per capire portata flussi passivi.",
+    "source": "Holdings ETF provider."
+  },
+  "PEER_LEADERS_info": {
+    "title": "Peer leaders",
+    "what": "Peers leader recenti.",
+    "how": "Momentum/forza relativa.",
+    "source": "Performance cross-peer."
+  },
+  "PEER_LAGGARDS_info": {
+    "title": "Peer laggards",
+    "what": "Peers in ritardo.",
+    "how": "Debolezza/temi in raffreddamento.",
+    "source": "Performance cross-peer."
+  },
+  "SECTOR_BREADTH_info": {
+    "title": "Sector breadth",
+    "what": "Diffusione forza nel settore.",
+    "how": "Quota titoli in rialzo vs in calo.",
+    "source": "Aggregazioni settore/tema."
+  },
+  "ETF_FLOW_BIAS_info": {
+    "title": "ETF flow bias",
+    "what": "Bias flussi ETF (1W/1M).",
+    "how": "Inflow/Outflow netti.",
+    "source": "Dati flussi ETF."
+  },
+  "TOP_HOLDING_ETF_info": {
+    "title": "Top holding ETF",
+    "what": "ETF con peso maggiore sul titolo.",
+    "how": "Per sensibilità a movimenti del paniere.",
+    "source": "Holdings ETF."
+  },
+
+  "SI_LEVEL_info": {
+    "title": "Short Float",
+    "what": "Quota azioni shortate sul float.",
+    "how": "Valori bassi = minore rischio squeeze.",
+    "source": "Finviz/Exchange short interest."
+  },
+  "DTC_BUCKET_info": {
+    "title": "Days to Cover",
+    "what": "Giorni necessari per coprire lo short.",
+    "how": "Calcolato su volume medio.",
+    "source": "Short interest / vol medio."
+  },
+  "SI_TREND_info": {
+    "title": "Trend short",
+    "what": "Direzione dello short interest.",
+    "how": "Crescente/diminuente/flat.",
+    "source": "Serie short interest."
+  },
+  "INST_FLOW_info": {
+    "title": "Istituzionali",
+    "what": "Segnale di flusso/posizionamento istituzionale.",
+    "how": "In ingresso/uscita descrittivo.",
+    "source": "13F/ownership + provider terzi."
+  },
+  "INSIDER_FLOW_info": {
+    "title": "Insider",
+    "what": "Segnale da transazioni insider.",
+    "how": "Acquisti/vendite recenti.",
+    "source": "SEC Form 4 / IR issuer."
+  },
+
+  "AAII_info": {
+    "title": "AAII Bulls-Bears",
+    "what": "Differenziale sentiment investitori retail USA.",
+    "how": "Estremi possono anticipare mean-reversion.",
+    "source": "AAII survey."
+  },
+  "NAAIM_info": {
+    "title": "NAAIM Exposure",
+    "what": "Esposizione media gestori attivi.",
+    "how": "Valori molto alti/bassi = estremi tattici.",
+    "source": "NAAIM survey."
+  },
+  "FearGreed_info": {
+    "title": "Fear & Greed",
+    "what": "Indicatore sintetico paura/avidità.",
+    "how": "Zone estreme utili per contesto, non timing.",
+    "source": "Provider pubblico (CNN/altro)."
+  },
+
+  "FreshnessScore_info": {
+    "title": "FreshnessScore",
+    "what": "Grado di aggiornamento delle fonti in F2.",
+    "how": "Verde=fresco; Giallo=parziale; Rosso=stale.",
+    "source": "Controlli automatici Tradelia AI."
+  },
+  "ConfidenceFinal_info": {
+    "title": "ConfidenceFinal",
+    "what": "Confidenza sulla qualità del quadro F2.",
+    "how": "Alto=stima robusta; Basso=rumore.",
+    "source": "Heuristics Tradelia AI."
+  },
+  "DataIntegrity_info": {
+    "title": "DataIntegrity",
+    "what": "Consistenza dati F2.",
+    "how": "Segnala buchi/outlier/incoerenze.",
+    "source": "Validator interni."
+  },
+  "FeedSync_info": {
+    "title": "FeedSync",
+    "what": "Sincronia temporale sorgenti F2.",
+    "how": "Drift riduce affidabilità della lettura.",
+    "source": "Scheduler interno."
+  }
+}
