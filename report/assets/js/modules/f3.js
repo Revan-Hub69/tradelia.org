@@ -1,13 +1,13 @@
-// /report/assets/js/modules/f3.js (rewritten)
+// /report/assets/js/modules/f3.js
 //
 // F3 · Analisi Tecnica MTF (3–10 giorni)
-// UI allineata a F1B/F2 con drawer/tabs "scoped" e delegation robusta
+// Allineato a F1B/F2: stessi selettori/tabs/drawer pattern
 //
-// Export:
+// Export
 //   renderCard(rawData, ctx?) -> string HTML
-//   bindCard(node, rawData, ctx?) -> attach listeners
+//   bindCard(node, rawData, ctx?)
 //
-// Dipendenze globali attese:
+// Dipendenze globali attese
 //   window.__TradeliaUI.openPanel()
 //   window.__TradeliaUI.closePanel()
 //   window.__TradeliaUI.bindMetricInfoButtons()
@@ -15,13 +15,14 @@
 export function renderCard(rawData, ctx = {}){
   const d = normalizeDataF3Public(rawData);
 
+  // KPI HERO
   const kpis = [
-    { key: "BiasMTF",   label: "Bias MTF",   desc: "", metric: d.head?.BiasMTF },
-    { key: "MTF_Score", label: "MTF Score",  desc: "", metric: d.head?.MTF_Score },
-    { key: "P_SwingUp", label: "P(SwingUp)", desc: "", metric: d.head?.P_SwingUp },
+    { key:"BiasMTF",   label:"Bias MTF",   desc:"", metric: d.head?.BiasMTF },
+    { key:"MTF_Score", label:"MTF Score",  desc:"", metric: d.head?.MTF_Score },
+    { key:"P_SwingUp", label:"P(SwingUp)", desc:"", metric: d.head?.P_SwingUp },
     d.options?.OPI_tkr
-      ? { key: "OPI_tkr", label: "OPI", desc: "", metric: d.options?.OPI_tkr }
-      : { key: "GSR_tkr", label: "GSR", desc: "", metric: d.options?.GSR_tkr }
+      ? { key:"OPI_tkr", label:"OPI", desc:"", metric: d.options?.OPI_tkr }
+      : { key:"GSR_tkr", label:"GSR", desc:"", metric: d.options?.GSR_tkr }
   ];
 
   return `
@@ -43,11 +44,11 @@ export function renderCard(rawData, ctx = {}){
           </div>
 
           <div class="section-title-main text-[14px] font-bold leading-[1.4] text-[color:var(--ink)] mt-1">
-            Struttura tecnica multi‑timeframe (volumetrico‑first)
+            Struttura tecnica multi-timeframe (volumetrico-first)
           </div>
 
           <div class="section-desc text-[12px] text-[color:var(--muted)] leading-[1.45] mt-1">
-            ${escapeHtml(d.meta.hero_intro || 'Lettura istituzionale W1→D1→H4→H1, overlay derivati e sintesi probabilistica. Nessun contenuto operativo.')}<br/>
+            ${escapeHtml(d.meta.hero_intro || 'Lettura W1→D1→H4→H1, overlay derivati e sintesi probabilistica. Nessun contenuto operativo.')}<br/>
             <span class="text-[11px] text-[color:var(--muted)]">Materiale educativo/informativo. Nessuna raccomandazione personale.</span>
           </div>
         </div>
@@ -57,12 +58,12 @@ export function renderCard(rawData, ctx = {}){
       <div class="relative flex flex-col gap-4 card-compact"
         style="background:var(--surface-card);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:1rem;">
 
-        <!-- KPI semaforiche -->
+        <!-- KPI -->
         <div class="grid gap-3 grid-cols-2 md:grid-cols-4">
           ${kpis.map(k=>metricBoxTrafficLightF3(k)).join('')}
         </div>
 
-        <!-- DISCLAIMER + CTA -->
+        <!-- CTA -->
         <div class="mt-2 flex flex-col gap-3 lg:flex-row lg:items-start">
           <p class="text-[11px] leading-[1.4] text-[color:var(--muted)] flex-1">${escapeHtml(d.meta.hero_disclaimer || '')}</p>
           <div class="flex lg:justify-end">
@@ -76,28 +77,20 @@ export function renderCard(rawData, ctx = {}){
     </section>`;
 }
 
-export function bindCard(node, rawData, ctx = {}) {
-  if (!node) return;
+export function bindCard(node, rawData, ctx = {}){
+  if(!node || !rawData) return;
   const data = normalizeDataF3Public(rawData);
 
-  // Delegation robusto per il bottone drawer (funziona anche su mobile)
-  if (!node.__f3Delegated) {
-    node.__f3Delegated = true;
-    node.addEventListener('click', (ev) => {
-      const btn = ev.target && ev.target.closest('[data-open-f3-details="true"]');
-      if (!btn) return;
-      try { openF3DrawerPublic(data); } catch (e) { console.error('F3 drawer open error:', e); }
-    }, { passive: true });
-  }
+  const btn = node.querySelector('[data-open-f3-details="true"]');
+  if (btn) btn.addEventListener('click', ()=> openF3DrawerPublic(data));
 
-  // Tooltip "?"
-  if (window.__TradeliaUI?.bindMetricInfoButtons) {
-    try { window.__TradeliaUI.bindMetricInfoButtons(node); } catch (_) {}
+  if (window.__TradeliaUI?.bindMetricInfoButtons){
+    try { window.__TradeliaUI.bindMetricInfoButtons(node); } catch(e){}
   }
 }
 
 /* -----------------------------------------------------------------------------
-// DRAWER (10 sezioni) — scoped root + safe activation
+// DRAWER (10 sezioni) — identico pattern a F2
 // -----------------------------------------------------------------------------*/
 function openF3DrawerPublic(d){
   if(!window.__TradeliaUI?.openPanel) return;
@@ -115,16 +108,14 @@ function openF3DrawerPublic(d){
     footerTabs: []
   });
 
-  // hint scroll per tabs mobile (scoped)
   function initScrollableTabsHint(){
-    const root = document.getElementById('f3-root');
-    const scrollBox = root?.querySelector('.f1b-footer-tabs-scroll');
-    const fadeRight = root?.querySelector('.f1b-tabs-fade-right');
+    const scrollBox = document.querySelector('.f1b-footer-tabs-scroll');
+    const fadeRight = document.querySelector('.f1b-tabs-fade-right');
     if(!scrollBox || !fadeRight) return;
     const needsScroll = scrollBox.scrollWidth > scrollBox.clientWidth + 2;
     if(!needsScroll){
       fadeRight.style.display = 'none';
-      const fadeLeft = root?.querySelector('.f1b-tabs-fade-left');
+      const fadeLeft = document.querySelector('.f1b-tabs-fade-left');
       if(fadeLeft) fadeLeft.style.display = 'none';
       return;
     }
@@ -132,27 +123,23 @@ function openF3DrawerPublic(d){
     function updateHint(){
       const atEnd = scrollBox.scrollLeft + scrollBox.clientWidth >= scrollBox.scrollWidth - 4;
       if(hintEl) hintEl.style.opacity = atEnd ? '0' : '.9';
-      const fadeLeft = root?.querySelector('.f1b-tabs-fade-left');
-      if (fadeLeft) fadeLeft.style.opacity = scrollBox.scrollLeft > 2 ? '.6' : '0';
+      const fadeLeft = document.querySelector('.f1b-tabs-fade-left');
+      if(fadeLeft) fadeLeft.style.opacity = scrollBox.scrollLeft > 2 ? '.6' : '0';
     }
     updateHint();
     scrollBox.addEventListener('scroll', ()=> updateHint(), { passive:true });
   }
 
-  // Post-mount: binding e attivazione iniziale
   setTimeout(()=>{
-    const root = document.getElementById('f3-root');
-    bindF3TabsPublic(root);
-
+    bindF3TabsPublic();
     if (window.__TradeliaUI?.bindMetricInfoButtons){
-      try { window.__TradeliaUI.bindMetricInfoButtons(root?.querySelector('#f3-scroll-desktop')); } catch(e){}
-      try { window.__TradeliaUI.bindMetricInfoButtons(root?.querySelector('#f3-scroll-mobile')); } catch(e){}
+      try { window.__TradeliaUI.bindMetricInfoButtons(document.getElementById('f3-scroll-desktop')); } catch(e){}
+      try { window.__TradeliaUI.bindMetricInfoButtons(document.getElementById('f3-scroll-mobile')); } catch(e){}
     }
-
-    requestAnimationFrame(()=>{
-      initScrollableTabsHint();
-    });
-  }, 0);
+    const first = document.querySelector('[data-f3-tab="dataset"]');
+    if (first?.click) first.click();
+    initScrollableTabsHint();
+  },0);
 }
 
 function isMobileViewport(){ return window.matchMedia('(max-width: 767px)').matches; }
@@ -173,7 +160,7 @@ function buildF3SectionsPublic(d){
     ${listBlockCardF3('Note OCR', d.dataset?.Notes_OCR)}
   </section>`;
 
-  // 2) W1 — Contesto direzionale
+  // 2) W1
   const w1 = d.W1 || {};
   const w1HTML = `
     <section class="tl-panel-section" data-f3-section="w1" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -193,7 +180,7 @@ function buildF3SectionsPublic(d){
       ${headlineBlockCardF3('Interpretazione W1', w1?.ai_note)}
     </section>`;
 
-  // 3) D1 — Struttura swing
+  // 3) D1
   const d1 = d.D1 || {};
   const d1HTML = `
     <section class="tl-panel-section" data-f3-section="d1" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -213,7 +200,7 @@ function buildF3SectionsPublic(d){
       ${headlineBlockCardF3('Interpretazione D1', d1?.ai_note)}
     </section>`;
 
-  // 4) H4 — Validazione intermedia
+  // 4) H4
   const h4 = d.H4 || {};
   const h4HTML = `
     <section class="tl-panel-section" data-f3-section="h4" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -228,7 +215,7 @@ function buildF3SectionsPublic(d){
       </div>
     </section>`;
 
-  // 5) H1 — Timing micro
+  // 5) H1
   const h1 = d.H1 || {};
   const h1HTML = `
     <section class="tl-panel-section" data-f3-section="h1" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -242,11 +229,11 @@ function buildF3SectionsPublic(d){
       </div>
     </section>`;
 
-  // 6) Options Overlay (da F2-Options)
+  // 6) Options Overlay
   const opt = d.options || {};
   const optionsHTML = `
     <section class="tl-panel-section" data-f3-section="options" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Options Overlay (F2‑Options)</div></header>
+      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Options Overlay (F2-Options)</div></header>
       <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4]">
         ${metricBlockF3('IV_info','IV (ATM)','', opt?.IV_ATM)}
         ${metricBlockF3('IVR_info','IV rank/percentile','', opt?.IV_rank_pct)}
@@ -261,7 +248,7 @@ function buildF3SectionsPublic(d){
       ${headlineBlockCardF3('Nota derivati', opt?.ai_note)}
     </section>`;
 
-  // 7) Price History (60 sedute REG)
+  // 7) Price History
   const ph = d.price_history || {};
   const priceHTML = `
     <section class="tl-panel-section" data-f3-section="price" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -274,16 +261,16 @@ function buildF3SectionsPublic(d){
       </div>
     </section>`;
 
-  // 8) Pattern MTF Board — qualitativo
+  // 8) Pattern board
   const pb = d.pattern_mtf || {};
   const patternHTML = `
     <section class="tl-panel-section" data-f3-section="patterns" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Pattern MTF Board (volumetrico‑first)</div></header>
+      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Pattern MTF Board (volumetrico-first)</div></header>
       ${patternBoardF3(pb)}
       ${headlineBlockCardF3('Note pattern', pb?.ai_note_pattern)}
     </section>`;
 
-  // 9) Consolidamento MTF & Probabilità — quantitativo
+  // 9) Consolidamento & Probabilità
   const mtf = d.mtf_consolidation || {};
   const mtfHTML = `
     <section class="tl-panel-section" data-f3-section="mtf" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
@@ -302,7 +289,7 @@ function buildF3SectionsPublic(d){
       ${headlineBlockCardF3('Sintesi MTF (educational)', mtf?.ai_note_mtf)}
     </section>`;
 
-  // 10) Governance (Audit & MiFID)
+  // 10) Governance
   const audit = d.governance || {};
   const q = audit?.QualityMetrics || {};
   const governanceHTML = `
@@ -322,11 +309,11 @@ function buildF3SectionsPublic(d){
 }
 
 /* -----------------------------------------------------------------------------
-// SHELL DESKTOP / MOBILE + TABS (scoped root id="f3-root")
+// SHELL DESKTOP / MOBILE + TABS (stile F1B/F2)
 // -----------------------------------------------------------------------------*/
 function renderF3DesktopShell(sections){
   return `
-    <div id="f3-root" class="f1b-panel-desktop" style="display:flex;flex-direction:row;gap:1rem;height:66vh;">
+    <div class="f1b-panel-desktop" style="display:flex;flex-direction:row;gap:1rem;height:66vh;">
       <aside class="f1b-panel-menu" style="min-width:180px;max-width:200px;border-right:1px solid var(--br-card);height:100%;overflow:auto;">
 ${drawerBtnF3('dataset','Dataset & Sync')}
 ${drawerBtnF3('w1','W1 · Direzionale')}
@@ -361,11 +348,11 @@ function renderF3MobileShell(sections){
     ['d1','D1 Swing'],
     ['h4','H4 Valid.'],
     ['h1','H1 Timing'],
-    ['options','Opzioni'],
-    ['price','Prezzo'],
+    ['options','Options'],
+    ['price','Price'],
     ['patterns','Pattern'],
     ['mtf','Sintesi MTF'],
-    ['governance','Governance']
+    ['governance','Gov']
   ].map(([k,l])=>mobileTabBtnF3(k,l)).join('');
 
   const mobileTabsBar = `
@@ -378,9 +365,8 @@ function renderF3MobileShell(sections){
         <span class="f1b-tabs-scroll-hint" style="display:inline-block;transform:translateY(1px);">⇠ ⇢</span>
       </div>
     </div>`;
-
   return `
-    <div id="f3-root" class="f1b-drawer-mobile" style="display:flex;flex-direction:column;height:calc(100vh - 110px);max-height:calc(100vh - 110px);min-height:300px;background:var(--surface-panel-head);">
+    <div class="f1b-drawer-mobile" style="display:flex;flex-direction:column;height:calc(100vh - 110px);max-height:calc(100vh - 110px);min-height:300px;background:var(--surface-panel-head);">
       ${mobileTabsBar}
       <main id="f3-scroll-mobile" class="f1b-panel-content-mobile flex-1 min-w-0" style="overflow:auto;-webkit-overflow-scrolling:touch;padding:1rem;background:var(--surface-page);">
         <div data-f3-view="dataset">${sections.datasetHTML}</div>
@@ -404,68 +390,32 @@ function mobileTabBtnF3(key,label){
   return `<button class="f1b-footer-tab-btn" data-f3-tab="${escapeAttr(key)}" style="flex:0 0 auto;white-space:nowrap;font-size:11px;line-height:1.2;font-weight:500;border-radius:999px;border:1px solid var(--br-soft);background:var(--surface-card);color:var(--muted);padding:.45rem .7rem;box-shadow:var(--shadow-card);min-width:max-content;">${escapeHtml(label)}</button>`;
 }
 
-// Delegation per le tab: una sola listener nello scope root
-function bindF3TabsPublic(root){
-  const scope = root || document.getElementById('f3-root') || document;
-  const views = scope.querySelectorAll('[data-f3-view]');
-  const desk  = scope.querySelector('#f3-scroll-desktop');
-  const mob   = scope.querySelector('#f3-scroll-mobile');
+function bindF3TabsPublic(){
+  const btns = document.querySelectorAll('[data-f3-tab]');
+  const views = document.querySelectorAll('[data-f3-view]');
+  const desk = document.getElementById('f3-scroll-desktop');
+  const mob  = document.getElementById('f3-scroll-mobile');
 
-  function resetScroll(){ [desk, mob].forEach(el=>{ if(!el) return; el.scrollTop=0; el.scrollLeft=0; }); }
-
+  function resetScroll(){ [desk,mob].forEach(el=>{ if(!el) return; el.scrollTop=0; el.scrollLeft=0; }); }
   function styleTabs(active){
-    scope.querySelectorAll('[data-f3-tab]').forEach(b=>{
+    btns.forEach(b=>{
       const on = b.getAttribute('data-f3-tab')===active;
       if (b.classList.contains('f1b-tab-btn')) b.classList.toggle('is-active', on);
       if (b.classList.contains('f1b-footer-tab-btn')){
-        if(on){
-          b.style.fontWeight='600';
-          b.style.border='1px solid var(--ink)';
-          b.style.background='radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--ink) 14%, transparent) 0%, transparent 60%), var(--surface-card-alt)';
-          b.style.color='var(--ink)';
-          b.style.boxShadow='0 4px 10px rgba(0,0,0,.18)';
-        } else {
-          b.style.fontWeight='500';
-          b.style.border='1px solid var(--br-soft)';
-          b.style.background='var(--surface-card)';
-          b.style.color='var(--muted)';
-          b.style.boxShadow='var(--shadow-card)';
-        }
+        if(on){ b.style.fontWeight='600'; b.style.border='1px solid var(--ink)'; b.style.background='radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--ink) 14%, transparent) 0%, transparent 60%), var(--surface-card-alt)'; b.style.color='var(--ink)'; b.style.boxShadow='0 4px 10px rgba(0,0,0,.18)'; }
+        else { b.style.fontWeight='500'; b.style.border='1px solid var(--br-soft)'; b.style.background='var(--surface-card)'; b.style.color='var(--muted)'; b.style.boxShadow='var(--shadow-card)'; }
       }
     });
   }
-
   function show(active){
-    views.forEach(v=>{
-      const k=v.getAttribute('data-f3-view');
-      v.hidden = (k!==active);
-      if(!v.hidden){
-        requestAnimationFrame(()=>{
-          resetScroll();
-          v.querySelectorAll('[data-scrollable]').forEach(sc=>{ sc.scrollTop=0; sc.scrollLeft=0; });
-        });
-      }
-    });
+    views.forEach(v=>{ const k=v.getAttribute('data-f3-view'); v.hidden = (k!==active); if(!v.hidden){ requestAnimationFrame(()=>{ resetScroll(); v.querySelectorAll('[data-scrollable]').forEach(sc=>{sc.scrollTop=0;sc.scrollLeft=0;}); }); }});
   }
-
-  function activate(k){ styleTabs(k); show(k); }
-
-  if (!scope.__f3Delegation){
-    scope.__f3Delegation = true;
-    scope.addEventListener('click', (e)=>{
-      const btn = e.target.closest('[data-f3-tab]');
-      if (!btn || !scope.contains(btn)) return;
-      const k = btn.getAttribute('data-f3-tab');
-      if (k) activate(k);
-    }, { passive:true });
-  }
-
-  // attiva tab iniziale
-  activate('dataset');
+  function activate(k){ styleTabs(k); show(k);}
+  btns.forEach(b=>{ if(b.__f3Bound) return; b.__f3Bound=true; b.addEventListener('click',()=>{ activate(b.getAttribute('data-f3-tab')); }); });
 }
 
 /* -----------------------------------------------------------------------------
-// CARD BUILDERS (F3)
+// CARD BUILDERS (identici a F2 nel pattern)
 // -----------------------------------------------------------------------------*/
 function f3Card({ tone, title, bodyHtml, noteHtml }){
   const { dotColor } = toneColorsF3(tone);
@@ -479,7 +429,6 @@ function f3Card({ tone, title, bodyHtml, noteHtml }){
       ${ noteHtml ? `<div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-2">${noteHtml}</div>` : '' }
     </div>`;
 }
-
 function metricBoxTrafficLightF3({ key, label, desc, metric }){
   const { dotColor, textColor } = toneColorsF3(metric?.tone);
   return `
@@ -495,51 +444,20 @@ function metricBoxTrafficLightF3({ key, label, desc, metric }){
       ${ desc ? `<div class="text-[11px] leading-[1.3] text-[color:var(--muted)] mt-1">${escapeHtml(desc)}</div>` : ''}
     </div>`;
 }
-
-// --- Smart render per evitare JSON raw nelle card ---
-function renderCompositeKV(obj){
-  const entries = Object.entries(obj||{});
-  if (!entries.length) return '<span class="text-[12px] text-[color:var(--muted)]">—</span>';
-  return `
-    <div class="grid grid-cols-3 gap-2 text-[12px]">
-      ${entries.map(([k,v])=>`
-        <div>
-          <div class="text-[10px] text-[color:var(--muted)]">${escapeHtml(String(k))}</div>
-          <div class="font-mono">${escapeHtml(String(v ?? '—'))}</div>
-        </div>
-      `).join('')}
-    </div>`;
-}
-
-function renderValueSmart(metricKey, metricObj){
-  const v = metricObj?.raw ?? metricObj;
-  if (metricKey==='COMP_MTF_info' && v && typeof v==='object') return renderCompositeKV(v);
-  if (metricKey==='PROB_info'     && v && typeof v==='object') return renderCompositeKV(v);
-  if (v === null || v === undefined) return '—';
-  if (Array.isArray(v))  return escapeHtml(JSON.stringify(v).slice(0,80)+(v.length>80?'…':''));
-  if (typeof v==='object'){
-    const s = JSON.stringify(v);
-    return `<code class="font-mono text-[12px]">${escapeHtml(s.length>100 ? s.slice(0,100)+'…' : s)}</code>`;
-  }
-  return escapeHtml(String(v));
-}
-
 function metricBlockF3(metricKey, title, desc, metricObj){
   const { textColor } = toneColorsF3(metricObj?.tone);
-  const valueHtml = renderValueSmart(metricKey, metricObj);
+  const value = formatMetricValue(metricObj);
   const bodyHtml = `
     <div class="flex items-start justify-between gap-2 mb-1">
       <div class="flex items-center gap-2">
-        <span class="font-mono font-bold text-[13px] leading-[1.4]" style="color:${textColor};"></span>
+        <span class="font-mono font-bold text-[13px] leading-[1.4]" style="color:${textColor};">${value}</span>
       </div>
       <button class="info-btn" data-metric="${escapeAttr(metricKey)}" aria-label="Info ${escapeAttr(metricKey)}">?</button>
     </div>
     ${ desc ? `<div class="text-[11px] leading-[1.3] text-[color:var(--muted)]">${escapeHtml(desc || '')}</div>` : ''}
-    <div class="mt-1">${valueHtml}</div>
     <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">${escapeHtml(metricObj?.ai_note || '')}</div>`;
   return f3Card({ tone: metricObj?.tone, title, bodyHtml, noteHtml: '' });
 }
-
 function patternBoardF3(pb={}){
   const tfOrder = ['W1','D1','H4','H1'];
   const blocks = tfOrder.map(tf=>{
@@ -568,47 +486,33 @@ function patternBoardF3(pb={}){
           </div>
         </div>`;
     }).join('');
-
     const title = tf==='W1' ? 'W1 · Direzionale' : (tf==='D1' ? 'D1 · Swing' : (tf==='H4' ? 'H4 · Validazione' : 'H1 · Timing'));
     return f3Card({ tone:'neutral', title, bodyHtml:`<div class='grid md:grid-cols-2 gap-2'>${rows || `<div class='text-[12px] text-[color:var(--muted)]'>N/A</div>`}</div>` });
   }).join('');
 
   const heat = Array.isArray(pb.heatmap) ? pb.heatmap : [];
   const heatCells = heat.map(h=>{
-    const tf = escapeHtml(String(h?.tf||''));
-    const conf = Number(h?.conf||0);
+    const tf = escapeHtml(String(h?.tf||'')); const conf = Number(h?.conf||0);
     const tone = conf>=0.66 ? 'green' : conf>=0.33 ? 'yellow' : 'red';
     const { bgSoft, brColor } = toneColorsCardF3(tone);
     return `<div class="rounded-md text-center p-2 border" title="${tf}: ${conf}" style="background:${bgSoft};border-color:${brColor};"><div class="text-[11px] font-semibold">${tf}</div><div class="font-mono text-[12px]">${conf}</div></div>`;
   }).join('');
-
   const heatBlock = heat.length ? f3Card({ tone:'neutral', title:'Heatmap Conf_pattern (TF)', bodyHtml:`<div class='grid grid-cols-4 gap-2'>${heatCells}</div>` }) : '';
-
   return `${blocks}${heatBlock}`;
 }
-
 function listBlockCardF3(title, body){
   if (!body && body !== 0) return '';
   let tone='neutral', raw='';
-  if (Array.isArray(body)){
-    raw = body.map(x=>`• ${String(x)}`).join('\n');
-  } else if (typeof body==='object'){
-    tone = body?.tone || 'neutral';
-    raw = body?.raw || '';
-  } else {
-    raw = String(body);
-  }
+  if (Array.isArray(body)){ raw = body.map(x=>`• ${String(x)}`).join('\n'); }
+  else if (typeof body==='object'){ tone = body?.tone || 'neutral'; raw = body?.raw || ''; }
+  else { raw = String(body); }
   return f3Card({ tone, title, bodyHtml:`<div class='whitespace-pre-line'>${escapeHtml(raw)}</div>`, noteHtml:'' });
 }
-
 function headlineBlockCardF3(title, obj){
   if (obj===undefined || obj===null) return '';
-  let tone='neutral', raw='';
-  if (typeof obj==='string'){ raw=obj; }
-  else { tone=obj?.tone||'neutral'; raw=obj?.raw||''; }
+  let tone='neutral', raw=''; if (typeof obj==='string'){ raw=obj; } else { tone=obj?.tone||'neutral'; raw=obj?.raw||''; }
   return f3Card({ tone, title, bodyHtml:`<div class='whitespace-pre-line'>${escapeHtml(raw)}</div>`, noteHtml: '' });
 }
-
 function qualityChipF3(key, q){
   if (!q) return '';
   const { textColor } = toneColorsF3(q.tone);
@@ -620,7 +524,6 @@ function qualityChipF3(key, q){
     <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">${escapeHtml(q.ai_note || '')}</div>`;
   return f3Card({ tone: q.tone, title: key || '', bodyHtml, noteHtml: '' });
 }
-
 function toneColorsF3(tone){
   switch((tone||'').toLowerCase()){
     case 'green': return { dotColor:'var(--tone-pos-fg)', textColor:'var(--tone-pos-fg)' };
@@ -629,42 +532,16 @@ function toneColorsF3(tone){
     default: return { dotColor:'var(--tone-neu-fg)', textColor:'var(--tone-neu-fg)' };
   }
 }
-
 function toneColorsCardF3(tone){
   const t = (tone||'').toLowerCase();
   if (t==='green' || t==='positive') return { dotColor:'var(--tone-pos-fg)', textColor:'var(--ink)', bgSoft:'color-mix(in oklab, var(--tone-pos-fg) 8%, var(--surface-card))', brColor:'color-mix(in oklab, var(--tone-pos-fg) 40%, var(--br-card))' };
-  if (t==='red' || t==='negative')   return { dotColor:'var(--tone-neg-fg)', textColor:'var(--ink)', bgSoft:'color-mix(in oklab, var(--tone-neg-fg) 8%, var(--surface-card))', brColor:'color-mix(in oklab, var(--tone-neg-fg) 40%, var(--br-card))' };
+  if (t==='red' || t==='negative') return { dotColor:'var(--tone-neg-fg)', textColor:'var(--ink)', bgSoft:'color-mix(in oklab, var(--tone-neg-fg) 8%, var(--surface-card))', brColor:'color-mix(in oklab, var(--tone-neg-fg) 40%, var(--br-card))' };
   if (t==='yellow' || t==='neutral') return { dotColor:'var(--tone-warn-fg)', textColor:'var(--ink)', bgSoft:'color-mix(in oklab, var(--tone-warn-fg) 8%, var(--surface-card))', brColor:'color-mix(in oklab, var(--tone-warn-fg) 40%, var(--br-card))' };
   return { dotColor:'var(--tone-neu-fg)', textColor:'var(--ink)', bgSoft:'var(--surface-card-alt)', brColor:'var(--br-card)' };
 }
 
-function truncateF3(s, n){
-  const str = String(s || '');
-  return str.length>n ? str.slice(0,n-1)+'…' : str;
-}
-
-function formatMetricValue(obj){
-  const v = obj?.raw ?? obj;
-  if (v === null || v === undefined) return '—';
-  if (Array.isArray(v)){
-    const s = JSON.stringify(v);
-    return escapeHtml(s.length>80 ? s.slice(0,80)+'…' : s);
-  }
-  if (typeof v === 'object'){
-    const keys = Object.keys(v);
-    if (keys.length === 0) return '{}';
-    const compact = keys.slice(0,5).reduce((acc,k)=>{ acc[k]=v[k]; return acc; },{});
-    const s = JSON.stringify(compact);
-    return escapeHtml(s.length>100 ? s.slice(0,100)+'…' : s);
-  }
-  return escapeHtml(String(v));
-}
-
-function escapeHtml(str){ if(str===undefined||str===null) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
-function escapeAttr(str){ if(str===undefined||str===null) return ''; return String(str).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
-
 /* -----------------------------------------------------------------------------
-// NORMALIZZAZIONE DATI (F3)
+// NORMALIZZAZIONE DATI (tassonomia stabile; no hard-code)
 // -----------------------------------------------------------------------------*/
 function normalizeDataF3Public(src={}){
   const meta = {
@@ -796,4 +673,26 @@ function normalizeDataF3Public(src={}){
   })();
 
   return { meta, head, dataset, W1, D1, H4, H1, options, price_history, pattern_mtf, mtf_consolidation, governance };
+}
+
+/* -----------------------------------------------------------------------------
+// UTILS
+// -----------------------------------------------------------------------------*/
+function escapeHtml(str){ if(str===undefined||str===null) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function escapeAttr(str){ if(str===undefined||str===null) return ''; return String(str).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function formatMetricValue(obj){
+  const v = obj?.raw;
+  if (v === null || v === undefined) return '—';
+  if (Array.isArray(v)){
+    const s = JSON.stringify(v);
+    return escapeHtml(s.length>80 ? s.slice(0,80)+'…' : s);
+  }
+  if (typeof v === 'object'){
+    const keys = Object.keys(v);
+    if (keys.length === 0) return '{}';
+    const compact = keys.slice(0,5).reduce((acc,k)=>{ acc[k]=v[k]; return acc; },{});
+    const s = JSON.stringify(compact);
+    return escapeHtml(s.length>100 ? s.slice(0,100)+'…' : s);
+  }
+  return escapeHtml(String(v));
 }
