@@ -18,12 +18,33 @@
 export function renderCard(rawData, ctx = {}){
   const d = normalizeDataF3OPublic(rawData);
 
-  const kpis = [
-    { key:'F3O_IV_ATM_info',   label: d.labels?.kpi_iv_atm,   desc:'', metric:d.head.IV_ATM },
-    { key:'F3O_IVRank_info',   label: d.labels?.kpi_ivrank,    desc:'', metric:d.head.IV_rank_pct },
-    { key:'F3O_GSR_info',      label: d.labels?.kpi_gsr,       desc:'', metric:d.head.GSR_tkr },
-    { key:'F3O_Dealer_info',   label: d.labels?.kpi_dealer,    desc:'', metric:d.head.DealerGamma },
-  ];
+ const kpis = [
+  {
+    key: "F3O_IV_ATM_info",
+    label: "IV (ATM)",
+    desc: "Volatilità implicita at-the-money (proxy 30D).",
+    metric: d.head.IV_ATM
+  },
+  {
+    key: "F3O_IVRank_info",
+    label: "IV Rank / %tile",
+    desc: "Posizione dell’IV nel range 1Y (rank/percentile).",
+    metric: d.head.IV_rank_pct
+  },
+  {
+    key: "F3O_GSR_info",
+    label: "GSR (Γ/Vega)",
+    desc: "Rapporto Gamma/Vega; segnala sensitività dealer.",
+    metric: d.head.GSR_tkr
+  },
+  {
+    key: "F3O_Dealer_info",
+    label: "Dealer Regime",
+    desc: "Posizionamento gamma dei dealer (long/short).",
+    metric: d.head.DealerGamma
+  }
+];
+
 
   return `
   <section class="f1b-card-container text-[13px] leading-[1.5] text-[color:var(--ink)]"
@@ -90,9 +111,11 @@ export function bindCard(node, rawData, ctx = {}){
 ----------------------------------------------------------------------------- */
 function openF3ODrawer(d){
   if (!window.__TradeliaUI?.openPanel) return;
-  const sections = buildF3OSections(d);
+  const sections = buildF3OSections(d);  
   const mobile   = isMobile();
   const shell    = mobile ? renderMobileShell(sections, d) : renderDesktopShell(sections, d);
+
+
 
   window.__TradeliaUI.openPanel({
     title:'F3O · Options Overlay',
@@ -168,15 +191,16 @@ function buildF3OSections(d){
       <td class="text-right">${fmtNum(r.lower)}</td>
       <td class="text-right">${fmtPct(r.iv_percent)}</td>
     </tr>`).join('');
-  const s2 = `
+const s2 = `
   <section class="tl-panel-section" data-f3o-section="em" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
     <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">${escapeHtml(L.em)}</div></header>
     ${f3oCard({ tone:'neutral', title:(d.labels?.em_table_title||'Expected Move'), bodyHtml:`
       <div class="flex items-center justify-between gap-2 mb-2">
-        <div class="text-[11px] text-[color:var(--muted)]">Spot: <span class="font-mono">${fmtNum(d.spot)||'—'}</span></div>
-        <div class="inline-flex items-center gap-[2px] border border-[color:var(--br-card)] rounded-[999px] overflow-hidden" role="group" aria-label="Toggle Expected Move unit">
-          <button type="button" class="em-toggle-btn px-2 py-1 text-[11px]" data-em-toggle="pct" aria-pressed="true" title="Mostra EM in percentuale">%</button>
-          <button type="button" class="em-toggle-btn px-2 py-1 text-[11px]" data-em-toggle="usd" aria-pressed="false" title="Mostra EM in dollari">$</button>
+        <div class="text-[11px] text-[color:var(--muted)]">${escapeHtml(d.labels?.spot||'Spot')}: <span class="font-mono">${fmtNum(d.spot)||'—'}</span></div>
+        <div class="inline-flex items-center gap-0 border border-[color:var(--br-card)] rounded-[999px] overflow-hidden" role="group" aria-label="${escapeAttr(d.labels?.em_toggle_arialabel||'Toggle Expected Move unit')}">
+          <button type="button" class="em-toggle-btn px-2 py-1 text-[11px]" data-em-toggle="pct" aria-pressed="true" title="${escapeAttr(d.labels?.em_toggle_pct_title||'Mostra EM in percentuale')}">%</button>
+          <button type="button" class="em-toggle-btn px-2 py-1 text-[11px]" data-em-toggle="usd" aria-pressed="false" title="${escapeAttr(d.labels?.em_toggle_usd_title||'Mostra EM in dollari')}">$</button>
+          <button type="button" class="info-btn ml-2" data-metric="F3O_EM_TOGGLE_info" aria-label="Info EM toggle">?</button>
         </div>
       </div>
       <div class="overflow-auto" data-scrollable id="em-container" data-em-mode="pct">
@@ -184,7 +208,10 @@ function buildF3OSections(d){
           <thead><tr>
             <th class="text-left">${escapeHtml(d.labels?.em_cols?.exp)}</th>
             <th class="text-right">${escapeHtml(d.labels?.em_cols?.dte)}</th>
-            <th class="text-right"><span data-kind="pct">${escapeHtml(d.labels?.em_cols?.em)}</span><span data-kind="usd" style="display:none;">EM$</span></th>
+            <th class="text-right">
+              <span data-kind="pct">${escapeHtml(d.labels?.em_cols?.em)}</span>
+              <span data-kind="usd" style="display:none;">${escapeHtml(d.labels?.em_col_usd||'EM$')}</span>
+            </th>
             <th class="text-right">${escapeHtml(d.labels?.em_cols?.up)}</th>
             <th class="text-right">${escapeHtml(d.labels?.em_cols?.down)}</th>
             <th class="text-right">${escapeHtml(d.labels?.em_cols?.iv)}</th>
