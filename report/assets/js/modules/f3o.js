@@ -7,6 +7,9 @@
 // - Governance completa (Quality chips + AuditPath + MiFID)
 // - "Sintesi" rinominata in "Sintesi educativa" e resa a schede (points[])
 // - Posizionamento (?) coerente: sempre a destra del titolo/metric box
+// - Patch: (1) `(?)` nei titoli sezione + `(?)` EM separato dal toggle
+//          (2) normalizzazione EM in PCR-by-exp (decimale→%)
+//          (3) toggle EM più leggibile
 //
 // Export:
 //   renderCard(rawData, ctx?) -> string HTML
@@ -18,33 +21,33 @@
 export function renderCard(rawData, ctx = {}){
   const d = normalizeDataF3OPublic(rawData);
 
- const kpis = [
-  {
-    key: "F3O_IV_ATM_info",
-    label: "IV (ATM)",
-    desc: "Volatilità implicita at-the-money (proxy 30D).",
-    metric: d.head.IV_ATM
-  },
-  {
-    key: "F3O_IVRank_info",
-    label: "IV Rank / %tile",
-    desc: "Posizione dell’IV nel range 1Y (rank/percentile).",
-    metric: d.head.IV_rank_pct
-  },
-  {
-    key: "F3O_GSR_info",
-    label: "GSR (Γ/Vega)",
-    desc: "Rapporto Gamma/Vega; segnala sensitività dealer.",
-    metric: d.head.GSR_tkr
-  },
-  {
-    key: "F3O_Dealer_info",
-    label: "Dealer Regime",
-    desc: "Posizionamento gamma dei dealer (long/short).",
-    metric: d.head.DealerGamma
-  }
-];
-
+  // KPI con descrizioni "alla F-series" (hardcoded usabili via tooltip esterno)
+  const kpis = [
+    {
+      key: "F3O_IV_ATM_info",
+      label: "IV (ATM)",
+      desc: "Volatilità implicita at-the-money (proxy 30D).",
+      metric: d.head.IV_ATM
+    },
+    {
+      key: "F3O_IVRank_info",
+      label: "IV Rank / %tile",
+      desc: "Posizione dell’IV nel range 1Y (rank/percentile).",
+      metric: d.head.IV_rank_pct
+    },
+    {
+      key: "F3O_GSR_info",
+      label: "GSR (Γ/Vega)",
+      desc: "Rapporto Gamma/Vega; segnala sensitività dealer.",
+      metric: d.head.GSR_tkr
+    },
+    {
+      key: "F3O_Dealer_info",
+      label: "Dealer Regime",
+      desc: "Posizionamento gamma dei dealer (long/short).",
+      metric: d.head.DealerGamma
+    }
+  ];
 
   return `
   <section class="f1b-card-container text-[13px] leading-[1.5] text-[color:var(--ink)]"
@@ -111,11 +114,9 @@ export function bindCard(node, rawData, ctx = {}){
 ----------------------------------------------------------------------------- */
 function openF3ODrawer(d){
   if (!window.__TradeliaUI?.openPanel) return;
-  const sections = buildF3OSections(d);  
+  const sections = buildF3OSections(d);
   const mobile   = isMobile();
   const shell    = mobile ? renderMobileShell(sections, d) : renderDesktopShell(sections, d);
-
-
 
   window.__TradeliaUI.openPanel({
     title:'F3O · Options Overlay',
@@ -168,10 +169,17 @@ function initScrollableTabsHint(){
 function buildF3OSections(d){
   const L = d.sectionTitles; // titoli user‑friendly
 
+  // Helper: header con `(?)` allineato a destra
+  const sectionHeader = (title, infoKey) => `
+    <header class="tl-panel-section-title flex items-center justify-between">
+      <div class="tl-panel-section-title-text">${escapeHtml(title)}</div>
+      <button type="button" class="info-btn ml-2" data-metric="${escapeAttr(infoKey)}" aria-label="Info ${escapeAttr(infoKey)}">?</button>
+    </header>`;
+
   // 1) KPI (quadro rapido)
   const s1 = `
   <section class="tl-panel-section" data-f3o-section="kpi" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-    <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">${escapeHtml(L.kpi)}</div></header>
+    ${sectionHeader(L.kpi, 'F3O_KPI_info')}
     <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4]">
       ${metricBlockF3O('F3O_IV_ATM_info', d.labels?.kpi_iv_atm, '', d.head.IV_ATM)}
       ${metricBlockF3O('F3O_IVRank_info', d.labels?.kpi_ivrank, '', d.head.IV_rank_pct)}
@@ -182,25 +190,18 @@ function buildF3OSections(d){
   </section>`;
 
   // 2) Expected Move
-  const emRows = (d.expected_move.rows||[]).slice(0,12).map(r=>`
-    <tr>
-      <td>${escapeHtml(r.expiration||'')}</td>
-      <td class="text-right">${escapeHtml(String(r.dte ?? '—'))}</td>
-      <td class="text-right">${fmtPct(r.em_percent)}</td>
-      <td class="text-right">${fmtNum(r.upper)}</td>
-      <td class="text-right">${fmtNum(r.lower)}</td>
-      <td class="text-right">${fmtPct(r.iv_percent)}</td>
-    </tr>`).join('');
-const s2 = `
+  const s2 = `
   <section class="tl-panel-section" data-f3o-section="em" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-    <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">${escapeHtml(L.em)}</div></header>
+    ${sectionHeader(L.em, 'F3O_EM_info')}
     ${f3oCard({ tone:'neutral', title:(d.labels?.em_table_title||'Expected Move'), bodyHtml:`
       <div class="flex items-center justify-between gap-2 mb-2">
         <div class="text-[11px] text-[color:var(--muted)]">${escapeHtml(d.labels?.spot||'Spot')}: <span class="font-mono">${fmtNum(d.spot)||'—'}</span></div>
-        <div class="inline-flex items-center gap-0 border border-[color:var(--br-card)] rounded-[999px] overflow-hidden" role="group" aria-label="${escapeAttr(d.labels?.em_toggle_arialabel||'Toggle Expected Move unit')}">
-          <button type="button" class="em-toggle-btn px-2 py-1 text-[11px]" data-em-toggle="pct" aria-pressed="true" title="${escapeAttr(d.labels?.em_toggle_pct_title||'Mostra EM in percentuale')}">%</button>
-          <button type="button" class="em-toggle-btn px-2 py-1 text-[11px]" data-em-toggle="usd" aria-pressed="false" title="${escapeAttr(d.labels?.em_toggle_usd_title||'Mostra EM in dollari')}">$</button>
-          <button type="button" class="info-btn ml-2" data-metric="F3O_EM_TOGGLE_info" aria-label="Info EM toggle">?</button>
+        <div class="flex items-center gap-3">
+          <div class="inline-flex items-center gap-0 border border-[color:var(--br-card)] rounded-[999px] overflow-hidden" role="group" aria-label="${escapeAttr(d.labels?.em_toggle_arialabel||'Toggle Expected Move unit')}">
+            <button type="button" class="em-toggle-btn px-2 py-1 text-[11px]" data-em-toggle="pct" aria-pressed="true" title="${escapeAttr(d.labels?.em_toggle_pct_title||'Mostra EM in percentuale')}">%</button>
+            <button type="button" class="em-toggle-btn px-2 py-1 text-[11px]" data-em-toggle="usd" aria-pressed="false" title="${escapeAttr(d.labels?.em_toggle_usd_title||'Mostra EM in dollari')}">$</button>
+          </div>
+          <button type="button" class="info-btn" data-metric="F3O_EM_TOGGLE_info" aria-label="Info EM toggle">?</button>
         </div>
       </div>
       <div class="overflow-auto" data-scrollable id="em-container" data-em-mode="pct">
@@ -240,7 +241,7 @@ const s2 = `
   // 3) Term Structure
   const s3 = `
   <section class="tl-panel-section" data-f3o-section="term" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-    <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">${escapeHtml(L.term)}</div></header>
+    ${sectionHeader(L.term, 'F3O_Term_info')}
     ${metricBlockF3O('F3O_TermSlope_info', d.labels?.term_slope, '', d.term_structure.slope)}
     ${headlineBlockF3O(d.labels?.contesto, d.term_structure.context)}
     ${headlineBlockF3O(d.labels?.note_ai, d.term_structure.ai_note)}
@@ -249,29 +250,43 @@ const s2 = `
   // 4) Skew
   const s4 = `
   <section class="tl-panel-section" data-f3o-section="skew" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-    <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">${escapeHtml(L.skew)}</div></header>
+    ${sectionHeader(L.skew, 'F3O_Skew_info')}
     ${metricBlockF3O('F3O_RR25_info', d.labels?.skew_rr25, '', { raw: fmtPct(d.skew.rr_25d), tone:d.skew.tone })}
     ${headlineBlockF3O(d.labels?.forma, d.skew.shape)}
     ${headlineBlockF3O(d.labels?.note_ai, d.skew.ai_note)}
   </section>`;
 
-  // 5) PCR & OI
-  const byExp = (d.pcr.by_expiry||[]).slice(0,6).map(x=>`• ${escapeHtml(x.exp||'')} · EM ${fmtPct(x.em)} · PCRv ${fmtNum(x.pcr_v)} · PCRoi ${fmtNum(x.pcr_oi)}`).join('\n');
+  // 5) PCR & OI (EM by expiry normalizzato)
+  const byExp = (d.pcr.by_expiry||[])
+    .slice(0,6)
+    .map(x=>{
+      const raw = Number(x.em);
+      const emPct = Number.isFinite(raw) ? (raw<=1 ? raw*100 : raw) : NaN;
+      return `• ${escapeHtml(x.exp||'')} · EM ${fmtPct(emPct)} · PCRv ${fmtNum(x.pcr_v)} · PCRoi ${fmtNum(x.pcr_oi)}`;
+    })
+    .join('\n');
   const s5 = `
   <section class="tl-panel-section" data-f3o-section="pcr" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-    <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">${escapeHtml(L.pcr)}</div></header>
+    ${sectionHeader(L.pcr, 'F3O_PCR_info')}
     <div class="grid md:grid-cols-2 gap-3">
       ${metricBlockF3O('F3O_PCR_Vol_info', d.labels?.pcr_vol, '', { raw: fmtNum(d.pcr.pcr_vol), tone:'neutral' })}
       ${metricBlockF3O('F3O_PCR_OI_info', d.labels?.pcr_oi,  '', { raw: fmtNum(d.pcr.pcr_oi),  tone:'neutral' })}
     </div>
-    ${f3oCard({ tone:'neutral', title:d.labels?.pcr_byexp, bodyHtml:`<pre class="whitespace-pre-wrap text-[12px] leading-[1.4]">${escapeHtml(byExp||'—')}</pre>` })}
+    ${f3oCard({
+      tone:'neutral',
+      title:d.labels?.pcr_byexp,
+      bodyHtml:`<div class="flex items-start justify-between">
+        <pre class="whitespace-pre-wrap text-[12px] leading-[1.4] flex-1">${escapeHtml(byExp||'—')}</pre>
+        <button class="info-btn ml-2" data-metric="F3O_PCR_byExp_info" aria-label="Info PCR per scadenza">?</button>
+      </div>`
+    })}
     ${headlineBlockF3O(d.labels?.note_ai, d.pcr.ai_note)}
   </section>`;
 
   // 6) Gamma & Max Pain
   const s6 = `
   <section class="tl-panel-section" data-f3o-section="gamma" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-    <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">${escapeHtml(L.gamma)}</div></header>
+    ${sectionHeader(L.gamma, 'F3O_Gamma_info')}
     ${metricBlockF3O('F3O_GammaFlip_info', d.labels?.gamma_flip, '', toMetric(d.gamma?.GEX?.gamma_flip, d.gamma?.tone))}
     ${metricBlockF3O('F3O_DealerRegime_info', d.labels?.dealer_regime, '', d.gamma?.DealerGamma)}
     ${metricBlockF3O('F3O_MaxPain_info', d.labels?.max_pain, '', toMetric(d.gamma?.MaxPain?.strike, d.gamma?.tone, d.gamma?.MaxPain?.ai_note))}
@@ -288,37 +303,35 @@ const s2 = `
   const flowTop = (d.flow.top||[]).slice(0,6).map(t=>`• ${String(t?.type||'')} ${fmtNum(t?.strike)} · ${String(t?.exp||'')} · Δ ${String(t?.delta||'')} · prem. ${fmtUsd(t?.premium)}`).join('\n');
   const s7 = `
   <section class="tl-panel-section" data-f3o-section="flow" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-    <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">${escapeHtml(L.flow)}</div></header>
+    ${sectionHeader(L.flow, 'F3O_Flow_info')}
     <div class="grid md:grid-cols-2 gap-3">
       ${metricBlockF3O('F3O_FlowNet_info', d.labels?.flow_net,   '', toMetric(d.flow.net_usd,   d.flow.tone))}
       ${metricBlockF3O('F3O_DeltaImb_info',d.labels?.flow_delta, '', toMetric(d.flow.delta_imb, d.flow.tone))}
     </div>
-   ${f3oCard({
-  tone:d.flow.tone||'neutral',
-  title:d.labels?.flow_top,
-  bodyHtml:`<div class="flex items-start justify-between">
-    <pre class="whitespace-pre-wrap text-[12px] leading-[1.4] flex-1">${escapeHtml(flowTop||'—')}</pre>
-    <button class="info-btn ml-2" data-metric="F3O_TopPrints_info" aria-label="Info Top prints">?</button>
-  </div>`
-})}
-
+    ${f3oCard({
+      tone:d.flow.tone||'neutral',
+      title:d.labels?.flow_top,
+      bodyHtml:`<div class="flex items-start justify-between">
+        <pre class="whitespace-pre-wrap text-[12px] leading-[1.4] flex-1">${escapeHtml(flowTop||'—')}</pre>
+        <button class="info-btn ml-2" data-metric="F3O_TopPrints_info" aria-label="Info Top prints">?</button>
+      </div>`
+    })}
     ${headlineBlockF3O(d.labels?.note_ai, d.flow.ai_note)}
   </section>`;
 
   // 8) Sintesi educativa (a schede)
-const sPoints = (d.sintesi_ai.points||[]).map(p=>{
-  const tone = p.tone || 'neutral';
-  const extra = d.labels?.sintesi_extra || '';
-  const bodyHtml = `
-    <div class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)] mb-1">${escapeHtml(p.raw||'')}</div>
-    <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mb-1">${escapeHtml(p.ai_note||'')}</div>
-    ${extra ? `<div class="text-[11px] leading-[1.4] text-[color:var(--muted)]">${escapeHtml(extra)}</div>` : ''}`;
-  return f3oCard({ tone, title: p.title||'', bodyHtml, noteHtml:'' });
-}).join('');
-
+  const sPoints = (d.sintesi_ai.points||[]).map(p=>{
+    const tone = p.tone || 'neutral';
+    const extra = d.labels?.sintesi_extra || '';
+    const bodyHtml = `
+      <div class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)] mb-1">${escapeHtml(p.raw||'')}</div>
+      <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mb-1">${escapeHtml(p.ai_note||'')}</div>
+      ${extra ? `<div class="text-[11px] leading-[1.4] text-[color:var(--muted)]">${escapeHtml(extra)}</div>` : ''}`;
+    return f3oCard({ tone, title: p.title||'', bodyHtml, noteHtml:'' });
+  }).join('');
   const s8 = `
   <section class="tl-panel-section" data-f3o-section="sintesi" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-    <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">${escapeHtml(L.sintesi)}</div></header>
+    ${sectionHeader(L.sintesi, 'F3O_Sintesi_info')}
     ${sPoints || ''}
     ${headlineBlockF3O(d.labels?.lettura_contesto, d.sintesi_ai.summary)}
     <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-2">${escapeHtml(d.labels?.sintesi_disclaimer)}</div>
@@ -328,7 +341,7 @@ const sPoints = (d.sintesi_ai.points||[]).map(p=>{
   const q = d.audit_quality?.QualityMetrics || {};
   const s9 = `
   <section class="tl-panel-section" data-f3o-section="governance" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-    <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">${escapeHtml(L.governance)}</div></header>
+    ${sectionHeader(L.governance, 'F3O_Governance_info')}
     <div class="grid gap-3 text-[12px] leading-[1.4] grid-cols-1 md:grid-cols-2">
       ${qualityChipF3O('FreshnessScore', q?.FreshnessScore || q?.Coverage)}
       ${qualityChipF3O('ConfidenceFinal', q?.ConfidenceFinal)}
@@ -622,11 +635,11 @@ function normalizeDataF3OPublic(src={}){
     },
     // Column labels EM
     em_cols: { exp:'Exp', dte:'DTE', em:'EM%', up:'Upper', down:'Lower', iv:'IV%' },
-    em_col_usd: 'EM$',                 // <-- AGGIUNTA
-em_toggle_arialabel: 'Cambia unità Expected Move', // <-- AGGIUNTA
-em_toggle_pct_title: 'Mostra EM in percentuale',   // <-- AGGIUNTA
-em_toggle_usd_title: 'Mostra EM in dollari',       // <-- AGGIUNTA
-spot: 'Spot',    
+    em_col_usd: 'EM$',
+    em_toggle_arialabel: 'Cambia unità Expected Move',
+    em_toggle_pct_title: 'Mostra EM in percentuale',
+    em_toggle_usd_title: 'Mostra EM in dollari',
+    spot: 'Spot',
     // Generic text labels
     note_ai: 'Nota AI',
     contesto: 'Contesto',
@@ -673,7 +686,7 @@ spot: 'Spot',
     ...UL,
     hero_title,
     hero_subtitle,
-    menu: { ...(defaults.menu||{}), ...sectionsFromS }, // usa gli stessi titoli anche per il menu
+    menu: { ...(defaults.menu||{}), ...sectionsFromS },
     sections: { ...(defaults.sections||{}), ...sectionsFromS },
     em_cols: { ...(defaults.em_cols||{}), ...(UL.em_cols||{}) }
   };
