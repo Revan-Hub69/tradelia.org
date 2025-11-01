@@ -392,8 +392,7 @@ function qualityChipF3(key, q){
 function listBlockCardF3(title, body){
   if (body===undefined || body===null || body==='') return '';
   let tone='neutral', raw='';
-  if (Array.isArray(body)) raw = body.map(x=>`• ${String(x)}`).join('
-');
+  if (Array.isArray(body)) raw = body.map(x=>`• ${String(x)}`).join('\n');
   else if (typeof body==='object') { tone = body.tone||'neutral'; raw = body.raw||''; }
   else raw = String(body);
   return f3Card({ tone, title, bodyHtml:`<div class='whitespace-pre-line'>${escapeHtml(raw)}</div>`, noteHtml:'' });
