@@ -62,14 +62,17 @@ export function renderCard(rawData, ctx = {}){
           ${kpis.map(k=>metricBoxTrafficLightF3O(k)).join('')}
         </div>
 
-        <div class="mt-2 flex flex-col gap-3 lg:flex-row lg:items-start">
-          ${d.meta.hero_disclaimer ? `<p class="text-[11px] leading-[1.4] text-[color:var(--muted)] flex-1">${escapeHtml(d.meta.hero_disclaimer)}</p>` : ''}
-          <div class="flex lg:justify-end">
-            <button class="f3o-cta-btn" data-open-f3o-details="true" type="button"
-              style="background:var(--ink);color:var(--surface-page);font-weight:600;font-size:12px;line-height:1.3;border-radius:var(--radius-card-sm);padding:0.5rem 0.75rem;min-width:max-content;border:1px solid var(--ink);box-shadow:var(--shadow-card);">
-              Dettagli Options →
-            </button>
-          </div>
+       // --- footer snapshot: mini-disclaimer (sx) + CTA (dx) ---
+<div class="mt-2 flex items-start gap-3">
+  ${d.meta.hero_disclaimer
+    ? `<p class="text-[11px] leading-[1.4] text-[color:var(--muted)] flex-1">${escapeHtml(d.meta.hero_disclaimer)}</p>`
+    : '<div class="flex-1"></div>'}
+  <button class="f3o-cta-btn ml-auto" data-open-f3o-details="true" type="button"
+    style="background:var(--ink);color:var(--surface-page);font-weight:600;font-size:12px;line-height:1.3;border-radius:var(--radius-card-sm);padding:0.5rem 0.75rem;min-width:max-content;border:1px solid var(--ink);box-shadow:var(--shadow-card);">
+    Dettagli Options →
+  </button>
+</div>
+
         </div>
       </div>
     </section>`;
