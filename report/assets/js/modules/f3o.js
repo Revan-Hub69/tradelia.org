@@ -19,10 +19,10 @@ export function renderCard(rawData, ctx = {}){
   const d = normalizeDataF3OPublic(rawData);
 
   const kpis = [
-    { key:'F3O_IV_ATM_info',   label: d.labels?.kpi_iv_atm,   desc:d.labels?.kpi_iv_atm_desc,   metric:d.head.IV_ATM },
-    { key:'F3O_IVRank_info',   label: d.labels?.kpi_ivrank,    desc:d.labels?.kpi_ivrank_desc,   metric:d.head.IV_rank_pct },
-    { key:'F3O_GSR_info',      label: d.labels?.kpi_gsr,       desc:d.labels?.kpi_gsr_desc,      metric:d.head.GSR_tkr },
-    { key:'F3O_Dealer_info',   label: d.labels?.kpi_dealer,    desc:d.labels?.kpi_dealer_desc,   metric:d.head.DealerGamma },
+    { key:'F3O_IV_ATM_info',   label: d.labels?.kpi_iv_atm,   desc:'', metric:d.head.IV_ATM },
+    { key:'F3O_IVRank_info',   label: d.labels?.kpi_ivrank,    desc:'', metric:d.head.IV_rank_pct },
+    { key:'F3O_GSR_info',      label: d.labels?.kpi_gsr,       desc:'', metric:d.head.GSR_tkr },
+    { key:'F3O_Dealer_info',   label: d.labels?.kpi_dealer,    desc:'', metric:d.head.DealerGamma },
   ];
 
   return `
@@ -171,13 +171,12 @@ function buildF3OSections(d){
   const s2 = `
   <section class="tl-panel-section" data-f3o-section="em" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
     <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">${escapeHtml(L.em)}</div></header>
-    ${f3oCard({ tone:'neutral', title:(d.labels?.em_table_title||'Expected Move'), infoKey:'F3O_EM_info', bodyHtml:`
+    ${f3oCard({ tone:'neutral', title:(d.labels?.em_table_title||'Expected Move'), bodyHtml:`
       <div class="flex items-center justify-between gap-2 mb-2">
-        <div class="text-[11px] text-[color:var(--muted)]">${escapeHtml(d.labels?.spot||'Spot')}: <span class="font-mono">${fmtNum(d.spot)||'—'}</span></div>
-        <div class="inline-flex items-center gap-0 border border-[color:var(--br-card)] rounded-[999px] overflow-hidden" role="group" aria-label="${escapeAttr(d.labels?.em_toggle_arialabel||'Toggle Expected Move unit')}">
-          <button type="button" class="em-toggle-btn px-2 py-1 text-[11px]" data-em-toggle="pct" aria-pressed="true" title="${escapeAttr(d.labels?.em_toggle_pct_title||'Mostra EM in percentuale')}">% </button>
-          <button type="button" class="em-toggle-btn px-2 py-1 text-[11px]" data-em-toggle="usd" aria-pressed="false" title="${escapeAttr(d.labels?.em_toggle_usd_title||'Mostra EM in dollari')}">$</button>
-          <button type="button" class="info-btn ml-2" data-metric="F3O_EM_TOGGLE_info" aria-label="Info EM toggle">?</button>
+        <div class="text-[11px] text-[color:var(--muted)]">Spot: <span class="font-mono">${fmtNum(d.spot)||'—'}</span></div>
+        <div class="inline-flex items-center gap-[2px] border border-[color:var(--br-card)] rounded-[999px] overflow-hidden" role="group" aria-label="Toggle Expected Move unit">
+          <button type="button" class="em-toggle-btn px-2 py-1 text-[11px]" data-em-toggle="pct" aria-pressed="true" title="Mostra EM in percentuale">%</button>
+          <button type="button" class="em-toggle-btn px-2 py-1 text-[11px]" data-em-toggle="usd" aria-pressed="false" title="Mostra EM in dollari">$</button>
         </div>
       </div>
       <div class="overflow-auto" data-scrollable id="em-container" data-em-mode="pct">
@@ -185,7 +184,7 @@ function buildF3OSections(d){
           <thead><tr>
             <th class="text-left">${escapeHtml(d.labels?.em_cols?.exp)}</th>
             <th class="text-right">${escapeHtml(d.labels?.em_cols?.dte)}</th>
-            <th class="text-right"><span data-kind="pct">${escapeHtml(d.labels?.em_cols?.em)}</span><span data-kind="usd" style="display:none;">${escapeHtml(d.labels?.em_col_usd||'EM$')}</span></th>
+            <th class="text-right"><span data-kind="pct">${escapeHtml(d.labels?.em_cols?.em)}</span><span data-kind="usd" style="display:none;">EM$</span></th>
             <th class="text-right">${escapeHtml(d.labels?.em_cols?.up)}</th>
             <th class="text-right">${escapeHtml(d.labels?.em_cols?.down)}</th>
             <th class="text-right">${escapeHtml(d.labels?.em_cols?.iv)}</th>
@@ -264,21 +263,19 @@ function buildF3OSections(d){
   <section class="tl-panel-section" data-f3o-section="flow" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
     <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">${escapeHtml(L.flow)}</div></header>
     <div class="grid md:grid-cols-2 gap-3">
-      ${metricBlockF3O('F3O_FlowNet_info', d.labels?.flow_net,   d.labels?.flow_net_desc || '', toMetric(d.flow.net_usd,   d.flow.tone))}
-      ${metricBlockF3O('F3O_DeltaImb_info',d.labels?.flow_delta, d.labels?.flow_delta_desc || '', toMetric(d.flow.delta_imb, d.flow.tone))}
+      ${metricBlockF3O('F3O_FlowNet_info', d.labels?.flow_net,   '', toMetric(d.flow.net_usd,   d.flow.tone))}
+      ${metricBlockF3O('F3O_DeltaImb_info',d.labels?.flow_delta, '', toMetric(d.flow.delta_imb, d.flow.tone))}
     </div>
-    ${f3oCard({ tone:d.flow.tone||'neutral', title:d.labels?.flow_top, infoKey:'F3O_TopPrints_info', bodyHtml:`<pre class=\"whitespace-pre-wrap text-[12px] leading-[1.4]\">${escapeHtml(flowTop||'—')}</pre>` })}
+    ${f3oCard({ tone:d.flow.tone||'neutral', title:d.labels?.flow_top, bodyHtml:`<pre class="whitespace-pre-wrap text-[12px] leading-[1.4]">${escapeHtml(flowTop||'—')}</pre>` })}
     ${headlineBlockF3O(d.labels?.note_ai, d.flow.ai_note)}
   </section>`;
 
   // 8) Sintesi educativa (a schede)
   const sPoints = (d.sintesi_ai.points||[]).map(p=>{
     const tone = p.tone || 'neutral';
-    const extra = d.labels?.sintesi_extra || '';
     const bodyHtml = `
       <div class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)] mb-1">${escapeHtml(p.raw||'')}</div>
-      <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mb-1">${escapeHtml(p.ai_note||'')}</div>
-      ${extra ? `<div class=\"text-[11px] leading-[1.4] text-[color:var(--muted)]\">${escapeHtml(extra)}</div>` : ''}`;
+      <div class="text-[11px] leading-[1.4] text-[color:var(--muted)]">${escapeHtml(p.ai_note||'')}</div>`;
     return f3oCard({ tone, title: p.title||'', bodyHtml, noteHtml:'' });
   }).join('');
   const s8 = `
@@ -418,21 +415,16 @@ function bindTabsF3O(){
 /* -----------------------------------------------------------------------------
    CARD/COMPONENTS (prefisso F3O; nessuna descrizione hard‑coded)
 ----------------------------------------------------------------------------- */
-function f3oCard({ tone, title, bodyHtml, noteHtml, infoKey }){
+function f3oCard({ tone, title, bodyHtml, noteHtml }){
   const { dotColor } = toneColorsF3O(tone);
   return `
   <div class="mb-4 p-2" style="background:var(--surface-card-alt);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);">
-    <div class="flex items-start gap-2 mb-1 justify-between">
-      <div class="flex items-start gap-2">
-        <span class="inline-block w-[8px] h-[8px] rounded-full" style="background:${dotColor};flex-shrink:0;"></span>
-        <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide">${escapeHtml(title||'')}</div>
-      </div>
-      ${infoKey ? `<button class=\"info-btn\" data-metric=\"${escapeAttr(infoKey)}\" aria-label=\"Info ${escapeAttr(infoKey)}\">?</button>` : ''}
+    <div class="flex items-start gap-2 mb-1">
+      <span class="inline-block w-[8px] h-[8px] rounded-full" style="background:${dotColor};flex-shrink:0;"></span>
+      <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide">${escapeHtml(title||'')}</div>
     </div>
     <div class="text-[12.5px] leading-[1.45] text-[color:var(--ink)]">${bodyHtml||''}</div>
-    ${noteHtml ? `<div class=\"text-[11px] leading-[1.4] text-[color:var(--muted)] mt-2\">${noteHtml}</div>` : ''}
-  </div>`;
-}
+    ${noteHtml ? `<div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-2">${noteHtml}</div>` : ''}
   </div>`;
 }
 
@@ -490,18 +482,9 @@ function bindEMToggle(){
   const container = document.getElementById('em-container');
   if(!container) return;
   const btns = document.querySelectorAll('.em-toggle-btn');
-  const styleBtn = (b,on)=>{
-    b.style.fontWeight = on ? '700' : '500';
-    b.style.background  = on ? 'var(--ink)' : 'transparent';
-    b.style.color       = on ? 'var(--surface-page)' : 'var(--ink)';
-  };
   const setMode = (mode)=>{
     container.setAttribute('data-em-mode', mode);
-    btns.forEach(b=>{
-      const on = (b.dataset.emToggle===mode);
-      b.setAttribute('aria-pressed', String(on));
-      styleBtn(b,on);
-    });
+    btns.forEach(b=> b.setAttribute('aria-pressed', String(b.dataset.emToggle===mode)));
     container.querySelectorAll('[data-kind]').forEach(el=>{
       const kind = el.getAttribute('data-kind');
       el.style.display = (kind===mode) ? '' : 'none';
@@ -511,9 +494,6 @@ function bindEMToggle(){
     if(b.__emBound) return; b.__emBound = true;
     b.addEventListener('click', ()=> setMode(b.dataset.emToggle==='usd' ? 'usd':'pct'));
   });
-  // init styles
-  const pressed = Array.from(btns).find(x=>x.getAttribute('aria-pressed')==='true');
-  if(pressed) styleBtn(pressed,true);
 }
 
 /* -----------------------------------------------------------------------------
@@ -558,13 +538,9 @@ function normalizeDataF3OPublic(src={}){
     cta_close: 'Chiudi',
     // KPI labels
     kpi_iv_atm: 'IV (ATM)',
-    kpi_iv_atm_desc: 'Volatilità implicita at-the-money (proxy 30D).',
     kpi_ivrank: 'IV Rank / %tile',
-    kpi_ivrank_desc: 'Posizione dell’IV nel range 1Y (rank/percentile).',
     kpi_gsr: 'GSR (Γ/Vega)',
-    kpi_gsr_desc: 'Rapporto Gamma/Vega; segnala sensitività dealer.',
     kpi_dealer: 'Dealer Regime',
-    kpi_dealer_desc: 'Posizionamento gamma dei dealer (long/short).',
     // Section titles (menu)
     menu: {
       kpi: 'Quadro rapido',
@@ -591,12 +567,7 @@ function normalizeDataF3OPublic(src={}){
     },
     // Column labels EM
     em_cols: { exp:'Exp', dte:'DTE', em:'EM%', up:'Upper', down:'Lower', iv:'IV%' },
-    em_col_usd: 'EM$',
-    em_toggle_arialabel: 'Cambia unità Expected Move',
-    em_toggle_pct_title: 'Mostra EM in percentuale',
-    em_toggle_usd_title: 'Mostra EM in dollari',
-    spot: 'Spot',
-    // Generic text labels / tooltips
+    // Generic text labels
     note_ai: 'Nota AI',
     contesto: 'Contesto',
     forma: 'Forma skew',
@@ -612,11 +583,8 @@ function normalizeDataF3OPublic(src={}){
     vega_atm: 'Vega ATM',
     gsr_ratio: 'GSR',
     flow_net: 'Net $',
-    flow_net_desc: 'Flusso netto in $ su prints istituzionali (selezione filtrata).',
     flow_delta: 'Δ-imbalance',
-    flow_delta_desc: 'Squilibrio di delta dei prints (call/put).',
     flow_top: 'Top prints',
-    sintesi_extra: 'Nota: lettura didattica, non operativa.',
     lettura_contesto: 'Lettura di contesto',
     sintesi_disclaimer: 'Sezione a fini esclusivamente informativi/educativi. Nessuna raccomandazione personale.'
   };
