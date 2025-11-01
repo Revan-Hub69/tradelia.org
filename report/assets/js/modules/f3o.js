@@ -113,6 +113,7 @@ function openF3ODrawer(d){
     const first = document.querySelector('[data-f3o-tab="kpi"]');
     if (first && typeof first.click==='function') first.click();
     initScrollableTabsHint();
+    bindEMToggle();
   },0);
 }
 
@@ -170,18 +171,40 @@ function buildF3OSections(d){
   const s2 = `
   <section class="tl-panel-section" data-f3o-section="em" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
     <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">${escapeHtml(L.em)}</div></header>
-    ${f3oCard({ tone:'neutral', title:d.labels?.em_table_title, bodyHtml:`
-      <div class="overflow-auto" data-scrollable>
+    ${f3oCard({ tone:'neutral', title:(d.labels?.em_table_title||'Expected Move'), bodyHtml:`
+      <div class="flex items-center justify-between gap-2 mb-2">
+        <div class="text-[11px] text-[color:var(--muted)]">Spot: <span class="font-mono">${fmtNum(d.spot)||'—'}</span></div>
+        <div class="inline-flex items-center gap-[2px] border border-[color:var(--br-card)] rounded-[999px] overflow-hidden" role="group" aria-label="Toggle Expected Move unit">
+          <button type="button" class="em-toggle-btn px-2 py-1 text-[11px]" data-em-toggle="pct" aria-pressed="true" title="Mostra EM in percentuale">%</button>
+          <button type="button" class="em-toggle-btn px-2 py-1 text-[11px]" data-em-toggle="usd" aria-pressed="false" title="Mostra EM in dollari">$</button>
+        </div>
+      </div>
+      <div class="overflow-auto" data-scrollable id="em-container" data-em-mode="pct">
         <table class="min-w-full text-[12px]">
           <thead><tr>
             <th class="text-left">${escapeHtml(d.labels?.em_cols?.exp)}</th>
             <th class="text-right">${escapeHtml(d.labels?.em_cols?.dte)}</th>
-            <th class="text-right">${escapeHtml(d.labels?.em_cols?.em)}</th>
+            <th class="text-right"><span data-kind="pct">${escapeHtml(d.labels?.em_cols?.em)}</span><span data-kind="usd" style="display:none;">EM$</span></th>
             <th class="text-right">${escapeHtml(d.labels?.em_cols?.up)}</th>
             <th class="text-right">${escapeHtml(d.labels?.em_cols?.down)}</th>
             <th class="text-right">${escapeHtml(d.labels?.em_cols?.iv)}</th>
           </tr></thead>
-          <tbody>${emRows || ''}</tbody>
+          <tbody>
+            ${(d.expected_move.rows||[]).slice(0,12).map(r=>{
+              const emUsd = (Number(r?.em_percent)||0)/100 * (Number(d.spot)||0);
+              return `
+              <tr>
+                <td>${escapeHtml(r.expiration||'')}</td>
+                <td class="text-right">${escapeHtml(String(r.dte ?? '—'))}</td>
+                <td class="text-right">
+                  <span data-kind="pct">${fmtPct(r.em_percent)}</span>
+                  <span data-kind="usd" style="display:none;">${fmtUsd2(emUsd)}</span>
+                </td>
+                <td class="text-right">${fmtNum(r.upper)}</td>
+                <td class="text-right">${fmtNum(r.lower)}</td>
+                <td class="text-right">${fmtPct(r.iv_percent)}</td>
+              </tr>`;}).join('')}
+          </tbody>
         </table>
       </div>` })}
     ${headlineBlockF3O(d.labels?.note_ai, d.expected_move.ai_note)}
@@ -454,6 +477,25 @@ function headlineBlockF3O(title, body){
   return f3oCard({ tone, title, bodyHtml:`<div class="text-[12.5px] leading-[1.45] whitespace-pre-line">${escapeHtml(raw)}</div>`, noteHtml:'' });
 }
 
+// Toggle EM % / $
+function bindEMToggle(){
+  const container = document.getElementById('em-container');
+  if(!container) return;
+  const btns = document.querySelectorAll('.em-toggle-btn');
+  const setMode = (mode)=>{
+    container.setAttribute('data-em-mode', mode);
+    btns.forEach(b=> b.setAttribute('aria-pressed', String(b.dataset.emToggle===mode)));
+    container.querySelectorAll('[data-kind]').forEach(el=>{
+      const kind = el.getAttribute('data-kind');
+      el.style.display = (kind===mode) ? '' : 'none';
+    });
+  };
+  btns.forEach(b=>{
+    if(b.__emBound) return; b.__emBound = true;
+    b.addEventListener('click', ()=> setMode(b.dataset.emToggle==='usd' ? 'usd':'pct'));
+  });
+}
+
 /* -----------------------------------------------------------------------------
    TONE / UTILS
 ----------------------------------------------------------------------------- */
@@ -471,6 +513,7 @@ function escapeAttr(s){ if(s===undefined||s===null) return ''; return String(s).
 function fmtPct(x){ const n=Number(x); return Number.isFinite(n)? n.toFixed(2)+'%':'—'; }
 function fmtNum(x){ const n=Number(x); return Number.isFinite(n)? new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n):'—'; }
 function fmtUsd(x){ const n=Number(x); return Number.isFinite(n)? '$'+new Intl.NumberFormat('en-US',{maximumFractionDigits:0}).format(n):'—'; }
+function fmtUsd2(x){ const n=Number(x); return Number.isFinite(n)? '$'+new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n):'—'; }
 
 /* -----------------------------------------------------------------------------
    NORMALIZZAZIONE (mapping + labels friendly)
@@ -647,5 +690,8 @@ function normalizeDataF3OPublic(src={}){
   const sectionTitles = labels.sections;
   const menuTitles = labels.menu;
 
-  return { meta, labels, head, expected_move, term_structure, skew, pcr, gamma, flow, sintesi_ai, audit_quality, mifid, sectionTitles, menuTitles };
+  // spot per calcolo EM$
+  const spot = Number(src?.head?.Spot?.raw);
+
+  return { meta, labels, head, expected_move, term_structure, skew, pcr, gamma, flow, sintesi_ai, audit_quality, mifid, sectionTitles, menuTitles, spot };
 }
