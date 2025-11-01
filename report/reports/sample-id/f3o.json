@@ -93,15 +93,37 @@
     ]
   },
 
-  "sintesi_ai": {
-    "points": [
-      { "title": "1. Volatilità contenuta", "raw": "IV 37–40% con HV allineata", "tone": "green" },
-      { "title": "2. Dealer short gamma",   "raw": "Gamma flip a 660 → rischio di movimenti ampi sotto il pivot", "tone": "red" },
-      { "title": "3. Flussi costruttivi",   "raw": "PCR<0.5 e OI NTM su call", "tone": "green" },
-      { "title": "4. Skew neutro-difensivo","raw": "Put leggermente più care ma senza panico", "tone": "yellow" }
-    ],
-    "summary": "Bias derivativo rialzista controllato; monitorare area 660 (flip) e 700 (call wall)."
+ "sintesi_ai": {
+  "points": [
+    {
+      "title": "1. Volatilità contenuta",
+      "raw": "IV 37–40% con HV allineata",
+      "ai_note": "Il differenziale ridotto tra volatilità implicita e realizzata indica un mercato in equilibrio: i premi opzioni restano compressi e non segnalano tensioni imminenti.",
+      "tone": "green"
+    },
+    {
+      "title": "2. Dealer short gamma",
+      "raw": "Gamma flip a 660 → rischio di movimenti ampi sotto il pivot",
+      "ai_note": "Dealer con gamma negativa tendono ad amplificare i movimenti di prezzo: sotto 660 aumentano la copertura vendendo sul ribasso; sopra 660 l’effetto si attenua verso area 665–670.",
+      "tone": "red"
+    },
+    {
+      "title": "3. Flussi costruttivi",
+      "raw": "PCR<0.5 e OI NTM su call",
+      "ai_note": "Un rapporto put/call inferiore a 0.5 e open interest concentrato su strike call ravvicinati suggeriscono una ricostruzione di posizioni a favore del rischio controllato.",
+      "tone": "green"
+    },
+    {
+      "title": "4. Skew neutro-difensivo",
+      "raw": "Put leggermente più care ma senza panico",
+      "ai_note": "Lo skew moderatamente inclinato verso le put riflette coperture selettive, non stress: tipico di fasi di consolidamento post-earnings con bias ancora positivo.",
+      "tone": "yellow"
+    }
+  ],
+  "summary": "La lettura combinata di volatilità, posizionamento dealer e flussi opzioni descrive un quadro costruttivo ma sensibile ai livelli tecnici 660–700 (Gamma flip e call wall)."
+}
   },
+
 
   "audit_quality": {
     "AuditPathID": "SWG25F3O_META_20251031",
