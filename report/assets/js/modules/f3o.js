@@ -63,13 +63,12 @@ export function renderCard(rawData, ctx = {}){
         </div>
 
         <div class="mt-2 flex items-start justify-between gap-3">
-  <p class="text-[11px] leading-[1.4] text-[color:var(--muted)] flex-1">${escapeHtml(d.meta.hero_disclaimer || 'Materiale educativo e informativo. Nessuna raccomandazione personale.')}</p>
-  <button class="f3o-cta-btn ml-auto" data-open-f3o-details="true" type="button"
-    style="background:var(--ink);color:var(--surface-page);font-weight:600;font-size:12px;line-height:1.3;border-radius:var(--radius-card-sm);padding:0.5rem 0.75rem;min-width:max-content;border:1px solid var(--ink);box-shadow:var(--shadow-card);">
-    Dettagli Options →
-  </button>
-</div>
-</div>
+          <p class="text-[11px] leading-[1.4] text-[color:var(--muted)] flex-1">${escapeHtml(d.meta.hero_disclaimer || 'Materiale educativo e informativo. Nessuna raccomandazione personale.')}</p>
+          <button class="f3o-cta-btn ml-auto" data-open-f3o-details="true" type="button"
+            style="background:var(--ink);color:var(--surface-page);font-weight:600;font-size:12px;line-height:1.3;border-radius:var(--radius-card-sm);padding:0.5rem 0.75rem;min-width:max-content;border:1px solid var(--ink);box-shadow:var(--shadow-card);">
+            Dettagli Options →
+          </button>
+        </div>
       </div>
     </section>`;
 }
@@ -88,7 +87,8 @@ export function bindCard(node, rawData, ctx = {}){
   }
 
   if (window.__TradeliaUI?.bindMetricInfoButtons){
-    try { window.__TradeliaUI.bindMetricInfoButtons(node); } catch(_){}}
+    try { window.__TradeliaUI.bindMetricInfoButtons(node); } catch(_){}
+  }
 }
 
 /* -----------------------------------------------------------------------------
@@ -284,7 +284,7 @@ function buildF3OSectionsPublic(d){
           </div>
           <div>${flowTop || '<div class="text-[12px] text-[color:var(--muted)]">—</div>'}</div>
         </div>` })}
-      ${headlineBlockCardF3O('Nota AI (Flow)', flow?.ai_note)}
+      ${headlineBlockCardF3O('Note', flow?.ai_note)}
     </section>`;
 
   // 8) Data Quality / Gaps & Sintesi AI
@@ -295,7 +295,7 @@ function buildF3OSectionsPublic(d){
       ${sectionHeaderF3O('Qualità dati & Sintesi','Data gaps e sintesi AI','F3O_Quality_info')}
       ${gaps}
       ${headlineBlockCardF3O('AI Summary (Options)', dq?.ai_note)}
-    </section>
+    </section>`;
 
   // 9) Governance · Audit & MiFID
   const aq = d.audit_quality?.QualityMetrics || {};
@@ -313,7 +313,6 @@ function buildF3OSectionsPublic(d){
     </section>`;
 
   return { kpiHTML, emHTML, termHTML, skewHTML, pcrHTML, gammaHTML, flowHTML, dqHTML, governanceHTML };
-} { kpiHTML, emHTML, termHTML, skewHTML, pcrHTML, gammaHTML, flowHTML, dqHTML, governanceHTML };
 }
 
 /* -----------------------------------------------------------------------------
@@ -470,7 +469,8 @@ function listBlockCardF3O(title, body){
   if (!body && body !== 0) return '';
   let tone='neutral', raw='';
   if (Array.isArray(body)){
-    raw = body.map(x=>`• ${String(x)}`).join('\n');
+    raw = body.map(x=>`• ${String(x)}`).join('
+');
   } else if (typeof body==='object'){
     tone = body?.tone || 'neutral';
     raw = body?.raw || '';
@@ -516,19 +516,16 @@ function toneColorsF3O(tone){
    UTILS
 ----------------------------------------------------------------------------- */
 function sectionHeaderF3O(title, subtitle, infoKey){
-  const info = infoKey ? `<button class=\"info-btn\" data-metric=\"${escapeAttr(infoKey)}\" aria-label=\"Info ${escapeAttr(infoKey)}\">?</button>` : '';
+  const info = infoKey ? `<button class="info-btn" data-metric="${escapeAttr(infoKey)}" aria-label="Info ${escapeAttr(infoKey)}">?</button>` : '';
   return `
-    <header class=\"tl-panel-section-title\">
-      <div class=\"flex items-start justify-between gap-2\">
+    <header class="tl-panel-section-title">
+      <div class="flex items-start justify-between gap-2">
         <div>
-          <div class=\"tl-panel-section-title-text\">${escapeHtml(title||'')}</div>
-          ${ subtitle ? `<div class=\"text-[11px] text-[color:var(--muted)] leading-[1.3] mt-[2px]\">${escapeHtml(subtitle)}</div>` : '' }
+          <div class="tl-panel-section-title-text">${escapeHtml(title||'')}</div>
+          ${ subtitle ? `<div class="text-[11px] text-[color:var(--muted)] leading-[1.3] mt-[2px]">${escapeHtml(subtitle)}</div>` : '' }
         </div>
         ${info}
       </div>
-    </header>`;
-}</div>
-      ${ subtitle ? `<div class="text-[11px] text-[color:var(--muted)] leading-[1.3] mt-[2px]">${escapeHtml(subtitle)}</div>` : '' }
     </header>`;
 }
 
