@@ -1,0 +1,124 @@
+{
+  "meta": {
+    "timestampET": "2025-10-31 17:40 ET",
+    "module": "F3O · Options Overlay",
+    "moduleVersion": "v1.2",
+    "moduleStatus": "ACTIVE",
+    "freshness": "≤ T-1",
+    "hero_intro": "Panoramica sintetica dei derivati: volatilità implicita, struttura a termine, skew e posizionamento dealer.",
+    "hero_disclaimer": "Materiale informativo e didattico. Nessuna raccomandazione personale (MiFID II)."
+  },
+
+  "ui_labels": {
+    "s1_title": "Quadro rapido (volatilità & dealer)",
+    "s2_title": "Range atteso (Expected Move)",
+    "s3_title": "Curva IV (scadenze)",
+    "s4_title": "Skew 25Δ (asimmetria)",
+    "s5_title": "Put/Call & Open Interest",
+    "s6_title": "Gamma & Max Pain",
+    "s7_title": "Flussi opzioni (istituzionali)",
+    "s8_title": "Sintesi educativa",
+    "s9_title": "Governance (Audit & MiFID)"
+  },
+
+  "head": {
+    "IV_ATM":      { "raw": "17.8%", "tone": "green", "ai_note": "Volatilità implicita ATM stabile e sotto la media 1Y." },
+    "IV_rank_pct": { "raw": "32%", "tone": "yellow", "ai_note": "IV in fascia medio-bassa sul percentile storico (calma relativa)." },
+    "GSR_tkr":     { "raw": "0.42", "tone": "green", "ai_note": "Gamma/Vega ratio in zona neutrale → dealer ancora long gamma." },
+    "DealerGamma": { "raw": "Long Gamma", "tone": "green", "ai_note": "Dealer in posizione protettiva, mercato ordinato." }
+  },
+
+  "expected_move": {
+    "rows": [
+      { "expiration": "2025-11-08", "dte": 7, "em_percent": 2.3, "upper": 5230, "lower": 5010, "iv_percent": 18.1 },
+      { "expiration": "2025-11-15", "dte": 14, "em_percent": 3.8, "upper": 5315, "lower": 4970, "iv_percent": 19.2 }
+    ],
+    "ai_note": "Range implicito stabile nelle prossime due settimane. Nessuna espansione di volatilità rilevante."
+  },
+
+  "term_structure": {
+    "slope":   { "raw": "+0.9", "tone": "green", "ai_note": "Contango regolare tra 1M e 3M." },
+    "context": "Curve IV leggermente crescente, segnale di normalizzazione post-earnings.",
+    "ai_note": "Struttura coerente con regime risk-on moderato."
+  },
+
+  "skew": {
+    "rr_25d":  0.35,
+    "shape":   "Leggera call-bid, bias moderatamente rialzista.",
+    "tone":    "green",
+    "ai_note": "Risk reversal 25Δ positivo indica copertura ridotta downside."
+  },
+
+  "pcr": {
+    "pcr_vol": 0.71,
+    "pcr_oi":  0.82,
+    "by_expiry": [
+      { "exp": "11/08", "em": 0.025, "pcr_v": 0.74, "pcr_oi": 0.81 },
+      { "exp": "11/15", "em": 0.038, "pcr_v": 0.69, "pcr_oi": 0.77 }
+    ],
+    "ai_note": "Leggera prevalenza di call sugli strike a breve scadenza."
+  },
+
+  "gamma": {
+    "GEX": { "gamma_flip": "5095" },
+    "MaxPain": { "strike": "5120", "ai_note": "Max pain stabile da 3 sedute consecutive." },
+    "DealerGamma": { "raw": "Long Gamma", "tone": "green", "ai_note": "Dealer long gamma → minore volatilità intraday." },
+    "Gamma_ATM":  { "raw": "1.25M", "tone": "neutral" },
+    "Vega_ATM":   { "raw": "0.72M", "tone": "neutral" },
+    "GSR_tkr":    { "raw": "0.42", "tone": "green" },
+    "ai_note_gsr": "Rapporto Γ/Vega coerente con mercato controllato.",
+    "ai_note": "Livello di equilibrio stabile; no segnali di stress gamma."
+  },
+
+  "flow": {
+    "net_usd": "+12.5M",
+    "delta_imb": "+0.08",
+    "tone": "green",
+    "ai_note": "Flusso netto positivo su strike OTM rialzisti (call spread istituzionali).",
+    "top": [
+      { "type": "CALL", "strike": 5200, "exp": "11/15", "delta": "+0.35", "premium": 3.2 },
+      { "type": "CALL", "strike": 5250, "exp": "11/15", "delta": "+0.28", "premium": 2.8 },
+      { "type": "PUT",  "strike": 5000, "exp": "11/08", "delta": "-0.25", "premium": 2.0 }
+    ]
+  },
+
+  "sintesi_ai": {
+    "points": [
+      {
+        "title": "1. Regime IV stabile",
+        "raw": "Volatilità implicita sotto la media e dealer long gamma riducono il rischio di shock improvvisi.",
+        "tone": "green"
+      },
+      {
+        "title": "2. Skew favorevole",
+        "raw": "Call-bid e PCR basso mostrano propensione al rischio, coerente con contesto risk-on macro.",
+        "tone": "green"
+      },
+      {
+        "title": "3. Flow istituzionali positivi",
+        "raw": "Afflussi netti su strike rialzisti, nessuna concentrazione di put difensive.",
+        "tone": "green"
+      },
+      {
+        "title": "4. Attenzione alla curva IV",
+        "raw": "Possibile ripido aumento dell’IV se SPX scende sotto area 5050.",
+        "tone": "yellow"
+      }
+    ],
+    "summary": "Setup derivati coerente con bias rialzista controllato; nessun segnale di stress gamma imminente."
+  },
+
+  "audit_quality": {
+    "AuditPathID": "SWG25F3O_20251031",
+    "QualityMetrics": {
+      "FreshnessScore": { "raw": "0.93", "tone": "green", "ai_note": "Aggiornato ≤ T-1" },
+      "ConfidenceFinal": { "raw": "0.91", "tone": "green", "ai_note": "Dataset coerente con F1B/F2" },
+      "DataIntegrity": { "raw": "0.88", "tone": "green", "ai_note": "Input validati da feed Tier-1" },
+      "FeedSync": { "raw": "OK", "tone": "green", "ai_note": "Sincronizzato con feed master T-1" }
+    }
+  },
+
+  "mifid": {
+    "disclaimer": "Output a fini educativi e informativi (MiFID II). Nessuna consulenza o raccomandazione personalizzata."
+  }
+}
