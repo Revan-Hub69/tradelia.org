@@ -1,7 +1,7 @@
 // /report/assets/js/modules/f3o.js
 //
 // F3-Options · Options Overlay (derivati) — orizzonte 3–10 giorni
-// Allineato al design system F1B/F2: stessa grammatica UI (card compatte, info‑btn, drawer con menu desktop / pills mobile)
+// Allineato al design system F1B/F2: stessa grammatica UI (card compatte, info-btn, drawer con menu desktop / pills mobile)
 //
 // Export:
 //   renderCard(rawData, ctx?) -> string HTML (card snapshot con KPI + CTA)
@@ -22,9 +22,9 @@ export function renderCard(rawData, ctx = {}){
 
   // KPI snapshot (4 box) – coerenti con head
   const kpis = [
-    { key: 'IV_ATM',   label: 'IV (ATM)',        desc: 'vol implicita prox‑ATM',   metric: d.head?.IV_ATM },
-    { key: 'IV_RANK',  label: 'IV Rank / %tile', desc: 'posizione IV 1y',         metric: d.head?.IV_rank_pct },
-    { key: 'GSR',      label: 'GSR (Γ/Vega)',    desc: 'regime dealer (ticker)',  metric: d.head?.GSR_tkr },
+    { key: 'IV_ATM',   label: 'IV (ATM)',        desc: 'vol implicita prox-ATM',   metric: d.head?.IV_ATM },
+    { key: 'IV_RANK',  label: 'IV Rank / %tile', desc: 'posizione IV 1y',          metric: d.head?.IV_rank_pct },
+    { key: 'GSR',      label: 'GSR (Γ/Vega)',    desc: 'regime dealer (ticker)',   metric: d.head?.GSR_tkr },
     { key: 'DEALER',   label: 'Dealer Regime',   desc: 'bias di copertura dealer', metric: d.head?.DealerGamma }
   ];
 
@@ -62,12 +62,14 @@ export function renderCard(rawData, ctx = {}){
           ${kpis.map(k=>metricBoxTrafficLightF3O(k)).join('')}
         </div>
 
-        <div class="mt-2 flex items-start justify-between gap-3">
-          <p class="text-[11px] leading-[1.4] text-[color:var(--muted)] flex-1">${escapeHtml(d.meta.hero_disclaimer || 'Materiale educativo e informativo. Nessuna raccomandazione personale.')}</p>
-          <button class="f3o-cta-btn ml-auto" data-open-f3o-details="true" type="button"
-            style="background:var(--ink);color:var(--surface-page);font-weight:600;font-size:12px;line-height:1.3;border-radius:var(--radius-card-sm);padding:0.5rem 0.75rem;min-width:max-content;border:1px solid var(--ink);box-shadow:var(--shadow-card);">
-            Dettagli Options →
-          </button>
+        <div class="mt-2 flex flex-col gap-3 lg:flex-row lg:items-start">
+          ${d.meta.hero_disclaimer ? `<p class="text-[11px] leading-[1.4] text-[color:var(--muted)] flex-1">${escapeHtml(d.meta.hero_disclaimer)}</p>` : ''}
+          <div class="flex lg:justify-end">
+            <button class="f3o-cta-btn" data-open-f3o-details="true" type="button"
+              style="background:var(--ink);color:var(--surface-page);font-weight:600;font-size:12px;line-height:1.3;border-radius:var(--radius-card-sm);padding:0.5rem 0.75rem;min-width:max-content;border:1px solid var(--ink);box-shadow:var(--shadow-card);">
+              Dettagli Options →
+            </button>
+          </div>
         </div>
       </div>
     </section>`;
@@ -157,12 +159,12 @@ function buildF3OSectionsPublic(d){
     <section class="tl-panel-section" data-f3o-section="kpi" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       ${sectionHeaderF3O('KPI & Regime','IV, IV Rank, GSR, Dealer bias','F3O_KPI_info')}
       <div class="grid gap-3 grid-cols-2 md:grid-cols-2">
-        ${metricBoxTrafficLightF3O({ key:'IV_ATM',   label:'IV (ATM)',        desc:'vol implicita prox‑ATM', metric:kpi.IV_ATM })}
+        ${metricBoxTrafficLightF3O({ key:'IV_ATM',   label:'IV (ATM)',        desc:'vol implicita prox-ATM', metric:kpi.IV_ATM })}
         ${metricBoxTrafficLightF3O({ key:'IV_RANK',  label:'IV Rank/%tile',   desc:'posizione IV 1y',       metric:kpi.IV_rank_pct })}
         ${metricBoxTrafficLightF3O({ key:'GSR',      label:'GSR (Γ/Vega)',    desc:'regime dealer (ticker)',metric:kpi.GSR_tkr })}
         ${metricBoxTrafficLightF3O({ key:'DEALER',   label:'Dealer Regime',   desc:'bias di copertura',     metric:kpi.DealerGamma })}
       </div>
-      ${headlineBlockCardF3O('Note', kpi?.ai_note)}
+      ${headlineBlockCardF3O('Nota AI (KPI)', kpi?.ai_note)}
     </section>`;
 
   // 2) Expected Move (EM) — tabella scadenze chiave
@@ -190,7 +192,7 @@ function buildF3OSectionsPublic(d){
             <tbody>${emRows}</tbody>
           </table>
         </div>` })}
-      ${headlineBlockCardF3O('Note', em?.ai_note)}
+      ${headlineBlockCardF3O('Nota AI (EM)', em?.ai_note)}
     </section>`;
 
   // 3) Term Structure & IV Slope
@@ -203,7 +205,7 @@ function buildF3OSectionsPublic(d){
           <div><div class="text-[10px] text-[color:var(--muted)]">Slope</div><div class="font-mono text-[12px]">${escapeHtml(term?.slope?.raw || term?.slope || '—')}</div></div>
           <div><div class="text-[10px] text-[color:var(--muted)]">Contesto</div><div class="text-[12px]">${escapeHtml(term?.context || '')}</div></div>
         </div>` })}
-      ${headlineBlockCardF3O('Note', term?.ai_note)}
+      ${headlineBlockCardF3O('Nota AI (Term)', term?.ai_note)}
     </section>`;
 
   // 4) Skew 25Δ / Risk Reversal
@@ -216,7 +218,7 @@ function buildF3OSectionsPublic(d){
           <div><div class="text-[10px] text-[color:var(--muted)]">RR 25Δ</div><div class="font-mono text-[12px]">${fmtPct(skew?.rr_25d)}</div></div>
           <div><div class="text-[10px] text-[color:var(--muted)]">Forma</div><div class="text-[12px]">${escapeHtml(skew?.shape || '—')}</div></div>
         </div>` })}
-      ${headlineBlockCardF3O('Note', skew?.ai_note)}
+      ${headlineBlockCardF3O('Nota AI (Skew)', skew?.ai_note)}
     </section>`;
 
   // 5) PCR & Open Interest (totali + per scadenza)
@@ -238,7 +240,7 @@ function buildF3OSectionsPublic(d){
             ${pcrRight || '<div class="text-[12px] text-[color:var(--muted)]">—</div>'}
           </div>
         </div>` })}
-      ${headlineBlockCardF3O('Note', pcr?.ai_note)}
+      ${headlineBlockCardF3O('Nota AI (PCR)', pcr?.ai_note)}
     </section>`;
 
   // 6) Gamma Exposure & Max Pain (incluso DealerGamma / GSR)
@@ -266,7 +268,7 @@ function buildF3OSectionsPublic(d){
           <div><div class="text-[10px] text-[color:var(--muted)]">GSR</div><div class="font-mono text-[12px]">${escapeHtml(String(gamma?.GSR_tkr?.raw ?? '—'))}</div></div>
         </div>
         ${gamma?.ai_note_gsr ? `<div class="text-[11px] text-[color:var(--muted)] mt-1">${escapeHtml(gamma.ai_note_gsr)}</div>` : ''}` })}
-      ${headlineBlockCardF3O('Note', gamma?.ai_note)}
+      ${headlineBlockCardF3O('Nota AI (Gamma/MaxPain)', gamma?.ai_note)}
     </section>`;
 
   // 7) Flow istituzionale (blotter sintetico)
@@ -284,7 +286,7 @@ function buildF3OSectionsPublic(d){
           </div>
           <div>${flowTop || '<div class="text-[12px] text-[color:var(--muted)]">—</div>'}</div>
         </div>` })}
-      ${headlineBlockCardF3O('Note', flow?.ai_note)}
+      ${headlineBlockCardF3O('Nota AI (Flow)', flow?.ai_note)}
     </section>`;
 
   // 8) Data Quality / Gaps & Sintesi AI
@@ -292,7 +294,13 @@ function buildF3OSectionsPublic(d){
   const gaps = Array.isArray(dq.DataGaps) && dq.DataGaps.length ? listBlockCardF3O('Data gaps', dq.DataGaps) : '';
   const dqHTML = `
     <section class="tl-panel-section" data-f3o-section="quality" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-      ${sectionHeaderF3O('Qualità dati & Sintesi','Data gaps e sintesi AI','F3O_Quality_info')}
+      ${sectionHeaderF3O('Qualità dati & Sintesi','Coverage, confidenza, integrità feed e note AI','F3O_Quality_info')}
+      <div class="grid gap-3 text-[12px] leading-[1.4] grid-cols-1 md:grid-cols-2">
+        ${qualityChipF3O('FreshnessScore', dq?.FreshnessScore || dq?.Coverage)}
+        ${qualityChipF3O('ConfidenceFinal', dq?.ConfidenceFinal)}
+        ${qualityChipF3O('DataIntegrity', dq?.DataIntegrity)}
+        ${qualityChipF3O('FeedSync', dq?.FeedSync)}
+      </div>
       ${gaps}
       ${headlineBlockCardF3O('AI Summary (Options)', dq?.ai_note)}
     </section>`;
@@ -469,8 +477,7 @@ function listBlockCardF3O(title, body){
   if (!body && body !== 0) return '';
   let tone='neutral', raw='';
   if (Array.isArray(body)){
-    raw = body.map(x=>`• ${String(x)}`).join('
-');
+    raw = body.map(x=>`• ${String(x)}`).join('\n');
   } else if (typeof body==='object'){
     tone = body?.tone || 'neutral';
     raw = body?.raw || '';
@@ -516,7 +523,9 @@ function toneColorsF3O(tone){
    UTILS
 ----------------------------------------------------------------------------- */
 function sectionHeaderF3O(title, subtitle, infoKey){
-  const info = infoKey ? `<button class="info-btn" data-metric="${escapeAttr(infoKey)}" aria-label="Info ${escapeAttr(infoKey)}">?</button>` : '';
+  const info = infoKey
+    ? `<button class="info-btn" data-metric="${escapeAttr(infoKey)}" aria-label="Info ${escapeAttr(infoKey)}">?</button>`
+    : '';
   return `
     <header class="tl-panel-section-title">
       <div class="flex items-start justify-between gap-2">
@@ -668,7 +677,7 @@ function normalizeDataF3OPublic(src={}){
   // Bridge out (per F3 tecnico puro — opzionale)
   const bridge_out = {
     VolatilityRegime: head?.IV_rank_pct?.raw ?? null,
-    GammaBias: gamma?.DealerGamma?.raw ?? null,
+    GammaBias: (function(){ try { return (src?.gamma?.DealerGamma?.raw ?? src?.options?.DealerGamma?.raw ?? null); } catch(_){ return null; } })(),
     IV_Level: head?.IV_ATM?.raw ?? null,
     IV_Slope: term_structure?.slope?.raw ?? term_structure?.slope ?? null
   };
