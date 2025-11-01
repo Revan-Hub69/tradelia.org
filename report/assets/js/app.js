@@ -202,7 +202,7 @@ async function loadManifest(reportId) {
 return {
   id: reportId,
   title: "Tradelia · Report Runtime",
-  order: ["F1B","F2","F30","F3","F4","F5","F5B","F6","F7"], // +F7
+  order: ["F1B","F2","F3o","F3","F4","F5","F5B","F6","F7"],
   modules: {
     "F1B": "f1b.json",
     "F2":  "f2.json",
