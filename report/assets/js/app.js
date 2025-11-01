@@ -223,14 +223,14 @@ function getSectionSelectorForModule(modId) {
 
   if (upper === "F1A" || upper === "F1B") return "#sec-f1";
   if (upper === "F2")  return "#sec-f2";
-  if (upper === "F3o")  return "#sec-f3o";
+-  if (upper === "F3o")  return "#sec-f3o";
++  if (upper === "F3O")  return "#sec-f3o";
   if (upper === "F3")  return "#sec-f3";
   if (upper === "F4")  return "#sec-f4";
   if (upper === "F5")  return "#sec-f5";
   if (upper === "F5B") return "#sec-f5b";
   if (upper === "F6")  return "#sec-f6";
-  if (upper === "F7")  return "#sec-f7"; // +F7
-
+  if (upper === "F7")  return "#sec-f7";
   return null;
 }
 
