@@ -293,18 +293,29 @@ const s2 = `
       ${metricBlockF3O('F3O_FlowNet_info', d.labels?.flow_net,   '', toMetric(d.flow.net_usd,   d.flow.tone))}
       ${metricBlockF3O('F3O_DeltaImb_info',d.labels?.flow_delta, '', toMetric(d.flow.delta_imb, d.flow.tone))}
     </div>
-    ${f3oCard({ tone:d.flow.tone||'neutral', title:d.labels?.flow_top, bodyHtml:`<pre class="whitespace-pre-wrap text-[12px] leading-[1.4]">${escapeHtml(flowTop||'—')}</pre>` })}
+   ${f3oCard({
+  tone:d.flow.tone||'neutral',
+  title:d.labels?.flow_top,
+  bodyHtml:`<div class="flex items-start justify-between">
+    <pre class="whitespace-pre-wrap text-[12px] leading-[1.4] flex-1">${escapeHtml(flowTop||'—')}</pre>
+    <button class="info-btn ml-2" data-metric="F3O_TopPrints_info" aria-label="Info Top prints">?</button>
+  </div>`
+})}
+
     ${headlineBlockF3O(d.labels?.note_ai, d.flow.ai_note)}
   </section>`;
 
   // 8) Sintesi educativa (a schede)
-  const sPoints = (d.sintesi_ai.points||[]).map(p=>{
-    const tone = p.tone || 'neutral';
-    const bodyHtml = `
-      <div class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)] mb-1">${escapeHtml(p.raw||'')}</div>
-      <div class="text-[11px] leading-[1.4] text-[color:var(--muted)]">${escapeHtml(p.ai_note||'')}</div>`;
-    return f3oCard({ tone, title: p.title||'', bodyHtml, noteHtml:'' });
-  }).join('');
+const sPoints = (d.sintesi_ai.points||[]).map(p=>{
+  const tone = p.tone || 'neutral';
+  const extra = d.labels?.sintesi_extra || '';
+  const bodyHtml = `
+    <div class="font-mono text-[12px] leading-[1.4] text-[color:var(--ink)] mb-1">${escapeHtml(p.raw||'')}</div>
+    <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mb-1">${escapeHtml(p.ai_note||'')}</div>
+    ${extra ? `<div class="text-[11px] leading-[1.4] text-[color:var(--muted)]">${escapeHtml(extra)}</div>` : ''}`;
+  return f3oCard({ tone, title: p.title||'', bodyHtml, noteHtml:'' });
+}).join('');
+
   const s8 = `
   <section class="tl-panel-section" data-f3o-section="sintesi" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
     <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">${escapeHtml(L.sintesi)}</div></header>
@@ -509,18 +520,35 @@ function bindEMToggle(){
   const container = document.getElementById('em-container');
   if(!container) return;
   const btns = document.querySelectorAll('.em-toggle-btn');
+
+  const styleBtn = (b,on)=>{
+    b.style.fontWeight = on ? '700' : '500';
+    b.style.background  = on ? 'var(--ink)' : 'transparent';
+    b.style.color       = on ? 'var(--surface-page)' : 'var(--ink)';
+    b.style.borderRadius = '999px';
+  };
+
   const setMode = (mode)=>{
     container.setAttribute('data-em-mode', mode);
-    btns.forEach(b=> b.setAttribute('aria-pressed', String(b.dataset.emToggle===mode)));
+    btns.forEach(b=>{
+      const on = (b.dataset.emToggle===mode);
+      b.setAttribute('aria-pressed', String(on));
+      styleBtn(b,on);
+    });
     container.querySelectorAll('[data-kind]').forEach(el=>{
       const kind = el.getAttribute('data-kind');
       el.style.display = (kind===mode) ? '' : 'none';
     });
   };
+
   btns.forEach(b=>{
     if(b.__emBound) return; b.__emBound = true;
     b.addEventListener('click', ()=> setMode(b.dataset.emToggle==='usd' ? 'usd':'pct'));
   });
+
+  // init (rispetta lo stato aria-pressed iniziale)
+  const pressed = Array.from(btns).find(x=>x.getAttribute('aria-pressed')==='true');
+  if(pressed){ styleBtn(pressed,true); }
 }
 
 /* -----------------------------------------------------------------------------
@@ -594,6 +622,11 @@ function normalizeDataF3OPublic(src={}){
     },
     // Column labels EM
     em_cols: { exp:'Exp', dte:'DTE', em:'EM%', up:'Upper', down:'Lower', iv:'IV%' },
+    em_col_usd: 'EM$',                 // <-- AGGIUNTA
+em_toggle_arialabel: 'Cambia unità Expected Move', // <-- AGGIUNTA
+em_toggle_pct_title: 'Mostra EM in percentuale',   // <-- AGGIUNTA
+em_toggle_usd_title: 'Mostra EM in dollari',       // <-- AGGIUNTA
+spot: 'Spot',    
     // Generic text labels
     note_ai: 'Nota AI',
     contesto: 'Contesto',
