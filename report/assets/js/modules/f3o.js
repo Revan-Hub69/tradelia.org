@@ -50,10 +50,11 @@ export function renderCard(rawData, ctx = {}){
             Regime di volatilità & posizionamento dealer (overlay derivati)
           </div>
 
-          <div class="section-desc text-[12px] text-[color:var(--muted)] leading-[1.45] mt-1">
-            ${escapeHtml(d.meta.hero_intro || 'Lettura anticipativa su IV, skew, term structure, PCR, flow istituzionali e Gamma/Max Pain. Nessun calcolo lato client.')}<br/>
-            <span class="text-[11px] text-[color:var(--muted)]">Materiale educativo/informativo. Nessuna raccomandazione personale.</span>
-          </div>
+          
+<div class="section-desc text-[12px] text-[color:var(--muted)] leading-[1.45] mt-1">
+  ${escapeHtml(d.meta.hero_intro || 'Lettura anticipativa su IV, skew, term structure, PCR, flow istituzionali e Gamma/Max Pain.')}
+</div>
+
         </div>
       </header>
 
