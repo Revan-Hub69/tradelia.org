@@ -1,7 +1,8 @@
-// /report/assets/js/modules/f3o.js (rewrite v1.2)
+// /report/assets/js/modules/f3o.js (rewrite v1.2-adapter)
 //
 // F3O · Options Overlay (derivati) — 3–10 giorni
 // - NIENTE descrizioni hard‑coded: tutto arriva da JSON (ai_note / labels)
+// - Adattato per leggere JSON con ui_labels.{s1_title..s9_title} come da feed del 2025‑10‑31
 // - Sezioni con nomi più intuitivi (fallback se manca ui_labels)
 // - Governance completa (Quality chips + AuditPath + MiFID)
 // - "Sintesi" rinominata in "Sintesi educativa" e resa a schede (points[])
@@ -292,7 +293,7 @@ function renderDesktopShell(s, d){
       ${menuBtn('em',        L.em)}
       ${menuBtn('term',      L.term)}
       ${menuBtn('skew',      L.skew)}
-      ${menuBtn('pcr',       L.pcr)}
+      ${menuBtn('pcr',      L.pcr)}
       ${menuBtn('gamma',     L.gamma)}
       ${menuBtn('flow',      L.flow)}
       ${menuBtn('sintesi',   L.sintesi)}
@@ -473,6 +474,7 @@ function fmtUsd(x){ const n=Number(x); return Number.isFinite(n)? '$'+new Intl.N
 
 /* -----------------------------------------------------------------------------
    NORMALIZZAZIONE (mapping + labels friendly)
+   — ADATTATA ai feed con ui_labels.{s1_title..s9_title}
 ----------------------------------------------------------------------------- */
 function normalizeDataF3OPublic(src={}){
   const meta = {
@@ -543,12 +545,33 @@ function normalizeDataF3OPublic(src={}){
     lettura_contesto: 'Lettura di contesto',
     sintesi_disclaimer: 'Sezione a fini esclusivamente informativi/educativi. Nessuna raccomandazione personale.'
   };
+
+  // Mappa dinamicamente ui_labels.{s1_title..s9_title} → menu/sections
   const UL = src?.ui_labels || {};
+  const uiFromS = (k, fallback) => (typeof UL[k] === 'string' && UL[k].trim()) ? UL[k].trim() : fallback;
+  const sectionsFromS = {
+    kpi: uiFromS('s1_title', defaults.sections.kpi),
+    em: uiFromS('s2_title', defaults.sections.em),
+    term: uiFromS('s3_title', defaults.sections.term),
+    skew: uiFromS('s4_title', defaults.sections.skew),
+    pcr: uiFromS('s5_title', defaults.sections.pcr),
+    gamma: uiFromS('s6_title', defaults.sections.gamma),
+    flow: uiFromS('s7_title', defaults.sections.flow),
+    sintesi: uiFromS('s8_title', defaults.sections.sintesi),
+    governance: uiFromS('s9_title', defaults.sections.governance)
+  };
+
+  // Hero title/subtitle: fallback dall'input JSON se presente
+  const hero_title = UL?.hero_title || defaults.hero_title;
+  const hero_subtitle = UL?.hero_subtitle || `${src?.meta?.module || 'F3O · Options Overlay'} · Orizzonte 3–10 giorni`;
+
   const labels = {
     ...defaults,
     ...UL,
-    menu: { ...(defaults.menu||{}), ...(UL.menu||{}) },
-    sections: { ...(defaults.sections||{}), ...(UL.sections||{}) },
+    hero_title,
+    hero_subtitle,
+    menu: { ...(defaults.menu||{}), ...sectionsFromS }, // usa gli stessi titoli anche per il menu
+    sections: { ...(defaults.sections||{}), ...sectionsFromS },
     em_cols: { ...(defaults.em_cols||{}), ...(UL.em_cols||{}) }
   };
 
