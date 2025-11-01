@@ -193,16 +193,22 @@ function buildF3OSections(d){
     </tr>`).join('');
 const s2 = `
   <section class="tl-panel-section" data-f3o-section="em" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-    <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">${escapeHtml(L.em)}</div></header>
+   <header class="tl-panel-section-title flex items-center justify-between">
+  <div class="tl-panel-section-title-text">${escapeHtml(L.em)}</div>
+  <button type="button" class="info-btn ml-2" data-metric="F3O_EM_info" aria-label="Info Expected Move">?</button>
+</header>
+
     ${f3oCard({ tone:'neutral', title:(d.labels?.em_table_title||'Expected Move'), bodyHtml:`
       <div class="flex items-center justify-between gap-2 mb-2">
         <div class="text-[11px] text-[color:var(--muted)]">${escapeHtml(d.labels?.spot||'Spot')}: <span class="font-mono">${fmtNum(d.spot)||'—'}</span></div>
-        <div class="inline-flex items-center gap-0 border border-[color:var(--br-card)] rounded-[999px] overflow-hidden" role="group" aria-label="${escapeAttr(d.labels?.em_toggle_arialabel||'Toggle Expected Move unit')}">
-          <button type="button" class="em-toggle-btn px-2 py-1 text-[11px]" data-em-toggle="pct" aria-pressed="true" title="${escapeAttr(d.labels?.em_toggle_pct_title||'Mostra EM in percentuale')}">%</button>
-          <button type="button" class="em-toggle-btn px-2 py-1 text-[11px]" data-em-toggle="usd" aria-pressed="false" title="${escapeAttr(d.labels?.em_toggle_usd_title||'Mostra EM in dollari')}">$</button>
-          <button type="button" class="info-btn ml-2" data-metric="F3O_EM_TOGGLE_info" aria-label="Info EM toggle">?</button>
-        </div>
+       <div class="inline-flex items-center gap-0 border border-[color:var(--br-card)] rounded-[999px] overflow-hidden" role="group" aria-label="Toggle Expected Move unit">
+  <button type="button" class="em-toggle-btn px-2 py-1 text-[11px]" data-em-toggle="pct" aria-pressed="true" title="Mostra EM in %">%</button>
+  <button type="button" class="em-toggle-btn px-2 py-1 text-[11px]" data-em-toggle="usd" aria-pressed="false" title="Mostra EM in $">$</button>
+</div>
+<button type="button" class="info-btn ml-3" data-metric="F3O_EM_TOGGLE_info" aria-label="Info EM toggle">?</button>
       </div>
+      </div>
+
       <div class="overflow-auto" data-scrollable id="em-container" data-em-mode="pct">
         <table class="min-w-full text-[12px]">
           <thead><tr>
@@ -264,7 +270,15 @@ const s2 = `
       ${metricBlockF3O('F3O_PCR_Vol_info', d.labels?.pcr_vol, '', { raw: fmtNum(d.pcr.pcr_vol), tone:'neutral' })}
       ${metricBlockF3O('F3O_PCR_OI_info', d.labels?.pcr_oi,  '', { raw: fmtNum(d.pcr.pcr_oi),  tone:'neutral' })}
     </div>
-    ${f3oCard({ tone:'neutral', title:d.labels?.pcr_byexp, bodyHtml:`<pre class="whitespace-pre-wrap text-[12px] leading-[1.4]">${escapeHtml(byExp||'—')}</pre>` })}
+   ${f3oCard({
+  tone:'neutral',
+  title:d.labels?.pcr_byexp,
+  bodyHtml:`<div class="flex items-start justify-between">
+    <pre class="whitespace-pre-wrap text-[12px] leading-[1.4] flex-1">${escapeHtml(byExp||'—')}</pre>
+    <button class="info-btn ml-2" data-metric="F3O_PCR_byExp_info" aria-label="Info PCR per scadenza">?</button>
+  </div>`
+})}
+
     ${headlineBlockF3O(d.labels?.note_ai, d.pcr.ai_note)}
   </section>`;
 
