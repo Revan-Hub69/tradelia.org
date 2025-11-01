@@ -1,7 +1,7 @@
-// /report/assets/js/modules/f3.js (rewritten)
-//
-// F3 · Analisi Tecnica MTF (3–10 giorni)
-// UI allineata a F1B/F2 con drawer/tabs "scoped" e delegation robusta
+// /report/assets/js/modules/f3.js (final, Tradelia AI cohesive)
+// F3 · Analisi Tecnica MTF (3–10 giorni) — PUBLIC REPORT
+// UI allineata a F1B/F2 con drawer/tabs "scoped" e delegation robusta.
+// Nessun valore hardcoded: tutti i dati arrivano via JSON.
 //
 // Export:
 //   renderCard(rawData, ctx?) -> string HTML
@@ -19,9 +19,9 @@ export function renderCard(rawData, ctx = {}){
     { key: "BiasMTF",   label: "Bias MTF",   desc: "", metric: d.head?.BiasMTF },
     { key: "MTF_Score", label: "MTF Score",  desc: "", metric: d.head?.MTF_Score },
     { key: "P_SwingUp", label: "P(SwingUp)", desc: "", metric: d.head?.P_SwingUp },
-    d.options?.OPI_tkr
-      ? { key: "OPI_tkr", label: "OPI", desc: "", metric: d.options?.OPI_tkr }
-      : { key: "GSR_tkr", label: "GSR", desc: "", metric: d.options?.GSR_tkr }
+    d.optionsF3?.head?.OPI_tkr
+      ? { key: "OPI_tkr", label: "OPI", desc: "", metric: d.optionsF3?.head?.OPI_tkr }
+      : { key: "GSR_tkr", label: "GSR", desc: "", metric: d.optionsF3?.head?.GSR_tkr }
   ];
 
   return `
@@ -115,74 +115,49 @@ function openF3DrawerPublic(d){
     footerTabs: []
   });
 
-  // hint scroll per tabs mobile (scoped)
-  function initScrollableTabsHint(){
+  // Post-mount: binding e attivazione iniziale (scoped)
+  setTimeout(()=>{
     const root = document.getElementById('f3-root');
-    const scrollBox = root?.querySelector('.f1b-footer-tabs-scroll');
-    const fadeRight = root?.querySelector('.f1b-tabs-fade-right');
-    if(!scrollBox || !fadeRight) return;
-    const needsScroll = scrollBox.scrollWidth > scrollBox.clientWidth + 2;
-    if(!needsScroll){
-      fadeRight.style.display = 'none';
-      const fadeLeft = root?.querySelector('.f1b-tabs-fade-left');
-      if(fadeLeft) fadeLeft.style.display = 'none';
-      return;
-    }
-    const hintEl = fadeRight.querySelector('.f1b-tabs-scroll-hint');
-    function updateHint(){
-      const atEnd = scrollBox.scrollLeft + scrollBox.clientWidth >= scrollBox.scrollWidth - 4;
-      if(hintEl) hintEl.style.opacity = atEnd ? '0' : '.9';
-      const fadeLeft = root?.querySelector('.f1b-tabs-fade-left');
-      if (fadeLeft) fadeLeft.style.opacity = scrollBox.scrollLeft > 2 ? '.6' : '0';
-    }
-    updateHint();
-    scrollBox.addEventListener('scroll', ()=> updateHint(), { passive:true });
-  }
 
-// Post-mount: binding e attivazione iniziale (scoped)
-setTimeout(()=>{
-  const root = document.getElementById('f3-root');
+    // bind tabs (usa la versione già definita nel file)
+    bindF3TabsPublic();
 
-  // bind tabs (usa la versione già definita nel file)
-  bindF3TabsPublic();
-
-  // tooltip "?" solo dentro al drawer F3
-  if (window.__TradeliaUI?.bindMetricInfoButtons){
-    try { window.__TradeliaUI.bindMetricInfoButtons(root?.querySelector('#f3-scroll-desktop')); } catch(e){}
-    try { window.__TradeliaUI.bindMetricInfoButtons(root?.querySelector('#f3-scroll-mobile')); } catch(e){}
-  }
-
-  // attiva la prima tab (dataset) dentro al root del drawer
-  const first = root?.querySelector('[data-f3-tab="dataset"]');
-  if (first && typeof first.click === 'function') first.click();
-
-  // hint scroll mobile (scoped su root)
-  (function initScrollableTabsHint(){
-    const scrollBox = root?.querySelector('.f1b-footer-tabs-scroll');
-    const fadeRight = root?.querySelector('.f1b-tabs-fade-right');
-    if(!scrollBox || !fadeRight) return;
-
-    const needsScroll = scrollBox.scrollWidth > scrollBox.clientWidth + 2;
-    if(!needsScroll){
-      fadeRight.style.display = 'none';
-      const fadeLeft = root?.querySelector('.f1b-tabs-fade-left');
-      if(fadeLeft) fadeLeft.style.display = 'none';
-      return;
+    // tooltip "?" solo dentro al drawer F3
+    if (window.__TradeliaUI?.bindMetricInfoButtons){
+      try { window.__TradeliaUI.bindMetricInfoButtons(root?.querySelector('#f3-scroll-desktop')); } catch(e){}
+      try { window.__TradeliaUI.bindMetricInfoButtons(root?.querySelector('#f3-scroll-mobile')); } catch(e){}
     }
 
-    const hintEl = fadeRight.querySelector('.f1b-tabs-scroll-hint');
-    function updateHint(){
-      const atEnd = scrollBox.scrollLeft + scrollBox.clientWidth >= scrollBox.scrollWidth - 4;
-      if(hintEl) hintEl.style.opacity = atEnd ? '0' : '.9';
-      const fadeLeft = root?.querySelector('.f1b-tabs-fade-left');
-      if(fadeLeft) fadeLeft.style.opacity = scrollBox.scrollLeft > 2 ? '.6' : '0';
-    }
+    // attiva la prima tab (dataset) dentro al root del drawer
+    const first = root?.querySelector('[data-f3-tab="dataset"]');
+    if (first && typeof first.click === 'function') first.click();
 
-    updateHint();
-    scrollBox.addEventListener('scroll', updateHint, { passive:true });
-  })();
-}, 0);
+    // hint scroll mobile (scoped su root)
+    (function initScrollableTabsHint(){
+      const scrollBox = root?.querySelector('.f1b-footer-tabs-scroll');
+      const fadeRight = root?.querySelector('.f1b-tabs-fade-right');
+      if(!scrollBox || !fadeRight) return;
 
+      const needsScroll = scrollBox.scrollWidth > scrollBox.clientWidth + 2;
+      if(!needsScroll){
+        fadeRight.style.display = 'none';
+        const fadeLeft = root?.querySelector('.f1b-tabs-fade-left');
+        if(fadeLeft) fadeLeft.style.display = 'none';
+        return;
+      }
+
+      const hintEl = fadeRight.querySelector('.f1b-tabs-scroll-hint');
+      function updateHint(){
+        const atEnd = scrollBox.scrollLeft + scrollBox.clientWidth >= scrollBox.scrollWidth - 4;
+        if(hintEl) hintEl.style.opacity = atEnd ? '0' : '.9';
+        const fadeLeft = root?.querySelector('.f1b-tabs-fade-left');
+        if(fadeLeft) fadeLeft.style.opacity = scrollBox.scrollLeft > 2 ? '.6' : '0';
+      }
+
+      updateHint();
+      scrollBox.addEventListener('scroll', updateHint, { passive:true });
+    })();
+  }, 0);
 }
 
 function isMobileViewport(){ return window.matchMedia('(max-width: 767px)').matches; }
@@ -272,24 +247,8 @@ function buildF3SectionsPublic(d){
       </div>
     </section>`;
 
-  // 6) Options Overlay (da F2-Options)
-  const opt = d.options || {};
-  const optionsHTML = `
-    <section class="tl-panel-section" data-f3-section="options" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Options Overlay (F2‑Options)</div></header>
-      <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4]">
-        ${metricBlockF3('IV_info','IV (ATM)','', opt?.IV_ATM)}
-        ${metricBlockF3('IVR_info','IV rank/percentile','', opt?.IV_rank_pct)}
-        ${metricBlockF3('SKEW_info','Skew (25Δ) / ΔSkew','', opt?.Skew_set)}
-        ${metricBlockF3('OI_info','Open Interest / ΔOI','', opt?.OI_delta)}
-        ${metricBlockF3('PCR_info','Put/Call (Vol & OI)','', opt?.PutCall)}
-        ${metricBlockF3('GSR_info','Gamma/Vega (GSR)','', opt?.GSR_tkr)}
-        ${metricBlockF3('OPI_info','OPI (Options Pattern Index)','', opt?.OPI_tkr)}
-        ${metricBlockF3('DEALER_info','Dealer gamma regime','', opt?.DealerGamma)}
-        ${metricBlockF3('PAT_OPT_info','Options pattern','', opt?.OptionsPattern)}
-      </div>
-      ${headlineBlockCardF3('Nota derivati', opt?.ai_note)}
-    </section>`;
+  // 6) Options Overlay — versione F3‑Options (d.optionsF3)
+  const optionsHTML = buildF3OptionsSectionPublic(d);
 
   // 7) Price History (60 sedute REG)
   const ph = d.price_history || {};
@@ -600,7 +559,8 @@ function listBlockCardF3(title, body){
   if (!body && body !== 0) return '';
   let tone='neutral', raw='';
   if (Array.isArray(body)){
-    raw = body.map(x=>`• ${String(x)}`).join('\n');
+    raw = body.map(x=>`• ${String(x)}`).join('
+');
   } else if (typeof body==='object'){
     tone = body?.tone || 'neutral';
     raw = body?.raw || '';
@@ -669,11 +629,135 @@ function formatMetricValue(obj){
   return escapeHtml(String(v));
 }
 
-function escapeHtml(str){ if(str===undefined||str===null) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function escapeHtml(str){ if(str===undefined||str===null) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;/').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function escapeAttr(str){ if(str===undefined||str===null) return ''; return String(str).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
 /* -----------------------------------------------------------------------------
-// NORMALIZZAZIONE DATI (F3)
+// OPTIONS (F3‑Options) — public section builder + helpers
+// -----------------------------------------------------------------------------*/
+function buildF3OptionsSectionPublic(d){
+  const o = d.optionsF3 || {};
+
+  // KPI row (auto selects available metrics)
+  const kpiDefs = [
+    { key:'IV_ATM',        label:'IV (ATM)',            metric:o.head?.IV_ATM },
+    { key:'IV_rank_pct',   label:'IV Rank / Percentile',metric:o.head?.IV_rank_pct },
+    { key:'PCR',           label:'Put/Call (Vol · OI)', metric:o.head?.PCR },
+    o.head?.OPI_tkr ?
+      { key:'OPI_tkr',     label:'OPI',                 metric:o.head?.OPI_tkr } :
+      { key:'GSR_tkr',     label:'GSR',                 metric:o.head?.GSR_tkr },
+    { key:'DealerGamma',   label:'Dealer Gamma Regime', metric:o.head?.DealerGamma }
+  ].filter(x=>!!x.metric);
+
+  const kpiHTML = kpiDefs.map(k=>metricBoxTrafficLightF3({ key:k.key, label:k.label, desc:'', metric:k.metric })).join('');
+
+  // Term structure table
+  const termRows = Array.isArray(o.term?.rows) ? o.term.rows : [];
+  const termHTML = termRows.length ? tableBlockF3({
+    title:'Term Structure · Expected Move / IV',
+    cols:[
+      {k:'expiry',  t:'Exp'},
+      {k:'dte',     t:'DTE', align:'right'},
+      {k:'iv_atm',  t:'IV%', align:'right'},
+      {k:'em_abs',  t:'EM $', align:'right'},
+      {k:'em_pct',  t:'EM %', align:'right'},
+      {k:'upper',   t:'Upper', align:'right'},
+      {k:'lower',   t:'Lower', align:'right'}
+    ],
+    rows: termRows
+  }) : '';
+
+  // Dealer / Gamma block
+  const g = o.gamma || {};
+  const gammaHTML = (g.flip || g.putWall || g.callWall || g.netGamma)
+    ? f3Card({
+        tone: g.tone || 'neutral',
+        title: 'Dealer / Gamma',
+        bodyHtml: renderCompositeKV({
+          Flip: g.flip ?? '—',
+          Regime: g.regime?.raw ?? g.regime ?? '—',
+          PutWall: g.putWall ?? '—',
+          CallWall: g.callWall ?? '—',
+          NetGamma: g.netGamma ?? '—'
+        }),
+        noteHtml: escapeHtml(g.ai_note || '')
+      })
+    : '';
+
+  // Flow (totali + per expiry)
+  const flow = o.flow || {};
+  const flowTotals = flow.totals ? f3Card({
+    tone: flow.totals?.tone || 'neutral',
+    title: 'Flow Totals',
+    bodyHtml: renderCompositeKV({
+      PutVol: flow.totals?.PutVol ?? '—',
+      CallVol: flow.totals?.CallVol ?? '—',
+      PCR_Vol: flow.totals?.PCR_Vol ?? '—',
+      PutOI: flow.totals?.PutOI ?? '—',
+      CallOI: flow.totals?.CallOI ?? '—',
+      PCR_OI: flow.totals?.PCR_OI ?? '—'
+    })
+  }) : '';
+
+  const flowByExp = Array.isArray(flow.expiries) && flow.expiries.length ? tableBlockF3({
+    title:'Flow by Expiration',
+    cols:[
+      {k:'expiry', t:'Exp'},
+      {k:'dte', t:'DTE', align:'right'},
+      {k:'pcr_vol', t:'PCR Vol', align:'right'},
+      {k:'pcr_oi', t:'PCR OI', align:'right'},
+      {k:'tot_oi', t:'Tot OI', align:'right'},
+      {k:'iv', t:'IV%', align:'right'}
+    ],
+    rows: flow.expiries
+  }) : '';
+
+  // Max Pain & Walls per expiry (optional)
+  const mpRows = Array.isArray(o.maxPain) ? o.maxPain : [];
+  const maxPainHTML = mpRows.length ? tableBlockF3({
+    title:'Max Pain / Walls (per expiry)',
+    cols:[
+      {k:'expiry', t:'Exp'},
+      {k:'dte', t:'DTE', align:'right'},
+      {k:'maxPain', t:'Max Pain', align:'right'},
+      {k:'putWall', t:'Put Wall', align:'right'},
+      {k:'callWall', t:'Call Wall', align:'right'}
+    ],
+    rows: mpRows
+  }) : '';
+
+  const noteHTML = o.ai_note ? headlineBlockCardF3('Nota derivati (F3‑Options)', o.ai_note) : '';
+
+  return `
+    <section class="tl-panel-section" data-f3-section="options" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Options Overlay (F3‑Options)</div></header>
+      <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4]">${kpiHTML}</div>
+      <div class="grid md:grid-cols-2 gap-3 mt-3">${termHTML}${gammaHTML}</div>
+      <div class="grid md:grid-cols-2 gap-3 mt-3">${flowTotals}${flowByExp}</div>
+      <div class="mt-3">${maxPainHTML}</div>
+      ${noteHTML}
+    </section>`;
+}
+
+// generic table renderer
+function tableBlockF3({ title, cols=[], rows=[] }){
+  const thead = `<tr>${cols.map(c=>`<th style="text-align:${c.align==='right'?'right':'left'};padding:.3rem .4rem;border-bottom:1px solid var(--br-card);font-size:11px;color:var(--muted);">${escapeHtml(c.t)}</th>`).join('')}</tr>`;
+  const tbody = rows.map(r=>{
+    return `<tr>${cols.map(c=>{
+      const v = r?.[c.k];
+      return `<td style="text-align:${c.align==='right'?'right':'left'};padding:.35rem .4rem;border-bottom:1px dashed var(--br-soft);font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;">${escapeHtml(v==null? '—' : String(v))}</td>`;
+    }).join('')}</tr>`;
+  }).join('');
+
+  return f3Card({
+    tone:'neutral',
+    title,
+    bodyHtml: `<div class="overflow-auto" data-scrollable><table style="width:100%;border-collapse:collapse;min-width:480px;">${thead}${tbody}</table></div>`
+  });
+}
+
+/* -----------------------------------------------------------------------------
+// NORMALIZZAZIONE DATI (F3) — coerenza Tradelia AI
 // -----------------------------------------------------------------------------*/
 function normalizeDataF3Public(src={}){
   const meta = {
@@ -733,6 +817,7 @@ function normalizeDataF3Public(src={}){
   const H4 = tfBlock('H4');
   const H1 = tfBlock('H1');
 
+  // Opzioni (compat legacy per retro-compatibilità)
   const options = (function(){
     const o = src?.options || {};
     return {
@@ -804,5 +889,79 @@ function normalizeDataF3Public(src={}){
     };
   })();
 
-  return { meta, head, dataset, W1, D1, H4, H1, options, price_history, pattern_mtf, mtf_consolidation, governance };
+  // NEW: optionsF3 mapping for public Options section
+  const optionsF3 = __mapOptionsF3(src);
+
+  return { meta, head, dataset, W1, D1, H4, H1, options, price_history, pattern_mtf, mtf_consolidation, governance, optionsF3 };
+}
+
+// Mapper F3‑Options → struttura UI
+function __mapOptionsF3(src){
+  const o = src?.options || {};
+
+  const head = {
+    IV_ATM:        o.IV_ATM || { raw:'—', tone:'neutral' },
+    IV_rank_pct:   o.IV_rank_pct || { raw:'—', tone:'neutral' },
+    PCR:           o.PutCall || { raw:'—', tone:'neutral' },
+    GSR_tkr:       o.GSR_tkr || { raw:'—', tone:'neutral' },
+    OPI_tkr:       o.OPI_tkr || null,
+    DealerGamma:   o.DealerGamma || { raw:'—', tone:'neutral' }
+  };
+
+  const termRows = (Array.isArray(o.TermStructure) ? o.TermStructure : []).map(x=>({
+    expiry:  x.expiry || x.Expiration || x.date || '—',
+    dte:     x.dte ?? x.DTE ?? '—',
+    iv_atm:  x.iv_atm ?? x.IV ?? x.IV_ATM ?? '—',
+    em_abs:  x.em_abs ?? x.ExpectedMove ?? '—',
+    em_pct:  x.em_pct ?? x.ExpectedMovePct ?? '—',
+    upper:   x.upper ?? x.Upper ?? '—',
+    lower:   x.lower ?? x.Lower ?? '—'
+  }));
+
+  const gamma = (function(){
+    const g = o.GammaBlock || {};
+    return {
+      flip: g.flip ?? g.gammaFlip ?? g.GammaFlip ?? null,
+      putWall: g.putWall ?? g.PutWall ?? null,
+      callWall: g.callWall ?? g.CallWall ?? null,
+      netGamma: g.netGamma ?? g.NetGamma ?? null,
+      regime: g.regime || o.DealerGamma || { raw:'—', tone:'neutral' },
+      ai_note: g.ai_note || o.ai_note || ''
+    };
+  })();
+
+  const flow = (function(){
+    const f = o.FlowAgg || {};
+    const totals = f.Totals || o.Totals || null;
+    const expiries = Array.isArray(f.Expiries) ? f.Expiries : (Array.isArray(o.FlowByExp) ? o.FlowByExp : []);
+    return {
+      totals: totals ? {
+        PutVol: totals.PutVol ?? totals.putVol,
+        CallVol: totals.CallVol ?? totals.callVol,
+        PCR_Vol: totals.PCR_Vol ?? totals.pcrVol,
+        PutOI: totals.PutOI ?? totals.putOI,
+        CallOI: totals.CallOI ?? totals.callOI,
+        PCR_OI: totals.PCR_OI ?? totals.pcrOI,
+        tone: totals.tone || 'neutral'
+      } : null,
+      expiries: expiries.map(x=>({
+        expiry: x.expiry || x.Expiration || '—',
+        dte:    x.dte ?? x.DTE ?? '—',
+        pcr_vol: x.pcr_vol ?? x.PCR_Vol ?? '—',
+        pcr_oi:  x.pcr_oi ?? x.PCR_OI ?? '—',
+        tot_oi:  x.tot_oi ?? x.TotalOI ?? x.Total_OI ?? '—',
+        iv:      x.iv ?? x.IV ?? '—'
+      }))
+    };
+  })();
+
+  const maxPain = Array.isArray(o.MaxPainByExp) ? o.MaxPainByExp.map(x=>({
+    expiry: x.expiry || x.Expiration || '—',
+    dte:    x.dte ?? x.DTE ?? '—',
+    maxPain: x.maxPain ?? x.MaxPain ?? '—',
+    putWall: x.putWall ?? x.PutWall ?? '',
+    callWall: x.callWall ?? x.CallWall ?? ''
+  })) : [];
+
+  return { head, term:{ rows:termRows }, gamma, flow, maxPain, ai_note:o.ai_note || '' };
 }
