@@ -2,10 +2,10 @@
   "meta": {
     "timestampET": "2025-10-31 17:40 ET",
     "module": "F3O · Options Overlay",
-    "moduleVersion": "v1.2",
+    "moduleVersion": "v1.4",
     "moduleStatus": "ACTIVE",
     "freshness": "≤ T-1",
-    "hero_intro": "Panoramica sintetica dei derivati: volatilità implicita, struttura a termine, skew e posizionamento dealer.",
+    "hero_intro": "Panoramica sintetica dei derivati su META: volatilità implicita, struttura a termine, skew e posizionamento dealer.",
     "hero_disclaimer": "Materiale informativo e didattico. Nessuna raccomandazione personale (MiFID II)."
   },
 
@@ -22,99 +22,94 @@
   },
 
   "head": {
-    "IV_ATM":      { "raw": "17.8%", "tone": "green", "ai_note": "Volatilità implicita ATM stabile e sotto la media 1Y." },
-    "IV_rank_pct": { "raw": "32%", "tone": "yellow", "ai_note": "IV in fascia medio-bassa sul percentile storico (calma relativa)." },
-    "GSR_tkr":     { "raw": "0.42", "tone": "green", "ai_note": "Gamma/Vega ratio in zona neutrale → dealer ancora long gamma." },
-    "DealerGamma": { "raw": "Long Gamma", "tone": "green", "ai_note": "Dealer in posizione protettiva, mercato ordinato." }
+    "Spot":        { "raw": "648.35",  "tone": "neutral", "ai_note": "Prezzo spot letto dai pannelli." },
+    "IV_ATM":      { "raw": "37.29%",  "tone": "yellow",  "ai_note": "IV ATM moderata; in linea con HV 30D (~40.7%)." },
+    "IV_rank_pct": { "raw": "28.14%",  "tone": "green",   "ai_note": "IV Rank basso → premi relativamente contenuti." },
+    "IV_percentile": { "raw": "62%",   "tone": "neutral", "ai_note": "Percentile 1Y medio-alto post-earnings." },
+    "HV_30D":      { "raw": "40.67%",  "tone": "neutral", "ai_note": "HV ≈ IV: regime non teso." },
+    "GSR_tkr":     { "raw": "-0.41",   "tone": "red",     "ai_note": "Γ/Vega < 0 su front-month → dealer short gamma." },
+    "DealerGamma": { "raw": "Short Gamma", "tone": "red", "ai_note": "Confermato da Net GEX < 0 e Gamma Flip 660." }
   },
 
   "expected_move": {
     "rows": [
-      { "expiration": "2025-11-08", "dte": 7, "em_percent": 2.3, "upper": 5230, "lower": 5010, "iv_percent": 18.1 },
-      { "expiration": "2025-11-15", "dte": 14, "em_percent": 3.8, "upper": 5315, "lower": 4970, "iv_percent": 19.2 }
+      { "expiration": "2025-11-07", "dte": 6,  "em_percent": 3.56, "upper": 671.40, "lower": 625.30, "iv_percent": 40.61 },
+      { "expiration": "2025-11-14", "dte": 13, "em_percent": 4.97, "upper": 680.58, "lower": 616.12, "iv_percent": 38.90 },
+      { "expiration": "2025-11-21", "dte": 20, "em_percent": 6.18, "upper": 688.44, "lower": 608.26, "iv_percent": 39.06 }
     ],
     "ai_note": "Range implicito stabile nelle prossime due settimane. Nessuna espansione di volatilità rilevante."
   },
 
   "term_structure": {
-    "slope":   { "raw": "+0.9", "tone": "green", "ai_note": "Contango regolare tra 1M e 3M." },
+    "curve": [
+      { "exp": "2025-12-19", "iv": 37.31, "ai_note": "Mensile dicembre come riferimento 1M." },
+      { "exp": "2026-01-16", "iv": 36.45, "ai_note": "Leggera compressione a 2M." },
+      { "exp": "2026-02-20", "iv": 40.22, "ai_note": "Bump su feb-26 (seasonality/evento)." },
+      { "exp": "2026-03-20", "iv": 39.60, "ai_note": "Rientro graduale dopo il picco di feb-26." }
+    ],
+    "slope":   { "raw": "+1.0", "tone": "green", "ai_note": "Contango regolare tra 1M e 3M." },
     "context": "Curve IV leggermente crescente, segnale di normalizzazione post-earnings.",
     "ai_note": "Struttura coerente con regime risk-on moderato."
   },
 
   "skew": {
-    "rr_25d":  0.35,
-    "shape":   "Leggera call-bid, bias moderatamente rialzista.",
-    "tone":    "green",
-    "ai_note": "Risk reversal 25Δ positivo indica copertura ridotta downside."
+    "rr_25d":  -1.6,
+    "shape":   "Smile a U con skew leggero verso le put OTM (minimo IV ~645–650).",
+    "tone":    "yellow",
+    "ai_note": "Put IV leggermente > ATM; call wing ripida >680: skew equilibrato, coperture non aggressive."
   },
 
   "pcr": {
-    "pcr_vol": 0.71,
-    "pcr_oi":  0.82,
+    "pcr_vol": 0.44,
+    "pcr_oi":  0.64,
     "by_expiry": [
-      { "exp": "11/08", "em": 0.025, "pcr_v": 0.74, "pcr_oi": 0.81 },
-      { "exp": "11/15", "em": 0.038, "pcr_v": 0.69, "pcr_oi": 0.77 }
+      { "exp": "11/07", "em": 0.0356, "pcr_v": 0.40, "pcr_oi": 0.60 },
+      { "exp": "11/14", "em": 0.0497, "pcr_v": 0.49, "pcr_oi": 0.62 },
+      { "exp": "11/21", "em": 0.0618, "pcr_v": 0.45, "pcr_oi": 0.61 }
     ],
     "ai_note": "Leggera prevalenza di call sugli strike a breve scadenza."
   },
 
   "gamma": {
-    "GEX": { "gamma_flip": "5095" },
-    "MaxPain": { "strike": "5120", "ai_note": "Max pain stabile da 3 sedute consecutive." },
-    "DealerGamma": { "raw": "Long Gamma", "tone": "green", "ai_note": "Dealer long gamma → minore volatilità intraday." },
-    "Gamma_ATM":  { "raw": "1.25M", "tone": "neutral" },
-    "Vega_ATM":   { "raw": "0.72M", "tone": "neutral" },
-    "GSR_tkr":    { "raw": "0.42", "tone": "green" },
-    "ai_note_gsr": "Rapporto Γ/Vega coerente con mercato controllato.",
-    "ai_note": "Livello di equilibrio stabile; no segnali di stress gamma."
+    "GEX": { "gamma_flip": "660.19" },
+    "MaxPain": { "strike": "665", "ai_note": "Max pain settimanale sopra lo spot (648) → attrazione verso l’alto." },
+    "DealerGamma": { "raw": "Short Gamma", "tone": "red", "ai_note": "Net GEX negativo su front e monthly." },
+    "Gamma_ATM":  { "raw": "-50M",  "tone": "red" },
+    "Vega_ATM":   { "raw": "≈122M", "tone": "neutral" },
+    "GSR_tkr":    { "raw": "-0.41", "tone": "red" },
+    "ai_note_gsr": "Rapporto Γ/Vega negativo coerente con posizionamento difensivo dei dealer.",
+    "ai_note": "Pivot gamma 660; Put Wall 630; Call Wall 700. Rischio intraday elevato finché sotto 660."
   },
 
   "flow": {
-    "net_usd": "+12.5M",
-    "delta_imb": "+0.08",
+    "net_usd": "+21.3M",
+    "delta_imb": "+0.10",
     "tone": "green",
-    "ai_note": "Flusso netto positivo su strike OTM rialzisti (call spread istituzionali).",
+    "ai_note": "Flusso netto positivo su strike 650–670 con concentrazione call; pattern tipico di ricostruzione post-earnings.",
     "top": [
-      { "type": "CALL", "strike": 5200, "exp": "11/15", "delta": "+0.35", "premium": 3.2 },
-      { "type": "CALL", "strike": 5250, "exp": "11/15", "delta": "+0.28", "premium": 2.8 },
-      { "type": "PUT",  "strike": 5000, "exp": "11/08", "delta": "-0.25", "premium": 2.0 }
+      { "type": "CALL", "strike": 650, "exp": "11/07", "delta": "+0.50", "premium": 15.5 },
+      { "type": "CALL", "strike": 660, "exp": "11/07", "delta": "+0.38", "premium": 8.8 },
+      { "type": "PUT",  "strike": 630, "exp": "11/07", "delta": "-0.32", "premium": 6.7 }
     ]
   },
 
   "sintesi_ai": {
     "points": [
-      {
-        "title": "1. Regime IV stabile",
-        "raw": "Volatilità implicita sotto la media e dealer long gamma riducono il rischio di shock improvvisi.",
-        "tone": "green"
-      },
-      {
-        "title": "2. Skew favorevole",
-        "raw": "Call-bid e PCR basso mostrano propensione al rischio, coerente con contesto risk-on macro.",
-        "tone": "green"
-      },
-      {
-        "title": "3. Flow istituzionali positivi",
-        "raw": "Afflussi netti su strike rialzisti, nessuna concentrazione di put difensive.",
-        "tone": "green"
-      },
-      {
-        "title": "4. Attenzione alla curva IV",
-        "raw": "Possibile ripido aumento dell’IV se SPX scende sotto area 5050.",
-        "tone": "yellow"
-      }
+      { "title": "1. Volatilità contenuta", "raw": "IV 37–40% con HV allineata", "tone": "green" },
+      { "title": "2. Dealer short gamma",   "raw": "Gamma flip a 660 → rischio di movimenti ampi sotto il pivot", "tone": "red" },
+      { "title": "3. Flussi costruttivi",   "raw": "PCR<0.5 e OI NTM su call", "tone": "green" },
+      { "title": "4. Skew neutro-difensivo","raw": "Put leggermente più care ma senza panico", "tone": "yellow" }
     ],
-    "summary": "Setup derivati coerente con bias rialzista controllato; nessun segnale di stress gamma imminente."
+    "summary": "Bias derivativo rialzista controllato; monitorare area 660 (flip) e 700 (call wall)."
   },
 
   "audit_quality": {
-    "AuditPathID": "SWG25F3O_20251031",
+    "AuditPathID": "SWG25F3O_META_20251031",
     "QualityMetrics": {
-      "FreshnessScore": { "raw": "0.93", "tone": "green", "ai_note": "Aggiornato ≤ T-1" },
-      "ConfidenceFinal": { "raw": "0.91", "tone": "green", "ai_note": "Dataset coerente con F1B/F2" },
-      "DataIntegrity": { "raw": "0.88", "tone": "green", "ai_note": "Input validati da feed Tier-1" },
-      "FeedSync": { "raw": "OK", "tone": "green", "ai_note": "Sincronizzato con feed master T-1" }
+      "FreshnessScore":   { "raw": "0.93", "tone": "green", "ai_note": "Aggiornato ≤ T-1." },
+      "ConfidenceFinal":  { "raw": "0.91", "tone": "green", "ai_note": "OCR e calcoli coerenti." },
+      "DataIntegrity":    { "raw": "0.89", "tone": "green", "ai_note": "Tabelle EM/IV/Skew/GEX complete." },
+      "FeedSync":         { "raw": "OK",   "tone": "green", "ai_note": "Allineamento interno F3/F4." }
     }
   },
 
