@@ -139,43 +139,51 @@ function openF3DrawerPublic(d){
     scrollBox.addEventListener('scroll', ()=> updateHint(), { passive:true });
   }
 
-  // Post-mount: binding e attivazione iniziale
+// Post-mount: binding e attivazione iniziale (scoped)
 setTimeout(()=>{
+  const root = document.getElementById('f3-root');
+
+  // bind tabs (usa la versione già definita nel file)
   bindF3TabsPublic();
 
+  // tooltip "?" solo dentro al drawer F3
   if (window.__TradeliaUI?.bindMetricInfoButtons){
-    try { window.__TradeliaUI.bindMetricInfoButtons(document.getElementById('f3-scroll-desktop')); } catch(e){}
-    try { window.__TradeliaUI.bindMetricInfoButtons(document.getElementById('f3-scroll-mobile')); } catch(e){}
+    try { window.__TradeliaUI.bindMetricInfoButtons(root?.querySelector('#f3-scroll-desktop')); } catch(e){}
+    try { window.__TradeliaUI.bindMetricInfoButtons(root?.querySelector('#f3-scroll-mobile')); } catch(e){}
   }
 
-  // identico a F2: click sulla prima tab
-  const first = document.querySelector('[data-f3-tab="dataset"]');
+  // attiva la prima tab (dataset) dentro al root del drawer
+  const first = root?.querySelector('[data-f3-tab="dataset"]');
   if (first && typeof first.click === 'function') first.click();
 
-  // hint scroll mobile
+  // hint scroll mobile (scoped su root)
   (function initScrollableTabsHint(){
-    const scrollBox = document.querySelector('.f1b-footer-tabs-scroll');
-    const fadeRight = document.querySelector('.f1b-tabs-fade-right');
+    const scrollBox = root?.querySelector('.f1b-footer-tabs-scroll');
+    const fadeRight = root?.querySelector('.f1b-tabs-fade-right');
     if(!scrollBox || !fadeRight) return;
+
     const needsScroll = scrollBox.scrollWidth > scrollBox.clientWidth + 2;
     if(!needsScroll){
       fadeRight.style.display = 'none';
-      const fadeLeft = document.querySelector('.f1b-tabs-fade-left');
+      const fadeLeft = root?.querySelector('.f1b-tabs-fade-left');
       if(fadeLeft) fadeLeft.style.display = 'none';
       return;
     }
+
     const hintEl = fadeRight.querySelector('.f1b-tabs-scroll-hint');
     function updateHint(){
       const atEnd = scrollBox.scrollLeft + scrollBox.clientWidth >= scrollBox.scrollWidth - 4;
       if(hintEl) hintEl.style.opacity = atEnd ? '0' : '.9';
-      const fadeLeft = document.querySelector('.f1b-tabs-fade-left');
+      const fadeLeft = root?.querySelector('.f1b-tabs-fade-left');
       if(fadeLeft) fadeLeft.style.opacity = scrollBox.scrollLeft > 2 ? '.6' : '0';
     }
+
     updateHint();
-    scrollBox.addEventListener('scroll', ()=> updateHint(), { passive:true });
+    scrollBox.addEventListener('scroll', updateHint, { passive:true });
   })();
 }, 0);
 
+}
 
 function isMobileViewport(){ return window.matchMedia('(max-width: 767px)').matches; }
 
