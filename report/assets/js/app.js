@@ -202,10 +202,11 @@ async function loadManifest(reportId) {
 return {
   id: reportId,
   title: "Tradelia · Report Runtime",
-  order: ["F1B","F2","F3","F4","F5","F5B","F6","F7"], // +F7
+  order: ["F1B","F2","F30","F3","F4","F5","F5B","F6","F7"], // +F7
   modules: {
     "F1B": "f1b.json",
     "F2":  "f2.json",
+    "F3o":  "f3o.json",
     "F3":  "f3.json",
     "F4":  "f4.json",
     "F5":  "f5.json",
@@ -222,6 +223,7 @@ function getSectionSelectorForModule(modId) {
 
   if (upper === "F1A" || upper === "F1B") return "#sec-f1";
   if (upper === "F2")  return "#sec-f2";
+  if (upper === "F3o")  return "#sec-f3o";
   if (upper === "F3")  return "#sec-f3";
   if (upper === "F4")  return "#sec-f4";
   if (upper === "F5")  return "#sec-f5";
