@@ -1,7 +1,7 @@
 // /report/assets/js/modules/f3.js (rewritten)
 //
 // F3 · Analisi Tecnica MTF (3–10 giorni)
-// UI allineata a F1B/F2 con drawer/tabs "scoped" al root per evitare race
+// UI allineata a F1B/F2 con drawer/tabs "scoped" e delegation robusta
 //
 // Export:
 //   renderCard(rawData, ctx?) -> string HTML
@@ -80,18 +80,17 @@ export function bindCard(node, rawData, ctx = {}) {
   if (!node) return;
   const data = normalizeDataF3Public(rawData);
 
-  // Delegation: intercetta click su QUALSIASI discendente con l'attributo data-open-f3-details
+  // Delegation robusto per il bottone drawer (funziona anche su mobile)
   if (!node.__f3Delegated) {
     node.__f3Delegated = true;
     node.addEventListener('click', (ev) => {
       const btn = ev.target && ev.target.closest('[data-open-f3-details="true"]');
       if (!btn) return;
-      // apre il drawer in modo affidabile
       try { openF3DrawerPublic(data); } catch (e) { console.error('F3 drawer open error:', e); }
     }, { passive: true });
   }
 
-  // Tooltip "?" (safe-guard)
+  // Tooltip "?"
   if (window.__TradeliaUI?.bindMetricInfoButtons) {
     try { window.__TradeliaUI.bindMetricInfoButtons(node); } catch (_) {}
   }
@@ -116,7 +115,7 @@ function openF3DrawerPublic(d){
     footerTabs: []
   });
 
-  // hint scroll per tabs mobile
+  // hint scroll per tabs mobile (scoped)
   function initScrollableTabsHint(){
     const root = document.getElementById('f3-root');
     const scrollBox = root?.querySelector('.f1b-footer-tabs-scroll');
@@ -140,7 +139,7 @@ function openF3DrawerPublic(d){
     scrollBox.addEventListener('scroll', ()=> updateHint(), { passive:true });
   }
 
-  // Post-mount: scope binding e attivazione tab iniziale quando DOM è pronto
+  // Post-mount: binding e attivazione iniziale
   setTimeout(()=>{
     const root = document.getElementById('f3-root');
     bindF3TabsPublic(root);
@@ -151,8 +150,6 @@ function openF3DrawerPublic(d){
     }
 
     requestAnimationFrame(()=>{
-      const first = root?.querySelector('[data-f3-tab="dataset"]');
-      if (first && typeof first.click === 'function') first.click();
       initScrollableTabsHint();
     });
   }, 0);
@@ -359,8 +356,16 @@ ${drawerBtnF3('governance','Governance')}
 
 function renderF3MobileShell(sections){
   const pills = [
-    ['dataset','Dataset'],['w1','W1'],['d1','D1'],['h4','H4'],['h1','H1'],
-    ['options','Options'],['price','Price'],['patterns','Pattern'],['mtf','MTF'],['governance','Gov']
+    ['dataset','Dataset & Sync'],
+    ['w1','W1 Direz.'],
+    ['d1','D1 Swing'],
+    ['h4','H4 Valid.'],
+    ['h1','H1 Timing'],
+    ['options','Opzioni'],
+    ['price','Prezzo'],
+    ['patterns','Pattern'],
+    ['mtf','Sintesi MTF'],
+    ['governance','Governance']
   ].map(([k,l])=>mobileTabBtnF3(k,l)).join('');
 
   const mobileTabsBar = `
@@ -399,9 +404,9 @@ function mobileTabBtnF3(key,label){
   return `<button class="f1b-footer-tab-btn" data-f3-tab="${escapeAttr(key)}" style="flex:0 0 auto;white-space:nowrap;font-size:11px;line-height:1.2;font-weight:500;border-radius:999px;border:1px solid var(--br-soft);background:var(--surface-card);color:var(--muted);padding:.45rem .7rem;box-shadow:var(--shadow-card);min-width:max-content;">${escapeHtml(label)}</button>`;
 }
 
+// Delegation per le tab: una sola listener nello scope root
 function bindF3TabsPublic(root){
   const scope = root || document.getElementById('f3-root') || document;
-  const btns  = scope.querySelectorAll('[data-f3-tab]');
   const views = scope.querySelectorAll('[data-f3-view]');
   const desk  = scope.querySelector('#f3-scroll-desktop');
   const mob   = scope.querySelector('#f3-scroll-mobile');
@@ -409,12 +414,23 @@ function bindF3TabsPublic(root){
   function resetScroll(){ [desk, mob].forEach(el=>{ if(!el) return; el.scrollTop=0; el.scrollLeft=0; }); }
 
   function styleTabs(active){
-    btns.forEach(b=>{
+    scope.querySelectorAll('[data-f3-tab]').forEach(b=>{
       const on = b.getAttribute('data-f3-tab')===active;
       if (b.classList.contains('f1b-tab-btn')) b.classList.toggle('is-active', on);
       if (b.classList.contains('f1b-footer-tab-btn')){
-        if(on){ b.style.fontWeight='600'; b.style.border='1px solid var(--ink)'; b.style.background='radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--ink) 14%, transparent) 0%, transparent 60%), var(--surface-card-alt)'; b.style.color='var(--ink)'; b.style.boxShadow='0 4px 10px rgba(0,0,0,.18)'; }
-        else { b.style.fontWeight='500'; b.style.border='1px solid var(--br-soft)'; b.style.background='var(--surface-card)'; b.style.color='var(--muted)'; b.style.boxShadow='var(--shadow-card)'; }
+        if(on){
+          b.style.fontWeight='600';
+          b.style.border='1px solid var(--ink)';
+          b.style.background='radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--ink) 14%, transparent) 0%, transparent 60%), var(--surface-card-alt)';
+          b.style.color='var(--ink)';
+          b.style.boxShadow='0 4px 10px rgba(0,0,0,.18)';
+        } else {
+          b.style.fontWeight='500';
+          b.style.border='1px solid var(--br-soft)';
+          b.style.background='var(--surface-card)';
+          b.style.color='var(--muted)';
+          b.style.boxShadow='var(--shadow-card)';
+        }
       }
     });
   }
@@ -432,8 +448,20 @@ function bindF3TabsPublic(root){
     });
   }
 
-  function activate(k){ styleTabs(k); show(k);} 
-  btns.forEach(b=>{ if(b.__f3Bound) return; b.__f3Bound=true; b.addEventListener('click',()=>{ activate(b.getAttribute('data-f3-tab')); }); });
+  function activate(k){ styleTabs(k); show(k); }
+
+  if (!scope.__f3Delegation){
+    scope.__f3Delegation = true;
+    scope.addEventListener('click', (e)=>{
+      const btn = e.target.closest('[data-f3-tab]');
+      if (!btn || !scope.contains(btn)) return;
+      const k = btn.getAttribute('data-f3-tab');
+      if (k) activate(k);
+    }, { passive:true });
+  }
+
+  // attiva tab iniziale
+  activate('dataset');
 }
 
 /* -----------------------------------------------------------------------------
@@ -468,17 +496,46 @@ function metricBoxTrafficLightF3({ key, label, desc, metric }){
     </div>`;
 }
 
+// --- Smart render per evitare JSON raw nelle card ---
+function renderCompositeKV(obj){
+  const entries = Object.entries(obj||{});
+  if (!entries.length) return '<span class="text-[12px] text-[color:var(--muted)]">—</span>';
+  return `
+    <div class="grid grid-cols-3 gap-2 text-[12px]">
+      ${entries.map(([k,v])=>`
+        <div>
+          <div class="text-[10px] text-[color:var(--muted)]">${escapeHtml(String(k))}</div>
+          <div class="font-mono">${escapeHtml(String(v ?? '—'))}</div>
+        </div>
+      `).join('')}
+    </div>`;
+}
+
+function renderValueSmart(metricKey, metricObj){
+  const v = metricObj?.raw ?? metricObj;
+  if (metricKey==='COMP_MTF_info' && v && typeof v==='object') return renderCompositeKV(v);
+  if (metricKey==='PROB_info'     && v && typeof v==='object') return renderCompositeKV(v);
+  if (v === null || v === undefined) return '—';
+  if (Array.isArray(v))  return escapeHtml(JSON.stringify(v).slice(0,80)+(v.length>80?'…':''));
+  if (typeof v==='object'){
+    const s = JSON.stringify(v);
+    return `<code class="font-mono text-[12px]">${escapeHtml(s.length>100 ? s.slice(0,100)+'…' : s)}</code>`;
+  }
+  return escapeHtml(String(v));
+}
+
 function metricBlockF3(metricKey, title, desc, metricObj){
   const { textColor } = toneColorsF3(metricObj?.tone);
-  const value = formatMetricValue(metricObj);
+  const valueHtml = renderValueSmart(metricKey, metricObj);
   const bodyHtml = `
     <div class="flex items-start justify-between gap-2 mb-1">
       <div class="flex items-center gap-2">
-        <span class="font-mono font-bold text-[13px] leading-[1.4]" style="color:${textColor};">${value}</span>
+        <span class="font-mono font-bold text-[13px] leading-[1.4]" style="color:${textColor};"></span>
       </div>
       <button class="info-btn" data-metric="${escapeAttr(metricKey)}" aria-label="Info ${escapeAttr(metricKey)}">?</button>
     </div>
     ${ desc ? `<div class="text-[11px] leading-[1.3] text-[color:var(--muted)]">${escapeHtml(desc || '')}</div>` : ''}
+    <div class="mt-1">${valueHtml}</div>
     <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">${escapeHtml(metricObj?.ai_note || '')}</div>`;
   return f3Card({ tone: metricObj?.tone, title, bodyHtml, noteHtml: '' });
 }
@@ -576,7 +633,7 @@ function toneColorsF3(tone){
 function toneColorsCardF3(tone){
   const t = (tone||'').toLowerCase();
   if (t==='green' || t==='positive') return { dotColor:'var(--tone-pos-fg)', textColor:'var(--ink)', bgSoft:'color-mix(in oklab, var(--tone-pos-fg) 8%, var(--surface-card))', brColor:'color-mix(in oklab, var(--tone-pos-fg) 40%, var(--br-card))' };
-  if (t==='red' || t==='negative') return { dotColor:'var(--tone-neg-fg)', textColor:'var(--ink)', bgSoft:'color-mix(in oklab, var(--tone-neg-fg) 8%, var(--surface-card))', brColor:'color-mix(in oklab, var(--tone-neg-fg) 40%, var(--br-card))' };
+  if (t==='red' || t==='negative')   return { dotColor:'var(--tone-neg-fg)', textColor:'var(--ink)', bgSoft:'color-mix(in oklab, var(--tone-neg-fg) 8%, var(--surface-card))', brColor:'color-mix(in oklab, var(--tone-neg-fg) 40%, var(--br-card))' };
   if (t==='yellow' || t==='neutral') return { dotColor:'var(--tone-warn-fg)', textColor:'var(--ink)', bgSoft:'color-mix(in oklab, var(--tone-warn-fg) 8%, var(--surface-card))', brColor:'color-mix(in oklab, var(--tone-warn-fg) 40%, var(--br-card))' };
   return { dotColor:'var(--tone-neu-fg)', textColor:'var(--ink)', bgSoft:'var(--surface-card-alt)', brColor:'var(--br-card)' };
 }
