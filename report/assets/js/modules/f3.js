@@ -272,24 +272,16 @@ function buildF3SectionsPublic(d){
       </div>
     </section>`;
 
-  // 6) Options Overlay (da F2-Options)
-  const opt = d.options || {};
-  const optionsHTML = `
-    <section class="tl-panel-section" data-f3-section="options" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-      <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Options Overlay (F2‑Options)</div></header>
-      <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4]">
-        ${metricBlockF3('IV_info','IV (ATM)','', opt?.IV_ATM)}
-        ${metricBlockF3('IVR_info','IV rank/percentile','', opt?.IV_rank_pct)}
-        ${metricBlockF3('SKEW_info','Skew (25Δ) / ΔSkew','', opt?.Skew_set)}
-        ${metricBlockF3('OI_info','Open Interest / ΔOI','', opt?.OI_delta)}
-        ${metricBlockF3('PCR_info','Put/Call (Vol & OI)','', opt?.PutCall)}
-        ${metricBlockF3('GSR_info','Gamma/Vega (GSR)','', opt?.GSR_tkr)}
-        ${metricBlockF3('OPI_info','OPI (Options Pattern Index)','', opt?.OPI_tkr)}
-        ${metricBlockF3('DEALER_info','Dealer gamma regime','', opt?.DealerGamma)}
-        ${metricBlockF3('PAT_OPT_info','Options pattern','', opt?.OptionsPattern)}
-      </div>
-      ${headlineBlockCardF3('Nota derivati', opt?.ai_note)}
-    </section>`;
+ // 6) Options Overlay (presentational, multi-scheda)
+const opt = d.options || {};
+const optionsHTML = `
+  <section class="tl-panel-section" data-f3-section="options" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+    <header class="tl-panel-section-title">
+      <div class="tl-panel-section-title-text">Options Overlay (F2-Options)</div>
+    </header>
+    ${renderOptionsSectionPublic(opt)}
+  </section>`;
+
 
   // 7) Price History (60 sedute REG)
   const ph = d.price_history || {};
@@ -354,6 +346,142 @@ function buildF3SectionsPublic(d){
 /* -----------------------------------------------------------------------------
 // SHELL DESKTOP / MOBILE + TABS (scoped root id="f3-root")
 // -----------------------------------------------------------------------------*/
+// --- Options Overlay (presentational, nessun calcolo lato client) ---
+function renderOptionsSectionPublic(opt){
+  const o = opt || {};
+  const cards = [];
+
+  // KPI header
+  const kpi = `
+    <div class="grid gap-3 grid-cols-2 md:grid-cols-4">
+      ${metricBoxTrafficLightF3({ key:'IV_ATM',   label:'IV (ATM)',           desc:'vol implicita prox-ATM',   metric:o.IV_ATM })}
+      ${metricBoxTrafficLightF3({ key:'IV_rank',  label:'IV Rank / %tile',    desc:'posizione 1y',             metric:o.IV_rank_pct })}
+      ${metricBoxTrafficLightF3({ key:'PCR',      label:'Put/Call (Vol/OI)',  desc:'rapporto totale',          metric:o.PutCall })}
+      ${metricBoxTrafficLightF3({ key:'GSR',      label:'GSR (Γ/Vega)',       desc:'regime dealer (fornito)',  metric:o.GSR_tkr })}
+    </div>`;
+  cards.push(kpi);
+
+  // Expected Move table
+  const emRows = (o.EM_rows||[]).slice(0,8).map(r=>`
+    <tr>
+      <td>${escapeHtml(r.expiration||'')}</td>
+      <td class="text-right">${escapeHtml(r.dte)}</td>
+      <td class="text-right">${fmtPct(r.em_percent)}</td>
+      <td class="text-right">${fmtNum(r.upper)}</td>
+      <td class="text-right">${fmtNum(r.lower)}</td>
+      <td class="text-right">${fmtPct(r.iv_percent)}</td>
+    </tr>`).join('');
+  cards.push(
+    f3Card({ tone:'neutral', title:'Expected Move (scadenze chiave)', bodyHtml:`
+      <div class="overflow-auto" data-scrollable>
+        <table class="min-w-full text-[12px]">
+          <thead><tr>
+            <th class="text-left">Exp</th><th class="text-right">DTE</th>
+            <th class="text-right">EM%</th><th class="text-right">Upper</th>
+            <th class="text-right">Lower</th><th class="text-right">IV%</th>
+          </tr></thead>
+          <tbody>${emRows}</tbody>
+        </table>
+      </div>` })
+  );
+
+  // PCR breakdown
+  const pcr = o.PCR_breakdown || {};
+  const pcrRight = (pcr.by_expiry||[]).slice(0,4).map(x=>
+    `<div class="text-[12px] font-mono">${escapeHtml(x.exp)} · EM ${fmtPct(x.em)} · PCRv ${fmtNum(x.pcr_v)} · PCRoi ${fmtNum(x.pcr_oi)}</div>`
+  ).join('');
+  cards.push(
+    f3Card({ tone:'neutral', title:'Put/Call Breakdown', bodyHtml:`
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <div class="text-[10px] text-[color:var(--muted)] mb-1">Totali</div>
+          <div class="text-[12px] font-mono">Vol: ${fmtNum(pcr.total_vol)} · OI: ${fmtNum(pcr.total_oi)}</div>
+          <div class="text-[12px]">PCR Vol <b>${fmtNum(pcr.pcr_vol)}</b> · PCR OI <b>${fmtNum(pcr.pcr_oi)}</b></div>
+        </div>
+        <div>
+          <div class="text-[10px] text-[color:var(--muted)] mb-1">Per scadenza (top)</div>
+          ${pcrRight || '<div class="text-[12px] text-[color:var(--muted)]">—</div>'}
+        </div>
+      </div>` })
+  );
+
+  // GEX + Max Pain
+  const gex = o.GEX || {};
+  cards.push(
+    f3Card({ tone:'neutral', title:'Gamma Exposure & Max Pain', bodyHtml:`
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <div class="text-[12px]">Gamma Flip <b>${fmtNum(gex.gamma_flip)}</b></div>
+          <div class="text-[12px]">Regime <b>${escapeHtml(o.DealerGamma?.raw||'—')}</b></div>
+          <div class="text-[11px] text-[color:var(--muted)]">(dato fornito da GPT-S)</div>
+        </div>
+        <div>
+          <div class="text-[12px]">Max Pain <b>${fmtNum(o.MaxPain?.strike)}</b> (exp ${escapeHtml(o.MaxPain?.exp||'—')})</div>
+        </div>
+      </div>` })
+  );
+
+  // Skew 25Δ / RR
+  const skew = o.Skew_detail || {};
+  cards.push(
+    f3Card({ tone: skew.tone||o.Skew_set?.tone||'neutral', title:'Skew 25Δ / Risk Reversal', bodyHtml:`
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <div class="text-[12px]">25Δ Put − Call: <b>${fmtPct(skew.rr_25d)}</b></div>
+          <div class="text-[11px] text-[color:var(--muted)]">Fonte: chain/smile (dato già normalizzato)</div>
+        </div>
+        <div>
+          <div class="text-[12px]">Forma: <b>${escapeHtml(skew.shape||'—')}</b></div>
+          <div class="text-[11px] text-[color:var(--muted)]">${escapeHtml(o.ai_note_skew||'')}</div>
+        </div>
+      </div>` })
+  );
+
+  // Flow
+  const flow = o.Flow || {};
+  const flowTop = (flow.top||[]).slice(0,3).map(t=>
+    `<div class="text-[12px] font-mono">${escapeHtml(t.type)} ${fmtNum(t.strike)} · ${escapeHtml(t.exp)} · Δ ${escapeHtml(t.delta)} · prem. ${fmtUsd(t.premium)}</div>`
+  ).join('');
+  cards.push(
+    f3Card({ tone: flow.tone||'neutral', title:'Options Flow (istituzionali)', bodyHtml:`
+      <div class="grid grid-cols-2 gap-3">
+        <div>Net Sentiment: <b>${fmtUsd(flow.net_usd)}</b><br/>Delta Imbalance: <b>${fmtNum(flow.delta_imb)}</b></div>
+        <div>${flowTop || '<div class="text-[12px] text-[color:var(--muted)]">—</div>'}</div>
+      </div>` })
+  );
+
+  // Term Structure
+  cards.push(
+    f3Card({ tone:o.TermSlope?.tone||'neutral', title:'Term Structure & IV Slope', bodyHtml:`
+      <div class="grid grid-cols-2 gap-3">
+        <div><div class="text-[12px]">Slope: <b>${escapeHtml(o.TermSlope?.raw||'—')}</b></div>
+             <div class="text-[11px] text-[color:var(--muted)]">ATM IV front ↔ back (dato fornito)</div></div>
+        <div><div class="text-[11px] text-[color:var(--muted)]">${escapeHtml(o.TermNotes||'')}</div></div>
+      </div>` })
+  );
+
+  // GSR board
+  cards.push(
+    f3Card({ tone:o.GSR_tkr?.tone||'neutral', title:'Dealer Γ/Vega Board', bodyHtml:`
+      <div class="grid grid-cols-3 gap-3">
+        <div><div class="text-[10px] text-[color:var(--muted)]">Γ ATM</div><div class="font-mono text-[12px]">${escapeHtml(o.Gamma_ATM?.raw||'—')}</div></div>
+        <div><div class="text-[10px] text-[color:var(--muted)]">Vega ATM</div><div class="font-mono text-[12px]">${escapeHtml(o.Vega_ATM?.raw||'—')}</div></div>
+        <div><div class="text-[10px] text-[color:var(--muted)]">GSR</div><div class="font-mono text-[12px]">${escapeHtml(o.GSR_tkr?.raw||'—')}</div></div>
+      </div>
+      ${ o.ai_note_gsr ? `<div class="text-[11px] text-[color:var(--muted)] mt-1">${escapeHtml(o.ai_note_gsr)}</div>` : '' }` })
+  );
+
+  // Data gaps
+  if ((o.DataGaps||[]).length) cards.push(listBlockCardF3('Data gaps (Options)', o.DataGaps));
+
+  // AI summary
+  if (o.ai_note) cards.push(headlineBlockCardF3('AI Summary (Options)', o.ai_note));
+
+  return cards.join('');
+}
+
+
+
 function renderF3DesktopShell(sections){
   return `
     <div id="f3-root" class="f1b-panel-desktop" style="display:flex;flex-direction:row;gap:1rem;height:66vh;">
