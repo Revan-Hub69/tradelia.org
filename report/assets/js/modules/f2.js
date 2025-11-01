@@ -72,7 +72,6 @@ const kpis = [
 
           <div class="section-desc text-[12px] text-[color:var(--muted)] leading-[1.45] mt-1">
             ${escapeHtml(d.meta.hero_intro || 'Contesto sintetico non operativo su sentiment, fondamentali descrittivi e newsflow.')}<br/>
-            <span class="text-[11px] text-[color:var(--muted)]">Materiale educativo/informativo. Nessuna raccomandazione personale.</span>
           </div>
         </div>
       </header>
