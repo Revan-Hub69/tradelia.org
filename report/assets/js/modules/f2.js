@@ -24,11 +24,27 @@ export function renderCard(rawData, ctx = {}){
   const d = normalizeDataF2Public(rawData);
 
   // KPI HERO (leggibili)
-  const kpis = [
-    { key:"MacroGate", label:"MacroGate", desc:"", metric: d.step1?.MacroGate },
-    { key:"SentimentComposite", label:"Sentiment", desc:"", metric: d.sentiment_flows?.SentimentComposite },
-    { key:"ETF_FlowTone", label:"ETF Flussi", desc:"", metric: d.sentiment_flows?.ETF_FlowTone }
-  ];
+const kpis = [
+  {
+    key: "MacroGate",
+    label: "MacroGate",
+    desc: "Stato controlli (PASS / REVIEW / FAIL)",
+    metric: d.step1?.MacroGate
+  },
+  {
+    key: "SentimentComposite",
+    label: "Sentiment",
+    desc: "Composito ticker-level",
+    metric: d.sentiment_flows?.SentimentComposite
+  },
+  {
+    key: "ETF_FlowTone",
+    label: "ETF Flussi",
+    desc: "Bias flussi ETF (1M)",
+    metric: d.sentiment_flows?.ETF_FlowTone
+  }
+];
+
 
   const { toneLabel, toneColor } = toneFromMacroGate(d.step1?.MacroGate);
 
