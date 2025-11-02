@@ -1,9 +1,13 @@
 // /report/assets/js/app.js
-// Orchestratore runtime Tradelia AI — shell minimale (2025)
+// Orchestratore runtime Tradelia AI — versione con HEADER TICKER integrato (2025-11-02)
+// - Carica header.json => popola footer/title + monta HeaderTicker variante B (2 righe)
+// - Carica manifest.json => monta moduli F*
+// - Cache-buster da header.Version
 
 (function(){
   const ROOT = document.getElementById('app-root');
   let __versionQS = ""; // cache-buster, valorizzato dopo header.json
+  let __headerCache = null; // header.json in memoria
 
   // -----------------------------
   // Utils
@@ -14,6 +18,7 @@
     return await res.json();
   }
   async function safeImport(path){
+    // dinamic import con cache-buster
     return import(path + __versionQS);
   }
   function setText(id, val){
@@ -43,11 +48,57 @@
   }
 
   // -----------------------------
+  // HeaderTicker helpers
+  // -----------------------------
+  function ensureHeaderTickerSlot(){
+    let slot = document.getElementById('header-ticker-slot');
+    if (!slot){
+      // Se non esiste, creiamolo sopra ROOT
+      slot = document.createElement('div');
+      slot.id = 'header-ticker-slot';
+      slot.className = 'container';
+      slot.style.marginTop = '72px'; // header fixed 56px ⇒ evita overlap
+      ROOT?.parentNode?.insertBefore(slot, ROOT);
+    }
+    return slot;
+  }
+
+  async function mountHeaderTicker(header){
+    try{
+      const slot = ensureHeaderTickerSlot();
+      const { headerTicker } = await safeImport('/report/assets/js/components/header-ticker.js');
+      const node = headerTicker.mount(slot);
+
+      await headerTicker.update(node, {
+        Ticker:          header?.Ticker,
+        Venue:           header?.Venue,
+        CompanyName:     header?.CompanyName,
+        Price:           header?.Price,
+        ChangePct:       header?.ChangePct,
+        Currency:        header?.Currency,
+        Start:           header?.Start,
+        End:             header?.End,
+        FreshnessLabel:  header?.FreshnessLabel || header?.Freshness,
+        ConfidenceFinal: header?.ConfidenceFinal,
+        DataIntegrity:   header?.DataIntegrity,
+        FeedSync:        header?.FeedSync,
+        State:           header?.State,
+        Version:         header?.Version,
+        UpdatedAt:       header?.UpdatedAt
+      });
+    }catch(err){
+      console.warn('[HeaderTicker] non montato:', err);
+    }
+  }
+
+  // -----------------------------
   // Header/Footer info (da header.json)
   // -----------------------------
   async function mountHeaderFooter(reportId){
     try {
       const header = await fetchJSON(`/report/reports/${reportId}/header.json`);
+      __headerCache = header; // memorizza per HeaderTicker
+
       // cache-buster (se c'è una Version la usiamo per invalidare cache)
       __versionQS = header?.Version ? `?v=${encodeURIComponent(header.Version)}` : "";
 
@@ -56,6 +107,9 @@
       setText('footer-version', header?.Version || '—');
       setText('footer-snapshot', `${header?.Start ?? '—'} → ${header?.End ?? '—'}`);
       setText('footer-updated', fmtDate(header?.UpdatedAt));
+
+      // Monta HeaderTicker subito dopo aver letto l'header
+      await mountHeaderTicker(header);
     } catch(e){
       console.warn('Header/footer non disponibili:', e);
       __versionQS = ""; // fallback
@@ -100,7 +154,7 @@
           catch(e){ console.warn(`bindCard ${modId} errore:`, e); }
         }
 
-        // Tooltip metriche "?"
+        // Tooltip metriche "?" (dal runtime UI)
         try { window.__TradeliaUI?.bindMetricInfoButtons?.(wrap); } catch(e){}
       } catch(err){
         console.warn(`Modulo ${modId} non caricato:`, err);
