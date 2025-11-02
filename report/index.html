@@ -21,30 +21,12 @@
   <!-- Design system -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
 
+  <!-- Inline overrides ridotti al minimo: tutto il resto è nei token -->
   <style>
-    :root { --pop-w:320px; }
-
+    :root{ --pop-w:320px; }
     html, body { height: 100%; }
-    .container { max-width: 90rem; margin-inline: auto; padding: 0 16px; }
-
-    main { padding-top: 2.25rem; padding-bottom: 3rem; }
-    @media (min-width:1280px){
-      main { padding-top: 2.75rem; padding-bottom: 3.75rem; }
-    }
-
-    /* HEADER sticky glass */
-    .hdr{
-      backdrop-filter:saturate(1.1) blur(6px);
-      background:color-mix(in oklab, var(--surface-card) 90%, transparent);
-      border-bottom:1px solid var(--br-soft);
-      box-shadow:0 1px 0 var(--br-soft);
-    }
-    .brand{font-weight:900}
-    .claim{ font-size:12px; color:var(--muted); }
-
-    /* print-only nodes hidden onscreen */
-    #print-toc { display:none; }
-    #print-watermark { display:none; }
+    /* nodi solo stampa nascosti a schermo */
+    #print-toc, #print-watermark { display:none; }
   </style>
 </head>
 
@@ -60,10 +42,7 @@
         <a href="/" class="brand shrink-0 text-lg sm:text-xl tracking-tight hover:opacity-90 transition">
           <span class="text-[color:var(--ink)]">TRADELIA</span><span class="text-[color:var(--brand)]">&bull;AI</span>
         </a>
-
-        <span class="claim truncate text-[12px] text-[color:var(--muted)]">
-          Report {NOME AZIENDA}
-        </span>
+        <span class="claim truncate text-[12px] text-[color:var(--muted)]">Report {NOME AZIENDA}</span>
       </div>
 
       <!-- lato destro: azioni header -->
@@ -84,6 +63,9 @@
 
   <!-- MAIN -->
   <main class="container">
+    <!-- H1 a11y/print -->
+    <h1 class="sr-only print:block">Tradelia AI · Report <span id="sr-company">{NOME AZIENDA}</span></h1>
+
     <!-- HERO -->
     <section id="hero" class="hero" aria-label="Copertina Report">
       <div class="hero__top">
@@ -107,90 +89,78 @@
       </div>
 
       <!-- HERO KPI PILLS -->
-      <div class="hero__meta grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="hero__meta">
         <!-- SNAPSHOT -->
-        <div class="meta-pill relative" id="pill-snap"
-             style="background:var(--surface-card);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.75rem;">
-          <span class="tonebar" id="tone-snap"
-                style="position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:var(--radius-card) 0 0 var(--radius-card);"></span>
+        <div class="meta-pill relative" id="pill-snap">
+          <span class="tonebar" id="tone-snap"></span>
           <div class="min-w-0">
             <div class="flex items-start gap-1 mb-2">
               <button class="info-btn info-btn--mini" data-metric="Snapshot" aria-label="Info Snapshot">?</button>
-              <div class="meta-label text-[11px] uppercase tracking-wide font-semibold leading-[1.3] text-[color:var(--muted)]">Snapshot</div>
+              <div class="meta-label">Snapshot</div>
             </div>
-            <div class="meta-val text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]">
+            <div class="meta-val">
               <span id="hero-start">—</span><span>→</span><span id="hero-end">—</span>
             </div>
           </div>
         </div>
 
         <!-- PRICE -->
-        <div class="meta-pill relative" id="pill-price"
-             style="background:var(--surface-card);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.75rem;">
-          <span class="tonebar" id="tone-price"
-                style="position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:var(--radius-card) 0 0 var(--radius-card);"></span>
+        <div class="meta-pill relative" id="pill-price">
+          <span class="tonebar" id="tone-price"></span>
           <div class="min-w-0">
             <div class="flex items-start gap-1 mb-2">
               <button class="info-btn info-btn--mini" data-metric="Price" aria-label="Info Price">?</button>
-              <div class="meta-label text-[11px] uppercase tracking-wide font-semibold leading-[1.3] text-[color:var(--muted)]">Price</div>
+              <div class="meta-label">Price</div>
             </div>
-            <div class="meta-val text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]" id="hero-price2">—</div>
+            <div class="meta-val" id="hero-price2">—</div>
           </div>
         </div>
 
         <!-- Δ% -->
-        <div class="meta-pill relative" id="pill-chg"
-             style="background:var(--surface-card);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.75rem;">
-          <span class="tonebar" id="tone-chg"
-                style="position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:var(--radius-card) 0 0 var(--radius-card);"></span>
+        <div class="meta-pill relative" id="pill-chg">
+          <span class="tonebar" id="tone-chg"></span>
           <div class="min-w-0">
             <div class="flex items-start gap-1 mb-2">
               <button class="info-btn info-btn--mini" data-metric="ChangePct" aria-label="Info Δ%">?</button>
-              <div class="meta-label text-[11px] uppercase tracking-wide font-semibold leading-[1.3] text-[color:var(--muted)]">Δ%</div>
+              <div class="meta-label">Δ%</div>
             </div>
-            <div class="meta-val text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]" id="hero-change2">—</div>
+            <div class="meta-val" id="hero-change2">—</div>
           </div>
         </div>
 
         <!-- CCY -->
-        <div class="meta-pill relative" id="pill-ccy"
-             style="background:var(--surface-card);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.75rem;">
-          <span class="tonebar" id="tone-ccy"
-                style="position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:var(--radius-card) 0 0 var(--radius-card);"></span>
+        <div class="meta-pill relative" id="pill-ccy">
+          <span class="tonebar" id="tone-ccy"></span>
           <div class="min-w-0">
             <div class="flex items-start gap-1 mb-2">
               <button class="info-btn info-btn--mini" data-metric="Currency" aria-label="Info Currency">?</button>
-              <div class="meta-label text-[11px] uppercase tracking-wide font-semibold leading-[1.3] text-[color:var(--muted)]">Currency</div>
+              <div class="meta-label">Currency</div>
             </div>
-            <div class="meta-val text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]" id="hero-ccy">—</div>
+            <div class="meta-val" id="hero-ccy">—</div>
           </div>
         </div>
 
         <!-- FRESHNESS -->
-        <div class="meta-pill relative" id="pill-fresh"
-             style="background:var(--surface-card);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.75rem;">
-          <span class="tonebar" id="tone-fresh"
-                style="position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:var(--radius-card) 0 0 var(--radius-card);"></span>
+        <div class="meta-pill relative" id="pill-fresh">
+          <span class="tonebar" id="tone-fresh"></span>
           <div class="min-w-0">
             <div class="flex items-start gap-1 mb-2">
               <button class="info-btn info-btn--mini" data-metric="Freshness" aria-label="Info Freshness">?</button>
-              <div class="meta-label text-[11px] uppercase tracking-wide font-semibold leading-[1.3] text-[color:var(--muted)]">Freshness</div>
+              <div class="meta-label">Freshness</div>
             </div>
-            <div class="meta-val text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]" id="hero-freshness">—</div>
+            <div class="meta-val" id="hero-freshness">—</div>
           </div>
         </div>
 
         <!-- CONFIDENCE -->
-        <div class="meta-pill relative" id="pill-conf"
-             style="background:var(--surface-card);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.75rem;">
-          <span class="tonebar" id="tone-conf"
-                style="position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:var(--radius-card) 0 0 var(--radius-card);"></span>
+        <div class="meta-pill relative" id="pill-conf">
+          <span class="tonebar" id="tone-conf"></span>
           <div class="min-w-0">
             <div class="flex items-start gap-1 mb-2">
               <button class="info-btn info-btn--mini" data-metric="ConfidenceFinal" aria-label="Info Confidence">?</button>
-              <div class="meta-label text-[11px] uppercase tracking-wide font-semibold leading-[1.3] text-[color:var(--muted)]">Confidence</div>
+              <div class="meta-label">Confidence</div>
             </div>
-            <div class="meta-val text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]" id="hero-confidence">—</div>
+            <div class="meta-val" id="hero-confidence">—</div>
           </div>
         </div>
       </div> <!-- /hero__meta -->
@@ -250,104 +220,103 @@
     </section>
   </main>
 
-<div class="footer-wrap mt-12">
-  <footer class="site-footer container py-8">
-    <!-- GRID 4 COLONNE -->
-    <section class="ftr-grid">
+  <div class="footer-wrap mt-12">
+    <footer class="site-footer container py-8">
+      <!-- GRID 4 COLONNE -->
+      <section class="ftr-grid">
 
-      <!-- COL 1 · Report meta -->
-      <div class="ftr-col">
-        <h3 class="ftr-head"><i data-lucide="file-text"></i><span>Report</span></h3>
-        <div class="ftr-body">
-          <div class="text-[13.5px] font-semibold">
-            TRADELIA<span class="text-[color:var(--brand)]">&bull;AI</span>
-          </div>
-          <div class="ftr-meta mt-2">
-            <div class="row"><span class="k">Società</span><span class="v" id="footer-company">{NOME AZIENDA}</span></div>
-            <div class="row"><span class="k">Versione</span><span class="v" id="footer-version">—</span></div>
-            <div class="row"><span class="k">Finestra</span><span class="v" id="footer-snapshot">—</span></div>
-            <div class="row"><span class="k">Aggiornato</span><span class="v" id="footer-updated">—</span></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- COL 2 · Fonti dati -->
-      <div class="ftr-col">
-        <h3 class="ftr-head"><i data-lucide="database"></i><span>Fonti dati</span></h3>
-        <div class="ftr-body">
-          Metriche e serie storiche da provider macro/finanziari ritenuti affidabili.
-          Campioni e timestamp possono essere soggetti a ritardi/revisioni.
-          <ul class="ftr-list">
-            <li>Bloomberg · Reuters · CME</li>
-            <li>FRED · World Bank · IMF</li>
-            <li>Metodologia documentata nei moduli F*</li>
-          </ul>
-          <div class="mt-2">Marchi citati © dei rispettivi titolari. Uso didattico.</div>
-        </div>
-      </div>
-
-      <!-- COL 3 · Compliance & Risk -->
-      <div class="ftr-col">
-        <h3 class="ftr-head"><i data-lucide="shield"></i><span>Compliance & Risk</span></h3>
-        <div class="ftr-body">
-          Materiale informativo/educativo: non è consulenza personalizzata né
-          sollecitazione (MiFID II / ESMA). Tradelia AI non gestisce capitali e non esegue ordini.
-          <ul class="ftr-list">
-            <li>Rischio di perdita anche totale del capitale</li>
-            <li>Nessuna profilazione pubblicitaria</li>
-          </ul>
-          <div class="mt-3 flex flex-wrap gap-6 noprint">
-            <button class="btn btn-sm" id="btn-privacy-open" type="button">Privacy</button>
-            <button class="btn btn-sm" id="btn-mifid-open" type="button">Informativa MiFID</button>
+        <!-- COL 1 · Report meta -->
+        <div class="ftr-col">
+          <h3 class="ftr-head"><i data-lucide="file-text"></i><span>Report</span></h3>
+          <div class="ftr-body">
+            <div class="text-[13.5px] font-semibold">
+              TRADELIA<span class="text-[color:var(--brand)]">&bull;AI</span>
+            </div>
+            <div class="ftr-meta mt-2">
+              <div class="row"><span class="k">Società</span><span class="v" id="footer-company">{NOME AZIENDA}</span></div>
+              <div class="row"><span class="k">Versione</span><span class="v" id="footer-version">—</span></div>
+              <div class="row"><span class="k">Finestra</span><span class="v" id="footer-snapshot">—</span></div>
+              <div class="row"><span class="k">Aggiornato</span><span class="v" id="footer-updated">—</span></div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- COL 4 · Canali ufficiali -->
-      <div class="ftr-col">
-        <h3 class="ftr-head"><i data-lucide="share-2"></i><span>Canali ufficiali</span></h3>
-        <div class="ftr-body">
-          Aggiornamenti su metodologia, release e contenuti educativi.
-          <div class="ftr-socials">
-            <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn">
-              <i data-lucide="linkedin"></i><span>LinkedIn</span>
-            </a>
-            <a href="https://x.com" target="_blank" rel="noopener" aria-label="X">
-              <i data-lucide="twitter"></i><span>X</span>
-            </a>
-           <a href="https://www.reddit.com" target="_blank" rel="noopener" aria-label="Reddit">
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-       viewBox="0 0 24 24" fill="none"
-       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-       class="lucide lucide-reddit">
-    <circle cx="9" cy="13" r="1.5"></circle>
-    <circle cx="15" cy="13" r="1.5"></circle>
-    <path d="M12 17c1.7 0 3-1.3 3-3"></path>
-    <path d="M20 12c0 4.4-3.6 8-8 8s-8-3.6-8-8 3.6-8 8-8c1.6 0 3.1.5 4.4 1.3"></path>
-    <circle cx="19" cy="5" r="1"></circle>
-    <path d="M15 7l1-5 2 1"></path>
-  </svg>
-  <span>Reddit</span>
-</a>
-
-            <a href="https://www.quora.com" target="_blank" rel="noopener" aria-label="Quora">
-              <i data-lucide="book"></i><span>Quora</span>
-            </a>
+        <!-- COL 2 · Fonti dati -->
+        <div class="ftr-col">
+          <h3 class="ftr-head"><i data-lucide="database"></i><span>Fonti dati</span></h3>
+          <div class="ftr-body">
+            Metriche e serie storiche da provider macro/finanziari ritenuti affidabili.
+            Campioni e timestamp possono essere soggetti a ritardi/revisioni.
+            <ul class="ftr-list">
+              <li>Bloomberg · Reuters · CME</li>
+              <li>FRED · World Bank · IMF</li>
+              <li>Metodologia documentata nei moduli F*</li>
+            </ul>
+            <div class="mt-2">Marchi citati © dei rispettivi titolari. Uso didattico.</div>
           </div>
-          <div class="mt-2 text-[11.5px] text-[color:var(--muted)]">Sostituisci con URL ufficiali Tradelia AI.</div>
         </div>
-      </div>
-    </section>
 
-    <!-- BOTTOM LINE -->
-    <div class="ftr-bottom">
-      <div>© <span id="footer-year"></span> <span class="ftr-brand">Tradelia AI</span>. Tutti i diritti riservati.
-        Contatti: <a href="mailto:info@tradelia.org" class="underline hover:opacity-80 text-[color:var(--ink)]">info@tradelia.org</a>
+        <!-- COL 3 · Compliance & Risk -->
+        <div class="ftr-col">
+          <h3 class="ftr-head"><i data-lucide="shield"></i><span>Compliance & Risk</span></h3>
+          <div class="ftr-body">
+            Materiale informativo/educativo: non è consulenza personalizzata né
+            sollecitazione (MiFID II / ESMA). Tradelia AI non gestisce capitali e non esegue ordini.
+            <ul class="ftr-list">
+              <li>Rischio di perdita anche totale del capitale</li>
+              <li>Nessuna profilazione pubblicitaria</li>
+            </ul>
+            <div class="mt-3 flex flex-wrap gap-6 noprint">
+              <button class="btn btn-sm" id="btn-privacy-open" type="button">Privacy</button>
+              <button class="btn btn-sm" id="btn-mifid-open" type="button">Informativa MiFID</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- COL 4 · Canali ufficiali -->
+        <div class="ftr-col">
+          <h3 class="ftr-head"><i data-lucide="share-2"></i><span>Canali ufficiali</span></h3>
+          <div class="ftr-body">
+            Aggiornamenti su metodologia, release e contenuti educativi.
+            <div class="ftr-socials">
+              <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn">
+                <i data-lucide="linkedin"></i><span>LinkedIn</span>
+              </a>
+              <a href="https://x.com" target="_blank" rel="noopener" aria-label="X">
+                <i data-lucide="twitter"></i><span>X</span>
+              </a>
+              <a href="https://www.reddit.com" target="_blank" rel="noopener" aria-label="Reddit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                     viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="lucide lucide-reddit">
+                  <circle cx="9" cy="13" r="1.5"></circle>
+                  <circle cx="15" cy="13" r="1.5"></circle>
+                  <path d="M12 17c1.7 0 3-1.3 3-3"></path>
+                  <path d="M20 12c0 4.4-3.6 8-8 8s-8-3.6-8-8 3.6-8 8-8c1.6 0 3.1.5 4.4 1.3"></path>
+                  <circle cx="19" cy="5" r="1"></circle>
+                  <path d="M15 7l1-5 2 1"></path>
+                </svg>
+                <span>Reddit</span>
+              </a>
+              <a href="https://www.quora.com" target="_blank" rel="noopener" aria-label="Quora">
+                <i data-lucide="book"></i><span>Quora</span>
+              </a>
+            </div>
+            <div class="mt-2 text-[11.5px] text-[color:var(--muted)]">Sostituisci con URL ufficiali Tradelia AI.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BOTTOM LINE -->
+      <div class="ftr-bottom">
+        <div>© <span id="footer-year"></span> <span class="ftr-brand">Tradelia AI</span>. Tutti i diritti riservati.
+          Contatti: <a href="mailto:info@tradelia.org" class="underline hover:opacity-80 text-[color:var(--ink)]">info@tradelia.org</a>
+        </div>
+        <div><span class="ftr-brand">Missione:</span> alfabetizzazione finanziaria indipendente.</div>
       </div>
-      <div><span class="ftr-brand">Missione:</span> alfabetizzazione finanziaria indipendente.</div>
-    </div>
-  </footer>
-</div>
+    </footer>
+  </div>
 
 
   <!-- PANEL OVERLAY (analitico: F1B, Audit, ecc.) -->
@@ -438,14 +407,14 @@
 
   <!-- TOOLTIP DESKTOP -->
   <div id="metric-popover" class="tl-popover noprint" role="tooltip" aria-hidden="true" style="max-width:320px;">
-    <div class="tl-popover__head" style="display:flex;align-items:flex-start;gap:.5rem;">
-      <button id="metric-popover-close" class="tl-popover__close" aria-label="Chiudi" style="order:0;flex-shrink:0;">
+    <div class="tl-popover__head">
+      <button id="metric-popover-close" class="tl-popover__close" aria-label="Chiudi">
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
-      <div id="metric-popover-title" class="tl-popover__title" style="order:1;font-weight:600;font-size:14px;line-height:1.4;color:var(--ink);">—</div>
+      <div id="metric-popover-title" class="tl-popover__title">—</div>
     </div>
     <div id="metric-popover-body" class="tl-popover__body">—</div>
     <div id="metric-popover-source" class="tl-popover__source">—</div>
