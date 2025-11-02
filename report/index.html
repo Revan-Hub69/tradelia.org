@@ -6,75 +6,82 @@
   <meta name="color-scheme" content="dark" />
   <title>Tradelia · Institutional Report</title>
   <link rel="icon" href="./favicon.ico">
-  <link rel="stylesheet" href="./assets/css/tokens.css?v=2.4" />
+  <link rel="stylesheet" href="./assets/css/tokens.css?v=2.6" />
 </head>
 <body>
-  <!-- HEADER (brand) -->
+  <!-- HEADER (brand pro) -->
   <header class="site-header" role="banner">
     <div class="header-inner" aria-label="Barra di navigazione">
       <a class="brand" href="./" aria-label="Tradelia AI Home">
-        <span class="brand-mark" aria-hidden="true">◆</span>
-        TRADELIA•AI
+        <svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
+          <defs><linearGradient id="tg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#6EA8FF"/><stop offset="1" stop-color="#3D7CFF"/></linearGradient></defs>
+          <path d="M16 2l9 3v8c0 6.6-4.5 12.4-9 14-4.5-1.6-9-7.4-9-14V5l9-3z"
+                fill="url(#tg)" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+          <path d="M16 9l4 4-4 4-4-4 4-4z" fill="#0E1420" opacity=".9"/>
+          <circle cx="16" cy="13" r="1.4" fill="#9EC0FF"/>
+        </svg>
+        <span class="wordmark">TRADELIA<span class="dot">•</span>AI</span>
       </a>
       <div class="spacer" aria-hidden="true"></div>
-      <!-- (nessun pulsante globale per ora) -->
     </div>
   </header>
 
-<section id="hero" class="hero" role="region" aria-label="Header ticker">
-  <div class="hero-head">
-    <div class="hero-title" id="hero-title">Report</div>
-    <div class="hero-sub" id="hero-sub"></div>
-  </div>
+  <!-- HERO / HEADER TICKER -->
+  <section id="hero" class="hero" role="region" aria-label="Header ticker">
+    <div class="hero-head">
+      <div class="hero-title" id="hero-title">Report</div>
+      <div class="hero-sub" id="hero-sub"></div>
+    </div>
 
-  <!-- Confidence meter -->
-  <div class="hero-meter">
-    <div class="meter-head">
-      <div class="meter-left">
-        <span class="meter-label">Confidence</span>
-        <button class="info-btn" data-info="ConfidenceFinal" aria-label="Cosa significa Confidence?">?</button>
+    <!-- Confidence meter -->
+    <div class="hero-meter">
+      <div class="meter-head">
+        <div class="meter-left">
+          <span class="meter-label">Confidence</span>
+          <button class="info-btn" data-info="ConfidenceFinal" aria-label="Cosa significa Confidence?">?</button>
+        </div>
+        <div class="meter-right"><span id="hero-conf-val" class="tabular">—</span></div>
       </div>
-      <div class="meter-right"><span id="hero-conf-val" class="tabular">—</span></div>
+      <div class="meter-track" role="progressbar" aria-label="Confidence"
+           aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div id="hero-meter-fill" class="meter-fill"></div>
+        <div class="meter-tick" data-x="0"></div>
+        <div class="meter-tick" data-x="65" aria-label="Review"></div>
+        <div class="meter-tick" data-x="85" aria-label="Pass"></div>
+        <div class="meter-tick" data-x="100"></div>
+      </div>
     </div>
-    <div class="meter-track" role="progressbar" aria-label="Confidence"
-         aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-      <div id="hero-meter-fill" class="meter-fill"></div>
-      <div class="meter-tick" data-x="0"></div>
-      <div class="meter-tick" data-x="65" aria-label="Review"></div>
-      <div class="meter-tick" data-x="85" aria-label="Pass"></div>
-      <div class="meter-tick" data-x="100"></div>
+
+    <!-- Main row -->
+    <div class="hero-main">
+      <div class="hero-price">
+        <span class="big tabular" id="hero-price">—</span>
+        <span class="ccy" id="hero-ccy"></span>
+        <button class="info-btn" data-info="Price_info" aria-label="Che prezzo mostriamo?">?</button>
+      </div>
+      <div class="hero-right">
+        <span class="delta-chip" id="hero-delta"></span>
+        <button class="info-btn" data-info="ChangePct_info" aria-label="Come calcoliamo la Δ%?">?</button>
+        <span class="badge" id="hero-state"></span>
+        <button class="info-btn" data-info="State_info" aria-label="Cosa significa lo stato?">?</button>
+      </div>
     </div>
-  </div>
 
-  <!-- Valore principale -->
-  <div class="hero-main">
-    <div class="hero-price">
-      <span class="big tabular" id="hero-price">—</span>
-      <span class="ccy" id="hero-ccy"></span>
-      <button class="info-btn" data-info="Price_info" aria-label="Cosa indica il prezzo?">?</button>
+    <!-- KPI pills -->
+    <div class="hero-kpi" id="hero-kpi"></div>
+
+    <!-- Disclaimer -->
+    <div class="hero-note" id="hero-note">
+      Materiale informativo/educativo. Nessuna raccomandazione personale (MiFID II).
     </div>
-    <div class="hero-right">
-      <span class="delta-chip" id="hero-delta"></span>
-      <button class="info-btn" data-info="ChangePct_info" aria-label="Cosa indica la variazione percentuale?">?</button>
-      <span class="badge" id="hero-state"></span>
-      <button class="info-btn" data-info="State_info" aria-label="Cosa significa lo stato?">?</button>
-    </div>
-  </div>
+  </section>
 
-  <!-- KPI pills -->
-  <div class="hero-kpi" id="hero-kpi"></div>
-
-  <!-- Nota -->
-  <div class="hero-note" id="hero-note">
-    Materiale informativo/educativo. Nessuna raccomandazione personale (MiFID II).
-  </div>
-</section>
-
-  <!-- SEPARATORE FRA HEADER TICKER E SCHEDE -->
+  <!-- separatore -->
   <div class="section-divider" role="separator" aria-label="Inizio schede"></div>
 
-  <!-- SCHEDE / MODULI -->
-  <main id="modules" class="modules-grid" role="main" aria-label="Schede analitiche">
+  <!-- MODULI -->
+  <main id="modules" class="modules-grid" role="main">
     <article id="sec-f1b" class="report-section" data-card="F1B"></article>
     <article id="sec-f2"  class="report-section" data-card="F2"></article>
     <article id="sec-f3"  class="report-section" data-card="F3"></article>
@@ -109,9 +116,7 @@
         <button class="btn btn-ghost" data-legal-close aria-label="Chiudi informativa">✕</button>
       </header>
       <div id="legal-body" class="panel-body" data-scrollable></div>
-      <footer class="panel-foot">
-        <button class="btn" data-legal-close>OK</button>
-      </footer>
+      <footer class="panel-foot"><button class="btn" data-legal-close>OK</button></footer>
     </section>
   </div>
 
@@ -126,7 +131,7 @@
     </div>
   </footer>
 
-  <script type="module" src="./assets/js/ui-runtime.js?v=2.4"></script>
-  <script type="module" src="./assets/js/app.js?v=2.4"></script>
+  <script type="module" src="./assets/js/ui-runtime.js?v=2.6"></script>
+  <script type="module" src="./assets/js/app.js?v=2.6"></script>
 </body>
 </html>
