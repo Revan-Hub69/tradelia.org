@@ -508,114 +508,129 @@
     "source": "Obstfeld, M., & Rogoff, K. (1996), *Foundations of International Macroeconomics*, MIT Press."
   },
   
-  "F3O_IV_ATM_info": {
+"F3O_IV_ATM_info": {
     "title": "IV (ATM)",
-    "what": "Volatilità implicita delle opzioni at-the-money (proxy ~30 giorni).",
-    "how": "Misura l’aspettativa di variabilità dei prezzi incorporata nei premi; utile per confrontare il costo della protezione nel breve.",
-    "source": "Hull (Options, Futures & Other Derivatives); Carr & Wu (2006) volatility risk premia."
+    "what": "Volatilità implicita delle opzioni più vicine al prezzo corrente del titolo.",
+    "how": "Misura l’oscillazione attesa dei prezzi incorporata nei premi delle opzioni. Valori elevati indicano attese di movimento o incertezza, valori bassi stabilità.",
+    "source": "Hull, J.C. (2018) *Options, Futures, and Other Derivatives*, Pearson; CBOE Volatility Primer (2020)."
   },
+
   "F3O_IVRank_info": {
     "title": "IV Rank / Percentile",
-    "what": "Posizione dell’IV corrente rispetto al range/percentile dell’ultimo anno.",
-    "how": "Valori bassi indicano premi relativamente compressi; valori alti premi espansi rispetto alla storia recente.",
-    "source": "Practitioner methods on IV rank/percentile; CBOE whitepapers."
+    "what": "Posizione della volatilità implicita attuale rispetto alla sua distribuzione storica (1 anno).",
+    "how": "Serve per valutare se i premi sono elevati o contenuti rispetto al passato. IV Rank alto = opzioni costose; basso = opzioni a premio ridotto.",
+    "source": "CBOE Education Series; VIX & Implied Volatility Research (Whaley, 2009)."
   },
+
   "F3O_GSR_info": {
     "title": "GSR (Γ/Vega)",
-    "what": "Rapporto tra Gamma e Vega su un paniere/tenor rappresentativo.",
-    "how": "GSR < 0 spesso associato a dealer short gamma (maggiore sensitività intraday), GSR > 0 a contesti più stabili.",
-    "source": "Options microstructure; Andersen, Fusari & Todorov (2015) volatility risk."
+    "what": "Rapporto tra Gamma e Vega, due sensibilità chiave delle opzioni.",
+    "how": "Gamma misura la reattività al prezzo, Vega alla volatilità. Un GSR negativo segnala dealer più esposti a movimenti di prezzo (short gamma).",
+    "source": "Andersen, T.G., Fusari, N. & Todorov, V. (2015) *The Risk Premia Embedded in Index Options*, Journal of Financial Economics."
   },
+
   "F3O_Dealer_info": {
     "title": "Dealer Regime",
-    "what": "Stima del posizionamento gamma dei dealer (long/short).",
-    "how": "Inferito da GEX/flow: short gamma → amplificazione dei movimenti; long gamma → smorzamento.",
-    "source": "Market-making hedging dynamics (gamma exposure) – practitioner literature."
+    "what": "Indica se i dealer sono posizionati in long o short gamma.",
+    "how": "In short gamma, i dealer tendono ad amplificare i movimenti; in long gamma li attenuano. È un indicatore del potenziale di volatilità intraday.",
+    "source": "Ni, S.X. (2008) *Stock Option Returns and the Pricing of Liquidity Risk*, Journal of Financial Economics; CBOE research notes."
   },
+
   "F3O_EM_TOGGLE_info": {
     "title": "Toggle EM % / $",
-    "what": "Cambio unità del Range Atteso (Expected Move) tra percentuale e dollari.",
-    "how": "EM% = variazione attesa relativa; EM$ = EM% × spot. Serve per leggere la stessa informazione in unità operative diverse.",
-    "source": "Options pricing heuristics; CBOE EM methodology (practitioner)."
+    "what": "Conversione del movimento atteso (Expected Move) tra valore percentuale e valore monetario.",
+    "how": "L’Expected Move deriva dalla volatilità implicita: rappresenta la variazione che il mercato si attende entro la scadenza considerata.",
+    "source": "CBOE (2022) *Expected Move Methodology*; Hull (2018)."
   },
+
   "F3O_TermSlope_info": {
-    "title": "Term Structure · Slope",
-    "what": "Pendenza della curva di IV tra scadenze (es. 1M→3M).",
-    "how": "Contango (slope positivo) tipico di regimi più calmi; backwardation (negativo) associata a stress/event risk.",
-    "source": "Term structure of implied volatility – academic & CBOE notes."
+    "title": "Curva IV · Pendenza (Slope)",
+    "what": "Misura la variazione della volatilità implicita lungo le scadenze.",
+    "how": "Un profilo crescente (contango) indica normalità e fiducia; un profilo decrescente (backwardation) segnala tensione o rischio evento.",
+    "source": "Carr, P. & Wu, L. (2006) *Stochastic Skew in Currency Options*, Journal of Financial Economics."
   },
+
   "F3O_RR25_info": {
     "title": "Skew · RR 25Δ",
-    "what": "Risk Reversal 25-delta: differenza IV tra call 25Δ e put 25Δ.",
-    "how": "Valori negativi → put più care (coperture downside); positivi → call wing più cara (upside chase).",
-    "source": "Derman (1999) smile/skew; FX options literature su risk reversals."
+    "what": "Differenza di volatilità implicita tra call e put con delta ±25.",
+    "how": "Valori negativi (put più care) riflettono ricerca di copertura; positivi (call più care) euforia o interesse speculativo sull’upside.",
+    "source": "Derman, E. (1999) *Regimes of Volatility*, Risk Magazine; academic FX options literature su risk reversals."
   },
+
   "F3O_PCR_Vol_info": {
-    "title": "PCR (Volumi)",
-    "what": "Rapporto put/call calcolato sui volumi scambiati.",
-    "how": "PCR < 1 indica prevalenza di call nel flusso; PCR > 1 prevalenza di put. Lettura di breve, non definitiva.",
-    "source": "Put/Call ratio – sentiment indicator (CBOE)."
+    "title": "Put/Call (Volumi)",
+    "what": "Rapporto tra volumi di put e call negoziati.",
+    "how": "Misura il tono tattico del mercato: >1 prevale copertura (put); <1 prevale speculazione rialzista (call).",
+    "source": "CBOE (2021) *Put/Call Ratio Research & Data Guide*."
   },
+
   "F3O_PCR_OI_info": {
-    "title": "PCR (Open Interest)",
-    "what": "Rapporto put/call sull’open interest (posizioni aperte).",
-    "how": "Fotografa posizionamento più lento/strutturale rispetto al volume giornaliero.",
-    "source": "CBOE data guides; practitioner use of OI."
+    "title": "Put/Call (Open Interest)",
+    "what": "Rapporto tra posizioni aperte su put e call.",
+    "how": "Evidenzia il posizionamento strutturale nel mercato delle opzioni; utile per interpretare il sentiment di fondo.",
+    "source": "CBOE Options Institute; Whaley (2009) *Understanding VIX*."
   },
+
   "F3O_PCR_byExp_info": {
     "title": "PCR per Scadenza",
-    "what": "Breakdown di EM/PCR per singole expiry.",
-    "how": "Evidenzia dove si concentra la domanda di copertura/speculazione lungo la curva delle scadenze.",
-    "source": "Options positioning analytics – practitioner."
+    "what": "Breakdown del Put/Call ratio per singola scadenza.",
+    "how": "Permette di individuare su quali expiry si concentrano coperture o scommesse speculative.",
+    "source": "CBOE data methodology; practitioner adaptation in institutional flow analysis."
   },
+
   "F3O_GammaFlip_info": {
     "title": "Gamma Flip",
     "what": "Livello di prezzo in cui la gamma netta del mercato cambia segno.",
-    "how": "Sotto il flip (short gamma) i dealer tendono ad inseguire il movimento; sopra (long gamma) lo smorzano.",
-    "source": "GEX/Dealer positioning literature (practitioner)."
+    "how": "Sotto questo livello i dealer sono short gamma (mercato più instabile), sopra sono long gamma (mercato più bilanciato).",
+    "source": "Andersen, Fusari & Todorov (2015); CBOE dealer positioning research."
   },
+
   "F3O_DealerRegime_info": {
     "title": "Dealer Regime (Gamma)",
-    "what": "Riepilogo del regime gamma dealer su orizzonti chiave.",
-    "how": "Conferma/integrazione del segnale GEX/flip su front-month e mensile.",
-    "source": "Market microstructure & hedging mechanics."
+    "what": "Riepilogo del posizionamento gamma aggregato dei dealer.",
+    "how": "Conferma se il mercato tende ad amplificare o smorzare i movimenti di prezzo.",
+    "source": "Market microstructure e analisi di gamma exposure (CBOE, 2021)."
   },
+
   "F3O_MaxPain_info": {
     "title": "Max Pain",
-    "what": "Strike a somma di payoff minima per i detentori di opzioni alla scadenza.",
-    "how": "Indicatore descrittivo; può agire da “attrattore” in prossimità della expiry ma non è regola deterministica.",
-    "source": "Max pain heuristic – practitioner notes."
+    "what": "Livello teorico di prezzo che minimizza il valore delle opzioni a scadenza.",
+    "how": "È una stima puramente descrittiva dell’area in cui il maggior numero di opzioni scadrebbe senza valore.",
+    "source": "Academic overview in option expiry effects; practitioner methodology (CBOE data)."
   },
+
   "F3O_GammaATM_info": {
     "title": "Γ ATM",
-    "what": "Gamma aggregata area at-the-money.",
-    "how": "Misura la sensitività locale del delta; più alta ⇒ potenziale maggiore reattività del hedging.",
-    "source": "Option Greeks (Hull); dealer hedging dynamics."
+    "what": "Gamma aggregata delle opzioni at-the-money.",
+    "how": "Quantifica la sensibilità complessiva del mercato a piccoli movimenti di prezzo; valori elevati indicano potenziale reattività dei dealer.",
+    "source": "Hull (2018) *Options, Futures and Other Derivatives*."
   },
+
   "F3O_VegaATM_info": {
     "title": "Vega ATM",
-    "what": "Vega aggregata area at-the-money.",
-    "how": "Sensitività del valore opzione a variazioni di IV; utile per capire il rischio ‘vol’ implicito.",
-    "source": "Option Greeks (Hull)."
+    "what": "Vega aggregata delle opzioni at-the-money.",
+    "how": "Misura quanto cambia il valore complessivo delle opzioni se la volatilità implicita varia di 1 punto percentuale.",
+    "source": "Hull (2018); academic option Greeks literature."
   },
+
   "F3O_FlowNet_info": {
-    "title": "Options Flow · Net $",
-    "what": "Stima netta in dollari dei flussi su call/put rilevanti.",
-    "how": "Sintetizza pressione di acquisto/vendita su strike/expiry dominanti; lettura descrittiva, non causale.",
-    "source": "Tape reading opzioni/‘top prints’ – practitioner."
+    "title": "Flussi netti ($)",
+    "what": "Saldo netto tra acquisti e vendite di opzioni espresso in valore monetario.",
+    "how": "Flusso positivo = domanda di rischio (acquisti di call); negativo = copertura o vendita di volatilità.",
+    "source": "CBOE Market Data Research; Lee & Ready (1991) *Trade Classification Algorithm*, Journal of Finance."
   },
+
   "F3O_DeltaImb_info": {
     "title": "Δ Imbalance",
-    "what": "Squilibrio di delta tra acquisti/vendite su opzioni significative.",
-    "how": "Segno/ampiezza indicano bias direzionale del flusso; utile insieme a net $ e contesto gamma.",
-    "source": "Order-flow imbalance literature; practitioner analytics."
+    "what": "Squilibrio di delta tra ordini di acquisto e vendita di opzioni.",
+    "how": "Serve a stimare il bias direzionale del flusso: delta positivo → propensione rialzista; negativo → difensiva.",
+    "source": "Hasbrouck, J. (2007) *Empirical Market Microstructure*; institutional flow studies."
   },
+
   "F3O_TopPrints_info": {
-    "title": "Top prints",
-    "what": "Elenco delle transazioni opzioni più rilevanti per size/vega.",
-    "how": "Aiuta a identificare strike/expiry chiave e natura del flusso (copertura vs scommessa).",
-    "source": "Block/large trade analysis – practitioner."
+    "title": "Top Prints (blocchi opzioni)",
+    "what": "Principali operazioni per volume o valore vega sulle opzioni.",
+    "how": "Evidenziano strike e scadenze più negoziati, spesso legati a strategie istituzionali di copertura o posizione direzionale.",
+    "source": "CBOE Large Trade Reports; academic references su block trading e option flows."
   }
 }
-
-
