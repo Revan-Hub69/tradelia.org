@@ -1,420 +1,131 @@
-// /report/assets/js/app.js
-//
-// Ruolo: orchestratore dati runtime del Report
-// - legge header.json e manifest.json dal report corrente
-// - popola hero e footer base
-// - monta le sezioni F1...F6 caricando i moduli dinamici
-//
-// Dipendenze: nessuna libreria esterna, solo fetch + dynamic import
-//
-// Convenzioni di path:
-//   /report/reports/{reportId}/header.json
-//   /report/reports/{reportId}/manifest.json
-//   poi i singoli dati modulo es. f1b.json, f2.json, ...
-//
-// Convenzioni moduli UI:
-//   /report/assets/js/modules/f1b.js, f2.js, ...
-//   export function renderCard(data, ctx) -> string HTML
-//   export function bindCard(node, data, ctx) -> attach listeners (opzionale)
+// Tradelia · App Orchestrator v4.0 — manifest, hero, moduli
 
-/////////////////////////////
-// Helpers base
-/////////////////////////////
+const App = (() => {
+  const $ = (s, r=document) => r.querySelector(s);
 
-function getReportIdFromURL() {
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
-  return (id && id.trim() !== "") ? id.trim() : "sample-id";
-}
-
-async function fetchJSON(url) {
-  try {
-    const res = await fetch(url, { cache: "no-cache" });
-    if (!res.ok) throw new Error("HTTP " + res.status + " @ " + url);
+  async function fetchJSON(path){
+    const res = await fetch(path, {cache:'no-store'});
+    if (!res.ok) throw new Error(`HTTP ${res.status} @ ${path}`);
     return await res.json();
-  } catch (err) {
-    console.warn("fetchJSON fail", url, err);
-    return null;
-  }
-}
-
-// formattazioni numeriche base
-function fmtNum(v, decimals = 2) {
-  if (v === null || v === undefined || Number.isNaN(v)) return "—";
-  const n = Number(v);
-  return n.toFixed(decimals).replace('.', ',');
-}
-
-function fmtPct(v, decimals = 2) {
-  if (v === null || v === undefined || Number.isNaN(v)) return "—";
-  const n = Number(v);
-  const sign = n > 0 ? "+" : "";
-  return sign + n.toFixed(decimals).replace('.', ',') + "%";
-}
-
-function setTextById(id, value) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = value;
-}
-
-/////////////////////////////
-// HERO + footer snapshot
-/////////////////////////////
-
-function mountHero(headerData) {
-  if (!headerData) return;
-
-  const {
-    Start,
-    End,
-    Ticker,
-    Venue,
-    Price,
-    ChangePct,
-    Currency,
-    FreshnessLabel,
-    ConfidenceFinal,
-    State,
-    Version,
-    UpdatedAt
-  } = headerData;
-
-  // ticker / venue
-  setTextById("hero-ticker", Ticker || "—");
-  setTextById("hero-venue", Venue || "—");
-
-  // price + change
-  const chgPctStr = fmtPct(ChangePct, 2);
-  setTextById("hero-price", Price !== undefined ? fmtNum(Price, 2) : "—");
-  setTextById("hero-change", chgPctStr);
-
-  // badge stato
-  setTextById("hero-state", State || "—");
-
-  // meta snapshot
-  setTextById("hero-start", Start || "—");
-  setTextById("hero-end", End || "—");
-
-  // meta price
-  setTextById("hero-price2", Price !== undefined ? fmtNum(Price, 2) : "—");
-
-  // meta Δ%
-  setTextById("hero-change2", chgPctStr);
-
-  // meta currency
-  setTextById("hero-ccy", Currency || "—");
-
-  // meta freshness
-  setTextById("hero-freshness", FreshnessLabel || "—");
-
-  // meta confidence
-  setTextById(
-    "hero-confidence",
-    ConfidenceFinal !== undefined ? fmtNum(ConfidenceFinal, 2) : "—"
-  );
-
-  // colorazione up/down su Δ%
-  const heroChangeEl  = document.getElementById("hero-change");
-  const heroChangeEl2 = document.getElementById("hero-change2");
-
-  if (heroChangeEl) {
-    heroChangeEl.classList.remove("chg--up","chg--down");
-    if (typeof ChangePct === "number") {
-      heroChangeEl.classList.add(ChangePct >= 0 ? "chg--up" : "chg--down");
-    }
-  }
-  if (heroChangeEl2) {
-    heroChangeEl2.classList.remove("chg--up","chg--down");
-    if (typeof ChangePct === "number") {
-      heroChangeEl2.classList.add(ChangePct >= 0 ? "chg--up" : "chg--down");
-    }
   }
 
-  // tonebars
-  const toneSnap  = document.getElementById("tone-snap");
-  const tonePrice = document.getElementById("tone-price");
-  const toneChg   = document.getElementById("tone-chg");
-  const toneCcy   = document.getElementById("tone-ccy");
-  const toneFresh = document.getElementById("tone-fresh");
-  const toneConf  = document.getElementById("tone-conf");
+  /* ---------- HERO ---------- */
+  function toneClass(v){
+    if (v >= .85) return 'ok';
+    if (v <= .65) return 'alert';
+    return ''; // warn is color of bar by default
+  }
+  function fmtPct(x){ return (x>0?'+':'') + x.toFixed(2) + '%'; }
+  function mountHero(h){
+    $('#hero-title').textContent = h.CompanyName || h.Ticker || 'Report';
+    $('#hero-sub').textContent = `${h.Ticker || '—'} · ${h.Venue || '—'}`;
 
-  if (toneSnap)  toneSnap.style.backgroundColor  = "var(--tone-n)";
-  if (tonePrice) tonePrice.style.backgroundColor = "var(--tone-n)";
-  if (toneCcy)   toneCcy.style.backgroundColor   = "var(--tone-n)";
-  if (toneFresh) toneFresh.style.backgroundColor = "var(--tone-n)";
+    // Confidence
+    const conf = Number(h.ConfidenceFinal ?? 0);
+    const bar = $('#hero-meter-fill');
+    bar.style.width = `${Math.max(0, Math.min(conf*100, 100))}%`;
+    bar.className = `meter-fill ${toneClass(conf)}`;
+    $('#hero-conf-val').textContent = Math.round(conf*100) + '%';
+    $('.meter-track').setAttribute('aria-valuenow', String(Math.round(conf*100)));
 
-  // Δ% tono semaforo
-  if (toneChg) {
-    if (typeof ChangePct === "number") {
-      toneChg.style.backgroundColor =
-        ChangePct >= 0 ? "var(--tone-g)" : "var(--tone-r)";
-    } else {
-      toneChg.style.backgroundColor = "var(--tone-n)";
-    }
+    // Prezzo, delta, stato
+    $('#hero-price').textContent = (h.Price ?? 0).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+    $('#hero-ccy').textContent = h.Currency || '';
+    $('#hero-hint').textContent = h.FreshnessLabel || '';
+    const d = Number(h.ChangePct ?? 0);
+    const delta = $('#hero-delta');
+    delta.textContent = fmtPct(d);
+    delta.className = `delta tabular ${d<0 ? 'alert' : d>0 ? 'ok' : ''}`;
+
+    const st = $('#hero-state');
+    st.textContent = h.State || '—';
+    st.className = `state ${h.State?.includes('LIVE') ? 'ok' : h.State?.includes('REVIEW') ? 'warn' : h.State?.includes('HOLD') ? 'alert' : ''}`;
+
+    // KPI table
+    const kpi = $('#hero-kpi');
+    const rows = [
+      ['Updated', `${h.UpdatedAt || '—'} UTC`, 'Updated_info'],
+      ['Window', `${h.Start || '—'} → ${h.End || '—'}`, 'Window_info'],
+      ['Freshness', h.FreshnessLabel || '—', 'Freshness_info'],
+      ['Confidence', (h.ConfidenceFinal!=null? h.ConfidenceFinal.toFixed(2) : '—'), 'ConfidenceFinal'],
+      ['Version', h.Version || '—', 'Version_info'],
+      ['Ticker', h.Ticker || '—', 'Ticker_info'],
+      ['Venue', h.Venue || '—', 'Venue_info'],
+      ['Currency', h.Currency || '—', 'Currency_info'],
+    ];
+    kpi.innerHTML = rows.map(([k,v,id]) => `
+      <div class="k">${k}</div>
+      <div class="v">${v} <button class="info-btn" data-info="${id}" aria-label="${k}">?</button></div>
+    `).join('');
+    window.__TradeliaUI?.bindInfoButtons(kpi);
   }
 
-  // confidence tono semaforo
-  if (toneConf) {
-    const cf = Number(ConfidenceFinal);
-    if (!isNaN(cf)) {
-      if (cf >= 0.75) {
-        toneConf.style.backgroundColor = "var(--tone-g)";
-      } else if (cf < 0.5) {
-        toneConf.style.backgroundColor = "var(--tone-r)";
-      } else {
-        toneConf.style.backgroundColor = "var(--tone-n)";
-      }
-    } else {
-      toneConf.style.backgroundColor = "var(--tone-n)";
-    }
-  }
-
-  // footer info
-  if (Version) {
-    setTextById("footer-version", Version);
-  }
-
-  setTextById(
-    "footer-snapshot",
-    (Start && End) ? (Start + " → " + End) : (Start || End || "—")
-  );
-
-  const upd = UpdatedAt || End || Start || "—";
-  setTextById("footer-updated", upd);
-
-  const yearEl = document.getElementById("footer-year");
-  if (yearEl) {
-    const now = new Date();
-    yearEl.textContent = now.getFullYear();
-  }
-}
-
-/////////////////////////////
-// MANIFEST LOADING / NORMALIZATION
-/////////////////////////////
-
-async function loadManifest(reportId) {
-  const url = `/report/reports/${reportId}/manifest.json`;
-  const mf = await fetchJSON(url);
-  if (mf) return mf;
-
-  // fallback se non esiste manifest.json
-  return {
-    id: reportId,
-    title: "Tradelia · Report Runtime",
-    order: ["F1B","F2","F3","F4","F5","F5B","F6"],
-    modules: {
-      "F1B": "f1b.json",
-      "F2":  "f2.json",
-      "F3":  "f3.json",
-      "F4":  "f4.json",
-      "F5":  "f5.json",
-      "F5B": "f5b.json",
-      "F6":  "f6.json"
-    }
-  };
-}
-
-// mappa modulo -> section DOM id
-function getSectionSelectorForModule(modId) {
-  const upper = modId.toUpperCase();
-
-  if (upper === "F1A" || upper === "F1B") return "#sec-f1";
-  if (upper === "F2")  return "#sec-f2";
-  if (upper === "F3")  return "#sec-f3";
-  if (upper === "F4")  return "#sec-f4";
-  if (upper === "F5")  return "#sec-f5";
-  if (upper === "F5B") return "#sec-f5b";
-  if (upper === "F6")  return "#sec-f6";
-
-  return null;
-}
-
-// normalizza i path dei json modulo
-function normalizeManifest(manifest, reportId) {
-  const order = Array.isArray(manifest.order)
-    ? manifest.order.slice()
-    : Object.keys(manifest.modules || {});
-
-  const outMods = {};
-  for (const key of Object.keys(manifest.modules || {})) {
-    let path = manifest.modules[key];
-    if (
-      typeof path === "string" &&
-      !path.startsWith("http") &&
-      !path.startsWith("/")
-    ) {
-      // relativo -> montalo sotto /report/reports/{id}/
-      path = `/report/reports/${reportId}/${path}`;
-    }
-    outMods[key] = path;
-  }
-
-  return {
-    id: manifest.id || reportId,
-    title: manifest.title || "",
-    order,
-    modules: outMods
-  };
-}
-
-/////////////////////////////
-// MOUNT DI UN SINGOLO MODULO (F1B/F2/...)
-/////////////////////////////
-
-async function mountSingleModule(modId, jsonUrl, reportId) {
-  const selector = getSectionSelectorForModule(modId);
-  if (!selector) {
-    console.warn(`Nessun section selector per ${modId}`);
-    return;
-  }
-
-  const container = document.querySelector(selector);
-  if (!container) {
-    console.warn(`Container DOM ${selector} non trovato per ${modId}`);
-    return;
-  }
-
-  // carica i dati del modulo (es. /report/reports/{id}/f1b.json)
-  const data = await fetchJSON(jsonUrl);
-
-  // importa dinamicamente il renderer JS del modulo
-  const fileBase = modId.toLowerCase();
-  let mod;
-  try {
-    // cache-bust minimo
-    mod = await import(`/report/assets/js/modules/${fileBase}.js?v=2`);
-  } catch (err) {
-    console.error("Import modulo fallita:", modId, err);
-    container.innerHTML = `
-      <div class="section-headline">
-        <div class="section-head-left">
-          <div class="section-head-topline">
-            <span class="section-badge">${modId}</span>
-            <span class="module-status-pill" data-state="error">DATA</span>
+  /* ---------- MODULI ---------- */
+  function placeholderCard(modId, path){
+    return `
+      <article class="report-section">
+        <div class="card">
+          <div class="section-head" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div>
+              <h3 style="margin:0 0 4px 0">${modId}</h3>
+              <div style="color:var(--muted);font-size:14px">Sezione modulare</div>
+            </div>
+            <button class="btn" data-open-panel>Dettagli →</button>
           </div>
-          <div class="section-title-main">${modId}</div>
-          <div class="section-desc">
-            Modulo non disponibile.
-          </div>
+          <p style="margin:0">Dati: <code>${path}</code></p>
         </div>
-      </div>
-      <div class="tl-panel-section-text text-[13px] leading-[1.45] text-[color:var(--muted)]">
-        Impossibile caricare il renderer ${fileBase}.js
-      </div>
+      </article>
     `;
-    container.classList.remove("is-loading");
-    return;
   }
 
-  // render effettivo
-  if (typeof mod.renderCard === "function") {
-    const html = mod.renderCard(data, { modId, reportId });
-    container.innerHTML = html;
-    container.classList.remove("is-loading");
-
-    // bind interazioni modulo
-    if (typeof mod.bindCard === "function") {
+  async function mountModules(reportId){
+    const manifest = await fetchJSON(`/report/reports/${reportId}/manifest.json`);
+    const grid = $('#modules');
+    grid.innerHTML = '';
+    const order = Array.isArray(manifest.order) ? manifest.order : Object.keys(manifest.modules||{});
+    for (const mod of order){
+      const file = manifest.modules?.[mod];
+      if (!file) continue;
+      // prova import dinamico / fallback placeholder
+      const jsonPath = `/report/reports/${reportId}/${file}`;
       try {
-        mod.bindCard(container, data, { modId, reportId });
-      } catch (bindErr) {
-        console.warn("bindCard error per", modId, bindErr);
+        // se c'è un renderer dedicato: /report/assets/js/modules/<mod>.js
+        const modUrl = `/report/assets/js/modules/${mod.toLowerCase()}.js`;
+        const renderer = await import(modUrl).catch(()=>null);
+        const data = await fetchJSON(jsonPath).catch(()=>({}));
+        if (renderer?.renderCard){
+          const html = renderer.renderCard(data, {modId:mod, reportId});
+          const node = document.createElement('article');
+          node.className = 'report-section';
+          node.innerHTML = html;
+          grid.appendChild(node);
+          renderer.bindCard?.(node, data, {openPanel:()=>window.__TradeliaUI?.openPanel()});
+        } else {
+          grid.insertAdjacentHTML('beforeend', placeholderCard(mod, jsonPath));
+        }
+      } catch {
+        grid.insertAdjacentHTML('beforeend', placeholderCard(mod, jsonPath));
       }
     }
-
-    // Tooltip "?" su metriche dentro la card
-    if (
-      window.__TradeliaUI &&
-      typeof window.__TradeliaUI.bindMetricInfoButtons === "function"
-    ) {
-      try {
-        window.__TradeliaUI.bindMetricInfoButtons();
-      } catch (e) {
-        console.warn("bindMetricInfoButtons error:", e);
-      }
-    }
-
-  } else {
-    // modulo importato ma senza renderCard
-    container.innerHTML = `
-      <div class="section-headline">
-        <div class="section-head-left">
-          <div class="section-head-topline">
-            <span class="section-badge">${modId}</span>
-            <span class="module-status-pill" data-state="error">VIEW</span>
-          </div>
-          <div class="section-title-main">${modId}</div>
-          <div class="section-desc">
-            Modulo caricato ma nessun renderer disponibile.
-          </div>
-        </div>
-      </div>
-    `;
-    container.classList.remove("is-loading");
-  }
-}
-
-/////////////////////////////
-// FLUSSO PRINCIPALE
-/////////////////////////////
-
-async function mountReport() {
-  const reportId = getReportIdFromURL();
-
-  // 1. header -> hero
-  const headerData = await fetchJSON(`/report/reports/${reportId}/header.json`);
-  if (headerData) {
-    mountHero(headerData);
-
-    // ==== NEW: inserisci CompanyName/Ticker in UI chrome ====
-    const name = headerData.CompanyName || headerData.Ticker || "—";
-
-    // <title>
-    document.title = `Tradelia AI · Report ${name}`;
-
-    // header sticky claim ("Report {NOME AZIENDA}")
-    const claimEl = document.querySelector(".claim");
-    if (claimEl) {
-      claimEl.textContent = `Report ${name}`;
-    }
-
-    // tagline hero "Analisi indipendente su ..."
-    const heroClientEl = document.getElementById("hero-client");
-    if (heroClientEl) {
-      heroClientEl.textContent = `Analisi indipendente su ${name}`;
-    }
-        // === NEW: aggiorna anche il footer ===
-    const footerCompanyEl = document.getElementById("footer-company");
-    if (footerCompanyEl) {
-      footerCompanyEl.textContent = name;
-    }
-    // =====================================
-
-    // =========================================================
-  } else {
-    console.warn("Header mancante per", reportId);
+    grid.querySelectorAll('[data-open-panel]')?.forEach(b=>b.addEventListener('click', ()=>window.__TradeliaUI?.openPanel()));
   }
 
-  // 2. manifest -> ordine moduli + path json
-  const rawManifest = await loadManifest(reportId);
-  const manifest = normalizeManifest(rawManifest, reportId);
-
-  // 3. scorri i moduli in ordine e montali
-  for (const modId of manifest.order) {
-    const jsonUrl = manifest.modules[modId];
-    if (!jsonUrl) {
-      console.warn(`Nessun jsonUrl per ${modId}`);
-      continue;
-    }
-    await mountSingleModule(modId, jsonUrl, reportId);
+  /* ---------- BOOT ---------- */
+  function getReportIdFromURL(){
+    const u=new URL(location.href);
+    return u.searchParams.get('id') || 'sample-id';
   }
-}
+  async function mountReport(){
+    const id = getReportIdFromURL();
+    const header = await fetchJSON(`/report/reports/${id}/header.json`);
+    mountHero(header);
+    await mountModules(id);
+    // title
+    document.title = `Tradelia · ${header.CompanyName || header.Ticker || 'Report'}`;
+  }
 
-// kick immediato
-mountReport();
+  return { mountReport, getReportIdFromURL };
+})();
 
-// esponiamo debug
-window.TradeliaApp = {
-  mountReport,
-  getReportIdFromURL
-};
+window.TradeliaApp = App;
+document.addEventListener('DOMContentLoaded', () => App.mountReport().catch(console.error));
