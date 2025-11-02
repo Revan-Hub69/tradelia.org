@@ -2582,6 +2582,43 @@ html[data-theme="light"] #legal-overlay strong {
 html[data-theme="light"] #legal-overlay em {
   color: var(--muted);
 }
+<div class="sheet" id="sheet-header">
+  <div class="sheet__head">
+    <div class="sheet__title">Header Ticker</div> <!-- opzionale: da manifest/strings -->
+  </div>
+
+  <table class="sheet__table">
+    <thead class="sheet__thead">
+      <tr>
+        <th>metrica</th><th>valore</th><th>skew</th><th>spiegazione</th><th>?</th>
+      </tr>
+    </thead>
+    <tbody class="sheet__tbody" id="rows-header">
+      <!-- righe generate da ui_map.json -->
+      <!-- <tr>
+        <td class="cell--metric">Price</td>
+        <td class="cell--value">123.45</td>
+        <td class="cell--skew skew--pos">▲</td>
+        <td class="cell--explain">…</td>
+        <td class="cell--help"><button class="info-btn" data-metric="Price">?</button></td>
+      </tr> -->
+    </tbody>
+  </table>
+
+  <div class="sheet__section" id="sheet-f1">
+    <div class="sheet__section-head">
+      <div class="sheet__section-title">F1</div>
+      <span class="module-status-pill" data-state="active">ACTIVE</span>
+    </div>
+    <table class="sheet__table">
+      <thead class="sheet__thead">…</thead>
+      <tbody class="sheet__tbody" id="rows-f1"></tbody>
+    </table>
+    <div class="sheet__ai-note" id="ai-note-f1"></div>
+  </div>
+
+  <!-- ripeti F2/F3… -->
+</div>
 
 
 /* =========================================================
