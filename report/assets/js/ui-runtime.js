@@ -1,6 +1,6 @@
-// UI Runtime v2.3 — dark-only: overlay analitico, legale, tooltips, footer year
+// UI Runtime v2.4 — dark-only: overlay analitico, legale, tooltips, footer year
 
-const $ = (s, r=document) => r.querySelector(s);
+const $  = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
 
 // Footer year
