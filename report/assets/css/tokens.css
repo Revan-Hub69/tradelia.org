@@ -2619,6 +2619,162 @@ html[data-theme="light"] #legal-overlay em {
 
   <!-- ripeti F2/F3… -->
 </div>
+/* ============================
+   EXCEL SKIN — tabella evoluta
+   ============================ */
+
+/* Wrapper foglio */
+.xl-sheet{
+  --xl-row-h: 42px;
+  --xl-br: var(--br-card);
+  --xl-br-strong: var(--br-card-strong);
+  --xl-zebra: color-mix(in oklab, var(--surface-card) 94%, black);
+  --xl-head-bg: color-mix(in oklab, var(--surface-card) 92%, var(--brand) 4%);
+  --xl-shadow: 0 1px 0 var(--br-soft), 0 8px 24px rgba(0,0,0,.06);
+
+  border:1px solid var(--xl-br-strong);
+  border-radius:12px;
+  overflow:hidden;
+  background:var(--surface-card);
+  box-shadow: var(--xl-shadow);
+}
+
+/* Header riga colonne */
+.xl-head{
+  position:sticky; top:0; z-index:2;
+  display:grid;
+  grid-template-columns: 220px 1fr 140px 1.7fr 40px; /* metrica | valore | skew | spiegazione | ? */
+  gap:0;
+  align-items:center;
+  min-height: var(--xl-row-h);
+  padding: 0 12px;
+  background: var(--xl-head-bg);
+  border-bottom:1px solid var(--xl-br-strong);
+  backdrop-filter: blur(4px) saturate(1.05);
+}
+.xl-head .xl-col{
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* Righe */
+.xl-row{
+  display:grid;
+  grid-template-columns: 220px 1fr 140px 1.7fr 40px;
+  gap:0;
+  align-items:center;
+  min-height: var(--xl-row-h);
+  padding: 0 12px;
+  border-bottom:1px dotted var(--xl-br);
+  background: var(--surface-card);
+}
+.xl-row:nth-child(even){ background: var(--xl-zebra); }
+.xl-row:hover{
+  background: color-mix(in oklab, var(--surface-card) 90%, var(--brand) 6%);
+}
+
+/* Celle base */
+.xl-cell{ min-width:0; }
+.xl-metric{
+  font-size: var(--fs-sm); font-weight: 700; color: var(--ink);
+}
+.xl-value{
+  font-family: ui-monospace, Menlo, Monaco, Consolas,"Courier New", monospace;
+  font-size: var(--fs-sm); font-weight: 800; color: var(--ink);
+  text-align: right;
+}
+.xl-explain{
+  font-size: var(--fs-xs); color: var(--muted);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Skew cell (direzionale o score) */
+.xl-skew{
+  display:flex; align-items:center; justify-content:flex-start; gap:8px;
+  font-size: var(--fs-xs); color: var(--muted);
+}
+.xl-skew .dir{ font-weight:800; line-height:1; }
+.xl-skew .dir.pos{ color: var(--tone-pos-fg); }
+.xl-skew .dir.neg{ color: var(--tone-neg-fg); }
+.xl-skew .dir.neu{ color: var(--tone-neu-fg); }
+
+/* Micro-bar per score 0–100 */
+.xl-bar{
+  position:relative; width:72px; height:6px; border-radius:999px;
+  background: color-mix(in oklab, var(--tone-neu-bg-soft) 40%, transparent);
+  overflow:hidden; flex-shrink:0;
+  border:1px solid var(--br-soft);
+}
+.xl-bar > i{
+  position:absolute; left:0; top:0; bottom:0;
+  width:0%; /* impostare inline: style="width:68%" */
+  background: var(--tone-neu-fg);
+}
+.xl-bar[data-tone="pos"] > i { background: var(--tone-pos-fg); }
+.xl-bar[data-tone="warn"]> i { background: var(--tone-warn-fg); }
+.xl-bar[data-tone="neg"] > i { background: var(--tone-neg-fg); }
+
+/* Pulsante tooltip “?” coerente e centrato */
+.xl-help{
+  display:flex; align-items:center; justify-content:center;
+}
+.xl-help .info-btn{
+  min-width:22px; min-height:22px; font-size:11px; border-radius:8px;
+}
+
+/* Titolo sezione “Excel” (sostituisce card head) */
+.xl-title{
+  display:flex; align-items:baseline; justify-content:space-between;
+  padding:10px 12px; border-bottom:1px solid var(--xl-br-strong);
+  background: var(--surface-card-alt);
+}
+.xl-title h3{
+  font-size: var(--fs-md); font-weight:800; color: var(--ink);
+}
+.xl-title .meta{
+  font-size: var(--fs-xs); color: var(--muted);
+}
+
+/* Resoconto AI */
+.xl-notes{
+  padding:10px 12px;
+  border-top:1px solid var(--xl-br);
+  background: var(--surface-card);
+}
+.xl-notes h4{
+  font-size: var(--fs-sm); font-weight:800; color: var(--ink); margin-bottom:6px;
+}
+.xl-notes ul{
+  margin:0; padding-left:18px; color: var(--ink); font-size: var(--fs-sm);
+}
+
+/* Responsiveness: su mobile 2 colonne (Metrica/Valore) + riga espansa per Skew+Spiegazione */
+@media (max-width: 768px){
+  .xl-head, .xl-row{
+    grid-template-columns: 1.1fr .9fr 40px; /* metrica | valore | ? */
+    grid-auto-rows: auto;
+    row-gap: 6px;
+  }
+  .xl-head .xl-col:nth-child(3),
+  .xl-head .xl-col:nth-child(4){ display:none; } /* nasconde “Skew” e “Spiegazione” in head */
+  .xl-skew, .xl-explain{
+    grid-column: 1 / span 2;
+  }
+  .xl-help{ grid-column: 3; }
+}
+
+/* Stampa: griglia legale, niente colori forti */
+@media print{
+  .xl-sheet{ box-shadow:none; border:1px solid #000; }
+  .xl-head{ background:#fff; border-bottom:1px solid #000; }
+  .xl-row{ background:#fff !important; border-bottom:1px dotted #000; }
+  .xl-bar{ border:1px solid #000; }
+  .xl-bar > i{ background:#000 !important; }
+  .xl-skew .dir{ color:#000 !important; }
+}
 
 
 /* =========================================================
