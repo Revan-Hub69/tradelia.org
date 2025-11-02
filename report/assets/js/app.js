@@ -1,4 +1,4 @@
-// App Orchestrator v2.5 — manifest object/array, case-insensitive, HERO premium + tooltips dinamici
+// App Orchestrator v2.6 — manifest object/array, HERO premium, KPI con "?" dinamici
 
 const $ = (s, r=document) => r.querySelector(s);
 
@@ -13,7 +13,6 @@ const normId = id => (id||'').toString().trim().toUpperCase();
 const slotId = modId => `sec-${normId(modId).toLowerCase()}`;
 async function importModule(modId){ return import(`./modules/${normId(modId).toLowerCase()}.js`); }
 
-// Manifest normalizer (array o object)
 function normalizeManifest(m){
   if(!m) return { order:[], list:[] };
   const map = new Map();
@@ -27,13 +26,11 @@ function normalizeManifest(m){
   return { order, list: order.map(id=>map.get(id)), title:m.title, id:m.id };
 }
 
-/* ---------------- HERO premium ---------------- */
-
+/* ---------- HERO ---------- */
 function addPill(kpiRoot, label, value, infoId){
-  if(!value) return;
+  if(!value && value !== 0) return;
   const el = document.createElement('span');
   el.className = 'pill';
-  // bottone "?" dinamico dal glossario
   const infoBtn = infoId ? `<button class="info-btn" data-info="${infoId}" aria-label="${label} – info">?</button>` : '';
   el.innerHTML = `<span class="k">${label}</span>${infoBtn}<span class="v tabular">${value}</span>`;
   kpiRoot.appendChild(el);
@@ -76,7 +73,6 @@ function mountHero(h){
   const pEl = $('#hero-price'); const ccy = $('#hero-ccy');
   if (pEl) pEl.textContent = (px!=null) ? (px.toLocaleString(undefined,{maximumFractionDigits:2})) : '—';
   if (ccy) ccy.textContent = cur || '';
-
   const delta = $('#hero-delta');
   if (delta){
     if (cp==null){ delta.textContent=''; delta.className='delta-chip neutral'; }
@@ -88,7 +84,7 @@ function mountHero(h){
     st.className = `badge ${tone}`; st.textContent = state || 'SNAPSHOT';
   }
 
-  // KPI pills con info-btn dinamici
+  // KPI pills con info-btn
   const kpi = $('#hero-kpi');
   if (kpi){
     kpi.innerHTML = '';
@@ -105,8 +101,7 @@ function mountHero(h){
   const note = $('#hero-note'); if (note && h?.hero_disclaimer) note.textContent = h.hero_disclaimer;
 }
 
-/* ---------------- Mount pipeline ---------------- */
-
+/* ---------- Mount pipeline ---------- */
 async function mountModule(reportId, spec){
   const { id: modId, data } = spec;
   if(!document.getElementById(slotId(modId))){
