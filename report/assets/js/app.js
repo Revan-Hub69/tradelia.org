@@ -1,4 +1,4 @@
-// App Orchestrator v2.4 — manifest object/array, case-insensitive, HERO premium + separazione
+// App Orchestrator v2.5 — manifest object/array, case-insensitive, HERO premium + tooltips dinamici
 
 const $ = (s, r=document) => r.querySelector(s);
 
@@ -27,7 +27,18 @@ function normalizeManifest(m){
   return { order, list: order.map(id=>map.get(id)), title:m.title, id:m.id };
 }
 
-// ---------------- HERO premium ----------------
+/* ---------------- HERO premium ---------------- */
+
+function addPill(kpiRoot, label, value, infoId){
+  if(!value) return;
+  const el = document.createElement('span');
+  el.className = 'pill';
+  // bottone "?" dinamico dal glossario
+  const infoBtn = infoId ? `<button class="info-btn" data-info="${infoId}" aria-label="${label} – info">?</button>` : '';
+  el.innerHTML = `<span class="k">${label}</span>${infoBtn}<span class="v tabular">${value}</span>`;
+  kpiRoot.appendChild(el);
+}
+
 function mountHero(h){
   const name = h?.CompanyName || 'Report';
   const tkr  = h?.Ticker || '';
@@ -42,6 +53,7 @@ function mountHero(h){
   const upd  = h?.UpdatedAt;
   const win  = (h?.Start && h?.End) ? `${h.Start} → ${h.End}` : '';
 
+  // title/sub
   const tEl = $('#hero-title'); const sEl = $('#hero-sub');
   if (tEl) tEl.textContent = name;
   if (sEl) sEl.textContent = tkr && ven ? `${tkr} · ${ven}` : (tkr || ven || '');
@@ -64,6 +76,7 @@ function mountHero(h){
   const pEl = $('#hero-price'); const ccy = $('#hero-ccy');
   if (pEl) pEl.textContent = (px!=null) ? (px.toLocaleString(undefined,{maximumFractionDigits:2})) : '—';
   if (ccy) ccy.textContent = cur || '';
+
   const delta = $('#hero-delta');
   if (delta){
     if (cp==null){ delta.textContent=''; delta.className='delta-chip neutral'; }
@@ -75,25 +88,25 @@ function mountHero(h){
     st.className = `badge ${tone}`; st.textContent = state || 'SNAPSHOT';
   }
 
-  // KPI pills
+  // KPI pills con info-btn dinamici
   const kpi = $('#hero-kpi');
   if (kpi){
     kpi.innerHTML = '';
-    const pills = [
-      ['Ticker', tkr], ['Venue', ven], ['Freshness', fresh],
-      ['Confidence', conf!=null ? conf.toFixed(2) : '—'],
-      ['Version', ver], ['Updated', upd], ['Window', win]
-    ].filter(([,v])=>v);
-    for (const [k,v] of pills){
-      const el = document.createElement('span'); el.className='pill';
-      el.innerHTML = `<span class="k">${k}</span><span class="v tabular">${v}</span>`; kpi.appendChild(el);
-    }
+    addPill(kpi, 'Ticker',     tkr,  'Ticker_info');
+    addPill(kpi, 'Venue',      ven,  'Venue_info');
+    addPill(kpi, 'Freshness',  fresh,'Freshness');
+    addPill(kpi, 'Confidence', conf!=null ? conf.toFixed(2) : '—', 'ConfidenceFinal');
+    addPill(kpi, 'Version',    ver,  'Version_info');
+    addPill(kpi, 'Updated',    upd,  'UpdatedAt_info');
+    addPill(kpi, 'Window',     win,  'SnapshotWindow_info');
+    addPill(kpi, 'Currency',   cur,  'Currency_info');
   }
 
   const note = $('#hero-note'); if (note && h?.hero_disclaimer) note.textContent = h.hero_disclaimer;
 }
 
-// ---------------- Mount pipeline ----------------
+/* ---------------- Mount pipeline ---------------- */
+
 async function mountModule(reportId, spec){
   const { id: modId, data } = spec;
   if(!document.getElementById(slotId(modId))){
