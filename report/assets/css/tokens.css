@@ -1,93 +1,614 @@
-/* Tradelia · Institutional v3 — dark-only, pulito e leggibile */
+/* =====================================================================
+   Tradelia · tokens.css (v3.3) — Dual Theme · Istituzionale / Super‑Premium
+   Target: index (header/hero/kpi/modules/overlay/pannelli/footer)
+   - Palette Oklab LIGHT+DARK con contrasto AA/AAA
+   - Semantic tokens (surface/ink/border) e State Map (ACTIVE/REVIEW/HOLD)
+   - Tipografia & density tokens; motion & z‑index map
+   - Tooltip glossario unificati (popover desktop / modal mobile)
+   - Print/PDF pro con utility
+   ===================================================================== */
 
-:root{
-  --bg:#0E1116; --surface:#141922; --ink:#E6E8EB; --muted:#9BA3AE; --line:#212733;
-  --accent:#5B8DEF; --ok:#4CB782; --warn:#E1C24D; --alert:#E0625E;
-  --fs:15px; --fs-sub:18px; --fs-hero:56px; --lh:1.65;
-  --r-card:12px; --r-pill:999px;
-  --s1:8px; --s2:12px; --s3:16px; --s4:24px; --s5:32px;
+/* =============================
+   ROOT TOKENS (shared)
+   ============================= */
+:root {
+  color-scheme: light dark;
+
+  /* Z‑index map */
+  --z-header: 50;
+  --z-overlay: 60;    /* panel analitico */
+  --z-legal: 61;      /* overlay legale sopra */
+  --z-tooltip: 70;    /* popover metriche */
+  --z-share: 75;
+
+  /* Radii */
+  --r-pill: 999px;
+  --r-card: 18px;
+
+  /* Spazi (8‑pt refined) */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px; --s-5: 20px; --s-6: 24px;
+  --s-7: 32px; --s-8: 40px; --s-9: 48px; --s-10: 64px; --s-11: 80px;
+
+  /* Type */
+  --ff: ui-sans-serif, system-ui, -apple-system, Segoe UI, Inter, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+  --ff-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New";
+  --fs-sm: .875rem; --fs-base: 1rem; --fs-md: 1.125rem; --fs-lg: 1.25rem; --fs-xl: 1.5rem; --fs-2xl: 2rem; --fs-3xl: 2.5rem;
+
+  /* Motion */
+  --ease: cubic-bezier(.2,.7,.2,1);
+  --t-fast: 120ms; --t-med: 200ms; --t-slow: 320ms;
 }
 
-*{box-sizing:border-box}
-html,body{height:100%} body{margin:0;background:var(--bg);color:var(--ink);font:var(--fs)/var(--lh) Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
-.tabular{font-variant-numeric: tabular-nums lining-nums}
-a{color:var(--accent);text-decoration:none}
+/* =============================
+   THEME: DARK
+   ============================= */
+:root, [data-theme="dark"] {
+  /* Ink */
+  --ink:         oklab(95% -0.002 0.001);
+  --ink-soft:    oklab(82% -0.002 0.001);
+  --muted:       oklab(70% -0.002 0.001 / .76);
+  --ink-invert:  oklab(18% 0 0);
 
-/* Header */
-.site-header{position:sticky;top:0;z-index:40;background:#0C0F14;border-bottom:1px solid var(--line)}
-.header-inner{max-width:1160px;margin:0 auto;padding:10px var(--s3);display:flex;align-items:center;gap:10px}
-.brand{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font-weight:800;letter-spacing:.08em}
-.logo{width:18px;height:18px;border-radius:4px;background:var(--accent)}
-.wordmark .dot{opacity:.8}
-.spacer{flex:1}
+  /* Surface (semantic) */
+  --surface-page:  oklab(20% 0 0);
+  --surface-card:  oklab(24% 0 0);
+  --surface-panel: oklab(28% 0 0);
+  --surface-glass: oklab(22% 0 0 / .7);
 
-/* Buttons / chips */
-.btn{appearance:none;border:1px solid var(--line);background:transparent;color:var(--ink);padding:8px 12px;border-radius:10px;cursor:pointer}
-.btn:hover{border-color:var(--accent)}
-.btn-ghost{background:transparent}
-.info-btn{width:20px;height:20px;display:inline-grid;place-items:center;border:1px solid var(--line);border-radius:var(--r-pill);background:transparent;color:var(--muted);cursor:pointer}
-.info-btn:hover{border-color:var(--accent);color:var(--ink)}
-.delta{padding:6px 10px;border:1px solid var(--line);border-radius:var(--r-pill)}
-.delta.ok{color:var(--ok);border-color:#2b4} .delta.alert{color:var(--alert);border-color:#843}
-.state{padding:6px 10px;border:1px solid var(--line);border-radius:var(--r-pill);font-weight:700}
-.state.ok{border-color:#2b4} .state.warn{border-color:#aa4} .state.alert{border-color:#843}
+  /* Border */
+  --br:        oklab(40% 0 0 / .22);
+  --br-strong: oklab(55% 0 0 / .28);
 
-/* HERO */
-.hero{max-width:1160px;margin:var(--s5) auto var(--s4);padding:0 var(--s3)}
-.hero-title{font-size:var(--fs-hero);line-height:1.08;font-weight:900;letter-spacing:-.02em;margin:0 0 var(--s2)}
-.hero-sub{color:var(--muted);font-size:var(--fs-sub);margin-bottom:var(--s3)}
+  /* Brand */
+  --brand-600: oklab(68% -0.04 -0.02);
+  --brand-500: oklab(76% -0.03 -0.01);
+  --brand-400: oklab(84% -0.02 -0.005);
 
-.hero-meter{margin:var(--s2) 0}
-.meter-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.meter-head .label{font-weight:800}
-.meter-track{height:6px;border:1px solid var(--line);border-radius:999px;background:#0B0E13;position:relative;overflow:hidden}
-.meter-fill{position:absolute;inset:0 auto 0 0;width:0;background:var(--warn)}
-.meter-fill.ok{background:var(--ok)} .meter-fill.alert{background:var(--alert)}
-.meter-legend{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:6px}
+  /* Traffic light */
+  --tone-g:    oklab(78% -0.07 0.06);
+  --tone-y:    oklab(85%  0.01 0.09);
+  --tone-r:    oklab(70%  0.20 0.06);
+  --tone-n:    oklab(78%  0 0);
 
-.hero-main{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s3);flex-wrap:wrap;margin:var(--s3) 0}
-.price-block{display:flex;flex-direction:column;gap:6px}
-.price-row{display:flex;align-items:baseline;gap:8px}
-.price{font-size:64px;font-weight:900}
-.ccy{color:var(--muted);font-weight:700}
-.hint{color:var(--muted);font-size:13px}
-.right-block{display:flex;gap:10px;align-items:center}
+  /* Utility */
+  --focus:     oklab(92% -0.02 -0.01);
+  --shadow:    0 1px 0 rgb(0 0 0 / .25), 0 8px 24px rgb(0 0 0 / .35);
+  --shadow-lg: 0 2px 0 rgb(0 0 0 / .25), 0 16px 48px rgb(0 0 0 / .45);
+}
 
-.kpi{display:grid;grid-template-columns:220px 1fr;gap:10px;border-top:1px solid var(--line);padding-top:var(--s3);margin-top:var(--s3)}
-.kpi .k{color:var(--muted)} .kpi .v{font-weight:700}
-.kpi .v .info-btn{margin-left:8px}
+/* =============================
+   THEME: LIGHT
+   ============================= */
+[data-theme="light"] {
+  --ink:         oklab(18% 0 0);
+  --ink-soft:    oklab(30% 0 0);
+  --muted:       oklab(45% 0 0 / .7);
+  --ink-invert:  oklab(96% 0 0);
 
-.hero-note{margin-top:var(--s3);color:var(--muted);font-size:14px}
+  --surface-page:  oklab(98% 0 0);
+  --surface-card:  oklab(100% 0 0);
+  --surface-panel: oklab(99% 0 0);
+  --surface-glass: oklab(98% 0 0 / .75);
 
-/* Divider & grid */
-.section-divider{height:1px;background:var(--line);margin:var(--s4) 0}
-.modules-grid{max-width:1160px;margin:0 auto var(--s5);padding:0 var(--s3);display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s3)}
-.report-section{grid-column:span 12} @media(min-width:960px){.report-section{grid-column:span 6}}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s3)}
+  --br:        oklab(30% 0 0 / .14);
+  --br-strong: oklab(30% 0 0 / .22);
 
-/* Overlay */
-.overlay{position:fixed;inset:0;z-index:100;display:grid;place-items:center}
-.overlay[hidden]{display:none}
-.overlay-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.55)}
-.panel{position:relative;width:min(980px,95vw);max-height:90vh;background:var(--surface);border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column;overflow:hidden}
-.panel-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line)}
-.panel-title{margin:0;font-size:20px}
-.panel-tabs{display:flex;gap:8px;padding:8px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
-.tab{padding:6px 10px;border:1px solid var(--line);border-radius:var(--r-pill);background:transparent;cursor:pointer}
-.tab[aria-selected="true"]{border-color:var(--accent)}
-.panel-body{padding:16px;overflow:auto}
-.panel-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 16px;border-top:1px solid var(--line)}
+  --brand-600: oklab(52% -0.08 -0.04);
+  --brand-500: oklab(60% -0.07 -0.03);
+  --brand-400: oklab(72% -0.06 -0.02);
 
-/* Footer */
-.site-footer{border-top:1px solid var(--line);background:#0C0F14}
-.footer-inner{max-width:1160px;margin:0 auto;padding:var(--s3);display:flex;align-items:center;gap:10px}
-.footer-inner .footer-actions{margin-left:auto;display:flex;gap:8px}
+  --tone-g:    oklab(45% -0.1 0.08);
+  --tone-y:    oklab(70%  0.02 0.10);
+  --tone-r:    oklab(53%  0.22 0.07);
+  --tone-n:    oklab(40%  0 0);
 
-/* Tooltip 3 sezioni */
-.tt{position:fixed;z-index:300;max-width:520px;background:#11151C;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-.tt h4{margin:0 0 8px 0;font-size:15px;font-weight:800}
-.tt section{margin:8px 0}
-.tt section h5{margin:0 0 2px 0;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-.tt p{margin:0;color:var(--ink)}
-.tt .meta{margin-top:6px;color:var(--muted);font-size:12px}
-.tt-arrow{position:absolute;width:10px;height:10px;background:#11151C;border-left:1px solid var(--line);border-top:1px solid var(--line);transform:rotate(45deg)}
+  --focus:     oklab(60% -0.07 -0.03);
+  --shadow:    0 1px 0 rgb(0 0 0 / .04), 0 8px 24px rgb(0 0 0 / .08);
+  --shadow-lg: 0 2px 0 rgb(0 0 0 / .05), 0 16px 48px rgb(0 0 0 / .12);
+}
+
+/* =============================
+   BASE & RESET
+   ============================= */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: var(--ff);
+  font-size: var(--fs-base);
+  line-height: 1.5;
+  color: var(--ink);
+  background: radial-gradient(1200px 600px at 20% -10%, color-mix(in oklab, var(--surface-card) 45%, transparent), transparent),
+              radial-gradient(1200px 800px at 120% 20%, color-mix(in oklab, var(--surface-card) 35%, transparent), transparent),
+              var(--surface-page);
+}
+img, svg { display:block; max-width:100%; height:auto; }
+button { font: inherit; color: inherit; }
+
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 8px; }
+.tabular { font-variant-numeric: tabular-nums; font-family: var(--ff-mono); }
+.muted { color: var(--muted); }
+
+/* Density tokens */
+:root { --density: 1; }
+@media (max-width: 640px){ :root { --density: .92; } }
+
+/* =============================
+   HEADER (glass, sticky)
+   ============================= */
+.site-header {
+  position: sticky; top: 0; z-index: var(--z-header);
+  backdrop-filter: saturate(1.1) blur(8px);
+  background: linear-gradient(to bottom, var(--surface-glass), transparent);
+  border-bottom: 1px solid var(--br);
+}
+.header-inner { max-width: 1200px; margin: 0 auto; padding: calc(var(--s-3)*var(--density)) var(--s-4); display: flex; align-items: center; gap: var(--s-4); }
+.brand { display:flex; align-items:center; gap: var(--s-3); text-decoration:none; color:var(--ink); font-weight:600; letter-spacing: .02em; }
+.brand .logo { width: 24px; height: 24px; border-radius: 6px; background: linear-gradient(135deg, var(--brand-600), var(--brand-400)); box-shadow: inset 0 0 0 1px rgb(255 255 255 / .08); }
+.brand .wordmark { font-size: var(--fs-md); }
+.brand .dot { color: var(--brand-500); padding-left: 1px; }
+.header-inner .spacer { flex:1; }
+
+/* =============================
+   HERO / HEADER TICKER
+   ============================= */
+.hero { max-width: 1200px; margin: 0 auto; padding: var(--s-7) var(--s-4) var(--s-6); display:flex; flex-direction:column; gap: var(--s-6); }
+.hero-title { font-size: var(--fs-3xl); line-height: 1.15; letter-spacing: -0.01em; margin: 0; }
+.hero-sub { color: var(--muted); min-height: 1.25em; }
+
+/* Confidence meter */
+.hero-meter { display:grid; gap: var(--s-3); padding: var(--s-4); border:1px solid var(--br); border-radius: var(--r-card); background: linear-gradient(180deg, color-mix(in oklab, var(--surface-panel) 55%, transparent), color-mix(in oklab, var(--surface-card) 55%, transparent)); box-shadow: var(--shadow); }
+.hero-meter .meter-head { display:flex; align-items:end; justify-content:space-between; gap: var(--s-3); }
+.hero-meter .label { display:flex; align-items:center; gap: var(--s-2); font-size: var(--fs-sm); color: var(--ink-soft); }
+#hero-conf-val { font-size: var(--fs-lg); }
+.meter-track { position: relative; height: 10px; border-radius: 999px; background: color-mix(in oklab, var(--surface-panel) 40%, transparent); overflow: hidden; }
+#hero-meter-fill { position:absolute; inset: 0 auto 0 0; width: 0%; background: linear-gradient(90deg, var(--tone-r) 0 15%, var(--tone-y) 40%, var(--tone-g) 80%); box-shadow: 0 0 0 1px rgb(0 0 0 / .15) inset; transition: width var(--t-med) var(--ease); }
+.hero-meter .meter-legend { display:flex; justify-content:space-between; font-size: var(--fs-sm); color: var(--muted); }
+
+/* Prezzo + stato */
+.hero-main { display:flex; align-items:end; justify-content:space-between; gap: var(--s-4); flex-wrap: wrap; }
+.price-block { display:grid; gap: var(--s-2); }
+.price-row { display:flex; align-items:center; gap: var(--s-2); }
+#hero-price { font-size: var(--fs-2xl); font-weight: 600; }
+#hero-ccy { color: var(--muted); }
+#hero-hint { color: var(--muted); font-size: var(--fs-sm); min-height: 1.2em; }
+.right-block { display:flex; align-items:center; gap: var(--s-3); }
+
+/* Delta & State map (shared utility) */
+.delta { font-weight:600; padding: 2px 10px; border-radius: var(--r-pill); border:1px solid var(--br); }
+.delta--pos { color: var(--tone-g); background: color-mix(in oklab, var(--tone-g) 18%, transparent); }
+.delta--neg { color: var(--tone-r); background: color-mix(in oklab, var(--tone-r) 16%, transparent); }
+.delta--flat { color: var(--ink-soft); background: color-mix(in oklab, var(--ink-soft) 12%, transparent); }
+
+.state { padding: 2px 10px; border-radius: var(--r-pill); border:1px solid var(--br); color: var(--ink); }
+.state--active { background: color-mix(in oklab, var(--tone-g) 14%, transparent); color: var(--tone-g); }
+.state--review { background: color-mix(in oklab, var(--tone-y) 14%, transparent); color: var(--tone-y); }
+.state--hold, .state--stop { background: color-mix(in oklab, var(--tone-r) 14%, transparent); color: var(--tone-r); }
+
+/* KPI table */
+.kpi { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: var(--s-3) var(--s-4); padding: var(--s-4); border:1px solid var(--br); border-radius: var(--r-card); background: var(--surface-card); box-shadow: var(--shadow); }
+.kpi .row { display:flex; align-items:center; justify-content:space-between; gap: var(--s-3); }
+.kpi .label { color: var(--ink-soft); font-size: var(--fs-sm); display:flex; align-items:center; gap: var(--s-2); }
+.kpi .value { font-weight:600; font-family: var(--ff-mono); }
+
+/* Nota MiFID */
+.hero-note { color: var(--muted); font-size: var(--fs-sm); }
+
+/* =============================
+   SEPARATORE & GRID MODULI
+   ============================= */
+.section-divider { height: 1px; background: linear-gradient(to right, transparent, var(--br), transparent); margin: var(--s-6) 0; }
+.modules-grid { max-width: 1200px; margin: 0 auto; padding: 0 var(--s-4) var(--s-10); display:grid; gap: var(--s-6); grid-template-columns: 1fr; }
+@media (min-width: 860px){ .modules-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1200px){ .modules-grid { grid-template-columns: 1fr 1fr; gap: var(--s-7); } }
+.report-section { border:1px solid var(--br); border-radius: var(--r-card); background: var(--surface-card); box-shadow: var(--shadow); min-height: 180px; }
+
+/* =============================
+   PULSANTI & INFO BUTTONS
+   ============================= */
+.btn { appearance: none; border: 1px solid var(--br); background: color-mix(in oklab, var(--surface-card) 60%, transparent); color: var(--ink); padding: 8px 14px; border-radius: 12px; line-height: 1; cursor: pointer; transition: transform var(--t-fast) var(--ease), background var(--t-med) var(--ease), border-color var(--t-med) var(--ease); }
+.btn:hover { background: color-mix(in oklab, var(--surface-panel) 70%, transparent); border-color: var(--br-strong); }
+.btn:active { transform: translateY(1px); }
+.btn-ghost { background: transparent; border-color: var(--br); }
+
+.info-btn { width: 22px; height: 22px; display:inline-grid; place-items:center; border-radius: 999px; border:1px solid var(--br); background: transparent; color: var(--ink-soft); font-weight:700; line-height: 1; cursor: help; }
+.info-btn:hover { color: var(--ink); border-color: var(--br-strong); }
+
+/* =============================
+   OVERLAY ANALITICO (singleton)
+   ============================= */
+.overlay[hidden] { display:none !important; }
+.overlay { position: fixed; inset: 0; z-index: var(--z-overlay); display:grid; place-items:center; }
+.overlay-backdrop { position:absolute; inset:0; background: oklab(0% 0 0 / .55); backdrop-filter: blur(2px); }
+.panel { position: relative; width: min(960px, 92vw); max-height: min(88vh, 980px); display:flex; flex-direction:column; border:1px solid var(--br); border-radius: 20px; background: linear-gradient(180deg, var(--surface-panel), color-mix(in oklab, var(--surface-card) 75%, transparent)); box-shadow: var(--shadow-lg); overflow:hidden; }
+.panel-head { display:flex; align-items:center; justify-content:space-between; gap: var(--s-4); padding: var(--s-4) var(--s-5); border-bottom: 1px solid var(--br); }
+.panel-title { font-size: var(--fs-lg); margin: 0; }
+.panel-tabs { display:flex; gap: var(--s-2); align-items:center; padding: var(--s-3) var(--s-5); border-bottom:1px solid var(--br); overflow:auto; -webkit-overflow-scrolling: touch; }
+.panel-tabs [role="tab"], .panel-tabs .tab { white-space:nowrap; padding: 6px 12px; border:1px solid var(--br); border-radius: var(--r-pill); background: color-mix(in oklab, var(--surface-card) 60%, transparent); font-size: var(--fs-sm); cursor: pointer; }
+.panel-tabs .is-active { border-color: var(--brand-500); color: var(--brand-400); background: color-mix(in oklab, var(--surface-panel) 70%, transparent); }
+.panel-body { padding: var(--s-5); overflow:auto; scroll-behavior: smooth; }
+.panel-foot { display:flex; align-items:center; justify-content:flex-end; gap: var(--s-3); padding: var(--s-4) var(--s-5); border-top: 1px solid var(--br); background: color-mix(in oklab, var(--surface-card) 70%, transparent); }
+
+/* Variante LEGAL */
+#legal-overlay.overlay { z-index: var(--z-legal); }
+.panel-legal { width: min(720px, 92vw); }
+
+/* =============================
+   TOOLTIP / POPOVER METRICHE
+   ============================= */
+.tooltip-popover { position: fixed; z-index: var(--z-tooltip); max-width: 360px; padding: var(--s-4); border:1px solid var(--br); border-radius: 12px; background: var(--surface-card); box-shadow: var(--shadow); color: var(--ink); }
+.tooltip-popover .tt-title { font-weight: 600; margin: 0 0 var(--s-2); }
+.tooltip-popover .tt-section { font-size: var(--fs-sm); color: var(--ink-soft); }
+.tooltip-popover .tt-section + .tt-section { margin-top: var(--s-2); }
+.tooltip-arrow { position:absolute; width: 10px; height: 10px; transform: rotate(45deg); background: var(--surface-card); border:1px solid var(--br); border-left:0; border-top:0; }
+
+/* =============================
+   FOOTER
+   ============================= */
+.site-footer { border-top: 1px solid var(--br); background: linear-gradient(180deg, color-mix(in oklab, var(--surface-card) 85%, transparent), color-mix(in oklab, var(--surface-page) 85%, transparent)); }
+.footer-inner { max-width:1200px; margin:0 auto; padding: var(--s-5) var(--s-4); display:flex; align-items:center; justify-content:space-between; gap: var(--s-4); color: var(--muted); font-size: var(--fs-sm); }
+.footer-actions { display:flex; gap: var(--s-2); }
+
+/* =============================
+   UTILITIES DI TONO / CHIPS / TONEBAR
+   ============================= */
+.chip { display:inline-flex; align-items:center; gap:.5ch; padding: 2px 10px; border-radius: var(--r-pill); border:1px solid var(--br); font-size: var(--fs-sm); }
+.chip--ok { color: var(--tone-g); background: color-mix(in oklab, var(--tone-g) 12%, transparent); }
+.chip--warn { color: var(--tone-y); background: color-mix(in oklab, var(--tone-y) 12%, transparent); }
+.chip--stop { color: var(--tone-r); background: color-mix(in oklab, var(--tone-r) 12%, transparent); }
+
+.tone-g { color: var(--tone-g); } .tone-y { color: var(--tone-y); } .tone-r { color: var(--tone-r); } .tone-n { color: var(--ink-soft); }
+
+/* Tonebar / meter utility */
+.tonebar { position:relative; height:10px; border-radius:999px; background: color-mix(in oklab, var(--surface-panel) 40%, transparent); overflow:hidden; }
+.tonebar > .fill { position:absolute; inset:0 auto 0 0; width:0%; background: linear-gradient(90deg, var(--tone-r) 0 15%, var(--tone-y) 40%, var(--tone-g) 80%); transition: width var(--t-med) var(--ease); }
+
+/* =============================
+   RESPONSIVE & MOTION
+   ============================= */
+@media (max-width: 640px){
+  .hero { padding-top: var(--s-6); }
+  .hero-title { font-size: 1.75rem; }
+  .hero-meter { border-radius: 16px; }
+  .kpi { grid-template-columns: 1fr; }
+  .panel { width: 96vw; max-height: 92vh; }
+}
+
+@media (prefers-reduced-motion: reduce){ * { scroll-behavior: auto !important; transition: none !important; } }
+
+/* =============================
+   STAMPA / PDF (istituzionale)
+   ============================= */
+@media print {
+  :root { color-scheme: light; }
+  body { background: #fff; color: #111; }
+  .site-header, .overlay, .site-footer { display:none !important; }
+  .hero { max-width: 100%; padding: 0; }
+  .section-divider { display:none; }
+  .modules-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .report-section { break-inside: avoid; border: 1px solid #ddd; box-shadow: none; background: #fff; }
+  /* Utilities */
+  .print-break { break-before: page; }
+  .print-only { display: block !important; }
+  .no-print { display: none !important; }
+}
+
+/* =============================
+   CARD & TABS PLACEHOLDERS (F1..F7)
+   ============================= */
+.report-section .card { padding: var(--s-5); display:grid; gap: var(--s-4); border-bottom-left-radius: var(--r-card); border-bottom-right-radius: var(--r-card); }
+.report-section .card-head { display:flex; align-items:center; justify-content:space-between; gap: var(--s-3); padding: var(--s-4) var(--s-5); border-bottom:1px solid var(--br); background: color-mix(in oklab, var(--surface-card) 55%, transparent); }
+.report-section .card-title { font-size: var(--fs-lg); margin:0; }
+.report-section .card-kpi { display:flex; flex-wrap:wrap; gap: var(--s-2) var(--s-3); }
+.report-section .kpi-pill { display:flex; align-items:center; gap: .6ch; padding: 6px 10px; border:1px solid var(--br); border-radius: var(--r-pill); background: color-mix(in oklab, var(--surface-card) 60%, transparent); font-size: var(--fs-sm); }
+
+.inline-tabs { display:flex; gap: var(--s-2); flex-wrap:wrap; }
+.inline-tabs .tab { padding: 6px 12px; border:1px solid var(--br); border-radius: var(--r-pill); background: color-mix(in oklab, var(--surface-card) 60%, transparent); font-size: var(--fs-sm); cursor:pointer; }
+.inline-tabs .tab.is-active { border-color: var(--brand-500); color: var(--brand-400); background: color-mix(in oklab, var(--surface-panel) 70%, transparent); }
+/* =====================================================================
+   Tradelia · tokens.css (v3.3) — Dual Theme · Istituzionale / Super‑Premium
+   Target: index (header/hero/kpi/modules/overlay/pannelli/footer)
+   - Palette Oklab LIGHT+DARK con contrasto AA/AAA
+   - Semantic tokens (surface/ink/border) e State Map (ACTIVE/REVIEW/HOLD)
+   - Tipografia & density tokens; motion & z‑index map
+   - Tooltip glossario unificati (popover desktop / modal mobile)
+   - Print/PDF pro con utility
+   ===================================================================== */
+
+/* =============================
+   ROOT TOKENS (shared)
+   ============================= */
+:root {
+  color-scheme: light dark;
+
+  /* Z‑index map */
+  --z-header: 50;
+  --z-overlay: 60;    /* panel analitico */
+  --z-legal: 61;      /* overlay legale sopra */
+  --z-tooltip: 70;    /* popover metriche */
+  --z-share: 75;
+
+  /* Radii */
+  --r-pill: 999px;
+  --r-card: 18px;
+
+  /* Spazi (8‑pt refined) */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px; --s-5: 20px; --s-6: 24px;
+  --s-7: 32px; --s-8: 40px; --s-9: 48px; --s-10: 64px; --s-11: 80px;
+
+  /* Type */
+  --ff: ui-sans-serif, system-ui, -apple-system, Segoe UI, Inter, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+  --ff-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New";
+  --fs-sm: .875rem; --fs-base: 1rem; --fs-md: 1.125rem; --fs-lg: 1.25rem; --fs-xl: 1.5rem; --fs-2xl: 2rem; --fs-3xl: 2.5rem;
+
+  /* Motion */
+  --ease: cubic-bezier(.2,.7,.2,1);
+  --t-fast: 120ms; --t-med: 200ms; --t-slow: 320ms;
+}
+
+/* =============================
+   THEME: DARK
+   ============================= */
+:root, [data-theme="dark"] {
+  /* Ink */
+  --ink:         oklab(95% -0.002 0.001);
+  --ink-soft:    oklab(82% -0.002 0.001);
+  --muted:       oklab(70% -0.002 0.001 / .76);
+  --ink-invert:  oklab(18% 0 0);
+
+  /* Surface (semantic) */
+  --surface-page:  oklab(20% 0 0);
+  --surface-card:  oklab(24% 0 0);
+  --surface-panel: oklab(28% 0 0);
+  --surface-glass: oklab(22% 0 0 / .7);
+
+  /* Border */
+  --br:        oklab(40% 0 0 / .22);
+  --br-strong: oklab(55% 0 0 / .28);
+
+  /* Brand */
+  --brand-600: oklab(68% -0.04 -0.02);
+  --brand-500: oklab(76% -0.03 -0.01);
+  --brand-400: oklab(84% -0.02 -0.005);
+
+  /* Traffic light */
+  --tone-g:    oklab(78% -0.07 0.06);
+  --tone-y:    oklab(85%  0.01 0.09);
+  --tone-r:    oklab(70%  0.20 0.06);
+  --tone-n:    oklab(78%  0 0);
+
+  /* Utility */
+  --focus:     oklab(92% -0.02 -0.01);
+  --shadow:    0 1px 0 rgb(0 0 0 / .25), 0 8px 24px rgb(0 0 0 / .35);
+  --shadow-lg: 0 2px 0 rgb(0 0 0 / .25), 0 16px 48px rgb(0 0 0 / .45);
+}
+
+/* =============================
+   THEME: LIGHT
+   ============================= */
+[data-theme="light"] {
+  --ink:         oklab(18% 0 0);
+  --ink-soft:    oklab(30% 0 0);
+  --muted:       oklab(45% 0 0 / .7);
+  --ink-invert:  oklab(96% 0 0);
+
+  --surface-page:  oklab(98% 0 0);
+  --surface-card:  oklab(100% 0 0);
+  --surface-panel: oklab(99% 0 0);
+  --surface-glass: oklab(98% 0 0 / .75);
+
+  --br:        oklab(30% 0 0 / .14);
+  --br-strong: oklab(30% 0 0 / .22);
+
+  --brand-600: oklab(52% -0.08 -0.04);
+  --brand-500: oklab(60% -0.07 -0.03);
+  --brand-400: oklab(72% -0.06 -0.02);
+
+  --tone-g:    oklab(45% -0.1 0.08);
+  --tone-y:    oklab(70%  0.02 0.10);
+  --tone-r:    oklab(53%  0.22 0.07);
+  --tone-n:    oklab(40%  0 0);
+
+  --focus:     oklab(60% -0.07 -0.03);
+  --shadow:    0 1px 0 rgb(0 0 0 / .04), 0 8px 24px rgb(0 0 0 / .08);
+  --shadow-lg: 0 2px 0 rgb(0 0 0 / .05), 0 16px 48px rgb(0 0 0 / .12);
+}
+
+/* =============================
+   BASE & RESET
+   ============================= */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: var(--ff);
+  font-size: var(--fs-base);
+  line-height: 1.5;
+  color: var(--ink);
+  background: radial-gradient(1200px 600px at 20% -10%, color-mix(in oklab, var(--surface-card) 45%, transparent), transparent),
+              radial-gradient(1200px 800px at 120% 20%, color-mix(in oklab, var(--surface-card) 35%, transparent), transparent),
+              var(--surface-page);
+}
+img, svg { display:block; max-width:100%; height:auto; }
+button { font: inherit; color: inherit; }
+
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 8px; }
+.tabular { font-variant-numeric: tabular-nums; font-family: var(--ff-mono); }
+.muted { color: var(--muted); }
+
+/* Density tokens */
+:root { --density: 1; }
+@media (max-width: 640px){ :root { --density: .92; } }
+
+/* =============================
+   HEADER (glass, sticky)
+   ============================= */
+.site-header {
+  position: sticky; top: 0; z-index: var(--z-header);
+  backdrop-filter: saturate(1.1) blur(8px);
+  background: linear-gradient(to bottom, var(--surface-glass), transparent);
+  border-bottom: 1px solid var(--br);
+}
+.header-inner { max-width: 1200px; margin: 0 auto; padding: calc(var(--s-3)*var(--density)) var(--s-4); display: flex; align-items: center; gap: var(--s-4); }
+.brand { display:flex; align-items:center; gap: var(--s-3); text-decoration:none; color:var(--ink); font-weight:600; letter-spacing: .02em; }
+.brand .logo { width: 24px; height: 24px; border-radius: 6px; background: linear-gradient(135deg, var(--brand-600), var(--brand-400)); box-shadow: inset 0 0 0 1px rgb(255 255 255 / .08); }
+.brand .wordmark { font-size: var(--fs-md); }
+.brand .dot { color: var(--brand-500); padding-left: 1px; }
+.header-inner .spacer { flex:1; }
+
+/* =============================
+   HERO / HEADER TICKER
+   ============================= */
+.hero { max-width: 1200px; margin: 0 auto; padding: var(--s-7) var(--s-4) var(--s-6); display:flex; flex-direction:column; gap: var(--s-6); }
+.hero-title { font-size: var(--fs-3xl); line-height: 1.15; letter-spacing: -0.01em; margin: 0; }
+.hero-sub { color: var(--muted); min-height: 1.25em; }
+
+/* Confidence meter */
+.hero-meter { display:grid; gap: var(--s-3); padding: var(--s-4); border:1px solid var(--br); border-radius: var(--r-card); background: linear-gradient(180deg, color-mix(in oklab, var(--surface-panel) 55%, transparent), color-mix(in oklab, var(--surface-card) 55%, transparent)); box-shadow: var(--shadow); }
+.hero-meter .meter-head { display:flex; align-items:end; justify-content:space-between; gap: var(--s-3); }
+.hero-meter .label { display:flex; align-items:center; gap: var(--s-2); font-size: var(--fs-sm); color: var(--ink-soft); }
+#hero-conf-val { font-size: var(--fs-lg); }
+.meter-track { position: relative; height: 10px; border-radius: 999px; background: color-mix(in oklab, var(--surface-panel) 40%, transparent); overflow: hidden; }
+#hero-meter-fill { position:absolute; inset: 0 auto 0 0; width: 0%; background: linear-gradient(90deg, var(--tone-r) 0 15%, var(--tone-y) 40%, var(--tone-g) 80%); box-shadow: 0 0 0 1px rgb(0 0 0 / .15) inset; transition: width var(--t-med) var(--ease); }
+.hero-meter .meter-legend { display:flex; justify-content:space-between; font-size: var(--fs-sm); color: var(--muted); }
+
+/* Prezzo + stato */
+.hero-main { display:flex; align-items:end; justify-content:space-between; gap: var(--s-4); flex-wrap: wrap; }
+.price-block { display:grid; gap: var(--s-2); }
+.price-row { display:flex; align-items:center; gap: var(--s-2); }
+#hero-price { font-size: var(--fs-2xl); font-weight: 600; }
+#hero-ccy { color: var(--muted); }
+#hero-hint { color: var(--muted); font-size: var(--fs-sm); min-height: 1.2em; }
+.right-block { display:flex; align-items:center; gap: var(--s-3); }
+
+/* Delta & State map (shared utility) */
+.delta { font-weight:600; padding: 2px 10px; border-radius: var(--r-pill); border:1px solid var(--br); }
+.delta--pos { color: var(--tone-g); background: color-mix(in oklab, var(--tone-g) 18%, transparent); }
+.delta--neg { color: var(--tone-r); background: color-mix(in oklab, var(--tone-r) 16%, transparent); }
+.delta--flat { color: var(--ink-soft); background: color-mix(in oklab, var(--ink-soft) 12%, transparent); }
+
+.state { padding: 2px 10px; border-radius: var(--r-pill); border:1px solid var(--br); color: var(--ink); }
+.state--active { background: color-mix(in oklab, var(--tone-g) 14%, transparent); color: var(--tone-g); }
+.state--review { background: color-mix(in oklab, var(--tone-y) 14%, transparent); color: var(--tone-y); }
+.state--hold, .state--stop { background: color-mix(in oklab, var(--tone-r) 14%, transparent); color: var(--tone-r); }
+
+/* KPI table */
+.kpi { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: var(--s-3) var(--s-4); padding: var(--s-4); border:1px solid var(--br); border-radius: var(--r-card); background: var(--surface-card); box-shadow: var(--shadow); }
+.kpi .row { display:flex; align-items:center; justify-content:space-between; gap: var(--s-3); }
+.kpi .label { color: var(--ink-soft); font-size: var(--fs-sm); display:flex; align-items:center; gap: var(--s-2); }
+.kpi .value { font-weight:600; font-family: var(--ff-mono); }
+
+/* Nota MiFID */
+.hero-note { color: var(--muted); font-size: var(--fs-sm); }
+
+/* =============================
+   SEPARATORE & GRID MODULI
+   ============================= */
+.section-divider { height: 1px; background: linear-gradient(to right, transparent, var(--br), transparent); margin: var(--s-6) 0; }
+.modules-grid { max-width: 1200px; margin: 0 auto; padding: 0 var(--s-4) var(--s-10); display:grid; gap: var(--s-6); grid-template-columns: 1fr; }
+@media (min-width: 860px){ .modules-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1200px){ .modules-grid { grid-template-columns: 1fr 1fr; gap: var(--s-7); } }
+.report-section { border:1px solid var(--br); border-radius: var(--r-card); background: var(--surface-card); box-shadow: var(--shadow); min-height: 180px; }
+
+/* =============================
+   PULSANTI & INFO BUTTONS
+   ============================= */
+.btn { appearance: none; border: 1px solid var(--br); background: color-mix(in oklab, var(--surface-card) 60%, transparent); color: var(--ink); padding: 8px 14px; border-radius: 12px; line-height: 1; cursor: pointer; transition: transform var(--t-fast) var(--ease), background var(--t-med) var(--ease), border-color var(--t-med) var(--ease); }
+.btn:hover { background: color-mix(in oklab, var(--surface-panel) 70%, transparent); border-color: var(--br-strong); }
+.btn:active { transform: translateY(1px); }
+.btn-ghost { background: transparent; border-color: var(--br); }
+
+.info-btn { width: 22px; height: 22px; display:inline-grid; place-items:center; border-radius: 999px; border:1px solid var(--br); background: transparent; color: var(--ink-soft); font-weight:700; line-height: 1; cursor: help; }
+.info-btn:hover { color: var(--ink); border-color: var(--br-strong); }
+
+/* =============================
+   OVERLAY ANALITICO (singleton)
+   ============================= */
+.overlay[hidden] { display:none !important; }
+.overlay { position: fixed; inset: 0; z-index: var(--z-overlay); display:grid; place-items:center; }
+.overlay-backdrop { position:absolute; inset:0; background: oklab(0% 0 0 / .55); backdrop-filter: blur(2px); }
+.panel { position: relative; width: min(960px, 92vw); max-height: min(88vh, 980px); display:flex; flex-direction:column; border:1px solid var(--br); border-radius: 20px; background: linear-gradient(180deg, var(--surface-panel), color-mix(in oklab, var(--surface-card) 75%, transparent)); box-shadow: var(--shadow-lg); overflow:hidden; }
+.panel-head { display:flex; align-items:center; justify-content:space-between; gap: var(--s-4); padding: var(--s-4) var(--s-5); border-bottom: 1px solid var(--br); }
+.panel-title { font-size: var(--fs-lg); margin: 0; }
+.panel-tabs { display:flex; gap: var(--s-2); align-items:center; padding: var(--s-3) var(--s-5); border-bottom:1px solid var(--br); overflow:auto; -webkit-overflow-scrolling: touch; }
+.panel-tabs [role="tab"], .panel-tabs .tab { white-space:nowrap; padding: 6px 12px; border:1px solid var(--br); border-radius: var(--r-pill); background: color-mix(in oklab, var(--surface-card) 60%, transparent); font-size: var(--fs-sm); cursor: pointer; }
+.panel-tabs .is-active { border-color: var(--brand-500); color: var(--brand-400); background: color-mix(in oklab, var(--surface-panel) 70%, transparent); }
+.panel-body { padding: var(--s-5); overflow:auto; scroll-behavior: smooth; }
+.panel-foot { display:flex; align-items:center; justify-content:flex-end; gap: var(--s-3); padding: var(--s-4) var(--s-5); border-top: 1px solid var(--br); background: color-mix(in oklab, var(--surface-card) 70%, transparent); }
+
+/* Variante LEGAL */
+#legal-overlay.overlay { z-index: var(--z-legal); }
+.panel-legal { width: min(720px, 92vw); }
+
+/* =============================
+   TOOLTIP / POPOVER METRICHE
+   ============================= */
+.tooltip-popover { position: fixed; z-index: var(--z-tooltip); max-width: 360px; padding: var(--s-4); border:1px solid var(--br); border-radius: 12px; background: var(--surface-card); box-shadow: var(--shadow); color: var(--ink); }
+.tooltip-popover .tt-title { font-weight: 600; margin: 0 0 var(--s-2); }
+.tooltip-popover .tt-section { font-size: var(--fs-sm); color: var(--ink-soft); }
+.tooltip-popover .tt-section + .tt-section { margin-top: var(--s-2); }
+.tooltip-arrow { position:absolute; width: 10px; height: 10px; transform: rotate(45deg); background: var(--surface-card); border:1px solid var(--br); border-left:0; border-top:0; }
+
+/* =============================
+   FOOTER
+   ============================= */
+.site-footer { border-top: 1px solid var(--br); background: linear-gradient(180deg, color-mix(in oklab, var(--surface-card) 85%, transparent), color-mix(in oklab, var(--surface-page) 85%, transparent)); }
+.footer-inner { max-width:1200px; margin:0 auto; padding: var(--s-5) var(--s-4); display:flex; align-items:center; justify-content:space-between; gap: var(--s-4); color: var(--muted); font-size: var(--fs-sm); }
+.footer-actions { display:flex; gap: var(--s-2); }
+
+/* =============================
+   UTILITIES DI TONO / CHIPS / TONEBAR
+   ============================= */
+.chip { display:inline-flex; align-items:center; gap:.5ch; padding: 2px 10px; border-radius: var(--r-pill); border:1px solid var(--br); font-size: var(--fs-sm); }
+.chip--ok { color: var(--tone-g); background: color-mix(in oklab, var(--tone-g) 12%, transparent); }
+.chip--warn { color: var(--tone-y); background: color-mix(in oklab, var(--tone-y) 12%, transparent); }
+.chip--stop { color: var(--tone-r); background: color-mix(in oklab, var(--tone-r) 12%, transparent); }
+
+.tone-g { color: var(--tone-g); } .tone-y { color: var(--tone-y); } .tone-r { color: var(--tone-r); } .tone-n { color: var(--ink-soft); }
+
+/* Tonebar / meter utility */
+.tonebar { position:relative; height:10px; border-radius:999px; background: color-mix(in oklab, var(--surface-panel) 40%, transparent); overflow:hidden; }
+.tonebar > .fill { position:absolute; inset:0 auto 0 0; width:0%; background: linear-gradient(90deg, var(--tone-r) 0 15%, var(--tone-y) 40%, var(--tone-g) 80%); transition: width var(--t-med) var(--ease); }
+
+/* =============================
+   RESPONSIVE & MOTION
+   ============================= */
+@media (max-width: 640px){
+  .hero { padding-top: var(--s-6); }
+  .hero-title { font-size: 1.75rem; }
+  .hero-meter { border-radius: 16px; }
+  .kpi { grid-template-columns: 1fr; }
+  .panel { width: 96vw; max-height: 92vh; }
+}
+
+@media (prefers-reduced-motion: reduce){ * { scroll-behavior: auto !important; transition: none !important; } }
+
+/* =============================
+   STAMPA / PDF (istituzionale)
+   ============================= */
+@media print {
+  :root { color-scheme: light; }
+  body { background: #fff; color: #111; }
+  .site-header, .overlay, .site-footer { display:none !important; }
+  .hero { max-width: 100%; padding: 0; }
+  .section-divider { display:none; }
+  .modules-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .report-section { break-inside: avoid; border: 1px solid #ddd; box-shadow: none; background: #fff; }
+  /* Utilities */
+  .print-break { break-before: page; }
+  .print-only { display: block !important; }
+  .no-print { display: none !important; }
+}
+
+/* =============================
+   CARD & TABS PLACEHOLDERS (F1..F7)
+   ============================= */
+.report-section .card { padding: var(--s-5); display:grid; gap: var(--s-4); border-bottom-left-radius: var(--r-card); border-bottom-right-radius: var(--r-card); }
+.report-section .card-head { display:flex; align-items:center; justify-content:space-between; gap: var(--s-3); padding: var(--s-4) var(--s-5); border-bottom:1px solid var(--br); background: color-mix(in oklab, var(--surface-card) 55%, transparent); }
+.report-section .card-title { font-size: var(--fs-lg); margin:0; }
+.report-section .card-kpi { display:flex; flex-wrap:wrap; gap: var(--s-2) var(--s-3); }
+.report-section .kpi-pill { display:flex; align-items:center; gap: .6ch; padding: 6px 10px; border:1px solid var(--br); border-radius: var(--r-pill); background: color-mix(in oklab, var(--surface-card) 60%, transparent); font-size: var(--fs-sm); }
+
+.inline-tabs { display:flex; gap: var(--s-2); flex-wrap:wrap; }
+.inline-tabs .tab { padding: 6px 12px; border:1px solid var(--br); border-radius: var(--r-pill); background: color-mix(in oklab, var(--surface-card) 60%, transparent); font-size: var(--fs-sm); cursor:pointer; }
+.inline-tabs .tab.is-active { border-color: var(--brand-500); color: var(--brand-400); background: color-mix(in oklab, var(--surface-panel) 70%, transparent); }
