@@ -1,6 +1,9 @@
 // /report/assets/js/ui-runtime.js
-// Runtime UI globale Tradelia AI (shell-only): overlay analitico, overlay legale, metric tooltips, helpers.
-// Dipendenze: tokens.css (classi tl-panel-*, tl-popover, tl-metric-modal-*, .btn), nessuna libreria esterna.
+// Runtime UI globale Tradelia AI (NO legal overlay):
+// - Overlay analitico (panel) per moduli F*
+// - Tooltip metriche "?" (popover desktop / modal mobile)
+// - Audit panel (qualità dati)
+// Dipendenze: tokens.css (classi tl-panel-*, tl-popover, tl-metric-modal-*, .btn). Nessuna libreria esterna.
 
 (function(){
   const UI = {};
@@ -117,10 +120,10 @@
     mountPanelOverlay();
     const { title='—', subtitle='—', body='', footerButtons=null, panelSize='wide', blocking=false } = opts;
 
-    // Size (opzionale, usabile dai moduli via classi)
+    // Size (opzionale)
     desktopPanel.style.width = panelSize === 'xl' ? 'min(980px,100%)' : 'min(860px,100%)';
 
-    // Conteuti
+    // Contenuti
     desktopTitle.textContent = title; mobileTitle.textContent = title;
     desktopSub.textContent   = subtitle || '—'; mobileSub.textContent = subtitle || '—';
     desktopBody.innerHTML    = body;    mobileBody.innerHTML = body;
@@ -133,7 +136,7 @@
 
     overlay.setAttribute('aria-hidden','false');
 
-    // Mostra solo variante corretta
+    // Variante corretta
     if (isMobile()){
       desktopPanel.style.display='none'; mobilePanel.style.display='flex';
     } else {
@@ -141,7 +144,7 @@
     }
 
     resetScroll();
-    // Re-bind metric tooltips anche dentro il pannello
+    // Tooltips anche dentro il pannello
     try { UI.bindMetricInfoButtons(desktopBody); UI.bindMetricInfoButtons(mobileBody); } catch(e){}
   }
 
@@ -153,111 +156,8 @@
   }
 
   // -----------------------------
-  // Overlay LEGAL (Privacy / MiFID)
+  // Audit Panel (qualità dati)
   // -----------------------------
-  let legal, legalBackdrop, legalDesktop, legalMobile, legalBody, legalBodyM, legalTitle, legalTitleM, legalSub, legalSubM, legalFooter, legalFooterM;
-
-  function mountLegalOverlay(){
-    if (qs('#legal-overlay')) return;
-    legal = el('div','tl-panel-overlay noprint'); legal.id='legal-overlay'; legal.setAttribute('aria-hidden','true');
-    legalBackdrop = el('div','tl-panel-backdrop'); legalBackdrop.setAttribute('data-legal-close','');
-    legal.appendChild(legalBackdrop);
-
-    // Desktop
-    legalDesktop = el('aside','tl-panel tl-panel--desktop');
-    const h = el('header','tl-panel__header');
-    legalTitle = el('h2','tl-panel__title'); legalTitle.id='legal-title'; legalTitle.textContent='—';
-    legalSub   = el('p','tl-panel__subtitle'); legalSub.id='legal-subtitle'; legalSub.textContent='—';
-    const wr   = el('div','min-w-0'); wr.append(legalTitle, legalSub);
-    const x    = el('button','tl-panel__close', svgX(16)); x.setAttribute('data-legal-close',''); x.setAttribute('aria-label','Chiudi');
-    h.append(wr,x);
-    legalBody   = el('div','tl-panel__body'); legalBody.id='legal-body';
-    legalFooter = el('footer','tl-panel__footer'); legalFooter.id='legal-footer';
-    const ok    = el('button','btn btn-sm'); ok.textContent='Chiudi'; ok.setAttribute('data-legal-close','');
-    legalFooter.append(ok);
-    legalDesktop.append(h, legalBody, legalFooter);
-
-    // Mobile
-    legalMobile = el('aside','tl-panel tl-panel--mobile');
-    const hm = el('header','tl-panel__header');
-    legalTitleM = el('h2','tl-panel__title'); legalTitleM.id='legal-title-mobile'; legalTitleM.textContent='—';
-    legalSubM   = el('p','tl-panel__subtitle'); legalSubM.id='legal-subtitle-mobile'; legalSubM.textContent='—';
-    const wrm   = el('div','min-w-0'); wrm.append(legalTitleM, legalSubM);
-    const xm    = el('button','tl-panel__close', svgX(18)); xm.setAttribute('data-legal-close',''); xm.setAttribute('aria-label','Chiudi');
-    hm.append(wrm, xm);
-    legalBodyM   = el('div','tl-panel__body'); legalBodyM.id='legal-body-mobile';
-    legalFooterM = el('footer','tl-panel__footer'); legalFooterM.id='legal-footer-mobile';
-    const okm    = el('button','btn btn-sm'); okm.textContent='Chiudi'; okm.setAttribute('data-legal-close','');
-    legalFooterM.append(okm);
-    legalMobile.append(hm, legalBodyM, legalFooterM);
-
-    legal.append(legalDesktop, legalMobile);
-    document.body.appendChild(legal);
-
-    // Close delegates
-    legal.addEventListener('click', (e)=>{
-      const t = e.target;
-      if (t.closest('[data-legal-close]') || t === legalBackdrop) closeLegal();
-    });
-    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && legal.getAttribute('aria-hidden')==='false'){ closeLegal(); } });
-  }
-
-  function openLegal({title='—', subtitle='—', body=''}){
-    mountLegalOverlay();
-    legalTitle.textContent = title;  legalTitleM.textContent = title;
-    legalSub.textContent   = subtitle || '—'; legalSubM.textContent = subtitle || '—';
-    legalBody.innerHTML    = body;   legalBodyM.innerHTML    = body;
-
-    legal.setAttribute('aria-hidden','false');
-    if (isMobile()){ legalDesktop.style.display='none'; legalMobile.style.display='flex'; }
-    else { legalDesktop.style.display='flex'; legalMobile.style.display='none'; }
-    (legalDesktop.querySelector('.tl-panel__body')||{}).scrollTop = 0;
-    (legalMobile.querySelector('.tl-panel__body')||{}).scrollTop  = 0;
-  }
-
-  function closeLegal(){
-    if (!legal) return;
-    legal.setAttribute('aria-hidden','true');
-  }
-
-  function openPrivacyPanel(){
-    openLegal({
-      title: 'Informativa Privacy',
-      subtitle: 'Uso limitato a finalità informative; nessuna profilazione pubblicitaria.',
-      body: `
-        <div class="card">
-          <p class="text-[13px] text-[color:var(--ink-soft)]">
-            Questo sito utilizza esclusivamente storage locale per preferenze tecniche (es. tema). 
-            Non vengono utilizzati cookie di profilazione né tracciamenti pubblicitari esterni.
-          </p>
-          <ul class="text-[13px] text-[color:var(--muted)] mt-3 space-y-1">
-            <li>• Nessun dato personale sensibile viene richiesto o trattato</li>
-            <li>• Dati tecnici: tema, preferenze di visualizzazione</li>
-            <li>• Contatto: <a href="mailto:info@tradelia.org">info@tradelia.org</a></li>
-          </ul>
-        </div>`
-    });
-  }
-
-  function openMifidPanel(){
-    openLegal({
-      title: 'Informativa MiFID',
-      subtitle: 'Materiale informativo e didattico — nessuna raccomandazione personalizzata.',
-      body: `
-        <div class="card">
-          <p class="text-[13px] text-[color:var(--ink-soft)]">
-            I contenuti presentati hanno finalità esclusivamente informative e formative.
-            Non costituiscono consulenza in materia di investimenti né sollecitazione al pubblico risparmio.
-          </p>
-          <ul class="text-[13px] text-[color:var(--muted)] mt-3 space-y-1">
-            <li>• Rischio di perdita anche totale del capitale</li>
-            <li>• Tradelia AI non gestisce capitali e non esegue ordini</li>
-            <li>• L’utente rimane l’unico responsabile delle proprie decisioni</li>
-          </ul>
-        </div>`
-    });
-  }
-
   function openAuditPanel(auditData={}){
     const { AuditPathID='—', QualityMetrics={}, Notes=[] } = auditData || {};
     const qm = (k)=> (QualityMetrics && (QualityMetrics[k] ?? '—'));
@@ -334,7 +234,6 @@
     popBody.innerHTML     = (data?.what || '—') + (data?.how ? `<div style="margin-top:.5rem">${data.how}</div>` : '');
     popSource.textContent = data?.source || '';
     popover.setAttribute('aria-hidden','false');
-    // Posizionamento preferito: sopra a destra del bottone
     const x = rect.left + rect.width + 8;
     const y = rect.top - 8;
     clampPopoverToViewport(popover, x, y);
@@ -366,31 +265,26 @@
   // -----------------------------
   // API globale
   // -----------------------------
-  UI.openPanel  = openPanel;
-  UI.closePanel = closePanel;
-  UI.openPrivacyPanel = openPrivacyPanel;
-  UI.openMifidPanel   = openMifidPanel;
-  UI.openAuditPanel   = openAuditPanel;
+  UI.openPanel       = openPanel;
+  UI.closePanel      = closePanel;
+  UI.openAuditPanel  = openAuditPanel;
+  // (Niente openPrivacyPanel / openMifidPanel in questa versione)
 
   // Esporta
   window.__TradeliaUI = UI;
 
   // -----------------------------
-  // Bootstrap: mount overlay e bind footer buttons
+  // Bootstrap
   // -----------------------------
   function boot(){
     mountPanelOverlay();
-    mountLegalOverlay();
     mountTooltips();
 
-    // Footer buttons
-    const bPriv = qs('#btn-privacy-open');
-    const bMi   = qs('#btn-mifid-open');
-    if (bPriv) bPriv.addEventListener('click', openPrivacyPanel);
-    if (bMi)   bMi.addEventListener('click',   openMifidPanel);
-
-    // Clic fuori/pagina: chiude popover desktop
+    // Nota: nessun binding Privacy/MiFID nel runtime
+    // I pulsanti del footer devono essere gestiti dall'overlay inline dell'index
+    // oppure da un altro modulo dedicato
     document.addEventListener('click', (e)=>{
+      // Chiudi popover desktop se clic fuori
       if (popover && popover.getAttribute('aria-hidden')==='false'){
         if (!e.target.closest('#metric-popover') && !e.target.closest('.info-btn') && !e.target.closest('.info-btn--mini')){
           hidePopover();
@@ -399,7 +293,6 @@
     });
   }
 
-  // Start
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 
