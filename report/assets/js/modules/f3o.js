@@ -119,7 +119,7 @@ function openF3ODrawer(d){
   const shell    = mobile ? renderMobileShell(sections, d) : renderDesktopShell(sections, d);
 
   window.__TradeliaUI.openPanel({
-    title:'F3O · Options Overlay',
+    title:'F3o · Options Overlay',
     subtitle:'',
     sections:[{ title:'', body:shell, meta:'' }],
     blocking:false,
@@ -590,7 +590,7 @@ function fmtUsd2(x){ const n=Number(x); return Number.isFinite(n)? '$'+new Intl.
 function normalizeDataF3OPublic(src={}){
   const meta = {
     timestampET: src?.meta?.timestampET ?? '—',
-    module: src?.meta?.module ?? 'F3O · Options Overlay',
+    module: src?.meta?.module ?? 'F3o · Options Overlay',
     moduleVersion: src?.meta?.moduleVersion ?? 'v1.2',
     moduleStatus: src?.meta?.moduleStatus ?? 'ACTIVE',
     freshness: src?.meta?.freshness ?? '≤ T-1',
@@ -679,7 +679,7 @@ function normalizeDataF3OPublic(src={}){
 
   // Hero title/subtitle: fallback dall'input JSON se presente
   const hero_title = UL?.hero_title || defaults.hero_title;
-  const hero_subtitle = UL?.hero_subtitle || `${src?.meta?.module || 'F3O · Options Overlay'} · Orizzonte 3–10 giorni`;
+  const hero_subtitle = UL?.hero_subtitle || `${src?.meta?.module || 'F3o · Options Overlay'} · Orizzonte 3–10 giorni`;
 
   const labels = {
     ...defaults,
