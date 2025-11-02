@@ -1,4 +1,4 @@
-// UI Runtime v2.4 — dark-only: overlay analitico, legale, tooltips, footer year
+// UI Runtime v2.6 — overlay analitico, legale, tooltips 3-sezioni, footer year
 
 const $  = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
@@ -6,7 +6,7 @@ const $$ = (s, r=document) => [...r.querySelectorAll(s)];
 // Footer year
 (function(){ const y = $('#footer-year'); if(y) y.textContent = new Date().getFullYear(); })();
 
-// -------- Overlay Analitico --------
+/* ---------- Overlay Analitico ---------- */
 const Panel = (() =>{
   const overlay = $('#panel-overlay'); const tabs = $('#panel-tabs');
   const body = $('#panel-body'); const title = $('#panel-title'); const foot = $('#panel-foot');
@@ -29,7 +29,7 @@ const Panel = (() =>{
   return { open, close };
 })();
 
-// -------- Overlay Legale --------
+/* ---------- Overlay Legale ---------- */
 (function legal(){
   const overlay = $('#legal-overlay'); const body = $('#legal-body');
   function close(){ overlay.hidden=true; body.innerHTML=''; document.body.style.overflow=''; }
@@ -42,19 +42,78 @@ const Panel = (() =>{
   window.__Legal = { open, close };
 })();
 
-// -------- Tooltips metriche --------
+/* ---------- Tooltips 3 sezioni (Cos’è / Come si usa / Fonte) ---------- */
 async function fetchGlossary(){ try { return await (await fetch('./assets/glossary.json',{cache:'no-store'})).json(); } catch { return {}; } }
+
 function bindMetricInfoButtons(root=document){
+  let openRef = null, openBtn = null;
+
+  const close = () => {
+    if (openRef){ openRef.remove(); openRef = null; }
+    if (openBtn){ openBtn.removeAttribute('aria-describedby'); openBtn = null; }
+    document.removeEventListener('keydown', onKey);
+    document.removeEventListener('click', onDocClick, true);
+  };
+
+  const onKey = (e) => { if (e.key === 'Escape') close(); };
+
+  const onDocClick = (e) => {
+    if (!openRef) return;
+    const inside = openRef.contains(e.target);
+    const isBtn = e.target === openBtn || e.target.closest('[data-info]') === openBtn;
+    if (!inside && !isBtn) close();
+  };
+
   root.addEventListener('click', async (e)=>{
-    const btn = e.target.closest('[data-info]'); if(!btn) return;
-    const id = btn.getAttribute('data-info'); const g = await fetchGlossary(); const it = g?.[id] || { title:id, what:'—' };
-    const pop = document.createElement('div'); pop.className='card'; pop.style.position='absolute'; pop.style.zIndex=200; pop.style.maxWidth='320px';
-    pop.innerHTML = `<h3 style="margin:0 0 6px 0">${it.title||id}</h3><p style="margin:0;color:var(--muted)">${it.what||''}</p>`;
-    document.body.appendChild(pop); const r = btn.getBoundingClientRect();
-    pop.style.left = Math.min(r.left, window.innerWidth-340) + 'px'; pop.style.top = (r.bottom + 8) + 'px';
-    const close = ()=>{ pop.remove(); document.removeEventListener('click', onDoc); };
-    const onDoc = ev => { if(!pop.contains(ev.target) && ev.target!==btn) close(); };
-    setTimeout(()=>document.addEventListener('click', onDoc),0);
+    const btn = e.target.closest('[data-info]');
+    if (!btn) return;
+
+    // toggle
+    if (openBtn === btn){ close(); return; } else { close(); }
+
+    const id = btn.getAttribute('data-info');
+    const g  = await fetchGlossary();
+    const it = g?.[id] || { title:id, what:'—', how:'', source:'' };
+
+    // Node
+    const n = document.createElement('div');
+    n.className = 'tt';
+    n.setAttribute('role', 'dialog');
+    const ttId = `tt-${Math.random().toString(36).slice(2,8)}`;
+    n.id = ttId;
+
+    n.innerHTML = `
+      <div class="tt-arrow" aria-hidden="true"></div>
+      ${ it.title ? `<h4>${it.title}</h4>` : '' }
+      ${ it.what  ? `<section><h5>Cos’è</h5><p>${it.what}</p></section>` : '' }
+      ${ it.how   ? `<section><h5>Come si usa</h5><p>${it.how}</p></section>` : '' }
+      ${ it.source? `<section class="src"><h5>Fonte</h5><p class="meta">${it.source}</p></section>` : '' }
+    `;
+
+    document.body.appendChild(n);
+
+    // Positioning (prefer top, fallback bottom) + clamp
+    const b = btn.getBoundingClientRect();
+    const margin = 10;
+    const prefTop = b.top > (window.innerHeight/2);
+    const nRect0 = n.getBoundingClientRect();
+    let left = Math.min(Math.max(b.left + (b.width/2) - (nRect0.width/2), margin), window.innerWidth - nRect0.width - margin);
+    let top  = prefTop ? (b.top - nRect0.height - 10) : (b.bottom + 10);
+
+    // clamp Y and recompute arrow
+    top  = Math.max(margin, Math.min(top, window.innerHeight - nRect0.height - margin));
+    n.style.left = `${left}px`; n.style.top = `${top}px`;
+    const nRect = n.getBoundingClientRect();
+    const arrow = n.querySelector('.tt-arrow');
+    const arrowLeft = Math.min(Math.max((b.left + b.width/2) - nRect.left - 6, 8), nRect.width - 8);
+    arrow.style.left = `${arrowLeft}px`;
+    arrow.style.top  = `${prefTop ? (nRect.height - 6) : -6}px`;
+
+    // Wire close
+    openRef = n; openBtn = btn;
+    btn.setAttribute('aria-describedby', ttId);
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('click', onDocClick, true);
   });
 }
 
