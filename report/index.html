@@ -21,52 +21,54 @@
     </div>
   </header>
 
-  <!-- HERO / HEADER TICKER -->
-  <section id="hero" class="hero" role="region" aria-label="Header ticker">
-    <div class="hero-head">
-      <div class="hero-title" id="hero-title">Report</div>
-      <div class="hero-sub" id="hero-sub"></div>
-    </div>
+<section id="hero" class="hero" role="region" aria-label="Header ticker">
+  <div class="hero-head">
+    <div class="hero-title" id="hero-title">Report</div>
+    <div class="hero-sub" id="hero-sub"></div>
+  </div>
 
-    <!-- Confidence meter -->
-    <div class="hero-meter">
-      <div class="meter-head">
-        <div class="meter-left">
-          <span class="meter-label">Confidence</span>
-          <button class="info-btn" data-info="ConfidenceFinal" aria-label="Cosa significa Confidence?">?</button>
-        </div>
-        <div class="meter-right"><span id="hero-conf-val" class="tabular">—</span></div>
+  <!-- Confidence meter -->
+  <div class="hero-meter">
+    <div class="meter-head">
+      <div class="meter-left">
+        <span class="meter-label">Confidence</span>
+        <button class="info-btn" data-info="ConfidenceFinal" aria-label="Cosa significa Confidence?">?</button>
       </div>
-      <div class="meter-track" role="progressbar" aria-label="Confidence"
-           aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-        <div id="hero-meter-fill" class="meter-fill"></div>
-        <div class="meter-tick" data-x="0"></div>
-        <div class="meter-tick" data-x="65" aria-label="Review"></div>
-        <div class="meter-tick" data-x="85" aria-label="Pass"></div>
-        <div class="meter-tick" data-x="100"></div>
-      </div>
+      <div class="meter-right"><span id="hero-conf-val" class="tabular">—</span></div>
     </div>
-
-    <!-- Valore principale -->
-    <div class="hero-main">
-      <div class="hero-price">
-        <span class="big tabular" id="hero-price">—</span>
-        <span class="ccy" id="hero-ccy"></span>
-      </div>
-      <div class="hero-right">
-        <span class="delta-chip" id="hero-delta"></span>
-        <span class="badge" id="hero-state"></span>
-      </div>
+    <div class="meter-track" role="progressbar" aria-label="Confidence"
+         aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div id="hero-meter-fill" class="meter-fill"></div>
+      <div class="meter-tick" data-x="0"></div>
+      <div class="meter-tick" data-x="65" aria-label="Review"></div>
+      <div class="meter-tick" data-x="85" aria-label="Pass"></div>
+      <div class="meter-tick" data-x="100"></div>
     </div>
+  </div>
 
-    <!-- KPI -->
-    <div class="hero-kpi" id="hero-kpi"></div>
-
-    <!-- Nota -->
-    <div class="hero-note" id="hero-note">
-      Materiale informativo/educativo. Nessuna raccomandazione personale (MiFID II).
+  <!-- Valore principale -->
+  <div class="hero-main">
+    <div class="hero-price">
+      <span class="big tabular" id="hero-price">—</span>
+      <span class="ccy" id="hero-ccy"></span>
+      <button class="info-btn" data-info="Price_info" aria-label="Cosa indica il prezzo?">?</button>
     </div>
-  </section>
+    <div class="hero-right">
+      <span class="delta-chip" id="hero-delta"></span>
+      <button class="info-btn" data-info="ChangePct_info" aria-label="Cosa indica la variazione percentuale?">?</button>
+      <span class="badge" id="hero-state"></span>
+      <button class="info-btn" data-info="State_info" aria-label="Cosa significa lo stato?">?</button>
+    </div>
+  </div>
+
+  <!-- KPI pills -->
+  <div class="hero-kpi" id="hero-kpi"></div>
+
+  <!-- Nota -->
+  <div class="hero-note" id="hero-note">
+    Materiale informativo/educativo. Nessuna raccomandazione personale (MiFID II).
+  </div>
+</section>
 
   <!-- SEPARATORE FRA HEADER TICKER E SCHEDE -->
   <div class="section-divider" role="separator" aria-label="Inizio schede"></div>
