@@ -6,21 +6,14 @@
   <meta name="color-scheme" content="dark" />
   <title>Tradelia · Institutional Report</title>
   <link rel="icon" href="./favicon.ico">
-  <link rel="stylesheet" href="./assets/css/tokens.css?v=2.6" />
+  <link rel="stylesheet" href="./assets/css/tokens.css?v=3.0" />
 </head>
 <body>
-  <!-- HEADER (brand pro) -->
+  <!-- HEADER -->
   <header class="site-header" role="banner">
-    <div class="header-inner" aria-label="Barra di navigazione">
-      <a class="brand" href="./" aria-label="Tradelia AI Home">
-        <svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
-          <defs><linearGradient id="tg" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#6EA8FF"/><stop offset="1" stop-color="#3D7CFF"/></linearGradient></defs>
-          <path d="M16 2l9 3v8c0 6.6-4.5 12.4-9 14-4.5-1.6-9-7.4-9-14V5l9-3z"
-                fill="url(#tg)" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
-          <path d="M16 9l4 4-4 4-4-4 4-4z" fill="#0E1420" opacity=".9"/>
-          <circle cx="16" cy="13" r="1.4" fill="#9EC0FF"/>
-        </svg>
+    <div class="header-inner">
+      <a class="brand" href="./" aria-label="Tradelia AI">
+        <span class="logo" aria-hidden="true"></span>
         <span class="wordmark">TRADELIA<span class="dot">•</span>AI</span>
       </a>
       <div class="spacer" aria-hidden="true"></div>
@@ -29,63 +22,58 @@
 
   <!-- HERO / HEADER TICKER -->
   <section id="hero" class="hero" role="region" aria-label="Header ticker">
-    <div class="hero-head">
-      <div class="hero-title" id="hero-title">Report</div>
-      <div class="hero-sub" id="hero-sub"></div>
-    </div>
+    <h1 id="hero-title" class="hero-title">Report</h1>
+    <div id="hero-sub" class="hero-sub"></div>
 
-    <!-- Confidence meter -->
     <div class="hero-meter">
       <div class="meter-head">
-        <div class="meter-left">
-          <span class="meter-label">Confidence</span>
-          <button class="info-btn" data-info="ConfidenceFinal" aria-label="Cosa significa Confidence?">?</button>
+        <div class="label">Confidence
+          <button class="info-btn" data-info="ConfidenceFinal" aria-label="Cos'è la Confidence?">?</button>
         </div>
-        <div class="meter-right"><span id="hero-conf-val" class="tabular">—</span></div>
+        <div id="hero-conf-val" class="tabular">—</div>
       </div>
-      <div class="meter-track" role="progressbar" aria-label="Confidence"
-           aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div class="meter-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
         <div id="hero-meter-fill" class="meter-fill"></div>
-        <div class="meter-tick" data-x="0"></div>
-        <div class="meter-tick" data-x="65" aria-label="Review"></div>
-        <div class="meter-tick" data-x="85" aria-label="Pass"></div>
-        <div class="meter-tick" data-x="100"></div>
+      </div>
+      <div class="meter-legend">
+        <span>0</span><span>65 (Review)</span><span>85 (Pass)</span><span>100</span>
       </div>
     </div>
 
-    <!-- Main row -->
     <div class="hero-main">
-      <div class="hero-price">
-        <span class="big tabular" id="hero-price">—</span>
-        <span class="ccy" id="hero-ccy"></span>
-        <button class="info-btn" data-info="Price_info" aria-label="Che prezzo mostriamo?">?</button>
+      <div class="price-block">
+        <div class="price-row">
+          <div id="hero-price" class="price tabular">—</div>
+          <div id="hero-ccy" class="ccy"></div>
+          <button class="info-btn" data-info="Price_info" aria-label="Che prezzo mostriamo?">?</button>
+        </div>
+        <div id="hero-hint" class="hint"></div>
       </div>
-      <div class="hero-right">
-        <span class="delta-chip" id="hero-delta"></span>
-        <button class="info-btn" data-info="ChangePct_info" aria-label="Come calcoliamo la Δ%?">?</button>
-        <span class="badge" id="hero-state"></span>
+
+      <div class="right-block">
+        <span id="hero-delta" class="delta tabular" aria-live="polite"></span>
+        <button class="info-btn" data-info="ChangePct_info" aria-label="Come si calcola Δ%?">?</button>
+        <span id="hero-state" class="state"></span>
         <button class="info-btn" data-info="State_info" aria-label="Cosa significa lo stato?">?</button>
       </div>
     </div>
 
-    <!-- KPI pills -->
-    <div class="hero-kpi" id="hero-kpi"></div>
+    <!-- KPI TABLE -->
+    <div id="hero-kpi" class="kpi"></div>
 
-    <!-- Disclaimer -->
-    <div class="hero-note" id="hero-note">
+    <div id="hero-note" class="hero-note">
       Materiale informativo/educativo. Nessuna raccomandazione personale (MiFID II).
     </div>
   </section>
 
-  <!-- separatore -->
-  <div class="section-divider" role="separator" aria-label="Inizio schede"></div>
+  <div class="section-divider" role="separator" aria-label="Schede moduli"></div>
 
   <!-- MODULI -->
   <main id="modules" class="modules-grid" role="main">
     <article id="sec-f1b" class="report-section" data-card="F1B"></article>
     <article id="sec-f2"  class="report-section" data-card="F2"></article>
-    <article id="sec-f3"  class="report-section" data-card="F3"></article>
     <article id="sec-f3o" class="report-section" data-card="F3O"></article>
+    <article id="sec-f3"  class="report-section" data-card="F3"></article>
     <article id="sec-f4"  class="report-section" data-card="F4"></article>
     <article id="sec-f5"  class="report-section" data-card="F5"></article>
     <article id="sec-f5b" class="report-section" data-card="F5B"></article>
@@ -99,9 +87,9 @@
     <section class="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title">
       <header class="panel-head">
         <h2 id="panel-title" class="panel-title">Dettaglio</h2>
-        <button class="btn btn-ghost" data-overlay-close aria-label="Chiudi pannello">✕</button>
+        <button class="btn btn-ghost" data-overlay-close aria-label="Chiudi">✕</button>
       </header>
-      <nav id="panel-tabs" class="panel-tabs" role="tablist" aria-label="Sezioni analitiche"></nav>
+      <nav id="panel-tabs" class="panel-tabs" role="tablist"></nav>
       <div id="panel-body" class="panel-body" data-scrollable tabindex="0" role="region" aria-live="polite"></div>
       <footer id="panel-foot" class="panel-foot"></footer>
     </section>
@@ -113,7 +101,7 @@
     <section class="panel panel-legal" role="dialog" aria-modal="true" aria-labelledby="legal-title">
       <header class="panel-head">
         <h2 id="legal-title" class="panel-title">Informativa</h2>
-        <button class="btn btn-ghost" data-legal-close aria-label="Chiudi informativa">✕</button>
+        <button class="btn btn-ghost" data-legal-close aria-label="Chiudi">✕</button>
       </header>
       <div id="legal-body" class="panel-body" data-scrollable></div>
       <footer class="panel-foot"><button class="btn" data-legal-close>OK</button></footer>
@@ -131,7 +119,7 @@
     </div>
   </footer>
 
-  <script type="module" src="./assets/js/ui-runtime.js?v=2.6"></script>
-  <script type="module" src="./assets/js/app.js?v=2.6"></script>
+  <script type="module" src="./assets/js/ui-runtime.js?v=3.0"></script>
+  <script type="module" src="./assets/js/app.js?v=3.0"></script>
 </body>
 </html>
