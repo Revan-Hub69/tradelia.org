@@ -1,425 +1,638 @@
-// /report/assets/js/app.js
-//
-// Ruolo: orchestratore dati runtime del Report
-// - legge header.json e manifest.json dal report corrente
-// - popola hero e footer base
-// - monta le sezioni F1...F6 caricando i moduli dinamici
-//
-// Dipendenze: nessuna libreria esterna, solo fetch + dynamic import
-//
-// Convenzioni di path:
-//   /report/reports/{reportId}/header.json
-//   /report/reports/{reportId}/manifest.json
-//   poi i singoli dati modulo es. f1b.json, f2.json, ...
-//
-// Convenzioni moduli UI:
-//   /report/assets/js/modules/f1b.js, f2.js, ...
-//   export function renderCard(data, ctx) -> string HTML
-//   export function bindCard(node, data, ctx) -> attach listeners (opzionale)
+// /report/assets/js/ui-runtime.js
+// Runtime UI globale (nessun dato di mercato qui).
+// - Drawer analitico (F1B/F2/F3...) -> #panel-overlay  **(LOGICA RIFATTA)**
+// - Overlay legale separato (Privacy / MiFID) -> #legal-overlay
+// - Tooltip metriche ("?") desktop/mobile
+// - Tema light/dark (dark al primo accesso)
+// - Stampa / Share overlay
+// - Export API window.__TradeliaUI { openPanel, closePanel, openPrivacyPanel, openMifidPanel, openAuditPanel, bindMetricInfoButtons, openLegalPanel, closeLegalPanel }
 
-/////////////////////////////
-// Helpers base
-/////////////////////////////
-
-function getReportIdFromURL() {
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
-  return (id && id.trim() !== "") ? id.trim() : "sample-id";
+// ------------------------------------------------------------
+// Utils DOM
+// ------------------------------------------------------------
+function qs(sel, root = document) { return root.querySelector(sel); }
+function qsa(sel, root = document) { return [...root.querySelectorAll(sel)]; }
+function setText(el, txt) { if (el) el.textContent = txt; }
+function setHTML(el, html) { if (el) el.innerHTML = html; }
+function isMobile() { return window.matchMedia("(max-width: 767px)").matches; }
+function escapeHtml(str) {
+  if (str === undefined || str === null) return "";
+  return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
 }
 
-async function fetchJSON(url) {
-  try {
-    const res = await fetch(url, { cache: "no-cache" });
-    if (!res.ok) throw new Error("HTTP " + res.status + " @ " + url);
-    return await res.json();
-  } catch (err) {
-    console.warn("fetchJSON fail", url, err);
-    return null;
-  }
-}
-
-// formattazioni numeriche base
-function fmtNum(v, decimals = 2) {
-  if (v === null || v === undefined || Number.isNaN(v)) return "—";
-  const n = Number(v);
-  return n.toFixed(decimals).replace('.', ',');
-}
-
-function fmtPct(v, decimals = 2) {
-  if (v === null || v === undefined || Number.isNaN(v)) return "—";
-  const n = Number(v);
-  const sign = n > 0 ? "+" : "";
-  return sign + n.toFixed(decimals).replace('.', ',') + "%";
-}
-
-function setTextById(id, value) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = value;
-}
-
-/////////////////////////////
-// HERO + footer snapshot
-/////////////////////////////
-
-function mountHero(headerData) {
-  if (!headerData) return;
-
-  const {
-    Start,
-    End,
-    Ticker,
-    Venue,
-    Price,
-    ChangePct,
-    Currency,
-    FreshnessLabel,
-    ConfidenceFinal,
-    State,
-    Version,
-    UpdatedAt
-  } = headerData;
-
-  // ticker / venue
-  setTextById("hero-ticker", Ticker || "—");
-  setTextById("hero-venue", Venue || "—");
-
-  // price + change
-  const chgPctStr = fmtPct(ChangePct, 2);
-  setTextById("hero-price", Price !== undefined ? fmtNum(Price, 2) : "—");
-  setTextById("hero-change", chgPctStr);
-
-  // badge stato
-  setTextById("hero-state", State || "—");
-
-  // meta snapshot
-  setTextById("hero-start", Start || "—");
-  setTextById("hero-end", End || "—");
-
-  // meta price
-  setTextById("hero-price2", Price !== undefined ? fmtNum(Price, 2) : "—");
-
-  // meta Δ%
-  setTextById("hero-change2", chgPctStr);
-
-  // meta currency
-  setTextById("hero-ccy", Currency || "—");
-
-  // meta freshness
-  setTextById("hero-freshness", FreshnessLabel || "—");
-
-  // meta confidence
-  setTextById(
-    "hero-confidence",
-    ConfidenceFinal !== undefined ? fmtNum(ConfidenceFinal, 2) : "—"
-  );
-
-  // colorazione up/down su Δ%
-  const heroChangeEl  = document.getElementById("hero-change");
-  const heroChangeEl2 = document.getElementById("hero-change2");
-
-  if (heroChangeEl) {
-    heroChangeEl.classList.remove("chg--up","chg--down");
-    if (typeof ChangePct === "number") {
-      heroChangeEl.classList.add(ChangePct >= 0 ? "chg--up" : "chg--down");
+// ------------------------------------------------------------
+// Scroll lock ref-count (evita conflitti tra overlay)
+// ------------------------------------------------------------
+const __lockState = { count: 0 };
+function __panelLockScroll(lock){
+  if (lock) {
+    if (++__lockState.count === 1) {
+      document.documentElement.style.overflow = 'hidden';
+      document.body.classList.add('body--lock');
+    }
+  } else {
+    if (__lockState.count > 0 && --__lockState.count === 0) {
+      document.documentElement.style.overflow = '';
+      document.body.classList.remove('body--lock');
     }
   }
-  if (heroChangeEl2) {
-    heroChangeEl2.classList.remove("chg--up","chg--down");
-    if (typeof ChangePct === "number") {
-      heroChangeEl2.classList.add(ChangePct >= 0 ? "chg--up" : "chg--down");
-    }
-  }
-
-  // tonebars
-  const toneSnap  = document.getElementById("tone-snap");
-  const tonePrice = document.getElementById("tone-price");
-  const toneChg   = document.getElementById("tone-chg");
-  const toneCcy   = document.getElementById("tone-ccy");
-  const toneFresh = document.getElementById("tone-fresh");
-  const toneConf  = document.getElementById("tone-conf");
-
-  if (toneSnap)  toneSnap.style.backgroundColor  = "var(--tone-n)";
-  if (tonePrice) tonePrice.style.backgroundColor = "var(--tone-n)";
-  if (toneCcy)   toneCcy.style.backgroundColor   = "var(--tone-n)";
-  if (toneFresh) toneFresh.style.backgroundColor = "var(--tone-n)";
-
-  // Δ% tono semaforo
-  if (toneChg) {
-    if (typeof ChangePct === "number") {
-      toneChg.style.backgroundColor =
-        ChangePct >= 0 ? "var(--tone-g)" : "var(--tone-r)";
-    } else {
-      toneChg.style.backgroundColor = "var(--tone-n)";
-    }
-  }
-
-  // confidence tono semaforo
-  if (toneConf) {
-    const cf = Number(ConfidenceFinal);
-    if (!isNaN(cf)) {
-      if (cf >= 0.75) {
-        toneConf.style.backgroundColor = "var(--tone-g)";
-      } else if (cf < 0.5) {
-        toneConf.style.backgroundColor = "var(--tone-r)";
-      } else {
-        toneConf.style.backgroundColor = "var(--tone-n)";
-      }
-    } else {
-      toneConf.style.backgroundColor = "var(--tone-n)";
-    }
-  }
-
-  // footer info
-  if (Version) {
-    setTextById("footer-version", Version);
-  }
-
-  setTextById(
-    "footer-snapshot",
-    (Start && End) ? (Start + " → " + End) : (Start || End || "—")
-  );
-
-  const upd = UpdatedAt || End || Start || "—";
-  setTextById("footer-updated", upd);
-
-  const yearEl = document.getElementById("footer-year");
-  if (yearEl) {
-    const now = new Date();
-    yearEl.textContent = now.getFullYear();
-  }
 }
+function __resetScrollable(el){ try { if(el) el.scrollTop = 0; } catch(e){} }
+function __clearNode(n){ if(!n) return; n.textContent=''; }
+function __clearHTML(n){ if(!n) return; n.innerHTML=''; }
 
-/////////////////////////////
-// MANIFEST LOADING / NORMALIZATION
-/////////////////////////////
-
-async function loadManifest(reportId) {
-  const url = `/report/reports/${reportId}/manifest.json`;
-  const mf = await fetchJSON(url);
-  if (mf) return mf;
-
-// fallback se non esiste manifest.json
-return {
-  id: reportId,
-  title: "Tradelia · Report Runtime",
-  order: ["F1B","F2","F3o","F3","F4","F5","F5B","F6","F7"],
-  modules: {
-    "F1B": "f1b.json",
-    "F2":  "f2.json",
-    "F3o":  "f3o.json",
-    "F3":  "f3.json",
-    "F4":  "f4.json",
-    "F5":  "f5.json",
-    "F5B": "f5b.json",
-    "F6":  "f6.json",
-    "F7":  "f7.json" // +F7
-  }
+// ------------------------------------------------------------
+// Drawer ANALITICO (#panel-overlay) — schede isolate & resize-aware
+// ------------------------------------------------------------
+let __panelTabs = {
+  activeKey: null,
+  sectionsByKey: {},
+  resizeHandler: null,
+  clickHandler: null,
+  keyHandler: null
 };
-}
 
-// mappa modulo -> section DOM id
-function getSectionSelectorForModule(modId) {
-  const upper = modId.toUpperCase();
-
-  if (upper === "F1A" || upper === "F1B") return "#sec-f1";
-  if (upper === "F2")  return "#sec-f2";
-  if (upper === "F3O") return "#sec-f3o";   // <-- qui il fix
-  if (upper === "F3")  return "#sec-f3";
-  if (upper === "F4")  return "#sec-f4";
-  if (upper === "F5")  return "#sec-f5";
-  if (upper === "F5B") return "#sec-f5b";
-  if (upper === "F6")  return "#sec-f6";
-  if (upper === "F7")  return "#sec-f7";
-  return null;
-}
-
-
-
-// normalizza i path dei json modulo
-function normalizeManifest(manifest, reportId) {
-  const order = Array.isArray(manifest.order)
-    ? manifest.order.slice()
-    : Object.keys(manifest.modules || {});
-
-  const outMods = {};
-  for (const key of Object.keys(manifest.modules || {})) {
-    let path = manifest.modules[key];
-    if (
-      typeof path === "string" &&
-      !path.startsWith("http") &&
-      !path.startsWith("/")
-    ) {
-      // relativo -> montalo sotto /report/reports/{id}/
-      path = `/report/reports/${reportId}/${path}`;
+function __panelActiveTarget() {
+  const overlay = qs('#panel-overlay');
+  const mobile = isMobile();
+  return mobile ? {
+    aside: qs('.tl-panel--mobile', overlay),
+    title: qs('#panel-title-mobile', overlay),
+    sub:   qs('#panel-subtitle-mobile', overlay),
+    body:  qs('#panel-body-mobile', overlay),
+    foot:  qs('#panel-footer-mobile', overlay),
+    other: {
+      title: qs('#panel-title', overlay),
+      sub:   qs('#panel-subtitle', overlay),
+      body:  qs('#panel-body', overlay),
+      foot:  qs('#panel-footer', overlay)
     }
-    outMods[key] = path;
-  }
-
-  return {
-    id: manifest.id || reportId,
-    title: manifest.title || "",
-    order,
-    modules: outMods
+  } : {
+    aside: qs('.tl-panel--desktop', overlay),
+    title: qs('#panel-title', overlay),
+    sub:   qs('#panel-subtitle', overlay),
+    body:  qs('#panel-body', overlay),
+    foot:  qs('#panel-footer', overlay),
+    other: {
+      title: qs('#panel-title-mobile', overlay),
+      sub:   qs('#panel-subtitle-mobile', overlay),
+      body:  qs('#panel-body-mobile', overlay),
+      foot:  qs('#panel-footer-mobile', overlay)
+    }
   };
 }
 
-/////////////////////////////
-// MOUNT DI UN SINGOLO MODULO (F1B/F2/...)
-/////////////////////////////
+// OPEN PANEL analitico (schede isolate, render on demand)
+function openPanel(opts) {
+  closePanel(); // pulizia preventiva
 
-async function mountSingleModule(modId, jsonUrl, reportId) {
-  const selector = getSectionSelectorForModule(modId);
-  if (!selector) {
-    console.warn(`Nessun section selector per ${modId}`);
-    return;
+  const overlayEl = qs("#panel-overlay");
+  if (!overlayEl) return;
+
+  const {
+    title = "Dettagli",
+    subtitle = "",
+    sections = [],           // [{key?, title?, body, meta?}, ...]
+    blocking = false,
+    panelSize,               // 'wide' | 'xl'
+    footerButtons = [],
+    footerTabs = []          // [{key, label}, ...]
+  } = opts || {};
+
+  // target attivo + svuota l’altro (stop doppio pannello)
+  const tgt = __panelActiveTarget();
+  const oth = tgt.other || {};
+  [oth.title, oth.sub].forEach(__clearNode);
+  [oth.body, oth.foot].forEach(__clearHTML);
+
+  // header
+  setText(tgt.title, title);
+  setText(tgt.sub, subtitle);
+
+  // mappa sezioni per key coerente
+  __panelTabs.sectionsByKey = {};
+  sections.forEach((s, i) => {
+    const k = s.key || (footerTabs[i] && footerTabs[i].key) || `sec${i}`;
+    __panelTabs.sectionsByKey[k] = s;
+  });
+
+  // attiva prima tab disponibile (o prima sezione)
+  __panelTabs.activeKey =
+    (footerTabs[0] && footerTabs[0].key) ||
+    (sections[0] && (sections[0].key || 'sec0')) ||
+    null;
+
+  // renderer sezione attiva (ricostruisce BODY ogni volta)
+  function renderActiveSection() {
+    const k = __panelTabs.activeKey;
+    const s = k ? __panelTabs.sectionsByKey[k] : null;
+
+    let html = "";
+    if (!s) {
+      html = `<section class="tl-panel-section"><div class="tl-panel-section-text">—</div></section>`;
+    } else if (panelSize === "wide" && Object.keys(__panelTabs.sectionsByKey).length === 1) {
+      // wide + singola sezione: body "nudo"
+      html = s.body || "";
+    } else {
+      html = `
+        <section class="tl-panel-section" style="margin-bottom:1rem;">
+          ${ s.title ? `
+            <div class="tl-panel-section-title">
+              <div class="tl-panel-section-title-text">${escapeHtml(s.title)}</div>
+            </div>` : `` }
+          <div class="tl-panel-section-text">${s.body || ""}</div>
+          ${ s.meta ? `<div class="tl-panel-section-meta">${s.meta}</div>` : `` }
+        </section>
+      `;
+    }
+
+    setHTML(tgt.body, html);
+    __resetScrollable(tgt.body);
+
+    // bind "?" perché il DOM è nuovo
+    try { bindMetricInfoButtons(overlayEl); } catch(e){}
   }
 
-  const container = document.querySelector(selector);
-  if (!container) {
-    console.warn(`Container DOM ${selector} non trovato per ${modId}`);
-    return;
+  // FOOTER: tabs (mobile) o bottoni (desktop)
+  function renderFooterBtns(arr) {
+    if (!arr || !arr.length) return `<button class="btn btn-sm" data-panel-close>Chiudi</button>`;
+    return arr.map((btn, i) => `<button class="btn btn-sm" data-panel-btn="${i}">${escapeHtml(btn.label || "OK")}</button>`).join("");
+  }
+  function renderFooterTabs(tabsArr, btnsArr) {
+    if (!tabsArr || !tabsArr.length) return renderFooterBtns(btnsArr);
+    const pills = tabsArr.map(t =>
+      `<button class="f1b-footer-tab-btn${t.key===__panelTabs.activeKey?' is-active':''}" data-f1b-tab="${escapeHtml(t.key)}">${escapeHtml(t.label)}</button>`
+    ).join("");
+    const closeBtn = `<button class="f1b-footer-close-btn" data-panel-close>Chiudi</button>`;
+    return `<div class="f1b-footer-tabs-wrap"><div class="f1b-footer-tabs-scroll">${pills}</div>${closeBtn}</div>`;
   }
 
-  // carica i dati del modulo (es. /report/reports/{id}/f1b.json)
-  const data = await fetchJSON(jsonUrl);
+  const mobileFooterHTML  = renderFooterTabs(footerTabs, footerButtons);
+  const desktopFooterHTML = renderFooterBtns(footerButtons);
 
-  // importa dinamicamente il renderer JS del modulo
-  const fileBase = modId.toLowerCase();
-  let mod;
+  if (isMobile()) {
+    setHTML(tgt.foot, mobileFooterHTML);
+    setHTML(oth.foot, "");
+  } else {
+    setHTML(tgt.foot, desktopFooterHTML);
+    setHTML(oth.foot, "");
+  }
+
+  // bind footer (solo sull’attivo)
+  function bindFooter(scopeEl) {
+    if (!scopeEl) return;
+
+    // bottoni azione
+    qsa("[data-panel-btn]", scopeEl).forEach(btnEl => {
+      const i = btnEl.getAttribute("data-panel-btn");
+      if (footerButtons[i] && typeof footerButtons[i].action === "function") {
+        btnEl.addEventListener("click", (ev) => { ev.stopPropagation(); footerButtons[i].action(); });
+      }
+    });
+
+    // chiudi
+    qsa("[data-panel-close]", scopeEl).forEach(btnEl => {
+      btnEl.addEventListener("click", (ev) => { ev.stopPropagation(); closePanel(); });
+    });
+
+    // tabs (mobile)
+    qsa('[data-f1b-tab]', scopeEl).forEach(btn => {
+      btn.addEventListener('click', () => {
+        const k = btn.getAttribute('data-f1b-tab');
+        if (!k || k === __panelTabs.activeKey) return;
+        __panelTabs.activeKey = k;
+
+        // aggiorna pill attiva
+        qsa('[data-f1b-tab]', scopeEl).forEach(b => b.classList.toggle('is-active', b===btn));
+
+        // re-render body per la nuova scheda
+        renderActiveSection();
+      });
+    });
+  }
+  bindFooter(tgt.foot);
+
+  // larghezza desktop
+  const panelDesktop = qs(".tl-panel--desktop", overlayEl);
+  if (panelDesktop) {
+    panelDesktop.classList.remove("tl-panel--wide","tl-panel--xl");
+    if (panelSize === "wide") panelDesktop.classList.add("tl-panel--wide");
+    else if (panelSize === "xl") panelDesktop.classList.add("tl-panel--xl");
+  }
+
+  // mostra overlay + primo render
+  if (blocking) overlayEl.setAttribute("data-blocking","true"); else overlayEl.removeAttribute("data-blocking");
+  __panelLockScroll(true);
+  overlayEl.setAttribute("aria-hidden","false");
+  renderActiveSection();
+
+  // ESC/backdrop (scoped a questo root)
+  __panelTabs.clickHandler = (ev)=>{
+    const blockingFlag = overlayEl.getAttribute("data-blocking")==="true";
+    if (ev.target.closest("[data-panel-close]")) { closePanel(); return; }
+    const backdrop = ev.target.closest(".tl-panel-backdrop");
+    if (backdrop && !blockingFlag) { closePanel(); }
+  };
+  __panelTabs.keyHandler = (e)=>{
+    const blockingFlag = overlayEl.getAttribute("data-blocking")==="true";
+    if (e.key === 'Escape' && !blockingFlag) closePanel();
+  };
+  document.addEventListener("click", __panelTabs.clickHandler);
+  document.addEventListener("keydown", __panelTabs.keyHandler);
+
+  // RESIZE: migra contenuto nel nuovo target mantenendo activeKey
+  __panelTabs.resizeHandler = () => {
+    if (overlayEl.getAttribute("aria-hidden")==="true") return;
+    const curKey = __panelTabs.activeKey;
+
+    const tgt2 = __panelActiveTarget();
+    const oth2 = tgt2.other || {};
+    [oth2.title, oth2.sub].forEach(__clearNode);
+    [oth2.body, oth2.foot].forEach(__clearHTML);
+
+    // ripristina header
+    setText(tgt2.title, title);
+    setText(tgt2.sub, subtitle);
+
+    // rifoot coerente con breakpoint
+    if (isMobile()) { setHTML(tgt2.foot, renderFooterTabs(footerTabs, footerButtons)); }
+    else { setHTML(tgt2.foot, renderFooterBtns(footerButtons)); }
+    bindFooter(tgt2.foot);
+
+    // rerender sezione attiva
+    __panelTabs.activeKey = curKey;
+    // nota: renderActiveSection() usa tgt/body calcolati prima;
+    // ricalcoliamo il target e poi renderizziamo
+    const tmp = __panelActiveTarget(); // aggiorna riferimento
+    setHTML(tmp.body, ""); // pulisci
+    renderActiveSection();
+  };
+  window.addEventListener('resize', __panelTabs.resizeHandler);
+}
+
+// CLOSE PANEL analitico (pulizia completa)
+function closePanel() {
+  const overlayEl = qs("#panel-overlay");
+  if (!overlayEl) return;
+
+  overlayEl.setAttribute("aria-hidden","true");
+  overlayEl.removeAttribute("data-blocking");
+
+  // pulizia DOM (entrambi i target)
+  ["#panel-title","#panel-subtitle","#panel-title-mobile","#panel-subtitle-mobile"].forEach(id => __clearNode(qs(id)));
+  ["#panel-body","#panel-footer","#panel-body-mobile","#panel-footer-mobile"].forEach(id => __clearHTML(qs(id)));
+
+  // unbind handler locali
+  if (__panelTabs.clickHandler) { document.removeEventListener("click", __panelTabs.clickHandler); __panelTabs.clickHandler = null; }
+  if (__panelTabs.keyHandler)   { document.removeEventListener("keydown", __panelTabs.keyHandler); __panelTabs.keyHandler   = null; }
+  if (__panelTabs.resizeHandler){ window.removeEventListener('resize', __panelTabs.resizeHandler); __panelTabs.resizeHandler = null; }
+
+  // reset stato
+  __panelTabs.activeKey = null;
+  __panelTabs.sectionsByKey = {};
+
+  __panelLockScroll(false);
+}
+
+// ------------------------------------------------------------
+// LEGAL OVERLAY (#legal-overlay) — identico API, separato
+// ------------------------------------------------------------
+function openLegalPanel(opts) {
+  closeLegalPanel();
+  const overlayEl = qs("#legal-overlay");
+  if (!overlayEl) return;
+
+  const { title="Informativa", subtitle="", body="", blocking=false, footerButtons=[] } = opts || {};
+  const tDesk=qs("#legal-title"), sDesk=qs("#legal-subtitle"), bDesk=qs("#legal-body"), fDesk=qs("#legal-footer");
+  const tMob=qs("#legal-title-mobile"), sMob=qs("#legal-subtitle-mobile"), bMob=qs("#legal-body-mobile"), fMob=qs("#legal-footer-mobile");
+
+  setText(tDesk,title); setText(sDesk,subtitle); setHTML(bDesk,body);
+  setText(tMob,title);  setText(sMob,subtitle);  setHTML(bMob,body);
+
+  function renderFooter(arr){
+    if (!arr || !arr.length) return `<button class="btn btn-sm" data-legal-close>Chiudi</button>`;
+    return arr.map((b,i)=>`<button class="btn btn-sm" data-legal-btn="${i}">${escapeHtml(b.label||"OK")}</button>`).join("");
+  }
+  const footerHTML = renderFooter(footerButtons);
+  setHTML(fDesk, footerHTML); setHTML(fMob, footerHTML);
+
+  function bind(scope, defs){
+    if (!scope) return;
+    qsa("[data-legal-btn]", scope).forEach(btn=>{
+      const i = btn.getAttribute("data-legal-btn");
+      if (defs[i] && typeof defs[i].action==="function") {
+        btn.addEventListener("click", ev=>{ ev.stopPropagation(); defs[i].action(); });
+      }
+    });
+    qsa("[data-legal-close]", scope).forEach(btn=>{
+      btn.addEventListener("click", ev=>{ ev.stopPropagation(); closeLegalPanel(); });
+    });
+  }
+  bind(fDesk, footerButtons); bind(fMob, footerButtons);
+
+  if (blocking) overlayEl.setAttribute("data-blocking","true"); else overlayEl.removeAttribute("data-blocking");
+  __panelLockScroll(true);
+  overlayEl.setAttribute("aria-hidden","false");
+
+  // ESC/backdrop scoped al root legale
+  function onDocClick(ev){
+    const blockingFlag = overlayEl.getAttribute("data-blocking")==="true";
+    if (ev.target.closest("[data-legal-close]")) { closeLegalPanel(); return; }
+    const backdrop = ev.target.closest(".tl-panel-backdrop");
+    if (backdrop && !blockingFlag && overlayEl.contains(backdrop)) { closeLegalPanel(); return; }
+  }
+  function onKeydown(e){
+    const blockingFlag = overlayEl.getAttribute("data-blocking")==="true";
+    if (e.key === 'Escape' && !blockingFlag) closeLegalPanel();
+  }
+  overlayEl.__clickHandler = onDocClick;
+  overlayEl.__keyHandler   = onKeydown;
+  document.addEventListener("click", onDocClick);
+  document.addEventListener("keydown", onKeydown);
+}
+function closeLegalPanel() {
+  const overlayEl = qs("#legal-overlay");
+  if (!overlayEl) return;
+  overlayEl.setAttribute("aria-hidden","true");
+  overlayEl.removeAttribute("data-blocking");
+
+  // pulizia testo/HTML
+  ["#legal-title","#legal-subtitle","#legal-title-mobile","#legal-subtitle-mobile"].forEach(id => __clearNode(qs(id)));
+  ["#legal-body","#legal-footer","#legal-body-mobile","#legal-footer-mobile"].forEach(id => __clearHTML(qs(id)));
+
+  if (overlayEl.__clickHandler) { document.removeEventListener("click", overlayEl.__clickHandler); overlayEl.__clickHandler = null; }
+  if (overlayEl.__keyHandler)   { document.removeEventListener("keydown", overlayEl.__keyHandler); overlayEl.__keyHandler   = null; }
+
+  __panelLockScroll(false);
+}
+
+// ------------------------------------------------------------
+// Pannelli predefiniti: Privacy / MiFID / Audit
+// ------------------------------------------------------------
+function openPrivacyPanel() {
+  openLegalPanel({
+    title: "Privacy & Trasparenza",
+    subtitle: "Dati minimi. Nessun tracciamento pubblicitario.",
+    body: `
+      <section style="font-size:13px;line-height:1.5;color:var(--ink);">
+        <div class="legal-callout">
+          <div class="legal-callout-title">Trasparenza dati</div>
+          <div class="legal-callout-text">Niente profilazione pubblicitaria. Le preferenze restano sul tuo dispositivo.</div>
+        </div>
+        <p>Tradelia AI adotta un approccio “privacy first”.</p>
+        <p><strong>Nessun cookie di profilazione.</strong></p>
+        <p><strong>Preferenze locali</strong> in localStorage (tema, consenso UI).</p>
+        <p><strong>Dati finanziari personali:</strong> non raccolti automaticamente.</p>
+        <p><strong>Fonti di mercato:</strong> Bloomberg, Reuters, CBOE, FRED, ecc.</p>
+        <p style="font-size:12px;color:var(--muted);margin-top:1rem;">GDPR (UE 2016/679), Direttiva ePrivacy.</p>
+      </section>`,
+    blocking: false,
+    footerButtons: [{ label: "Chiudi", action: () => closeLegalPanel() }]
+  });
+}
+function openMifidPanel() {
+  openLegalPanel({
+    title: "Informativa MiFID",
+    subtitle: "Contenuto educativo/informativo. Non è consulenza personalizzata.",
+    body: `
+      <section style="font-size:13px;line-height:1.5;color:var(--ink);">
+        <div class="legal-callout">
+          <div class="legal-callout-title">Importante</div>
+          <div class="legal-callout-text">Le informazioni hanno scopo didattico. Non sono un invito ad operare.</div>
+        </div>
+        <p>Non gestiamo portafogli né eseguiamo ordini.</p>
+        <p><strong>Nessuna raccomandazione personalizzata ai sensi MiFID II.</strong></p>
+        <p>I mercati sono volatili; possibili perdite totali del capitale.</p>
+        <p style="font-size:12px;color:var(--muted);margin-top:1rem;">Regolamentazione ESMA / MiFID II.</p>
+      </section>`,
+    blocking: true,
+    footerButtons: [{
+      label: "Ho letto",
+      action: () => { try { localStorage.setItem("mifidAcknowledged","yes"); } catch(e){} closeLegalPanel(); }
+    }]
+  });
+}
+function openAuditPanel(a) {
+  a = a || {};
+  openPanel({
+    title: "Audit dati / Fonti",
+    subtitle: "Qualità campione e latenza feed",
+    sections: [{
+      title: "Origine dati",
+      body: `
+        <p><strong>Fonte primaria:</strong> ${escapeHtml(a.source_sync || "—")}<br/>
+        <strong>Lag feed (giorni):</strong> ${escapeHtml(String(a.feed_lag_days ?? "—"))}<br/>
+        <strong>Confidence (0-1):</strong> ${escapeHtml(String(a.confidence ?? "—"))}<br/>
+        <strong>Integrità dataset:</strong> ${escapeHtml(String(a.integrity ?? "—"))}</p>
+        ${ a.notes ? `<p style="margin-top:.5rem;">${escapeHtml(a.notes)}</p>` : `` }
+      `,
+      meta: `Pannello informativo, non è una validazione regolamentare.`
+    },{
+      title: "Avvertenza MiFID",
+      body: `<p>Verifica adeguatezza/appropriatezza con consulente autorizzato.</p>`,
+      meta: `Tradelia AI non fornisce consulenza personalizzata.`
+    }],
+    panelSize: "wide",
+    footerButtons: [{ label: "Chiudi", action: () => closePanel() }]
+  });
+}
+
+// ------------------------------------------------------------
+// Tooltip metriche (“?”) — popover desktop / modal mobile
+// ------------------------------------------------------------
+let __TradeliaGlossary = {};
+async function loadGlossary() {
   try {
-    // cache-bust minimo
-    mod = await import(`/report/assets/js/modules/${fileBase}.js?v=2`);
-  } catch (err) {
-    console.error("Import modulo fallita:", modId, err);
-    container.innerHTML = `
-      <div class="section-headline">
-        <div class="section-head-left">
-          <div class="section-head-topline">
-            <span class="section-badge">${modId}</span>
-            <span class="module-status-pill" data-state="error">DATA</span>
-          </div>
-          <div class="section-title-main">${modId}</div>
-          <div class="section-desc">
-            Modulo non disponibile.
-          </div>
-        </div>
-      </div>
-      <div class="tl-panel-section-text text-[13px] leading-[1.45] text-[color:var(--muted)]">
-        Impossibile caricare il renderer ${fileBase}.js
-      </div>
-    `;
-    container.classList.remove("is-loading");
-    return;
-  }
-
-  // render effettivo
-  if (typeof mod.renderCard === "function") {
-    const html = mod.renderCard(data, { modId, reportId });
-    container.innerHTML = html;
-    container.classList.remove("is-loading");
-
-    // bind interazioni modulo
-    if (typeof mod.bindCard === "function") {
-      try {
-        mod.bindCard(container, data, { modId, reportId });
-      } catch (bindErr) {
-        console.warn("bindCard error per", modId, bindErr);
-      }
+    const res = await fetch("/report/assets/glossary.json", { cache: "no-cache" });
+    if (res.ok) {
+      const data = await res.json();
+      __TradeliaGlossary = (data && typeof data === "object") ? data : {};
     }
-
-    // Tooltip "?" su metriche dentro la card
-    if (
-      window.__TradeliaUI &&
-      typeof window.__TradeliaUI.bindMetricInfoButtons === "function"
-    ) {
-      try {
-        window.__TradeliaUI.bindMetricInfoButtons();
-      } catch (e) {
-        console.warn("bindMetricInfoButtons error:", e);
-      }
-    }
-
-  } else {
-    // modulo importato ma senza renderCard
-    container.innerHTML = `
-      <div class="section-headline">
-        <div class="section-head-left">
-          <div class="section-head-topline">
-            <span class="section-badge">${modId}</span>
-            <span class="module-status-pill" data-state="error">VIEW</span>
-          </div>
-          <div class="section-title-main">${modId}</div>
-          <div class="section-desc">
-            Modulo caricato ma nessun renderer disponibile.
-          </div>
-        </div>
-      </div>
-    `;
-    container.classList.remove("is-loading");
+  } catch(e) {
+    console.warn("Glossary load error", e);
+    __TradeliaGlossary = {};
   }
 }
+function getGlossaryEntry(key){
+  const raw = __TradeliaGlossary[key] || {};
+  return { title: raw.title || key || "—", what: raw.what || "—", how: raw.how || "—", source: raw.source || "" };
+}
+let currentPopoverOpen = false;
+function buildMetricHTML(info){
+  return `
+    <div style="font-size:13px;line-height:1.45;color:var(--ink);margin-bottom:.75rem;">
+      <div style="font-weight:600;margin-bottom:.25rem;">Cosa mostra</div>
+      <div>${escapeHtml(info.what)}</div>
+    </div>
+    <div style="font-size:13px;line-height:1.45;color:var(--ink);">
+      <div style="font-weight:600;margin-bottom:.25rem;">Come si usa</div>
+      <div>${escapeHtml(info.how)}</div>
+    </div>
+  `;
+}
+function openMetricDesktop(btnEl){
+  const pop = qs("#metric-popover"); if (!pop) return;
+  const key = btnEl.getAttribute("data-metric"); const info = getGlossaryEntry(key);
+  setText(qs("#metric-popover-title"), info.title || key || "—");
+  setHTML(qs("#metric-popover-body"), buildMetricHTML(info));
+  setHTML(qs("#metric-popover-source"), info.source ? `<span style="font-weight:600;">Fonte</span>: ${escapeHtml(info.source)}` : "");
 
-/////////////////////////////
-// FLUSSO PRINCIPALE
-/////////////////////////////
+  const rect = btnEl.getBoundingClientRect(); const OFFSET_X=8, OFFSET_Y=4;
+  let left = rect.left + window.scrollX + OFFSET_X;
+  let top  = rect.bottom + window.scrollY + OFFSET_Y;
 
-async function mountReport() {
-  const reportId = getReportIdFromURL();
+  pop.style.position="absolute"; pop.style.maxWidth="320px";
+  pop.style.left = left+"px"; pop.style.top = top+"px";
+  pop.setAttribute("aria-hidden","false");
 
-  // 1. header -> hero
-  const headerData = await fetchJSON(`/report/reports/${reportId}/header.json`);
-  if (headerData) {
-    mountHero(headerData);
+  const vpW = window.innerWidth, vpH = window.innerHeight;
+  const pr = pop.getBoundingClientRect();
+  if (pr.right > vpW-8) left -= (pr.right - (vpW-8));
+  if (left < window.scrollX+8) left = window.scrollX+8;
+  if (pr.bottom > vpH-8) top = rect.top + window.scrollY - pr.height - OFFSET_Y;
+  if (top < window.scrollY+8) top = window.scrollY+8;
+  pop.style.left = left+"px"; pop.style.top = top+"px";
+  currentPopoverOpen = true;
+}
+function closeMetricDesktop(){ const pop = qs("#metric-popover"); if (pop) pop.setAttribute("aria-hidden","true"); currentPopoverOpen=false; }
+function openMetricMobile(btnEl){
+  const modal = qs("#metric-modal"); if (!modal) return;
+  const key = btnEl.getAttribute("data-metric"); const info = getGlossaryEntry(key);
+  setText(qs("#metric-modal-title"), info.title || key || "—");
+  setHTML(qs("#metric-modal-body"), buildMetricHTML(info));
+  setHTML(qs("#metric-modal-source"), info.source ? `<span style="font-weight:600;">Fonte</span>: ${escapeHtml(info.source)}` : "");
+  modal.setAttribute("aria-hidden","false");
+}
+function closeMetricMobile(){ const m=qs("#metric-modal"); if (m) m.setAttribute("aria-hidden","true"); }
 
-    // ==== NEW: inserisci CompanyName/Ticker in UI chrome ====
-    const name = headerData.CompanyName || headerData.Ticker || "—";
+function bindMetricInfoButtons(scope){
+  const root = scope || document;
+  qsa(".info-btn", root).forEach(btn=>{
+    if (btn.__metricBound) return;
+    btn.__metricBound = true;
+    btn.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      if (isMobile()) openMetricMobile(btn);
+      else { if (currentPopoverOpen) closeMetricDesktop(); openMetricDesktop(btn); }
+    });
+  });
+}
+const popClose = qs("#metric-popover-close");
+if (popClose) popClose.addEventListener("click", (e)=>{ e.stopPropagation(); closeMetricDesktop(); });
+document.addEventListener("click", (ev)=>{
+  const pop = qs("#metric-popover"); if (!pop || pop.getAttribute("aria-hidden")==="true") return;
+  if (pop.contains(ev.target)) return;
+  if (ev.target.closest(".info-btn")) return;
+  closeMetricDesktop();
+});
+qsa("[data-metric-close]").forEach(btn => btn.addEventListener("click", ()=> closeMetricMobile()));
 
-    // <title>
-    document.title = `Tradelia AI · Report ${name}`;
-
-    // header sticky claim ("Report {NOME AZIENDA}")
-    const claimEl = document.querySelector(".claim");
-    if (claimEl) {
-      claimEl.textContent = `Report ${name}`;
-    }
-
-    // tagline hero "Analisi indipendente su ..."
-    const heroClientEl = document.getElementById("hero-client");
-    if (heroClientEl) {
-      heroClientEl.textContent = `Analisi indipendente su ${name}`;
-    }
-        // === NEW: aggiorna anche il footer ===
-    const footerCompanyEl = document.getElementById("footer-company");
-    if (footerCompanyEl) {
-      footerCompanyEl.textContent = name;
-    }
-    // =====================================
-
-    // =========================================================
-  } else {
-    console.warn("Header mancante per", reportId);
-  }
-
-  // 2. manifest -> ordine moduli + path json
-  const rawManifest = await loadManifest(reportId);
-  const manifest = normalizeManifest(rawManifest, reportId);
-
-  // 3. scorri i moduli in ordine e montali
-  for (const modId of manifest.order) {
-    const jsonUrl = manifest.modules[modId];
-    if (!jsonUrl) {
-      console.warn(`Nessun jsonUrl per ${modId}`);
-      continue;
-    }
-    await mountSingleModule(modId, jsonUrl, reportId);
-  }
+// ------------------------------------------------------------
+// Tema
+// ------------------------------------------------------------
+function initThemeToggle(){
+  const btn = qs("#btn-theme");
+  function applyTheme(theme){ document.documentElement.setAttribute("data-theme", theme); try { localStorage.setItem("tradelia-theme", theme); } catch(e){} }
+  (function firstLoad(){
+    let stored=null; try { stored = localStorage.getItem("tradelia-theme"); } catch(e){}
+    if (stored==="dark" || stored==="light") applyTheme(stored); else applyTheme("dark");
+  })();
+  if (btn) btn.addEventListener("click", ()=>{
+    const cur = document.documentElement.getAttribute("data-theme") || "dark";
+    applyTheme(cur==="light" ? "dark" : "light");
+  });
 }
 
-// kick immediato
-mountReport();
+// ------------------------------------------------------------
+// Print
+// ------------------------------------------------------------
+function initPrintButtons(){
+  [qs("#btn-print"), qs("#btn-print-2")].forEach(btn=>{
+    if (!btn) return;
+    btn.addEventListener("click", ()=> window.print());
+  });
+}
 
-// esponiamo debug
-window.TradeliaApp = {
-  mountReport,
-  getReportIdFromURL
+// ------------------------------------------------------------
+// Share overlay (opzionale)
+// ------------------------------------------------------------
+function initShareOverlay(){
+  const overlay = qs("#share-overlay"); const btnOpen = qs("#btn-share");
+  if (!overlay || !btnOpen) return;
+  const closeElems = qsa("[data-share-close]", overlay);
+  const copyBtns   = qsa("[data-share-svc='copy'], #share-copy-btn", overlay);
+  function openShare(){
+    const field = qs("#share-link-field"); if (field) field.textContent = window.location.href;
+    overlay.setAttribute("aria-hidden","false");
+  }
+  function closeShare(){ overlay.setAttribute("aria-hidden","true"); }
+  btnOpen.addEventListener("click", openShare);
+  closeElems.forEach(el => el.addEventListener("click", closeShare));
+  copyBtns.forEach(el => el.addEventListener("click", ()=>{ try { navigator.clipboard.writeText(window.location.href); } catch(e){} }));
+}
+
+// ------------------------------------------------------------
+// Bottoni legali footer
+// ------------------------------------------------------------
+function initLegalButtons(){
+  const privBtn = qs("#btn-privacy-open"); if (privBtn) privBtn.addEventListener("click", ()=> openPrivacyPanel());
+  const mifidBtn = qs("#btn-mifid-open");  if (mifidBtn)  mifidBtn.addEventListener("click", ()=> openMifidPanel());
+}
+
+// ------------------------------------------------------------
+// Export API globale
+// ------------------------------------------------------------
+window.__TradeliaUI = {
+  openPanel, closePanel,
+  openPrivacyPanel, openMifidPanel, openAuditPanel,
+  bindMetricInfoButtons,
+  openLegalPanel, closeLegalPanel
 };
+// retrocompat
+window.openPanel = openPanel; window.closePanel = closePanel;
+
+// ------------------------------------------------------------
+// Boot
+// ------------------------------------------------------------
+async function bootUIRuntime(){
+  await loadGlossary();
+  initThemeToggle();
+  initPrintButtons();
+  initShareOverlay();
+  initLegalButtons();
+  bindMetricInfoButtons(document);
+
+  // icone lucide
+  if (window.lucide && typeof window.lucide.createIcons === "function") {
+    try { window.lucide.createIcons(); } catch(e){ console.warn("lucide.createIcons() error:", e); }
+  }
+  // footer year
+  const fy = qs("#footer-year"); if (fy && !fy.textContent.trim()) fy.textContent = new Date().getFullYear();
+}
+bootUIRuntime();
+
+// Harden export
+if (!window.__TradeliaUI) window.__TradeliaUI = {};
+window.__TradeliaUI.openPanel = openPanel;
+window.__TradeliaUI.closePanel = closePanel;
+window.__TradeliaUI.openPrivacyPanel = openPrivacyPanel;
+window.__TradeliaUI.openMifidPanel = openMifidPanel;
+window.__TradeliaUI.openAuditPanel = openAuditPanel;
+window.__TradeliaUI.bindMetricInfoButtons = bindMetricInfoButtons;
+window.__TradeliaUI.openLegalPanel = openLegalPanel;
+window.__TradeliaUI.closeLegalPanel = closeLegalPanel;
+
+// ------------------------------------------------------------
+// MiFID obbligatorio primo accesso
+// ------------------------------------------------------------
+(function enforceMifidFirstVisit(){
+  try {
+    const ok = localStorage.getItem("mifidAcknowledged");
+    if (!ok) {
+      if (window.__TradeliaUI && typeof window.__TradeliaUI.openMifidPanel === "function") {
+        window.__TradeliaUI.openMifidPanel();
+      }
+    }
+  } catch(e){ console.warn("enforceMifidFirstVisit error:", e); }
+})();
