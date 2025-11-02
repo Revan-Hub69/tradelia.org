@@ -1,230 +1,276 @@
-// /report/assets/js/components/header-ticker.js — ONE FILE, DROP-IN, READY
-// Variante B (max 2 righe) con caption “what” sotto ogni metrica e (i) che mostra SOLO {how, source}
-// Nessuna dipendenza oltre a tokens.css. Carica automaticamente il glossario da /report/assets/glossary.json
-// API: headerTicker.mount(slot) -> node; headerTicker.update(node, data); (auto-carica glossario una volta)
+// /report/assets/js/components/header-ticker.js
+// Header Ticker (Variante B · istituzionale) — semaforo da JSON + WHAT sotto ogni metrica
+// Dipendenze: tokens.css (palette + base). Nessuna libreria esterna.
 
 export const headerTicker = (()=>{
-  // ---------------------------------
-  // Tiny DOM helpers
-  // ---------------------------------
+
+  // ---------------- Helpers ----------------
   const QS  = (s, r=document)=> r.querySelector(s);
   const QSA = (s, r=document)=> [...r.querySelectorAll(s)];
   const EL  = (t, cls, html)=>{ const e=document.createElement(t); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; };
 
-  // ---------------------------------
-  // Inline CSS (tones + utilities) — injected once
-  // ---------------------------------
+  // ===== CONFIG =====
+  const CFG = {
+    captionMode: 'what',   // 'what' | 'how' | 'what+how'
+    clampLines:  2,
+    showFeedSyncPill: false,  // tienilo false: FeedSync è ridondante nell’header
+    metaRightEnabled: true
+  };
+
+  // ---------------- CSS (iniettato) ----------------
   let CSS_INJECTED = false;
   function injectCSS(){
     if (CSS_INJECTED) return; CSS_INJECTED = true;
     const css = `
-    .no-scrollbar::-webkit-scrollbar{ display:none; }
-    .hdrtk-wrap{ padding-block: .35rem; }
-    .hdrtk-caption{ display:flex; align-items:center; gap:.35rem; }
-    .hdrtk-i{ cursor:pointer; font-weight:700; border:0; background:none; color:inherit; padding:0; }
-    [data-tone="green"]  { border-color: oklab(65% -0.1 0.2 / .5);  color: oklab(36% -0.08 0.12); background: color-mix(in oklab, var(--surface-card) 88%, oklab(91% -0.02 0.06)); }
-    [data-tone="yellow"] { border-color: oklab(75% 0.03 0.12 / .5); color: oklab(36%  0.03 0.09); background: color-mix(in oklab, var(--surface-card) 88%, oklab(95%  0.02 0.10)); }
-    [data-tone="red"]    { border-color: oklab(65% 0.16 0.12 / .5); color: oklab(34%  0.12 0.08); background: color-mix(in oklab, var(--surface-card) 88%, oklab(90%  0.12 0.08)); }
-    .hdrtk-popover{ pointer-events:auto; }
-    `;
-    const tag = EL('style'); tag.textContent = css; document.head.appendChild(tag);
+/* --- Header Ticker · Variante B (istituzionale) -------------------- */
+.header-ticker{padding-block:.9rem}
+.hdrtk-row1{display:flex;align-items:flex-start;justify-content:space-between;gap:1.25rem}
+.hdrtk-left{min-width:0}
+.hdrtk-ticker{letter-spacing:-.015em}
+.hdrtk-venue{white-space:nowrap;color:var(--muted);font-size:12px}
+.hdrtk-company{color:var(--ink-soft);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52ch;margin-top:2px}
+
+/* Right block (price) */
+.hdrtk-right{display:flex;flex-direction:column;align-items:flex-end;gap:.2rem}
+.hdrtk-price-val{font-weight:800;line-height:1;font-size:clamp(24px,3.9vw,34px)}
+.hdrtk-ccy{font-size:12px;font-weight:600;margin-left:.5rem}
+.hdrtk-delta{display:inline-flex;align-items:center;gap:.35rem;padding:.32rem .6rem;border-radius:999px;border:1px solid var(--br-soft);font-size:12px;font-weight:700;line-height:1;margin-left:.5rem}
+.hdrtk-delta[data-tone="green"]{color:oklab(38% -0.08 0.12);background:color-mix(in oklab,var(--surface-card) 90%, oklab(91% -0.02 0.06))}
+.hdrtk-delta[data-tone="yellow"]{color:oklab(36% 0.03 0.09);background:color-mix(in oklab,var(--surface-card) 90%, oklab(95% 0.02 0.10))}
+.hdrtk-delta[data-tone="red"]{color:oklab(34% 0.12 0.08);background:color-mix(in oklab,var(--surface-card) 90%, oklab(90% 0.12 0.08))}
+.hdrtk-caret{display:inline-block;transform:translateY(-1px);opacity:.9}
+
+/* Rimuove legend puntinata; usiamo WHAT sotto */
+.hdrtk-legend{display:none}
+
+/* WHAT sotto i KPI a destra */
+.hdrtk-what{margin-top:.15rem;color:var(--muted);font-size:11.5px;-webkit-line-clamp:${CFG.clampLines};display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
+
+/* Row 2: quality strip più pulita */
+.hdrtk-row2{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-top:.9rem}
+.hdrtk-quals{display:flex;gap:1rem;overflow-x:auto}
+.hdrtk-qpill{min-width:140px}
+.hdrtk-pill{display:inline-flex;align-items:center;gap:.4rem;padding:.34rem .62rem;border-radius:999px;border:1px solid var(--br-soft);font-size:12px;font-weight:700;line-height:1}
+.hdrtk-pill[data-tone="green"]{color:oklab(38% -0.08 0.12);background:color-mix(in oklab,var(--surface-card) 90%, oklab(91% -0.02 0.06))}
+.hdrtk-pill[data-tone="yellow"]{color:oklab(36% 0.03 0.09);background:color-mix(in oklab,var(--surface-card) 90%, oklab(95% 0.02 0.10))}
+.hdrtk-pill[data-tone="red"]{color:oklab(34% 0.12 0.08);background:color-mix(in oklab,var(--surface-card) 90%, oklab(90% 0.12 0.08))}
+.hdrtk-pill[data-tone="neutral"]{}
+
+/* Title+icona “i” sopra le pill: off, usiamo solo WHAT descrittivo */
+.hdrtk-caphead{display:none}
+
+/* Meta snapshot a destra */
+.hdrtk-meta{white-space:nowrap;font-size:11.5px;color:var(--muted)}
+
+/* Popover (how+source) */
+.hdrtk-pop{position:fixed;z-index:80;min-width:260px;max-width:320px;padding:.75rem .85rem;border:1px solid var(--br-soft);border-radius:12px;background:var(--surface-card);color:var(--ink);box-shadow:0 12px 36px oklab(0% 0 0 /.22)}
+.hdrtk-pop[hidden]{display:none!important}
+.hdrtk-pop::after{content:"";position:absolute;width:0;height:0;border:6px solid transparent;border-bottom-color:var(--surface-card);top:-12px;left:24px;filter:drop-shadow(0 -1px 0 var(--br-soft))}
+.hdrtk-pop-how{font-size:12px;line-height:1.5;margin-bottom:.35rem}
+.hdrtk-pop-src{font-size:11px;color:var(--muted)}
+@media print{ .hdrtk-pop{display:none!important} }
+`;
+    document.head.appendChild(EL('style', null, css));
   }
 
-  // ---------------------------------
-  // Tone helpers
-  // ---------------------------------
-  function toneForPct(p){ if (p==null||isNaN(p)) return 'neutral'; if (p>0.5) return 'green'; if (p<-0.5) return 'red'; return 'neutral'; }
+  // ---------------- Tone helpers (fallback) ----------------
+  const normTone = t => (t||'').toString().toLowerCase();
+  const toneForPct   = p => (p==null||isNaN(p)) ? 'neutral' : (p>0 ? 'green' : (p<0 ? 'red':'neutral'));
   function toneForFreshness(label){ if(!label) return 'neutral'; const s=String(label).toLowerCase(); if(s.includes('t-0')||s.includes('live')) return 'green'; if(s.includes('≤ t-1')||s.includes('t-1')) return 'yellow'; return 'red'; }
   function toneForScore(x){ if(x==null||isNaN(x)) return 'neutral'; if(x>=0.85) return 'green'; if(x>=0.70) return 'yellow'; return 'red'; }
   function toneForState(s){ if(!s) return 'neutral'; const u=String(s).toUpperCase(); if(u.includes('ACTIVE')) return 'green'; if(u.includes('REVIEW')) return 'yellow'; if(u.includes('HOLD')) return 'red'; return 'neutral'; }
 
-  // ---------------------------------
-  // Format helpers
-  // ---------------------------------
-  const fmt = {
-    price(v){ if(v==null||isNaN(v)) return '—'; return Number(v).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2}); },
-    pct(v){ if(v==null||isNaN(v)) return '—'; const sign = v>0?'+':''; return `${sign}${Number(v).toFixed(2)}%`; },
-  };
-
-  // ---------------------------------
-  // Glossary (auto-load once from /report/assets/glossary.json)
-  // ---------------------------------
-  let GLOSSARY = null; let GLOSSARY_LOADING = null;
+  // ---------------- Glossario (per “what” e popover “how+source”) ----------------
+  let GLOSS=null, LOADING=null;
   async function ensureGlossary(){
-    if (GLOSSARY) return GLOSSARY;
-    if (GLOSSARY_LOADING) return GLOSSARY_LOADING;
-    GLOSSARY_LOADING = fetch('/report/assets/glossary.json', { cache:'no-store' })
-      .then(r=> r.ok ? r.json() : null)
-      .then(j=>{ GLOSSARY = j||{}; return GLOSSARY; })
-      .catch(()=> (GLOSSARY={}));
-    return GLOSSARY_LOADING;
+    if (GLOSS) return GLOSS;
+    if (LOADING) return LOADING;
+    LOADING = fetch('/report/assets/glossary.json',{cache:'no-store'})
+      .then(r=> r.ok ? r.json() : {})
+      .then(j=> (GLOSS=j||{}))
+      .catch(()=> (GLOSS={}));
+    return LOADING;
   }
+  const G = key => (GLOSS?.[key] || GLOSS?.[`${key}_info`] || null);
 
-  // ---------------------------------
-  // Popover (shows only how + source)
-  // ---------------------------------
-  let popRef = null;
-  function ensurePopover(){
+  // ---------------- Popover (how+source) ----------------
+  let popRef=null;
+  function ensurePop(){
     if (popRef) return popRef;
-    const p = EL('div','tl-popover hdrtk-popover');
-    p.setAttribute('role','dialog');
-    Object.assign(p.style, {
-      position:'fixed', minWidth:'260px', maxWidth:'340px', zIndex:60,
-      border:'1px solid var(--br-soft)', borderRadius:'var(--radius-card)',
-      background:'var(--surface-card)', color:'var(--ink)',
-      boxShadow:'0 12px 36px oklab(0% 0 0 / .22)', padding:'.75rem .85rem'
-    });
-    p.hidden = true;
-    p.innerHTML = `
-      <div class="text-[12px] leading-5 hdrtk-popover-body">
-        <div class="hdrtk-how mb-2"></div>
-        <div class="hdrtk-src text-[11px] text-[color:var(--muted)]"></div>
-      </div>`;
-    document.body.appendChild(p);
-    popRef = p; return p;
+    const p = EL('div','hdrtk-pop'); p.hidden=true;
+    p.innerHTML = `<div class="hdrtk-pop-how"></div><div class="hdrtk-pop-src"></div>`;
+    document.body.appendChild(p); popRef=p; return p;
   }
-  function openPopover(target, key){
-    const p = ensurePopover();
-    const g = GLOSSARY?.[key] || GLOSSARY?.[`${key}_info`] || null;
-    const how = g?.how || '—';
-    const src = g?.source || '';
-    QS('.hdrtk-how', p).textContent = how;
-    QS('.hdrtk-src', p).textContent = src ? `Fonte: ${src}` : '';
-    const r = target.getBoundingClientRect();
-    const pad = 10; const vw = innerWidth; const vh = innerHeight;
-    let x = r.left + (r.width/2) - 140; let y = r.bottom + 8;
-    if (x < pad) x = pad; if (x > vw - 300) x = vw - 300; if (y > vh - 140) y = r.top - 8 - (p.offsetHeight||140);
-    p.style.left = x + 'px'; p.style.top = y + 'px'; p.hidden = false;
-    requestAnimationFrame(()=> document.addEventListener('click', ()=>{ p.hidden = true; }, { once:true }));
+  function openPop(target, key){
+    const pop = ensurePop(); const g = G(key) || {};
+    QS('.hdrtk-pop-how', pop).textContent = g.how || '—';
+    QS('.hdrtk-pop-src', pop).textContent = g.source ? `Fonte: ${g.source}` : '';
+    const r = target.getBoundingClientRect(); const pad=10;
+    pop.hidden=false;
+    const w=pop.offsetWidth, h=pop.offsetHeight;
+    let x=r.left, y=r.bottom+10;
+    if (x+w+pad>innerWidth) x=innerWidth-w-pad;
+    if (y+h+pad>innerHeight) y=r.top-10-h;
+    pop.style.left=x+'px'; pop.style.top=y+'px';
+  }
+  document.addEventListener('click',(e)=>{
+    if (!popRef || popRef.hidden) return;
+    if (!e.target.closest('.hdrtk-pop') && !e.target.closest('.hdrtk-i')) popRef.hidden=true;
+  },{capture:true});
+
+  // ---------------- Lettura metrica + tono (dal JSON) ----------------
+  function pickMetric(data, key, toneFallbackFn){
+    let value = null, tone = null;
+    const src = data?.[key];
+
+    if (src != null && typeof src === 'object') {
+      value = (src.raw ?? src.value ?? src.val ?? null);
+      tone  = normTone(src.tone);
+    } else {
+      value = src;
+      tone  = normTone(data?.[`${key}Tone`]);
+    }
+
+    if (!tone && typeof toneFallbackFn === 'function') {
+      tone = normTone(toneFallbackFn(value));
+    }
+    if (!tone) tone = 'neutral';
+    return { value, tone };
   }
 
-  // ---------------------------------
-  // Markup skeleton
-  // ---------------------------------
+  // ---------------- Markup ----------------
   function skeleton(){
     return `
-    <div class="hdrtk-wrap">
-      <div class="hdrtk-row1 flex items-end justify-between gap-3">
-        <div class="hdrtk-left flex items-baseline gap-2 min-w-0">
-          <div class="hdrtk-ticker text-[clamp(18px,3.2vw,24px)] font-extrabold tracking-tight">—</div>
-          <div class="hdrtk-venue text-[12px] text-[color:var(--muted)]">—</div>
+      <div class="hdrtk-row1">
+        <div class="hdrtk-left">
+          <div class="flex items-baseline gap-2">
+            <div class="hdrtk-ticker text-[clamp(18px,3.2vw,24px)] font-extrabold">—</div>
+            <div class="hdrtk-venue">—</div>
+          </div>
+          <div class="hdrtk-company">—</div>
         </div>
-        <div class="hdrtk-right flex items-center flex-wrap gap-x-3 gap-y-1">
-          <div class="hdrtk-price block">
-            <div class="text-[clamp(20px,3.6vw,28px)] font-extrabold tabular-nums">—</div>
-            <div class="hdrtk-caption text-[11px] text-[color:var(--muted)] leading-tight">
-              Price · <button class="hdrtk-i underline decoration-dotted" data-info="Price" aria-label="Info">i</button>
-            </div>
+        <div class="hdrtk-right">
+          <div>
+            <span class="hdrtk-price-val">—</span>
+            <span class="hdrtk-delta" data-tone="neutral"><span class="hdrtk-caret">◼</span><span class="hdrtk-dval">—%</span></span>
+            <span class="hdrtk-ccy">—</span>
           </div>
-          <div class="hdrtk-chg">
-            <div class="hdrtk-pill inline-flex items-center gap-1 px-2 py-[3px] rounded-[999px] border text-[12px] font-semibold">—%</div>
-            <div class="hdrtk-caption text-[11px] text-[color:var(--muted)] leading-tight">
-              ChangePct · <button class="hdrtk-i underline decoration-dotted" data-info="ChangePct" aria-label="Info">i</button>
-            </div>
-          </div>
-          <div class="hdrtk-ccy">
-            <div class="text-[13px] font-semibold">—</div>
-            <div class="hdrtk-caption text-[11px] text-[color:var(--muted)] leading-tight">
-              Currency · <button class="hdrtk-i underline decoration-dotted" data-info="Currency" aria-label="Info">i</button>
-            </div>
-          </div>
+          <!-- WHAT sotto al blocco prezzo -->
+          <div class="hdrtk-what" data-what="Price"></div>
+          <div class="hdrtk-what" data-what="ChangePct"></div>
+          <div class="hdrtk-what" data-what="Currency"></div>
         </div>
       </div>
 
-      <div class="hdrtk-row2 mt-2 flex items-center justify-between gap-2">
-        <div class="hdrtk-quals flex items-center gap-2 overflow-x-auto no-scrollbar pr-1">
-          ${pillSkeleton('Freshness')}
-          ${pillSkeleton('ConfidenceFinal')}
-          ${pillSkeleton('DataIntegrity')}
-          ${pillSkeleton('FeedSync')}
-          ${pillSkeleton('State')}
+      <div class="hdrtk-row2">
+        <div class="hdrtk-quals">
+          ${pill('Freshness')}
+          ${pill('ConfidenceFinal')}
+          ${pill('DataIntegrity')}
+          ${CFG.showFeedSyncPill ? pill('FeedSync') : ''}
+          ${pill('State')}
         </div>
+        <div class="hdrtk-meta">${CFG.metaRightEnabled ? '—' : ''}</div>
       </div>
-    </div>`;
+    `;
   }
-  function pillSkeleton(id){
+  function pill(id){
     return `
-      <div class="hdrtk-qpill min-w-[150px]">
-        <div class="hdrtk-pill inline-flex items-center gap-1 px-2 py-[3px] rounded-[999px] border text-[12px] font-semibold">—</div>
-        <div class="hdrtk-caption text-[11px] text-[color:var(--muted)] leading-tight">
-          ${id} · <button class="hdrtk-i underline decoration-dotted" data-info="${id}" aria-label="Info">i</button>
-        </div>
-      </div>`;
+      <div class="hdrtk-qpill" data-id="${id}">
+        <div class="hdrtk-pill" data-tone="neutral">—</div>
+        <div class="hdrtk-caphead">${id} <button class="hdrtk-i" data-info="${id}" aria-label="Info">i</button></div>
+        <div class="hdrtk-what" data-what="${id}"></div>
+      </div>
+    `;
   }
 
-  // ---------------------------------
-  // Update (map data → UI)
-  // ---------------------------------
-  async function update(root, data={}){
-    injectCSS();
-    await ensureGlossary();
+  // ---------------- Update ----------------
+  async function update(root, raw={}){
+    injectCSS(); await ensureGlossary();
 
-    const tkr   = data.Ticker || '—';
-    const vnu   = data.Venue || '';
-    const price = data.Price;
-    const chg   = data.ChangePct;
-    const ccy   = data.Currency || '';
+    // Normalizzazione input (alias FreshnessLabel -> Freshness)
+    const data = {
+      ...raw,
+      Freshness: raw.Freshness ?? raw.FreshnessLabel ?? raw.Freshness_label
+    };
 
-    QS('.hdrtk-ticker', root).textContent = tkr;
-    QS('.hdrtk-venue',  root).textContent = vnu ? `· ${vnu}` : '';
-    QS('.hdrtk-price .tabular-nums', root).textContent = fmt.price(price);
+    // SX: identità
+    QS('.hdrtk-ticker',  root).textContent = data.Ticker || '—';
+    QS('.hdrtk-venue',   root).textContent = data.Venue ? `· ${data.Venue}` : '';
+    QS('.hdrtk-company', root).textContent = data.CompanyName || '';
 
-    const pill = QS('.hdrtk-chg .hdrtk-pill', root);
-    const tone = toneForPct(Number(chg));
-    pill.textContent = fmt.pct(Number(chg));
-    applyTone(pill, tone);
-    const caret = Number(chg) > 0 ? '▲' : (Number(chg) < 0 ? '▼' : '◼');
-    pill.prepend(EL('span','', caret));
+    // DX: Price / ChangePct (semaforo dal JSON o fallback)
+    const price = (data.Price==null || isNaN(data.Price)) ? '—' : Number(data.Price).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2});
+    QS('.hdrtk-price-val', root).textContent = price;
+    QS('.hdrtk-ccy', root).textContent = data.Currency || '—';
 
-    QS('.hdrtk-ccy div:first-child', root).textContent = ccy || '—';
+    const { value: chg, tone: chgTone } = pickMetric(data, 'ChangePct', v => toneForPct(Number(v)));
+    const dEl = QS('.hdrtk-delta', root);
+    dEl.setAttribute('data-tone', chgTone);
+    QS('.hdrtk-dval', root).textContent = (chg==null||isNaN(chg)) ? '—%' : `${chg>0?'+':''}${Number(chg).toFixed(2)}%`;
+    QS('.hdrtk-caret', root).textContent = (chg==null||isNaN(chg)) ? '◼' : (chg>0 ? '▲' : (chg<0 ? '▼' : '◼'));
 
-    setQual(root, 'Freshness',       data.FreshnessLabel || data.Freshness);
-    setQual(root, 'ConfidenceFinal', data.ConfidenceFinal, 'score');
-    setQual(root, 'DataIntegrity',   data.DataIntegrity,   'score');
-    setQual(root, 'FeedSync',        data.FeedSync);
-    setQual(root, 'State',           data.State);
+    // Caption (WHAT) per le 3 metriche del blocco DX
+    ['Price','ChangePct','Currency'].forEach(k => setCaption(root, k));
 
-    // bind popover (how+source)
-    QSA('.hdrtk-i', root).forEach(btn => {
-      btn.addEventListener('click', (e)=>{ e.stopPropagation(); openPopover(btn, btn.getAttribute('data-info')); }, { passive:true });
+    // Pill qualità — tutte semaforiche da JSON (con fallback)
+    applyQual(root, data, 'Freshness',       v => toneForFreshness(v));
+    applyQual(root, data, 'ConfidenceFinal', v => toneForScore(Number(v)), true);
+    applyQual(root, data, 'DataIntegrity',   v => toneForScore(Number(v)), true);
+    if (CFG.showFeedSyncPill) applyQual(root, data, 'FeedSync', ()=>'neutral');
+    applyQual(root, data, 'State',           v => toneForState(v));
+
+    // Caption pill (WHAT sotto ogni metrica)
+    ['Freshness','ConfidenceFinal','DataIntegrity','FeedSync','State']
+      .filter(k => k!=='FeedSync' || CFG.showFeedSyncPill)
+      .forEach(k => setCaption(root, k));
+
+    // Meta snapshot (destra)
+    if (CFG.metaRightEnabled){
+      const meta = QS('.hdrtk-meta', root);
+      const start = data.Start ?? '—';
+      const end   = data.End ?? '—';
+      const upd   = data.UpdatedAt ? tryUTC(data.UpdatedAt) : '—';
+      meta.textContent = `Snapshot ${start} → ${end} · Updated ${upd}`;
+    }
+
+    // Bind popover “i” (resta disponibile su click se vuoi “how+source”)
+    QSA('.hdrtk-i', root).forEach(btn=>{
+      btn.addEventListener('click', (e)=>{ e.stopPropagation(); openPop(btn, btn.getAttribute('data-info')); }, { passive:true });
     });
   }
 
-  function setQual(root, id, value, kind='text'){
-    const box = QSA('.hdrtk-qpill', root).find(x => QS('.hdrtk-caption', x)?.textContent?.startsWith(id));
-    if (!box){ return; }
+  function tryUTC(str){ try{ return new Date(str).toISOString().slice(11,16)+' UTC'; }catch(e){ return String(str); } }
+
+  function setCaption(root, key){
+    const slot = QSA(`[data-what="${key}"]`, root)[0];
+    if(!slot) return;
+    const g = G(key) || {};
+    const mode = CFG.captionMode;
+    let txt = '—';
+    if (mode==='what') txt = g.what || '—';
+    else if (mode==='how') txt = g.how || g.what || '—';
+    else txt = [g.what, g.how].filter(Boolean).join(' • ');
+    slot.textContent = txt;
+  }
+
+  function applyQual(root, data, id, fallbackToneFn, isScore=false){
+    const box = QSA('.hdrtk-qpill', root).find(x => x.getAttribute('data-id')===id);
+    if (!box) return;
+    const { value, tone } = pickMetric(data, id, fallbackToneFn);
     if (value==null || value==='') { box.style.display='none'; return; }
-
-    const pill = QS('.hdrtk-pill', box);
-    let tone = 'neutral'; let txt = String(value);
-    if (id === 'Freshness') tone = toneForFreshness(value);
-    else if (id === 'ConfidenceFinal' || id==='DataIntegrity') tone = toneForScore(Number(value));
-    else if (id === 'State') tone = toneForState(value);
-    if (kind==='score' && !isNaN(Number(value))) txt = Number(value).toFixed(2);
-
-    pill.textContent = txt; applyTone(pill, tone);
+    const pill = box.querySelector('.hdrtk-pill');
+    pill.setAttribute('data-tone', tone);
+    pill.textContent = isScore && !isNaN(Number(value)) ? Number(value).toFixed(2) : String(value);
   }
 
-  function applyTone(el, tone){
-    el.style.borderColor = 'var(--br-soft)';
-    el.style.background  = 'var(--surface-card)';
-    el.style.color       = 'var(--ink)';
-    el.removeAttribute('data-tone');
-    if (tone==='green')  el.setAttribute('data-tone','green');
-    if (tone==='yellow') el.setAttribute('data-tone','yellow');
-    if (tone==='red')    el.setAttribute('data-tone','red');
-  }
-
-  // ---------------------------------
-  // Public API
-  // ---------------------------------
+  // ---------------- API ----------------
   function mount(slot){
     injectCSS();
-    const host = (typeof slot === 'string') ? QS(slot) : slot;
+    const host = (typeof slot==='string') ? QS(slot) : slot;
     if (!host) throw new Error('headerTicker.mount: invalid slot');
-    const wrap = EL('div','header-ticker');
-    wrap.innerHTML = skeleton();
-    host.innerHTML = ''; host.appendChild(wrap);
+    const wrap = EL('div','header-ticker'); wrap.innerHTML = skeleton();
+    host.innerHTML=''; host.appendChild(wrap);
     return wrap;
   }
 
