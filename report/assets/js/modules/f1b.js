@@ -1,14 +1,28 @@
-// /report/assets/js/modules/f1b.js (fixed 02 Nov 2025 · flush-mobile + scoped drawer)
+// /report/assets/js/modules/f1b.js (Super Premium · 02 Nov 2025)
 //
 // F1B · Regime di mercato / Contesto rischio (public dashboard)
+// - Card compatta, copy alleggerito
+// - Drawer/tabs desktop+mobile con scope locale (nessuna interferenza esterna)
+// - Mobile: una sola area scrollabile (main), tabs sticky, safe-area iOS, NO doppio contenitore
+// - Desktop: una sola scrollbar (content), sidebar fissa
+//
+// Export:
+//   renderCard(rawData, ctx?)
+//   bindCard(node, rawData, ctx?)
+//
+// Dipendenze globali attese (già fornite dal runtime):
+//   window.__TradeliaUI.openPanel(opts)
+//   window.__TradeliaUI.closePanel()
+//   window.__TradeliaUI.bindMetricInfoButtons(root?)
 
 export function renderCard(rawData, ctx = {}) {
   const d = normalizeDataPublicF1B(rawData);
 
+  // KPI principali (snapshot box)
   const kpis = [
-    { key: "StrategyMode_macro", label: "StrategyMode", desc: "Modalità regime",     metric: d.regime_and_risk.StrategyMode_macro },
-    { key: "RegimeScore",        label: "RegimeScore",  desc: "Appetito rischio",    metric: d.regime_and_risk.RegimeScore },
-    { key: "VolRegime",          label: "Volatilità",   desc: "VIX / oro / hedge",   metric: d.regime_and_risk.VolRegime }
+    { key: "StrategyMode_macro", label: "StrategyMode", desc: "Modalità regime",           metric: d.regime_and_risk.StrategyMode_macro },
+    { key: "RegimeScore",        label: "RegimeScore",  desc: "Appetito rischio",          metric: d.regime_and_risk.RegimeScore },
+    { key: "VolRegime",          label: "Volatilità",   desc: "VIX / oro / hedge",         metric: d.regime_and_risk.VolRegime }
   ];
 
   const { toneLabel, toneColor } = computeHighLevelTone(
@@ -26,28 +40,28 @@ export function renderCard(rawData, ctx = {}) {
               Regime di mercato · Orizzonte 3–10 giorni
             </span>
             <span class="module-status-pill text-[10px] font-semibold leading-[1.2] px-[6px] py-[2px] rounded-[4px] border"
-              data-state="${escapeAttr(d.meta.moduleStatus || 'ACTIVE')}"
-              style="background:var(--surface-card-alt);border-color:var(--br-card);color:var(--ink);">
+                  data-state="${escapeAttr(d.meta.moduleStatus || 'ACTIVE')}"
+                  style="background:var(--surface-card-alt);border-color:var(--br-card);color:var(--ink);">
               ${escapeHtml(d.meta.moduleStatus || 'ACTIVE')}
             </span>
-            <span class="text-[10px] leading-[1.3] text-[color:var(--muted)]">${escapeHtml(d.meta.freshness || '≤ T-1')}</span>
+            <span class="text-[10px] leading-[1.3] text-[color:var(--muted)]">
+              ${escapeHtml(d.meta.freshness || '≤ T-1')}
+            </span>
           </div>
-          <div class="text-[14px] font-bold leading-[1.35] mt-1">Contesto rischio &amp; ampiezza del mercato</div>
+          <div class="text-[14px] font-bold leading-[1.35] mt-1">
+            Contesto rischio &amp; ampiezza del mercato
+          </div>
           <div class="text-[12px] text-[color:var(--muted)] leading-[1.45] mt-1">
             Lettura di contesto. Non è un'istruzione operativa.
           </div>
         </div>
       </header>
 
-      <!-- FLUSH mobile: niente padding orizzontale; desktop: padding pieno -->
       <div class="f1b-card__body flex flex-col gap-4"
-           style="background:var(--surface-card);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:.6rem 0 .8rem 0;">
-        <style>
-          @media (min-width:768px){ .f1b-card__body{ padding:1rem; } }
-        </style>
+           style="background:var(--surface-card);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.85rem;">
 
-        <!-- StrategyMode + tono (padding solo sul testo) -->
-        <div class="px-3 md:px-0">
+        <!-- StrategyMode + tono -->
+        <div>
           <div class="text-[12px] font-semibold text-[color:var(--muted)] leading-[1.4] flex flex-wrap items-center gap-1.5">
             <span>StrategyMode</span>
             <button class="info-btn align-middle" data-metric="StrategyMode_macro" aria-label="Info StrategyMode">?</button>
@@ -59,18 +73,19 @@ export function renderCard(rawData, ctx = {}) {
               ${escapeHtml(toneLabel)}
             </span>
           </div>
-          <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">${escapeHtml(d.regime_and_risk.StrategyMode_macro?.ai_note || '')}</div>
+          <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">
+            ${escapeHtml(d.regime_and_risk.StrategyMode_macro?.ai_note || '')}
+          </div>
         </div>
 
-        <!-- KPI (flush) -->
+        <!-- KPI -->
         <div class="grid gap-3 grid-cols-2 md:grid-cols-3">
           ${kpis.map(k => metricBoxTrafficLight(k)).join('')}
         </div>
 
-        <!-- Disclaimer + CTA (padding solo testo) -->
-        <div class="mt-1 flex flex-col gap-3 md:flex-row md:items-start px-3 md:px-0">
+        <div class="mt-1 flex flex-col gap-3 md:flex-row md:items-start">
           <p class="text-[11px] leading-[1.4] text-[color:var(--muted)] flex-1">
-            ${escapeHtml(d.meta.hero_disclaimer || '')}
+            ${escapeHtml(d.meta.hero_disclaimer || 'Materiale educativo/informativo. Nessuna raccomandazione personale.')}
           </p>
           <div class="flex md:justify-end">
             <button class="f1b-cta-btn" data-open-f1b-details="true" type="button"
@@ -96,15 +111,18 @@ export function bindCard(node, rawData, ctx = {}) {
   }
 }
 
-/* ========================== PANEL / DRAWER (scoped) ========================== */
-
+/* --------------------------------------------------------------------------
+   PANEL / DRAWER — scoped (nessuna interferenza con overlay globale)
+-------------------------------------------------------------------------- */
 function openF1DrawerPublic(data){
   if (!window.__TradeliaUI?.openPanel) return;
 
   const sections = buildDrawerSectionsPublic(data);
   const isMobile = matchMobile();
-  const shell = isMobile ? renderDrawerMobileShellPublic(sections)
-                         : renderDrawerDesktopShellPublic(sections);
+
+  const shell = isMobile
+    ? renderDrawerMobileShellPublic(sections)
+    : renderDrawerDesktopShellPublic(sections);
 
   window.__TradeliaUI.openPanel({
     title: 'F1B · Regime di mercato',
@@ -116,27 +134,33 @@ function openF1DrawerPublic(data){
     footerTabs: []
   });
 
-  setTimeout(() => {
+  // Post-mount binding SOLO sotto #f1b-panel-root
+  requestAnimationFrame(() => {
     const root = document.getElementById('f1b-panel-root');
     if (!root) return;
 
     bindDrawerTabsPublic(root);
+
     if (window.__TradeliaUI?.bindMetricInfoButtons){
       try { window.__TradeliaUI.bindMetricInfoButtons(root); } catch {}
     }
+
+    // attiva la prima tab
     const first = root.querySelector('[data-f1b-tab="regime"]');
     if (first && typeof first.click === 'function') first.click();
+
     initTabsScrollHint(root);
-  }, 0);
+  });
 }
 
 function matchMobile(){ return window.matchMedia('(max-width: 767px)').matches; }
 
-/* ============================== CONTENT BUILDER ============================== */
-
+/* --------------------------------------------------------------------------
+   CONTENT BUILDER
+-------------------------------------------------------------------------- */
 function buildDrawerSectionsPublic(d){
   const regimeHTML = `
-    <section class="tl-panel-section px-3 md:px-4" data-f1b-section="regime" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding-top:.25rem;">
+    <section class="tl-panel-section" data-f1b-section="regime" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Regime &amp; Rischio</div></header>
       <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4]">
         ${metricBlock('StrategyMode_macro','StrategyMode','Modalità corrente del mercato',d.regime_and_risk.StrategyMode_macro)}
@@ -150,7 +174,7 @@ function buildDrawerSectionsPublic(d){
     </section>`;
 
   const breadthHTML = `
-    <section class="tl-panel-section px-3 md:px-4" data-f1b-section="breadth" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding-top:.25rem;">
+    <section class="tl-panel-section" data-f1b-section="breadth" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Breadth &amp; Rotazione Equity</div></header>
       <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4] mb-4">
         ${metricBlock('Breadth_1M','Breadth (1M)','% settori positivi ~30g',d.breadth_rotation.Breadth_1M)}
@@ -166,7 +190,7 @@ function buildDrawerSectionsPublic(d){
     </section>`;
 
   const internalsHTML = `
-    <section class="tl-panel-section px-3 md:px-4" data-f1b-section="internals" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding-top:.25rem;">
+    <section class="tl-panel-section" data-f1b-section="internals" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Market Internals (dati grezzi)</div></header>
       ${listBlockCard('Indici (1W)', d.internals_raw.Indices_1W)}
       ${listBlockCard('Futures / Commodities (1W)', d.internals_raw.Futures_Move_1W)}
@@ -176,7 +200,7 @@ function buildDrawerSectionsPublic(d){
     </section>`;
 
   const streetHTML = `
-    <section class="tl-panel-section px-3 md:px-4" data-f1b-section="street" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding-top:.25rem;">
+    <section class="tl-panel-section" data-f1b-section="street" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Narrativa istituzionale</div></header>
       ${headlineBlockCard('Macro (Bloomberg / Reuters / Barr\'s)', d.street_view.T1_MacroNews)}
       ${headlineBlockCard('Sell-Side / Street View', d.street_view.T1_SellSideNotes)}
@@ -185,7 +209,7 @@ function buildDrawerSectionsPublic(d){
     </section>`;
 
   const sintesiHTML = `
-    <section class="tl-panel-section px-3 md:px-4" data-f1b-section="sintesi" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding-top:.25rem;">
+    <section class="tl-panel-section" data-f1b-section="sintesi" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Conclusione · Tradelia AI (educational)</div></header>
       ${Array.isArray(d.sintesi_ai.points) ? d.sintesi_ai.points.map(conclusionPointBlock).join('') : ''}
       ${headlineBlockCard('Lettura di contesto (non operativa)', d.sintesi_ai.summary)}
@@ -193,19 +217,19 @@ function buildDrawerSectionsPublic(d){
     </section>`;
 
   const auditHTML = `
-    <section class="tl-panel-section px-3 md:px-4" data-f1b-section="audit" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding-top:.25rem;">
+    <section class="tl-panel-section" data-f1b-section="audit" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Audit &amp; Qualità dati</div></header>
       <div class="grid gap-3 text-[12px] leading-[1.4] grid-cols-1 md:grid-cols-2">
         ${qualityChip('FreshnessScore', d.audit_quality.QualityMetrics?.FreshnessScore)}
         ${qualityChip('ConfidenceFinal', d.audit_quality.QualityMetrics?.ConfidenceFinal)}
-        ${qualityChip('DataIntegrity', d.audit_quality.QualityMetrics?.DataIntegrity)}
-        ${qualityChip('FeedSync', d.audit_quality.QualityMetrics?.FeedSync)}
+        ${qualityChip('DataIntegrity',  d.audit_quality.QualityMetrics?.DataIntegrity)}
+        ${qualityChip('FeedSync',       d.audit_quality.QualityMetrics?.FeedSync)}
       </div>
       <div class="mt-4 text-[11px] leading-[1.4] text-[color:var(--muted)]">Semaforo interno: verde=coerente/aggiornato; giallo=parziale; rosso=rumoroso.</div>
     </section>`;
 
   const mifidHTML = `
-    <section class="tl-panel-section px-3 md:px-4" data-f1b-section="mifid" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding-top:.25rem;">
+    <section class="tl-panel-section" data-f1b-section="mifid" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
       <header class="tl-panel-section-title"><div class="tl-panel-section-title-text">Nota regolamentare</div></header>
       ${headlineBlockCard('Informativa', d.mifid.disclaimer)}
     </section>`;
@@ -213,12 +237,16 @@ function buildDrawerSectionsPublic(d){
   return { regimeHTML, breadthHTML, internalsHTML, streetHTML, sintesiHTML, auditHTML, mifidHTML };
 }
 
-/* =================== SHELLS (scoped under #f1b-panel-root) =================== */
-
+/* --------------------------------------------------------------------------
+   SHELLS DESKTOP / MOBILE (scoped under #f1b-panel-root)
+-------------------------------------------------------------------------- */
 function renderDrawerDesktopShellPublic(sections){
+  // Una sola scrollbar: sul content (main). Sidebar fissa, no overflow sul wrapper.
   return `
-  <div id="f1b-panel-root" class="f1b-panel-desktop" style="display:flex;flex-direction:row;gap:1rem;height:66vh;">
-    <aside class="f1b-panel-menu" style="min-width:180px;max-width:200px;border-right:1px solid var(--br-card);height:100%;overflow:auto;">
+  <div id="f1b-panel-root" class="f1b-panel-desktop"
+       style="display:flex;flex-direction:row;gap:1rem;height:66vh;min-height:380px;overflow:hidden;">
+    <aside class="f1b-panel-menu"
+           style="flex:0 0 200px;max-width:220px;border-right:1px solid var(--br-card);height:100%;overflow:auto;overscroll-behavior:contain;">
       ${drawerMenuButtonPublic('regime','Regime di Mercato')}
       ${drawerMenuButtonPublic('breadth','Ampiezza e Rotazione')}
       ${drawerMenuButtonPublic('internals','Market Internals')}
@@ -227,7 +255,9 @@ function renderDrawerDesktopShellPublic(sections){
       ${drawerMenuButtonPublic('audit','Qualità Dati')}
       ${drawerMenuButtonPublic('mifid','Informativa MiFID')}
     </aside>
-    <main class="f1b-panel-content flex-1 min-w-0" style="height:100%;overflow:auto;-webkit-overflow-scrolling:touch;padding:1rem;" id="f1b-scroll-desktop">
+    <main class="f1b-panel-content flex-1 min-w-0"
+          id="f1b-scroll-desktop"
+          style="height:100%;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:1rem;background:var(--surface-page);">
       <div data-f1b-view="regime">${sections.regimeHTML}</div>
       <div data-f1b-view="breadth" hidden>${sections.breadthHTML}</div>
       <div data-f1b-view="internals" hidden>${sections.internalsHTML}</div>
@@ -240,97 +270,145 @@ function renderDrawerDesktopShellPublic(sections){
 }
 
 function renderDrawerMobileShellPublic(sections){
+  // Tabs sticky, una sola area scrollabile (main), niente padding sul wrapper: padding solo nelle viste
   const tabs = `
-    <div class="f1b-mobile-tabs" style="position:relative;flex-shrink:0;width:100%;display:flex;align-items:center;border-bottom:1px solid var(--br-panel-divider);background:var(--surface-panel-head);box-shadow:0 6px 12px rgba(0,0,0,.12);padding:.6rem .75rem;">
-      <div class="f1b-tabs-fade-left"  style="position:absolute;left:0;top:0;bottom:0;width:24px;pointer-events:none;background:linear-gradient(to right,var(--surface-panel-head) 0%,rgba(0,0,0,0) 80%);opacity:.6;"></div>
-      <div class="f1b-footer-tabs-scroll" style="flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:.5rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-right:2rem;">
-        ${mobileTabButton('regime','Regime di Mercato')}
-        ${mobileTabButton('breadth','Ampiezza e Rotazione')}
-        ${mobileTabButton('internals','Market Internals')}
-        ${mobileTabButton('street','Narrativa Istituzionale')}
-        ${mobileTabButton('sintesi','Sintesi Educativa')}
-        ${mobileTabButton('audit','Qualità Dati')}
-        ${mobileTabButton('mifid','Informativa MiFID')}
+    <div class="f1b-mobile-tabs"
+         style="
+           position:sticky; top:0; z-index:2;
+           display:flex; align-items:center; gap:.5rem;
+           width:100%;
+           border-bottom:1px solid var(--br-panel-divider);
+           background:var(--surface-panel-head);
+           padding:.6rem max(12px, env(safe-area-inset-left)) .6rem max(12px, env(safe-area-inset-right));
+           box-shadow:0 6px 12px rgba(0,0,0,.12);
+           -webkit-backdrop-filter:saturate(120%) blur(6px);
+           backdrop-filter:saturate(120%) blur(6px);
+         ">
+      <div class="f1b-tabs-fade-left"
+           style="position:absolute;left:0;top:0;bottom:0;width:24px;pointer-events:none;background:linear-gradient(to right,var(--surface-panel-head) 0%,rgba(0,0,0,0) 80%);opacity:.6;"></div>
+      <div class="f1b-footer-tabs-scroll"
+           style="flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:.5rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-right:2rem;">
+        ${mobileTabButton('regime','Regime')}
+        ${mobileTabButton('breadth','Rotazione')}
+        ${mobileTabButton('internals','Internals')}
+        ${mobileTabButton('street','Narrativa')}
+        ${mobileTabButton('sintesi','Sintesi')}
+        ${mobileTabButton('audit','Qualità dati')}
+        ${mobileTabButton('mifid','MiFID')}
       </div>
-      <div class="f1b-tabs-fade-right" style="position:absolute;right:0;top:0;bottom:0;width:48px;display:flex;align-items:center;justify-content:flex-end;pointer-events:none;background:linear-gradient(to left,var(--surface-panel-head) 0%,rgba(0,0,0,0) 70%);opacity:.6;font-size:10px;line-height:1;font-weight:600;color:var(--muted);">
+      <div class="f1b-tabs-fade-right"
+           style="position:absolute;right:0;top:0;bottom:0;width:48px;display:flex;align-items:center;justify-content:flex-end;pointer-events:none;background:linear-gradient(to left,var(--surface-panel-head) 0%,rgba(0,0,0,0) 70%);opacity:.6;font-size:10px;line-height:1;font-weight:600;color:var(--muted);">
         <span class="f1b-tabs-scroll-hint" style="display:inline-block;transform:translateY(1px);">⇠ ⇢</span>
       </div>
     </div>`;
 
   return `
-  <div id="f1b-panel-root" class="f1b-drawer-mobile" style="display:flex;flex-direction:column;height:calc(100vh - 110px);max-height:calc(100vh - 110px);min-height:300px;background:var(--surface-panel-head);">
+  <div id="f1b-panel-root" class="f1b-drawer-mobile"
+       style="display:flex;flex-direction:column;height:calc(100vh - 110px);max-height:calc(100vh - 110px);min-height:300px;background:var(--surface-panel-head);padding:0;margin:0;overflow:hidden;">
     ${tabs}
-    <!-- FLUSH: niente padding laterale -->
-    <main class="f1b-panel-content-mobile flex-1 min-w-0" style="overflow:auto;-webkit-overflow-scrolling:touch;padding:0;background:var(--surface-page);" id="f1b-scroll-mobile">
-      <div data-f1b-view="regime">${sections.regimeHTML}</div>
-      <div data-f1b-view="breadth" hidden>${sections.breadthHTML}</div>
-      <div data-f1b-view="internals" hidden>${sections.internalsHTML}</div>
-      <div data-f1b-view="street" hidden>${sections.streetHTML}</div>
-      <div data-f1b-view="sintesi" hidden>${sections.sintesiHTML}</div>
-      <div data-f1b-view="audit" hidden>${sections.auditHTML}</div>
-      <div data-f1b-view="mifid" hidden>${sections.mifidHTML}</div>
+    <main id="f1b-scroll-mobile"
+          style="flex:1 1 auto;min-width:0;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:var(--surface-page);padding:0;margin:0;padding-bottom:max(12px, env(safe-area-inset-bottom));">
+      <div data-f1b-view="regime"    class="f1b-view-pad" style="padding:clamp(12px, 4vw, 16px);">${sections.regimeHTML}</div>
+      <div data-f1b-view="breadth"   hidden class="f1b-view-pad" style="padding:clamp(12px, 4vw, 16px);">${sections.breadthHTML}</div>
+      <div data-f1b-view="internals" hidden class="f1b-view-pad" style="padding:clamp(12px, 4vw, 16px);">${sections.internalsHTML}</div>
+      <div data-f1b-view="street"    hidden class="f1b-view-pad" style="padding:clamp(12px, 4vw, 16px);">${sections.streetHTML}</div>
+      <div data-f1b-view="sintesi"   hidden class="f1b-view-pad" style="padding:clamp(12px, 4vw, 16px);">${sections.sintesiHTML}</div>
+      <div data-f1b-view="audit"     hidden class="f1b-view-pad" style="padding:clamp(12px, 4vw, 16px);">${sections.auditHTML}</div>
+      <div data-f1b-view="mifid"     hidden class="f1b-view-pad" style="padding:clamp(12px, 4vw, 16px);">${sections.mifidHTML}</div>
     </main>
   </div>`;
 }
 
-/* ==================================== TABS =================================== */
-
+/* --------------------------------------------------------------------------
+   TABS (scoped)
+-------------------------------------------------------------------------- */
 function drawerMenuButtonPublic(key,label){
   return `<button class="f1b-tab-btn" data-f1b-tab="${escapeAttr(key)}">${escapeHtml(label)}</button>`;
 }
+
 function mobileTabButton(key,label){
-  return `<button class="f1b-footer-tab-btn" data-f1b-tab="${escapeAttr(key)}" style="flex:0 0 auto;white-space:nowrap;font-size:11px;line-height:1.2;font-weight:500;border-radius:999px;border:1px solid var(--br-soft);background:var(--surface-card);color:var(--muted);padding:.45rem .7rem;box-shadow:var(--shadow-card);min-width:max-content;">${escapeHtml(label)}</button>`;
+  // Target tattile maggiore per mobile
+  return `<button class="f1b-footer-tab-btn" data-f1b-tab="${escapeAttr(key)}"
+            style="flex:0 0 auto;white-space:nowrap;font-size:12px;line-height:1.2;font-weight:600;border-radius:999px;border:1px solid var(--br-soft);background:var(--surface-card);color:var(--muted);padding:.55rem .8rem;box-shadow:var(--shadow-card);min-width:max-content;-webkit-tap-highlight-color:rgba(0,0,0,0);">
+            ${escapeHtml(label)}
+          </button>`;
 }
 
 function bindDrawerTabsPublic(root){
   const tabButtons = root.querySelectorAll('[data-f1b-tab]');
   const views      = root.querySelectorAll('[data-f1b-view]');
-  const desktopEl  = root.querySelector('#f1b-scroll-desktop');
-  const mobileEl   = root.querySelector('#f1b-scroll-mobile');
+  const desktopSC  = root.querySelector('#f1b-scroll-desktop');
+  const mobileSC   = root.querySelector('#f1b-scroll-mobile');
   const sidebarEl  = root.querySelector('.f1b-panel-menu');
 
   function hardResetScroll(){
-    [desktopEl, mobileEl, sidebarEl].forEach(el => {
-      if (!el) return; el.scrollTop = 0; el.scrollLeft = 0;
-      if (typeof el.scrollTo === 'function') try{ el.scrollTo({top:0,left:0,behavior:'auto'});}catch{}
+    const list = [desktopSC, mobileSC, sidebarEl];
+    requestAnimationFrame(() => {
+      list.forEach(el => {
+        if (!el) return;
+        el.scrollTop = 0; el.scrollLeft = 0;
+        if (typeof el.scrollTo === 'function') { try { el.scrollTo({top:0,left:0,behavior:'auto'}); } catch {} }
+      });
     });
   }
+
   function styleTabs(activeKey){
     tabButtons.forEach(b => {
       const isActive = b.getAttribute('data-f1b-tab') === activeKey;
-      if (b.classList.contains('f1b-tab-btn'))       b.classList.toggle('is-active', isActive);
-      if (b.classList.contains('f1b-footer-tab-btn')){
+      if (b.classList.contains('f1b-tab-btn')) {
+        b.classList.toggle('is-active', isActive);
+      }
+      if (b.classList.contains('f1b-footer-tab-btn')) {
         if (isActive){
-          b.style.fontWeight='600'; b.style.border='1px solid var(--ink)';
-          b.style.background='radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--ink) 14%, transparent) 0%, transparent 60%), var(--surface-card-alt)';
-          b.style.color='var(--ink)'; b.style.boxShadow='0 4px 10px rgba(0,0,0,.18)';
+          b.style.fontWeight = '700';
+          b.style.border     = '1px solid var(--ink)';
+          b.style.background = 'radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--ink) 14%, transparent) 0%, transparent 60%), var(--surface-card-alt)';
+          b.style.color      = 'var(--ink)';
+          b.style.boxShadow  = '0 4px 10px rgba(0,0,0,.18)';
         } else {
-          b.style.fontWeight='500'; b.style.border='1px solid var(--br-soft)';
-          b.style.background='var(--surface-card)'; b.style.color='var(--muted)'; b.style.boxShadow='var(--shadow-card)';
+          b.style.fontWeight = '600';
+          b.style.border     = '1px solid var(--br-soft)';
+          b.style.background = 'var(--surface-card)';
+          b.style.color      = 'var(--muted)';
+          b.style.boxShadow  = 'var(--shadow-card)';
         }
       }
     });
   }
+
   function showView(activeKey){
     views.forEach(viewEl => {
       const key = viewEl.getAttribute('data-f1b-view');
       const show = key === activeKey;
       viewEl.hidden = !show;
+
       if (show){
+        // Reset scroll SOLO nel contenitore F1B (no overlay globale)
+        hardResetScroll();
+
         requestAnimationFrame(() => {
-          hardResetScroll();
-          const header = viewEl.querySelector('.tl-panel-section-title-text');
-          if (header){ header.setAttribute('tabindex','-1'); try{ header.focus({preventScroll:true}); }catch{ header.focus(); } }
-          viewEl.querySelectorAll('[data-scrollable]').forEach(sc => { sc.scrollTop=0; sc.scrollLeft=0; });
+          const head = viewEl.querySelector('.tl-panel-section-title-text');
+          if (head){
+            head.setAttribute('tabindex','-1');
+            try { head.focus({preventScroll:true}); } catch { head.focus(); }
+          }
+          // eventuali sub-scroll locali
+          viewEl.querySelectorAll('[data-scrollable]').forEach(sc => { sc.scrollTop = 0; sc.scrollLeft = 0; });
         });
       }
     });
   }
+
   function activateTab(key){ styleTabs(key); showView(key); }
 
   tabButtons.forEach(btn => {
-    if (btn.__f1bBound) return; btn.__f1bBound = true;
-    btn.addEventListener('click', () => { const key = btn.getAttribute('data-f1b-tab'); if (!key) return; activateTab(key); });
+    if (btn.__f1bBound) return;
+    btn.__f1bBound = true;
+    btn.addEventListener('click', () => {
+      const key = btn.getAttribute('data-f1b-tab');
+      if (!key) return;
+      activateTab(key);
+    });
   });
 }
 
@@ -338,26 +416,41 @@ function initTabsScrollHint(root){
   const scrollBox = root.querySelector('.f1b-footer-tabs-scroll');
   const fadeRight = root.querySelector('.f1b-tabs-fade-right');
   if (!scrollBox || !fadeRight) return;
-  const needs = scrollBox.scrollWidth > scrollBox.clientWidth + 2;
-  if (!needs){ fadeRight.style.display='none'; const l = root.querySelector('.f1b-tabs-fade-left'); if (l) l.style.display='none'; return; }
+
   const hintEl = fadeRight.querySelector('.f1b-tabs-scroll-hint');
+
   function update(){
+    const needs = scrollBox.scrollWidth > scrollBox.clientWidth + 2;
+    if (!needs){
+      fadeRight.style.display = 'none';
+      const fl = root.querySelector('.f1b-tabs-fade-left');
+      if (fl) fl.style.display = 'none';
+      return;
+    }
     const atEnd = scrollBox.scrollLeft + scrollBox.clientWidth >= scrollBox.scrollWidth - 4;
     if (hintEl) hintEl.style.opacity = atEnd ? '0' : '.9';
-    const fl = root.querySelector('.f1b-tabs-fade-left'); if (fl) fl.style.opacity = scrollBox.scrollLeft > 2 ? '.6' : '0';
+
+    const fl = root.querySelector('.f1b-tabs-fade-left');
+    if (fl) fl.style.opacity = scrollBox.scrollLeft > 2 ? '.6' : '0';
   }
-  update(); scrollBox.addEventListener('scroll', update, {passive:true});
+
+  update();
+  scrollBox.addEventListener('scroll', update, {passive:true});
 }
 
-/* ================================== CARDS =================================== */
-
+/* --------------------------------------------------------------------------
+   CARD SYSTEM
+-------------------------------------------------------------------------- */
 function f1bCard({ tone, title, bodyHtml, noteHtml }){
   const { dotColor } = toneColors(tone);
   return `
-    <div class="mb-4 p-2" style="background:var(--surface-card-alt);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);">
+    <div class="mb-4 p-2"
+         style="background:var(--surface-card-alt);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);">
       <div class="flex items-start gap-2 mb-1">
         <span class="inline-block w-[8px] h-[8px] rounded-full" style="background:${dotColor};flex-shrink:0;"></span>
-        <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide">${escapeHtml(title || '')}</div>
+        <div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide">
+          ${escapeHtml(title || '')}
+        </div>
       </div>
       <div class="text-[12.5px] leading-[1.45]">${bodyHtml || ''}</div>
       ${ noteHtml ? `<div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-2">${noteHtml}</div>` : '' }
@@ -367,15 +460,20 @@ function f1bCard({ tone, title, bodyHtml, noteHtml }){
 function metricBoxTrafficLight({ key, label, desc, metric }){
   const { dotColor, textColor } = toneColors(metric?.tone);
   return `
-    <div class="flex-1 min-w-[90px]" style="background:var(--surface-card-alt);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.6rem 0.75rem;">
+    <div class="flex-1 min-w-[90px]"
+         style="background:var(--surface-card-alt);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.6rem 0.75rem;">
       <div class="flex items-start justify-between gap-1 mb-1">
         <div class="flex items-start gap-2">
           <span class="inline-block w-[8px] h-[8px] rounded-full" style="background:${dotColor};"></span>
-          <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold leading-[1.3]">${escapeHtml(label)}</div>
+          <div class="text-[10px] uppercase tracking-wide text-[color:var(--muted)] font-semibold leading-[1.3]">
+            ${escapeHtml(label)}
+          </div>
         </div>
         <button class="info-btn" data-metric="${escapeAttr(key)}" aria-label="Info ${escapeAttr(key)}">?</button>
       </div>
-      <div class="font-mono font-bold text-[13px] leading-[1.4]" style="color:${textColor};">${escapeHtml(metric?.raw || '—')}</div>
+      <div class="font-mono font-bold text-[13px] leading-[1.4]" style="color:${textColor};">
+        ${escapeHtml(metric?.raw || '—')}
+      </div>
       <div class="text-[11px] leading-[1.3] text-[color:var(--muted)] mt-1">${escapeHtml(desc || '')}</div>
     </div>`;
 }
@@ -396,7 +494,7 @@ function metricBlock(metricKey, title, desc, metricObj){
 }
 
 function sectorListDetailed(title, leadershipBlock){
-  let tone='neutral', itemsArr=[], extraNote='';
+  let tone = 'neutral', itemsArr = [], extraNote = '';
   if (Array.isArray(leadershipBlock)) itemsArr = leadershipBlock;
   else if (leadershipBlock && typeof leadershipBlock === 'object'){
     tone = leadershipBlock.tone || 'neutral';
@@ -412,11 +510,11 @@ function sectorListDetailed(title, leadershipBlock){
       <button class="info-btn" data-metric="${escapeAttr(title || 'Leadership')}" aria-label="Info ${escapeAttr(title || 'Leadership')}">?</button>
     </div>
     <ul class="list-disc pl-4 space-y-1">${listHtml}</ul>`;
-  return f1bCard({ tone, title:'', bodyHtml, noteHtml: extraNote ? `<span class="text-[11px] text-[color:var(--muted)] leading-[1.4]">${escapeHtml(extraNote)}</span>` : '' });
+  return f1bCard({ tone, title: '', bodyHtml, noteHtml: extraNote ? `<span class="text-[11px] text-[color:var(--muted)] leading-[1.4]">${escapeHtml(extraNote)}</span>` : '' });
 }
 
 function listBlockCard(title, block){
-  let tone='neutral', rowsArr=[], aiNoteLocal='';
+  let tone = 'neutral', rowsArr = [], aiNoteLocal = '';
   if (Array.isArray(block)) rowsArr = block;
   else if (block && typeof block === 'object'){
     tone = block.tone || 'neutral';
@@ -433,20 +531,24 @@ function listBlockCard(title, block){
     </div>
     <ul class="pl-4 list-disc space-y-1">${listItems}</ul>`;
   const noteHtml = aiNoteLocal ? `<div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-2">${escapeHtml(aiNoteLocal)}</div>` : '';
-  return f1bCard({ tone, title:'', bodyHtml, noteHtml });
+  return f1bCard({ tone, title: '', bodyHtml, noteHtml });
 }
 
 function headlineBlockCard(title, body){
   if (!body && body !== 0) return '';
-  let tone='neutral', rawText='', aiNoteLocal='';
+  let tone = 'neutral', rawText = '', aiNoteLocal = '';
   if (typeof body === 'string') rawText = body;
-  else if (body && typeof body === 'object'){ tone = body.tone || 'neutral'; rawText = body.raw || ''; aiNoteLocal = body.ai_note || ''; }
+  else if (body && typeof body === 'object'){
+    tone = body.tone || 'neutral';
+    rawText = body.raw || '';
+    aiNoteLocal = body.ai_note || '';
+  }
   const heading = title === 'Informativa'
     ? `<div class="flex items-start justify-between gap-2 mb-2"><div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide">${escapeHtml(title)}</div><button class="info-btn" data-metric="MiFID_disclaimer" aria-label="Info MiFID">?</button></div>`
     : `<div class="text-[11px] font-semibold text-[color:var(--muted)] leading-[1.3] uppercase tracking-wide mb-2">${escapeHtml(title || '')}</div>`;
   const bodyHtml = `${heading}<div class="text-[12.5px] leading-[1.45] whitespace-pre-line">${escapeHtml(rawText)}</div>`;
   const noteHtml = aiNoteLocal ? `<div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-2">${escapeHtml(aiNoteLocal)}</div>` : '';
-  return f1bCard({ tone, title:'', bodyHtml, noteHtml });
+  return f1bCard({ tone, title: '', bodyHtml, noteHtml });
 }
 
 function conclusionPointBlock(pointObj = {}){
@@ -454,7 +556,7 @@ function conclusionPointBlock(pointObj = {}){
   const bodyHtml = `
     <div class="font-mono text-[12px] leading-[1.4] mb-1">${escapeHtml(pointObj.raw || '')}</div>
     <div class="text-[11px] leading-[1.4] text-[color:var(--muted)]">${escapeHtml(pointObj.ai_note || '')}</div>`;
-  return f1bCard({ tone, title: pointObj.title || '', bodyHtml, noteHtml:'' });
+  return f1bCard({ tone, title: pointObj.title || '', bodyHtml, noteHtml: '' });
 }
 
 function qualityChip(keyName, qObj){
@@ -466,11 +568,12 @@ function qualityChip(keyName, qObj){
       <button class="info-btn" data-metric="${escapeAttr(keyName)}" aria-label="Info ${escapeAttr(keyName)}">?</button>
     </div>
     <div class="text-[11px] leading-[1.4] text-[color:var(--muted)] mt-1">${escapeHtml(qObj.ai_note || '')}</div>`;
-  return f1bCard({ tone: qObj.tone, title: keyName || '', bodyHtml, noteHtml:'' });
+  return f1bCard({ tone: qObj.tone, title: keyName || '', bodyHtml, noteHtml: '' });
 }
 
-/* ======================= TONE & NORMALIZATION ======================= */
-
+/* --------------------------------------------------------------------------
+   TONE & NORMALIZATION
+-------------------------------------------------------------------------- */
 function toneColors(tone){
   switch ((tone || '').toLowerCase()){
     case 'green':  return { dotColor: 'var(--tone-pos-fg)',  textColor: 'var(--tone-pos-fg)'  };
@@ -483,13 +586,18 @@ function toneColors(tone){
 function computeHighLevelTone(strategyModeMacroObj, regimeScoreObj){
   const stratRaw = (strategyModeMacroObj && strategyModeMacroObj.raw || '').toLowerCase();
   let toneColor = 'var(--tone-neu-fg)'; let toneLabel = 'neutral';
-  if (stratRaw.includes('momentum') && !stratRaw.includes('light')){ toneColor='var(--tone-pos-fg)';  toneLabel='positive'; }
-  else if (stratRaw.includes('momentum-light')){                      toneColor='var(--tone-warn-fg)'; toneLabel='neutral'; }
-  else if (stratRaw.includes('pullback')){                            toneColor='var(--tone-neg-fg)';  toneLabel='alert'; }
+  if (stratRaw.includes('momentum') && !stratRaw.includes('light')) { toneColor = 'var(--tone-pos-fg)';  toneLabel = 'positive'; }
+  else if (stratRaw.includes('momentum-light'))                   { toneColor = 'var(--tone-warn-fg)'; toneLabel = 'neutral';  }
+  else if (stratRaw.includes('pullback'))                         { toneColor = 'var(--tone-neg-fg)';  toneLabel = 'alert';    }
   else {
     const regimeTone = (regimeScoreObj && regimeScoreObj.tone) || '';
     const colors = toneColors(regimeTone);
-    if (regimeTone){ toneColor = colors.textColor; toneLabel = regimeTone === 'green' ? 'positive' : regimeTone === 'yellow' ? 'neutral' : 'alert'; }
+    if (regimeTone){
+      toneColor = colors.textColor;
+      if (regimeTone === 'green') toneLabel='positive';
+      else if (regimeTone==='yellow') toneLabel='neutral';
+      else if (regimeTone==='red')    toneLabel='alert';
+    }
   }
   return { toneColor, toneLabel };
 }
@@ -497,24 +605,26 @@ function computeHighLevelTone(strategyModeMacroObj, regimeScoreObj){
 function normalizeDataPublicF1B(src = {}){
   return {
     meta: {
-      timestampET:    src?.meta?.timestampET    ?? '—',
-      module:         src?.meta?.module         ?? 'F1B · Market Regime',
-      moduleVersion:  src?.meta?.moduleVersion  ?? 'vX',
-      moduleStatus:   src?.meta?.moduleStatus   ?? 'ACTIVE',
-      freshness:      src?.meta?.freshness      ?? '≤ T-1',
-      hero_intro:     src?.meta?.hero_intro     ?? '',
-      hero_disclaimer:src?.meta?.hero_disclaimer?? 'Materiale educativo/informativo. Nessuna raccomandazione personale.'
+      timestampET:     src?.meta?.timestampET     ?? '—',
+      module:          src?.meta?.module          ?? 'F1B · Market Regime',
+      moduleVersion:   src?.meta?.moduleVersion   ?? 'vX',
+      moduleStatus:    src?.meta?.moduleStatus    ?? 'ACTIVE',
+      freshness:       src?.meta?.freshness       ?? '≤ T-1',
+      hero_intro:      src?.meta?.hero_intro      ?? '',
+      hero_disclaimer: src?.meta?.hero_disclaimer ?? 'Materiale educativo/informativo. Nessuna raccomandazione personale.'
     },
     regime_and_risk: src.regime_and_risk || {},
-    breadth_rotation:src.breadth_rotation || {},
-    internals_raw:   src.internals_raw || { Indices_1W: [], Futures_Move_1W: [], Curve_UST: [], Vol_USD: [], ai_note: '' },
-    street_view:     src.street_view   || { T1_MacroNews: '', T1_SellSideNotes: '', T1_ConsensusTone: '', ai_note: '' },
-    sintesi_ai:      src.sintesi_ai    || { points: [], summary: '' },
-    audit_quality:   src.audit_quality || { AuditPathID: '—', SourcesTier1: [], Freshness: '—', ModuleStatus: '—', QualityMetrics: {} },
-    mifid:           src.mifid         || { disclaimer: '' }
+    breadth_rotation: src.breadth_rotation || {},
+    internals_raw:    src.internals_raw || { Indices_1W: [], Futures_Move_1W: [], Curve_UST: [], Vol_USD: [], ai_note: '' },
+    street_view:      src.street_view   || { T1_MacroNews: '', T1_SellSideNotes: '', T1_ConsensusTone: '', ai_note: '' },
+    sintesi_ai:       src.sintesi_ai    || { points: [], summary: '' },
+    audit_quality:    src.audit_quality || { AuditPathID: '—', SourcesTier1: [], Freshness: '—', ModuleStatus: '—', QualityMetrics: {} },
+    mifid:            src.mifid         || { disclaimer: '' }
   };
 }
 
-/* ================================== ESCAPE ================================== */
+/* --------------------------------------------------------------------------
+   ESCAPE UTILS
+-------------------------------------------------------------------------- */
 function escapeHtml(str){ if (str === undefined || str === null) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function escapeAttr(str){ if (str === undefined || str === null) return ''; return String(str).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
