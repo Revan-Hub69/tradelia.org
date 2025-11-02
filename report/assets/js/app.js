@@ -1,4 +1,4 @@
-// App Orchestrator v2.2 — manifest object/array, case-insensitive, HERO premium
+// App Orchestrator v2.3 — manifest object/array, case-insensitive, HERO premium
 
 const $ = (s, r=document) => r.querySelector(s);
 
