@@ -1,79 +1,93 @@
 <!DOCTYPE html>
-<div class="spacer" aria-hidden="true"></div>
-<nav class="header-actions" aria-label="Azioni globali">
-<button id="btn-theme" class="btn btn-ghost" aria-pressed="false" aria-label="Cambia tema">🌓</button>
-<button id="btn-print" class="btn btn-ghost" aria-label="Stampa il report">Stampa</button>
-<button id="btn-share" class="btn" aria-label="Condividi il report">Condividi</button>
-</nav>
-</div>
-</header>
+<html lang="it" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark light" />
+  <title>Tradelia · Institutional Report</title>
 
+  <!-- CSS DESIGN SYSTEM -->
+  <link rel="icon" href="./favicon.ico">
+  <link rel="stylesheet" href="./assets/css/tokens.css?v=2026-11-02" />
+</head>
+<body>
+  <!-- HEADER STICKY -->
+  <header class="site-header" role="banner">
+    <div class="header-inner" aria-label="Barra di navigazione">
+      <a class="brand" href="./" aria-label="Tradelia AI Home">
+        <span class="brand-mark" aria-hidden="true">◆</span>
+        TRADELIA•AI
+      </a>
+      <div class="spacer" aria-hidden="true"></div>
+      <nav class="header-actions" aria-label="Azioni globali">
+        <button id="btn-theme" class="btn btn-ghost" aria-pressed="false" aria-label="Cambia tema">🌓</button>
+        <button id="btn-print" class="btn btn-ghost" aria-label="Stampa il report">Stampa</button>
+        <button id="btn-share" class="btn" aria-label="Condividi il report">Condividi</button>
+      </nav>
+    </div>
+  </header>
 
-<!-- HERO SNAPSHOT (ticker, price, Δ, quality) -->
-<section id="hero" class="hero" role="region" aria-label="Snapshot">
-<div class="hero-title" id="hero-title">Report</div>
-<div class="hero-kpi" id="hero-kpi"></div>
-<div class="hero-note" id="hero-note">Materiale informativo/educativo. Nessuna raccomandazione personale (MiFID II).</div>
-</section>
+  <!-- HERO SNAPSHOT -->
+  <section id="hero" class="hero" role="region" aria-label="Snapshot">
+    <div class="hero-title" id="hero-title">Report</div>
+    <div class="hero-kpi" id="hero-kpi"></div>
+    <div class="hero-note" id="hero-note">Materiale informativo/educativo. Nessuna raccomandazione personale (MiFID II).</div>
+  </section>
 
+  <!-- GRID MODULI -->
+  <main id="modules" class="modules-grid" role="main">
+    <article id="sec-f1b" class="report-section" data-card="F1B"></article>
+    <article id="sec-f2"  class="report-section" data-card="F2"></article>
+    <article id="sec-f3"  class="report-section" data-card="F3"></article>
+    <article id="sec-f3o" class="report-section" data-card="F3O"></article>
+    <article id="sec-f4"  class="report-section" data-card="F4"></article>
+    <article id="sec-f5"  class="report-section" data-card="F5"></article>
+    <article id="sec-f6"  class="report-section" data-card="F6"></article>
+    <article id="sec-f7"  class="report-section" data-card="F7"></article>
+  </main>
 
-<!-- GRID MODULI (famiglie F1..F7) -->
-<main id="modules" class="modules-grid" role="main">
-<article id="sec-f1b" class="report-section" data-card="F1B"></article>
-<article id="sec-f2" class="report-section" data-card="F2"></article>
-<article id="sec-f3" class="report-section" data-card="F3"></article>
-<article id="sec-f3o" class="report-section" data-card="F3O"></article>
-<article id="sec-f4" class="report-section" data-card="F4"></article>
-<article id="sec-f5" class="report-section" data-card="F5"></article>
-<article id="sec-f6" class="report-section" data-card="F6"></article>
-<article id="sec-f7" class="report-section" data-card="F7"></article>
-</main>
+  <!-- OVERLAY ANALITICO -->
+  <div id="panel-overlay" class="overlay" hidden>
+    <div class="overlay-backdrop" data-overlay-close></div>
+    <section class="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title">
+      <header class="panel-head">
+        <h2 id="panel-title" class="panel-title">Dettaglio</h2>
+        <button class="btn btn-ghost" data-overlay-close aria-label="Chiudi pannello">✕</button>
+      </header>
+      <nav id="panel-tabs" class="panel-tabs" role="tablist" aria-label="Sezioni analitiche"></nav>
+      <div id="panel-body" class="panel-body" data-scrollable tabindex="0" role="region" aria-live="polite"></div>
+      <footer id="panel-foot" class="panel-foot"></footer>
+    </section>
+  </div>
 
+  <!-- OVERLAY LEGALE -->
+  <div id="legal-overlay" class="overlay" hidden>
+    <div class="overlay-backdrop" data-legal-close></div>
+    <section class="panel panel-legal" role="dialog" aria-modal="true" aria-labelledby="legal-title">
+      <header class="panel-head">
+        <h2 id="legal-title" class="panel-title">Informativa</h2>
+        <button class="btn btn-ghost" data-legal-close aria-label="Chiudi informativa">✕</button>
+      </header>
+      <div id="legal-body" class="panel-body" data-scrollable></div>
+      <footer class="panel-foot">
+        <button class="btn" data-legal-close>OK</button>
+      </footer>
+    </section>
+  </div>
 
-<!-- OVERLAY ANALITICO (SINGLETON) -->
-<div id="panel-overlay" class="overlay" hidden>
-<div class="overlay-backdrop" data-overlay-close></div>
-<section class="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title">
-<header class="panel-head">
-<h2 id="panel-title" class="panel-title">Dettaglio</h2>
-<button class="btn btn-ghost" data-overlay-close aria-label="Chiudi pannello">✕</button>
-</header>
-<nav id="panel-tabs" class="panel-tabs" role="tablist" aria-label="Sezioni analitiche"></nav>
-<div id="panel-body" class="panel-body" data-scrollable tabindex="0" role="region" aria-live="polite"></div>
-<footer id="panel-foot" class="panel-foot"></footer>
-</section>
-</div>
+  <!-- FOOTER -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div>© <span id="footer-year"></span> Tradelia AI — Educational / Informational only</div>
+      <div class="footer-actions">
+        <button class="btn btn-ghost" id="btn-privacy">Privacy</button>
+        <button class="btn btn-ghost" id="btn-mifid">MiFID</button>
+      </div>
+    </div>
+  </footer>
 
-
-<!-- OVERLAY LEGALE (SEPARATO) -->
-<div id="legal-overlay" class="overlay" hidden>
-<div class="overlay-backdrop" data-legal-close></div>
-<section class="panel panel-legal" role="dialog" aria-modal="true" aria-labelledby="legal-title">
-<header class="panel-head">
-<h2 id="legal-title" class="panel-title">Informativa</h2>
-<button class="btn btn-ghost" data-legal-close aria-label="Chiudi informativa">✕</button>
-</header>
-<div id="legal-body" class="panel-body" data-scrollable></div>
-<footer class="panel-foot">
-<button class="btn" data-legal-close>OK</button>
-</footer>
-</section>
-</div>
-
-
-<!-- FOOTER ISTITUZIONALE -->
-<footer class="site-footer" role="contentinfo">
-<div class="footer-inner">
-<div>© <span id="footer-year"></span> Tradelia AI — Educational / Informational only</div>
-<div class="footer-actions">
-<button class="btn btn-ghost" id="btn-privacy">Privacy</button>
-<button class="btn btn-ghost" id="btn-mifid">MiFID</button>
-</div>
-</div>
-</footer>
-
-
-<script type="module" src="/report/assets/js/ui-runtime.js?v=2026-11-02"></script>
-<script type="module" src="/report/assets/js/app.js?v=2026-11-02"></script>
+  <!-- JS (percorsi RELATIVI) -->
+  <script type="module" src="./assets/js/ui-runtime.js?v=2026-11-02"></script>
+  <script type="module" src="./assets/js/app.js?v=2026-11-02"></script>
 </body>
 </html>
