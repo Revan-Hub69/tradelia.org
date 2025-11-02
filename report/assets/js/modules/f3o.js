@@ -170,16 +170,16 @@ function buildF3OSections(d){
   const L = d.sectionTitles; // titoli user‑friendly
 
   // Helper: header con `(?)` allineato a destra
-  const sectionHeader = (title, infoKey) => `
-    <header class="tl-panel-section-title flex items-center justify-between">
-      <div class="tl-panel-section-title-text">${escapeHtml(title)}</div>
-      <button type="button" class="info-btn ml-2" data-metric="${escapeAttr(infoKey)}" aria-label="Info ${escapeAttr(infoKey)}">?</button>
-    </header>`;
+const sectionHeader = (title /*, infoKey */) => `
+  <header class="tl-panel-section-title">
+    <div class="tl-panel-section-title-text">${escapeHtml(title)}</div>
+  </header>`;
+
 
   // 1) KPI (quadro rapido)
   const s1 = `
   <section class="tl-panel-section" data-f3o-section="kpi" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-    ${sectionHeader(L.kpi, 'F3O_KPI_info')}
+  ${sectionHeader(L.kpi)}
     <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4]">
       ${metricBlockF3O('F3O_IV_ATM_info', d.labels?.kpi_iv_atm, '', d.head.IV_ATM)}
       ${metricBlockF3O('F3O_IVRank_info', d.labels?.kpi_ivrank, '', d.head.IV_rank_pct)}
@@ -192,7 +192,7 @@ function buildF3OSections(d){
   // 2) Expected Move
   const s2 = `
   <section class="tl-panel-section" data-f3o-section="em" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-    ${sectionHeader(L.em, 'F3O_EM_info')}
+    ${sectionHeader(L.em)}
     ${f3oCard({ tone:'neutral', title:(d.labels?.em_table_title||'Expected Move'), bodyHtml:`
       <div class="flex items-center justify-between gap-2 mb-2">
         <div class="text-[11px] text-[color:var(--muted)]">${escapeHtml(d.labels?.spot||'Spot')}: <span class="font-mono">${fmtNum(d.spot)||'—'}</span></div>
@@ -241,7 +241,7 @@ function buildF3OSections(d){
   // 3) Term Structure
   const s3 = `
   <section class="tl-panel-section" data-f3o-section="term" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-    ${sectionHeader(L.term, 'F3O_Term_info')}
+    ${sectionHeader(L.term)}
     ${metricBlockF3O('F3O_TermSlope_info', d.labels?.term_slope, '', d.term_structure.slope)}
     ${headlineBlockF3O(d.labels?.contesto, d.term_structure.context)}
     ${headlineBlockF3O(d.labels?.note_ai, d.term_structure.ai_note)}
@@ -250,7 +250,7 @@ function buildF3OSections(d){
   // 4) Skew
   const s4 = `
   <section class="tl-panel-section" data-f3o-section="skew" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-    ${sectionHeader(L.skew, 'F3O_Skew_info')}
+    ${sectionHeader(L.skew)}
     ${metricBlockF3O('F3O_RR25_info', d.labels?.skew_rr25, '', { raw: fmtPct(d.skew.rr_25d), tone:d.skew.tone })}
     ${headlineBlockF3O(d.labels?.forma, d.skew.shape)}
     ${headlineBlockF3O(d.labels?.note_ai, d.skew.ai_note)}
@@ -267,7 +267,7 @@ function buildF3OSections(d){
     .join('\n');
   const s5 = `
   <section class="tl-panel-section" data-f3o-section="pcr" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-    ${sectionHeader(L.pcr, 'F3O_PCR_info')}
+    ${sectionHeader(L.pcr)}
     <div class="grid md:grid-cols-2 gap-3">
       ${metricBlockF3O('F3O_PCR_Vol_info', d.labels?.pcr_vol, '', { raw: fmtNum(d.pcr.pcr_vol), tone:'neutral' })}
       ${metricBlockF3O('F3O_PCR_OI_info', d.labels?.pcr_oi,  '', { raw: fmtNum(d.pcr.pcr_oi),  tone:'neutral' })}
@@ -286,7 +286,7 @@ function buildF3OSections(d){
   // 6) Gamma & Max Pain
   const s6 = `
   <section class="tl-panel-section" data-f3o-section="gamma" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-    ${sectionHeader(L.gamma, 'F3O_Gamma_info')}
+    ${sectionHeader(L.gamma)}
     ${metricBlockF3O('F3O_GammaFlip_info', d.labels?.gamma_flip, '', toMetric(d.gamma?.GEX?.gamma_flip, d.gamma?.tone))}
     ${metricBlockF3O('F3O_DealerRegime_info', d.labels?.dealer_regime, '', d.gamma?.DealerGamma)}
     ${metricBlockF3O('F3O_MaxPain_info', d.labels?.max_pain, '', toMetric(d.gamma?.MaxPain?.strike, d.gamma?.tone, d.gamma?.MaxPain?.ai_note))}
@@ -303,7 +303,7 @@ function buildF3OSections(d){
   const flowTop = (d.flow.top||[]).slice(0,6).map(t=>`• ${String(t?.type||'')} ${fmtNum(t?.strike)} · ${String(t?.exp||'')} · Δ ${String(t?.delta||'')} · prem. ${fmtUsd(t?.premium)}`).join('\n');
   const s7 = `
   <section class="tl-panel-section" data-f3o-section="flow" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-    ${sectionHeader(L.flow, 'F3O_Flow_info')}
+    ${sectionHeader(L.flow)}
     <div class="grid md:grid-cols-2 gap-3">
       ${metricBlockF3O('F3O_FlowNet_info', d.labels?.flow_net,   '', toMetric(d.flow.net_usd,   d.flow.tone))}
       ${metricBlockF3O('F3O_DeltaImb_info',d.labels?.flow_delta, '', toMetric(d.flow.delta_imb, d.flow.tone))}
@@ -331,7 +331,7 @@ function buildF3OSections(d){
   }).join('');
   const s8 = `
   <section class="tl-panel-section" data-f3o-section="sintesi" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-    ${sectionHeader(L.sintesi, 'F3O_Sintesi_info')}
+    ${sectionHeader(L.sintesi)}
     ${sPoints || ''}
     ${headlineBlockF3O(d.labels?.lettura_contesto, d.sintesi_ai.summary)}
     <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-2">${escapeHtml(d.labels?.sintesi_disclaimer)}</div>
@@ -341,7 +341,7 @@ function buildF3OSections(d){
   const q = d.audit_quality?.QualityMetrics || {};
   const s9 = `
   <section class="tl-panel-section" data-f3o-section="governance" style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
-    ${sectionHeader(L.governance, 'F3O_Governance_info')}
+    ${sectionHeader(L.governance)}
     <div class="grid gap-3 text-[12px] leading-[1.4] grid-cols-1 md:grid-cols-2">
       ${qualityChipF3O('FreshnessScore', q?.FreshnessScore || q?.Coverage)}
       ${qualityChipF3O('ConfidenceFinal', q?.ConfidenceFinal)}
