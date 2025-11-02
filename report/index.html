@@ -12,83 +12,79 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
   <meta name="theme-color" content="#0b1220">
 
-  <!-- Tailwind utility -->
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Lucide icons -->
+  <!-- Lucide -->
   <script src="https://unpkg.com/lucide@latest"></script>
-
   <!-- Design system -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
 
   <style>
     :root { --pop-w:320px; }
+    html, body { height:100%; }
+    .container { max-width:90rem; margin-inline:auto; padding:0 16px; }
+    main { padding-top:2.25rem; padding-bottom:3rem; }
+    @media (min-width:1280px){ main{ padding-top:2.75rem; padding-bottom:3.75rem; } }
 
-    html, body {
-      height: 100%;
-    }
-
-    .container {
-      max-width: 90rem;
-      margin-inline: auto;
-      padding: 0 16px;
-    }
-
-    main {
-      padding-top: 2.25rem;
-      padding-bottom: 3rem;
-    }
-    @media (min-width:1280px){
-      main {
-        padding-top: 2.75rem;
-        padding-bottom: 3.75rem;
-      }
-    }
-
-    /* HEADER sticky glass */
-    .hdr{
-      backdrop-filter:saturate(1.1) blur(6px);
+    /* Header sticky glass */
+    .hdr{ backdrop-filter:saturate(1.1) blur(6px);
       background:color-mix(in oklab, var(--surface-card) 90%, transparent);
-      border-bottom:1px solid var(--br-soft);
-      box-shadow:0 1px 0 var(--br-soft);
-    }
-    .brand{font-weight:900}
-    .claim{
-      font-size:12px;
-      color:var(--muted);
-    }
+      border-bottom:1px solid var(--br-soft); box-shadow:0 1px 0 var(--br-soft); }
+    .brand{ font-weight:900 }
+    .claim{ font-size:12px; color:var(--muted); }
 
-    /* print-only nodes hidden onscreen */
-    #print-toc {
-      display:none;
+    /* Sheet mode (Excel evoluto) */
+    .sheet-block{
+      background:var(--surface-card); border:1px solid var(--br-card);
+      border-radius:var(--radius-card); box-shadow:var(--shadow-card);
+      padding:1rem; margin-top:1rem;
     }
-    #print-watermark {
-      display:none;
+    .sheet-head{ display:flex; align-items:center; justify-content:space-between; gap:.75rem; }
+    .sheet-title{ font-size:15px; font-weight:700; color:var(--ink); }
+    .sheet-sub{ font-size:12px; color:var(--muted); }
+    .sheet-table{ width:100%; border-collapse:separate; border-spacing:0; margin-top:.5rem; }
+    .sheet-table thead th{
+      position:sticky; top:0; z-index:1; background:var(--surface-card);
+      font-size:11px; text-transform:uppercase; letter-spacing:.03em;
+      color:var(--muted); text-align:left; padding:.5rem .75rem; border-bottom:1px solid var(--br-soft);
     }
+    .sheet-row{ display:grid; grid-template-columns: 1.2fr .8fr .5fr 1.8fr 40px; }
+    .sheet-row > div{ padding:.6rem .75rem; }
+    .sheet-row:nth-child(even){ background:color-mix(in oklab, var(--surface-card) 90%, var(--surface-page)); }
+    .sheet-row:hover{ background:color-mix(in oklab, var(--surface-card) 80%, var(--surface-page)); }
+    .cell-name{ font-weight:600; color:var(--ink); }
+    .cell-val{ font-variant-numeric: tabular-nums; text-align:right; }
+    .cell-skew{ font-variant-numeric: tabular-nums; text-align:right; }
+    .cell-exp{ color:var(--ink); }
+    .cell-help{ text-align:center; }
+    .info-btn.info-btn--mini{ width:22px; height:22px; line-height:22px; border-radius:999px; }
+
+    .sheet-ai{
+      margin-top:.75rem; padding:.75rem; border:1px dashed var(--br-soft);
+      border-radius:var(--radius-card); color:var(--ink); font-size:13px;
+      background:color-mix(in oklab, var(--surface-card) 96%, transparent);
+    }
+    .sheet-cta{ display:flex; justify-content:flex-end; margin-top:.75rem; }
+
+    /* print-only nodes off on screen */
+    #print-toc, #print-watermark { display:none; }
   </style>
 </head>
 
 <body>
-  <!-- watermark solo stampa -->
+  <!-- watermark stampa -->
   <div id="print-watermark" aria-hidden="true">TRADELIA AI · INSTITUTIONAL MODEL REPORT</div>
 
   <!-- HEADER -->
   <header class="hdr sticky top-0 z-50 noprint">
     <div class="container h-12 sm:h-14 flex items-center justify-between">
-      <!-- lato sinistro: brand + claim -->
       <div class="flex items-center gap-2 sm:gap-3 min-w-0">
         <a href="/" class="brand shrink-0 text-lg sm:text-xl tracking-tight hover:opacity-90 transition">
           <span class="text-[color:var(--ink)]">TRADELIA</span><span class="text-[color:var(--brand)]">&bull;AI</span>
         </a>
-
-        <span class="claim truncate text-[12px] text-[color:var(--muted)]">
-          Report {NOME AZIENDA}
-        </span>
+        <span class="claim truncate text-[12px] text-[color:var(--muted)]">Report {NOME AZIENDA}</span>
       </div>
-
-      <!-- lato destro: azioni header -->
       <div class="flex items-center gap-2 sm:gap-3">
-        <!-- THEME BTN -->
         <button id="btn-theme" class="btn" type="button" aria-label="Tema">
           <span class="theme-icon" aria-hidden="true">
             <svg data-theme-icon="sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -104,21 +100,18 @@
 
   <!-- MAIN -->
   <main class="container">
-    <!-- HERO -->
+    <!-- HERO compatto -->
     <section id="hero" class="hero" aria-label="Copertina Report">
       <div class="hero__top">
         <div class="hero__id">
           <div class="hero__ticker" id="hero-ticker">—</div>
           <div class="hero__venue" id="hero-venue">—</div>
-
-          <!-- testo premium/non-consulenziale -->
           <div class="hero__client text-[11px] leading-[1.3] text-[color:var(--muted)] mt-1">
             <span class="uppercase tracking-wide">Tradelia AI / Premium Edition</span>
             <span> · </span>
             <span id="hero-client">Analisi indipendente su {NOME AZIENDA}</span>
           </div>
         </div>
-
         <div class="hero__price">
           <div class="hero__px" id="hero-price">—</div>
           <div class="hero__chg" id="hero-change">—</div>
@@ -126,229 +119,282 @@
         </div>
       </div>
 
-      <!-- HERO KPI PILLS -->
-      <div class="hero__meta grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-
-        <!-- SNAPSHOT -->
-        <div class="meta-pill relative" id="pill-snap"
-             style="
-              background:var(--surface-card);
-              border:1px solid var(--br-card);
-              border-radius:var(--radius-card);
-              box-shadow:var(--shadow-card);
-              padding:0.75rem;
-             ">
-
-          <!-- barra tono -->
-          <span class="tonebar" id="tone-snap"
-                style="
-                  position:absolute;
-                  left:0;
-                  top:0;
-                  bottom:0;
-                  width:4px;
-                  border-radius:var(--radius-card) 0 0 var(--radius-card);
-                "></span>
-
-          <div class="min-w-0">
-            <!-- header label + ? a sinistra -->
-            <div class="flex items-start gap-1 mb-2">
-              <button class="info-btn info-btn--mini"
-                      data-metric="Snapshot"
-                      aria-label="Info Snapshot">?</button>
-
-              <div class="meta-label text-[11px] uppercase tracking-wide font-semibold leading-[1.3] text-[color:var(--muted)]">
-                Snapshot
-              </div>
-            </div>
-
-            <div class="meta-val text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]">
-              <span id="hero-start">—</span>
-              <span>→</span>
-              <span id="hero-end">—</span>
-            </div>
+      <!-- “Header Ticker” in stile sheet -->
+      <div class="sheet-block" id="sheet-header">
+        <div class="sheet-head">
+          <div>
+            <div class="sheet-title">Header Ticker</div>
+            <div class="sheet-sub">Sintesi prezzo / Δ% / valuta / qualità dati</div>
           </div>
         </div>
 
-        <!-- PRICE -->
-        <div class="meta-pill relative" id="pill-price"
-             style="
-              background:var(--surface-card);
-              border:1px solid var(--br-card);
-              border-radius:var(--radius-card);
-              box-shadow:var(--shadow-card);
-              padding:0.75rem;
-             ">
+        <table class="sheet-table" aria-label="Header Ticker">
+          <thead>
+            <tr class="sheet-row">
+              <th>Nome metrica</th><th>Valore</th><th>Skew</th><th>Spiegazione</th><th>?</th>
+            </tr>
+          </thead>
+          <tbody id="sheet-header-body">
+            <!-- Righe popolabili da app.js (IDs = Snapshot, Price, ChangePct, Currency, Freshness, ConfidenceFinal) -->
+            <tr class="sheet-row" data-metric="Snapshot">
+              <div class="cell-name">Snapshot</div>
+              <div class="cell-val" id="hero-startend">—</div>
+              <div class="cell-skew" data-skew="neutral">—</div>
+              <div class="cell-exp">Finestra temporale del report.</div>
+              <div class="cell-help"><button class="info-btn info-btn--mini" data-metric="Snapshot">?</button></div>
+            </tr>
+            <tr class="sheet-row" data-metric="Price">
+              <div class="cell-name">Price</div>
+              <div class="cell-val" id="hero-price2">—</div>
+              <div class="cell-skew" data-skew="neutral">—</div>
+              <div class="cell-exp">Ultimo prezzo disponibile.</div>
+              <div class="cell-help"><button class="info-btn info-btn--mini" data-metric="Price">?</button></div>
+            </tr>
+            <tr class="sheet-row" data-metric="ChangePct">
+              <div class="cell-name">Δ%</div>
+              <div class="cell-val" id="hero-change2">—</div>
+              <div class="cell-skew" id="skew-chg">—</div>
+              <div class="cell-exp">Variazione % rispetto alla finestra.</div>
+              <div class="cell-help"><button class="info-btn info-btn--mini" data-metric="ChangePct">?</button></div>
+            </tr>
+            <tr class="sheet-row" data-metric="Currency">
+              <div class="cell-name">Currency</div>
+              <div class="cell-val" id="hero-ccy">—</div>
+              <div class="cell-skew">—</div>
+              <div class="cell-exp">Valuta di quotazione.</div>
+              <div class="cell-help"><button class="info-btn info-btn--mini" data-metric="Currency">?</button></div>
+            </tr>
+            <tr class="sheet-row" data-metric="Freshness">
+              <div class="cell-name">Freshness</div>
+              <div class="cell-val" id="hero-freshness">—</div>
+              <div class="cell-skew">—</div>
+              <div class="cell-exp">Aggiornamento dati (T-0/T-1).</div>
+              <div class="cell-help"><button class="info-btn info-btn--mini" data-metric="Freshness">?</button></div>
+            </tr>
+            <tr class="sheet-row" data-metric="ConfidenceFinal">
+              <div class="cell-name">Confidence</div>
+              <div class="cell-val" id="hero-confidence">—</div>
+              <div class="cell-skew">—</div>
+              <div class="cell-exp">Qualità/consistenza del campione.</div>
+              <div class="cell-help"><button class="info-btn info-btn--mini" data-metric="ConfidenceFinal">?</button></div>
+            </tr>
+          </tbody>
+        </table>
 
-          <span class="tonebar" id="tone-price"
-                style="
-                  position:absolute;
-                  left:0;
-                  top:0;
-                  bottom:0;
-                  width:4px;
-                  border-radius:var(--radius-card) 0 0 var(--radius-card);
-                "></span>
-
-          <div class="min-w-0">
-            <div class="flex items-start gap-1 mb-2">
-              <button class="info-btn info-btn--mini"
-                      data-metric="Price"
-                      aria-label="Info Price">?</button>
-
-              <div class="meta-label text-[11px] uppercase tracking-wide font-semibold leading-[1.3] text-[color:var(--muted)]">
-                Price
-              </div>
-            </div>
-
-            <div class="meta-val text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]" id="hero-price2">—</div>
-          </div>
-        </div>
-
-        <!-- Δ% -->
-        <div class="meta-pill relative" id="pill-chg"
-             style="
-              background:var(--surface-card);
-              border:1px solid var(--br-card);
-              border-radius:var(--radius-card);
-              box-shadow:var(--shadow-card);
-              padding:0.75rem;
-             ">
-
-          <span class="tonebar" id="tone-chg"
-                style="
-                  position:absolute;
-                  left:0;
-                  top:0;
-                  bottom:0;
-                  width:4px;
-                  border-radius:var(--radius-card) 0 0 var(--radius-card);
-                "></span>
-
-          <div class="min-w-0">
-            <div class="flex items-start gap-1 mb-2">
-              <button class="info-btn info-btn--mini"
-                      data-metric="ChangePct"
-                      aria-label="Info Δ%">?</button>
-
-              <div class="meta-label text-[11px] uppercase tracking-wide font-semibold leading-[1.3] text-[color:var(--muted)]">
-                Δ%
-              </div>
-            </div>
-
-            <div class="meta-val text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]" id="hero-change2">—</div>
-          </div>
-        </div>
-
-        <!-- CCY -->
-        <div class="meta-pill relative" id="pill-ccy"
-             style="
-              background:var(--surface-card);
-              border:1px solid var(--br-card);
-              border-radius:var(--radius-card);
-              box-shadow:var(--shadow-card);
-              padding:0.75rem;
-             ">
-
-          <span class="tonebar" id="tone-ccy"
-                style="
-                  position:absolute;
-                  left:0;
-                  top:0;
-                  bottom:0;
-                  width:4px;
-                  border-radius:var(--radius-card) 0 0 var(--radius-card);
-                "></span>
-
-          <div class="min-w-0">
-            <div class="flex items-start gap-1 mb-2">
-              <button class="info-btn info-btn--mini"
-                      data-metric="Currency"
-                      aria-label="Info Currency">?</button>
-
-              <div class="meta-label text-[11px] uppercase tracking-wide font-semibold leading-[1.3] text-[color:var(--muted)]">
-                Currency
-              </div>
-            </div>
-
-            <div class="meta-val text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]" id="hero-ccy">—</div>
-          </div>
-        </div>
-
-        <!-- FRESHNESS -->
-        <div class="meta-pill relative" id="pill-fresh"
-             style="
-              background:var(--surface-card);
-              border:1px solid var(--br-card);
-              border-radius:var(--radius-card);
-              box-shadow:var(--shadow-card);
-              padding:0.75rem;
-             ">
-
-          <span class="tonebar" id="tone-fresh"
-                style="
-                  position:absolute;
-                  left:0;
-                  top:0;
-                  bottom:0;
-                  width:4px;
-                  border-radius:var(--radius-card) 0 0 var(--radius-card);
-                "></span>
-
-          <div class="min-w-0">
-            <div class="flex items-start gap-1 mb-2">
-              <button class="info-btn info-btn--mini"
-                      data-metric="Freshness"
-                      aria-label="Info Freshness">?</button>
-
-              <div class="meta-label text-[11px] uppercase tracking-wide font-semibold leading-[1.3] text-[color:var(--muted)]">
-                Freshness
-              </div>
-            </div>
-
-            <div class="meta-val text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]" id="hero-freshness">—</div>
-          </div>
-        </div>
-
-        <!-- CONFIDENCE -->
-        <div class="meta-pill relative" id="pill-conf"
-             style="
-              background:var(--surface-card);
-              border:1px solid var(--br-card);
-              border-radius:var(--radius-card);
-              box-shadow:var(--shadow-card);
-              padding:0.75rem;
-             ">
-
-          <span class="tonebar" id="tone-conf"
-                style="
-                  position:absolute;
-                  left:0;
-                  top:0;
-                  bottom:0;
-                  width:4px;
-                  border-radius:var(--radius-card) 0 0 var(--radius-card);
-                "></span>
-
-          <div class="min-w-0">
-            <div class="flex items-start gap-1 mb-2">
-              <button class="info-btn info-btn--mini"
-                      data-metric="ConfidenceFinal"
-                      aria-label="Info Confidence">?</button>
-
-              <div class="meta-label text-[11px] uppercase tracking-wide font-semibold leading-[1.3] text-[color:var(--muted)]">
-                Confidence
-              </div>
-            </div>
-
-            <div class="meta-val text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]" id="hero-confidence">—</div>
-          </div>
-        </div>
-
-      </div> <!-- /hero__meta -->
+        <div class="sheet-ai" id="sheet-header-ai">Resoconto AI: —</div>
+      </div>
     </section>
 
-    <!-- TOC di stampa -->
+    <!-- BLOCCO F1 (Regime) -->
+    <section class="sheet-block" id="sheet-f1">
+      <div class="sheet-head">
+        <div>
+          <div class="sheet-title">F1 · Contesto iniziale / Regime di mercato</div>
+          <div class="sheet-sub">RegimeScore, Breadth, Volatilità, Credito, FX</div>
+        </div>
+        <div class="sheet-cta"><button class="btn btn-sm" data-open-panel="F1">Approfondisci</button></div>
+      </div>
+
+      <table class="sheet-table" aria-label="F1">
+        <thead>
+          <tr class="sheet-row"><th>Nome metrica</th><th>Valore</th><th>Skew</th><th>Spiegazione</th><th>?</th></tr>
+        </thead>
+        <tbody id="sheet-f1-body">
+          <!-- righe d’esempio/placeholder -->
+          <tr class="sheet-row" data-metric="RegimeScore">
+            <div class="cell-name">RegimeScore</div>
+            <div class="cell-val" id="f1-regime">—</div>
+            <div class="cell-skew" id="f1-regime-skew">—</div>
+            <div class="cell-exp">Bias di mercato a 3–10 giorni.</div>
+            <div class="cell-help"><button class="info-btn info-btn--mini" data-metric="RegimeScore">?</button></div>
+          </tr>
+          <tr class="sheet-row" data-metric="Breadth_1M">
+            <div class="cell-name">Breadth 1M</div>
+            <div class="cell-val" id="f1-breadth">—</div>
+            <div class="cell-skew" id="f1-breadth-skew">—</div>
+            <div class="cell-exp">Partecipazione ampia/stretta.</div>
+            <div class="cell-help"><button class="info-btn info-btn--mini" data-metric="Breadth_1M">?</button></div>
+          </tr>
+          <tr class="sheet-row" data-metric="CreditSpread">
+            <div class="cell-name">Credit HY–IG</div>
+            <div class="cell-val" id="f1-credit">—</div>
+            <div class="cell-skew" id="f1-credit-skew">—</div>
+            <div class="cell-exp">Tono del credito (bp).</div>
+            <div class="cell-help"><button class="info-btn info-btn--mini" data-metric="CreditRiskBlock">?</button></div>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sheet-ai" id="sheet-f1-ai">Resoconto AI: —</div>
+    </section>
+
+    <!-- BLOCCO F2 (Sentiment & Flussi) -->
+    <section class="sheet-block" id="sheet-f2">
+      <div class="sheet-head">
+        <div>
+          <div class="sheet-title">F2 · Sentiment e flussi</div>
+          <div class="sheet-sub">SentimentComposite, ETF_FlowTone, SCI/DPI</div>
+        </div>
+        <div class="sheet-cta"><button class="btn btn-sm" data-open-panel="F2">Approfondisci</button></div>
+      </div>
+
+      <table class="sheet-table" aria-label="F2">
+        <thead>
+          <tr class="sheet-row"><th>Nome metrica</th><th>Valore</th><th>Skew</th><th>Spiegazione</th><th>?</th></tr>
+        </thead>
+        <tbody id="sheet-f2-body">
+          <tr class="sheet-row" data-metric="SentimentComposite">
+            <div class="cell-name">SentimentComposite</div>
+            <div class="cell-val" id="f2-sent">—</div>
+            <div class="cell-skew" id="f2-sent-skew">—</div>
+            <div class="cell-exp">Sintesi survey/news/flow.</div>
+            <div class="cell-help"><button class="info-btn info-btn--mini" data-metric="SentimentComposite_info">?</button></div>
+          </tr>
+          <tr class="sheet-row" data-metric="ETF_FlowTone">
+            <div class="cell-name">ETF Flow Tone</div>
+            <div class="cell-val" id="f2-etf">—</div>
+            <div class="cell-skew" id="f2-etf-skew">—</div>
+            <div class="cell-exp">Bias dei flussi settoriali.</div>
+            <div class="cell-help"><button class="info-btn info-btn--mini" data-metric="ETF_FlowTone_info">?</button></div>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sheet-ai" id="sheet-f2-ai">Resoconto AI: —</div>
+    </section>
+
+    <!-- BLOCCO F3 (Tecnico MTF) -->
+    <section class="sheet-block" id="sheet-f3">
+      <div class="sheet-head">
+        <div>
+          <div class="sheet-title">F3 · Analisi tecnica multi-timeframe</div>
+          <div class="sheet-sub">Bias MTF, Score, Prob. swing</div>
+        </div>
+        <div class="sheet-cta"><button class="btn btn-sm" data-open-panel="F3">Approfondisci</button></div>
+      </div>
+
+      <table class="sheet-table" aria-label="F3">
+        <thead>
+          <tr class="sheet-row"><th>Nome metrica</th><th>Valore</th><th>Skew</th><th>Spiegazione</th><th>?</th></tr>
+        </thead>
+        <tbody id="sheet-f3-body">
+          <tr class="sheet-row" data-metric="BiasMTF">
+            <div class="cell-name">Bias MTF</div>
+            <div class="cell-val" id="f3-bias">—</div>
+            <div class="cell-skew" id="f3-bias-skew">—</div>
+            <div class="cell-exp">Direzione prevalente 3–10g.</div>
+            <div class="cell-help"><button class="info-btn info-btn--mini" data-metric="TECH_SIGNAL_info">?</button></div>
+          </tr>
+          <tr class="sheet-row" data-metric="MTF_Score">
+            <div class="cell-name">MTF Score</div>
+            <div class="cell-val" id="f3-score">—</div>
+            <div class="cell-skew" id="f3-score-skew">—</div>
+            <div class="cell-exp">Forza combinata multi-TF.</div>
+            <div class="cell-help"><button class="info-btn info-btn--mini" data-metric="PERF_VECTOR_info">?</button></div>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sheet-ai" id="sheet-f3-ai">Resoconto AI: —</div>
+    </section>
+
+    <!-- BLOCCO F4 -->
+    <section class="sheet-block" id="sheet-f4">
+      <div class="sheet-head">
+        <div>
+          <div class="sheet-title">F4 · Relazioni intermarket</div>
+          <div class="sheet-sub">Correlazioni e impatti</div>
+        </div>
+        <div class="sheet-cta"><button class="btn btn-sm" data-open-panel="F4">Approfondisci</button></div>
+      </div>
+      <table class="sheet-table" aria-label="F4">
+        <thead><tr class="sheet-row"><th>Nome metrica</th><th>Valore</th><th>Skew</th><th>Spiegazione</th><th>?</th></tr></thead>
+        <tbody id="sheet-f4-body">
+          <tr class="sheet-row" data-metric="IntermarketOil">
+            <div class="cell-name">Oil Regime</div>
+            <div class="cell-val" id="f4-oil">—</div>
+            <div class="cell-skew" id="f4-oil-skew">—</div>
+            <div class="cell-exp">Impatto prospettico su {TICKER}.</div>
+            <div class="cell-help"><button class="info-btn info-btn--mini" data-metric="Futures_Commodities_info">?</button></div>
+          </tr>
+        </tbody>
+      </table>
+      <div class="sheet-ai" id="sheet-f4-ai">Resoconto AI: —</div>
+    </section>
+
+    <!-- BLOCCO F5 -->
+    <section class="sheet-block" id="sheet-f5">
+      <div class="sheet-head">
+        <div>
+          <div class="sheet-title">F5 · Resoconto tecnico</div>
+          <div class="sheet-sub">Sintesi operativa (educational)</div>
+        </div>
+        <div class="sheet-cta"><button class="btn btn-sm" data-open-panel="F5">Approfondisci</button></div>
+      </div>
+      <table class="sheet-table" aria-label="F5">
+        <thead><tr class="sheet-row"><th>Nome metrica</th><th>Valore</th><th>Skew</th><th>Spiegazione</th><th>?</th></tr></thead>
+        <tbody id="sheet-f5-body">
+          <tr class="sheet-row" data-metric="SetupState">
+            <div class="cell-name">Setup status</div>
+            <div class="cell-val" id="f5-state">—</div>
+            <div class="cell-skew" id="f5-state-skew">—</div>
+            <div class="cell-exp">ACTIVE / REVIEW / HOLD.</div>
+            <div class="cell-help"><button class="info-btn info-btn--mini" data-metric="ModuleStatus">?</button></div>
+          </tr>
+        </tbody>
+      </table>
+      <div class="sheet-ai" id="sheet-f5-ai">Resoconto AI: —</div>
+    </section>
+
+    <!-- BLOCCO F5B -->
+    <section class="sheet-block" id="sheet-f5b">
+      <div class="sheet-head">
+        <div>
+          <div class="sheet-title">F5B · Validazione LT (medio-lungo)</div>
+          <div class="sheet-sub">Coerenza di fondo</div>
+        </div>
+        <div class="sheet-cta"><button class="btn btn-sm" data-open-panel="F5B">Approfondisci</button></div>
+      </div>
+      <table class="sheet-table" aria-label="F5B">
+        <thead><tr class="sheet-row"><th>Nome metrica</th><th>Valore</th><th>Skew</th><th>Spiegazione</th><th>?</th></tr></thead>
+        <tbody id="sheet-f5b-body">
+          <tr class="sheet-row" data-metric="LT_Validation">
+            <div class="cell-name">LT validation</div>
+            <div class="cell-val" id="f5b-lt">—</div>
+            <div class="cell-skew" id="f5b-lt-skew">—</div>
+            <div class="cell-exp">Allineamento multi-orizzonte.</div>
+            <div class="cell-help"><button class="info-btn info-btn--mini" data-metric="MacroConcordance_F2">?</button></div>
+          </tr>
+        </tbody>
+      </table>
+      <div class="sheet-ai" id="sheet-f5b-ai">Resoconto AI: —</div>
+    </section>
+
+    <!-- BLOCCO F6 -->
+    <section class="sheet-block" id="sheet-f6">
+      <div class="sheet-head">
+        <div>
+          <div class="sheet-title">F6 · Broker selezionati</div>
+          <div class="sheet-sub">Panoramica fee/mercati (educational)</div>
+        </div>
+        <div class="sheet-cta"><button class="btn btn-sm" data-open-panel="F6">Approfondisci</button></div>
+      </div>
+      <table class="sheet-table" aria-label="F6">
+        <thead><tr class="sheet-row"><th>Nome metrica</th><th>Valore</th><th>Skew</th><th>Spiegazione</th><th>?</th></tr></thead>
+        <tbody id="sheet-f6-body">
+          <tr class="sheet-row" data-metric="BrokerSample">
+            <div class="cell-name">Coverage</div>
+            <div class="cell-val">—</div>
+            <div class="cell-skew">—</div>
+            <div class="cell-exp">Elenco istituzionale regolamentato.</div>
+            <div class="cell-help"><button class="info-btn info-btn--mini" data-metric="MiFID_disclaimer">?</button></div>
+          </tr>
+        </tbody>
+      </table>
+      <div class="sheet-ai" id="sheet-f6-ai">Resoconto AI: —</div>
+    </section>
+
+    <!-- TOC stampa -->
     <section id="print-toc" aria-label="Indice del Report">
       <h2>Indice del Report</h2>
       <ol>
@@ -361,283 +407,110 @@
         <li>F6 · Broker selezionati</li>
       </ol>
     </section>
-
-    <!-- STRUTTURA DEL REPORT -->
-    <section class="section-head" aria-label="Struttura del Report">
-      <h2 class="section-title">Struttura del Report</h2>
-      <p class="section-sub">
-        Il framework Tradelia procede top-down: F1 (contesto iniziale / regime di mercato),
-        F2 (sentiment e flussi), F3 (analisi tecnica multi-timeframe),
-        F4 (relazioni intermarket), F5 (resoconto tecnico),
-        F5B (validazione LT), F6 (broker selezionati).
-        Contenuti a scopo informativo/formativo. Nessuna raccomandazione operativa.
-      </p>
-      <nav class="phase-nav" aria-label="Fasi del framework">
-        <a href="#sec-f1">F1</a>
-        <a href="#sec-f2">F2</a>
-        <a href="#sec-f3">F3</a>
-        <a href="#sec-f4">F4</a>
-        <a href="#sec-f5">F5</a>
-        <a href="#sec-f5b">F5B</a>
-        <a href="#sec-f6">F6</a>
-      </nav>
-    </section>
-
-    <!-- SEZIONI DINAMICHE -->
-    <section class="report-sections" aria-label="Moduli del Report">
-      <article id="sec-f1" class="report-section-block is-loading" aria-label="F1 · Contesto iniziale / Regime di mercato"></article>
-      <article id="sec-f2" class="report-section-block is-loading" aria-label="F2 · Sentiment e flussi"></article>
-      <article id="sec-f3" class="report-section-block is-loading" aria-label="F3 · Analisi tecnica multi-timeframe"></article>
-      <article id="sec-f4" class="report-section-block is-loading" aria-label="F4 · Relazioni intermarket"></article>
-      <article id="sec-f5" class="report-section-block is-loading" aria-label="F5 · Resoconto tecnico"></article>
-      <article id="sec-f5b" class="report-section-block is-loading" aria-label="F5B · Validazione LT (orizzonte medio-lungo)"></article>
-      <article id="sec-f6" class="report-section-block is-loading" aria-label="F6 · Broker selezionati"></article>
-    </section>
   </main>
 
   <!-- FOOTER -->
-  <div class="footer-wrap mt-12"
-       style="
-        background:var(--surface-footer,transparent);
-        border-top:1px solid var(--footer-br);
-       ">
+  <div class="footer-wrap mt-12" style="background:var(--surface-footer,transparent); border-top:1px solid var(--footer-br);">
     <footer class="site-footer container py-8 text-[12.5px] leading-[1.45] text-[color:var(--ink)]">
-
-      <!-- RIGA TOP: 3 COLONNE -->
-      <div
-        class="
-          flex flex-col gap-8
-          md:grid md:grid-cols-3 md:gap-6
-        "
-      >
-        <!-- COL 1 · META REPORT -->
+      <div class="flex flex-col gap-8 md:grid md:grid-cols-3 md:gap-6">
         <div class="min-w-0 relative md:pr-4 md:border-r md:border-[color:var(--footer-br)]">
-          <div class="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-            Report
-          </div>
-
-          <div class="mt-1 text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]">
-            TRADELIA<span class="text-[color:var(--brand)]">&bull;AI</span>
-          </div>
-
+          <div class="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">Report</div>
+          <div class="mt-1 text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]">TRADELIA<span class="text-[color:var(--brand)]">&bull;AI</span></div>
           <div class="mt-2 text-[12.5px] leading-[1.45]">
-            <div>
-              <span class="opacity-70">Società:</span>
-              <span id="footer-company" class="ml-1">{NOME AZIENDA}</span>
-            </div>
-            <div>
-              <span class="opacity-70">Versione:</span>
-              <span id="footer-version" class="ml-1">v1.0</span>
-            </div>
+            <div><span class="opacity-70">Società:</span> <span id="footer-company" class="ml-1">{NOME AZIENDA}</span></div>
+            <div><span class="opacity-70">Versione:</span> <span id="footer-version" class="ml-1">v1.0</span></div>
           </div>
-
           <div class="mt-2 text-[12.5px] leading-[1.45] opacity-90">
-            <div>
-              <span class="opacity-70">Finestra analizzata:</span>
-              <span id="footer-snapshot" class="ml-1">—</span>
-            </div>
-            <div>
-              <span class="opacity-70">Ultimo aggiornamento:</span>
-              <span id="footer-updated" class="ml-1">—</span>
-            </div>
+            <div><span class="opacity-70">Finestra analizzata:</span> <span id="footer-snapshot" class="ml-1">—</span></div>
+            <div><span class="opacity-70">Ultimo aggiornamento:</span> <span id="footer-updated" class="ml-1">—</span></div>
           </div>
         </div>
-
-        <!-- COL 2 · FONTI DATI -->
         <div class="min-w-0 relative md:px-4 md:border-r md:border-[color:var(--footer-br)]">
-          <div class="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-            Fonti dati
-          </div>
-
-          <p class="mt-2 opacity-90">
-            Le metriche e le serie storiche citate derivano da provider finanziari
-            e macro (es. Bloomberg, Reuters, CME, FRED, World Bank, IMF) ritenuti
-            affidabili. Dati e campioni possono essere soggetti a ritardi,
-            revisioni o errori.
-          </p>
-
-          <p class="mt-2 opacity-90">
-            Tutti i marchi e i nomi citati restano proprietà dei rispettivi titolari.
-            Uso riportato esclusivamente a fini informativi e didattici.
-          </p>
+          <div class="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">Fonti dati</div>
+          <p class="mt-2 opacity-90">Le metriche e le serie storiche citate derivano da provider finanziari e macro (es. Bloomberg, Reuters, CME, FRED, World Bank, IMF) ritenuti affidabili. Dati e campioni possono essere soggetti a ritardi, revisioni o errori.</p>
+          <p class="mt-2 opacity-90">Tutti i marchi e i nomi citati restano proprietà dei rispettivi titolari. Uso riportato esclusivamente a fini informativi e didattici.</p>
         </div>
-
-        <!-- COL 3 · COMPLIANCE -->
         <div class="min-w-0 relative md:pl-4">
-          <div class="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-            Compliance & Risk
-          </div>
-
-          <p class="mt-2 opacity-90">
-            Questo documento ha finalità educativa e informativa.
-            Non costituisce consulenza finanziaria personalizzata,
-            raccomandazione di investimento o sollecitazione al pubblico risparmio
-            ai sensi MiFID II / ESMA.
-          </p>
-
-          <p class="mt-2 opacity-90">
-            Tradelia AI non gestisce capitali, non esegue ordini e non valuta
-            la tua situazione patrimoniale o profilo di rischio.
-            I mercati finanziari implicano rischio di perdita anche totale
-            del capitale.
-          </p>
-
+          <div class="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">Compliance & Risk</div>
+          <p class="mt-2 opacity-90">Questo documento ha finalità educativa e informativa. Non costituisce consulenza finanziaria personalizzata, raccomandazione di investimento o sollecitazione al pubblico risparmio ai sensi MiFID II / ESMA.</p>
+          <p class="mt-2 opacity-90">Tradelia AI non gestisce capitali, non esegue ordini e non valuta la tua situazione patrimoniale o profilo di rischio. I mercati finanziari implicano rischio di perdita anche totale del capitale.</p>
           <div class="mt-3 flex flex-wrap gap-4">
-            <button class="btn btn-sm" id="btn-privacy-open" type="button">
-              Privacy
-            </button>
-            <button class="btn btn-sm" id="btn-mifid-open" type="button">
-              Informativa MiFID
-            </button>
+            <button class="btn btn-sm" id="btn-privacy-open" type="button">Privacy</button>
+            <button class="btn btn-sm" id="btn-mifid-open" type="button">Informativa MiFID</button>
           </div>
-
-          <p class="mt-3 opacity-90">
-            Nessuna profilazione pubblicitaria. Le preferenze utente
-            (es. tema chiaro/scuro) restano in locale sul dispositivo.
-          </p>
+          <p class="mt-3 opacity-90">Nessuna profilazione pubblicitaria. Le preferenze utente (es. tema chiaro/scuro) restano in locale sul dispositivo.</p>
         </div>
       </div>
-
-      <!-- DIVIDER BOTTOM -->
       <div class="mt-8 border-t border-[color:var(--footer-br)] pt-4 flex flex-col md:flex-row md:items-baseline md:justify-between gap-4 text-[12px] leading-[1.45] text-[color:var(--muted)]">
-
-        <div class="min-w-0">
-          © <span id="footer-year"></span>
-          <strong class="text-[color:var(--ink)]">Tradelia AI</strong>.
-          Tutti i diritti riservati.
-          Contatti:
-          <a href="mailto:info@tradelia.org" class="underline hover:opacity-80 text-[color:var(--ink)]">
-            info@tradelia.org
-          </a>
+        <div class="min-w-0">© <span id="footer-year"></span> <strong class="text-[color:var(--ink)]">Tradelia AI</strong>. Tutti i diritti riservati. Contatti:
+          <a href="mailto:info@tradelia.org" class="underline hover:opacity-80 text-[color:var(--ink)]">info@tradelia.org</a>
         </div>
-
         <div class="min-w-0 md:text-right text-[12px] leading-[1.45]">
-          <span class="text-[color:var(--ink)]">Missione:</span>
-          alfabetizzazione finanziaria indipendente.
+          <span class="text-[color:var(--ink)]">Missione:</span> alfabetizzazione finanziaria indipendente.
         </div>
       </div>
     </footer>
   </div>
 
-  <!-- PANEL OVERLAY (analitico: F1B, Audit, ecc.) -->
+  <!-- PANEL OVERLAY (analitico) -->
   <div id="panel-overlay" class="tl-panel-overlay noprint" aria-hidden="true">
     <div class="tl-panel-backdrop" data-panel-close></div>
-
-    <!-- desktop -->
     <aside class="tl-panel tl-panel--desktop" role="dialog" aria-modal="true" aria-labelledby="panel-title">
       <header class="tl-panel__header">
-        <div class="min-w-0">
-          <h2 id="panel-title" class="tl-panel__title">—</h2>
-          <p id="panel-subtitle" class="tl-panel__subtitle">—</p>
-        </div>
+        <div class="min-w-0"><h2 id="panel-title" class="tl-panel__title">—</h2><p id="panel-subtitle" class="tl-panel__subtitle">—</p></div>
         <button class="tl-panel__close" data-panel-close aria-label="Chiudi">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </header>
-
       <div id="panel-body" class="tl-panel__body"></div>
-
-      <footer class="tl-panel__footer" id="panel-footer">
-        <button class="btn btn-sm" data-panel-close>Chiudi</button>
-      </footer>
+      <footer class="tl-panel__footer" id="panel-footer"><button class="btn btn-sm" data-panel-close>Chiudi</button></footer>
     </aside>
 
-    <!-- mobile -->
     <aside class="tl-panel tl-panel--mobile" role="dialog" aria-modal="true" aria-labelledby="panel-title-mobile">
       <header class="tl-panel__header">
-        <div class="min-w-0">
-          <h2 id="panel-title-mobile" class="tl-panel__title">—</h2>
-          <p id="panel-subtitle-mobile" class="tl-panel__subtitle">—</p>
-        </div>
+        <div class="min-w-0"><h2 id="panel-title-mobile" class="tl-panel__title">—</h2><p id="panel-subtitle-mobile" class="tl-panel__subtitle">—</p></div>
         <button class="tl-panel__close" data-panel-close aria-label="Chiudi">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </header>
-
       <div id="panel-body-mobile" class="tl-panel__body"></div>
-
-      <footer class="tl-panel__footer" id="panel-footer-mobile">
-        <button class="btn btn-sm" data-panel-close>Chiudi</button>
-      </footer>
+      <footer class="tl-panel__footer" id="panel-footer-mobile"><button class="btn btn-sm" data-panel-close>Chiudi</button></footer>
     </aside>
   </div>
 
-  <!-- LEGAL OVERLAY (Privacy / MiFID separato, non tocca F1B) -->
+  <!-- LEGAL OVERLAY -->
   <div id="legal-overlay" class="tl-panel-overlay noprint" aria-hidden="true">
     <div class="tl-panel-backdrop" data-legal-close></div>
-
-    <!-- desktop -->
     <aside class="tl-panel tl-panel--desktop" role="dialog" aria-modal="true">
       <header class="tl-panel__header">
-        <div class="min-w-0">
-          <h2 id="legal-title" class="tl-panel__title">—</h2>
-          <p id="legal-subtitle" class="tl-panel__subtitle">—</p>
-        </div>
+        <div class="min-w-0"><h2 id="legal-title" class="tl-panel__title">—</h2><p id="legal-subtitle" class="tl-panel__subtitle">—</p></div>
         <button class="tl-panel__close" data-legal-close aria-label="Chiudi">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </header>
-
       <div id="legal-body" class="tl-panel__body"></div>
-
       <footer class="tl-panel__footer" id="legal-footer"></footer>
     </aside>
-
-    <!-- mobile -->
     <aside class="tl-panel tl-panel--mobile" role="dialog" aria-modal="true">
       <header class="tl-panel__header">
-        <div class="min-w-0">
-          <h2 id="legal-title-mobile" class="tl-panel__title">—</h2>
-          <p id="legal-subtitle-mobile" class="tl-panel__subtitle">—</p>
-        </div>
+        <div class="min-w-0"><h2 id="legal-title-mobile" class="tl-panel__title">—</h2><p id="legal-subtitle-mobile" class="tl-panel__subtitle">—</p></div>
         <button class="tl-panel__close" data-legal-close aria-label="Chiudi">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </header>
-
       <div id="legal-body-mobile" class="tl-panel__body"></div>
-
       <footer class="tl-panel__footer" id="legal-footer-mobile"></footer>
     </aside>
   </div>
 
   <!-- TOOLTIP DESKTOP -->
-  <div id="metric-popover"
-       class="tl-popover noprint"
-       role="tooltip"
-       aria-hidden="true"
-       style="max-width:320px;">
-    <div class="tl-popover__head"
-         style="display:flex;align-items:flex-start;gap:.5rem;">
-      <button id="metric-popover-close"
-              class="tl-popover__close"
-              aria-label="Chiudi"
-              style="order:0;flex-shrink:0;">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
+  <div id="metric-popover" class="tl-popover noprint" role="tooltip" aria-hidden="true" style="max-width:320px;">
+    <div class="tl-popover__head" style="display:flex;align-items:flex-start;gap:.5rem;">
+      <button id="metric-popover-close" class="tl-popover__close" aria-label="Chiudi" style="order:0;flex-shrink:0;">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
-
-      <div id="metric-popover-title"
-           class="tl-popover__title"
-           style="order:1;font-weight:600;font-size:14px;line-height:1.4;color:var(--ink);">
-        —
-      </div>
+      <div id="metric-popover-title" class="tl-popover__title" style="order:1;font-weight:600;font-size:14px;line-height:1.4;color:var(--ink);">—</div>
     </div>
-
     <div id="metric-popover-body" class="tl-popover__body">—</div>
     <div id="metric-popover-source" class="tl-popover__source">—</div>
   </div>
@@ -645,7 +518,6 @@
   <!-- TOOLTIP MOBILE -->
   <div id="metric-modal" class="tl-metric-modal-overlay noprint" aria-hidden="true">
     <div class="tl-metric-modal-backdrop" data-metric-close></div>
-
     <div class="tl-metric-modal" role="dialog" aria-modal="true" aria-labelledby="metric-modal-title">
       <header class="tl-metric-modal__header">
         <div class="min-w-0">
@@ -653,19 +525,15 @@
           <div id="metric-modal-source" class="tl-metric-modal__source">—</div>
         </div>
         <button class="tl-metric-modal__close" data-metric-close aria-label="Chiudi">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </header>
       <div id="metric-modal-body" class="tl-metric-modal__body">—</div>
     </div>
   </div>
 
-  <!-- JS runtime -->
+  <!-- Runtime -->
   <script type="module" src="/report/assets/js/app.js"></script>
   <script type="module" src="/report/assets/js/ui-runtime.js"></script>
-
 </body>
 </html>
