@@ -1,4 +1,4 @@
-/* Tradelia Tokens v2.4 — dark-only cross-browser */
+/* Tradelia Tokens v2.6 — dark-only */
 
 :root{
   --bg:#0f1216; --card:#171b21; --ink:#f3f4f6; --ink-soft:#d2d5d9; --muted:#a1a5aa;
@@ -14,17 +14,29 @@ body{margin:0;background:var(--bg);color:var(--ink);font:var(--fs)/var(--lh) "In
 a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .tabular{font-variant-numeric: tabular-nums lining-nums}
 
+/* ===== Logo Pro ===== */
+.brand{display:inline-flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none}
+.logo{width:22px;height:22px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
+.wordmark{font-weight:800;letter-spacing:.08em}
+.wordmark .dot{opacity:.85}
+.brand:hover .logo{transform:translateY(-1px);transition:transform .15s ease}
+.brand:hover .wordmark{text-shadow:0 0 1px rgba(255,255,255,.15)}
+.spacer{flex:1}
+
 /* Header */
 .site-header{position:sticky;top:0;z-index:50;background:rgba(18,21,26,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--br)}
 .header-inner{display:flex;align-items:center;gap:16px;max-width:1200px;margin:0 auto;padding:12px 16px}
-.brand{font-weight:700;letter-spacing:.08em;display:inline-flex;align-items:center;gap:8px;color:var(--ink)}
-.brand-mark{width:10px;height:10px;border-radius:2px;background:linear-gradient(135deg,var(--accent),#8ab2ff);box-shadow:0 0 8px rgba(0,0,0,.4)}
-.spacer{flex:1}
 
-/* Buttons */
-.btn{appearance:none;border:1px solid var(--br);background:var(--card);color:var(--ink);padding:8px 12px;border-radius:10px;cursor:pointer;transition:border-color .15s ease,transform .05s ease}
+/* Buttons & badges */
+.btn{appearance:none;border:1px solid var(--br);background:var(--card);color:var(--ink);padding:8px 12px;border-radius:10px;cursor:pointer;transition:border-color .15s ease,transform .05s}
 .btn:hover{border-color:var(--accent)} .btn:active{transform:translateY(1px)}
-.btn.btn-ghost{background:transparent} .btn.btn-sm{padding:6px 10px;font-size:var(--fs-sm)}
+.btn.btn-ghost{background:transparent}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid var(--br);background:var(--card);font-weight:800;font-size:13px}
+.badge.ok{border-color:var(--ok)} .badge.warn{border-color:var(--warn)} .badge.alert{border-color:var(--alert)}
+.delta-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid var(--br);background:var(--card);font-weight:800;font-size:13px}
+.delta-chip.ok{color:var(--ok);border-color:var(--ok)} .delta-chip.alert{color:var(--alert);border-color:var(--alert)} .delta-chip.neutral{color:var(--neutral)}
+.info-btn{width:22px;height:22px;display:inline-grid;place-items:center;border:1px solid var(--br);border-radius:999px;background:var(--card);color:var(--muted);cursor:pointer}
+.info-btn:hover{border-color:var(--accent);color:var(--ink)}
 
 /* HERO */
 .hero{max-width:1200px;margin:24px auto 12px;padding:0 16px}
@@ -32,34 +44,21 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .hero-title{font-size:44px;font-weight:900;letter-spacing:-.02em}
 .hero-sub{font-size:18px;color:var(--muted)}
 
-/* Confidence meter */
 .hero-meter{margin:10px 0 14px;display:flex;flex-direction:column;gap:8px}
 .meter-head{display:flex;align-items:center;justify-content:space-between}
 .meter-left{display:flex;align-items:center;gap:8px}
 .meter-label{font-weight:800;color:var(--ink)}
-.info-btn{width:22px;height:22px;border:1px solid var(--br);border-radius:999px;background:var(--card);color:var(--muted);cursor:pointer}
-.info-btn:hover{border-color:var(--accent);color:var(--ink)}
 .meter-right{font-weight:800}
 .meter-track{position:relative;height:10px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--br);overflow:hidden}
 .meter-fill{position:absolute;inset:0 auto 0 0;width:0%;background:var(--neutral);transition:width .25s ease, background .2s ease}
 .meter-tick{position:absolute;top:0;bottom:0;width:2px;background:rgba(255,255,255,.15)}
-.meter-tick[data-x="0"]{left:0}
-.meter-tick[data-x="65"]{left:65%}
-.meter-tick[data-x="85"]{left:85%}
-.meter-tick[data-x="100"]{left:100%}
-.meter-fill.ok{background:var(--ok)}
-.meter-fill.warn{background:var(--warn)}
-.meter-fill.alert{background:var(--alert)}
+.meter-tick[data-x="0"]{left:0} .meter-tick[data-x="65"]{left:65%} .meter-tick[data-x="85"]{left:85%} .meter-tick[data-x="100"]{left:100%}
+.meter-fill.ok{background:var(--ok)} .meter-fill.warn{background:var(--warn)} .meter-fill.alert{background:var(--alert)}
 
-/* Main price row */
 .hero-main{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:8px;flex-wrap:wrap}
 .hero-price .big{font-size:58px;line-height:1.05;font-weight:900}
 .hero-price .ccy{margin-left:8px;font-size:16px;color:var(--muted);font-weight:700}
 .hero-right{display:flex;align-items:center;gap:10px}
-.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid var(--br);background:var(--card);font-weight:800;font-size:13px}
-.badge.ok{border-color:var(--ok)} .badge.warn{border-color:var(--warn)} .badge.alert{border-color:var(--alert)}
-.delta-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid var(--br);background:var(--card);font-weight:800;font-size:13px}
-.delta-chip.ok{color:var(--ok);border-color:var(--ok)} .delta-chip.alert{color:var(--alert);border-color:var(--alert)} .delta-chip.neutral{color:var(--neutral)}
 
 .hero-kpi{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
 .pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--br);border-radius:999px;padding:6px 10px;background:var(--card)}
@@ -68,10 +67,8 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 
 .hero-note{font-size:13px;color:var(--muted);margin-top:4px}
 
-/* Separator */
+/* Divider & grid */
 .section-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);border:0;margin:18px 16px}
-
-/* Grid moduli & cards */
 .modules-grid{max-width:1200px;margin:12px auto 48px;padding:0 16px;display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
 .report-section{grid-column:span 12} @media(min-width:900px){.report-section{grid-column:span 6}}
 .card{background:var(--card);border:1px solid var(--br);border-radius:var(--radius-card);box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:12px}
@@ -95,7 +92,22 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .footer-inner{max-width:1200px;margin:0 auto;padding:16px;display:flex;align-items:center;gap:12px}
 .footer-inner .footer-actions{margin-left:auto;display:flex;gap:8px}
 
-/* Print (solo basi) */
+/* ===== Tooltip Premium (Cos'è / Come si usa / Fonte) ===== */
+.tt{position:fixed;z-index:300;max-width:420px;background:linear-gradient(180deg, rgba(25,29,35,.98), rgba(20,24,29,.98));
+    border:1px solid rgba(255,255,255,.08); box-shadow:0 20px 60px rgba(0,0,0,.45);
+    color:var(--ink); border-radius:14px; padding:12px 14px; backdrop-filter:blur(6px);
+    animation:ttIn .12s ease-out both}
+.tt h4{margin:0 0 6px 0;font-size:14px;font-weight:800;letter-spacing:.01em}
+.tt section{margin:6px 0}
+.tt section h5{margin:0 0 2px 0;font-size:12px;color:var(--ink-soft);font-weight:700;opacity:.9}
+.tt p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+.tt .meta{margin-top:8px;font-size:12px;color:var(--muted)}
+.tt .src a{color:var(--accent)}
+.tt-arrow{position:absolute;width:12px;height:12px;transform:rotate(45deg);background:inherit;
+          border-left:1px solid rgba(255,255,255,.08);border-top:1px solid rgba(255,255,255,.08)}
+@keyframes ttIn{from{opacity:0;transform:translateY(-2px)} to{opacity:1;transform:none}}
+
+/* Print */
 @media print{
   .site-header,.overlay,.panel-tabs,.panel-foot{display:none!important}
   body{background:#fff;color:#000}
