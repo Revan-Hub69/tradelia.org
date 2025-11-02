@@ -1,6 +1,6 @@
 // /report/assets/js/ui-runtime.js
 // Runtime UI globale (nessun dato di mercato qui).
-// - Drawer analitico (F1B/F2/F3...) -> #panel-overlay
+// - Drawer analitico (F1B/F2/F3...) -> #panel-overlay  **(LOGICA RIFATTA)**
 // - Overlay legale separato (Privacy / MiFID) -> #legal-overlay
 // - Tooltip metriche ("?") desktop/mobile
 // - Tema light/dark (dark al primo accesso)
@@ -22,8 +22,37 @@ function escapeHtml(str) {
 }
 
 // ------------------------------------------------------------
-// Drawer ANALITICO (#panel-overlay) — FIX: singolo target attivo
+// Scroll lock ref-count (evita conflitti tra overlay)
 // ------------------------------------------------------------
+const __lockState = { count: 0 };
+function __panelLockScroll(lock){
+  if (lock) {
+    if (++__lockState.count === 1) {
+      document.documentElement.style.overflow = 'hidden';
+      document.body.classList.add('body--lock');
+    }
+  } else {
+    if (__lockState.count > 0 && --__lockState.count === 0) {
+      document.documentElement.style.overflow = '';
+      document.body.classList.remove('body--lock');
+    }
+  }
+}
+function __resetScrollable(el){ try { if(el) el.scrollTop = 0; } catch(e){} }
+function __clearNode(n){ if(!n) return; n.textContent=''; }
+function __clearHTML(n){ if(!n) return; n.innerHTML=''; }
+
+// ------------------------------------------------------------
+// Drawer ANALITICO (#panel-overlay) — schede isolate & resize-aware
+// ------------------------------------------------------------
+let __panelTabs = {
+  activeKey: null,
+  sectionsByKey: {},
+  resizeHandler: null,
+  clickHandler: null,
+  keyHandler: null
+};
+
 function __panelActiveTarget() {
   const overlay = qs('#panel-overlay');
   const mobile = isMobile();
@@ -34,7 +63,6 @@ function __panelActiveTarget() {
     body:  qs('#panel-body-mobile', overlay),
     foot:  qs('#panel-footer-mobile', overlay),
     other: {
-      aside: qs('.tl-panel--desktop', overlay),
       title: qs('#panel-title', overlay),
       sub:   qs('#panel-subtitle', overlay),
       body:  qs('#panel-body', overlay),
@@ -47,7 +75,6 @@ function __panelActiveTarget() {
     body:  qs('#panel-body', overlay),
     foot:  qs('#panel-footer', overlay),
     other: {
-      aside: qs('.tl-panel--mobile', overlay),
       title: qs('#panel-title-mobile', overlay),
       sub:   qs('#panel-subtitle-mobile', overlay),
       body:  qs('#panel-body-mobile', overlay),
@@ -55,84 +82,95 @@ function __panelActiveTarget() {
     }
   };
 }
-function __panelLockScroll(lock){
-  document.body.classList.toggle('body--lock', !!lock);
-  document.documentElement.style.overflow = lock ? 'hidden' : '';
-}
-function __resetScrollable(el){ try { if(el) el.scrollTop = 0; } catch(e){} }
 
-// openPanel API identica alle versioni precedenti
+// OPEN PANEL analitico (schede isolate, render on demand)
 function openPanel(opts) {
-  closePanel(); // pulizia sempre
+  closePanel(); // pulizia preventiva
+
   const overlayEl = qs("#panel-overlay");
   if (!overlayEl) return;
 
   const {
     title = "Dettagli",
     subtitle = "",
-    sections = [],
+    sections = [],           // [{key?, title?, body, meta?}, ...]
     blocking = false,
-    panelSize,
+    panelSize,               // 'wide' | 'xl'
     footerButtons = [],
-    footerTabs = []
+    footerTabs = []          // [{key, label}, ...]
   } = opts || {};
 
-  // target attivo (SOLO UNO) + svuotiamo l'altro per evitare "doppio pannello"
+  // target attivo + svuota l’altro (stop doppio pannello)
   const tgt = __panelActiveTarget();
   const oth = tgt.other || {};
-  [oth.title, oth.sub].forEach(n => setText(n, ""));
-  [oth.body, oth.foot].forEach(n => setHTML(n, ""));
+  [oth.title, oth.sub].forEach(__clearNode);
+  [oth.body, oth.foot].forEach(__clearHTML);
 
   // header
   setText(tgt.title, title);
   setText(tgt.sub, subtitle);
 
-  // corpo
-  let bodyHTML = "";
-  if (panelSize === "wide" && sections.length === 1) {
-    bodyHTML = sections[0].body || "";
-  } else {
-    bodyHTML = sections.map(section => {
-      const st  = section.title || "";
-      const bd  = section.body  || "";
-      const mta = section.meta  || "";
-      return `
+  // mappa sezioni per key coerente
+  __panelTabs.sectionsByKey = {};
+  sections.forEach((s, i) => {
+    const k = s.key || (footerTabs[i] && footerTabs[i].key) || `sec${i}`;
+    __panelTabs.sectionsByKey[k] = s;
+  });
+
+  // attiva prima tab disponibile (o prima sezione)
+  __panelTabs.activeKey =
+    (footerTabs[0] && footerTabs[0].key) ||
+    (sections[0] && (sections[0].key || 'sec0')) ||
+    null;
+
+  // renderer sezione attiva (ricostruisce BODY ogni volta)
+  function renderActiveSection() {
+    const k = __panelTabs.activeKey;
+    const s = k ? __panelTabs.sectionsByKey[k] : null;
+
+    let html = "";
+    if (!s) {
+      html = `<section class="tl-panel-section"><div class="tl-panel-section-text">—</div></section>`;
+    } else if (panelSize === "wide" && Object.keys(__panelTabs.sectionsByKey).length === 1) {
+      // wide + singola sezione: body "nudo"
+      html = s.body || "";
+    } else {
+      html = `
         <section class="tl-panel-section" style="margin-bottom:1rem;">
-          ${ st ? `
+          ${ s.title ? `
             <div class="tl-panel-section-title">
-              <div class="tl-panel-section-title-text">${escapeHtml(st)}</div>
+              <div class="tl-panel-section-title-text">${escapeHtml(s.title)}</div>
             </div>` : `` }
-          <div class="tl-panel-section-text">${bd}</div>
-          ${ mta ? `<div class="tl-panel-section-meta">${mta}</div>` : `` }
+          <div class="tl-panel-section-text">${s.body || ""}</div>
+          ${ s.meta ? `<div class="tl-panel-section-meta">${s.meta}</div>` : `` }
         </section>
       `;
-    }).join("");
-  }
-  setHTML(tgt.body, bodyHTML);
-  __resetScrollable(tgt.body);
+    }
 
-  // footer
+    setHTML(tgt.body, html);
+    __resetScrollable(tgt.body);
+
+    // bind "?" perché il DOM è nuovo
+    try { bindMetricInfoButtons(overlayEl); } catch(e){}
+  }
+
+  // FOOTER: tabs (mobile) o bottoni (desktop)
   function renderFooterBtns(arr) {
     if (!arr || !arr.length) return `<button class="btn btn-sm" data-panel-close>Chiudi</button>`;
     return arr.map((btn, i) => `<button class="btn btn-sm" data-panel-btn="${i}">${escapeHtml(btn.label || "OK")}</button>`).join("");
   }
-  function renderFooterTabs(tabsArr) {
-    if (!tabsArr || !tabsArr.length) return renderFooterBtns(footerButtons);
+  function renderFooterTabs(tabsArr, btnsArr) {
+    if (!tabsArr || !tabsArr.length) return renderFooterBtns(btnsArr);
     const pills = tabsArr.map(t =>
-      `<button class="f1b-footer-tab-btn" data-f1b-tab="${escapeHtml(t.key)}">${escapeHtml(t.label)}</button>`
+      `<button class="f1b-footer-tab-btn${t.key===__panelTabs.activeKey?' is-active':''}" data-f1b-tab="${escapeHtml(t.key)}">${escapeHtml(t.label)}</button>`
     ).join("");
     const closeBtn = `<button class="f1b-footer-close-btn" data-panel-close>Chiudi</button>`;
-    return `
-      <div class="f1b-footer-tabs-wrap">
-        <div class="f1b-footer-tabs-scroll">${pills}</div>
-        ${closeBtn}
-      </div>
-    `;
+    return `<div class="f1b-footer-tabs-wrap"><div class="f1b-footer-tabs-scroll">${pills}</div>${closeBtn}</div>`;
   }
-  const mobileFooterHTML  = renderFooterTabs(footerTabs);
+
+  const mobileFooterHTML  = renderFooterTabs(footerTabs, footerButtons);
   const desktopFooterHTML = renderFooterBtns(footerButtons);
 
-  // scrivi SOLO nel target attivo; svuota l'altro
   if (isMobile()) {
     setHTML(tgt.foot, mobileFooterHTML);
     setHTML(oth.foot, "");
@@ -141,28 +179,41 @@ function openPanel(opts) {
     setHTML(oth.foot, "");
   }
 
-  // bind footer actions (solo target attivo)
-  function bindFooterButtons(scopeEl, buttonsDefArr) {
+  // bind footer (solo sull’attivo)
+  function bindFooter(scopeEl) {
     if (!scopeEl) return;
+
+    // bottoni azione
     qsa("[data-panel-btn]", scopeEl).forEach(btnEl => {
       const i = btnEl.getAttribute("data-panel-btn");
-      if (buttonsDefArr[i] && typeof buttonsDefArr[i].action === "function") {
-        btnEl.addEventListener("click", (ev) => { ev.stopPropagation(); buttonsDefArr[i].action(); });
+      if (footerButtons[i] && typeof footerButtons[i].action === "function") {
+        btnEl.addEventListener("click", (ev) => { ev.stopPropagation(); footerButtons[i].action(); });
       }
     });
+
+    // chiudi
     qsa("[data-panel-close]", scopeEl).forEach(btnEl => {
       btnEl.addEventListener("click", (ev) => { ev.stopPropagation(); closePanel(); });
     });
 
-    // reset scroll al cambio tab (mobile)
+    // tabs (mobile)
     qsa('[data-f1b-tab]', scopeEl).forEach(btn => {
-      btn.addEventListener('click', () => __resetScrollable(tgt.body));
+      btn.addEventListener('click', () => {
+        const k = btn.getAttribute('data-f1b-tab');
+        if (!k || k === __panelTabs.activeKey) return;
+        __panelTabs.activeKey = k;
+
+        // aggiorna pill attiva
+        qsa('[data-f1b-tab]', scopeEl).forEach(b => b.classList.toggle('is-active', b===btn));
+
+        // re-render body per la nuova scheda
+        renderActiveSection();
+      });
     });
   }
-  bindFooterButtons(tgt.foot, footerButtons);
+  bindFooter(tgt.foot);
 
-  // blocking + larghezza
-  if (blocking) overlayEl.setAttribute("data-blocking","true"); else overlayEl.removeAttribute("data-blocking");
+  // larghezza desktop
   const panelDesktop = qs(".tl-panel--desktop", overlayEl);
   if (panelDesktop) {
     panelDesktop.classList.remove("tl-panel--wide","tl-panel--xl");
@@ -170,38 +221,79 @@ function openPanel(opts) {
     else if (panelSize === "xl") panelDesktop.classList.add("tl-panel--xl");
   }
 
-  // mostra overlay
+  // mostra overlay + primo render
+  if (blocking) overlayEl.setAttribute("data-blocking","true"); else overlayEl.removeAttribute("data-blocking");
   __panelLockScroll(true);
   overlayEl.setAttribute("aria-hidden","false");
+  renderActiveSection();
 
-  // bind "?" apparsi dentro il drawer
-  bindMetricInfoButtons(overlayEl);
+  // ESC/backdrop (scoped a questo root)
+  __panelTabs.clickHandler = (ev)=>{
+    const blockingFlag = overlayEl.getAttribute("data-blocking")==="true";
+    if (ev.target.closest("[data-panel-close]")) { closePanel(); return; }
+    const backdrop = ev.target.closest(".tl-panel-backdrop");
+    if (backdrop && !blockingFlag) { closePanel(); }
+  };
+  __panelTabs.keyHandler = (e)=>{
+    const blockingFlag = overlayEl.getAttribute("data-blocking")==="true";
+    if (e.key === 'Escape' && !blockingFlag) closePanel();
+  };
+  document.addEventListener("click", __panelTabs.clickHandler);
+  document.addEventListener("keydown", __panelTabs.keyHandler);
+
+  // RESIZE: migra contenuto nel nuovo target mantenendo activeKey
+  __panelTabs.resizeHandler = () => {
+    if (overlayEl.getAttribute("aria-hidden")==="true") return;
+    const curKey = __panelTabs.activeKey;
+
+    const tgt2 = __panelActiveTarget();
+    const oth2 = tgt2.other || {};
+    [oth2.title, oth2.sub].forEach(__clearNode);
+    [oth2.body, oth2.foot].forEach(__clearHTML);
+
+    // ripristina header
+    setText(tgt2.title, title);
+    setText(tgt2.sub, subtitle);
+
+    // rifoot coerente con breakpoint
+    if (isMobile()) { setHTML(tgt2.foot, renderFooterTabs(footerTabs, footerButtons)); }
+    else { setHTML(tgt2.foot, renderFooterBtns(footerButtons)); }
+    bindFooter(tgt2.foot);
+
+    // rerender sezione attiva
+    __panelTabs.activeKey = curKey;
+    // nota: renderActiveSection() usa tgt/body calcolati prima;
+    // ricalcoliamo il target e poi renderizziamo
+    const tmp = __panelActiveTarget(); // aggiorna riferimento
+    setHTML(tmp.body, ""); // pulisci
+    renderActiveSection();
+  };
+  window.addEventListener('resize', __panelTabs.resizeHandler);
 }
 
+// CLOSE PANEL analitico (pulizia completa)
 function closePanel() {
   const overlayEl = qs("#panel-overlay");
   if (!overlayEl) return;
+
   overlayEl.setAttribute("aria-hidden","true");
-  // pulizia contenuti (evita "fantasmi" su riaperture)
-  const allBodies = ["#panel-body","#panel-body-mobile"].map(id=>qs(id));
-  const allTitles = ["#panel-title","#panel-title-mobile"].map(id=>qs(id));
-  const allSubs   = ["#panel-subtitle","#panel-subtitle-mobile"].map(id=>qs(id));
-  const allFoot   = ["#panel-footer","#panel-footer-mobile"].map(id=>qs(id));
-  [...allBodies,...allFoot].forEach(n=> setHTML(n,""));
-  [...allTitles,...allSubs].forEach(n=> setText(n,""));
   overlayEl.removeAttribute("data-blocking");
+
+  // pulizia DOM (entrambi i target)
+  ["#panel-title","#panel-subtitle","#panel-title-mobile","#panel-subtitle-mobile"].forEach(id => __clearNode(qs(id)));
+  ["#panel-body","#panel-footer","#panel-body-mobile","#panel-footer-mobile"].forEach(id => __clearHTML(qs(id)));
+
+  // unbind handler locali
+  if (__panelTabs.clickHandler) { document.removeEventListener("click", __panelTabs.clickHandler); __panelTabs.clickHandler = null; }
+  if (__panelTabs.keyHandler)   { document.removeEventListener("keydown", __panelTabs.keyHandler); __panelTabs.keyHandler   = null; }
+  if (__panelTabs.resizeHandler){ window.removeEventListener('resize', __panelTabs.resizeHandler); __panelTabs.resizeHandler = null; }
+
+  // reset stato
+  __panelTabs.activeKey = null;
+  __panelTabs.sectionsByKey = {};
+
   __panelLockScroll(false);
 }
-
-// chiusure generiche
-document.addEventListener("click", (ev) => {
-  const overlayEl = qs("#panel-overlay");
-  if (!overlayEl || overlayEl.getAttribute("aria-hidden")==="true") return;
-  const blocking = overlayEl.getAttribute("data-blocking")==="true";
-  if (ev.target.closest("[data-panel-close]")) { closePanel(); return; }
-  const backdrop = ev.target.closest(".tl-panel-backdrop");
-  if (backdrop && !blocking) { closePanel(); return; }
-});
 
 // ------------------------------------------------------------
 // LEGAL OVERLAY (#legal-overlay) — identico API, separato
@@ -242,22 +334,38 @@ function openLegalPanel(opts) {
   if (blocking) overlayEl.setAttribute("data-blocking","true"); else overlayEl.removeAttribute("data-blocking");
   __panelLockScroll(true);
   overlayEl.setAttribute("aria-hidden","false");
+
+  // ESC/backdrop scoped al root legale
+  function onDocClick(ev){
+    const blockingFlag = overlayEl.getAttribute("data-blocking")==="true";
+    if (ev.target.closest("[data-legal-close]")) { closeLegalPanel(); return; }
+    const backdrop = ev.target.closest(".tl-panel-backdrop");
+    if (backdrop && !blockingFlag && overlayEl.contains(backdrop)) { closeLegalPanel(); return; }
+  }
+  function onKeydown(e){
+    const blockingFlag = overlayEl.getAttribute("data-blocking")==="true";
+    if (e.key === 'Escape' && !blockingFlag) closeLegalPanel();
+  }
+  overlayEl.__clickHandler = onDocClick;
+  overlayEl.__keyHandler   = onKeydown;
+  document.addEventListener("click", onDocClick);
+  document.addEventListener("keydown", onKeydown);
 }
 function closeLegalPanel() {
   const overlayEl = qs("#legal-overlay");
   if (!overlayEl) return;
   overlayEl.setAttribute("aria-hidden","true");
   overlayEl.removeAttribute("data-blocking");
+
+  // pulizia testo/HTML
+  ["#legal-title","#legal-subtitle","#legal-title-mobile","#legal-subtitle-mobile"].forEach(id => __clearNode(qs(id)));
+  ["#legal-body","#legal-footer","#legal-body-mobile","#legal-footer-mobile"].forEach(id => __clearHTML(qs(id)));
+
+  if (overlayEl.__clickHandler) { document.removeEventListener("click", overlayEl.__clickHandler); overlayEl.__clickHandler = null; }
+  if (overlayEl.__keyHandler)   { document.removeEventListener("keydown", overlayEl.__keyHandler); overlayEl.__keyHandler   = null; }
+
   __panelLockScroll(false);
 }
-document.addEventListener("click", ev=>{
-  const overlayEl = qs("#legal-overlay");
-  if (!overlayEl || overlayEl.getAttribute("aria-hidden")==="true") return;
-  const blocking = overlayEl.getAttribute("data-blocking")==="true";
-  if (ev.target.closest("[data-legal-close]")) { closeLegalPanel(); return; }
-  const backdrop = ev.target.closest(".tl-panel-backdrop");
-  if (backdrop && !blocking && overlayEl.contains(backdrop)) { closeLegalPanel(); return; }
-});
 
 // ------------------------------------------------------------
 // Pannelli predefiniti: Privacy / MiFID / Audit
@@ -461,9 +569,7 @@ function initShareOverlay(){
   function closeShare(){ overlay.setAttribute("aria-hidden","true"); }
   btnOpen.addEventListener("click", openShare);
   closeElems.forEach(el => el.addEventListener("click", closeShare));
-  copyBtns.forEach(el => el.addEventListener("click", ()=>{
-    try { navigator.clipboard.writeText(window.location.href); } catch(e){}
-  }));
+  copyBtns.forEach(el => el.addEventListener("click", ()=>{ try { navigator.clipboard.writeText(window.location.href); } catch(e){} }));
 }
 
 // ------------------------------------------------------------
@@ -471,7 +577,7 @@ function initShareOverlay(){
 // ------------------------------------------------------------
 function initLegalButtons(){
   const privBtn = qs("#btn-privacy-open"); if (privBtn) privBtn.addEventListener("click", ()=> openPrivacyPanel());
-  const mifidBtn = qs("#btn-mifid-open");  if (mifidBtn) mifidBtn.addEventListener("click", ()=> openMifidPanel());
+  const mifidBtn = qs("#btn-mifid-open");  if (mifidBtn)  mifidBtn.addEventListener("click", ()=> openMifidPanel());
 }
 
 // ------------------------------------------------------------
