@@ -5,13 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="dark light" />
   <title>Tradelia · Institutional Report</title>
-
-  <!-- TOKENS + BASE UI -->
-  <link rel="stylesheet" href="/report/assets/css/tokens.css?v=4.0" />
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/report/assets/css/tokens.css?v=4.1" />
 </head>
 <body>
 
-  <!-- HEADER -->
+  <!-- HEADER (sobrio, bordi netti) -->
   <header class="site-header" role="banner">
     <div class="header-inner">
       <a class="brand" href="/" aria-label="Tradelia AI">
@@ -23,29 +22,12 @@
     </div>
   </header>
 
-  <!-- HERO -->
+  <!-- HERO ISTITUZIONALE -->
   <section id="hero" class="hero" role="region" aria-label="Header ticker">
     <h1 id="hero-title" class="hero-title">Report</h1>
     <div id="hero-sub" class="hero-sub">—</div>
 
-    <!-- Confidence -->
-    <div class="hero-meter">
-      <div class="meter-head">
-        <div class="label">
-          Confidence
-          <button class="info-btn" data-info="ConfidenceFinal" aria-label="Cos'è la Confidence?">?</button>
-        </div>
-        <div id="hero-conf-val" class="tabular">—</div>
-      </div>
-      <div class="meter-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-        <div id="hero-meter-fill" class="meter-fill"></div>
-      </div>
-      <div class="meter-legend">
-        <span>0</span><span>65 (Review)</span><span>85 (Pass)</span><span>100</span>
-      </div>
-    </div>
-
-    <!-- Prezzo + Delta + Stato -->
+    <!-- Riga Prezzo / Δ% / Stato -->
     <div class="hero-main">
       <div class="price-block">
         <div class="price-row">
@@ -57,14 +39,25 @@
       </div>
 
       <div class="right-block" aria-label="Variazione e stato">
-        <span id="hero-delta" class="delta tabular" aria-live="polite">—</span>
+        <span id="hero-delta" class="badge delta tabular">—</span>
         <button class="info-btn" data-info="ChangePct_info" aria-label="Come si calcola la variazione?">?</button>
-        <span id="hero-state" class="state">—</span>
+        <span id="hero-state" class="badge state">—</span>
         <button class="info-btn" data-info="State_info" aria-label="Cosa significa lo stato?">?</button>
       </div>
     </div>
 
-    <!-- KPI TABLE -->
+    <!-- Confidence (valore % + ticks testuali) -->
+    <div class="conf-row">
+      <div class="conf-label">
+        Confidence <button class="info-btn" data-info="ConfidenceFinal" aria-label="Cos'è la Confidence?">?</button>
+      </div>
+      <div id="hero-conf-val" class="conf-val tabular">—</div>
+    </div>
+    <div class="conf-legend">
+      <span>0</span><span>65 = Review</span><span>85 = Pass</span><span>100</span>
+    </div>
+
+    <!-- KPI tabellari -->
     <div id="hero-kpi" class="kpi"></div>
 
     <!-- Nota MiFID -->
@@ -75,12 +68,10 @@
 
   <div class="section-divider" role="separator" aria-label="Schede moduli"></div>
 
-  <!-- MODULI -->
-  <main id="modules" class="modules-grid" role="main">
-    <!-- I <article> vengono popolati da app.js in base al manifest -->
-  </main>
+  <!-- GRID MODULI (montati da manifest) -->
+  <main id="modules" class="modules-grid" role="main"></main>
 
-  <!-- OVERLAY ANALITICO -->
+  <!-- OVERLAY ANALITICO (uniforme) -->
   <div id="panel-overlay" class="overlay" hidden>
     <div class="overlay-backdrop" data-overlay-close></div>
     <section class="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title">
@@ -103,9 +94,7 @@
         <button class="btn btn-ghost" data-legal-close aria-label="Chiudi informativa">✕</button>
       </header>
       <div id="legal-body" class="panel-body" data-scrollable></div>
-      <footer class="panel-foot">
-        <button class="btn" data-legal-close>OK</button>
-      </footer>
+      <footer class="panel-foot"><button class="btn" data-legal-close>OK</button></footer>
     </section>
   </div>
 
@@ -120,8 +109,7 @@
     </div>
   </footer>
 
-  <!-- RUNTIME & APP -->
-  <script type="module" src="/report/assets/js/ui-runtime.js?v=4.0"></script>
-  <script type="module" src="/report/assets/js/app.js?v=4.0"></script>
+  <script type="module" src="/report/assets/js/ui-runtime.js?v=4.1"></script>
+  <script type="module" src="/report/assets/js/app.js?v=4.1"></script>
 </body>
 </html>
