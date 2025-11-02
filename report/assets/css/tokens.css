@@ -3167,6 +3167,12 @@ html[data-theme="dark"] .tl-panel-tab{
 @media (max-width: 767px){
   .f1b-card .info-btn{ margin-right:.25rem; }
 }
+@media (max-width: 767px) {
+  #panel-overlay .tl-panel--desktop { display: none !important; }
+}
+@media (min-width: 768px) {
+  #panel-overlay .tl-panel--mobile { display: none !important; }
+}
 
 /* =========================================================
    FINE
