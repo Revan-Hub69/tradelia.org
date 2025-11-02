@@ -22,6 +22,21 @@ export const headerTicker = (()=>{
   function injectCSS(){
     if (CSS_INJECTED) return; CSS_INJECTED = true;
     const css = `
+    :root[data-theme="dark"]{
+  --pill-bg: oklab(96% 0 0);      /* sfondo molto chiaro per dark */
+  --pill-br: oklab(82% 0 0);      /* bordo chiaro discreto */
+  --tone-g-ink: oklab(38% -0.08 0.12);
+  --tone-y-ink: oklab(36%  0.03 0.09);
+  --tone-r-ink: oklab(34%  0.12 0.08);
+}
+:root[data-theme="light"]{
+  --pill-bg: var(--surface-card); /* resta coerente col light */
+  --pill-br: var(--br-soft);
+  --tone-g-ink: oklab(38% -0.08 0.12);
+  --tone-y-ink: oklab(36%  0.03 0.09);
+  --tone-r-ink: oklab(34%  0.12 0.08);
+}
+
 /* --- Header Ticker · Variante B (istituzionale) -------------------- */
 .header-ticker{padding-block:.9rem}
 .hdrtk-row1{display:flex;align-items:flex-start;justify-content:space-between;gap:1.25rem}
