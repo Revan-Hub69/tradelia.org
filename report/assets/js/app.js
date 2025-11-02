@@ -1,4 +1,4 @@
-// App Orchestrator v2.3 — manifest object/array, case-insensitive, HERO premium
+// App Orchestrator v2.4 — manifest object/array, case-insensitive, HERO premium + separazione
 
 const $ = (s, r=document) => r.querySelector(s);
 
@@ -46,25 +46,36 @@ function mountHero(h){
   if (tEl) tEl.textContent = name;
   if (sEl) sEl.textContent = tkr && ven ? `${tkr} · ${ven}` : (tkr || ven || '');
 
-  const tb = $('#hero-tonebar');
-  if (tb){ const w = conf!=null ? Math.max(5, Math.min(100, Math.round(conf*100))) : 40; tb.style.width = w + '%'; }
+  // Confidence meter
+  const confPct = (typeof h?.ConfidenceFinal === 'number') ? Math.round(h.ConfidenceFinal * 100) : null;
+  const fill = document.getElementById('hero-meter-fill');
+  const confVal = document.getElementById('hero-conf-val');
+  const track = document.querySelector('.meter-track');
+  if (confVal) confVal.textContent = confPct!=null ? `${confPct}%` : '—';
+  if (fill && track){
+    const w = confPct!=null ? Math.min(100, Math.max(5, confPct)) : 40;
+    fill.style.width = w + '%';
+    const tone = confPct==null ? 'warn' : (confPct>=85 ? 'ok' : confPct>=65 ? 'warn' : 'alert');
+    fill.className = `meter-fill ${tone}`;
+    track.setAttribute('aria-valuenow', confPct!=null ? confPct : 0);
+  }
 
+  // Price + delta + state
   const pEl = $('#hero-price'); const ccy = $('#hero-ccy');
   if (pEl) pEl.textContent = (px!=null) ? (px.toLocaleString(undefined,{maximumFractionDigits:2})) : '—';
   if (ccy) ccy.textContent = cur || '';
-
   const delta = $('#hero-delta');
   if (delta){
     if (cp==null){ delta.textContent=''; delta.className='delta-chip neutral'; }
     else { const tone = cp>0?'ok':(cp<0?'alert':'neutral'); delta.className=`delta-chip ${tone} tabular`; delta.textContent=`${cp>0?'+':''}${cp.toFixed(2)}%`; }
   }
-
   const st = $('#hero-state');
   if (st){
     const tone = conf==null ? 'warn' : (conf>=0.85 ? 'ok' : conf>=0.65 ? 'warn' : 'alert');
     st.className = `badge ${tone}`; st.textContent = state || 'SNAPSHOT';
   }
 
+  // KPI pills
   const kpi = $('#hero-kpi');
   if (kpi){
     kpi.innerHTML = '';
@@ -82,7 +93,7 @@ function mountHero(h){
   const note = $('#hero-note'); if (note && h?.hero_disclaimer) note.textContent = h.hero_disclaimer;
 }
 
-// --------------- Mount pipeline ----------------
+// ---------------- Mount pipeline ----------------
 async function mountModule(reportId, spec){
   const { id: modId, data } = spec;
   if(!document.getElementById(slotId(modId))){
