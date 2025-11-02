@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="it" data-theme="light">
+<html lang="it" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <title>Tradelia AI · Report {NOME AZIENDA}</title>
+  <title>Tradelia AI · Institutional Dashboard</title>
 
   <!-- Favicons -->
   <link rel="icon" href="/favicon.ico?v=1">
@@ -18,461 +17,148 @@
   <!-- Lucide icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- Design system -->
+  <!-- Design System (palette, tipografia, componenti) -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
 
   <style>
-    :root { --pop-w:320px; }
-
     html, body { height: 100%; }
-    .container { max-width: 90rem; margin-inline: auto; padding: 0 16px; }
+    body { display: flex; flex-direction: column; min-height: 100vh; }
 
-    main { padding-top: 2.25rem; padding-bottom: 3rem; }
-    @media (min-width:1280px){
-      main { padding-top: 2.75rem; padding-bottom: 3.75rem; }
+    /* container utility */
+    .container { max-width: 90rem; margin-inline: auto; padding-inline: 1rem; }
+    main { flex: 1; padding-top: 5rem; padding-bottom: 5rem; }
+
+    /* Header: vetro satinato dark */
+    .hdr {
+      position: fixed; inset: 0 auto auto 0; right: 0; height: 56px; z-index: 50;
+      display: flex; align-items: center;
+      backdrop-filter: saturate(1.1) blur(10px);
+      background: color-mix(in oklab, var(--surface-card) 86%, transparent);
+      border-bottom: 1px solid var(--br-soft);
+      box-shadow: 0 1px 0 var(--br-soft);
+    }
+    .brand { font-weight: 900; letter-spacing: -0.02em; }
+    .brand span:last-child { color: var(--brand-600); }
+
+    /* Footer: blocco istituzionale su tinta dark */
+    .site-footer {
+      background: var(--footer-bg);
+      border-top: 1px solid var(--footer-br);
+      color: var(--ink-soft);
+      font-size: 14px;
+    }
+    .ftr-head { font-weight: 600; display:flex; align-items:center; gap:.4rem; color: var(--ink); margin-bottom:.5rem; }
+    .ftr-grid { display:grid; gap:2rem; grid-template-columns: 1fr; }
+    @media (min-width: 768px){ .ftr-grid { grid-template-columns: repeat(3, 1fr); } }
+    .ftr-list li { margin:.25rem 0; }
+    .ftr-bottom {
+      border-top: 1px solid var(--br-soft);
+      margin-top: 2rem; padding-top: 1rem;
+      display: flex; flex-direction: column; gap: .5rem; font-size: 13px; color: var(--muted);
+    }
+    @media (min-width: 768px){
+      .ftr-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
     }
 
-    /* HEADER sticky glass */
-    .hdr{
-      backdrop-filter:saturate(1.1) blur(6px);
-      background:color-mix(in oklab, var(--surface-card) 90%, transparent);
-      border-bottom:1px solid var(--br-soft);
-      box-shadow:0 1px 0 var(--br-soft);
-    }
-    .brand{font-weight:900}
-    .claim{ font-size:12px; color:var(--muted); }
-
-    /* print-only nodes hidden onscreen */
-    #print-toc { display:none; }
-    #print-watermark { display:none; }
+    /* Pulsanti coerenti con tokens */
+    .btn-inline { display:inline-flex; align-items:center; gap:.4rem; padding:.4rem .65rem; border-radius: var(--radius-pill); border:1px solid var(--br-soft); }
+    .btn-inline:hover { background: color-mix(in oklab, var(--surface-card) 92%, transparent); }
   </style>
 </head>
 
 <body>
-  <!-- watermark solo stampa -->
-  <div id="print-watermark" aria-hidden="true">TRADELIA AI · INSTITUTIONAL MODEL REPORT</div>
-
   <!-- HEADER -->
-  <header class="hdr sticky top-0 z-50 noprint">
-    <div class="container h-12 sm:h-14 flex items-center justify-between">
-      <!-- lato sinistro: brand + claim -->
-      <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-        <a href="/" class="brand shrink-0 text-lg sm:text-xl tracking-tight hover:opacity-90 transition">
-          <span class="text-[color:var(--ink)]">TRADELIA</span><span class="text-[color:var(--brand)]">&bull;AI</span>
-        </a>
-
-        <span class="claim truncate text-[12px] text-[color:var(--muted)]">
-          Report {NOME AZIENDA}
-        </span>
-      </div>
-
-      <!-- lato destro: azioni header -->
-      <div class="flex items-center gap-2 sm:gap-3">
-        <!-- THEME BTN -->
-        <button id="btn-theme" class="btn" type="button" aria-label="Tema">
-          <span class="theme-icon" aria-hidden="true">
-            <svg data-theme-icon="sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="5"></circle>
-              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-            </svg>
-          </span>
+  <header class="hdr">
+    <div class="container w-full flex items-center justify-between">
+      <a href="https://tradelia.org" class="brand text-lg sm:text-xl hover:opacity-90 transition" aria-label="Tradelia.org">
+        <span>TRADELIA</span><span>&bull;AI</span>
+      </a>
+      <nav class="flex items-center gap-3">
+        <!-- Il toggle rimane, ma il tema è forzato a dark via script sotto -->
+        <button id="btn-theme" class="btn-inline" type="button" aria-label="Tema">
+          <i data-lucide="moon"></i>
           <span class="hidden sm:inline text-[12px] leading-none">Tema</span>
         </button>
-      </div>
+      </nav>
     </div>
   </header>
 
-  <!-- MAIN -->
-  <main class="container">
-    <!-- HERO -->
-    <section id="hero" class="hero" aria-label="Copertina Report">
-      <div class="hero__top">
-        <div class="hero__id">
-          <div class="hero__ticker" id="hero-ticker">—</div>
-          <div class="hero__venue" id="hero-venue">—</div>
-
-          <!-- testo premium/non-consulenziale -->
-          <div class="hero__client text-[11px] leading-[1.3] text-[color:var(--muted)] mt-1">
-            <span class="uppercase tracking-wide">Tradelia AI / Premium Edition</span>
-            <span> · </span>
-            <span id="hero-client">Analisi indipendente su {NOME AZIENDA}</span>
-          </div>
-        </div>
-
-        <div class="hero__price">
-          <div class="hero__px" id="hero-price">—</div>
-          <div class="hero__chg" id="hero-change">—</div>
-          <span class="hero__badge" id="hero-state">—</span>
-        </div>
-      </div>
-
-      <!-- HERO KPI PILLS -->
-      <div class="hero__meta grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <!-- SNAPSHOT -->
-        <div class="meta-pill relative" id="pill-snap"
-             style="background:var(--surface-card);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.75rem;">
-          <span class="tonebar" id="tone-snap"
-                style="position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:var(--radius-card) 0 0 var(--radius-card);"></span>
-          <div class="min-w-0">
-            <div class="flex items-start gap-1 mb-2">
-              <button class="info-btn info-btn--mini" data-metric="Snapshot" aria-label="Info Snapshot">?</button>
-              <div class="meta-label text-[11px] uppercase tracking-wide font-semibold leading-[1.3] text-[color:var(--muted)]">Snapshot</div>
-            </div>
-            <div class="meta-val text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]">
-              <span id="hero-start">—</span><span>→</span><span id="hero-end">—</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- PRICE -->
-        <div class="meta-pill relative" id="pill-price"
-             style="background:var(--surface-card);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.75rem;">
-          <span class="tonebar" id="tone-price"
-                style="position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:var(--radius-card) 0 0 var(--radius-card);"></span>
-          <div class="min-w-0">
-            <div class="flex items-start gap-1 mb-2">
-              <button class="info-btn info-btn--mini" data-metric="Price" aria-label="Info Price">?</button>
-              <div class="meta-label text-[11px] uppercase tracking-wide font-semibold leading-[1.3] text-[color:var(--muted)]">Price</div>
-            </div>
-            <div class="meta-val text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]" id="hero-price2">—</div>
-          </div>
-        </div>
-
-        <!-- Δ% -->
-        <div class="meta-pill relative" id="pill-chg"
-             style="background:var(--surface-card);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.75rem;">
-          <span class="tonebar" id="tone-chg"
-                style="position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:var(--radius-card) 0 0 var(--radius-card);"></span>
-          <div class="min-w-0">
-            <div class="flex items-start gap-1 mb-2">
-              <button class="info-btn info-btn--mini" data-metric="ChangePct" aria-label="Info Δ%">?</button>
-              <div class="meta-label text-[11px] uppercase tracking-wide font-semibold leading-[1.3] text-[color:var(--muted)]">Δ%</div>
-            </div>
-            <div class="meta-val text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]" id="hero-change2">—</div>
-          </div>
-        </div>
-
-        <!-- CCY -->
-        <div class="meta-pill relative" id="pill-ccy"
-             style="background:var(--surface-card);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.75rem;">
-          <span class="tonebar" id="tone-ccy"
-                style="position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:var(--radius-card) 0 0 var(--radius-card);"></span>
-          <div class="min-w-0">
-            <div class="flex items-start gap-1 mb-2">
-              <button class="info-btn info-btn--mini" data-metric="Currency" aria-label="Info Currency">?</button>
-              <div class="meta-label text-[11px] uppercase tracking-wide font-semibold leading-[1.3] text-[color:var(--muted)]">Currency</div>
-            </div>
-            <div class="meta-val text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]" id="hero-ccy">—</div>
-          </div>
-        </div>
-
-        <!-- FRESHNESS -->
-        <div class="meta-pill relative" id="pill-fresh"
-             style="background:var(--surface-card);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.75rem;">
-          <span class="tonebar" id="tone-fresh"
-                style="position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:var(--radius-card) 0 0 var(--radius-card);"></span>
-          <div class="min-w-0">
-            <div class="flex items-start gap-1 mb-2">
-              <button class="info-btn info-btn--mini" data-metric="Freshness" aria-label="Info Freshness">?</button>
-              <div class="meta-label text-[11px] uppercase tracking-wide font-semibold leading-[1.3] text-[color:var(--muted)]">Freshness</div>
-            </div>
-            <div class="meta-val text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]" id="hero-freshness">—</div>
-          </div>
-        </div>
-
-        <!-- CONFIDENCE -->
-        <div class="meta-pill relative" id="pill-conf"
-             style="background:var(--surface-card);border:1px solid var(--br-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.75rem;">
-          <span class="tonebar" id="tone-conf"
-                style="position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:var(--radius-card) 0 0 var(--radius-card);"></span>
-          <div class="min-w-0">
-            <div class="flex items-start gap-1 mb-2">
-              <button class="info-btn info-btn--mini" data-metric="ConfidenceFinal" aria-label="Info Confidence">?</button>
-              <div class="meta-label text-[11px] uppercase tracking-wide font-semibold leading-[1.3] text-[color:var(--muted)]">Confidence</div>
-            </div>
-            <div class="meta-val text-[13px] font-semibold leading-[1.4] text-[color:var(--ink)]" id="hero-confidence">—</div>
-          </div>
-        </div>
-      </div> <!-- /hero__meta -->
-    </section>
-
-    <!-- TOC di stampa -->
-    <section id="print-toc" aria-label="Indice del Report">
-      <h2>Indice del Report</h2>
-      <ol>
-        <li>F1 · Contesto iniziale / Regime di mercato</li>
-        <li>F2 · Sentiment e flussi</li>
-        <li>F3o · Opzioni e derivati</li>
-        <li>F3 · Analisi tecnica multi-timeframe</li>
-        <li>F4 · Relazioni intermarket</li>
-        <li>F5 · Resoconto tecnico</li>
-        <li>F5B · Validazione LT (medio-lungo)</li>
-        <li>F6 · Broker selezionati</li>
-        <li>F7 · Letture consigliate (educazione finanziaria)</li>
-      </ol>
-    </section>
-
-    <!-- STRUTTURA DEL REPORT -->
-    <section class="section-head" aria-label="Struttura del Report">
-      <h2 class="section-title">Struttura del Report</h2>
-      <p class="section-sub">
-        Il framework Tradelia procede top-down: F1 (contesto iniziale / regime di mercato),
-        F2 (sentiment e flussi),F3o ( opzioni e derivati) F3 (analisi tecnica multi-timeframe),
-        F4 (relazioni intermarket), F5 (resoconto tecnico),
-        F5B (validazione LT), F6 (broker selezionati),
-        F7 (letture consigliate per educazione finanziaria).
-        Contenuti a scopo informativo/formativo. Nessuna raccomandazione operativa.
-      </p>
-      <nav class="phase-nav" aria-label="Fasi del framework">
-        <a href="#sec-f1">F1</a>
-        <a href="#sec-f2">F2</a>
-        <a href="#sec-f3o">F3o</a>
-        <a href="#sec-f3">F3</a>
-        <a href="#sec-f4">F4</a>
-        <a href="#sec-f5">F5</a>
-        <a href="#sec-f5b">F5B</a>
-        <a href="#sec-f6">F6</a>
-        <a href="#sec-f7">F7</a>
-      </nav>
-    </section>
-
-    <!-- SEZIONI DINAMICHE -->
-    <section class="report-sections" aria-label="Moduli del Report">
-      <article id="sec-f1" class="report-section-block is-loading" aria-label="F1 · Contesto iniziale / Regime di mercato"></article>
-      <article id="sec-f2" class="report-section-block is-loading" aria-label="F2 · Sentiment e flussi"></article>
-      <article id="sec-f3o" class="report-section-block is-loading" aria-label="F3o · Opzioni e derivati"></article>
-      <article id="sec-f3" class="report-section-block is-loading" aria-label="F3 · Analisi tecnica multi-timeframe"></article>
-      <article id="sec-f4" class="report-section-block is-loading" aria-label="F4 · Relazioni intermarket"></article>
-      <article id="sec-f5" class="report-section-block is-loading" aria-label="F5 · Resoconto tecnico"></article>
-      <article id="sec-f5b" class="report-section-block is-loading" aria-label="F5B · Validazione LT (orizzonte medio-lungo)"></article>
-      <article id="sec-f6" class="report-section-block is-loading" aria-label="F6 · Broker selezionati"></article>
-      <article id="sec-f7" class="report-section-block is-loading" aria-label="F7 · Letture consigliate (educazione finanziaria)"></article>
-    </section>
+  <!-- MAIN (mount point runtime) -->
+  <main id="app-root" class="container">
+    <!-- I moduli runtime (Hero, F1–F6, ecc.) verranno montati qui da app.js -->
   </main>
 
-<div class="footer-wrap mt-12">
-  <footer class="site-footer container py-8">
-    <!-- GRID 4 COLONNE -->
-    <section class="ftr-grid">
-
-      <!-- COL 1 · Report meta -->
-      <div class="ftr-col">
-        <h3 class="ftr-head"><i data-lucide="file-text"></i><span>Report</span></h3>
-        <div class="ftr-body">
-          <div class="text-[13.5px] font-semibold">
-            TRADELIA<span class="text-[color:var(--brand)]">&bull;AI</span>
-          </div>
-          <div class="ftr-meta mt-2">
-            <div class="row"><span class="k">Società</span><span class="v" id="footer-company">{NOME AZIENDA}</span></div>
-            <div class="row"><span class="k">Versione</span><span class="v" id="footer-version">—</span></div>
-            <div class="row"><span class="k">Finestra</span><span class="v" id="footer-snapshot">—</span></div>
-            <div class="row"><span class="k">Aggiornato</span><span class="v" id="footer-updated">—</span></div>
-          </div>
+  <!-- FOOTER -->
+  <footer class="site-footer mt-auto py-10">
+    <div class="container">
+      <section class="ftr-grid">
+        <!-- Col 1 -->
+        <div class="ftr-col">
+          <h3 class="ftr-head"><i data-lucide="file-text"></i><span>Report</span></h3>
+          <p>
+            Dashboard istituzionale Tradelia AI.<br/>
+            Analisi macro, sentiment e tecnica (orizzonte 3–10 giorni).<br/>
+            Uso informativo e didattico — nessuna raccomandazione.
+          </p>
         </div>
-      </div>
 
-      <!-- COL 2 · Fonti dati -->
-      <div class="ftr-col">
-        <h3 class="ftr-head"><i data-lucide="database"></i><span>Fonti dati</span></h3>
-        <div class="ftr-body">
-          Metriche e serie storiche da provider macro/finanziari ritenuti affidabili.
-          Campioni e timestamp possono essere soggetti a ritardi/revisioni.
+        <!-- Col 2 -->
+        <div class="ftr-col">
+          <h3 class="ftr-head"><i data-lucide="shield"></i><span>Compliance &amp; Risk</span></h3>
           <ul class="ftr-list">
-            <li>Bloomberg · Reuters · CME</li>
-            <li>FRED · World Bank · IMF</li>
-            <li>Metodologia documentata nei moduli F*</li>
-          </ul>
-          <div class="mt-2">Marchi citati © dei rispettivi titolari. Uso didattico.</div>
-        </div>
-      </div>
-
-      <!-- COL 3 · Compliance & Risk -->
-      <div class="ftr-col">
-        <h3 class="ftr-head"><i data-lucide="shield"></i><span>Compliance & Risk</span></h3>
-        <div class="ftr-body">
-          Materiale informativo/educativo: non è consulenza personalizzata né
-          sollecitazione (MiFID II / ESMA). Tradelia AI non gestisce capitali e non esegue ordini.
-          <ul class="ftr-list">
+            <li>Materiale informativo/formativo</li>
+            <li>Non è consulenza personalizzata (MiFID II / ESMA)</li>
+            <li>Tradelia AI non gestisce capitali né esegue ordini</li>
             <li>Rischio di perdita anche totale del capitale</li>
-            <li>Nessuna profilazione pubblicitaria</li>
           </ul>
-          <div class="mt-3 flex flex-wrap gap-6 noprint">
-            <button class="btn btn-sm" id="btn-privacy-open" type="button">Privacy</button>
-            <button class="btn btn-sm" id="btn-mifid-open" type="button">Informativa MiFID</button>
+          <div class="mt-3 flex flex-wrap gap-4">
+            <button id="btn-privacy-open" class="btn btn-sm" type="button">Privacy</button>
+            <button id="btn-mifid-open" class="btn btn-sm" type="button">Informativa MiFID</button>
           </div>
         </div>
-      </div>
 
-      <!-- COL 4 · Canali ufficiali -->
-      <div class="ftr-col">
-        <h3 class="ftr-head"><i data-lucide="share-2"></i><span>Canali ufficiali</span></h3>
-        <div class="ftr-body">
-          Aggiornamenti su metodologia, release e contenuti educativi.
-          <div class="ftr-socials">
-            <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <!-- Col 3 -->
+        <div class="ftr-col">
+          <h3 class="ftr-head"><i data-lucide="share-2"></i><span>Canali ufficiali</span></h3>
+          <p class="mb-2">Aggiornamenti su metodologia e release:</p>
+          <div class="flex flex-col gap-2">
+            <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener" class="flex items-center gap-2 hover:opacity-80">
               <i data-lucide="linkedin"></i><span>LinkedIn</span>
             </a>
-            <a href="https://x.com" target="_blank" rel="noopener" aria-label="X">
-              <i data-lucide="twitter"></i><span>X</span>
+            <a href="https://x.com/tradelia_ai" target="_blank" rel="noopener" class="flex items-center gap-2 hover:opacity-80">
+              <i data-lucide="twitter"></i><span>X (Twitter)</span>
             </a>
-           <a href="https://www.reddit.com" target="_blank" rel="noopener" aria-label="Reddit">
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-       viewBox="0 0 24 24" fill="none"
-       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-       class="lucide lucide-reddit">
-    <circle cx="9" cy="13" r="1.5"></circle>
-    <circle cx="15" cy="13" r="1.5"></circle>
-    <path d="M12 17c1.7 0 3-1.3 3-3"></path>
-    <path d="M20 12c0 4.4-3.6 8-8 8s-8-3.6-8-8 3.6-8 8-8c1.6 0 3.1.5 4.4 1.3"></path>
-    <circle cx="19" cy="5" r="1"></circle>
-    <path d="M15 7l1-5 2 1"></path>
-  </svg>
-  <span>Reddit</span>
-</a>
-
-            <a href="https://www.quora.com" target="_blank" rel="noopener" aria-label="Quora">
-              <i data-lucide="book"></i><span>Quora</span>
+            <a href="https://www.reddit.com/r/TradeliaAI" target="_blank" rel="noopener" class="flex items-center gap-2 hover:opacity-80">
+              <i data-lucide="reddit"></i><span>Reddit</span>
             </a>
           </div>
-          <div class="mt-2 text-[11.5px] text-[color:var(--muted)]">Sostituisci con URL ufficiali Tradelia AI.</div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- BOTTOM LINE -->
-    <div class="ftr-bottom">
-      <div>© <span id="footer-year"></span> <span class="ftr-brand">Tradelia AI</span>. Tutti i diritti riservati.
-        Contatti: <a href="mailto:info@tradelia.org" class="underline hover:opacity-80 text-[color:var(--ink)]">info@tradelia.org</a>
+      <!-- Bottom line -->
+      <div class="ftr-bottom">
+        <div>
+          © <span id="footer-year"></span> <strong>Tradelia AI</strong> · Tutti i diritti riservati ·
+          <a href="mailto:info@tradelia.org" class="underline hover:opacity-80">info@tradelia.org</a>
+        </div>
+        <div>Missione: alfabetizzazione finanziaria indipendente.</div>
       </div>
-      <div><span class="ftr-brand">Missione:</span> alfabetizzazione finanziaria indipendente.</div>
     </div>
   </footer>
-</div>
 
-
-  <!-- PANEL OVERLAY (analitico: F1B, Audit, ecc.) -->
-  <div id="panel-overlay" class="tl-panel-overlay noprint" aria-hidden="true">
-    <div class="tl-panel-backdrop" data-panel-close></div>
-
-    <!-- desktop -->
-    <aside class="tl-panel tl-panel--desktop" role="dialog" aria-modal="true" aria-labelledby="panel-title">
-      <header class="tl-panel__header">
-        <div class="min-w-0">
-          <h2 id="panel-title" class="tl-panel__title">—</h2>
-          <p id="panel-subtitle" class="tl-panel__subtitle">—</p>
-        </div>
-        <button class="tl-panel__close" data-panel-close aria-label="Chiudi">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </header>
-      <div id="panel-body" class="tl-panel__body"></div>
-      <footer class="tl-panel__footer" id="panel-footer">
-        <button class="btn btn-sm" data-panel-close>Chiudi</button>
-      </footer>
-    </aside>
-
-    <!-- mobile -->
-    <aside class="tl-panel tl-panel--mobile" role="dialog" aria-modal="true" aria-labelledby="panel-title-mobile">
-      <header class="tl-panel__header">
-        <div class="min-w-0">
-          <h2 id="panel-title-mobile" class="tl-panel__title">—</h2>
-          <p id="panel-subtitle-mobile" class="tl-panel__subtitle">—</p>
-        </div>
-        <button class="tl-panel__close" data-panel-close aria-label="Chiudi">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </header>
-      <div id="panel-body-mobile" class="tl-panel__body"></div>
-      <footer class="tl-panel__footer" id="panel-footer-mobile">
-        <button class="btn btn-sm" data-panel-close>Chiudi</button>
-      </footer>
-    </aside>
-  </div>
-
-  <!-- LEGAL OVERLAY (Privacy / MiFID separato, non tocca F1B) -->
-  <div id="legal-overlay" class="tl-panel-overlay noprint" aria-hidden="true">
-    <div class="tl-panel-backdrop" data-legal-close></div>
-
-    <!-- desktop -->
-    <aside class="tl-panel tl-panel--desktop" role="dialog" aria-modal="true">
-      <header class="tl-panel__header">
-        <div class="min-w-0">
-          <h2 id="legal-title" class="tl-panel__title">—</h2>
-          <p id="legal-subtitle" class="tl-panel__subtitle">—</p>
-        </div>
-        <button class="tl-panel__close" data-legal-close aria-label="Chiudi">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </header>
-      <div id="legal-body" class="tl-panel__body"></div>
-      <footer class="tl-panel__footer" id="legal-footer"></footer>
-    </aside>
-
-    <!-- mobile -->
-    <aside class="tl-panel tl-panel--mobile" role="dialog" aria-modal="true">
-      <header class="tl-panel__header">
-        <div class="min-w-0">
-          <h2 id="legal-title-mobile" class="tl-panel__title">—</h2>
-          <p id="legal-subtitle-mobile" class="tl-panel__subtitle">—</p>
-        </div>
-        <button class="tl-panel__close" data-legal-close aria-label="Chiudi">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </header>
-      <div id="legal-body-mobile" class="tl-panel__body"></div>
-      <footer class="tl-panel__footer" id="legal-footer-mobile"></footer>
-    </aside>
-  </div>
-
-  <!-- TOOLTIP DESKTOP -->
-  <div id="metric-popover" class="tl-popover noprint" role="tooltip" aria-hidden="true" style="max-width:320px;">
-    <div class="tl-popover__head" style="display:flex;align-items:flex-start;gap:.5rem;">
-      <button id="metric-popover-close" class="tl-popover__close" aria-label="Chiudi" style="order:0;flex-shrink:0;">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-      <div id="metric-popover-title" class="tl-popover__title" style="order:1;font-weight:600;font-size:14px;line-height:1.4;color:var(--ink);">—</div>
-    </div>
-    <div id="metric-popover-body" class="tl-popover__body">—</div>
-    <div id="metric-popover-source" class="tl-popover__source">—</div>
-  </div>
-
-  <!-- TOOLTIP MOBILE -->
-  <div id="metric-modal" class="tl-metric-modal-overlay noprint" aria-hidden="true">
-    <div class="tl-metric-modal-backdrop" data-metric-close></div>
-    <div class="tl-metric-modal" role="dialog" aria-modal="true" aria-labelledby="metric-modal-title">
-      <header class="tl-metric-modal__header">
-        <div class="min-w-0">
-          <div id="metric-modal-title" class="tl-metric-modal__title">—</div>
-          <div id="metric-modal-source" class="tl-metric-modal__source">—</div>
-        </div>
-        <button class="tl-metric-modal__close" data-metric-close aria-label="Chiudi">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </header>
-      <div id="metric-modal-body" class="tl-metric-modal__body">—</div>
-    </div>
-  </div>
-
-  <!-- JS runtime -->
+  <!-- Runtime -->
   <script type="module" src="/report/assets/js/app.js"></script>
   <script type="module" src="/report/assets/js/ui-runtime.js"></script>
+  <script>
+    // Forza dark come default (e persiste)
+    try {
+      localStorage.setItem('tradelia-theme', 'dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } catch(e){}
+
+    // Icone + anno footer
+    lucide.createIcons();
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
