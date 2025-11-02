@@ -2888,6 +2888,158 @@ html[data-theme="dark"]{
 .tl-metric-modal__source { color: var(--mp-source-fg); }
 .tl-metric-modal__close  { border-color: var(--mp-br); }
 
+/* =========================================================
+   PATCH · Readability & Spacing (2025‑11‑02)
+   ---------------------------------------------------------
+   Drop‑in overrides to append at the END of tokens.css.
+   Goals:
+   - Più aria tra i blocchi
+   - Tipografia più leggibile (line-height/size micro)
+   - Ombre più leggere; bordi un filo più definiti
+   - Hero e drawer meno densi
+   - Miglior gerarchia mobile
+   ========================================================= */
+
+/* --- 1) SCALE SPAZI (nuovi token opzionali) ----------------------- */
+:root{
+  --sp-1: 6px;   /* xs paddings/gap micro */
+  --sp-2: 8px;
+  --sp-3: 10px;
+  --sp-4: 12px;
+  --sp-5: 14px;  /* default micro‑macro */
+  --sp-6: 16px;  /* base */
+  --sp-7: 18px;
+  --sp-8: 20px;
+  --sp-9: 24px;
+  --sp-10: 28px;
+  --sp-11: 32px;
+  --sp-12: 40px; /* sezioni macro */
+}
+
+/* --- 2) TIPOGRAFIA: leggibilità micro ------------------------------ */
+:root{
+  --fs-md: 14.5px;    /* +0.5 */
+  --fs-sm: 13px;      /* +0.5 */
+  --fs-xs: 12px;      /* +0.5 */
+  --lh-mid: 1.4;      /* +0.05 */
+  --lh-body: 1.55;    /* +0.10 */
+}
+
+/* --- 3) CONTAINER & MAIN spacing ---------------------------------- */
+.container{ max-width: 84rem; }
+main{ padding-top: var(--sp-9); padding-bottom: var(--sp-10); }
+@media (min-width:1280px){
+  main{ padding-top: var(--sp-10); padding-bottom: var(--sp-11); }
+}
+
+/* --- 4) HERO più arioso -------------------------------------------- */
+.hero{ padding: var(--sp-8); border-radius: 18px; }
+.hero__top{ row-gap: var(--sp-5); column-gap: var(--sp-6); }
+.hero__meta{ gap: var(--sp-5); margin-top: var(--sp-6); }
+.meta-pill{ min-height: 60px; padding: .75rem 1rem .75rem 1.1rem; }
+.meta-label{ letter-spacing: .065em; }
+
+/* --- 5) SEZIONI REPORT: gap e padding ------------------------------ */
+.report-sections{ gap: var(--sp-10); }
+.report-section-block{ padding: var(--sp-8); border-radius: 16px; }
+@media(min-width:1280px){ .report-section-block{ padding: calc(var(--sp-8) + 4px) var(--sp-11); } }
+.section-head{ margin: var(--sp-11) 0 var(--sp-8); }
+.section-title{ letter-spacing: .015em; }
+.section-sub{ font-size: var(--fs-sm); max-width: 68rem; }
+
+/* --- 6) RIGHE METRICHE: più respiro ------------------------------- */
+.metric-row{ gap: var(--sp-6); }
+.metric-field{ padding: .9rem .9rem .8rem; min-height: 92px; }
+.metric-label{ margin-bottom: .6rem; }
+.metric-value{ font-size: 13.5px; }
+
+/* --- 7) PILL/FLAGS: definizione morbida ---------------------------- */
+.regime-stance-pill{ padding: .36rem .6rem; border-width: 1.2px; }
+.metric-flag svg{ width:18px; height:18px; }
+
+/* --- 8) HEADER STICKY: meno densità ------------------------------- */
+.hdr{ border-bottom-color: var(--br-card); box-shadow: 0 1px 0 var(--br-card); }
+
+/* --- 9) DRAWER/PANEL: gerarchia e aria ----------------------------- */
+.tl-panel__header{ padding: var(--sp-7); }
+.tl-panel__title{ font-size: 17px; }
+.tl-panel__subtitle{ font-size: 13.25px; max-width: 48ch; }
+.tl-panel__body{ padding: var(--sp-7); gap: var(--sp-7); }
+.tl-panel__footer{ padding: var(--sp-5) var(--sp-7); gap: var(--sp-5); }
+.tl-panel{ border-radius: 18px; }
+
+/* Tabs sticky: più spazio e focus ring più chiaro */
+.tl-panel-tabs{ gap: 8px 10px; padding: 6px 0 10px; box-shadow: 0 14px 28px rgba(0,0,0,.05); }
+.tl-panel-tab{ min-height: 30px; padding: .5rem .7rem; }
+.tl-panel-tab.is-active{ box-shadow: 0 0 8px var(--tone-neu-bg-hard), 0 0 0 2px var(--tone-neu-bg-soft), var(--shadow-card); }
+
+/* Sezioni interne: spazio e scan-line più chiara */
+.tl-panel-sections-wrapper{ gap: var(--sp-7); }
+.tl-panel-section{ padding: var(--sp-7); border-radius: 14px; }
+.tl-panel-section-title{ margin-bottom: var(--sp-4); }
+.tl-panel-section-text{ font-size: 13.5px; }
+
+/* Desktop XL guard‑rails */
+@media(min-width:768px){ .tl-panel--desktop.tl-panel--xl{ width: clamp(680px, 64vw, 1120px); } }
+
+/* Mobile fullscreen: più aria e tap target */
+@media(max-width:767px){
+  .tl-panel--mobile .tl-panel__body{ padding: var(--sp-7); }
+  .tl-panel--mobile .tl-panel__footer{ padding: var(--sp-6); }
+  .tl-panel-tab{ min-height: 34px; }
+  .tl-panel-section{ border-radius: 14px; }
+}
+
+/* --- 10) POPOVER/MODAL metriche: leggibilità ---------------------- */
+.tl-popover{ padding: var(--sp-6) var(--sp-6) var(--sp-5); max-width: 360px; }
+.tl-popover__title{ font-size: 13.5px; }
+.tl-metric-modal{ max-width: 520px; }
+.tl-metric-modal__body{ max-height: calc(80vh - 72px); font-size: 13px; }
+
+/* --- 11) OMBRE e BORDI più leggeri -------------------------------- */
+:root{
+  --shadow-card: 0 1px 2px rgba(0,0,0,.04), 0 1px 1px rgba(0,0,0,.025);
+  --shadow-lg:   0 14px 28px rgba(0,0,0,.06);
+  --shadow-xl:   0 28px 56px rgba(0,0,0,.10), 0 0 72px rgba(0,0,0,.05);
+  --br-card-strong: color-mix(in oklab, var(--br-card) 70%, black 10%);
+}
+html[data-theme="dark"]{ --shadow-card: 0 1px 2px rgba(0,0,0,.85), 0 0 14px rgba(0,0,0,.7); }
+
+/* --- 12) HERO badge & price: gerarchia ----------------------------- */
+.hero__badge{ padding: .28rem .7rem; font-weight: 700; }
+.hero__px{ letter-spacing: .01em; }
+.hero__chg{ font-size: 13.25px; }
+
+/* --- 13) FOOTER: aria e leggibilità ------------------------------- */
+.footer-wrap{ margin-top: var(--sp-11); }
+.ftr-grid{ gap: var(--sp-7); }
+.ftr-col{ padding: var(--sp-7); }
+.ftr-list{ gap: .35rem; }
+.ftr-bottom{ margin-top: var(--sp-7); padding-top: var(--sp-6); }
+
+/* --- 14) A11Y: focus ring sobrio su dark/light -------------------- */
+.btn:focus-visible,
+.btn-sm:focus-visible,
+.share-btn:focus-visible,
+.tl-panel-tab:focus-visible{
+  outline: 2px solid color-mix(in oklab, var(--brand) 55%, transparent);
+  outline-offset: 2px;
+}
+
+/* --- 15) PRINT: respiro maggiore nei blocchi ---------------------- */
+@media print{
+  .report-section-block{ padding: 18px !important; }
+  .metric-row{ gap: 10px !important; }
+  .metric-field{ padding: 10px 12px 9px !important; }
+}
+
+/* --- 16) MICRO‑MIGLIORIE varie ----------------------------------- */
+.section-headline{ margin-bottom: var(--sp-6); }
+.section-desc{ margin-top: .35rem; }
+.f1-mode-row{ gap: .6rem .8rem; }
+.info-btn,.metric-help{ min-width:22px; min-height:22px; }
+.tl-panel-tab-badge{ padding: .18rem .45rem; }
+.tl-panel-section-pill{ padding: .32rem .5rem; }
 
 /* =========================================================
    FINE
