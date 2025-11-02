@@ -11,26 +11,22 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
   <meta name="theme-color" content="#0b1220">
 
-  <!-- Tailwind utility -->
+  <!-- Tailwind utility (solo utility, look & feel in tokens.css) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Lucide icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <!-- Design System (palette, tipografia, componenti) -->
+  <!-- Design System -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
 
   <style>
+    /* ---- Shell layout ---- */
     html, body { height: 100%; }
     body { display: flex; flex-direction: column; min-height: 100vh; }
-
-    /* container utility */
     .container { max-width: 90rem; margin-inline: auto; padding-inline: 1rem; }
     main { flex: 1; padding-top: 5rem; padding-bottom: 5rem; }
 
-    /* Header: vetro satinato dark */
+    /* Header: vetro satinato */
     .hdr {
-      position: fixed; inset: 0 auto auto 0; right: 0; height: 56px; z-index: 50;
+      position: fixed; inset: 0 0 auto 0; height: 56px; z-index: 50;
       display: flex; align-items: center;
       backdrop-filter: saturate(1.1) blur(10px);
       background: color-mix(in oklab, var(--surface-card) 86%, transparent);
@@ -40,17 +36,33 @@
     .brand { font-weight: 900; letter-spacing: -0.02em; }
     .brand span:last-child { color: var(--brand-600); }
 
-    /* Footer: blocco istituzionale su tinta dark */
+    /* Pulsante inline coerente con tokens */
+    .btn-inline {
+      display:inline-flex; align-items:center; gap:.45rem;
+      padding:.4rem .7rem; border-radius: var(--radius-pill);
+      border:1px solid var(--br-soft);
+      background: var(--surface-card); color: var(--ink);
+      font-size: 12px; line-height: 1.2; font-weight: 600;
+      transition: color .15s ease, background-color .15s ease, border-color .15s ease, transform .12s ease, opacity .15s ease;
+    }
+    .btn-inline:hover { background: color-mix(in oklab, var(--surface-card) 92%, transparent); }
+    .btn-inline:active { transform: translateY(1px); }
+    .btn-inline:focus-visible { outline: 2px solid var(--brand-500); outline-offset: 2px; }
+
+    /* Icone tema (SVG inline) */
+    .ico-sun, .ico-moon { width:16px; height:16px; stroke: currentColor; stroke-width:1.7; }
+    [data-theme="dark"]  .ico-sun { display:none; }
+    [data-theme="dark"]  .ico-moon { display:inline; }
+    [data-theme="light"] .ico-sun { display:inline; }
+    [data-theme="light"] .ico-moon { display:none; }
+
+    /* Footer “editoriale” */
     .site-footer {
       background: var(--footer-bg);
       border-top: 1px solid var(--footer-br);
       color: var(--ink-soft);
       font-size: 14px;
     }
-    .ftr-head { font-weight: 600; display:flex; align-items:center; gap:.4rem; color: var(--ink); margin-bottom:.5rem; }
-    .ftr-grid { display:grid; gap:2rem; grid-template-columns: 1fr; }
-    @media (min-width: 768px){ .ftr-grid { grid-template-columns: repeat(3, 1fr); } }
-    .ftr-list li { margin:.25rem 0; }
     .ftr-bottom {
       border-top: 1px solid var(--br-soft);
       margin-top: 2rem; padding-top: 1rem;
@@ -60,9 +72,16 @@
       .ftr-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
     }
 
-    /* Pulsanti coerenti con tokens */
-    .btn-inline { display:inline-flex; align-items:center; gap:.4rem; padding:.4rem .65rem; border-radius: var(--radius-pill); border:1px solid var(--br-soft); }
-    .btn-inline:hover { background: color-mix(in oklab, var(--surface-card) 92%, transparent); }
+    /* Social: hover elegante */
+    .ftr-socials a { position: relative; display:flex; align-items:center; gap:.5rem; color: var(--ink-soft); transition: transform .18s ease, color .18s ease, opacity .18s ease; }
+    .ftr-socials a::after {
+      content:""; position:absolute; left:19px; right:0; bottom:-2px; height:1px;
+      background: currentColor; opacity:0; transform: scaleX(.4);
+      transform-origin:left; transition: transform .18s ease, opacity .18s ease;
+    }
+    .ftr-socials a:hover { color: var(--ink); transform: translateX(2px); }
+    .ftr-socials a:hover::after { opacity:.6; transform: scaleX(1); }
+    .ico-social { width:17px; height:17px; stroke: currentColor; stroke-width:1.7; }
   </style>
 </head>
 
@@ -74,10 +93,20 @@
         <span>TRADELIA</span><span>&bull;AI</span>
       </a>
       <nav class="flex items-center gap-3">
-        <!-- Il toggle rimane, ma il tema è forzato a dark via script sotto -->
-        <button id="btn-theme" class="btn-inline" type="button" aria-label="Tema">
-          <i data-lucide="moon"></i>
-          <span class="hidden sm:inline text-[12px] leading-none">Tema</span>
+        <button id="btn-theme" class="btn-inline" type="button"
+                aria-label="Cambia tema" aria-pressed="true" title="Cambia tema">
+          <!-- Sole -->
+          <svg class="ico-sun" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"></path>
+          </svg>
+          <!-- Luna -->
+          <svg class="ico-moon" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"></path>
+          </svg>
+          <span class="hidden sm:inline leading-none">Tema</span>
         </button>
       </nav>
     </div>
@@ -88,115 +117,129 @@
     <!-- I moduli runtime (Hero, F1–F6, ecc.) verranno montati qui da app.js -->
   </main>
 
-<footer class="site-footer mt-auto py-12 border-t border-[color:var(--footer-br)]">
-  <div class="container max-w-6xl mx-auto px-4">
-    <div class="grid gap-10 md:grid-cols-2">
-      <!-- BLOCCO SINISTRA -->
-      <div>
-        <h3 class="text-[15px] font-semibold tracking-wide uppercase mb-3 text-[color:var(--ink)]">
-          Tradelia AI · Institutional Dashboard
-        </h3>
-        <p class="text-[13.5px] leading-[1.5] text-[color:var(--ink-soft)] mb-4">
-          Analisi multi-fattore su contesto macro, sentiment e tecnica
-          (orizzonte 3–10 giorni). Uso esclusivamente informativo e formativo —
-          nessuna raccomandazione personalizzata.
-        </p>
-        <ul class="text-[13px] leading-[1.5] text-[color:var(--muted)] space-y-1">
-          <li>Non è consulenza (MiFID II / ESMA)</li>
-          <li>Tradelia AI non gestisce capitali né esegue ordini</li>
-          <li>Rischio di perdita anche totale del capitale</li>
-        </ul>
-        <div class="mt-4 flex flex-wrap gap-3">
-          <button id="btn-privacy-open" class="btn btn-sm" type="button">Privacy</button>
-          <button id="btn-mifid-open" class="btn btn-sm" type="button">Informativa MiFID</button>
+  <!-- FOOTER -->
+  <footer class="site-footer mt-auto py-12">
+    <div class="container max-w-6xl mx-auto px-4">
+      <div class="grid gap-10 md:grid-cols-2">
+        <!-- BLOCCO SINISTRA -->
+        <div>
+          <h3 class="text-[15px] font-semibold tracking-wide uppercase mb-3 text-[color:var(--ink)]">
+            Tradelia AI · Institutional Dashboard
+          </h3>
+          <p class="text-[13.5px] leading-[1.5] text-[color:var(--ink-soft)] mb-4">
+            Analisi multi-fattore su contesto macro, sentiment e tecnica (orizzonte 3–10 giorni).
+            Uso esclusivamente informativo e formativo — nessuna raccomandazione personalizzata.
+          </p>
+          <ul class="text-[13px] leading-[1.5] text-[color:var(--muted)] space-y-1">
+            <li>Non è consulenza (MiFID II / ESMA)</li>
+            <li>Tradelia AI non gestisce capitali né esegue ordini</li>
+            <li>Rischio di perdita anche totale del capitale</li>
+          </ul>
+          <div class="mt-4 flex flex-wrap gap-3">
+            <button id="btn-privacy-open" class="btn btn-sm" type="button">Privacy</button>
+            <button id="btn-mifid-open" class="btn btn-sm" type="button">Informativa MiFID</button>
+          </div>
+        </div>
+
+        <!-- BLOCCO DESTRA -->
+        <div>
+          <h3 class="text-[15px] font-semibold tracking-wide uppercase mb-3 text-[color:var(--ink)]">
+            Canali ufficiali
+          </h3>
+          <p class="text-[13.5px] text-[color:var(--ink-soft)] mb-3">
+            Aggiornamenti su metodologia, release e materiale educativo.
+          </p>
+          <div class="ftr-socials flex flex-col gap-3 text-[14px]">
+            <!-- LinkedIn -->
+            <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <svg class="ico-social" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                <path d="M8 17v-6"></path><circle cx="8" cy="8" r="1"></circle>
+                <path d="M12 17v-3a3 3 0 0 1 6 0v3"></path>
+              </svg>
+              LinkedIn
+            </a>
+            <!-- X / Twitter -->
+            <a href="https://x.com/tradelia_ai" target="_blank" rel="noopener" aria-label="X">
+              <svg class="ico-social" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 4l16 16M20 4L4 20"></path>
+              </svg>
+              X (Twitter)
+            </a>
+            <!-- Reddit -->
+            <a href="https://www.reddit.com/r/TradeliaAI" target="_blank" rel="noopener" aria-label="Reddit">
+              <svg class="ico-social" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="9" cy="13" r="1.5"></circle>
+                <circle cx="15" cy="13" r="1.5"></circle>
+                <path d="M12 17c1.7 0 3-1.3 3-3"></path>
+                <path d="M20 12c0 4.4-3.6 8-8 8s-8-3.6-8-8 3.6-8 8-8c1.6 0 3.1.5 4.4 1.3"></path>
+                <circle cx="19" cy="5" r="1"></circle>
+                <path d="M15 7l1-5 2 1"></path>
+              </svg>
+              Reddit
+            </a>
+            <!-- Quora -->
+            <a href="https://www.quora.com/profile/Tradelia" target="_blank" rel="noopener" aria-label="Quora">
+              <svg class="ico-social" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="7.5"></circle>
+                <path d="M16 16l2 2"></path>
+              </svg>
+              Quora
+            </a>
+          </div>
         </div>
       </div>
 
-      <!-- BLOCCO DESTRA -->
-      <div>
-        <h3 class="text-[15px] font-semibold tracking-wide uppercase mb-3 text-[color:var(--ink)]">
-          Canali ufficiali
-        </h3>
-        <p class="text-[13.5px] text-[color:var(--ink-soft)] mb-3">
-          Aggiornamenti su metodologia, release e materiale educativo.
-        </p>
-        <div class="flex flex-col gap-3 text-[14px]">
-          <!-- LinkedIn -->
-          <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener"
-             class="flex items-center gap-2 hover:opacity-90 transition">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="2"></rect>
-              <path d="M8 17v-6"></path><circle cx="8" cy="8" r="1"></circle>
-              <path d="M12 17v-3a3 3 0 0 1 6 0v3"></path>
-            </svg>
-            LinkedIn
-          </a>
-
-          <!-- X / Twitter -->
-          <a href="https://x.com/tradelia_ai" target="_blank" rel="noopener"
-             class="flex items-center gap-2 hover:opacity-90 transition">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 4l16 16M20 4L4 20"></path>
-            </svg>
-            X (Twitter)
-          </a>
-
-          <!-- Reddit -->
-          <a href="https://www.reddit.com/r/TradeliaAI" target="_blank" rel="noopener"
-             class="flex items-center gap-2 hover:opacity-90 transition">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="9" cy="13" r="1.5"></circle>
-              <circle cx="15" cy="13" r="1.5"></circle>
-              <path d="M12 17c1.7 0 3-1.3 3-3"></path>
-              <path d="M20 12c0 4.4-3.6 8-8 8s-8-3.6-8-8 3.6-8 8-8c1.6 0 3.1.5 4.4 1.3"></path>
-              <circle cx="19" cy="5" r="1"></circle>
-              <path d="M15 7l1-5 2 1"></path>
-            </svg>
-            Reddit
-          </a>
-
-          <!-- Quora -->
-          <a href="https://www.quora.com/profile/Tradelia" target="_blank" rel="noopener"
-             class="flex items-center gap-2 hover:opacity-90 transition">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="7.5"></circle>
-              <path d="M16 16l2 2"></path>
-            </svg>
-            Quora
-          </a>
+      <!-- BASELINE -->
+      <div class="ftr-bottom">
+        <div>
+          © <span id="footer-year"></span> <strong>Tradelia AI</strong> · Tutti i diritti riservati ·
+          <a href="mailto:info@tradelia.org" class="underline hover:opacity-80">info@tradelia.org</a>
         </div>
+        <div>Missione · alfabetizzazione finanziaria indipendente</div>
       </div>
     </div>
+  </footer>
 
-    <!-- BASELINE -->
-    <div class="mt-10 pt-6 border-t border-[color:var(--br-soft)] text-[13px] text-[color:var(--muted)] flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-      <div>
-        © <span id="footer-year"></span> <strong>Tradelia AI</strong> · Tutti i diritti riservati ·
-        <a href="mailto:info@tradelia.org" class="underline hover:opacity-80">info@tradelia.org</a>
-      </div>
-      <div>Missione · alfabetizzazione finanziaria indipendente</div>
-    </div>
-  </div>
-</footer>
-
-
-  <!-- Runtime -->
+  <!-- Runtime (monta Hero + moduli, gestisce overlay/tooltip) -->
   <script type="module" src="/report/assets/js/app.js"></script>
   <script type="module" src="/report/assets/js/ui-runtime.js"></script>
-  <script>
-    // Forza dark come default (e persiste)
-    try {
-      localStorage.setItem('tradelia-theme', 'dark');
-      document.documentElement.setAttribute('data-theme', 'dark');
-    } catch(e){}
 
-    // Icone + anno footer
-    lucide.createIcons();
-    document.getElementById('footer-year').textContent = new Date().getFullYear();
+  <!-- Tema: init + toggle + persistenza + anno footer -->
+  <script>
+    (function themeInit(){
+      const KEY = 'tradelia-theme';
+      const root = document.documentElement;
+      const btn  = document.getElementById('btn-theme');
+
+      function setTheme(mode){
+        root.setAttribute('data-theme', mode);
+        try { localStorage.setItem(KEY, mode); } catch(e){}
+        if (btn) btn.setAttribute('aria-pressed', String(mode === 'dark'));
+      }
+      function getTheme(){
+        try { return localStorage.getItem(KEY); } catch(e){ return null; }
+      }
+
+      // Init (default dark)
+      setTheme(getTheme() || 'dark');
+
+      // Toggle
+      if (btn) {
+        btn.addEventListener('click', () => {
+          const next = (root.getAttribute('data-theme') === 'dark') ? 'light' : 'dark';
+          setTheme(next);
+        });
+      }
+
+      // Footer year
+      const y = document.getElementById('footer-year');
+      if (y) y.textContent = new Date().getFullYear();
+    })();
   </script>
 </body>
 </html>
