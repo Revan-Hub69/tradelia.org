@@ -3164,6 +3164,9 @@ html[data-theme="dark"] .tl-panel-tab{
   .report-section-block{ margin-bottom: 24px !important; }
 }
 
+@media (max-width: 767px){
+  .f1b-card .info-btn{ margin-right:.25rem; }
+}
 
 /* =========================================================
    FINE
