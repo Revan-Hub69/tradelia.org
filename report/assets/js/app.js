@@ -1,4 +1,4 @@
-// App Orchestrator v2.6 — manifest object/array, HERO premium, KPI con "?" dinamici
+// App Orchestrator v3 — manifest object/array, HERO minimale premium
 
 const $ = (s, r=document) => r.querySelector(s);
 
@@ -27,78 +27,53 @@ function normalizeManifest(m){
 }
 
 /* ---------- HERO ---------- */
-function addPill(kpiRoot, label, value, infoId){
-  if(!value && value !== 0) return;
-  const el = document.createElement('span');
-  el.className = 'pill';
-  const infoBtn = infoId ? `<button class="info-btn" data-info="${infoId}" aria-label="${label} – info">?</button>` : '';
-  el.innerHTML = `<span class="k">${label}</span>${infoBtn}<span class="v tabular">${value}</span>`;
-  kpiRoot.appendChild(el);
-}
-
 function mountHero(h){
-  const name = h?.CompanyName || 'Report';
-  const tkr  = h?.Ticker || '';
-  const ven  = h?.Venue || '';
-  const cur  = h?.Currency || '';
-  const px   = (typeof h?.Price === 'number') ? h.Price : null;
-  const cp   = (typeof h?.ChangePct === 'number') ? h.ChangePct : null;
-  const conf = (typeof h?.ConfidenceFinal === 'number') ? h.ConfidenceFinal : null;
-  const state= h?.State || '';
-  const fresh= h?.FreshnessLabel || h?.Freshness || '';
-  const ver  = h?.Version;
-  const upd  = h?.UpdatedAt;
-  const win  = (h?.Start && h?.End) ? `${h.Start} → ${h.End}` : '';
+  const name=h?.CompanyName||'Report', tkr=h?.Ticker||'', ven=h?.Venue||'',
+        cur=h?.Currency||'', px=Number.isFinite(h?.Price)?h.Price:null,
+        cp=Number.isFinite(h?.ChangePct)?h.ChangePct:null,
+        conf=Number.isFinite(h?.ConfidenceFinal)?h.ConfidenceFinal:null,
+        state=h?.State||'', fresh=h?.FreshnessLabel||h?.Freshness||'',
+        ver=h?.Version, upd=h?.UpdatedAt,
+        win=(h?.Start&&h?.End)?`${h.Start} → ${h.End}`:'';
 
-  // title/sub
-  const tEl = $('#hero-title'); const sEl = $('#hero-sub');
-  if (tEl) tEl.textContent = name;
-  if (sEl) sEl.textContent = tkr && ven ? `${tkr} · ${ven}` : (tkr || ven || '');
+  $('#hero-title').textContent = name;
+  $('#hero-sub').textContent = tkr && ven ? `${tkr} · ${ven}` : (tkr||ven||'');
 
-  // Confidence meter
-  const confPct = (typeof h?.ConfidenceFinal === 'number') ? Math.round(h.ConfidenceFinal * 100) : null;
-  const fill = document.getElementById('hero-meter-fill');
-  const confVal = document.getElementById('hero-conf-val');
-  const track = document.querySelector('.meter-track');
-  if (confVal) confVal.textContent = confPct!=null ? `${confPct}%` : '—';
-  if (fill && track){
-    const w = confPct!=null ? Math.min(100, Math.max(5, confPct)) : 40;
-    fill.style.width = w + '%';
-    const tone = confPct==null ? 'warn' : (confPct>=85 ? 'ok' : confPct>=65 ? 'warn' : 'alert');
-    fill.className = `meter-fill ${tone}`;
-    track.setAttribute('aria-valuenow', confPct!=null ? confPct : 0);
-  }
+  const pct = conf!=null ? Math.round(conf*100) : null;
+  $('#hero-conf-val').textContent = pct!=null ? `${pct}%` : '—';
+  const fill = $('#hero-meter-fill'); const track = document.querySelector('.meter-track');
+  const tone = pct==null ? 'warn' : (pct>=85?'ok':pct>=65?'warn':'alert');
+  fill.className = `meter-fill ${tone}`;
+  fill.style.width = (pct!=null ? Math.max(4, Math.min(100, pct)) : 40) + '%';
+  track.setAttribute('aria-valuenow', pct!=null ? pct : 0);
 
-  // Price + delta + state
-  const pEl = $('#hero-price'); const ccy = $('#hero-ccy');
-  if (pEl) pEl.textContent = (px!=null) ? (px.toLocaleString(undefined,{maximumFractionDigits:2})) : '—';
-  if (ccy) ccy.textContent = cur || '';
-  const delta = $('#hero-delta');
-  if (delta){
-    if (cp==null){ delta.textContent=''; delta.className='delta-chip neutral'; }
-    else { const tone = cp>0?'ok':(cp<0?'alert':'neutral'); delta.className=`delta-chip ${tone} tabular`; delta.textContent=`${cp>0?'+':''}${cp.toFixed(2)}%`; }
-  }
+  $('#hero-price').textContent = (px!=null) ? px.toLocaleString(undefined,{maximumFractionDigits:2}) : '—';
+  $('#hero-ccy').textContent = cur || '';
+  $('#hero-hint').textContent = fresh || '';
+
+  const d = $('#hero-delta');
+  if(cp==null){ d.textContent='—'; d.className='delta'; }
+  else{ const t = cp>0?'ok':cp<0?'alert':''; d.className=`delta ${t} tabular`; d.textContent = `${cp>0?'+':''}${cp.toFixed(2)}%`; }
   const st = $('#hero-state');
-  if (st){
-    const tone = conf==null ? 'warn' : (conf>=0.85 ? 'ok' : conf>=0.65 ? 'warn' : 'alert');
-    st.className = `badge ${tone}`; st.textContent = state || 'SNAPSHOT';
-  }
+  st.textContent = state || 'SNAPSHOT'; st.className=`state ${tone}`;
 
-  // KPI pills con info-btn
-  const kpi = $('#hero-kpi');
-  if (kpi){
-    kpi.innerHTML = '';
-    addPill(kpi, 'Ticker',     tkr,  'Ticker_info');
-    addPill(kpi, 'Venue',      ven,  'Venue_info');
-    addPill(kpi, 'Freshness',  fresh,'Freshness');
-    addPill(kpi, 'Confidence', conf!=null ? conf.toFixed(2) : '—', 'ConfidenceFinal');
-    addPill(kpi, 'Version',    ver,  'Version_info');
-    addPill(kpi, 'Updated',    upd,  'UpdatedAt_info');
-    addPill(kpi, 'Window',     win,  'SnapshotWindow_info');
-    addPill(kpi, 'Currency',   cur,  'Currency_info');
-  }
+  const kpi = $('#hero-kpi'); kpi.innerHTML='';
+  const add = (k,v,id)=>{ if(!v && v!==0) return;
+    const kEl=document.createElement('div'); kEl.className='k'; kEl.textContent=k;
+    const vEl=document.createElement('div'); vEl.className='v';
+    vEl.innerHTML = `<span class="tabular">${v}</span>${id?` <button class="info-btn" data-info="${id}">?</button>`:''}`;
+    kpi.appendChild(kEl); kpi.appendChild(vEl);
+  };
+  add('Updated',upd,'UpdatedAt_info');
+  add('Window',win,'SnapshotWindow_info');
+  add('Freshness',fresh,'Freshness');
+  add('Confidence',conf!=null?conf.toFixed(2):'—','ConfidenceFinal');
+  add('Version',ver,'Version_info');
+  add('Ticker',tkr,'Ticker_info');
+  add('Venue',ven,'Venue_info');
+  add('Currency',cur,'Currency_info');
 
-  const note = $('#hero-note'); if (note && h?.hero_disclaimer) note.textContent = h.hero_disclaimer;
+  const note=$('#hero-note'); if(note && h?.hero_disclaimer) note.textContent = h.hero_disclaimer;
 }
 
 /* ---------- Mount pipeline ---------- */
