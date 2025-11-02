@@ -636,3 +636,127 @@ window.__TradeliaUI.closeLegalPanel = closeLegalPanel;
     }
   } catch(e){ console.warn("enforceMifidFirstVisit error:", e); }
 })();
+// =============== PATCH DIAGNOSTICA (incolla alla fine del file) ===============
+
+// elenco ganci richiesti dal drawer analitico
+const __PANEL_REQUIRED = [
+  '#panel-overlay',
+  '#panel-title', '#panel-subtitle', '#panel-body', '#panel-footer',
+  '#panel-title-mobile', '#panel-subtitle-mobile', '#panel-body-mobile', '#panel-footer-mobile',
+  '.tl-panel--desktop', '.tl-panel--mobile', '.tl-panel-backdrop'
+];
+
+// validator: controlla ganci, aria-hidden e z-index visibilità
+function __validatePanelStructure() {
+  const missing = [];
+  const info = [];
+  __PANEL_REQUIRED.forEach(sel => {
+    const el = document.querySelector(sel);
+    if (!el) missing.push(sel);
+    info.push({
+      selector: sel,
+      present: !!el,
+      display: el ? getComputedStyle(el).display : '—',
+      visibility: el ? getComputedStyle(el).visibility : '—',
+      opacity: el ? getComputedStyle(el).opacity : '—',
+      zIndex: el ? getComputedStyle(el).zIndex : '—'
+    });
+  });
+
+  const root = document.querySelector('#panel-overlay');
+  const aria = root ? root.getAttribute('aria-hidden') : '—';
+  const blocking = root ? root.getAttribute('data-blocking') : '—';
+
+  console.group('%c[TradeliaUI] Panel Validator', 'color:#12b886;font-weight:600;');
+  console.log('aria-hidden:', aria, 'data-blocking:', blocking);
+  console.table(info);
+  if (missing.length) {
+    console.error('MANCANO QUESTI SELECTOR:', missing);
+  } else {
+    console.log('OK: struttura base presente.');
+  }
+  console.groupEnd();
+
+  return { missing, aria, blocking };
+}
+
+// helper: prende il target attivo (clona la logica runtime)
+function __getActivePanelTarget() {
+  const overlay = document.querySelector('#panel-overlay');
+  const mobile = window.matchMedia("(max-width: 767px)").matches;
+  return mobile ? {
+    mode: 'mobile',
+    aside: overlay?.querySelector('.tl-panel--mobile'),
+    title: overlay?.querySelector('#panel-title-mobile'),
+    sub:   overlay?.querySelector('#panel-subtitle-mobile'),
+    body:  overlay?.querySelector('#panel-body-mobile'),
+    foot:  overlay?.querySelector('#panel-footer-mobile'),
+  } : {
+    mode: 'desktop',
+    aside: overlay?.querySelector('.tl-panel--desktop'),
+    title: overlay?.querySelector('#panel-title'),
+    sub:   overlay?.querySelector('#panel-subtitle'),
+    body:  overlay?.querySelector('#panel-body'),
+    foot:  overlay?.querySelector('#panel-footer'),
+  };
+}
+
+// espone due utility per debug live
+window.__TradeliaUI = window.__TradeliaUI || {};
+
+// 1) self-test: apre un drawer con 3 schede reali
+window.__TradeliaUI.selfTest = function selfTest() {
+  const v = __validatePanelStructure();
+  if (v.missing.length) {
+    alert('Markup drawer incompleto. Guarda la console (Panel Validator).');
+    return;
+  }
+  try {
+    window.__TradeliaUI.openPanel({
+      title: "Self-Test Drawer",
+      subtitle: "Se vedi il contenuto sotto e cambiano le schede, è OK.",
+      footerTabs: [
+        { key:"dataset",    label:"Dataset" },
+        { key:"signals",    label:"Segnali" },
+        { key:"governance", label:"Governance" }
+      ],
+      sections: [
+        { key:"dataset",    title:"Dataset",    body:`<p>Tab 1 · Dataset</p><button class="info-btn" data-metric="Dataset_info">?</button>` },
+        { key:"signals",    title:"Segnali",    body:`<p>Tab 2 · Segnali</p><button class="info-btn" data-metric="Signals_info">?</button>` },
+        { key:"governance", title:"Governance", body:`<p>Tab 3 · Governance</p><button class="info-btn" data-metric="Governance_info">?</button>`, meta:"MiFID/Qualità" }
+      ],
+      footerButtons: [{ label:"Chiudi", action: ()=> window.__TradeliaUI.closePanel() }],
+      panelSize: "xl"
+    });
+  } catch (e) {
+    console.error('openPanel ha lanciato eccezione:', e);
+    alert('openPanel ha fallito. Vedi console per errore.');
+  }
+};
+
+// 2) dumpState: mostra target attivo e visibilità
+window.__TradeliaUI.dumpState = function dumpState() {
+  const t = __getActivePanelTarget();
+  const root = document.querySelector('#panel-overlay');
+  const aria = root ? root.getAttribute('aria-hidden') : '—';
+  const out = {
+    mode: t.mode,
+    haveTitle: !!t.title,
+    haveSub: !!t.sub,
+    haveBody: !!t.body,
+    haveFoot: !!t.foot,
+    ariaHidden: aria,
+    bodyScrollTop: t.body ? t.body.scrollTop : '—'
+  };
+  console.group('%c[TradeliaUI] Panel State', 'color:#228be6;font-weight:600;');
+  console.table(out);
+  console.groupEnd();
+  return out;
+};
+
+// kick: se vuoi autovalidare a runtime
+setTimeout(() => {
+  __validatePanelStructure();
+}, 0);
+
+// ============= FINE PATCH DIAGNOSTICA =======================
