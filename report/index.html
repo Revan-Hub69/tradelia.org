@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="dark light" />
   <title>Tradelia · Institutional Report</title>
-
-  <!-- CSS DESIGN SYSTEM -->
   <link rel="icon" href="./favicon.ico">
-  <link rel="stylesheet" href="./assets/css/tokens.css?v=2026-11-02" />
+  <link rel="stylesheet" href="./assets/css/tokens.css?v=2.2" />
 </head>
 <body>
-  <!-- HEADER STICKY -->
+  <!-- HEADER -->
   <header class="site-header" role="banner">
     <div class="header-inner" aria-label="Barra di navigazione">
       <a class="brand" href="./" aria-label="Tradelia AI Home">
@@ -27,11 +25,33 @@
     </div>
   </header>
 
-  <!-- HERO SNAPSHOT -->
+  <!-- HERO PREMIUM -->
   <section id="hero" class="hero" role="region" aria-label="Snapshot">
-    <div class="hero-title" id="hero-title">Report</div>
+    <div class="hero-head">
+      <div class="hero-title" id="hero-title">Report</div>
+      <div class="hero-sub" id="hero-sub"></div>
+    </div>
+
+    <div class="tonebar" aria-hidden="true">
+      <div class="tonebar-fill" id="hero-tonebar"></div>
+    </div>
+
+    <div class="hero-main">
+      <div class="hero-price">
+        <span class="big tabular" id="hero-price">—</span>
+        <span class="ccy" id="hero-ccy"></span>
+      </div>
+      <div class="hero-right">
+        <span class="delta-chip" id="hero-delta"></span>
+        <span class="badge" id="hero-state"></span>
+      </div>
+    </div>
+
     <div class="hero-kpi" id="hero-kpi"></div>
-    <div class="hero-note" id="hero-note">Materiale informativo/educativo. Nessuna raccomandazione personale (MiFID II).</div>
+
+    <div class="hero-note" id="hero-note">
+      Materiale informativo/educativo. Nessuna raccomandazione personale (MiFID II).
+    </div>
   </section>
 
   <!-- GRID MODULI -->
@@ -42,6 +62,7 @@
     <article id="sec-f3o" class="report-section" data-card="F3O"></article>
     <article id="sec-f4"  class="report-section" data-card="F4"></article>
     <article id="sec-f5"  class="report-section" data-card="F5"></article>
+    <article id="sec-f5b" class="report-section" data-card="F5B"></article>
     <article id="sec-f6"  class="report-section" data-card="F6"></article>
     <article id="sec-f7"  class="report-section" data-card="F7"></article>
   </main>
@@ -86,8 +107,7 @@
     </div>
   </footer>
 
-  <!-- JS (percorsi RELATIVI) -->
-  <script type="module" src="./assets/js/ui-runtime.js?v=2026-11-02"></script>
-  <script type="module" src="./assets/js/app.js?v=2026-11-02"></script>
+  <script type="module" src="./assets/js/ui-runtime.js?v=2.2"></script>
+  <script type="module" src="./assets/js/app.js?v=2.2"></script>
 </body>
 </html>
