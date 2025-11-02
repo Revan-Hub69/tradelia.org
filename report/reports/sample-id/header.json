@@ -2,17 +2,30 @@
   "Ticker": "NVDA",
   "Venue": "NASDAQ",
   "CompanyName": "NVIDIA Corporation",
+
   "Price": 123.45,
+
   "ChangePct": -2.13,
+  "ChangePctTone": "red",
+
   "Currency": "USD",
+
   "Start": "2025-10-21",
   "End": "2025-10-25",
+
   "FreshnessLabel": "T-0 / latest close + AH",
-  "ConfidenceFinal": 0.82,
-  "DataIntegrity": 0.88,
-  "FeedSync": "T-1 OK",
-  "State": "ACTIVE",
-  "StateNote": "LIVE SNAPSHOT",
-  "Version": "v2025.10.25-rc3",
+  "Freshness": {
+    "raw": "T-0 / latest close + AH",
+    "tone": "green"
+  },
+
+  "ConfidenceFinal": { "raw": 0.82, "tone": "yellow" },
+  "DataIntegrity":   { "raw": 0.88, "tone": "green" },
+  "FeedSync":        { "raw": "T-1 OK", "tone": "yellow" },
+
+  "State":      { "raw": "ACTIVE", "tone": "green" },
+  "StateNote":  "LIVE SNAPSHOT",
+
+  "Version":   "v2025.10.25-rc3",
   "UpdatedAt": "2025-10-25T22:14:00Z"
 }
