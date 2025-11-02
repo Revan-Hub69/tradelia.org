@@ -1,47 +1,10 @@
-// UI Runtime v2.2 — tema, share, print, overlay, legal, tooltips
+// UI Runtime v2.3 — dark-only: overlay analitico, legale, tooltips, footer year
 
 const $ = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
 
-function initTheme(){
-  const html = document.documentElement;
-  const saved = localStorage.getItem('tradelia-theme');
-  const start = saved || 'dark';
-  html.setAttribute('data-theme', start);
-  const btn = $('#btn-theme');
-  if(btn){
-    btn.setAttribute('aria-pressed', start === 'dark' ? 'false' : 'true');
-    btn.addEventListener('click', ()=>{
-      const cur = html.getAttribute('data-theme');
-      const next = (cur === 'dark') ? 'light' : 'dark';
-      html.setAttribute('data-theme', next);
-      localStorage.setItem('tradelia-theme', next);
-      btn.setAttribute('aria-pressed', next === 'dark' ? 'false' : 'true');
-    });
-  }
-}
-
-function initShareAndPrint(){
-  $('#btn-print')?.addEventListener('click', ()=> window.print());
-  $('#btn-share')?.addEventListener('click', async ()=>{
-    const shareData = { title: document.title, url: location.href };
-    if (navigator.share){
-      try { await navigator.share(shareData); }
-      catch { /* utente ha annullato */ }
-    } else {
-      try { await navigator.clipboard.writeText(location.href); toast('Link copiato'); }
-      catch { alert(location.href); }
-    }
-  });
-  const y = $('#footer-year'); if(y) y.textContent = new Date().getFullYear();
-}
-
-function toast(msg){
-  const n = document.createElement('div');
-  n.textContent = msg;
-  n.style.cssText = 'position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#1f2328;color:#fff;border:1px solid #333;padding:8px 12px;border-radius:10px;z-index:999;opacity:0;transition:opacity .2s ease';
-  document.body.appendChild(n); requestAnimationFrame(()=>{n.style.opacity=1}); setTimeout(()=>{n.style.opacity=0; setTimeout(()=>n.remove(),200)},1600);
-}
+// Footer year
+(function(){ const y = $('#footer-year'); if(y) y.textContent = new Date().getFullYear(); })();
 
 // -------- Overlay Analitico --------
 const Panel = (() =>{
@@ -99,8 +62,4 @@ function bindMetricInfoButtons(root=document){
 window.__TradeliaUI = { openPanel: Panel.open, closePanel: Panel.close, bindMetricInfoButtons };
 
 // Bootstrap
-(function boot(){
-  initTheme();
-  initShareAndPrint();
-  bindMetricInfoButtons(document);
-})();
+(function boot(){ bindMetricInfoButtons(document); })();
