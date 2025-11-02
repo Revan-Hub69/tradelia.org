@@ -367,3 +367,45 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: var(--lh-13); font-weight
   .card { box-shadow:none !important; }
   .tl-panel-overlay, .tl-metric-modal-overlay, .tl-popover { display:none !important; }
 }
+/* ===== Wordmark & logo unificati ===== */
+.brand { font-weight: 900; letter-spacing: -0.02em; display:inline-flex; align-items:center; gap:.35rem; }
+.brand-word { color: var(--ink); }
+.brand-suffix { color: var(--ink); font-weight: 900; }
+.brand-dot { width:10px; height:10px; border-radius:999px; background: var(--brand-600); display:inline-block; }
+
+/* Variante piccola per baseline footer */
+.brand--sm .brand-word { font-weight: 700; }
+.brand--sm .brand-dot { width:8px; height:8px; }
+.brand--sm .brand-suffix { font-weight: 700; }
+
+/* Hover logo sobrio */
+a.brand:hover { opacity:.9; transform: translateY(-1px); transition: opacity .18s ease, transform .18s ease; }
+
+/* ===== Pulsanti: hover/focus eleganti (btn, btn-sm, toggle tema) ===== */
+:root { --hover-bg: color-mix(in oklab, var(--surface-card) 92%, transparent); }
+.btn, .btn-sm, .btn-inline {
+  transition: background-color .15s ease, border-color .15s ease,
+              color .15s ease, transform .12s ease, box-shadow .15s ease;
+}
+.btn:hover, .btn-sm:hover, .btn-inline:hover {
+  background: var(--hover-bg);
+  border-color: color-mix(in oklab, var(--br-soft) 70%, var(--brand-600) 30%);
+  box-shadow: 0 2px 10px oklab(0% 0 0 / .08);
+  transform: translateY(-1px);
+}
+.btn:active, .btn-sm:active, .btn-inline:active { transform: translateY(0); }
+.btn:focus-visible, .btn-sm:focus-visible, .btn-inline:focus-visible {
+  outline: 2px solid var(--brand-500);
+  outline-offset: 2px;
+}
+
+/* Toggle tema: rendi cursore/hover coerenti */
+#btn-theme { cursor: pointer; }
+
+/* ===== Footer & headings: no underline imprevisto ===== */
+h1, h2, h3, h4, h5, h6 { text-decoration: none; }
+.site-footer a { text-decoration: none; border-bottom: 1px solid transparent; }
+.site-footer a:hover { border-bottom-color: currentColor; }
+
+/* Email nel footer: underline più sottile e tono coerente */
+a.mail-link { text-underline-offset: 2px; text-decoration-thickness: 1px; }
