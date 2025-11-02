@@ -1,107 +1,420 @@
-// App Orchestrator v3 — manifest object/array, HERO minimale premium
+// /report/assets/js/app.js
+//
+// Ruolo: orchestratore dati runtime del Report
+// - legge header.json e manifest.json dal report corrente
+// - popola hero e footer base
+// - monta le sezioni F1...F6 caricando i moduli dinamici
+//
+// Dipendenze: nessuna libreria esterna, solo fetch + dynamic import
+//
+// Convenzioni di path:
+//   /report/reports/{reportId}/header.json
+//   /report/reports/{reportId}/manifest.json
+//   poi i singoli dati modulo es. f1b.json, f2.json, ...
+//
+// Convenzioni moduli UI:
+//   /report/assets/js/modules/f1b.js, f2.js, ...
+//   export function renderCard(data, ctx) -> string HTML
+//   export function bindCard(node, data, ctx) -> attach listeners (opzionale)
 
-const $ = (s, r=document) => r.querySelector(s);
+/////////////////////////////
+// Helpers base
+/////////////////////////////
 
-async function fetchJSON(path){
-  const r = await fetch(path, { cache:'no-store' });
-  if(!r.ok) throw new Error(`HTTP ${r.status} for ${path}`);
-  return r.json();
+function getReportIdFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+  return (id && id.trim() !== "") ? id.trim() : "sample-id";
 }
-function getReportId(){ const u=new URL(location.href); return u.searchParams.get('id') || 'sample-id'; }
 
-const normId = id => (id||'').toString().trim().toUpperCase();
-const slotId = modId => `sec-${normId(modId).toLowerCase()}`;
-async function importModule(modId){ return import(`./modules/${normId(modId).toLowerCase()}.js`); }
-
-function normalizeManifest(m){
-  if(!m) return { order:[], list:[] };
-  const map = new Map();
-  if (m.modules && !Array.isArray(m.modules) && typeof m.modules === 'object'){
-    for (const [k,v] of Object.entries(m.modules)){ if(!k||!v) continue; map.set(normId(k), { id:normId(k), data:v }); }
+async function fetchJSON(url) {
+  try {
+    const res = await fetch(url, { cache: "no-cache" });
+    if (!res.ok) throw new Error("HTTP " + res.status + " @ " + url);
+    return await res.json();
+  } catch (err) {
+    console.warn("fetchJSON fail", url, err);
+    return null;
   }
-  if (Array.isArray(m.modules)){
-    for (const it of m.modules){ if(!it||!it.id||!it.data) continue; map.set(normId(it.id), { id:normId(it.id), data:it.data }); }
-  }
-  const order = Array.isArray(m.order)&&m.order.length ? m.order.map(normId).filter(id=>map.has(id)) : Array.from(map.keys());
-  return { order, list: order.map(id=>map.get(id)), title:m.title, id:m.id };
 }
 
-/* ---------- HERO ---------- */
-function mountHero(h){
-  const name=h?.CompanyName||'Report', tkr=h?.Ticker||'', ven=h?.Venue||'',
-        cur=h?.Currency||'', px=Number.isFinite(h?.Price)?h.Price:null,
-        cp=Number.isFinite(h?.ChangePct)?h.ChangePct:null,
-        conf=Number.isFinite(h?.ConfidenceFinal)?h.ConfidenceFinal:null,
-        state=h?.State||'', fresh=h?.FreshnessLabel||h?.Freshness||'',
-        ver=h?.Version, upd=h?.UpdatedAt,
-        win=(h?.Start&&h?.End)?`${h.Start} → ${h.End}`:'';
+// formattazioni numeriche base
+function fmtNum(v, decimals = 2) {
+  if (v === null || v === undefined || Number.isNaN(v)) return "—";
+  const n = Number(v);
+  return n.toFixed(decimals).replace('.', ',');
+}
 
-  $('#hero-title').textContent = name;
-  $('#hero-sub').textContent = tkr && ven ? `${tkr} · ${ven}` : (tkr||ven||'');
+function fmtPct(v, decimals = 2) {
+  if (v === null || v === undefined || Number.isNaN(v)) return "—";
+  const n = Number(v);
+  const sign = n > 0 ? "+" : "";
+  return sign + n.toFixed(decimals).replace('.', ',') + "%";
+}
 
-  const pct = conf!=null ? Math.round(conf*100) : null;
-  $('#hero-conf-val').textContent = pct!=null ? `${pct}%` : '—';
-  const fill = $('#hero-meter-fill'); const track = document.querySelector('.meter-track');
-  const tone = pct==null ? 'warn' : (pct>=85?'ok':pct>=65?'warn':'alert');
-  fill.className = `meter-fill ${tone}`;
-  fill.style.width = (pct!=null ? Math.max(4, Math.min(100, pct)) : 40) + '%';
-  track.setAttribute('aria-valuenow', pct!=null ? pct : 0);
+function setTextById(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
 
-  $('#hero-price').textContent = (px!=null) ? px.toLocaleString(undefined,{maximumFractionDigits:2}) : '—';
-  $('#hero-ccy').textContent = cur || '';
-  $('#hero-hint').textContent = fresh || '';
+/////////////////////////////
+// HERO + footer snapshot
+/////////////////////////////
 
-  const d = $('#hero-delta');
-  if(cp==null){ d.textContent='—'; d.className='delta'; }
-  else{ const t = cp>0?'ok':cp<0?'alert':''; d.className=`delta ${t} tabular`; d.textContent = `${cp>0?'+':''}${cp.toFixed(2)}%`; }
-  const st = $('#hero-state');
-  st.textContent = state || 'SNAPSHOT'; st.className=`state ${tone}`;
+function mountHero(headerData) {
+  if (!headerData) return;
 
-  const kpi = $('#hero-kpi'); kpi.innerHTML='';
-  const add = (k,v,id)=>{ if(!v && v!==0) return;
-    const kEl=document.createElement('div'); kEl.className='k'; kEl.textContent=k;
-    const vEl=document.createElement('div'); vEl.className='v';
-    vEl.innerHTML = `<span class="tabular">${v}</span>${id?` <button class="info-btn" data-info="${id}">?</button>`:''}`;
-    kpi.appendChild(kEl); kpi.appendChild(vEl);
+  const {
+    Start,
+    End,
+    Ticker,
+    Venue,
+    Price,
+    ChangePct,
+    Currency,
+    FreshnessLabel,
+    ConfidenceFinal,
+    State,
+    Version,
+    UpdatedAt
+  } = headerData;
+
+  // ticker / venue
+  setTextById("hero-ticker", Ticker || "—");
+  setTextById("hero-venue", Venue || "—");
+
+  // price + change
+  const chgPctStr = fmtPct(ChangePct, 2);
+  setTextById("hero-price", Price !== undefined ? fmtNum(Price, 2) : "—");
+  setTextById("hero-change", chgPctStr);
+
+  // badge stato
+  setTextById("hero-state", State || "—");
+
+  // meta snapshot
+  setTextById("hero-start", Start || "—");
+  setTextById("hero-end", End || "—");
+
+  // meta price
+  setTextById("hero-price2", Price !== undefined ? fmtNum(Price, 2) : "—");
+
+  // meta Δ%
+  setTextById("hero-change2", chgPctStr);
+
+  // meta currency
+  setTextById("hero-ccy", Currency || "—");
+
+  // meta freshness
+  setTextById("hero-freshness", FreshnessLabel || "—");
+
+  // meta confidence
+  setTextById(
+    "hero-confidence",
+    ConfidenceFinal !== undefined ? fmtNum(ConfidenceFinal, 2) : "—"
+  );
+
+  // colorazione up/down su Δ%
+  const heroChangeEl  = document.getElementById("hero-change");
+  const heroChangeEl2 = document.getElementById("hero-change2");
+
+  if (heroChangeEl) {
+    heroChangeEl.classList.remove("chg--up","chg--down");
+    if (typeof ChangePct === "number") {
+      heroChangeEl.classList.add(ChangePct >= 0 ? "chg--up" : "chg--down");
+    }
+  }
+  if (heroChangeEl2) {
+    heroChangeEl2.classList.remove("chg--up","chg--down");
+    if (typeof ChangePct === "number") {
+      heroChangeEl2.classList.add(ChangePct >= 0 ? "chg--up" : "chg--down");
+    }
+  }
+
+  // tonebars
+  const toneSnap  = document.getElementById("tone-snap");
+  const tonePrice = document.getElementById("tone-price");
+  const toneChg   = document.getElementById("tone-chg");
+  const toneCcy   = document.getElementById("tone-ccy");
+  const toneFresh = document.getElementById("tone-fresh");
+  const toneConf  = document.getElementById("tone-conf");
+
+  if (toneSnap)  toneSnap.style.backgroundColor  = "var(--tone-n)";
+  if (tonePrice) tonePrice.style.backgroundColor = "var(--tone-n)";
+  if (toneCcy)   toneCcy.style.backgroundColor   = "var(--tone-n)";
+  if (toneFresh) toneFresh.style.backgroundColor = "var(--tone-n)";
+
+  // Δ% tono semaforo
+  if (toneChg) {
+    if (typeof ChangePct === "number") {
+      toneChg.style.backgroundColor =
+        ChangePct >= 0 ? "var(--tone-g)" : "var(--tone-r)";
+    } else {
+      toneChg.style.backgroundColor = "var(--tone-n)";
+    }
+  }
+
+  // confidence tono semaforo
+  if (toneConf) {
+    const cf = Number(ConfidenceFinal);
+    if (!isNaN(cf)) {
+      if (cf >= 0.75) {
+        toneConf.style.backgroundColor = "var(--tone-g)";
+      } else if (cf < 0.5) {
+        toneConf.style.backgroundColor = "var(--tone-r)";
+      } else {
+        toneConf.style.backgroundColor = "var(--tone-n)";
+      }
+    } else {
+      toneConf.style.backgroundColor = "var(--tone-n)";
+    }
+  }
+
+  // footer info
+  if (Version) {
+    setTextById("footer-version", Version);
+  }
+
+  setTextById(
+    "footer-snapshot",
+    (Start && End) ? (Start + " → " + End) : (Start || End || "—")
+  );
+
+  const upd = UpdatedAt || End || Start || "—";
+  setTextById("footer-updated", upd);
+
+  const yearEl = document.getElementById("footer-year");
+  if (yearEl) {
+    const now = new Date();
+    yearEl.textContent = now.getFullYear();
+  }
+}
+
+/////////////////////////////
+// MANIFEST LOADING / NORMALIZATION
+/////////////////////////////
+
+async function loadManifest(reportId) {
+  const url = `/report/reports/${reportId}/manifest.json`;
+  const mf = await fetchJSON(url);
+  if (mf) return mf;
+
+  // fallback se non esiste manifest.json
+  return {
+    id: reportId,
+    title: "Tradelia · Report Runtime",
+    order: ["F1B","F2","F3","F4","F5","F5B","F6"],
+    modules: {
+      "F1B": "f1b.json",
+      "F2":  "f2.json",
+      "F3":  "f3.json",
+      "F4":  "f4.json",
+      "F5":  "f5.json",
+      "F5B": "f5b.json",
+      "F6":  "f6.json"
+    }
   };
-  add('Updated',upd,'UpdatedAt_info');
-  add('Window',win,'SnapshotWindow_info');
-  add('Freshness',fresh,'Freshness');
-  add('Confidence',conf!=null?conf.toFixed(2):'—','ConfidenceFinal');
-  add('Version',ver,'Version_info');
-  add('Ticker',tkr,'Ticker_info');
-  add('Venue',ven,'Venue_info');
-  add('Currency',cur,'Currency_info');
-
-  const note=$('#hero-note'); if(note && h?.hero_disclaimer) note.textContent = h.hero_disclaimer;
 }
 
-/* ---------- Mount pipeline ---------- */
-async function mountModule(reportId, spec){
-  const { id: modId, data } = spec;
-  if(!document.getElementById(slotId(modId))){
-    const art = document.createElement('article');
-    art.id = slotId(modId); art.className='report-section'; art.setAttribute('data-card', normId(modId));
-    $('#modules')?.appendChild(art);
-  }
-  const slotNode = document.getElementById(slotId(modId));
-  const raw = await fetchJSON(`./reports/${reportId}/${data}`);
-  const api = await importModule(modId);
-  if(typeof api.renderCard !== 'function' || typeof api.bindCard !== 'function'){
-    throw new Error(`${modId} non esporta renderCard/bindCard`);
-  }
-  slotNode.innerHTML = api.renderCard(raw, { modId: normId(modId), reportId });
-  api.bindCard(slotNode, raw, { modId: normId(modId), reportId });
+// mappa modulo -> section DOM id
+function getSectionSelectorForModule(modId) {
+  const upper = modId.toUpperCase();
+
+  if (upper === "F1A" || upper === "F1B") return "#sec-f1";
+  if (upper === "F2")  return "#sec-f2";
+  if (upper === "F3")  return "#sec-f3";
+  if (upper === "F4")  return "#sec-f4";
+  if (upper === "F5")  return "#sec-f5";
+  if (upper === "F5B") return "#sec-f5b";
+  if (upper === "F6")  return "#sec-f6";
+
+  return null;
 }
 
-async function mountReport(){
-  const id = getReportId();
-  try { mountHero(await fetchJSON(`./reports/${id}/header.json`)); } catch { mountHero({}); }
-  const manifestRaw = await fetchJSON(`./reports/${id}/manifest.json`);
-  const manifest = normalizeManifest(manifestRaw);
-  for (const spec of manifest.list){
-    try { await mountModule(id, spec); } catch(err){ console.error('Mount fallito', spec?.id, err); }
+// normalizza i path dei json modulo
+function normalizeManifest(manifest, reportId) {
+  const order = Array.isArray(manifest.order)
+    ? manifest.order.slice()
+    : Object.keys(manifest.modules || {});
+
+  const outMods = {};
+  for (const key of Object.keys(manifest.modules || {})) {
+    let path = manifest.modules[key];
+    if (
+      typeof path === "string" &&
+      !path.startsWith("http") &&
+      !path.startsWith("/")
+    ) {
+      // relativo -> montalo sotto /report/reports/{id}/
+      path = `/report/reports/${reportId}/${path}`;
+    }
+    outMods[key] = path;
+  }
+
+  return {
+    id: manifest.id || reportId,
+    title: manifest.title || "",
+    order,
+    modules: outMods
+  };
+}
+
+/////////////////////////////
+// MOUNT DI UN SINGOLO MODULO (F1B/F2/...)
+/////////////////////////////
+
+async function mountSingleModule(modId, jsonUrl, reportId) {
+  const selector = getSectionSelectorForModule(modId);
+  if (!selector) {
+    console.warn(`Nessun section selector per ${modId}`);
+    return;
+  }
+
+  const container = document.querySelector(selector);
+  if (!container) {
+    console.warn(`Container DOM ${selector} non trovato per ${modId}`);
+    return;
+  }
+
+  // carica i dati del modulo (es. /report/reports/{id}/f1b.json)
+  const data = await fetchJSON(jsonUrl);
+
+  // importa dinamicamente il renderer JS del modulo
+  const fileBase = modId.toLowerCase();
+  let mod;
+  try {
+    // cache-bust minimo
+    mod = await import(`/report/assets/js/modules/${fileBase}.js?v=2`);
+  } catch (err) {
+    console.error("Import modulo fallita:", modId, err);
+    container.innerHTML = `
+      <div class="section-headline">
+        <div class="section-head-left">
+          <div class="section-head-topline">
+            <span class="section-badge">${modId}</span>
+            <span class="module-status-pill" data-state="error">DATA</span>
+          </div>
+          <div class="section-title-main">${modId}</div>
+          <div class="section-desc">
+            Modulo non disponibile.
+          </div>
+        </div>
+      </div>
+      <div class="tl-panel-section-text text-[13px] leading-[1.45] text-[color:var(--muted)]">
+        Impossibile caricare il renderer ${fileBase}.js
+      </div>
+    `;
+    container.classList.remove("is-loading");
+    return;
+  }
+
+  // render effettivo
+  if (typeof mod.renderCard === "function") {
+    const html = mod.renderCard(data, { modId, reportId });
+    container.innerHTML = html;
+    container.classList.remove("is-loading");
+
+    // bind interazioni modulo
+    if (typeof mod.bindCard === "function") {
+      try {
+        mod.bindCard(container, data, { modId, reportId });
+      } catch (bindErr) {
+        console.warn("bindCard error per", modId, bindErr);
+      }
+    }
+
+    // Tooltip "?" su metriche dentro la card
+    if (
+      window.__TradeliaUI &&
+      typeof window.__TradeliaUI.bindMetricInfoButtons === "function"
+    ) {
+      try {
+        window.__TradeliaUI.bindMetricInfoButtons();
+      } catch (e) {
+        console.warn("bindMetricInfoButtons error:", e);
+      }
+    }
+
+  } else {
+    // modulo importato ma senza renderCard
+    container.innerHTML = `
+      <div class="section-headline">
+        <div class="section-head-left">
+          <div class="section-head-topline">
+            <span class="section-badge">${modId}</span>
+            <span class="module-status-pill" data-state="error">VIEW</span>
+          </div>
+          <div class="section-title-main">${modId}</div>
+          <div class="section-desc">
+            Modulo caricato ma nessun renderer disponibile.
+          </div>
+        </div>
+      </div>
+    `;
+    container.classList.remove("is-loading");
   }
 }
 
-document.addEventListener('DOMContentLoaded', mountReport);
+/////////////////////////////
+// FLUSSO PRINCIPALE
+/////////////////////////////
+
+async function mountReport() {
+  const reportId = getReportIdFromURL();
+
+  // 1. header -> hero
+  const headerData = await fetchJSON(`/report/reports/${reportId}/header.json`);
+  if (headerData) {
+    mountHero(headerData);
+
+    // ==== NEW: inserisci CompanyName/Ticker in UI chrome ====
+    const name = headerData.CompanyName || headerData.Ticker || "—";
+
+    // <title>
+    document.title = `Tradelia AI · Report ${name}`;
+
+    // header sticky claim ("Report {NOME AZIENDA}")
+    const claimEl = document.querySelector(".claim");
+    if (claimEl) {
+      claimEl.textContent = `Report ${name}`;
+    }
+
+    // tagline hero "Analisi indipendente su ..."
+    const heroClientEl = document.getElementById("hero-client");
+    if (heroClientEl) {
+      heroClientEl.textContent = `Analisi indipendente su ${name}`;
+    }
+        // === NEW: aggiorna anche il footer ===
+    const footerCompanyEl = document.getElementById("footer-company");
+    if (footerCompanyEl) {
+      footerCompanyEl.textContent = name;
+    }
+    // =====================================
+
+    // =========================================================
+  } else {
+    console.warn("Header mancante per", reportId);
+  }
+
+  // 2. manifest -> ordine moduli + path json
+  const rawManifest = await loadManifest(reportId);
+  const manifest = normalizeManifest(rawManifest, reportId);
+
+  // 3. scorri i moduli in ordine e montali
+  for (const modId of manifest.order) {
+    const jsonUrl = manifest.modules[modId];
+    if (!jsonUrl) {
+      console.warn(`Nessun jsonUrl per ${modId}`);
+      continue;
+    }
+    await mountSingleModule(modId, jsonUrl, reportId);
+  }
+}
+
+// kick immediato
+mountReport();
+
+// esponiamo debug
+window.TradeliaApp = {
+  mountReport,
+  getReportIdFromURL
+};
