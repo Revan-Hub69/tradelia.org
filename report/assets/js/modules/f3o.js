@@ -1,6 +1,6 @@
 // /report/assets/js/modules/f3o.js (rewrite v1.2-adapter)
 //
-// F3O · Options Overlay (derivati) — 3–10 giorni
+// F3o · Options Overlay (derivati) — 3–10 giorni
 // - NIENTE descrizioni hard‑coded: tutto arriva da JSON (ai_note / labels)
 // - Adattato per leggere JSON con ui_labels.{s1_title..s9_title} come da feed del 2025‑10‑31
 // - Sezioni con nomi più intuitivi (fallback se manca ui_labels)
@@ -56,7 +56,7 @@ export function renderCard(rawData, ctx = {}){
     <header class="section-headline mb-4">
       <div class="section-head-left">
         <div class="section-head-topline flex items-center flex-wrap gap-2">
-          <span class="section-badge">F3O</span>
+          <span class="section-badge">F3o</span>
           <span class="text-[10px] font-semibold uppercase tracking-wide text-[color:var(--muted)]">
             ${escapeHtml(d.labels?.hero_subtitle)}
           </span>
