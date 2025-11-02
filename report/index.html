@@ -88,63 +88,101 @@
     <!-- I moduli runtime (Hero, F1–F6, ecc.) verranno montati qui da app.js -->
   </main>
 
-  <!-- FOOTER -->
-  <footer class="site-footer mt-auto py-10">
-    <div class="container">
-      <section class="ftr-grid">
-        <!-- Col 1 -->
-        <div class="ftr-col">
-          <h3 class="ftr-head"><i data-lucide="file-text"></i><span>Report</span></h3>
-          <p>
-            Dashboard istituzionale Tradelia AI.<br/>
-            Analisi macro, sentiment e tecnica (orizzonte 3–10 giorni).<br/>
-            Uso informativo e didattico — nessuna raccomandazione.
-          </p>
+<footer class="site-footer mt-auto py-12 border-t border-[color:var(--footer-br)]">
+  <div class="container max-w-6xl mx-auto px-4">
+    <div class="grid gap-10 md:grid-cols-2">
+      <!-- BLOCCO SINISTRA -->
+      <div>
+        <h3 class="text-[15px] font-semibold tracking-wide uppercase mb-3 text-[color:var(--ink)]">
+          Tradelia AI · Institutional Dashboard
+        </h3>
+        <p class="text-[13.5px] leading-[1.5] text-[color:var(--ink-soft)] mb-4">
+          Analisi multi-fattore su contesto macro, sentiment e tecnica
+          (orizzonte 3–10 giorni). Uso esclusivamente informativo e formativo —
+          nessuna raccomandazione personalizzata.
+        </p>
+        <ul class="text-[13px] leading-[1.5] text-[color:var(--muted)] space-y-1">
+          <li>Non è consulenza (MiFID II / ESMA)</li>
+          <li>Tradelia AI non gestisce capitali né esegue ordini</li>
+          <li>Rischio di perdita anche totale del capitale</li>
+        </ul>
+        <div class="mt-4 flex flex-wrap gap-3">
+          <button id="btn-privacy-open" class="btn btn-sm" type="button">Privacy</button>
+          <button id="btn-mifid-open" class="btn btn-sm" type="button">Informativa MiFID</button>
         </div>
+      </div>
 
-        <!-- Col 2 -->
-        <div class="ftr-col">
-          <h3 class="ftr-head"><i data-lucide="shield"></i><span>Compliance &amp; Risk</span></h3>
-          <ul class="ftr-list">
-            <li>Materiale informativo/formativo</li>
-            <li>Non è consulenza personalizzata (MiFID II / ESMA)</li>
-            <li>Tradelia AI non gestisce capitali né esegue ordini</li>
-            <li>Rischio di perdita anche totale del capitale</li>
-          </ul>
-          <div class="mt-3 flex flex-wrap gap-4">
-            <button id="btn-privacy-open" class="btn btn-sm" type="button">Privacy</button>
-            <button id="btn-mifid-open" class="btn btn-sm" type="button">Informativa MiFID</button>
-          </div>
-        </div>
+      <!-- BLOCCO DESTRA -->
+      <div>
+        <h3 class="text-[15px] font-semibold tracking-wide uppercase mb-3 text-[color:var(--ink)]">
+          Canali ufficiali
+        </h3>
+        <p class="text-[13.5px] text-[color:var(--ink-soft)] mb-3">
+          Aggiornamenti su metodologia, release e materiale educativo.
+        </p>
+        <div class="flex flex-col gap-3 text-[14px]">
+          <!-- LinkedIn -->
+          <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener"
+             class="flex items-center gap-2 hover:opacity-90 transition">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+              <path d="M8 17v-6"></path><circle cx="8" cy="8" r="1"></circle>
+              <path d="M12 17v-3a3 3 0 0 1 6 0v3"></path>
+            </svg>
+            LinkedIn
+          </a>
 
-        <!-- Col 3 -->
-        <div class="ftr-col">
-          <h3 class="ftr-head"><i data-lucide="share-2"></i><span>Canali ufficiali</span></h3>
-          <p class="mb-2">Aggiornamenti su metodologia e release:</p>
-          <div class="flex flex-col gap-2">
-            <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener" class="flex items-center gap-2 hover:opacity-80">
-              <i data-lucide="linkedin"></i><span>LinkedIn</span>
-            </a>
-            <a href="https://x.com/tradelia_ai" target="_blank" rel="noopener" class="flex items-center gap-2 hover:opacity-80">
-              <i data-lucide="twitter"></i><span>X (Twitter)</span>
-            </a>
-            <a href="https://www.reddit.com/r/TradeliaAI" target="_blank" rel="noopener" class="flex items-center gap-2 hover:opacity-80">
-              <i data-lucide="reddit"></i><span>Reddit</span>
-            </a>
-          </div>
-        </div>
-      </section>
+          <!-- X / Twitter -->
+          <a href="https://x.com/tradelia_ai" target="_blank" rel="noopener"
+             class="flex items-center gap-2 hover:opacity-90 transition">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4l16 16M20 4L4 20"></path>
+            </svg>
+            X (Twitter)
+          </a>
 
-      <!-- Bottom line -->
-      <div class="ftr-bottom">
-        <div>
-          © <span id="footer-year"></span> <strong>Tradelia AI</strong> · Tutti i diritti riservati ·
-          <a href="mailto:info@tradelia.org" class="underline hover:opacity-80">info@tradelia.org</a>
+          <!-- Reddit -->
+          <a href="https://www.reddit.com/r/TradeliaAI" target="_blank" rel="noopener"
+             class="flex items-center gap-2 hover:opacity-90 transition">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="13" r="1.5"></circle>
+              <circle cx="15" cy="13" r="1.5"></circle>
+              <path d="M12 17c1.7 0 3-1.3 3-3"></path>
+              <path d="M20 12c0 4.4-3.6 8-8 8s-8-3.6-8-8 3.6-8 8-8c1.6 0 3.1.5 4.4 1.3"></path>
+              <circle cx="19" cy="5" r="1"></circle>
+              <path d="M15 7l1-5 2 1"></path>
+            </svg>
+            Reddit
+          </a>
+
+          <!-- Quora -->
+          <a href="https://www.quora.com/profile/Tradelia" target="_blank" rel="noopener"
+             class="flex items-center gap-2 hover:opacity-90 transition">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="7.5"></circle>
+              <path d="M16 16l2 2"></path>
+            </svg>
+            Quora
+          </a>
         </div>
-        <div>Missione: alfabetizzazione finanziaria indipendente.</div>
       </div>
     </div>
-  </footer>
+
+    <!-- BASELINE -->
+    <div class="mt-10 pt-6 border-t border-[color:var(--br-soft)] text-[13px] text-[color:var(--muted)] flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <div>
+        © <span id="footer-year"></span> <strong>Tradelia AI</strong> · Tutti i diritti riservati ·
+        <a href="mailto:info@tradelia.org" class="underline hover:opacity-80">info@tradelia.org</a>
+      </div>
+      <div>Missione · alfabetizzazione finanziaria indipendente</div>
+    </div>
+  </div>
+</footer>
+
 
   <!-- Runtime -->
   <script type="module" src="/report/assets/js/app.js"></script>
