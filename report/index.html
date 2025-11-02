@@ -5,14 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="dark" />
   <title>Tradelia · Institutional Report</title>
-  <link rel="icon" href="./favicon.ico">
-  <link rel="stylesheet" href="./assets/css/tokens.css?v=3.0" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico">
+
+  <!-- Design tokens + base UI (dark-only, istituzionale) -->
+  <link rel="stylesheet" href="/report/assets/css/tokens.css?v=3.1">
 </head>
 <body>
-  <!-- HEADER -->
+
+  <!-- HEADER (semplice, dark) -->
   <header class="site-header" role="banner">
     <div class="header-inner">
-      <a class="brand" href="./" aria-label="Tradelia AI">
+      <a class="brand" href="/" aria-label="Tradelia AI">
         <span class="logo" aria-hidden="true"></span>
         <span class="wordmark">TRADELIA<span class="dot">•</span>AI</span>
       </a>
@@ -25,9 +30,11 @@
     <h1 id="hero-title" class="hero-title">Report</h1>
     <div id="hero-sub" class="hero-sub"></div>
 
+    <!-- Confidence meter con ticks -->
     <div class="hero-meter">
       <div class="meter-head">
-        <div class="label">Confidence
+        <div class="label">
+          Confidence
           <button class="info-btn" data-info="ConfidenceFinal" aria-label="Cos'è la Confidence?">?</button>
         </div>
         <div id="hero-conf-val" class="tabular">—</div>
@@ -36,10 +43,14 @@
         <div id="hero-meter-fill" class="meter-fill"></div>
       </div>
       <div class="meter-legend">
-        <span>0</span><span>65 (Review)</span><span>85 (Pass)</span><span>100</span>
+        <span>0</span>
+        <span>65 (Review)</span>
+        <span>85 (Pass)</span>
+        <span>100</span>
       </div>
     </div>
 
+    <!-- Prezzo + hint + Δ% / Stato -->
     <div class="hero-main">
       <div class="price-block">
         <div class="price-row">
@@ -50,25 +61,27 @@
         <div id="hero-hint" class="hint"></div>
       </div>
 
-      <div class="right-block">
+      <div class="right-block" aria-label="Variazione e stato">
         <span id="hero-delta" class="delta tabular" aria-live="polite"></span>
-        <button class="info-btn" data-info="ChangePct_info" aria-label="Come si calcola Δ%?">?</button>
+        <button class="info-btn" data-info="ChangePct_info" aria-label="Come si calcola la variazione percentuale?">?</button>
         <span id="hero-state" class="state"></span>
         <button class="info-btn" data-info="State_info" aria-label="Cosa significa lo stato?">?</button>
       </div>
     </div>
 
-    <!-- KPI TABLE -->
+    <!-- KPI TABLE (label / valore allineato a destra) -->
     <div id="hero-kpi" class="kpi"></div>
 
+    <!-- Nota MiFID -->
     <div id="hero-note" class="hero-note">
       Materiale informativo/educativo. Nessuna raccomandazione personale (MiFID II).
     </div>
   </section>
 
+  <!-- Separatore -->
   <div class="section-divider" role="separator" aria-label="Schede moduli"></div>
 
-  <!-- MODULI -->
+  <!-- GRID MODULI (F1..F7) -->
   <main id="modules" class="modules-grid" role="main">
     <article id="sec-f1b" class="report-section" data-card="F1B"></article>
     <article id="sec-f2"  class="report-section" data-card="F2"></article>
@@ -81,15 +94,15 @@
     <article id="sec-f7"  class="report-section" data-card="F7"></article>
   </main>
 
-  <!-- OVERLAY ANALITICO -->
+  <!-- OVERLAY ANALITICO (singleton) -->
   <div id="panel-overlay" class="overlay" hidden>
     <div class="overlay-backdrop" data-overlay-close></div>
     <section class="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title">
       <header class="panel-head">
         <h2 id="panel-title" class="panel-title">Dettaglio</h2>
-        <button class="btn btn-ghost" data-overlay-close aria-label="Chiudi">✕</button>
+        <button class="btn btn-ghost" data-overlay-close aria-label="Chiudi pannello">✕</button>
       </header>
-      <nav id="panel-tabs" class="panel-tabs" role="tablist"></nav>
+      <nav id="panel-tabs" class="panel-tabs" role="tablist" aria-label="Sezioni analitiche"></nav>
       <div id="panel-body" class="panel-body" data-scrollable tabindex="0" role="region" aria-live="polite"></div>
       <footer id="panel-foot" class="panel-foot"></footer>
     </section>
@@ -101,10 +114,12 @@
     <section class="panel panel-legal" role="dialog" aria-modal="true" aria-labelledby="legal-title">
       <header class="panel-head">
         <h2 id="legal-title" class="panel-title">Informativa</h2>
-        <button class="btn btn-ghost" data-legal-close aria-label="Chiudi">✕</button>
+        <button class="btn btn-ghost" data-legal-close aria-label="Chiudi informativa">✕</button>
       </header>
       <div id="legal-body" class="panel-body" data-scrollable></div>
-      <footer class="panel-foot"><button class="btn" data-legal-close>OK</button></footer>
+      <footer class="panel-foot">
+        <button class="btn" data-legal-close>OK</button>
+      </footer>
     </section>
   </div>
 
@@ -119,7 +134,8 @@
     </div>
   </footer>
 
-  <script type="module" src="./assets/js/ui-runtime.js?v=3.0"></script>
-  <script type="module" src="./assets/js/app.js?v=3.0"></script>
+  <!-- Runtime UI (tooltip unificati, overlay) + App orchestrator -->
+  <script type="module" src="/report/assets/js/ui-runtime.js?v=3.1"></script>
+  <script type="module" src="/report/assets/js/app.js?v=3.1"></script>
 </body>
 </html>
