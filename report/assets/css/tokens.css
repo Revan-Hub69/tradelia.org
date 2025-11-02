@@ -3040,6 +3040,130 @@ html[data-theme="dark"]{ --shadow-card: 0 1px 2px rgba(0,0,0,.85), 0 0 14px rgba
 .info-btn,.metric-help{ min-width:22px; min-height:22px; }
 .tl-panel-tab-badge{ padding: .18rem .45rem; }
 .tl-panel-section-pill{ padding: .32rem .5rem; }
+/* tokens.css v7.1-balance — PATCH OVERRIDES
+   ------------------------------------------------
+   Drop-in patch da APPENDERE in coda al tokens.css attuale.
+   Obiettivo: più respiro, leggibilità e coerenza light/dark
+   senza stravolgere l’architettura esistente.
+*/
+
+/* =========================
+   1) TOKENS & BASE TWEAKS
+   ========================= */
+:root{
+  /* spaziatura sezioni */
+  --space-section-y: 2.5rem;
+}
+
+/* Tema LIGHT: micro-ritocchi su superfici / ombre */
+:root{
+  --surface-page: oklab(99% 0 0);
+  --surface-card: oklab(100% 0 0);
+  --surface-card-alt: oklab(98.5% 0 0);
+  --br-card: oklab(85% 0 0);
+  --shadow-card: 0 1px 2px oklab(0% 0 0 / 0.05);
+}
+
+/* Tema DARK: maggiore contrasto + ombre più pulite */
+html[data-theme="dark"]{
+  --surface-page: oklab(21% 0 0);
+  --surface-card: oklab(26% 0 0);
+  --surface-card-alt: oklab(28% 0 0);
+  --br-card: oklab(45% 0 0 / 0.20);
+  --shadow-card: 0 1px 6px oklab(0% 0 0 / 0.40);
+
+  /* testo e label più leggibili */
+  --ink:   oklab(95% 0 0);
+  --muted: oklab(80% 0 0 / .70);
+
+  /* tono semaforo leggermente meno saturo per lunghe letture */
+  --tone-g:    oklab(72% -0.07 0.09);
+  --tone-r:    oklab(68%  0.14 0.05);
+  --tone-warn: oklab(80%  0.06 0.11);
+}
+
+/* =========================
+   2) STRUTTURA SEZIONI
+   ========================= */
+.section-head{
+  margin-top: calc(var(--space-section-y) + .25rem);
+  margin-bottom: var(--space-section-y);
+}
+.section-sub{ line-height: 1.6; }
+
+.report-section-block{ margin-bottom: var(--space-section-y); }
+
+/* =========================
+   3) HERO KPI / META-PILL
+   ========================= */
+.meta-pill{
+  padding: 1rem; /* +respiro */
+  border-radius: var(--radius-card);
+  background: var(--surface-card);
+  border: 1px solid var(--br-card);
+  box-shadow: var(--shadow-card);
+}
+.meta-label{
+  font-size: 11.5px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.meta-val{
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+
+/* =========================
+   4) CARD HEADER / TITOLI
+   ========================= */
+.section-title{ letter-spacing:.02em; }
+.section-title-main{ font-size: 15px; letter-spacing:.02em; }
+
+/* =========================
+   5) FOOTER RESPIRO & CONTRASTO
+   ========================= */
+.site-footer{ border-top:1px solid var(--br-soft); padding-top: 3rem; line-height:1.55; }
+.ftr-grid{ gap: 2rem; }
+.ftr-socials a{ opacity:.98; }
+.ftr-head i{ opacity:.9; }
+
+/* =========================
+   6) PANEL OVERLAY FINESSE
+   ========================= */
+.tl-panel-section{ scroll-margin-top: 64px; }
+.tl-panel__body{ line-height: 1.55; }
+
+/* Tabs: un filo più leggibili su dark */
+html[data-theme="dark"] .tl-panel-tab{
+  border-color: var(--br-card);
+}
+
+/* =========================
+   7) BUTTON & CHIP TOUCH TARGET
+   ========================= */
+@media (max-width: 767px){
+  .btn, .btn-sm, .tl-panel-footer-btn { min-height: 36px; }
+}
+
+/* =========================
+   8) LEGAL OVERLAY armonizzato
+   ========================= */
+#legal-overlay .tl-panel__body{ line-height:1.6; }
+#legal-overlay .tl-panel__footer .btn{ padding:.55rem .9rem; }
+
+/* =========================
+   9) MICRO-ADJUST MTF rows
+   ========================= */
+.metric-row{ gap: 14px; }
+.metric-field{ min-height: 84px; }
+
+/* =========================
+   10) PRINT QUALITY (no change of flow, solo respiro)
+   ========================= */
+@media print{
+  .report-section-block{ margin-bottom: 24px !important; }
+}
+
 
 /* =========================================================
    FINE
