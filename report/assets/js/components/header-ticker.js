@@ -1,8 +1,9 @@
 // /report/assets/js/components/header-ticker.js
 // Header verbale Tradelia AI (JSON-driven, inline-metrics)
 // - niente dot
-// - metriche come testo evidenziato (italic + underline)
-// - punteggiatura e parentesi vengono ATTACCATE al nodo precedente
+// - metriche = testo evidenziato (italic + underline)
+// - punteggiatura/parentesi SI ATTACCANO al nodo precedente
+// - footer con pulsanti dal JSON
 
 const metricToneClass = (tone) => {
   switch (tone) {
@@ -82,7 +83,7 @@ function renderTextPart(part) {
   const txt = part.text || '';
   const el = createEl('span', 'header-ticker-text', txt);
 
-  // se è solo punteggiatura o parentesi, la segniamo
+  // se è solo punteggiatura o parentesi → segniamo che va incollata
   if (/^[,.;:!?)]$/.test(txt.trim())) {
     el.dataset.glue = '1';
   }
@@ -91,7 +92,6 @@ function renderTextPart(part) {
 }
 
 function renderMetricPart(part) {
-  // metrica = solo testo evidenziato
   const wrap = createEl('button', `metric-inline ${metricToneClass(part.tone)}`);
   wrap.type = 'button';
   wrap.dataset.metric = part.key;
@@ -103,7 +103,7 @@ function renderMetricPart(part) {
     part.value != null ? String(part.value) : '—'
   );
 
-  // i tuoi stili inline
+  // stile che avevi tu
   txt.style.fontWeight = '600';
   txt.style.fontStyle = 'italic';
   txt.style.textDecoration = 'underline';
@@ -131,7 +131,7 @@ function renderRow(row) {
   else if (row.id === 'window-line') rowEl.classList.add('header-ticker-row--meta');
 
   (row.parts || []).forEach((part) => {
-    // se è punteggiatura → la attacco al nodo precedente
+    // 👉 se è virgola/punto/parentesi la appiccichiamo al precedente
     if (part.kind === 'text' && part.text && /^[,.;:!?)]$/.test(part.text.trim())) {
       const last = rowEl.lastElementChild;
       if (last) {
@@ -142,7 +142,7 @@ function renderRow(row) {
           last.textContent = (last.textContent || '') + part.text;
         }
       } else {
-        // fallback
+        // fallback, ma non dovrebbe succedere
         rowEl.appendChild(renderTextPart(part));
       }
     } else {
