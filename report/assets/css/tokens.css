@@ -627,3 +627,11 @@ a.mail-link { text-underline-offset: 2px; text-decoration-thickness: 1px; }
 .metric-inline--warn .metric-inline-arrow svg { stroke: var(--warn); }
 .metric-inline--err .metric-inline-arrow svg { stroke: var(--err); }
 .metric-inline--neutral .metric-inline-arrow svg { stroke: var(--muted); }
+
+.header-ticker-glue {
+  white-space: nowrap;              /* non andare mai a capo qui */
+}
+
+.header-ticker-glue::before {
+  content: "\00a0";                 /* spazio non separabile prima della virgola */
+}
