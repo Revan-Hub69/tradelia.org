@@ -1,12 +1,16 @@
 // /report/assets/js/components/header-ticker.js
-// Header verbale Tradelia AI (JSON-driven, premium, inline-metrics)
+// Header verbale Tradelia AI (JSON-driven, inline-metrics)
 
 const metricToneClass = (tone) => {
   switch (tone) {
-    case 'ok': return 'metric-inline--ok';
-    case 'warn': return 'metric-inline--warn';
-    case 'err': return 'metric-inline--err';
-    default: return 'metric-inline--neutral';
+    case 'ok':
+      return 'metric-inline--ok';
+    case 'warn':
+      return 'metric-inline--warn';
+    case 'err':
+      return 'metric-inline--err';
+    default:
+      return 'metric-inline--neutral';
   }
 };
 
@@ -17,7 +21,6 @@ const createEl = (tag, cls, text) => {
   return el;
 };
 
-// opzionale: glossario
 async function fetchGlossaryEntry(key) {
   try {
     const res = await fetch('/report/assets/glossary.json', { cache: 'no-store' });
@@ -29,24 +32,25 @@ async function fetchGlossaryEntry(key) {
   }
 }
 
-// pannello con tabella (qui teniamo le pill, va bene così)
 async function openMetricsPanel(data) {
   const ui = window.__TradeliaUI;
   if (!ui?.openPanel) return;
 
   const list = Array.isArray(data.metricsPanel) ? data.metricsPanel : [];
-  const rowsHtml = await Promise.all(list.map(async (m) => {
-    const g = await fetchGlossaryEntry(m.key);
-    return `
-      <tr>
-        <td class="py-2 pr-3"><div class="metric-btn pill--neutral">${m.label || m.key}</div></td>
-        <td class="py-2 pr-3">${m.value ?? '—'}</td>
-        <td class="py-2 pr-3 text-[13px] text-[color:var(--ink-soft)]">${g?.what || '—'}</td>
-        <td class="py-2 pr-3 text-[13px] text-[color:var(--ink-soft)]">${g?.how || '—'}</td>
-        <td class="py-2 pr-3 text-[13px] text-[color:var(--muted)]">${g?.source || '—'}</td>
-      </tr>
-    `;
-  }));
+  const rowsHtml = await Promise.all(
+    list.map(async (m) => {
+      const g = await fetchGlossaryEntry(m.key);
+      return `
+        <tr>
+          <td class="py-2 pr-3"><div class="metric-btn pill--neutral">${m.label || m.key}</div></td>
+          <td class="py-2 pr-3">${m.value ?? '—'}</td>
+          <td class="py-2 pr-3 text-[13px] text-[color:var(--ink-soft)]">${g?.what || '—'}</td>
+          <td class="py-2 pr-3 text-[13px] text-[color:var(--ink-soft)]">${g?.how || '—'}</td>
+          <td class="py-2 pr-3 text-[13px] text-[color:var(--muted)]">${g?.source || '—'}</td>
+        </tr>
+      `;
+    })
+  );
 
   ui.openPanel({
     title: 'Metriche header',
@@ -71,41 +75,34 @@ async function openMetricsPanel(data) {
   });
 }
 
-// testo semplice
 function renderTextPart(part) {
   return createEl('span', 'header-ticker-text', part.text || '');
 }
 
-// metrica in stile "dot + testo sottolineato"
 function renderMetricPart(part) {
-  // wrapper principale con tono cromatico
   const wrap = createEl('button', `metric-inline ${metricToneClass(part.tone)}`);
   wrap.type = 'button';
   wrap.dataset.metric = part.key;
   wrap.setAttribute('aria-label', part.label || part.key);
 
-  // testo principale (valore numerico o placeholder)
   const txt = createEl(
     'span',
     `metric-inline-text metric-inline-text--${part.tone || 'neutral'}`,
     part.value != null ? String(part.value) : '—'
   );
 
-  // stile tipografico: grassetto, corsivo, sottolineato
   txt.style.fontWeight = '600';
   txt.style.fontStyle = 'italic';
   txt.style.textDecoration = 'underline';
 
   wrap.appendChild(txt);
 
-  // click neutro
   wrap.addEventListener('click', (e) => {
     e.stopPropagation();
   });
 
   return wrap;
 }
-
 
 function renderPart(part) {
   if (part.kind === 'text') return renderTextPart(part);
@@ -115,33 +112,21 @@ function renderPart(part) {
 
 function renderRow(row) {
   const rowEl = createEl('div', 'header-ticker-row');
+
   if (row.id === 'intro-line') rowEl.classList.add('header-ticker-row--intro');
   else if (row.id === 'quality-line') rowEl.classList.add('header-ticker-row--quality');
   else if (row.id === 'window-line') rowEl.classList.add('header-ticker-row--meta');
 
-  const PUNCT_RE = /^[\s]*[,\.;:!\?]/;
-
   (row.parts || []).forEach((part) => {
-    // render normale
-    if (part.kind === 'text' && typeof part.text === 'string' && PUNCT_RE.test(part.text)) {
-      // è un pezzetto che inizia con virgola/punto → lo wrappiamo
-      const glue = createEl('span', 'header-ticker-glue');
-      // niente spazi davanti, li gestiamo col CSS
-      glue.textContent = part.text.trim();
-      rowEl.appendChild(glue);
-    } else {
-      rowEl.appendChild(renderPart(part));
-    }
+    rowEl.appendChild(renderPart(part));
   });
 
-  // tooltip runtime
   if (window.__TradeliaUI?.bindMetricInfoButtons) {
     window.__TradeliaUI.bindMetricInfoButtons(rowEl);
   }
 
   return rowEl;
 }
-
 
 function renderFooter(node, data) {
   const footer = node._footer;
@@ -166,9 +151,15 @@ function renderFooter(node, data) {
     });
     footer.appendChild(auditBtn);
   }
+
+  const hint = createEl(
+    'p',
+    'header-ticker-hint',
+    'Clicca sui valori per conoscerne il significato.'
+  );
+  footer.appendChild(hint);
 }
 
-// mount
 function mount(containerEl) {
   const root = createEl('section', 'header-ticker');
   const body = createEl('div', 'header-ticker-body');
@@ -184,12 +175,14 @@ function mount(containerEl) {
   return root;
 }
 
-// update
 function update(node, data) {
   if (!node || !data) return;
 
-  // tonebar per stato
-  node.classList.remove('header-ticker--state-ok', 'header-ticker--state-warn', 'header-ticker--state-err');
+  node.classList.remove(
+    'header-ticker--state-ok',
+    'header-ticker--state-warn',
+    'header-ticker--state-err'
+  );
   const st = data.meta?.state || data.State?.raw || data.State;
   if (st === 'ACTIVE') node.classList.add('header-ticker--state-ok');
   else if (st === 'HOLD') node.classList.add('header-ticker--state-warn');
