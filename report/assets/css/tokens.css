@@ -1,5 +1,5 @@
 /* /report/assets/css/tokens.css
-   Tradelia Report Design System · SUPER PREMIUM (v2025-11-02)
+   Tradelia Report Design System · SUPER PREMIUM (v2025-11-02 CORRETTA)
    -----------------------------------------------------------
    - Design tokens (colori, radius, shadow, tipografia)
    - Temi light/dark (attr [data-theme])
@@ -379,21 +379,20 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: var(--lh-13); font-weight
   .card { box-shadow:none !important; }
   .tl-panel-overlay, .tl-metric-modal-overlay, .tl-popover { display:none !important; }
 }
+
 /* ===== Wordmark & logo unificati ===== */
 .brand { font-weight: 900; letter-spacing: -0.02em; display:inline-flex; align-items:center; gap:.35rem; }
 .brand-word { color: var(--ink); }
 .brand-suffix { color: var(--ink); font-weight: 900; }
 .brand-dot { width:10px; height:10px; border-radius:999px; background: var(--brand-600); display:inline-block; }
 
-/* Variante piccola per baseline footer */
 .brand--sm .brand-word { font-weight: 700; }
 .brand--sm .brand-dot { width:8px; height:8px; }
 .brand--sm .brand-suffix { font-weight: 700; }
 
-/* Hover logo sobrio */
 a.brand:hover { opacity:.9; transform: translateY(-1px); transition: opacity .18s ease, transform .18s ease; }
 
-/* ===== Pulsanti: hover/focus eleganti (btn, btn-sm, toggle tema) ===== */
+/* ===== Pulsanti: hover/focus eleganti ===== */
 :root { --hover-bg: color-mix(in oklab, var(--surface-card) 92%, transparent); }
 .btn, .btn-sm, .btn-inline {
   transition: background-color .15s ease, border-color .15s ease,
@@ -410,17 +409,7 @@ a.brand:hover { opacity:.9; transform: translateY(-1px); transition: opacity .18
   outline: 2px solid var(--brand-500);
   outline-offset: 2px;
 }
-
-/* Toggle tema: rendi cursore/hover coerenti */
 #btn-theme { cursor: pointer; }
-
-/* ===== Footer & headings: no underline imprevisto ===== */
-h1, h2, h3, h4, h5, h6 { text-decoration: none; }
-.site-footer a { text-decoration: none; border-bottom: 1px solid transparent; }
-.site-footer a:hover { border-bottom-color: currentColor; }
-
-/* Email nel footer: underline più sottile e tono coerente */
-a.mail-link { text-underline-offset: 2px; text-decoration-thickness: 1px; }
 
 /* ===== Header Ticker Verbale ===== */
 .header-ticker {
@@ -433,8 +422,6 @@ a.mail-link { text-underline-offset: 2px; text-decoration-thickness: 1px; }
   flex-direction: column;
   gap: 0.65rem;
 }
-
-/* tonebar laterale */
 .header-ticker::before {
   content: "";
   position: absolute;
@@ -452,15 +439,12 @@ a.mail-link { text-underline-offset: 2px; text-decoration-thickness: 1px; }
   flex-direction: column;
   gap: 0.5rem;
 }
-
 .header-ticker-row {
   display: flex;
   flex-wrap: wrap;
   gap: .35rem .4rem;
   align-items: center;
 }
-
-/* gerarchia righe */
 .header-ticker-row--intro {
   font-size: 15px;
   line-height: 1.3;
@@ -476,41 +460,13 @@ a.mail-link { text-underline-offset: 2px; text-decoration-thickness: 1px; }
   line-height: 1.35;
   color: var(--muted);
 }
-
-/* testo inline per non staccare punteggiatura */
 .header-ticker-text {
   display: inline;
 }
-
-/* incolliamo la punteggiatura marcata dal JS */
 .header-ticker-text[data-glue="1"] {
   white-space: nowrap;
 }
 
-/* pill metriche: variante compact */
-.metric-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: .35rem;
-  padding: .28rem .55rem;
-  border-radius: 999px;
-  border: 1px solid var(--br-soft);
-  background: color-mix(in oklab, var(--surface-card) 96%, transparent);
-  font-size: 12px;
-  line-height: 1;
-  color: inherit;
-  cursor: pointer;
-  transition: background .12s ease, border-color .12s ease;
-}
-.metric-btn:hover {
-  background: color-mix(in oklab, var(--surface-card) 90%, transparent);
-  border-color: color-mix(in oklab, var(--br-soft) 50%, var(--brand-600) 40%);
-}
-.metric-btn.pill--ok    { border-color: color-mix(in oklab, var(--ok) 40%, var(--br-soft)); }
-.metric-btn.pill--warn  { border-color: color-mix(in oklab, var(--warn) 55%, var(--br-soft)); }
-.metric-btn.pill--err   { border-color: color-mix(in oklab, var(--err) 40%, var(--br-soft)); }
-
-/* footer */
 .header-ticker-footer {
   margin-top: .35rem;
   padding-top: .55rem;
@@ -526,7 +482,6 @@ a.mail-link { text-underline-offset: 2px; text-decoration-thickness: 1px; }
   padding: .35rem .75rem;
 }
 
-/* mobile tweaks */
 @media (max-width: 640px) {
   .header-ticker {
     padding: 1rem 1rem .75rem;
@@ -539,14 +494,13 @@ a.mail-link { text-underline-offset: 2px; text-decoration-thickness: 1px; }
   }
 }
 
-/* ===== Metriche verbali (dot + testo sottolineato) ===== */
+/* ===== Metriche verbali (versione unica, pulita) ===== */
 .metric-inline {
   display: inline-flex;
   align-items: center;
   gap: .35rem;
   cursor: pointer;
 }
-
 .metric-inline-dot {
   width: 6px;
   height: 6px;
@@ -555,111 +509,29 @@ a.mail-link { text-underline-offset: 2px; text-decoration-thickness: 1px; }
   flex: 0 0 auto;
   margin-top: 1px;
 }
-
 .metric-inline-text {
   font-weight: 600;
-  font-style: italic;
-  text-decoration: underline;
-  text-decoration-thickness: 1.5px;
-  text-underline-offset: 2px;
-  line-height: 1.3;
+  line-height: 1.25;
+  color: var(--ink);
+  text-decoration: none;
 }
-
-/* toni base (dark-friendly) */
 .metric-inline--ok .metric-inline-dot { background: var(--ok); }
 .metric-inline--warn .metric-inline-dot { background: var(--warn); }
 .metric-inline--err .metric-inline-dot { background: var(--err); }
 .metric-inline--neutral .metric-inline-dot { background: var(--ink-soft); }
 
-.metric-inline--ok .metric-inline-text {
-  color: var(--ink);
-  text-decoration-color: color-mix(in oklab, var(--ok) 85%, transparent);
-}
-.metric-inline--warn .metric-inline-text {
-  color: var(--ink);
-  text-decoration-color: color-mix(in oklab, var(--warn) 85%, transparent);
-}
-.metric-inline--err .metric-inline-text {
-  color: var(--ink);
-  text-decoration-color: color-mix(in oklab, var(--err) 85%, transparent);
-}
-.metric-inline--neutral .metric-inline-text {
-  color: var(--ink-soft);
-  text-decoration-color: color-mix(in oklab, var(--ink-soft) 85%, transparent);
-}
+/* in light non coloriamo TUTTO il testo, restiamo istituzionali */
+:root[data-theme="light"] .metric-inline--ok .metric-inline-text { color: var(--ink); }
+:root[data-theme="light"] .metric-inline--warn .metric-inline-text { color: var(--ink); }
+:root[data-theme="light"] .metric-inline--err .metric-inline-text { color: var(--ink); }
 
-/* stato hover leggero */
 .metric-inline:hover .metric-inline-text {
-  opacity: .95;
+  opacity: .92;
 }
-
-/* ===== Metriche verbali con freccia + info ===== */
-.metric-inline {
-  display: inline-flex;
-  align-items: center;
-  gap: .35rem;
-  cursor: pointer;
-}
-
-.metric-inline-body {
-  display: inline-flex;
-  align-items: center;
-  gap: .25rem;
-}
-
-/* freccia */
-.metric-inline-arrow {
-  width: 12px;
-  height: 12px;
-  flex: 0 0 auto;
-}
-
-/* valore testuale */
-.metric-inline-text {
-  font-weight: 600;
-  font-style: italic;
-  text-decoration: underline;
-  text-decoration-thickness: 1.5px;
-  text-underline-offset: 2px;
-  line-height: 1.2;
-}
-
-/* icona info */
-.metric-inline-info {
-  width: 16px;
-  height: 16px;
-  flex: 0 0 auto;
-  opacity: .55;
-  transition: opacity .12s ease;
-}
-.metric-inline-info:hover {
-  opacity: .95;
-}
-
-/* toni per tema chiaro: usare i tre colori più scuri */
-:root[data-theme="light"] .metric-inline--ok .metric-inline-text {
-  color: var(--clr-pos);
-  text-decoration-color: var(--clr-pos);
-}
-:root[data-theme="light"] .metric-inline--warn .metric-inline-text {
-  color: var(--clr-warn);
-  text-decoration-color: var(--clr-warn);
-}
-:root[data-theme="light"] .metric-inline--err .metric-inline-text {
-  color: var(--clr-neg);
-  text-decoration-color: var(--clr-neg);
-}
-
-/* frecce a colore */
-.metric-inline--ok .metric-inline-arrow svg { stroke: var(--ok); }
-.metric-inline--warn .metric-inline-arrow svg { stroke: var(--warn); }
-.metric-inline--err .metric-inline-arrow svg { stroke: var(--err); }
-.metric-inline--neutral .metric-inline-arrow svg { stroke: var(--muted); }
 
 .header-ticker-glue {
   white-space: nowrap;
 }
-
 .header-ticker-glue::before {
   content: "\00a0";
 }
