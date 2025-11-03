@@ -11,7 +11,7 @@
       "parts": [
         { "kind": "text", "text": "Report Tradelia AI su " },
         { "kind": "metric", "key": "CompanyName", "value": "NVIDIA Corporation", "tone": "neutral" },
-        { "kind": "text", "text": " (" },
+        { "kind": "text", "text": "(" },
         { "kind": "metric", "key": "Ticker", "value": "NVDA", "tone": "neutral" },
         { "kind": "text", "text": ") — " },
         { "kind": "metric", "key": "Venue", "value": "NASDAQ", "tone": "neutral" },
