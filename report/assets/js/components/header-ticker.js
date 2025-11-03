@@ -112,6 +112,9 @@ function renderMetricPart(part) {
 
   wrap.addEventListener('click', (e) => {
     e.stopPropagation();
+    try {
+      window.__TradeliaUI?.openMetricPopup?.(part.key);
+    } catch {}
   });
 
   return wrap;
