@@ -1,245 +1,231 @@
-// /report/assets/js/components/header-ticker-edu.table.js
-// Header Ticker · Educational (tabella COMPATTA, 1 metrica per riga)
-// - Layout ultra-compatto, istituzionale
-// - Colonne: Metrica | Valore (+chip tono inline) | (i)
-// - Popup (i): What / How / Source delegato a __TradeliaUI.openPanel (niente CSS modale locale)
-// - Dipendenze: tokens.css + ui-runtime.js (per openPanel). Nessun popover custom.
+// /report/assets/js/components/header-ticker.js
+// Header verbale Tradelia AI (versione JSON-driven)
+// - legge un json del tipo { meta, rows[], footer, metricsPanel[] }
+// - rende righe testuali dove le parti "metric" sono pill cliccabili
+// - apre un pannello con tutte le metriche
+// dipendenze opzionali: window.__TradeliaUI, /report/assets/glossary.json
 
-export const headerTicker = (() => {
-  // ---------------- Helpers ----------------
-  const QS  = (s, r=document) => r.querySelector(s);
-  const QSA = (s, r=document) => [...r.querySelectorAll(s)];
-  const EL  = (t, cls, html) => { const e=document.createElement(t); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; };
-  const normTone = t => (t||'').toString().toLowerCase();
-  const fmt = {
-    price: v => (v==null||isNaN(v)) ? '—' : Number(v).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2}),
-    pct:   v => (v==null||isNaN(v)) ? '—%' : `${v>0?'+':''}${Number(v).toFixed(2)}%`,
-    timeUTC: s => { try { const d = new Date(s); return isNaN(d) ? String(s||'—') : d.toISOString().slice(11,16) + ' UTC'; } catch { return String(s||'—'); } }
-  };
+const metricToneClass = (tone) => {
+  switch (tone) {
+    case 'ok': return 'pill--ok';
+    case 'warn': return 'pill--warn';
+    case 'err': return 'pill--err';
+    default: return 'pill--neutral';
+  }
+};
 
-  const CFG = {
-    glossaryPath: '/report/assets/glossary.json',
-    showFeedSync: true,   // mostra riga FeedSync se presente
-    showMeta: true        // mostra snapshot e updated nella testata
-  };
+const createEl = (tag, cls, text) => {
+  const el = document.createElement(tag);
+  if (cls) el.className = cls;
+  if (text != null) el.textContent = text;
+  return el;
+};
 
-  // ---------------- CSS (solo densità + chip, niente modali) ----------------
-  let CSS_DONE = false;
-  function injectCSS(){
-    if (CSS_DONE) return; CSS_DONE = true;
-    const css = `
-/* Card compatta */
-.hdtk-card{border:1px solid var(--br-soft);background:var(--surface-card);border-radius:14px;padding:.75rem}
-.hdtk-top{display:grid;grid-template-columns:1fr auto;gap:.75rem;align-items:start}
-.hdtk-tkr{font-weight:800;letter-spacing:-.015em;font-size:clamp(16px,2.6vw,20px)}
-.hdtk-venue{color:var(--muted);font-size:11px;margin-left:.4rem;white-space:nowrap}
-.hdtk-co{color:var(--ink-soft);font-size:11px;margin-top:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hdtk-price{text-align:right}
-.hdtk-price .val{font-weight:800;line-height:1;font-size:clamp(20px,3vw,28px)}
-.hdtk-price .ccy{font-size:11px;font-weight:600;margin-left:.35rem}
-.hdtk-delta{display:inline-flex;align-items:center;gap:.3rem;padding:.18rem .48rem;border-radius:999px;border:1px solid var(--br-soft);font-size:11px;font-weight:700;margin-left:.45rem}
-.hdtk-delta[data-tone="green"]{color:oklab(38% -0.08 0.12);background:color-mix(in oklab,var(--surface-card) 90%, oklab(91% -0.02 0.06))}
-.hdtk-delta[data-tone="yellow"]{color:oklab(36% 0.03 0.09);background:color-mix(in oklab,var(--surface-card) 90%, oklab(95% 0.02 0.10))}
-.hdtk-delta[data-tone="red"]{color:oklab(34% 0.12 0.08);background:color-mix(in oklab,var(--surface-card) 90%, oklab(90% 0.12 0.08))}
-.hdtk-meta{font-size:11px;color:var(--muted);text-align:right;margin-top:.2rem}
+// carica dal glossario (può essere già in cache nel runtime ui)
+async function fetchGlossaryEntry(key) {
+  try {
+    // se il runtime UI espone il Glossary via window, usiamolo
+    if (window.__TradeliaUI && typeof window.__TradeliaUI._glossaryGet === 'function') {
+      return await window.__TradeliaUI._glossaryGet(key);
+    }
+    // fallback: fetch diretto
+    const res = await fetch('/report/assets/glossary.json', { cache: 'no-store' });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json[key] || null;
+  } catch (err) {
+    console.warn('[header-ticker] glossary fetch failed for', key, err);
+    return null;
+  }
+}
 
-/* Tabella compatta */
-.hdtk-table{width:100%;border-collapse:collapse;margin-top:.5rem}
-.hdtk-table th,.hdtk-table td{padding:.44rem .5rem;border-bottom:1px solid var(--br-soft);font-size:12px}
-.hdtk-table th{text-align:left;color:var(--ink-soft);font-weight:700}
-.hdtk-table td:last-child{text-align:right}
-
-/* Chip tono inline (minuscola, sobria) */
-.hdtk-chip{display:inline-flex;align-items:center;gap:.35rem;border:1px solid var(--br-soft);border-radius:999px;padding:.06rem .38rem;font-size:11px;font-weight:700;margin-left:.38rem}
-.hdtk-dot{width:6px;height:6px;border-radius:50%}
-.hdtk-chip[data-tone="green"]{color:oklab(38% -0.08 0.12);background:color-mix(in oklab,var(--surface-card) 92%, oklab(91% -0.02 0.06))}
-.hdtk-chip[data-tone="yellow"]{color:oklab(36% 0.03 0.09);background:color-mix(in oklab,var(--surface-card) 92%, oklab(95% 0.02 0.10))}
-.hdtk-chip[data-tone="red"]{color:oklab(34% 0.12 0.08);background:color-mix(in oklab,var(--surface-card) 92%, oklab(90% 0.12 0.08))}
-`;
-    document.head.appendChild(EL('style', null, css));
+// apre il pannello tabellare con tutte le metriche del json
+async function openMetricsPanel(data) {
+  const ui = window.__TradeliaUI;
+  if (!ui || typeof ui.openPanel !== 'function') {
+    console.warn('[header-ticker] __TradeliaUI.openPanel non disponibile');
+    return;
   }
 
-  // ---------------- Glossario ----------------
-  let GLOSS=null, LOADING=null;
-  async function ensureGlossary(){
-    if (GLOSS) return GLOSS;
-    if (LOADING) return LOADING;
-    LOADING = fetch(CFG.glossaryPath,{cache:'no-store'})
-      .then(r=> r.ok ? r.json() : {})
-      .then(j=> (GLOSS=j||{}))
-      .catch(()=> (GLOSS={}));
-    return LOADING;
-  }
-  const G = key => (GLOSS?.[key] || GLOSS?.[`${key}_info`] || null);
+  const list = Array.isArray(data.metricsPanel) ? data.metricsPanel : [];
 
-  // ---------------- Tone fallback ----------------
-  const toneForPct = v => (v==null||isNaN(v)) ? 'neutral' : (v>0?'green':(v<0?'red':'neutral'));
-  function toneForFreshness(label){ if(!label) return 'neutral'; const s=String(label).toLowerCase(); if(s.includes('t-0')||s.includes('live')) return 'green'; if(s.includes('≤ t-1')||s.includes('t-1')) return 'yellow'; return 'red'; }
-  function toneForScore(x){ if(x==null||isNaN(x)) return 'neutral'; if(x>=0.85) return 'green'; if(x>=0.70) return 'yellow'; return 'red'; }
-  function toneForState(s){ if(!s) return 'neutral'; const u=String(s).toUpperCase(); if(u.includes('ACTIVE')) return 'green'; if(u.includes('REVIEW')) return 'yellow'; if(u.includes('HOLD')) return 'red'; return 'neutral'; }
-
-  // ---------------- Markup ----------------
-  function skeleton(){
+  // costruiamo le righe html
+  const rowsHtml = await Promise.all(list.map(async (m) => {
+    const g = await fetchGlossaryEntry(m.key);
+    const what = g?.what || '—';
+    const how = g?.how || '—';
+    const source = g?.source || '—';
+    const toneCls = metricToneClass(m.tone);
     return `
-      <div class="hdtk-card">
-        <div class="hdtk-top">
-          <div>
-            <div class="flex items-baseline gap-2">
-              <span class="hdtk-tkr">—</span>
-              <span class="hdtk-venue">—</span>
-            </div>
-            <div class="hdtk-co">—</div>
-          </div>
-          <div class="hdtk-price">
-            <div><span class="val">—</span><span class="ccy"> —</span><span class="hdtk-delta" data-tone="neutral"><span class="dval">—%</span></span></div>
-            <div class="hdtk-meta"></div>
-          </div>
-        </div>
-        <table class="hdtk-table">
-          <thead><tr><th style="width:34%">Metrica</th><th>Valore</th><th style="width:48px;text-align:right"></th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    `;
-  }
-
-  function rowTemplate(id, label, valueHTML){
-    return `
-      <tr data-row="${id}">
-        <td>${label}</td>
-        <td class="text-right">${valueHTML}</td>
-        <td class="text-right"><button type="button" class="btn btn-sm" data-info="${id}">(i)</button></td>
+      <tr>
+        <td class="align-top py-2 pr-3">
+          <div class="pill ${toneCls} mb-1 inline-flex">${m.label || m.key}</div>
+        </td>
+        <td class="align-top py-2 pr-3"><div>${m.value ?? '—'}</div></td>
+        <td class="align-top py-2 pr-3 text-[13px] text-[color:var(--ink-soft)]">${what}</td>
+        <td class="align-top py-2 pr-3 text-[13px] text-[color:var(--ink-soft)]">${how}</td>
+        <td class="align-top py-2 pr-3 text-[13px] text-[color:var(--muted)]">${source}</td>
       </tr>
     `;
+  }));
+
+  const bodyHtml = `
+    <div class="overflow-auto">
+      <p class="text-[13px] text-[color:var(--muted)] mb-3">
+        Valori, definizioni e fonti per le metriche esposte nell’header. Dati a scopo informativo.
+      </p>
+      <table class="min-w-full text-left text-[13px]">
+        <thead>
+          <tr class="text-[color:var(--muted)]">
+            <th class="py-2 pr-3 whitespace-nowrap">Metrica</th>
+            <th class="py-2 pr-3 whitespace-nowrap">Valore</th>
+            <th class="py-2 pr-3 whitespace-nowrap">What</th>
+            <th class="py-2 pr-3 whitespace-nowrap">How</th>
+            <th class="py-2 pr-3 whitespace-nowrap">Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rowsHtml.join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  ui.openPanel({
+    title: 'Metriche header',
+    subtitle: data.meta?.auditPathId || '—',
+    panelSize: 'xl',
+    body: bodyHtml
+  });
+}
+
+// rende una singola parte di riga
+function renderPart(part) {
+  if (part.kind === 'text') {
+    return createEl('span', '', part.text || '');
   }
+  if (part.kind === 'metric') {
+    const btn = createEl(
+      'button',
+      `pill ${metricToneClass(part.tone)} inline-flex items-center gap-1 mr-1 mb-1 metric-btn`,
+      part.value != null ? String(part.value) : '—'
+    );
+    btn.type = 'button';
+    btn.dataset.metric = part.key;
 
-  // ---------------- Update ----------------
-  async function update(root, raw={}){
-    injectCSS();
-    await ensureGlossary();
-
-    // Normalizza Freshness
-    const data = { ...raw, Freshness: raw.Freshness ?? { raw: raw.FreshnessLabel, tone: raw.FreshnessTone } };
-
-    // Header ID
-    QS('.hdtk-tkr', root).textContent   = data.Ticker || '—';
-    QS('.hdtk-venue', root).textContent = data.Venue ? `· ${data.Venue}` : '';
-    QS('.hdtk-co', root).textContent    = data.CompanyName || '';
-
-    // Prezzo + Δ% + ccy
-    QS('.hdtk-price .val', root).textContent = fmt.price(data.Price);
-    QS('.hdtk-price .ccy', root).textContent = data.Currency ? ` ${data.Currency}` : '';
-    const chgTone = normTone(data.ChangePctTone) || toneForPct(Number(data.ChangePct));
-    const dEl = QS('.hdtk-delta', root); dEl.setAttribute('data-tone', chgTone);
-    QS('.hdtk-delta .dval', root).textContent = fmt.pct(Number(data.ChangePct));
-
-    // Meta snapshot (opzionale)
-    if (CFG.showMeta) {
-      const meta = QS('.hdtk-meta', root);
-      const start = data.Start ?? '—';
-      const end   = data.End ?? '—';
-      const upd   = data.UpdatedAt ? fmt.timeUTC(data.UpdatedAt) : '—';
-      meta.textContent = `Snapshot ${start} → ${end} · Updated ${upd}`;
-    }
-
-    // Costruisci righe tabella
-    const body = QS('tbody', root); body.innerHTML = '';
-
-    const chip = (tone, label) => {
-      const t = normTone(tone||'');
-      if (!t || t==='neutral') return '';
-      return `<span class="hdtk-chip" data-tone="${t}"><span class="hdtk-dot" style="background:currentColor"></span>${label||t}</span>`;
-    };
-
-    const pickObj = (o) => (o && typeof o==='object') ? { val: (o.raw ?? o.value ?? o.val), tone: normTone(o.tone) } : { val: o, tone: null };
-
-    const rows = [];
-
-    // Price
-    rows.push(['Price','Price', `${fmt.price(data.Price)}`]);
-
-    // Change % (con chip tono)
-    rows.push(['ChangePct','Change %', `${fmt.pct(Number(data.ChangePct))} ${chip(chgTone)}`]);
-
-    // Currency
-    rows.push(['Currency','Currency', String(data.Currency||'—')]);
-
-    // Freshness
-    const f = pickObj(data.Freshness);
-    const fVal = (f.val || data.FreshnessLabel || '—').replace(' / ', ' (') + (String(f.val||'').includes(' / ')?')':'' );
-    const fTone = f.tone || toneForFreshness(fVal);
-    rows.push(['Freshness','Freshness', `${fVal} ${chip(fTone)}`]);
-
-    // ConfidenceFinal
-    const cf = pickObj(data.ConfidenceFinal);
-    const cfVal = !isNaN(Number(cf.val))? Number(cf.val).toFixed(2):String(cf.val||'—');
-    rows.push(['ConfidenceFinal','Confidence (final)', `${cfVal} ${chip(cf.tone || toneForScore(Number(cf.val)))}`]);
-
-    // DataIntegrity
-    const di = pickObj(data.DataIntegrity);
-    const diVal = !isNaN(Number(di.val))? Number(di.val).toFixed(2):String(di.val||'—');
-    rows.push(['DataIntegrity','Data integrity', `${diVal} ${chip(di.tone || toneForScore(Number(di.val)))}`]);
-
-    // FeedSync (opzionale)
-    if (CFG.showFeedSync && (data.FeedSync!=null)){
-      const fs = pickObj(data.FeedSync);
-      rows.push(['FeedSync','Feed sync', `${String(fs.val||'—')} ${chip(fs.tone||'neutral')}`]);
-    }
-
-    // State + nota
-    const st = pickObj(data.State);
-    const sNote = data.StateNote ? `<span class="text-muted" style="font-size:11px;margin-left:.35rem">${data.StateNote}</span>` : '';
-    rows.push(['State','State', `${String(st.val||'—')}${sNote} ${chip(st.tone || toneForState(st.val))}`]);
-
-    // Snapshot window
-    rows.push(['Snapshot','Snapshot window', `${data.Start||'—'} → ${data.End||'—'}`]);
-
-    // UpdatedAt
-    rows.push(['UpdatedAt','Updated at (UTC)', `${fmt.timeUTC(data.UpdatedAt)}`]);
-
-    // Version
-    rows.push(['Version','Version', String(data.Version||'—')]);
-
-    // Render
-    rows.forEach(([id,label,val]) => body.insertAdjacentHTML('beforeend', rowTemplate(id, label, val)));
-
-    // Bind (i) → pannello nativo runtime
-    QSA('[data-info]', root).forEach(btn=>{
-      btn.addEventListener('click', ()=> openInfo(btn.getAttribute('data-info')) );
+    // tooltip/popup: lasciamo che il runtime li leghi
+    // ma mettiamo un fallback minimale
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      // se il runtime ha i bind, li usiamo
+      if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === 'function') {
+        // il runtime si occupa da solo di aggiungere i listener
+        // qui possiamo anche non fare nulla
+      } else {
+        // fallback: mostra un alert minimale
+        const g = await fetchGlossaryEntry(part.key);
+        if (g) {
+          alert(`${g.title || part.key}\n\n${g.what || ''}\n\n${g.how || ''}\n\n${g.source || ''}`);
+        } else {
+          alert(part.key);
+        }
+      }
     });
-  }
 
-  // ---------------- Popup What/How/Source (solo via runtime) ----------------
-  function openInfo(key){
-    const g = G(key) || {};
-    const title = g.title || key;
-    const what  = g.what  || '—';
-    const how   = g.how   || '—';
-    const src   = g.source? `Fonte: ${g.source}` : '';
-
-    const html = `<div class="section-title" style="font-size:14px;margin-bottom:.25rem">${title}</div>
-      <div class="text-muted" style="font-size:13px;margin-bottom:.25rem">${what}</div>
-      <div style="font-size:12px;line-height:1.55">${how}</div>
-      <div class="text-muted" style="font-size:11px;margin-top:.5rem">${src}</div>`;
-
-    if (window.__TradeliaUI?.openPanel){
-      window.__TradeliaUI.openPanel({ title, body: html, blocking: true, panelSize: 'narrow' });
-      return;
+    // label visiva
+    if (part.label) {
+      btn.setAttribute('aria-label', part.label);
+    } else {
+      btn.setAttribute('aria-label', part.key);
     }
-    // Se manca il runtime, apri comunque in una nuova finestra minimale
-    const w = window.open('', '_blank', 'width=480,height=600');
-    if(w){ w.document.write(`<title>${title}</title><pre style="font:12px/1.5 system-ui, sans-serif">${what}\n\n${how}\n\n${src}</pre>`); }
-  }
 
-  // ---------------- API ----------------
-  function mount(slot){
-    injectCSS();
-    const host = (typeof slot==='string') ? QS(slot) : slot;
-    if (!host) throw new Error('headerTickerEdu.table.mount: invalid slot');
-    const wrap = EL('div'); wrap.innerHTML = skeleton();
-    host.innerHTML=''; host.appendChild(wrap);
-    return wrap;
+    return btn;
   }
+  // default
+  return createEl('span', '', '');
+}
 
-  return { mount, update };
-})();
+// rende una riga intera
+function renderRow(row) {
+  const wrap = createEl('div', 'flex flex-wrap items-center gap-1 mb-1 header-ticker-row');
+  (row.parts || []).forEach((part) => {
+    wrap.appendChild(renderPart(part));
+  });
+  return wrap;
+}
+
+function renderFooter(node, data) {
+  const footerEl = node._footer;
+  footerEl.innerHTML = '';
+  const links = data.footer?.links || [];
+  links.forEach((link) => {
+    const btn = createEl('button', 'btn btn-sm', link.label || 'Azione');
+    btn.type = 'button';
+    btn.addEventListener('click', () => {
+      if (link.action === 'open-metrics-panel') {
+        openMetricsPanel(data);
+      }
+      // qui in futuro puoi aggiungere altre azioni
+    });
+    footerEl.appendChild(btn);
+  });
+
+  // audit opzionale
+  if (data.meta?.auditPathId && window.__TradeliaUI?.openAuditPanel) {
+    const auditBtn = createEl('button', 'btn btn-sm', 'Audit');
+    auditBtn.type = 'button';
+    auditBtn.addEventListener('click', () => {
+      window.__TradeliaUI.openAuditPanel({
+        AuditPathID: data.meta.auditPathId,
+        QualityMetrics: {
+          FreshnessScore: data.rows ? '—' : '—'
+        },
+        Notes: ['Header verbale generato da Swing master.']
+      });
+    });
+    footerEl.appendChild(auditBtn);
+  }
+}
+
+// API: mount
+function mount(containerEl) {
+  const root = createEl('section', 'card mb-6 header-ticker');
+  const body = createEl('div', 'header-ticker-body flex flex-col gap-1');
+  const footer = createEl('div', 'header-ticker-footer mt-3 flex flex-wrap gap-2');
+
+  root.appendChild(body);
+  root.appendChild(footer);
+  containerEl.appendChild(root);
+
+  // salviamo riferimenti per update
+  root._body = body;
+  root._footer = footer;
+
+  return root;
+}
+
+// API: update
+function update(node, data) {
+  if (!node || !data) return;
+  const body = node._body;
+  body.innerHTML = '';
+
+  const rows = Array.isArray(data.rows) ? data.rows : [];
+  rows.forEach((row) => {
+    const rowEl = renderRow(row);
+    body.appendChild(rowEl);
+
+    // dopo aver reso la riga, facciamo legare i tooltip dal runtime
+    if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === 'function') {
+      window.__TradeliaUI.bindMetricInfoButtons(rowEl);
+    }
+  });
+
+  // footer
+  renderFooter(node, data);
+}
+
+export const headerTicker = {
+  mount,
+  update
+};
