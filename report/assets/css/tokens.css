@@ -1,86 +1,59 @@
 /* /report/assets/css/tokens.css
-   Tradelia Report Design System · SUPER PREMIUM (v2025-11-02 CORRETTA)
-   -----------------------------------------------------------
-   - Design tokens (colori, radius, shadow, tipografia)
-   - Temi light/dark (attr [data-theme])
-   - Componenti base: .btn, .card, .pill, .tonebar
-   - Overlay analitico: .tl-panel-*
-   - Tooltip metriche: .tl-popover, .tl-metric-modal-*
-   - Footer istituzionale
-   - Utility e regole stampa (PDF istituzionale)
-*/
+   Tradelia Report Design System · SUPER PREMIUM (v2025-11-02 corretta)
+   ----------------------------------------------------------- */
 
-/* =========================================================
-   RESET MINIMO + BASE
-   ========================================================= */
 :root, :host { --_1: initial; }
 * { box-sizing: border-box; }
 html, body { margin:0; padding:0; }
 img, svg { display:block; max-width:100%; }
 button { background:none; border:0; padding:0; font:inherit; color:inherit; cursor:pointer; }
 
-/* =========================================================
-   TOKENS — BASE (indipendenti dal tema)
-   ========================================================= */
+/* TOKENS BASE */
 :root {
-  /* Tipografia */
   --ff-sans: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
   --ff-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --fs-11: 11px; --fs-12: 12px; --fs-13: 13px; --fs-14: 14px; --fs-15: 15px; --fs-16: 16px; --fs-18: 18px;
   --lh-1: 1; --lh-12: 1.2; --lh-13: 1.3; --lh-14: 1.4; --lh-15: 1.5;
 
-  /* Spaziature */
   --sp-1: .25rem; --sp-1_5: .375rem; --sp-2: .5rem; --sp-3: .75rem; --sp-4: 1rem; --sp-5: 1.25rem; --sp-6: 1.5rem;
 
-  /* Radius */
   --radius-pill: 999px;
   --radius-card: 14px;
   --radius-pop: 12px;
   --radius-panel: 16px;
 
-  /* Shadow */
   --shadow-card: 0 4px 18px oklab(0% 0 0 / 0.08);
   --shadow-pop: 0 8px 28px oklab(0% 0 0 / 0.18);
   --shadow-panel: 0 10px 34px oklab(0% 0 0 / 0.22);
 
-  /* Tone (semaforo) */
   --tone-g: oklab(62% -0.07 0.04);
   --tone-y: oklab(85% 0.02 0.08);
   --tone-r: oklab(63% 0.21 0.12);
   --tone-n: oklab(78% 0 0);
 
-  /* Container helpers (non invadono Tailwind) */
   --container-max: 90rem;
 }
 
-/* =========================================================
-   TEMA — LIGHT
-   ========================================================= */
+/* LIGHT */
 :root[data-theme="light"] {
-  /* Inchiostri */
   --ink: oklab(18% 0 0);
   --ink-soft: oklab(30% 0 0);
   --muted: oklab(45% 0 0 / .72);
 
-  /* Superfici */
   --surface-page: oklab(98% 0 0);
   --surface-card: oklab(100% 0 0);
   --surface-elev: oklab(99% 0 0);
 
-  /* Brand */
   --brand-600: oklab(60% -0.04 -0.05);
   --brand-500: oklab(66% -0.03 -0.04);
   --brand-400: oklab(72% -0.02 -0.03);
 
-  /* Bordi */
   --br-soft: oklab(90% 0 0);
   --br-card: oklab(92% 0 0);
 
-  /* Footer */
   --footer-bg: oklab(97% 0 0);
   --footer-br: oklab(88% 0 0);
 
-  /* Accenti/feedback */
   --ok: var(--tone-g);
   --warn: var(--tone-y);
   --err: var(--tone-r);
@@ -89,47 +62,33 @@ button { background:none; border:0; padding:0; font:inherit; color:inherit; curs
   background: var(--surface-page);
   color: var(--ink);
 }
-/* ===== COLOR SYSTEM EXTENSIONS (semaforici) ===== */
+
 :root {
-  --clr-pos: #15803d;   /* verde istituzionale (light mode) */
-  --clr-neg: #b91c1c;   /* rosso istituzionale (light mode) */
-  --clr-warn: #b45309;  /* giallo-700 (avviso light mode) */
+  --clr-pos: #15803d;
+  --clr-neg: #b91c1c;
+  --clr-warn: #b45309;
 }
 
-html[data-theme="dark"] {
-  --clr-pos: #22c55e;   /* verde chiaro (dark) */
-  --clr-neg: #ef4444;   /* rosso chiaro (dark) */
-  --clr-warn: #facc15;  /* giallo-400 (avviso dark) */
-}
-
-/* =========================================================
-   TEMA — DARK
-   ========================================================= */
+/* DARK */
 :root[data-theme="dark"] {
-  /* Inchiostri */
   --ink: oklab(92% 0 0);
   --ink-soft: oklab(82% 0 0);
   --muted: oklab(76% 0 0 / .72);
 
-  /* Superfici */
   --surface-page: oklab(22% 0 0);
   --surface-card: oklab(26% 0 0);
   --surface-elev: oklab(30% 0 0);
 
-  /* Brand */
   --brand-600: oklab(73% -0.04 -0.06);
   --brand-500: oklab(68% -0.03 -0.05);
   --brand-400: oklab(64% -0.02 -0.04);
 
-  /* Bordi */
   --br-soft: oklab(34% 0 0);
   --br-card: oklab(36% 0 0);
 
-  /* Footer */
   --footer-bg: oklab(24% 0 0);
   --footer-br: oklab(32% 0 0);
 
-  /* Accenti/feedback */
   --ok: var(--tone-g);
   --warn: var(--tone-y);
   --err: var(--tone-r);
@@ -139,9 +98,7 @@ html[data-theme="dark"] {
   color: var(--ink);
 }
 
-/* =========================================================
-   BASE TYPO / LAYOUT
-   ========================================================= */
+/* BASE */
 html { color-scheme: light dark; }
 body {
   font-family: var(--ff-sans);
@@ -152,21 +109,15 @@ body {
 }
 .container { max-width: var(--container-max); margin-inline: auto; }
 
-/* Link */
 a { color: var(--brand-600); text-decoration: none; }
 a:hover { opacity:.9; }
 
-/* Titoli (scala sobria) */
 h1, h2, h3 { color: var(--ink); margin: 0 0 var(--sp-3); }
-h1 { font-size: clamp(22px, 2.4vw, 28px); line-height: var(--lh-12); font-weight: 800; letter-spacing: -.02em; }
-h2 { font-size: clamp(18px, 1.8vw, 22px); line-height: var(--lh-13); font-weight: 700; }
-h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: var(--lh-13); font-weight: 600; }
+h1 { font-size: clamp(22px, 2.4vw, 28px); line-height: 1.2; font-weight: 800; letter-spacing: -.02em; }
+h2 { font-size: clamp(18px, 1.8vw, 22px); line-height: 1.3; font-weight: 700; }
+h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
 
-/* =========================================================
-   COMPONENTI BASE
-   ========================================================= */
-
-/* Bottoni */
+/* BTN */
 .btn {
   --_pad-y: .55rem; --_pad-x: .9rem;
   display:inline-flex; align-items:center; gap:.5rem;
@@ -174,7 +125,6 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: var(--lh-13); font-weight
   font-size: var(--fs-13); line-height: var(--lh-13); font-weight:600;
   color: var(--ink); background: var(--surface-card);
   border:1px solid var(--br-soft); border-radius: var(--radius-pill);
-  box-shadow: 0 0 0 0 oklab(0% 0 0 / 0);
   transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
 }
 .btn:hover { background: color-mix(in oklab, var(--surface-card) 92%, transparent); }
@@ -182,7 +132,7 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: var(--lh-13); font-weight
 .btn[disabled] { opacity:.6; pointer-events:none; }
 .btn-sm { --_pad-y: .4rem; --_pad-x: .7rem; font-size: var(--fs-12); }
 
-/* Card standard (riusata da F*) */
+/* CARD */
 .card {
   background: var(--surface-card);
   border: 1px solid var(--br-card);
@@ -191,227 +141,7 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: var(--lh-13); font-weight
   padding: var(--sp-4);
 }
 
-/* Pill “metrica” */
-.pill {
-  display:inline-flex; align-items:center; gap:.45rem;
-  padding:.35rem .6rem; border-radius: var(--radius-pill);
-  border:1px solid var(--br-soft); background: var(--surface-card);
-  font-size: var(--fs-12); line-height: var(--lh-13); color: var(--ink);
-}
-.pill--ok { border-color: color-mix(in oklab, var(--ok) 40%, var(--br-soft)); }
-.pill--warn { border-color: color-mix(in oklab, var(--warn) 50%, var(--br-soft)); }
-.pill--err { border-color: color-mix(in oklab, var(--err) 40%, var(--br-soft)); }
-.pill--neutral { border-color: var(--br-soft); }
-
-/* Tonebar laterale (per snapshot/∆/confidence) */
-.tonebar {
-  content:""; display:block; width:4px; border-radius: var(--radius-card);
-  background: var(--neutral);
-}
-.tone--ok    { background: var(--ok); }
-.tone--warn  { background: var(--warn); }
-.tone--err   { background: var(--err); }
-.tone--neu   { background: var(--neutral); }
-
-/* Sezioni / heading blocchi */
-.section-head { margin: var(--sp-6) 0 var(--sp-4); }
-.section-title { font-size: var(--fs-16); font-weight:700; }
-.section-sub { color: var(--muted); font-size: var(--fs-13); }
-
-/* Loader “is-loading” */
-.is-loading { position: relative; }
-.is-loading::after {
-  content: ""; position: absolute; inset: 0; border-radius: var(--radius-card);
-  background: linear-gradient(90deg,
-    transparent, color-mix(in oklab, var(--surface-elev) 90%, transparent), transparent);
-  animation: tl-shimmer 1.2s linear infinite;
-}
-@keyframes tl-shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
-
-/* =========================================================
-   OVERLAY ANALITICO (desktop + mobile)
-   ========================================================= */
-
-.tl-panel-overlay[aria-hidden="true"] { display:none; }
-.tl-panel-overlay {
-  position: fixed; inset: 0; z-index: 60;
-}
-.tl-panel-backdrop {
-  position:absolute; inset:0; background: oklab(0% 0 0 / .45);
-  backdrop-filter: blur(2px);
-}
-
-/* Panel DESKTOP (dock right) */
-.tl-panel--desktop {
-  position: absolute; top:0; right:0; bottom:0; width: min(860px, 100%);
-  display:flex; flex-direction:column;
-  background: var(--surface-elev);
-  border-left: 1px solid var(--br-soft);
-  box-shadow: var(--shadow-panel);
-  border-radius: var(--radius-panel) 0 0 var(--radius-panel);
-}
-.tl-panel__header, .tl-panel__footer {
-  padding: var(--sp-4); border-bottom: 1px solid var(--br-soft);
-}
-.tl-panel__footer { border-bottom:0; border-top: 1px solid var(--br-soft); }
-.tl-panel__title { font-weight:700; font-size: var(--fs-16); }
-.tl-panel__subtitle { margin-top:.25rem; color: var(--muted); font-size: var(--fs-13); }
-.tl-panel__close {
-  width:28px; height:28px; display:inline-grid; place-items:center;
-  border:1px solid var(--br-soft); border-radius: var(--radius-pill);
-}
-.tl-panel__close:hover { background: color-mix(in oklab, var(--surface-card) 92%, transparent); }
-.tl-panel__body {
-  padding: var(--sp-4);
-  overflow:auto; flex:1;
-}
-
-/* Panel MOBILE (fullscreen) */
-.tl-panel--mobile {
-  position:absolute; inset:auto 0 0 0; top:auto; height: 92vh;
-  display:flex; flex-direction:column;
-  background: var(--surface-elev);
-  border-top: 1px solid var(--br-soft);
-  box-shadow: var(--shadow-panel);
-  border-radius: var(--radius-panel) var(--radius-panel) 0 0;
-}
-
-/* =========================================================
-   TOOLTIP METRICHE (desktop) · “Cosa è / Come si usa / Fonte”
-   ========================================================= */
-.tl-popover[aria-hidden="true"] { display:none; }
-.tl-popover {
-  position: fixed; z-index: 70;
-  background: var(--surface-card);
-  border:1px solid var(--br-card);
-  border-radius: var(--radius-pop);
-  box-shadow: var(--shadow-pop);
-  padding: var(--sp-3);
-  max-width: 360px;
-}
-.tl-popover__head { display:flex; align-items:center; justify-content:space-between; margin-bottom:.35rem; }
-.tl-popover__title { font-weight:600; font-size: var(--fs-14); color: var(--ink); }
-.tl-popover__close {
-  width:24px; height:24px; display:inline-grid; place-items:center;
-  border:1px solid var(--br-soft); border-radius: var(--radius-pill);
-}
-.tl-popover__close:hover { background: color-mix(in oklab, var(--surface-card) 92%, transparent); }
-.tl-popover__body { font-size: var(--fs-13); line-height: var(--lh-14); color: var(--ink-soft); margin-top:.35rem; }
-.tl-popover__source { margin-top:.5rem; font-size: var(--fs-12); color: var(--muted); font-family: var(--ff-mono); }
-
-/* Badge “?” (info-btn) — minimal, neutro */
-.info-btn, .info-btn--mini {
-  display:inline-grid; place-items:center; font-weight:700;
-  border:1px solid var(--br-soft); background: var(--surface-card);
-  color: var(--ink);
-}
-.info-btn { width:24px; height:24px; border-radius: var(--radius-pill); }
-.info-btn--mini { width:20px; height:20px; border-radius: var(--radius-pill); font-size: 12px; }
-
-/* =========================================================
-   TOOLTIP MOBILE (modal)
-   ========================================================= */
-.tl-metric-modal-overlay[aria-hidden="true"] { display:none; }
-.tl-metric-modal-overlay { position: fixed; inset: 0; z-index: 70; }
-.tl-metric-modal-backdrop { position:absolute; inset:0; background: oklab(0% 0 0 / .5); }
-.tl-metric-modal {
-  position:absolute; inset:auto var(--sp-4) var(--sp-4) var(--sp-4);
-  background: var(--surface-card);
-  border:1px solid var(--br-card);
-  border-radius: var(--radius-pop);
-  box-shadow: var(--shadow-pop);
-  padding: var(--sp-4);
-}
-.tl-metric-modal__header { display:flex; align-items:flex-start; justify-content:space-between; gap:.75rem; }
-.tl-metric-modal__title { font-weight:700; font-size: var(--fs-14); }
-.tl-metric-modal__source { color: var(--muted); font-size: var(--fs-12); margin-top:.25rem; }
-.tl-metric-modal__close {
-  width:28px; height:28px; display:inline-grid; place-items:center;
-  border:1px solid var(--br-soft); border-radius: var(--radius-pill);
-}
-.tl-metric-modal__body { margin-top:.75rem; font-size: var(--fs-13); color: var(--ink-soft); line-height: var(--lh-14); }
-
-/* =========================================================
-   FOOTER ISTITUZIONALE
-   ========================================================= */
-.footer-wrap { background: var(--footer-bg); }
-.site-footer {
-  background: var(--footer-bg);
-  border-top: 1px solid var(--footer-br);
-  color: var(--ink-soft);
-}
-.ftr-grid { display:grid; gap:2rem; grid-template-columns: 1fr; }
-@media (min-width:768px){ .ftr-grid { grid-template-columns: repeat(3, 1fr); } }
-.ftr-head { display:flex; align-items:center; gap:.45rem; color: var(--ink); font-weight:600; }
-.ftr-list { list-style:none; padding:0; margin:.25rem 0 0; }
-.ftr-list li { margin:.25rem 0; }
-.ftr-bottom {
-  border-top:1px solid var(--br-soft); margin-top:2rem; padding-top:1rem;
-  display:flex; flex-direction:column; gap:.5rem; font-size:var(--fs-12); color: var(--muted);
-}
-@media (min-width:768px){ .ftr-bottom { flex-direction:row; justify-content:space-between; align-items:center; } }
-
-/* =========================================================
-   UTILITY
-   ========================================================= */
-.text-muted { color: var(--muted); }
-.mono { font-family: var(--ff-mono); }
-.nobr { white-space: nowrap; }
-.noprint { }
-.onlyprint { display:none !important; }
-
-/* =========================================================
-   PRINT (PDF istituzionale)
-   ========================================================= */
-@media print {
-  :root {
-    /* Forza palette neutra per coerenza PDF */
-    --ink: #000; --ink-soft: #222; --muted: #555;
-    --surface-page: #fff; --surface-card: #fff; --surface-elev: #fff;
-    --br-soft: #ddd; --br-card: #ddd; --footer-bg: #fff; --footer-br: #ddd;
-    --shadow-card: none; --shadow-pop: none; --shadow-panel: none;
-  }
-  html, body { background:#fff !important; color:#000 !important; }
-  a { color:#000; text-decoration: underline; }
-  .noprint { display:none !important; }
-  .onlyprint { display:block !important; }
-  .btn, .info-btn, .info-btn--mini { display:none !important; }
-  .card { box-shadow:none !important; }
-  .tl-panel-overlay, .tl-metric-modal-overlay, .tl-popover { display:none !important; }
-}
-
-/* ===== Wordmark & logo unificati ===== */
-.brand { font-weight: 900; letter-spacing: -0.02em; display:inline-flex; align-items:center; gap:.35rem; }
-.brand-word { color: var(--ink); }
-.brand-suffix { color: var(--ink); font-weight: 900; }
-.brand-dot { width:10px; height:10px; border-radius:999px; background: var(--brand-600); display:inline-block; }
-
-.brand--sm .brand-word { font-weight: 700; }
-.brand--sm .brand-dot { width:8px; height:8px; }
-.brand--sm .brand-suffix { font-weight: 700; }
-
-a.brand:hover { opacity:.9; transform: translateY(-1px); transition: opacity .18s ease, transform .18s ease; }
-
-/* ===== Pulsanti: hover/focus eleganti ===== */
-:root { --hover-bg: color-mix(in oklab, var(--surface-card) 92%, transparent); }
-.btn, .btn-sm, .btn-inline {
-  transition: background-color .15s ease, border-color .15s ease,
-              color .15s ease, transform .12s ease, box-shadow .15s ease;
-}
-.btn:hover, .btn-sm:hover, .btn-inline:hover {
-  background: var(--hover-bg);
-  border-color: color-mix(in oklab, var(--br-soft) 70%, var(--brand-600) 30%);
-  box-shadow: 0 2px 10px oklab(0% 0 0 / .08);
-  transform: translateY(-1px);
-}
-.btn:active, .btn-sm:active, .btn-inline:active { transform: translateY(0); }
-.btn:focus-visible, .btn-sm:focus-visible, .btn-inline:focus-visible {
-  outline: 2px solid var(--brand-500);
-  outline-offset: 2px;
-}
-#btn-theme { cursor: pointer; }
-
-/* ===== Header Ticker Verbale ===== */
+/* HEADER TICKER */
 .header-ticker {
   position: relative;
   background: var(--surface-card);
@@ -466,7 +196,6 @@ a.brand:hover { opacity:.9; transform: translateY(-1px); transition: opacity .18
 .header-ticker-text[data-glue="1"] {
   white-space: nowrap;
 }
-
 .header-ticker-footer {
   margin-top: .35rem;
   padding-top: .55rem;
@@ -481,57 +210,59 @@ a.brand:hover { opacity:.9; transform: translateY(-1px); transition: opacity .18
   font-size: 12.5px;
   padding: .35rem .75rem;
 }
-
 @media (max-width: 640px) {
-  .header-ticker {
-    padding: 1rem 1rem .75rem;
-  }
-  .header-ticker-row--intro {
-    font-size: 14px;
-  }
-  .header-ticker-footer {
-    flex-direction: row;
-  }
+  .header-ticker { padding: 1rem 1rem .75rem; }
+  .header-ticker-row--intro { font-size: 14px; }
 }
 
-/* ===== Metriche verbali (versione unica, pulita) ===== */
+/* METRICHE VERBALI (senza dot) */
 .metric-inline {
   display: inline-flex;
   align-items: center;
   gap: .35rem;
   cursor: pointer;
 }
-.metric-inline-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: var(--neutral);
-  flex: 0 0 auto;
-  margin-top: 1px;
-}
 .metric-inline-text {
   font-weight: 600;
-  line-height: 1.25;
-  color: var(--ink);
-  text-decoration: none;
+  font-style: italic;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+  line-height: 1.2;
 }
-.metric-inline--ok .metric-inline-dot { background: var(--ok); }
-.metric-inline--warn .metric-inline-dot { background: var(--warn); }
-.metric-inline--err .metric-inline-dot { background: var(--err); }
-.metric-inline--neutral .metric-inline-dot { background: var(--ink-soft); }
 
-/* in light non coloriamo TUTTO il testo, restiamo istituzionali */
-:root[data-theme="light"] .metric-inline--ok .metric-inline-text { color: var(--ink); }
-:root[data-theme="light"] .metric-inline--warn .metric-inline-text { color: var(--ink); }
-:root[data-theme="light"] .metric-inline--err .metric-inline-text { color: var(--ink); }
+/* toni base */
+.metric-inline--ok .metric-inline-text {
+  color: var(--ink);
+  text-decoration-color: color-mix(in oklab, var(--ok) 85%, transparent);
+}
+.metric-inline--warn .metric-inline-text {
+  color: var(--ink);
+  text-decoration-color: color-mix(in oklab, var(--warn) 85%, transparent);
+}
+.metric-inline--err .metric-inline-text {
+  color: var(--ink);
+  text-decoration-color: color-mix(in oklab, var(--err) 85%, transparent);
+}
+.metric-inline--neutral .metric-inline-text {
+  color: var(--ink-soft);
+  text-decoration-color: color-mix(in oklab, var(--ink-soft) 85%, transparent);
+}
+
+/* light: toni meno accesi */
+:root[data-theme="light"] .metric-inline--ok .metric-inline-text {
+  color: #166534;
+  text-decoration-color: #166534;
+}
+:root[data-theme="light"] .metric-inline--warn .metric-inline-text {
+  color: #b45309;
+  text-decoration-color: #b45309;
+}
+:root[data-theme="light"] .metric-inline--err .metric-inline-text {
+  color: #b91c1c;
+  text-decoration-color: #b91c1c;
+}
 
 .metric-inline:hover .metric-inline-text {
-  opacity: .92;
-}
-
-.header-ticker-glue {
-  white-space: nowrap;
-}
-.header-ticker-glue::before {
-  content: "\00a0";
+  opacity: .95;
 }
