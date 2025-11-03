@@ -131,22 +131,35 @@ function renderRow(row) {
   else if (row.id === 'window-line') rowEl.classList.add('header-ticker-row--meta');
 
   (row.parts || []).forEach((part) => {
-    // 👉 se è virgola/punto/parentesi la appiccichiamo al precedente
-    if (part.kind === 'text' && part.text && /^[\s,.;:!?()—–\-«»“”]+$/.test(part.text)) {
-      const last = rowEl.lastElementChild;
-      if (last) {
-        const metricTxt = last.querySelector('.metric-inline-text');
-        const punct = part.text.replace(/\s+/g,'').trim();
-        const spacer = (punct === '(' || punct === '«' || punct === '“') ? '' : '\u00A0'; // niente spazio dopo apertura
-        if (metricTxt) {
-          metricTxt.textContent = (metricTxt.textContent || '') + punct + spacer;
+    if (part.kind === 'text' && part.text) {
+      let remaining = String(part.text);
+
+      // 1) Gluing: se il testo INIZIA con spazi + punteggiatura, incolla la punteggiatura al nodo precedente
+      let matched = false;
+      while (true) {
+        const m = remaining.match(/^\s*([,.;:!?()—–\-«»“”])\s*(.*)$/);
+        if (!m) break;
+        matched = true;
+        const punct = m[1];
+        const rest  = m[2] || '';
+        const last = rowEl.lastElementChild;
+        if (last) {
+          const metricTxt = last.querySelector('.metric-inline-text');
+          const spacer = (punct === '(' || punct === '«' || punct === '“') ? '' : '\u00A0';
+          if (metricTxt) metricTxt.textContent = (metricTxt.textContent || '') + punct + spacer;
+          else last.textContent = (last.textContent || '') + punct + spacer;
         } else {
-          last.textContent = (last.textContent || '') + punct + spacer;
+          // se non c'è precedente, appendiamo la punteggiatura come testo semplice (raro)
+          rowEl.appendChild(renderTextPart({ kind:'text', text: punct }));
         }
-      } else {
-        // fallback, ma non dovrebbe succedere
-        const el = renderTextPart({ kind:'text', text: part.text.replace(/\s+/g,'').trim() });
-        rowEl.appendChild(el);
+        remaining = rest;
+        // continua a consumare punteggiatura iniziale, poi esci
+        if (!/^\s*([,.;:!?()—–\-«»“”])/.test(remaining)) break;
+      }
+
+      // 2) Se resta contenuto non-punteggiatura, appendi come testo normale
+      if (remaining && remaining.trim() !== '' || !matched) {
+        rowEl.appendChild(renderTextPart({ kind:'text', text: remaining }));
       }
     } else {
       rowEl.appendChild(renderPart(part));
