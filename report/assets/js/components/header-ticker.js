@@ -168,7 +168,8 @@ function renderRow(row) {
       // 1) Gluing: se il testo INIZIA con spazi + punteggiatura, incolla la punteggiatura al nodo precedente
       let matched = false;
       while (true) {
-        const m = remaining.match(/^\s*([,.;:!?()—–\-«»“”])\s*(.*)$/);
+        // Match: spazi opzionali + punteggiatura + resto (gestisce anche " (" e ")" )
+        const m = remaining.match(/^\s*([,.;:!?()—–\-«»""])\s*(.*)$/);
         if (!m) break;
         matched = true;
         const punct = m[1];
@@ -176,21 +177,33 @@ function renderRow(row) {
         const last = rowEl.lastElementChild;
         if (last) {
           const metricTxt = last.querySelector('.metric-inline-text');
-          const spacer = (punct === '(' || punct === '«' || punct === '“') ? '' : '\u00A0';
-          if (metricTxt) metricTxt.textContent = (metricTxt.textContent || '') + punct + spacer;
-          else last.textContent = (last.textContent || '') + punct + spacer;
+          // Parentesi aperta e virgolette aperte: incolla direttamente senza spazio
+          // Altre punteggiature: aggiungi spazio non-breaking dopo
+          const spacer = (punct === '(' || punct === '«' || punct === '"') ? '' : '\u00A0';
+          if (metricTxt) {
+            metricTxt.textContent = (metricTxt.textContent || '') + punct + spacer;
+          } else {
+            last.textContent = (last.textContent || '') + punct + spacer;
+          }
         } else {
           // se non c'è precedente, appendiamo la punteggiatura come testo semplice (raro)
           rowEl.appendChild(renderTextPart({ kind:'text', text: punct }));
         }
         remaining = rest;
         // continua a consumare punteggiatura iniziale, poi esci
-        if (!/^\s*([,.;:!?()—–\-«»“”])/.test(remaining)) break;
+        if (!/^\s*([,.;:!?()—–\-«»""])/.test(remaining)) break;
       }
 
       // 2) Se resta contenuto non-punteggiatura, appendi come testo normale
+      // Rimuovi spazi iniziali che potrebbero essere rimasti dopo la punteggiatura
       if (remaining && remaining.trim() !== '' || !matched) {
-        rowEl.appendChild(renderTextPart({ kind:'text', text: remaining }));
+        // Se matched è true e remaining inizia con spazi dopo punteggiatura, rimuovili
+        if (matched && /^\s+/.test(remaining)) {
+          remaining = remaining.trimStart();
+        }
+        if (remaining) {
+          rowEl.appendChild(renderTextPart({ kind:'text', text: remaining }));
+        }
       }
     } else {
       rowEl.appendChild(renderPart(part));
