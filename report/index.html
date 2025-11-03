@@ -46,18 +46,26 @@
     a.brand { transition: opacity .18s ease, transform .18s ease; }
     a.brand:hover { opacity:.9; transform: translateY(-1px); }
 
-    /* ===== ICONS (SVG inline, uniformi) ===== */
+    /* ===== ICONS ===== */
     .ico { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
     .ico-lg { width:18px; height:18px; }
     .ico-xl { width:20px; height:20px; }
 
-    /* ===== BUTTONS & HOVER ===== */
+    /* ===== BUTTONS ===== */
     :root { --hover-bg: color-mix(in oklab, var(--surface-card) 92%, transparent); }
     .btn, .btn-sm, .btn-inline {
       transition: background-color .15s ease, border-color .15s ease,
                   color .15s ease, transform .12s ease, box-shadow .15s ease;
     }
-    .btn-inline { display:inline-flex; align-items:center; gap:.45rem; padding:.42rem .70rem; border-radius: var(--radius-pill); border:1px solid var(--br-soft); background: var(--surface-card); color: var(--ink); font-size:12px; font-weight:600; }
+    .btn-inline {
+      display:inline-flex; align-items:center; gap:.45rem;
+      padding:.42rem .70rem;
+      border-radius: var(--radius-pill);
+      border:1px solid var(--br-soft);
+      background: var(--surface-card);
+      color: var(--ink);
+      font-size:12px; font-weight:600;
+    }
     .btn:hover, .btn-sm:hover, .btn-inline:hover {
       background: var(--hover-bg);
       border-color: color-mix(in oklab, var(--br-soft) 70%, var(--brand-600) 30%);
@@ -71,7 +79,7 @@
     }
     #btn-theme { cursor: pointer; }
 
-    /* Toggle icone (sole/luna): mostra/nascondi via data-theme */
+    /* Toggle icone (sole/luna) */
     .ico-sun, .ico-moon { display: none; }
     [data-theme="dark"]  .ico-moon { display:inline-block; }
     [data-theme="light"] .ico-sun  { display:inline-block; }
@@ -83,139 +91,89 @@
       color: var(--ink-soft);
       font-size: 14px;
     }
-    .ftr-head { font-weight: 600; display:flex; align-items:center; gap:.5rem; color: var(--ink); margin-bottom: .6rem; }
+    .ftr-head {
+      font-weight: 600;
+      display:flex; align-items:center; gap:.5rem;
+      color: var(--ink);
+      margin-bottom: .6rem;
+    }
     .ftr-grid { display:grid; gap:2rem; grid-template-columns: 1fr; }
     @media (min-width: 768px){ .ftr-grid { grid-template-columns: repeat(3, 1fr); } }
     .ftr-list li { margin:.25rem 0; }
     .ftr-bottom {
       border-top: 1px solid var(--br-soft);
       margin-top: 2rem; padding-top: 1rem;
-      display: flex; flex-direction: column; gap: .5rem; font-size: 13px; color: var(--muted);
+      display: flex; flex-direction: column; gap: .5rem;
+      font-size: 13px; color: var(--muted);
     }
     @media (min-width: 768px){
       .ftr-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
     }
 
-    /* Link & social: hover leggero + underline animata */
-    .site-footer a { text-decoration: none; border-bottom: 1px solid transparent; transition: color .18s ease, border-color .18s ease, opacity .18s ease, transform .18s ease; }
+    /* Link & social */
+    .site-footer a {
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color .18s ease, border-color .18s ease, opacity .18s ease, transform .18s ease;
+    }
     .site-footer a:hover { border-bottom-color: currentColor; }
     a.mail-link { text-underline-offset: 2px; text-decoration-thickness: 1px; }
 
     .ftr-socials a{
-      position: relative; display:flex; align-items:center; gap:.5rem; color: var(--ink-soft);
+      position: relative;
+      display:flex; align-items:center; gap:.5rem;
+      color: var(--ink-soft);
     }
     .ftr-socials a::after{
-      content:""; position:absolute; left:19px; right:0; bottom:-2px; height:1px; background: currentColor;
-      opacity:0; transform: scaleX(.35); transform-origin:left; transition: transform .18s ease, opacity .18s ease;
+      content:"";
+      position:absolute; left:19px; right:0; bottom:-2px; height:1px;
+      background: currentColor;
+      opacity:0; transform: scaleX(.35); transform-origin:left;
+      transition: transform .18s ease, opacity .18s ease;
     }
     .ftr-socials a:hover{ color: var(--ink); transform: translateX(2px); }
     .ftr-socials a:hover::after{ opacity:.6; transform: scaleX(1); }
 
-    /* ===== LEGAL OVERLAY (MiFID + Privacy) ===== */
+    /* ===== LEGAL OVERLAY (contenuto montato altrove) ===== */
     #legal-consent-overlay[hidden] { display: none !important; }
-    #legal-consent-overlay {
-      position: fixed; inset: 0; z-index: 90;
-      display: grid; place-items: center;
-    }
-    .legal-backdrop {
-      position: absolute; inset: 0;
-      background: oklab(0% 0 0 / .55);
-      -webkit-backdrop-filter: blur(4px);
-      backdrop-filter: blur(4px);
-    }
-    .legal-panel {
-      position: relative; z-index: 1;
-      max-width: 760px; width: calc(100% - 2rem);
-      background: var(--surface-card);
-      color: var(--ink);
-      border: 1px solid var(--br-soft);
-      border-radius: var(--radius-card);
-      box-shadow: 0 20px 60px oklab(0% 0 0 / .35);
-    }
-    .legal-hdr {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: .75rem; padding: .9rem 1rem; border-bottom: 1px solid var(--br-soft);
-    }
-    .legal-title { font-weight: 700; font-size: 15px; }
-    .legal-tabs {
-      display: flex; gap: .4rem; padding: .6rem 1rem .2rem; border-bottom: 1px solid var(--br-soft);
-    }
-    .legal-tab {
-      padding: .35rem .6rem; border-radius: var(--radius-pill);
-      border: 1px solid transparent; font-size: 12px; font-weight: 600;
-      color: var(--ink-soft); background: transparent; cursor: pointer;
-      transition: background-color .15s ease, color .15s ease, border-color .15s ease;
-    }
-    .legal-tab[aria-selected="true"] {
-      color: var(--ink); background: var(--hover-bg); border-color: var(--br-soft);
-    }
-    .legal-body {
-      max-height: min(68vh, 680px); overflow: auto; padding: 1rem;
-    }
-    .legal-body section[hidden] { display: none !important; }
-    .legal-body h4 { font-weight: 700; margin: .75rem 0 .25rem; font-size: 14px; }
-    .legal-body p { margin: .35rem 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-soft); }
-    .legal-body ul { margin: .4rem 0 .6rem 1.1rem; }
-    .legal-body li { font-size: 13.5px; line-height: 1.5; color: var(--ink-soft); margin: .25rem 0; list-style: disc; }
-    .legal-ftr {
-      display: flex; justify-content: space-between; align-items: center; gap: .75rem;
-      padding: .9rem 1rem; border-top: 1px solid var(--br-soft);
-    }
-    .legal-btn { /* eredita btn-inline */ }
-    .legal-close { opacity: .8; }
-    .legal-close:hover { opacity: 1; }
 
-    /* Scrollbar panel */
-    .legal-body::-webkit-scrollbar { height: 10px; width: 10px; }
-    .legal-body::-webkit-scrollbar-thumb { background: color-mix(in oklab, var(--br-soft) 65%, var(--ink) 5%); border-radius: 999px; }
+    /* ===== SCROLLBAR GLOBAL (light + dark) ===== */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #e2e8f0;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(80, 160, 200, 0.4);
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(80, 160, 200, 0.6);
+    }
+    /* firefox base */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(80,160,200,.5) #e2e8f0;
+    }
+    /* variante dark */
+    html[data-theme="dark"] ::-webkit-scrollbar-track {
+      background: #0b1220; /* o var(--surface-card) */
+    }
+    html[data-theme="dark"] ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.5);
+    }
+    html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+      background: rgba(148, 163, 184, 0.75);
+    }
+    html[data-theme="dark"] * {
+      scrollbar-color: rgba(148,163,184,.6) #0b1220;
+    }
 
-    /* Riduci motion se richiesto */
+    /* Riduci motion */
     @media (prefers-reduced-motion: reduce){
       * { transition: none !important; }
-    }
-
-    /* ===== LEGENDA HEADER-TICKER (aggiunta) ===== */
-    .header-ticker-legend {
-      background: color-mix(in oklab, var(--surface-card) 92%, transparent);
-      border: 1px solid var(--br-soft);
-      border-radius: .75rem;
-      padding: .8rem 1rem;
-      margin-bottom: 1rem;
-      font-size: .72rem;
-      line-height: 1.4;
-      color: var(--ink-soft);
-    }
-    .header-ticker-legend-title {
-      font-weight: 650;
-      color: var(--ink);
-      margin-bottom: .4rem;
-    }
-    .header-ticker-legend ul {
-      margin-left: 1rem;
-      margin-top: .35rem;
-      list-style: disc;
-    }
-    .header-ticker-legend li {
-      margin: .15rem 0;
-    }
-    .header-ticker-pill {
-      display: inline-block;
-      padding: .12rem .5rem;
-      border-radius: 999px;
-      font-size: .63rem;
-      font-weight: 600;
-      margin-right: .25rem;
-    }
-    .header-ticker-pill--ok { background: rgba(0,200,100,.12); color: #4ee58a; }
-    .header-ticker-pill--warn { background: rgba(240,180,0,.12); color: #ffd27d; }
-    .header-ticker-pill--err { background: rgba(240,60,60,.12); color: #ff9a9a; }
-    .header-ticker-legend .metric-ok { font-weight: 600; font-style: italic; color: #4ee58a; }
-    .header-ticker-legend .metric-warn { font-weight: 600; font-style: italic; color: #ffd27d; }
-    .header-ticker-legend .metric-err { font-weight: 600; font-style: italic; color: #ff9a9a; }
-    .header-ticker-legend-note {
-      margin-top: .45rem;
-      font-size: .68rem;
-      color: var(--ink);
     }
   </style>
 </head>
@@ -229,26 +187,25 @@
          aria-label="Tradelia.org"
          target="_blank"
          rel="noopener noreferrer">
-          <span class="brand-word">TRADELIA</span>
-          <span class="brand-dot" aria-hidden="true"></span>
-          <span class="brand-suffix">AI</span>
-        </a>
-        <nav class="flex items-center gap-3">
-          <!-- Toggle tema (SVG inline, uniforme) -->
-          <button id="btn-theme" class="btn-inline" type="button" aria-label="Tema (scuro)">
-            <!-- Luna (dark) -->
-            <svg class="ico ico-moon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
-            </svg>
-            <!-- Sole (light) -->
-            <svg class="ico ico-sun" viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="12" cy="12" r="4"></circle>
-              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
-            </svg>
-            <span class="hidden sm:inline text-[12px] leading-none">Tema</span>
-          </button>
-        </nav>
-      </div>
+        <span class="brand-word">TRADELIA</span>
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span class="brand-suffix">AI</span>
+      </a>
+      <nav class="flex items-center gap-3">
+        <button id="btn-theme" class="btn-inline" type="button" aria-label="Tema (scuro)">
+          <!-- Luna (dark) -->
+          <svg class="ico ico-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+          </svg>
+          <!-- Sole (light) -->
+          <svg class="ico ico-sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+          </svg>
+          <span class="hidden sm:inline text-[12px] leading-none">Tema</span>
+        </button>
+      </nav>
+    </div>
   </header>
 
   <!-- MAIN (mount point) -->
@@ -303,31 +260,10 @@
           </h3>
           <p class="mb-2">Aggiornamenti su metodologia e release:</p>
           <div class="ftr-socials flex flex-col gap-2">
-            <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener" aria-label="LinkedIn">
-              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M4 4h4v16H4z"/><path d="M10 9h4"/><path d="M18 20h-4V12a3 3 0 0 1 6 0v8z"/>
-              </svg>
-              <span>LinkedIn</span>
-            </a>
-            <a href="https://x.com/tradelia_ai" target="_blank" rel="noopener" aria-label="X">
-              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M4 4l16 16M20 4 9 15"/><path d="M4 20l7-7"/>
-              </svg>
-              <span>X (Twitter)</span>
-            </a>
-            <a href="https://www.reddit.com/r/TradeliaAI" target="_blank" rel="noopener" aria-label="Reddit">
-              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="12" cy="13" r="6"/><circle cx="9" cy="13" r="1.2"/><circle cx="15" cy="13" r="1.2"/>
-                <path d="M14 6l1-4 3 1"/><circle cx="19" cy="7" r="1.2"/>
-              </svg>
-              <span>Reddit</span>
-            </a>
-            <a href="https://www.quora.com" target="_blank" rel="noopener" aria-label="Quora">
-              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="10.5" cy="12" r="6"/><path d="M13.5 15.5 18 20"/><path d="M8.5 10.5c.6-1.2 2-2 3.5-2"/>
-              </svg>
-              <span>Quora</span>
-            </a>
+            <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener" aria-label="LinkedIn">LinkedIn</a>
+            <a href="https://x.com/tradelia_ai" target="_blank" rel="noopener" aria-label="X (Twitter)">X (Twitter)</a>
+            <a href="https://www.reddit.com/r/TradeliaAI" target="_blank" rel="noopener" aria-label="Reddit">Reddit</a>
+            <a href="https://www.quora.com" target="_blank" rel="noopener" aria-label="Quora">Quora</a>
           </div>
         </div>
       </section>
@@ -349,89 +285,8 @@
     </div>
   </footer>
 
-  <!-- LEGAL CONSENT OVERLAY (MiFID + Privacy) -->
-  <div id="legal-consent-overlay" class="noprint" role="dialog" aria-modal="true" aria-labelledby="legal-consent-title" hidden>
-    <div class="legal-backdrop" data-legal-dismiss></div>
-    <div class="legal-panel" role="document">
-      <header class="legal-hdr">
-        <div class="legal-title" id="legal-consent-title">Informativa legale</div>
-        <button class="btn-inline legal-close" type="button" data-legal-dismiss aria-label="Chiudi">Chiudi</button>
-      </header>
-
-      <nav class="legal-tabs" role="tablist" aria-label="Sezioni legali">
-        <button class="legal-tab" role="tab" id="tab-mifid" aria-controls="panel-mifid" aria-selected="true">Informativa MiFID</button>
-        <button class="legal-tab" role="tab" id="tab-privacy" aria-controls="panel-privacy" aria-selected="false">Privacy</button>
-      </nav>
-
-      <div class="legal-body">
-        <!-- MIFID -->
-        <section id="panel-mifid" role="tabpanel" aria-labelledby="tab-mifid">
-          <h4>Finalità del materiale</h4>
-          <p>Il presente contenuto ha esclusiva finalità informativa e didattica. Non costituisce consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa MiFID II / ESMA.</p>
-
-          <h4>Orizzonte e perimetro</h4>
-          <p>I moduli (F1–F7) coprono analisi top-down (macro, sentiment, tecnica) con orizzonte indicativo 3–10 giorni. Non viene svolta verifica di adeguatezza/appropriatezza, profilo di rischio o obiettivi finanziari dell’utente.</p>
-
-          <h4>Rischi</h4>
-          <ul>
-            <li>I mercati finanziari comportano rischio di perdita, anche totale, del capitale.</li>
-            <li>Prodotti a leva/derivati (opzioni, futures, CFD) possono amplificare perdite oltre il capitale iniziale.</li>
-            <li>Rendimenti passati non sono indicativi di risultati futuri.</li>
-          </ul>
-
-          <h4>Dati e fonti</h4>
-          <ul>
-            <li>Dati e serie storiche possono essere soggetti a ritardi, revisioni o errori; i timestamp potrebbero non riflettere il “tempo reale”.</li>
-            <li>Le fonti includono provider ritenuti affidabili; non si garantisce esattezza/completezza.</li>
-          </ul>
-
-          <h4>Conflitti e indipendenza</h4>
-          <ul>
-            <li>Tradelia AI è indipendente: non esegue ordini e non gestisce capitali.</li>
-            <li>Non sono note situazioni di conflitto d’interesse rilevanti nella produzione del materiale.</li>
-          </ul>
-
-          <h4>Limitazioni</h4>
-          <ul>
-            <li>Le informazioni non sostituiscono il giudizio dell’utente né la consulenza di un intermediario autorizzato.</li>
-            <li>L’uso è vietato laddove non conforme alle leggi locali.</li>
-          </ul>
-        </section>
-
-        <!-- PRIVACY -->
-        <section id="panel-privacy" role="tabpanel" aria-labelledby="tab-privacy" hidden>
-          <h4>Principi</h4>
-          <p>Adottiamo un’impostazione “privacy-first”: minimizzazione dei dati e assenza di tracciamento pubblicitario.</p>
-
-          <h4>Dati trattati</h4>
-          <ul>
-            <li>Nessuna raccolta di dati personali identificativi tramite questa pagina.</li>
-            <li>Uso di <code>localStorage</code> per preferenze (tema) e consenso legale.</li>
-            <li>Eventuali log tecnici anonimi per sicurezza e diagnostica.</li>
-          </ul>
-
-          <h4>Cookie e analytics</h4>
-          <ul>
-            <li>Niente cookie di profilazione; eventuali analytics sono anonimizzati/aggregati.</li>
-            <li>Nessuna condivisione con terze parti a fini commerciali.</li>
-          </ul>
-
-          <h4>Diritti e contatti</h4>
-          <ul>
-            <li>Per informazioni o esercizio diritti privacy, scrivi a <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>.</li>
-            <li>Il titolare potrà aggiornare questa informativa: controlla periodicamente le revisioni.</li>
-          </ul>
-        </section>
-      </div>
-
-      <footer class="legal-ftr">
-        <small class="text-[12px] text-[color:var(--muted)]">Continuando dichiari di aver letto e compreso le informative.</small>
-        <div class="flex items-center gap-2">
-          <button class="btn-inline legal-btn" type="button" id="btn-accept-legal">Accetto e chiudi</button>
-        </div>
-      </footer>
-    </div>
-  </div>
+  <!-- LEGAL CONSENT OVERLAY (contenuto montato da runtime) -->
+  <div id="legal-consent-overlay" class="noprint" role="dialog" aria-modal="true" hidden></div>
 
   <!-- Runtime -->
   <script type="module" src="/report/assets/js/app.js"></script>
@@ -446,99 +301,18 @@
         HTML.setAttribute('data-theme', t);
         try{ localStorage.setItem(THEMEKEY, t); }catch(e){}
         btnTheme?.setAttribute('aria-label', t === 'dark' ? 'Tema (scuro)' : 'Tema (chiaro)');
-        btnTheme?.setAttribute('aria-pressed', t === 'dark' ? 'true' : 'false');
       }
       setTheme(localStorage.getItem(THEMEKEY) || 'dark');
-      btnTheme?.addEventListener('click', ()=> setTheme(HTML.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
-
-      // ===== Legend interpretativa (globale) =====
-function injectHeaderLegend() {
-  const root = document.getElementById('app-root');
-  if (!root || !root.parentNode) return;
-
-  const box = document.createElement('div');
-  box.className = 'header-ticker-legend';
-  box.innerHTML = `
-    <div class="header-ticker-legend-title">Legenda interpretativa (uso formativo)</div>
-    <p>Questo riquadro spiega i codici e i colori utilizzati nel report.</p>
-    <ul>
-      <li><span class="header-ticker-pill header-ticker-pill--ok">ACTIVE</span> dati coerenti e completi.</li>
-      <li><span class="header-ticker-pill header-ticker-pill--warn">HOLD</span> dati parzialmente contrastanti o in aggiornamento.</li>
-      <li><span class="header-ticker-pill header-ticker-pill--err">REVIEW</span> dati in fase di verifica o da validare.</li>
-    </ul>
-    <p style="margin-top:.35rem;">Colori delle metriche:</p>
-    <ul>
-      <li><span class="metric-ok">verde</span> = variabile con contributo positivo/sopra media.</li>
-      <li><span class="metric-warn">giallo</span> = variabile neutra o da monitorare.</li>
-      <li><span class="metric-err">rosso</span> = variabile debole o sotto benchmark.</li>
-    </ul>
-    <p class="header-ticker-legend-note">
-      Le metriche colorate sono cliccabili: tocca/clicca per aprire la scheda o l’audit (se il runtime lo prevede).
-    </p>
-  `;
-
-  // 👉 la mettiamo PRIMA di #app-root, così vale per tutto e il runtime non la tocca
-  root.parentNode.insertBefore(box, root);
-}
-
-document.addEventListener('DOMContentLoaded', injectHeaderLegend);
-
+      btnTheme?.addEventListener('click', ()=> {
+        const next = HTML.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        setTheme(next);
+      });
 
       // ===== Footer year =====
       const fy = document.getElementById('footer-year');
       if (fy) fy.textContent = new Date().getFullYear();
 
-      // ===== Legal overlay (MiFID + Privacy) =====
-      const KEY = 'tradelia-legal-ack-v2025-11'; // <— versiona per riforzare consenso
-      const overlay = document.getElementById('legal-consent-overlay');
-      const btnAccept = document.getElementById('btn-accept-legal');
-      const tabM = document.getElementById('tab-mifid');
-      const tabP = document.getElementById('tab-privacy');
-      const panelM = document.getElementById('panel-mifid');
-      const panelP = document.getElementById('panel-privacy');
-
-      function showTab(which){
-        const mifid = (which === 'mifid');
-        tabM.setAttribute('aria-selected', mifid ? 'true' : 'false');
-        tabP.setAttribute('aria-selected', mifid ? 'false' : 'true');
-        panelM.hidden = !mifid;
-        panelP.hidden = mifid;
-      }
-      function openLegal(which='mifid', blocking=true){
-        showTab(which);
-        overlay.hidden = false;
-        document.body.style.overflow = 'hidden';
-        if (blocking) overlay.setAttribute('data-blocking','true'); else overlay.removeAttribute('data-blocking');
-        setTimeout(()=> (which === 'privacy' ? tabP : tabM).focus(), 0);
-      }
-      function closeLegal(){
-        overlay.hidden = true;
-        document.body.style.overflow = '';
-      }
-
-      tabM.addEventListener('click', ()=> showTab('mifid'));
-      tabP.addEventListener('click', ()=> showTab('privacy'));
-      btnAccept.addEventListener('click', ()=>{
-        try { localStorage.setItem(KEY, JSON.stringify({ acceptedAt: new Date().toISOString(), v: '2025-11' })); } catch(e){}
-        closeLegal();
-      });
-      overlay.addEventListener('click', (e)=>{
-        if (e.target.matches('[data-legal-dismiss]') || e.target.closest('[data-legal-dismiss]')){
-          if (!overlay.hasAttribute('data-blocking')) closeLegal();
-        }
-      });
-      document.addEventListener('keydown', (e)=>{
-        if (e.key === 'Escape' && !overlay.hasAttribute('data-blocking')) closeLegal();
-      });
-
-      // Footer buttons open (non-bloccante)
-      document.getElementById('btn-privacy-open')?.addEventListener('click', ()=> openLegal('privacy', false));
-      document.getElementById('btn-mifid-open')?.addEventListener('click', ()=> openLegal('mifid', false));
-
-      // Primo accesso → blocca finché non accetta
-      let ack = null;
-      try { ack = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch(e){}
-      if (!ack) openLegal('mifid', true);
+      // I bottoni Privacy/MiFID li gestisce il runtime se presente
     })();
   </script>
 </body>
