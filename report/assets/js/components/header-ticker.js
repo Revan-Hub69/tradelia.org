@@ -38,7 +38,14 @@ async function fetchGlossaryEntry(key) {
 
 async function openMetricsPanel(data) {
   const ui = window.__TradeliaUI;
-  if (!ui?.openPanel) return;
+  if (!ui) {
+    console.warn('[HeaderTicker] window.__TradeliaUI non disponibile');
+    return;
+  }
+  if (!ui.openPanel) {
+    console.warn('[HeaderTicker] window.__TradeliaUI.openPanel non disponibile');
+    return;
+  }
 
   const list = Array.isArray(data.metricsPanel) ? data.metricsPanel : [];
   const rowsHtml = await Promise.all(
@@ -112,9 +119,17 @@ function renderMetricPart(part) {
 
   wrap.addEventListener('click', (e) => {
     e.stopPropagation();
+    e.preventDefault();
     try {
-      window.__TradeliaUI?.openMetricPopup?.(part.key);
-    } catch {}
+      const ui = window.__TradeliaUI;
+      if (ui?.openMetricPopup) {
+        ui.openMetricPopup(part.key);
+      } else {
+        console.warn('[HeaderTicker] __TradeliaUI.openMetricPopup non disponibile');
+      }
+    } catch (err) {
+      console.warn('[HeaderTicker] Errore apertura popup metrica:', err);
+    }
   });
 
   return wrap;
@@ -188,21 +203,38 @@ function renderFooter(node, data) {
   const links = data.footer?.links || [];
   links.forEach((link) => {
     const btn = createEl('button', 'btn btn-sm', link.label || 'Azione');
-    btn.addEventListener('click', () => {
-      if (link.action === 'open-metrics-panel') openMetricsPanel(data);
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (link.action === 'open-metrics-panel') {
+        try {
+          openMetricsPanel(data);
+        } catch (err) {
+          console.warn('[HeaderTicker] Errore apertura metrics panel:', err);
+        }
+      }
     });
     footer.appendChild(btn);
   });
 
-  if (data.meta?.auditPathId && window.__TradeliaUI?.openAuditPanel) {
-    const auditBtn = createEl('button', 'btn btn-sm', 'Audit');
-    auditBtn.addEventListener('click', () => {
-      window.__TradeliaUI.openAuditPanel({
-        AuditPathID: data.meta.auditPathId,
-        Notes: ['Header verbale generato da Swing master.']
+  if (data.meta?.auditPathId) {
+    const ui = window.__TradeliaUI;
+    if (ui?.openAuditPanel) {
+      const auditBtn = createEl('button', 'btn btn-sm', 'Audit');
+      auditBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        try {
+          ui.openAuditPanel({
+            AuditPathID: data.meta.auditPathId,
+            Notes: ['Header verbale generato da Swing master.']
+          });
+        } catch (err) {
+          console.warn('[HeaderTicker] Errore apertura audit panel:', err);
+        }
       });
-    });
-    footer.appendChild(auditBtn);
+      footer.appendChild(auditBtn);
+    }
   }
 }
 
