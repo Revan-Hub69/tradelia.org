@@ -104,10 +104,23 @@ function renderMetricPart(part) {
   wrap.dataset.metric = part.key;
   wrap.setAttribute('aria-label', part.label || part.key);
 
+  // Formatta il valore: se è un numero, formattalo correttamente
+  let displayValue = '—';
+  if (part.value != null && part.value !== '') {
+    if (typeof part.value === 'number') {
+      // Se è un numero decimale, formattalo con 2 decimali
+      displayValue = Number.isInteger(part.value) 
+        ? String(part.value)
+        : Number(part.value).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    } else {
+      displayValue = String(part.value);
+    }
+  }
+
   const txt = createEl(
     'span',
     `metric-inline-text metric-inline-text--${part.tone || 'neutral'}`,
-    part.value != null ? String(part.value) : '—'
+    displayValue
   );
 
   // stile che avevi tu
