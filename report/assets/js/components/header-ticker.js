@@ -161,15 +161,44 @@ function renderRow(row) {
   else if (row.id === 'quality-line') rowEl.classList.add('header-ticker-row--quality');
   else if (row.id === 'window-line') rowEl.classList.add('header-ticker-row--meta');
 
-  (row.parts || []).forEach((part) => {
+  (row.parts || []).forEach((part, idx, arr) => {
     if (part.kind === 'text' && part.text) {
       let remaining = String(part.text);
 
-      // 1) Gluing: se il testo INIZIA con spazi + punteggiatura, incolla la punteggiatura al nodo precedente
+      // 1) Gluing: gestisce punteggiatura che può essere incollata prima o dopo
+      // Se il testo è solo una parentesi aperta e il prossimo elemento è una metrica,
+      // segna che va incollata alla metrica successiva (prefissa)
+      const isOnlyPunct = /^\s*([(«"])\s*$/.test(remaining);
+      const nextIsMetric = idx + 1 < arr.length && arr[idx + 1]?.kind === 'metric';
+      
+      if (isOnlyPunct && nextIsMetric) {
+        // Salta questo part text, la parentesi verrà aggiunta alla metrica successiva
+        // Rimuovi eventuali spazi prima della parentesi
+        const punctMatch = remaining.match(/^\s*([(«"])/);
+        if (punctMatch) {
+          rowEl.dataset.pendingPunct = punctMatch[1];
+          // Rimuovi spazio finale dal testo precedente se c'è
+          const last = rowEl.lastElementChild;
+          if (last) {
+            // Se l'ultimo elemento è un part text, rimuovi spazio finale
+            if (last.classList.contains('header-ticker-text') && last.textContent && last.textContent.endsWith(' ')) {
+              last.textContent = last.textContent.slice(0, -1);
+            }
+            // Se l'ultimo elemento è una metrica, rimuovi spazio dal textContent
+            const metricTxt = last.querySelector('.metric-inline-text');
+            if (metricTxt && metricTxt.textContent && metricTxt.textContent.endsWith(' ')) {
+              metricTxt.textContent = metricTxt.textContent.slice(0, -1);
+            }
+          }
+        }
+        return; // Salta questo part, verrà gestito dalla metrica successiva
+      }
+
+      // 2) Gluing: se il testo INIZIA con spazi + punteggiatura, incolla la punteggiatura al nodo precedente
       let matched = false;
       while (true) {
-        // Match: spazi opzionali + punteggiatura + resto (gestisce anche " (" e ")" )
-        const m = remaining.match(/^\s*([,.;:!?()—–\-«»""])\s*(.*)$/);
+        // Match: spazi opzionali + punteggiatura + resto
+        const m = remaining.match(/^\s*([,.;:!?)—–\-«»""])\s*(.*)$/);
         if (!m) break;
         matched = true;
         const punct = m[1];
@@ -177,9 +206,8 @@ function renderRow(row) {
         const last = rowEl.lastElementChild;
         if (last) {
           const metricTxt = last.querySelector('.metric-inline-text');
-          // Parentesi aperta e virgolette aperte: incolla direttamente senza spazio
           // Altre punteggiature: aggiungi spazio non-breaking dopo
-          const spacer = (punct === '(' || punct === '«' || punct === '"') ? '' : '\u00A0';
+          const spacer = '\u00A0';
           if (metricTxt) {
             metricTxt.textContent = (metricTxt.textContent || '') + punct + spacer;
           } else {
@@ -191,10 +219,10 @@ function renderRow(row) {
         }
         remaining = rest;
         // continua a consumare punteggiatura iniziale, poi esci
-        if (!/^\s*([,.;:!?()—–\-«»""])/.test(remaining)) break;
+        if (!/^\s*([,.;:!?)—–\-«»""])/.test(remaining)) break;
       }
 
-      // 2) Se resta contenuto non-punteggiatura, appendi come testo normale
+      // 3) Se resta contenuto non-punteggiatura, appendi come testo normale
       // Rimuovi spazi iniziali che potrebbero essere rimasti dopo la punteggiatura
       if (remaining && remaining.trim() !== '' || !matched) {
         // Se matched è true e remaining inizia con spazi dopo punteggiatura, rimuovili
@@ -206,7 +234,20 @@ function renderRow(row) {
         }
       }
     } else {
-      rowEl.appendChild(renderPart(part));
+      // Se è una metrica, controlla se c'è una parentesi pendente da aggiungere prima
+      const pendingPunct = rowEl.dataset.pendingPunct;
+      if (pendingPunct) {
+        delete rowEl.dataset.pendingPunct;
+        // Aggiungi la parentesi prima del valore della metrica
+        const metricEl = renderPart(part);
+        const metricTxt = metricEl.querySelector('.metric-inline-text');
+        if (metricTxt) {
+          metricTxt.textContent = pendingPunct + metricTxt.textContent;
+        }
+        rowEl.appendChild(metricEl);
+      } else {
+        rowEl.appendChild(renderPart(part));
+      }
     }
   });
 
