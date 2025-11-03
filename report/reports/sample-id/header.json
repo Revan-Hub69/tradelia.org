@@ -1,31 +1,77 @@
 {
-  "Ticker": "NVDA",
-  "Venue": "NASDAQ",
-  "CompanyName": "NVIDIA Corporation",
-
-  "Price": 123.45,
-
-  "ChangePct": -2.13,
-  "ChangePctTone": "red",
-
-  "Currency": "USD",
-
-  "Start": "2025-10-21",
-  "End": "2025-10-25",
-
-  "FreshnessLabel": "T-0 / latest close + AH",
-  "Freshness": {
-    "raw": "T-0 / latest close + AH",
-    "tone": "green"
+  "meta": {
+    "module": "HEADER",
+    "version": "v2025.11.03",
+    "auditPathId": "RPT-2025-11-03-NVDA-HEAD",
+    "state": "ACTIVE"
   },
-
-  "ConfidenceFinal": { "raw": 0.82, "tone": "yellow" },
-  "DataIntegrity":   { "raw": 0.88, "tone": "green" },
-  "FeedSync":        { "raw": "T-1 OK", "tone": "yellow" },
-
-  "State":      { "raw": "ACTIVE", "tone": "green" },
-  "StateNote":  "LIVE SNAPSHOT",
-
-  "Version":   "v2025.10.25-rc3",
-  "UpdatedAt": "2025-10-25T22:14:00Z"
+  "rows": [
+    {
+      "id": "intro-line",
+      "parts": [
+        { "kind": "text", "text": "Report Tradelia AI su " },
+        { "kind": "metric", "key": "CompanyName", "value": "NVIDIA Corporation", "tone": "neutral" },
+        { "kind": "text", "text": " (" },
+        { "kind": "metric", "key": "Ticker", "value": "NVDA", "tone": "neutral" },
+        { "kind": "text", "text": ") — " },
+        { "kind": "metric", "key": "Venue", "value": "NASDAQ", "tone": "neutral" },
+        { "kind": "text", "text": ", prezzo al momento dello start " },
+        { "kind": "metric", "key": "Price", "value": 123.45, "tone": "ok" },
+        { "kind": "text", "text": ", cambiamento di prezzo registrato dall'ultima chiusura di mercato " },
+        { "kind": "metric", "key": "ChangePct", "value": "-2.13%", "tone": "err" },
+        { "kind": "text", "text": "." }
+      ]
+    },
+    {
+      "id": "quality-line",
+      "parts": [
+        { "kind": "text", "text": "Freshness dei dati: " },
+        { "kind": "metric", "key": "Freshness", "value": "< 24h", "tone": "ok" },
+        { "kind": "text", "text": ", confidence registrata " },
+        { "kind": "metric", "key": "ConfidenceFinal", "value": "0.82", "tone": "warn" },
+        { "kind": "text", "text": ", data integrity " },
+        { "kind": "metric", "key": "DataIntegrity", "value": "0.88", "tone": "ok" },
+        { "kind": "text", "text": ", feed sync " },
+        { "kind": "metric", "key": "FeedSync", "value": "T-1 OK", "tone": "ok" },
+        { "kind": "text", "text": ", stato del report " },
+        { "kind": "metric", "key": "State", "value": "ACTIVE", "tone": "ok" },
+        { "kind": "text", "text": "." }
+      ]
+    },
+    {
+      "id": "window-line",
+      "parts": [
+        { "kind": "text", "text": "Report iniziato il " },
+        { "kind": "metric", "key": "Start", "value": "2025-10-21", "tone": "neutral" },
+        { "kind": "text", "text": " e concluso il " },
+        { "kind": "metric", "key": "End", "value": "2025-10-25", "tone": "neutral" },
+        { "kind": "text", "text": ". Ultimo aggiornamento: " },
+        { "kind": "metric", "key": "UpdatedAt", "value": "2025-10-25T22:14:00Z", "tone": "neutral" },
+        { "kind": "text", "text": ". Versione: " },
+        { "kind": "metric", "key": "Version", "value": "v2025.10.25-rc3", "tone": "neutral" },
+        { "kind": "text", "text": "." }
+      ]
+    }
+  ],
+  "footer": {
+    "links": [
+      {
+        "label": "Scopri tutte le metriche",
+        "action": "open-metrics-panel"
+      }
+    ]
+  },
+  "metricsPanel": [
+    { "key": "Price", "label": "Prezzo allo start", "value": 123.45, "tone": "ok" },
+    { "key": "ChangePct", "label": "Variazione dall'ultima chiusura", "value": "-2.13%", "tone": "err" },
+    { "key": "Freshness", "label": "Freshness dei dati", "value": "< 24h", "tone": "ok" },
+    { "key": "ConfidenceFinal", "label": "Confidence registrata", "value": "0.82", "tone": "warn" },
+    { "key": "DataIntegrity", "label": "Data integrity", "value": "0.88", "tone": "ok" },
+    { "key": "FeedSync", "label": "Feed sync", "value": "T-1 OK", "tone": "ok" },
+    { "key": "State", "label": "Stato del report", "value": "ACTIVE", "tone": "ok" },
+    { "key": "Start", "label": "Inizio report", "value": "2025-10-21", "tone": "neutral" },
+    { "key": "End", "label": "Fine report", "value": "2025-10-25", "tone": "neutral" },
+    { "key": "UpdatedAt", "label": "Ultimo aggiornamento", "value": "2025-10-25T22:14:00Z", "tone": "neutral" },
+    { "key": "Version", "label": "Versione del report", "value": "v2025.10.25-rc3", "tone": "neutral" }
+  ]
 }
