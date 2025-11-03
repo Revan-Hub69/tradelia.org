@@ -157,7 +157,8 @@ function renderPart(part) {
 function renderRow(row) {
   const rowEl = createEl('div', 'header-ticker-row');
 
-  if (row.id === 'intro-line') rowEl.classList.add('header-ticker-row--intro');
+  if (row.id === 'company-line' || row.id === 'intro-line') rowEl.classList.add('header-ticker-row--intro');
+  else if (row.id === 'price-line') rowEl.classList.add('header-ticker-row--intro');
   else if (row.id === 'quality-line') rowEl.classList.add('header-ticker-row--quality');
   else if (row.id === 'window-line') rowEl.classList.add('header-ticker-row--meta');
 
