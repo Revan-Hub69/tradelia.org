@@ -1,12 +1,12 @@
 // /report/assets/js/components/header-ticker.js
-// Header verbale Tradelia AI (JSON-driven, premium)
+// Header verbale Tradelia AI (JSON-driven, premium, inline-metrics)
 
 const metricToneClass = (tone) => {
   switch (tone) {
-    case 'ok': return 'pill--ok';
-    case 'warn': return 'pill--warn';
-    case 'err': return 'pill--err';
-    default: return 'pill--neutral';
+    case 'ok': return 'metric-inline--ok';
+    case 'warn': return 'metric-inline--warn';
+    case 'err': return 'metric-inline--err';
+    default: return 'metric-inline--neutral';
   }
 };
 
@@ -29,6 +29,7 @@ async function fetchGlossaryEntry(key) {
   }
 }
 
+// pannello con tabella (qui teniamo le pill, va bene così)
 async function openMetricsPanel(data) {
   const ui = window.__TradeliaUI;
   if (!ui?.openPanel) return;
@@ -38,7 +39,7 @@ async function openMetricsPanel(data) {
     const g = await fetchGlossaryEntry(m.key);
     return `
       <tr>
-        <td class="py-2 pr-3"><div class="metric-btn ${metricToneClass(m.tone)}">${m.label || m.key}</div></td>
+        <td class="py-2 pr-3"><div class="metric-btn pill--neutral">${m.label || m.key}</div></td>
         <td class="py-2 pr-3">${m.value ?? '—'}</td>
         <td class="py-2 pr-3 text-[13px] text-[color:var(--ink-soft)]">${g?.what || '—'}</td>
         <td class="py-2 pr-3 text-[13px] text-[color:var(--ink-soft)]">${g?.how || '—'}</td>
@@ -70,31 +71,31 @@ async function openMetricsPanel(data) {
   });
 }
 
-// crea uno span di testo
+// testo semplice
 function renderTextPart(part) {
-  const span = createEl('span', 'header-ticker-text', part.text || '');
-  return span;
+  return createEl('span', 'header-ticker-text', part.text || '');
 }
 
-// crea una pill metrica
+// metrica in stile "dot + testo sottolineato"
 function renderMetricPart(part) {
-  const btn = createEl(
-    'button',
-    `metric-btn ${metricToneClass(part.tone)}`,
-    part.value != null ? String(part.value) : '—'
-  );
-  btn.type = 'button';
-  btn.dataset.metric = part.key;
-  btn.setAttribute('aria-label', part.label || part.key);
+  const wrap = createEl('button', `metric-inline ${metricToneClass(part.tone)}`);
+  wrap.type = 'button';
+  wrap.dataset.metric = part.key;
+  wrap.setAttribute('aria-label', part.label || part.key);
 
-  // il runtime legherà i popup
-  btn.addEventListener('click', (e) => {
+  const dot = createEl('span', 'metric-inline-dot');
+  const txt = createEl('span', 'metric-inline-text', part.value != null ? String(part.value) : '—');
+
+  wrap.appendChild(dot);
+  wrap.appendChild(txt);
+
+  // il runtime collegherà i popup
+  wrap.addEventListener('click', (e) => {
     e.stopPropagation();
-    // se non c'è il runtime, facciamo un fallback minimo
-    if (!window.__TradeliaUI?.bindMetricInfoButtons) return;
+    // se non c'è il runtime non facciamo niente: è opzionale
   });
 
-  return btn;
+  return wrap;
 }
 
 function renderPart(part) {
@@ -105,7 +106,6 @@ function renderPart(part) {
 
 function renderRow(row) {
   const rowEl = createEl('div', 'header-ticker-row');
-  // mappa l'id in una classe
   if (row.id === 'intro-line') rowEl.classList.add('header-ticker-row--intro');
   else if (row.id === 'quality-line') rowEl.classList.add('header-ticker-row--quality');
   else if (row.id === 'window-line') rowEl.classList.add('header-ticker-row--meta');
@@ -114,7 +114,7 @@ function renderRow(row) {
     rowEl.appendChild(renderPart(part));
   });
 
-  // attiva i tooltip del runtime anche qui
+  // tooltip runtime
   if (window.__TradeliaUI?.bindMetricInfoButtons) {
     window.__TradeliaUI.bindMetricInfoButtons(rowEl);
   }
@@ -130,14 +130,11 @@ function renderFooter(node, data) {
   links.forEach((link) => {
     const btn = createEl('button', 'btn btn-sm', link.label || 'Azione');
     btn.addEventListener('click', () => {
-      if (link.action === 'open-metrics-panel') {
-        openMetricsPanel(data);
-      }
+      if (link.action === 'open-metrics-panel') openMetricsPanel(data);
     });
     footer.appendChild(btn);
   });
 
-  // Audit opzionale
   if (data.meta?.auditPathId && window.__TradeliaUI?.openAuditPanel) {
     const auditBtn = createEl('button', 'btn btn-sm', 'Audit');
     auditBtn.addEventListener('click', () => {
@@ -150,7 +147,7 @@ function renderFooter(node, data) {
   }
 }
 
-// API: mount
+// mount
 function mount(containerEl) {
   const root = createEl('section', 'header-ticker');
   const body = createEl('div', 'header-ticker-body');
@@ -166,10 +163,11 @@ function mount(containerEl) {
   return root;
 }
 
-// API: update
+// update
 function update(node, data) {
   if (!node || !data) return;
-  // classe di stato per la tonebar
+
+  // tonebar per stato
   node.classList.remove('header-ticker--state-ok', 'header-ticker--state-warn', 'header-ticker--state-err');
   const st = data.meta?.state || data.State?.raw || data.State;
   if (st === 'ACTIVE') node.classList.add('header-ticker--state-ok');
