@@ -152,6 +152,14 @@
     resetScroll();
     // Tooltips anche dentro il pannello
     try { UI.bindMetricInfoButtons(desktopBody); UI.bindMetricInfoButtons(mobileBody); } catch(e){}
+    
+    // Bind tabs se presenti (sia desktop che mobile)
+    setTimeout(() => {
+      const desktopTabs = desktopBody.querySelector('.metric-tabs-container');
+      const mobileTabs = mobileBody.querySelector('.metric-tabs-container');
+      if (desktopTabs) bindMetricTabs(desktopBody, desktopTabs.getAttribute('data-key'));
+      if (mobileTabs) bindMetricTabs(mobileBody, mobileTabs.getAttribute('data-key'));
+    }, 0);
   }
 
   function closePanel(){
@@ -200,21 +208,38 @@
   async function openMetricPopup(key){
     const g = await Glossary.get(key);
     if (!g) return;
+    
+    // Usa tabs [What] [How] [Source] sia mobile che desktop
+    const tabsId = `metric-tabs-${key}`;
+    const body = `
+      <div class="metric-tabs-container" data-key="${key}">
+        <nav class="metric-tabs-nav" role="tablist">
+          <button class="metric-tab active" role="tab" data-tab="what" aria-selected="true">What</button>
+          <button class="metric-tab" role="tab" data-tab="how" aria-selected="false">How</button>
+          <button class="metric-tab" role="tab" data-tab="source" aria-selected="false">Source</button>
+        </nav>
+        <div class="metric-tabs-content">
+          <div class="metric-tab-panel active" data-panel="what" role="tabpanel">
+            <div class="text-[13px] text-[color:var(--ink)] leading-relaxed">${g.what || '—'}</div>
+          </div>
+          <div class="metric-tab-panel" data-panel="how" role="tabpanel" hidden>
+            <div class="text-[13px] text-[color:var(--ink-soft)] leading-relaxed">${g.how || '—'}</div>
+          </div>
+          <div class="metric-tab-panel" data-panel="source" role="tabpanel" hidden>
+            <div class="text-[13px] text-[color:var(--muted)] leading-relaxed">${g.source || '—'}</div>
+          </div>
+        </div>
+      </div>
+    `;
+
     if (isMobile()){
-      showModal({ title: g.title || key, what: g.what, how: g.how, source: g.source });
+      showModal({ title: g.title || key, body: body, key: key });
     } else {
-      // su desktop apriamo un panel compatto per coerenza (il popover richiede ancoraggio)
       openPanel({
         title: g.title || key,
         subtitle: 'Glossario metrica',
         panelSize: 'wide',
-        body: `
-          <div class="grid gap-3 text-[13px]">
-            <div class="text-[color:var(--ink)]">${g.what || '—'}</div>
-            ${g.how ? `<div class="text-[color:var(--ink-soft)]">${g.how}</div>` : ''}
-            ${g.source ? `<div class="text-[color:var(--muted)]">Fonte: ${g.source}</div>` : ''}
-          </div>
-        `
+        body: body
       });
     }
   }
@@ -310,8 +335,97 @@
     mountTooltips();
     modalTitle.textContent  = data?.title || '—';
     modalSource.textContent = data?.source || '';
-    modalBody.innerHTML     = (data?.what || '—') + (data?.how ? `<div style="margin-top:.75rem">${data.how}</div>` : '');
+    // Se body è fornito, usalo (per tabs), altrimenti costruisci HTML legacy
+    if (data?.body) {
+      modalBody.innerHTML = data.body;
+      // Bind tabs dopo inserimento HTML
+      setTimeout(() => bindMetricTabs(modalBody, data.key), 0);
+    } else {
+      modalBody.innerHTML = (data?.what || '—') + (data?.how ? `<div style="margin-top:.75rem">${data.how}</div>` : '');
+    }
     modal.setAttribute('aria-hidden','false');
+  }
+
+  function bindMetricTabs(container, key){
+    const tabsContainer = container.querySelector('.metric-tabs-container');
+    if (!tabsContainer) return;
+    
+    const tabs = tabsContainer.querySelectorAll('.metric-tab');
+    const panels = tabsContainer.querySelectorAll('.metric-tab-panel');
+    
+    tabs.forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tabName = tab.getAttribute('data-tab');
+        
+        // Update tabs
+        tabs.forEach(t => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        
+        // Update panels
+        panels.forEach(p => {
+          const panelName = p.getAttribute('data-panel');
+          if (panelName === tabName) {
+            p.classList.add('active');
+            p.removeAttribute('hidden');
+          } else {
+            p.classList.remove('active');
+            p.setAttribute('hidden', '');
+          }
+        });
+      });
+    });
+    
+    // Swipe gesture per mobile
+    if (isMobile() && key) {
+      setupSwipeGesture(tabsContainer, tabs);
+    }
+  }
+
+  function setupSwipeGesture(container, tabs){
+    let startX = 0, startY = 0, isDragging = false;
+    
+    container.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      isDragging = true;
+    }, { passive: true });
+    
+    container.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      const currentX = e.touches[0].clientX;
+      const currentY = e.touches[0].clientY;
+      const diffX = currentX - startX;
+      const diffY = currentY - startY;
+      
+      // Solo swipe orizzontale
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 30) {
+        e.preventDefault();
+        const activeTab = Array.from(tabs).findIndex(t => t.classList.contains('active'));
+        let nextTab = activeTab;
+        
+        if (diffX > 0 && activeTab > 0) {
+          // Swipe right → tab precedente
+          nextTab = activeTab - 1;
+        } else if (diffX < 0 && activeTab < tabs.length - 1) {
+          // Swipe left → tab successivo
+          nextTab = activeTab + 1;
+        }
+        
+        if (nextTab !== activeTab) {
+          tabs[nextTab].click();
+        }
+        isDragging = false;
+      }
+    }, { passive: false });
+    
+    container.addEventListener('touchend', () => {
+      isDragging = false;
+    }, { passive: true });
   }
   function hideModal(){ if(modal) modal.setAttribute('aria-hidden','true'); }
 
@@ -336,6 +450,7 @@
   UI.openAuditPanel     = openAuditPanel;
   UI.openMetricPopup    = openMetricPopup;
   UI.openMetricsCatalog = openMetricsCatalog;
+  UI.bindMetricTabs     = bindMetricTabs;
   // Back-compat: Privacy/MiFID panels (contenuto da fornire dall'host page)
   UI.openPrivacyPanel = function(contentHTML){
     openPanel({ title: 'Privacy', subtitle: 'Informativa', panelSize: 'wide', body: contentHTML || '<div class="text-[13px]">Contenuto privacy non configurato.</div>' });
