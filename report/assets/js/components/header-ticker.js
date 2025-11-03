@@ -1,9 +1,9 @@
 // /report/assets/js/components/header-ticker-edu.table.js
-// Header Ticker · Educational (tabella, 1 metrica per riga)
-// - Stile sobrio e istituzionale (tokens.css)
-// - Colonne: Metrica | Valore | Semaforo | (i)
-// - Popup (i): What / How / Source dal glossary.json
-// - Usa __TradeliaUI.openPanel se presente; altrimenti micro-modal interna
+// Header Ticker · Educational (tabella COMPATTA, 1 metrica per riga)
+// - Layout ultra-compatto, istituzionale
+// - Colonne: Metrica | Valore (+chip tono inline) | (i)
+// - Popup (i): What / How / Source delegato a __TradeliaUI.openPanel (niente CSS modale locale)
+// - Dipendenze: tokens.css + ui-runtime.js (per openPanel). Nessun popover custom.
 
 export const headerTicker = (() => {
   // ---------------- Helpers ----------------
@@ -23,49 +23,38 @@ export const headerTicker = (() => {
     showMeta: true        // mostra snapshot e updated nella testata
   };
 
-  // ---------------- CSS (una tantum) ----------------
+  // ---------------- CSS (solo densità + chip, niente modali) ----------------
   let CSS_DONE = false;
   function injectCSS(){
     if (CSS_DONE) return; CSS_DONE = true;
     const css = `
-/* Card base */
-.hdtk-card{border:1px solid var(--br-soft);background:var(--surface-card);border-radius:16px;padding:1rem}
-.hdtk-top{display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
-.hdtk-id{min-width:0}
-.hdtk-tkr{font-weight:800;letter-spacing:-.015em;font-size:clamp(18px,3vw,22px)}
-.hdtk-venue{color:var(--muted);font-size:12px;margin-left:.5rem;white-space:nowrap}
-.hdtk-co{color:var(--ink-soft);font-size:12px;margin-top:.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Card compatta */
+.hdtk-card{border:1px solid var(--br-soft);background:var(--surface-card);border-radius:14px;padding:.75rem}
+.hdtk-top{display:grid;grid-template-columns:1fr auto;gap:.75rem;align-items:start}
+.hdtk-tkr{font-weight:800;letter-spacing:-.015em;font-size:clamp(16px,2.6vw,20px)}
+.hdtk-venue{color:var(--muted);font-size:11px;margin-left:.4rem;white-space:nowrap}
+.hdtk-co{color:var(--ink-soft);font-size:11px;margin-top:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hdtk-price{text-align:right}
-.hdtk-price .val{font-weight:800;line-height:1;font-size:clamp(22px,3.6vw,32px)}
-.hdtk-price .ccy{font-size:12px;font-weight:600;margin-left:.4rem}
-.hdtk-delta{display:inline-flex;align-items:center;gap:.35rem;padding:.28rem .56rem;border-radius:999px;border:1px solid var(--br-soft);font-size:12px;font-weight:700;margin-left:.5rem}
+.hdtk-price .val{font-weight:800;line-height:1;font-size:clamp(20px,3vw,28px)}
+.hdtk-price .ccy{font-size:11px;font-weight:600;margin-left:.35rem}
+.hdtk-delta{display:inline-flex;align-items:center;gap:.3rem;padding:.18rem .48rem;border-radius:999px;border:1px solid var(--br-soft);font-size:11px;font-weight:700;margin-left:.45rem}
 .hdtk-delta[data-tone="green"]{color:oklab(38% -0.08 0.12);background:color-mix(in oklab,var(--surface-card) 90%, oklab(91% -0.02 0.06))}
 .hdtk-delta[data-tone="yellow"]{color:oklab(36% 0.03 0.09);background:color-mix(in oklab,var(--surface-card) 90%, oklab(95% 0.02 0.10))}
 .hdtk-delta[data-tone="red"]{color:oklab(34% 0.12 0.08);background:color-mix(in oklab,var(--surface-card) 90%, oklab(90% 0.12 0.08))}
-.hdtk-meta{font-size:11.5px;color:var(--muted);text-align:right;margin-top:.35rem}
+.hdtk-meta{font-size:11px;color:var(--muted);text-align:right;margin-top:.2rem}
 
-/* Tabella */
-.hdtk-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:1rem}
-.hdtk-table th,.hdtk-table td{padding:.6rem .7rem;border-bottom:1px solid var(--br-soft);font-size:13px}
+/* Tabella compatta */
+.hdtk-table{width:100%;border-collapse:collapse;margin-top:.5rem}
+.hdtk-table th,.hdtk-table td{padding:.44rem .5rem;border-bottom:1px solid var(--br-soft);font-size:12px}
 .hdtk-table th{text-align:left;color:var(--ink-soft);font-weight:700}
 .hdtk-table td:last-child{text-align:right}
-.hdtk-badge{display:inline-block;border:1px solid var(--br-soft);border-radius:999px;padding:.15rem .5rem;font-size:12px;font-weight:700}
-.hdtk-badge[data-tone="green"]{color:oklab(38% -0.08 0.12);background:color-mix(in oklab,var(--surface-card) 90%, oklab(91% -0.02 0.06))}
-.hdtk-badge[data-tone="yellow"]{color:oklab(36% 0.03 0.09);background:color-mix(in oklab,var(--surface-card) 90%, oklab(95% 0.02 0.10))}
-.hdtk-badge[data-tone="red"]{color:oklab(34% 0.12 0.08);background:color-mix(in oklab,var(--surface-card) 90%, oklab(90% 0.12 0.08))}
 
-/* Micro-modal info (fallback) */
-.hdtk-modal[hidden]{display:none!important}
-.hdtk-modal{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;background:oklab(0% 0 0 /.35);backdrop-filter:blur(2px)}
-.hdtk-dialog{max-width:min(560px,96vw);width:100%;border:1px solid var(--br-soft);background:var(--surface-card);border-radius:14px;box-shadow:0 12px 36px oklab(0% 0 0 /.22);padding:1rem}
-.hdtk-d-title{font-weight:700;font-size:14px;margin-bottom:.35rem}
-.hdtk-d-what{font-size:13px;color:var(--ink-soft);margin-bottom:.35rem}
-.hdtk-d-how{font-size:12px;line-height:1.55}
-.hdtk-d-src{font-size:11px;color:var(--muted);margin-top:.5rem}
-.hdtk-d-actions{display:flex;justify-content:flex-end;margin-top:.75rem}
-.hdtk-btn{border:1px solid var(--br-soft);border-radius:999px;padding:.32rem .7rem;font-size:12px;background:var(--surface-card)}
-@media (max-width:768px){.hdtk-dialog{margin:1rem}}
-@media print{ .hdtk-modal{display:none!important} }
+/* Chip tono inline (minuscola, sobria) */
+.hdtk-chip{display:inline-flex;align-items:center;gap:.35rem;border:1px solid var(--br-soft);border-radius:999px;padding:.06rem .38rem;font-size:11px;font-weight:700;margin-left:.38rem}
+.hdtk-dot{width:6px;height:6px;border-radius:50%}
+.hdtk-chip[data-tone="green"]{color:oklab(38% -0.08 0.12);background:color-mix(in oklab,var(--surface-card) 92%, oklab(91% -0.02 0.06))}
+.hdtk-chip[data-tone="yellow"]{color:oklab(36% 0.03 0.09);background:color-mix(in oklab,var(--surface-card) 92%, oklab(95% 0.02 0.10))}
+.hdtk-chip[data-tone="red"]{color:oklab(34% 0.12 0.08);background:color-mix(in oklab,var(--surface-card) 92%, oklab(90% 0.12 0.08))}
 `;
     document.head.appendChild(EL('style', null, css));
   }
@@ -94,7 +83,7 @@ export const headerTicker = (() => {
     return `
       <div class="hdtk-card">
         <div class="hdtk-top">
-          <div class="hdtk-id">
+          <div>
             <div class="flex items-baseline gap-2">
               <span class="hdtk-tkr">—</span>
               <span class="hdtk-venue">—</span>
@@ -107,31 +96,19 @@ export const headerTicker = (() => {
           </div>
         </div>
         <table class="hdtk-table">
-          <thead><tr><th>Metrica</th><th>Valore</th><th>Semaforo</th><th></th></tr></thead>
+          <thead><tr><th style="width:34%">Metrica</th><th>Valore</th><th style="width:48px;text-align:right"></th></tr></thead>
           <tbody></tbody>
         </table>
-      </div>
-      <div class="hdtk-modal" hidden>
-        <div class="hdtk-dialog" role="dialog" aria-modal="true">
-          <div class="hdtk-d-title">—</div>
-          <div class="hdtk-d-what">—</div>
-          <div class="hdtk-d-how">—</div>
-          <div class="hdtk-d-src">—</div>
-          <div class="hdtk-d-actions"><button type="button" class="hdtk-btn" data-close>Chiudi</button></div>
-        </div>
       </div>
     `;
   }
 
-  function rowTemplate(id, label, value, toneKey){
-    const tone = toneKey ? `data-tone="${toneKey}"` : '';
-    const badge = toneKey && toneKey!=='neutral' ? `<span class="hdtk-badge" ${tone}>${toneKey}</span>` : '';
+  function rowTemplate(id, label, valueHTML){
     return `
       <tr data-row="${id}">
         <td>${label}</td>
-        <td class="text-right">${value}</td>
-        <td class="text-right">${badge}</td>
-        <td class="text-right"><button type="button" class="hdtk-btn" data-info="${id}">(i)</button></td>
+        <td class="text-right">${valueHTML}</td>
+        <td class="text-right"><button type="button" class="btn btn-sm" data-info="${id}">(i)</button></td>
       </tr>
     `;
   }
@@ -168,61 +145,71 @@ export const headerTicker = (() => {
     // Costruisci righe tabella
     const body = QS('tbody', root); body.innerHTML = '';
 
-    // Helper metric pickers
+    const chip = (tone, label) => {
+      const t = normTone(tone||'');
+      if (!t || t==='neutral') return '';
+      return `<span class="hdtk-chip" data-tone="${t}"><span class="hdtk-dot" style="background:currentColor"></span>${label||t}</span>`;
+    };
+
     const pickObj = (o) => (o && typeof o==='object') ? { val: (o.raw ?? o.value ?? o.val), tone: normTone(o.tone) } : { val: o, tone: null };
 
     const rows = [];
 
     // Price
-    rows.push({ id:'Price', label:'Price', value: fmt.price(data.Price), tone:null });
+    rows.push(['Price','Price', `${fmt.price(data.Price)}`]);
 
-    // Change %
-    rows.push({ id:'ChangePct', label:'Change %', value: fmt.pct(Number(data.ChangePct)), tone: chgTone });
+    // Change % (con chip tono)
+    rows.push(['ChangePct','Change %', `${fmt.pct(Number(data.ChangePct))} ${chip(chgTone)}`]);
 
     // Currency
-    rows.push({ id:'Currency', label:'Currency', value: String(data.Currency||'—'), tone:null });
+    rows.push(['Currency','Currency', String(data.Currency||'—')]);
 
     // Freshness
     const f = pickObj(data.Freshness);
-    const fVal = (f.val || data.FreshnessLabel || '—').replace(' / ', ' (').replace('AH', 'AH') + (String(f.val||'').includes(' / ')?')':'' );
+    const fVal = (f.val || data.FreshnessLabel || '—').replace(' / ', ' (') + (String(f.val||'').includes(' / ')?')':'' );
     const fTone = f.tone || toneForFreshness(fVal);
-    rows.push({ id:'Freshness', label:'Freshness', value:fVal, tone:fTone });
+    rows.push(['Freshness','Freshness', `${fVal} ${chip(fTone)}`]);
 
     // ConfidenceFinal
-    const cf = pickObj(data.ConfidenceFinal); rows.push({ id:'ConfidenceFinal', label:'Confidence (final)', value: !isNaN(Number(cf.val))? Number(cf.val).toFixed(2):String(cf.val||'—'), tone: cf.tone || toneForScore(Number(cf.val)) });
+    const cf = pickObj(data.ConfidenceFinal);
+    const cfVal = !isNaN(Number(cf.val))? Number(cf.val).toFixed(2):String(cf.val||'—');
+    rows.push(['ConfidenceFinal','Confidence (final)', `${cfVal} ${chip(cf.tone || toneForScore(Number(cf.val)))}`]);
 
     // DataIntegrity
-    const di = pickObj(data.DataIntegrity); rows.push({ id:'DataIntegrity', label:'Data integrity', value: !isNaN(Number(di.val))? Number(di.val).toFixed(2):String(di.val||'—'), tone: di.tone || toneForScore(Number(di.val)) });
+    const di = pickObj(data.DataIntegrity);
+    const diVal = !isNaN(Number(di.val))? Number(di.val).toFixed(2):String(di.val||'—');
+    rows.push(['DataIntegrity','Data integrity', `${diVal} ${chip(di.tone || toneForScore(Number(di.val)))}`]);
 
     // FeedSync (opzionale)
     if (CFG.showFeedSync && (data.FeedSync!=null)){
-      const fs = pickObj(data.FeedSync); rows.push({ id:'FeedSync', label:'Feed sync', value:String(fs.val||'—'), tone: fs.tone||'neutral' });
+      const fs = pickObj(data.FeedSync);
+      rows.push(['FeedSync','Feed sync', `${String(fs.val||'—')} ${chip(fs.tone||'neutral')}`]);
     }
 
-    // State
+    // State + nota
     const st = pickObj(data.State);
-    const sNote = data.StateNote ? ` <span class="text-muted" style="font-size:11px">${data.StateNote}</span>` : '';
-    rows.push({ id:'State', label:'State', value:`${String(st.val||'—')}${sNote}`, tone: st.tone || toneForState(st.val) });
+    const sNote = data.StateNote ? `<span class="text-muted" style="font-size:11px;margin-left:.35rem">${data.StateNote}</span>` : '';
+    rows.push(['State','State', `${String(st.val||'—')}${sNote} ${chip(st.tone || toneForState(st.val))}`]);
 
     // Snapshot window
-    rows.push({ id:'Snapshot', label:'Snapshot window', value:`${data.Start||'—'} → ${data.End||'—'}`, tone:null });
+    rows.push(['Snapshot','Snapshot window', `${data.Start||'—'} → ${data.End||'—'}`]);
 
     // UpdatedAt
-    rows.push({ id:'UpdatedAt', label:'Updated at (UTC)', value: fmt.timeUTC(data.UpdatedAt), tone:null });
+    rows.push(['UpdatedAt','Updated at (UTC)', `${fmt.timeUTC(data.UpdatedAt)}`]);
 
     // Version
-    rows.push({ id:'Version', label:'Version', value:String(data.Version||'—'), tone:null });
+    rows.push(['Version','Version', String(data.Version||'—')]);
 
     // Render
-    rows.forEach(r => body.insertAdjacentHTML('beforeend', rowTemplate(r.id, r.label, r.value, r.tone)));
+    rows.forEach(([id,label,val]) => body.insertAdjacentHTML('beforeend', rowTemplate(id, label, val)));
 
-    // Bind (i)
+    // Bind (i) → pannello nativo runtime
     QSA('[data-info]', root).forEach(btn=>{
       btn.addEventListener('click', ()=> openInfo(btn.getAttribute('data-info')) );
     });
   }
 
-  // ---------------- Popup What/How/Source ----------------
+  // ---------------- Popup What/How/Source (solo via runtime) ----------------
   function openInfo(key){
     const g = G(key) || {};
     const title = g.title || key;
@@ -230,26 +217,18 @@ export const headerTicker = (() => {
     const how   = g.how   || '—';
     const src   = g.source? `Fonte: ${g.source}` : '';
 
-    const html = `<div class="hdtk-d-title">${title}</div>
-      <div class="hdtk-d-what">${what}</div>
-      <div class="hdtk-d-how">${how}</div>
-      <div class="hdtk-d-src">${src}</div>`;
+    const html = `<div class="section-title" style="font-size:14px;margin-bottom:.25rem">${title}</div>
+      <div class="text-muted" style="font-size:13px;margin-bottom:.25rem">${what}</div>
+      <div style="font-size:12px;line-height:1.55">${how}</div>
+      <div class="text-muted" style="font-size:11px;margin-top:.5rem">${src}</div>`;
 
     if (window.__TradeliaUI?.openPanel){
-      window.__TradeliaUI.openPanel({ title, body: html, blocking: true, panelSize: 'wide' });
+      window.__TradeliaUI.openPanel({ title, body: html, blocking: true, panelSize: 'narrow' });
       return;
     }
-
-    const modal = QS('.hdtk-modal');
-    QS('.hdtk-d-title', modal).textContent = title;
-    QS('.hdtk-d-what',  modal).textContent = what;
-    QS('.hdtk-d-how',   modal).textContent = how;
-    QS('.hdtk-d-src',   modal).textContent = src;
-    modal.hidden = false;
-
-    const close = () => { modal.hidden = true; };
-    modal.addEventListener('click', (e)=>{ if(e.target===modal || e.target.hasAttribute('data-close')) close(); }, { once:true });
-    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ close(); } }, { once:true });
+    // Se manca il runtime, apri comunque in una nuova finestra minimale
+    const w = window.open('', '_blank', 'width=480,height=600');
+    if(w){ w.document.write(`<title>${title}</title><pre style="font:12px/1.5 system-ui, sans-serif">${what}\n\n${how}\n\n${src}</pre>`); }
   }
 
   // ---------------- API ----------------
