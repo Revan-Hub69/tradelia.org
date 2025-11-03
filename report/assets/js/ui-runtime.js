@@ -220,13 +220,13 @@
         </nav>
         <div class="metric-tabs-content">
           <div class="metric-tab-panel active" data-panel="what" role="tabpanel">
-            <div class="text-[13px] text-[color:var(--ink)] leading-relaxed">${g.what || '—'}</div>
+            <div class="metric-tab-panel-content">${g.what || '—'}</div>
           </div>
           <div class="metric-tab-panel" data-panel="how" role="tabpanel" hidden>
-            <div class="text-[13px] text-[color:var(--ink-soft)] leading-relaxed">${g.how || '—'}</div>
+            <div class="metric-tab-panel-content">${g.how || '—'}</div>
           </div>
           <div class="metric-tab-panel" data-panel="source" role="tabpanel" hidden>
-            <div class="text-[13px] text-[color:var(--muted)] leading-relaxed">${g.source || '—'}</div>
+            <div class="metric-tab-panel-content">${g.source || '—'}</div>
           </div>
         </div>
       </div>
