@@ -5,7 +5,7 @@
 // - HOW + SOURCE su click "?" (popover desktop / bottom-sheet mobile)
 // - Bottone "💡 Spiega i dati" → drawer educativo (usa __TradeliaUI se presente; altrimenti fallback integrato)
 
-export const headerTickerEdu = (() => {
+export const headerTicker = (() => {
 
   // ---------------- Helpers ----------------
   const QS  = (s, r=document) => r.querySelector(s);
