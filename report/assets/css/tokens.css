@@ -89,6 +89,18 @@ button { background:none; border:0; padding:0; font:inherit; color:inherit; curs
   background: var(--surface-page);
   color: var(--ink);
 }
+/* ===== COLOR SYSTEM EXTENSIONS (semaforici) ===== */
+:root {
+  --clr-pos: #15803d;   /* verde istituzionale (light mode) */
+  --clr-neg: #b91c1c;   /* rosso istituzionale (light mode) */
+  --clr-warn: #b45309;  /* giallo-700 (avviso light mode) */
+}
+
+html[data-theme="dark"] {
+  --clr-pos: #22c55e;   /* verde chiaro (dark) */
+  --clr-neg: #ef4444;   /* rosso chiaro (dark) */
+  --clr-warn: #facc15;  /* giallo-400 (avviso dark) */
+}
 
 /* =========================================================
    TEMA — DARK
