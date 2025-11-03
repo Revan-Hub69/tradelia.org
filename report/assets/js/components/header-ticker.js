@@ -58,26 +58,24 @@ async function openMetricsPanel(data) {
     })
   );
 
-  // Mobile: lista metriche con drawer per tabs
+  // Mobile: lista metriche con icona (i) che apre popup
   if (isMobile) {
     const metricsList = metricsWithGlossary.map((m, idx) => `
-      <button class="metric-list-item" data-metric-index="${idx}" data-metric-key="${m.key}">
-        <div class="metric-list-item__label">${m.label || m.key}</div>
-        <div class="metric-list-item__value">${m.value ?? '—'}</div>
-      </button>
+      <div class="metric-list-item">
+        <div class="metric-list-item__content">
+          <div class="metric-list-item__label">${m.label || m.key}</div>
+          <div class="metric-list-item__value">${m.value ?? '—'}</div>
+        </div>
+        <button class="metric-list-item__info info-btn" data-metric-key="${m.key}" aria-label="Info ${m.label || m.key}">
+          <span>i</span>
+        </button>
+      </div>
     `).join('');
 
     const body = `
       <div class="metrics-list-container">
         <div class="metrics-list">
           ${metricsList}
-        </div>
-        <div class="metric-detail-drawer" id="metric-detail-drawer" hidden>
-          <div class="metric-detail-header">
-            <button class="metric-detail-back" aria-label="Torna alla lista">←</button>
-            <div class="metric-detail-title"></div>
-          </div>
-          <div class="metric-detail-content"></div>
         </div>
       </div>
     `;
@@ -89,91 +87,75 @@ async function openMetricsPanel(data) {
       body: body
     });
 
-    // Bind lista metriche mobile
+    // Bind lista metriche mobile: icona (i) apre popup
     setTimeout(() => {
       const container = document.querySelector('.metrics-list-container');
       if (!container) return;
       
-      const listItems = container.querySelectorAll('.metric-list-item');
-      const drawer = container.querySelector('#metric-detail-drawer');
-      const drawerTitle = drawer.querySelector('.metric-detail-title');
-      const drawerContent = drawer.querySelector('.metric-detail-content');
-      const backBtn = drawer.querySelector('.metric-detail-back');
+      const infoButtons = container.querySelectorAll('.metric-list-item__info');
       
-      listItems.forEach(item => {
-        item.addEventListener('click', () => {
-          const idx = parseInt(item.getAttribute('data-metric-index'));
-          const metric = metricsWithGlossary[idx];
-          if (!metric) return;
-          
-          // Mostra drawer con tabs
-          drawerTitle.textContent = metric.label || metric.key;
-          drawerContent.innerHTML = `
-            <div class="metric-tabs-container" data-key="${metric.key}">
-              <nav class="metric-tabs-nav" role="tablist">
-                <button class="metric-tab active" role="tab" data-tab="what" aria-selected="true">What</button>
-                <button class="metric-tab" role="tab" data-tab="how" aria-selected="false">How</button>
-                <button class="metric-tab" role="tab" data-tab="source" aria-selected="false">Source</button>
-              </nav>
-              <div class="metric-tabs-content">
-                <div class="metric-tab-panel active" data-panel="what" role="tabpanel">
-                  <div class="text-[13px] text-[color:var(--ink)] leading-relaxed">${metric.glossary.what || '—'}</div>
-                </div>
-                <div class="metric-tab-panel" data-panel="how" role="tabpanel" hidden>
-                  <div class="text-[13px] text-[color:var(--ink-soft)] leading-relaxed">${metric.glossary.how || '—'}</div>
-                </div>
-                <div class="metric-tab-panel" data-panel="source" role="tabpanel" hidden>
-                  <div class="text-[13px] text-[color:var(--muted)] leading-relaxed">${metric.glossary.source || '—'}</div>
-                </div>
-              </div>
-            </div>
-          `;
-          
-          drawer.removeAttribute('hidden');
-          if (window.__TradeliaUI?.bindMetricTabs) {
-            window.__TradeliaUI.bindMetricTabs(drawerContent, metric.key);
+      infoButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          const key = btn.getAttribute('data-metric-key');
+          if (key && ui.openMetricPopup) {
+            ui.openMetricPopup(key);
           }
         });
-      });
-      
-      backBtn.addEventListener('click', () => {
-        drawer.setAttribute('hidden', '');
       });
     }, 0);
     
     return;
   }
 
-  // Desktop: lista metriche con tabs [What] [How] [Source]
-  const firstMetric = metricsWithGlossary[0] || {};
-  const metricsList = metricsWithGlossary.map((m, idx) => `
-    <button class="metric-selector ${idx === 0 ? 'active' : ''}" data-metric-index="${idx}" data-metric-key="${m.key}">
-      <div class="metric-selector__label">${m.label || m.key}</div>
-      <div class="metric-selector__value">${m.value ?? '—'}</div>
-    </button>
+  // Desktop: tabs [What] [How] [Source] che mostrano tutte le metriche
+  const whatContent = metricsWithGlossary.map(m => `
+    <div class="metric-list-entry">
+      <div class="metric-list-entry__label">${m.label || m.key}</div>
+      <div class="metric-list-entry__value">${m.value ?? '—'}</div>
+      <div class="metric-list-entry__content">${m.glossary.what || '—'}</div>
+    </div>
+  `).join('');
+
+  const howContent = metricsWithGlossary.map(m => `
+    <div class="metric-list-entry">
+      <div class="metric-list-entry__label">${m.label || m.key}</div>
+      <div class="metric-list-entry__value">${m.value ?? '—'}</div>
+      <div class="metric-list-entry__content">${m.glossary.how || '—'}</div>
+    </div>
+  `).join('');
+
+  const sourceContent = metricsWithGlossary.map(m => `
+    <div class="metric-list-entry">
+      <div class="metric-list-entry__label">${m.label || m.key}</div>
+      <div class="metric-list-entry__value">${m.value ?? '—'}</div>
+      <div class="metric-list-entry__content">${m.glossary.source || '—'}</div>
+    </div>
   `).join('');
 
   const body = `
     <div class="metrics-panel-desktop">
-      <div class="metrics-panel-list">
-        ${metricsList}
-      </div>
-      <div class="metrics-panel-detail">
-        <div class="metric-tabs-container" data-key="${firstMetric.key || ''}">
-          <nav class="metric-tabs-nav" role="tablist">
-            <button class="metric-tab active" role="tab" data-tab="what" aria-selected="true">What</button>
-            <button class="metric-tab" role="tab" data-tab="how" aria-selected="false">How</button>
-            <button class="metric-tab" role="tab" data-tab="source" aria-selected="false">Source</button>
-          </nav>
-          <div class="metric-tabs-content">
-            <div class="metric-tab-panel active" data-panel="what" role="tabpanel">
-              <div class="text-[13px] text-[color:var(--ink)] leading-relaxed">${firstMetric.glossary.what || '—'}</div>
+      <div class="metric-tabs-container">
+        <nav class="metric-tabs-nav" role="tablist">
+          <button class="metric-tab active" role="tab" data-tab="what" aria-selected="true">What</button>
+          <button class="metric-tab" role="tab" data-tab="how" aria-selected="false">How</button>
+          <button class="metric-tab" role="tab" data-tab="source" aria-selected="false">Source</button>
+        </nav>
+        <div class="metric-tabs-content">
+          <div class="metric-tab-panel active" data-panel="what" role="tabpanel">
+            <div class="metrics-list-all">
+              ${whatContent}
             </div>
-            <div class="metric-tab-panel" data-panel="how" role="tabpanel" hidden>
-              <div class="text-[13px] text-[color:var(--ink-soft)] leading-relaxed">${firstMetric.glossary.how || '—'}</div>
+          </div>
+          <div class="metric-tab-panel" data-panel="how" role="tabpanel" hidden>
+            <div class="metrics-list-all">
+              ${howContent}
             </div>
-            <div class="metric-tab-panel" data-panel="source" role="tabpanel" hidden>
-              <div class="text-[13px] text-[color:var(--muted)] leading-relaxed">${firstMetric.glossary.source || '—'}</div>
+          </div>
+          <div class="metric-tab-panel" data-panel="source" role="tabpanel" hidden>
+            <div class="metrics-list-all">
+              ${sourceContent}
             </div>
           </div>
         </div>
@@ -188,59 +170,14 @@ async function openMetricsPanel(data) {
     body: body
   });
 
-  // Bind lista metriche desktop
+  // Bind tabs desktop
   setTimeout(() => {
     const container = document.querySelector('.metrics-panel-desktop');
     if (!container) return;
     
-    const selectors = container.querySelectorAll('.metric-selector');
-    const tabsContainer = container.querySelector('.metric-tabs-container');
-    const tabsContent = tabsContainer.querySelector('.metric-tabs-content');
-    
-    selectors.forEach(selector => {
-      selector.addEventListener('click', () => {
-        const idx = parseInt(selector.getAttribute('data-metric-index'));
-        const metric = metricsWithGlossary[idx];
-        if (!metric) return;
-        
-        // Update active selector
-        selectors.forEach(s => s.classList.remove('active'));
-        selector.classList.add('active');
-        
-        // Update tabs content
-        tabsContainer.setAttribute('data-key', metric.key);
-        const whatPanel = tabsContainer.querySelector('[data-panel="what"]');
-        const howPanel = tabsContainer.querySelector('[data-panel="how"]');
-        const sourcePanel = tabsContainer.querySelector('[data-panel="source"]');
-        
-        if (whatPanel) whatPanel.querySelector('div').textContent = metric.glossary.what || '—';
-        if (howPanel) howPanel.querySelector('div').textContent = metric.glossary.how || '—';
-        if (sourcePanel) sourcePanel.querySelector('div').textContent = metric.glossary.source || '—';
-        
-        // Reset to What tab
-        const tabs = tabsContainer.querySelectorAll('.metric-tab');
-        const panels = tabsContainer.querySelectorAll('.metric-tab-panel');
-        tabs.forEach(t => {
-          t.classList.remove('active');
-          t.setAttribute('aria-selected', 'false');
-        });
-        tabs[0].classList.add('active');
-        tabs[0].setAttribute('aria-selected', 'true');
-        panels.forEach(p => {
-          if (p.getAttribute('data-panel') === 'what') {
-            p.classList.add('active');
-            p.removeAttribute('hidden');
-          } else {
-            p.classList.remove('active');
-            p.setAttribute('hidden', '');
-          }
-        });
-      });
-    });
-    
     // Bind tabs
     if (window.__TradeliaUI?.bindMetricTabs) {
-      window.__TradeliaUI.bindMetricTabs(container, firstMetric.key || '');
+      window.__TradeliaUI.bindMetricTabs(container, '');
     }
   }, 0);
 }
