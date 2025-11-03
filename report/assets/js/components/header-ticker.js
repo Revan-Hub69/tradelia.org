@@ -84,7 +84,7 @@ function renderTextPart(part) {
   const el = createEl('span', 'header-ticker-text', txt);
 
   // se è solo punteggiatura o parentesi → segniamo che va incollata
-  if (/^[,.;:!?()—–-«»“”]+$/.test(txt.trim().replace(/\s+/g,''))) {
+  if (/^[,.;:!?()—–\-«»“”]+$/.test(txt.trim().replace(/\s+/g,''))) {
     el.dataset.glue = '1';
   }
 
@@ -132,7 +132,7 @@ function renderRow(row) {
 
   (row.parts || []).forEach((part) => {
     // 👉 se è virgola/punto/parentesi la appiccichiamo al precedente
-    if (part.kind === 'text' && part.text && /^[\s,.;:!?()—–-«»“”]+$/.test(part.text)) {
+    if (part.kind === 'text' && part.text && /^[\s,.;:!?()—–\-«»“”]+$/.test(part.text)) {
       const last = rowEl.lastElementChild;
       if (last) {
         const metricTxt = last.querySelector('.metric-inline-text');
