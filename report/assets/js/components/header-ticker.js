@@ -120,7 +120,26 @@ function renderRow(row) {
   else if (row.id === 'window-line') rowEl.classList.add('header-ticker-row--meta');
 
   (row.parts || []).forEach((part) => {
-    rowEl.appendChild(renderPart(part));
+    // render standard
+    const el = renderPart(part);
+
+    // FIX punteggiatura che va a capo:
+    // se questo part è testo e inizia con una punteggiatura, la attacchiamo al nodo precedente
+    if (
+      part.kind === 'text' &&
+      typeof part.text === 'string' &&
+      /^[\s]*[,\.;:\)%]/.test(part.text)
+    ) {
+      const last = rowEl.lastChild;
+      if (last) {
+        // togli gli spazi davanti e aggiungi al testo precedente
+        const clean = part.text.replace(/^\s+/, '');
+        last.insertAdjacentText('beforeend', clean);
+        return; // non appendere un nuovo nodo
+      }
+    }
+
+    rowEl.appendChild(el);
   });
 
   // tooltip runtime
@@ -130,6 +149,7 @@ function renderRow(row) {
 
   return rowEl;
 }
+
 
 function renderFooter(node, data) {
   const footer = node._footer;
