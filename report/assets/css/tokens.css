@@ -757,3 +757,224 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   height: 16px;
   font-size: var(--fs-10);
 }
+
+/* ===== METRIC TABS ===== */
+.metric-tabs-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.metric-tabs-nav {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--br-soft);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+}
+
+.metric-tab {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+  font-size: var(--fs-13);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+  bottom: -2px;
+}
+
+.metric-tab:hover {
+  color: var(--ink);
+}
+
+.metric-tab.active {
+  color: var(--ink);
+  border-bottom-color: var(--brand-500);
+}
+
+.metric-tab[aria-selected="true"] {
+  color: var(--ink);
+  border-bottom-color: var(--brand-500);
+}
+
+.metric-tabs-content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.metric-tab-panel {
+  display: block;
+}
+
+.metric-tab-panel[hidden] {
+  display: none !important;
+}
+
+/* ===== METRICS PANEL DESKTOP ===== */
+.metrics-panel-desktop {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1.5rem;
+  height: 100%;
+  max-height: 70vh;
+}
+
+.metrics-panel-list {
+  overflow-y: auto;
+  border-right: 1px solid var(--br-soft);
+  padding-right: 1rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.metric-selector {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  background: transparent;
+  border: 1px solid var(--br-soft);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.metric-selector:hover {
+  background: var(--hover-bg);
+  border-color: var(--brand-500);
+}
+
+.metric-selector.active {
+  background: var(--surface-elev);
+  border-color: var(--brand-500);
+}
+
+.metric-selector__label {
+  font-weight: 600;
+  font-size: var(--fs-13);
+  color: var(--ink);
+  margin-bottom: 0.25rem;
+}
+
+.metric-selector__value {
+  font-size: var(--fs-12);
+  color: var(--muted);
+}
+
+.metrics-panel-detail {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ===== METRICS LIST MOBILE ===== */
+.metrics-list-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 70vh;
+}
+
+.metrics-list {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.metric-list-item {
+  width: 100%;
+  padding: 1rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--br-soft);
+  cursor: pointer;
+  transition: background 0.15s ease;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 60px;
+}
+
+.metric-list-item:active {
+  background: var(--hover-bg);
+}
+
+.metric-list-item__label {
+  font-weight: 600;
+  font-size: var(--fs-14);
+  color: var(--ink);
+}
+
+.metric-list-item__value {
+  font-size: var(--fs-13);
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.metric-detail-drawer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--surface-card);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+}
+
+.metric-detail-drawer[hidden] {
+  display: none !important;
+}
+
+.metric-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--br-soft);
+  background: var(--surface-elev);
+}
+
+.metric-detail-back {
+  padding: 0.5rem;
+  background: transparent;
+  border: none;
+  font-size: var(--fs-18);
+  color: var(--ink);
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.metric-detail-title {
+  font-weight: 700;
+  font-size: var(--fs-16);
+  color: var(--ink);
+}
+
+.metric-detail-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+  .metrics-panel-desktop {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+  
+  .metrics-panel-list {
+    border-right: none;
+    border-bottom: 1px solid var(--br-soft);
+    padding-right: 0;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    max-height: 200px;
+  }
+}
