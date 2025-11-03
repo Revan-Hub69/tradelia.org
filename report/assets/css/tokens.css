@@ -573,3 +573,57 @@ a.mail-link { text-underline-offset: 2px; text-decoration-thickness: 1px; }
 .metric-inline:hover .metric-inline-text {
   opacity: .95;
 }
+/* ===== Metriche verbali con freccia + info ===== */
+.metric-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  cursor: pointer;
+}
+
+.metric-inline-body {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+}
+
+/* freccia */
+.metric-inline-arrow {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+}
+
+/* valore testuale */
+.metric-inline-text {
+  font-weight: 600;
+  font-style: italic;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+  line-height: 1.2;
+}
+
+/* icona info */
+.metric-inline-info {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  opacity: .55;
+  transition: opacity .12s ease;
+}
+.metric-inline-info:hover {
+  opacity: .95;
+}
+
+/* toni */
+.metric-inline--ok .metric-inline-text { color: var(--ok); text-decoration-color: var(--ok); }
+.metric-inline--warn .metric-inline-text { color: var(--warn); text-decoration-color: var(--warn); }
+.metric-inline--err .metric-inline-text { color: var(--err); text-decoration-color: var(--err); }
+.metric-inline--neutral .metric-inline-text { color: var(--ink-soft); text-decoration-color: color-mix(in oklab, var(--ink-soft) 85%, transparent); }
+
+/* frecce a colore */
+.metric-inline--ok .metric-inline-arrow svg { stroke: var(--ok); }
+.metric-inline--warn .metric-inline-arrow svg { stroke: var(--warn); }
+.metric-inline--err .metric-inline-arrow svg { stroke: var(--err); }
+.metric-inline--neutral .metric-inline-arrow svg { stroke: var(--muted); }
