@@ -78,21 +78,67 @@ function renderTextPart(part) {
 
 // metrica in stile "dot + testo sottolineato"
 function renderMetricPart(part) {
+  // wrapper principale con il tono
   const wrap = createEl('button', `metric-inline ${metricToneClass(part.tone)}`);
   wrap.type = 'button';
   wrap.dataset.metric = part.key;
   wrap.setAttribute('aria-label', part.label || part.key);
 
-  const dot = createEl('span', 'metric-inline-dot');
-  const txt = createEl('span', 'metric-inline-text', part.value != null ? String(part.value) : '—');
+  // corpo: freccia + valore
+  const body = createEl('span', 'metric-inline-body');
 
-  wrap.appendChild(dot);
-  wrap.appendChild(txt);
+  // freccia SVG in base al tono
+  const arrow = createEl('span', 'metric-inline-arrow');
+  let arrowPath = '';
+  switch (part.tone) {
+    case 'ok':
+      // su
+      arrowPath = '<path d="M12 19V5"/><path d="m6 11 6-6 6 6"/>';
+      break;
+    case 'warn':
+      // su-destra
+      arrowPath = '<path d="M5 19 19 5"/><path d="M10 5h9v9"/>';
+      break;
+    case 'err':
+      // giù
+      arrowPath = '<path d="M12 5v14"/><path d="m6 13 6 6 6-6"/>';
+      break;
+    default:
+      // destra
+      arrowPath = '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>';
+  }
+  arrow.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      ${arrowPath}
+    </svg>
+  `;
 
-  // il runtime collegherà i popup
+  // testo del valore (a colore)
+  const txt = createEl(
+    'span',
+    'metric-inline-text',
+    part.value != null ? String(part.value) : '—'
+  );
+
+  body.appendChild(arrow);
+  body.appendChild(txt);
+  wrap.appendChild(body);
+
+  // icona info sempre visibile
+  const info = createEl('span', 'metric-inline-info');
+  info.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"></circle>
+      <line x1="12" y1="10.5" x2="12" y2="16"></line>
+      <circle cx="12" cy="8" r="0.5"></circle>
+    </svg>
+  `;
+  wrap.appendChild(info);
+
+  // il runtime collegherà il popup
   wrap.addEventListener('click', (e) => {
     e.stopPropagation();
-    // se non c'è il runtime non facciamo niente: è opzionale
+    // se non c'è il runtime non facciamo altro
   });
 
   return wrap;
