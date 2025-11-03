@@ -451,33 +451,38 @@
       setTheme(localStorage.getItem(THEMEKEY) || 'dark');
       btnTheme?.addEventListener('click', ()=> setTheme(HTML.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
 
-      // ===== Legend interpretativa per header-ticker =====
-      function injectHeaderLegend() {
-        const root = document.getElementById('app-root');
-        if (!root) return;
-        const box = document.createElement('div');
-        box.className = 'header-ticker-legend';
-        box.innerHTML = `
-          <div class="header-ticker-legend-title">Legenda interpretativa (uso formativo)</div>
-          <p>Questo riquadro spiega i codici che vedrai nel pannello di testa.</p>
-          <ul>
-            <li><span class="header-ticker-pill header-ticker-pill--ok">ACTIVE</span> dati coerenti e completi.</li>
-            <li><span class="header-ticker-pill header-ticker-pill--warn">HOLD</span> dati parzialmente contrastanti o in aggiornamento.</li>
-            <li><span class="header-ticker-pill header-ticker-pill--err">REVIEW</span> dati in fase di verifica o da validare.</li>
-          </ul>
-          <p style="margin-top:.35rem;">Colori delle metriche:</p>
-          <ul>
-            <li><span class="metric-ok">verde</span> = variabile con contributo positivo/sopra media.</li>
-            <li><span class="metric-warn">giallo</span> = variabile neutra o da monitorare.</li>
-            <li><span class="metric-err">rosso</span> = variabile debole o sotto benchmark.</li>
-          </ul>
-          <p class="header-ticker-legend-note">
-            Le metriche colorate sono cliccabili: tocca/clicca per aprire la scheda o l’audit (se il runtime lo prevede).
-          </p>
-        `;
-        root.prepend(box);
-      }
+      // ===== Legend interpretativa (globale) =====
+function injectHeaderLegend() {
+  const root = document.getElementById('app-root');
+  if (!root || !root.parentNode) return;
+
+  const box = document.createElement('div');
+  box.className = 'header-ticker-legend';
+  box.innerHTML = `
+    <div class="header-ticker-legend-title">Legenda interpretativa (uso formativo)</div>
+    <p>Questo riquadro spiega i codici e i colori utilizzati nel report.</p>
+    <ul>
+      <li><span class="header-ticker-pill header-ticker-pill--ok">ACTIVE</span> dati coerenti e completi.</li>
+      <li><span class="header-ticker-pill header-ticker-pill--warn">HOLD</span> dati parzialmente contrastanti o in aggiornamento.</li>
+      <li><span class="header-ticker-pill header-ticker-pill--err">REVIEW</span> dati in fase di verifica o da validare.</li>
+    </ul>
+    <p style="margin-top:.35rem;">Colori delle metriche:</p>
+    <ul>
+      <li><span class="metric-ok">verde</span> = variabile con contributo positivo/sopra media.</li>
+      <li><span class="metric-warn">giallo</span> = variabile neutra o da monitorare.</li>
+      <li><span class="metric-err">rosso</span> = variabile debole o sotto benchmark.</li>
+    </ul>
+    <p class="header-ticker-legend-note">
+      Le metriche colorate sono cliccabili: tocca/clicca per aprire la scheda o l’audit (se il runtime lo prevede).
+    </p>
+  `;
+
+  // 👉 la mettiamo PRIMA di #app-root, così vale per tutto e il runtime non la tocca
+  root.parentNode.insertBefore(box, root);
+}
+
 document.addEventListener('DOMContentLoaded', injectHeaderLegend);
+
 
       // ===== Footer year =====
       const fy = document.getElementById('footer-year');
