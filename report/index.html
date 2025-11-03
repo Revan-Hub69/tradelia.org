@@ -86,6 +86,8 @@
 
     /* ===== FOOTER ===== */
     .site-footer {
+      position: relative;
+      z-index: 10; /* sotto header e panel overlay */
       background: var(--footer-bg);
       border-top: 1px solid var(--footer-br);
       color: var(--ink-soft);
@@ -459,14 +461,42 @@ html[data-theme="dark"] {
         if (e.key === 'Escape' && !overlay.hasAttribute('data-blocking')) closeLegal();
       });
 
-      // Footer buttons open (non-bloccante)
-      document.getElementById('btn-privacy-open')?.addEventListener('click', ()=> openLegal('privacy', false));
-      document.getElementById('btn-mifid-open')?.addEventListener('click', ()=> openLegal('mifid', false));
+      // Footer buttons open (non-bloccante) - bind dopo DOM ready
+      function bindFooterButtons() {
+        const btnPrivacy = document.getElementById('btn-privacy-open');
+        const btnMifid = document.getElementById('btn-mifid-open');
+        
+        if (btnPrivacy) {
+          btnPrivacy.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openLegal('privacy', false);
+          });
+        }
+        
+        if (btnMifid) {
+          btnMifid.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openLegal('mifid', false);
+          });
+        }
+      }
+
+      // Bind footer buttons quando DOM è pronto
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bindFooterButtons, { once: true });
+      } else {
+        bindFooterButtons();
+      }
 
       // Primo accesso → blocca finché non accetta
       let ack = null;
       try { ack = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch(e){}
-      if (!ack) openLegal('mifid', true);
+      if (!ack) {
+        // Delay per assicurare che tutto sia montato
+        setTimeout(() => openLegal('mifid', true), 100);
+      }
     })();
   </script>
 </body>
