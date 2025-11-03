@@ -68,13 +68,17 @@
     return slot;
   }
 
-  async function mountHeaderTicker(header) {
-    try {
-      const slot = ensureHeaderTickerSlot();
-      const { headerTicker } = await safeImport('/report/assets/js/components/header-ticker.js');
-      const node = headerTicker.mount(slot);
+async function mountHeaderTicker(header) {
+  try {
+    const slot = ensureHeaderTickerSlot();
+    const { headerTicker } = await safeImport('/report/assets/js/components/header-ticker.js');
+    const node = headerTicker.mount(slot);
 
-      // Normalizzo Freshness/FreshnessLabel compatibilmente col componente
+    // se è già il nuovo json verbale (ha rows) lo passo diretto
+    if (Array.isArray(header?.rows)) {
+      await headerTicker.update(node, header);
+    } else {
+      // altrimenti è il vecchio header, faccio la compat
       await headerTicker.update(node, {
         Ticker:          header?.Ticker,
         Venue:           header?.Venue,
@@ -92,10 +96,11 @@
         Version:         header?.Version,
         UpdatedAt:       header?.UpdatedAt
       });
-    } catch (err) {
-      console.warn('[HeaderTicker] non montato:', err);
     }
+  } catch (err) {
+    console.warn('[HeaderTicker] non montato:', err);
   }
+}
 
   // -----------------------------
   // Header/Footer (da header.json)
