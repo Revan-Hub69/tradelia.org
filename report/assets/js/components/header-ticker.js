@@ -76,7 +76,15 @@ async function openMetricsPanel(data) {
 }
 
 function renderTextPart(part) {
-  return createEl('span', 'header-ticker-text', part.text || '');
+  const txt = part.text || '';
+  const el = createEl('span', 'header-ticker-text', txt);
+
+  // se è solo punteggiatura o parentesi la incolliamo
+  if (/^[,.;:!?)]$/.test(txt.trim())) {
+    el.dataset.glue = '1';
+  }
+
+  return el;
 }
 
 function renderMetricPart(part) {
@@ -152,12 +160,7 @@ function renderFooter(node, data) {
     footer.appendChild(auditBtn);
   }
 
-  const hint = createEl(
-    'p',
-    'header-ticker-hint',
-    'Clicca sui valori per conoscerne il significato.'
-  );
-  footer.appendChild(hint);
+  // testo hint rimosso
 }
 
 function mount(containerEl) {
