@@ -84,7 +84,7 @@ function renderTextPart(part) {
   const el = createEl('span', 'header-ticker-text', txt);
 
   // se è solo punteggiatura o parentesi → segniamo che va incollata
-  if (/^[,.;:!?)]$/.test(txt.trim())) {
+  if (/^[,.;:!?()—–-«»“”]+$/.test(txt.trim().replace(/\s+/g,''))) {
     el.dataset.glue = '1';
   }
 
@@ -132,18 +132,21 @@ function renderRow(row) {
 
   (row.parts || []).forEach((part) => {
     // 👉 se è virgola/punto/parentesi la appiccichiamo al precedente
-    if (part.kind === 'text' && part.text && /^[,.;:!?)]$/.test(part.text.trim())) {
+    if (part.kind === 'text' && part.text && /^[\s,.;:!?()—–-«»“”]+$/.test(part.text)) {
       const last = rowEl.lastElementChild;
       if (last) {
         const metricTxt = last.querySelector('.metric-inline-text');
+        const punct = part.text.replace(/\s+/g,'').trim();
+        const spacer = (punct === '(' || punct === '«' || punct === '“') ? '' : '\u00A0'; // niente spazio dopo apertura
         if (metricTxt) {
-          metricTxt.textContent = metricTxt.textContent + part.text;
+          metricTxt.textContent = (metricTxt.textContent || '') + punct + spacer;
         } else {
-          last.textContent = (last.textContent || '') + part.text;
+          last.textContent = (last.textContent || '') + punct + spacer;
         }
       } else {
         // fallback, ma non dovrebbe succedere
-        rowEl.appendChild(renderTextPart(part));
+        const el = renderTextPart({ kind:'text', text: part.text.replace(/\s+/g,'').trim() });
+        rowEl.appendChild(el);
       }
     } else {
       rowEl.appendChild(renderPart(part));
@@ -214,9 +217,57 @@ function update(node, data) {
   body.innerHTML = '';
 
   const rows = Array.isArray(data.rows) ? data.rows : [];
-  rows.forEach((row) => {
-    body.appendChild(renderRow(row));
-  });
+  if (rows.length > 0) {
+    rows.forEach((row) => {
+      body.appendChild(renderRow(row));
+    });
+  } else {
+    // Fallback legacy: costruisce righe base da campi flat (Ticker, Price, ChangePct, ...)
+    const intro = {
+      id: 'intro-line',
+      parts: [
+        { kind: 'text', text: data.Ticker ? String(data.Ticker) : '—' },
+        // parentesi senza spazio prima (si incolla al ticker) e con chiusura separata
+        ...(data.Venue ? [
+          { kind: 'text', text: '(' },
+          { kind: 'text', text: String(data.Venue) },
+          { kind: 'text', text: ')' }
+        ] : [])
+      ]
+    };
+
+    const priceStr = (data.Price==null || isNaN(data.Price))
+      ? '—'
+      : Number(data.Price).toLocaleString('it-IT',{ minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const chgVal = (data.ChangePct!=null && !isNaN(Number(data.ChangePct))) ? Number(data.ChangePct) : null;
+    const chgTone = chgVal==null ? 'neutral' : (chgVal>0 ? 'ok' : (chgVal<0 ? 'err' : 'neutral'));
+    const chgStr  = chgVal==null ? '—%' : `${chgVal>0?'+':''}${chgVal.toFixed(2)}%`;
+
+    const quality = {
+      id: 'quality-line',
+      parts: [
+        { kind: 'text', text: 'Price ' },
+        { kind: 'metric', key: 'Price', value: priceStr, tone: 'neutral', label: 'Price' },
+        { kind: 'text', text: ',' },
+        { kind: 'text', text: 'Change ' },
+        { kind: 'metric', key: 'ChangePct', value: chgStr, tone: chgTone, label: 'ChangePct' },
+        { kind: 'text', text: ',' },
+        { kind: 'text', text: 'CCY ' },
+        { kind: 'metric', key: 'Currency', value: data.Currency || '—', tone: 'neutral', label: 'Currency' }
+      ]
+    };
+
+    const windowLine = {
+      id: 'window-line',
+      parts: [
+        { kind: 'text', text: `Snapshot ${data.Start ?? '—'} → ${data.End ?? '—'}` },
+        { kind: 'text', text: ' · ' },
+        { kind: 'text', text: `Updated ${(()=>{ try{ return new Date(data.UpdatedAt).toISOString().slice(11,16)+'\u00A0UTC'; }catch(e){ return (data.UpdatedAt || '—'); } })()}` }
+      ]
+    };
+
+    [intro, quality, windowLine].forEach(r => body.appendChild(renderRow(r)));
+  }
 
   renderFooter(node, data);
 }
