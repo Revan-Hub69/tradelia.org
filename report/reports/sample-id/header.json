@@ -7,17 +7,32 @@
   },
   "rows": [
     {
-      "id": "intro-line",
+      "id": "company-line",
       "parts": [
         { "kind": "text", "text": "Report Tradelia AI su " },
         { "kind": "metric", "key": "CompanyName", "value": "NVIDIA Corporation", "tone": "neutral" },
-        { "kind": "text", "text": "(" },
+        { "kind": "text", "text": ". " },
+        { "kind": "text", "text": "Ticker: " },
         { "kind": "metric", "key": "Ticker", "value": "NVDA", "tone": "neutral" },
-        { "kind": "text", "text": ") — " },
+        { "kind": "text", "text": ". " },
+        { "kind": "text", "text": "Borsa principale: " },
         { "kind": "metric", "key": "Venue", "value": "NASDAQ", "tone": "neutral" },
-        { "kind": "text", "text": ", prezzo al momento dello start " },
+        { "kind": "text", "text": ". " },
+        { "kind": "text", "text": "ISIN: " },
+        { "kind": "metric", "key": "ISIN", "value": "US67066G1040", "tone": "neutral" },
+        { "kind": "text", "text": ". " },
+        { "kind": "text", "text": "Settore: " },
+        { "kind": "metric", "key": "Sector", "value": "Tecnologia", "tone": "neutral" },
+        { "kind": "text", "text": "." }
+      ]
+    },
+    {
+      "id": "price-line",
+      "parts": [
+        { "kind": "text", "text": "Prezzo al momento dello start: " },
         { "kind": "metric", "key": "Price", "value": 123.45, "tone": "ok" },
-        { "kind": "text", "text": ", cambiamento di prezzo registrato dall'ultima chiusura di mercato " },
+        { "kind": "text", "text": ". " },
+        { "kind": "text", "text": "Cambiamento di prezzo registrato dall'ultima chiusura di mercato: " },
         { "kind": "metric", "key": "ChangePct", "value": "-2.13%", "tone": "err" },
         { "kind": "text", "text": "." }
       ]
@@ -27,13 +42,17 @@
       "parts": [
         { "kind": "text", "text": "Freshness dei dati: " },
         { "kind": "metric", "key": "Freshness", "value": "< 24h", "tone": "ok" },
-        { "kind": "text", "text": ", confidence registrata " },
+        { "kind": "text", "text": ". " },
+        { "kind": "text", "text": "Confidence registrata: " },
         { "kind": "metric", "key": "ConfidenceFinal", "value": "0.82", "tone": "warn" },
-        { "kind": "text", "text": ", data integrity " },
+        { "kind": "text", "text": ". " },
+        { "kind": "text", "text": "Data integrity: " },
         { "kind": "metric", "key": "DataIntegrity", "value": "0.88", "tone": "ok" },
-        { "kind": "text", "text": ", feed sync " },
+        { "kind": "text", "text": ". " },
+        { "kind": "text", "text": "Feed sync: " },
         { "kind": "metric", "key": "FeedSync", "value": "T-1 OK", "tone": "ok" },
-        { "kind": "text", "text": ", stato del report " },
+        { "kind": "text", "text": ". " },
+        { "kind": "text", "text": "Stato del report: " },
         { "kind": "metric", "key": "State", "value": "ACTIVE", "tone": "ok" },
         { "kind": "text", "text": "." }
       ]
@@ -45,9 +64,11 @@
         { "kind": "metric", "key": "Start", "value": "2025-10-21", "tone": "neutral" },
         { "kind": "text", "text": " e concluso il " },
         { "kind": "metric", "key": "End", "value": "2025-10-25", "tone": "neutral" },
-        { "kind": "text", "text": ". Ultimo aggiornamento: " },
+        { "kind": "text", "text": ". " },
+        { "kind": "text", "text": "Ultimo aggiornamento: " },
         { "kind": "metric", "key": "UpdatedAt", "value": "2025-10-25T22:14:00Z", "tone": "neutral" },
-        { "kind": "text", "text": ". Versione: " },
+        { "kind": "text", "text": ". " },
+        { "kind": "text", "text": "Versione: " },
         { "kind": "metric", "key": "Version", "value": "v2025.10.25-rc3", "tone": "neutral" },
         { "kind": "text", "text": "." }
       ]
@@ -62,6 +83,11 @@
     ]
   },
   "metricsPanel": [
+    { "key": "CompanyName", "label": "Nome azienda", "value": "NVIDIA Corporation", "tone": "neutral" },
+    { "key": "Ticker", "label": "Ticker", "value": "NVDA", "tone": "neutral" },
+    { "key": "Venue", "label": "Borsa principale", "value": "NASDAQ", "tone": "neutral" },
+    { "key": "ISIN", "label": "ISIN", "value": "US67066G1040", "tone": "neutral" },
+    { "key": "Sector", "label": "Settore", "value": "Tecnologia", "tone": "neutral" },
     { "key": "Price", "label": "Prezzo allo start", "value": 123.45, "tone": "ok" },
     { "key": "ChangePct", "label": "Variazione dall'ultima chiusura", "value": "-2.13%", "tone": "err" },
     { "key": "Freshness", "label": "Freshness dei dati", "value": "< 24h", "tone": "ok" },
