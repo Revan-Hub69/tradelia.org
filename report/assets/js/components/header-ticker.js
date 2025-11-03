@@ -169,8 +169,13 @@ function renderRow(row) {
     }
   });
 
+  // Bind metric info buttons (se disponibile)
   if (window.__TradeliaUI?.bindMetricInfoButtons) {
-    window.__TradeliaUI.bindMetricInfoButtons(rowEl);
+    try {
+      window.__TradeliaUI.bindMetricInfoButtons(rowEl);
+    } catch (e) {
+      console.warn('[HeaderTicker] bindMetricInfoButtons error:', e);
+    }
   }
 
   return rowEl;
