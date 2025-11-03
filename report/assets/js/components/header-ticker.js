@@ -119,27 +119,19 @@ function renderRow(row) {
   else if (row.id === 'quality-line') rowEl.classList.add('header-ticker-row--quality');
   else if (row.id === 'window-line') rowEl.classList.add('header-ticker-row--meta');
 
+  const PUNCT_RE = /^[\s]*[,\.;:!\?]/;
+
   (row.parts || []).forEach((part) => {
-    // render standard
-    const el = renderPart(part);
-
-    // FIX punteggiatura che va a capo:
-    // se questo part è testo e inizia con una punteggiatura, la attacchiamo al nodo precedente
-    if (
-      part.kind === 'text' &&
-      typeof part.text === 'string' &&
-      /^[\s]*[,\.;:\)%]/.test(part.text)
-    ) {
-      const last = rowEl.lastChild;
-      if (last) {
-        // togli gli spazi davanti e aggiungi al testo precedente
-        const clean = part.text.replace(/^\s+/, '');
-        last.insertAdjacentText('beforeend', clean);
-        return; // non appendere un nuovo nodo
-      }
+    // render normale
+    if (part.kind === 'text' && typeof part.text === 'string' && PUNCT_RE.test(part.text)) {
+      // è un pezzetto che inizia con virgola/punto → lo wrappiamo
+      const glue = createEl('span', 'header-ticker-glue');
+      // niente spazi davanti, li gestiamo col CSS
+      glue.textContent = part.text.trim();
+      rowEl.appendChild(glue);
+    } else {
+      rowEl.appendChild(renderPart(part));
     }
-
-    rowEl.appendChild(el);
   });
 
   // tooltip runtime
