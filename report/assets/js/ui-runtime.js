@@ -56,7 +56,10 @@
 
   function mountPanelOverlay(){
     if (qs('#panel-overlay')) return; // già creato
-    overlay = el('div','tl-panel-overlay noprint'); overlay.id='panel-overlay'; overlay.setAttribute('aria-hidden','true');
+    overlay = el('div','tl-panel-overlay noprint'); overlay.id='panel-overlay'; 
+    overlay.setAttribute('aria-hidden','true');
+    overlay.setAttribute('hidden','');
+    overlay.style.display = 'none'; // Inizialmente nascosto
 
     backdrop = el('div','tl-panel-backdrop'); backdrop.setAttribute('data-panel-close','');
     overlay.appendChild(backdrop);
@@ -134,7 +137,10 @@
     // Blocca scroll pagina se blocking
     document.body.style.overflow = blocking ? 'hidden' : '';
 
+    // Mostra overlay e panel
+    overlay.removeAttribute('hidden');
     overlay.setAttribute('aria-hidden','false');
+    overlay.style.display = 'flex'; // Forza display
 
     // Variante corretta
     if (isMobile()){
@@ -151,6 +157,8 @@
   function closePanel(){
     if (!overlay) return;
     overlay.setAttribute('aria-hidden','true');
+    overlay.setAttribute('hidden',''); // Nascondi anche con attributo hidden
+    overlay.style.display = 'none'; // Forza display none
     document.body.style.overflow = '';
     resetScroll();
   }
