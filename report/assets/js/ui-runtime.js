@@ -187,6 +187,64 @@
   }
 
   // -----------------------------
+  // Metriche: popup singolo e catalogo
+  // -----------------------------
+  async function openMetricPopup(key){
+    const g = await Glossary.get(key);
+    if (!g) return;
+    if (isMobile()){
+      showModal({ title: g.title || key, what: g.what, how: g.how, source: g.source });
+    } else {
+      // su desktop apriamo un panel compatto per coerenza (il popover richiede ancoraggio)
+      openPanel({
+        title: g.title || key,
+        subtitle: 'Glossario metrica',
+        panelSize: 'wide',
+        body: `
+          <div class="grid gap-3 text-[13px]">
+            <div class="text-[color:var(--ink)]">${g.what || '—'}</div>
+            ${g.how ? `<div class="text-[color:var(--ink-soft)]">${g.how}</div>` : ''}
+            ${g.source ? `<div class="text-[color:var(--muted)]">Fonte: ${g.source}</div>` : ''}
+          </div>
+        `
+      });
+    }
+  }
+
+  async function openMetricsCatalog(keys){
+    const g = await Glossary.load();
+    const list = (Array.isArray(keys) && keys.length) ? keys : Object.keys(g||{}).filter(k=>!k.startsWith('_'));
+    const rows = list.map(k=>{
+      const m = g[k] || {};
+      return `
+        <tr>
+          <td class="py-2 pr-3"><div class="metric-btn pill--neutral">${m.title || k}</div></td>
+          <td class="py-2 pr-3 text-[13px]">${m.what || '—'}</td>
+          <td class="py-2 pr-3 text-[13px] text-[color:var(--muted)]">${m.source || ''}</td>
+        </tr>`;
+    }).join('');
+    openPanel({
+      title: 'Glossario metriche',
+      subtitle: `${list.length} voci`,
+      panelSize: 'xl',
+      body: `
+        <div class="overflow-auto">
+          <table class="min-w-full text-left text-[13px]">
+            <thead>
+              <tr class="text-[color:var(--muted)]">
+                <th class="py-2 pr-3">Metrica</th>
+                <th class="py-2 pr-3">What</th>
+                <th class="py-2 pr-3">Source</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `
+    });
+  }
+
+  // -----------------------------
   // Tooltip metriche ("?")
   // -----------------------------
   let popover, popTitle, popBody, popSource, popClose, modal, modalTitle, modalBody, modalSource;
@@ -265,9 +323,18 @@
   // -----------------------------
   // API globale
   // -----------------------------
-  UI.openPanel       = openPanel;
-  UI.closePanel      = closePanel;
-  UI.openAuditPanel  = openAuditPanel;
+  UI.openPanel          = openPanel;
+  UI.closePanel         = closePanel;
+  UI.openAuditPanel     = openAuditPanel;
+  UI.openMetricPopup    = openMetricPopup;
+  UI.openMetricsCatalog = openMetricsCatalog;
+  // Back-compat: Privacy/MiFID panels (contenuto da fornire dall'host page)
+  UI.openPrivacyPanel = function(contentHTML){
+    openPanel({ title: 'Privacy', subtitle: 'Informativa', panelSize: 'wide', body: contentHTML || '<div class="text-[13px]">Contenuto privacy non configurato.</div>' });
+  };
+  UI.openMifidPanel = function(contentHTML){
+    openPanel({ title: 'Informativa MiFID', subtitle: 'Comunicazione istituzionale', panelSize: 'wide', body: contentHTML || '<div class="text-[13px]">Contenuto MiFID non configurato.</div>' });
+  };
   // (Niente openPrivacyPanel / openMifidPanel in questa versione)
 
   // Esporta
