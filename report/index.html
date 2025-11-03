@@ -77,12 +77,7 @@
       outline: 2px solid var(--brand-500);
       outline-offset: 2px;
     }
-    #btn-theme { cursor: pointer; }
-
-    /* Toggle icone (sole/luna) */
-    .ico-sun, .ico-moon { display: none; }
-    [data-theme="dark"]  .ico-moon { display:inline-block; }
-    [data-theme="light"] .ico-sun  { display:inline-block; }
+    /* Tema scuro fisso - toggle rimosso */
 
     /* ===== FOOTER ===== */
     .site-footer {
@@ -212,20 +207,7 @@ html[data-theme="dark"] {
       <span class="animate-pulse" style="color: var(--brand-accent)">&bull;AI</span>
     </a>
 
-    <nav class="flex items-center gap-3">
-      <button id="btn-theme" class="btn-inline" type="button" aria-label="Tema (scuro)">
-        <!-- Luna (dark) -->
-        <svg class="ico ico-moon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
-        </svg>
-        <!-- Sole (light) -->
-        <svg class="ico ico-sun" viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="12" cy="12" r="4"></circle>
-          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
-        </svg>
-        <span class="hidden sm:inline text-[12px] leading-none">Tema</span>
-      </button>
-    </nav>
+    <!-- Tema scuro fisso - toggle rimosso -->
   </div>
 </header>
 
@@ -397,18 +379,8 @@ html[data-theme="dark"] {
   <script type="module" src="/report/assets/js/app.js"></script>
   <script>
     (function(){
-      // ===== Theme toggle =====
-      const HTML = document.documentElement;
-      const THEMEKEY = 'tradelia-theme';
-      const btnTheme = document.getElementById('btn-theme');
-      function setTheme(t){
-        HTML.setAttribute('data-theme', t);
-        try{ localStorage.setItem(THEMEKEY, t); }catch(e){}
-        btnTheme?.setAttribute('aria-label', t === 'dark' ? 'Tema (scuro)' : 'Tema (chiaro)');
-        btnTheme?.setAttribute('aria-pressed', t === 'dark' ? 'true' : 'false');
-      }
-      setTheme(localStorage.getItem(THEMEKEY) || 'dark');
-      btnTheme?.addEventListener('click', ()=> setTheme(HTML.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+      // ===== Tema scuro fisso =====
+      document.documentElement.setAttribute('data-theme', 'dark');
 
       // ===== Footer year =====
       const fy = document.getElementById('footer-year');
