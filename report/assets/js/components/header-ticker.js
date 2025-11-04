@@ -299,16 +299,24 @@ function renderFooter(node, data) {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
+      console.log('[HeaderTicker] Footer button click:', link.action, 'isMobile:', window.matchMedia('(max-width: 768px)').matches);
       if (link.action === 'open-metrics-panel') {
         try {
           const ui = window.__TradeliaUI;
+          const isMobile = window.matchMedia('(max-width: 768px)').matches;
+          console.log('[HeaderTicker] Footer - isMobile:', isMobile, 'ui:', !!ui, 'openMetricsDrawer:', !!ui?.openMetricsDrawer, 'data:', !!data);
           if (ui?.openMetricsDrawer) {
-            ui.openMetricsDrawer(data);
+            console.log('[HeaderTicker] Footer - apri drawer con data:', data);
+            ui.openMetricsDrawer(data).then(() => {
+              console.log('[HeaderTicker] Footer - drawer aperto con successo');
+            }).catch(err => {
+              console.error('[HeaderTicker] Footer - errore apertura drawer:', err);
+            });
           } else {
-            console.warn('[HeaderTicker] openMetricsDrawer non disponibile');
+            console.warn('[HeaderTicker] Footer - openMetricsDrawer non disponibile');
           }
         } catch (err) {
-          console.warn('[HeaderTicker] Errore apertura metrics panel:', err);
+          console.error('[HeaderTicker] Footer - errore apertura metrics panel:', err);
         }
       }
     });
