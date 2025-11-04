@@ -674,6 +674,7 @@
         </div>
       </div>
     `;
+    // NOTA: drawer2 NON ha classe 'active' nell'HTML iniziale - è intenzionale
 
     console.log('[UI Runtime] openMobileMetricsDrawer - body HTML length:', body.length);
     console.log('[UI Runtime] openMobileMetricsDrawer - mobileBody prima:', mobileBody?.innerHTML?.substring(0, 100));
@@ -698,12 +699,15 @@
         const drawerInDoc = qs('.metrics-drawer-mobile');
         
         if (drawer && mobilePanel && mobilePanel.style.display !== 'none' && !mobilePanel.hasAttribute('hidden')) {
-          // Assicura che drawer1 sia attivo all'apertura
+          // FORZA drawer1 come attivo e drawer2 come non attivo PRIMA di setupMobileMetricsDrawer
           const drawer1 = drawer.querySelector('.metrics-drawer-1');
           const drawer2 = drawer.querySelector('#metrics-drawer-2');
           if (drawer1 && drawer2) {
-            drawer1.classList.add('active');
+            // APPROCCIO SEMPLICE: usa display
+            drawer1.style.display = 'flex';
+            drawer2.style.display = 'none';
             drawer2.classList.remove('active');
+            console.log('[UI Runtime] checkPanel - Reset semplice: drawer1 display:', drawer1.style.display, 'drawer2 display:', drawer2.style.display);
           }
           setupMobileMetricsDrawer(metricsWithGlossary, metricsByCategory, categories);
           resolve();
@@ -712,6 +716,15 @@
         
         // Se il drawer esiste nel documento ma non nel body, prova comunque
         if (drawerInDoc && Date.now() - startTime > 100) {
+          // FORZA anche qui drawer1 come attivo
+          const drawer1 = drawerInDoc.querySelector('.metrics-drawer-1');
+          const drawer2 = drawerInDoc.querySelector('#metrics-drawer-2');
+          if (drawer1 && drawer2) {
+            drawer1.style.display = 'flex';
+            drawer2.style.display = 'none';
+            drawer2.classList.remove('active');
+            console.log('[UI Runtime] checkPanel (drawerInDoc) - Reset semplice');
+          }
           setupMobileMetricsDrawer(metricsWithGlossary, metricsByCategory, categories);
           resolve();
           return true;
@@ -732,6 +745,15 @@
           // Prova comunque con drawer dal documento
           const drawerInDoc = qs('.metrics-drawer-mobile');
           if (drawerInDoc) {
+            // FORZA anche qui drawer1 come attivo
+            const drawer1 = drawerInDoc.querySelector('.metrics-drawer-1');
+            const drawer2 = drawerInDoc.querySelector('#metrics-drawer-2');
+            if (drawer1 && drawer2) {
+              drawer1.style.display = 'flex';
+              drawer2.style.display = 'none';
+              drawer2.classList.remove('active');
+              console.log('[UI Runtime] checkPanel (timeout) - Reset semplice');
+            }
             setupMobileMetricsDrawer(metricsWithGlossary, metricsByCategory, categories);
           }
           resolve();
@@ -886,7 +908,16 @@
 
     // Evita setup multipli: rimuovi listener esistenti se presenti
     if (container.dataset.mobileDrawerSetup === 'true') {
-      console.log('[UI Runtime] setupMobileMetricsDrawer: già inizializzato, skip');
+      console.log('[UI Runtime] setupMobileMetricsDrawer: già inizializzato, ma verifico stato...');
+      // Anche se già inizializzato, FORZA stato corretto con display
+      const existingDrawer1 = container.querySelector('.metrics-drawer-1');
+      const existingDrawer2 = container.querySelector('#metrics-drawer-2');
+      if (existingDrawer1 && existingDrawer2) {
+        existingDrawer1.style.display = 'flex';
+        existingDrawer2.style.display = 'none';
+        existingDrawer2.classList.remove('active');
+        console.log('[UI Runtime] setupMobileMetricsDrawer: reset semplice anche se già inizializzato');
+      }
       return;
     }
     container.dataset.mobileDrawerSetup = 'true';
@@ -908,6 +939,14 @@
       return;
     }
 
+    // RESET SEMPLICE: drawer1 visibile, drawer2 nascosto
+    drawer1.classList.remove('active'); // Non serve .active per drawer1, è sempre visibile
+    drawer2.classList.remove('active'); // drawer2 nascosto senza .active
+    // Forza anche display inline
+    drawer1.style.display = 'flex';
+    drawer2.style.display = 'none';
+    console.log('[UI Runtime] setupMobileMetricsDrawer: reset semplice - drawer1 display:', drawer1.style.display, 'drawer2 display:', drawer2.style.display);
+    
     console.log('[UI Runtime] setupMobileMetricsDrawer: inizializzato');
     console.log('[UI Runtime] setupMobileMetricsDrawer - container:', !!container, 'drawer1:', !!drawer1, 'drawer2:', !!drawer2);
     console.log('[UI Runtime] setupMobileMetricsDrawer - metricsList:', !!metricsList, 'backBtn:', !!backBtn);
@@ -926,11 +965,12 @@
       }
       const metrics = metricsByCategory[category] || [];
       
-      // Assicura che drawer1 sia visibile quando si cambia categoria
-      if (drawer1 && drawer2) {
-        drawer1.classList.add('active');
-        drawer2.classList.remove('active');
-      }
+          // APPROCCIO SEMPLICE: assicura che drawer1 sia visibile quando si cambia categoria
+          if (drawer1 && drawer2) {
+            drawer1.style.display = 'flex';
+            drawer2.style.display = 'none';
+            drawer2.classList.remove('active');
+          }
       
       // Update active tab
       container.querySelectorAll('.metric-category-tab').forEach(t => {
@@ -981,9 +1021,10 @@
           metricsListContainer.scrollTop = 0;
           metricsListContainer.scrollTo({ top: 0, behavior: 'instant' });
         }
-        // Assicura che drawer1 sia ancora attivo dopo l'aggiornamento
+        // APPROCCIO SEMPLICE: assicura che drawer1 sia ancora visibile dopo l'aggiornamento
         if (drawer1 && drawer2) {
-          drawer1.classList.add('active');
+          drawer1.style.display = 'flex';
+          drawer2.style.display = 'none';
           drawer2.classList.remove('active');
         }
         setupSwipeGesture(container, metricsWithGlossary, drawer2, drawer2Title, drawer2Content);
@@ -1012,9 +1053,12 @@
       if (metric) {
         console.log('[UI Runtime] Mobile - Metrica trovata, apro dettaglio:', metric.key, 'drawer2:', !!drawer2, 'drawer2Title:', !!drawer2Title, 'drawer2Content:', !!drawer2Content);
         openMetricDetail(metric, drawer2, drawer2Title, drawer2Content);
-        drawer1.classList.remove('active');
+        // APPROCCIO SEMPLICE: usa display invece di classi
+        drawer1.style.display = 'none';
+        drawer2.style.display = 'flex';
         drawer2.classList.add('active');
-        console.log('[UI Runtime] Mobile - Drawer2 attivato, drawer1 active:', drawer1.classList.contains('active'), 'drawer2 active:', drawer2.classList.contains('active'));
+        drawer1.classList.remove('active');
+        console.log('[UI Runtime] Mobile - Drawer2 attivato, drawer1 display:', drawer1.style.display, 'drawer2 display:', drawer2.style.display);
         const backButton = drawer2.querySelector('.metrics-drawer-2__back');
         if (backButton) {
           setTimeout(() => {
@@ -1195,7 +1239,8 @@
       // ESC chiude drawer2 e torna a drawer1
       if (e.key === 'Escape' && drawer2.classList.contains('active')) {
         e.preventDefault();
-        drawer1.classList.add('active');
+        drawer1.style.display = 'flex';
+        drawer2.style.display = 'none';
         drawer2.classList.remove('active');
         // Focus sul back button o prima metrica
         const firstItem = drawer1.querySelector('.metric-list-item');
@@ -1269,7 +1314,10 @@
       e.preventDefault();
       e.stopPropagation();
       console.log('[UI Runtime] Mobile - Back button click');
-      drawer1.classList.add('active');
+      // APPROCCIO SEMPLICE: usa display
+      drawer1.style.display = 'flex';
+      drawer2.style.display = 'none';
+      drawer1.classList.remove('active');
       drawer2.classList.remove('active');
       // Focus sulla prima metrica o tab attivo
       const activeTab = container.querySelector('.metric-category-tab.active');
