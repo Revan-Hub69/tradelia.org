@@ -167,7 +167,8 @@
     }
 
     /* ===== BROKER STYLES ===== */
-    .card{transition:transform .2s ease, box-shadow .2s ease; background: #ffffff !important; color: #1e293b !important;}
+    #brokers-grid { min-height: 200px; display: grid !important; }
+    .card{transition:transform .2s ease, box-shadow .2s ease; background: #ffffff !important; color: #1e293b !important; display: flex !important; visibility: visible !important; opacity: 1 !important;}
     .card:hover{box-shadow:0 10px 30px rgba(2,6,23,.08); transform: translateY(-2px)}
     .logo-fb{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:.75rem;font-weight:700;color:#fff;box-shadow:inset 0 0 0 1px rgba(15,23,42,.08)}
     .tag{font-size:11px;padding:.125rem .5rem;border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#475569}
@@ -1078,7 +1079,11 @@
   // ===== Helper per valorizzare campi mancanti =====
   function enrichBrokerData(broker) {
     // Crea una copia profonda per non modificare l'originale
-    const enriched = JSON.parse(JSON.stringify(broker));
+    // Usa Object.assign per evitare problemi con funzioni o altri tipi non serializzabili
+    const enriched = Object.assign({}, broker);
+    if (broker.filters) {
+      enriched.filters = Object.assign({}, broker.filters);
+    }
     
     // Default values per campi mancanti
     if (!enriched.minDeposit) {
@@ -1141,30 +1146,42 @@
       enriched.platforms_text = enriched.platforms || 'N/D';
     }
     
-    // Inizializza filters se non esiste
+    // Inizializza filters se non esiste (preserva quelli esistenti)
     if (!enriched.filters) {
       enriched.filters = {};
     }
     
-    // Aggiorna i filtri con i nuovi campi
+    // Aggiorna i filtri con i nuovi campi (solo se non esistono già)
     if (enriched.platforms) {
       enriched.platforms.forEach(p => {
-        enriched.filters[`platform-${p}`] = true;
+        if (!enriched.filters[`platform-${p}`]) {
+          enriched.filters[`platform-${p}`] = true;
+        }
       });
     }
     if (enriched.markets) {
       enriched.markets.forEach(m => {
-        enriched.filters[`market-${m}`] = true;
+        if (!enriched.filters[`market-${m}`]) {
+          enriched.filters[`market-${m}`] = true;
+        }
       });
     }
     if (enriched.regulations) {
       enriched.regulations.forEach(r => {
-        enriched.filters[`reg-${r}`] = true;
+        if (!enriched.filters[`reg-${r}`]) {
+          enriched.filters[`reg-${r}`] = true;
+        }
       });
     }
-    if (enriched.supportIt) enriched.filters['support-it'] = true;
-    if (enriched.protection) enriched.filters['protection'] = true;
-    enriched.filters[`fees-${enriched.feesCategory}`] = true;
+    if (enriched.supportIt && !enriched.filters['support-it']) {
+      enriched.filters['support-it'] = true;
+    }
+    if (enriched.protection && !enriched.filters['protection']) {
+      enriched.filters['protection'] = true;
+    }
+    if (!enriched.filters[`fees-${enriched.feesCategory}`]) {
+      enriched.filters[`fees-${enriched.feesCategory}`] = true;
+    }
     
     return enriched;
   }
@@ -1178,11 +1195,21 @@
     }
     grid.innerHTML = '';
 
-    const brokers = Object.entries(BROKERS).map(([key, broker]) => {
-      // Arricchisce i dati del broker
-      const enriched = enrichBrokerData(broker);
-      return [key, enriched];
-    }).filter(([key, broker]) => {
+    try {
+      console.log('Numero broker totali:', Object.keys(BROKERS).length);
+      console.log('Filtri attivi:', filters);
+      console.log('Range filtri:', rangeFilters);
+      
+      const brokers = Object.entries(BROKERS).map(([key, broker]) => {
+        // Arricchisce i dati del broker
+        try {
+          const enriched = enrichBrokerData(broker);
+          return [key, enriched];
+        } catch (e) {
+          console.error('Errore arricchimento broker', key, e);
+          return [key, broker];
+        }
+      }).filter(([key, broker]) => {
       // Filtri checkbox
       const activeFilters = Object.entries(filters).filter(([_, value]) => value);
       
@@ -1206,15 +1233,18 @@
       }
 
       return true;
-    });
+      });
 
-    // Mostra messaggio se non ci sono broker
-    if (brokers.length === 0) {
-      grid.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-slate-600">Nessun broker trovato con i filtri selezionati. Prova a modificare i filtri.</p></div>';
-      return;
-    }
+      console.log('Broker dopo filtri:', brokers.length);
+      
+      // Mostra messaggio se non ci sono broker
+      if (brokers.length === 0) {
+        grid.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-slate-600">Nessun broker trovato con i filtri selezionati. Prova a modificare i filtri.</p></div>';
+        return;
+      }
 
-    brokers.forEach(([key, broker]) => {
+      brokers.forEach(([key, broker]) => {
+        console.log('Rendering broker:', key, broker.name);
       const card = document.createElement('div');
       card.className = 'card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start';
       card.setAttribute('data-key', key);
@@ -1243,7 +1273,11 @@
       `;
       
       grid.appendChild(card);
-    });
+      });
+    } catch (error) {
+      console.error('Errore nel rendering dei broker:', error);
+      grid.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-red-600">Errore nel caricamento dei broker. Controlla la console per i dettagli.</p></div>';
+    }
   }
 
   // ===== Gestione filtri =====
@@ -1426,9 +1460,19 @@
   });
 
   // ===== Inizializzazione =====
-  applyFilters();
+  // Assicurati che il DOM sia pronto
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOM caricato, applico filtri');
+      applyFilters();
+    });
+  } else {
+    console.log('DOM già pronto, applico filtri');
+    applyFilters();
+  }
 })();
 </script>
 
 </body>
 </html>
+
