@@ -1,26 +1,20 @@
 // /report/assets/js/app.js
-// Orchestratore runtime Tradelia AI - Versione 2.0 (Semplificata e Robusta)
+// Orchestratore runtime Tradelia AI - Versione 3.0 (DA ZERO, senza runtime)
 // - Carica header.json e monta HeaderTicker
-// - Carica manifest.json e monta i moduli F*
-// - Gestione errori robusta
-// - Usa Logger centralizzato
+// - Carica manifest.json e monta moduli F*
+// - Nessun runtime complesso
+// - Solo metriche colorate inline
 
 import Logger from './utils/logger.js';
 
 (function() {
   'use strict';
   
-  // ===== CONFIGURAZIONE =====
   const ROOT = document.getElementById('app-root');
   const TICKER_SLOT = document.getElementById('header-ticker-slot');
   
-  if (!ROOT) {
-    Logger.error('App', 'app-root non trovato nel DOM');
-    return;
-  }
-  
-  if (!TICKER_SLOT) {
-    Logger.error('App', 'header-ticker-slot non trovato nel DOM');
+  if (!ROOT || !TICKER_SLOT) {
+    Logger.error('App', 'DOM non valido');
     return;
   }
   
@@ -32,19 +26,10 @@ import Logger from './utils/logger.js';
     try {
       const url = path + __versionQS;
       Logger.debug('App', `Fetching: ${url}`);
-      
       const res = await fetch(url, { cache: 'no-store' });
-      
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}: ${path}`);
-      }
-      
+      if (!res.ok) throw new Error(`HTTP ${res.status}: ${path}`);
       const data = await res.json();
-      
-      if (!data || typeof data !== 'object') {
-        throw new Error(`Invalid JSON: ${path}`);
-      }
-      
+      if (!data || typeof data !== 'object') throw new Error(`Invalid JSON: ${path}`);
       return data;
     } catch (err) {
       Logger.error('App', `Errore fetch ${path}`, err);
@@ -83,8 +68,11 @@ import Logger from './utils/logger.js';
   // ===== HEADER TICKER =====
   async function mountHeaderTicker(headerData) {
     if (!headerData || typeof headerData !== 'object') {
-      Logger.warn('App', 'Header data non valido');
-      showTickerError('Dati header non validi');
+      TICKER_SLOT.innerHTML = `
+        <div style="padding: 1rem; background: #1e2535; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; color: #94a3b8; font-size: 13px;">
+          ⚠️ Dati header non validi
+        </div>
+      `;
       return;
     }
     
@@ -96,38 +84,28 @@ import Logger from './utils/logger.js';
       }
       
       const node = headerTicker.mount(TICKER_SLOT);
-      
       if (!node) {
         throw new Error('headerTicker.mount ha restituito null');
       }
       
       await headerTicker.update(node, headerData);
-      
-      Logger.debug('App', 'Header ticker montato con successo');
+      Logger.debug('App', 'Header ticker montato');
     } catch (err) {
       Logger.error('App', 'Errore montaggio header ticker', err);
-      showTickerError(`Errore: ${err.message}`);
+      TICKER_SLOT.innerHTML = `
+        <div style="padding: 1rem; background: #1e2535; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; color: #94a3b8; font-size: 13px;">
+          ⚠️ Errore: ${err.message}
+        </div>
+      `;
     }
-  }
-  
-  function showTickerError(message) {
-    TICKER_SLOT.innerHTML = `
-      <div style="padding: 1rem; background: var(--surface-card); border: 1px solid var(--br-card); border-radius: var(--radius-card); color: var(--muted);">
-        <div style="font-size: 13px;">⚠️ ${message}</div>
-        <div style="font-size: 11px; margin-top: 0.5rem; opacity: 0.8;">Report ID: ${getReportId()}</div>
-      </div>
-    `;
   }
   
   // ===== CARICAMENTO HEADER =====
   async function loadHeader(reportId) {
     try {
       const headerPath = `/report/reports/${reportId}/header.json`;
-      Logger.debug('App', `Caricamento header: ${headerPath}`);
-      
       const header = await fetchJSON(headerPath);
       
-      // Validazione base
       const hasRows = Array.isArray(header?.rows) && header.rows.length > 0;
       const hasLegacy = header?.Ticker || header?.CompanyName;
       
@@ -136,11 +114,8 @@ import Logger from './utils/logger.js';
       }
       
       __header = header;
-      
-      // Cache-buster
       __versionQS = header?.Version ? `?v=${encodeURIComponent(header.Version)}` : '';
       
-      // Aggiorna title e footer
       if (header?.Ticker) {
         document.title = `Framework Accademico AI, Tradelia Swing Master 5.0 · ${header.Ticker}`;
       }
@@ -150,15 +125,11 @@ import Logger from './utils/logger.js';
       setText('footer-snapshot', `${header?.Start ?? '—'} → ${header?.End ?? '—'}`);
       setText('footer-updated', fmtDate(header?.UpdatedAt));
       
-      // Monta header ticker
       await mountHeaderTicker(header);
-      
-      Logger.debug('App', 'Header caricato con successo');
+      Logger.debug('App', 'Header caricato');
       return header;
     } catch (err) {
       Logger.error('App', 'Errore caricamento header', err);
-      showTickerError(`Errore caricamento header: ${err.message}`);
-      __versionQS = '';
       return null;
     }
   }
@@ -215,14 +186,7 @@ import Logger from './utils/logger.js';
           }
         }
         
-        // Tooltip metriche
-        try {
-          window.__TradeliaUI?.bindMetricInfoButtons?.(wrap);
-        } catch (err) {
-          Logger.debug('App', `Modulo ${modId}: errore bindMetricInfoButtons`, err);
-        }
-        
-        Logger.debug('App', `Modulo ${modId} montato con successo`);
+        Logger.debug('App', `Modulo ${modId} montato`);
       } catch (err) {
         Logger.warn('App', `Modulo ${modId} non caricato`, err);
         continue;
@@ -233,23 +197,20 @@ import Logger from './utils/logger.js';
   // ===== INIZIALIZZAZIONE =====
   async function init() {
     const reportId = getReportId();
-    Logger.debug('App', `Inizializzazione report: ${reportId}`);
+    Logger.debug('App', `Inizializzazione: ${reportId}`);
     
-    // Pulisci root
     ROOT.innerHTML = '';
     
     try {
-      // Carica header (non blocca se fallisce)
       await loadHeader(reportId);
     } catch (err) {
-      Logger.error('App', 'Errore critico loadHeader', err);
+      Logger.error('App', 'Errore loadHeader', err);
     }
     
     try {
-      // Carica moduli (non blocca se fallisce)
       await loadModules(reportId);
     } catch (err) {
-      Logger.error('App', 'Errore critico loadModules', err);
+      Logger.error('App', 'Errore loadModules', err);
     }
     
     Logger.debug('App', 'Inizializzazione completata');
@@ -262,11 +223,9 @@ import Logger from './utils/logger.js';
     init();
   }
   
-  // API pubblica
   window.TradeliaApp = {
     init,
     getReportId,
-    mountHeaderTicker,
     loadHeader,
     loadModules
   };
