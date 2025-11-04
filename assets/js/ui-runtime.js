@@ -169,6 +169,33 @@
 
   function closePanel(){
     if (!overlay) return;
+    
+    // Cleanup mobile drawer listeners se presenti
+    const mobileDrawer = qs('.metrics-drawer-mobile');
+    if (mobileDrawer) {
+      if (mobileDrawer._mobileDrawerCleanup) {
+        mobileDrawer._mobileDrawerCleanup();
+      }
+      if (mobileDrawer._tabObserver) {
+        mobileDrawer._tabObserver.disconnect();
+        delete mobileDrawer._tabObserver;
+      }
+    }
+    
+    // Se il focus è dentro il panel, spostalo su un elemento visibile prima di nascondere l'overlay
+    if (overlay.contains(document.activeElement)) {
+      const fallbackFocus = document.querySelector('.hdr a.brand') || document.body;
+      if (fallbackFocus && typeof fallbackFocus.focus === 'function') {
+        if (fallbackFocus === document.body) {
+          document.body.setAttribute('tabindex', '-1');
+        }
+        fallbackFocus.focus({ preventScroll: true });
+        if (fallbackFocus === document.body) {
+          setTimeout(() => document.body.removeAttribute('tabindex'), 200);
+        }
+      }
+    }
+
     overlay.setAttribute('aria-hidden','true');
     overlay.setAttribute('hidden',''); // Nascondi anche con attributo hidden
     overlay.style.display = 'none'; // Forza display none
@@ -367,37 +394,50 @@
 
   function bindMetricTabs(container, key){
     const tabsContainer = container.querySelector('.metric-tabs-container');
-    if (!tabsContainer) return;
+    if (!tabsContainer) {
+      console.warn('[UI Runtime] bindMetricTabs: tabsContainer non trovato');
+      return;
+    }
     
+    // Rimuovi listener esistenti usando delegation invece di listener diretti
     const tabs = tabsContainer.querySelectorAll('.metric-tab');
     const panels = tabsContainer.querySelectorAll('.metric-tab-panel');
     
-    tabs.forEach(tab => {
-      tab.addEventListener('click', (e) => {
-        e.preventDefault();
-        const tabName = tab.getAttribute('data-tab');
-        
-        // Update tabs
-        tabs.forEach(t => {
-          t.classList.remove('active');
-          t.setAttribute('aria-selected', 'false');
-        });
-        tab.classList.add('active');
-        tab.setAttribute('aria-selected', 'true');
-        
-        // Update panels
-        panels.forEach(p => {
-          const panelName = p.getAttribute('data-panel');
-          if (panelName === tabName) {
-            p.classList.add('active');
-            p.removeAttribute('hidden');
-          } else {
-            p.classList.remove('active');
-            p.setAttribute('hidden', '');
-          }
-        });
+    if (tabs.length === 0 || panels.length === 0) {
+      console.warn('[UI Runtime] bindMetricTabs: tabs o panels non trovati');
+      return;
+    }
+    
+    // Usa event delegation sul container per evitare listener duplicati
+    tabsContainer.addEventListener('click', (e) => {
+      const tab = e.target.closest('.metric-tab');
+      if (!tab) return;
+      
+      e.preventDefault();
+      e.stopPropagation();
+      const tabName = tab.getAttribute('data-tab');
+      console.log('[UI Runtime] bindMetricTabs: click su tab:', tabName);
+      
+      // Update tabs
+      tabs.forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
       });
-    });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      
+      // Update panels
+      panels.forEach(p => {
+        const panelName = p.getAttribute('data-panel');
+        if (panelName === tabName) {
+          p.classList.add('active');
+          p.removeAttribute('hidden');
+        } else {
+          p.classList.remove('active');
+          p.setAttribute('hidden', '');
+        }
+      });
+    }, { passive: false });
     
     // Swipe gesture per mobile
     if (isMobile() && key) {
@@ -589,7 +629,12 @@
     const activeMetrics = metricsByCategory[activeCategory] || [];
     
     const categoryTabs = categories.map(cat => `
-      <button class="metric-category-tab ${cat === activeCategory ? 'active' : ''}" data-category="${cat}">
+      <button class="metric-category-tab ${cat === activeCategory ? 'active' : ''}" 
+              data-category="${cat}"
+              role="tab"
+              aria-selected="${cat === activeCategory ? 'true' : 'false'}"
+              aria-controls="metrics-list-${cat}"
+              type="button">
         ${cat.charAt(0).toUpperCase() + cat.slice(1)}
       </button>
     `).join('');
@@ -607,7 +652,7 @@
     const body = `
       <div class="metrics-drawer-mobile">
         <div class="metrics-drawer-1 active">
-          <nav class="metric-category-tabs">
+          <nav class="metric-category-tabs" role="tablist" aria-label="Categorie metriche">
             ${categoryTabs}
           </nav>
           <div class="metrics-list-container">
@@ -649,6 +694,13 @@
         const drawerInDoc = qs('.metrics-drawer-mobile');
         
         if (drawer && mobilePanel && mobilePanel.style.display !== 'none' && !mobilePanel.hasAttribute('hidden')) {
+          // Assicura che drawer1 sia attivo all'apertura
+          const drawer1 = drawer.querySelector('.metrics-drawer-1');
+          const drawer2 = drawer.querySelector('#metrics-drawer-2');
+          if (drawer1 && drawer2) {
+            drawer1.classList.add('active');
+            drawer2.classList.remove('active');
+          }
           setupMobileMetricsDrawer(metricsWithGlossary, metricsByCategory, categories);
           resolve();
           return true;
@@ -828,6 +880,13 @@
       return;
     }
 
+    // Evita setup multipli: rimuovi listener esistenti se presenti
+    if (container.dataset.mobileDrawerSetup === 'true') {
+      console.log('[UI Runtime] setupMobileMetricsDrawer: già inizializzato, skip');
+      return;
+    }
+    container.dataset.mobileDrawerSetup = 'true';
+
     const drawer1 = container.querySelector('.metrics-drawer-1');
     const drawer2 = container.querySelector('#metrics-drawer-2');
     if (!drawer1 || !drawer2) {
@@ -846,54 +905,369 @@
     }
 
     console.log('[UI Runtime] setupMobileMetricsDrawer: inizializzato');
+    console.log('[UI Runtime] setupMobileMetricsDrawer - container:', !!container, 'drawer1:', !!drawer1, 'drawer2:', !!drawer2);
+    console.log('[UI Runtime] setupMobileMetricsDrawer - metricsList:', !!metricsList, 'backBtn:', !!backBtn);
+    
+    // Verifica che i tab siano presenti
+    const initialTabs = container.querySelectorAll('.metric-category-tab');
+    console.log('[UI Runtime] setupMobileMetricsDrawer - tab iniziali trovati:', initialTabs.length);
 
-    // Tabs categoria - usa delegation
-    container.addEventListener('click', (e) => {
-      const tab = e.target.closest('.metric-category-tab');
-      if (!tab) return;
-      
-      e.preventDefault();
-      e.stopPropagation();
-      const category = tab.getAttribute('data-category');
-      console.log('[UI Runtime] Mobile - Click categoria:', category);
+    // Handler per cambio categoria - funzione separata per maggiore chiarezza
+    const handleCategoryChange = (category, tabElement) => {
+      console.log('[UI Runtime] Mobile - handleCategoryChange chiamato:', category);
+      const currentCategory = metricsList.getAttribute('data-category');
+      if (currentCategory === category) {
+        console.log('[UI Runtime] Mobile - Categoria già attiva, skip aggiornamento');
+        return;
+      }
       const metrics = metricsByCategory[category] || [];
       
+      // Assicura che drawer1 sia visibile quando si cambia categoria
+      if (drawer1 && drawer2) {
+        drawer1.classList.add('active');
+        drawer2.classList.remove('active');
+      }
+      
       // Update active tab
-      container.querySelectorAll('.metric-category-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
+      container.querySelectorAll('.metric-category-tab').forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      if (tabElement) {
+        tabElement.classList.add('active');
+        tabElement.setAttribute('aria-selected', 'true');
+      }
       
       // Update metrics list
       metricsList.setAttribute('data-category', category);
-      metricsList.innerHTML = metrics.map((m, idx) => `
-        <div class="metric-list-item swipeable" data-metric-key="${m.key}" data-metric-index="${idx}">
+      console.log('[UI Runtime] Mobile - Aggiornamento lista metriche, categoria:', category, 'metriche:', metrics.length);
+      
+      // Reset scroll position prima di aggiornare contenuto
+      const metricsListContainer = container.querySelector('.metrics-list-container');
+      if (metricsListContainer) {
+        metricsListContainer.scrollTop = 0;
+      }
+      
+      // Aggiorna lista metriche con tabindex per keyboard navigation
+      metricsList.innerHTML = metrics.length > 0 ? metrics.map((m, idx) => `
+        <div class="metric-list-item swipeable" 
+             data-metric-key="${m.key}" 
+             data-metric-index="${idx}"
+             tabindex="${idx === 0 ? '0' : '-1'}"
+             role="button"
+             aria-label="Apri dettaglio ${m.label || m.key}"
+             aria-describedby="metric-value-${m.key}">
           <div class="metric-list-item__content">
             <div class="metric-list-item__label">${m.label || m.key}</div>
-            <div class="metric-list-item__value">${m.value ?? '—'}</div>
+            <div class="metric-list-item__value" id="metric-value-${m.key}">${m.value ?? '—'}</div>
           </div>
-          <div class="metric-list-item__swipe-hint">→</div>
+          <div class="metric-list-item__swipe-hint" aria-hidden="true">→</div>
         </div>
-      `).join('');
+      `).join('') : '<div class="metric-list-item" style="padding: 2rem; text-align: center; color: var(--muted);" role="status" aria-live="polite">Nessuna metrica disponibile</div>';
       
-      // Re-bind swipe gesture
-      setupSwipeGesture(container, metricsWithGlossary, drawer2, drawer2Title, drawer2Content);
-    });
+      attachMetricItemListeners();
+      
+      // Scroll to top e re-bind swipe gesture dopo che il DOM è aggiornato
+      requestAnimationFrame(() => {
+        // Force scroll reset
+        if (metricsListContainer) {
+          metricsListContainer.scrollTop = 0;
+          metricsListContainer.scrollTo({ top: 0, behavior: 'instant' });
+        }
+        // Assicura che drawer1 sia ancora attivo dopo l'aggiornamento
+        if (drawer1 && drawer2) {
+          drawer1.classList.add('active');
+          drawer2.classList.remove('active');
+        }
+        setupSwipeGesture(container, metricsWithGlossary, drawer2, drawer2Title, drawer2Content);
+        
+        // Focus management: focus sulla prima metrica della nuova categoria
+        const firstMetric = metricsList.querySelector('.metric-list-item.swipeable');
+        if (firstMetric) {
+          firstMetric.setAttribute('tabindex', '0');
+          // Usa setTimeout per evitare conflitti con animazioni
+          setTimeout(() => {
+            firstMetric.focus({ preventScroll: true });
+          }, 100);
+        }
+        
+        console.log('[UI Runtime] Mobile - Categoria cambiata con successo:', category, 'drawer1 active:', drawer1?.classList.contains('active'));
+      });
+    };
 
-    // Click handler per metriche (usa delegation sul container per evitare perdita listener)
-    container.addEventListener('click', (e) => {
-      const item = e.target.closest('.metric-list-item.swipeable');
-      if (!item) return;
-      
-      e.preventDefault();
-      e.stopPropagation();
-      const key = item.getAttribute('data-metric-key');
+    const selectMetric = (key, source = 'delegation') => {
+      if (!key) {
+        console.warn('[UI Runtime] Mobile - selectMetric chiamato senza key, source:', source);
+        return;
+      }
+      console.log('[UI Runtime] Mobile - Seleziona metrica:', key, 'source:', source, 'metricsWithGlossary length:', metricsWithGlossary.length);
       const metric = metricsWithGlossary.find(m => m.key === key);
       if (metric) {
-        console.log('[UI Runtime] Mobile - Click su metrica:', key);
+        console.log('[UI Runtime] Mobile - Metrica trovata, apro dettaglio:', metric.key, 'drawer2:', !!drawer2, 'drawer2Title:', !!drawer2Title, 'drawer2Content:', !!drawer2Content);
         openMetricDetail(metric, drawer2, drawer2Title, drawer2Content);
         drawer1.classList.remove('active');
         drawer2.classList.add('active');
+        console.log('[UI Runtime] Mobile - Drawer2 attivato, drawer1 active:', drawer1.classList.contains('active'), 'drawer2 active:', drawer2.classList.contains('active'));
+        const backButton = drawer2.querySelector('.metrics-drawer-2__back');
+        if (backButton) {
+          setTimeout(() => {
+            backButton.focus();
+            console.log('[UI Runtime] Mobile - Focus spostato su back button');
+          }, 120);
+        } else {
+          console.warn('[UI Runtime] Mobile - Back button non trovato!');
+        }
+      } else {
+        console.warn('[UI Runtime] Mobile - Metrica non trovata per key:', key, 'available keys:', metricsWithGlossary.map(m => m.key).slice(0, 10));
       }
-    });
+    };
+
+    const attachMetricItemListeners = () => {
+      const items = metricsList.querySelectorAll('.metric-list-item.swipeable');
+      console.log('[UI Runtime] attachMetricItemListeners - item trovati:', items.length);
+      items.forEach((item, idx) => {
+        const key = item.getAttribute('data-metric-key');
+        if (!key) {
+          console.warn('[UI Runtime] attachMetricItemListeners - item senza key:', item, 'index:', idx);
+          return;
+        }
+        // Rimuovi listener precedenti se esistono
+        if (item._metricHandler) {
+          item.removeEventListener('click', item._metricHandler);
+          item.removeEventListener('touchend', item._metricHandler);
+        }
+        const handler = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('[UI Runtime] Mobile - Click/Touch su metrica item:', key, 'event type:', e.type, 'source:', e.type === 'touchend' ? 'touch' : 'click');
+          selectMetric(key, e.type === 'touchend' ? 'touch' : 'click');
+        };
+        item._metricHandler = handler;
+        item.addEventListener('click', handler, { passive: false, capture: false });
+        item.addEventListener('touchend', handler, { passive: false, capture: false });
+        // Aggiungi anche pointerup per maggiore compatibilità
+        item.addEventListener('pointerup', handler, { passive: false, capture: false });
+        console.log('[UI Runtime] attachMetricItemListeners - listener attaccato su item:', key, 'index:', idx);
+      });
+      console.log('[UI Runtime] attachMetricItemListeners - completato, listener attaccati:', items.length);
+    };
+
+    // Attacca listener DIRETTI sui tab categoria per maggiore affidabilità
+    const attachTabListeners = () => {
+      const categoryTabs = container.querySelectorAll('.metric-category-tab');
+      console.log('[UI Runtime] setupMobileMetricsDrawer - tab trovati:', categoryTabs.length);
+      
+      if (categoryTabs.length === 0) {
+        console.warn('[UI Runtime] setupMobileMetricsDrawer - Nessun tab trovato!');
+        return [];
+      }
+      
+      const tabsArray = Array.from(categoryTabs);
+      tabsArray.forEach((tab, idx) => {
+        // Rimuovi listener precedenti se esistono
+        if (tab._categoryTabHandler) {
+          tab.removeEventListener('click', tab._categoryTabHandler);
+          tab.removeEventListener('touchend', tab._categoryTabHandler);
+        }
+        
+        const handler = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const category = tab.getAttribute('data-category') || tab.dataset.category;
+          console.log('[UI Runtime] Mobile - Tab click diretto:', category, 'tab index:', idx, 'event type:', e.type, 'tab:', tab, 'currentTarget:', e.currentTarget);
+          if (category) {
+            handleCategoryChange(category, tab);
+          } else {
+            console.warn('[UI Runtime] Mobile - Tab senza categoria!', tab, 'attributes:', Array.from(tab.attributes).map(a => `${a.name}="${a.value}"`).join(', '));
+          }
+        };
+        
+        tab._categoryTabHandler = handler;
+        // Attacca sia click che touchend per mobile
+        tab.addEventListener('click', handler, { passive: false, capture: false });
+        tab.addEventListener('touchend', handler, { passive: false, capture: false });
+        // Aggiungi anche pointerup per maggiore compatibilità
+        tab.addEventListener('pointerup', handler, { passive: false, capture: false });
+        // Aggiungi anche touchstart per maggiore compatibilità
+        tab.addEventListener('touchstart', (e) => {
+          // Non fare nulla, solo per evitare che altri handler interferiscano
+        }, { passive: true });
+        console.log('[UI Runtime] setupMobileMetricsDrawer - listener attaccato su tab:', tab.getAttribute('data-category'), 'index:', idx, 'tab element:', tab);
+      });
+      
+      return tabsArray;
+    };
+    
+    // Attacca listener immediatamente
+    let categoryTabs = attachTabListeners();
+    attachMetricItemListeners();
+    
+    // Se non ci sono tab, riprova più volte con delay crescenti
+    if (categoryTabs.length === 0) {
+      console.warn('[UI Runtime] setupMobileMetricsDrawer - Nessun tab trovato inizialmente, riprovo...');
+      const retryTabs = () => {
+        categoryTabs = attachTabListeners();
+        attachMetricItemListeners(); // Ricarica anche i listener delle metriche
+        if (categoryTabs.length === 0) {
+          console.warn('[UI Runtime] setupMobileMetricsDrawer - Ancora nessun tab, riprovo dopo 100ms...');
+          setTimeout(() => {
+            categoryTabs = attachTabListeners();
+            attachMetricItemListeners(); // Ricarica anche i listener delle metriche
+            if (categoryTabs.length === 0) {
+              console.error('[UI Runtime] setupMobileMetricsDrawer - CRITICO: Nessun tab trovato anche dopo delay!');
+              // Prova comunque ad attaccare listener su container per event delegation
+              console.log('[UI Runtime] setupMobileMetricsDrawer - Uso solo event delegation come fallback');
+            } else {
+              console.log('[UI Runtime] setupMobileMetricsDrawer - Tab trovati al secondo tentativo:', categoryTabs.length);
+            }
+          }, 100);
+        } else {
+          console.log('[UI Runtime] setupMobileMetricsDrawer - Tab trovati al primo retry:', categoryTabs.length);
+        }
+      };
+      requestAnimationFrame(retryTabs);
+    } else {
+      console.log('[UI Runtime] setupMobileMetricsDrawer - Tab trovati immediatamente:', categoryTabs.length);
+    }
+
+    // Handler unificato per tutti i click sul container (fallback/backup)
+    const handleContainerClick = (e) => {
+      // Check per tab categoria - supporta click su button o su elementi interni
+      const tab = e.target.closest('.metric-category-tab');
+      if (tab) {
+        e.preventDefault();
+        e.stopPropagation();
+        const category = tab.getAttribute('data-category') || tab.dataset.category;
+        if (!category) {
+          console.warn('[UI Runtime] Mobile - Tab senza categoria nel container click!', tab);
+          return;
+        }
+
+        console.log('[UI Runtime] Mobile - Click categoria (delegation):', category, 'has direct handler:', !!tab._categoryTabHandler);
+
+        // Esegui comunque il cambio categoria (eventuale doppia invocazione è idempotente)
+        handleCategoryChange(category, tab);
+        return;
+      }
+
+      // Check per metric item - supporta click su qualsiasi parte dell'item
+      const item = e.target.closest('.metric-list-item.swipeable');
+      if (item) {
+        e.preventDefault();
+        e.stopPropagation();
+        const key = item.getAttribute('data-metric-key') || item.dataset.metricKey;
+        console.log('[UI Runtime] Mobile - Click su metrica (delegation), key:', key, 'item:', item);
+        if (key) {
+          selectMetric(key, 'delegation');
+        } else {
+          console.warn('[UI Runtime] Mobile - Item senza key!', item, 'attributes:', Array.from(item.attributes).map(a => `${a.name}="${a.value}"`).join(', '));
+        }
+        return;
+      }
+    };
+
+    // Aggiungi listener per click - usa delegation per mobile e desktop
+    container.addEventListener('click', handleContainerClick, { passive: false, capture: false });
+    
+    // Per mobile: aggiungi anche touchstart per migliorare la risposta
+    // ma solo se non è già stato gestito da swipe
+    let touchStartTime = 0;
+    let touchStartTarget = null;
+    
+    container.addEventListener('touchstart', (e) => {
+      touchStartTime = Date.now();
+      touchStartTarget = e.target;
+    }, { passive: true });
+    
+    container.addEventListener('touchend', (e) => {
+      // Solo se è un tap veloce (non swipe) e target stesso
+      const touchDuration = Date.now() - touchStartTime;
+      // Se il target è già un tab o metric item, non interferire (hanno listener diretti)
+      const isTabOrMetric = e.target.closest('.metric-category-tab') || e.target.closest('.metric-list-item.swipeable');
+      if (isTabOrMetric) {
+        // Lascia che i listener diretti gestiscano l'evento
+        return;
+      }
+      if (touchDuration < 300 && e.target === touchStartTarget) {
+        // Evita doppia esecuzione se click è già stato gestito
+        setTimeout(() => {
+          if (!e.defaultPrevented) {
+            handleContainerClick(e);
+          }
+        }, 50);
+      }
+    }, { passive: false });
+
+    // Keyboard navigation per accessibilità
+    const handleKeyboardNav = (e) => {
+      // ESC chiude drawer2 e torna a drawer1
+      if (e.key === 'Escape' && drawer2.classList.contains('active')) {
+        e.preventDefault();
+        drawer1.classList.add('active');
+        drawer2.classList.remove('active');
+        // Focus sul back button o prima metrica
+        const firstItem = drawer1.querySelector('.metric-list-item');
+        if (firstItem) {
+          firstItem.focus();
+        }
+        return;
+      }
+
+      // Arrow keys nelle category tabs
+      const activeTab = container.querySelector('.metric-category-tab.active');
+      if (activeTab && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+        const tabs = Array.from(container.querySelectorAll('.metric-category-tab'));
+        const currentIndex = tabs.indexOf(activeTab);
+        let nextIndex = currentIndex;
+        
+        if (e.key === 'ArrowLeft' && currentIndex > 0) {
+          nextIndex = currentIndex - 1;
+        } else if (e.key === 'ArrowRight' && currentIndex < tabs.length - 1) {
+          nextIndex = currentIndex + 1;
+        }
+        
+        if (nextIndex !== currentIndex) {
+          e.preventDefault();
+          tabs[nextIndex].click();
+          tabs[nextIndex].focus();
+        }
+        return;
+      }
+
+      // Arrow keys nelle metriche (solo se drawer1 è attivo)
+      if (drawer1.classList.contains('active') && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+        const items = Array.from(container.querySelectorAll('.metric-list-item.swipeable'));
+        const activeItem = container.querySelector('.metric-list-item:focus');
+        const currentIndex = activeItem ? items.indexOf(activeItem) : -1;
+        let nextIndex = currentIndex;
+        
+        if (e.key === 'ArrowDown' && currentIndex < items.length - 1) {
+          nextIndex = currentIndex + 1;
+        } else if (e.key === 'ArrowUp' && currentIndex > 0) {
+          nextIndex = currentIndex - 1;
+        }
+        
+        if (nextIndex !== currentIndex && items[nextIndex]) {
+          e.preventDefault();
+          // Aggiorna tabindex: solo l'elemento attivo è navigabile con Tab
+          items.forEach((item, idx) => {
+            item.setAttribute('tabindex', idx === nextIndex ? '0' : '-1');
+          });
+          items[nextIndex].focus();
+          // Scroll into view
+          items[nextIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        return;
+      }
+
+      // Enter o Space apre dettaglio metrica
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('metric-list-item')) {
+        e.preventDefault();
+        e.target.click();
+      }
+    };
+
+    container.addEventListener('keydown', handleKeyboardNav);
 
     // Swipe gesture per aprire drawer 2
     setupSwipeGesture(container, metricsWithGlossary, drawer2, drawer2Title, drawer2Content);
@@ -905,47 +1279,164 @@
       console.log('[UI Runtime] Mobile - Back button click');
       drawer1.classList.add('active');
       drawer2.classList.remove('active');
+      // Focus sulla prima metrica o tab attivo
+      const activeTab = container.querySelector('.metric-category-tab.active');
+      if (activeTab) {
+        activeTab.focus();
+      }
     });
+
+    // Store cleanup function per rimuovere listeners quando drawer viene chiuso
+    container.dataset.cleanupMobileDrawer = 'true';
+    container._mobileDrawerCleanup = () => {
+      container.removeEventListener('click', handleContainerClick);
+      container.removeEventListener('touchstart', () => {});
+      container.removeEventListener('touchend', () => {});
+      container.removeEventListener('keydown', handleKeyboardNav);
+      // Rimuovi listener diretti sui tab
+      categoryTabs.forEach(tab => {
+        if (tab._categoryTabHandler) {
+          tab.removeEventListener('click', tab._categoryTabHandler);
+          delete tab._categoryTabHandler;
+        }
+      });
+      // Rimuovi handler dalle metriche
+      metricsList.querySelectorAll('.metric-list-item.swipeable').forEach(item => {
+        if (item._metricHandler) {
+          item.removeEventListener('click', item._metricHandler);
+          item.removeEventListener('touchend', item._metricHandler);
+          delete item._metricHandler;
+        }
+      });
+      delete container._mobileDrawerCleanup;
+    };
+    
+    // Riavvia listener quando cambia categoria (per nuovi tab aggiunti dinamicamente)
+    const observeTabChanges = () => {
+      const observer = new MutationObserver(() => {
+        const newTabs = container.querySelectorAll('.metric-category-tab');
+        newTabs.forEach(tab => {
+          if (!tab._categoryTabHandler) {
+            const handler = (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const category = tab.getAttribute('data-category') || tab.dataset.category;
+              if (category) {
+                handleCategoryChange(category, tab);
+              }
+            };
+            tab._categoryTabHandler = handler;
+            tab.addEventListener('click', handler, { passive: false });
+            tab.addEventListener('touchend', handler, { passive: false });
+          }
+        });
+      });
+      observer.observe(container, { childList: true, subtree: true });
+      return observer;
+    };
+    
+    container._tabObserver = observeTabChanges();
+    
+    // Verifica che tutto sia funzionante dopo setup
+    setTimeout(() => {
+      const verifyTabs = container.querySelectorAll('.metric-category-tab');
+      console.log('[UI Runtime] setupMobileMetricsDrawer - Verifica finale:', {
+        tabsFound: verifyTabs.length,
+        tabsWithHandlers: Array.from(verifyTabs).filter(t => t._categoryTabHandler).length,
+        drawer1Active: drawer1?.classList.contains('active'),
+        drawer2Active: drawer2?.classList.contains('active')
+      });
+    }, 200);
   }
 
-  // Setup swipe gesture per mobile drawer
+  // Setup swipe gesture per mobile drawer con debouncing migliorato
   function setupSwipeGesture(container, metricsWithGlossary, drawer2, drawer2Title, drawer2Content) {
     const drawer1 = container.querySelector('.metrics-drawer-1');
     const listItems = container.querySelectorAll('.metric-list-item.swipeable');
     
+    // Rimuovi listener precedenti se esistono
     listItems.forEach(item => {
-      let startX = 0, startY = 0, isDragging = false;
+      if (item._swipeHandlers) {
+        item.removeEventListener('touchstart', item._swipeHandlers.start);
+        item.removeEventListener('touchmove', item._swipeHandlers.move);
+        item.removeEventListener('touchend', item._swipeHandlers.end);
+      }
+    });
+    
+    const SWIPE_THRESHOLD = 80; // Soglia aumentata per swipe più intenzionale
+    const SWIPE_VELOCITY_THRESHOLD = 0.3; // Velocità minima (px/ms)
+    
+    listItems.forEach(item => {
+      let startX = 0, startY = 0, startTime = 0, isDragging = false, hasSwiped = false;
       
-      item.addEventListener('touchstart', (e) => {
+      const handleTouchStart = (e) => {
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
+        startTime = Date.now();
         isDragging = true;
-      }, { passive: true });
+        hasSwiped = false;
+        // Aggiungi indicatore visivo che lo swipe è iniziato
+        item.style.transition = 'transform 0.2s ease';
+      };
       
-      item.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
+      const handleTouchMove = (e) => {
+        if (!isDragging || hasSwiped) return;
         const currentX = e.touches[0].clientX;
         const currentY = e.touches[0].clientY;
         const diffX = currentX - startX;
         const diffY = currentY - startY;
+        const absDiffX = Math.abs(diffX);
+        const absDiffY = Math.abs(diffY);
         
-        // Solo swipe orizzontale right
-        if (diffX > 0 && Math.abs(diffX) > Math.abs(diffY) && diffX > 50) {
+        // Solo swipe orizzontale destro significativo
+        if (diffX > 0 && absDiffX > absDiffY && absDiffX > 30) {
+          // Feedback visivo durante swipe
+          const progress = Math.min(absDiffX / SWIPE_THRESHOLD, 1);
+          item.style.transform = `translateX(${progress * 20}px)`;
+          item.style.opacity = String(1 - progress * 0.2);
+        }
+        
+        // Se supera la soglia, attiva swipe
+        if (diffX > SWIPE_THRESHOLD && absDiffX > absDiffY) {
           e.preventDefault();
+          const duration = Date.now() - startTime;
+          const velocity = absDiffX / duration;
+          
+          // Solo se velocità sufficiente
+          if (velocity > SWIPE_VELOCITY_THRESHOLD) {
+            hasSwiped = true;
           const key = item.getAttribute('data-metric-key');
-          const metric = metricsWithGlossary.find(m => m.key === key);
-          if (metric) {
-            openMetricDetail(metric, drawer2, drawer2Title, drawer2Content);
-            drawer1.classList.remove('active');
-            drawer2.classList.add('active');
+          // Reset transform prima di aprire drawer
+          item.style.transform = '';
+          item.style.opacity = '';
+          item.style.transition = '';
+          selectMetric(key, 'swipe');
           }
           isDragging = false;
         }
-      }, { passive: false });
+      };
       
-      item.addEventListener('touchend', () => {
+      const handleTouchEnd = () => {
+        if (isDragging && !hasSwiped) {
+          // Reset trasformazione se swipe non completato
+          item.style.transform = '';
+          item.style.opacity = '';
+        }
+        item.style.transition = '';
         isDragging = false;
-      }, { passive: true });
+        hasSwiped = false;
+      };
+      
+      // Store handlers per cleanup
+      item._swipeHandlers = {
+        start: handleTouchStart,
+        move: handleTouchMove,
+        end: handleTouchEnd
+      };
+      
+      item.addEventListener('touchstart', handleTouchStart, { passive: true });
+      item.addEventListener('touchmove', handleTouchMove, { passive: false });
+      item.addEventListener('touchend', handleTouchEnd, { passive: true });
     });
   }
 
@@ -991,10 +1482,12 @@
       ` : ''}
     `;
 
-    // Bind tabs
-    if (UI.bindMetricTabs) {
-      UI.bindMetricTabs(drawer2Content, metric.key);
-    }
+    // Bind tabs dopo un breve delay per assicurare che il DOM sia pronto
+    requestAnimationFrame(() => {
+      if (UI.bindMetricTabs) {
+        UI.bindMetricTabs(drawer2Content, metric.key);
+      }
+    });
 
     // Swipe left per tornare
     let startX = 0;
@@ -1370,17 +1863,7 @@
       requestAnimationFrame(() => {
         const metricItem = drawer.querySelector(`[data-metric-key="${metricKey}"]`);
         if (metricItem) {
-          const metricsWithGlossary = currentMetricsData?.metricsWithGlossary || [];
-          const metric = metricsWithGlossary.find(m => m.key === metricKey);
-          if (metric) {
-            const drawer2Title = drawer2.querySelector('.metrics-drawer-2__title');
-            const drawer2Content = drawer2.querySelector('.metrics-drawer-2__content');
-            if (drawer2Title && drawer2Content) {
-              openMetricDetail(metric, drawer2, drawer2Title, drawer2Content);
-              drawer1.classList.remove('active');
-              drawer2.classList.add('active');
-            }
-          }
+          selectMetric(metricKey, 'programmatic');
         }
       });
     }
