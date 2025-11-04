@@ -1,475 +1,93 @@
 <!DOCTYPE html>
-<html lang="it" data-theme="dark">
+<html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tradelia AI · Institutional Dashboard</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tradelia AI · Report Runtime</title>
 
-  <!-- Favicons -->
-  <link rel="icon" href="/favicon.ico?v=1">
-  <link rel="icon" type="image/png" href="/favicon.png?v=1">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
-  <meta name="theme-color" content="#0b1220">
-
-  <!-- Tailwind (utility) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Design System -->
+  <!-- CSS design system -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
 
-  <style>
-    html, body { height: 100%; }
-    body { display: flex; flex-direction: column; min-height: 100vh; }
-
-    /* container */
-    .container { max-width: 90rem; margin-inline: auto; padding-inline: 1rem; }
-    main { flex: 1; padding-top: 5rem; padding-bottom: 5rem; }
-
-    /* ===== HEADER ===== */
-    .hdr {
-      position: fixed; inset: 0 auto auto 0; right: 0; height: 56px; z-index: 50;
-      display: flex; align-items: center;
-      backdrop-filter: saturate(1.1) blur(10px);
-      background: color-mix(in oklab, var(--surface-card) 86%, transparent);
-      border-bottom: 1px solid var(--br-soft);
-      box-shadow: 0 1px 0 var(--br-soft);
-    }
-
-    /* ===== BRAND ===== */
-    .brand { font-weight: 900; letter-spacing: -0.02em; display:inline-flex; align-items:center; gap:.35rem; }
-    .brand-word { color: var(--ink); }
-    .brand-suffix { color: var(--ink); font-weight: 900; }
-    .brand-dot { width:10px; height:10px; border-radius:999px; background: var(--brand-600); display:inline-block; }
-    .brand--sm .brand-word { font-weight: 700; }
-    .brand--sm .brand-dot { width:8px; height:8px; }
-    .brand--sm .brand-suffix { font-weight: 700; }
-    a.brand { transition: opacity .18s ease, transform .18s ease; }
-    a.brand:hover { opacity:.9; transform: translateY(-1px); }
-
-    /* ===== ICONS ===== */
-    .ico { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-    .ico-lg { width:18px; height:18px; }
-    .ico-xl { width:20px; height:20px; }
-
-    /* ===== BUTTONS ===== */
-    :root { --hover-bg: color-mix(in oklab, var(--surface-card) 92%, transparent); }
-    .btn, .btn-sm, .btn-inline {
-      transition: background-color .15s ease, border-color .15s ease,
-                  color .15s ease, transform .12s ease, box-shadow .15s ease;
-    }
-    .btn-inline {
-      display:inline-flex; align-items:center; gap:.45rem;
-      padding:.42rem .70rem;
-      border-radius: var(--radius-pill);
-      border:1px solid var(--br-soft);
-      background: var(--surface-card);
-      color: var(--ink);
-      font-size:12px; font-weight:600;
-    }
-    .btn:hover, .btn-sm:hover, .btn-inline:hover {
-      background: var(--hover-bg);
-      border-color: color-mix(in oklab, var(--br-soft) 70%, var(--brand-600) 30%);
-      box-shadow: 0 6px 18px oklab(0% 0 0 / .10);
-      transform: translateY(-1px);
-    }
-    .btn:active, .btn-sm:active, .btn-inline:active { transform: translateY(0); }
-    .btn:focus-visible, .btn-sm:focus-visible, .btn-inline:focus-visible {
-      outline: 2px solid var(--brand-500);
-      outline-offset: 2px;
-    }
-    /* Tema scuro fisso - toggle rimosso */
-
-    /* ===== FOOTER ===== */
-    .site-footer {
-      position: relative;
-      z-index: 10; /* sotto header e panel overlay */
-      background: var(--footer-bg);
-      border-top: 1px solid var(--footer-br);
-      color: var(--ink-soft);
-      font-size: 14px;
-    }
-    .ftr-head {
-      font-weight: 600;
-      display:flex; align-items:center; gap:.5rem;
-      color: var(--ink);
-      margin-bottom: .6rem;
-    }
-    .ftr-grid { display:grid; gap:2rem; grid-template-columns: 1fr; }
-    @media (min-width: 768px){ .ftr-grid { grid-template-columns: repeat(3, 1fr); } }
-    .ftr-list li { margin:.25rem 0; }
-    .ftr-bottom {
-      border-top: 1px solid var(--br-soft);
-      margin-top: 2rem; padding-top: 1rem;
-      display: flex; flex-direction: column; gap: .5rem;
-      font-size: 13px; color: var(--muted);
-    }
-    @media (min-width: 768px){
-      .ftr-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
-    }
-
-    /* Link & social */
-    .site-footer a {
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: color .18s ease, border-color .18s ease, opacity .18s ease, transform .18s ease;
-    }
-    .site-footer a:hover { border-bottom-color: currentColor; }
-    a.mail-link { text-underline-offset: 2px; text-decoration-thickness: 1px; }
-
-    .ftr-socials a{
-      position: relative;
-      display:flex; align-items:center; gap:.5rem;
-      color: var(--ink-soft);
-    }
-    .ftr-socials a::after{
-      content:"";
-      position:absolute; left:19px; right:0; bottom:-2px; height:1px;
-      background: currentColor;
-      opacity:0; transform: scaleX(.35); transform-origin:left;
-      transition: transform .18s ease, opacity .18s ease;
-    }
-    .ftr-socials a:hover{ color: var(--ink); transform: translateX(2px); }
-    .ftr-socials a:hover::after{ opacity:.6; transform: scaleX(1); }
-
-    /* ===== LEGAL OVERLAY (contenuto montato altrove) ===== */
-    #legal-consent-overlay[hidden] { display: none !important; }
-
-    /* ===== SCROLLBAR GLOBAL (light + dark) ===== */
-    ::-webkit-scrollbar {
-      width: 10px;
-      height: 10px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #e2e8f0;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(80, 160, 200, 0.4);
-      border-radius: 999px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(80, 160, 200, 0.6);
-    }
-    /* firefox base */
-    * {
-      scrollbar-width: thin;
-      scrollbar-color: rgba(80,160,200,.5) #e2e8f0;
-    }
-    /* variante dark */
-    html[data-theme="dark"] ::-webkit-scrollbar-track {
-      background: #0b1220; /* o var(--surface-card) */
-    }
-    html[data-theme="dark"] ::-webkit-scrollbar-thumb {
-      background: rgba(148, 163, 184, 0.5);
-    }
-    html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
-      background: rgba(148, 163, 184, 0.75);
-    }
-    html[data-theme="dark"] * {
-      scrollbar-color: rgba(148,163,184,.6) #0b1220;
-    }
-
-    /* Riduci motion */
-    @media (prefers-reduced-motion: reduce){
-      * { transition: none !important; }
-    }
-    /* ===== LOGO HOMEPAGE STYLE (unificato) ===== */
-:root {
-  --brand-text: #0f172a;     /* dark slate base */
-  --brand-accent: #2563eb;  /* blue-600 Tailwind */
-}
-html[data-theme="dark"] {
-  --brand-text: #f8fafc;    /* light text in dark mode */
-  --brand-accent: #38bdf8;  /* sky-400 accent */
-}
-
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: .4; }
-}
-
-  </style>
+  <!-- Lucide (icone) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
+<body class="tl-body tl-theme-dark">
+  <header class="tl-header">
+    <div class="tl-header__left">
+      <h1 class="tl-brand">TRADELIA · AI</h1>
+      <p class="tl-sub">Report runtime</p>
+    </div>
+    <div class="tl-header__right">
+      <button id="btn-print" class="btn btn-sm">Stampa</button>
+      <button id="btn-theme" class="btn btn-icon" aria-label="Cambia tema">
+        <i data-lucide="moon"></i>
+      </button>
+    </div>
+  </header>
 
-<body>
-<!-- ===== HEADER ===== -->
-<header class="hdr">
-  <div class="container w-full flex items-center justify-between">
-    <a href="https://tradelia.org"
-       class="text-lg sm:text-xl font-extrabold tracking-tight hover:opacity-90 transition"
-       aria-label="Tradelia.org"
-       target="_blank"
-       rel="noopener noreferrer"
-       style="color: var(--brand-text)">
-      <span>TRADELIA</span>
-      <span class="animate-pulse" style="color: var(--brand-accent)">&bull;AI</span>
-    </a>
+  <main class="tl-main">
+    <!-- HERO / HEADER TICKER -->
+    <section id="hero" class="tl-hero">
+      <div id="header-ticker-mount" class="header-ticker-shell">
+        <!-- montato da header-ticker.js -->
+      </div>
+    </section>
 
-    <!-- Tema scuro fisso - toggle rimosso -->
-  </div>
-</header>
-
-
-  <!-- MAIN (mount point) -->
-  <main id="app-root" class="container">
-    <!-- i moduli F1B..F7 vengono montati da /report/assets/js/app.js -->
+    <!-- Moduli dinamici F1..F6 -->
+    <section id="modules" class="tl-modules-grid">
+      <article id="sec-f1b" class="tl-card">F1B placeholder</article>
+      <article id="sec-f2" class="tl-card">F2 placeholder</article>
+      <article id="sec-f3" class="tl-card">F3 placeholder</article>
+      <article id="sec-f4" class="tl-card">F4 placeholder</article>
+      <article id="sec-f5" class="tl-card">F5 placeholder</article>
+      <article id="sec-f6" class="tl-card">F6 placeholder</article>
+    </section>
   </main>
 
-  <!-- FOOTER -->
-  <footer class="site-footer mt-auto py-10">
-    <div class="container">
-      <section class="ftr-grid">
-        <!-- Col 1 -->
-        <div class="ftr-col">
-          <h3 class="ftr-head">
-            <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 3h16v18H4z"/><path d="M8 7h8M8 11h8M8 15h6"/>
-            </svg>
-            <span>Tradelia AI · Institutional Dashboard</span>
-          </h3>
-          <p>
-            Analisi multi-fattore su contesto macro, sentiment e tecnica (orizzonte 3–10 giorni).<br/>
-            Materiale esclusivamente informativo e formativo — nessuna raccomandazione personalizzata.
-          </p>
-        </div>
-
-        <!-- Col 2 -->
-        <div class="ftr-col">
-          <h3 class="ftr-head">
-            <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 2l7 4v6c0 5-3 8-7 10C8 20 5 17 5 12V6l7-4z"/><path d="M12 8v4"/>
-            </svg>
-            <span>Compliance &amp; Risk</span>
-          </h3>
-          <ul class="ftr-list">
-            <li>Non è consulenza (MiFID II / ESMA)</li>
-            <li>Tradelia AI non gestisce capitali né esegue ordini</li>
-            <li>Rischio di perdita anche totale del capitale</li>
-          </ul>
-          <div class="mt-3 flex flex-wrap gap-4">
-            <button id="btn-privacy-open" class="btn btn-sm" type="button">Privacy</button>
-            <button id="btn-mifid-open" class="btn btn-sm" type="button">Informativa MiFID</button>
-          </div>
-        </div>
-
-        <!-- Col 3 -->
-        <div class="ftr-col">
-          <h3 class="ftr-head">
-            <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 12h16"/><path d="M12 4l8 8-8 8"/>
-            </svg>
-            <span>Canali ufficiali</span>
-          </h3>
-          <p class="mb-2">Aggiornamenti su metodologia e release:</p>
-          <div class="ftr-socials flex flex-col gap-2">
-            <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener" aria-label="LinkedIn">LinkedIn</a>
-            <a href="https://x.com/tradelia_ai" target="_blank" rel="noopener" aria-label="X (Twitter)">X (Twitter)</a>
-            <a href="https://www.reddit.com/r/TradeliaAI" target="_blank" rel="noopener" aria-label="Reddit">Reddit</a>
-            <a href="https://www.quora.com" target="_blank" rel="noopener" aria-label="Quora">Quora</a>
-          </div>
-        </div>
-      </section>
-
-      <!-- Bottom line -->
-      <div class="ftr-bottom">
-        <div>
-          © <span id="footer-year"></span>
-          <span class="brand brand--sm">
-            <span class="brand-word">Tradelia</span>
-            <span class="brand-dot" aria-hidden="true"></span>
-            <span class="brand-suffix">AI</span>
-          </span>
-          · Tutti i diritti riservati ·
-          <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>
-        </div>
-        <div>Missione: alfabetizzazione finanziaria indipendente.</div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- LEGAL CONSENT OVERLAY (MiFID + Privacy) -->
-  <div id="legal-consent-overlay" class="noprint" role="dialog" aria-modal="true" aria-labelledby="legal-consent-title" hidden>
-    <div class="legal-backdrop" data-legal-dismiss></div>
-    <div class="legal-panel" role="document">
-      <header class="legal-hdr">
-        <div class="legal-title" id="legal-consent-title">Informativa legale</div>
-        <button class="btn-inline legal-close" type="button" data-legal-dismiss aria-label="Chiudi">Chiudi</button>
+  <!-- PANEL OVERLAY (analitico / metriche) -->
+  <aside id="panel-overlay" class="tl-panel-overlay" aria-hidden="true">
+    <div class="tl-panel tl-panel--mobile" id="panel-mobile">
+      <header class="tl-panel__header">
+        <h2 id="panel-title">Metriche header</h2>
+        <button class="btn-icon" id="panel-close" aria-label="Chiudi"><i data-lucide="x"></i></button>
       </header>
-
-      <nav class="legal-tabs" role="tablist" aria-label="Sezioni legali">
-        <button class="legal-tab" role="tab" id="tab-mifid" aria-controls="panel-mifid" aria-selected="true">Informativa MiFID</button>
-        <button class="legal-tab" role="tab" id="tab-privacy" aria-controls="panel-privacy" aria-selected="false">Privacy</button>
-      </nav>
-
-      <div class="legal-body">
-        <!-- MIFID -->
-        <section id="panel-mifid" role="tabpanel" aria-labelledby="tab-mifid">
-          <h4>Finalità del materiale</h4>
-          <p>Il presente contenuto ha esclusiva finalità informativa e didattica. Non costituisce consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa MiFID II / ESMA.</p>
-
-          <h4>Orizzonte e perimetro</h4>
-          <p>I moduli (F1–F7) coprono analisi top-down (macro, sentiment, tecnica) con orizzonte indicativo 3–10 giorni. Non viene svolta verifica di adeguatezza/appropriatezza, profilo di rischio o obiettivi finanziari dell'utente.</p>
-
-          <h4>Rischi</h4>
-          <ul>
-            <li>I mercati finanziari comportano rischio di perdita, anche totale, del capitale.</li>
-            <li>Prodotti a leva/derivati (opzioni, futures, CFD) possono amplificare perdite oltre il capitale iniziale.</li>
-            <li>Rendimenti passati non sono indicativi di risultati futuri.</li>
-          </ul>
-
-          <h4>Dati e fonti</h4>
-          <ul>
-            <li>Dati e serie storiche possono essere soggetti a ritardi, revisioni o errori; i timestamp potrebbero non riflettere il "tempo reale".</li>
-            <li>Le fonti includono provider ritenuti affidabili; non si garantisce esattezza/completezza.</li>
-          </ul>
-
-          <h4>Conflitti e indipendenza</h4>
-          <ul>
-            <li>Tradelia AI è indipendente: non esegue ordini e non gestisce capitali.</li>
-            <li>Non sono note situazioni di conflitto d'interesse rilevanti nella produzione del materiale.</li>
-          </ul>
-
-          <h4>Limitazioni</h4>
-          <ul>
-            <li>Le informazioni non sostituiscono il giudizio dell'utente né la consulenza di un intermediario autorizzato.</li>
-            <li>L'uso è vietato laddove non conforme alle leggi locali.</li>
-          </ul>
-        </section>
-
-        <!-- PRIVACY -->
-        <section id="panel-privacy" role="tabpanel" aria-labelledby="tab-privacy" hidden>
-          <h4>Principi</h4>
-          <p>Adottiamo un'impostazione "privacy-first": minimizzazione dei dati e assenza di tracciamento pubblicitario.</p>
-
-          <h4>Dati trattati</h4>
-          <ul>
-            <li>Nessuna raccolta di dati personali identificativi tramite questa pagina.</li>
-            <li>Uso di <code>localStorage</code> per preferenze (tema) e consenso legale.</li>
-            <li>Eventuali log tecnici anonimi per sicurezza e diagnostica.</li>
-          </ul>
-
-          <h4>Cookie e analytics</h4>
-          <ul>
-            <li>Niente cookie di profilazione; eventuali analytics sono anonimizzati/aggregati.</li>
-            <li>Nessuna condivisione con terze parti a fini commerciali.</li>
-          </ul>
-
-          <h4>Diritti e contatti</h4>
-          <ul>
-            <li>Per informazioni o esercizio diritti privacy, scrivi a <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>.</li>
-            <li>Il titolare potrà aggiornare questa informativa: controlla periodicamente le revisioni.</li>
-          </ul>
-        </section>
+      <div class="tl-panel__body" id="panel-body-mobile">
+        <!-- il runtime inietta qui il drawer mobile -->
       </div>
-
-      <footer class="legal-ftr">
-        <small class="text-[12px] text-[color:var(--muted)]">Continuando dichiari di aver letto e compreso le informative.</small>
-        <div class="flex items-center gap-2">
-          <button class="btn-inline legal-btn" type="button" id="btn-accept-legal">Accetto e chiudi</button>
-        </div>
+      <footer class="tl-panel__footer">
+        <button class="btn" id="panel-close-bottom">Chiudi</button>
       </footer>
     </div>
-  </div>
+    <div class="tl-panel tl-panel--desktop" id="panel-desktop">
+      <header class="tl-panel__header">
+        <h2 id="panel-title-desktop">Metriche header</h2>
+        <button class="btn-icon" id="panel-close-desktop" aria-label="Chiudi"><i data-lucide="x"></i></button>
+      </header>
+      <div class="tl-panel__body tl-panel__body--desktop" id="panel-body-desktop">
+        <!-- il runtime inietta qui il drawer desktop -->
+      </div>
+    </div>
+  </aside>
 
-  <!-- Runtime -->
-  <!-- Load UI runtime BEFORE app to ensure window.__TradeliaUI is ready -->
-  <script type="module" src="/report/assets/js/ui-runtime.js"></script>
-  <script type="module" src="/report/assets/js/app.js"></script>
-  <script>
-    (function(){
-      // ===== Tema scuro fisso =====
-      document.documentElement.setAttribute('data-theme', 'dark');
+  <!-- OVERLAY LEGALE (separato) -->
+  <aside id="legal-overlay" class="tl-panel-overlay tl-panel-overlay--legal" aria-hidden="true">
+    <div class="tl-panel tl-panel--mobile" id="legal-panel">
+      <header class="tl-panel__header">
+        <h2 id="legal-title">Informativa</h2>
+        <button class="btn-icon" id="legal-close" aria-label="Chiudi"><i data-lucide="x"></i></button>
+      </header>
+      <div class="tl-panel__body" id="legal-body">
+        <!-- testo legale -->
+      </div>
+      <footer class="tl-panel__footer">
+        <button class="btn" id="legal-close-bottom">Chiudi</button>
+      </footer>
+    </div>
+  </aside>
 
-      // ===== Footer year =====
-      const fy = document.getElementById('footer-year');
-      if (fy) fy.textContent = new Date().getFullYear();
-
-      // ===== Legal overlay (MiFID + Privacy) =====
-      const KEY = 'tradelia-legal-ack-v2025-11'; // <— versiona per riforzare consenso
-      const overlay = document.getElementById('legal-consent-overlay');
-      const btnAccept = document.getElementById('btn-accept-legal');
-      const tabM = document.getElementById('tab-mifid');
-      const tabP = document.getElementById('tab-privacy');
-      const panelM = document.getElementById('panel-mifid');
-      const panelP = document.getElementById('panel-privacy');
-
-      function showTab(which){
-        const mifid = (which === 'mifid');
-        tabM.setAttribute('aria-selected', mifid ? 'true' : 'false');
-        tabP.setAttribute('aria-selected', mifid ? 'false' : 'true');
-        panelM.hidden = !mifid;
-        panelP.hidden = mifid;
-      }
-
-      function openLegal(which='mifid', blocking=true){
-        showTab(which);
-        overlay.hidden = false;
-        document.body.style.overflow = 'hidden';
-        if (blocking) overlay.setAttribute('data-blocking','true'); else overlay.removeAttribute('data-blocking');
-        setTimeout(()=> (which === 'privacy' ? tabP : tabM).focus(), 0);
-      }
-
-      function closeLegal(){
-        overlay.hidden = true;
-        document.body.style.overflow = '';
-      }
-
-      tabM.addEventListener('click', ()=> showTab('mifid'));
-      tabP.addEventListener('click', ()=> showTab('privacy'));
-      btnAccept.addEventListener('click', ()=>{
-        try { localStorage.setItem(KEY, JSON.stringify({ acceptedAt: new Date().toISOString(), v: '2025-11' })); } catch(e){}
-        closeLegal();
-      });
-
-      overlay.addEventListener('click', (e)=>{
-        if (e.target.matches('[data-legal-dismiss]') || e.target.closest('[data-legal-dismiss]')){
-          if (!overlay.hasAttribute('data-blocking')) closeLegal();
-        }
-      });
-
-      document.addEventListener('keydown', (e)=>{
-        if (e.key === 'Escape' && !overlay.hasAttribute('data-blocking')) closeLegal();
-      });
-
-      // Footer buttons open (non-bloccante) - bind dopo DOM ready
-      function bindFooterButtons() {
-        const btnPrivacy = document.getElementById('btn-privacy-open');
-        const btnMifid = document.getElementById('btn-mifid-open');
-        
-        if (btnPrivacy) {
-          btnPrivacy.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            openLegal('privacy', false);
-          });
-        }
-        
-        if (btnMifid) {
-          btnMifid.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            openLegal('mifid', false);
-          });
-        }
-      }
-
-      // Bind footer buttons quando DOM è pronto
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', bindFooterButtons, { once: true });
-      } else {
-        bindFooterButtons();
-      }
-
-      // Primo accesso → blocca finché non accetta
-      let ack = null;
-      try { ack = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch(e){}
-      if (!ack) {
-        // Delay per assicurare che tutto sia montato
-        setTimeout(() => openLegal('mifid', true), 100);
-      }
-    })();
-  </script>
+  <!-- JS runtime -->
+  <script src="/report/assets/js/ui-runtime.js"></script>
+  <script src="/report/assets/js/app.js"></script>
+  <script src="/report/assets/js/components/header-ticker.js"></script>
 </body>
 </html>
