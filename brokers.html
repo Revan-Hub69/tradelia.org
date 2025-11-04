@@ -217,296 +217,52 @@
     </p>
 
     <!-- Filtri -->
-    <details class="bg-white border border-slate-200 rounded-xl p-6 mb-8">
-      <summary class="text-lg font-semibold mb-4 cursor-pointer">Filtri</summary>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
-        <!-- Tipo strumenti -->
+    <div class="bg-white border border-slate-200 rounded-xl p-6 mb-8">
+      <div class="flex flex-wrap items-center gap-6">
+        <!-- Livello tecnico -->
         <div class="filter-group">
-          <label>Tipo strumenti</label>
-          <div class="filter-checkboxes">
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-bond" data-filter="bond">
-              <label for="filter-bond">Bond/Obbligazioni</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-etf" data-filter="etf">
-              <label for="filter-etf">ETF</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-azioni" data-filter="azioni">
-              <label for="filter-azioni">Azioni</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-derivati" data-filter="derivati">
-              <label for="filter-derivati">Derivati quotati</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-opzioni" data-filter="opzioni">
-              <label for="filter-opzioni">Opzioni</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-futures" data-filter="futures">
-              <label for="filter-futures">Futures</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-ipo" data-filter="ipo">
-              <label for="filter-ipo">IPO</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-crypto" data-filter="crypto">
-              <label for="filter-crypto">Crypto</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-obbligazionario-etf" data-filter="obbligazionario-etf">
-              <label for="filter-obbligazionario-etf">Usato prevalentemente per obbligazionario/ETF</label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Profilo utente -->
-        <div class="filter-group">
-          <label>Profilo utente</label>
-          <div class="filter-checkboxes">
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-istituzionali" data-filter="istituzionali">
-              <label for="filter-istituzionali">Istituzionali/Pro</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-retail-avanzato" data-filter="retail-avanzato">
-              <label for="filter-retail-avanzato">Retail avanzato</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-istituzionali-retail-avanzato" data-filter="istituzionali-retail-avanzato">
-              <label for="filter-istituzionali-retail-avanzato">Usato prevalentemente da istituzionali e retail avanzati</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-retail-base" data-filter="retail-base">
-              <label for="filter-retail-base">Retail base/Intermedio</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-social" data-filter="social">
-              <label for="filter-social">Social</label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Caratteristiche speciali -->
-        <div class="filter-group">
-          <label>Caratteristiche speciali</label>
-          <div class="filter-checkboxes">
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-regime-it" data-filter="regime-it">
-              <label for="filter-regime-it">Regime amministrato IT</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-dma" data-filter="dma">
-              <label for="filter-dma">DMA</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-api" data-filter="api">
-              <label for="filter-api">API/TWS</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-multi" data-filter="multi">
-              <label for="filter-multi">Multi-mercato</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-pac" data-filter="pac">
-              <label for="filter-pac">PAC</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-low-fees" data-filter="low-fees">
-              <label for="filter-low-fees">Low fees</label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Skill level -->
-        <div class="filter-group">
-          <label>Livello tecnico</label>
-          <div class="filter-checkboxes">
-            <div class="filter-checkbox">
+          <label class="text-sm font-semibold mb-2 block">Livello tecnico</label>
+          <div class="flex flex-wrap gap-2">
+            <label class="filter-checkbox">
               <input type="checkbox" id="filter-skill-pro" data-filter="skill-pro">
-              <label for="filter-skill-pro">Pro</label>
-            </div>
-            <div class="filter-checkbox">
+              <span>Pro</span>
+            </label>
+            <label class="filter-checkbox">
               <input type="checkbox" id="filter-skill-avanzato" data-filter="skill-avanzato">
-              <label for="filter-skill-avanzato">Avanzato</label>
-            </div>
-            <div class="filter-checkbox">
+              <span>Avanzato</span>
+            </label>
+            <label class="filter-checkbox">
               <input type="checkbox" id="filter-skill-intermedio" data-filter="skill-intermedio">
-              <label for="filter-skill-intermedio">Intermedio</label>
-            </div>
-            <div class="filter-checkbox">
+              <span>Intermedio</span>
+            </label>
+            <label class="filter-checkbox">
               <input type="checkbox" id="filter-skill-base" data-filter="skill-base">
-              <label for="filter-skill-base">Base</label>
-            </div>
+              <span>Base</span>
+            </label>
           </div>
         </div>
 
-        <!-- CFD -->
+        <!-- Regime amministrato -->
         <div class="filter-group">
-          <label>Presenza CFD</label>
-          <div class="filter-checkboxes">
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-cfd-si" data-filter="cfd-si">
-              <label for="filter-cfd-si">Con CFD</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-cfd-no" data-filter="cfd-no">
-              <label for="filter-cfd-no">Senza CFD</label>
-            </div>
+          <label class="text-sm font-semibold mb-2 block">Regime fiscale</label>
+          <div class="flex flex-wrap gap-2">
+            <label class="filter-checkbox">
+              <input type="checkbox" id="filter-regime-it" data-filter="regime-it">
+              <span>Regime amministrato IT</span>
+            </label>
           </div>
         </div>
 
-        <!-- Deposito minimo -->
+        <!-- Visualizzazione standard -->
         <div class="filter-group">
-          <label>Deposito minimo (€)</label>
-          <div class="filter-range">
-            <input type="range" id="filter-min-deposit" min="0" max="10000" step="100" value="10000">
-            <div class="filter-range-values">
-              <span id="min-deposit-min">€0</span>
-              <span id="min-deposit-max">€10.000+</span>
-            </div>
-            <div class="filter-range-label" id="min-deposit-value">Fino a €10.000+</div>
+          <label class="text-sm font-semibold mb-2 block">Visualizzazione</label>
+          <div class="flex flex-wrap gap-2">
+            <button id="view-all" class="btn-inline text-xs">Tutti</button>
+            <button id="view-by-skill" class="btn-inline text-xs">Per livello tecnico</button>
           </div>
-        </div>
-
-        <!-- Valutazione score -->
-        <div class="filter-group">
-          <label>Valutazione Tradelia AI</label>
-          <div class="filter-range">
-            <input type="range" id="filter-score" min="0" max="100" step="5" value="0">
-            <div class="filter-range-values">
-              <span>0</span>
-              <span>100</span>
-            </div>
-            <div class="filter-range-label" id="score-value">Da 0 in su</div>
-          </div>
-        </div>
-
-        <!-- Commissioni -->
-        <div class="filter-group">
-          <label>Costo commissioni</label>
-          <div class="filter-checkboxes">
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-fees-very-low" data-filter="fees-very-low">
-              <label for="filter-fees-very-low">Molto basse</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-fees-low" data-filter="fees-low">
-              <label for="filter-fees-low">Basse</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-fees-medium" data-filter="fees-medium">
-              <label for="filter-fees-medium">Medie</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-fees-high" data-filter="fees-high">
-              <label for="filter-fees-high">Alte</label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Regolamentazione -->
-        <div class="filter-group">
-          <label>Regolamentazione</label>
-          <div class="filter-checkboxes">
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-reg-consob" data-filter="reg-consob">
-              <label for="filter-reg-consob">CONSOB (Italia)</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-reg-fca" data-filter="reg-fca">
-              <label for="filter-reg-fca">FCA (UK)</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-reg-bafin" data-filter="reg-bafin">
-              <label for="filter-reg-bafin">BaFin (Germania)</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-reg-cysec" data-filter="reg-cysec">
-              <label for="filter-reg-cysec">CySEC (Cipro)</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-reg-sec" data-filter="reg-sec">
-              <label for="filter-reg-sec">SEC (USA)</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-reg-eu" data-filter="reg-eu">
-              <label for="filter-reg-eu">Regolamentazione UE</label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Piattaforme -->
-        <div class="filter-group">
-          <label>Piattaforme disponibili</label>
-          <div class="filter-checkboxes">
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-platform-web" data-filter="platform-web">
-              <label for="filter-platform-web">Web</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-platform-desktop" data-filter="platform-desktop">
-              <label for="filter-platform-desktop">Desktop</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-platform-mobile" data-filter="platform-mobile">
-              <label for="filter-platform-mobile">Mobile</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-platform-api" data-filter="platform-api">
-              <label for="filter-platform-api">API/TradingView</label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Mercati geografici -->
-        <div class="filter-group">
-          <label>Mercati geografici</label>
-          <div class="filter-checkboxes">
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-market-usa" data-filter="market-usa">
-              <label for="filter-market-usa">USA</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-market-eu" data-filter="market-eu">
-              <label for="filter-market-eu">Europa</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-market-asia" data-filter="market-asia">
-              <label for="filter-market-asia">Asia</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-market-italia" data-filter="market-italia">
-              <label for="filter-market-italia">Italia</label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Supporto italiano -->
-        <div class="filter-group">
-          <label>Supporto e servizi</label>
-          <div class="filter-checkboxes">
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-support-it" data-filter="support-it">
-              <label for="filter-support-it">Supporto italiano</label>
-            </div>
-            <div class="filter-checkbox">
-              <input type="checkbox" id="filter-protection" data-filter="protection">
-              <label for="filter-protection">Protezione depositi</label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Reset -->
-        <div class="filter-group flex items-end">
-          <button id="reset-filters" class="btn-inline">Reset filtri</button>
         </div>
       </div>
-    </details>
+    </div>
 
     <!-- Lista broker -->
     <div id="brokers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1187,7 +943,7 @@
   }
 
   // ===== Funzioni filtro =====
-  function renderBrokers(filters = {}, rangeFilters = {}) {
+  function renderBrokers(filters = {}, rangeFilters = {}, viewMode = 'all') {
     const grid = document.getElementById('brokers-grid');
     if (!grid) {
       console.error('brokers-grid non trovato!');
@@ -1196,10 +952,6 @@
     grid.innerHTML = '';
 
     try {
-      console.log('Numero broker totali:', Object.keys(BROKERS).length);
-      console.log('Filtri attivi:', filters);
-      console.log('Range filtri:', rangeFilters);
-      
       const brokers = Object.entries(BROKERS).map(([key, broker]) => {
         // Arricchisce i dati del broker
         try {
@@ -1235,55 +987,118 @@
       return true;
       });
 
-      console.log('Broker dopo filtri:', brokers.length);
-      
       // Mostra messaggio se non ci sono broker
       if (brokers.length === 0) {
         grid.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-slate-600">Nessun broker trovato con i filtri selezionati. Prova a modificare i filtri.</p></div>';
         return;
       }
 
-      brokers.forEach(([key, broker]) => {
-        console.log('Rendering broker:', key, broker.name);
-      const card = document.createElement('div');
-      card.className = 'card border border-slate-200 bg-white rounded-xl h-full min-h-[280px] p-5 flex gap-3 items-start';
-      card.setAttribute('data-key', key);
-      
-      const firstLetter = broker.name.charAt(0);
-      const colors = ['bg-sky-600', 'bg-slate-800', 'bg-amber-700', 'bg-emerald-600', 'bg-indigo-600', 'bg-pink-600', 'bg-red-600', 'bg-orange-600', 'bg-slate-600', 'bg-black', 'bg-blue-700', 'bg-rose-600'];
-      const colorIndex = key.charCodeAt(0) % colors.length;
-      
-      card.innerHTML = `
-        <div class="logo-fb ${colors[colorIndex]}">${firstLetter}</div>
-        <div class="min-w-0 flex flex-col h-full">
-          <div class="font-semibold mb-1 flex items-center gap-2">
-            ${broker.name}
-            ${broker.affiliated ? '<span class="badge bg-emerald-100 text-emerald-700">Affiliato</span>' : ''}
-            <span class="score-badge">${broker.score}/100</span>
-          </div>
-          <div class="text-sm text-slate-600 mb-3 clamp-3">${broker.description}</div>
-          <div class="flex flex-wrap gap-1 mb-3">
-            ${broker.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-          </div>
-          <div class="mt-2 text-xs text-slate-500 space-y-1">
-            <div><span class="font-medium">Livello:</span> ${broker.skill}</div>
-          </div>
-          <button class="btn bg-slate-900 text-white hover:bg-slate-800 mt-auto" onclick="openModal('${key}')">Maggiori info</button>
-        </div>
-      `;
-      
-      grid.appendChild(card);
-      });
+      // Raggruppa per livello tecnico se richiesto
+      if (viewMode === 'by-skill') {
+        const grouped = {};
+        brokers.forEach(([key, broker]) => {
+          const skill = broker.skill || 'Altro';
+          if (!grouped[skill]) grouped[skill] = [];
+          grouped[skill].push([key, broker]);
+        });
+
+        // Ordina i gruppi per livello
+        const skillOrder = ['Pro', 'Avanzato', 'Intermedio/Avanzato', 'Intermedio-Avanzato', 'Intermedio', 'Base/Intermedio', 'Base'];
+        const sortedGroups = Object.keys(grouped).sort((a, b) => {
+          const aIndex = skillOrder.indexOf(a);
+          const bIndex = skillOrder.indexOf(b);
+          if (aIndex === -1 && bIndex === -1) return a.localeCompare(b);
+          if (aIndex === -1) return 1;
+          if (bIndex === -1) return -1;
+          return aIndex - bIndex;
+        });
+
+        sortedGroups.forEach(skill => {
+          const skillHeader = document.createElement('div');
+          skillHeader.className = 'col-span-full mt-6 mb-4';
+          skillHeader.innerHTML = `<h2 class="text-xl font-bold text-slate-900 border-b border-slate-200 pb-2">${skill}</h2>`;
+          grid.appendChild(skillHeader);
+
+          grouped[skill].forEach(([key, broker]) => {
+            renderBrokerCard(key, broker, grid);
+          });
+        });
+      } else {
+        brokers.forEach(([key, broker]) => {
+          renderBrokerCard(key, broker, grid);
+        });
+      }
     } catch (error) {
       console.error('Errore nel rendering dei broker:', error);
       grid.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-red-600">Errore nel caricamento dei broker. Controlla la console per i dettagli.</p></div>';
     }
   }
 
+  // Funzione per renderizzare una singola card broker
+  function renderBrokerCard(key, broker, grid) {
+        const card = document.createElement('div');
+        card.className = 'card border border-slate-200 bg-white rounded-xl h-full min-h-[320px] p-5 flex flex-col';
+        card.setAttribute('data-key', key);
+        
+        const firstLetter = broker.name.charAt(0);
+        const colors = ['bg-sky-600', 'bg-slate-800', 'bg-amber-700', 'bg-emerald-600', 'bg-indigo-600', 'bg-pink-600', 'bg-red-600', 'bg-orange-600', 'bg-slate-600', 'bg-black', 'bg-blue-700', 'bg-rose-600'];
+        const colorIndex = key.charCodeAt(0) % colors.length;
+        
+        // Determina il colore del badge livello
+        const skillColors = {
+          'Pro': 'bg-purple-100 text-purple-700',
+          'Avanzato': 'bg-blue-100 text-blue-700',
+          'Intermedio': 'bg-green-100 text-green-700',
+          'Base': 'bg-yellow-100 text-yellow-700',
+          'Base/Intermedio': 'bg-orange-100 text-orange-700',
+          'Intermedio/Avanzato': 'bg-indigo-100 text-indigo-700',
+          'Intermedio-Avanzato': 'bg-indigo-100 text-indigo-700'
+        };
+        const skillColor = skillColors[broker.skill] || 'bg-gray-100 text-gray-700';
+        
+        card.innerHTML = `
+          <div class="flex gap-3 items-start mb-4">
+            <div class="logo-fb ${colors[colorIndex]} flex-shrink-0">${firstLetter}</div>
+            <div class="min-w-0 flex-1">
+              <div class="font-semibold text-lg mb-2 flex items-center gap-2 flex-wrap">
+                <span>${broker.name}</span>
+                ${broker.affiliated ? '<span class="badge bg-emerald-100 text-emerald-700 text-xs">Affiliato</span>' : ''}
+                <span class="score-badge">${broker.score}/100</span>
+              </div>
+              <div class="text-sm text-slate-600 mb-3">${broker.description}</div>
+            </div>
+          </div>
+          
+          <div class="flex flex-wrap gap-1 mb-3">
+            ${broker.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+          </div>
+          
+          <div class="space-y-2 mb-4 text-sm">
+            <div class="flex items-center justify-between">
+              <span class="text-slate-500">Livello tecnico:</span>
+              <span class="badge ${skillColor} font-semibold">${broker.skill}</span>
+            </div>
+            ${broker.filters && broker.filters['regime-it'] ? '<div class="flex items-center justify-between"><span class="text-slate-500">Regime:</span><span class="text-green-600 font-medium">Amministrato IT</span></div>' : ''}
+            <div class="flex items-center justify-between">
+              <span class="text-slate-500">Deposito min:</span>
+              <span class="font-medium">${broker.min || 'N/D'}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-slate-500">Strumenti:</span>
+              <span class="font-medium text-xs">${(broker.count || 'N/D').split('•')[0].trim()}</span>
+            </div>
+          </div>
+          
+          <button class="btn bg-slate-900 text-white hover:bg-slate-800 w-full mt-auto" onclick="openModal('${key}')">Maggiori info</button>
+        `;
+        
+    grid.appendChild(card);
+  }
+
   // ===== Gestione filtri =====
   const filterCheckboxes = document.querySelectorAll('[data-filter]');
   const activeFilters = {};
-  const rangeFilters = {};
+  let viewMode = 'all'; // 'all' o 'by-skill'
 
   // Gestione checkbox filters
   filterCheckboxes.forEach(checkbox => {
@@ -1294,70 +1109,34 @@
     });
   });
 
-  // Gestione range slider deposito minimo
-  const minDepositSlider = document.getElementById('filter-min-deposit');
-  const minDepositValue = document.getElementById('min-deposit-value');
-  if (minDepositSlider) {
-    minDepositSlider.addEventListener('input', (e) => {
-      const value = parseInt(e.target.value);
-      if (value === 10000) {
-        // Se è al massimo, non applicare il filtro
-        delete rangeFilters.minDeposit;
-      } else {
-        rangeFilters.minDeposit = value;
-      }
-      const displayValue = value === 10000 ? '€10.000+' : `Fino a €${value.toLocaleString('it-IT')}`;
-      if (minDepositValue) minDepositValue.textContent = displayValue;
-      applyFilters();
-    });
-    // Non impostare filtro iniziale - mostra tutti i broker
-  }
-
-  // Gestione range slider score
-  const scoreSlider = document.getElementById('filter-score');
-  const scoreValue = document.getElementById('score-value');
-  if (scoreSlider) {
-    scoreSlider.addEventListener('input', (e) => {
-      const value = parseInt(e.target.value);
-      if (value === 0) {
-        // Se è al minimo, non applicare il filtro
-        delete rangeFilters.score;
-      } else {
-        rangeFilters.score = value;
-      }
-      if (scoreValue) scoreValue.textContent = value === 0 ? 'Da 0 in su' : `Da ${value} in su`;
-      applyFilters();
-    });
-    // Non impostare filtro iniziale - mostra tutti i broker
-  }
-
   // Funzione unificata per applicare tutti i filtri
   function applyFilters() {
-    renderBrokers(activeFilters, rangeFilters);
+    renderBrokers(activeFilters, {}, viewMode);
   }
 
-  // Reset filtri
-  document.getElementById('reset-filters')?.addEventListener('click', () => {
-    filterCheckboxes.forEach(checkbox => {
-      checkbox.checked = false;
-      activeFilters[checkbox.getAttribute('data-filter')] = false;
-    });
-    
-    // Reset range sliders
-    if (minDepositSlider) {
-      minDepositSlider.value = 10000;
-      delete rangeFilters.minDeposit;
-      if (minDepositValue) minDepositValue.textContent = '€10.000+';
-    }
-    
-    if (scoreSlider) {
-      scoreSlider.value = 0;
-      delete rangeFilters.score;
-      if (scoreValue) scoreValue.textContent = 'Da 0 in su';
-    }
-    
+  // Visualizzazione per livello tecnico
+  document.getElementById('view-all')?.addEventListener('click', () => {
+    viewMode = 'all';
+    document.getElementById('view-all').classList.add('bg-slate-900', 'text-white');
+    document.getElementById('view-all').classList.remove('bg-white');
+    document.getElementById('view-by-skill').classList.remove('bg-slate-900', 'text-white');
+    document.getElementById('view-by-skill').classList.add('bg-white');
     applyFilters();
   });
+
+  document.getElementById('view-by-skill')?.addEventListener('click', () => {
+    viewMode = 'by-skill';
+    document.getElementById('view-by-skill').classList.add('bg-slate-900', 'text-white');
+    document.getElementById('view-by-skill').classList.remove('bg-white');
+    document.getElementById('view-all').classList.remove('bg-slate-900', 'text-white');
+    document.getElementById('view-all').classList.add('bg-white');
+    applyFilters();
+  });
+
+  // Imposta vista iniziale
+  if (document.getElementById('view-all')) {
+    document.getElementById('view-all').classList.add('bg-slate-900', 'text-white');
+  }
 
   // ===== Funzione Modal =====
   const OFFICIAL = {
@@ -1371,7 +1150,8 @@
     ig: 'https://www.ig.com/it'
   };
 
-  function openModal(key) {
+  // Rendi openModal accessibile globalmente
+  window.openModal = function(key) {
     const d = BROKERS[key];
     if (!d) return;
 
@@ -1443,9 +1223,9 @@
     const modal = $('#modal');
     modal.classList.remove('hidden');
     modal.classList.add('flex');
-  }
+  };
 
-  function closeModal() {
+  window.closeModal = function() {
     const modal = document.getElementById('modal');
     modal.classList.add('hidden');
     modal.classList.remove('flex');
@@ -1463,11 +1243,9 @@
   // Assicurati che il DOM sia pronto
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-      console.log('DOM caricato, applico filtri');
       applyFilters();
     });
   } else {
-    console.log('DOM già pronto, applico filtri');
     applyFilters();
   }
 })();
