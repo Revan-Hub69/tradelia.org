@@ -608,7 +608,7 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
 }
 
 .tl-panel__close:hover {
-  background: var(--hover-bg);
+  background: var(--surface-elev);
   border-color: var(--br-soft);
 }
 
@@ -799,7 +799,7 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
 }
 
 .info-btn:hover {
-  background: var(--hover-bg);
+  background: var(--surface-elev);
   border-color: var(--brand-500);
   color: var(--ink);
 }
@@ -949,7 +949,7 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
 
 .metric-list-item {
   width: 100%;
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   background: transparent;
   border: none;
   border-bottom: 1px solid var(--br-soft);
@@ -958,8 +958,11 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 60px;
+  min-height: 56px;
   gap: 1rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .metric-list-item__content {
@@ -978,6 +981,8 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   font-size: var(--fs-13);
   color: var(--muted);
   font-weight: 500;
+  pointer-events: none;
+  user-select: none;
 }
 
 .metric-list-item__info {
@@ -1060,25 +1065,32 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   bottom: 0;
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform; /* Ottimizzazione performance */
 }
 
 .metrics-drawer-1.active {
   transform: translateX(0);
+  opacity: 1;
+  visibility: visible;
 }
 
 .metrics-drawer-1:not(.active) {
   transform: translateX(-100%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none; /* Previene interazioni quando nascosto */
 }
 
 .metric-category-tabs {
   display: flex;
   gap: 0.5rem;
   padding: 1rem;
-  border-bottom: 1px solid var(--br-soft);
+  border-bottom: 2px solid var(--br-card);
   background: var(--surface-elev);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  flex-shrink: 0;
 }
 
 .metric-category-tab {
@@ -1094,6 +1106,27 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   white-space: nowrap;
   flex-shrink: 0;
   letter-spacing: 0.02em;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  outline: none; /* Gestito da focus-visible */
+  position: relative;
+}
+
+.metric-category-tab:focus-visible {
+  outline: 2px solid var(--brand-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.metric-category-tab:focus-visible::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 4px;
+  background: color-mix(in oklab, var(--brand-500) 10%, transparent);
+  pointer-events: none;
+  z-index: -1;
 }
 
 .metric-category-tab:hover {
@@ -1103,8 +1136,10 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
 
 .metric-category-tab.active {
   border-bottom-color: var(--brand-500);
+  border-bottom-width: 3px;
   color: var(--ink);
-  font-weight: 600;
+  font-weight: 700;
+  background: color-mix(in oklab, var(--brand-500) 8%, transparent);
 }
 
 .metrics-list-container {
@@ -1116,27 +1151,46 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
 .metric-list-item {
   position: relative;
   width: 100%;
-  padding: 1rem;
-  background: transparent;
+  padding: 0.75rem 1rem;
+  background: var(--surface-card);
   border: none;
   border-bottom: 1px solid var(--br-soft);
-  transition: background 0.15s ease;
+  border-left: 3px solid transparent;
+  transition: all 0.15s ease;
   text-align: left;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 60px;
+  min-height: 56px;
   gap: 1rem;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: pan-y; /* Permette swipe verticale per scroll, ma gestisce swipe orizzontale */
+  outline: none; /* Gestito da focus-visible */
+}
+
+.metric-list-item:focus-visible {
+  outline: 2px solid var(--brand-500);
+  outline-offset: -2px;
+  border-left-color: var(--brand-500);
+  border-left-width: 3px;
+}
+
+.metric-list-item:hover {
+  background: var(--surface-elev);
+  border-left-color: var(--brand-500);
+  padding-left: calc(1rem - 2px); /* Compensa bordo */
 }
 
 .metric-list-item:active {
-  background: var(--hover-bg);
+  background: var(--surface-elev);
+  transform: scale(0.98);
 }
 
 .metric-list-item__content {
   flex: 1;
   min-width: 0;
+  pointer-events: none;
 }
 
 .metric-list-item__label {
@@ -1144,12 +1198,16 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   font-size: var(--fs-14);
   color: var(--ink);
   margin-bottom: 0.25rem;
+  pointer-events: none;
+  user-select: none;
 }
 
 .metric-list-item__value {
   font-size: var(--fs-13);
   color: var(--muted);
   font-weight: 500;
+  pointer-events: none;
+  user-select: none;
 }
 
 .metric-list-item__swipe-hint {
@@ -1170,12 +1228,19 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   flex-direction: column;
   background: var(--surface-card);
   transform: translateX(100%);
-  transition: transform 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 10;
+  will-change: transform; /* Ottimizzazione performance */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .metrics-drawer-2.active {
   transform: translateX(0);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
 }
 
 .metrics-drawer-2__header {
@@ -1200,6 +1265,23 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: var(--radius-pill);
+  transition: background 0.15s ease;
+  outline: none;
+}
+
+.metrics-drawer-2__back:hover {
+  background: var(--surface-elev);
+}
+
+.metrics-drawer-2__back:focus-visible {
+  outline: 2px solid var(--brand-500);
+  outline-offset: 2px;
+  background: var(--surface-elev);
+}
+
+.metrics-drawer-2__back:active {
+  transform: scale(0.95);
 }
 
 .metrics-drawer-2__title {
@@ -1215,14 +1297,15 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   -webkit-overflow-scrolling: touch;
 }
 
-/* ===== DESKTOP DRAWER (3 colonne) - Design istituzionale ===== */
+/* ===== DESKTOP DRAWER (3 colonne) - Design professionale ===== */
 .metrics-drawer-desktop {
   display: grid;
-  grid-template-columns: 220px 280px 1fr;
-  gap: 1.5rem;
+  grid-template-columns: 200px 260px 1fr;
+  gap: 0;
   height: 100%;
-  max-height: 70vh;
-  border-left: 1px solid var(--br-soft);
+  max-height: 75vh;
+  border-left: 1px solid var(--br-card);
+  overflow: hidden;
 }
 
 .metrics-drawer-desktop__categories,
@@ -1230,54 +1313,92 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
 .metrics-drawer-desktop__content {
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Scrollbar indipendenti per ogni colonna */
+.metrics-drawer-desktop__categories {
+  border-right: 1px solid var(--br-card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.metrics-drawer-desktop__metrics {
+  border-right: 1px solid var(--br-card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.metrics-drawer-desktop__content {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .metrics-drawer-desktop__section-title {
-  font-weight: 700;
-  font-size: var(--fs-15);
-  color: var(--ink);
-  padding: 1rem 1.25rem;
-  border-bottom: 2px solid var(--br-soft);
+  font-weight: 600;
+  font-size: var(--fs-11);
+  color: var(--ink-soft);
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid var(--br-card);
   background: var(--surface-elev);
   flex-shrink: 0;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  font-size: var(--fs-12);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  backdrop-filter: blur(8px);
+  background: color-mix(in oklab, var(--surface-elev) 95%, transparent);
 }
 
 .metrics-drawer-desktop__categories-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding: 1rem;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: var(--surface-card);
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .metric-category-item {
   width: 100%;
-  padding: 0.875rem 1rem;
+  padding: 0.5rem 0.75rem;
   background: transparent;
-  border: 1px solid var(--br-soft);
-  border-left: 3px solid transparent;
+  border: none;
+  border-left: 2px solid transparent;
   border-radius: 0;
   color: var(--ink-soft);
-  font-size: var(--fs-14);
+  font-size: var(--fs-13);
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   text-align: left;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .metric-category-item:hover {
-  background: var(--surface-elev);
+  background: color-mix(in oklab, var(--surface-elev) 60%, transparent);
   border-left-color: var(--brand-500);
   color: var(--ink);
 }
 
 .metric-category-item.active {
-  background: var(--surface-elev);
+  background: color-mix(in oklab, var(--surface-elev) 80%, transparent);
   border-left-color: var(--brand-500);
+  border-left-width: 3px;
   color: var(--ink);
   font-weight: 600;
 }
@@ -1285,51 +1406,77 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
 .metrics-drawer-desktop__metrics-list {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding: 1rem;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: var(--surface-card);
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .metric-item {
   width: 100%;
-  padding: 0.875rem 1rem;
+  padding: 0.5rem 0.75rem;
   background: transparent;
-  border: 1px solid var(--br-soft);
+  border: none;
   border-left: 2px solid transparent;
   border-radius: 0;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   text-align: left;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .metric-item:hover {
-  background: var(--surface-elev);
+  background: color-mix(in oklab, var(--surface-elev) 60%, transparent);
   border-left-color: var(--brand-500);
 }
 
 .metric-item.active {
-  background: var(--surface-elev);
+  background: color-mix(in oklab, var(--surface-elev) 80%, transparent);
   border-left-color: var(--brand-500);
   border-left-width: 3px;
+  font-weight: 600;
+}
+
+.metric-item.active .metric-item__label {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.metric-item.active .metric-item__value {
+  color: var(--ink-soft);
+  font-weight: 600;
 }
 
 .metric-item__label {
   font-weight: 600;
   font-size: var(--fs-14);
   color: var(--ink);
-  margin-bottom: 0.375rem;
+  margin-bottom: 0.25rem;
+  pointer-events: none;
 }
 
 .metric-item__value {
   font-size: var(--fs-13);
   color: var(--muted);
   font-weight: 400;
+  pointer-events: none;
 }
 
 .metrics-drawer-desktop__content-header {
   padding: 1.25rem 1.5rem;
-  border-bottom: 2px solid var(--br-soft);
+  border-bottom: 1px solid var(--br-card);
   background: var(--surface-elev);
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  backdrop-filter: blur(8px);
+  background: color-mix(in oklab, var(--surface-elev) 95%, transparent);
 }
 
 .metrics-drawer-desktop__content-title {
@@ -1337,12 +1484,16 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   font-size: var(--fs-18);
   color: var(--ink);
   letter-spacing: -0.01em;
+  line-height: 1.3;
 }
 
 .metrics-drawer-desktop__content-body {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 1.5rem;
+  background: var(--surface-card);
+  min-height: 0;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -1363,11 +1514,11 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   font-weight: 700;
   font-size: var(--fs-14);
   color: var(--ink);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  margin: 0;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--br-soft);
+  margin: 0 0 0.75rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--br-card);
 }
 
 .metric-content-section__body {
@@ -1375,6 +1526,12 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   line-height: 1.75;
   color: var(--ink-soft);
   max-width: 65ch;
+  margin-top: 0.5rem;
+}
+
+.metric-content-section__body strong {
+  color: var(--ink);
+  font-weight: 600;
 }
 
 /* ===== LIBRI CONSIGLIATI - Design istituzionale ===== */
@@ -1410,7 +1567,7 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
 
 .recommended-book:hover {
   border-color: var(--brand-500);
-  background: var(--hover-bg);
+  background: var(--surface-elev);
   box-shadow: 0 2px 8px oklab(0% 0 0 / 0.1);
 }
 
@@ -1455,13 +1612,98 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   }
 }
 
+/* ===== REPORT SECTION BLOCKS - Prevenzione Overlapping ===== */
+.report-section-block {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin-bottom: 2rem;
+  margin-top: 0;
+  padding: 0;
+  z-index: 1;
+  isolation: isolate; /* Crea nuovo stacking context per prevenire overlapping */
+}
+
+.report-section-block:last-child {
+  margin-bottom: 0;
+}
+
+/* Assicura che i container interni non causino overflow */
+.report-section-block .f1b-card-container,
+.report-section-block section {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow: visible;
+}
+
+/* Prevenzione overlapping per card interne */
+.report-section-block .card-compact {
+  position: relative;
+  z-index: auto;
+  margin-bottom: 0;
+}
+
+/* Mobile: spacing ridotto ma sempre presente */
+@media (max-width: 768px) {
+  .report-section-block {
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* ===== HEADER TICKER SLOT ===== */
+#header-ticker-slot {
+  display: block !important;
+  visibility: visible !important;
+  margin-top: calc(64px + 1.5rem); /* header fisso (64px) + spazio */
+  margin-bottom: 1.5rem;
+  width: 100%;
+  min-height: 0;
+  position: relative;
+  z-index: 10; /* Sopra footer (5) ma sotto header (60) e overlay (200+) */
+  isolation: isolate; /* Crea nuovo stacking context */
+}
+
+#header-ticker-slot .header-ticker {
+  display: flex !important;
+  visibility: visible !important;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  #header-ticker-slot {
+    margin-top: calc(64px + 1rem); /* header fisso + spazio ridotto */
+    margin-bottom: 2rem; /* Più spazio per evitare sovrapposizione con footer */
+    padding: 0 1rem;
+    z-index: 10; /* Mantieni sopra footer anche su mobile */
+    position: relative;
+    isolation: isolate; /* Crea nuovo stacking context */
+  }
+  
+  /* Assicura che il main abbia spazio sufficiente */
+  main#app-root {
+    min-height: calc(100vh - 64px - 200px); /* Altezza viewport - header - spazio ticker e footer */
+    padding-bottom: 3rem !important; /* Spazio extra per footer */
+  }
+}
+
 /* ===== FOOTER ===== */
 #footer {
-  padding: 1.5rem 2rem;
-  border-top: 1px solid var(--br-soft);
+  display: block;
+  padding: 2rem 2rem;
+  border-top: 1px solid var(--br-card);
   background: var(--footer-bg);
   color: var(--ink-soft);
   font-size: var(--fs-13);
+  margin-top: 3rem;
+}
+
+@media (max-width: 768px) {
+  #footer {
+    padding: 1.5rem 1rem;
+    margin-top: 2rem;
+  }
 }
 
 .footer-content {
@@ -1469,7 +1711,7 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 @media (min-width: 768px) {
@@ -1477,13 +1719,14 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
+    gap: 2rem;
   }
 }
 
 .footer-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 1rem;
   align-items: center;
 }
 
@@ -1491,20 +1734,28 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   color: var(--ink-soft);
   text-decoration: none;
   font-size: var(--fs-13);
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 
 .footer-links a:hover {
   color: var(--ink);
-  text-decoration: underline;
+  text-decoration: none;
+}
+
+.footer-links .btn {
+  font-size: var(--fs-12);
+  padding: 0.4rem 0.8rem;
 }
 
 .footer-meta {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.5rem;
   font-size: var(--fs-12);
   color: var(--muted);
   text-align: left;
+  line-height: 1.5;
 }
 
 @media (min-width: 768px) {
@@ -1515,19 +1766,8 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
 }
 
 /* ============================================
-   MIGLIORIE DESIGN ACCADEMICO/PROFESSIONALE
+   MIGLIORIE DESIGN MINIMALI E FOCUS DRAWER
    ============================================ */
-
-/* === Typography Enhancement === */
-@supports (font-feature-settings: normal) {
-  body {
-    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
-    font-kerning: normal;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-}
 
 /* === Focus States Accessibili === */
 *:focus-visible {
@@ -1567,237 +1807,6 @@ a:focus-visible {
   scrollbar-color: color-mix(in oklab, var(--muted) 50%, transparent) var(--surface-page);
 }
 
-/* === Card Elevation Enhancement === */
-.card {
-  position: relative;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px oklab(0% 0 0 / 0.12);
-}
-
-/* === Metric Inline Hover Enhancement === */
-.metric-inline {
-  transition: transform 0.15s ease, opacity 0.15s ease;
-  position: relative;
-}
-
-.metric-inline:hover {
-  transform: translateY(-1px);
-  opacity: 0.9;
-}
-
-.metric-inline:active {
-  transform: translateY(0);
-}
-
-/* === Header Ticker Enhancement === */
-.header-ticker {
-  position: relative;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.header-ticker::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 16px;
-  padding: 1px;
-  background: linear-gradient(135deg, 
-    color-mix(in oklab, var(--br-card) 80%, transparent) 0%,
-    transparent 50%,
-    color-mix(in oklab, var(--br-card) 80%, transparent) 100%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.header-ticker:hover::after {
-  opacity: 1;
-}
-
-/* === Button Enhancement === */
-.btn {
-  position: relative;
-  overflow: hidden;
-}
-
-.btn::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at center, 
-    color-mix(in oklab, var(--brand-500) 15%, transparent) 0%,
-    transparent 70%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.btn:hover::before {
-  opacity: 1;
-}
-
-.btn:active::before {
-  opacity: 0.5;
-}
-
-/* === Panel Opening Animation === */
-.tl-panel-overlay:not([aria-hidden="true"]):not([hidden]) {
-  animation: fadeIn 0.2s ease-out;
-}
-
-.tl-panel {
-  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* === Drawer Enhancement === */
-.metrics-drawer-desktop__content-section {
-  position: relative;
-  padding-left: 1.5rem;
-}
-
-.metrics-drawer-desktop__content-section::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: linear-gradient(
-    to bottom,
-    var(--brand-500),
-    transparent
-  );
-  opacity: 0.3;
-}
-
-/* === Metric Item Active State === */
-.metric-item.active {
-  position: relative;
-  background: var(--surface-elev);
-  border-color: var(--brand-500);
-  box-shadow: 0 2px 8px color-mix(in oklab, var(--brand-500) 20%, transparent);
-}
-
-.metric-item.active::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 60%;
-  background: var(--brand-500);
-  border-radius: 0 2px 2px 0;
-}
-
-/* === Typography Refinement === */
-h1, h2, h3 {
-  font-variant-numeric: oldstyle-nums;
-  letter-spacing: -0.015em;
-}
-
-h1 {
-  font-weight: 700;
-  font-stretch: 98%;
-}
-
-/* === Link Enhancement === */
-a {
-  position: relative;
-  transition: color 0.2s ease;
-}
-
-a:not(.btn):not(.recommended-book__link):hover {
-  color: var(--brand-500);
-}
-
-a:not(.btn):not(.recommended-book__link)::after {
-  content: "";
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: var(--brand-500);
-  transition: width 0.2s ease;
-}
-
-a:not(.btn):not(.recommended-book__link):hover::after {
-  width: 100%;
-}
-
-/* === Footer Enhancement === */
-#footer {
-  position: relative;
-}
-
-#footer::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent 0%,
-    var(--br-soft) 20%,
-    var(--br-soft) 80%,
-    transparent 100%
-  );
-}
-
-/* === Print Styles Enhancement === */
-@media print {
-  * {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-  
-  .header-ticker {
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-  
-  .card {
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-  
-  .metric-inline-text {
-    text-decoration: none;
-    border-bottom: 1px solid currentColor;
-  }
-}
-
 /* === Reduced Motion === */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -1806,50 +1815,5 @@ a:not(.btn):not(.recommended-book__link):hover::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-}
-
-/* === High Contrast Mode Support === */
-@media (prefers-contrast: high) {
-  .card {
-    border-width: 2px;
-  }
-  
-  .btn {
-    border-width: 2px;
-  }
-  
-  .metric-inline-text {
-    text-decoration-thickness: 2px;
-  }
-}
-
-/* === Academic Style: Section Dividers === */
-.tl-panel-section-title::after {
-  content: "";
-  display: block;
-  width: 60px;
-  height: 2px;
-  background: var(--brand-500);
-  margin-top: 0.5rem;
-  opacity: 0.6;
-}
-
-/* === Subtle Background Pattern === */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image: 
-    radial-gradient(circle at 1px 1px, color-mix(in oklab, var(--ink) 3%, transparent) 1px, transparent 0);
-  background-size: 24px 24px;
-  pointer-events: none;
-  opacity: 0.3;
-  z-index: -1;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body::before {
-    display: none;
   }
 }
