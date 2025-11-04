@@ -231,9 +231,25 @@
       </p>
     </div>
 
-    <!-- Filtri -->
-    <div class="bg-white border border-slate-200 rounded-xl p-6 mb-8">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Pulsante Filtri -->
+    <div class="mb-6">
+      <button id="open-filters-btn" class="btn-inline text-sm">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 6h18M7 12h10M11 18h2"/>
+        </svg>
+        Filtri
+      </button>
+    </div>
+
+    <!-- Popup Filtri -->
+    <div id="filters-modal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/50 p-4">
+      <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+        <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+          <h3 class="font-semibold text-lg text-slate-900">Filtri</h3>
+          <button id="close-filters-btn" class="text-slate-500 hover:text-red-600 text-xl">✕</button>
+        </div>
+        <div class="px-5 py-4 overflow-y-auto flex-1">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <!-- Livello tecnico (mutuamente esclusivi) -->
         <div class="filter-group">
           <label class="text-sm font-semibold mb-2 block">Livello tecnico</label>
@@ -329,6 +345,11 @@
             <button type="button" id="clear-all-filters" class="text-xs text-slate-500 hover:text-slate-700 mt-2 text-left">Reset filtri</button>
           </div>
         </div>
+        </div>
+        <div class="px-5 py-4 border-t border-slate-200 flex items-center justify-between bg-slate-50">
+          <button type="button" id="apply-filters-btn" class="btn bg-slate-900 text-white hover:bg-slate-800">Applica filtri</button>
+          <button type="button" id="close-filters-modal-btn" class="btn-inline text-xs">Chiudi</button>
+        </div>
       </div>
     </div>
 
@@ -394,7 +415,7 @@
       </div>
     </div>
     <div class="px-5 py-4 border-t border-slate-200 flex items-center justify-between bg-slate-50">
-      <span id="m-afftext" class="text-[12px] text-slate-500">Unico link cliccabile (affiliato).</span>
+      <span id="m-afftext" class="text-[12px] text-slate-500">Link affiliato (se disponibile).</span>
       <a id="m-aff" href="#" rel="sponsored noopener" target="_blank"
          class="btn bg-sky-700 hover:bg-sky-800 text-white">Vai al sito ufficiale</a>
     </div>
@@ -915,7 +936,7 @@ window.BROKERS = {
     },
     pepperstone: {
       name: "Pepperstone",
-      affiliated: false,
+      affiliated: true,
       tags: ["CFD", "Forex", "Spread bassi", "ASIC", "FCA"],
       description: "Broker CFD specializzato con <strong>spread e commissioni tra i più bassi del mercato</strong>, regolamentato da autorità di altissimo livello (ASIC, FCA, DFSA).",
       score: 89,
@@ -938,7 +959,7 @@ window.BROKERS = {
       fees: "Spread tra i più bassi del mercato (da 0.0 pip su Razor account), commissioni competitive, nessun costo di deposito/prelievo",
       pros: ["Spread e commissioni tra i più bassi del mercato CFD", "Regolamentazione di altissimo livello (ASIC, FCA, DFSA)", "Piattaforme professionali (MT4, MT5, cTrader, TradingView)", "Esecuzione veloce e affidabile", "Assistenza clienti multilingua", "Nessun costo di deposito/prelievo", "Protezione fondi dei clienti garantita"],
       cons: ["Broker esclusivamente CFD - prodotti ad altissimo rischio", "Non offre strumenti reali quotati (azioni, ETF, obbligazioni reali)", "Rischio di perdita totale del capitale con CFD", "Leverage elevato può amplificare le perdite"],
-      aff: "",
+      aff: "https://pepperstone.com/it",
       disclaimer: "I CFD sono strumenti complessi ad altissimo rischio di perdita rapida di denaro a causa della leva finanziaria. Il trading di CFD comporta un rischio elevatissimo di perdita totale o parziale del capitale. Pepperstone è regolamentato da ASIC (Australia), FCA (Regno Unito) e DFSA (Emirati Arabi Uniti), tra le autorità di regolamentazione più severe al mondo. Questo broker è incluso solo per trader che, per necessità strategica, devono utilizzare CFD e sono pienamente consapevoli dei rischi elevatissimi. Valuta attentamente se comprendi il funzionamento dei CFD e se puoi permetterti di correre un rischio elevatissimo di perdere il tuo denaro. Le informazioni hanno scopo puramente informativo e non costituiscono consulenza o sollecitazione al pubblico risparmio.",
       filters: {
         cfd: true,
@@ -1429,7 +1450,8 @@ const OFFICIAL = {
   directa: 'https://www.directa.it',
   traderepublic: 'https://traderepublic.com/it-it',
   bgsaxo: 'https://www.home.saxo/it-it',
-  ig: 'https://www.ig.com/it'
+  ig: 'https://www.ig.com/it',
+  pepperstone: 'https://pepperstone.com/it'
 };
 
 // Rendi openModal accessibile globalmente
@@ -1494,7 +1516,8 @@ window.openModal = function(key) {
     affBtn.classList.remove('hidden');
     affBtn.setAttribute('href', url);
     affBtn.setAttribute('rel', d.affiliated ? 'sponsored noopener' : 'noopener');
-    affText.textContent = d.affiliated ? 'Link affiliato' : 'Sito ufficiale (non affiliato)';
+    affText.textContent = d.affiliated ? 'Link affiliato (sponsored)' : 'Sito ufficiale (non affiliato)';
+    affBtn.textContent = d.affiliated ? 'Apri account (link affiliato)' : 'Vai al sito ufficiale';
   } else {
     affBtn.classList.add('hidden');
     affBtn.removeAttribute('href');
@@ -1528,7 +1551,45 @@ document.getElementById('modal')?.addEventListener('click', (e) => {
 });
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') window.closeModal();
+  if (e.key === 'Escape') {
+    window.closeModal();
+    closeFiltersModal();
+  }
+});
+
+// ===== Gestione Popup Filtri =====
+const filtersModal = document.getElementById('filters-modal');
+const openFiltersBtn = document.getElementById('open-filters-btn');
+const closeFiltersBtn = document.getElementById('close-filters-btn');
+const closeFiltersModalBtn = document.getElementById('close-filters-modal-btn');
+const applyFiltersBtn = document.getElementById('apply-filters-btn');
+
+function openFiltersModal() {
+  if (filtersModal) {
+    filtersModal.classList.remove('hidden');
+    filtersModal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeFiltersModal() {
+  if (filtersModal) {
+    filtersModal.classList.add('hidden');
+    filtersModal.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+}
+
+openFiltersBtn?.addEventListener('click', openFiltersModal);
+closeFiltersBtn?.addEventListener('click', closeFiltersModal);
+closeFiltersModalBtn?.addEventListener('click', closeFiltersModal);
+applyFiltersBtn?.addEventListener('click', () => {
+  applyFilters();
+  closeFiltersModal();
+});
+
+filtersModal?.addEventListener('click', (e) => {
+  if (e.target.id === 'filters-modal') closeFiltersModal();
 });
 
 // ===== Inizializzazione =====
