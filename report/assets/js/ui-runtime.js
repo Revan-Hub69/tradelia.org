@@ -182,6 +182,20 @@
       }
     }
     
+    // Se il focus è dentro il panel, spostalo su un elemento visibile prima di nascondere l'overlay
+    if (overlay.contains(document.activeElement)) {
+      const fallbackFocus = document.querySelector('.hdr a.brand') || document.body;
+      if (fallbackFocus && typeof fallbackFocus.focus === 'function') {
+        if (fallbackFocus === document.body) {
+          document.body.setAttribute('tabindex', '-1');
+        }
+        fallbackFocus.focus({ preventScroll: true });
+        if (fallbackFocus === document.body) {
+          setTimeout(() => document.body.removeAttribute('tabindex'), 200);
+        }
+      }
+    }
+
     overlay.setAttribute('aria-hidden','true');
     overlay.setAttribute('hidden',''); // Nascondi anche con attributo hidden
     overlay.style.display = 'none'; // Forza display none
@@ -951,6 +965,8 @@
         </div>
       `).join('') : '<div class="metric-list-item" style="padding: 2rem; text-align: center; color: var(--muted);" role="status" aria-live="polite">Nessuna metrica disponibile</div>';
       
+      attachMetricItemListeners();
+      
       // Scroll to top e re-bind swipe gesture dopo che il DOM è aggiornato
       requestAnimationFrame(() => {
         // Force scroll reset
@@ -976,6 +992,43 @@
         }
         
         console.log('[UI Runtime] Mobile - Categoria cambiata con successo:', category, 'drawer1 active:', drawer1?.classList.contains('active'));
+      });
+    };
+
+    const selectMetric = (key, source = 'delegation') => {
+      if (!key) return;
+      console.log('[UI Runtime] Mobile - Seleziona metrica:', key, 'source:', source);
+      const metric = metricsWithGlossary.find(m => m.key === key);
+      if (metric) {
+        openMetricDetail(metric, drawer2, drawer2Title, drawer2Content);
+        drawer1.classList.remove('active');
+        drawer2.classList.add('active');
+        const backButton = drawer2.querySelector('.metrics-drawer-2__back');
+        if (backButton) {
+          setTimeout(() => backButton.focus(), 120);
+        }
+      } else {
+        console.warn('[UI Runtime] Mobile - Metrica non trovata per key:', key, 'available keys:', metricsWithGlossary.map(m => m.key).slice(0, 5));
+      }
+    };
+
+    const attachMetricItemListeners = () => {
+      const items = metricsList.querySelectorAll('.metric-list-item.swipeable');
+      items.forEach(item => {
+        const key = item.getAttribute('data-metric-key');
+        if (!key) return;
+        if (item._metricHandler) {
+          item.removeEventListener('click', item._metricHandler);
+          item.removeEventListener('touchend', item._metricHandler);
+        }
+        const handler = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          selectMetric(key, e.type === 'touchend' ? 'touch' : 'click');
+        };
+        item._metricHandler = handler;
+        item.addEventListener('click', handler, { passive: false });
+        item.addEventListener('touchend', handler, { passive: false });
       });
     };
 
@@ -1025,6 +1078,7 @@
     
     // Attacca listener immediatamente
     let categoryTabs = attachTabListeners();
+    attachMetricItemListeners();
     
     // Se non ci sono tab, riprova più volte con delay crescenti
     if (categoryTabs.length === 0) {
@@ -1078,18 +1132,7 @@
         e.preventDefault();
         e.stopPropagation();
         const key = item.getAttribute('data-metric-key') || item.dataset.metricKey;
-        if (!key) return;
-        
-        console.log('[UI Runtime] Mobile - Click su metrica, key:', key, 'metricsWithGlossary length:', metricsWithGlossary.length);
-        const metric = metricsWithGlossary.find(m => m.key === key);
-        if (metric) {
-          console.log('[UI Runtime] Mobile - Metrica trovata, apri dettaglio:', metric.key);
-          openMetricDetail(metric, drawer2, drawer2Title, drawer2Content);
-          drawer1.classList.remove('active');
-          drawer2.classList.add('active');
-        } else {
-          console.warn('[UI Runtime] Mobile - Metrica non trovata per key:', key, 'available keys:', metricsWithGlossary.map(m => m.key).slice(0, 5));
-        }
+        selectMetric(key, 'delegation');
         return;
       }
     };
@@ -1220,6 +1263,14 @@
         if (tab._categoryTabHandler) {
           tab.removeEventListener('click', tab._categoryTabHandler);
           delete tab._categoryTabHandler;
+        }
+      });
+      // Rimuovi handler dalle metriche
+      metricsList.querySelectorAll('.metric-list-item.swipeable').forEach(item => {
+        if (item._metricHandler) {
+          item.removeEventListener('click', item._metricHandler);
+          item.removeEventListener('touchend', item._metricHandler);
+          delete item._metricHandler;
         }
       });
       delete container._mobileDrawerCleanup;

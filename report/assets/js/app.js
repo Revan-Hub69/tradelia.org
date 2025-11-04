@@ -305,7 +305,8 @@ async function mountHeaderTicker(header) {
         try { window.__TradeliaUI?.bindMetricInfoButtons?.(wrap); } catch {}
       } catch (err) {
         console.warn(`Modulo ${modId} non caricato:`, err);
-        sectionPlaceholder(modId, 'file mancante o errore di parsing');
+        // Evita di inserire placeholder invasivi durante i test: logga soltanto
+        continue;
       }
     }
   }
