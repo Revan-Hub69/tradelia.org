@@ -35,7 +35,7 @@
     
     @media (max-width: 768px) {
       main {
-        padding-bottom: 2.5rem; /* Spazio maggiore su mobile */
+        padding-bottom: 2rem; /* Spazio sufficiente per footer */
       }
     }
 
@@ -154,6 +154,16 @@
         margin-bottom: 0;
         z-index: 2; /* Mantieni sotto anche su mobile */
         min-height: auto;
+        position: relative; /* Assicura che sia nel flow del documento */
+        width: 100%;
+        box-sizing: border-box;
+        /* Assicura che footer sia visibile nel viewport */
+        flex-shrink: 0;
+      }
+      
+      /* main già ha flex: 1 e padding-bottom gestito sopra */
+      main {
+        padding-bottom: 2rem; /* Spazio sufficiente per footer su mobile */
       }
       
       .ftr-grid {
@@ -571,3 +581,4 @@
   </script>
 </body>
 </html>
+
