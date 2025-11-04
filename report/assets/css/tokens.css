@@ -1055,6 +1055,9 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   flex-direction: column;
   background: var(--surface-card);
   /* Importante: assicura che i figli position:absolute siano visibili */
+  pointer-events: auto !important; /* FORZA eventi sempre attivi */
+  z-index: 1;
+  isolation: isolate; /* Crea nuovo stacking context */
 }
 
 .metrics-drawer-1 {
@@ -1067,6 +1070,8 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   flex-direction: column;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform; /* Ottimizzazione performance */
+  pointer-events: auto !important; /* FORZA eventi sempre attivi quando visibile */
+  z-index: 1;
 }
 
 .metrics-drawer-1.active {
@@ -1111,6 +1116,8 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   user-select: none;
   outline: none; /* Gestito da focus-visible */
   position: relative;
+  pointer-events: auto !important; /* FORZA eventi sempre attivi */
+  z-index: 1; /* Assicura che sia sopra altri elementi */
 }
 
 .metric-category-tab:focus-visible {
@@ -1167,6 +1174,8 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   -webkit-tap-highlight-color: transparent;
   touch-action: pan-y; /* Permette swipe verticale per scroll, ma gestisce swipe orizzontale */
   outline: none; /* Gestito da focus-visible */
+  pointer-events: auto !important; /* FORZA eventi sempre attivi */
+  z-index: 1; /* Assicura che sia sopra altri elementi */
 }
 
 .metric-list-item:focus-visible {
