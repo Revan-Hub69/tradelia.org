@@ -367,37 +367,50 @@
 
   function bindMetricTabs(container, key){
     const tabsContainer = container.querySelector('.metric-tabs-container');
-    if (!tabsContainer) return;
+    if (!tabsContainer) {
+      console.warn('[UI Runtime] bindMetricTabs: tabsContainer non trovato');
+      return;
+    }
     
+    // Rimuovi listener esistenti usando delegation invece di listener diretti
     const tabs = tabsContainer.querySelectorAll('.metric-tab');
     const panels = tabsContainer.querySelectorAll('.metric-tab-panel');
     
-    tabs.forEach(tab => {
-      tab.addEventListener('click', (e) => {
-        e.preventDefault();
-        const tabName = tab.getAttribute('data-tab');
-        
-        // Update tabs
-        tabs.forEach(t => {
-          t.classList.remove('active');
-          t.setAttribute('aria-selected', 'false');
-        });
-        tab.classList.add('active');
-        tab.setAttribute('aria-selected', 'true');
-        
-        // Update panels
-        panels.forEach(p => {
-          const panelName = p.getAttribute('data-panel');
-          if (panelName === tabName) {
-            p.classList.add('active');
-            p.removeAttribute('hidden');
-          } else {
-            p.classList.remove('active');
-            p.setAttribute('hidden', '');
-          }
-        });
+    if (tabs.length === 0 || panels.length === 0) {
+      console.warn('[UI Runtime] bindMetricTabs: tabs o panels non trovati');
+      return;
+    }
+    
+    // Usa event delegation sul container per evitare listener duplicati
+    tabsContainer.addEventListener('click', (e) => {
+      const tab = e.target.closest('.metric-tab');
+      if (!tab) return;
+      
+      e.preventDefault();
+      e.stopPropagation();
+      const tabName = tab.getAttribute('data-tab');
+      console.log('[UI Runtime] bindMetricTabs: click su tab:', tabName);
+      
+      // Update tabs
+      tabs.forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
       });
-    });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      
+      // Update panels
+      panels.forEach(p => {
+        const panelName = p.getAttribute('data-panel');
+        if (panelName === tabName) {
+          p.classList.add('active');
+          p.removeAttribute('hidden');
+        } else {
+          p.classList.remove('active');
+          p.setAttribute('hidden', '');
+        }
+      });
+    }, { passive: false });
     
     // Swipe gesture per mobile
     if (isMobile() && key) {
@@ -871,6 +884,7 @@
         
         // Update metrics list
         metricsList.setAttribute('data-category', category);
+        console.log('[UI Runtime] Mobile - Aggiornamento lista metriche, categoria:', category, 'metriche:', metrics.length);
         metricsList.innerHTML = metrics.map((m, idx) => `
           <div class="metric-list-item swipeable" data-metric-key="${m.key}" data-metric-index="${idx}">
             <div class="metric-list-item__content">
@@ -881,8 +895,10 @@
           </div>
         `).join('');
         
-        // Re-bind swipe gesture
-        setupSwipeGesture(container, metricsWithGlossary, drawer2, drawer2Title, drawer2Content);
+        // Re-bind swipe gesture dopo che il DOM è aggiornato
+        requestAnimationFrame(() => {
+          setupSwipeGesture(container, metricsWithGlossary, drawer2, drawer2Title, drawer2Content);
+        });
         return;
       }
 
@@ -892,12 +908,15 @@
         e.preventDefault();
         e.stopPropagation();
         const key = item.getAttribute('data-metric-key');
+        console.log('[UI Runtime] Mobile - Click su metrica, key:', key, 'metricsWithGlossary length:', metricsWithGlossary.length);
         const metric = metricsWithGlossary.find(m => m.key === key);
         if (metric) {
-          console.log('[UI Runtime] Mobile - Click su metrica:', key);
+          console.log('[UI Runtime] Mobile - Metrica trovata, apri dettaglio:', metric.key);
           openMetricDetail(metric, drawer2, drawer2Title, drawer2Content);
           drawer1.classList.remove('active');
           drawer2.classList.add('active');
+        } else {
+          console.warn('[UI Runtime] Mobile - Metrica non trovata per key:', key, 'available keys:', metricsWithGlossary.map(m => m.key).slice(0, 5));
         }
         return;
       }
@@ -1002,10 +1021,12 @@
       ` : ''}
     `;
 
-    // Bind tabs
-    if (UI.bindMetricTabs) {
-      UI.bindMetricTabs(drawer2Content, metric.key);
-    }
+    // Bind tabs dopo un breve delay per assicurare che il DOM sia pronto
+    requestAnimationFrame(() => {
+      if (UI.bindMetricTabs) {
+        UI.bindMetricTabs(drawer2Content, metric.key);
+      }
+    });
 
     // Swipe left per tornare
     let startX = 0;
