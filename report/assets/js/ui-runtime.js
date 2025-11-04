@@ -337,6 +337,18 @@
   function hidePopover(){ if(popover) popover.setAttribute('aria-hidden','true'); }
 
   function showModal(data){
+    // Evita di aprire modal se il drawer è aperto o se non ci sono dati
+    if (!data || (!data.body && !data.what && !data.how)) {
+      console.warn('[UI Runtime] showModal chiamato senza dati validi:', data);
+      return;
+    }
+    
+    // Evita di aprire modal se il panel mobile è aperto (perché useremo il drawer)
+    if (isMobile() && mobilePanel && mobilePanel.style.display !== 'none' && !mobilePanel.hasAttribute('hidden')) {
+      console.log('[UI Runtime] showModal evitato: panel mobile è aperto');
+      return;
+    }
+    
     mountTooltips();
     modalTitle.textContent  = data?.title || '—';
     modalSource.textContent = data?.source || '';
@@ -590,12 +602,18 @@
       </div>
     `;
 
+    console.log('[UI Runtime] openMobileMetricsDrawer - body HTML length:', body.length);
+    console.log('[UI Runtime] openMobileMetricsDrawer - mobileBody prima:', mobileBody?.innerHTML?.substring(0, 100));
+    
     openPanel({
       title: 'Metriche header',
       subtitle: data.meta?.auditPathId || '—',
       panelSize: 'xl',
       body: body
     });
+
+    console.log('[UI Runtime] openMobileMetricsDrawer - mobileBody dopo openPanel:', mobileBody?.innerHTML?.substring(0, 200));
+    console.log('[UI Runtime] openMobileMetricsDrawer - drawer nel mobileBody:', !!mobileBody?.querySelector('.metrics-drawer-mobile'));
 
     // Bind drawer mobile - aspetta che il DOM sia pronto
     return new Promise((resolve) => {
@@ -604,15 +622,17 @@
       // Verifica che il panel sia visibile e il drawer sia montato
       const checkPanel = () => {
         retries++;
-        const drawer = qs('.metrics-drawer-mobile', mobileBody);
+        const drawer = mobileBody?.querySelector('.metrics-drawer-mobile');
         const drawerInDoc = qs('.metrics-drawer-mobile');
+        const mobileBodyHTML = mobileBody?.innerHTML?.substring(0, 300) || '';
         console.log('[UI Runtime] Mobile drawer check', retries, {
           drawerInBody: !!drawer,
           drawerInDoc: !!drawerInDoc,
           mobilePanel: !!mobilePanel,
           mobilePanelDisplay: mobilePanel?.style?.display,
           mobilePanelHidden: mobilePanel?.hasAttribute('hidden'),
-          mobileBody: !!mobileBody
+          mobileBody: !!mobileBody,
+          mobileBodyHTML: mobileBodyHTML
         });
         if (drawer && mobilePanel && mobilePanel.style.display !== 'none' && !mobilePanel.hasAttribute('hidden')) {
           console.log('[UI Runtime] Mobile drawer trovato e panel visibile, setup...');
@@ -625,12 +645,17 @@
             drawer: !!drawer,
             drawerInDoc: !!drawerInDoc,
             mobilePanel: !!mobilePanel,
-            mobileBody: !!mobileBody
+            mobileBody: !!mobileBody,
+            mobileBodyHTML: mobileBodyHTML
           });
           // Prova comunque a fare setup se il drawer esiste nel documento
           if (drawerInDoc) {
             console.log('[UI Runtime] Provo setup comunque con drawer dal documento...');
             setupMobileMetricsDrawer(metricsWithGlossary, metricsByCategory, categories);
+          } else {
+            // Se il drawer non esiste, potrebbe essere un problema di rendering
+            console.error('[UI Runtime] Drawer mobile non trovato nel DOM!');
+            console.error('[UI Runtime] mobileBody.innerHTML:', mobileBody?.innerHTML);
           }
           resolve(); // Resolve comunque per non bloccare
         }
