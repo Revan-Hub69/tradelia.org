@@ -174,6 +174,16 @@
     .filter-checkbox { display: flex; align-items: center; gap: 0.35rem; }
     .filter-checkbox input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }
     .filter-checkbox label { margin: 0; font-size: 12px; font-weight: 400; cursor: pointer; }
+    
+    /* Range slider */
+    .filter-range { display: flex; flex-direction: column; gap: 0.5rem; }
+    .filter-range input[type="range"] { width: 100%; cursor: pointer; }
+    .filter-range-values { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-soft); }
+    .filter-range-label { font-size: 11px; margin-top: 0.25rem; }
+    
+    /* Select dropdown */
+    .filter-select { width: 100%; padding: 0.35rem 0.6rem; border-radius: var(--radius-sm); border: 1px solid var(--br-soft); background: var(--surface-card); color: var(--ink); font-size: 12px; cursor: pointer; }
+    .filter-select:focus { outline: 2px solid var(--brand-500); outline-offset: 2px; }
   </style>
 </head>
 <body>
@@ -343,6 +353,147 @@
           </div>
         </div>
 
+        <!-- Deposito minimo -->
+        <div class="filter-group">
+          <label>Deposito minimo (€)</label>
+          <div class="filter-range">
+            <input type="range" id="filter-min-deposit" min="0" max="10000" step="100" value="10000">
+            <div class="filter-range-values">
+              <span id="min-deposit-min">€0</span>
+              <span id="min-deposit-max">€10.000+</span>
+            </div>
+            <div class="filter-range-label" id="min-deposit-value">Fino a €10.000+</div>
+          </div>
+        </div>
+
+        <!-- Valutazione score -->
+        <div class="filter-group">
+          <label>Valutazione Tradelia AI</label>
+          <div class="filter-range">
+            <input type="range" id="filter-score" min="0" max="100" step="5" value="0">
+            <div class="filter-range-values">
+              <span>0</span>
+              <span>100</span>
+            </div>
+            <div class="filter-range-label" id="score-value">Da 0 in su</div>
+          </div>
+        </div>
+
+        <!-- Commissioni -->
+        <div class="filter-group">
+          <label>Costo commissioni</label>
+          <div class="filter-checkboxes">
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-fees-very-low" data-filter="fees-very-low">
+              <label for="filter-fees-very-low">Molto basse</label>
+            </div>
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-fees-low" data-filter="fees-low">
+              <label for="filter-fees-low">Basse</label>
+            </div>
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-fees-medium" data-filter="fees-medium">
+              <label for="filter-fees-medium">Medie</label>
+            </div>
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-fees-high" data-filter="fees-high">
+              <label for="filter-fees-high">Alte</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Regolamentazione -->
+        <div class="filter-group">
+          <label>Regolamentazione</label>
+          <div class="filter-checkboxes">
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-reg-consob" data-filter="reg-consob">
+              <label for="filter-reg-consob">CONSOB (Italia)</label>
+            </div>
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-reg-fca" data-filter="reg-fca">
+              <label for="filter-reg-fca">FCA (UK)</label>
+            </div>
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-reg-bafin" data-filter="reg-bafin">
+              <label for="filter-reg-bafin">BaFin (Germania)</label>
+            </div>
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-reg-cysec" data-filter="reg-cysec">
+              <label for="filter-reg-cysec">CySEC (Cipro)</label>
+            </div>
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-reg-sec" data-filter="reg-sec">
+              <label for="filter-reg-sec">SEC (USA)</label>
+            </div>
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-reg-eu" data-filter="reg-eu">
+              <label for="filter-reg-eu">Regolamentazione UE</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Piattaforme -->
+        <div class="filter-group">
+          <label>Piattaforme disponibili</label>
+          <div class="filter-checkboxes">
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-platform-web" data-filter="platform-web">
+              <label for="filter-platform-web">Web</label>
+            </div>
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-platform-desktop" data-filter="platform-desktop">
+              <label for="filter-platform-desktop">Desktop</label>
+            </div>
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-platform-mobile" data-filter="platform-mobile">
+              <label for="filter-platform-mobile">Mobile</label>
+            </div>
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-platform-api" data-filter="platform-api">
+              <label for="filter-platform-api">API/TradingView</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mercati geografici -->
+        <div class="filter-group">
+          <label>Mercati geografici</label>
+          <div class="filter-checkboxes">
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-market-usa" data-filter="market-usa">
+              <label for="filter-market-usa">USA</label>
+            </div>
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-market-eu" data-filter="market-eu">
+              <label for="filter-market-eu">Europa</label>
+            </div>
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-market-asia" data-filter="market-asia">
+              <label for="filter-market-asia">Asia</label>
+            </div>
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-market-italia" data-filter="market-italia">
+              <label for="filter-market-italia">Italia</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Supporto italiano -->
+        <div class="filter-group">
+          <label>Supporto e servizi</label>
+          <div class="filter-checkboxes">
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-support-it" data-filter="support-it">
+              <label for="filter-support-it">Supporto italiano</label>
+            </div>
+            <div class="filter-checkbox">
+              <input type="checkbox" id="filter-protection" data-filter="protection">
+              <label for="filter-protection">Protezione depositi</label>
+            </div>
+          </div>
+        </div>
+
         <!-- Reset -->
         <div class="filter-group flex items-end">
           <button id="reset-filters" class="btn-inline">Reset filtri</button>
@@ -499,12 +650,19 @@
       score: 92,
       skill: "Avanzato",
       cfd: true,
+      minDeposit: 10000,
+      feesCategory: "medium",
+      regulations: ["cysec", "eu"],
+      platforms: ["web", "desktop", "mobile"],
+      markets: ["usa", "eu", "asia"],
+      supportIt: true,
+      protection: true,
       assets: "Azioni, ETF (incl. ETN crypto), Futures, Opzioni, Obbligazioni; Cripto via CFD",
       count: "≈ 1.000.000+ strumenti • 50+ mercati • 20.000+ bond • 40.000+ azioni • 25.000+ ticker opzioni / 1.000.000+ strike",
       min: "≈ €10.000 (retail UE)",
       reg: "UE · entità europee (es. MFSA/CySEC) · operatività per residenti italiani",
       cfd_note: "Su EXANTE <strong>solo le criptovalute sono offerte tramite CFD</strong>. Tutti gli altri strumenti sono quotati su mercati regolamentati.",
-      platforms: "Web, Desktop, App",
+      platforms_text: "Web, Desktop, App",
       fees: "Commissioni per mercato; cambio e dati in tempo reale separati; deposito minimo €10k.",
       pros: ["Accesso DMA su 50+ mercati", "Vasta copertura obbligazionaria", "Derivati quotati su molte borse"],
       cons: ["Deposito minimo elevato", "Cripto solo via CFD", "Listino e mercati da verificare"],
@@ -522,7 +680,18 @@
         dma: true,
         "cfd-si": true,
         "obbligazionario-etf": true,
-        "istituzionali-retail-avanzato": true
+        "istituzionali-retail-avanzato": true,
+        "platform-web": true,
+        "platform-desktop": true,
+        "platform-mobile": true,
+        "market-usa": true,
+        "market-eu": true,
+        "market-asia": true,
+        "reg-cysec": true,
+        "reg-eu": true,
+        "support-it": true,
+        "protection": true,
+        "fees-medium": true
       }
     },
     ibkr: {
@@ -533,12 +702,19 @@
       score: 95,
       skill: "Pro",
       cfd: true,
+      minDeposit: 0,
+      feesCategory: "low",
+      regulations: ["sec", "fca", "eu"],
+      platforms: ["web", "desktop", "mobile", "api"],
+      markets: ["usa", "eu", "asia"],
+      supportIt: true,
+      protection: true,
       assets: "Azioni, ETF, obbligazioni, opzioni, futures su borse globali; forex; fondi; accesso API/TWS",
       count: "160+ mercati in 36 paesi • 1.000.000+ obbligazioni",
       min: "Nessun minimo formale (verificare requisiti)",
       reg: "USA/EU · entità regolamentate (SEC, CFTC, FCA, CSSF, IIROC, ASIC, SFC, MAS) · operatività per residenti italiani",
       cfd_note: "CFD disponibili tramite entità abilitate (es. IBKR UK/IE); in questa selezione consideriamo solo strumenti quotati reali.",
-      platforms: "Trader Workstation (TWS), Client Portal, IBKR Mobile, API",
+      platforms_text: "Trader Workstation (TWS), Client Portal, IBKR Mobile, API",
       fees: "Piani tiered o fixed; costi separati per dati di mercato e cambio valuta",
       pros: ["Copertura globale su oltre 160 mercati", "Piattaforme TWS/API estremamente potenti", "Infrastruttura professionale e stabile", "Ampia gamma di strumenti e asset class", "Commissioni molto competitive per trader attivi"],
       cons: ["Curva di apprendimento ripida per principianti", "Struttura commissionale articolata", "Dati di mercato in tempo reale spesso a pagamento"],
@@ -558,7 +734,20 @@
         multi: true,
         "cfd-si": true,
         "obbligazionario-etf": true,
-        "istituzionali-retail-avanzato": true
+        "istituzionali-retail-avanzato": true,
+        "platform-web": true,
+        "platform-desktop": true,
+        "platform-mobile": true,
+        "platform-api": true,
+        "market-usa": true,
+        "market-eu": true,
+        "market-asia": true,
+        "reg-sec": true,
+        "reg-fca": true,
+        "reg-eu": true,
+        "support-it": true,
+        "protection": true,
+        "fees-low": true
       }
     },
     mexem: {
@@ -880,20 +1069,123 @@
     }
   };
 
+  // ===== Helper per valorizzare campi mancanti =====
+  function enrichBrokerData(broker) {
+    // Default values per campi mancanti
+    if (!broker.minDeposit) {
+      // Cerca nel campo min per estrarre il valore numerico
+      const minMatch = broker.min?.match(/€?\s*([\d,.]+)/);
+      if (minMatch) {
+        const value = parseFloat(minMatch[1].replace(/\./g, '').replace(',', '.'));
+        broker.minDeposit = isNaN(value) ? 0 : Math.round(value);
+      } else {
+        broker.minDeposit = 0;
+      }
+    }
+    if (!broker.feesCategory) {
+      // Cerca nel campo fees per dedurre la categoria
+      const feesLower = broker.fees?.toLowerCase() || '';
+      if (feesLower.includes('molto bass') || feesLower.includes('very low') || feesLower.includes('€1') || feesLower.includes('1€')) {
+        broker.feesCategory = 'very-low';
+      } else if (feesLower.includes('bass') || feesLower.includes('low') || feesLower.includes('competitiv')) {
+        broker.feesCategory = 'low';
+      } else if (feesLower.includes('alt') || feesLower.includes('high') || feesLower.includes('€8') || feesLower.includes('€10')) {
+        broker.feesCategory = 'high';
+      } else {
+        broker.feesCategory = 'medium';
+      }
+    }
+    if (!broker.regulations) {
+      broker.regulations = [];
+      const regLower = broker.reg?.toLowerCase() || '';
+      if (regLower.includes('consob') || regLower.includes('italia')) broker.regulations.push('consob');
+      if (regLower.includes('fca') || regLower.includes('uk')) broker.regulations.push('fca');
+      if (regLower.includes('bafin') || regLower.includes('germania')) broker.regulations.push('bafin');
+      if (regLower.includes('cysec') || regLower.includes('cyprus')) broker.regulations.push('cysec');
+      if (regLower.includes('sec') || regLower.includes('usa')) broker.regulations.push('sec');
+      if (regLower.includes('ue') || regLower.includes('eu') || regLower.includes('europa')) broker.regulations.push('eu');
+    }
+    if (!broker.platforms) {
+      broker.platforms = [];
+      const platLower = (broker.platforms_text || broker.platforms || '').toLowerCase();
+      if (platLower.includes('web')) broker.platforms.push('web');
+      if (platLower.includes('desktop') || platLower.includes('tws') || platLower.includes('pro')) broker.platforms.push('desktop');
+      if (platLower.includes('app') || platLower.includes('mobile') || platLower.includes('ios') || platLower.includes('android')) broker.platforms.push('mobile');
+      if (platLower.includes('api') || platLower.includes('tradingview')) broker.platforms.push('api');
+    }
+    if (!broker.markets) {
+      broker.markets = [];
+      const countLower = (broker.count || '').toLowerCase();
+      const descLower = (broker.description || '').toLowerCase();
+      if (countLower.includes('usa') || descLower.includes('usa') || countLower.includes('nyse') || countLower.includes('nasdaq')) broker.markets.push('usa');
+      if (countLower.includes('ue') || countLower.includes('eu') || countLower.includes('europa') || countLower.includes('xetra')) broker.markets.push('eu');
+      if (countLower.includes('asia') || descLower.includes('asia')) broker.markets.push('asia');
+      if (countLower.includes('italia') || descLower.includes('italia') || countLower.includes('borsa italiana')) broker.markets.push('italia');
+    }
+    if (broker.supportIt === undefined) {
+      broker.supportIt = broker.reg?.toLowerCase().includes('italia') || broker.reg?.toLowerCase().includes('consob') || false;
+    }
+    if (broker.protection === undefined) {
+      broker.protection = broker.reg?.toLowerCase().includes('ue') || broker.reg?.toLowerCase().includes('eu') || broker.reg?.toLowerCase().includes('fca') || broker.reg?.toLowerCase().includes('bafin') || false;
+    }
+    if (!broker.platforms_text) {
+      broker.platforms_text = broker.platforms || 'N/D';
+    }
+    
+    // Aggiorna i filtri con i nuovi campi
+    if (broker.platforms) {
+      broker.platforms.forEach(p => {
+        broker.filters[`platform-${p}`] = true;
+      });
+    }
+    if (broker.markets) {
+      broker.markets.forEach(m => {
+        broker.filters[`market-${m}`] = true;
+      });
+    }
+    if (broker.regulations) {
+      broker.regulations.forEach(r => {
+        broker.filters[`reg-${r}`] = true;
+      });
+    }
+    if (broker.supportIt) broker.filters['support-it'] = true;
+    if (broker.protection) broker.filters['protection'] = true;
+    broker.filters[`fees-${broker.feesCategory}`] = true;
+    
+    return broker;
+  }
+
   // ===== Funzioni filtro =====
-  function renderBrokers(filters = {}) {
+  function renderBrokers(filters = {}, rangeFilters = {}) {
     const grid = document.getElementById('brokers-grid');
     grid.innerHTML = '';
 
-    const brokers = Object.entries(BROKERS).filter(([key, broker]) => {
-      // Se non ci sono filtri attivi, mostra tutto
+    const brokers = Object.entries(BROKERS).map(([key, broker]) => {
+      return [key, enrichBrokerData(broker)];
+    }).filter(([key, broker]) => {
+      // Filtri checkbox
       const activeFilters = Object.entries(filters).filter(([_, value]) => value);
-      if (activeFilters.length === 0) return true;
+      
+      // Verifica filtri checkbox
+      if (activeFilters.length > 0) {
+        const matchesCheckbox = activeFilters.every(([filterKey, _]) => {
+          return broker.filters[filterKey] === true;
+        });
+        if (!matchesCheckbox) return false;
+      }
 
-      // Verifica se il broker corrisponde ai filtri attivi
-      return activeFilters.every(([filterKey, _]) => {
-        return broker.filters[filterKey] === true;
-      });
+      // Filtro deposito minimo (range)
+      if (rangeFilters.minDeposit !== undefined) {
+        const minDeposit = broker.minDeposit || 0;
+        if (minDeposit > rangeFilters.minDeposit) return false;
+      }
+
+      // Filtro score (range)
+      if (rangeFilters.score !== undefined) {
+        if (broker.score < rangeFilters.score) return false;
+      }
+
+      return true;
     });
 
     brokers.forEach(([key, broker]) => {
@@ -931,21 +1223,72 @@
   // ===== Gestione filtri =====
   const filterCheckboxes = document.querySelectorAll('[data-filter]');
   const activeFilters = {};
+  const rangeFilters = {};
 
+  // Gestione checkbox filters
   filterCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('change', () => {
       const filterKey = checkbox.getAttribute('data-filter');
       activeFilters[filterKey] = checkbox.checked;
-      renderBrokers(activeFilters);
+      applyFilters();
     });
   });
 
+  // Gestione range slider deposito minimo
+  const minDepositSlider = document.getElementById('filter-min-deposit');
+  const minDepositValue = document.getElementById('min-deposit-value');
+  if (minDepositSlider) {
+    minDepositSlider.addEventListener('input', (e) => {
+      const value = parseInt(e.target.value);
+      rangeFilters.minDeposit = value;
+      const displayValue = value === 10000 ? '€10.000+' : `Fino a €${value.toLocaleString('it-IT')}`;
+      if (minDepositValue) minDepositValue.textContent = displayValue;
+      applyFilters();
+    });
+    // Reset iniziale
+    rangeFilters.minDeposit = 10000;
+  }
+
+  // Gestione range slider score
+  const scoreSlider = document.getElementById('filter-score');
+  const scoreValue = document.getElementById('score-value');
+  if (scoreSlider) {
+    scoreSlider.addEventListener('input', (e) => {
+      const value = parseInt(e.target.value);
+      rangeFilters.score = value;
+      if (scoreValue) scoreValue.textContent = value === 0 ? 'Da 0 in su' : `Da ${value} in su`;
+      applyFilters();
+    });
+    // Reset iniziale
+    rangeFilters.score = 0;
+  }
+
+  // Funzione unificata per applicare tutti i filtri
+  function applyFilters() {
+    renderBrokers(activeFilters, rangeFilters);
+  }
+
+  // Reset filtri
   document.getElementById('reset-filters')?.addEventListener('click', () => {
     filterCheckboxes.forEach(checkbox => {
       checkbox.checked = false;
       activeFilters[checkbox.getAttribute('data-filter')] = false;
     });
-    renderBrokers({});
+    
+    // Reset range sliders
+    if (minDepositSlider) {
+      minDepositSlider.value = 10000;
+      rangeFilters.minDeposit = 10000;
+      if (minDepositValue) minDepositValue.textContent = 'Fino a €10.000+';
+    }
+    
+    if (scoreSlider) {
+      scoreSlider.value = 0;
+      rangeFilters.score = 0;
+      if (scoreValue) scoreValue.textContent = 'Da 0 in su';
+    }
+    
+    applyFilters();
   });
 
   // ===== Funzione Modal =====
@@ -983,7 +1326,7 @@
     $('#m-reg').textContent = d.reg || 'N/D';
     $('#m-score').textContent = d.score ? `${d.score}/100` : 'N/D';
     $('#m-skill').textContent = d.skill || 'N/D';
-    $('#m-platforms').textContent = d.platforms || 'N/D';
+    $('#m-platforms').textContent = d.platforms_text || d.platforms || 'N/D';
     $('#m-fees').textContent = d.fees || 'N/D';
 
     const cfdBox = $('#m-cfd');
@@ -1049,10 +1392,9 @@
   });
 
   // ===== Inizializzazione =====
-  renderBrokers();
+  applyFilters();
 })();
 </script>
 
 </body>
 </html>
-
