@@ -114,16 +114,36 @@ import Logger from './utils/logger.js';
       }
       
       __header = header;
-      __versionQS = header?.Version ? `?v=${encodeURIComponent(header.Version)}` : '';
       
-      if (header?.Ticker) {
-        document.title = `Framework Accademico AI, Tradelia Swing Master 5.0 · ${header.Ticker}`;
+      // Estrai valori dalle metriche nelle rows
+      const extractMetric = (key) => {
+        for (const row of header.rows || []) {
+          for (const part of row.parts || []) {
+            if (part.kind === 'metric' && part.key === key) {
+              return part.value;
+            }
+          }
+        }
+        return null;
+      };
+      
+      const companyName = extractMetric('CompanyName');
+      const ticker = extractMetric('Ticker');
+      const version = extractMetric('Version') || header?.meta?.version || '—';
+      const start = extractMetric('Start');
+      const end = extractMetric('End');
+      const updatedAt = extractMetric('UpdatedAt');
+      
+      __versionQS = version && version !== '—' ? `?v=${encodeURIComponent(version)}` : '';
+      
+      if (ticker) {
+        document.title = `Framework Accademico AI, Tradelia Swing Master 5.0 · ${ticker}`;
       }
       
-      setText('footer-company', header?.CompanyName || header?.Ticker || '—');
-      setText('footer-version', header?.Version || '—');
-      setText('footer-snapshot', `${header?.Start ?? '—'} → ${header?.End ?? '—'}`);
-      setText('footer-updated', fmtDate(header?.UpdatedAt));
+      setText('footer-company', companyName || ticker || '—');
+      setText('footer-version', version);
+      setText('footer-snapshot', `${start || '—'} → ${end || '—'}`);
+      setText('footer-updated', fmtDate(updatedAt));
       
       await mountHeaderTicker(header);
       Logger.debug('App', 'Header caricato');
