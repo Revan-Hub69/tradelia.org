@@ -237,7 +237,9 @@
 
     <!-- Immagine mobile sopra -->
     <div class="order-1 lg:order-2">
-      <div class="parallax bg-cover bg-center rounded-lg shadow-lg border border-slate-200 h-64 sm:h-80 lg:h-96" style="background-image:url('/img/hero-institutional.jpg')"></div>
+      <div class="rounded-lg shadow-lg border border-slate-200 overflow-hidden h-64 sm:h-80 lg:h-96">
+        <img src="./img/hero-institutional.jpg" alt="Tradelia AI Hero" class="w-full h-full object-cover parallax-img">
+      </div>
     </div>
 
     <!-- Testo -->
@@ -281,19 +283,34 @@
 <!-- PARALLAX SOLO DESKTOP (migliorato) -->
 <style>
   @media (min-width: 768px) {
-    .parallax {
-      background-attachment: fixed;
-      background-position: center;
-      background-repeat: no-repeat;
+    .parallax-img {
+      position: sticky;
+      top: 0;
+      will-change: transform;
     }
-  }
-  /* Disabilita parallax su mobile per performance */
-  @media (max-width: 767px) {
-    .parallax {
-      background-attachment: scroll;
+    /* Effetto parallax via JavaScript */
+    @supports (background-attachment: fixed) {
+      .parallax {
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
     }
   }
 </style>
+<script>
+  // Parallax effect per immagini
+  document.addEventListener('DOMContentLoaded', () => {
+    const parallaxImg = document.querySelector('.parallax-img');
+    if (parallaxImg && window.innerWidth >= 768) {
+      window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const rate = scrolled * 0.5;
+        parallaxImg.style.transform = `translateY(${rate}px)`;
+      });
+    }
+  });
+</script>
 
 <!-- SCRIPT ICONS + TYPING -->
 <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
