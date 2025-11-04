@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Report Framework Accademico AI, Tradelia Swing Master 5.0" />
   <title>TRADELIA • AI — Report</title>
+  <link rel="stylesheet" href="/report/assets/css/tokens.css" />
   <style>
-    /* ===== RESET BASE ===== */
-    * { box-sizing: border-box; }
+    /* ===== LAYOUT BASE ===== */
     html, body {
       height: 100%;
       margin: 0;
@@ -19,33 +19,29 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background: #1a1f2e;
-      color: #e8eaed;
     }
     
-    /* ===== CONTAINER ===== */
-    .container {
-      max-width: 90rem;
-      margin: 0 auto;
-      padding: 0 1rem;
-      width: 100%;
-    }
-    
-    /* ===== HEADER (da brokers.html adattato a dark) ===== */
+    /* ===== HEADER FIXED ===== */
     .hdr {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      height: 56px;
-      z-index: 50;
+      height: 64px;
+      z-index: 100;
       display: flex;
       align-items: center;
-      backdrop-filter: saturate(1.1) blur(10px);
-      background: rgba(26, 31, 46, 0.86);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+      backdrop-filter: saturate(1.1) blur(12px);
+      background: rgba(10, 10, 10, 0.92);
+      border-bottom: 1px solid var(--br-card);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .hdr .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
     }
     
     /* ===== BRAND ===== */
@@ -56,180 +52,81 @@
       align-items: center;
       gap: 0.35rem;
       text-decoration: none;
-      color: #e8eaed;
-      transition: opacity 0.18s ease, transform 0.18s ease;
+      color: var(--ink);
+      transition: all var(--transition-fast);
     }
+    
     .brand:hover {
       opacity: 0.9;
       transform: translateY(-1px);
     }
-    .brand-word { color: #e8eaed; }
-    .brand-suffix { color: #e8eaed; font-weight: 900; }
+    
+    .brand-word {
+      color: var(--ink);
+    }
+    
+    .brand-suffix {
+      color: var(--ink);
+      font-weight: 900;
+    }
+    
     .brand-dot {
       width: 10px;
       height: 10px;
       border-radius: 999px;
-      background: #60a5fa;
+      background: var(--brand-600);
       display: inline-block;
       animation: pulse-brand 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
+    
     @keyframes pulse-brand {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.7; transform: scale(1.1); }
     }
-    .brand--sm .brand-word { font-weight: 700; }
-    .brand--sm .brand-dot { width: 8px; height: 8px; }
-    .brand--sm .brand-suffix { font-weight: 700; }
+    
+    .brand--sm .brand-word {
+      font-weight: 700;
+    }
+    
+    .brand--sm .brand-dot {
+      width: 8px;
+      height: 8px;
+    }
+    
+    .brand--sm .brand-suffix {
+      font-weight: 700;
+    }
     
     /* ===== HEADER TICKER SLOT ===== */
     #header-ticker-slot {
       display: block;
       width: 100%;
-      margin-top: 56px;
-      padding: 1.5rem 0;
+      margin-top: 64px;
+      padding: var(--sp-6) 0;
       position: relative;
       z-index: 10;
-    }
-    
-    /* ===== HEADER TICKER STYLES (minimo necessario) ===== */
-    .header-ticker {
-      position: relative;
-      background: #1e2535;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 1.25rem 1.4rem 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-    }
-    
-    .header-ticker::before {
-      content: "";
-      position: absolute;
-      inset: 0 auto 0 0;
-      width: 4px;
-      border-radius: 16px 0 0 16px;
-      background: #94a3b8;
-    }
-    
-    .header-ticker--state-ok::before { background: #22c55e; }
-    .header-ticker--state-warn::before { background: #facc15; }
-    .header-ticker--state-err::before { background: #ef4444; }
-    
-    .header-ticker-body {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    
-    .header-ticker-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.35rem 0.4rem;
-      align-items: center;
-    }
-    
-    .header-ticker-row--intro {
-      font-size: 15px;
-      line-height: 1.3;
-      color: #e8eaed;
-    }
-    
-    .header-ticker-row--quality {
-      font-size: 13px;
-      line-height: 1.35;
-      color: #cbd5e1;
-    }
-    
-    .header-ticker-row--meta {
-      font-size: 12.5px;
-      line-height: 1.35;
-      color: #94a3b8;
-    }
-    
-    .header-ticker-text {
-      display: inline;
-    }
-    
-    .header-ticker-footer {
-      margin-top: 0.35rem;
-      padding-top: 0.55rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-    
-    /* ===== METRICHE INLINE (colori) ===== */
-    .metric-inline {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      cursor: pointer;
-      background: transparent;
-      border: none;
-      padding: 0;
-      font: inherit;
-    }
-    
-    .metric-inline-text {
-      font-weight: 600;
-      font-style: italic;
-      text-decoration: underline;
-      text-decoration-thickness: 1.5px;
-      text-underline-offset: 2px;
-      line-height: 1.2;
-      white-space: nowrap;
-    }
-    
-    .metric-inline--neutral .metric-inline-text,
-    .metric-inline-text--neutral {
-      color: #cbd5e1;
-      text-decoration-color: rgba(203, 213, 225, 0.85);
-    }
-    
-    .metric-inline--ok .metric-inline-text,
-    .metric-inline-text--ok {
-      color: #22c55e;
-      text-decoration-color: #22c55e;
-    }
-    
-    .metric-inline--warn .metric-inline-text,
-    .metric-inline-text--warn {
-      color: #facc15;
-      text-decoration-color: #facc15;
-    }
-    
-    .metric-inline--err .metric-inline-text,
-    .metric-inline-text--err {
-      color: #ef4444;
-      text-decoration-color: #ef4444;
-    }
-    
-    .metric-inline:hover .metric-inline-text {
-      opacity: 0.95;
     }
     
     /* ===== MAIN CONTENT ===== */
     main {
       flex: 1;
       padding-top: 0;
-      padding-bottom: 2rem;
+      padding-bottom: var(--sp-8);
       position: relative;
       z-index: 1;
       min-height: 0;
     }
     
-    /* ===== FOOTER (da brokers.html adattato a dark) ===== */
+    /* ===== FOOTER ===== */
     .site-footer {
       position: relative;
       z-index: 10;
       margin-top: auto;
-      background: #1a1f2e;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      color: #cbd5e1;
-      font-size: 14px;
-      padding: 3rem 0 2rem;
+      background: var(--footer-bg);
+      border-top: 1px solid var(--footer-br);
+      color: var(--ink-soft);
+      font-size: var(--fs-14);
+      padding: var(--sp-10) 0 var(--sp-8);
       flex-shrink: 0;
     }
     
@@ -237,14 +134,14 @@
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      color: #e8eaed;
-      margin-bottom: 0.6rem;
+      gap: var(--sp-2);
+      color: var(--ink);
+      margin-bottom: var(--sp-3);
     }
     
     .ftr-grid {
       display: grid;
-      gap: 2rem;
+      gap: var(--sp-8);
       grid-template-columns: 1fr;
     }
     
@@ -257,7 +154,42 @@
     .ftr-col {
       display: flex;
       flex-direction: column;
-      gap: 0.9rem;
+      gap: var(--sp-4);
+    }
+    
+    .ftr-quick-links {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-2);
+      margin-top: var(--sp-3);
+    }
+    
+    .ftr-quick-links a {
+      color: var(--ink-soft);
+      text-decoration: none;
+      font-size: var(--fs-13);
+      transition: color var(--transition-fast);
+      position: relative;
+      padding-left: var(--sp-3);
+    }
+    
+    .ftr-quick-links a::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--brand-600);
+      opacity: 0;
+      transition: opacity var(--transition-fast), transform var(--transition-fast);
+      transform: translateX(-4px);
+    }
+    
+    .ftr-quick-links a:hover {
+      color: var(--ink);
+    }
+    
+    .ftr-quick-links a:hover::before {
+      opacity: 1;
+      transform: translateX(0);
     }
     
     .ftr-list {
@@ -267,19 +199,20 @@
     }
     
     .ftr-list li {
-      margin: 0.25rem 0;
-      line-height: 1.5;
+      margin: var(--sp-2) 0;
+      line-height: var(--lh-15);
+      font-size: var(--fs-13);
     }
     
     .ftr-bottom {
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      margin-top: 2rem;
-      padding-top: 1rem;
+      border-top: 1px solid var(--footer-br);
+      margin-top: var(--sp-8);
+      padding-top: var(--sp-4);
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-      font-size: 13px;
-      color: #94a3b8;
+      gap: var(--sp-2);
+      font-size: var(--fs-13);
+      color: var(--muted);
     }
     
     @media (min-width: 768px) {
@@ -293,13 +226,13 @@
     .site-footer a {
       text-decoration: none;
       border-bottom: 1px solid transparent;
-      transition: color 0.18s ease, border-color 0.18s ease;
-      color: #cbd5e1;
+      transition: color var(--transition-fast), border-color var(--transition-fast);
+      color: var(--ink-soft);
     }
     
     .site-footer a:hover {
       border-bottom-color: currentColor;
-      color: #e8eaed;
+      color: var(--ink);
     }
     
     a.mail-link {
@@ -310,15 +243,16 @@
     .ftr-socials {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: var(--sp-2);
     }
     
     .ftr-socials a {
       position: relative;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      color: #cbd5e1;
+      gap: var(--sp-2);
+      color: var(--ink-soft);
+      font-size: var(--fs-13);
     }
     
     .ftr-socials a::after {
@@ -332,45 +266,17 @@
       opacity: 0;
       transform: scaleX(0.35);
       transform-origin: left;
-      transition: transform 0.18s ease, opacity 0.18s ease;
+      transition: transform var(--transition-base), opacity var(--transition-base);
     }
     
     .ftr-socials a:hover {
-      color: #e8eaed;
+      color: var(--ink);
       transform: translateX(2px);
     }
     
     .ftr-socials a:hover::after {
       opacity: 0.6;
       transform: scaleX(1);
-    }
-    
-    /* ===== BUTTONS ===== */
-    .btn, .btn-sm {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.35rem 0.6rem;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: #1e2535;
-      color: #e8eaed;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      text-decoration: none;
-    }
-    
-    .btn:hover, .btn-sm:hover {
-      background: rgba(30, 37, 53, 0.92);
-      border-color: rgba(96, 165, 250, 0.3);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-      transform: translateY(-1px);
-    }
-    
-    .btn:active, .btn-sm:active {
-      transform: translateY(0);
     }
     
     /* ===== ICONS ===== */
@@ -398,9 +304,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1rem;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(4px);
+      padding: var(--sp-4);
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
     }
     
     #legal-consent-overlay[hidden] {
@@ -413,10 +319,10 @@
       width: 100%;
       max-width: min(90rem, 90vw);
       max-height: 90vh;
-      background: #1e2535;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      box-shadow: 0 10px 34px rgba(0, 0, 0, 0.22);
+      background: var(--surface-card);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -426,52 +332,52 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: var(--sp-5) var(--sp-6);
+      border-bottom: 1px solid var(--br-card);
     }
     
     .legal-title {
-      font-size: 18px;
+      font-size: var(--fs-18);
       font-weight: 700;
-      color: #e8eaed;
+      color: var(--ink);
     }
     
     .legal-tabs {
       display: flex;
-      gap: 0.5rem;
-      padding: 0.75rem 1.5rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      background: #252b3d;
+      gap: var(--sp-2);
+      padding: var(--sp-3) var(--sp-6);
+      border-bottom: 1px solid var(--br-card);
+      background: var(--surface-elev);
     }
     
     .legal-tab {
-      padding: 0.5rem 1rem;
-      font-size: 13px;
+      padding: var(--sp-2) var(--sp-4);
+      font-size: var(--fs-13);
       font-weight: 600;
-      color: #cbd5e1;
+      color: var(--muted);
       background: transparent;
       border: 1px solid transparent;
-      border-radius: 999px;
+      border-radius: var(--radius-pill);
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all var(--transition-fast);
     }
     
     .legal-tab:hover {
-      color: #e8eaed;
-      background: rgba(30, 37, 53, 0.92);
+      color: var(--ink);
+      background: var(--surface-card);
     }
     
     .legal-tab[aria-selected="true"] {
-      color: #e8eaed;
-      background: #1e2535;
-      border-color: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+      color: var(--ink);
+      background: var(--surface-card);
+      border-color: var(--br-card);
+      box-shadow: var(--shadow-sm);
     }
     
     .legal-body {
       flex: 1;
       overflow-y: auto;
-      padding: 1.5rem;
+      padding: var(--sp-6);
     }
     
     .legal-body section[hidden] {
@@ -479,11 +385,11 @@
     }
     
     .legal-body h4 {
-      font-size: 16px;
+      font-size: var(--fs-16);
       font-weight: 700;
-      color: #e8eaed;
-      margin-top: 1.5rem;
-      margin-bottom: 0.75rem;
+      color: var(--ink);
+      margin-top: var(--sp-6);
+      margin-bottom: var(--sp-3);
     }
     
     .legal-body h4:first-child {
@@ -492,32 +398,32 @@
     
     .legal-body p,
     .legal-body ul {
-      font-size: 14px;
-      line-height: 1.5;
-      color: #cbd5e1;
-      margin-bottom: 1rem;
+      font-size: var(--fs-14);
+      line-height: var(--lh-15);
+      color: var(--ink-soft);
+      margin-bottom: var(--sp-4);
     }
     
     .legal-body ul {
-      padding-left: 1.5rem;
+      padding-left: var(--sp-6);
     }
     
     .legal-body code {
-      font-family: ui-monospace, monospace;
-      font-size: 13px;
-      background: #252b3d;
+      font-family: var(--ff-mono);
+      font-size: var(--fs-13);
+      background: var(--surface-elev);
       padding: 0.2rem 0.4rem;
-      border-radius: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--br-card);
     }
     
     .legal-ftr {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
-      padding: 1.25rem 1.5rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      background: #252b3d;
+      gap: var(--sp-4);
+      padding: var(--sp-5) var(--sp-6);
+      border-top: 1px solid var(--br-card);
+      background: var(--surface-elev);
     }
     
     @media (min-width: 768px) {
@@ -531,26 +437,26 @@
     /* ===== MOBILE ===== */
     @media (max-width: 768px) {
       #header-ticker-slot {
-        margin-top: 56px;
-        padding: 1rem 0;
+        margin-top: 64px;
+        padding: var(--sp-4) 0;
       }
       
       .site-footer {
-        padding: 2rem 0 1.5rem;
+        padding: var(--sp-8) 0 var(--sp-6);
       }
     }
     
     /* ===== REPORT SECTIONS ===== */
     .report-section-block {
-      margin-bottom: 2rem;
+      margin-bottom: var(--sp-8);
     }
   </style>
 </head>
 <body>
   <!-- HEADER -->
   <header class="hdr">
-    <div class="container" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-      <a href="/index.html" class="brand" aria-label="Tradelia.org">
+    <div class="container">
+      <a href="/index.html" target="_blank" rel="noopener" class="brand" aria-label="Tradelia.org - Homepage">
         <span class="brand-word">TRADELIA</span>
         <span class="brand-dot" aria-hidden="true"></span>
         <span class="brand-suffix">AI</span>
@@ -576,9 +482,16 @@
             <span>Tradelia AI</span>
           </h3>
           <p>
-            Analisi multi-fattore su contesto macro, sentiment e tecnica (orizzonte 3–10 giorni).<br/>
+            Analisi multi-fattore su contesto macro, sentiment e tecnica (orizzonte 3–10 giorni).
+          </p>
+          <p>
             Materiale esclusivamente informativo e formativo — nessuna raccomandazione personalizzata.
           </p>
+          <div class="ftr-quick-links">
+            <a href="/index.html" target="_blank" rel="noopener">Homepage</a>
+            <a href="/archivio.html" target="_blank" rel="noopener">Archivio</a>
+            <a href="/brokers.html" target="_blank" rel="noopener">Brokers</a>
+          </div>
         </div>
 
         <div class="ftr-col">
@@ -594,7 +507,7 @@
             <li><strong>Rischio di perdita totale o parziale del capitale</strong> — investire comporta rischi</li>
             <li>Le informazioni hanno <strong>scopo puramente informativo e formativo</strong> — non costituiscono raccomandazione personalizzata</li>
           </ul>
-          <div style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 1rem;">
+          <div style="margin-top: var(--sp-4); display: flex; flex-wrap: wrap; gap: var(--sp-4);">
             <button id="btn-privacy-open" class="btn btn-sm" type="button">Privacy</button>
             <button id="btn-mifid-open" class="btn btn-sm" type="button">Informativa MiFID</button>
           </div>
@@ -607,7 +520,7 @@
             </svg>
             <span>Canali ufficiali</span>
           </h3>
-          <p style="margin-bottom: 0.5rem;">Aggiornamenti su metodologia e release:</p>
+          <p style="margin-bottom: var(--sp-2);">Aggiornamenti su metodologia e release:</p>
           <div class="ftr-socials">
             <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener" aria-label="LinkedIn">LinkedIn</a>
             <a href="https://x.com/tradelia_ai" target="_blank" rel="noopener" aria-label="X (Twitter)">X (Twitter)</a>
@@ -631,7 +544,7 @@
         <div>
           <span id="footer-company">—</span> · <span id="footer-version">—</span>
           <br>
-          <span id="footer-snapshot" style="font-size: 11px;">—</span> · <span id="footer-updated" style="font-size: 11px;">—</span>
+          <span id="footer-snapshot" style="font-size: var(--fs-11);">—</span> · <span id="footer-updated" style="font-size: var(--fs-11);">—</span>
         </div>
       </div>
     </div>
@@ -699,7 +612,7 @@
         </section>
       </div>
       <footer class="legal-ftr">
-        <small style="font-size: 12px; color: #94a3b8;">Continuando dichiari di aver letto e compreso le informative.</small>
+        <small style="font-size: var(--fs-12); color: var(--muted);">Continuando dichiari di aver letto e compreso le informative.</small>
         <button class="btn btn-sm" type="button" id="btn-accept-legal">Accetto e chiudi</button>
       </footer>
     </div>
