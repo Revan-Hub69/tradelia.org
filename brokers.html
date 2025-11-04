@@ -194,6 +194,31 @@
     /* Select dropdown */
     .filter-select { width: 100%; padding: 0.35rem 0.6rem; border-radius: var(--radius-sm); border: 1px solid var(--br-soft); background: var(--surface-card); color: var(--ink); font-size: 12px; cursor: pointer; }
     .filter-select:focus { outline: 2px solid var(--brand-500); outline-offset: 2px; }
+    
+    /* Modal styles */
+    #filters-modal, #modal {
+      display: none;
+    }
+    #filters-modal.flex, #modal.flex {
+      display: flex !important;
+    }
+    #filters-modal .bg-white, #modal .bg-white {
+      background: #ffffff !important;
+      color: #1e293b !important;
+    }
+    #filters-modal h3, #modal h3 {
+      color: #1e293b !important;
+      font-weight: 600 !important;
+    }
+    #filters-modal label, #modal label {
+      color: #1e293b !important;
+    }
+    #filters-modal span, #modal span {
+      color: #475569 !important;
+    }
+    #filters-modal button, #modal button {
+      color: #1e293b !important;
+    }
   </style>
 </head>
 <body>
@@ -242,109 +267,110 @@
     </div>
 
     <!-- Popup Filtri -->
-    <div id="filters-modal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/50 p-4">
-      <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+    <div id="filters-modal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/50 p-4" style="display: none;">
+      <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col" style="background: #ffffff; color: #1e293b;">
         <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
           <h3 class="font-semibold text-lg text-slate-900">Filtri</h3>
           <button id="close-filters-btn" class="text-slate-500 hover:text-red-600 text-xl">✕</button>
         </div>
         <div class="px-5 py-4 overflow-y-auto flex-1">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Livello tecnico (mutuamente esclusivi) -->
-        <div class="filter-group">
-          <label class="text-sm font-semibold mb-2 block">Livello tecnico</label>
-          <div class="flex flex-col gap-2">
-            <label class="filter-radio">
-              <input type="radio" name="skill-level" id="filter-skill-pro" value="skill-pro" data-filter="skill-pro">
-              <span>Pro</span>
-            </label>
-            <label class="filter-radio">
-              <input type="radio" name="skill-level" id="filter-skill-avanzato" value="skill-avanzato" data-filter="skill-avanzato">
-              <span>Avanzato</span>
-            </label>
-            <label class="filter-radio">
-              <input type="radio" name="skill-level" id="filter-skill-intermedio" value="skill-intermedio" data-filter="skill-intermedio">
-              <span>Intermedio</span>
-            </label>
-            <label class="filter-radio">
-              <input type="radio" name="skill-level" id="filter-skill-base" value="skill-base" data-filter="skill-base">
-              <span>Base</span>
-            </label>
-            <button type="button" id="clear-skill" class="text-xs text-slate-500 hover:text-slate-700 mt-1 text-left">Nessuno</button>
-          </div>
-        </div>
+            <!-- Livello tecnico (mutuamente esclusivi) -->
+            <div class="filter-group">
+              <label class="text-sm font-semibold mb-2 block" style="color: #1e293b;">Livello tecnico</label>
+              <div class="flex flex-col gap-2">
+                <label class="filter-radio">
+                  <input type="radio" name="skill-level" id="filter-skill-pro" value="skill-pro" data-filter="skill-pro">
+                  <span style="color: #1e293b;">Pro</span>
+                </label>
+                <label class="filter-radio">
+                  <input type="radio" name="skill-level" id="filter-skill-avanzato" value="skill-avanzato" data-filter="skill-avanzato">
+                  <span style="color: #1e293b;">Avanzato</span>
+                </label>
+                <label class="filter-radio">
+                  <input type="radio" name="skill-level" id="filter-skill-intermedio" value="skill-intermedio" data-filter="skill-intermedio">
+                  <span style="color: #1e293b;">Intermedio</span>
+                </label>
+                <label class="filter-radio">
+                  <input type="radio" name="skill-level" id="filter-skill-base" value="skill-base" data-filter="skill-base">
+                  <span style="color: #1e293b;">Base</span>
+                </label>
+                <button type="button" id="clear-skill" class="text-xs text-slate-500 hover:text-slate-700 mt-1 text-left" style="color: #64748b;">Nessuno</button>
+              </div>
+            </div>
 
-        <!-- Strumenti finanziari (multipli) -->
-        <div class="filter-group">
-          <label class="text-sm font-semibold mb-2 block">Strumenti finanziari</label>
-          <div class="flex flex-col gap-2">
-            <label class="filter-checkbox">
-              <input type="checkbox" id="filter-azioni" data-filter="azioni">
-              <span>Azioni</span>
-            </label>
-            <label class="filter-checkbox">
-              <input type="checkbox" id="filter-etf" data-filter="etf">
-              <span>ETF</span>
-            </label>
-            <label class="filter-checkbox">
-              <input type="checkbox" id="filter-bond" data-filter="bond">
-              <span>Obbligazioni</span>
-            </label>
-            <label class="filter-checkbox">
-              <input type="checkbox" id="filter-opzioni" data-filter="opzioni">
-              <span>Opzioni</span>
-            </label>
-            <label class="filter-checkbox">
-              <input type="checkbox" id="filter-futures" data-filter="futures">
-              <span>Futures</span>
-            </label>
-            <label class="filter-checkbox">
-              <input type="checkbox" id="filter-crypto" data-filter="crypto">
-              <span>Crypto</span>
-            </label>
-            <label class="filter-checkbox">
-              <input type="checkbox" id="filter-ipo" data-filter="ipo">
-              <span>IPO</span>
-            </label>
-          </div>
-        </div>
+            <!-- Strumenti finanziari (multipli) -->
+            <div class="filter-group">
+              <label class="text-sm font-semibold mb-2 block" style="color: #1e293b;">Strumenti finanziari</label>
+              <div class="flex flex-col gap-2">
+                <label class="filter-checkbox">
+                  <input type="checkbox" id="filter-azioni" data-filter="azioni">
+                  <span style="color: #1e293b;">Azioni</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" id="filter-etf" data-filter="etf">
+                  <span style="color: #1e293b;">ETF</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" id="filter-bond" data-filter="bond">
+                  <span style="color: #1e293b;">Obbligazioni</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" id="filter-opzioni" data-filter="opzioni">
+                  <span style="color: #1e293b;">Opzioni</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" id="filter-futures" data-filter="futures">
+                  <span style="color: #1e293b;">Futures</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" id="filter-crypto" data-filter="crypto">
+                  <span style="color: #1e293b;">Crypto</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" id="filter-ipo" data-filter="ipo">
+                  <span style="color: #1e293b;">IPO</span>
+                </label>
+              </div>
+            </div>
 
-        <!-- Piattaforme e Tecnologie (multipli) -->
-        <div class="filter-group">
-          <label class="text-sm font-semibold mb-2 block">Piattaforme e Tecnologie</label>
-          <div class="flex flex-col gap-2">
-            <label class="filter-checkbox">
-              <input type="checkbox" id="filter-dma" data-filter="dma">
-              <span>DMA (Direct Market Access)</span>
-            </label>
-            <label class="filter-checkbox">
-              <input type="checkbox" id="filter-api" data-filter="api">
-              <span>API Trading</span>
-            </label>
-            <label class="filter-checkbox">
-              <input type="checkbox" id="filter-tws" data-filter="tws">
-              <span>TWS (Trader Workstation)</span>
-            </label>
-            <label class="filter-checkbox">
-              <input type="checkbox" id="filter-regime-it" data-filter="regime-it">
-              <span>Regime amministrato IT</span>
-            </label>
-            <label class="filter-checkbox">
-              <input type="checkbox" id="filter-protection" data-filter="protection">
-              <span>Protezione fondi</span>
-            </label>
-          </div>
-        </div>
+            <!-- Piattaforme e Tecnologie (multipli) -->
+            <div class="filter-group">
+              <label class="text-sm font-semibold mb-2 block" style="color: #1e293b;">Piattaforme e Tecnologie</label>
+              <div class="flex flex-col gap-2">
+                <label class="filter-checkbox">
+                  <input type="checkbox" id="filter-dma" data-filter="dma">
+                  <span style="color: #1e293b;">DMA (Direct Market Access)</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" id="filter-api" data-filter="api">
+                  <span style="color: #1e293b;">API Trading</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" id="filter-tws" data-filter="tws">
+                  <span style="color: #1e293b;">TWS (Trader Workstation)</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" id="filter-regime-it" data-filter="regime-it">
+                  <span style="color: #1e293b;">Regime amministrato IT</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" id="filter-protection" data-filter="protection">
+                  <span style="color: #1e293b;">Protezione fondi</span>
+                </label>
+              </div>
+            </div>
 
-        <!-- Visualizzazione -->
-        <div class="filter-group">
-          <label class="text-sm font-semibold mb-2 block">Visualizzazione</label>
-          <div class="flex flex-col gap-2">
-            <button id="view-all" class="btn-inline text-xs justify-start">Tutti</button>
-            <button id="view-by-skill" class="btn-inline text-xs justify-start">Per livello tecnico</button>
-            <button type="button" id="clear-all-filters" class="text-xs text-slate-500 hover:text-slate-700 mt-2 text-left">Reset filtri</button>
+            <!-- Visualizzazione -->
+            <div class="filter-group">
+              <label class="text-sm font-semibold mb-2 block" style="color: #1e293b;">Visualizzazione</label>
+              <div class="flex flex-col gap-2">
+                <button id="view-all" class="btn-inline text-xs justify-start" style="color: #1e293b;">Tutti</button>
+                <button id="view-by-skill" class="btn-inline text-xs justify-start" style="color: #1e293b;">Per livello tecnico</button>
+                <button type="button" id="clear-all-filters" class="text-xs text-slate-500 hover:text-slate-700 mt-2 text-left" style="color: #64748b;">Reset filtri</button>
+              </div>
+            </div>
           </div>
-        </div>
         </div>
         <div class="px-5 py-4 border-t border-slate-200 flex items-center justify-between bg-slate-50">
           <button type="button" id="apply-filters-btn" class="btn bg-slate-900 text-white hover:bg-slate-800">Applica filtri</button>
@@ -378,8 +404,8 @@
 </main>
 
 <!-- Modal (single, dynamic) -->
-<div id="modal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/50 p-4">
-  <div class="bg-white w-full max-w-xl rounded-xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+<div id="modal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/50 p-4" style="display: none;">
+  <div class="bg-white w-full max-w-xl rounded-xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col" style="background: #ffffff; color: #1e293b;">
     <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
       <div class="flex items-center gap-2">
         <h3 id="m-title" class="font-semibold text-slate-900">Broker</h3>
@@ -387,26 +413,26 @@
       </div>
       <button class="text-slate-500 hover:text-red-600" onclick="closeModal()">✕</button>
     </div>
-    <div class="px-5 py-4 text-sm text-slate-700 grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 overflow-y-auto">
+    <div class="px-5 py-4 text-sm text-slate-700 grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 overflow-y-auto" style="color: #1e293b;">
       <div id="m-tags" class="flex flex-wrap gap-1 sm:col-span-2"></div>
-      <div><span class="font-semibold">Tipi di strumenti:</span> <span id="m-assets"></span></div>
-      <div><span class="font-semibold">Numero strumenti:</span> <span id="m-count"></span></div>
-      <div><span class="font-semibold">Deposito minimo:</span> <span id="m-min"></span></div>
-      <div><span class="font-semibold">Regolamentazione:</span> <span id="m-reg"></span></div>
-      <div><span class="font-semibold">Valutazione Tradelia AI:</span> <span id="m-score"></span></div>
-      <div><span class="font-semibold">Livello tecnico richiesto:</span> <span id="m-skill"></span></div>
+      <div style="color: #1e293b;"><span class="font-semibold" style="color: #1e293b;">Tipi di strumenti:</span> <span id="m-assets" style="color: #475569;"></span></div>
+      <div style="color: #1e293b;"><span class="font-semibold" style="color: #1e293b;">Numero strumenti:</span> <span id="m-count" style="color: #475569;"></span></div>
+      <div style="color: #1e293b;"><span class="font-semibold" style="color: #1e293b;">Deposito minimo:</span> <span id="m-min" style="color: #475569;"></span></div>
+      <div style="color: #1e293b;"><span class="font-semibold" style="color: #1e293b;">Regolamentazione:</span> <span id="m-reg" style="color: #475569;"></span></div>
+      <div style="color: #1e293b;"><span class="font-semibold" style="color: #1e293b;">Valutazione Tradelia AI:</span> <span id="m-score" style="color: #475569;"></span></div>
+      <div style="color: #1e293b;"><span class="font-semibold" style="color: #1e293b;">Livello tecnico richiesto:</span> <span id="m-skill" style="color: #475569;"></span></div>
       <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div><span class="font-semibold">Piattaforme:</span> <span id="m-platforms"></span></div>
-        <div><span class="font-semibold">Costi (indicativi):</span> <span id="m-fees"></span></div>
+        <div style="color: #1e293b;"><span class="font-semibold" style="color: #1e293b;">Piattaforme:</span> <span id="m-platforms" style="color: #475569;"></span></div>
+        <div style="color: #1e293b;"><span class="font-semibold" style="color: #1e293b;">Costi (indicativi):</span> <span id="m-fees" style="color: #475569;"></span></div>
       </div>
       <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <div class="font-semibold mb-1">Pro</div>
-          <ul id="m-pros" class="list-disc pl-5 space-y-1"></ul>
+          <div class="font-semibold mb-1" style="color: #1e293b;">Pro</div>
+          <ul id="m-pros" class="list-disc pl-5 space-y-1" style="color: #475569;"></ul>
         </div>
         <div>
-          <div class="font-semibold mb-1">Contro</div>
-          <ul id="m-cons" class="list-disc pl-5 space-y-1"></ul>
+          <div class="font-semibold mb-1" style="color: #1e293b;">Contro</div>
+          <ul id="m-cons" class="list-disc pl-5 space-y-1" style="color: #475569;"></ul>
         </div>
       </div>
       <div id="m-cfd" class="hidden text-amber-800 bg-amber-50 border border-amber-200 px-3 py-2 rounded sm:col-span-2">
@@ -1545,15 +1571,21 @@ window.openModal = function(key) {
   }
 
   const modal = $('#modal');
-  modal.classList.remove('hidden');
-  modal.classList.add('flex');
+  if (modal) {
+    modal.style.display = 'flex';
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
 };
 
 window.closeModal = function() {
   const modal = document.getElementById('modal');
   if (modal) {
+    modal.style.display = 'none';
     modal.classList.add('hidden');
     modal.classList.remove('flex');
+    document.body.style.overflow = '';
   }
 };
 
@@ -1563,8 +1595,14 @@ document.getElementById('modal')?.addEventListener('click', (e) => {
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
-    window.closeModal();
-    closeFiltersModal();
+    const filtersModal = document.getElementById('filters-modal');
+    const modal = document.getElementById('modal');
+    if (filtersModal && filtersModal.style.display === 'flex') {
+      closeFiltersModal();
+    }
+    if (modal && modal.style.display === 'flex') {
+      window.closeModal();
+    }
   }
 });
 
@@ -1572,8 +1610,9 @@ document.addEventListener('keydown', (e) => {
 function openFiltersModal() {
   const filtersModal = document.getElementById('filters-modal');
   if (filtersModal) {
-    filtersModal.classList.remove('hidden');
+    filtersModal.style.display = 'flex';
     filtersModal.classList.add('flex');
+    filtersModal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
   }
 }
@@ -1581,6 +1620,7 @@ function openFiltersModal() {
 function closeFiltersModal() {
   const filtersModal = document.getElementById('filters-modal');
   if (filtersModal) {
+    filtersModal.style.display = 'none';
     filtersModal.classList.add('hidden');
     filtersModal.classList.remove('flex');
     document.body.style.overflow = '';
