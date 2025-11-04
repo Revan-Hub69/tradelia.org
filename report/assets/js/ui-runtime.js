@@ -93,9 +93,13 @@
     overlay.append(desktopPanel, mobilePanel);
     document.body.appendChild(overlay);
 
-    // Deleghe chiusura
+    // Deleghe chiusura - NON chiudere se click è dentro drawer mobile
     overlay.addEventListener('click', (e)=>{
       const target = e.target;
+      // Se click è dentro drawer mobile, non chiudere il panel
+      if (target.closest('.metrics-drawer-mobile')) {
+        return; // Permetti interazioni con drawer mobile
+      }
       if (target.closest('[data-panel-close]') || target === backdrop) closePanel();
     });
 
@@ -965,10 +969,13 @@
         </div>
       `).join('') : '<div class="metric-list-item" style="padding: 2rem; text-align: center; color: var(--muted);" role="status" aria-live="polite">Nessuna metrica disponibile</div>';
       
+      // Attacca listener immediatamente dopo l'aggiornamento DOM
       attachMetricItemListeners();
       
       // Scroll to top e re-bind swipe gesture dopo che il DOM è aggiornato
       requestAnimationFrame(() => {
+        // Re-attacca listener dopo che il DOM è completamente renderizzato
+        attachMetricItemListeners();
         // Force scroll reset
         if (metricsListContainer) {
           metricsListContainer.scrollTop = 0;
@@ -1033,8 +1040,9 @@
         }
         // Rimuovi listener precedenti se esistono
         if (item._metricHandler) {
-          item.removeEventListener('click', item._metricHandler);
-          item.removeEventListener('touchend', item._metricHandler);
+          item.removeEventListener('click', item._metricHandler, { capture: true });
+          item.removeEventListener('touchend', item._metricHandler, { capture: true });
+          item.removeEventListener('pointerup', item._metricHandler, { capture: true });
         }
         const handler = (e) => {
           console.log('[UI Runtime] Mobile - Metric handler chiamato:', e.type, 'key:', key);
@@ -1072,8 +1080,9 @@
       tabsArray.forEach((tab, idx) => {
         // Rimuovi listener precedenti se esistono
         if (tab._categoryTabHandler) {
-          tab.removeEventListener('click', tab._categoryTabHandler);
-          tab.removeEventListener('touchend', tab._categoryTabHandler);
+          tab.removeEventListener('click', tab._categoryTabHandler, { capture: true });
+          tab.removeEventListener('touchend', tab._categoryTabHandler, { capture: true });
+          tab.removeEventListener('pointerup', tab._categoryTabHandler, { capture: true });
         }
         
         const handler = (e) => {
