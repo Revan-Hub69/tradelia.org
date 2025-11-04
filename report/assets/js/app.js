@@ -1,380 +1,273 @@
 // /report/assets/js/app.js
-// Orchestratore runtime Tradelia AI — con HEADER TICKER integrato (2025-11-03)
-// - Legge header.json -> aggiorna <title>/footer e monta HeaderTicker
-// - Legge manifest.json -> monta i moduli F*
-// - Usa cache-buster ?v=Version (se presente in header.json)
-// - Usa Logger centralizzato invece di console.log
+// Orchestratore runtime Tradelia AI - Versione 2.0 (Semplificata e Robusta)
+// - Carica header.json e monta HeaderTicker
+// - Carica manifest.json e monta i moduli F*
+// - Gestione errori robusta
+// - Usa Logger centralizzato
 
 import Logger from './utils/logger.js';
 
-(function () {
+(function() {
+  'use strict';
+  
+  // ===== CONFIGURAZIONE =====
   const ROOT = document.getElementById('app-root');
-  let __versionQS = '';      // cache-buster aggiunto dopo lettura header.json
-  let __header = null;       // copia in memoria dell'header.json
-
-  // -----------------------------
-  // Utils
-  // -----------------------------
+  const TICKER_SLOT = document.getElementById('header-ticker-slot');
+  
+  if (!ROOT) {
+    Logger.error('App', 'app-root non trovato nel DOM');
+    return;
+  }
+  
+  if (!TICKER_SLOT) {
+    Logger.error('App', 'header-ticker-slot non trovato nel DOM');
+    return;
+  }
+  
+  let __versionQS = '';
+  let __header = null;
+  
+  // ===== UTILITIES =====
   async function fetchJSON(path) {
     try {
       const url = path + __versionQS;
       Logger.debug('App', `Fetching: ${url}`);
+      
       const res = await fetch(url, { cache: 'no-store' });
       
       if (!res.ok) {
-        const errorMsg = `Fetch error: ${path} (${res.status})`;
-        Logger.error('App', errorMsg);
-        throw new Error(errorMsg);
+        throw new Error(`HTTP ${res.status}: ${path}`);
       }
       
       const data = await res.json();
       
-      // Validazione base: verifica che sia un oggetto
       if (!data || typeof data !== 'object') {
-        Logger.warn('App', `JSON non valido o vuoto: ${path}`);
-        throw new Error(`Invalid JSON data from ${path}`);
+        throw new Error(`Invalid JSON: ${path}`);
       }
       
       return data;
     } catch (err) {
-      // Se è un errore di fetch, rilancia
-      if (err instanceof TypeError && err.message.includes('fetch')) {
-        Logger.error('App', `Errore di rete: ${err.message}`, err);
-        throw new Error(`Network error: ${err.message}`);
-      }
+      Logger.error('App', `Errore fetch ${path}`, err);
       throw err;
     }
   }
-
+  
   async function safeImport(path) {
-    return import(path + __versionQS);
+    try {
+      return await import(path + __versionQS);
+    } catch (err) {
+      Logger.error('App', `Errore import ${path}`, err);
+      throw err;
+    }
   }
-
+  
   function setText(id, val) {
     const el = document.getElementById(id);
-    if (el) el.textContent = (val ?? '—');
+    if (el) el.textContent = val ?? '—';
   }
-
+  
   function fmtDate(str) {
     if (!str) return '—';
-    try { return new Date(str).toLocaleDateString('it-IT'); }
-    catch { return String(str); }
-  }
-
-  function getReportIdFromURL() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('id') || 'sample-id';
-  }
-
-  function sectionPlaceholder(modId, msg) {
-    const wrap = document.createElement('article');
-    wrap.id = `sec-${String(modId).toLowerCase()}`;
-    wrap.className = 'report-section-block mb-8';
-    wrap.innerHTML = `
-      <div class="card-compact">
-        <div class="text-[13px] text-[color:var(--muted)]">
-          Modulo <strong>${modId}</strong> non disponibile: ${msg}
-        </div>
-      </div>`;
-    if (ROOT) ROOT.appendChild(wrap);
-  }
-
-  // -----------------------------
-  // HeaderTicker (slot + mount)
-  // -----------------------------
-  function ensureHeaderTickerSlot() {
-    let slot = document.getElementById('header-ticker-slot');
-    if (!slot) {
-      // Se il template non lo ha, lo creiamo sopra a ROOT
-      slot = document.createElement('div');
-      slot.id = 'header-ticker-slot';
-      slot.className = 'container';
-      // Inserisci prima di ROOT se esiste, altrimenti nel body
-      if (ROOT && ROOT.parentNode) {
-        ROOT.parentNode.insertBefore(slot, ROOT);
-      } else {
-        // Se ROOT non ha parent, inserisci all'inizio del body dopo header
-        const header = document.querySelector('.hdr');
-        if (header && header.nextSibling) {
-          document.body.insertBefore(slot, header.nextSibling);
-        } else {
-          document.body.insertBefore(slot, document.body.firstChild);
-        }
-      }
+    try {
+      return new Date(str).toLocaleDateString('it-IT');
+    } catch {
+      return String(str);
     }
-    return slot;
   }
-
-  function showHeaderError(message) {
-    const slot = ensureHeaderTickerSlot();
-    if (!slot) return;
+  
+  function getReportId() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('id') || 'sample-id';
+  }
+  
+  // ===== HEADER TICKER =====
+  async function mountHeaderTicker(headerData) {
+    if (!headerData || typeof headerData !== 'object') {
+      Logger.warn('App', 'Header data non valido');
+      showTickerError('Dati header non validi');
+      return;
+    }
     
-    slot.innerHTML = `
+    try {
+      const { headerTicker } = await safeImport('/report/assets/js/components/header-ticker.js');
+      
+      if (!headerTicker || typeof headerTicker.mount !== 'function') {
+        throw new Error('headerTicker.mount non disponibile');
+      }
+      
+      const node = headerTicker.mount(TICKER_SLOT);
+      
+      if (!node) {
+        throw new Error('headerTicker.mount ha restituito null');
+      }
+      
+      await headerTicker.update(node, headerData);
+      
+      Logger.debug('App', 'Header ticker montato con successo');
+    } catch (err) {
+      Logger.error('App', 'Errore montaggio header ticker', err);
+      showTickerError(`Errore: ${err.message}`);
+    }
+  }
+  
+  function showTickerError(message) {
+    TICKER_SLOT.innerHTML = `
       <div style="padding: 1rem; background: var(--surface-card); border: 1px solid var(--br-card); border-radius: var(--radius-card); color: var(--muted);">
         <div style="font-size: 13px;">⚠️ ${message}</div>
-        <div style="font-size: 11px; margin-top: 0.5rem; opacity: 0.8;">Report ID: ${getReportIdFromURL()}</div>
+        <div style="font-size: 11px; margin-top: 0.5rem; opacity: 0.8;">Report ID: ${getReportId()}</div>
       </div>
     `;
   }
-
-  async function mountHeaderTicker(header) {
-    try {
-      if (!header) {
-        Logger.warn('HeaderTicker', 'header non fornito');
-        showHeaderError('Header non fornito');
-        return;
-      }
-      
-      const slot = ensureHeaderTickerSlot();
-      if (!slot) {
-        Logger.error('HeaderTicker', 'ERRORE CRITICO: slot non trovato nel DOM');
-        return;
-      }
-      
-      Logger.debug('HeaderTicker', 'Montando header ticker');
-      
-      try {
-        const { headerTicker } = await safeImport('/report/assets/js/components/header-ticker.js');
-        
-        if (!headerTicker || typeof headerTicker.mount !== 'function') {
-          Logger.error('HeaderTicker', 'ERRORE: headerTicker non esportato correttamente');
-          showHeaderError('Errore caricamento componente header');
-          return;
-        }
-        
-        const node = headerTicker.mount(slot);
-        
-        if (!node) {
-          Logger.error('HeaderTicker', 'ERRORE: node non creato da mount()');
-          showHeaderError('Errore creazione nodo header');
-          return;
-        }
-        
-        Logger.debug('HeaderTicker', 'Node creato, aggiornando con dati');
-
-        // se è già il nuovo json verbale (ha rows) lo passo diretto
-        if (Array.isArray(header?.rows)) {
-          await headerTicker.update(node, header);
-        } else {
-          // altrimenti è il vecchio header, faccio la compat
-          await headerTicker.update(node, {
-            Ticker:          header?.Ticker,
-            Venue:           header?.Venue,
-            CompanyName:     header?.CompanyName,
-            Price:           header?.Price,
-            ChangePct:       header?.ChangePct,
-            Currency:        header?.Currency,
-            Start:           header?.Start,
-            End:             header?.End,
-            Freshness:       header?.Freshness ?? header?.FreshnessLabel,
-            ConfidenceFinal: header?.ConfidenceFinal,
-            DataIntegrity:   header?.DataIntegrity,
-            FeedSync:        header?.FeedSync,
-            State:           header?.State,
-            Version:         header?.Version,
-            UpdatedAt:       header?.UpdatedAt
-          });
-        }
-        
-        Logger.debug('HeaderTicker', 'Header montato con successo');
-      } catch (importErr) {
-        Logger.error('HeaderTicker', 'Errore import componente', importErr);
-        showHeaderError(`Errore import componente: ${importErr.message}`);
-      }
-    } catch (err) {
-      Logger.error('HeaderTicker', 'Errore nel montaggio', err);
-      showHeaderError(`Errore montaggio header: ${err.message}`);
-    }
-  }
-
-  // -----------------------------
-  // Header/Footer (da header.json)
-  // -----------------------------
-  async function mountHeaderFooter(reportId) {
+  
+  // ===== CARICAMENTO HEADER =====
+  async function loadHeader(reportId) {
     try {
       const headerPath = `/report/reports/${reportId}/header.json`;
-      Logger.debug('App', `Caricamento header da: ${headerPath}`);
+      Logger.debug('App', `Caricamento header: ${headerPath}`);
       
       const header = await fetchJSON(headerPath);
       
-      if (!header || (typeof header !== 'object')) {
-        Logger.error('App', 'Header non valido', header);
-        showHeaderError('Header non valido o vuoto');
-        __versionQS = '';
-        return;
-      }
-      
-      // Verifica che ci siano almeno dati minimi (rows o campi legacy)
+      // Validazione base
       const hasRows = Array.isArray(header?.rows) && header.rows.length > 0;
-      const hasLegacyData = header?.Ticker || header?.CompanyName;
+      const hasLegacy = header?.Ticker || header?.CompanyName;
       
-      if (!hasRows && !hasLegacyData) {
-        Logger.warn('App', 'Header senza dati utili', header);
-        showHeaderError('Header senza dati da visualizzare');
-        __versionQS = '';
-        return;
+      if (!hasRows && !hasLegacy) {
+        throw new Error('Header senza dati validi');
       }
-      
-      Logger.debug('App', 'Header caricato con successo', {
-        hasRows,
-        rowsCount: hasRows ? header.rows.length : 0,
-        hasLegacyData,
-        ticker: header?.Ticker || header?.rows?.[0]?.parts?.find(p => p.key === 'Ticker')?.value
-      });
       
       __header = header;
-
-      // cache-buster basato su Version (se presente)
+      
+      // Cache-buster
       __versionQS = header?.Version ? `?v=${encodeURIComponent(header.Version)}` : '';
-
-      if (header?.Ticker) document.title = `Framework Accademico AI, Tradelia Swing Master 5.0 · ${header.Ticker}`;
+      
+      // Aggiorna title e footer
+      if (header?.Ticker) {
+        document.title = `Framework Accademico AI, Tradelia Swing Master 5.0 · ${header.Ticker}`;
+      }
+      
       setText('footer-company', header?.CompanyName || header?.Ticker || '—');
       setText('footer-version', header?.Version || '—');
       setText('footer-snapshot', `${header?.Start ?? '—'} → ${header?.End ?? '—'}`);
       setText('footer-updated', fmtDate(header?.UpdatedAt));
-
+      
+      // Monta header ticker
       await mountHeaderTicker(header);
-    } catch (e) {
-      Logger.error('App', 'Errore caricamento header/footer', e);
       
-      // Messaggio di errore più specifico
-      let errorMsg = 'Errore caricamento header';
-      if (e.message.includes('404')) {
-        errorMsg = `File header.json non trovato (404). Report ID: ${reportId}`;
-      } else if (e.message.includes('Network error')) {
-        errorMsg = 'Errore di rete. Verifica che il server sia attivo.';
-      } else if (e.message.includes('Invalid JSON')) {
-        errorMsg = 'File header.json non valido o corrotto';
-      } else {
-        errorMsg = `${errorMsg}: ${e.message || 'Errore sconosciuto'}`;
-      }
-      
-      showHeaderError(errorMsg);
-      __versionQS = ''; // fallback senza cache-buster
+      Logger.debug('App', 'Header caricato con successo');
+      return header;
+    } catch (err) {
+      Logger.error('App', 'Errore caricamento header', err);
+      showTickerError(`Errore caricamento header: ${err.message}`);
+      __versionQS = '';
+      return null;
     }
   }
-
-  // -----------------------------
-  // Montaggio moduli F* (manifest)
-  // -----------------------------
-  async function mountModules(reportId) {
-    // Rimossi temporaneamente F1B, F2, F3o, F3 - si montano sotto header ticker
+  
+  // ===== CARICAMENTO MODULI =====
+  async function loadModules(reportId) {
     let manifest = { order: ['F4', 'F5', 'F5B', 'F6'] };
+    
     try {
       const m = await fetchJSON(`/report/reports/${reportId}/manifest.json`);
       if (Array.isArray(m?.order) && m.order.length) {
-        // Filtra solo i moduli che vogliamo mostrare (escludi F1B, F2, F3o, F3)
         const excluded = new Set(['f1b', 'f2', 'f3o', 'f3']);
-        const filteredOrder = m.order
-          .map(modId => String(modId).trim())
+        const filtered = m.order
+          .map(id => String(id).trim())
           .filter(Boolean)
-          .filter(modId => !excluded.has(modId.toLowerCase()));
-
-        if (filteredOrder.length) {
-          manifest = { order: filteredOrder };
-        } else {
-          Logger.warn('App', 'Manifest filtrato ma vuoto, uso fallback default');
+          .filter(id => !excluded.has(id.toLowerCase()));
+        
+        if (filtered.length) {
+          manifest = { order: filtered };
         }
       }
-    } catch {
-      Logger.warn('App', 'Manifest mancante, uso ordine di default.');
+    } catch (err) {
+      Logger.warn('App', 'Manifest non trovato, uso default', err);
     }
-
-    if (!ROOT) {
-      Logger.error('App', 'ERRORE CRITICO: app-root non trovato');
-      return;
-    }
-
+    
+    Logger.debug('App', `Montaggio ${manifest.order.length} moduli`);
+    
     for (const modId of manifest.order) {
       const idLower = String(modId).toLowerCase();
       const jsonPath = `/report/reports/${reportId}/${idLower}.json`;
-      const modPath  = `/report/assets/js/modules/${idLower}.js`;
-
+      const modPath = `/report/assets/js/modules/${idLower}.js`;
+      
       try {
         const json = await fetchJSON(jsonPath);
-        const mod  = await safeImport(modPath);
-
+        const mod = await safeImport(modPath);
+        
         if (typeof mod.renderCard !== 'function') {
-          sectionPlaceholder(modId, 'renderCard() non esportata');
+          Logger.warn('App', `Modulo ${modId}: renderCard non disponibile`);
           continue;
         }
-
+        
         const cardHTML = mod.renderCard(json, { reportId, modId, header: __header });
         const wrap = document.createElement('article');
         wrap.id = `sec-${idLower}`;
         wrap.className = 'report-section-block mb-8';
         wrap.innerHTML = cardHTML;
         ROOT.appendChild(wrap);
-
+        
         if (typeof mod.bindCard === 'function') {
-          try { 
-            mod.bindCard(wrap, json, { reportId, modId, header: __header }); 
-          } catch (e) { 
-            Logger.warn('App', `bindCard ${modId} errore`, e); 
+          try {
+            mod.bindCard(wrap, json, { reportId, modId, header: __header });
+          } catch (err) {
+            Logger.warn('App', `Modulo ${modId}: errore bindCard`, err);
           }
         }
-
-        // Tooltip metriche "?" (se il runtime UI è presente)
-        try { 
-          window.__TradeliaUI?.bindMetricInfoButtons?.(wrap); 
-        } catch (e) {
-          Logger.debug('App', `Errore bindMetricInfoButtons per ${modId}`, e);
+        
+        // Tooltip metriche
+        try {
+          window.__TradeliaUI?.bindMetricInfoButtons?.(wrap);
+        } catch (err) {
+          Logger.debug('App', `Modulo ${modId}: errore bindMetricInfoButtons`, err);
         }
+        
+        Logger.debug('App', `Modulo ${modId} montato con successo`);
       } catch (err) {
         Logger.warn('App', `Modulo ${modId} non caricato`, err);
-        // Evita di inserire placeholder invasivi durante i test: logga soltanto
         continue;
       }
     }
   }
-
-  // -----------------------------
-  // Mount completo
-  // -----------------------------
-  async function mountReport() {
-    if (!ROOT) {
-      Logger.error('App', 'ERRORE CRITICO: app-root non trovato nel DOM');
-      return;
-    }
-
-    const reportId = getReportIdFromURL();
-    Logger.debug('App', `Inizio montaggio report, ID: ${reportId}`);
+  
+  // ===== INIZIALIZZAZIONE =====
+  async function init() {
+    const reportId = getReportId();
+    Logger.debug('App', `Inizializzazione report: ${reportId}`);
     
-    // Assicura che lo slot esista prima di iniziare
-    const slot = ensureHeaderTickerSlot();
-    if (!slot) {
-      Logger.error('App', 'ERRORE CRITICO: Impossibile creare header-ticker-slot');
-      return;
-    }
-    
-    // Pulisci solo ROOT, non lo slot (potrebbe avere contenuto di fallback)
+    // Pulisci root
     ROOT.innerHTML = '';
     
     try {
-      await mountHeaderFooter(reportId);
+      // Carica header (non blocca se fallisce)
+      await loadHeader(reportId);
     } catch (err) {
-      Logger.error('App', 'Errore critico mountHeaderFooter', err);
-      // Non bloccare il montaggio dei moduli anche se l'header fallisce
+      Logger.error('App', 'Errore critico loadHeader', err);
     }
     
     try {
-      await mountModules(reportId);
+      // Carica moduli (non blocca se fallisce)
+      await loadModules(reportId);
     } catch (err) {
-      Logger.error('App', 'Errore critico mountModules', err);
+      Logger.error('App', 'Errore critico loadModules', err);
     }
     
-    Logger.debug('App', 'Montaggio report completato');
+    Logger.debug('App', 'Inizializzazione completata');
   }
-
-  // -----------------------------
-  // Avvio
-  // -----------------------------
+  
+  // ===== AVVIO =====
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', mountReport);
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    mountReport();
+    init();
   }
-
-  // API opzionale
-  window.TradeliaApp = { mountReport, getReportIdFromURL };
+  
+  // API pubblica
+  window.TradeliaApp = {
+    init,
+    getReportId,
+    mountHeaderTicker,
+    loadHeader,
+    loadModules
+  };
 })();
