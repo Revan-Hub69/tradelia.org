@@ -1,9 +1,11 @@
-// /report/assets/js/components/header-ticker.js
+/ /report/assets/js/components/header-ticker.js
 // Header verbale Tradelia AI (JSON-driven, inline-metrics)
-// - niente dot
 // - metriche = testo evidenziato (italic + underline)
 // - punteggiatura/parentesi SI ATTACCANO al nodo precedente
 // - footer con pulsanti dal JSON
+// - Usa Logger centralizzato invece di console.log
+
+import Logger from '../utils/logger.js';
 
 const metricToneClass = (tone) => {
   switch (tone) {
@@ -29,11 +31,11 @@ const createEl = (tag, cls, text) => {
 async function openMetricsPanel(data) {
   const ui = window.__TradeliaUI;
   if (!ui) {
-    console.warn('[HeaderTicker] window.__TradeliaUI non disponibile');
+    Logger.warn('HeaderTicker', 'window.__TradeliaUI non disponibile');
     return Promise.resolve();
   }
   if (!ui.openMetricsDrawer) {
-    console.warn('[HeaderTicker] window.__TradeliaUI.openMetricsDrawer non disponibile');
+    Logger.warn('HeaderTicker', 'window.__TradeliaUI.openMetricsDrawer non disponibile');
     return Promise.resolve();
   }
 
@@ -46,7 +48,7 @@ function renderTextPart(part) {
   const el = createEl('span', 'header-ticker-text', txt);
 
   // se è solo punteggiatura o parentesi → segniamo che va incollata
-  if (/^[,.;:!?()—–\-«»“”]+$/.test(txt.trim().replace(/\s+/g,''))) {
+  if (/^[,.;:!?()—–\-«»""]+$/.test(txt.trim().replace(/\s+/g,''))) {
     el.dataset.glue = '1';
   }
 
@@ -57,7 +59,7 @@ function renderMetricPart(part) {
   const wrap = createEl('button', `metric-inline ${metricToneClass(part.tone)}`);
   wrap.type = 'button';
   wrap.dataset.metric = part.key;
-  wrap.dataset.metricKey = part.key; // Aggiungi anche questo per debug
+  wrap.dataset.metricKey = part.key;
   wrap.setAttribute('aria-label', part.label || part.key);
   wrap.style.cursor = 'pointer'; // Assicura che sia cliccabile
 
@@ -87,29 +89,28 @@ function renderMetricPart(part) {
 
   wrap.appendChild(txt);
 
-  // Aggiungi marker per debug
   wrap.dataset.metricKey = part.key;
   wrap.dataset.metricClickHandler = 'true';
 
   wrap.addEventListener('click', (e) => {
     e.stopPropagation();
     e.preventDefault();
-    console.log('[HeaderTicker] Click su metrica:', part.key, 'event:', e, 'target:', e.target, 'currentTarget:', e.currentTarget);
+    Logger.debug('HeaderTicker', `Click su metrica: ${part.key}`);
     try {
       const ui = window.__TradeliaUI;
       const isMobile = window.matchMedia('(max-width: 768px)').matches;
       
-      console.log('[HeaderTicker] isMobile:', isMobile, 'ui:', !!ui, 'openMetricsDrawerFromMetric:', !!ui?.openMetricsDrawerFromMetric);
+      Logger.debug('HeaderTicker', `isMobile: ${isMobile}, ui disponibile: ${!!ui}`);
       
       if (isMobile) {
         // Mobile: apri drawer "Scopri tutte le metriche" e naviga a quella metrica
         const headerData = window.__headerTickerData;
-        console.log('[HeaderTicker] Mobile - headerData:', !!headerData);
+        Logger.debug('HeaderTicker', `Mobile - headerData disponibile: ${!!headerData}`);
         if (headerData && ui?.openMetricsDrawer) {
-          console.log('[HeaderTicker] Mobile - apri drawer');
+          Logger.debug('HeaderTicker', 'Mobile - apri drawer');
           // Apri pannello metriche usando funzione centralizzata
           ui.openMetricsDrawer(headerData).then(() => {
-            console.log('[HeaderTicker] Mobile - drawer aperto, naviga a metrica');
+            Logger.debug('HeaderTicker', 'Mobile - drawer aperto, naviga a metrica');
             // Usa requestAnimationFrame invece di setTimeout per navigare immediatamente
             requestAnimationFrame(() => {
               if (ui?.navigateToMetricInMobileDrawer) {
@@ -117,37 +118,34 @@ function renderMetricPart(part) {
               }
             });
           }).catch(err => {
-            console.error('[HeaderTicker] Mobile - errore apertura drawer:', err);
+            Logger.error('HeaderTicker', 'Mobile - errore apertura drawer', err);
           });
         } else {
-          console.warn('[HeaderTicker] Mobile - drawer non disponibile, dati:', {
+          Logger.warn('HeaderTicker', 'Mobile - drawer non disponibile', {
             headerData: !!headerData,
             openMetricsDrawer: !!ui?.openMetricsDrawer
           });
         }
       } else {
         // Desktop: apri drawer e seleziona metrica
-        console.log('[HeaderTicker] Desktop - apri drawer con metrica:', part.key);
+        Logger.debug('HeaderTicker', `Desktop - apri drawer con metrica: ${part.key}`);
         if (ui?.openMetricsDrawerFromMetric) {
-          console.log('[HeaderTicker] Desktop - chiamando openMetricsDrawerFromMetric');
+          Logger.debug('HeaderTicker', 'Desktop - chiamando openMetricsDrawerFromMetric');
           try {
             ui.openMetricsDrawerFromMetric(part.key);
-            console.log('[HeaderTicker] Desktop - openMetricsDrawerFromMetric chiamata con successo');
+            Logger.debug('HeaderTicker', 'Desktop - openMetricsDrawerFromMetric chiamata con successo');
           } catch (err) {
-            console.error('[HeaderTicker] Desktop - errore in openMetricsDrawerFromMetric:', err);
+            Logger.error('HeaderTicker', 'Desktop - errore in openMetricsDrawerFromMetric', err);
           }
         } else {
-          console.warn('[HeaderTicker] Desktop - openMetricsDrawerFromMetric non disponibile, ui:', !!ui);
+          Logger.warn('HeaderTicker', 'Desktop - openMetricsDrawerFromMetric non disponibile', {
+            ui: !!ui
+          });
         }
       }
     } catch (err) {
-      console.error('[HeaderTicker] Errore apertura metrica:', err);
+      Logger.error('HeaderTicker', 'Errore apertura metrica', err);
     }
-  });
-  
-  // Aggiungi anche listener su mousedown per debug
-  wrap.addEventListener('mousedown', (e) => {
-    console.log('[HeaderTicker] mousedown su metrica:', part.key, 'event:', e);
   });
 
   return wrap;
@@ -178,7 +176,7 @@ function renderRow(row) {
       // 1) Gluing: gestisce punteggiatura che può essere incollata prima o dopo
       // Se il testo è solo una parentesi aperta e il prossimo elemento è una metrica,
       // segna che va incollata alla metrica successiva (prefissa)
-      const isOnlyPunct = /^\s*([(«"])\s*$/.test(remaining);
+      const isOnlyPunct = /^\s*([(«"])/.test(remaining);
       const nextIsMetric = idx + 1 < arr.length && arr[idx + 1]?.kind === 'metric';
       
       if (isOnlyPunct && nextIsMetric) {
@@ -294,14 +292,13 @@ function renderRow(row) {
     rowEl.appendChild(currentPair);
   }
 
-  // NON bind metric info buttons - le metriche nel testo hanno già il loro click handler
-  // bindMetricInfoButtons sovrascriverebbe il nostro handler personalizzato
-
   return rowEl;
 }
 
 function renderFooter(node, data) {
   const footer = node._footer;
+  if (!footer) return;
+  
   footer.innerHTML = '';
 
   const links = data.footer?.links || [];
@@ -313,33 +310,33 @@ function renderFooter(node, data) {
       e.preventDefault();
       e.stopPropagation();
       if (isHandling) {
-        console.log('[HeaderTicker] Footer button click già in gestione, skip');
+        Logger.debug('HeaderTicker', 'Footer button click già in gestione, skip');
         return;
       }
       isHandling = true;
       
-      console.log('[HeaderTicker] Footer button click:', link.action);
+      Logger.debug('HeaderTicker', `Footer button click: ${link.action}`);
       if (link.action === 'open-metrics-panel') {
         try {
           const ui = window.__TradeliaUI;
           if (!ui?.openMetricsDrawer) {
-            console.warn('[HeaderTicker] Footer - openMetricsDrawer non disponibile');
+            Logger.warn('HeaderTicker', 'Footer - openMetricsDrawer non disponibile');
             isHandling = false;
             return;
           }
           
           // Usa sempre i dati globali per avere metricsPanel garantito
           const headerData = window.__headerTickerData || data;
-          console.log('[HeaderTicker] Footer - apri drawer con headerData, metricsPanel:', headerData.metricsPanel?.length || 0);
+          Logger.debug('HeaderTicker', `Footer - apri drawer con headerData, metricsPanel: ${headerData.metricsPanel?.length || 0}`);
           ui.openMetricsDrawer(headerData).then(() => {
-            console.log('[HeaderTicker] Footer - drawer aperto con successo');
+            Logger.debug('HeaderTicker', 'Footer - drawer aperto con successo');
             isHandling = false;
           }).catch(err => {
-            console.error('[HeaderTicker] Footer - errore apertura drawer:', err);
+            Logger.error('HeaderTicker', 'Footer - errore apertura drawer', err);
             isHandling = false;
           });
         } catch (err) {
-          console.error('[HeaderTicker] Footer - errore apertura metrics panel:', err);
+          Logger.error('HeaderTicker', 'Footer - errore apertura metrics panel', err);
           isHandling = false;
         }
       } else {
@@ -348,11 +345,14 @@ function renderFooter(node, data) {
     }, { once: false }); // Mantieni il listener ma usa flag per evitare doppi trigger
     footer.appendChild(btn);
   });
-
-  // Audit button rimosso - le metriche sono già nel drawer
 }
 
 function mount(containerEl) {
+  if (!containerEl) {
+    Logger.error('HeaderTicker', 'mount: containerEl non fornito');
+    return null;
+  }
+
   const root = createEl('section', 'header-ticker');
   const body = createEl('div', 'header-ticker-body');
   const footer = createEl('div', 'header-ticker-footer');
@@ -369,12 +369,12 @@ function mount(containerEl) {
 
 function update(node, data) {
   if (!node) {
-    console.error('[HeaderTicker] update: node non fornito');
+    Logger.error('HeaderTicker', 'update: node non fornito');
     return;
   }
   
   if (!data || typeof data !== 'object') {
-    console.error('[HeaderTicker] update: data non valido:', data);
+    Logger.error('HeaderTicker', 'update: data non valido', data);
     // Mostra messaggio di errore nel body
     if (node._body) {
       node._body.innerHTML = `
@@ -397,7 +397,7 @@ function update(node, data) {
       headerData.metricsPanel = [];
     }
     window.__headerTickerData = headerData;
-    console.log('[HeaderTicker] update - headerData salvato con metricsPanel:', headerData.metricsPanel?.length || 0);
+    Logger.debug('HeaderTicker', `update - headerData salvato con metricsPanel: ${headerData.metricsPanel.length}`);
   }
 
   node.classList.remove(
@@ -412,7 +412,7 @@ function update(node, data) {
 
   const body = node._body;
   if (!body) {
-    console.error('[HeaderTicker] update: body non trovato nel node');
+    Logger.error('HeaderTicker', 'update: body non trovato nel node');
     return;
   }
   
@@ -420,23 +420,23 @@ function update(node, data) {
 
   const rows = Array.isArray(data.rows) ? data.rows : [];
   if (rows.length > 0) {
-    console.log('[HeaderTicker] Rendering', rows.length, 'righe');
+    Logger.debug('HeaderTicker', `Rendering ${rows.length} righe`);
     rows.forEach((row) => {
       try {
         const rowEl = renderRow(row);
         if (rowEl) {
           body.appendChild(rowEl);
         } else {
-          console.warn('[HeaderTicker] renderRow ritornato null per:', row);
+          Logger.warn('HeaderTicker', 'renderRow ritornato null', row);
         }
       } catch (err) {
-        console.error('[HeaderTicker] Errore rendering riga:', err, row);
+        Logger.error('HeaderTicker', 'Errore rendering riga', err);
       }
     });
     
     // Verifica che almeno una riga sia stata renderizzata
     if (body.children.length === 0) {
-      console.error('[HeaderTicker] Nessuna riga renderizzata nonostante rows.length > 0');
+      Logger.error('HeaderTicker', 'Nessuna riga renderizzata nonostante rows.length > 0');
       body.innerHTML = `
         <div style="padding: 1rem; color: var(--muted); font-size: 13px;">
           ⚠️ Errore rendering righe header
@@ -445,7 +445,7 @@ function update(node, data) {
     }
   } else {
     // Fallback legacy: costruisce righe base da campi flat (Ticker, Price, ChangePct, ...)
-    console.log('[HeaderTicker] Usando fallback legacy, dati:', {
+    Logger.debug('HeaderTicker', 'Usando fallback legacy', {
       Ticker: data.Ticker,
       CompanyName: data.CompanyName,
       Price: data.Price
@@ -501,14 +501,14 @@ function update(node, data) {
           body.appendChild(rowEl);
         }
       } catch (err) {
-        console.error('[HeaderTicker] Errore rendering riga legacy:', err, r);
+        Logger.error('HeaderTicker', 'Errore rendering riga legacy', err);
       }
     });
   }
 
   renderFooter(node, data);
   
-  console.log('[HeaderTicker] Update completato, elementi renderizzati:', body.children.length);
+  Logger.debug('HeaderTicker', `Update completato, elementi renderizzati: ${body.children.length}`);
 }
 
 export const headerTicker = {
