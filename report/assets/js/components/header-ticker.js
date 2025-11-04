@@ -794,7 +794,9 @@ function renderMetricPart(part) {
   const wrap = createEl('button', `metric-inline ${metricToneClass(part.tone)}`);
   wrap.type = 'button';
   wrap.dataset.metric = part.key;
+  wrap.dataset.metricKey = part.key; // Aggiungi anche questo per debug
   wrap.setAttribute('aria-label', part.label || part.key);
+  wrap.style.cursor = 'pointer'; // Assicura che sia cliccabile
 
   // Formatta il valore: se è un numero, formattalo correttamente
   let displayValue = '—';
@@ -822,10 +824,14 @@ function renderMetricPart(part) {
 
   wrap.appendChild(txt);
 
+  // Aggiungi marker per debug
+  wrap.dataset.metricKey = part.key;
+  wrap.dataset.metricClickHandler = 'true';
+
   wrap.addEventListener('click', (e) => {
     e.stopPropagation();
     e.preventDefault();
-    console.log('[HeaderTicker] Click su metrica:', part.key);
+    console.log('[HeaderTicker] Click su metrica:', part.key, 'event:', e);
     try {
       const ui = window.__TradeliaUI;
       const isMobile = window.matchMedia('(max-width: 768px)').matches;
