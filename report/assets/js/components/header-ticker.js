@@ -115,13 +115,14 @@ function renderMetricPart(part) {
                 ui.navigateToMetricInMobileDrawer(part.key);
               }
             }, 500);
+          }).catch(err => {
+            console.error('[HeaderTicker] Mobile - errore apertura drawer:', err);
           });
         } else {
-          console.warn('[HeaderTicker] Mobile - fallback popup');
-          // Fallback: apri popup se drawer non disponibile
-          if (ui?.openMetricPopup) {
-            ui.openMetricPopup(part.key);
-          }
+          console.warn('[HeaderTicker] Mobile - drawer non disponibile, dati:', {
+            headerData: !!headerData,
+            openMetricsDrawer: !!ui?.openMetricsDrawer
+          });
         }
       } else {
         // Desktop: apri drawer e seleziona metrica
@@ -130,11 +131,7 @@ function renderMetricPart(part) {
           console.log('[HeaderTicker] Desktop - apri drawer con metrica');
           ui.openMetricsDrawerFromMetric(part.key);
         } else {
-          console.warn('[HeaderTicker] Desktop - fallback popup');
-          // Fallback: apri popup se drawer non disponibile
-          if (ui?.openMetricPopup) {
-            ui.openMetricPopup(part.key);
-          }
+          console.warn('[HeaderTicker] Desktop - openMetricsDrawerFromMetric non disponibile');
         }
       }
     } catch (err) {
