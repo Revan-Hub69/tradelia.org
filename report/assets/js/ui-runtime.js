@@ -996,27 +996,42 @@
     };
 
     const selectMetric = (key, source = 'delegation') => {
-      if (!key) return;
-      console.log('[UI Runtime] Mobile - Seleziona metrica:', key, 'source:', source);
+      if (!key) {
+        console.warn('[UI Runtime] Mobile - selectMetric chiamato senza key, source:', source);
+        return;
+      }
+      console.log('[UI Runtime] Mobile - Seleziona metrica:', key, 'source:', source, 'metricsWithGlossary length:', metricsWithGlossary.length);
       const metric = metricsWithGlossary.find(m => m.key === key);
       if (metric) {
+        console.log('[UI Runtime] Mobile - Metrica trovata, apro dettaglio:', metric.key, 'drawer2:', !!drawer2, 'drawer2Title:', !!drawer2Title, 'drawer2Content:', !!drawer2Content);
         openMetricDetail(metric, drawer2, drawer2Title, drawer2Content);
         drawer1.classList.remove('active');
         drawer2.classList.add('active');
+        console.log('[UI Runtime] Mobile - Drawer2 attivato, drawer1 active:', drawer1.classList.contains('active'), 'drawer2 active:', drawer2.classList.contains('active'));
         const backButton = drawer2.querySelector('.metrics-drawer-2__back');
         if (backButton) {
-          setTimeout(() => backButton.focus(), 120);
+          setTimeout(() => {
+            backButton.focus();
+            console.log('[UI Runtime] Mobile - Focus spostato su back button');
+          }, 120);
+        } else {
+          console.warn('[UI Runtime] Mobile - Back button non trovato!');
         }
       } else {
-        console.warn('[UI Runtime] Mobile - Metrica non trovata per key:', key, 'available keys:', metricsWithGlossary.map(m => m.key).slice(0, 5));
+        console.warn('[UI Runtime] Mobile - Metrica non trovata per key:', key, 'available keys:', metricsWithGlossary.map(m => m.key).slice(0, 10));
       }
     };
 
     const attachMetricItemListeners = () => {
       const items = metricsList.querySelectorAll('.metric-list-item.swipeable');
-      items.forEach(item => {
+      console.log('[UI Runtime] attachMetricItemListeners - item trovati:', items.length);
+      items.forEach((item, idx) => {
         const key = item.getAttribute('data-metric-key');
-        if (!key) return;
+        if (!key) {
+          console.warn('[UI Runtime] attachMetricItemListeners - item senza key:', item, 'index:', idx);
+          return;
+        }
+        // Rimuovi listener precedenti se esistono
         if (item._metricHandler) {
           item.removeEventListener('click', item._metricHandler);
           item.removeEventListener('touchend', item._metricHandler);
@@ -1024,12 +1039,17 @@
         const handler = (e) => {
           e.preventDefault();
           e.stopPropagation();
+          console.log('[UI Runtime] Mobile - Click/Touch su metrica item:', key, 'event type:', e.type, 'source:', e.type === 'touchend' ? 'touch' : 'click');
           selectMetric(key, e.type === 'touchend' ? 'touch' : 'click');
         };
         item._metricHandler = handler;
-        item.addEventListener('click', handler, { passive: false });
-        item.addEventListener('touchend', handler, { passive: false });
+        item.addEventListener('click', handler, { passive: false, capture: false });
+        item.addEventListener('touchend', handler, { passive: false, capture: false });
+        // Aggiungi anche pointerup per maggiore compatibilità
+        item.addEventListener('pointerup', handler, { passive: false, capture: false });
+        console.log('[UI Runtime] attachMetricItemListeners - listener attaccato su item:', key, 'index:', idx);
       });
+      console.log('[UI Runtime] attachMetricItemListeners - completato, listener attaccati:', items.length);
     };
 
     // Attacca listener DIRETTI sui tab categoria per maggiore affidabilità
@@ -1054,7 +1074,7 @@
           e.preventDefault();
           e.stopPropagation();
           const category = tab.getAttribute('data-category') || tab.dataset.category;
-          console.log('[UI Runtime] Mobile - Tab click diretto:', category, 'tab index:', idx, 'event type:', e.type, 'tab:', tab);
+          console.log('[UI Runtime] Mobile - Tab click diretto:', category, 'tab index:', idx, 'event type:', e.type, 'tab:', tab, 'currentTarget:', e.currentTarget);
           if (category) {
             handleCategoryChange(category, tab);
           } else {
@@ -1066,6 +1086,8 @@
         // Attacca sia click che touchend per mobile
         tab.addEventListener('click', handler, { passive: false, capture: false });
         tab.addEventListener('touchend', handler, { passive: false, capture: false });
+        // Aggiungi anche pointerup per maggiore compatibilità
+        tab.addEventListener('pointerup', handler, { passive: false, capture: false });
         // Aggiungi anche touchstart per maggiore compatibilità
         tab.addEventListener('touchstart', (e) => {
           // Non fare nulla, solo per evitare che altri handler interferiscano
@@ -1085,10 +1107,12 @@
       console.warn('[UI Runtime] setupMobileMetricsDrawer - Nessun tab trovato inizialmente, riprovo...');
       const retryTabs = () => {
         categoryTabs = attachTabListeners();
+        attachMetricItemListeners(); // Ricarica anche i listener delle metriche
         if (categoryTabs.length === 0) {
           console.warn('[UI Runtime] setupMobileMetricsDrawer - Ancora nessun tab, riprovo dopo 100ms...');
           setTimeout(() => {
             categoryTabs = attachTabListeners();
+            attachMetricItemListeners(); // Ricarica anche i listener delle metriche
             if (categoryTabs.length === 0) {
               console.error('[UI Runtime] setupMobileMetricsDrawer - CRITICO: Nessun tab trovato anche dopo delay!');
               // Prova comunque ad attaccare listener su container per event delegation
@@ -1132,7 +1156,12 @@
         e.preventDefault();
         e.stopPropagation();
         const key = item.getAttribute('data-metric-key') || item.dataset.metricKey;
-        selectMetric(key, 'delegation');
+        console.log('[UI Runtime] Mobile - Click su metrica (delegation), key:', key, 'item:', item);
+        if (key) {
+          selectMetric(key, 'delegation');
+        } else {
+          console.warn('[UI Runtime] Mobile - Item senza key!', item, 'attributes:', Array.from(item.attributes).map(a => `${a.name}="${a.value}"`).join(', '));
+        }
         return;
       }
     };
@@ -1153,6 +1182,12 @@
     container.addEventListener('touchend', (e) => {
       // Solo se è un tap veloce (non swipe) e target stesso
       const touchDuration = Date.now() - touchStartTime;
+      // Se il target è già un tab o metric item, non interferire (hanno listener diretti)
+      const isTabOrMetric = e.target.closest('.metric-category-tab') || e.target.closest('.metric-list-item.swipeable');
+      if (isTabOrMetric) {
+        // Lascia che i listener diretti gestiscano l'evento
+        return;
+      }
       if (touchDuration < 300 && e.target === touchStartTarget) {
         // Evita doppia esecuzione se click è già stato gestito
         setTimeout(() => {
@@ -1823,14 +1858,31 @@
     const categoryTab = Array.from(categoryTabs).find(tab => tab.getAttribute('data-category') === category);
     
     if (categoryTab) {
+      // Simula click sul tab per cambiare categoria
       categoryTab.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
       
+      // Dopo che la categoria è cambiata, simula click sulla metrica
       requestAnimationFrame(() => {
-        const metricItem = drawer.querySelector(`[data-metric-key="${metricKey}"]`);
-        if (metricItem) {
-          selectMetric(metricKey, 'programmatic');
-        }
+        setTimeout(() => {
+          const metricItem = drawer.querySelector(`.metric-list-item.swipeable[data-metric-key="${metricKey}"]`);
+          if (metricItem) {
+            console.log('[UI Runtime] navigateToMetricInMobileDrawer - Simulo click su metrica:', metricKey);
+            // Simula click invece di chiamare selectMetric direttamente
+            metricItem.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+          } else {
+            console.warn('[UI Runtime] navigateToMetricInMobileDrawer - Metrica item non trovato:', metricKey);
+            // Retry se non trovato
+            if (retryCount < MAX_RETRIES - 1) {
+              setTimeout(() => navigateToMetricInMobileDrawer(metricKey, retryCount + 1), 200);
+            }
+          }
+        }, 150); // Delay per permettere il cambio categoria
       });
+    } else {
+      console.warn('[UI Runtime] navigateToMetricInMobileDrawer - Tab categoria non trovato per:', category);
+      if (retryCount < MAX_RETRIES - 1) {
+        requestAnimationFrame(() => navigateToMetricInMobileDrawer(metricKey, retryCount + 1));
+      }
     }
   }
 
