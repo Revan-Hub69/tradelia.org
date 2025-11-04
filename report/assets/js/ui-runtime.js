@@ -869,12 +869,14 @@
 
     // Handler unificato per tutti i click sul container
     const handleContainerClick = (e) => {
-      // Check per tab categoria
+      // Check per tab categoria - supporta click su button o su elementi interni
       const tab = e.target.closest('.metric-category-tab');
       if (tab) {
         e.preventDefault();
         e.stopPropagation();
-        const category = tab.getAttribute('data-category');
+        const category = tab.getAttribute('data-category') || tab.dataset.category;
+        if (!category) return;
+        
         console.log('[UI Runtime] Mobile - Click categoria:', category);
         const metrics = metricsByCategory[category] || [];
         
@@ -902,12 +904,14 @@
         return;
       }
 
-      // Check per metric item
+      // Check per metric item - supporta click su qualsiasi parte dell'item
       const item = e.target.closest('.metric-list-item.swipeable');
       if (item) {
         e.preventDefault();
         e.stopPropagation();
-        const key = item.getAttribute('data-metric-key');
+        const key = item.getAttribute('data-metric-key') || item.dataset.metricKey;
+        if (!key) return;
+        
         console.log('[UI Runtime] Mobile - Click su metrica, key:', key, 'metricsWithGlossary length:', metricsWithGlossary.length);
         const metric = metricsWithGlossary.find(m => m.key === key);
         if (metric) {
@@ -922,8 +926,12 @@
       }
     };
 
-    // Aggiungi un solo listener per tutti i click
+    // Aggiungi listener per click e touchstart (mobile)
     container.addEventListener('click', handleContainerClick, { passive: false });
+    container.addEventListener('touchend', (e) => {
+      // Per mobile, usa touchend per evitare conflitti con swipe
+      handleContainerClick(e);
+    }, { passive: false });
 
     // Swipe gesture per aprire drawer 2
     setupSwipeGesture(container, metricsWithGlossary, drawer2, drawer2Title, drawer2Content);

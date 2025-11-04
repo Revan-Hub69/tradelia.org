@@ -13,9 +13,34 @@
   // Utils
   // -----------------------------
   async function fetchJSON(path) {
-    const res = await fetch(path + __versionQS, { cache: 'no-store' });
-    if (!res.ok) throw new Error(`Fetch error: ${path} (${res.status})`);
-    return await res.json();
+    try {
+      const url = path + __versionQS;
+      console.log('[App] Fetching:', url);
+      const res = await fetch(url, { cache: 'no-store' });
+      
+      if (!res.ok) {
+        const errorMsg = `Fetch error: ${path} (${res.status})`;
+        console.error('[App]', errorMsg);
+        throw new Error(errorMsg);
+      }
+      
+      const data = await res.json();
+      
+      // Validazione base: verifica che sia un oggetto
+      if (!data || typeof data !== 'object') {
+        console.warn('[App] JSON non valido o vuoto:', path);
+        throw new Error(`Invalid JSON data from ${path}`);
+      }
+      
+      return data;
+    } catch (err) {
+      // Se è un errore di fetch, rilancia
+      if (err instanceof TypeError && err.message.includes('fetch')) {
+        console.error('[App] Errore di rete:', err);
+        throw new Error(`Network error: ${err.message}`);
+      }
+      throw err;
+    }
   }
 
   async function safeImport(path) {
@@ -73,58 +98,86 @@
     return slot;
   }
 
+  function showHeaderError(message) {
+    const slot = ensureHeaderTickerSlot();
+    if (!slot) return;
+    
+    slot.innerHTML = `
+      <div style="padding: 1rem; background: var(--surface-card); border: 1px solid var(--br-card); border-radius: var(--radius-card); color: var(--muted);">
+        <div style="font-size: 13px;">⚠️ ${message}</div>
+        <div style="font-size: 11px; margin-top: 0.5rem; opacity: 0.8;">Report ID: ${getReportIdFromURL()}</div>
+      </div>
+    `;
+  }
+
 async function mountHeaderTicker(header) {
   try {
     if (!header) {
       console.warn('[HeaderTicker] header non fornito');
+      showHeaderError('Header non fornito');
       return;
     }
     
     const slot = ensureHeaderTickerSlot();
     if (!slot) {
-      console.warn('[HeaderTicker] slot non trovato');
+      console.error('[HeaderTicker] ERRORE CRITICO: slot non trovato nel DOM');
       return;
     }
     
     console.log('[HeaderTicker] Montando header ticker, slot:', slot);
-    const { headerTicker } = await safeImport('/report/assets/js/components/header-ticker.js');
-    const node = headerTicker.mount(slot);
     
-    if (!node) {
-      console.warn('[HeaderTicker] node non creato');
-      return;
-    }
-    
-    console.log('[HeaderTicker] Node creato, aggiornando con dati:', header);
+    try {
+      const { headerTicker } = await safeImport('/report/assets/js/components/header-ticker.js');
+      
+      if (!headerTicker || typeof headerTicker.mount !== 'function') {
+        console.error('[HeaderTicker] ERRORE: headerTicker non esportato correttamente');
+        showHeaderError('Errore caricamento componente header');
+        return;
+      }
+      
+      const node = headerTicker.mount(slot);
+      
+      if (!node) {
+        console.error('[HeaderTicker] ERRORE: node non creato da mount()');
+        showHeaderError('Errore creazione nodo header');
+        return;
+      }
+      
+      console.log('[HeaderTicker] Node creato, aggiornando con dati:', header);
 
-    // se è già il nuovo json verbale (ha rows) lo passo diretto
-    if (Array.isArray(header?.rows)) {
-      await headerTicker.update(node, header);
-    } else {
-      // altrimenti è il vecchio header, faccio la compat
-      await headerTicker.update(node, {
-        Ticker:          header?.Ticker,
-        Venue:           header?.Venue,
-        CompanyName:     header?.CompanyName,
-        Price:           header?.Price,
-        ChangePct:       header?.ChangePct,
-        Currency:        header?.Currency,
-        Start:           header?.Start,
-        End:             header?.End,
-        Freshness:       header?.Freshness ?? header?.FreshnessLabel,
-        ConfidenceFinal: header?.ConfidenceFinal,
-        DataIntegrity:   header?.DataIntegrity,
-        FeedSync:        header?.FeedSync,
-        State:           header?.State,
-        Version:         header?.Version,
-        UpdatedAt:       header?.UpdatedAt
-      });
+      // se è già il nuovo json verbale (ha rows) lo passo diretto
+      if (Array.isArray(header?.rows)) {
+        await headerTicker.update(node, header);
+      } else {
+        // altrimenti è il vecchio header, faccio la compat
+        await headerTicker.update(node, {
+          Ticker:          header?.Ticker,
+          Venue:           header?.Venue,
+          CompanyName:     header?.CompanyName,
+          Price:           header?.Price,
+          ChangePct:       header?.ChangePct,
+          Currency:        header?.Currency,
+          Start:           header?.Start,
+          End:             header?.End,
+          Freshness:       header?.Freshness ?? header?.FreshnessLabel,
+          ConfidenceFinal: header?.ConfidenceFinal,
+          DataIntegrity:   header?.DataIntegrity,
+          FeedSync:        header?.FeedSync,
+          State:           header?.State,
+          Version:         header?.Version,
+          UpdatedAt:       header?.UpdatedAt
+        });
+      }
+      
+      console.log('[HeaderTicker] Header montato con successo');
+    } catch (importErr) {
+      console.error('[HeaderTicker] Errore import componente:', importErr);
+      showHeaderError(`Errore import componente: ${importErr.message}`);
     }
-    
-    console.log('[HeaderTicker] Header montato con successo');
   } catch (err) {
     console.error('[HeaderTicker] Errore nel montaggio:', err);
     console.error('[HeaderTicker] Stack:', err.stack);
+    showHeaderError(`Errore montaggio header: ${err.message}`);
   }
 }
 
@@ -133,7 +186,36 @@ async function mountHeaderTicker(header) {
   // -----------------------------
   async function mountHeaderFooter(reportId) {
     try {
-      const header = await fetchJSON(`/report/reports/${reportId}/header.json`);
+      const headerPath = `/report/reports/${reportId}/header.json`;
+      console.log('[App] Caricamento header da:', headerPath);
+      
+      const header = await fetchJSON(headerPath);
+      
+      if (!header || (typeof header !== 'object')) {
+        console.error('[App] Header non valido:', header);
+        showHeaderError('Header non valido o vuoto');
+        __versionQS = '';
+        return;
+      }
+      
+      // Verifica che ci siano almeno dati minimi (rows o campi legacy)
+      const hasRows = Array.isArray(header?.rows) && header.rows.length > 0;
+      const hasLegacyData = header?.Ticker || header?.CompanyName;
+      
+      if (!hasRows && !hasLegacyData) {
+        console.warn('[App] Header senza dati utili:', header);
+        showHeaderError('Header senza dati da visualizzare');
+        __versionQS = '';
+        return;
+      }
+      
+      console.log('[App] Header caricato con successo:', {
+        hasRows,
+        rowsCount: hasRows ? header.rows.length : 0,
+        hasLegacyData,
+        ticker: header?.Ticker || header?.rows?.[0]?.parts?.find(p => p.key === 'Ticker')?.value
+      });
+      
       __header = header;
 
       // cache-buster basato su Version (se presente)
@@ -147,7 +229,22 @@ async function mountHeaderTicker(header) {
 
       await mountHeaderTicker(header);
     } catch (e) {
-      console.warn('Header/footer non disponibili:', e);
+      console.error('[App] Errore caricamento header/footer:', e);
+      console.error('[App] Stack:', e.stack);
+      
+      // Messaggio di errore più specifico
+      let errorMsg = 'Errore caricamento header';
+      if (e.message.includes('404') || e.message.includes('404')) {
+        errorMsg = `File header.json non trovato (404). Report ID: ${reportId}`;
+      } else if (e.message.includes('Network error')) {
+        errorMsg = 'Errore di rete. Verifica che il server sia attivo.';
+      } else if (e.message.includes('Invalid JSON')) {
+        errorMsg = 'File header.json non valido o corrotto';
+      } else {
+        errorMsg = `${errorMsg}: ${e.message || 'Errore sconosciuto'}`;
+      }
+      
+      showHeaderError(errorMsg);
       __versionQS = ''; // fallback senza cache-buster
     }
   }
@@ -204,9 +301,32 @@ async function mountHeaderTicker(header) {
   // -----------------------------
   async function mountReport() {
     const reportId = getReportIdFromURL();
+    console.log('[App] Inizio montaggio report, ID:', reportId);
+    
+    // Assicura che lo slot esista prima di iniziare
+    const slot = ensureHeaderTickerSlot();
+    if (!slot) {
+      console.error('[App] ERRORE CRITICO: Impossibile creare header-ticker-slot');
+      return;
+    }
+    
+    // Pulisci solo ROOT, non lo slot (potrebbe avere contenuto di fallback)
     if (ROOT) ROOT.innerHTML = '';
-    await mountHeaderFooter(reportId);
-    await mountModules(reportId);
+    
+    try {
+      await mountHeaderFooter(reportId);
+    } catch (err) {
+      console.error('[App] Errore critico mountHeaderFooter:', err);
+      // Non bloccare il montaggio dei moduli anche se l'header fallisce
+    }
+    
+    try {
+      await mountModules(reportId);
+    } catch (err) {
+      console.error('[App] Errore critico mountModules:', err);
+    }
+    
+    console.log('[App] Montaggio report completato');
   }
 
   // -----------------------------

@@ -6,24 +6,299 @@
   <meta name="description" content="Report Framework Accademico AI, Tradelia Swing Master 5.0" />
   <title>TRADELIA • AI — Report</title>
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <style>
+    html, body { 
+      height: 100%; 
+      margin: 0;
+      padding: 0;
+    }
+    body { 
+      display: flex; 
+      flex-direction: column; 
+      min-height: 100vh;
+    }
+    
+    /* container */
+    .container { 
+      max-width: 90rem; 
+      margin-inline: auto; 
+      padding-inline: 1rem; 
+    }
+    
+    main { 
+      flex: 1; 
+      padding-top: 5rem; /* spazio per header fisso */
+      padding-bottom: 2rem; 
+    }
+
+    /* ===== HEADER ===== */
+    .hdr {
+      position: fixed;
+      inset: 0 auto auto 0;
+      right: 0;
+      height: 56px;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      backdrop-filter: saturate(1.1) blur(10px);
+      background: color-mix(in oklab, var(--surface-card) 86%, transparent);
+      border-bottom: 1px solid var(--br-soft);
+      box-shadow: 0 1px 0 var(--br-soft);
+    }
+
+    /* ===== BRAND ===== */
+    .brand { 
+      font-weight: 900; 
+      letter-spacing: -0.02em; 
+      display: inline-flex; 
+      align-items: center; 
+      gap: .35rem; 
+    }
+    .brand-word { 
+      color: var(--ink); 
+    }
+    .brand-suffix { 
+      color: var(--ink); 
+      font-weight: 900; 
+    }
+    .brand-dot { 
+      width: 10px; 
+      height: 10px; 
+      border-radius: 999px; 
+      background: var(--brand-600); 
+      display: inline-block; 
+    }
+    .brand--sm .brand-word { 
+      font-weight: 700; 
+    }
+    .brand--sm .brand-dot { 
+      width: 8px; 
+      height: 8px; 
+    }
+    .brand--sm .brand-suffix { 
+      font-weight: 700; 
+    }
+    a.brand { 
+      transition: opacity .18s ease, transform .18s ease; 
+    }
+    a.brand:hover { 
+      opacity: .9; 
+      transform: translateY(-1px); 
+    }
+
+    /* ===== FOOTER ===== */
+    .site-footer {
+      position: relative;
+      z-index: 10;
+      background: var(--footer-bg);
+      border-top: 1px solid var(--footer-br);
+      color: var(--ink-soft);
+      font-size: 14px;
+      margin-top: auto;
+    }
+    .ftr-head {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      color: var(--ink);
+      margin-bottom: .6rem;
+    }
+    .ftr-grid { 
+      display: grid; 
+      gap: 2rem; 
+      grid-template-columns: 1fr; 
+    }
+    @media (min-width: 768px) { 
+      .ftr-grid { 
+        grid-template-columns: repeat(3, 1fr); 
+      } 
+    }
+    .ftr-list li { 
+      margin: .25rem 0; 
+    }
+    .ftr-bottom {
+      border-top: 1px solid var(--br-soft);
+      margin-top: 2rem;
+      padding-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    @media (min-width: 768px) {
+      .ftr-bottom { 
+        flex-direction: row; 
+        justify-content: space-between; 
+        align-items: center; 
+      }
+    }
+
+    /* Link & social */
+    .site-footer a {
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color .18s ease, border-color .18s ease, opacity .18s ease, transform .18s ease;
+      color: var(--ink-soft);
+    }
+    .site-footer a:hover { 
+      border-bottom-color: currentColor; 
+      color: var(--ink);
+    }
+    a.mail-link { 
+      text-underline-offset: 2px; 
+      text-decoration-thickness: 1px; 
+    }
+
+    .ftr-socials a {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      color: var(--ink-soft);
+    }
+    .ftr-socials a::after {
+      content: "";
+      position: absolute;
+      left: 19px;
+      right: 0;
+      bottom: -2px;
+      height: 1px;
+      background: currentColor;
+      opacity: 0;
+      transform: scaleX(.35);
+      transform-origin: left;
+      transition: transform .18s ease, opacity .18s ease;
+    }
+    .ftr-socials a:hover { 
+      color: var(--ink); 
+      transform: translateX(2px); 
+    }
+    .ftr-socials a:hover::after { 
+      opacity: .6; 
+      transform: scaleX(1); 
+    }
+
+    /* ===== ICONS ===== */
+    .ico { 
+      width: 16px; 
+      height: 16px; 
+      stroke: currentColor; 
+      fill: none; 
+      stroke-width: 1.8; 
+      stroke-linecap: round; 
+      stroke-linejoin: round; 
+      flex-shrink: 0; 
+    }
+    .ico-lg { 
+      width: 18px; 
+      height: 18px; 
+    }
+    .ico-xl { 
+      width: 20px; 
+      height: 20px; 
+    }
+
+    /* ===== ANIMATIONS ===== */
+    .animate-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .4; }
+    }
+  </style>
 </head>
 <body>
+  <!-- ===== HEADER ===== -->
+  <header class="hdr">
+    <div class="container w-full flex items-center justify-between">
+      <a href="/index.html"
+         class="text-lg sm:text-xl font-extrabold tracking-tight hover:opacity-90 transition"
+         aria-label="Tradelia.org"
+         style="color: var(--ink);">
+        <span>TRADELIA</span>
+        <span class="animate-pulse" style="color: var(--brand-600);">&bull;AI</span>
+      </a>
+    </div>
+  </header>
+
   <div id="header-ticker-slot" class="container"></div>
   <main id="app-root"></main>
 
-  <footer id="footer" class="noprint">
-    <div class="footer-content">
-      <div class="footer-links">
-        <a href="https://tradelia.org" target="_blank" rel="noopener">Home</a>
-        <a href="https://tradelia.org/archivio.html" target="_blank" rel="noopener">Archivio</a>
-        <a href="https://tradelia.org/brokers.html" target="_blank" rel="noopener">Brokers</a>
-        <button id="btn-privacy-open" class="btn btn-sm">Privacy</button>
-        <button id="btn-mifid-open" class="btn btn-sm">Informativa MiFID</button>
-      </div>
-      <div class="footer-meta">
-        <div><span id="footer-company">—</span> · <span id="footer-version">—</span></div>
-        <div><span id="footer-snapshot">—</span> · <span id="footer-updated">—</span></div>
-        <div>© <span id="footer-year"></span> Framework Accademico AI, Tradelia Swing Master 5.0</div>
+  <!-- FOOTER -->
+  <footer class="site-footer noprint mt-auto py-10">
+    <div class="container">
+      <section class="ftr-grid">
+        <!-- Col 1 -->
+        <div class="ftr-col">
+          <h3 class="ftr-head">
+            <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 3h16v18H4z"/><path d="M8 7h8M8 11h8M8 15h6"/>
+            </svg>
+            <span>Tradelia AI</span>
+          </h3>
+          <p>
+            Analisi multi-fattore su contesto macro, sentiment e tecnica (orizzonte 3–10 giorni).<br/>
+            Materiale esclusivamente informativo e formativo — nessuna raccomandazione personalizzata.
+          </p>
+        </div>
+
+        <!-- Col 2 -->
+        <div class="ftr-col">
+          <h3 class="ftr-head">
+            <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2l7 4v6c0 5-3 8-7 10C8 20 5 17 5 12V6l7-4z"/><path d="M12 8v4"/>
+            </svg>
+            <span>Compliance &amp; Risk</span>
+          </h3>
+          <ul class="ftr-list">
+            <li><strong>Non è consulenza in materia di investimenti</strong> (MiFID II / ESMA / CONSOB)</li>
+            <li>Tradelia AI non è un intermediario autorizzato; <strong>non gestisce capitali né esegue ordini</strong></li>
+            <li><strong>Rischio di perdita totale o parziale del capitale</strong> — investire comporta rischi</li>
+            <li>Le informazioni hanno <strong>scopo puramente informativo e formativo</strong> — non costituiscono raccomandazione personalizzata</li>
+          </ul>
+          <div class="mt-3 flex flex-wrap gap-4">
+            <button id="btn-privacy-open" class="btn btn-sm" type="button">Privacy</button>
+            <button id="btn-mifid-open" class="btn btn-sm" type="button">Informativa MiFID</button>
+          </div>
+        </div>
+
+        <!-- Col 3 -->
+        <div class="ftr-col">
+          <h3 class="ftr-head">
+            <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 12h16"/><path d="M12 4l8 8-8 8"/>
+            </svg>
+            <span>Canali ufficiali</span>
+          </h3>
+          <p class="mb-2">Aggiornamenti su metodologia e release:</p>
+          <div class="ftr-socials flex flex-col gap-2">
+            <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener" aria-label="LinkedIn">LinkedIn</a>
+            <a href="https://x.com/tradelia_ai" target="_blank" rel="noopener" aria-label="X (Twitter)">X (Twitter)</a>
+            <a href="https://www.reddit.com/r/TradeliaAI" target="_blank" rel="noopener" aria-label="Reddit">Reddit</a>
+            <a href="https://www.quora.com" target="_blank" rel="noopener" aria-label="Quora">Quora</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bottom line -->
+      <div class="ftr-bottom">
+        <div>
+          © <span id="footer-year"></span>
+          <span class="brand brand--sm">
+            <span class="brand-word">Tradelia</span>
+            <span class="brand-dot" aria-hidden="true"></span>
+            <span class="brand-suffix">AI</span>
+          </span>
+          · Tutti i diritti riservati ·
+          <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>
+        </div>
+        <div>
+          <span id="footer-company">—</span> · <span id="footer-version">—</span> · 
+          <span id="footer-snapshot">—</span> · <span id="footer-updated">—</span>
+        </div>
       </div>
     </div>
   </footer>

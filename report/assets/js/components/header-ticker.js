@@ -368,7 +368,23 @@ function mount(containerEl) {
 }
 
 function update(node, data) {
-  if (!node || !data) return;
+  if (!node) {
+    console.error('[HeaderTicker] update: node non fornito');
+    return;
+  }
+  
+  if (!data || typeof data !== 'object') {
+    console.error('[HeaderTicker] update: data non valido:', data);
+    // Mostra messaggio di errore nel body
+    if (node._body) {
+      node._body.innerHTML = `
+        <div style="padding: 1rem; color: var(--muted); font-size: 13px;">
+          ⚠️ Dati header non validi
+        </div>
+      `;
+    }
+    return;
+  }
 
   // Salva dati header globalmente per aprire drawer da click su metrica
   // IMPORTANTE: assicura che metricsPanel sia sempre presente
@@ -395,15 +411,46 @@ function update(node, data) {
   else if (st === 'REVIEW') node.classList.add('header-ticker--state-err');
 
   const body = node._body;
+  if (!body) {
+    console.error('[HeaderTicker] update: body non trovato nel node');
+    return;
+  }
+  
   body.innerHTML = '';
 
   const rows = Array.isArray(data.rows) ? data.rows : [];
   if (rows.length > 0) {
+    console.log('[HeaderTicker] Rendering', rows.length, 'righe');
     rows.forEach((row) => {
-      body.appendChild(renderRow(row));
+      try {
+        const rowEl = renderRow(row);
+        if (rowEl) {
+          body.appendChild(rowEl);
+        } else {
+          console.warn('[HeaderTicker] renderRow ritornato null per:', row);
+        }
+      } catch (err) {
+        console.error('[HeaderTicker] Errore rendering riga:', err, row);
+      }
     });
+    
+    // Verifica che almeno una riga sia stata renderizzata
+    if (body.children.length === 0) {
+      console.error('[HeaderTicker] Nessuna riga renderizzata nonostante rows.length > 0');
+      body.innerHTML = `
+        <div style="padding: 1rem; color: var(--muted); font-size: 13px;">
+          ⚠️ Errore rendering righe header
+        </div>
+      `;
+    }
   } else {
     // Fallback legacy: costruisce righe base da campi flat (Ticker, Price, ChangePct, ...)
+    console.log('[HeaderTicker] Usando fallback legacy, dati:', {
+      Ticker: data.Ticker,
+      CompanyName: data.CompanyName,
+      Price: data.Price
+    });
+    
     const intro = {
       id: 'intro-line',
       parts: [
@@ -447,10 +494,21 @@ function update(node, data) {
       ]
     };
 
-    [intro, quality, windowLine].forEach(r => body.appendChild(renderRow(r)));
+    [intro, quality, windowLine].forEach(r => {
+      try {
+        const rowEl = renderRow(r);
+        if (rowEl) {
+          body.appendChild(rowEl);
+        }
+      } catch (err) {
+        console.error('[HeaderTicker] Errore rendering riga legacy:', err, r);
+      }
+    });
   }
 
   renderFooter(node, data);
+  
+  console.log('[HeaderTicker] Update completato, elementi renderizzati:', body.children.length);
 }
 
 export const headerTicker = {
