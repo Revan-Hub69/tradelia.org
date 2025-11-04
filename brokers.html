@@ -1053,29 +1053,81 @@ function renderBrokers() {
       cfdHeader.className = 'col-span-full mt-12 mb-6';
       cfdHeader.innerHTML = `
         <div class="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-r-lg">
-          <h2 class="text-2xl font-bold text-amber-900 mb-4">⚠️ Broker CFD Specializzati — Avvertenza ai sensi di MiFID II / ESMA</h2>
-          <p class="text-sm text-amber-800 leading-relaxed mb-3">
-            <strong>Avvertenza ai sensi di MiFID II / ESMA / CONSOB:</strong> Se la vostra strategia prevede di utilizzare <strong>per forza di cose CFD</strong>, 
-            e siete <strong>pienamente consapevoli dei rischi elevatissimi</strong> di questo tipo di prodotto, 
-            almeno utilizzate un broker con <strong>bassissimi costi di spread e commissioni</strong>, 
-            ritenuto tra i più <strong>affidabili con licenze di altissimo livello</strong>.
-          </p>
-          <div class="bg-amber-100 border border-amber-300 p-4 rounded mt-3">
-            <p class="text-xs text-amber-900 leading-relaxed font-semibold mb-2">
-              <strong>Avvertenza sui rischi dei CFD (ai sensi di MiFID II / ESMA):</strong>
+          <h2 class="text-2xl font-bold text-amber-900 mb-4">⚠️ Broker CFD Specializzati — Avvertenza e Disclosure · Tradelia AI (Framework Sperimentale)</h2>
+          
+          <div class="mb-4">
+            <p class="text-sm text-amber-900 leading-relaxed mb-3">
+              <strong>Avvertenza ai sensi della Direttiva MiFID II, del Regolamento ESMA sui CFD, del Regolamento PRIIPs (UE 1286/2014) e delle disposizioni CONSOB.</strong>
             </p>
-            <ul class="text-xs text-amber-900 leading-relaxed list-disc list-inside space-y-1">
-              <li>I CFD sono <strong>strumenti complessi ad altissimo rischio</strong> di perdita rapida di denaro a causa della leva finanziaria</li>
-              <li>Il trading di CFD comporta un <strong>rischio elevatissimo di perdita totale o parziale del capitale</strong></li>
-              <li><strong>La maggior parte degli investitori al dettaglio perde denaro</strong> quando negozia CFD</li>
-              <li>Non investire più di quanto puoi permetterti di perdere</li>
-              <li>Valuta attentamente se comprendi il funzionamento dei CFD prima di operare</li>
-            </ul>
+            <p class="text-sm text-amber-800 leading-relaxed mb-3">
+              La sezione che segue rientra nel <strong>framework sperimentale di ricerca applicata di Tradelia AI</strong> e ha finalità esclusivamente educative e analitiche.
+            </p>
+            <p class="text-sm text-amber-800 leading-relaxed mb-3">
+              Viene citato un intermediario che opera unicamente su CFD e strumenti derivati a leva, utilizzato dal team umano di Tradelia AI all'interno di un ambiente di test controllato per la validazione di strategie AI, simulazioni demo e micro-operatività a fini di ricerca.
+            </p>
+            <p class="text-sm text-amber-800 leading-relaxed">
+              L'esposizione media nei test rappresenta circa <strong>l'1% di un portafoglio satellite sperimentale</strong>, determinata dagli algoritmi di selezione AI incrociando affidabilità regolamentare, struttura dei costi, solidità piattaforma e varietà strumentale.
+            </p>
           </div>
-          <p class="text-xs text-amber-700 mt-3 italic">
-            <strong>Nota:</strong> Questa sezione è inclusa esclusivamente a scopo informativo. I CFD non sono promossi né raccomandati. 
-            Le informazioni hanno scopo puramente formativo e non costituiscono consulenza in materia di investimenti né raccomandazione personalizzata.
-          </p>
+
+          <div class="bg-red-50 border-2 border-red-400 p-5 rounded-lg mb-4">
+            <p class="text-sm text-red-900 font-bold mb-3">
+              ⚠️ <strong>Avvertenza sui rischi dei CFD</strong>
+            </p>
+            <p class="text-sm text-red-900 leading-relaxed mb-3">
+              I Contratti per Differenza (CFD) sono strumenti derivati complessi che comportano <strong>rischi estremamente elevati di perdita rapida del capitale</strong>, a causa dell'effetto leva.
+            </p>
+            <p class="text-sm text-red-900 font-semibold mb-2">
+              Secondo i dati pubblicati dalle autorità di vigilanza:
+            </p>
+            <ul class="text-sm text-red-900 leading-relaxed list-disc list-inside space-y-2 mb-3">
+              <li><strong>Tra il 70% e l'85% dei clienti retail subisce perdite</strong> nel trading di CFD (ESMA – "CFD & Retail Investor Outcomes 2024").</li>
+              <li><strong>Oltre il 75% degli account CFD viene chiuso entro 12 mesi</strong> per perdita di capitale (CONSOB – "Rapporto Investitori Retail 2023").</li>
+              <li><strong>Più del 90% degli investitori retail cessa l'attività entro tre anni.</strong></li>
+            </ul>
+            <p class="text-sm text-red-900 leading-relaxed mb-2">
+              La leva può amplificare sia i guadagni sia le perdite; costi impliciti (spread, overnight, slippage) possono rapidamente erodere o azzerare il capitale.
+            </p>
+            <p class="text-sm text-red-900 font-semibold">
+              Non investire mai più di quanto si possa permettere di perdere integralmente.
+            </p>
+            <p class="text-sm text-red-900 mt-2">
+              Valutare attentamente se si comprende il funzionamento dei CFD e se si dispone dell'esperienza, delle conoscenze e della capacità finanziaria necessarie.
+            </p>
+          </div>
+
+          <div class="bg-amber-100 border border-amber-300 p-4 rounded mb-4">
+            <p class="text-sm text-amber-900 font-semibold mb-2">
+              🧭 <strong>Disclosure accademica e trasparenza affiliazioni</strong>
+            </p>
+            <p class="text-sm text-amber-900 leading-relaxed mb-2">
+              <strong>Tradelia AI – Framework Sperimentale</strong> riceve compensi di affiliazione dai broker menzionati, esclusivamente a fini di ricerca e copertura infrastrutturale.
+            </p>
+            <p class="text-sm text-amber-900 leading-relaxed mb-2">
+              Tali compensi sono dichiarati, tracciati e <strong>non influiscono sulle valutazioni AI o sulla selezione dei broker</strong>, che avviene secondo criteri metodologici verificabili e documentati.
+            </p>
+            <p class="text-sm text-amber-900 leading-relaxed mb-2">
+              L'utilizzo del broker CFD ha finalità di studio, testing comparativo e analisi comportamentale, <strong>non promozionale</strong>.
+            </p>
+            <p class="text-sm text-amber-900 leading-relaxed">
+              Le attività di test vengono svolte all'interno del <strong>Tradelia AI Research Framework</strong>, in ambienti demo o micro-conti segregati, con finalità di validazione statistica e formazione avanzata. La quota di esposizione (≈ 1%) è coerente con le linee guida accademiche di gestione del rischio per strategie sperimentali ad alta volatilità.
+            </p>
+          </div>
+
+          <div class="bg-slate-100 border border-slate-300 p-4 rounded">
+            <p class="text-sm text-slate-900 font-semibold mb-2">
+              🧩 <strong>Nota legale e formativa</strong>
+            </p>
+            <p class="text-sm text-slate-800 leading-relaxed">
+              Le informazioni fornite hanno scopo <strong>educativo, formativo e di ricerca</strong>.
+            </p>
+            <p class="text-sm text-slate-800 leading-relaxed mt-2">
+              Tradelia AI <strong>non fornisce consulenza in materia di investimenti</strong>, non sollecita il pubblico risparmio e non raccomanda l'utilizzo di strumenti a leva da parte di soggetti non professionali.
+            </p>
+            <p class="text-sm text-slate-800 leading-relaxed mt-2">
+              Tutte le valutazioni rappresentano simulazioni o analisi sperimentali nell'ambito del framework AI e <strong>non costituiscono raccomandazione personalizzata</strong> ai sensi della Direttiva MiFID II.
+            </p>
+          </div>
         </div>
       `;
       grid.appendChild(cfdHeader);
