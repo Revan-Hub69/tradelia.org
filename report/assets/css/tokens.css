@@ -176,17 +176,24 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   gap: .35rem .4rem;
   align-items: center;
 }
-/* Mobile: evita troncamento label:metrica */
+/* Mobile: evita troncamento label:metrica - mantiene coppie insieme */
 @media (max-width: 768px) {
   .header-ticker-row {
     gap: .25rem .3rem;
   }
   .header-ticker-row .metric-inline {
     white-space: nowrap;
+    flex-shrink: 0;
   }
   /* Evita che il testo prima della metrica vada a capo se c'è spazio */
-  .header-ticker-text + .metric-inline {
+  .header-ticker-text + .metric-inline,
+  .header-ticker-text:has(+ .metric-inline) {
     white-space: nowrap;
+  }
+  /* Mantieni label e valore insieme (es: "Ticker:" e "NVDA") */
+  .header-ticker-text:has(+ .metric-inline) {
+    display: inline-flex;
+    align-items: baseline;
   }
 }
 .header-ticker-row--intro {
@@ -1298,6 +1305,37 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   overflow-y: auto;
   padding: 1.5rem;
   -webkit-overflow-scrolling: touch;
+}
+
+/* ===== CONTENUTO METRICHE DESKTOP (senza tabs) ===== */
+.metric-content-desktop {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.metric-content-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.metric-content-section__title {
+  font-weight: 700;
+  font-size: var(--fs-14);
+  color: var(--ink);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin: 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--br-soft);
+}
+
+.metric-content-section__body {
+  font-size: var(--fs-15);
+  line-height: 1.75;
+  color: var(--ink-soft);
+  max-width: 65ch;
 }
 
 /* ===== LIBRI CONSIGLIATI - Design istituzionale ===== */
