@@ -1,675 +1,951 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tradelia – Richiesta Report AI</title>
-  <link rel="icon" href="/favicon.png" type="image/png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Exante · Tradelia AI</title>
+
+  <!-- Favicons -->
+  <link rel="icon" href="/favicon.ico?v=1">
+  <link rel="icon" type="image/png" href="/favicon.png?v=1">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Tailwind (utility) -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Design System -->
+  <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+
+  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" />
 
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
-      background-size: 280px;
+    html, body { height: 100%; }
+    body { display: flex; flex-direction: column; min-height: 100vh; font-family: 'Inter', sans-serif; }
+
+    /* container */
+    .container { max-width: 90rem; margin-inline: auto; padding-inline: 1rem; }
+    main { flex: 1; padding-top: 5rem; padding-bottom: 5rem; }
+
+    /* ===== HEADER ===== */
+    .hdr {
+      position: fixed; inset: 0 auto auto 0; right: 0; height: 56px; z-index: 50;
+      display: flex; align-items: center;
+      backdrop-filter: saturate(1.1) blur(10px);
+      background: color-mix(in oklab, var(--surface-card) 96%, transparent);
+      border-bottom: 1px solid var(--br-soft);
+      box-shadow: 0 1px 0 var(--br-soft);
     }
+
+    /* ===== BRAND ===== */
+    .brand { font-weight: 900; letter-spacing: -0.02em; display:inline-flex; align-items:center; gap:.35rem; }
+    .brand-word { color: var(--ink); }
+    .brand-suffix { color: var(--ink); font-weight: 900; }
+    .brand-dot { width:10px; height:10px; border-radius:999px; background: var(--brand-600); display:inline-block; }
+    a.brand { transition: opacity .18s ease, transform .18s ease; }
+    a.brand:hover { opacity:.9; transform: translateY(-1px); }
+
+    /* ===== ICONS ===== */
+    .ico { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .ico-lg { width:18px; height:18px; }
+    .ico-xl { width:20px; height:20px; }
+
+    /* ===== BUTTONS ===== */
+    :root { --hover-bg: color-mix(in oklab, var(--surface-card) 92%, transparent); }
+    .btn, .btn-sm, .btn-inline {
+      transition: background-color .15s ease, border-color .15s ease,
+                  color .15s ease, transform .12s ease, box-shadow .15s ease;
+    }
+    .btn-inline {
+      display:inline-flex; align-items:center; gap:.45rem;
+      padding:.42rem .70rem;
+      border-radius: var(--radius-pill);
+      border:1px solid var(--br-soft);
+      background: var(--surface-card);
+      color: var(--ink);
+      font-size:12px; font-weight:600;
+    }
+    .btn-sm {
+      display:inline-flex; align-items:center; gap:.35rem;
+      padding:.35rem .6rem;
+      border-radius: var(--radius-pill);
+      border:1px solid var(--br-soft);
+      background: var(--surface-card);
+      color: var(--ink);
+      font-size:12px; font-weight:600;
+    }
+    .btn:hover, .btn-sm:hover, .btn-inline:hover {
+      background: var(--hover-bg);
+      border-color: color-mix(in oklab, var(--br-soft) 70%, var(--brand-600) 30%);
+      box-shadow: 0 6px 18px oklab(0% 0 0 / .10);
+      transform: translateY(-1px);
+    }
+
+    /* ===== CARDS ===== */
+    .card { background: var(--surface-card); border: 1px solid var(--br-card); border-radius: var(--radius-card); box-shadow: var(--shadow-card); padding: var(--sp-4); transition: transform .2s ease, box-shadow .2s ease; }
+    .card:hover { box-shadow: 0 10px 30px rgba(2,6,23,.08); transform: translateY(-2px); }
+
+    /* ===== EDUCATIONAL SECTIONS ===== */
+    .edu-section { background: var(--surface-card); border: 1px solid var(--br-card); border-radius: var(--radius-card); padding: var(--sp-5); margin-bottom: var(--sp-6); }
+    .edu-section-title { font-size: clamp(18px, 1.8vw, 22px); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-4); display: flex; align-items: center; gap: var(--sp-2); }
+    .edu-point { background: var(--surface-elev); border-left: 3px solid var(--brand-600); padding: var(--sp-3); margin-bottom: var(--sp-3); border-radius: 0 var(--radius-pop) var(--radius-pop) 0; }
+    .edu-point-title { font-weight: 600; color: var(--ink); margin-bottom: var(--sp-2); }
+    .edu-point-body { font-size: var(--fs-14); line-height: var(--lh-15); color: var(--ink-soft); }
+    .edu-ai-note { background: oklab(98% 0 0); border: 1px solid var(--br-soft); border-radius: var(--radius-pop); padding: var(--sp-3); margin-top: var(--sp-3); font-size: var(--fs-12); color: var(--muted); font-style: italic; }
+    .edu-ai-note::before { content: "💡 Tradelia AI: "; font-weight: 600; font-style: normal; color: var(--brand-600); }
+
+    /* ===== FOOTER ===== */
+    .site-footer {
+      position: relative; z-index: 10;
+      background: var(--footer-bg);
+      border-top: 1px solid var(--footer-br);
+      color: var(--ink-soft);
+      font-size: 14px;
+    }
+    .ftr-head {
+      font-weight: 600;
+      display:flex; align-items:center; gap:.5rem;
+      color: var(--ink);
+      margin-bottom: .6rem;
+    }
+    .ftr-grid { display:grid; gap:2rem; grid-template-columns: 1fr; }
+    @media (min-width: 768px){ .ftr-grid { grid-template-columns: repeat(3, 1fr); } }
+    .ftr-list li { margin:.25rem 0; }
+    .ftr-bottom {
+      border-top: 1px solid var(--br-soft);
+      margin-top: 2rem; padding-top: 1rem;
+      display: flex; flex-direction: column; gap: .5rem;
+      font-size: 13px; color: var(--muted);
+    }
+    @media (min-width: 768px){
+      .ftr-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
+    }
+    .site-footer a {
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color .18s ease, border-color .18s ease;
+    }
+    .site-footer a:hover { border-bottom-color: currentColor; }
+
+    /* ===== SCROLLBAR ===== */
     ::-webkit-scrollbar { width: 10px; height: 10px; }
-    ::-webkit-scrollbar-track {
-      background: linear-gradient(to right, #f1f5f9, #e2e8f0);
-      border-radius: 100vh;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(80, 160, 200, 0.4);
-      border-radius: 100vh;
-      backdrop-filter: blur(4px);
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(80, 160, 200, 0.6);
-    }
-    * {
-      scrollbar-width: thin;
-      scrollbar-color: rgba(80, 160, 200, 0.5) #e5e7eb;
-    }
-    .modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-    }
-    .modal-content {
-      background: #f8fafc;
-      max-width: 480px;
-      padding: 28px;
-      border-radius: 16px;
-      font-size: 15px;
-      line-height: 1.7;
-      color: #0f172a;
-      text-align: center;
-      box-shadow: 0 12px 48px rgba(0,0,0,0.25);
-    }
-    .flip-page {
-      perspective: 2000px;
-    }
-    .flip-wrapper {
-      transition: transform 0.8s ease;
-      transform-style: preserve-3d;
-      position: relative;
-      width: 100%;
-      min-height: 700px;
-    }
-    .flip-page[data-flipped="1"] .flip-wrapper,
-    .flip-page[data-flipped="2"] .flip-wrapper,
-    .flip-page[data-flipped="3"] .flip-wrapper,
-    .flip-page[data-flipped="4"] .flip-wrapper {
-      transform: rotateY(180deg);
-    }
-    .flip-face {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      backface-visibility: hidden;
-    }
-    .flip-back {
-      transform: rotateY(180deg);
-    }
+    ::-webkit-scrollbar-track { background: var(--surface-elev); border-radius: 100vh; }
+    ::-webkit-scrollbar-thumb { background: color-mix(in oklab, var(--br-soft) 50%, var(--brand-600) 50%); border-radius: 100vh; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--brand-600); }
+    * { scrollbar-width: thin; scrollbar-color: var(--br-soft) var(--surface-elev); }
+
+    /* ===== PROGRESS BARS ===== */
+    .progress-bar { height: 8px; background: var(--br-soft); border-radius: var(--radius-pill); overflow: hidden; margin-top: var(--sp-2); }
+    .progress-fill { height: 100%; background: var(--brand-600); border-radius: var(--radius-pill); transition: width .3s ease; }
+
+    /* ===== TABLES ===== */
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; padding: var(--sp-3); font-weight: 600; color: var(--ink); background: var(--surface-elev); border-bottom: 2px solid var(--br-soft); }
+    td { padding: var(--sp-3); border-bottom: 1px solid var(--br-soft); color: var(--ink-soft); }
+    tr:hover { background: var(--surface-elev); }
   </style>
 </head>
-<body class="text-gray-900">
-  <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6">
-    <a href="index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
-      <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
+<body>
+<!-- ===== HEADER ===== -->
+<header class="hdr">
+  <div class="container w-full flex items-center justify-between">
+    <a href="/index.html" class="brand" aria-label="Tradelia.org">
+      <span class="brand-word">TRADELIA</span>
+      <span class="brand-dot" aria-hidden="true"></span>
+      <span class="brand-suffix">AI</span>
     </a>
-  </header>
-<section class="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-md text-slate-800 mb-12">
-  <!-- LOGO -->
-  <div class="text-center mb-6">
-    <img src="https://exante.eu/static/i/dest/website/components/logos/flat_vertical_480x320.png" alt="Exante Logo" class="mx-auto w-44 h-auto">
   </div>
+  </header>
 
-  <!-- TITOLO -->
-  <h2 class="text-2xl font-bold text-center text-slate-900 mb-10">Exante Ltd</h2>
+<!-- MAIN -->
+<main class="container">
+  <!-- Hero Section -->
+  <section class="mb-10">
+    <div class="text-center mb-8">
+      <img src="/logos/exante.svg" alt="Exante Logo" class="mx-auto mb-6 w-44 h-auto" style="max-height: 120px;">
+      <h1 class="text-3xl sm:text-4xl font-bold mb-3" style="color: var(--ink);">Exante Ltd</h1>
+      <p class="text-base sm:text-lg" style="color: var(--ink-soft); max-width: 48rem; margin: 0 auto;">
+        Broker istituzionale multi-asset con accesso DMA globale a oltre 600.000 strumenti finanziari
+      </p>
+  </div>
+  </section>
 
-  <!-- DATI AZIENDALI -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 text-sm sm:text-base">
-    
-    <!-- Sede Legale -->
+  <!-- Dati Aziendali -->
+  <section class="mb-10">
+    <div class="card">
+      <h2 class="text-2xl font-bold mb-6" style="color: var(--ink);">Dati Aziendali</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
+        
     <div class="flex items-start gap-4">
-      <svg class="w-6 h-6 shrink-0 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3zM12 22s8-4.5 8-10a8 8 0 10-16 0c0 5.5 8 10 8 10z" />
+          <svg class="ico ico-lg" style="color: var(--ok);" viewBox="0 0 24 24">
+            <path d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3zM12 22s8-4.5 8-10a8 8 0 10-16 0c0 5.5 8 10 8 10z" />
       </svg>
       <div>
-        <div class="font-semibold text-slate-900">Sede Legale</div>
-        140 Vjal Portomaso, St Julian's, Malta
+            <div class="font-semibold" style="color: var(--ink);">Sede Legale</div>
+            <div style="color: var(--ink-soft);">140 Vjal Portomaso, St Julian's, Malta</div>
       </div>
     </div>
 
-    <!-- Licenza -->
     <div class="flex items-start gap-4">
-      <svg class="w-6 h-6 shrink-0 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m2 0a2 2 0 110-4 2 2 0 010 4zm-8 0a2 2 0 110-4 2 2 0 010 4z" />
+          <svg class="ico ico-lg" style="color: var(--ok);" viewBox="0 0 24 24">
+            <path d="M9 12h6m2 0a2 2 0 110-4 2 2 0 010 4zm-8 0a2 2 0 110-4 2 2 0 010 4z" />
       </svg>
       <div>
-        <div class="font-semibold text-slate-900">Licenza Principale</div>
-        MFSA (Malta) - Licenza IS/52182
+            <div class="font-semibold" style="color: var(--ink);">Licenza Principale</div>
+            <div style="color: var(--ink-soft);">MFSA (Malta) - Licenza IS/52182</div>
       </div>
     </div>
 
-    <!-- Regolamentazione -->
     <div class="flex items-start gap-4 sm:col-span-2">
-      <svg class="w-6 h-6 shrink-0 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2a10 10 0 000 20 10 10 0 000-20zM2 12h20M12 2v20" />
+          <svg class="ico ico-lg" style="color: var(--ok);" viewBox="0 0 24 24">
+            <path d="M12 2a10 10 0 000 20 10 10 0 000-20zM2 12h20M12 2v20" />
       </svg>
       <div>
-        <div class="font-semibold text-slate-900">Altre Regolamentazioni</div>
-        <ul class="list-disc list-inside mt-1 text-slate-600">
+            <div class="font-semibold" style="color: var(--ink);">Altre Regolamentazioni</div>
+            <ul class="list-disc list-inside mt-1" style="color: var(--ink-soft);">
           <li>Operatività UE tramite passporting MiFID II</li>
           <li>Conformità regolatoria in più di 100 paesi</li>
         </ul>
       </div>
     </div>
 
-    <!-- Capitale Sociale -->
     <div class="flex items-start gap-4">
-      <svg class="w-6 h-6 shrink-0 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7V6a2 2 0 012-2h12a2 2 0 012 2v1H4z" />
+          <svg class="ico ico-lg" style="color: var(--ok);" viewBox="0 0 24 24">
+            <path d="M4 7V6a2 2 0 012-2h12a2 2 0 012 2v1H4z" />
       </svg>
       <div>
-        <div class="font-semibold text-slate-900">Capitale Sociale</div>
-        Oltre 50 milioni EUR
+            <div class="font-semibold" style="color: var(--ink);">Capitale Sociale</div>
+            <div style="color: var(--ink-soft);">Oltre 50 milioni EUR</div>
       </div>
     </div>
 
-    <!-- Clienti Globali -->
     <div class="flex items-start gap-4">
-      <svg class="w-6 h-6 shrink-0 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-4-4h-1m-6 6H7v-2a4 4 0 014-4h1m4-6a4 4 0 110-8 4 4 0 010 8zm-8 4a4 4 0 100-8 4 4 0 000 8z" />
+          <svg class="ico ico-lg" style="color: var(--ok);" viewBox="0 0 24 24">
+            <path d="M17 20h5v-2a4 4 0 00-4-4h-1m-6 6H7v-2a4 4 0 014-4h1m4-6a4 4 0 110-8 4 4 0 010 8zm-8 4a4 4 0 100-8 4 4 0 000 8z" />
       </svg>
       <div>
-        <div class="font-semibold text-slate-900">Clienti Globali</div>
-        Clienti istituzionali e professionali in oltre 100 paesi
+            <div class="font-semibold" style="color: var(--ink);">Clienti Globali</div>
+            <div style="color: var(--ink-soft);">Clienti istituzionali e professionali in oltre 100 paesi</div>
       </div>
     </div>
 
-    <!-- Anni di attività -->
     <div class="flex items-start gap-4">
-      <svg class="w-6 h-6 shrink-0 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10m-5 4h.01M4 21h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          <svg class="ico ico-lg" style="color: var(--ok);" viewBox="0 0 24 24">
+            <path d="M8 7V3m8 4V3m-9 8h10m-5 4h.01M4 21h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v12a2 2 0 002 2z" />
       </svg>
       <div>
-        <div class="font-semibold text-slate-900">Anni di Attività</div>
-        Dal 2011 (13 anni di esperienza)
+            <div class="font-semibold" style="color: var(--ink);">Anni di Attività</div>
+            <div style="color: var(--ink-soft);">Dal 2011 (13 anni di esperienza)</div>
       </div>
     </div>
 
-    <!-- Premi -->
     <div class="flex items-start gap-4">
-      <svg class="w-6 h-6 shrink-0 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V13a6 6 0 00-12 0v1.159c0 .538-.214 1.055-.595 1.437L4 17h5m6 0v5a1 1 0 001 1h1a1 1 0 001-1v-5m-6 0v5a1 1 0 001 1h1a1 1 0 001-1v-5" />
+          <svg class="ico ico-lg" style="color: var(--ok);" viewBox="0 0 24 24">
+            <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V13a6 6 0 00-12 0v1.159c0 .538-.214 1.055-.595 1.437L4 17h5m6 0v5a1 1 0 001 1h1a1 1 0 001-1v-5m-6 0v5a1 1 0 001 1h1a1 1 0 001-1v-5" />
       </svg>
       <div>
-        <div class="font-semibold text-slate-900">Premi e Riconoscimenti</div>
-        Best Multi-Asset Broker 2022 (Global Banking & Finance Awards)
+            <div class="font-semibold" style="color: var(--ink);">Premi e Riconoscimenti</div>
+            <div style="color: var(--ink-soft);">Best Multi-Asset Broker 2022 (Global Banking & Finance Awards)</div>
       </div>
     </div>
 
+      </div>
   </div>
 </section>
-<section class="max-w-3xl mx-auto bg-gray-50 p-6 sm:p-10 rounded-2xl shadow-md mb-12 text-slate-800">
-  <h2 class="text-xl sm:text-2xl font-semibold text-center mb-8">Exante: Per Chi È Consigliato?</h2>
 
-  <div class="grid gap-5">
-    <!-- Card Template -->
-    <div class="flex items-start gap-4 bg-white p-5 rounded-lg shadow-sm">
-      <svg class="w-7 h-7 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0v7" />
+  <!-- Profilo Utente -->
+  <section class="mb-10">
+    <div class="card">
+      <h2 class="text-2xl font-bold mb-6" style="color: var(--ink);">Per Chi È Consigliato?</h2>
+      <div class="grid gap-4">
+        
+        <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--surface-elev);">
+          <svg class="ico ico-xl" style="color: var(--ok);" viewBox="0 0 24 24">
+            <path d="M12 14l9-5-9-5-9 5 9 5zm0 0v7" />
       </svg>
       <div class="flex-1">
-        <div class="font-semibold mb-1">Trader Istituzionali</div>
-        <p class="text-sm text-slate-600">Accesso diretto DMA a oltre 50 mercati globali.</p>
-        <div class="h-2 bg-gray-200 rounded-full mt-3">
-          <div class="h-2 bg-green-500 rounded-full w-[95%]"></div>
+            <div class="font-semibold mb-1" style="color: var(--ink);">Trader Istituzionali</div>
+            <p class="text-sm mb-2" style="color: var(--ink-soft);">Accesso diretto DMA a oltre 50 mercati globali.</p>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 95%;"></div>
         </div>
       </div>
     </div>
 
-    <div class="flex items-start gap-4 bg-white p-5 rounded-lg shadow-sm">
-      <svg class="w-7 h-7 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a4 4 0 014-4h4" />
+        <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--surface-elev);">
+          <svg class="ico ico-xl" style="color: var(--ok);" viewBox="0 0 24 24">
+            <path d="M9 17v-2a4 4 0 014-4h4" />
       </svg>
       <div class="flex-1">
-        <div class="font-semibold mb-1">Trader Professionisti</div>
-        <p class="text-sm text-slate-600">Strumenti avanzati, API, futures, opzioni, bond, azioni.</p>
-        <div class="h-2 bg-gray-200 rounded-full mt-3">
-          <div class="h-2 bg-green-500 rounded-full w-[90%]"></div>
+            <div class="font-semibold mb-1" style="color: var(--ink);">Trader Professionisti</div>
+            <p class="text-sm mb-2" style="color: var(--ink-soft);">Strumenti avanzati, API, futures, opzioni, bond, azioni.</p>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 90%;"></div>
         </div>
       </div>
     </div>
 
-    <div class="flex items-start gap-4 bg-white p-5 rounded-lg shadow-sm">
-      <svg class="w-7 h-7 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+        <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--surface-elev);">
+          <svg class="ico ico-xl" style="color: var(--ok);" viewBox="0 0 24 24">
+            <path d="M12 8v4l3 3" />
       </svg>
       <div class="flex-1">
-        <div class="font-semibold mb-1">Gestori di Fondi</div>
-        <p class="text-sm text-slate-600">Account multiutente e accesso a strumenti istituzionali.</p>
-        <div class="h-2 bg-gray-200 rounded-full mt-3">
-          <div class="h-2 bg-green-500 rounded-full w-[85%]"></div>
+            <div class="font-semibold mb-1" style="color: var(--ink);">Gestori di Fondi</div>
+            <p class="text-sm mb-2" style="color: var(--ink-soft);">Account multiutente e accesso a strumenti istituzionali.</p>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 85%;"></div>
         </div>
       </div>
     </div>
 
-    <div class="flex items-start gap-4 bg-white p-5 rounded-lg shadow-sm">
-      <svg class="w-7 h-7 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--surface-elev);">
+          <svg class="ico ico-xl" style="color: var(--ok);" viewBox="0 0 24 24">
+            <path d="M13 10V3L4 14h7v7l9-11h-7z" />
       </svg>
       <div class="flex-1">
-        <div class="font-semibold mb-1">Clienti con Elevato Capitale</div>
-        <p class="text-sm text-slate-600">Deposito minimo elevato, ideale per high-net-worth individuals.</p>
-        <div class="h-2 bg-gray-200 rounded-full mt-3">
-          <div class="h-2 bg-green-500 rounded-full w-[80%]"></div>
+            <div class="font-semibold mb-1" style="color: var(--ink);">Clienti con Elevato Capitale</div>
+            <p class="text-sm mb-2" style="color: var(--ink-soft);">Deposito minimo elevato, ideale per high-net-worth individuals.</p>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 80%;"></div>
         </div>
       </div>
     </div>
 
-    <div class="flex items-start gap-4 bg-white p-5 rounded-lg shadow-sm">
-      <svg class="w-7 h-7 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h4v11H3zM17 3h4v18h-4zM10 14h4v7h-4z" />
+        <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--surface-elev);">
+          <svg class="ico ico-xl" style="color: var(--ok);" viewBox="0 0 24 24">
+            <path d="M3 10h4v11H3zM17 3h4v18h-4zM10 14h4v7h-4z" />
       </svg>
       <div class="flex-1">
-        <div class="font-semibold mb-1">Algoritmic Trader</div>
-        <p class="text-sm text-slate-600">Accesso API e integrazioni per trading quantitativo.</p>
-        <div class="h-2 bg-gray-200 rounded-full mt-3">
-          <div class="h-2 bg-green-500 rounded-full w-[85%]"></div>
+            <div class="font-semibold mb-1" style="color: var(--ink);">Algoritmic Trader</div>
+            <p class="text-sm mb-2" style="color: var(--ink-soft);">Accesso API e integrazioni per trading quantitativo.</p>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 85%;"></div>
         </div>
       </div>
+        </div>
+
     </div>
   </div>
 </section>
-<section class="max-w-7xl mx-auto px-4 py-10 text-slate-800">
-  <h2 class="text-xl sm:text-2xl font-semibold text-center mb-8">Strategie Raccomandate su Exante</h2>
 
-  <div class="flex gap-6 overflow-x-auto scroll-snap-x scroll-smooth pb-6">
-    
-    <!-- CARD TEMPLATE -->
-    <div class="flex-shrink-0 w-80 bg-white rounded-2xl p-6 shadow-md scroll-snap-align-center relative">
-      <div class="absolute right-0 top-0 bottom-0 w-[6px] bg-gray-200 rounded-r-2xl">
-        <div class="h-[90%] mt-[10%] w-full bg-green-500 rounded-r-2xl"></div>
+  <!-- Sezione Educativa: Broker Istituzionali e Educazione Finanziaria -->
+  <section class="edu-section">
+    <h2 class="edu-section-title">
+      <svg class="ico ico-lg" style="color: var(--brand-600);" viewBox="0 0 24 24">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+      </svg>
+      Broker Istituzionali e Educazione Finanziaria
+    </h2>
+
+    <div class="edu-point">
+      <div class="edu-point-title">1. Differenza tra Broker Retail e Istituzionali</div>
+      <div class="edu-point-body">
+        I broker istituzionali come Exante si distinguono per l'accesso diretto ai mercati (DMA), 
+        commissioni basate su volumi e requisiti di capitale significativamente più elevati. 
+        Secondo la ricerca di Odean (1999) e Barber & Odean (2000), gli investitori retail tendono 
+        a sovraperformare quando hanno accesso a strumenti diretti piuttosto che derivati OTC.
       </div>
-      <div class="text-center font-bold text-lg mb-4">Multi-Asset Trading</div>
-      <ul class="text-sm text-gray-600 space-y-1">
+      <div class="edu-ai-note">
+        L'accesso DMA elimina il conflitto di interesse presente nei market maker, dove il broker 
+        guadagna dallo spread. Questo è particolarmente importante per trader professionisti che 
+        operano con volumi elevati, dove ogni pip di spread moltiplicato per grandi dimensioni può 
+        erodere significativamente i rendimenti.
+      </div>
+    </div>
+
+    <div class="edu-point">
+      <div class="edu-point-title">2. Costi Nascosti e Trasparenza</div>
+      <div class="edu-point-body">
+        La ricerca di Chalmers & Reuter (2020) evidenzia come i costi nascosti (spread, commissioni 
+        variabili, costi di custodia) possano erodere fino al 2-3% annuo dei rendimenti. Exante 
+        pubblica tariffe chiare: 0,02 USD per azione, 1,5 USD per futures/opzioni, con un costo di 
+        custodia dello 0,5% annuo. Per trader retail, questi costi possono essere proibitivi su 
+        conti piccoli.
+      </div>
+      <div class="edu-ai-note">
+        Il costo di custodia dello 0,5% annuo è standard per broker istituzionali ma può essere 
+        significativo su portafogli statici. Per un portafoglio da 100.000 EUR, questo significa 
+        500 EUR annui solo per la custodia, indipendentemente dalle operazioni. Questo rende Exante 
+        più adatto a trader attivi piuttosto che a investitori buy-and-hold.
+      </div>
+    </div>
+
+    <div class="edu-point">
+      <div class="edu-point-title">3. Diversificazione e Accesso Multi-Asset</div>
+      <div class="edu-point-body">
+        Exante offre accesso a oltre 600.000 strumenti finanziari globali. La ricerca di 
+        Markowitz (1952) e successive conferme empiriche (Fama & French, 1992) dimostrano che la 
+        diversificazione geografica e settoriale riduce il rischio di portafoglio. Tuttavia, 
+        l'accesso a mercati emergenti e strumenti esotici richiede competenze tecniche avanzate.
+      </div>
+      <div class="edu-ai-note">
+        L'ampia gamma di strumenti disponibili su Exante può essere un'arma a doppio taglio: 
+        mentre offre opportunità di diversificazione, aumenta anche il rischio di sovra-complessità 
+        del portafoglio. La ricerca di Goetzmann & Kumar (2008) mostra che molti investitori 
+        sub-diversificano o sovra-diversificano, senza beneficiare della teoria del portafoglio.
+      </div>
+    </div>
+
+    <div class="edu-point">
+      <div class="edu-point-title">4. Regolamentazione e Protezione dei Fondi</div>
+      <div class="edu-point-body">
+        Exante è regolamentata da MFSA (Malta) con licenza IS/52182 e opera in UE tramite MiFID II. 
+        La segregazione dei fondi è garantita, ma la protezione del fondo di compensazione è limitata 
+        a 20.000 EUR (soglia EU). Per clienti istituzionali, questa protezione non si applica, 
+        rendendo cruciale la valutazione della solidità del broker.
+      </div>
+      <div class="edu-ai-note">
+        La ricerca di Anginer et al. (2014) evidenzia come la fiducia nella regolamentazione 
+        influenzi significativamente la partecipazione ai mercati finanziari. La protezione limitata 
+        a 20.000 EUR per clienti retail è standard UE, ma per conti istituzionali è importante 
+        valutare il capitale proprio del broker e la sua storia regolatoria.
+      </div>
+    </div>
+
+    <div class="edu-point">
+      <div class="edu-point-title">5. Requisiti di Capitale e Selezione del Broker</div>
+      <div class="edu-point-body">
+        Il deposito minimo di 10.000 EUR su Exante è un filtro che seleziona trader con capitale 
+        significativo. La ricerca di Calvet et al. (2007) mostra che gli investitori con maggiore 
+        ricchezza finanziaria tendono a fare scelte migliori, ma questo non garantisce rendimenti 
+        superiori. Il requisito minimo elevato può essere un ostacolo per investitori retail che 
+        vogliono iniziare con piccoli importi.
+      </div>
+      <div class="edu-ai-note">
+        Il requisito minimo di 10.000 EUR è coerente con il target istituzionale di Exante, ma 
+        esclude molti investitori retail. La ricerca di Guiso et al. (2008) evidenzia come la 
+        partecipazione ai mercati finanziari sia correlata positivamente al reddito e all'educazione 
+        finanziaria. Piattaforme con requisiti più bassi possono essere più inclusive, ma offrono 
+        generalmente meno strumenti e accesso meno diretto ai mercati.
+      </div>
+    </div>
+
+    <div style="background: oklab(98% 0 0); border: 1px solid var(--br-soft); border-radius: var(--radius-pop); padding: var(--sp-4); margin-top: var(--sp-4);">
+      <div class="font-semibold mb-2" style="color: var(--ink);">Lettura di Contesto (non istruzioni operative)</div>
+      <div style="color: var(--ink-soft); font-size: var(--fs-14); line-height: var(--lh-15);">
+        Exante è un broker istituzionale di alto livello, progettato per trader professionisti e 
+        istituzionali con capitale significativo e necessità di accesso diretto ai mercati. 
+        La sua offerta di oltre 600.000 strumenti e accesso DMA la rende una scelta solida per 
+        chi ha competenze tecniche avanzate e capitale sufficiente per giustificare i costi 
+        di custodia e commissioni. Per investitori retail con capitale limitato o competenze 
+        tecniche di base, piattaforme con requisiti più bassi e interfacce più semplici possono 
+        essere più appropriate.
+      </div>
+    </div>
+
+    <div class="text-xs mt-4" style="color: var(--muted);">
+      Questa sezione ha esclusivamente finalità informative e formative. Non costituisce consulenza 
+      finanziaria né raccomandazione di investimento. Consultare sempre un intermediario autorizzato 
+      prima di prendere decisioni di investimento.
+    </div>
+  </section>
+
+  <!-- Strategie Raccomandate -->
+  <section class="mb-10">
+    <div class="card">
+      <h2 class="text-2xl font-bold mb-6" style="color: var(--ink);">Strategie Raccomandate su Exante</h2>
+      <div class="flex gap-6 overflow-x-auto scroll-snap-x scroll-smooth pb-6" style="scroll-snap-type: x mandatory;">
+        
+        <div class="flex-shrink-0 w-80 card scroll-snap-align-center relative">
+          <div class="absolute right-0 top-0 bottom-0 w-1 rounded-r-2xl" style="background: var(--ok); opacity: 0.9;"></div>
+          <div class="font-bold text-lg mb-4" style="color: var(--ink);">Multi-Asset Trading</div>
+          <ul class="text-sm space-y-1" style="color: var(--ink-soft);">
         <li><strong>Rischio sul Capitale:</strong> Alto (40%)</li>
         <li><strong>Utenti in Perdita:</strong> Non divulgato (mercato istituzionale)</li>
         <li><strong>Guadagni Potenziali:</strong> +10% / +25% annuo</li>
         <li><strong>Compatibilità con Exante:</strong> Eccellente</li>
       </ul>
-      <p class="text-xs text-gray-400 mt-4 text-center">
-        Nota: Accesso diretto a oltre 600.000 strumenti finanziari globali.
+          <p class="text-xs mt-4 text-center" style="color: var(--muted);">
+            Accesso diretto a oltre 600.000 strumenti finanziari globali.
       </p>
     </div>
 
-    <!-- DMA Trading -->
-    <div class="flex-shrink-0 w-80 bg-white rounded-2xl p-6 shadow-md scroll-snap-align-center relative">
-      <div class="absolute right-0 top-0 bottom-0 w-[6px] bg-gray-200 rounded-r-2xl">
-        <div class="h-[95%] mt-[5%] w-full bg-green-500 rounded-r-2xl"></div>
-      </div>
-      <div class="text-center font-bold text-lg mb-4">DMA Trading</div>
-      <ul class="text-sm text-gray-600 space-y-1">
+        <div class="flex-shrink-0 w-80 card scroll-snap-align-center relative">
+          <div class="absolute right-0 top-0 bottom-0 w-1 rounded-r-2xl" style="background: var(--ok); opacity: 0.95;"></div>
+          <div class="font-bold text-lg mb-4" style="color: var(--ink);">DMA Trading</div>
+          <ul class="text-sm space-y-1" style="color: var(--ink-soft);">
         <li><strong>Rischio sul Capitale:</strong> Medio-Alto (35%)</li>
         <li><strong>Utenti in Perdita:</strong> Non divulgato</li>
         <li><strong>Guadagni Potenziali:</strong> +8% / +20% annuo</li>
         <li><strong>Compatibilità con Exante:</strong> Unica</li>
       </ul>
-      <p class="text-xs text-gray-400 mt-4 text-center">
-        Nota: Accesso diretto ai mercati senza intermediazione broker.
+          <p class="text-xs mt-4 text-center" style="color: var(--muted);">
+            Accesso diretto ai mercati senza intermediazione broker.
       </p>
     </div>
 
-    <!-- Hedge Fund Strategies -->
-    <div class="flex-shrink-0 w-80 bg-white rounded-2xl p-6 shadow-md scroll-snap-align-center relative">
-      <div class="absolute right-0 top-0 bottom-0 w-[6px] bg-gray-200 rounded-r-2xl">
-        <div class="h-[85%] mt-[15%] w-full bg-green-500 rounded-r-2xl"></div>
-      </div>
-      <div class="text-center font-bold text-lg mb-4">Hedge Fund Strategies</div>
-      <ul class="text-sm text-gray-600 space-y-1">
+        <div class="flex-shrink-0 w-80 card scroll-snap-align-center relative">
+          <div class="absolute right-0 top-0 bottom-0 w-1 rounded-r-2xl" style="background: var(--ok); opacity: 0.85;"></div>
+          <div class="font-bold text-lg mb-4" style="color: var(--ink);">Hedge Fund Strategies</div>
+          <ul class="text-sm space-y-1" style="color: var(--ink-soft);">
         <li><strong>Rischio sul Capitale:</strong> Alto (50%)</li>
         <li><strong>Utenti in Perdita:</strong> Non applicabile</li>
         <li><strong>Guadagni Potenziali:</strong> +15% / +40% annuo</li>
         <li><strong>Compatibilità con Exante:</strong> Alta</li>
       </ul>
-      <p class="text-xs text-gray-400 mt-4 text-center">
-        Nota: Adatto a gestori di fondi e istituzionali.
+          <p class="text-xs mt-4 text-center" style="color: var(--muted);">
+            Adatto a gestori di fondi e istituzionali.
       </p>
     </div>
 
-    <!-- Fixed Income -->
-    <div class="flex-shrink-0 w-80 bg-white rounded-2xl p-6 shadow-md scroll-snap-align-center relative">
-      <div class="absolute right-0 top-0 bottom-0 w-[6px] bg-gray-200 rounded-r-2xl">
-        <div class="h-[70%] mt-[30%] w-full bg-green-500 rounded-r-2xl"></div>
-      </div>
-      <div class="text-center font-bold text-lg mb-4">Fixed Income Investing</div>
-      <ul class="text-sm text-gray-600 space-y-1">
+        <div class="flex-shrink-0 w-80 card scroll-snap-align-center relative">
+          <div class="absolute right-0 top-0 bottom-0 w-1 rounded-r-2xl" style="background: var(--ok); opacity: 0.70;"></div>
+          <div class="font-bold text-lg mb-4" style="color: var(--ink);">Fixed Income Investing</div>
+          <ul class="text-sm space-y-1" style="color: var(--ink-soft);">
         <li><strong>Rischio sul Capitale:</strong> Medio (25%)</li>
         <li><strong>Utenti in Perdita:</strong> Non divulgato</li>
         <li><strong>Guadagni Potenziali:</strong> +4% / +8% annuo</li>
         <li><strong>Compatibilità con Exante:</strong> Alta</li>
       </ul>
-      <p class="text-xs text-gray-400 mt-4 text-center">
-        Nota: Accesso a obbligazioni corporate, governative e fixed income.
+          <p class="text-xs mt-4 text-center" style="color: var(--muted);">
+            Accesso a obbligazioni corporate, governative e fixed income.
       </p>
     </div>
 
-    <!-- Quantitative & Algo -->
-    <div class="flex-shrink-0 w-80 bg-white rounded-2xl p-6 shadow-md scroll-snap-align-center relative">
-      <div class="absolute right-0 top-0 bottom-0 w-[6px] bg-gray-200 rounded-r-2xl">
-        <div class="h-[95%] mt-[5%] w-full bg-green-500 rounded-r-2xl"></div>
-      </div>
-      <div class="text-center font-bold text-lg mb-4">Quantitative & Algo Trading</div>
-      <ul class="text-sm text-gray-600 space-y-1">
+        <div class="flex-shrink-0 w-80 card scroll-snap-align-center relative">
+          <div class="absolute right-0 top-0 bottom-0 w-1 rounded-r-2xl" style="background: var(--ok); opacity: 0.95;"></div>
+          <div class="font-bold text-lg mb-4" style="color: var(--ink);">Quantitative & Algo Trading</div>
+          <ul class="text-sm space-y-1" style="color: var(--ink-soft);">
         <li><strong>Rischio sul Capitale:</strong> Alto (50%)</li>
         <li><strong>Utenti in Perdita:</strong> Non divulgato</li>
         <li><strong>Guadagni Potenziali:</strong> +20% / +60% annuo</li>
         <li><strong>Compatibilità con Exante:</strong> Eccellente</li>
       </ul>
-      <p class="text-xs text-gray-400 mt-4 text-center">
-        Nota: Richiede conoscenze avanzate di sviluppo e modelli quantitativi.
+          <p class="text-xs mt-4 text-center" style="color: var(--muted);">
+            Richiede conoscenze avanzate di sviluppo e modelli quantitativi.
       </p>
     </div>
 
   </div>
-
-  <!-- Footer note -->
-  <p class="text-xs text-center text-gray-400 mt-8">
+      <p class="text-xs text-center mt-6" style="color: var(--muted);">
     Dati basati su fonti ufficiali: Exante, MFSA, MiFID II. Consultare sempre i documenti ufficiali prima di ogni investimento.
   </p>
+    </div>
 </section>
-<section class="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-md text-slate-800 mb-12">
-  <h3 class="text-center text-lg font-semibold mb-4">Limitazioni Operative su Exante</h3>
-  <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
-    <li>❌ Non indicato per principianti retail (deposito minimo elevato)</li>
-    <li>❌ Nessun supporto per Copy Trading o Social Trading</li>
-    <li>❌ Piattaforma complessa, richiede formazione tecnica</li>
-    <li>❌ Non offre conti demo gratuiti per uso esteso</li>
-    <li>❌ Non destinato a micro-conti o operatività su piccoli volumi</li>
-  </ul>
-</section>
-<section class="max-w-7xl mx-auto px-4 py-10 text-slate-800 bg-white rounded-2xl shadow-md">
-  <h2 class="text-2xl font-bold text-center mb-10">Sicurezza dei Fondi e Regolamentazioni</h2>
 
+  <!-- Sezione Educativa: Strategie di Trading e Rischi -->
+  <section class="edu-section">
+    <h2 class="edu-section-title">
+      <svg class="ico ico-lg" style="color: var(--brand-600);" viewBox="0 0 24 24">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+      </svg>
+      Strategie di Trading e Gestione del Rischio
+    </h2>
+
+    <div class="edu-point">
+      <div class="edu-point-title">1. Diversificazione e Correlazione</div>
+      <div class="edu-point-body">
+        La ricerca di Markowitz (1952) e successive conferme empiriche dimostrano che la 
+        diversificazione riduce il rischio di portafoglio senza necessariamente ridurre i 
+        rendimenti attesi. Tuttavia, in periodi di stress di mercato, le correlazioni tendono 
+        ad aumentare (Longin & Solnik, 2001), riducendo i benefici della diversificazione. 
+        Exante offre accesso a oltre 600.000 strumenti, ma la vera diversificazione richiede 
+        comprensione delle correlazioni tra asset.
+      </div>
+      <div class="edu-ai-note">
+        La ricerca di Goetzmann & Kumar (2008) mostra che molti investitori sub-diversificano 
+        (meno di 10 posizioni) o sovra-diversificano (oltre 50 posizioni), senza beneficiare 
+        della teoria del portafoglio. La diversificazione ottimale richiede non solo numero di 
+        asset, ma anche bassa correlazione e distribuzione geografica/settoriale.
+      </div>
+    </div>
+
+    <div class="edu-point">
+      <div class="edu-point-title">2. Accesso DMA e Efficienza dei Mercati</div>
+      <div class="edu-point-body">
+        L'accesso DMA (Direct Market Access) elimina l'intermediazione del broker come market maker, 
+        riducendo i costi di transazione. La ricerca di Battalio & Loughran (2008) evidenzia come 
+        i trader istituzionali con accesso DMA ottengano esecuzioni migliori rispetto a trader retail 
+        che operano attraverso market maker. Tuttavia, l'accesso DMA richiede competenze tecniche 
+        avanzate per gestire ordini complessi e gestire il rischio operativo.
+      </div>
+      <div class="edu-ai-note">
+        L'accesso DMA su Exante è un vantaggio significativo per trader professionisti, ma richiede 
+        comprensione della struttura del mercato, tipi di ordine e gestione del rischio. Errori di 
+        esecuzione possono essere costosi, specialmente su ordini di grandi dimensioni. La ricerca 
+        di Harris (2003) mostra come l'esecuzione algoritmica possa migliorare significativamente i 
+        risultati rispetto a ordini manuali.
+      </div>
+    </div>
+
+    <div class="edu-point">
+      <div class="edu-point-title">3. Trading Quantitativo e Algoritmico</div>
+      <div class="edu-point-body">
+        Il trading algoritmico e quantitativo rappresenta una parte significativa del volume di 
+        scambio globale (circa 60-70% secondo Hendershott et al., 2011). Exante offre API avanzate 
+        per trading algoritmico, ma la ricerca di Dichev et al. (2013) mostra che molti trader 
+        quantitativi sovrastimano le proprie capacità e sottostimano i costi di transazione e il 
+        rischio di overfitting dei modelli.
+      </div>
+      <div class="edu-ai-note">
+        Il trading quantitativo richiede competenze in matematica, statistica, programmazione e 
+        gestione del rischio. La ricerca di Lo & MacKinlay (1990) e successive evidenzia come molti 
+        modelli quantitativi funzionino bene in backtest ma falliscano in live trading a causa di 
+        overfitting, cambiamenti nelle condizioni di mercato e costi di transazione non considerati. 
+        L'accesso API di Exante è potente, ma richiede competenze tecniche significative.
+      </div>
+    </div>
+
+    <div class="edu-point">
+      <div class="edu-point-title">4. Costi di Transazione e Rendimenti Netti</div>
+      <div class="edu-point-body">
+        La ricerca di French (2008) evidenzia come i costi di transazione (commissioni, spread, 
+        impatto sul mercato) possano erodere significativamente i rendimenti, specialmente per 
+        trader attivi. Su Exante, le commissioni di 0,02 USD per azione e 1,5 USD per futures/opzioni 
+        sono competitive per trader istituzionali, ma possono essere significative per trader retail 
+        con volumi bassi.
+      </div>
+      <div class="edu-ai-note">
+        Per un trader retail che compra 100 azioni a 50 USD ciascuna, la commissione di 0,02 USD 
+        per azione (minimo 1 USD) rappresenta solo lo 0,04% del valore dell'ordine. Tuttavia, per 
+        trader molto attivi, questi costi possono accumularsi rapidamente. Il costo di custodia 
+        dello 0,5% annuo è particolarmente rilevante per portafogli statici o posizioni di lungo 
+        termine, dove può erodere significativamente i rendimenti.
+      </div>
+    </div>
+
+    <div style="background: oklab(98% 0 0); border: 1px solid var(--br-soft); border-radius: var(--radius-pop); padding: var(--sp-4); margin-top: var(--sp-4);">
+      <div class="font-semibold mb-2" style="color: var(--ink);">Lettura di Contesto (non istruzioni operative)</div>
+      <div style="color: var(--ink-soft); font-size: var(--fs-14); line-height: var(--lh-15);">
+        Le strategie disponibili su Exante richiedono competenze tecniche avanzate e capitale 
+        significativo. L'accesso DMA e la gamma di strumenti disponibili offrono vantaggi per 
+        trader professionisti e istituzionali, ma i costi di custodia e commissioni possono essere 
+        proibitivi per trader retail con capitale limitato. La diversificazione e la gestione del 
+        rischio richiedono comprensione delle correlazioni tra asset e non solo il numero di 
+        strumenti disponibili.
+      </div>
+    </div>
+
+    <div class="text-xs mt-4" style="color: var(--muted);">
+      Questa sezione ha esclusivamente finalità informative e formative. Non costituisce consulenza 
+      finanziaria né raccomandazione di investimento. Consultare sempre un intermediario autorizzato 
+      prima di prendere decisioni di investimento.
+    </div>
+</section>
+
+  <!-- Sicurezza e Regolamentazioni -->
+  <section class="mb-10">
+    <div class="card">
+      <h2 class="text-2xl font-bold mb-6" style="color: var(--ink);">Sicurezza dei Fondi e Regolamentazioni</h2>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-    <!-- Card 1 -->
-    <div class="bg-gray-50 rounded-xl p-6 shadow-sm">
-      <h3 class="text-lg font-bold text-green-500 mb-3">Segregazione dei Fondi</h3>
-      <p class="text-sm text-gray-600">
-        I fondi dei clienti Exante sono separati da quelli della società e custoditi presso banche di primo livello, garantendo la protezione in caso di insolvenza.
+        <div style="background: var(--surface-elev); padding: var(--sp-4); border-radius: var(--radius-pop);">
+          <h3 class="text-lg font-bold mb-3" style="color: var(--ok);">Segregazione dei Fondi</h3>
+          <p class="text-sm" style="color: var(--ink-soft);">
+            I fondi dei clienti Exante sono separati da quelli della società e custoditi presso 
+            banche di primo livello, garantendo la protezione in caso di insolvenza.
       </p>
     </div>
 
-    <!-- Card 2 -->
-    <div class="bg-gray-50 rounded-xl p-6 shadow-sm">
-      <h3 class="text-lg font-bold text-green-500 mb-3">Regolamentazioni Internazionali</h3>
-      <p class="text-sm text-gray-600">
-        Exante è regolamentata dalla MFSA (Malta) con licenza IS/52182 e opera in Europa tramite MiFID II, garantendo conformità e trasparenza per clienti istituzionali e professionali.
+        <div style="background: var(--surface-elev); padding: var(--sp-4); border-radius: var(--radius-pop);">
+          <h3 class="text-lg font-bold mb-3" style="color: var(--ok);">Regolamentazioni Internazionali</h3>
+          <p class="text-sm" style="color: var(--ink-soft);">
+            Exante è regolamentata dalla MFSA (Malta) con licenza IS/52182 e opera in Europa tramite 
+            MiFID II, garantendo conformità e trasparenza per clienti istituzionali e professionali.
       </p>
     </div>
 
-    <!-- Card 3 -->
-    <div class="bg-gray-50 rounded-xl p-6 shadow-sm">
-      <h3 class="text-lg font-bold text-green-500 mb-3">Fondi di Compensazione</h3>
-      <p class="text-sm text-gray-600">
-        Gli investitori possono beneficiare del regime di compensazione maltese, fino a un massimo di 20.000 € per cliente, in caso di insolvenza, secondo le direttive EU.
+        <div style="background: var(--surface-elev); padding: var(--sp-4); border-radius: var(--radius-pop);">
+          <h3 class="text-lg font-bold mb-3" style="color: var(--ok);">Fondi di Compensazione</h3>
+          <p class="text-sm" style="color: var(--ink-soft);">
+            Gli investitori possono beneficiare del regime di compensazione maltese, fino a un massimo 
+            di 20.000 € per cliente, in caso di insolvenza, secondo le direttive EU.
       </p>
     </div>
 
-    <!-- Card 4 -->
-    <div class="bg-gray-50 rounded-xl p-6 shadow-sm">
-      <h3 class="text-lg font-bold text-green-500 mb-3">Clientela Professionale</h3>
-      <p class="text-sm text-gray-600">
-        Exante si rivolge principalmente a clienti professionali e istituzionali, pertanto non si applicano le protezioni retail ESMA come il saldo negativo o i limiti di leva.
+        <div style="background: var(--surface-elev); padding: var(--sp-4); border-radius: var(--radius-pop);">
+          <h3 class="text-lg font-bold mb-3" style="color: var(--ok);">Clientela Professionale</h3>
+          <p class="text-sm" style="color: var(--ink-soft);">
+            Exante si rivolge principalmente a clienti professionali e istituzionali, pertanto non 
+            si applicano le protezioni retail ESMA come il saldo negativo o i limiti di leva.
       </p>
     </div>
 
   </div>
-
-  <div class="text-center mt-8">
-    <span class="inline-block bg-green-500 text-white font-semibold text-sm px-4 py-2 rounded-full">
+      <div class="text-center mt-6">
+        <span class="inline-block px-4 py-2 rounded-full text-sm font-semibold" style="background: var(--ok); color: white;">
       ✔ Fondi Protetti e Regolamentazione Istituzionale Garantita
     </span>
+      </div>
   </div>
 </section>
-    <div class="my-12 sm:my-16"></div>
-<section class="max-w-7xl mx-auto px-4 py-10 text-slate-800 bg-white rounded-2xl shadow-md">
-  <h2 class="text-2xl font-bold text-center text-green-500 mb-8">Costi e Commissioni Exante</h2>
+
+  <!-- Costi e Commissioni -->
+  <section class="mb-10">
+    <div class="card">
+      <h2 class="text-2xl font-bold mb-6" style="color: var(--ink);">Costi e Commissioni Exante</h2>
 
   <div class="hidden md:block overflow-x-auto">
-    <table class="min-w-full text-sm text-left border-collapse">
-      <thead class="bg-green-500 text-white font-semibold">
-        <tr>
-          <th class="px-4 py-3">Strumento</th>
-          <th class="px-4 py-3">Costo</th>
-          <th class="px-4 py-3">Dettaglio</th>
-          <th class="px-4 py-3">Note</th>
+        <table>
+          <thead>
+            <tr>
+              <th>Strumento</th>
+              <th>Costo</th>
+              <th>Dettaglio</th>
+              <th>Note</th>
         </tr>
       </thead>
-      <tbody class="text-gray-700">
-        <tr class="border-b"><td class="px-4 py-3">Azioni & ETF</td><td class="px-4 py-3 text-green-600">0,02 USD / azione</td><td class="px-4 py-3">Commissione fissa</td><td class="px-4 py-3">Min. 1 USD per ordine</td></tr>
-        <tr class="border-b"><td class="px-4 py-3">Futures</td><td class="px-4 py-3 text-green-600">1,5 USD</td><td class="px-4 py-3">Per contratto</td><td class="px-4 py-3">Per lato, esclusi costi exchange</td></tr>
-        <tr class="border-b"><td class="px-4 py-3">Opzioni</td><td class="px-4 py-3 text-green-600">1,5 USD</td><td class="px-4 py-3">Per contratto</td><td class="px-4 py-3">Per lato, esclusi costi exchange</td></tr>
-        <tr class="border-b"><td class="px-4 py-3">Forex</td><td class="px-4 py-3 text-yellow-500">da 0,3 pip</td><td class="px-4 py-3">Spread variabile</td><td class="px-4 py-3">Accesso interbancario</td></tr>
-        <tr class="border-b"><td class="px-4 py-3">Bond</td><td class="px-4 py-3 text-green-600">0,02%</td><td class="px-4 py-3">% del valore</td><td class="px-4 py-3">Min. 80 USD per transazione</td></tr>
-        <tr class="border-b"><td class="px-4 py-3">Crypto</td><td class="px-4 py-3 text-yellow-500">0,5% + 10 USD</td><td class="px-4 py-3">Spread + commissione</td><td class="px-4 py-3">Per transazione</td></tr>
-        <tr class="border-b"><td class="px-4 py-3">Custodia</td><td class="px-4 py-3 text-yellow-500">0,5% annuo</td><td class="px-4 py-3">Mensile</td><td class="px-4 py-3">Proporzionato al saldo</td></tr>
-        <tr class="border-b"><td class="px-4 py-3">Prelievo</td><td class="px-4 py-3 text-red-500">30 EUR</td><td class="px-4 py-3">Fisso</td><td class="px-4 py-3">Per bonifico</td></tr>
-        <tr class="border-b"><td class="px-4 py-3">Deposito Minimo</td><td class="px-4 py-3 text-red-500">10.000 EUR</td><td class="px-4 py-3">All’apertura</td><td class="px-4 py-3">Per aprire il conto</td></tr>
-        <tr><td class="px-4 py-3">Depositi Successivi</td><td class="px-4 py-3 text-green-600">Nessun minimo</td><td class="px-4 py-3">Dopo apertura</td><td class="px-4 py-3">Importo libero</td></tr>
+          <tbody>
+            <tr>
+              <td>Azioni & ETF</td>
+              <td style="color: var(--ok); font-weight: 600;">0,02 USD / azione</td>
+              <td>Commissione fissa</td>
+              <td>Min. 1 USD per ordine</td>
+            </tr>
+            <tr>
+              <td>Futures</td>
+              <td style="color: var(--ok); font-weight: 600;">1,5 USD</td>
+              <td>Per contratto</td>
+              <td>Per lato, esclusi costi exchange</td>
+            </tr>
+            <tr>
+              <td>Opzioni</td>
+              <td style="color: var(--ok); font-weight: 600;">1,5 USD</td>
+              <td>Per contratto</td>
+              <td>Per lato, esclusi costi exchange</td>
+            </tr>
+            <tr>
+              <td>Forex</td>
+              <td style="color: var(--warn); font-weight: 600;">da 0,3 pip</td>
+              <td>Spread variabile</td>
+              <td>Accesso interbancario</td>
+            </tr>
+            <tr>
+              <td>Bond</td>
+              <td style="color: var(--ok); font-weight: 600;">0,02%</td>
+              <td>% del valore</td>
+              <td>Min. 80 USD per transazione</td>
+            </tr>
+            <tr>
+              <td>Crypto</td>
+              <td style="color: var(--warn); font-weight: 600;">0,5% + 10 USD</td>
+              <td>Spread + commissione</td>
+              <td>Per transazione</td>
+            </tr>
+            <tr>
+              <td>Custodia</td>
+              <td style="color: var(--warn); font-weight: 600;">0,5% annuo</td>
+              <td>Mensile</td>
+              <td>Proporzionato al saldo</td>
+            </tr>
+            <tr>
+              <td>Prelievo</td>
+              <td style="color: var(--err); font-weight: 600;">30 EUR</td>
+              <td>Fisso</td>
+              <td>Per bonifico</td>
+            </tr>
+            <tr>
+              <td>Deposito Minimo</td>
+              <td style="color: var(--err); font-weight: 600;">10.000 EUR</td>
+              <td>All'apertura</td>
+              <td>Per aprire il conto</td>
+            </tr>
+            <tr>
+              <td>Depositi Successivi</td>
+              <td style="color: var(--ok); font-weight: 600;">Nessun minimo</td>
+              <td>Dopo apertura</td>
+              <td>Importo libero</td>
+            </tr>
       </tbody>
     </table>
   </div>
 
   <!-- Mobile Cards -->
   <div class="md:hidden flex flex-col gap-4">
-    <div class="bg-white p-4 rounded-lg shadow text-sm">
-      <div class="font-semibold mb-1">Azioni & ETF</div>
-      <div class="text-green-600 font-bold">0,02 USD / azione</div>
-      <div>Commissione fissa</div>
-      <div class="text-gray-500">Min. 1 USD per ordine</div>
+        <div class="card">
+          <div class="font-semibold mb-1" style="color: var(--ink);">Azioni & ETF</div>
+          <div style="color: var(--ok); font-weight: 600;">0,02 USD / azione</div>
+          <div style="color: var(--ink-soft);">Commissione fissa</div>
+          <div class="text-xs" style="color: var(--muted);">Min. 1 USD per ordine</div>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow text-sm">
-      <div class="font-semibold mb-1">Futures</div>
-      <div class="text-green-600 font-bold">1,5 USD</div>
-      <div>Per contratto</div>
-      <div class="text-gray-500">Per lato, esclusi costi exchange</div>
+        <div class="card">
+          <div class="font-semibold mb-1" style="color: var(--ink);">Futures</div>
+          <div style="color: var(--ok); font-weight: 600;">1,5 USD</div>
+          <div style="color: var(--ink-soft);">Per contratto</div>
+          <div class="text-xs" style="color: var(--muted);">Per lato, esclusi costi exchange</div>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow text-sm">
-      <div class="font-semibold mb-1">Opzioni</div>
-      <div class="text-green-600 font-bold">1,5 USD</div>
-      <div>Per contratto</div>
-      <div class="text-gray-500">Per lato, esclusi costi exchange</div>
+        <div class="card">
+          <div class="font-semibold mb-1" style="color: var(--ink);">Opzioni</div>
+          <div style="color: var(--ok); font-weight: 600;">1,5 USD</div>
+          <div style="color: var(--ink-soft);">Per contratto</div>
+          <div class="text-xs" style="color: var(--muted);">Per lato, esclusi costi exchange</div>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow text-sm">
-      <div class="font-semibold mb-1">Forex</div>
-      <div class="text-yellow-500 font-bold">da 0,3 pip</div>
-      <div>Spread variabile</div>
-      <div class="text-gray-500">Accesso interbancario</div>
+        <div class="card">
+          <div class="font-semibold mb-1" style="color: var(--ink);">Forex</div>
+          <div style="color: var(--warn); font-weight: 600;">da 0,3 pip</div>
+          <div style="color: var(--ink-soft);">Spread variabile</div>
+          <div class="text-xs" style="color: var(--muted);">Accesso interbancario</div>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow text-sm">
-      <div class="font-semibold mb-1">Bond</div>
-      <div class="text-green-600 font-bold">0,02%</div>
-      <div>% del valore</div>
-      <div class="text-gray-500">Min. 80 USD per transazione</div>
+        <div class="card">
+          <div class="font-semibold mb-1" style="color: var(--ink);">Bond</div>
+          <div style="color: var(--ok); font-weight: 600;">0,02%</div>
+          <div style="color: var(--ink-soft);">% del valore</div>
+          <div class="text-xs" style="color: var(--muted);">Min. 80 USD per transazione</div>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow text-sm">
-      <div class="font-semibold mb-1">Crypto</div>
-      <div class="text-yellow-500 font-bold">0,5% + 10 USD</div>
-      <div>Spread + commissione</div>
-      <div class="text-gray-500">Per transazione</div>
+        <div class="card">
+          <div class="font-semibold mb-1" style="color: var(--ink);">Crypto</div>
+          <div style="color: var(--warn); font-weight: 600;">0,5% + 10 USD</div>
+          <div style="color: var(--ink-soft);">Spread + commissione</div>
+          <div class="text-xs" style="color: var(--muted);">Per transazione</div>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow text-sm">
-      <div class="font-semibold mb-1">Custodia</div>
-      <div class="text-yellow-500 font-bold">0,5% annuo</div>
-      <div>Mensile</div>
-      <div class="text-gray-500">Proporzionato al saldo</div>
+        <div class="card">
+          <div class="font-semibold mb-1" style="color: var(--ink);">Custodia</div>
+          <div style="color: var(--warn); font-weight: 600;">0,5% annuo</div>
+          <div style="color: var(--ink-soft);">Mensile</div>
+          <div class="text-xs" style="color: var(--muted);">Proporzionato al saldo</div>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow text-sm">
-      <div class="font-semibold mb-1">Prelievo</div>
-      <div class="text-red-500 font-bold">30 EUR</div>
-      <div>Fisso</div>
-      <div class="text-gray-500">Per bonifico</div>
+        <div class="card">
+          <div class="font-semibold mb-1" style="color: var(--ink);">Prelievo</div>
+          <div style="color: var(--err); font-weight: 600;">30 EUR</div>
+          <div style="color: var(--ink-soft);">Fisso</div>
+          <div class="text-xs" style="color: var(--muted);">Per bonifico</div>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow text-sm">
-      <div class="font-semibold mb-1">Deposito Minimo</div>
-      <div class="text-red-500 font-bold">10.000 EUR</div>
-      <div>All’apertura</div>
-      <div class="text-gray-500">Per aprire il conto</div>
+        <div class="card">
+          <div class="font-semibold mb-1" style="color: var(--ink);">Deposito Minimo</div>
+          <div style="color: var(--err); font-weight: 600;">10.000 EUR</div>
+          <div style="color: var(--ink-soft);">All'apertura</div>
+          <div class="text-xs" style="color: var(--muted);">Per aprire il conto</div>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow text-sm">
-      <div class="font-semibold mb-1">Depositi Successivi</div>
-      <div class="text-green-600 font-bold">Nessun minimo</div>
-      <div>Dopo apertura</div>
-      <div class="text-gray-500">Importo libero</div>
+        <div class="card">
+          <div class="font-semibold mb-1" style="color: var(--ink);">Depositi Successivi</div>
+          <div style="color: var(--ok); font-weight: 600;">Nessun minimo</div>
+          <div style="color: var(--ink-soft);">Dopo apertura</div>
+          <div class="text-xs" style="color: var(--muted);">Importo libero</div>
     </div>
   </div>
 
-  <p class="text-xs text-center text-gray-400 mt-8">
+      <p class="text-xs text-center mt-6" style="color: var(--muted);">
     Dati aggiornati al 2025. Consultare i documenti ufficiali di Exante per eventuali variazioni.
   </p>
+    </div>
 </section>
-    <div class="my-12 sm:my-16"></div>
-<section class="max-w-7xl mx-auto px-4 py-8 bg-gray-50 rounded-xl shadow-sm">
-  <h2 class="text-center text-green-500 text-lg font-semibold mb-4">Piattaforme Disponibili su Exante</h2>
 
-  <div class="flex gap-4 overflow-x-auto pb-3 scroll-smooth scroll-px-4 snap-x snap-mandatory">
-    
-    <!-- Web Platform -->
-    <div class="min-w-[200px] max-w-[200px] h-[150px] flex-shrink-0 bg-white rounded-lg shadow-md p-3 flex flex-col justify-between snap-start">
+  <!-- Piattaforme Disponibili -->
+  <section class="mb-10">
+    <div class="card" style="background: var(--surface-elev);">
+      <h2 class="text-lg font-semibold mb-4 text-center" style="color: var(--ok);">Piattaforme Disponibili su Exante</h2>
+      <div class="flex gap-4 overflow-x-auto pb-3 scroll-smooth">
+        
+        <div class="min-w-[200px] max-w-[200px] h-[150px] flex-shrink-0 card flex flex-col justify-between">
       <div>
         <div class="flex items-center mb-2">
-          <svg width="16" height="16" fill="#00C76A" viewBox="0 0 24 24"><path d="M4 5h16v2H4zM4 9h16v2H4zM4 13h10v2H4z"/></svg>
-          <h3 class="text-sm font-medium ml-2">Web Platform</h3>
+              <svg class="ico" style="color: var(--ok);" viewBox="0 0 24 24">
+                <path d="M4 5h16v2H4zM4 9h16v2H4zM4 13h10v2H4z" />
+              </svg>
+              <h3 class="text-sm font-medium ml-2" style="color: var(--ink);">Web Platform</h3>
         </div>
-        <p class="text-[11px] text-gray-600 leading-tight">
+            <p class="text-xs leading-tight" style="color: var(--ink-soft);">
           Piattaforma avanzata DMA con accesso diretto ai mercati globali.
         </p>
       </div>
-      <p class="text-[10px] font-medium mt-2">Disponibile: <span class="text-gray-900">Desktop</span></p>
+          <p class="text-xs font-medium mt-2">Disponibile: <span style="color: var(--ink);">Desktop</span></p>
     </div>
 
-    <!-- Mobile App -->
-    <div class="min-w-[200px] max-w-[200px] h-[150px] flex-shrink-0 bg-white rounded-lg shadow-md p-3 flex flex-col justify-between snap-start">
+        <div class="min-w-[200px] max-w-[200px] h-[150px] flex-shrink-0 card flex flex-col justify-between">
       <div>
         <div class="flex items-center mb-2">
-          <svg width="16" height="16" fill="#00C76A" viewBox="0 0 24 24"><path d="M7 2h10a2 2 0 012 2v16a2 2 0 01-2 2H7a2 2 0 01-2-2V4a2 2 0 012-2zm5 20a1 1 0 100-2 1 1 0 000 2zm5-4V4H7v14h10z"/></svg>
-          <h3 class="text-sm font-medium ml-2">Mobile App</h3>
+              <svg class="ico" style="color: var(--ok);" viewBox="0 0 24 24">
+                <path d="M7 2h10a2 2 0 012 2v16a2 2 0 01-2 2H7a2 2 0 01-2-2V4a2 2 0 012-2zm5 20a1 1 0 100-2 1 1 0 000 2zm5-4V4H7v14h10z" />
+              </svg>
+              <h3 class="text-sm font-medium ml-2" style="color: var(--ink);">Mobile App</h3>
         </div>
-        <p class="text-[11px] text-gray-600 leading-tight">
+            <p class="text-xs leading-tight" style="color: var(--ink-soft);">
           App mobile professionale per monitoraggio e trading in mobilità.
         </p>
       </div>
-      <p class="text-[10px] font-medium mt-2">Disponibile: <span class="text-gray-900">iOS & Android</span></p>
+          <p class="text-xs font-medium mt-2">Disponibile: <span style="color: var(--ink);">iOS & Android</span></p>
     </div>
 
-    <!-- API Access -->
-    <div class="min-w-[200px] max-w-[200px] h-[150px] flex-shrink-0 bg-white rounded-lg shadow-md p-3 flex flex-col justify-between snap-start">
+        <div class="min-w-[200px] max-w-[200px] h-[150px] flex-shrink-0 card flex flex-col justify-between">
       <div>
         <div class="flex items-center mb-2">
-          <svg width="16" height="16" fill="#00C76A" viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-          <h3 class="text-sm font-medium ml-2">API Access</h3>
+              <svg class="ico" style="color: var(--ok);" viewBox="0 0 24 24">
+                <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+              </svg>
+              <h3 class="text-sm font-medium ml-2" style="color: var(--ink);">API Access</h3>
         </div>
-        <p class="text-[11px] text-gray-600 leading-tight">
+            <p class="text-xs leading-tight" style="color: var(--ink-soft);">
           Integrazioni avanzate per trading algoritmico e personalizzato.
         </p>
       </div>
-      <p class="text-[10px] font-medium mt-2">Disponibile: <span class="text-gray-900">Professionale</span></p>
+          <p class="text-xs font-medium mt-2">Disponibile: <span style="color: var(--ink);">Professionale</span></p>
     </div>
 
   </div>
-
-  <p class="text-[10px] text-gray-400 text-center mt-4">
+      <p class="text-xs text-center mt-4" style="color: var(--muted);">
     Dati aggiornati al 2025. Consultare i documenti ufficiali di Exante per ulteriori dettagli.
   </p>
-</section>
-    <div class="my-12 sm:my-16"></div>
-<section class="max-w-4xl mx-auto my-10 px-4">
-  <div class="relative pb-[56.25%] h-0 rounded-xl overflow-hidden shadow-lg" id="video-wrapper">
-    <!-- VIDEO IFRAME -->
-    <iframe
-      id="exanteVideo"
-      data-src="https://player.vimeo.com/video/528719115?autoplay=1&muted=1"
-      title="Video Exante"
-      frameborder="0"
-      allow="autoplay; fullscreen; picture-in-picture"
-      allowfullscreen
-      class="absolute top-0 left-0 w-full h-full"
-    ></iframe>
-
-    <!-- OVERLAY ANIMATO -->
-    <div
-      id="video-overlay"
-      class="absolute inset-0 flex items-center justify-center z-10 bg-black/40 text-white animate-pulse pointer-events-none"
-    >
-      <p class="text-sm sm:text-base font-semibold">Il video parte tra pochi secondi...</p>
-    </div>
   </div>
 </section>
 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const video = document.getElementById("exanteVideo");
-    const overlay = document.getElementById("video-overlay");
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !video.src) {
-            video.src = video.dataset.src;
-
-            // Rimuovi overlay dopo 2 secondi
-            setTimeout(() => {
-              overlay.style.display = "none";
-            }, 2000);
-          }
-        });
-      },
-      { threshold: 0.6 }
-    );
-
-    observer.observe(video);
-  });
-</script>
-
-    <div class="my-12 sm:my-16"></div>
-<!-- Sezione Strumenti Finanziari Disponibili su Exante - VERSIONE TAILWIND COERENTE -->
-<section class="max-w-screen-xl mx-auto px-4 py-10 bg-gray-50 rounded-xl shadow-md">
-  <h2 class="text-2xl md:text-3xl font-bold text-center text-green-600 mb-8">
+  <!-- Strumenti Finanziari Disponibili -->
+  <section class="mb-10">
+    <div class="card" style="background: var(--surface-elev);">
+      <h2 class="text-2xl md:text-3xl font-bold text-center mb-8" style="color: var(--ok);">
     Strumenti Finanziari Disponibili su Exante
   </h2>
 
-  <!-- Tabella Desktop -->
   <div class="hidden md:block overflow-x-auto">
-    <table class="w-full text-sm text-left border-collapse">
-      <thead class="bg-green-600 text-white">
-        <tr>
-          <th class="px-4 py-3 font-semibold">Categoria</th>
-          <th class="px-4 py-3 font-semibold">Numero di Strumenti</th>
-          <th class="px-4 py-3 font-semibold">Note</th>
+        <table>
+          <thead>
+            <tr>
+              <th>Categoria</th>
+              <th>Numero di Strumenti</th>
+              <th>Note</th>
         </tr>
       </thead>
-      <tbody class="text-gray-700">
-        <tr class="bg-white">
-          <td class="px-4 py-3">Azioni</td>
-          <td class="px-4 py-3 text-green-600">Oltre 24.000</td>
-          <td class="px-4 py-3">USA, Europa, Asia, mercati emergenti</td>
+          <tbody>
+            <tr>
+              <td>Azioni</td>
+              <td style="color: var(--ok); font-weight: 600;">Oltre 24.000</td>
+              <td>USA, Europa, Asia, mercati emergenti</td>
         </tr>
-        <tr class="bg-gray-100">
-          <td class="px-4 py-3">ETF</td>
-          <td class="px-4 py-3 text-green-600">Oltre 500</td>
-          <td class="px-4 py-3">Accesso DMA globale</td>
+            <tr>
+              <td>ETF</td>
+              <td style="color: var(--ok); font-weight: 600;">Oltre 500</td>
+              <td>Accesso DMA globale</td>
         </tr>
-        <tr class="bg-white">
-          <td class="px-4 py-3">Futures</td>
-          <td class="px-4 py-3 text-yellow-500">50+ mercati</td>
-          <td class="px-4 py-3">CME, ICE, EUREX e altri</td>
+            <tr>
+              <td>Futures</td>
+              <td style="color: var(--warn); font-weight: 600;">50+ mercati</td>
+              <td>CME, ICE, EUREX e altri</td>
         </tr>
-        <tr class="bg-gray-100">
-          <td class="px-4 py-3">Opzioni</td>
-          <td class="px-4 py-3 text-green-600">Oltre 500.000 contratti</td>
-          <td class="px-4 py-3">Opzioni USA, EU, Asia</td>
+            <tr>
+              <td>Opzioni</td>
+              <td style="color: var(--ok); font-weight: 600;">Oltre 500.000 contratti</td>
+              <td>Opzioni USA, EU, Asia</td>
         </tr>
-        <tr class="bg-white">
-          <td class="px-4 py-3">Forex</td>
-          <td class="px-4 py-3 text-yellow-500">50+ coppie</td>
-          <td class="px-4 py-3">Accesso interbancario</td>
+            <tr>
+              <td>Forex</td>
+              <td style="color: var(--warn); font-weight: 600;">50+ coppie</td>
+              <td>Accesso interbancario</td>
         </tr>
-        <tr class="bg-gray-100">
-          <td class="px-4 py-3">Bond</td>
-          <td class="px-4 py-3 text-green-600">Oltre 20.000</td>
-          <td class="px-4 py-3">Corporate, governativi, municipali</td>
+            <tr>
+              <td>Bond</td>
+              <td style="color: var(--ok); font-weight: 600;">Oltre 20.000</td>
+              <td>Corporate, governativi, municipali</td>
         </tr>
-        <tr class="bg-white">
-          <td class="px-4 py-3">Metalli & Commodities</td>
-          <td class="px-4 py-3 text-yellow-500">Ampia gamma</td>
-          <td class="px-4 py-3">Oro, Argento, Petrolio, Agricoli</td>
+            <tr>
+              <td>Metalli & Commodities</td>
+              <td style="color: var(--warn); font-weight: 600;">Ampia gamma</td>
+              <td>Oro, Argento, Petrolio, Agricoli</td>
         </tr>
-        <tr class="bg-gray-100">
-          <td class="px-4 py-3">Crypto</td>
-          <td class="px-4 py-3 text-yellow-500">Oltre 150 CFD</td>
-          <td class="px-4 py-3">Disponibili anche per clienti retail</td>
+            <tr>
+              <td>Crypto</td>
+              <td style="color: var(--warn); font-weight: 600;">Oltre 150 CFD</td>
+              <td>Disponibili anche per clienti retail</td>
         </tr>
-        <tr class="bg-white">
-          <td class="px-4 py-3">Fondi</td>
-          <td class="px-4 py-3 text-yellow-500">Oltre 150</td>
-          <td class="px-4 py-3">Fondi hedge, comuni, indicizzati</td>
+            <tr>
+              <td>Fondi</td>
+              <td style="color: var(--warn); font-weight: 600;">Oltre 150</td>
+              <td>Fondi hedge, comuni, indicizzati</td>
         </tr>
-        <tr class="bg-gray-100">
-          <td class="px-4 py-3">Note Strutturate</td>
-          <td class="px-4 py-3 text-yellow-500">Ampia gamma</td>
-          <td class="px-4 py-3">Diversificazione e gestione del rischio</td>
+            <tr>
+              <td>Note Strutturate</td>
+              <td style="color: var(--warn); font-weight: 600;">Ampia gamma</td>
+              <td>Diversificazione e gestione del rischio</td>
         </tr>
       </tbody>
     </table>
@@ -677,154 +953,214 @@
 
   <!-- Mobile Cards -->
   <div class="md:hidden grid gap-4 mt-6">
-    <div class="bg-white p-4 rounded-lg shadow">
-      <h3 class="font-semibold text-gray-800 text-sm">Azioni</h3>
-      <p class="text-green-600 text-sm">Oltre 24.000</p>
-      <p class="text-gray-600 text-xs">USA, Europa, Asia, mercati emergenti</p>
+        <div class="card">
+          <h3 class="font-semibold text-sm mb-1" style="color: var(--ink);">Azioni</h3>
+          <p class="text-sm mb-1" style="color: var(--ok); font-weight: 600;">Oltre 24.000</p>
+          <p class="text-xs" style="color: var(--ink-soft);">USA, Europa, Asia, mercati emergenti</p>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow">
-      <h3 class="font-semibold text-gray-800 text-sm">ETF</h3>
-      <p class="text-green-600 text-sm">Oltre 500</p>
-      <p class="text-gray-600 text-xs">Accesso DMA globale</p>
+        <div class="card">
+          <h3 class="font-semibold text-sm mb-1" style="color: var(--ink);">ETF</h3>
+          <p class="text-sm mb-1" style="color: var(--ok); font-weight: 600;">Oltre 500</p>
+          <p class="text-xs" style="color: var(--ink-soft);">Accesso DMA globale</p>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow">
-      <h3 class="font-semibold text-gray-800 text-sm">Futures</h3>
-      <p class="text-yellow-500 text-sm">50+ mercati</p>
-      <p class="text-gray-600 text-xs">CME, ICE, EUREX e altri</p>
+        <div class="card">
+          <h3 class="font-semibold text-sm mb-1" style="color: var(--ink);">Futures</h3>
+          <p class="text-sm mb-1" style="color: var(--warn); font-weight: 600;">50+ mercati</p>
+          <p class="text-xs" style="color: var(--ink-soft);">CME, ICE, EUREX e altri</p>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow">
-      <h3 class="font-semibold text-gray-800 text-sm">Opzioni</h3>
-      <p class="text-green-600 text-sm">Oltre 500.000 contratti</p>
-      <p class="text-gray-600 text-xs">Opzioni USA, EU, Asia</p>
+        <div class="card">
+          <h3 class="font-semibold text-sm mb-1" style="color: var(--ink);">Opzioni</h3>
+          <p class="text-sm mb-1" style="color: var(--ok); font-weight: 600;">Oltre 500.000 contratti</p>
+          <p class="text-xs" style="color: var(--ink-soft);">Opzioni USA, EU, Asia</p>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow">
-      <h3 class="font-semibold text-gray-800 text-sm">Forex</h3>
-      <p class="text-yellow-500 text-sm">50+ coppie</p>
-      <p class="text-gray-600 text-xs">Accesso interbancario</p>
+        <div class="card">
+          <h3 class="font-semibold text-sm mb-1" style="color: var(--ink);">Forex</h3>
+          <p class="text-sm mb-1" style="color: var(--warn); font-weight: 600;">50+ coppie</p>
+          <p class="text-xs" style="color: var(--ink-soft);">Accesso interbancario</p>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow">
-      <h3 class="font-semibold text-gray-800 text-sm">Bond</h3>
-      <p class="text-green-600 text-sm">Oltre 20.000</p>
-      <p class="text-gray-600 text-xs">Corporate, governativi, municipali</p>
+        <div class="card">
+          <h3 class="font-semibold text-sm mb-1" style="color: var(--ink);">Bond</h3>
+          <p class="text-sm mb-1" style="color: var(--ok); font-weight: 600;">Oltre 20.000</p>
+          <p class="text-xs" style="color: var(--ink-soft);">Corporate, governativi, municipali</p>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow">
-      <h3 class="font-semibold text-gray-800 text-sm">Metalli & Commodities</h3>
-      <p class="text-yellow-500 text-sm">Ampia gamma</p>
-      <p class="text-gray-600 text-xs">Oro, Argento, Petrolio, Agricoli</p>
+        <div class="card">
+          <h3 class="font-semibold text-sm mb-1" style="color: var(--ink);">Metalli & Commodities</h3>
+          <p class="text-sm mb-1" style="color: var(--warn); font-weight: 600;">Ampia gamma</p>
+          <p class="text-xs" style="color: var(--ink-soft);">Oro, Argento, Petrolio, Agricoli</p>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow">
-      <h3 class="font-semibold text-gray-800 text-sm">Crypto</h3>
-      <p class="text-yellow-500 text-sm">Oltre 150 CFD</p>
-      <p class="text-gray-600 text-xs">Disponibili anche per clienti retail</p>
+        <div class="card">
+          <h3 class="font-semibold text-sm mb-1" style="color: var(--ink);">Crypto</h3>
+          <p class="text-sm mb-1" style="color: var(--warn); font-weight: 600;">Oltre 150 CFD</p>
+          <p class="text-xs" style="color: var(--ink-soft);">Disponibili anche per clienti retail</p>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow">
-      <h3 class="font-semibold text-gray-800 text-sm">Fondi</h3>
-      <p class="text-yellow-500 text-sm">Oltre 150</p>
-      <p class="text-gray-600 text-xs">Hedge, comuni, indicizzati</p>
+        <div class="card">
+          <h3 class="font-semibold text-sm mb-1" style="color: var(--ink);">Fondi</h3>
+          <p class="text-sm mb-1" style="color: var(--warn); font-weight: 600;">Oltre 150</p>
+          <p class="text-xs" style="color: var(--ink-soft);">Hedge, comuni, indicizzati</p>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow">
-      <h3 class="font-semibold text-gray-800 text-sm">Note Strutturate</h3>
-      <p class="text-yellow-500 text-sm">Ampia gamma</p>
-      <p class="text-gray-600 text-xs">Gestione del rischio</p>
+        <div class="card">
+          <h3 class="font-semibold text-sm mb-1" style="color: var(--ink);">Note Strutturate</h3>
+          <p class="text-sm mb-1" style="color: var(--warn); font-weight: 600;">Ampia gamma</p>
+          <p class="text-xs" style="color: var(--ink-soft);">Gestione del rischio</p>
     </div>
   </div>
 
-  <p class="text-center text-xs text-gray-400 mt-6">
+      <p class="text-xs text-center mt-6" style="color: var(--muted);">
     Dati aggiornati al 2025. Consultare i documenti ufficiali di Exante per ulteriori dettagli.
   </p>
+    </div>
 </section>
-    <div class="my-12 sm:my-16"></div>
-    <section class="max-w-screen-xl mx-auto px-4 sm:px-6 py-10 bg-gray-50 font-inter rounded-xl">
-  <h2 class="text-center text-2xl sm:text-3xl font-bold text-gray-800 mb-8 text-[#00C76A]">Servizi Offerti</h2>
 
-  <div class="flex gap-4 overflow-x-auto pb-4 scroll-snap-x scroll-smooth snap-x snap-mandatory">
-    
-<!-- Card aggiornata DMA -->
-<div class="min-w-[300px] max-w-[300px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 flex flex-col justify-between snap-start">
+  <!-- Servizi Offerti -->
+  <section class="mb-10">
+    <div class="card" style="background: var(--surface-elev);">
+      <h2 class="text-2xl font-bold text-center mb-8" style="color: var(--ok);">Servizi Offerti</h2>
+      <div class="flex gap-4 overflow-x-auto pb-4 scroll-smooth">
+        
+        <div class="min-w-[300px] max-w-[300px] flex-shrink-0 card flex flex-col justify-between">
+          <div>
   <div class="flex items-center gap-2 mb-3">
-    <svg width="24" height="24" fill="#00C76A" viewBox="0 0 24 24"><path d="M4 6h16v2H4zM4 11h16v2H4zM4 16h16v2H4z"/></svg>
-    <h3 class="text-base font-semibold text-gray-800">Accesso DMA</h3>
+              <svg class="ico ico-lg" style="color: var(--ok);" viewBox="0 0 24 24">
+                <path d="M4 6h16v2H4zM4 11h16v2H4zM4 16h16v2H4z" />
+              </svg>
+              <h3 class="text-base font-semibold" style="color: var(--ink);">Accesso DMA</h3>
   </div>
-  <p class="text-sm text-gray-600 leading-relaxed mb-4">
-    Accesso DMA disponibile anche per utenti retail, con esecuzione diretta su numerosi mercati globali.
-    Alcuni strumenti e funzionalità avanzate possono richiedere qualificazione come cliente professionale.
-  </p>
+            <p class="text-sm leading-relaxed mb-4" style="color: var(--ink-soft);">
+              Accesso DMA disponibile anche per utenti retail, con esecuzione diretta su numerosi 
+              mercati globali. Alcuni strumenti e funzionalità avanzate possono richiedere 
+              qualificazione come cliente professionale.
+            </p>
+          </div>
 </div>
 
-
-    <!-- Card -->
-    <div class="min-w-[300px] max-w-[300px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 flex flex-col justify-between snap-start">
+        <div class="min-w-[300px] max-w-[300px] flex-shrink-0 card flex flex-col justify-between">
+          <div>
       <div class="flex items-center gap-2 mb-3">
-        <svg width="24" height="24" fill="#00C76A" viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-        <h3 class="text-base font-semibold text-gray-800">Trading Algoritmico</h3>
+              <svg class="ico ico-lg" style="color: var(--ok);" viewBox="0 0 24 24">
+                <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+              </svg>
+              <h3 class="text-base font-semibold" style="color: var(--ink);">Trading Algoritmico</h3>
       </div>
-      <p class="text-sm text-gray-600 leading-relaxed mb-4">
-        API avanzate per integrare algoritmi e strategie personalizzate. Automazione totale, backtesting e gestione multi-asset.
+            <p class="text-sm leading-relaxed mb-4" style="color: var(--ink-soft);">
+              API avanzate per integrare algoritmi e strategie personalizzate. Automazione totale, 
+              backtesting e gestione multi-asset.
       </p>
-      <p class="text-sm font-medium text-gray-800">Servizio riservato a utenti con esperienza tecnica.</p>
+            <p class="text-sm font-medium" style="color: var(--ink);">Servizio riservato a utenti con esperienza tecnica.</p>
+          </div>
     </div>
 
-    <!-- Card -->
-    <div class="min-w-[300px] max-w-[300px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 flex flex-col justify-between snap-start">
+        <div class="min-w-[300px] max-w-[300px] flex-shrink-0 card flex flex-col justify-between">
+          <div>
       <div class="flex items-center gap-2 mb-3">
-        <svg width="24" height="24" fill="#00C76A" viewBox="0 0 24 24"><path d="M7 4h10v2H7zm0 6h10v2H7zm0 6h10v2H7z"/></svg>
-        <h3 class="text-base font-semibold text-gray-800">Prime Brokerage</h3>
+              <svg class="ico ico-lg" style="color: var(--ok);" viewBox="0 0 24 24">
+                <path d="M7 4h10v2H7zm0 6h10v2H7zm0 6h10v2H7z" />
+              </svg>
+              <h3 class="text-base font-semibold" style="color: var(--ink);">Prime Brokerage</h3>
       </div>
-      <p class="text-sm text-gray-600 leading-relaxed mb-4">
-        Servizi su misura per hedge fund, family office e grandi istituzioni: margini competitivi, clearing globale e accesso OTC.
+            <p class="text-sm leading-relaxed mb-4" style="color: var(--ink-soft);">
+              Servizi su misura per hedge fund, family office e grandi istituzioni: margini 
+              competitivi, clearing globale e accesso OTC.
       </p>
-      <p class="text-sm font-medium text-red-500">Richiede requisiti minimi elevati.</p>
+            <p class="text-sm font-medium" style="color: var(--err);">Richiede requisiti minimi elevati.</p>
+          </div>
     </div>
 
-    <!-- Card -->
-    <div class="min-w-[300px] max-w-[300px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 flex flex-col justify-between snap-start">
+        <div class="min-w-[300px] max-w-[300px] flex-shrink-0 card flex flex-col justify-between">
+          <div>
       <div class="flex items-center gap-2 mb-3">
-        <svg width="24" height="24" fill="#00C76A" viewBox="0 0 24 24"><path d="M4 6h16v2H4zM4 11h16v2H4zM4 16h16v2H4z"/></svg>
-        <h3 class="text-base font-semibold text-gray-800">Conto Demo</h3>
+              <svg class="ico ico-lg" style="color: var(--ok);" viewBox="0 0 24 24">
+                <path d="M4 6h16v2H4zM4 11h16v2H4zM4 16h16v2H4z" />
+              </svg>
+              <h3 class="text-base font-semibold" style="color: var(--ink);">Conto Demo</h3>
       </div>
-      <p class="text-sm text-gray-600 leading-relaxed mb-4">
-        Accesso simulato a tutti i mercati e strumenti Exante. Ideale per testare strategie avanzate senza rischio reale.
+            <p class="text-sm leading-relaxed mb-4" style="color: var(--ink-soft);">
+              Accesso simulato a tutti i mercati e strumenti Exante. Ideale per testare strategie 
+              avanzate senza rischio reale.
       </p>
-      <p class="text-sm font-medium text-gray-800">Nota: Accesso gratuito previa registrazione.</p>
+            <p class="text-sm font-medium" style="color: var(--ink);">Nota: Accesso gratuito previa registrazione.</p>
+          </div>
     </div>
 
-    <!-- Card -->
-    <div class="min-w-[300px] max-w-[300px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 flex flex-col justify-between snap-start">
+        <div class="min-w-[300px] max-w-[300px] flex-shrink-0 card flex flex-col justify-between">
+          <div>
       <div class="flex items-center gap-2 mb-3">
-        <svg width="24" height="24" fill="#00C76A" viewBox="0 0 24 24"><path d="M12 2L2 7v13h20V7L12 2zm0 2.18l8 4V9h-2v2h-2V9H8v2H6V9H4v-.82l8-4zm0 4.82a2 2 0 110 4 2 2 0 010-4zm0 10c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z"/></svg>
-        <h3 class="text-base font-semibold text-gray-800">Supporto Multilingua</h3>
+              <svg class="ico ico-lg" style="color: var(--ok);" viewBox="0 0 24 24">
+                <path d="M12 2L2 7v13h20V7L12 2zm0 2.18l8 4V9h-2v2h-2V9H8v2H6V9H4v-.82l8-4zm0 4.82a2 2 0 110 4 2 2 0 010-4zm0 10c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z" />
+              </svg>
+              <h3 class="text-base font-semibold" style="color: var(--ink);">Supporto Multilingua</h3>
       </div>
-      <p class="text-sm text-gray-600 leading-relaxed mb-4">
-        Assistenza via email, telefono e chat in più lingue. Supporto tecnico per onboarding e integrazioni API.
+            <p class="text-sm leading-relaxed mb-4" style="color: var(--ink-soft);">
+              Assistenza via email, telefono e chat in più lingue. Supporto tecnico per onboarding 
+              e integrazioni API.
       </p>
-      <p class="text-sm font-medium text-gray-800">Disponibile per tutti i clienti attivi.</p>
+            <p class="text-sm font-medium" style="color: var(--ink);">Disponibile per tutti i clienti attivi.</p>
     </div>
-
   </div>
 
-  <p class="text-center text-xs text-gray-400 mt-6">
-    Dati aggiornati al 2025. Le informazioni non costituiscono consulenza finanziaria. Verificare sempre i documenti ufficiali Exante.
-  </p>
+      </div>
+      <p class="text-xs text-center mt-6" style="color: var(--muted);">
+        Dati aggiornati al 2025. Le informazioni non costituiscono consulenza finanziaria. 
+        Verificare sempre i documenti ufficiali Exante.
+      </p>
+    </div>
 </section>
-    <div class="my-12 sm:my-16"></div>
-<section class="max-w-5xl mx-auto px-6 py-12 bg-gradient-to-br from-white via-gray-50 to-gray-100 rounded-2xl shadow-lg font-inter text-gray-800">
+
+  <!-- Limitazioni Operative -->
+  <section class="mb-10">
+    <div class="card">
+      <h3 class="text-center text-lg font-semibold mb-4" style="color: var(--ink);">Limitazioni Operative su Exante</h3>
+      <ul class="list-disc list-inside text-sm space-y-1" style="color: var(--ink-soft);">
+        <li>❌ Non indicato per principianti retail (deposito minimo elevato)</li>
+        <li>❌ Nessun supporto per Copy Trading o Social Trading</li>
+        <li>❌ Piattaforma complessa, richiede formazione tecnica</li>
+        <li>❌ Non offre conti demo gratuiti per uso esteso</li>
+        <li>❌ Non destinato a micro-conti o operatività su piccoli volumi</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Video Section -->
+  <section class="mb-10">
+    <div class="card" style="padding: 0; overflow: hidden;">
+      <div class="relative pb-[56.25%] h-0 rounded-xl overflow-hidden">
+        <iframe
+          id="exanteVideo"
+          data-src="https://player.vimeo.com/video/528719115?autoplay=1&muted=1"
+          title="Video Exante"
+          frameborder="0"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen
+          class="absolute top-0 left-0 w-full h-full"
+        ></iframe>
+        <div
+          id="video-overlay"
+          class="absolute inset-0 flex items-center justify-center z-10 bg-black/40 text-white animate-pulse pointer-events-none"
+        >
+          <p class="text-sm sm:text-base font-semibold">Il video parte tra pochi secondi...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="mb-10">
+    <div class="card" style="background: linear-gradient(to bottom right, var(--surface-card), var(--surface-elev));">
   <div class="text-center mb-8">
     <div class="flex justify-center mb-2">
-      <!-- Icona decorativa -->
-      <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg class="ico ico-xl" style="color: var(--ok);" viewBox="0 0 24 24">
         <path d="M13 10V3L4 14h7v7l9-11h-7z" />
       </svg>
     </div>
-    <h2 class="text-2xl sm:text-3xl font-bold text-emerald-600">Accedi all’Ambiente Simulato di Exante</h2>
-    <p class="mt-4 text-base sm:text-lg leading-relaxed text-gray-700">
-      Esplora gratuitamente oltre <strong>1.000.000 di strumenti finanziari globali</strong> con dati reali e un’interfaccia professionale.  
-      L’ambiente simulato ti consente di testare, analizzare e comprendere i mercati senza rischiare capitale.
+        <h2 class="text-2xl sm:text-3xl font-bold mb-4" style="color: var(--ok);">Accedi all'Ambiente Simulato di Exante</h2>
+        <p class="text-base sm:text-lg leading-relaxed mb-4" style="color: var(--ink-soft); max-width: 48rem; margin: 0 auto;">
+          Esplora gratuitamente oltre <strong>1.000.000 di strumenti finanziari globali</strong> con dati reali e un'interfaccia professionale.  
+          L'ambiente simulato ti consente di testare, analizzare e comprendere i mercati senza rischiare capitale.
     </p>
   </div>
 
-  <div class="max-w-md mx-auto text-left mb-8 text-sm sm:text-base">
-    <p class="font-semibold text-gray-800 mb-2">Mercati disponibili:</p>
-    <ul class="list-disc list-inside space-y-1 text-gray-700">
+      <div class="max-w-md mx-auto text-left mb-8 text-sm sm:text-base" style="color: var(--ink-soft);">
+        <p class="font-semibold mb-2" style="color: var(--ink);">Mercati disponibili:</p>
+        <ul class="list-disc list-inside space-y-1">
       <li>Azioni, ETF, Bond, Futures</li>
       <li>Opzioni, Forex, Commodities</li>
       <li>Accesso DMA diretto a mercati globali</li>
@@ -832,143 +1168,125 @@
   </div>
 
   <div class="text-center">
-    <a href="https://exantepartner.com/p/38603/" target="_blank"
-       class="inline-flex items-center justify-center gap-2 px-8 py-3 bg-emerald-600 text-white font-semibold text-base sm:text-lg rounded-full shadow-md hover:bg-emerald-700 transition">
+        <a href="https://exantepartner.com/p/38603/" target="_blank" rel="sponsored noopener"
+           class="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full shadow-md hover:shadow-lg transition text-base sm:text-lg font-semibold"
+           style="background: var(--ok); color: white;">
       Inizia Subito
-      <!-- Icona freccia -->
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg class="ico" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
       </svg>
     </a>
   </div>
 
-  <div class="mt-6 text-xs sm:text-sm text-gray-500 max-w-2xl mx-auto text-left mt-10">
+      <div class="mt-6 text-xs sm:text-sm max-w-2xl mx-auto text-left" style="color: var(--muted);">
     <p class="mb-2">
-      <strong>Disclaimer:</strong> L’accesso demo Exante offre un ambiente simulato con fondi virtuali e dati ritardati.
-      Non rappresenta fedelmente l’operatività reale. Le informazioni hanno scopo informativo e non costituiscono consulenza finanziaria.
+          <strong>Disclaimer:</strong> L'accesso demo Exante offre un ambiente simulato con fondi virtuali e dati ritardati.
+          Non rappresenta fedelmente l'operatività reale. Le informazioni hanno scopo informativo e non costituiscono consulenza finanziaria.
     </p>
     <p>
       Investire comporta rischi. Verificare sempre i documenti ufficiali del broker prima di operare.
     </p>
   </div>
-</section>
-<section class="py-12 sm:py-16">
-  <div class="max-w-6xl mx-auto px-4">
-    <hr class="border-t border-gray-200" />
   </div>
 </section>
+</main>
 
-  <div class="my-12 sm:my-16"></div>
-
-<!-- BROKER CON VALUTAZIONE AI -->
-<section class="bg-white py-20 px-4">
-  <div class="max-w-6xl mx-auto">
-    <h2 class="text-2xl font-bold text-blue-800 mb-6">Broker con Valutazione AI</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" id="broker-grid"></div>
-  </div>
-</section>
-
-<script>
-  const brokerList = [
-    { name: 'Exante', rating: 100, url: '/Exante.html', desc: 'Broker professionale con accesso DMA e ampia offerta istituzionale.', logo: 'exante.svg' },
-    { name: 'Freedom24', rating: 92, url: '/Freedom24.html', desc: 'Azioni reali, IPO e azione gratuita per i nuovi utenti.', logo: 'freedom24.svg' },
-    { name: 'FP Markets', rating: 90, url: '/FPMarkets.html', desc: 'Ottimo per Forex, esecuzione rapida e spread contenuti.', logo: 'fpmarkets.svg' },
-{ name: 'Pepperstone', rating: 87, url: '/Pepperstone.html', desc: 'Broker trasparente con esecuzione diretta. Perfetto per day trader.', logo: 'pepperstone.svg' },
-    { name: 'eToro', rating: 85, url: '/eToro.html', desc: 'Broker social, azioni reali e funzionalità di copy trading.', logo: 'etoro.svg' },
-    { name: 'Eightcap', rating: 83, url: '/Eightcap.html', desc: 'Ottima offerta di crypto CFD e strumenti per MT5.', logo: 'eightcap.svg' },
-    { name: 'NAGA', rating: 82, url: '/NAGA.html', desc: 'Copy trading, social network e crypto. Giovane e dinamico.', logo: 'naga.svg' },
-    { name: 'FxPro', rating: 80, url: '/FxPro.html', desc: 'Broker multi-asset con regolamentazione forte e buoni spread.', logo: 'fxpro.svg' },
-    { name: 'XM', rating: 79, url: '/XM.html', desc: 'Buon supporto educativo e bonus di benvenuto.', logo: 'xm.svg' },
-    { name: 'Plus500', rating: 78, url: '/Plus500.html', desc: 'Semplice, mobile-friendly, ideale per iniziare con CFD.', logo: 'plus500.svg' },
-    { name: 'Skilling', rating: 77, url: '/Skilling.html', desc: 'Piattaforma semplice, mobile, con discreto supporto.', logo: 'skilling.svg' },
-    { name: 'AvaTrade', rating: 76, url: '/AvaTrade.html', desc: 'Offerta solida multi-asset e opzioni vanilla.', logo: 'avatrade.svg' },
-    { name: 'BlackBull Markets', rating: 74, url: '/BlackBullMarkets.html', desc: 'Broker ECN con spread variabili, adatto a trader avanzati.', logo: 'blackbull.svg' }
-  ];
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('broker-grid');
-    brokerList.sort((a, b) => b.rating - a.rating).forEach(broker => {
-      const card = document.createElement('div');
-      card.className = "border rounded-xl shadow p-5 bg-white hover:bg-blue-50 transition";
-      card.innerHTML = `
-        <div class="flex items-center gap-3 mb-2">
-          <img src="/logos/${broker.logo}" alt="${broker.name}" class="w-8 h-8 rounded-full bg-gray-200" />
-          <div class="text-xl font-bold text-blue-900">${broker.name}</div>
-        </div>
-        <div class="text-sm text-gray-600">Rating AI: ${broker.rating}/100</div>
-        <p class="mt-2 text-sm text-gray-700">${broker.desc}</p>
-        <a href="${broker.url}" class="inline-block mt-3 text-sm text-blue-600 font-medium hover:underline">Leggi analisi AI completa →</a>
-      `;
-      container.appendChild(card);
-    });
-  });
-</script>
-
-<!-- MODALE LEGALE DINAMICO (Termini e Privacy) -->
-<script>
-  function apriSezioneLegale(id) {
-    const modal = document.createElement("div");
-    modal.className = "modal";
-    modal.style.display = "flex";
-    modal.innerHTML = `
-      <div class="modal-content relative">
-        <div class="modal-close absolute top-3 right-4 text-lg cursor-pointer hover:text-red-600" onclick="this.parentElement.parentElement.remove()">✕</div>
-        <h3 class="text-lg font-semibold mb-2">${id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy'}</h3>
-        <p class="text-sm text-gray-800">
-          ${
-            id === 'section-tc'
-              ? "Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all'investimento. Tutte le operazioni simulate in ambiente demo."
-              : "Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l'utente. Progetto open per educazione finanziaria."
-          }
-        </p>
-      </div>`;
-    document.body.appendChild(modal);
-  }
-</script>
-<div id="cookie-popup" class="modal">
-  <div class="modal-content">
-    <img src="https://lucid.app/favicon.ico" alt="Lucid icon" class="mx-auto mb-2 w-8 h-8">
-    <h3 class="text-lg font-semibold mb-2">Zero biscotti, zero sorprese.</h3>
-    <p class="mb-2">Tradelia non utilizza cookie di tracciamento, profilazione o pubblicità.</p>
-    <p class="text-sm text-gray-600">Salveremo la tua preferenza sul tuo dispositivo per non mostrarti più questo messaggio.</p>
-    <button onclick="chiudiPopupCookie()" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Ho capito</button>
-  </div>
-</div>
 <!-- FOOTER -->
-<footer class="bg-slate-900 text-slate-300 px-6 py-12 text-sm mt-16">
-  <div class="max-w-7xl mx-auto grid gap-10 md:grid-cols-2 items-start">
+<footer class="site-footer mt-auto py-10">
+  <div class="container">
+    <section class="ftr-grid">
+      <!-- Col 1 -->
+      <div class="ftr-col">
+        <h3 class="ftr-head">
+          <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 3h16v18H4z"/><path d="M8 7h8M8 11h8M8 15h6"/>
+          </svg>
+          <span>Tradelia AI</span>
+        </h3>
+        <p style="color: var(--ink-soft);">
+          Analisi multi-fattore su contesto macro, sentiment e tecnica (orizzonte 3–10 giorni).<br/>
+          Materiale esclusivamente informativo e formativo — nessuna raccomandazione personalizzata.
+        </p>
+  </div>
 
-    <!-- COLONNA 1 -->
+      <!-- Col 2 -->
+      <div class="ftr-col">
+        <h3 class="ftr-head">
+          <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2l7 4v6c0 5-3 8-7 10C8 20 5 17 5 12V6l7-4z"/><path d="M12 8v4"/>
+          </svg>
+          <span>Compliance &amp; Risk</span>
+        </h3>
+        <ul class="ftr-list" style="color: var(--ink-soft);">
+          <li>Non è consulenza (MiFID II / ESMA)</li>
+          <li>Tradelia AI non gestisce capitali né esegue ordini</li>
+          <li>Rischio di perdita anche totale del capitale</li>
+        </ul>
+        </div>
+
+      <!-- Col 3 -->
+      <div class="ftr-col">
+        <h3 class="ftr-head">
+          <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 12h16"/><path d="M12 4l8 8-8 8"/>
+          </svg>
+          <span>Navigazione</span>
+        </h3>
+        <ul class="ftr-list" style="color: var(--ink-soft);">
+          <li><a href="/index.html">Home</a></li>
+          <li><a href="/brokers.html">Broker</a></li>
+        </ul>
+  </div>
+    </section>
+
+    <!-- Bottom line -->
+    <div class="ftr-bottom">
     <div>
-      <h4 class="text-white text-base font-semibold mb-3">Tradelia AI</h4>
-      <p class="leading-relaxed">
-        Tradelia è un progetto indipendente per fornire strumenti educativi e analisi AI gratuite nel campo finanziario.
-      </p>
-      <p class="mt-4 text-blue-400">
-        ✉️ <a href="mailto:info@tradelia.org" class="hover:underline">info@tradelia.org</a>
-      </p>
+        © <span id="footer-year"></span>
+        <span class="brand brand--sm">
+          <span class="brand-word">Tradelia</span>
+          <span class="brand-dot" aria-hidden="true"></span>
+          <span class="brand-suffix">AI</span>
+        </span>
+        · Tutti i diritti riservati ·
+        <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>
     </div>
-
-    <!-- COLONNA 2 -->
-    <div>
-      <h4 class="text-white text-base font-semibold mb-3">Legal & Navigazione</h4>
-      <ul class="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-6">
-        <li>
-          <button onclick="apriSezioneLegale('section-tc')" class="hover:text-sky-400 transition">Termini e Condizioni</button>
-        </li>
-        <li>
-          <button onclick="apriSezioneLegale('section-privacy')" class="hover:text-sky-400 transition">Privacy Policy</button>
-        </li>
-        <li>
-          <a href="/index.html" class="hover:text-sky-400 transition">Home</a>
-        </li>
-     
-      </ul>
+      <div>Missione: alfabetizzazione finanziaria indipendente.</div>
     </div>
-
   </div>
 </footer>
 
+<script>
+(function(){
+  // ===== Tema light fisso =====
+  document.documentElement.setAttribute('data-theme', 'light');
+
+  // ===== Footer year =====
+  const fy = document.getElementById('footer-year');
+  if (fy) fy.textContent = new Date().getFullYear();
+
+  // ===== Video lazy loading =====
+  const video = document.getElementById('exanteVideo');
+  const overlay = document.getElementById('video-overlay');
+  
+  if (video && overlay) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !video.src) {
+            video.src = video.dataset.src;
+            setTimeout(() => {
+              overlay.style.display = 'none';
+            }, 2000);
+          }
+        });
+      },
+      { threshold: 0.6 }
+    );
+    observer.observe(video);
+  }
+})();
+</script>
 
 </body>
-</html
+</html>
