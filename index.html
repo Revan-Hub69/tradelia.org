@@ -1,174 +1,2416 @@
 <!DOCTYPE html>
-<html lang="it" data-theme="dark">
+<html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Report Tradelia AI - Analisi finanziaria istituzionale" />
-  <title>TRADELIA • AI — Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tradelia AI · Homepage</title>
+
+  <!-- Favicons -->
+  <link rel="icon" href="/favicon.ico?v=1">
+  <link rel="icon" type="image/png" href="/favicon.png?v=1">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Tailwind (utility) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Design System -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+
+  <!-- Lucide: una sola import -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    html, body { height: 100%; }
+    body { display: flex; flex-direction: column; min-height: 100vh; }
+
+    /* container */
+    .container { max-width: 90rem; margin-inline: auto; padding-inline: 1rem; }
+    main { flex: 1; padding-top: 5rem; padding-bottom: 5rem; }
+
+    /* ===== HEADER ===== */
+    .hdr {
+      position: fixed; inset: 0 auto auto 0; right: 0; height: 56px; z-index: 50;
+      display: flex; align-items: center;
+      backdrop-filter: saturate(1.1) blur(10px);
+      background: color-mix(in oklab, var(--surface-card) 86%, transparent);
+      border-bottom: 1px solid var(--br-soft);
+      box-shadow: 0 1px 0 var(--br-soft);
+    }
+
+    /* ===== BRAND ===== */
+    .brand { font-weight: 900; letter-spacing: -0.02em; display:inline-flex; align-items:center; gap:.35rem; }
+    .brand-word { color: var(--ink); }
+    .brand-suffix { color: var(--ink); font-weight: 900; }
+    .brand-dot { width:10px; height:10px; border-radius:999px; background: var(--brand-600); display:inline-block; }
+    .brand--sm .brand-word { font-weight: 700; }
+    .brand--sm .brand-dot { width:8px; height:8px; }
+    .brand--sm .brand-suffix { font-weight: 700; }
+    a.brand { transition: opacity .18s ease, transform .18s ease; }
+    a.brand:hover { opacity:.9; transform: translateY(-1px); }
+
+    /* ===== LOGO HOMEPAGE STYLE (unificato) ===== */
+    :root {
+      --brand-text: #0f172a;     /* dark slate base */
+      --brand-accent: #2563eb;  /* blue-600 Tailwind */
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
+      background-size: 280px;
+      color: #0f172a;
+    }
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+      border-radius: 100vh;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(80, 160, 200, 0.4);
+      border-radius: 100vh;
+      backdrop-filter: blur(4px);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(80, 160, 200, 0.6);
+    }
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(80, 160, 200, 0.5) #e5e7eb;
+    }
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0, 0, 0, 0.7);
+      visibility: hidden; opacity: 0;
+      z-index: 50;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .modal.show {
+      visibility: visible;
+      opacity: 1;
+    }
+    .modal-content {
+      background: #f8fafc;
+      max-width: 640px;
+      padding: 28px;
+      border-radius: 16px;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #0f172a;
+      text-align: left;
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
+    }
+   body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    .card{transition:transform .2s ease, box-shadow .2s ease}
+    .card:hover{box-shadow:0 10px 30px rgba(2,6,23,.08); transform: translateY(-2px)}
+    .logo-fb{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:.75rem;font-weight:700;color:#fff;box-shadow:inset 0 0 0 1px rgba(15,23,42,.08)}
+    .tag{font-size:11px;padding:.125rem .5rem;border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc}
+    .btn{display:inline-block;padding:.5rem .75rem;border-radius:.6rem;font-weight:600;transition:all .2s ease}
+    .btn:focus-visible{outline:none;box-shadow:0 0 0 2px rgba(56,189,248,.5)}
+    .badge{font-size:10px;padding:.1rem .45rem;border-radius:999px;font-weight:700}
+    .score-badge{font-size:11px;padding:.125rem .5rem;border-radius:999px;background:#eef2ff;color:#3730a3;font-weight:700}
+    .no-scrollbar{scrollbar-width:none}
+    .no-scrollbar::-webkit-scrollbar{display:none}
+    .clamp-3{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  html:has(#modal.flex), body:has(#modal.flex){overflow:hidden}
+
+    /* ===== ICONS ===== */
+    .ico { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .ico-lg { width:18px; height:18px; }
+    .ico-xl { width:20px; height:20px; }
+
+    /* ===== BUTTONS ===== */
+    :root { --hover-bg: color-mix(in oklab, var(--surface-card) 92%, transparent); }
+    .btn, .btn-sm, .btn-inline {
+      transition: background-color .15s ease, border-color .15s ease,
+                  color .15s ease, transform .12s ease, box-shadow .15s ease;
+    }
+    .btn-inline {
+      display:inline-flex; align-items:center; gap:.45rem;
+      padding:.42rem .70rem;
+      border-radius: var(--radius-pill);
+      border:1px solid var(--br-soft);
+      background: var(--surface-card);
+      color: var(--ink);
+      font-size:12px; font-weight:600;
+    }
+    .btn-sm {
+      display:inline-flex; align-items:center; gap:.35rem;
+      padding:.35rem .6rem;
+      border-radius: var(--radius-pill);
+      border:1px solid var(--br-soft);
+      background: var(--surface-card);
+      color: var(--ink);
+      font-size:12px; font-weight:600;
+    }
+    .btn:hover, .btn-sm:hover, .btn-inline:hover {
+      background: var(--hover-bg);
+      border-color: color-mix(in oklab, var(--br-soft) 70%, var(--brand-600) 30%);
+      box-shadow: 0 6px 18px oklab(0% 0 0 / .10);
+      transform: translateY(-1px);
+    }
+    .btn:active, .btn-sm:active, .btn-inline:active { transform: translateY(0); }
+    .btn:focus-visible, .btn-sm:focus-visible, .btn-inline:focus-visible {
+      outline: 2px solid var(--brand-500);
+      outline-offset: 2px;
+    }
+
+    /* ===== FOOTER ===== */
+    .site-footer {
+      position: relative;
+      z-index: 10; /* sotto header e panel overlay */
+      background: var(--footer-bg);
+      border-top: 1px solid var(--footer-br);
+      color: var(--ink-soft);
+      font-size: 14px;
+    }
+    .ftr-head {
+      font-weight: 600;
+      display:flex; align-items:center; gap:.5rem;
+      color: var(--ink);
+      margin-bottom: .6rem;
+    }
+    .ftr-grid { display:grid; gap:2rem; grid-template-columns: 1fr; }
+    @media (min-width: 768px){ .ftr-grid { grid-template-columns: repeat(3, 1fr); } }
+    .ftr-list li { margin:.25rem 0; }
+    .ftr-bottom {
+      border-top: 1px solid var(--br-soft);
+      margin-top: 2rem; padding-top: 1rem;
+      display: flex; flex-direction: column; gap: .5rem;
+      font-size: 13px; color: var(--muted);
+    }
+    @media (min-width: 768px){
+      .ftr-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
+    }
+
+    /* Link & social */
+    .site-footer a {
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color .18s ease, border-color .18s ease, opacity .18s ease, transform .18s ease;
+    }
+    .site-footer a:hover { border-bottom-color: currentColor; }
+    a.mail-link { text-underline-offset: 2px; text-decoration-thickness: 1px; }
+
+    .ftr-socials a{
+      position: relative;
+      display:flex; align-items:center; gap:.5rem;
+      color: var(--ink-soft);
+    }
+    .ftr-socials a::after{
+      content:"";
+      position:absolute; left:19px; right:0; bottom:-2px; height:1px;
+      background: currentColor;
+      opacity:0; transform: scaleX(.35); transform-origin:left;
+      transition: transform .18s ease, opacity .18s ease;
+    }
+    .ftr-socials a:hover{ color: var(--ink); transform: translateX(2px); }
+    .ftr-socials a:hover::after{ opacity:.6; transform: scaleX(1); }
+
+    /* ===== LEGAL OVERLAY (contenuto montato altrove) ===== */
+    #legal-consent-overlay[hidden] { display: none !important; }
+  </style>
 </head>
 <body>
-  <main id="app-root"></main>
+<!-- ===== HEADER ===== -->
+<header class="hdr">
+  <div class="container w-full flex items-center justify-between">
+    <a href="/index.html"
+       class="text-lg sm:text-xl font-extrabold tracking-tight hover:opacity-90 transition"
+       aria-label="Tradelia.org"
+       style="color: var(--brand-text)">
+      <span>TRADELIA</span>
+      <span class="animate-pulse" style="color: var(--brand-accent)">&bull;AI</span>
+    </a>
+  </div>
+</header>
 
-  <footer id="footer" class="noprint">
-    <div class="footer-content">
-      <div class="footer-links">
-        <button id="btn-privacy-open" class="btn btn-sm">Privacy</button>
-        <button id="btn-mifid-open" class="btn btn-sm">Informativa MiFID</button>
+<section class="bg-gradient-to-br from-white via-slate-50 to-white border-b border-slate-200 relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8 py-12 lg:py-20 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+    
+    <!-- Testo -->
+    <div>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 leading-tight min-h-[56px]">
+        <span id="hero-typing"></span>
+      </h1>
+      <p class="text-base sm:text-lg text-slate-700 mb-6 sm:mb-8 leading-relaxed">
+        Tradelia AI utilizza <strong>tecnologie AI integrate e ottimizzate per il metodo Tradelia</strong> 
+        per <strong>analizzare e simulare</strong> scenari di portafoglio.  
+        Strumenti didattici per comprendere mercati, rischi e correlazioni, con piena consapevolezza dei <strong>limiti tecnici e legali</strong> delle AI.
+      </p>
+
+      <!-- Tre pilastri -->
+      <div class="space-y-4">
+        <div class="flex items-start gap-3">
+          <i data-lucide="bar-chart-3" class="w-6 h-6 text-blue-700 flex-shrink-0"></i>
+          <span class="text-slate-700"><strong>Potenza Analitica</strong> – Analisi tecnica, macro e fondamentale integrate in modelli multilayer.</span>
+        </div>
+        <div class="flex items-start gap-3">
+          <i data-lucide="shield-check" class="w-6 h-6 text-blue-700 flex-shrink-0"></i>
+          <span class="text-slate-700"><strong>Trasparenza</strong> – Progetto indipendente, senza marketing aggressivo o tracciamenti pubblicitari.</span>
+        </div>
+        <div class="flex items-start gap-3">
+          <i data-lucide="lock" class="w-6 h-6 text-blue-700 flex-shrink-0"></i>
+          <span class="text-slate-700"><strong>Privacy Totale</strong> – Nessun cookie di tracciamento, nessuna raccolta o vendita di dati.</span>
+        </div>
       </div>
-      <div class="footer-meta">
-        <span>© <span id="footer-year"></span> Tradelia AI</span>
+    </div>
+
+    <!-- Immagine hero -->
+    <div class="order-first lg:order-last">
+      <div class="rounded-xl shadow-xl border border-slate-200 overflow-hidden bg-slate-100">
+        <img 
+          src="./img/hero-institutional.jpg" 
+          alt="Tradelia AI - Analisi Istituzionale" 
+          class="w-full h-auto object-cover block"
+          style="min-height: 400px; max-height: 600px;"
+          onerror="this.onerror=null; this.src='/img/hero-institutional.jpg'; this.onerror=function(){this.style.display='none'; this.parentElement.innerHTML='<div style=\'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 400px; display: flex; align-items: center; justify-content: center; border-radius: 0.75rem;\'><div class=\'text-white text-center p-8\'><i data-lucide=\'trending-up\' class=\'w-16 h-16 mx-auto mb-4\'></i><h3 class=\'text-2xl font-bold mb-2\'>Tradelia AI</h3><p class=\'text-blue-100\'>Analisi Istituzionale</p></div></div>'; if(window.lucide) lucide.createIcons();};"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Disclaimer -->
+  <div class="bg-slate-50 border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-4 text-xs sm:text-sm text-slate-600 leading-relaxed flex items-start sm:items-center gap-2">
+      <i data-lucide="info" class="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5"></i>
+      <span>Le analisi di Tradelia AI sono a scopo esclusivamente <strong>didattico</strong>. Le AI non memorizzano dati, non tracciano l’utente e possono contenere errori. Non costituiscono <strong>consulenza finanziaria</strong> e non sostituiscono un professionista abilitato.</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- SCRIPT ICONS + TYPING -->
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    if (window.lucide) lucide.createIcons();
+
+    new Typed('#hero-typing', {
+      strings: [
+        '<strong>Potenza AI modulare</strong>',
+        '<strong>Metodo Istituzionale</strong>',
+        '<strong>Privacy Totale</strong>'
+      ],
+      typeSpeed: 50,
+      backSpeed: 30,
+      backDelay: 1500,
+      loop: true,
+      fadeOut: true,
+      fadeOutClass: 'typed-fade-out',
+      fadeOutDelay: 200,
+      showCursor: false
+    });
+  });
+</script>
+<br><br><br>
+   <section id="metodo" class="mb-10">
+      <div class="bg-white border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <h2 class="text-2xl font-semibold mb-4 text-slate-900">Come usiamo l'AI in Tradelia</h2>
+        <p class="text-sm text-slate-600 mb-5 max-w-4xl">
+          In <strong>Tradelia AI</strong> non trattiamo l’intelligenza artificiale come un oracolo a cui porre domande, ma come
+          <strong>strumento di ricerca, normalizzazione e aggregazione</strong> dei dati. Le valutazioni sono costruite con
+          <strong>metodologie istituzionali e accademiche</strong>, privilegiando fonti primarie e verifiche incrociate.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+          <div class="border border-slate-200 rounded-lg p-4 md:p-5 bg-gradient-to-br from-slate-50 to-white hover:shadow-md transition-shadow duration-300">
+            <h3 class="font-semibold mb-3 text-slate-900">Principi</h3>
+            <ul class="text-sm text-slate-600 space-y-2 list-disc pl-5">
+              <li>AI = motore di <strong>ricerca/ETL</strong>, non consulente o “cristallo magico”.</li>
+              <li>Priorità a <strong>fonti primarie</strong> (regolatori, prospetti, bilanci) e <strong>letteratura</strong> tecnica/accademica.</li>
+              <li><strong>Tracciabilità</strong> di dati, versioni e criteri di scoring.</li>
+            </ul>
+          </div>
+          <div class="border border-slate-200 rounded-lg p-4 md:p-5 bg-gradient-to-br from-slate-50 to-white hover:shadow-md transition-shadow duration-300">
+            <h3 class="font-semibold mb-3 text-slate-900">Processo</h3>
+            <ul class="text-sm text-slate-600 space-y-2 list-disc pl-5">
+              <li><strong>Raccolta & normalizzazione</strong> (API/dataset) con timestamp e identificatori.</li>
+              <li><strong>Verifica incrociata</strong> T1/T2, controllo outlier, soglie di consenso.</li>
+              <li><strong>Sintesi & scoring</strong> su copertura mercati, costi, UX, compliance.</li>
+            </ul>
+          </div>
+          <div class="border border-slate-200 rounded-lg p-4 md:p-5 bg-gradient-to-br from-slate-50 to-white hover:shadow-md transition-shadow duration-300">
+            <h3 class="font-semibold mb-3 text-slate-900">Limiti & compliance</h3>
+            <ul class="text-sm text-slate-600 space-y-2 list-disc pl-5">
+              <li>L’output <strong>non è consulenza finanziaria</strong>.</li>
+              <li>Dove presenti CFD: <strong>avvertenze regolamentari</strong> e focus su strumenti quotati.</li>
+              <li><strong>Trasparenza</strong> su affiliazioni e potenziali conflitti.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-4 text-xs text-slate-500">Approfondisci la nostra metodologia: <a href="#" class="underline hover:no-underline">Whitepaper (coming soon)</a></div>
+      </div>
+    </section>
+<br><br><br>
+  <section class="bg-gradient-to-b from-slate-50 to-white py-16 md:py-20 border-b border-slate-200">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4 text-center">
+      Servizi AI <span class="text-blue-700">&bull;</span> Tradelia
+    </h2>
+    <p class="text-lg text-slate-700 text-center max-w-2xl mx-auto mb-12">
+      Tre strumenti principali per l'<strong>educazione finanziaria istituzionale</strong>, modellati per conformità MiFID II e orientati alla formazione professionale.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      
+      <!-- Card 1: Portafoglio -->
+      <div class="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 p-6 md:p-8 flex flex-col">
+        <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+          <i data-lucide="layers" class="w-8 h-8 text-blue-700"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-slate-900 mb-3">Validazione / Simulazione Portafoglio</h3>
+        <p class="text-sm text-slate-600 flex-grow">
+          Costruisci o valida un portafoglio seguendo criteri di coerenza macro, rischio e rendimento, con analisi multilayer AI.
+        </p>
+        <button onclick="apriModuloPortafoglio()" class="mt-4 inline-block bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 text-sm font-medium text-center">
+          Avvia Analisi
+        </button>
+      </div>
+
+      <!-- Card 2: Educazione Finanziaria AI -->
+      <div class="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 p-6 md:p-8 flex flex-col">
+        <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+          <i data-lucide="graduation-cap" class="w-8 h-8 text-blue-700"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-slate-900 mb-3">Educazione Finanziaria AI</h3>
+        <p class="text-sm text-slate-600 flex-grow">
+          Strumenti AI modellati per l’educazione finanziaria conforme alle normative MiFID II. Analisi di asset, mercati e scenari con metodologia istituzionale orientata alla formazione.
+        </p>
+        <button onclick="apriModuloAsset()" class="mt-4 inline-block bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 text-sm font-medium text-center">
+          Avvia Analisi
+        </button>
+      </div>
+
+      <!-- Card 3: Domanda Libera -->
+      <div class="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 p-6 md:p-8 flex flex-col">
+        <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+          <i data-lucide="message-square" class="w-8 h-8 text-blue-700"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-slate-900 mb-3">Domanda Libera</h3>
+        <p class="text-sm text-slate-600 flex-grow">
+          Formula qualsiasi domanda su mercati, strategie o scenari e ricevi un’analisi ragionata basata sul metodo Tradelia.
+        </p>
+        <button onclick="apriModuloDomanda()" class="mt-4 inline-block bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 text-sm font-medium text-center">
+          Fai una domanda
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    if (window.lucide) lucide.createIcons();
+  });
+</script>
+
+<!-- MODALE – BLOCCO 1 PROFILO INVESTITORE (v1.2 Mobile-compact + PAC toggle) -->
+<div id="modal-portafoglio" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
+  <div class="bg-white w-full max-w-5xl mx-auto rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[94vh]" role="dialog" aria-modal="true">
+
+    <!-- HEADER + PROGRESS (sticky) -->
+    <div class="sticky top-0 z-40">
+      <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
+        <div class="flex items-center gap-3">
+          <i data-lucide="layers" class="w-6 h-6 text-blue-700"></i>
+          <h3 class="text-lg font-semibold text-slate-900">Profilo Investitore – Validazione / Simulazione</h3>
+        </div>
+        <button onclick="chiudiModuloPortafoglio()" class="text-slate-500 hover:text-red-500" aria-label="Chiudi">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="px-6 pt-3 pb-3 bg-white border-b border-slate-200">
+        <div class="flex items-center gap-2 text-xs text-slate-600 mb-2">
+          <span id="progress-label">Step 1 di 11</span>
+          <span class="ml-auto">* campi obbligatori</span>
+        </div>
+        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+          <div id="progress-bar" class="h-2 bg-blue-700 w-[9%] transition-all"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM (mobile-compact) -->
+    <form id="form-portafoglio" class="p-4 md:p-8 overflow-y-auto flex-1 space-y-6 md:space-y-10 leading-relaxed" onsubmit="event.preventDefault(); inviaProfilo();">
+
+      <!-- STEP 0 – Modalità -->
+      <section class="step" data-step="0">
+        <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">0) Seleziona modalità</h4>
+        <p class="text-[12px] text-slate-500 mb-3">Scegli se vuoi <strong>validare</strong> un portafoglio esistente o <strong>simulare</strong> una nuova costruzione.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+          <label class="border rounded-lg p-3 md:p-4 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-start gap-3">
+            <input type="radio" name="tipo_analisi" value="validazione" class="accent-blue-700 mt-1" required>
+            <div>
+              <div class="font-medium text-sm md:text-base">Validazione Portafoglio</div>
+              <div class="text-[12px] text-slate-500">Coerenza, rischio, concentrazione, coperture, storico.</div>
+            </div>
+          </label>
+          <label class="border rounded-lg p-3 md:p-4 cursor-pointer hover:border-blue-600 has-[:checked]:border-blue-700 flex items-start gap-3">
+            <input type="radio" name="tipo_analisi" value="simulazione" class="accent-blue-700 mt-1" required>
+            <div>
+              <div class="font-medium text-sm md:text-base">Simulazione Portafoglio</div>
+              <div class="text-[12px] text-slate-500">Costruzione ex-novo con vincoli e profilo rischio.</div>
+            </div>
+          </label>
+        </div>
+      </section>
+
+  <!-- STEP 1 – Dati anagrafici e fiscali -->
+<section class="step hidden" data-step="1">
+  <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">
+    1) Dati anagrafici e fiscali
+  </h4>
+  <p class="text-[12px] text-slate-500 mb-3 md:mb-4">
+    Servono per calibrare orizzonte, tassazione e stabilità finanziaria a livello generale.
+  </p>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+    <!-- Età -->
+    <label>Età *
+      <select name="eta" class="w-full border rounded px-3 py-2" required>
+        <option value="">Seleziona</option>
+        <option>&lt;18</option>
+        <option>18–24</option>
+        <option>25–34</option>
+        <option>35–44</option>
+        <option>45–54</option>
+        <option>55–64</option>
+        <option>≥65</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        La fascia di età incide sull’orizzonte temporale e sulla tolleranza al rischio.
+        <em>Fonte: Bodie, Kane, Marcus – Investments, McGraw‑Hill</em>
+      </span>
+    </label>
+
+    <label>Composizione nucleo familiare *
+  <select name="nucleo_familiare" class="w-full border rounded px-3 py-2" required>
+    <option value="">Seleziona</option>
+    <option>Single</option>
+    <option>Coppia senza figli</option>
+    <option>Coppia con figli</option>
+    <option>Altro</option>
+  </select>
+  <span class="text-[11px] text-slate-500">
+    Indica la struttura del nucleo familiare, utile per stimare esigenze di liquidità e propensione al rischio.
+    <em>Fonte: EFAMA Investor Profile Study</em>
+  </span>
+</label>
+
+    <!-- Area fiscale -->
+    <label>Area fiscale *
+      <select name="area_fiscale" class="w-full border rounded px-3 py-2" required>
+        <option value="">Seleziona</option>
+        <option>Italia</option>
+        <option>UE (non IT)</option>
+        <option>UK</option>
+        <option>USA</option>
+        <option>Altro</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Determina il regime fiscale applicabile agli investimenti.
+      </span>
+    </label>
+
+    <!-- Stabilità reddito -->
+    <label>Stabilità reddito *
+      <select name="stabilita_reddito" class="w-full border rounded px-3 py-2" required>
+        <option value="">Seleziona</option>
+        <option>Stabile</option>
+        <option>Moderatamente variabile</option>
+        <option>Altamente variabile</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Indica quanto il reddito annuale è soggetto a variazioni: maggiore stabilità riduce il rischio di liquidità e consente strategie più aggressive.
+        <em>Fonte: Lusardi, A. & Mitchell, O.S. (2014). The Economic Importance of Financial Literacy. Journal of Economic Literature</em>
+      </span>
+    </label>
+  </div>
+</section>
+
+
+   <!-- STEP 2 – Capitale -->
+<section class="step hidden" data-step="2">
+  <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">2) Capitale</h4>
+  <p class="text-[12px] text-slate-500 mb-3 md:mb-4">
+    Indica valori <strong>a fascia</strong> per privacy. Questi dati aiutano a valutare la solidità patrimoniale e la capacità di investimento.
+  </p>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+    <!-- Capitale totale -->
+    <label>Capitale totale (fascia) *
+      <select name="capitale_totale" class="w-full border rounded px-3 py-2" required>
+        <option value="">Seleziona</option>
+        <option>&lt; 1 k€</option>
+        <option>1–5 k€</option>
+        <option>5–10 k€</option>
+        <option>10–25 k€</option>
+        <option>25–50 k€</option>
+        <option>50–100 k€</option>
+        <option>100–250 k€</option>
+        <option>250–500 k€</option>
+        <option>&gt; 500 k€</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Include liquidità, investimenti e immobili.  
+        <em>Fonte: Markowitz, H. (1952). Portfolio Selection. The Journal of Finance</em>
+      </span>
+    </label>
+
+    <!-- Quota investibile -->
+    <label>Quota investibile ora (fascia) *
+      <select name="capitale_investibile" class="w-full border rounded px-3 py-2" required>
+        <option value="">Seleziona</option>
+        <option>&lt; 100 €</option>
+        <option>100–500 €</option>
+        <option>500–1 k€</option>
+        <option>1–5 k€</option>
+        <option>5–10 k€</option>
+        <option>10–25 k€</option>
+        <option>25–50 k€</option>
+        <option>&gt; 50 k€</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Liquidità immediatamente disponibile per investimenti.
+      </span>
+    </label>
+
+    <!-- Passività -->
+    <label class="md:col-span-2">Passività (mutui, prestiti) *
+      <select name="passivita" class="w-full border rounded px-3 py-2" required>
+        <option value="">Seleziona</option>
+        <option>Nessuna</option>
+        <option>&lt; 20% del patrimonio</option>
+        <option>20–50% del patrimonio</option>
+        <option>&gt; 50% del patrimonio</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Indica il peso dei debiti sul patrimonio complessivo: un’elevata leva finanziaria aumenta il rischio di insolvenza e riduce la flessibilità d’investimento.  
+        <em>Fonte: Modigliani, F., & Miller, M. H. (1958). The Cost of Capital, Corporation Finance and the Theory of Investment. American Economic Review</em>
+      </span>
+    </label>
+  </div>
+</section>
+<!-- STEP 3 – Orizzonte -->
+<section class="step hidden" data-step="3">
+  <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">3) Orizzonte temporale</h4>
+  <p class="text-[12px] text-slate-500 mb-3 md:mb-4">
+    L’orizzonte temporale e la priorità degli obiettivi influenzano la strategia di allocazione e il livello di rischio sostenibile.
+  </p>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+    <!-- Orizzonte temporale -->
+    <label>Anni fino all’obiettivo *
+      <select name="anni_obiettivo" class="w-full border rounded px-3 py-2" data-estimable required>
+        <option value="">Seleziona</option>
+        <option>&lt; 1 anno</option>
+        <option>1–3 anni</option>
+        <option>3–5 anni</option>
+        <option>6–10 anni</option>
+        <option>11–15 anni</option>
+        <option>&gt; 15 anni</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Un orizzonte più lungo consente strategie più orientate alla crescita e tolleranti alla volatilità.  
+        <em>Fonte: Brinson, Hood & Beebower (1986), Financial Analysts Journal</em>
+      </span>
+    </label>
+
+    <!-- Priorità temporale -->
+    <label>Priorità temporale *
+      <select name="priorita_temporale" class="w-full border rounded px-3 py-2" required>
+        <option value="">Seleziona</option>
+        <option>Breve termine (1–3 anni)</option>
+        <option>Medio termine (4–9 anni)</option>
+        <option>Lungo termine (≥10 anni)</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Indica l’orizzonte prevalente per i tuoi obiettivi: breve termine privilegia la liquidità, lungo termine privilegia la crescita.  
+        <em>Fonte: CFA Institute – Asset Allocation Principles</em>
+      </span>
+    </label>
+
+    <!-- Milestone -->
+    <label class="md:col-span-1">Milestone (facoltativo)
+      <input type="text" name="milestone" class="w-full border rounded px-3 py-2" placeholder="Es. acconto casa in 3 anni; università figli in 8 anni">
+    </label>
+  </div>
+</section>
+
+<!-- STEP 4 – Rischio & rendimento -->
+<section class="step hidden" data-step="4">
+  <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">4) Rischio e rendimento</h4>
+  <p class="text-[12px] text-slate-500 mb-3 md:mb-4">
+    Questi dati servono a definire il profilo di rischio e il rendimento atteso, elementi chiave per la costruzione del portafoglio.
+  </p>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
+    <!-- Propensione al rischio -->
+    <label>Propensione al rischio *
+      <select name="propensione_rischio" class="w-full border rounded px-3 py-2" required>
+        <option value="">Seleziona</option>
+        <option>Molto bassa (&lt;3%)</option>
+        <option>Bassa (3–5%)</option>
+        <option>Moderata (5–10%)</option>
+        <option>Alta (10–20%)</option>
+        <option>Molto alta (&gt;20%)</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Indica la perdita temporanea massima che sei disposto ad accettare per ottenere rendimenti più elevati.  
+        <em>Fonte: Kahneman, D. & Tversky, A. (1979). Prospect Theory. Econometrica</em>
+      </span>
+    </label>
+
+    <!-- Capacità di sostenere perdite -->
+    <label>Capacità di sostenere perdite *
+      <select name="capacita_perdita" class="w-full border rounded px-3 py-2" required>
+        <option value="">Seleziona</option>
+        <option>&lt;3%</option>
+        <option>3–5%</option>
+        <option>5–10%</option>
+        <option>10–20%</option>
+        <option>&gt;20%</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Misura la perdita massima sostenibile senza compromettere i tuoi obiettivi finanziari.  
+        <em>Fonte: CFA Institute – Risk Tolerance Guidelines</em>
+      </span>
+    </label>
+
+    <!-- Rendimento obiettivo -->
+    <label>Rendimento obiettivo *
+      <select name="rendimento_obiettivo" class="w-full border rounded px-3 py-2" required>
+        <option value="">Annuale (fascia)</option>
+        <option>2–4%</option>
+        <option>4–6%</option>
+        <option>6–8%</option>
+        <option>&gt; 8%</option>
+      </select>
+      <select name="rnd_tipo" class="w-full border rounded px-3 py-2 mt-2">
+        <option>Nominale</option>
+        <option>Reale (al netto inflazione)</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Obiettivo di rendimento annuo, espresso in termini nominali o reali.
+      </span>
+    </label>
+
+    <!-- Comportamento in caso di calo -->
+    <label>Comportamento in caso di calo *
+      <select name="elasticita_drawdown" class="w-full border rounded px-3 py-2" required>
+        <option value="">Seleziona</option>
+        <option>Ridurre subito il rischio</option>
+        <option>Ribilanciare parzialmente</option>
+        <option>Mantenere le posizioni</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Indica la tua reazione tipica a un calo di mercato, utile per calibrare la strategia di gestione del rischio.
+      </span>
+    </label>
+  </div>
+</section>
+
+<!-- STEP 5 – Esperienza -->
+<section class="step hidden" data-step="5">
+  <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">5) Esperienza e conoscenza</h4>
+  <p class="text-[12px] text-slate-500 mb-3 md:mb-4">
+    Indica il tuo livello di esperienza e la frequenza con cui operi: questi dati aiutano a calibrare la complessità degli strumenti e la strategia operativa.
+  </p>
+
+  <div class="space-y-5 md:space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+      <!-- Anni di esperienza -->
+      <label>Anni di esperienza *
+        <select name="anni_esperienza" class="w-full border rounded px-3 py-2" required>
+          <option value="">Seleziona</option>
+          <option>0</option>
+          <option>1–2</option>
+          <option>3–5</option>
+          <option>6–10</option>
+          <option>10+</option>
+        </select>
+        <span class="text-[11px] text-slate-500">
+          Anche non continuativa: più anni indicano maggiore esposizione a cicli di mercato.  
+          <em>Fonte: CFA Institute – Investment Foundations</em>
+        </span>
+      </label>
+
+      <!-- Strumenti già utilizzati -->
+      <div class="md:col-span-2">
+        <div class="mb-1 font-medium text-sm">Strumenti già utilizzati *</div>
+        <p class="text-[11px] text-slate-500 mb-2">Seleziona tutte le tipologie (anche in demo).</p>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Azioni" class="accent-blue-700">Azioni</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="ETF" class="accent-blue-700">ETF</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Obbligazioni" class="accent-blue-700">Obbligazioni</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Commodities" class="accent-blue-700">Commodities</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Derivati" class="accent-blue-700">Derivati</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="strumenti_usati" value="Crypto" class="accent-blue-700">Crypto</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Competenza su prodotti complessi -->
+    <label>Competenza su prodotti complessi *
+      <select name="competenza_prodotti_complessi" class="w-full border rounded px-3 py-2" required>
+        <option value="">Seleziona</option>
+        <option>Bassa</option>
+        <option>Media</option>
+        <option>Alta</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Es. opzioni, futures, leva, strutturati.  
+        <em>Fonte: ESMA – Guidelines on complex products</em>
+      </span>
+    </label>
+<br><br>
+    <!-- Frequenza operazioni -->
+    <label>Frequenza operazioni *
+      <select name="frequenza_operazioni" class="w-full border rounded px-3 py-2" required>
+        <option value="">Seleziona</option>
+        <option>Mai</option>
+        <option>Sporadica</option>
+        <option>Regolare</option>
+        <option>Frequente</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Indica quante volte effettui operazioni di investimento: una frequenza elevata può aumentare i costi e l’esposizione al rischio di mercato.  
+        <em>Fonte: Barber, B.M. & Odean, T. (2000). Trading Is Hazardous to Your Wealth. The Journal of Finance</em>
+      </span>
+    </label>
+  </div>
+</section>
+
+  <!-- STEP 6 – Vincoli & preferenze -->
+<section class="step hidden" data-step="6">
+  <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">6) Vincoli e preferenze</h4>
+  <p class="text-[12px] text-slate-500 mb-3 md:mb-4">
+    Indica eventuali vincoli o preferenze che possono influenzare la costruzione del portafoglio.
+  </p>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+    <!-- ESG -->
+    <label>ESG / Etico / Religioso
+      <select name="ESG" class="w-full border rounded px-3 py-2" data-estimable>
+        <option>Nessuno</option>
+        <option>ESG Light</option>
+        <option>ESG Strict</option>
+      </select>
+      <textarea name="ESG_note" rows="2" class="w-full border rounded px-3 py-2 mt-2" placeholder="Es: escludere armi/tabacco; no fossili; halal; sharia; solo ETF UCITS SRI."></textarea>
+      <span class="text-[11px] text-slate-500">
+        Specifica esclusioni o preferenze.  
+        <em>Fonte: EU Sustainable Finance Disclosure Regulation (SFDR)</em>
+      </span>
+    </label>
+
+    <!-- Preferenza valutaria -->
+    <label>Preferenza valutaria
+      <select name="preferenza_valutaria" class="w-full border rounded px-3 py-2" data-estimable>
+        <option>EUR</option>
+        <option>USD</option>
+        <option>GBP</option>
+        <option>CHF</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        La valuta di riferimento può influenzare il rischio di cambio e la volatilità del portafoglio.
+      </span>
+    </label>
+
+    <!-- Vincoli su asset class -->
+    <label>Vincoli su asset class
+      <textarea name="vincoli_asset_class" rows="2" class="w-full border rounded px-3 py-2" placeholder="Es: max 20% crypto; no leva; solo titoli reali; IG only."></textarea>
+      <span class="text-[11px] text-slate-500">
+        Limiti su tipologie di strumenti o settori per motivi di rischio o policy interna.
+      </span>
+    </label>
+
+    <!-- Necessità di liquidità immediata -->
+    <label>Necessità di liquidità immediata *
+      <select name="liquidita_immediata" class="w-full border rounded px-3 py-2" required>
+        <option value="">Seleziona</option>
+        <option>Bassa</option>
+        <option>Media</option>
+        <option>Alta</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Indica quanto velocemente potresti aver bisogno di convertire gli investimenti in contanti.  
+        <em>Fonte: CFA Institute – Liquidity Considerations in Portfolio Management</em>
+      </span>
+    </label>
+
+    <!-- Vincoli legali/fiscali -->
+    <label>Vincoli legali/fiscali
+      <textarea name="vincoli_legali_fiscali" rows="2" class="w-full border rounded px-3 py-2" placeholder="Es: restrizioni normative, limiti fiscali, residenza fiscale multipla."></textarea>
+      <span class="text-[11px] text-slate-500">
+        Restrizioni derivanti da leggi o regolamenti fiscali che possono influenzare le scelte di investimento.  
+        <em>Fonte: OECD – Tax Policy and Investment</em>
+      </span>
+    </label>
+  </div>
+</section>
+
+<!-- STEP 7 – Reddito & fiscale -->
+<section class="step hidden" data-step="7">
+  <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">7) Situazione reddituale e fiscale</h4>
+  <p class="text-[12px] text-slate-500 mb-3 md:mb-4">
+    Questi dati aiutano a valutare la capacità di investimento, la resilienza finanziaria e l’impatto della fiscalità nel medio-lungo periodo.
+  </p>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+    <!-- Fascia reddito annuo lordo -->
+    <label>Fascia reddito annuo lordo *
+      <select name="reddito_annuo_lordo" class="w-full border rounded px-3 py-2" required>
+        <option value="">Seleziona</option>
+        <option>&lt; 5 k€</option>
+        <option>5–10 k€</option>
+        <option>10–20 k€</option>
+        <option>20–35 k€</option>
+        <option>35–50 k€</option>
+        <option>50–75 k€</option>
+        <option>75–100 k€</option>
+        <option>&gt; 100 k€</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Indica la fascia di reddito lordo annuale: utile per stimare la capacità di risparmio e l’esposizione fiscale.  
+        <em>Fonte: OECD – Household Income Statistics</em>
+      </span>
+    </label>
+<br>
+    <!-- Possesso abitazione principale -->
+<label>Abitazione principale *
+  <select name="abitazione_principale" class="w-full border rounded px-3 py-2" required>
+    <option value="">Seleziona</option>
+    <option>Di proprietà (senza mutuo)</option>
+    <option>Di proprietà (con mutuo)</option>
+    <option>In affitto</option>
+    <option>Altro</option>
+  </select>
+  <span class="text-[11px] text-slate-500">
+    Indica la situazione abitativa, utile per valutare stabilità patrimoniale e impegni finanziari.
+    <em>Fonte: Banca d’Italia – Indagine sui bilanci delle famiglie</em>
+  </span>
+</label>
+    
+
+    <!-- Tasso di risparmio -->
+    <label>Tasso di risparmio (% reddito) *
+      <select name="tasso_risparmio" class="w-full border rounded px-3 py-2" required>
+        <option value="">Seleziona</option>
+        <option>&lt; 5%</option>
+        <option>5–10%</option>
+        <option>10–20%</option>
+        <option>&gt; 20%</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Percentuale del reddito destinata al risparmio: un tasso più alto aumenta la capacità di investimento e la resilienza agli shock.  
+        <em>Fonte: Modigliani, F. & Brumberg, R. (1954). Life-Cycle Hypothesis</em>
+      </span>
+    </label>
+
+    <!-- Dipendenza dal reddito da lavoro -->
+    <label>Dipendenza dal reddito da lavoro *
+      <select name="dipendenza_reddito" class="w-full border rounded px-3 py-2" data-estimable required>
+        <option value="">Seleziona</option>
+        <option>Bassa</option>
+        <option>Media</option>
+        <option>Alta</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Bassa = spese coperte da rendite/risparmi; Alta = reddito da lavoro essenziale per sostenere le spese correnti.
+      </span>
+    </label>
+
+    <!-- Prospettiva fiscale -->
+    <label class="md:col-span-3">Prospettiva fiscale 5–10 anni
+      <input type="text" name="prospettiva_fiscale" class="w-full border rounded px-3 py-2" placeholder="Es: cambio residenza, rientro in Italia, nuovi regimi.">
+      <span class="text-[11px] text-slate-500">
+        Eventuali cambiamenti previsti nella residenza o nel regime fiscale che possono influenzare la pianificazione.  
+        <em>Fonte: OECD – Tax Policy and Investment</em>
+      </span>
+    </label>
+  </div>
+</section>
+<!-- STEP 8 – PAC (toggle) -->
+<section class="step hidden" data-step="8">
+  <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">
+    8) Piano di Accumulo Capitale (PAC)
+  </h4>
+  <p class="text-[12px] text-slate-500 mb-3 md:mb-4">
+    Il <strong>Piano di Accumulo Capitale (PAC)</strong> prevede versamenti periodici per mediare il prezzo nel tempo, riducendo il rischio di entrare sul mercato in momenti sfavorevoli e aiutando la disciplina di lungo periodo. 
+    <em>Fonti: CFA Institute – Principles of Investment Management; Modigliani–Brumberg (Life-Cycle Hypothesis)</em>
+  </p>
+
+  <!-- Stato PAC -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-2">
+    <label>Stato PAC *
+      <select name="pac_stato" class="w-full border rounded px-3 py-2" required onchange="onPACStateChange(this.value)">
+        <option value="">Seleziona</option>
+        <option value="nessuno">Nessuno</option>
+        <option value="attivo">Attivo</option>
+        <option value="nuovo">Vorrei attivarlo</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Se hai già un PAC, descrivilo. Se vuoi attivarlo, stimiamo una rata sostenibile.
+      </span>
+    </label>
+  </div>
+
+  <!-- PAC ATTIVO: dettagli descrittivi -->
+  <div id="pac-attivo" class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 hidden">
+    <label>Tipo piano
+      <select name="pac_tipo" class="w-full border rounded px-3 py-2" disabled>
+        <option>PAC</option><option>PIC</option><option>Ibrido</option>
+      </select>
+    </label>
+    <label>Frequenza versamenti
+      <select name="pac_frequenza" class="w-full border rounded px-3 py-2" disabled>
+        <option>Mensile</option><option>Trimestrale</option><option>Semestrale</option><option>Annuale</option>
+      </select>
+    </label>
+    <label>Importo rata (fascia)
+      <select name="pac_importo" class="w-full border rounded px-3 py-2" disabled>
+        <option>&lt; 25 €</option><option>25–50 €</option><option>50–100 €</option>
+        <option>100–250 €</option><option>250–500 €</option>
+        <option>500–1 000 €</option><option>&gt; 1 000 €</option>
+      </select>
+    </label>
+    <label>Durata prevista
+      <select name="pac_durata" class="w-full border rounded px-3 py-2" disabled>
+        <option>1–3 anni</option><option>4–7 anni</option>
+        <option>8–12 anni</option><option>12+ anni</option>
+      </select>
+    </label>
+    <label>Rivalutazione rata
+      <select name="pac_rivalutazione" class="w-full border rounded px-3 py-2" disabled>
+        <option>No</option><option>Sì, % annua</option><option>Sì, importo fisso</option>
+      </select>
+    </label>
+    <label class="md:col-span-3">Asset target
+      <input type="text" name="pac_asset_target" class="w-full border rounded px-3 py-2" placeholder="Es. ETF equity globali; obbligazionario indicizzato" disabled>
+    </label>
+    <label class="md:col-span-3">Note particolari
+      <input type="text" name="pac_note" class="w-full border rounded px-3 py-2" placeholder="Es. solo ETF UCITS, esclusione energy…" disabled>
+    </label>
+  </div>
+
+  <!-- PAC NUOVO: autodeterminazione rata -->
+  <div id="pac-nuovo" class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 hidden">
+    <label>Reddito annuo lordo (fascia) *
+      <select name="pac_reddito_lordo" class="w-full border rounded px-3 py-2">
+        <option value="">Seleziona</option>
+        <option>&lt; 20 k€</option><option>20–35 k€</option><option>35–50 k€</option>
+        <option>50–75 k€</option><option>75–100 k€</option><option>&gt; 100 k€</option>
+      </select>
+      <span class="text-[11px] text-slate-500">Serve solo a stimare la capienza di risparmio.</span>
+    </label>
+
+    <label>Tasso di risparmio stimato *
+      <select name="pac_tasso_risparmio" class="w-full border rounded px-3 py-2">
+        <option value="">Seleziona</option>
+        <option>&lt; 5%</option><option>5–10%</option><option>10–20%</option><option>&gt; 20%</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Quota media di reddito che riesci a risparmiare. Life‑Cycle: il tasso varia su orizzonte di vita.
+      </span>
+    </label>
+
+    <label>Buffer di emergenza disponibile *
+      <select name="pac_buffer_emergenza" class="w-full border rounded px-3 py-2">
+        <option value="">Seleziona</option>
+        <option>&lt; 3 mesi spese</option><option>3–6 mesi spese</option><option>&gt; 6 mesi spese</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Prima si costruisce il buffer (3–6 mesi), poi si aumenta la rata PAC.
+      </span>
+    </label>
+
+    <label>Quota del risparmio destinabile al PAC *
+      <select name="pac_quota_risparmio" class="w-full border rounded px-3 py-2">
+        <option value="">Seleziona</option>
+        <option>25%</option><option>50%</option><option>75%</option><option>100%</option>
+      </select>
+      <span class="text-[11px] text-slate-500">
+        Non è necessario destinare tutto il risparmio al PAC; lascia margine per imprevisti.
+      </span>
+    </label>
+
+    <label>Frequenza versamenti
+      <select name="pac_frequenza_new" class="w-full border rounded px-3 py-2">
+        <option>Mensile</option><option>Trimestrale</option><option>Semestrale</option>
+      </select>
+    </label>
+
+    <label class="md:col-span-2">Rata suggerita (calcolata)
+      <input type="text" name="pac_rata_suggerita" class="w-full border rounded px-3 py-2 bg-slate-50" readonly placeholder="Calcolata automaticamente">
+      <span class="text-[11px] text-slate-500">Stima indicativa in base ai dati inseriti (non vincolante, solo educativa).</span>
+    </label>
+
+    <label class="md:col-span-3">Coerenza con orizzonte obiettivi
+      <select name="pac_coerenza_orizzonte" class="w-full border rounded px-3 py-2">
+        <option>Breve (1–3 anni)</option><option>Medio (4–9 anni)</option><option>Lungo (≥10 anni)</option>
+      </select>
+      <span class="text-[11px] text-slate-500">Più l’orizzonte è lungo, più il PAC beneficia dell’effetto media.</span>
+    </label>
+
+    <label class="md:col-span-3">Asset target (idea)
+      <input type="text" name="pac_asset_target_new" class="w-full border rounded px-3 py-2" placeholder="Es. ETF azionari globali + obbligazionario indicizzato">
+    </label>
+  </div>
+</section>
+
+      <!-- STEP 9 – Portafoglio attuale (solo Validazione) -->
+      <section class="step hidden" data-step="9">
+        <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">9) Portafoglio attuale (solo Validazione)</h4>
+        <p class="text-[12px] text-slate-500 mb-2">Inserisci in % per privacy; opzionalmente apri “Dettagli”.</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-3">
+          <label>Core/Satellite (fac)
+            <select name="allocazione_core_satellite" class="w-full border rounded px-3 py-2">
+              <option>n/d</option><option>70/30</option><option>60/40</option><option>80/20</option>
+            </select>
+          </label>
+          <label>Volatilità realizzata (fascia)
+            <select name="volatilita_drawdown_vol" class="w-full border rounded px-3 py-2">
+              <option>n/d</option><option>&lt; 8%</option><option>8–12%</option><option>12–18%</option><option>&gt; 18%</option>
+            </select>
+          </label>
+          <label>Drawdown storico (fascia)
+            <select name="volatilita_drawdown_dd" class="w-full border rounded px-3 py-2">
+              <option>n/d</option><option>&lt; −5%</option><option>−5% / −10%</option><option>−10% / −20%</option><option>&lt; −20%</option>
+            </select>
+          </label>
+        </div>
+
+        <!-- Righe posizioni -->
+        <div id="val-positions" class="space-y-4 divide-y divide-slate-200"></div>
+
+        <div class="mt-3">
+          <button type="button" id="btn-add-row" class="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-100" onclick="aggiungiRigaVal(); scrollToLastRow();">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Aggiungi riga</span>
+          </button>
+        </div>
+
+        <div class="text-[12px] text-slate-600 mt-2" id="val-somma">Somma indicativa: 0%</div>
+        <div id="sum-warning" class="hidden mt-2 text-[12px] bg-amber-100 text-amber-800 border border-amber-300 rounded px-3 py-2">⚠️ Le percentuali non sembrano coerenti con il totale (atteso ~100%).</div>
+
+        <label class="block mt-3">Coperture in essere (facoltativo)
+          <input type="text" name="coperture" class="w-full border rounded px-3 py-2" placeholder="Es. put su indice; inverse ETF; future">
+        </label>
+        <label class="mt-2 inline-flex items-center gap-2 text-sm">
+          <input type="checkbox" name="controllo_coerenza_allocativa" class="accent-blue-700"> Esegui controllo coerenza allocativa
+        </label>
+      </section>
+
+      <!-- STEP 10 – Recapiti & Invio -->
+      <section class="step hidden" data-step="10">
+        <h4 class="text-[15px] md:text-base font-semibold text-slate-900 mb-2">10) Condivisione, recapiti & invio</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-2">
+          <label>Visibilità del report *
+            <select name="share_visibility" class="w-full border rounded px-3 py-2" required onchange="toggleSharing(this.value)">
+              <option value="pubblico" selected>Pubblico (link aperto)</option>
+              <option value="privato">Privato (protetto da password)</option>
+            </select>
+            <span class="text-[11px] text-slate-500">Se “Privato”, imposta una password.</span>
+          </label>
+          <label>Password (solo se privato)
+            <input type="password" name="share_password" class="w-full border rounded px-3 py-2" placeholder="Imposta una password" disabled>
+          </label>
+          <label>Email (facoltativo)
+            <input type="email" name="email" class="w-full border rounded px-3 py-2" placeholder="you@example.com">
+          </label>
+          <label>WhatsApp (facoltativo)
+            <input type="text" name="whatsapp" class="w-full border rounded px-3 py-2" placeholder="+39...">
+          </label>
+        </div>
+
+        <details class="mt-3 border rounded p-3">
+          <summary class="cursor-pointer text-sm font-medium">Anteprima (riepilogo tecnico per l’AI)</summary>
+          <p class="text-[12px] text-slate-500 mb-2">Vista tecnica del contenuto (JSON equivalente allo schema).</p>
+          <pre id="payload" class="text-xs bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto"></pre>
+        </details>
+      </section>
+
+    </form>
+
+    <!-- FOOTER NAV (sticky con sfumatura) -->
+    <div class="sticky-footer p-3 md:p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+      <button type="button" class="px-3 py-2 md:px-4 md:py-2 border border-slate-300 rounded-lg hover:bg-slate-100" onclick="prevStep()">Indietro</button>
+      <div class="flex items-center gap-2 md:gap-3">
+        <button id="submit-btn" class="px-3 py-2 md:px-4 md:py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-800 hidden" onclick="inviaProfilo()">Invia</button>
+        <button id="next-btn" type="button" class="px-3 py-2 md:px-4 md:py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800" onclick="nextStep()">Avanti</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  /* Mobile compact: inputs più bassi, font leggermente più piccoli, spazi ridotti */
+  @media (max-width:640px){
+    #modal-portafoglio h4{ font-size:15px; }
+    #modal-portafoglio select,
+    #modal-portafoglio input,
+    #modal-portafoglio textarea{
+      min-height:44px; font-size:15px; padding:10px 12px; border-radius:12px;
+    }
+    #modal-portafoglio textarea{ min-height:110px; }
+    #modal-portafoglio input[type="checkbox"],
+    #modal-portafoglio input[type="radio"]{ width:18px; height:18px; }
+  }
+  /* Micro-animazione focus ring */
+  #modal-portafoglio input, #modal-portafoglio select, #modal-portafoglio textarea{
+    transition: box-shadow .15s ease, border-color .15s ease, background-color .15s ease;
+  }
+  /* Sticky footer + sfumatura superiore */
+  #modal-portafoglio .sticky-footer{ position: sticky; bottom: 0; background: #f8fafc; }
+  #modal-portafoglio .sticky-footer::before{
+    content:""; position:absolute; left:0; right:0; top:-16px; height:16px;
+    background: linear-gradient(to top, rgba(248,250,252,1), rgba(248,250,252,0));
+    pointer-events:none;
+  }
+</style>
+<script>
+  function onPACStateChange(v){
+    const att = document.getElementById('pac-attivo');
+    const neu = document.getElementById('pac-nuovo');
+    att.classList.toggle('hidden', v!=='attivo');
+    neu.classList.toggle('hidden', v!=='nuovo');
+
+    // Abilita/disabilita campi “attivo”
+    const attFields = ['pac_tipo','pac_frequenza','pac_importo','pac_durata','pac_rivalutazione','pac_asset_target','pac_note'];
+    attFields.forEach(n=>{
+      const el = document.querySelector(`[name="${n}"]`);
+      if(el){ el.disabled = (v!=='attivo'); }
+    });
+
+    // Nessuno: tutto disabilitato
+    if(v==='nessuno' || v===''){
+      attFields.forEach(n=>{ const el=document.querySelector(`[name="${n}"]`); if(el) el.disabled=true; });
+      document.querySelectorAll('#pac-nuovo select, #pac-nuovo input').forEach(el=> el.disabled = true);
+    }else if(v==='nuovo'){
+      document.querySelectorAll('#pac-nuovo select, #pac-nuovo input').forEach(el=> el.disabled = false);
+    }
+  }
+
+  // Calcolo rata suggerita (educativo, non vincolante)
+  function __parsePct(label){
+    // Converte fascia in valore medio (es. "5–10%" -> 0.075)
+    if(!label) return null;
+    const m = label.match(/(\d+)[–-]?(\d+)?%|(\d+)%|&gt;\s*(\d+)%|&lt;\s*(\d+)%/);
+    if(!m) return null;
+    if(m[1] && m[2]) return (Number(m[1])+Number(m[2]))/2/100;
+    if(m[3]) return Number(m[3])/100;
+    if(m[4]) return Number(m[4])/100; // >X%
+    if(m[5]) return Number(m[5])/100/2; // <X% -> metà di X come stima
+    return null;
+  }
+  function __midOfIncome(label){
+    // Converte fascia reddito in valore annuo medio
+    if(!label) return null;
+    const clean = label.replace(/\s|€|k€/g,'');
+    if(clean.includes('&lt;20k')) return 15000;
+    if(clean.includes('20–35k')) return 27500;
+    if(clean.includes('35–50k')) return 42500;
+    if(clean.includes('50–75k')) return 62500;
+    if(clean.includes('75–100k')) return 87500;
+    if(clean.includes('&gt;100k')) return 120000;
+    return null;
+  }
+  function __bufferWeight(label){
+    // Penalizza rata se buffer <3 mesi
+    if(!label) return 1;
+    if(label.includes('&lt; 3')) return 0.5;
+    if(label.includes('3–6')) return 0.8;
+    if(label.includes('&gt; 6')) return 1;
+    return 1;
+  }
+  function calcolaRataPAC(){
+    const reddito = __midOfIncome(document.querySelector('[name="pac_reddito_lordo"]')?.value);
+    const tasso   = __parsePct(document.querySelector('[name="pac_tasso_risparmio"]')?.value);
+    const quota   = __parsePct(document.querySelector('[name="pac_quota_risparmio"]')?.value);
+    const buff    = __bufferWeight(document.querySelector('[name="pac_buffer_emergenza"]')?.value);
+
+    const out = document.querySelector('[name="pac_rata_suggerita"]');
+    if(!out){ return; }
+
+    if(reddito && tasso && quota){
+      const rispAnnuo = reddito * tasso;
+      const quotaAnnuo = rispAnnuo * (quota || 0.5);
+      const freq = (document.querySelector('[name="pac_frequenza_new"]')?.value || 'Mensile');
+      const div = (freq==='Mensile') ? 12 : (freq==='Trimestrale' ? 4 : 2);
+      let rata = (quotaAnnuo / div) * (buff || 1);
+
+      // Arrotondamento “umano”
+      if(rata < 25) rata = 25;
+      out.value = `${Math.round(rata/10)*10} €`;
+    }else{
+      out.value = '';
+    }
+  }
+
+  // Auto-calcolo al volo
+  document.addEventListener('input', (e)=>{
+    if(['pac_reddito_lordo','pac_tasso_risparmio','pac_quota_risparmio','pac_buffer_emergenza','pac_frequenza_new'].includes(e.target?.name)){
+      calcolaRataPAC();
+    }
+  });
+</script>
+<script>
+  // ===== Scroll lock =====
+  const __lockScroll = () => document.body.classList.add('overflow-hidden');
+  const __unlockScroll = () => document.body.classList.remove('overflow-hidden');
+
+  // ===== Apertura/chiusura modale =====
+  function apriModuloPortafoglio(mode=null){
+    const modal = document.getElementById('modal-portafoglio');
+    modal.classList.remove('hidden');
+    __lockScroll();
+    if(window.lucide) lucide.createIcons();
+    document.getElementById('form-portafoglio').reset();
+    currentStep = 0; stepsOrder = baseOrder.slice();
+    aggiornaStep();
+    toggleSharing(document.querySelector('[name="share_visibility"]')?.value||'pubblico');
+    if(mode){
+      const r = document.querySelector(`input[name=tipo_analisi][value=${mode}]`);
+      if(r){ r.checked = true; onModeChange(); }
+    }
+  }
+  function chiudiModuloPortafoglio(){
+    document.getElementById('modal-portafoglio').classList.add('hidden');
+    __unlockScroll();
+  }
+
+  // ===== Stepper =====
+  const baseOrder = [0,1,2,3,4,5,6,7,8,9,10];
+  let stepsOrder = baseOrder.slice();
+  let currentStep = 0;
+
+  function focusPrimoCampo(scope){
+    const container = scope || document.querySelector(`.step[data-step="${stepsOrder[currentStep]}"]`);
+    if(!container) return;
+    const el = container.querySelector('input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled])');
+    if(el){
+      setTimeout(()=>{
+        try{ el.focus({ preventScroll:true }); if(typeof el.select==='function') el.select(); }catch(_){}
+      }, 10);
+    }
+  }
+
+  function mostraStep(i){
+    document.querySelectorAll('.step').forEach(s=>s.classList.add('hidden'));
+    const key = stepsOrder[i];
+    const section = document.querySelector(`.step[data-step="${key}"]`);
+    if(section) section.classList.remove('hidden');
+    if(key === 9){
+      const wrap = document.getElementById('val-positions');
+      if(wrap && wrap.children.length === 0){ aggiungiRigaVal(); }
+    }
+    focusPrimoCampo(section);
+  }
+  function aggiornaStep(){
+    mostraStep(currentStep);
+    const total = stepsOrder.length;
+    document.getElementById('progress-label').textContent = `Step ${currentStep+1} di ${total}`;
+    document.getElementById('progress-bar').style.width = `${Math.round(((currentStep+1)/total)*100)}%`;
+    document.getElementById('submit-btn').classList.toggle('hidden', currentStep !== total-1);
+    document.getElementById('next-btn').classList.toggle('hidden', currentStep === total-1);
+  }
+  function nextStep(){ if(!validaStep()) return; if(currentStep < stepsOrder.length-1){ currentStep++; aggiornaStep(); } }
+  function prevStep(){ if(currentStep>0){ currentStep--; aggiornaStep(); } }
+  // ===== Mode logic =====
+  document.addEventListener('change', (e)=>{ if(e.target && e.target.name==='tipo_analisi') onModeChange(); });
+  function onModeChange(){
+    const mode = getMode();
+    const idx9 = stepsOrder.indexOf(9);
+    if(mode === 'validazione' && idx9 === -1){ stepsOrder.splice(stepsOrder.length-1,0,9); }
+    if(mode === 'simulazione' && idx9 !== -1){ stepsOrder = stepsOrder.filter(s=>s!==9); }
+    document.querySelector('[data-step="9"]').classList.toggle('hidden', mode !== 'validazione');
+    aggiornaStep();
+  }
+  function getMode(){ const r = document.querySelector('input[name=tipo_analisi]:checked'); return r ? r.value : null; }
+
+  // ===== Validazione minima =====
+  function validaStep(){
+    const key = stepsOrder[currentStep];
+    const el = document.querySelector(`.step[data-step="${key}"]`);
+    let ok = true;
+    el.querySelectorAll('select[required], input[required]').forEach(inp=>{
+      if(!inp.value){ ok=false; inp.classList.add('ring-2','ring-red-400'); }
+      else inp.classList.remove('ring-2','ring-red-400');
+    });
+    if(!ok){ el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    return ok;
+  }
+
+  // ===== Toggle sezioni dinamiche =====
+  function togglePAC(isOn){
+    const names = ['pac_tipo','pac_frequenza','pac_importo','pac_durata','pac_rivalutazione','pac_asset_target','pac_note'];
+    names.forEach(n=>{
+      const el = document.querySelector(`[name="${n}"]`);
+      if(!el) return;
+      el.disabled = !isOn;
+      el.closest('label')?.classList.toggle('opacity-50', !isOn);
+    });
+  }
+  function toggleSharing(v){
+    const pwd = document.querySelector('[name="share_password"]');
+    if(!pwd) return;
+    const isPriv = v==='privato';
+    pwd.disabled = !isPriv;
+    pwd.required = isPriv;
+    pwd.closest('label').classList.toggle('opacity-50', !isPriv);
+  }
+
+    // ===== Righe dinamiche Portafoglio (Step 9) =====
+  function aggiungiRigaVal(){
+    const wrap = document.getElementById('val-positions');
+    if(!wrap) return;
+    const i = wrap.children.length;
+    const div = document.createElement('div');
+    div.innerHTML = rowValTemplate(i);
+    const node = div.firstElementChild;
+    wrap.appendChild(node);
+    const first = node.querySelector(`input[name="pos[${i}][nome]"]`);
+    if(first){ setTimeout(()=> first.focus(), 10); }
+    if(window.lucide) lucide.createIcons();
+  }
+  function rimuoviRigaVal(btn){ btn.closest('.border.rounded-xl')?.remove(); aggiornaSomma(); }
+  function aggiornaSomma(){
+    let s=0; document.querySelectorAll('.pct-input').forEach(i=>{ const v=parseFloat(i.value); if(!isNaN(v)) s+=v; });
+    document.getElementById('val-somma').textContent = `Somma indicativa: ${s.toFixed(1)}%`;
+    const warn = document.getElementById('sum-warning');
+    if(!warn) return;
+    const out = (s>110 || s<90) && !isNaN(s);
+    warn.classList.toggle('hidden', !out);
+  }
+  function rowValTemplate(i){
+    return `
+      <div class="border rounded-xl p-3 sm:p-4">
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-start">
+          <label class="sm:col-span-7 text-[12px] text-slate-600 min-w-0">
+            Strumento o Categoria
+            <input name="pos[${i}][nome]" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[44px]" placeholder="Es. IWDA / BTP 2030 / Cash" />
+          </label>
+          <label class="sm:col-span-3 text-[12px] text-slate-600">
+            Percentuale (%)
+            <input name="pos[${i}][pct]" type="number" min="0" max="100" step="0.1" class="mt-1 w-full border rounded-xl px-3 py-3 min-h-[44px] pct-input" placeholder="%" oninput="aggiornaSomma()" />
+          </label>
+          <div class="sm:col-span-2 flex sm:justify-end">
+            <button type="button" class="w-full sm:w-auto mt-1 px-3 py-3 min-h-[44px] border rounded-xl" onclick="rimuoviRigaVal(this)">Rimuovi</button>
+          </div>
+        </div>
+      </div>`;
+  }
+  // ===== Helper =====
+  function readValue(form, name){
+    const value = form.get(name);
+    if(value===null || String(value).trim()==='') return null;
+    return { valore: value };
+  }
+
+  // ===== Build Payload =====
+function buildPayload(){
+  const fd = new FormData(document.getElementById('form-portafoglio'));
+
+  // strumenti usati (checkbox multipli)
+  const strumenti = [];
+  document.querySelectorAll('input[name="strumenti_usati"]:checked')
+    .forEach(x=> strumenti.push(x.value));
+
+  // posizioni portafoglio (step 9)
+  const pos = [];
+  document.querySelectorAll('#val-positions > .border.rounded-xl, #val-positions > .border.rounded-lg')
+    .forEach(card=>{
+      const q = sel => card.querySelector(sel)?.value?.trim();
+      const pct = parseFloat(q('[name$="[pct]"]'));
+      const nome = q('[name$="[nome]"]');
+      if(nome || !isNaN(pct)){
+        pos.push({
+          nome: nome||null,
+          pct: isNaN(pct)?null:pct,
+          id: q('[name$="[id]"]')||null,
+          qty: q('[name$="[qty]"]')||null,
+          px: q('[name$="[px]"]')||null,
+          ccy: q('[name$="[ccy]"]')||null
+        });
+      }
+    });
+
+  const mode = document.querySelector('input[name=tipo_analisi]:checked')?.value || null;
+  const pacStato = fd.get('pac_stato') || null; // attivo / nuovo / assente (se presente)
+
+  const Profilo_Investitore = {
+    // STEP 1 – Dati anagrafici e fiscali (+ stabilità reddito)
+    dati_anagrafici: {
+      eta: readValue(fd,'eta'),
+      area_fiscale: readValue(fd,'area_fiscale'),
+      nucleo_familiare: readValue(fd, 'nucleo_familiare'),
+      stabilita_reddito: readValue(fd,'stabilita_reddito'),
+      situazione_patrimoniale: { valore: null }
+    },
+
+    // STEP 2 – Capitale (+ passività)
+    capitale_liquidita: {
+      capitale_totale: readValue(fd,'capitale_totale'),
+      capitale_investibile: readValue(fd,'capitale_investibile'),
+      passivita: readValue(fd,'passivita'),
+      cash_buffer: { valore: null }
+    },
+
+    // STEP 3 – Orizzonte (+ priorità temporale)
+    orizzonte_temporale: {
+      anni_obiettivo: readValue(fd,'anni_obiettivo'),
+      priorita_temporale: readValue(fd,'priorita_temporale'),
+      milestone: { valore: (fd.get('milestone')||'').trim()||null }
+    },
+
+    // STEP 4 – Rischio & rendimento
+    rischio_rendimento: {
+      propensione_rischio: readValue(fd,'propensione_rischio'),
+      capacita_perdita: readValue(fd,'capacita_perdita'),
+      tolleranza_rischio: readValue(fd,'tolleranza_rischio'),
+      drawdown_tollerato: readValue(fd,'drawdown_tollerato'),
+      rendimento_obiettivo: readValue(fd,'rendimento_obiettivo'),
+      elasticita_drawdown: readValue(fd,'elasticita_drawdown'),
+      rnd_tipo: (fd.get('rnd_tipo')||'Nominale')
+    },
+
+    // STEP 5 – Esperienza
+    esperienza_conoscenza: {
+      anni_esperienza: readValue(fd,'anni_esperienza'),
+      strumenti_usati: { valore: strumenti },
+      competenza_prodotti_complessi: readValue(fd,'competenza_prodotti_complessi'),
+      frequenza_operazioni: readValue(fd,'frequenza_operazioni')
+    },
+
+    // STEP 6 – Vincoli & preferenze
+    vincoli_preferenze: {
+      ESG: { valore: fd.get('ESG')||'Nessuno' },
+      ESG_note: { valore: (fd.get('ESG_note')||'').trim()||null },
+      preferenza_valutaria: { valore: fd.get('preferenza_valutaria')||'EUR' },
+      vincoli_asset_class: { valore:(fd.get('vincoli_asset_class')||'').trim()||null },
+      liquidita_immediata: readValue(fd,'liquidita_immediata'),
+      vincoli_legali_fiscali: { valore:(fd.get('vincoli_legali_fiscali')||'').trim()||null }
+    },
+
+    // STEP 7 – Reddito & fiscale
+    contesto_macro_personale: {
+      reddito_annuo_lordo: readValue(fd,'reddito_annuo_lordo'),
+      tasso_risparmio: readValue(fd,'tasso_risparmio'),
+      dipendenza_reddito: readValue(fd,'dipendenza_reddito'),
+        abitazione_principale: readValue(fd, 'abitazione_principale'), 
+      prospettiva_fiscale: { valore:(fd.get('prospettiva_fiscale')||'').trim()||null }
+    },
+
+    // STEP 8 – PAC
+    pac: (() => {
+      if (pacStato === 'attivo') {
+        return {
+          presenza: { valore: 'Sì' },
+          stato: { valore: 'Attivo' },
+          tipo: { valore: fd.get('pac_tipo')||null },
+          frequenza: { valore: fd.get('pac_frequenza')||null },
+          importo_rata: { valore: fd.get('pac_importo')||null },
+          durata: { valore: fd.get('pac_durata')||null },
+          rivalutazione_rata: { valore: fd.get('pac_rivalutazione')||null },
+          asset_target: { valore: (fd.get('pac_asset_target')||'').trim()||null },
+          note: { valore: (fd.get('pac_note')||'').trim()||null }
+        };
+      }
+      if (pacStato === 'nuovo') {
+        return {
+          presenza: { valore: 'No (in attivazione)' },
+          stato: { valore: 'Nuovo' },
+          reddito_lordo: { valore: fd.get('pac_reddito_lordo')||null },
+          tasso_risparmio: { valore: fd.get('pac_tasso_risparmio')||null },
+          buffer_emergenza: { valore: fd.get('pac_buffer_emergenza')||null },
+          quota_risparmio_PAC: { valore: fd.get('pac_quota_risparmio')||null },
+          frequenza_proposta: { valore: fd.get('pac_frequenza_new')||'Mensile' },
+          rata_suggerita: { valore: fd.get('pac_rata_suggerita')||null },
+          coerenza_orizzonte: { valore: fd.get('pac_coerenza_orizzonte')||null },
+          asset_target_idea: { valore: (fd.get('pac_asset_target_new')||'').trim()||null }
+        };
+      }
+      if (pacStato === 'nessuno' || pacStato === 'assente') {
+        return { presenza: { valore: 'No' }, stato: { valore: 'Assente' } };
+      }
+      // fallback vecchia logica
+      const pacOn = !!document.querySelector('input[name="pac_presenza"]')?.checked;
+      return pacOn
+        ? {
+            presenza: { valore: 'Sì' },
+            stato: { valore: 'Attivo' },
+            tipo: { valore: fd.get('pac_tipo')||null },
+            frequenza: { valore: fd.get('pac_frequenza')||null },
+            importo_rata: { valore: fd.get('pac_importo')||null },
+            durata: { valore: fd.get('pac_durata')||null },
+            rivalutazione_rata: { valore: fd.get('pac_rivalutazione')||null },
+            asset_target: { valore: (fd.get('pac_asset_target')||'').trim()||null },
+            note: { valore: (fd.get('pac_note')||'').trim()||null }
+          }
+        : { presenza: { valore: 'No' }, stato: { valore: 'Assente' } };
+    })(),
+    // STEP 9 – Portafoglio attuale
+    portafoglio_attuale: (mode==='validazione') ? {
+      allocazione: { valore: fd.get('allocazione_core_satellite')||'n/d' },
+      performance_storica: { valore: null },
+      volatilita_drawdown: { 
+        valore: { 
+          vol: fd.get('volatilita_drawdown_vol')||'n/d', 
+          dd: fd.get('volatilita_drawdown_dd')||'n/d' 
+        } 
+      },
+      coperture: { valore:(fd.get('coperture')||'').trim()||null },
+      posizioni: { valore: pos },
+      controllo_coerenza: { 
+        esito: !!fd.get('controllo_coerenza_allocativa'), 
+        descrizione: null, 
+        validazione_colore: null 
+      }
+    } : null
+  };
+
+  return {
+    servizio: 'profilo_investitore',
+    tipo_analisi: mode,
+    Profilo_Investitore,
+    recapiti: {
+      email: (fd.get('email')||'').trim()||null,
+      whatsapp: (fd.get('whatsapp')||'').trim()||null
+    },
+    sharing: {
+      visibility: fd.get('share_visibility')||'pubblico',
+      password: (fd.get('share_visibility')==='privato' 
+        ? (fd.get('share_password')||null) 
+        : null)
+    }
+  };
+}
+
+
+
+    
+  // ===== Anteprima payload =====
+  function renderPayload(){
+    const pre = document.getElementById('payload');
+    if(pre) pre.textContent = JSON.stringify(buildPayload(), null, 2);
+  }
+
+  // ===== Debounce per anteprima automatica =====
+  const __debounce = (fn, ms=400) => {
+    let t;
+    return (...args) => {
+      clearTimeout(t);
+      t = setTimeout(() => fn.apply(null, args), ms);
+    };
+  };
+  const __autoPreview = __debounce(() => renderPayload(), 250);
+
+  (function(){
+    const f = document.getElementById('form-portafoglio');
+    if(!f) return;
+    f.addEventListener('input', __autoPreview);
+    f.addEventListener('change', __autoPreview);
+  })();
+
+  // ===== Invio =====
+  async function inviaProfilo(){
+    const disclaimer = `NOTA BENE
+
+L'analisi AI è uno strumento didattico per confrontare le tue idee.
+Non è consulenza e non ha validazione professionale.
+Potrebbe contenere errori o ragionamenti incompleti.
+Non affidarti mai a nessuna AI per prendere decisioni di investimento.
+
+Vuoi procedere inviando i dati?`;
+    if(!confirm(disclaimer)) return;
+
+    // recapiti minimi
+    const email = document.querySelector("[name='email']")?.value.trim();
+    const wa = document.querySelector("[name='whatsapp']")?.value.trim();
+    if(!email && !wa){
+      alert('Indica almeno un recapito (Email o WhatsApp).');
+      return;
+    }
+
+    // validazione step correnti
+    for(let i=0; i<stepsOrder.length-1; i++){ // esclude recapiti
+      const el = document.querySelector(`.step[data-step="${stepsOrder[i]}"]`);
+      let ok = true;
+      el.querySelectorAll('select[required], input[required]').forEach(inp=>{
+        if(!inp.value) ok=false;
+      });
+      if(!ok){
+        currentStep = i;
+        aggiornaStep();
+        alert('Compila i campi obbligatori dello step attuale.');
+        return;
+      }
+    }
+
+    const payload = buildPayload();
+    renderPayload();
+
+    try{
+      const res = await fetch('/api/send-email', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      });
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      alert('✅ Profilo inviato correttamente.');
+      chiudiModuloPortafoglio();
+    }catch(err){
+      console.error(err);
+      alert('❌ Errore durante l\'invio. Riprova.');
+    }
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+<!-- MODALE – ANALISI ASSET (privacy-first, finalità d’uso only, fetch /api/send-email) -->
+<div id="modal-asset" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
+  <div class="bg-white w-full max-w-4xl mx-auto rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[92vh]" role="dialog" aria-modal="true" aria-labelledby="asset-title">
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
+      <div class="flex items-center gap-3">
+        <i data-lucide="search" class="w-6 h-6 text-blue-700"></i>
+        <h3 id="asset-title" class="text-lg font-semibold text-slate-900">Analisi AI – Asset singolo</h3>
+      </div>
+      <button onclick="chiudiModuloAsset()" class="text-slate-500 hover:text-red-500" aria-label="Chiudi">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="px-6 pt-4">
+      <div class="flex items-center gap-2 text-xs text-slate-600 mb-2">
+        <span id="a-progress-label">Step 1 di 3</span>
+        <span class="ml-auto">* campi obbligatori</span>
+      </div>
+      <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+        <div id="a-progress-bar" class="h-2 bg-blue-700 w-[33%] transition-all"></div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <form id="form-asset" class="p-6 md:p-8 overflow-y-auto flex-1 space-y-10 leading-relaxed" onsubmit="event.preventDefault(); inviaAnalisiAsset();">
+
+      <!-- STEP A0 – Identificazione -->
+      <section class="a-step" data-astep="0">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">1) Identificazione asset</h4>
+        <p class="text-xs text-slate-500 mb-4">Bastano poche info. Usa <strong>sigle standard</strong> e <strong>fasce</strong> (privacy-first).</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <label>Tipologia *
+            <select name="tipo_asset" class="w-full border rounded px-3 py-2" required onchange="onTipoAssetChange(this.value)">
+              <option value="">Seleziona</option>
+              <option>Azione</option>
+              <option>ETF</option>
+              <option>Obbligazione</option>
+              <option>Commodity</option>
+              <option>Forex</option>
+              <option>Criptovaluta</option>
+              <option>Altro</option>
+            </select>
+          </label>
+
+          <label>Identificativo (ticker / ISIN / nome) *
+            <input name="identificativo" class="w-full border rounded px-3 py-2" required placeholder="Es. AAPL | IE00B4L5Y983 | Tesla | EUR/USD | BTC" />
+            <span id="a-hint-id" class="text-[11px] text-slate-500">Per ETF preferisci l’<strong>ISIN</strong> per evitare omonimie.</span>
+          </label>
+
+          <label>Mercato / Borsa (facoltativo)
+            <input name="mercato" class="w-full border rounded px-3 py-2" placeholder="Es. NASDAQ, XETRA, Borsa Italiana, CME" />
+          </label>
+
+          <label>Valuta quotazione (facoltativo)
+            <select name="valuta" class="w-full border rounded px-3 py-2">
+              <option>Auto</option><option>EUR</option><option>USD</option><option>GBP</option><option>CHF</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP A1 – Finalità d’uso -->
+      <section class="a-step hidden" data-astep="1">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">2) Finalità d’uso</h4>
+        <p class="text-[11px] text-slate-500 mb-3">
+          Scegli lo scopo dell’analisi. Il motore deciderà automaticamente quali blocchi applicare
+          (fondamentale, tecnica, macro, news, valutazione…).
+        </p>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Investimento lungo termine" class="accent-blue-700">Investimento lungo termine (Buy & Hold)</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Educazione finanziaria AI" class="accent-blue-700">Educazione finanziaria AI modellata per conformità MiFID II</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Speculazione CFD" class="accent-blue-700">Speculazione CFD</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Opzioni" class="accent-blue-700">Opzioni</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Futures" class="accent-blue-700">Futures</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Hedging" class="accent-blue-700">Hedging (copertura rischio)</label>
+          <label class="inline-flex items-center gap-2 md:col-span-2"><input type="checkbox" name="finalita" value="Analisi completa" class="accent-blue-700">Analisi completa (tutte le dimensioni)</label>
+        </div>
+
+        <label class="block mt-4">Domande o note (facoltativo)
+          <textarea name="note" rows="3" class="w-full border rounded px-3 py-2" placeholder="Esempi: CFD solo su indici; covered call; futures per hedging; richiesta DCF; news/regolatorio; confronto peer."></textarea>
+        </label>
+      </section>
+
+      <!-- STEP A2 – Recapiti & invio (senza visibilità report) -->
+      <section class="a-step hidden" data-astep="2">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">3) Recapiti & invio</h4>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <label>Email (facoltativo)
+            <input type="email" name="a_email" class="w-full border rounded px-3 py-2" placeholder="you@example.com">
+          </label>
+          <label>WhatsApp (facoltativo)
+            <input type="text" name="a_whatsapp" class="w-full border rounded px-3 py-2" placeholder="+39...">
+          </label>
+        </div>
+        <p class="text-xs text-slate-500 mt-1">Indica almeno un recapito. I dati sono <strong>minimizzati</strong> (solo campi valorizzati).</p>
+
+        <details class="mt-3 border rounded p-3">
+          <summary class="cursor-pointer text-sm font-medium">Anteprima (riepilogo tecnico per l’AI)</summary>
+          <p class="text-xs text-slate-500 mb-2">Vista tecnica del contenuto che invieremo al motore AI (JSON equivalente allo schema). Serve a verificare cosa stai condividendo.</p>
+          <pre id="a-payload" class="text-xs bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto"></pre>
+        </details>
+      </section>
+
+    </form>
+
+    <!-- FOOTER NAV -->
+    <div class="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+      <button type="button" class="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-100" onclick="aPrevStep()">Indietro</button>
+      <div class="flex items-center gap-3">
+        <button id="a-submit-btn" class="px-4 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-800 hidden" onclick="inviaAnalisiAsset()">Invia</button>
+        <button id="a-next-btn" type="button" class="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800" onclick="aNextStep()">Avanti</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ===== Apertura/chiusura modale (lock body scroll) =====
+  const __aLockScroll = () => document.body.classList.add('overflow-hidden');
+  const __aUnlockScroll = () => document.body.classList.remove('overflow-hidden');
+
+  function apriModuloAsset(){
+    const modal = document.getElementById('modal-asset');
+    modal.classList.remove('hidden');
+    __aLockScroll();
+    if(window.lucide) lucide.createIcons();
+    // reset
+    const f = document.getElementById('form-asset');
+    f.reset();
+    aCurrentStep = 0; aStepsOrder = [0,1,2];
+    aUpdateStep();
+    aRenderPayload();
+  }
+  function chiudiModuloAsset(){
+    document.getElementById('modal-asset').classList.add('hidden');
+    __aUnlockScroll();
+  }
+
+  // ===== Navigazione step =====
+  let aStepsOrder = [0,1,2];
+  let aCurrentStep = 0;
+
+  function aShowStep(i){
+    document.querySelectorAll('#modal-asset .a-step').forEach(s=>s.classList.add('hidden'));
+    const selector = `#modal-asset .a-step[data-astep="${aStepsOrder[i]}"]`;
+    const el = document.querySelector(selector);
+    if(el) el.classList.remove('hidden');
+  }
+  function aUpdateStep(){
+    aShowStep(aCurrentStep);
+    const total = aStepsOrder.length;
+    document.getElementById('a-progress-label').textContent = `Step ${aCurrentStep+1} di ${total}`;
+    document.getElementById('a-progress-bar').style.width = `${Math.round(((aCurrentStep+1)/total)*100)}%`;
+    document.getElementById('a-submit-btn').classList.toggle('hidden', aCurrentStep !== total-1);
+    document.getElementById('a-next-btn').classList.toggle('hidden', aCurrentStep === total-1);
+  }
+  function aNextStep(){ if(!aValidaStep()) return; if(aCurrentStep < aStepsOrder.length-1){ aCurrentStep++; aUpdateStep(); } }
+  function aPrevStep(){ if(aCurrentStep>0){ aCurrentStep--; aUpdateStep(); } }
+
+  // ===== Hint dinamico per identificativo =====
+  function onTipoAssetChange(v){
+    const hint = document.getElementById('a-hint-id');
+    if(!hint) return;
+    if(v==='ETF')      hint.textContent = 'Per ETF preferisci l’ISIN (es. IE00B4L5Y983).';
+    else if(v==='Obbligazione') hint.textContent = 'Per obbligazioni usa preferibilmente l’ISIN (es. IT0005433195).';
+    else if(v==='Forex') hint.textContent = 'Formato suggerito: EUR/USD, USD/JPY, ecc.';
+    else if(v==='Criptovaluta') hint.textContent = 'Ticker o nome (es. BTC, ETH, Solana).';
+    else hint.textContent = 'Per ETF preferisci l’ISIN per evitare omonimie.';
+  }
+
+  // ===== Validazione per step =====
+  function aValidaStep(){
+    const key = aStepsOrder[aCurrentStep];
+    const el = document.querySelector(`#modal-asset .a-step[data-astep="${key}"]`);
+    let ok = true;
+
+    if(el){
+      el.querySelectorAll('select[required], input[required]').forEach(inp=>{
+        if(!inp.value){ ok=false; inp.classList.add('ring-2','ring-red-400'); }
+        else { inp.classList.remove('ring-2','ring-red-400'); }
+      });
+    }
+    if(!ok){ el && el.scrollIntoView({behavior:'smooth', block:'start'}); }
+
+    // Step Finalità: richiedi almeno una voce
+    if(key === 1){
+      const anyFin = document.querySelectorAll('#modal-asset input[name="finalita"]:checked').length > 0;
+      if(!anyFin){
+        ok = false;
+        alert("Seleziona almeno una finalità d'uso (LT, CFD, Opzioni, Futures, Hedging o Completa).");
+      }
+    }
+    return ok;
+  }
+
+  // ===== Payload builder (JSON equivalente allo schema) =====
+  function buildAssetPayload(){
+    const fd = new FormData(document.getElementById('form-asset'));
+    const finalita = Array.from(document.querySelectorAll('#modal-asset input[name="finalita"]:checked')).map(x=>x.value);
+
+    const Analisi_Asset = {
+      identificazione: {
+        tipo:          { valore: fd.get('tipo_asset') || null },
+        identificativo:{ valore: (fd.get('identificativo')||'').trim() || null },
+        mercato:       { valore: (fd.get('mercato')||'').trim() || null },
+        valuta:        { valore: fd.get('valuta') || 'Auto' }
+      },
+      richiesta: {
+        finalita: { valore: finalita },
+        note:     { valore: (fd.get('note')||'').trim() || null }
+      }
+    };
+
+    return {
+      servizio: 'analisi_asset',
+      Analisi_Asset,
+      recapiti: {
+        email:    (fd.get('a_email')||'').trim() || null,
+        whatsapp: (fd.get('a_whatsapp')||'').trim() || null
+      }
+    };
+  }
+
+  // ===== Anteprima auto (debounced) =====
+  function aRenderPayload(){
+    const pre = document.getElementById('a-payload');
+    if(!pre) return;
+    pre.textContent = JSON.stringify(buildAssetPayload(), null, 2);
+  }
+  const __aDebounce = (fn, ms=300)=>{ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,args), ms); }; };
+  (function(){
+    const f = document.getElementById('form-asset');
+    if(!f) return;
+    const auto = __aDebounce(aRenderPayload, 200);
+    f.addEventListener('input', auto);
+    f.addEventListener('change', auto);
+  })();
+
+  // ===== INVIO =====
+  async function inviaAnalisiAsset(){
+    // Recapiti: almeno uno
+    const email = document.querySelector('#form-asset [name="a_email"]')?.value.trim();
+    const wa    = document.querySelector('#form-asset [name="a_whatsapp"]')?.value.trim();
+    if(!email && !wa){ alert('Indica almeno un recapito (Email o WhatsApp).'); return; }
+
+    // Disclaimer forte
+    const disclaimer = `NOTA BENE
+
+L'analisi AI è uno strumento didattico per confrontare le tue idee.
+Non è consulenza e non ha validazione professionale.
+Potrebbe contenere errori o ragionamenti incompleti.
+Non affidarti mai a nessuna AI per prendere decisioni di investimento.
+
+Vuoi procedere inviando i dati?`;
+    if(!confirm(disclaimer)) return;
+
+    // Validazione step correnti
+    for(let i=0;i<aStepsOrder.length;i++){
+      aCurrentStep = i; if(!aValidaStep()) { aUpdateStep(); return; }
+    }
+
+    const payload = buildAssetPayload();
+    aRenderPayload();
+
+    try{
+      const res = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      alert('✅ Richiesta inviata correttamente.');
+      chiudiModuloAsset();
+    }catch(err){
+      console.error(err);
+      alert('❌ Errore durante l\'invio. Riprova.');
+    }
+  }
+</script>
+
+<!-- MODALE – DOMANDA LIBERA (privacy-first, multi-step, fetch /api/send-email) -->
+<div id="modal-domanda" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
+  <div class="bg-white w-full max-w-4xl mx-auto rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[92vh]" role="dialog" aria-modal="true" aria-labelledby="q-title">
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
+      <div class="flex items-center gap-3">
+        <i data-lucide="message-square" class="w-6 h-6 text-blue-700"></i>
+        <h3 id="q-title" class="text-lg font-semibold text-slate-900">Domanda Libera – Tradelia AI</h3>
+      </div>
+      <button onclick="chiudiModuloDomanda()" class="text-slate-500 hover:text-red-500" aria-label="Chiudi">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="px-6 pt-4">
+      <div class="flex items-center gap-2 text-xs text-slate-600 mb-2">
+        <span id="q-progress-label">Step 1 di 3</span>
+        <span class="ml-auto">* campi obbligatori</span>
+      </div>
+      <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+        <div id="q-progress-bar" class="h-2 bg-blue-700 w-[33%] transition-all"></div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <form id="form-domanda" class="p-6 md:p-8 overflow-y-auto flex-1 space-y-10 leading-relaxed" onsubmit="event.preventDefault(); inviaDomandaLibera();">
+
+      <!-- STEP Q0 – Tema & contesto -->
+      <section class="q-step" data-qstep="0">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">1) Tema & contesto</h4>
+        <p class="text-xs text-slate-500 mb-4">Seleziona l’area generale della tua domanda. Niente dati sensibili, usa termini generici.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <label>Argomento principale *
+            <select name="q_argomento" class="w-full border rounded px-3 py-2" required>
+              <option value="">Seleziona</option>
+              <option>Macro & ciclo</option>
+              <option>Strategie & asset allocation</option>
+              <option>Rischi & stress test</option>
+              <option>Regolatorio / normativa</option>
+              <option>Strumenti & prodotti (ETF, bond, derivati)</option>
+              <option>Altro</option>
+            </select>
+          </label>
+
+          <label>Riferimento (facoltativo)
+            <input name="q_riferimento" class="w-full border rounded px-3 py-2" placeholder="Es. S&P 500, BTP 2030, EUR/USD, ETF EIMI, settore energy">
+            <span class="text-[11px] text-slate-500">Un asset/mercato/settore collegato alla domanda (opzionale).</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP Q1 – Domanda & finalità d’uso -->
+      <section class="q-step hidden" data-qstep="1">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">2) Domanda & finalità d’uso</h4>
+
+        <label>Scrivi la tua domanda *
+          <textarea name="q_domanda" rows="5" class="w-full border rounded px-3 py-2" required
+            placeholder="Esempi: come valutare il rischio tasso su un portafoglio 60/40 nei prossimi 12 mesi?; quali driver fondamentali contano oggi per AAPL?; quali alternative all’hedging con futures su Eurostoxx?"></textarea>
+          <span class="text-[11px] text-slate-500">Suggerimento: spiega in 1–3 frasi cosa vuoi ottenere.</span>
+        </label>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+          <label>Finalità d’uso *
+            <select name="q_finalita" class="w-full border rounded px-3 py-2" required>
+              <option value="">Seleziona</option>
+              <option>Informativa (capire il tema)</option>
+              <option>Validazione idea</option>
+              <option>Tesi vs antitesi (pro & contro)</option>
+              <option>Operatività (CFD/Opzioni/Futures)</option>
+              <option>Altro</option>
+            </select>
+            <span class="text-[11px] text-slate-500">Guida il motore nella scelta dei blocchi di analisi.</span>
+          </label>
+
+          <label>Note (facoltativo)
+            <input name="q_note" class="w-full border rounded px-3 py-2" placeholder="Es. focus news/regolatorio; confronta con ETF simili; ipotesi di copertura…">
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP Q2 – Recapiti & invio -->
+      <section class="q-step hidden" data-qstep="2">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">3) Recapiti & invio</h4>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <label>Email (facoltativo)
+            <input type="email" name="q_email" class="w-full border rounded px-3 py-2" placeholder="you@example.com">
+          </label>
+          <label>WhatsApp (facoltativo)
+            <input type="text" name="q_whatsapp" class="w-full border rounded px-3 py-2" placeholder="+39...">
+          </label>
+        </div>
+        <p class="text-xs text-slate-500 mt-1">Indica almeno un recapito. I dati sono <strong>minimizzati</strong> (solo campi valorizzati).</p>
+
+        <details class="mt-3 border rounded p-3">
+          <summary class="cursor-pointer text-sm font-medium">Anteprima (riepilogo tecnico per l’AI)</summary>
+          <p class="text-xs text-slate-500 mb-2">Vista tecnica del contenuto che invieremo al motore AI (JSON equivalente allo schema). Serve a verificare cosa stai condividendo.</p>
+          <pre id="q-payload" class="text-xs bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto"></pre>
+        </details>
+      </section>
+
+    </form>
+
+    <!-- FOOTER NAV -->
+    <div class="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+      <button type="button" class="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-100" onclick="qPrevStep()">Indietro</button>
+      <div class="flex items-center gap-3">
+        <button id="q-submit-btn" class="px-4 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-800 hidden" onclick="inviaDomandaLibera()">Invia</button>
+        <button id="q-next-btn" type="button" class="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800" onclick="qNextStep()">Avanti</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  /* Touch-friendly inputs su mobile */
+  @media (max-width: 640px){
+    #modal-domanda select,
+    #modal-domanda input,
+    #modal-domanda textarea{ min-height:44px; font-size:16px; }
+  }
+</style>
+
+<script>
+  // ===== Apertura/chiusura modale (lock body scroll) =====
+  const __qLockScroll = () => document.body.classList.add('overflow-hidden');
+  const __qUnlockScroll = () => document.body.classList.remove('overflow-hidden');
+
+  function apriModuloDomanda(){
+    const modal = document.getElementById('modal-domanda');
+    modal.classList.remove('hidden');
+    __qLockScroll();
+    if(window.lucide) lucide.createIcons();
+    // reset
+    const f = document.getElementById('form-domanda');
+    f.reset();
+    qCurrentStep = 0; qStepsOrder = [0,1,2];
+    qUpdateStep();
+    qRenderPayload();
+  }
+  function chiudiModuloDomanda(){
+    document.getElementById('modal-domanda').classList.add('hidden');
+    __qUnlockScroll();
+  }
+
+  // ===== Navigazione step =====
+  let qStepsOrder = [0,1,2];
+  let qCurrentStep = 0;
+
+  function qShowStep(i){
+    document.querySelectorAll('#modal-domanda .q-step').forEach(s=>s.classList.add('hidden'));
+    const el = document.querySelector(`#modal-domanda .q-step[data-qstep="${qStepsOrder[i]}"]`);
+    if(el) el.classList.remove('hidden');
+  }
+  function qUpdateStep(){
+    qShowStep(qCurrentStep);
+    const total = qStepsOrder.length;
+    document.getElementById('q-progress-label').textContent = `Step ${qCurrentStep+1} di ${total}`;
+    document.getElementById('q-progress-bar').style.width = `${Math.round(((qCurrentStep+1)/total)*100)}%`;
+    document.getElementById('q-submit-btn').classList.toggle('hidden', qCurrentStep !== total-1);
+    document.getElementById('q-next-btn').classList.toggle('hidden', qCurrentStep === total-1);
+  }
+  function qNextStep(){ if(!qValidaStep()) return; if(qCurrentStep < qStepsOrder.length-1){ qCurrentStep++; qUpdateStep(); } }
+  function qPrevStep(){ if(qCurrentStep>0){ qCurrentStep--; qUpdateStep(); } }
+
+  // ===== Validazione per step =====
+  function qValidaStep(){
+    const key = qStepsOrder[qCurrentStep];
+    const el = document.querySelector(`#modal-domanda .q-step[data-qstep="${key}"]`);
+    let ok = true;
+
+    if(el){
+      el.querySelectorAll('select[required], input[required], textarea[required]').forEach(inp=>{
+        if(!inp.value){ ok=false; inp.classList.add('ring-2','ring-red-400'); }
+        else { inp.classList.remove('ring-2','ring-red-400'); }
+      });
+      if(key===1){
+        const domanda = (el.querySelector('[name="q_domanda"]')?.value || '').trim();
+        if(domanda.length < 10){ ok=false; alert('Scrivi una domanda un po’ più dettagliata (almeno 10 caratteri).'); }
+      }
+    }
+    if(!ok){ el && el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    return ok;
+  }
+
+  // ===== Payload builder =====
+  function buildQuestionPayload(){
+    const fd = new FormData(document.getElementById('form-domanda'));
+    const Richiesta = {
+      argomento:    { valore: fd.get('q_argomento') || null },
+      riferimento:  { valore: (fd.get('q_riferimento')||'').trim() || null },
+      domanda:      { valore: (fd.get('q_domanda')||'').trim() || null },
+      finalita:     { valore: fd.get('q_finalita') || null },
+      note:         { valore: (fd.get('q_note')||'').trim() || null }
+    };
+    return {
+      servizio: 'domanda_libera',
+      Richiesta,
+      recapiti: {
+        email:    (fd.get('q_email')||'').trim() || null,
+        whatsapp: (fd.get('q_whatsapp')||'').trim() || null
+      }
+    };
+  }
+
+  // ===== Anteprima auto (debounced) =====
+  function qRenderPayload(){
+    const pre = document.getElementById('q-payload');
+    if(!pre) return;
+    pre.textContent = JSON.stringify(buildQuestionPayload(), null, 2);
+  }
+  const __qDebounce = (fn, ms=250)=>{ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,args), ms); }; };
+  (function(){
+    const f = document.getElementById('form-domanda');
+    if(!f) return;
+    const auto = __qDebounce(qRenderPayload, 200);
+    f.addEventListener('input', auto);
+    f.addEventListener('change', auto);
+  })();
+
+  // ===== INVIO =====
+  async function inviaDomandaLibera(){
+    // Recapiti minimi
+    const email = document.querySelector('#form-domanda [name="q_email"]')?.value.trim();
+    const wa    = document.querySelector('#form-domanda [name="q_whatsapp"]')?.value.trim();
+    if(!email && !wa){ alert('Indica almeno un recapito (Email o WhatsApp).'); return; }
+
+    // Disclaimer forte
+    const disclaimer = `NOTA BENE
+
+L'analisi AI è uno strumento didattico per confrontare le tue idee.
+Non è consulenza e non ha validazione professionale.
+Potrebbe contenere errori o ragionamenti incompleti.
+Non affidarti mai a nessuna AI per prendere decisioni di investimento.
+
+Vuoi procedere inviando i dati?`;
+    if(!confirm(disclaimer)) return;
+
+    // Validazione step correnti
+    for(let i=0;i<qStepsOrder.length;i++){
+      qCurrentStep = i; if(!qValidaStep()) { qUpdateStep(); return; }
+    }
+
+    const payload = buildQuestionPayload();
+    qRenderPayload();
+
+    try{
+      const res = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      alert('✅ Richiesta inviata correttamente.');
+      chiudiModuloDomanda();
+    }catch(err){
+      console.error(err);
+      alert('❌ Errore durante l\'invio. Riprova.');
+    }
+  }
+</script>
+
+<!-- MAIN -->
+<main class="container">
+  <!-- Contenuto principale della homepage -->
+  
+  <!-- Link alla pagina broker -->
+  <section class="bg-slate-50 py-16 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+      <h2 class="text-2xl font-bold text-slate-900 mb-4">Broker Regolamentati</h2>
+      <p class="text-lg text-slate-700 max-w-2xl mx-auto mb-8">
+        Selezione curata da <strong>Tradelia AI</strong> con focus su <strong>strumenti reali</strong> (azioni, ETF, obbligazioni, derivati quotati).
+        <span class="font-semibold text-amber-700">Se un broker offre anche CFD, lo includiamo esclusivamente per la componente di strumenti diretti.</span>
+      </p>
+      <a href="/brokers.html" class="inline-block bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 font-medium">
+        Vedi tutti i broker →
+      </a>
+    </div>
+  </section>
+</main>
+
+<!-- Cookie & Legal helpers (fix: racchiusi in <script>) -->
+<script>
+  function chiudiPopupCookie() {
+    const popup = document.getElementById('cookie-popup');
+    if (popup) {
+      popup.style.display = 'none';
+    }
+  }
+</script>
+
+<!-- Cookie & Legal helpers (fix: racchiusi in <script>) -->
+<script>
+  function chiudiPopupCookie() {
+    localStorage.setItem("tradelia_cookie_consent", "true");
+    const popup = document.getElementById("cookie-popup");
+    if (popup) popup.style.display = "none";
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const consento = localStorage.getItem("tradelia_cookie_consent");
+    if (consento === "true") {
+      const popup = document.getElementById("cookie-popup");
+      if (popup) popup.style.display = "none";
+    }
+  });
+
+  // Funzione usata nel footer
+  function apriSezioneLegale(id) {
+    const el = document.getElementById(id);
+    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    const map = {
+      'section-tc': '/legal/termini.html#section-tc',
+      'section-privacy': '/legal/privacy.html#section-privacy'
+    };
+    window.location.href = map[id] || '/legal/';
+  }
+</script>
+
+<!-- FOOTER -->
+
+<!-- Cookie & Legal helpers (fix: racchiusi in <script>) -->
+<script>
+  function chiudiPopupCookie() {
+    localStorage.setItem("tradelia_cookie_consent", "true");
+    const popup = document.getElementById("cookie-popup");
+    if (popup) popup.style.display = "none";
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const consento = localStorage.getItem("tradelia_cookie_consent");
+    if (consento === "true") {
+      const popup = document.getElementById("cookie-popup");
+      if (popup) popup.style.display = "none";
+    }
+  });
+
+  // Funzione usata nel footer
+  function apriSezioneLegale(id) {
+    const el = document.getElementById(id);
+    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    const map = {
+      'section-tc': '/legal/termini.html#section-tc',
+      'section-privacy': '/legal/privacy.html#section-privacy'
+    };
+    window.location.href = map[id] || '/legal/';
+  }
+</script>
+
+  <!-- FOOTER -->
+  <footer class="site-footer mt-auto py-10">
+    <div class="container">
+      <section class="ftr-grid">
+        <!-- Col 1 -->
+        <div class="ftr-col">
+          <h3 class="ftr-head">
+            <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 3h16v18H4z"/><path d="M8 7h8M8 11h8M8 15h6"/>
+            </svg>
+            <span>Tradelia AI</span>
+          </h3>
+          <p>
+            Analisi multi-fattore su contesto macro, sentiment e tecnica (orizzonte 3–10 giorni).<br/>
+            Materiale esclusivamente informativo e formativo — nessuna raccomandazione personalizzata.
+          </p>
+        </div>
+
+        <!-- Col 2 -->
+        <div class="ftr-col">
+          <h3 class="ftr-head">
+            <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2l7 4v6c0 5-3 8-7 10C8 20 5 17 5 12V6l7-4z"/><path d="M12 8v4"/>
+            </svg>
+            <span>Compliance &amp; Risk</span>
+          </h3>
+          <ul class="ftr-list">
+            <li>Non è consulenza (MiFID II / ESMA)</li>
+            <li>Tradelia AI non gestisce capitali né esegue ordini</li>
+            <li>Rischio di perdita anche totale del capitale</li>
+          </ul>
+          <div class="mt-3 flex flex-wrap gap-4">
+            <button id="btn-privacy-open" class="btn btn-sm" type="button">Privacy</button>
+            <button id="btn-mifid-open" class="btn btn-sm" type="button">Informativa MiFID</button>
+          </div>
+        </div>
+
+        <!-- Col 3 -->
+        <div class="ftr-col">
+          <h3 class="ftr-head">
+            <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 12h16"/><path d="M12 4l8 8-8 8"/>
+            </svg>
+            <span>Canali ufficiali</span>
+          </h3>
+          <p class="mb-2">Aggiornamenti su metodologia e release:</p>
+          <div class="ftr-socials flex flex-col gap-2">
+            <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener" aria-label="LinkedIn">LinkedIn</a>
+            <a href="https://x.com/tradelia_ai" target="_blank" rel="noopener" aria-label="X (Twitter)">X (Twitter)</a>
+            <a href="https://www.reddit.com/r/TradeliaAI" target="_blank" rel="noopener" aria-label="Reddit">Reddit</a>
+            <a href="https://www.quora.com" target="_blank" rel="noopener" aria-label="Quora">Quora</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bottom line -->
+      <div class="ftr-bottom">
+        <div>
+          <div class="flex flex-wrap items-center gap-3 mb-2">
+            <a href="/index.html" class="text-sm text-slate-600 hover:text-slate-900">Home</a>
+            <span class="text-slate-400">·</span>
+            <a href="https://www.tradelia.org/brokers.html" class="text-sm text-slate-600 hover:text-slate-900">Brokers</a>
+            <span class="text-slate-400">·</span>
+            <a href="/archivio" class="text-sm text-slate-600 hover:text-slate-900">Archivio</a>
+          </div>
+          © <span id="footer-year"></span>
+          <span class="brand brand--sm">
+            <span class="brand-word">Tradelia</span>
+            <span class="brand-dot" aria-hidden="true"></span>
+            <span class="brand-suffix">AI</span>
+          </span>
+          · Tutti i diritti riservati ·
+          <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>
+        </div>
+        <div>Missione: alfabetizzazione finanziaria indipendente.</div>
       </div>
     </div>
   </footer>
 
-  <!-- LEGAL CONSENT OVERLAY (MiFID + Privacy) -->
-  <div id="legal-consent-overlay" class="noprint" role="dialog" aria-modal="true" aria-labelledby="legal-consent-title" hidden>
-    <div class="legal-backdrop" data-legal-dismiss></div>
-    <div class="legal-panel" role="document">
-      <header class="legal-hdr">
-        <div class="legal-title" id="legal-consent-title">Informativa legale</div>
-        <button class="btn-inline legal-close" type="button" data-legal-dismiss aria-label="Chiudi">Chiudi</button>
-      </header>
-      <nav class="legal-tabs" role="tablist" aria-label="Sezioni legali">
-        <button class="legal-tab" role="tab" id="tab-mifid" aria-controls="panel-mifid" aria-selected="true">Informativa MiFID</button>
-        <button class="legal-tab" role="tab" id="tab-privacy" aria-controls="panel-privacy" aria-selected="false">Privacy</button>
-      </nav>
-      <div class="legal-body">
-        <!-- MIFID -->
-        <section id="panel-mifid" role="tabpanel" aria-labelledby="tab-mifid">
-          <h4>Finalità del materiale</h4>
-          <p>Il presente contenuto ha esclusiva finalità informativa e didattica. Non costituisce consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa MiFID II / ESMA.</p>
-          <h4>Orizzonte e perimetro</h4>
-          <p>I moduli (F1–F7) coprono analisi top-down (macro, sentiment, tecnica) con orizzonte indicativo 3–10 giorni. Non viene svolta verifica di adeguatezza/appropriatezza, profilo di rischio o obiettivi finanziari dell'utente.</p>
-          <h4>Rischi</h4>
-          <ul>
-            <li>I mercati finanziari comportano rischio di perdita, anche totale, del capitale.</li>
-            <li>Prodotti a leva/derivati (opzioni, futures, CFD) possono amplificare perdite oltre il capitale iniziale.</li>
-            <li>Rendimenti passati non sono indicativi di risultati futuri.</li>
-          </ul>
-          <h4>Dati e fonti</h4>
-          <ul>
-            <li>Dati e serie storiche possono essere soggetti a ritardi, revisioni o errori; i timestamp potrebbero non riflettere il "tempo reale".</li>
-            <li>Le fonti includono provider ritenuti affidabili; non si garantisce esattezza/completezza.</li>
-          </ul>
-          <h4>Conflitti e indipendenza</h4>
-          <ul>
-            <li>Tradelia AI è indipendente: non esegue ordini e non gestisce capitali.</li>
-            <li>Non sono note situazioni di conflitto d'interesse rilevanti nella produzione del materiale.</li>
-          </ul>
-          <h4>Limitazioni</h4>
-          <ul>
-            <li>Le informazioni non sostituiscono il giudizio dell'utente né la consulenza di un intermediario autorizzato.</li>
-            <li>L'uso è vietato laddove non conforme alle leggi locali.</li>
-          </ul>
-        </section>
-        <!-- PRIVACY -->
-        <section id="panel-privacy" role="tabpanel" aria-labelledby="tab-privacy" hidden>
-          <h4>Principi</h4>
-          <p>Adottiamo un'impostazione "privacy-first": minimizzazione dei dati e assenza di tracciamento pubblicitario.</p>
-          <h4>Dati trattati</h4>
-          <ul>
-            <li>Nessuna raccolta di dati personali identificativi tramite questa pagina.</li>
-            <li>Uso di <code>localStorage</code> per preferenze (tema) e consenso legale.</li>
-            <li>Eventuali log tecnici anonimi per sicurezza e diagnostica.</li>
-          </ul>
-          <h4>Cookie e analytics</h4>
-          <ul>
-            <li>Niente cookie di profilazione; eventuali analytics sono anonimizzati/aggregati.</li>
-            <li>Nessuna condivisione con terze parti a fini commerciali.</li>
-          </ul>
-          <h4>Diritti e contatti</h4>
-          <ul>
-            <li>Per informazioni o esercizio diritti privacy, scrivi a <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>.</li>
-            <li>Il titolare potrà aggiornare questa informativa: controlla periodicamente le revisioni.</li>
-          </ul>
-        </section>
-      </div>
-      <footer class="legal-ftr">
-        <small class="text-[12px] text-[color:var(--muted)]">Continuando dichiari di aver letto e compreso le informative.</small>
-        <div class="flex items-center gap-2">
-          <button class="btn-inline legal-btn" type="button" id="btn-accept-legal">Accetto e chiudi</button>
-        </div>
-      </footer>
-    </div>
-  </div>
-
-  <!-- Runtime -->
-  <script type="module" src="/report/assets/js/ui-runtime.js"></script>
-  <script type="module" src="/report/assets/js/app.js"></script>
-  <script>
-    (function(){
-      // ===== Dark theme permanente =====
-      document.documentElement.setAttribute('data-theme', 'dark');
-
-      // ===== Footer year =====
-      const fy = document.getElementById('footer-year');
-      if (fy) fy.textContent = new Date().getFullYear();
-
-      // ===== Legal overlay (MiFID + Privacy) =====
-      const KEY = 'tradelia-legal-ack-v2025-11'; // <— versiona per riforzare consenso
-      const overlay = document.getElementById('legal-consent-overlay');
-      const btnAccept = document.getElementById('btn-accept-legal');
-      const tabM = document.getElementById('tab-mifid');
-      const tabP = document.getElementById('tab-privacy');
-      const panelM = document.getElementById('panel-mifid');
-      const panelP = document.getElementById('panel-privacy');
-      
-      function showTab(which){
-        const mifid = (which === 'mifid');
-        tabM.setAttribute('aria-selected', mifid ? 'true' : 'false');
-        tabP.setAttribute('aria-selected', mifid ? 'false' : 'true');
-        panelM.hidden = !mifid;
-        panelP.hidden = mifid;
-      }
-      
-      function openLegal(which='mifid', blocking=true){
-        showTab(which);
-        overlay.hidden = false;
-        document.body.style.overflow = 'hidden';
-        if (blocking) overlay.setAttribute('data-blocking','true');
-        else overlay.removeAttribute('data-blocking');
-        setTimeout(()=> (which === 'privacy' ? tabP : tabM).focus(), 0);
-      }
-      
-      function closeLegal(){
-        overlay.hidden = true;
-        document.body.style.overflow = '';
-      }
-      
-      tabM.addEventListener('click', ()=> showTab('mifid'));
-      tabP.addEventListener('click', ()=> showTab('privacy'));
-      
-      btnAccept.addEventListener('click', ()=>{
-        try {
-          localStorage.setItem(KEY, JSON.stringify({ acceptedAt: new Date().toISOString(), v: '2025-11' }));
-        } catch(e){}
-        closeLegal();
-      });
-      
-      overlay.addEventListener('click', (e)=>{
-        if (e.target.matches('[data-legal-dismiss]') || e.target.closest('[data-legal-dismiss]')){
-          if (!overlay.hasAttribute('data-blocking')) closeLegal();
-        }
-      });
-      
-      document.addEventListener('keydown', (e)=>{
-        if (e.key === 'Escape' && !overlay.hasAttribute('data-blocking')) closeLegal();
-      });
-      
-      // Footer buttons open (non-bloccante)
-      document.getElementById('btn-privacy-open')?.addEventListener('click', ()=> openLegal('privacy', false));
-      document.getElementById('btn-mifid-open')?.addEventListener('click', ()=> openLegal('mifid', false));
-      
-      // Primo accesso → blocca finché non accetta
-      let ack = null;
-      try {
-        ack = JSON.parse(localStorage.getItem(KEY) || 'null');
-      } catch(e){}
-      if (!ack) openLegal('mifid', true);
-    })();
-  </script>
 </body>
 </html>
-
