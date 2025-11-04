@@ -234,15 +234,10 @@
 
 <section class="bg-gradient-to-br from-white via-slate-50 to-white border-b border-slate-200 relative overflow-hidden">
   <div class="max-w-7xl mx-auto px-6 lg:px-8 py-12 lg:py-20 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-
-    <!-- Immagine mobile sopra -->
-    <div class="order-1 lg:order-2">
-      <div class="parallax-hero rounded-lg shadow-lg border border-slate-200 h-64 sm:h-80 lg:h-96" style="background-image: url('./img/hero-institutional.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>
-    </div>
-
+    
     <!-- Testo -->
-    <div class="order-2 lg:order-1">
-      <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-4 leading-tight min-h-[56px]">
+    <div>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 leading-tight min-h-[56px]">
         <span id="hero-typing"></span>
       </h1>
       <p class="text-base sm:text-lg text-slate-700 mb-6 sm:mb-8 leading-relaxed">
@@ -267,6 +262,19 @@
         </div>
       </div>
     </div>
+
+    <!-- Immagine hero -->
+    <div class="order-first lg:order-last">
+      <div class="rounded-xl shadow-xl border border-slate-200 overflow-hidden">
+        <img 
+          src="/img/hero-institutional.jpg" 
+          alt="Tradelia AI - Analisi Istituzionale" 
+          class="w-full h-auto object-cover"
+          style="min-height: 400px; display: block;"
+          onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=&quot;bg-slate-200 rounded-xl h-96 flex items-center justify-center&quot;><p class=&quot;text-slate-500&quot;>Immagine non disponibile</p></div>';"
+        />
+      </div>
+    </div>
   </div>
 
   <!-- Disclaimer -->
@@ -278,23 +286,6 @@
   </div>
 </section>
 
-<!-- PARALLAX SOLO DESKTOP -->
-<style>
-  .parallax-hero {
-    min-height: 256px;
-  }
-  @media (min-width: 768px) {
-    .parallax-hero {
-      background-attachment: fixed !important;
-    }
-  }
-  /* Su mobile, scroll normale */
-  @media (max-width: 767px) {
-    .parallax-hero {
-      background-attachment: scroll !important;
-    }
-  }
-</style>
 
 <!-- SCRIPT ICONS + TYPING -->
 <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
@@ -1687,3 +1678,739 @@ Vuoi procedere inviando i dati?`;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+<!-- MODALE – ANALISI ASSET (privacy-first, finalità d’uso only, fetch /api/send-email) -->
+<div id="modal-asset" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
+  <div class="bg-white w-full max-w-4xl mx-auto rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[92vh]" role="dialog" aria-modal="true" aria-labelledby="asset-title">
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
+      <div class="flex items-center gap-3">
+        <i data-lucide="search" class="w-6 h-6 text-blue-700"></i>
+        <h3 id="asset-title" class="text-lg font-semibold text-slate-900">Analisi AI – Asset singolo</h3>
+      </div>
+      <button onclick="chiudiModuloAsset()" class="text-slate-500 hover:text-red-500" aria-label="Chiudi">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="px-6 pt-4">
+      <div class="flex items-center gap-2 text-xs text-slate-600 mb-2">
+        <span id="a-progress-label">Step 1 di 3</span>
+        <span class="ml-auto">* campi obbligatori</span>
+      </div>
+      <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+        <div id="a-progress-bar" class="h-2 bg-blue-700 w-[33%] transition-all"></div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <form id="form-asset" class="p-6 md:p-8 overflow-y-auto flex-1 space-y-10 leading-relaxed" onsubmit="event.preventDefault(); inviaAnalisiAsset();">
+
+      <!-- STEP A0 – Identificazione -->
+      <section class="a-step" data-astep="0">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">1) Identificazione asset</h4>
+        <p class="text-xs text-slate-500 mb-4">Bastano poche info. Usa <strong>sigle standard</strong> e <strong>fasce</strong> (privacy-first).</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <label>Tipologia *
+            <select name="tipo_asset" class="w-full border rounded px-3 py-2" required onchange="onTipoAssetChange(this.value)">
+              <option value="">Seleziona</option>
+              <option>Azione</option>
+              <option>ETF</option>
+              <option>Obbligazione</option>
+              <option>Commodity</option>
+              <option>Forex</option>
+              <option>Criptovaluta</option>
+              <option>Altro</option>
+            </select>
+          </label>
+
+          <label>Identificativo (ticker / ISIN / nome) *
+            <input name="identificativo" class="w-full border rounded px-3 py-2" required placeholder="Es. AAPL | IE00B4L5Y983 | Tesla | EUR/USD | BTC" />
+            <span id="a-hint-id" class="text-[11px] text-slate-500">Per ETF preferisci l’<strong>ISIN</strong> per evitare omonimie.</span>
+          </label>
+
+          <label>Mercato / Borsa (facoltativo)
+            <input name="mercato" class="w-full border rounded px-3 py-2" placeholder="Es. NASDAQ, XETRA, Borsa Italiana, CME" />
+          </label>
+
+          <label>Valuta quotazione (facoltativo)
+            <select name="valuta" class="w-full border rounded px-3 py-2">
+              <option>Auto</option><option>EUR</option><option>USD</option><option>GBP</option><option>CHF</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP A1 – Finalità d’uso -->
+      <section class="a-step hidden" data-astep="1">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">2) Finalità d’uso</h4>
+        <p class="text-[11px] text-slate-500 mb-3">
+          Scegli lo scopo dell’analisi. Il motore deciderà automaticamente quali blocchi applicare
+          (fondamentale, tecnica, macro, news, valutazione…).
+        </p>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Investimento lungo termine" class="accent-blue-700">Investimento lungo termine (Buy & Hold)</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Educazione finanziaria AI" class="accent-blue-700">Educazione finanziaria AI modellata per conformità MiFID II</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Speculazione CFD" class="accent-blue-700">Speculazione CFD</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Opzioni" class="accent-blue-700">Opzioni</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Futures" class="accent-blue-700">Futures</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Hedging" class="accent-blue-700">Hedging (copertura rischio)</label>
+          <label class="inline-flex items-center gap-2 md:col-span-2"><input type="checkbox" name="finalita" value="Analisi completa" class="accent-blue-700">Analisi completa (tutte le dimensioni)</label>
+        </div>
+
+        <label class="block mt-4">Domande o note (facoltativo)
+          <textarea name="note" rows="3" class="w-full border rounded px-3 py-2" placeholder="Esempi: CFD solo su indici; covered call; futures per hedging; richiesta DCF; news/regolatorio; confronto peer."></textarea>
+        </label>
+      </section>
+
+      <!-- STEP A2 – Recapiti & invio (senza visibilità report) -->
+      <section class="a-step hidden" data-astep="2">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">3) Recapiti & invio</h4>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <label>Email (facoltativo)
+            <input type="email" name="a_email" class="w-full border rounded px-3 py-2" placeholder="you@example.com">
+          </label>
+          <label>WhatsApp (facoltativo)
+            <input type="text" name="a_whatsapp" class="w-full border rounded px-3 py-2" placeholder="+39...">
+          </label>
+        </div>
+        <p class="text-xs text-slate-500 mt-1">Indica almeno un recapito. I dati sono <strong>minimizzati</strong> (solo campi valorizzati).</p>
+
+        <details class="mt-3 border rounded p-3">
+          <summary class="cursor-pointer text-sm font-medium">Anteprima (riepilogo tecnico per l’AI)</summary>
+          <p class="text-xs text-slate-500 mb-2">Vista tecnica del contenuto che invieremo al motore AI (JSON equivalente allo schema). Serve a verificare cosa stai condividendo.</p>
+          <pre id="a-payload" class="text-xs bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto"></pre>
+        </details>
+      </section>
+
+    </form>
+
+    <!-- FOOTER NAV -->
+    <div class="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+      <button type="button" class="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-100" onclick="aPrevStep()">Indietro</button>
+      <div class="flex items-center gap-3">
+        <button id="a-submit-btn" class="px-4 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-800 hidden" onclick="inviaAnalisiAsset()">Invia</button>
+        <button id="a-next-btn" type="button" class="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800" onclick="aNextStep()">Avanti</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ===== Apertura/chiusura modale (lock body scroll) =====
+  const __aLockScroll = () => document.body.classList.add('overflow-hidden');
+  const __aUnlockScroll = () => document.body.classList.remove('overflow-hidden');
+
+  function apriModuloAsset(){
+    const modal = document.getElementById('modal-asset');
+    modal.classList.remove('hidden');
+    __aLockScroll();
+    if(window.lucide) lucide.createIcons();
+    // reset
+    const f = document.getElementById('form-asset');
+    f.reset();
+    aCurrentStep = 0; aStepsOrder = [0,1,2];
+    aUpdateStep();
+    aRenderPayload();
+  }
+  function chiudiModuloAsset(){
+    document.getElementById('modal-asset').classList.add('hidden');
+    __aUnlockScroll();
+  }
+
+  // ===== Navigazione step =====
+  let aStepsOrder = [0,1,2];
+  let aCurrentStep = 0;
+
+  function aShowStep(i){
+    document.querySelectorAll('#modal-asset .a-step').forEach(s=>s.classList.add('hidden'));
+    const selector = `#modal-asset .a-step[data-astep="${aStepsOrder[i]}"]`;
+    const el = document.querySelector(selector);
+    if(el) el.classList.remove('hidden');
+  }
+  function aUpdateStep(){
+    aShowStep(aCurrentStep);
+    const total = aStepsOrder.length;
+    document.getElementById('a-progress-label').textContent = `Step ${aCurrentStep+1} di ${total}`;
+    document.getElementById('a-progress-bar').style.width = `${Math.round(((aCurrentStep+1)/total)*100)}%`;
+    document.getElementById('a-submit-btn').classList.toggle('hidden', aCurrentStep !== total-1);
+    document.getElementById('a-next-btn').classList.toggle('hidden', aCurrentStep === total-1);
+  }
+  function aNextStep(){ if(!aValidaStep()) return; if(aCurrentStep < aStepsOrder.length-1){ aCurrentStep++; aUpdateStep(); } }
+  function aPrevStep(){ if(aCurrentStep>0){ aCurrentStep--; aUpdateStep(); } }
+
+  // ===== Hint dinamico per identificativo =====
+  function onTipoAssetChange(v){
+    const hint = document.getElementById('a-hint-id');
+    if(!hint) return;
+    if(v==='ETF')      hint.textContent = 'Per ETF preferisci l’ISIN (es. IE00B4L5Y983).';
+    else if(v==='Obbligazione') hint.textContent = 'Per obbligazioni usa preferibilmente l’ISIN (es. IT0005433195).';
+    else if(v==='Forex') hint.textContent = 'Formato suggerito: EUR/USD, USD/JPY, ecc.';
+    else if(v==='Criptovaluta') hint.textContent = 'Ticker o nome (es. BTC, ETH, Solana).';
+    else hint.textContent = 'Per ETF preferisci l’ISIN per evitare omonimie.';
+  }
+
+  // ===== Validazione per step =====
+  function aValidaStep(){
+    const key = aStepsOrder[aCurrentStep];
+    const el = document.querySelector(`#modal-asset .a-step[data-astep="${key}"]`);
+    let ok = true;
+
+    if(el){
+      el.querySelectorAll('select[required], input[required]').forEach(inp=>{
+        if(!inp.value){ ok=false; inp.classList.add('ring-2','ring-red-400'); }
+        else { inp.classList.remove('ring-2','ring-red-400'); }
+      });
+    }
+    if(!ok){ el && el.scrollIntoView({behavior:'smooth', block:'start'}); }
+
+    // Step Finalità: richiedi almeno una voce
+    if(key === 1){
+      const anyFin = document.querySelectorAll('#modal-asset input[name="finalita"]:checked').length > 0;
+      if(!anyFin){
+        ok = false;
+        alert("Seleziona almeno una finalità d'uso (LT, CFD, Opzioni, Futures, Hedging o Completa).");
+      }
+    }
+    return ok;
+  }
+
+  // ===== Payload builder (JSON equivalente allo schema) =====
+  function buildAssetPayload(){
+    const fd = new FormData(document.getElementById('form-asset'));
+    const finalita = Array.from(document.querySelectorAll('#modal-asset input[name="finalita"]:checked')).map(x=>x.value);
+
+    const Analisi_Asset = {
+      identificazione: {
+        tipo:          { valore: fd.get('tipo_asset') || null },
+        identificativo:{ valore: (fd.get('identificativo')||'').trim() || null },
+        mercato:       { valore: (fd.get('mercato')||'').trim() || null },
+        valuta:        { valore: fd.get('valuta') || 'Auto' }
+      },
+      richiesta: {
+        finalita: { valore: finalita },
+        note:     { valore: (fd.get('note')||'').trim() || null }
+      }
+    };
+
+    return {
+      servizio: 'analisi_asset',
+      Analisi_Asset,
+      recapiti: {
+        email:    (fd.get('a_email')||'').trim() || null,
+        whatsapp: (fd.get('a_whatsapp')||'').trim() || null
+      }
+    };
+  }
+
+  // ===== Anteprima auto (debounced) =====
+  function aRenderPayload(){
+    const pre = document.getElementById('a-payload');
+    if(!pre) return;
+    pre.textContent = JSON.stringify(buildAssetPayload(), null, 2);
+  }
+  const __aDebounce = (fn, ms=300)=>{ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,args), ms); }; };
+  (function(){
+    const f = document.getElementById('form-asset');
+    if(!f) return;
+    const auto = __aDebounce(aRenderPayload, 200);
+    f.addEventListener('input', auto);
+    f.addEventListener('change', auto);
+  })();
+
+  // ===== INVIO =====
+  async function inviaAnalisiAsset(){
+    // Recapiti: almeno uno
+    const email = document.querySelector('#form-asset [name="a_email"]')?.value.trim();
+    const wa    = document.querySelector('#form-asset [name="a_whatsapp"]')?.value.trim();
+    if(!email && !wa){ alert('Indica almeno un recapito (Email o WhatsApp).'); return; }
+
+    // Disclaimer forte
+    const disclaimer = `NOTA BENE
+
+L'analisi AI è uno strumento didattico per confrontare le tue idee.
+Non è consulenza e non ha validazione professionale.
+Potrebbe contenere errori o ragionamenti incompleti.
+Non affidarti mai a nessuna AI per prendere decisioni di investimento.
+
+Vuoi procedere inviando i dati?`;
+    if(!confirm(disclaimer)) return;
+
+    // Validazione step correnti
+    for(let i=0;i<aStepsOrder.length;i++){
+      aCurrentStep = i; if(!aValidaStep()) { aUpdateStep(); return; }
+    }
+
+    const payload = buildAssetPayload();
+    aRenderPayload();
+
+    try{
+      const res = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      alert('✅ Richiesta inviata correttamente.');
+      chiudiModuloAsset();
+    }catch(err){
+      console.error(err);
+      alert('❌ Errore durante l\'invio. Riprova.');
+    }
+  }
+</script>
+
+<!-- MODALE – DOMANDA LIBERA (privacy-first, multi-step, fetch /api/send-email) -->
+<div id="modal-domanda" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
+  <div class="bg-white w-full max-w-4xl mx-auto rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[92vh]" role="dialog" aria-modal="true" aria-labelledby="q-title">
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
+      <div class="flex items-center gap-3">
+        <i data-lucide="message-square" class="w-6 h-6 text-blue-700"></i>
+        <h3 id="q-title" class="text-lg font-semibold text-slate-900">Domanda Libera – Tradelia AI</h3>
+      </div>
+      <button onclick="chiudiModuloDomanda()" class="text-slate-500 hover:text-red-500" aria-label="Chiudi">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="px-6 pt-4">
+      <div class="flex items-center gap-2 text-xs text-slate-600 mb-2">
+        <span id="q-progress-label">Step 1 di 3</span>
+        <span class="ml-auto">* campi obbligatori</span>
+      </div>
+      <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+        <div id="q-progress-bar" class="h-2 bg-blue-700 w-[33%] transition-all"></div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <form id="form-domanda" class="p-6 md:p-8 overflow-y-auto flex-1 space-y-10 leading-relaxed" onsubmit="event.preventDefault(); inviaDomandaLibera();">
+
+      <!-- STEP Q0 – Tema & contesto -->
+      <section class="q-step" data-qstep="0">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">1) Tema & contesto</h4>
+        <p class="text-xs text-slate-500 mb-4">Seleziona l’area generale della tua domanda. Niente dati sensibili, usa termini generici.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <label>Argomento principale *
+            <select name="q_argomento" class="w-full border rounded px-3 py-2" required>
+              <option value="">Seleziona</option>
+              <option>Macro & ciclo</option>
+              <option>Strategie & asset allocation</option>
+              <option>Rischi & stress test</option>
+              <option>Regolatorio / normativa</option>
+              <option>Strumenti & prodotti (ETF, bond, derivati)</option>
+              <option>Altro</option>
+            </select>
+          </label>
+
+          <label>Riferimento (facoltativo)
+            <input name="q_riferimento" class="w-full border rounded px-3 py-2" placeholder="Es. S&P 500, BTP 2030, EUR/USD, ETF EIMI, settore energy">
+            <span class="text-[11px] text-slate-500">Un asset/mercato/settore collegato alla domanda (opzionale).</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP Q1 – Domanda & finalità d’uso -->
+      <section class="q-step hidden" data-qstep="1">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">2) Domanda & finalità d’uso</h4>
+
+        <label>Scrivi la tua domanda *
+          <textarea name="q_domanda" rows="5" class="w-full border rounded px-3 py-2" required
+            placeholder="Esempi: come valutare il rischio tasso su un portafoglio 60/40 nei prossimi 12 mesi?; quali driver fondamentali contano oggi per AAPL?; quali alternative all’hedging con futures su Eurostoxx?"></textarea>
+          <span class="text-[11px] text-slate-500">Suggerimento: spiega in 1–3 frasi cosa vuoi ottenere.</span>
+        </label>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+          <label>Finalità d’uso *
+            <select name="q_finalita" class="w-full border rounded px-3 py-2" required>
+              <option value="">Seleziona</option>
+              <option>Informativa (capire il tema)</option>
+              <option>Validazione idea</option>
+              <option>Tesi vs antitesi (pro & contro)</option>
+              <option>Operatività (CFD/Opzioni/Futures)</option>
+              <option>Altro</option>
+            </select>
+            <span class="text-[11px] text-slate-500">Guida il motore nella scelta dei blocchi di analisi.</span>
+          </label>
+
+          <label>Note (facoltativo)
+            <input name="q_note" class="w-full border rounded px-3 py-2" placeholder="Es. focus news/regolatorio; confronta con ETF simili; ipotesi di copertura…">
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP Q2 – Recapiti & invio -->
+      <section class="q-step hidden" data-qstep="2">
+        <h4 class="text-base font-semibold text-slate-900 mb-2">3) Recapiti & invio</h4>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <label>Email (facoltativo)
+            <input type="email" name="q_email" class="w-full border rounded px-3 py-2" placeholder="you@example.com">
+          </label>
+          <label>WhatsApp (facoltativo)
+            <input type="text" name="q_whatsapp" class="w-full border rounded px-3 py-2" placeholder="+39...">
+          </label>
+        </div>
+        <p class="text-xs text-slate-500 mt-1">Indica almeno un recapito. I dati sono <strong>minimizzati</strong> (solo campi valorizzati).</p>
+
+        <details class="mt-3 border rounded p-3">
+          <summary class="cursor-pointer text-sm font-medium">Anteprima (riepilogo tecnico per l’AI)</summary>
+          <p class="text-xs text-slate-500 mb-2">Vista tecnica del contenuto che invieremo al motore AI (JSON equivalente allo schema). Serve a verificare cosa stai condividendo.</p>
+          <pre id="q-payload" class="text-xs bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto"></pre>
+        </details>
+      </section>
+
+    </form>
+
+    <!-- FOOTER NAV -->
+    <div class="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+      <button type="button" class="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-100" onclick="qPrevStep()">Indietro</button>
+      <div class="flex items-center gap-3">
+        <button id="q-submit-btn" class="px-4 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-800 hidden" onclick="inviaDomandaLibera()">Invia</button>
+        <button id="q-next-btn" type="button" class="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800" onclick="qNextStep()">Avanti</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  /* Touch-friendly inputs su mobile */
+  @media (max-width: 640px){
+    #modal-domanda select,
+    #modal-domanda input,
+    #modal-domanda textarea{ min-height:44px; font-size:16px; }
+  }
+</style>
+
+<script>
+  // ===== Apertura/chiusura modale (lock body scroll) =====
+  const __qLockScroll = () => document.body.classList.add('overflow-hidden');
+  const __qUnlockScroll = () => document.body.classList.remove('overflow-hidden');
+
+  function apriModuloDomanda(){
+    const modal = document.getElementById('modal-domanda');
+    modal.classList.remove('hidden');
+    __qLockScroll();
+    if(window.lucide) lucide.createIcons();
+    // reset
+    const f = document.getElementById('form-domanda');
+    f.reset();
+    qCurrentStep = 0; qStepsOrder = [0,1,2];
+    qUpdateStep();
+    qRenderPayload();
+  }
+  function chiudiModuloDomanda(){
+    document.getElementById('modal-domanda').classList.add('hidden');
+    __qUnlockScroll();
+  }
+
+  // ===== Navigazione step =====
+  let qStepsOrder = [0,1,2];
+  let qCurrentStep = 0;
+
+  function qShowStep(i){
+    document.querySelectorAll('#modal-domanda .q-step').forEach(s=>s.classList.add('hidden'));
+    const el = document.querySelector(`#modal-domanda .q-step[data-qstep="${qStepsOrder[i]}"]`);
+    if(el) el.classList.remove('hidden');
+  }
+  function qUpdateStep(){
+    qShowStep(qCurrentStep);
+    const total = qStepsOrder.length;
+    document.getElementById('q-progress-label').textContent = `Step ${qCurrentStep+1} di ${total}`;
+    document.getElementById('q-progress-bar').style.width = `${Math.round(((qCurrentStep+1)/total)*100)}%`;
+    document.getElementById('q-submit-btn').classList.toggle('hidden', qCurrentStep !== total-1);
+    document.getElementById('q-next-btn').classList.toggle('hidden', qCurrentStep === total-1);
+  }
+  function qNextStep(){ if(!qValidaStep()) return; if(qCurrentStep < qStepsOrder.length-1){ qCurrentStep++; qUpdateStep(); } }
+  function qPrevStep(){ if(qCurrentStep>0){ qCurrentStep--; qUpdateStep(); } }
+
+  // ===== Validazione per step =====
+  function qValidaStep(){
+    const key = qStepsOrder[qCurrentStep];
+    const el = document.querySelector(`#modal-domanda .q-step[data-qstep="${key}"]`);
+    let ok = true;
+
+    if(el){
+      el.querySelectorAll('select[required], input[required], textarea[required]').forEach(inp=>{
+        if(!inp.value){ ok=false; inp.classList.add('ring-2','ring-red-400'); }
+        else { inp.classList.remove('ring-2','ring-red-400'); }
+      });
+      if(key===1){
+        const domanda = (el.querySelector('[name="q_domanda"]')?.value || '').trim();
+        if(domanda.length < 10){ ok=false; alert('Scrivi una domanda un po’ più dettagliata (almeno 10 caratteri).'); }
+      }
+    }
+    if(!ok){ el && el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    return ok;
+  }
+
+  // ===== Payload builder =====
+  function buildQuestionPayload(){
+    const fd = new FormData(document.getElementById('form-domanda'));
+    const Richiesta = {
+      argomento:    { valore: fd.get('q_argomento') || null },
+      riferimento:  { valore: (fd.get('q_riferimento')||'').trim() || null },
+      domanda:      { valore: (fd.get('q_domanda')||'').trim() || null },
+      finalita:     { valore: fd.get('q_finalita') || null },
+      note:         { valore: (fd.get('q_note')||'').trim() || null }
+    };
+    return {
+      servizio: 'domanda_libera',
+      Richiesta,
+      recapiti: {
+        email:    (fd.get('q_email')||'').trim() || null,
+        whatsapp: (fd.get('q_whatsapp')||'').trim() || null
+      }
+    };
+  }
+
+  // ===== Anteprima auto (debounced) =====
+  function qRenderPayload(){
+    const pre = document.getElementById('q-payload');
+    if(!pre) return;
+    pre.textContent = JSON.stringify(buildQuestionPayload(), null, 2);
+  }
+  const __qDebounce = (fn, ms=250)=>{ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,args), ms); }; };
+  (function(){
+    const f = document.getElementById('form-domanda');
+    if(!f) return;
+    const auto = __qDebounce(qRenderPayload, 200);
+    f.addEventListener('input', auto);
+    f.addEventListener('change', auto);
+  })();
+
+  // ===== INVIO =====
+  async function inviaDomandaLibera(){
+    // Recapiti minimi
+    const email = document.querySelector('#form-domanda [name="q_email"]')?.value.trim();
+    const wa    = document.querySelector('#form-domanda [name="q_whatsapp"]')?.value.trim();
+    if(!email && !wa){ alert('Indica almeno un recapito (Email o WhatsApp).'); return; }
+
+    // Disclaimer forte
+    const disclaimer = `NOTA BENE
+
+L'analisi AI è uno strumento didattico per confrontare le tue idee.
+Non è consulenza e non ha validazione professionale.
+Potrebbe contenere errori o ragionamenti incompleti.
+Non affidarti mai a nessuna AI per prendere decisioni di investimento.
+
+Vuoi procedere inviando i dati?`;
+    if(!confirm(disclaimer)) return;
+
+    // Validazione step correnti
+    for(let i=0;i<qStepsOrder.length;i++){
+      qCurrentStep = i; if(!qValidaStep()) { qUpdateStep(); return; }
+    }
+
+    const payload = buildQuestionPayload();
+    qRenderPayload();
+
+    try{
+      const res = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      alert('✅ Richiesta inviata correttamente.');
+      chiudiModuloDomanda();
+    }catch(err){
+      console.error(err);
+      alert('❌ Errore durante l\'invio. Riprova.');
+    }
+  }
+</script>
+
+<!-- MAIN -->
+<main class="container">
+  <!-- Contenuto principale della homepage -->
+  
+  <!-- Link alla pagina broker -->
+  <section class="bg-slate-50 py-16 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+      <h2 class="text-2xl font-bold text-slate-900 mb-4">Broker Regolamentati</h2>
+      <p class="text-lg text-slate-700 max-w-2xl mx-auto mb-8">
+        Selezione curata da <strong>Tradelia AI</strong> con focus su <strong>strumenti reali</strong> (azioni, ETF, obbligazioni, derivati quotati).
+        <span class="font-semibold text-amber-700">Se un broker offre anche CFD, lo includiamo esclusivamente per la componente di strumenti diretti.</span>
+      </p>
+      <a href="/brokers.html" class="inline-block bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 font-medium">
+        Vedi tutti i broker →
+      </a>
+    </div>
+  </section>
+</main>
+
+<!-- Cookie & Legal helpers (fix: racchiusi in <script>) -->
+<script>
+  function chiudiPopupCookie() {
+    const popup = document.getElementById('cookie-popup');
+    if (popup) {
+      popup.style.display = 'none';
+    }
+  }
+</script>
+
+<!-- Cookie & Legal helpers (fix: racchiusi in <script>) -->
+<script>
+  function chiudiPopupCookie() {
+    localStorage.setItem("tradelia_cookie_consent", "true");
+    const popup = document.getElementById("cookie-popup");
+    if (popup) popup.style.display = "none";
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const consento = localStorage.getItem("tradelia_cookie_consent");
+    if (consento === "true") {
+      const popup = document.getElementById("cookie-popup");
+      if (popup) popup.style.display = "none";
+    }
+  });
+
+  // Funzione usata nel footer
+  function apriSezioneLegale(id) {
+    const el = document.getElementById(id);
+    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    const map = {
+      'section-tc': '/legal/termini.html#section-tc',
+      'section-privacy': '/legal/privacy.html#section-privacy'
+    };
+    window.location.href = map[id] || '/legal/';
+  }
+</script>
+
+<!-- FOOTER -->
+
+<!-- Cookie & Legal helpers (fix: racchiusi in <script>) -->
+<script>
+  function chiudiPopupCookie() {
+    localStorage.setItem("tradelia_cookie_consent", "true");
+    const popup = document.getElementById("cookie-popup");
+    if (popup) popup.style.display = "none";
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const consento = localStorage.getItem("tradelia_cookie_consent");
+    if (consento === "true") {
+      const popup = document.getElementById("cookie-popup");
+      if (popup) popup.style.display = "none";
+    }
+  });
+
+  // Funzione usata nel footer
+  function apriSezioneLegale(id) {
+    const el = document.getElementById(id);
+    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    const map = {
+      'section-tc': '/legal/termini.html#section-tc',
+      'section-privacy': '/legal/privacy.html#section-privacy'
+    };
+    window.location.href = map[id] || '/legal/';
+  }
+</script>
+
+  <!-- FOOTER -->
+  <footer class="site-footer mt-auto py-10">
+    <div class="container">
+      <section class="ftr-grid">
+        <!-- Col 1 -->
+        <div class="ftr-col">
+          <h3 class="ftr-head">
+            <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 3h16v18H4z"/><path d="M8 7h8M8 11h8M8 15h6"/>
+            </svg>
+            <span>Tradelia AI</span>
+          </h3>
+          <p>
+            Analisi multi-fattore su contesto macro, sentiment e tecnica (orizzonte 3–10 giorni).<br/>
+            Materiale esclusivamente informativo e formativo — nessuna raccomandazione personalizzata.
+          </p>
+        </div>
+
+        <!-- Col 2 -->
+        <div class="ftr-col">
+          <h3 class="ftr-head">
+            <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2l7 4v6c0 5-3 8-7 10C8 20 5 17 5 12V6l7-4z"/><path d="M12 8v4"/>
+            </svg>
+            <span>Compliance &amp; Risk</span>
+          </h3>
+          <ul class="ftr-list">
+            <li>Non è consulenza (MiFID II / ESMA)</li>
+            <li>Tradelia AI non gestisce capitali né esegue ordini</li>
+            <li>Rischio di perdita anche totale del capitale</li>
+          </ul>
+          <div class="mt-3 flex flex-wrap gap-4">
+            <button id="btn-privacy-open" class="btn btn-sm" type="button">Privacy</button>
+            <button id="btn-mifid-open" class="btn btn-sm" type="button">Informativa MiFID</button>
+          </div>
+        </div>
+
+        <!-- Col 3 -->
+        <div class="ftr-col">
+          <h3 class="ftr-head">
+            <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 12h16"/><path d="M12 4l8 8-8 8"/>
+            </svg>
+            <span>Canali ufficiali</span>
+          </h3>
+          <p class="mb-2">Aggiornamenti su metodologia e release:</p>
+          <div class="ftr-socials flex flex-col gap-2">
+            <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener" aria-label="LinkedIn">LinkedIn</a>
+            <a href="https://x.com/tradelia_ai" target="_blank" rel="noopener" aria-label="X (Twitter)">X (Twitter)</a>
+            <a href="https://www.reddit.com/r/TradeliaAI" target="_blank" rel="noopener" aria-label="Reddit">Reddit</a>
+            <a href="https://www.quora.com" target="_blank" rel="noopener" aria-label="Quora">Quora</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bottom line -->
+      <div class="ftr-bottom">
+        <div>
+          <div class="flex flex-wrap items-center gap-3 mb-2">
+            <a href="/index.html" class="text-sm text-slate-600 hover:text-slate-900">Home</a>
+            <span class="text-slate-400">·</span>
+            <a href="https://www.tradelia.org/brokers.html" class="text-sm text-slate-600 hover:text-slate-900">Brokers</a>
+            <span class="text-slate-400">·</span>
+            <a href="/archivio" class="text-sm text-slate-600 hover:text-slate-900">Archivio</a>
+          </div>
+          © <span id="footer-year"></span>
+          <span class="brand brand--sm">
+            <span class="brand-word">Tradelia</span>
+            <span class="brand-dot" aria-hidden="true"></span>
+            <span class="brand-suffix">AI</span>
+          </span>
+          · Tutti i diritti riservati ·
+          <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>
+        </div>
+        <div>Missione: alfabetizzazione finanziaria indipendente.</div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
