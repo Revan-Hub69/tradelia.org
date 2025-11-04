@@ -1370,23 +1370,12 @@
           // Solo se velocità sufficiente
           if (velocity > SWIPE_VELOCITY_THRESHOLD) {
             hasSwiped = true;
-            const key = item.getAttribute('data-metric-key');
-            const metric = metricsWithGlossary.find(m => m.key === key);
-            if (metric) {
-              // Reset transform prima di aprire drawer
-              item.style.transform = '';
-              item.style.opacity = '';
-              item.style.transition = '';
-              
-              openMetricDetail(metric, drawer2, drawer2Title, drawer2Content);
-              drawer1.classList.remove('active');
-              drawer2.classList.add('active');
-              // Focus sul back button
-              const backBtn = drawer2.querySelector('.metrics-drawer-2__back');
-              if (backBtn) {
-                setTimeout(() => backBtn.focus(), 100);
-              }
-            }
+          const key = item.getAttribute('data-metric-key');
+          // Reset transform prima di aprire drawer
+          item.style.transform = '';
+          item.style.opacity = '';
+          item.style.transition = '';
+          selectMetric(key, 'swipe');
           }
           isDragging = false;
         }
@@ -1839,17 +1828,7 @@
       requestAnimationFrame(() => {
         const metricItem = drawer.querySelector(`[data-metric-key="${metricKey}"]`);
         if (metricItem) {
-          const metricsWithGlossary = currentMetricsData?.metricsWithGlossary || [];
-          const metric = metricsWithGlossary.find(m => m.key === metricKey);
-          if (metric) {
-            const drawer2Title = drawer2.querySelector('.metrics-drawer-2__title');
-            const drawer2Content = drawer2.querySelector('.metrics-drawer-2__content');
-            if (drawer2Title && drawer2Content) {
-              openMetricDetail(metric, drawer2, drawer2Title, drawer2Content);
-              drawer1.classList.remove('active');
-              drawer2.classList.add('active');
-            }
-          }
+          selectMetric(metricKey, 'programmatic');
         }
       });
     }
