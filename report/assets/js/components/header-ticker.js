@@ -231,7 +231,9 @@ function renderRow(row) {
         if (remaining) {
           const textEl = renderTextPart({ kind:'text', text: remaining });
           // Su mobile: se il testo termina con ":" e il prossimo elemento è una metrica, wrappa insieme
-          if (isMobile && idx + 1 < arr.length && arr[idx + 1]?.kind === 'metric' && /:\s*$/.test(remaining)) {
+          // MA solo se il testo è breve (max 20 caratteri) per evitare di wrappare frasi lunghe
+          const isShortLabel = remaining.trim().length <= 20;
+          if (isMobile && idx + 1 < arr.length && arr[idx + 1]?.kind === 'metric' && /:\s*$/.test(remaining) && isShortLabel) {
             if (!currentPair) {
               currentPair = createEl('span', 'header-ticker-pair');
             }
