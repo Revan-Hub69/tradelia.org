@@ -1660,19 +1660,31 @@ h3 { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.3; font-weight: 600; }
   width: 100%;
   min-height: 0;
   position: relative;
-  z-index: 1;
+  z-index: 10; /* Sopra footer (5) ma sotto header (60) e overlay (200+) */
+  isolation: isolate; /* Crea nuovo stacking context */
 }
 
 #header-ticker-slot .header-ticker {
   display: flex !important;
   visibility: visible !important;
+  position: relative;
+  z-index: 1;
 }
 
 @media (max-width: 768px) {
   #header-ticker-slot {
     margin-top: calc(64px + 1rem); /* header fisso + spazio ridotto */
-    margin-bottom: 1rem;
+    margin-bottom: 2rem; /* Più spazio per evitare sovrapposizione con footer */
     padding: 0 1rem;
+    z-index: 10; /* Mantieni sopra footer anche su mobile */
+    position: relative;
+    isolation: isolate; /* Crea nuovo stacking context */
+  }
+  
+  /* Assicura che il main abbia spazio sufficiente */
+  main#app-root {
+    min-height: calc(100vh - 64px - 200px); /* Altezza viewport - header - spazio ticker e footer */
+    padding-bottom: 3rem !important; /* Spazio extra per footer */
   }
 }
 
