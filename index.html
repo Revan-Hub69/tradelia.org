@@ -264,31 +264,19 @@
         </div>
       </div>
 
-      <!-- Immagine hero - VISIBILE -->
-      <div class="flex-1 w-full lg:w-auto" style="min-height: 400px; width: 100%; max-width: 600px;">
-        <div 
-          class="rounded-xl shadow-xl border-4 border-blue-300 w-full"
-          style="
-            min-height: 400px;
-            width: 100%;
-            background-image: url('./img/hero-institutional.jpg'), url('/img/hero-institutional.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-color: #e2e8f0;
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
+      <!-- Immagine hero -->
+      <div class="flex-1 w-full lg:w-auto" style="min-height: 400px; width: 100%; max-width: 600px; background-color: #e2e8f0; border-radius: 0.75rem; border: 4px solid #93c5fd; display: block !important;">
+        <img 
+          src="img/hero-institutional.jpg" 
+          alt="Tradelia AI - Analisi Istituzionale" 
+          class="w-full h-full object-cover rounded-xl"
+          style="min-height: 400px; max-height: 600px; display: block; width: 100%;"
+          onerror="
+            this.onerror=null; 
+            this.src='./img/hero-institutional.jpg';
+            this.onerror=function(){this.src='/img/hero-institutional.jpg'; this.onerror=function(){this.style.display='none'; this.parentElement.style.backgroundColor='#e2e8f0'; this.parentElement.innerHTML='<div style=\'min-height:400px; display:flex; align-items:center; justify-content:center; color:#64748b;\'><div class=\'text-center\'><i data-lucide=\'image\' class=\'w-16 h-16 mx-auto mb-2\'></i><p class=\'text-sm\'>Immagine non disponibile</p></div></div>'; if(window.lucide) lucide.createIcons();};};
           "
-        >
-          <!-- Test placeholder visibile -->
-          <div style="min-height: 400px; display: flex; align-items: center; justify-content: center; background-color: rgba(226, 232, 240, 0.8);">
-            <div class="text-center p-4">
-              <div class="text-slate-600 text-sm mb-2">Hero Image</div>
-              <div class="text-slate-400 text-xs">400x400px</div>
-            </div>
-          </div>
-        </div>
+        />
       </div>
     </div>
   </div>

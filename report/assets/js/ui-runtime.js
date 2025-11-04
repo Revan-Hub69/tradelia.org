@@ -449,6 +449,11 @@
   UI.bindMetricInfoButtons = function(root=document){
     mountTooltips();
     qsa('.info-btn, .info-btn--mini', root).forEach(btn=>{
+      // Salta elementi che hanno già un handler personalizzato
+      if (btn.dataset.metricClickHandler === 'true' || btn.hasAttribute('data-metric-click-handler')) {
+        console.log('[UI Runtime] bindMetricInfoButtons - skip elemento con handler personalizzato:', btn);
+        return;
+      }
       btn.addEventListener('click', async (e)=>{
         e.stopPropagation();
         const key = btn.getAttribute('data-metric');
@@ -1042,6 +1047,7 @@
 
   // Update metric content per desktop
   function updateMetricContent(metric, contentTitle, contentBody, contentContainer) {
+    console.log('[UI Runtime] updateMetricContent chiamata per:', metric.key, 'title:', !!contentTitle, 'body:', !!contentBody, 'container:', !!contentContainer);
     const books = RECOMMENDED_BOOKS[metric.category || 'altro'] || [];
     const booksHtml = books.map(book => `
       <div class="recommended-book">
@@ -1052,7 +1058,10 @@
       </div>
     `).join('');
 
-    contentTitle.textContent = metric.label || metric.key;
+    if (contentTitle) {
+      contentTitle.textContent = metric.label || metric.key;
+      console.log('[UI Runtime] Titolo aggiornato:', contentTitle.textContent);
+    }
     
     if (contentContainer) {
       contentContainer.setAttribute('data-key', metric.key);
@@ -1060,9 +1069,22 @@
       const howSection = contentContainer.querySelector('.metric-content-section:nth-child(2) .metric-content-section__body');
       const sourceSection = contentContainer.querySelector('.metric-content-section:nth-child(3) .metric-content-section__body');
       
-      if (whatSection) whatSection.textContent = metric.glossary.what || '—';
-      if (howSection) howSection.textContent = metric.glossary.how || '—';
-      if (sourceSection) sourceSection.textContent = metric.glossary.source || '—';
+      console.log('[UI Runtime] Sezioni trovate - what:', !!whatSection, 'how:', !!howSection, 'source:', !!sourceSection);
+      
+      if (whatSection) {
+        whatSection.textContent = metric.glossary.what || '—';
+        console.log('[UI Runtime] What aggiornato:', whatSection.textContent.substring(0, 50));
+      }
+      if (howSection) {
+        howSection.textContent = metric.glossary.how || '—';
+        console.log('[UI Runtime] How aggiornato:', howSection.textContent.substring(0, 50));
+      }
+      if (sourceSection) {
+        sourceSection.textContent = metric.glossary.source || '—';
+        console.log('[UI Runtime] Source aggiornato:', sourceSection.textContent.substring(0, 50));
+      }
+    } else {
+      console.warn('[UI Runtime] contentContainer non trovato!');
     }
 
     // Update books
@@ -1193,16 +1215,18 @@
       // Seleziona direttamente la metrica
       setTimeout(() => {
         const metricItem = drawer.querySelector(`.metric-item[data-metric-key="${metricKey}"]`);
-        console.log('[UI Runtime] Metrica item trovato:', !!metricItem);
+        console.log('[UI Runtime] Metrica item trovato:', !!metricItem, 'metricKey:', metricKey);
         if (metricItem) {
           console.log('[UI Runtime] Aggiorno contenuto per metrica:', metricKey);
           // Aggiorna contenuto direttamente
           const allMetricItems = drawer.querySelectorAll('.metric-item');
           allMetricItems.forEach(m => m.classList.remove('active'));
           metricItem.classList.add('active');
+          console.log('[UI Runtime] Metrica item attivato, aggiorno contenuto...');
           updateMetricContent(metric, contentTitle, contentBody, contentContainer);
+          console.log('[UI Runtime] Contenuto aggiornato, title:', contentTitle?.textContent, 'container:', !!contentContainer);
         } else {
-          console.warn('[UI Runtime] Metrica item non trovato dopo aggiornamento lista');
+          console.warn('[UI Runtime] Metrica item non trovato dopo aggiornamento lista, metricKey:', metricKey);
           // Fallback: aggiorna contenuto direttamente
           updateMetricContent(metric, contentTitle, contentBody, contentContainer);
         }

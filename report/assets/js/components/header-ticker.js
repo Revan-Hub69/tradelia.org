@@ -94,12 +94,12 @@ function renderMetricPart(part) {
   wrap.addEventListener('click', (e) => {
     e.stopPropagation();
     e.preventDefault();
-    console.log('[HeaderTicker] Click su metrica:', part.key, 'event:', e);
+    console.log('[HeaderTicker] Click su metrica:', part.key, 'event:', e, 'target:', e.target, 'currentTarget:', e.currentTarget);
     try {
       const ui = window.__TradeliaUI;
       const isMobile = window.matchMedia('(max-width: 768px)').matches;
       
-      console.log('[HeaderTicker] isMobile:', isMobile, 'ui:', !!ui, 'openPanel:', !!ui?.openPanel);
+      console.log('[HeaderTicker] isMobile:', isMobile, 'ui:', !!ui, 'openMetricsDrawerFromMetric:', !!ui?.openMetricsDrawerFromMetric);
       
       if (isMobile) {
         // Mobile: apri drawer "Scopri tutte le metriche" e naviga a quella metrica
@@ -126,17 +126,27 @@ function renderMetricPart(part) {
         }
       } else {
         // Desktop: apri drawer e seleziona metrica
-        console.log('[HeaderTicker] Desktop - openMetricsDrawerFromMetric:', !!ui?.openMetricsDrawerFromMetric);
+        console.log('[HeaderTicker] Desktop - apri drawer con metrica:', part.key);
         if (ui?.openMetricsDrawerFromMetric) {
-          console.log('[HeaderTicker] Desktop - apri drawer con metrica');
-          ui.openMetricsDrawerFromMetric(part.key);
+          console.log('[HeaderTicker] Desktop - chiamando openMetricsDrawerFromMetric');
+          try {
+            ui.openMetricsDrawerFromMetric(part.key);
+            console.log('[HeaderTicker] Desktop - openMetricsDrawerFromMetric chiamata con successo');
+          } catch (err) {
+            console.error('[HeaderTicker] Desktop - errore in openMetricsDrawerFromMetric:', err);
+          }
         } else {
-          console.warn('[HeaderTicker] Desktop - openMetricsDrawerFromMetric non disponibile');
+          console.warn('[HeaderTicker] Desktop - openMetricsDrawerFromMetric non disponibile, ui:', !!ui);
         }
       }
     } catch (err) {
       console.error('[HeaderTicker] Errore apertura metrica:', err);
     }
+  });
+  
+  // Aggiungi anche listener su mousedown per debug
+  wrap.addEventListener('mousedown', (e) => {
+    console.log('[HeaderTicker] mousedown su metrica:', part.key, 'event:', e);
   });
 
   return wrap;
