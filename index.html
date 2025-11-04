@@ -233,60 +233,62 @@
 </header>
 
 <section class="bg-gradient-to-br from-white via-slate-50 to-white border-b border-slate-200 relative overflow-hidden">
-  <div class="max-w-7xl mx-auto px-6 lg:px-8 py-12 lg:py-20 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-    
-    <!-- Testo -->
-    <div>
-      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 leading-tight min-h-[56px]">
-        <span id="hero-typing"></span>
-      </h1>
-      <p class="text-base sm:text-lg text-slate-700 mb-6 sm:mb-8 leading-relaxed">
-        Tradelia AI utilizza <strong>tecnologie AI integrate e ottimizzate per il metodo Tradelia</strong> 
-        per <strong>analizzare e simulare</strong> scenari di portafoglio.  
-        Strumenti didattici per comprendere mercati, rischi e correlazioni, con piena consapevolezza dei <strong>limiti tecnici e legali</strong> delle AI.
-      </p>
+  <div class="max-w-7xl mx-auto px-6 lg:px-8 py-12 lg:py-20">
+    <div class="flex flex-col lg:flex-row gap-10 lg:gap-16 items-center">
+      
+      <!-- Testo -->
+      <div class="flex-1 w-full lg:w-auto">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 leading-tight min-h-[56px]">
+          <span id="hero-typing"></span>
+        </h1>
+        <p class="text-base sm:text-lg text-slate-700 mb-6 sm:mb-8 leading-relaxed">
+          Tradelia AI utilizza <strong>tecnologie AI integrate e ottimizzate per il metodo Tradelia</strong> 
+          per <strong>analizzare e simulare</strong> scenari di portafoglio.  
+          Strumenti didattici per comprendere mercati, rischi e correlazioni, con piena consapevolezza dei <strong>limiti tecnici e legali</strong> delle AI.
+        </p>
 
-      <!-- Tre pilastri -->
-      <div class="space-y-4">
-        <div class="flex items-start gap-3">
-          <i data-lucide="bar-chart-3" class="w-6 h-6 text-blue-700 flex-shrink-0"></i>
-          <span class="text-slate-700"><strong>Potenza Analitica</strong> – Analisi tecnica, macro e fondamentale integrate in modelli multilayer.</span>
-        </div>
-        <div class="flex items-start gap-3">
-          <i data-lucide="shield-check" class="w-6 h-6 text-blue-700 flex-shrink-0"></i>
-          <span class="text-slate-700"><strong>Trasparenza</strong> – Progetto indipendente, senza marketing aggressivo o tracciamenti pubblicitari.</span>
-        </div>
-        <div class="flex items-start gap-3">
-          <i data-lucide="lock" class="w-6 h-6 text-blue-700 flex-shrink-0"></i>
-          <span class="text-slate-700"><strong>Privacy Totale</strong> – Nessun cookie di tracciamento, nessuna raccolta o vendita di dati.</span>
+        <!-- Tre pilastri -->
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <i data-lucide="bar-chart-3" class="w-6 h-6 text-blue-700 flex-shrink-0"></i>
+            <span class="text-slate-700"><strong>Potenza Analitica</strong> – Analisi tecnica, macro e fondamentale integrate in modelli multilayer.</span>
+          </div>
+          <div class="flex items-start gap-3">
+            <i data-lucide="shield-check" class="w-6 h-6 text-blue-700 flex-shrink-0"></i>
+            <span class="text-slate-700"><strong>Trasparenza</strong> – Progetto indipendente, senza marketing aggressivo o tracciamenti pubblicitari.</span>
+          </div>
+          <div class="flex items-start gap-3">
+            <i data-lucide="lock" class="w-6 h-6 text-blue-700 flex-shrink-0"></i>
+            <span class="text-slate-700"><strong>Privacy Totale</strong> – Nessun cookie di tracciamento, nessuna raccolta o vendita di dati.</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Immagine hero -->
-    <div class="order-first lg:order-last" style="min-height: 400px; width: 100%;">
-      <div 
-        class="rounded-xl shadow-xl border border-slate-200 w-full h-full"
-        style="
-          min-height: 400px;
-          background-image: url('./img/hero-institutional.jpg'), url('/img/hero-institutional.jpg');
-          background-size: cover;
-          background-position: center;
-          background-repeat: no-repeat;
-          background-color: #e2e8f0;
-          display: block;
-        "
-      >
-        <!-- Fallback se l'immagine non carica -->
-        <noscript>
-          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 400px; display: flex; align-items: center; justify-content: center; border-radius: 0.75rem;">
-            <div class="text-white text-center p-8">
-              <i data-lucide="trending-up" class="w-16 h-16 mx-auto mb-4"></i>
-              <h3 class="text-2xl font-bold mb-2">Tradelia AI</h3>
-              <p class="text-blue-100">Analisi Istituzionale</p>
+      <!-- Immagine hero - VISIBILE -->
+      <div class="flex-1 w-full lg:w-auto" style="min-height: 400px; width: 100%; max-width: 600px;">
+        <div 
+          class="rounded-xl shadow-xl border-4 border-blue-300 w-full"
+          style="
+            min-height: 400px;
+            width: 100%;
+            background-image: url('./img/hero-institutional.jpg'), url('/img/hero-institutional.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #e2e8f0;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+          "
+        >
+          <!-- Test placeholder visibile -->
+          <div style="min-height: 400px; display: flex; align-items: center; justify-content: center; background-color: rgba(226, 232, 240, 0.8);">
+            <div class="text-center p-4">
+              <div class="text-slate-600 text-sm mb-2">Hero Image</div>
+              <div class="text-slate-400 text-xs">400x400px</div>
             </div>
           </div>
-        </noscript>
+        </div>
       </div>
     </div>
   </div>
