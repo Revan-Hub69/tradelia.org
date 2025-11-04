@@ -1,0 +1,491 @@
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Idea satellite copytrading Naga">
+  <title>TRADELIA • AI — Strumenti Finanziari Complessi</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    h1, h2, h3, h4 {
+      color: #0f172a;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.25rem; }
+    h3 { font-size: 1.25rem; }
+    h4 { font-size: 1.125rem; }
+    p {
+      margin-bottom: 1.25rem;
+      color: #374151;
+    }
+    ul, ol {
+      padding-left: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    li {
+      margin-bottom: 0.5rem;
+    }
+    section {
+      background: #ffffff;
+      padding: 2.5rem 2rem;
+      margin: 2rem auto;
+      border-radius: 0.75rem;
+      max-width: 840px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e5e7eb;
+    }
+    a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    a:hover {
+      text-decoration: underline;
+      color: #1d4ed8;
+    }
+    .positive { color: #16a34a; font-weight: 600; }
+    .negative { color: #dc2626; font-weight: 600; }
+    .neutral  { color: #64748b; font-weight: 500; }
+    @media screen and (max-width: 768px) {
+      body { font-size: 15px; line-height: 1.6; }
+      section { padding: 1.25rem; margin: 1rem; }
+      h1 { font-size: 1.5rem; }
+      h2 { font-size: 1.25rem; }
+      h3 { font-size: 1.125rem; }
+      h4 { font-size: 1rem; }
+    }
+
+    /* TABLE RESPONSIVE STYLE - struttura tabellare scrollabile */
+    .responsive-table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      margin-bottom: 2rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+    }
+    table.responsive-table {
+      width: 100%;
+      min-width: 640px;
+      border-collapse: collapse;
+      background-color: white;
+    }
+    table.responsive-table th,
+    table.responsive-table td {
+      padding: 0.75rem 1rem;
+      border: 1px solid #e5e7eb;
+      text-align: left;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+    table.responsive-table th {
+      background-color: #f3f4f6;
+      font-weight: 600;
+      color: #1f2937;
+    }
+    table.responsive-table tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+      border-radius: 100vh;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(80, 160, 200, 0.5);
+      border-radius: 100vh;
+      transition: background-color 0.2s ease-in-out;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(80, 160, 200, 0.7);
+    }
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
+      box-sizing: border-box;
+    }
+    #backToTop {
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+
+
+<body>
+  <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-3 flex justify-between items-center">
+    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 hover:opacity-90 transition">
+      TRADELIA<span class="text-blue-600 animate-pulse">•AI</span>
+    </a>
+    <a href="https://tradelia.org/archivio.html" class="text-sm sm:text-base text-blue-700 font-medium hover:underline transition">
+      Archivio Storico
+    </a>
+  </header>
+
+  <br>
+  <section id="sezione-1" class="max-w-4xl mx-auto mt-10 mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">1. Introduzione – Copytrading come Strumento Satellite</h2>
+
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    Il copytrading è una forma evoluta di investimento semi-automatico che consente di replicare in tempo reale le operazioni di un altro trader. Attraverso piattaforme regolamentate, come <strong>NAGA</strong>, l’utente può osservare, selezionare e copiare direttamente le strategie operative di investitori più esperti.
+  </p>
+
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    Nell’ambito della gestione patrimoniale secondo il modello Tradelia AI, il copytrading non è considerato una strategia core, ma viene classificato come uno <strong>strumento satellite</strong>: un modulo facoltativo, a bassa priorità strategica, che può essere integrato in misura limitata all’interno di portafogli già strutturati.
+  </p>
+
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    La logica satellitare implica una valutazione prudente dell’impatto sul rischio complessivo, con un’allocazione contenuta del capitale, destinata eventualmente a:
+    <ul class="list-disc list-inside mt-2 text-slate-700 text-base space-y-1">
+      <li>Sperimentare nuove dinamiche operative senza intervenire manualmente</li>
+      <li>Esplorare strategie alternative in contesto osservabile e tracciabile</li>
+      <li>Apprendere attraverso l’analisi comparativa dei portafogli copiati</li>
+    </ul>
+  </p>
+
+  <p class="text-slate-700 text-base leading-relaxed">
+    Questo tutorial si propone di guidare l’utente in un’analisi operativa del copytrading offerto da NAGA, valutandone struttura tecnica, trasparenza, costi e sostenibilità in chiave tattica e formativa.
+  </p>
+</section>
+<br>
+<section class="max-w-4xl mx-auto mb-12 bg-yellow-50 border-l-4 border-yellow-600 p-6 rounded-xl shadow-sm">
+  <h2 class="text-xl font-semibold text-yellow-800 mb-3">Avvertenza Preliminare</h2>
+
+  <p class="text-yellow-900 text-base leading-relaxed mb-4">
+    Prima di allocare qualsiasi somma di denaro reale in operazioni di copytrading, è fondamentale essere perfettamente consapevoli del funzionamento dello strumento utilizzato. Le piattaforme semplificate, pur apparendo accessibili, non riducono i rischi di perdita.
+  </p>
+
+  <p class="text-yellow-900 text-base leading-relaxed">
+    Se non si ha una comprensione completa delle dinamiche sottostanti o si nutrono dubbi sulla coerenza strategica del trader copiato, <strong>è vivamente consigliato non procedere all’investimento</strong> o, in alternativa, richiedere supporto a un consulente finanziario abilitato.
+  </p>
+</section>
+
+<section id="disclaimer" class="max-w-4xl mx-auto mt-10 mb-16 bg-white border border-gray-300 p-6 rounded-xl shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">Disclaimer Legale</h2>
+
+  <p class="text-slate-700 text-sm leading-relaxed mb-3">
+    I contenuti presenti in questo tutorial hanno finalità esclusivamente informative e formative. Non costituiscono in alcun modo una sollecitazione al pubblico risparmio, un'offerta di strumenti finanziari, né una raccomandazione personalizzata ai sensi della normativa vigente.
+  </p>
+
+  <p class="text-slate-700 text-sm leading-relaxed mb-3">
+    L'utilizzo di piattaforme di copytrading implica rischi operativi e finanziari che devono essere compresi in modo approfondito. Le performance passate dei trader copiati non costituiscono garanzia di risultati futuri. 
+  </p>
+
+  <p class="text-slate-700 text-sm leading-relaxed mb-3">
+    Prima di effettuare qualsiasi investimento, si raccomanda di valutare attentamente la propria tolleranza al rischio, l’orizzonte temporale e, se necessario, di consultare un consulente finanziario indipendente autorizzato.
+  </p>
+
+  <p class="text-slate-600 text-xs italic">
+    Tradelia AI non fornisce consulenza personalizzata in materia di investimenti. Alcuni dei link presenti nel report possono generare una commissione di affiliazione qualora l’utente decidesse di registrarsi o operare tramite i broker menzionati. La selezione dei partner è effettuata sulla base di criteri tecnici, di regolamentazione e qualità dei servizi — con l’unico obiettivo di offrire un servizio gratuito, informato e utile alla comunità, prima ancora di ogni logica commerciale.
+  </p>
+</section>
+<br>
+<section id="sezione-2" class="max-w-4xl mx-auto mt-10 mb-14 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">2. Come Funziona la Piattaforma NAGA</h2>
+
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    NAGA è una piattaforma regolamentata che integra funzioni di trading manuale, social trading e copytrading in un’unica interfaccia. L’utente può navigare tra le sezioni principali (Feed, Classifica, Copy Trading, Academy), osservare i trader attivi e selezionare chi copiare.
+  </p>
+
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    Il cuore operativo del copytrading risiede nella sezione <strong>“Classifica”</strong>, dove è possibile confrontare i trader in base a rendimento, livello di rischio, numero di autocopiatori e storico operativo. La piattaforma mostra in tempo reale i guadagni, la % di successo e la possibilità di attivare la copia automatica.
+  </p>
+
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    L’interfaccia è progettata per essere accessibile anche a utenti alle prime armi, ma le informazioni visualizzate devono essere interpretate con senso critico. Il “Rapporto di guadagno” indica il bilancio delle operazioni del trader copiato, ma non tiene conto di leva, stop loss o rischi assunti.
+  </p>
+
+  <!-- Screenshot -->
+  <figure class="mt-6 mb-4">
+    <img src="https://tradelia.org/screen/naga1.png" alt="Screenshot piattaforma NAGA - Classifica Top Trader" class="rounded-lg border border-gray-300 shadow-sm">
+    <figcaption class="text-sm text-gray-500 italic mt-2">Schermata della sezione “Classifica” su NAGA: panoramica sui top trader, rendimenti e opzione “Auto Copy”.</figcaption>
+  </figure>
+
+  <p class="text-slate-700 text-base leading-relaxed">
+    Ogni operazione effettuata dal trader copiato viene replicata automaticamente sul conto dell’utente, in proporzione all’importo allocato. È sempre possibile interrompere la copia, modificare le impostazioni di rischio, oppure disattivare singole operazioni.
+  </p>
+</section>
+<br>
+<section class="max-w-4xl mx-auto mt-6 mb-12 bg-slate-50 p-6 rounded-xl border-l-4 border-gray-700 shadow-sm">
+  <h3 class="text-lg font-semibold text-slate-800 mb-3">Esempio Operativo – Profilo Trader: <span class="font-mono text-gray-800">waveboarder</span></h3>
+
+  <div class="flex flex-col md:flex-row gap-6">
+    <!-- Screenshot -->
+    <div class="md:w-1/2">
+      <img src="https://www.tradelia.org/screen/Naga2.png" alt="Profilo trader waveboarder su NAGA" class="rounded-lg border border-gray-300 shadow-sm" />
+    </div>
+
+    <!-- Dati e Analisi -->
+    <div class="md:w-1/2 text-sm text-slate-700 space-y-2">
+      <p><strong>Posizione attuale:</strong> 2° in classifica</p>
+      <p><strong>Utenti che copiano:</strong> 108</p>
+      <p><strong>Follower:</strong> 175</p>
+      <p><strong>Profitto storico:</strong> <span class="text-green-700 font-semibold">$63,758.60</span></p>
+      <p><strong>Rapporto di guadagno:</strong> <span class="text-green-700 font-semibold">93.22%</span></p>
+      <p><strong>Stile operativo dichiarato:</strong> frequente, multi-asset, alta rotazione</p>
+      <p><strong>Rischio implicito:</strong> medio – molte operazioni a breve termine</p>
+          <img src="/screen/Naga3.png" alt="Classifica trader NAGA" class="rounded-lg border border-gray-300 shadow-sm w-full max-w-3xl mx-auto">
+    </div>
+  </div>
+
+  <p class="text-slate-700 text-sm leading-relaxed mt-5">
+    Il trader <strong>waveboarder</strong> ha un numero molto elevato di utenti attivi in copia, un elemento che può indicare fiducia nel breve periodo ma non sostituisce un’analisi individuale. L’operatività sembra ad alta frequenza, con esposizione a mercati volatili. È raccomandato visionare lo storico completo, individuare eventuali drawdown e verificare la sostenibilità della strategia replicata nel tempo.
+  </p>
+</section>
+<section id="sezione-3" class="max-w-5xl mx-auto mt-16 mb-16 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-2xl font-semibold text-slate-900 mb-6">3. Valutazione dei Profili Trader su NAGA</h2>
+
+  <!-- 3.1 -->
+  <div class="mb-10">
+    <h3 class="text-xl font-semibold text-slate-800 mb-2">3.1 – Panoramica Classifica Trader</h3>
+    <p class="text-slate-700 mb-4">
+      Nella schermata principale della classifica NAGA vengono mostrati i trader più copiati o performanti. Elementi chiave da valutare:
+    </p>
+    <ul class="list-disc list-inside text-slate-700 space-y-1 mb-4">
+      <li><strong>ROI:</strong> rendimento percentuale recente, da confrontare su base 1-3-6 mesi</li>
+      <li><strong>Rischio:</strong> indicatore interno da prendere con cautela</li>
+      <li><strong>Numero di follower:</strong> utile come indicatore sociale, ma non garanzia di qualità</li>
+      <li><strong>Stabilità:</strong> osservare se il trader è da mesi in top list o nuovo</li>
+    </ul>
+    <img src="/screen/Naga4.png" alt="Classifica trader NAGA" class="rounded-lg border border-gray-300 shadow-sm w-full max-w-3xl mx-auto">
+  </div>
+
+  <!-- 3.2 -->
+  <div class="mb-10">
+    <h3 class="text-xl font-semibold text-slate-800 mb-2">3.2 – Scheda Profilo Trader</h3>
+    <p class="text-slate-700 mb-4">
+      Il profilo completo di ogni trader include dettagli sullo stile operativo, asset preferiti, storico operativo, rischio medio e altri parametri. È importante valutare:
+    </p>
+    <ul class="list-disc list-inside text-slate-700 space-y-1 mb-4">
+      <li><strong>Nome e coerenza del profilo:</strong> evitare nickname ambigui o senza descrizione</li>
+      <li><strong>Descrizione personale:</strong> utile per comprendere approccio e obiettivi</li>
+      <li><strong>Strategia dichiarata:</strong> se presente, confrontarla con lo storico</li>
+    </ul>
+    <img src="/screen/Naga2.png" alt="Profilo trader NAGA" class="rounded-lg border border-gray-300 shadow-sm w-full max-w-3xl mx-auto">
+  </div>
+
+  <!-- 3.3 -->
+  <div class="mb-10">
+    <h3 class="text-xl font-semibold text-slate-800 mb-2">3.3 – Curva Equity e Performance</h3>
+    <p class="text-slate-700 mb-4">
+      La curva dell’equity mostra l’evoluzione del conto nel tempo. È uno degli elementi più importanti da analizzare:
+    </p>
+    <ul class="list-disc list-inside text-slate-700 space-y-1 mb-4">
+      <li><strong>Crescita graduale vs salti improvvisi:</strong> diffidare di picchi sospetti</li>
+      <li><strong>Drawdown:</strong> flessioni temporanee devono essere gestite con recovery coerente</li>
+      <li><strong>Durata storica:</strong> preferire profili attivi da almeno 6 mesi</li>
+    </ul>
+  </div>
+
+  <!-- 3.4 -->
+  <div class="mb-10">
+    <h3 class="text-xl font-semibold text-slate-800 mb-2">3.4 – Asset Preferiti e Frequenza Operativa</h3>
+    <p class="text-slate-700 mb-4">
+      Analizzare quali strumenti vengono utilizzati, con quale frequenza e su quali mercati:
+    </p>
+    <ul class="list-disc list-inside text-slate-700 space-y-1 mb-4">
+      <li><strong>Diversificazione:</strong> un buon trader non è esposto a un solo asset</li>
+      <li><strong>Numero di operazioni:</strong> troppo basso = poco indicativo, troppo alto = overtrading</li>
+      <li><strong>Tipologia strumenti:</strong> CFD, azioni, cripto: valutare coerenza con tuo profilo</li>
+    </ul>
+    <img src="/screen/Naga5.png" alt="Asset operativi e frequenza" class="rounded-lg border border-gray-300 shadow-sm w-full max-w-3xl mx-auto">
+  </div>
+
+  <!-- 3.5 -->
+  <div class="mb-10">
+    <h3 class="text-xl font-semibold text-slate-800 mb-2">3.5 – Storico Operazioni Chiuse</h3>
+    <p class="text-slate-700 mb-4">
+      La cronologia delle operazioni concluse rivela molto sulla gestione del rischio. Da osservare:
+    </p>
+    <ul class="list-disc list-inside text-slate-700 space-y-1 mb-4">
+      <li><strong>Rapporto tra operazioni vincenti e perdenti</strong> (win rate)</li>
+      <li><strong>Dimensione media dei guadagni e delle perdite</strong></li>
+      <li><strong>Tempo medio di mantenimento</strong>: utile per capire lo stile (scalping vs swing)</li>
+    </ul>
+  </div>
+
+  <!-- 3.6 -->
+  <div>
+    <h3 class="text-xl font-semibold text-slate-800 mb-2">3.6 – Criteri Tecnici per la Scelta di un Trader</h3>
+    <p class="text-slate-700 mb-4">
+      Tradelia AI suggerisce una selezione ragionata dei trader da copiare, seguendo questi criteri professionali:
+    </p>
+    <ul class="list-disc list-inside text-slate-700 space-y-2">
+      <li>Equity line stabile, senza strappi irregolari</li>
+      <li>Almeno 3–6 mesi di storico coerente</li>
+      <li>Strategia dichiarata e verificabile nello storico</li>
+      <li>Win rate ≥ 50% con rischio/beneficio ≥ 1</li>
+      <li>Rendimento cumulato realistico (no +200% in un mese)</li>
+      <li>Nessuna leva eccessiva o esposizione a una sola asset class</li>
+      <li>Attività costante (no inattività superiore a 30 giorni)</li>
+    </ul>
+  </div>
+</section>
+<section id="sezione-4" class="max-w-4xl mx-auto mt-16 mb-16 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-2xl font-semibold text-slate-900 mb-6">4. Modalità di Attivazione della Copia</h2>
+
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    Una volta selezionato un trader da copiare sulla piattaforma NAGA, è possibile attivare la replica automatica delle sue operazioni tramite l'opzione <strong>“Auto Copy”</strong>. Il processo è semplice, ma richiede attenzione nella configurazione dei parametri chiave.
+  </p>
+
+  <h3 class="text-lg font-semibold text-slate-800 mb-2 mt-6">4.1 – Importo Allocato</h3>
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    È necessario specificare l’importo che si intende destinare alla copia. Questo valore determina la dimensione proporzionale con cui verranno replicate le operazioni del trader. È consigliabile partire con un’allocazione limitata, incrementabile nel tempo in base ai risultati osservati.
+  </p>
+
+  <h3 class="text-lg font-semibold text-slate-800 mb-2 mt-6">4.2 – Stop Loss Globale</h3>
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    La piattaforma consente di impostare un livello massimo di perdita tollerabile sull’intera attività di copia. Una volta raggiunto tale livello, il sistema interrompe automaticamente la replica e chiude le posizioni aperte. È uno strumento fondamentale di gestione del rischio.
+  </p>
+
+  <h3 class="text-lg font-semibold text-slate-800 mb-2 mt-6">4.3 – Impostazioni Avanzate</h3>
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    Alcuni parametri aggiuntivi permettono di personalizzare ulteriormente la copia, come ad esempio:
+  </p>
+  <ul class="list-disc list-inside text-slate-700 space-y-1 mb-4">
+    <li><strong>Escludere singole operazioni manualmente</strong> (una volta copiate)</li>
+    <li><strong>Limitare il numero massimo di operazioni aperte</strong></li>
+    <li><strong>Attivare la copia solo di alcuni strumenti</strong> (es. solo azioni o solo forex)</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold text-slate-800 mb-2 mt-6">4.4 – Interruzione della Copia</h3>
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    L’utente può in qualsiasi momento sospendere la copia, chiudere manualmente una o più operazioni, oppure disattivare del tutto il collegamento con il trader selezionato. È possibile anche esportare le posizioni aperte e continuare a gestirle autonomamente.
+  </p>
+
+  <p class="text-slate-700 text-base leading-relaxed">
+    Tradelia AI raccomanda di monitorare regolarmente l’andamento della copia e di verificare eventuali variazioni nella strategia del trader seguito. La flessibilità operativa deve essere sempre accompagnata da un controllo consapevole.
+  </p>
+</section>
+<br>
+<section id="sezione-5" class="max-w-4xl mx-auto mt-16 mb-16 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-2xl font-semibold text-slate-900 mb-6">5. Costi e Commissioni del Copytrading</h2>
+
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    L’utilizzo del copytrading su NAGA comporta una serie di costi, diretti e indiretti, che devono essere attentamente considerati prima di iniziare. Questi costi impattano sulla performance netta finale dell’investimento copiato.
+  </p>
+
+  <h3 class="text-lg font-semibold text-slate-800 mb-2 mt-6">5.1 – Commissione sul Profitto (Copy Fee)</h3>
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    NAGA applica una <strong>commissione sul profitto</strong> generato da ogni operazione chiusa in guadagno tramite copia. Questa “Copy Fee” viene calcolata in percentuale e trattenuta automaticamente, a favore del trader copiato. La percentuale tipica varia dal <strong>5% al 10%</strong> dei profitti netti.
+  </p>
+
+  <h3 class="text-lg font-semibold text-slate-800 mb-2 mt-6">5.2 – Spread e Costi di Esecuzione</h3>
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    Ogni operazione copiata comporta uno spread, ovvero la differenza tra prezzo di acquisto e vendita. Questo costo è implicito nella piattaforma e può variare a seconda dello strumento, della liquidità e dell'orario. In alcuni casi si applicano anche <strong>commissioni fisse</strong> per asset specifici (es. azioni reali).
+  </p>
+
+  <h3 class="text-lg font-semibold text-slate-800 mb-2 mt-6">5.3 – Costi Overnight (Swap)</h3>
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    Le posizioni mantenute aperte oltre la chiusura giornaliera possono generare <strong>costi di finanziamento overnight</strong>. Questo è particolarmente rilevante nel caso di strumenti derivati con leva (CFD su indici, azioni o criptovalute). L’incidenza varia in base al tasso implicito dello strumento.
+  </p>
+
+  <h3 class="text-lg font-semibold text-slate-800 mb-2 mt-6">5.4 – Commissioni di Deposito e Prelievo</h3>
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    Anche se molti broker offrono depositi gratuiti, <strong>NAGA può applicare costi di prelievo</strong> (tipicamente 5€ per bonifico). Inoltre, possono esserci costi legati al metodo di pagamento utilizzato (carte, crypto, wallet digitali). È importante leggere attentamente il prospetto dei costi.
+  </p>
+
+  <p class="text-slate-700 text-base leading-relaxed">
+    La gestione oculata del copytrading richiede di <strong>calcolare il rendimento netto</strong>, tenendo conto di tutti i costi sopra elencati. Una performance lorda del +20% può ridursi sensibilmente se commissioni e oneri accessori non vengono valutati correttamente.
+  </p>
+</section>
+<br>
+<section id="sezione-6" class="max-w-4xl mx-auto mt-16 mb-16 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-2xl font-semibold text-slate-900 mb-6">6. Rischi Operativi e Limiti Strategici</h2>
+
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    Il copytrading, pur essendo accessibile e intuitivo, comporta una serie di rischi operativi spesso sottovalutati dagli investitori alle prime armi. Non si tratta di una strategia passiva priva di responsabilità, ma di una modalità operativa che richiede consapevolezza e monitoraggio continuo.
+  </p>
+
+  <h3 class="text-lg font-semibold text-slate-800 mb-2 mt-6">6.1 – Rischio di Replica Meccanica</h3>
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    La copia automatica delle operazioni non tiene conto del contesto personale del copiante: capitale disponibile, profilo di rischio, orizzonte temporale e tolleranza alla perdita possono essere molto diversi da quelli del trader copiato. La strategia può quindi diventare inefficace o controproducente.
+  </p>
+
+  <h3 class="text-lg font-semibold text-slate-800 mb-2 mt-6">6.2 – Disallineamento Temporale e Tecnico</h3>
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    In alcuni casi si può verificare un <strong>ritardo tra l’operazione originale e la replica</strong>, soprattutto su mercati ad alta volatilità. Inoltre, il volume disponibile, la leva utilizzata o lo strumento sottostante potrebbero differire, causando risultati finali divergenti.
+  </p>
+
+  <h3 class="text-lg font-semibold text-slate-800 mb-2 mt-6">6.3 – Abbandono Improvviso del Trader Copiato</h3>
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    Il copytrading è fortemente dipendente dall’operatività del trader scelto. Se quest’ultimo sospende le operazioni, cambia approccio o inizia a operare con criteri meno disciplinati, l’intero modello copiato può crollare. <strong>Non vi è alcun obbligo di coerenza operativa nel tempo</strong>.
+  </p>
+
+  <h3 class="text-lg font-semibold text-slate-800 mb-2 mt-6">6.4 – Rischi Psicologici e Falsi Incentivi</h3>
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    Il successo iniziale di un profilo copiato può generare euforia eccessiva o spingere l’utente ad aumentare la leva e il capitale allocato senza un’analisi razionale. Allo stesso modo, le perdite temporanee possono portare a decisioni impulsive di disattivazione o passaggio frettoloso ad altri trader.
+  </p>
+
+  <h3 class="text-lg font-semibold text-slate-800 mb-2 mt-6">6.5 – Limiti Strategici Intrinseci</h3>
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    Il copytrading non consente una reale personalizzazione della strategia. L’utente dipende interamente dalle scelte dell’altro. Questo limita fortemente la possibilità di costruire un piano d’investimento coerente con i principi della pianificazione patrimoniale evoluta, come previsto dal modello Tradelia AI.
+  </p>
+
+  <p class="text-slate-700 text-base leading-relaxed">
+    Per questi motivi, si raccomanda di utilizzare il copytrading <strong>solo come strumento satellitare</strong>, con allocazioni contenute e monitoraggio continuo, mai come sostituto della propria consapevolezza strategica o delega totale delle decisioni finanziarie.
+  </p>
+</section>
+<br>
+<section id="sezione-7" class="max-w-4xl mx-auto mt-16 mb-16 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-2xl font-semibold text-slate-900 mb-6">7. Copytrading in Demo: Apprendimento e Test</h2>
+
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    Una delle funzionalità più sottovalutate delle piattaforme di copytrading è la possibilità di utilizzare un conto <strong>demo</strong> per simulare la replica delle operazioni, senza rischiare capitale reale. Questa modalità rappresenta un ambiente ideale per apprendere, testare e osservare il comportamento reale dei trader copiati.
+  </p>
+
+  <h3 class="text-lg font-semibold text-slate-800 mb-2 mt-6">7.1 – Apprendimento Strategico in Ambiente Protetto</h3>
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    La modalità demo consente di monitorare in tempo reale la strategia di un trader senza essere esposti al rischio di perdita. È possibile osservare come reagisce a determinati eventi di mercato, come gestisce il rischio e con quale frequenza modifica la propria operatività. Il tutto senza alcuna conseguenza finanziaria.
+  </p>
+
+  <h3 class="text-lg font-semibold text-slate-800 mb-2 mt-6">7.2 – Valutazione Comparativa tra Trader</h3>
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    Utilizzando più profili in copia simultaneamente su un conto virtuale, si può effettuare un confronto diretto tra i trader, evidenziando punti di forza, coerenza, stabilità e livelli di drawdown. Questo approccio consente di affinare la selezione prima di passare eventualmente a una copia reale.
+  </p>
+
+  <h3 class="text-lg font-semibold text-slate-800 mb-2 mt-6">7.3 – Educazione Finanziaria per Investitori Inesperti</h3>
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    Per chi si avvicina per la prima volta al mondo del trading, la replica demo rappresenta un ponte educativo concreto: un modo per comprendere gli strumenti finanziari, osservare il funzionamento delle leve, riconoscere gli effetti della volatilità e interpretare correttamente l’equity line.
+  </p>
+
+  <h3 class="text-lg font-semibold text-slate-800 mb-2 mt-6">7.4 – Costruzione di Fiducia Progressiva</h3>
+  <p class="text-slate-700 text-base leading-relaxed">
+    La modalità demo permette di costruire fiducia nel tempo. Solo dopo aver osservato in maniera oggettiva i risultati, verificato la tenuta strategica e compreso appieno i rischi, si può valutare l’ingresso su un conto reale. Questo approccio graduale è pienamente coerente con la logica prudente promossa dal modello Tradelia AI.
+  </p>
+</section>
+<br>
+<section id="sezione-8" class="max-w-4xl mx-auto mt-16 mb-20 bg-slate-50 p-6 rounded-xl border border-slate-300 shadow-sm">
+  <h2 class="text-2xl font-semibold text-slate-900 mb-4">8. Accesso Diretto alla Piattaforma NAGA</h2>
+
+  <p class="text-slate-700 text-base leading-relaxed mb-4">
+    Per esplorare la piattaforma NAGA, attivare un conto demo gratuito o iniziare a osservare i trader in classifica, è possibile accedere direttamente tramite il link ufficiale fornito da Tradelia AI.
+  </p>
+
+  <p class="text-slate-700 text-base leading-relaxed mb-6">
+    Il collegamento qui sotto permette di accedere a NAGA senza costi aggiuntivi per l’utente, offrendo al contempo un supporto alla sostenibilità del servizio gratuito fornito da Tradelia AI.
+  </p>
+
+  <div class="text-center mt-8">
+    <a href="https://www.tradelia.org/NAGA.html" target="_blank" class="inline-block bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition">
+      Accedi a NAGA tramite Tradelia.org
+    </a>
+  </div>
+</section>

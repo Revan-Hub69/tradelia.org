@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Report completo TRADELIA AI sulla crisi finanziaria 2008: analisi tecnica, strumenti derivati, protagonisti e impatto sociale.">
+  <title>TRADELIA • AI — Strumenti Finanziari Complessi</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    h1, h2, h3, h4 {
+      color: #0f172a;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.25rem; }
+    h3 { font-size: 1.25rem; }
+    h4 { font-size: 1.125rem; }
+    p { margin-bottom: 1.25rem; color: #374151; }
+    ul, ol { padding-left: 1.25rem; margin-bottom: 1.25rem; }
+    li { margin-bottom: 0.5rem; }
+    section {
+      background: #ffffff;
+      padding: 2.5rem 2rem;
+      margin: 2rem auto;
+      border-radius: 0.75rem;
+      max-width: 840px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e5e7eb;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
+    th, td {
+      padding: 0.75rem;
+      border: 1px solid #e5e7eb;
+      text-align: left;
+      font-size: 0.95rem;
+      word-break: break-word;
+    }
+    th { background: #f3f4f6; font-weight: 600; }
+    tr:nth-child(even) { background: #f9fafb; }
+    .positive { color: #16a34a; font-weight: 600; }
+    .negative { color: #dc2626; font-weight: 600; }
+    .neutral { color: #64748b; font-weight: 500; }
+    a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    a:hover { text-decoration: underline; color: #1d4ed8; }
+    @media screen and (max-width: 768px) {
+      body { font-size: 15px; line-height: 1.6; }
+      section { padding: 1.25rem; margin: 1rem; }
+      h1 { font-size: 1.5rem; }
+      h2 { font-size: 1.25rem; }
+      h3 { font-size: 1.125rem; }
+      h4 { font-size: 1rem; }
+      table, thead, tbody, th, td, tr {
+        display: block; width: 100%;
+      }
+      th { display: none; }
+      td {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border: none;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #1e293b;
+        padding-right: 1rem;
+        min-width: 140px;
+        display: inline-block;
+      }
+    }
+    #backToTop {
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    /* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+  border-radius: 100vh;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(80, 160, 200, 0.5);
+  border-radius: 100vh;
+  transition: background-color 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(80, 160, 200, 0.7);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
+  box-sizing: border-box;
+}
+  </style>
+</head>
+  <body>
+
+<header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-3 flex justify-between items-center">
+  <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 hover:opacity-90 transition">
+    TRADELIA<span class="text-blue-600 animate-pulse">•AI</span>
+  </a>
+  <a href="https://tradelia.org/archivio.html" class="text-sm sm:text-base text-blue-700 font-medium hover:underline transition">
+    Archivio Storico
+  </a>
+</header> 
+<br>
+<main class="px-4 sm:px-6">
+  <section>
+    <nav class="max-w-4xl mx-auto mt-4 mb-10 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+      <h2 class="text-lg font-semibold text-gray-800 mb-3">Indice del Tutorial</h2>
+      <ul class="list-disc list-inside text-sm text-blue-600 space-y-2">
+        <li><a href="#sezione-1">1. Definizione e Logica di Base</a></li>
+        <li><a href="#sezione-2">2. Struttura Tecnica e Componenti</a></li>
+        <li><a href="#sezione-3">3. Funzionamento e Meccanismo Cedolare</a></li>
+        <li><a href="#sezione-4">4. Rischi Nascosti e Aspetti Critici</a></li>
+        <li><a href="#sezione-5">5. Dove si Acquistano e Come Vengono Proposte</a></li>
+        <li><a href="#sezione-6">6. Esempi Reali e Strutture Note</a></li>
+        <li><a href="#sezione-7">7. Strategie Corrette vs Sbagliate</a></li>
+        <li><a href="#sezione-8">8. Confronto con Obbligazioni Classiche</a></li>
+        <li><a href="#sezione-9">9. Check-list Operativa</a></li>
+        <li><a href="#sezione-10">10. Glossario Tecnico</a></li>
+      </ul>
+    </nav>
+  </section>
+<section id="sezione-1" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">1. Definizione e Logica di Base</h2>
+  <p>
+    Le <strong>obbligazioni strutturate</strong> sono strumenti finanziari ibridi composti da due elementi principali:
+    <em>una componente obbligazionaria tradizionale</em> (zero coupon o a tasso fisso) e <em>una componente derivativa</em>
+    (tipicamente opzioni su indici, azioni, tassi o valute). Il rendimento e la restituzione del capitale dipendono da eventi di mercato
+    predeterminati.
+  </p>
+
+  <p>
+    Vengono emesse da <strong>banche d’investimento, istituzioni finanziarie o grandi emittenti corporate</strong>, spesso in collaborazione
+    con desk strutturati interni. La loro finalità è offrire prodotti personalizzabili, con rendimento potenziale superiore a un bond classico,
+    ma anche con rischi impliciti non sempre evidenti.
+  </p>
+
+  <p>
+    La logica di fondo è quella di sfruttare l'aspettativa di mercato del cliente o dell’emittente, integrando nel prodotto
+    <strong>una scommessa su un determinato evento</strong> (ad esempio: “l’indice EuroStoxx non deve perdere più del 30%” oppure
+    “la volatilità implicita resterà stabile”).
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700">
+    <li><strong>Rendimento condizionato:</strong> la cedola dipende da eventi futuri (performance sottostante, volatilità, spread, ecc.)</li>
+    <li><strong>Capitale condizionatamente protetto:</strong> la protezione non è assoluta ma legata a barriere o trigger predefiniti</li>
+    <li><strong>Pricing poco trasparente:</strong> spesso costruite con opzioni OTC, difficili da valutare per l’investitore retail</li>
+  </ul>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Non sono vere obbligazioni: sono scommesse travestite da bond. Possono avere senso, ma solo se comprese a fondo e utilizzate nel giusto contesto.»
+  </p>
+</section>
+<br>
+<section id="sezione-2" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">2. Struttura Tecnica e Componenti</h2>
+
+  <p>
+    Un’obbligazione strutturata è composta da due elementi integrati in un unico strumento: una componente obbligazionaria e una componente derivativa. L’obiettivo è generare un flusso cedolare condizionato e un rimborso finale subordinato a determinati eventi di mercato.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">Componente obbligazionaria</h3>
+  <p>
+    È generalmente rappresentata da una obbligazione a tasso fisso o zero coupon, destinata a garantire (in tutto o in parte) il capitale a scadenza. La durata tipica va da 2 a 5 anni. In molti casi, però, la protezione del capitale è solo condizionata a barriere.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">Componente derivativa</h3>
+  <p>
+    Si tratta di una o più opzioni finanziarie incorporate nel titolo. Queste opzioni possono essere di varia natura (call, put, autocall, digitali, con barriera) e fanno riferimento a sottostanti come indici azionari, azioni singole, tassi, valute o materie prime.
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700">
+    <li>Le opzioni determinano il diritto al pagamento delle cedole o il meccanismo di rimborso anticipato</li>
+    <li>Le barriere stabiliscono se il capitale viene restituito integralmente o solo in parte</li>
+    <li>Il payoff finale è spesso non lineare e asimmetrico</li>
+  </ul>
+
+  <div class="bg-gray-50 border-l-4 border-gray-300 p-4 mt-6 rounded">
+    <p class="text-sm text-gray-800">
+      Esempio operativo: un’obbligazione strutturata su indice azionario può offrire il 5% annuo solo se l’indice non perde più del 20%.
+      In caso contrario, l’investitore rischia un rimborso proporzionale alla performance negativa dell’indice.
+    </p>
+  </div>
+</section>
+<br>
+<section id="sezione-3" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">3. Funzionamento e Meccanismo Cedolare</h2>
+
+  <p>
+    Le obbligazioni strutturate non prevedono, nella maggior parte dei casi, una cedola fissa incondizionata. Il flusso cedolare dipende da condizioni specifiche legate all’andamento di uno o più sottostanti. Le strutture possono variare notevolmente, ma condividono alcune logiche ricorrenti.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">Cedole condizionate</h3>
+  <p>
+    Il pagamento delle cedole avviene solo se il sottostante rispetta una determinata soglia alla data di osservazione. Ad esempio: “cedola del 6% se l’indice sottostante è sopra il 70% del valore iniziale”.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">Effetto memoria</h3>
+  <p>
+    In alcune strutture è presente la funzione “memory”: se una o più cedole non vengono pagate perché le condizioni non si sono verificate, esse possono essere recuperate alla prima occasione utile in cui il trigger viene rispettato.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">Rimborso a scadenza</h3>
+  <p>
+    Il capitale investito può essere rimborsato integralmente, parzialmente o convertito in strumenti alternativi, in base al rispetto di una barriera a scadenza. 
+    In genere, se il sottostante è sopra la barriera, si riceve il 100%; se è sotto, si subisce una perdita proporzionale.
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700">
+    <li>Osservazione mensile, trimestrale o annuale</li>
+    <li>Barriera può essere continua o discreta (solo a scadenza)</li>
+    <li>Payoff finale spesso replicabile con una combinazione di opzioni vanilla</li>
+  </ul>
+
+  <div class="bg-gray-50 border-l-4 border-gray-300 p-4 mt-6 rounded">
+    <p class="text-sm text-gray-800">
+      Nota operativa: la presenza di cedole condizionate può creare l’illusione di rendimenti regolari.
+      In realtà, la probabilità di non ricevere cedole in contesti di alta volatilità è significativa.
+    </p>
+  </div>
+</section>
+<br>
+<section id="sezione-4" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">4. Rischi Nascosti e Aspetti Critici</h2>
+
+  <p>
+    Le obbligazioni strutturate sono spesso percepite come strumenti a basso rischio grazie alla parola “obbligazione” e alla presenza di una scadenza definita. Tuttavia, incorporano componenti opzionali che ne alterano profondamente il profilo di rischio/rendimento. 
+    È fondamentale comprendere gli elementi che possono determinare perdite significative o risultati diversi dalle attese.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">Barriera e rischio sul capitale</h3>
+  <p>
+    In molte strutture, il rimborso del capitale a scadenza è subordinato al rispetto di una barriera (es. il sottostante non deve perdere oltre il 30%). Se la barriera viene infranta, il capitale restituito può essere inferiore anche del 50–60%.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">Illiquidità e assenza di mercato secondario</h3>
+  <p>
+    Spesso questi strumenti non sono quotati su mercati regolamentati. In caso di bisogno di liquidità anticipata, l’unica via è la vendita OTC alla banca collocatrice, con spread molto ampi e pricing discrezionale.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">Opacità dei costi impliciti</h3>
+  <p>
+    Le strutturate incorporano commissioni elevate e margini impliciti nell'opzione. Il valore effettivo dell’obbligazione al momento dell’emissione può essere significativamente inferiore al prezzo di collocamento (tipicamente 100).
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700">
+    <li>Capitale non garantito nella maggior parte dei casi</li>
+    <li>Payoff difficilmente replicabile e poco intuitivo</li>
+    <li>Documentazione spesso semplificata (KID) e non trasparente</li>
+    <li>Assenza di benchmark reale di confronto</li>
+  </ul>
+
+  <div class="bg-gray-50 border-l-4 border-gray-300 p-4 mt-6 rounded">
+    <p class="text-sm text-gray-800">
+      Attenzione: molti investitori sottoscrivono queste obbligazioni senza una reale comprensione dei rischi di perdita in conto capitale, convinti erroneamente della “protezione implicita” del prodotto.
+    </p>
+  </div>
+</section>
+<br>
+<section id="sezione-5" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">5. Dove si Acquistano e Come Vengono Proposte</h2>
+
+  <p>
+    Le obbligazioni strutturate non sono liberamente negoziabili sul mercato regolamentato come i titoli di Stato o le azioni quotate. 
+    Sono emesse direttamente da banche o intermediari finanziari e distribuite al pubblico tramite canali controllati, in modo centralizzato.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">Canali di collocamento</h3>
+  <ul class="list-disc list-inside text-slate-700">
+    <li><strong>Reti bancarie tradizionali</strong>: collocazione diretta allo sportello o tramite consulente</li>
+    <li><strong>Consulenti finanziari abilitati all’offerta fuori sede</strong>: private banker e promotori</li>
+    <li><strong>Piattaforme di investimento online</strong>: raramente disponibili al retail, più comune nel segmento professionale</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">Modalità di proposta</h3>
+  <p>
+    Il prodotto viene solitamente proposto in fase di collocamento primario, con materiale promozionale che enfatizza il rendimento atteso 
+    e la "potenziale protezione" del capitale. Raramente viene indicato con trasparenza il rischio reale di perdita o la composizione esatta 
+    della struttura derivativa.
+  </p>
+
+  <ul class="list-disc list-inside text-slate-700 mt-4">
+    <li>Prezzo di emissione quasi sempre pari a 100</li>
+    <li>Commissioni di collocamento già incluse nel pricing</li>
+    <li>Documentazione ridotta al solo <strong>KID (Key Information Document)</strong> per la clientela retail</li>
+    <li>Quotazione assente o poco liquida sul secondario</li>
+  </ul>
+
+  <div class="bg-gray-50 border-l-4 border-gray-300 p-4 mt-6 rounded">
+    <p class="text-sm text-gray-800">
+      Nota operativa: nella maggior parte dei casi l’investitore non ha la possibilità di negoziare il prezzo di acquisto, né di accedere 
+      a informazioni avanzate sul mark-to-market reale del titolo. La trasparenza è fortemente limitata.
+    </p>
+  </div>
+</section>
+<br>
+<section id="sezione-6" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">6. Esempi Reali e Strutture Note</h2>
+
+  <p class="mb-6">
+    Le obbligazioni strutturate assumono configurazioni anche molto differenti in termini di rischio, complessità e liquidità. Di seguito vengono presentati due esempi reali a fini educativi: uno con struttura prudente e trasparente, l’altro con caratteristiche speculative e rischio capitale significativo.
+  </p>
+
+  <!-- ESEMPIO 1: STRUTTURATA PRUDENTE -->
+  <h3 class="text-lg font-semibold mt-6 mb-2">BNP Paribas – Inflation Linked EMTN 2028</h3>
+  <p>
+    Obbligazione strutturata emessa da BNP Paribas, con capitale protetto e cedola variabile indicizzata all’inflazione europea (HICPxT). Quotata su mercato regolamentato, è caratterizzata da elevata trasparenza e accessibilità per investitori con orizzonte difensivo.
+  </p>
+  <ul class="list-disc list-inside text-slate-700 mt-2">
+    <li><strong>ISIN:</strong> FR0014001234 (esemplificativo)</li>
+    <li><strong>Emittente:</strong> BNP Paribas (rating A+)</li>
+    <li><strong>Cedola:</strong> Inflazione HICPxT + 1,25% annuo</li>
+    <li><strong>Capitale:</strong> interamente garantito a scadenza</li>
+    <li><strong>Durata:</strong> 5 anni</li>
+    <li><strong>Mercato:</strong> EMTN regolamentato</li>
+  </ul>
+  <p class="text-sm text-slate-700 mt-4">
+    Si tratta di uno strumento con profilo di rischio contenuto, adatto a contesti inflattivi, indicizzato in modo semplice e trasparente, con payoff lineare e senza barriere o condizioni nascoste.
+  </p>
+
+  <!-- ESEMPIO 2: STRUTTURATA SPECULATIVA -->
+  <h3 class="text-lg font-semibold mt-10 mb-2">Equity Linked OTC – ISIN XS1290256202</h3>
+  <p>
+    Obbligazione strutturata OTC disponibile su piattaforme come EXANTE. Il prodotto prevede una cedola potenziale elevata subordinata a condizioni multiple, con capitale a rischio e quotazione assente su mercati regolamentati.
+  </p>
+  <ul class="list-disc list-inside text-slate-700 mt-2">
+    <li><strong>ISIN:</strong> XS1290256202</li>
+    <li><strong>Cedola:</strong> 10% annua subordinata al mantenimento di tutti i sottostanti sopra il 70% del valore iniziale</li>
+    <li><strong>Capitale:</strong> parzialmente o totalmente a rischio in caso di violazione barriera</li>
+    <li><strong>Durata:</strong> 3 anni</li>
+    <li><strong>Mercato:</strong> OTC – strumento non quotato, liquidità su richiesta</li>
+  </ul>
+  <p class="text-sm text-slate-700 mt-4">
+    Questo strumento presenta un profilo di rischio elevato. L’assenza di trasparenza sulla formazione del prezzo, la presenza di barriere e la scarsa liquidità lo rendono inadeguato per portafogli retail senza copertura o analisi ex ante dei payoff.
+  </p>
+</section>
+<br>
+<section id="sezione-7" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">7. Strategie Operative e Ruolo in Portafoglio</h2>
+
+  <p class="mb-6">
+    Le obbligazioni strutturate possono essere utilizzate all’interno di portafogli diversificati con finalità diverse, a seconda del profilo di rischio dell’investitore e della struttura tecnica del singolo strumento. Di seguito sono delineati alcuni approcci operativi consolidati.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">1. Protezione Condizionata del Capitale</h3>
+  <p>
+    Obbligazioni strutturate con capitale garantito o parzialmente protetto sono utilizzate per sostituire strumenti a reddito fisso in contesti di tassi bassi. Offrono esposizione a indici o panieri con una componente derivativa embedded, mantenendo un profilo difensivo.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">2. Esposizione Tattica con Controllo del Rischio</h3>
+  <p>
+    Strutturate con payoff lineare condizionato (es. cedole indicizzate o step-up) consentono di implementare strategie tattiche su determinati sottostanti (equity, commodity, inflazione) con meccanismi di barriera o trigger predeterminati. Sono spesso preferite a opzioni pure per motivi di fiscalità e semplicità d’uso.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">3. Diversificazione rispetto a strumenti tradizionali</h3>
+  <p>
+    L’uso combinato di obbligazioni strutturate con strumenti tradizionali consente di introdurre payoff non lineari nel portafoglio, migliorando la resilienza in scenari laterali o complessi. La diversificazione strutturale (non solo per asset class ma per funzione) è una tecnica utilizzata in portafogli istituzionali multi-strategy.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">4. Integrazione in logiche di Asset Allocation dinamica</h3>
+  <p>
+    In contesti risk-on/off, l’utilizzo di obbligazioni strutturate consente una modulazione attiva dell’esposizione senza intervenire direttamente su sottostanti volatili. Gli strumenti con cedola variabile condizionata possono comportarsi come “opzioni sintetiche” con effetto leva implicito ma più controllato.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">5. Limiti di utilizzo e considerazioni tecniche</h3>
+  <p>
+    Questi strumenti richiedono un'analisi ex-ante approfondita (payoff mapping, sensitività agli scenari, rischio emittente, liquidabilità) e una comprensione puntuale dei termini contrattuali. L’impiego in portafogli retail è da valutare solo in presenza di copertura analitica e orizzonte d’investimento compatibile.
+  </p>
+</section>
+<br>
+<section id="sezione-8" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">8. Rischi Specifici e Avvertenze Operative</h2>
+
+  <p class="mb-6">
+    Le obbligazioni strutturate, pur appartenendo formalmente alla categoria del reddito fisso, incorporano componenti derivate che le espongono a una gamma di rischi sostanzialmente più ampia rispetto alle obbligazioni tradizionali. Di seguito una sintesi dei principali fattori di rischio.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">1. Rischio Emittente</h3>
+  <p>
+    Il rimborso del capitale e il pagamento delle cedole dipendono interamente dalla solidità dell’emittente. In caso di default, il payoff strutturato decade completamente. Non esiste alcuna protezione sistemica per prodotti emessi al di fuori dei mercati regolamentati.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">2. Rischio di Liquidità</h3>
+  <p>
+    Molte strutturate non sono negoziate su mercati secondari liquidi. L’uscita anticipata può avvenire solo tramite controparte primaria (emittente o desk) a condizioni sfavorevoli. Il prezzo reale può divergere significativamente dal valore teorico in assenza di market maker.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">3. Complessità del Payoff</h3>
+  <p>
+    I meccanismi di calcolo del rendimento possono essere non lineari, con presenza di barriere, trigger condizionati, cedole digitali, step-down o reverse memory. L’assenza di strumenti pubblici per la modellazione del payoff rende difficile la valutazione del rischio reale da parte dell’investitore retail.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">4. Rischio di Mercato Composito</h3>
+  <p>
+    Le strutturate espongono a una combinazione di rischi: tasso d’interesse, spread, volatilità implicita, correlazione tra sottostanti, andamento valutario. Questi rischi possono agire in modo combinato e amplificato rispetto agli strumenti classici.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">5. Assenza di Copertura Garantita</h3>
+  <p>
+    La presenza di una componente derivativa esclude la possibilità di accesso a meccanismi pubblici di garanzia (es. fondo interbancario di tutela dei depositi) in caso di insolvenza o default dell’emittente. Anche il valore di rimborso può non corrispondere al valore nominale.
+  </p>
+
+  <p class="text-sm text-slate-700 mt-6">
+    Prima di inserire obbligazioni strutturate in portafoglio, è essenziale effettuare simulazioni multi-scenario, analisi della documentazione contrattuale (term sheet e final terms), e valutazioni sulla tenuta in condizioni di mercato avverso.
+  </p>
+</section>
+<br>
+<section id="sezione-8-1" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">8.1 Requisiti Minimi e Criteri di Valutazione</h2>
+
+  <p class="mb-6">
+    L’uso consapevole delle obbligazioni strutturate richiede competenze specifiche, accesso a dati tecnici completi e strumenti analitici adeguati. Di seguito sono sintetizzati i requisiti minimi per poter selezionare e valutare correttamente uno strumento di questa categoria.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">1. Lettura tecnica della documentazione</h3>
+  <p>
+    È indispensabile saper leggere il <strong>term sheet</strong> e i <strong>final terms</strong> del prodotto. In particolare:
+  </p>
+  <ul class="list-disc list-inside text-slate-700 mt-2">
+    <li>Struttura delle cedole (fissa, digitale, condizionata, step-up, memory)</li>
+    <li>Eventuali barriere (knock-in / knock-out, osservazione continua o discreta)</li>
+    <li>Condizioni di rimborso anticipato (callability, trigger autocall)</li>
+    <li>Valute e mercati sottostanti</li>
+    <li>Rating e rischio emittente</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">2. Simulazione di scenari realistici</h3>
+  <p>
+    Una valutazione efficace richiede la costruzione di almeno tre scenari:
+  </p>
+  <ul class="list-disc list-inside text-slate-700 mt-2">
+    <li>Scenario neutro (lieve variazione dei sottostanti)</li>
+    <li>Scenario negativo (viola le barriere)</li>
+    <li>Scenario positivo (trigger raggiunti, payoff massimo)</li>
+  </ul>
+  <p class="mt-2">
+    Ogni scenario va verificato in termini di <strong>payoff netto a scadenza</strong> e rischio implicito di perdita di capitale.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">3. Strumenti minimi richiesti</h3>
+  <p>
+    Non è possibile valutare correttamente un’obbligazione strutturata senza:
+  </p>
+  <ul class="list-disc list-inside text-slate-700 mt-2">
+    <li>Accesso a dati storici e forward dei sottostanti (es. Bloomberg, Refinitiv, TradingView Pro)</li>
+    <li>Modello di pricing base (Excel con payoff mapping o calcolatore strutturato)</li>
+    <li>Calcolo di IRR, DV01 e sensitività (almeno simulata manualmente)</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">4. Compatibilità con l’orizzonte e profilo rischio</h3>
+  <p>
+    Il profilo del prodotto va confrontato con:
+  </p>
+  <ul class="list-disc list-inside text-slate-700 mt-2">
+    <li>Orizzonte temporale dell’investitore</li>
+    <li>Tolleranza alle perdite (VaR e Maximum Drawdown atteso)</li>
+    <li>Strategia complessiva di portafoglio (core/satellite, income, decorrelazione)</li>
+  </ul>
+
+  <p class="text-sm text-slate-700 mt-6">
+    L’uso inconsapevole o imitativo di questi strumenti – ad esempio sulla base del solo rendimento promesso – è una delle cause più frequenti di perdita patrimoniale permanente nel comparto retail.
+  </p>
+</section>
+<br>
+<section id="sezione-9" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">9. Canali di Acquisto e Accesso Operativo</h2>
+
+  <p class="mb-6">
+    L’acquisto di obbligazioni strutturate può avvenire attraverso diversi canali, a seconda della tipologia di prodotto, della sua quotazione e del livello di accesso dell’investitore. È essenziale distinguere tra strumenti quotati su mercati regolamentati e strutturati OTC su richiesta.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">1. Broker professionali (accesso diretto e OTC)</h3>
+  <p>
+    Alcune piattaforme forniscono accesso diretto a obbligazioni strutturate già emesse o consentono la negoziazione OTC con pricing dedicato. Tra i broker più avanzati in Europa figura <strong>EXANTE</strong>, con un'infrastruttura professionale per strumenti fixed income strutturati.
+  </p>
+
+  <ul class="list-disc list-inside text-slate-700 mt-2">
+    <li>Piattaforma multi-asset con accesso a oltre 50 mercati</li>
+    <li>Disponibilità di strutturate OTC non quotate ma visibili</li>
+    <li>Esposizione trasparente su parametri tecnici (barriere, trigger, pricing)</li>
+    <li>Account con margini, esposizione in tempo reale e gestione rischio</li>
+  </ul>
+
+<div class="mt-6 border-l-4 border-blue-600 pl-4 py-2 bg-blue-50 rounded">
+  <p class="text-sm text-slate-800">
+    Vuoi analizzare strumenti OTC su una piattaforma professionale?
+    <a href="https://tradelia.org/Exante.html" target="_blank" class="text-blue-700 font-semibold underline hover:text-blue-900 transition">
+      Scopri l’approfondimento completo su EXANTE
+    </a>
+  </p>
+</div>
+
+  <h3 class="text-lg font-semibold mt-10 mb-2">2. Banche emittenti e collocatori primari</h3>
+  <p>
+    Le principali emissioni di obbligazioni strutturate avvengono tramite banche d’investimento e istituti primari (es. BNP Paribas, Société Générale, Barclays, Intesa Sanpaolo). L’accesso avviene:
+  </p>
+  <ul class="list-disc list-inside text-slate-700 mt-2">
+    <li>Tramite home banking evoluti (solo strutture retail semplificate)</li>
+    <li>Tramite consulente bancario (collocamento periodico, commissioni implicite elevate)</li>
+    <li>In alcuni casi tramite app e strumenti automatizzati (es. Intesa Investrading)</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mt-10 mb-2">3. Piattaforme istituzionali con accesso limitato</h3>
+  <p>
+    Alcune piattaforme (es. Bloomberg Terminal, Allfunds, MarketAxess) offrono accesso integrato a prodotti strutturati, ma richiedono status di investitore istituzionale, licenze operative e capitale minimo per l’accesso.
+  </p>
+
+  <p class="text-sm text-slate-700 mt-6">
+    È raccomandabile confrontare sempre il prezzo di acquisto con il fair value teorico, verificare la liquidabilità reale e leggere attentamente i documenti precontrattuali forniti dal broker o dall’emittente.
+  </p>
+</section>
+<br>
+<section id="sezione-10" class="max-w-4xl mx-auto mb-20 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">10. Disclaimer e Note Legali</h2>
+
+  <p class="text-sm text-slate-700 mb-4">
+    Le informazioni contenute in questo report hanno finalità esclusivamente educative e non costituiscono in alcun modo sollecitazione al pubblico risparmio, consulenza personalizzata, raccomandazione operativa o invito all'investimento.
+  </p>
+
+  <p class="text-sm text-slate-700 mb-4">
+    Tradelia AI non è un intermediario abilitato alla prestazione di servizi di investimento. I contenuti presenti nel documento derivano da fonti ritenute attendibili, ma non si garantisce la completezza, correttezza o attualità dei dati riportati. Le analisi sono frutto di un’elaborazione autonoma a carattere informativo.
+  </p>
+
+  <p class="text-sm text-slate-700 mb-4">
+    Gli strumenti finanziari descritti – in particolare le obbligazioni strutturate e i derivati OTC – sono complessi, ad alto rischio, e possono generare perdite superiori al capitale investito. È fondamentale consultare documentazione ufficiale, prospetti informativi e personale qualificato prima di ogni decisione operativa.
+  </p>
+
+  <p class="text-sm text-slate-700">
+    L’utente rimane l’unico responsabile delle proprie decisioni finanziarie. La consultazione di questo materiale implica l’accettazione integrale del presente disclaimer.
+  </p>
+</section>
+<br>
+  <section>
+<div class="mb-16">
+  <h4 class="text-xl font-semibold text-slate-800 mb-4">Approfondimenti collegati</h4>
+  <ul class="list-disc list-inside text-slate-700 space-y-2">
+    <li><a href="/report/macro/CDS-CDO-subprime.html" class="text-blue-600 hover:underline" target="_blank">Gli Strumenti della crisi Subprime →</a></li>
+  </ul>
+</div>
+<section class="max-w-4xl mx-auto px-4 sm:px-6 mt-12 mb-24">
+  <h2 class="text-2xl font-semibold text-slate-800 mb-6 border-b pb-2">
+    Riepilogo Approfondimenti Tecnici
+  </h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+    <a href="/report/tutorial/Obbligazioni-Strutturate.html" target="_blank" class="text-blue-600 hover:underline">• Obbligazioni Strutturate</a>
+    <a href="/report/tutorial/CoCo-Bonds.html" target="_blank" class="text-blue-600 hover:underline">• CoCo Bonds</a>
+    <a href="/report/tutorial/Callable-StepUp.html" target="_blank" class="text-blue-600 hover:underline">• Callable & Step-Up</a>
+    <a href="/report/tutorial/Dual-Currency-Bonds.html" target="_blank" class="text-blue-600 hover:underline">• Dual Currency Bonds</a>
+    <a href="/report/tutorial/Reverse-Convertible.html" target="_blank" class="text-blue-600 hover:underline">• Reverse Convertible</a>
+    <a href="/report/tutorial/Note-Strutturate-Barriera.html" target="_blank" class="text-blue-600 hover:underline">• Note con Barriera</a>
+    <a href="/report/tutorial/Certificates-Complessi.html" target="_blank" class="text-blue-600 hover:underline">• Certificates Complessi</a>
+    <a href="/report/tutorial/False-Principal-Protection.html" target="_blank" class="text-blue-600 hover:underline">• Obbligazioni "Protette"</a>
+    <a href="/report/tutorial/ETF-Leva-Inversi.html" target="_blank" class="text-blue-600 hover:underline">• ETF Leva e Inversi</a>
+    <a href="/report/tutorial/CFD-Retail.html" target="_blank" class="text-blue-600 hover:underline">• CFD & Retail</a>
+    <a href="/report/tutorial/ETF-Sintetici.html" target="_blank" class="text-blue-600 hover:underline">• ETF Strutturati Sintetici</a>
+    <a href="/report/tutorial/Opzioni-Vanilla.html" target="_blank" class="text-blue-600 hover:underline">• Opzioni Plain Vanilla</a>
+    <a href="/report/tutorial/Opzioni-Esotiche.html" target="_blank" class="text-blue-600 hover:underline">• Opzioni Esotiche</a>
+    <a href="/report/tutorial/Derivati-OTC.html" target="_blank" class="text-blue-600 hover:underline">• Derivati OTC</a>
+    <a href="/report/tutorial/SPAC-Rischi.html" target="_blank" class="text-blue-600 hover:underline">• Rischi SPAC</a>
+    <a href="/report/tutorial/CLO-CDO.html" target="_blank" class="text-blue-600 hover:underline">• CLO / CDO</a>
+    <a href="/report/tutorial/Token-Sintetici.html" target="_blank" class="text-blue-600 hover:underline">• Token Sintetici</a>
+    <a href="/report/tutorial/Stablecoin-Algoritmiche.html" target="_blank" class="text-blue-600 hover:underline">• Stablecoin Algoritmiche</a>
+  </div>
+</section>
+
+<hr class="my-12">
+
+<div class="mb-16">
+  <h4 class="text-xl font-semibold text-slate-800 mb-4"> Analisi AI più lette</h4>
+  <ul class="list-disc list-inside text-slate-700 space-y-2">
+        <li><a href="/report/tutorial/Simulatore-Portafogli.html" class="text-blue-600 hover:underline" target="_blank">Simulatore Portafogli →</a></li>
+     <li><a href="/report/tutorial/CFD-Retail.html" class="text-blue-600 hover:underline" target="_blank">CFD Retail & Pratiche scorrette→ </a></li>
+    <li><a href="/report/tutorial/Truffe-Cripto.html" class="text-blue-600 hover:underline" target="_blank">Truffe cripto più famose →</a></li>
+    <li><a href="/report/tutorial/Truffe-Finanziarie-Storiche.html" class="text-blue-600 hover:underline" target="_blank">Grandi truffe finanziarie della storia →</a></li>
+    <li><a href="/report/tutorial/Statistiche-Truffe-Online.html" class="text-blue-600 hover:underline" target="_blank">Statistiche e numeri delle truffe online su investimenti →</a></li>
+    <li><a href="/report/tutorial/MM-STP-ECN.html" class="text-blue-600 hover:underline" target="_blank">Broker: differenze tra MM, STP ed ECN →</a></li>
+  </ul>
+</div>
+</section>
+  </main>
+  <button id="backToTop" title="Torna all'inizio" aria-label="Torna all'inizio" 
+  class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-lg transition-opacity opacity-80 hover:opacity-100 focus:outline-none">
+  ↑ Torna all'inizio
+</button>
+<script>
+  const btn = document.getElementById('backToTop');
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+
+</body>
+</html>
