@@ -178,9 +178,12 @@
     .filter-group { margin-bottom: 1.5rem; }
     .filter-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 0.5rem; color: var(--ink); }
     .filter-checkboxes { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-    .filter-checkbox { display: flex; align-items: center; gap: 0.35rem; }
-    .filter-checkbox input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }
-    .filter-checkbox label { margin: 0; font-size: 12px; font-weight: 400; cursor: pointer; }
+    .filter-checkbox { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 0.25rem 0; }
+    .filter-checkbox input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; }
+    .filter-checkbox span { font-size: 12px; font-weight: 400; cursor: pointer; }
+    .filter-radio { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 0.25rem 0; }
+    .filter-radio input[type="radio"] { width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; }
+    .filter-radio span { font-size: 12px; font-weight: 400; cursor: pointer; }
     
     /* Range slider */
     .filter-range { display: flex; flex-direction: column; gap: 0.5rem; }
@@ -218,47 +221,100 @@
 
     <!-- Filtri -->
     <div class="bg-white border border-slate-200 rounded-xl p-6 mb-8">
-      <div class="flex flex-wrap items-center gap-6">
-        <!-- Livello tecnico -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Livello tecnico (mutuamente esclusivi) -->
         <div class="filter-group">
           <label class="text-sm font-semibold mb-2 block">Livello tecnico</label>
-          <div class="flex flex-wrap gap-2">
-            <label class="filter-checkbox">
-              <input type="checkbox" id="filter-skill-pro" data-filter="skill-pro">
+          <div class="flex flex-col gap-2">
+            <label class="filter-radio">
+              <input type="radio" name="skill-level" id="filter-skill-pro" value="skill-pro" data-filter="skill-pro">
               <span>Pro</span>
             </label>
-            <label class="filter-checkbox">
-              <input type="checkbox" id="filter-skill-avanzato" data-filter="skill-avanzato">
+            <label class="filter-radio">
+              <input type="radio" name="skill-level" id="filter-skill-avanzato" value="skill-avanzato" data-filter="skill-avanzato">
               <span>Avanzato</span>
             </label>
-            <label class="filter-checkbox">
-              <input type="checkbox" id="filter-skill-intermedio" data-filter="skill-intermedio">
+            <label class="filter-radio">
+              <input type="radio" name="skill-level" id="filter-skill-intermedio" value="skill-intermedio" data-filter="skill-intermedio">
               <span>Intermedio</span>
             </label>
-            <label class="filter-checkbox">
-              <input type="checkbox" id="filter-skill-base" data-filter="skill-base">
+            <label class="filter-radio">
+              <input type="radio" name="skill-level" id="filter-skill-base" value="skill-base" data-filter="skill-base">
               <span>Base</span>
+            </label>
+            <button type="button" id="clear-skill" class="text-xs text-slate-500 hover:text-slate-700 mt-1 text-left">Nessuno</button>
+          </div>
+        </div>
+
+        <!-- Strumenti finanziari (multipli) -->
+        <div class="filter-group">
+          <label class="text-sm font-semibold mb-2 block">Strumenti finanziari</label>
+          <div class="flex flex-col gap-2">
+            <label class="filter-checkbox">
+              <input type="checkbox" id="filter-azioni" data-filter="azioni">
+              <span>Azioni</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" id="filter-etf" data-filter="etf">
+              <span>ETF</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" id="filter-bond" data-filter="bond">
+              <span>Obbligazioni</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" id="filter-opzioni" data-filter="opzioni">
+              <span>Opzioni</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" id="filter-futures" data-filter="futures">
+              <span>Futures</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" id="filter-crypto" data-filter="crypto">
+              <span>Crypto</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" id="filter-ipo" data-filter="ipo">
+              <span>IPO</span>
             </label>
           </div>
         </div>
 
-        <!-- Regime amministrato -->
+        <!-- Piattaforme e Tecnologie (multipli) -->
         <div class="filter-group">
-          <label class="text-sm font-semibold mb-2 block">Regime fiscale</label>
-          <div class="flex flex-wrap gap-2">
+          <label class="text-sm font-semibold mb-2 block">Piattaforme e Tecnologie</label>
+          <div class="flex flex-col gap-2">
+            <label class="filter-checkbox">
+              <input type="checkbox" id="filter-dma" data-filter="dma">
+              <span>DMA (Direct Market Access)</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" id="filter-api" data-filter="api">
+              <span>API Trading</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" id="filter-tws" data-filter="tws">
+              <span>TWS (Trader Workstation)</span>
+            </label>
             <label class="filter-checkbox">
               <input type="checkbox" id="filter-regime-it" data-filter="regime-it">
               <span>Regime amministrato IT</span>
             </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" id="filter-protection" data-filter="protection">
+              <span>Protezione fondi</span>
+            </label>
           </div>
         </div>
 
-        <!-- Visualizzazione standard -->
+        <!-- Visualizzazione -->
         <div class="filter-group">
           <label class="text-sm font-semibold mb-2 block">Visualizzazione</label>
-          <div class="flex flex-wrap gap-2">
-            <button id="view-all" class="btn-inline text-xs">Tutti</button>
-            <button id="view-by-skill" class="btn-inline text-xs">Per livello tecnico</button>
+          <div class="flex flex-col gap-2">
+            <button id="view-all" class="btn-inline text-xs justify-start">Tutti</button>
+            <button id="view-by-skill" class="btn-inline text-xs justify-start">Per livello tecnico</button>
+            <button type="button" id="clear-all-filters" class="text-xs text-slate-500 hover:text-slate-700 mt-2 text-left">Reset filtri</button>
           </div>
         </div>
       </div>
@@ -395,16 +451,16 @@
 </footer>
 
 <script>
-(function(){
-  // ===== Tema chiaro fisso =====
-  document.documentElement.setAttribute('data-theme', 'light');
+// ===== Tema chiaro fisso =====
+document.documentElement.setAttribute('data-theme', 'light');
 
-  // ===== Footer year =====
-  const fy = document.getElementById('footer-year');
-  if (fy) fy.textContent = new Date().getFullYear();
+// ===== Footer year =====
+const fy = document.getElementById('footer-year');
+if (fy) fy.textContent = new Date().getFullYear();
 
-  // ===== Dati broker =====
-  const BROKERS = {
+// ===== Dati broker =====
+// Rendi BROKERS accessibile globalmente
+window.BROKERS = {
     exante: {
       name: "EXANTE",
       affiliated: true,
@@ -494,6 +550,7 @@
         "skill-pro": true,
         dma: true,
         api: true,
+        tws: true,
         multi: true,
         "cfd-si": true,
         "obbligazionario-etf": true,
@@ -544,6 +601,7 @@
         "skill-avanzato": true,
         dma: true,
         api: true,
+        tws: true,
         multi: true,
         "cfd-si": true,
         "obbligazionario-etf": true,
@@ -914,6 +972,25 @@
           enriched.filters[`platform-${p}`] = true;
         }
       });
+      // Aggiungi filtri per piattaforme specifiche
+      const platLower = (enriched.platforms_text || '').toLowerCase();
+      if (platLower.includes('tws') || platLower.includes('trader workstation')) {
+        enriched.filters['tws'] = true;
+      }
+    }
+    // Aggiungi filtri DMA e API se presenti
+    if (enriched.tags && Array.isArray(enriched.tags)) {
+      if (enriched.tags.some(t => t.toLowerCase().includes('dma'))) {
+        enriched.filters['dma'] = true;
+      }
+      if (enriched.tags.some(t => t.toLowerCase().includes('api') || t.toLowerCase().includes('tws'))) {
+        if (enriched.tags.some(t => t.toLowerCase().includes('tws'))) {
+          enriched.filters['tws'] = true;
+        }
+        if (enriched.tags.some(t => t.toLowerCase().includes('api'))) {
+          enriched.filters['api'] = true;
+        }
+      }
     }
     if (enriched.markets) {
       enriched.markets.forEach(m => {
@@ -942,17 +1019,17 @@
     return enriched;
   }
 
-  // ===== Funzioni filtro =====
-  function renderBrokers(filters = {}, rangeFilters = {}, viewMode = 'all') {
-    const grid = document.getElementById('brokers-grid');
-    if (!grid) {
-      console.error('brokers-grid non trovato!');
-      return;
-    }
-    grid.innerHTML = '';
+// ===== Funzioni filtro =====
+function renderBrokers(filters = {}, rangeFilters = {}, viewMode = 'all') {
+  const grid = document.getElementById('brokers-grid');
+  if (!grid) {
+    console.error('brokers-grid non trovato!');
+    return;
+  }
+  grid.innerHTML = '';
 
-    try {
-      const brokers = Object.entries(BROKERS).map(([key, broker]) => {
+  try {
+    const brokers = Object.entries(window.BROKERS).map(([key, broker]) => {
         // Arricchisce i dati del broker
         try {
           const enriched = enrichBrokerData(broker);
@@ -962,15 +1039,53 @@
           return [key, broker];
         }
       }).filter(([key, broker]) => {
-      // Filtri checkbox
+      // Raggruppa i filtri per categoria logica
       const activeFilters = Object.entries(filters).filter(([_, value]) => value);
       
-      // Verifica filtri checkbox
-      if (activeFilters.length > 0) {
-        const matchesCheckbox = activeFilters.every(([filterKey, _]) => {
+      if (activeFilters.length === 0) {
+        // Nessun filtro attivo, mostra tutti
+        return true;
+      }
+      
+      // Definisci gruppi di filtri
+      const skillFilters = ['skill-pro', 'skill-avanzato', 'skill-intermedio', 'skill-base'];
+      const instrumentFilters = ['azioni', 'etf', 'bond', 'opzioni', 'futures', 'crypto', 'ipo'];
+      const platformFilters = ['dma', 'api', 'tws', 'regime-it', 'protection'];
+      
+      // Separa filtri per categoria
+      const activeSkillFilters = activeFilters.filter(([filterKey]) => 
+        skillFilters.includes(filterKey)
+      );
+      const activeInstrumentFilters = activeFilters.filter(([filterKey]) => 
+        instrumentFilters.includes(filterKey)
+      );
+      const activePlatformFilters = activeFilters.filter(([filterKey]) => 
+        platformFilters.includes(filterKey)
+      );
+      
+      // Verifica filtri skill (OR logico: almeno uno deve corrispondere)
+      // Nota: anche se è un radio button, alcuni broker possono avere skill multipli nei dati
+      if (activeSkillFilters.length > 0) {
+        const matchesSkill = activeSkillFilters.some(([filterKey]) => {
           return broker.filters[filterKey] === true;
         });
-        if (!matchesCheckbox) return false;
+        if (!matchesSkill) return false;
+      }
+      
+      // Verifica filtri strumenti (AND logico: deve avere tutti gli strumenti selezionati)
+      if (activeInstrumentFilters.length > 0) {
+        const matchesInstruments = activeInstrumentFilters.every(([filterKey]) => {
+          return broker.filters[filterKey] === true;
+        });
+        if (!matchesInstruments) return false;
+      }
+      
+      // Verifica filtri piattaforme (AND logico: deve avere tutte le piattaforme selezionate)
+      if (activePlatformFilters.length > 0) {
+        const matchesPlatforms = activePlatformFilters.every(([filterKey]) => {
+          return broker.filters[filterKey] === true;
+        });
+        if (!matchesPlatforms) return false;
       }
 
       // Filtro deposito minimo (range)
@@ -984,58 +1099,58 @@
         if (broker.score < rangeFilters.score) return false;
       }
 
-      return true;
+    return true;
+    });
+
+    // Mostra messaggio se non ci sono broker
+    if (brokers.length === 0) {
+      grid.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-slate-600">Nessun broker trovato con i filtri selezionati. Prova a modificare i filtri.</p></div>';
+      return;
+    }
+
+    // Raggruppa per livello tecnico se richiesto
+    if (viewMode === 'by-skill') {
+      const grouped = {};
+      brokers.forEach(([key, broker]) => {
+        const skill = broker.skill || 'Altro';
+        if (!grouped[skill]) grouped[skill] = [];
+        grouped[skill].push([key, broker]);
       });
 
-      // Mostra messaggio se non ci sono broker
-      if (brokers.length === 0) {
-        grid.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-slate-600">Nessun broker trovato con i filtri selezionati. Prova a modificare i filtri.</p></div>';
-        return;
-      }
+      // Ordina i gruppi per livello
+      const skillOrder = ['Pro', 'Avanzato', 'Intermedio/Avanzato', 'Intermedio-Avanzato', 'Intermedio', 'Base/Intermedio', 'Base'];
+      const sortedGroups = Object.keys(grouped).sort((a, b) => {
+        const aIndex = skillOrder.indexOf(a);
+        const bIndex = skillOrder.indexOf(b);
+        if (aIndex === -1 && bIndex === -1) return a.localeCompare(b);
+        if (aIndex === -1) return 1;
+        if (bIndex === -1) return -1;
+        return aIndex - bIndex;
+      });
 
-      // Raggruppa per livello tecnico se richiesto
-      if (viewMode === 'by-skill') {
-        const grouped = {};
-        brokers.forEach(([key, broker]) => {
-          const skill = broker.skill || 'Altro';
-          if (!grouped[skill]) grouped[skill] = [];
-          grouped[skill].push([key, broker]);
-        });
+      sortedGroups.forEach(skill => {
+        const skillHeader = document.createElement('div');
+        skillHeader.className = 'col-span-full mt-6 mb-4';
+        skillHeader.innerHTML = `<h2 class="text-xl font-bold text-slate-900 border-b border-slate-200 pb-2">${skill}</h2>`;
+        grid.appendChild(skillHeader);
 
-        // Ordina i gruppi per livello
-        const skillOrder = ['Pro', 'Avanzato', 'Intermedio/Avanzato', 'Intermedio-Avanzato', 'Intermedio', 'Base/Intermedio', 'Base'];
-        const sortedGroups = Object.keys(grouped).sort((a, b) => {
-          const aIndex = skillOrder.indexOf(a);
-          const bIndex = skillOrder.indexOf(b);
-          if (aIndex === -1 && bIndex === -1) return a.localeCompare(b);
-          if (aIndex === -1) return 1;
-          if (bIndex === -1) return -1;
-          return aIndex - bIndex;
-        });
-
-        sortedGroups.forEach(skill => {
-          const skillHeader = document.createElement('div');
-          skillHeader.className = 'col-span-full mt-6 mb-4';
-          skillHeader.innerHTML = `<h2 class="text-xl font-bold text-slate-900 border-b border-slate-200 pb-2">${skill}</h2>`;
-          grid.appendChild(skillHeader);
-
-          grouped[skill].forEach(([key, broker]) => {
-            renderBrokerCard(key, broker, grid);
-          });
-        });
-      } else {
-        brokers.forEach(([key, broker]) => {
+        grouped[skill].forEach(([key, broker]) => {
           renderBrokerCard(key, broker, grid);
         });
-      }
-    } catch (error) {
-      console.error('Errore nel rendering dei broker:', error);
-      grid.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-red-600">Errore nel caricamento dei broker. Controlla la console per i dettagli.</p></div>';
+      });
+    } else {
+      brokers.forEach(([key, broker]) => {
+        renderBrokerCard(key, broker, grid);
+      });
     }
+  } catch (error) {
+    console.error('Errore nel rendering dei broker:', error);
+    grid.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-red-600">Errore nel caricamento dei broker. Controlla la console per i dettagli.</p></div>';
   }
+}
 
-  // Funzione per renderizzare una singola card broker
-  function renderBrokerCard(key, broker, grid) {
+// Funzione per renderizzare una singola card broker
+function renderBrokerCard(key, broker, grid) {
         const card = document.createElement('div');
         card.className = 'card border border-slate-200 bg-white rounded-xl h-full min-h-[320px] p-5 flex flex-col';
         card.setAttribute('data-key', key);
@@ -1092,165 +1207,221 @@
           <button class="btn bg-slate-900 text-white hover:bg-slate-800 w-full mt-auto" onclick="openModal('${key}')">Maggiori info</button>
         `;
         
-    grid.appendChild(card);
-  }
+  grid.appendChild(card);
+}
 
-  // ===== Gestione filtri =====
-  const filterCheckboxes = document.querySelectorAll('[data-filter]');
-  const activeFilters = {};
-  let viewMode = 'all'; // 'all' o 'by-skill'
+// ===== Gestione filtri =====
+const activeFilters = {};
+let viewMode = 'all'; // 'all' o 'by-skill'
 
-  // Gestione checkbox filters
-  filterCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', () => {
-      const filterKey = checkbox.getAttribute('data-filter');
-      activeFilters[filterKey] = checkbox.checked;
-      applyFilters();
+// Funzione unificata per applicare tutti i filtri
+function applyFilters() {
+  renderBrokers(activeFilters, {}, viewMode);
+}
+
+// Gestione radio buttons per skill level (mutuamente esclusivi)
+const skillRadios = document.querySelectorAll('input[type="radio"][name="skill-level"]');
+skillRadios.forEach(radio => {
+  radio.addEventListener('change', () => {
+    // Rimuovi tutti i filtri skill precedenti
+    ['skill-pro', 'skill-avanzato', 'skill-intermedio', 'skill-base'].forEach(skill => {
+      delete activeFilters[skill];
     });
-  });
-
-  // Funzione unificata per applicare tutti i filtri
-  function applyFilters() {
-    renderBrokers(activeFilters, {}, viewMode);
-  }
-
-  // Visualizzazione per livello tecnico
-  document.getElementById('view-all')?.addEventListener('click', () => {
-    viewMode = 'all';
-    document.getElementById('view-all').classList.add('bg-slate-900', 'text-white');
-    document.getElementById('view-all').classList.remove('bg-white');
-    document.getElementById('view-by-skill').classList.remove('bg-slate-900', 'text-white');
-    document.getElementById('view-by-skill').classList.add('bg-white');
+    // Aggiungi il filtro skill selezionato
+    if (radio.checked) {
+      const filterKey = radio.getAttribute('data-filter');
+      activeFilters[filterKey] = true;
+    }
     applyFilters();
   });
+});
 
-  document.getElementById('view-by-skill')?.addEventListener('click', () => {
-    viewMode = 'by-skill';
-    document.getElementById('view-by-skill').classList.add('bg-slate-900', 'text-white');
-    document.getElementById('view-by-skill').classList.remove('bg-white');
-    document.getElementById('view-all').classList.remove('bg-slate-900', 'text-white');
-    document.getElementById('view-all').classList.add('bg-white');
+// Gestione checkbox per strumenti e piattaforme (multipli)
+const filterCheckboxes = document.querySelectorAll('input[type="checkbox"][data-filter]');
+filterCheckboxes.forEach(checkbox => {
+  checkbox.addEventListener('change', () => {
+    const filterKey = checkbox.getAttribute('data-filter');
+    if (checkbox.checked) {
+      activeFilters[filterKey] = true;
+    } else {
+      delete activeFilters[filterKey];
+    }
     applyFilters();
   });
+});
 
-  // Imposta vista iniziale
-  if (document.getElementById('view-all')) {
-    document.getElementById('view-all').classList.add('bg-slate-900', 'text-white');
+// Reset filtri skill
+document.getElementById('clear-skill')?.addEventListener('click', () => {
+  skillRadios.forEach(radio => radio.checked = false);
+  ['skill-pro', 'skill-avanzato', 'skill-intermedio', 'skill-base'].forEach(skill => {
+    delete activeFilters[skill];
+  });
+  applyFilters();
+});
+
+// Reset tutti i filtri
+document.getElementById('clear-all-filters')?.addEventListener('click', () => {
+  // Reset radio buttons
+  skillRadios.forEach(radio => radio.checked = false);
+  // Reset checkbox
+  filterCheckboxes.forEach(checkbox => checkbox.checked = false);
+  // Reset activeFilters
+  Object.keys(activeFilters).forEach(key => delete activeFilters[key]);
+  applyFilters();
+});
+
+// Visualizzazione per livello tecnico
+document.getElementById('view-all')?.addEventListener('click', () => {
+  viewMode = 'all';
+  document.getElementById('view-all').classList.add('bg-slate-900', 'text-white');
+  document.getElementById('view-all').classList.remove('bg-white');
+  document.getElementById('view-by-skill').classList.remove('bg-slate-900', 'text-white');
+  document.getElementById('view-by-skill').classList.add('bg-white');
+  applyFilters();
+});
+
+document.getElementById('view-by-skill')?.addEventListener('click', () => {
+  viewMode = 'by-skill';
+  document.getElementById('view-by-skill').classList.add('bg-slate-900', 'text-white');
+  document.getElementById('view-by-skill').classList.remove('bg-white');
+  document.getElementById('view-all').classList.remove('bg-slate-900', 'text-white');
+  document.getElementById('view-all').classList.add('bg-white');
+  applyFilters();
+});
+
+// Imposta vista iniziale
+if (document.getElementById('view-all')) {
+  document.getElementById('view-all').classList.add('bg-slate-900', 'text-white');
+}
+
+// ===== Funzione Modal =====
+const OFFICIAL = {
+  ibkr: 'https://www.interactivebrokers.eu',
+  mexem: 'https://www.mexem.com',
+  scalable: 'https://it.scalable.capital',
+  degiro: 'https://www.degiro.it',
+  directa: 'https://www.directa.it',
+  traderepublic: 'https://traderepublic.com/it-it',
+  bgsaxo: 'https://www.home.saxo/it-it',
+  ig: 'https://www.ig.com/it'
+};
+
+// Rendi openModal accessibile globalmente
+window.openModal = function(key) {
+  const d = window.BROKERS[key];
+  if (!d) {
+    console.error('Broker non trovato:', key);
+    return;
   }
 
-  // ===== Funzione Modal =====
-  const OFFICIAL = {
-    ibkr: 'https://www.interactivebrokers.eu',
-    mexem: 'https://www.mexem.com',
-    scalable: 'https://it.scalable.capital',
-    degiro: 'https://www.degiro.it',
-    directa: 'https://www.directa.it',
-    traderepublic: 'https://traderepublic.com/it-it',
-    bgsaxo: 'https://www.home.saxo/it-it',
-    ig: 'https://www.ig.com/it'
-  };
+  const $ = s => document.querySelector(s);
+  if (!$('#m-title')) {
+    console.error('Modal non trovato nel DOM');
+    return;
+  }
+  
+  $('#m-title').textContent = d.name;
+  $('#m-badge').classList.toggle('hidden', !d.affiliated);
+  
+  const tg = $('#m-tags');
+  tg.innerHTML = '';
+  d.tags.forEach(t => {
+    const s = document.createElement('span');
+    s.className = 'tag';
+    s.textContent = t;
+    tg.appendChild(s);
+  });
 
-  // Rendi openModal accessibile globalmente
-  window.openModal = function(key) {
-    const d = BROKERS[key];
-    if (!d) return;
+  $('#m-assets').textContent = d.assets || 'N/D';
+  $('#m-count').textContent = d.count || 'N/D';
+  $('#m-min').textContent = d.min || 'N/D';
+  $('#m-reg').textContent = d.reg || 'N/D';
+  $('#m-score').textContent = d.score ? `${d.score}/100` : 'N/D';
+  $('#m-skill').textContent = d.skill || 'N/D';
+  $('#m-platforms').textContent = d.platforms_text || d.platforms || 'N/D';
+  $('#m-fees').textContent = d.fees || 'N/D';
 
-    const $ = s => document.querySelector(s);
-    $('#m-title').textContent = d.name;
-    $('#m-badge').classList.toggle('hidden', !d.affiliated);
-    
-    const tg = $('#m-tags');
-    tg.innerHTML = '';
-    d.tags.forEach(t => {
-      const s = document.createElement('span');
-      s.className = 'tag';
-      s.textContent = t;
-      tg.appendChild(s);
-    });
+  const cfdBox = $('#m-cfd');
+  cfdBox.classList.toggle('hidden', !d.cfd);
+  const note = $('#m-cfd-note');
+  note.innerHTML = d.cfd && d.cfd_note ? d.cfd_note : '';
 
-    $('#m-assets').textContent = d.assets || 'N/D';
-    $('#m-count').textContent = d.count || 'N/D';
-    $('#m-min').textContent = d.min || 'N/D';
-    $('#m-reg').textContent = d.reg || 'N/D';
-    $('#m-score').textContent = d.score ? `${d.score}/100` : 'N/D';
-    $('#m-skill').textContent = d.skill || 'N/D';
-    $('#m-platforms').textContent = d.platforms_text || d.platforms || 'N/D';
-    $('#m-fees').textContent = d.fees || 'N/D';
+  const prosUl = $('#m-pros');
+  const consUl = $('#m-cons');
+  prosUl.innerHTML = '';
+  consUl.innerHTML = '';
+  (d.pros || []).forEach(p => {
+    const li = document.createElement('li');
+    li.innerHTML = p;
+    prosUl.appendChild(li);
+  });
+  (d.cons || []).forEach(c => {
+    const li = document.createElement('li');
+    li.innerHTML = c;
+    consUl.appendChild(li);
+  });
 
-    const cfdBox = $('#m-cfd');
-    cfdBox.classList.toggle('hidden', !d.cfd);
-    const note = $('#m-cfd-note');
-    note.innerHTML = d.cfd && d.cfd_note ? d.cfd_note : '';
+  const affBtn = $('#m-aff');
+  const affText = $('#m-afftext');
+  const url = d.aff ? d.aff : OFFICIAL[key] || '#';
+  if (url && url !== '#') {
+    affBtn.classList.remove('hidden');
+    affBtn.setAttribute('href', url);
+    affBtn.setAttribute('rel', d.affiliated ? 'sponsored noopener' : 'noopener');
+    affText.textContent = d.affiliated ? 'Link affiliato' : 'Sito ufficiale (non affiliato)';
+  } else {
+    affBtn.classList.add('hidden');
+    affBtn.removeAttribute('href');
+    affText.textContent = 'Nessun link disponibile.';
+  }
 
-    const prosUl = $('#m-pros');
-    const consUl = $('#m-cons');
-    prosUl.innerHTML = '';
-    consUl.innerHTML = '';
-    (d.pros || []).forEach(p => {
-      const li = document.createElement('li');
-      li.innerHTML = p;
-      prosUl.appendChild(li);
-    });
-    (d.cons || []).forEach(c => {
-      const li = document.createElement('li');
-      li.innerHTML = c;
-      consUl.appendChild(li);
-    });
+  const disclaimerBox = $('#m-disclaimer');
+  if (d.disclaimer) {
+    disclaimerBox.textContent = d.disclaimer;
+    disclaimerBox.classList.remove('hidden');
+  } else {
+    disclaimerBox.textContent = '';
+    disclaimerBox.classList.add('hidden');
+  }
 
-    const affBtn = $('#m-aff');
-    const affText = $('#m-afftext');
-    const url = d.aff ? d.aff : OFFICIAL[key] || '#';
-    if (url && url !== '#') {
-      affBtn.classList.remove('hidden');
-      affBtn.setAttribute('href', url);
-      affBtn.setAttribute('rel', d.affiliated ? 'sponsored noopener' : 'noopener');
-      affText.textContent = d.affiliated ? 'Link affiliato' : 'Sito ufficiale (non affiliato)';
-    } else {
-      affBtn.classList.add('hidden');
-      affBtn.removeAttribute('href');
-      affText.textContent = 'Nessun link disponibile.';
-    }
+  const modal = $('#modal');
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+};
 
-    const disclaimerBox = $('#m-disclaimer');
-    if (d.disclaimer) {
-      disclaimerBox.textContent = d.disclaimer;
-      disclaimerBox.classList.remove('hidden');
-    } else {
-      disclaimerBox.textContent = '';
-      disclaimerBox.classList.add('hidden');
-    }
-
-    const modal = $('#modal');
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-  };
-
-  window.closeModal = function() {
-    const modal = document.getElementById('modal');
+window.closeModal = function() {
+  const modal = document.getElementById('modal');
+  if (modal) {
     modal.classList.add('hidden');
     modal.classList.remove('flex');
   }
+};
 
-  document.getElementById('modal')?.addEventListener('click', (e) => {
-    if (e.target.id === 'modal') closeModal();
-  });
+document.getElementById('modal')?.addEventListener('click', (e) => {
+  if (e.target.id === 'modal') window.closeModal();
+});
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
-  });
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') window.closeModal();
+});
 
-  // ===== Inizializzazione =====
-  // Assicurati che il DOM sia pronto
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      applyFilters();
-    });
-  } else {
-    applyFilters();
+// ===== Inizializzazione =====
+// Assicurati che il DOM sia pronto
+function init() {
+  if (!window.BROKERS) {
+    console.error('BROKERS non definito!');
+    return;
   }
-})();
+  console.log('Broker disponibili:', Object.keys(window.BROKERS).length);
+  applyFilters();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
 </script>
 
 </body>
 </html>
-
