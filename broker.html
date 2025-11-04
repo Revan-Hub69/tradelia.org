@@ -216,10 +216,10 @@
     </p>
 
     <!-- Filtri -->
-    <div class="bg-white border border-slate-200 rounded-xl p-6 mb-8">
-      <h2 class="text-lg font-semibold mb-4">Filtri</h2>
+    <details class="bg-white border border-slate-200 rounded-xl p-6 mb-8">
+      <summary class="text-lg font-semibold mb-4 cursor-pointer">Filtri</summary>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
         <!-- Tipo strumenti -->
         <div class="filter-group">
           <label>Tipo strumenti</label>
@@ -505,7 +505,7 @@
           <button id="reset-filters" class="btn-inline">Reset filtri</button>
         </div>
       </div>
-    </div>
+    </details>
 
     <!-- Lista broker -->
     <div id="brokers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1077,97 +1077,111 @@
 
   // ===== Helper per valorizzare campi mancanti =====
   function enrichBrokerData(broker) {
+    // Crea una copia profonda per non modificare l'originale
+    const enriched = JSON.parse(JSON.stringify(broker));
+    
     // Default values per campi mancanti
-    if (!broker.minDeposit) {
+    if (!enriched.minDeposit) {
       // Cerca nel campo min per estrarre il valore numerico
-      const minMatch = broker.min?.match(/€?\s*([\d,.]+)/);
+      const minMatch = enriched.min?.match(/€?\s*([\d,.]+)/);
       if (minMatch) {
         const value = parseFloat(minMatch[1].replace(/\./g, '').replace(',', '.'));
-        broker.minDeposit = isNaN(value) ? 0 : Math.round(value);
+        enriched.minDeposit = isNaN(value) ? 0 : Math.round(value);
       } else {
-        broker.minDeposit = 0;
+        enriched.minDeposit = 0;
       }
     }
-    if (!broker.feesCategory) {
+    if (!enriched.feesCategory) {
       // Cerca nel campo fees per dedurre la categoria
-      const feesLower = broker.fees?.toLowerCase() || '';
+      const feesLower = enriched.fees?.toLowerCase() || '';
       if (feesLower.includes('molto bass') || feesLower.includes('very low') || feesLower.includes('€1') || feesLower.includes('1€')) {
-        broker.feesCategory = 'very-low';
+        enriched.feesCategory = 'very-low';
       } else if (feesLower.includes('bass') || feesLower.includes('low') || feesLower.includes('competitiv')) {
-        broker.feesCategory = 'low';
+        enriched.feesCategory = 'low';
       } else if (feesLower.includes('alt') || feesLower.includes('high') || feesLower.includes('€8') || feesLower.includes('€10')) {
-        broker.feesCategory = 'high';
+        enriched.feesCategory = 'high';
       } else {
-        broker.feesCategory = 'medium';
+        enriched.feesCategory = 'medium';
       }
     }
-    if (!broker.regulations) {
-      broker.regulations = [];
-      const regLower = broker.reg?.toLowerCase() || '';
-      if (regLower.includes('consob') || regLower.includes('italia')) broker.regulations.push('consob');
-      if (regLower.includes('fca') || regLower.includes('uk')) broker.regulations.push('fca');
-      if (regLower.includes('bafin') || regLower.includes('germania')) broker.regulations.push('bafin');
-      if (regLower.includes('cysec') || regLower.includes('cyprus')) broker.regulations.push('cysec');
-      if (regLower.includes('sec') || regLower.includes('usa')) broker.regulations.push('sec');
-      if (regLower.includes('ue') || regLower.includes('eu') || regLower.includes('europa')) broker.regulations.push('eu');
+    if (!enriched.regulations) {
+      enriched.regulations = [];
+      const regLower = enriched.reg?.toLowerCase() || '';
+      if (regLower.includes('consob') || regLower.includes('italia')) enriched.regulations.push('consob');
+      if (regLower.includes('fca') || regLower.includes('uk')) enriched.regulations.push('fca');
+      if (regLower.includes('bafin') || regLower.includes('germania')) enriched.regulations.push('bafin');
+      if (regLower.includes('cysec') || regLower.includes('cyprus')) enriched.regulations.push('cysec');
+      if (regLower.includes('sec') || regLower.includes('usa')) enriched.regulations.push('sec');
+      if (regLower.includes('ue') || regLower.includes('eu') || regLower.includes('europa')) enriched.regulations.push('eu');
     }
-    if (!broker.platforms) {
-      broker.platforms = [];
-      const platLower = (broker.platforms_text || broker.platforms || '').toLowerCase();
-      if (platLower.includes('web')) broker.platforms.push('web');
-      if (platLower.includes('desktop') || platLower.includes('tws') || platLower.includes('pro')) broker.platforms.push('desktop');
-      if (platLower.includes('app') || platLower.includes('mobile') || platLower.includes('ios') || platLower.includes('android')) broker.platforms.push('mobile');
-      if (platLower.includes('api') || platLower.includes('tradingview')) broker.platforms.push('api');
+    if (!enriched.platforms) {
+      enriched.platforms = [];
+      const platLower = (enriched.platforms_text || enriched.platforms || '').toLowerCase();
+      if (platLower.includes('web')) enriched.platforms.push('web');
+      if (platLower.includes('desktop') || platLower.includes('tws') || platLower.includes('pro')) enriched.platforms.push('desktop');
+      if (platLower.includes('app') || platLower.includes('mobile') || platLower.includes('ios') || platLower.includes('android')) enriched.platforms.push('mobile');
+      if (platLower.includes('api') || platLower.includes('tradingview')) enriched.platforms.push('api');
     }
-    if (!broker.markets) {
-      broker.markets = [];
-      const countLower = (broker.count || '').toLowerCase();
-      const descLower = (broker.description || '').toLowerCase();
-      if (countLower.includes('usa') || descLower.includes('usa') || countLower.includes('nyse') || countLower.includes('nasdaq')) broker.markets.push('usa');
-      if (countLower.includes('ue') || countLower.includes('eu') || countLower.includes('europa') || countLower.includes('xetra')) broker.markets.push('eu');
-      if (countLower.includes('asia') || descLower.includes('asia')) broker.markets.push('asia');
-      if (countLower.includes('italia') || descLower.includes('italia') || countLower.includes('borsa italiana')) broker.markets.push('italia');
+    if (!enriched.markets) {
+      enriched.markets = [];
+      const countLower = (enriched.count || '').toLowerCase();
+      const descLower = (enriched.description || '').toLowerCase();
+      if (countLower.includes('usa') || descLower.includes('usa') || countLower.includes('nyse') || countLower.includes('nasdaq')) enriched.markets.push('usa');
+      if (countLower.includes('ue') || countLower.includes('eu') || countLower.includes('europa') || countLower.includes('xetra')) enriched.markets.push('eu');
+      if (countLower.includes('asia') || descLower.includes('asia')) enriched.markets.push('asia');
+      if (countLower.includes('italia') || descLower.includes('italia') || countLower.includes('borsa italiana')) enriched.markets.push('italia');
     }
-    if (broker.supportIt === undefined) {
-      broker.supportIt = broker.reg?.toLowerCase().includes('italia') || broker.reg?.toLowerCase().includes('consob') || false;
+    if (enriched.supportIt === undefined) {
+      enriched.supportIt = enriched.reg?.toLowerCase().includes('italia') || enriched.reg?.toLowerCase().includes('consob') || false;
     }
-    if (broker.protection === undefined) {
-      broker.protection = broker.reg?.toLowerCase().includes('ue') || broker.reg?.toLowerCase().includes('eu') || broker.reg?.toLowerCase().includes('fca') || broker.reg?.toLowerCase().includes('bafin') || false;
+    if (enriched.protection === undefined) {
+      enriched.protection = enriched.reg?.toLowerCase().includes('ue') || enriched.reg?.toLowerCase().includes('eu') || enriched.reg?.toLowerCase().includes('fca') || enriched.reg?.toLowerCase().includes('bafin') || false;
     }
-    if (!broker.platforms_text) {
-      broker.platforms_text = broker.platforms || 'N/D';
+    if (!enriched.platforms_text) {
+      enriched.platforms_text = enriched.platforms || 'N/D';
+    }
+    
+    // Inizializza filters se non esiste
+    if (!enriched.filters) {
+      enriched.filters = {};
     }
     
     // Aggiorna i filtri con i nuovi campi
-    if (broker.platforms) {
-      broker.platforms.forEach(p => {
-        broker.filters[`platform-${p}`] = true;
+    if (enriched.platforms) {
+      enriched.platforms.forEach(p => {
+        enriched.filters[`platform-${p}`] = true;
       });
     }
-    if (broker.markets) {
-      broker.markets.forEach(m => {
-        broker.filters[`market-${m}`] = true;
+    if (enriched.markets) {
+      enriched.markets.forEach(m => {
+        enriched.filters[`market-${m}`] = true;
       });
     }
-    if (broker.regulations) {
-      broker.regulations.forEach(r => {
-        broker.filters[`reg-${r}`] = true;
+    if (enriched.regulations) {
+      enriched.regulations.forEach(r => {
+        enriched.filters[`reg-${r}`] = true;
       });
     }
-    if (broker.supportIt) broker.filters['support-it'] = true;
-    if (broker.protection) broker.filters['protection'] = true;
-    broker.filters[`fees-${broker.feesCategory}`] = true;
+    if (enriched.supportIt) enriched.filters['support-it'] = true;
+    if (enriched.protection) enriched.filters['protection'] = true;
+    enriched.filters[`fees-${enriched.feesCategory}`] = true;
     
-    return broker;
+    return enriched;
   }
 
   // ===== Funzioni filtro =====
   function renderBrokers(filters = {}, rangeFilters = {}) {
     const grid = document.getElementById('brokers-grid');
+    if (!grid) {
+      console.error('brokers-grid non trovato!');
+      return;
+    }
     grid.innerHTML = '';
 
     const brokers = Object.entries(BROKERS).map(([key, broker]) => {
-      return [key, enrichBrokerData(broker)];
+      // Arricchisce i dati del broker
+      const enriched = enrichBrokerData(broker);
+      return [key, enriched];
     }).filter(([key, broker]) => {
       // Filtri checkbox
       const activeFilters = Object.entries(filters).filter(([_, value]) => value);
@@ -1193,6 +1207,12 @@
 
       return true;
     });
+
+    // Mostra messaggio se non ci sono broker
+    if (brokers.length === 0) {
+      grid.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-slate-600">Nessun broker trovato con i filtri selezionati. Prova a modificare i filtri.</p></div>';
+      return;
+    }
 
     brokers.forEach(([key, broker]) => {
       const card = document.createElement('div');
@@ -1246,13 +1266,17 @@
   if (minDepositSlider) {
     minDepositSlider.addEventListener('input', (e) => {
       const value = parseInt(e.target.value);
-      rangeFilters.minDeposit = value;
+      if (value === 10000) {
+        // Se è al massimo, non applicare il filtro
+        delete rangeFilters.minDeposit;
+      } else {
+        rangeFilters.minDeposit = value;
+      }
       const displayValue = value === 10000 ? '€10.000+' : `Fino a €${value.toLocaleString('it-IT')}`;
       if (minDepositValue) minDepositValue.textContent = displayValue;
       applyFilters();
     });
-    // Reset iniziale
-    rangeFilters.minDeposit = 10000;
+    // Non impostare filtro iniziale - mostra tutti i broker
   }
 
   // Gestione range slider score
@@ -1261,12 +1285,16 @@
   if (scoreSlider) {
     scoreSlider.addEventListener('input', (e) => {
       const value = parseInt(e.target.value);
-      rangeFilters.score = value;
+      if (value === 0) {
+        // Se è al minimo, non applicare il filtro
+        delete rangeFilters.score;
+      } else {
+        rangeFilters.score = value;
+      }
       if (scoreValue) scoreValue.textContent = value === 0 ? 'Da 0 in su' : `Da ${value} in su`;
       applyFilters();
     });
-    // Reset iniziale
-    rangeFilters.score = 0;
+    // Non impostare filtro iniziale - mostra tutti i broker
   }
 
   // Funzione unificata per applicare tutti i filtri
@@ -1284,13 +1312,13 @@
     // Reset range sliders
     if (minDepositSlider) {
       minDepositSlider.value = 10000;
-      rangeFilters.minDeposit = 10000;
-      if (minDepositValue) minDepositValue.textContent = 'Fino a €10.000+';
+      delete rangeFilters.minDeposit;
+      if (minDepositValue) minDepositValue.textContent = '€10.000+';
     }
     
     if (scoreSlider) {
       scoreSlider.value = 0;
-      rangeFilters.score = 0;
+      delete rangeFilters.score;
       if (scoreValue) scoreValue.textContent = 'Da 0 in su';
     }
     
@@ -1404,4 +1432,3 @@
 
 </body>
 </html>
-
