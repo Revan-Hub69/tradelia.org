@@ -144,9 +144,14 @@
 
     // Variante corretta
     if (isMobile()){
-      desktopPanel.style.display='none'; mobilePanel.style.display='flex';
+      desktopPanel.style.display='none'; 
+      mobilePanel.style.display='flex';
+      mobilePanel.removeAttribute('hidden');
+      console.log('[UI Runtime] Mobile panel aperto, display:', mobilePanel.style.display, 'hidden:', mobilePanel.hasAttribute('hidden'));
     } else {
-      desktopPanel.style.display='flex'; mobilePanel.style.display='none';
+      desktopPanel.style.display='flex'; 
+      mobilePanel.style.display='none';
+      desktopPanel.removeAttribute('hidden');
     }
 
     resetScroll();
@@ -595,11 +600,20 @@
     // Bind drawer mobile - aspetta che il DOM sia pronto
     return new Promise((resolve) => {
       let retries = 0;
-      const maxRetries = 20;
+      const maxRetries = 30;
       // Verifica che il panel sia visibile e il drawer sia montato
       const checkPanel = () => {
         retries++;
-        const drawer = qs('.metrics-drawer-mobile');
+        const drawer = qs('.metrics-drawer-mobile', mobileBody);
+        const drawerInDoc = qs('.metrics-drawer-mobile');
+        console.log('[UI Runtime] Mobile drawer check', retries, {
+          drawerInBody: !!drawer,
+          drawerInDoc: !!drawerInDoc,
+          mobilePanel: !!mobilePanel,
+          mobilePanelDisplay: mobilePanel?.style?.display,
+          mobilePanelHidden: mobilePanel?.hasAttribute('hidden'),
+          mobileBody: !!mobileBody
+        });
         if (drawer && mobilePanel && mobilePanel.style.display !== 'none' && !mobilePanel.hasAttribute('hidden')) {
           console.log('[UI Runtime] Mobile drawer trovato e panel visibile, setup...');
           setupMobileMetricsDrawer(metricsWithGlossary, metricsByCategory, categories);
@@ -607,7 +621,17 @@
         } else if (retries < maxRetries) {
           setTimeout(checkPanel, 50);
         } else {
-          console.warn('[UI Runtime] Mobile drawer non trovato dopo', maxRetries, 'retry');
+          console.warn('[UI Runtime] Mobile drawer non trovato dopo', maxRetries, 'retry', {
+            drawer: !!drawer,
+            drawerInDoc: !!drawerInDoc,
+            mobilePanel: !!mobilePanel,
+            mobileBody: !!mobileBody
+          });
+          // Prova comunque a fare setup se il drawer esiste nel documento
+          if (drawerInDoc) {
+            console.log('[UI Runtime] Provo setup comunque con drawer dal documento...');
+            setupMobileMetricsDrawer(metricsWithGlossary, metricsByCategory, categories);
+          }
           resolve(); // Resolve comunque per non bloccare
         }
       };
@@ -1106,31 +1130,41 @@
     
     if (categoryItem) {
       console.log('[UI Runtime] Click su categoria:', category);
-      // Trigger click event per attivare event delegation
-      const clickEvent = new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-        view: window
-      });
-      categoryItem.dispatchEvent(clickEvent);
+      // Aggiorna categoria direttamente (come fa l'event delegation)
+      const metrics = metricsByCategory[category] || [];
+      const categoryItems = drawer.querySelectorAll('.metric-category-item');
+      categoryItems.forEach(c => c.classList.remove('active'));
+      categoryItem.classList.add('active');
       
+      // Update metrics list
+      const metricsList = drawer.querySelector('.metrics-drawer-desktop__metrics-list');
+      if (metricsList) {
+        metricsList.setAttribute('data-category', category);
+        metricsList.innerHTML = metrics.map(m => `
+          <button class="metric-item ${m.key === metricKey ? 'active' : ''}" data-metric-key="${m.key}">
+            <div class="metric-item__label">${m.label || m.key}</div>
+            <div class="metric-item__value">${m.value ?? '—'}</div>
+          </button>
+        `).join('');
+      }
+      
+      // Seleziona direttamente la metrica
       setTimeout(() => {
         const metricItem = drawer.querySelector(`.metric-item[data-metric-key="${metricKey}"]`);
         console.log('[UI Runtime] Metrica item trovato:', !!metricItem);
         if (metricItem) {
-          console.log('[UI Runtime] Click su metrica:', metricKey);
-          // Trigger click event per attivare event delegation
-          const metricClickEvent = new MouseEvent('click', {
-            bubbles: true,
-            cancelable: true,
-            view: window
-          });
-          metricItem.dispatchEvent(metricClickEvent);
+          console.log('[UI Runtime] Aggiorno contenuto per metrica:', metricKey);
+          // Aggiorna contenuto direttamente
+          const allMetricItems = drawer.querySelectorAll('.metric-item');
+          allMetricItems.forEach(m => m.classList.remove('active'));
+          metricItem.classList.add('active');
+          updateMetricContent(metric, contentTitle, contentBody, contentContainer);
         } else {
-          console.warn('[UI Runtime] Metrica item non trovato, aggiorno contenuto direttamente');
+          console.warn('[UI Runtime] Metrica item non trovato dopo aggiornamento lista');
+          // Fallback: aggiorna contenuto direttamente
           updateMetricContent(metric, contentTitle, contentBody, contentContainer);
         }
-      }, 300);
+      }, 100);
     } else {
       console.warn('[UI Runtime] Categoria item non trovato, aggiorno contenuto direttamente');
       updateMetricContent(metric, contentTitle, contentBody, contentContainer);
