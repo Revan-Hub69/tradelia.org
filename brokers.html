@@ -213,11 +213,23 @@
 <!-- MAIN -->
 <main class="container">
   <div class="py-8">
-    <h1 class="text-2xl sm:text-3xl font-bold mb-2">Broker regolamentati per ogni profilo</h1>
-    <p class="text-sm sm:text-base text-slate-600 max-w-3xl mb-8">
-      Selezione curata da <strong>Tradelia AI</strong> con focus su <strong>strumenti reali</strong> (azioni, ETF, obbligazioni, derivati quotati).
-      <span class="font-semibold text-amber-700">Se un broker offre anche CFD, lo includiamo esclusivamente per la componente di strumenti diretti.</span>
+    <h1 class="text-2xl sm:text-3xl font-bold mb-2">Broker regolamentati: selezione informativa</h1>
+    <p class="text-sm sm:text-base text-slate-600 max-w-3xl mb-4">
+      Selezione curata da <strong>Tradelia AI</strong> con focus su <strong>strumenti reali</strong> (azioni, ETF, obbligazioni, derivati quotati). 
+      <strong>Finalità esclusivamente informativa e formativa</strong> — non costituisce consulenza in materia di investimenti né raccomandazione personalizzata ai sensi della MiFID II e della normativa ESMA/CONSOB.
     </p>
+    <p class="text-xs text-amber-700 max-w-3xl mb-4 font-semibold">
+      ⚠️ <strong>Nota:</strong> Se un broker offre anche CFD, lo includiamo esclusivamente per la componente di strumenti diretti (azioni, ETF, bond, derivati quotati, cripto spot). 
+      I CFD sono prodotti complessi ad altissimo rischio e non sono promossi in questa selezione.
+    </p>
+    <div class="bg-slate-50 border-l-4 border-slate-400 p-4 rounded-r mb-8 max-w-3xl">
+      <p class="text-xs text-slate-700 leading-relaxed">
+        <strong>Avvertenza ai sensi di MiFID II / ESMA / CONSOB:</strong> Le informazioni fornite hanno scopo puramente informativo e formativo. 
+        Non costituiscono consulenza in materia di investimenti, raccomandazione personalizzata né sollecitazione al pubblico risparmio. 
+        <strong>Investire comporta rischi di perdita totale o parziale del capitale.</strong> 
+        Prima di prendere qualsiasi decisione di investimento, consultare sempre un intermediario autorizzato e verificare le informazioni aggiornate sul sito ufficiale del broker.
+      </p>
+    </div>
 
     <!-- Filtri -->
     <div class="bg-white border border-slate-200 rounded-xl p-6 mb-8">
@@ -325,9 +337,21 @@
       <!-- Broker cards verranno generate da JavaScript -->
     </div>
 
-    <section class="text-[12px] text-slate-500 mt-8">
-      <p>I dati (strumenti disponibili, quantità, minimi) sono indicativi e soggetti a variazioni; verificare sempre sul sito ufficiale prima di operare.</p>
-      <p>Questa pagina evita i CFD. Se un broker li offre, Tradelia AI lo include solo per strumenti diretti (azioni, ETF, bond, derivati quotati, cripto spot).</p>
+    <section class="text-[11px] text-slate-600 mt-8 bg-slate-50 p-4 rounded-lg border border-slate-200">
+      <p class="mb-2">
+        <strong>Disclaimer ai sensi di MiFID II / ESMA / CONSOB:</strong>
+      </p>
+      <ul class="list-disc list-inside space-y-1 mb-3">
+        <li>I dati (strumenti disponibili, quantità, minimi, costi) sono <strong>indicativi e soggetti a variazioni</strong>; verificare sempre sul sito ufficiale del broker prima di operare.</li>
+        <li>Le informazioni fornite hanno <strong>scopo puramente informativo e formativo</strong> e non costituiscono consulenza in materia di investimenti né raccomandazione personalizzata.</li>
+        <li>Tradelia AI <strong>non gestisce capitali né esegue ordini</strong>; non è un intermediario autorizzato ai sensi della MiFID II.</li>
+        <li><strong>Investire comporta rischi di perdita totale o parziale del capitale</strong>; le performance passate non sono indicative di risultati futuri.</li>
+        <li>Questa pagina privilegia broker che offrono strumenti reali quotati. Se un broker offre anche CFD, lo includiamo <strong>solo per la componente di strumenti diretti</strong> (azioni, ETF, bond, derivati quotati, cripto spot).</li>
+      </ul>
+      <p class="text-xs text-slate-500 italic mt-3">
+        Conformità: MiFID II (Direttiva 2014/65/UE), ESMA (European Securities and Markets Authority), CONSOB (Commissione Nazionale per le Società e la Borsa), 
+        Regolamento Delegato (UE) 2017/565, Linee guida ESMA su adeguatezza e governance dei prodotti.
+      </p>
     </section>
   </div>
 </main>
@@ -405,9 +429,10 @@
           <span>Compliance &amp; Risk</span>
         </h3>
         <ul class="ftr-list">
-          <li>Non è consulenza (MiFID II / ESMA)</li>
-          <li>Tradelia AI non gestisce capitali né esegue ordini</li>
-          <li>Rischio di perdita anche totale del capitale</li>
+          <li><strong>Non è consulenza in materia di investimenti</strong> (MiFID II / ESMA / CONSOB)</li>
+          <li>Tradelia AI non è un intermediario autorizzato; <strong>non gestisce capitali né esegue ordini</strong></li>
+          <li><strong>Rischio di perdita totale o parziale del capitale</strong> — investire comporta rischi</li>
+          <li>Le informazioni hanno <strong>scopo puramente informativo e formativo</strong> — non costituiscono raccomandazione personalizzata</li>
         </ul>
         <div class="mt-3 flex flex-wrap gap-4">
           <button id="btn-privacy-open" class="btn btn-sm" type="button">Privacy</button>
@@ -467,7 +492,7 @@ window.BROKERS = {
       tags: ["DMA", "Bond", "Derivati quotati"],
       description: "DMA globale su mercati quotati (azioni, ETF, futures, opzioni, bond). <strong>Cripto solo via CFD</strong> o tramite ETF/ETN quotati.",
       score: 92,
-      skill: "Avanzato",
+      skill: "Pro",
       cfd: true,
       minDeposit: 10000,
       feesCategory: "medium",
@@ -495,7 +520,7 @@ window.BROKERS = {
         opzioni: true,
         futures: true,
         istituzionali: true,
-        "skill-avanzato": true,
+        "skill-pro": true,
         dma: true,
         "cfd-si": true,
         "obbligazionario-etf": true,
@@ -887,6 +912,50 @@ window.BROKERS = {
         "obbligazionario-etf": true,
         "istituzionali-retail-avanzato": true
       }
+    },
+    pepperstone: {
+      name: "Pepperstone",
+      affiliated: false,
+      tags: ["CFD", "Forex", "Spread bassi", "ASIC", "FCA"],
+      description: "Broker CFD specializzato con <strong>spread e commissioni tra i più bassi del mercato</strong>, regolamentato da autorità di altissimo livello (ASIC, FCA, DFSA).",
+      score: 89,
+      skill: "Intermedio",
+      cfd: true,
+      cfdOnly: true,
+      minDeposit: 200,
+      feesCategory: "low",
+      regulations: ["asic", "fca", "dfsa"],
+      platforms: ["web", "desktop", "mobile"],
+      markets: ["global"],
+      supportIt: true,
+      protection: true,
+      assets: "CFD su Forex, Indici, Materie prime, Azioni, Criptovalute, ETF",
+      count: "Oltre 1.200 strumenti CFD • Forex, Indici, Commodities, Azioni, Crypto, ETF",
+      min: "≈ €200 (varia per entità regolamentata)",
+      reg: "Australia · ASIC (AFSL 414530) · UK · FCA (FRN 684312) · UAE · DFSA · tra i broker più regolamentati e affidabili del settore CFD",
+      cfd_note: "Pepperstone è un broker esclusivamente CFD. Questo broker è incluso solo per trader che, per necessità strategica, devono utilizzare CFD e sono consapevoli dei rischi elevatissimi. Pepperstone offre spread e commissioni tra i più competitivi del mercato con regolamentazione di altissimo livello.",
+      platforms_text: "MetaTrader 4, MetaTrader 5, cTrader, TradingView, Web, App",
+      fees: "Spread tra i più bassi del mercato (da 0.0 pip su Razor account), commissioni competitive, nessun costo di deposito/prelievo",
+      pros: ["Spread e commissioni tra i più bassi del mercato CFD", "Regolamentazione di altissimo livello (ASIC, FCA, DFSA)", "Piattaforme professionali (MT4, MT5, cTrader, TradingView)", "Esecuzione veloce e affidabile", "Assistenza clienti multilingua", "Nessun costo di deposito/prelievo", "Protezione fondi dei clienti garantita"],
+      cons: ["Broker esclusivamente CFD - prodotti ad altissimo rischio", "Non offre strumenti reali quotati (azioni, ETF, obbligazioni reali)", "Rischio di perdita totale del capitale con CFD", "Leverage elevato può amplificare le perdite"],
+      aff: "",
+      disclaimer: "I CFD sono strumenti complessi ad altissimo rischio di perdita rapida di denaro a causa della leva finanziaria. Il trading di CFD comporta un rischio elevatissimo di perdita totale o parziale del capitale. Pepperstone è regolamentato da ASIC (Australia), FCA (Regno Unito) e DFSA (Emirati Arabi Uniti), tra le autorità di regolamentazione più severe al mondo. Questo broker è incluso solo per trader che, per necessità strategica, devono utilizzare CFD e sono pienamente consapevoli dei rischi elevatissimi. Valuta attentamente se comprendi il funzionamento dei CFD e se puoi permetterti di correre un rischio elevatissimo di perdere il tuo denaro. Le informazioni hanno scopo puramente informativo e non costituiscono consulenza o sollecitazione al pubblico risparmio.",
+      filters: {
+        cfd: true,
+        forex: true,
+        "cfd-only": true,
+        "skill-intermedio": true,
+        "low-fees": true,
+        "low-spread": true,
+        "protection": true,
+        "support-it": true,
+        "platform-web": true,
+        "platform-desktop": true,
+        "platform-mobile": true,
+        "reg-asic": true,
+        "reg-fca": true,
+        "reg-dfsa": true
+      }
     }
   };
 
@@ -1108,39 +1177,84 @@ function renderBrokers(filters = {}, rangeFilters = {}, viewMode = 'all') {
       return;
     }
 
-    // Raggruppa per livello tecnico se richiesto
-    if (viewMode === 'by-skill') {
-      const grouped = {};
-      brokers.forEach(([key, broker]) => {
-        const skill = broker.skill || 'Altro';
-        if (!grouped[skill]) grouped[skill] = [];
-        grouped[skill].push([key, broker]);
-      });
+    // Separa broker CFD-only dai broker normali
+    const cfdOnlyBrokers = brokers.filter(([key, broker]) => broker.cfdOnly === true);
+    const normalBrokers = brokers.filter(([key, broker]) => !broker.cfdOnly);
 
-      // Ordina i gruppi per livello
-      const skillOrder = ['Pro', 'Avanzato', 'Intermedio/Avanzato', 'Intermedio-Avanzato', 'Intermedio', 'Base/Intermedio', 'Base'];
-      const sortedGroups = Object.keys(grouped).sort((a, b) => {
-        const aIndex = skillOrder.indexOf(a);
-        const bIndex = skillOrder.indexOf(b);
-        if (aIndex === -1 && bIndex === -1) return a.localeCompare(b);
-        if (aIndex === -1) return 1;
-        if (bIndex === -1) return -1;
-        return aIndex - bIndex;
-      });
-
-      sortedGroups.forEach(skill => {
-        const skillHeader = document.createElement('div');
-        skillHeader.className = 'col-span-full mt-6 mb-4';
-        skillHeader.innerHTML = `<h2 class="text-xl font-bold text-slate-900 border-b border-slate-200 pb-2">${skill}</h2>`;
-        grid.appendChild(skillHeader);
-
-        grouped[skill].forEach(([key, broker]) => {
-          renderBrokerCard(key, broker, grid);
+    // Renderizza broker normali
+    if (normalBrokers.length > 0) {
+      // Raggruppa per livello tecnico se richiesto
+      if (viewMode === 'by-skill') {
+        const grouped = {};
+        normalBrokers.forEach(([key, broker]) => {
+          const skill = broker.skill || 'Altro';
+          if (!grouped[skill]) grouped[skill] = [];
+          grouped[skill].push([key, broker]);
         });
-      });
-    } else {
-      brokers.forEach(([key, broker]) => {
-        renderBrokerCard(key, broker, grid);
+
+        // Ordina i gruppi per livello
+        const skillOrder = ['Pro', 'Avanzato', 'Intermedio/Avanzato', 'Intermedio-Avanzato', 'Intermedio', 'Base/Intermedio', 'Base'];
+        const sortedGroups = Object.keys(grouped).sort((a, b) => {
+          const aIndex = skillOrder.indexOf(a);
+          const bIndex = skillOrder.indexOf(b);
+          if (aIndex === -1 && bIndex === -1) return a.localeCompare(b);
+          if (aIndex === -1) return 1;
+          if (bIndex === -1) return -1;
+          return aIndex - bIndex;
+        });
+
+        sortedGroups.forEach(skill => {
+          const skillHeader = document.createElement('div');
+          skillHeader.className = 'col-span-full mt-6 mb-4';
+          skillHeader.innerHTML = `<h2 class="text-xl font-bold text-slate-900 border-b border-slate-200 pb-2">${skill}</h2>`;
+          grid.appendChild(skillHeader);
+
+          grouped[skill].forEach(([key, broker]) => {
+            renderBrokerCard(key, broker, grid, false);
+          });
+        });
+      } else {
+        normalBrokers.forEach(([key, broker]) => {
+          renderBrokerCard(key, broker, grid, false);
+        });
+      }
+    }
+
+    // Renderizza broker CFD-only in sezione separata
+    if (cfdOnlyBrokers.length > 0) {
+      const cfdHeader = document.createElement('div');
+      cfdHeader.className = 'col-span-full mt-12 mb-6';
+      cfdHeader.innerHTML = `
+        <div class="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-r-lg">
+          <h2 class="text-2xl font-bold text-amber-900 mb-4">⚠️ Broker CFD Specializzati — Avvertenza ai sensi di MiFID II / ESMA</h2>
+          <p class="text-sm text-amber-800 leading-relaxed mb-3">
+            <strong>Avvertenza ai sensi di MiFID II / ESMA / CONSOB:</strong> Se la vostra strategia prevede di utilizzare <strong>per forza di cose CFD</strong>, 
+            e siete <strong>pienamente consapevoli dei rischi elevatissimi</strong> di questo tipo di prodotto, 
+            almeno utilizzate un broker con <strong>bassissimi costi di spread e commissioni</strong>, 
+            ritenuto tra i più <strong>affidabili con licenze di altissimo livello</strong>.
+          </p>
+          <div class="bg-amber-100 border border-amber-300 p-4 rounded mt-3">
+            <p class="text-xs text-amber-900 leading-relaxed font-semibold mb-2">
+              <strong>Avvertenza sui rischi dei CFD (ai sensi di MiFID II / ESMA):</strong>
+            </p>
+            <ul class="text-xs text-amber-900 leading-relaxed list-disc list-inside space-y-1">
+              <li>I CFD sono <strong>strumenti complessi ad altissimo rischio</strong> di perdita rapida di denaro a causa della leva finanziaria</li>
+              <li>Il trading di CFD comporta un <strong>rischio elevatissimo di perdita totale o parziale del capitale</strong></li>
+              <li><strong>La maggior parte degli investitori al dettaglio perde denaro</strong> quando negozia CFD</li>
+              <li>Non investire più di quanto puoi permetterti di perdere</li>
+              <li>Valuta attentamente se comprendi il funzionamento dei CFD prima di operare</li>
+            </ul>
+          </div>
+          <p class="text-xs text-amber-700 mt-3 italic">
+            <strong>Nota:</strong> Questa sezione è inclusa esclusivamente a scopo informativo. I CFD non sono promossi né raccomandati. 
+            Le informazioni hanno scopo puramente formativo e non costituiscono consulenza in materia di investimenti né raccomandazione personalizzata.
+          </p>
+        </div>
+      `;
+      grid.appendChild(cfdHeader);
+
+      cfdOnlyBrokers.forEach(([key, broker]) => {
+        renderBrokerCard(key, broker, grid, true);
       });
     }
   } catch (error) {
@@ -1150,13 +1264,21 @@ function renderBrokers(filters = {}, rangeFilters = {}, viewMode = 'all') {
 }
 
 // Funzione per renderizzare una singola card broker
-function renderBrokerCard(key, broker, grid) {
+function renderBrokerCard(key, broker, grid, isCfdOnly = false) {
         const card = document.createElement('div');
-        card.className = 'card border border-slate-200 bg-white rounded-xl h-full min-h-[320px] p-5 flex flex-col';
+        // Colori diversi per broker CFD-only
+        if (isCfdOnly) {
+          card.className = 'card border-2 border-amber-300 bg-amber-50 rounded-xl h-full min-h-[320px] p-5 flex flex-col';
+        } else {
+          card.className = 'card border border-slate-200 bg-white rounded-xl h-full min-h-[320px] p-5 flex flex-col';
+        }
         card.setAttribute('data-key', key);
         
         const firstLetter = broker.name.charAt(0);
-        const colors = ['bg-sky-600', 'bg-slate-800', 'bg-amber-700', 'bg-emerald-600', 'bg-indigo-600', 'bg-pink-600', 'bg-red-600', 'bg-orange-600', 'bg-slate-600', 'bg-black', 'bg-blue-700', 'bg-rose-600'];
+        // Colori diversi per broker CFD-only (tema amber/giallo)
+        const colors = isCfdOnly 
+          ? ['bg-amber-600', 'bg-amber-700', 'bg-amber-800', 'bg-yellow-600', 'bg-yellow-700', 'bg-orange-600']
+          : ['bg-sky-600', 'bg-slate-800', 'bg-amber-700', 'bg-emerald-600', 'bg-indigo-600', 'bg-pink-600', 'bg-red-600', 'bg-orange-600', 'bg-slate-600', 'bg-black', 'bg-blue-700', 'bg-rose-600'];
         const colorIndex = key.charCodeAt(0) % colors.length;
         
         // Determina il colore del badge livello
@@ -1171,21 +1293,25 @@ function renderBrokerCard(key, broker, grid) {
         };
         const skillColor = skillColors[broker.skill] || 'bg-gray-100 text-gray-700';
         
+        const textColor = isCfdOnly ? 'text-amber-900' : 'text-slate-600';
+        const titleColor = isCfdOnly ? 'text-amber-900' : 'text-slate-900';
+        const tagStyle = isCfdOnly ? 'bg-amber-100 text-amber-800 border-amber-200' : '';
+        
         card.innerHTML = `
           <div class="flex gap-3 items-start mb-4">
             <div class="logo-fb ${colors[colorIndex]} flex-shrink-0">${firstLetter}</div>
             <div class="min-w-0 flex-1">
-              <div class="font-semibold text-lg mb-2 flex items-center gap-2 flex-wrap">
+              <div class="font-semibold text-lg mb-2 flex items-center gap-2 flex-wrap ${titleColor}">
                 <span>${broker.name}</span>
                 ${broker.affiliated ? '<span class="badge bg-emerald-100 text-emerald-700 text-xs">Affiliato</span>' : ''}
                 <span class="score-badge">${broker.score}/100</span>
               </div>
-              <div class="text-sm text-slate-600 mb-3">${broker.description}</div>
+              <div class="text-sm ${textColor} mb-3">${broker.description}</div>
             </div>
           </div>
           
           <div class="flex flex-wrap gap-1 mb-3">
-            ${broker.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+            ${broker.tags.map(tag => `<span class="tag ${tagStyle}">${tag}</span>`).join('')}
           </div>
           
           <div class="space-y-2 mb-4 text-sm">
@@ -1204,7 +1330,7 @@ function renderBrokerCard(key, broker, grid) {
             </div>
           </div>
           
-          <button class="btn bg-slate-900 text-white hover:bg-slate-800 w-full mt-auto" onclick="openModal('${key}')">Maggiori info</button>
+          <button class="btn ${isCfdOnly ? 'bg-amber-600 hover:bg-amber-700' : 'bg-slate-900 hover:bg-slate-800'} text-white w-full mt-auto" onclick="openModal('${key}')">Maggiori info</button>
         `;
         
   grid.appendChild(card);
@@ -1425,3 +1551,4 @@ if (document.readyState === 'loading') {
 
 </body>
 </html>
+
