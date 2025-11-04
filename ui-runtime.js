@@ -158,13 +158,13 @@
     // Tooltips anche dentro il pannello
     try { UI.bindMetricInfoButtons(desktopBody); UI.bindMetricInfoButtons(mobileBody); } catch(e){}
     
-    // Bind tabs se presenti (sia desktop che mobile)
-    setTimeout(() => {
+    // Bind tabs se presenti (sia desktop che mobile) - usa requestAnimationFrame per attendere rendering DOM
+    requestAnimationFrame(() => {
       const desktopTabs = desktopBody.querySelector('.metric-tabs-container');
       const mobileTabs = mobileBody.querySelector('.metric-tabs-container');
       if (desktopTabs) bindMetricTabs(desktopBody, desktopTabs.getAttribute('data-key'));
       if (mobileTabs) bindMetricTabs(mobileBody, mobileTabs.getAttribute('data-key'));
-    }, 0);
+    });
   }
 
   function closePanel(){
@@ -174,6 +174,8 @@
     overlay.style.display = 'none'; // Forza display none
     document.body.style.overflow = '';
     resetScroll();
+    // Reset currentMetricsDrawer quando si chiude il drawer
+    currentMetricsDrawer = null;
   }
 
   // -----------------------------
@@ -352,11 +354,11 @@
     mountTooltips();
     modalTitle.textContent  = data?.title || '—';
     modalSource.textContent = data?.source || '';
-    // Se body è fornito, usalo (per tabs), altrimenti costruisci HTML legacy
+      // Se body è fornito, usalo (per tabs), altrimenti costruisci HTML legacy
     if (data?.body) {
       modalBody.innerHTML = data.body;
-      // Bind tabs dopo inserimento HTML
-      setTimeout(() => bindMetricTabs(modalBody, data.key), 0);
+      // Bind tabs dopo inserimento HTML - usa requestAnimationFrame per attendere rendering DOM
+      requestAnimationFrame(() => bindMetricTabs(modalBody, data.key));
     } else {
       modalBody.innerHTML = (data?.what || '—') + (data?.how ? `<div style="margin-top:.75rem">${data.how}</div>` : '');
     }
@@ -365,37 +367,50 @@
 
   function bindMetricTabs(container, key){
     const tabsContainer = container.querySelector('.metric-tabs-container');
-    if (!tabsContainer) return;
+    if (!tabsContainer) {
+      console.warn('[UI Runtime] bindMetricTabs: tabsContainer non trovato');
+      return;
+    }
     
+    // Rimuovi listener esistenti usando delegation invece di listener diretti
     const tabs = tabsContainer.querySelectorAll('.metric-tab');
     const panels = tabsContainer.querySelectorAll('.metric-tab-panel');
     
-    tabs.forEach(tab => {
-      tab.addEventListener('click', (e) => {
-        e.preventDefault();
-        const tabName = tab.getAttribute('data-tab');
-        
-        // Update tabs
-        tabs.forEach(t => {
-          t.classList.remove('active');
-          t.setAttribute('aria-selected', 'false');
-        });
-        tab.classList.add('active');
-        tab.setAttribute('aria-selected', 'true');
-        
-        // Update panels
-        panels.forEach(p => {
-          const panelName = p.getAttribute('data-panel');
-          if (panelName === tabName) {
-            p.classList.add('active');
-            p.removeAttribute('hidden');
-          } else {
-            p.classList.remove('active');
-            p.setAttribute('hidden', '');
-          }
-        });
+    if (tabs.length === 0 || panels.length === 0) {
+      console.warn('[UI Runtime] bindMetricTabs: tabs o panels non trovati');
+      return;
+    }
+    
+    // Usa event delegation sul container per evitare listener duplicati
+    tabsContainer.addEventListener('click', (e) => {
+      const tab = e.target.closest('.metric-tab');
+      if (!tab) return;
+      
+      e.preventDefault();
+      e.stopPropagation();
+      const tabName = tab.getAttribute('data-tab');
+      console.log('[UI Runtime] bindMetricTabs: click su tab:', tabName);
+      
+      // Update tabs
+      tabs.forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
       });
-    });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      
+      // Update panels
+      panels.forEach(p => {
+        const panelName = p.getAttribute('data-panel');
+        if (panelName === tabName) {
+          p.classList.add('active');
+          p.removeAttribute('hidden');
+        } else {
+          p.classList.remove('active');
+          p.setAttribute('hidden', '');
+        }
+      });
+    }, { passive: false });
     
     // Swipe gesture per mobile
     if (isMobile() && key) {
@@ -637,52 +652,60 @@
     console.log('[UI Runtime] openMobileMetricsDrawer - mobileBody dopo openPanel:', mobileBody?.innerHTML?.substring(0, 200));
     console.log('[UI Runtime] openMobileMetricsDrawer - drawer nel mobileBody:', !!mobileBody?.querySelector('.metrics-drawer-mobile'));
 
-    // Bind drawer mobile - aspetta che il DOM sia pronto
+    // Bind drawer mobile - usa MutationObserver invece di retry multipli
     return new Promise((resolve) => {
-      let retries = 0;
-      const maxRetries = 30;
-      // Verifica che il panel sia visibile e il drawer sia montato
+      const maxWait = 2000; // 2 secondi massimo
+      const startTime = Date.now();
+      
       const checkPanel = () => {
-        retries++;
         const drawer = mobileBody?.querySelector('.metrics-drawer-mobile');
         const drawerInDoc = qs('.metrics-drawer-mobile');
-        const mobileBodyHTML = mobileBody?.innerHTML?.substring(0, 300) || '';
-        console.log('[UI Runtime] Mobile drawer check', retries, {
-          drawerInBody: !!drawer,
-          drawerInDoc: !!drawerInDoc,
-          mobilePanel: !!mobilePanel,
-          mobilePanelDisplay: mobilePanel?.style?.display,
-          mobilePanelHidden: mobilePanel?.hasAttribute('hidden'),
-          mobileBody: !!mobileBody,
-          mobileBodyHTML: mobileBodyHTML
-        });
+        
         if (drawer && mobilePanel && mobilePanel.style.display !== 'none' && !mobilePanel.hasAttribute('hidden')) {
-          console.log('[UI Runtime] Mobile drawer trovato e panel visibile, setup...');
           setupMobileMetricsDrawer(metricsWithGlossary, metricsByCategory, categories);
           resolve();
-        } else if (retries < maxRetries) {
-          setTimeout(checkPanel, 50);
-        } else {
-          console.warn('[UI Runtime] Mobile drawer non trovato dopo', maxRetries, 'retry', {
-            drawer: !!drawer,
-            drawerInDoc: !!drawerInDoc,
-            mobilePanel: !!mobilePanel,
-            mobileBody: !!mobileBody,
-            mobileBodyHTML: mobileBodyHTML
-          });
-          // Prova comunque a fare setup se il drawer esiste nel documento
+          return true;
+        }
+        
+        // Se il drawer esiste nel documento ma non nel body, prova comunque
+        if (drawerInDoc && Date.now() - startTime > 100) {
+          setupMobileMetricsDrawer(metricsWithGlossary, metricsByCategory, categories);
+          resolve();
+          return true;
+        }
+        
+        return false;
+      };
+      
+      // Prova immediatamente
+      if (checkPanel()) return;
+      
+      // Usa MutationObserver per attendere inserimento
+      const observer = new MutationObserver(() => {
+        if (checkPanel()) {
+          observer.disconnect();
+        } else if (Date.now() - startTime > maxWait) {
+          observer.disconnect();
+          // Prova comunque con drawer dal documento
+          const drawerInDoc = qs('.metrics-drawer-mobile');
           if (drawerInDoc) {
-            console.log('[UI Runtime] Provo setup comunque con drawer dal documento...');
             setupMobileMetricsDrawer(metricsWithGlossary, metricsByCategory, categories);
-          } else {
-            // Se il drawer non esiste, potrebbe essere un problema di rendering
-            console.error('[UI Runtime] Drawer mobile non trovato nel DOM!');
-            console.error('[UI Runtime] mobileBody.innerHTML:', mobileBody?.innerHTML);
           }
+          resolve();
+        }
+      });
+      
+      if (mobileBody) {
+        observer.observe(mobileBody, { childList: true, subtree: true });
+      }
+      
+      // Timeout di sicurezza
+      setTimeout(() => {
+        observer.disconnect();
+        if (!checkPanel()) {
           resolve(); // Resolve comunque per non bloccare
         }
-      };
-      setTimeout(checkPanel, 50);
+      }, maxWait);
     });
   }
 
@@ -768,23 +791,45 @@
       body: body
     });
 
-    // Bind drawer desktop - aspetta che il DOM sia pronto
+    // Bind drawer desktop - usa MutationObserver invece di setTimeout
     return new Promise((resolve) => {
-      setTimeout(() => {
+      const maxWait = 2000; // 2 secondi massimo
+      const startTime = Date.now();
+      
+      const checkAndSetup = () => {
         const drawer = qs('.metrics-drawer-desktop');
         if (drawer) {
           currentMetricsDrawer = setupDesktopMetricsDrawer(metricsWithGlossary, metricsByCategory, categories);
           resolve();
-        } else {
-          setTimeout(() => {
-            const drawer2 = qs('.metrics-drawer-desktop');
-            if (drawer2) {
-              currentMetricsDrawer = setupDesktopMetricsDrawer(metricsWithGlossary, metricsByCategory, categories);
-            }
-            resolve();
-          }, 100);
+          return true;
         }
-      }, 50);
+        return false;
+      };
+      
+      // Prova immediatamente
+      if (checkAndSetup()) return;
+      
+      // Usa MutationObserver per attendere inserimento
+      const observer = new MutationObserver(() => {
+        if (checkAndSetup()) {
+          observer.disconnect();
+        } else if (Date.now() - startTime > maxWait) {
+          observer.disconnect();
+          resolve(); // Resolve comunque per non bloccare
+        }
+      });
+      
+      if (desktopBody) {
+        observer.observe(desktopBody, { childList: true, subtree: true });
+      }
+      
+      // Timeout di sicurezza
+      setTimeout(() => {
+        observer.disconnect();
+        if (!checkAndSetup()) {
+          resolve(); // Resolve comunque per non bloccare
+        }
+      }, maxWait);
     });
   }
 
@@ -795,6 +840,13 @@
       console.warn('[UI Runtime] setupMobileMetricsDrawer: container non trovato');
       return;
     }
+
+    // Evita setup multipli: rimuovi listener esistenti se presenti
+    if (container.dataset.mobileDrawerSetup === 'true') {
+      console.log('[UI Runtime] setupMobileMetricsDrawer: già inizializzato, skip');
+      return;
+    }
+    container.dataset.mobileDrawerSetup = 'true';
 
     const drawer1 = container.querySelector('.metrics-drawer-1');
     const drawer2 = container.querySelector('#metrics-drawer-2');
@@ -815,36 +867,63 @@
 
     console.log('[UI Runtime] setupMobileMetricsDrawer: inizializzato');
 
-    // Tabs categoria - usa delegation
-    container.addEventListener('click', (e) => {
+    // Handler unificato per tutti i click sul container
+    const handleContainerClick = (e) => {
+      // Check per tab categoria
       const tab = e.target.closest('.metric-category-tab');
-      if (!tab) return;
-      
-      e.preventDefault();
-      e.stopPropagation();
-      const category = tab.getAttribute('data-category');
-      console.log('[UI Runtime] Mobile - Click categoria:', category);
-      const metrics = metricsByCategory[category] || [];
-      
-      // Update active tab
-      container.querySelectorAll('.metric-category-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      
-      // Update metrics list
-      metricsList.setAttribute('data-category', category);
-      metricsList.innerHTML = metrics.map((m, idx) => `
-        <div class="metric-list-item swipeable" data-metric-key="${m.key}" data-metric-index="${idx}">
-          <div class="metric-list-item__content">
-            <div class="metric-list-item__label">${m.label || m.key}</div>
-            <div class="metric-list-item__value">${m.value ?? '—'}</div>
+      if (tab) {
+        e.preventDefault();
+        e.stopPropagation();
+        const category = tab.getAttribute('data-category');
+        console.log('[UI Runtime] Mobile - Click categoria:', category);
+        const metrics = metricsByCategory[category] || [];
+        
+        // Update active tab
+        container.querySelectorAll('.metric-category-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        // Update metrics list
+        metricsList.setAttribute('data-category', category);
+        console.log('[UI Runtime] Mobile - Aggiornamento lista metriche, categoria:', category, 'metriche:', metrics.length);
+        metricsList.innerHTML = metrics.map((m, idx) => `
+          <div class="metric-list-item swipeable" data-metric-key="${m.key}" data-metric-index="${idx}">
+            <div class="metric-list-item__content">
+              <div class="metric-list-item__label">${m.label || m.key}</div>
+              <div class="metric-list-item__value">${m.value ?? '—'}</div>
+            </div>
+            <div class="metric-list-item__swipe-hint">→</div>
           </div>
-          <div class="metric-list-item__swipe-hint">→</div>
-        </div>
-      `).join('');
-      
-      // Re-bind swipe gesture
-      setupSwipeGesture(container, metricsWithGlossary, drawer2, drawer2Title, drawer2Content);
-    });
+        `).join('');
+        
+        // Re-bind swipe gesture dopo che il DOM è aggiornato
+        requestAnimationFrame(() => {
+          setupSwipeGesture(container, metricsWithGlossary, drawer2, drawer2Title, drawer2Content);
+        });
+        return;
+      }
+
+      // Check per metric item
+      const item = e.target.closest('.metric-list-item.swipeable');
+      if (item) {
+        e.preventDefault();
+        e.stopPropagation();
+        const key = item.getAttribute('data-metric-key');
+        console.log('[UI Runtime] Mobile - Click su metrica, key:', key, 'metricsWithGlossary length:', metricsWithGlossary.length);
+        const metric = metricsWithGlossary.find(m => m.key === key);
+        if (metric) {
+          console.log('[UI Runtime] Mobile - Metrica trovata, apri dettaglio:', metric.key);
+          openMetricDetail(metric, drawer2, drawer2Title, drawer2Content);
+          drawer1.classList.remove('active');
+          drawer2.classList.add('active');
+        } else {
+          console.warn('[UI Runtime] Mobile - Metrica non trovata per key:', key, 'available keys:', metricsWithGlossary.map(m => m.key).slice(0, 5));
+        }
+        return;
+      }
+    };
+
+    // Aggiungi un solo listener per tutti i click
+    container.addEventListener('click', handleContainerClick, { passive: false });
 
     // Swipe gesture per aprire drawer 2
     setupSwipeGesture(container, metricsWithGlossary, drawer2, drawer2Title, drawer2Content);
@@ -942,10 +1021,12 @@
       ` : ''}
     `;
 
-    // Bind tabs
-    if (UI.bindMetricTabs) {
-      UI.bindMetricTabs(drawer2Content, metric.key);
-    }
+    // Bind tabs dopo un breve delay per assicurare che il DOM sia pronto
+    requestAnimationFrame(() => {
+      if (UI.bindMetricTabs) {
+        UI.bindMetricTabs(drawer2Content, metric.key);
+      }
+    });
 
     // Swipe left per tornare
     let startX = 0;
@@ -1128,27 +1209,40 @@
     }
 
     const drawerExists = qs('.metrics-drawer-desktop');
-    console.log('[UI Runtime] Drawer esistente:', !!drawerExists, 'currentMetricsDrawer:', !!currentMetricsDrawer);
+    // Verifica se il drawer è visibile (non solo se esiste nel DOM)
+    const overlayEl = qs('.tl-panel-overlay');
+    const drawerVisible = drawerExists && overlayEl && overlayEl.getAttribute('aria-hidden') !== 'true' && !overlayEl.hasAttribute('hidden') && overlayEl.style.display !== 'none';
+    console.log('[UI Runtime] Drawer esistente:', !!drawerExists, 'drawer visibile:', drawerVisible, 'currentMetricsDrawer:', !!currentMetricsDrawer);
 
-    // Se il drawer non è ancora aperto, apri prima
-    if (!currentMetricsDrawer || !drawerExists) {
+    // Se il drawer non è ancora aperto o non è visibile, apri prima
+    if (!currentMetricsDrawer || !drawerVisible) {
       console.log('[UI Runtime] Drawer non aperto, apro...');
       openMetricsDrawer(headerData).then(() => {
         console.log('[UI Runtime] Drawer aperto, seleziono metrica...');
-        // Retry fino a quando la metrica non è selezionata
-        let retries = 0;
-        const trySelect = () => {
-          retries++;
-          const drawer = qs('.metrics-drawer-desktop');
-          if (drawer && drawer._metricsData) {
+        // Usa MutationObserver per attendere che _metricsData sia impostato
+        const drawer = qs('.metrics-drawer-desktop');
+        if (drawer) {
+          if (drawer._metricsData) {
             selectMetricInDesktopDrawer(metricKey);
-          } else if (retries < 10) {
-            setTimeout(trySelect, 100);
           } else {
-            console.warn('[UI Runtime] Impossibile selezionare metrica dopo retries');
+            const observer = new MutationObserver(() => {
+              if (drawer._metricsData) {
+                observer.disconnect();
+                selectMetricInDesktopDrawer(metricKey);
+              }
+            });
+            observer.observe(drawer, { childList: true, subtree: true, attributes: true });
+            // Timeout di sicurezza
+            setTimeout(() => {
+              observer.disconnect();
+              if (drawer._metricsData) {
+                selectMetricInDesktopDrawer(metricKey);
+              } else {
+                console.warn('[UI Runtime] Impossibile selezionare metrica: _metricsData non impostato');
+              }
+            }, 1500);
           }
-        };
-        setTimeout(trySelect, 200);
+        }
       }).catch(err => {
         console.error('[UI Runtime] Errore apertura drawer:', err);
       });
@@ -1161,7 +1255,14 @@
   }
 
   // Seleziona metrica nel drawer desktop
-  function selectMetricInDesktopDrawer(metricKey) {
+  function selectMetricInDesktopDrawer(metricKey, retryCount = 0) {
+    const MAX_RETRIES = 20;
+    
+    if (retryCount >= MAX_RETRIES) {
+      console.warn('[UI Runtime] selectMetricInDesktopDrawer: max retries raggiunto');
+      return;
+    }
+    
     console.log('[UI Runtime] selectMetricInDesktopDrawer chiamata con:', metricKey);
     const drawer = qs('.metrics-drawer-desktop');
     if (!drawer) {
@@ -1182,7 +1283,26 @@
         console.error('[UI Runtime] Metrica non trovata nei dati globali:', metricKey);
         return;
       }
-      setTimeout(() => selectMetricInDesktopDrawer(metricKey), 200);
+      // Usa MutationObserver invece di setTimeout ricorsivo
+      const observer = new MutationObserver(() => {
+        if (drawer._metricsData) {
+          observer.disconnect();
+          selectMetricInDesktopDrawer(metricKey, retryCount + 1);
+        }
+      });
+      observer.observe(drawer, { childList: true, subtree: true, attributes: true });
+      // Timeout di sicurezza per evitare loop infiniti
+      setTimeout(() => {
+        observer.disconnect();
+        if (drawer._metricsData) {
+          selectMetricInDesktopDrawer(metricKey, retryCount + 1);
+        } else if (retryCount < MAX_RETRIES - 1) {
+          // Se ancora non c'è dopo 2s e non abbiamo raggiunto il limite, riprova
+          selectMetricInDesktopDrawer(metricKey, retryCount + 1);
+        } else {
+          console.warn('[UI Runtime] selectMetricInDesktopDrawer: _metricsData non impostato dopo', MAX_RETRIES, 'retry');
+        }
+      }, 2000); // Timeout totale 2s
       return;
     }
 
@@ -1220,8 +1340,8 @@
         `).join('');
       }
       
-      // Seleziona direttamente la metrica
-      setTimeout(() => {
+      // Seleziona direttamente la metrica - usa requestAnimationFrame per attendere rendering DOM
+      requestAnimationFrame(() => {
         const metricItem = drawer.querySelector(`.metric-item[data-metric-key="${metricKey}"]`);
         console.log('[UI Runtime] Metrica item trovato:', !!metricItem, 'metricKey:', metricKey);
         if (metricItem) {
@@ -1238,7 +1358,7 @@
           // Fallback: aggiorna contenuto direttamente
           updateMetricContent(metric, contentTitle, contentBody, contentContainer);
         }
-      }, 100);
+      });
     } else {
       console.warn('[UI Runtime] Categoria item non trovato, aggiorno contenuto direttamente');
       updateMetricContent(metric, contentTitle, contentBody, contentContainer);
@@ -1246,22 +1366,32 @@
   }
 
   // Naviga a metrica nel drawer mobile
-  function navigateToMetricInMobileDrawer(metricKey) {
+  function navigateToMetricInMobileDrawer(metricKey, retryCount = 0) {
+    const MAX_RETRIES = 20;
+    
+    if (retryCount >= MAX_RETRIES) {
+      console.warn('[UI Runtime] navigateToMetricInMobileDrawer: max retries raggiunto');
+      return;
+    }
+    
     const drawer = qs('.metrics-drawer-mobile');
     if (!drawer) {
-      setTimeout(() => navigateToMetricInMobileDrawer(metricKey), 100);
+      requestAnimationFrame(() => navigateToMetricInMobileDrawer(metricKey, retryCount + 1));
       return;
     }
     
     const drawer1 = drawer.querySelector('.metrics-drawer-1');
     const drawer2 = drawer.querySelector('#metrics-drawer-2');
     if (!drawer1 || !drawer2) {
-      setTimeout(() => navigateToMetricInMobileDrawer(metricKey), 100);
+      requestAnimationFrame(() => navigateToMetricInMobileDrawer(metricKey, retryCount + 1));
       return;
     }
     
     const categoryTabs = drawer.querySelectorAll('.metric-category-tab');
-    const metricsList = drawer.querySelector('.metrics-list');
+    if (!categoryTabs || categoryTabs.length === 0) {
+      requestAnimationFrame(() => navigateToMetricInMobileDrawer(metricKey, retryCount + 1));
+      return;
+    }
     
     const category = getMetricCategory(metricKey);
     const categoryTab = Array.from(categoryTabs).find(tab => tab.getAttribute('data-category') === category);
@@ -1269,7 +1399,7 @@
     if (categoryTab) {
       categoryTab.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
       
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         const metricItem = drawer.querySelector(`[data-metric-key="${metricKey}"]`);
         if (metricItem) {
           const metricsWithGlossary = currentMetricsData?.metricsWithGlossary || [];
@@ -1284,7 +1414,7 @@
             }
           }
         }
-      }, 200);
+      });
     }
   }
 
