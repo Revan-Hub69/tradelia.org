@@ -256,128 +256,6 @@
       </p>
     </div>
 
-    <!-- Pulsante Filtri -->
-    <div class="mb-6">
-      <button id="open-filters-btn" class="btn-inline text-sm">
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M3 6h18M7 12h10M11 18h2"/>
-        </svg>
-        Filtri
-      </button>
-    </div>
-
-    <!-- Popup Filtri -->
-    <div id="filters-modal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/50 p-4" style="display: none;">
-      <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col" style="background: #ffffff; color: #1e293b;">
-        <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
-          <h3 class="font-semibold text-lg text-slate-900">Filtri</h3>
-          <button id="close-filters-btn" class="text-slate-500 hover:text-red-600 text-xl">✕</button>
-        </div>
-        <div class="px-5 py-4 overflow-y-auto flex-1">
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Livello tecnico (mutuamente esclusivi) -->
-            <div class="filter-group">
-              <label class="text-sm font-semibold mb-2 block" style="color: #1e293b;">Livello tecnico</label>
-              <div class="flex flex-col gap-2">
-                <label class="filter-radio">
-                  <input type="radio" name="skill-level" id="filter-skill-pro" value="skill-pro" data-filter="skill-pro">
-                  <span style="color: #1e293b;">Pro</span>
-                </label>
-                <label class="filter-radio">
-                  <input type="radio" name="skill-level" id="filter-skill-avanzato" value="skill-avanzato" data-filter="skill-avanzato">
-                  <span style="color: #1e293b;">Avanzato</span>
-                </label>
-                <label class="filter-radio">
-                  <input type="radio" name="skill-level" id="filter-skill-intermedio" value="skill-intermedio" data-filter="skill-intermedio">
-                  <span style="color: #1e293b;">Intermedio</span>
-                </label>
-                <label class="filter-radio">
-                  <input type="radio" name="skill-level" id="filter-skill-base" value="skill-base" data-filter="skill-base">
-                  <span style="color: #1e293b;">Base</span>
-                </label>
-                <button type="button" id="clear-skill" class="text-xs text-slate-500 hover:text-slate-700 mt-1 text-left" style="color: #64748b;">Nessuno</button>
-              </div>
-            </div>
-
-            <!-- Strumenti finanziari (multipli) -->
-            <div class="filter-group">
-              <label class="text-sm font-semibold mb-2 block" style="color: #1e293b;">Strumenti finanziari</label>
-              <div class="flex flex-col gap-2">
-                <label class="filter-checkbox">
-                  <input type="checkbox" id="filter-azioni" data-filter="azioni">
-                  <span style="color: #1e293b;">Azioni</span>
-                </label>
-                <label class="filter-checkbox">
-                  <input type="checkbox" id="filter-etf" data-filter="etf">
-                  <span style="color: #1e293b;">ETF</span>
-                </label>
-                <label class="filter-checkbox">
-                  <input type="checkbox" id="filter-bond" data-filter="bond">
-                  <span style="color: #1e293b;">Obbligazioni</span>
-                </label>
-                <label class="filter-checkbox">
-                  <input type="checkbox" id="filter-opzioni" data-filter="opzioni">
-                  <span style="color: #1e293b;">Opzioni</span>
-                </label>
-                <label class="filter-checkbox">
-                  <input type="checkbox" id="filter-futures" data-filter="futures">
-                  <span style="color: #1e293b;">Futures</span>
-                </label>
-                <label class="filter-checkbox">
-                  <input type="checkbox" id="filter-crypto" data-filter="crypto">
-                  <span style="color: #1e293b;">Crypto</span>
-                </label>
-                <label class="filter-checkbox">
-                  <input type="checkbox" id="filter-ipo" data-filter="ipo">
-                  <span style="color: #1e293b;">IPO</span>
-                </label>
-              </div>
-            </div>
-
-            <!-- Piattaforme e Tecnologie (multipli) -->
-            <div class="filter-group">
-              <label class="text-sm font-semibold mb-2 block" style="color: #1e293b;">Piattaforme e Tecnologie</label>
-              <div class="flex flex-col gap-2">
-                <label class="filter-checkbox">
-                  <input type="checkbox" id="filter-dma" data-filter="dma">
-                  <span style="color: #1e293b;">DMA (Direct Market Access)</span>
-                </label>
-                <label class="filter-checkbox">
-                  <input type="checkbox" id="filter-api" data-filter="api">
-                  <span style="color: #1e293b;">API Trading</span>
-                </label>
-                <label class="filter-checkbox">
-                  <input type="checkbox" id="filter-tws" data-filter="tws">
-                  <span style="color: #1e293b;">TWS (Trader Workstation)</span>
-                </label>
-                <label class="filter-checkbox">
-                  <input type="checkbox" id="filter-regime-it" data-filter="regime-it">
-                  <span style="color: #1e293b;">Regime amministrato IT</span>
-                </label>
-                <label class="filter-checkbox">
-                  <input type="checkbox" id="filter-protection" data-filter="protection">
-                  <span style="color: #1e293b;">Protezione fondi</span>
-                </label>
-              </div>
-            </div>
-
-            <!-- Visualizzazione -->
-            <div class="filter-group">
-              <label class="text-sm font-semibold mb-2 block" style="color: #1e293b;">Visualizzazione</label>
-              <div class="flex flex-col gap-2">
-                <button id="view-all" class="btn-inline text-xs justify-start" style="color: #1e293b;">Tutti</button>
-                <button id="view-by-skill" class="btn-inline text-xs justify-start" style="color: #1e293b;">Per livello tecnico</button>
-                <button type="button" id="clear-all-filters" class="text-xs text-slate-500 hover:text-slate-700 mt-2 text-left" style="color: #64748b;">Reset filtri</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="px-5 py-4 border-t border-slate-200 flex items-center justify-between bg-slate-50">
-          <button type="button" id="apply-filters-btn" class="btn bg-slate-900 text-white hover:bg-slate-800">Applica filtri</button>
-          <button type="button" id="close-filters-modal-btn" class="btn-inline text-xs">Chiudi</button>
-        </div>
-      </div>
-    </div>
 
     <!-- Lista broker -->
     <div id="brokers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -439,6 +317,7 @@
         ⚠ Questo intermediario offre anche CFD. <strong>Tradelia AI lo seleziona solo per strumenti diretti</strong> (no CFD).
         <div id="m-cfd-note" class="text-xs mt-1"></div>
       </div>
+      <div id="m-loss-percentage" class="hidden sm:col-span-2"></div>
     </div>
     <div class="px-5 py-4 border-t border-slate-200 flex items-center justify-between bg-slate-50">
       <span id="m-afftext" class="text-[12px] text-slate-500">Link affiliato (se disponibile).</span>
@@ -963,30 +842,31 @@ window.BROKERS = {
     pepperstone: {
       name: "Pepperstone",
       affiliated: true,
-      tags: ["CFD", "Forex", "Spread bassi", "ASIC", "FCA"],
-      description: "Broker CFD specializzato con <strong>spread e commissioni tra i più bassi del mercato</strong>, regolamentato da autorità di altissimo livello (ASIC, FCA, DFSA).",
+      tags: ["CFD", "Forex", "Spread bassi", "CySEC", "ESMA"],
+      description: "Broker CFD specializzato con <strong>spread e commissioni tra i più bassi del mercato</strong>. Per clienti europei opera su <strong>Pepperstone.eu</strong> regolamentata da CySEC (licenza 388/20) in conformità con le normative UE.",
       score: 89,
       skill: "Intermedio",
       cfd: true,
       cfdOnly: true,
       minDeposit: 200,
       feesCategory: "low",
-      regulations: ["asic", "fca", "dfsa"],
+      regulations: ["cysec", "esma"],
       platforms: ["web", "desktop", "mobile"],
       markets: ["global"],
       supportIt: true,
       protection: true,
       assets: "CFD su Forex, Indici, Materie prime, Azioni, Criptovalute, ETF",
       count: "Oltre 1.200 strumenti CFD • Forex, Indici, Commodities, Azioni, Crypto, ETF",
-      min: "≈ €200 (varia per entità regolamentata)",
-      reg: "Australia · ASIC (AFSL 414530) · UK · FCA (FRN 684312) · UAE · DFSA · tra i broker più regolamentati e affidabili del settore CFD",
-      cfd_note: "Pepperstone è un broker esclusivamente CFD. Questo broker è incluso solo per trader che, per necessità strategica, devono utilizzare CFD e sono consapevoli dei rischi elevatissimi. Pepperstone offre spread e commissioni tra i più competitivi del mercato con regolamentazione di altissimo livello.",
+      min: "≈ €200",
+      reg: "UE · Pepperstone EU Limited · CySEC (licenza 388/20) · conformità MiFID II/ESMA · fondi in conti segregati presso banche di primo livello · protezione ICF fino a €20.000",
+      cfd_note: "Pepperstone è un broker esclusivamente CFD. Per clienti europei opera su <strong>Pepperstone.eu</strong> (Pepperstone EU Limited), autorizzata e regolamentata dalla <strong>Cyprus Securities and Exchange Commission (CySEC)</strong> con licenza n. 388/20, garantendo conformità alle normative dell'Unione Europea. I fondi sono custoditi in conti segregati presso banche di primo livello, assicurando che il capitale dei clienti sia separato dai fondi aziendali. I clienti beneficiano della protezione del <strong>Fondo di Compensazione degli Investitori di Cipro (ICF)</strong>, che offre una copertura fino a €20.000 in caso di insolvenza del broker. Questo broker è incluso solo per trader che, per necessità strategica, devono utilizzare CFD e sono consapevoli dei rischi elevatissimi. Pepperstone offre spread e commissioni tra i più competitivi del mercato con regolamentazione di altissimo livello.",
       platforms_text: "MetaTrader 4, MetaTrader 5, cTrader, TradingView, Web, App",
       fees: "Spread tra i più bassi del mercato (da 0.0 pip su Razor account), commissioni competitive, nessun costo di deposito/prelievo",
-      pros: ["Spread e commissioni tra i più bassi del mercato CFD", "Regolamentazione di altissimo livello (ASIC, FCA, DFSA)", "Piattaforme professionali (MT4, MT5, cTrader, TradingView)", "Esecuzione veloce e affidabile", "Assistenza clienti multilingua", "Nessun costo di deposito/prelievo", "Protezione fondi dei clienti garantita"],
-      cons: ["Broker esclusivamente CFD - prodotti ad altissimo rischio", "Non offre strumenti reali quotati (azioni, ETF, obbligazioni reali)", "Rischio di perdita totale del capitale con CFD", "Leverage elevato può amplificare le perdite"],
+      pros: ["Spread e commissioni tra i più bassi del mercato CFD", "Per clienti europei: Pepperstone.eu regolamentata da CySEC (licenza 388/20)", "Fondi in conti segregati presso banche di primo livello", "Protezione ICF fino a €20.000", "Piattaforme professionali (MT4, MT5, cTrader, TradingView)", "Esecuzione veloce e affidabile", "Assistenza clienti multilingua", "Nessun costo di deposito/prelievo"],
+      cons: ["Broker esclusivamente CFD - prodotti ad altissimo rischio", "Non offre strumenti reali quotati (azioni, ETF, obbligazioni reali)", "Rischio di perdita totale del capitale con CFD", "Leverage elevato può amplificare le perdite", "Secondo dati ufficiali: 74-89% dei trader al dettaglio perde denaro con CFD"],
       aff: "https://pepperstone.com/it",
-      disclaimer: "I CFD sono strumenti complessi ad altissimo rischio di perdita rapida di denaro a causa della leva finanziaria. Il trading di CFD comporta un rischio elevatissimo di perdita totale o parziale del capitale. Pepperstone è regolamentato da ASIC (Australia), FCA (Regno Unito) e DFSA (Emirati Arabi Uniti), tra le autorità di regolamentazione più severe al mondo. Questo broker è incluso solo per trader che, per necessità strategica, devono utilizzare CFD e sono pienamente consapevoli dei rischi elevatissimi. Valuta attentamente se comprendi il funzionamento dei CFD e se puoi permetterti di correre un rischio elevatissimo di perdere il tuo denaro. Le informazioni hanno scopo puramente informativo e non costituiscono consulenza o sollecitazione al pubblico risparmio.",
+      lossPercentage: "74-89%",
+      disclaimer: "I CFD sono strumenti complessi ad altissimo rischio di perdita rapida di denaro a causa della leva finanziaria. Il trading di CFD comporta un rischio elevatissimo di perdita totale o parziale del capitale. <strong>Secondo i dati ufficiali di Pepperstone, tra il 74% e l'89% dei trader al dettaglio perde denaro quando fa trading con i CFD.</strong> Per clienti europei, Pepperstone opera su <strong>Pepperstone.eu</strong> (Pepperstone EU Limited), autorizzata e regolamentata dalla <strong>Cyprus Securities and Exchange Commission (CySEC)</strong> con licenza n. 388/20, garantendo conformità alle normative dell'Unione Europea (MiFID II, ESMA). I fondi sono custoditi in conti segregati presso banche di primo livello. I clienti beneficiano della protezione del <strong>Fondo di Compensazione degli Investitori di Cipro (ICF)</strong> fino a €20.000. Questo broker è incluso solo per trader che, per necessità strategica, devono utilizzare CFD e sono pienamente consapevoli dei rischi elevatissimi. Valuta attentamente se comprendi il funzionamento dei CFD e se puoi permetterti di correre un rischio elevatissimo di perdere il tuo denaro. Le informazioni hanno scopo puramente informativo e non costituiscono consulenza o sollecitazione al pubblico risparmio.",
       filters: {
         cfd: true,
         forex: true,
@@ -1136,7 +1016,7 @@ window.BROKERS = {
   }
 
 // ===== Funzioni filtro =====
-function renderBrokers(filters = {}, rangeFilters = {}, viewMode = 'all') {
+function renderBrokers() {
   const grid = document.getElementById('brokers-grid');
   if (!grid) {
     console.error('brokers-grid non trovato!');
@@ -1154,75 +1034,7 @@ function renderBrokers(filters = {}, rangeFilters = {}, viewMode = 'all') {
           console.error('Errore arricchimento broker', key, e);
           return [key, broker];
         }
-      }).filter(([key, broker]) => {
-      // Raggruppa i filtri per categoria logica
-      const activeFilters = Object.entries(filters).filter(([_, value]) => value);
-      
-      if (activeFilters.length === 0) {
-        // Nessun filtro attivo, mostra tutti
-        return true;
-      }
-      
-      // Definisci gruppi di filtri
-      const skillFilters = ['skill-pro', 'skill-avanzato', 'skill-intermedio', 'skill-base'];
-      const instrumentFilters = ['azioni', 'etf', 'bond', 'opzioni', 'futures', 'crypto', 'ipo'];
-      const platformFilters = ['dma', 'api', 'tws', 'regime-it', 'protection'];
-      
-      // Separa filtri per categoria
-      const activeSkillFilters = activeFilters.filter(([filterKey]) => 
-        skillFilters.includes(filterKey)
-      );
-      const activeInstrumentFilters = activeFilters.filter(([filterKey]) => 
-        instrumentFilters.includes(filterKey)
-      );
-      const activePlatformFilters = activeFilters.filter(([filterKey]) => 
-        platformFilters.includes(filterKey)
-      );
-      
-      // Verifica filtri skill (OR logico: almeno uno deve corrispondere)
-      // Nota: anche se è un radio button, alcuni broker possono avere skill multipli nei dati
-      if (activeSkillFilters.length > 0) {
-        const matchesSkill = activeSkillFilters.some(([filterKey]) => {
-          return broker.filters[filterKey] === true;
-        });
-        if (!matchesSkill) return false;
-      }
-      
-      // Verifica filtri strumenti (AND logico: deve avere tutti gli strumenti selezionati)
-      if (activeInstrumentFilters.length > 0) {
-        const matchesInstruments = activeInstrumentFilters.every(([filterKey]) => {
-          return broker.filters[filterKey] === true;
-        });
-        if (!matchesInstruments) return false;
-      }
-      
-      // Verifica filtri piattaforme (AND logico: deve avere tutte le piattaforme selezionate)
-      if (activePlatformFilters.length > 0) {
-        const matchesPlatforms = activePlatformFilters.every(([filterKey]) => {
-          return broker.filters[filterKey] === true;
-        });
-        if (!matchesPlatforms) return false;
-      }
-
-      // Filtro deposito minimo (range)
-      if (rangeFilters.minDeposit !== undefined) {
-        const minDeposit = broker.minDeposit || 0;
-        if (minDeposit > rangeFilters.minDeposit) return false;
-      }
-
-      // Filtro score (range)
-      if (rangeFilters.score !== undefined) {
-        if (broker.score < rangeFilters.score) return false;
-      }
-
-    return true;
-    });
-
-    // Mostra messaggio se non ci sono broker
-    if (brokers.length === 0) {
-      grid.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-slate-600">Nessun broker trovato con i filtri selezionati. Prova a modificare i filtri.</p></div>';
-      return;
-    }
+      });
 
     // Separa broker CFD-only dai broker normali
     const cfdOnlyBrokers = brokers.filter(([key, broker]) => broker.cfdOnly === true);
@@ -1230,41 +1042,9 @@ function renderBrokers(filters = {}, rangeFilters = {}, viewMode = 'all') {
 
     // Renderizza broker normali
     if (normalBrokers.length > 0) {
-      // Raggruppa per livello tecnico se richiesto
-      if (viewMode === 'by-skill') {
-        const grouped = {};
-        normalBrokers.forEach(([key, broker]) => {
-          const skill = broker.skill || 'Altro';
-          if (!grouped[skill]) grouped[skill] = [];
-          grouped[skill].push([key, broker]);
-        });
-
-        // Ordina i gruppi per livello
-        const skillOrder = ['Pro', 'Avanzato', 'Intermedio/Avanzato', 'Intermedio-Avanzato', 'Intermedio', 'Base/Intermedio', 'Base'];
-        const sortedGroups = Object.keys(grouped).sort((a, b) => {
-          const aIndex = skillOrder.indexOf(a);
-          const bIndex = skillOrder.indexOf(b);
-          if (aIndex === -1 && bIndex === -1) return a.localeCompare(b);
-          if (aIndex === -1) return 1;
-          if (bIndex === -1) return -1;
-          return aIndex - bIndex;
-        });
-
-        sortedGroups.forEach(skill => {
-          const skillHeader = document.createElement('div');
-          skillHeader.className = 'col-span-full mt-6 mb-4';
-          skillHeader.innerHTML = `<h2 class="text-xl font-bold text-slate-900 border-b border-slate-200 pb-2">${skill}</h2>`;
-          grid.appendChild(skillHeader);
-
-          grouped[skill].forEach(([key, broker]) => {
-            renderBrokerCard(key, broker, grid, false);
-          });
-        });
-      } else {
-        normalBrokers.forEach(([key, broker]) => {
-          renderBrokerCard(key, broker, grid, false);
-        });
-      }
+      normalBrokers.forEach(([key, broker]) => {
+        renderBrokerCard(key, broker, grid, false);
+      });
     }
 
     // Renderizza broker CFD-only in sezione separata
@@ -1377,106 +1157,24 @@ function renderBrokerCard(key, broker, grid, isCfdOnly = false) {
             </div>
           </div>
           
+          ${key === 'pepperstone' && broker.lossPercentage ? `
+          <div class="bg-red-50 border-2 border-red-400 rounded-lg p-3 mb-3">
+            <p class="text-sm font-bold text-red-900 text-center leading-tight">
+              ⚠️ <strong>Dati ufficiali Pepperstone:</strong><br>
+              <span class="text-base">${broker.lossPercentage} dei trader al dettaglio perde denaro con i CFD</span>
+            </p>
+            <p class="text-xs text-red-700 text-center mt-1">
+              (ai sensi di MiFID II / ESMA)
+            </p>
+          </div>
+          ` : ''}
+          
           <button class="btn ${isCfdOnly ? 'bg-amber-600 hover:bg-amber-700' : 'bg-slate-900 hover:bg-slate-800'} text-white w-full mt-auto" onclick="openModal('${key}')">Maggiori info</button>
         `;
         
   grid.appendChild(card);
 }
 
-// ===== Gestione filtri =====
-const activeFilters = {};
-let viewMode = 'all'; // 'all' o 'by-skill'
-
-// Funzione per raccogliere i filtri attivi dal DOM
-function collectFiltersFromDOM() {
-  const filters = {};
-  
-  // Raccogli filtri skill (radio button selezionato)
-  const selectedSkill = document.querySelector('input[type="radio"][name="skill-level"]:checked');
-  if (selectedSkill) {
-    const filterKey = selectedSkill.getAttribute('data-filter');
-    if (filterKey) {
-      filters[filterKey] = true;
-    }
-  }
-  
-  // Raccogli filtri checkbox
-  const checkboxes = document.querySelectorAll('input[type="checkbox"][data-filter]');
-  checkboxes.forEach(checkbox => {
-    if (checkbox.checked) {
-      const filterKey = checkbox.getAttribute('data-filter');
-      if (filterKey) {
-        filters[filterKey] = true;
-      }
-    }
-  });
-  
-  return filters;
-}
-
-// Funzione unificata per applicare tutti i filtri
-function applyFilters() {
-  // Aggiorna activeFilters con i valori dal DOM
-  const domFilters = collectFiltersFromDOM();
-  Object.keys(activeFilters).forEach(key => delete activeFilters[key]);
-  Object.assign(activeFilters, domFilters);
-  
-  // Applica i filtri
-  renderBrokers(activeFilters, {}, viewMode);
-}
-
-// Reset filtri skill (non applica automaticamente)
-function setupFilterReset() {
-  document.getElementById('clear-skill')?.addEventListener('click', () => {
-    const skillRadios = document.querySelectorAll('input[type="radio"][name="skill-level"]');
-    skillRadios.forEach(radio => radio.checked = false);
-  });
-
-  // Reset tutti i filtri (non applica automaticamente)
-  document.getElementById('clear-all-filters')?.addEventListener('click', () => {
-    // Reset radio buttons
-    const skillRadios = document.querySelectorAll('input[type="radio"][name="skill-level"]');
-    skillRadios.forEach(radio => radio.checked = false);
-    // Reset checkbox
-    const checkboxes = document.querySelectorAll('input[type="checkbox"][data-filter]');
-    checkboxes.forEach(checkbox => checkbox.checked = false);
-  });
-}
-
-// Visualizzazione per livello tecnico
-function setupViewMode() {
-  document.getElementById('view-all')?.addEventListener('click', () => {
-    viewMode = 'all';
-    const viewAll = document.getElementById('view-all');
-    const viewBySkill = document.getElementById('view-by-skill');
-    if (viewAll && viewBySkill) {
-      viewAll.classList.add('bg-slate-900', 'text-white');
-      viewAll.classList.remove('bg-white');
-      viewBySkill.classList.remove('bg-slate-900', 'text-white');
-      viewBySkill.classList.add('bg-white');
-    }
-    applyFilters();
-  });
-
-  document.getElementById('view-by-skill')?.addEventListener('click', () => {
-    viewMode = 'by-skill';
-    const viewAll = document.getElementById('view-all');
-    const viewBySkill = document.getElementById('view-by-skill');
-    if (viewAll && viewBySkill) {
-      viewBySkill.classList.add('bg-slate-900', 'text-white');
-      viewBySkill.classList.remove('bg-white');
-      viewAll.classList.remove('bg-slate-900', 'text-white');
-      viewAll.classList.add('bg-white');
-    }
-    applyFilters();
-  });
-
-  // Imposta vista iniziale
-  const viewAll = document.getElementById('view-all');
-  if (viewAll) {
-    viewAll.classList.add('bg-slate-900', 'text-white');
-  }
-}
 
 // ===== Funzione Modal =====
 const OFFICIAL = {
@@ -1570,6 +1268,28 @@ window.openModal = function(key) {
     disclaimerBox.classList.add('hidden');
   }
 
+  // Mostra percentuali di perdita per Pepperstone
+  const lossPercentageBox = $('#m-loss-percentage');
+  if (key === 'pepperstone' && d.lossPercentage) {
+    lossPercentageBox.classList.remove('hidden');
+    lossPercentageBox.innerHTML = `
+      <div class="bg-red-50 border-2 border-red-400 rounded-lg p-4 mb-4">
+        <p class="text-base font-bold text-red-900 text-center leading-tight mb-2">
+          ⚠️ <strong>Dati ufficiali Pepperstone (ai sensi di MiFID II / ESMA):</strong>
+        </p>
+        <p class="text-lg font-extrabold text-red-900 text-center leading-tight">
+          ${d.lossPercentage} dei trader al dettaglio perde denaro con i CFD
+        </p>
+        <p class="text-xs text-red-700 text-center mt-2">
+          Questi dati sono comunicati obbligatoriamente ai sensi della normativa europea MiFID II / ESMA.
+        </p>
+      </div>
+    `;
+  } else {
+    lossPercentageBox.classList.add('hidden');
+    lossPercentageBox.innerHTML = '';
+  }
+
   const modal = $('#modal');
   if (modal) {
     modal.style.display = 'flex';
@@ -1595,62 +1315,12 @@ document.getElementById('modal')?.addEventListener('click', (e) => {
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
-    const filtersModal = document.getElementById('filters-modal');
     const modal = document.getElementById('modal');
-    if (filtersModal && filtersModal.style.display === 'flex') {
-      closeFiltersModal();
-    }
     if (modal && modal.style.display === 'flex') {
       window.closeModal();
     }
   }
 });
-
-// ===== Gestione Popup Filtri =====
-function openFiltersModal() {
-  const filtersModal = document.getElementById('filters-modal');
-  if (filtersModal) {
-    filtersModal.style.display = 'flex';
-    filtersModal.classList.add('flex');
-    filtersModal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-  }
-}
-
-function closeFiltersModal() {
-  const filtersModal = document.getElementById('filters-modal');
-  if (filtersModal) {
-    filtersModal.style.display = 'none';
-    filtersModal.classList.add('hidden');
-    filtersModal.classList.remove('flex');
-    document.body.style.overflow = '';
-  }
-}
-
-function setupFiltersModal() {
-  // Apri popup filtri
-  document.getElementById('open-filters-btn')?.addEventListener('click', openFiltersModal);
-
-  // Chiudi popup filtri
-  document.getElementById('close-filters-btn')?.addEventListener('click', closeFiltersModal);
-  document.getElementById('close-filters-modal-btn')?.addEventListener('click', closeFiltersModal);
-
-  // Applica filtri e chiudi popup
-  document.getElementById('apply-filters-btn')?.addEventListener('click', () => {
-    applyFilters();
-    closeFiltersModal();
-  });
-
-  // Chiudi cliccando fuori dal popup
-  const filtersModal = document.getElementById('filters-modal');
-  if (filtersModal) {
-    filtersModal.addEventListener('click', (e) => {
-      if (e.target.id === 'filters-modal') {
-        closeFiltersModal();
-      }
-    });
-  }
-}
 
 // ===== Inizializzazione =====
 // Assicurati che il DOM sia pronto
@@ -1661,13 +1331,8 @@ function init() {
   }
   console.log('Broker disponibili:', Object.keys(window.BROKERS).length);
   
-  // Setup event listeners
-  setupFilterReset();
-  setupViewMode();
-  setupFiltersModal();
-  
-  // Applica filtri iniziali (mostra tutti i broker)
-  applyFilters();
+  // Renderizza tutti i broker
+  renderBrokers();
 }
 
 // Inizializza quando il DOM è pronto
