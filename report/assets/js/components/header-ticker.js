@@ -159,12 +159,25 @@ async function openMetricsPanel(data) {
       body: body
     });
 
-    // Bind drawer mobile
-    setTimeout(() => {
-      setupMobileDrawer(metricsWithGlossary, metricsByCategory, categories, ui);
-    }, 0);
-    
-    return Promise.resolve();
+    // Bind drawer mobile - aspetta che il DOM sia pronto
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const drawer = document.querySelector('.metrics-drawer-mobile');
+        if (drawer) {
+          setupMobileDrawer(metricsWithGlossary, metricsByCategory, categories, ui);
+          resolve();
+        } else {
+          // Retry se il drawer non è ancora nel DOM
+          setTimeout(() => {
+            const drawer2 = document.querySelector('.metrics-drawer-mobile');
+            if (drawer2) {
+              setupMobileDrawer(metricsWithGlossary, metricsByCategory, categories, ui);
+            }
+            resolve();
+          }, 100);
+        }
+      }, 100);
+    });
   }
 
   // Desktop: drawer 3 colonne (Categorie | Metriche | Contenuto)
@@ -397,51 +410,69 @@ if (typeof window !== 'undefined') {
 // Setup drawer mobile con swipe gesture
 function setupMobileDrawer(metricsWithGlossary, metricsByCategory, categories, ui) {
   const container = document.querySelector('.metrics-drawer-mobile');
-  if (!container) return;
+  if (!container) {
+    console.warn('[HeaderTicker] setupMobileDrawer: container non trovato');
+    return;
+  }
 
   const drawer1 = container.querySelector('.metrics-drawer-1');
   const drawer2 = container.querySelector('#metrics-drawer-2');
-  const categoryTabs = container.querySelectorAll('.metric-category-tab');
+  if (!drawer1 || !drawer2) {
+    console.warn('[HeaderTicker] setupMobileDrawer: drawer1 o drawer2 non trovati');
+    return;
+  }
+
   const metricsList = container.querySelector('.metrics-list');
-  const listItems = container.querySelectorAll('.metric-list-item');
   const backBtn = drawer2.querySelector('.metrics-drawer-2__back');
   const drawer2Title = drawer2.querySelector('.metrics-drawer-2__title');
   const drawer2Content = drawer2.querySelector('.metrics-drawer-2__content');
 
-  // Tabs categoria
-  categoryTabs.forEach(tab => {
-    tab.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const category = tab.getAttribute('data-category');
-      const metrics = metricsByCategory[category] || [];
-      
-      // Update active tab
-      categoryTabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      
-      // Update metrics list
-      metricsList.setAttribute('data-category', category);
-      metricsList.innerHTML = metrics.map((m, idx) => `
-        <div class="metric-list-item swipeable" data-metric-key="${m.key}" data-metric-index="${idx}">
-          <div class="metric-list-item__content">
-            <div class="metric-list-item__label">${m.label || m.key}</div>
-            <div class="metric-list-item__value">${m.value ?? '—'}</div>
-          </div>
-          <div class="metric-list-item__swipe-hint">→</div>
+  if (!metricsList || !backBtn || !drawer2Title || !drawer2Content) {
+    console.warn('[HeaderTicker] setupMobileDrawer: elementi non trovati');
+    return;
+  }
+
+  console.log('[HeaderTicker] setupMobileDrawer: inizializzato');
+
+  // Tabs categoria - usa delegation
+  container.addEventListener('click', (e) => {
+    const tab = e.target.closest('.metric-category-tab');
+    if (!tab) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    const category = tab.getAttribute('data-category');
+    console.log('[HeaderTicker] Mobile - Click categoria:', category);
+    const metrics = metricsByCategory[category] || [];
+    
+    // Update active tab
+    container.querySelectorAll('.metric-category-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    
+    // Update metrics list
+    metricsList.setAttribute('data-category', category);
+    metricsList.innerHTML = metrics.map((m, idx) => `
+      <div class="metric-list-item swipeable" data-metric-key="${m.key}" data-metric-index="${idx}">
+        <div class="metric-list-item__content">
+          <div class="metric-list-item__label">${m.label || m.key}</div>
+          <div class="metric-list-item__value">${m.value ?? '—'}</div>
         </div>
-      `).join('');
-      
-      // Re-bind swipe gesture
-      setupSwipeGesture(container, metricsWithGlossary, drawer2, drawer2Title, drawer2Content);
-    });
+        <div class="metric-list-item__swipe-hint">→</div>
+      </div>
+    `).join('');
+    
+    // Re-bind swipe gesture
+    setupSwipeGesture(container, metricsWithGlossary, drawer2, drawer2Title, drawer2Content);
   });
 
   // Swipe gesture per aprire drawer 2
   setupSwipeGesture(container, metricsWithGlossary, drawer2, drawer2Title, drawer2Content);
 
   // Back button
-  backBtn.addEventListener('click', () => {
+  backBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('[HeaderTicker] Mobile - Back button click');
     drawer1.classList.add('active');
     drawer2.classList.remove('active');
   });
@@ -572,47 +603,70 @@ function setupDesktopDrawer(metricsWithGlossary, metricsByCategory, categories, 
     container._metricsData = { metricsWithGlossary, metricsByCategory, contentTitle, contentBody, tabsContainer };
   }
 
-  // Click su categoria
-  categoryItems.forEach(catItem => {
-    catItem.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const category = catItem.getAttribute('data-category');
-      console.log('[HeaderTicker] Click categoria:', category);
-      const metrics = metricsByCategory[category] || [];
-      
-      // Update active category
-      categoryItems.forEach(c => c.classList.remove('active'));
-      catItem.classList.add('active');
-      
-      // Update metrics list
-      metricsList.setAttribute('data-category', category);
-      metricsList.innerHTML = metrics.map(m => `
-        <button class="metric-item" data-metric-key="${m.key}">
-          <div class="metric-item__label">${m.label || m.key}</div>
-          <div class="metric-item__value">${m.value ?? '—'}</div>
-        </button>
-      `).join('');
-      
-      // Select first metric
-      if (metrics.length > 0) {
-        const firstMetric = metrics[0];
-        updateMetricContent(firstMetric, contentTitle, contentBody, tabsContainer);
-        const firstItem = metricsList.querySelector('.metric-item');
-        if (firstItem) {
-          firstItem.classList.add('active');
-          console.log('[HeaderTicker] Prima metrica selezionata:', firstMetric.key);
-        }
+  // Click su categoria - usa delegation per evitare problemi di rebind
+  container.addEventListener('click', (e) => {
+    const catItem = e.target.closest('.metric-category-item');
+    if (!catItem) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    const category = catItem.getAttribute('data-category');
+    console.log('[HeaderTicker] Click categoria:', category);
+    const metrics = metricsByCategory[category] || [];
+    
+    // Update active category
+    categoryItems.forEach(c => c.classList.remove('active'));
+    catItem.classList.add('active');
+    
+    // Update metrics list
+    metricsList.setAttribute('data-category', category);
+    metricsList.innerHTML = metrics.map(m => `
+      <button class="metric-item" data-metric-key="${m.key}">
+        <div class="metric-item__label">${m.label || m.key}</div>
+        <div class="metric-item__value">${m.value ?? '—'}</div>
+      </button>
+    `).join('');
+    
+    // Select first metric
+    if (metrics.length > 0) {
+      const firstMetric = metrics[0];
+      updateMetricContent(firstMetric, contentTitle, contentBody, tabsContainer);
+      const firstItem = metricsList.querySelector('.metric-item');
+      if (firstItem) {
+        firstItem.classList.add('active');
+        console.log('[HeaderTicker] Prima metrica selezionata:', firstMetric.key);
       }
-      
-      // Re-bind metric items
-      setTimeout(() => {
-        bindMetricItems(metricsWithGlossary, contentTitle, contentBody, tabsContainer);
-      }, 0);
-    });
+    }
+    
+    // Re-bind metric items
+    setTimeout(() => {
+      bindMetricItems(metricsWithGlossary, contentTitle, contentBody, tabsContainer);
+    }, 0);
   });
 
-  // Bind metric items
+  // Bind metric items - usa delegation per evitare problemi di rebind
+  container.addEventListener('click', (e) => {
+    const metricItem = e.target.closest('.metric-item');
+    if (!metricItem) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    const key = metricItem.getAttribute('data-metric-key');
+    console.log('[HeaderTicker] Click metrica nel drawer:', key);
+    const metric = metricsWithGlossary.find(m => m.key === key);
+    
+    if (metric && contentTitle && contentBody && tabsContainer) {
+      console.log('[HeaderTicker] Aggiorna contenuto per:', key);
+      // Update active metric
+      container.querySelectorAll('.metric-item').forEach(m => m.classList.remove('active'));
+      metricItem.classList.add('active');
+      
+      // Update content
+      updateMetricContent(metric, contentTitle, contentBody, tabsContainer);
+    }
+  });
+  
+  // Bind metric items iniziali
   bindMetricItems(metricsWithGlossary, contentTitle, contentBody, tabsContainer);
   
   return container;
