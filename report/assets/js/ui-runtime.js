@@ -1045,13 +1045,14 @@
         };
         item._metricHandler = handler;
         // Attacca MULTIPLI eventi per massima compatibilità mobile
-        item.addEventListener('click', handler, { passive: false, capture: false });
-        item.addEventListener('touchend', handler, { passive: false, capture: false });
-        item.addEventListener('pointerup', handler, { passive: false, capture: false });
+        // Usa capture: true per catturare prima del container
+        item.addEventListener('click', handler, { passive: false, capture: true });
+        item.addEventListener('touchend', handler, { passive: false, capture: true });
+        item.addEventListener('pointerup', handler, { passive: false, capture: true });
         // Touchstart per debug - logga sempre
         item.addEventListener('touchstart', (e) => {
-          console.log('[UI Runtime] Mobile - Metric touchstart catturato:', key, 'target:', e.target);
-        }, { passive: true });
+          console.log('[UI Runtime] Mobile - Metric touchstart catturato:', key, 'target:', e.target, 'currentTarget:', e.currentTarget);
+        }, { passive: true, capture: true });
         console.log('[UI Runtime] attachMetricItemListeners - listener attaccato su item:', key, 'index:', idx);
       });
       console.log('[UI Runtime] attachMetricItemListeners - completato, listener attaccati:', items.length);
@@ -1090,13 +1091,14 @@
         
         tab._categoryTabHandler = handler;
         // Attacca MULTIPLI eventi per massima compatibilità mobile
-        tab.addEventListener('click', handler, { passive: false, capture: false });
-        tab.addEventListener('touchend', handler, { passive: false, capture: false });
-        tab.addEventListener('pointerup', handler, { passive: false, capture: false });
+        // Usa capture: true per catturare prima del container
+        tab.addEventListener('click', handler, { passive: false, capture: true });
+        tab.addEventListener('touchend', handler, { passive: false, capture: true });
+        tab.addEventListener('pointerup', handler, { passive: false, capture: true });
         // Touchstart per debug - logga sempre
         tab.addEventListener('touchstart', (e) => {
-          console.log('[UI Runtime] Mobile - Tab touchstart catturato:', tab.getAttribute('data-category'), 'target:', e.target);
-        }, { passive: true });
+          console.log('[UI Runtime] Mobile - Tab touchstart catturato:', tab.getAttribute('data-category'), 'target:', e.target, 'currentTarget:', e.currentTarget);
+        }, { passive: true, capture: true });
         console.log('[UI Runtime] setupMobileMetricsDrawer - listener attaccato su tab:', tab.getAttribute('data-category'), 'index:', idx, 'tab element:', tab);
       });
       
@@ -1175,33 +1177,9 @@
     container.addEventListener('click', handleContainerClick, { passive: false, capture: false });
     
     // Per mobile: aggiungi anche touchstart per migliorare la risposta
-    // ma solo se non è già stato gestito da swipe
-    let touchStartTime = 0;
-    let touchStartTarget = null;
-    
-    container.addEventListener('touchstart', (e) => {
-      touchStartTime = Date.now();
-      touchStartTarget = e.target;
-    }, { passive: true });
-    
-    container.addEventListener('touchend', (e) => {
-      // Solo se è un tap veloce (non swipe) e target stesso
-      const touchDuration = Date.now() - touchStartTime;
-      // Se il target è già un tab o metric item, non interferire (hanno listener diretti)
-      const isTabOrMetric = e.target.closest('.metric-category-tab') || e.target.closest('.metric-list-item.swipeable');
-      if (isTabOrMetric) {
-        // Lascia che i listener diretti gestiscano l'evento
-        return;
-      }
-      if (touchDuration < 300 && e.target === touchStartTarget) {
-        // Evita doppia esecuzione se click è già stato gestito
-        setTimeout(() => {
-          if (!e.defaultPrevented) {
-            handleContainerClick(e);
-          }
-        }, 50);
-      }
-    }, { passive: false });
+    // REMOSSO: Listener touchend sul container che interferiva con i listener diretti
+    // I tab e metric items hanno listener diretti che gestiscono tutto
+    // Manteniamo solo il supporto per swipe gesture (gestito da setupSwipeGesture)
 
     // Keyboard navigation per accessibilità
     const handleKeyboardNav = (e) => {
