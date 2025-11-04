@@ -1037,16 +1037,21 @@
           item.removeEventListener('touchend', item._metricHandler);
         }
         const handler = (e) => {
+          console.log('[UI Runtime] Mobile - Metric handler chiamato:', e.type, 'key:', key);
           e.preventDefault();
           e.stopPropagation();
           console.log('[UI Runtime] Mobile - Click/Touch su metrica item:', key, 'event type:', e.type, 'source:', e.type === 'touchend' ? 'touch' : 'click');
           selectMetric(key, e.type === 'touchend' ? 'touch' : 'click');
         };
         item._metricHandler = handler;
+        // Attacca MULTIPLI eventi per massima compatibilità mobile
         item.addEventListener('click', handler, { passive: false, capture: false });
         item.addEventListener('touchend', handler, { passive: false, capture: false });
-        // Aggiungi anche pointerup per maggiore compatibilità
         item.addEventListener('pointerup', handler, { passive: false, capture: false });
+        // Touchstart per debug - logga sempre
+        item.addEventListener('touchstart', (e) => {
+          console.log('[UI Runtime] Mobile - Metric touchstart catturato:', key, 'target:', e.target);
+        }, { passive: true });
         console.log('[UI Runtime] attachMetricItemListeners - listener attaccato su item:', key, 'index:', idx);
       });
       console.log('[UI Runtime] attachMetricItemListeners - completato, listener attaccati:', items.length);
@@ -1071,6 +1076,7 @@
         }
         
         const handler = (e) => {
+          console.log('[UI Runtime] Mobile - Tab handler chiamato:', e.type, 'category:', tab.getAttribute('data-category'));
           e.preventDefault();
           e.stopPropagation();
           const category = tab.getAttribute('data-category') || tab.dataset.category;
@@ -1083,14 +1089,13 @@
         };
         
         tab._categoryTabHandler = handler;
-        // Attacca sia click che touchend per mobile
+        // Attacca MULTIPLI eventi per massima compatibilità mobile
         tab.addEventListener('click', handler, { passive: false, capture: false });
         tab.addEventListener('touchend', handler, { passive: false, capture: false });
-        // Aggiungi anche pointerup per maggiore compatibilità
         tab.addEventListener('pointerup', handler, { passive: false, capture: false });
-        // Aggiungi anche touchstart per maggiore compatibilità
+        // Touchstart per debug - logga sempre
         tab.addEventListener('touchstart', (e) => {
-          // Non fare nulla, solo per evitare che altri handler interferiscano
+          console.log('[UI Runtime] Mobile - Tab touchstart catturato:', tab.getAttribute('data-category'), 'target:', e.target);
         }, { passive: true });
         console.log('[UI Runtime] setupMobileMetricsDrawer - listener attaccato su tab:', tab.getAttribute('data-category'), 'index:', idx, 'tab element:', tab);
       });
