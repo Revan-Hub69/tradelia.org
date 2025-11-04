@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it" data-theme="dark">
+<html lang="it">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,7 +9,7 @@
   <link rel="icon" href="/favicon.ico?v=1">
   <link rel="icon" type="image/png" href="/favicon.png?v=1">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
-  <meta name="theme-color" content="#0b1220">
+  <meta name="theme-color" content="#ffffff">
 
   <!-- Tailwind (utility) -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -55,19 +55,12 @@
       --brand-text: #0f172a;     /* dark slate base */
       --brand-accent: #2563eb;  /* blue-600 Tailwind */
     }
-    html[data-theme="dark"] {
-      --brand-text: #f8fafc;    /* light text in dark mode */
-      --brand-accent: #38bdf8;  /* sky-400 accent */
-    }
 
     body {
       font-family: 'Inter', sans-serif;
       background: #f1f5f9 url('https://www.transparenttextures.com/patterns/cubes.png');
       background-size: 280px;
-    }
-    html[data-theme="dark"] body {
-      background: var(--surface-page);
-      color: var(--ink);
+      color: #0f172a;
     }
     ::-webkit-scrollbar {
       width: 10px;
@@ -360,7 +353,7 @@
       Servizi AI <span class="text-blue-700">&bull;</span> Tradelia
     </h2>
     <p class="text-lg text-slate-700 text-center max-w-2xl mx-auto mb-12">
-      Tre strumenti principali, un unico <strong>metodo istituzionale</strong> ottimizzato per l’apprendimento e l’analisi.
+      Tre strumenti principali per l'<strong>educazione finanziaria istituzionale</strong>, modellati per conformità MiFID II e orientati alla formazione professionale.
     </p>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -377,12 +370,12 @@
         </button>
       </div>
 
-      <!-- Card 2: Analisi Asset -->
+      <!-- Card 2: Educazione Finanziaria AI -->
       <div class="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition p-6 flex flex-col">
-        <i data-lucide="search" class="w-10 h-10 text-blue-700 mb-4"></i>
-        <h3 class="text-xl font-semibold text-slate-900 mb-2">Analisi Asset</h3>
+        <i data-lucide="graduation-cap" class="w-10 h-10 text-blue-700 mb-4"></i>
+        <h3 class="text-xl font-semibold text-slate-900 mb-2">Educazione Finanziaria AI</h3>
         <p class="text-sm text-slate-600 flex-grow">
-          Analizza azioni, ETF, obbligazioni, commodities e altri strumenti, combinando dati tecnici, fondamentali e macro.
+          Strumenti AI modellati per l’educazione finanziaria conforme alle normative MiFID II. Analisi di asset, mercati e scenari con metodologia istituzionale orientata alla formazione.
         </p>
         <button onclick="apriModuloAsset()" class="mt-4 inline-block bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 text-sm font-medium text-center">
           Avvia Analisi
@@ -1767,7 +1760,7 @@ Vuoi procedere inviando i dati?`;
 
         <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
           <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Investimento lungo termine" class="accent-blue-700">Investimento lungo termine (Buy & Hold)</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Investimento medio/breve" class="accent-blue-700">Investimento medio/breve (swing)</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Educazione finanziaria AI" class="accent-blue-700">Educazione finanziaria AI modellata per conformità MiFID II</label>
           <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Speculazione CFD" class="accent-blue-700">Speculazione CFD</label>
           <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Opzioni" class="accent-blue-700">Opzioni</label>
           <label class="inline-flex items-center gap-2"><input type="checkbox" name="finalita" value="Futures" class="accent-blue-700">Futures</label>
@@ -2390,6 +2383,13 @@ Vuoi procedere inviando i dati?`;
       <!-- Bottom line -->
       <div class="ftr-bottom">
         <div>
+          <div class="flex flex-wrap items-center gap-3 mb-2">
+            <a href="/index.html" class="text-sm text-slate-600 hover:text-slate-900">Home</a>
+            <span class="text-slate-400">·</span>
+            <a href="https://www.tradelia.org/brokers.html" class="text-sm text-slate-600 hover:text-slate-900">Brokers</a>
+            <span class="text-slate-400">·</span>
+            <a href="/archivio" class="text-sm text-slate-600 hover:text-slate-900">Archivio</a>
+          </div>
           © <span id="footer-year"></span>
           <span class="brand brand--sm">
             <span class="brand-word">Tradelia</span>
