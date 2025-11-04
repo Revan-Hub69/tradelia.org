@@ -6,6 +6,7 @@
 // - Solo metriche colorate inline
 
 import Logger from './utils/logger.js';
+import { metricsDrawer } from './components/metrics-drawer.js';
 
 (function() {
   'use strict';
@@ -242,6 +243,25 @@ import Logger from './utils/logger.js';
   } else {
     init();
   }
+  
+  // ===== EXPOSE UI API =====
+  window.__TradeliaUI = {
+    openMetricsDrawer: (data) => {
+      return new Promise((resolve) => {
+        metricsDrawer.open(data);
+        resolve();
+      });
+    },
+    openMetricsDrawerFromMetric: (metricKey) => {
+      const headerData = window.__headerTickerData || __header;
+      if (headerData) {
+        metricsDrawer.openFromMetric(metricKey, headerData);
+      }
+    },
+    closeMetricsDrawer: () => {
+      metricsDrawer.close();
+    }
+  };
   
   window.TradeliaApp = {
     init,
