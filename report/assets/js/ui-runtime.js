@@ -452,7 +452,17 @@
       btn.addEventListener('click', async (e)=>{
         e.stopPropagation();
         const key = btn.getAttribute('data-metric');
+        console.log('[UI Runtime] bindMetricInfoButtons - click su info-btn:', key, 'isMobile:', isMobile());
+        // Evita di aprire modal se il panel mobile è aperto (perché useremo il drawer)
+        if (isMobile() && mobilePanel && mobilePanel.style.display !== 'none' && !mobilePanel.hasAttribute('hidden')) {
+          console.log('[UI Runtime] bindMetricInfoButtons - evitato modal: panel mobile è aperto');
+          return;
+        }
         const data = await Glossary.get(key);
+        if (!data || (!data.what && !data.how && !data.body)) {
+          console.warn('[UI Runtime] bindMetricInfoButtons - dati metriche vuoti per:', key);
+          return;
+        }
         if (isMobile()) showModal(data);
         else showPopoverFor(btn, data);
       }, { passive:false });
@@ -518,8 +528,15 @@
 
   // Apri drawer metriche (funzione principale)
   async function openMetricsDrawer(data) {
+    console.log('[UI Runtime] openMetricsDrawer chiamata con data:', !!data, 'metricsPanel:', !!data?.metricsPanel);
     const list = Array.isArray(data.metricsPanel) ? data.metricsPanel : [];
     const isMobileView = isMobile();
+    console.log('[UI Runtime] openMetricsDrawer - list length:', list.length, 'isMobileView:', isMobileView);
+    
+    if (list.length === 0) {
+      console.warn('[UI Runtime] openMetricsDrawer - nessuna metrica trovata in data.metricsPanel');
+      return Promise.resolve();
+    }
     
     // Carica tutte le definizioni del glossario e aggiungi categoria
     const metricsWithGlossary = await Promise.all(
