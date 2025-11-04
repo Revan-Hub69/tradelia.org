@@ -264,15 +264,29 @@
     </div>
 
     <!-- Immagine hero -->
-    <div class="order-first lg:order-last">
-      <div class="rounded-xl shadow-xl border border-slate-200 overflow-hidden bg-slate-100">
-        <img 
-          src="./img/hero-institutional.jpg" 
-          alt="Tradelia AI - Analisi Istituzionale" 
-          class="w-full h-auto object-cover block"
-          style="min-height: 400px; max-height: 600px;"
-          onerror="this.onerror=null; this.src='/img/hero-institutional.jpg'; this.onerror=function(){this.style.display='none'; this.parentElement.innerHTML='<div style=\'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 400px; display: flex; align-items: center; justify-content: center; border-radius: 0.75rem;\'><div class=\'text-white text-center p-8\'><i data-lucide=\'trending-up\' class=\'w-16 h-16 mx-auto mb-4\'></i><h3 class=\'text-2xl font-bold mb-2\'>Tradelia AI</h3><p class=\'text-blue-100\'>Analisi Istituzionale</p></div></div>'; if(window.lucide) lucide.createIcons();};"
-        />
+    <div class="order-first lg:order-last" style="min-height: 400px; width: 100%;">
+      <div 
+        class="rounded-xl shadow-xl border border-slate-200 w-full h-full"
+        style="
+          min-height: 400px;
+          background-image: url('./img/hero-institutional.jpg'), url('/img/hero-institutional.jpg');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-color: #e2e8f0;
+          display: block;
+        "
+      >
+        <!-- Fallback se l'immagine non carica -->
+        <noscript>
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 400px; display: flex; align-items: center; justify-content: center; border-radius: 0.75rem;">
+            <div class="text-white text-center p-8">
+              <i data-lucide="trending-up" class="w-16 h-16 mx-auto mb-4"></i>
+              <h3 class="text-2xl font-bold mb-2">Tradelia AI</h3>
+              <p class="text-blue-100">Analisi Istituzionale</p>
+            </div>
+          </div>
+        </noscript>
       </div>
     </div>
   </div>
