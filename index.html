@@ -232,8 +232,8 @@
   </div>
 </header>
 
-<section class="bg-white border-b border-slate-200 relative overflow-hidden">
-  <div class="max-w-7xl mx-auto px-6 lg:px-8 py-10 lg:py-16 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
+<section class="bg-gradient-to-br from-white via-slate-50 to-white border-b border-slate-200 relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8 py-12 lg:py-20 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
     <!-- Immagine mobile sopra -->
     <div class="order-1 lg:order-2">
@@ -278,10 +278,20 @@
   </div>
 </section>
 
-<!-- PARALLAX SOLO DESKTOP -->
+<!-- PARALLAX SOLO DESKTOP (migliorato) -->
 <style>
-  @media (min-width: 324px) {
-    .parallax { background-attachment: fixed; }
+  @media (min-width: 768px) {
+    .parallax {
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  }
+  /* Disabilita parallax su mobile per performance */
+  @media (max-width: 767px) {
+    .parallax {
+      background-attachment: scroll;
+    }
   }
 </style>
 
@@ -310,32 +320,32 @@
 </script>
 <br><br><br>
    <section id="metodo" class="mb-10">
-      <div class="bg-white border border-slate-200 rounded-xl p-6">
-        <h2 class="text-xl font-semibold mb-3">Come usiamo l’AI in Tradelia</h2>
+      <div class="bg-white border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <h2 class="text-2xl font-semibold mb-4 text-slate-900">Come usiamo l'AI in Tradelia</h2>
         <p class="text-sm text-slate-600 mb-5 max-w-4xl">
           In <strong>Tradelia AI</strong> non trattiamo l’intelligenza artificiale come un oracolo a cui porre domande, ma come
           <strong>strumento di ricerca, normalizzazione e aggregazione</strong> dei dati. Le valutazioni sono costruite con
           <strong>metodologie istituzionali e accademiche</strong>, privilegiando fonti primarie e verifiche incrociate.
         </p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="border border-slate-200 rounded-lg p-4">
-            <h3 class="font-semibold mb-2">Principi</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+          <div class="border border-slate-200 rounded-lg p-4 md:p-5 bg-gradient-to-br from-slate-50 to-white hover:shadow-md transition-shadow duration-300">
+            <h3 class="font-semibold mb-3 text-slate-900">Principi</h3>
             <ul class="text-sm text-slate-600 space-y-2 list-disc pl-5">
               <li>AI = motore di <strong>ricerca/ETL</strong>, non consulente o “cristallo magico”.</li>
               <li>Priorità a <strong>fonti primarie</strong> (regolatori, prospetti, bilanci) e <strong>letteratura</strong> tecnica/accademica.</li>
               <li><strong>Tracciabilità</strong> di dati, versioni e criteri di scoring.</li>
             </ul>
           </div>
-          <div class="border border-slate-200 rounded-lg p-4">
-            <h3 class="font-semibold mb-2">Processo</h3>
+          <div class="border border-slate-200 rounded-lg p-4 md:p-5 bg-gradient-to-br from-slate-50 to-white hover:shadow-md transition-shadow duration-300">
+            <h3 class="font-semibold mb-3 text-slate-900">Processo</h3>
             <ul class="text-sm text-slate-600 space-y-2 list-disc pl-5">
               <li><strong>Raccolta & normalizzazione</strong> (API/dataset) con timestamp e identificatori.</li>
               <li><strong>Verifica incrociata</strong> T1/T2, controllo outlier, soglie di consenso.</li>
               <li><strong>Sintesi & scoring</strong> su copertura mercati, costi, UX, compliance.</li>
             </ul>
           </div>
-          <div class="border border-slate-200 rounded-lg p-4">
-            <h3 class="font-semibold mb-2">Limiti & compliance</h3>
+          <div class="border border-slate-200 rounded-lg p-4 md:p-5 bg-gradient-to-br from-slate-50 to-white hover:shadow-md transition-shadow duration-300">
+            <h3 class="font-semibold mb-3 text-slate-900">Limiti & compliance</h3>
             <ul class="text-sm text-slate-600 space-y-2 list-disc pl-5">
               <li>L’output <strong>non è consulenza finanziaria</strong>.</li>
               <li>Dove presenti CFD: <strong>avvertenze regolamentari</strong> e focus su strumenti quotati.</li>
@@ -347,9 +357,9 @@
       </div>
     </section>
 <br><br><br>
-  <section class="bg-slate-50 py-16 border-b border-slate-200">
+  <section class="bg-gradient-to-b from-slate-50 to-white py-16 md:py-20 border-b border-slate-200">
   <div class="max-w-7xl mx-auto px-6 lg:px-8">
-    <h2 class="text-3cxl font-bold text-slate-900 mb-4 text-center">
+    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4 text-center">
       Servizi AI <span class="text-blue-700">&bull;</span> Tradelia
     </h2>
     <p class="text-lg text-slate-700 text-center max-w-2xl mx-auto mb-12">
@@ -359,9 +369,11 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       
       <!-- Card 1: Portafoglio -->
-      <div class="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition p-6 flex flex-col">
-        <i data-lucide="layers" class="w-10 h-10 text-blue-700 mb-4"></i>
-        <h3 class="text-xl font-semibold text-slate-900 mb-2">Validazione / Simulazione Portafoglio</h3>
+      <div class="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 p-6 md:p-8 flex flex-col">
+        <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+          <i data-lucide="layers" class="w-8 h-8 text-blue-700"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-slate-900 mb-3">Validazione / Simulazione Portafoglio</h3>
         <p class="text-sm text-slate-600 flex-grow">
           Costruisci o valida un portafoglio seguendo criteri di coerenza macro, rischio e rendimento, con analisi multilayer AI.
         </p>
@@ -371,9 +383,11 @@
       </div>
 
       <!-- Card 2: Educazione Finanziaria AI -->
-      <div class="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition p-6 flex flex-col">
-        <i data-lucide="graduation-cap" class="w-10 h-10 text-blue-700 mb-4"></i>
-        <h3 class="text-xl font-semibold text-slate-900 mb-2">Educazione Finanziaria AI</h3>
+      <div class="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 p-6 md:p-8 flex flex-col">
+        <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+          <i data-lucide="graduation-cap" class="w-8 h-8 text-blue-700"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-slate-900 mb-3">Educazione Finanziaria AI</h3>
         <p class="text-sm text-slate-600 flex-grow">
           Strumenti AI modellati per l’educazione finanziaria conforme alle normative MiFID II. Analisi di asset, mercati e scenari con metodologia istituzionale orientata alla formazione.
         </p>
@@ -383,9 +397,11 @@
       </div>
 
       <!-- Card 3: Domanda Libera -->
-      <div class="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition p-6 flex flex-col">
-        <i data-lucide="message-square" class="w-10 h-10 text-blue-700 mb-4"></i>
-        <h3 class="text-xl font-semibold text-slate-900 mb-2">Domanda Libera</h3>
+      <div class="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 p-6 md:p-8 flex flex-col">
+        <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+          <i data-lucide="message-square" class="w-8 h-8 text-blue-700"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-slate-900 mb-3">Domanda Libera</h3>
         <p class="text-sm text-slate-600 flex-grow">
           Formula qualsiasi domanda su mercati, strategie o scenari e ricevi un’analisi ragionata basata sul metodo Tradelia.
         </p>
