@@ -283,30 +283,43 @@ async function openMetricsPanel(data) {
 
 // Apri drawer desktop da metrica specifica (per click su metrica nel testo)
 function openMetricsPanelFromMetric(metricKey) {
+  console.log('[HeaderTicker] openMetricsPanelFromMetric chiamata con:', metricKey);
   // Se drawer non aperto, apri il pannello metriche prima
   const headerData = window.__headerTickerData;
   if (!headerData || !window.__TradeliaUI?.openPanel) {
-    console.warn('[HeaderTicker] Dati header non disponibili');
+    console.warn('[HeaderTicker] Dati header non disponibili', {
+      headerData: !!headerData,
+      openPanel: !!window.__TradeliaUI?.openPanel
+    });
     return;
   }
 
+  const drawerExists = document.querySelector('.metrics-drawer-desktop');
+  console.log('[HeaderTicker] Drawer esistente:', !!drawerExists, 'currentMetricsDrawer:', !!currentMetricsDrawer);
+
   // Se il drawer non è ancora aperto, apri prima
-  if (!currentMetricsDrawer || !document.querySelector('.metrics-drawer-desktop')) {
+  if (!currentMetricsDrawer || !drawerExists) {
+    console.log('[HeaderTicker] Drawer non aperto, apro...');
     openMetricsPanel(headerData).then(() => {
+      console.log('[HeaderTicker] Drawer aperto, seleziono metrica...');
       // Aspetta che il drawer sia montato
       setTimeout(() => {
         selectMetricInDesktopDrawer(metricKey);
-      }, 300);
+      }, 400);
+    }).catch(err => {
+      console.error('[HeaderTicker] Errore apertura drawer:', err);
     });
     return;
   }
 
   // Se il drawer è già aperto, seleziona direttamente la metrica
+  console.log('[HeaderTicker] Drawer già aperto, seleziono metrica direttamente');
   selectMetricInDesktopDrawer(metricKey);
 }
 
 // Seleziona metrica nel drawer desktop
 function selectMetricInDesktopDrawer(metricKey) {
+  console.log('[HeaderTicker] selectMetricInDesktopDrawer chiamata con:', metricKey);
   const drawer = document.querySelector('.metrics-drawer-desktop');
   if (!drawer) {
     console.warn('[HeaderTicker] Drawer desktop non trovato');
@@ -316,7 +329,20 @@ function selectMetricInDesktopDrawer(metricKey) {
   // Usa i dati dal container se disponibili
   const containerData = drawer._metricsData;
   if (!containerData) {
-    console.warn('[HeaderTicker] Dati container non disponibili');
+    console.warn('[HeaderTicker] Dati container non disponibili, uso dati globali');
+    // Fallback: usa dati globali
+    if (!currentMetricsData) {
+      console.error('[HeaderTicker] Nessun dato disponibile');
+      return;
+    }
+    const { metricsWithGlossary } = currentMetricsData;
+    const metric = metricsWithGlossary.find(m => m.key === metricKey);
+    if (!metric) {
+      console.error('[HeaderTicker] Metrica non trovata nei dati globali:', metricKey);
+      return;
+    }
+    // Retry dopo un po'
+    setTimeout(() => selectMetricInDesktopDrawer(metricKey), 200);
     return;
   }
 
@@ -328,26 +354,35 @@ function selectMetricInDesktopDrawer(metricKey) {
     return;
   }
 
+  console.log('[HeaderTicker] Metrica trovata, categoria:', metric.category);
+
   // Seleziona categoria
   const category = metric.category || 'altro';
   const categoryItem = drawer.querySelector(`.metric-category-item[data-category="${category}"]`);
+  console.log('[HeaderTicker] Categoria item trovato:', !!categoryItem);
+  
   if (categoryItem) {
     // Trigger click per aggiornare lista metriche
-    categoryItem.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    console.log('[HeaderTicker] Click su categoria:', category);
+    categoryItem.click();
     
     // Aspetta che la lista metriche sia aggiornata
     setTimeout(() => {
       // Seleziona metrica
       const metricItem = drawer.querySelector(`.metric-item[data-metric-key="${metricKey}"]`);
+      console.log('[HeaderTicker] Metrica item trovato:', !!metricItem);
       if (metricItem) {
         // Trigger click per aggiornare contenuto
-        metricItem.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+        console.log('[HeaderTicker] Click su metrica:', metricKey);
+        metricItem.click();
       } else {
+        console.warn('[HeaderTicker] Metrica item non trovato, aggiorno contenuto direttamente');
         // Fallback: aggiorna direttamente il contenuto
         updateMetricContent(metric, contentTitle, contentBody, tabsContainer);
       }
-    }, 150);
+    }, 200);
   } else {
+    console.warn('[HeaderTicker] Categoria item non trovato, aggiorno contenuto direttamente');
     // Fallback: aggiorna direttamente il contenuto
     updateMetricContent(metric, contentTitle, contentBody, tabsContainer);
   }
@@ -543,6 +578,7 @@ function setupDesktopDrawer(metricsWithGlossary, metricsByCategory, categories, 
       e.preventDefault();
       e.stopPropagation();
       const category = catItem.getAttribute('data-category');
+      console.log('[HeaderTicker] Click categoria:', category);
       const metrics = metricsByCategory[category] || [];
       
       // Update active category
@@ -563,11 +599,16 @@ function setupDesktopDrawer(metricsWithGlossary, metricsByCategory, categories, 
         const firstMetric = metrics[0];
         updateMetricContent(firstMetric, contentTitle, contentBody, tabsContainer);
         const firstItem = metricsList.querySelector('.metric-item');
-        if (firstItem) firstItem.classList.add('active');
+        if (firstItem) {
+          firstItem.classList.add('active');
+          console.log('[HeaderTicker] Prima metrica selezionata:', firstMetric.key);
+        }
       }
       
       // Re-bind metric items
-      bindMetricItems(metricsWithGlossary, contentTitle, contentBody, tabsContainer);
+      setTimeout(() => {
+        bindMetricItems(metricsWithGlossary, contentTitle, contentBody, tabsContainer);
+      }, 0);
     });
   });
 
@@ -581,9 +622,13 @@ function setupDesktopDrawer(metricsWithGlossary, metricsByCategory, categories, 
 function bindMetricItems(metricsWithGlossary, contentTitle, contentBody, tabsContainer) {
   // Trova gli elementi dal container per evitare problemi di scope
   const container = document.querySelector('.metrics-drawer-desktop');
-  if (!container) return;
+  if (!container) {
+    console.warn('[HeaderTicker] bindMetricItems: container non trovato');
+    return;
+  }
   
   const metricItems = container.querySelectorAll('.metric-item');
+  console.log('[HeaderTicker] bindMetricItems: trovati', metricItems.length, 'elementi');
   
   metricItems.forEach(item => {
     // Rimuovi listener esistenti creando nuovo elemento
@@ -594,15 +639,24 @@ function bindMetricItems(metricsWithGlossary, contentTitle, contentBody, tabsCon
       e.preventDefault();
       e.stopPropagation();
       const key = newItem.getAttribute('data-metric-key');
+      console.log('[HeaderTicker] Click metrica nel drawer:', key);
       const metric = metricsWithGlossary.find(m => m.key === key);
       
       if (metric && contentTitle && contentBody && tabsContainer) {
+        console.log('[HeaderTicker] Aggiorna contenuto per:', key);
         // Update active metric
         container.querySelectorAll('.metric-item').forEach(m => m.classList.remove('active'));
         newItem.classList.add('active');
         
         // Update content
         updateMetricContent(metric, contentTitle, contentBody, tabsContainer);
+      } else {
+        console.warn('[HeaderTicker] bindMetricItems: metrica o elementi non trovati', {
+          metric: !!metric,
+          contentTitle: !!contentTitle,
+          contentBody: !!contentBody,
+          tabsContainer: !!tabsContainer
+        });
       }
     });
   });
@@ -771,21 +825,28 @@ function renderMetricPart(part) {
   wrap.addEventListener('click', (e) => {
     e.stopPropagation();
     e.preventDefault();
+    console.log('[HeaderTicker] Click su metrica:', part.key);
     try {
       const ui = window.__TradeliaUI;
       const isMobile = window.matchMedia('(max-width: 768px)').matches;
       
+      console.log('[HeaderTicker] isMobile:', isMobile, 'ui:', !!ui, 'openPanel:', !!ui?.openPanel);
+      
       if (isMobile) {
         // Mobile: apri drawer "Scopri tutte le metriche" e naviga a quella metrica
         const headerData = window.__headerTickerData;
+        console.log('[HeaderTicker] Mobile - headerData:', !!headerData);
         if (headerData && ui?.openPanel) {
+          console.log('[HeaderTicker] Mobile - apri drawer');
           // Apri pannello metriche
-          openMetricsPanel(headerData);
-          // Dopo che il drawer è montato, naviga alla metrica
-          setTimeout(() => {
-            navigateToMetricInMobileDrawer(part.key);
-          }, 400);
+          openMetricsPanel(headerData).then(() => {
+            console.log('[HeaderTicker] Mobile - drawer aperto, naviga a metrica');
+            setTimeout(() => {
+              navigateToMetricInMobileDrawer(part.key);
+            }, 500);
+          });
         } else {
+          console.warn('[HeaderTicker] Mobile - fallback popup');
           // Fallback: apri popup se drawer non disponibile
           if (ui?.openMetricPopup) {
             ui.openMetricPopup(part.key);
@@ -793,9 +854,12 @@ function renderMetricPart(part) {
         }
       } else {
         // Desktop: apri drawer e seleziona metrica
+        console.log('[HeaderTicker] Desktop - openMetricsPanelFromMetric:', !!ui?.openMetricsPanelFromMetric);
         if (ui?.openMetricsPanelFromMetric) {
+          console.log('[HeaderTicker] Desktop - apri drawer con metrica');
           ui.openMetricsPanelFromMetric(part.key);
         } else {
+          console.warn('[HeaderTicker] Desktop - fallback popup');
           // Fallback: apri popup se drawer non disponibile
           if (ui?.openMetricPopup) {
             ui.openMetricPopup(part.key);
@@ -803,7 +867,7 @@ function renderMetricPart(part) {
         }
       }
     } catch (err) {
-      console.warn('[HeaderTicker] Errore apertura metrica:', err);
+      console.error('[HeaderTicker] Errore apertura metrica:', err);
     }
   });
 
@@ -914,14 +978,8 @@ function renderRow(row) {
     }
   });
 
-  // Bind metric info buttons (se disponibile)
-  if (window.__TradeliaUI?.bindMetricInfoButtons) {
-    try {
-      window.__TradeliaUI.bindMetricInfoButtons(rowEl);
-    } catch (e) {
-      console.warn('[HeaderTicker] bindMetricInfoButtons error:', e);
-    }
-  }
+  // NON bind metric info buttons - le metriche nel testo hanno già il loro click handler
+  // bindMetricInfoButtons sovrascriverebbe il nostro handler personalizzato
 
   return rowEl;
 }
