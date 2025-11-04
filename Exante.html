@@ -145,6 +145,44 @@
     th { text-align: left; padding: var(--sp-3); font-weight: 600; color: var(--ink); background: var(--surface-elev); border-bottom: 2px solid var(--br-soft); }
     td { padding: var(--sp-3); border-bottom: 1px solid var(--br-soft); color: var(--ink-soft); }
     tr:hover { background: var(--surface-elev); }
+
+    /* ===== CTA BUTTON (Istituzionale) ===== */
+    .cta-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 0.875rem 2rem;
+      border-radius: var(--radius-card);
+      border: 2px solid var(--brand-600);
+      background: var(--surface-card);
+      color: var(--brand-600);
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .cta-primary:hover {
+      background: var(--brand-600);
+      color: white;
+      border-color: var(--brand-600);
+      box-shadow: 0 4px 12px color-mix(in oklab, var(--brand-600) 25%, transparent);
+    }
+    .cta-primary:active {
+      transform: scale(0.98);
+    }
+    .cta-primary svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+    .cta-section {
+      background: var(--surface-card);
+      border: 1px solid var(--br-card);
+      position: relative;
+    }
   </style>
 </head>
 <body>
@@ -1144,49 +1182,47 @@
 
   <!-- CTA Webinar con Account Manager -->
   <section class="mb-10">
-    <div class="card">
-      <div class="text-center mb-6">
+    <div class="card cta-section">
+      <div class="text-center mb-8">
         <h2 class="text-2xl sm:text-3xl font-bold mb-4" style="color: var(--ink);">Webinar Informativo con Account Manager</h2>
-        <p class="text-base sm:text-lg leading-relaxed mb-4" style="color: var(--ink-soft); max-width: 48rem; margin: 0 auto;">
-          Fissa un incontro con <strong>Giuseppe Olivero</strong>, Senior Account Manager italiano di Exante, 
-          per comprendere il funzionamento della piattaforma e le opportunità di accesso ai mercati globali.
+        <p class="text-base sm:text-lg leading-relaxed mb-6" style="color: var(--ink-soft); max-width: 48rem; margin: 0 auto;">
+          Richiedi un appuntamento con <strong>Giuseppe Olivero</strong>, Senior Account Manager per il mercato italiano di Exante, 
+          per una presentazione dettagliata della piattaforma e delle opportunità di accesso ai mercati finanziari globali.
         </p>
       </div>
 
-      <div class="max-w-2xl mx-auto mb-6">
-        <div class="card" style="background: var(--surface-elev);">
-          <div class="flex items-start gap-4 mb-4">
+      <div class="max-w-2xl mx-auto mb-8">
+        <div class="card" style="background: var(--surface-elev); border-left: 3px solid var(--brand-600);">
+          <div class="flex items-start gap-4">
             <div class="flex-shrink-0">
               <svg class="ico ico-xl" style="color: var(--brand-600);" viewBox="0 0 24 24">
                 <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
             </div>
             <div class="flex-1">
-              <h3 class="font-semibold mb-2" style="color: var(--ink);">Giuseppe Olivero</h3>
-              <p class="text-sm mb-2" style="color: var(--ink-soft);">Senior Account Manager — Exante Italia</p>
-              <p class="text-sm" style="color: var(--ink-soft);">
-                Ogni cliente Exante ha accesso a un account manager personale dedicato, 
-                garantendo un livello di assistenza elevato e supporto specializzato per le proprie esigenze operative.
+              <h3 class="font-semibold mb-2 text-lg" style="color: var(--ink);">Giuseppe Olivero</h3>
+              <p class="text-sm mb-3 font-medium" style="color: var(--ink-soft);">Senior Account Manager — Exante Italia</p>
+              <p class="text-sm leading-relaxed" style="color: var(--ink-soft);">
+                Ogni cliente istituzionale e professionale di Exante ha accesso a un account manager dedicato, 
+                garantendo supporto specializzato e assistenza personalizzata per le proprie esigenze operative.
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="text-center">
-        <button onclick="apriPopupWebinar()"
-           class="inline-flex items-center justify-center gap-2 px-8 py-3 border rounded-lg transition text-base font-semibold cursor-pointer"
-           style="border-color: var(--br-card); color: var(--ink); background: var(--surface-card);">
-          <svg class="ico" fill="currentColor" viewBox="0 0 24 24">
+      <div class="text-center mb-6">
+        <button onclick="apriPopupWebinar()" class="cta-primary">
+          <svg fill="currentColor" viewBox="0 0 24 24">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
           </svg>
-          Fissa un appuntamento per il webinar
+          <span>Richiedi appuntamento per il webinar</span>
         </button>
       </div>
 
-      <div class="text-center mt-4">
+      <div class="text-center">
         <a href="https://exantepartner.com/p/38597/" target="_blank" rel="sponsored noopener"
-           class="inline-flex items-center justify-center gap-2 px-8 py-3 border rounded-lg transition text-base font-semibold"
+           class="inline-flex items-center justify-center gap-2 px-6 py-2 border rounded-lg transition text-sm font-semibold"
            style="border-color: var(--br-card); color: var(--ink); background: var(--surface-card);">
           Accedi alla piattaforma Exante
           <svg class="ico" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
