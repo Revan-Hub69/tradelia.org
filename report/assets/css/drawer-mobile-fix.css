@@ -1,0 +1,77 @@
+/* ===== DRAWER MOBILE - APPROCCIO SEMPLIFICATO ===== */
+/* Reset completo - usa display invece di transform per semplicità */
+
+.metrics-drawer-mobile {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-card);
+}
+
+/* DRAWER 1 - SEMPRE VISIBILE di default */
+.metrics-drawer-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex !important;
+  flex-direction: column;
+  background: var(--surface-card);
+  z-index: 1;
+}
+
+/* DRAWER 2 - NASCOSTO di default, visibile solo con .active */
+.metrics-drawer-2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none !important; /* NASCOSTO di default */
+  flex-direction: column;
+  background: var(--surface-card);
+  z-index: 2;
+}
+
+.metrics-drawer-2.active {
+  display: flex !important; /* VISIBILE solo con .active */
+}
+
+/* Quando drawer2 è attivo, nascondi drawer1 */
+.metrics-drawer-1:has(~ .metrics-drawer-2.active) {
+  display: none !important;
+}
+
+/* Fallback per browser senza :has() */
+.metrics-drawer-2.active ~ .metrics-drawer-1 {
+  display: none !important;
+}
+
+/* ===== FOOTER MOBILE - APPROCCIO SEMPLIFICATO ===== */
+@media (max-width: 768px) {
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  main {
+    flex: 1;
+    padding-bottom: 1rem;
+  }
+  
+  .site-footer {
+    width: 100%;
+    margin-top: auto;
+    padding: 2rem 1rem;
+    display: block;
+    visibility: visible;
+    opacity: 1;
+    position: relative;
+    z-index: 2;
+  }
+}
+
