@@ -177,9 +177,7 @@ function renderFooter(node, data) {
         const headerData = window.__headerTickerData || data;
         
         if (ui?.openMetricsDrawer) {
-          ui.openMetricsDrawer(headerData).catch(err => {
-            Logger.error('HeaderTicker', 'Errore apertura drawer', err);
-          });
+          ui.openMetricsDrawer(headerData);
         } else {
           Logger.warn('HeaderTicker', 'openMetricsDrawer non disponibile');
         }
@@ -196,7 +194,6 @@ function handleMetricClick(metricKey) {
   
   try {
     const ui = window.__TradeliaUI;
-    const isMobile = window.matchMedia('(max-width: 768px)').matches;
     const headerData = window.__headerTickerData;
     
     if (!headerData) {
@@ -204,26 +201,13 @@ function handleMetricClick(metricKey) {
       return;
     }
     
-    if (isMobile) {
-      // Mobile: apri drawer completo
-      if (ui?.openMetricsDrawer) {
-        ui.openMetricsDrawer(headerData).then(() => {
-          if (ui?.navigateToMetricInMobileDrawer) {
-            requestAnimationFrame(() => {
-              ui.navigateToMetricInMobileDrawer(metricKey);
-            });
-          }
-        }).catch(err => {
-          Logger.error('HeaderTicker', 'Errore apertura drawer mobile', err);
-        });
-      }
+    // Usa drawer unificato (mobile e desktop)
+    if (ui?.openMetricsDrawerFromMetric) {
+      ui.openMetricsDrawerFromMetric(metricKey);
+    } else if (ui?.openMetricsDrawer) {
+      ui.openMetricsDrawer(headerData);
     } else {
-      // Desktop: apri drawer con metrica selezionata
-      if (ui?.openMetricsDrawerFromMetric) {
-        ui.openMetricsDrawerFromMetric(metricKey);
-      } else if (ui?.openMetricsDrawer) {
-        ui.openMetricsDrawer(headerData);
-      }
+      Logger.warn('HeaderTicker', 'Drawer non disponibile');
     }
   } catch (err) {
     Logger.error('HeaderTicker', 'Errore gestione click metrica', err);
