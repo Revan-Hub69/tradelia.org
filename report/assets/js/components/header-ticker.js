@@ -331,7 +331,9 @@ function setupMobileDrawer(metricsWithGlossary, metricsByCategory, categories, u
 
   // Tabs categoria
   categoryTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
+    tab.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       const category = tab.getAttribute('data-category');
       const metrics = metricsByCategory[category] || [];
       
@@ -486,9 +488,16 @@ function setupDesktopDrawer(metricsWithGlossary, metricsByCategory, categories, 
   const contentBody = container.querySelector('.metrics-drawer-desktop__content-body');
   const tabsContainer = container.querySelector('.metric-tabs-container');
 
+  // Store per accesso globale
+  if (!container._metricsData) {
+    container._metricsData = { metricsWithGlossary, metricsByCategory, contentTitle, contentBody, tabsContainer };
+  }
+
   // Click su categoria
   categoryItems.forEach(catItem => {
-    catItem.addEventListener('click', () => {
+    catItem.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       const category = catItem.getAttribute('data-category');
       const metrics = metricsByCategory[category] || [];
       
@@ -509,7 +518,8 @@ function setupDesktopDrawer(metricsWithGlossary, metricsByCategory, categories, 
       if (metrics.length > 0) {
         const firstMetric = metrics[0];
         updateMetricContent(firstMetric, contentTitle, contentBody, tabsContainer);
-        metricsList.querySelector('.metric-item')?.classList.add('active');
+        const firstItem = metricsList.querySelector('.metric-item');
+        if (firstItem) firstItem.classList.add('active');
       }
       
       // Re-bind metric items
@@ -519,6 +529,8 @@ function setupDesktopDrawer(metricsWithGlossary, metricsByCategory, categories, 
 
   // Bind metric items
   bindMetricItems(metricsWithGlossary, contentTitle, contentBody, tabsContainer);
+  
+  return container;
 }
 
 // Bind metric items per desktop
@@ -526,20 +538,65 @@ function bindMetricItems(metricsWithGlossary, contentTitle, contentBody, tabsCon
   const metricItems = document.querySelectorAll('.metric-item');
   
   metricItems.forEach(item => {
-    item.addEventListener('click', () => {
-      const key = item.getAttribute('data-metric-key');
+    // Rimuovi listener esistenti per evitare duplicati
+    const newItem = item.cloneNode(true);
+    item.parentNode.replaceChild(newItem, item);
+    
+    newItem.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const key = newItem.getAttribute('data-metric-key');
       const metric = metricsWithGlossary.find(m => m.key === key);
       
       if (metric) {
         // Update active metric
-        metricItems.forEach(m => m.classList.remove('active'));
-        item.classList.add('active');
+        document.querySelectorAll('.metric-item').forEach(m => m.classList.remove('active'));
+        newItem.classList.add('active');
         
         // Update content
         updateMetricContent(metric, contentTitle, contentBody, tabsContainer);
       }
     });
   });
+}
+
+// Naviga a metrica nel drawer mobile
+function navigateToMetricInMobileDrawer(metricKey) {
+  const drawer = document.querySelector('.metrics-drawer-mobile');
+  if (!drawer) return;
+  
+  const drawer1 = drawer.querySelector('.metrics-drawer-1');
+  const drawer2 = drawer.querySelector('#metrics-drawer-2');
+  const categoryTabs = drawer.querySelectorAll('.metric-category-tab');
+  const metricsList = drawer.querySelector('.metrics-list');
+  
+  // Trova categoria della metrica
+  const category = getMetricCategory(metricKey);
+  const categoryTab = Array.from(categoryTabs).find(tab => tab.getAttribute('data-category') === category);
+  
+  if (categoryTab) {
+    // Click su categoria tab per aggiornare lista
+    categoryTab.click();
+    
+    // Dopo che la lista è aggiornata, trova la metrica e apri drawer 2
+    setTimeout(() => {
+      const metricItem = drawer.querySelector(`[data-metric-key="${metricKey}"]`);
+      if (metricItem && drawer1 && drawer2) {
+        // Simula swipe right
+        const metricsWithGlossary = currentMetricsData?.metricsWithGlossary || [];
+        const metric = metricsWithGlossary.find(m => m.key === metricKey);
+        if (metric) {
+          const drawer2Title = drawer2.querySelector('.metrics-drawer-2__title');
+          const drawer2Content = drawer2.querySelector('.metrics-drawer-2__content');
+          if (drawer2Title && drawer2Content) {
+            openMetricDetail(metric, drawer2, drawer2Title, drawer2Content);
+            drawer1.classList.remove('active');
+            drawer2.classList.add('active');
+          }
+        }
+      }
+    }, 150);
+  }
 }
 
 // Update metric content per desktop
@@ -662,8 +719,17 @@ function renderMetricPart(part) {
       const isMobile = window.matchMedia('(max-width: 768px)').matches;
       
       if (isMobile) {
-        // Mobile: apri popup come prima
-        if (ui?.openMetricPopup) {
+        // Mobile: apri drawer "Scopri tutte le metriche" e naviga a quella metrica
+        const headerData = window.__headerTickerData;
+        if (headerData && ui?.openPanel) {
+          // Apri pannello metriche
+          openMetricsPanel(headerData);
+          // Dopo che il drawer è montato, naviga alla metrica
+          setTimeout(() => {
+            navigateToMetricInMobileDrawer(part.key);
+          }, 300);
+        } else if (ui?.openMetricPopup) {
+          // Fallback: apri popup se drawer non disponibile
           ui.openMetricPopup(part.key);
         }
       } else {
