@@ -1,0 +1,196 @@
+{
+  "meta": {
+    "timestampET": "2025-10-31 17:40 ET",
+    "module": "F3 · Analisi Tecnica MTF",
+    "moduleVersion": "v7.4",
+    "moduleStatus": "ACTIVE",
+    "freshness": "≤ T-1",
+    "hero_intro": "Lettura istituzionale W1→D1→H4→H1 (volumetrico-first) con sintesi probabilistica. Nessun contenuto operativo.",
+    "hero_disclaimer": "Materiale educativo/informativo. Nessuna raccomandazione personale.",
+    "mifid_disclaimer": "Educativo/informativo (MiFID II). Nessuna raccomandazione personale o istruzione operativa.",
+    "labels": {
+      "price_history_title": "Price History · 60 sedute (REG)",
+      "pattern_title": "Pattern MTF Board",
+      "mtf_title": "Consolidamento MTF & Probabilità"
+    }
+  },
+
+  "head": {
+    "BiasMTF":   { "raw": "Positivo", "tone": "green",  "ai_note": "Allineamento W1/D1 > H4; nessuna divergenza critica." },
+    "MTF_Score": { "raw": 72,         "tone": "green",  "ai_note": "Score >70 sostenuto da volumi e breadth." },
+    "P_SwingUp": { "raw": "67%",      "tone": "green",  "ai_note": "Probabilità swing-up su 3–10g >60%." }
+  },
+
+  "dataset": {
+    "OCR_Conf":       { "raw": "0.97",     "tone": "green",  "ai_note": "OCR/log parse stabile." },
+    "DataIntegrity":  { "raw": "0.92",     "tone": "green",  "ai_note": "Serie completa 60 sedute REG." },
+    "FeedSync":       { "raw": "OK",       "tone": "green",  "ai_note": "Ultima sync T-1 22:10 ET." },
+    "SessionScope":   { "raw": "REG only", "tone": "neutral" },
+    "MissingCritical": [],
+    "Notes_OCR":      { "raw": "Nessuna anomalia parse.", "tone": "neutral" }
+  },
+
+  "W1": {
+    "RSI14":            { "raw": 61.4, "tone": "green",  "ai_note": "RSI>50, regime bull." },
+    "ADX14":            { "raw": 24.8, "tone": "yellow", "ai_note": "Trend in rafforzamento." },
+    "MACD":             { "raw": "line 1.35 · signal 0.92 · hist 0.43", "tone": "green" },
+    "EMA":              { "raw": "EMA9 ↑ · EMA20 ↑ · EMA50 ↑ · EMA200 ↑", "tone": "green" },
+    "EMA_CrossRatio":   { "raw": "4/4 bull", "tone": "green" },
+    "BBWidthPct":       { "raw": "13%",  "tone": "yellow" },
+    "ATRpct14":         { "raw": "2.1%", "tone": "neutral" },
+    "HV_30_90":         { "raw": "HV30 21% · HV90 24%", "tone": "neutral" },
+    "VOL_BLOCK":        { "raw": "RVOL50 1.2× · OBV ↑ · CMF +0.14 · MFI 61 · PVT ↑", "tone": "green" },
+    "PATTERNS_SUMMARY": { "raw": "Base rialzista >10w con Higher Lows", "tone": "green" },
+    "Donchian20":       { "raw": "upper: break · lower: distante", "tone": "green" },
+    "FLOW_SET":         { "raw": "OBV/CMF confermano accumulazione", "tone": "green" },
+    "Volume_z":         { "raw": "+0.7", "tone": "green" },
+    "OBV_slope":        { "raw": "↑ solida", "tone": "green" },
+    "CMF20":            { "raw": "+0.12", "tone": "green" },
+    "Confidence_H4":    { "raw": "—", "tone": "neutral" },
+    "Confidence_H1":    { "raw": "—", "tone": "neutral" },
+    "ai_note":          { "raw": "Direzionale positivo, volatilità contenuta, assenza di distribuzione.", "tone":"green" }
+  },
+
+  "D1": {
+    "RSI14":            { "raw": 58.9, "tone": "green" },
+    "ADX14":            { "raw": 22.1, "tone": "yellow" },
+    "MACD":             { "raw": "line 0.42 · signal 0.31 · hist 0.11", "tone": "green" },
+    "EMA_CrossRatio":   { "raw": "3/3 bull (9>20>50)", "tone": "green" },
+    "BBWidthPct":       { "raw": "10%", "tone": "yellow" },
+    "ATRpct14":         { "raw": "1.6%", "tone": "neutral" },
+    "VOL_CLUSTER":      { "raw": "RVOL>1 su breakout; dry-up su pullback", "tone": "green" },
+    "FLOW_SET":         { "raw": "OBV↑ · CMF>0 · MFI 57 · PVT↑", "tone": "green" },
+    "Donchian20":       { "raw": "upper-band hold", "tone": "green" },
+    "PATTERNS_SUMMARY": { "raw": "Cup&Handle in validazione; pullback buy-the-dip", "tone": "green" },
+    "Volume_z":         { "raw": "+0.4", "tone": "green" },
+    "OBV_slope":        { "raw": "↑", "tone": "green" },
+    "CMF20":            { "raw": "+0.09", "tone": "green" },
+    "Confidence_H4":    { "raw": "—", "tone": "neutral" },
+    "Confidence_H1":    { "raw": "—", "tone": "neutral" },
+    "ai_note":          { "raw": "Struttura swing ordinata; volumi coerenti con accumulazione.", "tone":"green" }
+  },
+
+  "H4": {
+    "RSI14":         { "raw": 56.3, "tone": "green" },
+    "ADX14":         { "raw": 19.7, "tone": "neutral" },
+    "CMF20":         { "raw": "+0.07", "tone": "green" },
+    "OBV_slope":     { "raw": "↑ lieve", "tone": "green" },
+    "Volume_z":      { "raw": "+0.3", "tone": "green" },
+    "Confidence_H4": { "raw": "0.64", "tone": "green", "ai_note": "Conferma intermedia (no eccessi)." },
+    "ai_note":       { "raw": "Validazione intermedia: coerente, nessun reversal dominante.", "tone":"green" }
+  },
+
+  "H1": {
+    "RSI14":         { "raw": 53.8, "tone": "neutral" },
+    "Volume_z":      { "raw": "+0.2", "tone": "neutral" },
+    "BBWidthPct":    { "raw": "16%", "tone": "neutral" },
+    "ATRpct":        { "raw": "0.42%", "tone": "neutral" },
+    "Confidence_H1": { "raw": "0.58", "tone": "yellow", "ai_note": "Timing micro non ancora ottimale." },
+    "ai_note":       { "raw": "Bias micro costruttivo; attendere conferma sui volumi.", "tone":"yellow" }
+  },
+
+  "price_history": {
+    "RangePct_60D":  { "raw": "12.8%",                              "tone": "neutral" },
+    "GapPct_stats":  { "raw": "avg 0.35% · p95 1.2%",               "tone": "neutral" },
+    "Streaks_stats": { "raw": "run ↑ 5 / run ↓ 3",                  "tone": "neutral" },
+    "RVOL_clusters": { "raw": "Cluster RVOL>1.3 su breakout; <0.8 su pullback", "tone": "green" }
+  },
+
+  "pattern_mtf": {
+    "W1": {
+      "patterns": [
+        {
+          "Type": "Base rialzista",
+          "Dominant": true,
+          "Conf_pattern": { "raw": 0.72, "tone": "green" },
+          "Evidences": ["HL sequenziali", "OBV in trend"],
+          "Composites": { "VolumeComposite": "↑", "OptionsComposite": "=", "PriceComposite": "↑" }
+        }
+      ],
+      "composites": { "VolumeComposite": "↑", "OptionsComposite": "=", "PriceComposite": "↑" }
+    },
+    "D1": {
+      "patterns": [
+        {
+          "Type": "Cup&Handle",
+          "Dominant": true,
+          "Conf_pattern": { "raw": 0.69, "tone": "green" },
+          "Evidences": ["Breakout su RVOL", "Pullback contenuto"],
+          "Composites": { "VolumeComposite": "↑", "OptionsComposite": "↑", "PriceComposite": "↑" }
+        }
+      ]
+    },
+    "H4": {
+      "patterns": [
+        {
+          "Type": "Flag rialzista",
+          "Conf_pattern": { "raw": 0.61, "tone": "green" },
+          "Evidences": ["Range contracting", "BB squeeze lieve"]
+        }
+      ]
+    },
+    "H1": {
+      "patterns": [
+        {
+          "Type": "Consolidamento alto",
+          "Conf_pattern": { "raw": 0.54, "tone": "yellow" },
+          "Evidences": ["Dry-up volumi", "RSI>50"]
+        }
+      ]
+    },
+    "heatmap": [
+      { "tf": "W1", "conf": 0.72 },
+      { "tf": "D1", "conf": 0.69 },
+      { "tf": "H4", "conf": 0.61 },
+      { "tf": "H1", "conf": 0.54 }
+    ],
+    "ai_note_pattern": { "raw": "Dominanza pattern costruttivi su TF alti; micro in assestamento.", "tone":"green" }
+  },
+
+  "mtf_consolidation": {
+    "Composites_MTF": { "raw": { "Volume": "↑", "Price": "↑" }, "tone": "green" },
+    "CBI":            { "raw": 58,   "tone": "yellow", "ai_note": "Breadth buona, non estrema." },
+    "TE":             { "raw": 0.62, "tone": "green",  "ai_note": "Trend Efficiency >0.6." },
+    "DPI":            { "raw": 0.57, "tone": "green" },
+    "MVA_hybrid":     { "raw": "Bull", "tone": "green" },
+    "Probabilities":  { "raw": { "SwingUp": 0.67, "LTUp": 0.60, "Breakout": 0.42 }, "tone": "green" },
+    "MTF_Score":      { "raw": 72,   "tone": "green" },
+    "Bias_MTF":       { "raw": "Positivo", "tone": "green" },
+    "Confidence_final": { "raw": 0.60, "tone": "yellow", "ai_note": "Dipende dalle conferme H1." },
+    "ai_note_mtf":    { "raw": "Sintesi educativa: regime costruttivo su 3–10g; conferme da volumi. Evitare letture operative.", "tone": "green" }
+  },
+
+  "governance": {
+    "AuditPathID": "SWG25F3_TKR_20251031_LOG",
+    "QualityMetrics": {
+      "FreshnessScore":  { "raw": "T-1",  "tone": "green"  },
+      "ConfidenceFinal": { "raw": "0.60", "tone": "yellow", "ai_note": "Sensibile al timing micro." },
+      "DataIntegrity":   { "raw": "0.92", "tone": "green"  },
+      "FeedSync":        { "raw": "OK",   "tone": "green"  }
+    },
+
+    "Educational_Summary": [
+      { "raw": "Le metriche sono descritte nei tooltip (?).", "tone": "neutral" },
+      { "raw": "Le evidenze non costituiscono segnali operativi.", "tone": "neutral" },
+      { "raw": "Usare in combinazione con F1B/F2 per contesto.", "tone": "neutral" }
+    ],
+
+    "Sources": [
+      "Finviz Premium (quote/fundamentals/news)",
+      "Barchart (tecnico, performance)",
+      "CBOE (volatilità)",
+      "FRED/Reuters/Bloomberg (macro, serie storiche)"
+    ],
+
+    "Methodology": [
+      "Pipeline W1→D1→H4→H1 con priorità volumetrica",
+      "Composite MTF (Volume/Price) normalizzati",
+      "Pattern board con Conf_pattern (0–1)"
+    ],
+
+    "Limitations": [
+      "Dati ≤T-1; nessun intraday in F3 pubblico",
+      "Nessuna istruzione operativa; educational only"
+    ]
+  }
+}
