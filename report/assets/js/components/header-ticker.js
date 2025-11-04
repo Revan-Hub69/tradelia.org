@@ -156,6 +156,10 @@ function renderRow(row) {
   else if (row.id === 'quality-line') rowEl.classList.add('header-ticker-row--quality');
   else if (row.id === 'window-line') rowEl.classList.add('header-ticker-row--meta');
 
+  // Wrapper per coppie label:value su mobile
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  let currentPair = null;
+  
   (row.parts || []).forEach((part, idx, arr) => {
     if (part.kind === 'text' && part.text) {
       let remaining = String(part.text);
@@ -225,26 +229,57 @@ function renderRow(row) {
           remaining = remaining.trimStart();
         }
         if (remaining) {
-          rowEl.appendChild(renderTextPart({ kind:'text', text: remaining }));
+          const textEl = renderTextPart({ kind:'text', text: remaining });
+          // Su mobile: se il testo termina con ":" e il prossimo elemento è una metrica, wrappa insieme
+          if (isMobile && idx + 1 < arr.length && arr[idx + 1]?.kind === 'metric' && /:\s*$/.test(remaining)) {
+            if (!currentPair) {
+              currentPair = createEl('span', 'header-ticker-pair');
+            }
+            currentPair.appendChild(textEl);
+          } else {
+            // Chiudi pair se esiste
+            if (currentPair) {
+              rowEl.appendChild(currentPair);
+              currentPair = null;
+            }
+            rowEl.appendChild(textEl);
+          }
         }
       }
     } else {
       // Se è una metrica, controlla se c'è una parentesi pendente da aggiungere prima
       const pendingPunct = rowEl.dataset.pendingPunct;
+      const metricEl = renderPart(part);
+      
       if (pendingPunct) {
         delete rowEl.dataset.pendingPunct;
         // Aggiungi la parentesi prima del valore della metrica
-        const metricEl = renderPart(part);
         const metricTxt = metricEl.querySelector('.metric-inline-text');
         if (metricTxt) {
           metricTxt.textContent = pendingPunct + metricTxt.textContent;
         }
-        rowEl.appendChild(metricEl);
+      }
+      
+      // Su mobile: se c'è un pair in corso, aggiungi la metrica al pair
+      if (isMobile && currentPair) {
+        currentPair.appendChild(metricEl);
+        rowEl.appendChild(currentPair);
+        currentPair = null;
       } else {
-        rowEl.appendChild(renderPart(part));
+        // Chiudi pair se esiste
+        if (currentPair) {
+          rowEl.appendChild(currentPair);
+          currentPair = null;
+        }
+        rowEl.appendChild(metricEl);
       }
     }
   });
+  
+  // Chiudi eventuale pair rimasto aperto
+  if (currentPair) {
+    rowEl.appendChild(currentPair);
+  }
 
   // NON bind metric info buttons - le metriche nel testo hanno già il loro click handler
   // bindMetricInfoButtons sovrascriverebbe il nostro handler personalizzato
