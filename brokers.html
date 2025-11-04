@@ -1361,84 +1361,95 @@ function renderBrokerCard(key, broker, grid, isCfdOnly = false) {
 const activeFilters = {};
 let viewMode = 'all'; // 'all' o 'by-skill'
 
+// Funzione per raccogliere i filtri attivi dal DOM
+function collectFiltersFromDOM() {
+  const filters = {};
+  
+  // Raccogli filtri skill (radio button selezionato)
+  const selectedSkill = document.querySelector('input[type="radio"][name="skill-level"]:checked');
+  if (selectedSkill) {
+    const filterKey = selectedSkill.getAttribute('data-filter');
+    if (filterKey) {
+      filters[filterKey] = true;
+    }
+  }
+  
+  // Raccogli filtri checkbox
+  const checkboxes = document.querySelectorAll('input[type="checkbox"][data-filter]');
+  checkboxes.forEach(checkbox => {
+    if (checkbox.checked) {
+      const filterKey = checkbox.getAttribute('data-filter');
+      if (filterKey) {
+        filters[filterKey] = true;
+      }
+    }
+  });
+  
+  return filters;
+}
+
 // Funzione unificata per applicare tutti i filtri
 function applyFilters() {
+  // Aggiorna activeFilters con i valori dal DOM
+  const domFilters = collectFiltersFromDOM();
+  Object.keys(activeFilters).forEach(key => delete activeFilters[key]);
+  Object.assign(activeFilters, domFilters);
+  
+  // Applica i filtri
   renderBrokers(activeFilters, {}, viewMode);
 }
 
-// Gestione radio buttons per skill level (mutuamente esclusivi)
-const skillRadios = document.querySelectorAll('input[type="radio"][name="skill-level"]');
-skillRadios.forEach(radio => {
-  radio.addEventListener('change', () => {
-    // Rimuovi tutti i filtri skill precedenti
-    ['skill-pro', 'skill-avanzato', 'skill-intermedio', 'skill-base'].forEach(skill => {
-      delete activeFilters[skill];
-    });
-    // Aggiungi il filtro skill selezionato
-    if (radio.checked) {
-      const filterKey = radio.getAttribute('data-filter');
-      activeFilters[filterKey] = true;
-    }
-    applyFilters();
+// Reset filtri skill (non applica automaticamente)
+function setupFilterReset() {
+  document.getElementById('clear-skill')?.addEventListener('click', () => {
+    const skillRadios = document.querySelectorAll('input[type="radio"][name="skill-level"]');
+    skillRadios.forEach(radio => radio.checked = false);
   });
-});
 
-// Gestione checkbox per strumenti e piattaforme (multipli)
-const filterCheckboxes = document.querySelectorAll('input[type="checkbox"][data-filter]');
-filterCheckboxes.forEach(checkbox => {
-  checkbox.addEventListener('change', () => {
-    const filterKey = checkbox.getAttribute('data-filter');
-    if (checkbox.checked) {
-      activeFilters[filterKey] = true;
-    } else {
-      delete activeFilters[filterKey];
-    }
-    applyFilters();
+  // Reset tutti i filtri (non applica automaticamente)
+  document.getElementById('clear-all-filters')?.addEventListener('click', () => {
+    // Reset radio buttons
+    const skillRadios = document.querySelectorAll('input[type="radio"][name="skill-level"]');
+    skillRadios.forEach(radio => radio.checked = false);
+    // Reset checkbox
+    const checkboxes = document.querySelectorAll('input[type="checkbox"][data-filter]');
+    checkboxes.forEach(checkbox => checkbox.checked = false);
   });
-});
-
-// Reset filtri skill
-document.getElementById('clear-skill')?.addEventListener('click', () => {
-  skillRadios.forEach(radio => radio.checked = false);
-  ['skill-pro', 'skill-avanzato', 'skill-intermedio', 'skill-base'].forEach(skill => {
-    delete activeFilters[skill];
-  });
-  applyFilters();
-});
-
-// Reset tutti i filtri
-document.getElementById('clear-all-filters')?.addEventListener('click', () => {
-  // Reset radio buttons
-  skillRadios.forEach(radio => radio.checked = false);
-  // Reset checkbox
-  filterCheckboxes.forEach(checkbox => checkbox.checked = false);
-  // Reset activeFilters
-  Object.keys(activeFilters).forEach(key => delete activeFilters[key]);
-  applyFilters();
-});
+}
 
 // Visualizzazione per livello tecnico
-document.getElementById('view-all')?.addEventListener('click', () => {
-  viewMode = 'all';
-  document.getElementById('view-all').classList.add('bg-slate-900', 'text-white');
-  document.getElementById('view-all').classList.remove('bg-white');
-  document.getElementById('view-by-skill').classList.remove('bg-slate-900', 'text-white');
-  document.getElementById('view-by-skill').classList.add('bg-white');
-  applyFilters();
-});
+function setupViewMode() {
+  document.getElementById('view-all')?.addEventListener('click', () => {
+    viewMode = 'all';
+    const viewAll = document.getElementById('view-all');
+    const viewBySkill = document.getElementById('view-by-skill');
+    if (viewAll && viewBySkill) {
+      viewAll.classList.add('bg-slate-900', 'text-white');
+      viewAll.classList.remove('bg-white');
+      viewBySkill.classList.remove('bg-slate-900', 'text-white');
+      viewBySkill.classList.add('bg-white');
+    }
+    applyFilters();
+  });
 
-document.getElementById('view-by-skill')?.addEventListener('click', () => {
-  viewMode = 'by-skill';
-  document.getElementById('view-by-skill').classList.add('bg-slate-900', 'text-white');
-  document.getElementById('view-by-skill').classList.remove('bg-white');
-  document.getElementById('view-all').classList.remove('bg-slate-900', 'text-white');
-  document.getElementById('view-all').classList.add('bg-white');
-  applyFilters();
-});
+  document.getElementById('view-by-skill')?.addEventListener('click', () => {
+    viewMode = 'by-skill';
+    const viewAll = document.getElementById('view-all');
+    const viewBySkill = document.getElementById('view-by-skill');
+    if (viewAll && viewBySkill) {
+      viewBySkill.classList.add('bg-slate-900', 'text-white');
+      viewBySkill.classList.remove('bg-white');
+      viewAll.classList.remove('bg-slate-900', 'text-white');
+      viewAll.classList.add('bg-white');
+    }
+    applyFilters();
+  });
 
-// Imposta vista iniziale
-if (document.getElementById('view-all')) {
-  document.getElementById('view-all').classList.add('bg-slate-900', 'text-white');
+  // Imposta vista iniziale
+  const viewAll = document.getElementById('view-all');
+  if (viewAll) {
+    viewAll.classList.add('bg-slate-900', 'text-white');
+  }
 }
 
 // ===== Funzione Modal =====
@@ -1558,13 +1569,8 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ===== Gestione Popup Filtri =====
-const filtersModal = document.getElementById('filters-modal');
-const openFiltersBtn = document.getElementById('open-filters-btn');
-const closeFiltersBtn = document.getElementById('close-filters-btn');
-const closeFiltersModalBtn = document.getElementById('close-filters-modal-btn');
-const applyFiltersBtn = document.getElementById('apply-filters-btn');
-
 function openFiltersModal() {
+  const filtersModal = document.getElementById('filters-modal');
   if (filtersModal) {
     filtersModal.classList.remove('hidden');
     filtersModal.classList.add('flex');
@@ -1573,6 +1579,7 @@ function openFiltersModal() {
 }
 
 function closeFiltersModal() {
+  const filtersModal = document.getElementById('filters-modal');
   if (filtersModal) {
     filtersModal.classList.add('hidden');
     filtersModal.classList.remove('flex');
@@ -1580,17 +1587,30 @@ function closeFiltersModal() {
   }
 }
 
-openFiltersBtn?.addEventListener('click', openFiltersModal);
-closeFiltersBtn?.addEventListener('click', closeFiltersModal);
-closeFiltersModalBtn?.addEventListener('click', closeFiltersModal);
-applyFiltersBtn?.addEventListener('click', () => {
-  applyFilters();
-  closeFiltersModal();
-});
+function setupFiltersModal() {
+  // Apri popup filtri
+  document.getElementById('open-filters-btn')?.addEventListener('click', openFiltersModal);
 
-filtersModal?.addEventListener('click', (e) => {
-  if (e.target.id === 'filters-modal') closeFiltersModal();
-});
+  // Chiudi popup filtri
+  document.getElementById('close-filters-btn')?.addEventListener('click', closeFiltersModal);
+  document.getElementById('close-filters-modal-btn')?.addEventListener('click', closeFiltersModal);
+
+  // Applica filtri e chiudi popup
+  document.getElementById('apply-filters-btn')?.addEventListener('click', () => {
+    applyFilters();
+    closeFiltersModal();
+  });
+
+  // Chiudi cliccando fuori dal popup
+  const filtersModal = document.getElementById('filters-modal');
+  if (filtersModal) {
+    filtersModal.addEventListener('click', (e) => {
+      if (e.target.id === 'filters-modal') {
+        closeFiltersModal();
+      }
+    });
+  }
+}
 
 // ===== Inizializzazione =====
 // Assicurati che il DOM sia pronto
@@ -1600,9 +1620,17 @@ function init() {
     return;
   }
   console.log('Broker disponibili:', Object.keys(window.BROKERS).length);
+  
+  // Setup event listeners
+  setupFilterReset();
+  setupViewMode();
+  setupFiltersModal();
+  
+  // Applica filtri iniziali (mostra tutti i broker)
   applyFilters();
 }
 
+// Inizializza quando il DOM è pronto
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
