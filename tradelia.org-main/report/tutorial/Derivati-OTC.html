@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Report completo TRADELIA AI sulla crisi finanziaria 2008: analisi tecnica, strumenti derivati, protagonisti e impatto sociale.">
+  <title>TRADELIA • AI — Strumenti Finanziari Complessi</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    h1, h2, h3, h4 {
+      color: #0f172a;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.25rem; }
+    h3 { font-size: 1.25rem; }
+    h4 { font-size: 1.125rem; }
+    p { margin-bottom: 1.25rem; color: #374151; }
+    ul, ol { padding-left: 1.25rem; margin-bottom: 1.25rem; }
+    li { margin-bottom: 0.5rem; }
+    section {
+      background: #ffffff;
+      padding: 2.5rem 2rem;
+      margin: 2rem auto;
+      border-radius: 0.75rem;
+      max-width: 840px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e5e7eb;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
+    th, td {
+      padding: 0.75rem;
+      border: 1px solid #e5e7eb;
+      text-align: left;
+      font-size: 0.95rem;
+      word-break: break-word;
+    }
+    th { background: #f3f4f6; font-weight: 600; }
+    tr:nth-child(even) { background: #f9fafb; }
+    .positive { color: #16a34a; font-weight: 600; }
+    .negative { color: #dc2626; font-weight: 600; }
+    .neutral { color: #64748b; font-weight: 500; }
+    a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    a:hover { text-decoration: underline; color: #1d4ed8; }
+    @media screen and (max-width: 768px) {
+      body { font-size: 15px; line-height: 1.6; }
+      section { padding: 1.25rem; margin: 1rem; }
+      h1 { font-size: 1.5rem; }
+      h2 { font-size: 1.25rem; }
+      h3 { font-size: 1.125rem; }
+      h4 { font-size: 1rem; }
+      table, thead, tbody, th, td, tr {
+        display: block; width: 100%;
+      }
+      th { display: none; }
+      td {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border: none;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #1e293b;
+        padding-right: 1rem;
+        min-width: 140px;
+        display: inline-block;
+      }
+    }
+    #backToTop {
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    /* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+  border-radius: 100vh;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(80, 160, 200, 0.5);
+  border-radius: 100vh;
+  transition: background-color 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(80, 160, 200, 0.7);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
+  box-sizing: border-box;
+}
+  </style>
+</head>
+  <body>
+
+<header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-3 flex justify-between items-center">
+  <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 hover:opacity-90 transition">
+    TRADELIA<span class="text-blue-600 animate-pulse">•AI</span>
+  </a>
+  <a href="https://tradelia.org/archivio.html" class="text-sm sm:text-base text-blue-700 font-medium hover:underline transition">
+    Archivio Storico
+  </a>
+</header> 
+<br>
+<section>
+  <nav class="max-w-4xl mx-auto mt-4 mb-10 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+    <h2 class="text-lg font-semibold text-gray-800 mb-3">Indice del Report – Derivati OTC</h2>
+    <ul class="list-disc list-inside text-sm text-blue-600 space-y-2">
+      <li><a href="#sezione-1">1. Cosa sono i derivati OTC e come funzionano</a></li>
+      <li><a href="#sezione-2">2. Controparti, marginazione e netting</a></li>
+      <li><a href="#sezione-3">3. Tipologie più diffuse (swap, forward, opzioni OTC)</a></li>
+      <li><a href="#sezione-4">4. Rischi intrinseci: controparte, liquidità, trasparenza</a></li>
+      <li><a href="#sezione-5">5. Uso distorto nei prodotti retail e scandali noti</a></li>
+      <li><a href="#sezione-6">6. Strutture ibride e embedded derivatives</a></li>
+      <li><a href="#sezione-7">7. Regolamentazione EMIR/MIFID e limiti operativi</a></li>
+      <li><a href="#sezione-8">8. Indicatori di rischio da verificare prima dell'acquisto</a></li>
+      <li><a href="#sezione-9">9. Check-list pre-sottoscrizione</a></li>
+      <li><a href="#sezione-10">10. Dove si trovano e chi li distribuisce</a></li>
+      <li><a href="#sezione-11">11. Glossario tecnico sintetico</a></li>
+      <li><a href="#sezione-12">12. Disclaimer e avvertenze finali</a></li>
+    </ul>
+  </nav>
+</section>
+<br>
+    <section id="sezione-1" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">1. Cosa sono i derivati OTC e come funzionano</h2>
+
+  <p>
+    I <strong>derivati OTC (Over-The-Counter)</strong> sono contratti finanziari negoziati <strong>fuori dai mercati regolamentati</strong>, direttamente tra due controparti. Non hanno una struttura standardizzata, ma vengono creati su misura per soddisfare esigenze specifiche di copertura, speculazione o ottimizzazione fiscale.
+  </p>
+
+  <p>
+    A differenza dei derivati quotati (es. futures e opzioni standardizzati), gli OTC non passano attraverso una clearing house centrale, quindi <strong>l’intero rischio di controparte resta in capo ai firmatari del contratto</strong>. Ciò rende i derivati OTC flessibili ma anche intrinsecamente più rischiosi.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-4 text-slate-800">Principali caratteristiche operative</h3>
+  <ul class="list-disc list-inside mt-2 text-slate-700 space-y-2">
+    <li><strong>Personalizzazione:</strong> struttura, sottostante, durata e clausole definite bilateralmente</li>
+    <li><strong>Assenza di trasparenza:</strong> i prezzi non sono visibili su mercati pubblici</li>
+    <li><strong>Regolazione diretta:</strong> tramite scambio tra le parti o intermediazione bancaria</li>
+    <li><strong>Accesso limitato:</strong> tipicamente riservati a istituzionali, banche e clienti professionali</li>
+  </ul>
+
+  <p class="mt-4">
+    Il mercato dei derivati OTC è vasto: secondo dati BIS, supera abbondantemente i <strong>600 trilioni di USD di nozionale lordo</strong>. Include swap su tassi, credit default swap (CDS), contratti forward su valute, opzioni esotiche e altri strumenti ibridi.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Il rischio non si vede sul book di mercato. Sta nel contratto privato tra due soggetti che si scambiano promesse complesse.»
+  </p>
+</section>
+    
+<br>
+
+    <section id="sezione-2" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">2. Controparti, marginazione e netting</h2>
+
+  <p>
+    Nei derivati OTC, la <strong>controparte diretta</strong> è l’interlocutore contrattuale: tipicamente una banca d’investimento, un hedge fund o una grande corporate. A differenza dei mercati regolamentati, dove una clearing house fa da garante, qui il <strong>rischio di default è bilaterale</strong>.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-4 text-slate-800">Rischio di controparte</h3>
+  <p>
+    Se una delle due parti fallisce o non onora le condizioni contrattuali, l’altra può subire perdite totali o parziali. Questo rischio diventa sistemico quando una banca coinvolta in centinaia di contratti non riesce a far fronte agli impegni — come avvenuto nel caso Lehman Brothers.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 text-slate-800">Marginazione (collateralizzazione)</h3>
+  <p>
+    Per attenuare il rischio di controparte, i contratti OTC prevedono la <strong>marginazione bilaterale</strong>: entrambe le parti depositano garanzie (initial margin + variation margin) su base giornaliera. Questi fondi coprono le oscillazioni di valore del contratto in tempo reale.
+  </p>
+  <ul class="list-disc list-inside mt-2 text-slate-700 space-y-2">
+    <li><strong>Initial margin:</strong> garanzia iniziale calcolata in base al rischio potenziale</li>
+    <li><strong>Variation margin:</strong> rettifica giornaliera in base alla mark-to-market del contratto</li>
+    <li><strong>Haircut:</strong> il collateral non è mai valutato al 100%, ma con uno sconto prudenziale</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mt-6 text-slate-800">Netting e close-out</h3>
+  <p>
+    Le controparti con più contratti attivi possono firmare accordi di <strong>netting</strong>: le esposizioni sono compensate in caso di default (es. se A deve 10 a B e B deve 6 ad A, si regola la differenza netta). Il <strong>close-out netting</strong> avviene automaticamente alla chiusura dei rapporti contrattuali, riducendo l’esposizione lorda.
+  </p>
+
+  <p class="mt-4">
+    Tuttavia, il netting è valido solo se i contratti sono giuridicamente compatibili e coperti da accordi standard (ISDA, CSA). In assenza di questi accordi, il rischio legale aumenta — specialmente nei contenziosi internazionali.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «In un contratto OTC non conta solo cosa succede sul mercato. Conta chi hai dall’altra parte — e quanto margine ha lasciato sul tavolo.»
+  </p>
+</section>
+<br>
+    <section id="sezione-3" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">3. Tipologie più diffuse (swap, forward, opzioni OTC)</h2>
+
+  <p>
+    I derivati OTC coprono una gamma molto ampia di strumenti, spesso utilizzati per copertura, arbitraggio o costruzione di payoff personalizzati. Di seguito le principali tipologie:
+  </p>
+
+  <h3 class="text-lg font-semibold mt-4 text-slate-800">Swap</h3>
+  <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
+    <li><strong>Interest Rate Swap (IRS):</strong> scambio di flussi a tasso fisso contro variabile (es. Euribor vs. fisso 2%)</li>
+    <li><strong>Currency Swap:</strong> scambio di flussi in valute diverse, spesso con nozionale in valuta estera</li>
+    <li><strong>Total Return Swap (TRS):</strong> trasferimento del rendimento totale di un asset senza possederlo</li>
+    <li><strong>Credit Default Swap (CDS):</strong> “assicurazione” contro il default di un debitore</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mt-6 text-slate-800">Forward</h3>
+  <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
+    <li><strong>FX Forward:</strong> accordo per scambiare una certa quantità di valuta a un prezzo fissato e data futura</li>
+    <li><strong>Commodity Forward:</strong> come sopra, ma su materie prime (petrolio, gas, grano, etc.)</li>
+    <li><strong>Bond Forward:</strong> su obbligazioni specifiche, spesso usati per coprire rischio di tasso</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mt-6 text-slate-800">Opzioni OTC</h3>
+  <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
+    <li><strong>Vanilla Options:</strong> call e put su valute, tassi o azioni — ma con strike e scadenze personalizzabili</li>
+    <li><strong>Barrier Options:</strong> attivate o disattivate al superamento di determinati livelli (knock-in/knock-out)</li>
+    <li><strong>Quanto Options:</strong> payoff in valuta diversa da quella del sottostante</li>
+    <li><strong>Digital/Binary Options:</strong> payoff fisso tutto o nulla al verificarsi di una condizione</li>
+  </ul>
+
+  <p class="mt-4">
+    Questi strumenti possono essere usati singolarmente o combinati in <strong>strutture complesse</strong> (es. dual currency notes, structured bonds, exotic basket). Il livello di rischio e opacità aumenta con la personalizzazione.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Dietro ogni derivato OTC si cela una struttura fatta su misura. Ma non sempre chi la compra ne conosce davvero l’anatomia.»
+  </p>
+</section>
+<br>
+    <section id="sezione-4" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">4. Rischi intrinseci: controparte, liquidità, trasparenza</h2>
+
+  <p>
+    I derivati OTC offrono flessibilità e personalizzazione, ma portano con sé rischi strutturali spesso sottovalutati, in particolare quando impacchettati in prodotti retail. Questi rischi non derivano solo dal movimento del sottostante, ma dalla <strong>natura stessa del contratto</strong>.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-4 text-slate-800">Rischio di controparte</h3>
+  <p>
+    Poiché non esiste una clearing house che garantisca la transazione, l’esecuzione del contratto dipende dalla solvibilità della controparte. In caso di default, anche un contratto in profitto può non essere onorato.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 text-slate-800">Rischio di liquidità</h3>
+  <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
+    <li>I derivati OTC non sono negoziabili su mercati secondari: la <strong>chiusura anticipata</strong> dipende dalla disponibilità della controparte</li>
+    <li>La valutazione del contratto può essere contestata in assenza di prezzi di mercato trasparenti</li>
+    <li>In caso di crisi di mercato, la possibilità di unwind si riduce drasticamente</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mt-6 text-slate-800">Rischio di trasparenza</h3>
+  <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
+    <li>La maggior parte dei derivati OTC viene valutata <strong>mark-to-model</strong>, cioè con modelli interni dell’emittente</li>
+    <li>Documentazione tecnica complessa e spesso <strong>non disponibile in lingua locale</strong></li>
+    <li>La struttura del payoff può essere non lineare, con meccanismi che penalizzano l’investitore in scenari avversi</li>
+  </ul>
+
+  <p class="mt-4">
+    A questi si aggiunge il <strong>rischio regolamentare</strong>: non tutti i derivati OTC sono notificati alle autorità in tempo reale, specialmente se inseriti in note strutturate vendute a clienti al dettaglio.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Il rischio più grande di un derivato OTC non è perdere soldi. È non capire perché li stai perdendo.»
+  </p>
+</section>
+    <br>
+    <section id="sezione-5" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">5. Uso distorto nei prodotti retail e scandali noti</h2>
+
+  <p>
+    I derivati OTC, nati come strumenti di gestione avanzata del rischio per investitori istituzionali, sono stati progressivamente incorporati in <strong>prodotti strutturati per clienti retail</strong>. Questo passaggio ha spesso mascherato rischi complessi dietro etichette rassicuranti.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-4 text-slate-800">Strutture opache “a capitale protetto”</h3>
+  <p>
+    Molti derivati OTC sono stati usati per costruire obbligazioni “protette”, “step-up” o “multicallable” che in realtà celavano:
+  </p>
+  <ul class="list-disc list-inside text-slate-700 space-y-2 mt-2">
+    <li><strong>Opzioni digitali o barrier</strong> che annullavano il rendimento in caso di eventi avversi</li>
+    <li><strong>Clausole di rimborso anticipato forzato</strong> sempre a favore dell’emittente</li>
+    <li><strong>Replica parziale</strong> di indici, spesso con cap massimo su guadagni e floor nullo su perdite</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mt-6 text-slate-800">Casi eclatanti</h3>
+  <ul class="list-disc list-inside text-slate-700 space-y-2 mt-2">
+    <li><strong>Monte dei Paschi (2013):</strong> derivati occultati tramite ristrutturazioni contabili (Alexandria, Santorini)</li>
+    <li><strong>Barclays e autocallable index notes:</strong> strutture vendute in Europa con payoff non trasparente, esplosi in perdita</li>
+    <li><strong>Deutsche Bank & structured notes:</strong> vendite massive a retail tedesco tra il 2006 e il 2011, poi sotto esame Bafin</li>
+    <li><strong>Mini-bond con embedded swap:</strong> prodotti piazzati a PMI e retail, poi esplosi alla prima variazione dei tassi</li>
+  </ul>
+
+  <p class="mt-4">
+    In tutti i casi, il problema non era solo il derivato — ma <strong>l’opacità del contenuto</strong> e la distanza tra payoff percepito e payoff reale. Gli investitori hanno spesso scoperto troppo tardi che la struttura era “asimmetrica”.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Il derivato OTC non è nato per fregare il retail. Ma il retail è stato fregato ogni volta che ha pensato fosse un’obbligazione sicura.»
+  </p>
+</section>
+<br>
+    <section id="sezione-6" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">6. Dove si trovano e su quali broker accedervi</h2>
+
+  <p>
+    I derivati OTC, per loro natura non quotati su mercati regolamentati, sono accessibili <strong>solo tramite intermediari autorizzati</strong> e in contesti operativi avanzati. Non tutti i broker offrono l’accesso diretto o trasparente a questi strumenti.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-4 text-slate-800">Canali di accesso principali</h3>
+  <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
+    <li><strong>Private banking e wealth management:</strong> offrono note strutturate su misura con derivati OTC embedded</li>
+    <li><strong>Piattaforme DMA e broker professionali:</strong> accesso diretto a derivati OTC su valute, tassi, obbligazioni</li>
+    <li><strong>Mercati non regolamentati:</strong> transazioni su base bilaterale con pricing personalizzato</li>
+  </ul>
+
+  <p class="mt-4">
+    La difficoltà non è solo operativa, ma anche informativa: <strong>non esiste un “book” consultabile</strong> come per i derivati standard. Ogni contratto è frutto di una negoziazione con un desk specialistico.
+  </p>
+
+  <div class="mt-8 p-6 bg-gray-50 border-l-4 border-gray-400 rounded-md shadow-sm">
+    <h3 class="text-lg font-semibold text-slate-800 mb-2">Accesso tramite broker professionale</h3>
+    <p class="text-slate-700 mb-4">
+      Se hai piena consapevolezza del funzionamento dei derivati OTC, un profilo avanzato o professionale e operi con obiettivi chiari, puoi valutare l’accesso tramite <strong>EXANTE</strong>, broker regolamentato con piattaforma diretta ai mercati (DMA).
+    </p>
+<a href="https://tradelia.org/Exante.html" target="_blank" class="inline-block bg-blue-600 text-white font-semibold py-2 px-5 rounded-md shadow-md hover:bg-blue-700 transition">
+  Scopri EXANTE su Tradelia →
+</a>
+
+
+    <p class="text-xs text-gray-500 mt-3 italic">
+      ⚠️ Accesso riservato a utenti esperti o con requisiti professionali. Verifica attentamente i costi, i requisiti e le condizioni prima dell’utilizzo.
+    </p>
+  </div>
+
+  <p class="mt-6">
+    Per il retail non specializzato, l’uso di strumenti OTC tramite prodotti confezionati (note, bond, strutturati) comporta un livello di rischio e opacità maggiore rispetto all’investimento diretto in strumenti regolamentati. La valutazione della struttura sottostante è essenziale.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Il derivato OTC non si trova su un grafico. Si trova in un contratto. E ogni clausola conta.»
+  </p>
+</section>
+<br>
+    <section id="sezione-7" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">7. Confronto con derivati quotati: vantaggi reali vs illusori</h2>
+
+  <p>
+    La principale differenza tra derivati OTC e derivati quotati (exchange-traded) risiede nel <strong>livello di standardizzazione, trasparenza e protezione</strong>. Entrambi possono essere usati per finalità speculative o di copertura — ma l’infrastruttura che li supporta è profondamente diversa.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-4 text-slate-800">Derivati quotati: caratteristiche principali</h3>
+  <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
+    <li><strong>Standardizzati:</strong> scadenze, taglio minimo e sottostanti sono fissi</li>
+    <li><strong>Regolati da clearing house:</strong> elimina il rischio di controparte diretta</li>
+    <li><strong>Trasparenza dei prezzi:</strong> book visibile, regolamento continuo</li>
+    <li><strong>Liquidità più elevata:</strong> soprattutto per future su indici, tassi e materie prime</li>
+    <li><strong>Accesso semplificato:</strong> via broker regolamentati con marginazione standard</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mt-6 text-slate-800">Derivati OTC: vantaggi reali (per l’esperto)</h3>
+  <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
+    <li><strong>Strutture personalizzate:</strong> possibile modellare payoff complessi su esigenze specifiche</li>
+    <li><strong>Accesso a sottostanti “non listati”:</strong> obbligazioni, cross valutari esotici, tassi forward</li>
+    <li><strong>Negoziazione bilaterale:</strong> flessibilità su data di regolamento, durata, leva, margini</li>
+    <li><strong>Utili per hedging sofisticato:</strong> specie su portafogli non lineari o illiquidi</li>
+  </ul>
+
+  <p class="mt-4">
+    I derivati OTC sono <strong>più potenti ma anche più pericolosi</strong>. Offrono soluzioni su misura, ma richiedono:
+  </p>
+  <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
+    <li>capacità di valutazione autonoma del fair value</li>
+    <li>monitoraggio costante del rischio controparte</li>
+    <li>capacità contrattuale di negoziare le clausole</li>
+  </ul>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Il derivato quotato è un bisturi sterilizzato. L’OTC è un coltello da cucina: taglia più a fondo, ma dipende da chi lo usa.»
+  </p>
+</section>
+<br>
+    <section id="sezione-8" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">8. Quando (non) ha senso utilizzarli in un portafoglio reale</h2>
+
+  <p>
+    I derivati OTC non sono strumenti “da evitare a priori”, ma nemmeno da inserire superficialmente in un portafoglio retail. Il loro utilizzo ha senso solo in <strong>strategie avanzate e contesti precisi</strong>, dove il controllo del rischio è pienamente sotto la responsabilità del gestore.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-4 text-slate-800">✔️ Quando ha senso usarli</h3>
+  <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
+    <li><strong>Hedging su portafogli illiquidi:</strong> copertura su obbligazioni corporate, duration, spread, cambi specifici</li>
+    <li><strong>Esposizione a tassi forward o strutture complesse:</strong> curve forward su IRS, swaption, trigger su inflazione</li>
+    <li><strong>Strutture ad alto rendimento gestito attivamente:</strong> reverse convertible, range accrual con controllo settimanale</li>
+    <li><strong>Clientela professionale o istituzionale:</strong> dove la gestione del rischio è integrata nel mandato</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mt-6 text-slate-800">❌ Quando è meglio evitarli</h3>
+  <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
+    <li><strong>Clienti retail non professionali:</strong> assenza di strumenti per comprendere e valutare correttamente il payoff</li>
+    <li><strong>Orizzonte di lungo termine passivo:</strong> i rischi non visibili si accumulano nel tempo</li>
+    <li><strong>Portafogli costruiti per semplicità e trasparenza:</strong> l’OTC rompe ogni linearità, spesso senza premio di rischio adeguato</li>
+    <li><strong>Condizioni di mercato stressate:</strong> nei momenti di turbolenza la liquidabilità e la valutazione diventano critiche</li>
+  </ul>
+
+  <p class="mt-4">
+    In sintesi, il derivato OTC ha senso <strong>solo se inserito in una strategia consapevole</strong> e in un contesto professionale. Diversamente, è come introdurre una variabile non osservabile in un’equazione che si credeva lineare.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «L’OTC può coprire, amplificare o distruggere. Il problema non è lo strumento, ma il contesto dove lo si usa — o lo si ignora.»
+  </p>
+</section>
+<br>
+    <section id="sezione-9" class="max-w-4xl mx-auto mb-24 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">9. Glossario sintetico dei termini OTC</h2>
+
+  <ul class="list-disc list-inside text-slate-700 space-y-3">
+    <li><strong>Derivato OTC:</strong> contratto finanziario derivato negoziato fuori dai mercati regolamentati, direttamente tra due controparti</li>
+    <li><strong>Swap:</strong> accordo per scambiarsi flussi di cassa futuri legati a tassi, valute o altri parametri finanziari</li>
+    <li><strong>Forward:</strong> contratto che fissa oggi il prezzo per una transazione futura su un asset specifico</li>
+    <li><strong>Controparte:</strong> soggetto (banca, istituzione, investitore) con cui si stipula il contratto OTC</li>
+    <li><strong>ISDA:</strong> standard contrattuale per derivati OTC, sviluppato dalla International Swaps and Derivatives Association</li>
+    <li><strong>Nota strutturata:</strong> strumento finanziario che incorpora uno o più derivati OTC all’interno di un’obbligazione</li>
+    <li><strong>Accrual:</strong> meccanismo di calcolo di interessi variabili legati a condizioni di mercato specifiche (es. range, trigger)</li>
+    <li><strong>Mark-to-market:</strong> valutazione giornaliera del valore corrente di un contratto derivato</li>
+    <li><strong>Rischio di controparte:</strong> possibilità che una delle parti del contratto non adempia ai propri obblighi</li>
+    <li><strong>Clearing bilaterale:</strong> regolamento diretto tra le due parti, senza intervento di una clearing house centrale</li>
+  </ul>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Nel linguaggio OTC ogni parola è un rischio. E ogni omissione è una variabile nascosta.»
+  </p>
+</section>
+<br>
+    <section id="sezione-10" class="max-w-4xl mx-auto mb-24 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">10. Disclaimer e avvertenze finali</h2>
+
+  <p class="text-slate-700">
+    Le informazioni contenute in questa sezione hanno finalità esclusivamente educative e informative. Non costituiscono raccomandazione personalizzata, consulenza finanziaria, né invito all’investimento in strumenti derivati o strutturati.
+  </p>
+
+  <p class="text-slate-700 mt-4">
+    I derivati OTC sono strumenti complessi, con una <strong>struttura opaca e rischi non immediatamente evidenti</strong>. L’accessibilità tecnica non equivale a idoneità operativa. Solo investitori con <strong>esperienza e competenze elevate</strong> dovrebbero valutare l’utilizzo diretto di tali strumenti.
+  </p>
+
+  <p class="text-slate-700 mt-4">
+    Ogni decisione d’investimento deve essere accompagnata da un’analisi autonoma e dalla lettura dei documenti contrattuali e regolamentari. I rischi principali includono la perdita totale del capitale, rischio di controparte, illiquidità e pricing non trasparente.
+  </p>
+
+  <p class="text-slate-700 mt-4">
+    Tradelia AI non promuove direttamente alcuno strumento, prodotto o broker. Tuttavia, qualora il lettore disponga di un <strong>profilo avanzato e piena consapevolezza delle implicazioni operative</strong>, esistono soluzioni professionali per l’accesso regolamentato ai mercati OTC.
+  </p>
+
+  <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-800 text-sm">
+    <strong>👉 Hai un profilo professionale e conosci i derivati OTC?</strong><br>
+    Valuta l’accesso a <a href="https://tradelia.org/Exante.html" class="text-blue-600 hover:underline font-medium" target="_blank">EXANTE</a>, piattaforma DMA globale con accesso diretto a derivati strutturati, swap e forward su oltre 50 mercati regolamentati e OTC.
+  </div>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Comprendere lo strumento è la sola forma di protezione reale. Tutto il resto è esposizione inconsapevole.»
+  </p>
+</section>
+
+
+
+      <section>
+<div class="mb-16">
+  <h4 class="text-xl font-semibold text-slate-800 mb-4">Approfondimenti collegati</h4>
+  <ul class="list-disc list-inside text-slate-700 space-y-2">
+    <li><a href="/report/macro/CDS-CDO-subprime.html" class="text-blue-600 hover:underline" target="_blank">Gli Strumenti della crisi Subprime →</a></li>
+  </ul>
+</div>
+<section class="max-w-4xl mx-auto px-4 sm:px-6 mt-12 mb-24">
+  <h2 class="text-2xl font-semibold text-slate-800 mb-6 border-b pb-2">
+    Riepilogo Approfondimenti Tecnici
+  </h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+    <a href="/report/tutorial/Obbligazioni-Strutturate.html" target="_blank" class="text-blue-600 hover:underline">• Obbligazioni Strutturate</a>
+    <a href="/report/tutorial/CoCo-Bonds.html" target="_blank" class="text-blue-600 hover:underline">• CoCo Bonds</a>
+    <a href="/report/tutorial/Callable-StepUp.html" target="_blank" class="text-blue-600 hover:underline">• Callable & Step-Up</a>
+    <a href="/report/tutorial/Dual-Currency-Bonds.html" target="_blank" class="text-blue-600 hover:underline">• Dual Currency Bonds</a>
+    <a href="/report/tutorial/Reverse-Convertible.html" target="_blank" class="text-blue-600 hover:underline">• Reverse Convertible</a>
+    <a href="/report/tutorial/Note-Strutturate-Barriera.html" target="_blank" class="text-blue-600 hover:underline">• Note con Barriera</a>
+    <a href="/report/tutorial/Certificates-Complessi.html" target="_blank" class="text-blue-600 hover:underline">• Certificates Complessi</a>
+    <a href="/report/tutorial/False-Principal-Protection.html" target="_blank" class="text-blue-600 hover:underline">• Obbligazioni "Protette"</a>
+    <a href="/report/tutorial/ETF-Leva-Inversi.html" target="_blank" class="text-blue-600 hover:underline">• ETF Leva e Inversi</a>
+    <a href="/report/tutorial/CFD-Retail.html" target="_blank" class="text-blue-600 hover:underline">• CFD & Retail</a>
+    <a href="/report/tutorial/ETF-Sintetici.html" target="_blank" class="text-blue-600 hover:underline">• ETF Strutturati Sintetici</a>
+    <a href="/report/tutorial/Opzioni-Vanilla.html" target="_blank" class="text-blue-600 hover:underline">• Opzioni Plain Vanilla</a>
+    <a href="/report/tutorial/Opzioni-Esotiche.html" target="_blank" class="text-blue-600 hover:underline">• Opzioni Esotiche</a>
+    <a href="/report/tutorial/Derivati-OTC.html" target="_blank" class="text-blue-600 hover:underline">• Derivati OTC</a>
+    <a href="/report/tutorial/SPAC-Rischi.html" target="_blank" class="text-blue-600 hover:underline">• Rischi SPAC</a>
+    <a href="/report/tutorial/CLO-CDO.html" target="_blank" class="text-blue-600 hover:underline">• CLO / CDO</a>
+    <a href="/report/tutorial/Token-Sintetici.html" target="_blank" class="text-blue-600 hover:underline">• Token Sintetici</a>
+    <a href="/report/tutorial/Stablecoin-Algoritmiche.html" target="_blank" class="text-blue-600 hover:underline">• Stablecoin Algoritmiche</a>
+  </div>
+</section>
+
+<hr class="my-12">
+
+<div class="mb-16">
+  <h4 class="text-xl font-semibold text-slate-800 mb-4"> Analisi AI più lette</h4>
+  <ul class="list-disc list-inside text-slate-700 space-y-2">
+        <li><a href="/report/tutorial/Simulatore-Portafogli.html" class="text-blue-600 hover:underline" target="_blank">Simulatore Portafogli →</a></li>
+     <li><a href="/report/tutorial/CFD-Retail.html" class="text-blue-600 hover:underline" target="_blank">CFD Retail & Pratiche scorrette→ </a></li>
+    <li><a href="/report/tutorial/Truffe-Cripto.html" class="text-blue-600 hover:underline" target="_blank">Truffe cripto più famose →</a></li>
+    <li><a href="/report/tutorial/Truffe-Finanziarie-Storiche.html" class="text-blue-600 hover:underline" target="_blank">Grandi truffe finanziarie della storia →</a></li>
+    <li><a href="/report/tutorial/Statistiche-Truffe-Online.html" class="text-blue-600 hover:underline" target="_blank">Statistiche e numeri delle truffe online su investimenti →</a></li>
+    <li><a href="/report/tutorial/MM-STP-ECN.html" class="text-blue-600 hover:underline" target="_blank">Broker: differenze tra MM, STP ed ECN →</a></li>
+  </ul>
+</div>
+</section>
+  </main>
+  <button id="backToTop" title="Torna all'inizio" aria-label="Torna all'inizio" 
+  class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-lg transition-opacity opacity-80 hover:opacity-100 focus:outline-none">
+  ↑ Torna all'inizio
+</button>
+<script>
+  const btn = document.getElementById('backToTop');
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+
+</body>
+</html>

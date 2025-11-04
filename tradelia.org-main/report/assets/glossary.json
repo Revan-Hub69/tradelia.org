@@ -1,0 +1,636 @@
+{
+  "_v": "2025-10-31-F2",
+  "ModuleStatus": {
+    "title": "ModuleStatus",
+    "what": "Stato operativo del modulo al momento della pubblicazione (ACTIVE/REVIEW/HOLD).",
+    "how": "Se non è ACTIVE, alcuni input possono essere parziali o degradati; la lettura resta informativa.",
+    "source": "Best practice di governance dei dati (BCBS 239; ESMA Supervisory Briefings)."
+  },
+  "Freshness": {
+    "title": "Freshness",
+    "what": "Allineamento temporale delle fonti rispetto al timestamp del report.",
+    "how": "‘≤ T-1’/‘live’ = dati aggiornati; ‘T-2’ o oltre = rischio di ‘staleness’ e minor affidabilità tattica.",
+    "source": "Principi di qualità dati (BCBS 239); data latency & timeliness in risk reporting."
+  },
+  "HeroDisclaimer": {
+    "title": "Disclaimer",
+    "what": "Materiale informativo/educativo non personalizzato.",
+    "how": "Non costituisce consulenza o raccomandazione; non considera obiettivi, conoscenze ed esperienza del lettore.",
+    "source": "MiFID II/ESMA – Guidelines on marketing communications & investor protection."
+  },
+
+  "StrategyMode_macro": {
+    "title": "StrategyMode",
+    "what": "Regime tattico 3–10 giorni (Momentum / Neutral / Pullback).",
+    "how": "Classifica il contesto di rischio combinando volatilità, credito, breadth e flussi; non è un segnale di trading.",
+    "source": "Carhart (1997) Momentum; Asness et al. (2013) Quality/Momentum; approcci regime-switching."
+  },
+  "RegimeScore": {
+    "title": "RegimeScore",
+    "what": "Indicatore sintetico dell’appetito al rischio (risk-on vs risk-off).",
+    "how": "Pondera volatilitá, credito e leadership fattoriale per stimare il tono di mercato.",
+    "source": "Adrian, Crump & Moench (2013) Risk Premia; Lettau & Ludvigson (2010) macro risk factors."
+  },
+  "VolRegime": {
+    "title": "Volatilità / Hedge",
+    "what": "Domanda di copertura rilevata via indici/term structure di volatilità.",
+    "how": "Vol alta e term structure compressa implicano maggiore domanda di hedge e stress.",
+    "source": "Whaley (2009) Understanding VIX; Carr & Wu (2006) volatility risk premia."
+  },
+  "LiquidityRegimeScore": {
+    "title": "Curva & Costo capitale",
+    "what": "Condizioni finanziarie implicate dalla curva tassi e dal funding.",
+    "how": "Curve tese e funding costoso scoraggiano il rischio; curve accomodanti lo favoriscono.",
+    "source": "Brunnermeier & Pedersen (2009) Market & funding liquidity; Hanson & Stein (2015)."
+  },
+  "CreditRiskBlock": {
+    "title": "Credito",
+    "what": "Segnale dal credito (HY vs IG) come proxy di stress/benignità.",
+    "how": "Allargamento HY vs IG spesso segnala deterioramento dell’appetito al rischio.",
+    "source": "Gilchrist & Zakrajšek (2012) Credit spreads & economic activity."
+  },
+  "FX_Regime": {
+    "title": "FX / USD",
+    "what": "Ruolo del dollaro nelle condizioni finanziarie globali.",
+    "how": "USD forte tende a irrigidire le condizioni globali; USD debole le allenta.",
+    "source": "Rey (2013) Dilemma not Trilemma; Bruno & Shin (2015) Global dollar cycle."
+  },
+  "RiskWindow": {
+    "title": "RiskWindow (3–10g)",
+    "what": "Driver/eventi potenzialmente market-moving nell’orizzonte tattico.",
+    "how": "Lista di sorveglianza di dati macro/policy/rollover; non è una call direzionale.",
+    "source": "Letteratura su announcement risk e macro news (e.g., Savor & Wilson, 2013)."
+  },
+  "Breadth_1M": {
+    "title": "Breadth (1M)",
+    "what": "Diffusione cross-sectional della forza di mercato su ~1 mese.",
+    "how": "Partecipazione ampia rafforza la robustezza del trend rispetto a concentrazioni su poche mega-cap.",
+    "source": "Stivers (2003) Return dispersion & breadth; concetti di diffusion index."
+  },
+  "RiskTilt_1M": {
+    "title": "RiskTilt (1M)",
+    "what": "Rotazione tra fattori pro-ciclo/high-beta e difensivi/quality.",
+    "how": "Prevalenza di growth/high-beta → maggiore propensione al rischio; difensivi/quality → cautela.",
+    "source": "Fama & French (1993, 2015) factor models; Asness, Frazzini & Pedersen (2013) Quality."
+  },
+  "SmallCapPressure_1W": {
+    "title": "SmallCap Pressure (1W)",
+    "what": "Forza/debolezza relativa di small/micro vs large cap a 1 settimana.",
+    "how": "Debolezza small suggerisce ritiro del rischio marginale.",
+    "source": "Banz (1981) size effect; Hou, Xue & Zhang (2015) q-factor model."
+  },
+  "IndexMomentum_1W": {
+    "title": "Index Momentum (1W)",
+    "what": "Co-movimento direzionale breve tra indici chiave.",
+    "how": "Coerenza su più indici rafforza la lettura del regime rispetto a segnali isolati.",
+    "source": "Jegadeesh & Titman (1993) momentum; riferimenti su comovimento intermarket."
+  },
+  "SizeBias": {
+    "title": "Size Bias",
+    "what": "Preferenza del mercato per specifiche classi di capitalizzazione.",
+    "how": "Leadership solo mega-cap implica concentrazione e maggiore fragilità del trend.",
+    "source": "Fama & French (1993) SMB factor."
+  },
+  "Leadership multi-timeframe": {
+    "title": "Leadership multi-timeframe",
+    "what": "Temi/settori leader sia breve che medio orizzonte.",
+    "how": "Persistenza su più orizzonti aumenta la probabilità che il trend sia strutturale.",
+    "source": "Asness et al. (2013) factor momentum; Barroso & Santa-Clara (2015)."
+  },
+  "Leadership difensiva qualitativa": {
+    "title": "Leadership difensiva qualitativa",
+    "what": "Sovraperformance di quality/low-vol/defensives.",
+    "how": "Indica ricerca di resilienza (cash-flow/stabilità) più che crescita aggressiva.",
+    "source": "Asness, Frazzini & Pedersen (2013) Quality; Ang et al. (2006) Low-vol."
+  },
+  "Settori in ritardo": {
+    "title": "Settori in ritardo",
+    "what": "Sottoperformance persistente di temi/settori.",
+    "how": "Often coda debole della struttura; utile per misurare asimmetrie del regime.",
+    "source": "Cross-sectional asset pricing & dispersion (Stivers, 2003)."
+  },
+  "Indici (1W)": {
+    "title": "Indici (1W)",
+    "what": "Movimento recente dei principali indici azionari.",
+    "how": "Serve a contestualizzare il tono tattico; non è indicazione operativa.",
+    "source": "Metodologia indici benchmark; letteratura su announcement/momentum breve."
+  },
+  "Futures / Commodities (1W)": {
+    "title": "Futures / Commodities (1W)",
+    "what": "Dinamica settimanale di energia/metalli/altre materie prime.",
+    "how": "Segnala pressioni su inflazione/crescita o shock geopolitici.",
+    "source": "Gorton & Rouwenhorst (2006) commodities as an asset class."
+  },
+  "Curva Treasury": {
+    "title": "Curva Treasury",
+    "what": "Forma/spostamenti della curva UST come segnale macro-finanziario.",
+    "how": "Steepening/inversione modulano costo del capitale e condizioni finanziarie.",
+    "source": "Estrella & Hardouvelis (1991) yield curve & cycles."
+  },
+  "Volatilità & USD": {
+    "title": "Volatilità & USD",
+    "what": "Quadro combinato tra rischio implicito (vol) e ciclo del dollaro.",
+    "how": "Vol elevata + USD forte = condizioni più rigide e risk-off.",
+    "source": "Whaley (2009) VIX; Rey (2013) global financial cycle."
+  },
+
+  "FreshnessScore": {
+    "title": "FreshnessScore",
+    "what": "Grado di aggiornamento/sincronia delle fonti chiave usate dal modulo.",
+    "how": "Valuta latenza e coerenza temporale tra feed eterogenei.",
+    "source": "BCBS 239 – accuracy, timeliness & integrity in risk data."
+  },
+  "ConfidenceFinal": {
+    "title": "ConfidenceFinal",
+    "what": "Confidenza interna nella qualità/completezza del quadro.",
+    "how": "Tiene conto di drift, outlier, lacune di copertura e coerenza inter-asset.",
+    "source": "Metodi di data quality & reliability in risk systems (BCBS 239; QA frameworks)."
+  },
+  "DataIntegrity": {
+    "title": "DataIntegrity",
+    "what": "Consistenza interna dei dati (assenza di buchi/valori impossibili).",
+    "how": "Controlli di validazione e reconciliazione cross-fonte.",
+    "source": "BCBS 239 – integrity & reconciliation controls."
+  },
+  "FeedSync": {
+    "title": "FeedSync",
+    "what": "Sincronizzazione temporale tra sorgenti (cash, futures, FX, vol, curve).",
+    "how": "Desincronizzazioni riducono l’affidabilità del quadro tattico.",
+    "source": "Design pattern di market data integration & timestamp alignment."
+  },
+  "MiFID_disclaimer": {
+    "title": "Informativa MiFID",
+    "what": "Contenuti non personalizzati, scopo informativo/educativo.",
+    "how": "Non costituiscono consulenza; l’utente deve valutare situazione e obiettivi.",
+    "source": "MiFID II / ESMA – Investor protection & marketing communications."
+  },
+
+  "MacroGate_info": {
+    "title": "MacroGate",
+    "what": "Semaforo eventi macro/policy vicini (48–72h) sensibili al prezzo.",
+    "how": "PASS/REVIEW/FAIL in base a densità e rilevanza dei catalizzatori.",
+    "source": "Letteratura su announcement risk (Savor & Wilson, 2013); policy surprise."
+  },
+
+  "SentimentComposite_info": {
+    "title": "SentimentComposite",
+    "what": "Composito qualitativo di sentiment ticker-level.",
+    "how": "Integra tecnico, news e consenso per descrivere il tono; non opera su opzioni.",
+    "source": "Baker & Wurgler (2006) investor sentiment; Tetlock (2007) news tone."
+  },
+  "ETF_FlowTone_info": {
+    "title": "ETF Flow Tone",
+    "what": "Bias dei flussi (in/out) negli ETF più esposti al titolo/settore.",
+    "how": "Flussi passivi influenzano domanda offerta e co-movimento col paniere.",
+    "source": "Ben-David, Franzoni & Moussawi (2018) ETF & market quality."
+  },
+
+  "TECH_SIGNAL_info": {
+    "title": "Tecnico (multi-TF)",
+    "what": "Lettura tecnica sintetica su più timeframe.",
+    "how": "Indicatore descrittivo (Buy/Hold/Sell) non operativo.",
+    "source": "Evidence su trend/momentum: Jegadeesh & Titman (1993); Moskowitz et al. (2012)."
+  },
+  "NEWS_TONE_info": {
+    "title": "News · Tono",
+    "what": "Polarità media di headline recenti.",
+    "how": "Il tono informativo influenza temporaneamente i rendimenti attesi.",
+    "source": "Tetlock (2007) media content & stock returns."
+  },
+  "CONSENSUS_LEVEL_info": {
+    "title": "Consenso analisti",
+    "what": "Livello sintetico del consenso sell-side.",
+    "how": "Utile per contesto; può riflettere informazioni diffusive.",
+    "source": "Womack (1996) analyst recommendations; Bradshaw (2011)."
+  },
+  "CONSISTENCY_info": {
+    "title": "Stabilità consenso",
+    "what": "Stabilità/variazione recente di rating/target.",
+    "how": "Maggiore stabilità = narrativa più robusta.",
+    "source": "Letteratura su revisions e dispersion (Diether, Malloy & Scherbina, 2002)."
+  },
+
+  "PERF_VECTOR_info": {
+    "title": "Performance vector",
+    "what": "Sintesi 1W/1M/3M a sola informazione di prezzo.",
+    "how": "Serve a contestualizzare momentum/mean-reversion di breve.",
+    "source": "Jegadeesh (1990) short-term reversals; Jegadeesh & Titman (1993) momentum."
+  },
+  "VALUATION_SNAPSHOT_info": {
+    "title": "Valuation snapshot",
+    "what": "Multipli (PE/EV/EBITDA/PS) vs storia/peers.",
+    "how": "Premi/sconti informativi sulle aspettative implicite.",
+    "source": "Penman (2010) valuation; Koller et al. (McKinsey Valuation)."
+  },
+  "MARGINS_SNAPSHOT_info": {
+    "title": "Margins snapshot",
+    "what": "Margini lordi/operativi attuali.",
+    "how": "Misura resilienza/efficienza operativa.",
+    "source": "Beaver (1966) accounting info & performance; analisi fundamental standard."
+  },
+  "PRICE_TREND_info": {
+    "title": "Price trend (descrittivo)",
+    "what": "Relazione con medie mobili/swing recenti.",
+    "how": "Contesto non operativo, utile per regime di fondo.",
+    "source": "Letteratura su trend following (Hurst, Ooi & Pedersen, 2013)."
+  },
+  "MARGIN_HEALTH_info": {
+    "title": "Margin health",
+    "what": "Qualità/sostenibilità dei margini.",
+    "how": "Valuta mix prezzi-costi e leverage operativo.",
+    "source": "Novy-Marx (2013) profitability; Fama & French (2015) profitability factor."
+  },
+  "PROFITABILITY_CLASS_info": {
+    "title": "Profitability class",
+    "what": "Classe di redditività (ROIC/ROE e affini).",
+    "how": "Migliore qualità operativa → premio atteso più elevato.",
+    "source": "Novy-Marx (2013) profitability."
+  },
+  "EARNINGS_TREND_info": {
+    "title": "Earnings trend",
+    "what": "Direzione di EPS/ricavi e loro revisioni.",
+    "how": "Upgrade netti spesso anticipano sorprese positive.",
+    "source": "Abarbanell & Bushee (1997); Chan, Karceski & Lakonishok (2003)."
+  },
+  "BALANCE_SHEET_STRENGTH_info": {
+    "title": "BS strength",
+    "what": "Solidità patrimoniale e leva finanziaria.",
+    "how": "Bilanci robusti mitigano drawdown in fasi di stress.",
+    "source": "Ohlson (1980s) financial ratios & distress; Altman (1968) z-score."
+  },
+  "CASHFLOW_MOMENTUM_info": {
+    "title": "Cash-flow momentum",
+    "what": "Dinamica/qualità dei flussi di cassa liberi.",
+    "how": "FCF sostenibile supporta investimenti e resilienza.",
+    "source": "Dechow, Kothari & Watts (1998) accruals; Richardson et al. (2005)."
+  },
+
+  "VAL_MULTIPLES_info": {
+    "title": "Valuation multiples",
+    "what": "PE/EV/EBITDA/PS rispetto a storia/peers.",
+    "how": "Misura pricing relativo del titolo nel settore.",
+    "source": "Penman (2010); Koller et al., Valuation."
+  },
+  "MARGINS_TREND_info": {
+    "title": "Margins trend",
+    "what": "Direzione recente di GM/OM/NP.",
+    "how": "Espansione/contrazione legate a mix prezzo-costi.",
+    "source": "Analisi fundamental standard; Novy-Marx (2013)."
+  },
+  "EARNINGS_REV_info": {
+    "title": "Revisions",
+    "what": "Revisione netta di stime EPS/ricavi.",
+    "how": "Upgrade/downgrade sintetizzano informazione diffusa.",
+    "source": "Chan, Karceski & Lakonishok (2003) analyst activity."
+  },
+  "QUALITY_BS_CF_info": {
+    "title": "Quality (BS & CF)",
+    "what": "Qualità del bilancio e copertura dei flussi.",
+    "how": "Confronta fabbisogni (capex/dividendi) con FCF.",
+    "source": "Asness et al. (2013) Quality."
+  },
+  "TARGET_SPREAD_info": {
+    "title": "Target spread",
+    "what": "Scostamento dal target price mediano.",
+    "how": "Indicatore informativo sul consenso, non raccomandazione.",
+    "source": "Bradshaw (2011) Analyst forecasts & valuation."
+  },
+  "UPSIDE_PCT_info": {
+    "title": "Upside %",
+    "what": "Upside implicito rispetto al target mediano.",
+    "how": "Usare come contesto; dispersione dei target è rilevante.",
+    "source": "Womack (1996); Bradshaw (2011)."
+  },
+  "EVENT_LAST_EARNINGS_info": {
+    "title": "Ultimo earnings",
+    "what": "Data dell’ultimo rilascio risultati.",
+    "how": "Rilevante per la finestra post-annuncio e drift post-earnings.",
+    "source": "Bernard & Thomas (1989) post-earnings announcement drift."
+  },
+  "POST_EARNINGS_WINDOW_info": {
+    "title": "Post-earnings window",
+    "what": "Finestra tattica post risultati (assorbimento news).",
+    "how": "Volumi/volatilità anomali possono protrarsi 5–10 sedute.",
+    "source": "PEAD: Bernard & Thomas (1989)."
+  },
+
+  "PEER_LIST_info": {
+    "title": "Peer list",
+    "what": "Comparables principali per il titolo.",
+    "how": "Serve per confronti relativi (valutazione/performance).",
+    "source": "Metodologie comparables (Damodaran; Penman)."
+  },
+  "ETF_LIST_info": {
+    "title": "ETF list",
+    "what": "ETF maggiormente esposti al titolo/tema.",
+    "how": "I flussi passivi possono generare co-movimenti.",
+    "source": "Ben-David, Franzoni & Moussawi (2018)."
+  },
+  "PEER_LEADERS_info": {
+    "title": "Peer leaders",
+    "what": "Peers in outperformance recente.",
+    "how": "Segnalano leadership tematica settoriale.",
+    "source": "Letteratura su relative strength/momentum cross-sectional."
+  },
+  "PEER_LAGGARDS_info": {
+    "title": "Peer laggards",
+    "what": "Peers in sotto-performance.",
+    "how": "Evidenziano coda debole/temi in raffreddamento.",
+    "source": "Cross-sectional asset pricing evidence."
+  },
+  "SECTOR_BREADTH_info": {
+    "title": "Sector breadth",
+    "what": "Diffusione della forza all’interno del settore.",
+    "how": "Quota di titoli in rialzo vs in calo su orizzonte definito.",
+    "source": "Concetti di diffusion/breadth (Stivers, 2003)."
+  },
+  "ETF_FLOW_BIAS_info": {
+    "title": "ETF flow bias",
+    "what": "Bias dei flussi su 1W/1M (in/out).",
+    "how": "Misura la direzione netta della domanda passiva.",
+    "source": "Ben-David, Franzoni & Moussawi (2018)."
+  },
+  "TOP_HOLDING_ETF_info": {
+    "title": "Top holding ETF",
+    "what": "ETF con peso maggiore sul titolo.",
+    "how": "Maggiore sensibilità ai flussi del paniere.",
+    "source": "Methodology disclosures dei provider ETF."
+  },
+
+  "SI_LEVEL_info": {
+    "title": "Short Float",
+    "what": "Quota del float venduta allo scoperto.",
+    "how": "Valori elevati implicano rischio squeeze; valori bassi, minore pressione.",
+    "source": "Asquith, Pathak & Ritter (2005) short interest & returns."
+  },
+  "DTC_BUCKET_info": {
+    "title": "Days to Cover",
+    "what": "Giorni necessari per coprire lo short (short interest / vol medio).",
+    "how": "Più alto = potenziale frizione in caso di news inattese.",
+    "source": "Short interest literature (e.g., Boccone & Smith, survey)."
+  },
+  "SI_TREND_info": {
+    "title": "Trend short",
+    "what": "Direzione recente dello short interest.",
+    "how": "Incrementi persistenti spesso segnalano pressioni downside o hedging.",
+    "source": "Asquith, Pathak & Ritter (2005)."
+  },
+  "INST_FLOW_info": {
+    "title": "Istituzionali",
+    "what": "Segnali da flussi/posizionamento istituzionale.",
+    "how": "Mutamenti di ownership possono riflettere ribilanciamenti informati.",
+    "source": "Bushee (1998) institutional ownership & monitoring."
+  },
+  "INSIDER_FLOW_info": {
+    "title": "Insider",
+    "what": "Attività recente di acquisti/vendite insider.",
+    "how": "Acquisti concentrati spesso associati a prospettive migliorative.",
+    "source": "Seyhun (1986, 1998) insider trading & returns."
+  },
+
+  "AAII_info": {
+    "title": "AAII Bulls-Bears",
+    "what": "Differenziale sentiment investitori retail USA (survey).",
+    "how": "Estremi possono anticipare mean-reversion di breve.",
+    "source": "Fisher & Statman (2000) investor sentiment; uso accademico di AAII."
+  },
+  "NAAIM_info": {
+    "title": "NAAIM Exposure",
+    "what": "Esposizione media dichiarata dai money manager attivi (survey).",
+    "how": "Valori molto elevati/bassi segnalano eccessi tattici.",
+    "source": "Letteratura su survey-based sentiment & positioning (Baker & Wurgler, 2006)."
+  },
+  "FearGreed_info": {
+    "title": "Fear & Greed",
+    "what": "Indice sintetico di paura/avidità multi-componente.",
+    "how": "Zone estreme utili come contesto di rischio, non come timing.",
+    "source": "Approcci compositi al sentiment; confronti con misure accademiche (Baker & Wurgler, 2006)."
+  },
+  
+  "Governance_info": {
+    "title": "Governance",
+    "what": "Trasparenza su versione, fonti e qualità dati del modulo.",
+    "how": "Mostra audit trail (AuditPathID), metriche di qualità (Freshness/Confidence/DataIntegrity/FeedSync) e informative regolamentari.",
+    "source": "BCBS 239; ESMA – Supervisory Briefings."
+  },
+
+  "AuditPathID_info": {
+    "title": "AuditPathID",
+    "what": "Identificativo univoco dello snapshot/log riproducibile.",
+    "how": "Collega versione modulo e dataset usati per questa pubblicazione.",
+    "source": "Best practice data lineage."
+  },
+
+  "FreshnessScore_info": {
+    "title": "FreshnessScore",
+    "what": "Aggiornamento/latenza delle fonti chiave.",
+    "how": "Confronta i timestamp dei feed con quello del report; più alto = dati più freschi/sincroni.",
+    "source": "BCBS 239 – timeliness."
+  },
+  "ConfidenceFinal_info": {
+    "title": "ConfidenceFinal",
+    "what": "Confidenza complessiva nella qualità del quadro.",
+    "how": "Integra copertura, coerenza inter-asset, outlier e drift.",
+    "source": "Framework QA interno."
+  },
+  "DataIntegrity_info": {
+    "title": "DataIntegrity",
+    "what": "Consistenza interna dei dati.",
+    "how": "Verifiche di validazione e riconciliazione cross-fonte.",
+    "source": "BCBS 239 – accuracy & integrity."
+  },
+  "FeedSync_info": {
+    "title": "FeedSync",
+    "what": "Sincronizzazione temporale tra sorgenti.",
+    "how": "Mis-alignment tra cash/futures/FX/vol/curve ⇒ affidabilità tattica ridotta.",
+    "source": "Pattern integrazione market data."
+  },
+
+  "ModuleVersion_info": {
+    "title": "ModuleVersion",
+    "what": "Version tag della logica (es. v7.2).",
+    "how": "Ogni modifica sostanziale incrementa la versione e aggiorna l’audit.",
+    "source": "Versioning & change-log."
+  },
+  "ModuleStatus_policy_info": {
+    "title": "Policy stato modulo",
+    "what": "Significato di ACTIVE / REVIEW / HOLD.",
+    "how": "ACTIVE: input adeguati; REVIEW: qualità parziale; HOLD: sospeso.",
+    "source": "Policy operativa."
+  },
+  "Freshness_policy_info": {
+    "title": "Policy Freshness",
+    "what": "Soglie minime di freschezza richieste.",
+    "how": "‘≤ T-1’ richiesto; oltre T-1 ⇒ REVIEW/HOLD finché non riallineato.",
+    "source": "BCBS 239 – timeliness."
+  },
+  "Sources_Tier1_info": {
+    "title": "Fonti Tier-1",
+    "what": "Ambito fonti consentite per F2.",
+    "how": "Reuters, Bloomberg, Nasdaq, SEC/EDGAR. Finviz/Barchart solo rassegna (no opzioni).",
+    "source": "Policy fonti Tradelia AI."
+  },
+  "EducationalScope_info": {
+    "title": "Scopo educativo",
+    "what": "Contenuti informativi non personalizzati.",
+    "how": "Non costituiscono consulenza o raccomandazioni individuali.",
+    "source": "MiFID II / ESMA."
+  },
+  "Compliance_ESMA_info": {
+    "title": "Compliance (ESMA)",
+    "what": "Linee guida su comunicazioni e tutela investitori.",
+    "how": "Richiede trasparenza su rischi, limiti e finalità del materiale.",
+    "source": "ESMA – marketing communications."
+  },
+  "Snapshot": {
+    "title": "Snapshot",
+    "what": "Finestra temporale dello snapshot del report (inizio → fine).",
+    "how": "Definisce l’intervallo su cui vengono calcolati prezzo e Δ% per garantire coerenza temporale dei dati.",
+    "source": "Hamilton, J.D. (1994), *Time Series Analysis*, Princeton University Press."
+  },
+  "Price": {
+    "title": "Price",
+    "what": "Prezzo di riferimento coerente con la finestra di snapshot (ultimo o close).",
+    "how": "Variabili di prezzo sono trattate come processi stocastici; il prezzo mostrato serve da contesto descrittivo, non operativo.",
+    "source": "Campbell, J.Y., Lo, A.W., & MacKinlay, A.C. (1997), *The Econometrics of Financial Markets*, Princeton University Press."
+  },
+
+  "ChangePct": {
+    "title": "ChangePct",
+    "what": "Variazione percentuale del prezzo tra l’inizio della finestra di analisi (Start) e l’ultima chiusura precedente (End).",
+    "how": "Calcolata come rendimento percentuale semplice: Δ% = [(End − Start) / Start] × 100. Indica la variazione direzionale sul periodo di osservazione; non rappresenta movimenti intraday 'live'.",
+    "source": "Campbell, J.Y., Lo, A.W., & MacKinlay, A.C. (1997). The Econometrics of Financial Markets. Princeton University Press."
+  },
+  "Currency": {
+    "title": "Currency",
+    "what": "Valuta di quotazione del prezzo mostrato.",
+    "how": "Esplicitare la valuta evita ambiguità in presenza di multi-listing/FX; la metrica è informativa, senza conversione implicita.",
+    "source": "Obstfeld, M., & Rogoff, K. (1996), *Foundations of International Macroeconomics*, MIT Press."
+  },
+  
+"F3O_IV_ATM_info": {
+    "title": "IV (ATM)",
+    "what": "Volatilità implicita delle opzioni più vicine al prezzo corrente del titolo.",
+    "how": "Misura l’oscillazione attesa dei prezzi incorporata nei premi delle opzioni. Valori elevati indicano attese di movimento o incertezza, valori bassi stabilità.",
+    "source": "Hull, J.C. (2018) *Options, Futures, and Other Derivatives*, Pearson; CBOE Volatility Primer (2020)."
+  },
+
+  "F3O_IVRank_info": {
+    "title": "IV Rank / Percentile",
+    "what": "Posizione della volatilità implicita attuale rispetto alla sua distribuzione storica (1 anno).",
+    "how": "Serve per valutare se i premi sono elevati o contenuti rispetto al passato. IV Rank alto = opzioni costose; basso = opzioni a premio ridotto.",
+    "source": "CBOE Education Series; VIX & Implied Volatility Research (Whaley, 2009)."
+  },
+
+  "F3O_GSR_info": {
+    "title": "GSR (Γ/Vega)",
+    "what": "Rapporto tra Gamma e Vega, due sensibilità chiave delle opzioni.",
+    "how": "Gamma misura la reattività al prezzo, Vega alla volatilità. Un GSR negativo segnala dealer più esposti a movimenti di prezzo (short gamma).",
+    "source": "Andersen, T.G., Fusari, N. & Todorov, V. (2015) *The Risk Premia Embedded in Index Options*, Journal of Financial Economics."
+  },
+
+  "F3O_Dealer_info": {
+    "title": "Dealer Regime",
+    "what": "Indica se i dealer sono posizionati in long o short gamma.",
+    "how": "In short gamma, i dealer tendono ad amplificare i movimenti; in long gamma li attenuano. È un indicatore del potenziale di volatilità intraday.",
+    "source": "Ni, S.X. (2008) *Stock Option Returns and the Pricing of Liquidity Risk*, Journal of Financial Economics; CBOE research notes."
+  },
+
+  "F3O_EM_TOGGLE_info": {
+    "title": "Toggle EM % / $",
+    "what": "Conversione del movimento atteso (Expected Move) tra valore percentuale e valore monetario.",
+    "how": "L’Expected Move deriva dalla volatilità implicita: rappresenta la variazione che il mercato si attende entro la scadenza considerata.",
+    "source": "CBOE (2022) *Expected Move Methodology*; Hull (2018)."
+  },
+
+  "F3O_TermSlope_info": {
+    "title": "Curva IV · Pendenza (Slope)",
+    "what": "Misura la variazione della volatilità implicita lungo le scadenze.",
+    "how": "Un profilo crescente (contango) indica normalità e fiducia; un profilo decrescente (backwardation) segnala tensione o rischio evento.",
+    "source": "Carr, P. & Wu, L. (2006) *Stochastic Skew in Currency Options*, Journal of Financial Economics."
+  },
+
+  "F3O_RR25_info": {
+    "title": "Skew · RR 25Δ",
+    "what": "Differenza di volatilità implicita tra call e put con delta ±25.",
+    "how": "Valori negativi (put più care) riflettono ricerca di copertura; positivi (call più care) euforia o interesse speculativo sull’upside.",
+    "source": "Derman, E. (1999) *Regimes of Volatility*, Risk Magazine; academic FX options literature su risk reversals."
+  },
+
+  "F3O_PCR_Vol_info": {
+    "title": "Put/Call (Volumi)",
+    "what": "Rapporto tra volumi di put e call negoziati.",
+    "how": "Misura il tono tattico del mercato: >1 prevale copertura (put); <1 prevale speculazione rialzista (call).",
+    "source": "CBOE (2021) *Put/Call Ratio Research & Data Guide*."
+  },
+
+  "F3O_PCR_OI_info": {
+    "title": "Put/Call (Open Interest)",
+    "what": "Rapporto tra posizioni aperte su put e call.",
+    "how": "Evidenzia il posizionamento strutturale nel mercato delle opzioni; utile per interpretare il sentiment di fondo.",
+    "source": "CBOE Options Institute; Whaley (2009) *Understanding VIX*."
+  },
+
+  "F3O_PCR_byExp_info": {
+    "title": "PCR per Scadenza",
+    "what": "Breakdown del Put/Call ratio per singola scadenza.",
+    "how": "Permette di individuare su quali expiry si concentrano coperture o scommesse speculative.",
+    "source": "CBOE data methodology; practitioner adaptation in institutional flow analysis."
+  },
+
+  "F3O_GammaFlip_info": {
+    "title": "Gamma Flip",
+    "what": "Livello di prezzo in cui la gamma netta del mercato cambia segno.",
+    "how": "Sotto questo livello i dealer sono short gamma (mercato più instabile), sopra sono long gamma (mercato più bilanciato).",
+    "source": "Andersen, Fusari & Todorov (2015); CBOE dealer positioning research."
+  },
+
+  "F3O_DealerRegime_info": {
+    "title": "Dealer Regime (Gamma)",
+    "what": "Riepilogo del posizionamento gamma aggregato dei dealer.",
+    "how": "Conferma se il mercato tende ad amplificare o smorzare i movimenti di prezzo.",
+    "source": "Market microstructure e analisi di gamma exposure (CBOE, 2021)."
+  },
+
+  "F3O_MaxPain_info": {
+    "title": "Max Pain",
+    "what": "Livello teorico di prezzo che minimizza il valore delle opzioni a scadenza.",
+    "how": "È una stima puramente descrittiva dell’area in cui il maggior numero di opzioni scadrebbe senza valore.",
+    "source": "Academic overview in option expiry effects; practitioner methodology (CBOE data)."
+  },
+
+  "F3O_GammaATM_info": {
+    "title": "Γ ATM",
+    "what": "Gamma aggregata delle opzioni at-the-money.",
+    "how": "Quantifica la sensibilità complessiva del mercato a piccoli movimenti di prezzo; valori elevati indicano potenziale reattività dei dealer.",
+    "source": "Hull (2018) *Options, Futures and Other Derivatives*."
+  },
+
+  "F3O_VegaATM_info": {
+    "title": "Vega ATM",
+    "what": "Vega aggregata delle opzioni at-the-money.",
+    "how": "Misura quanto cambia il valore complessivo delle opzioni se la volatilità implicita varia di 1 punto percentuale.",
+    "source": "Hull (2018); academic option Greeks literature."
+  },
+
+  "F3O_FlowNet_info": {
+    "title": "Flussi netti ($)",
+    "what": "Saldo netto tra acquisti e vendite di opzioni espresso in valore monetario.",
+    "how": "Flusso positivo = domanda di rischio (acquisti di call); negativo = copertura o vendita di volatilità.",
+    "source": "CBOE Market Data Research; Lee & Ready (1991) *Trade Classification Algorithm*, Journal of Finance."
+  },
+
+  "F3O_DeltaImb_info": {
+    "title": "Δ Imbalance",
+    "what": "Squilibrio di delta tra ordini di acquisto e vendita di opzioni.",
+    "how": "Serve a stimare il bias direzionale del flusso: delta positivo → propensione rialzista; negativo → difensiva.",
+    "source": "Hasbrouck, J. (2007) *Empirical Market Microstructure*; institutional flow studies."
+  },
+
+  "F3O_TopPrints_info": {
+    "title": "Top Prints (blocchi opzioni)",
+    "what": "Principali operazioni per volume o valore vega sulle opzioni.",
+    "how": "Evidenziano strike e scadenze più negoziati, spesso legati a strategie istituzionali di copertura o posizione direzionale.",
+    "source": "CBOE Large Trade Reports; academic references su block trading e option flows."
+  }
+}
