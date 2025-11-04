@@ -660,22 +660,18 @@
             <div class="metrics-drawer-desktop__content-title">${firstMetric.label || firstMetric.key || '—'}</div>
           </div>
           <div class="metrics-drawer-desktop__content-body">
-            <div class="metric-tabs-container" data-key="${firstMetric.key || ''}">
-              <nav class="metric-tabs-nav" role="tablist">
-                <button class="metric-tab active" role="tab" data-tab="what" aria-selected="true">What</button>
-                <button class="metric-tab" role="tab" data-tab="how" aria-selected="false">How</button>
-                <button class="metric-tab" role="tab" data-tab="source" aria-selected="false">Source</button>
-              </nav>
-              <div class="metric-tabs-content">
-                <div class="metric-tab-panel active" data-panel="what" role="tabpanel">
-                  <div class="metric-tab-panel-content">${firstMetric.glossary.what || '—'}</div>
-                </div>
-                <div class="metric-tab-panel" data-panel="how" role="tabpanel" hidden>
-                  <div class="metric-tab-panel-content">${firstMetric.glossary.how || '—'}</div>
-                </div>
-                <div class="metric-tab-panel" data-panel="source" role="tabpanel" hidden>
-                  <div class="metric-tab-panel-content">${firstMetric.glossary.source || '—'}</div>
-                </div>
+            <div class="metric-content-desktop" data-key="${firstMetric.key || ''}">
+              <div class="metric-content-section">
+                <h3 class="metric-content-section__title">What</h3>
+                <div class="metric-content-section__body">${firstMetric.glossary.what || '—'}</div>
+              </div>
+              <div class="metric-content-section">
+                <h3 class="metric-content-section__title">How</h3>
+                <div class="metric-content-section__body">${firstMetric.glossary.how || '—'}</div>
+              </div>
+              <div class="metric-content-section">
+                <h3 class="metric-content-section__title">Source</h3>
+                <div class="metric-content-section__body">${firstMetric.glossary.source || '—'}</div>
               </div>
             </div>
             ${books.length > 0 ? `
@@ -907,11 +903,11 @@
     const metricsList = container.querySelector('.metrics-drawer-desktop__metrics-list');
     const contentTitle = container.querySelector('.metrics-drawer-desktop__content-title');
     const contentBody = container.querySelector('.metrics-drawer-desktop__content-body');
-    const tabsContainer = container.querySelector('.metric-tabs-container');
+    const contentContainer = container.querySelector('.metric-content-desktop');
 
     // Store per accesso globale
     if (!container._metricsData) {
-      container._metricsData = { metricsWithGlossary, metricsByCategory, contentTitle, contentBody, tabsContainer };
+      container._metricsData = { metricsWithGlossary, metricsByCategory, contentTitle, contentBody, contentContainer };
     }
 
     // Click su categoria - usa delegation
@@ -941,7 +937,7 @@
       // Select first metric
       if (metrics.length > 0) {
         const firstMetric = metrics[0];
-        updateMetricContent(firstMetric, contentTitle, contentBody, tabsContainer);
+        updateMetricContent(firstMetric, contentTitle, contentBody, contentContainer);
         const firstItem = metricsList.querySelector('.metric-item');
         if (firstItem) {
           firstItem.classList.add('active');
@@ -961,14 +957,14 @@
       console.log('[UI Runtime] Click metrica nel drawer:', key);
       const metric = metricsWithGlossary.find(m => m.key === key);
       
-      if (metric && contentTitle && contentBody && tabsContainer) {
+      if (metric && contentTitle && contentBody && contentContainer) {
         console.log('[UI Runtime] Aggiorna contenuto per:', key);
         // Update active metric
         container.querySelectorAll('.metric-item').forEach(m => m.classList.remove('active'));
         metricItem.classList.add('active');
         
         // Update content
-        updateMetricContent(metric, contentTitle, contentBody, tabsContainer);
+        updateMetricContent(metric, contentTitle, contentBody, contentContainer);
       }
     });
     
@@ -976,7 +972,7 @@
   }
 
   // Update metric content per desktop
-  function updateMetricContent(metric, contentTitle, contentBody, tabsContainer) {
+  function updateMetricContent(metric, contentTitle, contentBody, contentContainer) {
     const books = RECOMMENDED_BOOKS[metric.category || 'altro'] || [];
     const booksHtml = books.map(book => `
       <div class="recommended-book">
@@ -989,33 +985,16 @@
 
     contentTitle.textContent = metric.label || metric.key;
     
-    tabsContainer.setAttribute('data-key', metric.key);
-    const whatPanel = tabsContainer.querySelector('[data-panel="what"]');
-    const howPanel = tabsContainer.querySelector('[data-panel="how"]');
-    const sourcePanel = tabsContainer.querySelector('[data-panel="source"]');
-    
-    if (whatPanel) whatPanel.querySelector('.metric-tab-panel-content').textContent = metric.glossary.what || '—';
-    if (howPanel) howPanel.querySelector('.metric-tab-panel-content').textContent = metric.glossary.how || '—';
-    if (sourcePanel) sourcePanel.querySelector('.metric-tab-panel-content').textContent = metric.glossary.source || '—';
-    
-    // Reset to What tab
-    const tabs = tabsContainer.querySelectorAll('.metric-tab');
-    const panels = tabsContainer.querySelectorAll('.metric-tab-panel');
-    tabs.forEach(t => {
-      t.classList.remove('active');
-      t.setAttribute('aria-selected', 'false');
-    });
-    tabs[0].classList.add('active');
-    tabs[0].setAttribute('aria-selected', 'true');
-    panels.forEach(p => {
-      if (p.getAttribute('data-panel') === 'what') {
-        p.classList.add('active');
-        p.removeAttribute('hidden');
-      } else {
-        p.classList.remove('active');
-        p.setAttribute('hidden', '');
-      }
-    });
+    if (contentContainer) {
+      contentContainer.setAttribute('data-key', metric.key);
+      const whatSection = contentContainer.querySelector('.metric-content-section:nth-child(1) .metric-content-section__body');
+      const howSection = contentContainer.querySelector('.metric-content-section:nth-child(2) .metric-content-section__body');
+      const sourceSection = contentContainer.querySelector('.metric-content-section:nth-child(3) .metric-content-section__body');
+      
+      if (whatSection) whatSection.textContent = metric.glossary.what || '—';
+      if (howSection) howSection.textContent = metric.glossary.how || '—';
+      if (sourceSection) sourceSection.textContent = metric.glossary.source || '—';
+    }
 
     // Update books
     const booksContainer = contentBody.querySelector('.recommended-books');
@@ -1035,11 +1014,6 @@
       }
     } else if (booksContainer) {
       booksContainer.remove();
-    }
-    
-    // Bind tabs
-    if (UI.bindMetricTabs) {
-      UI.bindMetricTabs(contentBody, metric.key);
     }
   }
 
@@ -1103,7 +1077,7 @@
       return;
     }
 
-    const { metricsWithGlossary, metricsByCategory, contentTitle, contentBody, tabsContainer } = containerData;
+    const { metricsWithGlossary, metricsByCategory, contentTitle, contentBody, contentContainer } = containerData;
     const metric = metricsWithGlossary.find(m => m.key === metricKey);
     
     if (!metric) {
@@ -1129,12 +1103,12 @@
           metricItem.click();
         } else {
           console.warn('[UI Runtime] Metrica item non trovato, aggiorno contenuto direttamente');
-          updateMetricContent(metric, contentTitle, contentBody, tabsContainer);
+          updateMetricContent(metric, contentTitle, contentBody, contentContainer);
         }
       }, 200);
     } else {
       console.warn('[UI Runtime] Categoria item non trovato, aggiorno contenuto direttamente');
-      updateMetricContent(metric, contentTitle, contentBody, tabsContainer);
+      updateMetricContent(metric, contentTitle, contentBody, contentContainer);
     }
   }
 
