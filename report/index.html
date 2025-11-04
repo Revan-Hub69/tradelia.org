@@ -4,8 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Report Framework Accademico AI, Tradelia Swing Master 5.0" />
-  <title>TRADELIA • AI+ — Report</title>
+  <title>TRADELIA • AI — Report</title>
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/report/assets/css/drawer-mobile-fix.css" />
   <style>
     html, body { 
       height: 100%; 
@@ -147,35 +148,7 @@
       isolation: isolate;
     }
     
-    @media (max-width: 768px) {
-      .site-footer {
-        padding: 2.5rem 1rem 2rem 1rem; /* Padding orizzontale per mobile */
-        margin-top: 2rem;
-        margin-bottom: 0;
-        z-index: 2; /* Mantieni sotto anche su mobile */
-        min-height: auto;
-        position: relative; /* Assicura che sia nel flow del documento */
-        width: 100%;
-        box-sizing: border-box;
-        /* Assicura che footer sia visibile nel viewport */
-        flex-shrink: 0;
-      }
-      
-      /* main già ha flex: 1 e padding-bottom gestito sopra */
-      main {
-        padding-bottom: 2rem; /* Spazio sufficiente per footer su mobile */
-      }
-      
-      .ftr-grid {
-        gap: 2rem; /* Ridotto da 2.5rem per mobile */
-      }
-      
-      .ftr-bottom {
-        margin-top: 2rem;
-        padding-top: 1.5rem;
-        gap: 0.75rem;
-      }
-    }
+    /* Footer mobile gestito in drawer-mobile-fix.css */
     
     .site-footer::before {
       content: "";
