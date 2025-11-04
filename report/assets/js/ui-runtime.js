@@ -926,11 +926,30 @@
       }
     };
 
-    // Aggiungi listener per click e touchstart (mobile)
-    container.addEventListener('click', handleContainerClick, { passive: false });
+    // Aggiungi listener per click - usa delegation per mobile e desktop
+    container.addEventListener('click', handleContainerClick, { passive: false, capture: false });
+    
+    // Per mobile: aggiungi anche touchstart per migliorare la risposta
+    // ma solo se non è già stato gestito da swipe
+    let touchStartTime = 0;
+    let touchStartTarget = null;
+    
+    container.addEventListener('touchstart', (e) => {
+      touchStartTime = Date.now();
+      touchStartTarget = e.target;
+    }, { passive: true });
+    
     container.addEventListener('touchend', (e) => {
-      // Per mobile, usa touchend per evitare conflitti con swipe
-      handleContainerClick(e);
+      // Solo se è un tap veloce (non swipe) e target stesso
+      const touchDuration = Date.now() - touchStartTime;
+      if (touchDuration < 300 && e.target === touchStartTarget) {
+        // Evita doppia esecuzione se click è già stato gestito
+        setTimeout(() => {
+          if (!e.defaultPrevented) {
+            handleContainerClick(e);
+          }
+        }, 50);
+      }
     }, { passive: false });
 
     // Swipe gesture per aprire drawer 2
