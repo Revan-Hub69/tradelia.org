@@ -173,14 +173,8 @@ function renderFooter(node, data) {
       e.stopPropagation();
       
       if (link.action === 'open-metrics-panel') {
-        const ui = window.__TradeliaUI;
-        const headerData = window.__headerTickerData || data;
-        
-        if (ui?.openMetricsDrawer) {
-          ui.openMetricsDrawer(headerData);
-        } else {
-          Logger.warn('HeaderTicker', 'openMetricsDrawer non disponibile');
-        }
+        // Non fare nulla per ora - popup singoli invece di drawer
+        Logger.debug('HeaderTicker', 'Azione open-metrics-panel ignorata (usa popup singoli)');
       }
     });
     
@@ -201,13 +195,12 @@ function handleMetricClick(metricKey) {
       return;
     }
     
-    // Usa drawer unificato (mobile e desktop)
-    if (ui?.openMetricsDrawerFromMetric) {
-      ui.openMetricsDrawerFromMetric(metricKey);
-    } else if (ui?.openMetricsDrawer) {
-      ui.openMetricsDrawer(headerData);
+    // Usa popup semplice
+    if (ui?.openMetricPopup) {
+      const allMetrics = headerData.metricsPanel || [];
+      ui.openMetricPopup(metricKey, allMetrics);
     } else {
-      Logger.warn('HeaderTicker', 'Drawer non disponibile');
+      Logger.warn('HeaderTicker', 'Popup non disponibile');
     }
   } catch (err) {
     Logger.error('HeaderTicker', 'Errore gestione click metrica', err);
