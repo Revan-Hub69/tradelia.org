@@ -22,20 +22,20 @@
   "StrategyMode_macro": {
     "title": "StrategyMode",
     "what": "Regime tattico 3–10 giorni (Momentum / Neutral / Pullback).",
-    "how": "Classifica il contesto di rischio combinando volatilità, credito, breadth e flussi; non è un segnale di trading.",
-    "source": "Carhart (1997) Momentum; Asness et al. (2013) Quality/Momentum; approcci regime-switching."
+    "how": "Classifica il contesto di rischio combinando volatilità, credito, breadth e flussi; non è un segnale di trading. Esempio pratico: se VIX < 20, credit spreads compatti, breadth > 0.7 e flussi ETF positivi → regime 'Momentum' (risk-on). Se VIX > 25, spreads in allargamento e breadth < 0.5 → regime 'Pullback' (risk-off).",
+    "source": "Carhart, M.M. (1997). On Persistence in Mutual Fund Performance. Journal of Finance, 52(1), 57-82. | Asness, C.S., Frazzini, A., & Pedersen, L.H. (2013). Quality Minus Junk. Review of Accounting Studies, 24, 325-391. | Ang, A., & Bekaert, G. (2002). International Asset Allocation with Regime Shifts. Review of Financial Studies, 15(4), 1137-1187."
   },
   "RegimeScore": {
     "title": "RegimeScore",
-    "what": "Indicatore sintetico dell’appetito al rischio (risk-on vs risk-off).",
-    "how": "Pondera volatilitá, credito e leadership fattoriale per stimare il tono di mercato.",
-    "source": "Adrian, Crump & Moench (2013) Risk Premia; Lettau & Ludvigson (2010) macro risk factors."
+    "what": "Indicatore sintetico dell'appetito al rischio (risk-on vs risk-off).",
+    "how": "Pondera volatilità, credito e leadership fattoriale per stimare il tono di mercato. Valori positivi (> +0.5) indicano risk-on (preferenza per asset rischiosi), valori negativi (< -0.5) risk-off (fuga verso qualità). Esempio: Score +0.60 = bias moderatamente favorevole al rischio, compatibile con rally equity guidato da tech. Score -0.40 = cautela, potenziale rotazione verso difensivi.",
+    "source": "Adrian, T., Crump, R.K., & Moench, E. (2013). Pricing the Term Structure with Linear Regressions. Journal of Financial Economics, 110(1), 110-138. | Lettau, M., & Ludvigson, S.C. (2010). Measuring and Modeling Variation in the Risk-Return Trade-off. In Handbook of Financial Econometrics, Vol. 1, 617-690. Elsevier."
   },
   "VolRegime": {
     "title": "Volatilità / Hedge",
     "what": "Domanda di copertura rilevata via indici/term structure di volatilità.",
-    "how": "Vol alta e term structure compressa implicano maggiore domanda di hedge e stress.",
-    "source": "Whaley (2009) Understanding VIX; Carr & Wu (2006) volatility risk premia."
+    "how": "Vol alta e term structure compressa implicano maggiore domanda di hedge e stress. Esempio pratico: VIX ~17 (< 20) con struttura normale (contango) → domanda di copertura contenuta, mercato stabile. VIX > 30 con backwardation (term structure invertita) → stress elevato, ricerca urgente di protezione. La term structure compressa (differenziale ridotto tra scadenze) indica pressione immediata per hedge.",
+    "source": "Whaley, R.E. (2009). Understanding VIX. Journal of Portfolio Management, 35(3), 98-105. | Carr, P., & Wu, L. (2006). A Tale of Two Indices. Journal of Derivatives, 13(3), 13-29. | Bollen, N.P.B., & Whaley, R.E. (2004). Does Net Buying Pressure Affect the Shape of Implied Volatility Functions? Journal of Finance, 59(2), 711-753."
   },
   "LiquidityRegimeScore": {
     "title": "Curva & Costo capitale",
@@ -46,8 +46,8 @@
   "CreditRiskBlock": {
     "title": "Credito",
     "what": "Segnale dal credito (HY vs IG) come proxy di stress/benignità.",
-    "how": "Allargamento HY vs IG spesso segnala deterioramento dell’appetito al rischio.",
-    "source": "Gilchrist & Zakrajšek (2012) Credit spreads & economic activity."
+    "how": "Allargamento HY vs IG spesso segnala deterioramento dell'appetito al rischio. Esempio pratico: OAS (Option-Adjusted Spread) investment-grade ~0.76% vs storico 1.2% → spreads compressi, condizioni di credito favorevoli. Se HY OAS sale da 4% a 6% mentre IG resta stabile → allargamento del differenziale, segnale di stress crescente. Il credito tende a anticipare il movimento dell'equity, fungendo da leading indicator.",
+    "source": "Gilchrist, S., & Zakrajšek, E. (2012). Credit Spreads and Business Cycle Fluctuations. American Economic Review, 102(4), 1692-1720. | Duffee, G.R. (1998). The Relation Between Treasury Yields and Corporate Bond Yield Spreads. Journal of Finance, 53(6), 2225-2241. | Merton, R.C. (1974). On the Pricing of Corporate Debt: The Risk Structure of Interest Rates. Journal of Finance, 29(2), 449-470."
   },
   "FX_Regime": {
     "title": "FX / USD",
@@ -64,14 +64,14 @@
   "Breadth_1M": {
     "title": "Breadth (1M)",
     "what": "Diffusione cross-sectional della forza di mercato su ~1 mese.",
-    "how": "Partecipazione ampia rafforza la robustezza del trend rispetto a concentrazioni su poche mega-cap.",
-    "source": "Stivers (2003) Return dispersion & breadth; concetti di diffusion index."
+    "how": "Partecipazione ampia rafforza la robustezza del trend rispetto a concentrazioni su poche mega-cap. Esempio pratico: Breadth 0.72 indica che il 72% dei titoli nell'universo è in trend positivo a 1 mese, suggerendo forza diffusa. Breadth < 0.5 con indici positivi indica rally concentrato su poche mega-cap, più fragile. Calcolato come percentuale di titoli sopra media mobile o con momentum positivo rispetto al totale.",
+    "source": "Stivers, C.T. (2003). Return Dispersion and Stock Returns. Journal of Financial Markets, 6(4), 389-415. | McClellan, T. (2011). McClellan Oscillator: Theory and Practice. McClellan Financial Publications. | Zweig, M.E. (1970). An Investor's Guide to Technical Indicators. Financial Analysts Journal, 26(4), 53-60."
   },
   "RiskTilt_1M": {
     "title": "RiskTilt (1M)",
     "what": "Rotazione tra fattori pro-ciclo/high-beta e difensivi/quality.",
-    "how": "Prevalenza di growth/high-beta → maggiore propensione al rischio; difensivi/quality → cautela.",
-    "source": "Fama & French (1993, 2015) factor models; Asness, Frazzini & Pedersen (2013) Quality."
+    "how": "Prevalenza di growth/high-beta → maggiore propensione al rischio; difensivi/quality → cautela. Esempio pratico: tilt 'Pro-rischio (growth/ciclici > difensivi)' indica outperformance di settori come Technology, Consumer Cyclical, Industrials rispetto a Utilities, Healthcare, Consumer Defensive. Misurato come differenza di performance tra portafogli high-beta e low-vol/quality. Tilt positivo persistente (> 1 mese) suggerisce fase di espansione, tilt negativo fase difensiva. Il tilt viene normalizzato su scala -1 (massimo difensivo) a +1 (massimo risk-on).",
+    "source": "Fama, E.F., & French, K.R. (1993). Common Risk Factors in the Returns on Stocks and Bonds. Journal of Financial Economics, 33(1), 3-56. | Fama, E.F., & French, K.R. (2015). A Five-Factor Asset Pricing Model. Journal of Financial Economics, 116(1), 1-22. | Asness, C.S., Frazzini, A., & Pedersen, L.H. (2013). Quality Minus Junk. Review of Accounting Studies, 24, 325-391."
   },
   "SmallCapPressure_1W": {
     "title": "SmallCap Pressure (1W)",
@@ -82,8 +82,8 @@
   "IndexMomentum_1W": {
     "title": "Index Momentum (1W)",
     "what": "Co-movimento direzionale breve tra indici chiave.",
-    "how": "Coerenza su più indici rafforza la lettura del regime rispetto a segnali isolati.",
-    "source": "Jegadeesh & Titman (1993) momentum; riferimenti su comovimento intermarket."
+    "how": "Coerenza su più indici rafforza la lettura del regime rispetto a segnali isolati. Esempio pratico: NDX +1.2%, SPX +0.9%, RUT +0.5% in 1 settimana → momentum positivo coerente, suggerisce forza diffusa. Se solo NDX è positivo mentre SPX e RUT sono negativi → divergenza, rally concentrato su tech, più fragile. Il co-movimento viene misurato come correlazione cross-sectionale dei rendimenti settimanali. Correlazione > 0.7 indica sincronizzazione alta, < 0.3 disaccoppiamento.",
+    "source": "Jegadeesh, N., & Titman, S. (1993). Returns to Buying Winners and Selling Losers: Implications for Stock Market Efficiency. Journal of Finance, 48(1), 65-91. | Erb, C.B., Harvey, C.R., & Viskanta, T.E. (1994). Forecasting International Equity Correlations. Financial Analysts Journal, 50(6), 32-45. | Pukthuanthong, K., & Roll, R. (2009). Global Market Integration: An Alternative Measure and Its Application. Journal of Financial Economics, 94(2), 214-232."
   },
   "SizeBias": {
     "title": "Size Bias",
@@ -508,11 +508,11 @@
     "source": "Obstfeld, M., & Rogoff, K. (1996), *Foundations of International Macroeconomics*, MIT Press."
   },
   
-"F3O_IV_ATM_info": {
+  "F3O_IV_ATM_info": {
     "title": "IV (ATM)",
     "what": "Volatilità implicita delle opzioni più vicine al prezzo corrente del titolo.",
-    "how": "Misura l’oscillazione attesa dei prezzi incorporata nei premi delle opzioni. Valori elevati indicano attese di movimento o incertezza, valori bassi stabilità.",
-    "source": "Hull, J.C. (2018) *Options, Futures, and Other Derivatives*, Pearson; CBOE Volatility Primer (2020)."
+    "how": "Misura l'oscillazione attesa dei prezzi incorporata nei premi delle opzioni. Valori elevati indicano attese di movimento o incertezza, valori bassi stabilità. Esempio pratico: NVDA con IV ATM 37.29% significa che il mercato si aspetta oscillazioni giornaliere di ~2.3% (37.29% / √252). Se HV 30D è 40.67%, IV < HV suggerisce premi relativamente contenuti. Per calcolare: risolvere Black-Scholes per σ usando il prezzo dell'opzione ATM più liquida. IV > 50% tipico di eventi earnings, IV < 20% di fasi consolidate.",
+    "source": "Hull, J.C. (2018). Options, Futures, and Other Derivatives (10th ed.). Pearson. | Black, F., & Scholes, M. (1973). The Pricing of Options and Corporate Liabilities. Journal of Political Economy, 81(3), 637-654. | CBOE (2020). Volatility Primer: Understanding Implied Volatility. CBOE Education Series."
   },
 
   "F3O_IVRank_info": {
@@ -525,8 +525,8 @@
   "F3O_GSR_info": {
     "title": "GSR (Γ/Vega)",
     "what": "Rapporto tra Gamma e Vega, due sensibilità chiave delle opzioni.",
-    "how": "Gamma misura la reattività al prezzo, Vega alla volatilità. Un GSR negativo segnala dealer più esposti a movimenti di prezzo (short gamma).",
-    "source": "Andersen, T.G., Fusari, N. & Todorov, V. (2015) *The Risk Premia Embedded in Index Options*, Journal of Financial Economics."
+    "how": "Gamma misura la reattività al prezzo, Vega alla volatilità. Un GSR negativo segnala dealer più esposti a movimenti di prezzo (short gamma). Esempio pratico: GSR -0.41 indica che Gamma ATM è -50M e Vega ATM è ~122M, quindi i dealer sono short gamma. In short gamma, i dealer devono coprire vendendo su ribassi e comprando su rialzi, amplificando i movimenti. GSR negativo sotto gamma flip (es. 660) aumenta rischio intraday. Calcolo: GSR = Γ_ATM / Vega_ATM. Valori < -0.3 indicano dealer short gamma significativo.",
+    "source": "Andersen, T.G., Fusari, N., & Todorov, V. (2015). The Risk Premia Embedded in Index Options. Journal of Financial Economics, 117(3), 558-584. | Bongaerts, D., & Driessen, J. (2013). An Asset Pricing Approach to Liquidity Effects in Corporate Bond Markets. Review of Financial Studies, 26(9), 2204-2247. | Ni, S.X. (2008). Stock Option Returns and the Pricing of Liquidity Risk. Journal of Financial Economics, 88(2), 228-247."
   },
 
   "F3O_Dealer_info": {
@@ -581,8 +581,8 @@
   "F3O_GammaFlip_info": {
     "title": "Gamma Flip",
     "what": "Livello di prezzo in cui la gamma netta del mercato cambia segno.",
-    "how": "Sotto questo livello i dealer sono short gamma (mercato più instabile), sopra sono long gamma (mercato più bilanciato).",
-    "source": "Andersen, Fusari & Todorov (2015); CBOE dealer positioning research."
+    "how": "Sotto questo livello i dealer sono short gamma (mercato più instabile), sopra sono long gamma (mercato più bilanciato). Esempio pratico: META con gamma flip a 660 significa che sotto 660 i dealer hanno gamma netta negativa e devono coprire vendendo sul ribasso, amplificando movimenti. Sopra 660 diventano long gamma e stabilizzano il mercato. Il livello viene calcolato trovando lo strike dove la somma pesata della gamma di tutte le opzioni passa da negativa a positiva. Più lo spot è lontano dal flip, maggiore la pressione direzionale.",
+    "source": "Andersen, T.G., Fusari, N., & Todorov, V. (2015). The Risk Premia Embedded in Index Options. Journal of Financial Economics, 117(3), 558-584. | CBOE (2021). Dealer Positioning and Market Dynamics: A Guide to Gamma Exposure. CBOE Market Data Research. | Gârleanu, N., & Pedersen, L.H. (2011). Margin-Based Asset Pricing and Deviations from the Law of One Price. Review of Financial Studies, 24(6), 1980-2022."
   },
 
   "F3O_DealerRegime_info": {

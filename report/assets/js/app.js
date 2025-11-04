@@ -253,10 +253,24 @@ async function mountHeaderTicker(header) {
   // Montaggio moduli F* (manifest)
   // -----------------------------
   async function mountModules(reportId) {
-    let manifest = { order: ['F1B', 'F2', 'F3o', 'F3', 'F4', 'F5', 'F5B', 'F6'] };
+    // Rimossi temporaneamente F1B, F2, F3o, F3 - si montano sotto header ticker
+    let manifest = { order: ['F4', 'F5', 'F5B', 'F6'] };
     try {
       const m = await fetchJSON(`/report/reports/${reportId}/manifest.json`);
-      if (Array.isArray(m?.order) && m.order.length) manifest = m;
+      if (Array.isArray(m?.order) && m.order.length) {
+        // Filtra solo i moduli che vogliamo mostrare (escludi F1B, F2, F3o, F3)
+        const excluded = new Set(['f1b', 'f2', 'f3o', 'f3']);
+        const filteredOrder = m.order
+          .map(modId => String(modId).trim())
+          .filter(Boolean)
+          .filter(modId => !excluded.has(modId.toLowerCase()));
+
+        if (filteredOrder.length) {
+          manifest = { order: filteredOrder };
+        } else {
+          console.warn('[App] Manifest filtrato ma vuoto, uso fallback default');
+        }
+      }
     } catch {
       console.warn('Manifest mancante, uso ordine di default.');
     }
