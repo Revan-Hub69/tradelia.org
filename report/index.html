@@ -8,50 +8,42 @@
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
   <link rel="stylesheet" href="/report/assets/css/drawer-mobile-fix.css" />
   <style>
+    /* ===== RESET & BASE ===== */
     html, body { 
       height: 100%; 
       margin: 0;
       padding: 0;
+      overflow-x: hidden; /* Previene scroll orizzontale */
     }
+    
     body { 
       display: flex; 
       flex-direction: column; 
       min-height: 100vh;
+      position: relative;
     }
     
-    /* container */
+    /* ===== CONTAINER ===== */
     .container { 
       max-width: 90rem; 
       margin-inline: auto; 
       padding-inline: 1rem; 
+      width: 100%;
     }
     
-    main { 
-      flex: 1; 
-      padding-top: 0; /* padding gestito dall'header-ticker-slot */
-      padding-bottom: 3rem; /* Spazio per evitare sovrapposizione con footer */
-      position: relative;
-      z-index: 1; /* Sotto header ticker ma sopra footer */
-    }
-    
-    @media (max-width: 768px) {
-      main {
-        padding-bottom: 2rem; /* Spazio sufficiente per footer */
-      }
-    }
-
-    /* ===== HEADER ===== */
+    /* ===== HEADER FIXED ===== */
     .hdr {
       position: fixed;
-      inset: 0 auto auto 0;
+      top: 0;
+      left: 0;
       right: 0;
       height: 64px;
-      z-index: 60;
+      z-index: 100; /* Sopra tutto tranne overlay */
       display: flex;
       align-items: center;
       background:
         linear-gradient(120deg,
-          color-mix(in oklab, var(--surface-card) 92%, transparent 0%) 0%,
+          color-mix(in oklab, var(--surface-card) 92%, transparent) 0%,
           color-mix(in oklab, var(--surface-card) 84%, var(--brand-400) 6%) 100%);
       border-bottom: 1px solid color-mix(in oklab, var(--br-card) 80%, transparent);
       box-shadow: 0 8px 28px oklab(0% 0 0 / 0.18);
@@ -105,16 +97,9 @@
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.7; transform: scale(1.1); }
     }
-    .brand--sm .brand-word { 
-      font-weight: 700; 
-    }
-    .brand--sm .brand-dot { 
-      width: 8px; 
-      height: 8px; 
-    }
-    .brand--sm .brand-suffix { 
-      font-weight: 700; 
-    }
+    .brand--sm .brand-word { font-weight: 700; }
+    .brand--sm .brand-dot { width: 8px; height: 8px; }
+    .brand--sm .brand-suffix { font-weight: 700; }
     a.brand { 
       transition: opacity .2s ease, transform .2s ease; 
       text-decoration: none;
@@ -129,26 +114,46 @@
       border-radius: 4px;
     }
 
+    /* ===== HEADER TICKER SLOT ===== */
+    #header-ticker-slot {
+      display: block;
+      width: 100%;
+      margin-top: 64px; /* Altezza header fisso */
+      margin-bottom: 1.5rem;
+      padding-top: 1.5rem;
+      position: relative;
+      z-index: 10; /* Sopra footer ma sotto header e overlay */
+      isolation: isolate;
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    main#app-root { 
+      flex: 1; 
+      width: 100%;
+      padding-top: 0;
+      padding-bottom: 4rem; /* Spazio per footer */
+      position: relative;
+      z-index: 1; /* Sotto header ticker ma sopra footer */
+      min-height: calc(100vh - 64px - 200px); /* Altezza minima per evitare collasso */
+    }
+
     /* ===== FOOTER ===== */
     .site-footer {
       position: relative;
-      z-index: 2; /* Sotto header (60) e ticker (10) - ASSOLUTAMENTE sotto */
+      z-index: 5; /* Sotto header (100) e ticker (10) */
       margin-top: auto;
       padding: 3.5rem 0 2.75rem;
       border-top: 1px solid color-mix(in oklab, var(--footer-br) 80%, transparent);
       background:
         radial-gradient(120% 160% at 50% 0%, color-mix(in oklab, var(--surface-card) 80%, var(--brand-500) 12%) 0%, transparent 65%),
         linear-gradient(180deg,
-          color-mix(in oklab, var(--footer-bg) 92%, transparent 0%) 0%,
+          color-mix(in oklab, var(--footer-bg) 92%, transparent) 0%,
           color-mix(in oklab, var(--footer-bg) 82%, transparent 45%),
           color-mix(in oklab, var(--surface-page) 88%, transparent 100%));
       color: color-mix(in oklab, var(--ink-soft) 94%, white 6%);
       overflow: hidden;
-      /* Assicura che non si sovrapponga mai all'header ticker */
       isolation: isolate;
     }
-    
-    /* Footer mobile gestito in drawer-mobile-fix.css */
     
     .site-footer::before {
       content: "";
@@ -172,6 +177,7 @@
         transparent);
       opacity: .6;
     }
+    
     .ftr-head {
       font-weight: 700;
       display: flex;
@@ -282,14 +288,8 @@
       stroke-linejoin: round; 
       flex-shrink: 0; 
     }
-    .ico-lg { 
-      width: 18px; 
-      height: 18px; 
-    }
-    .ico-xl { 
-      width: 20px; 
-      height: 20px; 
-    }
+    .ico-lg { width: 18px; height: 18px; }
+    .ico-xl { width: 20px; height: 20px; }
 
     /* ===== ANIMATIONS ===== */
     .animate-pulse {
@@ -299,10 +299,214 @@
       0%, 100% { opacity: 1; }
       50% { opacity: .4; }
     }
+
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      #header-ticker-slot {
+        margin-top: 64px;
+        margin-bottom: 1rem;
+        padding-top: 1rem;
+      }
+      
+      main#app-root {
+        padding-bottom: 3rem;
+        min-height: calc(100vh - 64px - 150px);
+      }
+      
+      .site-footer {
+        padding: 2rem 0 1.5rem;
+      }
+    }
+
+    /* ===== LEGAL OVERLAY ===== */
+    #legal-consent-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000; /* Sopra tutto */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    #legal-consent-overlay[hidden] {
+      display: none !important;
+    }
+
+    .legal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: oklab(0% 0 0 / 0.75);
+      backdrop-filter: blur(4px);
+    }
+
+    .legal-panel {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: min(90rem, 90vw);
+      max-height: 90vh;
+      background: var(--surface-card);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-panel);
+      box-shadow: var(--shadow-panel);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .legal-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--br-soft);
+      flex-shrink: 0;
+    }
+
+    .legal-title {
+      font-size: var(--fs-18);
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .legal-close {
+      font-size: var(--fs-12);
+    }
+
+    .legal-tabs {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-bottom: 1px solid var(--br-soft);
+      background: var(--surface-elev);
+      flex-shrink: 0;
+    }
+
+    .legal-tab {
+      padding: 0.5rem 1rem;
+      font-size: var(--fs-13);
+      font-weight: 600;
+      color: var(--ink-soft);
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .legal-tab:hover {
+      color: var(--ink);
+      background: color-mix(in oklab, var(--surface-card) 92%, transparent);
+    }
+
+    .legal-tab[aria-selected="true"] {
+      color: var(--ink);
+      background: var(--surface-card);
+      border-color: var(--br-card);
+      box-shadow: var(--shadow-card);
+    }
+
+    .legal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .legal-body section {
+      display: block;
+    }
+
+    .legal-body section[hidden] {
+      display: none !important;
+    }
+
+    .legal-body h4 {
+      font-size: var(--fs-16);
+      font-weight: 700;
+      color: var(--ink);
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .legal-body h4:first-child {
+      margin-top: 0;
+    }
+
+    .legal-body p {
+      font-size: var(--fs-14);
+      line-height: var(--lh-15);
+      color: var(--ink-soft);
+      margin-bottom: 1rem;
+    }
+
+    .legal-body ul {
+      font-size: var(--fs-14);
+      line-height: var(--lh-15);
+      color: var(--ink-soft);
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+    }
+
+    .legal-body li {
+      margin-bottom: 0.5rem;
+    }
+
+    .legal-body code {
+      font-family: var(--ff-mono);
+      font-size: var(--fs-13);
+      background: var(--surface-elev);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      border: 1px solid var(--br-soft);
+    }
+
+    .legal-ftr {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1.25rem 1.5rem;
+      border-top: 1px solid var(--br-soft);
+      background: var(--surface-elev);
+      flex-shrink: 0;
+    }
+
+    @media (min-width: 768px) {
+      .legal-ftr {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    .legal-btn {
+      font-size: var(--fs-13);
+      font-weight: 600;
+    }
+
+    @media (max-width: 640px) {
+      .legal-panel {
+        max-width: 100%;
+        max-height: 100vh;
+        border-radius: 0;
+      }
+      
+      .legal-hdr,
+      .legal-tabs,
+      .legal-ftr {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      
+      .legal-body {
+        padding: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- ===== HEADER ===== -->
+  <!-- ===== HEADER FIXED ===== -->
   <header class="hdr" role="banner">
     <div class="container w-full flex items-center justify-between">
       <a href="/index.html"
@@ -318,10 +522,13 @@
     </div>
   </header>
 
+  <!-- ===== HEADER TICKER SLOT ===== -->
   <div id="header-ticker-slot" class="container"></div>
+
+  <!-- ===== MAIN CONTENT ===== -->
   <main id="app-root" class="container" role="main"></main>
 
-  <!-- FOOTER -->
+  <!-- ===== FOOTER ===== -->
   <footer class="site-footer noprint mt-auto py-10">
     <div class="container">
       <section class="ftr-grid">
@@ -405,7 +612,7 @@
     </div>
   </footer>
 
-  <!-- LEGAL CONSENT OVERLAY (MiFID + Privacy) -->
+  <!-- ===== LEGAL CONSENT OVERLAY (MiFID + Privacy) ===== -->
   <div id="legal-consent-overlay" class="noprint" role="dialog" aria-modal="true" aria-labelledby="legal-consent-title" hidden>
     <div class="legal-backdrop" data-legal-dismiss></div>
     <div class="legal-panel" role="document">
@@ -443,7 +650,7 @@
           <h4>Limitazioni</h4>
           <ul>
             <li>Le informazioni non sostituiscono il giudizio dell'utente né la consulenza di un intermediario autorizzato.</li>
-            <li>L'uso è vietato laddove non conforme alle leggi locali.</li>
+            <li>L'use è vietato laddove non conforme alle leggi locali.</li>
           </ul>
         </section>
         <!-- PRIVACY -->
@@ -477,7 +684,7 @@
     </div>
   </div>
 
-  <!-- Runtime -->
+  <!-- ===== RUNTIME SCRIPTS ===== -->
   <script type="module" src="/report/assets/js/ui-runtime.js"></script>
   <script type="module" src="/report/assets/js/app.js"></script>
   <script>
@@ -490,7 +697,7 @@
       if (fy) fy.textContent = new Date().getFullYear();
 
       // ===== Legal overlay (MiFID + Privacy) =====
-      const KEY = 'tradelia-legal-ack-v2025-11'; // <— versiona per riforzare consenso
+      const KEY = 'tradelia-legal-ack-v2025-11';
       const overlay = document.getElementById('legal-consent-overlay');
       const btnAccept = document.getElementById('btn-accept-legal');
       const tabM = document.getElementById('tab-mifid');
@@ -554,4 +761,3 @@
   </script>
 </body>
 </html>
-
