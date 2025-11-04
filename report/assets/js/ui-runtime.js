@@ -443,6 +443,745 @@
   };
 
   // -----------------------------
+  // Drawer Metriche (con categorie) - Centralizzato
+  // -----------------------------
+  
+  // Categorie metriche
+  function getMetricCategory(key) {
+    const categories = {
+      'azienda': ['CompanyName', 'Ticker', 'ISIN', 'Sector', 'Venue'],
+      'prezzo': ['Price', 'ChangePct'],
+      'qualità': ['Freshness', 'ConfidenceFinal', 'DataIntegrity', 'FeedSync', 'State'],
+      'temporale': ['Start', 'End', 'UpdatedAt', 'Version']
+    };
+    
+    for (const [cat, keys] of Object.entries(categories)) {
+      if (keys.includes(key)) return cat;
+    }
+    return 'altro';
+  }
+
+  // Libri consigliati per categoria (hardcoded)
+  const RECOMMENDED_BOOKS = {
+    'azienda': [
+      { title: 'Analisi fondamentale', url: 'https://example.com/fundamental', author: 'Autore 1' },
+      { title: 'Valutazione aziende', url: 'https://example.com/valuation', author: 'Autore 2' }
+    ],
+    'prezzo': [
+      { title: 'Trading tecnico', url: 'https://example.com/technical', author: 'Autore 3' },
+      { title: 'Mercati finanziari', url: 'https://example.com/markets', author: 'Autore 4' }
+    ],
+    'qualità': [
+      { title: 'Data quality', url: 'https://example.com/data-quality', author: 'Autore 5' },
+      { title: 'Analisi dati', url: 'https://example.com/data-analysis', author: 'Autore 6' }
+    ],
+    'temporale': [
+      { title: 'Time series analysis', url: 'https://example.com/time-series', author: 'Autore 7' }
+    ],
+    'altro': [
+      { title: 'Finanza generale', url: 'https://example.com/finance', author: 'Autore 8' }
+    ]
+  };
+
+  // Store globale per drawer metriche
+  let currentMetricsData = null;
+  let currentMetricsDrawer = null;
+
+  // Fetch glossario entry
+  async function fetchGlossaryEntry(key) {
+    try {
+      const res = await fetch('/report/assets/glossary.json', { cache: 'no-store' });
+      if (!res.ok) return null;
+      const json = await res.json();
+      return json[key] || null;
+    } catch {
+      return null;
+    }
+  }
+
+  // Apri drawer metriche (funzione principale)
+  async function openMetricsDrawer(data) {
+    const list = Array.isArray(data.metricsPanel) ? data.metricsPanel : [];
+    const isMobileView = isMobile();
+    
+    // Carica tutte le definizioni del glossario e aggiungi categoria
+    const metricsWithGlossary = await Promise.all(
+      list.map(async (m) => {
+        const g = await fetchGlossaryEntry(m.key);
+        const category = getMetricCategory(m.key);
+        return { ...m, glossary: g || {}, category };
+      })
+    );
+
+    // Raggruppa metriche per categoria
+    const metricsByCategory = {};
+    metricsWithGlossary.forEach(m => {
+      if (!metricsByCategory[m.category]) {
+        metricsByCategory[m.category] = [];
+      }
+      metricsByCategory[m.category].push(m);
+    });
+
+    const categories = ['azienda', 'prezzo', 'qualità', 'temporale', 'altro'].filter(cat => 
+      metricsByCategory[cat] && metricsByCategory[cat].length > 0
+    );
+
+    // Store globale per aprire da click su metrica
+    currentMetricsData = {
+      metricsWithGlossary,
+      metricsByCategory,
+      categories
+    };
+
+    // Mobile: doppio drawer con swipe
+    if (isMobileView) {
+      return openMobileMetricsDrawer(data, metricsWithGlossary, metricsByCategory, categories);
+    } else {
+      // Desktop: drawer 3 colonne
+      return openDesktopMetricsDrawer(data, metricsWithGlossary, metricsByCategory, categories);
+    }
+  }
+
+  // Mobile: doppio drawer con swipe
+  function openMobileMetricsDrawer(data, metricsWithGlossary, metricsByCategory, categories) {
+    const activeCategory = categories[0] || 'azienda';
+    const activeMetrics = metricsByCategory[activeCategory] || [];
+    
+    const categoryTabs = categories.map(cat => `
+      <button class="metric-category-tab ${cat === activeCategory ? 'active' : ''}" data-category="${cat}">
+        ${cat.charAt(0).toUpperCase() + cat.slice(1)}
+      </button>
+    `).join('');
+
+    const metricsList = activeMetrics.map((m, idx) => `
+      <div class="metric-list-item swipeable" data-metric-key="${m.key}" data-metric-index="${idx}">
+        <div class="metric-list-item__content">
+          <div class="metric-list-item__label">${m.label || m.key}</div>
+          <div class="metric-list-item__value">${m.value ?? '—'}</div>
+        </div>
+        <div class="metric-list-item__swipe-hint">→</div>
+      </div>
+    `).join('');
+
+    const body = `
+      <div class="metrics-drawer-mobile">
+        <div class="metrics-drawer-1 active">
+          <nav class="metric-category-tabs">
+            ${categoryTabs}
+          </nav>
+          <div class="metrics-list-container">
+            <div class="metrics-list" data-category="${activeCategory}">
+              ${metricsList}
+            </div>
+          </div>
+        </div>
+        <div class="metrics-drawer-2" id="metrics-drawer-2">
+          <div class="metrics-drawer-2__header">
+            <button class="metrics-drawer-2__back" aria-label="Torna all'elenco">←</button>
+            <div class="metrics-drawer-2__title"></div>
+          </div>
+          <div class="metrics-drawer-2__content"></div>
+        </div>
+      </div>
+    `;
+
+    openPanel({
+      title: 'Metriche header',
+      subtitle: data.meta?.auditPathId || '—',
+      panelSize: 'xl',
+      body: body
+    });
+
+    // Bind drawer mobile - aspetta che il DOM sia pronto
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const drawer = qs('.metrics-drawer-mobile');
+        if (drawer) {
+          setupMobileMetricsDrawer(metricsWithGlossary, metricsByCategory, categories);
+          resolve();
+        } else {
+          setTimeout(() => {
+            const drawer2 = qs('.metrics-drawer-mobile');
+            if (drawer2) {
+              setupMobileMetricsDrawer(metricsWithGlossary, metricsByCategory, categories);
+            }
+            resolve();
+          }, 100);
+        }
+      }, 100);
+    });
+  }
+
+  // Desktop: drawer 3 colonne
+  function openDesktopMetricsDrawer(data, metricsWithGlossary, metricsByCategory, categories) {
+    const firstCategory = categories[0] || 'azienda';
+    const firstCategoryMetrics = metricsByCategory[firstCategory] || [];
+    const firstMetric = firstCategoryMetrics[0] || metricsWithGlossary[0] || {};
+
+    const categoryList = categories.map(cat => `
+      <button class="metric-category-item ${cat === firstCategory ? 'active' : ''}" data-category="${cat}">
+        ${cat.charAt(0).toUpperCase() + cat.slice(1)}
+      </button>
+    `).join('');
+
+    const metricsList = firstCategoryMetrics.map(m => `
+      <button class="metric-item ${m.key === firstMetric.key ? 'active' : ''}" data-metric-key="${m.key}">
+        <div class="metric-item__label">${m.label || m.key}</div>
+        <div class="metric-item__value">${m.value ?? '—'}</div>
+      </button>
+    `).join('');
+
+    const books = RECOMMENDED_BOOKS[firstMetric.category || 'altro'] || [];
+    const booksHtml = books.map(book => `
+      <div class="recommended-book">
+        <a href="${book.url}" target="_blank" rel="noopener noreferrer" class="recommended-book__link">
+          <div class="recommended-book__title">${book.title}</div>
+          <div class="recommended-book__author">${book.author}</div>
+        </a>
+      </div>
+    `).join('');
+
+    const body = `
+      <div class="metrics-drawer-desktop">
+        <div class="metrics-drawer-desktop__categories">
+          <div class="metrics-drawer-desktop__section-title">Categorie</div>
+          <nav class="metrics-drawer-desktop__categories-list">
+            ${categoryList}
+          </nav>
+        </div>
+        <div class="metrics-drawer-desktop__metrics">
+          <div class="metrics-drawer-desktop__section-title">Metriche</div>
+          <div class="metrics-drawer-desktop__metrics-list" data-category="${firstCategory}">
+            ${metricsList}
+          </div>
+        </div>
+        <div class="metrics-drawer-desktop__content">
+          <div class="metrics-drawer-desktop__content-header">
+            <div class="metrics-drawer-desktop__content-title">${firstMetric.label || firstMetric.key || '—'}</div>
+          </div>
+          <div class="metrics-drawer-desktop__content-body">
+            <div class="metric-tabs-container" data-key="${firstMetric.key || ''}">
+              <nav class="metric-tabs-nav" role="tablist">
+                <button class="metric-tab active" role="tab" data-tab="what" aria-selected="true">What</button>
+                <button class="metric-tab" role="tab" data-tab="how" aria-selected="false">How</button>
+                <button class="metric-tab" role="tab" data-tab="source" aria-selected="false">Source</button>
+              </nav>
+              <div class="metric-tabs-content">
+                <div class="metric-tab-panel active" data-panel="what" role="tabpanel">
+                  <div class="metric-tab-panel-content">${firstMetric.glossary.what || '—'}</div>
+                </div>
+                <div class="metric-tab-panel" data-panel="how" role="tabpanel" hidden>
+                  <div class="metric-tab-panel-content">${firstMetric.glossary.how || '—'}</div>
+                </div>
+                <div class="metric-tab-panel" data-panel="source" role="tabpanel" hidden>
+                  <div class="metric-tab-panel-content">${firstMetric.glossary.source || '—'}</div>
+                </div>
+              </div>
+            </div>
+            ${books.length > 0 ? `
+              <div class="recommended-books">
+                <div class="recommended-books__title">Libri consigliati</div>
+                <div class="recommended-books__list">
+                  ${booksHtml}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+
+    openPanel({
+      title: 'Metriche header',
+      subtitle: data.meta?.auditPathId || '—',
+      panelSize: 'xl',
+      body: body
+    });
+
+    // Bind drawer desktop - aspetta che il DOM sia pronto
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const drawer = qs('.metrics-drawer-desktop');
+        if (drawer) {
+          currentMetricsDrawer = setupDesktopMetricsDrawer(metricsWithGlossary, metricsByCategory, categories);
+          resolve();
+        } else {
+          setTimeout(() => {
+            const drawer2 = qs('.metrics-drawer-desktop');
+            if (drawer2) {
+              currentMetricsDrawer = setupDesktopMetricsDrawer(metricsWithGlossary, metricsByCategory, categories);
+            }
+            resolve();
+          }, 100);
+        }
+      }, 50);
+    });
+  }
+
+  // Setup drawer mobile con swipe gesture
+  function setupMobileMetricsDrawer(metricsWithGlossary, metricsByCategory, categories) {
+    const container = qs('.metrics-drawer-mobile');
+    if (!container) {
+      console.warn('[UI Runtime] setupMobileMetricsDrawer: container non trovato');
+      return;
+    }
+
+    const drawer1 = container.querySelector('.metrics-drawer-1');
+    const drawer2 = container.querySelector('#metrics-drawer-2');
+    if (!drawer1 || !drawer2) {
+      console.warn('[UI Runtime] setupMobileMetricsDrawer: drawer1 o drawer2 non trovati');
+      return;
+    }
+
+    const metricsList = container.querySelector('.metrics-list');
+    const backBtn = drawer2.querySelector('.metrics-drawer-2__back');
+    const drawer2Title = drawer2.querySelector('.metrics-drawer-2__title');
+    const drawer2Content = drawer2.querySelector('.metrics-drawer-2__content');
+
+    if (!metricsList || !backBtn || !drawer2Title || !drawer2Content) {
+      console.warn('[UI Runtime] setupMobileMetricsDrawer: elementi non trovati');
+      return;
+    }
+
+    console.log('[UI Runtime] setupMobileMetricsDrawer: inizializzato');
+
+    // Tabs categoria - usa delegation
+    container.addEventListener('click', (e) => {
+      const tab = e.target.closest('.metric-category-tab');
+      if (!tab) return;
+      
+      e.preventDefault();
+      e.stopPropagation();
+      const category = tab.getAttribute('data-category');
+      console.log('[UI Runtime] Mobile - Click categoria:', category);
+      const metrics = metricsByCategory[category] || [];
+      
+      // Update active tab
+      container.querySelectorAll('.metric-category-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      
+      // Update metrics list
+      metricsList.setAttribute('data-category', category);
+      metricsList.innerHTML = metrics.map((m, idx) => `
+        <div class="metric-list-item swipeable" data-metric-key="${m.key}" data-metric-index="${idx}">
+          <div class="metric-list-item__content">
+            <div class="metric-list-item__label">${m.label || m.key}</div>
+            <div class="metric-list-item__value">${m.value ?? '—'}</div>
+          </div>
+          <div class="metric-list-item__swipe-hint">→</div>
+        </div>
+      `).join('');
+      
+      // Re-bind swipe gesture
+      setupSwipeGesture(container, metricsWithGlossary, drawer2, drawer2Title, drawer2Content);
+    });
+
+    // Swipe gesture per aprire drawer 2
+    setupSwipeGesture(container, metricsWithGlossary, drawer2, drawer2Title, drawer2Content);
+
+    // Back button
+    backBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('[UI Runtime] Mobile - Back button click');
+      drawer1.classList.add('active');
+      drawer2.classList.remove('active');
+    });
+  }
+
+  // Setup swipe gesture per mobile drawer
+  function setupSwipeGesture(container, metricsWithGlossary, drawer2, drawer2Title, drawer2Content) {
+    const drawer1 = container.querySelector('.metrics-drawer-1');
+    const listItems = container.querySelectorAll('.metric-list-item.swipeable');
+    
+    listItems.forEach(item => {
+      let startX = 0, startY = 0, isDragging = false;
+      
+      item.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        isDragging = true;
+      }, { passive: true });
+      
+      item.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const currentX = e.touches[0].clientX;
+        const currentY = e.touches[0].clientY;
+        const diffX = currentX - startX;
+        const diffY = currentY - startY;
+        
+        // Solo swipe orizzontale right
+        if (diffX > 0 && Math.abs(diffX) > Math.abs(diffY) && diffX > 50) {
+          e.preventDefault();
+          const key = item.getAttribute('data-metric-key');
+          const metric = metricsWithGlossary.find(m => m.key === key);
+          if (metric) {
+            openMetricDetail(metric, drawer2, drawer2Title, drawer2Content);
+            drawer1.classList.remove('active');
+            drawer2.classList.add('active');
+          }
+          isDragging = false;
+        }
+      }, { passive: false });
+      
+      item.addEventListener('touchend', () => {
+        isDragging = false;
+      }, { passive: true });
+    });
+  }
+
+  // Apri dettaglio metrica nel drawer 2
+  function openMetricDetail(metric, drawer2, drawer2Title, drawer2Content) {
+    const books = RECOMMENDED_BOOKS[metric.category || 'altro'] || [];
+    const booksHtml = books.map(book => `
+      <div class="recommended-book">
+        <a href="${book.url}" target="_blank" rel="noopener noreferrer" class="recommended-book__link">
+          <div class="recommended-book__title">${book.title}</div>
+          <div class="recommended-book__author">${book.author}</div>
+        </a>
+      </div>
+    `).join('');
+
+    drawer2Title.textContent = metric.label || metric.key;
+    drawer2Content.innerHTML = `
+      <div class="metric-tabs-container" data-key="${metric.key}">
+        <nav class="metric-tabs-nav" role="tablist">
+          <button class="metric-tab active" role="tab" data-tab="what" aria-selected="true">What</button>
+          <button class="metric-tab" role="tab" data-tab="how" aria-selected="false">How</button>
+          <button class="metric-tab" role="tab" data-tab="source" aria-selected="false">Source</button>
+        </nav>
+        <div class="metric-tabs-content">
+          <div class="metric-tab-panel active" data-panel="what" role="tabpanel">
+            <div class="metric-tab-panel-content">${metric.glossary.what || '—'}</div>
+          </div>
+          <div class="metric-tab-panel" data-panel="how" role="tabpanel" hidden>
+            <div class="metric-tab-panel-content">${metric.glossary.how || '—'}</div>
+          </div>
+          <div class="metric-tab-panel" data-panel="source" role="tabpanel" hidden>
+            <div class="metric-tab-panel-content">${metric.glossary.source || '—'}</div>
+          </div>
+        </div>
+      </div>
+      ${books.length > 0 ? `
+        <div class="recommended-books">
+          <div class="recommended-books__title">Libri consigliati</div>
+          <div class="recommended-books__list">
+            ${booksHtml}
+          </div>
+        </div>
+      ` : ''}
+    `;
+
+    // Bind tabs
+    if (UI.bindMetricTabs) {
+      UI.bindMetricTabs(drawer2Content, metric.key);
+    }
+
+    // Swipe left per tornare
+    let startX = 0;
+    drawer2Content.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+    }, { passive: true });
+
+    drawer2Content.addEventListener('touchmove', (e) => {
+      const currentX = e.touches[0].clientX;
+      const diffX = currentX - startX;
+      if (diffX < -50) {
+        e.preventDefault();
+        const drawer1 = qs('.metrics-drawer-1');
+        const drawer2 = qs('#metrics-drawer-2');
+        if (drawer1 && drawer2) {
+          drawer1.classList.add('active');
+          drawer2.classList.remove('active');
+        }
+      }
+    }, { passive: false });
+  }
+
+  // Setup drawer desktop 3 colonne
+  function setupDesktopMetricsDrawer(metricsWithGlossary, metricsByCategory, categories) {
+    const container = qs('.metrics-drawer-desktop');
+    if (!container) return container;
+
+    const categoryItems = container.querySelectorAll('.metric-category-item');
+    const metricsList = container.querySelector('.metrics-drawer-desktop__metrics-list');
+    const contentTitle = container.querySelector('.metrics-drawer-desktop__content-title');
+    const contentBody = container.querySelector('.metrics-drawer-desktop__content-body');
+    const tabsContainer = container.querySelector('.metric-tabs-container');
+
+    // Store per accesso globale
+    if (!container._metricsData) {
+      container._metricsData = { metricsWithGlossary, metricsByCategory, contentTitle, contentBody, tabsContainer };
+    }
+
+    // Click su categoria - usa delegation
+    container.addEventListener('click', (e) => {
+      const catItem = e.target.closest('.metric-category-item');
+      if (!catItem) return;
+      
+      e.preventDefault();
+      e.stopPropagation();
+      const category = catItem.getAttribute('data-category');
+      console.log('[UI Runtime] Click categoria:', category);
+      const metrics = metricsByCategory[category] || [];
+      
+      // Update active category
+      categoryItems.forEach(c => c.classList.remove('active'));
+      catItem.classList.add('active');
+      
+      // Update metrics list
+      metricsList.setAttribute('data-category', category);
+      metricsList.innerHTML = metrics.map(m => `
+        <button class="metric-item" data-metric-key="${m.key}">
+          <div class="metric-item__label">${m.label || m.key}</div>
+          <div class="metric-item__value">${m.value ?? '—'}</div>
+        </button>
+      `).join('');
+      
+      // Select first metric
+      if (metrics.length > 0) {
+        const firstMetric = metrics[0];
+        updateMetricContent(firstMetric, contentTitle, contentBody, tabsContainer);
+        const firstItem = metricsList.querySelector('.metric-item');
+        if (firstItem) {
+          firstItem.classList.add('active');
+          console.log('[UI Runtime] Prima metrica selezionata:', firstMetric.key);
+        }
+      }
+    });
+
+    // Bind metric items - usa delegation
+    container.addEventListener('click', (e) => {
+      const metricItem = e.target.closest('.metric-item');
+      if (!metricItem) return;
+      
+      e.preventDefault();
+      e.stopPropagation();
+      const key = metricItem.getAttribute('data-metric-key');
+      console.log('[UI Runtime] Click metrica nel drawer:', key);
+      const metric = metricsWithGlossary.find(m => m.key === key);
+      
+      if (metric && contentTitle && contentBody && tabsContainer) {
+        console.log('[UI Runtime] Aggiorna contenuto per:', key);
+        // Update active metric
+        container.querySelectorAll('.metric-item').forEach(m => m.classList.remove('active'));
+        metricItem.classList.add('active');
+        
+        // Update content
+        updateMetricContent(metric, contentTitle, contentBody, tabsContainer);
+      }
+    });
+    
+    return container;
+  }
+
+  // Update metric content per desktop
+  function updateMetricContent(metric, contentTitle, contentBody, tabsContainer) {
+    const books = RECOMMENDED_BOOKS[metric.category || 'altro'] || [];
+    const booksHtml = books.map(book => `
+      <div class="recommended-book">
+        <a href="${book.url}" target="_blank" rel="noopener noreferrer" class="recommended-book__link">
+          <div class="recommended-book__title">${book.title}</div>
+          <div class="recommended-book__author">${book.author}</div>
+        </a>
+      </div>
+    `).join('');
+
+    contentTitle.textContent = metric.label || metric.key;
+    
+    tabsContainer.setAttribute('data-key', metric.key);
+    const whatPanel = tabsContainer.querySelector('[data-panel="what"]');
+    const howPanel = tabsContainer.querySelector('[data-panel="how"]');
+    const sourcePanel = tabsContainer.querySelector('[data-panel="source"]');
+    
+    if (whatPanel) whatPanel.querySelector('.metric-tab-panel-content').textContent = metric.glossary.what || '—';
+    if (howPanel) howPanel.querySelector('.metric-tab-panel-content').textContent = metric.glossary.how || '—';
+    if (sourcePanel) sourcePanel.querySelector('.metric-tab-panel-content').textContent = metric.glossary.source || '—';
+    
+    // Reset to What tab
+    const tabs = tabsContainer.querySelectorAll('.metric-tab');
+    const panels = tabsContainer.querySelectorAll('.metric-tab-panel');
+    tabs.forEach(t => {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
+    });
+    tabs[0].classList.add('active');
+    tabs[0].setAttribute('aria-selected', 'true');
+    panels.forEach(p => {
+      if (p.getAttribute('data-panel') === 'what') {
+        p.classList.add('active');
+        p.removeAttribute('hidden');
+      } else {
+        p.classList.remove('active');
+        p.setAttribute('hidden', '');
+      }
+    });
+
+    // Update books
+    const booksContainer = contentBody.querySelector('.recommended-books');
+    if (books.length > 0) {
+      if (!booksContainer) {
+        const booksHtmlFinal = `
+          <div class="recommended-books">
+            <div class="recommended-books__title">Libri consigliati</div>
+            <div class="recommended-books__list">
+              ${booksHtml}
+            </div>
+          </div>
+        `;
+        contentBody.insertAdjacentHTML('beforeend', booksHtmlFinal);
+      } else {
+        booksContainer.querySelector('.recommended-books__list').innerHTML = booksHtml;
+      }
+    } else if (booksContainer) {
+      booksContainer.remove();
+    }
+    
+    // Bind tabs
+    if (UI.bindMetricTabs) {
+      UI.bindMetricTabs(contentBody, metric.key);
+    }
+  }
+
+  // Apri drawer da metrica specifica (per click su metrica nel testo)
+  function openMetricsDrawerFromMetric(metricKey) {
+    console.log('[UI Runtime] openMetricsDrawerFromMetric chiamata con:', metricKey);
+    const headerData = window.__headerTickerData;
+    if (!headerData || !openPanel) {
+      console.warn('[UI Runtime] Dati header non disponibili', {
+        headerData: !!headerData,
+        openPanel: !!openPanel
+      });
+      return;
+    }
+
+    const drawerExists = qs('.metrics-drawer-desktop');
+    console.log('[UI Runtime] Drawer esistente:', !!drawerExists, 'currentMetricsDrawer:', !!currentMetricsDrawer);
+
+    // Se il drawer non è ancora aperto, apri prima
+    if (!currentMetricsDrawer || !drawerExists) {
+      console.log('[UI Runtime] Drawer non aperto, apro...');
+      openMetricsDrawer(headerData).then(() => {
+        console.log('[UI Runtime] Drawer aperto, seleziono metrica...');
+        setTimeout(() => {
+          selectMetricInDesktopDrawer(metricKey);
+        }, 400);
+      }).catch(err => {
+        console.error('[UI Runtime] Errore apertura drawer:', err);
+      });
+      return;
+    }
+
+    // Se il drawer è già aperto, seleziona direttamente la metrica
+    console.log('[UI Runtime] Drawer già aperto, seleziono metrica direttamente');
+    selectMetricInDesktopDrawer(metricKey);
+  }
+
+  // Seleziona metrica nel drawer desktop
+  function selectMetricInDesktopDrawer(metricKey) {
+    console.log('[UI Runtime] selectMetricInDesktopDrawer chiamata con:', metricKey);
+    const drawer = qs('.metrics-drawer-desktop');
+    if (!drawer) {
+      console.warn('[UI Runtime] Drawer desktop non trovato');
+      return;
+    }
+
+    const containerData = drawer._metricsData;
+    if (!containerData) {
+      console.warn('[UI Runtime] Dati container non disponibili, uso dati globali');
+      if (!currentMetricsData) {
+        console.error('[UI Runtime] Nessun dato disponibile');
+        return;
+      }
+      const { metricsWithGlossary } = currentMetricsData;
+      const metric = metricsWithGlossary.find(m => m.key === metricKey);
+      if (!metric) {
+        console.error('[UI Runtime] Metrica non trovata nei dati globali:', metricKey);
+        return;
+      }
+      setTimeout(() => selectMetricInDesktopDrawer(metricKey), 200);
+      return;
+    }
+
+    const { metricsWithGlossary, metricsByCategory, contentTitle, contentBody, tabsContainer } = containerData;
+    const metric = metricsWithGlossary.find(m => m.key === metricKey);
+    
+    if (!metric) {
+      console.warn('[UI Runtime] Metrica non trovata:', metricKey);
+      return;
+    }
+
+    console.log('[UI Runtime] Metrica trovata, categoria:', metric.category);
+
+    const category = metric.category || 'altro';
+    const categoryItem = drawer.querySelector(`.metric-category-item[data-category="${category}"]`);
+    console.log('[UI Runtime] Categoria item trovato:', !!categoryItem);
+    
+    if (categoryItem) {
+      console.log('[UI Runtime] Click su categoria:', category);
+      categoryItem.click();
+      
+      setTimeout(() => {
+        const metricItem = drawer.querySelector(`.metric-item[data-metric-key="${metricKey}"]`);
+        console.log('[UI Runtime] Metrica item trovato:', !!metricItem);
+        if (metricItem) {
+          console.log('[UI Runtime] Click su metrica:', metricKey);
+          metricItem.click();
+        } else {
+          console.warn('[UI Runtime] Metrica item non trovato, aggiorno contenuto direttamente');
+          updateMetricContent(metric, contentTitle, contentBody, tabsContainer);
+        }
+      }, 200);
+    } else {
+      console.warn('[UI Runtime] Categoria item non trovato, aggiorno contenuto direttamente');
+      updateMetricContent(metric, contentTitle, contentBody, tabsContainer);
+    }
+  }
+
+  // Naviga a metrica nel drawer mobile
+  function navigateToMetricInMobileDrawer(metricKey) {
+    const drawer = qs('.metrics-drawer-mobile');
+    if (!drawer) {
+      setTimeout(() => navigateToMetricInMobileDrawer(metricKey), 100);
+      return;
+    }
+    
+    const drawer1 = drawer.querySelector('.metrics-drawer-1');
+    const drawer2 = drawer.querySelector('#metrics-drawer-2');
+    if (!drawer1 || !drawer2) {
+      setTimeout(() => navigateToMetricInMobileDrawer(metricKey), 100);
+      return;
+    }
+    
+    const categoryTabs = drawer.querySelectorAll('.metric-category-tab');
+    const metricsList = drawer.querySelector('.metrics-list');
+    
+    const category = getMetricCategory(metricKey);
+    const categoryTab = Array.from(categoryTabs).find(tab => tab.getAttribute('data-category') === category);
+    
+    if (categoryTab) {
+      categoryTab.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+      
+      setTimeout(() => {
+        const metricItem = drawer.querySelector(`[data-metric-key="${metricKey}"]`);
+        if (metricItem) {
+          const metricsWithGlossary = currentMetricsData?.metricsWithGlossary || [];
+          const metric = metricsWithGlossary.find(m => m.key === metricKey);
+          if (metric) {
+            const drawer2Title = drawer2.querySelector('.metrics-drawer-2__title');
+            const drawer2Content = drawer2.querySelector('.metrics-drawer-2__content');
+            if (drawer2Title && drawer2Content) {
+              openMetricDetail(metric, drawer2, drawer2Title, drawer2Content);
+              drawer1.classList.remove('active');
+              drawer2.classList.add('active');
+            }
+          }
+        }
+      }, 200);
+    }
+  }
+
+  // -----------------------------
   // API globale
   // -----------------------------
   UI.openPanel          = openPanel;
@@ -451,6 +1190,9 @@
   UI.openMetricPopup    = openMetricPopup;
   UI.openMetricsCatalog = openMetricsCatalog;
   UI.bindMetricTabs     = bindMetricTabs;
+  UI.openMetricsDrawer  = openMetricsDrawer;
+  UI.openMetricsDrawerFromMetric = openMetricsDrawerFromMetric;
+  UI.navigateToMetricInMobileDrawer = navigateToMetricInMobileDrawer;
   // Back-compat: Privacy/MiFID panels (contenuto da fornire dall'host page)
   UI.openPrivacyPanel = function(contentHTML){
     openPanel({ title: 'Privacy', subtitle: 'Informativa', panelSize: 'wide', body: contentHTML || '<div class="text-[13px]">Contenuto privacy non configurato.</div>' });
