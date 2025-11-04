@@ -28,7 +28,15 @@
     main { 
       flex: 1; 
       padding-top: 0; /* padding gestito dall'header-ticker-slot */
-      padding-bottom: 2rem; 
+      padding-bottom: 3rem; /* Spazio per evitare sovrapposizione con footer */
+      position: relative;
+      z-index: 1; /* Sotto header ticker ma sopra footer */
+    }
+    
+    @media (max-width: 768px) {
+      main {
+        padding-bottom: 2.5rem; /* Spazio maggiore su mobile */
+      }
     }
 
     /* ===== HEADER ===== */
@@ -123,7 +131,7 @@
     /* ===== FOOTER ===== */
     .site-footer {
       position: relative;
-      z-index: 20;
+      z-index: 2; /* Sotto header (60) e ticker (10) - ASSOLUTAMENTE sotto */
       margin-top: auto;
       padding: 3.5rem 0 2.75rem;
       border-top: 1px solid color-mix(in oklab, var(--footer-br) 80%, transparent);
@@ -135,6 +143,16 @@
           color-mix(in oklab, var(--surface-page) 88%, transparent 100%));
       color: color-mix(in oklab, var(--ink-soft) 94%, white 6%);
       overflow: hidden;
+      /* Assicura che non si sovrapponga mai all'header ticker */
+      isolation: isolate;
+    }
+    
+    @media (max-width: 768px) {
+      .site-footer {
+        padding: 2.5rem 0 2rem;
+        margin-top: 2rem;
+        z-index: 2; /* Mantieni sotto anche su mobile */
+      }
     }
     
     .site-footer::before {
