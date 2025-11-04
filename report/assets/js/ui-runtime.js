@@ -594,21 +594,24 @@
 
     // Bind drawer mobile - aspetta che il DOM sia pronto
     return new Promise((resolve) => {
-      setTimeout(() => {
+      let retries = 0;
+      const maxRetries = 20;
+      // Verifica che il panel sia visibile e il drawer sia montato
+      const checkPanel = () => {
+        retries++;
         const drawer = qs('.metrics-drawer-mobile');
-        if (drawer) {
+        if (drawer && mobilePanel && mobilePanel.style.display !== 'none' && !mobilePanel.hasAttribute('hidden')) {
+          console.log('[UI Runtime] Mobile drawer trovato e panel visibile, setup...');
           setupMobileMetricsDrawer(metricsWithGlossary, metricsByCategory, categories);
           resolve();
+        } else if (retries < maxRetries) {
+          setTimeout(checkPanel, 50);
         } else {
-          setTimeout(() => {
-            const drawer2 = qs('.metrics-drawer-mobile');
-            if (drawer2) {
-              setupMobileMetricsDrawer(metricsWithGlossary, metricsByCategory, categories);
-            }
-            resolve();
-          }, 100);
+          console.warn('[UI Runtime] Mobile drawer non trovato dopo', maxRetries, 'retry');
+          resolve(); // Resolve comunque per non bloccare
         }
-      }, 100);
+      };
+      setTimeout(checkPanel, 50);
     });
   }
 
@@ -1021,10 +1024,9 @@
   function openMetricsDrawerFromMetric(metricKey) {
     console.log('[UI Runtime] openMetricsDrawerFromMetric chiamata con:', metricKey);
     const headerData = window.__headerTickerData;
-    if (!headerData || !openPanel) {
+    if (!headerData) {
       console.warn('[UI Runtime] Dati header non disponibili', {
-        headerData: !!headerData,
-        openPanel: !!openPanel
+        headerData: !!headerData
       });
       return;
     }
@@ -1037,9 +1039,20 @@
       console.log('[UI Runtime] Drawer non aperto, apro...');
       openMetricsDrawer(headerData).then(() => {
         console.log('[UI Runtime] Drawer aperto, seleziono metrica...');
-        setTimeout(() => {
-          selectMetricInDesktopDrawer(metricKey);
-        }, 400);
+        // Retry fino a quando la metrica non è selezionata
+        let retries = 0;
+        const trySelect = () => {
+          retries++;
+          const drawer = qs('.metrics-drawer-desktop');
+          if (drawer && drawer._metricsData) {
+            selectMetricInDesktopDrawer(metricKey);
+          } else if (retries < 10) {
+            setTimeout(trySelect, 100);
+          } else {
+            console.warn('[UI Runtime] Impossibile selezionare metrica dopo retries');
+          }
+        };
+        setTimeout(trySelect, 200);
       }).catch(err => {
         console.error('[UI Runtime] Errore apertura drawer:', err);
       });
@@ -1093,19 +1106,31 @@
     
     if (categoryItem) {
       console.log('[UI Runtime] Click su categoria:', category);
-      categoryItem.click();
+      // Trigger click event per attivare event delegation
+      const clickEvent = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      categoryItem.dispatchEvent(clickEvent);
       
       setTimeout(() => {
         const metricItem = drawer.querySelector(`.metric-item[data-metric-key="${metricKey}"]`);
         console.log('[UI Runtime] Metrica item trovato:', !!metricItem);
         if (metricItem) {
           console.log('[UI Runtime] Click su metrica:', metricKey);
-          metricItem.click();
+          // Trigger click event per attivare event delegation
+          const metricClickEvent = new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            view: window
+          });
+          metricItem.dispatchEvent(metricClickEvent);
         } else {
           console.warn('[UI Runtime] Metrica item non trovato, aggiorno contenuto direttamente');
           updateMetricContent(metric, contentTitle, contentBody, contentContainer);
         }
-      }, 200);
+      }, 300);
     } else {
       console.warn('[UI Runtime] Categoria item non trovato, aggiorno contenuto direttamente');
       updateMetricContent(metric, contentTitle, contentBody, contentContainer);
