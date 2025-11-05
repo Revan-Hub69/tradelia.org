@@ -236,7 +236,9 @@
     }
     
     /* ===== FOOTER ISTITUZIONALE INNOVATIVO ===== */
+    /* Breakpoint: mobile < 768px, desktop >= 768px */
     .site-footer {
+      position: relative;
       flex-shrink: 0;
       background: linear-gradient(
         180deg,
@@ -248,6 +250,8 @@
       font-size: var(--fs-14);
       padding: var(--sp-10) 0 var(--sp-6);
       overflow: hidden;
+      width: 100%;
+      /* Layout: flexbox column (mobile), grid 3 columns (desktop >= 768px) */
     }
     
     .site-footer::before {
