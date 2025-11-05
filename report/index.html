@@ -2,10 +2,70 @@
 <html lang="it" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Report Framework Accademico AI, Tradelia Swing Master 5.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Report Framework Accademico AI, Tradelia Swing Master 5.0 - Analisi multi-fattore su contesto macro, sentiment e tecnica (orizzonte 3–10 giorni)" />
+  <meta name="keywords" content="Tradelia AI, analisi finanziaria, swing trading, framework accademico, AI trading" />
+  <meta name="author" content="Tradelia AI" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0f0f0f" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tradelia.org" />
+  <meta property="og:title" content="TRADELIA • AI — Framework Accademico AI" />
+  <meta property="og:description" content="Report Framework Accademico AI - Analisi multi-fattore su contesto macro, sentiment e tecnica (orizzonte 3–10 giorni)" />
+  <meta property="og:image" content="https://tradelia.org/img/tradelia_og_vC_white_clean.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:site_name" content="Tradelia AI" />
+  <meta property="og:locale" content="it_IT" />
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://tradelia.org" />
+  <meta name="twitter:title" content="TRADELIA • AI — Framework Accademico AI" />
+  <meta name="twitter:description" content="Report Framework Accademico AI - Analisi multi-fattore su contesto macro, sentiment e tecnica" />
+  <meta name="twitter:image" content="https://tradelia.org/img/tradelia_og_vC_white_clean.png" />
+  <meta name="twitter:image:alt" content="Tradelia AI - Framework Accademico AI" />
+  <meta name="twitter:creator" content="@tradelia_ai" />
+  <meta name="twitter:site" content="@tradelia_ai" />
+  
   <title>TRADELIA • AI — Report</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
+  
+  <!-- Preconnect per performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  
+  <!-- Stylesheet -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json" id="structured-data">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Tradelia AI",
+    "description": "Framework Accademico AI per analisi finanziaria multi-fattore",
+    "url": "https://tradelia.org",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    },
+    "creator": {
+      "@type": "Organization",
+      "name": "Tradelia AI",
+      "url": "https://tradelia.org"
+    }
+  }
+  </script>
   <style>
     /* ===== LAYOUT BASE ===== */
     html, body {
@@ -641,9 +701,94 @@
     .report-section-block {
       margin-bottom: var(--sp-8);
     }
+    
+    /* ===== SKIP LINK (Accessibilità) ===== */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: var(--sp-4);
+      z-index: 1000;
+      padding: var(--sp-3) var(--sp-4);
+      background: var(--brand-600);
+      color: var(--ink);
+      font-weight: 600;
+      font-size: var(--fs-14);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      transition: top var(--transition-fast);
+    }
+    
+    .skip-link:focus {
+      top: var(--sp-4);
+      outline: 2px solid var(--ink);
+      outline-offset: 2px;
+    }
+    
+    /* ===== LOADING STATES ===== */
+    .loading-skeleton {
+      background: var(--surface-card);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-6);
+      border: 1px solid var(--br-card);
+      animation: skeleton-pulse 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes skeleton-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    
+    .loading-spinner {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-2);
+      color: var(--ink-soft);
+      font-size: var(--fs-14);
+    }
+    
+    .loading-spinner::before {
+      content: "";
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--br-card);
+      border-top-color: var(--brand-600);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* ===== ERROR STATES ===== */
+    .error-state {
+      padding: var(--sp-6);
+      background: var(--surface-card);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-lg);
+      color: var(--ink-soft);
+      text-align: center;
+    }
+    
+    .error-state-title {
+      font-size: var(--fs-18);
+      font-weight: 700;
+      color: var(--err);
+      margin-bottom: var(--sp-2);
+    }
+    
+    .error-state-message {
+      font-size: var(--fs-14);
+      color: var(--muted);
+      margin-bottom: var(--sp-4);
+    }
   </style>
 </head>
 <body>
+  <!-- SKIP LINK (Accessibilità WCAG 2.1 AA) -->
+  <a href="#app-root" class="skip-link">Salta al contenuto principale</a>
+  
   <!-- HEADER -->
   <header class="hdr">
     <div class="container">
@@ -678,10 +823,10 @@
           <p>
             Materiale esclusivamente informativo e formativo — nessuna raccomandazione personalizzata.
           </p>
-          <div class="ftr-quick-links">
-            <a href="/index.html" target="_blank" rel="noopener">Homepage</a>
-            <a href="/archivio.html" target="_blank" rel="noopener">Archivio</a>
-            <a href="/brokers.html" target="_blank" rel="noopener">Brokers</a>
+          <div class="ftr-quick-links" role="navigation" aria-label="Link rapidi">
+            <a href="/index.html" target="_blank" rel="noopener" aria-label="Vai alla homepage">Homepage</a>
+            <a href="/archivio.html" target="_blank" rel="noopener" aria-label="Vai all'archivio">Archivio</a>
+            <a href="/brokers.html" target="_blank" rel="noopener" aria-label="Vai alla pagina brokers">Brokers</a>
           </div>
         </div>
 
@@ -698,9 +843,9 @@
             <li><strong>Rischio di perdita totale o parziale del capitale</strong> — investire comporta rischi</li>
             <li>Le informazioni hanno <strong>scopo puramente informativo e formativo</strong> — non costituiscono raccomandazione personalizzata</li>
           </ul>
-          <div style="margin-top: var(--sp-4); display: flex; flex-wrap: wrap; gap: var(--sp-4);">
-            <button id="btn-privacy-open" class="btn btn-sm" type="button">Privacy</button>
-            <button id="btn-mifid-open" class="btn btn-sm" type="button">Informativa MiFID</button>
+          <div style="margin-top: var(--sp-4); display: flex; flex-wrap: wrap; gap: var(--sp-4);" role="group" aria-label="Documenti legali">
+            <button id="btn-privacy-open" class="btn btn-sm" type="button" aria-label="Apri informativa privacy">Privacy</button>
+            <button id="btn-mifid-open" class="btn btn-sm" type="button" aria-label="Apri informativa MiFID">Informativa MiFID</button>
           </div>
         </div>
 
@@ -712,11 +857,11 @@
             <span>Canali ufficiali</span>
           </h3>
           <p style="margin-bottom: var(--sp-3);">Aggiornamenti su metodologia e release:</p>
-          <div class="ftr-socials">
-            <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener" aria-label="LinkedIn">LinkedIn</a>
-            <a href="https://x.com/tradelia_ai" target="_blank" rel="noopener" aria-label="X (Twitter)">X (Twitter)</a>
-            <a href="https://www.reddit.com/r/TradeliaAI" target="_blank" rel="noopener" aria-label="Reddit">Reddit</a>
-            <a href="https://www.quora.com" target="_blank" rel="noopener" aria-label="Quora">Quora</a>
+          <div class="ftr-socials" role="list" aria-label="Canali social ufficiali">
+            <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener noreferrer" aria-label="Visita il profilo LinkedIn di Tradelia AI (si apre in nuova scheda)">LinkedIn</a>
+            <a href="https://x.com/tradelia_ai" target="_blank" rel="noopener noreferrer" aria-label="Visita il profilo X (Twitter) di Tradelia AI (si apre in nuova scheda)">X (Twitter)</a>
+            <a href="https://www.reddit.com/r/TradeliaAI" target="_blank" rel="noopener noreferrer" aria-label="Visita il subreddit Tradelia AI (si apre in nuova scheda)">Reddit</a>
+            <a href="https://www.quora.com" target="_blank" rel="noopener noreferrer" aria-label="Visita il profilo Quora di Tradelia AI (si apre in nuova scheda)">Quora</a>
           </div>
         </div>
       </section>
@@ -817,7 +962,7 @@
   </div>
 
   <!-- SCRIPTS -->
-  <script type="module" src="/report/assets/js/app.js"></script>
+  <script type="module" src="/report/assets/js/app.js" defer></script>
   <script type="module">
     // Pre-load popup component
     import { metricPopup } from '/report/assets/js/components/metric-popup.js';
