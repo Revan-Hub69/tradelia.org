@@ -13,6 +13,8 @@ import { metricPopup } from './components/metric-popup.js';
   
   const ROOT = document.getElementById('app-root');
   const TICKER_SLOT = document.getElementById('header-ticker-slot');
+  const HEADER_SLOT = document.getElementById('site-header-slot');
+  const FOOTER_SLOT = document.getElementById('site-footer-slot');
   
   if (!ROOT || !TICKER_SLOT) {
     Logger.error('App', 'DOM non valido');
@@ -236,12 +238,12 @@ import { metricPopup } from './components/metric-popup.js';
         updateStructuredData(ticker, companyName || ticker, version, start, end);
       }
       
-      setText('footer-company', companyName || ticker || '—');
-      setText('footer-version', version);
-      setText('footer-snapshot', `${start || '—'} → ${end || '—'}`);
-      setText('footer-updated', fmtDate(updatedAt));
-      
       await mountHeaderTicker(header);
+      
+      // Aggiorna footer se già montato
+      if (FOOTER_SLOT && window.__TradeliaFooter) {
+        window.__TradeliaFooter.update(header);
+      }
       Logger.debug('App', 'Header caricato');
       return header;
     } catch (err) {
@@ -341,21 +343,67 @@ import { metricPopup } from './components/metric-popup.js';
     }
   }
   
+  // ===== MOUNT HEADER & FOOTER =====
+  async function mountSiteHeader() {
+    if (!HEADER_SLOT) {
+      Logger.warn('App', 'Header slot non trovato, skip');
+      return;
+    }
+    
+    try {
+      const { siteHeader } = await safeImport('/report/assets/js/components/site-header.js');
+      if (siteHeader && typeof siteHeader.mount === 'function') {
+        siteHeader.mount(HEADER_SLOT);
+        Logger.debug('App', 'Site header montato');
+      }
+    } catch (err) {
+      Logger.warn('App', 'Errore montaggio site header', err);
+    }
+  }
+  
+  async function mountSiteFooter(headerData) {
+    if (!FOOTER_SLOT) {
+      Logger.warn('App', 'Footer slot non trovato, skip');
+      return;
+    }
+    
+    try {
+      const { siteFooter } = await safeImport('/report/assets/js/components/site-footer.js');
+      if (siteFooter && typeof siteFooter.mount === 'function') {
+        siteFooter.mount(FOOTER_SLOT);
+        // Aggiorna footer con dati da header.json
+        if (headerData) {
+          siteFooter.update(headerData);
+        }
+        Logger.debug('App', 'Site footer montato');
+      }
+    } catch (err) {
+      Logger.warn('App', 'Errore montaggio site footer', err);
+    }
+  }
+  
   // ===== INIZIALIZZAZIONE =====
   async function init() {
     const reportId = getReportId();
     Logger.debug('App', `Inizializzazione: ${reportId}`);
     
+    // Monta header e footer (statici, non dipendono da reportId)
+    await mountSiteHeader();
+    
     ROOT.innerHTML = '';
     
     // Error boundary globale per inizializzazione
+    let headerData = null;
     try {
-      await loadHeader(reportId);
+      headerData = await loadHeader(reportId);
     } catch (err) {
       Logger.error('App', 'Errore loadHeader', err);
       showErrorState(TICKER_SLOT, err, 'Errore caricamento header');
       // Continua comunque con i moduli
     }
+    
+    // Monta footer con dati dinamici
+    await mountSiteFooter(headerData);
     
     try {
       await loadModules(reportId);
