@@ -520,19 +520,47 @@ function buildDrawerSectionsPublic(d) {
 
       <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4] mt-3">
         <div>
-          <div class="text-[11px] font-semibold text-[color:var(--muted)] uppercase mb-1">Filter Type</div>
-          <div class="text-[12px] text-[color:var(--ink)]">${escapeHtml(d.finvizFilters.FilterType || "—")}</div>
+          <div class="text-[11px] font-semibold text-[color:var(--muted)] uppercase mb-1">StrategyMode</div>
+          <div class="text-[12px] text-[color:var(--ink)]">${escapeHtml(d.finvizFilters.StrategyMode || "—")}</div>
         </div>
         <div>
-          <div class="text-[11px] font-semibold text-[color:var(--muted)] uppercase mb-1">Generated From</div>
-          <div class="text-[12px] text-[color:var(--ink)]">${escapeHtml(d.finvizFilters.GeneratedFrom || "—")}</div>
+          <div class="text-[11px] font-semibold text-[color:var(--muted)] uppercase mb-1">Sector Focus</div>
+          <div class="text-[12px] text-[color:var(--ink)]">${escapeHtml(Array.isArray(d.finvizFilters.SectorFocus) ? d.finvizFilters.SectorFocus.join(", ") : (d.finvizFilters.SectorFocus || "—"))}</div>
+        </div>
+        <div>
+          <div class="text-[11px] font-semibold text-[color:var(--muted)] uppercase mb-1">Size Focus</div>
+          <div class="text-[12px] text-[color:var(--ink)]">${escapeHtml(d.finvizFilters.SizeFocus || "—")}</div>
+        </div>
+        <div>
+          <div class="text-[11px] font-semibold text-[color:var(--muted)] uppercase mb-1">Generated At</div>
+          <div class="text-[12px] text-[color:var(--ink)]">${escapeHtml(d.finvizFilters.GeneratedAt || "—")}</div>
         </div>
       </div>
 
-      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-3">
-        Query generata dinamicamente in base a StrategyMode_macro, LeadersMultiTF e SizeBias.
-        Per uso interno: non visualizzare in versione pubblica MiFID.
-      </div>
+      ${d.finvizFilters.Filters ? `
+        <div class="mt-4">
+          <div class="text-[11px] font-semibold text-[color:var(--muted)] uppercase mb-2">Filters Breakdown</div>
+          <div class="grid md:grid-cols-2 gap-2 text-[11px]">
+            ${Object.entries(d.finvizFilters.Filters).map(([key, value]) => `
+              <div>
+                <span class="text-[color:var(--muted)]">${escapeHtml(key)}:</span>
+                <span class="text-[color:var(--ink)] ml-1">${escapeHtml(String(value))}</span>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      ` : ""}
+
+      ${d.finvizFilters.ai_note ? `
+        <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-3">
+          ${escapeHtml(d.finvizFilters.ai_note)}
+        </div>
+      ` : `
+        <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-3">
+          Query generata dinamicamente in base a StrategyMode_macro, LeadersMultiTF e SizeBias.
+          Per uso interno: non visualizzare in versione pubblica MiFID.
+        </div>
+      `}
     </section>
   ` : "";
 
@@ -544,27 +572,55 @@ function buildDrawerSectionsPublic(d) {
         <div class="tl-panel-section-title-text">Bridge to F2 (v19-Dynamic)</div>
       </header>
 
-      ${headlineBlockCard(
-        "Universe for F2",
-        `Focus Sectors: ${(d.bridgeF2.universe_for_F2?.FocusSectors || []).join(", ")}\n` +
-        `Market Cap: ${(d.bridgeF2.universe_for_F2?.IncludeMarketCap || []).join(", ")}\n` +
-        `Finviz Query: ${d.bridgeF2.universe_for_F2?.FinvizQuery || ""}`
-      )}
-
-      <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4] mt-3">
-        <div>
-          <div class="text-[11px] font-semibold text-[color:var(--muted)] uppercase mb-1">StrategyMode</div>
-          <div class="text-[12px] text-[color:var(--ink)]">${escapeHtml(d.bridgeF2.handoffSignals?.StrategyMode_macro || "—")}</div>
+      ${Array.isArray(d.bridgeF2.signals) && d.bridgeF2.signals.length > 0 ? `
+        <div class="mb-4">
+          <div class="text-[11px] font-semibold text-[color:var(--muted)] uppercase mb-2">Handoff Signals</div>
+          ${d.bridgeF2.signals.map(signal => `
+            <div class="mb-3 p-3" style="background:var(--surface-card-alt);border:1px solid var(--br-card);border-radius:var(--radius-card);">
+              <div class="flex items-start justify-between gap-2 mb-1">
+                <div class="text-[12px] font-semibold text-[color:var(--ink)]">${escapeHtml(signal.type || "—")}</div>
+                <span class="px-2 py-1 text-[10px] font-semibold rounded" style="background:var(--surface-card);color:var(--muted);">
+                  ${escapeHtml(signal.strength || "—")}
+                </span>
+              </div>
+              <div class="text-[12px] text-[color:var(--ink)] mb-1">${escapeHtml(signal.value || "—")}</div>
+              ${signal.note ? `<div class="text-[11px] text-[color:var(--muted)]">${escapeHtml(signal.note)}</div>` : ""}
+            </div>
+          `).join("")}
         </div>
-        <div>
-          <div class="text-[11px] font-semibold text-[color:var(--muted)] uppercase mb-1">RegimeScore</div>
-          <div class="text-[12px] text-[color:var(--ink)]">${escapeHtml(d.bridgeF2.handoffSignals?.RegimeScore || "—")}</div>
-        </div>
-      </div>
+      ` : ""}
 
-      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-3">
-        Handoff signals per modulo F2. Per uso interno: non visualizzare in versione pubblica MiFID.
-      </div>
+      ${d.bridgeF2.universe_for_F2 ? `
+        ${headlineBlockCard(
+          "Universe for F2",
+          `Focus Sectors: ${(d.bridgeF2.universe_for_F2?.FocusSectors || []).join(", ")}\n` +
+          `Market Cap: ${(d.bridgeF2.universe_for_F2?.IncludeMarketCap || []).join(", ")}\n` +
+          `Finviz Query: ${d.bridgeF2.universe_for_F2?.FinvizQuery || ""}`
+        )}
+      ` : ""}
+
+      ${d.bridgeF2.handoffSignals ? `
+        <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4] mt-3">
+          <div>
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] uppercase mb-1">StrategyMode</div>
+            <div class="text-[12px] text-[color:var(--ink)]">${escapeHtml(d.bridgeF2.handoffSignals?.StrategyMode_macro || "—")}</div>
+          </div>
+          <div>
+            <div class="text-[11px] font-semibold text-[color:var(--muted)] uppercase mb-1">RegimeScore</div>
+            <div class="text-[12px] text-[color:var(--ink)]">${escapeHtml(d.bridgeF2.handoffSignals?.RegimeScore || "—")}</div>
+          </div>
+        </div>
+      ` : ""}
+
+      ${d.bridgeF2.next_steps ? `
+        <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-3">
+          <strong>Next Steps:</strong> ${escapeHtml(d.bridgeF2.next_steps)}
+        </div>
+      ` : `
+        <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-3">
+          Handoff signals per modulo F2. Per uso interno: non visualizzare in versione pubblica MiFID.
+        </div>
+      `}
     </section>
   ` : "";
 

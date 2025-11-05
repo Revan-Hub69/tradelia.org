@@ -85,6 +85,26 @@ button { background: none; border: 0; padding: 0; font: inherit; color: inherit;
   --err: #dc2626;              /* Rosso errore - più sobrio */
   --neutral: #64748b;          /* Grigio neutro istituzionale */
   
+  /* Tone Colors (per F1B e moduli) */
+  --tone-pos-fg: #16a34a;      /* Verde positivo */
+  --tone-neg-fg: #dc2626;      /* Rosso negativo */
+  --tone-warn-fg: #ea580c;     /* Arancione warning */
+  --tone-neu-fg: #64748b;      /* Grigio neutro */
+  
+  /* Superfici aggiuntive */
+  --surface-card-alt: #1a1a1a; /* Card alternativo (leggermente più scuro) */
+  --surface-panel-head: #0f0f0f; /* Header panel */
+  
+  /* Border Radius aggiuntivi */
+  --radius-card: 12px;         /* Radius card standard */
+  --radius-card-sm: 8px;       /* Radius card piccolo */
+  
+  /* Ombre aggiuntive */
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.4); /* Ombra card */
+  
+  /* Bordi panel */
+  --br-panel-divider: rgba(255, 255, 255, 0.06); /* Divisore panel */
+  
   /* Background e Text Color */
   background: var(--surface-page);
   color: var(--ink);

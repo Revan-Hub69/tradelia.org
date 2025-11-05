@@ -91,6 +91,36 @@
     "how": "Leadership solo mega-cap implica concentrazione e maggiore fragilità del trend.",
     "source": "Fama & French (1993) SMB factor."
   },
+  "LeadersMultiTF": {
+    "title": "Leadership Multi-Timeframe",
+    "what": "Settori con forza/inflow coerente su più timeframe (1D, 1W, 1M). Indica leadership sostenuta e non solo rally temporaneo.",
+    "how": "Identifica top 3-4 settori per performance combinata su 1D, 1W, 1M. Solo settori con performance positiva su tutti i timeframe vengono considerati leader.",
+    "source": "Sector leadership è un indicatore di trend sostenuto. Vedi: Sector rotation analysis in technical analysis."
+  },
+  "DefensiveLeadership": {
+    "title": "Defensive Leadership",
+    "what": "Sovraperformance di settori difensivi (Utilities, Healthcare, Consumer Defensive) rispetto a settori ciclici.",
+    "how": "Misurato confrontando performance settori difensivi vs settori growth. Indica ricerca di resilienza e stabilità.",
+    "source": "Asness, Frazzini & Pedersen (2013) Quality; Ang et al. (2006) Low-vol."
+  },
+  "Lagging": {
+    "title": "Settori in Ritardo",
+    "what": "Settori con sottoperformance persistente rispetto al mercato generale.",
+    "how": "Identifica settori che sono in ritardo su più timeframe. Utile per misurare asimmetrie del regime.",
+    "source": "Cross-sectional asset pricing & dispersion (Stivers, 2003)."
+  },
+  "StressMicroCap": {
+    "title": "Stress MicroCap",
+    "what": "Flag che indica se micro cap sono in drawdown e funding risk alto. Se true, micro cap devono essere escluse dall'universo swing.",
+    "how": "StressMicroCap = true se micro cap (IWC) performance < -15% o se micro cap < small cap - 10%. Indica rischio funding e illiquidità.",
+    "source": "Micro cap sono più sensibili a condizioni di funding. Vedi: Research su small cap liquidity risk."
+  },
+  "FinvizQuery": {
+    "title": "Finviz Query (Dynamic Filter)",
+    "what": "Query generata automaticamente per Finviz Premium basata su StrategyMode_macro, LeadersMultiTF e SizeBias. Serve a trovare ticker coerenti con il regime corrente.",
+    "how": "Se StrategyMode = Momentum → query cerca settori leader, large/mega cap, performance positiva, RSI < 70, beta > 1. Se Pullback → cerca settori difensivi, small/mid cap, performance negativa, RSI < 40.",
+    "source": "Filter generation basata su regime analysis. Vedi: Dynamic screening in quantitative trading."
+  },
   "Leadership multi-timeframe": {
     "title": "Leadership multi-timeframe",
     "what": "Temi/settori leader sia breve che medio orizzonte.",

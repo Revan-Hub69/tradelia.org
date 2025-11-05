@@ -41,7 +41,7 @@
         { "kind": "metric", "key": "Venue", "value": "NASDAQ", "tone": "neutral", "label": "Venue" },
         { "kind": "text", "text": ". " },
         { "kind": "text", "text": "Settore: " },
-        { "kind": "metric", "key": "Sector", "value": "Technology", "tone": "neutral", "label": "Sector" },
+        { "kind": "metric", "key": "Sector", "value": "Tecnologia", "tone": "neutral", "label": "Sector" },
         { "kind": "text", "text": "." }
       ]
     },
@@ -96,7 +96,7 @@
     { "key": "CompanyName", "label": "Nome azienda", "value": "Apple Inc.", "tone": "neutral" },
     { "key": "Ticker", "label": "Ticker", "value": "AAPL", "tone": "neutral" },
     { "key": "Venue", "label": "Borsa principale", "value": "NASDAQ", "tone": "neutral" },
-    { "key": "Sector", "label": "Settore", "value": "Technology", "tone": "neutral" },
+    { "key": "Sector", "label": "Settore", "value": "Tecnologia", "tone": "neutral" },
     { "key": "Price", "label": "Prezzo allo start", "value": 270.14, "tone": "ok" },
     { "key": "ChangePct", "label": "Variazione dall'ultima chiusura", "value": "+0.03%", "tone": "ok" },
     { "key": "Freshness", "label": "Freshness dei dati", "value": "< 24h", "tone": "ok" },
