@@ -940,3 +940,39 @@ a:hover {
     padding-right: var(--sp-4);
   }
 }
+
+/* ===== SCROLLBAR ISTITUZIONALE INNOVATIVA ===== */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(
+    to right,
+    var(--surface-page),
+    var(--surface-card)
+  );
+  border-radius: 100vh;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(37, 99, 235, 0.3);
+  border-radius: 100vh;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  backdrop-filter: blur(4px);
+  transition: all var(--transition-fast);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(37, 99, 235, 0.5);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(37, 99, 235, 0.4) var(--surface-card);
+}
+
