@@ -1,0 +1,29 @@
+{
+  "_v": "2025-01-01-v1",
+  "_note": "Glossario completo finanziario - Struttura: nomeTecnico, definizioneAccademica, spiegazioneAI, fonteAccademica, category",
+  
+  "StrategyMode_macro": {
+    "nomeTecnico": "StrategyMode (Regime Tattico)",
+    "category": "Regime di Mercato",
+    "definizioneAccademica": "Classificazione del regime di mercato tattico (3–10 giorni) basata sulla combinazione di volatilità, credito, breadth e flussi. Tre modalità: Momentum (risk-on), Neutral, Pullback (risk-off).",
+    "spiegazioneAI": "StrategyMode è come un 'meteo del mercato'. Se vedi Momentum, significa che gli investitori sono ottimisti (VIX basso, credito buono, molti titoli salgono). Se vedi Pullback, significa cautela (VIX alto, credito in tensione, poche azioni salgono). Neutral è una situazione intermedia. Non è un segnale per comprare/vendere, ma ti dice l'umore generale del mercato.",
+    "fonteAccademica": "Carhart, M.M. (1997). On Persistence in Mutual Fund Performance. Journal of Finance, 52(1), 57-82. | Asness, C.S., Frazzini, A., & Pedersen, L.H. (2013). Quality Minus Junk. Review of Accounting Studies, 24, 325-391."
+  },
+  
+  "RegimeScore": {
+    "nomeTecnico": "RegimeScore (Indicatore Appetito Rischio)",
+    "category": "Regime di Mercato",
+    "definizioneAccademica": "Indicatore sintetico che misura l'appetito al rischio (risk-on vs risk-off) ponderando volatilità, credito e leadership fattoriale. Valori positivi indicano preferenza per asset rischiosi, valori negativi indicano fuga verso qualità.",
+    "spiegazioneAI": "RegimeScore è un numero che va da -1 a +1. Se è positivo (es. +0.6), significa che il mercato è 'risk-on': gli investitori vogliono rischio e comprano azioni, cripto, ecc. Se è negativo (es. -0.4), è 'risk-off': gli investitori hanno paura e comprano obbligazioni, oro, ecc. Zero significa neutralità. È come un termometro dell'umore del mercato.",
+    "fonteAccademica": "Adrian, T., Crump, R.K., & Moench, E. (2013). Pricing the Term Structure with Linear Regressions. Journal of Financial Economics, 110(1), 110-138."
+  },
+  
+  "VolRegime": {
+    "nomeTecnico": "VolRegime (Regime Volatilità)",
+    "category": "Regime di Mercato",
+    "definizioneAccademica": "Misura della domanda di copertura (hedge) rilevata attraverso indici di volatilità e term structure. Volatilità alta e term structure compressa indicano maggiore stress e ricerca di protezione.",
+    "spiegazioneAI": "VolRegime ti dice se gli investitori sono spaventati. Se la volatilità (VIX) è alta (>30), significa che molti comprano protezione (hedge) perché hanno paura. Se è bassa (<20), significa calma. La 'term structure' ti dice se la paura è immediata (backwardation) o futura (contango). È come guardare quanto la gente compra assicurazioni: più ne comprano, più sono preoccupati.",
+    "fonteAccademica": "Whaley, R.E. (2009). Understanding VIX. Journal of Portfolio Management, 35(3), 98-105. | Carr, P., & Wu, L. (2006). A Tale of Two Indices. Journal of Derivatives, 13(3), 13-29."
+  }
+}
+
