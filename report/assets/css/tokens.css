@@ -52,20 +52,20 @@ button { background: none; border: 0; padding: 0; font: inherit; color: inherit;
   --muted: #a8a8a8;            /* Testo muted - grigio medio */
   --muted-strong: #707070;     /* Testo molto muted */
   
-  /* Superfici - Nero Profondo Istituzionale */
-  --surface-page: #0d0d0d;     /* Background principale - nero profondo */
-  --surface-card: #161616;     /* Card background - grigio molto scuro */
-  --surface-elev: #1e1e1e;     /* Superficie elevata */
-  --surface-hover: #262626;    /* Hover state */
+  /* Superfici - Nero Opaco Istituzionale (meno lucido) */
+  --surface-page: #0f0f0f;     /* Background principale - nero opaco */
+  --surface-card: #181818;     /* Card background - grigio scuro opaco */
+  --surface-elev: #202020;     /* Superficie elevata */
+  --surface-hover: #282828;    /* Hover state */
   
   /* Bordi - Sottili e Discreti */
-  --br-soft: #2e2e2e;          /* Bordo sottile */
-  --br-card: #363636;          /* Bordo card */
-  --br-strong: #444444;        /* Bordo forte */
+  --br-soft: #2a2a2a;          /* Bordo sottile */
+  --br-card: #323232;          /* Bordo card */
+  --br-strong: #3e3e3e;        /* Bordo forte */
   
-  /* Footer - Nero Profondo con Gradiente Sottile */
-  --footer-bg: #0f0f0f;
-  --footer-br: #2e2e2e;
+  /* Footer - Nero Opaco con Gradiente Sottile */
+  --footer-bg: #111111;
+  --footer-br: #2a2a2a;
   
   /* Brand - Blu Istituzionale Finanziario (Sobrio) */
   --brand-600: #2563eb;        /* Blu istituzionale - più sobrio */
@@ -189,17 +189,23 @@ a:hover {
   padding: var(--sp-4);
 }
 
-/* ===== HEADER TICKER ISTITUZIONALE ===== */
+/* ===== HEADER TICKER ISTITUZIONALE INNOVATIVO ===== */
 .header-ticker {
   position: relative;
-  background: var(--surface-card);
-  border: 1px solid var(--br-card);
+  background: linear-gradient(
+    135deg,
+    var(--surface-card) 0%,
+    color-mix(in oklab, var(--surface-card) 99%, var(--brand-600) 1%) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-xl);
   padding: var(--sp-5) var(--sp-6);
   display: flex;
   flex-direction: column;
   gap: var(--sp-3);
-  box-shadow: var(--shadow-md);
+  box-shadow: 
+    var(--shadow-md),
+    0 1px 0 rgba(255, 255, 255, 0.03) inset;
 }
 
 .header-ticker::before {
@@ -667,15 +673,33 @@ a:hover {
 
 .metric-popup-panel {
   width: 100%;
-  max-width: 600px;
+  max-width: 640px;
   max-height: 90vh;
   background: var(--surface-card);
-  border: 1px solid var(--br-card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-xl);
+  box-shadow: 
+    var(--shadow-xl),
+    0 1px 0 rgba(255, 255, 255, 0.03) inset;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
+}
+
+.metric-popup-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(37, 99, 235, 0.2) 50%,
+    transparent 100%
+  );
 }
 
 .metric-popup-header {
@@ -684,8 +708,13 @@ a:hover {
   justify-content: space-between;
   gap: var(--sp-4);
   padding: var(--sp-6);
-  border-bottom: 1px solid var(--br-card);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   flex-shrink: 0;
+  background: linear-gradient(
+    180deg,
+    var(--surface-card) 0%,
+    color-mix(in oklab, var(--surface-card) 98%, var(--brand-600) 2%) 100%
+  );
 }
 
 .metric-popup-header-content {
@@ -701,11 +730,20 @@ a:hover {
   line-height: var(--lh-12);
   color: var(--ink);
   margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.metric-popup-key {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-12);
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  margin-top: var(--sp-1);
 }
 
 .metric-popup-close {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -713,15 +751,18 @@ a:hover {
   line-height: 1;
   color: var(--muted);
   background: transparent;
-  border: none;
-  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
   cursor: pointer;
   transition: all var(--transition-fast);
+  flex-shrink: 0;
 }
 
 .metric-popup-close:hover {
   color: var(--ink);
   background: var(--surface-elev);
+  border-color: rgba(255, 255, 255, 0.06);
+  transform: scale(1.05);
 }
 
 .metric-popup-body {
@@ -730,17 +771,25 @@ a:hover {
   padding: var(--sp-6);
   display: flex;
   flex-direction: column;
-  gap: var(--sp-6);
+  gap: var(--sp-5);
+  background: var(--surface-card);
 }
 
 .metric-popup-value {
   display: flex;
   align-items: baseline;
   gap: var(--sp-4);
-  padding: var(--sp-5) var(--sp-6);
-  background: var(--surface-elev);
+  padding: var(--sp-6) var(--sp-6);
+  background: linear-gradient(
+    135deg,
+    var(--surface-elev) 0%,
+    color-mix(in oklab, var(--surface-elev) 98%, var(--brand-600) 2%) 100%
+  );
   border-radius: var(--radius-lg);
-  border: 1px solid var(--br-card);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 
+    var(--shadow-sm),
+    0 1px 0 rgba(255, 255, 255, 0.02) inset;
 }
 
 .metric-popup-value-label {
@@ -762,6 +811,10 @@ a:hover {
   display: flex;
   flex-direction: column;
   gap: var(--sp-3);
+  padding: var(--sp-4);
+  background: var(--surface-elev);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .metric-popup-section-title {
@@ -770,11 +823,26 @@ a:hover {
   color: var(--ink);
   margin: 0;
   line-height: var(--lh-12);
+  letter-spacing: -0.01em;
+  padding-bottom: var(--sp-2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
+}
+
+.metric-popup-section-title::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 30px;
+  height: 1px;
+  background: var(--brand-600);
+  opacity: 0.4;
 }
 
 .metric-popup-section-text {
-  font-size: var(--fs-15);
-  line-height: var(--lh-16);
+  font-size: var(--fs-14);
+  line-height: var(--lh-17);
   color: var(--ink-soft);
   margin: 0;
 }
@@ -788,9 +856,44 @@ a:hover {
 
 .metric-popup-no-info {
   font-size: var(--fs-14);
-  line-height: var(--lh-15);
+  line-height: var(--lh-16);
   color: var(--muted);
   font-style: italic;
+  text-align: center;
+  padding: var(--sp-6);
+}
+
+.metric-popup-meta {
+  margin-top: var(--sp-4);
+  padding-top: var(--sp-5);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.metric-popup-meta-key {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-13);
+  color: var(--muted);
+}
+
+.metric-popup-meta-label {
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.metric-popup-code {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-12);
+  background: var(--surface-elev);
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
 }
 
 @media (max-width: 768px) {
