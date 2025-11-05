@@ -1,0 +1,7 @@
+{
+  "name": "tradelia-org",
+  "version": "1.0.0",
+  "dependencies": {
+    "@vercel/og": "^0.0.0"
+  }
+}
