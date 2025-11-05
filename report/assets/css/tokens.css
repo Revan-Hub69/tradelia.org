@@ -1166,3 +1166,449 @@ a:focus-visible {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.12) var(--surface-page);
 }
+
+/* ===== CONTAINER ===== */
+.container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--sp-4);
+  width: 100%;
+}
+
+/* ===== HEADER FIXED ISTITUZIONALE INNOVATIVO ===== */
+.hdr {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  backdrop-filter: blur(16px) saturate(1.2);
+  background: linear-gradient(
+    180deg,
+    rgba(15, 15, 15, 0.96) 0%,
+    rgba(15, 15, 15, 0.92) 100%
+  );
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 
+    0 1px 0 rgba(255, 255, 255, 0.03) inset,
+    0 4px 20px rgba(0, 0, 0, 0.6);
+  transition: all var(--transition-base);
+}
+
+.hdr::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(37, 99, 235, 0.15) 50%,
+    transparent 100%
+  );
+}
+
+.hdr .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Placeholder per header fixed (occupa spazio) */
+#site-header-slot::before {
+  content: "";
+  display: block;
+  height: 64px;
+}
+
+/* ===== BRAND PREMIUM ===== */
+.brand {
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: -0.03em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  color: var(--ink);
+  transition: all var(--transition-base);
+  position: relative;
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--radius-md);
+  margin-left: calc(var(--sp-2) * -1);
+}
+
+.brand:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.03);
+  transform: translateY(-1px);
+}
+
+.brand:active {
+  transform: translateY(0);
+}
+
+.brand-word {
+  color: var(--ink);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.brand-suffix {
+  color: var(--ink);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+
+.brand-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--brand-600);
+  display: inline-block;
+  box-shadow: 
+    0 0 6px rgba(37, 99, 235, 0.5),
+    0 0 12px rgba(37, 99, 235, 0.2);
+  animation: pulse-brand 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-brand {
+  0%, 100% { 
+    opacity: 1;
+    box-shadow: 
+      0 0 6px rgba(37, 99, 235, 0.5),
+      0 0 12px rgba(37, 99, 235, 0.2);
+  }
+  50% { 
+    opacity: 0.8;
+    box-shadow: 
+      0 0 10px rgba(37, 99, 235, 0.7),
+      0 0 20px rgba(37, 99, 235, 0.3);
+  }
+}
+
+.brand--sm .brand-word {
+  font-weight: 700;
+}
+
+.brand--sm .brand-dot {
+  width: 8px;
+  height: 8px;
+}
+
+.brand--sm .brand-suffix {
+  font-weight: 700;
+}
+
+/* ===== FOOTER ISTITUZIONALE INNOVATIVO ===== */
+.site-footer {
+  position: relative;
+  flex-shrink: 0;
+  background: linear-gradient(
+    180deg,
+    var(--surface-page) 0%,
+    var(--footer-bg) 100%
+  );
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--ink-soft);
+  font-size: var(--fs-14);
+  padding: var(--sp-10) 0 var(--sp-6);
+  overflow: hidden;
+  width: 100%;
+}
+
+.site-footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(37, 99, 235, 0.2) 25%,
+    rgba(37, 99, 235, 0.3) 50%,
+    rgba(37, 99, 235, 0.2) 75%,
+    transparent 100%
+  );
+  opacity: 0.6;
+}
+
+.ftr-head {
+  font-weight: 600;
+  font-size: var(--fs-14);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  color: var(--ink);
+  margin-bottom: var(--sp-4);
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
+}
+
+.ftr-head::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 40px;
+  height: 1px;
+  background: var(--brand-600);
+  opacity: 0.4;
+}
+
+.ftr-head svg {
+  width: 14px;
+  height: 14px;
+  opacity: 0.7;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.ftr-head:hover svg {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.ftr-grid {
+  display: grid;
+  gap: var(--sp-8);
+  grid-template-columns: 1fr;
+  margin-bottom: var(--sp-8);
+}
+
+@media (min-width: 768px) {
+  .ftr-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-8);
+  }
+}
+
+.ftr-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.ftr-col p {
+  font-size: var(--fs-14);
+  line-height: var(--lh-16);
+  color: var(--ink-soft);
+  margin: 0 0 var(--sp-3);
+  max-width: 42ch;
+}
+
+.ftr-quick-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin-top: var(--sp-1);
+}
+
+.ftr-quick-links a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-size: var(--fs-14);
+  font-weight: 400;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-1) 0;
+  position: relative;
+  padding-left: var(--sp-4);
+}
+
+.ftr-quick-links a::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--muted);
+  font-size: var(--fs-12);
+  transition: all var(--transition-fast);
+  transform: translateX(-2px);
+}
+
+.ftr-quick-links a:hover {
+  color: var(--ink);
+  padding-left: var(--sp-5);
+}
+
+.ftr-quick-links a:hover::before {
+  color: var(--brand-600);
+  transform: translateX(0);
+}
+
+.ftr-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ftr-list li {
+  margin: var(--sp-3) 0 0;
+  line-height: var(--lh-16);
+  font-size: var(--fs-13);
+  color: var(--ink-soft);
+  padding-left: var(--sp-4);
+  position: relative;
+}
+
+.ftr-list li:first-child {
+  margin-top: 0;
+}
+
+.ftr-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--muted);
+  transition: all var(--transition-fast);
+}
+
+.ftr-list li:hover::before {
+  background: var(--brand-600);
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.4);
+}
+
+.ftr-list li strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.ftr-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: var(--sp-8);
+  padding-top: var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  font-size: var(--fs-13);
+  color: var(--muted);
+  line-height: var(--lh-15);
+  position: relative;
+}
+
+.ftr-bottom::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 1px;
+  background: var(--brand-600);
+  opacity: 0.3;
+}
+
+@media (min-width: 768px) {
+  .ftr-bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+}
+
+.ftr-bottom > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.ftr-bottom > div p,
+.ftr-bottom > div span {
+  margin: 0;
+  font-size: var(--fs-13);
+  line-height: var(--lh-15);
+  color: var(--muted);
+}
+
+.site-footer a {
+  text-decoration: none;
+  transition: color var(--transition-fast);
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+
+.site-footer a:hover {
+  color: var(--ink);
+}
+
+a.mail-link {
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+
+a.mail-link:hover {
+  color: var(--ink);
+}
+
+.ftr-socials {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin-top: var(--sp-1);
+}
+
+.ftr-socials a {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  color: var(--ink-soft);
+  font-size: var(--fs-14);
+  font-weight: 400;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  padding: var(--sp-1) 0;
+  position: relative;
+}
+
+.ftr-socials a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: var(--sp-1);
+  width: 0;
+  height: 1px;
+  background: var(--brand-600);
+  transition: width var(--transition-base);
+}
+
+.ftr-socials a:hover {
+  color: var(--ink);
+  transform: translateX(2px);
+}
+
+.ftr-socials a:hover::after {
+  width: 24px;
+}
+
+/* ===== ICONS ===== */
+.ico {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+.ico-lg {
+  width: 18px;
+  height: 18px;
+}
