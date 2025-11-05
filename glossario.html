@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="it" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
@@ -73,11 +73,7 @@
     
     /* ===== HEADER CONTENT PREMIUM ===== */
     .glossario-header {
-      background: linear-gradient(
-        180deg,
-        var(--surface-page) 0%,
-        color-mix(in oklab, var(--surface-page) 98%, var(--brand-600) 2%) 100%
-      );
+      background: var(--surface-page);
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
       padding: var(--sp-10) 0 var(--sp-8);
       margin-top: 64px;
@@ -94,12 +90,9 @@
       background: linear-gradient(
         90deg,
         transparent 0%,
-        rgba(37, 99, 235, 0.2) 25%,
-        rgba(37, 99, 235, 0.3) 50%,
-        rgba(37, 99, 235, 0.2) 75%,
+        rgba(255, 255, 255, 0.08) 50%,
         transparent 100%
       );
-      opacity: 0.6;
     }
     
     .glossario-header-content {
@@ -148,29 +141,20 @@
     
     .search-input {
       width: 100%;
-      padding: var(--sp-5) var(--sp-6) var(--sp-5) var(--sp-14);
+      padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-14);
       font-size: var(--fs-15);
       color: var(--ink);
-      background: linear-gradient(
-        135deg,
-        var(--surface-card) 0%,
-        color-mix(in oklab, var(--surface-card) 99%, var(--brand-600) 1%) 100%
-      );
+      background: var(--surface-card);
       border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: var(--radius-xl);
+      border-radius: var(--radius-lg);
       transition: all var(--transition-base);
-      box-shadow: 
-        var(--shadow-sm),
-        0 1px 0 rgba(255, 255, 255, 0.03) inset;
     }
     
     .search-input:focus {
       outline: none;
-      border-color: var(--brand-600);
-      box-shadow: 
-        0 0 0 3px rgba(37, 99, 235, 0.15),
-        var(--shadow-md),
-        0 1px 0 rgba(255, 255, 255, 0.03) inset;
+      border-color: rgba(255, 255, 255, 0.12);
+      background: var(--surface-elev);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.02) inset;
     }
     
     .search-icon {
@@ -214,32 +198,43 @@
     .category-filter-btn {
       padding: var(--sp-2_5) var(--sp-4);
       font-size: var(--fs-12);
-      font-weight: 600;
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
       color: var(--muted);
       background: var(--surface-card);
       border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: var(--radius-pill);
       cursor: pointer;
       transition: all var(--transition-fast);
+      position: relative;
     }
     
     .category-filter-btn:hover {
-      color: var(--ink);
-      background: var(--surface-elev);
-      border-color: rgba(255, 255, 255, 0.1);
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-sm);
+      color: var(--ink-soft);
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.08);
     }
     
     .category-filter-btn.active {
       color: var(--ink);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.12);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Accento blu discreto per stato attivo (solo quando necessario) */
+    .category-filter-btn.active::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 2px;
       background: var(--brand-600);
-      border-color: var(--brand-600);
-      box-shadow: 
-        var(--shadow-sm),
-        0 0 0 2px rgba(37, 99, 235, 0.2);
+      opacity: 0.4;
+      border-radius: 2px 2px 0 0;
     }
     
     /* ===== CONTENT ===== */
@@ -275,7 +270,7 @@
       content: "";
       position: absolute;
       inset: 0 auto 0 0;
-      width: 3px;
+      width: 2px;
       background: transparent;
       border-radius: var(--radius-md) 0 0 var(--radius-md);
       transition: background var(--transition-fast);
@@ -283,12 +278,12 @@
     
     .term-item:hover {
       background: var(--surface-elev);
-      border-color: rgba(255, 255, 255, 0.1);
-      transform: translateX(4px);
+      border-color: rgba(255, 255, 255, 0.08);
+      transform: translateX(2px);
     }
     
     .term-item:hover::before {
-      background: var(--brand-600);
+      background: rgba(255, 255, 255, 0.12);
     }
     
     .term-item-content {
@@ -331,28 +326,33 @@
     }
     
     .term-item-badge--universo {
-      color: var(--brand-600);
-      background: rgba(37, 99, 235, 0.1);
+      color: var(--ink-soft);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
     
     .term-item-badge--difficolta {
-      color: var(--neutral);
-      background: rgba(100, 116, 139, 0.1);
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
     }
     
     .term-item-badge--difficolta.principiante {
-      color: var(--ok);
-      background: rgba(22, 163, 74, 0.1);
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
     }
     
     .term-item-badge--difficolta.intermedio {
-      color: var(--warn);
-      background: rgba(234, 88, 12, 0.1);
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
     }
     
     .term-item-badge--difficolta.avanzato {
-      color: var(--err);
-      background: rgba(220, 38, 38, 0.1);
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
     }
     
     .term-item-icon {
@@ -364,21 +364,17 @@
     }
     
     .term-item:hover .term-item-icon {
-      color: var(--brand-600);
+      color: var(--ink-soft);
       transform: translateX(2px);
     }
     
-    /* ===== POPUP TERMINE ===== */
+    /* ===== POPUP TERMINE (SIDE PANEL DESKTOP / MODAL MOBILE) ===== */
     .glossary-popup-overlay {
       position: fixed;
       inset: 0;
       z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: var(--sp-4);
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
       transition: opacity var(--transition-base);
     }
     
@@ -387,19 +383,26 @@
     }
     
     .glossary-popup-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
       width: 100%;
-      max-width: 700px;
-      max-height: 90vh;
+      max-width: 480px;
       background: var(--surface-card);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: var(--radius-xl);
+      border-left: 1px solid rgba(255, 255, 255, 0.06);
       box-shadow: 
-        var(--shadow-xl),
-        0 1px 0 rgba(255, 255, 255, 0.03) inset;
+        -4px 0 20px rgba(0, 0, 0, 0.5),
+        0 1px 0 rgba(255, 255, 255, 0.02) inset;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      position: relative;
+      transform: translateX(100%);
+      transition: transform var(--transition-slow);
+    }
+    
+    .glossary-popup-overlay:not([hidden]) .glossary-popup-panel {
+      transform: translateX(0);
     }
     
     .glossary-popup-panel::before {
@@ -412,9 +415,31 @@
       background: linear-gradient(
         90deg,
         transparent 0%,
-        rgba(37, 99, 235, 0.2) 50%,
+        rgba(255, 255, 255, 0.08) 50%,
         transparent 100%
       );
+    }
+    
+    @media (max-width: 768px) {
+      .glossary-popup-panel {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-width: 100%;
+        max-height: 85vh;
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        transform: translateY(100%);
+        box-shadow: 
+          0 -4px 20px rgba(0, 0, 0, 0.5),
+          0 1px 0 rgba(255, 255, 255, 0.02) inset;
+      }
+      
+      .glossary-popup-overlay:not([hidden]) .glossary-popup-panel {
+        transform: translateY(0);
+      }
     }
     
     .glossary-popup-header {
@@ -424,11 +449,8 @@
       gap: var(--sp-4);
       padding: var(--sp-6);
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      background: linear-gradient(
-        180deg,
-        var(--surface-card) 0%,
-        color-mix(in oklab, var(--surface-card) 98%, var(--brand-600) 2%) 100%
-      );
+      background: var(--surface-card);
+      flex-shrink: 0;
     }
     
     .glossary-popup-header-content {
@@ -437,12 +459,12 @@
     }
     
     .glossary-popup-title {
-      font-size: var(--fs-22);
-      font-weight: 700;
+      font-size: var(--fs-20);
+      font-weight: 600;
       color: var(--ink);
-      margin: 0 0 var(--sp-2) 0;
+      margin: 0 0 var(--sp-3) 0;
       line-height: var(--lh-12);
-      letter-spacing: -0.02em;
+      letter-spacing: -0.01em;
     }
     
     .glossary-popup-badges {
@@ -453,37 +475,38 @@
     
     .glossary-popup-badge {
       display: inline-flex;
-      padding: var(--sp-1) var(--sp-3);
-      font-size: var(--fs-11);
-      font-weight: 600;
+      padding: var(--sp-1) var(--sp-2_5);
+      font-size: var(--fs-10);
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
       border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
     
     .glossary-popup-badge--universo {
-      color: var(--brand-600);
-      background: rgba(37, 99, 235, 0.1);
+      color: var(--ink-soft);
+      background: rgba(255, 255, 255, 0.04);
     }
     
     .glossary-popup-badge--difficolta {
-      color: var(--neutral);
-      background: rgba(100, 116, 139, 0.1);
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.03);
     }
     
     .glossary-popup-badge--difficolta.principiante {
-      color: var(--ok);
-      background: rgba(22, 163, 74, 0.1);
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.03);
     }
     
     .glossary-popup-badge--difficolta.intermedio {
-      color: var(--warn);
-      background: rgba(234, 88, 12, 0.1);
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.03);
     }
     
     .glossary-popup-badge--difficolta.avanzato {
-      color: var(--err);
-      background: rgba(220, 38, 38, 0.1);
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.03);
     }
     
     .glossary-popup-close {
@@ -492,11 +515,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: var(--radius-md);
+      border-radius: var(--radius-sm);
       background: transparent;
       border: 1px solid rgba(255, 255, 255, 0.06);
-      color: var(--ink-soft);
-      font-size: 20px;
+      color: var(--muted);
+      font-size: 18px;
       line-height: 1;
       cursor: pointer;
       transition: all var(--transition-fast);
@@ -504,9 +527,9 @@
     }
     
     .glossary-popup-close:hover {
-      background: var(--surface-elev);
-      border-color: rgba(255, 255, 255, 0.1);
-      color: var(--ink);
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.08);
+      color: var(--ink-soft);
     }
     
     .glossary-popup-body {
@@ -526,11 +549,11 @@
     
     .glossary-popup-section-title {
       font-size: var(--fs-11);
-      font-weight: 700;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--brand-600);
-      margin-bottom: var(--sp-2);
+      letter-spacing: 0.1em;
+      color: var(--ink-soft);
+      margin-bottom: var(--sp-3);
       display: flex;
       align-items: center;
       gap: var(--sp-2);
@@ -543,10 +566,9 @@
       position: absolute;
       bottom: 0;
       left: 0;
-      width: 30px;
+      width: 24px;
       height: 1px;
-      background: var(--brand-600);
-      opacity: 0.4;
+      background: rgba(255, 255, 255, 0.12);
     }
     
     .glossary-popup-section-text {
@@ -557,11 +579,11 @@
     }
     
     .glossary-popup-source {
-      font-size: var(--fs-13);
+      font-size: var(--fs-12);
       line-height: var(--lh-16);
       color: var(--muted);
       font-style: italic;
-      margin-top: var(--sp-3);
+      margin-top: var(--sp-4);
       padding-top: var(--sp-5);
       border-top: 1px solid rgba(255, 255, 255, 0.06);
       position: relative;
@@ -573,10 +595,9 @@
       top: 0;
       left: 50%;
       transform: translateX(-50%);
-      width: 60px;
+      width: 40px;
       height: 1px;
-      background: var(--brand-600);
-      opacity: 0.3;
+      background: rgba(255, 255, 255, 0.1);
     }
     
     .glossary-popup-source strong {
@@ -620,10 +641,9 @@
       position: absolute;
       bottom: -1px;
       left: 0;
-      width: 100px;
+      width: 80px;
       height: 1px;
-      background: var(--brand-600);
-      opacity: 0.3;
+      background: rgba(255, 255, 255, 0.1);
     }
   </style>
 </head>
@@ -967,7 +987,10 @@
       `;
       
       // Close handlers
-      panel.querySelector('.glossary-popup-close').addEventListener('click', () => closeTermPopup());
+      const closeBtn = panel.querySelector('.glossary-popup-close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => closeTermPopup());
+      }
       overlay.addEventListener('click', (e) => {
         if (e.target === overlay) closeTermPopup();
       });
