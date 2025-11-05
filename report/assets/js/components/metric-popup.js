@@ -73,6 +73,7 @@ function renderPopup(metric) {
     <header class="metric-popup-header">
       <div class="metric-popup-header-content">
         <h3 class="metric-popup-title">${escapeHtml(metric.label || metric.key)}</h3>
+        <div class="metric-popup-key">${escapeHtml(metric.key)}</div>
       </div>
       <button class="metric-popup-close" aria-label="Chiudi" type="button">×</button>
     </header>
@@ -103,6 +104,12 @@ function renderPopup(metric) {
           <p class="metric-popup-section-text metric-popup-no-info">Nessuna informazione disponibile nel glossario per questa metrica.</p>
         </div>
       `}
+      <div class="metric-popup-meta">
+        <div class="metric-popup-meta-key">
+          <span class="metric-popup-meta-label">Key:</span>
+          <code class="metric-popup-code">${escapeHtml(metric.key)}</code>
+        </div>
+      </div>
     </div>
   `;
   
