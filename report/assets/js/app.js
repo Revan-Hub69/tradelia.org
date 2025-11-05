@@ -96,23 +96,11 @@ import { metricPopup } from './components/metric-popup.js';
   }
   
   // ===== META TAGS DINAMICI =====
-  function updateMetaTags(ticker, companyName, version, rating = null, trend = null, start = null, end = null) {
+  function updateMetaTags(ticker, companyName, version) {
     const title = `Framework Accademico AI, Tradelia Swing Master 5.0 · ${ticker}`;
     const description = `Analisi multi-fattore su ${companyName} (${ticker}) - Contesto macro, sentiment e tecnica (orizzonte 3–10 giorni)`;
     const url = `${window.location.origin}${window.location.pathname}${window.location.search}`;
-    
-    // Genera URL immagine dinamica con parametri
-    const ogImageParams = new URLSearchParams({
-      ticker: ticker || '',
-      company: companyName || '',
-      version: version || '5.0',
-    });
-    if (rating) ogImageParams.set('rating', rating);
-    if (trend) ogImageParams.set('trend', trend);
-    if (start) ogImageParams.set('start', start);
-    if (end) ogImageParams.set('end', end);
-    
-    const imageUrl = `${window.location.origin}/api/og-image?${ogImageParams.toString()}`;
+    const imageUrl = `${window.location.origin}/img/tradelia_og_vC_white_clean.png`;
     const imageAlt = `${companyName} (${ticker}) - Analisi Tradelia AI`;
     
     // Update title
@@ -128,8 +116,6 @@ import { metricPopup } from './components/metric-popup.js';
     updateMetaProperty('og:url', url);
     updateMetaProperty('og:image', imageUrl);
     updateMetaProperty('og:image:alt', imageAlt);
-    updateMetaProperty('og:image:width', '1200');
-    updateMetaProperty('og:image:height', '630');
     
     // Update Twitter Card
     updateMetaName('twitter:title', title);
@@ -251,17 +237,13 @@ import { metricPopup } from './components/metric-popup.js';
       const end = extractMetric('End');
       const updatedAt = extractMetric('UpdatedAt');
       
-      // Estrai metriche per immagine dinamica (se disponibili)
-      const rating = extractMetric('Rating') || extractMetric('OverallRating') || null;
-      const trend = extractMetric('Trend') || extractMetric('Sentiment') || null;
-      
       __versionQS = version && version !== '—' ? `?v=${encodeURIComponent(version)}` : '';
       
       if (ticker) {
         document.title = `Framework Accademico AI, Tradelia Swing Master 5.0 · ${ticker}`;
         
-        // Aggiorna meta tags dinamici per SEO e social sharing (con immagine personalizzata)
-        updateMetaTags(ticker, companyName || ticker, version, rating, trend, start, end);
+        // Aggiorna meta tags dinamici per SEO e social sharing
+        updateMetaTags(ticker, companyName || ticker, version);
         
         // Aggiorna structured data dinamico
         updateStructuredData(ticker, companyName || ticker, version, start, end);
