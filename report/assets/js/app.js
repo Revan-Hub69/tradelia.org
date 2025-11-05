@@ -21,16 +21,6 @@ import { metricPopup } from './components/metric-popup.js';
   
   let __versionQS = '';
   let __header = null;
-  let __isLoading = false;
-  
-  // ===== LOADING STATES =====
-  function showLoadingState(container, message = 'Caricamento...') {
-    container.innerHTML = `
-      <div class="loading-skeleton">
-        <div class="loading-spinner">${message}</div>
-      </div>
-    `;
-  }
   
   // ===== ERROR STATES =====
   function showErrorState(container, error, title = 'Errore di caricamento') {
@@ -181,8 +171,6 @@ import { metricPopup } from './components/metric-popup.js';
     }
     
     try {
-      showLoadingState(TICKER_SLOT, 'Caricamento metriche...');
-      
       const { headerTicker } = await safeImport('/report/assets/js/components/header-ticker.js');
       
       if (!headerTicker || typeof headerTicker.mount !== 'function') {
@@ -205,7 +193,6 @@ import { metricPopup } from './components/metric-popup.js';
   // ===== CARICAMENTO HEADER =====
   async function loadHeader(reportId) {
     try {
-      __isLoading = true;
       const headerPath = `/report/reports/${reportId}/header.json`;
       const header = await fetchJSON(headerPath);
       
@@ -256,10 +243,8 @@ import { metricPopup } from './components/metric-popup.js';
       
       await mountHeaderTicker(header);
       Logger.debug('App', 'Header caricato');
-      __isLoading = false;
       return header;
     } catch (err) {
-      __isLoading = false;
       Logger.error('App', 'Errore caricamento header', err);
       showErrorState(TICKER_SLOT, err, 'Errore caricamento dati');
       return null;
@@ -288,11 +273,6 @@ import { metricPopup } from './components/metric-popup.js';
     }
     
     Logger.debug('App', `Montaggio ${manifest.order.length} moduli`);
-    
-    // Mostra loading state iniziale
-    if (manifest.order.length > 0) {
-      showLoadingState(ROOT, 'Caricamento moduli...');
-    }
     
     let loadedCount = 0;
     const totalModules = manifest.order.length;
@@ -348,12 +328,6 @@ import { metricPopup } from './components/metric-popup.js';
         continue;
       }
     }
-    
-    // Rimuovi loading state se tutti i moduli sono caricati
-    if (loadedCount === totalModules && ROOT.querySelector('.loading-skeleton')) {
-      // Se non ci sono errori, il loading sarà già stato rimosso
-      // altrimenti rimane visibile
-    }
   }
   
   // ===== INIZIALIZZAZIONE =====
@@ -376,8 +350,8 @@ import { metricPopup } from './components/metric-popup.js';
       await loadModules(reportId);
     } catch (err) {
       Logger.error('App', 'Errore loadModules', err);
-      // Se ROOT è vuoto o ha solo loading, mostra errore globale
-      if (!ROOT.innerHTML || ROOT.innerHTML.includes('loading-skeleton')) {
+      // Se ROOT è vuoto, mostra errore globale
+      if (!ROOT.innerHTML) {
         showErrorState(ROOT, err, 'Errore caricamento moduli');
       }
     }
