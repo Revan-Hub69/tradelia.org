@@ -253,20 +253,14 @@ import { metricPopup } from './components/metric-popup.js';
   
   // ===== CARICAMENTO MODULI =====
   async function loadModules(reportId) {
-    let manifest = { order: ['F4', 'F5', 'F5B', 'F6'] };
+    // Tutti i moduli sono placeholder (da rifare da zero)
+    // Carica tutti i moduli dal manifest, con fallback a placeholder se mancanti
+    let manifest = { order: ['F1', 'F1B', 'F2', 'F3', 'F3O', 'F4', 'F5', 'F5B', 'F6', 'F7'] };
     
     try {
       const m = await fetchJSON(`/report/reports/${reportId}/manifest.json`);
       if (Array.isArray(m?.order) && m.order.length) {
-        const excluded = new Set(['f1b', 'f2', 'f3o', 'f3']);
-        const filtered = m.order
-          .map(id => String(id).trim())
-          .filter(Boolean)
-          .filter(id => !excluded.has(id.toLowerCase()));
-        
-        if (filtered.length) {
-          manifest = { order: filtered };
-        }
+        manifest = { order: m.order };
       }
     } catch (err) {
       Logger.warn('App', 'Manifest non trovato, uso default', err);
@@ -283,13 +277,30 @@ import { metricPopup } from './components/metric-popup.js';
       const modPath = `/report/assets/js/modules/${idLower}.js`;
       
       try {
-        // Error boundary per ogni modulo
-        const json = await fetchJSON(jsonPath);
-        const mod = await safeImport(modPath);
+        // Carica JSON (fallback a oggetto vuoto se mancante)
+        let json = {};
+        try {
+          json = await fetchJSON(jsonPath);
+        } catch (jsonErr) {
+          Logger.warn('App', `JSON ${jsonPath} non trovato, uso placeholder`, jsonErr);
+          json = { _placeholder: true };
+        }
+        
+        // Carica modulo (fallback a placeholder se mancante)
+        let mod;
+        try {
+          mod = await safeImport(modPath);
+        } catch (modErr) {
+          Logger.warn('App', `Modulo ${modPath} non trovato, uso placeholder`, modErr);
+          // Importa placeholder generico
+          const placeholderModule = await safeImport('/report/assets/js/modules/_placeholder.js');
+          mod = placeholderModule;
+        }
         
         if (typeof mod.renderCard !== 'function') {
-          Logger.warn('App', `Modulo ${modId}: renderCard non disponibile`);
-          continue;
+          Logger.warn('App', `Modulo ${modId}: renderCard non disponibile, uso placeholder`);
+          const placeholderModule = await safeImport('/report/assets/js/modules/_placeholder.js');
+          mod = placeholderModule;
         }
         
         const cardHTML = mod.renderCard(json, { reportId, modId, header: __header });
