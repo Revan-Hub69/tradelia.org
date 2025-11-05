@@ -1,0 +1,189 @@
+{
+  "meta": {
+    "timestampET": "2025-11-07 16:30 ET",
+    "module": "F1B · Market Regime",
+    "moduleVersion": "v19-Dynamic",
+    "moduleStatus": "ACTIVE",
+    "freshness": "≤ T-1",
+    "hero_intro": "Regime risk-on con leadership Technology/Communication Services e bias MegaCap; volatilità sotto 20, credito IG disteso, breadth 1M ampia.",
+    "hero_disclaimer": "Output a fini educativi/informativi (orizzonte 3–10 giorni). Dati Tier-1 (ETF proxy, Yahoo Finance, FRED, CBOE). Non costituisce consulenza o raccomandazione (MiFID II)."
+  },
+  "f1bSnapshot": {
+    "regime_state": {
+      "StrategyMode_macro": {
+        "raw": "Momentum-light",
+        "tone": "green",
+        "ai_note": "Contesto favorevole al rischio con leadership tech e volatilità contenuta. AAPL beneficiato da regime pro-growth."
+      },
+      "RegimeScore": {
+        "raw": "+0.25",
+        "tone": "green",
+        "ai_note": "Score positivo: equity beta sostenuto da breadth mensile e condizioni finanziarie non restrittive."
+      },
+      "VolRegime": {
+        "raw": "VIX ~18 (<20), 1W stabile; possibili spike intraday",
+        "tone": "green",
+        "ai_note": "Volatilità contenuta coerente con risk-on; monitorare accelerazioni improvvise."
+      },
+      "LiquidityRegimeScore": {
+        "raw": "+0.50",
+        "tone": "green",
+        "ai_note": "Flussi su ETF growth/tech e condizioni di funding stabili supportano la liquidità."
+      },
+      "CreditRiskBlock": {
+        "raw": "+0.35 (IG OAS ~0.80%)",
+        "tone": "green",
+        "ai_note": "Spreads investment-grade compressi; nessun segnale di stress sistemico di breve."
+      },
+      "FX_Regime": {
+        "raw": "USD neutro/debole",
+        "tone": "neutral",
+        "ai_note": "FX non ostacola il rischio globale; dollaro non in rafforzamento aggressivo."
+      },
+      "RiskWindow": {
+        "raw": "Driver 3–10g: Fed policy, earnings tech, CPI/PCE; monitor Oil/Gold, USD, curva 2s10s, VIX 7d",
+        "tone": "yellow",
+        "ai_note": "Scenario costruttivo ma sensibile a sorprese macro e volatilità episodica."
+      }
+    },
+    "breadth_rotation": {
+      "Breadth_1M": {
+        "raw": "0.68",
+        "tone": "green",
+        "ai_note": "Partecipazione ampia a 1 mese, compatibile con trend rialzista diffuso."
+      },
+      "RiskTilt_1M": {
+        "raw": "Pro-rischio (growth/ciclici > difensivi)",
+        "tone": "green",
+        "ai_note": "Preferenza strutturale per settori beta e sensibili al ciclo."
+      },
+      "SmallCapPressure_1W": {
+        "raw": "-0.10",
+        "tone": "yellow",
+        "ai_note": "Small/Microcap positive ma inferiori a MegaCap; vulnerabilità periferica da monitorare."
+      },
+      "IndexMomentum_1W": {
+        "raw": "+0.75",
+        "tone": "green",
+        "ai_note": "Momentum settimanale forte su NDX/SPX; RUT positivo ma meno vigoroso."
+      },
+      "SizeBias": {
+        "raw": "MegaCap > SmallCap",
+        "tone": "yellow",
+        "ai_note": "Leadership concentrata su titoli a grande capitalizzazione (AAPL incluso)."
+      },
+      "Leadership": {
+        "LeadersMultiTF": {
+          "tone": "green",
+          "items": ["Technology", "Communication Services", "Consumer Cyclical", "Industrials"],
+          "ai_note": "Leadership coerente multi-timeframe a favore dei temi growth/innovazione."
+        },
+        "DefensiveLeadership": {
+          "tone": "neutral",
+          "items": ["Utilities", "Healthcare", "Consumer Defensive"],
+          "ai_note": "Difensivi in secondo piano; reattivi solo a shock macro."
+        },
+        "Lagging": {
+          "tone": "yellow",
+          "items": ["Real Estate", "Financial"],
+          "ai_note": "Sotto-performance relativa coerente con sensibilità a tassi e credito."
+        },
+        "ai_note": "Rotazione pro-growth con concentrazione su MegaCap; AAPL in settore Technology in leadership."
+      }
+    },
+    "internals_raw": {
+      "Indices_1W": {
+        "tone": "green",
+        "items": ["NDX: momentum forte", "SPX: positivo", "RUT: positivo ma lag"],
+        "ai_note": "Forza trainata dai grandi nomi tech (AAPL incluso); breadth migliora ma resta concentrata."
+      },
+      "Futures_Move_1W": {
+        "tone": "neutral",
+        "items": ["WTI Oil ~$78/bbl", "Gold ~$2650/oz", "Natural Gas mixed"],
+        "ai_note": "Energia mista; commodities in range; vol implicita in calo su base settimanale."
+      },
+      "Curve_UST": {
+        "tone": "neutral",
+        "items": ["2s10s ≈ +0.48% (T-1)"],
+        "ai_note": "Curva non invertita sul dato più recente; segnale neutro-moderatamente favorevole."
+      },
+      "Vol_USD": {
+        "tone": "green",
+        "items": ["VIX ~18", "USD neutro/debole"],
+        "ai_note": "Combinazione che non ostacola il rischio su equity."
+      },
+      "ai_note": "Internals coerenti con regime risk-on; principali rischi da sorprese macro e volatilità episodica."
+    }
+  },
+  "finvizFilters": {
+    "QueryString": "fa_pe_u30,fa_epsyoy_o20,sh_avgvol_o500,sh_price_u300,ta_sma20_pa,ta_sma50_pa,ta_sma200_pa,ta_rsi_os40,ind_technologyservices,geo_usa",
+    "GeneratedAt": "2025-11-07T16:30:00Z",
+    "StrategyMode": "Momentum-light",
+    "SectorFocus": ["Technology", "Communication Services"],
+    "SizeFocus": "MegaCap",
+    "Filters": {
+      "valuation": "P/E < 30, EPS YoY > 20%",
+      "liquidity": "Avg Volume > 500K",
+      "price": "Price < $300",
+      "technical": "Price > SMA20, SMA50, SMA200; RSI > 40",
+      "sector": "Technology Services",
+      "geo": "USA"
+    },
+    "ai_note": "Query generata per regime Momentum-light con focus Technology/MegaCap. AAPL soddisfa criteri di screening."
+  },
+  "bridgeF2": {
+    "signals": [
+      {
+        "type": "regime_confirm",
+        "value": "Momentum-light",
+        "strength": "medium",
+        "note": "Regime favorevole per swing trading 3-10 giorni"
+      },
+      {
+        "type": "sector_alignment",
+        "value": "Technology leadership",
+        "strength": "high",
+        "note": "AAPL in settore in leadership"
+      },
+      {
+        "type": "volatility_window",
+        "value": "VIX < 20",
+        "strength": "medium",
+        "note": "Finestra di volatilità favorevole"
+      }
+    ],
+    "next_steps": "F2: Macro/Sentiment analysis per conferma narrativa e driver specifici"
+  },
+  "audit_quality": {
+    "AuditPathID": "SWG25_F1B_20251107_AAPL",
+    "SourcesTier1": ["ETF proxy (Yahoo Finance)", "FRED", "CBOE", "Web search"],
+    "Freshness": "≤ T-1",
+    "ModuleStatus": "ACTIVE",
+    "QualityMetrics": {
+      "FreshnessScore": {
+        "raw": "T-1",
+        "tone": "green",
+        "ai_note": "Dati macro/mercato allineati a T-1; equity/ETF da proxy T-1."
+      },
+      "ConfidenceFinal": {
+        "raw": "0.85",
+        "tone": "green",
+        "ai_note": "Coerenza elevata tra blocchi (vol, credito, breadth) con dati ETF proxy."
+      },
+      "DataIntegrity": {
+        "raw": "0.88",
+        "tone": "green",
+        "ai_note": "Copertura ampia con ETF proxy; qualità sufficiente per uso educativo."
+      },
+      "FeedSync": {
+        "raw": "0.82",
+        "tone": "green",
+        "ai_note": "Sync tra fonti equity/ETF proxy e macro T-1 entro la soglia del framework."
+      }
+    }
+  },
+  "mifid": {
+    "disclaimer": "Questo contenuto ha finalità esclusivamente educativa e informativa e non costituisce in alcun modo raccomandazione d'investimento o consulenza personalizzata ai sensi della normativa MiFID II."
+  }
+}
+

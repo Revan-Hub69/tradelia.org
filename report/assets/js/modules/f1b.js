@@ -505,6 +505,69 @@ function buildDrawerSectionsPublic(d) {
     </section>
   `;
 
+  // 8. Finviz Filters (v19-Dynamic) - Solo se presente (uso interno)
+  const finvizHTML = d.finvizFilters ? `
+    <section class="tl-panel-section" data-f1b-section="finviz"
+      style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+      <header class="tl-panel-section-title">
+        <div class="tl-panel-section-title-text">Finviz Filters (Dynamic v19)</div>
+      </header>
+
+      ${headlineBlockCard(
+        "Query String",
+        d.finvizFilters.QueryString || ""
+      )}
+
+      <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4] mt-3">
+        <div>
+          <div class="text-[11px] font-semibold text-[color:var(--muted)] uppercase mb-1">Filter Type</div>
+          <div class="text-[12px] text-[color:var(--ink)]">${escapeHtml(d.finvizFilters.FilterType || "—")}</div>
+        </div>
+        <div>
+          <div class="text-[11px] font-semibold text-[color:var(--muted)] uppercase mb-1">Generated From</div>
+          <div class="text-[12px] text-[color:var(--ink)]">${escapeHtml(d.finvizFilters.GeneratedFrom || "—")}</div>
+        </div>
+      </div>
+
+      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-3">
+        Query generata dinamicamente in base a StrategyMode_macro, LeadersMultiTF e SizeBias.
+        Per uso interno: non visualizzare in versione pubblica MiFID.
+      </div>
+    </section>
+  ` : "";
+
+  // 9. Bridge F2 (v19-Dynamic) - Solo se presente (uso interno)
+  const bridgeF2HTML = d.bridgeF2 ? `
+    <section class="tl-panel-section" data-f1b-section="bridgef2"
+      style="background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;">
+      <header class="tl-panel-section-title">
+        <div class="tl-panel-section-title-text">Bridge to F2 (v19-Dynamic)</div>
+      </header>
+
+      ${headlineBlockCard(
+        "Universe for F2",
+        `Focus Sectors: ${(d.bridgeF2.universe_for_F2?.FocusSectors || []).join(", ")}\n` +
+        `Market Cap: ${(d.bridgeF2.universe_for_F2?.IncludeMarketCap || []).join(", ")}\n` +
+        `Finviz Query: ${d.bridgeF2.universe_for_F2?.FinvizQuery || ""}`
+      )}
+
+      <div class="grid md:grid-cols-2 gap-3 text-[12px] leading-[1.4] mt-3">
+        <div>
+          <div class="text-[11px] font-semibold text-[color:var(--muted)] uppercase mb-1">StrategyMode</div>
+          <div class="text-[12px] text-[color:var(--ink)]">${escapeHtml(d.bridgeF2.handoffSignals?.StrategyMode_macro || "—")}</div>
+        </div>
+        <div>
+          <div class="text-[11px] font-semibold text-[color:var(--muted)] uppercase mb-1">RegimeScore</div>
+          <div class="text-[12px] text-[color:var(--ink)]">${escapeHtml(d.bridgeF2.handoffSignals?.RegimeScore || "—")}</div>
+        </div>
+      </div>
+
+      <div class="text-[11px] text-[color:var(--muted)] leading-[1.4] mt-3">
+        Handoff signals per modulo F2. Per uso interno: non visualizzare in versione pubblica MiFID.
+      </div>
+    </section>
+  ` : "";
+
   return {
     regimeHTML,
     breadthHTML,
@@ -512,7 +575,9 @@ function buildDrawerSectionsPublic(d) {
     streetHTML,
     sintesiHTML,
     auditHTML,
-    mifidHTML
+    mifidHTML,
+    finvizHTML,
+    bridgeF2HTML
   };
 }
 
@@ -540,6 +605,8 @@ ${drawerMenuButtonPublic("street","Narrativa Istituzionale")}
 ${drawerMenuButtonPublic("sintesi","Sintesi Educativa")}
 ${drawerMenuButtonPublic("audit","Qualità Dati")}
 ${drawerMenuButtonPublic("mifid","Informativa MiFID")}
+${sectionsObj.finvizHTML ? drawerMenuButtonPublic("finviz","Finviz Filters") : ""}
+${sectionsObj.bridgeF2HTML ? drawerMenuButtonPublic("bridgef2","Bridge F2") : ""}
 </aside> 
       <main class="f1b-panel-content flex-1 min-w-0"
         style="
@@ -556,6 +623,8 @@ ${drawerMenuButtonPublic("mifid","Informativa MiFID")}
         <div data-f1b-view="sintesi" hidden>${sectionsObj.sintesiHTML}</div>
         <div data-f1b-view="audit" hidden>${sectionsObj.auditHTML}</div>
         <div data-f1b-view="mifid" hidden>${sectionsObj.mifidHTML}</div>
+        ${sectionsObj.finvizHTML ? `<div data-f1b-view="finviz" hidden>${sectionsObj.finvizHTML}</div>` : ""}
+        ${sectionsObj.bridgeF2HTML ? `<div data-f1b-view="bridgef2" hidden>${sectionsObj.bridgeF2HTML}</div>` : ""}
       </main>
     </div>
   `;
@@ -625,6 +694,8 @@ ${mobileTabButton("street","Narrativa Istituzionale")}
 ${mobileTabButton("sintesi","Sintesi Educativa")}
 ${mobileTabButton("audit","Qualità Dati")}
 ${mobileTabButton("mifid","Informativa MiFID")}
+${sectionsObj.finvizHTML ? mobileTabButton("finviz","Finviz Filters") : ""}
+${sectionsObj.bridgeF2HTML ? mobileTabButton("bridgef2","Bridge F2") : ""}
 
       </div>
 
@@ -702,6 +773,8 @@ ${mobileTabButton("mifid","Informativa MiFID")}
         <div data-f1b-view="sintesi" hidden>${sectionsObj.sintesiHTML}</div>
         <div data-f1b-view="audit" hidden>${sectionsObj.auditHTML}</div>
         <div data-f1b-view="mifid" hidden>${sectionsObj.mifidHTML}</div>
+        ${sectionsObj.finvizHTML ? `<div data-f1b-view="finviz" hidden>${sectionsObj.finvizHTML}</div>` : ""}
+        ${sectionsObj.bridgeF2HTML ? `<div data-f1b-view="bridgef2" hidden>${sectionsObj.bridgeF2HTML}</div>` : ""}
       </main>
     </div>
   `;
@@ -1255,17 +1328,26 @@ function computeHighLevelTone(strategyModeMacroObj, regimeScoreObj) {
 // -----------------------------------------------------------------------------*/
 
 function normalizeDataPublicF1B(src = {}) {
+  // Supporta sia formato nuovo (v19-Dynamic) che legacy
+  const hasNewFormat = src.f1bSnapshot || src.finvizFilters || src.bridgeF2;
+  
   return {
     meta: {
       timestampET: src?.meta?.timestampET ?? "—",
-      module: src?.meta?.module ?? "F1B · Market Regime",
+      module: src?.meta?.module ?? src?.meta?.moduleSource ?? "F1B · Market Regime",
       moduleVersion: src?.meta?.moduleVersion ?? "vX",
       moduleStatus: src?.meta?.moduleStatus ?? "ACTIVE",
-      freshness: src?.meta?.freshness ?? "≤ T-1",
+      freshness: src?.meta?.freshness ?? src?.meta?.dataLagLabel ?? "≤ T-1",
       hero_intro: src?.meta?.hero_intro ?? "Volatilità, credito, curva tassi, partecipazione al rialzo e narrativa macro dominante.",
       hero_disclaimer: src?.meta?.hero_disclaimer ?? "F1B descrive lo stato del rischio di mercato nell'orizzonte 3–10 giorni, basandosi su volatilità, credito, struttura curva tassi e ampiezza settoriale. Fonti primarie: Bloomberg, Reuters, CBOE, FRED, Finviz Premium, ETFdb."
     },
 
+    // Nuove sezioni v19-Dynamic (se presenti)
+    f1bSnapshot: src.f1bSnapshot || null,
+    finvizFilters: src.finvizFilters || null,
+    bridgeF2: src.bridgeF2 || null,
+
+    // Sezioni legacy (per compatibilità)
     regime_and_risk: src.regime_and_risk || {},
 
     breadth_rotation: src.breadth_rotation || {},

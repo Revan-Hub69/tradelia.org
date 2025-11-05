@@ -1,0 +1,112 @@
+{
+  "meta": {
+    "module": "HEADER",
+    "version": "v2025.11.07-rc2",
+    "auditPathId": "RPT-2025-11-07-AAPL-HEAD",
+    "state": "ACTIVE",
+    "generatedAt": "2025-11-07T16:30:00Z",
+    "lastUpdated": "2025-11-07T16:30:15Z",
+    "reportID": "20251107-1630",
+    "changes": [
+      {
+        "timestamp": "2025-11-07T16:30:00Z",
+        "version": "v2025.11.07-rc1",
+        "changes": ["Header generato automaticamente"]
+      },
+      {
+        "timestamp": "2025-11-07T16:30:15Z",
+        "version": "v2025.11.07-rc2",
+        "changes": [
+          "F1B processed: StrategyMode=Momentum-light, RegimeScore=0.25",
+          "F1B version: v19-Dynamic"
+        ]
+      }
+    ],
+    "moduleVersions": {
+      "header": "1.0.0",
+      "f1b": "v19-Dynamic"
+    }
+  },
+  "rows": [
+    {
+      "id": "company-line",
+      "parts": [
+        { "kind": "text", "text": "Report Framework Accademico AI, Tradelia Swing Master 5.0 su " },
+        { "kind": "metric", "key": "CompanyName", "value": "Apple Inc.", "tone": "neutral", "label": "CompanyName" },
+        { "kind": "text", "text": ". " },
+        { "kind": "text", "text": "Ticker: " },
+        { "kind": "metric", "key": "Ticker", "value": "AAPL", "tone": "neutral", "label": "Ticker" },
+        { "kind": "text", "text": ". " },
+        { "kind": "text", "text": "Borsa principale: " },
+        { "kind": "metric", "key": "Venue", "value": "NASDAQ", "tone": "neutral", "label": "Venue" },
+        { "kind": "text", "text": ". " },
+        { "kind": "text", "text": "Settore: " },
+        { "kind": "metric", "key": "Sector", "value": "Technology", "tone": "neutral", "label": "Sector" },
+        { "kind": "text", "text": "." }
+      ]
+    },
+    {
+      "id": "price-line",
+      "parts": [
+        { "kind": "text", "text": "Prezzo al momento dello start: " },
+        { "kind": "metric", "key": "Price", "value": 270.14, "tone": "ok", "label": "Price" },
+        { "kind": "text", "text": ". " },
+        { "kind": "text", "text": "Cambiamento di prezzo registrato dall'ultima chiusura di mercato: " },
+        { "kind": "metric", "key": "ChangePct", "value": "+0.03%", "tone": "ok", "label": "ChangePct" },
+        { "kind": "text", "text": "." }
+      ]
+    },
+    {
+      "id": "quality-line",
+      "parts": [
+        { "kind": "text", "text": "Freshness dei dati: " },
+        { "kind": "metric", "key": "Freshness", "value": "< 24h", "tone": "ok", "label": "Freshness" },
+        { "kind": "text", "text": ". " },
+        { "kind": "text", "text": "Stato del report: " },
+        { "kind": "metric", "key": "State", "value": "ACTIVE", "tone": "ok", "label": "State" },
+        { "kind": "text", "text": "." }
+      ]
+    },
+    {
+      "id": "window-line",
+      "parts": [
+        { "kind": "text", "text": "Report iniziato il " },
+        { "kind": "metric", "key": "Start", "value": "2025-10-28", "tone": "neutral", "label": "Start" },
+        { "kind": "text", "text": " e concluso il " },
+        { "kind": "metric", "key": "End", "value": "2025-11-07", "tone": "neutral", "label": "End" },
+        { "kind": "text", "text": ". " },
+        { "kind": "text", "text": "Ultimo aggiornamento: " },
+        { "kind": "metric", "key": "UpdatedAt", "value": "2025-11-07T16:30:15Z", "tone": "neutral", "label": "UpdatedAt" },
+        { "kind": "text", "text": ". " },
+        { "kind": "text", "text": "Versione: " },
+        { "kind": "metric", "key": "Version", "value": "v2025.11.07-rc2", "tone": "neutral", "label": "Version" },
+        { "kind": "text", "text": "." }
+      ]
+    }
+  ],
+  "footer": {
+    "links": [
+      {
+        "label": "Scopri tutte le metriche",
+        "action": "open-metrics-panel"
+      }
+    ]
+  },
+  "metricsPanel": [
+    { "key": "CompanyName", "label": "Nome azienda", "value": "Apple Inc.", "tone": "neutral" },
+    { "key": "Ticker", "label": "Ticker", "value": "AAPL", "tone": "neutral" },
+    { "key": "Venue", "label": "Borsa principale", "value": "NASDAQ", "tone": "neutral" },
+    { "key": "Sector", "label": "Settore", "value": "Technology", "tone": "neutral" },
+    { "key": "Price", "label": "Prezzo allo start", "value": 270.14, "tone": "ok" },
+    { "key": "ChangePct", "label": "Variazione dall'ultima chiusura", "value": "+0.03%", "tone": "ok" },
+    { "key": "Freshness", "label": "Freshness dei dati", "value": "< 24h", "tone": "ok" },
+    { "key": "State", "label": "Stato del report", "value": "ACTIVE", "tone": "ok" },
+    { "key": "Start", "label": "Inizio report", "value": "2025-10-28", "tone": "neutral" },
+    { "key": "End", "label": "Fine report", "value": "2025-11-07", "tone": "neutral" },
+    { "key": "UpdatedAt", "label": "Ultimo aggiornamento", "value": "2025-11-07T16:30:15Z", "tone": "neutral" },
+    { "key": "Version", "label": "Versione del report", "value": "v2025.11.07-rc2", "tone": "neutral" },
+    { "key": "F1B_StrategyMode", "label": "F1B Strategy Mode", "value": "Momentum-light", "tone": "ok" },
+    { "key": "F1B_RegimeScore", "label": "F1B Regime Score", "value": "+0.25", "tone": "ok" }
+  ]
+}
+
