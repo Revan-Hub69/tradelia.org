@@ -250,89 +250,79 @@
       padding-bottom: var(--sp-10);
     }
     
-    .terms-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: var(--sp-6);
-      margin-bottom: var(--sp-8);
-    }
-    
-    @media (max-width: 768px) {
-      .terms-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    
-    .term-card {
-      background: linear-gradient(
-        135deg,
-        var(--surface-card) 0%,
-        color-mix(in oklab, var(--surface-card) 99%, var(--brand-600) 1%) 100%
-      );
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: var(--radius-xl);
-      padding: var(--sp-6);
-      transition: all var(--transition-base);
-      position: relative;
-      overflow: hidden;
+    /* ===== LISTA COMPATTA ===== */
+    .terms-list {
       display: flex;
       flex-direction: column;
-      gap: var(--sp-5);
-      box-shadow: 
-        var(--shadow-md),
-        0 1px 0 rgba(255, 255, 255, 0.03) inset;
+      gap: var(--sp-1);
     }
     
-    .term-card::before {
+    .term-item {
+      background: var(--surface-card);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-md);
+      padding: var(--sp-4) var(--sp-5);
+      transition: all var(--transition-fast);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-4);
+      position: relative;
+    }
+    
+    .term-item::before {
       content: "";
       position: absolute;
       inset: 0 auto 0 0;
-      width: 4px;
-      background: var(--neutral);
-      border-radius: var(--radius-xl) 0 0 var(--radius-xl);
-      transition: background var(--transition-base);
+      width: 3px;
+      background: transparent;
+      border-radius: var(--radius-md) 0 0 var(--radius-md);
+      transition: background var(--transition-fast);
     }
     
-    .term-card:hover {
-      border-color: rgba(255, 255, 255, 0.12);
-      transform: translateY(-2px);
-      box-shadow: 
-        var(--shadow-lg),
-        0 1px 0 rgba(255, 255, 255, 0.04) inset;
+    .term-item:hover {
+      background: var(--surface-elev);
+      border-color: rgba(255, 255, 255, 0.1);
+      transform: translateX(4px);
     }
     
-    .term-card:hover::before {
+    .term-item:hover::before {
       background: var(--brand-600);
     }
     
-    .term-header {
+    .term-item-content {
+      flex: 1;
       display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: var(--sp-3);
+      align-items: center;
+      gap: var(--sp-4);
+      min-width: 0;
     }
     
-    .term-title {
-      font-size: var(--fs-20);
-      font-weight: 700;
+    .term-item-title {
+      font-size: var(--fs-15);
+      font-weight: 600;
       color: var(--ink);
       margin: 0;
-      line-height: var(--lh-12);
+      line-height: var(--lh-15);
       letter-spacing: -0.01em;
       flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     
-    .term-badges {
+    .term-item-badges {
       display: flex;
-      flex-wrap: wrap;
       gap: var(--sp-2);
-      align-items: center;
+      flex-shrink: 0;
     }
     
-    .term-badge {
+    .term-item-badge {
       display: inline-flex;
-      padding: var(--sp-1) var(--sp-3);
-      font-size: var(--fs-11);
+      padding: var(--sp-1) var(--sp-2_5);
+      font-size: var(--fs-10);
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -340,38 +330,201 @@
       white-space: nowrap;
     }
     
-    .term-badge--universo {
+    .term-item-badge--universo {
       color: var(--brand-600);
       background: rgba(37, 99, 235, 0.1);
     }
     
-    .term-badge--difficolta {
+    .term-item-badge--difficolta {
       color: var(--neutral);
       background: rgba(100, 116, 139, 0.1);
     }
     
-    .term-badge--difficolta.principiante {
+    .term-item-badge--difficolta.principiante {
       color: var(--ok);
       background: rgba(22, 163, 74, 0.1);
     }
     
-    .term-badge--difficolta.intermedio {
+    .term-item-badge--difficolta.intermedio {
       color: var(--warn);
       background: rgba(234, 88, 12, 0.1);
     }
     
-    .term-badge--difficolta.avanzato {
+    .term-item-badge--difficolta.avanzato {
       color: var(--err);
       background: rgba(220, 38, 38, 0.1);
     }
     
-    .term-section {
+    .term-item-icon {
+      width: 18px;
+      height: 18px;
+      color: var(--muted);
+      flex-shrink: 0;
+      transition: transform var(--transition-fast), color var(--transition-fast);
+    }
+    
+    .term-item:hover .term-item-icon {
+      color: var(--brand-600);
+      transform: translateX(2px);
+    }
+    
+    /* ===== POPUP TERMINE ===== */
+    .glossary-popup-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--sp-4);
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      transition: opacity var(--transition-base);
+    }
+    
+    .glossary-popup-overlay[hidden] {
+      display: none !important;
+    }
+    
+    .glossary-popup-panel {
+      width: 100%;
+      max-width: 700px;
+      max-height: 90vh;
+      background: var(--surface-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-xl);
+      box-shadow: 
+        var(--shadow-xl),
+        0 1px 0 rgba(255, 255, 255, 0.03) inset;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .glossary-popup-panel::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(37, 99, 235, 0.2) 50%,
+        transparent 100%
+      );
+    }
+    
+    .glossary-popup-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--sp-4);
+      padding: var(--sp-6);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      background: linear-gradient(
+        180deg,
+        var(--surface-card) 0%,
+        color-mix(in oklab, var(--surface-card) 98%, var(--brand-600) 2%) 100%
+      );
+    }
+    
+    .glossary-popup-header-content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .glossary-popup-title {
+      font-size: var(--fs-22);
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0 0 var(--sp-2) 0;
+      line-height: var(--lh-12);
+      letter-spacing: -0.02em;
+    }
+    
+    .glossary-popup-badges {
+      display: flex;
+      gap: var(--sp-2);
+      flex-wrap: wrap;
+    }
+    
+    .glossary-popup-badge {
+      display: inline-flex;
+      padding: var(--sp-1) var(--sp-3);
+      font-size: var(--fs-11);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-radius: var(--radius-pill);
+    }
+    
+    .glossary-popup-badge--universo {
+      color: var(--brand-600);
+      background: rgba(37, 99, 235, 0.1);
+    }
+    
+    .glossary-popup-badge--difficolta {
+      color: var(--neutral);
+      background: rgba(100, 116, 139, 0.1);
+    }
+    
+    .glossary-popup-badge--difficolta.principiante {
+      color: var(--ok);
+      background: rgba(22, 163, 74, 0.1);
+    }
+    
+    .glossary-popup-badge--difficolta.intermedio {
+      color: var(--warn);
+      background: rgba(234, 88, 12, 0.1);
+    }
+    
+    .glossary-popup-badge--difficolta.avanzato {
+      color: var(--err);
+      background: rgba(220, 38, 38, 0.1);
+    }
+    
+    .glossary-popup-close {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-md);
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--ink-soft);
+      font-size: 20px;
+      line-height: 1;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      flex-shrink: 0;
+    }
+    
+    .glossary-popup-close:hover {
+      background: var(--surface-elev);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: var(--ink);
+    }
+    
+    .glossary-popup-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--sp-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-6);
+    }
+    
+    .glossary-popup-section {
       display: flex;
       flex-direction: column;
       gap: var(--sp-2);
     }
     
-    .term-label {
+    .glossary-popup-section-title {
       font-size: var(--fs-11);
       font-weight: 700;
       text-transform: uppercase;
@@ -385,7 +538,7 @@
       padding-bottom: var(--sp-2);
     }
     
-    .term-label::after {
+    .glossary-popup-section-title::after {
       content: "";
       position: absolute;
       bottom: 0;
@@ -396,14 +549,14 @@
       opacity: 0.4;
     }
     
-    .term-text {
+    .glossary-popup-section-text {
       font-size: var(--fs-14);
       line-height: var(--lh-17);
       color: var(--ink-soft);
       margin: 0;
     }
     
-    .term-source {
+    .glossary-popup-source {
       font-size: var(--fs-13);
       line-height: var(--lh-16);
       color: var(--muted);
@@ -414,7 +567,7 @@
       position: relative;
     }
     
-    .term-source::before {
+    .glossary-popup-source::before {
       content: "";
       position: absolute;
       top: 0;
@@ -426,7 +579,7 @@
       opacity: 0.3;
     }
     
-    .term-source strong {
+    .glossary-popup-source strong {
       color: var(--ink-soft);
       font-weight: 600;
       font-style: normal;
@@ -529,8 +682,15 @@
         <span id="stats-text">Caricamento...</span>
       </div>
       
-      <div id="terms-container" class="terms-grid">
+      <div id="terms-container" class="terms-list">
         <!-- I termini verranno caricati qui -->
+      </div>
+      
+      <!-- POPUP TERMINE -->
+      <div id="glossary-popup-overlay" class="glossary-popup-overlay" hidden>
+        <div class="glossary-popup-panel" role="dialog" aria-labelledby="glossary-popup-title">
+          <!-- Il contenuto verrà generato dinamicamente -->
+        </div>
       </div>
     </div>
   </main>
@@ -692,7 +852,7 @@
       });
     }
     
-    // ===== RENDERING TERMINI =====
+    // ===== RENDERING TERMINI (LISTA COMPATTA) =====
     function renderTerms() {
       const container = document.getElementById('terms-container');
       
@@ -700,55 +860,138 @@
         container.innerHTML = `
           <div class="empty-state">
             <div class="empty-state-title">Nessun termine trovato</div>
-            <div class="empty-state-text">Prova a cercare con altre parole chiave o seleziona una categoria diversa.</div>
+            <div class="empty-state-text">Prova a cercare con altre parole chiave o seleziona un filtro diverso.</div>
           </div>
         `;
         return;
       }
       
-      container.innerHTML = filteredTerms
-        .map(([key, term]) => `
-          <article class="term-card">
-            <div class="term-header">
-              <h2 class="term-title">${escapeHtml(term.nomeTecnico || term.title || key)}</h2>
-              <div class="term-badges">
-                ${term.universo ? `
-                  <span class="term-badge term-badge--universo">${escapeHtml(term.universo)}</span>
-                ` : term.category ? `
-                  <span class="term-badge term-badge--universo">${escapeHtml(term.category)}</span>
-                ` : ''}
-                ${term.difficolta ? `
-                  <span class="term-badge term-badge--difficolta ${term.difficolta.toLowerCase()}">${escapeHtml(term.difficolta)}</span>
-                ` : ''}
+      // Renderizza solo i primi 100 per performance (puoi aumentare o implementare virtual scrolling)
+      const termsToRender = filteredTerms.slice(0, 500);
+      
+      container.innerHTML = termsToRender
+        .map(([key, term]) => {
+          const title = term.nomeTecnico || term.title || key;
+          const universo = term.universo || term.category;
+          
+          return `
+            <button class="term-item" data-key="${escapeHtml(key)}" type="button">
+              <div class="term-item-content">
+                <h3 class="term-item-title">${escapeHtml(title)}</h3>
+                <div class="term-item-badges">
+                  ${universo ? `
+                    <span class="term-item-badge term-item-badge--universo">${escapeHtml(universo)}</span>
+                  ` : ''}
+                  ${term.difficolta ? `
+                    <span class="term-item-badge term-item-badge--difficolta ${term.difficolta.toLowerCase()}">${escapeHtml(term.difficolta)}</span>
+                  ` : ''}
+                </div>
               </div>
-            </div>
-            
-            ${term.definizioneAccademica ? `
-              <div class="term-section">
-                <span class="term-label">Definizione Accademica</span>
-                <p class="term-text">${escapeHtml(term.definizioneAccademica)}</p>
-              </div>
-            ` : ''}
-            
-            ${term.spiegazioneAI ? `
-              <div class="term-section">
-                <span class="term-label">Spiegazione AI</span>
-                <p class="term-text">${escapeHtml(term.spiegazioneAI)}</p>
-              </div>
-            ` : ''}
-            
-            ${term.fonteAccademica ? `
-              <div class="term-source">
-                <strong>Fonte:</strong> ${escapeHtml(term.fonteAccademica)}
-              </div>
-            ` : term.source ? `
-              <div class="term-source">
-                <strong>Fonte:</strong> ${escapeHtml(term.source)}
-              </div>
-            ` : ''}
-          </article>
-        `)
+              <svg class="term-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          `;
+        })
         .join('');
+      
+      // Se ci sono più termini, mostra messaggio
+      if (filteredTerms.length > termsToRender.length) {
+        container.innerHTML += `
+          <div style="text-align: center; padding: var(--sp-6); color: var(--muted); font-size: var(--fs-13);">
+            Mostrando ${termsToRender.length} di ${filteredTerms.length} termini. Usa la ricerca per filtrare ulteriormente.
+          </div>
+        `;
+      }
+      
+      // Event listeners per click
+      container.querySelectorAll('.term-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.key;
+          openTermPopup(key);
+        });
+      });
+    }
+    
+    // ===== POPUP TERMINE =====
+    function openTermPopup(key) {
+      const term = glossaryData[key];
+      if (!term) return;
+      
+      const overlay = document.getElementById('glossary-popup-overlay');
+      const panel = overlay.querySelector('.glossary-popup-panel');
+      
+      const title = term.nomeTecnico || term.title || key;
+      const universo = term.universo || term.category;
+      
+      panel.innerHTML = `
+        <header class="glossary-popup-header">
+          <div class="glossary-popup-header-content">
+            <h2 id="glossary-popup-title" class="glossary-popup-title">${escapeHtml(title)}</h2>
+            <div class="glossary-popup-badges">
+              ${universo ? `
+                <span class="glossary-popup-badge glossary-popup-badge--universo">${escapeHtml(universo)}</span>
+              ` : ''}
+              ${term.difficolta ? `
+                <span class="glossary-popup-badge glossary-popup-badge--difficolta ${term.difficolta.toLowerCase()}">${escapeHtml(term.difficolta)}</span>
+              ` : ''}
+            </div>
+          </div>
+          <button class="glossary-popup-close" aria-label="Chiudi" type="button">×</button>
+        </header>
+        <div class="glossary-popup-body">
+          ${term.definizioneAccademica ? `
+            <div class="glossary-popup-section">
+              <h3 class="glossary-popup-section-title">Definizione Accademica</h3>
+              <p class="glossary-popup-section-text">${escapeHtml(term.definizioneAccademica)}</p>
+            </div>
+          ` : ''}
+          
+          ${term.spiegazioneAI ? `
+            <div class="glossary-popup-section">
+              <h3 class="glossary-popup-section-title">Spiegazione AI</h3>
+              <p class="glossary-popup-section-text">${escapeHtml(term.spiegazioneAI)}</p>
+            </div>
+          ` : ''}
+          
+          ${term.fonteAccademica ? `
+            <div class="glossary-popup-source">
+              <strong>Fonte:</strong> ${escapeHtml(term.fonteAccademica)}
+            </div>
+          ` : term.source ? `
+            <div class="glossary-popup-source">
+              <strong>Fonte:</strong> ${escapeHtml(term.source)}
+            </div>
+          ` : ''}
+        </div>
+      `;
+      
+      // Close handlers
+      panel.querySelector('.glossary-popup-close').addEventListener('click', () => closeTermPopup());
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeTermPopup();
+      });
+      
+      // ESC to close
+      const escHandler = (e) => {
+        if (e.key === 'Escape') {
+          closeTermPopup();
+          document.removeEventListener('keydown', escHandler);
+        }
+      };
+      document.addEventListener('keydown', escHandler);
+      
+      overlay.hidden = false;
+      document.body.style.overflow = 'hidden';
+      
+      Logger.debug('Glossario', `Popup aperto per termine: ${key}`);
+    }
+    
+    function closeTermPopup() {
+      const overlay = document.getElementById('glossary-popup-overlay');
+      overlay.hidden = true;
+      document.body.style.overflow = '';
+      Logger.debug('Glossario', 'Popup chiuso');
     }
     
     // ===== FILTRI =====
