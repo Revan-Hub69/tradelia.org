@@ -44,39 +44,39 @@ button { background: none; border: 0; padding: 0; font: inherit; color: inherit;
   --transition-slow: 0.3s ease;
 }
 
-/* ===== DARK MODE ISTITUZIONALE ===== */
+/* ===== DARK MODE ISTITUZIONALE FINANZIARIO ===== */
 :root[data-theme="dark"] {
-  /* Colori Testo - Grigi Chiari su Nero */
-  --ink: #f5f5f5;           /* Testo principale */
-  --ink-soft: #e0e0e0;       /* Testo secondario */
-  --muted: #b0b0b0;          /* Testo muted */
-  --muted-strong: #808080;   /* Testo molto muted */
+  /* Colori Testo - Contrasto Ottimale per Leggibilità */
+  --ink: #ffffff;             /* Testo principale - bianco puro per massimo contrasto */
+  --ink-soft: #e8e8e8;         /* Testo secondario - grigio chiaro leggibile */
+  --muted: #a8a8a8;            /* Testo muted - grigio medio */
+  --muted-strong: #707070;     /* Testo molto muted */
   
-  /* Superfici - Nero/Grigi Profondi */
-  --surface-page: #0a0a0a;   /* Background principale (nero puro) */
-  --surface-card: #151515;   /* Card background */
-  --surface-elev: #1f1f1f;   /* Superficie elevata */
-  --surface-hover: #252525;  /* Hover state */
+  /* Superfici - Nero Profondo Istituzionale */
+  --surface-page: #0d0d0d;     /* Background principale - nero profondo */
+  --surface-card: #161616;     /* Card background - grigio molto scuro */
+  --surface-elev: #1e1e1e;     /* Superficie elevata */
+  --surface-hover: #262626;    /* Hover state */
   
-  /* Bordi - Grigi Scuri */
-  --br-soft: #2a2a2a;        /* Bordo sottile */
-  --br-card: #333333;        /* Bordo card */
-  --br-strong: #404040;      /* Bordo forte */
+  /* Bordi - Sottili e Discreti */
+  --br-soft: #2e2e2e;          /* Bordo sottile */
+  --br-card: #363636;          /* Bordo card */
+  --br-strong: #444444;        /* Bordo forte */
   
-  /* Footer */
+  /* Footer - Nero Profondo con Gradiente Sottile */
   --footer-bg: #0f0f0f;
-  --footer-br: #2a2a2a;
+  --footer-br: #2e2e2e;
   
-  /* Brand - Accento Blu Professionale */
-  --brand-600: #3b82f6;      /* Brand principale */
-  --brand-500: #60a5fa;      /* Brand hover */
-  --brand-400: #93c5fd;      /* Brand light */
+  /* Brand - Blu Istituzionale Finanziario (Sobrio) */
+  --brand-600: #2563eb;        /* Blu istituzionale - più sobrio */
+  --brand-500: #3b82f6;        /* Blu hover */
+  --brand-400: #60a5fa;        /* Blu light */
   
-  /* Stati - Sobri e Professionali */
-  --ok: #22c55e;             /* Verde successo */
-  --warn: #f59e0b;            /* Giallo warning */
-  --err: #ef4444;             /* Rosso errore */
-  --neutral: #94a3b8;         /* Grigio neutro */
+  /* Stati - Palette Finanziaria Standard */
+  --ok: #16a34a;               /* Verde finanziario - più sobrio */
+  --warn: #ea580c;             /* Arancione warning - più sobrio */
+  --err: #dc2626;              /* Rosso errore - più sobrio */
+  --neutral: #64748b;          /* Grigio neutro istituzionale */
   
   /* Background e Text Color */
   background: var(--surface-page);
@@ -189,23 +189,17 @@ a:hover {
   padding: var(--sp-4);
 }
 
-/* ===== HEADER TICKER PREMIUM ===== */
+/* ===== HEADER TICKER ISTITUZIONALE ===== */
 .header-ticker {
   position: relative;
-  background: linear-gradient(
-    135deg,
-    var(--surface-card) 0%,
-    color-mix(in oklab, var(--surface-card) 98%, var(--brand-600) 2%) 100%
-  );
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--surface-card);
+  border: 1px solid var(--br-card);
   border-radius: var(--radius-xl);
-  padding: var(--sp-6) var(--sp-8) var(--sp-5);
+  padding: var(--sp-5) var(--sp-6);
   display: flex;
   flex-direction: column;
-  gap: var(--sp-4);
-  box-shadow: 
-    0 4px 24px rgba(0, 0, 0, 0.4),
-    0 1px 0 rgba(255, 255, 255, 0.05) inset;
+  gap: var(--sp-3);
+  box-shadow: var(--shadow-md);
 }
 
 .header-ticker::before {
@@ -235,22 +229,22 @@ a:hover {
 }
 
 .header-ticker-row--intro {
-  font-size: var(--fs-16);
+  font-size: var(--fs-15);
   line-height: var(--lh-14);
   color: var(--ink);
   font-weight: 500;
 }
 
 .header-ticker-row--quality {
-  font-size: var(--fs-14);
+  font-size: var(--fs-13);
   line-height: var(--lh-15);
   color: var(--ink-soft);
   font-weight: 400;
 }
 
 .header-ticker-row--meta {
-  font-size: var(--fs-13);
-  line-height: var(--lh-15);
+  font-size: var(--fs-12);
+  line-height: var(--lh-14);
   color: var(--muted);
   font-weight: 400;
 }
@@ -276,15 +270,14 @@ a:hover {
 }
 
 .metric-inline-text {
-  font-weight: 700;
+  font-weight: 600;
   font-style: italic;
   text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
   line-height: var(--lh-12);
   white-space: nowrap;
   transition: all var(--transition-fast);
-  letter-spacing: -0.01em;
 }
 
 .metric-inline--neutral .metric-inline-text,
@@ -312,9 +305,7 @@ a:hover {
 }
 
 .metric-inline:hover .metric-inline-text {
-  opacity: 0.9;
-  transform: translateY(-1px);
-  text-decoration-thickness: 2.5px;
+  opacity: 0.95;
 }
 
 /* ===== METRICS DRAWER ===== */
@@ -710,13 +701,6 @@ a:hover {
   line-height: var(--lh-12);
   color: var(--ink);
   margin: 0;
-}
-
-.metric-popup-key {
-  font-family: var(--ff-mono);
-  font-size: var(--fs-12);
-  color: var(--muted);
-  letter-spacing: 0.02em;
 }
 
 .metric-popup-close {
