@@ -184,6 +184,27 @@
       pointer-events: none;
     }
     
+    .filters-container {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-4);
+    }
+    
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-2);
+    }
+    
+    .filter-group-label {
+      font-size: var(--fs-12);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-soft);
+      margin-bottom: var(--sp-1);
+    }
+    
     .category-filters {
       display: flex;
       flex-wrap: wrap;
@@ -301,17 +322,47 @@
       flex: 1;
     }
     
-    .term-category {
+    .term-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+      align-items: center;
+    }
+    
+    .term-badge {
       display: inline-flex;
       padding: var(--sp-1) var(--sp-3);
       font-size: var(--fs-11);
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      color: var(--brand-600);
-      background: rgba(37, 99, 235, 0.1);
       border-radius: var(--radius-pill);
       white-space: nowrap;
+    }
+    
+    .term-badge--universo {
+      color: var(--brand-600);
+      background: rgba(37, 99, 235, 0.1);
+    }
+    
+    .term-badge--difficolta {
+      color: var(--neutral);
+      background: rgba(100, 116, 139, 0.1);
+    }
+    
+    .term-badge--difficolta.principiante {
+      color: var(--ok);
+      background: rgba(22, 163, 74, 0.1);
+    }
+    
+    .term-badge--difficolta.intermedio {
+      color: var(--warn);
+      background: rgba(234, 88, 12, 0.1);
+    }
+    
+    .term-badge--difficolta.avanzato {
+      color: var(--err);
+      background: rgba(220, 38, 38, 0.1);
     }
     
     .term-section {
@@ -455,8 +506,19 @@
             aria-label="Cerca nel glossario"
           />
         </div>
-        <div id="category-filters" class="category-filters">
-          <!-- I filtri categoria verranno generati dinamicamente -->
+        <div class="filters-container">
+          <div class="filter-group">
+            <label class="filter-group-label">Universo</label>
+            <div id="universo-filters" class="category-filters">
+              <!-- I filtri universo verranno generati dinamicamente -->
+            </div>
+          </div>
+          <div class="filter-group">
+            <label class="filter-group-label">Difficoltà</label>
+            <div id="difficolta-filters" class="category-filters">
+              <!-- I filtri difficoltà verranno generati dinamicamente -->
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -481,9 +543,11 @@
     
     // ===== STATE =====
     let glossaryData = {};
-    let categories = new Set();
+    let universi = new Set();
+    let difficolta = new Set();
     let filteredTerms = [];
-    let activeCategory = 'all';
+    let activeUniverso = 'all';
+    let activeDifficolta = 'all';
     
     // ===== CARICAMENTO HEADER & FOOTER =====
     async function mountHeaderFooter() {
@@ -531,19 +595,27 @@
         const { _v, ...terms } = data;
         glossaryData = terms;
         
-        // Estrai categorie
-        categories.clear();
+        // Estrai universi e difficoltà
+        universi.clear();
+        difficolta.clear();
         Object.values(terms).forEach(term => {
-          if (term.category) {
-            categories.add(term.category);
+          if (term.universo) {
+            universi.add(term.universo);
+          }
+          if (term.difficolta) {
+            difficolta.add(term.difficolta);
+          }
+          // Fallback per compatibilità con vecchio formato
+          if (term.category && !term.universo) {
+            universi.add(term.category);
           }
         });
         
         filteredTerms = Object.entries(terms);
         
-        Logger.debug('Glossario', `Glossario caricato: ${Object.keys(terms).length} termini, ${categories.size} categorie`);
+        Logger.debug('Glossario', `Glossario caricato: ${Object.keys(terms).length} termini, ${universi.size} universi, ${difficolta.size} difficoltà`);
         
-        renderCategoryFilters();
+        renderFilters();
         renderTerms();
         updateStats();
       } catch (err) {
@@ -557,29 +629,63 @@
       }
     }
     
-    // ===== CATEGORIE =====
-    function renderCategoryFilters() {
-      const container = document.getElementById('category-filters');
-      if (!container) return;
+    // ===== FILTRI =====
+    function renderFilters() {
+      const universoContainer = document.getElementById('universo-filters');
+      const difficoltaContainer = document.getElementById('difficolta-filters');
       
-      const sortedCategories = Array.from(categories).sort();
+      if (!universoContainer || !difficoltaContainer) return;
       
-      container.innerHTML = `
-        <button class="category-filter-btn ${activeCategory === 'all' ? 'active' : ''}" data-category="all">
+      const sortedUniversi = Array.from(universi).sort();
+      const sortedDifficolta = Array.from(difficolta).sort((a, b) => {
+        const order = ['Principiante', 'Intermedio', 'Avanzato'];
+        const aIndex = order.indexOf(a);
+        const bIndex = order.indexOf(b);
+        if (aIndex === -1 && bIndex === -1) return a.localeCompare(b);
+        if (aIndex === -1) return 1;
+        if (bIndex === -1) return -1;
+        return aIndex - bIndex;
+      });
+      
+      // Render filtri Universo
+      universoContainer.innerHTML = `
+        <button class="category-filter-btn ${activeUniverso === 'all' ? 'active' : ''}" data-filter="universo" data-value="all">
           Tutti
         </button>
-        ${sortedCategories.map(cat => `
-          <button class="category-filter-btn ${activeCategory === cat ? 'active' : ''}" data-category="${escapeHtml(cat)}">
-            ${escapeHtml(cat)}
+        ${sortedUniversi.map(uni => `
+          <button class="category-filter-btn ${activeUniverso === uni ? 'active' : ''}" data-filter="universo" data-value="${escapeHtml(uni)}">
+            ${escapeHtml(uni)}
           </button>
         `).join('')}
       `;
       
-      // Event listeners
-      container.querySelectorAll('.category-filter-btn').forEach(btn => {
+      // Render filtri Difficoltà
+      difficoltaContainer.innerHTML = `
+        <button class="category-filter-btn ${activeDifficolta === 'all' ? 'active' : ''}" data-filter="difficolta" data-value="all">
+          Tutti
+        </button>
+        ${sortedDifficolta.map(diff => `
+          <button class="category-filter-btn ${activeDifficolta === diff ? 'active' : ''}" data-filter="difficolta" data-value="${escapeHtml(diff)}">
+            ${escapeHtml(diff)}
+          </button>
+        `).join('')}
+      `;
+      
+      // Event listeners per filtri Universo
+      universoContainer.querySelectorAll('.category-filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          activeCategory = btn.dataset.category;
-          container.querySelectorAll('.category-filter-btn').forEach(b => b.classList.remove('active'));
+          activeUniverso = btn.dataset.value;
+          universoContainer.querySelectorAll('.category-filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          filterTerms();
+        });
+      });
+      
+      // Event listeners per filtri Difficoltà
+      difficoltaContainer.querySelectorAll('.category-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeDifficolta = btn.dataset.value;
+          difficoltaContainer.querySelectorAll('.category-filter-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           filterTerms();
         });
@@ -605,9 +711,16 @@
           <article class="term-card">
             <div class="term-header">
               <h2 class="term-title">${escapeHtml(term.nomeTecnico || term.title || key)}</h2>
-              ${term.category ? `
-                <span class="term-category">${escapeHtml(term.category)}</span>
-              ` : ''}
+              <div class="term-badges">
+                ${term.universo ? `
+                  <span class="term-badge term-badge--universo">${escapeHtml(term.universo)}</span>
+                ` : term.category ? `
+                  <span class="term-badge term-badge--universo">${escapeHtml(term.category)}</span>
+                ` : ''}
+                ${term.difficolta ? `
+                  <span class="term-badge term-badge--difficolta ${term.difficolta.toLowerCase()}">${escapeHtml(term.difficolta)}</span>
+                ` : ''}
+              </div>
             </div>
             
             ${term.definizioneAccademica ? `
@@ -643,9 +756,15 @@
       const searchQuery = document.getElementById('search-input')?.value.toLowerCase().trim() || '';
       
       filteredTerms = Object.entries(glossaryData).filter(([key, term]) => {
-        // Filtro categoria
-        if (activeCategory !== 'all') {
-          if (term.category !== activeCategory) return false;
+        // Filtro Universo
+        if (activeUniverso !== 'all') {
+          const termUniverso = term.universo || term.category; // Fallback per compatibilità
+          if (termUniverso !== activeUniverso) return false;
+        }
+        
+        // Filtro Difficoltà
+        if (activeDifficolta !== 'all') {
+          if (term.difficolta !== activeDifficolta) return false;
         }
         
         // Filtro ricerca
@@ -656,7 +775,8 @@
             term.definizioneAccademica?.toLowerCase() || term.what?.toLowerCase() || '',
             term.spiegazioneAI?.toLowerCase() || term.how?.toLowerCase() || '',
             term.fonteAccademica?.toLowerCase() || term.source?.toLowerCase() || '',
-            term.category?.toLowerCase() || ''
+            term.universo?.toLowerCase() || term.category?.toLowerCase() || '',
+            term.difficolta?.toLowerCase() || ''
           ].join(' ');
           
           if (!searchable.includes(searchQuery)) return false;
