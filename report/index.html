@@ -21,7 +21,7 @@
       min-height: 100vh;
     }
     
-    /* ===== HEADER FIXED ISTITUZIONALE ===== */
+    /* ===== HEADER FIXED ISTITUZIONALE INNOVATIVO ===== */
     .hdr {
       position: fixed;
       top: 0;
@@ -31,10 +31,32 @@
       z-index: 100;
       display: flex;
       align-items: center;
-      backdrop-filter: blur(12px) saturate(1.1);
-      background: rgba(13, 13, 13, 0.94);
-      border-bottom: 1px solid var(--br-card);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(16px) saturate(1.2);
+      background: linear-gradient(
+        180deg,
+        rgba(15, 15, 15, 0.96) 0%,
+        rgba(15, 15, 15, 0.92) 100%
+      );
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 
+        0 1px 0 rgba(255, 255, 255, 0.03) inset,
+        0 4px 20px rgba(0, 0, 0, 0.6);
+      transition: all var(--transition-base);
+    }
+    
+    .hdr::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(37, 99, 235, 0.15) 50%,
+        transparent 100%
+      );
     }
     
     .hdr .container {
@@ -89,7 +111,25 @@
       border-radius: 999px;
       background: var(--brand-600);
       display: inline-block;
-      opacity: 0.9;
+      box-shadow: 
+        0 0 6px rgba(37, 99, 235, 0.5),
+        0 0 12px rgba(37, 99, 235, 0.2);
+      animation: pulse-brand 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    @keyframes pulse-brand {
+      0%, 100% { 
+        opacity: 1;
+        box-shadow: 
+          0 0 6px rgba(37, 99, 235, 0.5),
+          0 0 12px rgba(37, 99, 235, 0.2);
+      }
+      50% { 
+        opacity: 0.8;
+        box-shadow: 
+          0 0 10px rgba(37, 99, 235, 0.7),
+          0 0 20px rgba(37, 99, 235, 0.3);
+      }
     }
     
     .brand--sm .brand-word {
@@ -125,17 +165,40 @@
       min-height: 0;
     }
     
-    /* ===== FOOTER ISTITUZIONALE FINANZIARIO ===== */
+    /* ===== FOOTER ISTITUZIONALE INNOVATIVO ===== */
     .site-footer {
       position: relative;
       z-index: 10;
       margin-top: auto;
-      background: var(--footer-bg);
-      border-top: 1px solid var(--footer-br);
+      background: linear-gradient(
+        180deg,
+        var(--surface-page) 0%,
+        var(--footer-bg) 100%
+      );
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
       color: var(--ink-soft);
       font-size: var(--fs-14);
       padding: var(--sp-10) 0 var(--sp-6);
       flex-shrink: 0;
+      overflow: hidden;
+    }
+    
+    .site-footer::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(37, 99, 235, 0.2) 25%,
+        rgba(37, 99, 235, 0.3) 50%,
+        rgba(37, 99, 235, 0.2) 75%,
+        transparent 100%
+      );
+      opacity: 0.6;
     }
     
     .ftr-head {
@@ -145,17 +208,35 @@
       text-transform: uppercase;
       display: flex;
       align-items: center;
-      gap: var(--sp-2);
+      gap: var(--sp-3);
       color: var(--ink);
       margin-bottom: var(--sp-4);
-      padding-bottom: var(--sp-2);
-      border-bottom: 1px solid var(--footer-br);
+      padding-bottom: var(--sp-3);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      position: relative;
+    }
+    
+    .ftr-head::after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 40px;
+      height: 1px;
+      background: var(--brand-600);
+      opacity: 0.4;
     }
     
     .ftr-head svg {
       width: 14px;
       height: 14px;
-      opacity: 0.6;
+      opacity: 0.7;
+      transition: opacity var(--transition-fast), transform var(--transition-fast);
+    }
+    
+    .ftr-head:hover svg {
+      opacity: 1;
+      transform: scale(1.1);
     }
     
     .ftr-grid {
@@ -198,12 +279,33 @@
       text-decoration: none;
       font-size: var(--fs-14);
       font-weight: 400;
-      transition: color var(--transition-fast);
-      display: block;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+      padding: var(--sp-1) 0;
+      position: relative;
+      padding-left: var(--sp-4);
+    }
+    
+    .ftr-quick-links a::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--muted);
+      font-size: var(--fs-12);
+      transition: all var(--transition-fast);
+      transform: translateX(-2px);
     }
     
     .ftr-quick-links a:hover {
       color: var(--ink);
+      padding-left: var(--sp-5);
+    }
+    
+    .ftr-quick-links a:hover::before {
+      color: var(--brand-600);
+      transform: translateX(0);
     }
     
     .ftr-list {
@@ -226,12 +328,20 @@
     }
     
     .ftr-list li::before {
-      content: "•";
+      content: "";
       position: absolute;
       left: 0;
-      color: var(--muted);
-      font-size: var(--fs-16);
-      line-height: 1;
+      top: 0.65em;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--muted);
+      transition: all var(--transition-fast);
+    }
+    
+    .ftr-list li:hover::before {
+      background: var(--brand-600);
+      box-shadow: 0 0 6px rgba(37, 99, 235, 0.4);
     }
     
     .ftr-list li strong {
@@ -240,7 +350,7 @@
     }
     
     .ftr-bottom {
-      border-top: 1px solid var(--footer-br);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
       margin-top: var(--sp-8);
       padding-top: var(--sp-5);
       display: flex;
@@ -249,6 +359,19 @@
       font-size: var(--fs-13);
       color: var(--muted);
       line-height: var(--lh-15);
+      position: relative;
+    }
+    
+    .ftr-bottom::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 1px;
+      background: var(--brand-600);
+      opacity: 0.3;
     }
     
     @media (min-width: 768px) {
@@ -301,16 +424,36 @@
     }
     
     .ftr-socials a {
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
       color: var(--ink-soft);
       font-size: var(--fs-14);
       font-weight: 400;
-      transition: color var(--transition-fast);
+      transition: all var(--transition-fast);
       text-decoration: none;
+      padding: var(--sp-1) 0;
+      position: relative;
+    }
+    
+    .ftr-socials a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: var(--sp-1);
+      width: 0;
+      height: 1px;
+      background: var(--brand-600);
+      transition: width var(--transition-base);
     }
     
     .ftr-socials a:hover {
       color: var(--ink);
+      transform: translateX(2px);
+    }
+    
+    .ftr-socials a:hover::after {
+      width: 24px;
     }
     
     /* ===== ICONS ===== */
