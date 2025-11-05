@@ -163,23 +163,9 @@ function renderFooter(node, data) {
   const footer = node._footer;
   if (!footer) return;
   
+  // Footer vuoto - pulsante "Scopri tutte le metriche" rimosso
   footer.innerHTML = '';
-  
-  const links = data.footer?.links || [];
-  links.forEach((link) => {
-    const btn = createEl('button', 'btn btn-sm', link.label || 'Azione');
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      if (link.action === 'open-metrics-panel') {
-        // Non fare nulla per ora - popup singoli invece di drawer
-        Logger.debug('HeaderTicker', 'Azione open-metrics-panel ignorata (usa popup singoli)');
-      }
-    });
-    
-    footer.appendChild(btn);
-  });
+  footer.style.display = 'none';
 }
 
 // ===== METRIC CLICK HANDLER =====
