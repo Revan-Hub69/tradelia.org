@@ -61,6 +61,7 @@ function render(data = {}) {
             <a href="/index.html" target="_blank" rel="noopener" aria-label="Vai alla homepage">Homepage</a>
             <a href="/archivio.html" target="_blank" rel="noopener" aria-label="Vai all'archivio">Archivio</a>
             <a href="/brokers.html" target="_blank" rel="noopener" aria-label="Vai alla pagina brokers">Brokers</a>
+            <a href="/glossario.html" target="_blank" rel="noopener" aria-label="Vai al glossario finanziario">Glossario</a>
           </div>
         </div>
 
