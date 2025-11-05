@@ -81,6 +81,11 @@
       min-height: 100vh;
     }
     
+    /* Header ticker slot non si espande */
+    #header-ticker-slot {
+      flex-shrink: 0;
+    }
+    
     /* ===== HEADER FIXED ISTITUZIONALE INNOVATIVO ===== */
     .hdr {
       position: fixed;
@@ -216,9 +221,9 @@
     }
     
     /* ===== MAIN CONTENT ===== */
-    main {
-      flex: 1;
-      padding-top: 0;
+    main#app-root {
+      flex: 1 1 auto;
+      padding-top: var(--sp-4);
       padding-bottom: var(--sp-8);
       position: relative;
       z-index: 1;
@@ -229,7 +234,7 @@
     .site-footer {
       position: relative;
       z-index: 10;
-      margin-top: auto;
+      flex-shrink: 0;
       background: linear-gradient(
         180deg,
         var(--surface-page) 0%,
@@ -807,7 +812,7 @@
   <main id="app-root" class="container" role="main"></main>
 
   <!-- FOOTER -->
-  <footer class="site-footer mt-auto py-10">
+  <footer class="site-footer py-10">
     <div class="container">
       <section class="ftr-grid">
         <div class="ftr-col">
