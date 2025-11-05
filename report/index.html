@@ -21,40 +21,20 @@
       min-height: 100vh;
     }
     
-    /* ===== HEADER FIXED PREMIUM ===== */
+    /* ===== HEADER FIXED ISTITUZIONALE ===== */
     .hdr {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      height: 72px;
+      height: 64px;
       z-index: 100;
       display: flex;
       align-items: center;
-      backdrop-filter: saturate(1.15) blur(16px);
-      background: linear-gradient(
-        180deg,
-        rgba(10, 10, 10, 0.95) 0%,
-        rgba(10, 10, 10, 0.92) 100%
-      );
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 
-        0 1px 0 rgba(255, 255, 255, 0.05) inset,
-        0 4px 24px rgba(0, 0, 0, 0.6);
-      transition: all var(--transition-base);
-    }
-    
-    .hdr::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(59, 130, 246, 0.03) 50%,
-        transparent 100%
-      );
-      pointer-events: none;
+      backdrop-filter: blur(12px) saturate(1.1);
+      background: rgba(13, 13, 13, 0.94);
+      border-bottom: 1px solid var(--br-card);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     }
     
     .hdr .container {
@@ -104,32 +84,12 @@
     }
     
     .brand-dot {
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       border-radius: 999px;
-      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-500) 100%);
+      background: var(--brand-600);
       display: inline-block;
-      box-shadow: 
-        0 0 8px rgba(59, 130, 246, 0.4),
-        0 0 16px rgba(59, 130, 246, 0.2);
-      animation: pulse-brand 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-    
-    @keyframes pulse-brand {
-      0%, 100% { 
-        opacity: 1; 
-        transform: scale(1);
-        box-shadow: 
-          0 0 8px rgba(59, 130, 246, 0.4),
-          0 0 16px rgba(59, 130, 246, 0.2);
-      }
-      50% { 
-        opacity: 0.85; 
-        transform: scale(1.08);
-        box-shadow: 
-          0 0 12px rgba(59, 130, 246, 0.6),
-          0 0 24px rgba(59, 130, 246, 0.3);
-      }
+      opacity: 0.9;
     }
     
     .brand--sm .brand-word {
@@ -149,8 +109,8 @@
     #header-ticker-slot {
       display: block;
       width: 100%;
-      margin-top: 72px;
-      padding: var(--sp-8) 0 var(--sp-6);
+      margin-top: 64px;
+      padding: var(--sp-6) 0;
       position: relative;
       z-index: 10;
     }
@@ -165,66 +125,44 @@
       min-height: 0;
     }
     
-    /* ===== FOOTER PREMIUM ===== */
+    /* ===== FOOTER ISTITUZIONALE FINANZIARIO ===== */
     .site-footer {
       position: relative;
       z-index: 10;
       margin-top: auto;
-      background: linear-gradient(
-        180deg,
-        var(--surface-page) 0%,
-        var(--footer-bg) 100%
-      );
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--footer-bg);
+      border-top: 1px solid var(--footer-br);
       color: var(--ink-soft);
       font-size: var(--fs-14);
-      padding: var(--sp-10) 0 var(--sp-8);
+      padding: var(--sp-10) 0 var(--sp-6);
       flex-shrink: 0;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .site-footer::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(59, 130, 246, 0.2) 50%,
-        transparent 100%
-      );
     }
     
     .ftr-head {
-      font-weight: 700;
-      font-size: var(--fs-16);
-      letter-spacing: -0.01em;
+      font-weight: 600;
+      font-size: var(--fs-14);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
       display: flex;
       align-items: center;
-      gap: var(--sp-3);
+      gap: var(--sp-2);
       color: var(--ink);
-      margin-bottom: var(--sp-5);
-      padding-bottom: var(--sp-3);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      margin-bottom: var(--sp-4);
+      padding-bottom: var(--sp-2);
+      border-bottom: 1px solid var(--footer-br);
     }
     
     .ftr-head svg {
-      opacity: 0.8;
-      transition: opacity var(--transition-fast);
-    }
-    
-    .ftr-head:hover svg {
-      opacity: 1;
+      width: 14px;
+      height: 14px;
+      opacity: 0.6;
     }
     
     .ftr-grid {
       display: grid;
-      gap: var(--sp-10);
+      gap: var(--sp-8);
       grid-template-columns: 1fr;
+      margin-bottom: var(--sp-8);
     }
     
     @media (min-width: 768px) {
@@ -237,56 +175,35 @@
     .ftr-col {
       display: flex;
       flex-direction: column;
-      gap: var(--sp-5);
+      gap: var(--sp-3);
     }
     
     .ftr-col p {
       font-size: var(--fs-14);
-      line-height: var(--lh-17);
+      line-height: var(--lh-16);
       color: var(--ink-soft);
-      margin: 0;
+      margin: 0 0 var(--sp-3);
+      max-width: 42ch;
     }
     
     .ftr-quick-links {
       display: flex;
       flex-direction: column;
       gap: var(--sp-2);
-      margin-top: var(--sp-3);
+      margin-top: var(--sp-1);
     }
     
     .ftr-quick-links a {
       color: var(--ink-soft);
       text-decoration: none;
       font-size: var(--fs-14);
-      font-weight: 500;
-      transition: all var(--transition-fast);
-      position: relative;
-      padding: var(--sp-2) var(--sp-3);
-      padding-left: var(--sp-5);
-      border-radius: var(--radius-md);
-      margin-left: calc(var(--sp-3) * -1);
-    }
-    
-    .ftr-quick-links a::before {
-      content: "→";
-      position: absolute;
-      left: var(--sp-3);
-      color: var(--brand-600);
-      opacity: 0.6;
-      transition: all var(--transition-fast);
-      transform: translateX(-4px);
+      font-weight: 400;
+      transition: color var(--transition-fast);
+      display: block;
     }
     
     .ftr-quick-links a:hover {
       color: var(--ink);
-      background: rgba(255, 255, 255, 0.03);
-      transform: translateX(2px);
-    }
-    
-    .ftr-quick-links a:hover::before {
-      opacity: 1;
-      transform: translateX(0);
-      color: var(--brand-500);
     }
     
     .ftr-list {
@@ -296,20 +213,25 @@
     }
     
     .ftr-list li {
-      margin: var(--sp-3) 0;
-      line-height: var(--lh-17);
-      font-size: var(--fs-14);
+      margin: var(--sp-3) 0 0;
+      line-height: var(--lh-16);
+      font-size: var(--fs-13);
       color: var(--ink-soft);
       padding-left: var(--sp-4);
       position: relative;
     }
     
+    .ftr-list li:first-child {
+      margin-top: 0;
+    }
+    
     .ftr-list li::before {
-      content: "·";
+      content: "•";
       position: absolute;
       left: 0;
       color: var(--muted);
-      font-weight: 700;
+      font-size: var(--fs-16);
+      line-height: 1;
     }
     
     .ftr-list li strong {
@@ -318,12 +240,12 @@
     }
     
     .ftr-bottom {
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      margin-top: var(--sp-10);
-      padding-top: var(--sp-6);
+      border-top: 1px solid var(--footer-br);
+      margin-top: var(--sp-8);
+      padding-top: var(--sp-5);
       display: flex;
       flex-direction: column;
-      gap: var(--sp-4);
+      gap: var(--sp-3);
       font-size: var(--fs-13);
       color: var(--muted);
       line-height: var(--lh-15);
@@ -343,75 +265,52 @@
       gap: var(--sp-2);
     }
     
-    .ftr-bottom p {
+    .ftr-bottom > div p,
+    .ftr-bottom > div span {
       margin: 0;
       font-size: var(--fs-13);
       line-height: var(--lh-15);
+      color: var(--muted);
     }
     
     .site-footer a {
       text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: all var(--transition-fast);
+      transition: color var(--transition-fast);
       color: var(--ink-soft);
-      font-weight: 500;
+      font-weight: 400;
     }
     
     .site-footer a:hover {
-      border-bottom-color: currentColor;
       color: var(--ink);
-      border-bottom-color: var(--brand-600);
     }
     
     a.mail-link {
-      text-underline-offset: 3px;
-      text-decoration-thickness: 1.5px;
-      font-weight: 500;
+      color: var(--ink-soft);
+      font-weight: 400;
+    }
+    
+    a.mail-link:hover {
+      color: var(--ink);
     }
     
     .ftr-socials {
       display: flex;
       flex-direction: column;
       gap: var(--sp-2);
+      margin-top: var(--sp-1);
     }
     
     .ftr-socials a {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: var(--sp-3);
+      display: block;
       color: var(--ink-soft);
       font-size: var(--fs-14);
-      font-weight: 500;
-      padding: var(--sp-2) var(--sp-3);
-      border-radius: var(--radius-md);
-      margin-left: calc(var(--sp-3) * -1);
-      transition: all var(--transition-fast);
-    }
-    
-    .ftr-socials a::after {
-      content: "";
-      position: absolute;
-      left: var(--sp-3);
-      right: var(--sp-3);
-      bottom: var(--sp-2);
-      height: 1px;
-      background: currentColor;
-      opacity: 0;
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform var(--transition-base), opacity var(--transition-base);
+      font-weight: 400;
+      transition: color var(--transition-fast);
+      text-decoration: none;
     }
     
     .ftr-socials a:hover {
       color: var(--ink);
-      background: rgba(255, 255, 255, 0.03);
-      transform: translateX(2px);
-    }
-    
-    .ftr-socials a:hover::after {
-      opacity: 0.8;
-      transform: scaleX(1);
     }
     
     /* ===== ICONS ===== */
@@ -585,12 +484,13 @@
       }
       
       .ftr-grid {
-        gap: var(--sp-8);
+        gap: var(--sp-6);
+        margin-bottom: var(--sp-6);
       }
       
       .ftr-bottom {
-        margin-top: var(--sp-8);
-        padding-top: var(--sp-5);
+        margin-top: var(--sp-6);
+        padding-top: var(--sp-4);
       }
     }
     
@@ -668,7 +568,7 @@
             </svg>
             <span>Canali ufficiali</span>
           </h3>
-          <p style="margin-bottom: var(--sp-2);">Aggiornamenti su metodologia e release:</p>
+          <p style="margin-bottom: var(--sp-3);">Aggiornamenti su metodologia e release:</p>
           <div class="ftr-socials">
             <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener" aria-label="LinkedIn">LinkedIn</a>
             <a href="https://x.com/tradelia_ai" target="_blank" rel="noopener" aria-label="X (Twitter)">X (Twitter)</a>
@@ -680,19 +580,26 @@
 
       <div class="ftr-bottom">
         <div>
-          © <span id="footer-year"></span>
-          <span class="brand brand--sm">
-            <span class="brand-word">Tradelia</span>
-            <span class="brand-dot" aria-hidden="true"></span>
-            <span class="brand-suffix">AI</span>
-          </span>
-          · Tutti i diritti riservati ·
-          <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>
+          <p style="margin: 0;">
+            © <span id="footer-year"></span>
+            <span class="brand brand--sm">
+              <span class="brand-word">Tradelia</span>
+              <span class="brand-dot" aria-hidden="true"></span>
+              <span class="brand-suffix">AI</span>
+            </span>
+            · Tutti i diritti riservati
+          </p>
+          <p style="margin: var(--sp-2) 0 0 0;">
+            <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>
+          </p>
         </div>
         <div>
-          <span id="footer-company">—</span> · <span id="footer-version">—</span>
-          <br>
-          <span id="footer-snapshot" style="font-size: var(--fs-11);">—</span> · <span id="footer-updated" style="font-size: var(--fs-11);">—</span>
+          <p style="margin: 0; text-align: right;">
+            <span id="footer-company">—</span> · <span id="footer-version">—</span>
+          </p>
+          <p style="margin: var(--sp-2) 0 0 0; text-align: right; font-size: var(--fs-12);">
+            <span id="footer-snapshot">—</span> · <span id="footer-updated">—</span>
+          </p>
         </div>
       </div>
     </div>
