@@ -87,6 +87,15 @@
       height: 100%;
     }
     
+    /* Header slot (fixed, non partecipa all'order) */
+    #site-header-slot {
+      order: 0;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 100;
+    }
+    
+    
     /* Header ticker slot non si espande */
     #header-ticker-slot {
       flex-shrink: 0;
@@ -236,6 +245,12 @@
       display: flex;
       flex-direction: column;
       gap: var(--sp-8);
+    }
+    
+    /* Footer slot viene dopo main */
+    #site-footer-slot {
+      order: 3;
+      flex-shrink: 0;
     }
     
     /* Footer viene dopo main */
