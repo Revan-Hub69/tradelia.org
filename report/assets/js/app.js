@@ -387,7 +387,7 @@ import { metricPopup } from './components/metric-popup.js';
     const reportId = getReportId();
     Logger.debug('App', `Inizializzazione: ${reportId}`);
     
-    // Monta header e footer (statici, non dipendono da reportId)
+    // Monta header (statico, non dipende da reportId)
     await mountSiteHeader();
     
     ROOT.innerHTML = '';
@@ -402,9 +402,6 @@ import { metricPopup } from './components/metric-popup.js';
       // Continua comunque con i moduli
     }
     
-    // Monta footer con dati dinamici
-    await mountSiteFooter(headerData);
-    
     try {
       await loadModules(reportId);
     } catch (err) {
@@ -414,6 +411,9 @@ import { metricPopup } from './components/metric-popup.js';
         showErrorState(ROOT, err, 'Errore caricamento moduli');
       }
     }
+    
+    // Monta footer DOPO il contenuto (con dati dinamici)
+    await mountSiteFooter(headerData);
     
     Logger.debug('App', 'Inizializzazione completata');
   }
