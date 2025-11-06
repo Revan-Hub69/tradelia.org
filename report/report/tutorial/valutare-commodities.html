@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Report completo TRADELIA AI sulla crisi finanziaria 2008: analisi tecnica, strumenti derivati, protagonisti e impatto sociale.">
+  <title>TRADELIA • AI — Strumenti Finanziari Complessi</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    h1, h2, h3, h4 {
+      color: #0f172a;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.25rem; }
+    h3 { font-size: 1.25rem; }
+    h4 { font-size: 1.125rem; }
+    p {
+      margin-bottom: 1.25rem;
+      color: #374151;
+    }
+    ul, ol {
+      padding-left: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    li {
+      margin-bottom: 0.5rem;
+    }
+    section {
+      background: #ffffff;
+      padding: 2.5rem 2rem;
+      margin: 2rem auto;
+      border-radius: 0.75rem;
+      max-width: 840px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e5e7eb;
+    }
+    a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    a:hover {
+      text-decoration: underline;
+      color: #1d4ed8;
+    }
+    .positive { color: #16a34a; font-weight: 600; }
+    .negative { color: #dc2626; font-weight: 600; }
+    .neutral  { color: #64748b; font-weight: 500; }
+    @media screen and (max-width: 768px) {
+      body { font-size: 15px; line-height: 1.6; }
+      section { padding: 1.25rem; margin: 1rem; }
+      h1 { font-size: 1.5rem; }
+      h2 { font-size: 1.25rem; }
+      h3 { font-size: 1.125rem; }
+      h4 { font-size: 1rem; }
+    }
+
+    /* TABLE RESPONSIVE STYLE - struttura tabellare scrollabile */
+    .responsive-table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      margin-bottom: 2rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+    }
+    table.responsive-table {
+      width: 100%;
+      min-width: 640px;
+      border-collapse: collapse;
+      background-color: white;
+    }
+    table.responsive-table th,
+    table.responsive-table td {
+      padding: 0.75rem 1rem;
+      border: 1px solid #e5e7eb;
+      text-align: left;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+    table.responsive-table th {
+      background-color: #f3f4f6;
+      font-weight: 600;
+      color: #1f2937;
+    }
+    table.responsive-table tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+      border-radius: 100vh;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(80, 160, 200, 0.5);
+      border-radius: 100vh;
+      transition: background-color 0.2s ease-in-out;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(80, 160, 200, 0.7);
+    }
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
+      box-sizing: border-box;
+    }
+    #backToTop {
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+
+
+<body>
+  <header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-3 flex justify-between items-center">
+    <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 hover:opacity-90 transition">
+      TRADELIA<span class="text-blue-600 animate-pulse">•AI</span>
+    </a>
+    <a href="https://tradelia.org/archivio.html" class="text-sm sm:text-base text-blue-700 font-medium hover:underline transition">
+      Archivio Storico
+    </a>
+  </header>
+
+  <section class="mt-6 mb-10 max-w-3xl mx-auto">
+  <h2 class="text-2xl font-semibold text-slate-800 mb-4 border-b-2 border-slate-200 pb-1">Indice dei Contenuti</h2>
+  <nav aria-label="Indice del report">
+    <ol class="list-decimal list-inside space-y-2 text-slate-700 text-base sm:text-lg leading-relaxed">
+      <li><a href="#sezione-1" class="hover:text-blue-600 transition">1. Introduzione: perché analizzare le materie prime</a></li>
+      <li><a href="#sezione-2" class="hover:text-blue-600 transition">2. Tipologie di commodities: energetiche, agricole, metalli</a></li>
+      <li><a href="#sezione-3" class="hover:text-blue-600 transition">3. Domanda e offerta: driver fondamentali</a></li>
+      <li><a href="#sezione-4" class="hover:text-blue-600 transition">4. Struttura a termine e curve future</a></li>
+      <li><a href="#sezione-5" class="hover:text-blue-600 transition">5. Volatilità implicita e rischi geopolitici</a></li>
+      <li><a href="#sezione-6" class="hover:text-blue-600 transition">6. Ruolo delle commodities in portafoglio</a></li>
+      <li><a href="#sezione-7" class="hover:text-blue-600 transition">7. ETF, ETC, CFD e futures: strumenti per l’esposizione</a></li>
+      <li><a href="#sezione-8" class="hover:text-blue-600 transition">8. Copertura valutaria e correlazioni intermarket</a></li>
+      <li><a href="#sezione-9" class="hover:text-blue-600 transition">9. Analisi quantitativa Tradelia AI sulle materie prime</a></li>
+      <li><a href="#sezione-10" class="hover:text-blue-600 transition">10. Disclaimer e avvertenze</a></li>
+    </ol>
+  </nav>
+</section>
+<br>
+  <section id="sezione-1" class="max-w-4xl mx-auto mt-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">1. Introduzione: perché analizzare le materie prime</h2>
+
+  <p class="text-gray-700 mb-4">
+    Le <strong>commodities</strong> rappresentano una classe di attivi fondamentali nei mercati finanziari globali. Che si tratti di energia, metalli industriali o prodotti agricoli, le materie prime sono alla base dell’economia reale e rispondono a dinamiche diverse rispetto ad azioni e obbligazioni.
+  </p>
+
+  <p class="text-gray-700 mb-4">
+    Storicamente, le commodities sono considerate un <strong>bene rifugio in contesti inflazionistici</strong> e offrono un potenziale di diversificazione grazie a una correlazione spesso bassa o inversa rispetto ad altri asset. Tuttavia, la loro elevata volatilità e la forte dipendenza da fattori geopolitici, climatici e ciclici richiedono un’analisi attenta prima di ogni esposizione.
+  </p>
+
+  <p class="text-gray-700">
+    Questa guida fornisce gli strumenti essenziali per valutare le materie prime in chiave strategica e operativa, sfruttando le analisi quantitative e qualitative di Tradelia AI.
+  </p>
+</section>
+<br>
+  <section id="sezione-2" class="max-w-4xl mx-auto mt-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">2. Tipologie di commodities: energetiche, agricole, metalli</h2>
+
+  <p class="text-gray-700 mb-4">
+    Le materie prime si suddividono in <strong>tre principali categorie operative</strong>, ciascuna con logiche di mercato, ciclicità e fattori di rischio distinti:
+  </p>
+
+  <ul class="list-disc list-inside text-gray-700 space-y-2 mb-4">
+    <li><strong>Commodities energetiche:</strong> petrolio (Brent, WTI), gas naturale, carbone. Sensibili a eventi geopolitici, cicli industriali, accordi OPEC, e alla transizione energetica.</li>
+    <li><strong>Commodities agricole (soft):</strong> grano, mais, zucchero, cacao, caffè. Estremamente volatili, influenzate da clima, stagionalità, geopolitica e politiche di sussidio.</li>
+    <li><strong>Metalli:</strong> oro, argento, rame, platino, nichel. L’oro e l’argento sono tradizionalmente rifugi sicuri; rame e metalli industriali riflettono la forza dell’economia globale.</li>
+  </ul>
+
+  <p class="text-gray-700">
+    Comprendere le <strong>peculiarità di ogni sottoclasse</strong> è essenziale per gestire l’esposizione e sfruttare le opportunità che ciascun ciclo di mercato offre, anche in ottica difensiva.
+  </p>
+</section>
+<br>
+  <section id="sezione-3" class="max-w-4xl mx-auto mt-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">3. Domanda e offerta: driver fondamentali</h2>
+
+  <p class="text-gray-700 mb-4">
+    Le materie prime sono governate da un equilibrio instabile tra <strong>domanda globale</strong> e <strong>offerta fisica</strong>. A differenza di asset finanziari, le commodities non possono essere “stampate”: la loro disponibilità è limitata da fattori geologici, climatici e politici.
+  </p>
+
+  <p class="text-gray-700 mb-4">
+    Sul lato della <strong>domanda</strong>, incidono: crescita economica, consumi industriali (es. rame e petrolio), domanda alimentare, investimenti in infrastrutture, e tendenze come la decarbonizzazione. Il lato dell’<strong>offerta</strong> invece è spesso rigido: disastri climatici, conflitti, embargo, scioperi, o colli di bottiglia logistici possono causare shock improvvisi.
+  </p>
+
+  <p class="text-gray-700">
+    I cicli delle commodities sono quindi fortemente legati a <strong>logiche macro e microeconomiche</strong> che devono essere costantemente monitorate per comprendere potenziali squilibri e scenari futuri.
+  </p>
+</section>
+<br>
+  <section id="sezione-4" class="max-w-4xl mx-auto mt-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">4. Struttura a termine e curve future</h2>
+
+  <p class="text-gray-700 mb-4">
+    Uno degli elementi distintivi del mercato delle materie prime è la <strong>struttura a termine</strong>, ovvero l’andamento dei prezzi dei contratti future con scadenze diverse. Questa struttura può essere in:
+  </p>
+
+  <ul class="list-disc list-inside text-gray-700 space-y-2 mb-4">
+    <li><strong>Contango:</strong> i prezzi future sono più alti rispetto al prezzo spot. Tipico in situazioni di costi di stoccaggio elevati o eccesso di offerta.</li>
+    <li><strong>Backwardation:</strong> i prezzi future sono più bassi del prezzo spot. Segnala scarsità nel breve termine o forte domanda immediata.</li>
+  </ul>
+
+  <p class="text-gray-700 mb-4">
+    La forma della curva influisce direttamente sulla <strong>redditività degli strumenti derivati</strong> e degli ETF/ETC che replicano le commodities, poiché implica guadagni o perdite implicite nei rollover dei contratti.
+  </p>
+
+  <p class="text-gray-700">
+    Monitorare la struttura a termine consente di <strong>valutare il sentiment di mercato</strong> e anticipare eventuali tensioni o ribilanciamenti futuri, soprattutto in asset come il petrolio o il gas naturale.
+  </p>
+</section>
+<br>
+  <section id="sezione-5" class="max-w-4xl mx-auto mt-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">5. Volatilità implicita e rischi geopolitici</h2>
+
+  <p class="text-gray-700 mb-4">
+    Le commodities sono tra le asset class più esposte a <strong>shock esterni e volatilità</strong>. Eventi geopolitici, conflitti regionali, sanzioni, fallimenti infrastrutturali o crisi energetiche possono innescare movimenti estremi dei prezzi in tempi molto brevi.
+  </p>
+
+  <p class="text-gray-700 mb-4">
+    La <strong>volatilità implicita</strong> rappresenta la misura delle aspettative del mercato circa le variazioni future dei prezzi e viene monitorata attraverso opzioni o strumenti derivati. Alti livelli di volatilità possono indicare incertezza sistemica, mentre bassi livelli possono segnalare fasi di stabilità o compiacenza.
+  </p>
+
+  <p class="text-gray-700">
+    Comprendere l’interazione tra <strong>volatilità attesa e rischio geopolitico</strong> è cruciale per chi intende esporsi alle materie prime con un approccio attivo o difensivo, anche in ottica di copertura del portafoglio.
+  </p>
+</section>
+<br>
+  <section id="sezione-6" class="max-w-4xl mx-auto mt-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">6. Ruolo delle commodities in portafoglio</h2>
+
+  <p class="text-gray-700 mb-4">
+    Le commodities svolgono un ruolo chiave nella <strong>diversificazione strategica</strong> dei portafogli, grazie alla loro bassa o negativa correlazione con azioni e obbligazioni tradizionali. Questo le rende preziose in fase di inflazione, instabilità valutaria o crisi geopolitiche.
+  </p>
+
+  <p class="text-gray-700 mb-4">
+    In contesti inflazionistici, asset come <strong>oro, energia o soft commodities</strong> possono agire come copertura naturale. Inoltre, alcune materie prime fungono da proxy per la crescita globale (es. rame) o come indicatori anticipatori di stress finanziario.
+  </p>
+
+  <p class="text-gray-700">
+    L’inserimento delle materie prime in portafoglio può essere effettuato in modo diretto o sintetico, ma richiede un’attenta <strong>valutazione del rischio, della volatilità attesa e dei costi di esposizione</strong> legati agli strumenti utilizzati.
+  </p>
+</section>
+<br>
+<section id="sezione-7" class="max-w-4xl mx-auto mt-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">7. ETF, ETC, CFD e futures: strumenti per l’esposizione</h2>
+
+  <p class="text-gray-700 mb-4">
+    Esistono diversi strumenti per ottenere esposizione alle materie prime, ciascuno con caratteristiche operative e profili di rischio differenti:
+  </p>
+
+  <ul class="list-disc list-inside text-gray-700 space-y-2 mb-4">
+    <li><strong>ETF / ETC</strong>: strumenti quotati che replicano l’andamento di singole commodities o panieri tematici (es. oro, energia, soft commodities). Semplici da negoziare, adatti a investitori tradizionali.</li>
+    <li><strong>Futures</strong>: contratti derivati standardizzati negoziati su mercati regolamentati. Offrono esposizione diretta con leva, ma richiedono margini e conoscenze tecniche avanzate.</li>
+    <li><strong>CFD su commodities</strong>: strumenti derivati over-the-counter che replicano il prezzo spot delle materie prime. Flessibili e accessibili, ma soggetti a leva, costi impliciti e volatilità elevata.</li>
+  </ul>
+
+  <p class="text-gray-700 mb-6">
+    La scelta dello strumento dipende dal profilo dell’investitore, dall’orizzonte temporale e dal livello di sofisticazione operativa. Di seguito alcune soluzioni regolamentate selezionate da Tradelia AI:
+  </p>
+
+  <div class="grid sm:grid-cols-2 gap-4">
+    <!-- FREEDOM24 -->
+    <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+      <h3 class="text-slate-800 font-semibold mb-2">ETF / ETC regolamentati</h3>
+      <p class="text-gray-700 mb-4 text-sm">
+        Accedi a decine di ETF e ETC su oro, petrolio, gas e materie prime agricole via piattaforme regolamentate europee.
+      </p>
+      <a href="https://www.tradelia.org/Freedom24.html" target="_blank" rel="noopener noreferrer" class="inline-block bg-blue-700 text-white font-semibold px-5 py-2 rounded-md shadow hover:bg-blue-800 transition">
+        Scopri Freedom24 →
+      </a>
+    </div>
+
+    <!-- EXANTE -->
+    <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+      <h3 class="text-slate-800 font-semibold mb-2">Futures e accesso diretto</h3>
+      <p class="text-gray-700 mb-4 text-sm">
+        Operatività professionale su mercati future (CME, ICE) tramite piattaforme avanzate e accesso diretto ai mercati globali.
+      </p>
+  <a href="https://www.tradelia.org/Exante.html"
+   target="_blank"
+   rel="noopener noreferrer"
+   class="inline-block bg-blue-900 text-white font-semibold px-5 py-2 rounded-md shadow hover:bg-blue-950 transition">
+  Scopri EXANTE →
+</a>
+
+    </div>
+
+    <!-- PEPPERSTONE -->
+    <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 sm:col-span-2">
+      <h3 class="text-slate-800 font-semibold mb-2">CFD su commodities</h3>
+      <p class="text-gray-700 mb-4 text-sm">
+        Specula sui prezzi spot di oro, gas, grano, cacao e molte altre commodities via CFD con leva regolamentata, spread competitivi e piattaforma stabile.
+      </p>
+      <a href="https://www.tradelia.org/Pepperstone.html" target="_blank" rel="noopener noreferrer" class="inline-block bg-red-700 text-white font-semibold px-5 py-2 rounded-md shadow hover:bg-red-800 transition">
+        Scopri Pepperstone →
+      </a>
+    </div>
+  </div>
+</section>
+
+<br>
+  <section id="sezione-8" class="max-w-4xl mx-auto mt-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">8. Copertura valutaria e correlazioni intermarket</h2>
+
+  <p class="text-gray-700 mb-4">
+    Le materie prime sono quotate prevalentemente in <strong>dollari USA</strong>, e quindi l’esposizione a commodities comporta anche un’esposizione valutaria implicita. La <strong>copertura del rischio cambio</strong> è fondamentale per investitori europei, soprattutto nei periodi di elevata volatilità del forex.
+  </p>
+
+  <p class="text-gray-700 mb-4">
+    Inoltre, molte commodities mostrano <strong>correlazioni intermarket</strong> con altri asset finanziari:
+  </p>
+
+  <ul class="list-disc list-inside text-gray-700 space-y-2 mb-4">
+    <li><strong>Oro</strong>: correlazione inversa con i rendimenti reali e il dollaro USA, correlazione positiva in fasi di crisi sistemica.</li>
+    <li><strong>Petrolio e gas</strong>: legame con l’andamento delle economie cicliche, dell’inflazione e con indici azionari di settori energetici.</li>
+    <li><strong>Rame</strong>: correlazione con l’attività industriale e con le valute dei paesi esportatori (es. Cile, Australia).</li>
+  </ul>
+
+  <p class="text-gray-700">
+    La comprensione delle correlazioni consente di strutturare portafogli più bilanciati e <strong>implementare strategie di hedging</strong> efficaci contro rischi macroeconomici e settoriali.
+  </p>
+</section>
+<br>
+  <section id="sezione-10" class="max-w-4xl mx-auto mt-12 mb-16 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">10. Conclusioni e indicazioni operative</h2>
+
+  <p class="text-gray-700 mb-4">
+    Le commodities rappresentano una componente fondamentale per la diversificazione e la gestione del rischio nei portafogli moderni. Tuttavia, la loro valutazione richiede attenzione a specificità uniche: struttura a termine, stagionalità, esposizione valutaria e volatilità implicita.
+  </p>
+
+  <p class="text-gray-700 mb-4">
+    È essenziale distinguere tra esposizione tattica (es. CFD, futures) e strategica (es. ETF/ETC su oro, energia, agricoltura) e valutare ogni strumento alla luce del proprio profilo di rischio, orizzonte temporale e obiettivo di investimento.
+  </p>
+
+  <p class="text-gray-700 mb-4">
+    I modelli quantitativi descritti permettono di implementare un processo di analisi oggettivo e replicabile, utile tanto per il trader quanto per l’investitore evoluto.
+  </p>
+
+  <p class="text-gray-700">
+    Per operare in modo regolamentato, Tradelia AI consiglia piattaforme con trasparenza esecutiva, accesso a strumenti differenziati e compliance normativa:
+  </p>
+
+  <ul class="list-disc list-inside text-gray-700 space-y-1 mt-4 mb-2">
+    <li><strong>Freedom24</strong> – ETF e ETC quotati su materie prime</li>
+    <li><strong>Exante</strong> – Accesso diretto ai mercati futures (CME, ICE)</li>
+    <li><strong>Pepperstone</strong> – CFD su commodities con leva regolamentata</li>
+  </ul>
+
+  <p class="text-gray-700 italic mt-4">
+    L’esposizione alle materie prime può essere un vantaggio competitivo solo se compresa e gestita con criterio. Il metodo Tradelia AI aiuta a farlo con dati, logica e disciplina.
+  </p>
+</section>
+<footer class="max-w-4xl mx-auto bg-gray-50 border-t border-gray-200 mt-16 px-6 py-6 rounded-t-xl text-sm text-gray-600 leading-relaxed">
+  <p class="mb-2">
+    Le informazioni contenute in questo report hanno finalità esclusivamente educativa e non costituiscono consulenza finanziaria, sollecitazione all'investimento o raccomandazione personalizzata ai sensi della normativa vigente. Ogni decisione operativa è sotto la piena responsabilità dell'utente.
+  </p>
+  <p class="mb-2">
+    Le performance passate non sono indicative di risultati futuri. L'investimento in strumenti finanziari comporta rischi, inclusa la possibile perdita del capitale investito. Prima di operare, valutare attentamente la propria situazione finanziaria, l'orizzonte temporale e la tolleranza al rischio.
+  </p>
+  <p class="italic">
+    Tradelia AI non offre servizi di consulenza soggetti ad autorizzazione Consob. I contenuti proposti si basano su modelli quantitativi e fonti ritenute affidabili, ma non garantiscono accuratezza o completezza.
+  </p>
+</footer>
+
+<section id="sezione-Collega" class="max-w-4xl mx-auto mt-12 px-6 pb-16">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">Collegamenti utili: valutare ogni asset class con metodo</h2>
+
+  <p class="text-gray-700 mb-4">
+    Per ogni asset incluso nella simulazione del portafoglio, è cruciale adottare metodi di valutazione coerenti e accademicamente fondati. Ecco le guide tecniche per l’analisi dei singoli strumenti:
+  </p>
+
+  <ul class="list-disc list-inside text-blue-600 mt-4 space-y-2 text-sm sm:text-base">
+    <li><a href="/report/tutorial/valutare-azioni.html" target="_blank" rel="noopener noreferrer">Come valutare un’azione (equity singola): metriche fondamentali e tecniche</a></li>
+    <li><a href="/report/tutorial/valutare-etf.html" target="_blank" rel="noopener noreferrer">Come valutare un ETF: costi, replica, tracking error, liquidità</a></li>
+    <li><a href="/report/tutorial/valutare-obbligazioni.html" target="_blank" rel="noopener noreferrer">Come valutare un’obbligazione: duration, YTM, rischio emittente</a></li>
+    <li><a href="/report/tutorial/valutare-crypto.html" target="_blank" rel="noopener noreferrer">Come valutare una crypto via ETF/ETN: volatilità, narrativa, regolazione</a></li>
+    <li><a href="/report/tutorial/valutare-reit.html" target="_blank" rel="noopener noreferrer">Come valutare un REIT: NAV, FFO, distribuzioni, sensibilità ai tassi</a></li>
+    <li><a href="/report/tutorial/valutare-commodities.html" target="_blank" rel="noopener noreferrer">Come valutare le commodities: struttura a termine, stagionalità, utilizzo in portafoglio</a></li>
+    <li><a href="/report/tutorial/valutare-liquidita.html" target="_blank" rel="noopener noreferrer">Come valutare la liquidità: rischio opportunità, conti deposito, T‑Bill, ETF monetari</a></li>
+  </ul>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Ogni strumento ha una grammatica. Un portafoglio avanzato si costruisce solo se sai leggere tutte le sue parole.»
+  </p>
+</section>
