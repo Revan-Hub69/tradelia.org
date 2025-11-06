@@ -212,7 +212,7 @@
   pointer-events: all;
 }
 
-/* Drawer container (si apre sopra la pagina) */
+/* Drawer container (si apre sopra la pagina) - Design istituzionale */
 .module-tabs-drawer {
   position: fixed;
   top: 0;
@@ -221,7 +221,7 @@
   width: 600px;
   max-width: 90vw;
   background: var(--surface-card);
-  border-left: 1px solid var(--br-card);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.3);
   z-index: 10000;
   transform: translateX(100%);
@@ -231,18 +231,36 @@
   overflow: hidden;
 }
 
+/* Footer drawer con sfumatura blu sottile */
+.module-tabs-drawer::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(37, 99, 235, 0.2) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
 .module-tabs-wrapper[data-drawer-open="true"] .module-tabs-drawer {
   transform: translateX(0);
 }
 
-/* Drawer header */
+/* Drawer header - Design istituzionale */
 .module-tabs-drawer-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--sp-5) var(--sp-5) var(--sp-4);
-  border-bottom: 1px solid var(--br-panel-divider);
+  padding: var(--sp-5) var(--sp-6) var(--sp-4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   flex-shrink: 0;
+  background: var(--surface-card);
 }
 
 .module-tabs-drawer-title {
@@ -257,8 +275,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  border: 1px solid var(--br-card);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-sm);
   color: var(--muted);
   cursor: pointer;
@@ -267,8 +285,8 @@
 }
 
 .module-tabs-drawer-close:hover {
-  background: var(--surface-hover);
-  border-color: var(--br-strong);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
   color: var(--ink);
 }
 
@@ -277,16 +295,22 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: var(--sp-6) var(--sp-6);
+  padding: var(--sp-6) var(--sp-6) var(--sp-6) var(--sp-6);
+  padding-right: var(--sp-8); /* Più padding a destra */
 }
 
-/* Header-ticker dentro drawer - rimuovi tutto il padding interno */
+/* Header-ticker dentro drawer - rimuovi tutto il padding interno e bordo colorato */
 .module-tabs-drawer-body .header-ticker {
   background: transparent;
   border: none;
   padding: 0 !important;
   box-shadow: none;
   margin: 0;
+}
+
+/* Rimuovi bordo sinistro colorato (::before) quando è nel drawer */
+.module-tabs-drawer-body .header-ticker::before {
+  display: none !important;
 }
 
 .module-tabs-drawer-body .header-ticker .header-ticker-body {
@@ -317,13 +341,13 @@
   background: var(--muted);
 }
 
-/* Tab button nel menu orizzontale */
+/* Tab button nel menu orizzontale - Design istituzionale */
 .module-tab-button {
   flex-shrink: 0;
-  padding: var(--sp-2) var(--sp-4);
+  padding: var(--sp-2_5) var(--sp-4);
   background: var(--surface-card);
-  border: 1px solid var(--br-card);
-  border-radius: var(--radius-card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
   cursor: pointer;
   font-family: inherit;
   font-size: var(--fs-12);
@@ -335,28 +359,19 @@
 }
 
 .module-tab-button:hover {
-  background: var(--surface-hover);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--ink);
-  border-color: var(--br-strong);
-  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 .module-tab-button[data-active="true"] {
-  background: var(--brand-600);
+  background: rgba(255, 255, 255, 0.08);
   color: var(--ink);
-  border-color: var(--brand-600);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .module-tab-button[data-active="true"]::after {
-  content: "";
-  position: absolute;
-  bottom: -2px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: 2px;
-  background: var(--brand-600);
-  border-radius: 2px;
+  display: none; /* Rimuovi indicatore colorato */
 }
 
 /* Content area non visibile nella homepage (solo nel drawer) */
