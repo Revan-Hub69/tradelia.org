@@ -240,7 +240,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--sp-4);
+  padding: var(--sp-5) var(--sp-5) var(--sp-4);
   border-bottom: 1px solid var(--br-panel-divider);
   flex-shrink: 0;
 }
@@ -277,15 +277,26 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: var(--sp-4);
+  padding: var(--sp-6) var(--sp-6);
 }
 
-/* Header-ticker dentro drawer */
+/* Header-ticker dentro drawer - rimuovi tutto il padding interno */
 .module-tabs-drawer-body .header-ticker {
   background: transparent;
   border: none;
-  padding: 0;
+  padding: 0 !important;
   box-shadow: none;
+  margin: 0;
+}
+
+.module-tabs-drawer-body .header-ticker .header-ticker-body {
+  padding: 0 !important;
+  margin: 0;
+}
+
+.module-tabs-drawer-body .header-ticker .header-ticker-row {
+  padding: 0 !important;
+  margin: 0;
 }
 
 /* Scrollbar personalizzata per drawer */
