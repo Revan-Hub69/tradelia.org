@@ -1,0 +1,33 @@
+{
+  "meta": {
+    "timestampET": "2025-01-15T10:00:00-05:00",
+    "module": "F5-LT+ · Layer Long-Term",
+    "moduleStatus": "ACTIVE",
+    "freshness": "≤ T-1",
+    "hero_intro": "",
+    "hero_disclaimer": "Output a fini educativi/informativi (orizzonte 3–10 giorni). Non costituisce consulenza o raccomandazione (MiFID II)."
+  },
+  "ui_labels": {
+    "badge": "F5-LT+",
+    "hero_title": "Layer long-term integrato per coerenza ciclica e fondamentale",
+    "hero_subtitle": "Layer Long-Term · Orizzonte 3–10 giorni",
+    "hero_desc": "Strato long-term integrato per coerenza ciclica e fondamentale. Nessun contenuto operativo.",
+    "ai_summary_label": "Riassunto AI"
+  },
+  "lt_code": {
+    "LT_Code": {
+      "raw": "—",
+      "formatted": "—"
+    }
+  },
+  "lt_composite": {
+    "LTComposite_total": {
+      "raw": "—",
+      "formatted": "—"
+    }
+  },
+  "cyclical": {},
+  "fundamental": {},
+  "governance": {}
+}
+

@@ -1,0 +1,38 @@
+{
+  "meta": {
+    "timestampET": "2025-01-15T10:00:00-05:00",
+    "module": "F5B · Setup Opzioni",
+    "moduleStatus": "ACTIVE",
+    "freshness": "≤ T-1",
+    "hero_intro": "",
+    "hero_disclaimer": "Output a fini educativi/informativi (orizzonte 3–10 giorni). Non costituisce consulenza o raccomandazione (MiFID II)."
+  },
+  "ui_labels": {
+    "badge": "F5B",
+    "hero_title": "Strutture CALL/PUT o spread (Freedom24/Pro)",
+    "hero_subtitle": "Setup Opzioni · Orizzonte 3–10 giorni",
+    "hero_desc": "Costruisce strutture CALL/PUT o spread coerenti con bias e rischio. Nessun contenuto operativo.",
+    "ai_summary_label": "Riassunto AI"
+  },
+  "bias_option": {
+    "BiasOption": {
+      "raw": "—",
+      "formatted": "—"
+    }
+  },
+  "iv_regime": {
+    "IV_regime": {
+      "raw": "—",
+      "formatted": "—"
+    }
+  },
+  "setup_score": {
+    "SetupScore_F5B": {
+      "raw": "—",
+      "formatted": "—"
+    }
+  },
+  "structures": {},
+  "governance": {}
+}
+
