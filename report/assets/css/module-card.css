@@ -140,8 +140,8 @@
   );
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-card);
-  padding: var(--sp-3);
-  margin-bottom: var(--sp-3);
+  padding: var(--sp-4);
+  margin-bottom: var(--sp-4); /* Più spazio dopo summary */
 }
 
 .module-ai-summary-label {
@@ -162,7 +162,7 @@
 /* ===== MODULE TABS (Menu Orizzontale + Drawer) ===== */
 .module-tabs-wrapper {
   position: relative;
-  margin-top: var(--sp-3);
+  margin-top: var(--sp-5); /* Più spazio tra AI summary e menu tabs */
 }
 
 /* Menu tabs orizzontale scrollabile */
@@ -171,10 +171,12 @@
   gap: var(--sp-2);
   overflow-x: auto;
   overflow-y: hidden;
-  padding: var(--sp-2) 0;
-  margin-bottom: var(--sp-3);
+  padding: var(--sp-3) 0 var(--sp-2);
+  margin-bottom: var(--sp-4);
   scrollbar-width: thin;
   scrollbar-color: var(--br-strong) transparent;
+  /* Indicatori scroll visibili */
+  scroll-padding-inline: var(--sp-4);
 }
 
 .module-tabs-menu::-webkit-scrollbar {
@@ -220,12 +222,12 @@
   bottom: 0;
   width: 600px;
   max-width: 90vw;
-  background: var(--surface-card);
+  background: color-mix(in oklab, var(--surface-card) 98%, white 2%); /* Leggermente più chiaro */
   border-left: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.3);
   z-index: 10000;
   transform: translateX(100%);
-  transition: transform var(--transition-slow);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Easing più fluido */
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -264,9 +266,18 @@
 }
 
 .module-tabs-drawer-title {
-  font-size: var(--fs-14);
+  font-size: var(--fs-15);
   font-weight: 700;
   color: var(--ink);
+  letter-spacing: -0.01em; /* Leggermente più compatto */
+}
+
+/* Breadcrumb opzionale nel drawer */
+.module-tabs-drawer-breadcrumb {
+  font-size: var(--fs-11);
+  color: var(--muted);
+  margin-top: var(--sp-1);
+  font-weight: 400;
 }
 
 .module-tabs-drawer-close {
@@ -295,8 +306,8 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: var(--sp-6) var(--sp-6) var(--sp-6) var(--sp-6);
-  padding-right: var(--sp-8); /* Più padding a destra */
+  padding: var(--sp-6) var(--sp-8) var(--sp-6) var(--sp-6);
+  line-height: var(--lh-16); /* Migliora leggibilità */
 }
 
 /* Header-ticker dentro drawer - rimuovi tutto il padding interno e bordo colorato */
@@ -316,11 +327,36 @@
 .module-tabs-drawer-body .header-ticker .header-ticker-body {
   padding: 0 !important;
   margin: 0;
+  gap: var(--sp-3); /* Più spazio tra le righe */
 }
 
 .module-tabs-drawer-body .header-ticker .header-ticker-row {
   padding: 0 !important;
   margin: 0;
+  line-height: var(--lh-16); /* Migliora leggibilità */
+}
+
+/* Migliora tipografia nel drawer - label più piccole, valori più grandi */
+.module-tabs-drawer-body .header-ticker-text {
+  font-size: var(--fs-13);
+  color: var(--ink-soft);
+}
+
+.module-tabs-drawer-body .metric-inline-text {
+  font-size: var(--fs-14);
+  font-weight: 600;
+  font-style: italic;
+}
+
+/* Migliora stile metriche nel drawer */
+.module-tabs-drawer-body .metric-inline {
+  transition: opacity var(--transition-fast);
+}
+
+.module-tabs-drawer-body .metric-inline:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.2);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 /* Scrollbar personalizzata per drawer */
@@ -362,16 +398,32 @@
   background: rgba(255, 255, 255, 0.05);
   color: var(--ink);
   border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.module-tab-button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.2);
+  outline-offset: 2px;
 }
 
 .module-tab-button[data-active="true"] {
   background: rgba(255, 255, 255, 0.08);
   color: var(--ink);
   border-color: rgba(255, 255, 255, 0.15);
+  font-weight: 700;
 }
 
+/* Indicatore sottile per tab attiva */
 .module-tab-button[data-active="true"]::after {
-  display: none; /* Rimuovi indicatore colorato */
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
 }
 
 /* Content area non visibile nella homepage (solo nel drawer) */
@@ -453,15 +505,30 @@
   .module-tabs-drawer {
     width: 100%;
     max-width: 100vw;
+    transform: translateY(100%); /* Su mobile si apre dal basso */
+  }
+  
+  .module-tabs-wrapper[data-drawer-open="true"] .module-tabs-drawer {
+    transform: translateY(0);
   }
   
   .module-tabs-menu {
     gap: var(--sp-1_5);
+    padding-left: var(--sp-2); /* Padding iniziale per scroll */
+    padding-right: var(--sp-2);
   }
   
   .module-tab-button {
-    padding: var(--sp-1_5) var(--sp-3);
+    padding: var(--sp-2) var(--sp-3);
     font-size: var(--fs-11);
+  }
+  
+  .module-tabs-drawer-body {
+    padding: var(--sp-5) var(--sp-4);
+  }
+  
+  .module-tabs-drawer-header {
+    padding: var(--sp-4) var(--sp-4) var(--sp-3);
   }
   
   .module-grid-2,

@@ -126,7 +126,10 @@ export function renderModuleTabsSidebar(tabs = []) {
     
     <div class="module-tabs-drawer">
       <div class="module-tabs-drawer-header">
-        <div class="module-tabs-drawer-title" data-drawer-title="Sezioni"></div>
+        <div>
+          <div class="module-tabs-drawer-title" data-drawer-title="Sezioni"></div>
+          <div class="module-tabs-drawer-breadcrumb" data-drawer-breadcrumb></div>
+        </div>
         <button class="module-tabs-drawer-close" type="button" aria-label="Chiudi drawer">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -171,6 +174,7 @@ export function bindModuleTabs(container) {
   const overlay = wrapper.querySelector('.module-tabs-drawer-overlay');
   const drawer = wrapper.querySelector('.module-tabs-drawer');
   const drawerTitle = wrapper.querySelector('[data-drawer-title]');
+  const drawerBreadcrumb = wrapper.querySelector('[data-drawer-breadcrumb]');
   const drawerContent = wrapper.querySelector('[data-drawer-content]');
   const buttons = wrapper.querySelectorAll('.module-tab-button');
   const panels = container.querySelectorAll('.module-tab-panel');
@@ -185,22 +189,37 @@ export function bindModuleTabs(container) {
       drawerTitle.textContent = tabTitle || 'Sezioni';
     }
     
+    // Aggiorna breadcrumb (opzionale)
+    if (drawerBreadcrumb) {
+      // Trova il badge del modulo (F1B, F2, ecc.)
+      const moduleCard = wrapper.closest('.module-card');
+      const moduleBadge = moduleCard?.querySelector('.module-badge');
+      const badgeText = moduleBadge?.textContent || '';
+      drawerBreadcrumb.textContent = badgeText ? `${badgeText} > ${tabTitle}` : tabTitle;
+    }
+    
     // Carica contenuto tab nel drawer
     if (drawerContent && panels.length > 0) {
       const panel = Array.from(panels).find(p => p.dataset.tabId === tabId);
       if (panel) {
-        // Copia HTML del panel nel drawer
-        drawerContent.innerHTML = panel.innerHTML;
+        // Mostra skeleton/loading state brevemente
+        drawerContent.innerHTML = '<div style="padding: var(--sp-4); color: var(--muted);">Caricamento...</div>';
         
-        // Se c'è un container per header-ticker, montalo
-        const tickerContainer = drawerContent.querySelector('[data-tab-ticker]');
-        if (tickerContainer && !tickerContainer.querySelector('.header-ticker')) {
-          // Trigger evento custom per montare header-ticker (gestito da f1b.js)
-          const event = new CustomEvent('drawer-tab-opened', {
-            detail: { tabId, container: tickerContainer }
-          });
-          wrapper.dispatchEvent(event);
-        }
+        // Piccolo delay per animazione smooth
+        requestAnimationFrame(() => {
+          // Copia HTML del panel nel drawer
+          drawerContent.innerHTML = panel.innerHTML;
+          
+          // Se c'è un container per header-ticker, montalo
+          const tickerContainer = drawerContent.querySelector('[data-tab-ticker]');
+          if (tickerContainer && !tickerContainer.querySelector('.header-ticker')) {
+            // Trigger evento custom per montare header-ticker (gestito da f1b.js)
+            const event = new CustomEvent('drawer-tab-opened', {
+              detail: { tabId, container: tickerContainer }
+            });
+            wrapper.dispatchEvent(event);
+          }
+        });
       }
     }
   }
@@ -224,19 +243,33 @@ export function bindModuleTabs(container) {
   }
 
   // Gestione click su tab button (apre drawer)
-  buttons.forEach(button => {
+  buttons.forEach((button, index) => {
     button.addEventListener('click', () => {
       const tabId = button.dataset.tabId;
       const tabTitle = button.textContent.trim();
       if (!tabId) return;
 
-      // Aggiorna stato button (opzionale, per evidenziare)
+      // Aggiorna stato button (per evidenziare)
       buttons.forEach(btn => {
         btn.dataset.active = btn.dataset.tabId === tabId ? 'true' : 'false';
       });
 
       // Apri drawer con contenuto tab
       openDrawer(tabId, tabTitle);
+    });
+    
+    // Keyboard navigation
+    button.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        button.click();
+      } else if (e.key === 'ArrowRight' && index < buttons.length - 1) {
+        e.preventDefault();
+        buttons[index + 1].focus();
+      } else if (e.key === 'ArrowLeft' && index > 0) {
+        e.preventDefault();
+        buttons[index - 1].focus();
+      }
     });
   });
 
