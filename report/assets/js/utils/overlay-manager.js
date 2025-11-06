@@ -46,15 +46,16 @@ export function registerOverlay(id, type, overlayEl, drawerEl = null) {
 
   OVERLAY_STACK.push(entry);
   overlayEl.style.zIndex = zIndex;
+  overlayEl.style.pointerEvents = 'all'; // Assicura che l'overlay blocchi lo sfondo
   
-  // Se c'è un drawer/panel separato, imposta z-index + 2
+  // Se c'è un drawer/panel separato, imposta z-index + 10 (sempre in primo piano)
   if (drawerEl) {
-    drawerEl.style.zIndex = zIndex + 2;
+    drawerEl.style.zIndex = zIndex + 10;
   } else {
     // Altrimenti cerca dentro l'overlay
-    const drawer = overlayEl.querySelector('.module-tabs-drawer, .metrics-drawer-panel, .metric-popup-panel');
+    const drawer = overlayEl.querySelector('.module-tabs-drawer, .metrics-drawer-panel, .metric-popup-panel, .glossary-drawer-panel');
     if (drawer) {
-      drawer.style.zIndex = zIndex + 2;
+      drawer.style.zIndex = zIndex + 10;
     }
   }
   
@@ -81,15 +82,16 @@ export function unregisterOverlay(id) {
     entry.zIndex = newZIndex;
     if (entry.overlayEl) {
       entry.overlayEl.style.zIndex = newZIndex;
+      entry.overlayEl.style.pointerEvents = 'all';
     }
     // Aggiorna anche drawer/panel separato (se presente)
     if (entry.drawerEl) {
-      entry.drawerEl.style.zIndex = newZIndex + 2;
+      entry.drawerEl.style.zIndex = newZIndex + 10;
     } else if (entry.overlayEl) {
       // Altrimenti cerca dentro l'overlay
-      const drawer = entry.overlayEl.querySelector('.module-tabs-drawer, .metrics-drawer-panel, .metric-popup-panel');
+      const drawer = entry.overlayEl.querySelector('.module-tabs-drawer, .metrics-drawer-panel, .metric-popup-panel, .glossary-drawer-panel');
       if (drawer) {
-        drawer.style.zIndex = newZIndex + 2;
+        drawer.style.zIndex = newZIndex + 10;
       }
     }
   });

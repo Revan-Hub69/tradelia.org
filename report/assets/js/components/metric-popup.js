@@ -11,7 +11,6 @@ const POPUP = {
   _isOpen: false,
   _glossary: null,
   _currentMetric: null,
-  _view: 'metric', // 'metric' | 'glossary'
   _overlayId: 'metric-popup' // ID univoco per overlay manager
 };
 
@@ -213,39 +212,16 @@ async function open(metric, allMetrics = []) {
 }
 
 function openGlossary() {
-  if (!POPUP._overlay || !POPUP._panel) return;
-  
-  // Import glossary component dynamically
-  import('./glossary-embedded.js').then(({ glossaryEmbedded }) => {
-    POPUP._view = 'glossary';
-    glossaryEmbedded.mount(POPUP._panel, () => {
-      // Callback: torna indietro al metric popup
-      if (POPUP._currentMetric) {
-        renderPopup(POPUP._currentMetric);
-      }
-    });
+  // Apri drawer glossario separato (non dentro il popup)
+  import('./glossary-drawer.js').then(({ glossaryDrawer }) => {
+    glossaryDrawer.open();
   }).catch(err => {
-    Logger.error('MetricPopup', 'Errore caricamento glossario embedded', err);
+    Logger.error('MetricPopup', 'Errore caricamento glossary drawer', err);
   });
 }
 
 async function close() {
   if (!POPUP._overlay || !POPUP._isOpen) return;
-  
-  // Se siamo nella vista glossario, torna al metric prima di chiudere
-  if (POPUP._view === 'glossary') {
-    try {
-      const { glossaryEmbedded } = await import('./glossary-embedded.js');
-      glossaryEmbedded.unmount();
-      if (POPUP._currentMetric) {
-        renderPopup(POPUP._currentMetric);
-        POPUP._view = 'metric';
-        return; // Non chiudere, solo torna al metric
-      }
-    } catch (err) {
-      Logger.error('MetricPopup', 'Errore unmount glossario', err);
-    }
-  }
   
   POPUP._overlay.hidden = true;
   POPUP._overlay.setAttribute('aria-hidden', 'true');
