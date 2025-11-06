@@ -13,10 +13,10 @@
   );
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-xl);
-  padding: var(--sp-6);
+  padding: var(--sp-4);
   display: flex;
   flex-direction: column;
-  gap: var(--sp-4);
+  gap: var(--sp-3);
   box-shadow: 
     var(--shadow-md),
     0 1px 0 rgba(255, 255, 255, 0.03) inset;
@@ -45,8 +45,8 @@
 .module-header {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-2);
-  margin-bottom: var(--sp-4);
+  gap: var(--sp-1_5);
+  margin-bottom: var(--sp-3);
 }
 
 .module-header-topline {
@@ -140,8 +140,8 @@
   );
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-card);
-  padding: var(--sp-4);
-  margin-bottom: var(--sp-4);
+  padding: var(--sp-3);
+  margin-bottom: var(--sp-3);
 }
 
 .module-ai-summary-label {
@@ -159,79 +159,110 @@
   color: var(--ink-soft);
 }
 
-/* ===== MODULE TABS (Accordion) ===== */
-.module-tabs {
+/* ===== MODULE TABS (Menu Laterale + Content) ===== */
+.module-tabs-wrapper {
+  display: flex;
+  gap: var(--sp-4);
+  margin-top: var(--sp-3);
+}
+
+/* Menu laterale tabs */
+.module-tabs-sidebar {
+  flex-shrink: 0;
+  width: 200px;
   display: flex;
   flex-direction: column;
-  gap: var(--sp-2);
+  gap: var(--sp-1);
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: var(--sp-2);
 }
 
-.module-tab {
-  background: var(--surface-card);
+/* Scrollbar personalizzata per sidebar */
+.module-tabs-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.module-tabs-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.module-tabs-sidebar::-webkit-scrollbar-thumb {
+  background: var(--br-strong);
+  border-radius: 3px;
+}
+
+.module-tabs-sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+.module-tab-button {
+  width: 100%;
+  padding: var(--sp-2) var(--sp-3);
+  background: transparent;
   border: 1px solid var(--br-card);
   border-radius: var(--radius-card);
-  overflow: hidden;
-  transition: all var(--transition-base);
-}
-
-.module-tab-header {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--sp-3) var(--sp-4);
-  background: transparent;
-  border: none;
   cursor: pointer;
   font-family: inherit;
-  font-size: var(--fs-13);
+  font-size: var(--fs-12);
   font-weight: 600;
-  color: var(--ink);
+  color: var(--muted);
   text-align: left;
   transition: all var(--transition-base);
+  position: relative;
 }
 
-.module-tab-header:hover {
+.module-tab-button:hover {
   background: var(--surface-hover);
+  color: var(--ink);
+  border-color: var(--br-strong);
 }
 
-.module-tab-header:focus-visible {
-  outline: 2px solid var(--brand-600);
-  outline-offset: -2px;
+.module-tab-button[data-active="true"] {
+  background: var(--surface-elev);
+  color: var(--ink);
+  border-color: var(--brand-600);
 }
 
-.module-tab-title {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
+.module-tab-button[data-active="true"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--brand-600);
+  border-radius: var(--radius-card) 0 0 var(--radius-card);
+}
+
+/* Content area */
+.module-tabs-content {
   flex: 1;
+  min-width: 0;
 }
 
-.module-tab-icon {
-  width: 16px;
-  height: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform var(--transition-base);
-  color: var(--muted);
+.module-tab-panel {
+  display: none;
 }
 
-.module-tab[data-expanded="true"] .module-tab-icon {
-  transform: rotate(180deg);
+.module-tab-panel[data-active="true"] {
+  display: block;
 }
 
-.module-tab-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height var(--transition-slow), padding var(--transition-base);
-  padding: 0 var(--sp-4);
+.module-tab-panel-content {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
 }
 
-.module-tab[data-expanded="true"] .module-tab-content {
-  max-height: 5000px;
-  padding: var(--sp-4);
-  border-top: 1px solid var(--br-panel-divider);
+/* Header-ticker dentro tab panel (compatto, senza bordi) */
+.module-tab-panel-content .header-ticker {
+  background: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
 }
 
 /* ===== MODULE CONTENT ===== */
@@ -290,7 +321,7 @@
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .module-card {
-    padding: var(--sp-4);
+    padding: var(--sp-3);
   }
   
   .module-header-topline {
@@ -305,17 +336,21 @@
     font-size: var(--fs-11);
   }
   
-  .module-tab-header {
-    padding: var(--sp-2_5) var(--sp-3);
-    font-size: var(--fs-12);
+  .module-tabs-wrapper {
+    flex-direction: column;
+    gap: var(--sp-3);
   }
   
-  .module-tab-content {
-    padding: 0 var(--sp-3);
+  .module-tabs-sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: var(--sp-2);
   }
   
-  .module-tab[data-expanded="true"] .module-tab-content {
-    padding: var(--sp-3);
+  .module-tab-button {
+    white-space: nowrap;
+    flex-shrink: 0;
   }
   
   .module-grid-2,

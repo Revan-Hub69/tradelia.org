@@ -1,9 +1,9 @@
 // /report/assets/js/modules/f1b.js
 // F1B · Market Regime - Design Unificato
-// Refactored con CSS unificato e tabs espandibili
+// Usa stessa logica di header-ticker: riassunto AI sempre visibile + tabs laterali
 
-import { formatF1BToRows } from './f1b-formatter.js';
-import { renderModuleHeader, renderAISummary, renderModuleTab, bindModuleTabs } from '../components/module-header.js';
+import { renderModuleHeader, renderModuleTabsSidebar, bindModuleTabs } from '../components/module-header.js';
+// header-ticker viene importato dinamicamente quando necessario (non modificato)
 
 // Helper functions
 function escapeHtml(str) {
@@ -41,31 +41,582 @@ function normalizeDataPublicF1B(src = {}) {
   };
 }
 
-// Render metric block per tabs
-function renderMetricBlock(key, label, desc, metric) {
-  const value = metric?.raw || metric || '—';
-  const tone = metric?.tone || 'neutral';
-  const aiNote = metric?.ai_note || '';
+/**
+ * Genera rows + parts per riassunto AI (sempre visibile)
+ * Usa stessa logica di header-ticker
+ */
+function generateAISummaryRows(data) {
+  const rows = [];
+  const d = data;
   
-  return `
-    <div class="module-content-compact">
-      <div class="module-header-topline" style="margin-bottom: var(--sp-2);">
-        <span style="font-size: var(--fs-12); font-weight: 600; color: var(--muted);">${escapeHtml(label)}</span>
-        <button class="info-btn" data-metric="${escapeAttr(key)}" aria-label="Info ${escapeHtml(label)}">?</button>
-      </div>
-      <div style="font-size: var(--fs-14); font-weight: 600; color: var(--ink); margin-bottom: var(--sp-1);">
-        ${escapeHtml(value)}
-      </div>
-      ${aiNote ? `<div style="font-size: var(--fs-11); color: var(--muted); line-height: var(--lh-15);">${escapeHtml(aiNote)}</div>` : ''}
-    </div>
-  `;
+  // ROW 1: StrategyMode + RegimeScore
+  const strategyMode = d.regime_and_risk?.StrategyMode_macro?.raw || d.regime_and_risk?.StrategyMode_macro || '—';
+  const regimeScore = d.regime_and_risk?.RegimeScore?.raw || d.regime_and_risk?.RegimeScore || '—';
+  
+  rows.push({
+    id: 'f1b-summary-strategy',
+    parts: [
+      { kind: 'text', text: 'StrategyMode: ' },
+      {
+        kind: 'metric',
+        key: 'StrategyMode_macro',
+        value: String(strategyMode),
+        label: 'StrategyMode',
+        tone: getToneForStrategyMode(strategyMode)
+      },
+      { kind: 'text', text: ' · RegimeScore: ' },
+      {
+        kind: 'metric',
+        key: 'RegimeScore',
+        value: formatRegimeScore(regimeScore),
+        label: 'RegimeScore',
+        tone: getToneForRegimeScore(regimeScore)
+      }
+    ]
+  });
+  
+  // ROW 2: Volatilità + Breadth
+  const volRegime = d.regime_and_risk?.VolRegime?.raw || d.regime_and_risk?.VolRegime || '—';
+  const breadth = d.breadth_rotation?.Breadth_1M?.raw || d.breadth_rotation?.Breadth_1M || '—';
+  
+  rows.push({
+    id: 'f1b-summary-vol-breadth',
+    parts: [
+      { kind: 'text', text: 'Volatilità: ' },
+      {
+        kind: 'metric',
+        key: 'VolRegime',
+        value: String(volRegime),
+        label: 'VolRegime',
+        tone: 'neutral'
+      },
+      { kind: 'text', text: ' · Breadth 1M: ' },
+      {
+        kind: 'metric',
+        key: 'Breadth_1M',
+        value: formatBreadth(breadth),
+        label: 'Breadth 1M',
+        tone: getToneForBreadth(breadth)
+      }
+    ]
+  });
+  
+  // ROW 3: RiskTilt + Leaders
+  const riskTilt = d.breadth_rotation?.RiskTilt_1M?.raw || d.breadth_rotation?.RiskTilt_1M || '—';
+  const leaders = d.breadth_rotation?.Leadership?.LeadersMultiTF?.items || [];
+  const leadersText = Array.isArray(leaders) && leaders.length > 0 
+    ? leaders.slice(0, 3).join(', ') 
+    : '—';
+  
+  rows.push({
+    id: 'f1b-summary-risk-tilt',
+    parts: [
+      { kind: 'text', text: 'RiskTilt: ' },
+      {
+        kind: 'metric',
+        key: 'RiskTilt_1M',
+        value: String(riskTilt),
+        label: 'RiskTilt 1M',
+        tone: getToneForRiskTilt(riskTilt)
+      },
+      { kind: 'text', text: ' · Leaders: ' },
+      { kind: 'text', text: leadersText }
+    ]
+  });
+  
+  // ROW 4: Size Bias + SmallCap
+  const sizeBias = d.breadth_rotation?.SizeBias?.raw || d.breadth_rotation?.SizeBias || '—';
+  const smallCap = d.breadth_rotation?.SmallCapPressure_1W?.raw || d.breadth_rotation?.SmallCapPressure_1W || '—';
+  
+  rows.push({
+    id: 'f1b-summary-size',
+    parts: [
+      { kind: 'text', text: 'Size Bias: ' },
+      {
+        kind: 'metric',
+        key: 'SizeBias',
+        value: String(sizeBias),
+        label: 'SizeBias',
+        tone: 'neutral'
+      },
+      { kind: 'text', text: ' · SmallCap Pressure: ' },
+      {
+        kind: 'metric',
+        key: 'SmallCapPressure_1W',
+        value: String(smallCap),
+        label: 'SmallCap Pressure 1W',
+        tone: 'neutral'
+      }
+    ]
+  });
+  
+  // ROW 5: Credito + FX
+  const credit = d.regime_and_risk?.CreditRiskBlock?.raw || d.regime_and_risk?.CreditRiskBlock || '—';
+  const fx = d.regime_and_risk?.FX_Regime?.raw || d.regime_and_risk?.FX_Regime || '—';
+  
+  rows.push({
+    id: 'f1b-summary-credit-fx',
+    parts: [
+      { kind: 'text', text: 'Credito: ' },
+      {
+        kind: 'metric',
+        key: 'CreditRiskBlock',
+        value: String(credit),
+        label: 'CreditRiskBlock',
+        tone: 'neutral'
+      },
+      { kind: 'text', text: ' · FX: ' },
+      {
+        kind: 'metric',
+        key: 'FX_Regime',
+        value: String(fx),
+        label: 'FX_Regime',
+        tone: 'neutral'
+      }
+    ]
+  });
+  
+  // ROW 6: Risk Window
+  const riskWindow = d.regime_and_risk?.RiskWindow?.raw || d.regime_and_risk?.RiskWindow || '—';
+  if (riskWindow !== '—') {
+    rows.push({
+      id: 'f1b-summary-risk-window',
+      parts: [
+        { kind: 'text', text: 'Risk Window (3–10g): ' },
+        {
+          kind: 'metric',
+          key: 'RiskWindow',
+          value: String(riskWindow),
+          label: 'RiskWindow',
+          tone: 'yellow'
+        }
+      ]
+    });
+  }
+  
+  // ROW 7: Liquidity + Index Momentum
+  const liquidity = d.regime_and_risk?.LiquidityRegimeScore?.raw || d.regime_and_risk?.LiquidityRegimeScore || '—';
+  const indexMomentum = d.breadth_rotation?.IndexMomentum_1W?.raw || d.breadth_rotation?.IndexMomentum_1W || '—';
+  
+  rows.push({
+    id: 'f1b-summary-liquidity-momentum',
+    parts: [
+      { kind: 'text', text: 'Liquidità: ' },
+      {
+        kind: 'metric',
+        key: 'LiquidityRegimeScore',
+        value: formatRegimeScore(liquidity),
+        label: 'LiquidityRegimeScore',
+        tone: 'neutral'
+      },
+      { kind: 'text', text: ' · Index Momentum 1W: ' },
+      {
+        kind: 'metric',
+        key: 'IndexMomentum_1W',
+        value: formatRegimeScore(indexMomentum),
+        label: 'Index Momentum 1W',
+        tone: 'neutral'
+      }
+    ]
+  });
+  
+  // ROW 8: Defensivi + Lagging
+  const defensive = d.breadth_rotation?.Leadership?.DefensiveLeadership?.items || [];
+  const lagging = d.breadth_rotation?.Leadership?.Lagging?.items || [];
+  const defensiveText = Array.isArray(defensive) && defensive.length > 0 
+    ? defensive.slice(0, 2).join(', ') 
+    : '—';
+  const laggingText = Array.isArray(lagging) && lagging.length > 0 
+    ? lagging.slice(0, 2).join(', ') 
+    : '—';
+  
+  if (defensiveText !== '—' || laggingText !== '—') {
+    rows.push({
+      id: 'f1b-summary-defensive-lagging',
+      parts: [
+        { kind: 'text', text: 'Defensivi: ' },
+        { kind: 'text', text: defensiveText },
+        { kind: 'text', text: ' · In ritardo: ' },
+        { kind: 'text', text: laggingText }
+      ]
+    });
+  }
+  
+  // ROW 9: Street View (troncato)
+  const streetView = d.street_view?.T1_MacroNews || '';
+  if (streetView) {
+    const streetPreview = streetView.length > 80 
+      ? streetView.substring(0, 80) + '...' 
+      : streetView;
+    rows.push({
+      id: 'f1b-summary-street-view',
+      parts: [
+        { kind: 'text', text: 'Street View: ' },
+        { kind: 'text', text: streetPreview }
+      ]
+    });
+  }
+  
+  return rows;
+}
+
+/**
+ * Genera rows + parts per tab Regime & Rischio
+ */
+function generateRegimeTabRows(data) {
+  const rows = [];
+  const d = data.regime_and_risk || {};
+  
+  // Stessa logica di header-ticker: rows con metriche cliccabili
+  if (d.StrategyMode_macro) {
+    rows.push({
+      id: 'regime-strategy',
+      parts: [
+        { kind: 'text', text: 'StrategyMode: ' },
+        {
+          kind: 'metric',
+          key: 'StrategyMode_macro',
+          value: String(d.StrategyMode_macro?.raw || d.StrategyMode_macro || '—'),
+          label: 'StrategyMode',
+          tone: getToneForStrategyMode(d.StrategyMode_macro?.raw || d.StrategyMode_macro)
+        }
+      ]
+    });
+  }
+  
+  if (d.RegimeScore) {
+    rows.push({
+      id: 'regime-score',
+      parts: [
+        { kind: 'text', text: 'RegimeScore: ' },
+        {
+          kind: 'metric',
+          key: 'RegimeScore',
+          value: formatRegimeScore(d.RegimeScore?.raw || d.RegimeScore),
+          label: 'RegimeScore',
+          tone: getToneForRegimeScore(d.RegimeScore?.raw || d.RegimeScore)
+        }
+      ]
+    });
+  }
+  
+  // Aggiungi altre metriche regime...
+  if (d.VolRegime) {
+    rows.push({
+      id: 'regime-vol',
+      parts: [
+        { kind: 'text', text: 'Volatilità: ' },
+        {
+          kind: 'metric',
+          key: 'VolRegime',
+          value: String(d.VolRegime?.raw || d.VolRegime || '—'),
+          label: 'VolRegime',
+          tone: 'neutral'
+        }
+      ]
+    });
+  }
+  
+  if (d.LiquidityRegimeScore) {
+    rows.push({
+      id: 'regime-liquidity',
+      parts: [
+        { kind: 'text', text: 'Liquidità: ' },
+        {
+          kind: 'metric',
+          key: 'LiquidityRegimeScore',
+          value: formatRegimeScore(d.LiquidityRegimeScore?.raw || d.LiquidityRegimeScore),
+          label: 'LiquidityRegimeScore',
+          tone: 'neutral'
+        }
+      ]
+    });
+  }
+  
+  if (d.CreditRiskBlock) {
+    rows.push({
+      id: 'regime-credit',
+      parts: [
+        { kind: 'text', text: 'Credito: ' },
+        {
+          kind: 'metric',
+          key: 'CreditRiskBlock',
+          value: String(d.CreditRiskBlock?.raw || d.CreditRiskBlock || '—'),
+          label: 'CreditRiskBlock',
+          tone: 'neutral'
+        }
+      ]
+    });
+  }
+  
+  if (d.FX_Regime) {
+    rows.push({
+      id: 'regime-fx',
+      parts: [
+        { kind: 'text', text: 'FX: ' },
+        {
+          kind: 'metric',
+          key: 'FX_Regime',
+          value: String(d.FX_Regime?.raw || d.FX_Regime || '—'),
+          label: 'FX_Regime',
+          tone: 'neutral'
+        }
+      ]
+    });
+  }
+  
+  if (d.RiskWindow) {
+    rows.push({
+      id: 'regime-risk-window',
+      parts: [
+        { kind: 'text', text: 'Risk Window (3–10g): ' },
+        {
+          kind: 'metric',
+          key: 'RiskWindow',
+          value: String(d.RiskWindow?.raw || d.RiskWindow || '—'),
+          label: 'RiskWindow',
+          tone: 'yellow'
+        }
+      ]
+    });
+  }
+  
+  return rows;
+}
+
+/**
+ * Genera rows + parts per tab Breadth & Rotazione
+ */
+function generateBreadthTabRows(data) {
+  const rows = [];
+  const d = data.breadth_rotation || {};
+  
+  if (d.Breadth_1M) {
+    rows.push({
+      id: 'breadth-1m',
+      parts: [
+        { kind: 'text', text: 'Breadth 1M: ' },
+        {
+          kind: 'metric',
+          key: 'Breadth_1M',
+          value: formatBreadth(d.Breadth_1M?.raw || d.Breadth_1M),
+          label: 'Breadth 1M',
+          tone: getToneForBreadth(d.Breadth_1M?.raw || d.Breadth_1M)
+        }
+      ]
+    });
+  }
+  
+  if (d.RiskTilt_1M) {
+    rows.push({
+      id: 'breadth-risk-tilt',
+      parts: [
+        { kind: 'text', text: 'RiskTilt 1M: ' },
+        {
+          kind: 'metric',
+          key: 'RiskTilt_1M',
+          value: String(d.RiskTilt_1M?.raw || d.RiskTilt_1M || '—'),
+          label: 'RiskTilt 1M',
+          tone: getToneForRiskTilt(d.RiskTilt_1M?.raw || d.RiskTilt_1M)
+        }
+      ]
+    });
+  }
+  
+  if (d.SmallCapPressure_1W) {
+    rows.push({
+      id: 'breadth-smallcap',
+      parts: [
+        { kind: 'text', text: 'SmallCap Pressure 1W: ' },
+        {
+          kind: 'metric',
+          key: 'SmallCapPressure_1W',
+          value: String(d.SmallCapPressure_1W?.raw || d.SmallCapPressure_1W || '—'),
+          label: 'SmallCap Pressure 1W',
+          tone: 'neutral'
+        }
+      ]
+    });
+  }
+  
+  if (d.IndexMomentum_1W) {
+    rows.push({
+      id: 'breadth-momentum',
+      parts: [
+        { kind: 'text', text: 'Index Momentum 1W: ' },
+        {
+          kind: 'metric',
+          key: 'IndexMomentum_1W',
+          value: formatRegimeScore(d.IndexMomentum_1W?.raw || d.IndexMomentum_1W),
+          label: 'Index Momentum 1W',
+          tone: 'neutral'
+        }
+      ]
+    });
+  }
+  
+  if (d.SizeBias) {
+    rows.push({
+      id: 'breadth-size-bias',
+      parts: [
+        { kind: 'text', text: 'Size Bias: ' },
+        {
+          kind: 'metric',
+          key: 'SizeBias',
+          value: String(d.SizeBias?.raw || d.SizeBias || '—'),
+          label: 'SizeBias',
+          tone: 'neutral'
+        }
+      ]
+    });
+  }
+  
+  // Leadership
+  if (d.Leadership?.LeadersMultiTF?.items) {
+    const leaders = d.Leadership.LeadersMultiTF.items;
+    rows.push({
+      id: 'breadth-leaders',
+      parts: [
+        { kind: 'text', text: 'Leaders: ' },
+        { kind: 'text', text: Array.isArray(leaders) ? leaders.join(', ') : String(leaders) }
+      ]
+    });
+  }
+  
+  if (d.Leadership?.DefensiveLeadership?.items) {
+    const defensive = d.Leadership.DefensiveLeadership.items;
+    rows.push({
+      id: 'breadth-defensive',
+      parts: [
+        { kind: 'text', text: 'Defensivi: ' },
+        { kind: 'text', text: Array.isArray(defensive) ? defensive.join(', ') : String(defensive) }
+      ]
+    });
+  }
+  
+  if (d.Leadership?.Lagging?.items) {
+    const lagging = d.Leadership.Lagging.items;
+    rows.push({
+      id: 'breadth-lagging',
+      parts: [
+        { kind: 'text', text: 'In ritardo: ' },
+        { kind: 'text', text: Array.isArray(lagging) ? lagging.join(', ') : String(lagging) }
+      ]
+    });
+  }
+  
+  return rows;
+}
+
+/**
+ * Genera rows + parts per tab Street View
+ */
+function generateStreetTabRows(data) {
+  const rows = [];
+  const d = data.street_view || {};
+  
+  if (d.T1_MacroNews) {
+    rows.push({
+      id: 'street-macro-news',
+      parts: [
+        { kind: 'text', text: 'Macro News: ' },
+        { kind: 'text', text: String(d.T1_MacroNews) }
+      ]
+    });
+  }
+  
+  if (d.T1_SellSideNotes) {
+    rows.push({
+      id: 'street-sellside',
+      parts: [
+        { kind: 'text', text: 'Sell-Side Notes: ' },
+        { kind: 'text', text: String(d.T1_SellSideNotes) }
+      ]
+    });
+  }
+  
+  if (d.T1_ConsensusTone) {
+    rows.push({
+      id: 'street-consensus',
+      parts: [
+        { kind: 'text', text: 'Consensus Tone: ' },
+        {
+          kind: 'metric',
+          key: 'T1_ConsensusTone',
+          value: String(d.T1_ConsensusTone?.raw || d.T1_ConsensusTone || '—'),
+          label: 'Consensus Tone',
+          tone: d.T1_ConsensusTone?.tone || 'neutral'
+        }
+      ]
+    });
+  }
+  
+  return rows;
+}
+
+// Helper functions per formattazione
+function getToneForStrategyMode(mode) {
+  if (typeof mode !== 'string') return 'neutral';
+  if (mode.includes('Momentum')) return 'green';
+  if (mode.includes('Pullback')) return 'red';
+  return 'neutral';
+}
+
+function getToneForRegimeScore(score) {
+  if (typeof score === 'string') {
+    const num = parseFloat(score.replace(/[^0-9.-]/g, ''));
+    if (num > 0.3) return 'green';
+    if (num < -0.3) return 'red';
+    return 'neutral';
+  }
+  if (typeof score === 'number') {
+    if (score > 0.3) return 'green';
+    if (score < -0.3) return 'red';
+    return 'neutral';
+  }
+  return 'neutral';
+}
+
+function formatRegimeScore(score) {
+  if (score === null || score === undefined || score === '—') return '—';
+  if (typeof score === 'number') {
+    return score > 0 ? `+${score.toFixed(2)}` : score.toFixed(2);
+  }
+  if (typeof score === 'string') {
+    return score;
+  }
+  return String(score);
+}
+
+function formatBreadth(breadth) {
+  if (breadth === null || breadth === undefined || breadth === '—') return '—';
+  if (typeof breadth === 'number') {
+    return (breadth * 100).toFixed(0) + '%';
+  }
+  if (typeof breadth === 'string') {
+    return breadth;
+  }
+  return String(breadth);
+}
+
+function getToneForBreadth(breadth) {
+  if (typeof breadth === 'number') {
+    if (breadth > 0.6) return 'green';
+    if (breadth < 0.4) return 'red';
+    return 'neutral';
+  }
+  return 'neutral';
+}
+
+function getToneForRiskTilt(tilt) {
+  if (typeof tilt !== 'string') return 'neutral';
+  if (tilt.includes('Pro-rischio') || tilt.includes('risk-on')) return 'green';
+  if (tilt.includes('Difensivo') || tilt.includes('risk-off')) return 'red';
+  return 'neutral';
 }
 
 export function renderCard(rawData, ctx = {}) {
   const d = normalizeDataPublicF1B(rawData);
-  
-  // Genera rows formattate per header-ticker
-  const formattedRows = rawData?.rows || rawData?.formattedRows || formatF1BToRows(rawData);
   
   // Header modulo
   const headerHTML = renderModuleHeader({
@@ -77,140 +628,61 @@ export function renderCard(rawData, ctx = {}) {
     freshness: d.meta.freshness
   });
   
-  // AI Summary
-  const aiSummaryHTML = renderAISummary(
-    d.meta.hero_intro || d.sintesi_ai?.summary?.raw || '',
-    'Riassunto AI'
-  );
+  // Riassunto AI sempre visibile (usa header-ticker)
+  const aiSummaryRows = generateAISummaryRows(d);
+  const aiSummaryContainer = `
+    <div class="module-ai-summary">
+      <div class="module-ai-summary-label">Riassunto AI</div>
+      <div data-ai-summary-ticker="true"></div>
+    </div>
+  `;
   
-  // Tabs per sezioni
+  // Tabs per sezioni (menu laterale, nessuna visibile di default)
   const tabs = [];
   
   // Tab 1: Regime & Rischio
   if (d.regime_and_risk && Object.keys(d.regime_and_risk).length > 0) {
-    const regimeContent = `
-      <div class="module-grid module-grid-2">
-        ${renderMetricBlock('StrategyMode_macro', 'StrategyMode', 'Modalità regime', d.regime_and_risk.StrategyMode_macro)}
-        ${renderMetricBlock('RegimeScore', 'RegimeScore', 'Appetito rischio', d.regime_and_risk.RegimeScore)}
-        ${renderMetricBlock('VolRegime', 'Volatilità', 'VIX / hedge', d.regime_and_risk.VolRegime)}
-        ${renderMetricBlock('LiquidityRegimeScore', 'Liquidità', 'Curva & funding', d.regime_and_risk.LiquidityRegimeScore)}
-        ${renderMetricBlock('CreditRiskBlock', 'Credito', 'Spread credito', d.regime_and_risk.CreditRiskBlock)}
-        ${renderMetricBlock('FX_Regime', 'FX', 'Dollar tone', d.regime_and_risk.FX_Regime)}
-        ${renderMetricBlock('RiskWindow', 'Risk Window (3–10g)', 'Driver macro monitorati', d.regime_and_risk.RiskWindow)}
-      </div>
-    `;
-    tabs.push(renderModuleTab({
+    tabs.push({
       id: 'regime',
       title: 'Regime & Rischio',
-      content: regimeContent,
-      expanded: true
-    }));
+      content: '<div data-tab-ticker="regime"></div>',
+      active: false,
+      rows: generateRegimeTabRows(d)
+    });
   }
   
   // Tab 2: Breadth & Rotazione
   if (d.breadth_rotation && Object.keys(d.breadth_rotation).length > 0) {
-    const breadthContent = `
-      <div class="module-grid module-grid-2">
-        ${renderMetricBlock('Breadth_1M', 'Breadth 1M', '% settori positivi', d.breadth_rotation.Breadth_1M)}
-        ${renderMetricBlock('RiskTilt_1M', 'RiskTilt 1M', 'Ciclici vs difensivi', d.breadth_rotation.RiskTilt_1M)}
-        ${renderMetricBlock('SmallCapPressure_1W', 'SmallCap Pressure', 'Microcap vs Large', d.breadth_rotation.SmallCapPressure_1W)}
-        ${renderMetricBlock('IndexMomentum_1W', 'Index Momentum', 'Momentum cross-indici', d.breadth_rotation.IndexMomentum_1W)}
-        ${renderMetricBlock('SizeBias', 'Size Bias', 'Preferenza capitalizzazione', d.breadth_rotation.SizeBias)}
-      </div>
-      ${d.breadth_rotation.Leadership ? `
-        <div style="margin-top: var(--sp-4);">
-          <h4 style="font-size: var(--fs-13); font-weight: 600; color: var(--ink); margin-bottom: var(--sp-2);">Leadership</h4>
-          ${d.breadth_rotation.Leadership.LeadersMultiTF ? `
-            <div style="margin-bottom: var(--sp-2);">
-              <strong>Leaders:</strong> ${escapeHtml((d.breadth_rotation.Leadership.LeadersMultiTF.items || []).join(', '))}
-            </div>
-          ` : ''}
-          ${d.breadth_rotation.Leadership.DefensiveLeadership ? `
-            <div style="margin-bottom: var(--sp-2);">
-              <strong>Defensivi:</strong> ${escapeHtml((d.breadth_rotation.Leadership.DefensiveLeadership.items || []).join(', '))}
-            </div>
-          ` : ''}
-          ${d.breadth_rotation.Leadership.Lagging ? `
-            <div>
-              <strong>In ritardo:</strong> ${escapeHtml((d.breadth_rotation.Leadership.Lagging.items || []).join(', '))}
-            </div>
-          ` : ''}
-        </div>
-      ` : ''}
-    `;
-    tabs.push(renderModuleTab({
+    tabs.push({
       id: 'breadth',
       title: 'Breadth & Rotazione',
-      content: breadthContent,
-      expanded: false
-    }));
+      content: '<div data-tab-ticker="breadth"></div>',
+      active: false,
+      rows: generateBreadthTabRows(d)
+    });
   }
   
   // Tab 3: Street View
   if (d.street_view && Object.keys(d.street_view).length > 0) {
-    const streetContent = `
-      <div class="module-content-compact">
-        <h4 style="font-size: var(--fs-13); font-weight: 600; color: var(--ink); margin-bottom: var(--sp-2);">Macro News</h4>
-        <p style="font-size: var(--fs-13); color: var(--ink-soft); line-height: var(--lh-16);">${escapeHtml(d.street_view.T1_MacroNews || '—')}</p>
-      </div>
-      <div class="module-content-compact" style="margin-top: var(--sp-3);">
-        <h4 style="font-size: var(--fs-13); font-weight: 600; color: var(--ink); margin-bottom: var(--sp-2);">Sell-Side Notes</h4>
-        <p style="font-size: var(--fs-13); color: var(--ink-soft); line-height: var(--lh-16);">${escapeHtml(d.street_view.T1_SellSideNotes || '—')}</p>
-      </div>
-      ${d.street_view.T1_ConsensusTone ? `
-        <div class="module-content-compact" style="margin-top: var(--sp-3);">
-          <h4 style="font-size: var(--fs-13); font-weight: 600; color: var(--ink); margin-bottom: var(--sp-2);">Consensus Tone</h4>
-          <p style="font-size: var(--fs-13); color: var(--ink-soft); line-height: var(--lh-16);">${escapeHtml(d.street_view.T1_ConsensusTone.raw || '—')}</p>
-        </div>
-      ` : ''}
-    `;
-    tabs.push(renderModuleTab({
+    tabs.push({
       id: 'street',
-      title: 'Street View · Narrativa istituzionale',
-      content: streetContent,
-      expanded: false
-    }));
+      title: 'Street View',
+      content: '<div data-tab-ticker="street"></div>',
+      active: false,
+      rows: generateStreetTabRows(d)
+    });
   }
   
-  // Tab 4: Finviz Filters (se presente)
-  if (d.finvizFilters) {
-    const finvizContent = `
-      <div class="module-content-compact">
-        <h4 style="font-size: var(--fs-13); font-weight: 600; color: var(--ink); margin-bottom: var(--sp-2);">Query String</h4>
-        <code style="font-size: var(--fs-11); color: var(--muted); word-break: break-all; display: block; padding: var(--sp-2); background: var(--surface-page); border-radius: var(--radius-sm);">${escapeHtml(d.finvizFilters.QueryString || '—')}</code>
-      </div>
-      <div class="module-grid module-grid-2" style="margin-top: var(--sp-3);">
-        <div>
-          <strong>StrategyMode:</strong> ${escapeHtml(d.finvizFilters.StrategyMode || '—')}
-        </div>
-        <div>
-          <strong>Sector Focus:</strong> ${escapeHtml(Array.isArray(d.finvizFilters.SectorFocus) ? d.finvizFilters.SectorFocus.join(', ') : (d.finvizFilters.SectorFocus || '—'))}
-        </div>
-        <div>
-          <strong>Size Focus:</strong> ${escapeHtml(d.finvizFilters.SizeFocus || '—')}
-        </div>
-      </div>
-    `;
-    tabs.push(renderModuleTab({
-      id: 'finviz',
-      title: 'Finviz Filters (Dynamic)',
-      content: finvizContent,
-      expanded: false
-    }));
-  }
-  
-  // Container per header-ticker (se ci sono rows)
-  const tickerContainer = formattedRows && formattedRows.length > 0 ? `
-    <div class="module-content-compact" data-f1b-ticker="true" style="padding: var(--sp-4);"></div>
-  ` : '';
+  // Genera menu laterale + content
+  const { sidebarHTML, contentHTML } = renderModuleTabsSidebar(tabs);
   
   return `
     <section class="module-card" data-state="${escapeAttr(d.meta.moduleStatus)}">
       ${headerHTML}
-      ${aiSummaryHTML}
-      ${tickerContainer}
-      <div class="module-tabs">
-        ${tabs.join('')}
+      ${aiSummaryContainer}
+      <div class="module-tabs-wrapper">
+        ${sidebarHTML}
+        ${contentHTML}
       </div>
     </section>
   `;
@@ -220,33 +692,83 @@ export function bindCard(node, rawData, ctx = {}) {
   if (!node || !rawData) return;
   const data = normalizeDataPublicF1B(rawData);
   
-  // Bind tabs
-  const tabsContainer = node.querySelector('.module-tabs');
-  if (tabsContainer) {
-    bindModuleTabs(tabsContainer);
+  // Bind tabs laterali
+  const tabsWrapper = node.querySelector('.module-tabs-wrapper');
+  if (tabsWrapper) {
+    bindModuleTabs(tabsWrapper);
   }
   
-  // Monta header-ticker se ci sono rows
-  const formattedRows = rawData?.rows || rawData?.formattedRows || formatF1BToRows(rawData);
-  const tickerContainer = node.querySelector('[data-f1b-ticker="true"]');
-  
-  if (formattedRows && Array.isArray(formattedRows) && formattedRows.length > 0 && tickerContainer) {
+  // Monta header-ticker per AI Summary (sempre visibile) - import dinamico
+  const aiSummaryTicker = node.querySelector('[data-ai-summary-ticker="true"]');
+  if (aiSummaryTicker) {
     import('../components/header-ticker.js').then(({ headerTicker }) => {
-      const tickerNode = headerTicker.mount(tickerContainer);
-      if (tickerNode) {
-        const tickerData = {
-          ...rawData.meta,
-          rows: formattedRows,
-          metricsPanel: rawData?.metricsPanel || []
-        };
-        headerTicker.update(tickerNode, tickerData);
+      const aiSummaryRows = generateAISummaryRows(data);
+      if (aiSummaryRows.length > 0) {
+        const tickerNode = headerTicker.mount(aiSummaryTicker);
+        if (tickerNode) {
+          headerTicker.update(tickerNode, {
+            ...rawData.meta,
+            rows: aiSummaryRows,
+            metricsPanel: rawData?.metricsPanel || []
+          });
+        }
       }
     }).catch(err => {
-      console.warn('F1B: Errore caricamento header-ticker', err);
+      console.warn('F1B: Errore caricamento header-ticker per AI summary', err);
     });
   }
   
-  // Bind metric info buttons
+  // Monta header-ticker per ogni tab (solo quando selezionata) - import dinamico
+  import('../components/header-ticker.js').then(({ headerTicker }) => {
+    const regimeTicker = node.querySelector('[data-tab-ticker="regime"]');
+    if (regimeTicker) {
+      const regimeRows = generateRegimeTabRows(data);
+      if (regimeRows.length > 0) {
+        const tickerNode = headerTicker.mount(regimeTicker);
+        if (tickerNode) {
+          headerTicker.update(tickerNode, {
+            ...rawData.meta,
+            rows: regimeRows,
+            metricsPanel: rawData?.metricsPanel || []
+          });
+        }
+      }
+    }
+    
+    const breadthTicker = node.querySelector('[data-tab-ticker="breadth"]');
+    if (breadthTicker) {
+      const breadthRows = generateBreadthTabRows(data);
+      if (breadthRows.length > 0) {
+        const tickerNode = headerTicker.mount(breadthTicker);
+        if (tickerNode) {
+          headerTicker.update(tickerNode, {
+            ...rawData.meta,
+            rows: breadthRows,
+            metricsPanel: rawData?.metricsPanel || []
+          });
+        }
+      }
+    }
+    
+    const streetTicker = node.querySelector('[data-tab-ticker="street"]');
+    if (streetTicker) {
+      const streetRows = generateStreetTabRows(data);
+      if (streetRows.length > 0) {
+        const tickerNode = headerTicker.mount(streetTicker);
+        if (tickerNode) {
+          headerTicker.update(tickerNode, {
+            ...rawData.meta,
+            rows: streetRows,
+            metricsPanel: rawData?.metricsPanel || []
+          });
+        }
+      }
+    }
+  }).catch(err => {
+    console.warn('F1B: Errore caricamento header-ticker per tabs', err);
+  });
+  
+  // Bind metric info buttons (per popup glossario)
   if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === "function") {
     try {
       window.__TradeliaUI.bindMetricInfoButtons(node);

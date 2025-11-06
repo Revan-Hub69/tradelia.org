@@ -76,21 +76,18 @@ export function renderAISummary(summaryText = '', label = 'Riassunto AI') {
 }
 
 /**
- * Genera HTML tab (accordion)
- * @param {Object} config - Configurazione tab
- * @param {string} config.id - ID tab
- * @param {string} config.title - Titolo tab
- * @param {string} config.content - Contenuto tab (HTML)
- * @param {boolean} config.expanded - Se espanso di default
- * @returns {string} HTML tab
+ * Genera HTML menu laterale tabs + content area
+ * @param {Array} tabs - Array di configurazioni tab
+ * @param {string} tabs[].id - ID tab
+ * @param {string} tabs[].title - Titolo tab
+ * @param {string} tabs[].content - Contenuto tab (HTML)
+ * @param {boolean} tabs[].active - Se attivo di default
+ * @returns {Object} { sidebarHTML, contentHTML }
  */
-export function renderModuleTab(config = {}) {
-  const {
-    id = '',
-    title = '',
-    content = '',
-    expanded = false
-  } = config;
+export function renderModuleTabsSidebar(tabs = []) {
+  if (!Array.isArray(tabs) || tabs.length === 0) {
+    return { sidebarHTML: '', contentHTML: '' };
+  }
 
   function escapeHtml(str) {
     if (str == null) return '';
@@ -104,58 +101,78 @@ export function renderModuleTab(config = {}) {
     return String(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
-  return `
-    <div class="module-tab" data-tab-id="${escapeAttr(id)}" data-expanded="${expanded}">
-      <button class="module-tab-header" type="button" aria-expanded="${expanded}" aria-controls="tab-content-${escapeAttr(id)}">
-        <span class="module-tab-title">
-          ${escapeHtml(title)}
-        </span>
-        <svg class="module-tab-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-      <div class="module-tab-content" id="tab-content-${escapeAttr(id)}" role="region">
-        ${content}
-      </div>
+  // Trova tab attivo (solo se esplicitamente active=true, altrimenti nessuna)
+  const activeTabId = tabs.find(t => t.active === true)?.id || '';
+
+  // Sidebar buttons
+  const sidebarHTML = `
+    <div class="module-tabs-sidebar">
+      ${tabs.map(tab => `
+        <button 
+          class="module-tab-button" 
+          type="button"
+          data-tab-id="${escapeAttr(tab.id)}"
+          data-active="${tab.id === activeTabId}"
+          aria-controls="tab-panel-${escapeAttr(tab.id)}"
+          aria-selected="${tab.id === activeTabId}">
+          ${escapeHtml(tab.title)}
+        </button>
+      `).join('')}
     </div>
   `;
+
+  // Content panels
+  const contentHTML = `
+    <div class="module-tabs-content">
+      ${tabs.map(tab => `
+        <div 
+          class="module-tab-panel" 
+          id="tab-panel-${escapeAttr(tab.id)}"
+          data-tab-id="${escapeAttr(tab.id)}"
+          data-active="${tab.id === activeTabId}"
+          role="tabpanel"
+          aria-labelledby="tab-button-${escapeAttr(tab.id)}">
+          <div class="module-tab-panel-content">
+            ${tab.content}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  return { sidebarHTML, contentHTML };
 }
 
 /**
- * Bind eventi per tabs (accordion)
- * @param {HTMLElement} container - Container con tabs
+ * Bind eventi per tabs laterali
+ * @param {HTMLElement} container - Container con tabs wrapper
  */
 export function bindModuleTabs(container) {
   if (!container) return;
 
-  const tabs = container.querySelectorAll('.module-tab-header');
+  const buttons = container.querySelectorAll('.module-tab-button');
+  const panels = container.querySelectorAll('.module-tab-panel');
   
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const tabEl = tab.closest('.module-tab');
-      if (!tabEl) return;
+  buttons.forEach(button => {
+    button.addEventListener('click', () => {
+      const tabId = button.dataset.tabId;
+      if (!tabId) return;
 
-      const isExpanded = tabEl.dataset.expanded === 'true';
-      const newState = !isExpanded;
+      // Aggiorna buttons
+      buttons.forEach(btn => {
+        btn.dataset.active = btn.dataset.tabId === tabId;
+        btn.setAttribute('aria-selected', btn.dataset.tabId === tabId);
+      });
 
-      // Aggiorna stato
-      tabEl.dataset.expanded = newState;
-      tab.setAttribute('aria-expanded', newState);
-
-      // Opzionale: chiudi altri tabs (accordion)
-      // Se vuoi solo uno aperto alla volta, decommenta:
-      /*
-      if (newState) {
-        const allTabs = container.querySelectorAll('.module-tab');
-        allTabs.forEach(t => {
-          if (t !== tabEl && t.dataset.expanded === 'true') {
-            t.dataset.expanded = 'false';
-            const header = t.querySelector('.module-tab-header');
-            if (header) header.setAttribute('aria-expanded', 'false');
-          }
-        });
-      }
-      */
+      // Aggiorna panels
+      panels.forEach(panel => {
+        panel.dataset.active = panel.dataset.tabId === tabId;
+        if (panel.dataset.tabId === tabId) {
+          panel.setAttribute('aria-hidden', 'false');
+        } else {
+          panel.setAttribute('aria-hidden', 'true');
+        }
+      });
     });
   });
 }
