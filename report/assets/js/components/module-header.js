@@ -199,6 +199,16 @@ export function bindModuleTabs(container) {
     // Aggiorna stato wrapper PRIMA di modificare contenuto (per evitare sfarfallio)
     wrapper.dataset.drawerOpen = 'true';
     
+    // Forza visibilità e pointer-events sul drawer (previene bug di scomparsa)
+    if (drawer) {
+      drawer.style.display = 'flex';
+      drawer.style.visibility = 'visible';
+      drawer.style.opacity = '1';
+      drawer.style.pointerEvents = 'auto';
+      // Trigger evento per avviare monitoraggio
+      wrapper.dispatchEvent(new CustomEvent('drawer-opened'));
+    }
+    
     // Registra overlay nello stack (gestisce z-index e overflow)
     // Il drawer è separato dall'overlay, passa entrambi
     if (overlay) {
@@ -257,6 +267,9 @@ export function bindModuleTabs(container) {
     if (isOpening) return; // Non chiudere mentre si apre
     wrapper.dataset.drawerOpen = 'false';
     
+    // Trigger evento per fermare monitoraggio
+    wrapper.dispatchEvent(new CustomEvent('drawer-closed'));
+    
     // Rimuovi overlay dallo stack (gestisce overflow automaticamente)
     unregisterOverlay(drawerId);
     
@@ -275,6 +288,38 @@ export function bindModuleTabs(container) {
     overlay.addEventListener('overlay-close-request', (e) => {
       if (e.detail.id === drawerId) {
         closeDrawer();
+      }
+    });
+  }
+
+  // Monitora e previeni scomparsa del drawer quando aperto
+  // Questo risolve il bug dove il drawer scompare quando il mouse è sulla pagina
+  if (drawer) {
+    const checkDrawerVisibility = () => {
+      if (wrapper.dataset.drawerOpen === 'true' && drawer) {
+        // Forza sempre visibilità quando aperto
+        if (drawer.style.display === 'none' || 
+            drawer.style.visibility === 'hidden' || 
+            drawer.style.opacity === '0') {
+          drawer.style.display = 'flex';
+          drawer.style.visibility = 'visible';
+          drawer.style.opacity = '1';
+          drawer.style.pointerEvents = 'auto';
+        }
+      }
+    };
+    
+    // Controlla periodicamente quando il drawer è aperto
+    let visibilityCheckInterval = null;
+    wrapper.addEventListener('drawer-opened', () => {
+      if (visibilityCheckInterval) clearInterval(visibilityCheckInterval);
+      visibilityCheckInterval = setInterval(checkDrawerVisibility, 100);
+    });
+    
+    wrapper.addEventListener('drawer-closed', () => {
+      if (visibilityCheckInterval) {
+        clearInterval(visibilityCheckInterval);
+        visibilityCheckInterval = null;
       }
     });
   }

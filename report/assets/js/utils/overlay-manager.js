@@ -51,11 +51,17 @@ export function registerOverlay(id, type, overlayEl, drawerEl = null) {
   // Se c'è un drawer/panel separato, imposta z-index + 10 (sempre in primo piano)
   if (drawerEl) {
     drawerEl.style.zIndex = zIndex + 10;
+    drawerEl.style.pointerEvents = 'auto'; // Forza pointer-events sul drawer
+    drawerEl.style.visibility = 'visible'; // Forza visibilità
+    drawerEl.style.opacity = '1'; // Forza opacità
   } else {
     // Altrimenti cerca dentro l'overlay
     const drawer = overlayEl.querySelector('.module-tabs-drawer, .metrics-drawer-panel, .metric-popup-panel, .glossary-drawer-panel');
     if (drawer) {
       drawer.style.zIndex = zIndex + 10;
+      drawer.style.pointerEvents = 'auto'; // Forza pointer-events sul drawer
+      drawer.style.visibility = 'visible'; // Forza visibilità
+      drawer.style.opacity = '1'; // Forza opacità
     }
   }
   

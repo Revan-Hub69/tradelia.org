@@ -254,7 +254,12 @@
   opacity: 1;
   visibility: visible;
   pointer-events: all;
+  /* Assicura che l'overlay non interferisca con il drawer */
+  z-index: inherit; /* Usa z-index dall'overlay-manager */
 }
+
+/* Assicura che il drawer sia sempre sopra l'overlay quando aperto */
+/* Il drawer è position: fixed, quindi z-index è gestito da overlay-manager */
 
 /* Drawer container (si apre sopra la pagina) - Design istituzionale */
 .module-tabs-drawer {
@@ -267,7 +272,7 @@
   background: color-mix(in oklab, var(--surface-card) 98%, white 2%); /* Leggermente più chiaro */
   border-left: 1px solid rgba(255, 255, 255, 0.04); /* Bordo più sottile */
   box-shadow: -2px 0 16px rgba(0, 0, 0, 0.25); /* Ombra più sottile */
-  /* z-index gestito dinamicamente da overlay-manager (overlay + 2) */
+  /* z-index gestito dinamicamente da overlay-manager (overlay + 10) */
   transform: translateX(100%);
   transition: transform var(--transition-slow) cubic-bezier(0.4, 0, 0.2, 1); /* Usa token */
   display: flex;
@@ -276,6 +281,9 @@
   will-change: transform; /* Ottimizza animazione per evitare sfarfallio */
   backface-visibility: hidden; /* Previeni flickering su alcuni browser */
   -webkit-font-smoothing: antialiased; /* Smooth rendering */
+  pointer-events: auto !important; /* Forza pointer-events sempre attivo sul drawer */
+  visibility: visible !important; /* Forza visibilità sempre attiva quando aperto */
+  display: flex !important; /* Forza display flex sempre attivo */
 }
 
 /* Footer drawer con sfumatura blu sottile */
@@ -297,6 +305,9 @@
 
 .module-tabs-wrapper[data-drawer-open="true"] .module-tabs-drawer {
   transform: translateX(0);
+  pointer-events: auto !important; /* Forza pointer-events sempre attivo quando aperto */
+  visibility: visible !important; /* Forza visibilità sempre attiva quando aperto */
+  opacity: 1 !important; /* Forza opacità sempre al 100% quando aperto */
 }
 
 /* Drawer header - Design istituzionale */
