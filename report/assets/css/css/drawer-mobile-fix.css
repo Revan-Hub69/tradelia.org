@@ -1,0 +1,43 @@
+/* ===== DRAWER MOBILE - VERSIONE MINIMALE ===== */
+/* Solo per drawer metriche se necessario in futuro */
+
+.metrics-drawer-mobile {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-card);
+}
+
+.metrics-drawer-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-card);
+  z-index: 1;
+}
+
+.metrics-drawer-2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  flex-direction: column;
+  background: var(--surface-card);
+  z-index: 2;
+}
+
+.metrics-drawer-2.active {
+  display: flex !important;
+}
+
+.metrics-drawer-2.active ~ .metrics-drawer-1 {
+  display: none !important;
+}
