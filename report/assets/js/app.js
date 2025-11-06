@@ -255,9 +255,10 @@ import { metricPopup } from './components/metric-popup.js';
   
   // ===== CARICAMENTO MODULI =====
   async function loadModules(reportId) {
-    // Tutti i moduli sono placeholder (da rifare da zero)
-    // Carica tutti i moduli dal manifest, con fallback a placeholder se mancanti
-    let manifest = { order: ['F1', 'F1B', 'F2', 'F3', 'F3O', 'F4', 'F5', 'F5B', 'F6', 'F7'] };
+    // Carica tutti i moduli dal manifest, con fallback a default se mancanti
+    // Solo F1-F5 vanno nel report (F6, F7, F8 esclusi)
+    // F3O, F5B, F5-LT+ sono moduli separati (come F3O è separato da F3)
+    let manifest = { order: ['F1', 'F1B', 'F2', 'F3', 'F3O', 'F4', 'F5', 'F5B', 'F5-LT+'] };
     
     try {
       const m = await fetchJSON(`/report/reports/${reportId}/manifest.json`);
@@ -274,9 +275,21 @@ import { metricPopup } from './components/metric-popup.js';
     const totalModules = manifest.order.length;
     
     for (const modId of manifest.order) {
-      const idLower = String(modId).toLowerCase();
-      const jsonPath = `/report/reports/${reportId}/${idLower}.json`;
-      const modPath = `/report/assets/js/modules/${idLower}.js`;
+      // Mapping per moduli con caratteri speciali nel nome
+      // ID originale -> (nome file JS, nome file JSON)
+      const moduleMap = {
+        'F5-LT+': { js: 'f5lt', json: 'f5-lt+' },
+        'F5B': { js: 'f5b', json: 'f5b' },
+        'F3O': { js: 'f3o', json: 'f3o' }
+      };
+      
+      const modInfo = moduleMap[modId] || { 
+        js: String(modId).toLowerCase().replace(/[^a-z0-9]/g, ''), 
+        json: String(modId).toLowerCase() 
+      };
+      
+      const jsonPath = `/report/reports/${reportId}/${modInfo.json}.json`;
+      const modPath = `/report/assets/js/modules/${modInfo.js}.js`;
       
       try {
         // Carica JSON (fallback a oggetto vuoto se mancante)
@@ -312,7 +325,7 @@ import { metricPopup } from './components/metric-popup.js';
         
         const cardHTML = mod.renderCard(json, { reportId, modId, header: __header });
         const wrap = document.createElement('article');
-        wrap.id = `sec-${idLower}`;
+        wrap.id = `sec-${modInfo.js}`;
         wrap.className = 'report-section-block mb-8';
         wrap.innerHTML = cardHTML;
         ROOT.appendChild(wrap);
@@ -339,7 +352,7 @@ import { metricPopup } from './components/metric-popup.js';
         Logger.warn('App', `Modulo ${modId} non caricato`, err);
         // Error boundary: mostra errore ma continua con altri moduli
         const errorWrap = document.createElement('article');
-        errorWrap.id = `sec-${idLower}-error`;
+        errorWrap.id = `sec-${modInfo.js}-error`;
         errorWrap.className = 'report-section-block mb-8';
         showErrorState(errorWrap, err, `Errore caricamento ${modId}`);
         ROOT.appendChild(errorWrap);
