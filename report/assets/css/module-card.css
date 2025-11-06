@@ -328,9 +328,11 @@
 .module-tabs-drawer-body {
   flex: 1;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: hidden; /* Previeni scroll orizzontale */
   padding: var(--sp-6) var(--sp-8) var(--sp-6) var(--sp-6);
   line-height: var(--lh-16); /* Migliora leggibilità */
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* Header-ticker dentro drawer - rimuovi tutto il padding interno e bordo colorato */
@@ -357,23 +359,41 @@
   padding: 0 !important;
   margin: 0;
   line-height: var(--lh-16); /* Migliora leggibilità */
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0; /* Permetti shrink */
 }
 
 /* Migliora tipografia nel drawer - label più piccole, valori più grandi */
 .module-tabs-drawer-body .header-ticker-text {
   font-size: var(--fs-13);
   color: var(--ink-soft);
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .module-tabs-drawer-body .metric-inline-text {
   font-size: var(--fs-14);
   font-weight: 600;
   font-style: italic;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal !important; /* Forza wrap anche su desktop nel drawer */
 }
 
 /* Migliora stile metriche nel drawer */
 .module-tabs-drawer-body .metric-inline {
   transition: opacity var(--transition-fast);
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  flex-shrink: 1;
 }
 
 .module-tabs-drawer-body .metric-inline:focus-visible {
@@ -581,19 +601,39 @@
   
   .module-tabs-drawer-body {
     padding: var(--sp-3) var(--sp-3);
+    max-width: 100%;
+    overflow-x: hidden; /* Previeni scroll orizzontale */
+    box-sizing: border-box;
+  }
+  
+  /* Forza contenuto a rispettare viewport */
+  .module-tabs-drawer-body .header-ticker {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .module-tabs-drawer-body .header-ticker .header-ticker-body {
+    max-width: 100%;
+    box-sizing: border-box;
   }
   
   /* Word-wrap per righe lunghe nel drawer su mobile */
   .module-tabs-drawer-body .header-ticker-row {
+    max-width: 100%;
+    box-sizing: border-box;
     word-break: break-word;
     overflow-wrap: break-word;
     hyphens: auto;
+    min-width: 0; /* Permetti shrink sotto 0 */
   }
   
   /* Testo normale può andare a capo */
   .module-tabs-drawer-body .header-ticker-text {
+    max-width: 100%;
+    box-sizing: border-box;
     word-break: break-word;
     overflow-wrap: break-word;
+    min-width: 0;
   }
   
   /* Font-size più piccolo su mobile */
@@ -601,12 +641,23 @@
     font-size: var(--fs-12);
   }
   
+  /* Metriche possono andare a capo su mobile */
+  .module-tabs-drawer-body .metric-inline {
+    max-width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+    flex-shrink: 1; /* Permetti shrink */
+  }
+  
   .module-tabs-drawer-body .metric-inline-text {
     font-size: var(--fs-13);
     /* Permetti wrap delle metriche su mobile nel drawer */
-    white-space: normal;
+    white-space: normal !important;
     word-break: break-word;
     overflow-wrap: break-word;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
   }
   
   .module-tabs-drawer-header {
