@@ -159,45 +159,39 @@
   color: var(--ink-soft);
 }
 
-/* ===== MODULE TABS (Drawer Laterale) ===== */
+/* ===== MODULE TABS (Menu Orizzontale + Drawer) ===== */
 .module-tabs-wrapper {
   position: relative;
   margin-top: var(--sp-3);
 }
 
-/* Pulsante per aprire drawer */
-.module-tabs-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-1_5);
-  padding: var(--sp-2) var(--sp-3);
-  background: var(--surface-card);
-  border: 1px solid var(--br-card);
-  border-radius: var(--radius-card);
-  color: var(--ink);
-  font-size: var(--fs-12);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-base);
-  margin-bottom: var(--sp-3);
-}
-
-.module-tabs-toggle:hover {
-  background: var(--surface-hover);
-  border-color: var(--br-strong);
-}
-
-.module-tabs-toggle-icon {
-  width: 16px;
-  height: 16px;
+/* Menu tabs orizzontale scrollabile */
+.module-tabs-menu {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform var(--transition-base);
+  gap: var(--sp-2);
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: var(--sp-2) 0;
+  margin-bottom: var(--sp-3);
+  scrollbar-width: thin;
+  scrollbar-color: var(--br-strong) transparent;
 }
 
-.module-tabs-wrapper[data-drawer-open="true"] .module-tabs-toggle-icon {
-  transform: rotate(180deg);
+.module-tabs-menu::-webkit-scrollbar {
+  height: 6px;
+}
+
+.module-tabs-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.module-tabs-menu::-webkit-scrollbar-thumb {
+  background: var(--br-strong);
+  border-radius: 3px;
+}
+
+.module-tabs-menu::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
 }
 
 /* Drawer overlay (backdrop) */
@@ -218,18 +212,18 @@
   pointer-events: all;
 }
 
-/* Drawer container */
+/* Drawer container (si apre sopra la pagina) */
 .module-tabs-drawer {
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
-  width: 320px;
+  width: 600px;
   max-width: 90vw;
   background: var(--surface-card);
   border-left: 1px solid var(--br-card);
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.3);
-  z-index: 9999;
+  z-index: 10000;
   transform: translateX(100%);
   transition: transform var(--transition-slow);
   display: flex;
@@ -278,15 +272,20 @@
   color: var(--ink);
 }
 
-/* Drawer body (tabs list) */
+/* Drawer body (contenuto tab) */
 .module-tabs-drawer-body {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: var(--sp-3);
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-2);
+  padding: var(--sp-4);
+}
+
+/* Header-ticker dentro drawer */
+.module-tabs-drawer-body .header-ticker {
+  background: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
 }
 
 /* Scrollbar personalizzata per drawer */
@@ -307,19 +306,19 @@
   background: var(--muted);
 }
 
-/* Tab button nel drawer */
+/* Tab button nel menu orizzontale */
 .module-tab-button {
-  width: 100%;
-  padding: var(--sp-3) var(--sp-4);
-  background: transparent;
+  flex-shrink: 0;
+  padding: var(--sp-2) var(--sp-4);
+  background: var(--surface-card);
   border: 1px solid var(--br-card);
   border-radius: var(--radius-card);
   cursor: pointer;
   font-family: inherit;
-  font-size: var(--fs-13);
+  font-size: var(--fs-12);
   font-weight: 600;
   color: var(--muted);
-  text-align: left;
+  white-space: nowrap;
   transition: all var(--transition-base);
   position: relative;
 }
@@ -328,97 +327,30 @@
   background: var(--surface-hover);
   color: var(--ink);
   border-color: var(--br-strong);
+  transform: translateY(-1px);
 }
 
 .module-tab-button[data-active="true"] {
-  background: var(--surface-elev);
+  background: var(--brand-600);
   color: var(--ink);
   border-color: var(--brand-600);
 }
 
-.module-tab-button[data-active="true"]::before {
+.module-tab-button[data-active="true"]::after {
   content: "";
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 2px;
   background: var(--brand-600);
-  border-radius: var(--radius-card) 0 0 var(--radius-card);
+  border-radius: 2px;
 }
 
-.module-tab-button:hover {
-  background: var(--surface-hover);
-  color: var(--ink);
-  border-color: var(--br-strong);
-}
-
-.module-tab-button[data-active="true"] {
-  background: var(--surface-elev);
-  color: var(--ink);
-  border-color: var(--brand-600);
-}
-
-.module-tab-button[data-active="true"]::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--brand-600);
-  border-radius: var(--radius-card) 0 0 var(--radius-card);
-}
-
-/* Content area (main, quando tab selezionata) */
+/* Content area non visibile nella homepage (solo nel drawer) */
 .module-tabs-content {
-  min-height: 200px;
-}
-
-.module-tab-panel {
   display: none;
-}
-
-.module-tab-panel[data-active="true"] {
-  display: block;
-  animation: fadeIn 0.2s ease-in;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.module-tab-panel-content {
-  background: var(--surface-card);
-  border: 1px solid var(--br-card);
-  border-radius: var(--radius-card);
-  padding: var(--sp-4);
-}
-
-/* Header-ticker dentro tab panel (compatto) */
-.module-tab-panel-content .header-ticker {
-  background: transparent;
-  border: none;
-  padding: 0;
-  box-shadow: none;
-}
-
-/* Messaggio quando nessuna tab selezionata */
-.module-tabs-empty-state {
-  padding: var(--sp-8);
-  text-align: center;
-  color: var(--muted);
-  font-size: var(--fs-13);
-  border: 1px dashed var(--br-card);
-  border-radius: var(--radius-card);
-  background: var(--surface-page);
 }
 
 /* ===== MODULE CONTENT ===== */
@@ -497,9 +429,13 @@
     max-width: 100vw;
   }
   
-  .module-tabs-toggle {
-    width: 100%;
-    justify-content: center;
+  .module-tabs-menu {
+    gap: var(--sp-1_5);
+  }
+  
+  .module-tab-button {
+    padding: var(--sp-1_5) var(--sp-3);
+    font-size: var(--fs-11);
   }
   
   .module-grid-2,

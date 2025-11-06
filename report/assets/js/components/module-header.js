@@ -104,66 +104,57 @@ export function renderModuleTabsSidebar(tabs = []) {
   // Trova tab attivo (solo se esplicitamente active=true, altrimenti nessuna)
   const activeTabId = tabs.find(t => t.active === true)?.id || '';
 
-  // Drawer HTML (pannello laterale)
+  // Menu tabs orizzontale (sotto la card)
+  const menuHTML = `
+    <div class="module-tabs-menu">
+      ${tabs.map(tab => `
+        <button 
+          class="module-tab-button" 
+          type="button"
+          data-tab-id="${escapeAttr(tab.id)}"
+          data-active="false"
+          aria-label="Apri ${escapeHtml(tab.title)}">
+          ${escapeHtml(tab.title)}
+        </button>
+      `).join('')}
+    </div>
+  `;
+
+  // Drawer HTML (si apre quando si clicca una tab)
   const drawerHTML = `
-    <button class="module-tabs-toggle" type="button" aria-label="Apri menu sezioni">
-      <span>Sezioni</span>
-      <svg class="module-tabs-toggle-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>
-    
     <div class="module-tabs-drawer-overlay"></div>
     
     <div class="module-tabs-drawer">
       <div class="module-tabs-drawer-header">
-        <div class="module-tabs-drawer-title">Sezioni</div>
-        <button class="module-tabs-drawer-close" type="button" aria-label="Chiudi menu">
+        <div class="module-tabs-drawer-title" data-drawer-title="Sezioni"></div>
+        <button class="module-tabs-drawer-close" type="button" aria-label="Chiudi drawer">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </button>
       </div>
-      <div class="module-tabs-drawer-body">
-        ${tabs.map(tab => `
-          <button 
-            class="module-tab-button" 
-            type="button"
-            data-tab-id="${escapeAttr(tab.id)}"
-            data-active="${tab.id === activeTabId}"
-            aria-controls="tab-panel-${escapeAttr(tab.id)}"
-            aria-selected="${tab.id === activeTabId}">
-            ${escapeHtml(tab.title)}
-          </button>
-        `).join('')}
+      <div class="module-tabs-drawer-body" data-drawer-content>
+        <!-- Contenuto caricato dinamicamente -->
       </div>
     </div>
   `;
 
-  // Content panels (main area)
+  // Content panels (nascosti, usati solo per generare contenuto drawer)
   const contentHTML = `
-    <div class="module-tabs-content">
-      ${activeTabId ? tabs.map(tab => `
+    <div class="module-tabs-content" style="display: none;">
+      ${tabs.map(tab => `
         <div 
           class="module-tab-panel" 
           id="tab-panel-${escapeAttr(tab.id)}"
           data-tab-id="${escapeAttr(tab.id)}"
-          data-active="${tab.id === activeTabId}"
-          role="tabpanel"
-          aria-labelledby="tab-button-${escapeAttr(tab.id)}">
-          <div class="module-tab-panel-content">
-            ${tab.content}
-          </div>
+          data-active="false">
+          ${tab.content}
         </div>
-      `).join('') : `
-        <div class="module-tabs-empty-state">
-          Seleziona una sezione dal menu per visualizzare i dettagli
-        </div>
-      `}
+      `).join('')}
     </div>
   `;
 
-  return { drawerHTML, contentHTML };
+  return { drawerHTML, contentHTML, menuHTML };
 }
 
 /**
@@ -176,30 +167,47 @@ export function bindModuleTabs(container) {
   const wrapper = container.closest('.module-tabs-wrapper');
   if (!wrapper) return;
 
-  const toggleBtn = wrapper.querySelector('.module-tabs-toggle');
   const closeBtn = wrapper.querySelector('.module-tabs-drawer-close');
   const overlay = wrapper.querySelector('.module-tabs-drawer-overlay');
   const drawer = wrapper.querySelector('.module-tabs-drawer');
+  const drawerTitle = wrapper.querySelector('[data-drawer-title]');
+  const drawerContent = wrapper.querySelector('[data-drawer-content]');
   const buttons = wrapper.querySelectorAll('.module-tab-button');
   const panels = container.querySelectorAll('.module-tab-panel');
-  const contentArea = container.querySelector('.module-tabs-content');
 
   // Apri/chiudi drawer
-  function openDrawer() {
+  function openDrawer(tabId, tabTitle) {
     wrapper.dataset.drawerOpen = 'true';
-    document.body.style.overflow = 'hidden'; // Previeni scroll body
+    document.body.style.overflow = 'hidden';
+    
+    // Aggiorna titolo drawer
+    if (drawerTitle) {
+      drawerTitle.textContent = tabTitle || 'Sezioni';
+    }
+    
+    // Carica contenuto tab nel drawer
+    if (drawerContent && panels.length > 0) {
+      const panel = Array.from(panels).find(p => p.dataset.tabId === tabId);
+      if (panel) {
+        // Copia HTML del panel nel drawer
+        drawerContent.innerHTML = panel.innerHTML;
+        
+        // Se c'è un container per header-ticker, montalo
+        const tickerContainer = drawerContent.querySelector('[data-tab-ticker]');
+        if (tickerContainer && !tickerContainer.querySelector('.header-ticker')) {
+          // Trigger evento custom per montare header-ticker (gestito da f1b.js)
+          const event = new CustomEvent('drawer-tab-opened', {
+            detail: { tabId, container: tickerContainer }
+          });
+          wrapper.dispatchEvent(event);
+        }
+      }
+    }
   }
 
   function closeDrawer() {
     wrapper.dataset.drawerOpen = 'false';
-    document.body.style.overflow = ''; // Ripristina scroll body
-  }
-
-  if (toggleBtn) {
-    toggleBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      openDrawer();
-    });
+    document.body.style.overflow = '';
   }
 
   if (closeBtn) {
@@ -215,40 +223,20 @@ export function bindModuleTabs(container) {
     });
   }
 
-  // Gestione selezione tab
+  // Gestione click su tab button (apre drawer)
   buttons.forEach(button => {
     button.addEventListener('click', () => {
       const tabId = button.dataset.tabId;
+      const tabTitle = button.textContent.trim();
       if (!tabId) return;
 
-      // Aggiorna buttons
+      // Aggiorna stato button (opzionale, per evidenziare)
       buttons.forEach(btn => {
-        btn.dataset.active = btn.dataset.tabId === tabId;
-        btn.setAttribute('aria-selected', btn.dataset.tabId === tabId);
+        btn.dataset.active = btn.dataset.tabId === tabId ? 'true' : 'false';
       });
 
-      // Aggiorna panels (se esistono)
-      if (panels.length > 0) {
-        panels.forEach(panel => {
-          panel.dataset.active = panel.dataset.tabId === tabId;
-          if (panel.dataset.tabId === tabId) {
-            panel.setAttribute('aria-hidden', 'false');
-          } else {
-            panel.setAttribute('aria-hidden', 'true');
-          }
-        });
-      } else {
-        // Se i panels non esistono ancora, caricali dinamicamente
-        // Questo viene gestito dal modulo stesso (f1b.js)
-      }
-
-      // Chiudi drawer dopo selezione
-      closeDrawer();
-
-      // Scrolla al content area
-      if (contentArea) {
-        contentArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      // Apri drawer con contenuto tab
+      openDrawer(tabId, tabTitle);
     });
   });
 

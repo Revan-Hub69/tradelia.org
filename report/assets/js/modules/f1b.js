@@ -673,14 +673,15 @@ export function renderCard(rawData, ctx = {}) {
     });
   }
   
-  // Genera drawer laterale + content
-  const { drawerHTML, contentHTML } = renderModuleTabsSidebar(tabs);
+  // Genera menu tabs + drawer + content
+  const { drawerHTML, contentHTML, menuHTML } = renderModuleTabsSidebar(tabs);
   
   return `
     <section class="module-card" data-state="${escapeAttr(d.meta.moduleStatus)}">
       ${headerHTML}
       ${aiSummaryContainer}
       <div class="module-tabs-wrapper" data-drawer-open="false">
+        ${menuHTML}
         ${drawerHTML}
         ${contentHTML}
       </div>
@@ -692,10 +693,41 @@ export function bindCard(node, rawData, ctx = {}) {
   if (!node || !rawData) return;
   const data = normalizeDataPublicF1B(rawData);
   
-  // Bind tabs laterali
+  // Bind tabs menu + drawer
   const tabsWrapper = node.querySelector('.module-tabs-wrapper');
   if (tabsWrapper) {
     bindModuleTabs(tabsWrapper);
+    
+    // Listener per quando si apre una tab nel drawer
+    tabsWrapper.addEventListener('drawer-tab-opened', (e) => {
+      const { tabId, container } = e.detail;
+      if (!container) return;
+      
+      // Monta header-ticker nel drawer
+      import('../components/header-ticker.js').then(({ headerTicker }) => {
+        let rows = [];
+        if (tabId === 'regime') {
+          rows = generateRegimeTabRows(data);
+        } else if (tabId === 'breadth') {
+          rows = generateBreadthTabRows(data);
+        } else if (tabId === 'street') {
+          rows = generateStreetTabRows(data);
+        }
+        
+        if (rows.length > 0) {
+          const tickerNode = headerTicker.mount(container);
+          if (tickerNode) {
+            headerTicker.update(tickerNode, {
+              ...rawData.meta,
+              rows: rows,
+              metricsPanel: rawData?.metricsPanel || []
+            });
+          }
+        }
+      }).catch(err => {
+        console.warn(`F1B: Errore caricamento header-ticker per drawer tab ${tabId}`, err);
+      });
+    });
   }
   
   // Monta header-ticker per AI Summary (sempre visibile) - import dinamico
