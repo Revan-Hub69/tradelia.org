@@ -246,6 +246,8 @@
   visibility: hidden;
   transition: opacity var(--transition-base), visibility var(--transition-base);
   pointer-events: none;
+  will-change: opacity, visibility; /* Ottimizza animazione */
+  backface-visibility: hidden; /* Previeni flickering */
 }
 
 .module-tabs-wrapper[data-drawer-open="true"] .module-tabs-drawer-overlay {
@@ -271,6 +273,9 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  will-change: transform; /* Ottimizza animazione per evitare sfarfallio */
+  backface-visibility: hidden; /* Previeni flickering su alcuni browser */
+  -webkit-font-smoothing: antialiased; /* Smooth rendering */
 }
 
 /* Footer drawer con sfumatura blu sottile */
@@ -357,6 +362,9 @@
   line-height: var(--lh-17); /* Line-height aumentato per leggibilità (1.7) */
   max-width: 100%;
   box-sizing: border-box;
+  /* Previeni flickering durante il caricamento del contenuto */
+  contain: layout style paint; /* Ottimizza rendering */
+  transform: translateZ(0); /* Force GPU acceleration */
 }
 
 /* Header-ticker dentro drawer - rimuovi tutto il padding interno e bordo colorato */

@@ -170,6 +170,10 @@ export function bindModuleTabs(container) {
   const wrapper = container.closest('.module-tabs-wrapper');
   if (!wrapper) return;
 
+  // Evita binding multipli
+  if (wrapper.dataset.bound === 'true') return;
+  wrapper.dataset.bound = 'true';
+
   const closeBtn = wrapper.querySelector('.module-tabs-drawer-close');
   const overlay = wrapper.querySelector('.module-tabs-drawer-overlay');
   const drawer = wrapper.querySelector('.module-tabs-drawer');
@@ -179,8 +183,15 @@ export function bindModuleTabs(container) {
   const buttons = wrapper.querySelectorAll('.module-tab-button');
   const panels = container.querySelectorAll('.module-tab-panel');
 
+  let isOpening = false; // Flag per prevenire click multipli rapidi
+
   // Apri/chiudi drawer
   function openDrawer(tabId, tabTitle) {
+    // Preveni apertura multipla
+    if (isOpening) return;
+    isOpening = true;
+
+    // Aggiorna stato wrapper PRIMA di modificare contenuto (per evitare sfarfallio)
     wrapper.dataset.drawerOpen = 'true';
     document.body.style.overflow = 'hidden';
     
@@ -202,31 +213,48 @@ export function bindModuleTabs(container) {
     if (drawerContent && panels.length > 0) {
       const panel = Array.from(panels).find(p => p.dataset.tabId === tabId);
       if (panel) {
-        // Mostra skeleton/loading state brevemente
-        drawerContent.innerHTML = '<div style="padding: var(--sp-4); color: var(--muted);">Caricamento...</div>';
+        // Pulisci contenuto precedente immediatamente (senza loading state per evitare sfarfallio)
+        drawerContent.innerHTML = '';
         
-        // Piccolo delay per animazione smooth
+        // Usa doppio requestAnimationFrame per assicurare che l'animazione CSS sia iniziata
         requestAnimationFrame(() => {
-          // Copia HTML del panel nel drawer
-          drawerContent.innerHTML = panel.innerHTML;
-          
-          // Se c'è un container per header-ticker, montalo
-          const tickerContainer = drawerContent.querySelector('[data-tab-ticker]');
-          if (tickerContainer && !tickerContainer.querySelector('.header-ticker')) {
-            // Trigger evento custom per montare header-ticker (gestito da f1b.js)
-            const event = new CustomEvent('drawer-tab-opened', {
-              detail: { tabId, container: tickerContainer }
-            });
-            wrapper.dispatchEvent(event);
-          }
+          requestAnimationFrame(() => {
+            // Copia HTML del panel nel drawer
+            drawerContent.innerHTML = panel.innerHTML;
+            
+            // Se c'è un container per header-ticker, montalo
+            const tickerContainer = drawerContent.querySelector('[data-tab-ticker]');
+            if (tickerContainer && !tickerContainer.querySelector('.header-ticker')) {
+              // Trigger evento custom per montare header-ticker (gestito da f1b.js)
+              const event = new CustomEvent('drawer-tab-opened', {
+                detail: { tabId, container: tickerContainer }
+              });
+              wrapper.dispatchEvent(event);
+            }
+            
+            isOpening = false; // Reset flag dopo che il contenuto è caricato
+          });
         });
+      } else {
+        isOpening = false;
       }
+    } else {
+      isOpening = false;
     }
   }
 
   function closeDrawer() {
+    if (isOpening) return; // Non chiudere mentre si apre
     wrapper.dataset.drawerOpen = 'false';
     document.body.style.overflow = '';
+    // Pulisci contenuto dopo che l'animazione di chiusura è completata
+    if (drawerContent) {
+      setTimeout(() => {
+        if (wrapper.dataset.drawerOpen === 'false') {
+          drawerContent.innerHTML = '';
+        }
+      }, 300); // Match transition duration
+    }
   }
 
   if (closeBtn) {

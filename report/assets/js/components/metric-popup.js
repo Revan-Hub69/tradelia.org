@@ -137,8 +137,10 @@ function renderPopup(metric) {
   // Glossary button handler
   const glossaryBtn = POPUP._panel.querySelector('.metric-popup-glossary-btn');
   if (glossaryBtn) {
-    glossaryBtn.addEventListener('click', () => {
-      POPUP.openGlossary();
+    glossaryBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      openGlossary(); // Chiama direttamente la funzione invece di POPUP.openGlossary
     });
   }
 }
@@ -251,6 +253,7 @@ async function close() {
 POPUP.mount = mount;
 POPUP.open = open;
 POPUP.close = close;
+POPUP.openGlossary = openGlossary; // Export openGlossary
 
 export const metricPopup = POPUP;
 

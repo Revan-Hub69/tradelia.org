@@ -8,6 +8,11 @@
   margin-bottom: var(--sp-8);
 }
 
+/* Assicura che le card dentro report-section-block abbiano hover */
+.report-section-block .module-card {
+  position: relative; /* Assicura che hover funzioni */
+}
+
 /* ===== F1A / F1B CARD CONTAINERS ===== */
 .f1a-card-container,
 .f1b-card-container {
