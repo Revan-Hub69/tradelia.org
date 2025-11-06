@@ -346,16 +346,10 @@ function openTermPopup(key) {
     if (e.target === overlay) closePopup();
   });
   
-  const escHandler = (e) => {
-    if (e.key === 'Escape' && !overlay.hidden) {
-      closePopup();
-      document.removeEventListener('keydown', escHandler);
-    }
-  };
-  document.addEventListener('keydown', escHandler);
+  // ESC gestito dal popup parent (overlay-manager), non gestire qui per evitare conflitti
   
   overlay.hidden = false;
-  document.body.style.overflow = 'hidden';
+  // Overflow gestito dal popup/drawer parent (non gestire qui)
 }
 
 // ===== PUBLIC API =====

@@ -7,6 +7,7 @@
 // - Funziona mobile e desktop
 
 import Logger from '../utils/logger.js';
+import { registerOverlay, unregisterOverlay, OVERLAY_TYPES } from '../utils/overlay-manager.js';
 
 const DRAWER = {
   _overlay: null,
@@ -20,6 +21,7 @@ const DRAWER = {
   _activeFilter: null,
   _glossary: null,
   _selectedMetricKey: null, // metric key da evidenziare
+  _overlayId: 'metrics-drawer' // ID univoco per overlay manager
 };
 
 // ===== UTILITIES =====
@@ -444,9 +446,14 @@ function mount() {
     if (e.target === DRAWER._overlay) DRAWER.close();
   });
   
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && DRAWER._isOpen) DRAWER.close();
+  // Listener per close request dall'overlay manager (ESC key)
+  DRAWER._overlay.addEventListener('overlay-close-request', (e) => {
+    if (e.detail.id === DRAWER._overlayId) {
+      DRAWER.close();
+    }
   });
+  
+  // ESC gestito da overlay-manager (rimosso listener duplicato)
   
   DRAWER._overlay.appendChild(DRAWER._panel);
   document.body.appendChild(DRAWER._overlay);
@@ -472,7 +479,9 @@ async function open(metricsData) {
   DRAWER._overlay.hidden = false;
   DRAWER._overlay.setAttribute('aria-hidden', 'false');
   DRAWER._isOpen = true;
-  document.body.style.overflow = 'hidden';
+  
+  // Registra overlay nello stack (gestisce z-index e overflow)
+  registerOverlay(DRAWER._overlayId, OVERLAY_TYPES.METRICS_DRAWER, DRAWER._overlay);
   
   renderView();
   
@@ -508,7 +517,9 @@ function close() {
   DRAWER._overlay.hidden = true;
   DRAWER._overlay.setAttribute('aria-hidden', 'true');
   DRAWER._isOpen = false;
-  document.body.style.overflow = '';
+  
+  // Rimuovi overlay dallo stack (gestisce overflow automaticamente)
+  unregisterOverlay(DRAWER._overlayId);
   
   // Reset
   DRAWER._searchQuery = '';

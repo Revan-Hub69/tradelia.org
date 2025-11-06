@@ -2,6 +2,8 @@
 // Helper per generare header moduli unificato
 // -----------------------------------------------------------
 
+import { registerOverlay, unregisterOverlay, OVERLAY_TYPES } from '../utils/overlay-manager.js';
+
 /**
  * Genera HTML header per modulo
  * @param {Object} config - Configurazione header
@@ -185,6 +187,9 @@ export function bindModuleTabs(container) {
 
   let isOpening = false; // Flag per prevenire click multipli rapidi
 
+  // ID univoco per questo drawer
+  const drawerId = `module-tabs-drawer-${wrapper.closest('.module-card')?.querySelector('.module-badge')?.textContent || 'default'}`;
+
   // Apri/chiudi drawer
   function openDrawer(tabId, tabTitle) {
     // Preveni apertura multipla
@@ -193,7 +198,12 @@ export function bindModuleTabs(container) {
 
     // Aggiorna stato wrapper PRIMA di modificare contenuto (per evitare sfarfallio)
     wrapper.dataset.drawerOpen = 'true';
-    document.body.style.overflow = 'hidden';
+    
+    // Registra overlay nello stack (gestisce z-index e overflow)
+    // Il drawer è separato dall'overlay, passa entrambi
+    if (overlay) {
+      registerOverlay(drawerId, OVERLAY_TYPES.MODULE_TABS, overlay, drawer);
+    }
     
     // Aggiorna titolo drawer
     if (drawerTitle) {
@@ -246,7 +256,10 @@ export function bindModuleTabs(container) {
   function closeDrawer() {
     if (isOpening) return; // Non chiudere mentre si apre
     wrapper.dataset.drawerOpen = 'false';
-    document.body.style.overflow = '';
+    
+    // Rimuovi overlay dallo stack (gestisce overflow automaticamente)
+    unregisterOverlay(drawerId);
+    
     // Pulisci contenuto dopo che l'animazione di chiusura è completata
     if (drawerContent) {
       setTimeout(() => {
@@ -255,6 +268,15 @@ export function bindModuleTabs(container) {
         }
       }, 300); // Match transition duration
     }
+  }
+
+  // Listener per close request dall'overlay manager (ESC key)
+  if (overlay) {
+    overlay.addEventListener('overlay-close-request', (e) => {
+      if (e.detail.id === drawerId) {
+        closeDrawer();
+      }
+    });
   }
 
   if (closeBtn) {
@@ -301,11 +323,6 @@ export function bindModuleTabs(container) {
     });
   });
 
-  // Chiudi drawer con ESC
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && wrapper.dataset.drawerOpen === 'true') {
-      closeDrawer();
-    }
-  });
+  // ESC gestito da overlay-manager (rimosso listener duplicato)
 }
 

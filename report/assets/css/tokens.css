@@ -639,7 +639,7 @@ a:focus-visible {
 .metrics-drawer-overlay {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  /* z-index gestito dinamicamente da overlay-manager */
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -978,7 +978,7 @@ a:focus-visible {
 .metric-popup-overlay {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  /* z-index gestito dinamicamente da overlay-manager */
   display: flex;
   align-items: center;
   justify-content: center;

@@ -3,6 +3,7 @@
 // Design coerente e semplice
 
 import Logger from '../utils/logger.js';
+import { registerOverlay, unregisterOverlay, OVERLAY_TYPES } from '../utils/overlay-manager.js';
 
 const POPUP = {
   _overlay: null,
@@ -11,6 +12,7 @@ const POPUP = {
   _glossary: null,
   _currentMetric: null,
   _view: 'metric', // 'metric' | 'glossary'
+  _overlayId: 'metric-popup' // ID univoco per overlay manager
 };
 
 // ===== UTILITIES =====
@@ -168,10 +170,14 @@ function mount() {
     if (e.target === POPUP._overlay) POPUP.close();
   });
   
-  // ESC to close
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && POPUP._isOpen) POPUP.close();
+  // Listener per close request dall'overlay manager (ESC key)
+  POPUP._overlay.addEventListener('overlay-close-request', (e) => {
+    if (e.detail.id === POPUP._overlayId) {
+      POPUP.close();
+    }
   });
+  
+  // ESC gestito da overlay-manager (rimosso listener duplicato)
   
   Logger.debug('MetricPopup', 'Popup montato');
 }
@@ -199,7 +205,9 @@ async function open(metric, allMetrics = []) {
   POPUP._overlay.hidden = false;
   POPUP._overlay.setAttribute('aria-hidden', 'false');
   POPUP._isOpen = true;
-  document.body.style.overflow = 'hidden';
+  
+  // Registra overlay nello stack (gestisce z-index e overflow)
+  registerOverlay(POPUP._overlayId, OVERLAY_TYPES.METRIC_POPUP, POPUP._overlay);
   
   Logger.debug('MetricPopup', `Popup aperto per metrica: ${metricData.key}`);
 }
@@ -244,7 +252,9 @@ async function close() {
   POPUP._isOpen = false;
   POPUP._view = 'metric';
   POPUP._currentMetric = null;
-  document.body.style.overflow = '';
+  
+  // Rimuovi overlay dallo stack (gestisce overflow automaticamente)
+  unregisterOverlay(POPUP._overlayId);
   
   Logger.debug('MetricPopup', 'Popup chiuso');
 }

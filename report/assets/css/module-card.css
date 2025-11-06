@@ -241,7 +241,7 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
-  z-index: 9998;
+  /* z-index gestito dinamicamente da overlay-manager */
   opacity: 0;
   visibility: hidden;
   transition: opacity var(--transition-base), visibility var(--transition-base);
@@ -267,7 +267,7 @@
   background: color-mix(in oklab, var(--surface-card) 98%, white 2%); /* Leggermente più chiaro */
   border-left: 1px solid rgba(255, 255, 255, 0.04); /* Bordo più sottile */
   box-shadow: -2px 0 16px rgba(0, 0, 0, 0.25); /* Ombra più sottile */
-  z-index: 10000;
+  /* z-index gestito dinamicamente da overlay-manager (overlay + 2) */
   transform: translateX(100%);
   transition: transform var(--transition-slow) cubic-bezier(0.4, 0, 0.2, 1); /* Usa token */
   display: flex;
