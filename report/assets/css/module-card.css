@@ -133,15 +133,13 @@
 
 /* ===== AI SUMMARY BOX ===== */
 .module-ai-summary {
-  background: linear-gradient(
-    135deg,
-    color-mix(in oklab, var(--surface-card) 95%, var(--brand-600) 5%) 0%,
-    var(--surface-card) 100%
-  );
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-card);
-  padding: var(--sp-4);
-  margin-bottom: var(--sp-4); /* Più spazio dopo summary */
+  background: transparent; /* Rimuovi background per evitare card nella card */
+  border: none; /* Rimuovi bordo */
+  border-radius: 0; /* Rimuovi border-radius */
+  padding: var(--sp-3) 0; /* Padding minimo, solo verticale */
+  margin-bottom: var(--sp-3); /* Spazio ridotto dopo summary */
+  border-top: 1px solid rgba(255, 255, 255, 0.06); /* Separatore sottile sopra */
+  padding-top: var(--sp-3);
 }
 
 .module-ai-summary-label {
@@ -150,7 +148,32 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--muted);
-  margin-bottom: var(--sp-2);
+  margin-bottom: var(--sp-2_5); /* Leggermente più spazio per separazione visiva */
+}
+
+/* Header-ticker dentro AI Summary - rimuovi card styling per evitare card nella card */
+.module-ai-summary .header-ticker {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  margin: 0;
+}
+
+.module-ai-summary .header-ticker::before {
+  display: none !important; /* Rimuovi bordo sinistro colorato */
+}
+
+.module-ai-summary .header-ticker .header-ticker-body {
+  padding: 0 !important;
+  margin: 0;
+  gap: var(--sp-2); /* Gap ridotto per compattezza */
+}
+
+.module-ai-summary .header-ticker .header-ticker-row {
+  padding: 0 !important;
+  margin: 0;
 }
 
 .module-ai-summary-text {
@@ -557,11 +580,37 @@
   }
   
   .module-tabs-drawer-body {
-    padding: var(--sp-5) var(--sp-4);
+    padding: var(--sp-3) var(--sp-3);
+  }
+  
+  /* Word-wrap per righe lunghe nel drawer su mobile */
+  .module-tabs-drawer-body .header-ticker-row {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+  
+  /* Testo normale può andare a capo */
+  .module-tabs-drawer-body .header-ticker-text {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  /* Font-size più piccolo su mobile */
+  .module-tabs-drawer-body .header-ticker-text {
+    font-size: var(--fs-12);
+  }
+  
+  .module-tabs-drawer-body .metric-inline-text {
+    font-size: var(--fs-13);
+    /* Permetti wrap delle metriche su mobile nel drawer */
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
   
   .module-tabs-drawer-header {
-    padding: var(--sp-4) var(--sp-4) var(--sp-3);
+    padding: var(--sp-4) var(--sp-3) var(--sp-3);
   }
   
   .module-grid-2,
