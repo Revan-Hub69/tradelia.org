@@ -88,11 +88,19 @@ function open(config) {
   
   // Carica contenuto
   if (UNIFIED_DRAWER._content) {
+    // Rimuovi classe search se presente (per distinguere contenuto schede da glossario)
+    UNIFIED_DRAWER._content.classList.remove('has-search');
+    
     if (typeof content === 'string') {
       UNIFIED_DRAWER._content.innerHTML = content;
+      // Se non c'è search/filters, è contenuto di una scheda
+      if (!content.includes('glossary-drawer-search') && !content.includes('glossary-drawer-filters')) {
+        UNIFIED_DRAWER._content.classList.add('module-tabs-content-wrapper');
+      }
     } else if (content instanceof HTMLElement) {
       UNIFIED_DRAWER._content.innerHTML = '';
       UNIFIED_DRAWER._content.appendChild(content);
+      UNIFIED_DRAWER._content.classList.add('module-tabs-content-wrapper');
     } else {
       UNIFIED_DRAWER._content.innerHTML = '';
     }

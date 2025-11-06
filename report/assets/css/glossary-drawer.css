@@ -107,6 +107,125 @@
   transform: translateZ(0); /* Force GPU acceleration */
 }
 
+/* Contenuto schede (non glossario) - Design migliorato */
+.glossary-drawer-content.module-tabs-content-wrapper {
+  /* Quando è contenuto di una scheda (non glossario) */
+  padding: var(--sp-6);
+  gap: var(--sp-5);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header-ticker dentro drawer schede - stile migliorato */
+.glossary-drawer-content.module-tabs-content-wrapper .header-ticker {
+  background: transparent;
+  border: none;
+  padding: 0 !important;
+  box-shadow: none;
+  margin: 0;
+  width: 100%;
+}
+
+.glossary-drawer-content.module-tabs-content-wrapper .header-ticker::before {
+  display: none !important;
+}
+
+.glossary-drawer-content.module-tabs-content-wrapper .header-ticker .header-ticker-body {
+  padding: 0 !important;
+  margin: 0;
+  gap: var(--sp-4);
+  width: 100%;
+}
+
+.glossary-drawer-content.module-tabs-content-wrapper .header-ticker .header-ticker-row {
+  padding: 0 !important;
+  margin: 0;
+  line-height: var(--lh-17);
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+}
+
+/* Tipografia nel drawer schede */
+.glossary-drawer-content.module-tabs-content-wrapper .header-ticker-text {
+  font-size: var(--fs-14);
+  font-weight: 400;
+  color: var(--ink-soft);
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  font-style: normal;
+  letter-spacing: 0.01em;
+}
+
+/* Metriche nel drawer schede */
+.glossary-drawer-content.module-tabs-content-wrapper .metric-inline-text {
+  font-size: var(--fs-15);
+  font-weight: 500;
+  font-style: normal;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal !important;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  text-decoration-thickness: 0;
+  text-underline-offset: 0;
+  transition: text-decoration var(--transition-base), opacity var(--transition-base), color var(--transition-base);
+}
+
+/* Colorazione semaforica nel drawer schede */
+.glossary-drawer-content.module-tabs-content-wrapper .metric-inline--ok .metric-inline-text {
+  color: var(--ok);
+}
+
+.glossary-drawer-content.module-tabs-content-wrapper .metric-inline--warn .metric-inline-text {
+  color: var(--warn);
+}
+
+.glossary-drawer-content.module-tabs-content-wrapper .metric-inline--err .metric-inline-text {
+  color: var(--err);
+}
+
+.glossary-drawer-content.module-tabs-content-wrapper .metric-inline--neutral .metric-inline-text {
+  color: var(--ink-soft);
+}
+
+/* Underline solo al hover/click nel drawer schede */
+.glossary-drawer-content.module-tabs-content-wrapper .metric-inline:hover .metric-inline-text,
+.glossary-drawer-content.module-tabs-content-wrapper .metric-inline:focus .metric-inline-text,
+.glossary-drawer-content.module-tabs-content-wrapper .metric-inline:active .metric-inline-text {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+  opacity: 0.9;
+}
+
+.glossary-drawer-content.module-tabs-content-wrapper .metric-inline--ok:hover .metric-inline-text,
+.glossary-drawer-content.module-tabs-content-wrapper .metric-inline--ok:focus .metric-inline-text {
+  text-decoration-color: var(--ok);
+}
+
+.glossary-drawer-content.module-tabs-content-wrapper .metric-inline--warn:hover .metric-inline-text,
+.glossary-drawer-content.module-tabs-content-wrapper .metric-inline--warn:focus .metric-inline-text {
+  text-decoration-color: var(--warn);
+}
+
+.glossary-drawer-content.module-tabs-content-wrapper .metric-inline--err:hover .metric-inline-text,
+.glossary-drawer-content.module-tabs-content-wrapper .metric-inline--err:focus .metric-inline-text {
+  text-decoration-color: var(--err);
+}
+
+.glossary-drawer-content.module-tabs-content-wrapper .metric-inline--neutral:hover .metric-inline-text,
+.glossary-drawer-content.module-tabs-content-wrapper .metric-inline--neutral:focus .metric-inline-text {
+  text-decoration-color: var(--muted);
+}
+
 /* Header-ticker dentro drawer - rimuovi tutto il padding interno e bordo colorato */
 .glossary-drawer-content .header-ticker {
   background: transparent;

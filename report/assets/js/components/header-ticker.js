@@ -66,10 +66,7 @@ function renderMetricPart(part) {
   }
   
   const txt = createEl('span', `metric-inline-text metric-inline-text--${part.tone || 'neutral'}`, displayValue);
-  txt.style.fontWeight = '600';
-  txt.style.fontStyle = 'italic';
-  txt.style.textDecoration = 'underline';
-  
+  // Stili gestiti da CSS (tokens.css) - underline solo al hover
   wrap.appendChild(txt);
   
   // Click handler
@@ -169,27 +166,19 @@ function renderFooter(node, data) {
 }
 
 // ===== METRIC CLICK HANDLER =====
-function handleMetricClick(metricKey) {
+async function handleMetricClick(metricKey) {
   Logger.debug('HeaderTicker', `Click su metrica: ${metricKey}`);
   
   try {
-    const ui = window.__TradeliaUI;
-    const headerData = window.__headerTickerData;
-    
-    if (!headerData) {
-      Logger.warn('HeaderTicker', 'headerData non disponibile');
-      return;
-    }
-    
-    // Usa popup semplice
-    if (ui?.openMetricPopup) {
-      const allMetrics = headerData.metricsPanel || [];
-      ui.openMetricPopup(metricKey, allMetrics);
+    // Apri drawer glossario (stesso sistema di glossario.html)
+    const { glossaryPopup } = await import('./glossary-popup.js');
+    if (glossaryPopup && glossaryPopup.openTerm) {
+      await glossaryPopup.openTerm(metricKey);
     } else {
-      Logger.warn('HeaderTicker', 'Popup non disponibile');
+      Logger.warn('HeaderTicker', 'Drawer glossario non disponibile');
     }
   } catch (err) {
-    Logger.error('HeaderTicker', 'Errore gestione click metrica', err);
+    Logger.error('HeaderTicker', 'Errore apertura drawer glossario', err);
   }
 }
 

@@ -149,8 +149,92 @@ function mount(containerEl) {
   FOOTER._node = node;
   FOOTER._container = containerEl;
   
+  // Bind event listeners per MiFID/Privacy (stesso sistema di index.html)
+  bindLegalButtons();
+  
   Logger.debug('SiteFooter', 'Footer montato');
   return node;
+}
+
+// ===== LEGAL BUTTONS BINDING =====
+function bindLegalButtons() {
+  // Usa setTimeout per assicurarsi che l'overlay legale sia già nel DOM
+  setTimeout(() => {
+    // Cerca overlay legale (deve esistere in index.html)
+    const overlay = document.getElementById('legal-consent-overlay');
+    if (!overlay) {
+      Logger.warn('SiteFooter', 'Overlay legale non trovato');
+      return;
+    }
+    
+    const btnAccept = document.getElementById('btn-accept-legal');
+    const tabM = document.getElementById('tab-mifid');
+    const tabP = document.getElementById('tab-privacy');
+    const panelM = document.getElementById('panel-mifid');
+    const panelP = document.getElementById('panel-privacy');
+    
+    if (!tabM || !tabP || !panelM || !panelP) {
+      Logger.warn('SiteFooter', 'Elementi legali non trovati');
+      return;
+    }
+    
+    function showTab(which) {
+      const mifid = (which === 'mifid');
+      if (tabM) tabM.setAttribute('aria-selected', mifid ? 'true' : 'false');
+      if (tabP) tabP.setAttribute('aria-selected', mifid ? 'false' : 'true');
+      if (panelM) panelM.hidden = !mifid;
+      if (panelP) panelP.hidden = mifid;
+    }
+    
+    function openLegal(which = 'mifid', blocking = true) {
+      showTab(which);
+      if (overlay) {
+        overlay.hidden = false;
+        document.body.style.overflow = 'hidden';
+        if (blocking) overlay.setAttribute('data-blocking', 'true');
+        else overlay.removeAttribute('data-blocking');
+        setTimeout(() => {
+          const targetTab = which === 'privacy' ? tabP : tabM;
+          if (targetTab) targetTab.focus();
+        }, 0);
+      }
+    }
+    
+    function closeLegal() {
+      if (overlay) {
+        overlay.hidden = true;
+        document.body.style.overflow = '';
+      }
+    }
+    
+    // Bind pulsanti footer (rimuovi listener esistenti per evitare duplicati)
+    const btnPrivacy = document.getElementById('btn-privacy-open');
+    const btnMifid = document.getElementById('btn-mifid-open');
+    
+    if (btnPrivacy) {
+      // Rimuovi listener esistenti
+      const newBtnPrivacy = btnPrivacy.cloneNode(true);
+      btnPrivacy.parentNode?.replaceChild(newBtnPrivacy, btnPrivacy);
+      newBtnPrivacy.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openLegal('privacy', false);
+      });
+    }
+    
+    if (btnMifid) {
+      // Rimuovi listener esistenti
+      const newBtnMifid = btnMifid.cloneNode(true);
+      btnMifid.parentNode?.replaceChild(newBtnMifid, btnMifid);
+      newBtnMifid.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openLegal('mifid', false);
+      });
+    }
+    
+    Logger.debug('SiteFooter', 'Pulsanti legali collegati');
+  }, 100);
 }
 
 // ===== UPDATE =====
