@@ -673,15 +673,15 @@ export function renderCard(rawData, ctx = {}) {
     });
   }
   
-  // Genera menu laterale + content
-  const { sidebarHTML, contentHTML } = renderModuleTabsSidebar(tabs);
+  // Genera drawer laterale + content
+  const { drawerHTML, contentHTML } = renderModuleTabsSidebar(tabs);
   
   return `
     <section class="module-card" data-state="${escapeAttr(d.meta.moduleStatus)}">
       ${headerHTML}
       ${aiSummaryContainer}
-      <div class="module-tabs-wrapper">
-        ${sidebarHTML}
+      <div class="module-tabs-wrapper" data-drawer-open="false">
+        ${drawerHTML}
         ${contentHTML}
       </div>
     </section>

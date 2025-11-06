@@ -76,17 +76,17 @@ export function renderAISummary(summaryText = '', label = 'Riassunto AI') {
 }
 
 /**
- * Genera HTML menu laterale tabs + content area
+ * Genera HTML drawer laterale per tabs + content area
  * @param {Array} tabs - Array di configurazioni tab
  * @param {string} tabs[].id - ID tab
  * @param {string} tabs[].title - Titolo tab
  * @param {string} tabs[].content - Contenuto tab (HTML)
  * @param {boolean} tabs[].active - Se attivo di default
- * @returns {Object} { sidebarHTML, contentHTML }
+ * @returns {Object} { drawerHTML, contentHTML }
  */
 export function renderModuleTabsSidebar(tabs = []) {
   if (!Array.isArray(tabs) || tabs.length === 0) {
-    return { sidebarHTML: '', contentHTML: '' };
+    return { drawerHTML: '', contentHTML: '' };
   }
 
   function escapeHtml(str) {
@@ -104,27 +104,46 @@ export function renderModuleTabsSidebar(tabs = []) {
   // Trova tab attivo (solo se esplicitamente active=true, altrimenti nessuna)
   const activeTabId = tabs.find(t => t.active === true)?.id || '';
 
-  // Sidebar buttons
-  const sidebarHTML = `
-    <div class="module-tabs-sidebar">
-      ${tabs.map(tab => `
-        <button 
-          class="module-tab-button" 
-          type="button"
-          data-tab-id="${escapeAttr(tab.id)}"
-          data-active="${tab.id === activeTabId}"
-          aria-controls="tab-panel-${escapeAttr(tab.id)}"
-          aria-selected="${tab.id === activeTabId}">
-          ${escapeHtml(tab.title)}
+  // Drawer HTML (pannello laterale)
+  const drawerHTML = `
+    <button class="module-tabs-toggle" type="button" aria-label="Apri menu sezioni">
+      <span>Sezioni</span>
+      <svg class="module-tabs-toggle-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    
+    <div class="module-tabs-drawer-overlay"></div>
+    
+    <div class="module-tabs-drawer">
+      <div class="module-tabs-drawer-header">
+        <div class="module-tabs-drawer-title">Sezioni</div>
+        <button class="module-tabs-drawer-close" type="button" aria-label="Chiudi menu">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
         </button>
-      `).join('')}
+      </div>
+      <div class="module-tabs-drawer-body">
+        ${tabs.map(tab => `
+          <button 
+            class="module-tab-button" 
+            type="button"
+            data-tab-id="${escapeAttr(tab.id)}"
+            data-active="${tab.id === activeTabId}"
+            aria-controls="tab-panel-${escapeAttr(tab.id)}"
+            aria-selected="${tab.id === activeTabId}">
+            ${escapeHtml(tab.title)}
+          </button>
+        `).join('')}
+      </div>
     </div>
   `;
 
-  // Content panels
+  // Content panels (main area)
   const contentHTML = `
     <div class="module-tabs-content">
-      ${tabs.map(tab => `
+      ${activeTabId ? tabs.map(tab => `
         <div 
           class="module-tab-panel" 
           id="tab-panel-${escapeAttr(tab.id)}"
@@ -136,23 +155,67 @@ export function renderModuleTabsSidebar(tabs = []) {
             ${tab.content}
           </div>
         </div>
-      `).join('')}
+      `).join('') : `
+        <div class="module-tabs-empty-state">
+          Seleziona una sezione dal menu per visualizzare i dettagli
+        </div>
+      `}
     </div>
   `;
 
-  return { sidebarHTML, contentHTML };
+  return { drawerHTML, contentHTML };
 }
 
 /**
- * Bind eventi per tabs laterali
+ * Bind eventi per tabs drawer
  * @param {HTMLElement} container - Container con tabs wrapper
  */
 export function bindModuleTabs(container) {
   if (!container) return;
 
-  const buttons = container.querySelectorAll('.module-tab-button');
+  const wrapper = container.closest('.module-tabs-wrapper');
+  if (!wrapper) return;
+
+  const toggleBtn = wrapper.querySelector('.module-tabs-toggle');
+  const closeBtn = wrapper.querySelector('.module-tabs-drawer-close');
+  const overlay = wrapper.querySelector('.module-tabs-drawer-overlay');
+  const drawer = wrapper.querySelector('.module-tabs-drawer');
+  const buttons = wrapper.querySelectorAll('.module-tab-button');
   const panels = container.querySelectorAll('.module-tab-panel');
-  
+  const contentArea = container.querySelector('.module-tabs-content');
+
+  // Apri/chiudi drawer
+  function openDrawer() {
+    wrapper.dataset.drawerOpen = 'true';
+    document.body.style.overflow = 'hidden'; // Previeni scroll body
+  }
+
+  function closeDrawer() {
+    wrapper.dataset.drawerOpen = 'false';
+    document.body.style.overflow = ''; // Ripristina scroll body
+  }
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openDrawer();
+    });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeDrawer();
+    });
+  }
+
+  if (overlay) {
+    overlay.addEventListener('click', () => {
+      closeDrawer();
+    });
+  }
+
+  // Gestione selezione tab
   buttons.forEach(button => {
     button.addEventListener('click', () => {
       const tabId = button.dataset.tabId;
@@ -164,16 +227,36 @@ export function bindModuleTabs(container) {
         btn.setAttribute('aria-selected', btn.dataset.tabId === tabId);
       });
 
-      // Aggiorna panels
-      panels.forEach(panel => {
-        panel.dataset.active = panel.dataset.tabId === tabId;
-        if (panel.dataset.tabId === tabId) {
-          panel.setAttribute('aria-hidden', 'false');
-        } else {
-          panel.setAttribute('aria-hidden', 'true');
-        }
-      });
+      // Aggiorna panels (se esistono)
+      if (panels.length > 0) {
+        panels.forEach(panel => {
+          panel.dataset.active = panel.dataset.tabId === tabId;
+          if (panel.dataset.tabId === tabId) {
+            panel.setAttribute('aria-hidden', 'false');
+          } else {
+            panel.setAttribute('aria-hidden', 'true');
+          }
+        });
+      } else {
+        // Se i panels non esistono ancora, caricali dinamicamente
+        // Questo viene gestito dal modulo stesso (f1b.js)
+      }
+
+      // Chiudi drawer dopo selezione
+      closeDrawer();
+
+      // Scrolla al content area
+      if (contentArea) {
+        contentArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
+  });
+
+  // Chiudi drawer con ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && wrapper.dataset.drawerOpen === 'true') {
+      closeDrawer();
+    }
   });
 }
 

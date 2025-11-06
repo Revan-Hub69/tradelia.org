@@ -159,53 +159,164 @@
   color: var(--ink-soft);
 }
 
-/* ===== MODULE TABS (Menu Laterale + Content) ===== */
+/* ===== MODULE TABS (Drawer Laterale) ===== */
 .module-tabs-wrapper {
-  display: flex;
-  gap: var(--sp-4);
+  position: relative;
   margin-top: var(--sp-3);
 }
 
-/* Menu laterale tabs */
-.module-tabs-sidebar {
-  flex-shrink: 0;
-  width: 200px;
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-1);
-  max-height: 400px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: var(--sp-2);
+/* Pulsante per aprire drawer */
+.module-tabs-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1_5);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--surface-card);
+  border: 1px solid var(--br-card);
+  border-radius: var(--radius-card);
+  color: var(--ink);
+  font-size: var(--fs-12);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  margin-bottom: var(--sp-3);
 }
 
-/* Scrollbar personalizzata per sidebar */
-.module-tabs-sidebar::-webkit-scrollbar {
+.module-tabs-toggle:hover {
+  background: var(--surface-hover);
+  border-color: var(--br-strong);
+}
+
+.module-tabs-toggle-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-base);
+}
+
+.module-tabs-wrapper[data-drawer-open="true"] .module-tabs-toggle-icon {
+  transform: rotate(180deg);
+}
+
+/* Drawer overlay (backdrop) */
+.module-tabs-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 9998;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-base), visibility var(--transition-base);
+  pointer-events: none;
+}
+
+.module-tabs-wrapper[data-drawer-open="true"] .module-tabs-drawer-overlay {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+/* Drawer container */
+.module-tabs-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 320px;
+  max-width: 90vw;
+  background: var(--surface-card);
+  border-left: 1px solid var(--br-card);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  transform: translateX(100%);
+  transition: transform var(--transition-slow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.module-tabs-wrapper[data-drawer-open="true"] .module-tabs-drawer {
+  transform: translateX(0);
+}
+
+/* Drawer header */
+.module-tabs-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-4);
+  border-bottom: 1px solid var(--br-panel-divider);
+  flex-shrink: 0;
+}
+
+.module-tabs-drawer-title {
+  font-size: var(--fs-14);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.module-tabs-drawer-close {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--br-card);
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.module-tabs-drawer-close:hover {
+  background: var(--surface-hover);
+  border-color: var(--br-strong);
+  color: var(--ink);
+}
+
+/* Drawer body (tabs list) */
+.module-tabs-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--sp-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+/* Scrollbar personalizzata per drawer */
+.module-tabs-drawer-body::-webkit-scrollbar {
   width: 6px;
 }
 
-.module-tabs-sidebar::-webkit-scrollbar-track {
+.module-tabs-drawer-body::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.module-tabs-sidebar::-webkit-scrollbar-thumb {
+.module-tabs-drawer-body::-webkit-scrollbar-thumb {
   background: var(--br-strong);
   border-radius: 3px;
 }
 
-.module-tabs-sidebar::-webkit-scrollbar-thumb:hover {
+.module-tabs-drawer-body::-webkit-scrollbar-thumb:hover {
   background: var(--muted);
 }
 
+/* Tab button nel drawer */
 .module-tab-button {
   width: 100%;
-  padding: var(--sp-2) var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
   background: transparent;
   border: 1px solid var(--br-card);
   border-radius: var(--radius-card);
   cursor: pointer;
   font-family: inherit;
-  font-size: var(--fs-12);
+  font-size: var(--fs-13);
   font-weight: 600;
   color: var(--muted);
   text-align: left;
@@ -236,10 +347,32 @@
   border-radius: var(--radius-card) 0 0 var(--radius-card);
 }
 
-/* Content area */
+.module-tab-button:hover {
+  background: var(--surface-hover);
+  color: var(--ink);
+  border-color: var(--br-strong);
+}
+
+.module-tab-button[data-active="true"] {
+  background: var(--surface-elev);
+  color: var(--ink);
+  border-color: var(--brand-600);
+}
+
+.module-tab-button[data-active="true"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--brand-600);
+  border-radius: var(--radius-card) 0 0 var(--radius-card);
+}
+
+/* Content area (main, quando tab selezionata) */
 .module-tabs-content {
-  flex: 1;
-  min-width: 0;
+  min-height: 200px;
 }
 
 .module-tab-panel {
@@ -248,21 +381,44 @@
 
 .module-tab-panel[data-active="true"] {
   display: block;
+  animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .module-tab-panel-content {
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  padding: 0;
+  background: var(--surface-card);
+  border: 1px solid var(--br-card);
+  border-radius: var(--radius-card);
+  padding: var(--sp-4);
 }
 
-/* Header-ticker dentro tab panel (compatto, senza bordi) */
+/* Header-ticker dentro tab panel (compatto) */
 .module-tab-panel-content .header-ticker {
   background: transparent;
   border: none;
   padding: 0;
   box-shadow: none;
+}
+
+/* Messaggio quando nessuna tab selezionata */
+.module-tabs-empty-state {
+  padding: var(--sp-8);
+  text-align: center;
+  color: var(--muted);
+  font-size: var(--fs-13);
+  border: 1px dashed var(--br-card);
+  border-radius: var(--radius-card);
+  background: var(--surface-page);
 }
 
 /* ===== MODULE CONTENT ===== */
@@ -336,21 +492,14 @@
     font-size: var(--fs-11);
   }
   
-  .module-tabs-wrapper {
-    flex-direction: column;
-    gap: var(--sp-3);
-  }
-  
-  .module-tabs-sidebar {
+  .module-tabs-drawer {
     width: 100%;
-    flex-direction: row;
-    overflow-x: auto;
-    padding-bottom: var(--sp-2);
+    max-width: 100vw;
   }
   
-  .module-tab-button {
-    white-space: nowrap;
-    flex-shrink: 0;
+  .module-tabs-toggle {
+    width: 100%;
+    justify-content: center;
   }
   
   .module-grid-2,
