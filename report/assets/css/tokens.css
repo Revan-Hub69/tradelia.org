@@ -221,6 +221,49 @@ a:focus-visible {
     var(--shadow-sm);
 }
 
+/* Pulsanti MiFID/Privacy nel footer - aggiungi freccia + underline */
+.site-footer .btn-sm {
+  position: relative;
+  padding-left: var(--sp-5);
+  padding-bottom: var(--sp-2);
+}
+
+.site-footer .btn-sm::before {
+  content: "→";
+  position: absolute;
+  left: var(--sp-3);
+  color: var(--muted);
+  font-size: var(--fs-11);
+  transition: all var(--transition-fast);
+  transform: translateX(-2px);
+}
+
+.site-footer .btn-sm::after {
+  content: "";
+  position: absolute;
+  left: var(--sp-5);
+  bottom: var(--sp-2);
+  width: 0;
+  height: 1px;
+  background: var(--brand-600);
+  transition: width var(--transition-base);
+  transform-origin: left;
+}
+
+.site-footer .btn-sm:hover {
+  padding-left: var(--sp-6);
+  transform: translateY(-1px) translateX(2px);
+}
+
+.site-footer .btn-sm:hover::before {
+  color: var(--brand-600);
+  transform: translateX(0);
+}
+
+.site-footer .btn-sm:hover::after {
+  width: calc(100% - var(--sp-6));
+}
+
 /* ===== CARD ===== */
 .card {
   background: var(--surface-card);
@@ -1832,12 +1875,64 @@ a:focus-visible {
   margin-top: var(--sp-1);
 }
 
+/* ===== LINK HOVER BLUE (Unificato: Freccia + Underline) ===== */
+.link-hover-blue {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  color: var(--ink-soft);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  padding-left: var(--sp-4);
+  padding-bottom: var(--sp-1);
+}
+
+/* Freccia a sinistra */
+.link-hover-blue::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--muted);
+  font-size: var(--fs-12);
+  transition: all var(--transition-fast);
+  transform: translateX(-2px);
+}
+
+/* Underline blu che si espande da sinistra */
+.link-hover-blue::after {
+  content: "";
+  position: absolute;
+  left: var(--sp-4);
+  bottom: 0;
+  width: 0;
+  height: 1px;
+  background: var(--brand-600);
+  transition: width var(--transition-base);
+  transform-origin: left;
+}
+
+/* Hover: freccia blu, underline si espande, leggero spostamento */
+.link-hover-blue:hover {
+  color: var(--ink);
+  padding-left: var(--sp-5);
+  transform: translateX(2px);
+}
+
+.link-hover-blue:hover::before {
+  color: var(--brand-600);
+  transform: translateX(0);
+}
+
+.link-hover-blue:hover::after {
+  width: calc(100% - var(--sp-5));
+}
+
+/* Applica a link footer quick-links */
 .ftr-quick-links a {
   color: var(--ink-soft);
   text-decoration: none;
   font-size: var(--fs-14);
   font-weight: 400;
-  transition: all var(--transition-fast);
   display: flex;
   align-items: center;
   gap: var(--sp-2);
@@ -1856,14 +1951,31 @@ a:focus-visible {
   transform: translateX(-2px);
 }
 
+.ftr-quick-links a::after {
+  content: "";
+  position: absolute;
+  left: var(--sp-4);
+  bottom: var(--sp-1);
+  width: 0;
+  height: 1px;
+  background: var(--brand-600);
+  transition: width var(--transition-base);
+  transform-origin: left;
+}
+
 .ftr-quick-links a:hover {
   color: var(--ink);
   padding-left: var(--sp-5);
+  transform: translateX(2px);
 }
 
 .ftr-quick-links a:hover::before {
   color: var(--brand-600);
   transform: translateX(0);
+}
+
+.ftr-quick-links a:hover::after {
+  width: calc(100% - var(--sp-5));
 }
 
 .ftr-list {
@@ -1965,13 +2077,96 @@ a:focus-visible {
   color: var(--ink);
 }
 
+/* Link nel footer bottom (Home, Brokers, Archivio) */
+.ftr-bottom a:not(.mail-link) {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding-left: var(--sp-4);
+  padding-bottom: 2px;
+}
+
+.ftr-bottom a:not(.mail-link)::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--muted);
+  font-size: var(--fs-11);
+  transition: all var(--transition-fast);
+  transform: translateX(-2px);
+}
+
+.ftr-bottom a:not(.mail-link)::after {
+  content: "";
+  position: absolute;
+  left: var(--sp-4);
+  bottom: 0;
+  width: 0;
+  height: 1px;
+  background: var(--brand-600);
+  transition: width var(--transition-base);
+  transform-origin: left;
+}
+
+.ftr-bottom a:not(.mail-link):hover {
+  padding-left: var(--sp-5);
+  transform: translateX(2px);
+}
+
+.ftr-bottom a:not(.mail-link):hover::before {
+  color: var(--brand-600);
+  transform: translateX(0);
+}
+
+.ftr-bottom a:not(.mail-link):hover::after {
+  width: calc(100% - var(--sp-5));
+}
+
 a.mail-link {
   color: var(--ink-soft);
   font-weight: 400;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding-left: var(--sp-4);
+  padding-bottom: 2px;
+}
+
+a.mail-link::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--muted);
+  font-size: var(--fs-11);
+  transition: all var(--transition-fast);
+  transform: translateX(-2px);
+}
+
+a.mail-link::after {
+  content: "";
+  position: absolute;
+  left: var(--sp-4);
+  bottom: 0;
+  width: 0;
+  height: 1px;
+  background: var(--brand-600);
+  transition: width var(--transition-base);
+  transform-origin: left;
 }
 
 a.mail-link:hover {
   color: var(--ink);
+  padding-left: var(--sp-5);
+  transform: translateX(2px);
+}
+
+a.mail-link:hover::before {
+  color: var(--brand-600);
+  transform: translateX(0);
+}
+
+a.mail-link:hover::after {
+  width: calc(100% - var(--sp-5));
 }
 
 .ftr-socials {
@@ -1992,26 +2187,46 @@ a.mail-link:hover {
   text-decoration: none;
   padding: var(--sp-1) 0;
   position: relative;
+  padding-left: var(--sp-4);
 }
 
+/* Freccia a sinistra */
+.ftr-socials a::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--muted);
+  font-size: var(--fs-12);
+  transition: all var(--transition-fast);
+  transform: translateX(-2px);
+}
+
+/* Underline blu che si espande da sinistra */
 .ftr-socials a::after {
   content: "";
   position: absolute;
-  left: 0;
+  left: var(--sp-4);
   bottom: var(--sp-1);
   width: 0;
   height: 1px;
   background: var(--brand-600);
   transition: width var(--transition-base);
+  transform-origin: left;
 }
 
 .ftr-socials a:hover {
   color: var(--ink);
+  padding-left: var(--sp-5);
   transform: translateX(2px);
 }
 
+.ftr-socials a:hover::before {
+  color: var(--brand-600);
+  transform: translateX(0);
+}
+
 .ftr-socials a:hover::after {
-  width: 24px;
+  width: calc(100% - var(--sp-5));
 }
 
 /* ===== ICONS ===== */

@@ -377,10 +377,11 @@
   background: var(--muted);
 }
 
-/* Tab button nel menu orizzontale - Design istituzionale */
+/* Tab button nel menu orizzontale - Design istituzionale con freccia + underline */
 .module-tab-button {
   flex-shrink: 0;
   padding: var(--sp-2_5) var(--sp-4);
+  padding-left: var(--sp-5);
   background: var(--surface-card);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-sm);
@@ -394,11 +395,45 @@
   position: relative;
 }
 
+/* Freccia a sinistra */
+.module-tab-button::before {
+  content: "→";
+  position: absolute;
+  left: var(--sp-3);
+  color: var(--muted);
+  font-size: var(--fs-11);
+  transition: all var(--transition-fast);
+  transform: translateX(-2px);
+}
+
+/* Underline blu che si espande da sinistra */
+.module-tab-button::after {
+  content: "";
+  position: absolute;
+  left: var(--sp-5);
+  bottom: var(--sp-2_5);
+  width: 0;
+  height: 1px;
+  background: var(--brand-600);
+  transition: width var(--transition-base);
+  transform-origin: left;
+}
+
 .module-tab-button:hover {
   background: rgba(255, 255, 255, 0.05);
   color: var(--ink);
   border-color: rgba(255, 255, 255, 0.12);
-  transform: translateY(-1px);
+  padding-left: var(--sp-6);
+  transform: translateY(-1px) translateX(2px);
+}
+
+.module-tab-button:hover::before {
+  color: var(--brand-600);
+  transform: translateX(0);
+}
+
+.module-tab-button:hover::after {
+  width: calc(100% - var(--sp-6));
 }
 
 .module-tab-button:focus-visible {
@@ -413,17 +448,15 @@
   font-weight: 700;
 }
 
-/* Indicatore sottile per tab attiva */
+/* Tab attiva: freccia e underline sempre visibili */
+.module-tab-button[data-active="true"]::before {
+  color: var(--brand-600);
+  transform: translateX(0);
+}
+
 .module-tab-button[data-active="true"]::after {
-  content: "";
-  position: absolute;
-  bottom: -2px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40%;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 2px;
+  width: calc(100% - var(--sp-5));
+  background: var(--brand-600);
 }
 
 /* Content area non visibile nella homepage (solo nel drawer) */
