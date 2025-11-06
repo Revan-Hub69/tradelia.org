@@ -86,18 +86,65 @@ async function openTerm(key) {
   await loadGlossaryData();
   
   const term = GLOSSARY_POPUP._data[key];
-  if (!term) {
-    Logger.warn('GlossaryPopup', `Termine non trovato: ${key}`);
-    return;
-  }
-  
   const panel = GLOSSARY_POPUP._panel;
   const overlay = GLOSSARY_POPUP._overlay;
+  
+  if (!term) {
+    Logger.warn('GlossaryPopup', `Termine non trovato: ${key}`);
+    // Mostra comunque il popup con messaggio informativo
+    panel.innerHTML = `
+      <header class="glossary-popup-header">
+        <div class="glossary-popup-header-content">
+          <h2 id="glossary-popup-title" class="glossary-popup-title">${escapeHtml(key)}</h2>
+        </div>
+        <button class="glossary-popup-close" aria-label="Chiudi" type="button">×</button>
+      </header>
+      <div class="glossary-popup-body">
+        <div class="glossary-popup-section">
+          <p class="glossary-popup-section-text">Nessuna informazione disponibile nel glossario per questo termine.</p>
+        </div>
+      </div>
+      <footer class="glossary-popup-footer">
+        <button class="glossary-popup-close-bottom" type="button">Chiudi</button>
+      </footer>
+    `;
+    
+    // Close handlers
+    const closeBtn = panel.querySelector('.glossary-popup-close');
+    const closeBtnBottom = panel.querySelector('.glossary-popup-close-bottom');
+    
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => GLOSSARY_POPUP.close());
+    }
+    if (closeBtnBottom) {
+      closeBtnBottom.addEventListener('click', () => GLOSSARY_POPUP.close());
+    }
+    
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) GLOSSARY_POPUP.close();
+    });
+    
+    overlay.addEventListener('overlay-close-request', (e) => {
+      if (e.detail.id === GLOSSARY_POPUP._overlayId) {
+        GLOSSARY_POPUP.close();
+      }
+    });
+    
+    overlay.hidden = false;
+    document.body.style.overflow = 'hidden';
+    GLOSSARY_POPUP._isOpen = true;
+    registerOverlay(GLOSSARY_POPUP._overlayId, OVERLAY_TYPES.GLOSSARY, overlay, panel);
+    return;
+  }
   
   const title = term.nomeTecnico || term.title || key;
   const universo = term.universo || term.category;
   
-  // Stesso HTML di glossario.html
+  // Stesso HTML di glossario.html - Mostra sempre definizione accademica, spiegazione AI e fonti
+  const definizioneAccademica = term.definizioneAccademica || term.what || '';
+  const spiegazioneAI = term.spiegazioneAI || term.how || '';
+  const fonteAccademica = term.fonteAccademica || term.source || '';
+  
   panel.innerHTML = `
     <header class="glossary-popup-header">
       <div class="glossary-popup-header-content">
@@ -114,27 +161,30 @@ async function openTerm(key) {
       <button class="glossary-popup-close" aria-label="Chiudi" type="button">×</button>
     </header>
     <div class="glossary-popup-body">
-      ${term.definizioneAccademica ? `
+      ${definizioneAccademica ? `
         <div class="glossary-popup-section">
           <h3 class="glossary-popup-section-title">Definizione Accademica</h3>
-          <p class="glossary-popup-section-text">${escapeHtml(term.definizioneAccademica)}</p>
+          <p class="glossary-popup-section-text">${escapeHtml(definizioneAccademica)}</p>
         </div>
       ` : ''}
       
-      ${term.spiegazioneAI ? `
+      ${spiegazioneAI ? `
         <div class="glossary-popup-section">
           <h3 class="glossary-popup-section-title">Spiegazione AI</h3>
-          <p class="glossary-popup-section-text">${escapeHtml(term.spiegazioneAI)}</p>
+          <p class="glossary-popup-section-text">${escapeHtml(spiegazioneAI)}</p>
         </div>
       ` : ''}
       
-      ${term.fonteAccademica ? `
-        <div class="glossary-popup-source">
-          <strong>Fonte:</strong> ${escapeHtml(term.fonteAccademica)}
+      ${fonteAccademica ? `
+        <div class="glossary-popup-section">
+          <h3 class="glossary-popup-section-title">Fonte</h3>
+          <p class="glossary-popup-section-text glossary-popup-source">${escapeHtml(fonteAccademica)}</p>
         </div>
-      ` : term.source ? `
-        <div class="glossary-popup-source">
-          <strong>Fonte:</strong> ${escapeHtml(term.source)}
+      ` : ''}
+      
+      ${!definizioneAccademica && !spiegazioneAI && !fonteAccademica ? `
+        <div class="glossary-popup-section">
+          <p class="glossary-popup-section-text">Nessuna informazione disponibile nel glossario per questo termine.</p>
         </div>
       ` : ''}
     </div>

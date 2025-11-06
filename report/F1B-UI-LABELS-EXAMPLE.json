@@ -1,0 +1,60 @@
+{
+  "meta": {
+    "timestampET": "2025-10-29 16:20 ET",
+    "module": "F1B · Market Regime",
+    "moduleVersion": "v19-Dynamic",
+    "moduleStatus": "ACTIVE",
+    "freshness": "≤ T-1",
+    "hero_intro": "Regime risk-on con leadership Tech/CommServices e bias MegaCap; volatilità sotto 20, credito IG disteso, breadth 1M ampia.",
+    "hero_disclaimer": "Output a fini educativi/informativi (orizzonte 3–10 giorni). Dati Tier-1 (Finviz, ETFdb, Reuters, FRED, CBOE). Non costituisce consulenza o raccomandazione (MiFID II)."
+  },
+
+  "ui_labels": {
+    "badge": "F1B",
+    "hero_title": "Contesto rischio & ampiezza del mercato",
+    "hero_subtitle": "Regime di mercato · Orizzonte 3–10 giorni",
+    "hero_desc": "Lettura di contesto. Non è un'istruzione operativa.",
+    "ai_summary_label": "Riassunto AI",
+    
+    "tab_regime": "Regime & Rischio",
+    "tab_breadth": "Breadth & Rotazione",
+    "tab_street": "Street View",
+    
+    "label_strategy_mode": "StrategyMode",
+    "label_regime_score": "RegimeScore",
+    "label_volatility": "Volatilità",
+    "label_vol_regime": "VolRegime",
+    "label_breadth": "Breadth 1M",
+    "label_risk_tilt": "RiskTilt",
+    "label_risk_tilt_1m": "RiskTilt 1M",
+    "label_leaders": "Leaders",
+    "label_size_bias": "Size Bias",
+    "label_smallcap_pressure": "SmallCap Pressure",
+    "label_smallcap_pressure_1w": "SmallCap Pressure 1W",
+    "label_credit": "Credito",
+    "label_fx": "FX",
+    "label_fx_regime": "FX_Regime",
+    "label_risk_window": "Risk Window (3–10g)",
+    "label_liquidity": "Liquidità",
+    "label_index_momentum": "Index Momentum 1W",
+    "label_defensive": "Defensivi",
+    "label_lagging": "In ritardo",
+    "label_street_view": "Street View",
+    "label_macro_news": "Macro News",
+    "label_sellside_notes": "Sell-Side Notes",
+    "label_consensus_tone": "Consensus Tone",
+    
+    "separator_dot": " · ",
+    "separator_colon": ": ",
+    "separator_comma": ", "
+  },
+
+  "regime_and_risk": {
+    "StrategyMode_macro": {
+      "raw": "Momentum",
+      "tone": "green",
+      "ai_note": "Contesto favorevole al rischio con rotazione pro-growth e volatilità contenuta."
+    }
+  }
+}
+

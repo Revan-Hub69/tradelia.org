@@ -437,6 +437,40 @@ import { metricPopup } from './components/metric-popup.js';
     },
     closeMetricPopup: () => {
       metricPopup.close();
+    },
+    bindMetricInfoButtons: (container) => {
+      // Trova tutti i pulsanti info-btn con data-metric e collega al glossario
+      if (!container) return;
+      
+      const infoButtons = container.querySelectorAll('.info-btn[data-metric]');
+      infoButtons.forEach(btn => {
+        // Rimuovi listener esistenti per evitare duplicati
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode?.replaceChild(newBtn, btn);
+        
+        newBtn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const metricKey = newBtn.getAttribute('data-metric');
+          if (!metricKey) return;
+          
+          // Rimuovi suffisso "_info" se presente
+          const cleanKey = metricKey.replace(/_info$/, '');
+          
+          // Apri drawer glossario (stesso sistema di glossario.html)
+          try {
+            const { glossaryPopup } = await import('./components/glossary-popup.js');
+            if (glossaryPopup && glossaryPopup.openTerm) {
+              await glossaryPopup.openTerm(cleanKey);
+            }
+          } catch (err) {
+            Logger.warn('App', 'Errore apertura drawer glossario', err);
+          }
+        });
+      });
+      
+      Logger.debug('App', `Collegati ${infoButtons.length} pulsanti metriche al glossario`);
     }
   };
   
