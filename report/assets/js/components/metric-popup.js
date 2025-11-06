@@ -46,7 +46,11 @@ async function loadGlossary() {
   if (POPUP._glossary) return POPUP._glossary;
   
   try {
-    const res = await fetch('/report/assets/glossary.json', { cache: 'no-store' });
+    // Prova prima il glossario unificato nella root, poi fallback a report/assets
+    let res = await fetch('/glossario.json', { cache: 'no-store' });
+    if (!res.ok) {
+      res = await fetch('/report/assets/glossary.json', { cache: 'no-store' });
+    }
     if (res.ok) {
       POPUP._glossary = await res.json();
       Logger.debug('MetricPopup', 'Glossario caricato');
@@ -87,18 +91,18 @@ function renderPopup(metric) {
       ${entry ? `
         <div class="metric-popup-section">
           <h4 class="metric-popup-section-title">Cosa</h4>
-          <p class="metric-popup-section-text">${escapeHtml(entry.what || '')}</p>
+          <p class="metric-popup-section-text">${escapeHtml(entry.what || entry.definizioneAccademica || '')}</p>
         </div>
-        ${entry.how ? `
+        ${(entry.how || entry.spiegazioneAI) ? `
           <div class="metric-popup-section">
             <h4 class="metric-popup-section-title">Come</h4>
-            <p class="metric-popup-section-text">${escapeHtml(entry.how)}</p>
+            <p class="metric-popup-section-text">${escapeHtml(entry.how || entry.spiegazioneAI || '')}</p>
           </div>
         ` : ''}
-        ${entry.source ? `
+        ${(entry.source || entry.fonteAccademica) ? `
           <div class="metric-popup-section">
             <h4 class="metric-popup-section-title">Fonte</h4>
-            <p class="metric-popup-section-text metric-popup-source">${escapeHtml(entry.source)}</p>
+            <p class="metric-popup-section-text metric-popup-source">${escapeHtml(entry.source || entry.fonteAccademica || '')}</p>
           </div>
         ` : ''}
       ` : `

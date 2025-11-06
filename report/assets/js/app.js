@@ -283,9 +283,14 @@ import { metricPopup } from './components/metric-popup.js';
         let json = {};
         try {
           json = await fetchJSON(jsonPath);
+          // Se JSON non esiste o è vuoto, salta questo modulo
+          if (!json || Object.keys(json).length === 0 || json._placeholder) {
+            Logger.debug('App', `Modulo ${modId}: JSON non disponibile, salto`);
+            continue;
+          }
         } catch (jsonErr) {
-          Logger.warn('App', `JSON ${jsonPath} non trovato, uso placeholder`, jsonErr);
-          json = { _placeholder: true };
+          Logger.debug('App', `Modulo ${modId}: JSON non trovato, salto`, jsonErr);
+          continue; // Salta se JSON non esiste (montaggio dinamico)
         }
         
         // Carica modulo (fallback a placeholder se mancante)
