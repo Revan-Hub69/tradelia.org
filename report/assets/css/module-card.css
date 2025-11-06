@@ -25,7 +25,11 @@
   line-height: var(--lh-16); /* Standardizzato a 1.6 */
   color: var(--ink);
   letter-spacing: 0.01em; /* Leggero letter-spacing per leggibilità */
+  transition: all var(--transition-base); /* Transizione smooth per hover */
+  cursor: default; /* Cursor normale, non pointer */
 }
+
+/* Hover unificato - definito in tokens.css insieme a header-ticker */
 
 /* Bordo sinistro colorato (come header-ticker) */
 .module-card::before {
@@ -35,7 +39,12 @@
   width: 4px;
   border-radius: var(--radius-xl) 0 0 var(--radius-xl);
   background: var(--neutral);
-  transition: background var(--transition-base);
+  transition: background var(--transition-base), width var(--transition-base);
+}
+
+/* Bordo sinistro leggermente più spesso al hover */
+.module-card:hover::before {
+  width: 5px; /* Leggermente più spesso al hover */
 }
 
 .module-card[data-state="ACTIVE"]::before { background: var(--ok); }

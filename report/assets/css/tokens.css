@@ -461,6 +461,32 @@ a:focus-visible {
     0 1px 0 rgba(255, 255, 255, 0.02) inset; /* Ombra più sottile */
   line-height: var(--lh-16); /* Standardizzato */
   letter-spacing: 0.01em; /* Leggero letter-spacing */
+  transition: all var(--transition-base); /* Transizione smooth per hover */
+  cursor: default; /* Cursor normale, non pointer */
+}
+
+/* ===== HOVER UNIFICATO PER CARD PRINCIPALI ===== */
+/* Hover condiviso per module-card e header-ticker (card principali) */
+.module-card:hover,
+.header-ticker:hover {
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--surface-card) 98%, white 2%) 0%,
+    color-mix(in oklab, var(--surface-card) 97%, var(--brand-600) 3%) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.06); /* Bordo leggermente più visibile */
+  box-shadow: 
+    var(--shadow-lg), /* Ombra più pronunciata */
+    0 1px 0 rgba(255, 255, 255, 0.03) inset;
+  transform: translateY(-1px); /* Leggero sollevamento */
+}
+
+/* Rimuovi hover solo quando header-ticker è dentro AI summary (mantieni hover nel drawer) */
+.module-ai-summary .header-ticker:hover {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  transform: none !important;
 }
 
 .header-ticker::before {
@@ -470,6 +496,18 @@ a:focus-visible {
   width: 4px;
   border-radius: var(--radius-xl) 0 0 var(--radius-xl);
   background: var(--neutral);
+  transition: background var(--transition-base), width var(--transition-base);
+}
+
+/* Bordo sinistro leggermente più spesso al hover (unificato per entrambe le card) */
+.module-card:hover::before,
+.header-ticker:hover::before {
+  width: 5px; /* Leggermente più spesso al hover */
+}
+
+/* Rimuovi effetto bordo solo quando è dentro AI summary */
+.module-ai-summary .header-ticker:hover::before {
+  width: 4px !important;
 }
 
 .header-ticker--state-ok::before { background: var(--ok); }
