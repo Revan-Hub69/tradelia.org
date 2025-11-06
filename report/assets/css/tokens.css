@@ -29,11 +29,11 @@ button { background: none; border: 0; padding: 0; font: inherit; color: inherit;
   --radius-xl: 16px;
   --radius-pill: 999px;
   
-  /* Ombre */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
-  --shadow-xl: 0 12px 36px rgba(0, 0, 0, 0.6);
+  /* Ombre - Più Sottili e Istituzionali */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.35);
   
   /* Container */
   --container-max: 90rem;
@@ -45,19 +45,36 @@ button { background: none; border: 0; padding: 0; font: inherit; color: inherit;
   --breakpoint-xl: 1280px;
   --breakpoint-2xl: 1536px;
   
-  /* Transizioni */
-  --transition-fast: 0.15s ease;
-  --transition-base: 0.2s ease;
-  --transition-slow: 0.3s ease;
+  /* Transizioni - Più Fluide */
+  --transition-fast: 0.18s ease-out;
+  --transition-base: 0.22s ease-out;
+  --transition-slow: 0.3s ease-out;
+}
+
+/* Supporto prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0.01s;
+    --transition-base: 0.01s;
+    --transition-slow: 0.01s;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01s !important;
+  }
 }
 
 /* ===== DARK MODE ISTITUZIONALE FINANZIARIO ===== */
 :root[data-theme="dark"] {
-  /* Colori Testo - Contrasto Ottimale per Leggibilità */
+  /* Colori Testo - Contrasto Ottimale per Leggibilità (WCAG AA+) */
   --ink: #ffffff;             /* Testo principale - bianco puro per massimo contrasto */
-  --ink-soft: #e8e8e8;         /* Testo secondario - grigio chiaro leggibile */
-  --muted: #a8a8a8;            /* Testo muted - grigio medio */
-  --muted-strong: #707070;     /* Testo molto muted */
+  --ink-soft: #f0f0f0;         /* Testo secondario - grigio chiaro più leggibile (da #e8e8e8) */
+  --muted: #b8b8b8;            /* Testo muted - grigio medio più leggibile (da #a8a8a8) */
+  --muted-strong: #808080;     /* Testo molto muted - più leggibile (da #707070) */
   
   /* Superfici - Nero Opaco Istituzionale (meno lucido) */
   --surface-page: #0f0f0f;     /* Background principale - nero opaco */
@@ -79,11 +96,11 @@ button { background: none; border: 0; padding: 0; font: inherit; color: inherit;
   --brand-500: #3b82f6;        /* Blu hover */
   --brand-400: #60a5fa;        /* Blu light */
   
-  /* Stati - Palette Finanziaria Standard */
-  --ok: #16a34a;               /* Verde finanziario - più sobrio */
-  --warn: #ea580c;             /* Arancione warning - più sobrio */
-  --err: #dc2626;              /* Rosso errore - più sobrio */
-  --neutral: #64748b;          /* Grigio neutro istituzionale */
+  /* Stati - Palette Finanziaria Standard (Discreti per Design Istituzionale) */
+  --ok: rgba(22, 163, 74, 0.88);      /* Verde finanziario - più discreto */
+  --warn: rgba(234, 88, 12, 0.88);    /* Arancione warning - più discreto */
+  --err: rgba(220, 38, 38, 0.88);     /* Rosso errore - più discreto */
+  --neutral: #64748b;                 /* Grigio neutro istituzionale */
   
   /* Tone Colors (per F1B e moduli) */
   --tone-pos-fg: #16a34a;      /* Verde positivo */
@@ -433,7 +450,7 @@ a:focus-visible {
     var(--surface-card) 0%,
     color-mix(in oklab, var(--surface-card) 99%, var(--brand-600) 1%) 100%
   );
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.04); /* Bordo più sottile */
   border-radius: var(--radius-xl);
   padding: var(--sp-5) var(--sp-6);
   display: flex;
@@ -441,7 +458,9 @@ a:focus-visible {
   gap: var(--sp-3);
   box-shadow: 
     var(--shadow-md),
-    0 1px 0 rgba(255, 255, 255, 0.03) inset;
+    0 1px 0 rgba(255, 255, 255, 0.02) inset; /* Ombra più sottile */
+  line-height: var(--lh-16); /* Standardizzato */
+  letter-spacing: 0.01em; /* Leggero letter-spacing */
 }
 
 .header-ticker::before {
@@ -472,23 +491,26 @@ a:focus-visible {
 
 .header-ticker-row--intro {
   font-size: var(--fs-15);
-  line-height: var(--lh-14);
+  line-height: var(--lh-16); /* Standardizzato */
   color: var(--ink);
   font-weight: 500;
+  letter-spacing: 0.01em;
 }
 
 .header-ticker-row--quality {
   font-size: var(--fs-13);
-  line-height: var(--lh-15);
+  line-height: var(--lh-16); /* Standardizzato */
   color: var(--ink-soft);
   font-weight: 400;
+  letter-spacing: 0.01em;
 }
 
 .header-ticker-row--meta {
-  font-size: var(--fs-12);
-  line-height: var(--lh-14);
+  font-size: var(--fs-13); /* Aumentato da 12px (WCAG) */
+  line-height: var(--lh-16); /* Standardizzato */
   color: var(--muted);
   font-weight: 400;
+  letter-spacing: 0.01em;
 }
 
 .header-ticker-text {
@@ -512,14 +534,21 @@ a:focus-visible {
 }
 
 .metric-inline-text {
-  font-weight: 600;
-  font-style: italic;
-  text-decoration: underline;
+  font-weight: 500; /* Meno pesante (da 600) */
+  font-style: normal; /* Rimuovi italic di default */
+  text-decoration: none; /* Rimuovi underline di default */
   text-decoration-thickness: 1.5px;
   text-underline-offset: 2px;
-  line-height: var(--lh-12);
+  line-height: var(--lh-16); /* Standardizzato */
   white-space: nowrap;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-base); /* Più fluido */
+  letter-spacing: 0.01em;
+}
+
+/* Underline solo al hover */
+.metric-inline:hover .metric-inline-text,
+.metric-inline:focus .metric-inline-text {
+  text-decoration: underline;
 }
 
 .metric-inline--neutral .metric-inline-text,
@@ -530,24 +559,42 @@ a:focus-visible {
 
 .metric-inline--ok .metric-inline-text,
 .metric-inline-text--ok {
-  color: var(--ok);
+  color: var(--ok); /* Già con opacità 0.88 */
+}
+
+.metric-inline--ok:hover .metric-inline-text,
+.metric-inline--ok:focus .metric-inline-text {
   text-decoration-color: var(--ok);
 }
 
 .metric-inline--warn .metric-inline-text,
 .metric-inline-text--warn {
-  color: var(--warn);
+  color: var(--warn); /* Già con opacità 0.88 */
+}
+
+.metric-inline--warn:hover .metric-inline-text,
+.metric-inline--warn:focus .metric-inline-text {
   text-decoration-color: var(--warn);
 }
 
 .metric-inline--err .metric-inline-text,
 .metric-inline-text--err {
-  color: var(--err);
+  color: var(--err); /* Già con opacità 0.88 */
+}
+
+.metric-inline--err:hover .metric-inline-text,
+.metric-inline--err:focus .metric-inline-text {
   text-decoration-color: var(--err);
 }
 
 .metric-inline:hover .metric-inline-text {
-  opacity: 0.95;
+  opacity: 0.9;
+}
+
+.metric-inline:focus-visible {
+  outline: 2.5px solid var(--brand-500);
+  outline-offset: 3px;
+  border-radius: 3px;
 }
 
 /* ===== METRICS DRAWER ===== */

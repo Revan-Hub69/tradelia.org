@@ -11,19 +11,20 @@
     var(--surface-card) 0%,
     color-mix(in oklab, var(--surface-card) 99%, var(--brand-600) 1%) 100%
   );
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.04); /* Bordo più sottile */
   border-radius: var(--radius-xl);
-  padding: var(--sp-4);
+  padding: var(--sp-5); /* Padding aumentato per respiro */
   display: flex;
   flex-direction: column;
-  gap: var(--sp-3);
+  gap: var(--sp-4); /* Gap aumentato per separazione */
   box-shadow: 
     var(--shadow-md),
-    0 1px 0 rgba(255, 255, 255, 0.03) inset;
+    0 1px 0 rgba(255, 255, 255, 0.02) inset; /* Ombra più sottile */
   font-family: var(--ff-sans);
   font-size: var(--fs-13);
-  line-height: var(--lh-15);
+  line-height: var(--lh-16); /* Standardizzato a 1.6 */
   color: var(--ink);
+  letter-spacing: 0.01em; /* Leggero letter-spacing per leggibilità */
 }
 
 /* Bordo sinistro colorato (come header-ticker) */
@@ -45,8 +46,10 @@
 .module-header {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-1_5);
-  margin-bottom: var(--sp-3);
+  gap: var(--sp-2); /* Gap aumentato */
+  margin-bottom: var(--sp-4); /* Margin aumentato per separazione */
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04); /* Separatore sottile */
 }
 
 .module-header-topline {
@@ -117,18 +120,20 @@
 }
 
 .module-title {
-  font-size: var(--fs-14);
-  font-weight: 700;
-  line-height: var(--lh-14);
+  font-size: var(--fs-15); /* Leggermente più grande */
+  font-weight: 600; /* Meno pesante (da 700) */
+  line-height: var(--lh-16); /* Standardizzato */
   color: var(--ink);
-  margin-top: var(--sp-1);
+  margin-top: var(--sp-2);
+  letter-spacing: -0.01em; /* Leggermente più compatto */
 }
 
 .module-desc {
-  font-size: var(--fs-12);
-  line-height: var(--lh-15);
+  font-size: var(--fs-13); /* Aumentato da 12px (WCAG) */
+  line-height: var(--lh-16); /* Standardizzato */
   color: var(--muted);
-  margin-top: var(--sp-1);
+  margin-top: var(--sp-1_5);
+  max-width: 65ch; /* Max-width per leggibilità */
 }
 
 /* ===== AI SUMMARY BOX ===== */
@@ -136,19 +141,20 @@
   background: transparent; /* Rimuovi background per evitare card nella card */
   border: none; /* Rimuovi bordo */
   border-radius: 0; /* Rimuovi border-radius */
-  padding: var(--sp-3) 0; /* Padding minimo, solo verticale */
-  margin-bottom: var(--sp-3); /* Spazio ridotto dopo summary */
-  border-top: 1px solid rgba(255, 255, 255, 0.06); /* Separatore sottile sopra */
-  padding-top: var(--sp-3);
+  padding: var(--sp-4) 0; /* Padding aumentato */
+  margin-bottom: var(--sp-4); /* Spazio aumentato */
+  border-top: 1px solid rgba(255, 255, 255, 0.05); /* Separatore più sottile */
+  padding-top: var(--sp-4);
 }
 
 .module-ai-summary-label {
-  font-size: var(--fs-10);
+  font-size: var(--fs-11); /* Aumentato da 10px */
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   color: var(--muted);
-  margin-bottom: var(--sp-2_5); /* Leggermente più spazio per separazione visiva */
+  margin-bottom: var(--sp-3); /* Spazio aumentato */
+  line-height: var(--lh-16); /* Standardizzato */
 }
 
 /* Header-ticker dentro AI Summary - rimuovi card styling per evitare card nella card */
@@ -185,7 +191,9 @@
 /* ===== MODULE TABS (Menu Orizzontale + Drawer) ===== */
 .module-tabs-wrapper {
   position: relative;
-  margin-top: var(--sp-5); /* Più spazio tra AI summary e menu tabs */
+  margin-top: var(--sp-4); /* Spazio uniforme */
+  padding-top: var(--sp-4);
+  border-top: 1px solid rgba(255, 255, 255, 0.04); /* Separatore sottile */
 }
 
 /* Menu tabs orizzontale scrollabile */
@@ -243,14 +251,14 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: 600px;
+  width: 520px; /* Ridotto da 600px per design più compatto */
   max-width: 90vw;
   background: color-mix(in oklab, var(--surface-card) 98%, white 2%); /* Leggermente più chiaro */
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.3);
+  border-left: 1px solid rgba(255, 255, 255, 0.04); /* Bordo più sottile */
+  box-shadow: -2px 0 16px rgba(0, 0, 0, 0.25); /* Ombra più sottile */
   z-index: 10000;
   transform: translateX(100%);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Easing più fluido */
+  transition: transform var(--transition-slow) cubic-bezier(0.4, 0, 0.2, 1); /* Usa token */
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -283,24 +291,26 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--sp-5) var(--sp-6) var(--sp-4);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Bordo più sottile */
   flex-shrink: 0;
   background: var(--surface-card);
 }
 
 .module-tabs-drawer-title {
   font-size: var(--fs-15);
-  font-weight: 700;
+  font-weight: 600; /* Meno pesante (da 700) */
   color: var(--ink);
   letter-spacing: -0.01em; /* Leggermente più compatto */
+  line-height: var(--lh-16); /* Standardizzato */
 }
 
 /* Breadcrumb opzionale nel drawer */
 .module-tabs-drawer-breadcrumb {
-  font-size: var(--fs-11);
+  font-size: var(--fs-12); /* Aumentato da 11px */
   color: var(--muted);
-  margin-top: var(--sp-1);
+  margin-top: var(--sp-1_5);
   font-weight: 400;
+  line-height: var(--lh-16); /* Standardizzato */
 }
 
 .module-tabs-drawer-close {
@@ -309,19 +319,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04); /* Più discreto */
+  border: 1px solid rgba(255, 255, 255, 0.06); /* Bordo più sottile */
   border-radius: var(--radius-sm);
   color: var(--muted);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-base); /* Più fluido */
   flex-shrink: 0;
 }
 
 .module-tabs-drawer-close:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
   color: var(--ink);
+}
+
+.module-tabs-drawer-close:focus-visible {
+  outline: 2.5px solid var(--brand-500);
+  outline-offset: 2px;
 }
 
 /* Drawer body (contenuto tab) */
@@ -329,8 +344,8 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden; /* Previeni scroll orizzontale */
-  padding: var(--sp-6) var(--sp-8) var(--sp-6) var(--sp-6);
-  line-height: var(--lh-16); /* Migliora leggibilità */
+  padding: var(--sp-6); /* Padding uniforme e simmetrico */
+  line-height: var(--lh-17); /* Line-height aumentato per leggibilità (1.7) */
   max-width: 100%;
   box-sizing: border-box;
 }
@@ -352,42 +367,108 @@
 .module-tabs-drawer-body .header-ticker .header-ticker-body {
   padding: 0 !important;
   margin: 0;
-  gap: var(--sp-3); /* Più spazio tra le righe */
+  gap: var(--sp-4); /* Spazio aumentato tra le righe */
 }
 
 .module-tabs-drawer-body .header-ticker .header-ticker-row {
   padding: 0 !important;
   margin: 0;
-  line-height: var(--lh-16); /* Migliora leggibilità */
+  line-height: var(--lh-17); /* Line-height aumentato (1.7) */
   max-width: 100%;
   box-sizing: border-box;
   min-width: 0; /* Permetti shrink */
+  max-width: 70ch; /* Max-width per leggibilità ottimale */
 }
 
-/* Migliora tipografia nel drawer - label più piccole, valori più grandi */
+/* Tipografia nel drawer - stile simile a header-ticker */
 .module-tabs-drawer-body .header-ticker-text {
   font-size: var(--fs-13);
+  font-weight: 400; /* Normale, non bold */
   color: var(--ink-soft);
   max-width: 100%;
   box-sizing: border-box;
   min-width: 0;
   word-break: break-word;
   overflow-wrap: break-word;
+  font-style: normal; /* Rimuovi italic di default */
+  letter-spacing: 0.01em; /* Leggero letter-spacing */
 }
 
+/* Metriche nel drawer - stile header-ticker con colorazione semaforica */
 .module-tabs-drawer-body .metric-inline-text {
   font-size: var(--fs-14);
-  font-weight: 600;
-  font-style: italic;
+  font-weight: 500; /* Leggermente più pesante ma non bold */
+  font-style: normal; /* Rimuovi italic */
   max-width: 100%;
   box-sizing: border-box;
   min-width: 0;
   word-break: break-word;
   overflow-wrap: break-word;
   white-space: normal !important; /* Forza wrap anche su desktop nel drawer */
+  letter-spacing: 0.01em; /* Leggero letter-spacing */
+  
+  /* Rimuovi underline di default */
+  text-decoration: none;
+  text-decoration-thickness: 0;
+  text-underline-offset: 0;
+  
+  /* Transizione smooth */
+  transition: text-decoration var(--transition-base), opacity var(--transition-base), color var(--transition-base);
 }
 
-/* Migliora stile metriche nel drawer */
+/* Colorazione semaforica (già presente, ma assicuriamoci funzioni) */
+.module-tabs-drawer-body .metric-inline--ok .metric-inline-text,
+.module-tabs-drawer-body .metric-inline-text--ok {
+  color: var(--ok);
+}
+
+.module-tabs-drawer-body .metric-inline--warn .metric-inline-text,
+.module-tabs-drawer-body .metric-inline-text--warn {
+  color: var(--warn);
+}
+
+.module-tabs-drawer-body .metric-inline--err .metric-inline-text,
+.module-tabs-drawer-body .metric-inline-text--err {
+  color: var(--err);
+}
+
+.module-tabs-drawer-body .metric-inline--neutral .metric-inline-text,
+.module-tabs-drawer-body .metric-inline-text--neutral {
+  color: var(--ink-soft);
+}
+
+/* Underline solo al hover/click */
+.module-tabs-drawer-body .metric-inline:hover .metric-inline-text,
+.module-tabs-drawer-body .metric-inline:focus .metric-inline-text,
+.module-tabs-drawer-body .metric-inline:active .metric-inline-text {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+  opacity: 0.9;
+}
+
+/* Colore underline al hover (stesso colore del testo) */
+.module-tabs-drawer-body .metric-inline--ok:hover .metric-inline-text,
+.module-tabs-drawer-body .metric-inline--ok:focus .metric-inline-text {
+  text-decoration-color: var(--ok);
+}
+
+.module-tabs-drawer-body .metric-inline--warn:hover .metric-inline-text,
+.module-tabs-drawer-body .metric-inline--warn:focus .metric-inline-text {
+  text-decoration-color: var(--warn);
+}
+
+.module-tabs-drawer-body .metric-inline--err:hover .metric-inline-text,
+.module-tabs-drawer-body .metric-inline--err:focus .metric-inline-text {
+  text-decoration-color: var(--err);
+}
+
+.module-tabs-drawer-body .metric-inline--neutral:hover .metric-inline-text,
+.module-tabs-drawer-body .metric-inline--neutral:focus .metric-inline-text {
+  text-decoration-color: var(--muted);
+}
+
+/* Stile metriche nel drawer */
 .module-tabs-drawer-body .metric-inline {
   transition: opacity var(--transition-fast);
   max-width: 100%;
@@ -397,9 +478,10 @@
 }
 
 .module-tabs-drawer-body .metric-inline:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.2);
-  outline-offset: 2px;
-  border-radius: 2px;
+  outline: 2px solid var(--brand-500);
+  outline-offset: 3px;
+  border-radius: 3px;
+  outline-width: 2.5px; /* Più visibile */
 }
 
 /* Scrollbar personalizzata per drawer */
@@ -480,8 +562,9 @@
 }
 
 .module-tab-button:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.2);
-  outline-offset: 2px;
+  outline: 2.5px solid var(--brand-500);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
 }
 
 .module-tab-button[data-active="true"] {
@@ -563,19 +646,19 @@
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .module-card {
-    padding: var(--sp-3);
+    padding: var(--sp-4); /* Padding aumentato anche su mobile */
   }
   
   .module-header-topline {
-    gap: var(--sp-1_5);
+    gap: var(--sp-2);
   }
   
   .module-title {
-    font-size: var(--fs-13);
+    font-size: var(--fs-14); /* Manteniamo leggibile (da 13px) */
   }
   
   .module-desc {
-    font-size: var(--fs-11);
+    font-size: var(--fs-12); /* Manteniamo leggibile (da 11px) */
   }
   
   .module-tabs-drawer {
@@ -600,10 +683,11 @@
   }
   
   .module-tabs-drawer-body {
-    padding: var(--sp-3) var(--sp-3);
+    padding: var(--sp-4); /* Padding aumentato su mobile */
     max-width: 100%;
     overflow-x: hidden; /* Previeni scroll orizzontale */
     box-sizing: border-box;
+    line-height: var(--lh-17); /* Line-height aumentato anche su mobile */
   }
   
   /* Forza contenuto a rispettare viewport */
@@ -636,9 +720,9 @@
     min-width: 0;
   }
   
-  /* Font-size più piccolo su mobile */
+  /* Font-size ottimizzato su mobile (manteniamo leggibilità WCAG) */
   .module-tabs-drawer-body .header-ticker-text {
-    font-size: var(--fs-12);
+    font-size: var(--fs-13); /* Manteniamo 13px (WCAG) invece di 12px */
   }
   
   /* Metriche possono andare a capo su mobile */
@@ -650,7 +734,7 @@
   }
   
   .module-tabs-drawer-body .metric-inline-text {
-    font-size: var(--fs-13);
+    font-size: var(--fs-14); /* Manteniamo 14px invece di 13px per leggibilità */
     /* Permetti wrap delle metriche su mobile nel drawer */
     white-space: normal !important;
     word-break: break-word;
@@ -658,6 +742,11 @@
     max-width: 100%;
     box-sizing: border-box;
     min-width: 0;
+  }
+  
+  /* Max-width ridotto su mobile per adattarsi meglio */
+  .module-tabs-drawer-body .header-ticker .header-ticker-row {
+    max-width: 100%; /* Su mobile usa tutta la larghezza */
   }
   
   .module-tabs-drawer-header {

@@ -188,7 +188,7 @@ function generateAISummaryRows(data) {
           key: 'RiskWindow',
           value: String(riskWindow),
           label: 'RiskWindow',
-          tone: 'yellow'
+          tone: 'warn' // yellow -> warn
         }
       ]
     });
@@ -375,7 +375,7 @@ function generateRegimeTabRows(data) {
           key: 'RiskWindow',
           value: String(d.RiskWindow?.raw || d.RiskWindow || '—'),
           label: 'RiskWindow',
-          tone: 'yellow'
+          tone: 'warn' // yellow -> warn
         }
       ]
     });
@@ -557,21 +557,21 @@ function generateStreetTabRows(data) {
 // Helper functions per formattazione
 function getToneForStrategyMode(mode) {
   if (typeof mode !== 'string') return 'neutral';
-  if (mode.includes('Momentum')) return 'green';
-  if (mode.includes('Pullback')) return 'red';
+  if (mode.includes('Momentum')) return 'ok'; // green -> ok
+  if (mode.includes('Pullback')) return 'err'; // red -> err
   return 'neutral';
 }
 
 function getToneForRegimeScore(score) {
   if (typeof score === 'string') {
     const num = parseFloat(score.replace(/[^0-9.-]/g, ''));
-    if (num > 0.3) return 'green';
-    if (num < -0.3) return 'red';
+    if (num > 0.3) return 'ok'; // green -> ok
+    if (num < -0.3) return 'err'; // red -> err
     return 'neutral';
   }
   if (typeof score === 'number') {
-    if (score > 0.3) return 'green';
-    if (score < -0.3) return 'red';
+    if (score > 0.3) return 'ok'; // green -> ok
+    if (score < -0.3) return 'err'; // red -> err
     return 'neutral';
   }
   return 'neutral';
@@ -601,8 +601,8 @@ function formatBreadth(breadth) {
 
 function getToneForBreadth(breadth) {
   if (typeof breadth === 'number') {
-    if (breadth > 0.6) return 'green';
-    if (breadth < 0.4) return 'red';
+    if (breadth > 0.6) return 'ok'; // green -> ok
+    if (breadth < 0.4) return 'err'; // red -> err
     return 'neutral';
   }
   return 'neutral';
@@ -610,8 +610,8 @@ function getToneForBreadth(breadth) {
 
 function getToneForRiskTilt(tilt) {
   if (typeof tilt !== 'string') return 'neutral';
-  if (tilt.includes('Pro-rischio') || tilt.includes('risk-on')) return 'green';
-  if (tilt.includes('Difensivo') || tilt.includes('risk-off')) return 'red';
+  if (tilt.includes('Pro-rischio') || tilt.includes('risk-on')) return 'ok'; // green -> ok
+  if (tilt.includes('Difensivo') || tilt.includes('risk-off')) return 'err'; // red -> err
   return 'neutral';
 }
 
