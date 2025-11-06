@@ -236,79 +236,8 @@
   background: var(--muted);
 }
 
-/* Drawer overlay (backdrop) */
-.module-tabs-drawer-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  /* z-index gestito dinamicamente da overlay-manager */
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity var(--transition-base), visibility var(--transition-base);
-  pointer-events: none;
-  will-change: opacity, visibility; /* Ottimizza animazione */
-  backface-visibility: hidden; /* Previeni flickering */
-}
-
-.module-tabs-wrapper[data-drawer-open="true"] .module-tabs-drawer-overlay {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: all;
-  /* Assicura che l'overlay non interferisca con il drawer */
-  z-index: inherit; /* Usa z-index dall'overlay-manager */
-}
-
-/* Assicura che il drawer sia sempre sopra l'overlay quando aperto */
-/* Il drawer è position: fixed, quindi z-index è gestito da overlay-manager */
-
-/* Drawer container (si apre sopra la pagina) - Design istituzionale */
-.module-tabs-drawer {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 520px; /* Ridotto da 600px per design più compatto */
-  max-width: 90vw;
-  background: color-mix(in oklab, var(--surface-card) 98%, white 2%); /* Leggermente più chiaro */
-  border-left: 1px solid rgba(255, 255, 255, 0.04); /* Bordo più sottile */
-  box-shadow: -2px 0 16px rgba(0, 0, 0, 0.25); /* Ombra più sottile */
-  /* z-index gestito dinamicamente da overlay-manager (overlay + 10) */
-  transform: translateX(100%);
-  transition: transform var(--transition-slow) cubic-bezier(0.4, 0, 0.2, 1); /* Usa token */
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  will-change: transform; /* Ottimizza animazione per evitare sfarfallio */
-  backface-visibility: hidden; /* Previeni flickering su alcuni browser */
-  -webkit-font-smoothing: antialiased; /* Smooth rendering */
-  pointer-events: auto !important; /* Forza pointer-events sempre attivo sul drawer */
-  visibility: visible !important; /* Forza visibilità sempre attiva quando aperto */
-  display: flex !important; /* Forza display flex sempre attivo */
-}
-
-/* Footer drawer con sfumatura blu sottile */
-.module-tabs-drawer::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(37, 99, 235, 0.2) 50%,
-    transparent 100%
-  );
-  pointer-events: none;
-}
-
-.module-tabs-wrapper[data-drawer-open="true"] .module-tabs-drawer {
-  transform: translateX(0);
-  pointer-events: auto !important; /* Forza pointer-events sempre attivo quando aperto */
-  visibility: visible !important; /* Forza visibilità sempre attiva quando aperto */
-  opacity: 1 !important; /* Forza opacità sempre al 100% quando aperto */
-}
+/* Drawer overlay e drawer rimossi - ora usiamo unified-drawer (glossary-drawer) */
+/* Gli stili del drawer sono in glossary-drawer.css */
 
 /* Drawer header - Design istituzionale */
 .module-tabs-drawer-header {

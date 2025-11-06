@@ -2,7 +2,7 @@
 // Helper per generare header moduli unificato
 // -----------------------------------------------------------
 
-import { registerOverlay, unregisterOverlay, OVERLAY_TYPES } from '../utils/overlay-manager.js';
+import { unifiedDrawer } from './unified-drawer.js';
 
 /**
  * Genera HTML header per modulo
@@ -122,27 +122,9 @@ export function renderModuleTabsSidebar(tabs = []) {
     </div>
   `;
 
-  // Drawer HTML (si apre quando si clicca una tab)
-  const drawerHTML = `
-    <div class="module-tabs-drawer-overlay"></div>
-    
-    <div class="module-tabs-drawer">
-      <div class="module-tabs-drawer-header">
-        <div>
-          <div class="module-tabs-drawer-title" data-drawer-title="Sezioni"></div>
-          <div class="module-tabs-drawer-breadcrumb" data-drawer-breadcrumb></div>
-        </div>
-        <button class="module-tabs-drawer-close" type="button" aria-label="Chiudi drawer">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </button>
-      </div>
-      <div class="module-tabs-drawer-body" data-drawer-content>
-        <!-- Contenuto caricato dinamicamente -->
-      </div>
-    </div>
-  `;
+  // Drawer HTML rimosso - ora usiamo unified-drawer (stessa struttura del glossary-drawer che funziona)
+  // Il drawer viene creato dinamicamente da unified-drawer.js
+  const drawerHTML = ``;
 
   // Content panels (nascosti, usati solo per generare contenuto drawer)
   const contentHTML = `
@@ -176,164 +158,54 @@ export function bindModuleTabs(container) {
   if (wrapper.dataset.bound === 'true') return;
   wrapper.dataset.bound = 'true';
 
-  const closeBtn = wrapper.querySelector('.module-tabs-drawer-close');
-  const overlay = wrapper.querySelector('.module-tabs-drawer-overlay');
-  const drawer = wrapper.querySelector('.module-tabs-drawer');
-  const drawerTitle = wrapper.querySelector('[data-drawer-title]');
-  const drawerBreadcrumb = wrapper.querySelector('[data-drawer-breadcrumb]');
-  const drawerContent = wrapper.querySelector('[data-drawer-content]');
   const buttons = wrapper.querySelectorAll('.module-tab-button');
   const panels = container.querySelectorAll('.module-tab-panel');
+  const moduleCard = wrapper.closest('.module-card');
+  const moduleBadge = moduleCard?.querySelector('.module-badge');
+  const badgeText = moduleBadge?.textContent || '';
 
   let isOpening = false; // Flag per prevenire click multipli rapidi
 
-  // ID univoco per questo drawer
-  const drawerId = `module-tabs-drawer-${wrapper.closest('.module-card')?.querySelector('.module-badge')?.textContent || 'default'}`;
-
-  // Apri/chiudi drawer
+  // Apri drawer usando unified-drawer (stessa struttura del glossary-drawer che funziona)
   function openDrawer(tabId, tabTitle) {
     // Preveni apertura multipla
     if (isOpening) return;
     isOpening = true;
 
-    // Aggiorna stato wrapper PRIMA di modificare contenuto (per evitare sfarfallio)
-    wrapper.dataset.drawerOpen = 'true';
-    
-    // Forza visibilità e pointer-events sul drawer (previene bug di scomparsa)
-    if (drawer) {
-      drawer.style.display = 'flex';
-      drawer.style.visibility = 'visible';
-      drawer.style.opacity = '1';
-      drawer.style.pointerEvents = 'auto';
-      // Trigger evento per avviare monitoraggio
-      wrapper.dispatchEvent(new CustomEvent('drawer-opened'));
-    }
-    
-    // Registra overlay nello stack (gestisce z-index e overflow)
-    // Il drawer è separato dall'overlay, passa entrambi
-    if (overlay) {
-      registerOverlay(drawerId, OVERLAY_TYPES.MODULE_TABS, overlay, drawer);
-    }
-    
-    // Aggiorna titolo drawer
-    if (drawerTitle) {
-      drawerTitle.textContent = tabTitle || 'Sezioni';
-    }
-    
-    // Aggiorna breadcrumb (opzionale)
-    if (drawerBreadcrumb) {
-      // Trova il badge del modulo (F1B, F2, ecc.)
-      const moduleCard = wrapper.closest('.module-card');
-      const moduleBadge = moduleCard?.querySelector('.module-badge');
-      const badgeText = moduleBadge?.textContent || '';
-      drawerBreadcrumb.textContent = badgeText ? `${badgeText} > ${tabTitle}` : tabTitle;
-    }
-    
-    // Carica contenuto tab nel drawer
-    if (drawerContent && panels.length > 0) {
-      const panel = Array.from(panels).find(p => p.dataset.tabId === tabId);
-      if (panel) {
-        // Pulisci contenuto precedente immediatamente (senza loading state per evitare sfarfallio)
-        drawerContent.innerHTML = '';
-        
-        // Usa doppio requestAnimationFrame per assicurare che l'animazione CSS sia iniziata
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            // Copia HTML del panel nel drawer
-            drawerContent.innerHTML = panel.innerHTML;
-            
-            // Se c'è un container per header-ticker, montalo
-            const tickerContainer = drawerContent.querySelector('[data-tab-ticker]');
-            if (tickerContainer && !tickerContainer.querySelector('.header-ticker')) {
-              // Trigger evento custom per montare header-ticker (gestito da f1b.js)
-              const event = new CustomEvent('drawer-tab-opened', {
-                detail: { tabId, container: tickerContainer }
-              });
-              wrapper.dispatchEvent(event);
-            }
-            
-            isOpening = false; // Reset flag dopo che il contenuto è caricato
-          });
-        });
-      } else {
-        isOpening = false;
-      }
-    } else {
+    // Trova il panel corrispondente
+    const panel = Array.from(panels).find(p => p.dataset.tabId === tabId);
+    if (!panel) {
       isOpening = false;
+      return;
     }
-  }
 
-  function closeDrawer() {
-    if (isOpening) return; // Non chiudere mentre si apre
-    wrapper.dataset.drawerOpen = 'false';
-    
-    // Trigger evento per fermare monitoraggio
-    wrapper.dispatchEvent(new CustomEvent('drawer-closed'));
-    
-    // Rimuovi overlay dallo stack (gestisce overflow automaticamente)
-    unregisterOverlay(drawerId);
-    
-    // Pulisci contenuto dopo che l'animazione di chiusura è completata
-    if (drawerContent) {
-      setTimeout(() => {
-        if (wrapper.dataset.drawerOpen === 'false') {
-          drawerContent.innerHTML = '';
+    // Prepara contenuto (copia HTML del panel)
+    const content = panel.innerHTML;
+
+    // Apri unified drawer (stessa struttura del glossary-drawer che funziona)
+    unifiedDrawer.open({
+      id: `module-tabs-${badgeText}-${tabId}`,
+      title: tabTitle || 'Sezioni',
+      breadcrumb: badgeText ? `${badgeText} > ${tabTitle}` : tabTitle,
+      content: content
+    });
+
+    // Se c'è un container per header-ticker, montalo dopo che il drawer è aperto
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const drawerContent = document.querySelector('.glossary-drawer-content');
+        if (drawerContent) {
+          const tickerContainer = drawerContent.querySelector('[data-tab-ticker]');
+          if (tickerContainer && !tickerContainer.querySelector('.header-ticker')) {
+            // Trigger evento custom per montare header-ticker (gestito da f1b.js)
+            const event = new CustomEvent('drawer-tab-opened', {
+              detail: { tabId, container: tickerContainer }
+            });
+            wrapper.dispatchEvent(event);
+          }
         }
-      }, 300); // Match transition duration
-    }
-  }
-
-  // Listener per close request dall'overlay manager (ESC key)
-  if (overlay) {
-    overlay.addEventListener('overlay-close-request', (e) => {
-      if (e.detail.id === drawerId) {
-        closeDrawer();
-      }
-    });
-  }
-
-  // Monitora e previeni scomparsa del drawer quando aperto
-  // Questo risolve il bug dove il drawer scompare quando il mouse è sulla pagina
-  if (drawer) {
-    const checkDrawerVisibility = () => {
-      if (wrapper.dataset.drawerOpen === 'true' && drawer) {
-        // Forza sempre visibilità quando aperto
-        if (drawer.style.display === 'none' || 
-            drawer.style.visibility === 'hidden' || 
-            drawer.style.opacity === '0') {
-          drawer.style.display = 'flex';
-          drawer.style.visibility = 'visible';
-          drawer.style.opacity = '1';
-          drawer.style.pointerEvents = 'auto';
-        }
-      }
-    };
-    
-    // Controlla periodicamente quando il drawer è aperto
-    let visibilityCheckInterval = null;
-    wrapper.addEventListener('drawer-opened', () => {
-      if (visibilityCheckInterval) clearInterval(visibilityCheckInterval);
-      visibilityCheckInterval = setInterval(checkDrawerVisibility, 100);
-    });
-    
-    wrapper.addEventListener('drawer-closed', () => {
-      if (visibilityCheckInterval) {
-        clearInterval(visibilityCheckInterval);
-        visibilityCheckInterval = null;
-      }
-    });
-  }
-
-  if (closeBtn) {
-    closeBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      closeDrawer();
-    });
-  }
-
-  if (overlay) {
-    overlay.addEventListener('click', () => {
-      closeDrawer();
+        isOpening = false;
+      });
     });
   }
 
@@ -367,7 +239,5 @@ export function bindModuleTabs(container) {
       }
     });
   });
-
-  // ESC gestito da overlay-manager (rimosso listener duplicato)
 }
 

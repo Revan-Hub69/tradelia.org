@@ -92,13 +92,153 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: var(--sp-5) var(--sp-6);
+  padding: var(--sp-6); /* Padding uniforme come module-tabs-drawer-body */
   display: flex;
   flex-direction: column;
   gap: var(--sp-4);
   min-height: 0; /* Permetti shrink */
   word-wrap: break-word;
   word-break: break-word;
+  line-height: var(--lh-17); /* Line-height aumentato per leggibilità (1.7) */
+  max-width: 100%;
+  box-sizing: border-box;
+  /* Previeni flickering durante il caricamento del contenuto */
+  contain: layout style paint; /* Ottimizza rendering */
+  transform: translateZ(0); /* Force GPU acceleration */
+}
+
+/* Header-ticker dentro drawer - rimuovi tutto il padding interno e bordo colorato */
+.glossary-drawer-content .header-ticker {
+  background: transparent;
+  border: none;
+  padding: 0 !important;
+  box-shadow: none;
+  margin: 0;
+}
+
+/* Rimuovi bordo sinistro colorato (::before) quando è nel drawer */
+.glossary-drawer-content .header-ticker::before {
+  display: none !important;
+}
+
+.glossary-drawer-content .header-ticker .header-ticker-body {
+  padding: 0 !important;
+  margin: 0;
+  gap: var(--sp-4); /* Spazio aumentato tra le righe */
+}
+
+.glossary-drawer-content .header-ticker .header-ticker-row {
+  padding: 0 !important;
+  margin: 0;
+  line-height: var(--lh-17); /* Line-height aumentato (1.7) */
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0; /* Permetti shrink */
+  max-width: 70ch; /* Max-width per leggibilità ottimale */
+}
+
+/* Tipografia nel drawer - stile simile a header-ticker */
+.glossary-drawer-content .header-ticker-text {
+  font-size: var(--fs-13);
+  font-weight: 400; /* Normale, non bold */
+  color: var(--ink-soft);
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  font-style: normal; /* Rimuovi italic di default */
+  letter-spacing: 0.01em; /* Leggero letter-spacing */
+}
+
+/* Metriche nel drawer - stile header-ticker con colorazione semaforica */
+.glossary-drawer-content .metric-inline-text {
+  font-size: var(--fs-14);
+  font-weight: 500; /* Leggermente più pesante ma non bold */
+  font-style: normal; /* Rimuovi italic */
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal !important; /* Forza wrap anche su desktop nel drawer */
+  letter-spacing: 0.01em; /* Leggero letter-spacing */
+  
+  /* Rimuovi underline di default */
+  text-decoration: none;
+  text-decoration-thickness: 0;
+  text-underline-offset: 0;
+  
+  /* Transizione smooth */
+  transition: text-decoration var(--transition-base), opacity var(--transition-base), color var(--transition-base);
+}
+
+/* Colorazione semaforica */
+.glossary-drawer-content .metric-inline--ok .metric-inline-text,
+.glossary-drawer-content .metric-inline-text--ok {
+  color: var(--ok);
+}
+
+.glossary-drawer-content .metric-inline--warn .metric-inline-text,
+.glossary-drawer-content .metric-inline-text--warn {
+  color: var(--warn);
+}
+
+.glossary-drawer-content .metric-inline--err .metric-inline-text,
+.glossary-drawer-content .metric-inline-text--err {
+  color: var(--err);
+}
+
+.glossary-drawer-content .metric-inline--neutral .metric-inline-text,
+.glossary-drawer-content .metric-inline-text--neutral {
+  color: var(--ink-soft);
+}
+
+/* Underline solo al hover/click */
+.glossary-drawer-content .metric-inline:hover .metric-inline-text,
+.glossary-drawer-content .metric-inline:focus .metric-inline-text,
+.glossary-drawer-content .metric-inline:active .metric-inline-text {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+  opacity: 0.9;
+}
+
+/* Colore underline al hover (stesso colore del testo) */
+.glossary-drawer-content .metric-inline--ok:hover .metric-inline-text,
+.glossary-drawer-content .metric-inline--ok:focus .metric-inline-text {
+  text-decoration-color: var(--ok);
+}
+
+.glossary-drawer-content .metric-inline--warn:hover .metric-inline-text,
+.glossary-drawer-content .metric-inline--warn:focus .metric-inline-text {
+  text-decoration-color: var(--warn);
+}
+
+.glossary-drawer-content .metric-inline--err:hover .metric-inline-text,
+.glossary-drawer-content .metric-inline--err:focus .metric-inline-text {
+  text-decoration-color: var(--err);
+}
+
+.glossary-drawer-content .metric-inline--neutral:hover .metric-inline-text,
+.glossary-drawer-content .metric-inline--neutral:focus .metric-inline-text {
+  text-decoration-color: var(--muted);
+}
+
+/* Stile metriche nel drawer */
+.glossary-drawer-content .metric-inline {
+  transition: opacity var(--transition-fast);
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  flex-shrink: 1;
+}
+
+.glossary-drawer-content .metric-inline:focus-visible {
+  outline: 2px solid var(--brand-500);
+  outline-offset: 3px;
+  border-radius: 3px;
+  outline-width: 2.5px; /* Più visibile */
 }
 
 /* Search */

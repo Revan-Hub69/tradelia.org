@@ -242,24 +242,15 @@ async function openTermDetail(key) {
   const term = GLOSSARY_DRAWER._data[key];
   if (!term) return;
   
-  // Usa metric-popup per mostrare il dettaglio (riutilizza componente esistente)
+  // Apri drawer glossario (stesso sistema di glossario.html)
   try {
-    const { metricPopup } = await import('./metric-popup.js');
-    // Crea un oggetto metric compatibile
-    const metricData = {
-      key: key,
-      label: term.nomeTecnico || term.title || key,
-      value: null,
-      what: term.definizioneAccademica || term.what || '',
-      how: term.spiegazioneAI || term.how || '',
-      source: term.fonteAccademica || term.source || '',
-      category: term.universo || term.category || '',
-      difficulty: term.difficolta || ''
-    };
-    
-    metricPopup.open(metricData, [metricData]);
+    const { glossaryPopup } = await import('./glossary-popup.js');
+    if (glossaryPopup && glossaryPopup.openTerm) {
+      await glossaryPopup.openTerm(key);
+    }
   } catch (err) {
-    Logger.warn('GlossaryDrawer', 'Errore apertura popup metrica', err);
+    Logger.error('GlossaryDrawer', 
+      'Errore apertura drawer glossario', err);
   }
 }
 
