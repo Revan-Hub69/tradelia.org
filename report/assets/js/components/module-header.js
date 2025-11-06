@@ -191,15 +191,18 @@ export function bindModuleTabs(container) {
     });
 
     // Se c'è un container per header-ticker, montalo dopo che il drawer è aperto
+    // Usa doppio requestAnimationFrame per assicurarsi che il drawer sia completamente renderizzato
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        const drawerContent = document.querySelector('.glossary-drawer-content');
+        // Cerca il drawer content (può essere dentro unified-drawer)
+        const drawerContent = document.querySelector('.glossary-drawer-content.module-tabs-content-wrapper');
         if (drawerContent) {
           const tickerContainer = drawerContent.querySelector('[data-tab-ticker]');
           if (tickerContainer && !tickerContainer.querySelector('.header-ticker')) {
             // Trigger evento custom per montare header-ticker (gestito da f1b.js)
             const event = new CustomEvent('drawer-tab-opened', {
-              detail: { tabId, container: tickerContainer }
+              detail: { tabId, container: tickerContainer },
+              bubbles: true
             });
             wrapper.dispatchEvent(event);
           }

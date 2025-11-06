@@ -104,6 +104,33 @@ function open(config) {
     } else {
       UNIFIED_DRAWER._content.innerHTML = '';
     }
+    
+    // IMPORTANTE: Event delegation per click su metriche nel drawer
+    // Questo assicura che i click funzionino anche se i click handler non sono bindati correttamente
+    if (!UNIFIED_DRAWER._content.__metricClickBound) {
+      UNIFIED_DRAWER._content.__metricClickBound = true;
+      UNIFIED_DRAWER._content.addEventListener('click', async (e) => {
+        // Cerca il button metric più vicino
+        const metricButton = e.target.closest('.metric-inline[data-metric]');
+        if (metricButton) {
+          e.stopPropagation();
+          e.preventDefault();
+          const metricKey = metricButton.dataset.metric;
+          if (metricKey) {
+            Logger.debug('UnifiedDrawer', `Click su metrica nel drawer: ${metricKey}`);
+            try {
+              // Apri drawer glossario sopra il drawer attuale
+              const { glossaryPopup } = await import('./glossary-popup.js');
+              if (glossaryPopup && glossaryPopup.openTerm) {
+                await glossaryPopup.openTerm(metricKey);
+              }
+            } catch (err) {
+              Logger.error('UnifiedDrawer', 'Errore apertura drawer glossario', err);
+            }
+          }
+        }
+      }, { capture: true }); // Usa capture per intercettare prima che altri handler possano interferire
+    }
   }
   
   // Apri drawer

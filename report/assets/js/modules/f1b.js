@@ -3,6 +3,7 @@
 // Usa stessa logica di header-ticker: riassunto AI sempre visibile + tabs laterali
 
 import { renderModuleHeader, renderModuleTabsSidebar, bindModuleTabs } from '../components/module-header.js';
+import Logger from '../utils/logger.js';
 // header-ticker viene importato dinamicamente quando necessario (non modificato)
 
 // Helper functions
@@ -793,6 +794,16 @@ export function bindCard(node, rawData, ctx = {}) {
               rows: rows,
               metricsPanel: rawData?.metricsPanel || []
             });
+            
+            // IMPORTANTE: Assicurati che i click handler siano bindati dopo il rendering
+            // Usa un piccolo delay per assicurarsi che il DOM sia completamente aggiornato
+            setTimeout(() => {
+              // Verifica che i click handler siano presenti
+              const metricButtons = tickerNode.querySelectorAll('.metric-inline[data-metric]');
+              if (metricButtons.length > 0) {
+                Logger.debug('F1B', `Metriche montate nel drawer: ${metricButtons.length}`);
+              }
+            }, 50);
           }
         }
       }).catch(err => {

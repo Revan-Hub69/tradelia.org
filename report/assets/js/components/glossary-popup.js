@@ -131,7 +131,7 @@ async function openTerm(key) {
     });
     
     overlay.hidden = false;
-    document.body.style.overflow = 'hidden';
+    // NOTA: overflow gestito da overlay-manager.js (non impostare qui)
     GLOSSARY_POPUP._isOpen = true;
     registerOverlay(GLOSSARY_POPUP._overlayId, OVERLAY_TYPES.GLOSSARY, overlay, panel);
     return;
@@ -217,10 +217,10 @@ async function openTerm(key) {
   
   // Apri drawer (stesso sistema di glossario.html)
   overlay.hidden = false;
-  document.body.style.overflow = 'hidden'; // Stesso sistema di glossario.html
+  // NOTA: overflow gestito da overlay-manager.js (non impostare qui)
   GLOSSARY_POPUP._isOpen = true;
   
-  // Registra overlay nello stack (gestisce z-index)
+  // Registra overlay nello stack (gestisce z-index e overflow)
   registerOverlay(GLOSSARY_POPUP._overlayId, OVERLAY_TYPES.GLOSSARY, overlay, panel);
   
   Logger.debug('GlossaryPopup', `Drawer aperto per termine: ${key}`);
@@ -231,10 +231,10 @@ function close() {
   if (!GLOSSARY_POPUP._overlay || !GLOSSARY_POPUP._isOpen) return;
   
   GLOSSARY_POPUP._overlay.hidden = true;
-  document.body.style.overflow = ''; // Stesso sistema di glossario.html
+  // NOTA: overflow gestito da overlay-manager.js (non impostare qui)
   GLOSSARY_POPUP._isOpen = false;
   
-  // Rimuovi overlay dallo stack
+  // Rimuovi overlay dallo stack (gestisce anche overflow)
   unregisterOverlay(GLOSSARY_POPUP._overlayId);
   
   Logger.debug('GlossaryPopup', 'Drawer chiuso');
