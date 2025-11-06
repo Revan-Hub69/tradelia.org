@@ -328,7 +328,8 @@ async function open() {
   GLOSSARY_DRAWER._isOpen = true;
   
   // Registra overlay nello stack (gestisce z-index e overflow)
-  registerOverlay(GLOSSARY_DRAWER._overlayId, OVERLAY_TYPES.GLOSSARY, GLOSSARY_DRAWER._overlay);
+  // Passa anche il panel come drawerEl per z-index corretto
+  registerOverlay(GLOSSARY_DRAWER._overlayId, OVERLAY_TYPES.GLOSSARY, GLOSSARY_DRAWER._overlay, GLOSSARY_DRAWER._panel);
   
   // Focus search
   const searchInput = GLOSSARY_DRAWER._panel.querySelector('#glossary-drawer-search-input');

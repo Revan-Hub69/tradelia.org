@@ -583,10 +583,14 @@ a:focus-visible {
   letter-spacing: 0.01em;
 }
 
-/* Underline solo al hover */
+/* Underline solo al hover - stesso stile del drawer */
 .metric-inline:hover .metric-inline-text,
-.metric-inline:focus .metric-inline-text {
+.metric-inline:focus .metric-inline-text,
+.metric-inline:active .metric-inline-text {
   text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+  opacity: 0.9;
 }
 
 .metric-inline--neutral .metric-inline-text,
@@ -601,7 +605,8 @@ a:focus-visible {
 }
 
 .metric-inline--ok:hover .metric-inline-text,
-.metric-inline--ok:focus .metric-inline-text {
+.metric-inline--ok:focus .metric-inline-text,
+.metric-inline--ok:active .metric-inline-text {
   text-decoration-color: var(--ok);
 }
 
@@ -611,7 +616,8 @@ a:focus-visible {
 }
 
 .metric-inline--warn:hover .metric-inline-text,
-.metric-inline--warn:focus .metric-inline-text {
+.metric-inline--warn:focus .metric-inline-text,
+.metric-inline--warn:active .metric-inline-text {
   text-decoration-color: var(--warn);
 }
 
@@ -621,12 +627,15 @@ a:focus-visible {
 }
 
 .metric-inline--err:hover .metric-inline-text,
-.metric-inline--err:focus .metric-inline-text {
+.metric-inline--err:focus .metric-inline-text,
+.metric-inline--err:active .metric-inline-text {
   text-decoration-color: var(--err);
 }
 
-.metric-inline:hover .metric-inline-text {
-  opacity: 0.9;
+.metric-inline--neutral:hover .metric-inline-text,
+.metric-inline--neutral:focus .metric-inline-text,
+.metric-inline--neutral:active .metric-inline-text {
+  text-decoration-color: var(--muted);
 }
 
 .metric-inline:focus-visible {
