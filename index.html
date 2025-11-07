@@ -1110,26 +1110,53 @@ Professionale</span>
     if (window.lucide) lucide.createIcons();
 
     const heroTyping = document.getElementById('hero-typing');
-    if (heroTyping) {
-      // Usa newline invece di <br> per cursore che segue tutte le righe
-      new Typed('#hero-typing', {
+    if (heroTyping && typeof Typed !== 'undefined') {
+      // Typing effect professionale - basato su principi di design istituzionale
+      const typed = new Typed('#hero-typing', {
         strings: [
           'Analisi Finanziaria\nProfessionale',
           'Potenza AI\nModulare',
           'Metodo\nAccademico',
           'Privacy\nTotale'
         ],
-        typeSpeed: 90,
-        backSpeed: 55,
-        backDelay: 2800,
+        typeSpeed: 100,
+        backSpeed: 60,
+        backDelay: 3000,
         loop: true,
         fadeOut: true,
         fadeOutClass: 'typed-fade-out',
-        fadeOutDelay: 450,
+        fadeOutDelay: 500,
         showCursor: true,
         cursorChar: '▊',
         html: false,
-        contentType: 'text'
+        contentType: 'text',
+        onComplete: function() {
+          // Assicura che il cursore sia sempre visibile
+          setTimeout(() => {
+            const cursor = document.querySelector('.typed-cursor');
+            if (cursor) {
+              cursor.style.display = 'inline-block';
+              cursor.style.verticalAlign = 'baseline';
+              cursor.style.opacity = '1';
+            }
+          }, 100);
+        }
+      });
+      
+      // Fix per cursore su multi-linea usando MutationObserver
+      const observer = new MutationObserver(() => {
+        const cursor = document.querySelector('.typed-cursor');
+        if (cursor) {
+          cursor.style.display = 'inline-block';
+          cursor.style.verticalAlign = 'baseline';
+          cursor.style.marginLeft = '6px';
+        }
+      });
+      
+      observer.observe(heroTyping, { 
+        childList: true, 
+        subtree: true,
+        characterData: true
       });
     }
   });
