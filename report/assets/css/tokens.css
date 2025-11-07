@@ -1746,21 +1746,9 @@ a:focus-visible {
   border: 1px solid transparent;
   background-clip: padding-box;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
   box-shadow: 
     0 0 0 1px rgba(255, 255, 255, 0.03),
     inset 0 1px 2px rgba(255, 255, 255, 0.05);
-}
-
-:root:not([data-theme="light"]) ::-webkit-scrollbar-thumb::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: 4px;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(37, 99, 235, 0) 100%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: -1;
 }
 
 :root:not([data-theme="light"]) ::-webkit-scrollbar-thumb:hover {
@@ -1769,10 +1757,7 @@ a:focus-visible {
     0 0 8px rgba(37, 99, 235, 0.2),
     0 0 0 1px rgba(255, 255, 255, 0.05),
     inset 0 1px 2px rgba(255, 255, 255, 0.08);
-}
-
-:root:not([data-theme="light"]) ::-webkit-scrollbar-thumb:hover::before {
-  opacity: 1;
+  background-image: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(37, 99, 235, 0) 100%);
 }
 
 :root:not([data-theme="light"]) ::-webkit-scrollbar-thumb:active {
