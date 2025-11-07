@@ -1744,7 +1744,7 @@ a:focus-visible {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
+  right: 8px; /* Lascia spazio per la scrollbar */
   height: 64px;
   z-index: 100;
   display: flex;
@@ -1760,9 +1760,6 @@ a:focus-visible {
     0 1px 0 rgba(255, 255, 255, 0.03) inset,
     0 4px 20px rgba(0, 0, 0, 0.6);
   transition: all var(--transition-base);
-  /* Non coprire la scrollbar */
-  padding-right: 0;
-  margin-right: 0;
 }
 
 .hdr::after {
