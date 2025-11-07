@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it" data-theme="light">
+<html lang="it" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,7 +9,7 @@
   <link rel="icon" href="/favicon.ico?v=1">
   <link rel="icon" type="image/png" href="/favicon.png?v=1">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#0f0f0f">
 
   <!-- Tailwind (utility) -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -26,23 +26,169 @@
     body { display: flex; flex-direction: column; min-height: 100vh; }
     .container { max-width: 90rem; margin-inline: auto; padding-inline: 1rem; }
     main { flex: 1; padding-top: 5rem; padding-bottom: 5rem; }
+
+    /* ===== HEADER ===== */
+    .hdr {
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      height: 64px; 
+      z-index: 100;
+      display: flex; 
+      align-items: center;
+      backdrop-filter: blur(16px) saturate(1.2);
+      background: linear-gradient(
+        180deg,
+        rgba(15, 15, 15, 0.96) 0%,
+        rgba(15, 15, 15, 0.92) 100%
+      );
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+    }
+
+    /* ===== LEGAL OVERLAY ===== */
+    #legal-consent-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--sp-4);
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+    }
+    
+    #legal-consent-overlay[hidden] {
+      display: none !important;
+    }
+    
+    .legal-panel {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: min(90rem, 90vw);
+      max-height: 90vh;
+      background: var(--surface-card);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .legal-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--sp-5) var(--sp-6);
+      border-bottom: 1px solid var(--br-card);
+    }
+    
+    .legal-title {
+      font-size: var(--fs-18);
+      font-weight: 700;
+      color: var(--ink);
+    }
+    
+    .legal-tabs {
+      display: flex;
+      gap: var(--sp-2);
+      padding: var(--sp-3) var(--sp-6);
+      border-bottom: 1px solid var(--br-card);
+      background: var(--surface-elev);
+    }
+    
+    .legal-tab {
+      padding: var(--sp-2) var(--sp-4);
+      font-size: var(--fs-13);
+      font-weight: 600;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .legal-tab:hover {
+      color: var(--ink);
+      background: var(--surface-card);
+    }
+    
+    .legal-tab[aria-selected="true"] {
+      color: var(--ink);
+      background: var(--surface-card);
+      border-color: var(--br-card);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .legal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--sp-6);
+    }
+    
+    .legal-body section[hidden] {
+      display: none !important;
+    }
+    
+    .legal-body h4 {
+      font-size: var(--fs-16);
+      font-weight: 700;
+      color: var(--ink);
+      margin-top: var(--sp-6);
+      margin-bottom: var(--sp-3);
+    }
+    
+    .legal-body h4:first-child {
+      margin-top: 0;
+    }
+    
+    .legal-body p,
+    .legal-body ul {
+      color: var(--ink-soft);
+      line-height: var(--lh-17);
+      margin-bottom: var(--sp-4);
+    }
+    
+    .legal-body ul {
+      padding-left: var(--sp-5);
+      list-style: disc;
+    }
+    
+    .legal-body li {
+      margin-bottom: var(--sp-2);
+    }
+    
+    .legal-body code {
+      background: var(--surface-elev);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: var(--fs-12);
+      color: var(--brand-400);
+    }
+    
+    .legal-ftr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--sp-4) var(--sp-6);
+      border-top: 1px solid var(--br-card);
+      background: var(--surface-elev);
+    }
+    
+    .legal-ftr small {
+      color: var(--muted);
+      font-size: var(--fs-12);
+    }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="hdr">
-    <div class="container" style="display: flex; align-items: center; justify-content: space-between; height: 100%;">
-      <a href="/index.html" class="brand" style="text-decoration: none;">
-        <span class="brand-word">Tradelia</span>
-        <span class="brand-dot" aria-hidden="true"></span>
-        <span class="brand-suffix">AI</span>
-      </a>
-      <nav style="display: flex; gap: var(--sp-4); align-items: center;">
-        <a href="/index.html" style="text-decoration: none; color: var(--ink); font-size: var(--fs-14);">Home</a>
-        <a href="/archivio.html" style="text-decoration: none; color: var(--ink); font-size: var(--fs-14);">Archivio</a>
-      </nav>
-    </div>
-  </header>
+  <!-- ===== HEADER SLOT (montato via JS) ===== -->
+  <div id="site-header-slot"></div>
 
   <!-- Main Content -->
   <main>
@@ -145,37 +291,171 @@
     </div>
   </main>
 
-  <!-- Footer -->
-  <footer class="site-footer" style="border-top: 1px solid var(--br-soft); padding: var(--sp-6) 0;">
-    <div class="container">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--sp-4);">
-        <div>
-          <p style="margin: 0; color: var(--muted); font-size: var(--fs-13);">
-            © <span id="footer-year">2024</span>
-            <span class="brand brand--sm">
-              <span class="brand-word">Tradelia</span>
-              <span class="brand-dot" aria-hidden="true"></span>
-              <span class="brand-suffix">AI</span>
-            </span>
-            · Tutti i diritti riservati
-          </p>
-        </div>
-        <nav style="display: flex; gap: var(--sp-4); flex-wrap: wrap;">
-          <a href="/terms.html" style="color: var(--muted); text-decoration: none; font-size: var(--fs-13);">Termini</a>
-          <a href="/privacy.html" style="color: var(--muted); text-decoration: none; font-size: var(--fs-13);">Privacy</a>
-          <a href="/refund.html" style="color: var(--muted); text-decoration: none; font-size: var(--fs-13);">Rimborsi</a>
-        </nav>
+  <!-- ===== FOOTER SLOT (montato via JS) ===== -->
+  <div id="site-footer-slot"></div>
+
+  <!-- ===== LEGAL OVERLAY ===== -->
+  <div id="legal-consent-overlay" role="dialog" aria-modal="true" aria-labelledby="legal-consent-title" hidden>
+    <div style="position: absolute; inset: 0;" data-legal-dismiss></div>
+    <div class="legal-panel" role="document">
+      <header class="legal-hdr">
+        <div class="legal-title" id="legal-consent-title">Informativa legale</div>
+        <button class="btn btn-sm" type="button" data-legal-dismiss aria-label="Chiudi">Chiudi</button>
+      </header>
+      <nav class="legal-tabs" role="tablist" aria-label="Sezioni legali">
+        <button class="legal-tab" role="tab" id="tab-mifid" aria-controls="panel-mifid" aria-selected="true">Informativa MiFID</button>
+        <button class="legal-tab" role="tab" id="tab-privacy" aria-controls="panel-privacy" aria-selected="false">Privacy</button>
+      </nav>
+      <div class="legal-body">
+        <section id="panel-mifid" role="tabpanel" aria-labelledby="tab-mifid">
+          <h4>Finalità del materiale</h4>
+          <p>Il presente contenuto ha esclusiva finalità informativa e didattica. Non costituisce consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa MiFID II / ESMA.</p>
+          <h4>Orizzonte e perimetro</h4>
+          <p>I moduli (F1–F7) coprono analisi top-down (macro, sentiment, tecnica) con orizzonte indicativo 3–10 giorni. Non viene svolta verifica di adeguatezza/appropriatezza, profilo di rischio o obiettivi finanziari dell'utente.</p>
+          <h4>Rischi</h4>
+          <ul>
+            <li>I mercati finanziari comportano rischio di perdita, anche totale, del capitale.</li>
+            <li>Prodotti a leva/derivati (opzioni, futures, CFD) possono amplificare perdite oltre il capitale iniziale.</li>
+            <li>Rendimenti passati non sono indicativi di risultati futuri.</li>
+          </ul>
+          <h4>Dati e fonti</h4>
+          <ul>
+            <li>Dati e serie storiche possono essere soggetti a ritardi, revisioni o errori; i timestamp potrebbero non riflettere il "tempo reale".</li>
+            <li>Le fonti includono provider ritenuti affidabili; non si garantisce esattezza/completezza.</li>
+          </ul>
+          <h4>Conflitti e indipendenza</h4>
+          <ul>
+            <li>Framework Accademico AI, Tradelia Swing Master 5.0 è indipendente: non esegue ordini e non gestisce capitali.</li>
+            <li>Non sono note situazioni di conflitto d'interesse rilevanti nella produzione del materiale.</li>
+          </ul>
+          <h4>Limitazioni</h4>
+          <ul>
+            <li>Le informazioni non sostituiscono il giudizio dell'utente né la consulenza di un intermediario autorizzato.</li>
+            <li>L'uso è vietato laddove non conforme alle leggi locali.</li>
+          </ul>
+        </section>
+        <section id="panel-privacy" role="tabpanel" aria-labelledby="tab-privacy" hidden>
+          <h4>Principi</h4>
+          <p>Adottiamo un'impostazione "privacy-first": minimizzazione dei dati e assenza di tracciamento pubblicitario.</p>
+          <h4>Dati trattati</h4>
+          <ul>
+            <li>Nessuna raccolta di dati personali identificativi tramite questa pagina.</li>
+            <li>Uso di <code>localStorage</code> per preferenze (tema) e consenso legale.</li>
+            <li>Eventuali log tecnici anonimi per sicurezza e diagnostica.</li>
+          </ul>
+          <h4>Cookie e analytics</h4>
+          <ul>
+            <li>Niente cookie di profilazione; eventuali analytics sono anonimizzati/aggregati.</li>
+            <li>Nessuna condivisione con terze parti a fini commerciali.</li>
+          </ul>
+          <h4>Diritti e contatti</h4>
+          <ul>
+            <li>Per informazioni o esercizio diritti privacy, scrivi a <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>.</li>
+            <li>Il titolare potrà aggiornare questa informativa: controlla periodicamente le revisioni.</li>
+          </ul>
+        </section>
       </div>
+      <footer class="legal-ftr">
+        <small style="font-size: var(--fs-12); color: var(--muted);">Continuando dichiari di aver letto e compreso le informative.</small>
+        <button class="btn btn-sm" type="button" id="btn-accept-legal">Accetto e chiudi</button>
+      </footer>
     </div>
-  </footer>
+  </div>
+
+  <!-- ===== MOUNT HEADER & FOOTER ===== -->
+  <script type="module">
+    // Imposta tema dark
+    document.documentElement.setAttribute('data-theme', 'dark');
+    
+    // Importa componenti
+    import { siteHeader } from '/report/assets/js/components/site-header.js';
+    import { siteFooter } from '/report/assets/js/components/site-footer.js';
+    
+    // Monta header
+    const headerSlot = document.getElementById('site-header-slot');
+    if (headerSlot) {
+      siteHeader.mount(headerSlot);
+    }
+    
+    // Monta footer
+    const footerSlot = document.getElementById('site-footer-slot');
+    if (footerSlot) {
+      siteFooter.mount(footerSlot);
+    }
+  </script>
+
+  <!-- ===== LEGAL OVERLAY SCRIPT ===== -->
+  <script>
+    (function() {
+      const KEY = 'tradelia-legal-ack-v2025-11';
+      const overlay = document.getElementById('legal-consent-overlay');
+      const btnAccept = document.getElementById('btn-accept-legal');
+      const tabM = document.getElementById('tab-mifid');
+      const tabP = document.getElementById('tab-privacy');
+      const panelM = document.getElementById('panel-mifid');
+      const panelP = document.getElementById('panel-privacy');
+      
+      if (!overlay || !btnAccept || !tabM || !tabP || !panelM || !panelP) return;
+      
+      function showTab(which) {
+        const mifid = (which === 'mifid');
+        tabM.setAttribute('aria-selected', mifid ? 'true' : 'false');
+        tabP.setAttribute('aria-selected', mifid ? 'false' : 'true');
+        panelM.hidden = !mifid;
+        panelP.hidden = mifid;
+      }
+      
+      function openLegal(which = 'mifid', blocking = true) {
+        showTab(which);
+        overlay.hidden = false;
+        document.body.style.overflow = 'hidden';
+        if (blocking) overlay.setAttribute('data-blocking', 'true');
+        else overlay.removeAttribute('data-blocking');
+        setTimeout(() => (which === 'privacy' ? tabP : tabM).focus(), 0);
+      }
+      
+      function closeLegal() {
+        overlay.hidden = true;
+        document.body.style.overflow = '';
+      }
+      
+      tabM.addEventListener('click', () => showTab('mifid'));
+      tabP.addEventListener('click', () => showTab('privacy'));
+      
+      btnAccept.addEventListener('click', () => {
+        try {
+          localStorage.setItem(KEY, JSON.stringify({ acceptedAt: new Date().toISOString(), v: '2025-11' }));
+        } catch(e) {}
+        closeLegal();
+      });
+      
+      overlay.addEventListener('click', (e) => {
+        if (e.target.matches('[data-legal-dismiss]') || e.target.closest('[data-legal-dismiss]')) {
+          if (!overlay.hasAttribute('data-blocking')) closeLegal();
+        }
+      });
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !overlay.hasAttribute('data-blocking')) closeLegal();
+      });
+      
+      // Bind pulsanti footer quando sono disponibili
+      setTimeout(() => {
+        document.getElementById('btn-privacy-open')?.addEventListener('click', () => openLegal('privacy', false));
+        document.getElementById('btn-mifid-open')?.addEventListener('click', () => openLegal('mifid', false));
+      }, 500);
+    })();
+  </script>
 
   <script>
-    document.getElementById('footer-year').textContent = new Date().getFullYear();
-    document.getElementById('last-updated').textContent = new Date().toLocaleDateString('it-IT', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    const lastUpdated = document.getElementById('last-updated');
+    if (lastUpdated) {
+      lastUpdated.textContent = new Date().toLocaleDateString('it-IT', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
   </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it" data-theme="light">
+<html lang="it" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -7,7 +7,7 @@
   <meta name="keywords" content="Tradelia AI, [KEYWORDS]" />
   <meta name="author" content="Tradelia AI" />
   <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#ffffff" />
+  <meta name="theme-color" content="#0f0f0f" />
   
   <title>TRADELIA • AI — [TITOLO]</title>
   
@@ -16,7 +16,6 @@
   <link rel="stylesheet" href="/report/assets/css/report-layout.css" />
   <link rel="stylesheet" href="/report/assets/css/glossary-drawer.css" />
   <link rel="stylesheet" href="/report/assets/css/glossary-popup.css" />
-  <link rel="stylesheet" href="/tutorial-light.css" />
 </head>
 <body>
   <!-- HEADER SLOT -->
@@ -32,5 +31,9 @@
 
   <!-- SCRIPTS -->
   <script type="module" src="/report/assets/js/tutorial-renderer.js"></script>
+  <script type="module">
+    // Imposta tema dark
+    document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
 </body>
 </html>
