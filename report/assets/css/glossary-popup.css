@@ -266,29 +266,5 @@
   font-style: normal;
 }
 
-/* Scrollbar personalizzata - Coerente con globale */
-.glossary-popup-body::-webkit-scrollbar {
-  width: 8px;
-}
-
-.glossary-popup-body::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.glossary-popup-body::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 4px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: none;
-}
-
-.glossary-popup-body:hover::-webkit-scrollbar-thumb,
-.glossary-popup-body::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow: 
-    0 0 8px rgba(37, 99, 235, 0.2),
-    0 0 0 1px rgba(255, 255, 255, 0.05),
-    inset 0 1px 2px rgba(255, 255, 255, 0.08);
-  background-image: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(37, 99, 235, 0) 100%);
-}
+/* Scrollbar rimossa - usa stile globale da tokens.css */
 

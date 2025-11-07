@@ -1728,28 +1728,34 @@ a:focus-visible {
   }
 }
 
-/* ===== SCROLLBAR INNOVATIVA ACCADEMICA (DARK THEME) ===== */
-/* Quasi invisibile di default, visibile solo in hover con glow */
-:root:not([data-theme="light"]) ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+/* ===== SCROLLBAR INNOVATIVA ACCADEMICA (DARK THEME) - GLOBALE ===== */
+/* Completamente invisibile di default, visibile solo in hover con glow */
+/* IMPORTANTE: Questo è l'unico stile scrollbar - tutti gli altri sono rimossi */
+
+:root:not([data-theme="light"]) ::-webkit-scrollbar,
+:root:not([data-theme="light"]) * ::-webkit-scrollbar {
+  width: 8px !important;
+  height: 8px !important;
 }
 
-:root:not([data-theme="light"]) ::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-:root:not([data-theme="light"]) ::-webkit-scrollbar-thumb {
+:root:not([data-theme="light"]) ::-webkit-scrollbar-track,
+:root:not([data-theme="light"]) * ::-webkit-scrollbar-track {
   background: transparent !important;
-  border-radius: 4px;
-  border: 1px solid transparent;
-  background-clip: padding-box;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+:root:not([data-theme="light"]) ::-webkit-scrollbar-thumb,
+:root:not([data-theme="light"]) * ::-webkit-scrollbar-thumb {
+  background: transparent !important;
+  border-radius: 4px !important;
+  border: 1px solid transparent !important;
+  background-clip: padding-box !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   box-shadow: none !important;
 }
 
 /* Hover diretto sul thumb */
-:root:not([data-theme="light"]) ::-webkit-scrollbar-thumb:hover {
+:root:not([data-theme="light"]) ::-webkit-scrollbar-thumb:hover,
+:root:not([data-theme="light"]) * ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.12) !important;
   box-shadow: 
     0 0 8px rgba(37, 99, 235, 0.2),
@@ -1758,19 +1764,23 @@ a:focus-visible {
   background-image: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(37, 99, 235, 0) 100%) !important;
 }
 
-:root:not([data-theme="light"]) ::-webkit-scrollbar-thumb:active {
+:root:not([data-theme="light"]) ::-webkit-scrollbar-thumb:active,
+:root:not([data-theme="light"]) * ::-webkit-scrollbar-thumb:active {
   background: rgba(255, 255, 255, 0.15) !important;
   box-shadow: 
     0 0 12px rgba(37, 99, 235, 0.3),
     0 0 0 1px rgba(255, 255, 255, 0.06) !important;
 }
 
-:root:not([data-theme="light"]) ::-webkit-scrollbar-corner {
-  background: transparent;
+:root:not([data-theme="light"]) ::-webkit-scrollbar-corner,
+:root:not([data-theme="light"]) * ::-webkit-scrollbar-corner {
+  background: transparent !important;
 }
 
-/* Classe per hover attivo (gestita da JS) */
-:root:not([data-theme="light"]) .scrollbar-hover-active ::-webkit-scrollbar-thumb {
+/* Classe per hover attivo (gestita da JS) - Applicata a TUTTI gli elementi */
+:root:not([data-theme="light"]) .scrollbar-hover-active ::-webkit-scrollbar-thumb,
+:root:not([data-theme="light"]) .scrollbar-hover-active::-webkit-scrollbar-thumb,
+:root:not([data-theme="light"]) * .scrollbar-hover-active ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.12) !important;
   box-shadow: 
     0 0 8px rgba(37, 99, 235, 0.2),
@@ -1781,8 +1791,8 @@ a:focus-visible {
 
 /* Firefox Dark Theme - Completamente trasparente di default */
 :root:not([data-theme="light"]) * {
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
+  scrollbar-width: thin !important;
+  scrollbar-color: transparent transparent !important;
 }
 
 /* Firefox hover (non supportato nativamente, ma possiamo usare JS se necessario) */
