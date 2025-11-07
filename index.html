@@ -53,70 +53,73 @@
     /* ===== HERO SECTION ===== */
     .hero-section {
       position: relative;
-      padding: 8rem 0 6rem;
+      padding: 10rem 0 7rem;
       background: var(--surface-page);
     }
 
     .hero-content {
       position: relative;
       z-index: 1;
-      max-width: 56rem;
+      max-width: 60rem;
       margin: 0 auto;
     }
 
     .hero-badge {
       display: inline-block;
-      padding: 0.5rem 1rem;
+      padding: 0.625rem 1.25rem;
       background: var(--surface-elev);
       border: 1px solid var(--br-card);
       border-radius: 6px;
-      font-size: 0.75rem;
+      font-size: 0.6875rem;
       font-weight: 600;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--brand-400);
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
     }
 
     .hero-title {
       font-family: var(--ff-sans);
-      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-size: clamp(2.75rem, 5.5vw, 5rem);
       font-weight: 700;
-      line-height: 1.15;
-      letter-spacing: -0.03em;
+      line-height: 1.1;
+      letter-spacing: -0.035em;
       color: var(--ink);
-      margin: 0 0 1.5rem;
-      min-height: 3.5em;
+      margin: 0 0 2rem;
+      min-height: 4em;
     }
     
     #hero-typing {
-      display: block;
+      display: inline-block;
       line-height: 1.2;
       white-space: pre-line;
     }
     
     .typed-cursor {
+      display: inline-block;
       opacity: 1;
       font-weight: 300;
+      font-size: 0.9em;
       color: var(--brand-500);
-      margin-left: 4px;
-      animation: typedjsBlink 1s infinite;
+      margin-left: 6px;
+      vertical-align: baseline;
+      animation: typedjsBlink 1.2s infinite;
     }
     
     @keyframes typedjsBlink {
-      0%, 49% { opacity: 1; }
-      50%, 100% { opacity: 0.2; }
+      0%, 45% { opacity: 1; }
+      50%, 100% { opacity: 0.15; }
     }
 
     .hero-description {
       font-family: var(--ff-sans);
-      font-size: 1.25rem;
+      font-size: 1.1875rem;
       font-weight: 400;
-      line-height: 1.7;
-      letter-spacing: -0.01em;
+      line-height: 1.75;
+      letter-spacing: -0.008em;
       color: var(--ink-soft);
-      margin: 0 0 3rem;
-      max-width: 48rem;
+      margin: 0 0 3.5rem;
+      max-width: 50rem;
     }
 
     .hero-description strong {
@@ -127,43 +130,48 @@
     .hero-features {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 1.5rem;
-      margin: 3rem 0;
+      gap: 1.75rem;
+      margin: 4rem 0;
     }
 
     @media (min-width: 768px) {
       .hero-features {
         grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
       }
     }
 
     .hero-feature {
-      padding: 1.5rem;
+      padding: 2rem 1.75rem;
       background: var(--surface-elev);
       border: 1px solid var(--br-soft);
       border-radius: var(--radius-lg);
-      transition: all 0.2s ease;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .hero-feature:hover {
       background: var(--surface-hover);
       border-color: var(--br-card);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
     .hero-feature .ico {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       color: var(--brand-500);
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
     }
 
     .hero-feature strong {
       display: block;
       font-family: var(--ff-sans);
-      font-size: 0.9375rem;
+      font-size: 1rem;
       font-weight: 600;
+      letter-spacing: -0.01em;
       color: var(--ink);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.625rem;
+      line-height: 1.4;
     }
 
     .hero-feature span {
@@ -171,14 +179,15 @@
       font-family: var(--ff-sans);
       font-size: 0.875rem;
       font-weight: 400;
-      line-height: 1.6;
+      line-height: 1.65;
+      letter-spacing: -0.005em;
       color: var(--muted);
     }
 
     .hero-cta {
       display: flex;
-      gap: 1rem;
-      margin-top: 3rem;
+      gap: 1.25rem;
+      margin-top: 4rem;
     }
 
     .hero-disclaimer {
