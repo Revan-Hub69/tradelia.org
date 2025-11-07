@@ -1,5 +1,25 @@
 {
+  "name": "tradelia-org",
+  "version": "1.0.0",
+  "description": "Tradelia AI - Dashboard Abbonati e Archivio Report",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step required'",
+    "start": "vercel dev",
+    "generate-icons": "node scripts/generate-pwa-icons.js",
+    "generate-hero": "node scripts/generate-hero-image.js",
+    "generate-all": "npm run generate-icons && npm run generate-hero"
+  },
   "dependencies": {
-    "@vercel/og": "latest"
+    "@supabase/supabase-js": "^2.39.0",
+    "firebase-admin": "^12.0.0",
+    "web-push": "^3.6.7",
+    "sharp": "^0.33.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.x"
   }
 }
+

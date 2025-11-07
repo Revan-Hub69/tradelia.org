@@ -1,0 +1,700 @@
+{
+  "title": "CFD: Strategie Operative Avanzate - Guida Completa",
+  "meta": {
+    "published": "Gennaio 2025",
+    "category": "Derivati e Trading"
+  },
+  "tags": [
+    "CFD",
+    "Trading",
+    "Derivati",
+    "Strategie Avanzate",
+    "Risk Management"
+  ],
+  "glossaryTerms": {
+    "CFD": "CreditRiskBlock",
+    "Contracts for Difference": "CreditRiskBlock",
+    "leva finanziaria": "LiquidityRegimeScore",
+    "OTC": "CreditRiskBlock",
+    "stop-loss": "CreditRiskBlock",
+    "take-profit": "CreditRiskBlock",
+    "volatilità": "CreditRiskBlock",
+    "breakout": "CreditRiskBlock",
+    "hedge": "CreditRiskBlock",
+    "overlay hedge": "CreditRiskBlock",
+    "mean reversion": "CreditRiskBlock",
+    "RSI": "CreditRiskBlock",
+    "MACD": "CreditRiskBlock",
+    "ATR": "CreditRiskBlock",
+    "VIX": "CreditRiskBlock",
+    "opzioni": "CreditRiskBlock",
+    "delta": "CreditRiskBlock",
+    "gamma": "CreditRiskBlock",
+    "slippage": "CreditRiskBlock",
+    "margin call": "CreditRiskBlock",
+    "DMA": "CreditRiskBlock",
+    "ECN": "CreditRiskBlock",
+    "STP": "CreditRiskBlock"
+  },
+  "sections": [
+    {
+      "id": "intro-cfd",
+      "title": "Perché servono strategie avanzate",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I **CFD (Contracts for Difference)** sono strumenti derivati flessibili, ma intrinsecamente complessi e rischiosi. Il loro utilizzo richiede un approccio avanzato, basato su **logiche quantitative, gestione del rischio dinamica e capacità di adattamento** a contesti di mercato mutevoli."
+        },
+        {
+          "type": "paragraph",
+          "text": "L'elevata **leva finanziaria** e la struttura **OTC** rendono i CFD strumenti adatti solo a operatori in grado di integrare **disciplina operativa, dati real-time e strategie definite ex ante**. La maggior parte dei trader retail subisce invece un approccio casuale o emotivo, che li espone a perdite sistematiche."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Differenze tra approccio base e approccio strategico"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Approccio base:** trading discrezionale, leva massima, entry casuali, nessuna gestione attiva",
+            "**Approccio strategico:** setup testati, gestione per rischio, logiche multi-asset e hedging selettivo"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Le strategie avanzate con CFD si ispirano a **framework professionali** usati da desk istituzionali e prop trader, in cui ogni operazione è valutata in funzione del contesto, della volatilità attesa, della correlazione con altri asset e dell'impatto sul portafoglio complessivo."
+        },
+        {
+          "type": "paragraph",
+          "text": "*«Il problema non è il CFD. Il problema è usarlo come se fosse un titolo azionario.»*"
+        },
+        {
+          "type": "paragraph",
+          "text": "In questo report, Tradelia AI esplora l'applicazione dei CFD in strategie operative **avanzate, replicabili e strutturate**, con l'obiettivo di fornire un framework solido a chi vuole fare trading in modo consapevole, e non casuale."
+        }
+      ]
+    },
+    {
+      "id": "breakout",
+      "title": "Breakout direzionali su livelli chiave",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le strategie di **breakout direzionale** si basano sull'identificazione di livelli tecnici chiave (resistenze, supporti, massimi/minimi recenti) oltre i quali si attivano movimenti impulsivi, spesso guidati da volumi elevati, news o squeeze di volatilità. I CFD sono strumenti ideali per sfruttare questi movimenti grazie alla loro natura speculativa e alla possibilità di operare long o short."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Setup operativo tipico"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Identificazione del livello chiave:** massimo di periodo, resistenza statica o dinamica, congestione laterale",
+            "**Volume o trigger news:** attesa di breakout solo con aumento di volume o catalizzatore esogeno (earnings, CPI, NFP)",
+            "**Conferma del breakout:** chiusura sopra il livello, candela impulsiva o pullback intraday sul livello rotto",
+            "**Gestione rischio:** stop-loss stretto sotto il livello (false rotture comuni), sizing ridotto se breakout volatile"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio operativo (indice DAX CFD)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Supponiamo che l'indice DAX CFD stia testando il livello 18.350, massimo settimanale. Il trader imposta:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Entry long:** sopra 18.370, solo se accompagnato da volume crescente",
+            "**Stop-loss:** 18.310 (60 punti sotto il breakout)",
+            "**Target:** proiezione tecnica 18.550–18.600, con parziale a +1R"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "L'uso di CFD consente una leva controllata, un'esecuzione immediata e la possibilità di scalare progressivamente la posizione, con gestione dinamica dei margini."
+        },
+        {
+          "type": "paragraph",
+          "text": "*«Il breakout è la miccia. Il rischio calcolato è la vera strategia.»*"
+        },
+        {
+          "type": "paragraph",
+          "text": "I breakout efficaci si presentano in contesti di compressione di volatilità o congestione prolungata. Il trader avanzato utilizza strumenti come **Band% di Bollinger, RVol, ADX e Price Action multi-timeframe** per aumentare la probabilità di successo e ridurre l'esposizione a falsi segnali."
+        }
+      ]
+    },
+    {
+      "id": "overlay-hedge",
+      "title": "Overlay hedge e copertura dinamica",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "L'**overlay hedge** con CFD è una tecnica avanzata che consente di aggiungere, rimuovere o calibrare un'esposizione direzionale su un portafoglio o una posizione primaria già esistente, senza dover vendere l'asset sottostante. È particolarmente utile nei momenti di incertezza, durante eventi macro o per protezione intra-giornaliera."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Applicazioni pratiche"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Coprire un ETF long:** aprire una posizione CFD short sull'indice di riferimento per proteggere da ribassi temporanei",
+            "**Neutralizzare rischio evento:** aggiungere un overlay short prima di decisioni BCE/FED o earnings",
+            "**Gestione delta temporanea:** modulare il rischio direzionale senza toccare la posizione madre",
+            "**Utilizzare timeframe diversi:** overlay CFD intraday su portafoglio long settimanale o mensile"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio operativo (ETF azionario + CFD hedge)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Un investitore detiene un **ETF MSCI World** (posizione long) ma prevede volatilità macro a breve termine (es. inflazione USA). Decide di:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Aprire un **CFD short sul DAX** con esposizione pari al 30% del portafoglio",
+            "Gestire dinamicamente il CFD con trailing stop in base a VIX e RVol",
+            "Chiudere l'hedge alla rottura di una resistenza tecnica chiave o dopo l'evento"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Questo tipo di strategia consente una protezione selettiva senza smontare la posizione principale, ottimizzando timing, costi e fiscalità (nel caso reale nessuna vendita dell'ETF)."
+        },
+        {
+          "type": "paragraph",
+          "text": "*«Il vero hedge non blocca il portafoglio. Lo difende quando serve e scompare quando non serve più.»*"
+        },
+        {
+          "type": "paragraph",
+          "text": "L'efficacia dell'overlay dipende dalla **correlazione tra asset**, dalla volatilità implicita e dalla reattività operativa del trader. I CFD rendono possibile un hedging fine-tuned, anche con capitali limitati, se accompagnato da una gestione attiva del rischio e dei livelli."
+        }
+      ]
+    },
+    {
+      "id": "mean-reversion",
+      "title": "Mean Reversion e volatilità compressa",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le strategie di **Mean Reversion** si basano sull'ipotesi che i prezzi tendano a tornare verso una media statistica dopo movimenti estremi. Sono particolarmente efficaci in mercati laterali o con bassa direzionalità, dove la volatilità è temporaneamente compressa e le forze di equilibrio prevalgono su quelle impulsive."
+        },
+        {
+          "type": "paragraph",
+          "text": "I CFD si prestano bene a queste logiche grazie alla possibilità di operare long e short in modo flessibile, anche su timeframe brevi, con costi di esecuzione contenuti. Tuttavia, serve **disciplina esecutiva**: la Mean Reversion è potente ma richiede pazienza e precisione."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Indicatori chiave per setup di Reversion"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**RSI estremo:** livelli inferiori a 25 o superiori a 75 (sovravenduto/sovracquistato)",
+            "**%B di Bollinger:** valori inferiori a 0.05 o superiori a 0.95 segnalano compressione o eccesso",
+            "**ATR basso + range stretto:** volatilità compressa pronta ad espandersi",
+            "**Divergenze MACD / RSI:** conferme di esaurimento movimento in corso"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio operativo (CFD su Nasdaq 100)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il CFD sul Nasdaq 100 mostra RSI = 82 e bande di Bollinger molto compresse. Il prezzo rompe i massimi ma senza volume."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Entry short: al rientro sotto la banda superiore e rottura della candela inside",
+            "Stop-loss: sopra il massimo recente, con buffer tecnico (es. 15 punti)",
+            "Target: media mobile 20-periodi o livello chiave intermedio"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "In alternativa, si può usare un ingresso scalettato con posizionamento progressivo (es. tre lotti: 1–1–2), in base alla conferma del pattern di esaurimento."
+        },
+        {
+          "type": "paragraph",
+          "text": "*«Il mercato tende all'equilibrio, ma non ci resta mai troppo a lungo. La mean reversion è il trade tra due estremi.»*"
+        },
+        {
+          "type": "paragraph",
+          "text": "Le strategie mean-reverting funzionano meglio in asset **non direzionali**, con oscillazioni cicliche e range ben definiti (es. indici, oro, valute major). Il trader avanzato imposta soglie oggettive e applica il principio di **rischio asimmetrico** anche in contesti di lateralità."
+        }
+      ]
+    },
+    {
+      "id": "news-trading",
+      "title": "Strategie su notizie macro ed earnings",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I CFD offrono un vantaggio significativo nelle operazioni legate a eventi programmati come **annunci macroeconomici** (CPI, NFP, tassi) o **earnings stagionali**. Grazie alla leva, all'accesso a mercati globali e alla possibilità di aprire posizioni long/short in modo flessibile, sono lo strumento ideale per strategie su eventi ad alta volatilità."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Approccio operativo"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Pre-evento (no touch):** si evitano ingressi prima dell'annuncio, per proteggersi da spike erratici",
+            "**Post-evento (fade o conferma):** si valuta la direzionalità reale e si opera su pullback o breakout validati",
+            "**Volatility trap:** si sfruttano gli eccessi iniziali per posizionarsi in senso opposto dopo conferma",
+            "**Hedging selettivo:** protezione con overlay CFD nel caso di portafogli già esposti su asset correlati"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio operativo (Earnings su Tesla)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Supponiamo che Tesla rilasci i risultati trimestrali con utili sopra le attese ma guidance deludente:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Spike iniziale verso l'alto (buy su numeri grezzi)",
+            "Fade short CFD al ritorno sotto il massimo post-news",
+            "Stop-loss stretto sopra spike iniziale",
+            "Target: supporto orizzontale precedente o media mobile 50 periodi"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Questa strategia sfrutta la reazione impulsiva emotiva e il successivo rientro verso livelli tecnici più razionali. Il CFD consente di agire anche in fase post-market su alcune piattaforme."
+        },
+        {
+          "type": "paragraph",
+          "text": "*«Le news creano caos. Il trader esperto entra quando la polvere si posa.»*"
+        },
+        {
+          "type": "paragraph",
+          "text": "L'elemento chiave in questo tipo di strategia è la **gestione della velocità e della size**: mai overexposure durante i primi minuti e utilizzo di logiche reattive solo dopo conferma tecnica. L'utilizzo di CFD permette timing preciso e azione su mercati globali 24/5."
+        }
+      ]
+    },
+    {
+      "id": "cfd-opzioni",
+      "title": "Coperture avanzate: CFD + opzioni",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Combinare **CFD e opzioni vanilla** consente di costruire strategie avanzate con profili di rischio/rendimento più equilibrati rispetto all'uso isolato dei CFD. Le opzioni offrono protezione, neutralità delta o edge su volatilità; i CFD offrono esecuzione veloce, leva dinamica e flessibilità operativa. L'uso combinato è riservato a trader esperti ma può offrire un vantaggio concreto."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempi di strategie ibride"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Protective Put + Long CFD:** acquisto CFD long su azione o indice + opzione put per copertura downside",
+            "**Short Straddle + Overlay CFD:** apertura di posizione neutra su opzioni, con attivazione CFD se breakout",
+            "**Covered Call su posizione CFD:** uso di opzioni call controposizionate per estrarre rendimento in fase laterale",
+            "**Hedge intraday con delta neutral:** bilanciamento di posizioni long CFD con opzioni per neutralizzare il rischio direzionale"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio operativo (Protective Put + Long CFD su S&P 500)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Un trader vuole esporsi al rialzo del mercato ma teme un evento macro imminente. Costruisce:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Long CFD su **S&P 500** sopra una resistenza tecnica (es. 5.500)",
+            "Acquisto di una **put ATM 5.500** con scadenza 5 giorni",
+            "In caso di salita: la put decade, il CFD guadagna",
+            "In caso di crollo improvviso: la put limita le perdite in modo definito"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Questa configurazione consente al trader di restare aggressivo sul breakout senza esporsi completamente al downside, evitando l'uso di stop-loss rigidi e sfruttando la protezione opzionale come assicurazione a tempo."
+        },
+        {
+          "type": "paragraph",
+          "text": "*«Un'opzione non è una scommessa. È un paracadute. E quando salti con un CFD, può salvarti il conto.»*"
+        },
+        {
+          "type": "paragraph",
+          "text": "Le combinazioni CFD + opzioni funzionano solo con broker che offrano accesso a entrambi gli strumenti con **esecuzione trasparente** e condizioni professionali. La gestione delta e la comprensione della greca \"gamma\" diventano cruciali. L'approccio è sofisticato ma potente."
+        }
+      ]
+    },
+    {
+      "id": "sizing",
+      "title": "Strategie sistematiche: sizing e rischio",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Lo **scalping** è una tecnica operativa ad alta frequenza che mira a sfruttare micro-movimenti del prezzo all'interno di timeframe molto brevi (es. 5s, 15s, 1m). Richiede esecuzione rapida, spread ultra-ridotti, e gestione millimetrica del rischio. I CFD, se usati con broker **DMA** o esecuzione **ECN/STP** reale, possono essere strumenti validi per questa tipologia di operatività."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Prerequisiti per scalping professionale"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Ping < 20 ms** al server del broker + esecuzione no-dealing-desk",
+            "Spread **inferiore a 0.3 pip** su strumenti liquidi (es. EUR/USD, DAX, Nasdaq)",
+            "**Commissioni fisse** competitive e trasparenza sullo slippage",
+            "Accesso a strumenti di **book profondo** e flusso tick-by-tick"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Setup classici per scalping"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Breakout di micro-range:** compressione su 5–10 candele da 1m, breakout con spike e pullback",
+            "**Fade su spike news:** ingresso contrario su eccesso breve, con TP molto stretto",
+            "**Reazione su VWAP o MA 20:** entrata veloce su rimbalzi algoritmici",
+            "**Arbitraggio temporale tra CFD e future** (solo se la piattaforma lo consente)"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "La strategia di scalping più efficace è spesso **controintuitiva**: si entra nei punti di esaurimento della velocità, non dove si forma il trend. Il rischio è contenuto, ma il numero di operazioni è elevato."
+        },
+        {
+          "type": "paragraph",
+          "text": "*«Lo scalping non è reazione, è lettura. Chi entra dopo il movimento è già in ritardo.»*"
+        },
+        {
+          "type": "paragraph",
+          "text": "Lo scalping professionale con CFD è possibile solo su piattaforme ottimizzate (es. cTrader, MT5 ECN, NinjaTrader) e richiede **disciplina estrema**, gestione millimetrica della size, e uso di hotkey o strumenti semi-automatizzati. Per la maggior parte dei trader retail, è una strategia più pericolosa che profittevole."
+        }
+      ]
+    },
+    {
+      "id": "caso-reale",
+      "title": "Caso operativo completo con CFD",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "In questo esempio simulato analizziamo un'operazione **short intraday** sul CFD del Nasdaq 100 (NDX), con logica **breakout + overlay hedge**, risk management rigoroso e leva contenuta."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Contesto e scenario operativo"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Sottostante:** Nasdaq 100 (CFD)",
+            "**Timeframe operativo:** 15 minuti (convalidato da H1)",
+            "**Evento macro:** CPI USA superiore al previsto → spike → inversione ribassista",
+            "**Condizione tecnica:** rottura volumetrica del supporto 18.550 con conferma RSI e MACD"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Costruzione del trade"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Entry:** Short @ 18.530 (rottura decisa + spike di volumi)",
+            "**Stop-loss tecnico:** 18.590 (+60 punti, sopra il breakout con buffer)",
+            "**Take-profit tecnico:** 18.420 (vicino a supporto statico precedente)",
+            "**RR previsto:** 1:1.8 (60 punti rischio vs 110 punti target)"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "**Metodo di definizione SL/TP:** Il stop-loss è posto sopra la candela breakout + 10 punti di buffer per evitare stop prematuri. Il take-profit è su supporto visibile da timeframe superiore (H1), zona di congestione precedente → probabile rimbalzo tecnico."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Dimensionamento e gestione rischio"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Capitale disponibile:** 10.000 €",
+            "**Rischio max per trade:** 0,8% → 80 €",
+            "**Valore punto:** 1€ per ogni movimento di 1 punto",
+            "**SL = 60 punti → max size:** 1,3 CFD (arrotondato a 1)",
+            "**Leva implicita:** 18.530 punti × 1 CFD ≈ 18.530€ di esposizione con margine 925 € (leva ≈ 10:1)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Overlay Hedge (didattico)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Per ridurre il rischio di gap o reversal improvvisi, viene simulato un hedge parziale tramite **acquisto di opzione call** 0.10 delta su QQQ (ETF del Nasdaq). L'opzione copre il worst-case da news impreviste e protegge parzialmente la perdita da stop."
+        },
+        {
+          "type": "paragraph",
+          "text": "*«Questo caso simulato mostra l'integrazione tra analisi tecnica, sizing, gestione dinamica del rischio e uso didattico di overlay hedge. È un esempio completo di operazione disciplinata su CFD con leva contenuta e validazione macro/tecnica.»*"
+        },
+        {
+          "type": "paragraph",
+          "text": "L'operazione si è chiusa con target pieno. Tuttavia, anche se fosse scattato lo stop-loss, il rischio era comunque sotto controllo (0,8%). Questo conferma che il successo nei CFD deriva più dalla **gestione del rischio** che dalla precisione del timing."
+        }
+      ]
+    },
+    {
+      "id": "confronto-strumenti",
+      "title": "CFD vs Futures vs Opzioni",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I derivati finanziari permettono di speculare o coprirsi sul prezzo di un asset senza possederlo direttamente. Tuttavia, i **CFD**, i **futures** e le **opzioni** presentano caratteristiche molto diverse per struttura, leva, margini e rischi impliciti. La seguente analisi riassume i principali elementi a confronto."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Mercato"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**CFD:** OTC (non regolamentato)",
+            "**Futures:** Regolamentato (CME, EUREX...)",
+            "**Opzioni:** Regolamentato (con clearing house)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Leva"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**CFD:** Alta (fino a 30:1 retail UE)",
+            "**Futures:** Media-Alta (in base al contratto)",
+            "**Opzioni:** Implicita (in base al delta)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Liquidità"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**CFD:** Dipende dal broker",
+            "**Futures:** Molto elevata",
+            "**Opzioni:** Elevata (ma meno costante)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Trasparenza Prezzo"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**CFD:** Media/Bassa (spread variabili)",
+            "**Futures:** Alta (book regolamentato)",
+            "**Opzioni:** Alta (con market maker ufficiali)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Scadenza"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**CFD:** No (rollover giornaliero)",
+            "**Futures:** Sì (mensile, trimestrale)",
+            "**Opzioni:** Sì (settimanale, mensile, LEAP)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Rischio Limitato"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**CFD:** No (stop-out non sempre efficace)",
+            "**Futures:** No (richiede margine e controllo)",
+            "**Opzioni:** Sì (solo se acquistate)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Utilizzo tipico"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**CFD:** Speculazione veloce / day trading",
+            "**Futures:** Hedging, arbitraggio, trading pro",
+            "**Opzioni:** Hedging, income, strategie complesse"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "**CFD:** accessibili e flessibili, ma poco trasparenti e con rischio elevato per i retail. Adatti al breve termine con controllo rischio attivo."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Futures:** strumenti regolamentati, più trasparenti, ma richiedono capitale elevato e competenza tecnica."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Opzioni:** permettono strategie non lineari, gestione rischio asimmetrica e copertura, ma richiedono padronanza di greche, volatilità e scadenze."
+        }
+      ]
+    },
+    {
+      "id": "best-practice",
+      "title": "Best practice e avvertenze finali",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le informazioni contenute in questo report hanno finalità esclusivamente educative e divulgative. Non costituiscono in alcun modo **consulenza finanziaria personalizzata**, raccomandazione operativa o sollecitazione al pubblico risparmio."
+        },
+        {
+          "type": "paragraph",
+          "text": "I CFD, le opzioni e gli strumenti derivati descritti sono **prodotti complessi e ad alto rischio**, non adatti alla maggior parte degli investitori retail. Il trading con leva può comportare **perdite superiori al capitale investito**, specialmente in assenza di una gestione attiva del rischio."
+        },
+        {
+          "type": "paragraph",
+          "text": "Tradelia AI non riceve retrocessioni né ha accordi economici con broker che non garantiscano **trasparenza, protezione retail, regolamentazione europea** e documentazione completa. Le segnalazioni e analisi sono indipendenti, basate su criteri tecnici e reputazionali."
+        },
+        {
+          "type": "paragraph",
+          "text": "Prima di qualsiasi operazione reale, si invita l'utente a:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Leggere attentamente **KID, Execution Policy, Regolamento e Termini di Servizio** del broker",
+            "Verificare la propria idoneità tramite **test di appropriatezza e simulazione demo**",
+            "Consultare, se necessario, un **consulente finanziario autorizzato**"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "*«La conoscenza finanziaria è il miglior margine di sicurezza. Il resto è marketing.»*"
+        }
+      ]
+    },
+    {
+      "id": "glossario-cfd",
+      "title": "Glossario tecnico essenziale",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "**CFD (Contract for Difference):** contratto derivato OTC che replica la variazione di prezzo di un asset sottostante senza possederlo."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Leva finanziaria:** rapporto tra esposizione e margine richiesto. Amplifica sia profitti che perdite."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Stop-loss:** ordine di uscita automatica per limitare le perdite su una posizione."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Take-profit:** ordine automatico che chiude una posizione al raggiungimento di un profitto target."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Slippage:** differenza tra il prezzo atteso e quello eseguito, causata da volatilità o bassa liquidità."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Greche (opzioni):** misure del rischio e sensibilità delle opzioni (Delta, Gamma, Theta, Vega, Rho)."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Delta:** variazione del prezzo dell'opzione rispetto al prezzo dell'asset sottostante."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Gamma:** sensibilità del Delta alle variazioni del sottostante."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Vega:** sensibilità del prezzo dell'opzione alla volatilità implicita."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Margin Call:** richiesta di fondi aggiuntivi da parte del broker per coprire le perdite di una posizione in leva."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Stop-out:** chiusura forzata della posizione da parte del broker per evitare saldo negativo."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Overlay hedge:** strategia di copertura sovrapposta, spesso tramite opzioni o posizioni inverse su correlati."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Scadenza (Expiry):** data oltre la quale un contratto derivato (futures o opzioni) non è più valido."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Roll-over:** operazione che estende la scadenza di una posizione, tipica nei CFD a lungo termine."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Execution (esecuzione):** processo di apertura o chiusura di un ordine. Può essere market, limit o stop."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Book di negoziazione:** rappresentazione del flusso di ordini bid/ask nei mercati regolamentati."
+        },
+        {
+          "type": "paragraph",
+          "text": "**DMA (Direct Market Access):** accesso diretto al mercato senza intervento del broker."
+        },
+        {
+          "type": "paragraph",
+          "text": "**NDD (No Dealing Desk):** modello di broker senza intervento diretto nella gestione degli ordini."
+        }
+      ]
+    }
+  ]
+}
+

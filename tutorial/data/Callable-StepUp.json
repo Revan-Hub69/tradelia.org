@@ -1,0 +1,381 @@
+{
+  "title": "Callable Step-Up: Guida Completa Tradelia AI",
+  "meta": {
+    "published": "Gennaio 2025",
+    "category": "Strumenti Strutturati",
+    "difficulty": "Intermedio"
+  },
+  "tags": [
+    "Callable",
+    "Step-Up",
+    "Obbligazioni",
+    "Cedola",
+    "Rischio",
+    "Emittente"
+  ],
+  "glossaryTerms": {
+    "callable": "CreditRiskBlock",
+    "step-up": "CreditRiskBlock",
+    "cedola": "CreditRiskBlock",
+    "call date": "CreditRiskBlock",
+    "YTC": "CreditRiskBlock",
+    "duration": "CreditRiskBlock",
+    "reinvestment risk": "CreditRiskBlock"
+  },
+  "sections": [
+    {
+      "id": "introduzione",
+      "title": "Definizione e Logica di Base",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le **obbligazioni callable** sono titoli di debito che offrono all'emittente la facoltà di **rimborsare anticipatamente** il capitale, prima della scadenza naturale, secondo modalità e tempistiche stabilite nel contratto. La call può essere esercitata una o più volte, ma sempre a discrezione dell'emittente, non dell'investitore."
+        },
+        {
+          "type": "paragraph",
+          "text": "La variante **Step-Up** prevede invece un meccanismo di **incremento progressivo della cedola**, tipicamente legato a scadenze prestabilite. L'idea alla base è attrarre l'investitore con la promessa di un maggiore rendimento futuro, salvo che l'emittente richiami il titolo prima del rialzo cedolare."
+        },
+        {
+          "type": "paragraph",
+          "text": "Quando le due strutture vengono combinate (Callable + Step-Up), nasce un prodotto con **forte asimmetria informativa**: l'emittente ha tutto l'interesse a esercitare la call prima che il rendimento aumenti, rendendo l'extra-cedola solo teorica per l'investitore."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Callable:** rimborso anticipato a discrezione dell'emittente (es. dopo 5 anni)",
+            "**Step-Up:** cedola crescente (es. 4% primi 5 anni, 6% successivi)",
+            "**Combinazione comune:** call alla fine del periodo con cedola più bassa",
+            "**Rischio implicito:** l'investitore riceve solo la parte \"bassa\" del rendimento, non quella crescente"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Longstaff (1990) ha analizzato le obbligazioni callable, dimostrando che l'opzione di call crea un'asimmetria informativa a favore dell'emittente. La ricerca evidenzia che gli emittenti esercitano la call quando è più conveniente per loro, spesso prima che l'investitore possa beneficiare dell'aumento cedolare."
+        }
+      ]
+    },
+    {
+      "id": "struttura",
+      "title": "Struttura Tecnica e Componenti",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le obbligazioni callable step-up sono regolate da **term sheet dettagliati**, che definiscono con precisione tempi, modalità e condizioni di esercizio della call, oltre alla struttura delle cedole crescenti."
+        },
+        {
+          "type": "paragraph",
+          "text": "La struttura base prevede due o più periodi con cedole differenti, uniti a una o più **call date** prefissate. La decisione di richiamare il bond prima della scadenza finale è sempre a discrezione dell'emittente, e solitamente avviene prima del primo aumento cedolare."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Periodo iniziale (es. 5 anni):** cedola fissa bassa (es. 3.75%)",
+            "**Data di call opzionale:** tipicamente alla fine del periodo iniziale",
+            "**Step-Up successivo:** incremento cedolare (es. 5.75% o 6%) valido solo se il bond non viene richiamato",
+            "**Call multiple (meno frequenti):** alcune strutture prevedono richiamo anche dopo lo step-up",
+            "**Prezzo di call:** solitamente 100 (par), ma possono esserci eccezioni (make-whole call)"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "In genere, l'emittente esercita la call quando il costo del debito sul mercato è più conveniente, eliminando così la cedola più alta. Questo meccanismo rende la **durata effettiva del bond inferiore alla scadenza teorica**."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Kalotay et al. (1993) ha analizzato la struttura delle obbligazioni callable step-up, dimostrando che la durata effettiva è spesso significativamente inferiore alla scadenza teorica. La ricerca evidenzia che gli emittenti esercitano la call quando è più conveniente per loro."
+        }
+      ]
+    },
+    {
+      "id": "funzionamento",
+      "title": "Funzionamento e Meccanismo Cedolare",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Il meccanismo delle callable step-up funziona in modo sequenziale: durante il primo periodo, l'investitore riceve una cedola fissa relativamente bassa. Se l'emittente non esercita la call alla prima data utile, la cedola aumenta automaticamente al livello successivo."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Meccanismo Cedolare"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Fase 1 (anni 1-5):** cedola fissa al 3.75% annuo",
+            "**Call date (fine anno 5):** l'emittente può richiamare il bond al 100%",
+            "**Fase 2 (anni 6-10):** se non richiamato, cedola aumenta al 5.75% annuo",
+            "**Scadenza finale:** se non richiamato, rimborso al 100% alla fine del periodo"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Il problema è che l'emittente ha tutto l'interesse a esercitare la call alla fine del primo periodo, quando la cedola è ancora bassa, evitando di pagare la cedola più alta. Questo rende lo step-up **teoricamente attraente ma praticamente irraggiungibile** per l'investitore."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Longstaff & Tuckman (1994) ha analizzato il comportamento degli emittenti nelle obbligazioni callable, dimostrando che gli emittenti esercitano la call quando il costo del debito sul mercato è più conveniente. La ricerca evidenzia che lo step-up è spesso irraggiungibile per l'investitore."
+        }
+      ]
+    },
+    {
+      "id": "rischi",
+      "title": "Rischi Specifici e Comportamento in Mercato",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le callable step-up nascondono una serie di **rischi impliciti** spesso sottovalutati dagli investitori. Sebbene l'incremento cedolare sembri vantaggioso, nella realtà operativa **l'emittente richiama quasi sempre il bond** prima dello step-up, rendendolo irrilevante."
+        },
+        {
+          "type": "paragraph",
+          "text": "Questo determina un **rendimento effettivo inferiore a quello \"promesso\"** e una durata reale più breve. L'investitore che acquista il titolo puntando alla cedola più alta rischia di essere deluso e di dover reinvestire a condizioni meno favorevoli."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Rischi Principali"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Rischio di call anticipata:** l'emittente esercita la call per evitare di pagare cedole più alte",
+            "**Reinvestimento a tassi inferiori:** dopo il richiamo, l'investitore potrebbe non trovare strumenti comparabili",
+            "**Illusione del rendimento:** il rendimento a scadenza riportato può includere step-up mai realizzati",
+            "**Durata effettiva minore:** il titolo può durare 5 anni anche se scade tra 10 o 20",
+            "**Limitata trasparenza:** le call non sono garantite, ma molto probabili – ciò genera ambiguità nelle simulazioni"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "In caso di tensione sui tassi o peggioramento della qualità dell'emittente, la call potrebbe non essere esercitata, esponendo l'investitore a **rischio tasso e rischio emittente più a lungo del previsto**."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Kalotay et al. (1993) ha analizzato i rischi delle obbligazioni callable, dimostrando che il rischio di reinvestimento è spesso sottovalutato dagli investitori retail. La ricerca evidenzia che il rendimento effettivo può essere significativamente inferiore a quello promesso."
+        }
+      ]
+    },
+    {
+      "id": "analisi",
+      "title": "Analisi Emittente e Scenario Tassi",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Per valutare correttamente una callable step-up è fondamentale analizzare sia la solidità dell'emittente sia lo scenario atteso sui tassi d'interesse. La decisione dell'emittente di esercitare o meno la call dipende da questi due fattori chiave."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Scenari Principali"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Emittente solido + tassi in discesa:** la call è quasi certa. Il bond sarà richiamato per rifinanziare a condizioni migliori.",
+            "**Emittente deteriorato + tassi in salita:** la call potrebbe non essere esercitata. Il bond prosegue con cedola aumentata, ma con rischio maggiore.",
+            "**Emittente solido + tassi stabili o in lieve salita:** la call è probabile, ma dipende dal trade-off tra costo e convenienza strategica."
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Fattori da Valutare"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Il rating e i ratio patrimoniali dell'emittente:** maggiore è la solidità, maggiore la probabilità di call al primo step-up",
+            "**Il contesto macro e le aspettative sui tassi:** se il costo del debito è destinato a salire, l'emittente ha convenienza a esercitare la call",
+            "**Il valore dello step-up:** più è elevato il salto cedolare, più è probabile il richiamo anticipato"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Longstaff (1990) ha analizzato i fattori che influenzano la decisione di call, dimostrando che la solidità dell'emittente e lo scenario sui tassi sono cruciali. La ricerca evidenzia che gli emittenti solidi tendono a esercitare la call più frequentemente."
+        }
+      ]
+    },
+    {
+      "id": "strategia",
+      "title": "Strategia e Inserimento in Portafoglio",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le obbligazioni callable step-up sono strumenti che si collocano tra l'obbligazionario tradizionale e le strutture complesse. Hanno senso solo all'interno di una strategia ben definita e con un monitoraggio costante."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Approcci Strategici"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Approccio difensivo:** utile in fasi di tassi stabili o in discesa, con call probabile e rendimento cedolare interessante a breve termine.",
+            "**Approccio opportunistico:** in caso di elevato spread iniziale e aspettativa che l'emittente non richiami il bond, si punta sullo step-up futuro.",
+            "**Asset satellite:** ideale per occupare una quota limitata (< 10%) in portafogli income-oriented o barbell strategy."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Attenzione: in fase di stress finanziario, questi bond possono diventare illiquidi o perdere valore rapidamente se il mercato sconta il mancato esercizio della call."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Domande Chiave"
+        },
+        {
+          "type": "list",
+          "items": [
+            "\"Quanto rischio sono disposto ad assumere se il bond resta in circolazione oltre la call?\"",
+            "\"Sto comprando una cedola elevata o sto scommettendo sull'inerzia di un emittente fragile?\"",
+            "\"Ho un piano d'uscita se lo scenario macro cambia?\""
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Kalotay et al. (1993) ha analizzato l'inserimento delle obbligazioni callable in portafoglio, dimostrando che questi strumenti richiedono un monitoraggio attivo e una comprensione chiara dei rischi. La ricerca evidenzia l'importanza di una strategia ben definita."
+        }
+      ]
+    },
+    {
+      "id": "confronto",
+      "title": "Confronto con Altre Obbligazioni",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le callable step-up devono essere valutate in relazione alle obbligazioni standard (plain vanilla), ai subordinati e ai titoli a tasso variabile. Il rischio principale è l'asimmetria informativa e il pricing errato da parte del retail."
+        },
+        {
+          "type": "table",
+          "headers": ["Strumento", "Scadenza", "Cedola", "Opzioni Emittente", "Rischio Rendimento"],
+          "rows": [
+            [
+              "Obbligazione Tradizionale",
+              "Fissa",
+              "Fissa",
+              "Nessuna",
+              "Limitato"
+            ],
+            [
+              "Tasso Variabile",
+              "Fissa",
+              "Indicizzata",
+              "Nessuna",
+              "Moderato"
+            ],
+            [
+              "Callable Step-Up",
+              "Incerta",
+              "Fissa + aumento",
+              "Call discrezionale",
+              { "text": "Elevato (asimmetrico)", "class": "negative" }
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "A differenza delle obbligazioni ordinarie, il rendimento effettivo di una callable dipende dalle scelte dell'emittente, non solo dal contratto iniziale. Questo la rende inadatta a profili conservativi o a chi non può monitorare costantemente lo strumento."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Longstaff & Tuckman (1994) ha confrontato le obbligazioni callable con quelle tradizionali, dimostrando che le callable offrono rendimenti apparentemente più elevati ma con rischi asimmetrici. La ricerca evidenzia che il rendimento effettivo può essere inferiore a quello promesso."
+        }
+      ]
+    },
+    {
+      "id": "checklist",
+      "title": "Check-list per Investitori",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le callable step-up non sono strumenti neutrali. Ogni acquisto deve essere preceduto da un controllo tecnico rigoroso. Ecco gli elementi chiave da verificare:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Durata reale attesa:** sei pronto a restare investito fino alla scadenza finale, anche oltre 10 anni?",
+            "**Opzione call:** è vantaggiosa solo per l'emittente o anche per te?",
+            "**Cedola post-call:** il tasso step-up è realmente competitivo con il mercato?",
+            "**Rendimento effettivo:** hai calcolato il rendimento in caso di call anticipata?",
+            "**Scenario avverso:** cosa succede se l'emittente non richiama e il tasso resta bloccato?",
+            "**Trasparenza contrattuale:** hai letto il prospetto e le condizioni della call?",
+            "**Rating emittente:** l'azienda ha uno storico affidabile nei rimborsi?"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "In assenza di risposte chiare e documentate, l'investimento è da considerarsi inadatto a un profilo retail. La difficoltà non è nell'acquisto, ma nella valutazione pre-contrattuale."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Inderst & Ottaviani (2012) ha sviluppato un framework per valutare l'adeguatezza dei prodotti strutturati, dimostrando che una checklist rigorosa può aiutare gli investitori retail a identificare prodotti inadeguati. La ricerca evidenzia l'importanza di una valutazione pre-contrattuale approfondita."
+        }
+      ]
+    },
+    {
+      "id": "glossario",
+      "title": "Glossario Tecnico",
+      "content": [
+        {
+          "type": "list",
+          "items": [
+            "**Callable:** clausola che consente all'emittente di richiamare anticipatamente l'obbligazione, rimborsando il capitale prima della scadenza naturale.",
+            "**Step-Up:** meccanismo che prevede un aumento progressivo della cedola a date prestabilite, salvo esercizio della call da parte dell'emittente.",
+            "**YTC (Yield to Call):** rendimento dell'obbligazione calcolato ipotizzando che venga richiamata alla prima data utile (call date).",
+            "**Duration Effettiva:** durata reale dell'investimento, tenuto conto della probabilità di call anticipata e non della scadenza legale.",
+            "**Make-Whole Call:** opzione di richiamo con penalità a carico dell'emittente, raramente presente nei bond retail.",
+            "**Reinvestment Risk:** rischio che il capitale rimborsato prima della scadenza debba essere reinvestito a tassi inferiori.",
+            "**Asimmetria Informativa:** situazione in cui l'emittente ha un vantaggio informativo e decisionale sull'investitore, tipica dei bond callable."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "esempi",
+      "title": "Esempi Reali e Cronaca Finanziaria",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I bond callable step-up sono stati al centro di numerosi casi pratici che evidenziano i loro vantaggi e insidie. Di seguito alcuni esempi significativi:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Santander 5.75% Callable 2025:** richiamato con largo anticipo, impedendo agli investitori di beneficiare della cedola aumentata. Il titolo ha mostrato come il vero rendimento si esaurisca nella prima fase.",
+            "**Enel Finance Intl 3.875% Step-Up:** emesso con call dopo 6 anni e step-up al 5.5%. È stato esercitato al primo richiamo utile, con grande delusione per chi sperava in rendimento lungo.",
+            "**BNP Paribas Retail Callable 2021:** venduto con promessa step-up progressivo, ma l'emittente ha ritirato il bond alla prima occasione utile. Dimostra l'asimmetria a favore dell'emittente."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "La stampa finanziaria ha più volte criticato questi strumenti per la loro opacità e per la difficoltà dell'investitore retail nel comprendere la vera durata e il rendimento atteso. Sono richieste competenze tecniche e accesso a fonti dati affidabili per un'analisi ex-ante corretta."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Henderson & Pearson (2011) ha analizzato i casi di delusione degli investitori retail nei bond callable step-up, dimostrando che molti investitori hanno subito perdite a causa della mancanza di comprensione dei rischi. La ricerca evidenzia l'importanza di una maggiore trasparenza."
+        }
+      ]
+    },
+    {
+      "id": "disclaimer",
+      "title": "Disclaimer e Note Legali",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le informazioni contenute in questa guida sono fornite da Tradelia AI a scopo esclusivamente informativo, formativo e simulativo. Non costituiscono in alcun modo una sollecitazione al pubblico risparmio, una raccomandazione personalizzata o una consulenza finanziaria, fiscale o legale."
+        },
+        {
+          "type": "paragraph",
+          "text": "Le obbligazioni callable step-up sono strumenti complessi e rischiosi. Comportano rischi significativi in termini di perdita del capitale, rischio di reinvestimento, asimmetria informativa, e rischio emittente. Ogni valutazione e decisione d'investimento deve essere presa in autonomia e con il supporto di un professionista autorizzato, tenendo conto del proprio profilo di rischio e degli obiettivi individuali."
+        },
+        {
+          "type": "paragraph",
+          "text": "Tradelia AI declina ogni responsabilità per danni diretti o indiretti derivanti dall'uso delle informazioni contenute in questa guida, incluse simulazioni o link esterni. L'utente accetta di assumersi ogni rischio associato alla consultazione e all'utilizzo dei contenuti."
+        }
+      ]
+    }
+  ]
+}
+

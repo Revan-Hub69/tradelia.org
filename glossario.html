@@ -762,8 +762,11 @@
     let activeUniverso = 'all';
     let activeDifficolta = 'all';
     
-    // ===== CARICAMENTO HEADER & FOOTER =====
+    // ===== CARICAMENTO HEADER & FOOTER (Dark Theme) =====
     async function mountHeaderFooter() {
+      // Assicura che il tema dark sia impostato
+      document.documentElement.setAttribute('data-theme', 'dark');
+      
       try {
         // Header
         const headerSlot = document.getElementById('site-header-slot');
@@ -1136,5 +1139,8 @@
       init();
     }
   </script>
+
+  <!-- ===== FOOTER SLOT (montato via JS) ===== -->
+  <div id="site-footer-slot"></div>
 </body>
 </html>

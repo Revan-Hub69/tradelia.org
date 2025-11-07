@@ -14,10 +14,17 @@ export default async function handler(req, res) {
       req.on("error", reject);
     });
 
+    // Usa variabile d'ambiente per la chiave API
+    const RESEND_API_KEY = process.env.RESEND_API_KEY || process.env.NEXT_PUBLIC_RESEND_API_KEY;
+    
+    if (!RESEND_API_KEY) {
+      return res.status(500).json({ error: "API key non configurata" });
+    }
+
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
-        Authorization: "Bearer re_hkkZC1CZ_4jT9XipxNg4mN1ffmPTQp61d", // Chiave in chiaro
+        Authorization: `Bearer ${RESEND_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

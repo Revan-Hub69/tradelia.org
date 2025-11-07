@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Tutorial Tradelia AI - [TITOLO]" />
+  <meta name="keywords" content="Tradelia AI, [KEYWORDS]" />
+  <meta name="author" content="Tradelia AI" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#ffffff" />
+  
+  <title>TRADELIA • AI — [TITOLO]</title>
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/report/assets/css/report-layout.css" />
+  <link rel="stylesheet" href="/report/assets/css/glossary-drawer.css" />
+  <link rel="stylesheet" href="/report/assets/css/glossary-popup.css" />
+  
+  <style>
+    /* ===== LIGHT THEME (PALETTE INVERSA) ===== */
+    :root[data-theme="light"] {
+      /* Colori Testo - Inversi */
+      --ink: #0f0f0f;             /* Testo principale - nero */
+      --ink-soft: #1a1a1a;         /* Testo secondario - grigio scuro */
+      --muted: #4a4a4a;            /* Testo muted - grigio medio */
+      --muted-strong: #6a6a6a;      /* Testo molto muted */
+      
+      /* Superfici - Bianco/Grigio Chiaro */
+      --surface-page: #ffffff;      /* Background principale - bianco */
+      --surface-card: #f8f8f8;     /* Card background - grigio chiaro */
+      --surface-elev: #f0f0f0;     /* Superficie elevata */
+      --surface-hover: #e8e8e8;    /* Hover state */
+      
+      /* Bordi - Sottili e Discreti */
+      --br-soft: #e0e0e0;          /* Bordo sottile */
+      --br-card: #d0d0d0;          /* Bordo card */
+      --br-strong: #c0c0c0;        /* Bordo forte */
+      
+      /* Footer */
+      --footer-bg: #f5f5f5;
+      --footer-br: #e0e0e0;
+      
+      /* Brand - Blu Istituzionale (stesso) */
+      --brand-600: #2563eb;
+      --brand-500: #3b82f6;
+      --brand-400: #60a5fa;
+      
+      /* Stati - Palette Finanziaria Standard */
+      --ok: rgba(22, 163, 74, 0.9);
+      --warn: rgba(234, 88, 12, 0.9);
+      --err: rgba(220, 38, 38, 0.9);
+      --neutral: #64748b;
+      
+      /* Tone Colors */
+      --tone-pos-fg: #16a34a;
+      --tone-neg-fg: #dc2626;
+      --tone-warn-fg: #ea580c;
+      --tone-neu-fg: #64748b;
+      
+      /* Background e Text Color */
+      background: var(--surface-page);
+      color: var(--ink);
+    }
+    
+    /* ===== TUTORIAL LAYOUT ===== */
+    body {
+      font-family: var(--ff-sans);
+      font-size: var(--fs-15);
+      line-height: var(--lh-17);
+      color: var(--ink);
+      background: var(--surface-page);
+      min-height: 100vh;
+    }
+    
+    /* Header slot */
+    #site-header-slot {
+      order: 0;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 100;
+    }
+    
+    /* Main content */
+    main#tutorial-content {
+      flex: 1 1 0%;
+      order: 1;
+      padding-top: var(--sp-8);
+      padding-bottom: var(--sp-8);
+      width: 100%;
+      max-width: 56rem; /* ~896px */
+      margin: 0 auto;
+      padding-left: var(--sp-4);
+      padding-right: var(--sp-4);
+    }
+    
+    /* Footer slot */
+    #site-footer-slot {
+      order: 2;
+      flex-shrink: 0;
+    }
+    
+    /* ===== TUTORIAL CONTENT STYLES ===== */
+    .tutorial-header {
+      margin-bottom: var(--sp-8);
+      padding-bottom: var(--sp-6);
+      border-bottom: 2px solid var(--br-card);
+    }
+    
+    .tutorial-title {
+      font-size: clamp(24px, 3vw, 32px);
+      font-weight: 800;
+      color: var(--ink);
+      margin: 0 0 var(--sp-3);
+      letter-spacing: -0.02em;
+      line-height: var(--lh-12);
+    }
+    
+    .tutorial-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-4);
+      margin-bottom: var(--sp-4);
+      font-size: var(--fs-13);
+      color: var(--muted);
+    }
+    
+    .tutorial-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+      margin-top: var(--sp-4);
+    }
+    
+    .tutorial-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: var(--sp-1_5) var(--sp-3);
+      font-size: var(--fs-11);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-soft);
+      background: var(--surface-elev);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-pill);
+    }
+    
+    .tutorial-toc {
+      background: var(--surface-card);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-5);
+      margin-bottom: var(--sp-8);
+    }
+    
+    .tutorial-toc-title {
+      font-size: var(--fs-16);
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0 0 var(--sp-4);
+    }
+    
+    .tutorial-toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-2);
+    }
+    
+    .tutorial-toc-item {
+      margin: 0;
+    }
+    
+    .tutorial-toc-link {
+      color: var(--brand-600);
+      text-decoration: none;
+      font-size: var(--fs-14);
+      transition: all var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-2);
+    }
+    
+    .tutorial-toc-link:hover {
+      color: var(--brand-500);
+      text-decoration: underline;
+    }
+    
+    .tutorial-section {
+      margin-bottom: var(--sp-10);
+      padding-bottom: var(--sp-6);
+      border-bottom: 1px solid var(--br-soft);
+    }
+    
+    .tutorial-section:last-child {
+      border-bottom: none;
+    }
+    
+    .tutorial-section-title {
+      font-size: clamp(20px, 2.2vw, 26px);
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0 0 var(--sp-4);
+      letter-spacing: -0.01em;
+      line-height: var(--lh-12);
+    }
+    
+    .tutorial-section-subtitle {
+      font-size: clamp(16px, 1.6vw, 20px);
+      font-weight: 600;
+      color: var(--ink);
+      margin: var(--sp-6) 0 var(--sp-3);
+    }
+    
+    .tutorial-content {
+      font-size: var(--fs-15);
+      line-height: var(--lh-17);
+      color: var(--ink-soft);
+      margin-bottom: var(--sp-5);
+    }
+    
+    .tutorial-content p {
+      margin-bottom: var(--sp-4);
+    }
+    
+    .tutorial-content ul,
+    .tutorial-content ol {
+      margin-bottom: var(--sp-4);
+      padding-left: var(--sp-6);
+    }
+    
+    .tutorial-content li {
+      margin-bottom: var(--sp-2);
+    }
+    
+    /* ===== GLOSSARY TERMS (CLICCABILI) ===== */
+    .glossary-term {
+      color: var(--brand-600);
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border-bottom: 1px solid transparent;
+      transition: all var(--transition-fast);
+      position: relative;
+    }
+    
+    .glossary-term:hover {
+      color: var(--brand-500);
+      border-bottom-color: var(--brand-500);
+    }
+    
+    .glossary-term:focus-visible {
+      outline: 2px solid var(--brand-600);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+    
+    /* ===== TABLES ===== */
+    .tutorial-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: var(--sp-6) 0;
+      background: var(--surface-card);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    
+    .tutorial-table th {
+      background: var(--surface-elev);
+      padding: var(--sp-3) var(--sp-4);
+      text-align: left;
+      font-weight: 600;
+      font-size: var(--fs-13);
+      color: var(--ink);
+      border-bottom: 1px solid var(--br-card);
+    }
+    
+    .tutorial-table td {
+      padding: var(--sp-3) var(--sp-4);
+      font-size: var(--fs-14);
+      color: var(--ink-soft);
+      border-bottom: 1px solid var(--br-soft);
+    }
+    
+    .tutorial-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .tutorial-table tr:nth-child(even) {
+      background: var(--surface-elev);
+    }
+    
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      main#tutorial-content {
+        padding-top: var(--sp-6);
+        padding-bottom: var(--sp-6);
+      }
+      
+      .tutorial-section {
+        margin-bottom: var(--sp-8);
+      }
+    }
+    
+    /* ===== HEADER LIGHT THEME ===== */
+    :root[data-theme="light"] .hdr {
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.96) 0%,
+        rgba(255, 255, 255, 0.92) 100%
+      );
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 
+        0 1px 0 rgba(0, 0, 0, 0.03) inset,
+        0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    :root[data-theme="light"] .hdr::after {
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(37, 99, 235, 0.15) 50%,
+        transparent 100%
+      );
+    }
+    
+    :root[data-theme="light"] .brand:hover {
+      background: rgba(0, 0, 0, 0.03);
+    }
+    
+    /* ===== FOOTER LIGHT THEME ===== */
+    :root[data-theme="light"] .site-footer {
+      background: linear-gradient(
+        180deg,
+        var(--surface-page) 0%,
+        var(--footer-bg) 100%
+      );
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+    }
+    
+    :root[data-theme="light"] .site-footer::before {
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(37, 99, 235, 0.2) 25%,
+        rgba(37, 99, 235, 0.3) 50%,
+        rgba(37, 99, 235, 0.2) 75%,
+        transparent 100%
+      );
+    }
+    
+    :root[data-theme="light"] .ftr-head {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER SLOT -->
+  <div id="site-header-slot"></div>
+
+  <!-- MAIN CONTENT -->
+  <main id="tutorial-content" role="main">
+    <!-- Tutorial Header -->
+    <header class="tutorial-header">
+      <h1 class="tutorial-title">[TITOLO TUTORIAL]</h1>
+      <div class="tutorial-meta">
+        <span>Pubblicato: [DATA]</span>
+        <span>•</span>
+        <span>Categoria: [CATEGORIA]</span>
+      </div>
+      <div class="tutorial-tags">
+        <span class="tutorial-tag">[TAG1]</span>
+        <span class="tutorial-tag">[TAG2]</span>
+        <span class="tutorial-tag">[TAG3]</span>
+      </div>
+    </header>
+
+    <!-- Table of Contents -->
+    <nav class="tutorial-toc" aria-label="Indice del tutorial">
+      <h2 class="tutorial-toc-title">Indice del Tutorial</h2>
+      <ol class="tutorial-toc-list">
+        <li class="tutorial-toc-item"><a href="#sezione-1" class="tutorial-toc-link">1. [Sezione 1]</a></li>
+        <li class="tutorial-toc-item"><a href="#sezione-2" class="tutorial-toc-link">2. [Sezione 2]</a></li>
+        <!-- Aggiungi altre sezioni -->
+      </ol>
+    </nav>
+
+    <!-- Tutorial Sections -->
+    <section id="sezione-1" class="tutorial-section">
+      <h2 class="tutorial-section-title">1. [Titolo Sezione]</h2>
+      <div class="tutorial-content">
+        <p>
+          [Contenuto paragrafo 1. I termini tecnici come <span class="glossary-term" data-glossary="TermKey">termine tecnico</span> sono cliccabili per aprire il drawer del glossario.]
+        </p>
+        <p>
+          [Contenuto paragrafo 2. Ogni termine tecnico può essere reso cliccabile usando la classe <code>glossary-term</code> con l'attributo <code>data-glossary</code> che contiene la chiave del termine nel glossario.]
+        </p>
+        
+        <h3 class="tutorial-section-subtitle">Sottosezione</h3>
+        <p>
+          [Contenuto sottosezione...]
+        </p>
+      </div>
+    </section>
+
+    <!-- Aggiungi altre sezioni -->
+  </main>
+
+  <!-- FOOTER SLOT -->
+  <div id="site-footer-slot"></div>
+
+  <!-- SCRIPTS -->
+  <script type="module">
+    // Import components
+    import { siteHeader } from '/report/assets/js/components/site-header.js';
+    import { siteFooter } from '/report/assets/js/components/site-footer.js';
+    import { glossaryPopup } from '/report/assets/js/components/glossary-popup.js';
+    
+    // Mount header
+    const headerSlot = document.getElementById('site-header-slot');
+    if (headerSlot) {
+      siteHeader.mount(headerSlot);
+    }
+    
+    // Mount footer
+    const footerSlot = document.getElementById('site-footer-slot');
+    if (footerSlot) {
+      siteFooter.mount(footerSlot);
+    }
+    
+    // Mount glossary popup
+    glossaryPopup.mount();
+    
+    // Make glossary terms clickable
+    document.addEventListener('DOMContentLoaded', () => {
+      const glossaryTerms = document.querySelectorAll('.glossary-term[data-glossary]');
+      
+      glossaryTerms.forEach(term => {
+        term.addEventListener('click', async (e) => {
+          e.preventDefault();
+          const termKey = term.dataset.glossary;
+          if (termKey) {
+            try {
+              await glossaryPopup.openTerm(termKey);
+            } catch (err) {
+              console.warn('Errore apertura glossario:', err);
+            }
+          }
+        });
+      });
+    });
+    
+    // Set light theme
+    document.documentElement.setAttribute('data-theme', 'light');
+  </script>
+</body>
+</html>
+

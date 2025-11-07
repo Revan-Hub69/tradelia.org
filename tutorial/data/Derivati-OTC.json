@@ -1,0 +1,445 @@
+{
+  "title": "Derivati OTC: Guida Completa Tradelia AI",
+  "meta": {
+    "published": "Gennaio 2025",
+    "category": "Strumenti Derivati",
+    "difficulty": "Intermedio-Avanzato"
+  },
+  "tags": [
+    "Derivati OTC",
+    "Swap",
+    "Forward",
+    "Opzioni",
+    "Rischio Controparte",
+    "Derivati",
+    "Strumenti Complessi"
+  ],
+  "glossaryTerms": {
+    "derivati OTC": "CreditRiskBlock",
+    "swap": "CreditRiskBlock",
+    "forward": "CreditRiskBlock",
+    "rischio controparte": "CreditRiskBlock",
+    "marginazione": "CreditRiskBlock",
+    "netting": "CreditRiskBlock",
+    "ISDA": "CreditRiskBlock"
+  },
+  "sections": [
+    {
+      "id": "introduzione",
+      "title": "Cosa sono i Derivati OTC e Come Funzionano",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I **derivati OTC (Over-The-Counter)** sono contratti finanziari negoziati **fuori dai mercati regolamentati**, direttamente tra due controparti. Non hanno una struttura standardizzata, ma vengono creati su misura per soddisfare esigenze specifiche di copertura, speculazione o ottimizzazione fiscale."
+        },
+        {
+          "type": "paragraph",
+          "text": "A differenza dei derivati quotati (es. futures e opzioni standardizzati), gli OTC non passano attraverso una clearing house centrale, quindi **l'intero rischio di controparte resta in capo ai firmatari del contratto**. Ciò rende i derivati OTC flessibili ma anche intrinsecamente più rischiosi."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Principali Caratteristiche Operative"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Personalizzazione:** struttura, sottostante, durata e clausole definite bilateralmente",
+            "**Assenza di trasparenza:** i prezzi non sono visibili su mercati pubblici",
+            "**Regolazione diretta:** tramite scambio tra le parti o intermediazione bancaria",
+            "**Accesso limitato:** tipicamente riservati a istituzionali, banche e clienti professionali"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Il mercato dei derivati OTC è vasto: secondo dati BIS, supera abbondantemente i **600 trilioni di USD di nozionale lordo**. Include swap su tassi, credit default swap (CDS), contratti forward su valute, opzioni esotiche e altri strumenti ibridi."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Duffie & Singleton (2003) ha analizzato il mercato dei derivati OTC, dimostrando che il rischio di controparte può essere significativo anche con collateral. La ricerca evidenzia che la dimensione del mercato OTC supera quella dei mercati regolamentati, con implicazioni sistemiche significative."
+        }
+      ]
+    },
+    {
+      "id": "controparti",
+      "title": "Controparti, Marginazione e Netting",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Nei derivati OTC, la **controparte diretta** è l'interlocutore contrattuale: tipicamente una banca d'investimento, un hedge fund o una grande corporate. A differenza dei mercati regolamentati, dove una clearing house fa da garante, qui il **rischio di default è bilaterale**."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Rischio di Controparte"
+        },
+        {
+          "type": "paragraph",
+          "text": "Se una delle due parti fallisce o non onora le condizioni contrattuali, l'altra può subire perdite totali o parziali. Questo rischio diventa sistemico quando una banca coinvolta in centinaia di contratti non riesce a far fronte agli impegni — come avvenuto nel caso Lehman Brothers."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Marginazione (Collateralizzazione)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Per attenuare il rischio di controparte, i contratti OTC prevedono la **marginazione bilaterale**: entrambe le parti depositano garanzie (initial margin + variation margin) su base giornaliera. Questi fondi coprono le oscillazioni di valore del contratto in tempo reale."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Initial margin:** garanzia iniziale calcolata in base al rischio potenziale",
+            "**Variation margin:** rettifica giornaliera in base alla mark-to-market del contratto",
+            "**Haircut:** il collateral non è mai valutato al 100%, ma con uno sconto prudenziale"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Netting e Close-Out"
+        },
+        {
+          "type": "paragraph",
+          "text": "Le controparti con più contratti attivi possono firmare accordi di **netting**: le esposizioni sono compensate in caso di default (es. se A deve 10 a B e B deve 6 ad A, si regola la differenza netta). Il **close-out netting** avviene automaticamente alla chiusura dei rapporti contrattuali, riducendo l'esposizione lorda."
+        },
+        {
+          "type": "paragraph",
+          "text": "Tuttavia, il netting è valido solo se i contratti sono giuridicamente compatibili e coperti da accordi standard (ISDA, CSA). In assenza di questi accordi, il rischio legale aumenta — specialmente nei contenziosi internazionali."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Duffie & Singleton (2003) ha analizzato il rischio di controparte nei derivati OTC, dimostrando che la marginazione e il netting possono ridurre ma non eliminare il rischio. La ricerca evidenzia che la qualità e la liquidità del collateral sono cruciali per la protezione."
+        }
+      ]
+    },
+    {
+      "id": "tipologie",
+      "title": "Tipologie Più Diffuse (Swap, Forward, Opzioni OTC)",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I derivati OTC coprono una gamma molto ampia di strumenti, spesso utilizzati per copertura, arbitraggio o costruzione di payoff personalizzati. Di seguito le principali tipologie:"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Swap"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Interest Rate Swap (IRS):** scambio di flussi a tasso fisso contro variabile (es. Euribor vs. fisso 2%)",
+            "**Currency Swap:** scambio di flussi in valute diverse, spesso con nozionale in valuta estera",
+            "**Total Return Swap (TRS):** trasferimento del rendimento totale di un asset senza possederlo",
+            "**Credit Default Swap (CDS):** \"assicurazione\" contro il default di un debitore"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Forward"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**FX Forward:** accordo per scambiare una certa quantità di valuta a un prezzo fissato e data futura",
+            "**Commodity Forward:** come sopra, ma su materie prime (petrolio, gas, grano, etc.)",
+            "**Bond Forward:** su obbligazioni specifiche, spesso usati per coprire rischio di tasso"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Opzioni OTC"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Vanilla Options:** call e put su valute, tassi o azioni — ma con strike e scadenze personalizzabili",
+            "**Barrier Options:** attivate o disattivate al superamento di determinati livelli (knock-in/knock-out)",
+            "**Quanto Options:** payoff in valuta diversa da quella del sottostante",
+            "**Digital/Binary Options:** payoff fisso tutto o nulla al verificarsi di una condizione"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Questi strumenti possono essere usati singolarmente o combinati in **strutture complesse** (es. dual currency notes, structured bonds, exotic basket). Il livello di rischio e opacità aumenta con la personalizzazione."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Hull (2018) ha analizzato le diverse tipologie di derivati OTC, dimostrando che la complessità strutturale aumenta con il numero di variabili incorporate. La ricerca evidenzia che molti investitori retail sottovalutano l'impatto delle combinazioni di derivati."
+        }
+      ]
+    },
+    {
+      "id": "rischi",
+      "title": "Rischi Intrinseci: Controparte, Liquidità, Trasparenza",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I derivati OTC offrono flessibilità e personalizzazione, ma portano con sé rischi strutturali spesso sottovalutati, in particolare quando impacchettati in prodotti retail. Questi rischi non derivano solo dal movimento del sottostante, ma dalla **natura stessa del contratto**."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Rischio di Controparte"
+        },
+        {
+          "type": "paragraph",
+          "text": "Poiché non esiste una clearing house che garantisca la transazione, l'esecuzione del contratto dipende dalla solvibilità della controparte. In caso di default, anche un contratto in profitto può non essere onorato."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Rischio di Liquidità"
+        },
+        {
+          "type": "list",
+          "items": [
+            "I derivati OTC non sono negoziabili su mercati secondari: la **chiusura anticipata** dipende dalla disponibilità della controparte",
+            "La valutazione del contratto può essere contestata in assenza di prezzi di mercato trasparenti",
+            "In caso di crisi di mercato, la possibilità di unwind si riduce drasticamente"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Rischio di Trasparenza"
+        },
+        {
+          "type": "list",
+          "items": [
+            "La maggior parte dei derivati OTC viene valutata **mark-to-model**, cioè con modelli interni dell'emittente",
+            "Documentazione tecnica complessa e spesso **non disponibile in lingua locale**",
+            "La struttura del payoff può essere non lineare, con meccanismi che penalizzano l'investitore in scenari avversi"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "A questi si aggiunge il **rischio regolamentare**: non tutti i derivati OTC sono notificati alle autorità in tempo reale, specialmente se inseriti in note strutturate vendute a clienti al dettaglio."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Duffie & Singleton (2003) ha analizzato i rischi dei derivati OTC, dimostrando che il rischio di controparte e la mancanza di trasparenza possono compromettere la sicurezza dell'investitore. La ricerca evidenzia l'importanza di comprendere appieno i rischi prima dell'investimento."
+        }
+      ]
+    },
+    {
+      "id": "uso-distorto",
+      "title": "Uso Distorto nei Prodotti Retail e Scandali Noti",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I derivati OTC, nati come strumenti di gestione avanzata del rischio per investitori istituzionali, sono stati progressivamente incorporati in **prodotti strutturati per clienti retail**. Questo passaggio ha spesso mascherato rischi complessi dietro etichette rassicuranti."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Strutture Opache \"a Capitale Protetto\""
+        },
+        {
+          "type": "paragraph",
+          "text": "Molti derivati OTC sono stati usati per costruire obbligazioni \"protette\", \"step-up\" o \"multicallable\" che in realtà celavano:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Opzioni digitali o barrier** che annullavano il rendimento in caso di eventi avversi",
+            "**Clausole di rimborso anticipato forzato** sempre a favore dell'emittente",
+            "**Replica parziale** di indici, spesso con cap massimo su guadagni e floor nullo su perdite"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Casi Eclatanti"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Monte dei Paschi (2013):** derivati occultati tramite ristrutturazioni contabili (Alexandria, Santorini)",
+            "**Barclays e autocallable index notes:** strutture vendute in Europa con payoff non trasparente, esplosi in perdita",
+            "**Deutsche Bank & structured notes:** vendite massive a retail tedesco tra il 2006 e il 2011, poi sotto esame Bafin",
+            "**Mini-bond con embedded swap:** prodotti piazzati a PMI e retail, poi esplosi alla prima variazione dei tassi"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "In tutti i casi, il problema non era solo il derivato — ma **l'opacità del contenuto** e la distanza tra payoff percepito e payoff reale. Gli investitori hanno spesso scoperto troppo tardi che la struttura era \"asimmetrica\"."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Henderson & Pearson (2011) ha analizzato l'uso dei derivati OTC nei prodotti retail, dimostrando che l'opacità e la complessità possono compromettere la protezione dell'investitore. La ricerca evidenzia l'importanza di una maggiore trasparenza e regolamentazione."
+        }
+      ]
+    },
+    {
+      "id": "confronto",
+      "title": "Confronto con Derivati Quotati: Vantaggi Reali vs Illusori",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "La principale differenza tra derivati OTC e derivati quotati (exchange-traded) risiede nel **livello di standardizzazione, trasparenza e protezione**. Entrambi possono essere usati per finalità speculative o di copertura — ma l'infrastruttura che li supporta è profondamente diversa."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Derivati Quotati: Caratteristiche Principali"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Standardizzati:** scadenze, taglio minimo e sottostanti sono fissi",
+            "**Regolati da clearing house:** elimina il rischio di controparte diretta",
+            "**Trasparenza dei prezzi:** book visibile, regolamento continuo",
+            "**Liquidità più elevata:** soprattutto per future su indici, tassi e materie prime",
+            "**Accesso semplificato:** via broker regolamentati con marginazione standard"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Derivati OTC: Vantaggi Reali (per l'Esperto)"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Strutture personalizzate:** possibile modellare payoff complessi su esigenze specifiche",
+            "**Accesso a sottostanti \"non listati\":** obbligazioni, cross valutari esotici, tassi forward",
+            "**Negoziazione bilaterale:** flessibilità su data di regolamento, durata, leva, margini",
+            "**Utili per hedging sofisticato:** specie su portafogli non lineari o illiquidi"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "I derivati OTC sono **più potenti ma anche più pericolosi**. Offrono soluzioni su misura, ma richiedono: capacità di valutazione autonoma del fair value, monitoraggio costante del rischio controparte, e capacità contrattuale di negoziare le clausole."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Hull (2018) ha confrontato i derivati OTC con quelli quotati, dimostrando che gli OTC offrono maggiore flessibilità ma con rischi significativamente più elevati. La ricerca evidenzia che gli OTC sono adatti solo per investitori evoluti che comprendono appieno i rischi."
+        }
+      ]
+    },
+    {
+      "id": "quando-usare",
+      "title": "Quando (Non) ha Senso Utilizzarli in un Portafoglio Reale",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I derivati OTC non sono strumenti \"da evitare a priori\", ma nemmeno da inserire superficialmente in un portafoglio retail. Il loro utilizzo ha senso solo in **strategie avanzate e contesti precisi**, dove il controllo del rischio è pienamente sotto la responsabilità del gestore."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Quando ha Senso Usarli"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Hedging su portafogli illiquidi:** copertura su obbligazioni corporate, duration, spread, cambi specifici",
+            "**Esposizione a tassi forward o strutture complesse:** curve forward su IRS, swaption, trigger su inflazione",
+            "**Strutture ad alto rendimento gestito attivamente:** reverse convertible, range accrual con controllo settimanale",
+            "**Clientela professionale o istituzionale:** dove la gestione del rischio è integrata nel mandato"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Quando è Meglio Evitarli"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Clienti retail non professionali:** assenza di strumenti per comprendere e valutare correttamente il payoff",
+            "**Orizzonte di lungo termine passivo:** i rischi non visibili si accumulano nel tempo",
+            "**Portafogli costruiti per semplicità e trasparenza:** l'OTC rompe ogni linearità, spesso senza premio di rischio adeguato",
+            "**Condizioni di mercato stressate:** nei momenti di turbolenza la liquidabilità e la valutazione diventano critiche"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "In sintesi, il derivato OTC ha senso **solo se inserito in una strategia consapevole** e in un contesto professionale. Diversamente, è come introdurre una variabile non osservabile in un'equazione che si credeva lineare."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Inderst & Ottaviani (2012) ha sviluppato criteri per valutare l'adeguatezza dei derivati OTC, dimostrando che questi strumenti sono adatti solo per investitori evoluti che comprendono appieno i rischi. La ricerca evidenzia l'importanza di una valutazione approfondita prima dell'investimento."
+        }
+      ]
+    },
+    {
+      "id": "checklist",
+      "title": "Indicatori di Rischio da Verificare Prima dell'Acquisto",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Prima di sottoscrivere un prodotto che incorpora derivati OTC, è essenziale rispondere in modo chiaro e documentato a una serie di **domande operative e tecniche**. Questa check-list serve da filtro per valutare la reale adeguatezza del prodotto."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Comprendi la **struttura del derivato OTC** incorporato nel prodotto?",
+            "Conosci la **solidità della controparte** e il rischio di default?",
+            "Hai valutato il **rischio di liquidità** e la possibilità di uscita anticipata?",
+            "Sai come viene calcolato il **fair value** del prodotto (mark-to-model o mark-to-market)?",
+            "Hai letto la **documentazione completa** (ISDA, term sheet, prospetto)?",
+            "Comprendi le **clausole di marginazione** e netting?",
+            "Hai valutato il **rischio regolamentare** e le implicazioni normative?",
+            "Puoi accettare il **rischio di perdita totale** anche in scenari avversi?"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "In assenza di risposte chiare e fondate a queste domande, l'investimento è da considerarsi ad alto rischio. La difficoltà non è nel comprarlo, ma nel capirlo prima."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Inderst & Ottaviani (2012) ha sviluppato un framework per valutare l'adeguatezza dei prodotti con derivati OTC, dimostrando che una checklist rigorosa può aiutare gli investitori retail a identificare prodotti inadeguati. La ricerca evidenzia l'importanza di una valutazione pre-contrattuale approfondita."
+        }
+      ]
+    },
+    {
+      "id": "glossario",
+      "title": "Glossario Tecnico Sintetico",
+      "content": [
+        {
+          "type": "list",
+          "items": [
+            "**Derivato OTC:** contratto finanziario derivato negoziato fuori dai mercati regolamentati, direttamente tra due controparti",
+            "**Swap:** accordo per scambiarsi flussi di cassa futuri legati a tassi, valute o altri parametri finanziari",
+            "**Forward:** contratto che fissa oggi il prezzo per una transazione futura su un asset specifico",
+            "**Controparte:** soggetto (banca, istituzione, investitore) con cui si stipula il contratto OTC",
+            "**ISDA:** standard contrattuale per derivati OTC, sviluppato dalla International Swaps and Derivatives Association",
+            "**Nota Strutturata:** strumento finanziario che incorpora uno o più derivati OTC all'interno di un'obbligazione",
+            "**Accrual:** meccanismo di calcolo di interessi variabili legati a condizioni di mercato specifiche (es. range, trigger)",
+            "**Mark-to-Market:** valutazione giornaliera del valore corrente di un contratto derivato",
+            "**Rischio di Controparte:** possibilità che una delle parti del contratto non adempia ai propri obblighi",
+            "**Clearing Bilaterale:** regolamento diretto tra le due parti, senza intervento di una clearing house centrale"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "disclaimer",
+      "title": "Disclaimer e Avvertenze Finali",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le informazioni contenute in questa guida sono fornite da Tradelia AI a scopo esclusivamente informativo, formativo e simulativo. Non costituiscono in alcun modo una sollecitazione al pubblico risparmio, una raccomandazione personalizzata o una consulenza finanziaria, fiscale o legale."
+        },
+        {
+          "type": "paragraph",
+          "text": "I derivati OTC sono strumenti complessi, con una **struttura opaca e rischi non immediatamente evidenti**. L'accessibilità tecnica non equivale a idoneità operativa. Solo investitori con **esperienza e competenze elevate** dovrebbero valutare l'utilizzo diretto di tali strumenti."
+        },
+        {
+          "type": "paragraph",
+          "text": "Ogni decisione d'investimento deve essere accompagnata da un'analisi autonoma e dalla lettura dei documenti contrattuali e regolamentari. I rischi principali includono la perdita totale del capitale, rischio di controparte, illiquidità e pricing non trasparente. Ogni valutazione e decisione d'investimento deve essere presa in autonomia e con il supporto di un professionista autorizzato, tenendo conto del proprio profilo di rischio e degli obiettivi individuali."
+        },
+        {
+          "type": "paragraph",
+          "text": "Tradelia AI declina ogni responsabilità per danni diretti o indiretti derivanti dall'uso delle informazioni contenute in questa guida, incluse simulazioni o link esterni. L'utente accetta di assumersi ogni rischio associato alla consultazione e all'utilizzo dei contenuti."
+        }
+      ]
+    }
+  ]
+}
