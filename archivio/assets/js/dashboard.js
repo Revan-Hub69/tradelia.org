@@ -411,6 +411,40 @@ function setupEventListeners() {
     loginForm.addEventListener('submit', handleLogin);
   }
   
+  // Demo login button
+  const demoLoginBtn = document.getElementById('demo-login-btn');
+  if (demoLoginBtn) {
+    demoLoginBtn.addEventListener('click', handleDemoLogin);
+  }
+  
+  // Forgot password button
+  const forgotPasswordBtn = document.getElementById('forgot-password-btn');
+  if (forgotPasswordBtn) {
+    forgotPasswordBtn.addEventListener('click', () => {
+      const modal = document.getElementById('forgot-password-modal');
+      if (modal) {
+        modal.hidden = false;
+      }
+    });
+  }
+  
+  // Cancel reset button
+  const cancelResetBtn = document.getElementById('cancel-reset-btn');
+  if (cancelResetBtn) {
+    cancelResetBtn.addEventListener('click', () => {
+      const modal = document.getElementById('forgot-password-modal');
+      if (modal) {
+        modal.hidden = true;
+      }
+    });
+  }
+  
+  // Forgot password form
+  const forgotPasswordForm = document.getElementById('forgot-password-form');
+  if (forgotPasswordForm) {
+    forgotPasswordForm.addEventListener('submit', handleForgotPassword);
+  }
+  
   // Logout button
   const logoutBtn = document.getElementById('logout-btn');
   if (logoutBtn) {
@@ -446,10 +480,16 @@ async function handleLogin(event) {
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
   const errorEl = document.getElementById('login-error');
+  const successEl = document.getElementById('login-success');
   
+  // Reset messaggi
   if (errorEl) {
     errorEl.hidden = true;
     errorEl.textContent = '';
+  }
+  if (successEl) {
+    successEl.hidden = true;
+    successEl.textContent = '';
   }
   
   try {
@@ -457,31 +497,187 @@ async function handleLogin(event) {
       throw new Error('Email e password richieste');
     }
     
+    Logger.debug('Dashboard', 'Tentativo login', { email: email.trim() });
+    
     const { data, error } = await supabase.auth.signInWithPassword({ 
       email: email.trim(), 
       password 
     });
     
     if (error) {
-      throw error;
+      Logger.error('Dashboard', 'Errore Supabase login', error);
+      
+      // Messaggi di errore specifici
+      let errorMessage = 'Errore durante il login';
+      if (error.message) {
+        if (error.message.includes('Invalid login credentials')) {
+          errorMessage = 'Email o password non corretti. Verifica le credenziali e riprova.';
+        } else if (error.message.includes('Email not confirmed')) {
+          errorMessage = 'Email non confermata. Controlla la tua casella email e clicca sul link di conferma.';
+        } else if (error.message.includes('Too many requests')) {
+          errorMessage = 'Troppi tentativi. Attendi qualche minuto e riprova.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      throw new Error(errorMessage);
     }
     
     if (data && data.user) {
+      Logger.debug('Dashboard', 'Login riuscito', { userId: data.user.id });
       STATE.user = data.user;
       
       // Crea/aggiorna subscriber
       await ensureSubscriber(data.user);
       
-      showDashboard();
+      // Mostra messaggio di successo
+      if (successEl) {
+        successEl.hidden = false;
+        successEl.textContent = 'Login riuscito! Accesso in corso...';
+      }
+      
+      // Piccolo delay per mostrare messaggio
+      setTimeout(() => {
+        showDashboard();
+      }, 500);
     } else {
-      throw new Error('Login fallito');
+      throw new Error('Login fallito: nessun dato utente ricevuto');
     }
     
   } catch (err) {
     Logger.error('Dashboard', 'Errore login', err);
     if (errorEl) {
       errorEl.hidden = false;
-      errorEl.textContent = err.message || 'Errore durante il login';
+      errorEl.textContent = err.message || 'Errore durante il login. Verifica le credenziali e riprova.';
+    }
+  }
+}
+
+// ===== HANDLE DEMO LOGIN =====
+async function handleDemoLogin() {
+  const errorEl = document.getElementById('login-error');
+  const successEl = document.getElementById('login-success');
+  
+  // Reset messaggi
+  if (errorEl) {
+    errorEl.hidden = true;
+    errorEl.textContent = '';
+  }
+  if (successEl) {
+    successEl.hidden = true;
+    successEl.textContent = '';
+  }
+  
+  try {
+    // Credenziali demo (da creare in Supabase)
+    const demoEmail = 'demo@tradelia.org';
+    const demoPassword = 'Demo123!';
+    
+    Logger.debug('Dashboard', 'Tentativo login demo', { email: demoEmail });
+    
+    const { data, error } = await supabase.auth.signInWithPassword({ 
+      email: demoEmail, 
+      password: demoPassword 
+    });
+    
+    if (error) {
+      Logger.error('Dashboard', 'Errore login demo', error);
+      
+      // Se login demo fallisce, mostra messaggio informativo
+      if (errorEl) {
+        errorEl.hidden = false;
+        errorEl.textContent = 'Login demo non disponibile. Crea un account o usa le tue credenziali.';
+      }
+      return;
+    }
+    
+    if (data && data.user) {
+      Logger.debug('Dashboard', 'Login demo riuscito', { userId: data.user.id });
+      STATE.user = data.user;
+      
+      // Crea/aggiorna subscriber
+      await ensureSubscriber(data.user);
+      
+      // Mostra messaggio di successo
+      if (successEl) {
+        successEl.hidden = false;
+        successEl.textContent = 'Login demo riuscito! Accesso in corso...';
+      }
+      
+      // Piccolo delay per mostrare messaggio
+      setTimeout(() => {
+        showDashboard();
+      }, 500);
+    }
+    
+  } catch (err) {
+    Logger.error('Dashboard', 'Errore login demo', err);
+    if (errorEl) {
+      errorEl.hidden = false;
+      errorEl.textContent = 'Errore durante il login demo. Verifica la configurazione.';
+    }
+  }
+}
+
+// ===== HANDLE FORGOT PASSWORD =====
+async function handleForgotPassword(event) {
+  event.preventDefault();
+  
+  const email = document.getElementById('reset-email').value;
+  const errorEl = document.getElementById('reset-error');
+  const successEl = document.getElementById('reset-success');
+  
+  // Reset messaggi
+  if (errorEl) {
+    errorEl.hidden = true;
+    errorEl.textContent = '';
+  }
+  if (successEl) {
+    successEl.hidden = true;
+    successEl.textContent = '';
+  }
+  
+  try {
+    if (!email) {
+      throw new Error('Email richiesta');
+    }
+    
+    Logger.debug('Dashboard', 'Richiesta reset password', { email: email.trim() });
+    
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${window.location.origin}/archivio/dashboard.html?reset=true`
+    });
+    
+    if (error) {
+      Logger.error('Dashboard', 'Errore reset password', error);
+      
+      // Messaggi di errore specifici
+      let errorMessage = 'Errore durante la richiesta di reset password';
+      if (error.message) {
+        if (error.message.includes('rate limit')) {
+          errorMessage = 'Troppe richieste. Attendi qualche minuto e riprova.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      throw new Error(errorMessage);
+    }
+    
+    // Mostra messaggio di successo
+    if (successEl) {
+      successEl.hidden = false;
+      successEl.textContent = 'Email di ripristino inviata! Controlla la tua casella email e segui le istruzioni.';
+    }
+    
+    Logger.debug('Dashboard', 'Reset password inviato', { email: email.trim() });
+    
+  } catch (err) {
+    Logger.error('Dashboard', 'Errore forgot password', err);
+    if (errorEl) {
+      errorEl.hidden = false;
+      errorEl.textContent = err.message || 'Errore durante la richiesta di reset password. Riprova.';
     }
   }
 }
