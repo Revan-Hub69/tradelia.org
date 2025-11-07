@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -16,6 +16,7 @@
 
   <!-- Design System -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/report/assets/css/header-footer-light.css" />
 
   <!-- Lucide: una sola import -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -219,18 +220,8 @@
   </style>
 </head>
 <body>
-<!-- ===== HEADER ===== -->
-<header class="hdr">
-  <div class="container w-full flex items-center justify-between">
-    <a href="/index.html"
-       class="text-lg sm:text-xl font-extrabold tracking-tight hover:opacity-90 transition"
-       aria-label="Tradelia.org"
-       style="color: var(--brand-text)">
-      <span>TRADELIA</span>
-      <span class="animate-pulse" style="color: var(--brand-accent)">&bull;AI</span>
-    </a>
-  </div>
-</header>
+<!-- ===== HEADER SLOT (montato via JS) ===== -->
+<div id="site-header-slot"></div>
 
 <section class="bg-white border-b border-slate-200 relative overflow-hidden">
   <div class="max-w-7xl mx-auto px-6 lg:px-8 py-10 lg:py-16 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
@@ -1291,9 +1282,13 @@
     if(!container) return;
     const el = container.querySelector('input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled])');
     if(el){
-      setTimeout(()=>{
-        try{ el.focus({ preventScroll:true }); if(typeof el.select==='function') el.select(); }catch(_){}
-      }, 10);
+      // Usa requestAnimationFrame invece di setTimeout per migliore reattività
+      requestAnimationFrame(() => {
+        try{ 
+          el.focus({ preventScroll:true }); 
+          if(typeof el.select==='function') el.select(); 
+        }catch(_){}
+      });
     }
   }
 
@@ -1362,27 +1357,51 @@
     pwd.closest('label').classList.toggle('opacity-50', !isPriv);
   }
 
-    // ===== Righe dinamiche Portafoglio (Step 9) =====
+    // ===== Righe dinamiche Portafoglio (Step 9) - ottimizzato =====
   function aggiungiRigaVal(){
     const wrap = document.getElementById('val-positions');
     if(!wrap) return;
     const i = wrap.children.length;
-    const div = document.createElement('div');
-    div.innerHTML = rowValTemplate(i);
-    const node = div.firstElementChild;
-    wrap.appendChild(node);
-    const first = node.querySelector(`input[name="pos[${i}][nome]"]`);
-    if(first){ setTimeout(()=> first.focus(), 10); }
-    if(window.lucide) lucide.createIcons();
+    // Usa requestAnimationFrame per rendering più fluido
+    requestAnimationFrame(() => {
+      const div = document.createElement('div');
+      div.innerHTML = rowValTemplate(i);
+      const node = div.firstElementChild;
+      wrap.appendChild(node);
+      const first = node.querySelector(`input[name="pos[${i}][nome]"]`);
+      if(first){ 
+        // Focus immediato senza setTimeout per migliore reattività
+        requestAnimationFrame(() => first.focus());
+      }
+      // Lazy load icons solo se necessario
+      if(window.lucide) {
+        requestAnimationFrame(() => lucide.createIcons(node));
+      }
+    });
   }
   function rimuoviRigaVal(btn){ btn.closest('.border.rounded-xl')?.remove(); aggiornaSomma(); }
+  // Ottimizzato: usa requestAnimationFrame e cache per evitare calcoli inutili
+  let __sommaTimeout = null;
   function aggiornaSomma(){
-    let s=0; document.querySelectorAll('.pct-input').forEach(i=>{ const v=parseFloat(i.value); if(!isNaN(v)) s+=v; });
-    document.getElementById('val-somma').textContent = `Somma indicativa: ${s.toFixed(1)}%`;
-    const warn = document.getElementById('sum-warning');
-    if(!warn) return;
-    const out = (s>110 || s<90) && !isNaN(s);
-    warn.classList.toggle('hidden', !out);
+    // Debounce per evitare troppi calcoli durante la digitazione
+    if(__sommaTimeout) clearTimeout(__sommaTimeout);
+    __sommaTimeout = setTimeout(() => {
+      requestAnimationFrame(() => {
+        let s=0; 
+        const inputs = document.querySelectorAll('.pct-input');
+        inputs.forEach(i=>{ 
+          const v=parseFloat(i.value); 
+          if(!isNaN(v) && v > 0) s+=v; 
+        });
+        const sommaEl = document.getElementById('val-somma');
+        if(sommaEl) sommaEl.textContent = `Somma indicativa: ${s.toFixed(1)}%`;
+        const warn = document.getElementById('sum-warning');
+        if(warn) {
+          const out = (s>110 || s<90) && !isNaN(s);
+          warn.classList.toggle('hidden', !out);
+        }
+      });
+    }, 50);
   }
   function rowValTemplate(i){
     return `
@@ -1591,21 +1610,36 @@ function buildPayload(){
 
 
     
-  // ===== Anteprima payload =====
+  // ===== Anteprima payload (ottimizzato) =====
+  let __payloadCache = null;
   function renderPayload(){
     const pre = document.getElementById('payload');
-    if(pre) pre.textContent = JSON.stringify(buildPayload(), null, 2);
+    if(!pre) return;
+    // Usa requestAnimationFrame per rendering più fluido
+    requestAnimationFrame(() => {
+      try {
+        const payload = buildPayload();
+        // Cache per evitare re-stringify se invariato
+        const payloadStr = JSON.stringify(payload, null, 2);
+        if(payloadStr !== __payloadCache) {
+          pre.textContent = payloadStr;
+          __payloadCache = payloadStr;
+        }
+      } catch(err) {
+        console.error('Errore rendering payload:', err);
+      }
+    });
   }
 
-  // ===== Debounce per anteprima automatica =====
-  const __debounce = (fn, ms=400) => {
+  // ===== Debounce ottimizzato (delay ridotto per reattività) =====
+  const __debounce = (fn, ms=150) => {
     let t;
     return (...args) => {
       clearTimeout(t);
       t = setTimeout(() => fn.apply(null, args), ms);
     };
   };
-  const __autoPreview = __debounce(() => renderPayload(), 250);
+  const __autoPreview = __debounce(() => renderPayload(), 100);
 
   (function(){
     const f = document.getElementById('form-portafoglio');
@@ -1915,17 +1949,30 @@ Vuoi procedere inviando i dati?`;
     };
   }
 
-  // ===== Anteprima auto (debounced) =====
+  // ===== Anteprima auto (ottimizzata) =====
+  let __aPayloadCache = null;
   function aRenderPayload(){
     const pre = document.getElementById('a-payload');
     if(!pre) return;
-    pre.textContent = JSON.stringify(buildAssetPayload(), null, 2);
+    // Usa requestAnimationFrame per rendering più fluido
+    requestAnimationFrame(() => {
+      try {
+        const payload = buildAssetPayload();
+        const payloadStr = JSON.stringify(payload, null, 2);
+        if(payloadStr !== __aPayloadCache) {
+          pre.textContent = payloadStr;
+          __aPayloadCache = payloadStr;
+        }
+      } catch(err) {
+        console.error('Errore rendering asset payload:', err);
+      }
+    });
   }
-  const __aDebounce = (fn, ms=300)=>{ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,args), ms); }; };
+  const __aDebounce = (fn, ms=150)=>{ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,args), ms); }; };
   (function(){
     const f = document.getElementById('form-asset');
     if(!f) return;
-    const auto = __aDebounce(aRenderPayload, 200);
+    const auto = __aDebounce(aRenderPayload, 100);
     f.addEventListener('input', auto);
     f.addEventListener('change', auto);
   })();
@@ -2181,17 +2228,30 @@ Vuoi procedere inviando i dati?`;
     };
   }
 
-  // ===== Anteprima auto (debounced) =====
+  // ===== Anteprima auto (ottimizzata) =====
+  let __qPayloadCache = null;
   function qRenderPayload(){
     const pre = document.getElementById('q-payload');
     if(!pre) return;
-    pre.textContent = JSON.stringify(buildQuestionPayload(), null, 2);
+    // Usa requestAnimationFrame per rendering più fluido
+    requestAnimationFrame(() => {
+      try {
+        const payload = buildQuestionPayload();
+        const payloadStr = JSON.stringify(payload, null, 2);
+        if(payloadStr !== __qPayloadCache) {
+          pre.textContent = payloadStr;
+          __qPayloadCache = payloadStr;
+        }
+      } catch(err) {
+        console.error('Errore rendering question payload:', err);
+      }
+    });
   }
-  const __qDebounce = (fn, ms=250)=>{ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,args), ms); }; };
+  const __qDebounce = (fn, ms=150)=>{ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,args), ms); }; };
   (function(){
     const f = document.getElementById('form-domanda');
     if(!f) return;
-    const auto = __qDebounce(qRenderPayload, 200);
+    const auto = __qDebounce(qRenderPayload, 100);
     f.addEventListener('input', auto);
     f.addEventListener('change', auto);
   })();
@@ -2325,84 +2385,30 @@ Vuoi procedere inviando i dati?`;
   }
 </script>
 
-  <!-- FOOTER -->
-  <footer class="site-footer mt-auto py-10">
-    <div class="container">
-      <section class="ftr-grid">
-        <!-- Col 1 -->
-        <div class="ftr-col">
-          <h3 class="ftr-head">
-            <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 3h16v18H4z"/><path d="M8 7h8M8 11h8M8 15h6"/>
-            </svg>
-            <span>Tradelia AI</span>
-          </h3>
-          <p>
-            Analisi multi-fattore su contesto macro, sentiment e tecnica (orizzonte 3–10 giorni).<br/>
-            Materiale esclusivamente informativo e formativo — nessuna raccomandazione personalizzata.
-          </p>
-        </div>
+  <!-- ===== FOOTER SLOT (montato via JS) ===== -->
+  <div id="site-footer-slot"></div>
 
-        <!-- Col 2 -->
-        <div class="ftr-col">
-          <h3 class="ftr-head">
-            <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 2l7 4v6c0 5-3 8-7 10C8 20 5 17 5 12V6l7-4z"/><path d="M12 8v4"/>
-            </svg>
-            <span>Compliance &amp; Risk</span>
-          </h3>
-          <ul class="ftr-list">
-            <li>Non è consulenza (MiFID II / ESMA)</li>
-            <li>Tradelia AI non gestisce capitali né esegue ordini</li>
-            <li>Rischio di perdita anche totale del capitale</li>
-          </ul>
-          <div class="mt-3 flex flex-wrap gap-4">
-            <button id="btn-privacy-open" class="btn btn-sm" type="button">Privacy</button>
-            <button id="btn-mifid-open" class="btn btn-sm" type="button">Informativa MiFID</button>
-          </div>
-        </div>
-
-        <!-- Col 3 -->
-        <div class="ftr-col">
-          <h3 class="ftr-head">
-            <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 12h16"/><path d="M12 4l8 8-8 8"/>
-            </svg>
-            <span>Canali ufficiali</span>
-          </h3>
-          <p class="mb-2">Aggiornamenti su metodologia e release:</p>
-          <div class="ftr-socials flex flex-col gap-2">
-            <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener" aria-label="LinkedIn">LinkedIn</a>
-            <a href="https://x.com/tradelia_ai" target="_blank" rel="noopener" aria-label="X (Twitter)">X (Twitter)</a>
-            <a href="https://www.reddit.com/r/TradeliaAI" target="_blank" rel="noopener" aria-label="Reddit">Reddit</a>
-            <a href="https://www.quora.com" target="_blank" rel="noopener" aria-label="Quora">Quora</a>
-          </div>
-        </div>
-      </section>
-
-      <!-- Bottom line -->
-      <div class="ftr-bottom">
-        <div>
-          <div class="flex flex-wrap items-center gap-3 mb-2">
-            <a href="/index.html" class="text-sm text-slate-600 hover:text-slate-900">Home</a>
-            <span class="text-slate-400">·</span>
-            <a href="https://www.tradelia.org/brokers.html" class="text-sm text-slate-600 hover:text-slate-900">Brokers</a>
-            <span class="text-slate-400">·</span>
-            <a href="/archivio" class="text-sm text-slate-600 hover:text-slate-900">Archivio</a>
-          </div>
-          © <span id="footer-year"></span>
-          <span class="brand brand--sm">
-            <span class="brand-word">Tradelia</span>
-            <span class="brand-dot" aria-hidden="true"></span>
-            <span class="brand-suffix">AI</span>
-          </span>
-          · Tutti i diritti riservati ·
-          <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>
-        </div>
-        <div>Missione: alfabetizzazione finanziaria indipendente.</div>
-      </div>
-    </div>
-  </footer>
+  <!-- ===== MOUNT HEADER & FOOTER (Light Theme) ===== -->
+  <script type="module">
+    // Imposta tema light
+    document.documentElement.setAttribute('data-theme', 'light');
+    
+    // Importa componenti
+    import { siteHeader } from '/report/assets/js/components/site-header.js';
+    import { siteFooter } from '/report/assets/js/components/site-footer.js';
+    
+    // Monta header
+    const headerSlot = document.getElementById('site-header-slot');
+    if (headerSlot) {
+      siteHeader.mount(headerSlot);
+    }
+    
+    // Monta footer
+    const footerSlot = document.getElementById('site-footer-slot');
+    if (footerSlot) {
+      siteFooter.mount(footerSlot);
+    }
+  </script>
 
 </body>
 </html>

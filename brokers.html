@@ -16,6 +16,7 @@
 
   <!-- Design System -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/report/assets/css/header-footer-light.css" />
 <br>
   <style>
     html, body { height: 100%; }
@@ -222,18 +223,8 @@
   </style>
 </head>
 <body>
-<!-- ===== HEADER ===== -->
-<header class="hdr">
-  <div class="container w-full flex items-center justify-between">
-    <a href="/index.html"
-       class="text-lg sm:text-xl font-extrabold tracking-tight hover:opacity-90 transition"
-       aria-label="Tradelia.org"
-       style="color: var(--brand-text)">
-      <span>TRADELIA</span>
-      <span class="animate-pulse" style="color: var(--brand-accent)">&bull;AI</span>
-    </a>
-  </div>
-</header>
+<!-- ===== HEADER SLOT (montato via JS) ===== -->
+<div id="site-header-slot"></div>
 
 <!-- MAIN -->
 <main class="container">
@@ -328,83 +319,32 @@
   </div>
 </div>
 
-<!-- FOOTER -->
-<footer class="site-footer mt-auto py-10">
-  <div class="container">
-    <section class="ftr-grid">
-      <!-- Col 1 -->
-      <div class="ftr-col">
-        <h3 class="ftr-head">
-          <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 3h16v18H4z"/><path d="M8 7h8M8 11h8M8 15h6"/>
-          </svg>
-          <span>Tradelia AI</span>
-        </h3>
-        <p>
-          Analisi multi-fattore su contesto macro, sentiment e tecnica (orizzonte 3–10 giorni).<br/>
-          Materiale esclusivamente informativo e formativo — nessuna raccomandazione personalizzata.
-        </p>
-      </div>
+<!-- ===== FOOTER SLOT (montato via JS) ===== -->
+<div id="site-footer-slot"></div>
 
-      <!-- Col 2 -->
-      <div class="ftr-col">
-        <h3 class="ftr-head">
-          <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 2l7 4v6c0 5-3 8-7 10C8 20 5 17 5 12V6l7-4z"/><path d="M12 8v4"/>
-          </svg>
-          <span>Compliance &amp; Risk</span>
-        </h3>
-        <ul class="ftr-list">
-          <li><strong>Non è consulenza in materia di investimenti</strong> (MiFID II / ESMA / CONSOB)</li>
-          <li>Tradelia AI non è un intermediario autorizzato; <strong>non gestisce capitali né esegue ordini</strong></li>
-          <li><strong>Rischio di perdita totale o parziale del capitale</strong> — investire comporta rischi</li>
-          <li>Le informazioni hanno <strong>scopo puramente informativo e formativo</strong> — non costituiscono raccomandazione personalizzata</li>
-        </ul>
-        <div class="mt-3 flex flex-wrap gap-4">
-          <button id="btn-privacy-open" class="btn btn-sm" type="button">Privacy</button>
-          <button id="btn-mifid-open" class="btn btn-sm" type="button">Informativa MiFID</button>
-        </div>
-      </div>
-
-      <!-- Col 3 -->
-      <div class="ftr-col">
-        <h3 class="ftr-head">
-          <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 12h16"/><path d="M12 4l8 8-8 8"/>
-          </svg>
-          <span>Canali ufficiali</span>
-        </h3>
-        <p class="mb-2">Aggiornamenti su metodologia e release:</p>
-        <div class="ftr-socials flex flex-col gap-2">
-          <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener" aria-label="LinkedIn">LinkedIn</a>
-          <a href="https://x.com/tradelia_ai" target="_blank" rel="noopener" aria-label="X (Twitter)">X (Twitter)</a>
-          <a href="https://www.reddit.com/r/TradeliaAI" target="_blank" rel="noopener" aria-label="Reddit">Reddit</a>
-          <a href="https://www.quora.com" target="_blank" rel="noopener" aria-label="Quora">Quora</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Bottom line -->
-    <div class="ftr-bottom">
-      <div>
-        © <span id="footer-year"></span>
-        <span class="brand brand--sm">
-          <span class="brand-word">Tradelia</span>
-          <span class="brand-dot" aria-hidden="true"></span>
-          <span class="brand-suffix">AI</span>
-        </span>
-        · Tutti i diritti riservati ·
-        <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>
-      </div>
-      <div>Missione: alfabetizzazione finanziaria indipendente.</div>
-    </div>
-  </div>
-</footer>
+  <!-- ===== MOUNT HEADER & FOOTER (Light Theme) ===== -->
+  <script type="module">
+    // Imposta tema light
+    document.documentElement.setAttribute('data-theme', 'light');
+    
+    // Importa componenti
+    import { siteHeader } from '/report/assets/js/components/site-header.js';
+    import { siteFooter } from '/report/assets/js/components/site-footer.js';
+    
+    // Monta header
+    const headerSlot = document.getElementById('site-header-slot');
+    if (headerSlot) {
+      siteHeader.mount(headerSlot);
+    }
+    
+    // Monta footer
+    const footerSlot = document.getElementById('site-footer-slot');
+    if (footerSlot) {
+      siteFooter.mount(footerSlot);
+    }
+  </script>
 
 <script>
-// ===== Tema chiaro fisso =====
-document.documentElement.setAttribute('data-theme', 'light');
-
 // ===== Footer year =====
 const fy = document.getElementById('footer-year');
 if (fy) fy.textContent = new Date().getFullYear();
