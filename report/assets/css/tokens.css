@@ -1740,7 +1740,7 @@ a:focus-visible {
 }
 
 :root:not([data-theme="light"]) ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.02);
+  background: transparent;
   border-radius: 4px;
   border: 1px solid transparent;
   background-clip: padding-box;
@@ -1769,10 +1769,10 @@ a:focus-visible {
   background: transparent;
 }
 
-/* Firefox Dark Theme - Quasi invisibile di default */
+/* Firefox Dark Theme - Trasparente di default */
 :root:not([data-theme="light"]) * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.02) transparent;
+  scrollbar-color: transparent transparent;
 }
 
 /* Firefox hover (non supportato nativamente, ma possiamo usare JS se necessario) */
