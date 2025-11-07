@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pricing · Tradelia AI</title>
+
+  <!-- Favicons -->
+  <link rel="icon" href="/favicon.ico?v=1">
+  <link rel="icon" type="image/png" href="/favicon.png?v=1">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Tailwind (utility) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Design System -->
+  <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/report/assets/css/header-footer-light.css" />
+
+  <!-- Lucide -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    html, body { height: 100%; }
+    body { display: flex; flex-direction: column; min-height: 100vh; }
+    .container { max-width: 90rem; margin-inline: auto; padding-inline: 1rem; }
+    main { flex: 1; padding-top: 5rem; padding-bottom: 5rem; }
+    
+    .pricing-card {
+      background: var(--surface-card);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-8);
+      transition: all var(--transition-base);
+    }
+    
+    .pricing-card:hover {
+      border-color: var(--brand-600);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .pricing-price {
+      font-size: var(--fs-48);
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1;
+    }
+    
+    .pricing-period {
+      font-size: var(--fs-14);
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="hdr">
+    <div class="container" style="display: flex; align-items: center; justify-content: space-between; height: 100%;">
+      <a href="/index.html" class="brand" style="text-decoration: none;">
+        <span class="brand-word">Tradelia</span>
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span class="brand-suffix">AI</span>
+      </a>
+      <nav style="display: flex; gap: var(--sp-4); align-items: center;">
+        <a href="/index.html" style="text-decoration: none; color: var(--ink); font-size: var(--fs-14);">Home</a>
+        <a href="/archivio.html" style="text-decoration: none; color: var(--ink); font-size: var(--fs-14);">Archivio</a>
+        <a href="/pricing.html" style="text-decoration: none; color: var(--brand-600); font-size: var(--fs-14); font-weight: 600;">Pricing</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <div class="container" style="max-width: 1000px;">
+      
+      <!-- Hero Section -->
+      <header style="text-align: center; margin-bottom: var(--sp-12);">
+        <h1 style="font-size: var(--fs-40); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);">
+          Scegli il Piano Giusto per Te
+        </h1>
+        <p style="color: var(--muted); font-size: var(--fs-18); max-width: 600px; margin: 0 auto;">
+          Accesso completo a tutti i report, dashboard interattive e strumenti di analisi
+        </p>
+      </header>
+
+      <!-- Pricing Card -->
+      <div class="pricing-card" style="max-width: 500px; margin: 0 auto;">
+        <div style="text-align: center; margin-bottom: var(--sp-6);">
+          <h2 style="font-size: var(--fs-24); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-2);">
+            Abbonamento Mensile
+          </h2>
+          <div style="display: flex; align-items: baseline; justify-content: center; gap: var(--sp-2); margin-bottom: var(--sp-4);">
+            <span class="pricing-price">€49</span>
+            <span class="pricing-period">/mese</span>
+          </div>
+          <p style="color: var(--muted); font-size: var(--fs-14); margin-bottom: var(--sp-6);">
+            Annulla in qualsiasi momento
+          </p>
+        </div>
+
+        <!-- Features -->
+        <div style="margin-bottom: var(--sp-6);">
+          <h3 style="font-size: var(--fs-16); font-weight: 600; color: var(--ink); margin-bottom: var(--sp-4);">
+            Cosa include:
+          </h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="display: flex; align-items: start; gap: var(--sp-3); margin-bottom: var(--sp-3);">
+              <i data-lucide="check" style="width: 20px; height: 20px; color: var(--brand-600); flex-shrink: 0; margin-top: 2px;"></i>
+              <span style="color: var(--ink); font-size: var(--fs-15);">Accesso completo a tutti i report</span>
+            </li>
+            <li style="display: flex; align-items: start; gap: var(--sp-3); margin-bottom: var(--sp-3);">
+              <i data-lucide="check" style="width: 20px; height: 20px; color: var(--brand-600); flex-shrink: 0; margin-top: 2px;"></i>
+              <span style="color: var(--ink); font-size: var(--fs-15);">Dashboard interattive e personalizzabili</span>
+            </li>
+            <li style="display: flex; align-items: start; gap: var(--sp-3); margin-bottom: var(--sp-3);">
+              <i data-lucide="check" style="width: 20px; height: 20px; color: var(--brand-600); flex-shrink: 0; margin-top: 2px;"></i>
+              <span style="color: var(--ink); font-size: var(--fs-15);">Sistema di votazione avanzato</span>
+            </li>
+            <li style="display: flex; align-items: start; gap: var(--sp-3); margin-bottom: var(--sp-3);">
+              <i data-lucide="check" style="width: 20px; height: 20px; color: var(--brand-600); flex-shrink: 0; margin-top: 2px;"></i>
+              <span style="color: var(--ink); font-size: var(--fs-15);">Notifiche push per nuovi report</span>
+            </li>
+            <li style="display: flex; align-items: start; gap: var(--sp-3); margin-bottom: var(--sp-3);">
+              <i data-lucide="check" style="width: 20px; height: 20px; color: var(--brand-600); flex-shrink: 0; margin-top: 2px;"></i>
+              <span style="color: var(--ink); font-size: var(--fs-15);">Accesso prioritario a nuove funzionalità</span>
+            </li>
+            <li style="display: flex; align-items: start; gap: var(--sp-3); margin-bottom: var(--sp-3);">
+              <i data-lucide="check" style="width: 20px; height: 20px; color: var(--brand-600); flex-shrink: 0; margin-top: 2px;"></i>
+              <span style="color: var(--ink); font-size: var(--fs-15);">Supporto via email</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- CTA Button -->
+        <div style="text-align: center;">
+          <a href="/archivio/dashboard.html" 
+             style="display: inline-block; background: var(--brand-600); color: white; padding: var(--sp-4) var(--sp-8); border-radius: var(--radius-md); text-decoration: none; font-weight: 600; font-size: var(--fs-16); transition: all var(--transition-base);">
+            Inizia Subito
+          </a>
+          <p style="color: var(--muted); font-size: var(--fs-12); margin-top: var(--sp-3);">
+            <a href="/refund.html" style="color: var(--brand-600); text-decoration: underline;">14 giorni di garanzia rimborso</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- FAQ Section -->
+      <section style="margin-top: var(--sp-12); max-width: 700px; margin-left: auto; margin-right: auto;">
+        <h2 style="font-size: var(--fs-24); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-6); text-align: center;">
+          Domande Frequenti
+        </h2>
+        
+        <div style="space-y: var(--sp-4);">
+          <details style="background: var(--surface-card); border: 1px solid var(--br-card); border-radius: var(--radius-md); padding: var(--sp-4); margin-bottom: var(--sp-4);">
+            <summary style="font-weight: 600; color: var(--ink); cursor: pointer; font-size: var(--fs-16);">
+              Posso cancellare in qualsiasi momento?
+            </summary>
+            <p style="color: var(--muted); font-size: var(--fs-14); margin-top: var(--sp-3); padding-left: var(--sp-2);">
+              Sì, puoi cancellare il tuo abbonamento in qualsiasi momento dalla dashboard. 
+              Continuerai ad avere accesso fino alla fine del periodo già pagato.
+            </p>
+          </details>
+
+          <details style="background: var(--surface-card); border: 1px solid var(--br-card); border-radius: var(--radius-md); padding: var(--sp-4); margin-bottom: var(--sp-4);">
+            <summary style="font-weight: 600; color: var(--ink); cursor: pointer; font-size: var(--fs-16);">
+              C'è un periodo di prova?
+            </summary>
+            <p style="color: var(--muted); font-size: var(--fs-14); margin-top: var(--sp-3); padding-left: var(--sp-2);">
+              Offriamo 14 giorni di garanzia rimborso. Se non sei soddisfatto, ti rimborsiamo completamente.
+            </p>
+          </details>
+
+          <details style="background: var(--surface-card); border: 1px solid var(--br-card); border-radius: var(--radius-md); padding: var(--sp-4); margin-bottom: var(--sp-4);">
+            <summary style="font-weight: 600; color: var(--ink); cursor: pointer; font-size: var(--fs-16);">
+              Come funziona il pagamento?
+            </summary>
+            <p style="color: var(--muted); font-size: var(--fs-14); margin-top: var(--sp-3); padding-left: var(--sp-2);">
+              I pagamenti sono gestiti in modo sicuro tramite Paddle. L'abbonamento si rinnova 
+              automaticamente ogni mese. Puoi cambiare o cancellare in qualsiasi momento.
+            </p>
+          </details>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" style="border-top: 1px solid var(--br-soft); padding: var(--sp-6) 0;">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--sp-4);">
+        <div>
+          <p style="margin: 0; color: var(--muted); font-size: var(--fs-13);">
+            © <span id="footer-year">2024</span>
+            <span class="brand brand--sm">
+              <span class="brand-word">Tradelia</span>
+              <span class="brand-dot" aria-hidden="true"></span>
+              <span class="brand-suffix">AI</span>
+            </span>
+            · Tutti i diritti riservati
+          </p>
+        </div>
+        <nav style="display: flex; gap: var(--sp-4); flex-wrap: wrap;">
+          <a href="/terms.html" style="color: var(--muted); text-decoration: none; font-size: var(--fs-13);">Termini</a>
+          <a href="/privacy.html" style="color: var(--muted); text-decoration: none; font-size: var(--fs-13);">Privacy</a>
+          <a href="/refund.html" style="color: var(--muted); text-decoration: none; font-size: var(--fs-13);">Rimborsi</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+    lucide.createIcons();
+  </script>
+</body>
+</html>
+

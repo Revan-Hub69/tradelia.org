@@ -1,0 +1,46 @@
+# Environment variables
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Firebase Service Account (NON committare mai!)
+*-firebase-adminsdk-*.json
+firebase-adminsdk-*.json
+service-account*.json
+*-service-account*.json
+
+# API keys private
+*-private-key.json
+*-secret.json
+secrets/
+*.key
+*.pem
+
+# Firebase private config (locale)
+firebase-private-config.local.js
+*-private-config.local.js
+
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build output
+dist/
+build/
+.vercel
+.vercel/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
