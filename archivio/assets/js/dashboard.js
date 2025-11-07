@@ -708,10 +708,13 @@ function showLogin() {
   const loginSection = document.getElementById('login-section');
   const dashboardContent = document.getElementById('dashboard-content');
   const subscriptionRequiredSection = document.getElementById('subscription-required-section');
+  const forgotPasswordModal = document.getElementById('forgot-password-modal');
   
   if (loginSection) loginSection.hidden = false;
   if (dashboardContent) dashboardContent.hidden = true;
   if (subscriptionRequiredSection) subscriptionRequiredSection.hidden = true;
+  // Assicurati che il modal reset password sia nascosto
+  if (forgotPasswordModal) forgotPasswordModal.hidden = true;
 }
 
 // ===== SHOW SUBSCRIPTION REQUIRED =====

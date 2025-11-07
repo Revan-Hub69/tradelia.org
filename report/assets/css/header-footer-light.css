@@ -1,32 +1,54 @@
 /* /report/assets/css/header-footer-light.css
    Header & Footer Light Theme Styles
    Stili dedicati per tema light di header e footer
+   Migliorati per migliore visibilità e contrasto
    ----------------------------------------------------------- */
 
 /* ===== HEADER LIGHT THEME ===== */
 :root[data-theme="light"] .hdr {
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.96) 0%,
-    rgba(255, 255, 255, 0.92) 100%
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(255, 255, 255, 0.95) 100%
   );
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 
-    0 1px 0 rgba(0, 0, 0, 0.03) inset,
-    0 4px 20px rgba(0, 0, 0, 0.1);
+    0 1px 0 rgba(0, 0, 0, 0.04) inset,
+    0 4px 24px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 :root[data-theme="light"] .hdr::after {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(37, 99, 235, 0.15) 50%,
+    rgba(37, 99, 235, 0.12) 50%,
     transparent 100%
   );
+  opacity: 0.8;
+}
+
+:root[data-theme="light"] .brand {
+  color: #0f172a;
+  transition: all var(--transition-fast);
 }
 
 :root[data-theme="light"] .brand:hover {
-  background: rgba(0, 0, 0, 0.03);
+  background: rgba(0, 0, 0, 0.04);
+  color: #1e293b;
+}
+
+:root[data-theme="light"] .brand-word {
+  color: #0f172a;
+}
+
+:root[data-theme="light"] .brand-suffix {
+  color: #2563eb;
+}
+
+:root[data-theme="light"] .brand-dot {
+  background: #2563eb;
 }
 
 /* ===== FOOTER LIGHT THEME ===== */
@@ -36,22 +58,94 @@
     var(--surface-page) 0%,
     var(--footer-bg) 100%
   );
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  color: #334155;
 }
 
 :root[data-theme="light"] .site-footer::before {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(37, 99, 235, 0.2) 25%,
-    rgba(37, 99, 235, 0.3) 50%,
-    rgba(37, 99, 235, 0.2) 75%,
+    rgba(37, 99, 235, 0.15) 25%,
+    rgba(37, 99, 235, 0.25) 50%,
+    rgba(37, 99, 235, 0.15) 75%,
     transparent 100%
   );
+  opacity: 0.6;
 }
 
 :root[data-theme="light"] .ftr-head {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  color: #0f172a;
+}
+
+:root[data-theme="light"] .ftr-head svg {
+  color: #1e293b;
+  opacity: 0.9;
+}
+
+:root[data-theme="light"] .site-footer {
+  color: #334155;
+}
+
+:root[data-theme="light"] .site-footer p {
+  color: #475569;
+}
+
+:root[data-theme="light"] .site-footer a {
+  color: #2563eb;
+  border-bottom-color: rgba(37, 99, 235, 0.3);
+}
+
+:root[data-theme="light"] .site-footer a:hover {
+  color: #1d4ed8;
+  border-bottom-color: #1d4ed8;
+  background: rgba(37, 99, 235, 0.05);
+}
+
+:root[data-theme="light"] .ftr-list {
+  color: #475569;
+}
+
+:root[data-theme="light"] .ftr-list li {
+  color: #475569;
+}
+
+:root[data-theme="light"] .ftr-list strong {
+  color: #0f172a;
+}
+
+:root[data-theme="light"] .ftr-socials a {
+  color: #2563eb;
+  border-bottom-color: rgba(37, 99, 235, 0.3);
+}
+
+:root[data-theme="light"] .ftr-socials a:hover {
+  color: #1d4ed8;
+  border-bottom-color: #1d4ed8;
+}
+
+:root[data-theme="light"] .ftr-quick-links a {
+  color: #2563eb;
+  border-bottom-color: rgba(37, 99, 235, 0.3);
+}
+
+:root[data-theme="light"] .ftr-quick-links a:hover {
+  color: #1d4ed8;
+  border-bottom-color: #1d4ed8;
+}
+
+/* ===== BUTTONS LIGHT THEME ===== */
+:root[data-theme="light"] .site-footer .btn-sm {
+  background: rgba(37, 99, 235, 0.1);
+  color: #2563eb;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+}
+
+:root[data-theme="light"] .site-footer .btn-sm:hover {
+  background: rgba(37, 99, 235, 0.15);
+  color: #1d4ed8;
+  border-color: rgba(37, 99, 235, 0.3);
 }
 
 /* ===== SCROLLBAR LIGHT THEME ===== */
@@ -62,14 +156,14 @@
 
 :root[data-theme="light"] ::-webkit-scrollbar-track {
   background: #f8fafc;
-  border-left: 1px solid rgba(0, 0, 0, 0.05);
+  border-left: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 :root[data-theme="light"] ::-webkit-scrollbar-thumb {
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0.15) 0%,
-    rgba(0, 0, 0, 0.10) 100%
+    rgba(0, 0, 0, 0.18) 0%,
+    rgba(0, 0, 0, 0.12) 100%
   );
   border-radius: 6px;
   border: 2px solid #f8fafc;
@@ -83,17 +177,17 @@
 :root[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0.22) 0%,
-    rgba(0, 0, 0, 0.15) 100%
+    rgba(0, 0, 0, 0.25) 0%,
+    rgba(0, 0, 0, 0.18) 100%
   );
-  border-color: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.1);
 }
 
 :root[data-theme="light"] ::-webkit-scrollbar-thumb:active {
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0.18) 0%,
-    rgba(0, 0, 0, 0.12) 100%
+    rgba(0, 0, 0, 0.22) 0%,
+    rgba(0, 0, 0, 0.15) 100%
   );
 }
 
@@ -104,37 +198,29 @@
 /* Firefox Light Theme */
 :root[data-theme="light"] * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.15) #f8fafc;
+  scrollbar-color: rgba(0, 0, 0, 0.18) #f8fafc;
 }
 
 /* ===== CONTRASTO MIGLIORATO LIGHT THEME ===== */
-:root[data-theme="light"] .brand {
-  color: #0f172a;
-}
-
-:root[data-theme="light"] .brand:hover {
-  color: #1e293b;
-  background: rgba(0, 0, 0, 0.04);
-}
-
-:root[data-theme="light"] .ftr-head {
-  color: #0f172a;
-}
-
-:root[data-theme="light"] .ftr-head svg {
-  color: #1e293b;
-}
-
+/* Assicura che tutti i testi siano leggibili */
+:root[data-theme="light"] .hdr,
 :root[data-theme="light"] .site-footer {
-  color: #334155;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-:root[data-theme="light"] .site-footer a {
-  color: #2563eb;
+/* Migliora visibilità link nel footer */
+:root[data-theme="light"] .site-footer a:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
-:root[data-theme="light"] .site-footer a:hover {
-  color: #1d4ed8;
-  border-bottom-color: #1d4ed8;
+/* Migliora contrasto per accessibilità */
+:root[data-theme="light"] .ftr-head {
+  font-weight: 600;
 }
 
+:root[data-theme="light"] .ftr-head span {
+  color: #0f172a;
+}
