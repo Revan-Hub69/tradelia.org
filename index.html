@@ -22,8 +22,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 
   <style>
-    html, body { height: 100%; }
-    body { display: flex; flex-direction: column; min-height: 100vh; }
+    html, body { 
+      height: 100%; 
+      margin: 0;
+      padding: 0;
+    }
+    body { 
+      display: flex; 
+      flex-direction: column; 
+      min-height: 100vh;
+      background: var(--surface-page);
+      color: var(--ink);
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+    }
 
     /* container */
     .container { max-width: 90rem; margin-inline: auto; padding-inline: 1rem; }
@@ -31,6 +42,12 @@
       flex: 1; 
       padding-top: 0;
       padding-bottom: 0;
+      background: var(--surface-page);
+      color: var(--ink);
+    }
+    
+    main * {
+      color: inherit;
     }
 
     /* ===== HERO SECTION ===== */
@@ -275,6 +292,19 @@
     .method-section {
       padding: var(--sp-20) 0;
       background: var(--surface-card);
+      color: var(--ink);
+    }
+    
+    .method-section * {
+      color: inherit;
+    }
+    
+    .method-section .section-description {
+      color: var(--ink-soft);
+    }
+    
+    .method-section .section-description strong {
+      color: var(--ink);
     }
 
     .method-grid {
@@ -361,6 +391,11 @@
     .services-section {
       padding: var(--sp-20) 0;
       background: var(--surface-page);
+      color: var(--ink);
+    }
+    
+    .services-section * {
+      color: inherit;
     }
 
     .services-grid {
@@ -481,6 +516,11 @@
       padding: var(--sp-20) 0;
       background: var(--surface-card);
       border-top: 1px solid var(--br-card);
+      color: var(--ink);
+    }
+    
+    .brokers-section * {
+      color: inherit;
     }
 
     /* ===== HEADER ===== */
