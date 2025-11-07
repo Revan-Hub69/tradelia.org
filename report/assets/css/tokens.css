@@ -1728,48 +1728,39 @@ a:focus-visible {
   }
 }
 
-/* ===== SCROLLBAR PREMIUM ISTITUZIONALE (DARK THEME) ===== */
+/* ===== SCROLLBAR PREMIUM ACCADEMICA (DARK THEME) ===== */
 /* Nota: Stili footer/header unificati - funzionano sia per dark che light */
 :root:not([data-theme="light"]) ::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
 }
 
 :root:not([data-theme="light"]) ::-webkit-scrollbar-track {
   background: var(--surface-page);
-  border-left: 1px solid rgba(255, 255, 255, 0.03);
+  border-left: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 :root:not([data-theme="light"]) ::-webkit-scrollbar-thumb {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.12) 0%,
-    rgba(255, 255, 255, 0.08) 100%
-  );
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
   border: 2px solid var(--surface-page);
   background-clip: padding-box;
-  transition: all var(--transition-base);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 
-    inset 0 1px 2px rgba(255, 255, 255, 0.1),
+    inset 0 0 1px rgba(255, 255, 255, 0.08),
     0 0 0 1px rgba(255, 255, 255, 0.02);
 }
 
 :root:not([data-theme="light"]) ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.18) 0%,
-    rgba(255, 255, 255, 0.12) 100%
-  );
-  border-color: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.06);
+  box-shadow: 
+    inset 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
 }
 
 :root:not([data-theme="light"]) ::-webkit-scrollbar-thumb:active {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.15) 0%,
-    rgba(255, 255, 255, 0.10) 100%
-  );
+  background: rgba(255, 255, 255, 0.14);
 }
 
 :root:not([data-theme="light"]) ::-webkit-scrollbar-corner {
@@ -1779,7 +1770,7 @@ a:focus-visible {
 /* Firefox Dark Theme */
 :root:not([data-theme="light"]) * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.12) var(--surface-page);
+  scrollbar-color: rgba(255, 255, 255, 0.1) var(--surface-page);
 }
 
 /* ===== CONTAINER ===== */
@@ -1790,7 +1781,7 @@ a:focus-visible {
   width: 100%;
 }
 
-/* ===== HEADER FIXED ISTITUZIONALE INNOVATIVO ===== */
+/* ===== HEADER FIXED ACCADEMICO INNOVATIVO ===== */
 .hdr {
   position: fixed;
   top: 0;
