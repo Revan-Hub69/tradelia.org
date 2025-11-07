@@ -1205,23 +1205,25 @@
 
     const heroTyping = document.getElementById('hero-typing');
     if (heroTyping) {
+      // Usa newline invece di <br> per cursore che segue tutte le righe
       new Typed('#hero-typing', {
         strings: [
-          'Analisi Finanziaria<br>Professionale',
-          'Potenza AI<br>Modulare',
-          'Metodo<br>Accademico',
-          'Privacy<br>Totale'
+          'Analisi Finanziaria\nProfessionale',
+          'Potenza AI\nModulare',
+          'Metodo\nAccademico',
+          'Privacy\nTotale'
         ],
-        typeSpeed: 80,
-        backSpeed: 50,
-        backDelay: 2500,
+        typeSpeed: 90,
+        backSpeed: 55,
+        backDelay: 2800,
         loop: true,
         fadeOut: true,
         fadeOutClass: 'typed-fade-out',
-        fadeOutDelay: 400,
+        fadeOutDelay: 450,
         showCursor: true,
-        cursorChar: '|',
-        html: true
+        cursorChar: '▊',
+        html: false,
+        contentType: 'text'
       });
     }
   });
