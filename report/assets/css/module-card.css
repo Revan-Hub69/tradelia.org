@@ -265,7 +265,7 @@
 }
 
 .module-tabs-menu::-webkit-scrollbar {
-  height: 6px;
+  height: 8px;
 }
 
 .module-tabs-menu::-webkit-scrollbar-track {
@@ -273,12 +273,20 @@
 }
 
 .module-tabs-menu::-webkit-scrollbar-thumb {
-  background: var(--br-strong);
-  border-radius: 3px;
+  background: transparent;
+  border-radius: 4px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: none;
 }
 
+.module-tabs-menu:hover::-webkit-scrollbar-thumb,
 .module-tabs-menu::-webkit-scrollbar-thumb:hover {
-  background: var(--muted);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 0 8px rgba(37, 99, 235, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 2px rgba(255, 255, 255, 0.08);
+  background-image: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(37, 99, 235, 0) 100%);
 }
 
 /* Drawer overlay e drawer rimossi - ora usiamo unified-drawer (glossary-drawer) */
@@ -486,9 +494,9 @@
   outline-width: 2.5px; /* Più visibile */
 }
 
-/* Scrollbar personalizzata per drawer */
+/* Scrollbar personalizzata per drawer - Coerente con globale */
 .module-tabs-drawer-body::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 .module-tabs-drawer-body::-webkit-scrollbar-track {
@@ -496,12 +504,20 @@
 }
 
 .module-tabs-drawer-body::-webkit-scrollbar-thumb {
-  background: var(--br-strong);
-  border-radius: 3px;
+  background: transparent;
+  border-radius: 4px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: none;
 }
 
+.module-tabs-drawer-body:hover::-webkit-scrollbar-thumb,
 .module-tabs-drawer-body::-webkit-scrollbar-thumb:hover {
-  background: var(--muted);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 0 8px rgba(37, 99, 235, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 2px rgba(255, 255, 255, 0.08);
+  background-image: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(37, 99, 235, 0) 100%);
 }
 
 /* Tab button nel menu orizzontale - Design istituzionale con freccia + underline */

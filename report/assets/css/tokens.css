@@ -1748,6 +1748,9 @@ a:focus-visible {
   box-shadow: none;
 }
 
+/* Hover sull'elemento scrollabile mostra la scrollbar */
+:root:not([data-theme="light"]) body:hover::-webkit-scrollbar-thumb,
+:root:not([data-theme="light"]) html:hover::-webkit-scrollbar-thumb,
 :root:not([data-theme="light"]) *:hover::-webkit-scrollbar-thumb,
 :root:not([data-theme="light"]) ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.12);

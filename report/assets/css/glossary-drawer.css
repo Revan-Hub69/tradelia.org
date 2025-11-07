@@ -542,10 +542,10 @@
   color: var(--muted);
 }
 
-/* Scrollbar personalizzata per drawer */
+/* Scrollbar personalizzata per drawer - Coerente con globale */
 .glossary-drawer-content::-webkit-scrollbar,
 .glossary-drawer-terms::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 .glossary-drawer-content::-webkit-scrollbar-track,
@@ -555,13 +555,22 @@
 
 .glossary-drawer-content::-webkit-scrollbar-thumb,
 .glossary-drawer-terms::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
+  background: transparent;
+  border-radius: 4px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: none;
 }
 
+.glossary-drawer-content:hover::-webkit-scrollbar-thumb,
+.glossary-drawer-terms:hover::-webkit-scrollbar-thumb,
 .glossary-drawer-content::-webkit-scrollbar-thumb:hover,
 .glossary-drawer-terms::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 0 8px rgba(37, 99, 235, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 2px rgba(255, 255, 255, 0.08);
+  background-image: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(37, 99, 235, 0) 100%);
 }
 
 /* Mobile */
