@@ -1,0 +1,989 @@
+{
+  "title": "Tipi di Ordini di Mercato: Guida Completa Tradelia AI",
+  "meta": {
+    "published": "Gennaio 2025",
+    "category": "Trading e Operatività",
+    "difficulty": "Principiante-Intermedio"
+  },
+  "tags": [
+    "Ordini",
+    "Trading",
+    "Market Order",
+    "Limit Order",
+    "Stop Loss",
+    "Stop Limit",
+    "Trailing Stop",
+    "Execution",
+    "Slippage"
+  ],
+  "glossaryTerms": {
+    "market order": "CreditRiskBlock",
+    "limit order": "CreditRiskBlock",
+    "stop loss": "CreditRiskBlock",
+    "stop limit": "CreditRiskBlock",
+    "trailing stop": "CreditRiskBlock",
+    "slippage": "CreditRiskBlock",
+    "spread": "CreditRiskBlock",
+    "execution": "CreditRiskBlock",
+    "fill": "CreditRiskBlock",
+    "partial fill": "CreditRiskBlock",
+    "GTC": "CreditRiskBlock",
+    "IOC": "CreditRiskBlock",
+    "FOK": "CreditRiskBlock"
+  },
+  "sections": [
+    {
+      "id": "introduzione",
+      "title": "Introduzione: Perché Conoscere i Tipi di Ordini è Cruciale",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "La scelta del tipo di ordine non è un dettaglio operativo secondario: è un **elemento fondamentale** della gestione del rischio e dell'ottimizzazione dell'esecuzione. Utilizzare l'ordine sbagliato può comportare **slippage significativo**, esecuzioni indesiderate o mancato raggiungimento degli obiettivi strategici."
+        },
+        {
+          "type": "paragraph",
+          "text": "Ogni tipo di ordine ha caratteristiche specifiche, vantaggi e limiti che lo rendono adatto a determinate situazioni di mercato, strategie operative e obiettivi temporali. Conoscere queste differenze consente di operare in modo più consapevole, riducendo i costi di transazione e migliorando il controllo del rischio."
+        },
+        {
+          "type": "paragraph",
+          "text": "Questa guida Tradelia AI analizza i principali tipi di ordini disponibili sui mercati regolamentati, le loro meccaniche operative, i casi d'uso ideali e i rischi associati. L'obiettivo è fornire una comprensione pratica e operativa che permetta di selezionare l'ordine corretto in ogni contesto di mercato."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Keim & Madhavan (1995) ha analizzato i costi di esecuzione degli ordini, dimostrando che la scelta del tipo di ordine può influenzare significativamente il costo totale di transazione. La ricerca evidenzia che gli ordini limit possono ridurre lo slippage ma aumentare il rischio di non esecuzione."
+        }
+      ]
+    },
+    {
+      "id": "market-order",
+      "title": "Market Order (Ordine al Mercato)",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Il **Market Order** (ordine al mercato) è il tipo di ordine più semplice e immediato. Quando viene inserito, viene eseguito immediatamente al miglior prezzo disponibile sul mercato, senza specificare un prezzo limite. Garantisce l'esecuzione ma non garantisce il prezzo."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Caratteristiche Principali"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Esecuzione immediata:** l'ordine viene eseguito subito, senza attesa",
+            "**Prezzo non garantito:** l'esecuzione avviene al miglior prezzo disponibile, che può differire dal prezzo visualizzato",
+            "**Fill garantito:** se c'è liquidità sufficiente, l'ordine viene sempre eseguito",
+            "**Priorità massima:** gli ordini market hanno priorità sugli ordini limit nella stessa coda"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Quando Usare un Market Order"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Liquidità elevata:** su titoli molto liquidi con spread bid-ask stretto",
+            "**Urgenza:** quando l'esecuzione immediata è più importante del prezzo preciso",
+            "**Ordini piccoli:** per quantità che non impattano significativamente il mercato",
+            "**Exit veloce:** quando si deve chiudere rapidamente una posizione"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Rischi e Limiti"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Slippage:** la differenza tra prezzo atteso e prezzo di esecuzione può essere significativa",
+            " **Spread bid-ask:** si paga sempre lo spread completo",
+            "**Mercati volatili:** in fase di alta volatilità, il prezzo di esecuzione può essere molto diverso",
+            "**Titoli illiquidi:** su titoli con poca liquidità, lo slippage può essere elevato"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio Pratico"
+        },
+        {
+          "type": "paragraph",
+          "text": "Supponiamo di voler acquistare 100 azioni di Apple (AAPL) quando il prezzo visualizzato è 150,00 $. Inseriamo un market order. Il book mostra:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Bid (denaro):** 149,98 $",
+            "**Ask (lettera):** 150,02 $",
+            "**Spread:** 0,04 $"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Il nostro market order viene eseguito a 150,02 $ (ask), con uno slippage di 0,02 $ rispetto al prezzo medio visualizzato. Il costo totale dell'operazione è 15.002 $ + commissioni."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Bessembinder & Kaufman (1997) ha dimostrato che lo slippage medio sui market order è generalmente più basso sui titoli più liquidi, ma può aumentare significativamente durante eventi di mercato o su titoli con bassa liquidità. La ricerca evidenzia l'importanza di valutare la liquidità prima di utilizzare market order."
+        }
+      ]
+    },
+    {
+      "id": "limit-order",
+      "title": "Limit Order (Ordine con Prezzo Limite)",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Il **Limit Order** (ordine con prezzo limite) è un ordine che specifica il prezzo massimo (per l'acquisto) o minimo (per la vendita) al quale si è disposti a eseguire la transazione. A differenza del market order, garantisce il prezzo ma non garantisce l'esecuzione."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Caratteristiche Principali"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Prezzo garantito:** l'esecuzione avviene solo al prezzo specificato o migliore",
+            "**Nessun slippage negativo:** non si paga mai più del limite per acquisti, non si riceve mai meno per vendite",
+            "**Esecuzione condizionata:** l'ordine viene eseguito solo se il prezzo raggiunge il livello limite",
+            "**Posizionamento nel book:** l'ordine viene inserito nel book degli ordini e può essere eseguito immediatamente o in futuro"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Limit Buy vs Limit Sell"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Limit Buy:** specifica il prezzo massimo al quale si è disposti ad acquistare. L'ordine viene eseguito se il prezzo scende al livello limite o sotto",
+            "**Limit Sell:** specifica il prezzo minimo al quale si è disposti a vendere. L'ordine viene eseguito se il prezzo sale al livello limite o sopra"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Quando Usare un Limit Order"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Controllo del prezzo:** quando il prezzo di esecuzione è più importante della certezza dell'esecuzione",
+            "**Titoli volatili:** per evitare slippage su titoli con alta volatilità",
+            "**Strategie patient trading:** quando si può aspettare che il mercato raggiunga il prezzo desiderato",
+            "**Ordini grandi:** per limitare l'impatto sul mercato di ordini di grandi dimensioni"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Rischi e Limiti"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Rischio di non esecuzione:** l'ordine potrebbe non essere eseguito se il prezzo non raggiunge mai il limite",
+            "**Opportunità mancate:** il mercato potrebbe muoversi senza eseguire l'ordine",
+            "**Parziale esecuzione:** l'ordine potrebbe essere eseguito solo parzialmente se la liquidità non è sufficiente"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio Pratico"
+        },
+        {
+          "type": "paragraph",
+          "text": "Vogliamo acquistare 500 azioni di Tesla (TSLA) ma riteniamo che 250 $ sia un buon prezzo di ingresso. Il prezzo attuale è 255 $. Inseriamo un limit buy a 250 $."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Scenario 1:** TSLA scende a 250,50 $ → l'ordine viene eseguito a 250,50 $ (migliore del limite)",
+            "**Scenario 2:** TSLA scende a 248 $ → l'ordine viene eseguito a 250 $ (al limite)",
+            "**Scenario 3:** TSLA non scende mai sotto 251 $ → l'ordine non viene eseguito"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Harris & Hasbrouck (1996) ha analizzato il trade-off tra limit e market order, dimostrando che i limit order offrono migliore prezzo ma con rischio di non esecuzione. La ricerca evidenzia che il rischio di non esecuzione aumenta con la distanza del prezzo limite dal prezzo di mercato corrente."
+        }
+      ]
+    },
+    {
+      "id": "stop-order",
+      "title": "Stop Order (Stop Loss e Stop Entry)",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Il **Stop Order** (ordine stop) è un ordine che diventa un market order quando il prezzo raggiunge un livello specificato (prezzo stop). Viene utilizzato principalmente per due scopi: **limitare le perdite** (stop loss) o **entrare in una posizione** quando il prezzo supera un livello chiave (stop entry)."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Stop Loss: Protezione delle Posizioni"
+        },
+        {
+          "type": "paragraph",
+          "text": "Lo **Stop Loss** è probabilmente l'ordine più importante per la gestione del rischio. Viene inserito sotto il prezzo corrente (per posizioni long) o sopra il prezzo corrente (per posizioni short) per limitare le perdite potenziali."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Stop Loss per posizioni long:** inserito sotto il prezzo di acquisto, si attiva se il prezzo scende",
+            "**Stop Loss per posizioni short:** inserito sopra il prezzo di vendita, si attiva se il prezzo sale",
+            "**Protezione automatica:** chiude automaticamente la posizione quando viene raggiunto il livello di perdita massima accettabile"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Stop Entry: Ingresso su Breakout"
+        },
+        {
+          "type": "paragraph",
+          "text": "Lo **Stop Entry** viene utilizzato per entrare in una posizione quando il prezzo supera un livello chiave, confermando un trend o un breakout."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Buy Stop:** inserito sopra il prezzo corrente, si attiva quando il prezzo sale (per entrare long)",
+            "**Sell Stop:** inserito sotto il prezzo corrente, si attiva quando il prezzo scende (per entrare short)",
+            "**Breakout trading:** utile per catturare movimenti forti dopo la rottura di resistenze o supporti"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Meccanica di Funzionamento"
+        },
+        {
+          "type": "paragraph",
+          "text": "Quando il prezzo tocca il livello stop, l'ordine viene **automaticamente convertito in un market order** e viene eseguito al miglior prezzo disponibile. Questo significa che, a differenza del limit order, il prezzo di esecuzione non è garantito."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Rischi Principali"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Slippage:** in mercati volatili o durante gap, il prezzo di esecuzione può essere significativamente peggiore del prezzo stop",
+            "**Stop hunting:** in mercati manipolati, il prezzo può essere temporaneamente spinto per attivare stop loss prima di tornare indietro",
+            "**Gap:** durante gap (apertura, notizie), lo stop può essere eseguito a un prezzo molto diverso dal livello stop"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio Pratico - Stop Loss"
+        },
+        {
+          "type": "paragraph",
+          "text": "Hai acquistato 100 azioni di NVIDIA (NVDA) a 500 $ e vuoi limitare le perdite al 5%. Inserisci uno stop loss a 475 $ (5% sotto il prezzo di acquisto)."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Scenario normale:** NVDA scende a 475 $ → lo stop si attiva e viene eseguito a ~475 $ → perdita: 2.500 $ (5%)",
+            "**Scenario gap down:** NVDA apre a 460 $ dopo una notizia negativa → lo stop viene eseguito a 460 $ → perdita: 4.000 $ (8%)",
+            "**Scenario volatile:** NVDA tocca 475 $ ma poi rimbalza → la posizione viene chiusa anche se il prezzo torna sopra"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Kaminski & Lo (2014) ha analizzato l'efficacia degli stop loss, dimostrando che possono ridurre significativamente le perdite massime ma possono anche chiudere prematuramente posizioni redditizie. La ricerca evidenzia che lo slippage durante l'attivazione degli stop può essere significativo, specialmente in mercati volatili."
+        }
+      ]
+    },
+    {
+      "id": "stop-limit",
+      "title": "Stop Limit Order: Combinare Stop e Limit",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Il **Stop Limit Order** combina le caratteristiche dello stop order e del limit order. Quando il prezzo raggiunge il livello stop, l'ordine viene convertito in un limit order invece che in un market order, garantendo il controllo del prezzo ma introducendo il rischio di non esecuzione."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Meccanica di Funzionamento"
+        },
+        {
+          "type": "paragraph",
+          "text": "Un stop limit order richiede due prezzi:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Stop Price:** il prezzo che attiva l'ordine",
+            "**Limit Price:** il prezzo massimo/minimo al quale si è disposti a eseguire"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Quando il prezzo raggiunge lo stop price, l'ordine diventa un limit order al prezzo limite specificato. L'esecuzione avviene solo se il prezzo rimane al livello limite o migliore."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Vantaggi"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Controllo del prezzo:** evita lo slippage eccessivo rispetto a un semplice stop order",
+            "**Protezione da gap:** in caso di gap, l'ordine non viene eseguito a un prezzo peggiore del limite",
+            "**Prezzo garantito:** simile a un limit order, garantisce il prezzo di esecuzione"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Rischi"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Rischio di non esecuzione:** se il prezzo supera rapidamente il limite dopo l'attivazione, l'ordine potrebbe non essere eseguito",
+            "**Mancata protezione:** in scenari di gap estremi, la posizione potrebbe rimanere aperta senza protezione",
+            "**Complessità:** richiede la gestione di due parametri (stop e limit)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Quando Usare Stop Limit"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Titoli liquidi:** quando c'è sufficiente liquidità per garantire l'esecuzione al limite",
+            "**Mercati normali:** in assenza di eventi estremi previsti",
+            "**Ordini grandi:** quando si vuole evitare slippage su ordini di dimensioni significative"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio Pratico"
+        },
+        {
+          "type": "paragraph",
+          "text": "Hai una posizione long su Amazon (AMZN) a 150 $ e vuoi proteggerla con uno stop limit. Inserisci uno stop limit con stop a 145 $ e limit a 144,50 $."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Scenario 1:** AMZN scende gradualmente a 145 $ → l'ordine si attiva → viene eseguito a 144,50-145 $ → perdita limitata",
+            "**Scenario 2:** AMZN scende rapidamente da 145 $ a 143 $ → l'ordine si attiva ma non viene eseguito (prezzo sotto il limite) → la posizione rimane aperta, senza protezione",
+            "**Scenario 3:** AMZN scende a 145 $ con gap → l'ordine non viene eseguito se il gap è sotto 144,50 $"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Hasbrouck & Saar (2013) ha analizzato il comportamento degli stop limit order, dimostrando che offrono migliore controllo del prezzo rispetto agli stop order ma con maggiore rischio di non esecuzione. La ricerca evidenzia che l'efficacia dipende dalla volatilità del mercato e dalla distanza tra stop e limit price."
+        }
+      ]
+    },
+    {
+      "id": "trailing-stop",
+      "title": "Trailing Stop: Stop Loss Dinamico",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Il **Trailing Stop** (stop loss dinamico) è un ordine stop che si muove automaticamente insieme al prezzo, mantenendo una distanza percentuale o assoluta prefissata. Permette di **proteggere i profitti** mentre consente alla posizione di continuare a generare guadagni in caso di trend favorevole."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Meccanica di Funzionamento"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Trailing Stop per posizioni long:** si muove verso l'alto con il prezzo, ma non scende mai. Se il prezzo scende, lo stop rimane fisso al livello massimo raggiunto",
+            "**Trailing Stop per posizioni short:** si muove verso il basso con il prezzo, ma non sale mai. Se il prezzo sale, lo stop rimane fisso al livello minimo raggiunto",
+            "**Distanza dinamica:** la distanza può essere percentuale (es. 5%) o assoluta (es. 2 $)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Vantaggi Principali"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Protezione dei profitti:** chiude automaticamente la posizione se il prezzo si inverte, preservando i guadagni",
+            "**Flessibilità nel trend:** permette alla posizione di continuare a guadagnare durante trend forti",
+            "**Gestione automatica:** non richiede monitoraggio costante o aggiornamenti manuali",
+            "**Disciplina:** evita decisioni emotive di chiusura anticipata o di mantenere posizioni in perdita"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Quando Usare Trailing Stop"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Trend trading:** quando si cerca di catturare movimenti ampi e prolungati",
+            "**Posizioni profitabili:** per proteggere guadagni realizzati senza chiudere prematuramente",
+            "**Mercati volatili:** quando la volatilità rende difficile determinare un punto di uscita fisso",
+            "**Trading sistematico:** per strategie automatizzate che richiedono gestione del rischio dinamica"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Rischi e Limitazioni"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Whipsaw:** in mercati laterali, il trailing stop può essere attivato da movimenti normali, chiudendo posizioni prima del tempo",
+            "**Distanza critica:** una distanza troppo stretta può chiudere prematuramente, una troppo larga offre poca protezione",
+            "**Gap:** durante gap, lo stop può essere eseguito a un prezzo peggiore del previsto",
+            "**Complessità:** richiede una comprensione accurata della volatilità del titolo per impostare la distanza corretta"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio Pratico"
+        },
+        {
+          "type": "paragraph",
+          "text": "Hai acquistato 100 azioni di Microsoft (MSFT) a 350 $ e imposti un trailing stop al 5%."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Prezzo iniziale:** 350 $ → Stop iniziale: 332,50 $ (5% sotto)",
+            "**MSFT sale a 380 $:** Stop si muove a 361 $ (5% sotto il nuovo massimo)",
+            "**MSFT sale a 400 $:** Stop si muove a 380 $ (5% sotto il nuovo massimo)",
+            "**MSFT scende a 379 $:** Stop viene attivato a ~379 $ → Posizione chiusa con profitto di 29 $ per azione (+8,3%)",
+            "**MSFT scende a 370 $ ma poi risale:** Lo stop rimane a 380 $ e non viene attivato"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Lo et al. (2002) ha analizzato l'efficacia dei trailing stop, dimostrando che possono migliorare significativamente il rapporto rischio-rendimento in strategie di trend following. Tuttavia, la ricerca evidenzia che l'ottimizzazione della distanza del trailing stop è cruciale e dipende dalla volatilità specifica del titolo."
+        }
+      ]
+    },
+    {
+      "id": "tipi-avanzati",
+      "title": "Tipi di Ordini Avanzati: GTC, IOC, FOK",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Oltre ai tipi di ordini base, esistono **qualificatori temporali** che modificano il comportamento dell'ordine in termini di durata e modalità di esecuzione. Questi qualificatori permettono un controllo più granulare sull'esecuzione degli ordini."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "GTC (Good Till Canceled)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Gli ordini **GTC** (Good Till Canceled) rimangono attivi fino a quando non vengono eseguiti o cancellati manualmente. Non hanno una data di scadenza."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Vantaggi:** non richiedono reinserimento giornaliero, utili per ordini a lungo termine",
+            "**Rischi:** rischio di esecuzione indesiderata se dimenticati, possono rimanere attivi per molto tempo",
+            "**Uso:** ideale per limit order o stop order che si vogliono mantenere attivi oltre la sessione"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "IOC (Immediate or Cancel)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Gli ordini **IOC** (Immediate or Cancel) vengono eseguiti immediatamente nella misura possibile, e la parte non eseguita viene cancellata automaticamente."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Vantaggi:** garantiscono che solo la parte eseguibile venga eseguita, evitando ordini parziali persistenti",
+            "**Uso:** utile per ordini grandi su titoli con liquidità limitata",
+            "**Esempio:** ordine per 10.000 azioni, ma solo 3.000 disponibili → vengono eseguite 3.000, le altre 7.000 vengono cancellate"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "FOK (Fill or Kill)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Gli ordini **FOK** (Fill or Kill) devono essere eseguiti completamente o non vengono eseguiti affatto. Se non c'è liquidità sufficiente per l'intera quantità, l'ordine viene immediatamente cancellato."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Vantaggi:** garantiscono esecuzione completa o nessuna esecuzione, evitando ordini parziali",
+            "**Uso:** quando è cruciale che l'intera quantità venga eseguita insieme",
+            "**Rischi:** alto rischio di non esecuzione se la liquidità è insufficiente"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Day Order vs GTC"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Day Order:** ordine valido solo per la sessione corrente. Se non eseguito, viene automaticamente cancellato alla chiusura",
+            "**GTC:** ordine che rimane attivo fino a esecuzione o cancellazione manuale",
+            "**Scelta:** Day Order per ordini tattici, GTC per ordini strategici a lungo termine"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di O'Hara (1995) ha analizzato l'impatto dei qualificatori temporali sugli ordini, dimostrando che la scelta tra GTC, IOC e FOK può influenzare significativamente la probabilità di esecuzione e il costo totale. La ricerca evidenzia che gli ordini IOC possono migliorare l'efficienza dell'esecuzione su titoli con liquidità limitata."
+        }
+      ]
+    },
+    {
+      "id": "confronto",
+      "title": "Confronto tra Tipi di Ordini: Quando Usare Quale",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "La scelta del tipo di ordine dipende da diversi fattori: obiettivo strategico, liquidità del titolo, volatilità del mercato, dimensione dell'ordine e tolleranza al rischio. Di seguito un confronto sistematico che aiuta a selezionare l'ordine corretto."
+        },
+        {
+          "type": "table",
+          "headers": ["Tipo Ordine", "Prezzo Garantito", "Esecuzione Garantita", "Slippage", "Uso Principale"],
+          "rows": [
+            [
+              "Market Order",
+              { "text": "No", "class": "negative" },
+              { "text": "Sì", "class": "positive" },
+              { "text": "Possibile", "class": "negative" },
+              "Esecuzione immediata, liquidità elevata"
+            ],
+            [
+              "Limit Order",
+              { "text": "Sì", "class": "positive" },
+              { "text": "No", "class": "negative" },
+              { "text": "No", "class": "positive" },
+              "Controllo prezzo, pazienza operativa"
+            ],
+            [
+              "Stop Order",
+              { "text": "No", "class": "negative" },
+              { "text": "Sì", "class": "positive" },
+              { "text": "Possibile", "class": "negative" },
+              "Protezione perdite, breakout entry"
+            ],
+            [
+              "Stop Limit",
+              { "text": "Sì", "class": "positive" },
+              { "text": "No", "class": "negative" },
+              { "text": "Limitato", "class": "positive" },
+              "Protezione con controllo prezzo"
+            ],
+            [
+              "Trailing Stop",
+              { "text": "No", "class": "negative" },
+              { "text": "Sì", "class": "positive" },
+              { "text": "Possibile", "class": "negative" },
+              "Trend following, protezione profitti"
+            ]
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Matrice Decisionale"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Urgenza + Liquidità:** Market Order",
+            "**Controllo prezzo + Pazienza:** Limit Order",
+            "**Protezione perdite:** Stop Loss o Stop Limit",
+            "**Protezione profitti:** Trailing Stop",
+            "**Entry su breakout:** Buy/Sell Stop",
+            "**Ordini grandi + Controllo:** Limit Order o Stop Limit",
+            "**Titoli illiquidi:** Limit Order (evitare Market Order)"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Almgren & Chriss (2001) ha sviluppato un modello per ottimizzare la scelta del tipo di ordine considerando trade-off tra costo di esecuzione e rischio di non esecuzione. La ricerca dimostra che non esiste un tipo di ordine ottimale universale, ma la scelta dipende dalle caratteristiche specifiche del mercato e dell'ordine."
+        }
+      ]
+    },
+    {
+      "id": "slippage-costi",
+      "title": "Slippage e Costi di Esecuzione: Impatto Reale",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Lo **slippage** è la differenza tra il prezzo previsto e il prezzo effettivo di esecuzione di un ordine. Rappresenta un costo nascosto che può erodere significativamente i profitti, specialmente su operazioni frequenti o ordini di grandi dimensioni."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Cause dello Slippage"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Spread bid-ask:** la differenza tra prezzo denaro e lettera",
+            "**Mercati in movimento:** il prezzo può cambiare tra l'inserimento e l'esecuzione",
+            "**Liquidità insufficiente:** su titoli illiquidi, grandi ordini impattano il prezzo",
+            "**Volatilità:** durante eventi di alta volatilità, il prezzo può muoversi rapidamente",
+            "**Gap:** durante gap (apertura, notizie), il prezzo può saltare significativamente"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Come Minimizzare lo Slippage"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Usare Limit Order:** garantiscono il prezzo massimo/minimo",
+            "**Titoli liquidi:** preferire titoli con alto volume e spread stretto",
+            "**Orari di mercato:** evitare aperture, chiusure e eventi ad alta volatilità",
+            "**Dividere ordini grandi:** eseguire ordini grandi in più tranche",
+            "**VWAP/TWAP:** utilizzare algoritmi di esecuzione per ordini istituzionali"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Costo Totale di Transazione"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il costo totale di transazione comprende:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Commissioni:** costi espliciti del broker",
+            "**Spread:** differenza bid-ask (costo implicito)",
+            "**Slippage:** differenza tra prezzo atteso e eseguito",
+            "**Costo opportunità:** se l'ordine non viene eseguito (per limit order)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio di Calcolo"
+        },
+        {
+          "type": "paragraph",
+          "text": "Acquisto di 1.000 azioni a 100 $ con market order:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Prezzo visualizzato:** 100,00 $",
+            "**Prezzo esecuzione:** 100,15 $ (slippage 0,15 $)",
+            "**Costo aggiuntivo:** 150 $ (0,15% del valore)",
+            "**Commissioni:** 5 $",
+            "**Costo totale:** 155 $ (0,155% del valore)"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Su 100 operazioni all'anno, questo si traduce in 15.500 $ di costi aggiuntivi su un capitale di 10 milioni. Lo slippage può avere un impatto significativo sulla performance a lungo termine."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Perold (1988) ha quantificato l'impatto dei costi di transazione sulla performance, dimostrando che lo slippage può erodere significativamente i rendimenti, specialmente per strategie ad alta frequenza. La ricerca evidenzia che l'ottimizzazione dell'esecuzione è cruciale per la performance a lungo termine."
+        }
+      ]
+    },
+    {
+      "id": "strategie",
+      "title": "Strategie Operative: Combinare i Tipi di Ordini",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le strategie operative più efficaci combinano diversi tipi di ordini per ottimizzare l'entry, la gestione del rischio e l'uscita. La combinazione intelligente di ordini può migliorare significativamente il rapporto rischio-rendimento."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Strategia Base: Entry + Stop Loss"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Entry:** Limit Order a un livello di supporto/resistenza",
+            "**Stop Loss:** Stop Order o Stop Limit per limitare le perdite",
+            "**Take Profit:** Limit Order per bloccare i profitti a un livello target",
+            "**Vantaggio:** controllo completo su entry, rischio e profitto"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Strategia Trend Following"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Entry:** Buy Stop per entrare su breakout",
+            "**Stop Loss:** Stop Order sotto il punto di entry",
+            "**Trailing Stop:** per proteggere i profitti durante il trend",
+            "**Vantaggio:** cattura movimenti ampi, protezione dinamica"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Strategia Scalping"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Entry:** Market Order per esecuzione immediata",
+            "**Exit:** Limit Order per uscire con profitto rapido",
+            "**Stop Loss:** Stop Order stretto per limitare le perdite",
+            "**Vantaggio:** esecuzione veloce, controllo del rischio"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Strategia per Ordini Grandi"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Approccio:** Dividere l'ordine in più tranche",
+            "**Entry:** Limit Order per controllare il prezzo",
+            "**VWAP:** Utilizzare algoritmi VWAP per ordini istituzionali",
+            "**Stop Loss:** Stop Limit per evitare slippage eccessivo",
+            "**Vantaggio:** minimizza l'impatto sul mercato, controlla i costi"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Best Practices"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Sempre usare stop loss:** proteggere ogni posizione con uno stop",
+            "**Limit su entry:** preferire limit order per controllare il prezzo di ingresso",
+            "**Trailing stop su profitti:** proteggere i guadagni con trailing stop",
+            "**Evitare market order su titoli illiquidi:** rischio di slippage elevato",
+            "**Review regolare:** controllare e aggiornare gli ordini attivi regolarmente"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Kissell & Glantz (2003) ha analizzato le migliori pratiche per l'esecuzione degli ordini, dimostrando che la combinazione strategica di diversi tipi di ordini può migliorare significativamente la performance. La ricerca evidenzia che l'approccio sistematico all'esecuzione è cruciale per il successo a lungo termine."
+        }
+      ]
+    },
+    {
+      "id": "errori-comuni",
+      "title": "Errori Comuni e Come Evitarli",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Molti trader commettono errori comuni nella scelta e gestione degli ordini che possono compromettere la performance. Identificare e evitare questi errori è fondamentale per operare in modo efficace."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Errori Più Frequenti"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Non usare stop loss:** lasciare posizioni aperte senza protezione è estremamente rischioso",
+            "**Stop loss troppo stretti:** possono essere attivati da volatilità normale, chiudendo posizioni prematuramente",
+            "**Stop loss troppo larghi:** offrono poca protezione reale, permettendo perdite significative",
+            "**Market order su titoli illiquidi:** rischio di slippage eccessivo e esecuzioni a prezzi sfavorevoli",
+            "**Limit order irrealistici:** ordini con limiti troppo lontani dal mercato che non vengono mai eseguiti",
+            "**Dimenticare ordini GTC:** ordini lasciati attivi e dimenticati possono essere eseguiti inaspettatamente",
+            "**Non aggiornare trailing stop:** trailing stop statici non offrono protezione dinamica"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Come Evitare gli Errori"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Sempre impostare stop loss:** fare dello stop loss un'abitudine obbligatoria",
+            "**Calibrare stop in base a volatilità:** usare ATR (Average True Range) per determinare distanza appropriata",
+            "**Verificare liquidità:** controllare volume e spread prima di usare market order",
+            "**Review giornaliero:** controllare tutti gli ordini attivi ogni giorno",
+            "**Documentare strategia:** scrivere chiaramente la logica dietro ogni ordine",
+            "**Testare in demo:** praticare con ordini diversi in ambiente simulato prima di operare con capitale reale"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Checklist Pre-Ordine"
+        },
+        {
+          "type": "list",
+          "items": [
+            "✓ Ho verificato la liquidità del titolo?",
+            "✓ Ho impostato uno stop loss appropriato?",
+            "✓ Il tipo di ordine è adatto al mio obiettivo?",
+            "✓ Ho considerato lo slippage potenziale?",
+            "✓ L'ordine è coerente con la mia strategia?",
+            "✓ Ho documentato la logica dell'ordine?",
+            "✓ Ho impostato un reminder per review?"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Odean (1998) ha analizzato gli errori comportamentali nel trading, dimostrando che molti trader commettono errori sistematici nella gestione degli ordini. La ricerca evidenzia che la disciplina e la sistematicità nella gestione degli ordini sono cruciali per il successo."
+        }
+      ]
+    },
+    {
+      "id": "piattaforme-broker",
+      "title": "Piattaforme e Broker: Supporto ai Diversi Tipi di Ordini",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Non tutte le piattaforme e i broker supportano tutti i tipi di ordini. La disponibilità e le funzionalità possono variare significativamente. È importante verificare le capacità della propria piattaforma prima di sviluppare strategie basate su ordini specifici."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Ordini Standard (Tutte le Piattaforme)"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Market Order:** disponibile su tutte le piattaforme",
+            "**Limit Order:** supportato universalmente",
+            "**Stop Order:** disponibile su maggior parte delle piattaforme",
+            "**Day Order:** standard su tutte le piattaforme"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Ordini Avanzati (Piattaforme Professionali)"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Stop Limit:** disponibile su piattaforme avanzate",
+            "**Trailing Stop:** supportato da broker più sofisticati",
+            "**IOC/FOK:** tipicamente disponibili su piattaforme istituzionali",
+            "**Algoritmi VWAP/TWAP:** riservati a piattaforme professionali"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Considerazioni per la Scelta del Broker"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Tipi di ordini supportati:** verificare che il broker supporti gli ordini necessari per la propria strategia",
+            "**Qualità di esecuzione:** valutare spread, slippage e velocità di esecuzione",
+            "**Commissioni:** considerare l'impatto delle commissioni sulla strategia",
+            "**Piattaforma:** assicurarsi che l'interfaccia supporti gli ordini avanzati in modo intuitivo",
+            "**Supporto:** verificare la disponibilità di assistenza per domande sugli ordini"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Piattaforme Consigliate"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Interactive Brokers:** supporta tutti i tipi di ordini avanzati, qualità di esecuzione elevata",
+            "**TD Ameritrade/Charles Schwab:** ottimo supporto per ordini avanzati, piattaforma user-friendly",
+            "**E*TRADE:** buon supporto per trailing stop e ordini condizionali",
+            "**Piattaforme specializzate:** per trading algoritmico e ordini istituzionali"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Barber & Odean (2000) ha analizzato l'impatto della scelta del broker sulla performance, dimostrando che broker con migliore qualità di esecuzione possono migliorare significativamente i risultati. La ricerca evidenzia l'importanza di valutare attentamente le capacità della piattaforma."
+        }
+      ]
+    },
+    {
+      "id": "glossario",
+      "title": "Glossario Tecnico",
+      "content": [
+        {
+          "type": "list",
+          "items": [
+            "**Market Order (Ordine al Mercato):** ordine eseguito immediatamente al miglior prezzo disponibile, senza specificare un prezzo limite.",
+            "**Limit Order (Ordine con Prezzo Limite):** ordine che specifica il prezzo massimo (acquisto) o minimo (vendita) al quale eseguire la transazione.",
+            "**Stop Order (Ordine Stop):** ordine che diventa un market order quando il prezzo raggiunge un livello specificato.",
+            "**Stop Loss:** ordine stop utilizzato per limitare le perdite su una posizione aperta.",
+            "**Stop Limit Order:** ordine che combina stop e limit, diventando un limit order quando il prezzo raggiunge lo stop.",
+            "**Trailing Stop:** stop loss dinamico che si muove automaticamente con il prezzo, mantenendo una distanza prefissata.",
+            "**Slippage:** differenza tra il prezzo previsto e il prezzo effettivo di esecuzione di un ordine.",
+            "**Spread Bid-Ask:** differenza tra il prezzo denaro (bid) e il prezzo lettera (ask).",
+            "**Fill:** esecuzione completa o parziale di un ordine.",
+            "**Partial Fill:** esecuzione parziale di un ordine, con parte della quantità rimanente da eseguire.",
+            "**GTC (Good Till Canceled):** qualificatore temporale che mantiene l'ordine attivo fino a esecuzione o cancellazione.",
+            "**IOC (Immediate or Cancel):** ordine eseguito immediatamente nella misura possibile, con parte non eseguita cancellata.",
+            "**FOK (Fill or Kill):** ordine che deve essere eseguito completamente o non viene eseguito affatto.",
+            "**Day Order:** ordine valido solo per la sessione corrente di trading.",
+            "**VWAP (Volume Weighted Average Price):** prezzo medio ponderato per il volume, utilizzato come benchmark per esecuzione."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "disclaimer",
+      "title": "Disclaimer e Avvertenze Finali",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le informazioni contenute in questa guida sono fornite da Tradelia AI a scopo esclusivamente informativo, formativo e simulativo. Non costituiscono in alcun modo una sollecitazione al pubblico risparmio, una raccomandazione personalizzata o una consulenza finanziaria, fiscale o legale."
+        },
+        {
+          "type": "paragraph",
+          "text": "I tipi di ordini di mercato sono strumenti operativi che richiedono comprensione e pratica. La scelta del tipo di ordine sbagliato può comportare perdite significative, slippage elevato o mancata esecuzione. Ogni decisione operativa deve essere presa in autonomia e con il supporto di un professionista autorizzato, tenendo conto del proprio profilo di rischio e degli obiettivi individuali."
+        },
+        {
+          "type": "paragraph",
+          "text": "Tradelia AI declina ogni responsabilità per danni diretti o indiretti derivanti dall'uso delle informazioni contenute in questa guida, incluse simulazioni o link esterni. L'utente accetta di assumersi ogni rischio associato alla consultazione e all'utilizzo dei contenuti."
+        },
+        {
+          "type": "paragraph",
+          "text": "Prima di utilizzare tipi di ordini avanzati, è fortemente consigliato praticare in ambiente demo e comprendere appieno le meccaniche operative. La gestione corretta degli ordini è fondamentale per il successo nel trading, ma richiede competenza, disciplina e monitoraggio costante."
+        }
+      ]
+    }
+  ]
+}
+

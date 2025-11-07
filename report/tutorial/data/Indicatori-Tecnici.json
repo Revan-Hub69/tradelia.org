@@ -1,0 +1,637 @@
+{
+  "title": "Indicatori Tecnici: RSI, MACD, Bollinger Bands e Altri - Guida Completa Tradelia AI",
+  "meta": {
+    "published": "Gennaio 2025",
+    "category": "Analisi Tecnica",
+    "difficulty": "Intermedio"
+  },
+  "tags": [
+    "Indicatori Tecnici",
+    "Technical Indicators",
+    "RSI",
+    "MACD",
+    "Bollinger Bands",
+    "Stochastic",
+    "Moving Averages",
+    "Oscillators",
+    "Momentum Indicators"
+  ],
+  "glossaryTerms": {
+    "indicatori tecnici": "CreditRiskBlock",
+    "RSI": "CreditRiskBlock",
+    "MACD": "CreditRiskBlock",
+    "Bollinger Bands": "CreditRiskBlock",
+    "Stochastic": "CreditRiskBlock",
+    "oscillatore": "CreditRiskBlock",
+    "momentum": "CreditRiskBlock",
+    "divergenza": "CreditRiskBlock",
+    "overbought": "CreditRiskBlock",
+    "oversold": "CreditRiskBlock"
+  },
+  "sections": [
+    {
+      "id": "introduzione",
+      "title": "Introduzione: Cosa Sono gli Indicatori Tecnici",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Gli **Indicatori Tecnici** sono calcoli matematici basati su prezzo e volume che aiutano a identificare trend, momentum, volatilità e potenziali inversioni. Sono strumenti essenziali dell'analisi tecnica che forniscono segnali oggettivi per decisioni di trading."
+        },
+        {
+          "type": "paragraph",
+          "text": "Gli indicatori si dividono in due categorie principali: **Oscillatori** (RSI, Stochastic, MACD) che oscillano tra livelli estremi, e **Indicatori di Trend** (Moving Averages, ADX) che seguono direzione del mercato. Ogni indicatore ha i propri punti di forza e debolezza."
+        },
+        {
+          "type": "paragraph",
+          "text": "Questa guida Tradelia AI esplora i principali indicatori tecnici: RSI, MACD, Bollinger Bands, Stochastic, e come usarli nel trading. L'obiettivo è fornire una comprensione completa di questi strumenti potenti."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Brock et al. (1992) ha analizzato efficacia degli indicatori tecnici, dimostrando che alcuni indicatori (es. moving averages) possono generare rendimenti positivi. Tuttavia, la ricerca evidenzia che nessun indicatore è perfetto e che combinare più indicatori aumenta accuratezza."
+        }
+      ]
+    },
+    {
+      "id": "rsi",
+      "title": "RSI (Relative Strength Index): Indicatore di Momentum",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Il **RSI (Relative Strength Index)** è un oscillatore che misura la **velocità e l'entità** dei movimenti di prezzo. Oscilla tra 0 e 100, indicando condizioni di ipercomprato (overbought) e ipervenduto (oversold)."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Come Funziona"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Formula:** RSI = 100 - (100 / (1 + RS)), dove RS = media guadagni / media perdite",
+            "**Periodo standard:** 14 periodi",
+            "**Range:** 0-100",
+            "**Interpretazione:** RSI > 70 = overbought, RSI < 30 = oversold"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Segnali di Trading"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Oversold (RSI < 30):** Potenziale inversione rialzista, segnale di acquisto",
+            "**Overbought (RSI > 70):** Potenziale inversione ribassista, segnale di vendita",
+            "**Divergenza:** Se prezzo fa nuovi massimi ma RSI no, potenziale inversione",
+            "**Nota:** In trend forti, RSI può rimanere overbought/oversold per lungo tempo"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Limitazioni"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Trend forti:** RSI può rimanere overbought/oversold per settimane",
+            "**Falsi segnali:** RSI può dare falsi segnali in mercati laterali",
+            "**Conferma necessaria:** Non usare RSI da solo, combina con altri indicatori",
+            "**Regola:** RSI è più affidabile in mercati laterali che in trend forti"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Wilder (1978) ha sviluppato RSI, dimostrando che oscillatore può identificare condizioni di ipercomprato e ipervenduto. Tuttavia, la ricerca evidenzia che RSI è più efficace in mercati laterali e che in trend forti può dare falsi segnali."
+        }
+      ]
+    },
+    {
+      "id": "macd",
+      "title": "MACD (Moving Average Convergence Divergence): Indicatore di Trend e Momentum",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Il **MACD (Moving Average Convergence Divergence)** è un indicatore che combina **trend e momentum**. Mostra relazione tra due medie mobili esponenziali e identifica cambiamenti di momentum."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Componenti del MACD"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**MACD Line:** Differenza tra EMA 12 e EMA 26",
+            "**Signal Line:** EMA 9 del MACD Line",
+            "**Histogram:** Differenza tra MACD Line e Signal Line",
+            "**Zero Line:** Livello zero, sopra = momentum rialzista, sotto = momentum ribassista"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Segnali di Trading"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Crossover:** Quando MACD Line attraversa Signal Line (bullish/bearish crossover)",
+            "**Zero Line Crossover:** Quando MACD attraversa zero line (cambio di momentum)",
+            "**Divergenza:** Se prezzo fa nuovi massimi ma MACD no, potenziale inversione",
+            "**Histogram:** Crescita/decrescita histogram indica accelerazione/decelerazione momentum"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Vantaggi"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Trend e momentum:** Combina analisi trend e momentum",
+            "**Segnali chiari:** Crossover sono segnali chiari e oggettivi",
+            "**Divergenze:** Può identificare divergenze che prevedono inversioni",
+            "**Versatile:** Funziona in diversi timeframe e mercati"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Appel (2005) ha analizzato MACD, dimostrando che crossover possono generare rendimenti positivi. La ricerca evidenzia che MACD è particolarmente efficace in trend forti e che combinare con altri indicatori aumenta accuratezza."
+        }
+      ]
+    },
+    {
+      "id": "bollinger-bands",
+      "title": "Bollinger Bands: Indicatore di Volatilità",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le **Bollinger Bands** sono bande di volatilità che mostrano quando un asset è **relativamente costoso o economico** rispetto alla sua media recente. Sono composte da tre linee: media mobile centrale e due bande superiore/inferiore basate su deviazione standard."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Come Funziona"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Banda Superiore:** Media mobile + (2 × deviazione standard)",
+            "**Banda Centrale:** Media mobile (tipicamente SMA 20)",
+            "**Banda Inferiore:** Media mobile - (2 × deviazione standard)",
+            "**Interpretazione:** Prezzo tra bande = normale, prezzo tocca bande = estremo"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Segnali di Trading"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Tocco banda inferiore:** Potenziale rimbalzo verso media (se in range)",
+            "**Tocco banda superiore:** Potenziale ritracciamento verso media (se in range)",
+            "**Squeeze:** Quando bande si restringono, indica bassa volatilità, spesso precede breakout",
+            "**Expansion:** Quando bande si allargano, indica alta volatilità, trend forte"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Limitazioni"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Trend forti:** In trend forti, prezzo può rimanere su banda superiore/inferiore",
+            "**Falsi segnali:** Tocco bande non garantisce inversione",
+            "**Conferma necessaria:** Non usare Bollinger Bands da solo",
+            "**Regola:** Bollinger Bands sono più efficaci in mercati laterali"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Bollinger (2001) ha sviluppato Bollinger Bands, dimostrando che bande possono identificare condizioni estreme. La ricerca evidenzia che squeeze (restringimento bande) spesso precede breakout significativi e che combinare con altri indicatori aumenta accuratezza."
+        }
+      ]
+    },
+    {
+      "id": "stochastic",
+      "title": "Stochastic Oscillator: Indicatore di Momentum",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Lo **Stochastic Oscillator** confronta il prezzo di chiusura con il range di prezzo su un periodo specifico. Oscilla tra 0 e 100, indicando condizioni di ipercomprato e ipervenduto."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Come Funziona"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Formula:** %K = ((Chiusura - Minimo) / (Massimo - Minimo)) × 100",
+            "**%D:** Media mobile di %K (tipicamente 3 periodi)",
+            "**Range:** 0-100",
+            "**Interpretazione:** %K > 80 = overbought, %K < 20 = oversold"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Segnali di Trading"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Oversold (%K < 20):** Potenziale inversione rialzista",
+            "**Overbought (%K > 80):** Potenziale inversione ribassista",
+            "**Crossover:** Quando %K attraversa %D (bullish/bearish crossover)",
+            "**Divergenza:** Se prezzo fa nuovi massimi ma Stochastic no, potenziale inversione"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Limitazioni"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Simile a RSI:** Ha limitazioni simili a RSI",
+            "**Trend forti:** Può rimanere overbought/oversold in trend forti",
+            "**Falsi segnali:** Può dare falsi segnali in mercati laterali",
+            "**Conferma necessaria:** Non usare Stochastic da solo"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Lane (1984) ha sviluppato Stochastic Oscillator, dimostrando che oscillatore può identificare condizioni estreme. La ricerca evidenzia che Stochastic è simile a RSI ma può dare segnali leggermente diversi, e che combinare entrambi può aumentare accuratezza."
+        }
+      ]
+    },
+    {
+      "id": "altri-indicatori",
+      "title": "Altri Indicatori Importanti",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "1. ADX (Average Directional Index)"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Funzione:** Misura forza del trend (non direzione)",
+            "**Range:** 0-100",
+            "**Interpretazione:** ADX > 25 = trend forte, ADX < 20 = trend debole/laterale",
+            "**Uso:** Identifica se mercato è in trend o laterale"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "2. CCI (Commodity Channel Index)"
+        {
+          "type": "list",
+          "items": [
+            "**Funzione:** Identifica cicli e condizioni estreme",
+            "**Range:** Tipicamente -100 a +100",
+            "**Interpretazione:** CCI > +100 = overbought, CCI < -100 = oversold",
+            "**Uso:** Simile a RSI/Stochastic ma con calcolo diverso"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "3. ATR (Average True Range)"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Funzione:** Misura volatilità media",
+            "**Uso:** Calcola stop loss dinamici, identifica periodi di alta/bassa volatilità",
+            "**Vantaggio:** Adattivo, si adatta a volatilità corrente",
+            "**Esempio:** Stop loss = prezzo ± (2 × ATR)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "4. Volume Indicators (OBV, Volume Profile)"
+        {
+          "type": "list",
+          "items": [
+            "**OBV (On-Balance Volume):** Accumula volume in base a direzione prezzo",
+            "**Volume Profile:** Mostra distribuzione volume a diversi livelli di prezzo",
+            "**Uso:** Conferma movimenti prezzo, identifica livelli di supporto/resistenza",
+            "**Vantaggio:** Volume è conferma essenziale per movimenti prezzo"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Wilder (1978) ha sviluppato ADX e ATR, dimostrando che questi indicatori possono misurare forza trend e volatilità. La ricerca evidenzia che combinare indicatori di trend (ADX) con indicatori di momentum (RSI) può migliorare accuratezza."
+        }
+      ]
+    },
+    {
+      "id": "divergenze",
+      "title": "Divergenze: Segnali Potenti",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Divergenza Rialzista (Bullish Divergence)"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Formazione:** Prezzo fa nuovi minimi, ma indicatore (RSI, MACD, Stochastic) fa minimi più alti"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Significato:** Momentum ribassista si indebolisce, potenziale inversione rialzista",
+            "**Dove:** Fine di trend ribassista",
+            "**Conferma:** Candela verde successiva, volume alto",
+            "**Entry:** Dopo conferma, stop loss sotto minimo precedente"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Divergenza Ribassista (Bearish Divergence)"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Formazione:** Prezzo fa nuovi massimi, ma indicatore (RSI, MACD, Stochastic) fa massimi più bassi"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Significato:** Momentum rialzista si indebolisce, potenziale inversione ribassista",
+            "**Dove:** Fine di trend rialzista",
+            "**Conferma:** Candela rossa successiva, volume alto",
+            "**Entry:** Dopo conferma, stop loss sopra massimo precedente"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Perché le Divergenze Funzionano"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Momentum:** Divergenze indicano indebolimento momentum",
+            "**Psicologia:** Mostrano che compratori/venditori stanno perdendo forza",
+            "**Previsione:** Possono prevedere inversioni prima che prezzo si inverta",
+            "**Affidabilità:** Divergenze sono tra segnali più affidabili degli indicatori"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Murphy (1999) ha analizzato divergenze, dimostrando che divergenze tra prezzo e indicatori possono identificare potenziali inversioni. La ricerca evidenzia che divergenze sono particolarmente affidabili quando confermate da volume e pattern di candele."
+        }
+      ]
+    },
+    {
+      "id": "combinare-indicatori",
+      "title": "Combinare Indicatori: Strategie Efficaci",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "1. Trend + Momentum"
+        {
+          "type": "list",
+          "items": [
+            "**Combinazione:** MACD (trend) + RSI (momentum)",
+            "**Strategia:** Entra quando MACD conferma trend e RSI conferma momentum",
+            "**Esempio:** MACD crossover rialzista + RSI > 50 = segnale rialzista forte",
+            "**Vantaggio:** Combina analisi trend e momentum"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "2. Volatilità + Momentum"
+        {
+          "type": "list",
+          "items": [
+            "**Combinazione:** Bollinger Bands (volatilità) + RSI (momentum)",
+            "**Strategia:** Entra quando prezzo tocca banda e RSI conferma",
+            "**Esempio:** Prezzo tocca banda inferiore + RSI < 30 = segnale rialzista",
+            "**Vantaggio:** Combina analisi volatilità e momentum"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "3. Multiple Timeframe"
+        {
+          "type": "list",
+          "items": [
+            "**Strategia:** Usa stesso indicatore su timeframe diversi",
+            "**Esempio:** RSI su settimanale (trend) + RSI su giornaliero (entry)",
+            "**Vantaggio:** Conferma su più timeframe aumenta accuratezza",
+            "**Regola:** Trade nella direzione del timeframe superiore"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "4. Indicatori + Price Action"
+        {
+          "type": "list",
+          "items": [
+            "**Strategia:** Combina indicatori con supporti/resistenze e pattern",
+            "**Esempio:** RSI oversold + supporto + hammer pattern = segnale forte",
+            "**Vantaggio:** Conferme multiple aumentano probabilità di successo",
+            "**Regola:** Più conferme = segnale più forte"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Brock et al. (1992) ha analizzato combinazioni di indicatori, dimostrando che combinare più indicatori aumenta accuratezza rispetto a usare singoli indicatori. La ricerca evidenzia che strategie che combinano trend, momentum e volatilità ottengono performance superiori."
+        }
+      ]
+    },
+    {
+      "id": "errori-comuni",
+      "title": "Errori Comuni con gli Indicatori",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "1. Sovraccaricare Grafico"
+        {
+          "type": "list",
+          "items": [
+            "**Errore:** Usare troppi indicatori contemporaneamente",
+            "**Problema:** Confusione, segnali contrastanti, paralisi decisionale",
+            "**Soluzione:** Usa 2-3 indicatori complementari, non di più",
+            "**Regola:** Se non puoi spiegare setup in 30 secondi, è troppo complesso"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "2. Usare Indicatori da Soli"
+        {
+          "type": "list",
+          "items": [
+            "**Errore:** Basare decisioni solo su indicatori, ignorare price action",
+            "**Problema:** Indicatori possono dare falsi segnali",
+            "**Soluzione:** Combina indicatori con supporti/resistenze, volume, pattern",
+            "**Regola:** Indicatori sono conferma, non sostituzione di price action"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "3. Ignorare Context"
+        {
+          "type": "list",
+          "items": [
+            "**Errore:** Usare indicatori senza considerare trend, supporti/resistenze",
+            "**Problema:** Segnali possono essere meno affidabili senza context",
+            "**Soluzione:** Analizza sempre trend, supporti/resistenze prima di usare indicatori",
+            "**Regola:** Context è essenziale per accuratezza"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "4. Parametri Sbagliati"
+        {
+          "type": "list",
+          "items": [
+            "**Errore:** Usare parametri standard senza adattare a mercato/timeframe",
+            "**Problema:** Parametri standard possono non essere ottimali",
+            "**Soluzione:** Testa parametri diversi, adatta a mercato/timeframe",
+            "**Regola:** Parametri ottimali variano a seconda di mercato e timeframe"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Murphy (1999) ha identificato errori comuni con indicatori, evidenziando che sovraccaricare grafico e ignorare context sono gli errori più costosi. La ricerca dimostra che semplicità e context sono essenziali per successo con indicatori."
+        }
+      ]
+    },
+    {
+      "id": "best-practices",
+      "title": "Best Practices: Come Usare gli Indicatori",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "1. Keep It Simple"
+        {
+          "type": "list",
+          "items": [
+            "**Principio:** Usa 2-3 indicatori complementari, non di più",
+            "**Esempio:** MACD + RSI + Bollinger Bands",
+            "**Vantaggio:** Chiarezza, meno confusione, segnali più chiari",
+            "**Regola:** Se non puoi spiegare setup, è troppo complesso"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "2. Conferme Multiple"
+        {
+          "type": "list",
+          "items": [
+            "**Principio:** Non basarti su un solo indicatore",
+            "**Strategia:** Aspetta che 2-3 indicatori confermino stesso segnale",
+            "**Vantaggio:** Riduce falsi segnali, aumenta accuratezza",
+            "**Regola:** Più conferme = segnale più forte"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "3. Context è Chiave"
+        {
+          "type": "list",
+          "items": [
+            "**Principio:** Analizza sempre trend, supporti/resistenze prima di indicatori",
+            "**Strategia:** Usa indicatori per confermare price action, non sostituirla",
+            "**Vantaggio:** Aumenta accuratezza, riduce falsi segnali",
+            "**Regola:** Price action prima, indicatori dopo"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "4. Testa e Adatta"
+        {
+          "type": "list",
+          "items": [
+            "**Principio:** Testa parametri e combinazioni diverse",
+            "**Strategia:** Backtest setup prima di usare live",
+            "**Vantaggio:** Trova parametri ottimali per tuo stile di trading",
+            "**Regola:** Non usare parametri standard senza testare"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Brock et al. (1992) ha sintetizzato best practices per uso di indicatori, evidenziando che semplicità, conferme multiple e context sono essenziali. La ricerca dimostra che trader che usano setup semplici e ben definiti ottengono performance superiori."
+        }
+      ]
+    },
+    {
+      "id": "glossario",
+      "title": "Glossario Tecnico",
+      "content": [
+        {
+          "type": "list",
+          "items": [
+            "**Indicatori Tecnici:** calcoli matematici basati su prezzo e volume per analisi tecnica.",
+            "**Oscillatore:** indicatore che oscilla tra livelli estremi (es. RSI, Stochastic).",
+            "**RSI (Relative Strength Index):** oscillatore che misura velocità ed entità movimenti prezzo.",
+            "**MACD (Moving Average Convergence Divergence):** indicatore che combina trend e momentum.",
+            "**Bollinger Bands:** bande di volatilità basate su deviazione standard.",
+            "**Stochastic Oscillator:** oscillatore che confronta prezzo di chiusura con range di prezzo.",
+            "**ADX (Average Directional Index):** indicatore che misura forza del trend.",
+            "**ATR (Average True Range):** indicatore che misura volatilità media.",
+            "**Divergenza:** quando prezzo e indicatore si muovono in direzioni opposte.",
+            "**Overbought (Ipercomprato):** condizione dove prezzo è relativamente alto (es. RSI > 70).",
+            "**Oversold (Ipervenduto):** condizione dove prezzo è relativamente basso (es. RSI < 30).",
+            "**Crossover:** quando due linee di indicatore si attraversano.",
+            "**Momentum:** velocità e forza dei movimenti di prezzo.",
+            "**Volatilità:** misura di variabilità dei prezzi."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "disclaimer",
+      "title": "Disclaimer e Avvertenze Finali",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le informazioni contenute in questa guida sono fornite da Tradelia AI a scopo esclusivamente informativo, formativo e simulativo. Non costituiscono in alcun modo una sollecitazione al pubblico risparmio, una raccomandazione personalizzata o una consulenza finanziaria, fiscale o legale."
+        },
+        {
+          "type": "paragraph",
+          "text": "Gli indicatori tecnici sono strumenti utili per analisi tecnica, ma non sono perfetti e non garantiscono successo. Molti indicatori possono dare falsi segnali. Conferma, context e risk management sono essenziali. Ogni decisione di investimento deve essere presa in autonomia e con il supporto di professionisti qualificati."
+        },
+        {
+          "type": "paragraph",
+          "text": "Tradelia AI declina ogni responsabilità per danni diretti o indiretti derivanti dall'uso delle informazioni contenute in questa guida. L'utente accetta di assumersi ogni rischio associato alla consultazione e all'utilizzo dei contenuti."
+        },
+        {
+          "type": "paragraph",
+          "text": "*«Gli indicatori tecnici sono strumenti potenti per analisi tecnica, ma richiedono conferme multiple, context e risk management. Non sono perfetti, ma possono essere utili quando usati correttamente con semplicità e disciplina.»*"
+        }
+      ]
+    }
+  ]
+}
+

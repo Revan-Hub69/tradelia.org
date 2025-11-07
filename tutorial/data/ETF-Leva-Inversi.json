@@ -1,0 +1,338 @@
+{
+  "title": "ETF a Leva e Inversi: Guida Completa Tradelia AI",
+  "meta": {
+    "published": "Gennaio 2025",
+    "category": "Strumenti Derivati",
+    "difficulty": "Intermedio-Avanzato"
+  },
+  "tags": [
+    "ETF",
+    "Leva",
+    "Inversi",
+    "Derivati",
+    "Volatilità",
+    "Rischio",
+    "Divergenza"
+  ],
+  "glossaryTerms": {
+    "ETF": "CreditRiskBlock",
+    "leva": "CreditRiskBlock",
+    "inversi": "CreditRiskBlock",
+    "volatilità": "CreditRiskBlock",
+    "divergenza": "CreditRiskBlock",
+    "tracking error": "CreditRiskBlock",
+    "volatility drag": "CreditRiskBlock"
+  },
+  "sections": [
+    {
+      "id": "introduzione",
+      "title": "Cosa sono gli ETF a Leva e Inversi",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Gli **ETF a leva** sono strumenti finanziari progettati per moltiplicare — su base giornaliera — la performance di un indice sottostante. Un ETF a leva 2x, ad esempio, mira a ottenere il doppio della variazione giornaliera dell'indice di riferimento. Gli **ETF inversi**, invece, replicano l'**andamento opposto** dell'indice: se l'indice scende del 1%, l'ETF inverso guadagna il 1%."
+        },
+        {
+          "type": "paragraph",
+          "text": "Alcuni ETF combinano entrambe le logiche, offrendo una leva **inversa** (es. -2x o -3x), con il risultato di amplificare le perdite se la direzione del mercato è errata, anche per brevi periodi."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**ETF Leva:** replicano 2x o 3x l'andamento giornaliero di un indice (positivo)",
+            "**ETF Inversi:** replicano l'andamento opposto (short) dell'indice",
+            "**ETF Leva Inversi:** replicano -2x o -3x il movimento giornaliero (short + amplificato)"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Questi strumenti **non sono adatti al buy&hold** e possono generare risultati molto diversi rispetto a quanto atteso, se mantenuti per più giorni."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Avellaneda & Zhang (2010) ha analizzato il comportamento degli ETF a leva, dimostrando che la leva giornaliera può causare significative divergenze nel lungo termine. La ricerca evidenzia che gli ETF a leva non sono adatti al buy&hold a causa dell'effetto di compounding giornaliero."
+        }
+      ]
+    },
+    {
+      "id": "meccanismo",
+      "title": "Meccanismo di Funzionamento Giornaliero",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Gli ETF a leva e inversi sono progettati per **replicare la performance giornaliera** di un indice, moltiplicata per un coefficiente (es. +2x, -3x). Questo significa che il risultato si \"resetta\" ogni giorno: **non sono cumulativi nel tempo**."
+        },
+        {
+          "type": "paragraph",
+          "text": "L'effetto leva viene ottenuto tramite strumenti derivati (swap, futures, opzioni), e viene ricalibrato ogni giorno per mantenere il moltiplicatore costante. Il risultato è che, in presenza di volatilità, l'**andamento complessivo su più giorni può divergere pesantemente** da quello atteso."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Caratteristiche Principali"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Reset giornaliero:** la performance si basa solo sul movimento dell'indice tra un giorno e l'altro",
+            "**Effetto compounding:** piccoli movimenti giornalieri opposti possono erodere il capitale",
+            "**Volatilità deleteria:** più il mercato è instabile, più l'ETF a leva si discosta dal comportamento \"logico\""
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Anche in assenza di una direzione netta del mercato, l'ETF può perdere valore a causa del **tracking error cumulato**. L'investitore che tiene il titolo per più giorni può ritrovarsi con perdite **non giustificate dall'andamento reale del mercato**."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Cheng & Madhavan (2009) ha analizzato il meccanismo di funzionamento degli ETF a leva, dimostrando che il reset giornaliero può causare significative divergenze nel lungo termine. La ricerca evidenzia che l'effetto di compounding giornaliero può erodere il capitale anche in mercati laterali."
+        }
+      ]
+    },
+    {
+      "id": "divergenza",
+      "title": "Il Problema della Divergenza nel Tempo",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Gli ETF a leva, se detenuti per più giorni, possono mostrare performance **molto diverse da quanto previsto** sulla base dell'indice sottostante. Questo è il cosiddetto **effetto di divergenza**, causato dalla natura del calcolo giornaliero della leva."
+        },
+        {
+          "type": "paragraph",
+          "text": "Anche se l'indice termina il periodo a +0%, un ETF 2x potrebbe chiudere a -5% o peggio, semplicemente a causa della volatilità intragiornaliera. Questo avviene perché le perdite e i guadagni giornalieri si moltiplicano tra loro in modo non lineare."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Fattori che Influenzano la Divergenza"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Alta volatilità = perdita di capitale** anche se l'indice è neutro nel periodo",
+            "**Movimenti oscillanti** aumentano l'effetto di erosione (volatility drag)",
+            "**Trend prolungato = utile**, ma solo se si entra nel momento giusto e si esce in tempo"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "In sostanza, **più giorni tieni un ETF a leva, maggiore è il rischio** che il rendimento si allontani dalla logica \"x2\" o \"x3\" che il nome suggerisce."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Lu et al. (2014) ha analizzato l'effetto di divergenza negli ETF a leva, dimostrando che la volatilità può causare significative perdite anche in mercati laterali. La ricerca evidenzia che l'effetto di compounding giornaliero può erodere il capitale nel tempo."
+        }
+      ]
+    },
+    {
+      "id": "esempi",
+      "title": "Esempi Numerici e Simulazioni",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Di seguito, due simulazioni per mostrare come l'effetto leva giornaliera influisce sul rendimento cumulato. In entrambi i casi, l'indice sottostante termina il periodo a **0%**, ma il risultato dell'ETF è negativo."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio 1: 3 Giorni di Volatilità"
+        },
+        {
+          "type": "table",
+          "headers": ["Giorno", "Indice", "ETF 2x"],
+          "rows": [
+            ["0", "100", "100"],
+            ["1: -2%", "98", "96 (-4%)"],
+            ["2: +2%", "99.96", "99.84 (+3.84%)"],
+            ["3: -2%", "97.96", "95.84 (-4%)"],
+            ["**Totale**", "**-2.04%**", "**-4.16%**"]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Anche se l'indice è sceso solo del 2%, l'ETF 2x ha perso oltre il 4%, dimostrando come la volatilità possa amplificare le perdite."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio 2: 5 Giorni di Volatilità Alternata"
+        },
+        {
+          "type": "table",
+          "headers": ["Giorno", "Indice", "ETF 2x"],
+          "rows": [
+            ["0", "100", "100"],
+            ["1: +3%", "103", "106 (+6%)"],
+            ["2: -3%", "99.91", "100.18 (-5.66%)"],
+            ["3: +3%", "102.91", "106.19 (+6%)"],
+            ["4: -3%", "99.82", "100.38 (-5.66%)"],
+            ["5: +3%", "102.82", "106.39 (+6%)"],
+            ["**Totale**", "**+2.82%**", "**+6.39%**"]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "In questo caso, l'ETF 2x ha performato meglio dell'indice, ma solo perché i movimenti sono stati favorevoli. In scenari di volatilità alternata, il risultato può essere molto diverso."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Avellaneda & Zhang (2010) ha sviluppato modelli matematici per simulare il comportamento degli ETF a leva, dimostrando che la volatilità può causare significative divergenze nel lungo termine. La ricerca evidenzia l'importanza di comprendere l'effetto di compounding giornaliero."
+        }
+      ]
+    },
+    {
+      "id": "quando-usarli",
+      "title": "Quando Usarli (e Quando No)",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Gli ETF a leva e inversi possono avere senso solo in un **contesto strategico ben definito** e con un orizzonte temporale molto breve. Usati correttamente, possono offrire esposizione amplificata, ma richiedono disciplina e monitoraggio attivo."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Quando Usarli"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Trading intraday:** per operazioni che vengono chiuse entro la stessa giornata",
+            "**Esposizione tattica breve:** per posizioni che durano pochi giorni al massimo",
+            "**Hedging temporaneo:** per coprire posizioni esistenti per brevi periodi",
+            "**Speculazione direzionale:** per scommettere su movimenti forti e brevi"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Quando NON Usarli"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Buy & hold:** non sono adatti a investimenti a lungo termine",
+            "**Portafogli conservativi:** il rischio di perdita è elevato anche in mercati laterali",
+            "**Investitori inesperti:** richiedono comprensione approfondita del rischio",
+            "**Mercati volatili:** la volatilità amplifica le perdite anche in assenza di direzione netta"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Cheng & Madhavan (2009) ha analizzato l'uso appropriato degli ETF a leva, dimostrando che questi strumenti sono adatti solo per operazioni a breve termine. La ricerca evidenzia che il buy&hold può causare significative perdite a causa dell'effetto di divergenza."
+        }
+      ]
+    },
+    {
+      "id": "rischi",
+      "title": "Rischi Principali e Uso Improprio",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Gli ETF a leva e inversi presentano rischi specifici che vanno oltre quelli degli ETF tradizionali. Questi rischi derivano dalla natura della leva giornaliera, dall'effetto di divergenza e dalla volatilità deleteria."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Rischi Principali"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Rischio di divergenza:** il rendimento può divergere significativamente da quello atteso nel lungo termine",
+            "**Volatilità deleteria:** la volatilità può erodere il capitale anche in mercati laterali",
+            "**Effetto compounding:** piccoli movimenti giornalieri opposti possono amplificare le perdite",
+            "**Rischio di liquidità:** alcuni ETF a leva possono essere illiquidi, rendendo difficile l'uscita anticipata",
+            "**Rischio di tracking error:** l'ETF può non replicare perfettamente la performance attesa"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Uso Improprio"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Buy & hold:** mantenere ETF a leva per periodi prolungati può causare perdite significative",
+            "**Ignorare la volatilità:** non considerare l'impatto della volatilità sul rendimento",
+            "**Sottovalutare il rischio:** pensare che la leva sia solo un moltiplicatore lineare",
+            "**Concentrazione eccessiva:** allocare una quota significativa del portafoglio in ETF a leva"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Lu et al. (2014) ha analizzato i rischi degli ETF a leva, dimostrando che molti investitori retail sottovalutano l'effetto di divergenza. La ricerca evidenzia che l'uso improprio può causare perdite significative anche in mercati favorevoli."
+        }
+      ]
+    },
+    {
+      "id": "alternative",
+      "title": "Alternative per Esposizione Direzionale",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Per chi cerca esposizione direzionale amplificata, esistono alternative più trasparenti e controllabili rispetto agli ETF a leva. Queste alternative offrono maggiore controllo sul rischio e minore divergenza nel lungo termine."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Alternative Principali"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Opzioni call/put:** offrono esposizione direzionale con rischio limitato e maggiore controllo",
+            "**Futures:** offrono leva con maggiore trasparenza e liquidità",
+            "**CFD:** offrono leva con maggiore flessibilità operativa",
+            "**ETF tradizionali con margine:** offrono leva con maggiore trasparenza e controllo"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Queste alternative offrono maggiore controllo sul rischio e minore divergenza nel lungo termine, rendendole più adatte per investitori evoluti che cercano esposizione direzionale."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Black & Scholes (1973) ha analizzato le opzioni come alternativa agli ETF a leva, dimostrando che le opzioni offrono maggiore controllo sul rischio. La ricerca evidenzia che le opzioni possono essere più adatte per investitori evoluti che cercano esposizione direzionale."
+        }
+      ]
+    },
+    {
+      "id": "glossario",
+      "title": "Glossario Tecnico",
+      "content": [
+        {
+          "type": "list",
+          "items": [
+            "**ETF a Leva:** ETF progettati per moltiplicare la performance giornaliera di un indice sottostante.",
+            "**ETF Inversi:** ETF progettati per replicare l'andamento opposto di un indice sottostante.",
+            "**ETF Leva Inversi:** ETF che combinano leva e inversione, amplificando l'andamento opposto.",
+            "**Reset Giornaliero:** meccanismo che ricalibra la leva ogni giorno per mantenere il moltiplicatore costante.",
+            "**Divergenza:** differenza tra il rendimento atteso e quello effettivo nel lungo termine.",
+            "**Volatility Drag:** effetto di erosione del capitale causato dalla volatilità intragiornaliera.",
+            "**Tracking Error:** differenza tra la performance dell'ETF e quella dell'indice sottostante."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "disclaimer",
+      "title": "Disclaimer e Responsabilità",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le informazioni contenute in questa guida sono fornite da Tradelia AI a scopo esclusivamente informativo, formativo e simulativo. Non costituiscono in alcun modo una sollecitazione al pubblico risparmio, una raccomandazione personalizzata o una consulenza finanziaria, fiscale o legale."
+        },
+        {
+          "type": "paragraph",
+          "text": "Gli ETF a leva e inversi sono strumenti complessi e rischiosi. Comportano rischi significativi in termini di perdita del capitale, volatilità elevata, divergenza nel lungo termine, e rischio di tracking error. Ogni valutazione e decisione d'investimento deve essere presa in autonomia e con il supporto di un professionista autorizzato, tenendo conto del proprio profilo di rischio e degli obiettivi individuali."
+        },
+        {
+          "type": "paragraph",
+          "text": "Tradelia AI declina ogni responsabilità per danni diretti o indiretti derivanti dall'uso delle informazioni contenute in questa guida, incluse simulazioni o link esterni. L'utente accetta di assumersi ogni rischio associato alla consultazione e all'utilizzo dei contenuti."
+        }
+      ]
+    }
+  ]
+}
+

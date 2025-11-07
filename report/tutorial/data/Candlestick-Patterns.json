@@ -1,0 +1,520 @@
+{
+  "title": "Candlestick Patterns: Pattern di Candele Giapponesi - Guida Completa Tradelia AI",
+  "meta": {
+    "published": "Gennaio 2025",
+    "category": "Analisi Tecnica",
+    "difficulty": "Intermedio"
+  },
+  "tags": [
+    "Candlestick",
+    "Pattern",
+    "Reversal Patterns",
+    "Continuation Patterns",
+    "Japanese Candlesticks",
+    "Price Action",
+    "Trading"
+  ],
+  "glossaryTerms": {
+    "candlestick": "CreditRiskBlock",
+    "pattern": "CreditRiskBlock",
+    "reversal pattern": "CreditRiskBlock",
+    "continuation pattern": "CreditRiskBlock",
+    "doji": "CreditRiskBlock",
+    "hammer": "CreditRiskBlock",
+    "engulfing": "CreditRiskBlock",
+    "shooting star": "CreditRiskBlock",
+    "hanging man": "CreditRiskBlock"
+  },
+  "sections": [
+    {
+      "id": "introduzione",
+      "title": "Introduzione: Cos'è un Candlestick Pattern",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I **Candlestick Patterns** (pattern di candele) sono formazioni grafiche create da una o più candele che possono indicare **inversione** o **continuazione** di trend. Originati in Giappone nel XVIII secolo, sono stati introdotti in Occidente da Steve Nison negli anni '90."
+        },
+        {
+          "type": "paragraph",
+          "text": "Ogni candela mostra **apertura, massimo, minimo e chiusura** di un periodo. La forma e il colore della candela, insieme alla relazione con candele precedenti, creano pattern che riflettono **psicologia del mercato** e possono prevedere movimenti futuri."
+        },
+        {
+          "type": "paragraph",
+          "text": "Questa guida Tradelia AI esplora i principali pattern di candele: reversal patterns (inversione), continuation patterns (continuazione), e come usarli nel trading. L'obiettivo è fornire una comprensione completa di questi pattern potenti."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Nison (1991) ha introdotto candlestick patterns in Occidente, dimostrando che questi pattern forniscono informazioni psicologiche utili sui mercati. La ricerca evidenzia che pattern di candele possono identificare potenziali inversioni e continuazioni con accuratezza superiore al caso."
+        }
+      ]
+    },
+    {
+      "id": "anatomia-candela",
+      "title": "Anatomia di una Candela",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Componenti di una Candela"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Corpo (Body):** Differenza tra apertura e chiusura (rettangolo)",
+            "**Ombra Superiore (Upper Shadow/Wick):** Linea sopra corpo, mostra massimo",
+            "**Ombra Inferiore (Lower Shadow/Wick):** Linea sotto corpo, mostra minimo",
+            "**Colore:** Verde/Bianco = rialzista (chiusura > apertura), Rosso/Nero = ribassista (chiusura < apertura)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Interpretazione"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Corpo grande:** Forte pressione compratori/venditori",
+            "**Corpo piccolo:** Indecisione, equilibrio tra compratori e venditori",
+            "**Ombre lunghe:** Rifiuto di prezzi estremi, potenziale inversione",
+            "**Ombre corte:** Consenso su prezzo, trend forte"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Nison (1991) ha spiegato anatomia delle candele, evidenziando che ogni componente (corpo, ombre) fornisce informazioni psicologiche. La ricerca dimostra che interpretazione corretta di questi componenti è essenziale per identificare pattern significativi."
+        }
+      ]
+    },
+    {
+      "id": "reversal-patterns",
+      "title": "Reversal Patterns: Pattern di Inversione",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "1. Hammer (Martello)"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Formazione:** Corpo piccolo, ombra inferiore lunga (2-3x corpo), ombra superiore piccola o assente"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Significato:** Rifiuto di prezzi bassi, potenziale inversione rialzista",
+            "**Dove:** Fine di trend ribassista, vicino a supporto",
+            "**Conferma:** Candela verde successiva che chiude sopra apertura hammer",
+            "**Entry:** Dopo conferma, stop loss sotto minimo hammer"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "2. Hanging Man (Uomo Appeso)"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Formazione:** Stessa di hammer, ma in **trend rialzista**"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Significato:** Rifiuto di prezzi alti, potenziale inversione ribassista",
+            "**Dove:** Fine di trend rialzista, vicino a resistenza",
+            "**Conferma:** Candela rossa successiva che chiude sotto apertura hanging man",
+            "**Entry:** Dopo conferma, stop loss sopra massimo hanging man"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "3. Shooting Star (Stella Cadente)"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Formazione:** Corpo piccolo, ombra superiore lunga (2-3x corpo), ombra inferiore piccola o assente"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Significato:** Rifiuto di prezzi alti, potenziale inversione ribassista",
+            "**Dove:** Fine di trend rialzista, vicino a resistenza",
+            "**Conferma:** Candela rossa successiva che chiude sotto apertura shooting star",
+            "**Entry:** Dopo conferma, stop loss sopra massimo shooting star"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "4. Inverted Hammer (Martello Invertito)"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Formazione:** Stessa di shooting star, ma in **trend ribassista**"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Significato:** Rifiuto di prezzi bassi, potenziale inversione rialzista",
+            "**Dove:** Fine di trend ribassista, vicino a supporto",
+            "**Conferma:** Candela verde successiva che chiude sopra apertura inverted hammer",
+            "**Entry:** Dopo conferma, stop loss sotto minimo inverted hammer"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "5. Doji"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Formazione:** Corpo molto piccolo o assente (apertura ≈ chiusura), ombre di lunghezza variabile"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Significato:** Indecisione, equilibrio tra compratori e venditori",
+            "**Dove:** Può indicare inversione se in trend forte, o continuazione se in trend debole",
+            "**Conferma:** Candela successiva che conferma direzione",
+            "**Varianti:** Long-legged doji (ombre lunghe), Dragonfly doji (ombra inferiore lunga), Gravestone doji (ombra superiore lunga)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "6. Engulfing Pattern (Pattern di Ingestione)"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Bullish Engulfing:** Candela verde che \"ingloba\" candela rossa precedente"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Formazione:** Candela verde con corpo che copre completamente corpo candela rossa precedente",
+            "**Significato:** Forte pressione compratori, potenziale inversione rialzista",
+            "**Dove:** Fine di trend ribassista, vicino a supporto",
+            "**Conferma:** Volume alto, candela successiva che conferma"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "**Bearish Engulfing:** Candela rossa che \"ingloba\" candela verde precedente"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Formazione:** Candela rossa con corpo che copre completamente corpo candela verde precedente",
+            "**Significato:** Forte pressione venditori, potenziale inversione ribassista",
+            "**Dove:** Fine di trend rialzista, vicino a resistenza",
+            "**Conferma:** Volume alto, candela successiva che conferma"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Nison (1991) ha analizzato reversal patterns, dimostrando che pattern come hammer, shooting star e engulfing hanno accuratezza superiore al caso quando confermati. La ricerca evidenzia che combinare pattern con supporti/resistenze e volume aumenta significativamente accuratezza."
+        }
+      ]
+    },
+    {
+      "id": "continuation-patterns",
+      "title": "Continuation Patterns: Pattern di Continuazione",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "1. Rising Three Methods (Tre Metodi Rialzisti)"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Formazione:** Candela verde grande, seguito da 3 candele piccole (rosse o verdi) che si muovono contro trend, poi candela verde grande che conferma trend"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Significato:** Pausa in trend rialzista, poi continuazione",
+            "**Dove:** Durante trend rialzista",
+            "**Conferma:** Candela verde finale che supera massimo prima candela",
+            "**Entry:** Dopo conferma, stop loss sotto minimo pattern"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "2. Falling Three Methods (Tre Metodi Ribassisti)"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Formazione:** Candela rossa grande, seguito da 3 candele piccole (rosse o verdi) che si muovono contro trend, poi candela rossa grande che conferma trend"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Significato:** Pausa in trend ribassista, poi continuazione",
+            "**Dove:** Durante trend ribassista",
+            "**Conferma:** Candela rossa finale che supera minimo prima candela",
+            "**Entry:** Dopo conferma, stop loss sopra massimo pattern"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "3. Three White Soldiers (Tre Soldati Bianchi)"
+        {
+          "type": "list",
+          "items": [
+            "**Formazione:** Tre candele verdi consecutive con corpi crescenti",
+            "**Significato:** Forte momentum rialzista, continuazione trend",
+            "**Dove:** Durante trend rialzista",
+            "**Conferma:** Volume alto, trend continua"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "4. Three Black Crows (Tre Corvi Neri)"
+        {
+          "type": "list",
+          "items": [
+            "**Formazione:** Tre candele rosse consecutive con corpi crescenti",
+            "**Significato:** Forte momentum ribassista, continuazione trend",
+            "**Dove:** Durante trend ribassista",
+            "**Conferma:** Volume alto, trend continua"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Nison (1991) ha analizzato continuation patterns, evidenziando che questi pattern indicano pause temporanee in trend forti. La ricerca dimostra che continuation patterns sono particolarmente affidabili quando confermati da volume e quando si verificano in trend chiari."
+        }
+      ]
+    },
+    {
+      "id": "pattern-complessi",
+      "title": "Pattern Complessi: Formazioni Multi-Candela",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "1. Morning Star (Stella del Mattino)"
+        {
+          "type": "paragraph",
+          "text": "**Formazione:** Candela rossa grande, candela piccola (doji o corpo piccolo) con gap, candela verde grande che chiude gap"
+        {
+          "type": "list",
+          "items": [
+            "**Significato:** Inversione rialzista forte",
+            "**Dove:** Fine di trend ribassista",
+            "**Conferma:** Volume alto sulla candela verde finale",
+            "**Entry:** Dopo conferma, stop loss sotto minimo pattern"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "2. Evening Star (Stella della Sera)"
+        {
+          "type": "paragraph",
+          "text": "**Formazione:** Candela verde grande, candela piccola (doji o corpo piccolo) con gap, candela rossa grande che chiude gap"
+        {
+          "type": "list",
+          "items": [
+            "**Significato:** Inversione ribassista forte",
+            "**Dove:** Fine di trend rialzista",
+            "**Conferma:** Volume alto sulla candela rossa finale",
+            "**Entry:** Dopo conferma, stop loss sopra massimo pattern"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "3. Three Line Strike"
+        {
+          "type": "list",
+          "items": [
+            "**Formazione:** Tre candele nella stessa direzione, poi candela che \"ingloba\" le tre precedenti in direzione opposta",
+            "**Significato:** Inversione forte",
+            "**Dove:** Fine di trend",
+            "**Conferma:** Volume alto sulla candela finale"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Nison (1991) ha analizzato pattern complessi, dimostrando che formazioni multi-candela come morning/evening star sono particolarmente affidabili quando confermate. La ricerca evidenzia che pattern complessi richiedono conferma ma possono identificare inversioni significative."
+        }
+      ]
+    },
+    {
+      "id": "come-usare",
+      "title": "Come Usare i Candlestick Patterns",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "1. Conferma è Essenziale"
+        {
+          "type": "list",
+          "items": [
+            "**Principio:** Non entrare solo su pattern, aspetta conferma",
+            "**Conferma:** Candela successiva che conferma direzione",
+            "**Volume:** Pattern con volume alto sono più affidabili",
+            "**Supporti/Resistenze:** Pattern vicino a supporti/resistenze sono più affidabili"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "2. Context è Chiave"
+        {
+          "type": "list",
+          "items": [
+            "**Trend:** Reversal patterns sono più affidabili in trend forti",
+            "**Supporti/Resistenze:** Pattern vicino a supporti/resistenze sono più significativi",
+            "**Volume:** Pattern con volume alto sono più affidabili",
+            "**Timeframe:** Pattern su timeframe più lunghi sono più affidabili"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "3. Combinare con Altri Indicatori"
+        {
+          "type": "list",
+          "items": [
+            "**Supporti/Resistenze:** Pattern vicino a supporti/resistenze",
+            "**Volume:** Conferma volume per pattern",
+            "**Indicatori:** RSI, MACD per conferma",
+            "**Trend:** Pattern nella direzione del trend sono più affidabili"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "4. Risk Management"
+        {
+          "type": "list",
+          "items": [
+            "**Stop loss:** Sempre usa stop loss basati su pattern",
+            "**Take profit:** Usa supporti/resistenze per take profit",
+            "**Position sizing:** Non rischiare più del 1-2% per trade",
+            "**Regola:** Risk management è più importante del pattern"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Nison (1991) ha sintetizzato best practices per uso di candlestick patterns, evidenziando che conferma, context e risk management sono essenziali. La ricerca dimostra che trader che usano pattern con conferme multiple ottengono performance superiori."
+        }
+      ]
+    },
+    {
+      "id": "errori-comuni",
+      "title": "Errori Comuni con Candlestick Patterns",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "1. Entrare Senza Conferma"
+        {
+          "type": "list",
+          "items": [
+            "**Errore:** Entrare immediatamente quando vedi pattern",
+            "**Problema:** Pattern può non completarsi, falso segnale",
+            "**Soluzione:** Aspetta conferma (candela successiva)",
+            "**Regola:** Mai entrare senza conferma"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "2. Ignorare Context"
+        {
+          "type": "list",
+          "items": [
+            "**Errore:** Usare pattern senza considerare trend, supporti/resistenze",
+            "**Problema:** Pattern può essere meno affidabile senza context",
+            "**Soluzione:** Analizza sempre trend, supporti/resistenze, volume",
+            "**Regola:** Context è essenziale per accuratezza"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "3. Sovraccaricare Grafico"
+        {
+          "type": "list",
+          "items": [
+            "**Errore:** Cercare pattern ovunque, troppi pattern",
+            "**Problema:** Confusione, falsi segnali",
+            "**Soluzione:** Focus su pattern chiari, significativi",
+            "**Regola:** Qualità > Quantità"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "4. Ignorare Risk Management"
+        {
+          "type": "list",
+          "items": [
+            "**Errore:** Entrare senza stop loss, rischiare troppo",
+            "**Problema:** Pattern non sono perfetti, possono fallire",
+            "**Soluzione:** Sempre usa stop loss, position sizing corretto",
+            "**Regola:** Risk management è più importante del pattern"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Nison (1991) ha identificato errori comuni con candlestick patterns, evidenziando che entrare senza conferma e ignorare context sono gli errori più costosi. La ricerca dimostra che disciplina e risk management sono essenziali per successo con pattern."
+        }
+      ]
+    },
+    {
+      "id": "glossario",
+      "title": "Glossario Tecnico",
+      "content": [
+        {
+          "type": "list",
+          "items": [
+            "**Candlestick:** tipo di grafico che mostra apertura, massimo, minimo, chiusura.",
+            "**Pattern:** formazione grafica che può indicare inversione o continuazione.",
+            "**Reversal Pattern:** pattern che indica potenziale inversione di trend.",
+            "**Continuation Pattern:** pattern che indica potenziale continuazione di trend.",
+            "**Hammer:** pattern di inversione rialzista con corpo piccolo e ombra inferiore lunga.",
+            "**Hanging Man:** pattern di inversione ribassista simile a hammer ma in trend rialzista.",
+            "**Shooting Star:** pattern di inversione ribassista con corpo piccolo e ombra superiore lunga.",
+            "**Doji:** candela con corpo molto piccolo, indica indecisione.",
+            "**Engulfing Pattern:** pattern dove una candela \"ingloba\" candela precedente.",
+            "**Morning Star:** pattern di inversione rialzista con tre candele.",
+            "**Evening Star:** pattern di inversione ribassista con tre candele.",
+            "**Body:** differenza tra apertura e chiusura di una candela.",
+            "**Shadow/Wick:** linea sopra o sotto corpo che mostra massimo o minimo.",
+            "**Gap:** spazio tra chiusura di una candela e apertura della successiva."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "disclaimer",
+      "title": "Disclaimer e Avvertenze Finali",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le informazioni contenute in questa guida sono fornite da Tradelia AI a scopo esclusivamente informativo, formativo e simulativo. Non costituiscono in alcun modo una sollecitazione al pubblico risparmio, una raccomandazione personalizzata o una consulenza finanziaria, fiscale o legale."
+        },
+        {
+          "type": "paragraph",
+          "text": "I candlestick patterns sono strumenti utili per analisi tecnica, ma non sono perfetti e non garantiscono successo. Molti pattern possono dare falsi segnali. Conferma, context e risk management sono essenziali. Ogni decisione di investimento deve essere presa in autonomia e con il supporto di professionisti qualificati."
+        },
+        {
+          "type": "paragraph",
+          "text": "Tradelia AI declina ogni responsabilità per danni diretti o indiretti derivanti dall'uso delle informazioni contenute in questa guida. L'utente accetta di assumersi ogni rischio associato alla consultazione e all'utilizzo dei contenuti."
+        },
+        {
+          "type": "paragraph",
+          "text": "*«I candlestick patterns sono strumenti potenti per identificare potenziali inversioni e continuazioni, ma richiedono conferma, context e risk management. Non sono perfetti, ma possono essere utili quando usati correttamente.»*"
+        }
+      ]
+    }
+  ]
+}
+

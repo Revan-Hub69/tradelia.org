@@ -1,0 +1,37 @@
+{
+  "documents": [
+    {
+      "id": "tutorial-cfd",
+      "title": "CFD - Guida Completa",
+      "category": "tutorial",
+      "tags": ["cfd", "derivati", "trading"],
+      "version": "Tradelia AI v2.1",
+      "link": "/tutorial/CFD-guida-completa.html",
+      "created_at": "2025-01-01T10:00:00Z",
+      "updated_at": "2025-01-01T10:00:00Z"
+    },
+    {
+      "id": "tutorial-etf-sintetici",
+      "title": "ETF Sintetici",
+      "category": "tutorial",
+      "tags": ["etf", "sintetici", "derivati"],
+      "version": "Tradelia AI v2.1",
+      "link": "/tutorial/ETF-Sintetici.html",
+      "created_at": "2025-01-02T10:00:00Z",
+      "updated_at": "2025-01-02T10:00:00Z"
+    },
+    {
+      "id": "tutorial-opzioni-vanilla",
+      "title": "Opzioni Vanilla",
+      "category": "tutorial",
+      "tags": ["opzioni", "derivati", "trading"],
+      "version": "Tradelia AI v2.1",
+      "link": "/tutorial/Opzioni-Vanilla.html",
+      "created_at": "2025-01-03T10:00:00Z",
+      "updated_at": "2025-01-03T10:00:00Z"
+    }
+  ],
+  "generated_at": "2025-01-27T10:00:00Z",
+  "total_documents": 3
+}
+

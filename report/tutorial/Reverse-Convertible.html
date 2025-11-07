@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Tutorial Tradelia Ai Reverse-Convertible.">
+  <title>TRADELIA • AI — Strumenti Finanziari Complessi</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    h1, h2, h3, h4 {
+      color: #0f172a;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.25rem; }
+    h3 { font-size: 1.25rem; }
+    h4 { font-size: 1.125rem; }
+    p { margin-bottom: 1.25rem; color: #374151; }
+    ul, ol { padding-left: 1.25rem; margin-bottom: 1.25rem; }
+    li { margin-bottom: 0.5rem; }
+    section {
+      background: #ffffff;
+      padding: 2.5rem 2rem;
+      margin: 2rem auto;
+      border-radius: 0.75rem;
+      max-width: 840px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e5e7eb;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
+    th, td {
+      padding: 0.75rem;
+      border: 1px solid #e5e7eb;
+      text-align: left;
+      font-size: 0.95rem;
+      word-break: break-word;
+    }
+    th { background: #f3f4f6; font-weight: 600; }
+    tr:nth-child(even) { background: #f9fafb; }
+    .positive { color: #16a34a; font-weight: 600; }
+    .negative { color: #dc2626; font-weight: 600; }
+    .neutral { color: #64748b; font-weight: 500; }
+    a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    a:hover { text-decoration: underline; color: #1d4ed8; }
+    @media screen and (max-width: 768px) {
+      body { font-size: 15px; line-height: 1.6; }
+      section { padding: 1.25rem; margin: 1rem; }
+      h1 { font-size: 1.5rem; }
+      h2 { font-size: 1.25rem; }
+      h3 { font-size: 1.125rem; }
+      h4 { font-size: 1rem; }
+      table, thead, tbody, th, td, tr {
+        display: block; width: 100%;
+      }
+      th { display: none; }
+      td {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border: none;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #1e293b;
+        padding-right: 1rem;
+        min-width: 140px;
+        display: inline-block;
+      }
+    }
+    #backToTop {
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    /* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+  border-radius: 100vh;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(80, 160, 200, 0.5);
+  border-radius: 100vh;
+  transition: background-color 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(80, 160, 200, 0.7);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
+  box-sizing: border-box;
+}
+  </style>
+</head>
+  <body>
+
+<header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-3 flex justify-between items-center">
+  <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 hover:opacity-90 transition">
+    TRADELIA<span class="text-blue-600 animate-pulse">•AI</span>
+  </a>
+  <a href="https://tradelia.org/archivio.html" class="text-sm sm:text-base text-blue-700 font-medium hover:underline transition">
+    Archivio Storico
+  </a>
+</header> 
+<br>
+<section>
+  <nav class="max-w-4xl mx-auto mt-4 mb-10 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+    <h2 class="text-lg font-semibold text-gray-800 mb-3">Indice del Tutorial</h2>
+    <ul class="list-disc list-inside text-sm text-blue-600 space-y-2">
+      <li><a href="#sezione-1">1. Definizione e Logica Finanziaria</a></li>
+      <li><a href="#sezione-2">2. Struttura Tecnica e Meccanismo</a></li>
+      <li><a href="#sezione-3">3. Funzionamento e Scenari di Rendimento</a></li>
+      <li><a href="#sezione-4">4. Rischi Nascosti e Asimmetrie</a></li>
+      <li><a href="#sezione-5">5. Tipologie di Reverse Convertible</a></li>
+      <li><a href="#sezione-6">6. Analisi del Target Retail</a></li>
+      <li><a href="#sezione-7">7. Esempi Reali e Casi Critici</a></li>
+      <li><a href="#sezione-8">8. Strategie Operative e Alternative</a></li>
+      <li><a href="#sezione-9">9. Confronto con Altri Strumenti Derivati</a></li>
+      <li><a href="#sezione-10">10. Check-list Operativa per l'Investitore</a></li>
+      <li><a href="#sezione-11">11. Glossario Tecnico</a></li>
+      <li><a href="#sezione-12">12. Accesso al Mercato e Intermediari</a></li>
+      <li><a href="#sezione-13">13. Disclaimer e Note Legali</a></li>
+    </ul>
+  </nav>
+</section>
+<br>
+<section id="sezione-1" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">1. Definizione e Logica Finanziaria</h2>
+
+  <p>
+    I <strong>Reverse Convertible</strong> sono strumenti finanziari derivati, classificabili come <strong>obbligazioni strutturate</strong>. Offrono una <strong>cedola fissa</strong> elevata in cambio della possibilità che, a scadenza, il capitale venga rimborsato non in contanti ma in <strong>azioni sottostanti</strong> (in caso di andamento negativo del sottostante).
+  </p>
+
+  <p>
+    Sono strutture ibride: combinano un <strong>bond tradizionale</strong> con una <strong>opzione put venduta</strong> sull’azione sottostante. L’investitore incassa la cedola grazie al premio ricevuto per la put venduta, ma si espone indirettamente al rischio di ribasso del titolo.
+  </p>
+
+  <p>
+    Il nome "reverse" deriva dal fatto che, a differenza dei convertibili classici (che permettono all’investitore di convertire in azioni), qui è l’emittente a scegliere se rimborsare in azioni (se il valore del sottostante è sceso).
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700">
+    <li><strong>Obbligazione:</strong> offre una cedola predeterminata (es. 8%)</li>
+    <li><strong>Opzione Put venduta:</strong> espone al rischio di ricevere azioni se il titolo scende sotto un certo livello (strike o barriera)</li>
+    <li><strong>Rimborso:</strong> in contanti se il sottostante è sopra la barriera; in azioni se sotto</li>
+    <li><strong>Logica per l’emittente:</strong> raccogliere capitale offrendo strumenti ad alto rendimento apparente</li>
+  </ul>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Il Reverse Convertible promette una cedola elevata, ma nasconde una scommessa ribassista sull’azione sottostante. L’investitore vende rischio implicito senza rendersene conto.»
+  </p>
+</section>
+<br>
+<section id="sezione-2" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">2. Struttura Tecnica e Meccanismo</h2>
+
+  <p>
+    Un Reverse Convertible è composto da due elementi principali:
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700">
+    <li><strong>Obbligazione zero-coupon o plain vanilla:</strong> struttura base che assicura il pagamento cedolare</li>
+    <li><strong>Opzione put venduta su un’azione:</strong> obbliga l’investitore ad acquistare il titolo a un prezzo predeterminato se il valore scende</li>
+  </ul>
+
+  <p>
+    Il titolo paga cedole fisse trimestrali, semestrali o annuali, indipendentemente dall’andamento del sottostante. Tuttavia, a scadenza, se il valore dell’azione sottostante è inferiore alla <strong>barriera</strong> (es. 70% del livello iniziale), il capitale non verrà rimborsato per intero: l’investitore riceverà <strong>azioni deprezzate</strong>.
+  </p>
+
+  <p>
+    Il prezzo di rimborso in azioni è calcolato dividendo il valore nominale per il fixing iniziale dell’azione, e moltiplicando per il valore finale (quindi, una perdita se il titolo ha performato male).
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700">
+    <li><strong>Cedola:</strong> fissa, elevata (es. 6%–12%), indipendente dal prezzo dell’azione</li>
+    <li><strong>Barriera:</strong> livello critico (es. 70%) sotto cui scatta il rimborso in azioni</li>
+    <li><strong>Rimborso:</strong> 100% in contanti se il titolo resta sopra la barriera; azioni se scende sotto</li>
+    <li><strong>Durata:</strong> tipicamente 1–3 anni</li>
+  </ul>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Non è un’obbligazione pura: è un derivato mascherato da bond. Il vero rischio emerge solo alla scadenza, quando il mercato decide il tuo capitale.»
+  </p>
+</section>
+<br>
+<section id="sezione-3" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">3. Funzionamento e Scenari di Rendimento</h2>
+
+  <p>
+    I Reverse Convertible si basano su tre scenari principali alla scadenza, che determinano il rendimento finale per l’investitore. Il funzionamento ruota attorno al comportamento dell’<strong>azione sottostante</strong> rispetto a una <strong>barriera</strong>.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">🔹 Scenario 1 – Azione sopra la barriera</h3>
+  <p>
+    Se il prezzo dell’azione a scadenza è superiore alla barriera (es. sopra il 70% del fixing iniziale), l’investitore riceve:
+  </p>
+  <ul class="list-disc list-inside text-slate-700 mb-4">
+    <li><strong>Rimborso integrale</strong> del capitale in contanti</li>
+    <li><strong>Cedole</strong> già incassate durante la vita del bond</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">🔸 Scenario 2 – Azione sotto la barriera</h3>
+  <p>
+    Se l’azione scende sotto la barriera e vi resta alla scadenza:
+  </p>
+  <ul class="list-disc list-inside text-slate-700 mb-4">
+    <li><strong>Rimborso in azioni</strong> svalutate, al prezzo definito dal fixing iniziale</li>
+    <li><strong>Perdita in conto capitale</strong>, compensata solo parzialmente dalle cedole</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">⚠️ Scenario 3 – Azione colpita intraday (barriera “americana”)</h3>
+  <p>
+    Alcune strutture prevedono una barriera osservata in continuo (non solo a scadenza): basta una <strong>violazione intraday</strong> per far scattare il rimborso in azioni.
+  </p>
+
+  <p class="mt-6">
+    Il rendimento finale è quindi il risultato della <strong>cedola fissa</strong> più (o meno) il valore di mercato dell’azione ricevuta, con <strong>elevata incertezza</strong> nei casi di correzione del sottostante.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Il rendimento nominale è certo. Il capitale no. La vera scommessa è sull’equity, non sul bond: se sbagli il titolo sottostante, perdi molto più della cedola guadagnata.»
+  </p>
+</section>
+<br>
+<section id="sezione-4" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">4. Rischi Nascosti e Asimmetrie</h2>
+
+  <p>
+    I Reverse Convertible offrono cedole elevate, ma nascondono rischi asimmetrici che spesso sfuggono all’investitore retail. Dietro l’apparente generosità del rendimento si cela una <strong>vendita implicita di opzioni</strong>, con esposizione diretta al ribasso del sottostante.
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700 space-y-2">
+    <li><strong>Rischio di mercato:</strong> il titolo sottostante può scendere molto più del livello barriera, generando perdite elevate in conto capitale</li>
+    <li><strong>Rischio di rimborso in natura:</strong> l’investitore riceve azioni proprio nei momenti peggiori di mercato (effetto pro-ciclico)</li>
+    <li><strong>Rischio emittente:</strong> come in tutte le obbligazioni strutturate, il fallimento dell’emittente comporta perdita totale o parziale</li>
+    <li><strong>Assenza di garanzie:</strong> non esiste tutela del capitale, né protezione da movimenti rapidi o intraday</li>
+    <li><strong>Asimmetria decisionale:</strong> l’emittente incassa il premio dell’opzione, l’investitore incassa il rischio senza piena consapevolezza</li>
+  </ul>
+
+  <p class="mt-4">
+    A differenza di una normale obbligazione, l’investitore assume una <strong>posizione corta su opzioni put</strong>, ma spesso senza comprenderne la natura o le implicazioni tecniche (volatilità, greche, correlazioni).
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Il Reverse Convertible sembra pagarti per il rischio, ma spesso sei tu a pagare (in capitale) la cedola che hai incassato. L’asimmetria è nascosta nella struttura.»
+  </p>
+</section>
+<br>
+<section id="sezione-5" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">5. Tipologie di Reverse Convertible</h2>
+
+  <p>
+    I Reverse Convertible si sono evoluti in una varietà di strutture complesse, pensate per attrarre diversi profili di investitori e adattarsi a contesti di mercato specifici. Le differenze principali riguardano il <strong>meccanismo di rimborso</strong>, la <strong>presenza di autocall</strong> e il tipo di barriera utilizzata.
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700 space-y-2">
+    <li>
+      <strong>Cash-or-Share Reverse Convertible:</strong> forma base. A scadenza l’investitore riceve contanti (se il titolo è sopra la barriera) o azioni (se è sotto).
+    </li>
+    <li>
+      <strong>Autocallable Reverse Convertible:</strong> può essere richiamato anticipatamente se il sottostante supera una soglia prefissata a date periodiche. L’investitore riceve solo la cedola maturata fino a quel punto.
+    </li>
+    <li>
+      <strong>Reverse Convertible con Barriera Europea:</strong> la barriera è osservata solo a scadenza. Più favorevole per l’investitore rispetto alla versione americana (monitoraggio continuo).
+    </li>
+    <li>
+      <strong>Phoenix Reverse Convertible:</strong> prevede pagamento cedole condizionate alla tenuta del sottostante sopra una soglia. Unisce struttura reverse + autocall + barriera dinamica.
+    </li>
+    <li>
+      <strong>Multi-Asset Reverse Convertible:</strong> basato su più sottostanti. Il rimborso dipende dal peggiore dei titoli (worst-of), con rischio amplificato.
+    </li>
+  </ul>
+
+  <p>
+    Ogni variante introduce nuove complessità che rendono difficile una valutazione trasparente per l’investitore retail. Le condizioni di call, trigger cedolari e barriera sono spesso articolate e nascondono <strong>effetti non lineari sul rendimento</strong>.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Quando un Reverse Convertible diventa autocallable, Phoenix o worst-of, non è solo un bond: è una macchina derivata. Più è complicato, più la probabilità è contro di te.»
+  </p>
+</section>
+<br>
+<section id="sezione-6" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">6. Analisi del Target Retail</h2>
+
+  <p>
+    I Reverse Convertible sono spesso proposti a investitori retail come strumenti ad alto rendimento e basso rischio apparente. In realtà, presentano una <strong>complessità tecnica elevata</strong> che li rende inadatti a profili non sofisticati.
+  </p>
+
+  <p>
+    I principali problemi nella distribuzione al retail includono:
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700 space-y-2">
+    <li><strong>Rappresentazione fuorviante del rischio:</strong> spesso vengono presentati come “obbligazioni con extra-rendimento” invece che come <em>short put su equity</em></li>
+    <li><strong>Focalizzazione solo sulla cedola:</strong> l’investitore medio valuta il 7–9% annuo senza comprendere il rischio di perdita in conto capitale</li>
+    <li><strong>Documentazione complessa:</strong> prospetti, KID e term sheet sono scritti in linguaggio tecnico, difficile da decifrare per chi non ha competenze in derivati</li>
+    <li><strong>Assenza di stress test realistici:</strong> raramente vengono mostrati scenari in cui l’investitore riceve azioni in forte perdita</li>
+    <li><strong>Bias cognitivo:</strong> l’elevata cedola crea un effetto “ancoraggio” che riduce la percezione del rischio effettivo</li>
+  </ul>
+
+  <p>
+    L’investitore ideale per questi strumenti dovrebbe avere esperienza in opzioni, conoscenza dei meccanismi di barriera, consapevolezza della volatilità di mercato e capacità di monitoraggio attivo.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Un Reverse Convertible non è sbagliato in sé, ma lo diventa quando viene venduto a chi non ha gli strumenti per capirlo. È come pilotare un jet con il manuale di un’auto.»
+  </p>
+</section>
+<br>
+<section id="sezione-7" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">7. Esempi Reali e Casi Critici</h2>
+
+  <p>
+    Nella pratica, i Reverse Convertible hanno spesso mostrato le loro criticità durante fasi di volatilità elevata o cali bruschi dei mercati azionari. Di seguito alcuni esempi significativi che evidenziano l'effetto asimmetrico del rischio a carico dell'investitore:
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700 space-y-2">
+    <li>
+      <strong>Credit Suisse Reverse Convertible su Tesla (2022):</strong> cedola del 12% annuo, ma l’azione è crollata oltre il 60%. Alla scadenza gli investitori hanno ricevuto azioni svalutate, con perdite superiori al 40% in conto capitale.
+    </li>
+    <li>
+      <strong>BNP Reverse su UniCredit (2020):</strong> colpito dalla crisi COVID, il titolo è sceso sotto la barriera. Rimborsato in azioni nel momento di massimo panico. Le cedole non hanno coperto le perdite.
+    </li>
+    <li>
+      <strong>Autocallable Phoenix su Deutsche Bank (2018):</strong> cedole condizionate, barriera intraday colpita. Nessuna protezione. Il prodotto è diventato illiquido sul secondario, con prezzo inferiore al 65%.
+    </li>
+  </ul>
+
+  <p>
+    In molti casi, gli investitori hanno scoperto troppo tardi che stavano acquistando una <strong>posizione ribassista implicita</strong> e che il rimborso in azioni avveniva proprio quando i titoli erano più penalizzati, amplificando la perdita.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «L’unico momento in cui ti danno azioni è quando nessuno le vuole. Il prezzo della cedola fissa è l’ingresso forzato in titoli in discesa libera.»
+  </p>
+</section>
+<br>
+<section id="sezione-8" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">8. Strategie Operative e Alternative</h2>
+
+  <p>
+    I Reverse Convertible possono avere senso solo in un <strong>contesto strategico ben definito</strong> e con una gestione attiva del rischio. Usati correttamente, possono generare reddito decorrelato, ma richiedono disciplina e comprensione tecnica.
+  </p>
+
+  <h3 class="text-lg font-semibold mt-6 mb-2">✔️ Strategie possibili:</h3>
+  <ul class="list-disc list-inside text-slate-700 mb-6 space-y-2">
+    <li><strong>Approccio difensivo su titoli forti:</strong> usare sottostanti con alta capitalizzazione e bassa volatilità, riducendo il rischio di consegna azioni</li>
+    <li><strong>Utilizzo come cash replacement:</strong> in contesti di tassi bassi, accettando l’eventuale esposizione azionaria controllata</li>
+    <li><strong>Copertura attiva:</strong> proteggere la posizione vendendo call out-of-the-money o usando put comprate in parallelo</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mt-4 mb-2">❌ Alternative più trasparenti:</h3>
+  <ul class="list-disc list-inside text-slate-700 space-y-2">
+    <li><strong>Strategia covered call su ETF:</strong> genera extra-rendimento mantenendo controllo diretto del sottostante</li>
+    <li><strong>Bond ad alto rendimento selettivo:</strong> corporate bond con spread elevato ma rischio più lineare e leggibile</li>
+    <li><strong>Fondi income-oriented:</strong> fondi a distribuzione periodica con gestione diversificata</li>
+  </ul>
+
+  <p class="mt-4">
+    Le strutture reverse richiedono capacità di intervenire prontamente in caso di discesa del sottostante, e non si adattano a chi non può monitorare il portafoglio con regolarità.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Il Reverse Convertible è uno strumento a gestione attiva mascherato da bond passivo. Se non puoi seguire il rischio, è meglio evitarlo del tutto.»
+  </p>
+</section>
+<br>
+<section id="sezione-9" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">9. Check-list Operativa per l'Investitore</h2>
+
+  <p>
+    Prima di sottoscrivere un Reverse Convertible, è essenziale rispondere in modo chiaro e documentato a una serie di <strong>domande operative e tecniche</strong>. Questa check-list serve da filtro per valutare la reale adeguatezza del prodotto.
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700 space-y-2">
+    <li>✔️ Comprendi il rischio di ricevere <strong>azioni svalutate</strong> a scadenza?</li>
+    <li>✔️ Hai analizzato il comportamento storico del <strong>sottostante</strong>?</li>
+    <li>✔️ Conosci il <strong>livello della barriera</strong> e se è europea o americana?</li>
+    <li>✔️ Hai calcolato il rendimento reale <strong>in caso di rimborso in azioni</strong>?</li>
+    <li>✔️ Puoi accettare una <strong>perdita in conto capitale</strong> anche superiore alla cedola incassata?</li>
+    <li>✔️ Sai se il prodotto è <strong>quotato o illiquido</strong> sul secondario?</li>
+    <li>✔️ Hai letto il <strong>term sheet completo</strong> e non solo la brochure promozionale?</li>
+    <li>✔️ Sai come si comporta il prodotto in caso di <strong>shock di volatilità</strong>?</li>
+    <li>✔️ Hai un <strong>piano d’uscita</strong> se il sottostante crolla?</li>
+  </ul>
+
+  <p class="mt-4">
+    In assenza di risposte chiare e fondate a queste domande, l’investimento è da considerarsi ad alto rischio. La difficoltà non è nel comprarlo, ma nel capirlo prima.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Un Reverse Convertible non si compra. Si assume. E come ogni esposizione, va ponderata, valutata e controllata. Non è per tutti. Né dovrebbe esserlo.»
+  </p>
+</section>
+<br>
+<section id="sezione-10" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">10. Glossario Tecnico</h2>
+
+  <ul class="space-y-4 text-slate-700">
+    <li>
+      <strong>Reverse Convertible:</strong> strumento ibrido che combina un'obbligazione con la vendita di un'opzione put sul sottostante. Può rimborsare in azioni anziché in contanti.
+    </li>
+    <li>
+      <strong>Cedola Fissa:</strong> interesse periodico garantito all’investitore, indipendente dall’andamento del sottostante.
+    </li>
+    <li>
+      <strong>Barriera:</strong> livello critico del prezzo del sottostante. Se superata al ribasso, comporta rimborso in azioni.
+    </li>
+    <li>
+      <strong>Barriera Europea:</strong> osservata solo a scadenza. Più favorevole per l’investitore.
+    </li>
+    <li>
+      <strong>Barriera Americana:</strong> osservata in continuo. Qualsiasi tocco attiva il rimborso in azioni.
+    </li>
+    <li>
+      <strong>Fixing Iniziale:</strong> prezzo del sottostante al momento dell’emissione. Serve da riferimento per barriera e rimborso.
+    </li>
+    <li>
+      <strong>Worst-of:</strong> nei multi-asset, indica che il rimborso dipende dal peggior titolo del paniere.
+    </li>
+    <li>
+      <strong>Autocallable:</strong> struttura con possibilità di rimborso anticipato se il sottostante supera una certa soglia a date periodiche.
+    </li>
+    <li>
+      <strong>Phoenix:</strong> Reverse Convertible evoluto con cedole condizionate e struttura autocall.
+    </li>
+    <li>
+      <strong>Opzione Put:</strong> diritto di vendere un asset a un prezzo prefissato. Nei Reverse Convertible, l’investitore è venditore implicito di questa opzione.
+    </li>
+  </ul>
+</section>
+<br>
+<section id="sezione-11" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">11. Accesso al Mercato e Intermediari</h2>
+
+  <p>
+    I Reverse Convertible sono distribuiti principalmente tramite <strong>collocamenti primari</strong> (banche, reti di consulenza, private banking) o acquistabili sul <strong>mercato secondario</strong> tramite desk professionali o broker specializzati.
+  </p>
+
+  <ul class="list-disc list-inside mt-4 text-slate-700 space-y-2">
+    <li><strong>Primario:</strong> accesso durante le finestre di emissione; richiede sottoscrizione diretta tramite intermediario</li>
+    <li><strong>Secondario:</strong> su EuroTLX, MOT, o OTC tramite piattaforme evolute</li>
+    <li><strong>Broker professionali:</strong> offrono accesso diretto a prodotti internazionali, pricing competitivo e book trasparente</li>
+  </ul>
+
+  <p class="mt-4">
+    L’investitore consapevole dovrebbe valutare attentamente <strong>spread denaro/lettera</strong>, <strong>liquidità del prodotto</strong> e <strong>trasparenza della struttura</strong>. Alcuni emittenti non garantiscono la riacquistabilità sul secondario.
+  </p>
+
+  <div class="mt-8 bg-slate-50 border-l-4 border-slate-800 p-6 rounded-md shadow-sm">
+    <h3 class="text-lg font-semibold text-slate-900 mb-2">Accedi ai Reverse Convertible con un broker avanzato</h3>
+    <p class="text-slate-700 mb-4">
+      Scopri EXANTE, la piattaforma con accesso diretto a titoli strutturati globali, reverse convertible internazionali e strumenti OTC per investitori sofisticati.
+    </p>
+    <a href="https://www.tradelia.org/Exante.html" target="_blank" class="inline-block bg-white border border-slate-800 text-slate-800 hover:bg-slate-800 hover:text-white px-6 py-3 rounded-md text-base font-medium shadow-md transition duration-200">
+      Scopri EXANTE →
+    </a>
+  </div>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Il pricing di un Reverse Convertible dipende dal desk che lo tratta. Più sei vicino al book, più controlli la tua posizione. L’accesso professionale fa la differenza.»
+  </p>
+</section>
+<br>
+<section id="sezione-12" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+  <h2 class="text-xl font-semibold text-slate-900 mb-4">12. Disclaimer e Note Legali</h2>
+
+  <p class="text-slate-700">
+    Le informazioni contenute in questo report sono fornite a scopo puramente informativo e didattico. Non costituiscono in alcun modo una sollecitazione al pubblico risparmio, una raccomandazione personalizzata o un’offerta di acquisto o vendita di strumenti finanziari.
+  </p>
+
+  <p class="text-slate-700 mt-4">
+    Qualsiasi decisione operativa deve essere assunta in autonomia dall’investitore, previa attenta lettura della documentazione ufficiale (prospetto, KID, term sheet) e con il supporto di un professionista abilitato. L’investimento in Reverse Convertible comporta rischi significativi che vanno compresi in modo completo.
+  </p>
+
+  <p class="text-slate-700 mt-4">
+    Tradelia AI declina ogni responsabilità per scelte di investimento basate su una lettura parziale, impropria o fuori contesto dei contenuti. Le caratteristiche tecniche dei prodotti menzionati possono variare nel tempo e vanno verificate presso fonti ufficiali e aggiornate.
+  </p>
+
+  <p class="mt-6 text-sm text-gray-500 italic">
+    «Ogni strumento complesso richiede studio e cautela. La vera protezione non è nel contratto, ma nella competenza con cui viene letto.»
+  </p>
+</section>
+  <section>
+<div class="mb-16">
+  <h4 class="text-xl font-semibold text-slate-800 mb-4">Approfondimenti collegati</h4>
+  <ul class="list-disc list-inside text-slate-700 space-y-2">
+    <li><a href="/report/macro/CDS-CDO-subprime.html" class="text-blue-600 hover:underline" target="_blank">Gli Strumenti della crisi Subprime →</a></li>
+  </ul>
+</div>
+<section class="max-w-4xl mx-auto px-4 sm:px-6 mt-12 mb-24">
+  <h2 class="text-2xl font-semibold text-slate-800 mb-6 border-b pb-2">
+    Riepilogo Approfondimenti Tecnici
+  </h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+    <a href="/report/tutorial/Obbligazioni-Strutturate.html" target="_blank" class="text-blue-600 hover:underline">• Obbligazioni Strutturate</a>
+    <a href="/report/tutorial/CoCo-Bonds.html" target="_blank" class="text-blue-600 hover:underline">• CoCo Bonds</a>
+    <a href="/report/tutorial/Callable-StepUp.html" target="_blank" class="text-blue-600 hover:underline">• Callable & Step-Up</a>
+    <a href="/report/tutorial/Dual-Currency-Bonds.html" target="_blank" class="text-blue-600 hover:underline">• Dual Currency Bonds</a>
+    <a href="/report/tutorial/Reverse-Convertible.html" target="_blank" class="text-blue-600 hover:underline">• Reverse Convertible</a>
+    <a href="/report/tutorial/Note-Strutturate-Barriera.html" target="_blank" class="text-blue-600 hover:underline">• Note con Barriera</a>
+    <a href="/report/tutorial/Certificates-Complessi.html" target="_blank" class="text-blue-600 hover:underline">• Certificates Complessi</a>
+    <a href="/report/tutorial/False-Principal-Protection.html" target="_blank" class="text-blue-600 hover:underline">• Obbligazioni "Protette"</a>
+    <a href="/report/tutorial/ETF-Leva-Inversi.html" target="_blank" class="text-blue-600 hover:underline">• ETF Leva e Inversi</a>
+    <a href="/report/tutorial/CFD-Retail.html" target="_blank" class="text-blue-600 hover:underline">• CFD & Retail</a>
+    <a href="/report/tutorial/ETF-Sintetici.html" target="_blank" class="text-blue-600 hover:underline">• ETF Strutturati Sintetici</a>
+    <a href="/report/tutorial/Opzioni-Vanilla.html" target="_blank" class="text-blue-600 hover:underline">• Opzioni Plain Vanilla</a>
+    <a href="/report/tutorial/Opzioni-Esotiche.html" target="_blank" class="text-blue-600 hover:underline">• Opzioni Esotiche</a>
+    <a href="/report/tutorial/Derivati-OTC.html" target="_blank" class="text-blue-600 hover:underline">• Derivati OTC</a>
+    <a href="/report/tutorial/SPAC-Rischi.html" target="_blank" class="text-blue-600 hover:underline">• Rischi SPAC</a>
+    <a href="/report/tutorial/CLO-CDO.html" target="_blank" class="text-blue-600 hover:underline">• CLO / CDO</a>
+    <a href="/report/tutorial/Token-Sintetici.html" target="_blank" class="text-blue-600 hover:underline">• Token Sintetici</a>
+    <a href="/report/tutorial/Stablecoin-Algoritmiche.html" target="_blank" class="text-blue-600 hover:underline">• Stablecoin Algoritmiche</a>
+  </div>
+</section>
+
+<hr class="my-12">
+
+<div class="mb-16">
+  <h4 class="text-xl font-semibold text-slate-800 mb-4"> Analisi AI più lette</h4>
+  <ul class="list-disc list-inside text-slate-700 space-y-2">
+        <li><a href="/report/tutorial/Simulatore-Portafogli.html" class="text-blue-600 hover:underline" target="_blank">Simulatore Portafogli →</a></li>
+     <li><a href="/report/tutorial/CFD-Retail.html" class="text-blue-600 hover:underline" target="_blank">CFD Retail & Pratiche scorrette→ </a></li>
+    <li><a href="/report/tutorial/Truffe-Cripto.html" class="text-blue-600 hover:underline" target="_blank">Truffe cripto più famose →</a></li>
+    <li><a href="/report/tutorial/Truffe-Finanziarie-Storiche.html" class="text-blue-600 hover:underline" target="_blank">Grandi truffe finanziarie della storia →</a></li>
+    <li><a href="/report/tutorial/Statistiche-Truffe-Online.html" class="text-blue-600 hover:underline" target="_blank">Statistiche e numeri delle truffe online su investimenti →</a></li>
+    <li><a href="/report/tutorial/MM-STP-ECN.html" class="text-blue-600 hover:underline" target="_blank">Broker: differenze tra MM, STP ed ECN →</a></li>
+  </ul>
+</div>
+</section>
+  </main>
+  <button id="backToTop" title="Torna all'inizio" aria-label="Torna all'inizio" 
+  class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-lg transition-opacity opacity-80 hover:opacity-100 focus:outline-none">
+  ↑ Torna all'inizio
+</button>
+<script>
+  const btn = document.getElementById('backToTop');
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+
+</body>
+</html>

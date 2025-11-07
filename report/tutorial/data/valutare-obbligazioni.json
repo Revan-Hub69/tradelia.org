@@ -1,0 +1,373 @@
+{
+  "title": "Come Valutare un'Obbligazione: Guida Completa Tradelia AI",
+  "meta": {
+    "published": "Gennaio 2025",
+    "category": "Valutazione Strumenti Finanziari",
+    "difficulty": "Intermedio"
+  },
+  "tags": [
+    "Obbligazioni",
+    "Bond",
+    "Valutazione",
+    "Investimenti",
+    "Fixed Income",
+    "YTM",
+    "Duration"
+  ],
+  "glossaryTerms": {
+    "obbligazioni": "CreditRiskBlock",
+    "bond": "CreditRiskBlock",
+    "cedola": "CreditRiskBlock",
+    "YTM": "CreditRiskBlock",
+    "Yield to Maturity": "CreditRiskBlock",
+    "duration": "CreditRiskBlock",
+    "convexity": "CreditRiskBlock",
+    "credit spread": "CreditRiskBlock",
+    "rating": "CreditRiskBlock",
+    "default": "CreditRiskBlock",
+    "inflation-linked": "CreditRiskBlock",
+    "callable": "CreditRiskBlock",
+    "puttable": "CreditRiskBlock",
+    "subordinato": "CreditRiskBlock",
+    "perpetual": "CreditRiskBlock"
+  },
+  "sections": [
+    {
+      "id": "introduzione",
+      "title": "Introduzione e Obiettivi della Guida",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le obbligazioni rappresentano una delle asset class fondamentali all'interno dei portafogli di investimento, sia retail che istituzionali. Tuttavia, la loro apparente semplicità spesso nasconde una notevole complessità, legata a fattori come tassi d'interesse, rischio di credito, durata finanziaria e sensibilità al contesto macroeconomico."
+        },
+        {
+          "type": "paragraph",
+          "text": "Questa guida avanzata, sviluppata da **Tradelia AI**, ha l'obiettivo di fornire un framework operativo completo per valutare un'obbligazione in modo tecnico, razionale e coerente con i criteri professionali adottati nel risk management moderno."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Comprendere le **caratteristiche strutturali** di un'obbligazione (cedola, scadenza, rimborso, call/put).",
+            "Calcolare e interpretare **i rendimenti attesi** in base al mercato secondario.",
+            "Analizzare **la duration e la convexity** per stimare l'impatto dei tassi.",
+            "Valutare il **rischio emittente** in ottica di rating, settore e giurisdizione.",
+            "Gestire il **rischio di cambio** e l'inflazione implicita.",
+            "Inserire le obbligazioni in una strategia **di portafoglio consapevole**."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "L'approccio presentato in questa guida non costituisce una raccomandazione operativa, ma uno strumento di studio e simulazione, basato su logiche oggettive e dati analizzati tramite modelli AI."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Secondo lo studio di Fama & French (1993), le obbligazioni offrono diversificazione significativa rispetto alle azioni, con correlazioni negative durante le crisi. Tuttavia, la ricerca evidenzia che la valutazione delle obbligazioni richiede competenze specifiche in matematica finanziaria e analisi del rischio."
+        }
+      ]
+    },
+    {
+      "id": "cosa-sono",
+      "title": "Cosa sono le Obbligazioni",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le **obbligazioni** sono strumenti finanziari di debito attraverso i quali un emittente (Stato, ente sovranazionale, banca o azienda) raccoglie capitale dai sottoscrittori, impegnandosi a restituirlo a scadenza e a pagare interessi periodici (cedole), se previsti."
+        },
+        {
+          "type": "paragraph",
+          "text": "A differenza delle azioni, che rappresentano una quota del capitale sociale, le obbligazioni non danno diritti di proprietà, ma un **credito verso l'emittente**. Questo implica che, in caso di insolvenza, l'obbligazionista ha priorità rispetto all'azionista nel recupero del capitale."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Tipologie Principali di Obbligazioni"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Obbligazioni a tasso fisso:** cedola predeterminata e costante fino a scadenza. Offrono certezza dei flussi ma esposizione al rischio di tasso.",
+            "**Obbligazioni a tasso variabile (floaters):** cedola indicizzata (es. Euribor, Libor, SOFR). Offrono protezione parziale dal rischio di tasso ma incertezza sui flussi futuri.",
+            "**Zero coupon bond:** non prevedono cedole, ma sono emesse sotto la pari e rimborsate al 100%. Offrono rendimento implicito ma nessun flusso intermedio.",
+            "**Inflation-linked:** cedola e capitale indicizzati all'inflazione (es. BTP Italia, TIPS). Offrono protezione dall'inflazione ma rendimenti iniziali spesso inferiori.",
+            "**Subordinate e perpetual:** emesse da banche, offrono rendimenti più alti in cambio di maggior rischio. Possono essere convertite o azzerate in caso di stress.",
+            "**Obbligazioni callable/puttable:** con clausole che permettono all'emittente o all'investitore di anticipare il rimborso. Offrono flessibilità ma complessità aggiuntiva."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "La scelta tra le diverse tipologie dipende da fattori come orizzonte temporale, scenario dei tassi, rischio emittente e finalità del portafoglio (protezione, reddito, diversificazione)."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Modigliani & Miller (1958) ha dimostrato che la struttura del capitale (debito vs equity) influenza il valore dell'azienda. Le obbligazioni rappresentano il debito e offrono priorità nel recupero del capitale rispetto alle azioni."
+        }
+      ]
+    },
+    {
+      "id": "componenti-fondamentali",
+      "title": "Le Componenti Fondamentali da Analizzare",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Per valutare correttamente un'obbligazione, è essenziale conoscere e interpretare le sue componenti strutturali. Ogni singolo parametro ha un impatto diretto sul profilo rischio-rendimento dello strumento."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Emittente:** lo Stato, l'ente o la società che emette l'obbligazione. Più è solido l'emittente, minore è il rischio di default. Rating di agenzie come Moody's, S&P e Fitch aiutano a valutare l'affidabilità.",
+            "**Scadenza:** la data di rimborso del capitale. Le scadenze brevi hanno minore esposizione al rischio di tasso, quelle lunghe offrono spesso rendimenti maggiori ma più sensibilità ai movimenti di mercato.",
+            "**Cedola:** l'interesse periodico pagato. Può essere fissa, variabile, nulla (zero coupon) o indicizzata. Le cedole sono un indicatore della redditività, ma anche del rischio percepito.",
+            "**Prezzo di mercato:** espresso in percentuale del valore nominale (100). Se il prezzo è sopra 100, l'obbligazione è \"sopra la pari\"; sotto 100, è \"sotto la pari\".",
+            "**Rendimento a scadenza (YTM):** il rendimento effettivo dell'obbligazione se detenuta fino alla scadenza, includendo prezzo di acquisto, cedole e rimborso. È la metrica più importante per confronti tra obbligazioni.",
+            "**Durata e duration modificata:** indicano la sensibilità dell'obbligazione ai tassi di interesse. Più alta è la duration, maggiore sarà la variazione di prezzo in risposta ai movimenti dei tassi.",
+            "**Valuta di denominazione:** obbligazioni emesse in valute diverse dall'euro (es. USD, CHF) espongono a rischio di cambio, se non coperto."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "L'analisi completa parte da questi elementi, integrandoli con il contesto macroeconomico e il posizionamento del portafoglio."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Macaulay (1938) ha introdotto il concetto di duration, dimostrando che la duration misura la sensibilità del prezzo delle obbligazioni alle variazioni dei tassi di interesse. La duration modificata è ancora oggi uno degli indicatori più utilizzati nella valutazione delle obbligazioni."
+        }
+      ]
+    },
+    {
+      "id": "rendimento-rischio",
+      "title": "Rendimento e Rischio a Confronto",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "La valutazione di un'obbligazione non può prescindere da un'analisi bilanciata tra rendimento atteso e rischio assunto. Ogni tipologia di obbligazione presenta un profilo rischio-rendimento specifico, da valutare in relazione agli obiettivi di portafoglio e all'orizzonte temporale."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Rendimento Atteso (Yield to Maturity)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Rappresenta il guadagno effettivo dell'investitore, tenendo conto del prezzo di acquisto, delle cedole incassate e del valore di rimborso. È la metrica chiave per confrontare obbligazioni diverse. Il YTM è calcolato come il tasso di sconto che eguaglia il valore attuale dei flussi futuri al prezzo corrente."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Rischi Principali"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Rischio emittente:** è il rischio che l'emittente non onori il pagamento delle cedole o il rimborso del capitale. Si misura attraverso il rating e l'affidabilità storica. I titoli corporate e high yield hanno rischio più elevato rispetto ai titoli governativi investment grade.",
+            "**Rischio di tasso:** riguarda la variazione dei tassi d'interesse. Se i tassi salgono, i prezzi delle obbligazioni esistenti scendono. Le obbligazioni con durata lunga sono più sensibili a questo rischio.",
+            "**Rischio di liquidità:** alcuni titoli, specie quelli corporate o in valuta estera, possono avere mercati meno liquidi, con spread bid/ask elevati e difficoltà di uscita in tempi rapidi.",
+            "**Rischio di cambio:** le obbligazioni non denominate in euro (es. USD, CHF) espongono l'investitore al rischio di svalutazione della valuta. È possibile coprire il rischio con strumenti derivati, ma a un costo.",
+            "**Rischio inflazione:** l'aumento dell'inflazione riduce il valore reale delle cedole fisse. Le obbligazioni inflation-linked proteggono da questo rischio, ma spesso offrono rendimenti iniziali inferiori."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "In sintesi, più è elevato il rendimento offerto, più è probabile che l'obbligazione incorpori uno o più rischi aggiuntivi. La selezione deve sempre considerare l'equilibrio complessivo del portafoglio."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Sharpe (1966) ha sviluppato il Capital Asset Pricing Model (CAPM), dimostrando che il rendimento atteso di un asset dipende dal rischio sistematico (beta) e dal premio per il rischio di mercato. Questo modello è applicabile anche alle obbligazioni, dove il rischio di credito e il rischio di tasso sono i fattori principali."
+        }
+      ]
+    },
+    {
+      "id": "indicatori-tecnici",
+      "title": "Indicatori Tecnici e Segnali Operativi",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Anche per le obbligazioni, esistono indicatori chiave che aiutano a determinare il valore, il rischio e la direzionalità attesa. Questi indicatori sono fondamentali per costruire un portafoglio obbligazionario consapevole e ottimizzato per rendimento e resilienza."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "1. YTM (Yield to Maturity)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il rendimento effettivo annuo a scadenza. Più preciso del semplice coupon, tiene conto del prezzo di acquisto e delle cedole future. Permette il confronto reale tra obbligazioni. Il YTM è calcolato risolvendo l'equazione che eguaglia il prezzo corrente al valore attuale dei flussi futuri."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "2. Duration"
+        },
+        {
+          "type": "paragraph",
+          "text": "Indica la sensibilità dell'obbligazione alle variazioni dei tassi d'interesse. Più è alta, maggiore sarà la variazione del prezzo in caso di rialzo dei tassi. La duration modificata è calcolata come: *Duration Modificata = Duration / (1 + YTM)*."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "3. Convexity"
+        },
+        {
+          "type": "paragraph",
+          "text": "Misura il grado di non linearità della duration. Utile per comprendere la reazione del prezzo ai movimenti non lineari dei tassi d'interesse. La convexity è particolarmente importante per obbligazioni con durata lunga o con clausole call/put."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "4. Credit Spread"
+        },
+        {
+          "type": "paragraph",
+          "text": "Differenziale tra il rendimento dell'obbligazione e quello di un titolo governativo risk-free con stessa durata. Riflette il rischio di credito percepito. Spread ampi indicano rischio elevato, spread stretti indicano rischio basso."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "5. Yield to Call / Worst"
+        },
+        {
+          "type": "paragraph",
+          "text": "Rendimento calcolato nel caso in cui l'obbligazione venga richiamata anticipatamente. Utile per strumenti callable o puttable. Il YTW (Yield to Worst) è il rendimento minimo possibile considerando tutti gli scenari."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "6. Rating & Outlook"
+        },
+        {
+          "type": "paragraph",
+          "text": "Valutazione del merito creditizio da parte delle agenzie. Insieme all'outlook, consente di anticipare possibili declassamenti e riprezzamenti. Un outlook negativo può preannunciare un downgrade del rating."
+        },
+        {
+          "type": "paragraph",
+          "text": "L'interpretazione combinata di questi indicatori consente di filtrare le opportunità, evitare rischi asimmetrici e costruire esposizioni difensive o speculative, in base alla strategia."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Bierwag et al. (1983) ha analizzato l'importanza della convexity nella valutazione delle obbligazioni, dimostrando che la convexity è particolarmente rilevante per obbligazioni con durata lunga o con clausole call/put. La convexity positiva offre protezione aggiuntiva in scenari di volatilità dei tassi."
+        }
+      ]
+    },
+    {
+      "id": "rischio-cambio",
+      "title": "Rischio di Cambio e Copertura Valutaria",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Quando un'obbligazione è denominata in una valuta diversa da quella dell'investitore (es. bond in USD per un investitore in euro), si è esposti al **rischio di cambio**. Ciò significa che, anche in presenza di un rendimento obbligazionario positivo, il valore effettivo può diminuire a causa della svalutazione della valuta estera rispetto all'euro."
+        },
+        {
+          "type": "paragraph",
+          "text": "Questo rischio non è teorico: durante periodi di elevata volatilità valutaria, l'impatto sul portafoglio può essere significativo, soprattutto per obbligazioni a lunga scadenza e a basso rendimento."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Strategie di Copertura Valutaria (FX Hedging)"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Contratti forward su valuta:** permettono di bloccare il tasso di cambio futuro, neutralizzando la variabilità del valore nominale dell'obbligazione. Offrono protezione completa ma richiedono un costo iniziale.",
+            "**ETF o fondi obbligazionari hedged:** strumenti che integrano già la copertura valutaria all'interno della struttura. Offrono semplicità ma possono avere costi aggiuntivi.",
+            "**Opzioni su valute:** protezione asimmetrica contro scenari estremi, ma con un premio da pagare. Offrono protezione limitata ma con costo controllato.",
+            "**Cambio diretto in valuta:** convertire parte della liquidità in valuta estera e gestire il rischio come esposizione strutturale. Richiede competenze specifiche in gestione valutaria."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "In generale, la copertura è raccomandabile in presenza di **titoli investment grade a basso rendimento** o per portafogli con orizzonte breve-medio. In altri casi, l'esposizione valutaria può essere parte della strategia complessiva, ma va sempre monitorata."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Solnik (1974) ha analizzato l'importanza della diversificazione valutaria nei portafogli internazionali, dimostrando che il rischio di cambio può avere un impatto significativo sui rendimenti. La ricerca evidenzia l'importanza di valutare attentamente se coprire o meno il rischio di cambio."
+        }
+      ]
+    },
+    {
+      "id": "rischi-specifici",
+      "title": "Analisi dei Rischi Specifici di un'Obbligazione",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Valutare un'obbligazione richiede un'attenta comprensione dei principali rischi a cui è esposta. Ogni titolo obbligazionario comporta un profilo di rischio/rendimento ben definito, spesso sottovalutato dagli investitori meno esperti. Tradelia AI consiglia di considerare almeno i seguenti rischi chiave:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Rischio di credito:** rappresenta la probabilità che l'emittente non sia in grado di rimborsare capitale e/o interessi. È correlato al **rating** assegnato da agenzie come S&P, Moody's o Fitch. Emittenti con rating \"investment grade\" (es. A, BBB) sono considerati più sicuri rispetto a quelli \"high yield\" (es. BB o inferiori).",
+            "**Rischio di tasso d'interesse:** il prezzo di un'obbligazione scende se i tassi salgono. Obbligazioni a lunga duration sono particolarmente sensibili. Questo rischio è cruciale nei contesti di politica monetaria restrittiva (es. rialzo tassi da parte della BCE o della Fed).",
+            "**Rischio di liquidità:** non tutte le obbligazioni sono facilmente negoziabili. Titoli con scarso volume possono comportare spread bid-ask elevati e difficoltà a vendere rapidamente.",
+            "**Rischio di inflazione:** l'inflazione erode il potere d'acquisto dei flussi cedolari. Le obbligazioni a tasso fisso sono le più esposte, mentre i **titoli indicizzati** (es. BTP Italia, TIPS) offrono parziale protezione.",
+            "**Rischio di cambio:** presente se si acquistano obbligazioni denominate in valuta estera (es. USD, GBP, CHF). Le oscillazioni valutarie possono amplificare rendimenti o perdite. È un rischio chiave in obbligazioni emergenti o corporate USA.",
+            "**Rischio di reinvestimento:** riguarda la possibilità che, una volta ricevute le cedole, il reinvestimento avvenga a tassi inferiori. È particolarmente rilevante in fasi di discesa dei tassi.",
+            "**Rischio emittente specifico:** eventi straordinari come default, fusione, ristrutturazione o cambio governance possono impattare drasticamente il titolo, anche a prescindere dal contesto di mercato."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Tradelia AI consiglia di mappare e pesare questi rischi per ciascuna obbligazione analizzata, considerando anche l'orizzonte temporale, l'obiettivo d'investimento e la tolleranza al rischio dell'investitore."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Altman (1968) ha sviluppato il modello Z-score per prevedere il default delle aziende, dimostrando che il rischio di credito può essere quantificato attraverso indicatori finanziari. Questo modello è ancora oggi utilizzato per valutare il rischio di default delle obbligazioni corporate."
+        }
+      ]
+    },
+    {
+      "id": "strumenti-operativi",
+      "title": "Strumenti Operativi & Analisi Obbligazioni Tradelia AI",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Per valutare correttamente un'obbligazione è fondamentale integrare fonti dati affidabili, strumenti di analisi quantitativa e modelli comparativi. Di seguito una selezione curata da Tradelia AI per applicare concretamente i concetti di questa guida."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Principali Fonti di Dati"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Dati fondamentali e anagrafici:** Utilizza Börse Frankfurt, MarketWatch, Fidelity per recuperare ISIN, rating, scadenza, cedola e valuta.",
+            "**Analisi del rendimento e rischio tasso:** Strumenti come TradingView (sezione bond yield), Investing Bonds o modelli DCF semplificati aiutano a stimare lo yield to maturity (YTM) e la duration.",
+            "**Valutazione rischio emittente:** Verifica rating e outlook con agenzie come S&P, Moody's e Fitch. In alternativa, monitora CDS a 5 anni per emittenti corporate o sovrani.",
+            "**Valuta, rischio cambio e tasso reale:** Se l'obbligazione è in valuta estera, consulta i tassi di cambio reali (DXY, EURUSD, ecc.) e confronta i tassi nominali con l'inflazione attesa per valutare il rendimento reale atteso.",
+            "**Simulazioni e analisi multi-fattoriali Tradelia AI:** Le obbligazioni più complesse (step-up, callable, subordinate) possono essere analizzate con modelli avanzati multi-parametro sviluppati da Tradelia AI, su richiesta."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Il team Tradelia AI può generare un'analisi dettagliata su obbligazioni corporate o governative, integrando indicatori fondamentali, rischio tasso, rating, sensitività al ciclo macro e scenari di rendimento. Le analisi sono elaborate da modelli AI e non costituiscono consulenza professionale."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Duffie & Singleton (1999) ha sviluppato modelli avanzati per la valutazione delle obbligazioni, integrando rischio di credito, rischio di tasso e rischio di liquidità. Questi modelli sono utilizzati dalle istituzioni finanziarie per valutare obbligazioni complesse."
+        }
+      ]
+    },
+    {
+      "id": "disclaimer",
+      "title": "Disclaimer e Avvertenze",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le informazioni contenute in questa guida sono fornite da Tradelia AI a scopo esclusivamente informativo e didattico. Non costituiscono in alcun modo una sollecitazione al pubblico risparmio, una raccomandazione personalizzata o una consulenza finanziaria, legale o fiscale."
+        },
+        {
+          "type": "paragraph",
+          "text": "Le analisi e i contenuti eventualmente generati tramite modelli di intelligenza artificiale sono basati su dati di pubblico dominio e su elaborazioni algoritmiche automatiche. Sebbene siano sottoposti a validazione interna, non sono redatti da analisti finanziari certificati né da soggetti abilitati secondo normative MiFID o equivalenti."
+        },
+        {
+          "type": "paragraph",
+          "text": "Gli strumenti obbligazionari comportano rischi significativi legati a tassi d'interesse, credito, inflazione, liquidità e cambio. Ogni valutazione o decisione d'investimento dovrebbe essere effettuata con il supporto di un consulente abilitato e sulla base del proprio profilo di rischio, obiettivi e orizzonte temporale."
+        },
+        {
+          "type": "paragraph",
+          "text": "Tradelia AI declina ogni responsabilità per eventuali danni, diretti o indiretti, derivanti dall'utilizzo dei contenuti presenti in questa guida o nelle simulazioni pubblicate."
+        }
+      ]
+    }
+  ]
+}
+

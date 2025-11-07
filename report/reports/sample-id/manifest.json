@@ -1,0 +1,15 @@
+{
+  "id": "sample-id",
+  "title": "Tradelia · Report Runtime",
+  "order": ["F1B", "F2", "F3", "F3O", "F4", "F5", "F5B", "F5-LT+"],
+  "modules": {
+    "F1B": "f1b.json",
+    "F2": "f2.json",
+    "F3": "f3.json",
+    "F3O": "f3o.json",
+    "F4": "f4.json",
+    "F5": "f5.json",
+    "F5B": "f5b.json",
+    "F5-LT+": "f5-lt+.json"
+  }
+}

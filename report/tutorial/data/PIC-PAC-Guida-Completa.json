@@ -1,0 +1,1206 @@
+{
+  "title": "PIC e PAC: Piano di Investimento Capitale vs Piano di Accumulo Capitale - Guida Completa Tradelia AI",
+  "meta": {
+    "published": "Gennaio 2025",
+    "category": "Strategie di Investimento",
+    "difficulty": "Principiante-Intermedio"
+  },
+  "tags": [
+    "PIC",
+    "PAC",
+    "Dollar Cost Averaging",
+    "Investimento Periodico",
+    "Investimento Una Tantum",
+    "Strategie di Investimento",
+    "Piano di Accumulo",
+    "Lump Sum Investing"
+  ],
+  "glossaryTerms": {
+    "PIC": "CreditRiskBlock",
+    "PAC": "CreditRiskBlock",
+    "dollar cost averaging": "CreditRiskBlock",
+    "lump sum investing": "CreditRiskBlock",
+    "investimento periodico": "CreditRiskBlock",
+    "investimento una tantum": "CreditRiskBlock",
+    "piano di accumulo": "CreditRiskBlock",
+    "value averaging": "CreditRiskBlock",
+    "time in the market": "CreditRiskBlock",
+    "timing del mercato": "CreditRiskBlock",
+    "media del prezzo": "CreditRiskBlock",
+    "volatilità": "CreditRiskBlock"
+  },
+  "sections": [
+    {
+      "id": "introduzione",
+      "title": "Introduzione: PIC vs PAC - Due Approcci all'Investimento",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Quando hai un capitale da investire, ti trovi di fronte a una scelta fondamentale: investire tutto **subito** (PIC - Piano di Investimento Capitale) o investire **gradualmente** nel tempo (PAC - Piano di Accumulo Capitale)? Questa decisione può avere un impatto significativo sui tuoi rendimenti e sulla tua esperienza psicologica di investimento."
+        },
+        {
+          "type": "paragraph",
+          "text": "Il **PIC** (o Lump Sum Investing) consiste nell'investire tutto il capitale disponibile in un'unica soluzione. Il **PAC** (o Dollar Cost Averaging - DCA) consiste nell'investire importi fissi a intervalli regolari (es. mensili) indipendentemente dal prezzo di mercato."
+        },
+        {
+          "type": "paragraph",
+          "text": "Questa guida Tradelia AI esplora entrambi gli approcci, i loro vantaggi e svantaggi, le evidenze accademiche, e quando è meglio usare uno o l'altro. L'obiettivo è fornire una comprensione completa per prendere decisioni informate su come investire il proprio capitale."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Statman (1995) ha analizzato il Dollar Cost Averaging (PAC), dimostrando che riduce il rischio psicologico e la volatilità percepita, anche se matematicamente il Lump Sum Investing (PIC) tende a generare rendimenti attesi più alti. La ricerca evidenzia che la scelta tra PIC e PAC dipende non solo da considerazioni matematiche, ma anche da fattori psicologici e comportamentali."
+        }
+      ]
+    },
+    {
+      "id": "cosa-sono",
+      "title": "Cosa Sono PIC e PAC: Definizioni e Caratteristiche",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "PIC - Piano di Investimento Capitale (Lump Sum)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il **PIC** consiste nell'investire tutto il capitale disponibile **in un'unica soluzione** in un momento specifico."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Esempio:** hai 10.000 € da investire → investi tutti i 10.000 € oggi",
+            "**Frequenza:** una volta, tutto subito",
+            "**Vantaggio principale:** massimizza il tempo in cui il capitale è investito",
+            "**Svantaggio principale:** esposizione completa a volatilità immediata"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "PAC - Piano di Accumulo Capitale (Dollar Cost Averaging)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il **PAC** consiste nell'investire importi **fissi e regolari** (es. mensili) indipendentemente dal prezzo di mercato."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Esempio:** hai 10.000 € da investire → investi 1.000 € al mese per 10 mesi",
+            "**Frequenza:** regolare (mensile, trimestrale, ecc.)",
+            "**Vantaggio principale:** riduce impatto psicologico e media il prezzo di acquisto",
+            "**Svantaggio principale:** parte del capitale rimane non investita più a lungo"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio Pratico: Confronto Visivo"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Scenario:** Hai 12.000 € da investire in un ETF sull'S&P 500."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**PIC:** Investi tutti i 12.000 € oggi → esposizione immediata completa",
+            "**PAC:** Investi 1.000 € al mese per 12 mesi → esposizione graduale",
+            "**Differenza:** Con PIC, tutto il capitale è investito da subito. Con PAC, il capitale viene investito gradualmente."
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Constantinides (1979) ha analizzato matematicamente il Dollar Cost Averaging, dimostrando che in mercati con trend rialzista, il Lump Sum Investing (PIC) genera rendimenti attesi più alti perché il capitale è investito più a lungo. Tuttavia, il DCA riduce la volatilità dei rendimenti, offrendo un trade-off tra rendimento atteso e rischio."
+        }
+      ]
+    },
+    {
+      "id": "vantaggi-pic",
+      "title": "Vantaggi del PIC: Perché Investire Tutto Subito",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "1. Massimizza il Tempo nel Mercato"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il principio fondamentale è: **\"Time in the market beats timing the market\"**. Investendo tutto subito, massimizzi il tempo in cui il tuo capitale è esposto al mercato e può crescere."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Esempio:** Investi 10.000 € oggi vs 1.000 € al mese per 10 mesi",
+            "**Con PIC:** 10.000 € generano rendimenti da subito",
+            "**Con PAC:** Solo 1.000 € generano rendimenti il primo mese, 9.000 € aspettano",
+            "**Risultato:** PIC ha più capitale investito più a lungo → rendimenti potenzialmente più alti"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "2. Rendimenti Attesi Più Alti (Storicamente)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Storicamente, i mercati tendono a salire nel lungo termine. Investendo tutto subito, partecipi a questa crescita da subito, mentre con PAC parte del capitale \"perde\" tempo fuori dal mercato."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Evidenza:** Studi mostrano che PIC batte PAC in circa 2/3 dei casi su orizzonti lunghi",
+            "**Ragione:** Mercati tendono a salire, quindi avere capitale investito prima è statisticamente vantaggioso"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "3. Costi di Transazione Minori"
+        },
+        {
+          "type": "paragraph",
+          "text": "Investendo tutto in una volta, paghi commissioni di transazione **una sola volta** invece di pagarle ogni mese con PAC."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Esempio:** Commissione 5 € per transazione",
+            "**PIC:** 1 transazione = 5 €",
+            "**PAC (12 mesi):** 12 transazioni = 60 €",
+            "**Risparmio:** 55 € con PIC"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "4. Semplicità Operativa"
+        },
+        {
+          "type": "paragraph",
+          "text": "PIC è più semplice: investi una volta e finisci. Con PAC devi ricordarti di investire ogni mese e gestire il processo."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Knight & Mandell (1992) ha confrontato Lump Sum Investing (PIC) con Dollar Cost Averaging (PAC) su dati storici, dimostrando che PIC genera rendimenti medi più alti in circa il 66% dei casi su orizzonti di 12 mesi. La ricerca evidenzia che questo vantaggio aumenta con orizzonti temporali più lunghi, poiché il capitale è investito più a lungo."
+        }
+      ]
+    },
+    {
+      "id": "svantaggi-pic",
+      "title": "Svantaggi del PIC: I Rischi di Investire Tutto Subito",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "1. Timing Sfortunato: Rischio di Entrare al Picco"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il rischio principale del PIC è investire tutto **proprio prima di un crollo**. Se investi 10.000 € oggi e il mercato crolla del 20% domani, perdi 2.000 € immediatamente."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Esempio:** Investi 10.000 € a ottobre 2007 (prima della crisi)",
+            "**Risultato:** Perdi il 50%+ nei mesi successivi",
+            "**Con PAC:** Avresti investito gradualmente, comprando anche ai prezzi bassi del 2008-2009",
+            "**Implicazione:** PIC espone tutto il capitale a rischio immediato"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "2. Impatto Psicologico: Stress da Volatilità"
+        },
+        {
+          "type": "paragraph",
+          "text": "Vedere tutto il capitale investito crollare del 20-30% può essere **psicologicamente devastante**, portando a decisioni emotive (vendere al minimo)."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Problema:** Stress emotivo può portare a vendere al peggio",
+            "**Con PAC:** Perdite graduali sono più gestibili psicologicamente",
+            "**Implicazione:** Alcuni investitori non riescono a gestire volatilità immediata"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "3. Nessuna Media del Prezzo"
+        },
+        {
+          "type": "paragraph",
+          "text": "Con PIC, compri a **un solo prezzo**. Se quel prezzo è alto, sei sfortunato. Con PAC, compri a prezzi diversi, facendo una **media** che riduce l'impatto di un timing sfortunato."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "4. Nessuna Opportunità di Aggiustamento"
+        },
+        {
+          "type": "paragraph",
+          "text": "Con PIC, una volta investito, non puoi aggiustare la strategia basandoti su come evolve il mercato. Con PAC, puoi modificare importi o frequenza se necessario."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Benartzi & Thaler (1995) ha analizzato il comportamento degli investitori, dimostrando che il Dollar Cost Averaging (PAC) riduce il \"regret\" (rimpianto) e lo stress psicologico associato a investimenti che vanno male immediatamente. La ricerca evidenzia che molti investitori preferiscono PAC nonostante rendimenti attesi inferiori, a causa dei benefici psicologici."
+        }
+      ]
+    },
+    {
+      "id": "vantaggi-pac",
+      "title": "Vantaggi del PAC: Perché Investire Gradualmente",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "1. Riduce il Rischio di Timing Sfortunato"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il vantaggio principale del PAC è **ridurre il rischio** di investire tutto al momento sbagliato. Investendo gradualmente, compri a prezzi diversi, facendo una media."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Esempio:** Investi 1.000 € al mese per 12 mesi",
+            "**Mese 1:** Prezzo 100 € → compri 10 quote",
+            "**Mese 6:** Prezzo 80 € → compri 12,5 quote (più quote a prezzo basso!)",
+            "**Mese 12:** Prezzo 120 € → compri 8,3 quote",
+            "**Risultato:** Prezzo medio di acquisto migliore rispetto a comprare tutto a 100 €"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "2. Media del Prezzo di Acquisto"
+        },
+        {
+          "type": "paragraph",
+          "text": "Con PAC, quando il prezzo è **alto**, compri meno quote. Quando il prezzo è **basso**, compri più quote. Questo automaticamente migliora il prezzo medio di acquisto."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Meccanismo:** Investi sempre lo stesso importo → compri più quote quando prezzo è basso",
+            "**Risultato:** Prezzo medio di acquisto inferiore al prezzo medio di mercato",
+            "**Vantaggio:** Riduce impatto di volatilità sul prezzo di acquisto"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "3. Benefici Psicologici: Riduce Stress e Regret"
+        },
+        {
+          "type": "paragraph",
+          "text": "PAC riduce significativamente lo **stress psicologico** e il **regret** (rimpianto) associati a investimenti che vanno male immediatamente."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Con PIC:** Vedi tutto il capitale crollare del 20% → stress massimo",
+            "**Con PAC:** Vedi perdite graduali, più gestibili psicologicamente",
+            "**Risultato:** Maggiore probabilità di rimanere investito e non vendere al minimo"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "4. Disciplina e Automazione"
+        },
+        {
+          "type": "paragraph",
+          "text": "PAC crea **disciplina** e può essere **automatizzato**, rimuovendo decisioni emotive dal processo di investimento."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Automazione:** PAC può essere impostato automaticamente (addebito diretto)",
+            "**Disciplina:** Investi regolarmente senza dover decidere ogni volta",
+            "**Vantaggio:** Elimina tentazione di \"aspettare il momento giusto\""
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "5. Flessibilità: Puoi Modificare la Strategia"
+        },
+        {
+          "type": "paragraph",
+          "text": "Con PAC, puoi **modificare** importi o frequenza se le circostanze cambiano, senza dover vendere tutto."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Rozeff (1994) ha analizzato il Dollar Cost Averaging, dimostrando che riduce la volatilità dei rendimenti e il rischio di timing sfortunato. La ricerca evidenzia che PAC è particolarmente efficace in mercati volatili, dove la media del prezzo di acquisto può compensare parzialmente il costo opportunità di avere capitale non investito."
+        }
+      ]
+    },
+    {
+      "id": "svantaggi-pac",
+      "title": "Svantaggi del PAC: I Costi dell'Investimento Graduale",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "1. Costo Opportunità: Capitale Non Investito"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il principale svantaggio del PAC è che **parte del capitale rimane non investita** più a lungo, perdendo potenziali rendimenti."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Esempio:** Hai 12.000 €, investi 1.000 € al mese per 12 mesi",
+            "**Mese 1:** Solo 1.000 € investiti, 11.000 € aspettano",
+            "**Mese 6:** 6.000 € investiti, 6.000 € aspettano",
+            "**Costo:** I 6.000 € che aspettano non generano rendimenti",
+            "**Con PIC:** Tutti i 12.000 € generano rendimenti da subito"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "2. Rendimenti Attesi Più Bassi (Storicamente)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Storicamente, i mercati tendono a salire. Avere capitale non investito significa perdere questa crescita. Studi mostrano che PIC batte PAC in circa **2/3 dei casi**."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Evidenza:** Su orizzonti lunghi, PIC genera rendimenti medi più alti",
+            "**Ragione:** Mercati tendono a salire, quindi capitale investito prima è vantaggioso",
+            "**Implicazione:** PAC sacrifica rendimenti attesi per ridurre rischio psicologico"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "3. Costi di Transazione Maggiori"
+        },
+        {
+          "type": "paragraph",
+          "text": "Con PAC, paghi commissioni di transazione **più volte** invece di una sola volta."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Esempio:** Commissione 5 € per transazione",
+            "**PIC:** 1 transazione = 5 €",
+            "**PAC (12 mesi):** 12 transazioni = 60 €",
+            "**Costo aggiuntivo:** 55 € con PAC"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "4. Complessità Operativa"
+        },
+        {
+          "type": "paragraph",
+          "text": "PAC richiede **gestione continua**: ricordarsi di investire ogni mese, impostare addebiti automatici, monitorare il processo."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "5. Inflazione: Capitale Non Investito Perde Valore"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il capitale che aspetta di essere investito perde valore a causa dell'**inflazione**. Con PAC, parte del capitale \"perde\" valore mentre aspetta."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Edleson (1995) ha analizzato il costo opportunità del Dollar Cost Averaging, dimostrando che il costo di avere capitale non investito può essere significativo in mercati con trend rialzista. La ricerca evidenzia che PAC sacrifica rendimenti attesi per benefici psicologici e riduzione del rischio di timing sfortunato."
+        }
+      ]
+    },
+    {
+      "id": "evidenze-accademiche",
+      "title": "Evidenze Accademiche: Cosa Dicono gli Studi",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Diversi studi accademici hanno analizzato la performance di PIC (Lump Sum) vs PAC (DCA). Ecco le evidenze principali:"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Studio 1: Knight & Mandell (1992)"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Risultato:** Lump Sum Investing (PIC) batte Dollar Cost Averaging (PAC) in circa **66% dei casi** su orizzonti di 12 mesi."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Metodo:** Analisi su dati storici S&P 500",
+            "**Conclusione:** PIC genera rendimenti medi più alti",
+            "**Nota:** Vantaggio aumenta con orizzonti temporali più lunghi"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Studio 2: Statman (1995)"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Risultato:** DCA (PAC) riduce rischio psicologico e volatilità percepita, anche se matematicamente PIC è superiore."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Focus:** Aspetti comportamentali e psicologici",
+            "**Conclusione:** PAC è preferibile per investitori con bassa tolleranza al rischio psicologico",
+            "**Implicazione:** La scelta non è solo matematica, ma anche psicologica"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Studio 3: Constantinides (1979)"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Risultato:** In mercati con trend rialzista, Lump Sum (PIC) genera rendimenti attesi più alti perché il capitale è investito più a lungo."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Metodo:** Analisi teorica e matematica",
+            "**Conclusione:** PIC massimizza rendimenti attesi in mercati rialzisti",
+            "**Nota:** DCA riduce volatilità dei rendimenti"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Studio 4: Benartzi & Thaler (1995)"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Risultato:** DCA (PAC) riduce \"regret\" (rimpianto) e stress psicologico, anche se rendimenti attesi sono inferiori."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Focus:** Comportamento degli investitori",
+            "**Conclusione:** Molti investitori preferiscono PAC per benefici psicologici",
+            "**Implicazione:** La scelta dipende da preferenze psicologiche individuali"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Sintesi delle Evidenze"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Matematicamente:** PIC tende a generare rendimenti più alti (circa 66% dei casi)",
+            "**Psicologicamente:** PAC riduce stress e regret, aumentando probabilità di rimanere investito",
+            "**Conclusione:** La scelta dipende da obiettivi, orizzonte temporale e tolleranza al rischio psicologico"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Vanguard (2012) ha analizzato la performance di Lump Sum vs Dollar Cost Averaging su dati storici, confermando che Lump Sum batte DCA in circa 2/3 dei casi. Tuttavia, la ricerca evidenzia che DCA può essere preferibile per investitori con bassa tolleranza al rischio psicologico, poiché aumenta la probabilità di rimanere investito nel lungo termine."
+        }
+      ]
+    },
+    {
+      "id": "quando-usare",
+      "title": "Quando Usare PIC vs PAC: Guida Pratica",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Usa PIC (Investimento Una Tantum) Se:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Orizzonte lungo:** Investi per 10+ anni, hai tempo per recuperare eventuali crolli",
+            "**Tolleranza al rischio alta:** Puoi gestire psicologicamente volatilità immediata",
+            "**Disciplina emotiva:** Non vendi al panico anche se vedi perdite del 20-30%",
+            "**Capitale già disponibile:** Hai tutto il capitale disponibile ora (es. eredità, vendita casa)",
+            "**Obiettivo massimizzare rendimenti:** Vuoi massimizzare rendimenti attesi nel lungo termine",
+            "**Mercato in calo:** Se il mercato è già crollato, PIC può essere vantaggioso (compri a prezzi bassi)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Usa PAC (Investimento Graduale) Se:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Bassa tolleranza al rischio psicologico:** Stress da volatilità ti porta a vendere al minimo",
+            "**Capitale futuro:** Ricevi capitale gradualmente (es. stipendio mensile)",
+            "**Principiante:** Stai iniziando a investire, PAC ti aiuta a costruire disciplina",
+            "**Mercato incerto:** Non sei sicuro della direzione del mercato, PAC riduce rischio timing",
+            "**Obiettivo ridurre stress:** Preferisci rendimenti leggermente inferiori ma meno stress",
+            "**Automazione:** Vuoi automatizzare il processo (addebito diretto mensile)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Approccio Ibrido: La Soluzione Intermedia"
+        },
+        {
+          "type": "paragraph",
+          "text": "Molti investitori usano un **approccio ibrido**:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**50% PIC + 50% PAC:** Investi metà subito, metà gradualmente",
+            "**PIC per capitale esistente:** Investi capitale già disponibile tutto subito",
+            "**PAC per capitale futuro:** Investi stipendio/entrate future gradualmente",
+            "**Vantaggio:** Bilanci tra rendimenti attesi (PIC) e comfort psicologico (PAC)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio Pratico: Scenario Reale"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Situazione:** Hai 20.000 € da investire, orizzonte 15 anni, tolleranza al rischio media."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Opzione 1 - PIC:** Investi tutti i 20.000 € oggi → massimizza rendimenti attesi, ma stress se mercato crolla",
+            "**Opzione 2 - PAC:** Investi 2.000 € al mese per 10 mesi → meno stress, ma rendimenti potenzialmente inferiori",
+            "**Opzione 3 - Ibrido:** Investi 10.000 € oggi (PIC) + 1.000 € al mese per 10 mesi (PAC) → bilancia rendimenti e comfort"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Statman (1995) ha evidenziato che la scelta tra PIC e PAC dipende da fattori individuali come tolleranza al rischio psicologico, orizzonte temporale e obiettivi. La ricerca suggerisce che un approccio ibrido può essere ottimale per molti investitori, bilanciando rendimenti attesi con comfort psicologico."
+        }
+      ]
+    },
+    {
+      "id": "esempi-pratici",
+      "title": "Esempi Pratici: Calcoli e Confronti",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio 1: Mercato in Salita"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Scenario:** Investi 12.000 € in un ETF. Il mercato sale del 10% nei prossimi 12 mesi."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**PIC:** Investi 12.000 € oggi → dopo 12 mesi: 13.200 € (guadagno 1.200 €)",
+            "**PAC:** Investi 1.000 € al mese per 12 mesi → capitale medio investito ~6.000 € → dopo 12 mesi: ~6.600 € (guadagno ~600 €)",
+            "**Risultato:** PIC vince nettamente (guadagno doppio)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio 2: Mercato Volatile (Prima Crolla, Poi Sale)"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Scenario:** Investi 12.000 €. Il mercato crolla del 20% nei primi 6 mesi, poi sale del 30% nei secondi 6 mesi."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**PIC:** Investi 12.000 € oggi → dopo 6 mesi: 9.600 € → dopo 12 mesi: 12.480 € (guadagno 480 €)",
+            "**PAC:** Investi 1.000 € al mese. Nei primi 6 mesi compri a prezzi alti, negli ultimi 6 mesi compri a prezzi bassi → prezzo medio migliore → dopo 12 mesi: ~12.800 € (guadagno ~800 €)",
+            "**Risultato:** PAC vince (ha comprato più quote a prezzi bassi durante il crollo)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio 3: Mercato in Calo"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Scenario:** Investi 12.000 €. Il mercato scende del 15% nei prossimi 12 mesi."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**PIC:** Investi 12.000 € oggi → dopo 12 mesi: 10.200 € (perdita 1.800 €)",
+            "**PAC:** Investi 1.000 € al mese → compri a prezzi progressivamente più bassi → dopo 12 mesi: ~10.500 € (perdita ~1.500 €)",
+            "**Risultato:** PAC perde meno (ha comprato più quote a prezzi bassi)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Lezione Chiave"
+        },
+        {
+          "type": "paragraph",
+          "text": "**PIC vince quando il mercato sale subito. PAC vince quando il mercato è volatile o crolla inizialmente.** Poiché i mercati tendono a salire nel lungo termine, PIC vince statisticamente più spesso."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Knight & Mandell (1992) ha analizzato scenari simili, dimostrando che PIC batte PAC in circa 66% dei casi perché i mercati tendono a salire. Tuttavia, PAC può essere superiore in scenari di alta volatilità o crolli iniziali, dove la media del prezzo di acquisto compensa parzialmente il costo opportunità."
+        }
+      ]
+    },
+    {
+      "id": "value-averaging",
+      "title": "Value Averaging: Alternativa Avanzata al PAC",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Oltre a PIC e PAC, esiste una terza strategia: **Value Averaging** (VA), che combina elementi di entrambe."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Come Funziona Value Averaging"
+        },
+        {
+          "type": "paragraph",
+          "text": "Con **Value Averaging**, invece di investire importi fissi (come PAC), investi importi **variabili** per mantenere il valore del portafoglio su un percorso target."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Esempio:** Vuoi che il portafoglio valga 1.000 € dopo mese 1, 2.000 € dopo mese 2, 3.000 € dopo mese 3, ecc.",
+            "**Mese 1:** Investi 1.000 € → portafoglio vale 1.000 € (target raggiunto)",
+            "**Mese 2:** Portafoglio vale 1.100 € (guadagno 10%) → investi solo 900 € per raggiungere 2.000 €",
+            "**Mese 3:** Portafoglio vale 2.800 € (perdita 10%) → investi 1.200 € per raggiungere 3.000 €",
+            "**Risultato:** Investi di più quando il mercato scende, meno quando sale"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Vantaggi di Value Averaging"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Buy low, sell high automatico:** Investi di più quando prezzo è basso",
+            "**Disciplina:** Mantieni portafoglio su percorso target",
+            "**Potenzialmente superiore a PAC:** Può generare rendimenti migliori di PAC"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Svantaggi di Value Averaging"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Complessità:** Richiede calcoli e monitoraggio continuo",
+            "**Capitale variabile:** Devi avere capitale disponibile quando serve (non sempre possibile)",
+            "**Vendite:** Potresti dover vendere se portafoglio supera target (tasse, commissioni)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Quando Usare Value Averaging"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Investitori avanzati:** Hai tempo e capacità di gestire complessità",
+            "**Capitale flessibile:** Hai capitale disponibile quando serve",
+            "**Obiettivo specifico:** Vuoi mantenere portafoglio su percorso target preciso"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Edleson (1991) ha sviluppato il concetto di Value Averaging, dimostrando che può generare rendimenti superiori a Dollar Cost Averaging (PAC) perché investe automaticamente di più quando i prezzi sono bassi. Tuttavia, la ricerca evidenzia che la complessità operativa e la necessità di capitale flessibile limitano l'applicabilità pratica per molti investitori."
+        }
+      ]
+    },
+    {
+      "id": "errori-comuni",
+      "title": "Errori Comuni e Come Evitarli",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Errore 1: Aspettare il \"Momento Giusto\" per PIC"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Problema:** Aspettare il \"momento giusto\" per investire tutto (PIC) spesso significa aspettare indefinitamente o entrare al picco."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Realtà:** Nessuno può prevedere il momento giusto",
+            "**Soluzione:** Se scegli PIC, investi subito. Se aspetti, usa PAC.",
+            "**Principio:** \"Time in the market beats timing the market\""
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Errore 2: Interrompere PAC Durante Crolli"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Problema:** Interrompere PAC durante crolli di mercato vanifica il beneficio principale (compri a prezzi bassi)."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Realtà:** I crolli sono quando PAC è più efficace (compri a prezzi bassi)",
+            "**Soluzione:** Continua PAC anche durante crolli, anzi considera di aumentare importi",
+            "**Principio:** PAC funziona meglio quando mercato è volatile"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Errore 3: Vendere PIC Dopo Crollo Immediato"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Problema:** Investire tutto con PIC e poi vendere dopo un crollo immediato (panico) è la peggiore strategia possibile."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Realtà:** Crolli sono temporanei, vendere al minimo cristallizza perdite",
+            "**Soluzione:** Se scegli PIC, devi avere disciplina di non vendere al panico",
+            "**Alternativa:** Se non hai disciplina, usa PAC per ridurre stress"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Errore 4: Usare PAC con Orizzonte Troppo Lungo"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Problema:** Usare PAC per 5+ anni quando hai tutto il capitale disponibile oggi sacrifica troppi rendimenti."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Realtà:** Più lungo è il PAC, maggiore è il costo opportunità",
+            "**Soluzione:** Se hai capitale disponibile, usa PIC o PAC breve (6-12 mesi max)",
+            "**Principio:** PAC è per ridurre stress, non per massimizzare rendimenti"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Errore 5: Non Considerare Costi di Transazione"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Problema:** Ignorare costi di transazione può rendere PAC costoso se commissioni sono alte."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Realtà:** Con commissioni alte, PAC può essere costoso",
+            "**Soluzione:** Usa broker con commissioni basse o zero, oppure usa PIC",
+            "**Calcolo:** Verifica se costi aggiuntivi di PAC valgono benefici psicologici"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Odean (1998) ha analizzato gli errori comportamentali degli investitori, dimostrando che interrompere strategie durante crolli e vendere al panico sono errori comuni che riducono significativamente i rendimenti. La ricerca evidenzia che la disciplina e l'aderenza alla strategia scelta sono cruciali per il successo, indipendentemente dalla scelta tra PIC e PAC."
+        }
+      ]
+    },
+    {
+      "id": "strategie-ibride",
+      "title": "Strategie Ibride: Combinare PIC e PAC",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Molti investitori usano **strategie ibride** che combinano PIC e PAC per bilanciare rendimenti attesi e comfort psicologico."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Strategia 1: PIC + PAC Combinato"
+        },
+        {
+          "type": "paragraph",
+          "text": "Investi parte del capitale subito (PIC) e parte gradualmente (PAC):"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Esempio:** Hai 20.000 € → investi 10.000 € oggi (PIC) + 1.000 € al mese per 10 mesi (PAC)",
+            "**Vantaggio:** Bilanci tra rendimenti attesi (PIC) e riduzione stress (PAC)",
+            "**Quando usare:** Tolleranza al rischio media, vuoi bilanciare rendimenti e comfort"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Strategia 2: PIC per Capitale Esistente, PAC per Capitale Futuro"
+        },
+        {
+          "type": "paragraph",
+          "text": "Usa PIC per capitale già disponibile, PAC per entrate future:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Esempio:** Investi 50.000 € oggi (PIC) + 500 € al mese dallo stipendio (PAC)",
+            "**Vantaggio:** Massimizzi rendimenti su capitale esistente, costruisci disciplina su entrate future",
+            "**Quando usare:** Hai capitale esistente (eredità, vendita) + entrate regolari (stipendio)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Strategia 3: PIC Accelerato"
+        },
+        {
+          "type": "paragraph",
+          "text": "Investi tutto rapidamente ma non tutto subito (es. 3-6 mesi invece di 12):"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Esempio:** Hai 12.000 € → investi 2.000 € al mese per 6 mesi (invece di 1.000 € per 12 mesi)",
+            "**Vantaggio:** Riduci costo opportunità rispetto a PAC lungo, ma mantieni beneficio psicologico",
+            "**Quando usare:** Vuoi ridurre stress ma minimizzare costo opportunità"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Strategia 4: PAC Dinamico"
+        },
+        {
+          "type": "paragraph",
+          "text": "Aumenta importi PAC durante crolli, riduci durante rally:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Esempio:** Investi 1.000 € al mese normalmente, ma 2.000 € quando mercato crolla del 10%+",
+            "**Vantaggio:** Sfrutti volatilità per migliorare prezzo medio di acquisto",
+            "**Quando usare:** Hai capitale flessibile e disciplina per aumentare importi durante crolli"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Statman (1995) ha suggerito che strategie ibride possono essere ottimali per molti investitori, bilanciando rendimenti attesi con comfort psicologico. La ricerca evidenzia che non esiste una strategia \"migliore\" universale, ma la scelta dovrebbe dipendere da fattori individuali come tolleranza al rischio, orizzonte temporale e obiettivi."
+        }
+      ]
+    },
+    {
+      "id": "calcoli-pratici",
+      "title": "Calcoli Pratici: Come Scegliere",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Domande da Farti Prima di Scegliere"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Quanto capitale hai disponibile?** Tutto oggi o gradualmente?",
+            "**Qual è il tuo orizzonte temporale?** Breve (< 5 anni) o lungo (10+ anni)?",
+            "**Qual è la tua tolleranza al rischio psicologico?** Puoi gestire volatilità immediata?",
+            "**Hai disciplina emotiva?** Venderesti al panico se vedi perdite del 20-30%?",
+            "**Quali sono i tuoi obiettivi?** Massimizzare rendimenti o ridurre stress?",
+            "**Hai capitale futuro?** Riceverai entrate regolari da investire?"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Matrice Decisionale Semplificata"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Usa PIC se:**"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Orizzonte lungo (10+ anni) ✓",
+            "Tolleranza al rischio alta ✓",
+            "Disciplina emotiva alta ✓",
+            "Capitale disponibile oggi ✓",
+            "Obiettivo: massimizzare rendimenti ✓"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "**Usa PAC se:**"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Bassa tolleranza al rischio psicologico ✓",
+            "Principiante, costruisci disciplina ✓",
+            "Capitale futuro (stipendio mensile) ✓",
+            "Mercato incerto, vuoi ridurre rischio timing ✓",
+            "Obiettivo: ridurre stress ✓"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "**Usa Ibrido se:**"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Tolleranza al rischio media ✓",
+            "Vuoi bilanciare rendimenti e comfort ✓",
+            "Hai capitale esistente + entrate future ✓"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Calcolo Costi di Transazione"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Esempio:** Commissione 5 € per transazione, investi 12.000 €"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**PIC:** 1 transazione × 5 € = 5 €",
+            "**PAC (12 mesi):** 12 transazioni × 5 € = 60 €",
+            "**Costo aggiuntivo PAC:** 55 €",
+            "**Domanda:** Vale la pena pagare 55 € per benefici psicologici di PAC?"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Benartzi & Thaler (1995) ha sviluppato un framework decisionale per la scelta tra Lump Sum e Dollar Cost Averaging, evidenziando che la decisione dovrebbe considerare non solo aspetti matematici ma anche fattori psicologici e comportamentali. La ricerca suggerisce che per molti investitori, i benefici psicologici di PAC possono valere il costo di rendimenti leggermente inferiori."
+        }
+      ]
+    },
+    {
+      "id": "automazione",
+      "title": "Automazione: Come Implementare PIC e PAC",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Automazione del PAC"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il PAC può essere **completamente automatizzato** attraverso:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Addebito diretto:** Imposta addebito automatico mensile dal conto corrente",
+            "**Broker automatici:** Molti broker offrono PAC automatici",
+            "**Vantaggio:** Elimina decisioni emotive, investi automaticamente ogni mese",
+            "**Esempio:** Fineco, Directa, Degiro offrono PAC automatici"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Implementazione del PIC"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il PIC richiede **azione manuale** una volta:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Processo:** Apri posizione, investi tutto il capitale, chiudi",
+            "**Vantaggio:** Una volta fatto, non devi fare altro",
+            "**Svantaggio:** Richiede disciplina di non vendere al panico dopo"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Best Practices per Automazione"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Imposta e dimentica:** Una volta impostato PAC automatico, non modificarlo durante crolli",
+            "**Review periodico:** Rivedi strategia ogni 6-12 mesi, non ogni mese",
+            "**Non interrompere:** Continua PAC anche durante crolli (è quando è più efficace)",
+            "**Monitora costi:** Verifica che costi di transazione non erodano rendimenti"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Thaler & Benartzi (2004) ha analizzato l'importanza dell'automazione negli investimenti, dimostrando che strategie automatiche (come PAC) riducono errori comportamentali e aumentano la probabilità di rimanere investiti. La ricerca evidenzia che \"imposta e dimentica\" è spesso superiore a gestione attiva per investitori retail."
+        }
+      ]
+    },
+    {
+      "id": "miti-da-sfatare",
+      "title": "Miti da Sfatare: Falsità Comuni su PIC e PAC",
+      "content": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Mito 1: \"PAC Garantisce Rendimenti Migliori\""
+        },
+        {
+          "type": "paragraph",
+          "text": "**Falso:** PAC non garantisce rendimenti migliori. Storicamente, PIC batte PAC in circa 66% dei casi."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Realtà:** PAC riduce rischio psicologico e volatilità, ma sacrifica rendimenti attesi",
+            "**Vantaggio di PAC:** Comfort psicologico, non rendimenti superiori"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Mito 2: \"PIC è Sempre Migliore\""
+        },
+        {
+          "type": "paragraph",
+          "text": "**Falso:** PIC è matematicamente superiore, ma non sempre praticamente superiore."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Realtà:** Se PIC ti porta a vendere al panico, PAC è superiore",
+            "**Vantaggio di PAC:** Aumenta probabilità di rimanere investito nel lungo termine"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Mito 3: \"PAC Elimina il Rischio\""
+        },
+        {
+          "type": "paragraph",
+          "text": "**Falso:** PAC riduce rischio psicologico e volatilità percepita, ma non elimina il rischio di perdita."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Realtà:** Puoi ancora perdere con PAC se mercato crolla e rimane basso",
+            "**Vantaggio di PAC:** Riduce impatto psicologico, non rischio finanziario"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Mito 4: \"Devi Scegliere Solo Uno\""
+        },
+        {
+          "type": "paragraph",
+          "text": "**Falso:** Puoi combinare PIC e PAC in strategie ibride."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Realtà:** Molti investitori usano approcci ibridi",
+            "**Vantaggio:** Bilanci tra rendimenti attesi e comfort psicologico"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Mito 5: \"PAC Funziona Solo in Mercati Volatili\""
+        },
+        {
+          "type": "paragraph",
+          "text": "**Parzialmente falso:** PAC funziona meglio in mercati volatili, ma ha benefici psicologici anche in mercati stabili."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Realtà:** PAC riduce stress psicologico indipendentemente dalla volatilità",
+            "**Vantaggio:** Benefici psicologici sono indipendenti dalla performance"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Statman (1995) ha evidenziato che molti miti su PIC e PAC derivano da confusione tra aspetti matematici e psicologici. La ricerca dimostra che la scelta ottimale dipende da fattori individuali, e non esiste una strategia universalmente superiore."
+        }
+      ]
+    },
+    {
+      "id": "glossario",
+      "title": "Glossario Tecnico",
+      "content": [
+        {
+          "type": "list",
+          "items": [
+            "**PIC (Piano di Investimento Capitale):** strategia di investimento che consiste nell'investire tutto il capitale disponibile in un'unica soluzione (Lump Sum Investing).",
+            "**PAC (Piano di Accumulo Capitale):** strategia di investimento che consiste nell'investire importi fissi e regolari a intervalli regolari, indipendentemente dal prezzo di mercato (Dollar Cost Averaging - DCA).",
+            "**Lump Sum Investing:** termine inglese per PIC, investimento una tantum di tutto il capitale disponibile.",
+            "**Dollar Cost Averaging (DCA):** termine inglese per PAC, investimento periodico di importi fissi.",
+            "**Value Averaging:** strategia avanzata che investe importi variabili per mantenere il portafoglio su un percorso target.",
+            "**Time in the Market:** principio che afferma che il tempo nel mercato è più importante del timing del mercato.",
+            "**Timing del Mercato:** tentativo di prevedere i movimenti di mercato per entrare/uscire al momento giusto.",
+            "**Media del Prezzo:** prezzo medio di acquisto ottenuto comprando a prezzi diversi nel tempo (beneficio di PAC).",
+            "**Costo Opportunità:** costo di avere capitale non investito, perdendo potenziali rendimenti.",
+            "**Regret (Rimpianto):** emozione negativa associata a decisioni di investimento che vanno male.",
+            "**Volatilità Percepita:** sensazione soggettiva di rischio, spesso diversa dal rischio reale.",
+            "**Disciplina Emotiva:** capacità di mantenere strategia di investimento nonostante emozioni e stress.",
+            "**Strategia Ibrida:** combinazione di PIC e PAC per bilanciare rendimenti attesi e comfort psicologico.",
+            "**Automazione:** processo di investimento automatico che elimina decisioni emotive.",
+            "**Buy Low, Sell High:** principio di comprare a prezzi bassi e vendere a prezzi alti (automatico con PAC)."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "disclaimer",
+      "title": "Disclaimer e Avvertenze Finali",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le informazioni contenute in questa guida sono fornite da Tradelia AI a scopo esclusivamente informativo, formativo e simulativo. Non costituiscono in alcun modo una sollecitazione al pubblico risparmio, una raccomandazione personalizzata o una consulenza finanziaria, fiscale o legale."
+        },
+        {
+          "type": "paragraph",
+          "text": "La scelta tra PIC e PAC dipende da fattori individuali come orizzonte temporale, tolleranza al rischio, obiettivi finanziari e capacità psicologica. Non esiste una strategia universalmente migliore. Le evidenze storiche mostrano che PIC tende a generare rendimenti attesi più alti, ma PAC può essere preferibile per investitori con bassa tolleranza al rischio psicologico."
+        },
+        {
+          "type": "paragraph",
+          "text": "I rendimenti passati non sono indicativi di rendimenti futuri. I mercati possono comportarsi diversamente in futuro. Ogni decisione di investimento deve essere presa in autonomia e con il supporto di professionisti qualificati, tenendo conto del proprio profilo di rischio e degli obiettivi individuali."
+        },
+        {
+          "type": "paragraph",
+          "text": "Tradelia AI declina ogni responsabilità per danni diretti o indiretti derivanti dall'uso delle informazioni contenute in questa guida, incluse analisi, calcoli o simulazioni. L'utente accetta di assumersi ogni rischio associato alla consultazione e all'utilizzo dei contenuti."
+        },
+        {
+          "type": "paragraph",
+          "text": "*«La scelta tra PIC e PAC non è solo matematica, ma anche psicologica. La strategia migliore è quella che ti permette di rimanere investito nel lungo termine, indipendentemente dalla volatilità. Se PIC ti porta a vendere al panico, PAC è superiore. Se hai disciplina emotiva, PIC può massimizzare i rendimenti.»*"
+        }
+      ]
+    }
+  ]
+}
+

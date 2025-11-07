@@ -1,0 +1,312 @@
+/* /archivio/assets/css/archive.css
+   Archivio Report - Stili Dark Theme
+   Design System Tradelia AI - Coerente con tokens.css
+   ----------------------------------------------------------- */
+
+/* ===== LAYOUT BASE ===== */
+#archive-main {
+  padding: var(--sp-8) var(--sp-4);
+  min-height: calc(100vh - 200px);
+}
+
+.archive-header {
+  margin-bottom: var(--sp-8);
+  padding-bottom: var(--sp-6);
+  border-bottom: 1px solid var(--br-card);
+}
+
+.archive-title {
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 800;
+  color: var(--ink);
+  margin: 0 0 var(--sp-2);
+  letter-spacing: -0.02em;
+}
+
+.archive-subtitle {
+  font-size: var(--fs-15);
+  color: var(--muted);
+  margin: 0;
+}
+
+/* ===== TABS ===== */
+.archive-tabs {
+  display: flex;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-6);
+  border-bottom: 1px solid var(--br-card);
+}
+
+.archive-tab {
+  padding: var(--sp-3) var(--sp-5);
+  font-size: var(--fs-15);
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.archive-tab:hover {
+  color: var(--ink);
+}
+
+.archive-tab.active {
+  color: var(--ink);
+  border-bottom-color: var(--brand-600);
+}
+
+/* ===== SEZIONI ===== */
+.archive-section {
+  display: none;
+}
+
+.archive-section.active {
+  display: block;
+}
+
+/* ===== FILTRI ===== */
+.archive-filters {
+  margin-bottom: var(--sp-6);
+}
+
+.btn-toggle-filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--surface-card);
+  border: 1px solid var(--br-card);
+  border-radius: var(--radius-md);
+  color: var(--ink);
+  font-size: var(--fs-14);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.btn-toggle-filters:hover {
+  background: var(--surface-elev);
+  border-color: var(--brand-600);
+}
+
+.btn-toggle-filters svg {
+  transition: transform var(--transition-base);
+}
+
+.btn-toggle-filters[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+.filters-panel {
+  margin-top: var(--sp-4);
+  padding: var(--sp-4);
+  background: var(--surface-card);
+  border: 1px solid var(--br-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+/* ===== TABELLA REPORT (Tipo Excel) ===== */
+.archive-table-container {
+  overflow-x: auto;
+  background: var(--surface-card);
+  border: 1px solid var(--br-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+.archive-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-14);
+}
+
+.archive-table thead {
+  background: var(--surface-elev);
+  border-bottom: 2px solid var(--br-card);
+}
+
+.archive-table th {
+  padding: var(--sp-3) var(--sp-4);
+  text-align: left;
+  font-weight: 600;
+  color: var(--ink);
+  font-size: var(--fs-13);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+
+.archive-table th:hover {
+  background: var(--surface-hover);
+}
+
+.archive-table th[data-sort]::after {
+  content: " ↕";
+  opacity: 0.5;
+  font-size: var(--fs-12);
+}
+
+.archive-table th[data-sort="asc"]::after {
+  content: " ↑";
+  opacity: 1;
+}
+
+.archive-table th[data-sort="desc"]::after {
+  content: " ↓";
+  opacity: 1;
+}
+
+.archive-table tbody tr {
+  border-bottom: 1px solid var(--br-soft);
+  transition: background var(--transition-fast);
+}
+
+.archive-table tbody tr:hover {
+  background: var(--surface-elev);
+}
+
+.archive-table tbody tr:nth-child(even) {
+  background: var(--surface-card);
+}
+
+.archive-table tbody tr:nth-child(even):hover {
+  background: var(--surface-elev);
+}
+
+.archive-table td {
+  padding: var(--sp-3) var(--sp-4);
+  color: var(--ink-soft);
+}
+
+.archive-table td:first-child {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.archive-table a {
+  color: var(--brand-600);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.archive-table a:hover {
+  color: var(--brand-500);
+  text-decoration: underline;
+}
+
+/* ===== BADGE STATUS ===== */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--sp-1_5) var(--sp-3);
+  font-size: var(--fs-11);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: var(--radius-pill);
+}
+
+.status-badge[data-status="active"] {
+  background: rgba(22, 163, 74, 0.2);
+  color: var(--tone-pos-fg);
+}
+
+.status-badge[data-status="hold"] {
+  background: rgba(234, 88, 12, 0.2);
+  color: var(--tone-warn-fg);
+}
+
+.status-badge[data-status="review"] {
+  background: rgba(220, 38, 38, 0.2);
+  color: var(--tone-neg-fg);
+}
+
+/* ===== LOADING & EMPTY STATES ===== */
+.archive-loading,
+.archive-empty {
+  text-align: center;
+  padding: var(--sp-10);
+  color: var(--muted);
+}
+
+.archive-loading p,
+.archive-empty p {
+  margin: 0;
+  font-size: var(--fs-15);
+}
+
+/* ===== TUTORIALS LIST ===== */
+.tutorials-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--sp-4);
+}
+
+.tutorial-card {
+  padding: var(--sp-5);
+  background: var(--surface-card);
+  border: 1px solid var(--br-card);
+  border-radius: var(--radius-card);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-card);
+}
+
+.tutorial-card:hover {
+  background: var(--surface-elev);
+  border-color: var(--brand-600);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.tutorial-card-title {
+  font-size: var(--fs-16);
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 var(--sp-2);
+}
+
+.tutorial-card-meta {
+  font-size: var(--fs-12);
+  color: var(--muted);
+  margin-bottom: var(--sp-3);
+}
+
+.tutorial-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
+}
+
+.tutorial-tag {
+  padding: var(--sp-1) var(--sp-2);
+  font-size: var(--fs-11);
+  background: var(--surface-elev);
+  border: 1px solid var(--br-card);
+  border-radius: var(--radius-pill);
+  color: var(--ink-soft);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .archive-table-container {
+    overflow-x: scroll;
+  }
+  
+  .archive-table {
+    min-width: 800px;
+  }
+  
+  .tutorials-list {
+    grid-template-columns: 1fr;
+  }
+}
+

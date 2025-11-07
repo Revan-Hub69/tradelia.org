@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Dashboard Abbonati Tradelia AI - Accesso anticipato ai report" />
+  <meta name="theme-color" content="#0f0f0f" />
+  
+  <title>TRADELIA • AI — Dashboard</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/archivio/assets/css/archive.css" />
+  <link rel="stylesheet" href="/archivio/assets/css/dashboard.css" />
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json" />
+</head>
+<body>
+  <!-- HEADER SLOT -->
+  <div id="site-header-slot"></div>
+  
+  <!-- MAIN CONTENT -->
+  <main id="dashboard-main" class="container">
+    <!-- Login Section (se non autenticato) -->
+    <section id="login-section" class="dashboard-login">
+      <div class="login-card">
+        <h1 class="login-title">Dashboard Abbonati</h1>
+        <p class="login-subtitle">Accedi per vedere tutti i report e votare i titoli</p>
+        
+        <form id="login-form" class="login-form">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required autocomplete="email" />
+          </div>
+          
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required autocomplete="current-password" />
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Accedi</button>
+            <button type="button" id="demo-login-btn" class="btn btn-sm">Login Demo</button>
+          </div>
+          
+          <div class="form-footer">
+            <button type="button" id="forgot-password-btn" class="btn-link">Password dimenticata?</button>
+          </div>
+        </form>
+        
+        <div id="login-error" class="error-message" hidden></div>
+        <div id="login-success" class="success-message" hidden></div>
+        
+        <!-- Forgot Password Modal -->
+        <div id="forgot-password-modal" class="modal" hidden>
+          <div class="modal-content">
+            <h2>Recupera Password</h2>
+            <p>Inserisci la tua email per ricevere il link di ripristino password.</p>
+            <form id="forgot-password-form" class="login-form">
+              <div class="form-group">
+                <label for="reset-email">Email</label>
+                <input type="email" id="reset-email" name="email" required autocomplete="email" />
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Invia Link</button>
+                <button type="button" id="cancel-reset-btn" class="btn btn-sm">Annulla</button>
+              </div>
+            </form>
+            <div id="reset-error" class="error-message" hidden></div>
+            <div id="reset-success" class="success-message" hidden></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Subscription Required Section (se autenticato ma non abbonato) -->
+    <section id="subscription-required-section" class="dashboard-subscription-required" hidden>
+      <div class="subscription-card">
+        <h1 class="subscription-title">Abbonamento Richiesto</h1>
+        <p class="subscription-subtitle">Per accedere alla dashboard, è necessario un abbonamento attivo.</p>
+        <p class="subscription-description">
+          Se hai già acquistato un abbonamento, attendi qualche istante che il sistema aggiorni il tuo status.
+          Se non hai ancora un abbonamento, <a href="#" class="subscription-link">acquista qui</a>.
+        </p>
+        <div class="subscription-actions">
+          <button id="refresh-subscription-btn" class="btn btn-primary">Aggiorna Status</button>
+          <button id="logout-btn-2" class="btn btn-sm">Esci</button>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Dashboard Content (se autenticato) -->
+    <section id="dashboard-content" class="dashboard-content" hidden>
+      <header class="dashboard-header">
+        <div>
+          <h1 class="dashboard-title">Dashboard Abbonati</h1>
+          <p class="dashboard-subtitle">Benvenuto, <span id="user-email"></span></p>
+        </div>
+        <div class="dashboard-header-actions">
+          <button id="install-app-btn" class="btn btn-primary btn-sm" hidden>
+            📱 Installa App
+          </button>
+          <button id="logout-btn" class="btn btn-sm">Esci</button>
+        </div>
+      </header>
+      
+      <!-- Sezioni: Report | Tutorial | Votazione -->
+      <nav class="dashboard-tabs" role="tablist">
+        <button class="dashboard-tab active" role="tab" data-tab="reports" aria-selected="true">
+          Report
+        </button>
+        <button class="dashboard-tab" role="tab" data-tab="tutorials" aria-selected="false">
+          Tutorial
+        </button>
+        <button class="dashboard-tab" role="tab" data-tab="voting" aria-selected="false">
+          Votazione
+        </button>
+      </nav>
+      
+      <!-- SEZIONE REPORT (con filtri avanzati) -->
+      <section id="dashboard-reports" class="dashboard-section active" role="tabpanel">
+        <!-- Filtri avanzati (solo abbonati) -->
+        <div class="dashboard-filters">
+          <button class="btn-toggle-filters" aria-expanded="false">
+            <span>Filtri e Ricerca Avanzati</span>
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 10l5 5 5-5"/>
+            </svg>
+          </button>
+          <div class="filters-panel" hidden>
+            <!-- Filtri avanzati qui -->
+          </div>
+        </div>
+        
+        <!-- Tabella Report (tutti, anche < 24h) -->
+        <div class="archive-table-container">
+          <table class="archive-table" id="dashboard-reports-table">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Ticker</th>
+                <th>Company</th>
+                <th>Tipo</th>
+                <th>Versione AI</th>
+                <th>Status</th>
+                <th>Link</th>
+              </tr>
+            </thead>
+            <tbody id="dashboard-reports-tbody">
+              <!-- Report caricati dinamicamente -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+      
+      <!-- SEZIONE TUTORIAL -->
+      <section id="dashboard-tutorials" class="dashboard-section" role="tabpanel" hidden>
+        <div class="tutorials-list" id="dashboard-tutorials-list">
+          <!-- Tutorial caricati dinamicamente -->
+        </div>
+      </section>
+      
+      <!-- SEZIONE VOTAZIONE -->
+      <section id="dashboard-voting" class="dashboard-section" role="tabpanel" hidden>
+        <div class="voting-container">
+          <h2 class="voting-title">Vota il titolo per l'analisi Swing Master di domani</h2>
+          <p class="voting-subtitle">I tuoi voti determinano quale titolo analizzeremo domani</p>
+          
+          <!-- Form Votazione -->
+          <form id="voting-form" class="voting-form">
+            <div class="form-group">
+              <label for="ticker-input">Ticker</label>
+              <input type="text" id="ticker-input" name="ticker" placeholder="Es. AAPL" required pattern="[A-Z]{1,5}" />
+            </div>
+            
+            <div class="form-group">
+              <label for="votes-input">Voti (1-10)</label>
+              <input type="number" id="votes-input" name="votes" min="1" max="10" value="1" required />
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Vota</button>
+          </form>
+          
+          <!-- Ranking in tempo reale -->
+          <div class="voting-ranking">
+            <h3 class="ranking-title">Ranking Attuale</h3>
+            <div id="ranking-list" class="ranking-list">
+              <!-- Ranking caricato dinamicamente -->
+            </div>
+          </div>
+          
+          <!-- Statistiche -->
+          <div class="voting-stats">
+            <h3 class="stats-title">Statistiche</h3>
+            <div id="voting-stats" class="stats-grid">
+              <!-- Statistiche caricati dinamicamente -->
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+  
+  <!-- FOOTER SLOT -->
+  <div id="site-footer-slot"></div>
+  
+  <!-- SCRIPTS -->
+  <script type="module" src="/archivio/assets/js/dashboard.js"></script>
+</body>
+</html>
+

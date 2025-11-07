@@ -1,0 +1,44 @@
+{
+  "meta": {
+    "timestampET": "2025-01-15T10:00:00-05:00",
+    "module": "F5 · Setup Operativo",
+    "moduleStatus": "ACTIVE",
+    "freshness": "≤ T-1",
+    "hero_intro": "",
+    "hero_disclaimer": "Output a fini educativi/informativi (orizzonte 3–10 giorni). Non costituisce consulenza o raccomandazione (MiFID II)."
+  },
+  "ui_labels": {
+    "badge": "F5",
+    "hero_title": "Analisi di setup tecnici (esemplificativi)",
+    "hero_subtitle": "Analisi Setup · Orizzonte 3–10 giorni",
+    "hero_desc": "Analisi educativa di setup tecnici esemplificativi, coerenti con bias e rischio. Nessun contenuto operativo o raccomandativo.",
+    "ai_summary_label": "Riassunto AI"
+  },
+  "entry": {
+    "Entry": {
+      "raw": "—",
+      "formatted": "—"
+    }
+  },
+  "stop": {
+    "Stop": {
+      "raw": "—",
+      "formatted": "—"
+    }
+  },
+  "tp": {
+    "TP": {
+      "raw": "—",
+      "formatted": "—"
+    }
+  },
+  "flow_score": {
+    "FlowScore": {
+      "raw": "—",
+      "formatted": "—"
+    }
+  },
+  "setup_details": {},
+  "governance": {}
+}
+

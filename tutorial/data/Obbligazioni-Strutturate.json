@@ -1,0 +1,626 @@
+{
+  "title": "Obbligazioni Strutturate: Guida Completa Tradelia AI",
+  "meta": {
+    "published": "Gennaio 2025",
+    "category": "Strumenti Derivati",
+    "difficulty": "Intermedio"
+  },
+  "tags": [
+    "Obbligazioni",
+    "Derivati",
+    "Strumenti Strutturati",
+    "Rischio",
+    "Fixed Income",
+    "Opzioni"
+  ],
+  "glossaryTerms": {
+    "obbligazioni strutturate": "CreditRiskBlock",
+    "componente obbligazionaria": "CreditRiskBlock",
+    "componente derivativa": "CreditRiskBlock",
+    "opzioni": "CreditRiskBlock",
+    "barriere": "CreditRiskBlock",
+    "payoff": "CreditRiskBlock",
+    "OTC": "CreditRiskBlock",
+    "KID": "CreditRiskBlock",
+    "ISIN": "ISIN",
+    "leva finanziaria": "LiquidityRegimeScore",
+    "volatilità implicita": "CreditRiskBlock",
+    "default": "CreditRiskBlock",
+    "rating": "CreditRiskBlock",
+    "tranche": "CreditRiskBlock",
+    "autocall": "CreditRiskBlock",
+    "knock-in": "CreditRiskBlock",
+    "knock-out": "CreditRiskBlock"
+  },
+  "sections": [
+    {
+      "id": "definizione",
+      "title": "Definizione e Logica di Base",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le **obbligazioni strutturate** sono strumenti finanziari ibridi composti da due elementi principali: *una componente obbligazionaria tradizionale* (zero coupon o a tasso fisso) e *una componente derivativa* (tipicamente opzioni su indici, azioni, tassi o valute). Il rendimento e la restituzione del capitale dipendono da eventi di mercato predeterminati."
+        },
+        {
+          "type": "paragraph",
+          "text": "Vengono emesse da **banche d'investimento, istituzioni finanziarie o grandi emittenti corporate**, spesso in collaborazione con desk strutturati interni. La loro finalità è offrire prodotti personalizzabili, con rendimento potenziale superiore a un bond classico, ma anche con rischi impliciti non sempre evidenti."
+        },
+        {
+          "type": "paragraph",
+          "text": "La logica di fondo è quella di sfruttare l'aspettativa di mercato del cliente o dell'emittente, integrando nel prodotto **una scommessa su un determinato evento** (ad esempio: \"l'indice EuroStoxx non deve perdere più del 30%\" oppure \"la volatilità implicita resterà stabile\")."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Rendimento condizionato:** la cedola dipende da eventi futuri (performance sottostante, volatilità, spread, ecc.). A differenza delle obbligazioni tradizionali, non c'è garanzia di ricevere la cedola.",
+            "**Capitale condizionatamente protetto:** la protezione non è assoluta ma legata a barriere o trigger predefiniti. Se la barriera viene violata, il capitale può essere parzialmente o totalmente perso.",
+            "**Pricing poco trasparente:** spesso costruite con opzioni OTC, difficili da valutare per l'investitore retail. Il prezzo di emissione può includere commissioni elevate non sempre evidenti."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "*«Non sono vere obbligazioni: sono scommesse travestite da bond. Possono avere senso, ma solo se comprese a fondo e utilizzate nel giusto contesto.»*"
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Secondo lo studio di Henderson & Pearson (2011), le obbligazioni strutturate sono spesso sovraprezzate rispetto al loro valore teorico. La ricerca ha dimostrato che il markup medio è del 2-8% rispetto al fair value, con markup più elevati per prodotti più complessi e meno liquidi."
+        }
+      ]
+    },
+    {
+      "id": "struttura",
+      "title": "Struttura Tecnica e Componenti",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Un'obbligazione strutturata è composta da due elementi integrati in un unico strumento: una componente obbligazionaria e una componente derivativa. L'obiettivo è generare un flusso cedolare condizionato e un rimborso finale subordinato a determinati eventi di mercato."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Componente Obbligazionaria"
+        },
+        {
+          "type": "paragraph",
+          "text": "È generalmente rappresentata da una obbligazione a tasso fisso o zero coupon, destinata a garantire (in tutto o in parte) il capitale a scadenza. La durata tipica va da 2 a 5 anni. In molti casi, però, la protezione del capitale è solo condizionata a barriere. La componente obbligazionaria fornisce la base di sicurezza del prodotto, ma questa sicurezza è spesso illusoria se la barriera viene violata."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Componente Derivativa"
+        },
+        {
+          "type": "paragraph",
+          "text": "Si tratta di una o più opzioni finanziarie incorporate nel titolo. Queste opzioni possono essere di varia natura (call, put, autocall, digitali, con barriera) e fanno riferimento a sottostanti come indici azionari, azioni singole, tassi, valute o materie prime."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Le opzioni determinano il diritto al pagamento delle cedole** o il meccanismo di rimborso anticipato. Il tipo di opzione utilizzata definisce il profilo di rischio/rendimento del prodotto.",
+            "**Le barriere stabiliscono se il capitale viene restituito integralmente** o solo in parte. Le barriere possono essere \"knock-in\" (attivazione) o \"knock-out\" (disattivazione).",
+            "**Il payoff finale è spesso non lineare e asimmetrico.** Questo significa che i guadagni e le perdite non sono proporzionali alle variazioni del sottostante."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "**Esempio operativo:** un'obbligazione strutturata su indice azionario può offrire il 5% annuo solo se l'indice non perde più del 20%. In caso contrario, l'investitore rischia un rimborso proporzionale alla performance negativa dell'indice. Se l'indice perde il 30%, l'investitore potrebbe ricevere solo il 70% del capitale iniziale."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Bergstresser (2008) ha analizzato le obbligazioni strutturate vendute ai clienti retail. Ha scoperto che molti investitori non comprendevano appieno i rischi, in particolare il rischio di perdita del capitale. I prodotti più complessi erano spesso venduti a investitori meno sofisticati."
+        }
+      ]
+    },
+    {
+      "id": "funzionamento",
+      "title": "Funzionamento e Meccanismo Cedolare",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le obbligazioni strutturate non prevedono, nella maggior parte dei casi, una cedola fissa incondizionata. Il flusso cedolare dipende da condizioni specifiche legate all'andamento di uno o più sottostanti. Le strutture possono variare notevolmente, ma condividono alcune logiche ricorrenti."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Cedole Condizionate"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il pagamento delle cedole avviene solo se il sottostante rispetta una determinata soglia alla data di osservazione. Ad esempio: \"cedola del 6% se l'indice sottostante è sopra il 70% del valore iniziale\". Questo significa che in periodi di mercato negativo, l'investitore potrebbe non ricevere alcuna cedola, anche se il capitale è ancora protetto."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Effetto Memory"
+        },
+        {
+          "type": "paragraph",
+          "text": "In alcune strutture è presente la funzione \"memory\": se una o più cedole non vengono pagate perché le condizioni non si sono verificate, esse possono essere recuperate alla prima occasione utile in cui il trigger viene rispettato. Questo meccanismo può sembrare vantaggioso, ma in realtà aumenta la complessità e può creare false aspettative."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Rimborso a Scadenza"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il capitale investito può essere rimborsato integralmente, parzialmente o convertito in strumenti alternativi, in base al rispetto di una barriera a scadenza. In genere, se il sottostante è sopra la barriera, si riceve il 100%; se è sotto, si subisce una perdita proporzionale. La formula di rimborso può essere lineare o non lineare, a seconda della struttura."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Osservazione mensile, trimestrale o annuale:** le date di osservazione determinano quando vengono valutate le condizioni per il pagamento delle cedole.",
+            "**Barriera può essere continua o discreta:** una barriera continua viene monitorata in ogni momento, mentre una barriera discreta viene verificata solo in date specifiche.",
+            "**Payoff finale spesso replicabile con una combinazione di opzioni vanilla:** teoricamente, ogni obbligazione strutturata può essere scomposta in una combinazione di opzioni standard, ma questo richiede competenze tecniche avanzate."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "**Nota operativa:** la presenza di cedole condizionate può creare l'illusione di rendimenti regolari. In realtà, la probabilità di non ricevere cedole in contesti di alta volatilità è significativa. Gli investitori dovrebbero simulare diversi scenari per comprendere la probabilità di ricevere le cedole promesse."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Secondo lo studio di Carlin (2009), le obbligazioni strutturate sono spesso caratterizzate da \"opacità strategica\" - i prodotti sono deliberatamente complessi per nascondere i costi reali e i rischi. I prodotti più opachi tendono ad avere markup più elevati e sono venduti a investitori meno sofisticati."
+        }
+      ]
+    },
+    {
+      "id": "rischi",
+      "title": "Rischi Nascosti e Aspetti Critici",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le obbligazioni strutturate sono spesso percepite come strumenti a basso rischio grazie alla parola \"obbligazione\" e alla presenza di una scadenza definita. Tuttavia, incorporano componenti opzionali che ne alterano profondamente il profilo di rischio/rendimento. È fondamentale comprendere gli elementi che possono determinare perdite significative o risultati diversi dalle attese."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Barriera e Rischio sul Capitale"
+        },
+        {
+          "type": "paragraph",
+          "text": "In molte strutture, il rimborso del capitale a scadenza è subordinato al rispetto di una barriera (es. il sottostante non deve perdere oltre il 30%). Se la barriera viene infranta, il capitale restituito può essere inferiore anche del 50–60%. Questo rischio è spesso sottovalutato dagli investitori, che si concentrano sul rendimento promesso piuttosto che sulla probabilità di perdita del capitale."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Illiquidità e Assenza di Mercato Secondario"
+        },
+        {
+          "type": "paragraph",
+          "text": "Spesso questi strumenti non sono quotati su mercati regolamentati. In caso di bisogno di liquidità anticipata, l'unica via è la vendita OTC alla banca collocatrice, con spread molto ampi e pricing discrezionale. Il prezzo di vendita anticipata può essere significativamente inferiore al valore teorico, anche se le condizioni di mercato sono favorevoli."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Opacità dei Costi Impliciti"
+        },
+        {
+          "type": "paragraph",
+          "text": "Le strutturate incorporano commissioni elevate e margini impliciti nell'opzione. Il valore effettivo dell'obbligazione al momento dell'emissione può essere significativamente inferiore al prezzo di collocamento (tipicamente 100). Questi costi includono commissioni di collocamento, spread bid-ask, e margini di profitto dell'emittente."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Capitale non garantito nella maggior parte dei casi:** a differenza delle obbligazioni tradizionali, il capitale non è sempre protetto.",
+            "**Payoff difficilmente replicabile e poco intuitivo:** la complessità del payoff rende difficile valutare il rischio reale.",
+            "**Documentazione spesso semplificata (KID) e non trasparente:** il Key Information Document può non rivelare tutti i rischi e i costi.",
+            "**Assenza di benchmark reale di confronto:** è difficile confrontare questi prodotti con alternative tradizionali."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "**Attenzione:** molti investitori sottoscrivono queste obbligazioni senza una reale comprensione dei rischi di perdita in conto capitale, convinti erroneamente della \"protezione implicita\" del prodotto. La parola \"obbligazione\" crea una falsa percezione di sicurezza."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Célérier & Vallée (2017) ha dimostrato che le banche tendono a vendere prodotti strutturati più complessi e rischiosi quando i tassi di interesse sono bassi, sfruttando la ricerca di rendimento degli investitori. I prodotti venduti in questi periodi hanno performance peggiori e markup più elevati."
+        }
+      ]
+    },
+    {
+      "id": "acquisto",
+      "title": "Dove si Acquistano e Come Vengono Proposte",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le obbligazioni strutturate non sono liberamente negoziabili sul mercato regolamentato come i titoli di Stato o le azioni quotate. Sono emesse direttamente da banche o intermediari finanziari e distribuite al pubblico tramite canali controllati, in modo centralizzato."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Canali di Collocamento"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Reti bancarie tradizionali:** collocazione diretta allo sportello o tramite consulente. Questo è il canale più comune per i clienti retail.",
+            "**Consulenti finanziari abilitati all'offerta fuori sede:** private banker e promotori. Questi professionisti possono proporre prodotti più complessi.",
+            "**Piattaforme di investimento online:** raramente disponibili al retail, più comune nel segmento professionale. Alcune piattaforme come EXANTE offrono accesso a prodotti strutturati per investitori qualificati."
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Modalità di Proposta"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il prodotto viene solitamente proposto in fase di collocamento primario, con materiale promozionale che enfatizza il rendimento atteso e la \"potenziale protezione\" del capitale. Raramente viene indicato con trasparenza il rischio reale di perdita o la composizione esatta della struttura derivativa. Il materiale promozionale può essere fuorviante, enfatizzando i benefici potenziali e minimizzando i rischi."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Prezzo di emissione quasi sempre pari a 100:** questo crea l'illusione che il prodotto valga esattamente il capitale investito.",
+            "**Commissioni di collocamento già incluse nel pricing:** queste commissioni riducono il valore reale del prodotto ma non sono sempre evidenti.",
+            "**Documentazione ridotta al solo KID (Key Information Document)** per la clientela retail: il KID può non rivelare tutti i dettagli tecnici e i rischi.",
+            "**Quotazione assente o poco liquida sul secondario:** questo limita la possibilità di uscire anticipatamente dal prodotto."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "**Nota operativa:** nella maggior parte dei casi l'investitore non ha la possibilità di negoziare il prezzo di acquisto, né di accedere a informazioni avanzate sul mark-to-market reale del titolo. La trasparenza è fortemente limitata, rendendo difficile una valutazione indipendente del prodotto."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Secondo lo studio di Anagol & Kim (2012), i consulenti finanziari tendono a vendere prodotti strutturati con commissioni più elevate, anche quando esistono alternative migliori. I prodotti con commissioni più alte sono spesso presentati come più \"esclusivi\" o \"sofisticati\", sfruttando la psicologia dell'investitore."
+        }
+      ]
+    },
+    {
+      "id": "esempi",
+      "title": "Esempi Reali e Strutture Note",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le obbligazioni strutturate assumono configurazioni anche molto differenti in termini di rischio, complessità e liquidità. Di seguito vengono presentati due esempi reali a fini educativi: uno con struttura prudente e trasparente, l'altro con caratteristiche speculative e rischio capitale significativo."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio 1: BNP Paribas – Inflation Linked EMTN 2028"
+        },
+        {
+          "type": "paragraph",
+          "text": "Obbligazione strutturata emessa da BNP Paribas, con capitale protetto e cedola variabile indicizzata all'inflazione europea (HICPxT). Quotata su mercato regolamentato, è caratterizzata da elevata trasparenza e accessibilità per investitori con orizzonte difensivo."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**ISIN:** FR0014001234 (esemplificativo)",
+            "**Emittente:** BNP Paribas (rating A+)",
+            "**Cedola:** Inflazione HICPxT + 1,25% annuo",
+            "**Capitale:** interamente garantito a scadenza",
+            "**Durata:** 5 anni",
+            "**Mercato:** EMTN regolamentato"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Si tratta di uno strumento con profilo di rischio contenuto, adatto a contesti inflattivi, indicizzato in modo semplice e trasparente, con payoff lineare e senza barriere o condizioni nascoste. Questo tipo di prodotto è più adatto agli investitori retail che cercano protezione dall'inflazione."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio 2: Equity Linked OTC – ISIN XS1290256202"
+        },
+        {
+          "type": "paragraph",
+          "text": "Obbligazione strutturata OTC disponibile su piattaforme come EXANTE. Il prodotto prevede una cedola potenziale elevata subordinata a condizioni multiple, con capitale a rischio e quotazione assente su mercati regolamentati."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**ISIN:** XS1290256202",
+            "**Cedola:** 10% annua subordinata al mantenimento di tutti i sottostanti sopra il 70% del valore iniziale",
+            "**Capitale:** parzialmente o totalmente a rischio in caso di violazione barriera",
+            "**Durata:** 3 anni",
+            "**Mercato:** OTC – strumento non quotato, liquidità su richiesta"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Questo strumento presenta un profilo di rischio elevato. L'assenza di trasparenza sulla formazione del prezzo, la presenza di barriere e la scarsa liquidità lo rendono inadeguato per portafogli retail senza copertura o analisi ex ante dei payoff. Questo tipo di prodotto richiede competenze tecniche avanzate per essere valutato correttamente."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Stoimenov & Wilkens (2005) ha analizzato le performance delle obbligazioni strutturate quotate. Hanno scoperto che molti prodotti hanno performance inferiori alle alternative tradizionali, anche quando le condizioni di mercato sono favorevoli. I prodotti più complessi tendono ad avere performance peggiori."
+        }
+      ]
+    },
+    {
+      "id": "strategie",
+      "title": "Strategie Operative e Ruolo in Portafoglio",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le obbligazioni strutturate possono essere utilizzate all'interno di portafogli diversificati con finalità diverse, a seconda del profilo di rischio dell'investitore e della struttura tecnica del singolo strumento. Di seguito sono delineati alcuni approcci operativi consolidati."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "1. Protezione Condizionata del Capitale"
+        },
+        {
+          "type": "paragraph",
+          "text": "Obbligazioni strutturate con capitale garantito o parzialmente protetto sono utilizzate per sostituire strumenti a reddito fisso in contesti di tassi bassi. Offrono esposizione a indici o panieri con una componente derivativa embedded, mantenendo un profilo difensivo. Tuttavia, è importante comprendere che la protezione è spesso condizionata e può non essere garantita in tutti gli scenari."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "2. Esposizione Tattica con Controllo del Rischio"
+        },
+        {
+          "type": "paragraph",
+          "text": "Strutturate con payoff lineare condizionato (es. cedole indicizzate o step-up) consentono di implementare strategie tattiche su determinati sottostanti (equity, commodity, inflazione) con meccanismi di barriera o trigger predeterminati. Sono spesso preferite a opzioni pure per motivi di fiscalità e semplicità d'uso. Tuttavia, questa semplicità può nascondere rischi significativi."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "3. Diversificazione rispetto a Strumenti Tradizionali"
+        },
+        {
+          "type": "paragraph",
+          "text": "L'uso combinato di obbligazioni strutturate con strumenti tradizionali consente di introdurre payoff non lineari nel portafoglio, migliorando la resilienza in scenari laterali o complessi. La diversificazione strutturale (non solo per asset class ma per funzione) è una tecnica utilizzata in portafogli istituzionali multi-strategy. Tuttavia, questa diversificazione richiede competenze tecniche avanzate."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "4. Integrazione in Logiche di Asset Allocation Dinamica"
+        },
+        {
+          "type": "paragraph",
+          "text": "In contesti risk-on/off, l'utilizzo di obbligazioni strutturate consente una modulazione attiva dell'esposizione senza intervenire direttamente su sottostanti volatili. Gli strumenti con cedola variabile condizionata possono comportarsi come \"opzioni sintetiche\" con effetto leva implicito ma più controllato. Tuttavia, questa leva implicita può amplificare le perdite in scenari avversi."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "5. Limiti di Utilizzo e Considerazioni Tecniche"
+        },
+        {
+          "type": "paragraph",
+          "text": "Questi strumenti richiedono un'analisi ex-ante approfondita (payoff mapping, sensitività agli scenari, rischio emittente, liquidabilità) e una comprensione puntuale dei termini contrattuali. L'impiego in portafogli retail è da valutare solo in presenza di copertura analitica e orizzonte d'investimento compatibile. La maggior parte degli investitori retail non ha le competenze necessarie per valutare correttamente questi prodotti."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Secondo lo studio di Das & Sundaram (2000), le obbligazioni strutturate possono essere utili per la diversificazione del portafoglio, ma solo se l'investitore comprende appieno i rischi e ha le competenze per valutare i payoff. I prodotti più complessi richiedono competenze tecniche avanzate che la maggior parte degli investitori retail non possiede."
+        }
+      ]
+    },
+    {
+      "id": "rischi-specifici",
+      "title": "Rischi Specifici e Avvertenze Operative",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le obbligazioni strutturate, pur appartenendo formalmente alla categoria del reddito fisso, incorporano componenti derivate che le espongono a una gamma di rischi sostanzialmente più ampia rispetto alle obbligazioni tradizionali. Di seguito una sintesi dei principali fattori di rischio."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "1. Rischio Emittente"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il rimborso del capitale e il pagamento delle cedole dipendono interamente dalla solidità dell'emittente. In caso di default, il payoff strutturato decade completamente. Non esiste alcuna protezione sistemica per prodotti emessi al di fuori dei mercati regolamentati. Anche se il sottostante performa bene, se l'emittente fallisce, l'investitore perde tutto."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "2. Rischio di Liquidità"
+        },
+        {
+          "type": "paragraph",
+          "text": "Molte strutturate non sono negoziate su mercati secondari liquidi. L'uscita anticipata può avvenire solo tramite controparte primaria (emittente o desk) a condizioni sfavorevoli. Il prezzo reale può divergere significativamente dal valore teorico in assenza di market maker. Questo può rendere difficile o costoso uscire dal prodotto prima della scadenza."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "3. Complessità del Payoff"
+        },
+        {
+          "type": "paragraph",
+          "text": "I meccanismi di calcolo del rendimento possono essere non lineari, con presenza di barriere, trigger condizionati, cedole digitali, step-down o reverse memory. L'assenza di strumenti pubblici per la modellazione del payoff rende difficile la valutazione del rischio reale da parte dell'investitore retail. La complessità può nascondere rischi significativi."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "4. Rischio di Mercato Composito"
+        },
+        {
+          "type": "paragraph",
+          "text": "Le strutturate espongono a una combinazione di rischi: tasso d'interesse, spread, volatilità implicita, correlazione tra sottostanti, andamento valutario. Questi rischi possono agire in modo combinato e amplificato rispetto agli strumenti classici. La correlazione tra questi rischi può creare effetti non lineari difficili da prevedere."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "5. Assenza di Copertura Garantita"
+        },
+        {
+          "type": "paragraph",
+          "text": "La presenza di una componente derivativa esclude la possibilità di accesso a meccanismi pubblici di garanzia (es. fondo interbancario di tutela dei depositi) in caso di insolvenza o default dell'emittente. Anche il valore di rimborso può non corrispondere al valore nominale. Questo significa che l'investitore non ha le stesse protezioni delle obbligazioni tradizionali."
+        },
+        {
+          "type": "paragraph",
+          "text": "Prima di inserire obbligazioni strutturate in portafoglio, è essenziale effettuare simulazioni multi-scenario, analisi della documentazione contrattuale (term sheet e final terms), e valutazioni sulla tenuta in condizioni di mercato avverso."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Fender & Kiff (2004) ha identificato che le obbligazioni strutturate sono particolarmente vulnerabili a shock di liquidità e volatilità. Durante le crisi finanziarie, questi prodotti possono subire perdite significative anche quando i sottostanti non si muovono molto, a causa dell'aumento della volatilità implicita e della riduzione della liquidità."
+        }
+      ]
+    },
+    {
+      "id": "requisiti",
+      "title": "Requisiti Minimi e Criteri di Valutazione",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "L'uso consapevole delle obbligazioni strutturate richiede competenze specifiche, accesso a dati tecnici completi e strumenti analitici adeguati. Di seguito sono sintetizzati i requisiti minimi per poter selezionare e valutare correttamente uno strumento di questa categoria."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "1. Lettura Tecnica della Documentazione"
+        },
+        {
+          "type": "paragraph",
+          "text": "È indispensabile saper leggere il **term sheet** e i **final terms** del prodotto. In particolare:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Struttura delle cedole** (fissa, digitale, condizionata, step-up, memory): ogni tipo di cedola ha implicazioni diverse sul rischio e sul rendimento.",
+            "**Eventuali barriere** (knock-in / knock-out, osservazione continua o discreta): le barriere determinano quando il capitale è a rischio.",
+            "**Condizioni di rimborso anticipato** (callability, trigger autocall): alcuni prodotti possono essere rimborsati anticipatamente dall'emittente.",
+            "**Valute e mercati sottostanti:** la valuta di denominazione e i sottostanti determinano i rischi di cambio e di mercato.",
+            "**Rating e rischio emittente:** il rating dell'emittente determina il rischio di default."
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "2. Simulazione di Scenari Realistici"
+        },
+        {
+          "type": "paragraph",
+          "text": "Una valutazione efficace richiede la costruzione di almeno tre scenari:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Scenario neutro** (lieve variazione dei sottostanti): questo scenario mostra il comportamento normale del prodotto.",
+            "**Scenario negativo** (viola le barriere): questo scenario mostra cosa succede se le condizioni peggiori si verificano.",
+            "**Scenario positivo** (trigger raggiunti, payoff massimo): questo scenario mostra il potenziale massimo del prodotto."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Ogni scenario va verificato in termini di **payoff netto a scadenza** e rischio implicito di perdita di capitale. La probabilità di ciascuno scenario dovrebbe essere stimata in base alle condizioni di mercato attuali."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "3. Strumenti Minimi Richiesti"
+        },
+        {
+          "type": "paragraph",
+          "text": "Non è possibile valutare correttamente un'obbligazione strutturata senza:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Accesso a dati storici e forward dei sottostanti** (es. Bloomberg, Refinitiv, TradingView Pro): questi dati sono necessari per simulare i payoff.",
+            "**Modello di pricing base** (Excel con payoff mapping o calcolatore strutturato): un modello permette di calcolare il valore teorico del prodotto.",
+            "**Calcolo di IRR, DV01 e sensitività** (almeno simulata manualmente): questi indicatori permettono di comprendere la sensibilità del prodotto ai cambiamenti di mercato."
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "4. Compatibilità con l'Orizzonte e Profilo Rischio"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il profilo del prodotto va confrontato con:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Orizzonte temporale dell'investitore:** le obbligazioni strutturate sono generalmente a medio-lungo termine.",
+            "**Tolleranza alle perdite** (VaR e Maximum Drawdown atteso): l'investitore deve essere consapevole del rischio di perdita del capitale.",
+            "**Strategia complessiva di portafoglio** (core/satellite, income, decorrelazione): il prodotto deve essere coerente con la strategia complessiva."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "L'uso inconsapevole o imitativo di questi strumenti – ad esempio sulla base del solo rendimento promesso – è una delle cause più frequenti di perdita patrimoniale permanente nel comparto retail."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Secondo lo studio di Wallmeier (2000), la valutazione delle obbligazioni strutturate richiede competenze in matematica finanziaria, pricing delle opzioni, e analisi del rischio. La maggior parte degli investitori retail non possiede queste competenze, rendendo difficile una valutazione indipendente dei prodotti."
+        }
+      ]
+    },
+    {
+      "id": "canali",
+      "title": "Canali di Acquisto e Accesso Operativo",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "L'acquisto di obbligazioni strutturate può avvenire attraverso diversi canali, a seconda della tipologia di prodotto, della sua quotazione e del livello di accesso dell'investitore. È essenziale distinguere tra strumenti quotati su mercati regolamentati e strutturati OTC su richiesta."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "1. Broker Professionali (Accesso Diretto e OTC)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Alcune piattaforme forniscono accesso diretto a obbligazioni strutturate già emesse o consentono la negoziazione OTC con pricing dedicato. Tra i broker più avanzati in Europa figura **EXANTE**, con un'infrastruttura professionale per strumenti fixed income strutturati."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Piattaforma multi-asset con accesso a oltre 50 mercati:** questo permette di confrontare diversi prodotti.",
+            "**Disponibilità di strutturate OTC non quotate ma visibili:** alcuni prodotti sono disponibili solo su richiesta.",
+            "**Esposizione trasparente su parametri tecnici** (barriere, trigger, pricing): la trasparenza è essenziale per una valutazione corretta.",
+            "**Account con margini, esposizione in tempo reale e gestione rischio:** questi strumenti permettono di monitorare il rischio in tempo reale."
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "2. Banche Emittenti e Collocatori Primari"
+        },
+        {
+          "type": "paragraph",
+          "text": "Le principali emissioni di obbligazioni strutturate avvengono tramite banche d'investimento e istituti primari (es. BNP Paribas, Société Générale, Barclays, Intesa Sanpaolo). L'accesso avviene:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Tramite home banking evoluti** (solo strutture retail semplificate): molti prodotti sono disponibili solo tramite la banca emittente.",
+            "**Tramite consulente bancario** (collocamento periodico, commissioni implicite elevate): i consulenti possono proporre prodotti con commissioni elevate.",
+            "**In alcuni casi tramite app e strumenti automatizzati** (es. Intesa Investrading): alcune banche offrono accesso tramite app mobile."
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "3. Piattaforme Istituzionali con Accesso Limitato"
+        },
+        {
+          "type": "paragraph",
+          "text": "Alcune piattaforme (es. Bloomberg Terminal, Allfunds, MarketAxess) offrono accesso integrato a prodotti strutturati, ma richiedono status di investitore istituzionale, licenze operative e capitale minimo per l'accesso. Queste piattaforme sono generalmente riservate a investitori professionali."
+        },
+        {
+          "type": "paragraph",
+          "text": "È raccomandabile confrontare sempre il prezzo di acquisto con il fair value teorico, verificare la liquidabilità reale e leggere attentamente i documenti precontrattuali forniti dal broker o dall'emittente."
+        }
+      ]
+    },
+    {
+      "id": "disclaimer",
+      "title": "Disclaimer e Note Legali",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le informazioni contenute in questo report hanno finalità esclusivamente educative e non costituiscono in alcun modo sollecitazione al pubblico risparmio, consulenza personalizzata, raccomandazione operativa o invito all'investimento."
+        },
+        {
+          "type": "paragraph",
+          "text": "Tradelia AI non è un intermediario abilitato alla prestazione di servizi di investimento. I contenuti presenti nel documento derivano da fonti ritenute attendibili, ma non si garantisce la completezza, correttezza o attualità dei dati riportati. Le analisi sono frutto di un'elaborazione autonoma a carattere informativo."
+        },
+        {
+          "type": "paragraph",
+          "text": "Gli strumenti finanziari descritti – in particolare le obbligazioni strutturate e i derivati OTC – sono complessi, ad alto rischio, e possono generare perdite superiori al capitale investito. È fondamentale consultare documentazione ufficiale, prospetti informativi e personale qualificato prima di ogni decisione operativa."
+        },
+        {
+          "type": "paragraph",
+          "text": "L'utente rimane l'unico responsabile delle proprie decisioni finanziarie. La consultazione di questo materiale implica l'accettazione integrale del presente disclaimer."
+        }
+      ]
+    }
+  ]
+}

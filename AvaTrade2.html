@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tradelia – Richiesta Report AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="icon" href="/favicon.png" type="image/png" />
+
+ <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Mostra il popup cookie solo se NON è stato già accettato
+    if (!localStorage.getItem('tradeliaConsent')) {
+      setTimeout(() => {
+        const popup = document.getElementById("cookie-popup");
+        if (popup) popup.style.display = "flex";
+      }, 1000);
+    }
+
+    const form = document.querySelector("form");
+    form.addEventListener("submit", function (e) {
+      const requiredFields = ["asset", "categoria", "timeframe", "focus", "nome", "contatto", "metodo"];
+      let valid = true;
+      requiredFields.forEach(id => {
+        const field = document.getElementById(id);
+        const label = document.querySelector(`label[for='${id}']`);
+        if (!field.value) {
+          valid = false;
+          label.innerHTML = label.innerHTML.replace(/✅/g, '').replace(/<span.*?<\/span>/, '<span class="text-red-500">*</span>');
+        } else {
+          label.innerHTML = label.innerHTML.replace(/<span.*?<\/span>/, '✅');
+        }
+      });
+      if (!valid) {
+        e.preventDefault();
+        alert("Compila tutti i campi obbligatori contrassegnati con *");
+      } else {
+        setTimeout(() => {
+          document.getElementById("form-response").classList.remove("hidden");
+        }, 300);
+      }
+    });
+
+    const phrases = [
+      "AI per trader moderni",
+      "Strumenti gratuiti, zero fuffa",
+      "Operatività solo in ambiente demo"
+    ];
+    let current = 0;
+    const typingElement = document.getElementById("typing-text");
+
+    function typePhrase() {
+      const phrase = phrases[current];
+      typingElement.textContent = "";
+      [...phrase].forEach((char, i) => {
+        setTimeout(() => {
+          typingElement.textContent += char;
+        }, i * 50);
+      });
+      setTimeout(() => {
+        current = (current + 1) % phrases.length;
+        typePhrase();
+      }, phrase.length * 50 + 2000);
+    }
+    typePhrase();
+  });
+
+  function apriSezioneLegale(id) {
+    const modal = document.createElement("div");
+    modal.className = "modal animate-fade-in";
+    modal.style.display = "flex";
+    modal.innerHTML = `
+      <div class="modal-content">
+        <div class="modal-close hover:text-red-500 transition" onclick="this.parentElement.parentElement.remove()">✕</div>
+        <h3 class="text-lg font-semibold mb-2">${id === 'section-tc' ? 'Termini e Condizioni' : 'Privacy Policy'}</h3>
+        <p class="text-sm text-gray-800">
+          ${
+            id === 'section-tc'
+              ? "Questo progetto è destinato solo a scopo educativo. Nessuna consulenza, nessun invito all'investimento. Tutte le operazioni simulate in ambiente demo."
+              : "Tradelia non raccoglie dati personali, non utilizza cookie di profilazione e non traccia in alcun modo l'utente. Progetto open per educazione finanziaria."
+          }
+        </p>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+
+  // Salva consenso nel localStorage quando l'utente clicca "Ho capito"
+  function chiudiPopupCookie() {
+    localStorage.setItem('tradeliaConsent', 'true');
+    const popup = document.getElementById("cookie-popup");
+    if (popup) popup.style.display = "none";
+  }
+</script>
+
+    
+      <style>
+/* Scrollbar elegante, personalizzata, istituzionale */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+  border-radius: 100vh;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(80, 160, 200, 0.4); /* azzurro-grigio semi */
+  border-radius: 100vh;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(80, 160, 200, 0.6);
+  box-shadow: inset 0 0 6px rgba(80, 160, 200, 0.4);
+}
+
+/* Firefox support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(80, 160, 200, 0.5) #e5e7eb;
+}
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: #f1f5f9;
+        background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+        background-repeat: repeat;
+        background-size: 280px;
+      }
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 50;
+        animation: fadeIn 0.4s ease;
+      }
+      .modal-content {
+        background: #f8fafc;
+        max-width: 480px;
+        padding: 28px;
+        border-radius: 16px;
+        font-size: 15px;
+        line-height: 1.7;
+        color: #0f172a;
+        position: relative;
+        text-align: center;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
+        border: 1px solid #cbd5e1;
+      }
+      .modal-close {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        cursor: pointer;
+        font-size: 18px;
+        color: #334155;
+      }
+      @keyframes fadeIn {
+        from {opacity: 0; transform: scale(0.95);}
+        to {opacity: 1; transform: scale(1);}
+      }
+    </style>
+  </head>
+  <body class="text-gray-900">
+<header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-2 flex justify-between items-center mb-6">
+  <a href="index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-sky-900 hover:opacity-90 transition">
+    <span class="text-slate-900">TRADELIA</span><span class="text-blue-600 animate-pulse">•AI</span>
+  </a>
+</header>
+    <div class="my-12 sm:my-16"></div>
+<section class="max-w-6xl mx-auto px-6 py-12 bg-white rounded-2xl shadow-lg font-inter">
+  <div class="text-center mb-12">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/AvaTrade.png" alt="AvaTrade Logo" class="mx-auto w-48 h-auto mb-4" />
+    <h2 class="text-3xl font-bold text-[#003366]">AvaTrade</h2>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 text-sm text-gray-700">
+    <div class="flex gap-4">
+      <div class="text-blue-700 mt-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3z" />
+          <path d="M12 22s8-4.5 8-10a8 8 0 10-16 0c0 5.5 8 10 8 10z" />
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[#003366]">Sede Legale</div>
+        Five Lamps Place, Amiens Street, Dublino 1, Irlanda
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <div class="text-blue-700 mt-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M9 12h6m2 0a2 2 0 110-4 2 2 0 010 4zm-8 0a2 2 0 110-4 2 2 0 010 4z" />
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[#003366]">Licenza Principale</div>
+        Banca Centrale d’Irlanda - Licenza n. C53877
+      </div>
+    </div>
+
+    <div class="flex gap-4 col-span-1 sm:col-span-2">
+      <div class="text-blue-700 mt-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 2a10 10 0 000 20 10 10 0 000-20zM2 12h20M12 2v20" />
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[#003366]">Altre Regolamentazioni</div>
+        <ul class="list-disc list-inside text-sm">
+          <li><strong>ASIC (Australia):</strong> Licenza 406684</li>
+          <li><strong>FSCA (Sudafrica):</strong> Licenza 45984</li>
+          <li><strong>FSA (Giappone):</strong> Registrazione n. 1662</li>
+          <li><strong>ADGM (Abu Dhabi):</strong> Licenza n. 190018</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <div class="text-blue-700 mt-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 4v16m8-8H4" />
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[#003366]">Lingue Supportate</div>
+        Inglese, Italiano, Spagnolo, Tedesco, Francese, Arabo, Cinese, Portoghese
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <div class="text-blue-700 mt-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 20l-8-16h16l-8 16z" />
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[#003366]">Trustpilot</div>
+        ⭐ 4.3/5 su oltre 10.000 recensioni
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <div class="text-blue-700 mt-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M4 7V6a2 2 0 012-2h4m4 0h4a2 2 0 012 2v1M4 7h16M4 7v11a2 2 0 002 2h12a2 2 0 002-2V7" />
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[#003366]">Capitale Sociale</div>
+        Privato, fondato nel 2006
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <div class="text-blue-700 mt-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M17 20h5v-2a4 4 0 00-4-4h-1m-6 6H7v-2a4 4 0 014-4h1m4-6a4 4 0 110-8 4 4 0 010 8z" />
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[#003366]">Utenti Registrati</div>
+        Oltre 300.000 clienti globali
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <div class="text-blue-700 mt-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M8 7V3m8 4V3m-9 8h10m-5 4h.01M4 21h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[#003366]">Anni di Attività</div>
+        Dal 2006 (19 anni di esperienza)
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <div class="text-blue-700 mt-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V13a6 6 0 00-12 0v1.159c0 .538-.214 1.055-.595 1.437L4 17h5m6 0v5a1 1 0 001 1h1a1 1 0 001-1v-5" />
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[#003366]">Premi e Riconoscimenti</div>
+        Best Broker 2023, Best Trading App 2022
+      </div>
+    </div>
+  </div>
+</section>
+    <div class="my-12 sm:my-16"></div>
+<section class="max-w-3xl mx-auto px-6 py-12 bg-gray-50 rounded-2xl shadow-md">
+  <h2 class="text-2xl sm:text-3xl font-bold text-center text-[#1D4A8C] mb-8">Contatti AvaTrade</h2>
+
+  <div class="grid gap-6 text-sm text-gray-700">
+    <!-- Email -->
+    <div class="flex items-start gap-4 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition">
+      <svg class="w-6 h-6 text-[#1D4A8C]" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm1.5 2h9v2h-9V8zm0 4h9v2h-9v-2z"/></svg>
+      <div>
+        <div class="font-semibold text-sm text-gray-900">Email Supporto</div>
+        <div>support@avatrade.com</div>
+      </div>
+    </div>
+
+    <!-- Telefono -->
+    <div class="flex items-start gap-4 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition">
+      <svg class="w-6 h-6 text-[#1D4A8C]" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C10.07 21 3 13.93 3 5c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.24.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+      <div>
+        <div class="font-semibold text-sm text-gray-900">Telefono Globale</div>
+        <div>+353 1 513 7861 (Irlanda) | +1 212 941 9609 (USA)</div>
+      </div>
+    </div>
+
+    <!-- Live Chat -->
+    <div class="flex items-start gap-4 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition">
+      <svg class="w-6 h-6 text-[#1D4A8C]" fill="currentColor" viewBox="0 0 24 24"><path d="M21 6h-2v9H7v2h10l4 4V6z"/></svg>
+      <div>
+        <div class="font-semibold text-sm text-gray-900">Live Chat</div>
+        <div>Disponibile 24/5 sul sito ufficiale AvaTrade</div>
+      </div>
+    </div>
+
+    <!-- Sede -->
+    <div class="flex items-start gap-4 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition">
+      <svg class="w-6 h-6 text-[#1D4A8C]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l7 6v12h-4v-6H9v6H5V8l7-6z"/></svg>
+      <div>
+        <div class="font-semibold text-sm text-gray-900">Sede Legale</div>
+        <div>Five Lamps Place, Amiens Street, Dublino 1, Irlanda</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-xs text-gray-400 text-center mt-6">
+    Consulta sempre il sito ufficiale per i contatti aggiornati e specifici per il tuo Paese.
+  </div>
+</section>
+    <div class="my-12 sm:my-16"></div>
+<section class="max-w-3xl mx-auto px-6 py-10 bg-gray-50 rounded-xl shadow-md">
+  <h2 class="text-2xl sm:text-3xl font-semibold text-center text-[#1D4A8C] mb-8">
+    AvaTrade: Per Chi È Consigliato?
+  </h2>
+
+  <div class="space-y-5">
+    <!-- Trader Intermedi e Avanzati -->
+    <div class="flex items-start gap-4 bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition">
+      <svg class="w-7 h-7 text-[#1D4A8C]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a4 4 0 014-4h4"/>
+      </svg>
+      <div class="flex-1">
+        <div class="font-semibold text-gray-900 mb-1">Trader Intermedi e Avanzati</div>
+        <p class="text-sm text-gray-600">
+          Ampio catalogo CFD (forex, azioni, ETF, crypto), spread ok, leva alta extra-UE.
+        </p>
+        <div class="h-2 bg-gray-200 rounded-full mt-3">
+          <div class="h-2 bg-green-600 rounded-full" style="width: 85%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trader Algoritmici e Copy Trader -->
+    <div class="flex items-start gap-4 bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition">
+      <svg class="w-7 h-7 text-[#1D4A8C]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+      </svg>
+      <div class="flex-1">
+        <div class="font-semibold text-gray-900 mb-1">Trader Algoritmici e Copy Trader</div>
+        <p class="text-sm text-gray-600">
+          MT4/MT5, DupliTrade, ZuluTrade; bot e automazioni supportate.
+        </p>
+        <div class="h-2 bg-gray-200 rounded-full mt-3">
+          <div class="h-2 bg-green-600 rounded-full" style="width: 80%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Principianti -->
+    <div class="flex items-start gap-4 bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition">
+      <svg class="w-7 h-7 text-[#1D4A8C]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0v7"/>
+      </svg>
+      <div class="flex-1">
+        <div class="font-semibold text-gray-900 mb-1">Principianti</div>
+        <p class="text-sm text-gray-600">
+          Materiale educativo buono, demo disponibile, ma serve studio sui CFD.
+        </p>
+        <div class="h-2 bg-gray-200 rounded-full mt-3">
+          <div class="h-2 bg-yellow-500 rounded-full" style="width: 65%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Investitori Passivi -->
+    <div class="flex items-start gap-4 bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition">
+      <svg class="w-7 h-7 text-[#1D4A8C]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h4v11H3zM17 3h4v18h-4zM10 14h4v7h-4z"/>
+      </svg>
+      <div class="flex-1">
+        <div class="font-semibold text-gray-900 mb-1">Investitori Passivi e Lungo Termine</div>
+        <p class="text-sm text-gray-600">
+          Non indicato: solo CFD, nessun strumento buy&hold o PAC.
+        </p>
+        <div class="h-2 bg-gray-200 rounded-full mt-3">
+          <div class="h-2 bg-red-500 rounded-full" style="width: 20%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+    <div class="my-12 sm:my-16"></div>
+<section class="max-w-5xl mx-auto px-6 py-12 bg-gray-50 rounded-xl shadow-md">
+  <h2 class="text-2xl sm:text-3xl font-semibold text-center text-[#1D4A8C] mb-10">
+    Tipologia di Accesso ai Mercati
+  </h2>
+
+  <div class="grid gap-6">
+    
+    <!-- Market Maker -->
+    <div class="flex gap-4 items-start bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition">
+      <svg class="w-7 h-7 text-[#1D4A8C]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M5 4v16h14V4H5zm12 2v2H7V6h10zM7 18v-8h10v8H7z"/>
+      </svg>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-1">Market Maker</h3>
+        <p class="text-sm text-gray-600">
+          AvaTrade opera come market maker, offrendo liquidità interna ai trader retail, con spread fissi o variabili e senza accesso diretto interbancario.
+        </p>
+      </div>
+    </div>
+
+    <!-- Conti Spread Fissi -->
+    <div class="flex gap-4 items-start bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition">
+      <svg class="w-7 h-7 text-[#1D4A8C]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v2H8V8zm0 4h8v2H8v-2z"/>
+      </svg>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-1">Conti con Spread Fissi</h3>
+        <p class="text-sm text-gray-600">
+          AvaTrade offre spread fissi su molte coppie forex, ideali per chi vuole evitare sorprese in condizioni di mercato volatili.
+        </p>
+      </div>
+    </div>
+
+    <!-- Copy Trading -->
+    <div class="flex gap-4 items-start bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition">
+      <svg class="w-7 h-7 text-[#1D4A8C]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2L2 7v13h20V7L12 2zm0 2.18l8 4V9H4V8.18l8-4zm0 16.64c-2.58 0-8-1.28-8-3.82V11h16v6c0 2.54-5.42 3.82-8 3.82z"/>
+      </svg>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-1">Copy Trading & Social Trading</h3>
+        <p class="text-sm text-gray-600">
+          Integrato con piattaforme come DupliTrade e ZuluTrade, permette ai clienti di replicare strategie di trader esperti in modo automatico.
+        </p>
+      </div>
+    </div>
+
+    <!-- Islamic Accounts -->
+    <div class="flex gap-4 items-start bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition">
+      <svg class="w-7 h-7 text-[#1D4A8C]" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M3 5h18v2H3V5zm0 4h18v2H3V9zm0 4h12v2H3v-2zm0 4h12v2H3v-2z"/>
+      </svg>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-1">Conti Islamic Swap-Free</h3>
+        <p class="text-sm text-gray-600">
+          Per clienti che seguono i principi della finanza islamica, AvaTrade offre conti privi di interessi overnight, con una commissione fissa.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="text-xs text-gray-400 text-center mt-10">
+    Dati aggiornati al 2025. Consulta sempre il sito ufficiale per conferme e dettagli aggiornati.
+  </p>
+</section>
+<section aria-label="Strategie consigliate su AvaTrade" style="max-width: 1200px; margin: 60px auto; padding: 32px; font-family: 'Inter', Arial, sans-serif; background-color: #f9fafb; border-radius: 16px; box-shadow: 0 12px 40px rgba(0,0,0,0.06); overflow-x: auto;">
+  <h2 style="font-size: 26px; font-weight: 700; text-align: center; margin-bottom: 36px; color: #1D4A8C;">Strategie Raccomandate su AvaTrade</h2>
+
+  <div style="display: flex; gap: 28px; scroll-snap-type: x mandatory; overflow-x: auto; padding-bottom: 24px;">
+
+    <!-- Card: Copy Trading -->
+    <div style="flex: 0 0 300px; background: linear-gradient(to bottom, #ffffff, #f1f5f9); border-radius: 20px; padding: 24px; box-shadow: 0 8px 30px rgba(0,0,0,0.07); scroll-snap-align: start; position: relative;">
+      <div style="height: 6px; width: 60px; background: #16A34A; border-radius: 999px; position: absolute; top: -3px; left: 24px;"></div>
+      <h3 style="font-weight: 700; font-size: 18px; margin-bottom: 16px; color: #1E3A8A; text-align: center;">Copy Trading</h3>
+      <ul style="list-style: none; padding: 0; color: #4B5563; font-size: 15px; line-height: 1.6;">
+        <li><strong>Rischio:</strong> Medio (30–35%)</li>
+        <li><strong>Guadagni:</strong> +8% / +20% annuo</li>
+        <li><strong>Compatibilità:</strong> ZuluTrade, DupliTrade</li>
+      </ul>
+      <p style="font-size: 13px; color: #6B7280; margin-top: 16px; text-align: center;">Ideale per chi vuole seguire trader esperti.</p>
+    </div>
+
+    <!-- Card: Swing Trading -->
+    <div style="flex: 0 0 300px; background: linear-gradient(to bottom, #ffffff, #f1f5f9); border-radius: 20px; padding: 24px; box-shadow: 0 8px 30px rgba(0,0,0,0.07); scroll-snap-align: start; position: relative;">
+      <div style="height: 6px; width: 60px; background: #16A34A; border-radius: 999px; position: absolute; top: -3px; left: 24px;"></div>
+      <h3 style="font-weight: 700; font-size: 18px; margin-bottom: 16px; color: #1E3A8A; text-align: center;">Swing Trading</h3>
+      <ul style="list-style: none; padding: 0; color: #4B5563; font-size: 15px; line-height: 1.6;">
+        <li><strong>Rischio:</strong> Medio (30%)</li>
+        <li><strong>Guadagni:</strong> +10% / +18% annuo</li>
+        <li><strong>Compatibilità:</strong> MT4, MT5, WebTrader</li>
+      </ul>
+      <p style="font-size: 13px; color: #6B7280; margin-top: 16px; text-align: center;">Per trader pazienti e disciplinati.</p>
+    </div>
+
+    <!-- Card: Trading Algoritmico -->
+    <div style="flex: 0 0 300px; background: linear-gradient(to bottom, #ffffff, #f1f5f9); border-radius: 20px; padding: 24px; box-shadow: 0 8px 30px rgba(0,0,0,0.07); scroll-snap-align: start; position: relative;">
+      <div style="height: 6px; width: 60px; background: #F59E0B; border-radius: 999px; position: absolute; top: -3px; left: 24px;"></div>
+      <h3 style="font-weight: 700; font-size: 18px; margin-bottom: 16px; color: #1E3A8A; text-align: center;">Trading Algoritmico</h3>
+      <ul style="list-style: none; padding: 0; color: #4B5563; font-size: 15px; line-height: 1.6;">
+        <li><strong>Rischio:</strong> Medio (25–30%)</li>
+        <li><strong>Guadagni:</strong> +8% / +15% annuo</li>
+        <li><strong>Compatibilità:</strong> MT4/MT5, Bot, Plugin</li>
+      </ul>
+      <p style="font-size: 13px; color: #6B7280; margin-top: 16px; text-align: center;">Automazione moderata, non pro.</p>
+    </div>
+
+    <!-- Card: Day Trading -->
+    <div style="flex: 0 0 300px; background: linear-gradient(to bottom, #ffffff, #f1f5f9); border-radius: 20px; padding: 24px; box-shadow: 0 8px 30px rgba(0,0,0,0.07); scroll-snap-align: start; position: relative;">
+      <div style="height: 6px; width: 60px; background: #F59E0B; border-radius: 999px; position: absolute; top: -3px; left: 24px;"></div>
+      <h3 style="font-weight: 700; font-size: 18px; margin-bottom: 16px; color: #1E3A8A; text-align: center;">Day Trading</h3>
+      <ul style="list-style: none; padding: 0; color: #4B5563; font-size: 15px; line-height: 1.6;">
+        <li><strong>Rischio:</strong> Medio (30–35%)</li>
+        <li><strong>Guadagni:</strong> +8% / +15% annuo</li>
+        <li><strong>Compatibilità:</strong> Spread buoni, non da scalping</li>
+      </ul>
+      <p style="font-size: 13px; color: #6B7280; margin-top: 16px; text-align: center;">Attenzione a costi e orari.</p>
+    </div>
+
+  </div>
+
+  <div style="font-size: 12px; color: #9CA3AF; text-align: center; margin-top: 30px;">
+    Fonti: AvaTrade, regolatori, analisi indipendenti (2025).
+  </div>
+</section>
+<div class="my-12 sm:my-16"></div>
+    <section aria-label="Sicurezza dei Fondi e Regolamentazioni AvaTrade" style="max-width: 1200px; margin: 60px auto; padding: 32px; font-family: 'Inter', Arial, sans-serif; background-color: #ffffff; border-radius: 16px; box-shadow: 0 12px 40px rgba(0,0,0,0.06);">
+  <h2 style="font-size: 26px; font-weight: 700; text-align: center; margin-bottom: 36px; color: #1D4A8C;">Sicurezza dei Fondi e Regolamentazioni</h2>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 28px; justify-content: center;">
+    
+    <!-- Card -->
+    <div style="flex: 1 1 280px; background: #f0f6fc; border-radius: 16px; padding: 24px; box-shadow: 0 6px 20px rgba(0,0,0,0.04); transition: transform 0.2s ease;">
+      <h3 style="font-size: 18px; font-weight: 700; color: #1D4A8C; margin-bottom: 14px;">Segregazione dei Fondi</h3>
+      <p style="font-size: 15px; color: #4B5563;">I fondi dei clienti sono conservati in conti separati presso istituti bancari di primo livello, garantendo protezione in caso di problemi societari.</p>
+    </div>
+
+    <div style="flex: 1 1 280px; background: #f0f6fc; border-radius: 16px; padding: 24px; box-shadow: 0 6px 20px rgba(0,0,0,0.04); transition: transform 0.2s ease;">
+      <h3 style="font-size: 18px; font-weight: 700; color: #1D4A8C; margin-bottom: 14px;">Regolamentazioni Globali</h3>
+      <p style="font-size: 15px; color: #4B5563;">AvaTrade è regolamentata da Banca Centrale d’Irlanda, ASIC (Australia), FSCA (Sudafrica), FSA (Giappone), ADGM (Abu Dhabi) e altri enti, garantendo solidità internazionale.</p>
+    </div>
+
+    <div style="flex: 1 1 280px; background: #f0f6fc; border-radius: 16px; padding: 24px; box-shadow: 0 6px 20px rgba(0,0,0,0.04); transition: transform 0.2s ease;">
+      <h3 style="font-size: 18px; font-weight: 700; color: #1D4A8C; margin-bottom: 14px;">Fondi di Compensazione</h3>
+      <p style="font-size: 15px; color: #4B5563;">I clienti europei (Irlanda) hanno diritto al Fondo di Compensazione fino a €20.000, in linea con le normative UE MiFID II.</p>
+    </div>
+
+    <div style="flex: 1 1 280px; background: #f0f6fc; border-radius: 16px; padding: 24px; box-shadow: 0 6px 20px rgba(0,0,0,0.04); transition: transform 0.2s ease;">
+      <h3 style="font-size: 18px; font-weight: 700; color: #1D4A8C; margin-bottom: 14px;">Protezione del Saldo Negativo</h3>
+      <p style="font-size: 15px; color: #4B5563;">AvaTrade garantisce protezione contro i saldi negativi per i clienti retail europei, evitando perdite oltre il capitale investito.</p>
+    </div>
+
+  </div>
+
+  <div style="text-align: center; margin-top: 36px;">
+    <span style="display: inline-block; background: #1D4A8C; color: #ffffff; padding: 10px 20px; border-radius: 999px; font-weight: 600; font-size: 14px;">
+      ✔ Fondi Protetti e Regolamentazioni Verificate
+    </span>
+  </div>
+</section>
+<div class="my-12 sm:my-16"></div>
+    <section class="max-w-6xl mx-auto my-12 px-4 py-6 bg-gray-50 rounded-xl shadow-md">
+  <h2 class="text-2xl font-bold text-center text-blue-800 mb-8">Costi e Commissioni AvaTrade</h2>
+
+  <!-- Desktop Table -->
+  <div class="hidden md:block overflow-x-auto">
+    <table class="w-full text-sm text-left border-collapse">
+      <thead class="bg-blue-800 text-white">
+        <tr>
+          <th class="py-3 px-4 font-semibold">Strumento</th>
+          <th class="py-3 px-4 font-semibold">Costo</th>
+          <th class="py-3 px-4 font-semibold">Dettaglio</th>
+          <th class="py-3 px-4 font-semibold">Note</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-800">
+        <tr class="border-b hover:bg-gray-100"><td class="py-3 px-4">Deposito Minimo</td><td class="py-3 px-4 text-green-600 font-medium">$100 carta / $500 bonifico</td><td class="py-3 px-4">Importo iniziale richiesto</td><td class="py-3 px-4">Varia in base al metodo</td></tr>
+        <tr class="border-b hover:bg-gray-100"><td class="py-3 px-4">Forex</td><td class="py-3 px-4 text-yellow-600 font-medium">da 0.9 pip</td><td class="py-3 px-4">Spread minimo EUR/USD</td><td class="py-3 px-4">Nessuna commissione</td></tr>
+        <tr class="border-b hover:bg-gray-100"><td class="py-3 px-4">Indici CFD</td><td class="py-3 px-4 text-yellow-600 font-medium">da 0.5–1.0 punti</td><td class="py-3 px-4">US500, NAS100, DAX40</td><td class="py-3 px-4">Spread incluso</td></tr>
+        <tr class="border-b hover:bg-gray-100"><td class="py-3 px-4">Materie Prime</td><td class="py-3 px-4 text-green-600 font-medium">da 0.03 punti</td><td class="py-3 px-4">Oro, Petrolio, Gas</td><td class="py-3 px-4">Spread incluso</td></tr>
+        <tr class="border-b hover:bg-gray-100"><td class="py-3 px-4">Criptovalute CFD</td><td class="py-3 px-4 text-red-600 font-medium">da 0.25% spread</td><td class="py-3 px-4">BTC/USD, Crypto10 Index</td><td class="py-3 px-4">Solo CFD</td></tr>
+        <tr class="border-b hover:bg-gray-100"><td class="py-3 px-4">Azioni CFD</td><td class="py-3 px-4 text-yellow-600 font-medium">da 0.13% per trade</td><td class="py-3 px-4">USA, EU, AU</td><td class="py-3 px-4">Solo commissione</td></tr>
+        <tr class="border-b hover:bg-gray-100"><td class="py-3 px-4">Swap Overnight</td><td class="py-3 px-4 text-yellow-600 font-medium">variabile + markup</td><td class="py-3 px-4">Forex & CFD</td><td class="py-3 px-4">Applicato dopo chiusura</td></tr>
+        <tr class="border-b hover:bg-gray-100"><td class="py-3 px-4">Conti Islamic</td><td class="py-3 px-4 text-yellow-600 font-medium">variabile per strumento</td><td class="py-3 px-4">Commissione fissa</td><td class="py-3 px-4">Su richiesta</td></tr>
+        <tr class="border-b hover:bg-gray-100"><td class="py-3 px-4">Depositi / Prelievi</td><td class="py-3 px-4 text-green-600 font-medium">0% AvaTrade</td><td class="py-3 px-4">Commissioni</td><td class="py-3 px-4">Costi bancari esclusi</td></tr>
+        <tr class="hover:bg-gray-100"><td class="py-3 px-4">Inattività</td><td class="py-3 px-4 text-red-600 font-medium">$50 USD/mese</td><td class="py-3 px-4">Dopo 3 mesi</td><td class="py-3 px-4">Conti inattivi</td></tr>
+      </tbody>
+    </table>
+  </div>
+<div class="my-12 sm:my-16"></div>
+  <!-- Mobile Version -->
+  <div class="block md:hidden mt-6 space-y-4">
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-blue-800">Deposito Minimo</div>
+      <div class="text-gray-600 text-sm">Importo iniziale richiesto</div>
+      <div class="text-xs text-gray-500">Metodo variabile</div>
+      <div class="text-green-700 font-bold text-sm mt-2">$100 / $500</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-blue-800">Forex</div>
+      <div class="text-gray-600 text-sm">Spread minimo EUR/USD</div>
+      <div class="text-xs text-gray-500">Nessuna commissione</div>
+      <div class="text-yellow-600 font-bold text-sm mt-2">da 0.9 pip</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-blue-800">Indici CFD</div>
+      <div class="text-gray-600 text-sm">US500, NAS100, DAX40</div>
+      <div class="text-xs text-gray-500">Spread incluso</div>
+      <div class="text-yellow-600 font-bold text-sm mt-2">da 0.5–1.0 pt</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-blue-800">Materie Prime</div>
+      <div class="text-gray-600 text-sm">Oro, Petrolio, Gas</div>
+      <div class="text-xs text-gray-500">Spread incluso</div>
+      <div class="text-green-700 font-bold text-sm mt-2">da 0.03 pt</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-blue-800">Criptovalute CFD</div>
+      <div class="text-gray-600 text-sm">18 crypto + Index</div>
+      <div class="text-xs text-gray-500">Solo CFD</div>
+      <div class="text-red-600 font-bold text-sm mt-2">da 0.25% spread</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-blue-800">Azioni CFD</div>
+      <div class="text-gray-600 text-sm">USA, Europa, AU</div>
+      <div class="text-xs text-gray-500">Solo commissione</div>
+      <div class="text-yellow-600 font-bold text-sm mt-2">da 0.13%</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-blue-800">Swap Overnight</div>
+      <div class="text-gray-600 text-sm">Forex & CFD</div>
+      <div class="text-xs text-gray-500">Applicato ogni notte</div>
+      <div class="text-yellow-600 font-bold text-sm mt-2">variabile + markup</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-blue-800">Conti Islamic</div>
+      <div class="text-gray-600 text-sm">Commissione fissa</div>
+      <div class="text-xs text-gray-500">Su richiesta</div>
+      <div class="text-yellow-600 font-bold text-sm mt-2">variabile</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-blue-800">Depositi / Prelievi</div>
+      <div class="text-gray-600 text-sm">Commissioni</div>
+      <div class="text-xs text-gray-500">Costi bancari a parte</div>
+      <div class="text-green-700 font-bold text-sm mt-2">0% AvaTrade</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow">
+      <div class="text-sm font-semibold text-blue-800">Inattività</div>
+      <div class="text-gray-600 text-sm">Dopo 3 mesi</div>
+      <div class="text-xs text-gray-500">Conto inattivo</div>
+      <div class="text-red-600 font-bold text-sm mt-2">$50 USD/mese</div>
+    </div>
+  </div>
+
+  <div class="text-center text-xs text-gray-400 mt-8">
+    Dati aggiornati al 2025 – verificare sempre sul sito ufficiale AvaTrade.
+  </div>
+</section>
+<div class="my-12 sm:my-16"></div>
+<section class="max-w-screen-xl mx-auto p-6 bg-gray-50 rounded-xl shadow-md font-[Inter]">
+  <h2 class="text-center text-xl sm:text-2xl font-semibold text-[#1D4A8C] mb-6">Piattaforme Disponibili su AvaTrade</h2>
+
+  <div class="flex gap-4 overflow-x-auto pb-4 scroll-snap-x scroll-smooth sm:scroll-auto">
+    
+    <!-- Card -->
+    <div class="min-w-[200px] max-w-[200px] h-[150px] bg-white rounded-lg shadow-md flex flex-col justify-between p-4 scroll-snap-start">
+      <div>
+        <div class="flex items-center mb-1">
+          <svg class="w-4 h-4 text-[#1D4A8C]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7v10l10 5 10-5V7l-10-5z"/></svg>
+          <h3 class="text-sm font-medium ml-1">AvaTradeGO</h3>
+        </div>
+        <p class="text-[11px] text-gray-600 leading-tight">App mobile intuitiva per fare trading ovunque.</p>
+      </div>
+      <p class="text-[10px] font-medium mt-2">Disponibile: <span class="text-gray-800">iOS, Android</span></p>
+    </div>
+
+    <!-- Card -->
+    <div class="min-w-[200px] max-w-[200px] h-[150px] bg-white rounded-lg shadow-md flex flex-col justify-between p-4 scroll-snap-start">
+      <div>
+        <div class="flex items-center mb-1">
+          <svg class="w-4 h-4 text-[#1D4A8C]" fill="currentColor" viewBox="0 0 24 24"><path d="M4 5h16v2H4zM4 9h16v2H4zM4 13h10v2H4z"/></svg>
+          <h3 class="text-sm font-medium ml-1">MetaTrader 4</h3>
+        </div>
+        <p class="text-[11px] text-gray-600 leading-tight">Classica per forex e CFD, supporta EA.</p>
+      </div>
+      <p class="text-[10px] font-medium mt-2">Disponibile: <span class="text-gray-800">Desktop, Web, Mobile</span></p>
+    </div>
+
+    <!-- Card -->
+    <div class="min-w-[200px] max-w-[200px] h-[150px] bg-white rounded-lg shadow-md flex flex-col justify-between p-4 scroll-snap-start">
+      <div>
+        <div class="flex items-center mb-1">
+          <svg class="w-4 h-4 text-[#1D4A8C]" fill="currentColor" viewBox="0 0 24 24"><path d="M7 2h10a2 2 0 012 2v16a2 2 0 01-2 2H7a2 2 0 01-2-2V4a2 2 0 012-2zm5 20a1 1 0 100-2 1 1 0 000 2zm5-4V4H7v14h10z"/></svg>
+          <h3 class="text-sm font-medium ml-1">MetaTrader 5</h3>
+        </div>
+        <p class="text-[11px] text-gray-600 leading-tight">Multi-asset avanzata con più indicatori.</p>
+      </div>
+      <p class="text-[10px] font-medium mt-2">Disponibile: <span class="text-gray-800">Desktop, Web, Mobile</span></p>
+    </div>
+
+    <!-- Card -->
+    <div class="min-w-[200px] max-w-[200px] h-[150px] bg-white rounded-lg shadow-md flex flex-col justify-between p-4 scroll-snap-start">
+      <div>
+        <div class="flex items-center mb-1">
+          <svg class="w-4 h-4 text-[#1D4A8C]" fill="currentColor" viewBox="0 0 24 24"><path d="M18 6h-2v12h2V6zm-8 6h2v6h-2v-6zM4 10h2v8H4v-8z"/></svg>
+          <h3 class="text-sm font-medium ml-1">DupliTrade</h3>
+        </div>
+        <p class="text-[11px] text-gray-600 leading-tight">Copy trading per replicare trader esperti.</p>
+      </div>
+      <p class="text-[10px] font-medium mt-2">Disponibile: <span class="text-gray-800">Web</span></p>
+    </div>
+  </div>
+
+  <p class="text-[10px] text-gray-400 text-center mt-4">Dati aggiornati al 2025. Controlla il sito ufficiale per info aggiornate.</p>
+</section>
+<div class="my-12 sm:my-16"></div>
+    <section class="max-w-screen-xl mx-auto p-6 bg-gray-50 rounded-xl shadow-md font-[Inter]">
+  <h2 class="text-center text-xl sm:text-2xl font-semibold text-[#1D4A8C] mb-6">
+    Strumenti Finanziari Disponibili su AvaTrade (Aggiornato 2025)
+  </h2>
+
+  <!-- Desktop Table -->
+  <div class="hidden md:block">
+    <table class="w-full border-collapse text-sm">
+      <thead class="bg-[#1D4A8C] text-white">
+        <tr>
+          <th class="text-left px-4 py-3">Categoria</th>
+          <th class="text-left px-4 py-3">Numero di Strumenti</th>
+          <th class="text-left px-4 py-3 rounded-tr-lg">Note</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-700">
+        <tr class="bg-white">
+          <td class="px-4 py-3">Forex</td>
+          <td class="px-4 py-3 text-[#F59E0B]">55+ coppie</td>
+          <td class="px-4 py-3">Principali, minori ed esotiche</td>
+        </tr>
+        <tr class="bg-gray-100">
+          <td class="px-4 py-3">Indici</td>
+          <td class="px-4 py-3 text-[#F59E0B]">31</td>
+          <td class="px-4 py-3">US500, NASDAQ100, DAX40, FTSE100 e altri</td>
+        </tr>
+        <tr class="bg-white">
+          <td class="px-4 py-3">Materie Prime</td>
+          <td class="px-4 py-3 text-[#F59E0B]">27</td>
+          <td class="px-4 py-3">Oro, petrolio, gas, prodotti agricoli</td>
+        </tr>
+        <tr class="bg-gray-100">
+          <td class="px-4 py-3">Azioni CFD</td>
+          <td class="px-4 py-3 text-[#10B981]">600+</td>
+          <td class="px-4 py-3">CFD su azioni USA, Europa, Australia</td>
+        </tr>
+        <tr class="bg-white">
+          <td class="px-4 py-3">ETF CFD</td>
+          <td class="px-4 py-3 text-[#F59E0B]">58</td>
+          <td class="px-4 py-3">ETF globali su vari settori</td>
+        </tr>
+        <tr class="bg-gray-100">
+          <td class="px-4 py-3">Criptovalute CFD</td>
+          <td class="px-4 py-3 text-[#F59E0B]">16</td>
+          <td class="px-4 py-3">BTC, ETH, XRP, LTC, BCH, DASH e altri</td>
+        </tr>
+        <tr class="bg-white">
+          <td class="px-4 py-3">Obbligazioni CFD</td>
+          <td class="px-4 py-3 text-[#10B981]">Esclusivo</td>
+          <td class="px-4 py-3">Japan Govt Bond, Euro-Bond</td>
+        </tr>
+        <tr class="bg-gray-100">
+          <td class="px-4 py-3">Opzioni Vanilla</td>
+          <td class="px-4 py-3 text-[#10B981]">44</td>
+          <td class="px-4 py-3">Disponibili su AvaOptions</td>
+        </tr>
+        <tr class="bg-white">
+          <td class="px-4 py-3">Futures CFD</td>
+          <td class="px-4 py-3 text-[#F59E0B]">Diversi contratti</td>
+          <td class="px-4 py-3">Commodities, indici, obbligazioni</td>
+        </tr>
+        <tr class="bg-gray-100">
+          <td class="px-4 py-3">Strumenti Sintetici</td>
+          <td class="px-4 py-3 text-[#10B981]">Esclusivo</td>
+          <td class="px-4 py-3">Combinazioni per strategie avanzate</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<div class="my-12 sm:my-16"></div>
+  <!-- Mobile Cards -->
+  <div class="md:hidden flex flex-col gap-4">
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Forex</div>
+      <div class="text-[#F59E0B] text-sm">55+ coppie</div>
+      <div class="text-gray-600 text-sm">Principali, minori ed esotiche</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Indici</div>
+      <div class="text-[#F59E0B] text-sm">31</div>
+      <div class="text-gray-600 text-sm">US500, NASDAQ100, DAX40, FTSE100 e altri</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Materie Prime</div>
+      <div class="text-[#F59E0B] text-sm">27</div>
+      <div class="text-gray-600 text-sm">Oro, petrolio, gas, agricoli</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Azioni CFD</div>
+      <div class="text-[#10B981] text-sm">600+</div>
+      <div class="text-gray-600 text-sm">USA, Europa, Australia</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">ETF CFD</div>
+      <div class="text-[#F59E0B] text-sm">58</div>
+      <div class="text-gray-600 text-sm">ETF globali su vari settori</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Criptovalute CFD</div>
+      <div class="text-[#F59E0B] text-sm">16</div>
+      <div class="text-gray-600 text-sm">BTC, ETH, XRP, LTC, BCH, DASH e altri</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Obbligazioni CFD</div>
+      <div class="text-[#10B981] text-sm">Esclusivo</div>
+      <div class="text-gray-600 text-sm">Japan Govt Bond, Euro-Bond</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Opzioni Vanilla</div>
+      <div class="text-[#10B981] text-sm">44</div>
+      <div class="text-gray-600 text-sm">Su AvaOptions</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Futures CFD</div>
+      <div class="text-[#F59E0B] text-sm">Diversi contratti</div>
+      <div class="text-gray-600 text-sm">Rollover automatico</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow-sm">
+      <div class="text-base font-semibold text-gray-800">Strumenti Sintetici</div>
+      <div class="text-[#10B981] text-sm">Esclusivo</div>
+      <div class="text-gray-600 text-sm">Combinazioni per strategie avanzate</div>
+    </div>
+  </div>
+
+  <p class="text-[12px] text-gray-400 text-center mt-6">
+    Dati aggiornati al 2025. Consultare i documenti ufficiali di AvaTrade per dettagli più precisi.
+  </p>
+</section>
+    <div class="my-12 sm:my-16"></div>
+<section class="max-w-screen-xl mx-auto p-6 bg-gray-50 rounded-xl font-[Inter] text-gray-800">
+  <h2 class="text-xl sm:text-2xl font-semibold text-center text-[#1D4A8C] mb-6">
+    Servizi Offerti da AvaTrade
+  </h2>
+
+  <div class="flex gap-4 overflow-x-auto pb-4 scroll-smooth scroll-snap-x scroll-snap-mandatory -webkit-overflow-scrolling-touch">
+    
+    <!-- Card -->
+    <div class="min-w-[280px] max-w-[280px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-base font-semibold mb-2">Conti Standard e Demo</h3>
+      <p class="text-sm text-gray-600">
+        Conto Standard senza commissioni, spread variabili e conto demo gratuito per esercitarsi senza rischi.
+      </p>
+    </div>
+
+    <div class="min-w-[280px] max-w-[280px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-base font-semibold mb-2">Trading Multi-Asset</h3>
+      <p class="text-sm text-gray-600">
+        Accesso a Forex, indici, materie prime, azioni, ETF e oltre 20 criptovalute tramite CFD.
+      </p>
+    </div>
+
+    <div class="min-w-[280px] max-w-[280px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-base font-semibold mb-2">Piattaforme Intuitive</h3>
+      <p class="text-sm text-gray-600">
+        AvaTradeGo, MT4, MT5 e integrazione con Zulutrade per copy trading.
+      </p>
+    </div>
+
+    <div class="min-w-[280px] max-w-[280px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-base font-semibold mb-2">Copy Trading Integrato</h3>
+      <p class="text-sm text-gray-600">
+        Servizio integrato con Zulutrade per seguire trader esperti e replicare strategie.
+      </p>
+    </div>
+
+    <div class="min-w-[280px] max-w-[280px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-base font-semibold mb-2">Conto Islamico (Swap-Free)</h3>
+      <p class="text-sm text-gray-600">
+        Disponibile per motivi religiosi, senza swap ma con commissioni amministrative variabili.
+      </p>
+    </div>
+
+    <div class="min-w-[280px] max-w-[280px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-base font-semibold mb-2">Formazione e Webinar</h3>
+      <p class="text-sm text-gray-600">
+        Materiali educativi, webinar live e tutorial per trader principianti e avanzati.
+      </p>
+    </div>
+
+    <div class="min-w-[280px] max-w-[280px] flex-shrink-0 bg-white rounded-xl shadow-md p-6 scroll-snap-start">
+      <h3 class="text-base font-semibold mb-2">Regolamentazione Globale</h3>
+      <p class="text-sm text-gray-600">
+        Regolamentato da ASIC, FSCA, FSA e altre autorità per protezione e conformità.
+      </p>
+    </div>
+
+  </div>
+
+  <p class="text-xs text-gray-400 text-center mt-6">
+    Dati aggiornati al 2025. Verificare sempre i documenti ufficiali di AvaTrade per dettagli aggiornati.
+  </p>
+</section>
+<div class="my-12 sm:my-16"></div>
+<section class="max-w-5xl mx-auto mt-20 mb-20 px-6 py-10 bg-white text-gray-800 rounded-xl shadow-md border border-gray-200 font-[Inter] transition duration-300">
+  <div class="text-center">
+    <h2 class="text-2xl sm:text-3xl font-semibold text-blue-900 mb-4">
+      AvaTrade: Piattaforme Avanzate, Condizioni Competitive
+    </h2>
+    <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed mb-6">
+      Broker regolamentato a livello globale, ideale per chi cerca <strong>affidabilità, strumenti professionali e supporto in italiano</strong>.  
+      Apri un <strong>conto demo gratuito</strong> per sperimentare i mercati in modo sicuro e senza rischi.
+    </p>
+    <a href="https://www.avatrade.it?versionId=10301&tag=207382" target="_blank"
+       class="inline-flex items-center gap-2 px-7 py-3 bg-blue-900 text-white rounded-full font-medium shadow-md hover:shadow-xl hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m2 0a8 8 0 11-16 0 8 8 0 0116 0z" />
+      </svg>
+      Apri Conto Demo AvaTrade
+    </a>
+  </div>
+
+  <div class="mt-8 text-[11px] sm:text-xs text-gray-500 text-center leading-snug max-w-3xl mx-auto">
+    <p class="mb-2">
+      <strong class="text-gray-700">Disclaimer Demo:</strong> L'apertura del conto demo è gratuita. Le performance ottenute non garantiscono risultati futuri né replicano le condizioni reali di mercato.
+    </p>
+    <p>
+      <strong class="text-gray-700">Avvertenza sul rischio (ESMA):</strong> I CFD sono strumenti complessi e comportano un alto rischio di perdita.  
+      Il 76% dei conti retail perde denaro con questo fornitore. Valuta attentamente se puoi permetterti di sostenere tale rischio.
+    </p>
+  </div>
+</section>
+<div class="my-12 sm:my-16"></div>
+    <!-- Transizione fine sezione broker -->
+<div class="w-full max-w-6xl mx-auto my-20 px-4">
+  <div class="w-24 h-1.5 mx-auto bg-gradient-to-r from-blue-700 via-blue-500 to-blue-700 rounded-full opacity-50"></div>
+</div>
+
+
+    <section class="text-center py-12 px-4 max-w-4xl mx-auto">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight mb-4">Strumenti AI per la finanza reale</h1>
+      <p class="mt-2 text-base text-slate-600">Richiedi un report AI su un asset: ricezione via WhatsApp, SMS o Email. Nessun tracciamento. Solo analisi reale, senza fuffa.</p>
+      <p class="mt-4 text-lg text-blue-700 min-h-[28px] font-medium" id="typing-text"></p>
+    </section>
+
+    <section class="text-center py-8 px-4 max-w-md mx-auto bg-white/90 rounded-xl shadow-xl backdrop-blur-md border-2 border-transparent transition-all duration-500" id="form-container" style="margin-bottom: 64px;">
+      <form action="https://formsubmit.co/analisi@tradelia.org" method="POST" class="text-left space-y-3 text-sm">
+        <div><label for="asset" class="block font-semibold">Asset <span class="text-red-500">*</span></label><input type="text" name="asset" id="asset" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
+        <div><label for="categoria" class="block font-semibold">Categoria <span class="text-red-500">*</span></label><select name="categoria" id="categoria" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Azioni</option><option>ETF</option><option>Forex</option><option>Crypto</option><option>Commodities</option><option>Obbligazioni</option><option>Indici</option><option>REIT</option><option>Derivati</option></select></div>
+        <div><label for="timeframe" class="block font-semibold">Orizzonte Temporale <span class="text-red-500">*</span></label><select name="timeframe" id="timeframe" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Breve Termine</option><option>Medio Termine</option><option>Lungo Termine</option></select></div>
+        <div><label for="focus" class="block font-semibold">Focus dell'analisi <span class="text-red-500">*</span></label><select name="focus" id="focus" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>Fondamentale</option><option>Tecnico</option><option>Macroeconomico</option><option>Approfondita</option></select></div>
+        <div><label for="nome" class="block font-semibold">Nome <span class="text-red-500">*</span></label><input type="text" name="nome" id="nome" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
+        <div><label for="metodo" class="block font-semibold">Metodo di ricezione <span class="text-red-500">*</span></label><select name="metodo" id="metodo" class="w-full border border-gray-300 rounded-md px-3 py-1.5"><option value="">Seleziona...</option><option>SMS</option><option>Email</option><option>WhatsApp</option></select></div>
+        <div><label for="contatto" class="block font-semibold">Contatto <span class="text-red-500">*</span></label><input type="text" name="contatto" id="contatto" placeholder="Telefono o email" class="w-full border border-gray-300 rounded-md px-3 py-1.5"></div>
+        <p class="text-xs text-slate-500 mt-2 leading-snug">🛡 Nessuna pubblicità. Nessuna profilazione. I dati verranno usati solo per inviarti il report PDF.</p>
+        <button type="submit" class="w-full mt-3 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-md">Invia Richiesta</button>
+        <p id="form-response" class="mt-3 text-green-600 font-medium hidden">✅ Richiesta inviata! Riceverai il report entro poche ore.</p>
+      </form>
+    </section>
+ <body class="text-gray-900">
+    <header class="bg-white shadow py-4 px-6 flex justify-between items-center">
+      <div class="text-xl font-bold text-blue-800">Analisi AI Broker</div>
+    </header>
+
+    <main class="p-4">
+      <div class="bg-white shadow-lg rounded-lg p-6 max-w-6xl mx-auto">
+        <h2 class="text-lg font-semibold mb-4">Broker con Valutazione AI</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6" id="broker-grid"></div>
+      </div>
+    </main>
+
+    <script>
+      const brokerList = [
+        { name: 'Exante', rating: 100, url: '/Exante.html', desc: 'Broker professionale con accesso DMA e ampia offerta istituzionale.', logo: 'exante.svg' },
+        { name: 'Freedom24', rating: 92, url: '/Freedom24.html', desc: 'Azioni reali, IPO e azione gratuita per i nuovi utenti.', logo: 'freedom24.svg' },
+        { name: 'FP Markets', rating: 90, url: '/FPMarkets.html', desc: 'Ottimo per Forex, esecuzione rapida e spread contenuti.', logo: 'fpmarkets.svg' },
+        { name: 'Pepperstone', rating: 87, url: '/Pepperstone.html', desc: 'Broker ECN rapido e trasparente. Perfetto per day trader.', logo: 'pepperstone.svg' },
+        { name: 'eToro', rating: 85, url: '/eToro.html', desc: 'Broker social, azioni reali e funzionalità di copy trading.', logo: 'etoro.svg' },
+        { name: 'Eightcap', rating: 83, url: '/Eightcap.html', desc: 'Ottima offerta di crypto CFD e strumenti per MT5.', logo: 'eightcap.svg' },
+        { name: 'NAGA', rating: 82, url: '/NAGA.html', desc: 'Copy trading, social network e crypto. Giovane e dinamico.', logo: 'naga.svg' },
+        { name: 'FxPro', rating: 80, url: '/FxPro.html', desc: 'Broker multi-asset con regolamentazione forte e buoni spread.', logo: 'fxpro.svg' },
+        { name: 'XM', rating: 79, url: '/XM.html', desc: 'Buon supporto educativo e bonus di benvenuto.', logo: 'xm.svg' },
+        { name: 'Plus500', rating: 78, url: '/Plus500.html', desc: 'Semplice, mobile-friendly, ideale per iniziare con CFD.', logo: 'plus500.svg' },
+        { name: 'Skilling', rating: 77, url: '/Skilling.html', desc: 'Piattaforma semplice, mobile, con discreto supporto.', logo: 'skilling.svg' },
+        { name: 'AvaTrade', rating: 76, url: '/AvaTrade.html', desc: 'Offerta solida multi-asset e opzioni vanilla.', logo: 'avatrade.svg' },
+        { name: 'BlackBull Markets', rating: 74, url: '/BlackBullMarkets.html', desc: 'Broker ECN con spread variabili, adatto a trader avanzati.', logo: 'blackbull.svg' }
+      ];
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('broker-grid');
+        brokerList.sort((a, b) => b.rating - a.rating).forEach(broker => {
+          const card = document.createElement('div');
+          card.className = "border rounded-xl shadow p-5 bg-white hover:bg-blue-50 transition";
+          card.innerHTML = `
+            <div class="flex items-center gap-3 mb-2">
+              <img src="/logos/${broker.logo}" alt="${broker.name}" class="w-8 h-8 rounded-full bg-gray-200" />
+              <div class="text-xl font-bold text-blue-900">${broker.name}</div>
+            </div>
+            <div class="text-sm text-gray-600">Rating AI: ${broker.rating}/100</div>
+            <p class="mt-2 text-sm text-gray-700">${broker.desc}</p>
+            <a href="${broker.url}" class="inline-block mt-3 text-sm text-blue-600 font-medium hover:underline">Leggi analisi AI completa →</a>
+          `;
+          container.appendChild(card);
+        });
+      });
+    </script>
+  </body>
+  <div id="cookie-popup" class="modal">
+  <div class="modal-content">
+    <img src="https://lucid.app/favicon.ico" alt="Lucid icon" class="mx-auto mb-2 w-8 h-8">
+    <h3 class="text-lg font-semibold mb-2">Zero biscotti, zero sorprese.</h3>
+    <p class="mb-2">Tradelia non utilizza cookie di tracciamento, profilazione o pubblicità.</p>
+    <p class="text-sm text-gray-600">Salveremo la tua preferenza sul tuo dispositivo per non mostrarti più questo messaggio.</p>
+    <button onclick="chiudiPopupCookie()" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Ho capito</button>
+  </div>
+</div>
+
+
+    <footer style="width:100%;background:#0f172a;color:#cbd5e1;padding:48px 24px 32px;font-family:'Inter',sans-serif;font-size:14px;line-height:1.7;border-top:1px solid rgba(255,255,255,0.08)">
+      <div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between">
+        <div style="flex:1 1 300px">
+          <h4 style="color:#f8fafc;font-size:16px;margin-bottom:12px;font-weight:600">Tradelia AI</h4>
+          <p>Tradelia è un progetto indipendente per fornire strumenti educativi e analisi AI gratuite nel campo finanziario.</p>
+          <p style="margin-top:16px;font-size:13px;color:#60a5fa">✉️ <a href="mailto:info@tradelia.org" style="color:#60a5fa;text-decoration:none">info@tradelia.org</a></p>
+        </div>
+        <div style="flex:1 1 300px">
+          <p class="hover:translate-x-1 hover:text-sky-400 transition cursor-pointer font-semibold text-white mb-2" onclick="apriSezioneLegale('section-tc')">Termini e Condizioni</p>
+          <p class="hover:translate-x-1 hover:text-sky-400 transition cursor-pointer font-semibold text-white" onclick="apriSezioneLegale('section-privacy')">Privacy Policy</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

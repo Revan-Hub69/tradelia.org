@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test F1B - Swing Master 5.0</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: #0f0f0f;
+      color: #fff;
+    }
+    .test-section {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .test-section h2 {
+      margin-top: 0;
+      color: #4a9eff;
+    }
+    .output {
+      background: #0a0a0a;
+      border: 1px solid #333;
+      border-radius: 4px;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    button {
+      background: #4a9eff;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    button:hover {
+      background: #3a8eef;
+    }
+    button:disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
+    .status {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 1rem;
+    }
+    .status.success { background: #2d5a2d; color: #90ee90; }
+    .status.error { background: #5a2d2d; color: #ff6b6b; }
+    .status.loading { background: #2d4a5a; color: #6bcfff; }
+  </style>
+</head>
+<body>
+  <h1>🧪 Test F1B - Swing Master 5.0</h1>
+  
+  <div class="test-section">
+    <h2>1. Test Data Collection</h2>
+    <button id="test-data-btn">Test Raccolta Dati</button>
+    <span id="data-status" class="status"></span>
+    <div id="data-output" class="output" style="display: none;"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>2. Test F1B Processing</h2>
+    <button id="test-process-btn">Test Processing Completo</button>
+    <span id="process-status" class="status"></span>
+    <div id="process-output" class="output" style="display: none;"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>3. Test Output Formattato</h2>
+    <button id="test-format-btn">Test Output con Spiegazioni</button>
+    <span id="format-status" class="status"></span>
+    <div id="format-output" class="output" style="display: none;"></div>
+  </div>
+
+  <script type="module">
+    import { collectF1BMarketData } from '../modules/f1b-data-collector.js';
+    
+    // Test 1: Data Collection
+    document.getElementById('test-data-btn').addEventListener('click', async () => {
+      const btn = document.getElementById('test-data-btn');
+      const status = document.getElementById('data-status');
+      const output = document.getElementById('data-output');
+      
+      btn.disabled = true;
+      status.textContent = 'Loading...';
+      status.className = 'status loading';
+      output.style.display = 'none';
+      
+      try {
+        const data = await collectF1BMarketData();
+        output.textContent = JSON.stringify(data, null, 2);
+        output.style.display = 'block';
+        status.textContent = 'Success';
+        status.className = 'status success';
+      } catch (error) {
+        output.textContent = `Error: ${error.message}\n${error.stack}`;
+        output.style.display = 'block';
+        status.textContent = 'Error';
+        status.className = 'status error';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+    
+    // Test 2: Processing (se processor disponibile)
+    document.getElementById('test-process-btn').addEventListener('click', async () => {
+      const btn = document.getElementById('test-process-btn');
+      const status = document.getElementById('process-status');
+      const output = document.getElementById('process-output');
+      
+      btn.disabled = true;
+      status.textContent = 'Loading...';
+      status.className = 'status loading';
+      output.style.display = 'none';
+      
+      try {
+        // Prima raccogli dati
+        const marketData = await collectF1BMarketData();
+        
+        // Poi processa (se processor disponibile)
+        // NOTE: Qui serve importare processF1B
+        output.textContent = 'Processing test - requires processF1B import\n\nMarket Data collected:\n' + JSON.stringify(marketData, null, 2);
+        output.style.display = 'block';
+        status.textContent = 'Partial (no processor)';
+        status.className = 'status loading';
+      } catch (error) {
+        output.textContent = `Error: ${error.message}\n${error.stack}`;
+        output.style.display = 'block';
+        status.textContent = 'Error';
+        status.className = 'status error';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+    
+    // Test 3: Format (se completo disponibile)
+    document.getElementById('test-format-btn').addEventListener('click', async () => {
+      const btn = document.getElementById('test-format-btn');
+      const status = document.getElementById('format-status');
+      const output = document.getElementById('format-output');
+      
+      btn.disabled = true;
+      status.textContent = 'Loading...';
+      status.className = 'status loading';
+      output.style.display = 'none';
+      
+      try {
+        output.textContent = 'Format test - requires full module chain\n\nSee console for details.';
+        output.style.display = 'block';
+        status.textContent = 'Not implemented';
+        status.className = 'status loading';
+      } catch (error) {
+        output.textContent = `Error: ${error.message}`;
+        output.style.display = 'block';
+        status.textContent = 'Error';
+        status.className = 'status error';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
+

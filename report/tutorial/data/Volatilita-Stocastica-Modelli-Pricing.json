@@ -1,0 +1,1276 @@
+{
+  "title": "Volatilità Stocastica e Modelli Avanzati di Pricing: Heston, SABR e Jump-Diffusion",
+  "meta": {
+    "published": "Gennaio 2025",
+    "category": "Quantitative Finance e Pricing",
+    "difficulty": "Avanzato"
+  },
+  "tags": [
+    "Volatilità Stocastica",
+    "Heston Model",
+    "SABR Model",
+    "Jump-Diffusion",
+    "Quantitative Finance",
+    "Pricing Models",
+    "Stochastic Calculus",
+    "Options Pricing",
+    "Volatility Smile",
+    "Risk-Neutral Pricing"
+  ],
+  "glossaryTerms": {
+    "volatilità stocastica": "CreditRiskBlock",
+    "Heston model": "CreditRiskBlock",
+    "SABR model": "CreditRiskBlock",
+    "jump-diffusion": "CreditRiskBlock",
+    "volatility smile": "CreditRiskBlock",
+    "volatility skew": "CreditRiskBlock",
+    "risk-neutral measure": "CreditRiskBlock",
+    "Fourier transform": "CreditRiskBlock",
+    "characteristic function": "CreditRiskBlock",
+    "mean reversion": "CreditRiskBlock",
+    "correlation structure": "CreditRiskBlock",
+    "stochastic differential equation": "CreditRiskBlock",
+    "Feynman-Kac theorem": "CreditRiskBlock",
+    "Monte Carlo simulation": "CreditRiskBlock",
+    "implied volatility": "CreditRiskBlock",
+    "local volatility": "CreditRiskBlock"
+  },
+  "sections": [
+    {
+      "id": "introduzione",
+      "title": "Introduzione: Limiti del Black-Scholes e Necessità di Modelli Avanzati",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Il modello di **Black-Scholes-Merton** (1973) ha rivoluzionato il pricing delle opzioni, ma presenta limitazioni fondamentali che lo rendono inadeguato per mercati reali. L'assunzione di **volatilità costante** è la più critica: i mercati mostrano volatilità variabile nel tempo, con fenomeni come **volatility smile**, **skew** e **term structure** che il modello classico non può spiegare."
+        },
+        {
+          "type": "paragraph",
+          "text": "I modelli di **volatilità stocastica** e **jump-diffusion** rappresentano l'evoluzione naturale del pricing quantitativo. Questi modelli avanzati catturano la dinamica reale dei mercati, permettendo di prezzare correttamente opzioni esotiche, strutturate e prodotti derivati complessi. Questa guida Tradelia AI esplora i modelli più importanti: **Heston (1993)**, **SABR (2002)** e **Bates (1996)**, con approfondimenti matematici e applicazioni pratiche."
+        },
+        {
+          "type": "paragraph",
+          "text": "La comprensione di questi modelli richiede familiarità con **calcolo stocastico**, **equazioni differenziali parziali** e **metodi numerici**. Non sono strumenti per principianti, ma rappresentano lo standard per desk quantitativi, hedge fund e istituzioni che operano in derivati complessi."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Black & Scholes (1973) ha introdotto il pricing risk-neutral, ma l'osservazione empirica di Rubinstein (1994) ha evidenziato il \"volatility smile\" — volatilità implicita che varia con strike e scadenza. Questo fenomeno ha spinto lo sviluppo di modelli di volatilità stocastica, dimostrando che la volatilità stessa deve essere modellata come processo stocastico."
+        }
+      ]
+    },
+    {
+      "id": "limiti-black-scholes",
+      "title": "Limiti del Modello Black-Scholes: Evidenza Empirica",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Il modello Black-Scholes assume che il prezzo dell'asset segua un **moto browniano geometrico** con volatilità costante σ. Questa assunzione è contraddetta da evidenze empiriche robuste."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Problema 1: Volatility Smile e Skew"
+        },
+        {
+          "type": "paragraph",
+          "text": "In Black-Scholes, la volatilità implicita dovrebbe essere costante per tutte le opzioni sullo stesso sottostante. In realtà, si osserva:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Volatility Smile:** volatilità implicita più alta per strike out-of-the-money (OTM), creando una \"curva a sorriso\"",
+            "**Volatility Skew:** per equity, volatilità implicita più alta per put OTM (skew negativo), riflettendo paura di crash",
+            "**Term Structure:** volatilità implicita varia con la scadenza, mostrando dinamica temporale"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Problema 2: Volatilità Variabile nel Tempo"
+        },
+        {
+          "type": "paragraph",
+          "text": "La volatilità storica mostra **clustering** (periodi di alta volatilità seguiti da alta volatilità) e **mean reversion** (tendenza a tornare a un livello medio). Black-Scholes non cattura questa dinamica."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Problema 3: Jumps e Discontinuità"
+        },
+        {
+          "type": "paragraph",
+          "text": "I mercati mostrano **jumps** (movimenti bruschi) dovuti a notizie, eventi macro o crisi. Il moto browniano continuo non può modellare questi eventi."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Problema 4: Correlazione tra Prezzo e Volatilità"
+        },
+        {
+          "type": "paragraph",
+          "text": "Per equity, esiste una **correlazione negativa** tra prezzo e volatilità (leverage effect): quando il prezzo scende, la volatilità aumenta. Black-Scholes assume indipendenza."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Rubinstein (1994) ha documentato sistematicamente il volatility smile nei mercati delle opzioni. La ricerca evidenzia che dopo il crash del 1987, il smile è diventato permanente, suggerendo che i mercati incorporano la possibilità di eventi estremi che Black-Scholes non può catturare."
+        }
+      ]
+    },
+    {
+      "id": "heston-model",
+      "title": "Modello di Heston: Volatilità Stocastica con Mean Reversion",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Il modello di **Heston (1993)** è il modello di volatilità stocastica più utilizzato nella pratica. Assume che la **varianza** (volatilità al quadrato) segua un processo di **Cox-Ingersoll-Ross (CIR)** con mean reversion, e che prezzo e varianza siano correlati."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Equazioni Stocastiche del Modello Heston"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il modello Heston è definito da due equazioni differenziali stocastiche (SDE):"
+        },
+        {
+          "type": "paragraph",
+          "text": "**dS(t) = rS(t)dt + √V(t)S(t)dW₁(t)**"
+        },
+        {
+          "type": "paragraph",
+          "text": "**dV(t) = κ(θ - V(t))dt + σ√V(t)dW₂(t)**"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**S(t):** prezzo dell'asset al tempo t",
+            "**V(t):** varianza (volatilità²) al tempo t",
+            "**r:** tasso di interesse risk-free",
+            "**κ:** velocità di mean reversion della varianza",
+            "**θ:** varianza di lungo termine (long-term variance)",
+            "**σ:** volatilità della volatilità (vol-of-vol)",
+            "**dW₁, dW₂:** moti browniani correlati con correlazione ρ"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Interpretazione dei Parametri"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**κ (kappa):** misura quanto velocemente la varianza torna al livello θ. κ alto = mean reversion veloce.",
+            "**θ (theta):** varianza di equilibrio nel lungo termine. Determina il livello medio di volatilità.",
+            "**σ (sigma):** volatilità della volatilità. σ alto = varianza più volatile, più estremi.",
+            "**ρ (rho):** correlazione tra prezzo e varianza. Per equity, ρ < 0 (leverage effect)."
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Condizione di Feller"
+        },
+        {
+          "type": "paragraph",
+          "text": "Per garantire che V(t) rimanga sempre positiva (condizione necessaria per la varianza), deve valere:"
+        },
+        {
+          "type": "paragraph",
+          "text": "**2κθ ≥ σ²**"
+        },
+        {
+          "type": "paragraph",
+          "text": "Questa è la **condizione di Feller**. Se non è soddisfatta, la varianza può diventare negativa, rendendo il modello non valido."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Pricing con Fourier Transform"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il pricing nel modello Heston utilizza la **trasformata di Fourier** della funzione caratteristica. La formula di pricing per una call europea è:"
+        },
+        {
+          "type": "paragraph",
+          "text": "**C(S, V, t) = S₀P₁ - Ke⁻ʳᵀP₂**"
+        },
+        {
+          "type": "paragraph",
+          "text": "Dove P₁ e P₂ sono probabilità risk-neutral calcolate tramite integrazione numerica della funzione caratteristica. Questo metodo è computazionalmente efficiente rispetto a Monte Carlo."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Vantaggi del Modello Heston"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Cattura il volatility smile:** la correlazione ρ e vol-of-vol σ generano smile endogeno",
+            "**Mean reversion:** la varianza torna naturalmente al livello θ, coerente con dati empirici",
+            "**Formula chiusa:** pricing efficiente tramite Fourier transform",
+            "**Flessibilità:** può essere calibrato su smile osservato"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Limitazioni"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Calibrazione complessa:** richiede ottimizzazione numerica su 5 parametri (κ, θ, σ, ρ, V₀)",
+            "**Vol-of-vol costante:** σ è costante, ma in realtà può variare",
+            "**No jumps:** non cattura discontinuità brusche nei prezzi"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Heston (1993) ha introdotto il primo modello di volatilità stocastica con formula chiusa per il pricing. La ricerca utilizza la funzione caratteristica e la trasformata di Fourier, dimostrando che il modello può replicare il volatility smile osservato nei mercati. Il lavoro ha aperto la strada a una nuova generazione di modelli quantitativi."
+        }
+      ]
+    },
+    {
+      "id": "sabr-model",
+      "title": "Modello SABR: Volatilità Stocastica per Tassi e FX",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Il modello **SABR (Stochastic Alpha Beta Rho)** di Hagan et al. (2002) è specificamente progettato per **tassi di interesse** e **forex**. È diventato lo standard de facto per il pricing di swaption e cap/floor nel mercato dei tassi."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Equazioni Stocastiche SABR"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il modello SABR modella il **forward rate** F(t) e la sua **volatilità stocastica** α(t):"
+        },
+        {
+          "type": "paragraph",
+          "text": "**dF(t) = α(t)F(t)ᵝdW₁(t)**"
+        },
+        {
+          "type": "paragraph",
+          "text": "**dα(t) = να(t)dW₂(t)**"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**F(t):** forward rate (es. LIBOR, swap rate)",
+            "**α(t):** volatilità stocastica",
+            "**β (beta):** parametro di elasticità (0 ≤ β ≤ 1)",
+            "**ν (nu):** volatilità della volatilità (vol-of-vol)",
+            "**dW₁, dW₂:** browniani correlati con correlazione ρ"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Interpretazione del Parametro β"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**β = 0:** modello normale (Bachelier), adatto per tassi negativi",
+            "**β = 0.5:** modello CIR-like, bilanciato",
+            "**β = 1:** modello log-normale (Black), standard per tassi positivi"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Formula di Volatilità Implicita SABR"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il grande vantaggio di SABR è la **formula approssimata chiusa** per la volatilità implicita, che permette calibrazione e pricing rapidi:"
+        },
+        {
+          "type": "paragraph",
+          "text": "**σ_impl(K, F) ≈ (α / (F¹⁻ᵝ)) × [1 + ...]**"
+        },
+        {
+          "type": "paragraph",
+          "text": "La formula completa (Hagan et al., 2002) include correzioni per smile e skew, ed è utilizzata direttamente dai trader per quotare opzioni su tassi."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Calibrazione SABR"
+        },
+        {
+          "type": "paragraph",
+          "text": "La calibrazione SABR è relativamente semplice:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**α:** calibrato su ATM volatility",
+            "**β:** scelto a priori (tipicamente 0.5 o 1) o calibrato",
+            "**ρ:** calibrato su skew (correlazione tra rate e vol)",
+            "**ν:** calibrato su smile curvature"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Vantaggi di SABR"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Formula chiusa:** pricing immediato senza metodi numerici complessi",
+            "**Adatto per tassi:** progettato specificamente per mercati dei tassi",
+            "**Calibrazione rapida:** 4 parametri facili da calibrare",
+            "**Standard di mercato:** utilizzato quotidianamente da desk di tassi"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Limitazioni e Estensioni"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Solo per tassi/FX:** meno adatto per equity",
+            "**Formula approssimata:** può avere errori per strike estremi",
+            "**SABR-LMM:** estensioni per modellare intera curva dei tassi"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Hagan et al. (2002) ha introdotto SABR come modello pratico per il mercato dei tassi. La ricerca evidenzia che la formula approssimata per volatilità implicita è sufficientemente accurata per uso pratico, rendendo SABR lo standard per swaption e cap/floor. Il modello cattura il smile osservato nei mercati dei tassi con semplicità computazionale."
+        }
+      ]
+    },
+    {
+      "id": "jump-diffusion",
+      "title": "Modelli Jump-Diffusion: Merton e Bates",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I modelli **jump-diffusion** combinano il moto browniano continuo con **jumps** (salti) che catturano eventi estremi come crash, annunci macro o notizie. Il modello base è di **Merton (1976)**, esteso da **Bates (1996)** per includere volatilità stocastica."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Modello di Merton: Jump-Diffusion Base"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il modello Merton assume che il prezzo segua:"
+        },
+        {
+          "type": "paragraph",
+          "text": "**dS(t) = (r - λκ)S(t)dt + σS(t)dW(t) + S(t)dJ(t)**"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**r:** tasso risk-free",
+            "**σ:** volatilità del moto browniano continuo",
+            "**λ:** intensità del processo di Poisson (frequenza dei jumps)",
+            "**κ:** jump size medio",
+            "**dJ(t):** processo di salto (compound Poisson)"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "I jumps seguono una distribuzione log-normale: **log(1 + jump) ~ N(μⱼ, σⱼ²)**"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Modello di Bates: Jump-Diffusion con Volatilità Stocastica"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il modello **Bates (1996)** combina jumps con volatilità stocastica (tipo Heston):"
+        },
+        {
+          "type": "paragraph",
+          "text": "**dS(t) = (r - λκ)S(t)dt + √V(t)S(t)dW₁(t) + S(t)dJ(t)**"
+        },
+        {
+          "type": "paragraph",
+          "text": "**dV(t) = κ(θ - V(t))dt + σ√V(t)dW₂(t)**"
+        },
+        {
+          "type": "paragraph",
+          "text": "Questo modello cattura sia la **volatilità variabile** (Heston) che i **jumps** (Merton), rendendolo molto realistico per equity markets."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Pricing con Formula Chiusa"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il pricing nel modello Bates utilizza la **formula di Merton** estesa:"
+        },
+        {
+          "type": "paragraph",
+          "text": "**C = Σ(n=0 to ∞) [e⁻λᵀ(λT)ⁿ/n!] × C_BS(S, V_eff, T)**"
+        },
+        {
+          "type": "paragraph",
+          "text": "Dove C_BS è il prezzo Black-Scholes con volatilità effettiva che include l'effetto dei jumps. La sommatoria pesa ogni scenario (n jumps) con probabilità Poisson."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Interpretazione dei Parametri"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**λ (lambda):** frequenza dei jumps. λ alto = più jumps attesi.",
+            "**μⱼ (mu_jump):** jump size medio. Negativo per crash, positivo per rally.",
+            "**σⱼ (sigma_jump):** volatilità del jump size. Determina l'ampiezza dei jumps."
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Vantaggi dei Modelli Jump-Diffusion"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Catturano eventi estremi:** crash, rally, notizie macro",
+            "**Spiegano tail risk:** distribuzione con code grasse (fat tails)",
+            "**Realistici per equity:** equity markets mostrano jumps frequenti",
+            "**Pricing accurato:** per opzioni OTM e prodotti strutturati"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Limitazioni"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Calibrazione complessa:** richiede stima di parametri di jump (λ, μⱼ, σⱼ)",
+            "**Assunzioni su distribuzione:** jumps spesso non sono log-normali",
+            "**Computazionalmente intensivo:** sommatoria infinita richiede troncamento"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Merton (1976) ha introdotto il modello jump-diffusion, dimostrando che i jumps possono spiegare il volatility smile e le code grasse osservate nei dati. Bates (1996) ha esteso il modello includendo volatilità stocastica, creando un framework completo che cattura sia dinamica continua che discontinuità. La ricerca evidenzia che i modelli jump-diffusion sono essenziali per pricing accurato di opzioni OTM e prodotti con esposizione a tail risk."
+        }
+      ]
+    },
+    {
+      "id": "calibrazione",
+      "title": "Calibrazione dei Modelli: Metodi e Sfide",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "La **calibrazione** è il processo di determinare i parametri del modello che meglio replicano i prezzi di mercato osservati. È cruciale per l'accuratezza del pricing e la gestione del rischio."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Obiettivo della Calibrazione"
+        },
+        {
+          "type": "paragraph",
+          "text": "Minimizzare la differenza tra prezzi di mercato e prezzi del modello:"
+        },
+        {
+          "type": "paragraph",
+          "text": "**min Σᵢ (P_market(Kᵢ, Tᵢ) - P_model(Kᵢ, Tᵢ, θ))²**"
+        },
+        {
+          "type": "paragraph",
+          "text": "Dove θ è il vettore dei parametri da calibrare (es. κ, θ, σ, ρ per Heston)."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Metodi di Calibrazione"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Least Squares:** minimizza somma dei quadrati degli errori",
+            "**Weighted Least Squares:** pesa errori per liquidità o importanza",
+            "**Robust Calibration:** metodi robusti a outliers (es. Huber loss)",
+            "**Global Optimization:** algoritmi genetici, simulated annealing per evitare minimi locali"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Sfide nella Calibrazione"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Minimi locali:** funzione obiettivo non convessa, rischio di convergenza a soluzione subottimale",
+            "**Overfitting:** modello troppo complesso si adatta a rumore, non a segnale",
+            "**Stabilità temporale:** parametri cambiano nel tempo, richiede ricalibrazione frequente",
+            "**Illiquidità:** opzioni poco liquide hanno prezzi distorti, difficile calibrare"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Calibrazione Heston: Esempio Pratico"
+        },
+        {
+          "type": "paragraph",
+          "text": "Per calibrare Heston su opzioni S&P 500:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Dati:** prezzi di mercato per diverse strike e scadenze",
+            "**Parametri iniziali:** stime basate su dati storici o valori tipici",
+            "**Ottimizzazione:** algoritmo (es. Levenberg-Marquardt) minimizza errore",
+            "**Validazione:** verifica che parametri calibrati siano economicamente sensati (es. κ > 0, 2κθ ≥ σ²)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Calibrazione SABR: Approccio Standard"
+        },
+        {
+          "type": "paragraph",
+          "text": "SABR ha calibrazione più semplice:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**α:** da ATM volatility",
+            "**β:** scelto a priori (0.5 o 1) o calibrato su term structure",
+            "**ρ, ν:** calibrati su smile osservato"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Cont & Tankov (2004) ha analizzato i problemi di calibrazione nei modelli stocastici, evidenziando che l'overfitting è comune quando si calibrano troppi parametri su dati limitati. La ricerca suggerisce di utilizzare metodi di regolarizzazione e validazione out-of-sample per garantire robustezza dei parametri calibrati."
+        }
+      ]
+    },
+    {
+      "id": "metodi-numerici",
+      "title": "Metodi Numerici per Pricing: Monte Carlo, PDE e Fourier",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I modelli avanzati richiedono metodi numerici sofisticati per il pricing. Tre approcci principali: **Monte Carlo**, **PDE (Partial Differential Equations)** e **Fourier Transform**."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Monte Carlo Simulation"
+        },
+        {
+          "type": "paragraph",
+          "text": "Simula traiettorie del processo stocastico e calcola payoff medio:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Vantaggi:** flessibile, funziona per payoff complessi, facile da implementare",
+            "**Svantaggi:** lento, richiede molte simulazioni per accuratezza",
+            "**Variance Reduction:** tecniche (antithetic, control variates) per accelerare convergenza"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "PDE Methods (Finite Difference)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Risolve l'equazione differenziale parziale (PDE) del prezzo usando metodi alle differenze finite:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Vantaggi:** veloce, accurato per opzioni europee",
+            "**Svantaggi:** complesso per dimensioni multiple, difficile per opzioni americane/esotiche",
+            "**Applicazione:** pricing Heston richiede PDE 2D (prezzo × varianza)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Fourier Transform Methods"
+        },
+        {
+          "type": "paragraph",
+          "text": "Utilizza la funzione caratteristica e trasformata di Fourier per pricing:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Vantaggi:** molto veloce, accurato, formula quasi-chiusa",
+            "**Svantaggi:** richiede funzione caratteristica nota (non sempre disponibile)",
+            "**Applicazione:** standard per Heston, Bates, modelli affine"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Confronto Pratico"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Opzioni Vanilla:** Fourier (più veloce) o PDE",
+            "**Opzioni Esotiche:** Monte Carlo (più flessibile)",
+            "**Greeks (hedging):** PDE o Monte Carlo con bumping",
+            "**Portafogli grandi:** Fourier (scalabilità migliore)"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Carr & Madan (1999) ha sviluppato il metodo di pricing tramite Fourier transform, dimostrando che per modelli con funzione caratteristica nota, questo approccio è computazionalmente superiore a Monte Carlo. La ricerca evidenzia che l'uso di FFT (Fast Fourier Transform) permette pricing di migliaia di opzioni in secondi."
+        }
+      ]
+    },
+    {
+      "id": "volatility-smile-dynamics",
+      "title": "Dinamica del Volatility Smile: Term Structure e Skew",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I modelli avanzati permettono di comprendere e prezzare la **dinamica del volatility smile** — come cambia nel tempo e con strike/scadenza."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Volatility Smile: Forma e Significato"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il smile mostra che opzioni OTM hanno volatilità implicita più alta, riflettendo:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Tail risk:** mercati incorporano probabilità di eventi estremi",
+            "**Leverage effect:** per equity, put OTM più care (skew negativo)",
+            "**Liquidità:** opzioni OTM meno liquide, spread più ampi"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Term Structure della Volatilità"
+        },
+        {
+          "type": "paragraph",
+          "text": "La volatilità implicita varia con la scadenza:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Short-term:** più volatile, riflette eventi immediati",
+            "**Long-term:** più stabile, riflette volatilità di equilibrio",
+            "**Mean reversion:** modelli come Heston catturano questa dinamica"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Skew e Correlazione"
+        },
+        {
+          "type": "paragraph",
+          "text": "Nel modello Heston, il **skew** è generato dalla correlazione ρ:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**ρ < 0:** skew negativo (equity), put OTM più care",
+            "**ρ > 0:** skew positivo (alcune commodity), call OTM più care",
+            "**ρ ≈ 0:** smile simmetrico (FX, alcuni indici)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Vol-of-Vol e Curvatura del Smile"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il parametro **σ (vol-of-vol)** nel modello Heston controlla la **curvatura** del smile:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**σ alto:** smile più curvo, più estremi",
+            "**σ basso:** smile più piatto, meno estremi",
+            "**Calibrazione:** σ viene calibrato sulla curvatura osservata"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Derman (1999) ha analizzato la dinamica del volatility smile, evidenziando che il smile non è statico ma evolve nel tempo. La ricerca dimostra che modelli di volatilità stocastica come Heston possono spiegare sia il livello che la dinamica del smile, mentre modelli local volatility (Dupire) catturano solo lo smile statico."
+        }
+      ]
+    },
+    {
+      "id": "applicazioni-pratiche",
+      "title": "Applicazioni Pratiche: Pricing di Opzioni Esotiche e Strutturati",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I modelli avanzati sono essenziali per il pricing di **opzioni esotiche** e **prodotti strutturati** che Black-Scholes non può gestire correttamente."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Barrier Options"
+        },
+        {
+          "type": "paragraph",
+          "text": "Opzioni con barriera (knock-in/knock-out) richiedono modelli che catturano la **probabilità di toccare la barriera**. Heston e Bates sono standard:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Down-and-out call:** si annulla se prezzo tocca barriera inferiore",
+            "**Pricing:** Monte Carlo o PDE 2D con condizioni di barriera",
+            "**Sensibilità:** molto sensibile a volatilità e correlazione"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Asian Options"
+        },
+        {
+          "type": "paragraph",
+          "text": "Opzioni il cui payoff dipende dal **prezzo medio** richiedono modellazione della distribuzione congiunta:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Arithmetic average:** prezzo medio aritmetico",
+            "**Geometric average:** prezzo medio geometrico (più facile da prezzare)",
+            "**Pricing:** Monte Carlo standard, o approssimazioni analitiche"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Autocallable e Reverse Convertible"
+        },
+        {
+          "type": "paragraph",
+          "text": "Prodotti strutturati complessi richiedono modelli avanzati:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Autocallable:** call automatica se prezzo supera soglia",
+            "**Reverse Convertible:** obbligazione con put embedded",
+            "**Pricing:** Monte Carlo con modelli Heston/Bates per catturare smile e jumps"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Vantaggi dei Modelli Avanzati"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Pricing accurato:** catturano smile, skew, term structure",
+            "**Risk management:** Greeks più accurati (delta, vega, gamma)",
+            "**Calibrazione:** possono essere calibrati su mercato osservato",
+            "**Realismo:** dinamica più vicina ai mercati reali"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Rebonato (2004) ha analizzato l'uso di modelli stocastici avanzati per il pricing di prodotti strutturati, evidenziando che l'uso di modelli semplici (Black-Scholes) per prodotti complessi può portare a sottovalutazione significativa del rischio. La ricerca dimostra che modelli come Heston e Bates sono essenziali per pricing accurato e risk management."
+        }
+      ]
+    },
+    {
+      "id": "risk-management",
+      "title": "Risk Management con Modelli Avanzati: Greeks e Hedging",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I modelli avanzati permettono calcolo accurato dei **Greeks** (sensibilità del prezzo) e **hedging dinamico** più efficace."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Greeks nei Modelli Stocastici"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Delta:** sensibilità a movimento prezzo. In Heston, dipende da correlazione ρ.",
+            "**Vega:** sensibilità a volatilità. In modelli stocastici, vega è più complesso (vega di vol-of-vol).",
+            "**Gamma:** sensibilità di delta. Importante per hedging dinamico.",
+            "**Vanna:** sensibilità di delta a volatilità (cross-Greek).",
+            "**Volga:** sensibilità di vega a volatilità (volatility of volatility)."
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Hedging Dinamico"
+        },
+        {
+          "type": "paragraph",
+          "text": "L'hedging con modelli avanzati è più complesso:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Delta hedging:** copre movimento prezzo, ma non volatilità",
+            "**Delta-Vega hedging:** copre sia prezzo che volatilità (richiede opzione aggiuntiva)",
+            "**Hedging smile:** gestire rischio che smile cambi forma"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Rischio di Modello"
+        },
+        {
+          "type": "paragraph",
+          "text": "I modelli avanzati introducono **rischio di modello**:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Parametri instabili:** parametri cambiano nel tempo",
+            "**Misspecification:** modello non cattura tutte le dinamiche",
+            "**Calibrazione error:** parametri calibrati su dati distorti",
+            "**Mitigazione:** diversificazione modelli, stress testing, validazione continua"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Backtesting e Validazione"
+        },
+        {
+          "type": "paragraph",
+          "text": "Validazione continua è essenziale:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Out-of-sample testing:** verifica accuratezza su dati non usati per calibrazione",
+            "**P&L attribution:** analisi se profitti/perdite sono da modello o da fattori esterni",
+            "**Greeks backtesting:** verifica se hedging funziona in pratica"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Derman & Kamal (1997) ha analizzato l'accuratezza dei Greeks nei modelli stocastici, dimostrando che modelli come Heston producono Greeks più stabili e accurati rispetto a Black-Scholes. La ricerca evidenzia che l'hedging con modelli avanzati riduce significativamente il rischio residuo, specialmente per opzioni OTM e prodotti esotici."
+        }
+      ]
+    },
+    {
+      "id": "estensioni-avanzate",
+      "title": "Estensioni Avanzate: Modelli Multi-Fattore e Regime-Switching",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Oltre ai modelli base, esistono **estensioni avanzate** che catturano dinamiche ancora più complesse."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Modelli Multi-Fattore"
+        },
+        {
+          "type": "paragraph",
+          "text": "Modelli che includono **fattori multipli** per volatilità:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Double Heston:** due processi di varianza indipendenti per catturare short-term e long-term volatility",
+            "**3/2 Model:** varianza segue processo 3/2 (più realistico per alcuni asset)",
+            "**GARCH:** modelli GARCH stocastici per volatilità time-varying"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Regime-Switching Models"
+        },
+        {
+          "type": "paragraph",
+          "text": "Modelli che assumono che il mercato sia in **regimi diversi** (es. bull/bear, alta/bassa volatilità):"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Markov Regime-Switching:** transizioni tra regimi seguono catena di Markov",
+            "**Applicazione:** cattura cambiamenti strutturali (crisi, rally)",
+            "**Pricing:** più complesso, richiede pricing condizionale per ogni regime"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Modelli con Jumps Tempo-Dipendenti"
+        },
+        {
+          "type": "paragraph",
+          "text": "Estensioni che permettono **intensità di jump variabile**:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Hawkes Process:** intensità di jump dipende da jumps precedenti (clustering)",
+            "**Time-Varying Intensity:** λ(t) varia nel tempo",
+            "**Applicazione:** modellare clustering di eventi estremi"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Modelli Affine Generalizzati"
+        },
+        {
+          "type": "paragraph",
+          "text": "Classe generale di modelli con **struttura affine** che permette pricing efficiente:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Affine Jump-Diffusion:** combinazione generale di jumps e volatilità stocastica",
+            "**Vantaggio:** funzione caratteristica in forma chiusa, pricing veloce",
+            "**Esempi:** Heston, Bates, modelli multi-fattore"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Duffie et al. (2000) ha sviluppato la teoria generale dei modelli affini, dimostrando che modelli con struttura affine permettono pricing efficiente tramite funzione caratteristica. La ricerca evidenzia che questa classe di modelli cattura la maggior parte delle dinamiche osservate nei mercati mantenendo efficienza computazionale."
+        }
+      ]
+    },
+    {
+      "id": "implementazione-pratica",
+      "title": "Implementazione Pratica: Software e Librerie",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "L'implementazione pratica di questi modelli richiede **software specializzato** e **librerie quantitative**."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Librerie Python"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**QuantLib:** libreria C++/Python per pricing quantitativo, include Heston, SABR, jump-diffusion",
+            "**PyValuation:** implementazioni Python di modelli avanzati",
+            "**scipy.optimize:** per calibrazione (minimizzazione non lineare)",
+            "**numpy.fft:** per Fourier transform methods"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Software Commerciale"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Bloomberg:** funzioni HEST, SABR per pricing e calibrazione",
+            "**Reuters (Refinitiv):** modelli avanzati integrati",
+            "**Numerix:** piattaforma per pricing strutturati",
+            "**FINCAD:** soluzioni per derivati complessi"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Sfide Implementative"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Calibrazione robusta:** algoritmi di ottimizzazione che evitano minimi locali",
+            "**Performance:** pricing veloce per portafogli grandi (migliaia di opzioni)",
+            "**Accuratezza numerica:** gestione di integrali complessi, convergenza",
+            "**Validazione:** test su dati storici, confronto con prezzi di mercato"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Best Practices"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Documentazione:** parametri, assunzioni, limitazioni del modello",
+            "**Backtesting:** validazione continua su dati out-of-sample",
+            "**Stress testing:** testare modello in scenari estremi",
+            "**Monitoraggio:** tracking di parametri calibrati nel tempo"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Joshi (2008) ha analizzato le best practices per implementazione di modelli quantitativi, evidenziando che la validazione continua e il backtesting sono essenziali per garantire robustezza. La ricerca sottolinea l'importanza di documentazione chiara e gestione del rischio di modello."
+        }
+      ]
+    },
+    {
+      "id": "limitazioni-critiche",
+      "title": "Limitazioni Critiche e Quando Non Usare Questi Modelli",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Nonostante la sofisticazione, i modelli avanzati hanno **limitazioni critiche** che devono essere comprese."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Limitazione 1: Assunzioni Sempre Presenti"
+        },
+        {
+          "type": "paragraph",
+          "text": "Anche modelli avanzati fanno assunzioni:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Distribuzioni parametriche:** jumps spesso non sono log-normali",
+            "**Parametri costanti:** κ, θ, σ possono variare nel tempo",
+            "**Mercati completi:** assumono possibilità di hedging perfetto (non sempre vero)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Limitazione 2: Calibrazione Instabile"
+        },
+        {
+          "type": "paragraph",
+          "text": "I parametri calibrati possono essere **instabili**:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Cambiano nel tempo:** parametri di ieri non funzionano oggi",
+            "**Sensibili a dati:** piccole variazioni in prezzi di mercato cambiano parametri significativamente",
+            "**Overfitting:** modello si adatta a rumore, non a segnale"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Limitazione 3: Complessità Computazionale"
+        },
+        {
+          "type": "paragraph",
+          "text": "Modelli avanzati sono **computazionalmente intensivi**:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Tempo di calibrazione:** può richiedere minuti/ore",
+            "**Pricing lento:** per portafogli grandi, può essere bottleneck",
+            "**Manutenzione:** richiede expertise quantitativa continua"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Quando NON Usare Modelli Avanzati"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Opzioni vanilla liquidi:** Black-Scholes è sufficiente se smile non è critico",
+            "**Dati insufficienti:** calibrazione richiede opzioni multiple, se non disponibili, modello non affidabile",
+            " **Risorse limitate:** se non hai expertise quantitativa o software, meglio modelli semplici",
+            "**Prodotti semplici:** per prodotti lineari, modelli complessi non aggiungono valore"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Principio di Parsimonia"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il **rasoio di Occam** applicato ai modelli: **usa il modello più semplice che cattura le dinamiche necessarie**. Se Black-Scholes è sufficiente, non serve Heston. Se Heston è sufficiente, non serve modello multi-fattore."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Derman (2001) ha criticato l'over-engineering nei modelli quantitativi, evidenziando che modelli troppo complessi possono essere meno robusti di modelli semplici. La ricerca sottolinea che la complessità deve essere giustificata da miglioramenti misurabili in accuratezza o risk management."
+        }
+      ]
+    },
+    {
+      "id": "ricerca-futura",
+      "title": "Ricerca Futura e Sviluppi Recenti",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "La ricerca in modelli di pricing continua a evolversi, con sviluppi recenti che affrontano limitazioni dei modelli classici."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Machine Learning e Modelli Ibridi"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Machine Learning** viene utilizzato per:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Calibrazione:** reti neurali per calibrazione rapida",
+            "**Pricing:** deep learning per pricing diretto (bypass modelli parametrici)",
+            "**Hedging:** reinforcement learning per strategie di hedging ottimali"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Rough Volatility"
+        },
+        {
+          "type": "paragraph",
+          "text": "Modelli di **rough volatility** (volatilità ruvida) assumono che la volatilità abbia traiettorie più irregolari:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Fractional Brownian Motion:** volatilità con memoria a lungo termine",
+            "**Rough Heston:** estensione di Heston con volatilità rough",
+            "**Evidenza empirica:** dati suggeriscono che volatilità è \"rough\" (Gatheral et al., 2018)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Modelli con Microstructure"
+        },
+        {
+          "type": "paragraph",
+          "text": "Modelli che incorporano **market microstructure**:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Bid-ask spread:** modelli che includono costi di transazione",
+            "**Liquidità:** pricing che considera liquidità variabile",
+            "**Market impact:** effetti di trade size su prezzo"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Modelli Non-Parametrici"
+        },
+        {
+          "type": "paragraph",
+          "text": "Approcci che **non assumono forme parametriche**:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Local Volatility (Dupire):** volatilità funzione di prezzo e tempo",
+            "**Stochastic Local Volatility (SLV):** combinazione local + stochastic",
+            "**Vantaggio:** calibrazione perfetta su smile osservato"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Gatheral et al. (2018) ha introdotto il concetto di rough volatility, dimostrando che la volatilità ha proprietà di \"roughness\" (irregolarità) che modelli classici non catturano. La ricerca evidenzia che modelli rough possono spiegare meglio alcune anomalie empiriche, aprendo nuove direzioni nella ricerca quantitativa."
+        }
+      ]
+    },
+    {
+      "id": "glossario",
+      "title": "Glossario Tecnico Avanzato",
+      "content": [
+        {
+          "type": "list",
+          "items": [
+            "**Volatilità Stocastica:** modellazione della volatilità come processo stocastico variabile nel tempo.",
+            "**Heston Model:** modello di volatilità stocastica con mean reversion, utilizzando processo CIR per varianza.",
+            "**SABR Model:** modello per tassi/FX con volatilità stocastica e formula approssimata per volatilità implicita.",
+            "**Jump-Diffusion:** modelli che combinano moto browniano continuo con jumps (salti) discreti.",
+            "**Bates Model:** combinazione di Heston (volatilità stocastica) e Merton (jumps).",
+            "**Volatility Smile:** curva che mostra volatilità implicita variabile con strike, creando forma a \"sorriso\".",
+            "**Volatility Skew:** asimmetria del smile, tipicamente negativo per equity (put OTM più care).",
+            "**Mean Reversion:** tendenza di un processo a tornare a un livello medio di lungo termine.",
+            "**Risk-Neutral Measure:** misura di probabilità dove tutti gli asset hanno rendimento atteso pari a tasso risk-free.",
+            "**Fourier Transform:** metodo matematico per pricing tramite funzione caratteristica, computazionalmente efficiente.",
+            "**Characteristic Function:** trasformata di Fourier della distribuzione, permette pricing veloce per modelli affini.",
+            "**Feller Condition:** condizione 2κθ ≥ σ² che garantisce che varianza rimanga positiva nel modello CIR.",
+            "**Vol-of-Vol:** volatilità della volatilità, parametro che controlla quanto la volatilità stessa è volatile.",
+            "**Correlation Structure:** correlazione tra prezzo e volatilità, tipicamente negativa per equity (leverage effect).",
+            "**Stochastic Differential Equation (SDE):** equazione differenziale che include termine stocastico (moto browniano).",
+            "**Feynman-Kac Theorem:** teorema che collega SDE a equazioni differenziali parziali (PDE) per pricing.",
+            "**Monte Carlo Simulation:** metodo numerico che simula traiettorie stocastiche per pricing.",
+            "**PDE Methods:** risoluzione di equazioni differenziali parziali per pricing (es. finite difference).",
+            "**Calibrazione:** processo di determinare parametri del modello che replicano prezzi di mercato osservati.",
+            "**Overfitting:** problema dove modello si adatta troppo a dati di calibrazione, perdendo generalizzazione.",
+            "**Greeks:** sensibilità del prezzo a variabili (delta, gamma, vega, vanna, volga).",
+            "**Hedging Dinamico:** strategia di copertura che adatta posizione nel tempo per neutralizzare rischio.",
+            "**Risk of Model:** rischio che modello sia errato o parametri cambino, portando a perdite.",
+            "**Affine Models:** classe di modelli con struttura matematica che permette pricing efficiente.",
+            "**Regime-Switching:** modelli che assumono mercato in regimi diversi (es. alta/bassa volatilità).",
+            "**Rough Volatility:** modelli che assumono volatilità con traiettorie irregolari (fractional Brownian motion).",
+            "**Local Volatility:** volatilità funzione di prezzo e tempo, permette calibrazione perfetta su smile.",
+            "**Stochastic Local Volatility (SLV):** combinazione di local volatility e stochastic volatility."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "disclaimer",
+      "title": "Disclaimer e Avvertenze Finali",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le informazioni contenute in questa guida sono fornite da Tradelia AI a scopo esclusivamente informativo, formativo e simulativo. Non costituiscono in alcun modo una sollecitazione al pubblico risparmio, una raccomandazione personalizzata o una consulenza finanziaria, fiscale o legale."
+        },
+        {
+          "type": "paragraph",
+          "text": "I modelli di volatilità stocastica e jump-diffusion sono strumenti quantitativi avanzati che richiedono competenze matematiche, statistiche e computazionali significative. L'implementazione, calibrazione e utilizzo di questi modelli comporta rischi sostanziali, inclusi: rischio di modello, rischio di calibrazione errata, rischio computazionale e rischio di overfitting."
+        },
+        {
+          "type": "paragraph",
+          "text": "Questi modelli non garantiscono accuratezza nei prezzi o nel risk management. I parametri calibrati possono cambiare rapidamente, rendendo i modelli obsoleti. L'uso di modelli complessi senza adeguata validazione, backtesting e monitoraggio può portare a perdite significative."
+        },
+        {
+          "type": "paragraph",
+          "text": "Ogni decisione di pricing, hedging o risk management deve essere presa in autonomia e con il supporto di professionisti qualificati. Tradelia AI declina ogni responsabilità per danni diretti o indiretti derivanti dall'uso delle informazioni contenute in questa guida, incluse implementazioni, calcoli o simulazioni. L'utente accetta di assumersi ogni rischio associato alla consultazione e all'utilizzo dei contenuti."
+        },
+        {
+          "type": "paragraph",
+          "text": "*«I modelli sono utili, ma non sono la realtà. Un modello è una semplificazione del mondo, e ogni semplificazione introduce errori. La sfida non è creare il modello perfetto, ma comprendere i limiti di ogni modello e gestire il rischio di modello.»*"
+        }
+      ]
+    }
+  ]
+}
+
