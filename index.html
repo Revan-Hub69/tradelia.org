@@ -9,7 +9,7 @@
   <link rel="icon" href="/favicon.ico?v=1">
   <link rel="icon" type="image/png" href="/favicon.png?v=1">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#0f0f0f">
 
   <!-- Tailwind (utility) -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -27,7 +27,461 @@
 
     /* container */
     .container { max-width: 90rem; margin-inline: auto; padding-inline: 1rem; }
-    main { flex: 1; padding-top: 5rem; padding-bottom: 5rem; }
+    main { 
+      flex: 1; 
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero-section {
+      position: relative;
+      min-height: calc(100vh - 64px);
+      display: flex;
+      flex-direction: column;
+      padding: var(--sp-16) 0 var(--sp-8);
+      background: linear-gradient(180deg, var(--surface-page) 0%, var(--surface-card) 100%);
+      overflow: hidden;
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(37, 99, 235, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--sp-12);
+      align-items: center;
+    }
+
+    @media (min-width: 1024px) {
+      .hero-content {
+        grid-template-columns: 1.2fr 1fr;
+        gap: var(--sp-16);
+      }
+    }
+
+    .hero-text {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-6);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-2);
+      padding: var(--sp-2) var(--sp-4);
+      background: var(--surface-elev);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-pill);
+      font-size: var(--fs-13);
+      font-weight: 600;
+      color: var(--brand-400);
+      width: fit-content;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    .hero-title strong {
+      background: linear-gradient(135deg, var(--brand-500) 0%, var(--brand-400) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-description {
+      font-size: var(--fs-18);
+      line-height: var(--lh-17);
+      color: var(--ink-soft);
+      max-width: 48rem;
+      margin: 0;
+    }
+
+    .hero-description strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .hero-features {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-4);
+      margin-top: var(--sp-2);
+    }
+
+    .hero-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sp-4);
+      padding: var(--sp-4);
+      background: var(--surface-elev);
+      border: 1px solid var(--br-soft);
+      border-radius: var(--radius-lg);
+      transition: all var(--transition-base);
+    }
+
+    .hero-feature:hover {
+      background: var(--surface-hover);
+      border-color: var(--br-card);
+      transform: translateX(4px);
+    }
+
+    .hero-feature .ico {
+      color: var(--brand-500);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .hero-feature div {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-1);
+    }
+
+    .hero-feature strong {
+      font-size: var(--fs-16);
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .hero-feature span {
+      font-size: var(--fs-14);
+      color: var(--ink-soft);
+      line-height: var(--lh-17);
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-4);
+      margin-top: var(--sp-2);
+    }
+
+    .hero-visual {
+      position: relative;
+      height: 400px;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+
+    @media (min-width: 1024px) {
+      .hero-visual {
+        height: 500px;
+      }
+    }
+
+    .hero-visual-bg {
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(37, 99, 235, 0.05) 100%),
+        radial-gradient(circle at center, rgba(37, 99, 235, 0.1) 0%, transparent 70%);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-xl);
+      position: relative;
+    }
+
+    .hero-visual-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: 
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.03) 2px, rgba(255, 255, 255, 0.03) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 255, 255, 0.03) 2px, rgba(255, 255, 255, 0.03) 4px);
+      opacity: 0.5;
+    }
+
+    .hero-disclaimer {
+      margin-top: var(--sp-12);
+      padding: var(--sp-5) 0;
+      background: var(--surface-elev);
+      border-top: 1px solid var(--br-card);
+      border-bottom: 1px solid var(--br-card);
+    }
+
+    .hero-disclaimer .container {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sp-4);
+    }
+
+    .hero-disclaimer .ico {
+      color: var(--brand-500);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .hero-disclaimer p {
+      font-size: var(--fs-13);
+      line-height: var(--lh-17);
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .hero-disclaimer strong {
+      color: var(--ink-soft);
+      font-weight: 600;
+    }
+
+    /* ===== SECTION HEADERS ===== */
+    .section-header {
+      text-align: center;
+      max-width: 48rem;
+      margin: 0 auto var(--sp-12);
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin: 0 0 var(--sp-4);
+    }
+
+    .section-description {
+      font-size: var(--fs-18);
+      line-height: var(--lh-17);
+      color: var(--ink-soft);
+      margin: 0;
+    }
+
+    .section-description strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* ===== METHOD SECTION ===== */
+    .method-section {
+      padding: var(--sp-20) 0;
+      background: var(--surface-card);
+    }
+
+    .method-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--sp-6);
+    }
+
+    @media (min-width: 768px) {
+      .method-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--sp-8);
+      }
+    }
+
+    .method-card {
+      padding: var(--sp-8);
+      background: var(--surface-elev);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-xl);
+      transition: all var(--transition-base);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-5);
+    }
+
+    .method-card:hover {
+      background: var(--surface-hover);
+      border-color: var(--brand-600);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      transform: translateY(-4px);
+    }
+
+    .method-card-icon {
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(37, 99, 235, 0.1) 100%);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-lg);
+      color: var(--brand-500);
+    }
+
+    .method-card-title {
+      font-size: var(--fs-20);
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    .method-card-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+    }
+
+    .method-card-list li {
+      font-size: var(--fs-15);
+      line-height: var(--lh-17);
+      color: var(--ink-soft);
+      padding-left: var(--sp-5);
+      position: relative;
+    }
+
+    .method-card-list li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--brand-500);
+      font-weight: 700;
+    }
+
+    .method-card-list strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* ===== SERVICES SECTION ===== */
+    .services-section {
+      padding: var(--sp-20) 0;
+      background: var(--surface-page);
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--sp-8);
+    }
+
+    @media (min-width: 768px) {
+      .services-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .service-card {
+      padding: var(--sp-8);
+      background: var(--surface-card);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-xl);
+      transition: all var(--transition-base);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-6);
+    }
+
+    .service-card:hover {
+      background: var(--surface-elev);
+      border-color: var(--brand-600);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+      transform: translateY(-6px);
+    }
+
+    .service-card-header {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-4);
+    }
+
+    .service-card-icon {
+      width: 64px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.25) 0%, rgba(37, 99, 235, 0.15) 100%);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-lg);
+      color: var(--brand-400);
+    }
+
+    .service-card-title {
+      font-size: var(--fs-22);
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    .service-card-description {
+      font-size: var(--fs-15);
+      line-height: var(--lh-17);
+      color: var(--ink-soft);
+      margin: 0;
+      flex: 1;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--sp-2);
+      padding: var(--sp-4) var(--sp-8);
+      border-radius: var(--radius-md);
+      font-size: var(--fs-15);
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-500) 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--brand-500) 0%, var(--brand-400) 100%);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: var(--surface-elev);
+      color: var(--ink);
+      border: 1px solid var(--br-card);
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface-hover);
+      border-color: var(--brand-600);
+      color: var(--brand-400);
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    /* ===== BROKERS SECTION ===== */
+    .brokers-section {
+      padding: var(--sp-20) 0;
+      background: var(--surface-card);
+      border-top: 1px solid var(--br-card);
+    }
 
     /* ===== HEADER ===== */
     .hdr {
@@ -103,8 +557,14 @@
 
     /* ===== ICONS ===== */
     .ico { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-    .ico-lg { width:18px; height:18px; }
-    .ico-xl { width:20px; height:20px; }
+    .ico-lg { width: 24px; height: 24px; stroke-width: 2; }
+    .ico-xl { width: 32px; height: 32px; stroke-width: 2; }
+    
+    /* ===== TYPED.JS FADE OUT ===== */
+    .typed-fade-out {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
 
     /* ===== BUTTONS ===== */
     :root { --hover-bg: color-mix(in oklab, var(--surface-card) 92%, transparent); }
@@ -337,175 +797,269 @@
 <!-- ===== HEADER SLOT (montato via JS) ===== -->
 <div id="site-header-slot"></div>
 
-<section class="bg-white border-b border-slate-200 relative overflow-hidden">
-  <div class="max-w-7xl mx-auto px-6 lg:px-8 py-10 lg:py-16 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
+<!-- ===== MAIN CONTENT ===== -->
+<main>
+  <!-- ===== HERO SECTION ===== -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <div class="hero-badge">
+            <span>Framework Accademico AI</span>
+          </div>
+          <h1 class="hero-title">
+            <span id="hero-typing">Analisi Finanziaria<br>Istituzionale</span>
+          </h1>
+          <p class="hero-description">
+            Tradelia AI sviluppa <strong>analisi finanziarie modulari</strong> attraverso prompt proprietari 
+            e <strong>metodologia accademica scientifica</strong>. Strumenti didattici per comprendere mercati, 
+            rischi e correlazioni, con piena consapevolezza dei <strong>limiti tecnici e legali</strong> delle AI.
+          </p>
+          
+          <div class="hero-features">
+            <div class="hero-feature">
+              <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 3v18h18" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path d="M7 12l4 4 7-7" stroke="currentColor" stroke-width="2" fill="none"/>
+              </svg>
+              <div>
+                <strong>Potenza Analitica</strong>
+                <span>Analisi tecnica, macro e fondamentale integrate in modelli multilayer</span>
+              </div>
+            </div>
+            <div class="hero-feature">
+              <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2l7 4v6c0 5-3 8-7 10C8 20 5 17 5 12V6l7-4z" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path d="M12 8v4" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <div>
+                <strong>Trasparenza</strong>
+                <span>Progetto indipendente, senza marketing aggressivo o tracciamenti pubblicitari</span>
+              </div>
+            </div>
+            <div class="hero-feature">
+              <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="2" fill="none"/>
+              </svg>
+              <div>
+                <strong>Privacy Totale</strong>
+                <span>Nessun cookie di tracciamento, nessuna raccolta o vendita di dati</span>
+              </div>
+            </div>
+          </div>
 
-    <!-- Immagine mobile sopra -->
-    <div class="order-1 lg:order-2">
-      <div class="parallax bg-cover bg-center rounded-lg shadow-lg border border-slate-200 h-64 sm:h-80 lg:h-96" style="background-image:url('/img/hero-institutional.jpg')"></div>
-    </div>
-
-    <!-- Testo -->
-    <div class="order-2 lg:order-1">
-      <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-4 leading-tight min-h-[56px]">
-        <span id="hero-typing"></span>
-      </h1>
-      <p class="text-base sm:text-lg text-slate-700 mb-6 sm:mb-8 leading-relaxed">
-        Tradelia AI utilizza <strong>tecnologie AI integrate e ottimizzate per il metodo Tradelia</strong> 
-        per <strong>analizzare e simulare</strong> scenari di portafoglio.  
-        Strumenti didattici per comprendere mercati, rischi e correlazioni, con piena consapevolezza dei <strong>limiti tecnici e legali</strong> delle AI.
-      </p>
-
-      <!-- Tre pilastri -->
-      <div class="space-y-4">
-        <div class="flex items-start gap-3">
-          <i data-lucide="bar-chart-3" class="w-6 h-6 text-blue-700 flex-shrink-0"></i>
-          <span class="text-slate-700"><strong>Potenza Analitica</strong> – Analisi tecnica, macro e fondamentale integrate in modelli multilayer.</span>
+          <div class="hero-cta">
+            <a href="/dashboard.html" class="btn btn-primary">Accedi alla Dashboard</a>
+            <a href="/pricing.html" class="btn btn-secondary">Scopri i Prezzi</a>
+          </div>
         </div>
-        <div class="flex items-start gap-3">
-          <i data-lucide="shield-check" class="w-6 h-6 text-blue-700 flex-shrink-0"></i>
-          <span class="text-slate-700"><strong>Trasparenza</strong> – Progetto indipendente, senza marketing aggressivo o tracciamenti pubblicitari.</span>
-        </div>
-        <div class="flex items-start gap-3">
-          <i data-lucide="lock" class="w-6 h-6 text-blue-700 flex-shrink-0"></i>
-          <span class="text-slate-700"><strong>Privacy Totale</strong> – Nessun cookie di tracciamento, nessuna raccolta o vendita di dati.</span>
+        <div class="hero-visual">
+          <div class="hero-visual-bg"></div>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Disclaimer -->
-  <div class="bg-slate-50 border-t border-slate-200">
-    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-4 text-xs sm:text-sm text-slate-600 leading-relaxed flex items-start sm:items-center gap-2">
-      <i data-lucide="info" class="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5"></i>
-      <span>Le analisi di Tradelia AI sono a scopo esclusivamente <strong>didattico</strong>. Le AI non memorizzano dati, non tracciano l’utente e possono contenere errori. Non costituiscono <strong>consulenza finanziaria</strong> e non sostituiscono un professionista abilitato.</span>
+    
+    <!-- Disclaimer Banner -->
+    <div class="hero-disclaimer">
+      <div class="container">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+          <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <p>
+          Le analisi di Tradelia AI sono a scopo esclusivamente <strong>didattico</strong>. 
+          Le AI non memorizzano dati, non tracciano l'utente e possono contenere errori. 
+          Non costituiscono <strong>consulenza finanziaria</strong> e non sostituiscono un professionista abilitato.
+        </p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- PARALLAX SOLO DESKTOP -->
-<style>
-  @media (min-width: 324px) {
-    .parallax { background-attachment: fixed; }
-  }
-</style>
+  <!-- ===== METODOLOGIA SECTION ===== -->
+  <section id="metodo" class="method-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Metodologia Istituzionale</h2>
+        <p class="section-description">
+          In <strong>Tradelia AI</strong> non trattiamo l'intelligenza artificiale come un oracolo a cui porre domande, 
+          ma come <strong>strumento di ricerca, normalizzazione e aggregazione</strong> dei dati. 
+          Le valutazioni sono costruite con <strong>metodologie istituzionali e accademiche</strong>, 
+          privilegiando fonti primarie e verifiche incrociate.
+        </p>
+      </div>
 
-<!-- SCRIPT ICONS + TYPING -->
+      <div class="method-grid">
+        <div class="method-card">
+          <div class="method-card-icon">
+            <svg class="ico ico-xl" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="2" fill="none"/>
+              <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+          </div>
+          <h3 class="method-card-title">Principi</h3>
+          <ul class="method-card-list">
+            <li>AI = motore di <strong>ricerca/ETL</strong>, non consulente o "cristallo magico"</li>
+            <li>Priorità a <strong>fonti primarie</strong> (regolatori, prospetti, bilanci) e <strong>letteratura</strong> tecnica/accademica</li>
+            <li><strong>Tracciabilità</strong> di dati, versioni e criteri di scoring</li>
+          </ul>
+        </div>
+
+        <div class="method-card">
+          <div class="method-card-icon">
+            <svg class="ico ico-xl" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="currentColor" stroke-width="2" fill="none"/>
+              <path d="M7.5 4.27l9 5.15M3.29 7 12 12l8.71-5M12 22V12" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+          </div>
+          <h3 class="method-card-title">Processo</h3>
+          <ul class="method-card-list">
+            <li><strong>Raccolta & normalizzazione</strong> (API/dataset) con timestamp e identificatori</li>
+            <li><strong>Verifica incrociata</strong> T1/T2, controllo outlier, soglie di consenso</li>
+            <li><strong>Sintesi & scoring</strong> su copertura mercati, costi, UX, compliance</li>
+          </ul>
+        </div>
+
+        <div class="method-card">
+          <div class="method-card-icon">
+            <svg class="ico ico-xl" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2l7 4v6c0 5-3 8-7 10C8 20 5 17 5 12V6l7-4z" stroke="currentColor" stroke-width="2" fill="none"/>
+              <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="method-card-title">Limiti & Compliance</h3>
+          <ul class="method-card-list">
+            <li>L'output <strong>non è consulenza finanziaria</strong></li>
+            <li>Dove presenti CFD: <strong>avvertenze regolamentari</strong> e focus su strumenti quotati</li>
+            <li><strong>Trasparenza</strong> su affiliazioni e potenziali conflitti</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SERVIZI SECTION ===== -->
+  <section class="services-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Servizi AI</h2>
+        <p class="section-description">
+          Tre strumenti principali per l'<strong>educazione finanziaria istituzionale</strong>, 
+          modellati per conformità MiFID II e orientati alla formazione professionale.
+        </p>
+      </div>
+
+      <div class="services-grid">
+        <!-- Service 1: Portafoglio -->
+        <div class="service-card">
+          <div class="service-card-header">
+            <div class="service-card-icon">
+              <svg class="ico ico-xl" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" fill="none"/>
+              </svg>
+            </div>
+            <h3 class="service-card-title">Validazione / Simulazione Portafoglio</h3>
+          </div>
+          <p class="service-card-description">
+            Costruisci o valida un portafoglio seguendo criteri di coerenza macro, rischio e rendimento, 
+            con analisi multilayer AI.
+          </p>
+          <button onclick="apriModuloPortafoglio()" class="btn btn-primary btn-block">
+            Avvia Analisi
+          </button>
+        </div>
+
+        <!-- Service 2: Educazione Finanziaria -->
+        <div class="service-card">
+          <div class="service-card-header">
+            <div class="service-card-icon">
+              <svg class="ico ico-xl" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path d="M6 12v5c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-5" stroke="currentColor" stroke-width="2" fill="none"/>
+              </svg>
+            </div>
+            <h3 class="service-card-title">Educazione Finanziaria AI</h3>
+          </div>
+          <p class="service-card-description">
+            Strumenti AI modellati per l'educazione finanziaria conforme alle normative MiFID II. 
+            Analisi di asset, mercati e scenari con metodologia istituzionale orientata alla formazione.
+          </p>
+          <button onclick="apriModuloAsset()" class="btn btn-primary btn-block">
+            Avvia Analisi
+          </button>
+        </div>
+
+        <!-- Service 3: Domanda Libera -->
+        <div class="service-card">
+          <div class="service-card-header">
+            <div class="service-card-icon">
+              <svg class="ico ico-xl" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path d="M8 10h.01M12 10h.01M16 10h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="service-card-title">Domanda Libera</h3>
+          </div>
+          <p class="service-card-description">
+            Formula qualsiasi domanda su mercati, strategie o scenari e ricevi un'analisi ragionata 
+            basata sul metodo Tradelia.
+          </p>
+          <button onclick="apriModuloDomanda()" class="btn btn-primary btn-block">
+            Fai una Domanda
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BROKERS SECTION ===== -->
+  <section class="brokers-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Broker Regolamentati</h2>
+        <p class="section-description">
+          Selezione curata da <strong>Tradelia AI</strong> con focus su <strong>strumenti reali</strong> 
+          (azioni, ETF, obbligazioni, derivati quotati). 
+          <strong>Se un broker offre anche CFD, lo includiamo esclusivamente per la componente di strumenti diretti.</strong>
+        </p>
+        <a href="/brokers.html" class="btn btn-primary" style="margin-top: var(--sp-4);">
+          Vedi tutti i broker
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
+            <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ===== HERO TYPING SCRIPT ===== -->
 <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     if (window.lucide) lucide.createIcons();
 
-    new Typed('#hero-typing', {
-      strings: [
-        '<strong>Potenza AI modulare</strong>',
-        '<strong>Metodo Istituzionale</strong>',
-        '<strong>Privacy Totale</strong>'
-      ],
-      typeSpeed: 50,
-      backSpeed: 30,
-      backDelay: 1500,
-      loop: true,
-      fadeOut: true,
-      fadeOutClass: 'typed-fade-out',
-      fadeOutDelay: 200,
-      showCursor: false
-    });
-  });
-</script>
-<br><br><br>
-   <section id="metodo" class="mb-10">
-      <div class="bg-white border border-slate-200 rounded-xl p-6">
-        <h2 class="text-xl font-semibold mb-3">Come usiamo l’AI in Tradelia</h2>
-        <p class="text-sm text-slate-600 mb-5 max-w-4xl">
-          In <strong>Tradelia AI</strong> non trattiamo l’intelligenza artificiale come un oracolo a cui porre domande, ma come
-          <strong>strumento di ricerca, normalizzazione e aggregazione</strong> dei dati. Le valutazioni sono costruite con
-          <strong>metodologie istituzionali e accademiche</strong>, privilegiando fonti primarie e verifiche incrociate.
-        </p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="border border-slate-200 rounded-lg p-4">
-            <h3 class="font-semibold mb-2">Principi</h3>
-            <ul class="text-sm text-slate-600 space-y-2 list-disc pl-5">
-              <li>AI = motore di <strong>ricerca/ETL</strong>, non consulente o “cristallo magico”.</li>
-              <li>Priorità a <strong>fonti primarie</strong> (regolatori, prospetti, bilanci) e <strong>letteratura</strong> tecnica/accademica.</li>
-              <li><strong>Tracciabilità</strong> di dati, versioni e criteri di scoring.</li>
-            </ul>
-          </div>
-          <div class="border border-slate-200 rounded-lg p-4">
-            <h3 class="font-semibold mb-2">Processo</h3>
-            <ul class="text-sm text-slate-600 space-y-2 list-disc pl-5">
-              <li><strong>Raccolta & normalizzazione</strong> (API/dataset) con timestamp e identificatori.</li>
-              <li><strong>Verifica incrociata</strong> T1/T2, controllo outlier, soglie di consenso.</li>
-              <li><strong>Sintesi & scoring</strong> su copertura mercati, costi, UX, compliance.</li>
-            </ul>
-          </div>
-          <div class="border border-slate-200 rounded-lg p-4">
-            <h3 class="font-semibold mb-2">Limiti & compliance</h3>
-            <ul class="text-sm text-slate-600 space-y-2 list-disc pl-5">
-              <li>L’output <strong>non è consulenza finanziaria</strong>.</li>
-              <li>Dove presenti CFD: <strong>avvertenze regolamentari</strong> e focus su strumenti quotati.</li>
-              <li><strong>Trasparenza</strong> su affiliazioni e potenziali conflitti.</li>
-            </ul>
-          </div>
-        </div>
-        <div class="mt-4 text-xs text-slate-500">Approfondisci la nostra metodologia: <a href="#" class="underline hover:no-underline">Whitepaper (coming soon)</a></div>
-      </div>
-    </section>
-<br><br><br>
-  <section class="bg-slate-50 py-16 border-b border-slate-200">
-  <div class="max-w-7xl mx-auto px-6 lg:px-8">
-    <h2 class="text-3cxl font-bold text-slate-900 mb-4 text-center">
-      Servizi AI <span class="text-blue-700">&bull;</span> Tradelia
-    </h2>
-    <p class="text-lg text-slate-700 text-center max-w-2xl mx-auto mb-12">
-      Tre strumenti principali per l'<strong>educazione finanziaria istituzionale</strong>, modellati per conformità MiFID II e orientati alla formazione professionale.
-    </p>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      
-      <!-- Card 1: Portafoglio -->
-      <div class="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition p-6 flex flex-col">
-        <i data-lucide="layers" class="w-10 h-10 text-blue-700 mb-4"></i>
-        <h3 class="text-xl font-semibold text-slate-900 mb-2">Validazione / Simulazione Portafoglio</h3>
-        <p class="text-sm text-slate-600 flex-grow">
-          Costruisci o valida un portafoglio seguendo criteri di coerenza macro, rischio e rendimento, con analisi multilayer AI.
-        </p>
-        <button onclick="apriModuloPortafoglio()" class="mt-4 inline-block bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 text-sm font-medium text-center">
-          Avvia Analisi
-        </button>
-      </div>
-
-      <!-- Card 2: Educazione Finanziaria AI -->
-      <div class="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition p-6 flex flex-col">
-        <i data-lucide="graduation-cap" class="w-10 h-10 text-blue-700 mb-4"></i>
-        <h3 class="text-xl font-semibold text-slate-900 mb-2">Educazione Finanziaria AI</h3>
-        <p class="text-sm text-slate-600 flex-grow">
-          Strumenti AI modellati per l’educazione finanziaria conforme alle normative MiFID II. Analisi di asset, mercati e scenari con metodologia istituzionale orientata alla formazione.
-        </p>
-        <button onclick="apriModuloAsset()" class="mt-4 inline-block bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 text-sm font-medium text-center">
-          Avvia Analisi
-        </button>
-      </div>
-
-      <!-- Card 3: Domanda Libera -->
-      <div class="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition p-6 flex flex-col">
-        <i data-lucide="message-square" class="w-10 h-10 text-blue-700 mb-4"></i>
-        <h3 class="text-xl font-semibold text-slate-900 mb-2">Domanda Libera</h3>
-        <p class="text-sm text-slate-600 flex-grow">
-          Formula qualsiasi domanda su mercati, strategie o scenari e ricevi un’analisi ragionata basata sul metodo Tradelia.
-        </p>
-        <button onclick="apriModuloDomanda()" class="mt-4 inline-block bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 text-sm font-medium text-center">
-          Fai una domanda
-        </button>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    if (window.lucide) lucide.createIcons();
+    const heroTyping = document.getElementById('hero-typing');
+    if (heroTyping) {
+      new Typed('#hero-typing', {
+        strings: [
+          'Analisi Finanziaria<br>Istituzionale',
+          'Potenza AI<br>Modulare',
+          'Metodo<br>Accademico',
+          'Privacy<br>Totale'
+        ],
+        typeSpeed: 50,
+        backSpeed: 30,
+        backDelay: 2000,
+        loop: true,
+        fadeOut: true,
+        fadeOutClass: 'typed-fade-out',
+        fadeOutDelay: 300,
+        showCursor: false,
+        html: true
+      });
+    }
   });
 </script>
 
@@ -2412,24 +2966,25 @@ Vuoi procedere inviando i dati?`;
   }
 </script>
 
-<!-- MAIN -->
-<main class="container">
-  <!-- Contenuto principale della homepage -->
-  
-  <!-- Link alla pagina broker -->
-  <section class="bg-slate-50 py-16 border-b border-slate-200">
-    <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-      <h2 class="text-2xl font-bold text-slate-900 mb-4">Broker Regolamentati</h2>
-      <p class="text-lg text-slate-700 max-w-2xl mx-auto mb-8">
-        Selezione curata da <strong>Tradelia AI</strong> con focus su <strong>strumenti reali</strong> (azioni, ETF, obbligazioni, derivati quotati).
-        <span class="font-semibold text-amber-700">Se un broker offre anche CFD, lo includiamo esclusivamente per la componente di strumenti diretti.</span>
+<!-- ===== BROKERS SECTION ===== -->
+<section class="brokers-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Broker Regolamentati</h2>
+      <p class="section-description">
+        Selezione curata da <strong>Tradelia AI</strong> con focus su <strong>strumenti reali</strong> 
+        (azioni, ETF, obbligazioni, derivati quotati). 
+        <strong>Se un broker offre anche CFD, lo includiamo esclusivamente per la componente di strumenti diretti.</strong>
       </p>
-      <a href="/brokers.html" class="inline-block bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 font-medium">
-        Vedi tutti i broker →
+      <a href="/brokers.html" class="btn btn-primary" style="margin-top: var(--sp-4);">
+        Vedi tutti i broker
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
+          <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </a>
     </div>
-  </section>
-</main>
+  </div>
+</section>
 
 <!-- Cookie & Legal helpers (fix: racchiusi in <script>) -->
 <script>
