@@ -171,11 +171,12 @@ export function renderCard(rawData, ctx = {}) {
   // Header modulo (tutto da labels/JSON)
   const headerHTML = renderModuleHeader({
     badge: labels.badge || 'F5B',
-    subtitle: labels.hero_subtitle || 'Setup Opzioni · Orizzonte 3–10 giorni',
-    title: labels.hero_title || 'Strutture CALL/PUT o spread (Freedom24/Pro)',
-    desc: labels.hero_desc || 'Costruisce strutture CALL/PUT o spread coerenti con bias e rischio. Nessun contenuto operativo.',
+    subtitle: labels.hero_subtitle || 'Analisi Opzioni · Orizzonte 3–10 giorni',
+    title: labels.hero_title || 'Analisi di strutture opzioni (esemplificative)',
+    desc: labels.hero_desc || 'Analisi educativa di strutture opzioni esemplificative (CALL/PUT, spread), coerenti con bias e rischio. Nessun contenuto operativo o raccomandativo.',
     status: d.meta.moduleStatus,
-    freshness: d.meta.freshness
+    freshness: d.meta.freshness,
+    disclaimer: d.meta.hero_disclaimer || d.mifid?.disclaimer || ''
   });
   
   // Riassunto AI sempre visibile (usa header-ticker)

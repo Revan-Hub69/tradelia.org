@@ -237,11 +237,12 @@ export function renderCard(rawData, ctx = {}) {
   // Header modulo (tutto da labels/JSON)
   const headerHTML = renderModuleHeader({
     badge: labels.badge || 'F5',
-    subtitle: labels.hero_subtitle || 'Setup Operativo · Orizzonte 3–10 giorni',
-    title: labels.hero_title || 'Setup tecnici completi, coerenti con bias e rischio',
-    desc: labels.hero_desc || 'Genera setup tecnici completi, coerenti con bias e rischio. Nessun contenuto operativo.',
+    subtitle: labels.hero_subtitle || 'Analisi Setup · Orizzonte 3–10 giorni',
+    title: labels.hero_title || 'Analisi di setup tecnici (esemplificativi)',
+    desc: labels.hero_desc || 'Analisi educativa di setup tecnici esemplificativi, coerenti con bias e rischio. Nessun contenuto operativo o raccomandativo.',
     status: d.meta.moduleStatus,
-    freshness: d.meta.freshness
+    freshness: d.meta.freshness,
+    disclaimer: d.meta.hero_disclaimer || d.mifid?.disclaimer || ''
   });
   
   // Riassunto AI sempre visibile (usa header-ticker)

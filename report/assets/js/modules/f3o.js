@@ -213,7 +213,8 @@ export function renderCard(rawData, ctx = {}) {
     title: labels.hero_title || 'Volatilità, curva IV, skew e posizionamento',
     desc: labels.hero_desc || 'Analisi opzioni: volatilità implicita, gamma, vega, skew e posizionamento. Nessun contenuto operativo.',
     status: d.meta.moduleStatus,
-    freshness: d.meta.freshness
+    freshness: d.meta.freshness,
+    disclaimer: d.meta.hero_disclaimer || d.mifid?.disclaimer || ''
   });
   
   // Riassunto AI sempre visibile (usa header-ticker)

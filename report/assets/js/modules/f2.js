@@ -305,7 +305,8 @@ export function renderCard(rawData, ctx = {}) {
     title: labels.hero_title || 'Sentiment & overlay fondamentali (ticker‑level)',
     desc: labels.hero_desc || 'Contesto sintetico non operativo su sentiment, fondamentali descrittivi e newsflow.',
     status: d.meta.moduleStatus,
-    freshness: d.meta.freshness
+    freshness: d.meta.freshness,
+    disclaimer: d.meta.hero_disclaimer || d.mifid?.disclaimer || ''
   });
   
   // Riassunto AI sempre visibile (usa header-ticker)
@@ -355,7 +356,7 @@ export function renderCard(rawData, ctx = {}) {
   
   // Genera menu tabs + drawer + content
   const { drawerHTML, contentHTML, menuHTML } = renderModuleTabsSidebar(tabs);
-  
+
   return `
     <section class="module-card" data-state="${escapeAttr(d.meta.moduleStatus)}">
       ${headerHTML}

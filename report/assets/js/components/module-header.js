@@ -5,6 +5,33 @@
 import { unifiedDrawer } from './unified-drawer.js';
 
 /**
+ * Genera HTML disclaimer MiFID per modulo
+ * @param {string} disclaimer - Testo disclaimer
+ * @returns {string} HTML disclaimer
+ */
+export function renderMiFIDDisclaimer(disclaimer = '') {
+  if (!disclaimer) {
+    disclaimer = 'Output a fini educativi/informativi (orizzonte 3–10 giorni). Non costituisce consulenza o raccomandazione (MiFID II).';
+  }
+
+  function escapeHtml(str) {
+    if (str == null) return '';
+    const div = document.createElement('div');
+    div.textContent = String(str);
+    return div.innerHTML;
+  }
+
+  return `
+    <div class="module-mifid-disclaimer">
+      <svg class="module-mifid-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+      </svg>
+      <span class="module-mifid-text">${escapeHtml(disclaimer)}</span>
+    </div>
+  `;
+}
+
+/**
  * Genera HTML header per modulo
  * @param {Object} config - Configurazione header
  * @param {string} config.badge - Badge modulo (es: "F1B", "F2")
@@ -13,6 +40,7 @@ import { unifiedDrawer } from './unified-drawer.js';
  * @param {string} config.desc - Descrizione
  * @param {string} config.status - Status (ACTIVE/HOLD/REVIEW)
  * @param {string} config.freshness - Freshness (es: "≤ T-1")
+ * @param {string} config.disclaimer - Disclaimer MiFID (opzionale)
  * @returns {string} HTML header
  */
 export function renderModuleHeader(config = {}) {
@@ -22,7 +50,8 @@ export function renderModuleHeader(config = {}) {
     title = '',
     desc = '',
     status = 'ACTIVE',
-    freshness = '≤ T-1'
+    freshness = '≤ T-1',
+    disclaimer = ''
   } = config;
 
   function escapeHtml(str) {
@@ -49,6 +78,7 @@ export function renderModuleHeader(config = {}) {
       </div>
       ${title ? `<div class="module-title">${escapeHtml(title)}</div>` : ''}
       ${desc ? `<div class="module-desc">${escapeHtml(desc)}</div>` : ''}
+      ${disclaimer ? renderMiFIDDisclaimer(disclaimer) : ''}
     </header>
   `;
 }

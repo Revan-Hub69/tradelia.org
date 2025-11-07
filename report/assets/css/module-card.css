@@ -145,6 +145,51 @@
   max-width: 65ch; /* Max-width per leggibilità */
 }
 
+/* ===== MIFID DISCLAIMER ===== */
+.module-mifid-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
+  padding: var(--sp-3);
+  background: rgba(255, 193, 7, 0.08); /* Giallo molto tenue per attirare attenzione */
+  border: 1px solid rgba(255, 193, 7, 0.15);
+  border-radius: var(--radius-md);
+  border-left: 3px solid rgba(255, 193, 7, 0.4);
+}
+
+.module-mifid-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  color: rgba(255, 193, 7, 0.9);
+  fill: currentColor;
+}
+
+.module-mifid-text {
+  font-size: var(--fs-11);
+  line-height: var(--lh-16);
+  color: var(--muted);
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .module-mifid-disclaimer {
+    padding: var(--sp-2);
+    gap: var(--sp-2);
+  }
+  
+  .module-mifid-icon {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .module-mifid-text {
+    font-size: var(--fs-10);
+  }
+}
+
 /* ===== AI SUMMARY BOX ===== */
 .module-ai-summary {
   background: transparent; /* Rimuovi background per evitare card nella card */

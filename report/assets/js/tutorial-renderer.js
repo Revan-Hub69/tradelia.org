@@ -104,7 +104,9 @@ function renderSection(section, index, glossaryTerms = {}) {
       });
       html += `</${listTag}>`;
     } else if (item.type === 'table') {
-      html += renderTable(item);
+      html += renderTable(item, glossaryTerms);
+    } else if (item.type === 'pill') {
+      html += `<div class="tutorial-pill">${processText(item.text, glossaryTerms)}</div>`;
     } else if (item.type === 'html') {
       html += item.content;
     }
@@ -119,7 +121,7 @@ function renderSection(section, index, glossaryTerms = {}) {
 }
 
 // ===== RENDER TABLE =====
-function renderTable(tableData) {
+function renderTable(tableData, glossaryTerms = {}) {
   if (!tableData.headers || !tableData.rows) return '';
   
   let html = `
@@ -161,7 +163,7 @@ async function loadTutorialData() {
   // Estrai nome file tutorial da URL
   const pathParts = window.location.pathname.split('/');
   const fileName = pathParts[pathParts.length - 1].replace('.html', '');
-  const jsonPath = `/report/tutorial/data/${fileName}.json`;
+  const jsonPath = `/tutorial/data/${fileName}.json`;
   
   try {
     const response = await fetch(jsonPath);

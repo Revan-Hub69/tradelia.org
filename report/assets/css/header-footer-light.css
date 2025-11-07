@@ -1,0 +1,56 @@
+/* /report/assets/css/header-footer-light.css
+   Header & Footer Light Theme Styles
+   Stili dedicati per tema light di header e footer
+   ----------------------------------------------------------- */
+
+/* ===== HEADER LIGHT THEME ===== */
+:root[data-theme="light"] .hdr {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.96) 0%,
+    rgba(255, 255, 255, 0.92) 100%
+  );
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 
+    0 1px 0 rgba(0, 0, 0, 0.03) inset,
+    0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme="light"] .hdr::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(37, 99, 235, 0.15) 50%,
+    transparent 100%
+  );
+}
+
+:root[data-theme="light"] .brand:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+/* ===== FOOTER LIGHT THEME ===== */
+:root[data-theme="light"] .site-footer {
+  background: linear-gradient(
+    180deg,
+    var(--surface-page) 0%,
+    var(--footer-bg) 100%
+  );
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+:root[data-theme="light"] .site-footer::before {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(37, 99, 235, 0.2) 25%,
+    rgba(37, 99, 235, 0.3) 50%,
+    rgba(37, 99, 235, 0.2) 75%,
+    transparent 100%
+  );
+}
+
+:root[data-theme="light"] .ftr-head {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+

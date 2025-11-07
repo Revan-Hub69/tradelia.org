@@ -152,11 +152,12 @@ export function renderCard(rawData, ctx = {}) {
   // Header modulo (tutto da labels/JSON)
   const headerHTML = renderModuleHeader({
     badge: labels.badge || 'F5-LT+',
-    subtitle: labels.hero_subtitle || 'Layer Long-Term · Orizzonte 3–10 giorni',
-    title: labels.hero_title || 'Layer long-term integrato per coerenza ciclica e fondamentale',
-    desc: labels.hero_desc || 'Strato long-term integrato per coerenza ciclica e fondamentale. Nessun contenuto operativo.',
+    subtitle: labels.hero_subtitle || 'Analisi Long-Term · Orizzonte 3–10 giorni',
+    title: labels.hero_title || 'Analisi di coerenza long-term (ciclica e fondamentale)',
+    desc: labels.hero_desc || 'Analisi educativa di coerenza long-term integrata (ciclica e fondamentale). Nessun contenuto operativo o raccomandativo.',
     status: d.meta.moduleStatus,
-    freshness: d.meta.freshness
+    freshness: d.meta.freshness,
+    disclaimer: d.meta.hero_disclaimer || d.mifid?.disclaimer || ''
   });
   
   // Riassunto AI sempre visibile (usa header-ticker)

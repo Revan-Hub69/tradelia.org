@@ -183,7 +183,8 @@ export function renderCard(rawData, ctx = {}) {
     title: labels.hero_title || 'Verifica coerenza cross-asset e macro con il bias tecnico',
     desc: labels.hero_desc || 'Validazione coerenza cross-asset e macro con il bias tecnico. Nessun contenuto operativo.',
     status: d.meta.moduleStatus,
-    freshness: d.meta.freshness
+    freshness: d.meta.freshness,
+    disclaimer: d.meta.hero_disclaimer || d.mifid?.disclaimer || ''
   });
   
   // Riassunto AI sempre visibile (usa header-ticker)
