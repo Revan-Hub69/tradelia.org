@@ -56,10 +56,11 @@ function render(data = {}) {
             proprietari e metodologia accademica scientifica.
           </p>
           <div class="ftr-quick-links" role="navigation" aria-label="Link rapidi">
-            <a href="/index.html" target="_blank" rel="noopener" aria-label="Vai alla homepage">Homepage</a>
-            <a href="/archivio.html" target="_blank" rel="noopener" aria-label="Vai all'archivio">Archivio</a>
-            <a href="/brokers.html" target="_blank" rel="noopener" aria-label="Vai alla pagina brokers">Brokers</a>
-            <a href="/glossario.html" target="_blank" rel="noopener" aria-label="Vai al glossario finanziario">Glossario</a>
+            <a href="/index.html" aria-label="Vai alla homepage">Homepage</a>
+            <a href="/archivio/dashboard.html" aria-label="Vai alla dashboard abbonati">Dashboard</a>
+            <a href="/pricing.html" aria-label="Vai alla pagina prezzi">Pricing</a>
+            <a href="/brokers.html" aria-label="Vai alla pagina brokers">Brokers</a>
+            <a href="/glossario.html" aria-label="Vai al glossario finanziario">Glossario</a>
           </div>
         </div>
 
@@ -76,7 +77,12 @@ function render(data = {}) {
             <li><strong>Rischio di perdita totale o parziale del capitale</strong> — investire comporta rischi</li>
             <li>Le informazioni hanno <strong>scopo puramente informativo e formativo</strong> — non costituiscono raccomandazione personalizzata</li>
           </ul>
-          <div style="margin-top: var(--sp-4); display: flex; flex-wrap: wrap; gap: var(--sp-4);" role="group" aria-label="Documenti legali">
+          <div class="ftr-quick-links" role="navigation" aria-label="Documenti legali" style="margin-top: var(--sp-4);">
+            <a href="/privacy.html" aria-label="Vai alla privacy policy">Privacy Policy</a>
+            <a href="/terms.html" aria-label="Vai ai termini e condizioni">Termini e Condizioni</a>
+            <a href="/refund.html" aria-label="Vai alla policy di rimborso">Policy di Rimborso</a>
+          </div>
+          <div style="margin-top: var(--sp-3);">
             <button id="btn-privacy-open" class="btn btn-sm" type="button" aria-label="Apri informativa privacy">Privacy</button>
             <button id="btn-mifid-open" class="btn btn-sm" type="button" aria-label="Apri informativa MiFID">Informativa MiFID</button>
           </div>

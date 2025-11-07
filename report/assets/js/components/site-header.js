@@ -20,7 +20,7 @@ function createEl(tag, className) {
 function render() {
   return `
     <div class="container">
-      <a href="/index.html" target="_blank" rel="noopener" class="brand" aria-label="Tradelia.org - Homepage">
+      <a href="/index.html" class="brand" aria-label="Tradelia.org - Homepage">
         <span class="brand-word">TRADELIA</span>
         <span class="brand-dot" aria-hidden="true"></span>
         <span class="brand-suffix">AI</span>

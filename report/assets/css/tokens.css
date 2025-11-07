@@ -1670,7 +1670,7 @@ a:focus-visible {
 }
 
 /* ===== SCROLLBAR PREMIUM ISTITUZIONALE (DARK THEME) ===== */
-/* Nota: Light theme scrollbar è in header-footer-light.css */
+/* Nota: Stili footer/header unificati - funzionano sia per dark che light */
 :root:not([data-theme="light"]) ::-webkit-scrollbar {
   width: 12px;
   height: 12px;
