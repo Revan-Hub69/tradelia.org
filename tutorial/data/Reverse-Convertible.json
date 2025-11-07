@@ -1,0 +1,394 @@
+{
+  "title": "Reverse Convertible: Guida Completa Tradelia AI",
+  "meta": {
+    "published": "Gennaio 2025",
+    "category": "Strumenti Strutturati",
+    "difficulty": "Intermedio-Avanzato"
+  },
+  "tags": [
+    "Reverse Convertible",
+    "Obbligazioni Strutturate",
+    "Derivati",
+    "Barriera",
+    "Rischio",
+    "Cedola"
+  ],
+  "glossaryTerms": {
+    "reverse convertible": "CreditRiskBlock",
+    "obbligazioni strutturate": "CreditRiskBlock",
+    "barriera": "CreditRiskBlock",
+    "cedola": "CreditRiskBlock",
+    "put": "CreditRiskBlock",
+    "autocallable": "CreditRiskBlock",
+    "phoenix": "CreditRiskBlock",
+    "worst-of": "CreditRiskBlock",
+    "fixing": "CreditRiskBlock"
+  },
+  "sections": [
+    {
+      "id": "introduzione",
+      "title": "Definizione e Logica Finanziaria",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I **Reverse Convertible** sono strumenti finanziari derivati, classificabili come **obbligazioni strutturate**. Offrono una **cedola fissa** elevata in cambio della possibilità che, a scadenza, il capitale venga rimborsato non in contanti ma in **azioni sottostanti** (in caso di andamento negativo del sottostante)."
+        },
+        {
+          "type": "paragraph",
+          "text": "Sono strutture ibride: combinano un **bond tradizionale** con una **opzione put venduta** sull'azione sottostante. L'investitore incassa la cedola grazie al premio ricevuto per la put venduta, ma si espone indirettamente al rischio di ribasso del titolo."
+        },
+        {
+          "type": "paragraph",
+          "text": "Il nome \"reverse\" deriva dal fatto che, a differenza dei convertibili classici (che permettono all'investitore di convertire in azioni), qui è l'emittente a scegliere se rimborsare in azioni (se il valore del sottostante è sceso)."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Obbligazione:** offre una cedola predeterminata (es. 8%)",
+            "**Opzione Put venduta:** espone al rischio di ricevere azioni se il titolo scende sotto un certo livello (strike o barriera)",
+            "**Rimborso:** in contanti se il sottostante è sopra la barriera; in azioni se sotto",
+            "**Logica per l'emittente:** raccogliere capitale offrendo strumenti ad alto rendimento apparente"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Henderson & Pearson (2011) ha analizzato le obbligazioni strutturate, dimostrando che i Reverse Convertible combinano un'obbligazione con la vendita di un'opzione put. La ricerca evidenzia che molti investitori retail non comprendono appieno i rischi impliciti nella vendita di opzioni."
+        }
+      ]
+    },
+    {
+      "id": "struttura",
+      "title": "Struttura Tecnica e Meccanismo",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Un Reverse Convertible è composto da due elementi principali:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Obbligazione zero-coupon o plain vanilla:** struttura base che assicura il pagamento cedolare",
+            "**Opzione put venduta su un'azione:** obbliga l'investitore ad acquistare il titolo a un prezzo predeterminato se il valore scende"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Il titolo paga cedole fisse trimestrali, semestrali o annuali, indipendentemente dall'andamento del sottostante. Tuttavia, a scadenza, se il valore dell'azione sottostante è inferiore alla **barriera** (es. 70% del livello iniziale), il capitale non verrà rimborsato per intero: l'investitore riceverà **azioni deprezzate**."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Componenti Chiave"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Cedola:** fissa, elevata (es. 6%–12%), indipendente dal prezzo dell'azione",
+            "**Barriera:** livello critico (es. 70%) sotto cui scatta il rimborso in azioni",
+            "**Rimborso:** 100% in contanti se il titolo resta sopra la barriera; azioni se scende sotto",
+            "**Durata:** tipicamente 1–3 anni"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Bergstresser et al. (2009) ha analizzato la struttura dei Reverse Convertible, dimostrando che la combinazione di obbligazione e opzione put venduta crea un profilo di rischio asimmetrico. La ricerca evidenzia che molti investitori retail sottovalutano il rischio di ricevere azioni deprezzate."
+        }
+      ]
+    },
+    {
+      "id": "funzionamento",
+      "title": "Funzionamento e Scenari di Rendimento",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I Reverse Convertible si basano su tre scenari principali alla scadenza, che determinano il rendimento finale per l'investitore. Il funzionamento ruota attorno al comportamento dell'**azione sottostante** rispetto a una **barriera**."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Scenario 1 – Azione sopra la Barriera"
+        },
+        {
+          "type": "paragraph",
+          "text": "Se il prezzo dell'azione a scadenza è superiore alla barriera (es. sopra il 70% del fixing iniziale), l'investitore riceve:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Rimborso integrale** del capitale in contanti",
+            "**Cedole** già incassate durante la vita del bond"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Scenario 2 – Azione sotto la Barriera"
+        },
+        {
+          "type": "paragraph",
+          "text": "Se l'azione scende sotto la barriera e vi resta alla scadenza:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Rimborso in azioni** svalutate, al prezzo definito dal fixing iniziale",
+            "**Perdita in conto capitale**, compensata solo parzialmente dalle cedole"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Scenario 3 – Azione Colpita Intraday (Barriera \"Americana\")"
+        },
+        {
+          "type": "paragraph",
+          "text": "Alcune strutture prevedono una barriera osservata in continuo (non solo a scadenza): basta una **violazione intraday** per far scattare il rimborso in azioni."
+        },
+        {
+          "type": "paragraph",
+          "text": "Il rendimento finale è quindi il risultato della **cedola fissa** più (o meno) il valore di mercato dell'azione ricevuta, con **elevata incertezza** nei casi di correzione del sottostante."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Carlin (2009) ha analizzato i rendimenti dei Reverse Convertible, dimostrando che il rendimento effettivo dipende significativamente dal comportamento del sottostante. La ricerca evidenzia che molti investitori retail sottovalutano la probabilità di ricevere azioni deprezzate."
+        }
+      ]
+    },
+    {
+      "id": "rischi",
+      "title": "Rischi Nascosti e Asimmetrie",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I Reverse Convertible offrono cedole elevate, ma nascondono rischi asimmetrici che spesso sfuggono all'investitore retail. Dietro l'apparente generosità del rendimento si cela una **vendita implicita di opzioni**, con esposizione diretta al ribasso del sottostante."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Rischi Principali"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Rischio di mercato:** il titolo sottostante può scendere molto più del livello barriera, generando perdite elevate in conto capitale",
+            "**Rischio di rimborso in natura:** l'investitore riceve azioni proprio nei momenti peggiori di mercato (effetto pro-ciclico)",
+            "**Rischio emittente:** come in tutte le obbligazioni strutturate, il fallimento dell'emittente comporta perdita totale o parziale",
+            "**Assenza di garanzie:** non esiste tutela del capitale, né protezione da movimenti rapidi o intraday",
+            "**Asimmetria decisionale:** l'emittente incassa il premio dell'opzione, l'investitore incassa il rischio senza piena consapevolezza"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "A differenza di una normale obbligazione, l'investitore assume una **posizione corta su opzioni put**, ma spesso senza comprenderne la natura o le implicazioni tecniche (volatilità, greche, correlazioni)."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Inderst & Ottaviani (2009) ha analizzato l'asimmetria informativa nei prodotti strutturati, dimostrando che i Reverse Convertible creano un vantaggio informativo a favore dell'emittente. La ricerca evidenzia che molti investitori retail non comprendono appieno i rischi impliciti nella vendita di opzioni."
+        }
+      ]
+    },
+    {
+      "id": "tipologie",
+      "title": "Tipologie di Reverse Convertible",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I Reverse Convertible si sono evoluti in una varietà di strutture complesse, pensate per attrarre diversi profili di investitori e adattarsi a contesti di mercato specifici. Le differenze principali riguardano il **meccanismo di rimborso**, la **presenza di autocall** e il tipo di barriera utilizzata."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Cash-or-Share Reverse Convertible:** forma base. A scadenza l'investitore riceve contanti (se il titolo è sopra la barriera) o azioni (se è sotto).",
+            "**Autocallable Reverse Convertible:** può essere richiamato anticipatamente se il sottostante supera una soglia prefissata a date periodiche. L'investitore riceve solo la cedola maturata fino a quel punto.",
+            "**Reverse Convertible con Barriera Europea:** la barriera è osservata solo a scadenza. Più favorevole per l'investitore rispetto alla versione americana (monitoraggio continuo).",
+            "**Phoenix Reverse Convertible:** prevede pagamento cedole condizionate alla tenuta del sottostante sopra una soglia. Unisce struttura reverse + autocall + barriera dinamica.",
+            "**Multi-Asset Reverse Convertible:** basato su più sottostanti. Il rimborso dipende dal peggiore dei titoli (worst-of), con rischio amplificato."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Ogni variante introduce nuove complessità che rendono difficile una valutazione trasparente per l'investitore retail. Le condizioni di call, trigger cedolari e barriera sono spesso articolate e nascondono **effetti non lineari sul rendimento**."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Célérier & Vallée (2017) ha analizzato l'evoluzione dei Reverse Convertible, dimostrando che le varianti più complesse (autocallable, phoenix, worst-of) aumentano significativamente il rischio per l'investitore retail. La ricerca evidenzia che la complessità è spesso utilizzata per mascherare i rischi."
+        }
+      ]
+    },
+    {
+      "id": "target-retail",
+      "title": "Analisi del Target Retail",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I Reverse Convertible sono spesso proposti a investitori retail come strumenti ad alto rendimento e basso rischio apparente. In realtà, presentano una **complessità tecnica elevata** che li rende inadatti a profili non sofisticati."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Problemi Principali nella Distribuzione al Retail"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Rappresentazione fuorviante del rischio:** spesso vengono presentati come \"obbligazioni con extra-rendimento\" invece che come *short put su equity*",
+            "**Focalizzazione solo sulla cedola:** l'investitore medio valuta il 7–9% annuo senza comprendere il rischio di perdita in conto capitale",
+            "**Documentazione complessa:** prospetti, KID e term sheet sono scritti in linguaggio tecnico, difficile da decifrare per chi non ha competenze in derivati",
+            "**Assenza di stress test realistici:** raramente vengono mostrati scenari in cui l'investitore riceve azioni in forte perdita",
+            "**Bias cognitivo:** l'elevata cedola crea un effetto \"ancoraggio\" che riduce la percezione del rischio effettivo"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "L'investitore ideale per questi strumenti dovrebbe avere esperienza in opzioni, conoscenza dei meccanismi di barriera, consapevolezza della volatilità di mercato e capacità di monitoraggio attivo."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Carlin et al. (2013) ha analizzato il comportamento degli investitori retail nei prodotti strutturati, dimostrando che molti investitori sottovalutano i rischi a causa della focalizzazione sulla cedola elevata. La ricerca evidenzia l'importanza di una maggiore trasparenza e formazione."
+        }
+      ]
+    },
+    {
+      "id": "esempi-reali",
+      "title": "Esempi Reali e Casi Critici",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Nella pratica, i Reverse Convertible hanno spesso mostrato le loro criticità durante fasi di volatilità elevata o cali bruschi dei mercati azionari. Di seguito alcuni esempi significativi che evidenziano l'effetto asimmetrico del rischio a carico dell'investitore:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Credit Suisse Reverse Convertible su Tesla (2022):** cedola del 12% annuo, ma l'azione è crollata oltre il 60%. Alla scadenza gli investitori hanno ricevuto azioni svalutate, con perdite superiori al 40% in conto capitale.",
+            "**BNP Reverse su UniCredit (2020):** colpito dalla crisi COVID, il titolo è sceso sotto la barriera. Rimborsato in azioni nel momento di massimo panico. Le cedole non hanno coperto le perdite.",
+            "**Autocallable Phoenix su Deutsche Bank (2018):** cedole condizionate, barriera intraday colpita. Nessuna protezione. Il prodotto è diventato illiquido sul secondario, con prezzo inferiore al 65%."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "In molti casi, gli investitori hanno scoperto troppo tardi che stavano acquistando una **posizione ribassista implicita** e che il rimborso in azioni avveniva proprio quando i titoli erano più penalizzati, amplificando la perdita."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Henderson & Pearson (2011) ha analizzato i casi di perdite significative nei Reverse Convertible, dimostrando che molti investitori retail hanno subito perdite elevate a causa della mancanza di comprensione dei rischi. La ricerca evidenzia l'importanza di una maggiore trasparenza e regolamentazione."
+        }
+      ]
+    },
+    {
+      "id": "strategie",
+      "title": "Strategie Operative e Alternative",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "I Reverse Convertible possono avere senso solo in un **contesto strategico ben definito** e con una gestione attiva del rischio. Usati correttamente, possono generare reddito decorrelato, ma richiedono disciplina e comprensione tecnica."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Strategie Possibili"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Approccio difensivo su titoli forti:** usare sottostanti con alta capitalizzazione e bassa volatilità, riducendo il rischio di consegna azioni",
+            "**Utilizzo come cash replacement:** in contesti di tassi bassi, accettando l'eventuale esposizione azionaria controllata",
+            "**Copertura attiva:** proteggere la posizione vendendo call out-of-the-money o usando put comprate in parallelo"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Alternative Più Trasparenti"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Strategia covered call su ETF:** genera extra-rendimento mantenendo controllo diretto del sottostante",
+            "**Bond ad alto rendimento selettivo:** corporate bond con spread elevato ma rischio più lineare e leggibile",
+            "**Fondi income-oriented:** fondi a distribuzione periodica con gestione diversificata"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Le strutture reverse richiedono capacità di intervenire prontamente in caso di discesa del sottostante, e non si adattano a chi non può monitorare il portafoglio con regolarità."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Whaley (1982) ha analizzato le strategie alternative ai Reverse Convertible, dimostrando che strategie come covered call su ETF possono offrire rendimenti simili con maggiore trasparenza e controllo. La ricerca evidenzia l'importanza di valutare alternative più semplici."
+        }
+      ]
+    },
+    {
+      "id": "checklist",
+      "title": "Check-list Operativa per l'Investitore",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Prima di sottoscrivere un Reverse Convertible, è essenziale rispondere in modo chiaro e documentato a una serie di **domande operative e tecniche**. Questa check-list serve da filtro per valutare la reale adeguatezza del prodotto."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Comprendi il rischio di ricevere **azioni svalutate** a scadenza?",
+            "Hai analizzato il comportamento storico del **sottostante**?",
+            "Conosci il **livello della barriera** e se è europea o americana?",
+            "Hai calcolato il rendimento reale **in caso di rimborso in azioni**?",
+            "Puoi accettare una **perdita in conto capitale** anche superiore alla cedola incassata?",
+            "Sai se il prodotto è **quotato o illiquido** sul secondario?",
+            "Hai letto il **term sheet completo** e non solo la brochure promozionale?",
+            "Sai come si comporta il prodotto in caso di **shock di volatilità**?",
+            "Hai un **piano d'uscita** se il sottostante crolla?"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "In assenza di risposte chiare e fondate a queste domande, l'investimento è da considerarsi ad alto rischio. La difficoltà non è nel comprarlo, ma nel capirlo prima."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Inderst & Ottaviani (2012) ha sviluppato un framework per valutare l'adeguatezza dei prodotti strutturati, dimostrando che una checklist rigorosa può aiutare gli investitori retail a identificare prodotti inadeguati. La ricerca evidenzia l'importanza di una valutazione pre-contrattuale approfondita."
+        }
+      ]
+    },
+    {
+      "id": "glossario",
+      "title": "Glossario Tecnico",
+      "content": [
+        {
+          "type": "list",
+          "items": [
+            "**Reverse Convertible:** strumento ibrido che combina un'obbligazione con la vendita di un'opzione put sul sottostante. Può rimborsare in azioni anziché in contanti.",
+            "**Cedola Fissa:** interesse periodico garantito all'investitore, indipendente dall'andamento del sottostante.",
+            "**Barriera:** livello critico del prezzo del sottostante. Se superata al ribasso, comporta rimborso in azioni.",
+            "**Barriera Europea:** osservata solo a scadenza. Più favorevole per l'investitore.",
+            "**Barriera Americana:** osservata in continuo. Qualsiasi tocco attiva il rimborso in azioni.",
+            "**Fixing Iniziale:** prezzo del sottostante al momento dell'emissione. Serve da riferimento per barriera e rimborso.",
+            "**Worst-of:** nei multi-asset, indica che il rimborso dipende dal peggior titolo del paniere.",
+            "**Autocallable:** struttura con possibilità di rimborso anticipato se il sottostante supera una certa soglia a date periodiche.",
+            "**Phoenix:** Reverse Convertible evoluto con cedole condizionate e struttura autocall.",
+            "**Opzione Put:** diritto di vendere un asset a un prezzo prefissato. Nei Reverse Convertible, l'investitore è venditore implicito di questa opzione."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "disclaimer",
+      "title": "Disclaimer e Note Legali",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le informazioni contenute in questa guida sono fornite da Tradelia AI a scopo esclusivamente informativo, formativo e simulativo. Non costituiscono in alcun modo una sollecitazione al pubblico risparmio, una raccomandazione personalizzata o una consulenza finanziaria, fiscale o legale."
+        },
+        {
+          "type": "paragraph",
+          "text": "I Reverse Convertible sono strumenti complessi e rischiosi. Comportano rischi significativi in termini di perdita del capitale, volatilità elevata, rischio di rimborso in azioni deprezzate, e rischio emittente. Ogni valutazione e decisione d'investimento deve essere presa in autonomia e con il supporto di un professionista autorizzato, tenendo conto del proprio profilo di rischio e degli obiettivi individuali."
+        },
+        {
+          "type": "paragraph",
+          "text": "Tradelia AI declina ogni responsabilità per danni diretti o indiretti derivanti dall'uso delle informazioni contenute in questa guida, incluse simulazioni o link esterni. L'utente accetta di assumersi ogni rischio associato alla consultazione e all'utilizzo dei contenuti."
+        }
+      ]
+    }
+  ]
+}
+

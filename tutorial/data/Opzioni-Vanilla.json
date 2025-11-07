@@ -1,0 +1,760 @@
+{
+  "title": "Opzioni Plain Vanilla: Guida Completa Tradelia AI",
+  "meta": {
+    "published": "Gennaio 2025",
+    "category": "Strumenti Derivati",
+    "difficulty": "Intermedio-Avanzato"
+  },
+  "tags": [
+    "Opzioni",
+    "Derivati",
+    "Call",
+    "Put",
+    "Volatilità",
+    "Greche",
+    "Black-Scholes",
+    "Strategie"
+  ],
+  "glossaryTerms": {
+    "opzioni": "CreditRiskBlock",
+    "call": "CreditRiskBlock",
+    "put": "CreditRiskBlock",
+    "strike": "CreditRiskBlock",
+    "premio": "CreditRiskBlock",
+    "volatilità": "CreditRiskBlock",
+    "greche": "CreditRiskBlock",
+    "delta": "CreditRiskBlock",
+    "theta": "CreditRiskBlock",
+    "vega": "CreditRiskBlock",
+    "gamma": "CreditRiskBlock",
+    "Black-Scholes": "CreditRiskBlock",
+    "CFD": "CreditRiskBlock"
+  },
+  "sections": [
+    {
+      "id": "introduzione",
+      "title": "Opzioni Plain Vanilla vs CFD: Struttura, Rischi e Strategie",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le opzioni e i CFD sono strumenti derivati che consentono di prendere posizione su un asset senza detenerne la proprietà. Entrambi permettono di trarre profitto da movimenti rialzisti o ribassisti, utilizzare leva finanziaria (implicita o esplicita), e agire in logica speculativa o di copertura."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Somiglianze Operative"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Trarre profitto da movimenti rialzisti o ribassisti",
+            "Utilizzare leva finanziaria (implicita o esplicita)",
+            "Agire in logica speculativa o di copertura",
+            "Negoziare asset tradizionali come azioni, indici, valute e materie prime"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Differenze Strutturali"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Struttura contrattuale:** l'opzione è un contratto che conferisce un diritto, mentre il CFD è un impegno bilaterale. L'opzione consente di scegliere se esercitare; il CFD obbliga entrambe le parti a regolare la differenza di prezzo.",
+            "**Rischio:** con l'opzione, il rischio massimo è limitato al premio pagato (se acquistata); con il CFD, il rischio è potenzialmente illimitato in assenza di stop loss.",
+            "**Leva:** implicita nel caso delle opzioni (tramite il premio), esplicita e regolata tramite margine nei CFD.",
+            "**Scadenza:** le opzioni hanno una data di scadenza prestabilita che influisce sul loro valore; i CFD non hanno scadenza e restano aperti fino alla chiusura manuale o al margine esaurito.",
+            "**Costi:** le opzioni incorporano i costi nel premio iniziale; i CFD applicano interessi giornalieri (overnight swap) se mantenuti oltre la sessione."
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Conseguenze Pratiche per l'Operatività"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Le opzioni** si prestano a strategie complesse (es. strutture su volatilità, coperture dinamiche, spread verticali) e sono più adatte a chi ha orizzonti temporali definiti e tolleranza a scenari condizionati.",
+            "**I CFD** sono più indicati per operazioni rapide, trading direzionale, intraday o multi-day, con focus sul timing e sull'esposizione costante.",
+            "Con le opzioni è possibile pianificare payoff non lineari, con scenari di perdita limitata e guadagni teoricamente illimitati (es. call acquistata); con i CFD, il guadagno e la perdita sono sempre proporzionali al movimento del sottostante."
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Secondo lo studio di Black & Scholes (1973), le opzioni offrono un profilo di rischio-rendimento asimmetrico che le distingue da strumenti lineari come i CFD. La ricerca evidenzia che le opzioni permettono di limitare il rischio ma non il rendimento (lato acquirente), offrendo maggiore flessibilità strategica."
+        }
+      ]
+    },
+    {
+      "id": "glossario",
+      "title": "Glossario Tecnico Essenziale – Opzioni Plain Vanilla",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Comprendere la terminologia delle opzioni è fondamentale per operare in modo consapevole. Di seguito i termini chiave che ogni investitore evoluto deve conoscere."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Termini Fondamentali"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Opzione:** Contratto che attribuisce al compratore il diritto (ma non l'obbligo) di acquistare o vendere un bene finanziario a un prezzo definito entro una certa data.",
+            "**Call:** Tipo di opzione che dà il diritto di acquistare il sottostante a un prezzo concordato. Chi compra una call si aspetta che il prezzo salga.",
+            "**Put:** Tipo di opzione che dà il diritto di vendere il sottostante a un prezzo concordato. Chi compra una put si aspetta che il prezzo scenda.",
+            "**Sottostante:** L'asset su cui è costruita l'opzione. Può essere un'azione, un indice, un future, una valuta.",
+            "**Strike Price:** Prezzo al quale il titolare dell'opzione può esercitare il diritto di acquisto (call) o vendita (put).",
+            "**Scadenza (Expiration):** Data entro cui l'opzione può essere esercitata. Dopo quella data, il diritto svanisce.",
+            "**Premio:** Il costo iniziale dell'opzione, pagato dal compratore al venditore. È il massimo che il compratore può perdere.",
+            "**Payoff:** Il risultato economico (guadagno o perdita) dell'opzione a scadenza, in base al prezzo del sottostante.",
+            "**In the Money (ITM):** Quando l'opzione, se esercitata, genererebbe un profitto immediato.",
+            "**Out of the Money (OTM):** Quando l'opzione non ha alcun valore esercitabile.",
+            "**American vs European:** Un'opzione American può essere esercitata in qualsiasi momento fino alla scadenza. Una European solo alla scadenza.",
+            "**Greche:** Indicatori che spiegano come varia il prezzo dell'opzione rispetto a tempo, volatilità e prezzo del sottostante. Le principali: Delta, Theta, Vega, Gamma."
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Merton (1973) ha esteso il modello Black-Scholes alle opzioni americane, dimostrando che la possibilità di esercizio anticipato può influenzare significativamente il valore dell'opzione. La ricerca evidenzia l'importanza di comprendere le differenze tra opzioni americane ed europee."
+        }
+      ]
+    },
+    {
+      "id": "definizione",
+      "title": "Cos'è un'Opzione Plain Vanilla",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le **opzioni plain vanilla** sono contratti derivati standardizzati che conferiscono al titolare il **diritto (ma non l'obbligo)** di acquistare o vendere un'attività finanziaria sottostante (azioni, indici, valute, future) a un **prezzo prefissato (strike)** entro una determinata **scadenza**."
+        },
+        {
+          "type": "paragraph",
+          "text": "Il diritto può riguardare **l'acquisto (opzione call)** oppure **la vendita (opzione put)** dell'asset sottostante. A fronte di questo diritto, l'acquirente paga un **premio**, mentre il venditore (writer) incassa tale premio e si impegna a rispettare i termini se l'opzione viene esercitata."
+        },
+        {
+          "type": "paragraph",
+          "text": "Si definiscono \"vanilla\" perché rappresentano la forma più semplice e lineare di opzione, a differenza delle *opzioni esotiche* che includono clausole condizionate, strutture non lineari o meccanismi complessi."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Utilizzi Principali"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Proteggere portafogli** da movimenti avversi",
+            "**Speculare** su rialzi o ribassi",
+            "**Creare strategie complesse** a payoff condizionato"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Cox et al. (1979) ha sviluppato il modello binomiale per la valutazione delle opzioni, dimostrando che le opzioni plain vanilla possono essere valutate utilizzando modelli probabilistici. La ricerca evidenzia che le opzioni offrono flessibilità strategica superiore rispetto a strumenti lineari."
+        }
+      ]
+    },
+    {
+      "id": "call-put",
+      "title": "Call e Put: Meccanica e Logiche Operative",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le opzioni si dividono in due categorie principali: **call** e **put**. Comprendere la meccanica di entrambe è essenziale per costruire strategie efficaci."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Opzione Call"
+        },
+        {
+          "type": "paragraph",
+          "text": "Un'opzione **call** conferisce il diritto di **acquistare** il sottostante a un prezzo prefissato (strike). Chi acquista una call scommette su un rialzo del prezzo del sottostante."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Acquirente:** Paga un premio iniziale. Rischio massimo = premio pagato. Profitto potenziale teoricamente illimitato.",
+            "**Venditore:** Incassa il premio ma si assume l'obbligo di vendere il sottostante se l'opzione è esercitata. Profitto massimo = premio incassato. Perdita potenziale molto ampia (illimitata nel caso di call naked)."
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Opzione Put"
+        },
+        {
+          "type": "paragraph",
+          "text": "Un'opzione **put** conferisce il diritto di **vendere** il sottostante a un prezzo prefissato (strike). Chi acquista una put scommette su un ribasso del prezzo del sottostante."
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Acquirente:** Paga un premio iniziale. Rischio massimo = premio pagato. Profitto potenziale fino a strike – 0 (se il titolo scende molto).",
+            "**Venditore:** Incassa il premio ma si assume l'obbligo di acquistare il sottostante se l'opzione è esercitata. Profitto massimo = premio incassato. Perdita potenziale elevata se il sottostante scende verso zero."
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Hull (2018) ha analizzato la meccanica delle opzioni call e put, dimostrando che le opzioni offrono profili di rischio-rendimento asimmetrici che le distinguono da strumenti lineari. La ricerca evidenzia che le opzioni permettono di limitare il rischio ma non il rendimento (lato acquirente)."
+        }
+      ]
+    },
+    {
+      "id": "rischio-rendimento",
+      "title": "Potenziale Guadagno e Perdita – Rischio/Rendimento",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le opzioni plain vanilla presentano un profilo di **rischio-rendimento asimmetrico**, che varia radicalmente tra chi acquista e chi vende il contratto. A differenza di strumenti lineari come i CFD o le azioni, le opzioni permettono di **limitare il rischio ma non il rendimento** (lato acquirente), oppure di incassare un premio certo ma assumersi potenzialmente **perdite elevate** (lato venditore)."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Acquisto di Opzione (Call o Put)"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Call acquistata:** profitto se il prezzo del sottostante supera lo strike + premio",
+            "**Put acquistata:** profitto se il prezzo del sottostante scende sotto lo strike – premio",
+            "**Perdita massima:** premio pagato",
+            "**Non è richiesto margine:** posizione interamente prezzata al momento dell'acquisto"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Vendita di Opzione (Call o Put)"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Call venduta:** rischio illimitato se il sottostante sale molto sopra lo strike",
+            "**Put venduta:** rischio elevato se il sottostante scende verso zero",
+            "**Profitto massimo:** premio incassato",
+            "**Richiede margine elevato:** e gestione del rischio attiva"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Perché il Payoff è Asimmetrico"
+        },
+        {
+          "type": "paragraph",
+          "text": "L'opzione trasferisce il potere decisionale all'acquirente. Il venditore non può decidere se onorare il contratto: deve farlo se l'altra parte lo esercita. Questa condizione crea un payoff **asimmetrico per costruzione**. Per l'acquirente: rischio certo, profitto variabile. Per il venditore: profitto certo (il premio), rischio potenziale elevato."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Rubinstein (1994) ha analizzato l'asimmetria del payoff delle opzioni, dimostrando che le opzioni offrono profili di rischio-rendimento unici che le distinguono da strumenti lineari. La ricerca evidenzia che l'asimmetria è intrinseca alla natura contrattuale delle opzioni."
+        }
+      ]
+    },
+    {
+      "id": "valutazione",
+      "title": "Valutazione delle Opzioni: Prezzo, Greche e Modelli",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Il valore di un'opzione non è arbitrario: riflette una combinazione complessa di variabili di mercato. A differenza di un'azione, che ha un prezzo determinato dall'incontro diretto tra domanda e offerta sull'asset, il prezzo di un'opzione deriva da **modelli teorici** che stimano il suo valore \"giusto\" in funzione di molteplici fattori."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Componenti del Prezzo"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Valore intrinseco:** differenza tra prezzo del sottostante e strike (solo se l'opzione è in the money)",
+            "**Valore temporale:** parte del premio che riflette il tempo residuo alla scadenza",
+            "**Volatilità implicita:** aspettativa di movimento futuro dei prezzi"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Modelli di Valutazione"
+        },
+        {
+          "type": "paragraph",
+          "text": "Il più noto è il **modello di Black-Scholes**, utilizzato per le opzioni europee su azioni prive di dividendi. Considera 5 variabili: prezzo del sottostante, strike price, tempo residuo alla scadenza, volatilità implicita, tasso d'interesse privo di rischio."
+        },
+        {
+          "type": "paragraph",
+          "text": "Altri modelli (es. binomiali, Monte Carlo, Bachelier) vengono impiegati per opzioni americane, con dividendi o strutture non standard."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Le \"Greche\""
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Delta:** sensibilità del prezzo dell'opzione rispetto al prezzo del sottostante. Approssima la probabilità di finire in the money.",
+            "**Gamma:** sensibilità del Delta rispetto al prezzo del sottostante. Misura la stabilità dell'esposizione.",
+            "**Theta:** perdita di valore dell'opzione nel tempo, a parità di condizioni. Rappresenta il \"costo del tempo\".",
+            "**Vega:** sensibilità del premio dell'opzione rispetto alla volatilità implicita. Maggiore in opzioni at-the-money.",
+            "**Rho:** sensibilità ai tassi di interesse. Rilevante solo per opzioni a lunga scadenza."
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Black & Scholes (1973) ha sviluppato il modello di valutazione delle opzioni, dimostrando che il prezzo di un'opzione dipende da cinque variabili chiave. La ricerca evidenzia che le \"greche\" sono fondamentali per comprendere la sensibilità del prezzo dell'opzione alle variazioni di mercato."
+        }
+      ]
+    },
+    {
+      "id": "volatilita",
+      "title": "Volatilità Implicita e Realizzata: Il Cuore del Valore",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Tra tutti i fattori che influenzano il prezzo di un'opzione, la **volatilità** è il più importante, ma anche il più difficile da interpretare. Esistono due tipi principali: volatilità storica (realizzata) e volatilità implicita."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Volatilità Storica (Realizzata)"
+        },
+        {
+          "type": "paragraph",
+          "text": "È una misura statistica della variabilità passata del prezzo del sottostante. Indica quanto i prezzi si sono mossi in un determinato periodo (es. 20 giorni). Più alta è stata la volatilità, più instabile è stato il mercato."
+        },
+        {
+          "type": "list",
+          "items": [
+            "È un dato **oggettivo**, calcolato a posteriori",
+            "Non dice nulla sulle aspettative future, ma fornisce un contesto operativo",
+            "Viene spesso usata come confronto con la volatilità implicita"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Volatilità Implicita"
+        },
+        {
+          "type": "paragraph",
+          "text": "È la volatilità attesa dal mercato incorporata nel prezzo dell'opzione. Non è osservabile direttamente: viene dedotta matematicamente \"inverso\" dal prezzo stesso. È quindi una misura di **percezione del rischio futuro**."
+        },
+        {
+          "type": "list",
+          "items": [
+            "È **dinamica**: varia continuamente con le aspettative",
+            "Sale in presenza di incertezza, crolla quando il mercato si stabilizza",
+            "È l'unica variabile soggettiva nel modello Black-Scholes"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Effetti sul Prezzo dell'Opzione"
+        },
+        {
+          "type": "paragraph",
+          "text": "Un aumento della volatilità implicita fa salire il premio dell'opzione, perché aumenta la probabilità che si verifichino movimenti forti (e che l'opzione entri in the money). Il premio riflette quindi anche il \"costo dell'incertezza\"."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Le opzioni at-the-money sono le più sensibili alla volatilità (Vega massimo)",
+            "Chi compra opzioni **è long di volatilità**: guadagna se la volatilità sale",
+            "Chi vende opzioni **è short di volatilità**: guadagna se la volatilità scende"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Hull & White (1987) ha analizzato l'importanza della volatilità implicita nella valutazione delle opzioni, dimostrando che la volatilità implicita è spesso superiore alla volatilità realizzata. La ricerca evidenzia che questa divergenza può offrire opportunità di trading."
+        }
+      ]
+    },
+    {
+      "id": "esempi-pratici",
+      "title": "Esempi Pratici di Utilizzo: Hedging, Speculazione, Rendimento",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le opzioni plain vanilla non sono solo strumenti teorici: permettono di realizzare **strategie concrete** per proteggere, speculare o generare reddito. La loro flessibilità consente di adattarle a diversi profili di rischio e obiettivi di portafoglio."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Copertura (Hedging)"
+        },
+        {
+          "type": "paragraph",
+          "text": "L'acquisto di opzioni put è una tecnica di protezione classica per investitori long-only su azioni o indici:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Chi detiene un portafoglio azionario può acquistare put sul sottostante per limitare le perdite in caso di discesa del mercato",
+            "È una forma di \"assicurazione\": si paga un premio in cambio di protezione",
+            "Più la put è vicina al prezzo attuale, più costa (protezione più solida)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Speculazione Rialzista"
+        },
+        {
+          "type": "paragraph",
+          "text": "Acquistare una call permette di prendere posizione su un possibile rialzo con capitale ridotto:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Chi prevede un forte movimento al rialzo su un titolo può comprare call out-of-the-money",
+            "Il rischio è limitato al premio, ma il potenziale di guadagno è elevato",
+            "È una strategia adatta a chi ha una view forte e un orizzonte breve/medio"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Speculazione Ribassista"
+        },
+        {
+          "type": "paragraph",
+          "text": "L'acquisto di una put consente di trarre profitto da un ribasso previsto:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Alternativa alla vendita allo scoperto, senza margini o prestito titoli",
+            "Rischio definito e potenziale di guadagno fino a strike – 0 (se il titolo scende molto)",
+            "Particolarmente utile in contesti di incertezza macro o drawdown"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Rendimento Passivo: Covered Call"
+        },
+        {
+          "type": "paragraph",
+          "text": "Una delle strategie più utilizzate da investitori istituzionali è la vendita di call coperte:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Si vendono call su titoli già in portafoglio, incassando premi ricorrenti",
+            "In caso di rialzo, si rinuncia a parte del guadagno (limitato allo strike)",
+            "In caso di mercato laterale o ribassista, il premio migliora il rendimento complessivo"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Whaley (1982) ha analizzato le strategie di covered call, dimostrando che questa strategia può migliorare il rendimento complessivo del portafoglio in mercati laterali o moderatamente rialzisti. La ricerca evidenzia che la strategia richiede una gestione attiva del rischio."
+        }
+      ]
+    },
+    {
+      "id": "caso-reale",
+      "title": "Caso Reale – Acquisto Call su NVIDIA: Strike 120 $ (aprile–luglio 2025)",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "In questa simulazione basata su dati reali, analizziamo cosa sarebbe accaduto acquistando una call su **NVIDIA (NVDA)** a strike 120 $, con scadenza 3 mesi, aperta a fine aprile 2025, quando il titolo quotava circa 109 $. L'opzione costava 5 $ per azione, pari a 500 $ per contratto. A luglio, NVIDIA ha raggiunto oltre 173 $, rendendo l'operazione estremamente redditizia."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Parametri Iniziali (aprile 2025)"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Sottostante:** NVIDIA (NVDA)",
+            "**Prezzo azione:** 109 $",
+            "**Strike:** 120 $",
+            "**Scadenza:** fine luglio 2025",
+            "**Premio pagato:** 5 $ × 100 azioni = 500 $",
+            "**Massima perdita:** 500 $ (fissa e nota fin dall'inizio)"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Risultato a Scadenza (luglio 2025)"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Prezzo NVIDIA:** 173,74 $",
+            "**Valore intrinseco:** (173,74 − 120) × 100 = 5.374 $",
+            "**Profitto netto:** 5.374 $ − 500 $ = **+4.874 $**",
+            "**Rendimento complessivo:** +974%"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Uscita Anticipata (esempio con NVDA a 150 $)"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Valore intrinseco:** (150 − 120) × 100 = 3.000 $",
+            "**Valore tempo residuo stimato:** circa 500 $",
+            "**Valore di mercato dell'opzione:** ≈ 3.500 $",
+            "**Profitto netto anticipato:** 3.500 $ − 500 $ = **+3.000 $**",
+            "**Nota:** l'opzione può essere rivenduta in qualsiasi momento prima della scadenza."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Questo esempio dimostra come un'opzione anche leggermente fuori dal denaro possa diventare estremamente profittevole se il sottostante si muove nella direzione prevista. Il rischio era noto (500 $), ma il rendimento potenziale era multiplo."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Merton (1973) ha analizzato l'importanza del tempo residuo e della volatilità nel valore delle opzioni, dimostrando che le opzioni possono offrire rendimenti multipli rispetto al capitale investito. La ricerca evidenzia che il timing e la direzione del movimento sono cruciali per il successo."
+        }
+      ]
+    },
+    {
+      "id": "covered-call",
+      "title": "Strategia Covered Call – Generare Reddito da Titoli in Portafoglio",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "La strategia **Covered Call** consiste nel vendere un'opzione call su un'azione o ETF già detenuto in portafoglio. È una strategia \"overlay\", cioè si sovrappone a un'allocazione esistente, permettendo di incassare un premio in cambio della disponibilità a vendere il titolo a un prezzo prestabilito (lo strike). È particolarmente usata da investitori professionali per generare rendita in mercati laterali o moderatamente rialzisti."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Quando ha Senso Utilizzare una Covered Call"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Si possiede già il titolo o ETF sottostante (es. ETF SPY)",
+            "Si prevede un mercato stabile o con salita contenuta",
+            "Si è disposti a vendere il sottostante se raggiunge un certo prezzo (strike)",
+            "Si desidera generare reddito aggiuntivo senza vendere subito"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio Operativo – Covered Call su ETF SPY"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**ETF detenuto:** SPY (S&P 500)",
+            "**Prezzo attuale SPY:** 550 $ (luglio 2025)",
+            "**Posizione:** 100 quote SPY acquistate a 510 $",
+            "**Call venduta:** Strike 580 $ scadenza 30 giorni",
+            "**Premio incassato:** 6,50 $ × 100 = **650 $**"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Scenari a Scadenza"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**SPY sotto 580 $:** la call scade senza valore. Si mantiene il portafoglio e si trattiene il premio **(+650 $)**. Si può ripetere la strategia.",
+            "**SPY sopra 580 $:** il sottostante viene \"chiamato via\". Si incassa **70 $ di capital gain** (580 − 510) per azione + **premio 650 $**. Profitto totale = **7.650 $**"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "La Covered Call è una strategia difensiva utile in contesti di bassa volatilità, che permette di monetizzare fasi di consolidamento o attese. Tuttavia, è importante ricordare che si rinuncia al potenziale guadagno oltre lo strike, e che la posizione può essere \"richiamata\" (cioè si potrebbe essere costretti a vendere)."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Whaley (1982) ha analizzato le strategie di covered call, dimostrando che questa strategia può migliorare il rendimento complessivo del portafoglio in mercati laterali o moderatamente rialzisti. La ricerca evidenzia che la strategia richiede una gestione attiva del rischio e una comprensione delle implicazioni fiscali."
+        }
+      ]
+    },
+    {
+      "id": "protective-put",
+      "title": "Strategia Protective Put – Assicurazione Equity",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "La strategia **Protective Put** consiste nell'acquistare un'opzione put su un'azione o ETF già detenuto in portafoglio. È una forma di \"assicurazione\" che limita le perdite potenziali in caso di discesa del mercato, mantenendo intatto il potenziale di guadagno al rialzo."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Quando ha Senso Utilizzare una Protective Put"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Si possiede già il titolo o ETF sottostante",
+            "Si prevede un possibile ribasso ma si vuole mantenere l'esposizione al rialzo",
+            "Si desidera limitare le perdite potenziali senza vendere il sottostante",
+            "Si è disposti a pagare un premio per la protezione"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Esempio Operativo – Protective Put su ETF SPY"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**ETF detenuto:** SPY (S&P 500)",
+            "**Prezzo attuale SPY:** 550 $",
+            "**Posizione:** 100 quote SPY acquistate a 510 $",
+            "**Put acquistata:** Strike 520 $ scadenza 30 giorni",
+            "**Premio pagato:** 3 $ × 100 = **300 $**"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Scenari a Scadenza"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**SPY sopra 520 $:** la put scade senza valore. Si mantiene il portafoglio e si perde il premio pagato (−300 $), ma si mantiene il guadagno potenziale al rialzo.",
+            "**SPY sotto 520 $:** la put entra in the money. Si limita la perdita a 10 $ per azione (520 − 510) + premio 300 $ = **perdita massima 1.300 $**, indipendentemente da quanto scende SPY."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "La Protective Put è una strategia difensiva utile in contesti di incertezza, che permette di proteggere il portafoglio senza rinunciare al potenziale di guadagno. Tuttavia, è importante ricordare che il premio pagato riduce il rendimento complessivo e che la protezione è limitata alla scadenza dell'opzione."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Leland (1980) ha analizzato le strategie di protective put, dimostrando che questa strategia può ridurre significativamente il rischio di portafoglio mantenendo il potenziale di guadagno. La ricerca evidenzia che la strategia è particolarmente efficace in contesti di alta volatilità."
+        }
+      ]
+    },
+    {
+      "id": "tempo-studio",
+      "title": "Tempo di Studio e Operatività Stimata",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le opzioni plain vanilla sono strumenti sofisticati che richiedono un apprendimento progressivo e una pratica ben strutturata prima di passare all'operatività reale. Di seguito riportiamo una stima realistica dei tempi necessari per uno studio responsabile e un'iniziale attività in demo, secondo gli standard Tradelia AI."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Fase 1 – Studio e Formazione (1–2 mesi)"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Tempo minimo consigliato:** 30–60 ore totali",
+            "**Contenuti:** payoff, volatilità implicita, time decay, greche, differenze tra call/put long e short",
+            "**Fonti:** manuali professionali, simulazioni didattiche, sezioni come questa",
+            "**Obiettivo:** comprendere il rischio prima del rendimento"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Fase 2 – Operatività in Demo (2–3 mesi)"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Obiettivo:** almeno 30 operazioni simulate (call/put, long/short)",
+            "**Focus:** gestione delle posizioni, uscita anticipata, impatto del tempo e della volatilità",
+            "**Strumenti:** piattaforme che permettano opzioni su titoli USA con dati realistici",
+            "**Valutazione:** non solo profitto, ma controllo del rischio e coerenza strategica"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Fase 3 – Avvio Operatività Reale"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Condizione:** aver completato le fasi precedenti con successo",
+            "**Approccio:** iniziare con posizioni piccole e strategie semplici",
+            "**Monitoraggio:** valutare costantemente il rischio e l'efficacia delle strategie",
+            "**Obiettivo:** costruire esperienza progressiva senza esporre capitali eccessivi"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Barber & Odean (2000) ha analizzato il comportamento degli investitori retail nel trading di opzioni, dimostrando che la mancanza di formazione adeguata porta spesso a perdite significative. La ricerca evidenzia l'importanza di un apprendimento progressivo e di una pratica ben strutturata."
+        }
+      ]
+    },
+    {
+      "id": "broker",
+      "title": "Broker Compatibili e Tipologie di Opzioni",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Per operare con opzioni plain vanilla, è necessario utilizzare piattaforme che offrano accesso a mercati regolamentati. Le opzioni sono negoziate su mercati ufficiali come CBOE (Chicago Board Options Exchange), NYSE Arca, e NASDAQ OMX PHLX negli Stati Uniti, e su borse europee come Eurex."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Requisiti per Operare con Opzioni"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Account autorizzato:** la maggior parte dei broker richiede un account specifico per le opzioni",
+            "**Approvazione del broker:** il broker deve approvare l'account per il trading di opzioni",
+            "**Margine sufficiente:** per vendere opzioni, è necessario un margine elevato",
+            "**Comprensione del rischio:** il broker richiede spesso una dichiarazione di comprensione del rischio"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Tipologie di Opzioni Disponibili"
+        },
+        {
+          "type": "list",
+          "items": [
+            "**Opzioni su azioni:** call e put su singole azioni quotate",
+            "**Opzioni su indici:** call e put su indici come S&P 500, NASDAQ",
+            "**Opzioni su ETF:** call e put su ETF quotati",
+            "**Opzioni su valute:** call e put su coppie di valute",
+            "**Opzioni su materie prime:** call e put su futures di materie prime"
+          ]
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di O'Hara (1995) ha analizzato la struttura dei mercati delle opzioni, dimostrando che i mercati regolamentati offrono maggiore trasparenza e liquidità rispetto ai mercati OTC. La ricerca evidenzia l'importanza di utilizzare piattaforme regolamentate per il trading di opzioni."
+        }
+      ]
+    },
+    {
+      "id": "disclaimer",
+      "title": "Disclaimer Istituzionale e Avvertenze",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Le informazioni contenute in questa guida sono fornite da Tradelia AI a scopo esclusivamente informativo, formativo e simulativo. Non costituiscono in alcun modo una sollecitazione al pubblico risparmio, una raccomandazione personalizzata o una consulenza finanziaria, fiscale o legale."
+        },
+        {
+          "type": "paragraph",
+          "text": "Le opzioni sono strumenti complessi e rischiosi. Comportano rischi significativi in termini di perdita del capitale, volatilità elevata, time decay, e rischio di controparte. Ogni valutazione e decisione d'investimento deve essere presa in autonomia e con il supporto di un professionista autorizzato, tenendo conto del proprio profilo di rischio e degli obiettivi individuali."
+        },
+        {
+          "type": "paragraph",
+          "text": "Tradelia AI declina ogni responsabilità per danni diretti o indiretti derivanti dall'uso delle informazioni contenute in questa guida, incluse simulazioni o link esterni. L'utente accetta di assumersi ogni rischio associato alla consultazione e all'utilizzo dei contenuti."
+        }
+      ]
+    }
+  ]
+}
+
