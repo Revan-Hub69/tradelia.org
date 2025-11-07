@@ -127,6 +127,65 @@ button { background: none; border: 0; padding: 0; font: inherit; color: inherit;
   color: var(--ink);
 }
 
+/* ===== LIGHT THEME - USA STESSI STILI DARK ===== */
+:root[data-theme="light"] {
+  /* Colori Testo - Stesso del dark */
+  --ink: #ffffff;
+  --ink-soft: #f0f0f0;
+  --muted: #b8b8b8;
+  --muted-strong: #808080;
+  
+  /* Superfici - Stesso del dark */
+  --surface-page: #0f0f0f;
+  --surface-card: #181818;
+  --surface-elev: #202020;
+  --surface-hover: #282828;
+  
+  /* Bordi - Stesso del dark */
+  --br-soft: #2a2a2a;
+  --br-card: #323232;
+  --br-strong: #3e3e3e;
+  
+  /* Footer - Stesso del dark */
+  --footer-bg: #111111;
+  --footer-br: #2a2a2a;
+  
+  /* Brand - Stesso del dark */
+  --brand-600: #2563eb;
+  --brand-500: #3b82f6;
+  --brand-400: #60a5fa;
+  
+  /* Stati - Stesso del dark */
+  --ok: rgba(22, 163, 74, 0.88);
+  --warn: rgba(234, 88, 12, 0.88);
+  --err: rgba(220, 38, 38, 0.88);
+  --neutral: #64748b;
+  
+  /* Tone Colors - Stesso del dark */
+  --tone-pos-fg: #16a34a;
+  --tone-neg-fg: #dc2626;
+  --tone-warn-fg: #ea580c;
+  --tone-neu-fg: #64748b;
+  
+  /* Superfici aggiuntive - Stesso del dark */
+  --surface-card-alt: #1a1a1a;
+  --surface-panel-head: #0f0f0f;
+  
+  /* Border Radius - Stesso del dark */
+  --radius-card: 12px;
+  --radius-card-sm: 8px;
+  
+  /* Ombre - Stesso del dark */
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.4);
+  
+  /* Bordi panel - Stesso del dark */
+  --br-panel-divider: rgba(255, 255, 255, 0.06);
+  
+  /* Background e Text Color - Stesso del dark */
+  background: var(--surface-page);
+  color: var(--ink);
+}
+
 /* ===== BASE STYLES ===== */
 html {
   color-scheme: dark;
