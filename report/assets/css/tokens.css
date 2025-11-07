@@ -1728,35 +1728,6 @@ a:focus-visible {
   }
 }
 
-/* ===== SCROLLBAR - QUASI INVISIBILE, VISIBILE SOLO IN HOVER ===== */
-:root:not([data-theme="light"]) ::-webkit-scrollbar {
-  width: 8px !important;
-  height: 8px !important;
-}
-
-:root:not([data-theme="light"]) ::-webkit-scrollbar-track {
-  background: transparent !important;
-}
-
-:root:not([data-theme="light"]) ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.02) !important;
-  border-radius: 4px !important;
-  transition: background 0.3s ease !important;
-}
-
-:root:not([data-theme="light"]) ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2) !important;
-  box-shadow: 0 0 8px rgba(37, 99, 235, 0.4) !important;
-}
-
-:root:not([data-theme="light"]) ::-webkit-scrollbar-corner {
-  background: transparent !important;
-}
-
-:root:not([data-theme="light"]) * {
-  scrollbar-width: thin !important;
-  scrollbar-color: rgba(255, 255, 255, 0.02) transparent !important;
-}
 
 /* Firefox hover (non supportato nativamente, ma possiamo usare JS se necessario) */
 
@@ -2427,4 +2398,48 @@ a.mail-link:hover::after {
 .ico-lg {
   width: 18px;
   height: 18px;
+}
+
+/* ===== SCROLLBAR GLOBALE - APPROCCIO SEMPLICE E DIRETTO ===== */
+/* Applicato a TUTTI gli elementi, indipendentemente dal tema */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 8px !important;
+  height: 8px !important;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-radius: 4px !important;
+  border: none !important;
+  transition: background 0.2s ease !important;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+html::-webkit-scrollbar-corner,
+body::-webkit-scrollbar-corner,
+*::-webkit-scrollbar-corner {
+  background: transparent !important;
+}
+
+/* Firefox */
+html,
+body,
+* {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(255, 255, 255, 0.03) transparent !important;
 }
