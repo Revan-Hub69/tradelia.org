@@ -52,10 +52,8 @@ function render(data = {}) {
             <span>Tradelia AI</span>
           </h3>
           <p>
-            Analisi multi-fattore su contesto macro, sentiment e tecnica (orizzonte 3–10 giorni).
-          </p>
-          <p>
-            Materiale esclusivamente informativo e formativo — nessuna raccomandazione personalizzata.
+            Tradelia AI sviluppa analisi finanziarie modulari attraverso prompt 
+            proprietari e metodologia accademica scientifica.
           </p>
           <div class="ftr-quick-links" role="navigation" aria-label="Link rapidi">
             <a href="/index.html" target="_blank" rel="noopener" aria-label="Vai alla homepage">Homepage</a>
@@ -259,17 +257,46 @@ function update(data = {}) {
   
   const companyName = extractMetric('CompanyName');
   const ticker = extractMetric('Ticker');
-  const version = extractMetric('Version') || data?.meta?.version || '—';
+  const version = extractMetric('Version') || data?.meta?.version || null;
   const start = extractMetric('Start');
   const end = extractMetric('End');
   const updatedAt = extractMetric('UpdatedAt');
   
   // Aggiorna elementi dinamici
   setText('footer-year', new Date().getFullYear());
-  setText('footer-company', companyName || ticker || '—');
-  setText('footer-version', version);
-  setText('footer-snapshot', `${start || '—'} → ${end || '—'}`);
-  setText('footer-updated', fmtDate(updatedAt));
+  
+  // Mostra/nascondi campi dinamici solo se ci sono dati (solo nei report)
+  const hasReportData = companyName || ticker || version || start || end || updatedAt;
+  
+  // Footer company/version (solo se ci sono dati)
+  const footerCompanyEl = document.getElementById('footer-company');
+  const footerVersionEl = document.getElementById('footer-version');
+  const footerCompanyVersionContainer = footerCompanyEl?.parentElement;
+  
+  if (footerCompanyVersionContainer) {
+    if (hasReportData && (companyName || ticker || version)) {
+      footerCompanyVersionContainer.style.display = '';
+      setText('footer-company', companyName || ticker || '—');
+      setText('footer-version', version || '—');
+    } else {
+      footerCompanyVersionContainer.style.display = 'none';
+    }
+  }
+  
+  // Footer snapshot/updated (solo se ci sono dati)
+  const footerSnapshotEl = document.getElementById('footer-snapshot');
+  const footerUpdatedEl = document.getElementById('footer-updated');
+  const footerSnapshotContainer = footerSnapshotEl?.parentElement;
+  
+  if (footerSnapshotContainer) {
+    if (hasReportData && (start || end || updatedAt)) {
+      footerSnapshotContainer.style.display = '';
+      setText('footer-snapshot', start && end ? `${start} → ${end}` : '—');
+      setText('footer-updated', fmtDate(updatedAt));
+    } else {
+      footerSnapshotContainer.style.display = 'none';
+    }
+  }
   
   Logger.debug('SiteFooter', 'Footer aggiornato');
 }
