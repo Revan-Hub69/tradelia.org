@@ -730,6 +730,145 @@
       color: var(--ink);
     }
 
+    /* ===== MODAL PROFESSIONISTA ===== */
+    #modal-professionista {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 1rem;
+      backdrop-filter: blur(4px);
+    }
+
+    #modal-professionista.hidden {
+      display: none;
+    }
+
+    .modal-professionista-content {
+      background: var(--surface-card);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-lg);
+      max-width: 40rem;
+      width: 100%;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-professionista-header {
+      padding: 2rem 2rem 1.5rem;
+      border-bottom: 1px solid var(--br-card);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-professionista-title {
+      font-size: var(--fs-24);
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    .modal-professionista-close {
+      background: none;
+      border: none;
+      color: var(--ink-soft);
+      cursor: pointer;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .modal-professionista-close:hover {
+      background: var(--surface-elev);
+      color: var(--ink);
+    }
+
+    .modal-professionista-body {
+      padding: 2rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .form-group {
+      margin-bottom: var(--sp-5);
+    }
+
+    .form-label {
+      display: block;
+      font-size: var(--fs-14);
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: var(--sp-2);
+    }
+
+    .form-label .required {
+      color: var(--err, #ef4444);
+      margin-left: 2px;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: var(--sp-3);
+      font-size: var(--fs-14);
+      font-family: var(--ff-sans);
+      color: var(--ink);
+      background: var(--surface-page);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-md);
+      transition: all 0.2s;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--brand-600, #2563eb);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-help {
+      font-size: var(--fs-12);
+      color: var(--muted, #888);
+      margin-top: var(--sp-1);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: var(--sp-3);
+      margin-top: var(--sp-6);
+    }
+
+    .form-actions .btn {
+      flex: 1;
+    }
+
+    .form-actions .btn-secondary {
+      background: var(--surface-elev);
+      color: var(--ink);
+      border: 1px solid var(--br-card);
+    }
+
+    .form-actions .btn-secondary:hover {
+      background: var(--surface-hover);
+    }
+
     .collaborator-card-description {
       font-size: var(--fs-14);
       color: var(--ink-soft);
@@ -3854,48 +3993,28 @@ Vuoi procedere inviando i dati?`;
 
         <!-- Panel Consulenti Finanziari -->
         <div id="panel-consulenti" class="collaborator-panel">
-          <div class="collaborators-grid">
-            <div class="collaborator-card">
-              <div class="collaborator-card-icon">
-                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px;">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                  <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
-                </svg>
-              </div>
-              <h4 class="collaborator-card-title">Consulenti Finanziari Indipendenti</h4>
-              <p class="collaborator-card-description">
-                Consulenti finanziari indipendenti (OPC / OCF) autorizzati e regolamentati, specializzati in 
-                pianificazione finanziaria, gestione patrimoniale e analisi di mercato. I collegamenti sono 
-                suggeriti per il loro valore formativo e non costituiscono referral commerciale.
-              </p>
-              <a href="mailto:info@tradelia.org" class="collaborator-card-link">
-                Richiedi Informazioni
-                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
-                  <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </a>
+          <div style="text-align: center; padding: var(--sp-12) var(--sp-4);">
+            <div style="margin-bottom: var(--sp-6);">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 64px; height: 64px; margin: 0 auto; color: var(--muted, #888);">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
+              </svg>
             </div>
-
-            <div class="collaborator-card">
-              <div class="collaborator-card-icon">
-                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px;">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                  <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
-                </svg>
-              </div>
-              <h4 class="collaborator-card-title">Esperti e Analisti di Mercato</h4>
-              <p class="collaborator-card-description">
-                Professionisti finanziari specializzati in analisi di mercato, strategie di investimento e 
-                valutazione di strumenti finanziari per privati e piccole imprese. I collegamenti sono 
-                suggeriti per il loro valore formativo e la condivisione di metodologie educative.
-              </p>
-              <a href="mailto:info@tradelia.org" class="collaborator-card-link">
-                Richiedi Informazioni
-                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
-                  <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </a>
-            </div>
+            <h3 style="font-size: var(--fs-24); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">
+              Sezione in Allestimento
+            </h3>
+            <p style="font-size: var(--fs-16); color: var(--ink-soft); margin: 0 0 var(--sp-6); max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+              Stiamo selezionando consulenti finanziari qualificati e professionisti indipendenti per questa sezione. 
+              Se sei un consulente finanziario autorizzato (OCF/OPC) o un professionista qualificato e vuoi essere 
+              considerato per questa sezione, compila il form qui sotto.
+            </p>
+            <button onclick="apriModalProfessionista()" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px;">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
+              </svg>
+              Compila il Form per Professionisti
+            </button>
           </div>
 
           <!-- Security Guide: Consulenti -->
@@ -3940,6 +4059,119 @@ Vuoi procedere inviando i dati?`;
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL PROFESSIONISTA ===== -->
+  <div id="modal-professionista" class="hidden" role="dialog" aria-modal="true" aria-labelledby="modal-professionista-title">
+    <div class="modal-professionista-content">
+      <div class="modal-professionista-header">
+        <h3 class="modal-professionista-title" id="modal-professionista-title">Candidatura Professionista</h3>
+        <button class="modal-professionista-close" onclick="chiudiModalProfessionista()" aria-label="Chiudi">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px;">
+            <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-professionista-body">
+        <p style="font-size: var(--fs-14); color: var(--ink-soft); margin-bottom: var(--sp-6); line-height: 1.6;">
+          Compila il form qui sotto per candidarti come consulente finanziario o professionista qualificato. 
+          Valuteremo la tua richiesta e ti contatteremo al più presto.
+        </p>
+        <form id="form-professionista">
+          <div class="form-group">
+            <label class="form-label" for="nome">
+              Nome <span class="required">*</span>
+            </label>
+            <input type="text" id="nome" name="nome" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="cognome">
+              Cognome <span class="required">*</span>
+            </label>
+            <input type="text" id="cognome" name="cognome" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="qualifica">
+              Qualifica Professionale <span class="required">*</span>
+            </label>
+            <select id="qualifica" name="qualifica" class="form-select" required>
+              <option value="">Seleziona qualifica...</option>
+              <option value="OCF">OCF - Consulente Finanziario</option>
+              <option value="OPC">OPC - Organismo di Partecipazione Collettiva</option>
+              <option value="Analista">Analista di Mercato</option>
+              <option value="Esperto">Esperto Finanziario</option>
+              <option value="Altro">Altro</option>
+            </select>
+            <p class="form-help">Seleziona la tua qualifica professionale principale</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="numero_iscrizione">
+              Numero Iscrizione OCF/OPC
+            </label>
+            <input type="text" id="numero_iscrizione" name="numero_iscrizione" class="form-input" placeholder="Es: OCF-12345">
+            <p class="form-help">Se applicabile, inserisci il numero di iscrizione all'Albo</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email">
+              Email <span class="required">*</span>
+            </label>
+            <input type="email" id="email" name="email" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="telefono">
+              Telefono
+            </label>
+            <input type="tel" id="telefono" name="telefono" class="form-input" placeholder="+39 123 456 7890">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="sito_web">
+              Sito Web / Profilo Professionale
+            </label>
+            <input type="url" id="sito_web" name="sito_web" class="form-input" placeholder="https://...">
+            <p class="form-help">Link al tuo sito web o profilo professionale (LinkedIn, etc.)</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="specializzazione">
+              Specializzazione <span class="required">*</span>
+            </label>
+            <select id="specializzazione" name="specializzazione" class="form-select" required>
+              <option value="">Seleziona specializzazione...</option>
+              <option value="Pianificazione">Pianificazione Finanziaria</option>
+              <option value="Gestione">Gestione Patrimoniale</option>
+              <option value="Analisi">Analisi di Mercato</option>
+              <option value="Investimenti">Investimenti e Portafogli</option>
+              <option value="Fiscale">Consulenza Fiscale</option>
+              <option value="Pensione">Pianificazione Pensionistica</option>
+              <option value="Altro">Altro</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="descrizione">
+              Descrizione Breve <span class="required">*</span>
+            </label>
+            <textarea id="descrizione" name="descrizione" class="form-textarea" required placeholder="Descrivi brevemente la tua attività professionale, esperienza e metodologia..."></textarea>
+            <p class="form-help">Massimo 500 caratteri. Questa descrizione potrebbe essere utilizzata nella sezione se la tua candidatura verrà accettata.</p>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="chiudiModalProfessionista()">
+              Annulla
+            </button>
+            <button type="submit" class="btn btn-primary">
+              Invia Candidatura
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -3995,6 +4227,63 @@ Vuoi procedere inviando i dati?`;
         if (modal && !modal.classList.contains('hidden')) {
           chiudiModalCollaboratori();
         }
+        const modalProf = document.getElementById('modal-professionista');
+        if (modalProf && !modalProf.classList.contains('hidden')) {
+          chiudiModalProfessionista();
+        }
+      }
+    });
+
+    // ===== MODAL PROFESSIONISTA FUNCTIONS =====
+    function apriModalProfessionista() {
+      const modal = document.getElementById('modal-professionista');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function chiudiModalProfessionista() {
+      const modal = document.getElementById('modal-professionista');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+      // Reset form
+      const form = document.getElementById('form-professionista');
+      if (form) form.reset();
+    }
+
+    // Chiudi modal cliccando fuori
+    document.getElementById('modal-professionista')?.addEventListener('click', (e) => {
+      if (e.target.id === 'modal-professionista') {
+        chiudiModalProfessionista();
+      }
+    });
+
+    // Gestione submit form
+    document.getElementById('form-professionista')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      
+      // Disabilita submit
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Invio in corso...';
+      
+      // Raccogli dati form
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData);
+      
+      try {
+        // Qui puoi aggiungere la logica per inviare i dati (email, API, etc.)
+        // Per ora mostriamo un messaggio di successo
+        alert('Grazie per la tua candidatura! Ti contatteremo al più presto per valutare la tua richiesta.');
+        chiudiModalProfessionista();
+      } catch (error) {
+        alert('Si è verificato un errore. Riprova più tardi o contattaci direttamente a info@tradelia.org');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
       }
     });
   </script>
