@@ -428,6 +428,180 @@
       margin-top: 0.75rem;
     }
 
+    /* ===== COLLABORATORS SECTION ===== */
+    .collaborators-section {
+      padding: 6rem 0;
+      background: var(--surface-card);
+    }
+
+    /* ===== MODAL COLLABORATORS ===== */
+    #modal-collaboratori {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 1rem;
+      backdrop-filter: blur(4px);
+    }
+
+    #modal-collaboratori.hidden {
+      display: none;
+    }
+
+    .modal-collaboratori-content {
+      background: var(--surface-card);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-lg);
+      max-width: 56rem;
+      width: 100%;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-collaboratori-header {
+      padding: 2rem 2rem 1.5rem;
+      border-bottom: 1px solid var(--br-card);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-collaboratori-title {
+      font-size: var(--fs-24);
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    .modal-collaboratori-close {
+      background: none;
+      border: none;
+      color: var(--ink-soft);
+      cursor: pointer;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .modal-collaboratori-close:hover {
+      background: var(--surface-elev);
+      color: var(--ink);
+    }
+
+    .modal-collaboratori-body {
+      padding: 2rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .collaborators-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--br-card);
+    }
+
+    .collaborator-tab {
+      padding: 0.75rem 1.5rem;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--ink-soft);
+      font-size: var(--fs-15);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: -1px;
+    }
+
+    .collaborator-tab:hover {
+      color: var(--ink);
+    }
+
+    .collaborator-tab.active {
+      color: var(--brand-400);
+      border-bottom-color: var(--brand-400);
+    }
+
+    .collaborators-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .collaborator-card {
+      background: var(--surface-elev);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      transition: all 0.3s;
+    }
+
+    .collaborator-card:hover {
+      border-color: var(--brand-600);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.1);
+    }
+
+    .collaborator-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--brand-400);
+      margin-bottom: 1rem;
+    }
+
+    .collaborator-card-title {
+      font-size: var(--fs-18);
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0 0 0.5rem;
+    }
+
+    .collaborator-card-description {
+      font-size: var(--fs-14);
+      color: var(--ink-soft);
+      margin: 0 0 1rem;
+      line-height: 1.6;
+    }
+
+    .collaborator-card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--brand-400);
+      font-size: var(--fs-14);
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .collaborator-card-link:hover {
+      color: var(--brand-300);
+      gap: 0.75rem;
+    }
+
+    .collaborator-panel {
+      display: none;
+    }
+
+    .collaborator-panel.active {
+      display: block;
+    }
+
     /* ===== BUTTONS ===== */
     .btn {
       display: inline-flex;
