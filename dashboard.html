@@ -1401,14 +1401,26 @@
         updateReportsStats();
         
         // Show controls
-        document.getElementById('reports-stats').style.display = 'flex';
-        document.getElementById('reports-framework-filter').style.display = 'flex';
+        const statsEl = document.getElementById('reports-stats');
+        const filterEl = document.getElementById('reports-framework-filter');
+        if (statsEl) statsEl.style.display = 'flex';
+        if (filterEl) filterEl.style.display = 'flex';
+        
+        // Rimuovi loading state
+        const loadingEl = container?.querySelector('.loading');
+        if (loadingEl) {
+          loadingEl.style.display = 'none';
+        }
         
         // Setup search, sort and filters
         setupReportsSearch();
         setupReportsSort();
         setupFrameworkFilter();
-        setupScrollControls();
+        
+        // Setup scroll controls dopo che il DOM è stato aggiornato
+        setTimeout(() => {
+          setupScrollControls();
+        }, 100);
         
         // Set initial sort indicator on date column
         setTimeout(() => {
@@ -1419,7 +1431,15 @@
         }, 100);
       } catch(error) {
         console.error('Errore caricamento report:', error);
-        container.innerHTML = `<div class="empty-state">Errore: ${error.message || 'Errore sconosciuto'}</div>`;
+        if (container) {
+          container.innerHTML = `<div class="empty-state">Errore: ${error.message || 'Errore sconosciuto'}</div>`;
+        }
+      } finally {
+        // Rimuovi loading state anche in caso di errore
+        const loadingEl = container?.querySelector('.loading');
+        if (loadingEl) {
+          loadingEl.style.display = 'none';
+        }
       }
     }
     
@@ -1792,9 +1812,18 @@
     
     // ===== INIT =====
     // Carica report
-    loadReports().catch(err => console.error('Errore loadReports:', err)).then(() => {
+    loadReports().catch(err => {
+      console.error('Errore loadReports:', err);
+      const container = document.getElementById('reports-container');
+      if (container) {
+        container.innerHTML = `<div class="empty-state">Errore caricamento report: ${err.message || 'Errore sconosciuto'}</div>`;
+      }
+    }).then(() => {
       console.log('Dashboard caricata completamente');
-      setupScrollControls();
+      // Setup scroll controls dopo che il DOM è stato aggiornato
+      setTimeout(() => {
+        setupScrollControls();
+      }, 100);
     });
   </script>
   

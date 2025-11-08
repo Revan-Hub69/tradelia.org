@@ -216,6 +216,25 @@
       color: var(--tut-text-muted);
     }
     
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: var(--tut-bg);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: var(--tut-border);
+      border-radius: 5px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--tut-text-muted);
+    }
+    
     @media (max-width: 768px) {
       .container {
         padding-inline: 1rem;
@@ -270,23 +289,33 @@
   <!-- ===== FOOTER ===== -->
   <div id="site-footer-slot"></div>
   
-  <!-- ===== MOUNT HEADER & FOOTER ===== -->
+  <!-- ===== MOUNT HEADER & FOOTER & LOAD TUTORIALS ===== -->
   <script type="module">
     document.documentElement.setAttribute('data-theme', 'dark');
     
     // Importa componenti
-    import { siteHeader } from '/report/assets/js/site-header.js';
-    import { siteFooter } from '/report/assets/js/site-footer.js';
+    import { siteHeader } from '/report/assets/js/components/site-header.js';
+    import { siteFooter } from '/report/assets/js/components/site-footer.js';
     
     // Mount header/footer
     const headerSlot = document.getElementById('site-header-slot');
-    if (headerSlot) siteHeader.mount(headerSlot);
+    if (headerSlot) {
+      try {
+        siteHeader.mount(headerSlot);
+      } catch(e) {
+        console.error('Errore mount header:', e);
+      }
+    }
     
     const footerSlot = document.getElementById('site-footer-slot');
-    if (footerSlot) siteFooter.mount(footerSlot);
-  </script>
-  
-  <script type="module">
+    if (footerSlot) {
+      try {
+        siteFooter.mount(footerSlot);
+      } catch(e) {
+        console.error('Errore mount footer:', e);
+      }
+    }
+    
     const STATE = {
       tutorials: [],
       currentCategory: 'all'
@@ -308,29 +337,76 @@
             throw new Error('Manifest non disponibile');
           }
         } catch(e) {
+          console.warn('Usando lista hardcoded tutorial:', e.message);
           tutorialFiles = [
             'Analisi-Tecnica-Introduzione.json',
             'Chart-Patterns.json',
+            'Indicatori-Tecnici.json',
+            'Candlestick-Patterns.json',
             'valutare-azioni.json',
             'valutare-etf.json',
             'valutare-obbligazioni.json',
             'valutare-crypto.json',
             'valutare-commodities.json',
             'valutare-reit.json',
+            'valutare-liquidita.json',
+            'PIC-PAC-Guida-Completa.json',
+            'Rebalancing-Portafoglio.json',
+            'Teorie-Creazione-Portafogli.json',
+            'Value-vs-Growth-Investing.json',
+            'Dividend-Investing.json',
+            'Money-Management-Position-Sizing.json',
+            'Tipi-Ordini-Mercato.json',
+            'Psicologia-Trading-Bias-Comportamentali.json',
+            'Trading-Algoritmico-Miti-Realta.json',
+            'Backtesting-Stress-Test-Monte-Carlo.json',
+            'Correlazione-Guida-Completa.json',
+            'Volatilita-Stocastica-Modelli-Pricing.json',
+            'The-Big-Short-Short-Selling.json',
+            'Analisi-Macroeconomica-Investimenti.json',
+            'Opzioni-Vanilla.json',
+            'Opzioni-Esotiche.json',
             'CFD-guida-completa.json',
-            'Derivati-OTC.json'
+            'CFD-Retail.json',
+            'ETF-Leva-Inversi.json',
+            'ETF-Sintetici.json',
+            'Derivati-OTC.json',
+            'CoCo-Bonds.json',
+            'Callable-StepUp.json',
+            'Reverse-Convertible.json',
+            'Dual-Currency-Bonds.json',
+            'Note-Strutturate-Barriera.json',
+            'Certificates-Complessi.json',
+            'Obbligazioni-Strutturate.json',
+            'False-Principal-Protection.json',
+            'CLO-CDO.json',
+            'CDS-CDO-Subprime.json',
+            'SPAC-Rischi.json',
+            'Token-Sintetici.json',
+            'Stablecoin-Algoritmiche.json',
+            'Truffe-Cripto.json',
+            'Truffe-Finanziarie-Storiche.json'
           ];
         }
         
         const tutorials = [];
+        const failedFiles = [];
         
         for (const file of tutorialFiles) {
           try {
             const response = await fetch(`/report/tutorial/data/${file}`);
-            if (!response.ok) continue;
+            if (!response.ok) {
+              failedFiles.push(file);
+              console.warn(`Tutorial ${file} non trovato (${response.status})`);
+              continue;
+            }
             
             const data = await response.json();
-            if (!data || typeof data !== 'object') continue;
+            if (!data || typeof data !== 'object') {
+              failedFiles.push(file);
+              console.warn(`Tutorial ${file} ha formato non valido`);
+              continue;
+            }
             
             const fileName = file.replace('.json', '');
             const category = data.meta?.category || data.category || 'Altro';
@@ -344,16 +420,36 @@
               fileName: fileName
             });
           } catch(e) {
+            failedFiles.push(file);
             console.error(`Errore caricamento tutorial ${file}:`, e);
           }
         }
         
+        if (failedFiles.length > 0) {
+          console.warn(`${failedFiles.length} tutorial non caricati:`, failedFiles);
+        }
+        
         STATE.tutorials = tutorials;
+        
+        if (tutorials.length === 0) {
+          container.innerHTML = `<div class="empty-state">Nessun tutorial disponibile. Verifica che i file JSON siano presenti in /report/tutorial/data/</div>`;
+          return;
+        }
+        
         renderTutorials();
         setupFilters();
         setupSearch();
+        
+        console.log(`Tutorial caricati: ${tutorials.length}`);
       } catch(error) {
-        container.innerHTML = `<div class="empty-state">Errore: ${error.message}</div>`;
+        console.error('Errore caricamento tutorial:', error);
+        container.innerHTML = `<div class="empty-state">Errore: ${error.message || 'Errore sconosciuto'}</div>`;
+      } finally {
+        // Rimuovi loading state
+        const loadingEl = container?.querySelector('.loading');
+        if (loadingEl) {
+          loadingEl.style.display = 'none';
+        }
       }
     }
     
@@ -446,7 +542,10 @@
       });
     }
     
-    loadTutorials();
+    // Carica tutorial dopo che header/footer sono montati
+    setTimeout(() => {
+      loadTutorials();
+    }, 100);
   </script>
 </body>
 </html>

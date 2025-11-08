@@ -2,7 +2,11 @@
 // Usa il template base e crea un HTML per ogni JSON nella cartella data/
 
 import { readdir, readFile, writeFile } from 'fs/promises';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 function getTemplateBase(tutorialName) {
   return `<!DOCTYPE html>
@@ -44,8 +48,8 @@ function getTemplateBase(tutorialName) {
 }
 
 async function generateHTML() {
-  const dataDir = join(process.cwd(), 'tutorial', 'data');
-  const tutorialDir = join(process.cwd(), 'tutorial');
+  const dataDir = join(__dirname, 'data');
+  const tutorialDir = __dirname;
   
   try {
     const files = await readdir(dataDir);
@@ -78,5 +82,13 @@ async function generateHTML() {
   }
 }
 
-generateHTML();
+// Esegui solo se chiamato direttamente
+if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith('generate-html.js')) {
+  generateHTML().catch(err => {
+    console.error('Errore generazione HTML:', err);
+    process.exit(1);
+  });
+}
+
+export { generateHTML };
 
