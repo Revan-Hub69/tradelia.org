@@ -18,271 +18,918 @@
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
   
   <style>
+    /* ===== ACADEMIC DESIGN SYSTEM - COHERENT WITH TRADELIA ===== */
+    :root {
+      /* Use design system tokens as base */
+      --dash-bg: var(--surface-page, #0f0f0f);
+      --dash-surface: var(--surface-card, #181818);
+      --dash-surface-elev: var(--surface-elev, #202020);
+      --dash-border: var(--br-card, #323232);
+      --dash-border-strong: var(--br-strong, #3e3e3e);
+      --dash-text: var(--ink, #ffffff);
+      --dash-text-soft: var(--ink-soft, #f0f0f0);
+      --dash-text-muted: var(--muted, #b8b8b8);
+      --dash-accent: var(--brand-600, #2563eb);
+      --dash-accent-hover: var(--brand-400, #60a5fa);
+      --dash-accent-bg: rgba(37, 99, 235, 0.12);
+    }
+    
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
     }
     
     body {
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      background: var(--surface-page);
-      color: var(--ink);
-      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-      font-size: 13px;
-      line-height: 1.6;
+      background: var(--dash-bg);
+      color: var(--dash-text);
+      /* Academic typography: Inter for UI, monospace for data */
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.7;
+      letter-spacing: -0.011em;
+      font-feature-settings: 'kern' 1, 'liga' 1;
     }
     
     main {
       flex: 1;
       padding-top: 64px;
-      padding-bottom: 0;
-      background: var(--surface-page);
-      color: var(--ink);
+      padding-bottom: 4rem;
+      background: var(--dash-bg);
+      color: var(--dash-text);
     }
     
     .container {
-      max-width: 1200px;
+      max-width: 1400px;
       margin-inline: auto;
-      padding-inline: 1.5rem;
+      padding-inline: 2rem;
     }
     
-    /* ===== SECTION TOGGLE ===== */
+    /* ===== ACADEMIC TYPOGRAPHY HIERARCHY ===== */
+    h1, h2, h3, h4 {
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: var(--dash-text);
+    }
+    
+    /* Monospace for technical data only */
+    .mono {
+      font-family: var(--ff-mono, 'SF Mono', 'Monaco', 'Consolas', monospace);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0;
+    }
+    
+    /* ===== SECTION TOGGLE - ACADEMIC REFINED ===== */
     .section-toggle {
-      display: flex;
+      display: inline-flex;
       gap: 0;
-      margin-bottom: 2rem;
-      border-bottom: 1px solid var(--br-card);
-      font-size: 12px;
+      margin-bottom: 1.75rem;
+      border-bottom: 1px solid var(--dash-border);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
     }
     
     .section-toggle-btn {
-      padding: 0.5rem 1rem;
+      position: relative;
+      padding: 0.625rem 1.5rem;
       background: transparent;
       border: none;
       border-bottom: 2px solid transparent;
-      color: var(--ink-soft);
+      color: var(--dash-text-muted);
       cursor: pointer;
       font-family: inherit;
       font-size: inherit;
-      transition: all 0.2s;
+      font-weight: 600;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-bottom: -1px;
+    }
+    
+    .section-toggle-btn::before {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--dash-accent);
+      transform: scaleX(0);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     .section-toggle-btn:hover {
-      color: var(--ink);
+      color: var(--dash-text);
       background: rgba(255, 255, 255, 0.02);
     }
     
     .section-toggle-btn.active {
-      color: var(--brand-400);
-      border-bottom-color: var(--brand-400);
+      color: var(--dash-accent);
+      border-bottom-color: var(--dash-accent);
     }
     
-    /* ===== COMPACT LIST STYLE ===== */
+    .section-toggle-btn.active::before {
+      transform: scaleX(1);
+    }
+    
+    /* ===== ACADEMIC LIST STYLE - REFINED & READABLE ===== */
     .tech-list {
       list-style: none;
       padding: 0;
       margin: 0;
+      background: var(--dash-surface);
+      border: 1px solid var(--dash-border);
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
     
     .tech-list-item {
-      padding: 0.5rem 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      display: flex;
-      align-items: baseline;
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--dash-border);
+      display: grid;
+      grid-template-columns: 130px 2fr 120px 140px 100px 100px 120px;
       gap: 1rem;
+      align-items: center;
       font-size: 12px;
+      line-height: 1.4;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      min-height: 2.25rem;
     }
     
     .tech-list-item:last-child {
       border-bottom: none;
     }
     
+    .tech-list-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--dash-accent);
+      transform: scaleY(0);
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0.8;
+    }
+    
     .tech-list-item:hover {
-      background: rgba(255, 255, 255, 0.02);
-      margin: 0 -0.5rem;
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
+      border-color: var(--dash-border-strong);
+    }
+    
+    .tech-list-item:hover::before {
+      transform: scaleY(1);
     }
     
     .tech-link {
-      color: var(--brand-400);
+      color: var(--dash-accent);
       text-decoration: none;
-      flex: 1;
+      font-weight: 600;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      letter-spacing: -0.01em;
     }
     
     .tech-link:hover {
-      color: var(--brand-300);
-      text-decoration: underline;
+      color: var(--dash-accent-hover);
+    }
+    
+    .tech-link::after {
+      content: '→';
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      color: var(--dash-accent);
+      font-weight: 400;
+    }
+    
+    .tech-list-item:hover .tech-link::after {
+      opacity: 1;
+      transform: translateX(0);
     }
     
     .tech-meta {
-      color: var(--ink-soft);
-      font-size: 11px;
+      color: var(--dash-text-soft);
+      font-size: 12px;
       white-space: nowrap;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
     }
     
     .tech-id {
-      color: var(--muted);
-      font-family: 'Consolas', monospace;
+      color: var(--dash-text-muted);
+      font-family: var(--ff-mono, 'SF Mono', 'Monaco', 'Consolas', monospace);
       font-size: 11px;
-      min-width: 120px;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.03em;
     }
     
     .tech-separator {
-      color: var(--muted);
-      margin: 0 0.25rem;
+      color: var(--dash-text-muted);
+      margin: 0;
+      opacity: 0.3;
+      font-weight: 300;
     }
     
-    /* ===== REPORT SECTION ===== */
+    .tech-company {
+      color: var(--dash-text-muted);
+      font-size: 11px;
+      font-style: italic;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      opacity: 0.8;
+      margin-top: 0.1rem;
+    }
+    
+    .tech-asset-wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .tech-asset-wrapper .tech-link {
+      margin: 0;
+    }
+    
+    .tech-asset-wrapper .tech-company {
+      margin: 0;
+    }
+    
+    /* ===== REPORT SECTION - ACADEMIC ===== */
     .report-section {
       display: none;
+      animation: fadeIn 0.4s ease-out;
     }
     
     .report-section.active {
       display: block;
     }
     
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
     .report-header {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.75rem;
       padding-bottom: 1rem;
-      border-bottom: 1px solid var(--br-card);
+      border-bottom: 1px solid var(--dash-border);
     }
     
     .report-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--ink);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--dash-text);
       margin: 0 0 0.5rem;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.025em;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
     }
     
     .report-description {
-      font-size: 11px;
-      color: var(--ink-soft);
-      margin: 0;
-    }
-    
-    /* ===== TUTORIAL SECTION ===== */
-    .tutorial-section {
-      display: none;
-    }
-    
-    .tutorial-section.active {
-      display: block;
-    }
-    
-    .tutorial-header {
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--br-card);
-    }
-    
-    .tutorial-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--ink);
-      margin: 0 0 0.5rem;
-      letter-spacing: -0.01em;
-    }
-    
-    .tutorial-description {
-      font-size: 11px;
-      color: var(--ink-soft);
-      margin: 0;
-    }
-    
-    .tutorial-category {
-      margin-bottom: 2rem;
-    }
-    
-    .tutorial-category-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--brand-400);
-      margin: 0 0 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    
-    .tutorial-list {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 0 1rem;
-    }
-    
-    .tutorial-item {
-      padding: 0.4rem 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    }
-    
-    .tutorial-item:last-child {
-      border-bottom: none;
-    }
-    
-    .tutorial-link {
-      color: var(--ink);
-      text-decoration: none;
       font-size: 12px;
+      color: var(--dash-text-soft);
+      margin: 0;
+      line-height: 1.6;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      max-width: 65ch;
     }
     
-    .tutorial-link:hover {
-      color: var(--brand-400);
-      text-decoration: underline;
-    }
-    
-    /* ===== LOADING ===== */
+    /* ===== LOADING - ACADEMIC ===== */
     .loading {
-      padding: 2rem;
+      padding: 4rem;
       text-align: center;
-      color: var(--ink-soft);
-      font-size: 11px;
+      color: var(--dash-text-soft);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
     }
     
     .loading-spinner {
       display: inline-block;
       width: 16px;
       height: 16px;
-      border: 2px solid var(--br-card);
-      border-top-color: var(--brand-400);
+      border: 2px solid var(--dash-border);
+      border-top-color: var(--dash-accent);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
-      margin-right: 0.5rem;
     }
     
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
     
-    /* ===== EMPTY STATE ===== */
+    /* ===== EMPTY STATE - ACADEMIC ===== */
     .empty-state {
-      padding: 2rem;
+      padding: 4rem;
       text-align: center;
-      color: var(--ink-soft);
-      font-size: 11px;
+      color: var(--dash-text-muted);
+      font-size: 13px;
+      font-style: italic;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      line-height: 1.7;
     }
     
-    /* ===== HEADER COMPACT ===== */
+    /* ===== HEADER - ACADEMIC ===== */
     .dashboard-header {
-      padding: 2rem 0 1rem;
-      border-bottom: 1px solid var(--br-card);
-      margin-bottom: 1.5rem;
+      padding: 2rem 0 1.25rem;
+      border-bottom: 1px solid var(--dash-border);
+      margin-bottom: 1.75rem;
     }
     
     .dashboard-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--ink);
-      margin: 0 0 0.25rem;
-      letter-spacing: -0.01em;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--dash-text);
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.03em;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      line-height: 1.2;
     }
     
     .dashboard-subtitle {
-      font-size: 11px;
-      color: var(--ink-soft);
+      font-size: 12px;
+      color: var(--dash-text-soft);
       margin: 0;
+      letter-spacing: 0.03em;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .dashboard-subtitle::before {
+      content: '─';
+      color: var(--dash-text-muted);
+      opacity: 0.3;
+      font-weight: 300;
+    }
+    
+    /* ===== STATS BAR - ACADEMIC ===== */
+    .stats-bar {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 1.25rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--dash-border);
+      font-size: 12px;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+    }
+    
+    .stat-item {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      color: var(--dash-text-soft);
+    }
+    
+    .stat-value {
+      color: var(--dash-accent);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      font-family: var(--ff-mono, 'SF Mono', 'Monaco', 'Consolas', monospace);
+      font-size: 14px;
+      letter-spacing: -0.01em;
+    }
+    
+    .stat-label {
+      color: var(--dash-text-muted);
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+    }
+    
+    /* ===== SEARCH BAR - ACADEMIC ===== */
+    .search-container {
+      margin-bottom: 1.25rem;
+      position: relative;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.75rem;
+      background: var(--dash-surface);
+      border: 1.5px solid var(--dash-border);
+      border-radius: 6px;
+      color: var(--dash-text);
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      font-size: 13px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      line-height: 1.5;
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: var(--dash-accent);
+      background: var(--dash-surface-elev);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+    }
+    
+    .search-input::placeholder {
+      color: var(--dash-text-muted);
+      opacity: 0.7;
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--dash-text-muted);
+      font-size: 16px;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+    
+    .search-results-count {
+      position: absolute;
+      right: 5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--dash-text-muted);
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+      font-family: var(--ff-mono, 'SF Mono', 'Monaco', 'Consolas', monospace);
+    }
+    
+    
+    /* ===== FILTER CONTROLS - ACADEMIC ===== */
+    .filter-controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      align-items: center;
+      font-size: 12px;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      flex-wrap: wrap;
+    }
+    
+    .sort-label {
+      color: var(--dash-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    
+    .filter-btn {
+      padding: 0.375rem 0.875rem;
+      background: transparent;
+      border: 1.5px solid var(--dash-border);
+      border-radius: 5px;
+      color: var(--dash-text-soft);
+      cursor: pointer;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      font-size: 11px;
+      font-weight: 500;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .filter-btn:hover {
+      border-color: var(--dash-accent);
+      color: var(--dash-text);
+      background: rgba(37, 99, 235, 0.05);
+    }
+    
+    .filter-btn.active {
+      background: var(--dash-accent-bg);
+      border-color: var(--dash-accent);
+      color: var(--dash-accent);
+      font-weight: 600;
+    }
+    
+    /* ===== COLUMN HEADERS WITH SORT ===== */
+    .list-header {
+      margin-bottom: 0.75rem;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 130px 2fr 120px 140px 100px 100px 120px;
+      gap: 1rem;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--dash-text-muted);
+      font-weight: 700;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+    }
+    
+    .list-header-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.2s;
+    }
+    
+    .list-header-cell:hover {
+      color: var(--dash-text-soft);
+    }
+    
+    .list-header-cell.sortable {
+      cursor: pointer;
+    }
+    
+    .sort-icon {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.125rem;
+      opacity: 0.4;
+      transition: opacity 0.2s;
+      margin-left: 0.25rem;
+    }
+    
+    .list-header-cell:hover .sort-icon,
+    .list-header-cell.sorted .sort-icon {
+      opacity: 0.8;
+    }
+    
+    .list-header-cell.sorted-asc .sort-icon .sort-up,
+    .list-header-cell.sorted-desc .sort-icon .sort-down {
+      opacity: 1;
+      color: var(--dash-accent);
+    }
+    
+    .sort-up,
+    .sort-down {
+      width: 8px;
+      height: 4px;
+      opacity: 0.3;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    
+    /* ===== SCROLL CONTROLS (DESKTOP ONLY) ===== */
+    .scroll-controls {
+      position: absolute;
+      top: 0;
+      right: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    
+    @media (min-width: 769px) {
+      .report-section.active .scroll-controls,
+      .tutorial-section.active .scroll-controls {
+        opacity: 0.6;
+        pointer-events: auto;
+      }
+      
+      .report-section.active .scroll-controls:hover,
+      .tutorial-section.active .scroll-controls:hover {
+        opacity: 1;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .scroll-controls {
+        display: none !important;
+      }
+    }
+    
+    .scroll-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--dash-surface);
+      border: 1px solid var(--dash-border);
+      border-radius: 6px;
+      color: var(--dash-text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0.6;
+    }
+    
+    .scroll-btn:hover {
+      opacity: 1;
+      border-color: var(--dash-accent);
+      color: var(--dash-accent);
+      background: var(--dash-surface-elev);
+    }
+    
+    .scroll-btn:active {
+      transform: scale(0.95);
+    }
+    
+    .scroll-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+    
+    /* ===== KEYBOARD SHORTCUT HINT - ACADEMIC ===== */
+    .shortcut-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.625rem;
+      background: var(--dash-surface);
+      border: 1px solid var(--dash-border);
+      border-radius: 5px;
+      font-size: 11px;
+      color: var(--dash-text-muted);
+      font-family: var(--ff-mono, 'SF Mono', 'Monaco', 'Consolas', monospace);
+      transition: all 0.2s;
+    }
+    
+    .shortcut-key {
+      padding: 0.2rem 0.4rem;
+      background: var(--dash-surface-elev);
+      border-radius: 3px;
+      font-weight: 600;
+      color: var(--dash-text-soft);
+    }
+    
+    /* ===== INNOVATIVE TOUCHES ===== */
+    .tech-list-item {
+      counter-increment: list-item;
+    }
+    
+    .tech-list {
+      counter-reset: list-item;
+    }
+    
+    /* Subtle gradient on hover for depth - combined with existing hover */
+    .tech-list-item:hover {
+      background: linear-gradient(90deg, var(--dash-surface-elev) 0%, rgba(32, 32, 32, 0.5) 100%);
+    }
+    
+    /* Academic citation-style for IDs */
+    .tech-id::before {
+      content: '[';
+      opacity: 0.4;
+      margin-right: 0.125rem;
+    }
+    
+    .tech-id::after {
+      content: ']';
+      opacity: 0.4;
+      margin-left: 0.125rem;
+    }
+    
+    
+    /* Subtle shadow elevation on cards */
+    .tech-list,
+    .tutorial-list {
+      box-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+    }
+    
+    /* Academic section divider */
+    .report-header::after,
+    .tutorial-header::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 2px;
+      background: var(--dash-accent);
+      margin-top: 1rem;
+      opacity: 0.6;
+    }
+    
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 968px) {
+      .tech-list-item {
+        grid-template-columns: 110px 2fr 100px 120px 80px 80px 100px;
+        gap: 0.875rem;
+        font-size: 11px;
+        padding: 0.5rem 0.875rem;
+        min-height: 2rem;
+      }
+      
+      .list-header {
+        grid-template-columns: 110px 2fr 100px 120px 80px 80px 100px;
+      }
+      
+      .tech-id {
+        font-size: 10px;
+      }
+      
+      .tech-meta {
+        font-size: 10px;
+      }
+      
+      .tech-link {
+        font-size: 11px;
+      }
+      
+      .tech-company {
+        font-size: 10px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding-inline: 1rem;
+      }
+      
+      .dashboard-header {
+        padding: 1.5rem 0 1rem;
+      }
+      
+      .dashboard-title {
+        font-size: 20px;
+      }
+      
+      .list-header {
+        display: none !important;
+      }
+      
+      .tech-list-item {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding: 0.875rem;
+        min-height: auto;
+      }
+      
+      .tech-id {
+        font-size: 10px;
+        order: -1;
+        margin-bottom: 0.375rem;
+        padding-bottom: 0.375rem;
+        border-bottom: 1px solid var(--dash-border);
+      }
+      
+      .tech-asset-wrapper {
+        flex-direction: column;
+        gap: 0.25rem;
+        align-items: flex-start;
+      }
+      
+      .tech-meta {
+        font-size: 11px;
+        padding: 0.25rem 0;
+      }
+      
+      .tech-meta[data-label]::before {
+        content: attr(data-label) ': ';
+        color: var(--dash-text-muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 9px;
+        letter-spacing: 0.05em;
+        margin-right: 0.5rem;
+      }
+      
+      .section-toggle {
+        font-size: 10px;
+        margin-bottom: 1.5rem;
+      }
+      
+      .section-toggle-btn {
+        padding: 0.5rem 1rem;
+      }
+      
+      .search-input {
+        padding: 0.75rem 0.875rem 0.75rem 2.5rem;
+        font-size: 13px;
+      }
+      
+      .sort-controls,
+      .filter-controls {
+        gap: 0.75rem;
+        font-size: 11px;
+      }
+      
+      .sort-btn,
+      .filter-btn {
+        padding: 0.3rem 0.7rem;
+        font-size: 10px;
+      }
+      
+      .stats-bar {
+        gap: 1.5rem;
+        padding: 0.5rem 0;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding-inline: 0.75rem;
+      }
+      
+      .dashboard-title {
+        font-size: 18px;
+      }
+      
+      .tech-list-item {
+        padding: 0.75rem;
+      }
+      
+      .sort-controls,
+      .filter-controls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+      
+      .sort-label {
+        margin-bottom: 0.25rem;
+      }
+    }
+    
+    /* ===== SCROLLBAR STYLING - REFINED ===== */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: var(--dash-bg);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: var(--dash-border);
+      border-radius: 5px;
+      border: 2px solid var(--dash-bg);
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--dash-border-strong);
+    }
+    
+    /* ===== FOCUS VISIBLE - ACCESSIBILITY ===== */
+    *:focus-visible {
+      outline: 2px solid var(--dash-accent);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+    
+    /* ===== SELECTION STYLING - ACADEMIC ===== */
+    ::selection {
+      background: var(--dash-accent-bg);
+      color: var(--dash-accent-hover);
+    }
+    
+    /* ===== PRINT STYLES - ACADEMIC ===== */
+    @media print {
+      .section-toggle,
+      .search-container,
+      .sort-controls,
+      .shortcut-hint {
+        display: none !important;
+      }
+      
+      .tech-list-item {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+    }
+    
+    /* ===== ACCESSIBILITY ENHANCEMENTS ===== */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+      :root {
+        --dash-border: rgba(255, 255, 255, 0.2);
+        --dash-text-muted: #d0d0d0;
+      }
     }
     
     
@@ -385,21 +1032,66 @@
       <!-- ===== DASHBOARD HEADER ===== -->
       <div class="dashboard-header">
         <h1 class="dashboard-title">Dashboard</h1>
-        <p class="dashboard-subtitle">Report finanziari AI | Tutorial educativi</p>
+        <p class="dashboard-subtitle">Report finanziari AI</p>
       </div>
       
       <!-- ===== SECTION TOGGLE ===== -->
-      <div class="section-toggle">
-        <button class="section-toggle-btn active" data-section="reports">REPORT</button>
-        <button class="section-toggle-btn" data-section="tutorials">TUTORIAL</button>
-      </div>
+      <!-- Rimossa sezione tutorial - ora disponibile in /tutorials.html -->
       
       <!-- ===== REPORT SECTION ===== -->
       <section class="report-section active">
         <div class="report-header">
           <h2 class="report-title">Report</h2>
-          <p class="report-description">Framework Accademico AI Tradelia Swing Master 5.0 - Analisi multi-fattore</p>
+          <p class="report-description">Framework Accademico AI Tradelia - Analisi finanziaria multi-fattore basata su dati Tier-1. Include framework (Swing Master 5.0, Daily Market Intelligence 3.1, Stress Test Avanzato) e tipologia di analisi.</p>
         </div>
+        
+        <div class="stats-bar" id="reports-stats" style="display: none;">
+          <div class="stat-item">
+            <span class="stat-value" id="reports-count">0</span>
+            <span class="stat-label">Report</span>
+          </div>
+        </div>
+        
+        <div class="search-container">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            id="reports-search" 
+            class="search-input" 
+            placeholder="Cerca per ticker, azienda, ID, exchange o settore..." 
+            autocomplete="off"
+          />
+          <span class="search-results-count" id="reports-search-count" style="display: none;"></span>
+          <div style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); pointer-events: none;">
+            <span class="shortcut-hint" id="reports-shortcut-hint">
+              <span class="shortcut-key" id="reports-shortcut-mod">⌘</span>
+              <span>K</span>
+            </span>
+          </div>
+        </div>
+        
+        <div class="filter-controls" id="reports-framework-filter" style="display: none;">
+          <span class="sort-label">Framework:</span>
+          <button class="sort-btn filter-btn active" data-framework="all">Tutti</button>
+          <button class="sort-btn filter-btn" data-framework="swing-master-5.0">Swing Master 5.0</button>
+          <button class="sort-btn filter-btn" data-framework="dmi-3.1">Daily Market Intelligence 3.1</button>
+          <button class="sort-btn filter-btn" data-framework="stress-test">Stress Test Avanzato</button>
+        </div>
+        
+        <!-- Scroll controls (desktop only) -->
+        <div class="scroll-controls" id="scroll-controls">
+          <button class="scroll-btn scroll-up" aria-label="Scroll su" title="Scroll su">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 15l-6-6-6 6"/>
+            </svg>
+          </button>
+          <button class="scroll-btn scroll-down" aria-label="Scroll giù" title="Scroll giù">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
+        </div>
+        
         <div id="reports-container">
           <div class="loading">
             <div class="loading-spinner"></div>
@@ -408,19 +1100,6 @@
         </div>
       </section>
       
-      <!-- ===== TUTORIAL SECTION ===== -->
-      <section class="tutorial-section">
-        <div class="tutorial-header">
-          <h2 class="tutorial-title">Tutorial</h2>
-          <p class="tutorial-description">Trading, investimenti e analisi finanziaria</p>
-        </div>
-        <div id="tutorials-container">
-          <div class="loading">
-            <div class="loading-spinner"></div>
-            <span>Caricamento tutorial...</span>
-          </div>
-        </div>
-      </section>
     </div>
   </main>
   
@@ -451,34 +1130,53 @@
   
   <!-- ===== DASHBOARD SCRIPTS ===== -->
   <script type="module">
+    // ===== STATE MANAGEMENT =====
+    const STATE = {
+      reports: [],
+      filteredReports: [],
+      currentSort: 'date-desc',
+      currentFramework: 'all',
+    };
+    
     // ===== SECTION TOGGLE =====
-    function initSectionToggle() {
-      const toggleBtns = document.querySelectorAll('.section-toggle-btn');
-      const reportSection = document.querySelector('.report-section');
-      const tutorialSection = document.querySelector('.tutorial-section');
-      
-      toggleBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const section = btn.dataset.section;
-          
-          // Update buttons
-          toggleBtns.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          
-          // Update sections
-          if (section === 'reports') {
-            reportSection.classList.add('active');
-            tutorialSection.classList.remove('active');
-          } else {
-            reportSection.classList.remove('active');
-            tutorialSection.classList.add('active');
+    // Rimossa logica toggle - solo report ora
+    
+    // ===== KEYBOARD SHORTCUTS =====
+    function initKeyboardShortcuts() {
+      document.addEventListener('keydown', (e) => {
+        // Cmd/Ctrl + K per focus search
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          const searchInput = document.getElementById('reports-search');
+          if (searchInput) {
+            searchInput.focus();
+            searchInput.select();
           }
-        });
+        }
+        
+        // Escape per clear search
+        if (e.key === 'Escape') {
+          const activeSearch = document.activeElement;
+          if (activeSearch && activeSearch.classList.contains('search-input')) {
+            activeSearch.value = '';
+            activeSearch.blur();
+            filterReports();
+          }
+        }
       });
     }
     
-    // Initialize toggle on load
-    initSectionToggle();
+    // Initialize shortcuts
+    initKeyboardShortcuts();
+    
+    // Detect OS for shortcut hint
+    function updateShortcutHints() {
+      const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      const modKey = isMac ? '⌘' : 'Ctrl';
+      document.getElementById('reports-shortcut-mod').textContent = modKey;
+      document.getElementById('tutorials-shortcut-mod').textContent = modKey;
+    }
+    updateShortcutHints();
     
     // ===== REPORTS LOADER =====
     async function loadReports() {
@@ -486,11 +1184,36 @@
       if (!container) return;
       
       try {
-        // Lista dei report disponibili (da aggiornare dinamicamente)
-        const reportDirs = [
-          '20251107-1630',
-          'sample-id'
-        ];
+        // Carica lista report da manifest (se disponibile) o usa lista hardcoded
+        let reportDirs = [];
+        
+        try {
+          // Prova a caricare manifest report (generato dinamicamente)
+          const manifestResponse = await fetch('/report/reports/reports-manifest.json');
+          if (manifestResponse.ok) {
+            const manifest = await manifestResponse.json();
+            // Estrai array di ID report (supporta sia array di stringhe che array di oggetti)
+            if (Array.isArray(manifest.reports)) {
+              reportDirs = manifest.reports.map(r => typeof r === 'string' ? r : r.id).filter(Boolean);
+            } else if (Array.isArray(manifest.dirs)) {
+              reportDirs = manifest.dirs;
+            } else {
+              throw new Error('Formato manifest non valido');
+            }
+            console.log('Report manifest caricato:', reportDirs.length, 'report');
+          } else {
+            // Fallback: usa lista hardcoded
+            throw new Error('Manifest non disponibile, uso lista hardcoded');
+          }
+        } catch(e) {
+          // Lista hardcoded di report disponibili (fallback)
+          reportDirs = [
+            '20251107-1630',
+            'sample-id'
+          ];
+          console.log('Usando lista hardcoded:', reportDirs.length, 'report');
+          console.warn('Errore caricamento manifest report:', e.message);
+        }
         
         const reports = [];
         
@@ -543,6 +1266,12 @@
               continue;
             }
             
+            // Verifica che non sia un tutorial (sicurezza aggiuntiva)
+            if (reportID.includes('tutorial') || reportID.includes('Tutorial')) {
+              console.warn(`Saltato ${reportID}: sembra essere un tutorial, non un report`);
+              continue;
+            }
+            
             // Determina timestamp
             let timestamp = reportID; // Fallback all'ID
             if (manifest?.metadata?.timestamp) {
@@ -553,12 +1282,72 @@
               timestamp = header.meta.lastUpdated;
             }
             
-            // Determina moduli
-            let modules = [];
+            // Estrai exchange, sector, price da header metricsPanel
+            let exchange = null;
+            let sector = null;
+            let price = null;
+            let framework = 'swing-master-5.0'; // default
+            
+            if (header?.metricsPanel && Array.isArray(header.metricsPanel)) {
+              header.metricsPanel.forEach(metric => {
+                if (metric.key === 'Venue') exchange = metric.value;
+                if (metric.key === 'Sector') sector = metric.value;
+                if (metric.key === 'Price') price = metric.value;
+              });
+            }
+            
+            // Determina framework da manifest.metadata.generatedBy o framework
+            if (manifest?.metadata?.framework) {
+              framework = manifest.metadata.framework;
+            } else if (manifest?.metadata?.generatedBy) {
+              const generatedBy = manifest.metadata.generatedBy.toLowerCase();
+              if (generatedBy.includes('swing master')) {
+                framework = 'swing-master-5.0';
+              } else if (generatedBy.includes('daily market intelligence') || generatedBy.includes('dmi')) {
+                framework = 'dmi-3.1';
+              } else if (generatedBy.includes('stress test')) {
+                framework = 'stress-test';
+              } else {
+                // Default: swing-master-5.0 se contiene moduli F1-F8
+                const hasModules = manifest?.order || manifest?.modules;
+                if (hasModules) {
+                  framework = 'swing-master-5.0';
+                }
+              }
+            } else {
+              // Default: swing-master-5.0 se contiene moduli F1-F8
+              const hasModules = manifest?.order || manifest?.modules;
+              if (hasModules) {
+                framework = 'swing-master-5.0';
+              }
+            }
+            
+            // Determina tipologia basata sui moduli presenti
+            let tipologia = 'Analisi Multi-Fattore';
             if (manifest?.order && Array.isArray(manifest.order)) {
-              modules = manifest.order;
-            } else if (manifest?.modules && typeof manifest.modules === 'object') {
-              modules = Object.keys(manifest.modules);
+              const modules = manifest.order;
+              if (modules.includes('F1B')) {
+                tipologia = 'Analisi Momentum';
+              } else if (modules.includes('F2')) {
+                tipologia = 'Analisi Fondamentale';
+              } else if (modules.includes('F3') || modules.includes('F3O')) {
+                tipologia = 'Analisi Tecnica';
+              } else if (modules.includes('F4')) {
+                tipologia = 'Analisi Sentiment';
+              } else if (modules.includes('F5') || modules.includes('F5B') || modules.includes('F5-LT+')) {
+                tipologia = 'Analisi Rischi';
+              }
+              // Se ci sono più moduli, è multi-fattore
+              if (modules.length > 1) {
+                tipologia = 'Analisi Multi-Fattore';
+              }
+            }
+            
+            // Usa tipologia da metadata se presente
+            if (manifest?.metadata?.tipologia) {
+              tipologia = manifest.metadata.tipologia;
+            } else if (manifest?.metadata?.type) {
+              tipologia = manifest.metadata.type;
             }
             
             // Estrai ticker da manifest se non trovato in header
@@ -571,8 +1360,12 @@
               id: manifest?.id || reportID,
               ticker: ticker || 'N/A',
               company: companyName || null,
+              exchange: exchange || null,
+              sector: sector || null,
+              price: price || null,
+              framework: framework,
+              tipologia: tipologia,
               timestamp: timestamp,
-              modules: modules,
               reportUrl: `/report/index.html?id=${reportID}`
             };
             
@@ -597,201 +1390,497 @@
           }
         });
         
-        // Renderizza lista semplice
-        if (reports.length === 0) {
-          container.innerHTML = `<div class="empty-state">Nessun report disponibile</div>`;
-          return;
+        // Save reports to state
+        STATE.reports = reports;
+        STATE.filteredReports = [...reports];
+        
+        // Rimuovi loading state PRIMA di renderizzare (in caso di errore nelle funzioni successive)
+        const loadingEl = container?.querySelector('.loading');
+        if (loadingEl) {
+          loadingEl.style.display = 'none';
         }
         
-        const listHTML = `
-          <ul class="tech-list">
-            ${reports.map(report => {
-              let dateStr = report.timestamp;
-              
-              try {
-                const dateObj = new Date(report.timestamp);
-                if (!isNaN(dateObj.getTime())) {
-                  dateStr = dateObj.toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' });
-                }
-              } catch(e) {
-                // Usa timestamp originale se parsing fallisce
-              }
-              
-              const modulesStr = report.modules.length > 0 
-                ? report.modules.join(', ') 
-                : 'N/A';
-              
-              return `
-                <li class="tech-list-item">
-                  <span class="tech-id">${report.id}</span>
-                  <span class="tech-separator">|</span>
-                  <a href="${report.reportUrl}" class="tech-link">${report.ticker}</a>
-                  ${report.company ? `<span class="tech-meta">${report.company}</span>` : ''}
-                  <span class="tech-separator">|</span>
-                  <span class="tech-meta">${dateStr}</span>
-                  <span class="tech-separator">|</span>
-                  <span class="tech-meta">${modulesStr}</span>
-                </li>
-              `;
-            }).join('')}
-          </ul>
-        `;
+        // Render using dedicated function
+        try {
+          renderReportsList(STATE.filteredReports);
+        } catch(err) {
+          console.error('Errore renderReportsList:', err);
+          container.innerHTML = `<div class="empty-state">Errore nel rendering: ${err.message || 'Errore sconosciuto'}</div>`;
+        }
         
-        container.innerHTML = listHTML;
+        // Update stats
+        try {
+          updateReportsStats();
+        } catch(err) {
+          console.error('Errore updateReportsStats:', err);
+        }
+        
+        // Show controls
+        const statsEl = document.getElementById('reports-stats');
+        const filterEl = document.getElementById('reports-framework-filter');
+        if (statsEl) statsEl.style.display = 'flex';
+        if (filterEl) filterEl.style.display = 'flex';
+        
+        // Setup search, sort and filters
+        setupReportsSearch();
+        setupReportsSort();
+        setupFrameworkFilter();
+        
+        // Setup scroll controls dopo che il DOM è stato aggiornato
+        setTimeout(() => {
+          setupScrollControls();
+        }, 100);
+        
+        // Set initial sort indicator on date column
+        setTimeout(() => {
+          const dateHeader = document.querySelector('.list-header-cell[data-sort="date"]');
+          if (dateHeader) {
+            dateHeader.classList.add('sorted', 'sorted-desc');
+          }
+        }, 100);
       } catch(error) {
         console.error('Errore caricamento report:', error);
-        container.innerHTML = `<div class="empty-state">Errore: ${error.message || 'Errore sconosciuto'}</div>`;
+        if (container) {
+          // Assicurati che il loading sia rimosso prima di mostrare l'errore
+          const loadingEl = container.querySelector('.loading');
+          if (loadingEl) {
+            loadingEl.style.display = 'none';
+          }
+          container.innerHTML = `<div class="empty-state">Errore: ${error.message || 'Errore sconosciuto'}</div>`;
+        }
+      } finally {
+        // Rimuovi loading state anche in caso di errore (safety net)
+        const container = document.getElementById('reports-container');
+        if (container) {
+          const loadingEl = container.querySelector('.loading');
+          if (loadingEl) {
+            loadingEl.style.display = 'none';
+          }
+        }
       }
     }
     
-    // ===== TUTORIALS LOADER =====
-    async function loadTutorials() {
-      const container = document.getElementById('tutorials-container');
-      if (!container) return;
+    // ===== REPORTS SEARCH =====
+    function setupReportsSearch() {
+      const searchInput = document.getElementById('reports-search');
+      const countEl = document.getElementById('reports-search-count');
+      const shortcutHint = document.getElementById('reports-shortcut-hint');
       
-      try {
-        // Lista dei tutorial disponibili (da caricare dinamicamente)
-        const tutorialFiles = [
-          'Analisi-Tecnica-Introduzione.json',
-          'Chart-Patterns.json',
-          'Indicatori-Tecnici.json',
-          'Candlestick-Patterns.json',
-          'valutare-azioni.json',
-          'valutare-etf.json',
-          'valutare-obbligazioni.json',
-          'valutare-crypto.json',
-          'valutare-commodities.json',
-          'valutare-reit.json',
-          'valutare-liquidita.json',
-          'PIC-PAC-Guida-Completa.json',
-          'Rebalancing-Portafoglio.json',
-          'Teorie-Creazione-Portafogli.json',
-          'Value-vs-Growth-Investing.json',
-          'Dividend-Investing.json',
-          'Money-Management-Position-Sizing.json',
-          'Tipi-Ordini-Mercato.json',
-          'Psicologia-Trading-Bias-Comportamentali.json',
-          'Trading-Algoritmico-Miti-Realta.json',
-          'Backtesting-Stress-Test-Monte-Carlo.json',
-          'Correlazione-Guida-Completa.json',
-          'Volatilita-Stocastica-Modelli-Pricing.json',
-          'The-Big-Short-Short-Selling.json',
-          'Analisi-Macroeconomica-Investimenti.json',
-          'Opzioni-Vanilla.json',
-          'Opzioni-Esotiche.json',
-          'CFD-guida-completa.json',
-          'CFD-Retail.json',
-          'ETF-Leva-Inversi.json',
-          'ETF-Sintetici.json',
-          'Derivati-OTC.json',
-          'CoCo-Bonds.json',
-          'Callable-StepUp.json',
-          'Reverse-Convertible.json',
-          'Dual-Currency-Bonds.json',
-          'Note-Strutturate-Barriera.json',
-          'Certificates-Complessi.json',
-          'Obbligazioni-Strutturate.json',
-          'False-Principal-Protection.json',
-          'CLO-CDO.json',
-          'CDS-CDO-Subprime.json',
-          'SPAC-Rischi.json',
-          'Token-Sintetici.json',
-          'Stablecoin-Algoritmiche.json',
-          'Truffe-Cripto.json',
-          'Truffe-Finanziarie-Storiche.json'
-        ];
-        
-        const tutorials = [];
-        
-        for (const file of tutorialFiles) {
-          try {
-            const response = await fetch(`/report/tutorial/data/${file}`);
-            if (!response.ok) {
-              console.warn(`Tutorial ${file} non trovato (${response.status})`);
-              continue;
-            }
-            
-            const data = await response.json();
-            if (!data || typeof data !== 'object') {
-              console.warn(`Tutorial ${file} ha formato non valido`);
-              continue;
-            }
-            
-            const fileName = file.replace('.json', '');
-            
-            // Estrai categoria con fallback
-            let category = 'Altro';
-            if (data.meta?.category) {
-              category = data.meta.category;
-            } else if (data.category) {
-              category = data.category;
-            }
-            
-            tutorials.push({
-              title: data.title || fileName.replace(/-/g, ' '),
-              category: category,
-              published: data.meta?.published || data.published || '',
-              difficulty: data.meta?.difficulty || data.difficulty || '',
-              link: `/report/tutorial/${fileName}.html`,
-              fileName: fileName
-            });
-          } catch(e) {
-            console.error(`Errore caricamento tutorial ${file}:`, e);
-          }
+      if (!searchInput) return;
+      
+      // Show/hide shortcut hint based on focus
+      searchInput.addEventListener('focus', () => {
+        if (shortcutHint) shortcutHint.style.display = 'none';
+      });
+      
+      searchInput.addEventListener('blur', () => {
+        if (shortcutHint) {
+          shortcutHint.style.display = !searchInput.value ? 'inline-flex' : 'none';
         }
+      });
+      
+      searchInput.addEventListener('input', (e) => {
+        filterReports();
+        // Show/hide shortcut based on input value
+        if (shortcutHint) {
+          shortcutHint.style.display = searchInput.value ? 'none' : 'inline-flex';
+        }
+      });
+      
+      // Initial state
+      if (shortcutHint && !searchInput.value) {
+        shortcutHint.style.display = 'inline-flex';
+      }
+    }
+    
+    function filterReports() {
+      const searchInput = document.getElementById('reports-search');
+      const countEl = document.getElementById('reports-search-count');
+      const query = searchInput?.value.toLowerCase().trim() || '';
+      
+      // Start from all reports
+      let filtered = [...STATE.reports];
+      
+      // Apply framework filter
+      if (STATE.currentFramework !== 'all') {
+        filtered = filtered.filter(report => 
+          report.framework === STATE.currentFramework
+        );
+      }
+      
+      // Apply search filter
+      if (query) {
+        filtered = filtered.filter(report => {
+          const searchable = [
+            report.id?.toLowerCase() || '',
+            report.ticker?.toLowerCase() || '',
+            report.company?.toLowerCase() || '',
+            report.exchange?.toLowerCase() || '',
+            report.sector?.toLowerCase() || '',
+            report.framework?.toLowerCase() || '',
+            report.tipologia?.toLowerCase() || '',
+            report.timestamp?.toLowerCase() || ''
+          ].join(' ');
+          return searchable.includes(query);
+        });
+      }
+      
+      STATE.filteredReports = filtered;
+      
+      // Apply current sort (sortReports will use STATE.filteredReports)
+      sortReports(STATE.currentSort);
+      
+      // Update count
+      if (countEl) {
+        if (query || STATE.currentFramework !== 'all') {
+          countEl.textContent = `${STATE.filteredReports.length} / ${STATE.reports.length}`;
+          countEl.style.display = 'block';
+        } else {
+          countEl.style.display = 'none';
+        }
+      }
+    }
+    
+    // ===== REPORTS SORT (COLUMN HEADERS) =====
+    function setupReportsSort() {
+      // Setup click handlers on column headers
+      document.addEventListener('click', (e) => {
+        const headerCell = e.target.closest('.list-header-cell.sortable');
+        if (!headerCell) return;
         
-        // Raggruppa per categoria
-        const categories = {};
-        tutorials.forEach(tutorial => {
-          const cat = tutorial.category;
-          if (!categories[cat]) {
-            categories[cat] = [];
-          }
-          categories[cat].push(tutorial);
+        const sortField = headerCell.dataset.sort;
+        if (!sortField) return;
+        
+        // Determine sort direction
+        const isCurrentlySorted = headerCell.classList.contains('sorted');
+        const isCurrentlyDesc = headerCell.classList.contains('sorted-desc');
+        
+        // Remove all sorted classes
+        document.querySelectorAll('.list-header-cell').forEach(cell => {
+          cell.classList.remove('sorted', 'sorted-asc', 'sorted-desc');
         });
         
-        // Ordina categorie
-        const sortedCategories = Object.keys(categories).sort();
+        // Set new sort
+        const newSort = isCurrentlySorted && !isCurrentlyDesc ? 'desc' : 'asc';
+        headerCell.classList.add('sorted', `sorted-${newSort}`);
         
-        // Renderizza lista semplice per categoria
-        if (sortedCategories.length === 0) {
-          container.innerHTML = `<div class="empty-state">Nessun tutorial disponibile</div>`;
-          return;
-        }
+        // Update state and sort
+        STATE.currentSort = `${sortField}-${newSort}`;
+        sortReports(STATE.currentSort);
+      });
+    }
+    
+    function sortReports(sortType) {
+      // Use already filtered reports from STATE
+      const reports = [...STATE.filteredReports];
+      
+      // Parse sort type (e.g., "date-desc", "ticker-asc")
+      const [field, direction] = sortType.split('-');
+      
+      // Apply sort
+      switch(field) {
+        case 'date':
+          reports.sort((a, b) => {
+            const dateA = new Date(a.timestamp);
+            const dateB = new Date(b.timestamp);
+            if (isNaN(dateA.getTime()) && isNaN(dateB.getTime())) return 0;
+            if (isNaN(dateA.getTime())) return 1;
+            if (isNaN(dateB.getTime())) return -1;
+            return direction === 'desc' ? dateB - dateA : dateA - dateB;
+          });
+          break;
+        case 'ticker':
+          reports.sort((a, b) => {
+            const tickerA = (a.ticker || '').toUpperCase();
+            const tickerB = (b.ticker || '').toUpperCase();
+            return direction === 'desc' 
+              ? tickerB.localeCompare(tickerA)
+              : tickerA.localeCompare(tickerB);
+          });
+          break;
+        case 'exchange':
+          reports.sort((a, b) => {
+            const exA = (a.exchange || '').toUpperCase();
+            const exB = (b.exchange || '').toUpperCase();
+            return direction === 'desc'
+              ? exB.localeCompare(exA)
+              : exA.localeCompare(exB);
+          });
+          break;
+        case 'sector':
+          reports.sort((a, b) => {
+            const secA = (a.sector || '').toUpperCase();
+            const secB = (b.sector || '').toUpperCase();
+            return direction === 'desc'
+              ? secB.localeCompare(secA)
+              : secA.localeCompare(secB);
+          });
+          break;
+        case 'framework':
+          reports.sort((a, b) => {
+            const fwA = (a.framework || '').toUpperCase();
+            const fwB = (b.framework || '').toUpperCase();
+            return direction === 'desc'
+              ? fwB.localeCompare(fwA)
+              : fwA.localeCompare(fwB);
+          });
+          break;
+        case 'tipologia':
+          reports.sort((a, b) => {
+            const tipA = (a.tipologia || '').toUpperCase();
+            const tipB = (b.tipologia || '').toUpperCase();
+            return direction === 'desc'
+              ? tipB.localeCompare(tipA)
+              : tipA.localeCompare(tipB);
+          });
+          break;
+        case 'id':
+          reports.sort((a, b) => {
+            const idA = (a.id || '').toUpperCase();
+            const idB = (b.id || '').toUpperCase();
+            return direction === 'desc'
+              ? idB.localeCompare(idA)
+              : idA.localeCompare(idB);
+          });
+          break;
+      }
+      
+      STATE.filteredReports = reports;
+      // Re-render with updated sort indicators
+      renderReportsList(reports);
+    }
+    
+    // ===== FRAMEWORK FILTER =====
+    function setupFrameworkFilter() {
+      const filterBtns = document.querySelectorAll('#reports-framework-filter .filter-btn');
+      
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const framework = btn.dataset.framework;
+          
+          // Update buttons
+          filterBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          
+          // Update state
+          STATE.currentFramework = framework;
+          
+          // Re-filter and re-sort
+          filterReports();
+        });
+      });
+    }
+    
+    function renderReportsList(reports) {
+      const container = document.getElementById('reports-container');
+      if (!container) {
+        // Rimuovi loading anche se container non esiste
+        const loadingEl = document.querySelector('#reports-container .loading');
+        if (loadingEl) loadingEl.style.display = 'none';
+        return;
+      }
+      
+      // Rimuovi loading state prima di renderizzare
+      const loadingEl = container.querySelector('.loading');
+      if (loadingEl) {
+        loadingEl.style.display = 'none';
+      }
+      
+      if (!reports || reports.length === 0) {
+        container.innerHTML = `<div class="empty-state">Nessun report trovato</div>`;
+        return;
+      }
+      
+      const listHTML = `
+        <div class="list-header">
+          <span class="list-header-cell" data-sort="id">ID
+            <span class="sort-icon">
+              <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
+              <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+            </span>
+          </span>
+          <span class="list-header-cell sortable" data-sort="ticker">Asset
+            <span class="sort-icon">
+              <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
+              <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+            </span>
+          </span>
+          <span class="list-header-cell sortable" data-sort="framework">Framework
+            <span class="sort-icon">
+              <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
+              <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+            </span>
+          </span>
+          <span class="list-header-cell sortable" data-sort="tipologia">Tipologia
+            <span class="sort-icon">
+              <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
+              <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+            </span>
+          </span>
+          <span class="list-header-cell sortable" data-sort="exchange">Exchange
+            <span class="sort-icon">
+              <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
+              <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+            </span>
+          </span>
+          <span class="list-header-cell sortable" data-sort="sector">Settore
+            <span class="sort-icon">
+              <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
+              <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+            </span>
+          </span>
+          <span class="list-header-cell sortable" data-sort="date">Data
+            <span class="sort-icon">
+              <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
+              <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+            </span>
+          </span>
+        </div>
+        <ul class="tech-list">
+          ${reports.map(report => {
+            let dateStr = report.timestamp;
+            let timeStr = '';
+            
+            try {
+              const dateObj = new Date(report.timestamp);
+              if (!isNaN(dateObj.getTime())) {
+                const day = String(dateObj.getDate()).padStart(2, '0');
+                const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                const year = dateObj.getFullYear();
+                const hours = String(dateObj.getHours()).padStart(2, '0');
+                const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+                dateStr = `${day}/${month}/${year}`;
+                timeStr = `${hours}:${minutes}`;
+              }
+            } catch(e) {
+              // Usa timestamp originale se parsing fallisce
+            }
+            
+            const dateTimeDisplay = timeStr ? `${dateStr} ${timeStr}` : dateStr;
+            
+            // Format framework name
+            const frameworkNames = {
+              'swing-master-5.0': 'Swing Master 5.0',
+              'dmi-3.1': 'Daily Market Intelligence 3.1',
+              'stress-test': 'Stress Test Avanzato'
+            };
+            const frameworkDisplay = frameworkNames[report.framework] || report.framework || '—';
+            
+            return `
+              <li class="tech-list-item" data-framework="${report.framework || 'swing-master-5.0'}">
+                <span class="tech-id">${report.id}</span>
+                <div class="tech-asset-wrapper">
+                  <a href="${report.reportUrl}" class="tech-link" style="font-weight: 600;">${report.ticker}</a>
+                  ${report.company ? `<span class="tech-company">${report.company}</span>` : ''}
+                </div>
+                <span class="tech-meta" data-label="Framework">${frameworkDisplay}</span>
+                <span class="tech-meta" data-label="Tipologia">${report.tipologia || '—'}</span>
+                <span class="tech-meta" data-label="Exchange">${report.exchange || '—'}</span>
+                <span class="tech-meta" data-label="Settore">${report.sector || '—'}</span>
+                <span class="tech-meta" data-label="Data">${dateTimeDisplay}</span>
+              </li>
+            `;
+          }).join('')}
+        </ul>
+      `;
+      
+      container.innerHTML = listHTML;
+    }
+    
+    function updateReportsStats() {
+      const countEl = document.getElementById('reports-count');
+      if (countEl) {
+        countEl.textContent = STATE.reports.length;
+      }
+    }
+    
+    // ===== SCROLL CONTROLS =====
+    function setupScrollControls() {
+      const scrollControls = document.querySelectorAll('.scroll-controls');
+      
+      scrollControls.forEach(controls => {
+        const scrollUp = controls.querySelector('.scroll-up');
+        const scrollDown = controls.querySelector('.scroll-down');
         
-        const categoriesHTML = sortedCategories.map(category => {
-          const tutorialsInCategory = categories[category];
-          return `
-            <div class="tutorial-category">
-              <h3 class="tutorial-category-title">${category}</h3>
-              <ul class="tutorial-list">
-                ${tutorialsInCategory.map(tutorial => {
-                  const cleanTitle = tutorial.title.replace(' - Guida Completa Tradelia AI', '');
-                  return `
-                    <li class="tutorial-item">
-                      <a href="${tutorial.link}" class="tutorial-link">${cleanTitle}</a>
-                    </li>
-                  `;
-                }).join('')}
-              </ul>
-            </div>
-          `;
-        }).join('');
+        if (!scrollUp || !scrollDown) return;
         
-        container.innerHTML = categoriesHTML;
-      } catch(error) {
-        console.error('Errore caricamento tutorial:', error);
-        container.innerHTML = `<div class="empty-state">Errore: ${error.message || 'Errore sconosciuto'}</div>`;
+        scrollUp.addEventListener('click', () => {
+          window.scrollBy({ top: -300, behavior: 'smooth' });
+        });
+        
+        scrollDown.addEventListener('click', () => {
+          window.scrollBy({ top: 300, behavior: 'smooth' });
+        });
+      });
+      
+      // Hide scroll controls when near top/bottom (only on desktop)
+      if (window.innerWidth >= 769) {
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+          clearTimeout(scrollTimeout);
+          scrollControls.forEach(controls => {
+            if (!controls) return;
+            
+            const scrollY = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            
+            // Fade out near top/bottom
+            if (scrollY < 50) {
+              controls.style.opacity = '0.3';
+            } else if (scrollY + windowHeight > documentHeight - 50) {
+              controls.style.opacity = '0.3';
+            } else {
+              controls.style.opacity = '1';
+            }
+          });
+        }, { passive: true });
       }
     }
     
     // ===== INIT =====
-    // Carica report e tutorial in parallelo
-    Promise.all([
-      loadReports().catch(err => console.error('Errore loadReports:', err)),
-      loadTutorials().catch(err => console.error('Errore loadTutorials:', err))
-    ]).then(() => {
+    // Safety timeout per rimuovere loading se qualcosa va storto
+    let loadingTimeout;
+    let loadingCompleted = false;
+    
+    function removeLoadingSafety() {
+      if (loadingCompleted) return;
+      const container = document.getElementById('reports-container');
+      if (container) {
+        const loadingEl = container.querySelector('.loading');
+        if (loadingEl) {
+          console.warn('Loading timeout: rimozione forzata loading state');
+          loadingEl.style.display = 'none';
+          // Verifica se il container contiene ancora solo il loading
+          const containerText = container.textContent || '';
+          if (containerText.toLowerCase().includes('caricamento')) {
+            container.innerHTML = `<div class="empty-state">Timeout caricamento report. <a href="javascript:location.reload()">Ricarica pagina</a></div>`;
+          }
+        }
+      }
+    }
+    
+    loadingTimeout = setTimeout(removeLoadingSafety, 10000); // 10 secondi timeout
+    
+    // Carica report
+    loadReports().catch(err => {
+      console.error('Errore loadReports:', err);
+      loadingCompleted = true;
+      if (loadingTimeout) clearTimeout(loadingTimeout);
+      const container = document.getElementById('reports-container');
+      if (container) {
+        const loadingEl = container.querySelector('.loading');
+        if (loadingEl) loadingEl.style.display = 'none';
+        container.innerHTML = `<div class="empty-state">Errore caricamento report: ${err.message || 'Errore sconosciuto'}</div>`;
+      }
+    }).then(() => {
+      loadingCompleted = true;
+      if (loadingTimeout) clearTimeout(loadingTimeout);
       console.log('Dashboard caricata completamente');
+      // Setup scroll controls dopo che il DOM è stato aggiornato
+      setTimeout(() => {
+        setupScrollControls();
+      }, 100);
     });
   </script>
   
@@ -809,61 +1898,61 @@
       </nav>
       <div class="legal-body" style="padding: var(--sp-6); overflow-y: auto; flex: 1;">
         <section id="panel-mifid" role="tabpanel" aria-labelledby="tab-mifid">
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Finalità del materiale</h4>
-          <p style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4);">Il presente sito web e tutti i suoi contenuti (analisi, moduli AI, report, articoli, glossario) hanno esclusiva finalità <strong>informativa e didattica</strong>. Non costituiscono consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa <strong>MiFID II / ESMA</strong>.</p>
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Natura educativa</h4>
-          <p style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4);">Tradelia AI è una piattaforma di <strong>educazione finanziaria accademica</strong>. Tutti i contenuti, inclusi moduli AI proprietari, analisi di mercato, report e strumenti didattici, sono progettati esclusivamente per finalità formative e di ricerca. Non viene svolta verifica di adeguatezza/appropriatezza, profilo di rischio o obiettivi finanziari dell'utente.</p>
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Rischi</h4>
-          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
+          <h4>Finalità del materiale</h4>
+          <p>Il presente sito web e tutti i suoi contenuti (analisi, moduli AI, report, articoli, glossario) hanno esclusiva finalità <strong>informativa e didattica</strong>. Non costituiscono consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa <strong>MiFID II / ESMA</strong>.</p>
+          <h4>Natura educativa</h4>
+          <p>Tradelia AI è una piattaforma di <strong>educazione finanziaria accademica</strong>. Tutti i contenuti, inclusi moduli AI proprietari, analisi di mercato, report e strumenti didattici, sono progettati esclusivamente per finalità formative e di ricerca. Non viene svolta verifica di adeguatezza/appropriatezza, profilo di rischio o obiettivi finanziari dell'utente.</p>
+          <h4>Rischi</h4>
+          <ul>
             <li>I mercati finanziari comportano <strong>rischio di perdita, anche totale, del capitale</strong>.</li>
             <li>Prodotti a leva/derivati (opzioni, futures, CFD) possono amplificare perdite oltre il capitale iniziale.</li>
             <li>Rendimenti passati non sono indicativi di risultati futuri.</li>
             <li>Le informazioni fornite non devono essere considerate come garanzie di rendimento.</li>
           </ul>
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Dati e fonti</h4>
-          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
+          <h4>Dati e fonti</h4>
+          <ul>
             <li>Dati e serie storiche possono essere soggetti a ritardi, revisioni o errori; i timestamp potrebbero non riflettere il "tempo reale".</li>
             <li>Le fonti includono provider ritenuti affidabili (Tier-1); non si garantisce esattezza/completezza assoluta.</li>
             <li>Le analisi AI sono generate automaticamente e possono contenere errori o imprecisioni.</li>
           </ul>
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Conflitti e indipendenza</h4>
-          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
+          <h4>Conflitti e indipendenza</h4>
+          <ul>
             <li><strong>Tradelia AI è indipendente</strong>: non esegue ordini, non gestisce capitali, non raccoglie depositi e non opera come intermediario finanziario.</li>
             <li>Non sono note situazioni di conflitto d'interesse rilevanti nella produzione del materiale.</li>
             <li>Eventuali link a piattaforme o servizi esterni sono forniti a solo scopo informativo.</li>
           </ul>
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Limitazioni e responsabilità</h4>
-          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
+          <h4>Limitazioni e responsabilità</h4>
+          <ul>
             <li>Le informazioni non sostituiscono il giudizio dell'utente né la consulenza di un <strong>intermediario autorizzato</strong>.</li>
             <li>L'utente è responsabile delle proprie decisioni di investimento.</li>
             <li>L'uso del sito è vietato laddove non conforme alle leggi locali.</li>
             <li>Tradelia AI non si assume alcuna responsabilità per perdite derivanti dall'uso delle informazioni fornite.</li>
           </ul>
         </section>
-        <section id="panel-privacy" role="tabpanel" aria-labelledby="tab-privacy" hidden style="display: none;">
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Principi</h4>
-          <p style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4);">Adottiamo un'impostazione "privacy-first": minimizzazione dei dati e assenza di tracciamento pubblicitario.</p>
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Dati trattati</h4>
-          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
+        <section id="panel-privacy" role="tabpanel" aria-labelledby="tab-privacy" hidden>
+          <h4>Principi</h4>
+          <p>Adottiamo un'impostazione "privacy-first": minimizzazione dei dati e assenza di tracciamento pubblicitario.</p>
+          <h4>Dati trattati</h4>
+          <ul>
             <li>Nessuna raccolta di dati personali identificativi tramite questa pagina.</li>
-            <li>Uso di <code style="background: var(--surface-elev); padding: 2px 6px; border-radius: 4px; font-size: var(--fs-12); color: var(--brand-400);">localStorage</code> per preferenze (tema) e consenso legale.</li>
+            <li>Uso di <code>localStorage</code> per preferenze (tema) e consenso legale.</li>
             <li>Eventuali log tecnici anonimi per sicurezza e diagnostica.</li>
           </ul>
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Cookie e analytics</h4>
-          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
+          <h4>Cookie e analytics</h4>
+          <ul>
             <li>Niente cookie di profilazione; eventuali analytics sono anonimizzati/aggregati.</li>
             <li>Nessuna condivisione con terze parti a fini commerciali.</li>
           </ul>
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Diritti e contatti</h4>
-          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
-            <li>Per informazioni o esercizio diritti privacy, scrivi a <a href="mailto:info@tradelia.org" style="color: var(--brand-400); text-decoration: underline;">info@tradelia.org</a>.</li>
+          <h4>Diritti e contatti</h4>
+          <ul>
+            <li>Per informazioni o esercizio diritti privacy, scrivi a <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>.</li>
             <li>Il titolare potrà aggiornare questa informativa: controlla periodicamente le revisioni.</li>
           </ul>
         </section>
       </div>
       <footer class="legal-ftr">
         <small style="font-size: var(--fs-12); color: var(--muted);">Continuando dichiari di aver letto e compreso le informative.</small>
-        <button class="btn btn-sm" type="button" id="btn-accept-legal" style="padding: 0.5rem 1rem; background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.2); border-radius: 6px; color: var(--brand-400); font-weight: 600; cursor: pointer;">Accetto e chiudi</button>
+        <button class="btn btn-sm" type="button" id="btn-accept-legal">Accetto e chiudi</button>
       </footer>
     </div>
   </div>
