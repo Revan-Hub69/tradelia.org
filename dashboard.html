@@ -1173,10 +1173,26 @@
     function updateShortcutHints() {
       const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
       const modKey = isMac ? '⌘' : 'Ctrl';
-      document.getElementById('reports-shortcut-mod').textContent = modKey;
-      document.getElementById('tutorials-shortcut-mod').textContent = modKey;
+      
+      // Verifica che gli elementi esistano prima di modificarli
+      const reportsMod = document.getElementById('reports-shortcut-mod');
+      if (reportsMod) {
+        reportsMod.textContent = modKey;
+      }
+      
+      const tutorialsMod = document.getElementById('tutorials-shortcut-mod');
+      if (tutorialsMod) {
+        tutorialsMod.textContent = modKey;
+      }
     }
-    updateShortcutHints();
+    
+    // Esegui solo dopo che il DOM è completamente caricato
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', updateShortcutHints);
+    } else {
+      // Se il DOM è già caricato, aspetta un po' per permettere al rendering dinamico
+      setTimeout(updateShortcutHints, 100);
+    }
     
     // ===== REPORTS LOADER =====
     async function loadReports() {
@@ -1394,23 +1410,32 @@
         STATE.reports = reports;
         STATE.filteredReports = [...reports];
         
+        // Rimuovi loading state PRIMA di renderizzare (in caso di errore nelle funzioni successive)
+        const loadingEl = container?.querySelector('.loading');
+        if (loadingEl) {
+          loadingEl.style.display = 'none';
+        }
+        
         // Render using dedicated function
-        renderReportsList(STATE.filteredReports);
+        try {
+          renderReportsList(STATE.filteredReports);
+        } catch(err) {
+          console.error('Errore renderReportsList:', err);
+          container.innerHTML = `<div class="empty-state">Errore nel rendering: ${err.message || 'Errore sconosciuto'}</div>`;
+        }
         
         // Update stats
-        updateReportsStats();
+        try {
+          updateReportsStats();
+        } catch(err) {
+          console.error('Errore updateReportsStats:', err);
+        }
         
         // Show controls
         const statsEl = document.getElementById('reports-stats');
         const filterEl = document.getElementById('reports-framework-filter');
         if (statsEl) statsEl.style.display = 'flex';
         if (filterEl) filterEl.style.display = 'flex';
-        
-        // Rimuovi loading state
-        const loadingEl = container?.querySelector('.loading');
-        if (loadingEl) {
-          loadingEl.style.display = 'none';
-        }
         
         // Setup search, sort and filters
         setupReportsSearch();
@@ -1432,13 +1457,21 @@
       } catch(error) {
         console.error('Errore caricamento report:', error);
         if (container) {
+          // Assicurati che il loading sia rimosso prima di mostrare l'errore
+          const loadingEl = container.querySelector('.loading');
+          if (loadingEl) {
+            loadingEl.style.display = 'none';
+          }
           container.innerHTML = `<div class="empty-state">Errore: ${error.message || 'Errore sconosciuto'}</div>`;
         }
       } finally {
-        // Rimuovi loading state anche in caso di errore
-        const loadingEl = container?.querySelector('.loading');
-        if (loadingEl) {
-          loadingEl.style.display = 'none';
+        // Rimuovi loading state anche in caso di errore (safety net)
+        const container = document.getElementById('reports-container');
+        if (container) {
+          const loadingEl = container.querySelector('.loading');
+          if (loadingEl) {
+            loadingEl.style.display = 'none';
+          }
         }
       }
     }
@@ -1656,14 +1689,25 @@
     
     function renderReportsList(reports) {
       const container = document.getElementById('reports-container');
-      if (!container) return;
+      if (!container) {
+        // Rimuovi loading anche se container non esiste
+        const loadingEl = document.querySelector('#reports-container .loading');
+        if (loadingEl) loadingEl.style.display = 'none';
+        return;
+      }
       
-      if (reports.length === 0) {
+      // Rimuovi loading state prima di renderizzare
+      const loadingEl = container.querySelector('.loading');
+      if (loadingEl) {
+        loadingEl.style.display = 'none';
+      }
+      
+      if (!reports || reports.length === 0) {
         container.innerHTML = `<div class="empty-state">Nessun report trovato</div>`;
         return;
       }
       
-        const listHTML = `
+      const listHTML = `
         <div class="list-header">
           <span class="list-header-cell" data-sort="id">ID
             <span class="sort-icon">
@@ -1811,14 +1855,43 @@
     }
     
     // ===== INIT =====
+    // Safety timeout per rimuovere loading se qualcosa va storto
+    let loadingTimeout;
+    let loadingCompleted = false;
+    
+    function removeLoadingSafety() {
+      if (loadingCompleted) return;
+      const container = document.getElementById('reports-container');
+      if (container) {
+        const loadingEl = container.querySelector('.loading');
+        if (loadingEl) {
+          console.warn('Loading timeout: rimozione forzata loading state');
+          loadingEl.style.display = 'none';
+          // Verifica se il container contiene ancora solo il loading
+          const containerText = container.textContent || '';
+          if (containerText.toLowerCase().includes('caricamento')) {
+            container.innerHTML = `<div class="empty-state">Timeout caricamento report. <a href="javascript:location.reload()">Ricarica pagina</a></div>`;
+          }
+        }
+      }
+    }
+    
+    loadingTimeout = setTimeout(removeLoadingSafety, 10000); // 10 secondi timeout
+    
     // Carica report
     loadReports().catch(err => {
       console.error('Errore loadReports:', err);
+      loadingCompleted = true;
+      if (loadingTimeout) clearTimeout(loadingTimeout);
       const container = document.getElementById('reports-container');
       if (container) {
+        const loadingEl = container.querySelector('.loading');
+        if (loadingEl) loadingEl.style.display = 'none';
         container.innerHTML = `<div class="empty-state">Errore caricamento report: ${err.message || 'Errore sconosciuto'}</div>`;
       }
     }).then(() => {
+      loadingCompleted = true;
+      if (loadingTimeout) clearTimeout(loadingTimeout);
       console.log('Dashboard caricata completamente');
       // Setup scroll controls dopo che il DOM è stato aggiornato
       setTimeout(() => {
