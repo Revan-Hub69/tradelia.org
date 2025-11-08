@@ -543,6 +543,95 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+    
+    /* ===== LEGAL OVERLAY ===== */
+    #legal-consent-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      padding: var(--sp-4);
+    }
+    
+    #legal-consent-overlay[hidden] {
+      display: none !important;
+    }
+    
+    .legal-panel {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: min(48rem, 90vw);
+      max-height: 90vh;
+      background: var(--surface-card);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+    }
+    
+    .legal-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--sp-5) var(--sp-6);
+      border-bottom: 1px solid var(--br-card);
+    }
+    
+    .legal-title {
+      font-size: var(--fs-20);
+      font-weight: 700;
+      color: var(--ink);
+    }
+    
+    .legal-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--br-card);
+    }
+    
+    .legal-tab {
+      padding: var(--sp-4) var(--sp-6);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--ink-soft);
+      font-size: var(--fs-15);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .legal-tab:hover {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.02);
+    }
+    
+    .legal-tab[aria-selected="true"] {
+      color: var(--brand-400);
+      border-bottom-color: var(--brand-400);
+    }
+    
+    .legal-body {
+      padding: var(--sp-6);
+      overflow-y: auto;
+      flex: 1;
+    }
+    
+    .legal-ftr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--sp-5) var(--sp-6);
+      border-top: 1px solid var(--br-card);
+      gap: var(--sp-4);
+    }
   </style>
 </head>
 <body>
@@ -1054,14 +1143,14 @@
   <!-- ===== LEGAL OVERLAY ===== -->
   <div id="legal-consent-overlay" role="dialog" aria-modal="true" aria-labelledby="legal-consent-title" hidden>
     <div style="position: absolute; inset: 0;" data-legal-dismiss></div>
-    <div class="legal-panel" role="document" style="position: relative; z-index: 1; width: 100%; max-width: 48rem; max-height: 90vh; background: var(--surface-card); border: 1px solid var(--br-card); border-radius: var(--radius-lg); display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); overflow: hidden; margin: auto; padding: 0;">
-      <header class="legal-hdr" style="display: flex; align-items: center; justify-content: space-between; padding: var(--sp-5) var(--sp-6); border-bottom: 1px solid var(--br-card);">
-        <div class="legal-title" id="legal-consent-title" style="font-size: var(--fs-20); font-weight: 700; color: var(--ink);">Informativa legale</div>
+    <div class="legal-panel" role="document">
+      <header class="legal-hdr">
+        <div class="legal-title" id="legal-consent-title">Informativa legale</div>
         <button class="btn btn-sm" type="button" data-legal-dismiss aria-label="Chiudi" style="background: none; border: none; color: var(--ink-soft); cursor: pointer; padding: 0.5rem;">Chiudi</button>
       </header>
-      <nav class="legal-tabs" role="tablist" aria-label="Sezioni legali" style="display: flex; gap: 0; border-bottom: 1px solid var(--br-card);">
-        <button class="legal-tab" role="tab" id="tab-mifid" aria-controls="panel-mifid" aria-selected="true" style="padding: var(--sp-4) var(--sp-6); background: none; border: none; border-bottom: 2px solid transparent; color: var(--ink-soft); font-size: var(--fs-15); font-weight: 600; cursor: pointer;">Informativa MiFID</button>
-        <button class="legal-tab" role="tab" id="tab-privacy" aria-controls="panel-privacy" aria-selected="false" style="padding: var(--sp-4) var(--sp-6); background: none; border: none; border-bottom: 2px solid transparent; color: var(--ink-soft); font-size: var(--fs-15); font-weight: 600; cursor: pointer;">Privacy</button>
+      <nav class="legal-tabs" role="tablist" aria-label="Sezioni legali">
+        <button class="legal-tab" role="tab" id="tab-mifid" aria-controls="panel-mifid" aria-selected="true">Informativa MiFID</button>
+        <button class="legal-tab" role="tab" id="tab-privacy" aria-controls="panel-privacy" aria-selected="false">Privacy</button>
       </nav>
       <div class="legal-body" style="padding: var(--sp-6); overflow-y: auto; flex: 1;">
         <section id="panel-mifid" role="tabpanel" aria-labelledby="tab-mifid">
@@ -1117,7 +1206,7 @@
           </ul>
         </section>
       </div>
-      <footer class="legal-ftr" style="display: flex; align-items: center; justify-content: space-between; padding: var(--sp-5) var(--sp-6); border-top: 1px solid var(--br-card); gap: var(--sp-4);">
+      <footer class="legal-ftr">
         <small style="font-size: var(--fs-12); color: var(--muted);">Continuando dichiari di aver letto e compreso le informative.</small>
         <button class="btn btn-sm" type="button" id="btn-accept-legal" style="padding: 0.5rem 1rem; background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.2); border-radius: 6px; color: var(--brand-400); font-weight: 600; cursor: pointer;">Accetto e chiudi</button>
       </footer>
@@ -1170,27 +1259,58 @@
       });
       
       overlay.addEventListener('click', (e) => {
-        if (e.target.matches('[data-legal-dismiss]') || e.target.closest('[data-legal-dismiss]')) {
-          if (!overlay.hasAttribute('data-blocking') || overlay.getAttribute('data-blocking') === 'false') closeLegal();
+        // Se clicca sull'overlay background (non sul panel)
+        if (e.target === overlay || e.target.matches('[data-legal-dismiss]')) {
+          // Se è in modalità bloccante, non chiudere
+          if (overlay.hasAttribute('data-blocking') && overlay.getAttribute('data-blocking') === 'true') {
+            return;
+          }
+          closeLegal();
         }
       });
       
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && (!overlay.hasAttribute('data-blocking') || overlay.getAttribute('data-blocking') === 'false')) closeLegal();
+        if (e.key === 'Escape') {
+          // Se è in modalità bloccante, non chiudere
+          if (overlay.hasAttribute('data-blocking') && overlay.getAttribute('data-blocking') === 'true') {
+            return;
+          }
+          closeLegal();
+        }
       });
       
+      // Bind pulsanti footer (se presenti)
       setTimeout(() => {
         document.getElementById('btn-privacy-open')?.addEventListener('click', () => openLegal('privacy', false));
         document.getElementById('btn-mifid-open')?.addEventListener('click', () => openLegal('mifid', false));
       }, 500);
       
-      // Primo accesso → OBBLIGO accettazione
+      // Verifica consenso PRIMA di aprire overlay
       let ack = null;
       try {
-        ack = JSON.parse(localStorage.getItem(KEY) || 'null');
-      } catch(e) {}
+        const stored = localStorage.getItem(KEY);
+        if (stored) {
+          ack = JSON.parse(stored);
+        }
+      } catch(e) {
+        console.warn('Errore lettura localStorage:', e);
+      }
+      
+      // Se non c'è consenso, apri overlay in modalità bloccante
+      // Ma solo DOPO che il DOM è pronto
       if (!ack) {
-        openLegal('mifid', true);
+        // Aspetta che tutto sia caricato
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => openLegal('mifid', true), 100);
+          });
+        } else {
+          setTimeout(() => openLegal('mifid', true), 100);
+        }
+      } else {
+        // Assicurati che l'overlay sia chiuso e il body non sia bloccato
+        overlay.hidden = true;
+        document.body.style.overflow = '';
       }
     })();
   </script>
