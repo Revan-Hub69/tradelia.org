@@ -1,498 +1,56 @@
-<!DOCTYPE html>
-<html lang="it">
+﻿<!DOCTYPE html>
+<html lang="it" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Report completo TRADELIA AI sulla crisi finanziaria 2008: analisi tecnica, strumenti derivati, protagonisti e impatto sociale.">
-  <title>TRADELIA • AI — Strumenti Finanziari Complessi</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-  <style>
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f9fafb;
-      color: #1f2937;
-      margin: 0;
-      padding: 0;
-      line-height: 1.7;
-      font-size: 16px;
-    }
-    h1, h2, h3, h4 {
-      color: #0f172a;
-      line-height: 1.3;
-      margin-top: 2rem;
-      margin-bottom: 1rem;
-      font-weight: 600;
-    }
-    h1 { font-size: 2rem; }
-    h2 { font-size: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.25rem; }
-    h3 { font-size: 1.25rem; }
-    h4 { font-size: 1.125rem; }
-    p { margin-bottom: 1.25rem; color: #374151; }
-    ul, ol { padding-left: 1.25rem; margin-bottom: 1.25rem; }
-    li { margin-bottom: 0.5rem; }
-    section {
-      background: #ffffff;
-      padding: 2.5rem 2rem;
-      margin: 2rem auto;
-      border-radius: 0.75rem;
-      max-width: 840px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-      border: 1px solid #e5e7eb;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 2rem;
-    }
-    th, td {
-      padding: 0.75rem;
-      border: 1px solid #e5e7eb;
-      text-align: left;
-      font-size: 0.95rem;
-      word-break: break-word;
-    }
-    th { background: #f3f4f6; font-weight: 600; }
-    tr:nth-child(even) { background: #f9fafb; }
-    .positive { color: #16a34a; font-weight: 600; }
-    .negative { color: #dc2626; font-weight: 600; }
-    .neutral { color: #64748b; font-weight: 500; }
-    a {
-      color: #2563eb;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    a:hover { text-decoration: underline; color: #1d4ed8; }
-    @media screen and (max-width: 768px) {
-      body { font-size: 15px; line-height: 1.6; }
-      section { padding: 1.25rem; margin: 1rem; }
-      h1 { font-size: 1.5rem; }
-      h2 { font-size: 1.25rem; }
-      h3 { font-size: 1.125rem; }
-      h4 { font-size: 1rem; }
-      table, thead, tbody, th, td, tr {
-        display: block; width: 100%;
-      }
-      th { display: none; }
-      td {
-        display: flex;
-        justify-content: space-between;
-        padding: 0.5rem 0;
-        border: none;
-        border-bottom: 1px solid #e5e7eb;
-      }
-      td::before {
-        content: attr(data-label);
-        font-weight: 600;
-        color: #1e293b;
-        padding-right: 1rem;
-        min-width: 140px;
-        display: inline-block;
-      }
-    }
-    #backToTop {
-      transition: all 0.3s ease-in-out;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-    /* Scrollbar Styling */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: linear-gradient(to right, #f1f5f9, #e2e8f0);
-  border-radius: 100vh;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(80, 160, 200, 0.5);
-  border-radius: 100vh;
-  transition: background-color 0.2s ease-in-out;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(80, 160, 200, 0.7);
-}
-
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
-  box-sizing: border-box;
-}
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Tutorial Tradelia AI - Progetto indipendente con metodo accademico AI per analisi finanziaria" />
+  <meta name="keywords" content="Tradelia AI, metodo accademico, progetto indipendente, AI trading, analisi finanziaria, tutorial" />
+  <meta name="author" content="Tradelia AI" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#ffffff" />
+  
+  <!-- Open Graph / Facebook - Default values (verranno sovrascritti da tutorial-renderer.js) -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="TRADELIA • AI — Tutorial" />
+  <meta property="og:description" content="Progetto indipendente che utilizza AI con metodo accademico per analisi finanziaria multi-fattore. Tutorial completo su trading e investimenti." />
+  <meta property="og:image" content="https://tradelia.org/img/tradelia_og_vC_white_clean.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:site_name" content="Tradelia AI" />
+  <meta property="og:locale" content="it_IT" />
+  
+  <!-- Twitter Card - Default values (verranno sovrascritti da tutorial-renderer.js) -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TRADELIA • AI — Tutorial" />
+  <meta name="twitter:description" content="Progetto indipendente che utilizza AI con metodo accademico per analisi finanziaria multi-fattore." />
+  <meta name="twitter:image" content="https://tradelia.org/img/tradelia_og_vC_white_clean.png" />
+  <meta name="twitter:creator" content="@tradelia_ai" />
+  <meta name="twitter:site" content="@tradelia_ai" />
+  
+  <title>TRADELIA • AI — Tutorial</title>
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/report/assets/css/report-layout.css" />
+  <link rel="stylesheet" href="/report/assets/css/glossary-drawer.css" />
+  <link rel="stylesheet" href="/report/assets/css/glossary-popup.css" />
+  <link rel="stylesheet" href="/report/tutorial-light.css" />
 </head>
-  <body>
+<body>
+  <!-- HEADER SLOT -->
+  <div id="site-header-slot"></div>
 
-<header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-3 flex justify-between items-center">
-  <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 hover:opacity-90 transition">
-    TRADELIA<span class="text-blue-600 animate-pulse">•AI</span>
-  </a>
-  <a href="https://tradelia.org/archivio.html" class="text-sm sm:text-base text-blue-700 font-medium hover:underline transition">
-    Archivio Storico
-  </a>
-</header> 
-<br>
-<section>
-  <nav class="max-w-4xl mx-auto mt-4 mb-10 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-    <h2 class="text-lg font-semibold text-gray-800 mb-3">Indice del Tutorial</h2>
-    <ul class="list-disc list-inside text-sm text-blue-600 space-y-2">
-      <li><a href="#sezione-1">1. Cosa significa "protezione del capitale"</a></li>
-      <li><a href="#sezione-2">2. Meccanismi reali e promesse contrattuali</a></li>
-      <li><a href="#sezione-3">3. Clausole nascoste e condizioni attivanti</a></li>
-      <li><a href="#sezione-4">4. Protezione condizionata: quando non funziona</a></li>
-      <li><a href="#sezione-5">5. Confronto con strumenti realmente protetti</a></li>
-      <li><a href="#sezione-6">6. Analisi di casi reali</a></li>
-      <li><a href="#sezione-7">7. Domande da porsi prima dell'acquisto</a></li>
-      <li><a href="#sezione-8">8. Glossario tecnico</a></li>
-      <li><a href="#sezione-9">9. Note legali e responsabilità dell’investitore</a></li>
-    </ul>
-  </nav>
-</section>
-<br>
-<section id="sezione-1" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">1. Cosa significa "protezione del capitale"?</h2>
-
-  <p>
-    In finanza, la <strong>protezione del capitale</strong> indica una garanzia — esplicita o implicita — che l’investitore riceverà almeno l’importo investito inizialmente, a prescindere dall’andamento del mercato.
-    Tuttavia, non tutte le forme di "protezione" sono equivalenti, e molte strutture vendute come sicure <strong>nascondono condizioni e vincoli</strong> che possono azzerare tale tutela.
-  </p>
-
-  <p>
-    La vera protezione del capitale è quella <strong>incondizionata, legale e verificabile</strong>, come nel caso di titoli di Stato di emittenti sovrani o strumenti assicurati da entità statali.
-    Diversamente, molti prodotti strutturati parlano di "protezione" in modo <strong>condizionato o subordinato</strong> all’assenza di eventi negativi — ad esempio, alla non rottura di una barriera di prezzo.
-  </p>
-
-  <ul class="list-disc list-inside mt-4 text-slate-700">
-    <li><strong>Protezione piena:</strong> restituzione garantita del capitale nominale (es. BTP zero coupon a scadenza)</li>
-    <li><strong>Protezione condizionata:</strong> restituzione solo se non si verifica un evento (es. barriera knock-in)</li>
-    <li><strong>Protezione illusoria:</strong> basata su marketing e nominale teorico, ma con perdita possibile anche totale</li>
-  </ul>
-
-  <p class="mt-4">
-    Il termine “protezione” è spesso usato in modo ambiguo per veicolare sicurezza emotiva, quando nella realtà il capitale è esposto a rischi di mercato, credito o struttura.
-  </p>
-
-  <p class="mt-6 text-sm text-gray-500 italic">
-    «Se un prodotto parla di protezione, chiediti: chi la garantisce, in che modo, e cosa succede se le condizioni cambiano? La finanza vera non si basa sulla fiducia, ma sui contratti.»
-  </p>
-</section>
-<br>
-<section id="sezione-2" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">2. Meccanismi reali e promesse contrattuali</h2>
-
-  <p>
-    Molti strumenti finanziari etichettati come “protetti” utilizzano meccanismi strutturati per simulare la restituzione del capitale. In realtà, la “protezione” è spesso subordinata a scenari ottimistici e a una <strong>serie di condizioni attivanti</strong> che possono essere facilmente disattese.
-  </p>
-
-  <p>
-    I meccanismi più comuni si basano su:
-  </p>
-
-  <ul class="list-disc list-inside mt-4 text-slate-700">
-    <li><strong>Barriere osservate:</strong> la protezione decade se un sottostante tocca un certo livello (knock-in)</li>
-    <li><strong>Scadenza rigida:</strong> il capitale è restituito solo se il titolo è mantenuto fino alla scadenza (no exit anticipata)</li>
-    <li><strong>Protezione solo nominale:</strong> restituzione del capitale senza cedola o dopo un’inflazione cumulata che erode il valore reale</li>
-    <li><strong>Protezione condizionata multipla:</strong> in presenza di più sottostanti, basta che uno superi la soglia per perdere la protezione</li>
-  </ul>
-
-  <p class="mt-4">
-    Tali clausole sono spesso scritte in modo tecnico e poco trasparente nei prospetti, rendendo difficile per l’investitore retail comprendere la reale natura del rischio assunto.
-  </p>
-
-  <p class="mt-6 text-sm text-gray-500 italic">
-    «Il contratto protegge chi lo scrive, non chi lo compra. Se la protezione dipende da un evento, non è una protezione: è una scommessa mascherata.»
-  </p>
-</section>
-<br>
-<section id="sezione-3" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">3. Clausole nascoste e condizioni attivanti</h2>
-
-  <p>
-    Le obbligazioni “protette” spesso contengono clausole complesse che solo un'analisi approfondita del <strong>term sheet</strong> o del <strong>prospetto informativo</strong> può rivelare. La protezione del capitale, presentata come assoluta, è in realtà <strong>condizionata all’assenza di eventi negativi</strong> o subordinata a clausole che penalizzano l’investitore.
-  </p>
-
-  <p>
-    Ecco alcune delle condizioni più diffuse che compromettono la presunta protezione:
-  </p>
-
-  <ul class="list-disc list-inside mt-4 text-slate-700">
-    <li><strong>Knock-In su sottostante:</strong> se un’azione inclusa scende sotto una soglia (es. -50%), la protezione svanisce</li>
-    <li><strong>Barriere europee o americane:</strong> la protezione vale solo a scadenza o viene persa in qualunque momento del periodo</li>
-    <li><strong>Multipli sottostanti:</strong> la perdita è legata al peggiore tra 3 o più titoli, anche se gli altri hanno performato bene</li>
-    <li><strong>Protezione solo in caso di performance neutra:</strong> se il titolo scende anche solo di poco, il rimborso è inferiore al capitale</li>
-    <li><strong>Valutazioni discrezionali:</strong> la protezione è “a discrezione dell’emittente” in caso di eventi eccezionali (clausole MAC, force majeure)</li>
-  </ul>
-
-  <p class="mt-4">
-    Questi dettagli spesso non compaiono nel materiale di marketing, ma sono presenti nei documenti ufficiali in linguaggio tecnico, poco accessibile al risparmiatore medio.
-  </p>
-
-  <p class="mt-6 text-sm text-gray-500 italic">
-    «La vera insidia è semantica: non si può dire “capitale protetto” se esiste anche solo una condizione in cui non lo è. La finanza è piena di “ma” nascosti a piè pagina.»
-  </p>
-</section>
-<br>
-<section id="sezione-4" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">4. Protezione condizionata: quando non funziona</h2>
-
-  <p>
-    I prodotti con “protezione condizionata” sembrano sicuri, ma diventano <strong>estremamente rischiosi</strong> in scenari di mercato avversi. È sufficiente che una delle condizioni predefinite venga violata per <strong>invalidare la protezione del capitale</strong> e trasformare lo strumento in un investimento con potenziali perdite significative.
-  </p>
-
-  <p>
-    Ecco alcuni casi tipici in cui la protezione fallisce:
-  </p>
-
-  <ul class="list-disc list-inside mt-4 text-slate-700">
-    <li><strong>Mercato fortemente ribassista:</strong> una discesa rapida dei sottostanti può attivare la barriera knock-in anche per un solo giorno</li>
-    <li><strong>Elevata volatilità:</strong> la protezione si basa su soglie statiche, ma la volatilità può causare temporanei break anche su titoli solidi</li>
-    <li><strong>Timing di ingresso sbagliato:</strong> se il prodotto viene acquistato vicino a una soglia critica, il margine di sicurezza è nullo</li>
-    <li><strong>Assenza di diversificazione:</strong> molti strumenti si basano su un solo sottostante o su un “worst of” con forte concentrazione del rischio</li>
-    <li><strong>Eventi straordinari:</strong> fusioni, sospensioni o delisting dei titoli sottostanti possono alterare la validità della protezione</li>
-  </ul>
-
-  <p class="mt-4">
-    Il rischio maggiore è che l’investitore compri un prodotto convinto che “il peggio non succederà mai”, sottovalutando che la protezione è effettiva solo in scenari favorevoli.
-  </p>
-
-  <p class="mt-6 text-sm text-gray-500 italic">
-    «La protezione condizionata è come un airbag che funziona solo se l’urto non supera i 30 km/h: rassicurante sulla carta, inutile quando serve davvero.»
-  </p>
-</section>
-<br>
-<section id="sezione-5" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">5. Confronto con strumenti realmente protetti</h2>
-
-  <p>
-    Esistono strumenti che offrono una protezione del capitale <strong>vera, legale e non condizionata</strong>. Il confronto con le strutture “false-protette” aiuta a capire come la differenza non sia solo tecnica, ma sostanziale.
-  </p>
-
-  <table class="table-auto w-full mt-4 border text-sm text-slate-700">
-    <thead>
-      <tr class="bg-slate-100">
-        <th class="px-2 py-1 border">Strumento</th>
-        <th class="px-2 py-1 border">Tipo di Protezione</th>
-        <th class="px-2 py-1 border">Condizioni</th>
-        <th class="px-2 py-1 border">Rischio Capitale</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="px-2 py-1 border">BTP Zero Coupon</td>
-        <td class="px-2 py-1 border">Legale</td>
-        <td class="px-2 py-1 border">Stato Italiano</td>
-        <td class="px-2 py-1 border text-green-600 font-semibold">Minimo</td>
-      </tr>
-      <tr>
-        <td class="px-2 py-1 border">T-Bill USA</td>
-        <td class="px-2 py-1 border">Legale</td>
-        <td class="px-2 py-1 border">Tesoro USA</td>
-        <td class="px-2 py-1 border text-green-600 font-semibold">Minimo</td>
-      </tr>
-      <tr>
-        <td class="px-2 py-1 border font-semibold">Note Strutturate "Protette"</td>
-        <td class="px-2 py-1 border">Condizionata</td>
-        <td class="px-2 py-1 border">Barriere, scadenze, worst-of</td>
-        <td class="px-2 py-1 border text-red-600 font-semibold">Elevato</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <p class="mt-4">
-    Gli strumenti realmente protetti sono noiosi, ma solidi. Non hanno cedole fantasiose né marketing accattivante, ma <strong>funzionano davvero</strong> quando il mercato crolla.
-  </p>
-
-  <div class="mt-8 bg-slate-50 border-l-4 border-slate-800 p-6 rounded-md shadow-sm">
-    <h3 class="text-lg font-semibold text-slate-900 mb-2">Accedi a strumenti con protezione capitale reale</h3>
-    <p class="text-slate-700 mb-4">
-      EXANTE ti consente di acquistare direttamente titoli di Stato, obbligazioni zero coupon e altri strumenti a protezione legale o contrattuale reale, evitando le false protezioni promesse da prodotti strutturati.
-    </p>
-    <a href="https://www.tradelia.org/Exante.html" target="_blank" class="inline-block bg-white border border-slate-800 text-slate-800 hover:bg-slate-800 hover:text-white px-6 py-3 rounded-md text-base font-medium shadow-md transition duration-200">
-      Scopri EXANTE →
-    </a>
-  </div>
-
-  <p class="mt-6 text-sm text-gray-500 italic">
-    «La vera protezione non ha condizioni né barriere. È un contratto con lo Stato, non con il marketing.»
-  </p>
-</section>
-<br>
-<section id="sezione-6" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">6. Analisi di casi reali</h2>
-
-  <p>
-    I mercati hanno già visto numerosi esempi di prodotti strutturati venduti come “protetti” che, in realtà, hanno causato perdite rilevanti. Ecco alcuni casi noti che evidenziano la pericolosità della protezione condizionata.
-  </p>
-
-  <ul class="list-disc list-inside mt-4 text-slate-700 space-y-2">
-    <li>
-      <strong>Nota BNP Paribas 2015-2018 su EuroStoxx:</strong> venduta come protetta, ma la barriera al 60% è stata toccata nel 2016. Rimborso finale legato al sottostante peggiore: perdita -35%.
-    </li>
-    <li>
-      <strong>Obbligazione Intesa-Structured 2012:</strong> struttura “protetta” solo a scadenza. In caso di vendita anticipata (2013-2014) perdita sul mercato secondario fino al -20%.
-    </li>
-    <li>
-      <strong>UBS Autocall con barriera worst-of:</strong> titolo costruito su 3 azioni tecnologiche. Una di esse è scesa sotto barriera del -50%, causando perdita integrale della protezione nominale.
-    </li>
-    <li>
-      <strong>Clienti retail 2008–2009:</strong> durante la crisi, molte strutture “protette” hanno attivato le clausole peggiorative a causa della volatilità e delle cadute temporanee dei mercati, portando a rimborso parziale o totale perdita.
-    </li>
-  </ul>
-
-  <p class="mt-4">
-    Questi casi dimostrano che l’etichetta “capital protected” può essere <strong>fuorviante</strong>, soprattutto se legata a condizioni poco chiare o a una fiducia eccessiva nella stabilità dei mercati.
-  </p>
-
-  <p class="mt-6 text-sm text-gray-500 italic">
-    «La protezione vera funziona sempre. Quella condizionata funziona solo quando non serve.»
-  </p>
-</section>
-<br>
-<section id="sezione-7" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">7. Domande da porsi prima dell'acquisto</h2>
-
-  <p>
-    Ogni prodotto che dichiara “protezione del capitale” deve essere sottoposto a un test di realtà. Le seguenti domande aiutano a <strong>valutare se la protezione è reale o solo apparente</strong>:
-  </p>
-
-  <ul class="list-disc list-inside mt-4 text-slate-700 space-y-2">
-    <li>Il capitale è garantito <strong>incondizionatamente</strong> o solo a scadenza?</li>
-    <li>Esistono <strong>barriere o eventi</strong> che possono annullare la protezione?</li>
-    <li>La protezione vale anche in caso di <strong>fallimento dell’emittente</strong>?</li>
-    <li>Hai letto il <strong>prospetto informativo</strong> e il <strong>term sheet</strong>?</li>
-    <li>Capisci cosa accade se vendi prima della scadenza?</li>
-    <li>Chi ti ha venduto il prodotto ha spiegato <strong>i casi in cui perdi capitale</strong>?</li>
-    <li>Hai simulato il peggiore scenario possibile?</li>
-  </ul>
-
-  <p class="mt-4">
-    Se anche solo una di queste domande riceve risposta incerta o vaga, <strong>il prodotto non è adatto a un profilo conservativo</strong>. La protezione vera è quella che regge anche nei peggiori scenari.
-  </p>
-
-  <p class="mt-6 text-sm text-gray-500 italic">
-    «Non chiederti quanto puoi guadagnare, ma quanto puoi perdere se le promesse non reggono. La vera protezione nasce dalla trasparenza, non dal marketing.»
-  </p>
-</section>
-<br>
-<section id="sezione-8" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">8. Glossario tecnico</h2>
-
-  <ul class="space-y-4 text-slate-700">
-    <li>
-      <strong>Protezione del Capitale:</strong> garanzia che il capitale investito venga restituito interamente alla scadenza. Può essere incondizionata (reale) o subordinata a eventi (falsa).
-    </li>
-    <li>
-      <strong>Knock-In:</strong> evento che attiva la perdita di protezione se il sottostante scende sotto una certa soglia.
-    </li>
-    <li>
-      <strong>Barriera:</strong> livello di prezzo di un sottostante che determina l’attivazione o la perdita della protezione.
-    </li>
-    <li>
-      <strong>Worst-Of:</strong> struttura che lega l’esito dell’investimento all’asset con la performance peggiore tra un paniere.
-    </li>
-    <li>
-      <strong>Nota Strutturata:</strong> strumento finanziario complesso che combina obbligazioni con derivati, spesso legato a performance di mercato.
-    </li>
-    <li>
-      <strong>Protezione Condizionata:</strong> forma di tutela valida solo in assenza di eventi negativi specifici.
-    </li>
-    <li>
-      <strong>Make-Whole:</strong> clausola che consente il rimborso anticipato dell’obbligazione con compensazione al portatore (rara nei retail).
-    </li>
-    <li>
-      <strong>Term Sheet:</strong> documento tecnico che riassume le condizioni contrattuali di uno strumento strutturato.
-    </li>
-  </ul>
-
-  <p class="mt-6 text-sm text-gray-500 italic">
-    «Capire il lessico è il primo passo per riconoscere cosa stai realmente comprando. La finanza usa parole semplici per mascherare strutture complesse.»
-  </p>
-</section>
-<br>
-<section id="sezione-9" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">9. Note legali e responsabilità dell’investitore</h2>
-
-  <p class="text-slate-700">
-    Le informazioni contenute in questo report hanno finalità puramente educative e divulgative. Non rappresentano in alcun modo una raccomandazione personalizzata, un’offerta al pubblico o una consulenza finanziaria autorizzata.
-  </p>
-
-  <p class="text-slate-700 mt-4">
-    Gli strumenti descritti possono comportare <strong>rischi elevati, perdite di capitale e illiquidità</strong>. L’acquisto di prodotti “protetti” deve avvenire solo dopo attenta analisi del <strong>prospetto informativo</strong> e con la piena comprensione delle <strong>condizioni che attivano la perdita della protezione</strong>.
-  </p>
-
-  <p class="text-slate-700 mt-4">
-    L’investitore è responsabile in via esclusiva delle proprie decisioni operative. Si raccomanda il supporto di un <strong>consulente finanziario indipendente o abilitato</strong> prima di sottoscrivere strumenti complessi.
-  </p>
-
-  <p class="text-slate-700 mt-4">
-    Tradelia AI non è un intermediario autorizzato né un soggetto vigilato, e declina ogni responsabilità per scelte operative effettuate sulla base dei contenuti qui riportati.
-  </p>
-
-  <p class="mt-6 text-sm text-gray-500 italic">
-    «Capire il rischio è il primo dovere dell’investitore. Nessuna protezione è reale se non ne conosci i limiti legali, strutturali e operativi.»
-  </p>
-</section>
-<br>
-<section>
-<div class="mb-16">
-  <h4 class="text-xl font-semibold text-slate-800 mb-4">Approfondimenti collegati</h4>
-  <ul class="list-disc list-inside text-slate-700 space-y-2">
-    <li><a href="/report/macro/CDS-CDO-subprime.html" class="text-blue-600 hover:underline" target="_blank">Gli Strumenti della crisi Subprime →</a></li>
-  </ul>
-</div>
-<section class="max-w-4xl mx-auto px-4 sm:px-6 mt-12 mb-24">
-  <h2 class="text-2xl font-semibold text-slate-800 mb-6 border-b pb-2">
-    Riepilogo Approfondimenti Tecnici
-  </h2>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-    <a href="/report/tutorial/Obbligazioni-Strutturate.html" target="_blank" class="text-blue-600 hover:underline">• Obbligazioni Strutturate</a>
-    <a href="/report/tutorial/CoCo-Bonds.html" target="_blank" class="text-blue-600 hover:underline">• CoCo Bonds</a>
-    <a href="/report/tutorial/Callable-StepUp.html" target="_blank" class="text-blue-600 hover:underline">• Callable & Step-Up</a>
-    <a href="/report/tutorial/Dual-Currency-Bonds.html" target="_blank" class="text-blue-600 hover:underline">• Dual Currency Bonds</a>
-    <a href="/report/tutorial/Reverse-Convertible.html" target="_blank" class="text-blue-600 hover:underline">• Reverse Convertible</a>
-    <a href="/report/tutorial/Note-Strutturate-Barriera.html" target="_blank" class="text-blue-600 hover:underline">• Note con Barriera</a>
-    <a href="/report/tutorial/Certificates-Complessi.html" target="_blank" class="text-blue-600 hover:underline">• Certificates Complessi</a>
-    <a href="/report/tutorial/False-Principal-Protection.html" target="_blank" class="text-blue-600 hover:underline">• Obbligazioni "Protette"</a>
-    <a href="/report/tutorial/ETF-Leva-Inversi.html" target="_blank" class="text-blue-600 hover:underline">• ETF Leva e Inversi</a>
-    <a href="/report/tutorial/CFD-Retail.html" target="_blank" class="text-blue-600 hover:underline">• CFD & Retail</a>
-    <a href="/report/tutorial/ETF-Sintetici.html" target="_blank" class="text-blue-600 hover:underline">• ETF Strutturati Sintetici</a>
-    <a href="/report/tutorial/Opzioni-Vanilla.html" target="_blank" class="text-blue-600 hover:underline">• Opzioni Plain Vanilla</a>
-    <a href="/report/tutorial/Opzioni-Esotiche.html" target="_blank" class="text-blue-600 hover:underline">• Opzioni Esotiche</a>
-    <a href="/report/tutorial/Derivati-OTC.html" target="_blank" class="text-blue-600 hover:underline">• Derivati OTC</a>
-    <a href="/report/tutorial/SPAC-Rischi.html" target="_blank" class="text-blue-600 hover:underline">• Rischi SPAC</a>
-    <a href="/report/tutorial/CLO-CDO.html" target="_blank" class="text-blue-600 hover:underline">• CLO / CDO</a>
-    <a href="/report/tutorial/Token-Sintetici.html" target="_blank" class="text-blue-600 hover:underline">• Token Sintetici</a>
-    <a href="/report/tutorial/Stablecoin-Algoritmiche.html" target="_blank" class="text-blue-600 hover:underline">• Stablecoin Algoritmiche</a>
-  </div>
-</section>
-
-<hr class="my-12">
-
-<div class="mb-16">
-  <h4 class="text-xl font-semibold text-slate-800 mb-4"> Analisi AI più lette</h4>
-  <ul class="list-disc list-inside text-slate-700 space-y-2">
-        <li><a href="/report/tutorial/Simulatore-Portafogli.html" class="text-blue-600 hover:underline" target="_blank">Simulatore Portafogli →</a></li>
-     <li><a href="/report/tutorial/CFD-Retail.html" class="text-blue-600 hover:underline" target="_blank">CFD Retail & Pratiche scorrette→ </a></li>
-    <li><a href="/report/tutorial/Truffe-Cripto.html" class="text-blue-600 hover:underline" target="_blank">Truffe cripto più famose →</a></li>
-    <li><a href="/report/tutorial/Truffe-Finanziarie-Storiche.html" class="text-blue-600 hover:underline" target="_blank">Grandi truffe finanziarie della storia →</a></li>
-    <li><a href="/report/tutorial/Statistiche-Truffe-Online.html" class="text-blue-600 hover:underline" target="_blank">Statistiche e numeri delle truffe online su investimenti →</a></li>
-    <li><a href="/report/tutorial/MM-STP-ECN.html" class="text-blue-600 hover:underline" target="_blank">Broker: differenze tra MM, STP ed ECN →</a></li>
-  </ul>
-</div>
-</section>
+  <!-- MAIN CONTENT -->
+  <main id="tutorial-content" role="main">
+    <!-- Content will be injected here by tutorial-renderer.js -->
   </main>
-  <button id="backToTop" title="Torna all'inizio" aria-label="Torna all'inizio" 
-  class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-lg transition-opacity opacity-80 hover:opacity-100 focus:outline-none">
-  ↑ Torna all'inizio
-</button>
-<script>
-  const btn = document.getElementById('backToTop');
-  btn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-</script>
 
+  <!-- FOOTER SLOT -->
+  <div id="site-footer-slot"></div>
+
+  <!-- SCRIPTS -->
+  <script type="module" src="/report/assets/js/tutorial-renderer.js"></script>
 </body>
 </html>
+
