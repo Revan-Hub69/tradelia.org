@@ -798,6 +798,13 @@ async function loadDashboardData() {
       const manifest = await manifestResponse.json();
       STATE.reports = manifest.reports || [];
       Logger.debug('Dashboard', `Caricati ${STATE.reports.length} report`);
+      
+      if (STATE.reports.length === 0) {
+        Logger.warn('Dashboard', 'Nessun report trovato nel manifest');
+      }
+    } else {
+      Logger.error('Dashboard', `Errore caricamento manifest: ${manifestResponse.status} ${manifestResponse.statusText}`);
+      STATE.reports = [];
     }
     
     // Carica documenti tutorial
@@ -806,16 +813,31 @@ async function loadDashboardData() {
       const docs = await docsResponse.json();
       STATE.tutorials = docs.documents || [];
       Logger.debug('Dashboard', `Caricati ${STATE.tutorials.length} tutorial`);
+    } else {
+      Logger.warn('Dashboard', `Errore caricamento documenti: ${docsResponse.status}`);
+      STATE.tutorials = [];
     }
   } catch (err) {
     Logger.error('Dashboard', 'Errore caricamento dati', err);
+    STATE.reports = [];
+    STATE.tutorials = [];
   }
 }
 
 // ===== RENDER DASHBOARD REPORTS =====
 function renderDashboardReports() {
   const tbody = document.getElementById('dashboard-reports-tbody');
-  if (!tbody) return;
+  if (!tbody) {
+    Logger.warn('Dashboard', 'Elemento dashboard-reports-tbody non trovato');
+    return;
+  }
+  
+  // Verifica se ci sono report
+  if (!STATE.reports || STATE.reports.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: var(--sp-6);">Nessun report disponibile</td></tr>';
+    Logger.warn('Dashboard', 'Nessun report da renderizzare');
+    return;
+  }
   
   // Sort reports (più recenti prima)
   const sortedReports = [...STATE.reports].sort((a, b) => {
@@ -823,6 +845,8 @@ function renderDashboardReports() {
     const dateB = new Date(b.created_at);
     return dateB - dateA;
   });
+  
+  Logger.debug('Dashboard', `Renderizzando ${sortedReports.length} report`);
   
   tbody.innerHTML = sortedReports.map(report => {
     const date = new Date(report.created_at).toLocaleDateString('it-IT');

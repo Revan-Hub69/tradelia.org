@@ -53,14 +53,20 @@ function scanReports() {
       
       const ticker = extractMetric('Ticker');
       const company = extractMetric('CompanyName');
-      const created_at = header.meta?.created_at || header.meta?.timestamp || new Date().toISOString();
+      // Gestisci diversi formati di data nei metadati
+      const created_at = header.meta?.created_at 
+        || header.meta?.timestamp 
+        || header.meta?.generatedAt 
+        || header.meta?.lastUpdated 
+        || new Date().toISOString();
       
       // Calcola public_after (created_at + 24h)
       const createdDate = new Date(created_at);
       const publicAfter = new Date(createdDate.getTime() + 24 * 60 * 60 * 1000); // +24h
       
       // Determina tipo report (Swing Master o Macro Briefing)
-      const type = header.meta?.type || (reportId.includes('swing') ? 'swing-master' : 'macro-briefing');
+      // Default: swing-master se non specificato (i report Tradelia sono principalmente Swing Master)
+      const type = header.meta?.type || (reportId.includes('macro') ? 'macro-briefing' : 'swing-master');
       
       const report = {
         id: reportId,
@@ -113,7 +119,10 @@ function generateManifest() {
 }
 
 // ===== MAIN =====
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Verifica se lo script è stato eseguito direttamente
+const isMainModule = process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
+
+if (isMainModule) {
   generateManifest();
 }
 
