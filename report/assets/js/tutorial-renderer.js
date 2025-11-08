@@ -163,7 +163,7 @@ async function loadTutorialData() {
   // Estrai nome file tutorial da URL
   const pathParts = window.location.pathname.split('/');
   const fileName = pathParts[pathParts.length - 1].replace('.html', '');
-  const jsonPath = `/tutorial/data/${fileName}.json`;
+  const jsonPath = `/report/tutorial/data/${fileName}.json`;
   
   try {
     const response = await fetch(jsonPath);

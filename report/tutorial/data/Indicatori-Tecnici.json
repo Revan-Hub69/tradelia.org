@@ -297,6 +297,7 @@
           "type": "heading",
           "level": 3,
           "text": "2. CCI (Commodity Channel Index)"
+        },
         {
           "type": "list",
           "items": [
@@ -324,6 +325,7 @@
           "type": "heading",
           "level": 3,
           "text": "4. Volume Indicators (OBV, Volume Profile)"
+        },
         {
           "type": "list",
           "items": [
@@ -469,6 +471,7 @@
           "type": "heading",
           "level": 3,
           "text": "1. Sovraccaricare Grafico"
+        },
         {
           "type": "list",
           "items": [
@@ -482,6 +485,7 @@
           "type": "heading",
           "level": 3,
           "text": "2. Usare Indicatori da Soli"
+        },
         {
           "type": "list",
           "items": [
@@ -495,6 +499,7 @@
           "type": "heading",
           "level": 3,
           "text": "3. Ignorare Context"
+        },
         {
           "type": "list",
           "items": [
@@ -508,6 +513,7 @@
           "type": "heading",
           "level": 3,
           "text": "4. Parametri Sbagliati"
+        },
         {
           "type": "list",
           "items": [
