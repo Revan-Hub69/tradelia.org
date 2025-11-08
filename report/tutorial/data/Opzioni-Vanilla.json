@@ -37,7 +37,7 @@
       "content": [
         {
           "type": "paragraph",
-          "text": "Le opzioni e i CFD sono strumenti derivati che consentono di prendere posizione su un asset senza detenerne la proprietà. Entrambi permettono di trarre profitto da movimenti rialzisti o ribassisti, utilizzare leva finanziaria (implicita o esplicita), e agire in logica speculativa o di copertura."
+          "text": "Le opzioni e i CFD sono strumenti derivati che consentono di prendere posizione su un asset senza detenerne la proprietà. Entrambi permettono di trarre profitto da movimenti rialzisti o ribassisti, utilizzare leva finanziaria (implicita o esplicita), e agire in logica speculativa o di copertura. Nel **metodo Tradelia AI**, le opzioni costituiscono uno degli strumenti analizzati nel Blocco 7 (Derivati & Opzioni), che valuta Open Interest, IV percentile, skew, Put/Call ratio e posizionamento speculativo implicito dai mercati derivati."
         },
         {
           "type": "heading",

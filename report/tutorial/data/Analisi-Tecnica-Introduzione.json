@@ -43,7 +43,7 @@
         },
         {
           "type": "paragraph",
-          "text": "Questa guida Tradelia AI introduce i concetti base dell'analisi tecnica: supporti, resistenze, trend, volume, e i principi fondamentali. È la base per comprendere tutti gli altri aspetti dell'analisi tecnica."
+          "text": "Questa guida Tradelia AI introduce i concetti base dell'analisi tecnica: supporti, resistenze, trend, volume, e i principi fondamentali. È la base per comprendere tutti gli altri aspetti dell'analisi tecnica. Nel **metodo Tradelia AI**, l'analisi tecnica costituisce uno dei 12 blocchi di valutazione integrata (Blocco 8: Tecnica & Correlazioni), combinando analisi multi-timeframe con validazioni oggettive e correlazioni intermarket."
         },
         {
           "type": "pill",
@@ -147,9 +147,11 @@
           "type": "heading",
           "level": 3,
           "text": "Ruolo Inversione"
+        },
         {
           "type": "paragraph",
           "text": "Quando supporto o resistenza si **rompono**, spesso si **invertono**:"
+        },
         {
           "type": "list",
           "items": [
@@ -163,6 +165,7 @@
           "type": "heading",
           "level": 3,
           "text": "Supporti e Resistenze Dinamici"
+        },
         {
           "type": "list",
           "items": [
@@ -186,6 +189,7 @@
           "type": "heading",
           "level": 3,
           "text": "Tipi di Trend"
+        },
         {
           "type": "list",
           "items": [
@@ -198,6 +202,7 @@
           "type": "heading",
           "level": 3,
           "text": "Come Identificare Trend"
+        },
         {
           "type": "list",
           "items": [
@@ -211,6 +216,7 @@
           "type": "heading",
           "level": 3,
           "text": "Timeframe dei Trend"
+        },
         {
           "type": "list",
           "items": [
@@ -224,6 +230,7 @@
           "type": "heading",
           "level": 3,
           "text": "Strategia: Trend is Your Friend"
+        },
         {
           "type": "list",
           "items": [
@@ -251,6 +258,7 @@
           "type": "heading",
           "level": 3,
           "text": "Principi del Volume"
+        },
         {
           "type": "list",
           "items": [
@@ -264,6 +272,7 @@
           "type": "heading",
           "level": 3,
           "text": "Volume e Breakout"
+        },
         {
           "type": "list",
           "items": [
@@ -277,6 +286,7 @@
           "type": "heading",
           "level": 3,
           "text": "Volume e Reversal"
+        },
         {
           "type": "list",
           "items": [
@@ -300,6 +310,7 @@
           "type": "heading",
           "level": 3,
           "text": "Timeframe Principali"
+        },
         {
           "type": "list",
           "items": [
@@ -313,9 +324,11 @@
           "type": "heading",
           "level": 3,
           "text": "Multi-Timeframe Analysis"
+        },
         {
           "type": "paragraph",
           "text": "Analizza **più timeframe** contemporaneamente:"
+        },
         {
           "type": "list",
           "items": [
@@ -329,6 +342,7 @@
           "type": "heading",
           "level": 3,
           "text": "Scegliere Timeframe"
+        },
         {
           "type": "list",
           "items": [
@@ -352,6 +366,7 @@
           "type": "heading",
           "level": 3,
           "text": "1. Line Chart (Grafico a Linea)"
+        },
         {
           "type": "list",
           "items": [
@@ -365,6 +380,7 @@
           "type": "heading",
           "level": 3,
           "text": "2. Bar Chart (Grafico a Barre)"
+        },
         {
           "type": "list",
           "items": [
@@ -378,6 +394,7 @@
           "type": "heading",
           "level": 3,
           "text": "3. Candlestick Chart (Grafico a Candele)"
+        },
         {
           "type": "list",
           "items": [
@@ -391,6 +408,7 @@
           "type": "heading",
           "level": 3,
           "text": "4. Volume Chart"
+        },
         {
           "type": "list",
           "items": [
@@ -414,6 +432,7 @@
           "type": "heading",
           "level": 3,
           "text": "1. Non è Perfetta"
+        },
         {
           "type": "list",
           "items": [
@@ -427,6 +446,7 @@
           "type": "heading",
           "level": 3,
           "text": "2. Self-Fulfilling Prophecy"
+        },
         {
           "type": "list",
           "items": [
@@ -440,6 +460,7 @@
           "type": "heading",
           "level": 3,
           "text": "3. False Signals"
+        },
         {
           "type": "list",
           "items": [
@@ -453,6 +474,7 @@
           "type": "heading",
           "level": 3,
           "text": "4. Eventi Esterni"
+        },
         {
           "type": "list",
           "items": [
@@ -476,6 +498,7 @@
           "type": "heading",
           "level": 3,
           "text": "1. Usa Conferme Multiple"
+        },
         {
           "type": "list",
           "items": [
@@ -489,6 +512,7 @@
           "type": "heading",
           "level": 3,
           "text": "2. Multi-Timeframe Analysis"
+        },
         {
           "type": "list",
           "items": [
@@ -502,6 +526,7 @@
           "type": "heading",
           "level": 3,
           "text": "3. Risk Management"
+        },
         {
           "type": "list",
           "items": [
@@ -515,6 +540,7 @@
           "type": "heading",
           "level": 3,
           "text": "4. Keep It Simple"
+        },
         {
           "type": "list",
           "items": [
