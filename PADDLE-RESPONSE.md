@@ -102,11 +102,10 @@ Tutti i link sono presenti nel footer di ogni pagina del sito, facilmente access
 
 I Terms & Conditions includono una sezione dedicata "1. Identità del Fornitore" che contiene:
 
-- **Nome:** Tradelia AI
+- **Nome commerciale:** Tradelia AI
+- **Proprietario (Nome legale):** Massimo Rodi
 - **Email:** info@tradelia.org
 - **Sito web:** https://tradelia.org
-
-**Nota:** Per informazioni complete sul nome legale registrato (società o proprietario individuale), è necessario contattare info@tradelia.org.
 
 **Link diretto:** https://tradelia.org/terms.html (Sezione 1)
 
