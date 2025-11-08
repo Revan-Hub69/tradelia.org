@@ -2,18 +2,42 @@
 // Usa il template base e crea un HTML per ogni JSON nella cartella data/
 
 import { readdir, readFile, writeFile } from 'fs/promises';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const templateBase = `<!DOCTYPE html>
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+function getTemplateBase(tutorialName) {
+  return `<!DOCTYPE html>
 <html lang="it" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="description" content="Tutorial Tradelia AI" />
-  <meta name="keywords" content="Tradelia AI, tutorial" />
+  <meta name="description" content="Tutorial Tradelia AI - Progetto indipendente con metodo accademico AI per analisi finanziaria" />
+  <meta name="keywords" content="Tradelia AI, metodo accademico, progetto indipendente, AI trading, analisi finanziaria" />
   <meta name="author" content="Tradelia AI" />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#ffffff" />
+  
+  <!-- Open Graph / Facebook - Default values (verranno sovrascritti da tutorial-renderer.js) -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="TRADELIA • AI — Tutorial" />
+  <meta property="og:description" content="Progetto indipendente che utilizza AI con metodo accademico per analisi finanziaria multi-fattore. Tutorial completo su trading e investimenti." />
+  <meta property="og:image" content="https://tradelia.org/img/tradelia_og_vC_white_clean.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:site_name" content="Tradelia AI" />
+  <meta property="og:locale" content="it_IT" />
+  
+  <!-- Twitter Card - Default values (verranno sovrascritti da tutorial-renderer.js) -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TRADELIA • AI — Tutorial" />
+  <meta name="twitter:description" content="Progetto indipendente che utilizza AI con metodo accademico per analisi finanziaria multi-fattore." />
+  <meta name="twitter:image" content="https://tradelia.org/img/tradelia_og_vC_white_clean.png" />
+  <meta name="twitter:creator" content="@tradelia_ai" />
+  <meta name="twitter:site" content="@tradelia_ai" />
   
   <title>TRADELIA • AI — Tutorial</title>
   
@@ -40,10 +64,11 @@ const templateBase = `<!DOCTYPE html>
   <script type="module" src="/report/assets/js/tutorial-renderer.js"></script>
 </body>
 </html>`;
+}
 
 async function generateHTML() {
-  const dataDir = join(process.cwd(), 'tutorial', 'data');
-  const tutorialDir = join(process.cwd(), 'tutorial');
+  const dataDir = join(__dirname, 'data');
+  const tutorialDir = __dirname;
   
   try {
     const files = await readdir(dataDir);
@@ -60,7 +85,7 @@ async function generateHTML() {
       const data = JSON.parse(jsonContent);
       
       // Aggiorna template con meta tags dal JSON
-      let html = templateBase;
+      let html = getTemplateBase(tutorialName);
       html = html.replace('<title>TRADELIA • AI — Tutorial</title>', 
         `<title>TRADELIA • AI — ${data.title || 'Tutorial'}</title>`);
       html = html.replace('<meta name="description" content="Tutorial Tradelia AI" />', 
@@ -76,5 +101,13 @@ async function generateHTML() {
   }
 }
 
-generateHTML();
+// Esegui solo se chiamato direttamente
+if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith('generate-html.js')) {
+  generateHTML().catch(err => {
+    console.error('Errore generazione HTML:', err);
+    process.exit(1);
+  });
+}
+
+export { generateHTML };
 

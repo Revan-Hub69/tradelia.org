@@ -1,513 +1,56 @@
-<!DOCTYPE html>
-<html lang="it">
+﻿<!DOCTYPE html>
+<html lang="it" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Report completo TRADELIA AI sulla crisi finanziaria 2008: analisi tecnica, strumenti derivati, protagonisti e impatto sociale.">
-  <title>TRADELIA • AI — Strumenti Finanziari Complessi</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-  <style>
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f9fafb;
-      color: #1f2937;
-      margin: 0;
-      padding: 0;
-      line-height: 1.7;
-      font-size: 16px;
-    }
-    h1, h2, h3, h4 {
-      color: #0f172a;
-      line-height: 1.3;
-      margin-top: 2rem;
-      margin-bottom: 1rem;
-      font-weight: 600;
-    }
-    h1 { font-size: 2rem; }
-    h2 { font-size: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.25rem; }
-    h3 { font-size: 1.25rem; }
-    h4 { font-size: 1.125rem; }
-    p { margin-bottom: 1.25rem; color: #374151; }
-    ul, ol { padding-left: 1.25rem; margin-bottom: 1.25rem; }
-    li { margin-bottom: 0.5rem; }
-    section {
-      background: #ffffff;
-      padding: 2.5rem 2rem;
-      margin: 2rem auto;
-      border-radius: 0.75rem;
-      max-width: 840px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-      border: 1px solid #e5e7eb;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 2rem;
-    }
-    th, td {
-      padding: 0.75rem;
-      border: 1px solid #e5e7eb;
-      text-align: left;
-      font-size: 0.95rem;
-      word-break: break-word;
-    }
-    th { background: #f3f4f6; font-weight: 600; }
-    tr:nth-child(even) { background: #f9fafb; }
-    .positive { color: #16a34a; font-weight: 600; }
-    .negative { color: #dc2626; font-weight: 600; }
-    .neutral { color: #64748b; font-weight: 500; }
-    a {
-      color: #2563eb;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    a:hover { text-decoration: underline; color: #1d4ed8; }
-    @media screen and (max-width: 768px) {
-      body { font-size: 15px; line-height: 1.6; }
-      section { padding: 1.25rem; margin: 1rem; }
-      h1 { font-size: 1.5rem; }
-      h2 { font-size: 1.25rem; }
-      h3 { font-size: 1.125rem; }
-      h4 { font-size: 1rem; }
-      table, thead, tbody, th, td, tr {
-        display: block; width: 100%;
-      }
-      th { display: none; }
-      td {
-        display: flex;
-        justify-content: space-between;
-        padding: 0.5rem 0;
-        border: none;
-        border-bottom: 1px solid #e5e7eb;
-      }
-      td::before {
-        content: attr(data-label);
-        font-weight: 600;
-        color: #1e293b;
-        padding-right: 1rem;
-        min-width: 140px;
-        display: inline-block;
-      }
-    }
-    #backToTop {
-      transition: all 0.3s ease-in-out;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-    /* Scrollbar Styling */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: linear-gradient(to right, #f1f5f9, #e2e8f0);
-  border-radius: 100vh;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(80, 160, 200, 0.5);
-  border-radius: 100vh;
-  transition: background-color 0.2s ease-in-out;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(80, 160, 200, 0.7);
-}
-
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(80, 160, 200, 0.6) #e5e7eb;
-  box-sizing: border-box;
-}
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Tutorial Tradelia AI - Progetto indipendente con metodo accademico AI per analisi finanziaria" />
+  <meta name="keywords" content="Tradelia AI, metodo accademico, progetto indipendente, AI trading, analisi finanziaria, tutorial" />
+  <meta name="author" content="Tradelia AI" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#ffffff" />
+  
+  <!-- Open Graph / Facebook - Default values (verranno sovrascritti da tutorial-renderer.js) -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="TRADELIA • AI — Tutorial" />
+  <meta property="og:description" content="Progetto indipendente che utilizza AI con metodo accademico per analisi finanziaria multi-fattore. Tutorial completo su trading e investimenti." />
+  <meta property="og:image" content="https://tradelia.org/img/tradelia_og_vC_white_clean.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:site_name" content="Tradelia AI" />
+  <meta property="og:locale" content="it_IT" />
+  
+  <!-- Twitter Card - Default values (verranno sovrascritti da tutorial-renderer.js) -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TRADELIA • AI — Tutorial" />
+  <meta name="twitter:description" content="Progetto indipendente che utilizza AI con metodo accademico per analisi finanziaria multi-fattore." />
+  <meta name="twitter:image" content="https://tradelia.org/img/tradelia_og_vC_white_clean.png" />
+  <meta name="twitter:creator" content="@tradelia_ai" />
+  <meta name="twitter:site" content="@tradelia_ai" />
+  
+  <title>TRADELIA • AI — Tutorial</title>
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/report/assets/css/report-layout.css" />
+  <link rel="stylesheet" href="/report/assets/css/glossary-drawer.css" />
+  <link rel="stylesheet" href="/report/assets/css/glossary-popup.css" />
+  <link rel="stylesheet" href="/report/tutorial-light.css" />
 </head>
-  <body>
+<body>
+  <!-- HEADER SLOT -->
+  <div id="site-header-slot"></div>
 
-<header class="sticky top-0 z-50 bg-white shadow-md w-full px-4 sm:px-6 py-3 flex justify-between items-center">
-  <a href="https://tradelia.org/index.html" class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 hover:opacity-90 transition">
-    TRADELIA<span class="text-blue-600 animate-pulse">•AI</span>
-  </a>
-  <a href="https://tradelia.org/archivio.html" class="text-sm sm:text-base text-blue-700 font-medium hover:underline transition">
-    Archivio Storico
-  </a>
-</header> 
-<br>
-<section>
-  <nav class="max-w-4xl mx-auto mt-4 mb-10 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-    <h2 class="text-lg font-semibold text-gray-800 mb-3">Indice del Report – Stablecoin Algoritmiche</h2>
-    <ul class="list-disc list-inside text-sm text-blue-600 space-y-2">
-      <li><a href="#sezione-1">1. Cosa sono le Stablecoin Algoritmiche</a></li>
-      <li><a href="#sezione-2">2. Tipologie: rebase, collateral, seigniorage</a></li>
-      <li><a href="#sezione-3">3. Meccanismi di mantenimento del peg</a></li>
-      <li><a href="#sezione-4">4. Casi di successo e fallimento (DAI, UST, ESD)</a></li>
-      <li><a href="#sezione-5">5. Rischi principali: liquidazioni, spirale della morte</a></li>
-      <li><a href="#sezione-6">6. Regolamentazione e implicazioni legali</a></li>
-      <li><a href="#sezione-7">7. Stablecoin algoritmiche vs stablecoin collateralizzate</a></li>
-      <li><a href="#sezione-8">8. Alternative regolamentate: euro digitali e stablecoin bancarie</a></li>
-      <li><a href="#sezione-9">9. Glossario tecnico stablecoin</a></li>
-      <li><a href="#sezione-10">10. Disclaimer finale e avvertenze operative</a></li>
-    </ul>
-  </nav>
-</section>
-
-    <section id="sezione-1" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">1. Cosa sono le Stablecoin Algoritmiche</h2>
-
-  <p>
-    Le <strong>Stablecoin Algoritmiche</strong> sono criptovalute progettate per mantenere un valore stabile (solitamente ancorato al dollaro USA) attraverso <strong>meccanismi matematici e regole di offerta</strong> gestiti da smart contract — senza supporto diretto da riserve fiat.
-  </p>
-
-  <p>
-    A differenza delle stablecoin collateralizzate (come USDC o USDT), le algoritmiche <strong>non sono coperte da asset reali</strong> depositati presso una banca, ma si basano su incentivi economici interni, supply elastic e talvolta token gemelli per autoregolarsi.
-  </p>
-
-  <h3 class="text-lg font-semibold mt-4 text-slate-800">Obiettivi</h3>
-  <ul class="list-disc list-inside text-slate-700 mt-2 space-y-2">
-    <li>Offrire una stablecoin decentralizzata e indipendente da enti centralizzati</li>
-    <li>Gestire l’offerta tramite logiche dinamiche di espansione e contrazione</li>
-    <li>Mantenere il peg a 1$ (o altro valore) attraverso arbitraggio e incentivi</li>
-  </ul>
-
-  <p class="mt-4">
-    Il risultato è un sistema elegante, ma fragile: se i meccanismi interni non funzionano o vengono messi sotto pressione dai mercati, il valore può discostarsi rapidamente dal target — con effetti potenzialmente catastrofici.
-  </p>
-
-  <p class="mt-6 text-sm text-gray-500 italic">
-    «Una stablecoin algoritmica non ha un salvadanaio. Ha una formula. E quando la fiducia nella formula crolla, crolla tutto il sistema.»
-  </p>
-</section>
-<br>
-    <section id="sezione-2" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">2. Tipologie: rebase, collateral, seigniorage</h2>
-
-  <p>
-    Le stablecoin algoritmiche si distinguono in tre grandi famiglie a seconda della <strong>logica usata per mantenere il valore stabile</strong>. Ogni modello ha vantaggi teorici ma anche vulnerabilità operative che lo rendono fragile in scenari reali.
-  </p>
-
-  <h3 class="text-lg font-semibold mt-4 text-slate-800">1. Rebase (Elastic Supply)</h3>
-  <p>
-    Queste stablecoin modificano il <strong>numero di token in circolazione</strong> nel wallet dell’utente per mantenere il peg. Se il prezzo sale sopra 1$, aumenta l’offerta (es. ampliamento del saldo). Se scende, l’offerta si contrae.
-  </p>
-  <p class="text-sm text-gray-500 italic">Esempio: Ampleforth (AMPL)</p>
-
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">2. Collateralizzate da cripto</h3>
-  <p>
-    Il valore è garantito da <strong>collaterale in asset digitali</strong> (ETH, BTC, token governance), spesso con overcollateralizzazione. Il sistema liquida le posizioni se il valore della garanzia scende sotto soglia.
-  </p>
-  <p class="text-sm text-gray-500 italic">Esempio: DAI (MakerDAO)</p>
-
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">3. Seigniorage / Dual-token</h3>
-  <p>
-    Funzionano con un <strong>token gemello</strong> (di solito volatile) che assorbe le perdite e i guadagni del sistema. Quando la stablecoin perde il peg, si usano meccanismi di burn o di mint incentivato tramite il token secondario.
-  </p>
-  <p class="text-sm text-gray-500 italic">Esempio: TerraUSD (UST) con LUNA</p>
-
-  <p class="mt-4">
-    Tutte le tipologie fanno leva sulla fiducia e sulla partecipazione attiva degli utenti: <strong>se la domanda sparisce o l’incentivo collassa, il sistema non tiene</strong>.
-  </p>
-
-  <p class="mt-6 text-sm text-gray-500 italic">
-    «Ogni modello ha una logica. Ma nessuno è immune dalla fuga di capitali. E nella DeFi, la fiducia se ne va più veloce del collaterale.»
-  </p>
-</section>
-<br>
-    <section id="sezione-3" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">3. Meccanismi di mantenimento del peg</h2>
-
-  <p>
-    Il cuore di ogni stablecoin algoritmica è il meccanismo che ne mantiene il valore ancorato a un target (di solito 1$). Questi sistemi si basano su <strong>incentivi economici, feedback automatici e arbitraggio</strong> per regolare domanda e offerta.
-  </p>
-
-  <h3 class="text-lg font-semibold mt-4 text-slate-800">1. Incentivi di arbitraggio</h3>
-  <p>
-    Quando la stablecoin vale più di 1$, gli utenti sono incentivati a crearne di nuova e venderla a prezzo maggiorato. Se vale meno, conviene acquistarla e riscattarla o mantenerla per beneficiare del rimbalzo. Il profitto crea pressione sul peg.
-  </p>
-
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">2. Bruciatura e conio dinamico</h3>
-  <p>
-    Alcuni sistemi usano <strong>token gemelli</strong> per assorbire variazioni di valore: in caso di eccesso, vengono bruciati per ridurre l’offerta; in caso di scarsità, vengono creati per riequilibrare. Il tutto è gestito via smart contract.
-  </p>
-
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">3. Parametri on-chain reattivi</h3>
-  <p>
-    Alcuni protocolli monitorano prezzi in tempo reale e modificano automaticamente <strong>interessi, premi, penalità</strong> o regole di collateralizzazione. Questo sistema crea stabilità, ma può innescare dinamiche impreviste se mal calibrato.
-  </p>
-
-  <p class="mt-4">
-    Tutti questi meccanismi funzionano finché esiste fiducia nel sistema e sufficiente liquidità per operare. <strong>Se gli incentivi non bastano, il peg si spezza</strong>.
-  </p>
-
-  <p class="mt-6 text-sm text-gray-500 italic">
-    «Un algoritmo può correggere un errore. Ma non può correggere il panico.»
-  </p>
-</section>
-<br>
-<section id="sezione-4" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">4. Casi di successo e fallimento (DAI, UST, ESD)</h2>
-
-  <p>
-    L’esperienza concreta delle stablecoin algoritmiche dimostra quanto sia sottile la linea tra <strong>eleganza teorica e disastro pratico</strong>. Alcune hanno retto a stress test reali, altre si sono sgretolate in poche ore sotto pressione speculativa.
-  </p>
-
-  <h3 class="text-lg font-semibold mt-4 text-slate-800">DAI (MakerDAO) – Il compromesso funzionale</h3>
-  <p>
-    DAI è una stablecoin algoritmica collateralizzata da cripto asset (ETH, WBTC, USDC). Il sistema è parzialmente centralizzato ma ha dimostrato <strong>resilienza nei bear market</strong>. Utilizza liquidazioni automatiche e governance decentralizzata.
-  </p>
-
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">UST (Terra) – Il crollo sistemico</h3>
-  <p>
-    UST era la stablecoin algoritmica più usata fino a maggio 2022. Ancorata a 1$ tramite il meccanismo di burn/mint con LUNA, è entrata in crisi quando <strong>la domanda è evaporata</strong> e la supply di LUNA è esplosa. Il depeg ha causato perdite per oltre 40 miliardi di dollari.
-  </p>
-
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">ESD – Esperimento fallito</h3>
-  <p>
-    Elastic Supply Dollar (ESD) è stato un tentativo di creare una stablecoin 100% decentralizzata senza collateral, basata su rebase e incentivi. Il sistema è stato <strong>incapace di mantenere il peg</strong> in condizioni di mercato reali e si è autoestinto.
-  </p>
-
-  <p class="mt-4">
-    Questi esempi dimostrano che la stabilità algoritmica <strong>non è garantita dal codice</strong>, ma dalla fiducia continua e dalla capacità di reagire rapidamente ai comportamenti di massa.
-  </p>
-
-  <p class="mt-6 text-sm text-gray-500 italic">
-    «L’algoritmo non ha emozioni. Ma il mercato sì. E quando ha paura, nessun calcolo regge.»
-  </p>
-</section>
-<br>
-<section id="sezione-5" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">5. Rischi principali: liquidazioni, spirale della morte</h2>
-
-  <p>
-    Le stablecoin algoritmiche, per quanto sofisticate, sono esposte a <strong>rischi sistemici rilevanti</strong> che possono distruggere in poche ore valore, fiducia e funzionalità. A differenza delle stablecoin backed da fiat, qui non esiste alcun garante ultimo.
-  </p>
-
-  <h3 class="text-lg font-semibold mt-4 text-slate-800">1. Rischio di liquidazione</h3>
-  <p>
-    Nelle stablecoin collateralizzate, se il valore del collaterale scende sotto soglia, il protocollo liquida automaticamente la posizione. In mercati volatili, questo può causare <strong>svendite a catena</strong> e perdita permanente del peg.
-  </p>
-
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">2. Spirale della morte</h3>
-  <p>
-    Nei modelli dual-token, se la fiducia crolla, il token di supporto (es. LUNA) perde valore, viene emesso in quantità crescente e <strong>diventa inutile</strong>. Il sistema si auto-distrugge per inflazione interna, senza possibilità di recupero.
-  </p>
-
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">3. Manipolazioni di mercato e oracoli</h3>
-  <p>
-    Gli attacchi agli oracoli o alla liquidità possono generare <strong>depeg artificiali</strong> e attivare meccanismi di fallimento. Alcuni protocolli sono stati sfruttati tramite strategie flash loan o falsi segnali di prezzo.
-  </p>
-
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">4. Mancanza di strumenti difensivi</h3>
-  <p>
-    In assenza di circuit breaker o meccanismi anti-panico, il sistema non può fermare la corsa al riscatto o l’escalation negativa. <strong>Il tempo gioca contro l’algoritmo</strong>.
-  </p>
-
-  <p class="mt-4">
-    La stabilità apparente nasconde una complessità che spesso si attiva solo in condizioni estreme — troppo tardi per intervenire manualmente.
-  </p>
-
-  <p class="mt-6 text-sm text-gray-500 italic">
-    «Un algoritmo funziona finché tutti credono che funzioni. Quando smettono… non resta che il codice, nudo e impotente.»
-  </p><section id="sezione-6" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">6. Regolamentazione e implicazioni legali</h2>
-
-  <p>
-    Le stablecoin algoritmiche rappresentano una sfida diretta per i regolatori globali. A differenza delle stablecoin collateralizzate da fiat, non offrono alcuna <strong>garanzia legale di rimborso</strong> né sono gestite da entità sottoposte a supervisione formale.
-  </p>
-
-  <h3 class="text-lg font-semibold mt-4 text-slate-800">Vuoto normativo e ambiguità</h3>
-  <ul class="list-disc list-inside text-slate-700 space-y-2">
-    <li>Molti protocolli sono anonimi, decentralizzati o non registrati</li>
-    <li>Non esistono obblighi di trasparenza su collaterale, audit o rischio operativo</li>
-    <li>Il peg è mantenuto da logiche di mercato, non da responsabilità contrattuali</li>
-  </ul>
-
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">Risposte dei regolatori</h3>
-  <ul class="list-disc list-inside text-slate-700 space-y-2">
-    <li>Dopo il crollo di UST, autorità USA e UE hanno chiesto restrizioni sulle stablecoin non garantite</li>
-    <li>Il MiCA (Regolamento UE sui mercati cripto) prevede regole severe per emittenti di stablecoin significative</li>
-    <li>Le stablecoin algoritmiche potrebbero essere vietate o classificate come strumenti finanziari complessi</li>
-  </ul>
-
-  <p class="mt-4">
-    Chi utilizza queste stablecoin si espone a <strong>rischi normativi gravi</strong>: impossibilità di riscatto, perdita totale, blocchi regolamentari, sanzioni a protocolli o exchange.
-  </p>
-
-  <p class="mt-6 text-sm text-gray-500 italic">
-    «Un algoritmo non può andare in tribunale. E quando il sistema crolla, nessuno risponde.»
-  </p>
-</section>
-<br>
-<section id="sezione-7" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">7. Stablecoin algoritmiche vs collateralizzate</h2>
-
-  <p>
-    Le stablecoin algoritmiche e quelle collateralizzate condividono l’obiettivo di offrire <strong>stabilità del valore</strong> in ambiente digitale, ma differiscono radicalmente per struttura, governance e profilo di rischio.
-  </p>
-
-  <h3 class="text-lg font-semibold mt-4 text-slate-800">Stablecoin collateralizzate</h3>
-  <ul class="list-disc list-inside text-slate-700 space-y-2">
-    <li>Garantite da <strong>asset reali</strong> detenuti in riserve (es. USDC, USDT con fiat; DAI con cripto)</li>
-    <li>Offrono meccanismi di riscatto diretti o tramite liquidazione del collaterale</li>
-    <li>Più affidabili in situazioni di stress, ma esposte a rischi di custodia o regolatori</li>
-  </ul>
-
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">Stablecoin algoritmiche</h3>
-  <ul class="list-disc list-inside text-slate-700 space-y-2">
-    <li><strong>Non hanno riserve reali</strong>: si basano su incentivi di mercato e algoritmi di gestione della supply</li>
-    <li>Promettono decentralizzazione ma sono <strong>fragili in scenari di panico</strong></li>
-    <li>La fiducia si basa sulla logica, non su beni tangibili</li>
-  </ul>
-
-  <p class="mt-4">
-    In sostanza: le stablecoin collateralizzate offrono stabilità “da contratto”; le algoritmiche offrono stabilità “da modello”. Quando il modello fallisce, non c’è nulla da riscattare.
-  </p>
-
-  <p class="mt-6 text-sm text-gray-500 italic">
-    «La collateralizzazione ti ancora. L’algoritmo ti guida. Ma quando arriva la tempesta, meglio avere un’àncora che un’equazione.»
-  </p>
-</section>
-<br>
-<section id="sezione-8" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">8. Alternative regolamentate: euro digitali e stablecoin bancarie</h2>
-
-  <p>
-    In risposta all’instabilità delle stablecoin algoritmiche, il mondo finanziario tradizionale sta sviluppando <strong>alternative regolamentate</strong> con garanzie legali e trasparenza operativa. Queste soluzioni cercano di unire <strong>stabilità e innovazione</strong>.
-  </p>
-
-  <h3 class="text-lg font-semibold mt-4 text-slate-800">1. Euro digitale (BCE)</h3>
-  <p>
-    La Banca Centrale Europea sta lavorando a una versione digitale dell’euro, emessa direttamente dall’Eurosistema. Sarà una <strong>CBDC (Central Bank Digital Currency)</strong>, non una stablecoin commerciale, ma potrà offrire stabilità e accesso diretto al denaro pubblico digitale.
-  </p>
-
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">2. Stablecoin bancarie</h3>
-  <ul class="list-disc list-inside text-slate-700 space-y-2">
-    <li>Emesse da istituti finanziari regolati (es. JPM Coin, Monerium, Signet)</li>
-    <li>Collateralizzate da riserve interamente depositate in conti segregati</li>
-    <li>Adatte a transazioni istituzionali, settlement istantaneo e pagamenti wholesale</li>
-  </ul>
-
-  <h3 class="text-lg font-semibold mt-6 text-slate-800">3. Stablecoin regolamentate per retail</h3>
-  <p>
-    Alcune stablecoin come <strong>EUROe</strong> e <strong>Circle EURC</strong> offrono esposizione a valute fiat in forma digitale regolamentata, con verifiche di conformità, audit e trasparenza periodica.
-  </p>
-
-  <p class="mt-4">
-    Queste alternative potrebbero sostituire le stablecoin algoritmiche nel medio termine, offrendo <strong>affidabilità superiore</strong> e compatibilità con i sistemi normativi europei e internazionali.
-  </p>
-
-  <p class="mt-6 text-sm text-gray-500 italic">
-    «La finanza non deve essere anarchica per essere innovativa. Serve stabilità per essere utile — e regolamentazione per essere sostenibile.»
-  </p>
-</section>
-<br>
-<section id="sezione-9" class="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">9. Glossario tecnico stablecoin</h2>
-
-  <ul class="list-disc list-inside text-slate-700 space-y-3">
-    <li><strong>Stablecoin:</strong> criptovaluta progettata per mantenere un valore stabile, solitamente ancorato a una valuta fiat come il dollaro o l’euro</li>
-    <li><strong>Algoritmica:</strong> basata su logiche programmate per gestire dinamicamente offerta e domanda senza collaterale fiat diretto</li>
-    <li><strong>Collateralizzata:</strong> stablecoin garantita da asset depositati come riserva (es. USD, ETH, BTC)</li>
-    <li><strong>Peg:</strong> rapporto di parità tra stablecoin e l’asset di riferimento (es. 1 DAI = 1 USD)</li>
-    <li><strong>Seigniorage:</strong> profitto derivante dall’emissione di moneta; nei sistemi dual-token è gestito attraverso burn/mint</li>
-    <li><strong>Rebase:</strong> meccanismo che modifica la quantità di token nel wallet dell’utente per mantenere il valore stabile</li>
-    <li><strong>Spirale della morte:</strong> dinamica negativa in cui la fiducia crolla, il valore scende e la supply esplode inutilmente</li>
-    <li><strong>Oracolo:</strong> sistema che fornisce dati esterni (es. prezzi di mercato) agli smart contract su blockchain</li>
-    <li><strong>Liquidazione:</strong> vendita forzata di asset a garanzia per mantenere la solvibilità del sistema</li>
-    <li><strong>CBDC:</strong> Central Bank Digital Currency, valuta digitale emessa da una banca centrale</li>
-  </ul>
-
-  <p class="mt-6 text-sm text-gray-500 italic">
-    «Le parole della finanza algoritmica sembrano neutre. Ma ciascuna contiene un meccanismo — o un rischio.»
-  </p>
-</section>
-<br>
-<section id="sezione-10" class="max-w-4xl mx-auto mb-24 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-  <h2 class="text-xl font-semibold text-slate-900 mb-4">10. Disclaimer finale e avvertenze operative</h2>
-
-  <p class="text-slate-700">
-    Le informazioni contenute in questo report hanno esclusiva finalità didattica e informativa. Non rappresentano in alcun modo una consulenza finanziaria, un invito all’acquisto o una sollecitazione all’investimento in stablecoin, criptovalute o altri strumenti derivati digitali.
-  </p>
-
-  <p class="text-slate-700 mt-4">
-    Le stablecoin algoritmiche sono strumenti ad altissima complessità e instabilità. Il loro funzionamento dipende da modelli matematici, fiducia collettiva e condizioni di mercato estreme. Possono <strong>perdere completamente il valore</strong> in tempi molto brevi, anche senza bug tecnici.
-  </p>
-
-  <p class="text-slate-700 mt-4">
-    Tradelia AI non promuove né colloca stablecoin, protocolli DeFi o strumenti finanziari digitali. Ogni esempio riportato ha solo scopo illustrativo. Le piattaforme menzionate non generano retrocessioni né implicano partnership attive.
-  </p>
-
-  <p class="text-slate-700 mt-4">
-    Prima di valutare l’uso o l’acquisto di qualsiasi stablecoin algoritmica, è essenziale comprendere pienamente le logiche di funzionamento, i documenti tecnici (whitepaper) e i rischi impliciti. In caso di dubbi, è sempre opportuno rivolgersi a un consulente qualificato.
-  </p>
-
-  <p class="mt-6 text-sm text-gray-500 italic">
-    «Una stablecoin algoritmica non è mai veramente stabile. È un atto di fiducia ripetuto ogni secondo — e fragile quanto l’ultimo panic sell.»
-  </p>
-</section>
-<br>
-
-</section>
-<br>
-
-  <section>
-<div class="mb-16">
-  <h4 class="text-xl font-semibold text-slate-800 mb-4">Approfondimenti collegati</h4>
-  <ul class="list-disc list-inside text-slate-700 space-y-2">
-    <li><a href="/report/macro/CDS-CDO-subprime.html" class="text-blue-600 hover:underline" target="_blank">Gli Strumenti della crisi Subprime →</a></li>
-  </ul>
-</div>
-<section class="max-w-4xl mx-auto px-4 sm:px-6 mt-12 mb-24">
-  <h2 class="text-2xl font-semibold text-slate-800 mb-6 border-b pb-2">
-    Riepilogo Approfondimenti Tecnici
-  </h2>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-    <a href="/report/tutorial/Obbligazioni-Strutturate.html" target="_blank" class="text-blue-600 hover:underline">• Obbligazioni Strutturate</a>
-    <a href="/report/tutorial/CoCo-Bonds.html" target="_blank" class="text-blue-600 hover:underline">• CoCo Bonds</a>
-    <a href="/report/tutorial/Callable-StepUp.html" target="_blank" class="text-blue-600 hover:underline">• Callable & Step-Up</a>
-    <a href="/report/tutorial/Dual-Currency-Bonds.html" target="_blank" class="text-blue-600 hover:underline">• Dual Currency Bonds</a>
-    <a href="/report/tutorial/Reverse-Convertible.html" target="_blank" class="text-blue-600 hover:underline">• Reverse Convertible</a>
-    <a href="/report/tutorial/Note-Strutturate-Barriera.html" target="_blank" class="text-blue-600 hover:underline">• Note con Barriera</a>
-    <a href="/report/tutorial/Certificates-Complessi.html" target="_blank" class="text-blue-600 hover:underline">• Certificates Complessi</a>
-    <a href="/report/tutorial/False-Principal-Protection.html" target="_blank" class="text-blue-600 hover:underline">• Obbligazioni "Protette"</a>
-    <a href="/report/tutorial/ETF-Leva-Inversi.html" target="_blank" class="text-blue-600 hover:underline">• ETF Leva e Inversi</a>
-    <a href="/report/tutorial/CFD-Retail.html" target="_blank" class="text-blue-600 hover:underline">• CFD & Retail</a>
-    <a href="/report/tutorial/ETF-Sintetici.html" target="_blank" class="text-blue-600 hover:underline">• ETF Strutturati Sintetici</a>
-    <a href="/report/tutorial/Opzioni-Vanilla.html" target="_blank" class="text-blue-600 hover:underline">• Opzioni Plain Vanilla</a>
-    <a href="/report/tutorial/Opzioni-Esotiche.html" target="_blank" class="text-blue-600 hover:underline">• Opzioni Esotiche</a>
-    <a href="/report/tutorial/Derivati-OTC.html" target="_blank" class="text-blue-600 hover:underline">• Derivati OTC</a>
-    <a href="/report/tutorial/SPAC-Rischi.html" target="_blank" class="text-blue-600 hover:underline">• Rischi SPAC</a>
-    <a href="/report/tutorial/CLO-CDO.html" target="_blank" class="text-blue-600 hover:underline">• CLO / CDO</a>
-    <a href="/report/tutorial/Token-Sintetici.html" target="_blank" class="text-blue-600 hover:underline">• Token Sintetici</a>
-    <a href="/report/tutorial/Stablecoin-Algoritmiche.html" target="_blank" class="text-blue-600 hover:underline">• Stablecoin Algoritmiche</a>
-  </div>
-</section>
-
-<hr class="my-12">
-
-<div class="mb-16">
-  <h4 class="text-xl font-semibold text-slate-800 mb-4"> Analisi AI più lette</h4>
-  <ul class="list-disc list-inside text-slate-700 space-y-2">
-        <li><a href="/report/tutorial/Simulatore-Portafogli.html" class="text-blue-600 hover:underline" target="_blank">Simulatore Portafogli →</a></li>
-     <li><a href="/report/tutorial/CFD-Retail.html" class="text-blue-600 hover:underline" target="_blank">CFD Retail & Pratiche scorrette→ </a></li>
-    <li><a href="/report/tutorial/Truffe-Cripto.html" class="text-blue-600 hover:underline" target="_blank">Truffe cripto più famose →</a></li>
-    <li><a href="/report/tutorial/Truffe-Finanziarie-Storiche.html" class="text-blue-600 hover:underline" target="_blank">Grandi truffe finanziarie della storia →</a></li>
-    <li><a href="/report/tutorial/Statistiche-Truffe-Online.html" class="text-blue-600 hover:underline" target="_blank">Statistiche e numeri delle truffe online su investimenti →</a></li>
-    <li><a href="/report/tutorial/MM-STP-ECN.html" class="text-blue-600 hover:underline" target="_blank">Broker: differenze tra MM, STP ed ECN →</a></li>
-  </ul>
-</div>
-</section>
+  <!-- MAIN CONTENT -->
+  <main id="tutorial-content" role="main">
+    <!-- Content will be injected here by tutorial-renderer.js -->
   </main>
-  <button id="backToTop" title="Torna all'inizio" aria-label="Torna all'inizio" 
-  class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-lg transition-opacity opacity-80 hover:opacity-100 focus:outline-none">
-  ↑ Torna all'inizio
-</button>
-<script>
-  const btn = document.getElementById('backToTop');
-  btn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-</script>
 
+  <!-- FOOTER SLOT -->
+  <div id="site-footer-slot"></div>
+
+  <!-- SCRIPTS -->
+  <script type="module" src="/report/assets/js/tutorial-renderer.js"></script>
 </body>
 </html>
+

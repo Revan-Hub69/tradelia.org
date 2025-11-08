@@ -161,9 +161,27 @@ function renderTable(tableData, glossaryTerms = {}) {
 
 // ===== LOAD AND RENDER =====
 async function loadTutorialData() {
-  // Estrai nome file tutorial da URL
-  const pathParts = window.location.pathname.split('/');
-  const fileName = pathParts[pathParts.length - 1].replace('.html', '');
+  // Estrai nome file tutorial da URL parameter o path
+  let fileName = null;
+  
+  // Prova a leggere dal parametro URL ?tutorial=nome
+  const urlParams = new URLSearchParams(window.location.search);
+  const tutorialParam = urlParams.get('tutorial');
+  
+  if (tutorialParam) {
+    fileName = tutorialParam;
+  } else {
+    // Fallback: estrai dal path (per compatibilità con vecchi link)
+    const pathParts = window.location.pathname.split('/');
+    fileName = pathParts[pathParts.length - 1].replace('.html', '').replace('index', '');
+    
+    // Se il fileName è vuoto o 'index', non possiamo procedere
+    if (!fileName || fileName === 'index') {
+      Logger.error('TutorialRenderer', 'Nome tutorial non trovato in URL parameter o path');
+      return null;
+    }
+  }
+  
   const jsonPath = `/report/tutorial/data/${fileName}.json`;
   
   try {
