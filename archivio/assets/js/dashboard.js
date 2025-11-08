@@ -780,9 +780,18 @@ async function showDashboard() {
     userEmail.textContent = STATE.user.email;
   }
   
+  // Timeout globale: se il caricamento dura più di 15 secondi, forza il rendering
+  const globalTimeout = setTimeout(() => {
+    Logger.warn('Dashboard', 'Timeout globale caricamento dati (15s), forzo rendering');
+    renderDashboardReports();
+    renderDashboardTutorials();
+    hideLoadingState();
+  }, 15000);
+  
   try {
     // Carica dati
     await loadDashboardData();
+    clearTimeout(globalTimeout);
     
     // Renderizza sempre, anche se non ci sono dati
     renderDashboardReports();
@@ -793,8 +802,11 @@ async function showDashboard() {
       Logger.warn('Dashboard', 'Errore caricamento votazioni (non critico)', err);
     });
   } catch (err) {
+    clearTimeout(globalTimeout);
     Logger.error('Dashboard', 'Errore showDashboard', err);
     // Mostra messaggio di errore e nascondi loading
+    renderDashboardReports(); // Renderizza comunque
+    renderDashboardTutorials();
     hideLoadingState();
     showErrorState('Errore nel caricamento della dashboard. Riprova più tardi.');
   }
