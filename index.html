@@ -650,6 +650,86 @@
       margin: 0 0 0.5rem;
     }
 
+    /* ===== SECURITY GUIDE BOXES ===== */
+    .security-guide {
+      margin-top: var(--sp-8);
+      padding: var(--sp-5);
+      border-radius: var(--radius-lg);
+      border-left: 4px solid;
+      background: rgba(234, 88, 12, 0.08);
+      border-color: rgba(234, 88, 12, 0.4);
+    }
+
+    .security-guide.warning {
+      background: rgba(234, 88, 12, 0.08);
+      border-color: rgba(234, 88, 12, 0.4);
+    }
+
+    .security-guide.info {
+      background: rgba(37, 99, 235, 0.08);
+      border-color: rgba(37, 99, 235, 0.4);
+    }
+
+    .security-guide-header {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+      margin-bottom: var(--sp-3);
+    }
+
+    .security-guide-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      color: var(--warn, #ea580c);
+    }
+
+    .security-guide.info .security-guide-icon {
+      color: var(--brand-600, #2563eb);
+    }
+
+    .security-guide-title {
+      font-size: var(--fs-16);
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    .security-guide-content {
+      font-size: var(--fs-14);
+      line-height: 1.6;
+      color: var(--ink-soft);
+    }
+
+    .security-guide-list {
+      margin: var(--sp-3) 0;
+      padding-left: var(--sp-5);
+      list-style: none;
+    }
+
+    .security-guide-list li {
+      margin-bottom: var(--sp-2);
+      position: relative;
+      padding-left: var(--sp-4);
+    }
+
+    .security-guide-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--warn, #ea580c);
+      font-weight: 700;
+    }
+
+    .security-guide.info .security-guide-list li::before {
+      color: var(--brand-600, #2563eb);
+    }
+
+    .security-guide-strong {
+      font-weight: 700;
+      color: var(--ink);
+    }
+
     .collaborator-card-description {
       font-size: var(--fs-14);
       color: var(--ink-soft);
@@ -3618,6 +3698,36 @@ Vuoi procedere inviando i dati?`;
               </a>
             </div>
           </div>
+
+          <!-- Security Guide: Community -->
+          <div class="security-guide warning">
+            <div class="security-guide-header">
+              <svg class="security-guide-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+              <h4 class="security-guide-title">Avviso Importante: Rischio Truffe</h4>
+            </div>
+            <div class="security-guide-content">
+              <p>
+                <span class="security-guide-strong">Le community sui social network (Facebook, WhatsApp, Telegram, etc.)</span> 
+                sono spesso utilizzate da truffatori per contattare potenziali vittime. Presta attenzione a:
+              </p>
+              <ul class="security-guide-list">
+                <li><span class="security-guide-strong">Nessun amministratore ufficiale ti contatterà privatamente</span> per offrirti investimenti, segnali di trading o servizi a pagamento</li>
+                <li><span class="security-guide-strong">Ignora richieste di amicizia o messaggi privati</span> che pretendono di essere dagli admin o moderatori dei gruppi</li>
+                <li><span class="security-guide-strong">Non condividere mai dati personali, codici di accesso o informazioni bancarie</span> via chat private o WhatsApp</li>
+                <li><span class="security-guide-strong">Diffida da promesse di guadagni facili</span> o rendimenti garantiti</li>
+                <li><span class="security-guide-strong">Verifica sempre l'identità</span> di chi ti contatta controllando il profilo ufficiale del gruppo</li>
+                <li><span class="security-guide-strong">Le community serie non vendono servizi</span> o prodotti tramite messaggi privati</li>
+              </ul>
+              <p style="margin-top: var(--sp-3);">
+                <span class="security-guide-strong">In caso di dubbi:</span> segnala immediatamente all'amministratore del gruppo o blocca il contatto sospetto. 
+                Ricorda che Tradelia AI non è responsabile per le attività delle community esterne.
+              </p>
+            </div>
+          </div>
         </div>
 
         <!-- Panel Piattaforme -->
@@ -3669,6 +3779,34 @@ Vuoi procedere inviando i dati?`;
               </a>
             </div>
           </div>
+
+          <!-- Security Guide: Piattaforme -->
+          <div class="security-guide info">
+            <div class="security-guide-header">
+              <svg class="security-guide-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="M9 12l2 2 4-4"/>
+              </svg>
+              <h4 class="security-guide-title">Verifica Prima di Investire</h4>
+            </div>
+            <div class="security-guide-content">
+              <p>
+                Prima di aprire un conto con qualsiasi piattaforma di trading o broker, è essenziale verificare:
+              </p>
+              <ul class="security-guide-list">
+                <li><span class="security-guide-strong">Regolamentazione:</span> Verifica che il broker sia regolamentato da autorità riconosciute (Consob, FCA, CySEC, ASIC, etc.)</li>
+                <li><span class="security-guide-strong">Licenze:</span> Controlla il numero di licenza sul sito dell'autorità di vigilanza competente</li>
+                <li><span class="security-guide-strong">Protezione dei fondi:</span> Verifica i meccanismi di protezione dei depositi (FSCS, ICF, etc.)</li>
+                <li><span class="security-guide-strong">Commissioni e spread:</span> Leggi attentamente i costi, le commissioni e gli spread prima di depositare</li>
+                <li><span class="security-guide-strong">Recensioni indipendenti:</span> Cerca recensioni da fonti multiple e verifica eventuali lamentele su autorità di vigilanza</li>
+                <li><span class="security-guide-strong">Condizioni di prelievo:</span> Verifica i tempi e le condizioni per il prelievo dei fondi</li>
+              </ul>
+              <p style="margin-top: var(--sp-3);">
+                <span class="security-guide-strong">Ricorda:</span> Il trading comporta rischi di perdita. Investi solo capitale che puoi permetterti di perdere. 
+                I collegamenti alle piattaforme sono suggeriti a scopo informativo e non costituiscono raccomandazione di investimento.
+              </p>
+            </div>
+          </div>
         </div>
 
         <!-- Panel Consulenti Finanziari -->
@@ -3714,6 +3852,34 @@ Vuoi procedere inviando i dati?`;
                   <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </a>
+            </div>
+          </div>
+
+          <!-- Security Guide: Consulenti -->
+          <div class="security-guide info">
+            <div class="security-guide-header">
+              <svg class="security-guide-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="M9 12l2 2 4-4"/>
+              </svg>
+              <h4 class="security-guide-title">Verifica la Professionalità</h4>
+            </div>
+            <div class="security-guide-content">
+              <p>
+                Prima di affidarti a un consulente finanziario, assicurati di verificare:
+              </p>
+              <ul class="security-guide-list">
+                <li><span class="security-guide-strong">Registro OCF/OPC:</span> Verifica che il consulente sia iscritto all'Albo dei Consulenti Finanziari (OCF) o Organismo di Partecipazione Collettiva (OPC)</li>
+                <li><span class="security-guide-strong">Autorizzazioni:</span> Controlla sul sito della Consob che il professionista abbia le autorizzazioni necessarie per l'attività svolta</li>
+                <li><span class="security-guide-strong">Indipendenza:</span> Verifica se il consulente è indipendente o collegato a banche/assicurazioni (possibili conflitti di interesse)</li>
+                <li><span class="security-guide-strong">Compensi:</span> Chiedi sempre informazioni chiare su come viene retribuito il consulente (commissioni, fee fisse, etc.)</li>
+                <li><span class="security-guide-strong">Piano finanziario:</span> Un consulente serio elabora un piano personalizzato basato sulla tua situazione, obiettivi e propensione al rischio</li>
+                <li><span class="security-guide-strong">Aggiornamenti formativi:</span> Verifica che il consulente segua corsi di aggiornamento obbligatori per mantenere l'iscrizione</li>
+              </ul>
+              <p style="margin-top: var(--sp-3);">
+                <span class="security-guide-strong">Attenzione:</span> Diffida da chi promette rendimenti garantiti, ti contatta in modo aggressivo o ti chiede pagamenti anticipati. 
+                Un consulente serio fornisce sempre documentazione trasparente e non esercita pressioni.
+              </p>
             </div>
           </div>
         </div>
