@@ -68,7 +68,7 @@
     .container {
       max-width: 1400px;
       margin-inline: auto;
-      padding-inline: 2.5rem;
+      padding-inline: 2rem;
     }
     
     /* ===== ACADEMIC TYPOGRAPHY HIERARCHY ===== */
@@ -91,9 +91,9 @@
     .section-toggle {
       display: inline-flex;
       gap: 0;
-      margin-bottom: 3rem;
+      margin-bottom: 1.75rem;
       border-bottom: 1px solid var(--dash-border);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.06em;
       text-transform: uppercase;
@@ -102,7 +102,7 @@
     
     .section-toggle-btn {
       position: relative;
-      padding: 0.875rem 2rem;
+      padding: 0.625rem 1.5rem;
       background: transparent;
       border: none;
       border-bottom: 2px solid transparent;
@@ -150,23 +150,23 @@
       margin: 0;
       background: var(--dash-surface);
       border: 1px solid var(--dash-border);
-      border-radius: 8px;
+      border-radius: 6px;
       overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
     
     .tech-list-item {
-      padding: 1rem 1.25rem;
+      padding: 0.625rem 1rem;
       border-bottom: 1px solid var(--dash-border);
       display: grid;
-      grid-template-columns: 150px 2fr 150px 220px;
-      gap: 2rem;
+      grid-template-columns: 130px 2fr 100px 100px 120px;
+      gap: 1.25rem;
       align-items: center;
-      font-size: 13px;
-      line-height: 1.6;
+      font-size: 12px;
+      line-height: 1.5;
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
-      min-height: 3.5rem;
+      min-height: 2.75rem;
     }
     
     .tech-list-item:last-child {
@@ -280,25 +280,25 @@
     }
     
     .report-header {
-      margin-bottom: 2.5rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 2px solid var(--dash-border);
+      margin-bottom: 1.75rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--dash-border);
     }
     
     .report-title {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
       color: var(--dash-text);
-      margin: 0 0 0.75rem;
+      margin: 0 0 0.5rem;
       letter-spacing: -0.025em;
       font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
     }
     
     .report-description {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--dash-text-soft);
       margin: 0;
-      line-height: 1.7;
+      line-height: 1.6;
       font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
       max-width: 65ch;
     }
@@ -460,23 +460,23 @@
     
     /* ===== HEADER - ACADEMIC ===== */
     .dashboard-header {
-      padding: 3rem 0 2rem;
-      border-bottom: 2px solid var(--dash-border);
-      margin-bottom: 2.5rem;
+      padding: 2rem 0 1.25rem;
+      border-bottom: 1px solid var(--dash-border);
+      margin-bottom: 1.75rem;
     }
     
     .dashboard-title {
-      font-size: 28px;
+      font-size: 24px;
       font-weight: 800;
       color: var(--dash-text);
-      margin: 0 0 0.75rem;
+      margin: 0 0 0.5rem;
       letter-spacing: -0.03em;
       font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
       line-height: 1.2;
     }
     
     .dashboard-subtitle {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--dash-text-soft);
       margin: 0;
       letter-spacing: 0.03em;
@@ -497,18 +497,18 @@
     /* ===== STATS BAR - ACADEMIC ===== */
     .stats-bar {
       display: flex;
-      gap: 2.5rem;
-      margin-bottom: 2rem;
-      padding: 1rem 0;
+      gap: 2rem;
+      margin-bottom: 1.25rem;
+      padding: 0.75rem 0;
       border-bottom: 1px solid var(--dash-border);
-      font-size: 13px;
+      font-size: 12px;
       font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
     }
     
     .stat-item {
       display: flex;
       align-items: baseline;
-      gap: 0.625rem;
+      gap: 0.5rem;
       color: var(--dash-text-soft);
     }
     
@@ -517,14 +517,14 @@
       font-weight: 700;
       font-variant-numeric: tabular-nums;
       font-family: var(--ff-mono, 'SF Mono', 'Monaco', 'Consolas', monospace);
-      font-size: 16px;
+      font-size: 14px;
       letter-spacing: -0.01em;
     }
     
     .stat-label {
       color: var(--dash-text-muted);
       text-transform: uppercase;
-      font-size: 11px;
+      font-size: 10px;
       letter-spacing: 0.06em;
       font-weight: 600;
       font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
@@ -532,19 +532,19 @@
     
     /* ===== SEARCH BAR - ACADEMIC ===== */
     .search-container {
-      margin-bottom: 2rem;
+      margin-bottom: 1.25rem;
       position: relative;
     }
     
     .search-input {
       width: 100%;
-      padding: 1rem 1.25rem 1rem 3rem;
+      padding: 0.75rem 1rem 0.75rem 2.75rem;
       background: var(--dash-surface);
       border: 1.5px solid var(--dash-border);
-      border-radius: 8px;
+      border-radius: 6px;
       color: var(--dash-text);
       font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
-      font-size: 14px;
+      font-size: 13px;
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       line-height: 1.5;
     }
@@ -585,13 +585,15 @@
     
     
     /* ===== SORT CONTROLS - ACADEMIC ===== */
-    .sort-controls {
+    .sort-controls,
+    .filter-controls {
       display: flex;
-      gap: 1.25rem;
-      margin-bottom: 1.5rem;
+      gap: 1rem;
+      margin-bottom: 1rem;
       align-items: center;
-      font-size: 13px;
+      font-size: 12px;
       font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      flex-wrap: wrap;
     }
     
     .sort-label {
@@ -602,26 +604,29 @@
       font-weight: 600;
     }
     
-    .sort-btn {
-      padding: 0.5rem 1rem;
+    .sort-btn,
+    .filter-btn {
+      padding: 0.375rem 0.875rem;
       background: transparent;
       border: 1.5px solid var(--dash-border);
-      border-radius: 6px;
+      border-radius: 5px;
       color: var(--dash-text-soft);
       cursor: pointer;
       font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 500;
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
-    .sort-btn:hover {
+    .sort-btn:hover,
+    .filter-btn:hover {
       border-color: var(--dash-accent);
       color: var(--dash-text);
       background: rgba(37, 99, 235, 0.05);
     }
     
-    .sort-btn.active {
+    .sort-btn.active,
+    .filter-btn.active {
       background: var(--dash-accent-bg);
       border-color: var(--dash-accent);
       color: var(--dash-accent);
@@ -948,7 +953,7 @@
       <section class="report-section active">
         <div class="report-header">
           <h2 class="report-title">Report</h2>
-          <p class="report-description">Framework Accademico AI Tradelia Swing Master 5.0 - Analisi multi-fattore</p>
+          <p class="report-description">Framework Accademico AI Tradelia - Analisi finanziaria multi-fattore basata su dati Tier-1</p>
         </div>
         
         <div class="stats-bar" id="reports-stats" style="display: none;">
@@ -964,7 +969,7 @@
             type="text" 
             id="reports-search" 
             class="search-input" 
-            placeholder="Cerca per ticker, azienda, ID o moduli..." 
+            placeholder="Cerca per ticker, azienda, ID, exchange o settore..." 
             autocomplete="off"
           />
           <span class="search-results-count" id="reports-search-count" style="display: none;"></span>
@@ -981,6 +986,14 @@
           <button class="sort-btn active" data-sort="date-desc">Data ↓</button>
           <button class="sort-btn" data-sort="date-asc">Data ↑</button>
           <button class="sort-btn" data-sort="ticker">Ticker</button>
+        </div>
+        
+        <div class="filter-controls" id="reports-framework-filter" style="display: none;">
+          <span class="sort-label">Framework:</span>
+          <button class="sort-btn filter-btn active" data-framework="all">Tutti</button>
+          <button class="sort-btn filter-btn" data-framework="swing-master-5.0">Swing Master 5.0</button>
+          <button class="sort-btn filter-btn" data-framework="dmi-3.1">Daily Market Intelligence 3.1</button>
+          <button class="sort-btn filter-btn" data-framework="stress-test">Stress Test Avanzato</button>
         </div>
         
         <div id="reports-container">
@@ -1071,6 +1084,7 @@
       tutorials: [],
       filteredTutorials: {},
       currentSort: 'date-desc',
+      currentFramework: 'all',
       currentSection: 'reports'
     };
     
@@ -1223,12 +1237,30 @@
               timestamp = header.meta.lastUpdated;
             }
             
-            // Determina moduli
-            let modules = [];
-            if (manifest?.order && Array.isArray(manifest.order)) {
-              modules = manifest.order;
-            } else if (manifest?.modules && typeof manifest.modules === 'object') {
-              modules = Object.keys(manifest.modules);
+            // Estrai exchange, sector, price da header metricsPanel
+            let exchange = null;
+            let sector = null;
+            let price = null;
+            let framework = 'swing-master-5.0'; // default
+            
+            if (header?.metricsPanel && Array.isArray(header.metricsPanel)) {
+              header.metricsPanel.forEach(metric => {
+                if (metric.key === 'Venue') exchange = metric.value;
+                if (metric.key === 'Sector') sector = metric.value;
+                if (metric.key === 'Price') price = metric.value;
+              });
+            }
+            
+            // Determina framework (per ora default a swing-master-5.0, può essere esteso)
+            // In futuro può essere determinato da manifest.metadata.framework o altro
+            if (manifest?.metadata?.framework) {
+              framework = manifest.metadata.framework;
+            } else {
+              // Default: swing-master-5.0 se contiene moduli F1-F8
+              const hasModules = manifest?.order || manifest?.modules;
+              if (hasModules) {
+                framework = 'swing-master-5.0';
+              }
             }
             
             // Estrai ticker da manifest se non trovato in header
@@ -1241,8 +1273,11 @@
               id: manifest?.id || reportID,
               ticker: ticker || 'N/A',
               company: companyName || null,
+              exchange: exchange || null,
+              sector: sector || null,
+              price: price || null,
+              framework: framework,
               timestamp: timestamp,
-              modules: modules,
               reportUrl: `/report/index.html?id=${reportID}`
             };
             
@@ -1280,10 +1315,12 @@
         // Show controls
         document.getElementById('reports-stats').style.display = 'flex';
         document.getElementById('reports-sort').style.display = 'flex';
+        document.getElementById('reports-framework-filter').style.display = 'flex';
         
-        // Setup search and sort
+        // Setup search, sort and filters
         setupReportsSearch();
         setupReportsSort();
+        setupFrameworkFilter();
       } catch(error) {
         console.error('Errore caricamento report:', error);
         container.innerHTML = `<div class="empty-state">Errore: ${error.message || 'Errore sconosciuto'}</div>`;
@@ -1328,27 +1365,39 @@
       const countEl = document.getElementById('reports-search-count');
       const query = searchInput?.value.toLowerCase().trim() || '';
       
-      if (!query) {
-        STATE.filteredReports = [...STATE.reports];
-      } else {
-        STATE.filteredReports = STATE.reports.filter(report => {
+      // Start from all reports
+      let filtered = [...STATE.reports];
+      
+      // Apply framework filter
+      if (STATE.currentFramework !== 'all') {
+        filtered = filtered.filter(report => 
+          report.framework === STATE.currentFramework
+        );
+      }
+      
+      // Apply search filter
+      if (query) {
+        filtered = filtered.filter(report => {
           const searchable = [
             report.id?.toLowerCase() || '',
             report.ticker?.toLowerCase() || '',
             report.company?.toLowerCase() || '',
-            report.modules?.join(' ').toLowerCase() || '',
+            report.exchange?.toLowerCase() || '',
+            report.sector?.toLowerCase() || '',
             report.timestamp?.toLowerCase() || ''
           ].join(' ');
           return searchable.includes(query);
         });
       }
       
-      // Apply current sort
+      STATE.filteredReports = filtered;
+      
+      // Apply current sort (sortReports will use STATE.filteredReports)
       sortReports(STATE.currentSort);
       
       // Update count
       if (countEl) {
-        if (query) {
+        if (query || STATE.currentFramework !== 'all') {
           countEl.textContent = `${STATE.filteredReports.length} / ${STATE.reports.length}`;
           countEl.style.display = 'block';
         } else {
@@ -1377,8 +1426,10 @@
     }
     
     function sortReports(sortType) {
-      const reports = STATE.filteredReports;
+      // Use already filtered reports from STATE
+      const reports = [...STATE.filteredReports];
       
+      // Apply sort
       switch(sortType) {
         case 'date-desc':
           reports.sort((a, b) => {
@@ -1403,8 +1454,30 @@
           break;
       }
       
+      STATE.filteredReports = reports;
       // Re-render
       renderReportsList(reports);
+    }
+    
+    // ===== FRAMEWORK FILTER =====
+    function setupFrameworkFilter() {
+      const filterBtns = document.querySelectorAll('#reports-framework-filter .filter-btn');
+      
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const framework = btn.dataset.framework;
+          
+          // Update buttons
+          filterBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          
+          // Update state
+          STATE.currentFramework = framework;
+          
+          // Re-filter and re-sort
+          filterReports();
+        });
+      });
     }
     
     function renderReportsList(reports) {
@@ -1417,11 +1490,12 @@
       }
       
         const listHTML = `
-        <div class="list-header" style="margin-bottom: 0.875rem; padding: 0 1.25rem; display: grid; grid-template-columns: 150px 2fr 150px 220px; gap: 2rem; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dash-text-muted); font-weight: 700; font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);">
+        <div class="list-header" style="margin-bottom: 0.75rem; padding: 0 1rem; display: grid; grid-template-columns: 130px 2fr 100px 100px 120px; gap: 1.25rem; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dash-text-muted); font-weight: 700; font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);">
           <span>ID</span>
           <span>Asset</span>
+          <span>Exchange</span>
+          <span>Settore</span>
           <span>Data</span>
-          <span>Moduli</span>
         </div>
         <ul class="tech-list">
           ${reports.map(report => {
@@ -1443,25 +1517,18 @@
               // Usa timestamp originale se parsing fallisce
             }
             
-            const modulesStr = report.modules.length > 0 
-              ? report.modules.slice(0, 3).join(', ') + (report.modules.length > 3 ? '...' : '')
-              : 'N/A';
-            
             const dateTimeDisplay = timeStr ? `${dateStr} ${timeStr}` : dateStr;
-            const modulesCount = report.modules.length;
-            const modulesDisplay = modulesCount > 0 
-              ? `${modulesStr}${modulesCount > 3 ? ` (+${modulesCount - 3})` : ''}`
-              : 'N/A';
             
             return `
-              <li class="tech-list-item">
+              <li class="tech-list-item" data-framework="${report.framework || 'swing-master-5.0'}">
                 <span class="tech-id">${report.id}</span>
-                <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                <div style="display: flex; flex-direction: column; gap: 0.2rem;">
                   <a href="${report.reportUrl}" class="tech-link" style="font-weight: 600;">${report.ticker}</a>
                   ${report.company ? `<span class="tech-company">${report.company}</span>` : ''}
                 </div>
+                <span class="tech-meta">${report.exchange || '—'}</span>
+                <span class="tech-meta">${report.sector || '—'}</span>
                 <span class="tech-meta">${dateTimeDisplay}</span>
-                <span class="tech-meta" title="${report.modules.join(', ')}">${modulesDisplay}</span>
               </li>
             `;
           }).join('')}
@@ -1782,9 +1849,9 @@
       <div class="legal-body" style="padding: var(--sp-6); overflow-y: auto; flex: 1;">
         <section id="panel-mifid" role="tabpanel" aria-labelledby="tab-mifid">
           <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Finalità del materiale</h4>
-          <p style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4);">Il presente sito web e tutti i suoi contenuti (analisi, moduli AI, report, articoli, glossario) hanno esclusiva finalità <strong>informativa e didattica</strong>. Non costituiscono consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa <strong>MiFID II / ESMA</strong>.</p>
+          <p style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4);">Il presente sito web e tutti i suoi contenuti (analisi, framework AI, report, articoli, glossario) hanno esclusiva finalità <strong>informativa e didattica</strong>. Non costituiscono consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa <strong>MiFID II / ESMA</strong>.</p>
           <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Natura educativa</h4>
-          <p style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4);">Tradelia AI è una piattaforma di <strong>educazione finanziaria accademica</strong>. Tutti i contenuti, inclusi moduli AI proprietari, analisi di mercato, report e strumenti didattici, sono progettati esclusivamente per finalità formative e di ricerca. Non viene svolta verifica di adeguatezza/appropriatezza, profilo di rischio o obiettivi finanziari dell'utente.</p>
+          <p style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4);">Tradelia AI è una piattaforma di <strong>educazione finanziaria accademica</strong>. Tutti i contenuti, inclusi framework AI proprietari (Swing Master 5.0, Daily Market Intelligence 3.1, Stress Test Avanzato), analisi di mercato, report e strumenti didattici, sono progettati esclusivamente per finalità formative e di ricerca. Non viene svolta verifica di adeguatezza/appropriatezza, profilo di rischio o obiettivi finanziari dell'utente.</p>
           <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Rischi</h4>
           <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
             <li>I mercati finanziari comportano <strong>rischio di perdita, anche totale, del capitale</strong>.</li>
@@ -1795,7 +1862,7 @@
           <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Dati e fonti</h4>
           <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
             <li>Dati e serie storiche possono essere soggetti a ritardi, revisioni o errori; i timestamp potrebbero non riflettere il "tempo reale".</li>
-            <li>Le fonti includono provider ritenuti affidabili (Tier-1); non si garantisce esattezza/completezza assoluta.</li>
+            <li>Le fonti includono provider ritenuti affidabili <strong>(Tier-1: Bloomberg, Reuters, Fed, BCE, Nasdaq)</strong>; non si garantisce esattezza/completezza assoluta.</li>
             <li>Le analisi AI sono generate automaticamente e possono contenere errori o imprecisioni.</li>
           </ul>
           <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Conflitti e indipendenza</h4>
@@ -1814,10 +1881,10 @@
         </section>
         <section id="panel-privacy" role="tabpanel" aria-labelledby="tab-privacy" hidden style="display: none;">
           <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Principi</h4>
-          <p style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4);">Adottiamo un'impostazione "privacy-first": minimizzazione dei dati e assenza di tracciamento pubblicitario.</p>
+          <p style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4);">Adottiamo un'impostazione <strong>"privacy-first"</strong>: minimizzazione dei dati e assenza di tracciamento pubblicitario.</p>
           <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Dati trattati</h4>
           <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
-            <li>Nessuna raccolta di dati personali identificativi tramite questa pagina.</li>
+            <li>Nessuna raccolta di dati personali identificativi tramite questa dashboard.</li>
             <li>Uso di <code style="background: var(--surface-elev); padding: 2px 6px; border-radius: 4px; font-size: var(--fs-12); color: var(--brand-400);">localStorage</code> per preferenze (tema) e consenso legale.</li>
             <li>Eventuali log tecnici anonimi per sicurezza e diagnostica.</li>
           </ul>
