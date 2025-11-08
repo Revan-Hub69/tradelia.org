@@ -5,8 +5,8 @@
       "ticker": "NVDA",
       "company": "NVIDIA Corporation",
       "type": "swing-master",
-      "created_at": "2025-11-08T18:04:33.987Z",
-      "public_after": "2025-11-09T18:04:33.987Z",
+      "created_at": "2025-11-08T18:07:44.339Z",
+      "public_after": "2025-11-09T18:07:44.339Z",
       "version": "v2025.11.03",
       "status": "active",
       "path": "/report/reports/sample-id/"
@@ -23,6 +23,6 @@
       "path": "/report/reports/20251107-1630/"
     }
   ],
-  "generated_at": "2025-11-08T18:04:33.987Z",
+  "generated_at": "2025-11-08T18:07:44.340Z",
   "total_reports": 2
 }
