@@ -30,7 +30,9 @@
       min-height: 100vh;
       background: var(--surface-page);
       color: var(--ink);
-      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.6;
     }
     
     main {
@@ -42,507 +44,247 @@
     }
     
     .container {
-      max-width: 90rem;
+      max-width: 1200px;
       margin-inline: auto;
-      padding-inline: 1rem;
+      padding-inline: 1.5rem;
     }
     
-    /* ===== HEADER ===== */
-    .hdr {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 8px;
-      height: 64px;
-      z-index: 100;
+    /* ===== SECTION TOGGLE ===== */
+    .section-toggle {
       display: flex;
-      align-items: center;
-      backdrop-filter: blur(16px) saturate(1.2);
-      background: linear-gradient(
-        180deg,
-        rgba(15, 15, 15, 0.96) 0%,
-        rgba(15, 15, 15, 0.92) 100%
-      );
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+      gap: 0;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--br-card);
+      font-size: 12px;
     }
     
-    .brand {
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      text-decoration: none;
-      color: var(--ink);
-    }
-    
-    .brand-word {
-      color: var(--ink);
-    }
-    
-    .brand-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      background: var(--brand-600);
-      display: inline-block;
-    }
-    
-    .brand-suffix {
-      color: var(--ink);
-      font-weight: 900;
-    }
-    
-    .header-dashboard-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
+    .section-toggle-btn {
       padding: 0.5rem 1rem;
-      background: rgba(37, 99, 235, 0.1);
-      border: 1px solid rgba(37, 99, 235, 0.2);
-      border-radius: 6px;
-      color: var(--brand-400);
-      text-decoration: none;
-      font-size: 0.875rem;
-      font-weight: 600;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--ink-soft);
+      cursor: pointer;
+      font-family: inherit;
+      font-size: inherit;
       transition: all 0.2s;
     }
     
-    .header-dashboard-link:hover {
-      background: rgba(37, 99, 235, 0.15);
-      border-color: rgba(37, 99, 235, 0.3);
-    }
-    
-    /* ===== DASHBOARD SECTIONS ===== */
-    .dashboard-section {
-      padding: 5rem 0;
-    }
-    
-    .dashboard-section:first-of-type {
-      padding-top: 7rem;
-    }
-    
-    .section-header {
-      margin-bottom: 3rem;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid var(--br-card);
-    }
-    
-    .section-title {
-      font-size: clamp(1.75rem, 4vw, 2rem);
-      font-weight: 800;
+    .section-toggle-btn:hover {
       color: var(--ink);
-      margin: 0 0 1rem;
-      letter-spacing: -0.03em;
-      line-height: 1.2;
+      background: rgba(255, 255, 255, 0.02);
     }
     
-    .section-description {
-      font-size: var(--fs-16);
-      color: var(--ink-soft);
-      line-height: 1.7;
+    .section-toggle-btn.active {
+      color: var(--brand-400);
+      border-bottom-color: var(--brand-400);
+    }
+    
+    /* ===== COMPACT LIST STYLE ===== */
+    .tech-list {
+      list-style: none;
+      padding: 0;
       margin: 0;
-      max-width: 65ch;
     }
     
-    .section-description strong {
-      color: var(--ink);
-      font-weight: 600;
+    .tech-list-item {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      font-size: 12px;
     }
     
-    /* ===== REPORTS TABLE ===== */
-    .reports-table-wrapper {
-      background: var(--surface-card);
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-    
-    .reports-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: transparent;
-    }
-    
-    .reports-table thead {
-      background: linear-gradient(180deg, var(--surface-elev) 0%, rgba(255, 255, 255, 0.02) 100%);
-      border-bottom: 2px solid var(--br-card);
-    }
-    
-    .reports-table th {
-      padding: 1.25rem 1.75rem;
-      text-align: left;
-      font-size: var(--fs-12);
-      font-weight: 700;
-      color: var(--ink-soft);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      white-space: nowrap;
-    }
-    
-    .reports-table th:first-child {
-      padding-left: 2rem;
-    }
-    
-    .reports-table th:last-child {
-      padding-right: 2rem;
-      text-align: right;
-    }
-    
-    .reports-table td {
-      padding: 1.5rem 1.75rem;
-      border-bottom: 1px solid var(--br-card);
-      font-size: var(--fs-15);
-      color: var(--ink);
-      vertical-align: middle;
-    }
-    
-    .reports-table td:first-child {
-      padding-left: 2rem;
-    }
-    
-    .reports-table td:last-child {
-      padding-right: 2rem;
-      text-align: right;
-    }
-    
-    .reports-table tbody tr:last-child td {
+    .tech-list-item:last-child {
       border-bottom: none;
     }
     
-    .reports-table tbody tr {
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    .tech-list-item:hover {
+      background: rgba(255, 255, 255, 0.02);
+      margin: 0 -0.5rem;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
     }
     
-    .reports-table tbody tr:hover {
-      background: var(--surface-elev);
-      transform: translateX(2px);
-    }
-    
-    .report-asset {
-      display: flex;
-      flex-direction: column;
-      gap: 0.375rem;
-    }
-    
-    .report-ticker {
-      font-weight: 800;
-      font-size: var(--fs-17);
-      color: var(--brand-400);
-      letter-spacing: -0.01em;
-    }
-    
-    .report-company {
-      font-size: var(--fs-13);
-      color: var(--ink-soft);
-      font-weight: 500;
-    }
-    
-    .report-type {
-      font-size: var(--fs-14);
-      color: var(--ink);
-      font-weight: 600;
-    }
-    
-    .report-modules {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      align-items: center;
-    }
-    
-    .module-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.375rem 0.875rem;
-      background: rgba(37, 99, 235, 0.08);
-      border: 1px solid rgba(37, 99, 235, 0.15);
-      border-radius: 6px;
-      font-size: var(--fs-11);
-      font-weight: 700;
-      color: var(--brand-400);
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      transition: all 0.2s;
-    }
-    
-    .module-badge:hover {
-      background: rgba(37, 99, 235, 0.12);
-      border-color: rgba(37, 99, 235, 0.25);
-    }
-    
-    .report-date {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-    
-    .report-date-main {
-      color: var(--ink);
-      font-size: var(--fs-14);
-      font-weight: 600;
-    }
-    
-    .report-date-time {
-      color: var(--ink-soft);
-      font-size: var(--fs-12);
-    }
-    
-    .btn-view {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.625rem;
-      padding: 0.625rem 1.25rem;
-      background: rgba(37, 99, 235, 0.08);
-      border: 1.5px solid rgba(37, 99, 235, 0.2);
-      border-radius: 8px;
+    .tech-link {
       color: var(--brand-400);
       text-decoration: none;
-      font-size: var(--fs-14);
-      font-weight: 700;
-      letter-spacing: 0.01em;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      flex: 1;
+    }
+    
+    .tech-link:hover {
+      color: var(--brand-300);
+      text-decoration: underline;
+    }
+    
+    .tech-meta {
+      color: var(--ink-soft);
+      font-size: 11px;
       white-space: nowrap;
     }
     
-    .btn-view:hover {
-      background: rgba(37, 99, 235, 0.12);
-      border-color: rgba(37, 99, 235, 0.35);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
-    }
-    
-    .btn-view svg {
-      transition: transform 0.25s;
-    }
-    
-    .btn-view:hover svg {
-      transform: translateX(2px);
-    }
-    
-    .empty-state {
-      padding: 3rem;
-      text-align: center;
-      color: var(--ink-soft);
-    }
-    
-    .empty-state-icon {
-      width: 48px;
-      height: 48px;
-      margin: 0 auto 1rem;
+    .tech-id {
       color: var(--muted);
+      font-family: 'Consolas', monospace;
+      font-size: 11px;
+      min-width: 120px;
     }
     
-    /* ===== TUTORIALS GRID ===== */
-    .tutorials-categories {
-      display: flex;
-      flex-direction: column;
-      gap: 4rem;
+    .tech-separator {
+      color: var(--muted);
+      margin: 0 0.25rem;
+    }
+    
+    /* ===== REPORT SECTION ===== */
+    .report-section {
+      display: none;
+    }
+    
+    .report-section.active {
+      display: block;
+    }
+    
+    .report-header {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--br-card);
+    }
+    
+    .report-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.01em;
+    }
+    
+    .report-description {
+      font-size: 11px;
+      color: var(--ink-soft);
+      margin: 0;
+    }
+    
+    /* ===== TUTORIAL SECTION ===== */
+    .tutorial-section {
+      display: none;
+    }
+    
+    .tutorial-section.active {
+      display: block;
+    }
+    
+    .tutorial-header {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--br-card);
+    }
+    
+    .tutorial-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.01em;
+    }
+    
+    .tutorial-description {
+      font-size: 11px;
+      color: var(--ink-soft);
+      margin: 0;
     }
     
     .tutorial-category {
-      background: var(--surface-card);
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-lg);
-      padding: 2.5rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-    
-    .tutorial-category-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
       margin-bottom: 2rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 2px solid var(--br-card);
     }
     
     .tutorial-category-title {
-      font-size: var(--fs-22);
-      font-weight: 800;
-      color: var(--ink);
-      margin: 0;
-      letter-spacing: -0.02em;
-    }
-    
-    .tutorial-category-count {
-      font-size: var(--fs-13);
+      font-size: 13px;
       font-weight: 600;
-      color: var(--ink-soft);
+      color: var(--brand-400);
+      margin: 0 0 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
     
-    .tutorials-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
-      gap: 1.25rem;
+    .tutorial-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 0 1rem;
     }
     
-    @media (max-width: 768px) {
-      .dashboard-section {
-        padding: 3rem 0;
-      }
-      
-      .dashboard-section:first-of-type {
-        padding-top: 5rem;
-      }
-      
-      .reports-table-wrapper {
-        overflow-x: auto;
-      }
-      
-      .reports-table {
-        min-width: 700px;
-      }
-      
-      .reports-table th,
-      .reports-table td {
-        padding: 1rem 1rem;
-      }
-      
-      .reports-table th:first-child,
-      .reports-table td:first-child {
-        padding-left: 1.5rem;
-      }
-      
-      .reports-table th:last-child,
-      .reports-table td:last-child {
-        padding-right: 1.5rem;
-      }
-      
-      .tutorial-category {
-        padding: 1.5rem;
-      }
-      
-      .tutorials-grid {
-        grid-template-columns: 1fr;
-      }
+    .tutorial-item {
+      padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
     }
     
-    .tutorial-card {
-      padding: 1.5rem;
-      background: var(--surface-elev);
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-md);
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
+    .tutorial-item:last-child {
+      border-bottom: none;
     }
     
-    .tutorial-card:hover {
-      border-color: var(--brand-600);
-      background: rgba(37, 99, 235, 0.02);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.12);
-    }
-    
-    .tutorial-card-header {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    
-    .tutorial-card-title {
-      font-size: var(--fs-16);
-      font-weight: 700;
+    .tutorial-link {
       color: var(--ink);
-      margin: 0;
-      line-height: 1.4;
-      letter-spacing: -0.01em;
-    }
-    
-    .tutorial-card-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      align-items: center;
-    }
-    
-    .tutorial-card-meta-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.375rem;
-      font-size: var(--fs-12);
-      color: var(--ink-soft);
-      font-weight: 500;
-    }
-    
-    .tutorial-card-meta-item::before {
-      content: '';
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: var(--ink-soft);
-      opacity: 0.4;
-    }
-    
-    .tutorial-card-meta-item:first-child::before {
-      display: none;
-    }
-    
-    .tutorial-card-difficulty {
-      display: inline-block;
-      padding: 0.25rem 0.625rem;
-      background: rgba(37, 99, 235, 0.08);
-      border: 1px solid rgba(37, 99, 235, 0.15);
-      border-radius: 4px;
-      font-size: var(--fs-11);
-      font-weight: 700;
-      color: var(--brand-400);
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-    }
-    
-    .tutorial-card-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.625rem;
-      color: var(--brand-400);
-      font-size: var(--fs-14);
-      font-weight: 700;
       text-decoration: none;
-      transition: all 0.25s;
-      margin-top: auto;
-      padding-top: 0.5rem;
-      border-top: 1px solid var(--br-card);
+      font-size: 12px;
     }
     
-    .tutorial-card-link:hover {
-      color: var(--brand-300);
-      gap: 0.875rem;
+    .tutorial-link:hover {
+      color: var(--brand-400);
+      text-decoration: underline;
     }
     
-    .tutorial-card-link svg {
-      transition: transform 0.25s;
-    }
-    
-    .tutorial-card-link:hover svg {
-      transform: translateX(3px);
-    }
-    
+    /* ===== LOADING ===== */
     .loading {
-      padding: 3rem;
+      padding: 2rem;
       text-align: center;
       color: var(--ink-soft);
+      font-size: 11px;
     }
     
     .loading-spinner {
       display: inline-block;
-      width: 24px;
-      height: 24px;
-      border: 3px solid var(--br-card);
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--br-card);
       border-top-color: var(--brand-400);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
+      margin-right: 0.5rem;
     }
     
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+    
+    /* ===== EMPTY STATE ===== */
+    .empty-state {
+      padding: 2rem;
+      text-align: center;
+      color: var(--ink-soft);
+      font-size: 11px;
+    }
+    
+    /* ===== HEADER COMPACT ===== */
+    .dashboard-header {
+      padding: 2rem 0 1rem;
+      border-bottom: 1px solid var(--br-card);
+      margin-bottom: 1.5rem;
+    }
+    
+    .dashboard-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      margin: 0 0 0.25rem;
+      letter-spacing: -0.01em;
+    }
+    
+    .dashboard-subtitle {
+      font-size: 11px;
+      color: var(--ink-soft);
+      margin: 0;
+    }
+    
     
     /* ===== LEGAL OVERLAY ===== */
     #legal-consent-overlay {
@@ -641,47 +383,41 @@
   <main>
     <div class="container">
       <!-- ===== DASHBOARD HEADER ===== -->
-      <div style="padding: 5rem 0 3rem; border-bottom: 1px solid var(--br-card); margin-bottom: 3rem;">
-        <h1 style="font-size: clamp(2rem, 5vw, 2.5rem); font-weight: 800; color: var(--ink); margin: 0 0 1rem; letter-spacing: -0.03em; line-height: 1.2;">
-          Dashboard
-        </h1>
-        <p style="font-size: var(--fs-16); color: var(--ink-soft); margin: 0; line-height: 1.7; max-width: 65ch;">
-          Accesso centralizzato a <strong>report finanziari</strong> generati con il Framework Accademico AI e <strong>tutorial educativi</strong> su trading, investimenti e analisi finanziaria.
-        </p>
+      <div class="dashboard-header">
+        <h1 class="dashboard-title">Dashboard</h1>
+        <p class="dashboard-subtitle">Report finanziari AI | Tutorial educativi</p>
       </div>
       
-      <!-- ===== ARCHIVIO REPORT SECTION ===== -->
-      <section class="dashboard-section">
-        <div class="section-header">
-          <h2 class="section-title">Archivio Report</h2>
-          <p class="section-description">
-            Report generati con il <strong>Framework Accademico AI Tradelia Swing Master 5.0</strong>. 
-            Analisi multi-fattore su contesto macro, sentiment e tecnica.
-          </p>
+      <!-- ===== SECTION TOGGLE ===== -->
+      <div class="section-toggle">
+        <button class="section-toggle-btn active" data-section="reports">REPORT</button>
+        <button class="section-toggle-btn" data-section="tutorials">TUTORIAL</button>
+      </div>
+      
+      <!-- ===== REPORT SECTION ===== -->
+      <section class="report-section active">
+        <div class="report-header">
+          <h2 class="report-title">Report</h2>
+          <p class="report-description">Framework Accademico AI Tradelia Swing Master 5.0 - Analisi multi-fattore</p>
         </div>
-        
         <div id="reports-container">
           <div class="loading">
             <div class="loading-spinner"></div>
-            <p style="margin-top: 1rem;">Caricamento report...</p>
+            <span>Caricamento report...</span>
           </div>
         </div>
       </section>
       
       <!-- ===== TUTORIAL SECTION ===== -->
-      <section class="dashboard-section">
-        <div class="section-header">
-          <h2 class="section-title">Tutorial</h2>
-          <p class="section-description">
-            Guida completa su <strong>trading, investimenti e analisi finanziaria</strong>. 
-            Tutorial educativi organizzati per categorie.
-          </p>
+      <section class="tutorial-section">
+        <div class="tutorial-header">
+          <h2 class="tutorial-title">Tutorial</h2>
+          <p class="tutorial-description">Trading, investimenti e analisi finanziaria</p>
         </div>
-        
         <div id="tutorials-container">
           <div class="loading">
             <div class="loading-spinner"></div>
-            <p style="margin-top: 1rem;">Caricamento tutorial...</p>
+            <span>Caricamento tutorial...</span>
           </div>
         </div>
       </section>
@@ -715,6 +451,35 @@
   
   <!-- ===== DASHBOARD SCRIPTS ===== -->
   <script type="module">
+    // ===== SECTION TOGGLE =====
+    function initSectionToggle() {
+      const toggleBtns = document.querySelectorAll('.section-toggle-btn');
+      const reportSection = document.querySelector('.report-section');
+      const tutorialSection = document.querySelector('.tutorial-section');
+      
+      toggleBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const section = btn.dataset.section;
+          
+          // Update buttons
+          toggleBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          
+          // Update sections
+          if (section === 'reports') {
+            reportSection.classList.add('active');
+            tutorialSection.classList.remove('active');
+          } else {
+            reportSection.classList.remove('active');
+            tutorialSection.classList.add('active');
+          }
+        });
+      });
+    }
+    
+    // Initialize toggle on load
+    initSectionToggle();
+    
     // ===== REPORTS LOADER =====
     async function loadReports() {
       const container = document.getElementById('reports-container');
@@ -832,106 +597,50 @@
           }
         });
         
-        // Renderizza tabella
+        // Renderizza lista semplice
         if (reports.length === 0) {
-          container.innerHTML = `
-            <div class="empty-state">
-              <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="16" y1="13" x2="8" y2="13"></line>
-                <line x1="16" y1="17" x2="8" y2="17"></line>
-                <polyline points="10 9 9 9 8 9"></polyline>
-              </svg>
-              <p>Nessun report disponibile al momento.</p>
-            </div>
-          `;
+          container.innerHTML = `<div class="empty-state">Nessun report disponibile</div>`;
           return;
         }
         
-        const tableHTML = `
-          <div class="reports-table-wrapper">
-            <table class="reports-table">
-              <thead>
-                <tr>
-                  <th>Asset</th>
-                  <th>Tipologia</th>
-                  <th>Data</th>
-                  <th>Moduli</th>
-                  <th>Azioni</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${reports.map(report => {
-                  let dateStr = report.timestamp;
-                  let timeStr = '';
-                  
-                  try {
-                    const dateObj = new Date(report.timestamp);
-                    if (!isNaN(dateObj.getTime())) {
-                      dateStr = dateObj.toLocaleDateString('it-IT', { year: 'numeric', month: 'short', day: 'numeric' });
-                      timeStr = dateObj.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-                    }
-                  } catch(e) {
-                    // Usa timestamp originale se parsing fallisce
-                  }
-                  
-                  return `
-                    <tr>
-                      <td>
-                        <div class="report-asset">
-                          <span class="report-ticker">${report.ticker}</span>
-                          ${report.company ? `<span class="report-company">${report.company}</span>` : ''}
-                        </div>
-                      </td>
-                      <td>
-                        <span class="report-type">Report Completo</span>
-                      </td>
-                      <td>
-                        <div class="report-date">
-                          <span class="report-date-main">${dateStr}</span>
-                          ${timeStr ? `<span class="report-date-time">${timeStr}</span>` : ''}
-                        </div>
-                      </td>
-                      <td>
-                        <div class="report-modules">
-                          ${report.modules.length > 0 
-                            ? report.modules.map(module => `<span class="module-badge">${module}</span>`).join('')
-                            : '<span style="color: var(--ink-soft); font-size: var(--fs-13);">N/A</span>'
-                          }
-                        </div>
-                      </td>
-                      <td>
-                        <a href="${report.reportUrl}" class="btn-view">
-                          View
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M5 12h14M12 5l7 7-7 7"></path>
-                          </svg>
-                        </a>
-                      </td>
-                    </tr>
-                  `;
-                }).join('')}
-              </tbody>
-            </table>
-          </div>
+        const listHTML = `
+          <ul class="tech-list">
+            ${reports.map(report => {
+              let dateStr = report.timestamp;
+              
+              try {
+                const dateObj = new Date(report.timestamp);
+                if (!isNaN(dateObj.getTime())) {
+                  dateStr = dateObj.toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                }
+              } catch(e) {
+                // Usa timestamp originale se parsing fallisce
+              }
+              
+              const modulesStr = report.modules.length > 0 
+                ? report.modules.join(', ') 
+                : 'N/A';
+              
+              return `
+                <li class="tech-list-item">
+                  <span class="tech-id">${report.id}</span>
+                  <span class="tech-separator">|</span>
+                  <a href="${report.reportUrl}" class="tech-link">${report.ticker}</a>
+                  ${report.company ? `<span class="tech-meta">${report.company}</span>` : ''}
+                  <span class="tech-separator">|</span>
+                  <span class="tech-meta">${dateStr}</span>
+                  <span class="tech-separator">|</span>
+                  <span class="tech-meta">${modulesStr}</span>
+                </li>
+              `;
+            }).join('')}
+          </ul>
         `;
         
-        container.innerHTML = tableHTML;
+        container.innerHTML = listHTML;
       } catch(error) {
         console.error('Errore caricamento report:', error);
-        container.innerHTML = `
-          <div class="empty-state">
-            <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="12"></line>
-              <line x1="12" y1="16" x2="12.01" y2="16"></line>
-            </svg>
-            <p style="margin-top: 1rem; font-weight: 600;">Errore nel caricamento dei report</p>
-            <p style="margin-top: 0.5rem; font-size: var(--fs-14); color: var(--ink-soft);">${error.message || 'Errore sconosciuto'}</p>
-            <button onclick="location.reload()" style="margin-top: 1.5rem; padding: 0.625rem 1.25rem; background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.2); border-radius: 6px; color: var(--brand-400); font-weight: 600; cursor: pointer;">Ricarica</button>
-          </div>
-        `;
+        container.innerHTML = `<div class="empty-state">Errore: ${error.message || 'Errore sconosciuto'}</div>`;
       }
     }
     
@@ -1044,89 +753,35 @@
         // Ordina categorie
         const sortedCategories = Object.keys(categories).sort();
         
-        // Renderizza categorie
+        // Renderizza lista semplice per categoria
         if (sortedCategories.length === 0) {
-          container.innerHTML = `
-            <div class="empty-state">
-              <p>Nessun tutorial disponibile al momento.</p>
-            </div>
-          `;
+          container.innerHTML = `<div class="empty-state">Nessun tutorial disponibile</div>`;
           return;
         }
         
-        const categoriesHTML = `
-          <div class="tutorials-categories">
-            ${sortedCategories.map(category => {
-              const tutorialsInCategory = categories[category];
-              return `
-                <div class="tutorial-category">
-                  <div class="tutorial-category-header">
-                    <h3 class="tutorial-category-title">${category}</h3>
-                    <span class="tutorial-category-count">${tutorialsInCategory.length} ${tutorialsInCategory.length === 1 ? 'tutorial' : 'tutorial'}</span>
-                  </div>
-                  <div class="tutorials-grid">
-                    ${tutorialsInCategory.map(tutorial => {
-                      const cleanTitle = tutorial.title.replace(' - Guida Completa Tradelia AI', '');
-                      return `
-                        <div class="tutorial-card">
-                          <div class="tutorial-card-header">
-                            <h4 class="tutorial-card-title">${cleanTitle}</h4>
-                            <div class="tutorial-card-meta">
-                              ${tutorial.published ? `<span class="tutorial-card-meta-item">${tutorial.published}</span>` : ''}
-                              ${tutorial.difficulty ? `<span class="tutorial-card-difficulty">${tutorial.difficulty}</span>` : ''}
-                            </div>
-                          </div>
-                          <a href="${tutorial.link}" class="tutorial-card-link">
-                            Leggi Tutorial
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                              <path d="M5 12h14M12 5l7 7-7 7"></path>
-                            </svg>
-                          </a>
-                        </div>
-                      `;
-                    }).join('')}
-                  </div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        `;
+        const categoriesHTML = sortedCategories.map(category => {
+          const tutorialsInCategory = categories[category];
+          return `
+            <div class="tutorial-category">
+              <h3 class="tutorial-category-title">${category}</h3>
+              <ul class="tutorial-list">
+                ${tutorialsInCategory.map(tutorial => {
+                  const cleanTitle = tutorial.title.replace(' - Guida Completa Tradelia AI', '');
+                  return `
+                    <li class="tutorial-item">
+                      <a href="${tutorial.link}" class="tutorial-link">${cleanTitle}</a>
+                    </li>
+                  `;
+                }).join('')}
+              </ul>
+            </div>
+          `;
+        }).join('');
         
         container.innerHTML = categoriesHTML;
       } catch(error) {
         console.error('Errore caricamento tutorial:', error);
-        container.innerHTML = `
-          <div class="empty-state">
-            <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="12"></line>
-              <line x1="12" y1="16" x2="12.01" y2="16"></line>
-            </svg>
-            <p style="margin-top: 1rem; font-weight: 600;">Errore nel caricamento dei tutorial</p>
-            <p style="margin-top: 0.5rem; font-size: var(--fs-14); color: var(--ink-soft);">${error.message || 'Errore sconosciuto'}</p>
-            <button onclick="location.reload()" style="margin-top: 1.5rem; padding: 0.625rem 1.25rem; background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.2); border-radius: 6px; color: var(--brand-400); font-weight: 600; cursor: pointer;">Ricarica</button>
-          </div>
-        `;
-      }
-    }
-    
-    // ===== UTILITY FUNCTIONS =====
-    function formatDate(dateString) {
-      try {
-        const date = new Date(dateString);
-        return {
-          date: date.toLocaleDateString('it-IT', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-          }),
-          time: date.toLocaleTimeString('it-IT', {
-            hour: '2-digit',
-            minute: '2-digit'
-          })
-        };
-      } catch(e) {
-        return { date: dateString, time: '' };
+        container.innerHTML = `<div class="empty-state">Errore: ${error.message || 'Errore sconosciuto'}</div>`;
       }
     }
     

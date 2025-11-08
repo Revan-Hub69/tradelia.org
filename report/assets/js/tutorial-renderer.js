@@ -248,46 +248,79 @@ function updateSEOMetaTags(data) {
   const category = meta.category || 'Trading & Investimenti';
   
   // Estrai descrizione dal primo paragrafo o usa default
-  let description = '';
+  let baseDescription = '';
   if (data.sections && data.sections.length > 0) {
     const firstSection = data.sections[0];
     if (firstSection.content) {
       const firstParagraph = firstSection.content.find(item => item.type === 'paragraph');
       if (firstParagraph && firstParagraph.text) {
-        description = firstParagraph.text.substring(0, 160);
+        // Rimuovi markdown e tag HTML, estrai solo testo pulito
+        let cleanText = firstParagraph.text
+          .replace(/\*\*(.+?)\*\*/g, '$1') // Rimuovi **bold**
+          .replace(/\*(.+?)\*/g, '$1') // Rimuovi *italic*
+          .replace(/__(.+?)__/g, '$1') // Rimuovi __underline__
+          .trim();
+        baseDescription = cleanText.substring(0, 120);
       }
     }
   }
-  if (!description) {
-    description = `Tutorial completo su ${title.toLowerCase()}. ${category}. Guida pratica con esempi e spiegazioni dettagliate.`;
+  
+  // Costruisci descrizione ottimizzata per social sharing
+  // Enfatizza: progetto indipendente, metodo accademico, non istituzionale
+  let description = '';
+  if (baseDescription) {
+    // Combina descrizione base con contesto del progetto
+    description = `${baseDescription} Progetto indipendente con metodo accademico AI per analisi finanziaria.`;
+  } else {
+    // Default che enfatizza il progetto indipendente
+    description = `Tutorial completo su ${title.toLowerCase()}. Progetto indipendente che utilizza AI con metodo accademico per analisi finanziaria multi-fattore. ${category}.`;
   }
   
+  // Assicurati che la descrizione non superi i limiti per social (max ~155-160 caratteri per Twitter)
+  // Ma Open Graph può essere più lungo, quindi creiamo due versioni se necessario
+  const socialDescription = description.length > 155 
+    ? description.substring(0, 152) + '...'
+    : description;
+  
   // Ottimizza descrizione per AI
-  const keywords = tags.concat(['Tradelia AI', category, 'Tutorial']);
-  description = optimizeDescriptionForAI(description, keywords);
+  const keywords = tags.concat(['Tradelia AI', category, 'Tutorial', 'Metodo Accademico', 'Progetto Indipendente']);
+  const optimizedDescription = optimizeDescriptionForAI(socialDescription, keywords);
   
   // URL pagina
   const pathParts = window.location.pathname.split('/');
   const fileName = pathParts[pathParts.length - 1].replace('.html', '');
   const url = `https://tradelia.org/report/tutorial/${fileName}.html`;
+  const imageUrl = 'https://tradelia.org/img/tradelia_og_vC_white_clean.png';
   
-  // Aggiorna title
+  // Aggiorna title - enfatizza progetto indipendente
   document.title = `TRADELIA • AI — ${title}`;
   
   // Aggiorna meta description
-  updateOrCreateMeta('name', 'description', description);
+  updateOrCreateMeta('name', 'description', optimizedDescription);
   
   // Aggiorna keywords
   updateOrCreateMeta('name', 'keywords', keywords.join(', '));
   
-  // Aggiorna Open Graph
+  // Aggiorna Open Graph - importante per social sharing
+  updateOrCreateMeta('property', 'og:type', 'article');
   updateOrCreateMeta('property', 'og:title', `TRADELIA • AI — ${title}`);
-  updateOrCreateMeta('property', 'og:description', description);
+  updateOrCreateMeta('property', 'og:description', optimizedDescription);
   updateOrCreateMeta('property', 'og:url', url);
+  updateOrCreateMeta('property', 'og:image', imageUrl);
+  updateOrCreateMeta('property', 'og:image:width', '1200');
+  updateOrCreateMeta('property', 'og:image:height', '630');
+  updateOrCreateMeta('property', 'og:image:type', 'image/png');
+  updateOrCreateMeta('property', 'og:site_name', 'Tradelia AI');
+  updateOrCreateMeta('property', 'og:locale', 'it_IT');
   
   // Aggiorna Twitter Card
+  updateOrCreateMeta('name', 'twitter:card', 'summary_large_image');
   updateOrCreateMeta('name', 'twitter:title', `TRADELIA • AI — ${title}`);
-  updateOrCreateMeta('name', 'twitter:description', description);
+  updateOrCreateMeta('name', 'twitter:description', optimizedDescription);
+  updateOrCreateMeta('name', 'twitter:image', imageUrl);
+  updateOrCreateMeta('name', 'twitter:image:alt', `${title} - Tradelia AI`);
+  updateOrCreateMeta('name', 'twitter:creator', '@tradelia_ai');
+  updateOrCreateMeta('name', 'twitter:site', '@tradelia_ai');
   
   // Aggiorna article tags
   if (meta.published) {

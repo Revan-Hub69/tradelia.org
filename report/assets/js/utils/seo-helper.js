@@ -341,13 +341,25 @@ export function optimizeDescriptionForAI(description, keywords = []) {
   // - Includi keywords naturalmente
   // - Sii specifico e informativo
   // - Usa linguaggio chiaro
+  // - Enfatizza "progetto indipendente" e "metodo accademico", evita "istituzionale"
   
   let optimized = description;
   
-  // Se troppo corta, aggiungi contesto
+  // Rimuovi eventuali riferimenti fuorvianti a "istituzionale" nel contesto del progetto
+  // (manteniamo "istituzionale" solo se si riferisce a tipi di analisi/metodi, non al progetto stesso)
+  optimized = optimized.replace(/\bMetodo istituzionale\b/gi, 'Metodo accademico');
+  optimized = optimized.replace(/\bapproccio istituzionale\b/gi, 'metodo accademico');
+  
+  // Se troppo corta, aggiungi contesto che enfatizza il progetto indipendente
   if (optimized.length < 100 && keywords.length > 0) {
-    const keywordsStr = keywords.slice(0, 3).join(', ');
-    optimized = `${description} Scopri ${keywordsStr} con Tradelia AI.`;
+    // Verifica se già menziona "progetto indipendente" o "metodo accademico"
+    const hasProjectContext = /progetto indipendente|metodo accademico/i.test(optimized);
+    if (!hasProjectContext) {
+      optimized = `${description} Progetto indipendente con metodo accademico AI.`;
+    } else {
+      const keywordsStr = keywords.slice(0, 2).join(', ');
+      optimized = `${description} Scopri ${keywordsStr} con Tradelia AI.`;
+    }
   }
   
   // Taglia a max 320 caratteri (AI-friendly)
