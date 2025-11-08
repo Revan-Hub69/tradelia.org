@@ -58,7 +58,7 @@ function render(data = {}) {
           <div class="ftr-quick-links" role="navigation" aria-label="Link rapidi">
             <a href="/index.html" aria-label="Vai alla homepage">Homepage</a>
             <a href="/dashboard.html" aria-label="Vai alla dashboard abbonati">Dashboard</a>
-            <a href="/tutorials.html" aria-label="Vai alla pagina tutorial">Tutorial</a>
+            <!-- Tutorial temporaneamente rimosso -->
             <a href="/pricing.html" aria-label="Vai alla pagina prezzi">Pricing</a>
             <a href="/brokers.html" aria-label="Vai alla pagina brokers">Brokers</a>
             <a href="/glossario.html" aria-label="Vai al glossario finanziario">Glossario</a>
