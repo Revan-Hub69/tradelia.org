@@ -5,6 +5,7 @@
 import { siteHeader } from './components/site-header.js';
 import { siteFooter } from './components/site-footer.js';
 import { glossaryPopup } from './components/glossary-popup.js';
+import { generateArticleStructuredData, optimizeDescriptionForAI } from './utils/seo-helper.js';
 import Logger from './utils/logger.js';
 
 // ===== UTILITIES =====
@@ -198,12 +199,8 @@ async function renderTutorial() {
     return;
   }
   
-  // Aggiorna meta tags
-  if (data.title) {
-    document.title = `TRADELIA • AI — ${data.title}`;
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) metaDesc.content = `Tutorial Tradelia AI - ${data.title}`;
-  }
+  // Aggiorna meta tags SEO
+  updateSEOMetaTags(data);
   
   // Render header
   const headerHtml = renderHeader(data);
@@ -241,6 +238,108 @@ async function renderTutorial() {
   document.documentElement.setAttribute('data-theme', 'light');
   
   Logger.debug('TutorialRenderer', 'Tutorial renderizzato');
+}
+
+// ===== UPDATE SEO META TAGS =====
+function updateSEOMetaTags(data) {
+  const title = data.title || 'Tutorial Tradelia AI';
+  const meta = data.meta || {};
+  const tags = data.tags || [];
+  const category = meta.category || 'Trading & Investimenti';
+  
+  // Estrai descrizione dal primo paragrafo o usa default
+  let description = '';
+  if (data.sections && data.sections.length > 0) {
+    const firstSection = data.sections[0];
+    if (firstSection.content) {
+      const firstParagraph = firstSection.content.find(item => item.type === 'paragraph');
+      if (firstParagraph && firstParagraph.text) {
+        description = firstParagraph.text.substring(0, 160);
+      }
+    }
+  }
+  if (!description) {
+    description = `Tutorial completo su ${title.toLowerCase()}. ${category}. Guida pratica con esempi e spiegazioni dettagliate.`;
+  }
+  
+  // Ottimizza descrizione per AI
+  const keywords = tags.concat(['Tradelia AI', category, 'Tutorial']);
+  description = optimizeDescriptionForAI(description, keywords);
+  
+  // URL pagina
+  const pathParts = window.location.pathname.split('/');
+  const fileName = pathParts[pathParts.length - 1].replace('.html', '');
+  const url = `https://tradelia.org/report/tutorial/${fileName}.html`;
+  
+  // Aggiorna title
+  document.title = `TRADELIA • AI — ${title}`;
+  
+  // Aggiorna meta description
+  updateOrCreateMeta('name', 'description', description);
+  
+  // Aggiorna keywords
+  updateOrCreateMeta('name', 'keywords', keywords.join(', '));
+  
+  // Aggiorna Open Graph
+  updateOrCreateMeta('property', 'og:title', `TRADELIA • AI — ${title}`);
+  updateOrCreateMeta('property', 'og:description', description);
+  updateOrCreateMeta('property', 'og:url', url);
+  
+  // Aggiorna Twitter Card
+  updateOrCreateMeta('name', 'twitter:title', `TRADELIA • AI — ${title}`);
+  updateOrCreateMeta('name', 'twitter:description', description);
+  
+  // Aggiorna article tags
+  if (meta.published) {
+    // Converti data pubblicazione in ISO
+    const publishedDate = new Date(meta.published).toISOString();
+    updateOrCreateMeta('property', 'article:published_time', publishedDate);
+  }
+  updateOrCreateMeta('property', 'article:section', category);
+  tags.forEach(tag => {
+    const metaTag = document.createElement('meta');
+    metaTag.setAttribute('property', 'article:tag');
+    metaTag.setAttribute('content', tag);
+    document.head.appendChild(metaTag);
+  });
+  
+  // Aggiorna structured data JSON-LD
+  const structuredData = generateArticleStructuredData({
+    title: `TRADELIA • AI — ${title}`,
+    description: description,
+    url: url,
+    author: 'Tradelia AI',
+    datePublished: meta.published ? new Date(meta.published).toISOString() : new Date().toISOString(),
+    dateModified: new Date().toISOString(),
+    section: category,
+    keywords: keywords
+  });
+  
+  // Rimuovi structured data esistente
+  const existing = document.querySelector('script[type="application/ld+json"]#structured-data');
+  if (existing) {
+    existing.remove();
+  }
+  
+  // Inietta nuovo structured data
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.id = 'structured-data';
+  script.textContent = JSON.stringify(structuredData, null, 2);
+  document.head.appendChild(script);
+  
+  Logger.debug('TutorialRenderer', 'Meta tags SEO aggiornati');
+}
+
+// ===== HELPER: UPDATE OR CREATE META =====
+function updateOrCreateMeta(attr, value, content) {
+  let meta = document.querySelector(`meta[${attr}="${value}"]`);
+  if (!meta) {
+    meta = document.createElement('meta');
+    meta.setAttribute(attr, value);
+    document.head.appendChild(meta);
+  }
+  meta.setAttribute('content', content);
 }
 
 // ===== BIND GLOSSARY TERMS =====

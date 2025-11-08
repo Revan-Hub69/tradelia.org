@@ -90,7 +90,7 @@ import { metricPopup } from './components/metric-popup.js';
   // ===== META TAGS DINAMICI =====
   function updateMetaTags(ticker, companyName, version) {
     const title = `Framework Accademico AI, Tradelia Swing Master 5.0 · ${ticker}`;
-    const description = `Analisi multi-fattore su ${companyName} (${ticker}) - Contesto macro, sentiment e tecnica (orizzonte 3–10 giorni)`;
+    const description = `Analisi multi-fattore su ${companyName} (${ticker}) - Contesto macro, sentiment e tecnica (orizzonte 3–10 giorni). Report finanziario completo con analisi fondamentale, tecnica e macroeconomica.`;
     const url = `${window.location.origin}${window.location.pathname}${window.location.search}`;
     const imageUrl = `${window.location.origin}/img/tradelia_og_vC_white_clean.png`;
     const imageAlt = `${companyName} (${ticker}) - Analisi Tradelia AI`;
@@ -98,9 +98,12 @@ import { metricPopup } from './components/metric-popup.js';
     // Update title
     document.title = title;
     
-    // Update meta description
+    // Update meta description (ottimizzato per AI)
     let metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.content = description;
+    
+    // Update keywords
+    updateMetaName('keywords', `Tradelia AI, ${ticker}, ${companyName}, analisi finanziaria, report finanziario, analisi tecnica, analisi fondamentale, trading, investimenti`);
     
     // Update Open Graph
     updateMetaProperty('og:title', title);
@@ -108,6 +111,7 @@ import { metricPopup } from './components/metric-popup.js';
     updateMetaProperty('og:url', url);
     updateMetaProperty('og:image', imageUrl);
     updateMetaProperty('og:image:alt', imageAlt);
+    updateMetaProperty('og:type', 'article');
     
     // Update Twitter Card
     updateMetaName('twitter:title', title);
@@ -115,6 +119,47 @@ import { metricPopup } from './components/metric-popup.js';
     updateMetaName('twitter:url', url);
     updateMetaName('twitter:image', imageUrl);
     updateMetaName('twitter:image:alt', imageAlt);
+    
+    // Update structured data (FinancialProduct)
+    updateFinancialProductStructuredData(ticker, companyName, description, url, version);
+  }
+  
+  // ===== UPDATE FINANCIAL PRODUCT STRUCTURED DATA =====
+  function updateFinancialProductStructuredData(ticker, companyName, description, url, version) {
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "FinancialProduct",
+      "name": `${companyName} (${ticker}) - Analisi Finanziaria`,
+      "description": description,
+      "provider": {
+        "@type": "Organization",
+        "name": "Tradelia AI",
+        "url": "https://tradelia.org"
+      },
+      "tickerSymbol": ticker,
+      "url": url,
+      "datePublished": new Date().toISOString(),
+      "category": "Financial Analysis",
+      "applicationCategory": "FinanceApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR"
+      }
+    };
+    
+    // Rimuovi structured data esistente
+    const existing = document.querySelector('script[type="application/ld+json"]#structured-data');
+    if (existing) {
+      existing.remove();
+    }
+    
+    // Inietta nuovo structured data
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = 'structured-data';
+    script.textContent = JSON.stringify(structuredData, null, 2);
+    document.head.appendChild(script);
   }
   
   function updateMetaProperty(property, content) {
