@@ -34,6 +34,7 @@
   
   <!-- Stylesheet -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/report/assets/css/glossary-popup.css" />
   
   <style>
     /* ===== LAYOUT BASE ===== */
@@ -299,182 +300,34 @@
     }
     
     /* ===== POPUP DRAWER ===== */
-    .glossary-popup-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(4px);
-      transition: opacity var(--transition-base);
-    }
-    
-    .glossary-popup-overlay[hidden] {
-      display: none !important;
-    }
-    
-    .glossary-popup-panel {
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      max-width: 520px;
-      background: var(--surface-card);
-      border-left: 1px solid rgba(255, 255, 255, 0.06);
-      box-shadow: 
-        -4px 0 20px rgba(0, 0, 0, 0.5),
-        0 1px 0 rgba(255, 255, 255, 0.02) inset;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      transform: translateX(100%);
-      transition: transform var(--transition-slow);
-    }
-    
-    .glossary-popup-overlay:not([hidden]) .glossary-popup-panel {
-      transform: translateX(0);
-    }
-    
-    @media (max-width: 768px) {
-      .glossary-popup-panel {
-        top: auto;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        max-width: 100%;
-        max-height: 85vh;
-        border-left: none;
-        border-top: 1px solid rgba(255, 255, 255, 0.06);
-        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-        transform: translateY(100%);
-      }
-      
-      .glossary-popup-overlay:not([hidden]) .glossary-popup-panel {
-        transform: translateY(0);
-      }
-    }
-    
-    .glossary-popup-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: var(--sp-4);
-      padding: var(--sp-6);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      background: var(--surface-card);
-      flex-shrink: 0;
-    }
-    
-    .glossary-popup-header-content {
-      flex: 1;
-      min-width: 0;
-    }
-    
-    .glossary-popup-title {
-      font-size: var(--fs-20);
-      font-weight: 600;
-      color: var(--ink);
-      margin: 0 0 var(--sp-3) 0;
-      line-height: var(--lh-12);
-      letter-spacing: -0.01em;
-    }
-    
+    /* Stili importati da /report/assets/css/glossary-popup.css */
+    /* Stili custom per tag personalizzati */
     .glossary-popup-tag {
       display: inline-flex;
-      padding: var(--sp-1_5) var(--sp-3);
+      padding: var(--sp-1) var(--sp-2_5);
       font-size: var(--fs-11);
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      border-radius: var(--radius-pill);
+      border-radius: var(--radius-sm);
     }
     
     .glossary-popup-tag--finanza-base {
+      background: rgba(96, 165, 250, 0.15);
       color: rgba(96, 165, 250, 0.9);
-      background: rgba(96, 165, 250, 0.1);
       border: 1px solid rgba(96, 165, 250, 0.2);
     }
     
     .glossary-popup-tag--investimenti {
+      background: rgba(34, 197, 94, 0.15);
       color: rgba(34, 197, 94, 0.9);
-      background: rgba(34, 197, 94, 0.1);
       border: 1px solid rgba(34, 197, 94, 0.2);
     }
     
     .glossary-popup-tag--trading {
+      background: rgba(251, 146, 60, 0.15);
       color: rgba(251, 146, 60, 0.9);
-      background: rgba(251, 146, 60, 0.1);
       border: 1px solid rgba(251, 146, 60, 0.2);
-    }
-    
-    .glossary-popup-close {
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: var(--radius-sm);
-      background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      color: var(--muted);
-      font-size: 18px;
-      line-height: 1;
-      cursor: pointer;
-      transition: all var(--transition-fast);
-      flex-shrink: 0;
-    }
-    
-    .glossary-popup-close:hover {
-      background: rgba(255, 255, 255, 0.04);
-      border-color: rgba(255, 255, 255, 0.08);
-      color: var(--ink-soft);
-    }
-    
-    .glossary-popup-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: var(--sp-6);
-      display: flex;
-      flex-direction: column;
-      gap: var(--sp-6);
-    }
-    
-    .glossary-popup-section {
-      display: flex;
-      flex-direction: column;
-      gap: var(--sp-2);
-    }
-    
-    .glossary-popup-section-title {
-      font-size: var(--fs-11);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--ink-soft);
-      margin-bottom: var(--sp-2);
-    }
-    
-    .glossary-popup-section-text {
-      font-size: var(--fs-14);
-      line-height: var(--lh-17);
-      color: var(--ink-soft);
-      margin: 0;
-    }
-    
-    .glossary-popup-source {
-      font-size: var(--fs-12);
-      line-height: var(--lh-16);
-      color: var(--muted);
-      font-style: italic;
-      margin-top: var(--sp-4);
-      padding-top: var(--sp-5);
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-    }
-    
-    .glossary-popup-source strong {
-      color: var(--ink-soft);
-      font-weight: 600;
-      font-style: normal;
     }
     
     .empty-state {
@@ -569,6 +422,7 @@
   
   <script type="module">
     import Logger from '/report/assets/js/utils/logger.js';
+    import { registerOverlay, unregisterOverlay, OVERLAY_TYPES } from '/report/assets/js/utils/overlay-manager.js';
     
     // ===== STATE =====
     let glossaryData = {};
@@ -576,14 +430,17 @@
     let filteredTerms = [];
     let activeFilter = 'all';
     let searchQuery = '';
+    const OVERLAY_ID = 'glossary-popup';
     
     // ===== MAPPATURA TAG =====
     // Funzione per assegnare tag in base al contenuto/nome della metrica
     function assignTag(key, term) {
-      const title = (term.title || key).toLowerCase();
-      const what = (term.what || '').toLowerCase();
-      const how = (term.how || '').toLowerCase();
-      const content = `${key} ${title} ${what} ${how}`.toLowerCase();
+      // Supporta sia formato nuovo che vecchio
+      const title = (term.nomeTecnico || term.title || key).toLowerCase();
+      const what = (term.definizioneAccademica || term.what || '').toLowerCase();
+      const how = (term.spiegazioneAI || term.how || '').toLowerCase();
+      const universo = (term.universo || '').toLowerCase();
+      const content = `${key} ${title} ${what} ${how} ${universo}`.toLowerCase();
       
       // Regole specifiche per chiavi che iniziano con pattern noti (più precise)
       const keyUpper = key.toUpperCase();
@@ -732,7 +589,8 @@
         
         // Crea array di termini con tag assegnati e ordina alfabeticamente
         allTerms = Object.entries(terms).map(([key, term]) => {
-          const title = term.title || key;
+          // Supporta sia formato nuovo (nomeTecnico) che vecchio (title)
+          const title = term.nomeTecnico || term.title || key;
           const tag = assignTag(key, term);
           return {
             key,
@@ -788,12 +646,10 @@
           const searchableText = [
             key.toLowerCase(),
             title.toLowerCase(),
-            (term.what || '').toLowerCase(),
-            (term.how || '').toLowerCase(),
-            (term.source || '').toLowerCase(),
-            (term.definizioneAccademica || '').toLowerCase(),
-            (term.spiegazioneAI || '').toLowerCase(),
-            (term.fonteAccademica || '').toLowerCase()
+            (term.nomeTecnico || '').toLowerCase(),
+            (term.what || term.definizioneAccademica || '').toLowerCase(),
+            (term.how || term.spiegazioneAI || '').toLowerCase(),
+            (term.source || term.fonteAccademica || '').toLowerCase()
           ].join(' ');
           
           if (!searchableText.includes(searchQuery)) {
@@ -850,71 +706,109 @@
       const overlay = document.getElementById('glossary-popup-overlay');
       const panel = overlay.querySelector('.glossary-popup-panel');
       
-      const tagClass = tag.toLowerCase().replace(' ', '-');
-      const what = term.what || term.definizioneAccademica || '';
-      const how = term.how || term.spiegazioneAI || '';
-      const source = term.source || term.fonteAccademica || '';
+      // Supporta sia formato nuovo che vecchio
+      const nomeTecnico = term.nomeTecnico || term.title || title;
+      const universo = term.universo || tag;
+      const difficolta = term.difficolta || '';
       
+      // Supporta sia formato nuovo (definizioneAccademica/spiegazioneAI) che vecchio (what/how)
+      const definizioneAccademica = term.definizioneAccademica || term.what || '';
+      const spiegazioneAI = term.spiegazioneAI || term.how || '';
+      const fonteAccademica = term.fonteAccademica || term.source || '';
+      
+      const tagClass = tag.toLowerCase().replace(' ', '-');
+      
+      // HTML identico a quello dei report
       panel.innerHTML = `
         <header class="glossary-popup-header">
           <div class="glossary-popup-header-content">
-            <h2 id="glossary-popup-title" class="glossary-popup-title">${escapeHtml(title)}</h2>
-            <span class="glossary-popup-tag glossary-popup-tag--${tagClass}">${escapeHtml(tag)}</span>
+            <h2 id="glossary-popup-title" class="glossary-popup-title">${escapeHtml(nomeTecnico)}</h2>
+            <div class="glossary-popup-badges">
+              ${universo ? `
+                <span class="glossary-popup-badge glossary-popup-tag glossary-popup-tag--${tagClass}">${escapeHtml(universo)}</span>
+              ` : ''}
+              ${difficolta ? `
+                <span class="glossary-popup-badge glossary-popup-badge--difficolta ${difficolta.toLowerCase()}">${escapeHtml(difficolta)}</span>
+              ` : ''}
+            </div>
           </div>
           <button class="glossary-popup-close" aria-label="Chiudi" type="button">×</button>
         </header>
         <div class="glossary-popup-body">
-          ${what ? `
+          ${definizioneAccademica ? `
             <div class="glossary-popup-section">
-              <h3 class="glossary-popup-section-title">Cosa</h3>
-              <p class="glossary-popup-section-text">${escapeHtml(what)}</p>
+              <h3 class="glossary-popup-section-title">Definizione Accademica</h3>
+              <p class="glossary-popup-section-text">${escapeHtml(definizioneAccademica)}</p>
             </div>
           ` : ''}
           
-          ${how ? `
+          ${spiegazioneAI ? `
             <div class="glossary-popup-section">
-              <h3 class="glossary-popup-section-title">Come</h3>
-              <p class="glossary-popup-section-text">${escapeHtml(how)}</p>
+              <h3 class="glossary-popup-section-title">Spiegazione AI</h3>
+              <p class="glossary-popup-section-text">${escapeHtml(spiegazioneAI)}</p>
             </div>
           ` : ''}
           
-          ${source ? `
-            <div class="glossary-popup-source">
-              <strong>Fonte:</strong> ${escapeHtml(source)}
+          ${fonteAccademica ? `
+            <div class="glossary-popup-section">
+              <h3 class="glossary-popup-section-title">Fonte</h3>
+              <p class="glossary-popup-section-text glossary-popup-source">${escapeHtml(fonteAccademica)}</p>
+            </div>
+          ` : ''}
+          
+          ${!definizioneAccademica && !spiegazioneAI && !fonteAccademica ? `
+            <div class="glossary-popup-section">
+              <p class="glossary-popup-section-text">Nessuna informazione disponibile nel glossario per questo termine.</p>
             </div>
           ` : ''}
         </div>
+        <footer class="glossary-popup-footer">
+          <button class="glossary-popup-close-bottom" type="button">Chiudi</button>
+        </footer>
       `;
       
-      // Close handlers
+      // Close handlers (stesso sistema dei report)
       const closeBtn = panel.querySelector('.glossary-popup-close');
+      const closeBtnBottom = panel.querySelector('.glossary-popup-close-bottom');
+      
       if (closeBtn) {
         closeBtn.addEventListener('click', () => closeTermDrawer());
+      }
+      if (closeBtnBottom) {
+        closeBtnBottom.addEventListener('click', () => closeTermDrawer());
       }
       
       overlay.addEventListener('click', (e) => {
         if (e.target === overlay) closeTermDrawer();
       });
       
-      // ESC to close
-      const escHandler = (e) => {
-        if (e.key === 'Escape') {
+      // Listener per close request dall'overlay manager (ESC key)
+      overlay.addEventListener('overlay-close-request', (e) => {
+        if (e.detail.id === OVERLAY_ID) {
           closeTermDrawer();
-          document.removeEventListener('keydown', escHandler);
         }
-      };
-      document.addEventListener('keydown', escHandler);
+      });
       
+      // Apri drawer (stesso sistema dei report)
       overlay.hidden = false;
-      document.body.style.overflow = 'hidden';
+      // NOTA: overflow gestito da overlay-manager.js (non impostare qui)
+      
+      // Registra overlay nello stack (gestisce z-index e overflow)
+      registerOverlay(OVERLAY_ID, OVERLAY_TYPES.GLOSSARY, overlay, panel);
       
       Logger.debug('Glossario', `Drawer aperto per termine: ${key}`);
     }
     
     function closeTermDrawer() {
       const overlay = document.getElementById('glossary-popup-overlay');
+      if (!overlay || overlay.hidden) return;
+      
       overlay.hidden = true;
-      document.body.style.overflow = '';
+      // NOTA: overflow gestito da overlay-manager.js (non impostare qui)
+      
+      // Rimuovi overlay dallo stack (gestisce anche overflow)
+      unregisterOverlay(OVERLAY_ID);
+      
       Logger.debug('Glossario', 'Drawer chiuso');
     }
     
