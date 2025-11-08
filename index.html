@@ -1087,6 +1087,30 @@
     </div>
   </section>
 
+  <!-- ===== COLLABORATORS SECTION ===== -->
+  <section class="collaborators-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Collaboratori Tradelia AI</h2>
+        <p class="section-description">
+          Una <strong>rete selezionata</strong> di gruppi, piattaforme e consulenti finanziari che condividono 
+          la nostra visione di <strong>educazione finanziaria trasparente</strong> e basata su dati.
+        </p>
+      </div>
+      
+      <div style="text-align: center; margin-top: var(--sp-8);">
+        <button onclick="apriModalCollaboratori()" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px;">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Esplora i Collaboratori
+        </button>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== BROKERS SECTION ===== -->
   <section class="brokers-section">
     <div class="container">
@@ -3248,6 +3272,213 @@ Vuoi procedere inviando i dati?`;
       } catch(e) {}
       // Non bloccare automaticamente su homepage, solo se cliccato dai pulsanti
     })();
+  </script>
+
+  <!-- ===== MODAL COLLABORATORS ===== -->
+  <div id="modal-collaboratori" class="hidden" role="dialog" aria-modal="true" aria-labelledby="modal-collaboratori-title">
+    <div class="modal-collaboratori-content">
+      <div class="modal-collaboratori-header">
+        <h3 class="modal-collaboratori-title" id="modal-collaboratori-title">Collaboratori Tradelia AI</h3>
+        <button class="modal-collaboratori-close" onclick="chiudiModalCollaboratori()" aria-label="Chiudi">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px;">
+            <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-collaboratori-body">
+        <div class="collaborators-tabs">
+          <button class="collaborator-tab active" onclick="switchCollaboratorTab('facebook')">Gruppi Facebook</button>
+          <button class="collaborator-tab" onclick="switchCollaboratorTab('piattaforme')">Piattaforme</button>
+          <button class="collaborator-tab" onclick="switchCollaboratorTab('consulenti')">Consulenti Finanziari</button>
+        </div>
+
+        <!-- Panel Gruppi Facebook -->
+        <div id="panel-facebook" class="collaborator-panel active">
+          <div class="collaborators-grid">
+            <div class="collaborator-card">
+              <div class="collaborator-card-icon">
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px;">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <h4 class="collaborator-card-title">Trading Community Italia</h4>
+              <p class="collaborator-card-description">
+                Community attiva di trader italiani per condividere analisi, strategie e insights sui mercati finanziari.
+              </p>
+              <a href="#" target="_blank" rel="noopener noreferrer" class="collaborator-card-link">
+                Visita il Gruppo
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
+                  <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+
+            <div class="collaborator-card">
+              <div class="collaborator-card-icon">
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px;">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <h4 class="collaborator-card-title">Investimenti Consapevoli</h4>
+              <p class="collaborator-card-description">
+                Gruppo dedicato all'educazione finanziaria e agli investimenti responsabili, con focus su analisi fondamentali.
+              </p>
+              <a href="#" target="_blank" rel="noopener noreferrer" class="collaborator-card-link">
+                Visita il Gruppo
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
+                  <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel Piattaforme -->
+        <div id="panel-piattaforme" class="collaborator-panel">
+          <div class="collaborators-grid">
+            <div class="collaborator-card">
+              <div class="collaborator-card-icon">
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px;">
+                  <rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+              </div>
+              <h4 class="collaborator-card-title">Piattaforma Partner A</h4>
+              <p class="collaborator-card-description">
+                Broker regolamentato con focus su strumenti diretti, commissioni competitive e piattaforma professionale.
+              </p>
+              <a href="#" target="_blank" rel="noopener noreferrer" class="collaborator-card-link">
+                Scopri di Più
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
+                  <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+
+            <div class="collaborator-card">
+              <div class="collaborator-card-icon">
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px;">
+                  <rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+              </div>
+              <h4 class="collaborator-card-title">Piattaforma Partner B</h4>
+              <p class="collaborator-card-description">
+                Exchange regolamentato per trading di strumenti finanziari con analisi integrate e strumenti avanzati.
+              </p>
+              <a href="#" target="_blank" rel="noopener noreferrer" class="collaborator-card-link">
+                Scopri di Più
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
+                  <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel Consulenti Finanziari -->
+        <div id="panel-consulenti" class="collaborator-panel">
+          <div class="collaborators-grid">
+            <div class="collaborator-card">
+              <div class="collaborator-card-icon">
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px;">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+              </div>
+              <h4 class="collaborator-card-title">Consulente Finanziario A</h4>
+              <p class="collaborator-card-description">
+                Consulente finanziario indipendente specializzato in pianificazione finanziaria e gestione patrimoniale.
+              </p>
+              <a href="#" target="_blank" rel="noopener noreferrer" class="collaborator-card-link">
+                Contatta
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
+                  <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+
+            <div class="collaborator-card">
+              <div class="collaborator-card-icon">
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px;">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+              </div>
+              <h4 class="collaborator-card-title">Consulente Finanziario B</h4>
+              <p class="collaborator-card-description">
+                Esperto in analisi di mercato e strategie di investimento per privati e piccole imprese.
+              </p>
+              <a href="#" target="_blank" rel="noopener noreferrer" class="collaborator-card-link">
+                Contatta
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
+                  <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== MODAL COLLABORATORS FUNCTIONS =====
+    function apriModalCollaboratori() {
+      const modal = document.getElementById('modal-collaboratori');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function chiudiModalCollaboratori() {
+      const modal = document.getElementById('modal-collaboratori');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    function switchCollaboratorTab(tabName) {
+      // Rimuovi active da tutti i tab
+      document.querySelectorAll('.collaborator-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Rimuovi active da tutti i panel
+      document.querySelectorAll('.collaborator-panel').forEach(panel => {
+        panel.classList.remove('active');
+      });
+      
+      // Aggiungi active al tab cliccato
+      const tabs = document.querySelectorAll('.collaborator-tab');
+      const tabIndex = tabName === 'facebook' ? 0 : tabName === 'piattaforme' ? 1 : 2;
+      if (tabs[tabIndex]) tabs[tabIndex].classList.add('active');
+      
+      // Mostra il panel corrispondente
+      const panel = document.getElementById(`panel-${tabName}`);
+      if (panel) panel.classList.add('active');
+    }
+
+    // Chiudi modal cliccando sull'overlay
+    document.getElementById('modal-collaboratori')?.addEventListener('click', (e) => {
+      if (e.target.id === 'modal-collaboratori') {
+        chiudiModalCollaboratori();
+      }
+    });
+
+    // Chiudi modal con ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('modal-collaboratori');
+        if (modal && !modal.classList.contains('hidden')) {
+          chiudiModalCollaboratori();
+        }
+      }
+    });
   </script>
 
 </body>
