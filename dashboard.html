@@ -18,156 +18,295 @@
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
   
   <style>
+    /* ===== ACADEMIC DESIGN SYSTEM - COHERENT WITH TRADELIA ===== */
+    :root {
+      /* Use design system tokens as base */
+      --dash-bg: var(--surface-page, #0f0f0f);
+      --dash-surface: var(--surface-card, #181818);
+      --dash-surface-elev: var(--surface-elev, #202020);
+      --dash-border: var(--br-card, #323232);
+      --dash-border-strong: var(--br-strong, #3e3e3e);
+      --dash-text: var(--ink, #ffffff);
+      --dash-text-soft: var(--ink-soft, #f0f0f0);
+      --dash-text-muted: var(--muted, #b8b8b8);
+      --dash-accent: var(--brand-600, #2563eb);
+      --dash-accent-hover: var(--brand-400, #60a5fa);
+      --dash-accent-bg: rgba(37, 99, 235, 0.12);
+    }
+    
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
     }
     
     body {
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      background: var(--surface-page);
-      color: var(--ink);
-      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-      font-size: 13px;
-      line-height: 1.6;
+      background: var(--dash-bg);
+      color: var(--dash-text);
+      /* Academic typography: Inter for UI, monospace for data */
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.7;
+      letter-spacing: -0.011em;
+      font-feature-settings: 'kern' 1, 'liga' 1;
     }
     
     main {
       flex: 1;
       padding-top: 64px;
-      padding-bottom: 0;
-      background: var(--surface-page);
-      color: var(--ink);
+      padding-bottom: 4rem;
+      background: var(--dash-bg);
+      color: var(--dash-text);
     }
     
     .container {
-      max-width: 1200px;
+      max-width: 1400px;
       margin-inline: auto;
-      padding-inline: 1.5rem;
+      padding-inline: 2.5rem;
     }
     
-    /* ===== SECTION TOGGLE ===== */
+    /* ===== ACADEMIC TYPOGRAPHY HIERARCHY ===== */
+    h1, h2, h3, h4 {
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: var(--dash-text);
+    }
+    
+    /* Monospace for technical data only */
+    .mono {
+      font-family: var(--ff-mono, 'SF Mono', 'Monaco', 'Consolas', monospace);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0;
+    }
+    
+    /* ===== SECTION TOGGLE - ACADEMIC REFINED ===== */
     .section-toggle {
-      display: flex;
+      display: inline-flex;
       gap: 0;
-      margin-bottom: 2rem;
-      border-bottom: 1px solid var(--br-card);
+      margin-bottom: 3rem;
+      border-bottom: 1px solid var(--dash-border);
       font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
     }
     
     .section-toggle-btn {
-      padding: 0.5rem 1rem;
+      position: relative;
+      padding: 0.875rem 2rem;
       background: transparent;
       border: none;
       border-bottom: 2px solid transparent;
-      color: var(--ink-soft);
+      color: var(--dash-text-muted);
       cursor: pointer;
       font-family: inherit;
       font-size: inherit;
-      transition: all 0.2s;
+      font-weight: 600;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-bottom: -1px;
+    }
+    
+    .section-toggle-btn::before {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--dash-accent);
+      transform: scaleX(0);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     .section-toggle-btn:hover {
-      color: var(--ink);
+      color: var(--dash-text);
       background: rgba(255, 255, 255, 0.02);
     }
     
     .section-toggle-btn.active {
-      color: var(--brand-400);
-      border-bottom-color: var(--brand-400);
+      color: var(--dash-accent);
+      border-bottom-color: var(--dash-accent);
     }
     
-    /* ===== COMPACT LIST STYLE ===== */
+    .section-toggle-btn.active::before {
+      transform: scaleX(1);
+    }
+    
+    /* ===== ACADEMIC LIST STYLE - REFINED & READABLE ===== */
     .tech-list {
       list-style: none;
       padding: 0;
       margin: 0;
+      background: var(--dash-surface);
+      border: 1px solid var(--dash-border);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     }
     
     .tech-list-item {
-      padding: 0.5rem 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      display: flex;
-      align-items: baseline;
-      gap: 1rem;
-      font-size: 12px;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--dash-border);
+      display: grid;
+      grid-template-columns: 150px 2fr 150px 220px;
+      gap: 2rem;
+      align-items: center;
+      font-size: 13px;
+      line-height: 1.6;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      min-height: 3.5rem;
     }
     
     .tech-list-item:last-child {
       border-bottom: none;
     }
     
+    .tech-list-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--dash-accent);
+      transform: scaleY(0);
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0.8;
+    }
+    
     .tech-list-item:hover {
-      background: rgba(255, 255, 255, 0.02);
-      margin: 0 -0.5rem;
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
+      border-color: var(--dash-border-strong);
+    }
+    
+    .tech-list-item:hover::before {
+      transform: scaleY(1);
     }
     
     .tech-link {
-      color: var(--brand-400);
+      color: var(--dash-accent);
       text-decoration: none;
-      flex: 1;
+      font-weight: 600;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      letter-spacing: -0.01em;
     }
     
     .tech-link:hover {
-      color: var(--brand-300);
-      text-decoration: underline;
+      color: var(--dash-accent-hover);
+    }
+    
+    .tech-link::after {
+      content: '→';
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      color: var(--dash-accent);
+      font-weight: 400;
+    }
+    
+    .tech-list-item:hover .tech-link::after {
+      opacity: 1;
+      transform: translateX(0);
     }
     
     .tech-meta {
-      color: var(--ink-soft);
-      font-size: 11px;
+      color: var(--dash-text-soft);
+      font-size: 12px;
       white-space: nowrap;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
     }
     
     .tech-id {
-      color: var(--muted);
-      font-family: 'Consolas', monospace;
+      color: var(--dash-text-muted);
+      font-family: var(--ff-mono, 'SF Mono', 'Monaco', 'Consolas', monospace);
       font-size: 11px;
-      min-width: 120px;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.03em;
     }
     
     .tech-separator {
-      color: var(--muted);
-      margin: 0 0.25rem;
+      color: var(--dash-text-muted);
+      margin: 0;
+      opacity: 0.3;
+      font-weight: 300;
     }
     
-    /* ===== REPORT SECTION ===== */
+    .tech-company {
+      color: var(--dash-text-soft);
+      font-size: 12px;
+      font-style: italic;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      opacity: 0.85;
+    }
+    
+    /* ===== REPORT SECTION - ACADEMIC ===== */
     .report-section {
       display: none;
+      animation: fadeIn 0.4s ease-out;
     }
     
     .report-section.active {
       display: block;
     }
     
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
     .report-header {
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--br-card);
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--dash-border);
     }
     
     .report-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--ink);
-      margin: 0 0 0.5rem;
-      letter-spacing: -0.01em;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--dash-text);
+      margin: 0 0 0.75rem;
+      letter-spacing: -0.025em;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
     }
     
     .report-description {
-      font-size: 11px;
-      color: var(--ink-soft);
+      font-size: 13px;
+      color: var(--dash-text-soft);
       margin: 0;
+      line-height: 1.7;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      max-width: 65ch;
     }
     
-    /* ===== TUTORIAL SECTION ===== */
+    /* ===== TUTORIAL SECTION - ACADEMIC ===== */
     .tutorial-section {
       display: none;
+      animation: fadeIn 0.4s ease-out;
     }
     
     .tutorial-section.active {
@@ -175,114 +314,525 @@
     }
     
     .tutorial-header {
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--br-card);
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--dash-border);
     }
     
     .tutorial-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--ink);
-      margin: 0 0 0.5rem;
-      letter-spacing: -0.01em;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--dash-text);
+      margin: 0 0 0.75rem;
+      letter-spacing: -0.025em;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
     }
     
     .tutorial-description {
-      font-size: 11px;
-      color: var(--ink-soft);
+      font-size: 13px;
+      color: var(--dash-text-soft);
       margin: 0;
+      line-height: 1.7;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      max-width: 65ch;
     }
     
     .tutorial-category {
-      margin-bottom: 2rem;
+      margin-bottom: 3rem;
+    }
+    
+    .tutorial-category:last-child {
+      margin-bottom: 0;
     }
     
     .tutorial-category-title {
       font-size: 13px;
-      font-weight: 600;
-      color: var(--brand-400);
-      margin: 0 0 0.75rem;
+      font-weight: 700;
+      color: var(--dash-accent);
+      margin: 0 0 1.25rem;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+    }
+    
+    .tutorial-category-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--dash-border), transparent);
     }
     
     .tutorial-list {
       list-style: none;
       padding: 0;
-      margin: 0 0 0 1rem;
+      margin: 0;
+      background: var(--dash-surface);
+      border: 1px solid var(--dash-border);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     }
     
     .tutorial-item {
-      padding: 0.4rem 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      padding: 0.875rem 1.25rem;
+      border-bottom: 1px solid var(--dash-border);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     .tutorial-item:last-child {
       border-bottom: none;
     }
     
+    .tutorial-item:hover {
+      background: var(--dash-surface-elev);
+    }
+    
     .tutorial-link {
-      color: var(--ink);
+      color: var(--dash-text);
       text-decoration: none;
-      font-size: 12px;
+      font-size: 13px;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: all 0.2s;
+      line-height: 1.6;
     }
     
-    .tutorial-link:hover {
-      color: var(--brand-400);
-      text-decoration: underline;
+    .tutorial-link::before {
+      content: '→';
+      color: var(--dash-accent);
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 400;
     }
     
-    /* ===== LOADING ===== */
+    .tutorial-item:hover .tutorial-link {
+      color: var(--dash-accent);
+    }
+    
+    .tutorial-item:hover .tutorial-link::before {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    /* ===== LOADING - ACADEMIC ===== */
     .loading {
-      padding: 2rem;
+      padding: 4rem;
       text-align: center;
-      color: var(--ink-soft);
-      font-size: 11px;
+      color: var(--dash-text-soft);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
     }
     
     .loading-spinner {
       display: inline-block;
       width: 16px;
       height: 16px;
-      border: 2px solid var(--br-card);
-      border-top-color: var(--brand-400);
+      border: 2px solid var(--dash-border);
+      border-top-color: var(--dash-accent);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
-      margin-right: 0.5rem;
     }
     
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
     
-    /* ===== EMPTY STATE ===== */
+    /* ===== EMPTY STATE - ACADEMIC ===== */
     .empty-state {
-      padding: 2rem;
+      padding: 4rem;
       text-align: center;
-      color: var(--ink-soft);
-      font-size: 11px;
+      color: var(--dash-text-muted);
+      font-size: 13px;
+      font-style: italic;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      line-height: 1.7;
     }
     
-    /* ===== HEADER COMPACT ===== */
+    /* ===== HEADER - ACADEMIC ===== */
     .dashboard-header {
-      padding: 2rem 0 1rem;
-      border-bottom: 1px solid var(--br-card);
-      margin-bottom: 1.5rem;
+      padding: 3rem 0 2rem;
+      border-bottom: 2px solid var(--dash-border);
+      margin-bottom: 2.5rem;
     }
     
     .dashboard-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--ink);
-      margin: 0 0 0.25rem;
-      letter-spacing: -0.01em;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--dash-text);
+      margin: 0 0 0.75rem;
+      letter-spacing: -0.03em;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      line-height: 1.2;
     }
     
     .dashboard-subtitle {
-      font-size: 11px;
-      color: var(--ink-soft);
+      font-size: 13px;
+      color: var(--dash-text-soft);
       margin: 0;
+      letter-spacing: 0.03em;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .dashboard-subtitle::before {
+      content: '─';
+      color: var(--dash-text-muted);
+      opacity: 0.3;
+      font-weight: 300;
+    }
+    
+    /* ===== STATS BAR - ACADEMIC ===== */
+    .stats-bar {
+      display: flex;
+      gap: 2.5rem;
+      margin-bottom: 2rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--dash-border);
+      font-size: 13px;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+    }
+    
+    .stat-item {
+      display: flex;
+      align-items: baseline;
+      gap: 0.625rem;
+      color: var(--dash-text-soft);
+    }
+    
+    .stat-value {
+      color: var(--dash-accent);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      font-family: var(--ff-mono, 'SF Mono', 'Monaco', 'Consolas', monospace);
+      font-size: 16px;
+      letter-spacing: -0.01em;
+    }
+    
+    .stat-label {
+      color: var(--dash-text-muted);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+    }
+    
+    /* ===== SEARCH BAR - ACADEMIC ===== */
+    .search-container {
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 1rem 1.25rem 1rem 3rem;
+      background: var(--dash-surface);
+      border: 1.5px solid var(--dash-border);
+      border-radius: 8px;
+      color: var(--dash-text);
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      font-size: 14px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      line-height: 1.5;
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: var(--dash-accent);
+      background: var(--dash-surface-elev);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+    }
+    
+    .search-input::placeholder {
+      color: var(--dash-text-muted);
+      opacity: 0.7;
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--dash-text-muted);
+      font-size: 16px;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+    
+    .search-results-count {
+      position: absolute;
+      right: 5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--dash-text-muted);
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+      font-family: var(--ff-mono, 'SF Mono', 'Monaco', 'Consolas', monospace);
+    }
+    
+    
+    /* ===== SORT CONTROLS - ACADEMIC ===== */
+    .sort-controls {
+      display: flex;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+      align-items: center;
+      font-size: 13px;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+    }
+    
+    .sort-label {
+      color: var(--dash-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    
+    .sort-btn {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 1.5px solid var(--dash-border);
+      border-radius: 6px;
+      color: var(--dash-text-soft);
+      cursor: pointer;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .sort-btn:hover {
+      border-color: var(--dash-accent);
+      color: var(--dash-text);
+      background: rgba(37, 99, 235, 0.05);
+    }
+    
+    .sort-btn.active {
+      background: var(--dash-accent-bg);
+      border-color: var(--dash-accent);
+      color: var(--dash-accent);
+      font-weight: 600;
+    }
+    
+    /* ===== KEYBOARD SHORTCUT HINT - ACADEMIC ===== */
+    .shortcut-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.625rem;
+      background: var(--dash-surface);
+      border: 1px solid var(--dash-border);
+      border-radius: 5px;
+      font-size: 11px;
+      color: var(--dash-text-muted);
+      font-family: var(--ff-mono, 'SF Mono', 'Monaco', 'Consolas', monospace);
+      transition: all 0.2s;
+    }
+    
+    .shortcut-key {
+      padding: 0.2rem 0.4rem;
+      background: var(--dash-surface-elev);
+      border-radius: 3px;
+      font-weight: 600;
+      color: var(--dash-text-soft);
+    }
+    
+    /* ===== INNOVATIVE TOUCHES ===== */
+    .tech-list-item {
+      counter-increment: list-item;
+    }
+    
+    .tech-list {
+      counter-reset: list-item;
+    }
+    
+    /* Subtle gradient on hover for depth - combined with existing hover */
+    .tech-list-item:hover {
+      background: linear-gradient(90deg, var(--dash-surface-elev) 0%, rgba(32, 32, 32, 0.5) 100%);
+    }
+    
+    /* Academic citation-style for IDs */
+    .tech-id::before {
+      content: '[';
+      opacity: 0.4;
+      margin-right: 0.125rem;
+    }
+    
+    .tech-id::after {
+      content: ']';
+      opacity: 0.4;
+      margin-left: 0.125rem;
+    }
+    
+    
+    /* Subtle shadow elevation on cards */
+    .tech-list,
+    .tutorial-list {
+      box-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+    }
+    
+    /* Academic section divider */
+    .report-header::after,
+    .tutorial-header::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 2px;
+      background: var(--dash-accent);
+      margin-top: 1rem;
+      opacity: 0.6;
+    }
+    
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 968px) {
+      .tech-list-item {
+        grid-template-columns: 120px 2fr 120px 180px;
+        gap: 1.25rem;
+        font-size: 12px;
+        padding: 0.875rem 1rem;
+      }
+      
+      .tech-id {
+        font-size: 10px;
+      }
+      
+      .tech-meta {
+        font-size: 11px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding-inline: 1.5rem;
+      }
+      
+      .dashboard-header {
+        padding: 2rem 0 1.25rem;
+      }
+      
+      .dashboard-title {
+        font-size: 24px;
+      }
+      
+      .list-header {
+        display: none !important;
+      }
+      
+      .tech-list-item {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        padding: 1.25rem;
+        min-height: auto;
+      }
+      
+      .tech-id {
+        font-size: 10px;
+        order: -1;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--dash-border);
+      }
+      
+      .tech-meta {
+        font-size: 11px;
+      }
+      
+      .section-toggle {
+        font-size: 11px;
+        margin-bottom: 2rem;
+      }
+      
+      .section-toggle-btn {
+        padding: 0.625rem 1.25rem;
+      }
+      
+      .search-input {
+        padding: 0.875rem 1rem 0.875rem 2.75rem;
+        font-size: 14px;
+      }
+    }
+    
+    /* ===== SCROLLBAR STYLING - REFINED ===== */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: var(--dash-bg);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: var(--dash-border);
+      border-radius: 5px;
+      border: 2px solid var(--dash-bg);
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--dash-border-strong);
+    }
+    
+    /* ===== FOCUS VISIBLE - ACCESSIBILITY ===== */
+    *:focus-visible {
+      outline: 2px solid var(--dash-accent);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+    
+    /* ===== SELECTION STYLING - ACADEMIC ===== */
+    ::selection {
+      background: var(--dash-accent-bg);
+      color: var(--dash-accent-hover);
+    }
+    
+    /* ===== PRINT STYLES - ACADEMIC ===== */
+    @media print {
+      .section-toggle,
+      .search-container,
+      .sort-controls,
+      .shortcut-hint {
+        display: none !important;
+      }
+      
+      .tech-list-item {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+    }
+    
+    /* ===== ACCESSIBILITY ENHANCEMENTS ===== */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+      :root {
+        --dash-border: rgba(255, 255, 255, 0.2);
+        --dash-text-muted: #d0d0d0;
+      }
     }
     
     
@@ -400,6 +950,39 @@
           <h2 class="report-title">Report</h2>
           <p class="report-description">Framework Accademico AI Tradelia Swing Master 5.0 - Analisi multi-fattore</p>
         </div>
+        
+        <div class="stats-bar" id="reports-stats" style="display: none;">
+          <div class="stat-item">
+            <span class="stat-value" id="reports-count">0</span>
+            <span class="stat-label">Report</span>
+          </div>
+        </div>
+        
+        <div class="search-container">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            id="reports-search" 
+            class="search-input" 
+            placeholder="Cerca per ticker, azienda, ID o moduli..." 
+            autocomplete="off"
+          />
+          <span class="search-results-count" id="reports-search-count" style="display: none;"></span>
+          <div style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); pointer-events: none;">
+            <span class="shortcut-hint" id="reports-shortcut-hint">
+              <span class="shortcut-key" id="reports-shortcut-mod">⌘</span>
+              <span>K</span>
+            </span>
+          </div>
+        </div>
+        
+        <div class="sort-controls" id="reports-sort" style="display: none;">
+          <span class="sort-label">Ordina:</span>
+          <button class="sort-btn active" data-sort="date-desc">Data ↓</button>
+          <button class="sort-btn" data-sort="date-asc">Data ↑</button>
+          <button class="sort-btn" data-sort="ticker">Ticker</button>
+        </div>
+        
         <div id="reports-container">
           <div class="loading">
             <div class="loading-spinner"></div>
@@ -414,6 +997,36 @@
           <h2 class="tutorial-title">Tutorial</h2>
           <p class="tutorial-description">Trading, investimenti e analisi finanziaria</p>
         </div>
+        
+        <div class="stats-bar" id="tutorials-stats" style="display: none;">
+          <div class="stat-item">
+            <span class="stat-value" id="tutorials-count">0</span>
+            <span class="stat-label">Tutorial</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="tutorials-categories-count">0</span>
+            <span class="stat-label">Categorie</span>
+          </div>
+        </div>
+        
+        <div class="search-container">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            id="tutorials-search" 
+            class="search-input" 
+            placeholder="Cerca tutorial per titolo o categoria..." 
+            autocomplete="off"
+          />
+          <span class="search-results-count" id="tutorials-search-count" style="display: none;"></span>
+          <div style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); pointer-events: none;">
+            <span class="shortcut-hint" id="tutorials-shortcut-hint">
+              <span class="shortcut-key" id="tutorials-shortcut-mod">⌘</span>
+              <span>K</span>
+            </span>
+          </div>
+        </div>
+        
         <div id="tutorials-container">
           <div class="loading">
             <div class="loading-spinner"></div>
@@ -451,6 +1064,16 @@
   
   <!-- ===== DASHBOARD SCRIPTS ===== -->
   <script type="module">
+    // ===== STATE MANAGEMENT =====
+    const STATE = {
+      reports: [],
+      filteredReports: [],
+      tutorials: [],
+      filteredTutorials: {},
+      currentSort: 'date-desc',
+      currentSection: 'reports'
+    };
+    
     // ===== SECTION TOGGLE =====
     function initSectionToggle() {
       const toggleBtns = document.querySelectorAll('.section-toggle-btn');
@@ -460,6 +1083,7 @@
       toggleBtns.forEach(btn => {
         btn.addEventListener('click', () => {
           const section = btn.dataset.section;
+          STATE.currentSection = section;
           
           // Update buttons
           toggleBtns.forEach(b => b.classList.remove('active'));
@@ -469,16 +1093,62 @@
           if (section === 'reports') {
             reportSection.classList.add('active');
             tutorialSection.classList.remove('active');
+            // Focus search quando si passa ai report
+            setTimeout(() => document.getElementById('reports-search')?.focus(), 100);
           } else {
             reportSection.classList.remove('active');
             tutorialSection.classList.add('active');
+            // Focus search quando si passa ai tutorial
+            setTimeout(() => document.getElementById('tutorials-search')?.focus(), 100);
           }
         });
       });
     }
     
-    // Initialize toggle on load
+    // ===== KEYBOARD SHORTCUTS =====
+    function initKeyboardShortcuts() {
+      document.addEventListener('keydown', (e) => {
+        // Cmd/Ctrl + K per focus search
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          const activeSection = STATE.currentSection;
+          const searchInput = activeSection === 'reports' 
+            ? document.getElementById('reports-search')
+            : document.getElementById('tutorials-search');
+          if (searchInput) {
+            searchInput.focus();
+            searchInput.select();
+          }
+        }
+        
+        // Escape per clear search
+        if (e.key === 'Escape') {
+          const activeSearch = document.activeElement;
+          if (activeSearch && activeSearch.classList.contains('search-input')) {
+            activeSearch.value = '';
+            activeSearch.blur();
+            if (STATE.currentSection === 'reports') {
+              filterReports();
+            } else {
+              filterTutorials();
+            }
+          }
+        }
+      });
+    }
+    
+    // Initialize toggle and shortcuts
     initSectionToggle();
+    initKeyboardShortcuts();
+    
+    // Detect OS for shortcut hint
+    function updateShortcutHints() {
+      const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      const modKey = isMac ? '⌘' : 'Ctrl';
+      document.getElementById('reports-shortcut-mod').textContent = modKey;
+      document.getElementById('tutorials-shortcut-mod').textContent = modKey;
+    }
+    updateShortcutHints();
     
     // ===== REPORTS LOADER =====
     async function loadReports() {
@@ -597,50 +1267,214 @@
           }
         });
         
-        // Renderizza lista semplice
-        if (reports.length === 0) {
-          container.innerHTML = `<div class="empty-state">Nessun report disponibile</div>`;
-          return;
-        }
+        // Save reports to state
+        STATE.reports = reports;
+        STATE.filteredReports = [...reports];
         
-        const listHTML = `
-          <ul class="tech-list">
-            ${reports.map(report => {
-              let dateStr = report.timestamp;
-              
-              try {
-                const dateObj = new Date(report.timestamp);
-                if (!isNaN(dateObj.getTime())) {
-                  dateStr = dateObj.toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' });
-                }
-              } catch(e) {
-                // Usa timestamp originale se parsing fallisce
-              }
-              
-              const modulesStr = report.modules.length > 0 
-                ? report.modules.join(', ') 
-                : 'N/A';
-              
-              return `
-                <li class="tech-list-item">
-                  <span class="tech-id">${report.id}</span>
-                  <span class="tech-separator">|</span>
-                  <a href="${report.reportUrl}" class="tech-link">${report.ticker}</a>
-                  ${report.company ? `<span class="tech-meta">${report.company}</span>` : ''}
-                  <span class="tech-separator">|</span>
-                  <span class="tech-meta">${dateStr}</span>
-                  <span class="tech-separator">|</span>
-                  <span class="tech-meta">${modulesStr}</span>
-                </li>
-              `;
-            }).join('')}
-          </ul>
-        `;
+        // Render using dedicated function
+        renderReportsList(STATE.filteredReports);
         
-        container.innerHTML = listHTML;
+        // Update stats
+        updateReportsStats();
+        
+        // Show controls
+        document.getElementById('reports-stats').style.display = 'flex';
+        document.getElementById('reports-sort').style.display = 'flex';
+        
+        // Setup search and sort
+        setupReportsSearch();
+        setupReportsSort();
       } catch(error) {
         console.error('Errore caricamento report:', error);
         container.innerHTML = `<div class="empty-state">Errore: ${error.message || 'Errore sconosciuto'}</div>`;
+      }
+    }
+    
+    // ===== REPORTS SEARCH =====
+    function setupReportsSearch() {
+      const searchInput = document.getElementById('reports-search');
+      const countEl = document.getElementById('reports-search-count');
+      const shortcutHint = document.getElementById('reports-shortcut-hint');
+      
+      if (!searchInput) return;
+      
+      // Show/hide shortcut hint based on focus
+      searchInput.addEventListener('focus', () => {
+        if (shortcutHint) shortcutHint.style.display = 'none';
+      });
+      
+      searchInput.addEventListener('blur', () => {
+        if (shortcutHint) {
+          shortcutHint.style.display = !searchInput.value ? 'inline-flex' : 'none';
+        }
+      });
+      
+      searchInput.addEventListener('input', (e) => {
+        filterReports();
+        // Show/hide shortcut based on input value
+        if (shortcutHint) {
+          shortcutHint.style.display = searchInput.value ? 'none' : 'inline-flex';
+        }
+      });
+      
+      // Initial state
+      if (shortcutHint && !searchInput.value) {
+        shortcutHint.style.display = 'inline-flex';
+      }
+    }
+    
+    function filterReports() {
+      const searchInput = document.getElementById('reports-search');
+      const countEl = document.getElementById('reports-search-count');
+      const query = searchInput?.value.toLowerCase().trim() || '';
+      
+      if (!query) {
+        STATE.filteredReports = [...STATE.reports];
+      } else {
+        STATE.filteredReports = STATE.reports.filter(report => {
+          const searchable = [
+            report.id?.toLowerCase() || '',
+            report.ticker?.toLowerCase() || '',
+            report.company?.toLowerCase() || '',
+            report.modules?.join(' ').toLowerCase() || '',
+            report.timestamp?.toLowerCase() || ''
+          ].join(' ');
+          return searchable.includes(query);
+        });
+      }
+      
+      // Apply current sort
+      sortReports(STATE.currentSort);
+      
+      // Update count
+      if (countEl) {
+        if (query) {
+          countEl.textContent = `${STATE.filteredReports.length} / ${STATE.reports.length}`;
+          countEl.style.display = 'block';
+        } else {
+          countEl.style.display = 'none';
+        }
+      }
+    }
+    
+    // ===== REPORTS SORT =====
+    function setupReportsSort() {
+      const sortBtns = document.querySelectorAll('#reports-sort .sort-btn');
+      
+      sortBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const sortType = btn.dataset.sort;
+          
+          // Update buttons
+          sortBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          
+          // Sort
+          STATE.currentSort = sortType;
+          sortReports(sortType);
+        });
+      });
+    }
+    
+    function sortReports(sortType) {
+      const reports = STATE.filteredReports;
+      
+      switch(sortType) {
+        case 'date-desc':
+          reports.sort((a, b) => {
+            const dateA = new Date(a.timestamp);
+            const dateB = new Date(b.timestamp);
+            return isNaN(dateB.getTime()) ? -1 : (isNaN(dateA.getTime()) ? 1 : dateB - dateA);
+          });
+          break;
+        case 'date-asc':
+          reports.sort((a, b) => {
+            const dateA = new Date(a.timestamp);
+            const dateB = new Date(b.timestamp);
+            return isNaN(dateA.getTime()) ? 1 : (isNaN(dateB.getTime()) ? -1 : dateA - dateB);
+          });
+          break;
+        case 'ticker':
+          reports.sort((a, b) => {
+            const tickerA = (a.ticker || '').toUpperCase();
+            const tickerB = (b.ticker || '').toUpperCase();
+            return tickerA.localeCompare(tickerB);
+          });
+          break;
+      }
+      
+      // Re-render
+      renderReportsList(reports);
+    }
+    
+    function renderReportsList(reports) {
+      const container = document.getElementById('reports-container');
+      if (!container) return;
+      
+      if (reports.length === 0) {
+        container.innerHTML = `<div class="empty-state">Nessun report trovato</div>`;
+        return;
+      }
+      
+        const listHTML = `
+        <div class="list-header" style="margin-bottom: 0.875rem; padding: 0 1.25rem; display: grid; grid-template-columns: 150px 2fr 150px 220px; gap: 2rem; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dash-text-muted); font-weight: 700; font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);">
+          <span>ID</span>
+          <span>Asset</span>
+          <span>Data</span>
+          <span>Moduli</span>
+        </div>
+        <ul class="tech-list">
+          ${reports.map(report => {
+            let dateStr = report.timestamp;
+            let timeStr = '';
+            
+            try {
+              const dateObj = new Date(report.timestamp);
+              if (!isNaN(dateObj.getTime())) {
+                const day = String(dateObj.getDate()).padStart(2, '0');
+                const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                const year = dateObj.getFullYear();
+                const hours = String(dateObj.getHours()).padStart(2, '0');
+                const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+                dateStr = `${day}/${month}/${year}`;
+                timeStr = `${hours}:${minutes}`;
+              }
+            } catch(e) {
+              // Usa timestamp originale se parsing fallisce
+            }
+            
+            const modulesStr = report.modules.length > 0 
+              ? report.modules.slice(0, 3).join(', ') + (report.modules.length > 3 ? '...' : '')
+              : 'N/A';
+            
+            const dateTimeDisplay = timeStr ? `${dateStr} ${timeStr}` : dateStr;
+            const modulesCount = report.modules.length;
+            const modulesDisplay = modulesCount > 0 
+              ? `${modulesStr}${modulesCount > 3 ? ` (+${modulesCount - 3})` : ''}`
+              : 'N/A';
+            
+            return `
+              <li class="tech-list-item">
+                <span class="tech-id">${report.id}</span>
+                <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                  <a href="${report.reportUrl}" class="tech-link" style="font-weight: 600;">${report.ticker}</a>
+                  ${report.company ? `<span class="tech-company">${report.company}</span>` : ''}
+                </div>
+                <span class="tech-meta">${dateTimeDisplay}</span>
+                <span class="tech-meta" title="${report.modules.join(', ')}">${modulesDisplay}</span>
+              </li>
+            `;
+          }).join('')}
+        </ul>
+      `;
+      
+      container.innerHTML = listHTML;
+    }
+    
+    function updateReportsStats() {
+      const countEl = document.getElementById('reports-count');
+      if (countEl) {
+        countEl.textContent = STATE.reports.length;
       }
     }
     
@@ -779,9 +1613,147 @@
         }).join('');
         
         container.innerHTML = categoriesHTML;
+        
+        // Save tutorials to state
+        STATE.tutorials = tutorials;
+        STATE.filteredTutorials = categories;
+        
+        // Update stats
+        updateTutorialsStats();
+        
+        // Show stats
+        document.getElementById('tutorials-stats').style.display = 'flex';
+        
+        // Setup search
+        setupTutorialsSearch();
       } catch(error) {
         console.error('Errore caricamento tutorial:', error);
         container.innerHTML = `<div class="empty-state">Errore: ${error.message || 'Errore sconosciuto'}</div>`;
+      }
+    }
+    
+    // ===== TUTORIALS SEARCH =====
+    function setupTutorialsSearch() {
+      const searchInput = document.getElementById('tutorials-search');
+      const countEl = document.getElementById('tutorials-search-count');
+      const shortcutHint = document.getElementById('tutorials-shortcut-hint');
+      
+      if (!searchInput) return;
+      
+      // Show/hide shortcut hint based on focus
+      searchInput.addEventListener('focus', () => {
+        if (shortcutHint) shortcutHint.style.display = 'none';
+      });
+      
+      searchInput.addEventListener('blur', () => {
+        if (shortcutHint) {
+          shortcutHint.style.display = !searchInput.value ? 'inline-flex' : 'none';
+        }
+      });
+      
+      searchInput.addEventListener('input', (e) => {
+        filterTutorials();
+        // Show/hide shortcut based on input value
+        if (shortcutHint) {
+          shortcutHint.style.display = searchInput.value ? 'none' : 'inline-flex';
+        }
+      });
+      
+      // Initial state
+      if (shortcutHint && !searchInput.value) {
+        shortcutHint.style.display = 'inline-flex';
+      }
+    }
+    
+    function filterTutorials() {
+      const searchInput = document.getElementById('tutorials-search');
+      const countEl = document.getElementById('tutorials-search-count');
+      const query = searchInput?.value.toLowerCase().trim() || '';
+      const container = document.getElementById('tutorials-container');
+      
+      if (!container || !STATE.tutorials.length) return;
+      
+      if (!query) {
+        // Show all
+        renderTutorialsCategories(STATE.filteredTutorials);
+        if (countEl) countEl.style.display = 'none';
+        return;
+      }
+      
+      // Filter tutorials
+      const filtered = {};
+      let totalCount = 0;
+      
+      Object.entries(STATE.filteredTutorials).forEach(([category, tutorials]) => {
+        const filteredTutorials = tutorials.filter(tutorial => {
+          const searchable = [
+            tutorial.title?.toLowerCase() || '',
+            tutorial.category?.toLowerCase() || '',
+            tutorial.fileName?.toLowerCase() || ''
+          ].join(' ');
+          return searchable.includes(query);
+        });
+        
+        if (filteredTutorials.length > 0) {
+          filtered[category] = filteredTutorials;
+          totalCount += filteredTutorials.length;
+        }
+      });
+      
+      // Render filtered
+      renderTutorialsCategories(filtered);
+      
+      // Update count
+      if (countEl) {
+        const totalTutorials = STATE.tutorials.length;
+        countEl.textContent = `${totalCount} / ${totalTutorials}`;
+        countEl.style.display = 'block';
+      }
+    }
+    
+    function renderTutorialsCategories(categories) {
+      const container = document.getElementById('tutorials-container');
+      if (!container) return;
+      
+      const sortedCategories = Object.keys(categories).sort();
+      
+      if (sortedCategories.length === 0) {
+        container.innerHTML = `<div class="empty-state">Nessun tutorial trovato</div>`;
+        return;
+      }
+      
+      const categoriesHTML = sortedCategories.map(category => {
+        const tutorialsInCategory = categories[category];
+        return `
+          <div class="tutorial-category">
+            <h3 class="tutorial-category-title">${category}</h3>
+            <ul class="tutorial-list">
+              ${tutorialsInCategory.map(tutorial => {
+                const cleanTitle = tutorial.title.replace(' - Guida Completa Tradelia AI', '');
+                return `
+                  <li class="tutorial-item">
+                    <a href="${tutorial.link}" class="tutorial-link">${cleanTitle}</a>
+                  </li>
+                `;
+              }).join('')}
+            </ul>
+          </div>
+        `;
+      }).join('');
+      
+      container.innerHTML = categoriesHTML;
+    }
+    
+    function updateTutorialsStats() {
+      const countEl = document.getElementById('tutorials-count');
+      const categoriesCountEl = document.getElementById('tutorials-categories-count');
+      
+      if (countEl) {
+        countEl.textContent = STATE.tutorials.length;
+      }
+      
+      if (categoriesCountEl) {
+        categoriesCountEl.textContent = Object.keys(STATE.filteredTutorials).length;
       }
     }
     
