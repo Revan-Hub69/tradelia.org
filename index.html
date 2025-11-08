@@ -414,6 +414,18 @@
       margin: 0;
       flex: 1;
     }
+    
+    .service-card-badge {
+      padding: 0.75rem 1rem;
+      background: rgba(234, 88, 12, 0.1);
+      border: 1px solid rgba(234, 88, 12, 0.25);
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.875rem;
+      color: rgba(234, 88, 12, 0.95);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
 
     /* ===== BUTTONS ===== */
     .btn {
@@ -995,15 +1007,16 @@
   <section class="services-section">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">Servizi AI</h2>
+        <h2 class="section-title">Moduli AI Proprietari</h2>
         <p class="section-description">
-          Tre strumenti principali per l'<strong>educazione finanziaria accademica</strong>, 
-          modellati per conformità MiFID II e orientati alla formazione didattica.
+          Tre <strong>moduli proprietari</strong> che trasformano la complessità dei mercati in <strong>decisioni chiare e immediate</strong>. 
+          Tecnologia esclusiva basata su dati Tier-1 e algoritmi proprietari, progettata per chi vuole <strong>anticipare i trend</strong> 
+          invece di subirli.
         </p>
       </div>
 
       <div class="services-grid">
-        <!-- Service 1: Portafoglio -->
+        <!-- Modulo 1: Protocollo Swing Master 5.0 -->
         <div class="service-card">
           <div class="service-card-header">
             <div class="service-card-icon">
@@ -1012,18 +1025,20 @@
                 <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" fill="none"/>
               </svg>
             </div>
-            <h3 class="service-card-title">Validazione / Simulazione Portafoglio</h3>
+            <h3 class="service-card-title">Protocollo Swing Master 5.0</h3>
           </div>
           <p class="service-card-description">
-            Costruisci o valida un portafoglio seguendo criteri di coerenza macro, rischio e rendimento, 
-            con analisi multilayer AI.
+            Percorso di analisi accademica in <strong>7 fasi (F1→F7)</strong> che integra contesto macro, sentiment, 
+            analisi tecnica multi-timeframe, confronto intermarket e verifica finale. Elaborazioni basate su 
+            <strong>dati Tier-1</strong>, presentate in forma descrittiva e tracciabile, con finalità formative 
+            e conformi alle linee MiFID II.
           </p>
           <button onclick="apriModuloPortafoglio()" class="btn btn-primary btn-block">
-            Avvia Analisi
+            Accedi al Modulo
           </button>
         </div>
 
-        <!-- Service 2: Educazione Finanziaria -->
+        <!-- Modulo 2: Daily Market Intelligence 3.1 -->
         <div class="service-card">
           <div class="service-card-header">
             <div class="service-card-icon">
@@ -1032,18 +1047,20 @@
                 <path d="M6 12v5c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-5" stroke="currentColor" stroke-width="2" fill="none"/>
               </svg>
             </div>
-            <h3 class="service-card-title">Educazione Finanziaria AI</h3>
+            <h3 class="service-card-title">Daily Market Intelligence 3.1</h3>
           </div>
           <p class="service-card-description">
-            Strumenti AI modellati per l'educazione finanziaria conforme alle normative MiFID II. 
-            Analisi di asset, mercati e scenari con metodologia accademica orientata alla formazione.
+            Desk informativo istituzionale che elabora, <strong>ogni giorno</strong>, un report strutturato secondo 
+            standard proprietario DMI. Analizza contesto macro, movimenti degli analisti, flussi ETF, insider trading 
+            e short interest, integrando solo <strong>fonti Tier-1</strong> (Reuters, Bloomberg, Fed, BCE, Nasdaq). 
+            Contenuti educativi e descrittivi, conformi a MiFID II.
           </p>
           <button onclick="apriModuloAsset()" class="btn btn-primary btn-block">
-            Avvia Analisi
+            Accedi al Modulo
           </button>
         </div>
 
-        <!-- Service 3: Domanda Libera -->
+        <!-- Modulo 3: Stress Test Avanzato -->
         <div class="service-card">
           <div class="service-card-header">
             <div class="service-card-icon">
@@ -1052,15 +1069,23 @@
                 <path d="M8 10h.01M12 10h.01M16 10h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
               </svg>
             </div>
-            <h3 class="service-card-title">Domanda Libera</h3>
+            <h3 class="service-card-title">Stress Test Avanzato</h3>
           </div>
           <p class="service-card-description">
-            Formula qualsiasi domanda su mercati, strategie o scenari e ricevi un'analisi ragionata 
-            basata sul metodo Tradelia.
+            Modulo di valutazione <strong>multi-scenario</strong> che simula l'impatto di variabili macro, volatilità, 
+            tassi e rotazioni settoriali su portafogli modello o personalizzati. Integra dati storici e real-time da 
+            fonti Tier-1 (Fed, BCE, IMF, Bloomberg) con <strong>algoritmi proprietari</strong> di analisi cross-asset. 
+            Risultati descrittivi e comparativi, con finalità didattiche e di ricerca, conformi a MiFID II.
           </p>
-          <button onclick="apriModuloDomanda()" class="btn btn-primary btn-block">
-            Fai una Domanda
-          </button>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div class="service-card-badge">In fase di sviluppo</div>
+            <a href="/dashboard.html" class="btn btn-primary btn-block" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
+              Vai alla Dashboard
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px; margin-left: 0.5rem;">
+                <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
     </div>
