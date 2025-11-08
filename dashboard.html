@@ -320,86 +320,29 @@
       max-width: 65ch;
     }
     
-    /* ===== TUTORIAL SECTION - ACADEMIC ===== */
-    .tutorial-section {
-      display: none;
-      animation: fadeIn 0.4s ease-out;
-    }
-    
-    .tutorial-section.active {
-      display: block;
-    }
-    
+    /* ===== TUTORIAL SECTION - REFINED & ELEGANT ===== */
     .tutorial-header {
-      margin-bottom: 2.5rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 2px solid var(--dash-border);
+      margin-bottom: 1.75rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--dash-border);
     }
     
     .tutorial-title {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
       color: var(--dash-text);
-      margin: 0 0 0.75rem;
+      margin: 0 0 0.5rem;
       letter-spacing: -0.025em;
       font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
     }
     
     .tutorial-description {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--dash-text-soft);
       margin: 0;
-      line-height: 1.7;
+      line-height: 1.6;
       font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
       max-width: 65ch;
-    }
-    
-    .tutorial-category {
-      margin-bottom: 2rem;
-    }
-    
-    .tutorial-category:last-child {
-      margin-bottom: 0;
-    }
-    
-    .tutorial-category-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--dash-accent);
-      margin: 0 0 1rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
-    }
-    
-    .tutorial-category-title::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(to right, var(--dash-border), transparent);
-    }
-    
-    /* Tutorial responsive */
-    @media (max-width: 768px) {
-      .tutorial-category {
-        margin-bottom: 1.5rem;
-      }
-      
-      .tutorial-category-title {
-        font-size: 11px;
-        margin-bottom: 0.75rem;
-      }
-      
-      .tutorial-item {
-        padding: 0.5rem 0.875rem;
-      }
-      
-      .tutorial-link {
-        font-size: 11px;
-      }
     }
     
     .tutorial-list {
@@ -643,8 +586,7 @@
     }
     
     
-    /* ===== SORT CONTROLS - ACADEMIC ===== */
-    .sort-controls,
+    /* ===== FILTER CONTROLS - ACADEMIC ===== */
     .filter-controls {
       display: flex;
       gap: 1rem;
@@ -663,7 +605,6 @@
       font-weight: 600;
     }
     
-    .sort-btn,
     .filter-btn {
       padding: 0.375rem 0.875rem;
       background: transparent;
@@ -677,19 +618,141 @@
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
-    .sort-btn:hover,
     .filter-btn:hover {
       border-color: var(--dash-accent);
       color: var(--dash-text);
       background: rgba(37, 99, 235, 0.05);
     }
     
-    .sort-btn.active,
     .filter-btn.active {
       background: var(--dash-accent-bg);
       border-color: var(--dash-accent);
       color: var(--dash-accent);
       font-weight: 600;
+    }
+    
+    /* ===== COLUMN HEADERS WITH SORT ===== */
+    .list-header {
+      margin-bottom: 0.75rem;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 130px 2fr 100px 100px 120px;
+      gap: 1rem;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--dash-text-muted);
+      font-weight: 700;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+    }
+    
+    .list-header-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.2s;
+    }
+    
+    .list-header-cell:hover {
+      color: var(--dash-text-soft);
+    }
+    
+    .list-header-cell.sortable {
+      cursor: pointer;
+    }
+    
+    .sort-icon {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.125rem;
+      opacity: 0.4;
+      transition: opacity 0.2s;
+      margin-left: 0.25rem;
+    }
+    
+    .list-header-cell:hover .sort-icon,
+    .list-header-cell.sorted .sort-icon {
+      opacity: 0.8;
+    }
+    
+    .list-header-cell.sorted-asc .sort-icon .sort-up,
+    .list-header-cell.sorted-desc .sort-icon .sort-down {
+      opacity: 1;
+      color: var(--dash-accent);
+    }
+    
+    .sort-up,
+    .sort-down {
+      width: 8px;
+      height: 4px;
+      opacity: 0.3;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    
+    /* ===== SCROLL CONTROLS (DESKTOP ONLY) ===== */
+    .scroll-controls {
+      position: absolute;
+      top: 0;
+      right: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    
+    @media (min-width: 769px) {
+      .report-section.active .scroll-controls,
+      .tutorial-section.active .scroll-controls {
+        opacity: 0.6;
+        pointer-events: auto;
+      }
+      
+      .report-section.active .scroll-controls:hover,
+      .tutorial-section.active .scroll-controls:hover {
+        opacity: 1;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .scroll-controls {
+        display: none !important;
+      }
+    }
+    
+    .scroll-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--dash-surface);
+      border: 1px solid var(--dash-border);
+      border-radius: 6px;
+      color: var(--dash-text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0.6;
+    }
+    
+    .scroll-btn:hover {
+      opacity: 1;
+      border-color: var(--dash-accent);
+      color: var(--dash-accent);
+      background: var(--dash-surface-elev);
+    }
+    
+    .scroll-btn:active {
+      transform: scale(0.95);
+    }
+    
+    .scroll-btn svg {
+      width: 16px;
+      height: 16px;
     }
     
     /* ===== KEYBOARD SHORTCUT HINT - ACADEMIC ===== */
@@ -1080,7 +1143,7 @@
       <section class="report-section active">
         <div class="report-header">
           <h2 class="report-title">Report</h2>
-          <p class="report-description">Framework Accademico AI Tradelia - Analisi finanziaria multi-fattore basata su dati Tier-1</p>
+          <p class="report-description">Framework Accademico AI Tradelia - Analisi finanziaria multi-fattore basata su dati Tier-1. Include framework (Swing Master 5.0, Daily Market Intelligence 3.1, Stress Test Avanzato) e tipologia di analisi.</p>
         </div>
         
         <div class="stats-bar" id="reports-stats" style="display: none;">
@@ -1108,19 +1171,26 @@
           </div>
         </div>
         
-        <div class="sort-controls" id="reports-sort" style="display: none;">
-          <span class="sort-label">Ordina:</span>
-          <button class="sort-btn active" data-sort="date-desc">Data ↓</button>
-          <button class="sort-btn" data-sort="date-asc">Data ↑</button>
-          <button class="sort-btn" data-sort="ticker">Ticker</button>
-        </div>
-        
         <div class="filter-controls" id="reports-framework-filter" style="display: none;">
           <span class="sort-label">Framework:</span>
           <button class="sort-btn filter-btn active" data-framework="all">Tutti</button>
           <button class="sort-btn filter-btn" data-framework="swing-master-5.0">Swing Master 5.0</button>
           <button class="sort-btn filter-btn" data-framework="dmi-3.1">Daily Market Intelligence 3.1</button>
           <button class="sort-btn filter-btn" data-framework="stress-test">Stress Test Avanzato</button>
+        </div>
+        
+        <!-- Scroll controls (desktop only) -->
+        <div class="scroll-controls" id="scroll-controls">
+          <button class="scroll-btn scroll-up" aria-label="Scroll su" title="Scroll su">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 15l-6-6-6 6"/>
+            </svg>
+          </button>
+          <button class="scroll-btn scroll-down" aria-label="Scroll giù" title="Scroll giù">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
         </div>
         
         <div id="reports-container">
@@ -1167,6 +1237,20 @@
           </div>
         </div>
         
+        <!-- Scroll controls (desktop only) -->
+        <div class="scroll-controls" id="tutorials-scroll-controls">
+          <button class="scroll-btn scroll-up" aria-label="Scroll su" title="Scroll su">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 15l-6-6-6 6"/>
+            </svg>
+          </button>
+          <button class="scroll-btn scroll-down" aria-label="Scroll giù" title="Scroll giù">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
+        </div>
+        
         <div id="tutorials-container">
           <div class="loading">
             <div class="loading-spinner"></div>
@@ -1209,7 +1293,6 @@
       reports: [],
       filteredReports: [],
       tutorials: [],
-      filteredTutorials: {},
       currentSort: 'date-desc',
       currentFramework: 'all',
       currentSection: 'reports'
@@ -1441,13 +1524,21 @@
         
         // Show controls
         document.getElementById('reports-stats').style.display = 'flex';
-        document.getElementById('reports-sort').style.display = 'flex';
         document.getElementById('reports-framework-filter').style.display = 'flex';
         
         // Setup search, sort and filters
         setupReportsSearch();
         setupReportsSort();
         setupFrameworkFilter();
+        setupScrollControls();
+        
+        // Set initial sort indicator on date column
+        setTimeout(() => {
+          const dateHeader = document.querySelector('.list-header-cell[data-sort="date"]');
+          if (dateHeader) {
+            dateHeader.classList.add('sorted', 'sorted-desc');
+          }
+        }, 100);
       } catch(error) {
         console.error('Errore caricamento report:', error);
         container.innerHTML = `<div class="empty-state">Errore: ${error.message || 'Errore sconosciuto'}</div>`;
@@ -1533,22 +1624,32 @@
       }
     }
     
-    // ===== REPORTS SORT =====
+    // ===== REPORTS SORT (COLUMN HEADERS) =====
     function setupReportsSort() {
-      const sortBtns = document.querySelectorAll('#reports-sort .sort-btn');
-      
-      sortBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const sortType = btn.dataset.sort;
-          
-          // Update buttons
-          sortBtns.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          
-          // Sort
-          STATE.currentSort = sortType;
-          sortReports(sortType);
+      // Setup click handlers on column headers
+      document.addEventListener('click', (e) => {
+        const headerCell = e.target.closest('.list-header-cell.sortable');
+        if (!headerCell) return;
+        
+        const sortField = headerCell.dataset.sort;
+        if (!sortField) return;
+        
+        // Determine sort direction
+        const isCurrentlySorted = headerCell.classList.contains('sorted');
+        const isCurrentlyDesc = headerCell.classList.contains('sorted-desc');
+        
+        // Remove all sorted classes
+        document.querySelectorAll('.list-header-cell').forEach(cell => {
+          cell.classList.remove('sorted', 'sorted-asc', 'sorted-desc');
         });
+        
+        // Set new sort
+        const newSort = isCurrentlySorted && !isCurrentlyDesc ? 'desc' : 'asc';
+        headerCell.classList.add('sorted', `sorted-${newSort}`);
+        
+        // Update state and sort
+        STATE.currentSort = `${sortField}-${newSort}`;
+        sortReports(STATE.currentSort);
       });
     }
     
@@ -1556,33 +1657,61 @@
       // Use already filtered reports from STATE
       const reports = [...STATE.filteredReports];
       
+      // Parse sort type (e.g., "date-desc", "ticker-asc")
+      const [field, direction] = sortType.split('-');
+      
       // Apply sort
-      switch(sortType) {
-        case 'date-desc':
+      switch(field) {
+        case 'date':
           reports.sort((a, b) => {
             const dateA = new Date(a.timestamp);
             const dateB = new Date(b.timestamp);
-            return isNaN(dateB.getTime()) ? -1 : (isNaN(dateA.getTime()) ? 1 : dateB - dateA);
-          });
-          break;
-        case 'date-asc':
-          reports.sort((a, b) => {
-            const dateA = new Date(a.timestamp);
-            const dateB = new Date(b.timestamp);
-            return isNaN(dateA.getTime()) ? 1 : (isNaN(dateB.getTime()) ? -1 : dateA - dateB);
+            if (isNaN(dateA.getTime()) && isNaN(dateB.getTime())) return 0;
+            if (isNaN(dateA.getTime())) return 1;
+            if (isNaN(dateB.getTime())) return -1;
+            return direction === 'desc' ? dateB - dateA : dateA - dateB;
           });
           break;
         case 'ticker':
           reports.sort((a, b) => {
             const tickerA = (a.ticker || '').toUpperCase();
             const tickerB = (b.ticker || '').toUpperCase();
-            return tickerA.localeCompare(tickerB);
+            return direction === 'desc' 
+              ? tickerB.localeCompare(tickerA)
+              : tickerA.localeCompare(tickerB);
+          });
+          break;
+        case 'exchange':
+          reports.sort((a, b) => {
+            const exA = (a.exchange || '').toUpperCase();
+            const exB = (b.exchange || '').toUpperCase();
+            return direction === 'desc'
+              ? exB.localeCompare(exA)
+              : exA.localeCompare(exB);
+          });
+          break;
+        case 'sector':
+          reports.sort((a, b) => {
+            const secA = (a.sector || '').toUpperCase();
+            const secB = (b.sector || '').toUpperCase();
+            return direction === 'desc'
+              ? secB.localeCompare(secA)
+              : secA.localeCompare(secB);
+          });
+          break;
+        case 'id':
+          reports.sort((a, b) => {
+            const idA = (a.id || '').toUpperCase();
+            const idB = (b.id || '').toUpperCase();
+            return direction === 'desc'
+              ? idB.localeCompare(idA)
+              : idA.localeCompare(idB);
           });
           break;
       }
       
       STATE.filteredReports = reports;
-      // Re-render
+      // Re-render with updated sort indicators
       renderReportsList(reports);
     }
     
@@ -1617,12 +1746,37 @@
       }
       
         const listHTML = `
-        <div class="list-header" style="margin-bottom: 0.75rem; padding: 0 1rem; display: grid; grid-template-columns: 130px 2fr 100px 100px 120px; gap: 1.25rem; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dash-text-muted); font-weight: 700; font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);">
-          <span>ID</span>
-          <span>Asset</span>
-          <span>Exchange</span>
-          <span>Settore</span>
-          <span>Data</span>
+        <div class="list-header">
+          <span class="list-header-cell" data-sort="id">ID
+            <span class="sort-icon">
+              <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
+              <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+            </span>
+          </span>
+          <span class="list-header-cell sortable" data-sort="ticker">Asset
+            <span class="sort-icon">
+              <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
+              <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+            </span>
+          </span>
+          <span class="list-header-cell sortable" data-sort="exchange">Exchange
+            <span class="sort-icon">
+              <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
+              <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+            </span>
+          </span>
+          <span class="list-header-cell sortable" data-sort="sector">Settore
+            <span class="sort-icon">
+              <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
+              <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+            </span>
+          </span>
+          <span class="list-header-cell sortable" data-sort="date">Data
+            <span class="sort-icon">
+              <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
+              <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+            </span>
+          </span>
         </div>
         <ul class="tech-list">
           ${reports.map(report => {
@@ -1768,57 +1922,17 @@
           }
         }
         
-        // Raggruppa per categoria
-        const categories = {};
-        tutorials.forEach(tutorial => {
-          const cat = tutorial.category;
-          if (!categories[cat]) {
-            categories[cat] = [];
-          }
-          categories[cat].push(tutorial);
-        });
-        
-        // Ordina categorie
-        const sortedCategories = Object.keys(categories).sort();
-        
-        // Renderizza lista semplice per categoria
-        if (sortedCategories.length === 0) {
+        // Renderizza lista semplice e elegante (tutti i tutorial in una lista, ordinati)
+        if (tutorials.length === 0) {
           container.innerHTML = `<div class="empty-state">Nessun tutorial disponibile</div>`;
           return;
         }
         
-        const categoriesHTML = sortedCategories.map(category => {
-          const tutorialsInCategory = categories[category];
-          return `
-            <div class="tutorial-category">
-              <h3 class="tutorial-category-title">${category}</h3>
-              <ul class="tutorial-list">
-                ${tutorialsInCategory.map(tutorial => {
-                  // Pulisci il titolo rimuovendo suffissi comuni
-                  let cleanTitle = tutorial.title;
-                  cleanTitle = cleanTitle.replace(/ - Guida Completa Tradelia AI/gi, '');
-                  cleanTitle = cleanTitle.replace(/ - Tradelia AI/gi, '');
-                  cleanTitle = cleanTitle.trim();
-                  
-                  // Assicura che il link sia valido
-                  const tutorialLink = tutorial.link || `/report/tutorial/${tutorial.fileName || tutorial.title.replace(/\s+/g, '-')}.html`;
-                  
-                  return `
-                    <li class="tutorial-item">
-                      <a href="${tutorialLink}" class="tutorial-link" target="_self">${cleanTitle}</a>
-                    </li>
-                  `;
-                }).join('')}
-              </ul>
-            </div>
-          `;
-        }).join('');
-        
-        container.innerHTML = categoriesHTML;
-        
-        // Save tutorials to state
+        // Save tutorials to state (flat array)
         STATE.tutorials = tutorials;
-        STATE.filteredTutorials = categories;
+        
+        // Render lista
+        renderTutorialsList(tutorials);
         
         // Update stats
         updateTutorialsStats();
@@ -1828,6 +1942,9 @@
         
         // Setup search
         setupTutorialsSearch();
+        
+        // Setup scroll controls
+        setupScrollControls();
       } catch(error) {
         console.error('Errore caricamento tutorial:', error);
         container.innerHTML = `<div class="empty-state">Errore: ${error.message || 'Errore sconosciuto'}</div>`;
@@ -1876,82 +1993,71 @@
       if (!container || !STATE.tutorials.length) return;
       
       if (!query) {
-        // Show all
-        renderTutorialsCategories(STATE.filteredTutorials);
+        // Show all tutorials
+        renderTutorialsList(STATE.tutorials);
         if (countEl) countEl.style.display = 'none';
         return;
       }
       
       // Filter tutorials
-      const filtered = {};
-      let totalCount = 0;
-      
-      Object.entries(STATE.filteredTutorials).forEach(([category, tutorials]) => {
-        const filteredTutorials = tutorials.filter(tutorial => {
-          const searchable = [
-            tutorial.title?.toLowerCase() || '',
-            tutorial.category?.toLowerCase() || '',
-            tutorial.fileName?.toLowerCase() || ''
-          ].join(' ');
-          return searchable.includes(query);
-        });
-        
-        if (filteredTutorials.length > 0) {
-          filtered[category] = filteredTutorials;
-          totalCount += filteredTutorials.length;
-        }
+      const filtered = STATE.tutorials.filter(tutorial => {
+        const searchable = [
+          tutorial.title?.toLowerCase() || '',
+          tutorial.category?.toLowerCase() || '',
+          tutorial.fileName?.toLowerCase() || ''
+        ].join(' ');
+        return searchable.includes(query);
       });
       
       // Render filtered
-      renderTutorialsCategories(filtered);
+      renderTutorialsList(filtered);
       
       // Update count
       if (countEl) {
         const totalTutorials = STATE.tutorials.length;
-        countEl.textContent = `${totalCount} / ${totalTutorials}`;
+        countEl.textContent = `${filtered.length} / ${totalTutorials}`;
         countEl.style.display = 'block';
       }
     }
     
-    function renderTutorialsCategories(categories) {
+    function renderTutorialsList(tutorials) {
       const container = document.getElementById('tutorials-container');
       if (!container) return;
       
-      const sortedCategories = Object.keys(categories).sort();
-      
-      if (sortedCategories.length === 0) {
+      if (tutorials.length === 0) {
         container.innerHTML = `<div class="empty-state">Nessun tutorial trovato</div>`;
         return;
       }
       
-      const categoriesHTML = sortedCategories.map(category => {
-        const tutorialsInCategory = categories[category];
-        return `
-          <div class="tutorial-category">
-            <h3 class="tutorial-category-title">${category}</h3>
-            <ul class="tutorial-list">
-              ${tutorialsInCategory.map(tutorial => {
-                // Pulisci il titolo rimuovendo suffissi comuni
-                let cleanTitle = tutorial.title;
-                cleanTitle = cleanTitle.replace(/ - Guida Completa Tradelia AI/gi, '');
-                cleanTitle = cleanTitle.replace(/ - Tradelia AI/gi, '');
-                cleanTitle = cleanTitle.trim();
-                
-                // Assicura che il link sia valido
-                const tutorialLink = tutorial.link || `/report/tutorial/${tutorial.fileName || tutorial.title.replace(/\s+/g, '-')}.html`;
-                
-                return `
-                  <li class="tutorial-item">
-                    <a href="${tutorialLink}" class="tutorial-link" target="_self">${cleanTitle}</a>
-                  </li>
-                `;
-              }).join('')}
-            </ul>
-          </div>
-        `;
-      }).join('');
+      // Ordina per titolo
+      const sortedTutorials = [...tutorials].sort((a, b) => {
+        const titleA = (a.title || '').toLowerCase();
+        const titleB = (b.title || '').toLowerCase();
+        return titleA.localeCompare(titleB);
+      });
       
-      container.innerHTML = categoriesHTML;
+      const tutorialsHTML = `
+        <ul class="tutorial-list">
+          ${sortedTutorials.map(tutorial => {
+            // Pulisci il titolo rimuovendo suffissi comuni
+            let cleanTitle = tutorial.title;
+            cleanTitle = cleanTitle.replace(/ - Guida Completa Tradelia AI/gi, '');
+            cleanTitle = cleanTitle.replace(/ - Tradelia AI/gi, '');
+            cleanTitle = cleanTitle.trim();
+            
+            // Assicura che il link sia valido
+            const tutorialLink = tutorial.link || `/report/tutorial/${tutorial.fileName || tutorial.title.replace(/\s+/g, '-')}.html`;
+            
+            return `
+              <li class="tutorial-item">
+                <a href="${tutorialLink}" class="tutorial-link" target="_self">${cleanTitle}</a>
+              </li>
+            `;
+          }).join('')}
+        </ul>
+      `;
+      
+      container.innerHTML = tutorialsHTML;
     }
     
     function updateTutorialsStats() {
@@ -1963,7 +2069,53 @@
       }
       
       if (categoriesCountEl) {
-        categoriesCountEl.textContent = Object.keys(STATE.filteredTutorials).length;
+        // Count unique categories
+        const uniqueCategories = new Set(STATE.tutorials.map(t => t.category));
+        categoriesCountEl.textContent = uniqueCategories.size;
+      }
+    }
+    
+    // ===== SCROLL CONTROLS =====
+    function setupScrollControls() {
+      const scrollControls = document.querySelectorAll('.scroll-controls');
+      
+      scrollControls.forEach(controls => {
+        const scrollUp = controls.querySelector('.scroll-up');
+        const scrollDown = controls.querySelector('.scroll-down');
+        
+        if (!scrollUp || !scrollDown) return;
+        
+        scrollUp.addEventListener('click', () => {
+          window.scrollBy({ top: -300, behavior: 'smooth' });
+        });
+        
+        scrollDown.addEventListener('click', () => {
+          window.scrollBy({ top: 300, behavior: 'smooth' });
+        });
+      });
+      
+      // Hide scroll controls when near top/bottom (only on desktop)
+      if (window.innerWidth >= 769) {
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+          clearTimeout(scrollTimeout);
+          scrollControls.forEach(controls => {
+            if (!controls) return;
+            
+            const scrollY = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            
+            // Fade out near top/bottom
+            if (scrollY < 50) {
+              controls.style.opacity = '0.3';
+            } else if (scrollY + windowHeight > documentHeight - 50) {
+              controls.style.opacity = '0.3';
+            } else {
+              controls.style.opacity = '1';
+            }
+          });
+        }, { passive: true });
       }
     }
     
@@ -1974,6 +2126,7 @@
       loadTutorials().catch(err => console.error('Errore loadTutorials:', err))
     ]).then(() => {
       console.log('Dashboard caricata completamente');
+      setupScrollControls();
     });
   </script>
   
@@ -1991,61 +2144,61 @@
       </nav>
       <div class="legal-body" style="padding: var(--sp-6); overflow-y: auto; flex: 1;">
         <section id="panel-mifid" role="tabpanel" aria-labelledby="tab-mifid">
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Finalità del materiale</h4>
-          <p style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4);">Il presente sito web e tutti i suoi contenuti (analisi, framework AI, report, articoli, glossario) hanno esclusiva finalità <strong>informativa e didattica</strong>. Non costituiscono consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa <strong>MiFID II / ESMA</strong>.</p>
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Natura educativa</h4>
-          <p style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4);">Tradelia AI è una piattaforma di <strong>educazione finanziaria accademica</strong>. Tutti i contenuti, inclusi framework AI proprietari (Swing Master 5.0, Daily Market Intelligence 3.1, Stress Test Avanzato), analisi di mercato, report e strumenti didattici, sono progettati esclusivamente per finalità formative e di ricerca. Non viene svolta verifica di adeguatezza/appropriatezza, profilo di rischio o obiettivi finanziari dell'utente.</p>
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Rischi</h4>
-          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
+          <h4>Finalità del materiale</h4>
+          <p>Il presente sito web e tutti i suoi contenuti (analisi, moduli AI, report, articoli, glossario) hanno esclusiva finalità <strong>informativa e didattica</strong>. Non costituiscono consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa <strong>MiFID II / ESMA</strong>.</p>
+          <h4>Natura educativa</h4>
+          <p>Tradelia AI è una piattaforma di <strong>educazione finanziaria accademica</strong>. Tutti i contenuti, inclusi moduli AI proprietari, analisi di mercato, report e strumenti didattici, sono progettati esclusivamente per finalità formative e di ricerca. Non viene svolta verifica di adeguatezza/appropriatezza, profilo di rischio o obiettivi finanziari dell'utente.</p>
+          <h4>Rischi</h4>
+          <ul>
             <li>I mercati finanziari comportano <strong>rischio di perdita, anche totale, del capitale</strong>.</li>
             <li>Prodotti a leva/derivati (opzioni, futures, CFD) possono amplificare perdite oltre il capitale iniziale.</li>
             <li>Rendimenti passati non sono indicativi di risultati futuri.</li>
             <li>Le informazioni fornite non devono essere considerate come garanzie di rendimento.</li>
           </ul>
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Dati e fonti</h4>
-          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
+          <h4>Dati e fonti</h4>
+          <ul>
             <li>Dati e serie storiche possono essere soggetti a ritardi, revisioni o errori; i timestamp potrebbero non riflettere il "tempo reale".</li>
-            <li>Le fonti includono provider ritenuti affidabili <strong>(Tier-1: Bloomberg, Reuters, Fed, BCE, Nasdaq)</strong>; non si garantisce esattezza/completezza assoluta.</li>
+            <li>Le fonti includono provider ritenuti affidabili (Tier-1); non si garantisce esattezza/completezza assoluta.</li>
             <li>Le analisi AI sono generate automaticamente e possono contenere errori o imprecisioni.</li>
           </ul>
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Conflitti e indipendenza</h4>
-          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
+          <h4>Conflitti e indipendenza</h4>
+          <ul>
             <li><strong>Tradelia AI è indipendente</strong>: non esegue ordini, non gestisce capitali, non raccoglie depositi e non opera come intermediario finanziario.</li>
             <li>Non sono note situazioni di conflitto d'interesse rilevanti nella produzione del materiale.</li>
             <li>Eventuali link a piattaforme o servizi esterni sono forniti a solo scopo informativo.</li>
           </ul>
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Limitazioni e responsabilità</h4>
-          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
+          <h4>Limitazioni e responsabilità</h4>
+          <ul>
             <li>Le informazioni non sostituiscono il giudizio dell'utente né la consulenza di un <strong>intermediario autorizzato</strong>.</li>
             <li>L'utente è responsabile delle proprie decisioni di investimento.</li>
             <li>L'uso del sito è vietato laddove non conforme alle leggi locali.</li>
             <li>Tradelia AI non si assume alcuna responsabilità per perdite derivanti dall'uso delle informazioni fornite.</li>
           </ul>
         </section>
-        <section id="panel-privacy" role="tabpanel" aria-labelledby="tab-privacy" hidden style="display: none;">
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Principi</h4>
-          <p style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4);">Adottiamo un'impostazione <strong>"privacy-first"</strong>: minimizzazione dei dati e assenza di tracciamento pubblicitario.</p>
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Dati trattati</h4>
-          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
-            <li>Nessuna raccolta di dati personali identificativi tramite questa dashboard.</li>
-            <li>Uso di <code style="background: var(--surface-elev); padding: 2px 6px; border-radius: 4px; font-size: var(--fs-12); color: var(--brand-400);">localStorage</code> per preferenze (tema) e consenso legale.</li>
+        <section id="panel-privacy" role="tabpanel" aria-labelledby="tab-privacy" hidden>
+          <h4>Principi</h4>
+          <p>Adottiamo un'impostazione "privacy-first": minimizzazione dei dati e assenza di tracciamento pubblicitario.</p>
+          <h4>Dati trattati</h4>
+          <ul>
+            <li>Nessuna raccolta di dati personali identificativi tramite questa pagina.</li>
+            <li>Uso di <code>localStorage</code> per preferenze (tema) e consenso legale.</li>
             <li>Eventuali log tecnici anonimi per sicurezza e diagnostica.</li>
           </ul>
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Cookie e analytics</h4>
-          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
+          <h4>Cookie e analytics</h4>
+          <ul>
             <li>Niente cookie di profilazione; eventuali analytics sono anonimizzati/aggregati.</li>
             <li>Nessuna condivisione con terze parti a fini commerciali.</li>
           </ul>
-          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Diritti e contatti</h4>
-          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
-            <li>Per informazioni o esercizio diritti privacy, scrivi a <a href="mailto:info@tradelia.org" style="color: var(--brand-400); text-decoration: underline;">info@tradelia.org</a>.</li>
+          <h4>Diritti e contatti</h4>
+          <ul>
+            <li>Per informazioni o esercizio diritti privacy, scrivi a <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>.</li>
             <li>Il titolare potrà aggiornare questa informativa: controlla periodicamente le revisioni.</li>
           </ul>
         </section>
       </div>
       <footer class="legal-ftr">
         <small style="font-size: var(--fs-12); color: var(--muted);">Continuando dichiari di aver letto e compreso le informative.</small>
-        <button class="btn btn-sm" type="button" id="btn-accept-legal" style="padding: 0.5rem 1rem; background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.2); border-radius: 6px; color: var(--brand-400); font-weight: 600; cursor: pointer;">Accetto e chiudi</button>
+        <button class="btn btn-sm" type="button" id="btn-accept-legal">Accetto e chiudi</button>
       </footer>
     </div>
   </div>
