@@ -30,9 +30,10 @@ Il servizio utilizza prompt proprietari e metodologia accademica scientifica per
 **URL Pricing:** https://tradelia.org/pricing.html
 
 La pagina pricing include:
-- Prezzo chiaro: €49/mese
+- Prezzo chiaro: €29/mese
+- **14 giorni di prova gratuita** (nessun addebito durante il periodo di prova)
 - Lista dettagliata di tutte le features incluse
-- Link alla policy di rimborso (14 giorni)
+- Link alla policy di rimborso
 - FAQ su cancellazione e pagamenti
 - Descrizione completa del servizio
 
@@ -40,7 +41,13 @@ La pagina pricing include:
 
 ## 3. Display chiaro delle features/deliverables inclusi nell'acquisto
 
-**Features incluse nell'abbonamento mensile (€49/mese):**
+**Features incluse nell'abbonamento mensile (€29/mese):**
+
+**Prova Gratuita:**
+- 14 giorni di prova gratuita senza impegno
+- Accesso completo a tutte le funzionalità durante la prova
+- Nessun addebito durante il periodo di prova
+- Cancellazione gratuita in qualsiasi momento durante la prova
 
 ✅ **Accesso completo a tutti i report**
    - Report su azioni, ETF, commodities
@@ -134,9 +141,10 @@ I pagamenti sono gestiti completamente tramite **Paddle** come Merchant of Recor
 
 ### Tipo di servizio
 - **Software as a Service (SaaS)**
-- Abbonamento ricorrente mensile
-- Cancellazione in qualsiasi momento
-- Rinnovo automatico fino a cancellazione
+- Abbonamento ricorrente mensile (€29/mese)
+- **14 giorni di prova gratuita** per tutti i nuovi utenti
+- Cancellazione in qualsiasi momento (anche durante la prova gratuita)
+- Rinnovo automatico fino a cancellazione (dopo il periodo di prova)
 
 ### Compliance
 - **MiFID II / ESMA / CONSOB compliant**
