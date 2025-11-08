@@ -6,7 +6,7 @@
       "category": "tutorial",
       "tags": ["cfd", "derivati", "trading"],
       "version": "Tradelia AI v2.1",
-      "link": "/tutorial/CFD-guida-completa.html",
+      "link": "/report/tutorial/CFD-guida-completa.html",
       "created_at": "2025-01-01T10:00:00Z",
       "updated_at": "2025-01-01T10:00:00Z"
     },
@@ -16,7 +16,7 @@
       "category": "tutorial",
       "tags": ["etf", "sintetici", "derivati"],
       "version": "Tradelia AI v2.1",
-      "link": "/tutorial/ETF-Sintetici.html",
+      "link": "/report/tutorial/ETF-Sintetici.html",
       "created_at": "2025-01-02T10:00:00Z",
       "updated_at": "2025-01-02T10:00:00Z"
     },
@@ -26,7 +26,7 @@
       "category": "tutorial",
       "tags": ["opzioni", "derivati", "trading"],
       "version": "Tradelia AI v2.1",
-      "link": "/tutorial/Opzioni-Vanilla.html",
+      "link": "/report/tutorial/Opzioni-Vanilla.html",
       "created_at": "2025-01-03T10:00:00Z",
       "updated_at": "2025-01-03T10:00:00Z"
     }

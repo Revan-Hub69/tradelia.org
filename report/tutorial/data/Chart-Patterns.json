@@ -379,6 +379,7 @@
           "type": "heading",
           "level": 3,
           "text": "1. Entrare Prima della Rottura"
+        },
         {
           "type": "list",
           "items": [
@@ -392,6 +393,7 @@
           "type": "heading",
           "level": 3,
           "text": "2. Ignorare Volume"
+        },
         {
           "type": "list",
           "items": [
@@ -405,6 +407,7 @@
           "type": "heading",
           "level": 3,
           "text": "3. Pattern Mal Formati"
+        },
         {
           "type": "list",
           "items": [
@@ -418,6 +421,7 @@
           "type": "heading",
           "level": 3,
           "text": "4. Ignorare Context"
+        },
         {
           "type": "list",
           "items": [
@@ -441,6 +445,7 @@
           "type": "heading",
           "level": 3,
           "text": "1. Cup and Handle (Tazza e Manico)"
+        },
         {
           "type": "list",
           "items": [
@@ -455,6 +460,7 @@
           "type": "heading",
           "level": 3,
           "text": "2. Diamond (Diamante)"
+        },
         {
           "type": "list",
           "items": [
@@ -469,6 +475,7 @@
           "type": "heading",
           "level": 3,
           "text": "3. Rounding Bottom/Top (Fondo/Top Arrotondato)"
+        },
         {
           "type": "list",
           "items": [
@@ -493,6 +500,7 @@
           "type": "heading",
           "level": 3,
           "text": "1. Pattern + Volume"
+        },
         {
           "type": "list",
           "items": [
@@ -506,6 +514,7 @@
           "type": "heading",
           "level": 3,
           "text": "2. Pattern + Supporti/Resistenze"
+        },
         {
           "type": "list",
           "items": [
@@ -519,6 +528,7 @@
           "type": "heading",
           "level": 3,
           "text": "3. Pattern + Indicatori Tecnici"
+        },
         {
           "type": "list",
           "items": [
@@ -532,6 +542,7 @@
           "type": "heading",
           "level": 3,
           "text": "4. Pattern + Candlestick"
+        },
         {
           "type": "list",
           "items": [
@@ -555,6 +566,7 @@
           "type": "heading",
           "level": 3,
           "text": "1. Aspetta Pattern Ben Formati"
+        },
         {
           "type": "list",
           "items": [
@@ -568,6 +580,7 @@
           "type": "heading",
           "level": 3,
           "text": "2. Conferma è Essenziale"
+        },
         {
           "type": "list",
           "items": [
@@ -581,6 +594,7 @@
           "type": "heading",
           "level": 3,
           "text": "3. Context è Chiave"
+        },
         {
           "type": "list",
           "items": [
