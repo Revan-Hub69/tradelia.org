@@ -642,52 +642,105 @@
         
         for (const reportID of reportDirs) {
           try {
-            const manifestResponse = await fetch(`/report/reports/${reportID}/manifest.json`);
-            if (!manifestResponse.ok) continue;
-            
-            const manifest = await manifestResponse.json();
-            
-            // Carica header.json per info aggiuntive
+            // Carica header.json PRIMA per avere sempre il ticker
             let header = null;
+            let ticker = null;
+            let companyName = null;
+            
             try {
               const headerResponse = await fetch(`/report/reports/${reportID}/header.json`);
               if (headerResponse.ok) {
                 header = await headerResponse.json();
+                
+                // Estrai ticker e companyName da header
+                if (header?.rows) {
+                  const companyRow = header.rows.find(r => r.id === 'company-line');
+                  if (companyRow?.parts) {
+                    const tickerPart = companyRow.parts.find(p => p.key === 'Ticker');
+                    const companyPart = companyRow.parts.find(p => p.key === 'CompanyName');
+                    
+                    if (tickerPart) ticker = tickerPart.value;
+                    if (companyPart) companyName = companyPart.value;
+                  }
+                }
+                
+                // Fallback: usa header legacy se presente
+                if (!ticker && header?.Ticker) ticker = header.Ticker;
+                if (!companyName && header?.CompanyName) companyName = header.CompanyName;
               }
-            } catch(e) {}
+            } catch(e) {
+              console.warn(`Errore caricamento header per ${reportID}:`, e);
+            }
             
-            // Estrai info dal manifest
+            // Carica manifest.json
+            let manifest = null;
+            try {
+              const manifestResponse = await fetch(`/report/reports/${reportID}/manifest.json`);
+              if (manifestResponse.ok) {
+                manifest = await manifestResponse.json();
+              }
+            } catch(e) {
+              console.warn(`Errore caricamento manifest per ${reportID}:`, e);
+            }
+            
+            // Se non abbiamo né header né manifest, salta
+            if (!header && !manifest) {
+              console.warn(`Nessun dato disponibile per report ${reportID}`);
+              continue;
+            }
+            
+            // Determina timestamp
+            let timestamp = reportID; // Fallback all'ID
+            if (manifest?.metadata?.timestamp) {
+              timestamp = manifest.metadata.timestamp;
+            } else if (header?.meta?.generatedAt) {
+              timestamp = header.meta.generatedAt;
+            } else if (header?.meta?.lastUpdated) {
+              timestamp = header.meta.lastUpdated;
+            }
+            
+            // Determina moduli
+            let modules = [];
+            if (manifest?.order && Array.isArray(manifest.order)) {
+              modules = manifest.order;
+            } else if (manifest?.modules && typeof manifest.modules === 'object') {
+              modules = Object.keys(manifest.modules);
+            }
+            
+            // Estrai ticker da manifest se non trovato in header
+            if (!ticker && manifest?.metadata?.ticker) {
+              ticker = manifest.metadata.ticker;
+            }
+            
+            // Crea reportData
             const reportData = {
-              id: manifest.id || reportID,
-              ticker: manifest.metadata?.ticker || 'N/A',
-              timestamp: manifest.metadata?.timestamp || manifest.id,
-              modules: manifest.order || Object.keys(manifest.modules || {}),
+              id: manifest?.id || reportID,
+              ticker: ticker || 'N/A',
+              company: companyName || null,
+              timestamp: timestamp,
+              modules: modules,
               reportUrl: `/report/index.html?id=${reportID}`
             };
             
-            // Estrai info aggiuntive da header se disponibile
-            if (header?.rows) {
-              // Cerca CompanyName e altri dati
-              const companyRow = header.rows.find(r => r.id === 'company-line');
-              if (companyRow) {
-                const companyPart = companyRow.parts?.find(p => p.key === 'CompanyName');
-                if (companyPart) {
-                  reportData.company = companyPart.value;
-                }
-              }
-            }
-            
             reports.push(reportData);
           } catch(e) {
-            console.warn(`Errore caricamento report ${reportID}:`, e);
+            console.error(`Errore elaborazione report ${reportID}:`, e);
           }
         }
         
-        // Ordina per data (più recenti prima)
+        // Ordina per data (più recenti prima), gestendo date invalide
         reports.sort((a, b) => {
-          const dateA = new Date(a.timestamp);
-          const dateB = new Date(b.timestamp);
-          return dateB - dateA;
+          try {
+            const dateA = new Date(a.timestamp);
+            const dateB = new Date(b.timestamp);
+            // Se una data è invalida, mettila alla fine
+            if (isNaN(dateA.getTime()) && isNaN(dateB.getTime())) return 0;
+            if (isNaN(dateA.getTime())) return 1;
+            if (isNaN(dateB.getTime())) return -1;
+            return dateB - dateA;
+          } catch(e) {
+            return 0;
+          }
         });
         
         // Renderizza tabella
@@ -721,9 +774,19 @@
               </thead>
               <tbody>
                 ${reports.map(report => {
-                  const dateObj = new Date(report.timestamp);
-                  const dateStr = dateObj.toLocaleDateString('it-IT', { year: 'numeric', month: 'short', day: 'numeric' });
-                  const timeStr = dateObj.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+                  let dateStr = report.timestamp;
+                  let timeStr = '';
+                  
+                  try {
+                    const dateObj = new Date(report.timestamp);
+                    if (!isNaN(dateObj.getTime())) {
+                      dateStr = dateObj.toLocaleDateString('it-IT', { year: 'numeric', month: 'short', day: 'numeric' });
+                      timeStr = dateObj.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+                    }
+                  } catch(e) {
+                    // Usa timestamp originale se parsing fallisce
+                  }
+                  
                   return `
                     <tr>
                       <td>
@@ -738,12 +801,15 @@
                       <td>
                         <div class="report-date">
                           <span class="report-date-main">${dateStr}</span>
-                          <span class="report-date-time">${timeStr}</span>
+                          ${timeStr ? `<span class="report-date-time">${timeStr}</span>` : ''}
                         </div>
                       </td>
                       <td>
                         <div class="report-modules">
-                          ${report.modules.map(module => `<span class="module-badge">${module}</span>`).join('')}
+                          ${report.modules.length > 0 
+                            ? report.modules.map(module => `<span class="module-badge">${module}</span>`).join('')
+                            : '<span style="color: var(--ink-soft); font-size: var(--fs-13);">N/A</span>'
+                          }
                         </div>
                       </td>
                       <td>
@@ -767,7 +833,14 @@
         console.error('Errore caricamento report:', error);
         container.innerHTML = `
           <div class="empty-state">
-            <p>Errore nel caricamento dei report.</p>
+            <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <p style="margin-top: 1rem; font-weight: 600;">Errore nel caricamento dei report</p>
+            <p style="margin-top: 0.5rem; font-size: var(--fs-14); color: var(--ink-soft);">${error.message || 'Errore sconosciuto'}</p>
+            <button onclick="location.reload()" style="margin-top: 1.5rem; padding: 0.625rem 1.25rem; background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.2); border-radius: 6px; color: var(--brand-400); font-weight: 600; cursor: pointer;">Ricarica</button>
           </div>
         `;
       }
@@ -835,21 +908,37 @@
         for (const file of tutorialFiles) {
           try {
             const response = await fetch(`/report/tutorial/data/${file}`);
-            if (!response.ok) continue;
+            if (!response.ok) {
+              console.warn(`Tutorial ${file} non trovato (${response.status})`);
+              continue;
+            }
             
             const data = await response.json();
+            if (!data || typeof data !== 'object') {
+              console.warn(`Tutorial ${file} ha formato non valido`);
+              continue;
+            }
+            
             const fileName = file.replace('.json', '');
             
+            // Estrai categoria con fallback
+            let category = 'Altro';
+            if (data.meta?.category) {
+              category = data.meta.category;
+            } else if (data.category) {
+              category = data.category;
+            }
+            
             tutorials.push({
-              title: data.title || fileName,
-              category: data.meta?.category || 'Altro',
-              published: data.meta?.published || '',
-              difficulty: data.meta?.difficulty || '',
+              title: data.title || fileName.replace(/-/g, ' '),
+              category: category,
+              published: data.meta?.published || data.published || '',
+              difficulty: data.meta?.difficulty || data.difficulty || '',
               link: `/report/tutorial/${fileName}.html`,
               fileName: fileName
             });
           } catch(e) {
-            console.warn(`Errore caricamento tutorial ${file}:`, e);
+            console.error(`Errore caricamento tutorial ${file}:`, e);
           }
         }
         
@@ -919,7 +1008,14 @@
         console.error('Errore caricamento tutorial:', error);
         container.innerHTML = `
           <div class="empty-state">
-            <p>Errore nel caricamento dei tutorial.</p>
+            <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <p style="margin-top: 1rem; font-weight: 600;">Errore nel caricamento dei tutorial</p>
+            <p style="margin-top: 0.5rem; font-size: var(--fs-14); color: var(--ink-soft);">${error.message || 'Errore sconosciuto'}</p>
+            <button onclick="location.reload()" style="margin-top: 1.5rem; padding: 0.625rem 1.25rem; background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.2); border-radius: 6px; color: var(--brand-400); font-weight: 600; cursor: pointer;">Ricarica</button>
           </div>
         `;
       }
@@ -946,8 +1042,13 @@
     }
     
     // ===== INIT =====
-    loadReports();
-    loadTutorials();
+    // Carica report e tutorial in parallelo
+    Promise.all([
+      loadReports().catch(err => console.error('Errore loadReports:', err)),
+      loadTutorials().catch(err => console.error('Errore loadTutorials:', err))
+    ]).then(() => {
+      console.log('Dashboard caricata completamente');
+    });
   </script>
   
   <!-- ===== LEGAL OVERLAY ===== -->
