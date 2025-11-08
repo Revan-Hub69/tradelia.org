@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tradelia AI · Tutorial</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Tutorial educativi Tradelia AI - Trading, investimenti e analisi finanziaria" />
+  <meta name="theme-color" content="#0f0f0f" />
+  
+  <!-- Favicons -->
+  <link rel="icon" href="/favicon.ico?v=1">
+  <link rel="icon" type="image/png" href="/favicon.png?v=1">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
+  
+  <!-- Design System -->
+  <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  
+  <style>
+    /* ===== CLEAN MINIMAL DESIGN - NO BLUE ===== */
+    :root {
+      --tut-bg: var(--surface-page, #0f0f0f);
+      --tut-surface: var(--surface-card, #181818);
+      --tut-surface-elev: var(--surface-elev, #202020);
+      --tut-border: var(--br-card, #323232);
+      --tut-text: var(--ink, #ffffff);
+      --tut-text-soft: var(--ink-soft, #f0f0f0);
+      --tut-text-muted: var(--muted, #b8b8b8);
+      --tut-accent: #e5e5e5;
+      --tut-accent-hover: #ffffff;
+    }
+    
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: var(--tut-bg);
+      color: var(--tut-text);
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    
+    main {
+      flex: 1;
+      padding-top: 64px;
+      padding-bottom: 4rem;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin-inline: auto;
+      padding-inline: 2rem;
+    }
+    
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--tut-text-muted);
+      margin: 0 0 2.5rem;
+    }
+    
+    .search-container {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 0.875rem 1rem 0.875rem 2.75rem;
+      background: var(--tut-surface);
+      border: 1px solid var(--tut-border);
+      border-radius: 6px;
+      color: var(--tut-text);
+      font-size: 14px;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      transition: all 0.2s;
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: var(--tut-text-muted);
+      background: var(--tut-surface-elev);
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--tut-text-muted);
+      pointer-events: none;
+    }
+    
+    .filter-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      font-size: 12px;
+    }
+    
+    .filter-label {
+      color: var(--tut-text-muted);
+      font-weight: 500;
+    }
+    
+    .filter-btn {
+      padding: 0.4rem 0.875rem;
+      background: var(--tut-surface);
+      border: 1px solid var(--tut-border);
+      border-radius: 4px;
+      color: var(--tut-text-soft);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+    }
+    
+    .filter-btn:hover {
+      background: var(--tut-surface-elev);
+      border-color: var(--tut-text-muted);
+    }
+    
+    .filter-btn.active {
+      background: var(--tut-surface-elev);
+      border-color: var(--tut-text);
+      color: var(--tut-text);
+    }
+    
+    .tutorial-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      background: var(--tut-surface);
+      border: 1px solid var(--tut-border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    
+    .tutorial-item {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--tut-border);
+      transition: background 0.2s;
+    }
+    
+    .tutorial-item:last-child {
+      border-bottom: none;
+    }
+    
+    .tutorial-item:hover {
+      background: var(--tut-surface-elev);
+    }
+    
+    .tutorial-link {
+      color: var(--tut-text);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 0.75rem;
+      transition: color 0.2s;
+    }
+    
+    .tutorial-item:hover .tutorial-link {
+      color: var(--tut-accent-hover);
+    }
+    
+    .tutorial-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      font-size: 11px;
+      color: var(--tut-text-muted);
+    }
+    
+    .tutorial-badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      background: var(--tut-surface-elev);
+      border: 1px solid var(--tut-border);
+      border-radius: 3px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--tut-text-soft);
+    }
+    
+    .empty-state {
+      padding: 4rem 2rem;
+      text-align: center;
+      color: var(--tut-text-muted);
+    }
+    
+    .loading {
+      padding: 4rem;
+      text-align: center;
+      color: var(--tut-text-muted);
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding-inline: 1rem;
+      }
+      
+      h1 {
+        font-size: 24px;
+      }
+      
+      .tutorial-item {
+        padding: 1rem;
+      }
+      
+      .filter-controls {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ===== HEADER ===== -->
+  <div id="site-header-slot"></div>
+  
+  <main>
+    <div class="container">
+      <h1>Tutorial</h1>
+      <p class="page-subtitle">Trading, investimenti e analisi finanziaria</p>
+      
+      <div class="search-container">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="text" 
+          id="tutorials-search" 
+          class="search-input" 
+          placeholder="Cerca tutorial..." 
+          autocomplete="off"
+        />
+      </div>
+      
+      <div class="filter-controls" id="category-filter">
+        <span class="filter-label">Categoria:</span>
+        <button class="filter-btn active" data-category="all">Tutte</button>
+      </div>
+      
+      <div id="tutorials-container">
+        <div class="loading">Caricamento tutorial...</div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- ===== FOOTER ===== -->
+  <div id="site-footer-slot"></div>
+  
+  <!-- ===== MOUNT HEADER & FOOTER ===== -->
+  <script type="module">
+    document.documentElement.setAttribute('data-theme', 'dark');
+    
+    // Importa componenti
+    import { siteHeader } from '/report/assets/js/site-header.js';
+    import { siteFooter } from '/report/assets/js/site-footer.js';
+    
+    // Mount header/footer
+    const headerSlot = document.getElementById('site-header-slot');
+    if (headerSlot) siteHeader.mount(headerSlot);
+    
+    const footerSlot = document.getElementById('site-footer-slot');
+    if (footerSlot) siteFooter.mount(footerSlot);
+  </script>
+  
+  <script type="module">
+    const STATE = {
+      tutorials: [],
+      currentCategory: 'all'
+    };
+    
+    async function loadTutorials() {
+      const container = document.getElementById('tutorials-container');
+      if (!container) return;
+      
+      try {
+        let tutorialFiles = [];
+        
+        try {
+          const manifestResponse = await fetch('/report/tutorial/tutorials-manifest.json');
+          if (manifestResponse.ok) {
+            const manifest = await manifestResponse.json();
+            tutorialFiles = manifest.tutorials || manifest.files || [];
+          } else {
+            throw new Error('Manifest non disponibile');
+          }
+        } catch(e) {
+          tutorialFiles = [
+            'Analisi-Tecnica-Introduzione.json',
+            'Chart-Patterns.json',
+            'valutare-azioni.json',
+            'valutare-etf.json',
+            'valutare-obbligazioni.json',
+            'valutare-crypto.json',
+            'valutare-commodities.json',
+            'valutare-reit.json',
+            'CFD-guida-completa.json',
+            'Derivati-OTC.json'
+          ];
+        }
+        
+        const tutorials = [];
+        
+        for (const file of tutorialFiles) {
+          try {
+            const response = await fetch(`/report/tutorial/data/${file}`);
+            if (!response.ok) continue;
+            
+            const data = await response.json();
+            if (!data || typeof data !== 'object') continue;
+            
+            const fileName = file.replace('.json', '');
+            const category = data.meta?.category || data.category || 'Altro';
+            
+            tutorials.push({
+              title: data.title || fileName.replace(/-/g, ' '),
+              category: category,
+              published: data.meta?.published || data.published || '',
+              difficulty: data.meta?.difficulty || data.difficulty || '',
+              link: `/report/tutorial/${fileName}.html`,
+              fileName: fileName
+            });
+          } catch(e) {
+            console.error(`Errore caricamento tutorial ${file}:`, e);
+          }
+        }
+        
+        STATE.tutorials = tutorials;
+        renderTutorials();
+        setupFilters();
+        setupSearch();
+      } catch(error) {
+        container.innerHTML = `<div class="empty-state">Errore: ${error.message}</div>`;
+      }
+    }
+    
+    function renderTutorials() {
+      const container = document.getElementById('tutorials-container');
+      if (!container) return;
+      
+      let filtered = [...STATE.tutorials];
+      
+      if (STATE.currentCategory !== 'all') {
+        filtered = filtered.filter(t => 
+          (t.category || 'Altro').toLowerCase() === STATE.currentCategory.toLowerCase()
+        );
+      }
+      
+      const query = document.getElementById('tutorials-search')?.value.toLowerCase().trim() || '';
+      if (query) {
+        filtered = filtered.filter(t => {
+          const searchable = [
+            t.title?.toLowerCase() || '',
+            t.category?.toLowerCase() || '',
+            t.difficulty?.toLowerCase() || ''
+          ].join(' ');
+          return searchable.includes(query);
+        });
+      }
+      
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="empty-state">Nessun tutorial trovato</div>`;
+        return;
+      }
+      
+      const sorted = filtered.sort((a, b) => {
+        return (a.title || '').toLowerCase().localeCompare((b.title || '').toLowerCase());
+      });
+      
+      const cleanTitle = (title) => {
+        return title
+          .replace(/ - Guida Completa Tradelia AI/gi, '')
+          .replace(/ - Tradelia AI/gi, '')
+          .trim();
+      };
+      
+      container.innerHTML = `
+        <ul class="tutorial-list">
+          ${sorted.map(t => `
+            <li class="tutorial-item">
+              <a href="${t.link}" class="tutorial-link">${cleanTitle(t.title)}</a>
+              <div class="tutorial-meta">
+                ${t.category !== 'Altro' ? `<span class="tutorial-badge">${t.category}</span>` : ''}
+                ${t.difficulty ? `<span class="tutorial-badge">${t.difficulty}</span>` : ''}
+                ${t.published ? `<span>${t.published}</span>` : ''}
+              </div>
+            </li>
+          `).join('')}
+        </ul>
+      `;
+    }
+    
+    function setupFilters() {
+      const categoryFilter = document.getElementById('category-filter');
+      if (!categoryFilter) return;
+      
+      const categories = [...new Set(STATE.tutorials.map(t => t.category || 'Altro'))].sort();
+      
+      categories.forEach(category => {
+        const btn = document.createElement('button');
+        btn.className = 'filter-btn';
+        btn.dataset.category = category.toLowerCase();
+        btn.textContent = category;
+        if (category.toLowerCase() === STATE.currentCategory) {
+          btn.classList.add('active');
+        }
+        btn.addEventListener('click', () => {
+          categoryFilter.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          STATE.currentCategory = btn.dataset.category;
+          renderTutorials();
+        });
+        categoryFilter.appendChild(btn);
+      });
+    }
+    
+    function setupSearch() {
+      const searchInput = document.getElementById('tutorials-search');
+      if (!searchInput) return;
+      
+      searchInput.addEventListener('input', () => {
+        renderTutorials();
+      });
+    }
+    
+    loadTutorials();
+  </script>
+</body>
+</html>
+

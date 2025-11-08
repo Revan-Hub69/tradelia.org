@@ -320,156 +320,6 @@
       max-width: 65ch;
     }
     
-    /* ===== TUTORIAL SECTION - ACADEMIC STYLE ===== */
-    .tutorial-header {
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--dash-border);
-    }
-    
-    .tutorial-title {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--dash-text);
-      margin: 0 0 0.5rem;
-      letter-spacing: -0.025em;
-      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
-    }
-    
-    .tutorial-description {
-      font-size: 13px;
-      color: var(--dash-text-soft);
-      margin: 0;
-      line-height: 1.6;
-      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
-      max-width: 65ch;
-    }
-    
-    .tutorial-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      background: var(--dash-surface);
-      border: 1px solid var(--dash-border);
-      border-radius: 6px;
-      overflow: hidden;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    }
-    
-    .tutorial-item {
-      padding: 1rem 1.25rem;
-      border-bottom: 1px solid var(--dash-border);
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      min-height: auto;
-      background: var(--dash-surface);
-    }
-    
-    .tutorial-item:last-child {
-      border-bottom: none;
-    }
-    
-    .tutorial-item::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 3px;
-      background: var(--dash-accent);
-      transform: scaleY(0);
-      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      opacity: 0.8;
-    }
-    
-    .tutorial-item:hover {
-      background: var(--dash-surface-elev);
-      border-color: var(--dash-border-strong);
-    }
-    
-    .tutorial-item:hover::before {
-      transform: scaleY(1);
-    }
-    
-    .tutorial-item-content {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    
-    .tutorial-link {
-      color: var(--dash-accent);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 600;
-      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
-      display: flex;
-      align-items: center;
-      gap: 0.625rem;
-      transition: all 0.2s;
-      line-height: 1.5;
-      letter-spacing: -0.01em;
-    }
-    
-    .tutorial-link::after {
-      content: '→';
-      opacity: 0;
-      transform: translateX(-6px);
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      color: var(--dash-accent);
-      font-weight: 400;
-      font-size: 13px;
-    }
-    
-    .tutorial-item:hover .tutorial-link {
-      color: var(--dash-accent-hover);
-    }
-    
-    .tutorial-item:hover .tutorial-link::after {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    
-    .tutorial-meta {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      font-size: 11px;
-      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
-    }
-    
-    .tutorial-category-badge,
-    .tutorial-difficulty-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.25rem 0.625rem;
-      border-radius: 4px;
-      font-weight: 500;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    
-    .tutorial-category-badge {
-      background: rgba(37, 99, 235, 0.1);
-      color: var(--dash-accent);
-      border: 1px solid rgba(37, 99, 235, 0.2);
-    }
-    
-    .tutorial-difficulty-badge {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--dash-text-soft);
-      border: 1px solid var(--dash-border);
-    }
-    
-    .tutorial-published {
-      color: var(--dash-text-muted);
-      font-size: 10px;
-      font-variant-numeric: tabular-nums;
-      font-family: var(--ff-mono, 'SF Mono', 'Monaco', 'Consolas', monospace);
-    }
-    
     /* ===== LOADING - ACADEMIC ===== */
     .loading {
       padding: 4rem;
@@ -1182,14 +1032,11 @@
       <!-- ===== DASHBOARD HEADER ===== -->
       <div class="dashboard-header">
         <h1 class="dashboard-title">Dashboard</h1>
-        <p class="dashboard-subtitle">Report finanziari AI | Tutorial educativi</p>
+        <p class="dashboard-subtitle">Report finanziari AI</p>
       </div>
       
       <!-- ===== SECTION TOGGLE ===== -->
-      <div class="section-toggle">
-        <button class="section-toggle-btn active" data-section="reports">REPORT</button>
-        <button class="section-toggle-btn" data-section="tutorials">TUTORIAL</button>
-      </div>
+      <!-- Rimossa sezione tutorial - ora disponibile in /tutorials.html -->
       
       <!-- ===== REPORT SECTION ===== -->
       <section class="report-section active">
@@ -1253,73 +1100,6 @@
         </div>
       </section>
       
-      <!-- ===== TUTORIAL SECTION ===== -->
-      <section class="tutorial-section">
-        <div class="tutorial-header">
-          <h2 class="tutorial-title">Tutorial</h2>
-          <p class="tutorial-description">Trading, investimenti e analisi finanziaria</p>
-        </div>
-        
-        <div class="stats-bar" id="tutorials-stats" style="display: none;">
-          <div class="stat-item">
-            <span class="stat-value" id="tutorials-count">0</span>
-            <span class="stat-label">Tutorial</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-value" id="tutorials-categories-count">0</span>
-            <span class="stat-label">Categorie</span>
-          </div>
-        </div>
-        
-        <div class="search-container">
-          <span class="search-icon">🔍</span>
-          <input 
-            type="text" 
-            id="tutorials-search" 
-            class="search-input" 
-            placeholder="Cerca tutorial per titolo, categoria o difficoltà..." 
-            autocomplete="off"
-          />
-          <span class="search-results-count" id="tutorials-search-count" style="display: none;"></span>
-          <div style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); pointer-events: none;">
-            <span class="shortcut-hint" id="tutorials-shortcut-hint">
-              <span class="shortcut-key" id="tutorials-shortcut-mod">⌘</span>
-              <span>K</span>
-            </span>
-          </div>
-        </div>
-        
-        <div class="filter-controls" id="tutorials-category-filter" style="display: none;">
-          <span class="sort-label">Categoria:</span>
-          <button class="sort-btn filter-btn active" data-category="all">Tutte</button>
-        </div>
-        
-        <div class="filter-controls" id="tutorials-difficulty-filter" style="display: none;">
-          <span class="sort-label">Difficoltà:</span>
-          <button class="sort-btn filter-btn active" data-difficulty="all">Tutte</button>
-        </div>
-        
-        <!-- Scroll controls (desktop only) -->
-        <div class="scroll-controls" id="tutorials-scroll-controls">
-          <button class="scroll-btn scroll-up" aria-label="Scroll su" title="Scroll su">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18 15l-6-6-6 6"/>
-            </svg>
-          </button>
-          <button class="scroll-btn scroll-down" aria-label="Scroll giù" title="Scroll giù">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M6 9l6 6 6-6"/>
-            </svg>
-          </button>
-        </div>
-        
-        <div id="tutorials-container">
-          <div class="loading">
-            <div class="loading-spinner"></div>
-            <span>Caricamento tutorial...</span>
-          </div>
-        </div>
-      </section>
     </div>
   </main>
   
@@ -1354,44 +1134,12 @@
     const STATE = {
       reports: [],
       filteredReports: [],
-      tutorials: [],
       currentSort: 'date-desc',
       currentFramework: 'all',
-      currentSection: 'reports',
-      currentCategory: 'all',
-      currentDifficulty: 'all'
     };
     
     // ===== SECTION TOGGLE =====
-    function initSectionToggle() {
-      const toggleBtns = document.querySelectorAll('.section-toggle-btn');
-      const reportSection = document.querySelector('.report-section');
-      const tutorialSection = document.querySelector('.tutorial-section');
-      
-      toggleBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const section = btn.dataset.section;
-          STATE.currentSection = section;
-          
-          // Update buttons
-          toggleBtns.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          
-          // Update sections
-          if (section === 'reports') {
-            reportSection.classList.add('active');
-            tutorialSection.classList.remove('active');
-            // Focus search quando si passa ai report
-            setTimeout(() => document.getElementById('reports-search')?.focus(), 100);
-          } else {
-            reportSection.classList.remove('active');
-            tutorialSection.classList.add('active');
-            // Focus search quando si passa ai tutorial
-            setTimeout(() => document.getElementById('tutorials-search')?.focus(), 100);
-          }
-        });
-      });
-    }
+    // Rimossa logica toggle - solo report ora
     
     // ===== KEYBOARD SHORTCUTS =====
     function initKeyboardShortcuts() {
@@ -1399,10 +1147,7 @@
         // Cmd/Ctrl + K per focus search
         if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
           e.preventDefault();
-          const activeSection = STATE.currentSection;
-          const searchInput = activeSection === 'reports' 
-            ? document.getElementById('reports-search')
-            : document.getElementById('tutorials-search');
+          const searchInput = document.getElementById('reports-search');
           if (searchInput) {
             searchInput.focus();
             searchInput.select();
@@ -1415,18 +1160,13 @@
           if (activeSearch && activeSearch.classList.contains('search-input')) {
             activeSearch.value = '';
             activeSearch.blur();
-            if (STATE.currentSection === 'reports') {
-              filterReports();
-            } else {
-              filterTutorials();
-            }
+            filterReports();
           }
         }
       });
     }
     
-    // Initialize toggle and shortcuts
-    initSectionToggle();
+    // Initialize shortcuts
     initKeyboardShortcuts();
     
     // Detect OS for shortcut hint
@@ -2006,394 +1746,6 @@
       }
     }
     
-    // ===== TUTORIALS LOADER =====
-    async function loadTutorials() {
-      const container = document.getElementById('tutorials-container');
-      if (!container) return;
-      
-      try {
-        // Carica lista tutorial da manifest (se disponibile) o usa lista hardcoded
-        let tutorialFiles = [];
-        
-        try {
-          // Prova a caricare manifest tutorial (generato dinamicamente)
-          const manifestResponse = await fetch('/report/tutorial/tutorials-manifest.json');
-          if (manifestResponse.ok) {
-            const manifest = await manifestResponse.json();
-            tutorialFiles = manifest.tutorials || manifest.files || [];
-            console.log('Tutorial manifest caricato:', tutorialFiles.length, 'tutorial');
-          } else {
-            // Fallback: usa lista hardcoded con tutti i tutorial disponibili
-            throw new Error('Manifest non disponibile, uso lista hardcoded');
-          }
-        } catch(e) {
-          // Lista completa di tutti i tutorial disponibili (fallback)
-          tutorialFiles = [
-            'Analisi-Tecnica-Introduzione.json',
-            'Chart-Patterns.json',
-            'Indicatori-Tecnici.json',
-            'Candlestick-Patterns.json',
-            'valutare-azioni.json',
-            'valutare-etf.json',
-            'valutare-obbligazioni.json',
-            'valutare-crypto.json',
-            'valutare-commodities.json',
-            'valutare-reit.json',
-            'valutare-liquidita.json',
-            'PIC-PAC-Guida-Completa.json',
-            'Rebalancing-Portafoglio.json',
-            'Teorie-Creazione-Portafogli.json',
-            'Value-vs-Growth-Investing.json',
-            'Dividend-Investing.json',
-            'Money-Management-Position-Sizing.json',
-            'Tipi-Ordini-Mercato.json',
-            'Psicologia-Trading-Bias-Comportamentali.json',
-            'Trading-Algoritmico-Miti-Realta.json',
-            'Backtesting-Stress-Test-Monte-Carlo.json',
-            'Correlazione-Guida-Completa.json',
-            'Volatilita-Stocastica-Modelli-Pricing.json',
-            'The-Big-Short-Short-Selling.json',
-            'Analisi-Macroeconomica-Investimenti.json',
-            'Opzioni-Vanilla.json',
-            'Opzioni-Esotiche.json',
-            'CFD-guida-completa.json',
-            'CFD-Retail.json',
-            'ETF-Leva-Inversi.json',
-            'ETF-Sintetici.json',
-            'Derivati-OTC.json',
-            'CoCo-Bonds.json',
-            'Callable-StepUp.json',
-            'Reverse-Convertible.json',
-            'Dual-Currency-Bonds.json',
-            'Note-Strutturate-Barriera.json',
-            'Certificates-Complessi.json',
-            'Obbligazioni-Strutturate.json',
-            'False-Principal-Protection.json',
-            'CLO-CDO.json',
-            'CDS-CDO-Subprime.json',
-            'SPAC-Rischi.json',
-            'Token-Sintetici.json',
-            'Stablecoin-Algoritmiche.json',
-            'Truffe-Cripto.json',
-            'Truffe-Finanziarie-Storiche.json'
-          ];
-          console.log('Usando lista hardcoded:', tutorialFiles.length, 'tutorial');
-        }
-        
-        const tutorials = [];
-        
-        for (const file of tutorialFiles) {
-          try {
-            const response = await fetch(`/report/tutorial/data/${file}`);
-            if (!response.ok) {
-              console.warn(`Tutorial ${file} non trovato (${response.status})`);
-              continue;
-            }
-            
-            const data = await response.json();
-            if (!data || typeof data !== 'object') {
-              console.warn(`Tutorial ${file} ha formato non valido`);
-              continue;
-            }
-            
-            const fileName = file.replace('.json', '');
-            
-            // Estrai categoria con fallback
-            let category = 'Altro';
-            if (data.meta?.category) {
-              category = data.meta.category;
-            } else if (data.category) {
-              category = data.category;
-            }
-            
-            tutorials.push({
-              title: data.title || fileName.replace(/-/g, ' '),
-              category: category,
-              published: data.meta?.published || data.published || '',
-              difficulty: data.meta?.difficulty || data.difficulty || '',
-              link: `/report/tutorial/${fileName}.html`,
-              fileName: fileName
-            });
-          } catch(e) {
-            console.error(`Errore caricamento tutorial ${file}:`, e);
-          }
-        }
-        
-        // Renderizza lista semplice e elegante (tutti i tutorial in una lista, ordinati)
-        if (tutorials.length === 0) {
-          container.innerHTML = `<div class="empty-state">Nessun tutorial disponibile</div>`;
-          return;
-        }
-        
-        // Save tutorials to state (flat array)
-        STATE.tutorials = tutorials;
-        
-        // Render lista
-        renderTutorialsList(tutorials);
-        
-        // Update stats
-        updateTutorialsStats();
-        
-        // Show stats
-        document.getElementById('tutorials-stats').style.display = 'flex';
-        
-        // Setup search and filters
-        setupTutorialsSearch();
-        setupTutorialsFilters();
-        
-        // Setup scroll controls
-        setupScrollControls();
-      } catch(error) {
-        console.error('Errore caricamento tutorial:', error);
-        container.innerHTML = `<div class="empty-state">Errore: ${error.message || 'Errore sconosciuto'}</div>`;
-      }
-    }
-    
-    // ===== TUTORIALS SEARCH =====
-    function setupTutorialsSearch() {
-      const searchInput = document.getElementById('tutorials-search');
-      const countEl = document.getElementById('tutorials-search-count');
-      const shortcutHint = document.getElementById('tutorials-shortcut-hint');
-      
-      if (!searchInput) return;
-      
-      // Show/hide shortcut hint based on focus
-      searchInput.addEventListener('focus', () => {
-        if (shortcutHint) shortcutHint.style.display = 'none';
-      });
-      
-      searchInput.addEventListener('blur', () => {
-        if (shortcutHint) {
-          shortcutHint.style.display = !searchInput.value ? 'inline-flex' : 'none';
-        }
-      });
-      
-      searchInput.addEventListener('input', (e) => {
-        filterTutorials();
-        // Show/hide shortcut based on input value
-        if (shortcutHint) {
-          shortcutHint.style.display = searchInput.value ? 'none' : 'inline-flex';
-        }
-      });
-      
-      // Initial state
-      if (shortcutHint && !searchInput.value) {
-        shortcutHint.style.display = 'inline-flex';
-      }
-    }
-    
-    function filterTutorials() {
-      const searchInput = document.getElementById('tutorials-search');
-      const countEl = document.getElementById('tutorials-search-count');
-      const query = searchInput?.value.toLowerCase().trim() || '';
-      const container = document.getElementById('tutorials-container');
-      
-      if (!container || !STATE.tutorials.length) return;
-      
-      // Start from all tutorials
-      let filtered = [...STATE.tutorials];
-      
-      // Apply category filter
-      if (STATE.currentCategory !== 'all') {
-        filtered = filtered.filter(tutorial => 
-          (tutorial.category || 'Altro').toLowerCase() === STATE.currentCategory.toLowerCase()
-        );
-      }
-      
-      // Apply difficulty filter
-      if (STATE.currentDifficulty !== 'all') {
-        filtered = filtered.filter(tutorial => 
-          (tutorial.difficulty || '').toLowerCase() === STATE.currentDifficulty.toLowerCase()
-        );
-      }
-      
-      // Apply search filter
-      if (query) {
-        filtered = filtered.filter(tutorial => {
-          const searchable = [
-            tutorial.title?.toLowerCase() || '',
-            tutorial.category?.toLowerCase() || '',
-            tutorial.difficulty?.toLowerCase() || '',
-            tutorial.fileName?.toLowerCase() || ''
-          ].join(' ');
-          return searchable.includes(query);
-        });
-      }
-      
-      // Render filtered
-      renderTutorialsList(filtered);
-      
-      // Update count
-      if (countEl) {
-        const totalTutorials = STATE.tutorials.length;
-        if (filtered.length !== totalTutorials || query || STATE.currentCategory !== 'all' || STATE.currentDifficulty !== 'all') {
-          countEl.textContent = `${filtered.length} / ${totalTutorials}`;
-          countEl.style.display = 'block';
-        } else {
-          countEl.style.display = 'none';
-        }
-      }
-    }
-    
-    function renderTutorialsList(tutorials) {
-      const container = document.getElementById('tutorials-container');
-      if (!container) return;
-      
-      if (tutorials.length === 0) {
-        container.innerHTML = `<div class="empty-state">Nessun tutorial trovato</div>`;
-        return;
-      }
-      
-      // Ordina per titolo
-      const sortedTutorials = [...tutorials].sort((a, b) => {
-        const titleA = (a.title || '').toLowerCase();
-        const titleB = (b.title || '').toLowerCase();
-        return titleA.localeCompare(titleB);
-      });
-      
-      const tutorialsHTML = `
-        <ul class="tutorial-list">
-          ${sortedTutorials.map(tutorial => {
-            // Pulisci il titolo rimuovendo suffissi comuni
-            let cleanTitle = tutorial.title;
-            cleanTitle = cleanTitle.replace(/ - Guida Completa Tradelia AI/gi, '');
-            cleanTitle = cleanTitle.replace(/ - Tradelia AI/gi, '');
-            cleanTitle = cleanTitle.trim();
-            
-            // Assicura che il link sia valido e verifica che il file HTML esista
-            let tutorialLink = tutorial.link;
-            if (!tutorialLink && tutorial.fileName) {
-              // Usa il fileName direttamente se disponibile
-              tutorialLink = `/report/tutorial/${tutorial.fileName}.html`;
-            } else if (!tutorialLink) {
-              // Fallback: genera da titolo
-              const slug = tutorial.title
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/^-|-$/g, '');
-              tutorialLink = `/report/tutorial/${slug}.html`;
-            }
-            
-            // Metadati per display accademico
-            const category = tutorial.category || 'Altro';
-            const difficulty = tutorial.difficulty || '';
-            const published = tutorial.published || '';
-            
-            return `
-              <li class="tutorial-item" data-category="${category}" data-difficulty="${difficulty}">
-                <div class="tutorial-item-content">
-                  <a href="${tutorialLink}" class="tutorial-link" target="_self">${cleanTitle}</a>
-                  <div class="tutorial-meta">
-                    ${category !== 'Altro' ? `<span class="tutorial-category-badge">${category}</span>` : ''}
-                    ${difficulty ? `<span class="tutorial-difficulty-badge">${difficulty}</span>` : ''}
-                    ${published ? `<span class="tutorial-published">${published}</span>` : ''}
-                  </div>
-                </div>
-              </li>
-            `;
-          }).join('')}
-        </ul>
-      `;
-      
-      container.innerHTML = tutorialsHTML;
-    }
-    
-    function updateTutorialsStats() {
-      const countEl = document.getElementById('tutorials-count');
-      const categoriesCountEl = document.getElementById('tutorials-categories-count');
-      
-      if (countEl) {
-        countEl.textContent = STATE.tutorials.length;
-      }
-      
-      if (categoriesCountEl) {
-        // Count unique categories
-        const uniqueCategories = new Set(STATE.tutorials.map(t => t.category || 'Altro'));
-        categoriesCountEl.textContent = uniqueCategories.size;
-      }
-    }
-    
-    // ===== TUTORIALS FILTERS =====
-    function setupTutorialsFilters() {
-      // Setup category filter
-      const categoryFilter = document.getElementById('tutorials-category-filter');
-      if (categoryFilter) {
-        // Get all unique categories
-        const categories = [...new Set(STATE.tutorials.map(t => t.category || 'Altro'))].sort();
-        
-        // Create filter buttons
-        categories.forEach(category => {
-          const btn = document.createElement('button');
-          btn.className = 'sort-btn filter-btn';
-          btn.dataset.category = category.toLowerCase();
-          btn.textContent = category;
-          if (category.toLowerCase() === STATE.currentCategory) {
-            btn.classList.add('active');
-          }
-          categoryFilter.appendChild(btn);
-        });
-        
-        // Add event listeners
-        categoryFilter.querySelectorAll('.filter-btn').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const category = btn.dataset.category;
-            
-            // Update buttons
-            categoryFilter.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            // Update state
-            STATE.currentCategory = category;
-            
-            // Re-filter and re-render
-            filterTutorials();
-          });
-        });
-        
-        categoryFilter.style.display = 'flex';
-      }
-      
-      // Setup difficulty filter
-      const difficultyFilter = document.getElementById('tutorials-difficulty-filter');
-      if (difficultyFilter) {
-        // Get all unique difficulties
-        const difficulties = [...new Set(STATE.tutorials.map(t => t.difficulty || '').filter(Boolean))].sort();
-        
-        // Create filter buttons
-        difficulties.forEach(difficulty => {
-          const btn = document.createElement('button');
-          btn.className = 'sort-btn filter-btn';
-          btn.dataset.difficulty = difficulty.toLowerCase();
-          btn.textContent = difficulty;
-          if (difficulty.toLowerCase() === STATE.currentDifficulty) {
-            btn.classList.add('active');
-          }
-          difficultyFilter.appendChild(btn);
-        });
-        
-        // Add event listeners
-        difficultyFilter.querySelectorAll('.filter-btn').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const difficulty = btn.dataset.difficulty;
-            
-            // Update buttons
-            difficultyFilter.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            // Update state
-            STATE.currentDifficulty = difficulty;
-            
-            // Re-filter and re-render
-            filterTutorials();
-          });
-        });
-        
-        if (difficulties.length > 0) {
-          difficultyFilter.style.display = 'flex';
-        }
-      }
-    }
-    
     // ===== SCROLL CONTROLS =====
     function setupScrollControls() {
       const scrollControls = document.querySelectorAll('.scroll-controls');
@@ -2439,11 +1791,8 @@
     }
     
     // ===== INIT =====
-    // Carica report e tutorial in parallelo
-    Promise.all([
-      loadReports().catch(err => console.error('Errore loadReports:', err)),
-      loadTutorials().catch(err => console.error('Errore loadTutorials:', err))
-    ]).then(() => {
+    // Carica report
+    loadReports().catch(err => console.error('Errore loadReports:', err)).then(() => {
       console.log('Dashboard caricata completamente');
       setupScrollControls();
     });
