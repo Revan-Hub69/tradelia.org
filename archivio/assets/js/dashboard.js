@@ -787,10 +787,15 @@ async function showDashboard() {
     // Renderizza sempre, anche se non ci sono dati
     renderDashboardReports();
     renderDashboardTutorials();
-    await loadVotingData();
+    
+    // Carica votazioni in background (non blocca il rendering)
+    loadVotingData().catch(err => {
+      Logger.warn('Dashboard', 'Errore caricamento votazioni (non critico)', err);
+    });
   } catch (err) {
     Logger.error('Dashboard', 'Errore showDashboard', err);
-    // Mostra messaggio di errore
+    // Mostra messaggio di errore e nascondi loading
+    hideLoadingState();
     showErrorState('Errore nel caricamento della dashboard. Riprova più tardi.');
   }
 }
@@ -867,8 +872,8 @@ async function loadDashboardData() {
     STATE.reports = [];
     STATE.tutorials = [];
   } finally {
-    // Nascondi stato di loading
-    hideLoadingState();
+    // Il rendering rimuove lo stato di loading
+    // Assicuriamoci che il rendering avvenga sempre
   }
 }
 
@@ -877,43 +882,60 @@ function renderDashboardReports() {
   const tbody = document.getElementById('dashboard-reports-tbody');
   if (!tbody) {
     Logger.warn('Dashboard', 'Elemento dashboard-reports-tbody non trovato');
+    // Nascondi loading comunque
+    hideLoadingState();
     return;
   }
   
-  // Verifica se ci sono report
-  if (!STATE.reports || STATE.reports.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: var(--sp-6);">Nessun report disponibile</td></tr>';
-    Logger.warn('Dashboard', 'Nessun report da renderizzare');
-    return;
-  }
-  
-  // Sort reports (più recenti prima)
-  const sortedReports = [...STATE.reports].sort((a, b) => {
-    const dateA = new Date(a.created_at);
-    const dateB = new Date(b.created_at);
-    return dateB - dateA;
-  });
-  
-  Logger.debug('Dashboard', `Renderizzando ${sortedReports.length} report`);
-  
-  tbody.innerHTML = sortedReports.map(report => {
-    const date = new Date(report.created_at).toLocaleDateString('it-IT');
-    const statusBadge = `<span class="status-badge" data-status="${report.status || 'active'}">${(report.status || 'active').toUpperCase()}</span>`;
-    const isLocked = isReportLocked(report);
-    const lockedBadge = isLocked ? '<span class="status-badge" data-status="hold" style="margin-left: var(--sp-2);">LOCKED</span>' : '';
+  try {
+    // Verifica se ci sono report
+    if (!STATE.reports || STATE.reports.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: var(--sp-6);">Nessun report disponibile</td></tr>';
+      Logger.warn('Dashboard', 'Nessun report da renderizzare');
+      return;
+    }
     
-    return `
-      <tr>
-        <td>${date}</td>
-        <td><strong>${report.ticker || '—'}</strong></td>
-        <td>${report.company || '—'}</td>
-        <td>${report.type || '—'}</td>
-        <td>${report.version || '—'}</td>
-        <td>${statusBadge}${lockedBadge}</td>
-        <td><a href="/report/index.html?id=${report.id}" target="_blank">Apri Report</a></td>
-      </tr>
-    `;
-  }).join('');
+    // Sort reports (più recenti prima)
+    const sortedReports = [...STATE.reports].sort((a, b) => {
+      try {
+        const dateA = new Date(a.created_at || 0);
+        const dateB = new Date(b.created_at || 0);
+        return dateB - dateA;
+      } catch (err) {
+        Logger.warn('Dashboard', 'Errore ordinamento report', err);
+        return 0;
+      }
+    });
+    
+    Logger.debug('Dashboard', `Renderizzando ${sortedReports.length} report`);
+    
+    tbody.innerHTML = sortedReports.map(report => {
+      try {
+        const date = report.created_at ? new Date(report.created_at).toLocaleDateString('it-IT') : '—';
+        const statusBadge = `<span class="status-badge" data-status="${report.status || 'active'}">${(report.status || 'active').toUpperCase()}</span>`;
+        const isLocked = isReportLocked(report);
+        const lockedBadge = isLocked ? '<span class="status-badge" data-status="hold" style="margin-left: var(--sp-2);">LOCKED</span>' : '';
+        
+        return `
+          <tr>
+            <td>${date}</td>
+            <td><strong>${report.ticker || '—'}</strong></td>
+            <td>${report.company || '—'}</td>
+            <td>${report.type || '—'}</td>
+            <td>${report.version || '—'}</td>
+            <td>${statusBadge}${lockedBadge}</td>
+            <td><a href="/report/index.html?id=${report.id}" target="_blank">Apri Report</a></td>
+          </tr>
+        `;
+      } catch (err) {
+        Logger.warn('Dashboard', 'Errore rendering report', err);
+        return '<tr><td colspan="7">Errore caricamento report</td></tr>';
+      }
+    }).join('');
+  } catch (err) {
+    Logger.error('Dashboard', 'Errore renderDashboardReports', err);
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: var(--sp-6); color: var(--err, #ef4444);">Errore nel rendering dei report</td></tr>';
+  }
 }
 
 // ===== IS REPORT LOCKED =====
@@ -992,15 +1014,35 @@ function switchTab(tabName) {
 // ===== LOAD VOTING DATA =====
 async function loadVotingData() {
   try {
-    // L'API /api/vote supporta GET per recuperare i voti
-    const response = await fetch('/api/vote');
-    if (response.ok) {
-      const data = await response.json();
-      STATE.votes = data.votes || [];
-      renderVotingRanking();
-      renderVotingStats();
-    } else {
-      Logger.warn('Dashboard', 'Errore risposta API votazioni', response.status);
+    // L'API /api/vote supporta GET per recuperare i voti con timeout
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000); // 5 secondi timeout
+    
+    try {
+      const response = await fetch('/api/vote', {
+        signal: controller.signal,
+        cache: 'no-cache'
+      });
+      clearTimeout(timeout);
+      
+      if (response.ok) {
+        const data = await response.json();
+        STATE.votes = data.votes || [];
+        renderVotingRanking();
+        renderVotingStats();
+      } else {
+        Logger.warn('Dashboard', 'Errore risposta API votazioni', response.status);
+        STATE.votes = [];
+        renderVotingRanking();
+        renderVotingStats();
+      }
+    } catch (fetchErr) {
+      clearTimeout(timeout);
+      if (fetchErr.name === 'AbortError') {
+        Logger.warn('Dashboard', 'Timeout caricamento votazioni (5s)');
+      } else {
+        Logger.warn('Dashboard', 'Errore fetch votazioni', fetchErr);
+      }
       STATE.votes = [];
       renderVotingRanking();
       renderVotingStats();
@@ -1114,7 +1156,18 @@ function showLoadingState() {
 }
 
 function hideLoadingState() {
-  // Lo stato di loading viene rimosso da renderDashboardReports
+  // Rimuove lo stato di loading se presente
+  const tbody = document.getElementById('dashboard-reports-tbody');
+  if (tbody) {
+    // Se è ancora in loading, mostra messaggio vuoto
+    const currentContent = tbody.innerHTML;
+    if (currentContent.includes('loading-spinner') || currentContent.includes('Caricamento report')) {
+      // Il rendering lo sostituirà, ma se non ci sono dati mostriamo messaggio
+      if (!STATE.reports || STATE.reports.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: var(--sp-6);">Nessun report disponibile</td></tr>';
+      }
+    }
+  }
 }
 
 // ===== ERROR STATE =====
