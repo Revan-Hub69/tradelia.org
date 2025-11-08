@@ -4,7 +4,8 @@
 import { readdir, readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 
-const templateBase = `<!DOCTYPE html>
+function getTemplateBase(tutorialName) {
+  return `<!DOCTYPE html>
 <html lang="it" data-theme="light">
 <head>
   <meta charset="UTF-8" />
@@ -29,7 +30,7 @@ const templateBase = `<!DOCTYPE html>
   <div id="site-header-slot"></div>
 
   <!-- MAIN CONTENT -->
-  <main id="tutorial-content" role="main">
+  <main id="tutorial-content" role="main" data-tutorial-file="${tutorialName}">
     <!-- Content will be injected here by tutorial-renderer.js -->
   </main>
 
@@ -40,6 +41,7 @@ const templateBase = `<!DOCTYPE html>
   <script type="module" src="/report/assets/js/tutorial-renderer.js"></script>
 </body>
 </html>`;
+}
 
 async function generateHTML() {
   const dataDir = join(process.cwd(), 'tutorial', 'data');
@@ -60,7 +62,7 @@ async function generateHTML() {
       const data = JSON.parse(jsonContent);
       
       // Aggiorna template con meta tags dal JSON
-      let html = templateBase;
+      let html = getTemplateBase(tutorialName);
       html = html.replace('<title>TRADELIA • AI — Tutorial</title>', 
         `<title>TRADELIA • AI — ${data.title || 'Tutorial'}</title>`);
       html = html.replace('<meta name="description" content="Tutorial Tradelia AI" />', 

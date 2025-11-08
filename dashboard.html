@@ -320,25 +320,25 @@
       max-width: 65ch;
     }
     
-    /* ===== TUTORIAL SECTION - WHITE WITH BLUE ELEMENTS ===== */
+    /* ===== TUTORIAL SECTION - ACADEMIC STYLE ===== */
     .tutorial-header {
-      margin-bottom: 1.75rem;
+      margin-bottom: 2rem;
       padding-bottom: 1rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid var(--dash-border);
     }
     
     .tutorial-title {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 700;
-      color: #ffffff;
+      color: var(--dash-text);
       margin: 0 0 0.5rem;
       letter-spacing: -0.025em;
       font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
     }
     
     .tutorial-description {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.7);
+      font-size: 13px;
+      color: var(--dash-text-soft);
       margin: 0;
       line-height: 1.6;
       font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
@@ -349,20 +349,20 @@
       list-style: none;
       padding: 0;
       margin: 0;
-      background: #ffffff;
-      border: 1px solid rgba(37, 99, 235, 0.2);
-      border-radius: 8px;
+      background: var(--dash-surface);
+      border: 1px solid var(--dash-border);
+      border-radius: 6px;
       overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
     
     .tutorial-item {
-      padding: 0.75rem 1.25rem;
-      border-bottom: 1px solid rgba(37, 99, 235, 0.1);
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--dash-border);
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
-      min-height: 2.5rem;
-      background: #ffffff;
+      min-height: auto;
+      background: var(--dash-surface);
     }
     
     .tutorial-item:last-child {
@@ -375,50 +375,99 @@
       left: 0;
       top: 0;
       bottom: 0;
-      width: 4px;
-      background: #2563eb;
+      width: 3px;
+      background: var(--dash-accent);
       transform: scaleY(0);
       transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0.8;
     }
     
     .tutorial-item:hover {
-      background: #f8fafc;
-      border-color: rgba(37, 99, 235, 0.3);
+      background: var(--dash-surface-elev);
+      border-color: var(--dash-border-strong);
     }
     
     .tutorial-item:hover::before {
       transform: scaleY(1);
     }
     
+    .tutorial-item-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
     .tutorial-link {
-      color: #1e40af;
+      color: var(--dash-accent);
       text-decoration: none;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
       font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.625rem;
       transition: all 0.2s;
       line-height: 1.5;
       letter-spacing: -0.01em;
     }
     
-    .tutorial-link::before {
+    .tutorial-link::after {
       content: '→';
-      color: #2563eb;
-      font-weight: 700;
-      font-size: 14px;
-      transition: transform 0.2s;
-      display: inline-block;
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      color: var(--dash-accent);
+      font-weight: 400;
+      font-size: 13px;
     }
     
     .tutorial-item:hover .tutorial-link {
-      color: #2563eb;
+      color: var(--dash-accent-hover);
     }
     
-    .tutorial-item:hover .tutorial-link::before {
-      transform: translateX(4px);
+    .tutorial-item:hover .tutorial-link::after {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .tutorial-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      font-size: 11px;
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+    }
+    
+    .tutorial-category-badge,
+    .tutorial-difficulty-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.625rem;
+      border-radius: 4px;
+      font-weight: 500;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .tutorial-category-badge {
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--dash-accent);
+      border: 1px solid rgba(37, 99, 235, 0.2);
+    }
+    
+    .tutorial-difficulty-badge {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--dash-text-soft);
+      border: 1px solid var(--dash-border);
+    }
+    
+    .tutorial-published {
+      color: var(--dash-text-muted);
+      font-size: 10px;
+      font-variant-numeric: tabular-nums;
+      font-family: var(--ff-mono, 'SF Mono', 'Monaco', 'Consolas', monospace);
     }
     
     /* ===== LOADING - ACADEMIC ===== */
@@ -1228,7 +1277,7 @@
             type="text" 
             id="tutorials-search" 
             class="search-input" 
-            placeholder="Cerca tutorial per titolo o categoria..." 
+            placeholder="Cerca tutorial per titolo, categoria o difficoltà..." 
             autocomplete="off"
           />
           <span class="search-results-count" id="tutorials-search-count" style="display: none;"></span>
@@ -1238,6 +1287,16 @@
               <span>K</span>
             </span>
           </div>
+        </div>
+        
+        <div class="filter-controls" id="tutorials-category-filter" style="display: none;">
+          <span class="sort-label">Categoria:</span>
+          <button class="sort-btn filter-btn active" data-category="all">Tutte</button>
+        </div>
+        
+        <div class="filter-controls" id="tutorials-difficulty-filter" style="display: none;">
+          <span class="sort-label">Difficoltà:</span>
+          <button class="sort-btn filter-btn active" data-difficulty="all">Tutte</button>
         </div>
         
         <!-- Scroll controls (desktop only) -->
@@ -1298,7 +1357,9 @@
       tutorials: [],
       currentSort: 'date-desc',
       currentFramework: 'all',
-      currentSection: 'reports'
+      currentSection: 'reports',
+      currentCategory: 'all',
+      currentDifficulty: 'all'
     };
     
     // ===== SECTION TOGGLE =====
@@ -1462,6 +1523,12 @@
             // Se non abbiamo né header né manifest, salta
             if (!header && !manifest) {
               console.warn(`Nessun dato disponibile per report ${reportID}`);
+              continue;
+            }
+            
+            // Verifica che non sia un tutorial (sicurezza aggiuntiva)
+            if (reportID.includes('tutorial') || reportID.includes('Tutorial')) {
+              console.warn(`Saltato ${reportID}: sembra essere un tutorial, non un report`);
               continue;
             }
             
@@ -2070,8 +2137,9 @@
         // Show stats
         document.getElementById('tutorials-stats').style.display = 'flex';
         
-        // Setup search
+        // Setup search and filters
         setupTutorialsSearch();
+        setupTutorialsFilters();
         
         // Setup scroll controls
         setupScrollControls();
@@ -2122,22 +2190,35 @@
       
       if (!container || !STATE.tutorials.length) return;
       
-      if (!query) {
-        // Show all tutorials
-        renderTutorialsList(STATE.tutorials);
-        if (countEl) countEl.style.display = 'none';
-        return;
+      // Start from all tutorials
+      let filtered = [...STATE.tutorials];
+      
+      // Apply category filter
+      if (STATE.currentCategory !== 'all') {
+        filtered = filtered.filter(tutorial => 
+          (tutorial.category || 'Altro').toLowerCase() === STATE.currentCategory.toLowerCase()
+        );
       }
       
-      // Filter tutorials
-      const filtered = STATE.tutorials.filter(tutorial => {
-        const searchable = [
-          tutorial.title?.toLowerCase() || '',
-          tutorial.category?.toLowerCase() || '',
-          tutorial.fileName?.toLowerCase() || ''
-        ].join(' ');
-        return searchable.includes(query);
-      });
+      // Apply difficulty filter
+      if (STATE.currentDifficulty !== 'all') {
+        filtered = filtered.filter(tutorial => 
+          (tutorial.difficulty || '').toLowerCase() === STATE.currentDifficulty.toLowerCase()
+        );
+      }
+      
+      // Apply search filter
+      if (query) {
+        filtered = filtered.filter(tutorial => {
+          const searchable = [
+            tutorial.title?.toLowerCase() || '',
+            tutorial.category?.toLowerCase() || '',
+            tutorial.difficulty?.toLowerCase() || '',
+            tutorial.fileName?.toLowerCase() || ''
+          ].join(' ');
+          return searchable.includes(query);
+        });
+      }
       
       // Render filtered
       renderTutorialsList(filtered);
@@ -2145,8 +2226,12 @@
       // Update count
       if (countEl) {
         const totalTutorials = STATE.tutorials.length;
-        countEl.textContent = `${filtered.length} / ${totalTutorials}`;
-        countEl.style.display = 'block';
+        if (filtered.length !== totalTutorials || query || STATE.currentCategory !== 'all' || STATE.currentDifficulty !== 'all') {
+          countEl.textContent = `${filtered.length} / ${totalTutorials}`;
+          countEl.style.display = 'block';
+        } else {
+          countEl.style.display = 'none';
+        }
       }
     }
     
@@ -2175,7 +2260,7 @@
             cleanTitle = cleanTitle.replace(/ - Tradelia AI/gi, '');
             cleanTitle = cleanTitle.trim();
             
-            // Assicura che il link sia valido
+            // Assicura che il link sia valido e verifica che il file HTML esista
             let tutorialLink = tutorial.link;
             if (!tutorialLink && tutorial.fileName) {
               // Usa il fileName direttamente se disponibile
@@ -2189,9 +2274,21 @@
               tutorialLink = `/report/tutorial/${slug}.html`;
             }
             
+            // Metadati per display accademico
+            const category = tutorial.category || 'Altro';
+            const difficulty = tutorial.difficulty || '';
+            const published = tutorial.published || '';
+            
             return `
-              <li class="tutorial-item">
-                <a href="${tutorialLink}" class="tutorial-link">${cleanTitle}</a>
+              <li class="tutorial-item" data-category="${category}" data-difficulty="${difficulty}">
+                <div class="tutorial-item-content">
+                  <a href="${tutorialLink}" class="tutorial-link" target="_self">${cleanTitle}</a>
+                  <div class="tutorial-meta">
+                    ${category !== 'Altro' ? `<span class="tutorial-category-badge">${category}</span>` : ''}
+                    ${difficulty ? `<span class="tutorial-difficulty-badge">${difficulty}</span>` : ''}
+                    ${published ? `<span class="tutorial-published">${published}</span>` : ''}
+                  </div>
+                </div>
               </li>
             `;
           }).join('')}
@@ -2211,8 +2308,89 @@
       
       if (categoriesCountEl) {
         // Count unique categories
-        const uniqueCategories = new Set(STATE.tutorials.map(t => t.category));
+        const uniqueCategories = new Set(STATE.tutorials.map(t => t.category || 'Altro'));
         categoriesCountEl.textContent = uniqueCategories.size;
+      }
+    }
+    
+    // ===== TUTORIALS FILTERS =====
+    function setupTutorialsFilters() {
+      // Setup category filter
+      const categoryFilter = document.getElementById('tutorials-category-filter');
+      if (categoryFilter) {
+        // Get all unique categories
+        const categories = [...new Set(STATE.tutorials.map(t => t.category || 'Altro'))].sort();
+        
+        // Create filter buttons
+        categories.forEach(category => {
+          const btn = document.createElement('button');
+          btn.className = 'sort-btn filter-btn';
+          btn.dataset.category = category.toLowerCase();
+          btn.textContent = category;
+          if (category.toLowerCase() === STATE.currentCategory) {
+            btn.classList.add('active');
+          }
+          categoryFilter.appendChild(btn);
+        });
+        
+        // Add event listeners
+        categoryFilter.querySelectorAll('.filter-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const category = btn.dataset.category;
+            
+            // Update buttons
+            categoryFilter.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Update state
+            STATE.currentCategory = category;
+            
+            // Re-filter and re-render
+            filterTutorials();
+          });
+        });
+        
+        categoryFilter.style.display = 'flex';
+      }
+      
+      // Setup difficulty filter
+      const difficultyFilter = document.getElementById('tutorials-difficulty-filter');
+      if (difficultyFilter) {
+        // Get all unique difficulties
+        const difficulties = [...new Set(STATE.tutorials.map(t => t.difficulty || '').filter(Boolean))].sort();
+        
+        // Create filter buttons
+        difficulties.forEach(difficulty => {
+          const btn = document.createElement('button');
+          btn.className = 'sort-btn filter-btn';
+          btn.dataset.difficulty = difficulty.toLowerCase();
+          btn.textContent = difficulty;
+          if (difficulty.toLowerCase() === STATE.currentDifficulty) {
+            btn.classList.add('active');
+          }
+          difficultyFilter.appendChild(btn);
+        });
+        
+        // Add event listeners
+        difficultyFilter.querySelectorAll('.filter-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const difficulty = btn.dataset.difficulty;
+            
+            // Update buttons
+            difficultyFilter.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Update state
+            STATE.currentDifficulty = difficulty;
+            
+            // Re-filter and re-render
+            filterTutorials();
+          });
+        });
+        
+        if (difficulties.length > 0) {
+          difficultyFilter.style.display = 'flex';
+        }
       }
     }
     
