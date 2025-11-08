@@ -122,10 +122,10 @@ function render(data = {}) {
           </p>
         </div>
         <div>
-          <p style="margin: 0; text-align: right;">
+          <p style="margin: 0; text-align: right; display: none;" id="footer-company-version-container">
             <span id="footer-company">—</span> · <span id="footer-version">—</span>
           </p>
-          <p style="margin: var(--sp-2) 0 0 0; text-align: right; font-size: var(--fs-12);">
+          <p style="margin: var(--sp-2) 0 0 0; text-align: right; font-size: var(--fs-12); display: none;" id="footer-snapshot-container">
             <span id="footer-snapshot">—</span> · <span id="footer-updated">—</span>
           </p>
         </div>
@@ -156,6 +156,12 @@ function mount(containerEl) {
   
   // Bind event listeners per MiFID/Privacy (stesso sistema di index.html)
   bindLegalButtons();
+  
+  // Chiama update con dati vuoti per nascondere i campi dinamici di default
+  // (verranno mostrati solo quando update() viene chiamata con dati reali)
+  setTimeout(() => {
+    update({});
+  }, 0);
   
   Logger.debug('SiteFooter', 'Footer montato');
   return node;
@@ -276,9 +282,7 @@ function update(data = {}) {
   const hasReportData = companyName || ticker || version || start || end || updatedAt;
   
   // Footer company/version (solo se ci sono dati)
-  const footerCompanyEl = document.getElementById('footer-company');
-  const footerVersionEl = document.getElementById('footer-version');
-  const footerCompanyVersionContainer = footerCompanyEl?.parentElement;
+  const footerCompanyVersionContainer = document.getElementById('footer-company-version-container');
   
   if (footerCompanyVersionContainer) {
     if (hasReportData && (companyName || ticker || version)) {
@@ -291,9 +295,7 @@ function update(data = {}) {
   }
   
   // Footer snapshot/updated (solo se ci sono dati)
-  const footerSnapshotEl = document.getElementById('footer-snapshot');
-  const footerUpdatedEl = document.getElementById('footer-updated');
-  const footerSnapshotContainer = footerSnapshotEl?.parentElement;
+  const footerSnapshotContainer = document.getElementById('footer-snapshot-container');
   
   if (footerSnapshotContainer) {
     if (hasReportData && (start || end || updatedAt)) {
