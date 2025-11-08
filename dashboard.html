@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tradelia AI · Dashboard</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Dashboard Tradelia AI - Accesso rapido a report finanziari e tutorial educativi" />
+  <meta name="theme-color" content="#0f0f0f" />
+  
+  <!-- Favicons -->
+  <link rel="icon" href="/favicon.ico?v=1">
+  <link rel="icon" type="image/png" href="/favicon.png?v=1">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
+  
+  <!-- Design System -->
+  <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: var(--surface-page);
+      color: var(--ink);
+      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+    }
+    
+    main {
+      flex: 1;
+      padding-top: 64px;
+      padding-bottom: 0;
+      background: var(--surface-page);
+      color: var(--ink);
+    }
+    
+    .container {
+      max-width: 90rem;
+      margin-inline: auto;
+      padding-inline: 1rem;
+    }
+    
+    /* ===== HEADER ===== */
+    .hdr {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 8px;
+      height: 64px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      backdrop-filter: blur(16px) saturate(1.2);
+      background: linear-gradient(
+        180deg,
+        rgba(15, 15, 15, 0.96) 0%,
+        rgba(15, 15, 15, 0.92) 100%
+      );
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+    }
+    
+    .brand {
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      text-decoration: none;
+      color: var(--ink);
+    }
+    
+    .brand-word {
+      color: var(--ink);
+    }
+    
+    .brand-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--brand-600);
+      display: inline-block;
+    }
+    
+    .brand-suffix {
+      color: var(--ink);
+      font-weight: 900;
+    }
+    
+    .header-dashboard-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(37, 99, 235, 0.1);
+      border: 1px solid rgba(37, 99, 235, 0.2);
+      border-radius: 6px;
+      color: var(--brand-400);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    
+    .header-dashboard-link:hover {
+      background: rgba(37, 99, 235, 0.15);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+    
+    /* ===== DASHBOARD SECTIONS ===== */
+    .dashboard-section {
+      padding: 5rem 0;
+    }
+    
+    .dashboard-section:first-of-type {
+      padding-top: 7rem;
+    }
+    
+    .section-header {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--br-card);
+    }
+    
+    .section-title {
+      font-size: clamp(1.75rem, 4vw, 2rem);
+      font-weight: 800;
+      color: var(--ink);
+      margin: 0 0 1rem;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+    }
+    
+    .section-description {
+      font-size: var(--fs-16);
+      color: var(--ink-soft);
+      line-height: 1.7;
+      margin: 0;
+      max-width: 65ch;
+    }
+    
+    .section-description strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+    
+    /* ===== REPORTS TABLE ===== */
+    .reports-table-wrapper {
+      background: var(--surface-card);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .reports-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    
+    .reports-table thead {
+      background: linear-gradient(180deg, var(--surface-elev) 0%, rgba(255, 255, 255, 0.02) 100%);
+      border-bottom: 2px solid var(--br-card);
+    }
+    
+    .reports-table th {
+      padding: 1.25rem 1.75rem;
+      text-align: left;
+      font-size: var(--fs-12);
+      font-weight: 700;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+    
+    .reports-table th:first-child {
+      padding-left: 2rem;
+    }
+    
+    .reports-table th:last-child {
+      padding-right: 2rem;
+      text-align: right;
+    }
+    
+    .reports-table td {
+      padding: 1.5rem 1.75rem;
+      border-bottom: 1px solid var(--br-card);
+      font-size: var(--fs-15);
+      color: var(--ink);
+      vertical-align: middle;
+    }
+    
+    .reports-table td:first-child {
+      padding-left: 2rem;
+    }
+    
+    .reports-table td:last-child {
+      padding-right: 2rem;
+      text-align: right;
+    }
+    
+    .reports-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .reports-table tbody tr {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .reports-table tbody tr:hover {
+      background: var(--surface-elev);
+      transform: translateX(2px);
+    }
+    
+    .report-asset {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+    
+    .report-ticker {
+      font-weight: 800;
+      font-size: var(--fs-17);
+      color: var(--brand-400);
+      letter-spacing: -0.01em;
+    }
+    
+    .report-company {
+      font-size: var(--fs-13);
+      color: var(--ink-soft);
+      font-weight: 500;
+    }
+    
+    .report-type {
+      font-size: var(--fs-14);
+      color: var(--ink);
+      font-weight: 600;
+    }
+    
+    .report-modules {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    .module-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.375rem 0.875rem;
+      background: rgba(37, 99, 235, 0.08);
+      border: 1px solid rgba(37, 99, 235, 0.15);
+      border-radius: 6px;
+      font-size: var(--fs-11);
+      font-weight: 700;
+      color: var(--brand-400);
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+    
+    .module-badge:hover {
+      background: rgba(37, 99, 235, 0.12);
+      border-color: rgba(37, 99, 235, 0.25);
+    }
+    
+    .report-date {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    .report-date-main {
+      color: var(--ink);
+      font-size: var(--fs-14);
+      font-weight: 600;
+    }
+    
+    .report-date-time {
+      color: var(--ink-soft);
+      font-size: var(--fs-12);
+    }
+    
+    .btn-view {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.625rem 1.25rem;
+      background: rgba(37, 99, 235, 0.08);
+      border: 1.5px solid rgba(37, 99, 235, 0.2);
+      border-radius: 8px;
+      color: var(--brand-400);
+      text-decoration: none;
+      font-size: var(--fs-14);
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      white-space: nowrap;
+    }
+    
+    .btn-view:hover {
+      background: rgba(37, 99, 235, 0.12);
+      border-color: rgba(37, 99, 235, 0.35);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+    }
+    
+    .btn-view svg {
+      transition: transform 0.25s;
+    }
+    
+    .btn-view:hover svg {
+      transform: translateX(2px);
+    }
+    
+    .empty-state {
+      padding: 3rem;
+      text-align: center;
+      color: var(--ink-soft);
+    }
+    
+    .empty-state-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 1rem;
+      color: var(--muted);
+    }
+    
+    /* ===== TUTORIALS GRID ===== */
+    .tutorials-categories {
+      display: flex;
+      flex-direction: column;
+      gap: 4rem;
+    }
+    
+    .tutorial-category {
+      background: var(--surface-card);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .tutorial-category-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--br-card);
+    }
+    
+    .tutorial-category-title {
+      font-size: var(--fs-22);
+      font-weight: 800;
+      color: var(--ink);
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+    
+    .tutorial-category-count {
+      font-size: var(--fs-13);
+      font-weight: 600;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .tutorials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+      gap: 1.25rem;
+    }
+    
+    @media (max-width: 768px) {
+      .dashboard-section {
+        padding: 3rem 0;
+      }
+      
+      .dashboard-section:first-of-type {
+        padding-top: 5rem;
+      }
+      
+      .reports-table-wrapper {
+        overflow-x: auto;
+      }
+      
+      .reports-table {
+        min-width: 700px;
+      }
+      
+      .reports-table th,
+      .reports-table td {
+        padding: 1rem 1rem;
+      }
+      
+      .reports-table th:first-child,
+      .reports-table td:first-child {
+        padding-left: 1.5rem;
+      }
+      
+      .reports-table th:last-child,
+      .reports-table td:last-child {
+        padding-right: 1.5rem;
+      }
+      
+      .tutorial-category {
+        padding: 1.5rem;
+      }
+      
+      .tutorials-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .tutorial-card {
+      padding: 1.5rem;
+      background: var(--surface-elev);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-md);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .tutorial-card:hover {
+      border-color: var(--brand-600);
+      background: rgba(37, 99, 235, 0.02);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.12);
+    }
+    
+    .tutorial-card-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .tutorial-card-title {
+      font-size: var(--fs-16);
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0;
+      line-height: 1.4;
+      letter-spacing: -0.01em;
+    }
+    
+    .tutorial-card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+    
+    .tutorial-card-meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-size: var(--fs-12);
+      color: var(--ink-soft);
+      font-weight: 500;
+    }
+    
+    .tutorial-card-meta-item::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--ink-soft);
+      opacity: 0.4;
+    }
+    
+    .tutorial-card-meta-item:first-child::before {
+      display: none;
+    }
+    
+    .tutorial-card-difficulty {
+      display: inline-block;
+      padding: 0.25rem 0.625rem;
+      background: rgba(37, 99, 235, 0.08);
+      border: 1px solid rgba(37, 99, 235, 0.15);
+      border-radius: 4px;
+      font-size: var(--fs-11);
+      font-weight: 700;
+      color: var(--brand-400);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    
+    .tutorial-card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.625rem;
+      color: var(--brand-400);
+      font-size: var(--fs-14);
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.25s;
+      margin-top: auto;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--br-card);
+    }
+    
+    .tutorial-card-link:hover {
+      color: var(--brand-300);
+      gap: 0.875rem;
+    }
+    
+    .tutorial-card-link svg {
+      transition: transform 0.25s;
+    }
+    
+    .tutorial-card-link:hover svg {
+      transform: translateX(3px);
+    }
+    
+    .loading {
+      padding: 3rem;
+      text-align: center;
+      color: var(--ink-soft);
+    }
+    
+    .loading-spinner {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 3px solid var(--br-card);
+      border-top-color: var(--brand-400);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- ===== HEADER ===== -->
+  <div id="site-header-slot"></div>
+  
+  <main>
+    <div class="container">
+      <!-- ===== DASHBOARD HEADER ===== -->
+      <div style="padding: 5rem 0 3rem; border-bottom: 1px solid var(--br-card); margin-bottom: 3rem;">
+        <h1 style="font-size: clamp(2rem, 5vw, 2.5rem); font-weight: 800; color: var(--ink); margin: 0 0 1rem; letter-spacing: -0.03em; line-height: 1.2;">
+          Dashboard
+        </h1>
+        <p style="font-size: var(--fs-16); color: var(--ink-soft); margin: 0; line-height: 1.7; max-width: 65ch;">
+          Accesso centralizzato a <strong>report finanziari</strong> generati con il Framework Accademico AI e <strong>tutorial educativi</strong> su trading, investimenti e analisi finanziaria.
+        </p>
+      </div>
+      
+      <!-- ===== ARCHIVIO REPORT SECTION ===== -->
+      <section class="dashboard-section">
+        <div class="section-header">
+          <h2 class="section-title">Archivio Report</h2>
+          <p class="section-description">
+            Report generati con il <strong>Framework Accademico AI Tradelia Swing Master 5.0</strong>. 
+            Analisi multi-fattore su contesto macro, sentiment e tecnica.
+          </p>
+        </div>
+        
+        <div id="reports-container">
+          <div class="loading">
+            <div class="loading-spinner"></div>
+            <p style="margin-top: 1rem;">Caricamento report...</p>
+          </div>
+        </div>
+      </section>
+      
+      <!-- ===== TUTORIAL SECTION ===== -->
+      <section class="dashboard-section">
+        <div class="section-header">
+          <h2 class="section-title">Tutorial</h2>
+          <p class="section-description">
+            Guida completa su <strong>trading, investimenti e analisi finanziaria</strong>. 
+            Tutorial educativi organizzati per categorie.
+          </p>
+        </div>
+        
+        <div id="tutorials-container">
+          <div class="loading">
+            <div class="loading-spinner"></div>
+            <p style="margin-top: 1rem;">Caricamento tutorial...</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  
+  <!-- ===== FOOTER SLOT ===== -->
+  <div id="site-footer-slot"></div>
+  
+  <!-- ===== MOUNT HEADER & FOOTER ===== -->
+  <script type="module">
+    // Imposta tema dark
+    document.documentElement.setAttribute('data-theme', 'dark');
+    
+    // Importa componenti
+    import { siteHeader } from '/report/assets/js/components/site-header.js';
+    import { siteFooter } from '/report/assets/js/components/site-footer.js';
+    
+    // Monta header
+    const headerSlot = document.getElementById('site-header-slot');
+    if (headerSlot) {
+      siteHeader.mount(headerSlot);
+    }
+    
+    // Monta footer
+    const footerSlot = document.getElementById('site-footer-slot');
+    if (footerSlot) {
+      siteFooter.mount(footerSlot);
+    }
+  </script>
+  
+  <!-- ===== DASHBOARD SCRIPTS ===== -->
+  <script type="module">
+    // ===== REPORTS LOADER =====
+    async function loadReports() {
+      const container = document.getElementById('reports-container');
+      if (!container) return;
+      
+      try {
+        // Lista dei report disponibili (da aggiornare dinamicamente)
+        const reportDirs = [
+          '20251107-1630',
+          'sample-id'
+        ];
+        
+        const reports = [];
+        
+        for (const reportID of reportDirs) {
+          try {
+            const manifestResponse = await fetch(`/report/reports/${reportID}/manifest.json`);
+            if (!manifestResponse.ok) continue;
+            
+            const manifest = await manifestResponse.json();
+            
+            // Carica header.json per info aggiuntive
+            let header = null;
+            try {
+              const headerResponse = await fetch(`/report/reports/${reportID}/header.json`);
+              if (headerResponse.ok) {
+                header = await headerResponse.json();
+              }
+            } catch(e) {}
+            
+            // Estrai info dal manifest
+            const reportData = {
+              id: manifest.id || reportID,
+              ticker: manifest.metadata?.ticker || 'N/A',
+              timestamp: manifest.metadata?.timestamp || manifest.id,
+              modules: manifest.order || Object.keys(manifest.modules || {}),
+              reportUrl: `/report/index.html?id=${reportID}`
+            };
+            
+            // Estrai info aggiuntive da header se disponibile
+            if (header?.rows) {
+              // Cerca CompanyName e altri dati
+              const companyRow = header.rows.find(r => r.id === 'company-line');
+              if (companyRow) {
+                const companyPart = companyRow.parts?.find(p => p.key === 'CompanyName');
+                if (companyPart) {
+                  reportData.company = companyPart.value;
+                }
+              }
+            }
+            
+            reports.push(reportData);
+          } catch(e) {
+            console.warn(`Errore caricamento report ${reportID}:`, e);
+          }
+        }
+        
+        // Ordina per data (più recenti prima)
+        reports.sort((a, b) => {
+          const dateA = new Date(a.timestamp);
+          const dateB = new Date(b.timestamp);
+          return dateB - dateA;
+        });
+        
+        // Renderizza tabella
+        if (reports.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              <p>Nessun report disponibile al momento.</p>
+            </div>
+          `;
+          return;
+        }
+        
+        const tableHTML = `
+          <div class="reports-table-wrapper">
+            <table class="reports-table">
+              <thead>
+                <tr>
+                  <th>Asset</th>
+                  <th>Tipologia</th>
+                  <th>Data</th>
+                  <th>Moduli</th>
+                  <th>Azioni</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${reports.map(report => {
+                  const dateObj = new Date(report.timestamp);
+                  const dateStr = dateObj.toLocaleDateString('it-IT', { year: 'numeric', month: 'short', day: 'numeric' });
+                  const timeStr = dateObj.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+                  return `
+                    <tr>
+                      <td>
+                        <div class="report-asset">
+                          <span class="report-ticker">${report.ticker}</span>
+                          ${report.company ? `<span class="report-company">${report.company}</span>` : ''}
+                        </div>
+                      </td>
+                      <td>
+                        <span class="report-type">Report Completo</span>
+                      </td>
+                      <td>
+                        <div class="report-date">
+                          <span class="report-date-main">${dateStr}</span>
+                          <span class="report-date-time">${timeStr}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="report-modules">
+                          ${report.modules.map(module => `<span class="module-badge">${module}</span>`).join('')}
+                        </div>
+                      </td>
+                      <td>
+                        <a href="${report.reportUrl}" class="btn-view">
+                          View
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M12 5l7 7-7 7"></path>
+                          </svg>
+                        </a>
+                      </td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+        
+        container.innerHTML = tableHTML;
+      } catch(error) {
+        console.error('Errore caricamento report:', error);
+        container.innerHTML = `
+          <div class="empty-state">
+            <p>Errore nel caricamento dei report.</p>
+          </div>
+        `;
+      }
+    }
+    
+    // ===== TUTORIALS LOADER =====
+    async function loadTutorials() {
+      const container = document.getElementById('tutorials-container');
+      if (!container) return;
+      
+      try {
+        // Lista dei tutorial disponibili (da caricare dinamicamente)
+        const tutorialFiles = [
+          'Analisi-Tecnica-Introduzione.json',
+          'Chart-Patterns.json',
+          'Indicatori-Tecnici.json',
+          'Candlestick-Patterns.json',
+          'valutare-azioni.json',
+          'valutare-etf.json',
+          'valutare-obbligazioni.json',
+          'valutare-crypto.json',
+          'valutare-commodities.json',
+          'valutare-reit.json',
+          'valutare-liquidita.json',
+          'PIC-PAC-Guida-Completa.json',
+          'Rebalancing-Portafoglio.json',
+          'Teorie-Creazione-Portafogli.json',
+          'Value-vs-Growth-Investing.json',
+          'Dividend-Investing.json',
+          'Money-Management-Position-Sizing.json',
+          'Tipi-Ordini-Mercato.json',
+          'Psicologia-Trading-Bias-Comportamentali.json',
+          'Trading-Algoritmico-Miti-Realta.json',
+          'Backtesting-Stress-Test-Monte-Carlo.json',
+          'Correlazione-Guida-Completa.json',
+          'Volatilita-Stocastica-Modelli-Pricing.json',
+          'The-Big-Short-Short-Selling.json',
+          'Analisi-Macroeconomica-Investimenti.json',
+          'Opzioni-Vanilla.json',
+          'Opzioni-Esotiche.json',
+          'CFD-guida-completa.json',
+          'CFD-Retail.json',
+          'ETF-Leva-Inversi.json',
+          'ETF-Sintetici.json',
+          'Derivati-OTC.json',
+          'CoCo-Bonds.json',
+          'Callable-StepUp.json',
+          'Reverse-Convertible.json',
+          'Dual-Currency-Bonds.json',
+          'Note-Strutturate-Barriera.json',
+          'Certificates-Complessi.json',
+          'Obbligazioni-Strutturate.json',
+          'False-Principal-Protection.json',
+          'CLO-CDO.json',
+          'CDS-CDO-Subprime.json',
+          'SPAC-Rischi.json',
+          'Token-Sintetici.json',
+          'Stablecoin-Algoritmiche.json',
+          'Truffe-Cripto.json',
+          'Truffe-Finanziarie-Storiche.json'
+        ];
+        
+        const tutorials = [];
+        
+        for (const file of tutorialFiles) {
+          try {
+            const response = await fetch(`/report/tutorial/data/${file}`);
+            if (!response.ok) continue;
+            
+            const data = await response.json();
+            const fileName = file.replace('.json', '');
+            
+            tutorials.push({
+              title: data.title || fileName,
+              category: data.meta?.category || 'Altro',
+              published: data.meta?.published || '',
+              difficulty: data.meta?.difficulty || '',
+              link: `/report/tutorial/${fileName}.html`,
+              fileName: fileName
+            });
+          } catch(e) {
+            console.warn(`Errore caricamento tutorial ${file}:`, e);
+          }
+        }
+        
+        // Raggruppa per categoria
+        const categories = {};
+        tutorials.forEach(tutorial => {
+          const cat = tutorial.category;
+          if (!categories[cat]) {
+            categories[cat] = [];
+          }
+          categories[cat].push(tutorial);
+        });
+        
+        // Ordina categorie
+        const sortedCategories = Object.keys(categories).sort();
+        
+        // Renderizza categorie
+        if (sortedCategories.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <p>Nessun tutorial disponibile al momento.</p>
+            </div>
+          `;
+          return;
+        }
+        
+        const categoriesHTML = `
+          <div class="tutorials-categories">
+            ${sortedCategories.map(category => {
+              const tutorialsInCategory = categories[category];
+              return `
+                <div class="tutorial-category">
+                  <div class="tutorial-category-header">
+                    <h3 class="tutorial-category-title">${category}</h3>
+                    <span class="tutorial-category-count">${tutorialsInCategory.length} ${tutorialsInCategory.length === 1 ? 'tutorial' : 'tutorial'}</span>
+                  </div>
+                  <div class="tutorials-grid">
+                    ${tutorialsInCategory.map(tutorial => {
+                      const cleanTitle = tutorial.title.replace(' - Guida Completa Tradelia AI', '');
+                      return `
+                        <div class="tutorial-card">
+                          <div class="tutorial-card-header">
+                            <h4 class="tutorial-card-title">${cleanTitle}</h4>
+                            <div class="tutorial-card-meta">
+                              ${tutorial.published ? `<span class="tutorial-card-meta-item">${tutorial.published}</span>` : ''}
+                              ${tutorial.difficulty ? `<span class="tutorial-card-difficulty">${tutorial.difficulty}</span>` : ''}
+                            </div>
+                          </div>
+                          <a href="${tutorial.link}" class="tutorial-card-link">
+                            Leggi Tutorial
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M5 12h14M12 5l7 7-7 7"></path>
+                            </svg>
+                          </a>
+                        </div>
+                      `;
+                    }).join('')}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+        
+        container.innerHTML = categoriesHTML;
+      } catch(error) {
+        console.error('Errore caricamento tutorial:', error);
+        container.innerHTML = `
+          <div class="empty-state">
+            <p>Errore nel caricamento dei tutorial.</p>
+          </div>
+        `;
+      }
+    }
+    
+    // ===== UTILITY FUNCTIONS =====
+    function formatDate(dateString) {
+      try {
+        const date = new Date(dateString);
+        return {
+          date: date.toLocaleDateString('it-IT', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          }),
+          time: date.toLocaleTimeString('it-IT', {
+            hour: '2-digit',
+            minute: '2-digit'
+          })
+        };
+      } catch(e) {
+        return { date: dateString, time: '' };
+      }
+    }
+    
+    // ===== INIT =====
+    loadReports();
+    loadTutorials();
+  </script>
+  
+  <!-- ===== LEGAL OVERLAY ===== -->
+  <div id="legal-consent-overlay" role="dialog" aria-modal="true" aria-labelledby="legal-consent-title" hidden>
+    <div style="position: absolute; inset: 0;" data-legal-dismiss></div>
+    <div class="legal-panel" role="document" style="position: relative; z-index: 1; width: 100%; max-width: 48rem; max-height: 90vh; background: var(--surface-card); border: 1px solid var(--br-card); border-radius: var(--radius-lg); display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); overflow: hidden; margin: auto; padding: 0;">
+      <header class="legal-hdr" style="display: flex; align-items: center; justify-content: space-between; padding: var(--sp-5) var(--sp-6); border-bottom: 1px solid var(--br-card);">
+        <div class="legal-title" id="legal-consent-title" style="font-size: var(--fs-20); font-weight: 700; color: var(--ink);">Informativa legale</div>
+        <button class="btn btn-sm" type="button" data-legal-dismiss aria-label="Chiudi" style="background: none; border: none; color: var(--ink-soft); cursor: pointer; padding: 0.5rem;">Chiudi</button>
+      </header>
+      <nav class="legal-tabs" role="tablist" aria-label="Sezioni legali" style="display: flex; gap: 0; border-bottom: 1px solid var(--br-card);">
+        <button class="legal-tab" role="tab" id="tab-mifid" aria-controls="panel-mifid" aria-selected="true" style="padding: var(--sp-4) var(--sp-6); background: none; border: none; border-bottom: 2px solid transparent; color: var(--ink-soft); font-size: var(--fs-15); font-weight: 600; cursor: pointer;">Informativa MiFID</button>
+        <button class="legal-tab" role="tab" id="tab-privacy" aria-controls="panel-privacy" aria-selected="false" style="padding: var(--sp-4) var(--sp-6); background: none; border: none; border-bottom: 2px solid transparent; color: var(--ink-soft); font-size: var(--fs-15); font-weight: 600; cursor: pointer;">Privacy</button>
+      </nav>
+      <div class="legal-body" style="padding: var(--sp-6); overflow-y: auto; flex: 1;">
+        <section id="panel-mifid" role="tabpanel" aria-labelledby="tab-mifid">
+          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Finalità del materiale</h4>
+          <p style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4);">Il presente sito web e tutti i suoi contenuti (analisi, moduli AI, report, articoli, glossario) hanno esclusiva finalità <strong>informativa e didattica</strong>. Non costituiscono consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa <strong>MiFID II / ESMA</strong>.</p>
+          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Natura educativa</h4>
+          <p style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4);">Tradelia AI è una piattaforma di <strong>educazione finanziaria accademica</strong>. Tutti i contenuti, inclusi moduli AI proprietari, analisi di mercato, report e strumenti didattici, sono progettati esclusivamente per finalità formative e di ricerca. Non viene svolta verifica di adeguatezza/appropriatezza, profilo di rischio o obiettivi finanziari dell'utente.</p>
+          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Rischi</h4>
+          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
+            <li>I mercati finanziari comportano <strong>rischio di perdita, anche totale, del capitale</strong>.</li>
+            <li>Prodotti a leva/derivati (opzioni, futures, CFD) possono amplificare perdite oltre il capitale iniziale.</li>
+            <li>Rendimenti passati non sono indicativi di risultati futuri.</li>
+            <li>Le informazioni fornite non devono essere considerate come garanzie di rendimento.</li>
+          </ul>
+          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Dati e fonti</h4>
+          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
+            <li>Dati e serie storiche possono essere soggetti a ritardi, revisioni o errori; i timestamp potrebbero non riflettere il "tempo reale".</li>
+            <li>Le fonti includono provider ritenuti affidabili (Tier-1); non si garantisce esattezza/completezza assoluta.</li>
+            <li>Le analisi AI sono generate automaticamente e possono contenere errori o imprecisioni.</li>
+          </ul>
+          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Conflitti e indipendenza</h4>
+          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
+            <li><strong>Tradelia AI è indipendente</strong>: non esegue ordini, non gestisce capitali, non raccoglie depositi e non opera come intermediario finanziario.</li>
+            <li>Non sono note situazioni di conflitto d'interesse rilevanti nella produzione del materiale.</li>
+            <li>Eventuali link a piattaforme o servizi esterni sono forniti a solo scopo informativo.</li>
+          </ul>
+          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Limitazioni e responsabilità</h4>
+          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
+            <li>Le informazioni non sostituiscono il giudizio dell'utente né la consulenza di un <strong>intermediario autorizzato</strong>.</li>
+            <li>L'utente è responsabile delle proprie decisioni di investimento.</li>
+            <li>L'uso del sito è vietato laddove non conforme alle leggi locali.</li>
+            <li>Tradelia AI non si assume alcuna responsabilità per perdite derivanti dall'uso delle informazioni fornite.</li>
+          </ul>
+        </section>
+        <section id="panel-privacy" role="tabpanel" aria-labelledby="tab-privacy" hidden style="display: none;">
+          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Principi</h4>
+          <p style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4);">Adottiamo un'impostazione "privacy-first": minimizzazione dei dati e assenza di tracciamento pubblicitario.</p>
+          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Dati trattati</h4>
+          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
+            <li>Nessuna raccolta di dati personali identificativi tramite questa pagina.</li>
+            <li>Uso di <code style="background: var(--surface-elev); padding: 2px 6px; border-radius: 4px; font-size: var(--fs-12); color: var(--brand-400);">localStorage</code> per preferenze (tema) e consenso legale.</li>
+            <li>Eventuali log tecnici anonimi per sicurezza e diagnostica.</li>
+          </ul>
+          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Cookie e analytics</h4>
+          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
+            <li>Niente cookie di profilazione; eventuali analytics sono anonimizzati/aggregati.</li>
+            <li>Nessuna condivisione con terze parti a fini commerciali.</li>
+          </ul>
+          <h4 style="font-size: var(--fs-16); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">Diritti e contatti</h4>
+          <ul style="color: var(--ink-soft); line-height: var(--lh-17); margin-bottom: var(--sp-4); padding-left: var(--sp-5);">
+            <li>Per informazioni o esercizio diritti privacy, scrivi a <a href="mailto:info@tradelia.org" style="color: var(--brand-400); text-decoration: underline;">info@tradelia.org</a>.</li>
+            <li>Il titolare potrà aggiornare questa informativa: controlla periodicamente le revisioni.</li>
+          </ul>
+        </section>
+      </div>
+      <footer class="legal-ftr" style="display: flex; align-items: center; justify-content: space-between; padding: var(--sp-5) var(--sp-6); border-top: 1px solid var(--br-card); gap: var(--sp-4);">
+        <small style="font-size: var(--fs-12); color: var(--muted);">Continuando dichiari di aver letto e compreso le informative.</small>
+        <button class="btn btn-sm" type="button" id="btn-accept-legal" style="padding: 0.5rem 1rem; background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.2); border-radius: 6px; color: var(--brand-400); font-weight: 600; cursor: pointer;">Accetto e chiudi</button>
+      </footer>
+    </div>
+  </div>
+  
+  <!-- ===== LEGAL OVERLAY SCRIPT ===== -->
+  <script>
+    (function() {
+      const KEY = 'tradelia-legal-ack-v2025-11';
+      const overlay = document.getElementById('legal-consent-overlay');
+      const btnAccept = document.getElementById('btn-accept-legal');
+      const tabM = document.getElementById('tab-mifid');
+      const tabP = document.getElementById('tab-privacy');
+      const panelM = document.getElementById('panel-mifid');
+      const panelP = document.getElementById('panel-privacy');
+      
+      if (!overlay || !btnAccept || !tabM || !tabP || !panelM || !panelP) return;
+      
+      function showTab(which) {
+        const mifid = (which === 'mifid');
+        tabM.setAttribute('aria-selected', mifid ? 'true' : 'false');
+        tabP.setAttribute('aria-selected', mifid ? 'false' : 'true');
+        panelM.hidden = !mifid;
+        panelP.hidden = mifid;
+      }
+      
+      function openLegal(which = 'mifid', blocking = true) {
+        showTab(which);
+        overlay.hidden = false;
+        document.body.style.overflow = 'hidden';
+        if (blocking) overlay.setAttribute('data-blocking', 'true');
+        else overlay.setAttribute('data-blocking', 'false');
+        setTimeout(() => (which === 'privacy' ? tabP : tabM).focus(), 0);
+      }
+      
+      function closeLegal() {
+        overlay.hidden = true;
+        document.body.style.overflow = '';
+      }
+      
+      tabM.addEventListener('click', () => showTab('mifid'));
+      tabP.addEventListener('click', () => showTab('privacy'));
+      
+      btnAccept.addEventListener('click', () => {
+        try {
+          localStorage.setItem(KEY, JSON.stringify({ acceptedAt: new Date().toISOString(), v: '2025-11' }));
+        } catch(e) {}
+        closeLegal();
+      });
+      
+      overlay.addEventListener('click', (e) => {
+        if (e.target.matches('[data-legal-dismiss]') || e.target.closest('[data-legal-dismiss]')) {
+          if (!overlay.hasAttribute('data-blocking') || overlay.getAttribute('data-blocking') === 'false') closeLegal();
+        }
+      });
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && (!overlay.hasAttribute('data-blocking') || overlay.getAttribute('data-blocking') === 'false')) closeLegal();
+      });
+      
+      setTimeout(() => {
+        document.getElementById('btn-privacy-open')?.addEventListener('click', () => openLegal('privacy', false));
+        document.getElementById('btn-mifid-open')?.addEventListener('click', () => openLegal('mifid', false));
+      }, 500);
+      
+      // Primo accesso → OBBLIGO accettazione
+      let ack = null;
+      try {
+        ack = JSON.parse(localStorage.getItem(KEY) || 'null');
+      } catch(e) {}
+      if (!ack) {
+        openLegal('mifid', true);
+      }
+    })();
+  </script>
+</body>
+</html>
+
