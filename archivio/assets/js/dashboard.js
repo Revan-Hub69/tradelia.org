@@ -780,47 +780,95 @@ async function showDashboard() {
     userEmail.textContent = STATE.user.email;
   }
   
-  // Carica dati
-  await loadDashboardData();
-  
-  // Renderizza
-  renderDashboardReports();
-  renderDashboardTutorials();
-  await loadVotingData();
+  try {
+    // Carica dati
+    await loadDashboardData();
+    
+    // Renderizza sempre, anche se non ci sono dati
+    renderDashboardReports();
+    renderDashboardTutorials();
+    await loadVotingData();
+  } catch (err) {
+    Logger.error('Dashboard', 'Errore showDashboard', err);
+    // Mostra messaggio di errore
+    showErrorState('Errore nel caricamento della dashboard. Riprova più tardi.');
+  }
 }
 
 // ===== LOAD DASHBOARD DATA =====
 async function loadDashboardData() {
+  // Mostra stato di loading
+  showLoadingState();
+  
   try {
-    // Carica manifest report (tutti, anche < 24h per abbonati)
-    const manifestResponse = await fetch('/archivio/manifest.json');
-    if (manifestResponse.ok) {
-      const manifest = await manifestResponse.json();
-      STATE.reports = manifest.reports || [];
-      Logger.debug('Dashboard', `Caricati ${STATE.reports.length} report`);
+    // Carica manifest report (tutti, anche < 24h per abbonati) con timeout
+    const manifestController = new AbortController();
+    const manifestTimeout = setTimeout(() => manifestController.abort(), 10000); // 10 secondi timeout
+    
+    try {
+      const manifestResponse = await fetch('/archivio/manifest.json', {
+        signal: manifestController.signal,
+        cache: 'no-cache'
+      });
+      clearTimeout(manifestTimeout);
       
-      if (STATE.reports.length === 0) {
-        Logger.warn('Dashboard', 'Nessun report trovato nel manifest');
+      if (manifestResponse.ok) {
+        const manifest = await manifestResponse.json();
+        STATE.reports = manifest.reports || [];
+        Logger.debug('Dashboard', `Caricati ${STATE.reports.length} report`);
+        
+        if (STATE.reports.length === 0) {
+          Logger.warn('Dashboard', 'Nessun report trovato nel manifest');
+        }
+      } else {
+        Logger.error('Dashboard', `Errore caricamento manifest: ${manifestResponse.status} ${manifestResponse.statusText}`);
+        STATE.reports = [];
       }
-    } else {
-      Logger.error('Dashboard', `Errore caricamento manifest: ${manifestResponse.status} ${manifestResponse.statusText}`);
+    } catch (fetchErr) {
+      clearTimeout(manifestTimeout);
+      if (fetchErr.name === 'AbortError') {
+        Logger.error('Dashboard', 'Timeout caricamento manifest.json (10s)');
+      } else {
+        Logger.error('Dashboard', 'Errore fetch manifest.json', fetchErr);
+      }
       STATE.reports = [];
     }
     
-    // Carica documenti tutorial
-    const docsResponse = await fetch('/archivio/documents.json');
-    if (docsResponse.ok) {
-      const docs = await docsResponse.json();
-      STATE.tutorials = docs.documents || [];
-      Logger.debug('Dashboard', `Caricati ${STATE.tutorials.length} tutorial`);
-    } else {
-      Logger.warn('Dashboard', `Errore caricamento documenti: ${docsResponse.status}`);
+    // Carica documenti tutorial con timeout
+    const docsController = new AbortController();
+    const docsTimeout = setTimeout(() => docsController.abort(), 10000);
+    
+    try {
+      const docsResponse = await fetch('/archivio/documents.json', {
+        signal: docsController.signal,
+        cache: 'no-cache'
+      });
+      clearTimeout(docsTimeout);
+      
+      if (docsResponse.ok) {
+        const docs = await docsResponse.json();
+        STATE.tutorials = docs.documents || [];
+        Logger.debug('Dashboard', `Caricati ${STATE.tutorials.length} tutorial`);
+      } else {
+        Logger.warn('Dashboard', `Errore caricamento documenti: ${docsResponse.status}`);
+        STATE.tutorials = [];
+      }
+    } catch (fetchErr) {
+      clearTimeout(docsTimeout);
+      if (fetchErr.name === 'AbortError') {
+        Logger.warn('Dashboard', 'Timeout caricamento documents.json (10s)');
+      } else {
+        Logger.warn('Dashboard', 'Errore fetch documents.json', fetchErr);
+      }
       STATE.tutorials = [];
     }
   } catch (err) {
     Logger.error('Dashboard', 'Errore caricamento dati', err);
     STATE.reports = [];
     STATE.tutorials = [];
+  } finally {
+    // Nascondi stato di loading
+    hideLoadingState();
   }
 }
 
@@ -1055,6 +1103,26 @@ function renderVotingStats() {
       <div class="stat-value">${totalVoteCount}</div>
     </div>
   `;
+}
+
+// ===== LOADING STATE =====
+function showLoadingState() {
+  const tbody = document.getElementById('dashboard-reports-tbody');
+  if (tbody) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: var(--sp-6);"><div class="loading-spinner">Caricamento report...</div></td></tr>';
+  }
+}
+
+function hideLoadingState() {
+  // Lo stato di loading viene rimosso da renderDashboardReports
+}
+
+// ===== ERROR STATE =====
+function showErrorState(message) {
+  const tbody = document.getElementById('dashboard-reports-tbody');
+  if (tbody) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: var(--sp-6); color: var(--err, #ef4444);">${message}</td></tr>`;
+  }
 }
 
 // ===== AVVIO =====
