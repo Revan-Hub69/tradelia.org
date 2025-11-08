@@ -784,7 +784,7 @@ async function showDashboard() {
   const globalTimeout = setTimeout(() => {
     Logger.warn('Dashboard', 'Timeout globale caricamento dati (15s), forzo rendering');
     renderDashboardReports();
-    renderDashboardTutorials();
+    // renderDashboardTutorials(); // Tutorial temporaneamente disabilitati
     hideLoadingState();
   }, 15000);
   
@@ -795,7 +795,7 @@ async function showDashboard() {
     
     // Renderizza sempre, anche se non ci sono dati
     renderDashboardReports();
-    renderDashboardTutorials();
+    // renderDashboardTutorials(); // Tutorial temporaneamente disabilitati
     
     // Carica votazioni in background (non blocca il rendering)
     loadVotingData().catch(err => {
@@ -806,7 +806,7 @@ async function showDashboard() {
     Logger.error('Dashboard', 'Errore showDashboard', err);
     // Mostra messaggio di errore e nascondi loading
     renderDashboardReports(); // Renderizza comunque
-    renderDashboardTutorials();
+    // renderDashboardTutorials(); // Tutorial temporaneamente disabilitati
     hideLoadingState();
     showErrorState('Errore nel caricamento della dashboard. Riprova più tardi.');
   }
@@ -851,34 +851,39 @@ async function loadDashboardData() {
       STATE.reports = [];
     }
     
+    // Tutorial temporaneamente disabilitati - verranno riattivati quando completati
     // Carica documenti tutorial con timeout
-    const docsController = new AbortController();
-    const docsTimeout = setTimeout(() => docsController.abort(), 10000);
+    // const docsController = new AbortController();
+    // const docsTimeout = setTimeout(() => docsController.abort(), 10000);
     
-    try {
-      const docsResponse = await fetch('/archivio/documents.json', {
-        signal: docsController.signal,
-        cache: 'no-cache'
-      });
-      clearTimeout(docsTimeout);
+    // try {
+    //   const docsResponse = await fetch('/archivio/documents.json', {
+    //     signal: docsController.signal,
+    //     cache: 'no-cache'
+    //   });
+    //   clearTimeout(docsTimeout);
       
-      if (docsResponse.ok) {
-        const docs = await docsResponse.json();
-        STATE.tutorials = docs.documents || [];
-        Logger.debug('Dashboard', `Caricati ${STATE.tutorials.length} tutorial`);
-      } else {
-        Logger.warn('Dashboard', `Errore caricamento documenti: ${docsResponse.status}`);
-        STATE.tutorials = [];
-      }
-    } catch (fetchErr) {
-      clearTimeout(docsTimeout);
-      if (fetchErr.name === 'AbortError') {
-        Logger.warn('Dashboard', 'Timeout caricamento documents.json (10s)');
-      } else {
-        Logger.warn('Dashboard', 'Errore fetch documents.json', fetchErr);
-      }
-      STATE.tutorials = [];
-    }
+    //   if (docsResponse.ok) {
+    //     const docs = await docsResponse.json();
+    //     STATE.tutorials = docs.documents || [];
+    //     Logger.debug('Dashboard', `Caricati ${STATE.tutorials.length} tutorial`);
+    //   } else {
+    //     Logger.warn('Dashboard', `Errore caricamento documenti: ${docsResponse.status}`);
+    //     STATE.tutorials = [];
+    //   }
+    // } catch (fetchErr) {
+    //   clearTimeout(docsTimeout);
+    //   if (fetchErr.name === 'AbortError') {
+    //     Logger.warn('Dashboard', 'Timeout caricamento documents.json (10s)');
+    //   } else {
+    //     Logger.warn('Dashboard', 'Errore fetch documents.json', fetchErr);
+    //   }
+    //   STATE.tutorials = [];
+    // }
+    
+    // Tutorial disabilitati - non caricarli
+    STATE.tutorials = [];
+    Logger.debug('Dashboard', 'Tutorial temporaneamente disabilitati');
   } catch (err) {
     Logger.error('Dashboard', 'Errore caricamento dati', err);
     STATE.reports = [];
