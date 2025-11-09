@@ -810,6 +810,11 @@ async function showDashboard() {
     renderDashboardReports();
     // renderDashboardTutorials(); // Tutorial temporaneamente disabilitati
     
+    // Applica traduzioni dopo il rendering
+    setTimeout(() => {
+      i18n.translatePage();
+    }, 100);
+    
     // Carica votazioni in background (non blocca il rendering)
     loadVotingData().catch(err => {
       Logger.warn('Dashboard', 'Errore caricamento votazioni (non critico)', err);
@@ -822,6 +827,11 @@ async function showDashboard() {
     // renderDashboardTutorials(); // Tutorial temporaneamente disabilitati
     hideLoadingState();
     showErrorState('Errore nel caricamento della dashboard. Riprova più tardi.');
+    
+    // Applica traduzioni anche in caso di errore
+    setTimeout(() => {
+      i18n.translatePage();
+    }, 100);
   }
 }
 
@@ -920,8 +930,13 @@ function renderDashboardReports() {
   try {
     // Verifica se ci sono report
     if (!STATE.reports || STATE.reports.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: var(--sp-6);">Nessun report disponibile</td></tr>';
+      const noReportsText = i18n.t('dashboard.table.noReports') || 'Nessun report disponibile';
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: var(--sp-6);" data-i18n="dashboard.table.noReports">${noReportsText}</td></tr>`;
       Logger.warn('Dashboard', 'Nessun report da renderizzare');
+      // Applica traduzioni
+      setTimeout(() => {
+        i18n.translatePage();
+      }, 50);
       return;
     }
     
@@ -946,6 +961,7 @@ function renderDashboardReports() {
         const isLocked = isReportLocked(report);
         const lockedBadge = isLocked ? '<span class="status-badge" data-status="hold" style="margin-left: var(--sp-2);">LOCKED</span>' : '';
         
+        const openReportText = i18n.t('dashboard.table.openReport') || 'Apri Report';
         return `
           <tr>
             <td>${date}</td>
@@ -954,7 +970,7 @@ function renderDashboardReports() {
             <td>${report.type || '—'}</td>
             <td>${report.version || '—'}</td>
             <td>${statusBadge}${lockedBadge}</td>
-            <td><a href="/report/index.html?id=${report.id}" target="_blank">Apri Report</a></td>
+            <td><a href="/report/index.html?id=${report.id}" target="_blank" data-i18n="dashboard.table.openReport">${openReportText}</a></td>
           </tr>
         `;
       } catch (err) {
@@ -962,9 +978,18 @@ function renderDashboardReports() {
         return '<tr><td colspan="7">Errore caricamento report</td></tr>';
       }
     }).join('');
+    
+    // Applica traduzioni dopo il rendering
+    setTimeout(() => {
+      i18n.translatePage();
+    }, 50);
   } catch (err) {
     Logger.error('Dashboard', 'Errore renderDashboardReports', err);
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: var(--sp-6); color: var(--err, #ef4444);">Errore nel rendering dei report</td></tr>';
+    const errorText = i18n.t('dashboard.table.error') || 'Errore nel rendering dei report';
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: var(--sp-6); color: var(--err, #ef4444);" data-i18n="dashboard.table.error">${errorText}</td></tr>`;
+    setTimeout(() => {
+      i18n.translatePage();
+    }, 50);
   }
 }
 
@@ -1039,6 +1064,11 @@ function switchTab(tabName) {
   if (tabName === 'voting') {
     loadVotingData();
   }
+  
+  // Applica traduzioni dopo il cambio tab
+  setTimeout(() => {
+    i18n.translatePage();
+  }, 50);
 }
 
 // ===== LOAD VOTING DATA =====
@@ -1060,11 +1090,18 @@ async function loadVotingData() {
         STATE.votes = data.votes || [];
         renderVotingRanking();
         renderVotingStats();
+        // Applica traduzioni dopo il rendering
+        setTimeout(() => {
+          i18n.translatePage();
+        }, 50);
       } else {
         Logger.warn('Dashboard', 'Errore risposta API votazioni', response.status);
         STATE.votes = [];
         renderVotingRanking();
         renderVotingStats();
+        setTimeout(() => {
+          i18n.translatePage();
+        }, 50);
       }
     } catch (fetchErr) {
       clearTimeout(timeout);
@@ -1076,12 +1113,18 @@ async function loadVotingData() {
       STATE.votes = [];
       renderVotingRanking();
       renderVotingStats();
+      setTimeout(() => {
+        i18n.translatePage();
+      }, 50);
     }
   } catch (err) {
     Logger.error('Dashboard', 'Errore caricamento votazioni', err);
     STATE.votes = [];
     renderVotingRanking();
     renderVotingStats();
+    setTimeout(() => {
+      i18n.translatePage();
+    }, 50);
   }
 }
 

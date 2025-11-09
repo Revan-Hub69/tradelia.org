@@ -52,7 +52,7 @@ function render(data = {}) {
             </svg>
             <span>Tradelia AI</span>
           </h3>
-          <p>
+          <p data-i18n="footer.about.desc">
             Tradelia AI sviluppa analisi finanziarie modulari attraverso prompt 
             proprietari e metodologia accademica scientifica.
           </p>
@@ -61,8 +61,8 @@ function render(data = {}) {
             <a href="/dashboard.html" aria-label="Vai alla dashboard abbonati" data-i18n="nav.dashboard">Dashboard</a>
             <!-- Tutorial temporaneamente rimosso -->
             <a href="/pricing.html" aria-label="Vai alla pagina prezzi" data-i18n="nav.pricing">Pricing</a>
-            <a href="/brokers.html" aria-label="Vai alla pagina brokers">Brokers</a>
-            <a href="/glossario.html" aria-label="Vai al glossario finanziario">Glossario</a>
+            <a href="/brokers.html" aria-label="Vai alla pagina brokers" data-i18n="nav.brokers">Brokers</a>
+            <a href="/glossario.html" aria-label="Vai al glossario finanziario" data-i18n="nav.glossary">Glossario</a>
           </div>
         </div>
 
@@ -71,13 +71,13 @@ function render(data = {}) {
             <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 2l7 4v6c0 5-3 8-7 10C8 20 5 17 5 12V6l7-4z"/><path d="M12 8v4"/>
             </svg>
-            <span>Compliance &amp; Risk</span>
+            <span data-i18n="footer.legal.title">Compliance &amp; Risk</span>
           </h3>
           <ul class="ftr-list">
-            <li><strong>Non è consulenza in materia di investimenti</strong> (MiFID II / ESMA / CONSOB)</li>
-            <li>Tradelia AI non è un intermediario autorizzato; <strong>non gestisce capitali né esegue ordini</strong></li>
-            <li><strong>Rischio di perdita totale o parziale del capitale</strong> — investire comporta rischi</li>
-            <li>Le informazioni hanno <strong>scopo puramente informativo e formativo</strong> — non costituiscono raccomandazione personalizzata</li>
+            <li data-i18n="footer.legal.disclaimer1"><strong>Non è consulenza in materia di investimenti</strong> (MiFID II / ESMA / CONSOB)</li>
+            <li data-i18n="footer.legal.disclaimer2">Tradelia AI non è un intermediario autorizzato; <strong>non gestisce capitali né esegue ordini</strong></li>
+            <li data-i18n="footer.legal.disclaimer3"><strong>Rischio di perdita totale o parziale del capitale</strong> — investire comporta rischi</li>
+            <li data-i18n="footer.legal.disclaimer4">Le informazioni hanno <strong>scopo puramente informativo e formativo</strong> — non costituiscono raccomandazione personalizzata</li>
           </ul>
           <div class="ftr-quick-links" role="navigation" aria-label="Documenti legali" style="margin-top: var(--sp-4);">
             <a href="/privacy.html" aria-label="Vai alla privacy policy" data-i18n="nav.privacy">Privacy Policy</a>
@@ -95,9 +95,9 @@ function render(data = {}) {
             <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M4 12h16"/><path d="M12 4l8 8-8 8"/>
             </svg>
-            <span>Canali ufficiali</span>
+            <span data-i18n="footer.social.title">Canali ufficiali</span>
           </h3>
-          <p style="margin-bottom: var(--sp-3);">Aggiornamenti su metodologia e release:</p>
+          <p style="margin-bottom: var(--sp-3);" data-i18n="footer.social.subtitle">Aggiornamenti su metodologia e release:</p>
           <div class="ftr-socials" role="list" aria-label="Canali social ufficiali">
             <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener noreferrer" aria-label="Visita il profilo LinkedIn di Tradelia AI (si apre in nuova scheda)">LinkedIn</a>
             <a href="https://x.com/tradelia_ai" target="_blank" rel="noopener noreferrer" aria-label="Visita il profilo X (Twitter) di Tradelia AI (si apre in nuova scheda)">X (Twitter)</a>

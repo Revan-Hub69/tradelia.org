@@ -18,6 +18,22 @@
   <link rel="stylesheet" href="/archivio/assets/css/dashboard.css" />
   <link rel="stylesheet" href="/assets/css/global-header.css" />
   
+  <style>
+    /* Assicura che header abbia z-index corretto */
+    #site-header-slot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    }
+    
+    /* Spazio per header fixed */
+    body {
+      padding-top: 64px;
+    }
+  </style>
+  
   <!-- PWA Manifest -->
   <link rel="manifest" href="/manifest.json" />
 </head>
@@ -30,27 +46,27 @@
     <!-- Login Section (se non autenticato) -->
     <section id="login-section" class="dashboard-login">
       <div class="login-card">
-        <h1 class="login-title">Dashboard Abbonati</h1>
-        <p class="login-subtitle">Accedi per vedere tutti i report e votare i titoli</p>
+        <h1 class="login-title" data-i18n="dashboard.login.title">Dashboard Abbonati</h1>
+        <p class="login-subtitle" data-i18n="dashboard.login.subtitle">Accedi per vedere tutti i report e votare i titoli</p>
         
         <form id="login-form" class="login-form">
           <div class="form-group">
-            <label for="email">Email</label>
+            <label for="email" data-i18n="dashboard.login.email">Email</label>
             <input type="email" id="email" name="email" required autocomplete="email" />
           </div>
           
           <div class="form-group">
-            <label for="password">Password</label>
+            <label for="password" data-i18n="dashboard.login.password">Password</label>
             <input type="password" id="password" name="password" required autocomplete="current-password" />
           </div>
           
           <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Accedi</button>
-            <button type="button" id="demo-login-btn" class="btn btn-sm">Login Demo</button>
+            <button type="submit" class="btn btn-primary" data-i18n="dashboard.login.submit">Accedi</button>
+            <button type="button" id="demo-login-btn" class="btn btn-sm" data-i18n="dashboard.login.demo">Login Demo</button>
           </div>
           
           <div class="form-footer">
-            <button type="button" id="forgot-password-btn" class="btn-link">Password dimenticata?</button>
+            <button type="button" id="forgot-password-btn" class="btn-link" data-i18n="dashboard.login.forgotPassword">Password dimenticata?</button>
           </div>
         </form>
         
@@ -60,16 +76,16 @@
         <!-- Forgot Password Modal -->
         <div id="forgot-password-modal" class="modal" hidden>
           <div class="modal-content">
-            <h2>Recupera Password</h2>
-            <p>Inserisci la tua email per ricevere il link di ripristino password.</p>
+            <h2 data-i18n="dashboard.resetPassword.title">Recupera Password</h2>
+            <p data-i18n="dashboard.resetPassword.subtitle">Inserisci la tua email per ricevere il link di ripristino password.</p>
             <form id="forgot-password-form" class="login-form">
               <div class="form-group">
-                <label for="reset-email">Email</label>
+                <label for="reset-email" data-i18n="dashboard.login.email">Email</label>
                 <input type="email" id="reset-email" name="email" required autocomplete="email" />
               </div>
               <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Invia Link</button>
-                <button type="button" id="cancel-reset-btn" class="btn btn-sm">Annulla</button>
+                <button type="submit" class="btn btn-primary" data-i18n="dashboard.resetPassword.submit">Invia Link</button>
+                <button type="button" id="cancel-reset-btn" class="btn btn-sm" data-i18n="common.cancel">Annulla</button>
               </div>
             </form>
             <div id="reset-error" class="error-message" hidden></div>
@@ -82,15 +98,15 @@
     <!-- Subscription Required Section (se autenticato ma non abbonato) -->
     <section id="subscription-required-section" class="dashboard-subscription-required" hidden>
       <div class="subscription-card">
-        <h1 class="subscription-title">Abbonamento Richiesto</h1>
-        <p class="subscription-subtitle">Per accedere alla dashboard, è necessario un abbonamento attivo.</p>
-        <p class="subscription-description">
+        <h1 class="subscription-title" data-i18n="dashboard.subscription.title">Abbonamento Richiesto</h1>
+        <p class="subscription-subtitle" data-i18n="dashboard.subscription.subtitle">Per accedere alla dashboard, è necessario un abbonamento attivo.</p>
+        <p class="subscription-description" data-i18n="dashboard.subscription.description">
           Se hai già acquistato un abbonamento, attendi qualche istante che il sistema aggiorni il tuo status.
-          Se non hai ancora un abbonamento, <a href="#" class="subscription-link">acquista qui</a>.
+          Se non hai ancora un abbonamento, <a href="#" class="subscription-link" data-i18n="dashboard.subscription.link">acquista qui</a>.
         </p>
         <div class="subscription-actions">
-          <button id="refresh-subscription-btn" class="btn btn-primary">Aggiorna Status</button>
-          <button id="logout-btn-2" class="btn btn-sm">Esci</button>
+          <button id="refresh-subscription-btn" class="btn btn-primary" data-i18n="dashboard.subscription.refresh">Aggiorna Status</button>
+          <button id="logout-btn-2" class="btn btn-sm" data-i18n="dashboard.logout">Esci</button>
         </div>
       </div>
     </section>
@@ -99,27 +115,27 @@
     <section id="dashboard-content" class="dashboard-content" hidden>
       <header class="dashboard-header">
         <div>
-          <h1 class="dashboard-title">Dashboard Abbonati</h1>
-          <p class="dashboard-subtitle">Benvenuto, <span id="user-email"></span></p>
+          <h1 class="dashboard-title" data-i18n="dashboard.title">Dashboard Abbonati</h1>
+          <p class="dashboard-subtitle"><span data-i18n="dashboard.welcome">Benvenuto</span>, <span id="user-email"></span></p>
         </div>
         <div class="dashboard-header-actions">
-          <button id="install-app-btn" class="btn btn-primary btn-sm" hidden>
+          <button id="install-app-btn" class="btn btn-primary btn-sm" hidden data-i18n="dashboard.installApp">
             📱 Installa App
           </button>
-          <button id="logout-btn" class="btn btn-sm">Esci</button>
+          <button id="logout-btn" class="btn btn-sm" data-i18n="dashboard.logout">Esci</button>
         </div>
       </header>
       
       <!-- Sezioni: Report | Votazione -->
       <!-- Tutorial temporaneamente disabilitati - verranno riattivati quando completati -->
       <nav class="dashboard-tabs" role="tablist">
-        <button class="dashboard-tab active" role="tab" data-tab="reports" aria-selected="true">
+        <button class="dashboard-tab active" role="tab" data-tab="reports" aria-selected="true" data-i18n="dashboard.tab.reports">
           Report
         </button>
         <!-- <button class="dashboard-tab" role="tab" data-tab="tutorials" aria-selected="false">
           Tutorial
         </button> -->
-        <button class="dashboard-tab" role="tab" data-tab="voting" aria-selected="false">
+        <button class="dashboard-tab" role="tab" data-tab="voting" aria-selected="false" data-i18n="dashboard.tab.voting">
           Votazione
         </button>
       </nav>
@@ -129,7 +145,7 @@
         <!-- Filtri avanzati (solo abbonati) -->
         <div class="dashboard-filters">
           <button class="btn-toggle-filters" aria-expanded="false">
-            <span>Filtri e Ricerca Avanzati</span>
+            <span data-i18n="dashboard.filters.title">Filtri e Ricerca Avanzati</span>
             <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M7 10l5 5 5-5"/>
             </svg>
@@ -144,19 +160,19 @@
           <table class="archive-table" id="dashboard-reports-table">
             <thead>
               <tr>
-                <th>Data</th>
-                <th>Ticker</th>
-                <th>Company</th>
-                <th>Tipo</th>
-                <th>Versione AI</th>
-                <th>Status</th>
-                <th>Link</th>
+                <th data-i18n="dashboard.table.date">Data</th>
+                <th data-i18n="dashboard.table.ticker">Ticker</th>
+                <th data-i18n="dashboard.table.company">Company</th>
+                <th data-i18n="dashboard.table.type">Tipo</th>
+                <th data-i18n="dashboard.table.version">Versione AI</th>
+                <th data-i18n="dashboard.table.status">Status</th>
+                <th data-i18n="dashboard.table.link">Link</th>
               </tr>
             </thead>
             <tbody id="dashboard-reports-tbody">
               <tr>
                 <td colspan="7" style="text-align: center; padding: var(--sp-6);">
-                  <div class="loading-spinner">Caricamento report...</div>
+                  <div class="loading-spinner" data-i18n="dashboard.loading">Caricamento report...</div>
                 </td>
               </tr>
             </tbody>
@@ -174,27 +190,27 @@
       <!-- SEZIONE VOTAZIONE -->
       <section id="dashboard-voting" class="dashboard-section" role="tabpanel" hidden>
         <div class="voting-container">
-          <h2 class="voting-title">Vota il titolo per l'analisi Swing Master di domani</h2>
-          <p class="voting-subtitle">I tuoi voti determinano quale titolo analizzeremo domani</p>
+          <h2 class="voting-title" data-i18n="dashboard.voting.title">Vota il titolo per l'analisi Swing Master di domani</h2>
+          <p class="voting-subtitle" data-i18n="dashboard.voting.subtitle">I tuoi voti determinano quale titolo analizzeremo domani</p>
           
           <!-- Form Votazione -->
           <form id="voting-form" class="voting-form">
             <div class="form-group">
-              <label for="ticker-input">Ticker</label>
-              <input type="text" id="ticker-input" name="ticker" placeholder="Es. AAPL" required pattern="[A-Z]{1,5}" />
+              <label for="ticker-input" data-i18n="dashboard.voting.ticker">Ticker</label>
+              <input type="text" id="ticker-input" name="ticker" placeholder="Es. AAPL" required pattern="[A-Z]{1,5}" data-i18n-placeholder="dashboard.voting.tickerPlaceholder" />
             </div>
             
             <div class="form-group">
-              <label for="votes-input">Voti (1-10)</label>
+              <label for="votes-input" data-i18n="dashboard.voting.votes">Voti (1-10)</label>
               <input type="number" id="votes-input" name="votes" min="1" max="10" value="1" required />
             </div>
             
-            <button type="submit" class="btn btn-primary">Vota</button>
+            <button type="submit" class="btn btn-primary" data-i18n="dashboard.voting.submit">Vota</button>
           </form>
           
           <!-- Ranking in tempo reale -->
           <div class="voting-ranking">
-            <h3 class="ranking-title">Ranking Attuale</h3>
+            <h3 class="ranking-title" data-i18n="dashboard.voting.ranking">Ranking Attuale</h3>
             <div id="ranking-list" class="ranking-list">
               <!-- Ranking caricato dinamicamente -->
             </div>
@@ -202,7 +218,7 @@
           
           <!-- Statistiche -->
           <div class="voting-stats">
-            <h3 class="stats-title">Statistiche</h3>
+            <h3 class="stats-title" data-i18n="dashboard.voting.stats">Statistiche</h3>
             <div id="voting-stats" class="stats-grid">
               <!-- Statistiche caricati dinamicamente -->
             </div>
