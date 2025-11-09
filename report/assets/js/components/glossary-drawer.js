@@ -4,6 +4,7 @@
 
 import Logger from '../utils/logger.js';
 import { registerOverlay, unregisterOverlay, OVERLAY_TYPES } from '../utils/overlay-manager.js';
+import { i18n } from '../utils/i18n.js';
 
 const GLOSSARY_DRAWER = {
   _overlay: null,
@@ -80,8 +81,8 @@ function renderGlossary() {
           type="text" 
           id="glossary-drawer-search-input" 
           class="glossary-drawer-search-input" 
-          placeholder="Cerca un termine..."
-          aria-label="Cerca nel glossario"
+          placeholder="${i18n.t('glossary.search.placeholder')}"
+          aria-label="${i18n.t('glossary.search.ariaLabel')}"
         />
       </div>
     </div>
@@ -89,9 +90,9 @@ function renderGlossary() {
     <!-- Filters -->
     <div class="glossary-drawer-filters">
       <div class="glossary-drawer-filter-group">
-        <label class="glossary-drawer-filter-label">Universo</label>
+        <label class="glossary-drawer-filter-label">${i18n.t('glossary.filter.universe')}</label>
         <div class="glossary-drawer-filter-buttons" data-filter="universo">
-          <button class="glossary-drawer-filter-btn active" data-value="all" type="button">Tutti</button>
+          <button class="glossary-drawer-filter-btn active" data-value="all" type="button">${i18n.t('glossary.filter.all')}</button>
           ${universi.map(u => `
             <button class="glossary-drawer-filter-btn" data-value="${escapeHtml(u)}" type="button">${escapeHtml(u)}</button>
           `).join('')}
@@ -99,9 +100,9 @@ function renderGlossary() {
       </div>
       
       <div class="glossary-drawer-filter-group">
-        <label class="glossary-drawer-filter-label">Difficoltà</label>
+        <label class="glossary-drawer-filter-label">${i18n.t('glossary.filter.difficulty')}</label>
         <div class="glossary-drawer-filter-buttons" data-filter="difficolta">
-          <button class="glossary-drawer-filter-btn active" data-value="all" type="button">Tutte</button>
+          <button class="glossary-drawer-filter-btn active" data-value="all" type="button">${i18n.t('glossary.filter.allDifficulties')}</button>
           ${difficolta.map(d => `
             <button class="glossary-drawer-filter-btn" data-value="${escapeHtml(d)}" type="button">${escapeHtml(d)}</button>
           `).join('')}
@@ -111,7 +112,7 @@ function renderGlossary() {
     
     <!-- Stats -->
     <div class="glossary-drawer-stats">
-      <span id="glossary-drawer-stats-text">${terms.length} termini</span>
+      <span id="glossary-drawer-stats-text">${terms.length} ${i18n.t('glossary.stats')}</span>
     </div>
     
     <!-- Terms List -->
@@ -126,7 +127,7 @@ function renderGlossary() {
 
 function renderTermsList(terms) {
   if (!terms || terms.length === 0) {
-    return '<div class="glossary-drawer-empty">Nessun termine trovato</div>';
+    return `<div class="glossary-drawer-empty">${i18n.t('glossary.empty')}</div>`;
   }
   
   return terms.map(([key, term]) => {
@@ -230,9 +231,11 @@ function filterTerms() {
   const statsText = GLOSSARY_DRAWER._panel.querySelector('#glossary-drawer-stats-text');
   if (statsText) {
     const total = Object.keys(GLOSSARY_DRAWER._data).filter(k => !k.startsWith('_')).length;
-    statsText.textContent = terms.length === total 
-      ? `${total} termini` 
-      : `Mostrando ${terms.length} di ${total} termini`;
+    if (terms.length === total) {
+      statsText.textContent = `${total} ${i18n.t('glossary.stats')}`;
+    } else {
+      statsText.textContent = i18n.t('glossary.stats.showing').replace('{count}', terms.length).replace('{total}', total);
+    }
   }
 }
 
@@ -272,8 +275,8 @@ function mount() {
   // Header
   const header = createEl('header', 'glossary-drawer-header');
   header.innerHTML = `
-    <h2 id="glossary-drawer-title" class="glossary-drawer-title">Glossario Finanziario</h2>
-    <button class="glossary-drawer-close" aria-label="Chiudi" type="button">
+    <h2 id="glossary-drawer-title" class="glossary-drawer-title">${i18n.t('glossary.title')}</h2>
+    <button class="glossary-drawer-close" aria-label="${i18n.t('common.close')}" type="button">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
       </svg>

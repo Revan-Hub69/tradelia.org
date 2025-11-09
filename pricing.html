@@ -402,7 +402,7 @@
       left: 0; 
       right: 0; 
       height: 64px; 
-      z-index: 100;
+      z-index: 1000;
       display: flex; 
       align-items: center;
       backdrop-filter: blur(16px) saturate(1.2);
@@ -564,13 +564,13 @@
       
       <!-- Hero Section -->
       <header class="pricing-hero" style="text-align: center;">
-        <h1 style="font-size: clamp(2rem, 5vw, 2.75rem); font-weight: 800; color: var(--ink); margin-bottom: var(--sp-4); letter-spacing: -0.02em;">
+        <h1 style="font-size: clamp(2rem, 5vw, 2.75rem); font-weight: 800; color: var(--ink); margin-bottom: var(--sp-4); letter-spacing: -0.02em;" data-i18n="pricing.hero.title">
           Scegli il Piano Giusto per Te
         </h1>
-        <p style="color: var(--ink-soft); font-size: var(--fs-18); max-width: 600px; margin: 0 auto var(--sp-6); line-height: var(--lh-16);">
+        <p style="color: var(--ink-soft); font-size: var(--fs-18); max-width: 600px; margin: 0 auto var(--sp-6); line-height: var(--lh-16);" data-i18n="pricing.hero.subtitle">
           Accesso completo a tutti i report, dashboard interattive e strumenti di analisi
         </p>
-        <p style="color: var(--muted); font-size: var(--fs-15); max-width: 700px; margin: 0 auto; line-height: var(--lh-17);">
+        <p style="color: var(--muted); font-size: var(--fs-15); max-width: 700px; margin: 0 auto; line-height: var(--lh-17);" data-i18n="pricing.hero.description">
           <strong style="color: var(--ink-soft);">Tradelia AI</strong> è una piattaforma SaaS che fornisce analisi finanziarie professionali 
           attraverso metodologia accademica AI. Offriamo report dettagliati su azioni, ETF, commodities e altri asset, 
           con dashboard interattive e strumenti di analisi tecnica e fondamentale. 
@@ -583,17 +583,17 @@
       <div class="pricing-card-wrapper" style="max-width: 600px; margin: 0 auto;">
         <div class="pricing-card">
           <div style="text-align: center; margin-bottom: var(--sp-8);">
-            <h2 style="font-size: var(--fs-22); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-4); letter-spacing: -0.01em;">
+            <h2 style="font-size: var(--fs-22); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-4); letter-spacing: -0.01em;" data-i18n="pricing.card.title">
               Abbonamento Mensile
             </h2>
-            <div class="trial-badge" style="margin-bottom: var(--sp-5);">
+            <div class="trial-badge" style="margin-bottom: var(--sp-5);" data-i18n="pricing.card.trial">
               14 giorni di prova gratuita
             </div>
             <div style="display: flex; align-items: baseline; justify-content: center; gap: var(--sp-3); margin-bottom: var(--sp-5);">
               <span class="pricing-price">€29</span>
-              <span class="pricing-period">/mese</span>
+              <span class="pricing-period" data-i18n="pricing.card.period">/mese</span>
             </div>
-            <p style="color: var(--muted); font-size: var(--fs-14); line-height: var(--lh-16);">
+            <p style="color: var(--muted); font-size: var(--fs-14); line-height: var(--lh-16);" data-i18n="pricing.card.description">
               Prova gratuita per 14 giorni, poi €29/mese.<br>
               Annulla in qualsiasi momento.
             </p>
@@ -601,45 +601,45 @@
 
           <!-- Features -->
           <div class="pricing-features">
-            <h3>Cosa include:</h3>
+            <h3 data-i18n="pricing.features.title">Cosa include:</h3>
             <ul>
               <li>
                 <i data-lucide="check"></i>
-                <span>Accesso completo a tutti i report</span>
+                <span data-i18n="pricing.features.reports">Accesso completo a tutti i report</span>
               </li>
               <li>
                 <i data-lucide="check"></i>
-                <span>Dashboard interattive e personalizzabili</span>
+                <span data-i18n="pricing.features.dashboard">Dashboard interattive e personalizzabili</span>
               </li>
               <li>
                 <i data-lucide="check"></i>
-                <span>Sistema di votazione avanzato</span>
+                <span data-i18n="pricing.features.voting">Sistema di votazione avanzato</span>
               </li>
               <li>
                 <i data-lucide="check"></i>
-                <span>Notifiche push per nuovi report</span>
+                <span data-i18n="pricing.features.notifications">Notifiche push per nuovi report</span>
               </li>
               <li>
                 <i data-lucide="check"></i>
-                <span>Accesso prioritario a nuove funzionalità</span>
+                <span data-i18n="pricing.features.priority">Accesso prioritario a nuove funzionalità</span>
               </li>
               <li>
                 <i data-lucide="check"></i>
-                <span>Supporto via email</span>
+                <span data-i18n="pricing.features.support">Supporto via email</span>
               </li>
             </ul>
           </div>
 
           <!-- CTA Button -->
           <div style="text-align: center; margin-top: var(--sp-8);">
-            <a href="/dashboard.html" class="cta-button">
+            <a href="/dashboard.html" class="cta-button" data-i18n="pricing.cta.button">
               Inizia Subito
             </a>
             <div class="pricing-legal">
               <div class="pricing-legal-links">
-                <a href="/refund.html">14 giorni di prova gratuita</a>
+                <a href="/refund.html" data-i18n="pricing.cta.trial">14 giorni di prova gratuita</a>
                 <span class="pricing-legal-separator">·</span>
-                <a href="/terms.html">Termini e Condizioni</a>
+                <a href="/terms.html" data-i18n="pricing.cta.terms">Termini e Condizioni</a>
               </div>
             </div>
           </div>
@@ -648,22 +648,22 @@
 
       <!-- FAQ Section -->
       <section class="pricing-faq" style="max-width: 700px; margin-left: auto; margin-right: auto;">
-        <h2 style="font-size: var(--fs-24); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-10); text-align: center; letter-spacing: -0.01em;">
+        <h2 style="font-size: var(--fs-24); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-10); text-align: center; letter-spacing: -0.01em;" data-i18n="pricing.faq.title">
           Domande Frequenti
         </h2>
         
         <div>
           <details>
-            <summary>Posso cancellare in qualsiasi momento?</summary>
-            <p>
+            <summary data-i18n="pricing.faq.cancel.title">Posso cancellare in qualsiasi momento?</summary>
+            <p data-i18n="pricing.faq.cancel.content">
               Sì, puoi cancellare il tuo abbonamento in qualsiasi momento dalla dashboard. 
               Continuerai ad avere accesso fino alla fine del periodo già pagato.
             </p>
           </details>
 
           <details>
-            <summary>Come funziona la prova gratuita?</summary>
-            <p>
+            <summary data-i18n="pricing.faq.trial.title">Come funziona la prova gratuita?</summary>
+            <p data-i18n="pricing.faq.trial.content">
               Offriamo <strong style="color: var(--ink-soft);">14 giorni di prova gratuita</strong> senza impegno. Puoi accedere a tutte le funzionalità della dashboard 
               senza pagare nulla. Al termine dei 14 giorni, se non cancelli, l'abbonamento si attiva automaticamente a €29/mese. 
               Puoi cancellare in qualsiasi momento durante la prova gratuita senza costi.
@@ -671,8 +671,8 @@
           </details>
 
           <details>
-            <summary>Come funziona il pagamento?</summary>
-            <p>
+            <summary data-i18n="pricing.faq.payment.title">Come funziona il pagamento?</summary>
+            <p data-i18n="pricing.faq.payment.content">
               I pagamenti sono gestiti in modo sicuro tramite Paddle. L'abbonamento si rinnova 
               automaticamente ogni mese. Puoi cambiare o cancellare in qualsiasi momento.
             </p>
@@ -691,70 +691,70 @@
     <div style="position: absolute; inset: 0;" data-legal-dismiss></div>
     <div class="legal-panel" role="document">
       <header class="legal-hdr">
-        <div class="legal-title" id="legal-consent-title">Informativa legale</div>
-        <button class="btn btn-sm" type="button" data-legal-dismiss aria-label="Chiudi">Chiudi</button>
+        <div class="legal-title" id="legal-consent-title" data-i18n="legal.overlay.title">Informativa legale</div>
+        <button class="btn btn-sm" type="button" data-legal-dismiss aria-label="Chiudi" data-i18n="legal.overlay.close">Chiudi</button>
       </header>
       <nav class="legal-tabs" role="tablist" aria-label="Sezioni legali">
-        <button class="legal-tab" role="tab" id="tab-mifid" aria-controls="panel-mifid" aria-selected="true">Informativa MiFID</button>
-        <button class="legal-tab" role="tab" id="tab-privacy" aria-controls="panel-privacy" aria-selected="false">Privacy</button>
+        <button class="legal-tab" role="tab" id="tab-mifid" aria-controls="panel-mifid" aria-selected="true" data-i18n="legal.overlay.tab.mifid">Informativa MiFID</button>
+        <button class="legal-tab" role="tab" id="tab-privacy" aria-controls="panel-privacy" aria-selected="false" data-i18n="legal.overlay.tab.privacy">Privacy</button>
       </nav>
       <div class="legal-body">
         <section id="panel-mifid" role="tabpanel" aria-labelledby="tab-mifid">
-          <h4>Finalità del materiale</h4>
-          <p>Il presente sito web e tutti i suoi contenuti (analisi, moduli AI, report, articoli, glossario) hanno esclusiva finalità <strong>informativa e didattica</strong>. Non costituiscono consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa <strong>MiFID II / ESMA</strong>.</p>
-          <h4>Natura educativa</h4>
-          <p>Tradelia AI è una piattaforma di <strong>educazione finanziaria accademica</strong>. Tutti i contenuti, inclusi moduli AI proprietari, analisi di mercato, report e strumenti didattici, sono progettati esclusivamente per finalità formative e di ricerca. Non viene svolta verifica di adeguatezza/appropriatezza, profilo di rischio o obiettivi finanziari dell'utente.</p>
-          <h4>Rischi</h4>
+          <h4 data-i18n="legal.mifid.purpose.title">Finalità del materiale</h4>
+          <p data-i18n="legal.mifid.purpose.content">Il presente sito web e tutti i suoi contenuti (analisi, moduli AI, report, articoli, glossario) hanno esclusiva finalità <strong>informativa e didattica</strong>. Non costituiscono consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa <strong>MiFID II / ESMA</strong>.</p>
+          <h4 data-i18n="legal.mifid.educational.title">Natura educativa</h4>
+          <p data-i18n="legal.mifid.educational.content">Tradelia AI è una piattaforma di <strong>educazione finanziaria accademica</strong>. Tutti i contenuti, inclusi moduli AI proprietari, analisi di mercato, report e strumenti didattici, sono progettati esclusivamente per finalità formative e di ricerca. Non viene svolta verifica di adeguatezza/appropriatezza, profilo di rischio o obiettivi finanziari dell'utente.</p>
+          <h4 data-i18n="legal.mifid.risks.title">Rischi</h4>
           <ul>
-            <li>I mercati finanziari comportano <strong>rischio di perdita, anche totale, del capitale</strong>.</li>
-            <li>Prodotti a leva/derivati (opzioni, futures, CFD) possono amplificare perdite oltre il capitale iniziale.</li>
-            <li>Rendimenti passati non sono indicativi di risultati futuri.</li>
-            <li>Le informazioni fornite non devono essere considerate come garanzie di rendimento.</li>
+            <li data-i18n="legal.mifid.risks.item1">I mercati finanziari comportano <strong>rischio di perdita, anche totale, del capitale</strong>.</li>
+            <li data-i18n="legal.mifid.risks.item2">Prodotti a leva/derivati (opzioni, futures, CFD) possono amplificare perdite oltre il capitale iniziale.</li>
+            <li data-i18n="legal.mifid.risks.item3">Rendimenti passati non sono indicativi di risultati futuri.</li>
+            <li data-i18n="legal.mifid.risks.item4">Le informazioni fornite non devono essere considerate come garanzie di rendimento.</li>
           </ul>
-          <h4>Dati e fonti</h4>
+          <h4 data-i18n="legal.mifid.data.title">Dati e fonti</h4>
           <ul>
-            <li>Dati e serie storiche possono essere soggetti a ritardi, revisioni o errori; i timestamp potrebbero non riflettere il "tempo reale".</li>
-            <li>Le fonti includono provider ritenuti affidabili (Tier-1); non si garantisce esattezza/completezza assoluta.</li>
-            <li>Le analisi AI sono generate automaticamente e possono contenere errori o imprecisioni.</li>
+            <li data-i18n="legal.mifid.data.item1">Dati e serie storiche possono essere soggetti a ritardi, revisioni o errori; i timestamp potrebbero non riflettere il "tempo reale".</li>
+            <li data-i18n="legal.mifid.data.item2">Le fonti includono provider ritenuti affidabili (Tier-1); non si garantisce esattezza/completezza assoluta.</li>
+            <li data-i18n="legal.mifid.data.item3">Le analisi AI sono generate automaticamente e possono contenere errori o imprecisioni.</li>
           </ul>
-          <h4>Conflitti e indipendenza</h4>
+          <h4 data-i18n="legal.mifid.independence.title">Conflitti e indipendenza</h4>
           <ul>
-            <li><strong>Tradelia AI è indipendente</strong>: non esegue ordini, non gestisce capitali, non raccoglie depositi e non opera come intermediario finanziario.</li>
-            <li>Non sono note situazioni di conflitto d'interesse rilevanti nella produzione del materiale.</li>
-            <li>Eventuali link a piattaforme o servizi esterni sono forniti a solo scopo informativo.</li>
+            <li data-i18n="legal.mifid.independence.item1"><strong>Tradelia AI è indipendente</strong>: non esegue ordini, non gestisce capitali, non raccoglie depositi e non opera come intermediario finanziario.</li>
+            <li data-i18n="legal.mifid.independence.item2">Non sono note situazioni di conflitto d'interesse rilevanti nella produzione del materiale.</li>
+            <li data-i18n="legal.mifid.independence.item3">Eventuali link a piattaforme o servizi esterni sono forniti a solo scopo informativo.</li>
           </ul>
-          <h4>Limitazioni e responsabilità</h4>
+          <h4 data-i18n="legal.mifid.limitations.title">Limitazioni e responsabilità</h4>
           <ul>
-            <li>Le informazioni non sostituiscono il giudizio dell'utente né la consulenza di un <strong>intermediario autorizzato</strong>.</li>
-            <li>L'utente è responsabile delle proprie decisioni di investimento.</li>
-            <li>L'uso del sito è vietato laddove non conforme alle leggi locali.</li>
-            <li>Tradelia AI non si assume alcuna responsabilità per perdite derivanti dall'uso delle informazioni fornite.</li>
+            <li data-i18n="legal.mifid.limitations.item1">Le informazioni non sostituiscono il giudizio dell'utente né la consulenza di un <strong>intermediario autorizzato</strong>.</li>
+            <li data-i18n="legal.mifid.limitations.item2">L'utente è responsabile delle proprie decisioni di investimento.</li>
+            <li data-i18n="legal.mifid.limitations.item3">L'uso del sito è vietato laddove non conforme alle leggi locali.</li>
+            <li data-i18n="legal.mifid.limitations.item4">Tradelia AI non si assume alcuna responsabilità per perdite derivanti dall'uso delle informazioni fornite.</li>
           </ul>
         </section>
         <section id="panel-privacy" role="tabpanel" aria-labelledby="tab-privacy" hidden>
-          <h4>Principi</h4>
-          <p>Adottiamo un'impostazione "privacy-first": minimizzazione dei dati e assenza di tracciamento pubblicitario.</p>
-          <h4>Dati trattati</h4>
+          <h4 data-i18n="legal.privacy.principles.title">Principi</h4>
+          <p data-i18n="legal.privacy.principles.content">Adottiamo un'impostazione "privacy-first": minimizzazione dei dati e assenza di tracciamento pubblicitario.</p>
+          <h4 data-i18n="legal.privacy.data.title">Dati trattati</h4>
           <ul>
-            <li>Nessuna raccolta di dati personali identificativi tramite questa pagina.</li>
-            <li>Uso di <code>localStorage</code> per preferenze (tema) e consenso legale.</li>
-            <li>Eventuali log tecnici anonimi per sicurezza e diagnostica.</li>
+            <li data-i18n="legal.privacy.data.item1">Nessuna raccolta di dati personali identificativi tramite questa pagina.</li>
+            <li data-i18n="legal.privacy.data.item2">Uso di <code>localStorage</code> per preferenze (tema) e consenso legale.</li>
+            <li data-i18n="legal.privacy.data.item3">Eventuali log tecnici anonimi per sicurezza e diagnostica.</li>
           </ul>
-          <h4>Cookie e analytics</h4>
+          <h4 data-i18n="legal.privacy.cookies.title">Cookie e analytics</h4>
           <ul>
-            <li>Niente cookie di profilazione; eventuali analytics sono anonimizzati/aggregati.</li>
-            <li>Nessuna condivisione con terze parti a fini commerciali.</li>
+            <li data-i18n="legal.privacy.cookies.item1">Niente cookie di profilazione; eventuali analytics sono anonimizzati/aggregati.</li>
+            <li data-i18n="legal.privacy.cookies.item2">Nessuna condivisione con terze parti a fini commerciali.</li>
           </ul>
-          <h4>Diritti e contatti</h4>
+          <h4 data-i18n="legal.privacy.rights.title">Diritti e contatti</h4>
           <ul>
-            <li>Per informazioni o esercizio diritti privacy, scrivi a <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>.</li>
-            <li>Il titolare potrà aggiornare questa informativa: controlla periodicamente le revisioni.</li>
+            <li data-i18n="legal.privacy.rights.item1">Per informazioni o esercizio diritti privacy, scrivi a <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>.</li>
+            <li data-i18n="legal.privacy.rights.item2">Il titolare potrà aggiornare questa informativa: controlla periodicamente le revisioni.</li>
           </ul>
         </section>
       </div>
       <footer class="legal-ftr">
-        <small style="font-size: var(--fs-12); color: var(--muted);">Continuando dichiari di aver letto e compreso le informative.</small>
-        <button class="btn btn-sm" type="button" id="btn-accept-legal">Accetto e chiudi</button>
+        <small style="font-size: var(--fs-12); color: var(--muted);" data-i18n="legal.overlay.continue">Continuando dichiari di aver letto e compreso le informative.</small>
+        <button class="btn btn-sm" type="button" id="btn-accept-legal" data-i18n="legal.overlay.accept">Accetto e chiudi</button>
       </footer>
     </div>
   </div>

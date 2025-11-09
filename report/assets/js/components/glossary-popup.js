@@ -4,6 +4,7 @@
 
 import Logger from '../utils/logger.js';
 import { registerOverlay, unregisterOverlay, OVERLAY_TYPES } from '../utils/overlay-manager.js';
+import { i18n } from '../utils/i18n.js';
 
 const GLOSSARY_POPUP = {
   _overlay: null,
@@ -97,15 +98,15 @@ async function openTerm(key) {
         <div class="glossary-popup-header-content">
           <h2 id="glossary-popup-title" class="glossary-popup-title">${escapeHtml(key)}</h2>
         </div>
-        <button class="glossary-popup-close" aria-label="Chiudi" type="button">×</button>
+        <button class="glossary-popup-close" aria-label="${i18n.t('common.close')}" type="button">×</button>
       </header>
       <div class="glossary-popup-body">
         <div class="glossary-popup-section">
-          <p class="glossary-popup-section-text">Nessuna informazione disponibile nel glossario per questo termine.</p>
+          <p class="glossary-popup-section-text">${i18n.t('glossary.term.noInfo')}</p>
         </div>
       </div>
       <footer class="glossary-popup-footer">
-        <button class="glossary-popup-close-bottom" type="button">Chiudi</button>
+        <button class="glossary-popup-close-bottom" type="button">${i18n.t('common.close')}</button>
       </footer>
     `;
     
@@ -158,38 +159,38 @@ async function openTerm(key) {
           ` : ''}
         </div>
       </div>
-      <button class="glossary-popup-close" aria-label="Chiudi" type="button">×</button>
+      <button class="glossary-popup-close" aria-label="${i18n.t('common.close')}" type="button">×</button>
     </header>
     <div class="glossary-popup-body">
       ${definizioneAccademica ? `
         <div class="glossary-popup-section">
-          <h3 class="glossary-popup-section-title">Definizione Accademica</h3>
+          <h3 class="glossary-popup-section-title">${i18n.t('glossary.term.definition')}</h3>
           <p class="glossary-popup-section-text">${escapeHtml(definizioneAccademica)}</p>
         </div>
       ` : ''}
       
       ${spiegazioneAI ? `
         <div class="glossary-popup-section">
-          <h3 class="glossary-popup-section-title">Spiegazione AI</h3>
+          <h3 class="glossary-popup-section-title">${i18n.t('glossary.term.explanation')}</h3>
           <p class="glossary-popup-section-text">${escapeHtml(spiegazioneAI)}</p>
         </div>
       ` : ''}
       
       ${fonteAccademica ? `
         <div class="glossary-popup-section">
-          <h3 class="glossary-popup-section-title">Fonte</h3>
+          <h3 class="glossary-popup-section-title">${i18n.t('glossary.term.source')}</h3>
           <p class="glossary-popup-section-text glossary-popup-source">${escapeHtml(fonteAccademica)}</p>
         </div>
       ` : ''}
       
       ${!definizioneAccademica && !spiegazioneAI && !fonteAccademica ? `
         <div class="glossary-popup-section">
-          <p class="glossary-popup-section-text">Nessuna informazione disponibile nel glossario per questo termine.</p>
+          <p class="glossary-popup-section-text">${i18n.t('glossary.term.noInfo')}</p>
         </div>
       ` : ''}
     </div>
     <footer class="glossary-popup-footer">
-      <button class="glossary-popup-close-bottom" type="button">Chiudi</button>
+      <button class="glossary-popup-close-bottom" type="button">${i18n.t('common.close')}</button>
     </footer>
   `;
   

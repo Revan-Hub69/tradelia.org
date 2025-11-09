@@ -3,6 +3,7 @@
 // Design coerente con glossario.html ma senza header/footer sito
 
 import Logger from '../utils/logger.js';
+import { i18n } from '../utils/i18n.js';
 
 const GLOSSARY = {
   _container: null,
@@ -61,14 +62,14 @@ function renderGlossary() {
   GLOSSARY._container.innerHTML = `
     <header class="glossary-embedded-header">
       <div class="glossary-embedded-header-content">
-        <h2 class="glossary-embedded-title">Glossario Finanziario</h2>
-        <p class="glossary-embedded-subtitle">${terms.length} termini disponibili</p>
+        <h2 class="glossary-embedded-title">${i18n.t('glossary.title')}</h2>
+        <p class="glossary-embedded-subtitle">${terms.length} ${i18n.t('glossary.stats.available')}</p>
       </div>
-      <button class="glossary-embedded-back" aria-label="Torna indietro" type="button">
+      <button class="glossary-embedded-back" aria-label="${i18n.t('glossary.back')}" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M19 12H5M12 19l-7-7 7-7"/>
         </svg>
-        Torna indietro
+        ${i18n.t('glossary.back')}
       </button>
     </header>
     
@@ -84,8 +85,8 @@ function renderGlossary() {
             type="text" 
             id="glossary-embedded-search-input" 
             class="glossary-embedded-search-input" 
-            placeholder="Cerca un termine..."
-            aria-label="Cerca nel glossario"
+            placeholder="${i18n.t('glossary.search.placeholder')}"
+            aria-label="${i18n.t('glossary.search.ariaLabel')}"
           />
         </div>
       </div>
@@ -93,9 +94,9 @@ function renderGlossary() {
       <!-- Filters -->
       <div class="glossary-embedded-filters">
         <div class="glossary-embedded-filter-group">
-          <label class="glossary-embedded-filter-label">Universo</label>
+          <label class="glossary-embedded-filter-label">${i18n.t('glossary.filter.universe')}</label>
           <div class="glossary-embedded-filter-buttons" data-filter="universo">
-            <button class="glossary-embedded-filter-btn active" data-value="all" type="button">Tutti</button>
+            <button class="glossary-embedded-filter-btn active" data-value="all" type="button">${i18n.t('glossary.filter.all')}</button>
             ${universi.map(u => `
               <button class="glossary-embedded-filter-btn" data-value="${escapeHtml(u)}" type="button">${escapeHtml(u)}</button>
             `).join('')}
@@ -103,9 +104,9 @@ function renderGlossary() {
         </div>
         
         <div class="glossary-embedded-filter-group">
-          <label class="glossary-embedded-filter-label">Difficoltà</label>
+          <label class="glossary-embedded-filter-label">${i18n.t('glossary.filter.difficulty')}</label>
           <div class="glossary-embedded-filter-buttons" data-filter="difficolta">
-            <button class="glossary-embedded-filter-btn active" data-value="all" type="button">Tutte</button>
+            <button class="glossary-embedded-filter-btn active" data-value="all" type="button">${i18n.t('glossary.filter.allDifficulties')}</button>
             ${difficolta.map(d => `
               <button class="glossary-embedded-filter-btn" data-value="${escapeHtml(d)}" type="button">${escapeHtml(d)}</button>
             `).join('')}
@@ -115,7 +116,7 @@ function renderGlossary() {
       
       <!-- Terms List -->
       <div class="glossary-embedded-stats">
-        <span id="glossary-embedded-stats-text">${terms.length} termini</span>
+        <span id="glossary-embedded-stats-text">${terms.length} ${i18n.t('glossary.stats')}</span>
       </div>
       
       <div id="glossary-embedded-terms" class="glossary-embedded-terms">
@@ -139,8 +140,8 @@ function renderTermsList(terms) {
   if (!terms || terms.length === 0) {
     return `
       <div class="glossary-embedded-empty">
-        <div class="glossary-embedded-empty-title">Nessun termine trovato</div>
-        <div class="glossary-embedded-empty-text">Prova a modificare i filtri o la ricerca</div>
+        <div class="glossary-embedded-empty-title">${i18n.t('glossary.empty')}</div>
+        <div class="glossary-embedded-empty-text">${i18n.t('glossary.empty.description')}</div>
       </div>
     `;
   }
@@ -266,9 +267,11 @@ function filterTerms() {
   const statsText = GLOSSARY._container.querySelector('#glossary-embedded-stats-text');
   if (statsText) {
     const total = Object.keys(GLOSSARY._data).filter(k => !k.startsWith('_')).length;
-    statsText.textContent = terms.length === total 
-      ? `${total} termini` 
-      : `Mostrando ${terms.length} di ${total} termini`;
+    if (terms.length === total) {
+      statsText.textContent = `${total} ${i18n.t('glossary.stats')}`;
+    } else {
+      statsText.textContent = i18n.t('glossary.stats.showing').replace('{count}', terms.length).replace('{total}', total);
+    }
   }
 }
 
@@ -299,35 +302,35 @@ function openTermPopup(key) {
           ` : ''}
         </div>
       </div>
-      <button class="glossary-popup-close" aria-label="Chiudi" type="button">×</button>
+      <button class="glossary-popup-close" aria-label="${i18n.t('common.close')}" type="button">×</button>
     </header>
     <div class="glossary-popup-body">
       ${term.definizioneAccademica ? `
         <div class="glossary-popup-section">
-          <h3 class="glossary-popup-section-title">Definizione Accademica</h3>
+          <h3 class="glossary-popup-section-title">${i18n.t('glossary.term.definition')}</h3>
           <p class="glossary-popup-section-text">${escapeHtml(term.definizioneAccademica)}</p>
         </div>
       ` : ''}
       
       ${term.spiegazioneAI ? `
         <div class="glossary-popup-section">
-          <h3 class="glossary-popup-section-title">Spiegazione AI</h3>
+          <h3 class="glossary-popup-section-title">${i18n.t('glossary.term.explanation')}</h3>
           <p class="glossary-popup-section-text">${escapeHtml(term.spiegazioneAI)}</p>
         </div>
       ` : ''}
       
       ${term.fonteAccademica ? `
         <div class="glossary-popup-source">
-          <strong>Fonte:</strong> ${escapeHtml(term.fonteAccademica)}
+          <strong>${i18n.t('glossary.term.source')}:</strong> ${escapeHtml(term.fonteAccademica)}
         </div>
       ` : term.source ? `
         <div class="glossary-popup-source">
-          <strong>Fonte:</strong> ${escapeHtml(term.source)}
+          <strong>${i18n.t('glossary.term.source')}:</strong> ${escapeHtml(term.source)}
         </div>
       ` : ''}
     </div>
     <footer class="glossary-popup-footer">
-      <button class="glossary-popup-close-bottom" type="button">Chiudi</button>
+      <button class="glossary-popup-close-bottom" type="button">${i18n.t('common.close')}</button>
     </footer>
   `;
   
