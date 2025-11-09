@@ -1519,18 +1519,44 @@
         console.log('loadReports: State aggiornato, inizio rendering');
         
         // PULISCI COMPLETAMENTE IL CONTAINER PRIMA DI RENDERIZZARE
-        console.log('loadReports: Pulizia container prima del rendering');
-        container.innerHTML = ''; // Pulisci tutto, incluso loading
+        console.log('loadReports: Report caricati:', reports.length);
+        console.log('loadReports: Report da renderizzare:', STATE.filteredReports.length);
+        console.log('loadReports: Primi report:', STATE.filteredReports.slice(0, 3).map(r => ({ id: r.id, ticker: r.ticker, framework: r.framework })));
+        
+        // Rimuovi solo placeholder temporanei, non contenuto già renderizzato
+        const placeholder = container.querySelector('div[style*="Caricamento report"]');
+        if (placeholder) {
+          console.log('loadReports: Rimozione placeholder temporaneo');
+          placeholder.remove();
+        }
         
         // Render using dedicated function (anche se array vuoto)
         try {
           console.log('loadReports: Chiamata renderReportsList con', STATE.filteredReports.length, 'report');
           renderReportsList(STATE.filteredReports);
           console.log('loadReports: renderReportsList completata');
+          
+          // Verifica che il contenuto sia stato inserito
+          setTimeout(() => {
+            const hasContent = container.querySelector('.tech-list, .list-header, .tech-list-item');
+            const hasEmptyState = container.querySelector('.empty-state');
+            console.log('loadReports: Verifica post-rendering - hasContent:', !!hasContent, 'hasEmptyState:', !!hasEmptyState);
+            
+            if (!hasContent && !hasEmptyState && STATE.filteredReports.length > 0) {
+              console.error('loadReports: WARNING - Container vuoto dopo renderReportsList!');
+              console.error('loadReports: Container HTML:', container.innerHTML.substring(0, 500));
+              container.innerHTML = `<div class="empty-state">Errore: Report caricati (${STATE.filteredReports.length}) ma non renderizzati. Verifica la console.</div>`;
+            } else if (hasContent) {
+              console.log('loadReports: SUCCESS - Contenuto renderizzato correttamente');
+            } else if (hasEmptyState) {
+              console.log('loadReports: Empty state mostrato (nessun report disponibile)');
+            }
+          }, 200);
         } catch(err) {
           console.error('loadReports: Errore renderReportsList:', err);
+          console.error('loadReports: Stack trace:', err.stack);
           // Mostra errore nel container
-          container.innerHTML = `<div class="empty-state">Errore nel rendering: ${err.message || 'Errore sconosciuto'}</div>`;
+          container.innerHTML = `<div class="empty-state">Errore nel rendering: ${err.message || 'Errore sconosciuto'}<br><small>Verifica la console per dettagli</small></div>`;
         }
         
         // Update stats
