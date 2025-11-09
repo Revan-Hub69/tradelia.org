@@ -450,23 +450,30 @@ function scrollToModule(moduleId) {
   // Prova prima con l'ID esatto
   let element = document.getElementById(moduleId);
   
-  // Se non trovato, prova senza "sec-"
-  if (!element && moduleId.startsWith('sec-')) {
-    const altId = moduleId.replace('^sec-', '');
-    element = document.getElementById(altId);
-    if (element) {
-      console.log('ReportNavigation: Trovato con ID alternativo:', altId);
-    }
-  }
-  
-  // Se ancora non trovato, cerca nell'HTML
+  // Se non trovato, prova varianti dell'ID
   if (!element) {
-    const allArticles = document.querySelectorAll('article[id], section[id]');
-    for (const el of allArticles) {
-      if (el.id && el.id.includes(moduleId.replace('sec-', ''))) {
-        element = el;
-        console.log('ReportNavigation: Trovato elemento simile:', el.id);
-        break;
+    // Prova senza "sec-"
+    if (moduleId.startsWith('sec-')) {
+      const altId = moduleId.substring(4); // Rimuovi "sec-"
+      element = document.getElementById(altId);
+      if (element) {
+        console.log('ReportNavigation: Trovato con ID senza "sec-":', altId);
+      }
+    }
+    
+    // Se ancora non trovato, cerca nell'HTML per ID parziali
+    if (!element) {
+      const allArticles = document.querySelectorAll('article[id], section[id]');
+      const moduleIdClean = moduleId.replace(/^sec-/, '');
+      for (const el of allArticles) {
+        if (el.id) {
+          // Cerca ID che contengono il modulo ID
+          if (el.id.includes(moduleIdClean) || el.id === moduleIdClean) {
+            element = el;
+            console.log('ReportNavigation: Trovato elemento con ID simile:', el.id);
+            break;
+          }
+        }
       }
     }
   }
