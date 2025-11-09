@@ -1120,36 +1120,49 @@
     // Rimuovi loading IMMEDIATAMENTE - eseguito prima di qualsiasi altro script
     (function() {
       'use strict';
+      let hasRemovedLoading = false;
+      
       function hideAllLoading() {
+        // Evita di rimuovere contenuto se già processato o se ci sono report renderizzati
         const container = document.getElementById('reports-container');
-        if (container) {
-          // Nascondi qualsiasi loading
-          const loadings = container.querySelectorAll('.loading, [class*="loading"], [id*="loading"]');
+        if (!container) return;
+        
+        // NON rimuovere se il container contiene già report renderizzati
+        if (container.querySelector('.tech-list, .list-header, .tech-list-item')) {
+          console.log('hideAllLoading: Container contiene già report, skip');
+          return;
+        }
+        
+        // Nascondi SOLO elementi loading, non altri contenuti
+        const loadings = container.querySelectorAll('.loading, [class*="loading"]:not(.tech-list):not(.list-header)');
+        if (loadings.length > 0 && !hasRemovedLoading) {
+          console.log('hideAllLoading: Rimozione', loadings.length, 'elementi loading');
           loadings.forEach(el => {
-            el.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; height: 0 !important; overflow: hidden !important;';
+            el.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
             try { el.remove(); } catch(e) {}
           });
-          // Se container vuoto, mostra placeholder
-          if (!container.textContent.trim() && !container.querySelector('div')) {
-            container.innerHTML = '<div style="padding: 2rem; text-align: center; color: #666;">Caricamento report...</div>';
-          }
+          hasRemovedLoading = true;
         }
+        
+        // Mostra placeholder SOLO se container è completamente vuoto (nessun contenuto utile)
+        const hasContent = container.querySelector('div, ul, li, .tech-list, .list-header, .empty-state') || 
+                          (container.textContent.trim() && !container.textContent.trim().includes('Caricamento'));
+        
+        if (!hasContent && !hasRemovedLoading) {
+          // Container vuoto, mostra placeholder temporaneo (sarà rimosso da loadReports)
+          console.log('hideAllLoading: Container vuoto, mostro placeholder temporaneo');
+          container.innerHTML = '<div style="padding: 2rem; text-align: center; color: #666; font-size: 13px;">Caricamento report...</div>';
+        }
+        
         document.body.classList.add('loaded');
       }
       
-      // Esegui immediatamente
-      hideAllLoading();
-      
-      // Esegui quando DOM è pronto
+      // Esegui una sola volta quando DOM è pronto
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', hideAllLoading);
+        document.addEventListener('DOMContentLoaded', hideAllLoading, { once: true });
       } else {
         setTimeout(hideAllLoading, 0);
       }
-      
-      // Esegui anche dopo un delay (safety)
-      setTimeout(hideAllLoading, 50);
-      setTimeout(hideAllLoading, 200);
     })();
   </script>
   
@@ -1819,101 +1832,128 @@
       }
       
       console.log('renderReportsList: Rendering', reports.length, 'report');
+      console.log('renderReportsList: Dati report:', reports.slice(0, 2)); // Log primi 2 report per debug
       
-      const listHTML = `
-        <div class="list-header">
-          <span class="list-header-cell" data-sort="id">ID
-            <span class="sort-icon">
-              <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
-              <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+      try {
+        const listHTML = `
+          <div class="list-header">
+            <span class="list-header-cell" data-sort="id">ID
+              <span class="sort-icon">
+                <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
+                <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+              </span>
             </span>
-          </span>
-          <span class="list-header-cell sortable" data-sort="ticker">Asset
-            <span class="sort-icon">
-              <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
-              <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+            <span class="list-header-cell sortable" data-sort="ticker">Asset
+              <span class="sort-icon">
+                <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
+                <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+              </span>
             </span>
-          </span>
-          <span class="list-header-cell sortable" data-sort="framework">Framework
-            <span class="sort-icon">
-              <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
-              <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+            <span class="list-header-cell sortable" data-sort="framework">Framework
+              <span class="sort-icon">
+                <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
+                <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+              </span>
             </span>
-          </span>
-          <span class="list-header-cell sortable" data-sort="tipologia">Tipologia
-            <span class="sort-icon">
-              <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
-              <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+            <span class="list-header-cell sortable" data-sort="tipologia">Tipologia
+              <span class="sort-icon">
+                <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
+                <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+              </span>
             </span>
-          </span>
-          <span class="list-header-cell sortable" data-sort="exchange">Exchange
-            <span class="sort-icon">
-              <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
-              <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+            <span class="list-header-cell sortable" data-sort="exchange">Exchange
+              <span class="sort-icon">
+                <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
+                <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+              </span>
             </span>
-          </span>
-          <span class="list-header-cell sortable" data-sort="sector">Settore
-            <span class="sort-icon">
-              <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
-              <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+            <span class="list-header-cell sortable" data-sort="sector">Settore
+              <span class="sort-icon">
+                <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
+                <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+              </span>
             </span>
-          </span>
-          <span class="list-header-cell sortable" data-sort="date">Data
-            <span class="sort-icon">
-              <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
-              <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+            <span class="list-header-cell sortable" data-sort="date">Data
+              <span class="sort-icon">
+                <svg class="sort-up" viewBox="0 0 8 4" fill="currentColor"><path d="M0 4l4-4 4 4z"/></svg>
+                <svg class="sort-down" viewBox="0 0 8 4" fill="currentColor"><path d="M0 0l4 4 4-4z"/></svg>
+              </span>
             </span>
-          </span>
-        </div>
-        <ul class="tech-list">
-          ${reports.map(report => {
-            let dateStr = report.timestamp;
-            let timeStr = '';
-            
-            try {
-              const dateObj = new Date(report.timestamp);
-              if (!isNaN(dateObj.getTime())) {
-                const day = String(dateObj.getDate()).padStart(2, '0');
-                const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-                const year = dateObj.getFullYear();
-                const hours = String(dateObj.getHours()).padStart(2, '0');
-                const minutes = String(dateObj.getMinutes()).padStart(2, '0');
-                dateStr = `${day}/${month}/${year}`;
-                timeStr = `${hours}:${minutes}`;
+          </div>
+          <ul class="tech-list">
+            ${reports.map(report => {
+              let dateStr = report.timestamp || '';
+              let timeStr = '';
+              
+              try {
+                if (report.timestamp) {
+                  const dateObj = new Date(report.timestamp);
+                  if (!isNaN(dateObj.getTime())) {
+                    const day = String(dateObj.getDate()).padStart(2, '0');
+                    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                    const year = dateObj.getFullYear();
+                    const hours = String(dateObj.getHours()).padStart(2, '0');
+                    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+                    dateStr = `${day}/${month}/${year}`;
+                    timeStr = `${hours}:${minutes}`;
+                  }
+                }
+              } catch(e) {
+                console.warn('renderReportsList: Errore parsing data per report', report.id, e);
               }
-            } catch(e) {
-              // Usa timestamp originale se parsing fallisce
-            }
-            
-            const dateTimeDisplay = timeStr ? `${dateStr} ${timeStr}` : dateStr;
-            
-            // Format framework name
-            const frameworkNames = {
-              'swing-master-5.0': 'Swing Master 5.0',
-              'dmi-3.1': 'Daily Market Intelligence 3.1',
-              'stress-test': 'Stress Test Avanzato'
-            };
-            const frameworkDisplay = frameworkNames[report.framework] || report.framework || '—';
-            
-            return `
-              <li class="tech-list-item" data-framework="${report.framework || 'swing-master-5.0'}">
-                <span class="tech-id">${report.id}</span>
-                <div class="tech-asset-wrapper">
-                  <a href="${report.reportUrl}" class="tech-link" style="font-weight: 600;">${report.ticker}</a>
-                  ${report.company ? `<span class="tech-company">${report.company}</span>` : ''}
-                </div>
-                <span class="tech-meta" data-label="Framework">${frameworkDisplay}</span>
-                <span class="tech-meta" data-label="Tipologia">${report.tipologia || '—'}</span>
-                <span class="tech-meta" data-label="Exchange">${report.exchange || '—'}</span>
-                <span class="tech-meta" data-label="Settore">${report.sector || '—'}</span>
-                <span class="tech-meta" data-label="Data">${dateTimeDisplay}</span>
-              </li>
-            `;
-          }).join('')}
-        </ul>
-      `;
-      
-      container.innerHTML = listHTML;
+              
+              const dateTimeDisplay = timeStr ? `${dateStr} ${timeStr}` : (dateStr || '—');
+              
+              // Format framework name
+              const frameworkNames = {
+                'swing-master-5.0': 'Swing Master 5.0',
+                'dmi-3.1': 'Daily Market Intelligence 3.1',
+                'stress-test': 'Stress Test Avanzato'
+              };
+              const frameworkDisplay = frameworkNames[report.framework] || report.framework || '—';
+              
+              // Escape HTML per sicurezza
+              const escapeHtml = (str) => {
+                if (!str) return '';
+                const div = document.createElement('div');
+                div.textContent = String(str);
+                return div.innerHTML;
+              };
+              
+              return `
+                <li class="tech-list-item" data-framework="${escapeHtml(report.framework || 'swing-master-5.0')}">
+                  <span class="tech-id">${escapeHtml(report.id || '—')}</span>
+                  <div class="tech-asset-wrapper">
+                    <a href="${escapeHtml(report.reportUrl || '#')}" class="tech-link" style="font-weight: 600;">${escapeHtml(report.ticker || '—')}</a>
+                    ${report.company ? `<span class="tech-company">${escapeHtml(report.company)}</span>` : ''}
+                  </div>
+                  <span class="tech-meta" data-label="Framework">${escapeHtml(frameworkDisplay)}</span>
+                  <span class="tech-meta" data-label="Tipologia">${escapeHtml(report.tipologia || '—')}</span>
+                  <span class="tech-meta" data-label="Exchange">${escapeHtml(report.exchange || '—')}</span>
+                  <span class="tech-meta" data-label="Settore">${escapeHtml(report.sector || '—')}</span>
+                  <span class="tech-meta" data-label="Data">${escapeHtml(dateTimeDisplay)}</span>
+                </li>
+              `;
+            }).join('')}
+          </ul>
+        `;
+        
+        console.log('renderReportsList: HTML generato, lunghezza:', listHTML.length);
+        container.innerHTML = listHTML;
+        console.log('renderReportsList: HTML inserito nel container');
+        
+        // Verifica che l'HTML sia stato inserito correttamente
+        const insertedItems = container.querySelectorAll('.tech-list-item');
+        console.log('renderReportsList: Elementi inseriti:', insertedItems.length);
+        
+        if (insertedItems.length === 0 && reports.length > 0) {
+          console.error('renderReportsList: ERRORE - Nessun elemento inserito nonostante ci siano report!');
+          container.innerHTML = `<div class="empty-state">Errore nel rendering dei report. Verifica la console per dettagli.</div>`;
+        }
+      } catch(err) {
+        console.error('renderReportsList: Errore durante generazione HTML:', err);
+        container.innerHTML = `<div class="empty-state">Errore nel rendering: ${err.message || 'Errore sconosciuto'}</div>`;
+      }
     }
     
     function updateReportsStats() {
