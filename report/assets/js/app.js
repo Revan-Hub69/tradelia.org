@@ -9,6 +9,7 @@ import Logger from './utils/logger.js';
 import { metricPopup } from './components/metric-popup.js';
 import { reportNavigation } from './components/report-navigation.js';
 import { userPreferences } from './utils/user-preferences.js';
+import { i18n } from './utils/i18n.js';
 
 (function() {
   'use strict';
@@ -32,13 +33,14 @@ import { userPreferences } from './utils/user-preferences.js';
   let __header = null;
   
   // ===== ERROR STATES =====
-  function showErrorState(container, error, title = 'Errore di caricamento') {
-    const message = error?.message || 'Si è verificato un errore temporaneo.';
+  function showErrorState(container, error, title = null) {
+    const errorTitle = title || i18n.t('error.loading');
+    const message = error?.message || i18n.t('error.temporary');
     container.innerHTML = `
       <div class="error-state">
-        <div class="error-state-title">${escapeHtml(title)}</div>
+        <div class="error-state-title">${escapeHtml(errorTitle)}</div>
         <div class="error-state-message">${escapeHtml(message)}</div>
-        <button class="btn btn-sm" onclick="location.reload()">Ricarica pagina</button>
+        <button class="btn btn-sm" onclick="location.reload()">${i18n.t('error.reload')}</button>
       </div>
     `;
   }
@@ -528,8 +530,14 @@ import { userPreferences } from './utils/user-preferences.js';
   }
   
   // ===== AVVIO =====
-  // Applica preferenze utente al DOM
+  // Inizializza i18n e applica preferenze utente al DOM
+  i18n.init();
   userPreferences.applyToDOM();
+  
+  // Ascolta cambiamenti lingua
+  window.addEventListener('languageChanged', () => {
+    i18n.translatePage();
+  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);

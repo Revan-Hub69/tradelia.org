@@ -17,7 +17,9 @@ const DEFAULT_PREFERENCES = {
   hiddenModules: [],
   // Accessibilità
   highContrast: false,
-  reducedMotion: false
+  reducedMotion: false,
+  // Multilingua
+  language: null // null = auto-detect, 'it', 'en'
 };
 
 // ===== UTILITIES =====

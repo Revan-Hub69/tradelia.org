@@ -4,6 +4,7 @@
 
 import Logger from '../utils/logger.js';
 import { userPreferences } from '../utils/user-preferences.js';
+import { i18n } from '../utils/i18n.js';
 
 const REPORT_NAVIGATION = {
   _indexContainer: null,
@@ -52,10 +53,10 @@ function renderIndex(modules) {
   }).join('');
 
   return `
-    <nav class="report-index" role="navigation" aria-label="Indice moduli report">
+    <nav class="report-index" role="navigation" aria-label="${i18n.t('nav.index.title')}">
       <div class="report-index-header">
-        <h3 class="report-index-title">Indice Moduli</h3>
-        <button class="report-index-toggle" aria-label="Espandi/Comprimi indice" type="button">
+        <h3 class="report-index-title" data-i18n="nav.index.title">${i18n.t('nav.index.title')}</h3>
+        <button class="report-index-toggle" aria-label="${i18n.t('common.open')}" type="button">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -76,7 +77,7 @@ function renderBreadcrumb(module) {
     <nav class="report-breadcrumb" role="navigation" aria-label="Breadcrumb">
       <ol class="report-breadcrumb-list">
         <li class="report-breadcrumb-item">
-          <a href="/report" class="report-breadcrumb-link">Report</a>
+          <a href="/report" class="report-breadcrumb-link" data-i18n="nav.breadcrumb.report">${i18n.t('nav.breadcrumb.report')}</a>
         </li>
         <li class="report-breadcrumb-item" aria-current="page">
           <span class="report-breadcrumb-separator">/</span>
@@ -98,11 +99,12 @@ function renderSearch() {
         <input 
           type="search" 
           class="report-search-input" 
-          placeholder="Cerca nel report..." 
-          aria-label="Cerca nel report"
+          placeholder="${i18n.t('nav.search.placeholder')}" 
+          aria-label="${i18n.t('nav.search.placeholder')}"
           autocomplete="off"
+          data-i18n-placeholder="nav.search.placeholder"
         />
-        <button class="report-search-clear" aria-label="Cancella ricerca" type="button" hidden>
+        <button class="report-search-clear" aria-label="${i18n.t('common.close')}" type="button" hidden>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
@@ -168,13 +170,19 @@ function renderSearchResults(results, query) {
   if (results.length === 0) {
     return `
       <div class="report-search-results-empty">
-        Nessun risultato per "${escapeHtml(query)}"
+        ${i18n.t('nav.search.noResults')} "${escapeHtml(query)}"
       </div>
     `;
   }
 
   const resultsHTML = results.map(result => {
     const module = REPORT_NAVIGATION._modules[result.module];
+    const typeLabels = {
+      title: i18n.t('nav.search.resultType.title'),
+      desc: i18n.t('nav.search.resultType.desc'),
+      metric: i18n.t('nav.search.resultType.metric')
+    };
+    const typeLabel = typeLabels[result.type] || result.type;
     return `
       <a href="#${result.moduleId}" 
          class="report-search-result-item" 
@@ -182,19 +190,22 @@ function renderSearchResults(results, query) {
          data-result-type="${result.type}">
         <span class="report-search-result-badge">${escapeHtml(module?.badge || '')}</span>
         <span class="report-search-result-text">
-          <strong>${escapeHtml(result.type === 'title' ? 'Titolo' : result.type === 'desc' ? 'Descrizione' : 'Metrica')}:</strong>
+          <strong>${escapeHtml(typeLabel)}:</strong>
           ${highlightMatch(result.text, query)}
         </span>
       </a>
     `;
   }).join('');
 
+  const resultsCount = i18n.tPlural('nav.search.results', results.length);
+  const foundLabel = i18n.tPlural('nav.search.found', results.length);
+
   return `
     <div class="report-search-results-list">
       ${resultsHTML}
     </div>
     <div class="report-search-results-count">
-      ${results.length} risultato${results.length !== 1 ? 'i' : ''} trovato${results.length !== 1 ? 'i' : ''}
+      ${results.length} ${resultsCount} ${foundLabel}
     </div>
   `;
 }
