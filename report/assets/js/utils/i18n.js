@@ -74,7 +74,52 @@ const TRANSLATIONS = {
     'filter.byDate': 'Filtra per data',
     'filter.byMetric': 'Filtra per metrica',
     'filter.all': 'Tutti',
-    'filter.clear': 'Rimuovi filtri'
+    'filter.clear': 'Rimuovi filtri',
+    
+    // Mifid Banner
+    'mifid.banner.title': 'Informativa legale',
+    'mifid.banner.message': 'Questo sito ha finalità esclusivamente educativa e informativa. Non costituisce consulenza in materia di investimenti (MiFID II).',
+    'mifid.banner.accept': 'Accetto e chiudi',
+    'mifid.banner.mifid': 'Informativa MiFID',
+    'mifid.banner.privacy': 'Privacy',
+    'mifid.banner.close': 'Chiudi',
+    'mifid.banner.continue': 'Continuando dichiari di aver letto e compreso le informative.',
+    
+    // Homepage
+    'home.hero.badge': 'Progetto Indipendente',
+    'home.hero.title.line1': 'Tradelia AI',
+    'home.hero.title.line2': 'Metodo Accademico',
+    'home.hero.description': 'Progetto indipendente che utilizza AI con metodo accademico per analisi finanziaria multi-fattore. Report su trading, investimenti, analisi tecnica e fondamentale.',
+    'home.hero.feature.analysis': 'Analisi Multi-Fattore',
+    'home.hero.feature.analysis.desc': 'Analisi tecnica, fondamentale e macroeconomica integrate con AI',
+    'home.hero.feature.report': 'Report Accademici',
+    'home.hero.feature.report.desc': 'Report dettagliati con metodologia accademica e conformità MiFID II',
+    'home.hero.feature.education': 'Educazione Finanziaria',
+    'home.hero.feature.education.desc': 'Glossario, tutorial e strumenti educativi per trader e investitori',
+    'home.hero.disclaimer': 'Output a fini educativi/informativi. Non costituisce consulenza o raccomandazione (MiFID II).',
+    
+    // Footer
+    'footer.about.title': 'Chi Siamo',
+    'footer.about.desc': 'Progetto indipendente con metodo accademico AI per analisi finanziaria multi-fattore.',
+    'footer.legal.title': 'Legale',
+    'footer.legal.mifid': 'Informativa MiFID',
+    'footer.legal.privacy': 'Privacy Policy',
+    'footer.legal.terms': 'Termini di Servizio',
+    'footer.legal.refund': 'Politica di Rimborso',
+    'footer.contact.title': 'Contatti',
+    'footer.contact.email': 'info@tradelia.org',
+    'footer.copyright': 'Tradelia AI. Tutti i diritti riservati.',
+    
+    // Glossario
+    'glossary.title': 'Glossario Finanziario',
+    'glossary.subtitle': 'Oltre 200 termini finanziari spiegati con definizioni accademiche e spiegazioni AI',
+    'glossary.search.placeholder': 'Cerca nel glossario...',
+    'glossary.filter.all': 'Tutti',
+    'glossary.filter.trading': 'Trading',
+    'glossary.filter.investments': 'Investimenti',
+    'glossary.filter.finance': 'Finanza base',
+    'glossary.empty': 'Nessun termine trovato',
+    'glossary.stats': 'termini trovati'
   },
   
   en: {
@@ -144,26 +189,80 @@ const TRANSLATIONS = {
     'filter.byDate': 'Filter by date',
     'filter.byMetric': 'Filter by metric',
     'filter.all': 'All',
-    'filter.clear': 'Clear filters'
+    'filter.clear': 'Clear filters',
+    
+    // Mifid Banner
+    'mifid.banner.title': 'Legal information',
+    'mifid.banner.message': 'This site is for educational and informational purposes only. It does not constitute investment advice (MiFID II).',
+    'mifid.banner.accept': 'Accept and close',
+    'mifid.banner.mifid': 'MiFID Information',
+    'mifid.banner.privacy': 'Privacy',
+    'mifid.banner.close': 'Close',
+    'mifid.banner.continue': 'By continuing you declare that you have read and understood the information.',
+    
+    // Homepage
+    'home.hero.badge': 'Independent Project',
+    'home.hero.title.line1': 'Tradelia AI',
+    'home.hero.title.line2': 'Academic Method',
+    'home.hero.description': 'Independent project using AI with academic method for multi-factor financial analysis. Reports on trading, investments, technical and fundamental analysis.',
+    'home.hero.feature.analysis': 'Multi-Factor Analysis',
+    'home.hero.feature.analysis.desc': 'Technical, fundamental and macroeconomic analysis integrated with AI',
+    'home.hero.feature.report': 'Academic Reports',
+    'home.hero.feature.report.desc': 'Detailed reports with academic methodology and MiFID II compliance',
+    'home.hero.feature.education': 'Financial Education',
+    'home.hero.feature.education.desc': 'Glossary, tutorials and educational tools for traders and investors',
+    'home.hero.disclaimer': 'Output for educational/informational purposes. Does not constitute advice or recommendation (MiFID II).',
+    
+    // Footer
+    'footer.about.title': 'About Us',
+    'footer.about.desc': 'Independent project with academic AI method for multi-factor financial analysis.',
+    'footer.legal.title': 'Legal',
+    'footer.legal.mifid': 'MiFID Information',
+    'footer.legal.privacy': 'Privacy Policy',
+    'footer.legal.terms': 'Terms of Service',
+    'footer.legal.refund': 'Refund Policy',
+    'footer.contact.title': 'Contact',
+    'footer.contact.email': 'info@tradelia.org',
+    'footer.copyright': 'Tradelia AI. All rights reserved.',
+    
+    // Glossario
+    'glossary.title': 'Financial Glossary',
+    'glossary.subtitle': 'Over 200 financial terms explained with academic definitions and AI explanations',
+    'glossary.search.placeholder': 'Search in glossary...',
+    'glossary.filter.all': 'All',
+    'glossary.filter.trading': 'Trading',
+    'glossary.filter.investments': 'Investments',
+    'glossary.filter.finance': 'Basic Finance',
+    'glossary.empty': 'No terms found',
+    'glossary.stats': 'terms found'
   }
 };
 
 // ===== UTILITIES =====
 function detectLanguage() {
-  // 1. Preferenze utente
+  // 1. Preferenze utente (salvate in localStorage)
   const userLang = userPreferences.get('language');
   if (userLang && TRANSLATIONS[userLang]) {
+    Logger.debug('i18n', `Lingua da preferenze utente: ${userLang}`);
     return userLang;
   }
   
-  // 2. Browser language
-  const browserLang = navigator.language || navigator.userLanguage;
-  const langCode = browserLang.split('-')[0].toLowerCase();
-  if (TRANSLATIONS[langCode]) {
-    return langCode;
+  // 2. Browser language (rilevamento automatico)
+  try {
+    const browserLang = navigator.language || navigator.userLanguage || 'it';
+    const langCode = browserLang.split('-')[0].toLowerCase();
+    if (TRANSLATIONS[langCode]) {
+      Logger.debug('i18n', `Lingua da browser: ${langCode} (${browserLang})`);
+      // Salva automaticamente la lingua del browser come preferenza
+      userPreferences.set('language', langCode);
+      return langCode;
+    }
+  } catch (e) {
+    Logger.warn('i18n', 'Errore rilevamento lingua browser', e);
   }
   
   // 3. Default: italiano
+  Logger.debug('i18n', 'Lingua default: it');
   return 'it';
 }
 

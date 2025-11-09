@@ -72,6 +72,7 @@
   <!-- Stylesheet -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
   <link rel="stylesheet" href="/report/assets/css/glossary-popup.css" />
+  <link rel="stylesheet" href="/assets/css/global-header.css" />
   
   <style>
     /* ===== LAYOUT BASE ===== */
@@ -103,6 +104,8 @@
     #site-header-slot {
       order: 0;
       flex-shrink: 0;
+      position: relative;
+      z-index: 1000;
     }
     
     #site-footer-slot {
@@ -717,11 +720,18 @@
       document.documentElement.setAttribute('data-theme', 'dark');
       
       try {
+        // Inizializza i18n prima di montare header
+        const { i18n } = await import('/report/assets/js/utils/i18n.js');
+        if (i18n) {
+          i18n.init();
+          i18n.translatePage();
+        }
+        
         const headerSlot = document.getElementById('site-header-slot');
         if (headerSlot) {
           const { siteHeader } = await import('/report/assets/js/components/site-header.js');
           if (siteHeader?.mount) {
-            siteHeader.mount(headerSlot);
+            siteHeader.mount(headerSlot, { showExport: false });
             Logger.debug('Glossario', 'Header montato');
           }
         }

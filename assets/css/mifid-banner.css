@@ -1,0 +1,274 @@
+/* /assets/css/mifid-banner.css
+   Banner Mifid/Privacy per homepage
+   Design Istituzionale 2025
+   ----------------------------------------------------------- */
+
+/* ===== BANNER ===== */
+.mifid-banner {
+  position: fixed;
+  top: 64px; /* Sotto header */
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 193, 7, 0.15) 0%,
+    rgba(255, 152, 0, 0.1) 100%
+  );
+  border-bottom: 1px solid rgba(255, 193, 7, 0.2);
+  backdrop-filter: blur(8px);
+  padding: var(--sp-4) 0;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mifid-banner-content {
+  max-width: var(--container-max, 90rem);
+  margin: 0 auto;
+  padding: 0 var(--sp-4);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+.mifid-banner-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: rgba(255, 193, 7, 1);
+}
+
+.mifid-banner-text {
+  flex: 1;
+}
+
+.mifid-banner-message {
+  margin: 0;
+  font-size: var(--fs-14, 0.875rem);
+  line-height: var(--lh-15, 1.5);
+  color: var(--ink, #ffffff);
+  font-weight: 400;
+}
+
+.mifid-banner-actions {
+  flex-shrink: 0;
+  display: flex;
+  gap: var(--sp-2);
+}
+
+.mifid-banner-btn {
+  padding: var(--sp-2) var(--sp-4);
+  font-size: var(--fs-13, 0.8125rem);
+  font-weight: 600;
+  border-radius: var(--radius-md, 6px);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--ff-sans, system-ui, sans-serif);
+}
+
+.mifid-banner-btn-accept {
+  background: rgba(255, 193, 7, 0.2);
+  border-color: rgba(255, 193, 7, 0.4);
+  color: var(--ink, #ffffff);
+}
+
+.mifid-banner-btn-accept:hover {
+  background: rgba(255, 193, 7, 0.3);
+  border-color: rgba(255, 193, 7, 0.5);
+}
+
+.mifid-banner-btn-accept:focus-visible {
+  outline: 2px solid rgba(255, 193, 7, 0.6);
+  outline-offset: 2px;
+}
+
+/* ===== LEGAL OVERLAY ===== */
+#legal-consent-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-4);
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+}
+
+#legal-consent-overlay[hidden] {
+  display: none !important;
+}
+
+.legal-panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: min(90rem, 90vw);
+  max-height: 90vh;
+  background: var(--surface-card, #1a1a1a);
+  border: 1px solid var(--br-card, rgba(255, 255, 255, 0.08));
+  border-radius: var(--radius-xl, 12px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.legal-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-5) var(--sp-6);
+  border-bottom: 1px solid var(--br-card, rgba(255, 255, 255, 0.08));
+}
+
+.legal-title {
+  font-size: var(--fs-18, 1.125rem);
+  font-weight: 700;
+  color: var(--ink, #ffffff);
+}
+
+.legal-tabs {
+  display: flex;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-6);
+  border-bottom: 1px solid var(--br-card, rgba(255, 255, 255, 0.08));
+  background: var(--surface-elev, #222222);
+}
+
+.legal-tab {
+  padding: var(--sp-2) var(--sp-4);
+  font-size: var(--fs-13, 0.8125rem);
+  font-weight: 600;
+  color: var(--muted, #888888);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill, 999px);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.legal-tab:hover {
+  color: var(--ink, #ffffff);
+  background: var(--surface-card, #1a1a1a);
+}
+
+.legal-tab[aria-selected="true"] {
+  color: var(--ink, #ffffff);
+  background: var(--surface-card, #1a1a1a);
+  border-color: var(--br-card, rgba(255, 255, 255, 0.08));
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.legal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--sp-6);
+}
+
+.legal-body section[hidden] {
+  display: none !important;
+}
+
+.legal-body h4 {
+  font-size: var(--fs-16, 1rem);
+  font-weight: 700;
+  color: var(--ink, #ffffff);
+  margin-top: var(--sp-6);
+  margin-bottom: var(--sp-3);
+}
+
+.legal-body h4:first-child {
+  margin-top: 0;
+}
+
+.legal-body p,
+.legal-body ul {
+  font-size: var(--fs-14, 0.875rem);
+  line-height: var(--lh-15, 1.5);
+  color: var(--ink-soft, #e0e0e0);
+  margin-bottom: var(--sp-4);
+}
+
+.legal-body ul {
+  padding-left: var(--sp-6);
+}
+
+.legal-body code {
+  font-family: var(--ff-mono, 'Courier New', monospace);
+  font-size: var(--fs-13, 0.8125rem);
+  background: var(--surface-elev, #222222);
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--radius-sm, 4px);
+  border: 1px solid var(--br-card, rgba(255, 255, 255, 0.08));
+}
+
+.legal-ftr {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-5) var(--sp-6);
+  border-top: 1px solid var(--br-card, rgba(255, 255, 255, 0.08));
+  background: var(--surface-elev, #222222);
+}
+
+@media (min-width: 768px) {
+  .legal-ftr {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.mail-link {
+  color: var(--brand-400, #60a5fa);
+  text-decoration: none;
+}
+
+.mail-link:hover {
+  color: var(--brand-300, #93c5fd);
+  text-decoration: underline;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .mifid-banner-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-3);
+  }
+  
+  .mifid-banner-actions {
+    width: 100%;
+  }
+  
+  .mifid-banner-btn {
+    flex: 1;
+  }
+  
+  .legal-panel {
+    max-width: 100vw;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  
+  .legal-hdr,
+  .legal-tabs,
+  .legal-body,
+  .legal-ftr {
+    padding-left: var(--sp-4);
+    padding-right: var(--sp-4);
+  }
+}
+
