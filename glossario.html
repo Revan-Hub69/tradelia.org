@@ -148,17 +148,74 @@
 
     /* Link & social */
     .site-footer a {
+      color: var(--brand-600);
       text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: color .18s ease, border-color .18s ease, opacity .18s ease, transform .18s ease;
+      transition: color .18s ease;
     }
-    .site-footer a:hover { border-bottom-color: currentColor; }
-    a.mail-link { text-underline-offset: 2px; text-decoration-thickness: 1px; }
+    .site-footer a:hover { 
+      color: var(--brand-500);
+    }
+    a.mail-link { 
+      color: var(--brand-400);
+      text-underline-offset: 2px; 
+      text-decoration-thickness: 1px; 
+    }
+
+    /* Quick links footer con freccia */
+    .ftr-quick-links a {
+      color: var(--brand-600);
+      text-decoration: none;
+      font-size: var(--fs-14);
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+      padding: var(--sp-1) 0;
+      position: relative;
+      padding-left: var(--sp-4);
+    }
+
+    .ftr-quick-links a::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--muted);
+      font-size: var(--fs-12);
+      transition: all var(--transition-fast);
+      transform: translateX(-2px);
+    }
+
+    .ftr-quick-links a::after {
+      content: "";
+      position: absolute;
+      left: var(--sp-4);
+      bottom: var(--sp-1);
+      width: 0;
+      height: 1px;
+      background: var(--brand-600);
+      transition: width var(--transition-base);
+      transform-origin: left;
+    }
+
+    .ftr-quick-links a:hover {
+      color: var(--ink);
+      padding-left: var(--sp-5);
+      transform: translateX(2px);
+    }
+
+    .ftr-quick-links a:hover::before {
+      color: var(--brand-600);
+      transform: translateX(0);
+    }
+
+    .ftr-quick-links a:hover::after {
+      width: calc(100% - var(--sp-5));
+    }
 
     .ftr-socials a{
       position: relative;
       display:flex; align-items:center; gap:.5rem;
-      color: var(--ink-soft);
+      color: var(--brand-600);
     }
     .ftr-socials a::after{
       content:"";
@@ -167,7 +224,7 @@
       opacity:0; transform: scaleX(.35); transform-origin:left;
       transition: transform .18s ease, opacity .18s ease;
     }
-    .ftr-socials a:hover{ color: var(--ink); transform: translateX(2px); }
+    .ftr-socials a:hover{ color: var(--brand-500); transform: translateX(2px); }
     .ftr-socials a:hover::after{ opacity:1; transform: scaleX(1); }
     
     main {
