@@ -1739,6 +1739,20 @@ a:focus-visible {
   width: 100%;
 }
 
+/* Assicura che il container dei report sia centrato e usi tutta la larghezza disponibile */
+main#app-root.container {
+  max-width: var(--container-max);
+  padding-inline: var(--sp-6); /* Padding leggermente aumentato per respiro */
+  box-sizing: border-box;
+}
+
+/* Su schermi grandi, aumenta il padding laterale ma mantieni il contenuto centrato */
+@media (min-width: 1024px) {
+  main#app-root.container {
+    padding-inline: var(--sp-8);
+  }
+}
+
 /* ===== HEADER FIXED ACCADEMICO INNOVATIVO ===== */
 .hdr {
   position: fixed;

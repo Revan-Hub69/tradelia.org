@@ -246,9 +246,23 @@
       padding-top: var(--sp-4);
       padding-bottom: var(--sp-8);
       width: 100%;
+      max-width: 100%;
       display: flex;
       flex-direction: column;
       gap: var(--sp-8);
+    }
+    
+    /* Assicura che i moduli occupino tutta la larghezza disponibile */
+    main#app-root .report-section-block {
+      width: 100%;
+      max-width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+    }
+    
+    main#app-root .module-card {
+      width: 100%;
+      max-width: 100%;
     }
     
     /* Footer slot viene dopo main */
