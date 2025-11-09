@@ -1105,10 +1105,7 @@
         </div>
         
         <div id="reports-container">
-          <div class="loading" id="initial-loading" style="display: none;">
-            <div class="loading-spinner"></div>
-            <span>Caricamento report...</span>
-          </div>
+          <!-- Content verrà caricato dinamicamente da JavaScript -->
         </div>
       </section>
       
@@ -1117,6 +1114,44 @@
   
   <!-- ===== FOOTER SLOT ===== -->
   <div id="site-footer-slot"></div>
+  
+  <!-- ===== IMMEDIATE LOADING REMOVAL (BEFORE ANY OTHER SCRIPT) ===== -->
+  <script>
+    // Rimuovi loading IMMEDIATAMENTE - eseguito prima di qualsiasi altro script
+    (function() {
+      'use strict';
+      function hideAllLoading() {
+        const container = document.getElementById('reports-container');
+        if (container) {
+          // Nascondi qualsiasi loading
+          const loadings = container.querySelectorAll('.loading, [class*="loading"], [id*="loading"]');
+          loadings.forEach(el => {
+            el.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; height: 0 !important; overflow: hidden !important;';
+            try { el.remove(); } catch(e) {}
+          });
+          // Se container vuoto, mostra placeholder
+          if (!container.textContent.trim() && !container.querySelector('div')) {
+            container.innerHTML = '<div style="padding: 2rem; text-align: center; color: #666;">Caricamento report...</div>';
+          }
+        }
+        document.body.classList.add('loaded');
+      }
+      
+      // Esegui immediatamente
+      hideAllLoading();
+      
+      // Esegui quando DOM è pronto
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', hideAllLoading);
+      } else {
+        setTimeout(hideAllLoading, 0);
+      }
+      
+      // Esegui anche dopo un delay (safety)
+      setTimeout(hideAllLoading, 50);
+      setTimeout(hideAllLoading, 200);
+    })();
+  </script>
   
   <!-- ===== MOUNT HEADER & FOOTER ===== -->
   <script type="module">
