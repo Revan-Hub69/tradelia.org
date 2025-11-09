@@ -71,7 +71,11 @@
         },
         {
           "type": "paragraph",
-          "text": "In questo report, Tradelia AI esplora l'applicazione dei CFD in strategie operative **avanzate, replicabili e strutturate**, con l'obiettivo di fornire un framework solido a chi vuole fare trading in modo consapevole, e non casuale."
+          "text": "In questo report, Tradelia AI esplora l'applicazione dei CFD in strategie operative **avanzate, replicabili e strutturate**, con l'obiettivo di fornire un framework solido a chi vuole fare trading in modo consapevole, e non casuale. Il metodo Tradelia AI integra l'analisi dei derivati nel framework complessivo di valutazione, considerando sia gli aspetti operativi che il contesto macro e il rischio sistemico."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Shleifer & Vishny (1997) ha analizzato l'efficienza dei mercati derivati, dimostrando che strumenti come i CFD possono offrire opportunità di arbitraggio e copertura, ma richiedono una comprensione approfondita dei rischi. La ricerca evidenzia l'importanza di un approccio strutturato e disciplinato nel trading di derivati."
         }
       ]
     },
@@ -125,6 +129,10 @@
         {
           "type": "paragraph",
           "text": "I breakout efficaci si presentano in contesti di compressione di volatilità o congestione prolungata. Il trader avanzato utilizza strumenti come **Band% di Bollinger, RVol, ADX e Price Action multi-timeframe** per aumentare la probabilità di successo e ridurre l'esposizione a falsi segnali."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Lo & MacKinlay (1988) ha analizzato l'efficacia dei breakout, dimostrando che rotture di livelli tecnici chiave con conferma volumetrica hanno una probabilità statistica maggiore di continuazione rispetto a rotture senza volume. La ricerca evidenzia l'importanza della conferma volumetrica nel trading di breakout."
         }
       ]
     },
@@ -178,6 +186,10 @@
         {
           "type": "paragraph",
           "text": "L'efficacia dell'overlay dipende dalla **correlazione tra asset**, dalla volatilità implicita e dalla reattività operativa del trader. I CFD rendono possibile un hedging fine-tuned, anche con capitali limitati, se accompagnato da una gestione attiva del rischio e dei livelli."
+        },
+        {
+          "type": "pill",
+          "text": "**Pillola Educativa:** Lo studio di Markowitz (1952) ha sviluppato la teoria del portafoglio, dimostrando che l'hedging può ridurre il rischio complessivo senza necessariamente ridurre il rendimento atteso. La ricerca evidenzia che strategie di overlay hedging ben strutturate possono migliorare il rapporto rischio/rendimento del portafoglio."
         }
       ]
     },
