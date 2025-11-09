@@ -1,0 +1,161 @@
+/* /report/assets/css/popover.css
+   Sistema Popover Avanzato 2025 - Best Practices Finanza
+   Per informazioni contestuali più ricche dei tooltip
+   ----------------------------------------------------------- */
+
+/* ===== POPOVER BASE ===== */
+.popover {
+  position: fixed;
+  z-index: 10001; /* Sopra tooltip */
+  background: var(--surface-card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    0 4px 12px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: scale(0.95) translateY(-8px);
+  transition: 
+    opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  max-width: 320px;
+  min-width: 200px;
+}
+
+.popover--visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* ===== POPOVER HEADER ===== */
+.popover-header {
+  padding: var(--sp-4) var(--sp-5) var(--sp-3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.popover-title {
+  font-size: var(--fs-14);
+  font-weight: 600;
+  line-height: var(--lh-16);
+  color: var(--ink);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+/* ===== POPOVER BODY ===== */
+.popover-body {
+  padding: var(--sp-4) var(--sp-5);
+  font-size: var(--fs-13);
+  line-height: var(--lh-16);
+  color: var(--ink-soft);
+}
+
+.popover-body p {
+  margin: 0 0 var(--sp-2);
+}
+
+.popover-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* ===== POPOVER ARROW ===== */
+.popover-arrow {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--surface-card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transform: rotate(45deg);
+}
+
+.popover--top .popover-arrow {
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  border-right: none;
+  border-bottom: none;
+}
+
+.popover--bottom .popover-arrow {
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  border-left: none;
+  border-top: none;
+}
+
+.popover--left .popover-arrow {
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  border-right: none;
+  border-bottom: none;
+}
+
+.popover--right .popover-arrow {
+  left: -5px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  border-left: none;
+  border-top: none;
+}
+
+/* ===== POPOVER CLOSE ===== */
+.popover-close {
+  position: absolute;
+  top: var(--sp-3);
+  right: var(--sp-3);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-size: var(--fs-16);
+  line-height: 1;
+  padding: 0;
+}
+
+.popover-close:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--ink);
+}
+
+.popover-close:focus-visible {
+  outline: 2px solid var(--brand-500);
+  outline-offset: 2px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .popover {
+    max-width: calc(100vw - 32px);
+    font-size: var(--fs-14);
+  }
+  
+  .popover-body {
+    padding: var(--sp-3) var(--sp-4);
+  }
+}
+
+/* ===== ACCESSIBILITÀ ===== */
+@media (prefers-reduced-motion: reduce) {
+  .popover {
+    transition: opacity 0.01s;
+    transform: none;
+  }
+  
+  .popover--visible {
+    transform: none;
+  }
+}
+
