@@ -19,19 +19,58 @@ function escapeHtml(str) {
 function processText(text, glossaryTerms = {}) {
   if (!text) return '';
   
-  // Processa termini glossario: {term: "chiave"}
-  let processed = text;
-  Object.entries(glossaryTerms).forEach(([term, key]) => {
-    const regex = new RegExp(`\\b${term}\\b`, 'gi');
-    processed = processed.replace(regex, (match) => {
-      return `<span class="glossary-term" data-glossary="${escapeHtml(key)}">${match}</span>`;
-    });
-  });
+  // Converti in stringa per sicurezza
+  let processed = String(text);
   
-  // Processa markdown-like: **bold**, *italic*, __underline__
+  // STEP 1: Processa markdown PRIMA dell'escape HTML (così i tag HTML vengono preservati)
   processed = processed.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   processed = processed.replace(/\*(.+?)\*/g, '<em>$1</em>');
   processed = processed.replace(/__(.+?)__/g, '<u>$1</u>');
+  
+  // STEP 2: Escape HTML manualmente, preservando i tag che abbiamo creato
+  // Prima escape i tag che abbiamo creato in modo temporaneo
+  const tagPlaceholders = {
+    strong: '___STRONG_TAG___',
+    em: '___EM_TAG___',
+    u: '___U_TAG___'
+  };
+  
+  processed = processed
+    .replace(/<strong>/g, tagPlaceholders.strong + 'OPEN')
+    .replace(/<\/strong>/g, tagPlaceholders.strong + 'CLOSE')
+    .replace(/<em>/g, tagPlaceholders.em + 'OPEN')
+    .replace(/<\/em>/g, tagPlaceholders.em + 'CLOSE')
+    .replace(/<u>/g, tagPlaceholders.u + 'OPEN')
+    .replace(/<\/u>/g, tagPlaceholders.u + 'CLOSE');
+  
+  // Escape HTML characters (previene errori con <<, <, >, &, etc.)
+  processed = processed
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+  
+  // Ripristina i tag HTML
+  processed = processed
+    .replace(new RegExp(tagPlaceholders.strong + 'OPEN', 'g'), '<strong>')
+    .replace(new RegExp(tagPlaceholders.strong + 'CLOSE', 'g'), '</strong>')
+    .replace(new RegExp(tagPlaceholders.em + 'OPEN', 'g'), '<em>')
+    .replace(new RegExp(tagPlaceholders.em + 'CLOSE', 'g'), '</em>')
+    .replace(new RegExp(tagPlaceholders.u + 'OPEN', 'g'), '<u>')
+    .replace(new RegExp(tagPlaceholders.u + 'CLOSE', 'g'), '</u>');
+  
+  // STEP 3: Processa termini glossario DOPO markdown e escape HTML
+  Object.entries(glossaryTerms).forEach(([term, key]) => {
+    // Escape il termine per la regex (ma il testo è già escaped)
+    const escapedTerm = escapeHtml(term);
+    // Match il termine escaped nel testo processed (che è già escaped)
+    const regex = new RegExp(`\\b${escapedTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+    processed = processed.replace(regex, (match) => {
+      // Il match è già escaped, quindi lo usiamo così com'è
+      return `<span class="glossary-term" data-glossary="${escapeHtml(key)}">${match}</span>`;
+    });
+  });
   
   return processed;
 }
