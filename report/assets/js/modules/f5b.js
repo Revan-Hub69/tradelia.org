@@ -1,5 +1,5 @@
 // /report/assets/js/modules/f5b.js
-// F5B · Setup Opzioni - Design Unificato
+// F5B · Analisi Strutture Opzioni - Design Unificato
 // Usa stessa logica di header-ticker: riassunto AI sempre visibile + tabs laterali
 
 import { renderModuleHeader, renderModuleTabsSidebar, bindModuleTabs } from '../components/module-header.js';
@@ -22,7 +22,7 @@ function escapeAttr(str) {
 function normalizeDataPublicF5B(src = {}) {
   const meta = {
     timestampET: src?.meta?.timestampET ?? "—",
-    module: src?.meta?.module ?? "F5B · Setup Opzioni",
+    module: src?.meta?.module ?? "F5B · Analisi Strutture Opzioni",
     moduleStatus: src?.meta?.moduleStatus ?? "ACTIVE",
     freshness: src?.meta?.freshness ?? "≤ T-1",
     hero_intro: src?.meta?.hero_intro ?? "",
@@ -32,20 +32,20 @@ function normalizeDataPublicF5B(src = {}) {
   // UI labels (user-friendly) — tutto override‑abile da src.ui_labels
   const defaults = {
     badge: 'F5B',
-    hero_title: 'Strutture CALL/PUT o spread (Freedom24/Pro)',
-    hero_subtitle: 'Setup Opzioni · Orizzonte 3–10 giorni',
-    hero_desc: 'Costruisce strutture CALL/PUT o spread coerenti con bias e rischio. Nessun contenuto operativo.',
+    hero_title: 'Strutture opzioni esemplificative (CALL/PUT, spread)',
+    hero_subtitle: 'Analisi Strutture Opzioni · Orizzonte 3–10 giorni',
+    hero_desc: 'Analisi educativa di strutture opzioni esemplificative (CALL/PUT, spread), coerenti con bias e rischio. Nessun contenuto operativo o raccomandativo.',
     ai_summary_label: 'Riassunto AI',
-    // Tab titles
-    tab_bias_option: 'Bias Option',
-    tab_iv_regime: 'IV Regime',
-    tab_setup_score: 'SetupScore F5B',
-    tab_structures: 'Strutture',
+    // Tab titles (terminologia educativa, non operativa)
+    tab_bias_option: 'Orientamento Strutturale',
+    tab_iv_regime: 'Regime Volatilità Implicita',
+    tab_setup_score: 'Score Configurazione F5B',
+    tab_structures: 'Strutture Esemplificative',
     tab_governance: 'Governance',
-    // Metric labels
-    label_bias_option: 'BiasOption',
-    label_iv_regime: 'IV Regime',
-    label_setup_score: 'SetupScore_F5B',
+    // Metric labels (terminologia educativa, non operativa)
+    label_bias_option: 'Orientamento Strutturale',
+    label_iv_regime: 'Regime Volatilità Implicita',
+    label_setup_score: 'Score Configurazione F5B',
     // Separatori
     separator_dot: ' · ',
     separator_colon: ': ',
@@ -90,44 +90,44 @@ function generateAISummaryRows(data) {
   const d = data;
   const labels = d.labels || {};
   
-  // ROW 1: BiasOption + IV Regime
+  // ROW 1: Orientamento Strutturale + Regime Volatilità Implicita
   const biasOption = d.bias_option?.BiasOption?.raw || d.bias_option?.BiasOption || '—';
   const ivRegime = d.iv_regime?.IV_regime?.raw || d.iv_regime?.IV_regime || '—';
   
   rows.push({
     id: 'f5b-summary-bias',
     parts: [
-      { kind: 'text', text: `${labels.label_bias_option || 'BiasOption'}${labels.separator_colon || ': '}` },
+      { kind: 'text', text: `${labels.label_bias_option || 'Orientamento Strutturale'}${labels.separator_colon || ': '}` },
       {
         kind: 'metric',
         key: 'BiasOption',
         value: String(biasOption),
-        label: labels.label_bias_option || 'BiasOption',
+        label: labels.label_bias_option || 'Orientamento Strutturale',
         tone: 'neutral'
       },
-      { kind: 'text', text: `${labels.separator_dot || ' · '}${labels.label_iv_regime || 'IV Regime'}${labels.separator_colon || ': '}` },
+      { kind: 'text', text: `${labels.separator_dot || ' · '}${labels.label_iv_regime || 'Regime Volatilità Implicita'}${labels.separator_colon || ': '}` },
       {
         kind: 'metric',
         key: 'IV_regime',
         value: String(ivRegime),
-        label: labels.label_iv_regime || 'IV_regime',
+        label: labels.label_iv_regime || 'Regime Volatilità Implicita',
         tone: 'neutral'
       }
     ]
   });
   
-  // ROW 2: SetupScore_F5B
+  // ROW 2: Score Configurazione F5B
   const setupScore = d.setup_score?.SetupScore_F5B?.raw || d.setup_score?.SetupScore_F5B || '—';
   if (setupScore !== '—') {
     rows.push({
       id: 'f5b-summary-setup',
       parts: [
-        { kind: 'text', text: `${labels.label_setup_score || 'SetupScore_F5B'}${labels.separator_colon || ': '}` },
+        { kind: 'text', text: `${labels.label_setup_score || 'Score Configurazione F5B'}${labels.separator_colon || ': '}` },
         {
           kind: 'metric',
           key: 'SetupScore_F5B',
           value: String(setupScore),
-          label: labels.label_setup_score || 'SetupScore_F5B',
+          label: labels.label_setup_score || 'Score Configurazione F5B',
           tone: 'neutral'
         }
       ]
@@ -138,7 +138,7 @@ function generateAISummaryRows(data) {
 }
 
 /**
- * Genera rows + parts per tab Bias Option
+ * Genera rows + parts per tab Orientamento Strutturale
  */
 function generateBiasOptionTabRows(data) {
   const rows = [];
@@ -149,12 +149,12 @@ function generateBiasOptionTabRows(data) {
     rows.push({
       id: 'bias-option',
       parts: [
-        { kind: 'text', text: `${labels.label_bias_option || 'BiasOption'}${labels.separator_colon || ': '}` },
+        { kind: 'text', text: `${labels.label_bias_option || 'Orientamento Strutturale'}${labels.separator_colon || ': '}` },
         {
           kind: 'metric',
           key: 'BiasOption',
           value: String(d.BiasOption?.raw || d.BiasOption || '—'),
-          label: labels.label_bias_option || 'BiasOption',
+          label: labels.label_bias_option || 'Orientamento Strutturale',
           tone: 'neutral'
         }
       ]
@@ -171,8 +171,8 @@ export function renderCard(rawData, ctx = {}) {
   // Header modulo (tutto da labels/JSON)
   const headerHTML = renderModuleHeader({
     badge: labels.badge || 'F5B',
-    subtitle: labels.hero_subtitle || 'Analisi Opzioni · Orizzonte 3–10 giorni',
-    title: labels.hero_title || 'Analisi di strutture opzioni (esemplificative)',
+    subtitle: labels.hero_subtitle || 'Analisi Strutture Opzioni · Orizzonte 3–10 giorni',
+    title: labels.hero_title || 'Strutture opzioni esemplificative (CALL/PUT, spread)',
     desc: labels.hero_desc || 'Analisi educativa di strutture opzioni esemplificative (CALL/PUT, spread), coerenti con bias e rischio. Nessun contenuto operativo o raccomandativo.',
     status: d.meta.moduleStatus,
     freshness: d.meta.freshness,
@@ -191,11 +191,11 @@ export function renderCard(rawData, ctx = {}) {
   // Tabs per sezioni
   const tabs = [];
   
-  // Tab 1: Bias Option
+  // Tab 1: Orientamento Strutturale
   if (d.bias_option && Object.keys(d.bias_option).length > 0) {
     tabs.push({
       id: 'bias_option',
-      title: labels.tab_bias_option || 'Bias Option',
+      title: labels.tab_bias_option || 'Orientamento Strutturale',
       content: '<div data-tab-ticker="bias_option"></div>',
       active: false,
       rows: generateBiasOptionTabRows(d)
