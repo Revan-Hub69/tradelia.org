@@ -87,16 +87,16 @@ const TRANSLATIONS = {
     
     // Homepage
     'home.hero.badge': 'Progetto Indipendente',
-    'home.hero.title.line1': 'Tradelia AI',
-    'home.hero.title.line2': 'Metodo Accademico',
-    'home.hero.description': 'Progetto indipendente che utilizza AI con metodo accademico per analisi finanziaria multi-fattore. Report su trading, investimenti, analisi tecnica e fondamentale.',
-    'home.hero.feature.analysis': 'Analisi Multi-Fattore',
-    'home.hero.feature.analysis.desc': 'Analisi tecnica, fondamentale e macroeconomica integrate con AI',
+    'home.hero.title.line1': 'Analisi Finanziaria',
+    'home.hero.title.line2': 'Accademica',
+    'home.hero.description': 'Tradelia AI sviluppa <strong>analisi finanziarie modulari</strong> attraverso prompt proprietari e <strong>metodologia accademica scientifica</strong>. Strumenti didattici per comprendere mercati, rischi e correlazioni, con piena consapevolezza dei <strong>limiti tecnici e legali</strong> delle AI.',
+    'home.hero.feature.analysis': 'Potenza Analitica',
+    'home.hero.feature.analysis.desc': 'Analisi tecnica, macro e fondamentale integrate in modelli multilayer',
     'home.hero.feature.report': 'Report Accademici',
     'home.hero.feature.report.desc': 'Report dettagliati con metodologia accademica e conformità MiFID II',
     'home.hero.feature.education': 'Educazione Finanziaria',
     'home.hero.feature.education.desc': 'Glossario, tutorial e strumenti educativi per trader e investitori',
-    'home.hero.disclaimer': 'Output a fini educativi/informativi. Non costituisce consulenza o raccomandazione (MiFID II).',
+    'home.hero.disclaimer': 'Le analisi di Tradelia AI sono a scopo esclusivamente <strong>didattico</strong>. Le <strong>intelligenze artificiali</strong> non memorizzano dati, non tracciano l\'utente e possono contenere errori. Non costituiscono <strong>consulenza finanziaria</strong> e non sostituiscono un professionista abilitato.',
     
     // Footer
     'footer.about.title': 'Chi Siamo',
@@ -202,16 +202,16 @@ const TRANSLATIONS = {
     
     // Homepage
     'home.hero.badge': 'Independent Project',
-    'home.hero.title.line1': 'Tradelia AI',
-    'home.hero.title.line2': 'Academic Method',
-    'home.hero.description': 'Independent project using AI with academic method for multi-factor financial analysis. Reports on trading, investments, technical and fundamental analysis.',
-    'home.hero.feature.analysis': 'Multi-Factor Analysis',
-    'home.hero.feature.analysis.desc': 'Technical, fundamental and macroeconomic analysis integrated with AI',
+    'home.hero.title.line1': 'Financial Analysis',
+    'home.hero.title.line2': 'Academic',
+    'home.hero.description': 'Tradelia AI develops <strong>modular financial analysis</strong> through proprietary prompts and <strong>scientific academic methodology</strong>. Educational tools to understand markets, risks and correlations, with full awareness of the <strong>technical and legal limits</strong> of AI.',
+    'home.hero.feature.analysis': 'Analytical Power',
+    'home.hero.feature.analysis.desc': 'Technical, macro and fundamental analysis integrated into multilayer models',
     'home.hero.feature.report': 'Academic Reports',
     'home.hero.feature.report.desc': 'Detailed reports with academic methodology and MiFID II compliance',
     'home.hero.feature.education': 'Financial Education',
     'home.hero.feature.education.desc': 'Glossary, tutorials and educational tools for traders and investors',
-    'home.hero.disclaimer': 'Output for educational/informational purposes. Does not constitute advice or recommendation (MiFID II).',
+    'home.hero.disclaimer': 'Tradelia AI analyses are for <strong>educational</strong> purposes only. <strong>Artificial intelligences</strong> do not store data, do not track users and may contain errors. They do not constitute <strong>financial advice</strong> and do not replace a licensed professional.',
     
     // Footer
     'footer.about.title': 'About Us',
@@ -381,17 +381,22 @@ export const i18n = {
     
     const translation = this.t(key, params);
     
-    // Se ha data-i18n, aggiorna testo
-    if (element.hasAttribute('data-i18n')) {
-      element.textContent = translation;
-    } else {
-      // Altrimenti aggiorna direttamente
-      element.textContent = translation;
+    // Se è input/textarea, aggiorna placeholder
+    if (element.hasAttribute('data-i18n-placeholder') || element.placeholder !== undefined) {
+      const placeholderKey = element.getAttribute('data-i18n-placeholder') || key;
+      element.placeholder = this.t(placeholderKey, params);
     }
     
-    // Se è input/textarea, aggiorna placeholder
-    if (element.placeholder !== undefined) {
-      element.placeholder = translation;
+    // Se è input/button/text, aggiorna testo
+    if (element.tagName === 'INPUT' && element.type === 'button') {
+      element.value = translation;
+    } else if (element.tagName !== 'INPUT' && element.tagName !== 'TEXTAREA') {
+      // Se la traduzione contiene HTML, usa innerHTML
+      if (translation.includes('<')) {
+        element.innerHTML = translation;
+      } else {
+        element.textContent = translation;
+      }
     }
     
     // Se è title/aria-label, aggiorna attributi
@@ -408,15 +413,41 @@ export const i18n = {
    * @returns {void}
    */
   translatePage() {
+    // Traduci elementi con data-i18n
     const elements = document.querySelectorAll('[data-i18n]');
+    let translatedCount = 0;
+    
     elements.forEach(element => {
       const key = element.getAttribute('data-i18n');
       if (key) {
-        this.translateElement(element, key);
+        const translation = this.t(key);
+        if (translation && translation !== key) {
+          // Se la traduzione contiene HTML (tag <strong>, <em>, etc.), usa innerHTML
+          if (translation.includes('<')) {
+            element.innerHTML = translation;
+          } else {
+            // Altrimenti usa textContent per sicurezza
+            element.textContent = translation;
+          }
+          translatedCount++;
+        }
       }
     });
     
-    Logger.debug('i18n', `Tradotti ${elements.length} elementi`);
+    // Traduci placeholder con data-i18n-placeholder
+    const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
+    placeholderElements.forEach(element => {
+      const key = element.getAttribute('data-i18n-placeholder');
+      if (key && element.placeholder !== undefined) {
+        const translation = this.t(key);
+        if (translation && translation !== key) {
+          element.placeholder = translation;
+          translatedCount++;
+        }
+      }
+    });
+    
+    Logger.debug('i18n', `Tradotti ${translatedCount} elementi (${elements.length} data-i18n + ${placeholderElements.length} placeholder)`);
   }
 };
 

@@ -307,7 +307,7 @@
       left: 0;
       right: 0;
       height: 64px;
-      z-index: 100;
+      z-index: 1000;
       display: flex;
       align-items: center;
       backdrop-filter: blur(16px) saturate(1.2);
@@ -1321,7 +1321,7 @@
       left: 0; 
       right: 0; 
       height: 64px; 
-      z-index: 100;
+      z-index: 1000;
       display: flex; 
       align-items: center;
       backdrop-filter: blur(16px) saturate(1.2);
@@ -2084,14 +2084,14 @@
   <section class="hero-section">
     <div class="container">
       <div class="hero-content">
-        <div class="hero-badge">Framework Accademico AI</div>
+        <div class="hero-badge" data-i18n="home.hero.badge">Progetto Indipendente</div>
         
         <h1 class="hero-title">
-          <span class="hero-title-line">Analisi Finanziaria</span>
-          <span class="hero-title-line">Accademica</span>
+          <span class="hero-title-line" data-i18n="home.hero.title.line1">Analisi Finanziaria</span>
+          <span class="hero-title-line" data-i18n="home.hero.title.line2">Accademica</span>
         </h1>
         
-        <p class="hero-description">
+        <p class="hero-description" data-i18n="home.hero.description">
           Tradelia AI sviluppa <strong>analisi finanziarie modulari</strong> attraverso prompt proprietari 
           e <strong>metodologia accademica scientifica</strong>. Strumenti didattici per comprendere mercati, 
           rischi e correlazioni, con piena consapevolezza dei <strong>limiti tecnici e legali</strong> delle AI.
@@ -2103,29 +2103,29 @@
               <path d="M3 3v18h18" stroke="currentColor" stroke-width="2" fill="none"/>
               <path d="M7 12l4 4 7-7" stroke="currentColor" stroke-width="2" fill="none"/>
             </svg>
-            <strong>Potenza Analitica</strong>
-            <span>Analisi tecnica, macro e fondamentale integrate in modelli multilayer</span>
+            <strong data-i18n="home.hero.feature.analysis">Potenza Analitica</strong>
+            <span data-i18n="home.hero.feature.analysis.desc">Analisi tecnica, macro e fondamentale integrate in modelli multilayer</span>
           </div>
           <div class="hero-feature">
             <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 2l7 4v6c0 5-3 8-7 10C8 20 5 17 5 12V6l7-4z" stroke="currentColor" stroke-width="2" fill="none"/>
               <path d="M12 8v4" stroke="currentColor" stroke-width="2"/>
             </svg>
-            <strong>Trasparenza</strong>
-            <span>Progetto indipendente, senza marketing aggressivo o tracciamenti pubblicitari</span>
+            <strong data-i18n="home.hero.feature.report">Report Accademici</strong>
+            <span data-i18n="home.hero.feature.report.desc">Report dettagliati con metodologia accademica e conformità MiFID II</span>
           </div>
           <div class="hero-feature">
             <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
               <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
               <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="2" fill="none"/>
             </svg>
-            <strong>Privacy Totale</strong>
-            <span>Nessun cookie di tracciamento, nessuna raccolta o vendita di dati</span>
+            <strong data-i18n="home.hero.feature.education">Educazione Finanziaria</strong>
+            <span data-i18n="home.hero.feature.education.desc">Glossario, tutorial e strumenti educativi per trader e investitori</span>
           </div>
         </div>
 
         <div class="hero-cta">
-          <a href="/dashboard.html" class="btn btn-primary">Accedi alla Dashboard</a>
+          <a href="/dashboard.html" class="btn btn-primary" data-i18n="nav.dashboard">Dashboard</a>
         </div>
       </div>
     </div>
@@ -2137,7 +2137,7 @@
           <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
           <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
-        <p>
+        <p data-i18n="home.hero.disclaimer">
           Le analisi di Tradelia AI sono a scopo esclusivamente <strong>didattico</strong>. 
           Le <strong>intelligenze artificiali</strong> non memorizzano dati, non tracciano l'utente e possono contenere errori. 
           Non costituiscono <strong>consulenza finanziaria</strong> e non sostituiscono un professionista abilitato.

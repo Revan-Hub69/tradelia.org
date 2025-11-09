@@ -25,7 +25,7 @@ function render() {
           <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
-      <div class="export-menu-dropdown" hidden>
+      <div class="export-menu-dropdown" hidden style="display: none !important;">
         <button class="export-menu-option" data-export="json" type="button">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M4 2H12V14H4V2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -64,13 +64,25 @@ function setupEventHandlers(container) {
   EXPORT_MENU._button = btn;
   EXPORT_MENU._dropdown = dropdown;
 
+  // Assicura che dropdown sia chiuso all'inizio
+  dropdown.hidden = true;
+  dropdown.style.display = 'none';
+  btn.setAttribute('aria-expanded', 'false');
+  EXPORT_MENU._isOpen = false;
+
   // Toggle dropdown
   btn.addEventListener('click', (e) => {
     e.stopPropagation();
     const isExpanded = btn.getAttribute('aria-expanded') === 'true';
     btn.setAttribute('aria-expanded', !isExpanded);
-    dropdown.hidden = isExpanded;
     EXPORT_MENU._isOpen = !isExpanded;
+    if (isExpanded) {
+      dropdown.hidden = true;
+      dropdown.style.display = 'none';
+    } else {
+      dropdown.hidden = false;
+      dropdown.style.display = 'flex';
+    }
   });
 
   // Click su opzione export
@@ -79,15 +91,14 @@ function setupEventHandlers(container) {
       e.stopPropagation();
       const format = option.getAttribute('data-export');
       handleExport(format);
-      dropdown.hidden = true;
-      btn.setAttribute('aria-expanded', 'false');
-      EXPORT_MENU._isOpen = false;
+      closeDropdown();
     });
   });
 
   // Chiudi dropdown
   const closeDropdown = () => {
     dropdown.hidden = true;
+    dropdown.style.display = 'none';
     btn.setAttribute('aria-expanded', 'false');
     EXPORT_MENU._isOpen = false;
   };
@@ -123,9 +134,7 @@ function setupEventHandlers(container) {
       e.preventDefault();
       btn.click();
     } else if (e.key === 'Escape') {
-      dropdown.hidden = true;
-      btn.setAttribute('aria-expanded', 'false');
-      EXPORT_MENU._isOpen = false;
+      closeDropdown();
     }
   });
 }

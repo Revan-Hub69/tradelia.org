@@ -49,7 +49,7 @@ function render(options = {}) {
               <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
-          <div class="header-lang-dropdown" hidden>
+          <div class="header-lang-dropdown" hidden style="display: none !important;">
             <button class="header-lang-option ${currentLang === 'it' ? 'is-active' : ''}" data-lang="it" type="button">
               <span class="header-lang-flag">🇮🇹</span>
               <span class="header-lang-name">${i18n.t('prefs.language.it')}</span>
@@ -101,8 +101,10 @@ function mount(containerEl, options = {}) {
     if (exportSlot) {
       exportMenu.render(exportSlot);
     }
-    // Aggiorna traduzioni elementi
-    i18n.translatePage();
+    // Aggiorna traduzioni elementi dopo un breve delay
+    setTimeout(() => {
+      i18n.translatePage();
+    }, 50);
   });
   
   Logger.debug('SiteHeader', 'Header montato');
@@ -117,12 +119,26 @@ function setupLanguageSelector(headerNode) {
   
   if (!langBtn || !langDropdown) return;
   
+  // FORZA chiusura dropdown all'inizio
+  langDropdown.setAttribute('hidden', '');
+  langDropdown.style.display = 'none';
+  langBtn.setAttribute('aria-expanded', 'false');
+  
   // Toggle dropdown
   langBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     const isExpanded = langBtn.getAttribute('aria-expanded') === 'true';
-    langBtn.setAttribute('aria-expanded', !isExpanded);
-    langDropdown.hidden = isExpanded;
+    if (isExpanded) {
+      // Chiudi
+      langDropdown.setAttribute('hidden', '');
+      langDropdown.style.display = 'none';
+      langBtn.setAttribute('aria-expanded', 'false');
+    } else {
+      // Apri
+      langDropdown.removeAttribute('hidden');
+      langDropdown.style.display = 'flex';
+      langBtn.setAttribute('aria-expanded', 'true');
+    }
   });
   
   // Click su opzione lingua
@@ -131,7 +147,8 @@ function setupLanguageSelector(headerNode) {
       e.stopPropagation();
       const lang = option.getAttribute('data-lang');
       if (lang && i18n.setLanguage(lang)) {
-        langDropdown.hidden = true;
+        langDropdown.setAttribute('hidden', '');
+        langDropdown.style.display = 'none';
         langBtn.setAttribute('aria-expanded', 'false');
         updateLanguageSelector(headerNode);
       }
@@ -140,7 +157,8 @@ function setupLanguageSelector(headerNode) {
   
   // Chiudi dropdown quando si clicca fuori
   const closeDropdown = () => {
-    langDropdown.hidden = true;
+    langDropdown.setAttribute('hidden', '');
+    langDropdown.style.display = 'none';
     langBtn.setAttribute('aria-expanded', 'false');
   };
   

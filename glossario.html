@@ -528,8 +528,8 @@
   <!-- HEADER CONTENT -->
   <header class="glossario-header">
     <div class="glossario-header-content">
-      <h1 class="glossario-title">Glossario Finanziario</h1>
-      <p class="glossario-subtitle">
+      <h1 class="glossario-title" data-i18n="glossary.title">Glossario Finanziario</h1>
+      <p class="glossario-subtitle" data-i18n="glossary.subtitle">
         Definizioni accademiche e spiegazioni AI di tutti i termini finanziari utilizzati nei report Tradelia AI
       </p>
     </div>
@@ -551,19 +551,20 @@
             class="search-input" 
             placeholder="Cerca un termine finanziario..."
             aria-label="Cerca nel glossario"
+            data-i18n-placeholder="glossary.search.placeholder"
           />
         </div>
         <div class="filters-container">
-          <button class="category-filter-btn active" data-filter="all" type="button">
+          <button class="category-filter-btn active" data-filter="all" type="button" data-i18n="glossary.filter.all">
             Tutti
           </button>
-          <button class="category-filter-btn" data-filter="Finanza base" type="button">
+          <button class="category-filter-btn" data-filter="Finanza base" type="button" data-i18n="glossary.filter.finance">
             Finanza base
           </button>
-          <button class="category-filter-btn" data-filter="Investimenti" type="button">
+          <button class="category-filter-btn" data-filter="Investimenti" type="button" data-i18n="glossary.filter.investments">
             Investimenti
           </button>
-          <button class="category-filter-btn" data-filter="Trading" type="button">
+          <button class="category-filter-btn" data-filter="Trading" type="button" data-i18n="glossary.filter.trading">
             Trading
           </button>
         </div>

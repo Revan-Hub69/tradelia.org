@@ -3,6 +3,7 @@
 // Legge dati dinamici da header.json
 
 import Logger from '../utils/logger.js';
+import { i18n } from '../utils/i18n.js';
 
 const FOOTER = {
   _node: null,
@@ -56,10 +57,10 @@ function render(data = {}) {
             proprietari e metodologia accademica scientifica.
           </p>
           <div class="ftr-quick-links" role="navigation" aria-label="Link rapidi">
-            <a href="/index.html" aria-label="Vai alla homepage">Homepage</a>
-            <a href="/dashboard.html" aria-label="Vai alla dashboard abbonati">Dashboard</a>
+            <a href="/index.html" aria-label="Vai alla homepage" data-i18n="nav.home">Homepage</a>
+            <a href="/dashboard.html" aria-label="Vai alla dashboard abbonati" data-i18n="nav.dashboard">Dashboard</a>
             <!-- Tutorial temporaneamente rimosso -->
-            <a href="/pricing.html" aria-label="Vai alla pagina prezzi">Pricing</a>
+            <a href="/pricing.html" aria-label="Vai alla pagina prezzi" data-i18n="nav.pricing">Pricing</a>
             <a href="/brokers.html" aria-label="Vai alla pagina brokers">Brokers</a>
             <a href="/glossario.html" aria-label="Vai al glossario finanziario">Glossario</a>
           </div>
@@ -79,13 +80,13 @@ function render(data = {}) {
             <li>Le informazioni hanno <strong>scopo puramente informativo e formativo</strong> — non costituiscono raccomandazione personalizzata</li>
           </ul>
           <div class="ftr-quick-links" role="navigation" aria-label="Documenti legali" style="margin-top: var(--sp-4);">
-            <a href="/privacy.html" aria-label="Vai alla privacy policy">Privacy Policy</a>
-            <a href="/terms.html" aria-label="Vai ai termini e condizioni">Termini e Condizioni</a>
-            <a href="/refund.html" aria-label="Vai alla policy di rimborso">Policy di Rimborso</a>
+            <a href="/privacy.html" aria-label="Vai alla privacy policy" data-i18n="nav.privacy">Privacy Policy</a>
+            <a href="/terms.html" aria-label="Vai ai termini e condizioni" data-i18n="nav.terms">Termini e Condizioni</a>
+            <a href="/refund.html" aria-label="Vai alla policy di rimborso" data-i18n="nav.refund">Policy di Rimborso</a>
           </div>
           <div style="margin-top: var(--sp-3);">
-            <button id="btn-privacy-open" class="btn btn-sm" type="button" aria-label="Apri informativa privacy">Privacy</button>
-            <button id="btn-mifid-open" class="btn btn-sm" type="button" aria-label="Apri informativa MiFID">Informativa MiFID</button>
+            <button id="btn-privacy-open" class="btn btn-sm" type="button" aria-label="Apri informativa privacy" data-i18n="nav.privacy">Privacy</button>
+            <button id="btn-mifid-open" class="btn btn-sm" type="button" aria-label="Apri informativa MiFID" data-i18n="mifid.banner.mifid">Informativa MiFID</button>
           </div>
         </div>
 
@@ -115,7 +116,7 @@ function render(data = {}) {
               <span class="brand-dot" aria-hidden="true"></span>
               <span class="brand-suffix">AI</span>
             </span>
-            · Tutti i diritti riservati
+            · <span data-i18n="footer.copyright">Tutti i diritti riservati</span>
           </p>
           <p style="margin: var(--sp-2) 0 0 0;">
             <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>
@@ -156,6 +157,18 @@ function mount(containerEl) {
   
   // Bind event listeners per MiFID/Privacy (stesso sistema di index.html)
   bindLegalButtons();
+  
+  // Applica traduzioni al footer
+  setTimeout(() => {
+    i18n.translatePage();
+  }, 150);
+  
+  // Ascolta cambiamenti lingua
+  window.addEventListener('languageChanged', () => {
+    setTimeout(() => {
+      i18n.translatePage();
+    }, 50);
+  });
   
   // Chiama update con dati vuoti per nascondere i campi dinamici di default
   // (verranno mostrati solo quando update() viene chiamata con dati reali)

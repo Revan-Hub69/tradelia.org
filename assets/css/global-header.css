@@ -162,8 +162,12 @@
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   overflow: hidden;
   z-index: 1001;
-  display: flex;
+  display: none !important;
   flex-direction: column;
+}
+
+.header-lang-dropdown:not([hidden]) {
+  display: flex !important;
 }
 
 .header-lang-option {

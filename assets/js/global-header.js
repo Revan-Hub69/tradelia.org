@@ -26,12 +26,17 @@ async function initGlobalHeader() {
       console.log('GlobalHeader: Header montato');
     }
     
-    // Applica traduzioni a tutta la pagina
-    i18n.translatePage();
+    // Applica traduzioni a tutta la pagina dopo un breve delay
+    // per assicurarsi che tutti gli elementi siano nel DOM
+    setTimeout(() => {
+      i18n.translatePage();
+    }, 100);
     
     // Ascolta cambiamenti lingua
     window.addEventListener('languageChanged', () => {
-      i18n.translatePage();
+      setTimeout(() => {
+        i18n.translatePage();
+      }, 50);
     });
   } catch (err) {
     console.error('GlobalHeader: Errore inizializzazione', err);

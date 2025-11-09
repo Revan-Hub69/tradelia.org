@@ -63,8 +63,12 @@
   box-shadow: var(--shadow-lg);
   overflow: hidden;
   z-index: 1001;
-  display: flex;
+  display: none !important;
   flex-direction: column;
+}
+
+.export-menu-dropdown:not([hidden]) {
+  display: flex !important;
 }
 
 .export-menu-option {
