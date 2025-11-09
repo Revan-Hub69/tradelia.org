@@ -4,6 +4,7 @@
    ----------------------------------------------------------- */
 
 /* ===== INDICE INTERATTIVO ===== */
+<<<<<<< HEAD
 .report-index {
   position: sticky;
   top: 80px; /* Header height + offset */
@@ -161,6 +162,18 @@
 .report-index-status[data-status="REVIEW"] {
   background: var(--err);
   box-shadow: 0 0 4px rgba(220, 38, 38, 0.4);
+=======
+/* RIMOSSO: L'indice è stato rimosso completamente */
+.report-index,
+.report-index-item,
+.report-index-badge,
+.report-index-list,
+.report-index-header,
+.report-index-toggle,
+.report-index-title,
+.report-index-status {
+  display: none !important;
+>>>>>>> 2396cdf287956992ef12b310110fc2f3a4d6de73
 }
 
 /* ===== BREADCRUMB ===== */

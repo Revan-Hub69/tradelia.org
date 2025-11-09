@@ -31,6 +31,7 @@ function escapeHtml(str) {
 }
 
 // ===== INDICE INTERATTIVO =====
+<<<<<<< HEAD
 function renderIndex(modules) {
   if (!modules || modules.length === 0) return '';
 
@@ -68,6 +69,11 @@ function renderIndex(modules) {
       </div>
     </nav>
   `;
+=======
+// RIMOSSO: L'indice è stato rimosso per problemi di design e funzionalità
+function renderIndex(modules) {
+  return '';
+>>>>>>> 2396cdf287956992ef12b310110fc2f3a4d6de73
 }
 
 // ===== BREADCRUMB =====
@@ -265,6 +271,7 @@ function updateActiveModule() {
 }
 
 function updateIndexActiveState(activeModuleId) {
+<<<<<<< HEAD
   if (!activeModuleId) return;
   
   const indexItems = document.querySelectorAll('.report-index-item');
@@ -290,6 +297,10 @@ function updateIndexActiveState(activeModuleId) {
   if (!found) {
     Logger.warn('ReportNavigation', `Elemento indice con data-module-id="${activeModuleId}" non trovato`);
   }
+=======
+  // RIMOSSO: L'indice è stato rimosso
+  return;
+>>>>>>> 2396cdf287956992ef12b310110fc2f3a4d6de73
 }
 
 // ===== EVENT HANDLERS =====
@@ -389,6 +400,7 @@ function setupEventHandlers() {
     });
   }
 
+<<<<<<< HEAD
   // Toggle indice - usa event delegation
   const indexContainer = REPORT_NAVIGATION._indexContainer;
   if (indexContainer) {
@@ -521,6 +533,15 @@ function scrollToModule(moduleId) {
   
   console.log('ReportNavigation: Scroll completato');
   Logger.debug('ReportNavigation', `Scroll completato a modulo ${moduleId}`);
+=======
+  // Indice rimosso - nessun handler necessario
+}
+
+// RIMOSSO: scrollToModule non serve più senza indice
+function scrollToModule(moduleId) {
+  // RIMOSSO: L'indice è stato rimosso
+  return;
+>>>>>>> 2396cdf287956992ef12b310110fc2f3a4d6de73
 }
 
 // ===== PUBLIC API =====
@@ -538,6 +559,7 @@ export const reportNavigation = {
 
     REPORT_NAVIGATION._modules = modules;
 
+<<<<<<< HEAD
     // Render indice
     if (indexContainer) {
       REPORT_NAVIGATION._indexContainer = indexContainer;
@@ -554,6 +576,15 @@ export const reportNavigation = {
             toggle.setAttribute('aria-expanded', 'false');
           }
         }
+=======
+    // Render indice - RIMOSSO
+    if (indexContainer) {
+      REPORT_NAVIGATION._indexContainer = indexContainer;
+      indexContainer.innerHTML = '';
+      // Nascondi il container dell'indice
+      if (indexContainer.parentElement) {
+        indexContainer.style.display = 'none';
+>>>>>>> 2396cdf287956992ef12b310110fc2f3a4d6de73
       }
     }
 
@@ -572,6 +603,7 @@ export const reportNavigation = {
 
     // Setup event handlers immediatamente - usa event delegation quindi funziona anche se elementi non sono ancora nel DOM
     setupEventHandlers();
+<<<<<<< HEAD
     
     // Inizializza scroll tracking dopo che i moduli sono renderizzati
     requestAnimationFrame(() => {
@@ -590,6 +622,8 @@ export const reportNavigation = {
         }
       });
     });
+=======
+>>>>>>> 2396cdf287956992ef12b310110fc2f3a4d6de73
 
     Logger.debug('ReportNavigation', 'Navigazione inizializzata', { modulesCount: modules.length });
   },
@@ -617,12 +651,16 @@ export const reportNavigation = {
    */
   addModules(modules) {
     REPORT_NAVIGATION._modules.push(...modules);
+<<<<<<< HEAD
     
     if (REPORT_NAVIGATION._indexContainer) {
       REPORT_NAVIGATION._indexContainer.innerHTML = renderIndex(REPORT_NAVIGATION._modules);
       // Gli event handlers usano event delegation, quindi non serve re-bindare
       updateActiveModule();
     }
+=======
+    // RIMOSSO: L'indice è stato rimosso
+>>>>>>> 2396cdf287956992ef12b310110fc2f3a4d6de73
   }
 };
 
