@@ -104,10 +104,13 @@
     
     /* Slots per header e footer */
     #site-header-slot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
       order: 0;
       flex-shrink: 0;
-      position: relative;
-      z-index: 1000;
     }
     
     #site-footer-slot {
