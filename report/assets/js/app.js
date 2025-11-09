@@ -426,12 +426,12 @@ import { i18n } from './utils/i18n.js';
       }
     }
 
-    // Inizializza navigazione dopo caricamento moduli
-    if (modulesInfo.length > 0 && (INDEX_SLOT || BREADCRUMB_SLOT || SEARCH_SLOT)) {
+    // Inizializza navigazione dopo caricamento moduli (senza indice)
+    if (modulesInfo.length > 0 && (BREADCRUMB_SLOT || SEARCH_SLOT)) {
       try {
         reportNavigation.init({
           modules: modulesInfo,
-          indexContainer: INDEX_SLOT,
+          indexContainer: null, // Indice rimosso
           breadcrumbContainer: BREADCRUMB_SLOT,
           searchContainer: SEARCH_SLOT
         });
@@ -445,6 +445,11 @@ import { i18n } from './utils/i18n.js';
       } catch (err) {
         Logger.warn('App', 'Errore inizializzazione navigazione', err);
       }
+    }
+    
+    // Nascondi sidebar indice se presente
+    if (INDEX_SLOT) {
+      INDEX_SLOT.style.display = 'none';
     }
   }
   

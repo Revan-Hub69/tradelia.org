@@ -31,43 +31,9 @@ function escapeHtml(str) {
 }
 
 // ===== INDICE INTERATTIVO =====
+// RIMOSSO: L'indice è stato rimosso per problemi di design e funzionalità
 function renderIndex(modules) {
-  if (!modules || modules.length === 0) return '';
-
-  const indexHTML = modules.map((module, index) => {
-    const modId = module.id || `module-${index}`;
-    const modTitle = module.title || module.badge || `Modulo ${index + 1}`;
-    const modStatus = module.status || 'ACTIVE';
-    // Non impostare is-active di default - sarà gestito dallo scroll tracking
-    const isActive = false;
-
-    return `
-      <a href="#${modId}" 
-         class="report-index-item" 
-         data-module-id="${modId}"
-         data-status="${modStatus}">
-        <span class="report-index-badge">${escapeHtml(module.badge || '')}</span>
-        <span class="report-index-title-text">${escapeHtml(modTitle)}</span>
-        <span class="report-index-status" data-status="${modStatus}"></span>
-      </a>
-    `;
-  }).join('');
-
-  return `
-    <nav class="report-index" role="navigation" aria-label="Indice report">
-      <div class="report-index-header">
-        <h3 class="report-index-title">Indice</h3>
-        <button class="report-index-toggle" aria-label="Apri/Chiudi indice" type="button">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      </div>
-      <div class="report-index-list">
-        ${indexHTML}
-      </div>
-    </nav>
-  `;
+  return '';
 }
 
 // ===== BREADCRUMB =====
@@ -265,31 +231,8 @@ function updateActiveModule() {
 }
 
 function updateIndexActiveState(activeModuleId) {
-  if (!activeModuleId) return;
-  
-  const indexItems = document.querySelectorAll('.report-index-item');
-  let found = false;
-  
-  indexItems.forEach(item => {
-    const moduleId = item.getAttribute('data-module-id');
-    if (moduleId === activeModuleId) {
-      item.classList.add('is-active');
-      found = true;
-      // Scroll indice per mostrare elemento attivo
-      try {
-        item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-      } catch (e) {
-        // Fallback per browser che non supportano tutte le opzioni
-        item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    } else {
-      item.classList.remove('is-active');
-    }
-  });
-  
-  if (!found) {
-    Logger.warn('ReportNavigation', `Elemento indice con data-module-id="${activeModuleId}" non trovato`);
-  }
+  // RIMOSSO: L'indice è stato rimosso
+  return;
 }
 
 // ===== EVENT HANDLERS =====
@@ -405,20 +348,6 @@ function setupEventHandlers() {
         }
       }
       
-      // Click su item indice
-      const item = e.target.closest('.report-index-item');
-      if (item) {
-        e.preventDefault();
-        e.stopPropagation();
-        const moduleId = item.getAttribute('data-module-id');
-        if (moduleId) {
-          console.log('ReportNavigation: Click su indice:', moduleId);
-          Logger.debug('ReportNavigation', `Click su indice: ${moduleId}`);
-          scrollToModule(moduleId);
-        } else {
-          Logger.warn('ReportNavigation', 'Click su indice: moduleId non trovato', item);
-        }
-      }
     });
   }
 
@@ -538,22 +467,13 @@ export const reportNavigation = {
 
     REPORT_NAVIGATION._modules = modules;
 
-    // Render indice
+    // Render indice - RIMOSSO
     if (indexContainer) {
       REPORT_NAVIGATION._indexContainer = indexContainer;
-      indexContainer.innerHTML = renderIndex(modules);
-      
-      // Ripristina stato collassato da preferenze
-      const isCollapsed = userPreferences.get('indexCollapsed', false);
-      if (isCollapsed) {
-        const index = indexContainer.querySelector('.report-index');
-        if (index) {
-          index.classList.add('is-collapsed');
-          const toggle = indexContainer.querySelector('.report-index-toggle');
-          if (toggle) {
-            toggle.setAttribute('aria-expanded', 'false');
-          }
-        }
+      indexContainer.innerHTML = '';
+      // Nascondi il container dell'indice
+      if (indexContainer.parentElement) {
+        indexContainer.style.display = 'none';
       }
     }
 
@@ -617,12 +537,7 @@ export const reportNavigation = {
    */
   addModules(modules) {
     REPORT_NAVIGATION._modules.push(...modules);
-    
-    if (REPORT_NAVIGATION._indexContainer) {
-      REPORT_NAVIGATION._indexContainer.innerHTML = renderIndex(REPORT_NAVIGATION._modules);
-      // Gli event handlers usano event delegation, quindi non serve re-bindare
-      updateActiveModule();
-    }
+    // RIMOSSO: L'indice è stato rimosso
   }
 };
 
