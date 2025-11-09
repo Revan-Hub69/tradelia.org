@@ -9,6 +9,7 @@ import { userPreferences } from './user-preferences.js';
 const TRANSLATIONS = {
   it: {
     // Navigazione
+    'nav.dashboard': 'Dashboard',
     'nav.index.title': 'Indice Moduli',
     'nav.breadcrumb.report': 'Report',
     'nav.search.placeholder': 'Cerca nel report...',
@@ -20,6 +21,11 @@ const TRANSLATIONS = {
     'nav.search.resultType.title': 'Titolo',
     'nav.search.resultType.desc': 'Descrizione',
     'nav.search.resultType.metric': 'Metrica',
+    'nav.home': 'Home',
+    'nav.pricing': 'Prezzi',
+    'nav.terms': 'Termini',
+    'nav.privacy': 'Privacy',
+    'nav.refund': 'Rimborsi',
     
     // Errori
     'error.loading': 'Errore di caricamento',
@@ -73,6 +79,7 @@ const TRANSLATIONS = {
   
   en: {
     // Navigation
+    'nav.dashboard': 'Dashboard',
     'nav.index.title': 'Module Index',
     'nav.breadcrumb.report': 'Report',
     'nav.search.placeholder': 'Search in report...',
@@ -84,6 +91,11 @@ const TRANSLATIONS = {
     'nav.search.resultType.title': 'Title',
     'nav.search.resultType.desc': 'Description',
     'nav.search.resultType.metric': 'Metric',
+    'nav.home': 'Home',
+    'nav.pricing': 'Pricing',
+    'nav.terms': 'Terms',
+    'nav.privacy': 'Privacy',
+    'nav.refund': 'Refunds',
     
     // Errors
     'error.loading': 'Loading Error',

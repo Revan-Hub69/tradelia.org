@@ -95,6 +95,7 @@
 
   <!-- Design System -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/assets/css/global-header.css" />
 
   <!-- Lucide: una sola import -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -113,6 +114,16 @@
       background: var(--surface-page);
       color: var(--ink);
       font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      padding-top: 64px; /* Spazio per header fixed */
+    }
+
+    /* Header slot */
+    #site-header-slot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
     }
 
     /* container */
@@ -286,6 +297,176 @@
     .hero-disclaimer strong {
       color: var(--ink-soft);
       font-weight: 600;
+    }
+
+    /* ===== HEADER STYLES (from report) ===== */
+    .hdr {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      backdrop-filter: blur(16px) saturate(1.2);
+      background: linear-gradient(
+        180deg,
+        rgba(15, 15, 15, 0.96) 0%,
+        rgba(15, 15, 15, 0.92) 100%
+      );
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 
+        0 1px 0 rgba(255, 255, 255, 0.03) inset,
+        0 4px 20px rgba(0, 0, 0, 0.6);
+    }
+    
+    .hdr .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: 1rem;
+    }
+
+    .brand {
+      font-weight: 900;
+      font-size: 18px;
+      letter-spacing: -0.03em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      color: var(--ink, #ffffff);
+      transition: all 0.2s;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      margin-left: -0.5rem;
+    }
+    
+    .brand:hover {
+      background: rgba(255, 255, 255, 0.03);
+      transform: translateY(-1px);
+    }
+    
+    .brand-word {
+      color: var(--ink, #ffffff);
+      font-weight: 900;
+    }
+    
+    .brand-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--brand-600, #2563eb);
+      border-radius: 50%;
+      display: inline-block;
+    }
+    
+    .brand-suffix {
+      color: var(--brand-400, #60a5fa);
+      font-weight: 700;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .header-dashboard-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      color: var(--ink-soft, #f0f0f0);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 6px;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .header-dashboard-link:hover {
+      color: var(--ink, #ffffff);
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .header-language-selector {
+      position: relative;
+    }
+
+    .header-lang-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      color: var(--ink-soft, #f0f0f0);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .header-lang-btn:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.12);
+      color: var(--ink, #ffffff);
+    }
+
+    .header-lang-dropdown {
+      position: absolute;
+      top: calc(100% + 0.5rem);
+      right: 0;
+      min-width: 140px;
+      background: var(--surface-card, #1a1a1a);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-lang-option {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 0.75rem;
+      background: transparent;
+      border: none;
+      color: var(--ink-soft, #f0f0f0);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: left;
+      width: 100%;
+    }
+
+    .header-lang-option:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--ink, #ffffff);
+    }
+
+    .header-lang-option.is-active {
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--brand-400, #60a5fa);
+    }
+
+    @media (max-width: 768px) {
+      .header-dashboard-link span {
+        display: none;
+      }
+
+      .header-lang-btn .header-lang-code {
+        display: none;
+      }
     }
 
     /* ===== SECTION HEADERS ===== */
@@ -4324,20 +4505,13 @@ Vuoi procedere inviando i dati?`;
     </div>
   </div>
 
-  <!-- ===== MOUNT HEADER & FOOTER ===== -->
+  <!-- ===== MOUNT FOOTER ===== -->
   <script type="module">
     // Imposta tema dark
     document.documentElement.setAttribute('data-theme', 'dark');
     
-    // Importa componenti
-    import { siteHeader } from '/report/assets/js/components/site-header.js';
+    // Importa footer (header gestito da global-header.js)
     import { siteFooter } from '/report/assets/js/components/site-footer.js';
-    
-    // Monta header
-    const headerSlot = document.getElementById('site-header-slot');
-    if (headerSlot) {
-      siteHeader.mount(headerSlot);
-    }
     
     // Monta footer
     const footerSlot = document.getElementById('site-footer-slot');
@@ -4950,6 +5124,9 @@ Vuoi procedere inviando i dati?`;
       }
     });
   </script>
+
+  <!-- Global Header & i18n -->
+  <script type="module" src="/assets/js/global-header.js"></script>
 
 </body>
 </html>

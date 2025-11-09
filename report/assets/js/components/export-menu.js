@@ -85,14 +85,37 @@ function setupEventHandlers(container) {
     });
   });
 
-  // Chiudi dropdown quando si clicca fuori
-  document.addEventListener('click', (e) => {
-    if (!container.contains(e.target) && EXPORT_MENU._isOpen) {
-      dropdown.hidden = true;
-      btn.setAttribute('aria-expanded', 'false');
-      EXPORT_MENU._isOpen = false;
+  // Chiudi dropdown
+  const closeDropdown = () => {
+    dropdown.hidden = true;
+    btn.setAttribute('aria-expanded', 'false');
+    EXPORT_MENU._isOpen = false;
+  };
+  
+  // Gestione click esterno
+  const handleClickOutside = (e) => {
+    if (!container.contains(e.target)) {
+      // Clic fuori, chiudi
+      closeDropdown();
+    } else if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+      // Clic dentro header ma fuori export menu, chiudi
+      closeDropdown();
     }
-  });
+  };
+  
+  // Usa capture per intercettare prima
+  document.addEventListener('click', handleClickOutside, true);
+  
+  // Chiudi quando si apre language selector
+  const headerNode = container.closest('.hdr');
+  if (headerNode) {
+    const langBtn = headerNode.querySelector('.header-lang-btn');
+    if (langBtn) {
+      langBtn.addEventListener('click', () => {
+        closeDropdown();
+      });
+    }
+  }
 
   // Keyboard navigation
   btn.addEventListener('keydown', (e) => {

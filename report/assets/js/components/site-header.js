@@ -19,8 +19,9 @@ function createEl(tag, className) {
 }
 
 // ===== RENDER =====
-function render() {
+function render(options = {}) {
   const currentLang = i18n.getLanguage();
+  const showExport = options.showExport === true; // Solo per pagine report
   
   return `
     <div class="container">
@@ -30,16 +31,16 @@ function render() {
         <span class="brand-suffix">AI</span>
       </a>
       <div class="header-actions">
-        <a href="/dashboard.html" class="header-dashboard-link" aria-label="Dashboard">
+        <a href="/dashboard.html" class="header-dashboard-link" aria-label="${i18n.t('nav.dashboard')}">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="7" height="7"></rect>
             <rect x="14" y="3" width="7" height="7"></rect>
             <rect x="14" y="14" width="7" height="7"></rect>
             <rect x="3" y="14" width="7" height="7"></rect>
           </svg>
-          <span>Dashboard</span>
+          <span data-i18n="nav.dashboard">${i18n.t('nav.dashboard')}</span>
         </a>
-        <div id="header-export-menu-slot"></div>
+        ${showExport ? '<div id="header-export-menu-slot"></div>' : ''}
         <div class="header-language-selector">
           <button class="header-lang-btn" type="button" aria-label="${i18n.t('prefs.language')}" aria-haspopup="true" aria-expanded="false">
             <span class="header-lang-flag">${currentLang === 'en' ? '🇬🇧' : '🇮🇹'}</span>
@@ -65,7 +66,7 @@ function render() {
 }
 
 // ===== MOUNT =====
-function mount(containerEl) {
+function mount(containerEl, options = {}) {
   if (!containerEl) {
     Logger.error('SiteHeader', 'mount: containerEl non fornito');
     return null;
@@ -77,7 +78,7 @@ function mount(containerEl) {
   }
   
   const node = createEl('header', 'hdr');
-  node.innerHTML = render();
+  node.innerHTML = render(options);
   
   containerEl.appendChild(node);
   
@@ -87,7 +88,7 @@ function mount(containerEl) {
   // Setup event handlers per selettore lingua
   setupLanguageSelector(node);
   
-  // Renderizza menu export
+  // Renderizza menu export solo se showExport è true
   const exportSlot = node.querySelector('#header-export-menu-slot');
   if (exportSlot) {
     exportMenu.render(exportSlot);
@@ -100,11 +101,8 @@ function mount(containerEl) {
     if (exportSlot) {
       exportMenu.render(exportSlot);
     }
-    // Aggiorna link dashboard se ha traduzione
-    const dashboardLink = node.querySelector('.header-dashboard-link span');
-    if (dashboardLink) {
-      // Dashboard non è tradotto per ora, ma possiamo aggiungerlo se necessario
-    }
+    // Aggiorna traduzioni elementi
+    i18n.translatePage();
   });
   
   Logger.debug('SiteHeader', 'Header montato');
@@ -141,12 +139,34 @@ function setupLanguageSelector(headerNode) {
   });
   
   // Chiudi dropdown quando si clicca fuori
-  document.addEventListener('click', (e) => {
-    if (!headerNode.contains(e.target)) {
-      langDropdown.hidden = true;
-      langBtn.setAttribute('aria-expanded', 'false');
+  const closeDropdown = () => {
+    langDropdown.hidden = true;
+    langBtn.setAttribute('aria-expanded', 'false');
+  };
+  
+  // Gestione click esterno
+  const handleClickOutside = (e) => {
+    // Se clic dentro header ma non dentro language selector, chiudi
+    if (headerNode.contains(e.target)) {
+      if (!langBtn.contains(e.target) && !langDropdown.contains(e.target)) {
+        closeDropdown();
+      }
+    } else {
+      // Clic fuori header, chiudi
+      closeDropdown();
     }
-  });
+  };
+  
+  // Usa capture per intercettare prima
+  document.addEventListener('click', handleClickOutside, true);
+  
+  // Chiudi quando si apre export menu
+  const exportMenuBtn = headerNode.querySelector('.export-menu-btn');
+  if (exportMenuBtn) {
+    exportMenuBtn.addEventListener('click', () => {
+      closeDropdown();
+    });
+  }
   
   // Keyboard navigation
   langBtn.addEventListener('keydown', (e) => {
@@ -198,7 +218,8 @@ function update(data = {}) {
   
   // Se richiesto, aggiorna header completo (es. cambio lingua)
   if (data.refresh) {
-    HEADER._node.innerHTML = render();
+    const showExport = HEADER._node.querySelector('#header-export-menu-slot') !== null;
+    HEADER._node.innerHTML = render({ showExport });
     setupLanguageSelector(HEADER._node);
     const exportSlot = HEADER._node.querySelector('#header-export-menu-slot');
     if (exportSlot) {

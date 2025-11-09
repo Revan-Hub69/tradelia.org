@@ -449,7 +449,7 @@ import { i18n } from './utils/i18n.js';
   }
   
   // ===== MOUNT HEADER & FOOTER =====
-  async function mountSiteHeader() {
+  async function mountSiteHeader(options = {}) {
     if (!HEADER_SLOT) {
       Logger.warn('App', 'Header slot non trovato, skip');
       return;
@@ -458,7 +458,7 @@ import { i18n } from './utils/i18n.js';
     try {
       const { siteHeader } = await safeImport('/report/assets/js/components/site-header.js');
       if (siteHeader && typeof siteHeader.mount === 'function') {
-        siteHeader.mount(HEADER_SLOT);
+        siteHeader.mount(HEADER_SLOT, { showExport: true, ...options });
         Logger.debug('App', 'Site header montato');
       }
     } catch (err) {

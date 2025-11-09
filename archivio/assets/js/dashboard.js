@@ -2,6 +2,7 @@
 // Dashboard Abbonati - Autenticazione Supabase + Votazioni
 
 import Logger from '/report/assets/js/utils/logger.js';
+import { i18n } from '/report/assets/js/utils/i18n.js';
 import { siteHeader } from '/report/assets/js/components/site-header.js';
 import { siteFooter } from '/report/assets/js/components/site-footer.js';
 import { SUPABASE_CONFIG } from './supabase-config.js';
@@ -57,15 +58,27 @@ async function mountHeaderFooter() {
   document.documentElement.setAttribute('data-theme', 'dark');
   
   try {
+    // Inizializza i18n
+    i18n.init();
+    
     const headerSlot = document.getElementById('site-header-slot');
     if (headerSlot) {
-      siteHeader.mount(headerSlot);
+      // Monta header SENZA export menu (dashboard non ha export)
+      siteHeader.mount(headerSlot, { showExport: false });
     }
     
     const footerSlot = document.getElementById('site-footer-slot');
     if (footerSlot) {
       siteFooter.mount(footerSlot);
     }
+    
+    // Applica traduzioni
+    i18n.translatePage();
+    
+    // Ascolta cambiamenti lingua
+    window.addEventListener('languageChanged', () => {
+      i18n.translatePage();
+    });
   } catch (err) {
     Logger.warn('Dashboard', 'Errore montaggio header/footer', err);
   }

@@ -16,6 +16,7 @@
 
   <!-- Design System -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/assets/css/global-header.css" />
 
   <!-- Lucide -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -23,9 +24,21 @@
 
   <style>
     html, body { height: 100%; }
-    body { display: flex; flex-direction: column; min-height: 100vh; }
+    body { 
+      display: flex; 
+      flex-direction: column; 
+      min-height: 100vh;
+      padding-top: 64px; /* Spazio per header fixed */
+    }
+    #site-header-slot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+    }
     .container { max-width: 90rem; margin-inline: auto; padding-inline: 1rem; }
-    main { flex: 1; padding-top: 5rem; padding-bottom: 5rem; }
+    main { flex: 1; padding-top: 1rem; padding-bottom: 5rem; }
 
     /* ===== HEADER ===== */
     .hdr {
@@ -408,20 +421,13 @@
     </div>
   </div>
 
-  <!-- ===== MOUNT HEADER & FOOTER ===== -->
+  <!-- ===== MOUNT FOOTER ===== -->
   <script type="module">
     // Imposta tema dark
     document.documentElement.setAttribute('data-theme', 'dark');
     
-    // Importa componenti
-    import { siteHeader } from '/report/assets/js/components/site-header.js';
+    // Importa footer (header gestito da global-header.js)
     import { siteFooter } from '/report/assets/js/components/site-footer.js';
-    
-    // Monta header
-    const headerSlot = document.getElementById('site-header-slot');
-    if (headerSlot) {
-      siteHeader.mount(headerSlot);
-    }
     
     // Monta footer
     const footerSlot = document.getElementById('site-footer-slot');
@@ -429,6 +435,9 @@
       siteFooter.mount(footerSlot);
     }
   </script>
+
+  <!-- Global Header & i18n -->
+  <script type="module" src="/assets/js/global-header.js"></script>
 
   <!-- ===== LEGAL OVERLAY SCRIPT ===== -->
   <script>
