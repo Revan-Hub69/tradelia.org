@@ -392,7 +392,7 @@ import { i18n } from './utils/i18n.js';
           title: json?.ui_labels?.hero_title || json?.meta?.module || modId,
           desc: json?.ui_labels?.hero_desc || json?.meta?.hero_intro || '',
           status: json?.meta?.moduleStatus || 'ACTIVE',
-          isActive: loadedCount === 0 // Primo modulo attivo di default
+          isActive: false // Non impostare attivo di default - sarà gestito dallo scroll tracking
         };
         modulesInfo.push(moduleInfo);
         

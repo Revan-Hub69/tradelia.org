@@ -37,11 +37,12 @@ function renderIndex(modules) {
     const modId = module.id || `module-${index}`;
     const modTitle = module.title || module.badge || `Modulo ${index + 1}`;
     const modStatus = module.status || 'ACTIVE';
-    const isActive = module.isActive || false;
+    // Non impostare is-active di default - sarà gestito dallo scroll tracking
+    const isActive = false;
 
     return `
       <a href="#${modId}" 
-         class="report-index-item ${isActive ? 'is-active' : ''}" 
+         class="report-index-item" 
          data-module-id="${modId}"
          data-status="${modStatus}">
         <span class="report-index-badge">${escapeHtml(module.badge || '')}</span>
@@ -386,25 +387,21 @@ function setupEventHandlers() {
   // Click su indice - usa event delegation per gestire elementi aggiunti dinamicamente
   const indexList = document.querySelector('.report-index-list');
   if (indexList) {
-    // Rimuovi listener precedenti se esistono
-    indexList.removeEventListener('click', handleIndexClick);
-    // Aggiungi nuovo listener
-    indexList.addEventListener('click', handleIndexClick);
-  }
-  
-  function handleIndexClick(e) {
-    const item = e.target.closest('.report-index-item');
-    if (item) {
-      e.preventDefault();
-      e.stopPropagation();
-      const moduleId = item.getAttribute('data-module-id');
-      if (moduleId) {
-        Logger.debug('ReportNavigation', `Click su indice: ${moduleId}`);
-        scrollToModule(moduleId);
-      } else {
-        Logger.warn('ReportNavigation', 'Click su indice: moduleId non trovato');
+    // Usa una funzione anonima per evitare problemi con removeEventListener
+    indexList.addEventListener('click', function handleIndexClick(e) {
+      const item = e.target.closest('.report-index-item');
+      if (item) {
+        e.preventDefault();
+        e.stopPropagation();
+        const moduleId = item.getAttribute('data-module-id');
+        if (moduleId) {
+          Logger.debug('ReportNavigation', `Click su indice: ${moduleId}`);
+          scrollToModule(moduleId);
+        } else {
+          Logger.warn('ReportNavigation', 'Click su indice: moduleId non trovato', item);
+        }
       }
-    }
+    });
   }
 
   // Scroll tracking
@@ -424,17 +421,29 @@ function setupEventHandlers() {
 }
 
 function scrollToModule(moduleId) {
-  if (!moduleId) return;
+  if (!moduleId) {
+    Logger.warn('ReportNavigation', 'scrollToModule: moduleId non fornito');
+    return;
+  }
+  
+  Logger.debug('ReportNavigation', `Tentativo scroll a: ${moduleId}`);
   
   const element = document.getElementById(moduleId);
   if (!element) {
-    Logger.warn('ReportNavigation', `Elemento con ID ${moduleId} non trovato`);
+    Logger.warn('ReportNavigation', `Elemento con ID "${moduleId}" non trovato nel DOM`);
+    // Prova a trovare elementi simili per debug
+    const allIds = Array.from(document.querySelectorAll('[id]')).map(el => el.id);
+    Logger.debug('ReportNavigation', `ID disponibili: ${allIds.slice(0, 10).join(', ')}...`);
     return;
   }
   
   const headerHeight = 64; // Altezza header fisso
-  const elementTop = element.getBoundingClientRect().top + window.scrollY;
-  const offset = elementTop - headerHeight - 20;
+  const tickerHeight = 80; // Altezza approssimativa ticker
+  const elementRect = element.getBoundingClientRect();
+  const elementTop = elementRect.top + window.scrollY;
+  const offset = elementTop - headerHeight - tickerHeight - 20;
+  
+  Logger.debug('ReportNavigation', `Scroll: elementTop=${elementTop}, offset=${offset}, scrollY=${window.scrollY}`);
   
   window.scrollTo({
     top: Math.max(0, offset),
@@ -446,10 +455,11 @@ function scrollToModule(moduleId) {
     history.pushState(null, '', `#${moduleId}`);
   }
 
+  // Aggiorna stato attivo immediatamente
   REPORT_NAVIGATION._currentModule = moduleId;
   updateIndexActiveState(moduleId);
   
-  Logger.debug('ReportNavigation', `Scroll a modulo ${moduleId}`);
+  Logger.debug('ReportNavigation', `Scroll completato a modulo ${moduleId}`);
 }
 
 // ===== PUBLIC API =====
