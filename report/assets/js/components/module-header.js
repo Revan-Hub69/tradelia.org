@@ -120,7 +120,7 @@ export function renderAISummary(summaryText = '', label = '') {
  */
 export function renderModuleTabsSidebar(tabs = []) {
   if (!Array.isArray(tabs) || tabs.length === 0) {
-    return { drawerHTML: '', contentHTML: '' };
+    return { drawerHTML: '', contentHTML: '', menuHTML: '' };
   }
 
   function escapeHtml(str) {
@@ -159,19 +159,29 @@ export function renderModuleTabsSidebar(tabs = []) {
   const drawerHTML = ``;
 
   // Content panels (nascosti, usati solo per generare contenuto drawer)
-  const contentHTML = `
-    <div class="module-tabs-content" style="display: none;">
-      ${tabs.map(tab => `
-        <div 
-          class="module-tab-panel" 
-          id="tab-panel-${escapeAttr(tab.id)}"
-          data-tab-id="${escapeAttr(tab.id)}"
-          data-active="false">
-          ${tab.content}
-        </div>
-      `).join('')}
-    </div>
-  `;
+  // PROBLEMA: tab.content potrebbe contenere caratteri speciali come << che causano errori
+  // nei template literals JavaScript. Soluzione: usare createElement invece di template literals
+  // per evitare problemi di parsing JavaScript.
+  
+  // Creiamo i panel usando createElement per evitare problemi con template literals e caratteri speciali
+  const contentContainer = document.createElement('div');
+  contentContainer.className = 'module-tabs-content';
+  contentContainer.style.display = 'none';
+  
+  tabs.forEach(tab => {
+    const panel = document.createElement('div');
+    panel.className = 'module-tab-panel';
+    panel.id = `tab-panel-${escapeAttr(tab.id)}`;
+    panel.setAttribute('data-tab-id', escapeAttr(tab.id));
+    panel.setAttribute('data-active', 'false');
+    // Inserisci HTML direttamente usando innerHTML (più sicuro per HTML già escapato)
+    // NOTA: Assumiamo che tab.content sia HTML già valido e escapato correttamente
+    panel.innerHTML = tab.content || '';
+    contentContainer.appendChild(panel);
+  });
+  
+  // Converti in HTML string per il return (questo è sicuro perché è HTML già costruito)
+  const contentHTML = contentContainer.outerHTML;
 
   return { drawerHTML, contentHTML, menuHTML };
 }
