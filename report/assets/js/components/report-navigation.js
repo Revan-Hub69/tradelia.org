@@ -11,7 +11,8 @@ const REPORT_NAVIGATION = {
   _searchContainer: null,
   _modules: [],
   _currentModule: null,
-  _searchResults: []
+  _searchResults: [],
+  _searchTimeout: null
 };
 
 // ===== UTILITIES =====
@@ -292,109 +293,126 @@ function updateIndexActiveState(activeModuleId) {
 }
 
 // ===== EVENT HANDLERS =====
+// Flag per evitare listener multipli
+let _handlersSetup = false;
+let _scrollTimeout = null;
+
 function setupEventHandlers() {
-  // Ricerca
-  const searchInput = document.querySelector('.report-search-input');
-  const searchClear = document.querySelector('.report-search-clear');
-  const searchResults = document.querySelector('.report-search-results');
+  // Evita di aggiungere listener multipli
+  if (_handlersSetup) {
+    Logger.debug('ReportNavigation', 'Event handlers già configurati, skip');
+    return;
+  }
+  
+  _handlersSetup = true;
+  Logger.debug('ReportNavigation', 'Configurazione event handlers');
 
-  if (searchInput) {
-    let searchTimeout;
-    searchInput.addEventListener('input', (e) => {
-      clearTimeout(searchTimeout);
-      const query = e.target.value.trim();
+  // Ricerca - usa event delegation sul container
+  const searchContainer = REPORT_NAVIGATION._searchContainer;
+  if (searchContainer) {
+    // Input search
+    searchContainer.addEventListener('input', (e) => {
+      if (e.target.matches('.report-search-input')) {
+        const searchInput = e.target;
+        const searchClear = searchContainer.querySelector('.report-search-clear');
+        const searchResults = searchContainer.querySelector('.report-search-results');
+        const query = searchInput.value.trim();
 
-      if (query.length < 2) {
-        searchResults.hidden = true;
-        searchClear.hidden = true;
-        REPORT_NAVIGATION._searchResults = [];
-        return;
-      }
-
-      searchClear.hidden = false;
-
-      searchTimeout = setTimeout(() => {
-        const results = searchInModules(query, REPORT_NAVIGATION._modules);
-        REPORT_NAVIGATION._searchResults = results;
-        
-        // Salva in storia ricerca
-        userPreferences.addSearchHistory(query);
-        
-        if (results.length > 0) {
-          searchResults.innerHTML = renderSearchResults(results, query);
-          searchResults.hidden = false;
-        } else {
-          searchResults.innerHTML = renderSearchResults([], query);
-          searchResults.hidden = false;
+        if (query.length < 2) {
+          if (searchResults) searchResults.hidden = true;
+          if (searchClear) searchClear.hidden = true;
+          REPORT_NAVIGATION._searchResults = [];
+          return;
         }
-      }, 300);
-    });
 
-    searchInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        searchInput.value = '';
-        searchResults.hidden = true;
-        searchClear.hidden = true;
-        REPORT_NAVIGATION._searchResults = [];
+        if (searchClear) searchClear.hidden = false;
+
+        clearTimeout(REPORT_NAVIGATION._searchTimeout);
+        REPORT_NAVIGATION._searchTimeout = setTimeout(() => {
+          const results = searchInModules(query, REPORT_NAVIGATION._modules);
+          REPORT_NAVIGATION._searchResults = results;
+          
+          userPreferences.addSearchHistory(query);
+          
+          if (searchResults) {
+            searchResults.innerHTML = renderSearchResults(results, query);
+            searchResults.hidden = false;
+          }
+        }, 300);
       }
     });
-  }
 
-  if (searchClear) {
-    searchClear.addEventListener('click', () => {
-      searchInput.value = '';
-      searchResults.hidden = true;
-      searchClear.hidden = true;
-      REPORT_NAVIGATION._searchResults = [];
-      searchInput.focus();
+    // Clear search
+    searchContainer.addEventListener('click', (e) => {
+      if (e.target.matches('.report-search-clear') || e.target.closest('.report-search-clear')) {
+        const searchInput = searchContainer.querySelector('.report-search-input');
+        const searchClear = searchContainer.querySelector('.report-search-clear');
+        const searchResults = searchContainer.querySelector('.report-search-results');
+        
+        if (searchInput) searchInput.value = '';
+        if (searchResults) searchResults.hidden = true;
+        if (searchClear) searchClear.hidden = true;
+        REPORT_NAVIGATION._searchResults = [];
+        if (searchInput) searchInput.focus();
+      }
     });
-  }
 
-  // Click su risultati ricerca - usa event delegation
-  if (searchResults) {
-    searchResults.addEventListener('click', (e) => {
+    // Click su risultati ricerca
+    searchContainer.addEventListener('click', (e) => {
       const resultItem = e.target.closest('.report-search-result-item');
       if (resultItem) {
         e.preventDefault();
         const moduleId = resultItem.getAttribute('data-module-id');
         if (moduleId) {
           scrollToModule(moduleId);
-          searchResults.hidden = true;
-          if (searchInput) {
-            searchInput.value = '';
-            if (searchClear) searchClear.hidden = true;
-          }
+          const searchResults = searchContainer.querySelector('.report-search-results');
+          const searchInput = searchContainer.querySelector('.report-search-input');
+          const searchClear = searchContainer.querySelector('.report-search-clear');
+          if (searchResults) searchResults.hidden = true;
+          if (searchInput) searchInput.value = '';
+          if (searchClear) searchClear.hidden = true;
         }
       }
     });
-  }
 
-  // Toggle indice
-  const indexToggle = document.querySelector('.report-index-toggle');
-  if (indexToggle) {
-    indexToggle.addEventListener('click', () => {
-      const index = document.querySelector('.report-index');
-      if (index) {
-        index.classList.toggle('is-collapsed');
-        const isCollapsed = index.classList.contains('is-collapsed');
-        indexToggle.setAttribute('aria-expanded', !isCollapsed);
-        // Salva preferenza
-        userPreferences.set('indexCollapsed', isCollapsed);
+    // Escape key
+    searchContainer.addEventListener('keydown', (e) => {
+      if (e.target.matches('.report-search-input') && e.key === 'Escape') {
+        const searchInput = e.target;
+        const searchClear = searchContainer.querySelector('.report-search-clear');
+        const searchResults = searchContainer.querySelector('.report-search-results');
+        searchInput.value = '';
+        if (searchResults) searchResults.hidden = true;
+        if (searchClear) searchClear.hidden = true;
+        REPORT_NAVIGATION._searchResults = [];
       }
     });
   }
 
-  // Click su indice - usa event delegation per gestire elementi aggiunti dinamicamente
-  const indexList = document.querySelector('.report-index-list');
-  if (indexList) {
-    // Usa una funzione anonima per evitare problemi con removeEventListener
-    indexList.addEventListener('click', function handleIndexClick(e) {
+  // Toggle indice - usa event delegation
+  const indexContainer = REPORT_NAVIGATION._indexContainer;
+  if (indexContainer) {
+    indexContainer.addEventListener('click', (e) => {
+      // Toggle button
+      if (e.target.matches('.report-index-toggle') || e.target.closest('.report-index-toggle')) {
+        const index = indexContainer.querySelector('.report-index');
+        const toggle = indexContainer.querySelector('.report-index-toggle');
+        if (index && toggle) {
+          index.classList.toggle('is-collapsed');
+          const isCollapsed = index.classList.contains('is-collapsed');
+          toggle.setAttribute('aria-expanded', !isCollapsed);
+          userPreferences.set('indexCollapsed', isCollapsed);
+        }
+      }
+      
+      // Click su item indice
       const item = e.target.closest('.report-index-item');
       if (item) {
         e.preventDefault();
         e.stopPropagation();
         const moduleId = item.getAttribute('data-module-id');
         if (moduleId) {
+          console.log('ReportNavigation: Click su indice:', moduleId);
           Logger.debug('ReportNavigation', `Click su indice: ${moduleId}`);
           scrollToModule(moduleId);
         } else {
@@ -404,12 +422,11 @@ function setupEventHandlers() {
     });
   }
 
-  // Scroll tracking
-  let scrollTimeout;
+  // Scroll tracking - solo una volta
   window.addEventListener('scroll', () => {
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(updateActiveModule, 100);
-  });
+    clearTimeout(_scrollTimeout);
+    _scrollTimeout = setTimeout(updateActiveModule, 100);
+  }, { passive: true });
 
   // Hash change (per deep linking)
   window.addEventListener('hashchange', () => {
@@ -422,43 +439,80 @@ function setupEventHandlers() {
 
 function scrollToModule(moduleId) {
   if (!moduleId) {
+    console.warn('ReportNavigation: moduleId non fornito');
     Logger.warn('ReportNavigation', 'scrollToModule: moduleId non fornito');
     return;
   }
   
+  console.log('ReportNavigation: Tentativo scroll a:', moduleId);
   Logger.debug('ReportNavigation', `Tentativo scroll a: ${moduleId}`);
   
-  const element = document.getElementById(moduleId);
+  // Prova prima con l'ID esatto
+  let element = document.getElementById(moduleId);
+  
+  // Se non trovato, prova senza "sec-"
+  if (!element && moduleId.startsWith('sec-')) {
+    const altId = moduleId.replace('^sec-', '');
+    element = document.getElementById(altId);
+    if (element) {
+      console.log('ReportNavigation: Trovato con ID alternativo:', altId);
+    }
+  }
+  
+  // Se ancora non trovato, cerca nell'HTML
   if (!element) {
+    const allArticles = document.querySelectorAll('article[id], section[id]');
+    for (const el of allArticles) {
+      if (el.id && el.id.includes(moduleId.replace('sec-', ''))) {
+        element = el;
+        console.log('ReportNavigation: Trovato elemento simile:', el.id);
+        break;
+      }
+    }
+  }
+  
+  if (!element) {
+    console.error('ReportNavigation: Elemento non trovato:', moduleId);
     Logger.warn('ReportNavigation', `Elemento con ID "${moduleId}" non trovato nel DOM`);
-    // Prova a trovare elementi simili per debug
-    const allIds = Array.from(document.querySelectorAll('[id]')).map(el => el.id);
-    Logger.debug('ReportNavigation', `ID disponibili: ${allIds.slice(0, 10).join(', ')}...`);
+    // Debug: mostra ID disponibili
+    const allIds = Array.from(document.querySelectorAll('article[id], section[id]')).map(el => el.id).filter(Boolean);
+    console.log('ReportNavigation: ID disponibili:', allIds.slice(0, 20));
     return;
   }
   
-  const headerHeight = 64; // Altezza header fisso
-  const tickerHeight = 80; // Altezza approssimativa ticker
+  // Calcola offset considerando header e ticker
+  const headerHeight = 64;
+  const headerTicker = document.getElementById('header-ticker-slot');
+  const tickerHeight = headerTicker ? headerTicker.offsetHeight : 0;
   const elementRect = element.getBoundingClientRect();
   const elementTop = elementRect.top + window.scrollY;
-  const offset = elementTop - headerHeight - tickerHeight - 20;
+  const offset = elementTop - headerHeight - tickerHeight - 32; // 32px di margine
   
-  Logger.debug('ReportNavigation', `Scroll: elementTop=${elementTop}, offset=${offset}, scrollY=${window.scrollY}`);
+  console.log('ReportNavigation: Scroll', {
+    moduleId,
+    elementTop,
+    offset,
+    scrollY: window.scrollY,
+    headerHeight,
+    tickerHeight
+  });
   
+  // Scroll
   window.scrollTo({
     top: Math.max(0, offset),
     behavior: 'smooth'
   });
 
-  // Aggiorna hash (senza triggerare hashchange)
+  // Aggiorna hash
   if (window.location.hash !== `#${moduleId}`) {
     history.pushState(null, '', `#${moduleId}`);
   }
 
-  // Aggiorna stato attivo immediatamente
+  // Aggiorna stato attivo
   REPORT_NAVIGATION._currentModule = moduleId;
   updateIndexActiveState(moduleId);
   
+  console.log('ReportNavigation: Scroll completato');
   Logger.debug('ReportNavigation', `Scroll completato a modulo ${moduleId}`);
 }
 
@@ -509,12 +563,12 @@ export const reportNavigation = {
       searchContainer.innerHTML = renderSearch();
     }
 
-    // Setup event handlers - con delay per assicurarsi che il DOM sia pronto
-    setTimeout(() => {
-      setupEventHandlers();
-      
-      // Inizializza scroll tracking dopo un breve delay per assicurarsi che i moduli siano renderizzati
-      setTimeout(() => {
+    // Setup event handlers immediatamente - usa event delegation quindi funziona anche se elementi non sono ancora nel DOM
+    setupEventHandlers();
+    
+    // Inizializza scroll tracking dopo che i moduli sono renderizzati
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
         updateActiveModule();
         
         // Gestisci hash iniziale se presente
@@ -522,13 +576,13 @@ export const reportNavigation = {
           const hash = window.location.hash.slice(1);
           if (hash) {
             setTimeout(() => {
-              Logger.debug('ReportNavigation', `Scroll a hash iniziale: ${hash}`);
+              console.log('ReportNavigation: Scroll a hash iniziale:', hash);
               scrollToModule(hash);
-            }, 200);
+            }, 300);
           }
         }
-      }, 200);
-    }, 100);
+      });
+    });
 
     Logger.debug('ReportNavigation', 'Navigazione inizializzata', { modulesCount: modules.length });
   },
@@ -559,10 +613,8 @@ export const reportNavigation = {
     
     if (REPORT_NAVIGATION._indexContainer) {
       REPORT_NAVIGATION._indexContainer.innerHTML = renderIndex(REPORT_NAVIGATION._modules);
-      // Re-bind event handlers dopo aggiornamento
-      setTimeout(() => {
-        setupEventHandlers();
-      }, 50);
+      // Gli event handlers usano event delegation, quindi non serve re-bindare
+      updateActiveModule();
     }
   }
 };
