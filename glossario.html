@@ -118,57 +118,7 @@
       flex-shrink: 0;
     }
     
-    /* ===== FOOTER ===== */
-    .site-footer {
-      position: relative;
-      z-index: 10; /* sotto header e panel overlay */
-      background: var(--footer-bg);
-      border-top: 1px solid var(--footer-br);
-      color: var(--ink-soft);
-      font-size: 14px;
-    }
-    .ftr-head {
-      font-weight: 600;
-      display:flex; align-items:center; gap:.5rem;
-      color: var(--ink);
-      margin-bottom: .6rem;
-    }
-    .ftr-grid { display:grid; gap:2rem; grid-template-columns: 1fr; }
-    @media (min-width: 768px){ .ftr-grid { grid-template-columns: repeat(3, 1fr); } }
-    .ftr-list li { margin:.25rem 0; }
-    .ftr-bottom {
-      border-top: 1px solid var(--br-soft);
-      margin-top: 2rem; padding-top: 1rem;
-      display: flex; flex-direction: column; gap: .5rem;
-      font-size: 13px; color: var(--muted);
-    }
-    @media (min-width: 768px){
-      .ftr-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
-    }
-
-    /* Link & social */
-    .site-footer a {
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: color .18s ease, border-color .18s ease, opacity .18s ease, transform .18s ease;
-    }
-    .site-footer a:hover { border-bottom-color: currentColor; }
-    a.mail-link { text-underline-offset: 2px; text-decoration-thickness: 1px; }
-
-    .ftr-socials a{
-      position: relative;
-      display:flex; align-items:center; gap:.5rem;
-      color: var(--ink-soft);
-    }
-    .ftr-socials a::after{
-      content:"";
-      position:absolute; left:19px; right:0; bottom:-2px; height:1px;
-      background: currentColor;
-      opacity:0; transform: scaleX(.35); transform-origin:left;
-      transition: transform .18s ease, opacity .18s ease;
-    }
-    .ftr-socials a:hover{ color: var(--ink); transform: translateX(2px); }
-    .ftr-socials a:hover::after{ opacity:.6; transform: scaleX(1); }
+    /* Footer gestito da tokens.css - nessuno stile aggiuntivo necessario */
     
     main {
       flex: 1 1 0%;
