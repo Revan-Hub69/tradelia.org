@@ -332,30 +332,9 @@ function setupEventHandlers() {
     });
   }
 
-  // Toggle indice - usa event delegation
-  const indexContainer = REPORT_NAVIGATION._indexContainer;
-  if (indexContainer) {
-    indexContainer.addEventListener('click', (e) => {
-      // Toggle button
-      if (e.target.matches('.report-index-toggle') || e.target.closest('.report-index-toggle')) {
-        const index = indexContainer.querySelector('.report-index');
-        const toggle = indexContainer.querySelector('.report-index-toggle');
-        if (index && toggle) {
-          index.classList.toggle('is-collapsed');
-          const isCollapsed = index.classList.contains('is-collapsed');
-          toggle.setAttribute('aria-expanded', !isCollapsed);
-          userPreferences.set('indexCollapsed', isCollapsed);
-        }
-      }
-      
-    });
-  }
+  // Indice rimosso - nessun handler necessario
 
-  // Scroll tracking - solo una volta
-  window.addEventListener('scroll', () => {
-    clearTimeout(_scrollTimeout);
-    _scrollTimeout = setTimeout(updateActiveModule, 100);
-  }, { passive: true });
+  // Scroll tracking rimosso - l'indice è stato rimosso
 
   // Hash change (per deep linking)
   window.addEventListener('hashchange', () => {
