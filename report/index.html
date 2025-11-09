@@ -138,13 +138,11 @@
       flex-shrink: 0;
     }
     
-    /* Footer viene dopo main */
-    footer.site-footer {
-      order: 3;
-    }
+    /* Footer gestito completamente da tokens.css - nessuno stile aggiuntivo necessario */
     
     /* ===== FOOTER ISTITUZIONALE INNOVATIVO ===== */
-    /* Breakpoint: mobile < 768px, desktop >= 768px */
+    /* RIMOSSO: Footer gestito da tokens.css */
+    /*
     .site-footer {
       position: relative;
       flex-shrink: 0;
@@ -592,28 +590,12 @@
     
     /* ===== MOBILE ===== */
     @media (max-width: 768px) {
-      .hdr {
-        height: 64px;
-      }
-      
       #header-ticker-slot {
         margin-top: 64px;
         padding: var(--sp-6) 0 var(--sp-4);
       }
       
-      .site-footer {
-        padding: var(--sp-8) 0 var(--sp-6);
-      }
-      
-      .ftr-grid {
-        gap: var(--sp-6);
-        margin-bottom: var(--sp-6);
-      }
-      
-      .ftr-bottom {
-        margin-top: var(--sp-6);
-        padding-top: var(--sp-4);
-      }
+      /* Footer e header gestiti da tokens.css e global-header.css */
     }
     
     /* ===== REPORT SECTIONS ===== */
