@@ -96,24 +96,68 @@ header.hdr .container {
 
 .header-dashboard-link,
 .hdr .header-dashboard-link {
-  display: flex !important;
+  display: inline-flex !important;
   align-items: center !important;
   gap: 0.5rem !important;
-  padding: 0.5rem 0.75rem !important;
+  padding: 0.625rem 1rem !important;
   color: var(--ink-soft, #f0f0f0) !important;
   text-decoration: none !important;
   font-size: 13px !important;
-  font-weight: 500 !important;
-  border-radius: 6px !important;
-  transition: all 0.2s !important;
-  border: 1px solid transparent !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(8px) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.header-dashboard-link::before,
+.hdr .header-dashboard-link::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%) !important;
+  opacity: 0 !important;
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  z-index: -1 !important;
 }
 
 .header-dashboard-link:hover,
 .hdr .header-dashboard-link:hover {
   color: var(--ink, #ffffff) !important;
-  background: rgba(255, 255, 255, 0.04) !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(37, 99, 235, 0.2) !important;
+}
+
+.header-dashboard-link:hover::before,
+.hdr .header-dashboard-link:hover::before {
+  opacity: 1 !important;
+}
+
+.header-dashboard-link:active,
+.hdr .header-dashboard-link:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+}
+
+.header-dashboard-link svg,
+.hdr .header-dashboard-link svg {
+  width: 18px !important;
+  height: 18px !important;
+  flex-shrink: 0 !important;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.header-dashboard-link:hover svg,
+.hdr .header-dashboard-link:hover svg {
+  transform: scale(1.1) !important;
 }
 
 /* ===== LANGUAGE SELECTOR ===== */

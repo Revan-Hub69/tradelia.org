@@ -4,7 +4,6 @@
 
 import Logger from '../utils/logger.js';
 import { userPreferences } from '../utils/user-preferences.js';
-import { i18n } from '../utils/i18n.js';
 
 const REPORT_NAVIGATION = {
   _indexContainer: null,
@@ -53,10 +52,10 @@ function renderIndex(modules) {
   }).join('');
 
   return `
-    <nav class="report-index" role="navigation" aria-label="${i18n.t('nav.index.title')}">
+    <nav class="report-index" role="navigation" aria-label="Indice report">
       <div class="report-index-header">
-        <h3 class="report-index-title" data-i18n="nav.index.title">${i18n.t('nav.index.title')}</h3>
-        <button class="report-index-toggle" aria-label="${i18n.t('common.open')}" type="button">
+        <h3 class="report-index-title">Indice</h3>
+        <button class="report-index-toggle" aria-label="Apri/Chiudi indice" type="button">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -77,7 +76,7 @@ function renderBreadcrumb(module) {
     <nav class="report-breadcrumb" role="navigation" aria-label="Breadcrumb">
       <ol class="report-breadcrumb-list">
         <li class="report-breadcrumb-item">
-          <a href="/report" class="report-breadcrumb-link" data-i18n="nav.breadcrumb.report">${i18n.t('nav.breadcrumb.report')}</a>
+          <a href="/report" class="report-breadcrumb-link">Report</a>
         </li>
         <li class="report-breadcrumb-item" aria-current="page">
           <span class="report-breadcrumb-separator">/</span>
@@ -99,12 +98,11 @@ function renderSearch() {
         <input 
           type="search" 
           class="report-search-input" 
-          placeholder="${i18n.t('nav.search.placeholder')}" 
-          aria-label="${i18n.t('nav.search.placeholder')}"
+          placeholder="Cerca nel report..." 
+          aria-label="Cerca nel report"
           autocomplete="off"
-          data-i18n-placeholder="nav.search.placeholder"
         />
-        <button class="report-search-clear" aria-label="${i18n.t('common.close')}" type="button" hidden>
+        <button class="report-search-clear" aria-label="Chiudi" type="button" hidden>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
@@ -170,7 +168,7 @@ function renderSearchResults(results, query) {
   if (results.length === 0) {
     return `
       <div class="report-search-results-empty">
-        ${i18n.t('nav.search.noResults')} "${escapeHtml(query)}"
+        Nessun risultato per "${escapeHtml(query)}"
       </div>
     `;
   }
@@ -178,9 +176,9 @@ function renderSearchResults(results, query) {
   const resultsHTML = results.map(result => {
     const module = REPORT_NAVIGATION._modules[result.module];
     const typeLabels = {
-      title: i18n.t('nav.search.resultType.title'),
-      desc: i18n.t('nav.search.resultType.desc'),
-      metric: i18n.t('nav.search.resultType.metric')
+      title: 'Titolo',
+      desc: 'Descrizione',
+      metric: 'Metrica'
     };
     const typeLabel = typeLabels[result.type] || result.type;
     return `
@@ -197,8 +195,8 @@ function renderSearchResults(results, query) {
     `;
   }).join('');
 
-  const resultsCount = i18n.tPlural('nav.search.results', results.length);
-  const foundLabel = i18n.tPlural('nav.search.found', results.length);
+  const resultsCount = results.length === 1 ? 'risultato' : 'risultati';
+  const foundLabel = 'trovato';
 
   return `
     <div class="report-search-results-list">
@@ -319,14 +317,21 @@ function setupEventHandlers() {
     });
   }
 
-  // Click su risultati ricerca
+  // Click su risultati ricerca - usa event delegation
   if (searchResults) {
     searchResults.addEventListener('click', (e) => {
       const resultItem = e.target.closest('.report-search-result-item');
       if (resultItem) {
+        e.preventDefault();
         const moduleId = resultItem.getAttribute('data-module-id');
-        scrollToModule(moduleId);
-        searchResults.hidden = true;
+        if (moduleId) {
+          scrollToModule(moduleId);
+          searchResults.hidden = true;
+          if (searchInput) {
+            searchInput.value = '';
+            if (searchClear) searchClear.hidden = true;
+          }
+        }
       }
     });
   }
@@ -346,15 +351,20 @@ function setupEventHandlers() {
     });
   }
 
-  // Click su indice
-  const indexItems = document.querySelectorAll('.report-index-item');
-  indexItems.forEach(item => {
-    item.addEventListener('click', (e) => {
-      e.preventDefault();
-      const moduleId = item.getAttribute('data-module-id');
-      scrollToModule(moduleId);
+  // Click su indice - usa event delegation per gestire elementi aggiunti dinamicamente
+  const indexList = document.querySelector('.report-index-list');
+  if (indexList) {
+    indexList.addEventListener('click', (e) => {
+      const item = e.target.closest('.report-index-item');
+      if (item) {
+        e.preventDefault();
+        const moduleId = item.getAttribute('data-module-id');
+        if (moduleId) {
+          scrollToModule(moduleId);
+        }
+      }
     });
-  });
+  }
 
   // Scroll tracking
   let scrollTimeout;
@@ -373,24 +383,32 @@ function setupEventHandlers() {
 }
 
 function scrollToModule(moduleId) {
+  if (!moduleId) return;
+  
   const element = document.getElementById(moduleId);
-  if (element) {
-    const headerHeight = 64; // Altezza header fisso
-    const offset = element.getBoundingClientRect().top + window.scrollY - headerHeight - 20;
-    
-    window.scrollTo({
-      top: offset,
-      behavior: 'smooth'
-    });
-
-    // Aggiorna hash (senza triggerare hashchange)
-    if (window.location.hash !== `#${moduleId}`) {
-      history.pushState(null, '', `#${moduleId}`);
-    }
-
-    REPORT_NAVIGATION._currentModule = moduleId;
-    updateIndexActiveState(moduleId);
+  if (!element) {
+    Logger.warn('ReportNavigation', `Elemento con ID ${moduleId} non trovato`);
+    return;
   }
+  
+  const headerHeight = 64; // Altezza header fisso
+  const elementTop = element.getBoundingClientRect().top + window.scrollY;
+  const offset = elementTop - headerHeight - 20;
+  
+  window.scrollTo({
+    top: Math.max(0, offset),
+    behavior: 'smooth'
+  });
+
+  // Aggiorna hash (senza triggerare hashchange)
+  if (window.location.hash !== `#${moduleId}`) {
+    history.pushState(null, '', `#${moduleId}`);
+  }
+
+  REPORT_NAVIGATION._currentModule = moduleId;
+  updateIndexActiveState(moduleId);
+  
+  Logger.debug('ReportNavigation', `Scroll a modulo ${moduleId}`);
 }
 
 // ===== PUBLIC API =====
@@ -440,11 +458,20 @@ export const reportNavigation = {
       searchContainer.innerHTML = renderSearch();
     }
 
-    // Setup event handlers
-    setupEventHandlers();
-
-    // Inizializza scroll tracking
-    updateActiveModule();
+    // Setup event handlers - con delay per assicurarsi che il DOM sia pronto
+    setTimeout(() => {
+      setupEventHandlers();
+      // Inizializza scroll tracking
+      updateActiveModule();
+      
+      // Gestisci hash iniziale se presente
+      if (window.location.hash) {
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+          setTimeout(() => scrollToModule(hash), 100);
+        }
+      }
+    }, 100);
 
     Logger.debug('ReportNavigation', 'Navigazione inizializzata', { modulesCount: modules.length });
   },
@@ -475,7 +502,10 @@ export const reportNavigation = {
     
     if (REPORT_NAVIGATION._indexContainer) {
       REPORT_NAVIGATION._indexContainer.innerHTML = renderIndex(REPORT_NAVIGATION._modules);
-      setupEventHandlers();
+      // Re-bind event handlers dopo aggiornamento
+      setTimeout(() => {
+        setupEventHandlers();
+      }, 50);
     }
   }
 };
