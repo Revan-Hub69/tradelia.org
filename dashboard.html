@@ -1220,10 +1220,25 @@
     function updateShortcutHints() {
       const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
       const modKey = isMac ? '⌘' : 'Ctrl';
-      document.getElementById('reports-shortcut-mod').textContent = modKey;
-      document.getElementById('tutorials-shortcut-mod').textContent = modKey;
+      
+      // Aggiorna solo se gli elementi esistono (null-safe)
+      const reportsShortcut = document.getElementById('reports-shortcut-mod');
+      if (reportsShortcut) {
+        reportsShortcut.textContent = modKey;
+      }
+      
+      const tutorialsShortcut = document.getElementById('tutorials-shortcut-mod');
+      if (tutorialsShortcut) {
+        tutorialsShortcut.textContent = modKey;
+      }
     }
-    updateShortcutHints();
+    
+    // Esegui solo quando il DOM è pronto
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', updateShortcutHints);
+    } else {
+      updateShortcutHints();
+    }
     
     // ===== REPORTS LOADER =====
     async function loadReports() {
