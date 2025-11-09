@@ -1149,36 +1149,7 @@
       color: inherit;
     }
 
-    /* ===== HEADER ===== */
-    .hdr {
-      position: fixed; 
-      top: 0; 
-      left: 0; 
-      right: 0; 
-      height: 64px; 
-      z-index: 1000;
-      display: flex; 
-      align-items: center;
-      backdrop-filter: blur(16px) saturate(1.2);
-      background: linear-gradient(
-        180deg,
-        rgba(15, 15, 15, 0.96) 0%,
-        rgba(15, 15, 15, 0.92) 100%
-      );
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
-    }
-
-    /* ===== BRAND ===== */
-    .brand { font-weight: 900; letter-spacing: -0.02em; display:inline-flex; align-items:center; gap:.35rem; }
-    .brand-word { color: var(--ink); }
-    .brand-suffix { color: var(--ink); font-weight: 900; }
-    .brand-dot { width:10px; height:10px; border-radius:999px; background: var(--brand-600); display:inline-block; }
-    .brand--sm .brand-word { font-weight: 700; }
-    .brand--sm .brand-dot { width:8px; height:8px; }
-    .brand--sm .brand-suffix { font-weight: 700; }
-    a.brand { transition: opacity .18s ease, transform .18s ease; }
-    a.brand:hover { opacity:.9; transform: translateY(-1px); }
+    /* Header gestito completamente da global-header.css - nessuno stile aggiuntivo necessario */
 
     /* Scrollbar gestita da tokens.css - rimossa custom light */
     .modal {
