@@ -185,20 +185,22 @@ a[role="button"]:focus-visible {
 
 /* ===== LINKS COHERENCE ===== */
 /* Footer gestito completamente da tokens.css - escludiamo footer dai link generici */
+/* Header gestito completamente da global-header.css - escludiamo header dai link generici */
 /* NOTA: Gli stili del footer sono in tokens.css e hanno priorità più alta */
-a:not(.btn):not([role="button"]) {
+/* NOTA: Gli stili dell'header sono in global-header.css e hanno priorità più alta */
+a:not(.btn):not([role="button"]):not(.site-footer a):not(.ftr-quick-links a):not(.ftr-socials a):not(.hdr a):not(.header-dashboard-link):not(.brand) {
   color: var(--brand-400);
   text-decoration: none;
   border-bottom: 1px solid transparent;
   transition: all var(--transition-base);
 }
 
-a:not(.btn):not([role="button"]):hover {
+a:not(.btn):not([role="button"]):not(.site-footer a):not(.ftr-quick-links a):not(.ftr-socials a):not(.hdr a):not(.header-dashboard-link):not(.brand):hover {
   color: var(--brand-300);
   border-bottom-color: currentColor;
 }
 
-a:not(.btn):not([role="button"]):focus-visible {
+a:not(.btn):not([role="button"]):not(.site-footer a):not(.ftr-quick-links a):not(.ftr-socials a):not(.hdr a):not(.header-dashboard-link):not(.brand):focus-visible {
   outline: 2px solid var(--brand-500);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
@@ -212,6 +214,16 @@ a:not(.btn):not([role="button"]):focus-visible {
 .site-footer a.mail-link {
   /* Tutti gli stili del footer sono gestiti da tokens.css */
   /* Questa regola assicura che tokens.css abbia priorità */
+}
+
+/* Override per header: global-header.css gestisce tutti gli stili dell'header */
+.hdr a,
+.hdr .brand,
+.hdr .header-dashboard-link,
+.hdr .header-lang-btn,
+.hdr .header-actions a {
+  /* Tutti gli stili dell'header sono gestiti da global-header.css */
+  /* Questa regola assicura che global-header.css abbia priorità */
 }
 
 /* ===== LISTS COHERENCE ===== */
