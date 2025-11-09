@@ -333,6 +333,18 @@
       font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
     }
     
+    /* Hide loading by default after page load - JavaScript will handle removal */
+    body.loaded .loading,
+    .loading.hidden,
+    .loading[style*="display: none"],
+    .loading[style*="display:none"] {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      height: 0 !important;
+      overflow: hidden !important;
+    }
+    
     .loading-spinner {
       display: inline-block;
       width: 16px;
@@ -1093,7 +1105,7 @@
         </div>
         
         <div id="reports-container">
-          <div class="loading">
+          <div class="loading" id="initial-loading" style="display: none;">
             <div class="loading-spinner"></div>
             <span>Caricamento report...</span>
           </div>
@@ -1182,26 +1194,32 @@
     async function loadReports() {
       const container = document.getElementById('reports-container');
       if (!container) {
-        console.error('Container reports-container non trovato!');
+        console.error('loadReports: Container reports-container non trovato!');
         return;
       }
       
       console.log('loadReports: Inizio caricamento report');
       
-      // Rimuovi loading state IMMEDIATAMENTE all'inizio (safety) - NON aspettare
+      // RIMUOVI LOADING STATE IMMEDIATAMENTE - MULTIPLE STRATEGIES
       const loadingEls = container.querySelectorAll('.loading');
       loadingEls.forEach((el, idx) => {
         console.log(`loadReports: Rimozione loading element #${idx} immediatamente`);
         el.style.display = 'none';
-        // NON rimuovere subito, solo nascondere - lo rimuoveremo dopo il rendering
+        el.style.visibility = 'hidden';
+        el.style.opacity = '0';
+        el.remove(); // Rimuovi subito dal DOM
       });
       
-      // Mostra un messaggio temporaneo durante il caricamento
-      const loadingMsg = document.createElement('div');
-      loadingMsg.id = 'loading-temp-msg';
-      loadingMsg.style.cssText = 'padding: 1rem; text-align: center; color: var(--dash-text-muted); font-size: 13px;';
-      loadingMsg.textContent = 'Caricamento report...';
-      container.appendChild(loadingMsg);
+      // Rimuovi anche per ID o altri selettori
+      const loadingById = document.getElementById('loading-temp-msg');
+      if (loadingById) loadingById.remove();
+      
+      // Pulisci container se contiene solo loading
+      const containerHTML = container.innerHTML.trim();
+      if (containerHTML.includes('loading') || containerHTML.includes('Caricamento')) {
+        console.log('loadReports: Container contiene loading, pulizia');
+        container.innerHTML = '';
+      }
       
       try {
         // Carica lista report da manifest (se disponibile) o usa lista hardcoded
@@ -1437,18 +1455,9 @@
         
         console.log('loadReports: State aggiornato, inizio rendering');
         
-        // RIMUOVI TUTTI GLI ELEMENTI LOADING E IL MESSAGGIO TEMPORANEO
-        const loadingElsFinal = container.querySelectorAll('.loading');
-        loadingElsFinal.forEach(el => {
-          console.log('loadReports: Rimozione loading element finale');
-          el.remove(); // Rimuovi completamente dal DOM
-        });
-        
-        // Rimuovi messaggio temporaneo
-        const loadingMsg = document.getElementById('loading-temp-msg');
-        if (loadingMsg) {
-          loadingMsg.remove();
-        }
+        // PULISCI COMPLETAMENTE IL CONTAINER PRIMA DI RENDERIZZARE
+        console.log('loadReports: Pulizia container prima del rendering');
+        container.innerHTML = ''; // Pulisci tutto, incluso loading
         
         // Render using dedicated function (anche se array vuoto)
         try {
@@ -1457,9 +1466,7 @@
           console.log('loadReports: renderReportsList completata');
         } catch(err) {
           console.error('loadReports: Errore renderReportsList:', err);
-          // Rimuovi loading anche in caso di errore
-          const loadingEls = container.querySelectorAll('.loading, #loading-temp-msg');
-          loadingEls.forEach(el => el.remove());
+          // Mostra errore nel container
           container.innerHTML = `<div class="empty-state">Errore nel rendering: ${err.message || 'Errore sconosciuto'}</div>`;
         }
         
@@ -1745,22 +1752,15 @@
       const container = document.getElementById('reports-container');
       if (!container) {
         console.error('renderReportsList: Container non trovato!');
-        // Rimuovi loading anche se container non esiste
-        const loadingEl = document.querySelector('#reports-container .loading');
-        if (loadingEl) {
-          loadingEl.style.display = 'none';
-          loadingEl.remove();
-        }
         return;
       }
       
-      // RIMUOVI LOADING STATE IMMEDIATAMENTE (multiple safety checks)
-      const loadingEls = container.querySelectorAll('.loading');
-      loadingEls.forEach(el => {
-        console.log('renderReportsList: Rimozione loading element');
-        el.style.display = 'none';
-        el.remove();
-      });
+      // PULISCI COMPLETAMENTE IL CONTAINER (incluso qualsiasi loading rimasto)
+      console.log('renderReportsList: Pulizia completa container');
+      container.innerHTML = '';
+      
+      // Assicurati che body sia marked as loaded
+      document.body.classList.add('loaded');
       
       if (!reports || reports.length === 0) {
         console.log('renderReportsList: Nessun report, mostro empty state');
@@ -1917,8 +1917,76 @@
       }
     }
     
+    // ===== FORCE REMOVE LOADING IMMEDIATELY =====
+    // Rimuovi loading IMMEDIATAMENTE quando lo script viene eseguito (prima di tutto)
+    function forceRemoveLoading() {
+      console.log('forceRemoveLoading: Rimozione forzata loading immediata');
+      
+      // Marca body come loaded per attivare CSS
+      document.body.classList.add('loaded');
+      
+      const container = document.getElementById('reports-container');
+      if (container) {
+        // Rimuovi TUTTI gli elementi loading con multiple strategie
+        const loadingEls = container.querySelectorAll('.loading, #initial-loading');
+        loadingEls.forEach(el => {
+          console.log('forceRemoveLoading: Rimozione elemento loading');
+          el.classList.add('hidden');
+          el.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; height: 0 !important; overflow: hidden !important;';
+          try {
+            el.remove();
+          } catch(e) {
+            console.warn('forceRemoveLoading: Errore rimozione elemento:', e);
+          }
+        });
+        
+        // Rimuovi anche per classe CSS (doppio check)
+        const loadingByClass = container.getElementsByClassName('loading');
+        Array.from(loadingByClass).forEach(el => {
+          el.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+          try {
+            el.remove();
+          } catch(e) {}
+        });
+        
+        // Rimuovi loading spinner specifico
+        const spinner = container.querySelector('.loading-spinner');
+        if (spinner) {
+          spinner.parentElement?.remove();
+        }
+        
+        // Se il container contiene solo loading o è vuoto, mostra messaggio
+        const containerText = container.textContent?.trim() || '';
+        const containerHTML = container.innerHTML.trim();
+        if (!containerText || containerText.toLowerCase().includes('caricamento') || containerHTML.includes('loading-spinner')) {
+          console.log('forceRemoveLoading: Container vuoto o contiene loading, mostro messaggio iniziale');
+          // NON sostituire subito, aspetta che loadReports lo faccia
+        }
+      } else {
+        console.error('forceRemoveLoading: Container reports-container non trovato!');
+      }
+    }
+    
+    // Esegui IMMEDIATAMENTE (prima che qualsiasi altro script)
+    (function() {
+      forceRemoveLoading();
+      
+      // Esegui anche quando il DOM è pronto (multiple safety checks)
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          setTimeout(forceRemoveLoading, 0);
+        });
+      } else {
+        setTimeout(forceRemoveLoading, 0);
+      }
+      
+      // Esegui anche dopo un breve delay (ultima sicurezza)
+      setTimeout(forceRemoveLoading, 50);
+      setTimeout(forceRemoveLoading, 100);
+    })();
+    
     // ===== INIT =====
-    // Safety timeout per rimuovere loading se qualcosa va storto (ridotto a 5 secondi)
+    // Safety timeout per rimuovere loading se qualcosa va storto (ridotto a 3 secondi)
     let loadingTimeout;
     let loadingCompleted = false;
     
@@ -1928,62 +1996,72 @@
         return;
       }
       console.warn('removeLoadingSafety: TIMEOUT - rimozione forzata loading state');
+      forceRemoveLoading();
       const container = document.getElementById('reports-container');
       if (container) {
-        // Rimuovi TUTTI gli elementi loading
-        const loadingEls = container.querySelectorAll('.loading');
-        loadingEls.forEach(el => {
-          console.warn('removeLoadingSafety: Rimozione forzata elemento loading');
-          el.style.display = 'none';
-          el.remove();
-        });
-        
         // Se il container è ancora vuoto o contiene solo loading, mostra messaggio
         const containerText = container.textContent?.trim() || '';
         if (!containerText || containerText.toLowerCase().includes('caricamento')) {
           console.warn('removeLoadingSafety: Container vuoto dopo timeout, mostro errore');
           container.innerHTML = `<div class="empty-state">Timeout caricamento report. <a href="javascript:location.reload()">Ricarica pagina</a></div>`;
         }
-      } else {
-        console.error('removeLoadingSafety: Container non trovato!');
       }
     }
     
-    loadingTimeout = setTimeout(removeLoadingSafety, 5000); // 5 secondi timeout (ridotto)
-    console.log('INIT: Timeout sicurezza impostato a 5 secondi');
+    loadingTimeout = setTimeout(removeLoadingSafety, 3000); // 3 secondi timeout (ridotto ulteriormente)
+    console.log('INIT: Timeout sicurezza impostato a 3 secondi');
     
-    // Carica report
-    loadReports().catch(err => {
-      console.error('INIT: Errore loadReports:', err);
-      loadingCompleted = true;
-      if (loadingTimeout) {
-        clearTimeout(loadingTimeout);
-        console.log('INIT: Timeout cancellato dopo errore');
-      }
+    // Aspetta che il DOM sia completamente pronto prima di chiamare loadReports
+    function initDashboard() {
+      console.log('initDashboard: Inizializzazione dashboard');
       const container = document.getElementById('reports-container');
-      if (container) {
-        // Rimuovi loading
-        const loadingEls = container.querySelectorAll('.loading');
-        loadingEls.forEach(el => {
-          el.style.display = 'none';
-          el.remove();
-        });
-        container.innerHTML = `<div class="empty-state">Errore caricamento report: ${err.message || 'Errore sconosciuto'}</div>`;
+      if (!container) {
+        console.error('initDashboard: Container non trovato!');
+        return;
       }
-    }).then(() => {
-      loadingCompleted = true;
-      if (loadingTimeout) {
-        clearTimeout(loadingTimeout);
-        console.log('INIT: Timeout cancellato dopo successo');
-      }
-      console.log('INIT: Dashboard caricata completamente');
-      // Setup scroll controls dopo che il DOM è stato aggiornato
-      setTimeout(() => {
-        setupScrollControls();
-      }, 100);
-    }).catch(err => {
-      console.error('INIT: Errore in then/catch:', err);
-    });
+      
+      // Rimuovi loading prima di iniziare
+      forceRemoveLoading();
+      
+      // Carica report
+      loadReports().catch(err => {
+        console.error('INIT: Errore loadReports:', err);
+        loadingCompleted = true;
+        if (loadingTimeout) {
+          clearTimeout(loadingTimeout);
+          console.log('INIT: Timeout cancellato dopo errore');
+        }
+        forceRemoveLoading();
+        const container = document.getElementById('reports-container');
+        if (container) {
+          container.innerHTML = `<div class="empty-state">Errore caricamento report: ${err.message || 'Errore sconosciuto'}</div>`;
+        }
+      }).then(() => {
+        loadingCompleted = true;
+        if (loadingTimeout) {
+          clearTimeout(loadingTimeout);
+          console.log('INIT: Timeout cancellato dopo successo');
+        }
+        console.log('INIT: Dashboard caricata completamente');
+        // Setup scroll controls dopo che il DOM è stato aggiornato
+        setTimeout(() => {
+          setupScrollControls();
+        }, 100);
+      }).catch(err => {
+        console.error('INIT: Errore in then/catch:', err);
+        forceRemoveLoading();
+      });
+    }
+    
+    // Inizializza quando il DOM è pronto
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(initDashboard, 100);
+      });
+    } else {
+      // DOM già pronto
+      setTimeout(initDashboard, 100);
+    }
   </script>
   
   <!-- ===== LEGAL OVERLAY ===== -->
@@ -2162,4 +2240,5 @@
   </script>
 </body>
 </html>
+
 
