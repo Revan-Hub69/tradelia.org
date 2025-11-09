@@ -184,6 +184,8 @@ a[role="button"]:focus-visible {
 }
 
 /* ===== LINKS COHERENCE ===== */
+/* Footer gestito completamente da tokens.css - escludiamo footer dai link generici */
+/* NOTA: Gli stili del footer sono in tokens.css e hanno priorità più alta */
 a:not(.btn):not([role="button"]) {
   color: var(--brand-400);
   text-decoration: none;
@@ -200,6 +202,16 @@ a:not(.btn):not([role="button"]):focus-visible {
   outline: 2px solid var(--brand-500);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
+}
+
+/* Override per footer: tokens.css gestisce tutti gli stili del footer */
+.site-footer a,
+.site-footer .ftr-quick-links a,
+.site-footer .ftr-socials a,
+.site-footer .ftr-bottom a,
+.site-footer a.mail-link {
+  /* Tutti gli stili del footer sono gestiti da tokens.css */
+  /* Questa regola assicura che tokens.css abbia priorità */
 }
 
 /* ===== LISTS COHERENCE ===== */

@@ -2082,17 +2082,21 @@ a:focus-visible {
 }
 
 /* Applica a link footer quick-links */
-.ftr-quick-links a {
-  color: var(--ink-soft);
-  text-decoration: none;
-  font-size: var(--fs-14);
-  font-weight: 400;
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-  padding: var(--sp-1) 0;
-  position: relative;
-  padding-left: var(--sp-4);
+/* Priorità alta per sovrascrivere regole generiche */
+.ftr-quick-links a,
+.site-footer .ftr-quick-links a,
+.site-footer .ftr-quick-links a:not(.btn):not([role="button"]) {
+  color: var(--ink-soft) !important;
+  text-decoration: none !important;
+  font-size: var(--fs-14) !important;
+  font-weight: 400 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--sp-2) !important;
+  padding: var(--sp-1) 0 !important;
+  position: relative !important;
+  padding-left: var(--sp-4) !important;
+  border-bottom: none !important;
 }
 
 .ftr-quick-links a::before {
@@ -2117,19 +2121,24 @@ a:focus-visible {
   transform-origin: left;
 }
 
-.ftr-quick-links a:hover {
-  color: var(--ink);
-  padding-left: var(--sp-5);
-  transform: translateX(2px);
+.ftr-quick-links a:hover,
+.site-footer .ftr-quick-links a:hover,
+.site-footer .ftr-quick-links a:not(.btn):not([role="button"]):hover {
+  color: var(--ink) !important;
+  padding-left: var(--sp-5) !important;
+  transform: translateX(2px) !important;
+  border-bottom-color: transparent !important;
 }
 
-.ftr-quick-links a:hover::before {
-  color: var(--brand-600);
-  transform: translateX(0);
+.ftr-quick-links a:hover::before,
+.site-footer .ftr-quick-links a:hover::before {
+  color: var(--brand-600) !important;
+  transform: translateX(0) !important;
 }
 
-.ftr-quick-links a:hover::after {
-  width: calc(100% - var(--sp-5));
+.ftr-quick-links a:hover::after,
+.site-footer .ftr-quick-links a:hover::after {
+  width: calc(100% - var(--sp-5)) !important;
 }
 
 .ftr-list {
@@ -2330,18 +2339,21 @@ a.mail-link:hover::after {
   margin-top: var(--sp-1);
 }
 
-.ftr-socials a {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-  color: var(--ink-soft);
-  font-size: var(--fs-14);
-  font-weight: 400;
-  transition: all var(--transition-fast);
-  text-decoration: none;
-  padding: var(--sp-1) 0;
-  position: relative;
-  padding-left: var(--sp-4);
+.ftr-socials a,
+.site-footer .ftr-socials a,
+.site-footer .ftr-socials a:not(.btn):not([role="button"]) {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--sp-2) !important;
+  color: var(--ink-soft) !important;
+  font-size: var(--fs-14) !important;
+  font-weight: 400 !important;
+  transition: all var(--transition-fast) !important;
+  text-decoration: none !important;
+  padding: var(--sp-1) 0 !important;
+  position: relative !important;
+  padding-left: var(--sp-4) !important;
+  border-bottom: none !important;
 }
 
 /* Freccia a sinistra */
@@ -2368,19 +2380,24 @@ a.mail-link:hover::after {
   transform-origin: left;
 }
 
-.ftr-socials a:hover {
-  color: var(--ink);
-  padding-left: var(--sp-5);
-  transform: translateX(2px);
+.ftr-socials a:hover,
+.site-footer .ftr-socials a:hover,
+.site-footer .ftr-socials a:not(.btn):not([role="button"]):hover {
+  color: var(--ink) !important;
+  padding-left: var(--sp-5) !important;
+  transform: translateX(2px) !important;
+  border-bottom-color: transparent !important;
 }
 
-.ftr-socials a:hover::before {
-  color: var(--brand-600);
-  transform: translateX(0);
+.ftr-socials a:hover::before,
+.site-footer .ftr-socials a:hover::before {
+  color: var(--brand-600) !important;
+  transform: translateX(0) !important;
 }
 
-.ftr-socials a:hover::after {
-  width: calc(100% - var(--sp-5));
+.ftr-socials a:hover::after,
+.site-footer .ftr-socials a:hover::after {
+  width: calc(100% - var(--sp-5)) !important;
 }
 
 /* ===== ICONS ===== */
