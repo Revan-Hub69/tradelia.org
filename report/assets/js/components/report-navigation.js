@@ -220,42 +220,74 @@ function escapeRegex(str) {
 // ===== SCROLL TRACKING =====
 function updateActiveModule() {
   const modules = REPORT_NAVIGATION._modules;
-  if (!modules || modules.length === 0) return;
+  if (!modules || modules.length === 0) {
+    Logger.debug('ReportNavigation', 'Nessun modulo disponibile per scroll tracking');
+    return;
+  }
 
-  const scrollPosition = window.scrollY + 100; // Offset per header
+  const headerHeight = 64; // Altezza header fisso
+  const scrollPosition = window.scrollY + headerHeight + 100; // Offset per header + margine
   let activeModule = null;
+  let closestDistance = Infinity;
 
+  // Trova il modulo più vicino alla posizione di scroll
   modules.forEach(module => {
     const element = document.getElementById(module.id);
     if (element) {
       const rect = element.getBoundingClientRect();
       const elementTop = rect.top + window.scrollY;
       const elementBottom = elementTop + rect.height;
+      const elementCenter = elementTop + (rect.height / 2);
 
+      // Se siamo dentro il modulo
       if (scrollPosition >= elementTop && scrollPosition < elementBottom) {
         activeModule = module.id;
+      } else {
+        // Calcola distanza dal centro del modulo
+        const distance = Math.abs(scrollPosition - elementCenter);
+        if (distance < closestDistance && elementTop < scrollPosition) {
+          closestDistance = distance;
+          activeModule = module.id;
+        }
       }
+    } else {
+      Logger.warn('ReportNavigation', `Elemento con ID ${module.id} non trovato`);
     }
   });
 
   if (activeModule && activeModule !== REPORT_NAVIGATION._currentModule) {
     REPORT_NAVIGATION._currentModule = activeModule;
     updateIndexActiveState(activeModule);
+    Logger.debug('ReportNavigation', `Modulo attivo: ${activeModule}`);
   }
 }
 
 function updateIndexActiveState(activeModuleId) {
+  if (!activeModuleId) return;
+  
   const indexItems = document.querySelectorAll('.report-index-item');
+  let found = false;
+  
   indexItems.forEach(item => {
     const moduleId = item.getAttribute('data-module-id');
     if (moduleId === activeModuleId) {
       item.classList.add('is-active');
+      found = true;
       // Scroll indice per mostrare elemento attivo
-      item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      try {
+        item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+      } catch (e) {
+        // Fallback per browser che non supportano tutte le opzioni
+        item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
     } else {
       item.classList.remove('is-active');
     }
   });
+  
+  if (!found) {
+    Logger.warn('ReportNavigation', `Elemento indice con data-module-id="${activeModuleId}" non trovato`);
+  }
 }
 
 // ===== EVENT HANDLERS =====
@@ -354,16 +386,25 @@ function setupEventHandlers() {
   // Click su indice - usa event delegation per gestire elementi aggiunti dinamicamente
   const indexList = document.querySelector('.report-index-list');
   if (indexList) {
-    indexList.addEventListener('click', (e) => {
-      const item = e.target.closest('.report-index-item');
-      if (item) {
-        e.preventDefault();
-        const moduleId = item.getAttribute('data-module-id');
-        if (moduleId) {
-          scrollToModule(moduleId);
-        }
+    // Rimuovi listener precedenti se esistono
+    indexList.removeEventListener('click', handleIndexClick);
+    // Aggiungi nuovo listener
+    indexList.addEventListener('click', handleIndexClick);
+  }
+  
+  function handleIndexClick(e) {
+    const item = e.target.closest('.report-index-item');
+    if (item) {
+      e.preventDefault();
+      e.stopPropagation();
+      const moduleId = item.getAttribute('data-module-id');
+      if (moduleId) {
+        Logger.debug('ReportNavigation', `Click su indice: ${moduleId}`);
+        scrollToModule(moduleId);
+      } else {
+        Logger.warn('ReportNavigation', 'Click su indice: moduleId non trovato');
       }
-    });
+    }
   }
 
   // Scroll tracking
@@ -461,16 +502,22 @@ export const reportNavigation = {
     // Setup event handlers - con delay per assicurarsi che il DOM sia pronto
     setTimeout(() => {
       setupEventHandlers();
-      // Inizializza scroll tracking
-      updateActiveModule();
       
-      // Gestisci hash iniziale se presente
-      if (window.location.hash) {
-        const hash = window.location.hash.slice(1);
-        if (hash) {
-          setTimeout(() => scrollToModule(hash), 100);
+      // Inizializza scroll tracking dopo un breve delay per assicurarsi che i moduli siano renderizzati
+      setTimeout(() => {
+        updateActiveModule();
+        
+        // Gestisci hash iniziale se presente
+        if (window.location.hash) {
+          const hash = window.location.hash.slice(1);
+          if (hash) {
+            setTimeout(() => {
+              Logger.debug('ReportNavigation', `Scroll a hash iniziale: ${hash}`);
+              scrollToModule(hash);
+            }, 200);
+          }
         }
-      }
+      }, 200);
     }, 100);
 
     Logger.debug('ReportNavigation', 'Navigazione inizializzata', { modulesCount: modules.length });
