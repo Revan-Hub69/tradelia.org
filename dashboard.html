@@ -1181,7 +1181,27 @@
     // ===== REPORTS LOADER =====
     async function loadReports() {
       const container = document.getElementById('reports-container');
-      if (!container) return;
+      if (!container) {
+        console.error('Container reports-container non trovato!');
+        return;
+      }
+      
+      console.log('loadReports: Inizio caricamento report');
+      
+      // Rimuovi loading state IMMEDIATAMENTE all'inizio (safety) - NON aspettare
+      const loadingEls = container.querySelectorAll('.loading');
+      loadingEls.forEach((el, idx) => {
+        console.log(`loadReports: Rimozione loading element #${idx} immediatamente`);
+        el.style.display = 'none';
+        // NON rimuovere subito, solo nascondere - lo rimuoveremo dopo il rendering
+      });
+      
+      // Mostra un messaggio temporaneo durante il caricamento
+      const loadingMsg = document.createElement('div');
+      loadingMsg.id = 'loading-temp-msg';
+      loadingMsg.style.cssText = 'padding: 1rem; text-align: center; color: var(--dash-text-muted); font-size: 13px;';
+      loadingMsg.textContent = 'Caricamento report...';
+      container.appendChild(loadingMsg);
       
       try {
         // Carica lista report da manifest (se disponibile) o usa lista hardcoded
@@ -1189,6 +1209,7 @@
         
         try {
           // Prova a caricare manifest report (generato dinamicamente)
+          console.log('loadReports: Tentativo caricamento manifest...');
           const manifestResponse = await fetch('/report/reports/reports-manifest.json');
           if (manifestResponse.ok) {
             const manifest = await manifestResponse.json();
@@ -1200,10 +1221,10 @@
             } else {
               throw new Error('Formato manifest non valido');
             }
-            console.log('Report manifest caricato:', reportDirs.length, 'report');
+            console.log('loadReports: Report manifest caricato:', reportDirs.length, 'report');
           } else {
             // Fallback: usa lista hardcoded
-            throw new Error('Manifest non disponibile, uso lista hardcoded');
+            throw new Error(`Manifest HTTP ${manifestResponse.status}`);
           }
         } catch(e) {
           // Lista hardcoded di report disponibili (fallback)
@@ -1211,21 +1232,32 @@
             '20251107-1630',
             'sample-id'
           ];
-          console.log('Usando lista hardcoded:', reportDirs.length, 'report');
-          console.warn('Errore caricamento manifest report:', e.message);
+          console.log('loadReports: Usando lista hardcoded:', reportDirs.length, 'report');
+          console.warn('loadReports: Errore caricamento manifest:', e.message);
         }
         
         const reports = [];
+        console.log('loadReports: Inizio elaborazione', reportDirs.length, 'report');
+        
+        // Timeout per ogni singolo report (max 3 secondi)
+        const REPORT_TIMEOUT = 3000;
         
         for (const reportID of reportDirs) {
           try {
+            console.log('loadReports: Elaborazione report', reportID);
+            
             // Carica header.json PRIMA per avere sempre il ticker
             let header = null;
             let ticker = null;
             let companyName = null;
             
             try {
-              const headerResponse = await fetch(`/report/reports/${reportID}/header.json`);
+              const headerPromise = fetch(`/report/reports/${reportID}/header.json`);
+              const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Timeout')), REPORT_TIMEOUT)
+              );
+              
+              const headerResponse = await Promise.race([headerPromise, timeoutPromise]);
               if (headerResponse.ok) {
                 header = await headerResponse.json();
                 
@@ -1252,17 +1284,22 @@
             // Carica manifest.json
             let manifest = null;
             try {
-              const manifestResponse = await fetch(`/report/reports/${reportID}/manifest.json`);
+              const manifestPromise = fetch(`/report/reports/${reportID}/manifest.json`);
+              const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Timeout')), REPORT_TIMEOUT)
+              );
+              
+              const manifestResponse = await Promise.race([manifestPromise, timeoutPromise]);
               if (manifestResponse.ok) {
                 manifest = await manifestResponse.json();
               }
             } catch(e) {
-              console.warn(`Errore caricamento manifest per ${reportID}:`, e);
+              console.warn(`loadReports: Errore caricamento manifest per ${reportID}:`, e.message);
             }
             
-            // Se non abbiamo né header né manifest, salta
+            // Se non abbiamo né header né manifest, salta ma continua
             if (!header && !manifest) {
-              console.warn(`Nessun dato disponibile per report ${reportID}`);
+              console.warn(`loadReports: Nessun dato disponibile per report ${reportID}, salto`);
               continue;
             }
             
@@ -1370,10 +1407,14 @@
             };
             
             reports.push(reportData);
+            console.log('loadReports: Report', reportID, 'aggiunto (totale:', reports.length, ')');
           } catch(e) {
-            console.error(`Errore elaborazione report ${reportID}:`, e);
+            console.error(`loadReports: Errore elaborazione report ${reportID}:`, e.message);
+            // Continua con gli altri report anche se uno fallisce
           }
         }
+        
+        console.log('loadReports: Elaborati', reports.length, 'report su', reportDirs.length);
         
         // Ordina per data (più recenti prima), gestendo date invalide
         reports.sort((a, b) => {
@@ -1394,17 +1435,31 @@
         STATE.reports = reports;
         STATE.filteredReports = [...reports];
         
-        // Rimuovi loading state PRIMA di renderizzare (in caso di errore nelle funzioni successive)
-        const loadingEl = container?.querySelector('.loading');
-        if (loadingEl) {
-          loadingEl.style.display = 'none';
+        console.log('loadReports: State aggiornato, inizio rendering');
+        
+        // RIMUOVI TUTTI GLI ELEMENTI LOADING E IL MESSAGGIO TEMPORANEO
+        const loadingElsFinal = container.querySelectorAll('.loading');
+        loadingElsFinal.forEach(el => {
+          console.log('loadReports: Rimozione loading element finale');
+          el.remove(); // Rimuovi completamente dal DOM
+        });
+        
+        // Rimuovi messaggio temporaneo
+        const loadingMsg = document.getElementById('loading-temp-msg');
+        if (loadingMsg) {
+          loadingMsg.remove();
         }
         
-        // Render using dedicated function
+        // Render using dedicated function (anche se array vuoto)
         try {
+          console.log('loadReports: Chiamata renderReportsList con', STATE.filteredReports.length, 'report');
           renderReportsList(STATE.filteredReports);
+          console.log('loadReports: renderReportsList completata');
         } catch(err) {
-          console.error('Errore renderReportsList:', err);
+          console.error('loadReports: Errore renderReportsList:', err);
+          // Rimuovi loading anche in caso di errore
+          const loadingEls = container.querySelectorAll('.loading, #loading-temp-msg');
+          loadingEls.forEach(el => el.remove());
           container.innerHTML = `<div class="empty-state">Errore nel rendering: ${err.message || 'Errore sconosciuto'}</div>`;
         }
         
@@ -1412,7 +1467,7 @@
         try {
           updateReportsStats();
         } catch(err) {
-          console.error('Errore updateReportsStats:', err);
+          console.error('loadReports: Errore updateReportsStats:', err);
         }
         
         // Show controls
@@ -1438,25 +1493,39 @@
             dateHeader.classList.add('sorted', 'sorted-desc');
           }
         }, 100);
+        
+        console.log('loadReports: Caricamento completato con successo');
       } catch(error) {
-        console.error('Errore caricamento report:', error);
+        console.error('loadReports: Errore critico:', error);
         if (container) {
-          // Assicurati che il loading sia rimosso prima di mostrare l'errore
-          const loadingEl = container.querySelector('.loading');
-          if (loadingEl) {
-            loadingEl.style.display = 'none';
-          }
+          // RIMUOVI TUTTI GLI ELEMENTI LOADING E MESSAGGI TEMPORANEI
+          const loadingEls = container.querySelectorAll('.loading, #loading-temp-msg');
+          loadingEls.forEach(el => {
+            console.log('loadReports: Rimozione loading/messaggio in catch');
+            el.remove();
+          });
           container.innerHTML = `<div class="empty-state">Errore: ${error.message || 'Errore sconosciuto'}</div>`;
         }
       } finally {
-        // Rimuovi loading state anche in caso di errore (safety net)
-        const container = document.getElementById('reports-container');
-        if (container) {
-          const loadingEl = container.querySelector('.loading');
-          if (loadingEl) {
-            loadingEl.style.display = 'none';
+        // Safety net finale: rimuovi TUTTO quello che potrebbe essere loading
+        const containerFinal = document.getElementById('reports-container');
+        if (containerFinal) {
+          const loadingEls = containerFinal.querySelectorAll('.loading, #loading-temp-msg');
+          loadingEls.forEach(el => {
+            console.log('loadReports: Rimozione loading/messaggio in finally (safety net)');
+            el.style.display = 'none';
+            el.remove();
+          });
+          
+          // Se il container è ancora vuoto dopo tutto, mostra almeno un messaggio
+          if (!containerFinal.innerHTML.trim() || containerFinal.textContent?.toLowerCase().includes('caricamento')) {
+            console.warn('loadReports: Container vuoto dopo finally, mostro messaggio');
+            if (!containerFinal.querySelector('.empty-state')) {
+              containerFinal.innerHTML = `<div class="empty-state">Nessun report disponibile</div>`;
+            }
           }
         }
+        console.log('loadReports: Finally completato');
       }
     }
     
@@ -1672,24 +1741,34 @@
     }
     
     function renderReportsList(reports) {
+      console.log('renderReportsList: Inizio rendering con', reports?.length || 0, 'report');
       const container = document.getElementById('reports-container');
       if (!container) {
+        console.error('renderReportsList: Container non trovato!');
         // Rimuovi loading anche se container non esiste
         const loadingEl = document.querySelector('#reports-container .loading');
-        if (loadingEl) loadingEl.style.display = 'none';
+        if (loadingEl) {
+          loadingEl.style.display = 'none';
+          loadingEl.remove();
+        }
         return;
       }
       
-      // Rimuovi loading state prima di renderizzare
-      const loadingEl = container.querySelector('.loading');
-      if (loadingEl) {
-        loadingEl.style.display = 'none';
-      }
+      // RIMUOVI LOADING STATE IMMEDIATAMENTE (multiple safety checks)
+      const loadingEls = container.querySelectorAll('.loading');
+      loadingEls.forEach(el => {
+        console.log('renderReportsList: Rimozione loading element');
+        el.style.display = 'none';
+        el.remove();
+      });
       
       if (!reports || reports.length === 0) {
+        console.log('renderReportsList: Nessun report, mostro empty state');
         container.innerHTML = `<div class="empty-state">Nessun report trovato</div>`;
         return;
       }
+      
+      console.log('renderReportsList: Rendering', reports.length, 'report');
       
       const listHTML = `
         <div class="list-header">
@@ -1839,48 +1918,71 @@
     }
     
     // ===== INIT =====
-    // Safety timeout per rimuovere loading se qualcosa va storto
+    // Safety timeout per rimuovere loading se qualcosa va storto (ridotto a 5 secondi)
     let loadingTimeout;
     let loadingCompleted = false;
     
     function removeLoadingSafety() {
-      if (loadingCompleted) return;
+      if (loadingCompleted) {
+        console.log('removeLoadingSafety: Loading già completato, skip');
+        return;
+      }
+      console.warn('removeLoadingSafety: TIMEOUT - rimozione forzata loading state');
       const container = document.getElementById('reports-container');
       if (container) {
-        const loadingEl = container.querySelector('.loading');
-        if (loadingEl) {
-          console.warn('Loading timeout: rimozione forzata loading state');
-          loadingEl.style.display = 'none';
-          // Verifica se il container contiene ancora solo il loading
-          const containerText = container.textContent || '';
-          if (containerText.toLowerCase().includes('caricamento')) {
-            container.innerHTML = `<div class="empty-state">Timeout caricamento report. <a href="javascript:location.reload()">Ricarica pagina</a></div>`;
-          }
+        // Rimuovi TUTTI gli elementi loading
+        const loadingEls = container.querySelectorAll('.loading');
+        loadingEls.forEach(el => {
+          console.warn('removeLoadingSafety: Rimozione forzata elemento loading');
+          el.style.display = 'none';
+          el.remove();
+        });
+        
+        // Se il container è ancora vuoto o contiene solo loading, mostra messaggio
+        const containerText = container.textContent?.trim() || '';
+        if (!containerText || containerText.toLowerCase().includes('caricamento')) {
+          console.warn('removeLoadingSafety: Container vuoto dopo timeout, mostro errore');
+          container.innerHTML = `<div class="empty-state">Timeout caricamento report. <a href="javascript:location.reload()">Ricarica pagina</a></div>`;
         }
+      } else {
+        console.error('removeLoadingSafety: Container non trovato!');
       }
     }
     
-    loadingTimeout = setTimeout(removeLoadingSafety, 10000); // 10 secondi timeout
+    loadingTimeout = setTimeout(removeLoadingSafety, 5000); // 5 secondi timeout (ridotto)
+    console.log('INIT: Timeout sicurezza impostato a 5 secondi');
     
     // Carica report
     loadReports().catch(err => {
-      console.error('Errore loadReports:', err);
+      console.error('INIT: Errore loadReports:', err);
       loadingCompleted = true;
-      if (loadingTimeout) clearTimeout(loadingTimeout);
+      if (loadingTimeout) {
+        clearTimeout(loadingTimeout);
+        console.log('INIT: Timeout cancellato dopo errore');
+      }
       const container = document.getElementById('reports-container');
       if (container) {
-        const loadingEl = container.querySelector('.loading');
-        if (loadingEl) loadingEl.style.display = 'none';
+        // Rimuovi loading
+        const loadingEls = container.querySelectorAll('.loading');
+        loadingEls.forEach(el => {
+          el.style.display = 'none';
+          el.remove();
+        });
         container.innerHTML = `<div class="empty-state">Errore caricamento report: ${err.message || 'Errore sconosciuto'}</div>`;
       }
     }).then(() => {
       loadingCompleted = true;
-      if (loadingTimeout) clearTimeout(loadingTimeout);
-      console.log('Dashboard caricata completamente');
+      if (loadingTimeout) {
+        clearTimeout(loadingTimeout);
+        console.log('INIT: Timeout cancellato dopo successo');
+      }
+      console.log('INIT: Dashboard caricata completamente');
       // Setup scroll controls dopo che il DOM è stato aggiornato
       setTimeout(() => {
         setupScrollControls();
       }, 100);
+    }).catch(err => {
+      console.error('INIT: Errore in then/catch:', err);
     });
   </script>
   
