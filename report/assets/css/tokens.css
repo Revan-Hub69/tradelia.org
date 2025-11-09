@@ -242,17 +242,18 @@ p {
 /* ===== LINK ===== */
 /* Footer gestito da stili specifici più in basso - questa regola NON si applica al footer */
 /* Header gestito da global-header.css - questa regola NON si applica all'header */
-a:not(.site-footer a):not(.ftr-quick-links a):not(.ftr-socials a):not(.ftr-bottom a):not(.hdr a):not(.header-dashboard-link) {
+/* NOTA: Gli stili del header sono in global-header.css e hanno priorità più alta */
+a:not(.site-footer a):not(.ftr-quick-links a):not(.ftr-socials a):not(.ftr-bottom a):not(.hdr a):not(.header-dashboard-link):not(.brand) {
   color: var(--brand-600);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
-a:not(.site-footer a):not(.ftr-quick-links a):not(.ftr-socials a):not(.ftr-bottom a):not(.hdr a):not(.header-dashboard-link):hover {
+a:not(.site-footer a):not(.ftr-quick-links a):not(.ftr-socials a):not(.ftr-bottom a):not(.hdr a):not(.header-dashboard-link):not(.brand):hover {
   color: var(--brand-500);
 }
 
-a:not(.site-footer a):not(.ftr-quick-links a):not(.ftr-socials a):not(.ftr-bottom a):not(.hdr a):not(.header-dashboard-link):focus-visible {
+a:not(.site-footer a):not(.ftr-quick-links a):not(.ftr-socials a):not(.ftr-bottom a):not(.hdr a):not(.header-dashboard-link):not(.brand):focus-visible {
   outline: 2px solid var(--brand-600);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
