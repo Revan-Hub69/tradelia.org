@@ -333,102 +333,12 @@ function setupEventHandlers() {
   }
 
   // Indice rimosso - nessun handler necessario
-
-  // Scroll tracking rimosso - l'indice è stato rimosso
-
-  // Hash change (per deep linking)
-  window.addEventListener('hashchange', () => {
-    const hash = window.location.hash.slice(1);
-    if (hash) {
-      scrollToModule(hash);
-    }
-  });
 }
 
+// RIMOSSO: scrollToModule non serve più senza indice
 function scrollToModule(moduleId) {
-  if (!moduleId) {
-    console.warn('ReportNavigation: moduleId non fornito');
-    Logger.warn('ReportNavigation', 'scrollToModule: moduleId non fornito');
-    return;
-  }
-  
-  console.log('ReportNavigation: Tentativo scroll a:', moduleId);
-  Logger.debug('ReportNavigation', `Tentativo scroll a: ${moduleId}`);
-  
-  // Prova prima con l'ID esatto
-  let element = document.getElementById(moduleId);
-  
-  // Se non trovato, prova varianti dell'ID
-  if (!element) {
-    // Prova senza "sec-"
-    if (moduleId.startsWith('sec-')) {
-      const altId = moduleId.substring(4); // Rimuovi "sec-"
-      element = document.getElementById(altId);
-      if (element) {
-        console.log('ReportNavigation: Trovato con ID senza "sec-":', altId);
-      }
-    }
-    
-    // Se ancora non trovato, cerca nell'HTML per ID parziali
-    if (!element) {
-      const allArticles = document.querySelectorAll('article[id], section[id]');
-      const moduleIdClean = moduleId.replace(/^sec-/, '');
-      for (const el of allArticles) {
-        if (el.id) {
-          // Cerca ID che contengono il modulo ID
-          if (el.id.includes(moduleIdClean) || el.id === moduleIdClean) {
-            element = el;
-            console.log('ReportNavigation: Trovato elemento con ID simile:', el.id);
-            break;
-          }
-        }
-      }
-    }
-  }
-  
-  if (!element) {
-    console.error('ReportNavigation: Elemento non trovato:', moduleId);
-    Logger.warn('ReportNavigation', `Elemento con ID "${moduleId}" non trovato nel DOM`);
-    // Debug: mostra ID disponibili
-    const allIds = Array.from(document.querySelectorAll('article[id], section[id]')).map(el => el.id).filter(Boolean);
-    console.log('ReportNavigation: ID disponibili:', allIds.slice(0, 20));
-    return;
-  }
-  
-  // Calcola offset considerando header e ticker
-  const headerHeight = 64;
-  const headerTicker = document.getElementById('header-ticker-slot');
-  const tickerHeight = headerTicker ? headerTicker.offsetHeight : 0;
-  const elementRect = element.getBoundingClientRect();
-  const elementTop = elementRect.top + window.scrollY;
-  const offset = elementTop - headerHeight - tickerHeight - 32; // 32px di margine
-  
-  console.log('ReportNavigation: Scroll', {
-    moduleId,
-    elementTop,
-    offset,
-    scrollY: window.scrollY,
-    headerHeight,
-    tickerHeight
-  });
-  
-  // Scroll
-  window.scrollTo({
-    top: Math.max(0, offset),
-    behavior: 'smooth'
-  });
-
-  // Aggiorna hash
-  if (window.location.hash !== `#${moduleId}`) {
-    history.pushState(null, '', `#${moduleId}`);
-  }
-
-  // Aggiorna stato attivo
-  REPORT_NAVIGATION._currentModule = moduleId;
-  updateIndexActiveState(moduleId);
-  
-  console.log('ReportNavigation: Scroll completato');
-  Logger.debug('ReportNavigation', `Scroll completato a modulo ${moduleId}`);
+  // RIMOSSO: L'indice è stato rimosso
+  return;
 }
 
 // ===== PUBLIC API =====
@@ -471,24 +381,6 @@ export const reportNavigation = {
 
     // Setup event handlers immediatamente - usa event delegation quindi funziona anche se elementi non sono ancora nel DOM
     setupEventHandlers();
-    
-    // Inizializza scroll tracking dopo che i moduli sono renderizzati
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        updateActiveModule();
-        
-        // Gestisci hash iniziale se presente
-        if (window.location.hash) {
-          const hash = window.location.hash.slice(1);
-          if (hash) {
-            setTimeout(() => {
-              console.log('ReportNavigation: Scroll a hash iniziale:', hash);
-              scrollToModule(hash);
-            }, 300);
-          }
-        }
-      });
-    });
 
     Logger.debug('ReportNavigation', 'Navigazione inizializzata', { modulesCount: modules.length });
   },
