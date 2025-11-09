@@ -5,12 +5,19 @@
 /* ===== REPORT SECTIONS ===== */
 .report-section-block {
   width: 100%;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
   margin-bottom: var(--sp-8);
+  box-sizing: border-box;
 }
 
 /* Assicura che le card dentro report-section-block abbiano hover */
 .report-section-block .module-card {
   position: relative; /* Assicura che hover funzioni */
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* ===== F1A / F1B CARD CONTAINERS ===== */
