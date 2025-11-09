@@ -717,26 +717,13 @@
       }
     }
     
-    // ===== CARICAMENTO HEADER & FOOTER =====
-    async function mountHeaderFooter() {
+    // ===== CARICAMENTO FOOTER =====
+    async function mountFooter() {
       document.documentElement.setAttribute('data-theme', 'dark');
       
       try {
-        // Inizializza i18n prima di montare header
-        const { i18n } = await import('/report/assets/js/utils/i18n.js');
-        if (i18n) {
-          i18n.init();
-          i18n.translatePage();
-        }
-        
-        const headerSlot = document.getElementById('site-header-slot');
-        if (headerSlot) {
-          const { siteHeader } = await import('/report/assets/js/components/site-header.js');
-          if (siteHeader?.mount) {
-            siteHeader.mount(headerSlot, { showExport: false });
-            Logger.debug('Glossario', 'Header montato');
-          }
-        }
+        // Sistema traduzione disabilitato - sempre italiano
+        // Header gestito da global-header.js
         
         const footerSlot = document.getElementById('site-footer-slot');
         if (footerSlot) {
@@ -747,7 +734,7 @@
           }
         }
       } catch (err) {
-        Logger.warn('Glossario', 'Errore montaggio header/footer', err);
+        Logger.warn('Glossario', 'Errore montaggio footer', err);
       }
     }
     
