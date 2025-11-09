@@ -240,17 +240,19 @@ p {
 }
 
 /* ===== LINK ===== */
-a {
+/* Footer gestito da stili specifici più in basso - questa regola NON si applica al footer */
+/* Header gestito da global-header.css - questa regola NON si applica all'header */
+a:not(.site-footer a):not(.ftr-quick-links a):not(.ftr-socials a):not(.ftr-bottom a):not(.hdr a):not(.header-dashboard-link) {
   color: var(--brand-600);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
-a:hover {
+a:not(.site-footer a):not(.ftr-quick-links a):not(.ftr-socials a):not(.ftr-bottom a):not(.hdr a):not(.header-dashboard-link):hover {
   color: var(--brand-500);
 }
 
-a:focus-visible {
+a:not(.site-footer a):not(.ftr-quick-links a):not(.ftr-socials a):not(.ftr-bottom a):not(.hdr a):not(.header-dashboard-link):focus-visible {
   outline: 2px solid var(--brand-600);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
@@ -2229,15 +2231,21 @@ a:focus-visible {
   color: var(--muted);
 }
 
-.site-footer a {
-  text-decoration: none;
-  transition: color var(--transition-fast);
-  color: var(--ink-soft);
-  font-weight: 400;
+/* ===== FOOTER LINKS - PRIORITÀ ALTA ===== */
+/* Questi stili hanno priorità rispetto a regole generiche di altri CSS */
+.site-footer a,
+.site-footer a:not(.btn):not([role="button"]) {
+  text-decoration: none !important;
+  transition: color var(--transition-fast) !important;
+  color: var(--ink-soft) !important;
+  font-weight: 400 !important;
+  border-bottom: none !important;
 }
 
-.site-footer a:hover {
-  color: var(--ink);
+.site-footer a:hover,
+.site-footer a:not(.btn):not([role="button"]):hover {
+  color: var(--ink) !important;
+  border-bottom-color: transparent !important;
 }
 
 /* Link nel footer bottom (Home, Brokers, Archivio) */
