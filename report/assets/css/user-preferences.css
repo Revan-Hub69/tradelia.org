@@ -1,0 +1,86 @@
+/* /report/assets/css/user-preferences.css
+   Stili Preferenze Utente
+   Design Istituzionale 2025
+   ----------------------------------------------------------- */
+
+/* ===== HIGH CONTRAST MODE ===== */
+[data-high-contrast="true"] {
+  --ink: #ffffff;
+  --ink-soft: #ffffff;
+  --muted: #ffffff;
+  --muted-strong: #ffffff;
+  --surface-page: #000000;
+  --surface-card: #000000;
+  --surface-elev: #1a1a1a;
+  --br-card: #ffffff;
+  --br-strong: #ffffff;
+}
+
+[data-high-contrast="true"] .module-card,
+[data-high-contrast="true"] .header-ticker {
+  border: 2px solid var(--br-card);
+}
+
+[data-high-contrast="true"] .metric-inline-text {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* ===== COMPACT MODE ===== */
+[data-compact-mode="true"] {
+  --sp-1: 0.2rem;
+  --sp-2: 0.4rem;
+  --sp-3: 0.6rem;
+  --sp-4: 0.8rem;
+  --sp-5: 1rem;
+  --sp-6: 1.2rem;
+  --sp-8: 1.6rem;
+  --sp-10: 2rem;
+}
+
+[data-compact-mode="true"] .module-card {
+  padding: var(--sp-3);
+  gap: var(--sp-2);
+}
+
+[data-compact-mode="true"] .module-header {
+  margin-bottom: var(--sp-2);
+  padding-bottom: var(--sp-2);
+}
+
+[data-compact-mode="true"] .module-title {
+  font-size: var(--fs-14);
+}
+
+[data-compact-mode="true"] .module-desc {
+  font-size: var(--fs-12);
+}
+
+[data-compact-mode="true"] .header-ticker {
+  padding: var(--sp-3) var(--sp-4);
+  gap: var(--sp-2);
+}
+
+[data-compact-mode="true"] .report-section-block {
+  margin-bottom: var(--sp-4);
+}
+
+/* ===== REDUCED MOTION ===== */
+[data-reduced-motion="true"] *,
+[data-reduced-motion="true"] *::before,
+[data-reduced-motion="true"] *::after {
+  animation-duration: 0.01s !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01s !important;
+  scroll-behavior: auto !important;
+}
+
+/* ===== FONT SIZE ===== */
+/* Small font size è gestito direttamente dal JavaScript */
+/* Large font size è gestito direttamente dal JavaScript */
+
+/* ===== HIDDEN MODULES ===== */
+.report-section-block[data-module-hidden="true"] {
+  display: none;
+}
+

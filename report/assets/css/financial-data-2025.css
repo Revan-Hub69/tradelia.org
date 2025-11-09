@@ -1,0 +1,744 @@
+/* /report/assets/css/financial-data-2025.css
+   Sistema Dati Finanziari 2025 - Best Practices
+   Validazione Colori, Drawer, Schede - Responsive
+   ----------------------------------------------------------- */
+
+/* ===== VALIDAZIONE COLORI FINANZIARI ===== */
+/* Sistema semaforico istituzionale per dati finanziari */
+
+/* Metriche Inline - Validazione Colori */
+.metric-inline {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: var(--sp-1) var(--sp-2);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-base);
+  min-height: 32px; /* Touch-friendly su mobile */
+}
+
+.metric-inline-text {
+  font-weight: 600; /* Più visibile per dati finanziari */
+  font-style: normal;
+  text-decoration: none;
+  line-height: var(--lh-16);
+  white-space: nowrap;
+  transition: all var(--transition-base);
+  letter-spacing: 0.01em;
+  font-size: var(--fs-14); /* Leggibilità ottimale */
+}
+
+/* Stati Colori - Semaforo Finanziario */
+.metric-inline--ok .metric-inline-text,
+.metric-inline-text--ok {
+  color: var(--ok);
+  background: rgba(22, 163, 74, 0.08);
+  padding: var(--sp-1) var(--sp-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(22, 163, 74, 0.15);
+}
+
+.metric-inline--warn .metric-inline-text,
+.metric-inline-text--warn {
+  color: var(--warn);
+  background: rgba(234, 88, 12, 0.08);
+  padding: var(--sp-1) var(--sp-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(234, 88, 12, 0.15);
+}
+
+.metric-inline--err .metric-inline-text,
+.metric-inline-text--err {
+  color: var(--err);
+  background: rgba(220, 38, 38, 0.08);
+  padding: var(--sp-1) var(--sp-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(220, 38, 38, 0.15);
+}
+
+.metric-inline--neutral .metric-inline-text,
+.metric-inline-text--neutral {
+  color: var(--ink-soft);
+  background: rgba(255, 255, 255, 0.02);
+  padding: var(--sp-1) var(--sp-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Hover States - Migliorati per Dati Finanziari */
+.metric-inline:hover {
+  transform: scale(1.05);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.metric-inline--ok:hover .metric-inline-text {
+  background: rgba(22, 163, 74, 0.12);
+  border-color: rgba(22, 163, 74, 0.25);
+  box-shadow: 
+    0 0 0 2px rgba(22, 163, 74, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.metric-inline--warn:hover .metric-inline-text {
+  background: rgba(234, 88, 12, 0.12);
+  border-color: rgba(234, 88, 12, 0.25);
+  box-shadow: 
+    0 0 0 2px rgba(234, 88, 12, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.metric-inline--err:hover .metric-inline-text {
+  background: rgba(220, 38, 38, 0.12);
+  border-color: rgba(220, 38, 38, 0.25);
+  box-shadow: 
+    0 0 0 2px rgba(220, 38, 38, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.metric-inline--neutral:hover .metric-inline-text {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 0 0 2px rgba(255, 255, 255, 0.05),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Focus States - Accessibilità */
+.metric-inline:focus-visible {
+  outline: 2px solid var(--brand-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Active State */
+.metric-inline:active {
+  transform: scale(1.02);
+}
+
+/* ===== MODULE CARDS - MIGLIORATE ===== */
+/* Schede moduli ottimizzate per dati finanziari */
+
+.module-card {
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+/* Bordo sinistro colorato - Più visibile */
+.module-card::before {
+  width: 5px; /* Più spesso per visibilità */
+  transition: all var(--transition-base);
+}
+
+.module-card:hover::before {
+  width: 6px; /* Ancora più spesso al hover */
+}
+
+/* Stati Moduli - Più visibili */
+.module-card[data-state="ACTIVE"]::before {
+  background: var(--ok);
+  box-shadow: 
+    0 0 8px rgba(22, 163, 74, 0.3),
+    0 0 4px rgba(22, 163, 74, 0.2);
+}
+
+.module-card[data-state="HOLD"]::before {
+  background: var(--warn);
+  box-shadow: 
+    0 0 8px rgba(234, 88, 12, 0.3),
+    0 0 4px rgba(234, 88, 12, 0.2);
+}
+
+.module-card[data-state="REVIEW"]::before {
+  background: var(--err);
+  box-shadow: 
+    0 0 8px rgba(220, 38, 38, 0.3),
+    0 0 4px rgba(220, 38, 38, 0.2);
+}
+
+/* Hover Card - Migliorato */
+.module-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    var(--shadow-lg),
+    0 2px 0 rgba(255, 255, 255, 0.03) inset;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ===== DRAWER FINANZIARI - MIGLIORATI ===== */
+/* Tutti i drawer ottimizzati per dati finanziari */
+
+/* Glossary Drawer */
+.glossary-drawer-panel {
+  /* Animazione migliorata */
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Metrics Drawer */
+.metrics-drawer-panel {
+  /* Stesso stile del glossary drawer */
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 600px;
+  max-width: 90vw;
+  background: var(--surface-card);
+  border-left: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: -2px 0 16px rgba(0, 0, 0, 0.25);
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.metrics-drawer-overlay:not([hidden]) .metrics-drawer-panel {
+  transform: translateX(0);
+}
+
+/* Unified Drawer */
+.module-tabs-drawer {
+  /* Stesso stile */
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 600px;
+  max-width: 90vw;
+  background: var(--surface-card);
+  border-left: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: -2px 0 16px rgba(0, 0, 0, 0.25);
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Drawer Header - Migliorato */
+.glossary-drawer-header,
+.metrics-drawer-header,
+.module-tabs-drawer-header {
+  background: linear-gradient(
+    180deg,
+    var(--surface-card) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Drawer Content - Ottimizzato per Dati Finanziari */
+.glossary-drawer-content,
+.metrics-drawer-content,
+.module-tabs-drawer-body {
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  
+  /* Fade gradient in fondo */
+  position: relative;
+}
+
+.glossary-drawer-content::after,
+.metrics-drawer-content::after,
+.module-tabs-drawer-body::after {
+  content: '';
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--surface-card) 100%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.glossary-drawer-content.scrollable::after,
+.metrics-drawer-content.scrollable::after,
+.module-tabs-drawer-body.scrollable::after {
+  opacity: 1;
+}
+
+/* Drawer Items - Micro-interazioni */
+.glossary-drawer-term-item,
+.metrics-drawer-item,
+.drawer-metric-item {
+  position: relative;
+  transition: 
+    background-color 0.2s ease,
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.glossary-drawer-term-item::before,
+.metrics-drawer-item::before,
+.drawer-metric-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--brand-600);
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glossary-drawer-term-item:hover::before,
+.metrics-drawer-item:hover::before,
+.drawer-metric-item:hover::before {
+  transform: scaleY(1);
+}
+
+.glossary-drawer-term-item:hover,
+.metrics-drawer-item:hover,
+.drawer-metric-item:hover {
+  transform: translateX(4px);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    0 1px 4px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.glossary-drawer-term-item:active,
+.metrics-drawer-item:active,
+.drawer-metric-item:active {
+  transform: translateX(2px) scale(0.98);
+}
+
+/* Drawer Metriche - Validazione Colori */
+.drawer-metric-item[data-tone="ok"] {
+  border-left-color: var(--ok);
+}
+
+.drawer-metric-item[data-tone="warn"] {
+  border-left-color: var(--warn);
+}
+
+.drawer-metric-item[data-tone="err"] {
+  border-left-color: var(--err);
+}
+
+.drawer-metric-item[data-tone="neutral"] {
+  border-left-color: var(--neutral);
+}
+
+.drawer-metric-item[data-tone="ok"]::before {
+  background: var(--ok);
+}
+
+.drawer-metric-item[data-tone="warn"]::before {
+  background: var(--warn);
+}
+
+.drawer-metric-item[data-tone="err"]::before {
+  background: var(--err);
+}
+
+.drawer-metric-item[data-tone="neutral"]::before {
+  background: var(--neutral);
+}
+
+/* Drawer Search - Migliorato */
+.glossary-drawer-search-input,
+.metrics-drawer-search-input,
+.drawer-search-input {
+  transition: 
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+  font-size: var(--fs-14); /* Leggibilità */
+  min-height: 44px; /* Touch-friendly */
+}
+
+.glossary-drawer-search-input:focus,
+.metrics-drawer-search-input:focus,
+.drawer-search-input:focus {
+  border-color: var(--brand-500);
+  box-shadow: 
+    0 0 0 3px rgba(37, 99, 235, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  outline: none;
+}
+
+/* Drawer Filters - Migliorati */
+.glossary-drawer-filter-btn,
+.metrics-drawer-filter-btn {
+  position: relative;
+  overflow: hidden;
+  min-height: 44px; /* Touch-friendly */
+  padding: var(--sp-2) var(--sp-4);
+  transition: all var(--transition-base);
+}
+
+.glossary-drawer-filter-btn.active,
+.metrics-drawer-filter-btn.active {
+  background: rgba(37, 99, 235, 0.15);
+  border-color: rgba(37, 99, 235, 0.3);
+  color: var(--brand-300);
+  font-weight: 600;
+  box-shadow: 
+    0 0 0 2px rgba(37, 99, 235, 0.1),
+    0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== RESPONSIVE - DATI FINANZIARI ===== */
+
+/* Mobile: Metriche più leggibili */
+@media (max-width: 640px) {
+  .metric-inline {
+    min-height: 44px; /* Touch-friendly */
+    padding: var(--sp-2) var(--sp-3);
+  }
+  
+  .metric-inline-text {
+    font-size: var(--fs-15); /* Più grande su mobile */
+    font-weight: 600;
+  }
+  
+  /* Metriche con background più visibile su mobile */
+  .metric-inline--ok .metric-inline-text {
+    background: rgba(22, 163, 74, 0.12);
+    border-color: rgba(22, 163, 74, 0.2);
+  }
+  
+  .metric-inline--warn .metric-inline-text {
+    background: rgba(234, 88, 12, 0.12);
+    border-color: rgba(234, 88, 12, 0.2);
+  }
+  
+  .metric-inline--err .metric-inline-text {
+    background: rgba(220, 38, 38, 0.12);
+    border-color: rgba(220, 38, 38, 0.2);
+  }
+  
+  /* Module Cards - Padding ridotto su mobile */
+  .module-card {
+    padding: var(--sp-4);
+  }
+  
+  /* Bordo sinistro più spesso su mobile */
+  .module-card::before {
+    width: 6px;
+  }
+  
+  .module-card:hover::before {
+    width: 7px;
+  }
+  
+  /* Drawer - Full screen su mobile */
+  .glossary-drawer-panel,
+  .metrics-drawer-panel,
+  .module-tabs-drawer {
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  
+  .glossary-drawer-content,
+  .metrics-drawer-content,
+  .module-tabs-drawer-body {
+    padding: var(--sp-4);
+    max-height: calc(100vh - 120px);
+  }
+  
+  /* Drawer Header - Più grande su mobile */
+  .glossary-drawer-header,
+  .metrics-drawer-header,
+  .module-tabs-drawer-header {
+    padding: var(--sp-4);
+    min-height: 60px;
+  }
+  
+  /* Drawer Close - Più grande su mobile */
+  .glossary-drawer-close,
+  .metrics-drawer-close,
+  .drawer-close {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* Tablet: Layout intermedio */
+@media (min-width: 641px) and (max-width: 1023px) {
+  .glossary-drawer-panel,
+  .metrics-drawer-panel,
+  .module-tabs-drawer {
+    width: 85%;
+    max-width: 600px;
+  }
+  
+  .metric-inline {
+    min-height: 40px;
+  }
+  
+  .metric-inline-text {
+    font-size: var(--fs-14);
+  }
+}
+
+/* Desktop: Layout completo */
+@media (min-width: 1024px) {
+  .glossary-drawer-panel,
+  .metrics-drawer-panel,
+  .module-tabs-drawer {
+    width: 600px;
+    max-width: 600px;
+  }
+  
+  .metric-inline {
+    min-height: 32px;
+  }
+  
+  .metric-inline-text {
+    font-size: var(--fs-14);
+  }
+}
+
+/* ===== ACCESSIBILITÀ - DATI FINANZIARI ===== */
+
+/* Supporto prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .metric-inline,
+  .module-card,
+  .glossary-drawer-panel,
+  .metrics-drawer-panel,
+  .module-tabs-drawer {
+    transition: none;
+    animation: none;
+  }
+  
+  .metric-inline:hover {
+    transform: none;
+  }
+  
+  .module-card:hover {
+    transform: none;
+  }
+  
+  .glossary-drawer-term-item:hover,
+  .metrics-drawer-item:hover,
+  .drawer-metric-item:hover {
+    transform: none;
+  }
+}
+
+/* Focus states migliorati */
+.metric-inline:focus-visible,
+.glossary-drawer-term-item:focus-visible,
+.metrics-drawer-item:focus-visible,
+.drawer-metric-item:focus-visible {
+  outline: 2px solid var(--brand-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ===== PERFORMANCE - DATI FINANZIARI ===== */
+
+/* GPU acceleration */
+.metric-inline,
+.module-card,
+.glossary-drawer-panel,
+.metrics-drawer-panel,
+.module-tabs-drawer {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== BEST PRACTICES FINANZIARI ===== */
+
+/* Contrasto ottimale per dati finanziari */
+.metric-inline-text {
+  /* Assicura contrasto WCAG AA+ */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Numeri finanziari - Font monospace per allineamento */
+.metric-inline-value {
+  font-family: var(--ff-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
+}
+
+/* Indicatori di tendenza */
+.metric-trend-up {
+  color: var(--ok);
+}
+
+.metric-trend-down {
+  color: var(--err);
+}
+
+.metric-trend-neutral {
+  color: var(--neutral);
+}
+
+/* Badge di validazione */
+.metric-validation-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-1) var(--sp-2);
+  font-size: var(--fs-11);
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  border: 1px solid;
+}
+
+.metric-validation-badge--valid {
+  background: rgba(22, 163, 74, 0.15);
+  border-color: rgba(22, 163, 74, 0.3);
+  color: var(--ok);
+}
+
+.metric-validation-badge--warning {
+  background: rgba(234, 88, 12, 0.15);
+  border-color: rgba(234, 88, 12, 0.3);
+  color: var(--warn);
+}
+
+.metric-validation-badge--error {
+  background: rgba(220, 38, 38, 0.15);
+  border-color: rgba(220, 38, 38, 0.3);
+  color: var(--err);
+}
+
+/* Tooltip per metriche finanziarie */
+.metric-tooltip {
+  font-family: var(--ff-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* ===== TABELLE FINANZIARIE ===== */
+/* Ottimizzate per dati finanziari */
+
+.financial-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--sp-4) 0;
+}
+
+.financial-table th {
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--surface-elev);
+  padding: var(--sp-3) var(--sp-4);
+  text-align: left;
+  border-bottom: 2px solid var(--br-card);
+  font-size: var(--fs-13);
+}
+
+.financial-table td {
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--br-soft);
+  font-size: var(--fs-14);
+  color: var(--ink-soft);
+}
+
+.financial-table tr:hover {
+  background: var(--surface-elev);
+}
+
+/* Numeri finanziari in tabelle */
+.financial-table .number {
+  font-family: var(--ff-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  font-weight: 600;
+}
+
+.financial-table .number.positive {
+  color: var(--ok);
+}
+
+.financial-table .number.negative {
+  color: var(--err);
+}
+
+.financial-table .number.neutral {
+  color: var(--neutral);
+}
+
+/* Responsive tabelle finanziarie */
+@media (max-width: 768px) {
+  .financial-table {
+    font-size: var(--fs-13);
+  }
+  
+  .financial-table th,
+  .financial-table td {
+    padding: var(--sp-2) var(--sp-3);
+  }
+  
+  /* Stack layout su mobile */
+  .financial-table-mobile {
+    display: block;
+  }
+  
+  .financial-table-mobile thead {
+    display: none;
+  }
+  
+  .financial-table-mobile tbody {
+    display: block;
+  }
+  
+  .financial-table-mobile tr {
+    display: block;
+    margin-bottom: var(--sp-4);
+    background: var(--surface-card);
+    border: 1px solid var(--br-card);
+    border-radius: var(--radius-md);
+    padding: var(--sp-4);
+  }
+  
+  .financial-table-mobile td {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--sp-2) 0;
+    border-bottom: 1px solid var(--br-soft);
+  }
+  
+  .financial-table-mobile td:last-child {
+    border-bottom: none;
+  }
+  
+  .financial-table-mobile td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--ink);
+    margin-right: var(--sp-4);
+  }
+}
+

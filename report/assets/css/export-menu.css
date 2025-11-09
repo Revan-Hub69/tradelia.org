@@ -1,0 +1,128 @@
+/* /report/assets/css/export-menu.css
+   Menu Export Dati
+   Design Istituzionale 2025
+   ----------------------------------------------------------- */
+
+/* ===== EXPORT MENU ===== */
+.export-menu {
+  position: relative;
+}
+
+.export-menu-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  color: var(--ink-soft);
+  font-size: var(--fs-13);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-family: var(--ff-sans);
+}
+
+.export-menu-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--ink);
+}
+
+.export-menu-btn:focus-visible {
+  outline: 2px solid var(--brand-500);
+  outline-offset: 2px;
+}
+
+.export-menu-icon {
+  flex-shrink: 0;
+}
+
+.export-menu-text {
+  flex-shrink: 0;
+}
+
+.export-menu-arrow {
+  transition: transform var(--transition-base);
+  flex-shrink: 0;
+}
+
+.export-menu-btn[aria-expanded="true"] .export-menu-arrow {
+  transform: rotate(180deg);
+}
+
+.export-menu-dropdown {
+  position: absolute;
+  top: calc(100% + var(--sp-2));
+  right: 0;
+  min-width: 160px;
+  background: var(--surface-card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  z-index: 1001;
+  display: none !important;
+  flex-direction: column;
+}
+
+.export-menu-dropdown:not([hidden]) {
+  display: flex !important;
+}
+
+.export-menu-option {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2_5) var(--sp-3);
+  background: transparent;
+  border: none;
+  color: var(--ink-soft);
+  font-size: var(--fs-13);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+  width: 100%;
+  font-family: var(--ff-sans);
+}
+
+.export-menu-option:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+}
+
+.export-menu-option:focus-visible {
+  outline: 2px solid var(--brand-500);
+  outline-offset: -2px;
+}
+
+.export-menu-option svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.export-menu-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: var(--sp-1) 0;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .export-menu-text {
+    display: none;
+  }
+
+  .export-menu-btn {
+    padding: var(--sp-2);
+  }
+
+  .export-menu-dropdown {
+    right: 0;
+    left: auto;
+  }
+}
+

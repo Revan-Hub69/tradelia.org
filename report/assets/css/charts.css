@@ -1,0 +1,185 @@
+/* /report/assets/css/charts.css
+   Stili Grafici Interattivi
+   Design Istituzionale 2025
+   ----------------------------------------------------------- */
+
+/* ===== CHART CONTAINER ===== */
+.chart-container {
+  width: 100%;
+  margin: var(--sp-4) 0;
+  padding: var(--sp-4);
+  background: var(--surface-card);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.chart-title {
+  font-size: var(--fs-15);
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: var(--sp-2);
+  line-height: var(--lh-16);
+}
+
+.chart-description {
+  font-size: var(--fs-13);
+  color: var(--muted);
+  margin-bottom: var(--sp-3);
+  line-height: var(--lh-16);
+  max-width: 65ch;
+}
+
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  margin-top: var(--sp-3);
+}
+
+.chart-wrapper canvas {
+  max-width: 100%;
+  height: 100% !important;
+}
+
+/* ===== CHART RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .chart-container {
+    padding: var(--sp-3);
+    margin: var(--sp-3) 0;
+  }
+
+  .chart-wrapper {
+    height: 250px;
+  }
+
+  .chart-title {
+    font-size: var(--fs-14);
+  }
+
+  .chart-description {
+    font-size: var(--fs-12);
+  }
+}
+
+/* ===== CHART LEGEND ===== */
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin-top: var(--sp-3);
+  padding-top: var(--sp-3);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.chart-legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-12);
+  color: var(--ink-soft);
+}
+
+.chart-legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ===== CHART TOOLTIP (Custom) ===== */
+.chart-tooltip {
+  position: absolute;
+  padding: var(--sp-2) var(--sp-3);
+  background: rgba(15, 15, 15, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  color: var(--ink);
+  font-size: var(--fs-12);
+  pointer-events: none;
+  z-index: 1000;
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(8px);
+}
+
+.chart-tooltip-title {
+  font-weight: 600;
+  margin-bottom: var(--sp-1);
+  color: var(--ink);
+}
+
+.chart-tooltip-body {
+  color: var(--ink-soft);
+  line-height: var(--lh-16);
+}
+
+/* ===== CHART LOADING STATE ===== */
+.chart-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  color: var(--muted);
+  font-size: var(--fs-13);
+}
+
+.chart-loading::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--br-card);
+  border-top-color: var(--brand-600);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-right: var(--sp-2);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== CHART ERROR STATE ===== */
+.chart-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  color: var(--err);
+  font-size: var(--fs-13);
+  text-align: center;
+  padding: var(--sp-4);
+}
+
+/* ===== CHART CONTROLS ===== */
+.chart-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
+  padding-top: var(--sp-3);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.chart-control-btn {
+  padding: var(--sp-1_5) var(--sp-3);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  color: var(--ink-soft);
+  font-size: var(--fs-12);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.chart-control-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--ink);
+}
+
+.chart-control-btn:focus-visible {
+  outline: 2px solid var(--brand-500);
+  outline-offset: 2px;
+}
+
