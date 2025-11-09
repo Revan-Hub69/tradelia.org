@@ -1846,7 +1846,18 @@
       
       // PULISCI COMPLETAMENTE IL CONTAINER (incluso qualsiasi loading rimasto)
       console.log('renderReportsList: Pulizia completa container');
-      container.innerHTML = '';
+      console.log('renderReportsList: Container HTML prima pulizia:', container.innerHTML.substring(0, 100));
+      
+      // Pulisci SOLO se non contiene già report renderizzati (evita di rimuovere contenuto valido)
+      const hasRenderedContent = container.querySelector('.tech-list, .list-header, .tech-list-item');
+      if (!hasRenderedContent) {
+        container.innerHTML = '';
+      } else {
+        console.log('renderReportsList: Container contiene già report, pulizia selettiva');
+        // Rimuovi solo elementi loading, non i report
+        const loadings = container.querySelectorAll('.loading, [class*="loading"]:not(.tech-list):not(.list-header)');
+        loadings.forEach(el => el.remove());
+      }
       
       // Assicurati che body sia marked as loaded
       document.body.classList.add('loaded');
@@ -1965,16 +1976,40 @@
         `;
         
         console.log('renderReportsList: HTML generato, lunghezza:', listHTML.length);
+        console.log('renderReportsList: Primi 200 caratteri HTML:', listHTML.substring(0, 200));
+        
+        // Inserisci HTML nel container
         container.innerHTML = listHTML;
         console.log('renderReportsList: HTML inserito nel container');
+        console.log('renderReportsList: Container HTML dopo inserimento:', container.innerHTML.substring(0, 200));
         
-        // Verifica che l'HTML sia stato inserito correttamente
+        // Verifica IMMEDIATAMENTE che l'HTML sia stato inserito correttamente
         const insertedItems = container.querySelectorAll('.tech-list-item');
-        console.log('renderReportsList: Elementi inseriti:', insertedItems.length);
+        const insertedList = container.querySelector('.tech-list');
+        const insertedHeader = container.querySelector('.list-header');
+        
+        console.log('renderReportsList: Verifica inserimento - Items:', insertedItems.length, 'List:', !!insertedList, 'Header:', !!insertedHeader);
+        console.log('renderReportsList: Container children count:', container.children.length);
         
         if (insertedItems.length === 0 && reports.length > 0) {
           console.error('renderReportsList: ERRORE - Nessun elemento inserito nonostante ci siano report!');
-          container.innerHTML = `<div class="empty-state">Errore nel rendering dei report. Verifica la console per dettagli.</div>`;
+          console.error('renderReportsList: Container.innerHTML length:', container.innerHTML.length);
+          console.error('renderReportsList: Container.innerHTML:', container.innerHTML);
+          
+          // Prova a inserire di nuovo
+          console.log('renderReportsList: Tentativo reinserimento HTML...');
+          container.innerHTML = listHTML;
+          
+          // Verifica di nuovo
+          const retryItems = container.querySelectorAll('.tech-list-item');
+          if (retryItems.length === 0) {
+            console.error('renderReportsList: ERRORE CRITICO - HTML non viene inserito nel DOM!');
+            container.innerHTML = `<div class="empty-state">Errore critico nel rendering dei report. Verifica la console per dettagli.<br><small>Report da renderizzare: ${reports.length}</small></div>`;
+          } else {
+            console.log('renderReportsList: SUCCESS dopo retry - Items inseriti:', retryItems.length);
+          }
+        } else if (insertedItems.length > 0) {
+          console.log('renderReportsList: SUCCESS -', insertedItems.length, 'report renderizzati correttamente');
         }
       } catch(err) {
         console.error('renderReportsList: Errore durante generazione HTML:', err);
