@@ -2,6 +2,7 @@
 // Dashboard Abbonati - Autenticazione Supabase + Votazioni
 
 import Logger from '/report/assets/js/utils/logger.js';
+import { i18n } from '/report/assets/js/utils/i18n.js';
 import { siteHeader } from '/report/assets/js/components/site-header.js';
 import { siteFooter } from '/report/assets/js/components/site-footer.js';
 import { SUPABASE_CONFIG } from './supabase-config.js';
@@ -57,9 +58,12 @@ async function mountHeaderFooter() {
   document.documentElement.setAttribute('data-theme', 'dark');
   
   try {
+    // Sistema traduzione disabilitato - sempre italiano
+    
     const headerSlot = document.getElementById('site-header-slot');
     if (headerSlot) {
-      siteHeader.mount(headerSlot);
+      // Monta header SENZA export menu (dashboard non ha export)
+      siteHeader.mount(headerSlot, { showExport: false });
     }
     
     const footerSlot = document.getElementById('site-footer-slot');
@@ -780,68 +784,192 @@ async function showDashboard() {
     userEmail.textContent = STATE.user.email;
   }
   
-  // Carica dati
-  await loadDashboardData();
+  // Timeout globale: se il caricamento dura più di 15 secondi, forza il rendering
+  const globalTimeout = setTimeout(() => {
+    Logger.warn('Dashboard', 'Timeout globale caricamento dati (15s), forzo rendering');
+    renderDashboardReports();
+    // renderDashboardTutorials(); // Tutorial temporaneamente disabilitati
+    hideLoadingState();
+  }, 15000);
   
-  // Renderizza
-  renderDashboardReports();
-  renderDashboardTutorials();
-  await loadVotingData();
+  try {
+    // Carica dati
+    await loadDashboardData();
+    clearTimeout(globalTimeout);
+    
+    // Renderizza sempre, anche se non ci sono dati
+    renderDashboardReports();
+    // renderDashboardTutorials(); // Tutorial temporaneamente disabilitati
+    
+    // Sistema traduzione disabilitato - sempre italiano
+    
+    // Carica votazioni in background (non blocca il rendering)
+    loadVotingData().catch(err => {
+      Logger.warn('Dashboard', 'Errore caricamento votazioni (non critico)', err);
+    });
+  } catch (err) {
+    clearTimeout(globalTimeout);
+    Logger.error('Dashboard', 'Errore showDashboard', err);
+    // Mostra messaggio di errore e nascondi loading
+    renderDashboardReports(); // Renderizza comunque
+    // renderDashboardTutorials(); // Tutorial temporaneamente disabilitati
+    hideLoadingState();
+    showErrorState('Errore nel caricamento della dashboard. Riprova più tardi.');
+    
+    // Sistema traduzione disabilitato - sempre italiano
+  }
 }
 
 // ===== LOAD DASHBOARD DATA =====
 async function loadDashboardData() {
+  // Mostra stato di loading
+  showLoadingState();
+  
   try {
-    // Carica manifest report (tutti, anche < 24h per abbonati)
-    const manifestResponse = await fetch('/archivio/manifest.json');
-    if (manifestResponse.ok) {
-      const manifest = await manifestResponse.json();
-      STATE.reports = manifest.reports || [];
-      Logger.debug('Dashboard', `Caricati ${STATE.reports.length} report`);
+    // Carica manifest report (tutti, anche < 24h per abbonati) con timeout
+    const manifestController = new AbortController();
+    const manifestTimeout = setTimeout(() => manifestController.abort(), 10000); // 10 secondi timeout
+    
+    try {
+      const manifestResponse = await fetch('/archivio/manifest.json', {
+        signal: manifestController.signal,
+        cache: 'no-cache'
+      });
+      clearTimeout(manifestTimeout);
+      
+      if (manifestResponse.ok) {
+        const manifest = await manifestResponse.json();
+        STATE.reports = manifest.reports || [];
+        Logger.debug('Dashboard', `Caricati ${STATE.reports.length} report`);
+        
+        if (STATE.reports.length === 0) {
+          Logger.warn('Dashboard', 'Nessun report trovato nel manifest');
+        }
+      } else {
+        Logger.error('Dashboard', `Errore caricamento manifest: ${manifestResponse.status} ${manifestResponse.statusText}`);
+        STATE.reports = [];
+      }
+    } catch (fetchErr) {
+      clearTimeout(manifestTimeout);
+      if (fetchErr.name === 'AbortError') {
+        Logger.error('Dashboard', 'Timeout caricamento manifest.json (10s)');
+      } else {
+        Logger.error('Dashboard', 'Errore fetch manifest.json', fetchErr);
+      }
+      STATE.reports = [];
     }
     
-    // Carica documenti tutorial
-    const docsResponse = await fetch('/archivio/documents.json');
-    if (docsResponse.ok) {
-      const docs = await docsResponse.json();
-      STATE.tutorials = docs.documents || [];
-      Logger.debug('Dashboard', `Caricati ${STATE.tutorials.length} tutorial`);
-    }
+    // Tutorial temporaneamente disabilitati - verranno riattivati quando completati
+    // Carica documenti tutorial con timeout
+    // const docsController = new AbortController();
+    // const docsTimeout = setTimeout(() => docsController.abort(), 10000);
+    
+    // try {
+    //   const docsResponse = await fetch('/archivio/documents.json', {
+    //     signal: docsController.signal,
+    //     cache: 'no-cache'
+    //   });
+    //   clearTimeout(docsTimeout);
+      
+    //   if (docsResponse.ok) {
+    //     const docs = await docsResponse.json();
+    //     STATE.tutorials = docs.documents || [];
+    //     Logger.debug('Dashboard', `Caricati ${STATE.tutorials.length} tutorial`);
+    //   } else {
+    //     Logger.warn('Dashboard', `Errore caricamento documenti: ${docsResponse.status}`);
+    //     STATE.tutorials = [];
+    //   }
+    // } catch (fetchErr) {
+    //   clearTimeout(docsTimeout);
+    //   if (fetchErr.name === 'AbortError') {
+    //     Logger.warn('Dashboard', 'Timeout caricamento documents.json (10s)');
+    //   } else {
+    //     Logger.warn('Dashboard', 'Errore fetch documents.json', fetchErr);
+    //   }
+    //   STATE.tutorials = [];
+    // }
+    
+    // Tutorial disabilitati - non caricarli
+    STATE.tutorials = [];
+    Logger.debug('Dashboard', 'Tutorial temporaneamente disabilitati');
   } catch (err) {
     Logger.error('Dashboard', 'Errore caricamento dati', err);
+    STATE.reports = [];
+    STATE.tutorials = [];
+  } finally {
+    // Il rendering rimuove lo stato di loading
+    // Assicuriamoci che il rendering avvenga sempre
   }
 }
 
 // ===== RENDER DASHBOARD REPORTS =====
 function renderDashboardReports() {
   const tbody = document.getElementById('dashboard-reports-tbody');
-  if (!tbody) return;
+  if (!tbody) {
+    Logger.warn('Dashboard', 'Elemento dashboard-reports-tbody non trovato');
+    // Nascondi loading comunque
+    hideLoadingState();
+    return;
+  }
   
-  // Sort reports (più recenti prima)
-  const sortedReports = [...STATE.reports].sort((a, b) => {
-    const dateA = new Date(a.created_at);
-    const dateB = new Date(b.created_at);
-    return dateB - dateA;
-  });
-  
-  tbody.innerHTML = sortedReports.map(report => {
-    const date = new Date(report.created_at).toLocaleDateString('it-IT');
-    const statusBadge = `<span class="status-badge" data-status="${report.status || 'active'}">${(report.status || 'active').toUpperCase()}</span>`;
-    const isLocked = isReportLocked(report);
-    const lockedBadge = isLocked ? '<span class="status-badge" data-status="hold" style="margin-left: var(--sp-2);">LOCKED</span>' : '';
+  try {
+    // Verifica se ci sono report
+    if (!STATE.reports || STATE.reports.length === 0) {
+      const noReportsText = i18n.t('dashboard.table.noReports') || 'Nessun report disponibile';
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: var(--sp-6);" data-i18n="dashboard.table.noReports">${noReportsText}</td></tr>`;
+      Logger.warn('Dashboard', 'Nessun report da renderizzare');
+      // Sistema traduzione disabilitato - sempre italiano
+      return;
+    }
     
-    return `
-      <tr>
-        <td>${date}</td>
-        <td><strong>${report.ticker || '—'}</strong></td>
-        <td>${report.company || '—'}</td>
-        <td>${report.type || '—'}</td>
-        <td>${report.version || '—'}</td>
-        <td>${statusBadge}${lockedBadge}</td>
-        <td><a href="/report/index.html?id=${report.id}" target="_blank">Apri Report</a></td>
-      </tr>
-    `;
-  }).join('');
+    // Sort reports (più recenti prima)
+    const sortedReports = [...STATE.reports].sort((a, b) => {
+      try {
+        const dateA = new Date(a.created_at || 0);
+        const dateB = new Date(b.created_at || 0);
+        return dateB - dateA;
+      } catch (err) {
+        Logger.warn('Dashboard', 'Errore ordinamento report', err);
+        return 0;
+      }
+    });
+    
+    Logger.debug('Dashboard', `Renderizzando ${sortedReports.length} report`);
+    
+    tbody.innerHTML = sortedReports.map(report => {
+      try {
+        const date = report.created_at ? new Date(report.created_at).toLocaleDateString('it-IT') : '—';
+        const statusBadge = `<span class="status-badge" data-status="${report.status || 'active'}">${(report.status || 'active').toUpperCase()}</span>`;
+        const isLocked = isReportLocked(report);
+        const lockedBadge = isLocked ? '<span class="status-badge" data-status="hold" style="margin-left: var(--sp-2);">LOCKED</span>' : '';
+        
+        const openReportText = i18n.t('dashboard.table.openReport') || 'Apri Report';
+        return `
+          <tr>
+            <td>${date}</td>
+            <td><strong>${report.ticker || '—'}</strong></td>
+            <td>${report.company || '—'}</td>
+            <td>${report.type || '—'}</td>
+            <td>${report.version || '—'}</td>
+            <td>${statusBadge}${lockedBadge}</td>
+            <td><a href="/report/index.html?id=${report.id}" target="_blank" data-i18n="dashboard.table.openReport">${openReportText}</a></td>
+          </tr>
+        `;
+      } catch (err) {
+        Logger.warn('Dashboard', 'Errore rendering report', err);
+        return '<tr><td colspan="7">Errore caricamento report</td></tr>';
+      }
+    }).join('');
+    
+    // Sistema traduzione disabilitato - sempre italiano
+  } catch (err) {
+    Logger.error('Dashboard', 'Errore renderDashboardReports', err);
+    const errorText = i18n.t('dashboard.table.error') || 'Errore nel rendering dei report';
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: var(--sp-6); color: var(--err, #ef4444);" data-i18n="dashboard.table.error">${errorText}</td></tr>`;
+    setTimeout(() => {
+      i18n.translatePage();
+    }, 50);
+  }
 }
 
 // ===== IS REPORT LOCKED =====
@@ -915,29 +1043,63 @@ function switchTab(tabName) {
   if (tabName === 'voting') {
     loadVotingData();
   }
+  
+  // Applica traduzioni dopo il cambio tab
+  setTimeout(() => {
+    i18n.translatePage();
+  }, 50);
 }
 
 // ===== LOAD VOTING DATA =====
 async function loadVotingData() {
   try {
-    // L'API /api/vote supporta GET per recuperare i voti
-    const response = await fetch('/api/vote');
-    if (response.ok) {
-      const data = await response.json();
-      STATE.votes = data.votes || [];
-      renderVotingRanking();
-      renderVotingStats();
-    } else {
-      Logger.warn('Dashboard', 'Errore risposta API votazioni', response.status);
+    // L'API /api/vote supporta GET per recuperare i voti con timeout
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000); // 5 secondi timeout
+    
+    try {
+      const response = await fetch('/api/vote', {
+        signal: controller.signal,
+        cache: 'no-cache'
+      });
+      clearTimeout(timeout);
+      
+      if (response.ok) {
+        const data = await response.json();
+        STATE.votes = data.votes || [];
+        renderVotingRanking();
+        renderVotingStats();
+        // Applica traduzioni dopo il rendering
+        // Sistema traduzione disabilitato - sempre italiano
+      } else {
+        Logger.warn('Dashboard', 'Errore risposta API votazioni', response.status);
+        STATE.votes = [];
+        renderVotingRanking();
+        renderVotingStats();
+        // Sistema traduzione disabilitato - sempre italiano
+      }
+    } catch (fetchErr) {
+      clearTimeout(timeout);
+      if (fetchErr.name === 'AbortError') {
+        Logger.warn('Dashboard', 'Timeout caricamento votazioni (5s)');
+      } else {
+        Logger.warn('Dashboard', 'Errore fetch votazioni', fetchErr);
+      }
       STATE.votes = [];
       renderVotingRanking();
       renderVotingStats();
+      setTimeout(() => {
+        i18n.translatePage();
+      }, 50);
     }
   } catch (err) {
     Logger.error('Dashboard', 'Errore caricamento votazioni', err);
     STATE.votes = [];
     renderVotingRanking();
     renderVotingStats();
+    setTimeout(() => {
+      i18n.translatePage();
+    }, 50);
   }
 }
 
@@ -1031,6 +1193,37 @@ function renderVotingStats() {
       <div class="stat-value">${totalVoteCount}</div>
     </div>
   `;
+}
+
+// ===== LOADING STATE =====
+function showLoadingState() {
+  const tbody = document.getElementById('dashboard-reports-tbody');
+  if (tbody) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: var(--sp-6);"><div class="loading-spinner">Caricamento report...</div></td></tr>';
+  }
+}
+
+function hideLoadingState() {
+  // Rimuove lo stato di loading se presente
+  const tbody = document.getElementById('dashboard-reports-tbody');
+  if (tbody) {
+    // Se è ancora in loading, mostra messaggio vuoto
+    const currentContent = tbody.innerHTML;
+    if (currentContent.includes('loading-spinner') || currentContent.includes('Caricamento report')) {
+      // Il rendering lo sostituirà, ma se non ci sono dati mostriamo messaggio
+      if (!STATE.reports || STATE.reports.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: var(--sp-6);">Nessun report disponibile</td></tr>';
+      }
+    }
+  }
+}
+
+// ===== ERROR STATE =====
+function showErrorState(message) {
+  const tbody = document.getElementById('dashboard-reports-tbody');
+  if (tbody) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: var(--sp-6); color: var(--err, #ef4444);">${message}</td></tr>`;
+  }
 }
 
 // ===== AVVIO =====

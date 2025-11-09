@@ -25,20 +25,20 @@ Integra Barchart numerico, OHLCV e Options F2 per costruire la carta d'identità
 ### 4️⃣ F4 – Intermarket & Strutturale
 Verifica coerenza cross-asset e macro con il bias tecnico
 
-### 5️⃣ F5 – Setup Operativo (Method Perfect Setup)
-Genera setup tecnici completi, coerenti con bias e rischio
+### 5️⃣ F5 – Analisi Configurazione Tecnica
+Analisi educativa di configurazioni tecniche esemplificative, coerenti con bias e rischio
 
-- **F5B – Opzioni**: costruisce strutture CALL/PUT o spread Freedom24/Pro
+- **F5B – Analisi Strutture Opzioni**: analisi educativa di strutture CALL/PUT o spread esemplificative
 - **F5-LT+**: layer long-term integrato per coerenza ciclica e fondamentale
 
-### 6️⃣ F6 – Gestione Dinamica
-Simula la gestione swing o LT (discipline, coerenza, efficienza educativa)
+### 6️⃣ F6 – Analisi Dinamica
+Analisi educativa di coerenza e disciplina metodologica (swing o LT)
 
 ### 7️⃣ F7 – Audit & Feedback
-Consolida lezioni operative, validazioni, e feed di miglioramento
+Consolida analisi descrittive, validazioni, e feed di miglioramento metodologico
 
-### 8️⃣ F8 – Registro Performance
-Calcola KPI portafoglio, validazioni rischio e lesson learned
+### 8️⃣ F8 – Analisi Performance
+Analisi descrittiva di KPI portafoglio, validazioni rischio e lesson learned (solo didattica)
 
 ---
 
@@ -64,7 +64,7 @@ Calcola KPI portafoglio, validazioni rischio e lesson learned
 - Linguaggio descrittivo ("indica", "mostra", "evidenzia")
 
 ### Output interni
-- Numerico e operativo (Entry, Stop, TP, Size)
+- Numerico descrittivo (Punto di Riferimento, Soglia Monitoraggio, Obiettivo Esemplificativo)
 
 ---
 
@@ -76,12 +76,12 @@ Calcola KPI portafoglio, validazioni rischio e lesson learned
 | **F2** | Macro & Sentiment Overlay | ACTIVE | SCI, IPI, ICR, DPI_context |
 | **F3** | Analisi tecnica OCR + Options | ACTIVE | MTF_Score, Prob_SwingUp/LTUp |
 | **F4** | Intermarket validation | ACTIVE | BiasIntermarketScore, Concordance |
-| **F5** | Setup operativo | ACTIVE | Entry, Stop, TP, FlowScore |
-| **F5B** | Setup opzioni | ACTIVE | BiasOption, IV regime, SetupScore_F5B |
+| **F5** | Analisi Configurazione Tecnica | ACTIVE | Punto di Riferimento, Soglia Monitoraggio, Obiettivo Esemplificativo, FlowScore |
+| **F5B** | Analisi Strutture Opzioni | ACTIVE | Orientamento Strutturale, Regime Volatilità Implicita, Score Configurazione F5B |
 | **F5-LT+** | Strato long-term | ACTIVE | LT_Code, LTComposite_total |
-| **F6** | Gestione dinamica | ACTIVE | DisciplineScore, ConsistencyIndex |
+| **F6** | Analisi Dinamica | ACTIVE | DisciplineScore, ConsistencyIndex |
 | **F7** | Audit & Feedback | ACTIVE | Validation, Lesson Learned |
-| **F8** | Performance & KPI | ACTIVE | WinRate, PF, Sharpe, DD |
+| **F8** | Analisi Performance | ACTIVE | Analisi descrittiva WinRate, PF, Sharpe, DD |
 
 ---
 
@@ -95,8 +95,8 @@ Report strutturato con:
 
 Contiene:
 - Indicatori macro, sentimentali, tecnici e intermarket
-- Blocco F5 (setup)
-- Gestione dinamica F6
+- Blocco F5 (configurazione tecnica esemplificativa)
+- Analisi educativa F6
 
 ---
 
@@ -107,15 +107,16 @@ Ogni blocco include:
 - **FeedSyncScore**
 - **ConfidenceFinal**
 
-### Regole operative
+### Regole analitiche (solo per finalità educative)
 
-**Stop operativo Master:**
-- Se `DD_portafoglio > 5%` → **Stop operativo Master**
+**Analisi rischio portafoglio:**
+- Monitoraggio drawdown per finalità didattiche
+- Analisi coerenza posizionamento (solo descrittiva)
 
-**Validazione rischio:**
-- Rischio ≤ 1%
-- Max 3 posizioni non correlate
-- Trailing coerente
+**Validazione rischio (solo descrittiva):**
+- Analisi rischio relativo (≤ 1% esemplificativo)
+- Coerenza posizionamento (esemplificativo)
+- Analisi trailing (solo descrittiva)
 
 ---
 

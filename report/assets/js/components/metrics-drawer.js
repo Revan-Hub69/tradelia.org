@@ -8,6 +8,7 @@
 
 import Logger from '../utils/logger.js';
 import { registerOverlay, unregisterOverlay, OVERLAY_TYPES } from '../utils/overlay-manager.js';
+import { i18n } from '../utils/i18n.js';
 
 const DRAWER = {
   _overlay: null,
@@ -140,12 +141,12 @@ function renderBreadcrumb(container, path) {
   container.innerHTML = '';
   
   if (path.length === 0) {
-    const home = createEl('span', 'breadcrumb-item breadcrumb-active', 'Tutte le metriche');
+    const home = createEl('span', 'breadcrumb-item breadcrumb-active', i18n.t('metrics.drawer.all'));
     container.appendChild(home);
     return;
   }
   
-  const home = createEl('button', 'breadcrumb-item', 'Tutte le metriche');
+  const home = createEl('button', 'breadcrumb-item', i18n.t('metrics.drawer.all'));
   home.addEventListener('click', () => DRAWER.navigateTo('categories'));
   container.appendChild(home);
   
@@ -172,7 +173,7 @@ function renderSearch(container) {
   const searchWrapper = createEl('div', 'drawer-search');
   const searchInput = createEl('input', 'drawer-search-input');
   searchInput.type = 'text';
-  searchInput.placeholder = 'Cerca metrica...';
+  searchInput.placeholder = i18n.t('metrics.drawer.search');
   searchInput.value = DRAWER._searchQuery;
   
   searchInput.addEventListener('input', (e) => {
@@ -213,7 +214,7 @@ function renderCategories(organized) {
   const categories = Object.keys(organized.categories).sort();
   
   if (categories.length === 0) {
-    container.innerHTML = '<div class="drawer-empty">Nessuna metrica disponibile</div>';
+    container.innerHTML = `<div class="drawer-empty">${i18n.t('metrics.drawer.empty')}</div>`;
     return container;
   }
   
@@ -226,7 +227,7 @@ function renderCategories(organized) {
     const item = createEl('button', 'drawer-category-item');
     item.innerHTML = `
       <div class="drawer-category-name">${escapeHtml(categoryName)}</div>
-      <div class="drawer-category-count">${count} ${count === 1 ? 'metrica' : 'metriche'}</div>
+      <div class="drawer-category-count">${count} ${count === 1 ? i18n.t('metrics.drawer.metric') : i18n.t('metrics.drawer.metrics')}</div>
     `;
     
     item.addEventListener('click', () => {
@@ -244,7 +245,7 @@ function renderGroup(groupData) {
   const container = createEl('div', 'drawer-content');
   
   if (!groupData || !groupData.metrics || groupData.metrics.length === 0) {
-    container.innerHTML = '<div class="drawer-empty">Nessuna metrica in questo gruppo</div>';
+    container.innerHTML = `<div class="drawer-empty">${i18n.t('metrics.drawer.emptyGroup')}</div>`;
     return container;
   }
   
@@ -302,22 +303,22 @@ function renderMetric(metric) {
     </div>
     ${enriched.description || enriched.what ? `
       <div class="drawer-metric-detail-desc">
-        <strong>Cosa:</strong> ${escapeHtml(enriched.description || enriched.what)}
+        <strong>${i18n.t('metric.popup.what')}:</strong> ${escapeHtml(enriched.description || enriched.what)}
       </div>
     ` : ''}
     ${enriched.how ? `
       <div class="drawer-metric-detail-how">
-        <strong>Come:</strong> ${escapeHtml(enriched.how)}
+        <strong>${i18n.t('metric.popup.how')}:</strong> ${escapeHtml(enriched.how)}
       </div>
     ` : ''}
     ${enriched.source ? `
       <div class="drawer-metric-detail-source">
-        <strong>Fonte:</strong> ${escapeHtml(enriched.source)}
+        <strong>${i18n.t('metric.popup.source')}:</strong> ${escapeHtml(enriched.source)}
       </div>
     ` : ''}
     ${enriched.category ? `
       <div class="drawer-metric-detail-category">
-        <strong>Categoria:</strong> ${escapeHtml(enriched.category)}
+        <strong>${i18n.t('metrics.drawer.category')}:</strong> ${escapeHtml(enriched.category)}
       </div>
     ` : ''}
     <div class="drawer-metric-detail-tone">
@@ -416,8 +417,8 @@ function mount() {
   // Header
   const header = createEl('header', 'drawer-header');
   header.innerHTML = `
-    <h2 id="drawer-title" class="drawer-title">Metriche</h2>
-    <button class="drawer-close" aria-label="Chiudi" type="button">×</button>
+    <h2 id="drawer-title" class="drawer-title">${i18n.t('metrics.drawer.all')}</h2>
+    <button class="drawer-close" aria-label="${i18n.t('common.close')}" type="button">×</button>
   `;
   DRAWER._panel.appendChild(header);
   

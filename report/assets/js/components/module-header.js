@@ -3,6 +3,7 @@
 // -----------------------------------------------------------
 
 import { unifiedDrawer } from './unified-drawer.js';
+import { i18n } from '../utils/i18n.js';
 
 /**
  * Genera HTML disclaimer MiFID per modulo
@@ -11,7 +12,7 @@ import { unifiedDrawer } from './unified-drawer.js';
  */
 export function renderMiFIDDisclaimer(disclaimer = '') {
   if (!disclaimer) {
-    disclaimer = 'Output a fini educativi/informativi (orizzonte 3–10 giorni). Non costituisce consulenza o raccomandazione (MiFID II).';
+    disclaimer = i18n.t('module.header.mifid.default');
   }
 
   function escapeHtml(str) {
@@ -89,8 +90,9 @@ export function renderModuleHeader(config = {}) {
  * @param {string} label - Label (default: "Riassunto AI")
  * @returns {string} HTML summary box
  */
-export function renderAISummary(summaryText = '', label = 'Riassunto AI') {
+export function renderAISummary(summaryText = '', label = '') {
   if (!summaryText) return '';
+  if (!label) label = i18n.t('module.header.aiSummary');
 
   function escapeHtml(str) {
     if (str == null) return '';
@@ -145,7 +147,7 @@ export function renderModuleTabsSidebar(tabs = []) {
           type="button"
           data-tab-id="${escapeAttr(tab.id)}"
           data-active="false"
-          aria-label="Apri ${escapeHtml(tab.title)}">
+          aria-label="${i18n.t('module.header.openTab')} ${escapeHtml(tab.title)}">
           ${escapeHtml(tab.title)}
         </button>
       `).join('')}
@@ -215,7 +217,7 @@ export function bindModuleTabs(container) {
     // Apri unified drawer (stessa struttura del glossary-drawer che funziona)
     unifiedDrawer.open({
       id: `module-tabs-${badgeText}-${tabId}`,
-      title: tabTitle || 'Sezioni',
+      title: tabTitle || i18n.t('module.header.sections'),
       breadcrumb: badgeText ? `${badgeText} > ${tabTitle}` : tabTitle,
       content: content
     });

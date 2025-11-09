@@ -154,6 +154,41 @@
   margin-top: 0;
 }
 
+/* ===== REPORT CONTENT WRAPPER ===== */
+.report-content-wrapper {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--sp-6);
+  align-items: start;
+}
+
+.report-index-sidebar {
+  position: sticky;
+  top: 80px;
+  align-self: start;
+}
+
+.report-modules-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-8);
+  min-width: 0; /* Permette shrink */
+}
+
+@media (max-width: 1024px) {
+  .report-content-wrapper {
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+  }
+
+  .report-index-sidebar {
+    position: relative;
+    top: 0;
+    order: -1;
+    margin-bottom: var(--sp-4);
+  }
+}
+
 /* ===== ERROR STATES ===== */
 .error-state {
   padding: var(--sp-6);

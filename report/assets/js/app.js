@@ -7,14 +7,22 @@
 
 import Logger from './utils/logger.js';
 import { metricPopup } from './components/metric-popup.js';
+import { reportNavigation } from './components/report-navigation.js';
+import { userPreferences } from './utils/user-preferences.js';
+import { i18n } from './utils/i18n.js';
 
 (function() {
   'use strict';
   
   const ROOT = document.getElementById('app-root');
+  const MODULES_CONTAINER = document.getElementById('report-modules-container') || ROOT;
   const TICKER_SLOT = document.getElementById('header-ticker-slot');
   const HEADER_SLOT = document.getElementById('site-header-slot');
   const FOOTER_SLOT = document.getElementById('site-footer-slot');
+  const INDEX_SLOT = document.getElementById('report-index-slot');
+  const BREADCRUMB_SLOT = document.getElementById('report-breadcrumb-slot');
+  const SEARCH_SLOT = document.getElementById('report-search-slot');
+  const NAVIGATION_CONTAINER = document.getElementById('report-navigation-container');
   
   if (!ROOT || !TICKER_SLOT) {
     Logger.error('App', 'DOM non valido');
@@ -25,13 +33,14 @@ import { metricPopup } from './components/metric-popup.js';
   let __header = null;
   
   // ===== ERROR STATES =====
-  function showErrorState(container, error, title = 'Errore di caricamento') {
-    const message = error?.message || 'Si è verificato un errore temporaneo.';
+  function showErrorState(container, error, title = null) {
+    const errorTitle = title || i18n.t('error.loading');
+    const message = error?.message || i18n.t('error.temporary');
     container.innerHTML = `
       <div class="error-state">
-        <div class="error-state-title">${escapeHtml(title)}</div>
+        <div class="error-state-title">${escapeHtml(errorTitle)}</div>
         <div class="error-state-message">${escapeHtml(message)}</div>
-        <button class="btn btn-sm" onclick="location.reload()">Ricarica pagina</button>
+        <button class="btn btn-sm" onclick="location.reload()">${i18n.t('error.reload')}</button>
       </div>
     `;
   }
@@ -318,6 +327,7 @@ import { metricPopup } from './components/metric-popup.js';
     
     let loadedCount = 0;
     const totalModules = manifest.order.length;
+    const modulesInfo = []; // Per navigazione
     
     for (const modId of manifest.order) {
       // Mapping per moduli con caratteri speciali nel nome
@@ -373,7 +383,18 @@ import { metricPopup } from './components/metric-popup.js';
         wrap.id = `sec-${modInfo.js}`;
         wrap.className = 'report-section-block mb-8';
         wrap.innerHTML = cardHTML;
-        ROOT.appendChild(wrap);
+        MODULES_CONTAINER.appendChild(wrap);
+        
+        // Estrai informazioni modulo per navigazione
+        const moduleInfo = {
+          id: `sec-${modInfo.js}`,
+          badge: json?.ui_labels?.badge || modId,
+          title: json?.ui_labels?.hero_title || json?.meta?.module || modId,
+          desc: json?.ui_labels?.hero_desc || json?.meta?.hero_intro || '',
+          status: json?.meta?.moduleStatus || 'ACTIVE',
+          isActive: false // Non impostare attivo di default - sarà gestito dallo scroll tracking
+        };
+        modulesInfo.push(moduleInfo);
         
         if (typeof mod.bindCard === 'function') {
           try {
@@ -400,14 +421,35 @@ import { metricPopup } from './components/metric-popup.js';
         errorWrap.id = `sec-${modInfo.js}-error`;
         errorWrap.className = 'report-section-block mb-8';
         showErrorState(errorWrap, err, `Errore caricamento ${modId}`);
-        ROOT.appendChild(errorWrap);
+        MODULES_CONTAINER.appendChild(errorWrap);
         continue;
+      }
+    }
+
+    // Inizializza navigazione dopo caricamento moduli
+    if (modulesInfo.length > 0 && (INDEX_SLOT || BREADCRUMB_SLOT || SEARCH_SLOT)) {
+      try {
+        reportNavigation.init({
+          modules: modulesInfo,
+          indexContainer: INDEX_SLOT,
+          breadcrumbContainer: BREADCRUMB_SLOT,
+          searchContainer: SEARCH_SLOT
+        });
+        
+        // Mostra container navigazione
+        if (NAVIGATION_CONTAINER) {
+          NAVIGATION_CONTAINER.style.display = 'block';
+        }
+        
+        Logger.debug('App', 'Navigazione inizializzata', { modulesCount: modulesInfo.length });
+      } catch (err) {
+        Logger.warn('App', 'Errore inizializzazione navigazione', err);
       }
     }
   }
   
   // ===== MOUNT HEADER & FOOTER =====
-  async function mountSiteHeader() {
+  async function mountSiteHeader(options = {}) {
     if (!HEADER_SLOT) {
       Logger.warn('App', 'Header slot non trovato, skip');
       return;
@@ -416,7 +458,7 @@ import { metricPopup } from './components/metric-popup.js';
     try {
       const { siteHeader } = await safeImport('/report/assets/js/components/site-header.js');
       if (siteHeader && typeof siteHeader.mount === 'function') {
-        siteHeader.mount(HEADER_SLOT);
+        siteHeader.mount(HEADER_SLOT, { showExport: true, ...options });
         Logger.debug('App', 'Site header montato');
       }
     } catch (err) {
@@ -453,7 +495,12 @@ import { metricPopup } from './components/metric-popup.js';
     // Monta header (statico, non dipende da reportId)
     await mountSiteHeader();
     
-    ROOT.innerHTML = '';
+    // Pulisci container
+    if (MODULES_CONTAINER) {
+      MODULES_CONTAINER.innerHTML = '';
+    } else {
+      ROOT.innerHTML = '';
+    }
     
     // Error boundary globale per inizializzazione
     let headerData = null;
@@ -469,9 +516,10 @@ import { metricPopup } from './components/metric-popup.js';
       await loadModules(reportId);
     } catch (err) {
       Logger.error('App', 'Errore loadModules', err);
-      // Se ROOT è vuoto, mostra errore globale
-      if (!ROOT.innerHTML) {
-        showErrorState(ROOT, err, 'Errore caricamento moduli');
+      // Se container è vuoto, mostra errore globale
+      const container = MODULES_CONTAINER || ROOT;
+      if (!container.innerHTML) {
+        showErrorState(container, err, 'Errore caricamento moduli');
       }
     }
     
@@ -482,6 +530,10 @@ import { metricPopup } from './components/metric-popup.js';
   }
   
   // ===== AVVIO =====
+  // Sistema traduzione disabilitato - sempre italiano
+  // i18n.init(); // Disabilitato
+  userPreferences.applyToDOM();
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

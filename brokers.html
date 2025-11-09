@@ -2,7 +2,7 @@
 <html lang="it" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0" />
   <title>Tradelia AI · Broker Regolamentati</title>
 
   <!-- Favicons -->
@@ -16,6 +16,8 @@
 
   <!-- Design System -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/assets/css/global-header.css" />
+  <link rel="stylesheet" href="/assets/css/homepage-brokers-2025.css" />
 
   <style>
     html, body { height: 100%; }
@@ -537,20 +539,13 @@
   </div>
 </div>
 
-  <!-- ===== MOUNT HEADER & FOOTER ===== -->
+  <!-- ===== MOUNT FOOTER ===== -->
   <script type="module">
     // Imposta tema dark
     document.documentElement.setAttribute('data-theme', 'dark');
     
-    // Importa componenti
-    import { siteHeader } from '/report/assets/js/components/site-header.js';
+    // Importa footer (header gestito da global-header.js)
     import { siteFooter } from '/report/assets/js/components/site-footer.js';
-    
-    // Monta header
-    const headerSlot = document.getElementById('site-header-slot');
-    if (headerSlot) {
-      siteHeader.mount(headerSlot);
-    }
     
     // Monta footer
     const footerSlot = document.getElementById('site-footer-slot');
@@ -558,6 +553,9 @@
       siteFooter.mount(footerSlot);
     }
   </script>
+
+  <!-- Global Header (monta automaticamente l'header) -->
+  <script type="module" src="/assets/js/global-header.js"></script>
 
   <!-- ===== LEGAL OVERLAY SCRIPT ===== -->
   <script>

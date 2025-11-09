@@ -2,7 +2,7 @@
 <html lang="it" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0" />
   <title>Pricing · Tradelia AI</title>
 
   <!-- Favicons -->
@@ -16,6 +16,8 @@
 
   <!-- Design System -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/assets/css/global-header.css" />
+  <link rel="stylesheet" href="/assets/css/site-coherence-2025.css" />
 
   <!-- Lucide -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -23,33 +25,377 @@
 
   <style>
     html, body { height: 100%; }
-    body { display: flex; flex-direction: column; min-height: 100vh; }
+    body { 
+      display: flex; 
+      flex-direction: column; 
+      min-height: 100vh;
+      padding-top: 64px; /* Spazio per header fixed */
+    }
+    #site-header-slot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    }
     .container { max-width: 90rem; margin-inline: auto; padding-inline: 1rem; }
-    main { flex: 1; padding-top: 5rem; padding-bottom: 5rem; }
+    main { flex: 1; padding-top: 2rem; padding-bottom: 8rem; }
     
+    /* Footer gestito da tokens.css - nessuno stile aggiuntivo necessario */
+    
+    /* ===== PRICING CARD ===== */
     .pricing-card {
-      background: var(--surface-card);
+      background: linear-gradient(
+        135deg,
+        var(--surface-card) 0%,
+        color-mix(in oklab, var(--surface-card) 99%, var(--brand-600) 1%) 100%
+      );
       border: 1px solid var(--br-card);
-      border-radius: var(--radius-lg);
-      padding: var(--sp-8);
+      border-radius: var(--radius-xl);
+      padding: var(--sp-10) var(--sp-8);
       transition: all var(--transition-base);
+      box-shadow: 
+        var(--shadow-md),
+        0 1px 0 rgba(255, 255, 255, 0.02) inset;
+      position: relative;
+    }
+    
+    .pricing-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: var(--brand-600);
+      border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+      opacity: 0.6;
+      transition: opacity var(--transition-base), width var(--transition-base);
     }
     
     .pricing-card:hover {
-      border-color: var(--brand-600);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      background: linear-gradient(
+        135deg,
+        color-mix(in oklab, var(--surface-card) 98%, white 2%) 0%,
+        color-mix(in oklab, var(--surface-card) 97%, var(--brand-600) 3%) 100%
+      );
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 
+        var(--shadow-lg),
+        0 1px 0 rgba(255, 255, 255, 0.03) inset;
+      transform: translateY(-2px);
+    }
+    
+    .pricing-card:hover::before {
+      opacity: 1;
+      width: 5px;
     }
     
     .pricing-price {
-      font-size: var(--fs-48);
-      font-weight: 700;
+      font-size: clamp(3rem, 8vw, 4.5rem);
+      font-weight: 800;
       color: var(--ink);
       line-height: 1;
+      letter-spacing: -0.03em;
+      background: linear-gradient(
+        135deg,
+        var(--ink) 0%,
+        color-mix(in oklab, var(--ink) 95%, var(--brand-400) 5%) 100%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
     
     .pricing-period {
-      font-size: var(--fs-14);
+      font-size: var(--fs-16);
       color: var(--muted);
+      font-weight: 500;
+    }
+    
+    /* ===== TRIAL BADGE ===== */
+    .trial-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-2);
+      padding: var(--sp-2) var(--sp-4);
+      background: linear-gradient(
+        135deg,
+        rgba(37, 99, 235, 0.15) 0%,
+        rgba(37, 99, 235, 0.1) 100%
+      );
+      border: 1px solid rgba(37, 99, 235, 0.3);
+      border-radius: var(--radius-pill);
+      font-size: var(--fs-12);
+      font-weight: 600;
+      color: var(--brand-400);
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      transition: all var(--transition-base);
+    }
+    
+    .trial-badge::before {
+      content: "→";
+      font-size: var(--fs-14);
+      transition: transform var(--transition-fast);
+    }
+    
+    .trial-badge:hover {
+      background: linear-gradient(
+        135deg,
+        rgba(37, 99, 235, 0.2) 0%,
+        rgba(37, 99, 235, 0.15) 100%
+      );
+      border-color: rgba(37, 99, 235, 0.4);
+      transform: translateX(2px);
+    }
+    
+    .trial-badge:hover::before {
+      transform: translateX(2px);
+    }
+    
+    /* ===== CTA BUTTON ===== */
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--sp-3);
+      padding: var(--sp-4) var(--sp-10);
+      font-size: var(--fs-16);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      background: linear-gradient(
+        135deg,
+        var(--surface-elev) 0%,
+        color-mix(in oklab, var(--surface-elev) 98%, var(--brand-600) 2%) 100%
+      );
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-lg);
+      text-decoration: none;
+      transition: all var(--transition-base);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 
+        var(--shadow-sm),
+        0 1px 0 rgba(255, 255, 255, 0.02) inset;
+    }
+    
+    .cta-button::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: var(--brand-600);
+      border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+      opacity: 0.6;
+      transition: all var(--transition-base);
+    }
+    
+    .cta-button::after {
+      content: "→";
+      position: absolute;
+      right: var(--sp-6);
+      opacity: 0;
+      transform: translateX(-4px);
+      transition: all var(--transition-base);
+      font-size: var(--fs-18);
+    }
+    
+    .cta-button:hover {
+      background: linear-gradient(
+        135deg,
+        color-mix(in oklab, var(--surface-elev) 96%, white 4%) 0%,
+        color-mix(in oklab, var(--surface-elev) 95%, var(--brand-600) 5%) 100%
+      );
+      border-color: rgba(255, 255, 255, 0.12);
+      box-shadow: 
+        var(--shadow-md),
+        0 1px 0 rgba(255, 255, 255, 0.03) inset;
+      transform: translateY(-2px);
+      padding-right: var(--sp-12);
+    }
+    
+    .cta-button:hover::before {
+      opacity: 1;
+      width: 5px;
+    }
+    
+    .cta-button:hover::after {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .cta-button:active {
+      transform: translateY(0);
+    }
+    
+    /* ===== SECTION SPACING ===== */
+    .pricing-hero {
+      margin-bottom: var(--sp-16);
+    }
+    
+    .pricing-card-wrapper {
+      margin-bottom: var(--sp-16);
+    }
+    
+    .pricing-faq {
+      margin-top: var(--sp-16);
+    }
+    
+    /* ===== FEATURE LIST ===== */
+    .pricing-features {
+      margin: var(--sp-8) 0;
+    }
+    
+    .pricing-features h3 {
+      font-size: var(--fs-18);
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: var(--sp-6);
+      letter-spacing: -0.01em;
+    }
+    
+    .pricing-features ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-4);
+    }
+    
+    .pricing-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sp-3);
+      padding: var(--sp-3) 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    
+    .pricing-features li:last-child {
+      border-bottom: none;
+    }
+    
+    .pricing-features li i {
+      width: 20px;
+      height: 20px;
+      color: var(--brand-500);
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: all var(--transition-fast);
+    }
+    
+    .pricing-features li:hover i {
+      color: var(--brand-400);
+      transform: scale(1.1);
+    }
+    
+    .pricing-features li span {
+      color: var(--ink-soft);
+      font-size: var(--fs-15);
+      line-height: var(--lh-16);
+      flex: 1;
+    }
+    
+    /* ===== FAQ ===== */
+    .pricing-faq details {
+      background: var(--surface-elev);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-5) var(--sp-6);
+      margin-bottom: var(--sp-4);
+      transition: all var(--transition-base);
+    }
+    
+    .pricing-faq details:hover {
+      background: var(--surface-hover);
+      border-color: rgba(255, 255, 255, 0.08);
+      transform: translateX(2px);
+    }
+    
+    .pricing-faq details summary {
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: var(--fs-15);
+      letter-spacing: -0.01em;
+      padding: var(--sp-1) 0;
+      list-style: none;
+      position: relative;
+      padding-right: var(--sp-6);
+    }
+    
+    .pricing-faq details summary::-webkit-details-marker {
+      display: none;
+    }
+    
+    .pricing-faq details summary::after {
+      content: "→";
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%) rotate(0deg);
+      transition: transform var(--transition-fast);
+      color: var(--muted);
+      font-size: var(--fs-16);
+    }
+    
+    .pricing-faq details[open] summary::after {
+      transform: translateY(-50%) rotate(90deg);
+      color: var(--brand-500);
+    }
+    
+    .pricing-faq details p {
+      color: var(--muted);
+      font-size: var(--fs-14);
+      margin-top: var(--sp-4);
+      padding-left: var(--sp-2);
+      line-height: var(--lh-17);
+    }
+    
+    /* ===== LEGAL LINKS ===== */
+    .pricing-legal {
+      margin-top: var(--sp-6);
+      text-align: center;
+    }
+    
+    .pricing-legal-links {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-4);
+      font-size: var(--fs-13);
+      color: var(--muted);
+    }
+    
+    .pricing-legal-links a {
+      color: var(--ink-soft);
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 2px;
+      transition: all var(--transition-fast);
+    }
+    
+    .pricing-legal-links a::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--brand-600);
+      transition: width var(--transition-base);
+    }
+    
+    .pricing-legal-links a:hover {
+      color: var(--ink);
+    }
+    
+    .pricing-legal-links a:hover::after {
+      width: 100%;
+    }
+    
+    .pricing-legal-separator {
+      color: var(--muted-strong);
+      opacity: 0.5;
     }
 
     /* ===== HEADER ===== */
@@ -59,7 +405,7 @@
       left: 0; 
       right: 0; 
       height: 64px; 
-      z-index: 100;
+      z-index: 1000;
       display: flex; 
       align-items: center;
       backdrop-filter: blur(16px) saturate(1.2);
@@ -220,106 +566,116 @@
     <div class="container" style="max-width: 1000px;">
       
       <!-- Hero Section -->
-      <header style="text-align: center; margin-bottom: var(--sp-12);">
-        <h1 style="font-size: var(--fs-40); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);">
+      <header class="pricing-hero" style="text-align: center;">
+        <h1 style="font-size: clamp(2rem, 5vw, 2.75rem); font-weight: 800; color: var(--ink); margin-bottom: var(--sp-4); letter-spacing: -0.02em;" data-i18n="pricing.hero.title">
           Scegli il Piano Giusto per Te
         </h1>
-        <p style="color: var(--muted); font-size: var(--fs-18); max-width: 600px; margin: 0 auto;">
+        <p style="color: var(--ink-soft); font-size: var(--fs-18); max-width: 600px; margin: 0 auto var(--sp-6); line-height: var(--lh-16);" data-i18n="pricing.hero.subtitle">
           Accesso completo a tutti i report, dashboard interattive e strumenti di analisi
+        </p>
+        <p style="color: var(--muted); font-size: var(--fs-15); max-width: 700px; margin: 0 auto; line-height: var(--lh-17);" data-i18n="pricing.hero.description">
+          <strong style="color: var(--ink-soft);">Tradelia AI</strong> è una piattaforma SaaS che fornisce analisi finanziarie professionali 
+          attraverso metodologia accademica AI. Offriamo report dettagliati su azioni, ETF, commodities e altri asset, 
+          con dashboard interattive e strumenti di analisi tecnica e fondamentale. 
+          Il servizio è progettato per trader, investitori e professionisti finanziari che cercano analisi dati 
+          approfondite e visualizzazioni professionali.
         </p>
       </header>
 
       <!-- Pricing Card -->
-      <div class="pricing-card" style="max-width: 500px; margin: 0 auto;">
-        <div style="text-align: center; margin-bottom: var(--sp-6);">
-          <h2 style="font-size: var(--fs-24); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-2);">
-            Abbonamento Mensile
-          </h2>
-          <div style="display: flex; align-items: baseline; justify-content: center; gap: var(--sp-2); margin-bottom: var(--sp-4);">
-            <span class="pricing-price">€49</span>
-            <span class="pricing-period">/mese</span>
+      <div class="pricing-card-wrapper" style="max-width: 600px; margin: 0 auto;">
+        <div class="pricing-card">
+          <div style="text-align: center; margin-bottom: var(--sp-8);">
+            <h2 style="font-size: var(--fs-22); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-4); letter-spacing: -0.01em;" data-i18n="pricing.card.title">
+              Abbonamento Mensile
+            </h2>
+            <div class="trial-badge" style="margin-bottom: var(--sp-5);" data-i18n="pricing.card.trial">
+              14 giorni di prova gratuita
+            </div>
+            <div style="display: flex; align-items: baseline; justify-content: center; gap: var(--sp-3); margin-bottom: var(--sp-5);">
+              <span class="pricing-price">€29</span>
+              <span class="pricing-period" data-i18n="pricing.card.period">/mese</span>
+            </div>
+            <p style="color: var(--muted); font-size: var(--fs-14); line-height: var(--lh-16);" data-i18n="pricing.card.description">
+              Prova gratuita per 14 giorni, poi €29/mese.<br>
+              Annulla in qualsiasi momento.
+            </p>
           </div>
-          <p style="color: var(--muted); font-size: var(--fs-14); margin-bottom: var(--sp-6);">
-            Annulla in qualsiasi momento
-          </p>
-        </div>
 
-        <!-- Features -->
-        <div style="margin-bottom: var(--sp-6);">
-          <h3 style="font-size: var(--fs-16); font-weight: 600; color: var(--ink); margin-bottom: var(--sp-4);">
-            Cosa include:
-          </h3>
-          <ul style="list-style: none; padding: 0; margin: 0;">
-            <li style="display: flex; align-items: start; gap: var(--sp-3); margin-bottom: var(--sp-3);">
-              <i data-lucide="check" style="width: 20px; height: 20px; color: var(--brand-600); flex-shrink: 0; margin-top: 2px;"></i>
-              <span style="color: var(--ink); font-size: var(--fs-15);">Accesso completo a tutti i report</span>
-            </li>
-            <li style="display: flex; align-items: start; gap: var(--sp-3); margin-bottom: var(--sp-3);">
-              <i data-lucide="check" style="width: 20px; height: 20px; color: var(--brand-600); flex-shrink: 0; margin-top: 2px;"></i>
-              <span style="color: var(--ink); font-size: var(--fs-15);">Dashboard interattive e personalizzabili</span>
-            </li>
-            <li style="display: flex; align-items: start; gap: var(--sp-3); margin-bottom: var(--sp-3);">
-              <i data-lucide="check" style="width: 20px; height: 20px; color: var(--brand-600); flex-shrink: 0; margin-top: 2px;"></i>
-              <span style="color: var(--ink); font-size: var(--fs-15);">Sistema di votazione avanzato</span>
-            </li>
-            <li style="display: flex; align-items: start; gap: var(--sp-3); margin-bottom: var(--sp-3);">
-              <i data-lucide="check" style="width: 20px; height: 20px; color: var(--brand-600); flex-shrink: 0; margin-top: 2px;"></i>
-              <span style="color: var(--ink); font-size: var(--fs-15);">Notifiche push per nuovi report</span>
-            </li>
-            <li style="display: flex; align-items: start; gap: var(--sp-3); margin-bottom: var(--sp-3);">
-              <i data-lucide="check" style="width: 20px; height: 20px; color: var(--brand-600); flex-shrink: 0; margin-top: 2px;"></i>
-              <span style="color: var(--ink); font-size: var(--fs-15);">Accesso prioritario a nuove funzionalità</span>
-            </li>
-            <li style="display: flex; align-items: start; gap: var(--sp-3); margin-bottom: var(--sp-3);">
-              <i data-lucide="check" style="width: 20px; height: 20px; color: var(--brand-600); flex-shrink: 0; margin-top: 2px;"></i>
-              <span style="color: var(--ink); font-size: var(--fs-15);">Supporto via email</span>
-            </li>
-          </ul>
-        </div>
+          <!-- Features -->
+          <div class="pricing-features">
+            <h3 data-i18n="pricing.features.title">Cosa include:</h3>
+            <ul>
+              <li>
+                <i data-lucide="check"></i>
+                <span data-i18n="pricing.features.reports">Accesso completo a tutti i report</span>
+              </li>
+              <li>
+                <i data-lucide="check"></i>
+                <span data-i18n="pricing.features.dashboard">Dashboard interattive e personalizzabili</span>
+              </li>
+              <li>
+                <i data-lucide="check"></i>
+                <span data-i18n="pricing.features.voting">Sistema di votazione avanzato</span>
+              </li>
+              <li>
+                <i data-lucide="check"></i>
+                <span data-i18n="pricing.features.notifications">Notifiche push per nuovi report</span>
+              </li>
+              <li>
+                <i data-lucide="check"></i>
+                <span data-i18n="pricing.features.priority">Accesso prioritario a nuove funzionalità</span>
+              </li>
+              <li>
+                <i data-lucide="check"></i>
+                <span data-i18n="pricing.features.support">Supporto via email</span>
+              </li>
+            </ul>
+          </div>
 
-        <!-- CTA Button -->
-        <div style="text-align: center;">
-          <a href="/dashboard.html" 
-             style="display: inline-block; background: var(--brand-600); color: white; padding: var(--sp-4) var(--sp-8); border-radius: var(--radius-md); text-decoration: none; font-weight: 600; font-size: var(--fs-16); transition: all var(--transition-base);">
-            Inizia Subito
-          </a>
-          <p style="color: var(--muted); font-size: var(--fs-12); margin-top: var(--sp-3);">
-            <a href="/refund.html" style="color: var(--brand-600); text-decoration: underline;">14 giorni di garanzia rimborso</a>
-          </p>
+          <!-- CTA Button -->
+          <div style="text-align: center; margin-top: var(--sp-8);">
+            <a href="/dashboard.html" class="cta-button" data-i18n="pricing.cta.button">
+              Inizia Subito
+            </a>
+            <div class="pricing-legal">
+              <div class="pricing-legal-links">
+                <a href="/refund.html" data-i18n="pricing.cta.trial">14 giorni di prova gratuita</a>
+                <span class="pricing-legal-separator">·</span>
+                <a href="/terms.html" data-i18n="pricing.cta.terms">Termini e Condizioni</a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- FAQ Section -->
-      <section style="margin-top: var(--sp-12); max-width: 700px; margin-left: auto; margin-right: auto;">
-        <h2 style="font-size: var(--fs-24); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-6); text-align: center;">
+      <section class="pricing-faq" style="max-width: 700px; margin-left: auto; margin-right: auto;">
+        <h2 style="font-size: var(--fs-24); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-10); text-align: center; letter-spacing: -0.01em;" data-i18n="pricing.faq.title">
           Domande Frequenti
         </h2>
         
-        <div style="space-y: var(--sp-4);">
-          <details style="background: var(--surface-card); border: 1px solid var(--br-card); border-radius: var(--radius-md); padding: var(--sp-4); margin-bottom: var(--sp-4);">
-            <summary style="font-weight: 600; color: var(--ink); cursor: pointer; font-size: var(--fs-16);">
-              Posso cancellare in qualsiasi momento?
-            </summary>
-            <p style="color: var(--muted); font-size: var(--fs-14); margin-top: var(--sp-3); padding-left: var(--sp-2);">
+        <div>
+          <details>
+            <summary data-i18n="pricing.faq.cancel.title">Posso cancellare in qualsiasi momento?</summary>
+            <p data-i18n="pricing.faq.cancel.content">
               Sì, puoi cancellare il tuo abbonamento in qualsiasi momento dalla dashboard. 
               Continuerai ad avere accesso fino alla fine del periodo già pagato.
             </p>
           </details>
 
-          <details style="background: var(--surface-card); border: 1px solid var(--br-card); border-radius: var(--radius-md); padding: var(--sp-4); margin-bottom: var(--sp-4);">
-            <summary style="font-weight: 600; color: var(--ink); cursor: pointer; font-size: var(--fs-16);">
-              C'è un periodo di prova?
-            </summary>
-            <p style="color: var(--muted); font-size: var(--fs-14); margin-top: var(--sp-3); padding-left: var(--sp-2);">
-              Offriamo 14 giorni di garanzia rimborso. Se non sei soddisfatto, ti rimborsiamo completamente.
+          <details>
+            <summary data-i18n="pricing.faq.trial.title">Come funziona la prova gratuita?</summary>
+            <p data-i18n="pricing.faq.trial.content">
+              Offriamo <strong style="color: var(--ink-soft);">14 giorni di prova gratuita</strong> senza impegno. Puoi accedere a tutte le funzionalità della dashboard 
+              senza pagare nulla. Al termine dei 14 giorni, se non cancelli, l'abbonamento si attiva automaticamente a €29/mese. 
+              Puoi cancellare in qualsiasi momento durante la prova gratuita senza costi.
             </p>
           </details>
 
-          <details style="background: var(--surface-card); border: 1px solid var(--br-card); border-radius: var(--radius-md); padding: var(--sp-4); margin-bottom: var(--sp-4);">
-            <summary style="font-weight: 600; color: var(--ink); cursor: pointer; font-size: var(--fs-16);">
-              Come funziona il pagamento?
-            </summary>
-            <p style="color: var(--muted); font-size: var(--fs-14); margin-top: var(--sp-3); padding-left: var(--sp-2);">
+          <details>
+            <summary data-i18n="pricing.faq.payment.title">Come funziona il pagamento?</summary>
+            <p data-i18n="pricing.faq.payment.content">
               I pagamenti sono gestiti in modo sicuro tramite Paddle. L'abbonamento si rinnova 
               automaticamente ogni mese. Puoi cambiare o cancellare in qualsiasi momento.
             </p>
@@ -338,88 +694,81 @@
     <div style="position: absolute; inset: 0;" data-legal-dismiss></div>
     <div class="legal-panel" role="document">
       <header class="legal-hdr">
-        <div class="legal-title" id="legal-consent-title">Informativa legale</div>
-        <button class="btn btn-sm" type="button" data-legal-dismiss aria-label="Chiudi">Chiudi</button>
+        <div class="legal-title" id="legal-consent-title" data-i18n="legal.overlay.title">Informativa legale</div>
+        <button class="btn btn-sm" type="button" data-legal-dismiss aria-label="Chiudi" data-i18n="legal.overlay.close">Chiudi</button>
       </header>
       <nav class="legal-tabs" role="tablist" aria-label="Sezioni legali">
-        <button class="legal-tab" role="tab" id="tab-mifid" aria-controls="panel-mifid" aria-selected="true">Informativa MiFID</button>
-        <button class="legal-tab" role="tab" id="tab-privacy" aria-controls="panel-privacy" aria-selected="false">Privacy</button>
+        <button class="legal-tab" role="tab" id="tab-mifid" aria-controls="panel-mifid" aria-selected="true" data-i18n="legal.overlay.tab.mifid">Informativa MiFID</button>
+        <button class="legal-tab" role="tab" id="tab-privacy" aria-controls="panel-privacy" aria-selected="false" data-i18n="legal.overlay.tab.privacy">Privacy</button>
       </nav>
       <div class="legal-body">
         <section id="panel-mifid" role="tabpanel" aria-labelledby="tab-mifid">
-          <h4>Finalità del materiale</h4>
-          <p>Il presente sito web e tutti i suoi contenuti (analisi, moduli AI, report, articoli, glossario) hanno esclusiva finalità <strong>informativa e didattica</strong>. Non costituiscono consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa <strong>MiFID II / ESMA</strong>.</p>
-          <h4>Natura educativa</h4>
-          <p>Tradelia AI è una piattaforma di <strong>educazione finanziaria accademica</strong>. Tutti i contenuti, inclusi moduli AI proprietari, analisi di mercato, report e strumenti didattici, sono progettati esclusivamente per finalità formative e di ricerca. Non viene svolta verifica di adeguatezza/appropriatezza, profilo di rischio o obiettivi finanziari dell'utente.</p>
-          <h4>Rischi</h4>
+          <h4 data-i18n="legal.mifid.purpose.title">Finalità del materiale</h4>
+          <p data-i18n="legal.mifid.purpose.content">Il presente sito web e tutti i suoi contenuti (analisi, moduli AI, report, articoli, glossario) hanno esclusiva finalità <strong>informativa e didattica</strong>. Non costituiscono consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa <strong>MiFID II / ESMA</strong>.</p>
+          <h4 data-i18n="legal.mifid.educational.title">Natura educativa</h4>
+          <p data-i18n="legal.mifid.educational.content">Tradelia AI è una piattaforma di <strong>educazione finanziaria accademica</strong>. Tutti i contenuti, inclusi moduli AI proprietari, analisi di mercato, report e strumenti didattici, sono progettati esclusivamente per finalità formative e di ricerca. Non viene svolta verifica di adeguatezza/appropriatezza, profilo di rischio o obiettivi finanziari dell'utente.</p>
+          <h4 data-i18n="legal.mifid.risks.title">Rischi</h4>
           <ul>
-            <li>I mercati finanziari comportano <strong>rischio di perdita, anche totale, del capitale</strong>.</li>
-            <li>Prodotti a leva/derivati (opzioni, futures, CFD) possono amplificare perdite oltre il capitale iniziale.</li>
-            <li>Rendimenti passati non sono indicativi di risultati futuri.</li>
-            <li>Le informazioni fornite non devono essere considerate come garanzie di rendimento.</li>
+            <li data-i18n="legal.mifid.risks.item1">I mercati finanziari comportano <strong>rischio di perdita, anche totale, del capitale</strong>.</li>
+            <li data-i18n="legal.mifid.risks.item2">Prodotti a leva/derivati (opzioni, futures, CFD) possono amplificare perdite oltre il capitale iniziale.</li>
+            <li data-i18n="legal.mifid.risks.item3">Rendimenti passati non sono indicativi di risultati futuri.</li>
+            <li data-i18n="legal.mifid.risks.item4">Le informazioni fornite non devono essere considerate come garanzie di rendimento.</li>
           </ul>
-          <h4>Dati e fonti</h4>
+          <h4 data-i18n="legal.mifid.data.title">Dati e fonti</h4>
           <ul>
-            <li>Dati e serie storiche possono essere soggetti a ritardi, revisioni o errori; i timestamp potrebbero non riflettere il "tempo reale".</li>
-            <li>Le fonti includono provider ritenuti affidabili (Tier-1); non si garantisce esattezza/completezza assoluta.</li>
-            <li>Le analisi AI sono generate automaticamente e possono contenere errori o imprecisioni.</li>
+            <li data-i18n="legal.mifid.data.item1">Dati e serie storiche possono essere soggetti a ritardi, revisioni o errori; i timestamp potrebbero non riflettere il "tempo reale".</li>
+            <li data-i18n="legal.mifid.data.item2">Le fonti includono provider ritenuti affidabili (Tier-1); non si garantisce esattezza/completezza assoluta.</li>
+            <li data-i18n="legal.mifid.data.item3">Le analisi AI sono generate automaticamente e possono contenere errori o imprecisioni.</li>
           </ul>
-          <h4>Conflitti e indipendenza</h4>
+          <h4 data-i18n="legal.mifid.independence.title">Conflitti e indipendenza</h4>
           <ul>
-            <li><strong>Tradelia AI è indipendente</strong>: non esegue ordini, non gestisce capitali, non raccoglie depositi e non opera come intermediario finanziario.</li>
-            <li>Non sono note situazioni di conflitto d'interesse rilevanti nella produzione del materiale.</li>
-            <li>Eventuali link a piattaforme o servizi esterni sono forniti a solo scopo informativo.</li>
+            <li data-i18n="legal.mifid.independence.item1"><strong>Tradelia AI è indipendente</strong>: non esegue ordini, non gestisce capitali, non raccoglie depositi e non opera come intermediario finanziario.</li>
+            <li data-i18n="legal.mifid.independence.item2">Non sono note situazioni di conflitto d'interesse rilevanti nella produzione del materiale.</li>
+            <li data-i18n="legal.mifid.independence.item3">Eventuali link a piattaforme o servizi esterni sono forniti a solo scopo informativo.</li>
           </ul>
-          <h4>Limitazioni e responsabilità</h4>
+          <h4 data-i18n="legal.mifid.limitations.title">Limitazioni e responsabilità</h4>
           <ul>
-            <li>Le informazioni non sostituiscono il giudizio dell'utente né la consulenza di un <strong>intermediario autorizzato</strong>.</li>
-            <li>L'utente è responsabile delle proprie decisioni di investimento.</li>
-            <li>L'uso del sito è vietato laddove non conforme alle leggi locali.</li>
-            <li>Tradelia AI non si assume alcuna responsabilità per perdite derivanti dall'uso delle informazioni fornite.</li>
+            <li data-i18n="legal.mifid.limitations.item1">Le informazioni non sostituiscono il giudizio dell'utente né la consulenza di un <strong>intermediario autorizzato</strong>.</li>
+            <li data-i18n="legal.mifid.limitations.item2">L'utente è responsabile delle proprie decisioni di investimento.</li>
+            <li data-i18n="legal.mifid.limitations.item3">L'uso del sito è vietato laddove non conforme alle leggi locali.</li>
+            <li data-i18n="legal.mifid.limitations.item4">Tradelia AI non si assume alcuna responsabilità per perdite derivanti dall'uso delle informazioni fornite.</li>
           </ul>
         </section>
         <section id="panel-privacy" role="tabpanel" aria-labelledby="tab-privacy" hidden>
-          <h4>Principi</h4>
-          <p>Adottiamo un'impostazione "privacy-first": minimizzazione dei dati e assenza di tracciamento pubblicitario.</p>
-          <h4>Dati trattati</h4>
+          <h4 data-i18n="legal.privacy.principles.title">Principi</h4>
+          <p data-i18n="legal.privacy.principles.content">Adottiamo un'impostazione "privacy-first": minimizzazione dei dati e assenza di tracciamento pubblicitario.</p>
+          <h4 data-i18n="legal.privacy.data.title">Dati trattati</h4>
           <ul>
-            <li>Nessuna raccolta di dati personali identificativi tramite questa pagina.</li>
-            <li>Uso di <code>localStorage</code> per preferenze (tema) e consenso legale.</li>
-            <li>Eventuali log tecnici anonimi per sicurezza e diagnostica.</li>
+            <li data-i18n="legal.privacy.data.item1">Nessuna raccolta di dati personali identificativi tramite questa pagina.</li>
+            <li data-i18n="legal.privacy.data.item2">Uso di <code>localStorage</code> per preferenze (tema) e consenso legale.</li>
+            <li data-i18n="legal.privacy.data.item3">Eventuali log tecnici anonimi per sicurezza e diagnostica.</li>
           </ul>
-          <h4>Cookie e analytics</h4>
+          <h4 data-i18n="legal.privacy.cookies.title">Cookie e analytics</h4>
           <ul>
-            <li>Niente cookie di profilazione; eventuali analytics sono anonimizzati/aggregati.</li>
-            <li>Nessuna condivisione con terze parti a fini commerciali.</li>
+            <li data-i18n="legal.privacy.cookies.item1">Niente cookie di profilazione; eventuali analytics sono anonimizzati/aggregati.</li>
+            <li data-i18n="legal.privacy.cookies.item2">Nessuna condivisione con terze parti a fini commerciali.</li>
           </ul>
-          <h4>Diritti e contatti</h4>
+          <h4 data-i18n="legal.privacy.rights.title">Diritti e contatti</h4>
           <ul>
-            <li>Per informazioni o esercizio diritti privacy, scrivi a <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>.</li>
-            <li>Il titolare potrà aggiornare questa informativa: controlla periodicamente le revisioni.</li>
+            <li data-i18n="legal.privacy.rights.item1">Per informazioni o esercizio diritti privacy, scrivi a <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>.</li>
+            <li data-i18n="legal.privacy.rights.item2">Il titolare potrà aggiornare questa informativa: controlla periodicamente le revisioni.</li>
           </ul>
         </section>
       </div>
       <footer class="legal-ftr">
-        <small style="font-size: var(--fs-12); color: var(--muted);">Continuando dichiari di aver letto e compreso le informative.</small>
-        <button class="btn btn-sm" type="button" id="btn-accept-legal">Accetto e chiudi</button>
+        <small style="font-size: var(--fs-12); color: var(--muted);" data-i18n="legal.overlay.continue">Continuando dichiari di aver letto e compreso le informative.</small>
+        <button class="btn btn-sm" type="button" id="btn-accept-legal" data-i18n="legal.overlay.accept">Accetto e chiudi</button>
       </footer>
     </div>
   </div>
 
-  <!-- ===== MOUNT HEADER & FOOTER ===== -->
+  <!-- ===== MOUNT FOOTER ===== -->
   <script type="module">
     // Imposta tema dark
     document.documentElement.setAttribute('data-theme', 'dark');
     
-    // Importa componenti
-    import { siteHeader } from '/report/assets/js/components/site-header.js';
+    // Importa footer (header gestito da global-header.js)
     import { siteFooter } from '/report/assets/js/components/site-footer.js';
-    
-    // Monta header
-    const headerSlot = document.getElementById('site-header-slot');
-    if (headerSlot) {
-      siteHeader.mount(headerSlot);
-    }
     
     // Monta footer
     const footerSlot = document.getElementById('site-footer-slot');
@@ -504,6 +853,9 @@
   <script>
     if (window.lucide) lucide.createIcons();
   </script>
+
+  <!-- Global Header & i18n -->
+  <script type="module" src="/assets/js/global-header.js"></script>
 </body>
 </html>
 

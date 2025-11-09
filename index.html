@@ -2,7 +2,7 @@
 <html lang="it" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0" />
   <title>Tradelia AI · Progetto Indipendente con Metodo Accademico AI</title>
   
   <!-- SEO Meta Tags -->
@@ -95,6 +95,9 @@
 
   <!-- Design System -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/assets/css/global-header.css" />
+  <link rel="stylesheet" href="/assets/css/mifid-banner.css" />
+  <link rel="stylesheet" href="/assets/css/homepage-brokers-2025.css" />
 
   <!-- Lucide: una sola import -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -113,7 +116,19 @@
       background: var(--surface-page);
       color: var(--ink);
       font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+      padding-top: 64px; /* Spazio per header fixed */
     }
+
+    /* Header slot (gestito da global-header.css) */
+    #site-header-slot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    }
+
+    /* Header gestito completamente da global-header.css - nessuno stile aggiuntivo necessario */
 
     /* container */
     .container { max-width: 90rem; margin-inline: auto; padding-inline: 1rem; }
@@ -287,6 +302,8 @@
       color: var(--ink-soft);
       font-weight: 600;
     }
+
+    /* Header gestito completamente da global-header.css - nessuno stile aggiuntivo necessario */
 
     /* ===== SECTION HEADERS ===== */
     .section-header {
@@ -513,6 +530,106 @@
       background: var(--surface-card);
     }
 
+    /* ===== TESTIMONIALS SECTION ===== */
+    .testimonials-section {
+      padding: 6rem 0;
+      background: var(--surface-page);
+      display: none; /* Nascosta fino a quando non viene riempita con testimonials reali */
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-top: var(--sp-8);
+    }
+
+    .testimonial-card {
+      background: var(--surface-card);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .testimonial-card:hover {
+      border-color: var(--brand-600);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(37, 99, 235, 0.15);
+    }
+
+    .testimonial-rating {
+      display: flex;
+      gap: 0.25rem;
+      margin-bottom: var(--sp-4);
+    }
+
+    .testimonial-star {
+      width: 18px;
+      height: 18px;
+      color: #fbbf24;
+      fill: currentColor;
+    }
+
+    .testimonial-star.empty {
+      color: var(--br-card, #333);
+      opacity: 0.3;
+    }
+
+    .testimonial-text {
+      font-size: var(--fs-15);
+      line-height: 1.7;
+      color: var(--ink-soft);
+      margin-bottom: var(--sp-5);
+      font-style: italic;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      padding-top: var(--sp-4);
+      border-top: 1px solid var(--br-card);
+    }
+
+    .testimonial-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--brand-600, #2563eb), var(--brand-400, #60a5fa));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: var(--fs-16);
+      flex-shrink: 0;
+    }
+
+    .testimonial-author-info {
+      flex: 1;
+    }
+
+    .testimonial-author-name {
+      font-size: var(--fs-15);
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0 0 0.25rem;
+    }
+
+    .testimonial-author-role {
+      font-size: var(--fs-13);
+      color: var(--muted, #888);
+      margin: 0;
+    }
+
+    .testimonial-date {
+      font-size: var(--fs-12);
+      color: var(--muted, #888);
+      margin-top: var(--sp-2);
+    }
+
     /* ===== MODAL COLLABORATORS ===== */
     #modal-collaboratori {
       position: fixed;
@@ -648,6 +765,225 @@
       font-weight: 700;
       color: var(--ink);
       margin: 0 0 0.5rem;
+    }
+
+    /* ===== SECURITY GUIDE BOXES ===== */
+    .security-guide {
+      margin-top: var(--sp-8);
+      padding: var(--sp-5);
+      border-radius: var(--radius-lg);
+      border-left: 4px solid;
+      background: rgba(234, 88, 12, 0.08);
+      border-color: rgba(234, 88, 12, 0.4);
+    }
+
+    .security-guide.warning {
+      background: rgba(234, 88, 12, 0.08);
+      border-color: rgba(234, 88, 12, 0.4);
+    }
+
+    .security-guide.info {
+      background: rgba(37, 99, 235, 0.08);
+      border-color: rgba(37, 99, 235, 0.4);
+    }
+
+    .security-guide-header {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+      margin-bottom: var(--sp-3);
+    }
+
+    .security-guide-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      color: var(--warn, #ea580c);
+    }
+
+    .security-guide.info .security-guide-icon {
+      color: var(--brand-600, #2563eb);
+    }
+
+    .security-guide-title {
+      font-size: var(--fs-16);
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    .security-guide-content {
+      font-size: var(--fs-14);
+      line-height: 1.6;
+      color: var(--ink-soft);
+    }
+
+    .security-guide-list {
+      margin: var(--sp-3) 0;
+      padding-left: var(--sp-5);
+      list-style: none;
+    }
+
+    .security-guide-list li {
+      margin-bottom: var(--sp-2);
+      position: relative;
+      padding-left: var(--sp-4);
+    }
+
+    .security-guide-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--warn, #ea580c);
+      font-weight: 700;
+    }
+
+    .security-guide.info .security-guide-list li::before {
+      color: var(--brand-600, #2563eb);
+    }
+
+    .security-guide-strong {
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    /* ===== MODAL PROFESSIONISTA ===== */
+    #modal-professionista {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 1rem;
+      backdrop-filter: blur(4px);
+    }
+
+    #modal-professionista.hidden {
+      display: none;
+    }
+
+    .modal-professionista-content {
+      background: var(--surface-card);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-lg);
+      max-width: 40rem;
+      width: 100%;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-professionista-header {
+      padding: 2rem 2rem 1.5rem;
+      border-bottom: 1px solid var(--br-card);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-professionista-title {
+      font-size: var(--fs-24);
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    .modal-professionista-close {
+      background: none;
+      border: none;
+      color: var(--ink-soft);
+      cursor: pointer;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .modal-professionista-close:hover {
+      background: var(--surface-elev);
+      color: var(--ink);
+    }
+
+    .modal-professionista-body {
+      padding: 2rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .form-group {
+      margin-bottom: var(--sp-5);
+    }
+
+    .form-label {
+      display: block;
+      font-size: var(--fs-14);
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: var(--sp-2);
+    }
+
+    .form-label .required {
+      color: var(--err, #ef4444);
+      margin-left: 2px;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: var(--sp-3);
+      font-size: var(--fs-14);
+      font-family: var(--ff-sans);
+      color: var(--ink);
+      background: var(--surface-page);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-md);
+      transition: all 0.2s;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--brand-600, #2563eb);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-help {
+      font-size: var(--fs-12);
+      color: var(--muted, #888);
+      margin-top: var(--sp-1);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: var(--sp-3);
+      margin-top: var(--sp-6);
+    }
+
+    .form-actions .btn {
+      flex: 1;
+    }
+
+    .form-actions .btn-secondary {
+      background: var(--surface-elev);
+      color: var(--ink);
+      border: 1px solid var(--br-card);
+    }
+
+    .form-actions .btn-secondary:hover {
+      background: var(--surface-hover);
     }
 
     .collaborator-card-description {
@@ -813,36 +1149,7 @@
       color: inherit;
     }
 
-    /* ===== HEADER ===== */
-    .hdr {
-      position: fixed; 
-      top: 0; 
-      left: 0; 
-      right: 0; 
-      height: 64px; 
-      z-index: 100;
-      display: flex; 
-      align-items: center;
-      backdrop-filter: blur(16px) saturate(1.2);
-      background: linear-gradient(
-        180deg,
-        rgba(15, 15, 15, 0.96) 0%,
-        rgba(15, 15, 15, 0.92) 100%
-      );
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
-    }
-
-    /* ===== BRAND ===== */
-    .brand { font-weight: 900; letter-spacing: -0.02em; display:inline-flex; align-items:center; gap:.35rem; }
-    .brand-word { color: var(--ink); }
-    .brand-suffix { color: var(--ink); font-weight: 900; }
-    .brand-dot { width:10px; height:10px; border-radius:999px; background: var(--brand-600); display:inline-block; }
-    .brand--sm .brand-word { font-weight: 700; }
-    .brand--sm .brand-dot { width:8px; height:8px; }
-    .brand--sm .brand-suffix { font-weight: 700; }
-    a.brand { transition: opacity .18s ease, transform .18s ease; }
-    a.brand:hover { opacity:.9; transform: translateY(-1px); }
+    /* Header gestito completamente da global-header.css - nessuno stile aggiuntivo necessario */
 
     /* Scrollbar gestita da tokens.css - rimossa custom light */
     .modal {
@@ -932,57 +1239,7 @@
       outline-offset: 2px;
     }
 
-    /* ===== FOOTER ===== */
-    .site-footer {
-      position: relative;
-      z-index: 10; /* sotto header e panel overlay */
-      background: var(--footer-bg);
-      border-top: 1px solid var(--footer-br);
-      color: var(--ink-soft);
-      font-size: 14px;
-    }
-    .ftr-head {
-      font-weight: 600;
-      display:flex; align-items:center; gap:.5rem;
-      color: var(--ink);
-      margin-bottom: .6rem;
-    }
-    .ftr-grid { display:grid; gap:2rem; grid-template-columns: 1fr; }
-    @media (min-width: 768px){ .ftr-grid { grid-template-columns: repeat(3, 1fr); } }
-    .ftr-list li { margin:.25rem 0; }
-    .ftr-bottom {
-      border-top: 1px solid var(--br-soft);
-      margin-top: 2rem; padding-top: 1rem;
-      display: flex; flex-direction: column; gap: .5rem;
-      font-size: 13px; color: var(--muted);
-    }
-    @media (min-width: 768px){
-      .ftr-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
-    }
-
-    /* Link & social */
-    .site-footer a {
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: color .18s ease, border-color .18s ease, opacity .18s ease, transform .18s ease;
-    }
-    .site-footer a:hover { border-bottom-color: currentColor; }
-    a.mail-link { text-underline-offset: 2px; text-decoration-thickness: 1px; }
-
-    .ftr-socials a{
-      position: relative;
-      display:flex; align-items:center; gap:.5rem;
-      color: var(--ink-soft);
-    }
-    .ftr-socials a::after{
-      content:"";
-      position:absolute; left:19px; right:0; bottom:-2px; height:1px;
-      background: currentColor;
-      opacity:0; transform: scaleX(.35); transform-origin:left;
-      transition: transform .18s ease, opacity .18s ease;
-    }
-    .ftr-socials a:hover{ color: var(--ink); transform: translateX(2px); }
-    .ftr-socials a:hover::after{ opacity:.6; transform: scaleX(1); }
+    /* Footer gestito completamente da tokens.css - nessuno stile aggiuntivo necessario */
 
     /* ===== LEGAL OVERLAY ===== */
     #legal-consent-overlay {
@@ -1121,6 +1378,456 @@
       color: var(--muted);
       font-size: var(--fs-12);
     }
+
+    /* ===== MOBILE RESPONSIVE DESIGN ===== */
+    @media (max-width: 767px) {
+      /* Container padding ridotto su mobile */
+      .container {
+        padding-inline: var(--sp-4);
+      }
+
+      /* Hero Section - Mobile */
+      .hero-section {
+        padding: 4rem 0 3rem;
+      }
+
+      .hero-badge {
+        font-size: 0.625rem;
+        padding: 0.375rem 0.75rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .hero-title {
+        font-size: clamp(2rem, 8vw, 3rem);
+        margin-bottom: 1.5rem;
+      }
+
+      .hero-description {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+      }
+
+      .hero-features {
+        gap: 1.25rem;
+        margin: 2.5rem 0;
+      }
+
+      .hero-feature {
+        padding: 1.5rem 1.25rem;
+      }
+
+      .hero-feature .ico {
+        width: 20px;
+        height: 20px;
+        margin-bottom: 0.75rem;
+      }
+
+      .hero-feature strong {
+        font-size: 0.9375rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .hero-feature span {
+        font-size: 0.8125rem;
+      }
+
+      .hero-cta {
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 2.5rem;
+      }
+
+      .hero-disclaimer {
+        margin-top: 3rem;
+        padding: 1.25rem 0;
+      }
+
+      .hero-disclaimer .container {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .hero-disclaimer p {
+        font-size: 0.75rem;
+      }
+
+      /* Section Headers - Mobile */
+      .section-header {
+        margin-bottom: var(--sp-10);
+        padding: 0 var(--sp-2);
+      }
+
+      .section-title {
+        font-size: clamp(1.75rem, 6vw, 2.5rem);
+        margin-bottom: var(--sp-4);
+      }
+
+      .section-description {
+        font-size: var(--fs-16);
+        line-height: 1.6;
+        margin-bottom: var(--sp-3);
+      }
+
+      /* Method Section - Mobile */
+      .method-section {
+        padding: 4rem 0;
+      }
+
+      .method-grid {
+        gap: var(--sp-6);
+      }
+
+      .method-card {
+        padding: var(--sp-6);
+      }
+
+      .method-card-icon {
+        width: 48px;
+        height: 48px;
+      }
+
+      .method-card-title {
+        font-size: var(--fs-18);
+      }
+
+      .method-card-list li {
+        font-size: var(--fs-14);
+      }
+
+      /* Services Section - Mobile */
+      .services-section {
+        padding: 4rem 0;
+      }
+
+      .services-grid {
+        gap: var(--sp-6);
+      }
+
+      .service-card {
+        padding: var(--sp-6);
+      }
+
+      .service-card-icon {
+        width: 48px;
+        height: 48px;
+      }
+
+      .service-card-title {
+        font-size: var(--fs-18);
+      }
+
+      /* Collaborators Section - Mobile */
+      .collaborators-section {
+        padding: 4rem 0;
+      }
+
+      /* Collaborators grid nella sezione principale */
+      .collaborators-section .collaborators-grid,
+      #panel-facebook .collaborators-grid,
+      #panel-piattaforme .collaborators-grid,
+      #panel-consulenti .collaborators-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+      }
+
+      .collaborator-card {
+        padding: 1.25rem;
+      }
+
+      .collaborator-card-icon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 0.75rem;
+      }
+
+      .collaborator-card-title {
+        font-size: var(--fs-16);
+        margin-bottom: 0.375rem;
+      }
+
+      .collaborator-card-description {
+        font-size: var(--fs-13);
+        margin-bottom: 0.75rem;
+        line-height: 1.5;
+      }
+
+      .collaborator-card-link {
+        font-size: var(--fs-13);
+      }
+
+      /* Security Guide - Mobile */
+      .security-guide {
+        margin-top: var(--sp-6);
+        padding: var(--sp-4);
+      }
+
+      .security-guide-header {
+        margin-bottom: var(--sp-2);
+      }
+
+      .security-guide-icon {
+        width: 20px;
+        height: 20px;
+      }
+
+      .security-guide-title {
+        font-size: var(--fs-15);
+      }
+
+      .security-guide-content {
+        font-size: var(--fs-13);
+        line-height: 1.5;
+      }
+
+      .security-guide-list {
+        margin: var(--sp-2) 0;
+        padding-left: var(--sp-4);
+      }
+
+      .security-guide-list li {
+        margin-bottom: var(--sp-1_5);
+        padding-left: var(--sp-3);
+        font-size: var(--fs-13);
+      }
+
+      /* Modal Collaborators - Mobile */
+      #modal-collaboratori {
+        padding: 0.5rem;
+      }
+
+      .modal-collaboratori-content {
+        max-width: 100%;
+        max-height: 95vh;
+        border-radius: var(--radius-md);
+      }
+
+      .modal-collaboratori-header {
+        padding: 1.5rem 1.25rem 1rem;
+      }
+
+      .modal-collaboratori-title {
+        font-size: var(--fs-20);
+      }
+
+      .modal-collaboratori-body {
+        padding: 1.25rem;
+      }
+
+      .collaborators-tabs {
+        flex-wrap: wrap;
+        gap: 0.375rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .collaborator-tab {
+        padding: 0.625rem 1rem;
+        font-size: var(--fs-14);
+        flex: 1;
+        min-width: 0;
+      }
+
+      /* Modal Professionista - Mobile */
+      #modal-professionista {
+        padding: 0.5rem;
+      }
+
+      .modal-professionista-content {
+        max-width: 100%;
+        max-height: 95vh;
+        border-radius: var(--radius-md);
+      }
+
+      .modal-professionista-header {
+        padding: 1.5rem 1.25rem 1rem;
+      }
+
+      .modal-professionista-title {
+        font-size: var(--fs-20);
+      }
+
+      .modal-professionista-body {
+        padding: 1.25rem;
+      }
+
+      .form-group {
+        margin-bottom: var(--sp-4);
+      }
+
+      .form-label {
+        font-size: var(--fs-13);
+        margin-bottom: var(--sp-1_5);
+      }
+
+      .form-input,
+      .form-select,
+      .form-textarea {
+        padding: var(--sp-2_5);
+        font-size: var(--fs-15); /* 15px per evitare zoom su iOS */
+        min-height: 44px; /* Touch-friendly */
+      }
+
+      .form-textarea {
+        min-height: 100px;
+      }
+
+      .form-help {
+        font-size: var(--fs-11);
+      }
+
+      .form-actions {
+        flex-direction: column;
+        gap: var(--sp-2);
+        margin-top: var(--sp-5);
+      }
+
+      .form-actions .btn {
+        width: 100%;
+      }
+
+      /* Buttons - Mobile */
+      .btn {
+        padding: var(--sp-4) 2rem;
+        font-size: var(--fs-15);
+        min-height: 44px; /* Touch-friendly */
+        justify-content: center;
+      }
+
+      /* Solo i bottoni nel hero-cta e form-actions sono full-width */
+      .hero-cta .btn,
+      .form-actions .btn {
+        width: 100%;
+      }
+
+      /* Brokers Section - Mobile */
+      .brokers-section {
+        padding: 4rem 0;
+      }
+
+      /* Testimonials Grid - Mobile (se riattivata) */
+      .testimonials-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin-top: var(--sp-6);
+      }
+
+      .testimonial-card {
+        padding: 1.5rem;
+      }
+
+      .testimonial-text {
+        font-size: var(--fs-14);
+        margin-bottom: var(--sp-4);
+      }
+
+      .testimonial-author {
+        padding-top: var(--sp-3);
+      }
+
+      .testimonial-avatar {
+        width: 40px;
+        height: 40px;
+        font-size: var(--fs-14);
+      }
+
+      .testimonial-author-name {
+        font-size: var(--fs-14);
+      }
+
+      .testimonial-author-role {
+        font-size: var(--fs-12);
+      }
+
+      /* Legal Overlay - Mobile */
+      .legal-panel {
+        max-width: 100%;
+        max-height: 95vh;
+        border-radius: var(--radius-md);
+      }
+
+      .legal-hdr {
+        padding: 1.25rem;
+      }
+
+      .legal-title {
+        font-size: var(--fs-18);
+      }
+
+      .legal-tabs {
+        padding: var(--sp-2) var(--sp-4);
+        flex-wrap: wrap;
+      }
+
+      .legal-tab {
+        padding: var(--sp-1_5) var(--sp-3);
+        font-size: var(--fs-12);
+        flex: 1;
+        min-width: 0;
+      }
+
+      .legal-body {
+        padding: var(--sp-4);
+      }
+
+      .legal-body h4 {
+        font-size: var(--fs-15);
+        margin-top: var(--sp-4);
+        margin-bottom: var(--sp-2);
+      }
+
+      .legal-body p,
+      .legal-body ul {
+        font-size: var(--fs-13);
+        margin-bottom: var(--sp-3);
+      }
+
+      .legal-ftr {
+        padding: var(--sp-3) var(--sp-4);
+        flex-direction: column;
+        gap: var(--sp-2);
+        align-items: stretch;
+      }
+
+      .legal-ftr .btn {
+        width: 100%;
+      }
+    }
+
+    /* ===== TABLET RESPONSIVE (768px - 1023px) ===== */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .container {
+        padding-inline: var(--sp-6);
+      }
+
+      .hero-section {
+        padding: 5rem 0 4rem;
+      }
+
+      .collaborators-section .collaborators-grid,
+      #panel-facebook .collaborators-grid,
+      #panel-piattaforme .collaborators-grid,
+      #panel-consulenti .collaborators-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .testimonials-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .modal-collaboratori-content,
+      .modal-professionista-content {
+        max-width: 90%;
+      }
+
+      .hero-cta {
+        flex-wrap: wrap;
+      }
+
+      .hero-cta .btn {
+        flex: 1;
+        min-width: 200px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1133,14 +1840,14 @@
   <section class="hero-section">
     <div class="container">
       <div class="hero-content">
-        <div class="hero-badge">Framework Accademico AI</div>
+        <div class="hero-badge" data-i18n="home.hero.badge">Progetto Indipendente</div>
         
         <h1 class="hero-title">
-          <span class="hero-title-line">Analisi Finanziaria</span>
-          <span class="hero-title-line">Accademica</span>
+          <span class="hero-title-line" data-i18n="home.hero.title.line1">Analisi Finanziaria</span>
+          <span class="hero-title-line" data-i18n="home.hero.title.line2">Accademica</span>
         </h1>
         
-        <p class="hero-description">
+        <p class="hero-description" data-i18n="home.hero.description">
           Tradelia AI sviluppa <strong>analisi finanziarie modulari</strong> attraverso prompt proprietari 
           e <strong>metodologia accademica scientifica</strong>. Strumenti didattici per comprendere mercati, 
           rischi e correlazioni, con piena consapevolezza dei <strong>limiti tecnici e legali</strong> delle AI.
@@ -1152,29 +1859,29 @@
               <path d="M3 3v18h18" stroke="currentColor" stroke-width="2" fill="none"/>
               <path d="M7 12l4 4 7-7" stroke="currentColor" stroke-width="2" fill="none"/>
             </svg>
-            <strong>Potenza Analitica</strong>
-            <span>Analisi tecnica, macro e fondamentale integrate in modelli multilayer</span>
+            <strong data-i18n="home.hero.feature.analysis">Potenza Analitica</strong>
+            <span data-i18n="home.hero.feature.analysis.desc">Analisi tecnica, macro e fondamentale integrate in modelli multilayer</span>
           </div>
           <div class="hero-feature">
             <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 2l7 4v6c0 5-3 8-7 10C8 20 5 17 5 12V6l7-4z" stroke="currentColor" stroke-width="2" fill="none"/>
               <path d="M12 8v4" stroke="currentColor" stroke-width="2"/>
             </svg>
-            <strong>Trasparenza</strong>
-            <span>Progetto indipendente, senza marketing aggressivo o tracciamenti pubblicitari</span>
+            <strong data-i18n="home.hero.feature.report">Report Accademici</strong>
+            <span data-i18n="home.hero.feature.report.desc">Report dettagliati con metodologia accademica e conformità MiFID II</span>
           </div>
           <div class="hero-feature">
             <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
               <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
               <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="2" fill="none"/>
             </svg>
-            <strong>Privacy Totale</strong>
-            <span>Nessun cookie di tracciamento, nessuna raccolta o vendita di dati</span>
+            <strong data-i18n="home.hero.feature.education">Educazione Finanziaria</strong>
+            <span data-i18n="home.hero.feature.education.desc">Glossario, tutorial e strumenti educativi per trader e investitori</span>
           </div>
         </div>
 
         <div class="hero-cta">
-          <a href="/dashboard.html" class="btn btn-primary">Accedi alla Dashboard</a>
+          <a href="/dashboard.html" class="btn btn-primary" data-i18n="nav.dashboard">Dashboard</a>
         </div>
       </div>
     </div>
@@ -1186,9 +1893,9 @@
           <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
           <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
-        <p>
+        <p data-i18n="home.hero.disclaimer">
           Le analisi di Tradelia AI sono a scopo esclusivamente <strong>didattico</strong>. 
-          Le AI non memorizzano dati, non tracciano l'utente e possono contenere errori. 
+          Le <strong>intelligenze artificiali</strong> non memorizzano dati, non tracciano l'utente e possono contenere errori. 
           Non costituiscono <strong>consulenza finanziaria</strong> e non sostituiscono un professionista abilitato.
         </p>
       </div>
@@ -1218,7 +1925,7 @@
           </div>
           <h3 class="method-card-title">Principi</h3>
           <ul class="method-card-list">
-            <li>AI = motore di <strong>ricerca/ETL</strong>, non consulente o "cristallo magico"</li>
+            <li>AI = motore di ricerca/<strong>ETL</strong>, non consulente o "cristallo magico"</li>
             <li>Priorità a <strong>fonti primarie</strong> (regolatori, prospetti, bilanci) e <strong>letteratura</strong> tecnica/accademica</li>
             <li><strong>Tracciabilità</strong> di dati, versioni e criteri di scoring</li>
           </ul>
@@ -1234,7 +1941,7 @@
           <h3 class="method-card-title">Processo</h3>
           <ul class="method-card-list">
             <li><strong>Raccolta & normalizzazione</strong> (API/dataset) con timestamp e identificatori</li>
-            <li><strong>Verifica incrociata</strong> T1/T2, controllo outlier, soglie di consenso</li>
+            <li><strong>Verifica incrociata Tier-1 / Tier-2</strong>, controllo outlier, soglie di consenso</li>
             <li><strong>Sintesi & scoring</strong> su copertura mercati, costi, UX, compliance</li>
           </ul>
         </div>
@@ -1248,8 +1955,8 @@
           </div>
           <h3 class="method-card-title">Limiti & Compliance</h3>
           <ul class="method-card-list">
-            <li>L'output <strong>non è consulenza finanziaria</strong></li>
-            <li>Dove presenti CFD: <strong>avvertenze regolamentari</strong> e focus su strumenti quotati</li>
+            <li>L'output <strong>non costituisce consulenza finanziaria</strong></li>
+            <li>Dove presenti <strong>CFD</strong>: <strong>avvertenze regolamentari</strong> e focus su strumenti quotati</li>
             <li><strong>Trasparenza</strong> su affiliazioni e potenziali conflitti</li>
           </ul>
         </div>
@@ -1263,9 +1970,8 @@
       <div class="section-header">
         <h2 class="section-title">Moduli AI Proprietari</h2>
         <p class="section-description">
-          Tre <strong>moduli proprietari</strong> che trasformano la complessità dei mercati in <strong>decisioni chiare e immediate</strong>. 
-          Tecnologia esclusiva basata su dati Tier-1 e algoritmi proprietari, progettata per chi vuole <strong>anticipare i trend</strong> 
-          invece di subirli.
+          Tre <strong>moduli esclusivi</strong> che trasformano la complessità dei mercati in <strong>insight chiari e didatticamente utili</strong>. 
+          Tecnologia basata su dati Tier-1 e algoritmi proprietari, progettata per finalità formative e di ricerca.
         </p>
       </div>
 
@@ -1285,7 +1991,7 @@
             Percorso di analisi accademica in <strong>7 fasi (F1→F7)</strong> che integra contesto macro, sentiment, 
             analisi tecnica multi-timeframe, confronto intermarket e verifica finale. Elaborazioni basate su 
             <strong>dati Tier-1</strong>, presentate in forma descrittiva e tracciabile, con finalità formative 
-            e conformi alle linee MiFID II.
+            e conformi alle linee <strong>MiFID II</strong>.
           </p>
         </div>
 
@@ -1301,8 +2007,8 @@
             <h3 class="service-card-title">Daily Market Intelligence 3.1</h3>
           </div>
           <p class="service-card-description">
-            Desk informativo istituzionale che elabora, <strong>ogni giorno</strong>, un report strutturato secondo 
-            standard proprietario DMI. Analizza contesto macro, movimenti degli analisti, flussi ETF, insider trading 
+            Desk informativo istituzionale che elabora ogni giorno un report strutturato secondo 
+            lo <strong>standard DMI</strong>. Analizza contesto macro, <strong>revisioni degli analisti</strong>, flussi ETF, insider trading 
             e short interest, integrando solo <strong>fonti Tier-1</strong> (Reuters, Bloomberg, Fed, BCE, Nasdaq). 
             Contenuti educativi e descrittivi, conformi a MiFID II.
           </p>
@@ -1320,10 +2026,10 @@
             <h3 class="service-card-title">Stress Test Avanzato</h3>
           </div>
           <p class="service-card-description">
-            Modulo di valutazione <strong>multi-scenario</strong> che simula l'impatto di variabili macro, volatilità, 
+            Modulo di valutazione <strong>multi-scenario</strong> che simula l'impatto di variabili macroeconomiche, volatilità, 
             tassi e rotazioni settoriali su portafogli modello o personalizzati. Integra dati storici e real-time da 
             fonti Tier-1 (Fed, BCE, IMF, Bloomberg) con <strong>algoritmi proprietari</strong> di analisi cross-asset. 
-            Risultati descrittivi e comparativi, con finalità didattiche e di ricerca, conformi a MiFID II.
+            <strong>Risultati descrittivi e comparativi, con finalità didattiche e di ricerca.</strong> Conformi a MiFID II.
           </p>
           <div class="service-card-badge">In fase di sviluppo</div>
         </div>
@@ -1344,10 +2050,12 @@
   <section class="collaborators-section">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">Collaboratori Tradelia AI</h2>
+        <h2 class="section-title">Collegamenti Consigliati</h2>
         <p class="section-description">
-          Una <strong>rete selezionata</strong> di gruppi, piattaforme e consulenti finanziari che condividono 
-          la nostra visione di <strong>educazione finanziaria trasparente</strong> e basata su dati.
+          Una selezione di <strong>community</strong>, piattaforme e risorse che condividono il nostro 
+          approccio all'educazione finanziaria basata su dati e metodologia accademica. 
+          Questi collegamenti hanno <strong>valore formativo e di trasparenza</strong>: 
+          non costituiscono raccomandazioni commerciali né accordi formali.
         </p>
       </div>
       
@@ -1358,8 +2066,122 @@
             <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
             <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          Esplora i Collaboratori
+          Esplora i Collegamenti
         </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS SECTION ===== -->
+  <section class="testimonials-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Dicono di Noi</h2>
+        <p class="section-description">
+          Le opinioni e le esperienze di <strong>trader e investitori</strong> che utilizzano Tradelia AI 
+          per le loro analisi finanziarie. Feedback autentici dalla nostra community di utenti.
+        </p>
+      </div>
+
+      <div class="testimonials-grid">
+        <!-- Testimonial 1 - DA COMPILARE -->
+        <div class="testimonial-card">
+          <div class="testimonial-rating">
+            <svg class="testimonial-star" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <svg class="testimonial-star" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <svg class="testimonial-star" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <svg class="testimonial-star" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <svg class="testimonial-star" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          </div>
+          <p class="testimonial-text">
+            "Inserisci qui la testimonianza del primo utente. Descrivi la loro esperienza con Tradelia AI, 
+            come hanno utilizzato i report, quali benefici hanno ottenuto e cosa apprezzano di più del servizio."
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">NU</div>
+            <div class="testimonial-author-info">
+              <h4 class="testimonial-author-name">Nome Utente</h4>
+              <p class="testimonial-author-role">Ruolo / Professione</p>
+            </div>
+          </div>
+          <p class="testimonial-date">Data</p>
+        </div>
+
+        <!-- Testimonial 2 - DA COMPILARE -->
+        <div class="testimonial-card">
+          <div class="testimonial-rating">
+            <svg class="testimonial-star" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <svg class="testimonial-star" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <svg class="testimonial-star" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <svg class="testimonial-star" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <svg class="testimonial-star" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          </div>
+          <p class="testimonial-text">
+            "Inserisci qui la testimonianza del secondo utente. Descrivi la loro esperienza con Tradelia AI, 
+            come hanno utilizzato i report, quali benefici hanno ottenuto e cosa apprezzano di più del servizio."
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">NU</div>
+            <div class="testimonial-author-info">
+              <h4 class="testimonial-author-name">Nome Utente</h4>
+              <p class="testimonial-author-role">Ruolo / Professione</p>
+            </div>
+          </div>
+          <p class="testimonial-date">Data</p>
+        </div>
+
+        <!-- Testimonial 3 - DA COMPILARE -->
+        <div class="testimonial-card">
+          <div class="testimonial-rating">
+            <svg class="testimonial-star" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <svg class="testimonial-star" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <svg class="testimonial-star" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <svg class="testimonial-star" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <svg class="testimonial-star empty" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          </div>
+          <p class="testimonial-text">
+            "Inserisci qui la testimonianza del terzo utente. Descrivi la loro esperienza con Tradelia AI, 
+            come hanno utilizzato i report, quali benefici hanno ottenuto e cosa apprezzano di più del servizio."
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">NU</div>
+            <div class="testimonial-author-info">
+              <h4 class="testimonial-author-name">Nome Utente</h4>
+              <p class="testimonial-author-role">Ruolo / Professione</p>
+            </div>
+          </div>
+          <p class="testimonial-date">Data</p>
+        </div>
       </div>
     </div>
   </section>
@@ -3368,92 +4190,15 @@ Vuoi procedere inviando i dati?`;
   <div id="site-footer-slot"></div>
 
   <!-- ===== LEGAL OVERLAY ===== -->
-  <div id="legal-consent-overlay" role="dialog" aria-modal="true" aria-labelledby="legal-consent-title" hidden>
-    <div style="position: absolute; inset: 0;" data-legal-dismiss></div>
-    <div class="legal-panel" role="document">
-      <header class="legal-hdr">
-        <div class="legal-title" id="legal-consent-title">Informativa legale</div>
-        <button class="btn btn-sm" type="button" data-legal-dismiss aria-label="Chiudi">Chiudi</button>
-      </header>
-      <nav class="legal-tabs" role="tablist" aria-label="Sezioni legali">
-        <button class="legal-tab" role="tab" id="tab-mifid" aria-controls="panel-mifid" aria-selected="true">Informativa MiFID</button>
-        <button class="legal-tab" role="tab" id="tab-privacy" aria-controls="panel-privacy" aria-selected="false">Privacy</button>
-      </nav>
-      <div class="legal-body">
-        <section id="panel-mifid" role="tabpanel" aria-labelledby="tab-mifid">
-          <h4>Finalità del materiale</h4>
-          <p>Il presente sito web e tutti i suoi contenuti (analisi, moduli AI, report, articoli, glossario) hanno esclusiva finalità <strong>informativa e didattica</strong>. Non costituiscono consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa <strong>MiFID II / ESMA</strong>.</p>
-          <h4>Natura educativa</h4>
-          <p>Tradelia AI è una piattaforma di <strong>educazione finanziaria accademica</strong>. Tutti i contenuti, inclusi moduli AI proprietari, analisi di mercato, report e strumenti didattici, sono progettati esclusivamente per finalità formative e di ricerca. Non viene svolta verifica di adeguatezza/appropriatezza, profilo di rischio o obiettivi finanziari dell'utente.</p>
-          <h4>Rischi</h4>
-          <ul>
-            <li>I mercati finanziari comportano <strong>rischio di perdita, anche totale, del capitale</strong>.</li>
-            <li>Prodotti a leva/derivati (opzioni, futures, CFD) possono amplificare perdite oltre il capitale iniziale.</li>
-            <li>Rendimenti passati non sono indicativi di risultati futuri.</li>
-            <li>Le informazioni fornite non devono essere considerate come garanzie di rendimento.</li>
-          </ul>
-          <h4>Dati e fonti</h4>
-          <ul>
-            <li>Dati e serie storiche possono essere soggetti a ritardi, revisioni o errori; i timestamp potrebbero non riflettere il "tempo reale".</li>
-            <li>Le fonti includono provider ritenuti affidabili (Tier-1); non si garantisce esattezza/completezza assoluta.</li>
-            <li>Le analisi AI sono generate automaticamente e possono contenere errori o imprecisioni.</li>
-          </ul>
-          <h4>Conflitti e indipendenza</h4>
-          <ul>
-            <li><strong>Tradelia AI è indipendente</strong>: non esegue ordini, non gestisce capitali, non raccoglie depositi e non opera come intermediario finanziario.</li>
-            <li>Non sono note situazioni di conflitto d'interesse rilevanti nella produzione del materiale.</li>
-            <li>Eventuali link a piattaforme o servizi esterni sono forniti a solo scopo informativo.</li>
-          </ul>
-          <h4>Limitazioni e responsabilità</h4>
-          <ul>
-            <li>Le informazioni non sostituiscono il giudizio dell'utente né la consulenza di un <strong>intermediario autorizzato</strong>.</li>
-            <li>L'utente è responsabile delle proprie decisioni di investimento.</li>
-            <li>L'uso del sito è vietato laddove non conforme alle leggi locali.</li>
-            <li>Tradelia AI non si assume alcuna responsabilità per perdite derivanti dall'uso delle informazioni fornite.</li>
-          </ul>
-        </section>
-        <section id="panel-privacy" role="tabpanel" aria-labelledby="tab-privacy" hidden>
-          <h4>Principi</h4>
-          <p>Adottiamo un'impostazione "privacy-first": minimizzazione dei dati e assenza di tracciamento pubblicitario.</p>
-          <h4>Dati trattati</h4>
-          <ul>
-            <li>Nessuna raccolta di dati personali identificativi tramite questa pagina.</li>
-            <li>Uso di <code>localStorage</code> per preferenze (tema) e consenso legale.</li>
-            <li>Eventuali log tecnici anonimi per sicurezza e diagnostica.</li>
-          </ul>
-          <h4>Cookie e analytics</h4>
-          <ul>
-            <li>Niente cookie di profilazione; eventuali analytics sono anonimizzati/aggregati.</li>
-            <li>Nessuna condivisione con terze parti a fini commerciali.</li>
-          </ul>
-          <h4>Diritti e contatti</h4>
-          <ul>
-            <li>Per informazioni o esercizio diritti privacy, scrivi a <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>.</li>
-            <li>Il titolare potrà aggiornare questa informativa: controlla periodicamente le revisioni.</li>
-          </ul>
-        </section>
-      </div>
-      <footer class="legal-ftr">
-        <small style="font-size: var(--fs-12); color: var(--muted);">Continuando dichiari di aver letto e compreso le informative.</small>
-        <button class="btn btn-sm" type="button" id="btn-accept-legal">Accetto e chiudi</button>
-      </footer>
-    </div>
-  </div>
+  <!-- Overlay verrà creato dinamicamente da mifid-banner.js -->
 
-  <!-- ===== MOUNT HEADER & FOOTER ===== -->
+  <!-- ===== MOUNT FOOTER ===== -->
   <script type="module">
     // Imposta tema dark
     document.documentElement.setAttribute('data-theme', 'dark');
     
-    // Importa componenti
-    import { siteHeader } from '/report/assets/js/components/site-header.js';
+    // Importa footer (header gestito da global-header.js)
     import { siteFooter } from '/report/assets/js/components/site-footer.js';
-    
-    // Monta header
-    const headerSlot = document.getElementById('site-header-slot');
-    if (headerSlot) {
-      siteHeader.mount(headerSlot);
-    }
     
     // Monta footer
     const footerSlot = document.getElementById('site-footer-slot');
@@ -3462,73 +4207,64 @@ Vuoi procedere inviando i dati?`;
     }
   </script>
 
-  <!-- ===== LEGAL OVERLAY SCRIPT ===== -->
+  <!-- ===== MIFID BANNER (sostituisce vecchio legal overlay) ===== -->
+  <script type="module" src="/assets/js/mifid-banner.js"></script>
+  
+  <!-- ===== LEGAL OVERLAY (per pulsanti footer, gestito da mifid-banner.js) ===== -->
+  <!-- Overlay verrà creato dinamicamente da mifid-banner.js se necessario -->
+  
+  <!-- ===== LEGAL OVERLAY SCRIPT (solo per gestire pulsanti footer) ===== -->
   <script>
     (function() {
-      const KEY = 'tradelia-legal-ack-v2025-11';
-      const overlay = document.getElementById('legal-consent-overlay');
-      const btnAccept = document.getElementById('btn-accept-legal');
-      const tabM = document.getElementById('tab-mifid');
-      const tabP = document.getElementById('tab-privacy');
-      const panelM = document.getElementById('panel-mifid');
-      const panelP = document.getElementById('panel-privacy');
-      
-      if (!overlay || !btnAccept || !tabM || !tabP || !panelM || !panelP) return;
-      
-      function showTab(which) {
-        const mifid = (which === 'mifid');
-        tabM.setAttribute('aria-selected', mifid ? 'true' : 'false');
-        tabP.setAttribute('aria-selected', mifid ? 'false' : 'true');
-        panelM.hidden = !mifid;
-        panelP.hidden = mifid;
-      }
-      
-      function openLegal(which = 'mifid', blocking = true) {
-        showTab(which);
-        overlay.hidden = false;
-        document.body.style.overflow = 'hidden';
-        if (blocking) overlay.setAttribute('data-blocking', 'true');
-        else overlay.removeAttribute('data-blocking');
-        setTimeout(() => (which === 'privacy' ? tabP : tabM).focus(), 0);
-      }
-      
-      function closeLegal() {
-        overlay.hidden = true;
-        document.body.style.overflow = '';
-      }
-      
-      tabM.addEventListener('click', () => showTab('mifid'));
-      tabP.addEventListener('click', () => showTab('privacy'));
-      
-      btnAccept.addEventListener('click', () => {
-        try {
-          localStorage.setItem(KEY, JSON.stringify({ acceptedAt: new Date().toISOString(), v: '2025-11' }));
-        } catch(e) {}
-        closeLegal();
-      });
-      
-      overlay.addEventListener('click', (e) => {
-        if (e.target.matches('[data-legal-dismiss]') || e.target.closest('[data-legal-dismiss]')) {
-          if (!overlay.hasAttribute('data-blocking')) closeLegal();
-        }
-      });
-      
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !overlay.hasAttribute('data-blocking')) closeLegal();
-      });
-      
       // Bind pulsanti footer quando sono disponibili
-      setTimeout(() => {
-        document.getElementById('btn-privacy-open')?.addEventListener('click', () => openLegal('privacy', false));
-        document.getElementById('btn-mifid-open')?.addEventListener('click', () => openLegal('mifid', false));
-      }, 500);
+      // Usa la funzione esposta da mifid-banner.js
+      function bindFooterButtons() {
+        const btnPrivacy = document.getElementById('btn-privacy-open');
+        const btnMifid = document.getElementById('btn-mifid-open');
+        
+        if (btnPrivacy) {
+          btnPrivacy.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Usa funzione esposta da mifid-banner.js
+            if (window.openLegalOverlay) {
+              window.openLegalOverlay('privacy', false);
+            } else {
+              // Se non disponibile ancora, riprova dopo un po'
+              setTimeout(() => {
+                if (window.openLegalOverlay) {
+                  window.openLegalOverlay('privacy', false);
+                }
+              }, 500);
+            }
+          });
+        }
+        
+        if (btnMifid) {
+          btnMifid.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Usa funzione esposta da mifid-banner.js
+            if (window.openLegalOverlay) {
+              window.openLegalOverlay('mifid', false);
+            } else {
+              // Se non disponibile ancora, riprova dopo un po'
+              setTimeout(() => {
+                if (window.openLegalOverlay) {
+                  window.openLegalOverlay('mifid', false);
+                }
+              }, 500);
+            }
+          });
+        }
+      }
       
-      // Primo accesso → OBBLIGO accettazione (solo per homepage, non bloccare sempre)
-      let ack = null;
-      try {
-        ack = JSON.parse(localStorage.getItem(KEY) || 'null');
-      } catch(e) {}
-      // Non bloccare automaticamente su homepage, solo se cliccato dai pulsanti
+      // Bind immediatamente se DOM è pronto
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+          setTimeout(bindFooterButtons, 1000);
+        });
+      } else {
+        setTimeout(bindFooterButtons, 1000);
+      }
     })();
   </script>
 
@@ -3536,7 +4272,7 @@ Vuoi procedere inviando i dati?`;
   <div id="modal-collaboratori" class="hidden" role="dialog" aria-modal="true" aria-labelledby="modal-collaboratori-title">
     <div class="modal-collaboratori-content">
       <div class="modal-collaboratori-header">
-        <h3 class="modal-collaboratori-title" id="modal-collaboratori-title">Collaboratori Tradelia AI</h3>
+        <h3 class="modal-collaboratori-title" id="modal-collaboratori-title">Collegamenti Consigliati</h3>
         <button class="modal-collaboratori-close" onclick="chiudiModalCollaboratori()" aria-label="Chiudi">
           <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px;">
             <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -3545,9 +4281,9 @@ Vuoi procedere inviando i dati?`;
       </div>
       <div class="modal-collaboratori-body">
         <div class="collaborators-tabs">
-          <button class="collaborator-tab active" onclick="switchCollaboratorTab('facebook')">Gruppi Facebook</button>
+          <button class="collaborator-tab active" onclick="switchCollaboratorTab('facebook')">Community</button>
           <button class="collaborator-tab" onclick="switchCollaboratorTab('piattaforme')">Piattaforme</button>
-          <button class="collaborator-tab" onclick="switchCollaboratorTab('consulenti')">Consulenti Finanziari</button>
+          <button class="collaborator-tab" onclick="switchCollaboratorTab('consulenti')">Consulenti</button>
         </div>
 
         <!-- Panel Gruppi Facebook -->
@@ -3559,12 +4295,15 @@ Vuoi procedere inviando i dati?`;
                   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
-              <h4 class="collaborator-card-title">Trading Community Italia</h4>
+              <h4 class="collaborator-card-title">Economia ed Investimenti Finanziari</h4>
               <p class="collaborator-card-description">
-                Community attiva di trader italiani per condividere analisi, strategie e insights sui mercati finanziari.
+                Community pubblica indipendente con oltre 23.000 iscritti, focalizzata su investimenti a lungo termine, 
+                PAC (Piani di Accumulo), ETF e obbligazioni. Gruppo completamente indipendente, non collegato a nessuna 
+                piattaforma commerciale. Ambiente formativo serio, senza fini commerciali, dedicato alla discussione 
+                e condivisione di conoscenze sugli investimenti.
               </p>
-              <a href="#" target="_blank" rel="noopener noreferrer" class="collaborator-card-link">
-                Visita il Gruppo
+              <a href="https://www.facebook.com/groups/1973405496304394" target="_blank" rel="noopener noreferrer" class="collaborator-card-link">
+                Accedi alla Community
                 <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
                   <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -3577,16 +4316,70 @@ Vuoi procedere inviando i dati?`;
                   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
-              <h4 class="collaborator-card-title">Investimenti Consapevoli</h4>
+              <h4 class="collaborator-card-title">Unionetrader</h4>
               <p class="collaborator-card-description">
-                Gruppo dedicato all'educazione finanziaria e agli investimenti responsabili, con focus su analisi fondamentali.
+                Community con oltre 21.000 membri, gestita da giornalisti accreditati ed esperti trader. 
+                Focus su analisi tecnica e trading puro, senza fini commerciali. Ambiente professionale per 
+                la discussione di strategie, analisi di mercato e metodologie di trading. Community indipendente 
+                dedicata alla formazione e condivisione di conoscenze tecniche.
               </p>
-              <a href="#" target="_blank" rel="noopener noreferrer" class="collaborator-card-link">
-                Visita il Gruppo
+              <a href="https://www.facebook.com/groups/unionetrader" target="_blank" rel="noopener noreferrer" class="collaborator-card-link">
+                Accedi alla Community
                 <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
                   <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </a>
+            </div>
+
+            <div class="collaborator-card">
+              <div class="collaborator-card-icon">
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px;">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <h4 class="collaborator-card-title">Fufflix</h4>
+              <p class="collaborator-card-description">
+                Gruppo ufficiale di Fufflix.it, rubrica d'approfondimento ideata da Germano Milite per la testata 
+                giornalistica Young.it. Community dedicata al confronto e alla vigilanza indipendente contro truffe, 
+                raggiri, pratiche commerciali scorrette e pubblicità ingannevole nel settore finanziario. 
+                Ambiente di discussione e scambio di alert su professionisti e aziende.
+              </p>
+              <a href="https://www.facebook.com/groups/fufflix" target="_blank" rel="noopener noreferrer" class="collaborator-card-link">
+                Accedi alla Community
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
+                  <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Security Guide: Community -->
+          <div class="security-guide warning">
+            <div class="security-guide-header">
+              <svg class="security-guide-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+              <h4 class="security-guide-title">Avviso Importante: Rischio Truffe</h4>
+            </div>
+            <div class="security-guide-content">
+              <p>
+                <span class="security-guide-strong">Le community sui social network (Facebook, WhatsApp, Telegram, etc.)</span> 
+                sono spesso utilizzate da truffatori per contattare potenziali vittime. Presta attenzione a:
+              </p>
+              <ul class="security-guide-list">
+                <li><span class="security-guide-strong">Nessun amministratore ufficiale ti contatterà privatamente</span> per offrirti investimenti, segnali di trading o servizi a pagamento</li>
+                <li><span class="security-guide-strong">Ignora richieste di amicizia o messaggi privati</span> che pretendono di essere dagli admin o moderatori dei gruppi</li>
+                <li><span class="security-guide-strong">Non condividere mai dati personali, codici di accesso o informazioni bancarie</span> via chat private o WhatsApp</li>
+                <li><span class="security-guide-strong">Diffida da promesse di guadagni facili</span> o rendimenti garantiti</li>
+                <li><span class="security-guide-strong">Verifica sempre l'identità</span> di chi ti contatta controllando il profilo ufficiale del gruppo</li>
+                <li><span class="security-guide-strong">Le community serie non vendono servizi</span> o prodotti tramite messaggi privati</li>
+              </ul>
+              <p style="margin-top: var(--sp-3);">
+                <span class="security-guide-strong">In caso di dubbi:</span> segnala immediatamente all'amministratore del gruppo o blocca il contatto sospetto. 
+                Ricorda che Tradelia AI non è responsabile per le attività delle community esterne.
+              </p>
             </div>
           </div>
         </div>
@@ -3597,18 +4390,17 @@ Vuoi procedere inviando i dati?`;
             <div class="collaborator-card">
               <div class="collaborator-card-icon">
                 <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px;">
-                  <rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none"/>
-                  <rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none"/>
-                  <rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none"/>
-                  <rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
-              <h4 class="collaborator-card-title">Piattaforma Partner A</h4>
+              <h4 class="collaborator-card-title">Finviz</h4>
               <p class="collaborator-card-description">
-                Broker regolamentato con focus su strumenti diretti, commissioni competitive e piattaforma professionale.
+                Piattaforma di screening e analisi tecnica avanzata per azioni, ETF e forex. 
+                Strumenti potenti per filtrare titoli, visualizzare mappe di calore e analizzare pattern di mercato. 
+                Utile per ricerca e analisi fondamentale e tecnica.
               </p>
-              <a href="#" target="_blank" rel="noopener noreferrer" class="collaborator-card-link">
-                Scopri di Più
+              <a href="https://finviz.com" target="_blank" rel="noopener noreferrer" class="collaborator-card-link">
+                Visita Finviz
                 <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
                   <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -3618,68 +4410,283 @@ Vuoi procedere inviando i dati?`;
             <div class="collaborator-card">
               <div class="collaborator-card-icon">
                 <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px;">
-                  <rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none"/>
-                  <rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none"/>
-                  <rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none"/>
-                  <rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <path d="M3 3v18h18M7 16l4-8 4 8M7 12h10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
-              <h4 class="collaborator-card-title">Piattaforma Partner B</h4>
+              <h4 class="collaborator-card-title">Barchart</h4>
               <p class="collaborator-card-description">
-                Exchange regolamentato per trading di strumenti finanziari con analisi integrate e strumenti avanzati.
+                Piattaforma completa per dati di mercato, analisi tecnica e screener per azioni, futures e opzioni. 
+                Fornisce dati real-time, grafici avanzati e strumenti di ricerca per trader e investitori. 
+                Ideale per analisi di mercato e ricerca di opportunità.
               </p>
-              <a href="#" target="_blank" rel="noopener noreferrer" class="collaborator-card-link">
-                Scopri di Più
+              <a href="https://www.barchart.com" target="_blank" rel="noopener noreferrer" class="collaborator-card-link">
+                Visita Barchart
                 <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
                   <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </a>
+            </div>
+
+            <div class="collaborator-card">
+              <div class="collaborator-card-icon">
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px;">
+                  <path d="M3 3h18v18H3zM7 7h10v10H7z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 3v18M3 12h18" stroke="currentColor" stroke-width="1" stroke-dasharray="2,2"/>
+                </svg>
+              </div>
+              <h4 class="collaborator-card-title">TradingView</h4>
+              <p class="collaborator-card-description">
+                Piattaforma leader per analisi tecnica, grafici avanzati e social trading. 
+                Strumenti professionali per charting, indicatori tecnici, alert personalizzati e condivisione di idee. 
+                Ampia community di trader e investitori per apprendere e confrontarsi.
+              </p>
+              <a href="https://www.tradingview.com" target="_blank" rel="noopener noreferrer" class="collaborator-card-link">
+                Visita TradingView
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
+                  <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+
+            <div class="collaborator-card">
+              <div class="collaborator-card-icon">
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px;">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <h4 class="collaborator-card-title">Investing.com</h4>
+              <p class="collaborator-card-description">
+                Portale finanziario globale con notizie di mercato, dati in tempo reale, analisi e strumenti di ricerca. 
+                Copertura completa di azioni, forex, commodities, criptovalute e indici. 
+                Utile per rimanere aggiornati e fare ricerche approfondite su mercati e titoli.
+              </p>
+              <a href="https://www.investing.com" target="_blank" rel="noopener noreferrer" class="collaborator-card-link">
+                Visita Investing.com
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
+                  <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Security Guide: Piattaforme -->
+          <div class="security-guide info">
+            <div class="security-guide-header">
+              <svg class="security-guide-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="M9 12l2 2 4-4"/>
+              </svg>
+              <h4 class="security-guide-title">Utilità degli Strumenti di Analisi</h4>
+            </div>
+            <div class="security-guide-content">
+              <p>
+                Questi strumenti (Finviz, Barchart, TradingView, Investing.com) sono <span class="security-guide-strong">piattaforme di analisi e ricerca</span> 
+                che offrono dati di mercato, grafici, screener e strumenti di analisi tecnica e fondamentale. 
+                Sono utili per:
+              </p>
+              <ul class="security-guide-list">
+                <li><span class="security-guide-strong">Ricerca e screening:</span> Trovare titoli e opportunità di investimento in base a criteri specifici</li>
+                <li><span class="security-guide-strong">Analisi tecnica:</span> Studiare grafici, indicatori e pattern per supportare decisioni di trading</li>
+                <li><span class="security-guide-strong">Analisi fondamentale:</span> Accedere a dati finanziari, bilanci e notizie di mercato</li>
+                <li><span class="security-guide-strong">Formazione:</span> Imparare attraverso strumenti educativi, tutorial e community</li>
+                <li><span class="security-guide-strong">Monitoraggio:</span> Tenere traccia di portafogli e creare alert personalizzati</li>
+                <li><span class="security-guide-strong">Confronto:</span> Confrontare performance, metriche e dati tra diversi titoli e settori</li>
+              </ul>
+              <p style="margin-top: var(--sp-3);">
+                <span class="security-guide-strong">Importante:</span> Tradelia AI <span class="security-guide-strong">non ha contratti di partnership</span> 
+                con queste piattaforme e <span class="security-guide-strong">non riceve commissioni</span> o compensi per i collegamenti suggeriti. 
+                Questi strumenti sono inclusi esclusivamente per il loro <span class="security-guide-strong">valore formativo e informativo</span>, 
+                aiutando utenti e investitori a fare ricerche approfondite e prendere decisioni informate.
+              </p>
+              <p style="margin-top: var(--sp-2);">
+                <span class="security-guide-strong">Nota:</span> Alcune funzionalità avanzate potrebbero richiedere abbonamenti a pagamento. 
+                Verifica sempre i termini di servizio e le policy di privacy delle piattaforme prima di utilizzarle.
+              </p>
             </div>
           </div>
         </div>
 
         <!-- Panel Consulenti Finanziari -->
         <div id="panel-consulenti" class="collaborator-panel">
-          <div class="collaborators-grid">
-            <div class="collaborator-card">
-              <div class="collaborator-card-icon">
-                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px;">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                  <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
-                </svg>
-              </div>
-              <h4 class="collaborator-card-title">Consulente Finanziario A</h4>
-              <p class="collaborator-card-description">
-                Consulente finanziario indipendente specializzato in pianificazione finanziaria e gestione patrimoniale.
-              </p>
-              <a href="#" target="_blank" rel="noopener noreferrer" class="collaborator-card-link">
-                Contatta
-                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
-                  <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </a>
+          <div style="text-align: center; padding: var(--sp-12) var(--sp-4);">
+            <div style="margin-bottom: var(--sp-6);">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 64px; height: 64px; margin: 0 auto; color: var(--muted, #888);">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
+              </svg>
             </div>
+            <h3 style="font-size: var(--fs-24); font-weight: 700; color: var(--ink); margin: 0 0 var(--sp-3);">
+              Sezione in Allestimento
+            </h3>
+            <p style="font-size: var(--fs-16); color: var(--ink-soft); margin: 0 0 var(--sp-6); max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+              Stiamo selezionando consulenti finanziari qualificati e professionisti indipendenti per questa sezione. 
+              Se sei un consulente finanziario autorizzato (OCF/OPC) o un professionista qualificato e vuoi essere 
+              considerato per questa sezione, compila il form qui sotto.
+            </p>
+            <button onclick="apriModalProfessionista()" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px;">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
+              </svg>
+              Compila il Form per Professionisti
+            </button>
+          </div>
 
-            <div class="collaborator-card">
-              <div class="collaborator-card-icon">
-                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px;">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                  <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
-                </svg>
-              </div>
-              <h4 class="collaborator-card-title">Consulente Finanziario B</h4>
-              <p class="collaborator-card-description">
-                Esperto in analisi di mercato e strategie di investimento per privati e piccole imprese.
+          <!-- Security Guide: Consulenti -->
+          <div class="security-guide warning">
+            <div class="security-guide-header">
+              <svg class="security-guide-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+              <h4 class="security-guide-title">Investire Senza Consulenza è Molto Rischioso</h4>
+            </div>
+            <div class="security-guide-content">
+              <p>
+                <span class="security-guide-strong">Investire senza una consulenza professionale appropriata comporta rischi elevati</span> 
+                di perdita del capitale e di prendere decisioni finanziarie non allineate ai tuoi obiettivi, propensione al rischio e situazione patrimoniale.
               </p>
-              <a href="#" target="_blank" rel="noopener noreferrer" class="collaborator-card-link">
-                Contatta
-                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
-                  <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </a>
+              <ul class="security-guide-list">
+                <li><span class="security-guide-strong">Mancanza di pianificazione:</span> Senza una consulenza, potresti non avere una strategia chiara e coerente con i tuoi obiettivi a lungo termine</li>
+                <li><span class="security-guide-strong">Sovraesposizione al rischio:</span> Potresti investire in strumenti troppo rischiosi per la tua situazione o sottovalutare i rischi</li>
+                <li><span class="security-guide-strong">Diversificazione insufficiente:</span> Senza una visione d'insieme, potresti concentrare i tuoi investimenti in pochi titoli o settori</li>
+                <li><span class="security-guide-strong">Errori emotivi:</span> Le decisioni di investimento guidate dalle emozioni (panico, euforia) possono portare a perdite significative</li>
+                <li><span class="security-guide-strong">Mancanza di conoscenza:</span> Investire senza comprensione adeguata di strumenti finanziari complessi aumenta il rischio di errori costosi</li>
+                <li><span class="security-guide-strong">Assenza di monitoraggio:</span> Senza un consulente, potresti non monitorare adeguatamente i tuoi investimenti o adattarli ai cambiamenti di mercato</li>
+              </ul>
+              <p style="margin-top: var(--sp-3);">
+                <span class="security-guide-strong">Un consulente finanziario qualificato può aiutarti a:</span>
+              </p>
+              <ul class="security-guide-list" style="margin-top: var(--sp-2);">
+                <li>Elaborare un piano finanziario personalizzato basato sulla tua situazione</li>
+                <li>Diversificare correttamente il portafoglio in base alla tua propensione al rischio</li>
+                <li>Evitare errori comuni e decisioni emotive</li>
+                <li>Monitorare e adattare la strategia ai cambiamenti di mercato e personali</li>
+                <li>Ottimizzare fiscalmente i tuoi investimenti</li>
+                <li>Fornire educazione finanziaria continua</li>
+              </ul>
+              <p style="margin-top: var(--sp-3);">
+                <span class="security-guide-strong">Prima di affidarti a un consulente, verifica sempre:</span> 
+                iscrizione all'Albo OCF/OPC, autorizzazioni Consob, indipendenza, trasparenza sui compensi e competenze professionali. 
+                Un consulente serio fornisce documentazione trasparente e non esercita pressioni.
+              </p>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL PROFESSIONISTA ===== -->
+  <div id="modal-professionista" class="hidden" role="dialog" aria-modal="true" aria-labelledby="modal-professionista-title">
+    <div class="modal-professionista-content">
+      <div class="modal-professionista-header">
+        <h3 class="modal-professionista-title" id="modal-professionista-title">Candidatura Professionista</h3>
+        <button class="modal-professionista-close" onclick="chiudiModalProfessionista()" aria-label="Chiudi">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px;">
+            <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-professionista-body">
+        <p style="font-size: var(--fs-14); color: var(--ink-soft); margin-bottom: var(--sp-6); line-height: 1.6;">
+          Compila il form qui sotto per candidarti come consulente finanziario o professionista qualificato. 
+          Valuteremo la tua richiesta e ti contatteremo al più presto.
+        </p>
+        <form id="form-professionista">
+          <div class="form-group">
+            <label class="form-label" for="nome">
+              Nome <span class="required">*</span>
+            </label>
+            <input type="text" id="nome" name="nome" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="cognome">
+              Cognome <span class="required">*</span>
+            </label>
+            <input type="text" id="cognome" name="cognome" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="qualifica">
+              Qualifica Professionale <span class="required">*</span>
+            </label>
+            <select id="qualifica" name="qualifica" class="form-select" required>
+              <option value="">Seleziona qualifica...</option>
+              <option value="OCF">OCF - Consulente Finanziario</option>
+              <option value="OPC">OPC - Organismo di Partecipazione Collettiva</option>
+              <option value="Analista">Analista di Mercato</option>
+              <option value="Esperto">Esperto Finanziario</option>
+              <option value="Altro">Altro</option>
+            </select>
+            <p class="form-help">Seleziona la tua qualifica professionale principale</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="numero_iscrizione">
+              Numero Iscrizione OCF/OPC
+            </label>
+            <input type="text" id="numero_iscrizione" name="numero_iscrizione" class="form-input" placeholder="Es: OCF-12345">
+            <p class="form-help">Se applicabile, inserisci il numero di iscrizione all'Albo</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email">
+              Email <span class="required">*</span>
+            </label>
+            <input type="email" id="email" name="email" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="telefono">
+              Telefono
+            </label>
+            <input type="tel" id="telefono" name="telefono" class="form-input" placeholder="+39 123 456 7890">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="sito_web">
+              Sito Web / Profilo Professionale
+            </label>
+            <input type="url" id="sito_web" name="sito_web" class="form-input" placeholder="https://...">
+            <p class="form-help">Link al tuo sito web o profilo professionale (LinkedIn, etc.)</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="specializzazione">
+              Specializzazione <span class="required">*</span>
+            </label>
+            <select id="specializzazione" name="specializzazione" class="form-select" required>
+              <option value="">Seleziona specializzazione...</option>
+              <option value="Pianificazione">Pianificazione Finanziaria</option>
+              <option value="Gestione">Gestione Patrimoniale</option>
+              <option value="Analisi">Analisi di Mercato</option>
+              <option value="Investimenti">Investimenti e Portafogli</option>
+              <option value="Fiscale">Consulenza Fiscale</option>
+              <option value="Pensione">Pianificazione Pensionistica</option>
+              <option value="Altro">Altro</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="descrizione">
+              Descrizione Breve <span class="required">*</span>
+            </label>
+            <textarea id="descrizione" name="descrizione" class="form-textarea" required placeholder="Descrivi brevemente la tua attività professionale, esperienza e metodologia..."></textarea>
+            <p class="form-help">Massimo 500 caratteri. Questa descrizione potrebbe essere utilizzata nella sezione se la tua candidatura verrà accettata.</p>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="chiudiModalProfessionista()">
+              Annulla
+            </button>
+            <button type="submit" class="btn btn-primary">
+              Invia Candidatura
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -3735,9 +4742,69 @@ Vuoi procedere inviando i dati?`;
         if (modal && !modal.classList.contains('hidden')) {
           chiudiModalCollaboratori();
         }
+        const modalProf = document.getElementById('modal-professionista');
+        if (modalProf && !modalProf.classList.contains('hidden')) {
+          chiudiModalProfessionista();
+        }
+      }
+    });
+
+    // ===== MODAL PROFESSIONISTA FUNCTIONS =====
+    function apriModalProfessionista() {
+      const modal = document.getElementById('modal-professionista');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function chiudiModalProfessionista() {
+      const modal = document.getElementById('modal-professionista');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+      // Reset form
+      const form = document.getElementById('form-professionista');
+      if (form) form.reset();
+    }
+
+    // Chiudi modal cliccando fuori
+    document.getElementById('modal-professionista')?.addEventListener('click', (e) => {
+      if (e.target.id === 'modal-professionista') {
+        chiudiModalProfessionista();
+      }
+    });
+
+    // Gestione submit form
+    document.getElementById('form-professionista')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      
+      // Disabilita submit
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Invio in corso...';
+      
+      // Raccogli dati form
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData);
+      
+      try {
+        // Qui puoi aggiungere la logica per inviare i dati (email, API, etc.)
+        // Per ora mostriamo un messaggio di successo
+        alert('Grazie per la tua candidatura! Ti contatteremo al più presto per valutare la tua richiesta.');
+        chiudiModalProfessionista();
+      } catch (error) {
+        alert('Si è verificato un errore. Riprova più tardi o contattaci direttamente a info@tradelia.org');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
       }
     });
   </script>
+
+  <!-- Global Header & i18n -->
+  <script type="module" src="/assets/js/global-header.js"></script>
 
 </body>
 </html>

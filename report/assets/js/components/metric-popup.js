@@ -4,6 +4,7 @@
 
 import Logger from '../utils/logger.js';
 import { registerOverlay, unregisterOverlay, OVERLAY_TYPES } from '../utils/overlay-manager.js';
+import { i18n } from '../utils/i18n.js';
 
 const POPUP = {
   _overlay: null,
@@ -82,38 +83,38 @@ function renderPopup(metric) {
         <h3 class="metric-popup-title">${escapeHtml(metric.label || metric.key)}</h3>
         <div class="metric-popup-key">${escapeHtml(metric.key)}</div>
       </div>
-      <button class="metric-popup-close" aria-label="Chiudi" type="button">×</button>
+      <button class="metric-popup-close" aria-label="${i18n.t('metric.popup.close')}" type="button">×</button>
     </header>
     <div class="metric-popup-body">
       <div class="metric-popup-value">
-        <span class="metric-popup-value-label">Valore:</span>
+        <span class="metric-popup-value-label">${i18n.t('metric.popup.value')}</span>
         <span class="metric-popup-value-text">${escapeHtml(formatValue(metric.value))}</span>
       </div>
       ${entry ? `
         <div class="metric-popup-section">
-          <h4 class="metric-popup-section-title">Cosa</h4>
+          <h4 class="metric-popup-section-title">${i18n.t('metric.popup.what')}</h4>
           <p class="metric-popup-section-text">${escapeHtml(entry.what || entry.definizioneAccademica || '')}</p>
         </div>
         ${(entry.how || entry.spiegazioneAI) ? `
           <div class="metric-popup-section">
-            <h4 class="metric-popup-section-title">Come</h4>
+            <h4 class="metric-popup-section-title">${i18n.t('metric.popup.how')}</h4>
             <p class="metric-popup-section-text">${escapeHtml(entry.how || entry.spiegazioneAI || '')}</p>
           </div>
         ` : ''}
         ${(entry.source || entry.fonteAccademica) ? `
           <div class="metric-popup-section">
-            <h4 class="metric-popup-section-title">Fonte</h4>
+            <h4 class="metric-popup-section-title">${i18n.t('metric.popup.source')}</h4>
             <p class="metric-popup-section-text metric-popup-source">${escapeHtml(entry.source || entry.fonteAccademica || '')}</p>
           </div>
         ` : ''}
       ` : `
         <div class="metric-popup-section">
-          <p class="metric-popup-section-text metric-popup-no-info">Nessuna informazione disponibile nel glossario per questa metrica.</p>
+          <p class="metric-popup-section-text metric-popup-no-info">${i18n.t('metric.popup.noInfo')}</p>
         </div>
       `}
       <div class="metric-popup-meta">
         <div class="metric-popup-meta-key">
-          <span class="metric-popup-meta-label">Key:</span>
+          <span class="metric-popup-meta-label">${i18n.t('metric.popup.key')}</span>
           <code class="metric-popup-code">${escapeHtml(metric.key)}</code>
         </div>
       </div>
@@ -123,7 +124,7 @@ function renderPopup(metric) {
         <svg class="metric-popup-glossary-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
         </svg>
-        Apri glossario
+        ${i18n.t('metric.popup.openGlossary')}
       </button>
     </footer>
   `;

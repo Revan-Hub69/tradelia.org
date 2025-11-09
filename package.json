@@ -1,0 +1,12 @@
+{
+  "name": "tradelia",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Tradelia AI Dashboard",
+  "scripts": {
+    "generate-manifest": "node archivio/generate-manifest.js",
+    "setup-hooks": "node scripts/setup-hooks.js",
+    "precommit": "node archivio/generate-manifest.js"
+  }
+}
+

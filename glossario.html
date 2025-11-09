@@ -72,6 +72,8 @@
   <!-- Stylesheet -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
   <link rel="stylesheet" href="/report/assets/css/glossary-popup.css" />
+  <link rel="stylesheet" href="/assets/css/global-header.css" />
+  <link rel="stylesheet" href="/assets/css/site-coherence-2025.css" />
   
   <style>
     /* ===== LAYOUT BASE ===== */
@@ -92,6 +94,7 @@
       color: var(--ink);
       background: var(--surface-page);
       padding-right: 0 !important;
+      padding-top: 64px; /* Spazio per header fixed */
     }
     
     html {
@@ -101,6 +104,11 @@
     
     /* Slots per header e footer */
     #site-header-slot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
       order: 0;
       flex-shrink: 0;
     }
@@ -109,6 +117,8 @@
       order: 3;
       flex-shrink: 0;
     }
+    
+    /* Footer gestito da tokens.css - nessuno stile aggiuntivo necessario */
     
     main {
       flex: 1 1 0%;
@@ -525,8 +535,8 @@
   <!-- HEADER CONTENT -->
   <header class="glossario-header">
     <div class="glossario-header-content">
-      <h1 class="glossario-title">Glossario Finanziario</h1>
-      <p class="glossario-subtitle">
+      <h1 class="glossario-title" data-i18n="glossary.title">Glossario Finanziario</h1>
+      <p class="glossario-subtitle" data-i18n="glossary.subtitle">
         Definizioni accademiche e spiegazioni AI di tutti i termini finanziari utilizzati nei report Tradelia AI
       </p>
     </div>
@@ -548,19 +558,20 @@
             class="search-input" 
             placeholder="Cerca un termine finanziario..."
             aria-label="Cerca nel glossario"
+            data-i18n-placeholder="glossary.search.placeholder"
           />
         </div>
         <div class="filters-container">
-          <button class="category-filter-btn active" data-filter="all" type="button">
+          <button class="category-filter-btn active" data-filter="all" type="button" data-i18n="glossary.filter.all">
             Tutti
           </button>
-          <button class="category-filter-btn" data-filter="Finanza base" type="button">
+          <button class="category-filter-btn" data-filter="Finanza base" type="button" data-i18n="glossary.filter.finance">
             Finanza base
           </button>
-          <button class="category-filter-btn" data-filter="Investimenti" type="button">
+          <button class="category-filter-btn" data-filter="Investimenti" type="button" data-i18n="glossary.filter.investments">
             Investimenti
           </button>
-          <button class="category-filter-btn" data-filter="Trading" type="button">
+          <button class="category-filter-btn" data-filter="Trading" type="button" data-i18n="glossary.filter.trading">
             Trading
           </button>
         </div>
@@ -712,19 +723,13 @@
       }
     }
     
-    // ===== CARICAMENTO HEADER & FOOTER =====
-    async function mountHeaderFooter() {
+    // ===== CARICAMENTO FOOTER =====
+    async function mountFooter() {
       document.documentElement.setAttribute('data-theme', 'dark');
       
       try {
-        const headerSlot = document.getElementById('site-header-slot');
-        if (headerSlot) {
-          const { siteHeader } = await import('/report/assets/js/components/site-header.js');
-          if (siteHeader?.mount) {
-            siteHeader.mount(headerSlot);
-            Logger.debug('Glossario', 'Header montato');
-          }
-        }
+        // Sistema traduzione disabilitato - sempre italiano
+        // Header gestito da global-header.js
         
         const footerSlot = document.getElementById('site-footer-slot');
         if (footerSlot) {
@@ -735,7 +740,7 @@
           }
         }
       } catch (err) {
-        Logger.warn('Glossario', 'Errore montaggio header/footer', err);
+        Logger.warn('Glossario', 'Errore montaggio footer', err);
       }
     }
     
@@ -1011,7 +1016,7 @@
     
     // ===== INIZIALIZZAZIONE =====
     async function init() {
-      await mountHeaderFooter();
+      await mountFooter();
       await loadGlossary();
     }
     
@@ -1167,5 +1172,8 @@
       }
     })();
   </script>
+
+  <!-- Global Header (monta automaticamente l'header) -->
+  <script type="module" src="/assets/js/global-header.js"></script>
 </body>
 </html>

@@ -4,6 +4,7 @@
 
 import Logger from '../utils/logger.js';
 import { registerOverlay, unregisterOverlay, OVERLAY_TYPES } from '../utils/overlay-manager.js';
+import { i18n } from '../utils/i18n.js';
 
 const UNIFIED_DRAWER = {
   _overlay: null,
@@ -39,8 +40,8 @@ function mount() {
   // Header
   const header = createEl('header', 'glossary-drawer-header');
   header.innerHTML = `
-    <h2 class="glossary-drawer-title" data-drawer-title>Sezioni</h2>
-    <button class="glossary-drawer-close" aria-label="Chiudi" type="button">
+    <h2 class="glossary-drawer-title" data-drawer-title>${i18n.t('module.header.sections')}</h2>
+    <button class="glossary-drawer-close" aria-label="${i18n.t('common.close')}" type="button">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
       </svg>
@@ -81,9 +82,15 @@ function open(config) {
   // Aggiorna titolo
   const titleEl = UNIFIED_DRAWER._panel.querySelector('[data-drawer-title]');
   if (titleEl) {
-    titleEl.textContent = title || 'Sezioni';
+    titleEl.textContent = title || i18n.t('module.header.sections');
     titleEl.id = `unified-drawer-title-${id || 'default'}`;
     UNIFIED_DRAWER._panel.setAttribute('aria-labelledby', titleEl.id);
+  }
+  
+  // Aggiorna aria-label del pulsante close
+  const closeBtn = UNIFIED_DRAWER._panel.querySelector('.glossary-drawer-close');
+  if (closeBtn) {
+    closeBtn.setAttribute('aria-label', i18n.t('common.close'));
   }
   
   // Carica contenuto

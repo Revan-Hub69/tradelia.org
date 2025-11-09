@@ -2,7 +2,7 @@
 <html lang="it" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0" />
   <title>Privacy Policy · Tradelia AI</title>
 
   <!-- Favicons -->
@@ -16,6 +16,8 @@
 
   <!-- Design System -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/assets/css/global-header.css" />
+  <link rel="stylesheet" href="/assets/css/site-coherence-2025.css" />
 
   <!-- Lucide -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -23,9 +25,21 @@
 
   <style>
     html, body { height: 100%; }
-    body { display: flex; flex-direction: column; min-height: 100vh; }
+    body { 
+      display: flex; 
+      flex-direction: column; 
+      min-height: 100vh;
+      padding-top: 64px; /* Spazio per header fixed */
+    }
+    #site-header-slot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    }
     .container { max-width: 90rem; margin-inline: auto; padding-inline: 1rem; }
-    main { flex: 1; padding-top: 5rem; padding-bottom: 5rem; }
+    main { flex: 1; padding-top: 1rem; padding-bottom: 5rem; }
 
     /* ===== HEADER ===== */
     .hdr {
@@ -34,7 +48,7 @@
       left: 0; 
       right: 0; 
       height: 64px; 
-      z-index: 100;
+      z-index: 1000;
       display: flex; 
       align-items: center;
       backdrop-filter: blur(16px) saturate(1.2);
@@ -195,21 +209,21 @@
     <div class="container" style="max-width: 800px;">
       <article style="background: var(--surface-card); border: 1px solid var(--br-card); border-radius: var(--radius-lg); padding: var(--sp-8);">
         <header style="margin-bottom: var(--sp-8);">
-          <h1 style="font-size: var(--fs-32); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-2);">
+          <h1 style="font-size: var(--fs-32); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-2);" data-i18n="privacy.title">
             Privacy Policy
           </h1>
           <p style="color: var(--muted); font-size: var(--fs-14);">
-            Ultimo aggiornamento: <time id="last-updated">2024-01-15</time>
+            <span data-i18n="privacy.lastUpdate">Ultimo aggiornamento:</span> <time id="last-updated">2024-01-15</time>
           </p>
         </header>
 
         <div style="color: var(--ink); line-height: 1.7; font-size: var(--fs-15);">
           
           <section style="margin-bottom: var(--sp-6);">
-            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);">
+            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);" data-i18n="privacy.section1.title">
               1. Introduzione
             </h2>
-            <p style="margin-bottom: var(--sp-3);">
+            <p style="margin-bottom: var(--sp-3);" data-i18n="privacy.section1.content">
               Tradelia AI ("noi", "nostro", "il Servizio") rispetta la tua privacy e si impegna a proteggere 
               i tuoi dati personali. Questa Privacy Policy spiega come raccogliamo, utilizziamo e proteggiamo 
               le tue informazioni quando utilizzi il nostro Servizio.
@@ -217,80 +231,80 @@
           </section>
 
           <section style="margin-bottom: var(--sp-6);">
-            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);">
+            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);" data-i18n="privacy.section2.title">
               2. Dati che Raccogliamo
             </h2>
-            <p style="margin-bottom: var(--sp-3);">
+            <p style="margin-bottom: var(--sp-3);" data-i18n="privacy.section2.content">
               Raccogliamo i seguenti tipi di dati:
             </p>
             <ul style="list-style: disc; margin-left: var(--sp-6); margin-bottom: var(--sp-3);">
-              <li><strong>Dati di account:</strong> Email, password (criptata), informazioni di abbonamento</li>
-              <li><strong>Dati di utilizzo:</strong> Log di accesso, preferenze, interazioni con il Servizio</li>
-              <li><strong>Dati tecnici:</strong> Indirizzo IP, tipo di browser, dispositivo</li>
-              <li><strong>Dati di pagamento:</strong> Gestiti da Paddle (non conserviamo dati di carte di credito)</li>
+              <li data-i18n="privacy.section2.item1"><strong>Dati di account:</strong> Email, password (criptata), informazioni di abbonamento</li>
+              <li data-i18n="privacy.section2.item2"><strong>Dati di utilizzo:</strong> Log di accesso, preferenze, interazioni con il Servizio</li>
+              <li data-i18n="privacy.section2.item3"><strong>Dati tecnici:</strong> Indirizzo IP, tipo di browser, dispositivo</li>
+              <li data-i18n="privacy.section2.item4"><strong>Dati di pagamento:</strong> Gestiti da Paddle (non conserviamo dati di carte di credito)</li>
             </ul>
           </section>
 
           <section style="margin-bottom: var(--sp-6);">
-            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);">
+            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);" data-i18n="privacy.section3.title">
               3. Come Utilizziamo i Dati
             </h2>
-            <p style="margin-bottom: var(--sp-3);">
+            <p style="margin-bottom: var(--sp-3);" data-i18n="privacy.section3.content">
               Utilizziamo i tuoi dati per:
             </p>
             <ul style="list-style: disc; margin-left: var(--sp-6); margin-bottom: var(--sp-3);">
-              <li>Fornire e migliorare il Servizio</li>
-              <li>Gestire il tuo account e abbonamento</li>
-              <li>Inviare notifiche importanti sul Servizio</li>
-              <li>Rispettare obblighi legali e normativi</li>
+              <li data-i18n="privacy.section3.item1">Fornire e migliorare il Servizio</li>
+              <li data-i18n="privacy.section3.item2">Gestire il tuo account e abbonamento</li>
+              <li data-i18n="privacy.section3.item3">Inviare notifiche importanti sul Servizio</li>
+              <li data-i18n="privacy.section3.item4">Rispettare obblighi legali e normativi</li>
             </ul>
           </section>
 
           <section style="margin-bottom: var(--sp-6);">
-            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);">
+            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);" data-i18n="privacy.section4.title">
               4. Condivisione dei Dati
             </h2>
-            <p style="margin-bottom: var(--sp-3);">
+            <p style="margin-bottom: var(--sp-3);" data-i18n="privacy.section4.content">
               Non vendiamo i tuoi dati personali. Condividiamo i dati solo con:
             </p>
             <ul style="list-style: disc; margin-left: var(--sp-6); margin-bottom: var(--sp-3);">
-              <li><strong>Paddle:</strong> Per gestione pagamenti e abbonamenti</li>
-              <li><strong>Supabase:</strong> Per autenticazione e database (hosting sicuro)</li>
-              <li><strong>Resend:</strong> Per invio email (solo se necessario)</li>
-              <li><strong>Autorità legali:</strong> Se richiesto dalla legge</li>
+              <li data-i18n="privacy.section4.item1"><strong>Paddle:</strong> Per gestione pagamenti e abbonamenti</li>
+              <li data-i18n="privacy.section4.item2"><strong>Supabase:</strong> Per autenticazione e database (hosting sicuro)</li>
+              <li data-i18n="privacy.section4.item3"><strong>Resend:</strong> Per invio email (solo se necessario)</li>
+              <li data-i18n="privacy.section4.item4"><strong>Autorità legali:</strong> Se richiesto dalla legge</li>
             </ul>
           </section>
 
           <section style="margin-bottom: var(--sp-6);">
-            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);">
+            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);" data-i18n="privacy.section5.title">
               5. Sicurezza dei Dati
             </h2>
-            <p style="margin-bottom: var(--sp-3);">
+            <p style="margin-bottom: var(--sp-3);" data-i18n="privacy.section5.content">
               Implementiamo misure di sicurezza appropriate per proteggere i tuoi dati, inclusi:
             </p>
             <ul style="list-style: disc; margin-left: var(--sp-6); margin-bottom: var(--sp-3);">
-              <li>Crittografia dei dati in transito (HTTPS)</li>
-              <li>Crittografia delle password (hashing sicuro)</li>
-              <li>Accesso limitato ai dati personali</li>
-              <li>Monitoraggio continuo per violazioni</li>
+              <li data-i18n="privacy.section5.item1">Crittografia dei dati in transito (HTTPS)</li>
+              <li data-i18n="privacy.section5.item2">Crittografia delle password (hashing sicuro)</li>
+              <li data-i18n="privacy.section5.item3">Accesso limitato ai dati personali</li>
+              <li data-i18n="privacy.section5.item4">Monitoraggio continuo per violazioni</li>
             </ul>
           </section>
 
           <section style="margin-bottom: var(--sp-6);">
-            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);">
+            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);" data-i18n="privacy.section6.title">
               6. I Tuoi Diritti (GDPR)
             </h2>
-            <p style="margin-bottom: var(--sp-3);">
+            <p style="margin-bottom: var(--sp-3);" data-i18n="privacy.section6.content">
               Hai il diritto di:
             </p>
             <ul style="list-style: disc; margin-left: var(--sp-6); margin-bottom: var(--sp-3);">
-              <li>Accedere ai tuoi dati personali</li>
-              <li>Correggere dati inaccurati</li>
-              <li>Richiedere la cancellazione dei tuoi dati</li>
-              <li>Opporti al trattamento dei tuoi dati</li>
-              <li>Richiedere la portabilità dei dati</li>
+              <li data-i18n="privacy.section6.item1">Accedere ai tuoi dati personali</li>
+              <li data-i18n="privacy.section6.item2">Correggere dati inaccurati</li>
+              <li data-i18n="privacy.section6.item3">Richiedere la cancellazione dei tuoi dati</li>
+              <li data-i18n="privacy.section6.item4">Opporti al trattamento dei tuoi dati</li>
+              <li data-i18n="privacy.section6.item5">Richiedere la portabilità dei dati</li>
             </ul>
-            <p style="margin-bottom: var(--sp-3);">
+            <p style="margin-bottom: var(--sp-3);" data-i18n="privacy.section6.content2">
               Per esercitare questi diritti, contattaci a: 
               <a href="mailto:info@tradelia.org" style="color: var(--brand-600); text-decoration: underline;">
                 info@tradelia.org
@@ -299,10 +313,10 @@
           </section>
 
           <section style="margin-bottom: var(--sp-6);">
-            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);">
+            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);" data-i18n="privacy.section7.title">
               7. Conservazione dei Dati
             </h2>
-            <p style="margin-bottom: var(--sp-3);">
+            <p style="margin-bottom: var(--sp-3);" data-i18n="privacy.section7.content">
               Conserviamo i tuoi dati personali solo per il tempo necessario a fornire il Servizio 
               o come richiesto dalla legge. Quando cancelli il tuo account, eliminiamo i tuoi dati 
               entro 30 giorni, salvo obblighi legali di conservazione.
@@ -310,10 +324,10 @@
           </section>
 
           <section style="margin-bottom: var(--sp-6);">
-            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);">
+            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);" data-i18n="privacy.section8.title">
               8. Cookie e Tecnologie Simili
             </h2>
-            <p style="margin-bottom: var(--sp-3);">
+            <p style="margin-bottom: var(--sp-3);" data-i18n="privacy.section8.content">
               Utilizziamo cookie e tecnologie simili per migliorare l'esperienza utente, analizzare 
               l'utilizzo del Servizio e personalizzare i contenuti. Puoi gestire le preferenze dei 
               cookie tramite le impostazioni del browser.
@@ -321,20 +335,20 @@
           </section>
 
           <section style="margin-bottom: var(--sp-6);">
-            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);">
+            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);" data-i18n="privacy.section9.title">
               9. Modifiche a questa Privacy Policy
             </h2>
-            <p style="margin-bottom: var(--sp-3);">
+            <p style="margin-bottom: var(--sp-3);" data-i18n="privacy.section9.content">
               Possiamo aggiornare questa Privacy Policy periodicamente. Ti notificheremo eventuali 
               modifiche significative via email o tramite il Servizio.
             </p>
           </section>
 
           <section style="margin-bottom: var(--sp-6);">
-            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);">
+            <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);" data-i18n="privacy.section10.title">
               10. Contatti
             </h2>
-            <p style="margin-bottom: var(--sp-3);">
+            <p style="margin-bottom: var(--sp-3);" data-i18n="privacy.section10.content">
               Per domande su questa Privacy Policy, contattaci a: 
               <a href="mailto:info@tradelia.org" style="color: var(--brand-600); text-decoration: underline;">
                 info@tradelia.org
@@ -355,88 +369,81 @@
     <div style="position: absolute; inset: 0;" data-legal-dismiss></div>
     <div class="legal-panel" role="document">
       <header class="legal-hdr">
-        <div class="legal-title" id="legal-consent-title">Informativa legale</div>
-        <button class="btn btn-sm" type="button" data-legal-dismiss aria-label="Chiudi">Chiudi</button>
+        <div class="legal-title" id="legal-consent-title" data-i18n="legal.overlay.title">Informativa legale</div>
+        <button class="btn btn-sm" type="button" data-legal-dismiss aria-label="Chiudi" data-i18n="legal.overlay.close">Chiudi</button>
       </header>
       <nav class="legal-tabs" role="tablist" aria-label="Sezioni legali">
-        <button class="legal-tab" role="tab" id="tab-mifid" aria-controls="panel-mifid" aria-selected="true">Informativa MiFID</button>
-        <button class="legal-tab" role="tab" id="tab-privacy" aria-controls="panel-privacy" aria-selected="false">Privacy</button>
+        <button class="legal-tab" role="tab" id="tab-mifid" aria-controls="panel-mifid" aria-selected="true" data-i18n="legal.overlay.tab.mifid">Informativa MiFID</button>
+        <button class="legal-tab" role="tab" id="tab-privacy" aria-controls="panel-privacy" aria-selected="false" data-i18n="legal.overlay.tab.privacy">Privacy</button>
       </nav>
       <div class="legal-body">
         <section id="panel-mifid" role="tabpanel" aria-labelledby="tab-mifid">
-          <h4>Finalità del materiale</h4>
-          <p>Il presente sito web e tutti i suoi contenuti (analisi, moduli AI, report, articoli, glossario) hanno esclusiva finalità <strong>informativa e didattica</strong>. Non costituiscono consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa <strong>MiFID II / ESMA</strong>.</p>
-          <h4>Natura educativa</h4>
-          <p>Tradelia AI è una piattaforma di <strong>educazione finanziaria accademica</strong>. Tutti i contenuti, inclusi moduli AI proprietari, analisi di mercato, report e strumenti didattici, sono progettati esclusivamente per finalità formative e di ricerca. Non viene svolta verifica di adeguatezza/appropriatezza, profilo di rischio o obiettivi finanziari dell'utente.</p>
-          <h4>Rischi</h4>
+          <h4 data-i18n="legal.mifid.purpose.title">Finalità del materiale</h4>
+          <p data-i18n="legal.mifid.purpose.content">Il presente sito web e tutti i suoi contenuti (analisi, moduli AI, report, articoli, glossario) hanno esclusiva finalità <strong>informativa e didattica</strong>. Non costituiscono consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa <strong>MiFID II / ESMA</strong>.</p>
+          <h4 data-i18n="legal.mifid.educational.title">Natura educativa</h4>
+          <p data-i18n="legal.mifid.educational.content">Tradelia AI è una piattaforma di <strong>educazione finanziaria accademica</strong>. Tutti i contenuti, inclusi moduli AI proprietari, analisi di mercato, report e strumenti didattici, sono progettati esclusivamente per finalità formative e di ricerca. Non viene svolta verifica di adeguatezza/appropriatezza, profilo di rischio o obiettivi finanziari dell'utente.</p>
+          <h4 data-i18n="legal.mifid.risks.title">Rischi</h4>
           <ul>
-            <li>I mercati finanziari comportano <strong>rischio di perdita, anche totale, del capitale</strong>.</li>
-            <li>Prodotti a leva/derivati (opzioni, futures, CFD) possono amplificare perdite oltre il capitale iniziale.</li>
-            <li>Rendimenti passati non sono indicativi di risultati futuri.</li>
-            <li>Le informazioni fornite non devono essere considerate come garanzie di rendimento.</li>
+            <li data-i18n="legal.mifid.risks.item1">I mercati finanziari comportano <strong>rischio di perdita, anche totale, del capitale</strong>.</li>
+            <li data-i18n="legal.mifid.risks.item2">Prodotti a leva/derivati (opzioni, futures, CFD) possono amplificare perdite oltre il capitale iniziale.</li>
+            <li data-i18n="legal.mifid.risks.item3">Rendimenti passati non sono indicativi di risultati futuri.</li>
+            <li data-i18n="legal.mifid.risks.item4">Le informazioni fornite non devono essere considerate come garanzie di rendimento.</li>
           </ul>
-          <h4>Dati e fonti</h4>
+          <h4 data-i18n="legal.mifid.data.title">Dati e fonti</h4>
           <ul>
-            <li>Dati e serie storiche possono essere soggetti a ritardi, revisioni o errori; i timestamp potrebbero non riflettere il "tempo reale".</li>
-            <li>Le fonti includono provider ritenuti affidabili (Tier-1); non si garantisce esattezza/completezza assoluta.</li>
-            <li>Le analisi AI sono generate automaticamente e possono contenere errori o imprecisioni.</li>
+            <li data-i18n="legal.mifid.data.item1">Dati e serie storiche possono essere soggetti a ritardi, revisioni o errori; i timestamp potrebbero non riflettere il "tempo reale".</li>
+            <li data-i18n="legal.mifid.data.item2">Le fonti includono provider ritenuti affidabili (Tier-1); non si garantisce esattezza/completezza assoluta.</li>
+            <li data-i18n="legal.mifid.data.item3">Le analisi AI sono generate automaticamente e possono contenere errori o imprecisioni.</li>
           </ul>
-          <h4>Conflitti e indipendenza</h4>
+          <h4 data-i18n="legal.mifid.independence.title">Conflitti e indipendenza</h4>
           <ul>
-            <li><strong>Tradelia AI è indipendente</strong>: non esegue ordini, non gestisce capitali, non raccoglie depositi e non opera come intermediario finanziario.</li>
-            <li>Non sono note situazioni di conflitto d'interesse rilevanti nella produzione del materiale.</li>
-            <li>Eventuali link a piattaforme o servizi esterni sono forniti a solo scopo informativo.</li>
+            <li data-i18n="legal.mifid.independence.item1"><strong>Tradelia AI è indipendente</strong>: non esegue ordini, non gestisce capitali, non raccoglie depositi e non opera come intermediario finanziario.</li>
+            <li data-i18n="legal.mifid.independence.item2">Non sono note situazioni di conflitto d'interesse rilevanti nella produzione del materiale.</li>
+            <li data-i18n="legal.mifid.independence.item3">Eventuali link a piattaforme o servizi esterni sono forniti a solo scopo informativo.</li>
           </ul>
-          <h4>Limitazioni e responsabilità</h4>
+          <h4 data-i18n="legal.mifid.limitations.title">Limitazioni e responsabilità</h4>
           <ul>
-            <li>Le informazioni non sostituiscono il giudizio dell'utente né la consulenza di un <strong>intermediario autorizzato</strong>.</li>
-            <li>L'utente è responsabile delle proprie decisioni di investimento.</li>
-            <li>L'uso del sito è vietato laddove non conforme alle leggi locali.</li>
-            <li>Tradelia AI non si assume alcuna responsabilità per perdite derivanti dall'uso delle informazioni fornite.</li>
+            <li data-i18n="legal.mifid.limitations.item1">Le informazioni non sostituiscono il giudizio dell'utente né la consulenza di un <strong>intermediario autorizzato</strong>.</li>
+            <li data-i18n="legal.mifid.limitations.item2">L'utente è responsabile delle proprie decisioni di investimento.</li>
+            <li data-i18n="legal.mifid.limitations.item3">L'uso del sito è vietato laddove non conforme alle leggi locali.</li>
+            <li data-i18n="legal.mifid.limitations.item4">Tradelia AI non si assume alcuna responsabilità per perdite derivanti dall'uso delle informazioni fornite.</li>
           </ul>
         </section>
         <section id="panel-privacy" role="tabpanel" aria-labelledby="tab-privacy" hidden>
-          <h4>Principi</h4>
-          <p>Adottiamo un'impostazione "privacy-first": minimizzazione dei dati e assenza di tracciamento pubblicitario.</p>
-          <h4>Dati trattati</h4>
+          <h4 data-i18n="legal.privacy.principles.title">Principi</h4>
+          <p data-i18n="legal.privacy.principles.content">Adottiamo un'impostazione "privacy-first": minimizzazione dei dati e assenza di tracciamento pubblicitario.</p>
+          <h4 data-i18n="legal.privacy.data.title">Dati trattati</h4>
           <ul>
-            <li>Nessuna raccolta di dati personali identificativi tramite questa pagina.</li>
-            <li>Uso di <code>localStorage</code> per preferenze (tema) e consenso legale.</li>
-            <li>Eventuali log tecnici anonimi per sicurezza e diagnostica.</li>
+            <li data-i18n="legal.privacy.data.item1">Nessuna raccolta di dati personali identificativi tramite questa pagina.</li>
+            <li data-i18n="legal.privacy.data.item2">Uso di <code>localStorage</code> per preferenze (tema) e consenso legale.</li>
+            <li data-i18n="legal.privacy.data.item3">Eventuali log tecnici anonimi per sicurezza e diagnostica.</li>
           </ul>
-          <h4>Cookie e analytics</h4>
+          <h4 data-i18n="legal.privacy.cookies.title">Cookie e analytics</h4>
           <ul>
-            <li>Niente cookie di profilazione; eventuali analytics sono anonimizzati/aggregati.</li>
-            <li>Nessuna condivisione con terze parti a fini commerciali.</li>
+            <li data-i18n="legal.privacy.cookies.item1">Niente cookie di profilazione; eventuali analytics sono anonimizzati/aggregati.</li>
+            <li data-i18n="legal.privacy.cookies.item2">Nessuna condivisione con terze parti a fini commerciali.</li>
           </ul>
-          <h4>Diritti e contatti</h4>
+          <h4 data-i18n="legal.privacy.rights.title">Diritti e contatti</h4>
           <ul>
-            <li>Per informazioni o esercizio diritti privacy, scrivi a <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>.</li>
-            <li>Il titolare potrà aggiornare questa informativa: controlla periodicamente le revisioni.</li>
+            <li data-i18n="legal.privacy.rights.item1">Per informazioni o esercizio diritti privacy, scrivi a <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>.</li>
+            <li data-i18n="legal.privacy.rights.item2">Il titolare potrà aggiornare questa informativa: controlla periodicamente le revisioni.</li>
           </ul>
         </section>
       </div>
       <footer class="legal-ftr">
-        <small style="font-size: var(--fs-12); color: var(--muted);">Continuando dichiari di aver letto e compreso le informative.</small>
-        <button class="btn btn-sm" type="button" id="btn-accept-legal">Accetto e chiudi</button>
+        <small style="font-size: var(--fs-12); color: var(--muted);" data-i18n="legal.overlay.continue">Continuando dichiari di aver letto e compreso le informative.</small>
+        <button class="btn btn-sm" type="button" id="btn-accept-legal" data-i18n="legal.overlay.accept">Accetto e chiudi</button>
       </footer>
     </div>
   </div>
 
-  <!-- ===== MOUNT HEADER & FOOTER ===== -->
+  <!-- ===== MOUNT FOOTER ===== -->
   <script type="module">
     // Imposta tema dark
     document.documentElement.setAttribute('data-theme', 'dark');
     
-    // Importa componenti
-    import { siteHeader } from '/report/assets/js/components/site-header.js';
+    // Importa footer (header gestito da global-header.js)
     import { siteFooter } from '/report/assets/js/components/site-footer.js';
-    
-    // Monta header
-    const headerSlot = document.getElementById('site-header-slot');
-    if (headerSlot) {
-      siteHeader.mount(headerSlot);
-    }
     
     // Monta footer
     const footerSlot = document.getElementById('site-footer-slot');
@@ -444,6 +451,9 @@
       siteFooter.mount(footerSlot);
     }
   </script>
+
+  <!-- Global Header & i18n -->
+  <script type="module" src="/assets/js/global-header.js"></script>
 
   <!-- ===== LEGAL OVERLAY SCRIPT ===== -->
   <script>

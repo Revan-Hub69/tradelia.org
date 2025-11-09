@@ -1,5 +1,5 @@
 // /report/assets/js/modules/f5.js
-// F5 · Setup Operativo - Design Unificato
+// F5 · Analisi Configurazione Tecnica - Design Unificato
 // Usa stessa logica di header-ticker: riassunto AI sempre visibile + tabs laterali
 
 import { renderModuleHeader, renderModuleTabsSidebar, bindModuleTabs } from '../components/module-header.js';
@@ -22,7 +22,7 @@ function escapeAttr(str) {
 function normalizeDataPublicF5(src = {}) {
   const meta = {
     timestampET: src?.meta?.timestampET ?? "—",
-    module: src?.meta?.module ?? "F5 · Setup Operativo",
+    module: src?.meta?.module ?? "F5 · Analisi Configurazione Tecnica",
     moduleStatus: src?.meta?.moduleStatus ?? "ACTIVE",
     freshness: src?.meta?.freshness ?? "≤ T-1",
     hero_intro: src?.meta?.hero_intro ?? "",
@@ -32,21 +32,21 @@ function normalizeDataPublicF5(src = {}) {
   // UI labels (user-friendly) — tutto override‑abile da src.ui_labels
   const defaults = {
     badge: 'F5',
-    hero_title: 'Setup tecnici completi, coerenti con bias e rischio',
-    hero_subtitle: 'Setup Operativo · Orizzonte 3–10 giorni',
-    hero_desc: 'Genera setup tecnici completi, coerenti con bias e rischio. Nessun contenuto operativo.',
+    hero_title: 'Configurazione tecnica esemplificativa, coerente con bias e rischio',
+    hero_subtitle: 'Analisi Configurazione Tecnica · Orizzonte 3–10 giorni',
+    hero_desc: 'Analisi educativa di configurazioni tecniche esemplificative, coerenti con bias e rischio. Nessun contenuto operativo o raccomandativo.',
     ai_summary_label: 'Riassunto AI',
-    // Tab titles
-    tab_entry: 'Entry',
-    tab_stop: 'Stop',
-    tab_tp: 'Take Profit',
+    // Tab titles (terminologia educativa, non operativa)
+    tab_entry: 'Punto di Riferimento Iniziale',
+    tab_stop: 'Soglia di Monitoraggio',
+    tab_tp: 'Obiettivo Esemplificativo',
     tab_flow: 'FlowScore',
-    tab_setup: 'Setup Details',
+    tab_setup: 'Dettagli Configurazione',
     tab_governance: 'Governance',
-    // Metric labels
-    label_entry: 'Entry',
-    label_stop: 'Stop',
-    label_tp: 'TP',
+    // Metric labels (terminologia educativa, non operativa)
+    label_entry: 'Punto di Riferimento',
+    label_stop: 'Soglia Monitoraggio',
+    label_tp: 'Obiettivo Esemplificativo',
     label_flow_score: 'FlowScore',
     // Separatori
     separator_dot: ' · ',
@@ -94,46 +94,46 @@ function generateAISummaryRows(data) {
   const d = data;
   const labels = d.labels || {};
   
-  // ROW 1: Entry + Stop
+  // ROW 1: Punto di Riferimento + Soglia di Monitoraggio
   const entry = d.entry?.Entry?.raw || d.entry?.Entry || '—';
   const stop = d.stop?.Stop?.raw || d.stop?.Stop || '—';
   
   rows.push({
     id: 'f5-summary-entry-stop',
     parts: [
-      { kind: 'text', text: `${labels.label_entry || 'Entry'}${labels.separator_colon || ': '}` },
+      { kind: 'text', text: `${labels.label_entry || 'Punto di Riferimento'}${labels.separator_colon || ': '}` },
       {
         kind: 'metric',
         key: 'Entry',
         value: String(entry),
-        label: labels.label_entry || 'Entry',
+        label: labels.label_entry || 'Punto di Riferimento',
         tone: 'neutral'
       },
-      { kind: 'text', text: `${labels.separator_dot || ' · '}${labels.label_stop || 'Stop'}${labels.separator_colon || ': '}` },
+      { kind: 'text', text: `${labels.separator_dot || ' · '}${labels.label_stop || 'Soglia Monitoraggio'}${labels.separator_colon || ': '}` },
       {
         kind: 'metric',
         key: 'Stop',
         value: String(stop),
-        label: labels.label_stop || 'Stop',
-        tone: 'err'
+        label: labels.label_stop || 'Soglia Monitoraggio',
+        tone: 'neutral'
       }
     ]
   });
   
-  // ROW 2: TP + FlowScore
+  // ROW 2: Obiettivo Esemplificativo + FlowScore
   const tp = d.tp?.TP?.raw || d.tp?.TP || '—';
   const flowScore = d.flow_score?.FlowScore?.raw || d.flow_score?.FlowScore || '—';
   
   rows.push({
     id: 'f5-summary-tp-flow',
     parts: [
-      { kind: 'text', text: `${labels.label_tp || 'TP'}${labels.separator_colon || ': '}` },
+      { kind: 'text', text: `${labels.label_tp || 'Obiettivo Esemplificativo'}${labels.separator_colon || ': '}` },
       {
         kind: 'metric',
         key: 'TP',
         value: String(tp),
-        label: labels.label_tp || 'TP',
-        tone: 'ok'
+        label: labels.label_tp || 'Obiettivo Esemplificativo',
+        tone: 'neutral'
       },
       { kind: 'text', text: `${labels.separator_dot || ' · '}${labels.label_flow_score || 'FlowScore'}${labels.separator_colon || ': '}` },
       {
@@ -150,7 +150,7 @@ function generateAISummaryRows(data) {
 }
 
 /**
- * Genera rows + parts per tab Entry
+ * Genera rows + parts per tab Punto di Riferimento Iniziale
  */
 function generateEntryTabRows(data) {
   const rows = [];
@@ -161,12 +161,12 @@ function generateEntryTabRows(data) {
     rows.push({
       id: 'entry-price',
       parts: [
-        { kind: 'text', text: `${labels.label_entry || 'Entry'}${labels.separator_colon || ': '}` },
+        { kind: 'text', text: `${labels.label_entry || 'Punto di Riferimento'}${labels.separator_colon || ': '}` },
         {
           kind: 'metric',
           key: 'Entry',
           value: String(d.Entry?.raw || d.Entry || '—'),
-          label: labels.label_entry || 'Entry',
+          label: labels.label_entry || 'Punto di Riferimento',
           tone: 'neutral'
         }
       ]
@@ -177,7 +177,7 @@ function generateEntryTabRows(data) {
 }
 
 /**
- * Genera rows + parts per tab Stop
+ * Genera rows + parts per tab Soglia di Monitoraggio
  */
 function generateStopTabRows(data) {
   const rows = [];
@@ -188,13 +188,13 @@ function generateStopTabRows(data) {
     rows.push({
       id: 'stop-price',
       parts: [
-        { kind: 'text', text: `${labels.label_stop || 'Stop'}${labels.separator_colon || ': '}` },
+        { kind: 'text', text: `${labels.label_stop || 'Soglia Monitoraggio'}${labels.separator_colon || ': '}` },
         {
           kind: 'metric',
           key: 'Stop',
           value: String(d.Stop?.raw || d.Stop || '—'),
-          label: labels.label_stop || 'Stop',
-          tone: 'err'
+          label: labels.label_stop || 'Soglia Monitoraggio',
+          tone: 'neutral'
         }
       ]
     });
@@ -204,7 +204,7 @@ function generateStopTabRows(data) {
 }
 
 /**
- * Genera rows + parts per tab TP
+ * Genera rows + parts per tab Obiettivo Esemplificativo
  */
 function generateTPTabRows(data) {
   const rows = [];
@@ -215,13 +215,13 @@ function generateTPTabRows(data) {
     rows.push({
       id: 'tp-price',
       parts: [
-        { kind: 'text', text: `${labels.label_tp || 'TP'}${labels.separator_colon || ': '}` },
+        { kind: 'text', text: `${labels.label_tp || 'Obiettivo Esemplificativo'}${labels.separator_colon || ': '}` },
         {
           kind: 'metric',
           key: 'TP',
           value: String(d.TP?.raw || d.TP || '—'),
-          label: labels.label_tp || 'TP',
-          tone: 'ok'
+          label: labels.label_tp || 'Obiettivo Esemplificativo',
+          tone: 'neutral'
         }
       ]
     });
@@ -237,9 +237,9 @@ export function renderCard(rawData, ctx = {}) {
   // Header modulo (tutto da labels/JSON)
   const headerHTML = renderModuleHeader({
     badge: labels.badge || 'F5',
-    subtitle: labels.hero_subtitle || 'Analisi Setup · Orizzonte 3–10 giorni',
-    title: labels.hero_title || 'Analisi di setup tecnici (esemplificativi)',
-    desc: labels.hero_desc || 'Analisi educativa di setup tecnici esemplificativi, coerenti con bias e rischio. Nessun contenuto operativo o raccomandativo.',
+    subtitle: labels.hero_subtitle || 'Analisi Configurazione Tecnica · Orizzonte 3–10 giorni',
+    title: labels.hero_title || 'Configurazione tecnica esemplificativa, coerente con bias e rischio',
+    desc: labels.hero_desc || 'Analisi educativa di configurazioni tecniche esemplificative, coerenti con bias e rischio. Nessun contenuto operativo o raccomandativo.',
     status: d.meta.moduleStatus,
     freshness: d.meta.freshness,
     disclaimer: d.meta.hero_disclaimer || d.mifid?.disclaimer || ''
@@ -257,33 +257,33 @@ export function renderCard(rawData, ctx = {}) {
   // Tabs per sezioni
   const tabs = [];
   
-  // Tab 1: Entry
+  // Tab 1: Punto di Riferimento Iniziale
   if (d.entry && Object.keys(d.entry).length > 0) {
     tabs.push({
       id: 'entry',
-      title: labels.tab_entry || 'Entry',
+      title: labels.tab_entry || 'Punto di Riferimento Iniziale',
       content: '<div data-tab-ticker="entry"></div>',
       active: false,
       rows: generateEntryTabRows(d)
     });
   }
   
-  // Tab 2: Stop
+  // Tab 2: Soglia di Monitoraggio
   if (d.stop && Object.keys(d.stop).length > 0) {
     tabs.push({
       id: 'stop',
-      title: labels.tab_stop || 'Stop',
+      title: labels.tab_stop || 'Soglia di Monitoraggio',
       content: '<div data-tab-ticker="stop"></div>',
       active: false,
       rows: generateStopTabRows(d)
     });
   }
   
-  // Tab 3: TP
+  // Tab 3: Obiettivo Esemplificativo
   if (d.tp && Object.keys(d.tp).length > 0) {
     tabs.push({
       id: 'tp',
-      title: labels.tab_tp || 'Take Profit',
+      title: labels.tab_tp || 'Obiettivo Esemplificativo',
       content: '<div data-tab-ticker="tp"></div>',
       active: false,
       rows: generateTPTabRows(d)

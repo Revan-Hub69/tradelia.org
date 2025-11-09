@@ -3,6 +3,7 @@
 // Legge dati dinamici da header.json
 
 import Logger from '../utils/logger.js';
+import { i18n } from '../utils/i18n.js';
 
 const FOOTER = {
   _node: null,
@@ -51,17 +52,17 @@ function render(data = {}) {
             </svg>
             <span>Tradelia AI</span>
           </h3>
-          <p>
+          <p data-i18n="footer.about.desc">
             Tradelia AI sviluppa analisi finanziarie modulari attraverso prompt 
             proprietari e metodologia accademica scientifica.
           </p>
           <div class="ftr-quick-links" role="navigation" aria-label="Link rapidi">
-            <a href="/index.html" aria-label="Vai alla homepage">Homepage</a>
-            <a href="/dashboard.html" aria-label="Vai alla dashboard abbonati">Dashboard</a>
-            <a href="/tutorials.html" aria-label="Vai alla pagina tutorial">Tutorial</a>
-            <a href="/pricing.html" aria-label="Vai alla pagina prezzi">Pricing</a>
-            <a href="/brokers.html" aria-label="Vai alla pagina brokers">Brokers</a>
-            <a href="/glossario.html" aria-label="Vai al glossario finanziario">Glossario</a>
+            <a href="/index.html" aria-label="Vai alla homepage" data-i18n="nav.home">Homepage</a>
+            <a href="/dashboard.html" aria-label="Vai alla dashboard abbonati" data-i18n="nav.dashboard">Dashboard</a>
+            <!-- Tutorial temporaneamente rimosso -->
+            <a href="/pricing.html" aria-label="Vai alla pagina prezzi" data-i18n="nav.pricing">Pricing</a>
+            <a href="/brokers.html" aria-label="Vai alla pagina brokers" data-i18n="nav.brokers">Brokers</a>
+            <a href="/glossario.html" aria-label="Vai al glossario finanziario" data-i18n="nav.glossary">Glossario</a>
           </div>
         </div>
 
@@ -70,22 +71,22 @@ function render(data = {}) {
             <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 2l7 4v6c0 5-3 8-7 10C8 20 5 17 5 12V6l7-4z"/><path d="M12 8v4"/>
             </svg>
-            <span>Compliance &amp; Risk</span>
+            <span data-i18n="footer.legal.title">Compliance &amp; Risk</span>
           </h3>
           <ul class="ftr-list">
-            <li><strong>Non è consulenza in materia di investimenti</strong> (MiFID II / ESMA / CONSOB)</li>
-            <li>Tradelia AI non è un intermediario autorizzato; <strong>non gestisce capitali né esegue ordini</strong></li>
-            <li><strong>Rischio di perdita totale o parziale del capitale</strong> — investire comporta rischi</li>
-            <li>Le informazioni hanno <strong>scopo puramente informativo e formativo</strong> — non costituiscono raccomandazione personalizzata</li>
+            <li data-i18n="footer.legal.disclaimer1"><strong>Non è consulenza in materia di investimenti</strong> (MiFID II / ESMA / CONSOB)</li>
+            <li data-i18n="footer.legal.disclaimer2">Tradelia AI non è un intermediario autorizzato; <strong>non gestisce capitali né esegue ordini</strong></li>
+            <li data-i18n="footer.legal.disclaimer3"><strong>Rischio di perdita totale o parziale del capitale</strong> — investire comporta rischi</li>
+            <li data-i18n="footer.legal.disclaimer4">Le informazioni hanno <strong>scopo puramente informativo e formativo</strong> — non costituiscono raccomandazione personalizzata</li>
           </ul>
           <div class="ftr-quick-links" role="navigation" aria-label="Documenti legali" style="margin-top: var(--sp-4);">
-            <a href="/privacy.html" aria-label="Vai alla privacy policy">Privacy Policy</a>
-            <a href="/terms.html" aria-label="Vai ai termini e condizioni">Termini e Condizioni</a>
-            <a href="/refund.html" aria-label="Vai alla policy di rimborso">Policy di Rimborso</a>
+            <a href="/privacy.html" aria-label="Vai alla privacy policy" data-i18n="nav.privacy">Privacy Policy</a>
+            <a href="/terms.html" aria-label="Vai ai termini e condizioni" data-i18n="nav.terms">Termini e Condizioni</a>
+            <a href="/refund.html" aria-label="Vai alla policy di rimborso" data-i18n="nav.refund">Policy di Rimborso</a>
           </div>
           <div style="margin-top: var(--sp-3);">
-            <button id="btn-privacy-open" class="btn btn-sm" type="button" aria-label="Apri informativa privacy">Privacy</button>
-            <button id="btn-mifid-open" class="btn btn-sm" type="button" aria-label="Apri informativa MiFID">Informativa MiFID</button>
+            <button id="btn-privacy-open" class="btn btn-sm" type="button" aria-label="Apri informativa privacy" data-i18n="nav.privacy">Privacy</button>
+            <button id="btn-mifid-open" class="btn btn-sm" type="button" aria-label="Apri informativa MiFID" data-i18n="mifid.banner.mifid">Informativa MiFID</button>
           </div>
         </div>
 
@@ -94,9 +95,9 @@ function render(data = {}) {
             <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M4 12h16"/><path d="M12 4l8 8-8 8"/>
             </svg>
-            <span>Canali ufficiali</span>
+            <span data-i18n="footer.social.title">Canali ufficiali</span>
           </h3>
-          <p style="margin-bottom: var(--sp-3);">Aggiornamenti su metodologia e release:</p>
+          <p style="margin-bottom: var(--sp-3);" data-i18n="footer.social.subtitle">Aggiornamenti su metodologia e release:</p>
           <div class="ftr-socials" role="list" aria-label="Canali social ufficiali">
             <a href="https://www.linkedin.com/company/tradelia" target="_blank" rel="noopener noreferrer" aria-label="Visita il profilo LinkedIn di Tradelia AI (si apre in nuova scheda)">LinkedIn</a>
             <a href="https://x.com/tradelia_ai" target="_blank" rel="noopener noreferrer" aria-label="Visita il profilo X (Twitter) di Tradelia AI (si apre in nuova scheda)">X (Twitter)</a>
@@ -115,17 +116,17 @@ function render(data = {}) {
               <span class="brand-dot" aria-hidden="true"></span>
               <span class="brand-suffix">AI</span>
             </span>
-            · Tutti i diritti riservati
+            · <span data-i18n="footer.copyright">Tutti i diritti riservati</span>
           </p>
           <p style="margin: var(--sp-2) 0 0 0;">
             <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>
           </p>
         </div>
         <div>
-          <p style="margin: 0; text-align: right;">
+          <p style="margin: 0; text-align: right; display: none;" id="footer-company-version-container">
             <span id="footer-company">—</span> · <span id="footer-version">—</span>
           </p>
-          <p style="margin: var(--sp-2) 0 0 0; text-align: right; font-size: var(--fs-12);">
+          <p style="margin: var(--sp-2) 0 0 0; text-align: right; font-size: var(--fs-12); display: none;" id="footer-snapshot-container">
             <span id="footer-snapshot">—</span> · <span id="footer-updated">—</span>
           </p>
         </div>
@@ -156,6 +157,14 @@ function mount(containerEl) {
   
   // Bind event listeners per MiFID/Privacy (stesso sistema di index.html)
   bindLegalButtons();
+  
+  // Sistema traduzione disabilitato - sempre italiano
+  
+  // Chiama update con dati vuoti per nascondere i campi dinamici di default
+  // (verranno mostrati solo quando update() viene chiamata con dati reali)
+  setTimeout(() => {
+    update({});
+  }, 0);
   
   Logger.debug('SiteFooter', 'Footer montato');
   return node;
@@ -276,9 +285,7 @@ function update(data = {}) {
   const hasReportData = companyName || ticker || version || start || end || updatedAt;
   
   // Footer company/version (solo se ci sono dati)
-  const footerCompanyEl = document.getElementById('footer-company');
-  const footerVersionEl = document.getElementById('footer-version');
-  const footerCompanyVersionContainer = footerCompanyEl?.parentElement;
+  const footerCompanyVersionContainer = document.getElementById('footer-company-version-container');
   
   if (footerCompanyVersionContainer) {
     if (hasReportData && (companyName || ticker || version)) {
@@ -291,9 +298,7 @@ function update(data = {}) {
   }
   
   // Footer snapshot/updated (solo se ci sono dati)
-  const footerSnapshotEl = document.getElementById('footer-snapshot');
-  const footerUpdatedEl = document.getElementById('footer-updated');
-  const footerSnapshotContainer = footerSnapshotEl?.parentElement;
+  const footerSnapshotContainer = document.getElementById('footer-snapshot-container');
   
   if (footerSnapshotContainer) {
     if (hasReportData && (start || end || updatedAt)) {

@@ -14,7 +14,8 @@ export const OVERLAY_TYPES = {
   METRICS_DRAWER: 'metrics-drawer',
   METRIC_POPUP: 'metric-popup',
   GLOSSARY: 'glossary',
-  PANEL: 'panel'
+  PANEL: 'panel',
+  POPOVER: 'popover'
 };
 
 /**

@@ -1,7 +1,7 @@
 {
   "meta": {
     "timestampET": "2025-01-15T10:00:00-05:00",
-    "module": "F5 · Setup Operativo",
+    "module": "F5 · Analisi Configurazione Tecnica",
     "moduleStatus": "ACTIVE",
     "freshness": "≤ T-1",
     "hero_intro": "",
@@ -9,10 +9,16 @@
   },
   "ui_labels": {
     "badge": "F5",
-    "hero_title": "Analisi di setup tecnici (esemplificativi)",
-    "hero_subtitle": "Analisi Setup · Orizzonte 3–10 giorni",
-    "hero_desc": "Analisi educativa di setup tecnici esemplificativi, coerenti con bias e rischio. Nessun contenuto operativo o raccomandativo.",
-    "ai_summary_label": "Riassunto AI"
+    "hero_title": "Configurazione tecnica esemplificativa, coerente con bias e rischio",
+    "hero_subtitle": "Analisi Configurazione Tecnica · Orizzonte 3–10 giorni",
+    "hero_desc": "Analisi educativa di configurazioni tecniche esemplificative, coerenti con bias e rischio. Nessun contenuto operativo o raccomandativo.",
+    "ai_summary_label": "Riassunto AI",
+    "tab_entry": "Punto di Riferimento Iniziale",
+    "tab_stop": "Soglia di Monitoraggio",
+    "tab_tp": "Obiettivo Esemplificativo",
+    "label_entry": "Punto di Riferimento",
+    "label_stop": "Soglia Monitoraggio",
+    "label_tp": "Obiettivo Esemplificativo"
   },
   "entry": {
     "Entry": {
