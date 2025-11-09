@@ -58,8 +58,7 @@ async function mountHeaderFooter() {
   document.documentElement.setAttribute('data-theme', 'dark');
   
   try {
-    // Inizializza i18n
-    i18n.init();
+    // Sistema traduzione disabilitato - sempre italiano
     
     const headerSlot = document.getElementById('site-header-slot');
     if (headerSlot) {
@@ -71,14 +70,6 @@ async function mountHeaderFooter() {
     if (footerSlot) {
       siteFooter.mount(footerSlot);
     }
-    
-    // Applica traduzioni
-    i18n.translatePage();
-    
-    // Ascolta cambiamenti lingua
-    window.addEventListener('languageChanged', () => {
-      i18n.translatePage();
-    });
   } catch (err) {
     Logger.warn('Dashboard', 'Errore montaggio header/footer', err);
   }
@@ -810,10 +801,7 @@ async function showDashboard() {
     renderDashboardReports();
     // renderDashboardTutorials(); // Tutorial temporaneamente disabilitati
     
-    // Applica traduzioni dopo il rendering
-    setTimeout(() => {
-      i18n.translatePage();
-    }, 100);
+    // Sistema traduzione disabilitato - sempre italiano
     
     // Carica votazioni in background (non blocca il rendering)
     loadVotingData().catch(err => {
@@ -828,10 +816,7 @@ async function showDashboard() {
     hideLoadingState();
     showErrorState('Errore nel caricamento della dashboard. Riprova più tardi.');
     
-    // Applica traduzioni anche in caso di errore
-    setTimeout(() => {
-      i18n.translatePage();
-    }, 100);
+    // Sistema traduzione disabilitato - sempre italiano
   }
 }
 
@@ -933,10 +918,7 @@ function renderDashboardReports() {
       const noReportsText = i18n.t('dashboard.table.noReports') || 'Nessun report disponibile';
       tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: var(--sp-6);" data-i18n="dashboard.table.noReports">${noReportsText}</td></tr>`;
       Logger.warn('Dashboard', 'Nessun report da renderizzare');
-      // Applica traduzioni
-      setTimeout(() => {
-        i18n.translatePage();
-      }, 50);
+      // Sistema traduzione disabilitato - sempre italiano
       return;
     }
     
@@ -979,10 +961,7 @@ function renderDashboardReports() {
       }
     }).join('');
     
-    // Applica traduzioni dopo il rendering
-    setTimeout(() => {
-      i18n.translatePage();
-    }, 50);
+    // Sistema traduzione disabilitato - sempre italiano
   } catch (err) {
     Logger.error('Dashboard', 'Errore renderDashboardReports', err);
     const errorText = i18n.t('dashboard.table.error') || 'Errore nel rendering dei report';
@@ -1091,17 +1070,13 @@ async function loadVotingData() {
         renderVotingRanking();
         renderVotingStats();
         // Applica traduzioni dopo il rendering
-        setTimeout(() => {
-          i18n.translatePage();
-        }, 50);
+        // Sistema traduzione disabilitato - sempre italiano
       } else {
         Logger.warn('Dashboard', 'Errore risposta API votazioni', response.status);
         STATE.votes = [];
         renderVotingRanking();
         renderVotingStats();
-        setTimeout(() => {
-          i18n.translatePage();
-        }, 50);
+        // Sistema traduzione disabilitato - sempre italiano
       }
     } catch (fetchErr) {
       clearTimeout(timeout);

@@ -530,14 +530,9 @@ import { i18n } from './utils/i18n.js';
   }
   
   // ===== AVVIO =====
-  // Inizializza i18n e applica preferenze utente al DOM
-  i18n.init();
+  // Sistema traduzione disabilitato - sempre italiano
+  // i18n.init(); // Disabilitato
   userPreferences.applyToDOM();
-  
-  // Ascolta cambiamenti lingua
-  window.addEventListener('languageChanged', () => {
-    i18n.translatePage();
-  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);

@@ -793,7 +793,8 @@ function detectLanguage() {
 }
 
 function getCurrentLanguage() {
-  return userPreferences.get('language') || detectLanguage();
+  // FORZATO ITALIANO - Sistema traduzione disabilitato
+  return 'it';
 }
 
 function setLanguage(lang) {
@@ -809,13 +810,11 @@ function setLanguage(lang) {
 
 function applyLanguage(lang) {
   const html = document.documentElement;
-  html.setAttribute('lang', lang);
-  html.setAttribute('data-lang', lang);
+  html.setAttribute('lang', 'it');
+  html.setAttribute('data-lang', 'it');
   
-  // Trigger event per aggiornare UI
-  window.dispatchEvent(new CustomEvent('languageChanged', { detail: { language: lang } }));
-  
-  Logger.debug('i18n', `Lingua applicata: ${lang}`);
+  // Sistema traduzione disabilitato - non emettere eventi
+  Logger.debug('i18n', 'Lingua forzata: italiano');
 }
 
 // ===== PUBLIC API =====
@@ -876,7 +875,8 @@ export const i18n = {
    * @returns {boolean} Successo
    */
   setLanguage(lang) {
-    return setLanguage(lang);
+    // Sistema traduzione disabilitato - sempre italiano
+    return true;
   },
 
   /**

@@ -158,17 +158,7 @@ function mount(containerEl) {
   // Bind event listeners per MiFID/Privacy (stesso sistema di index.html)
   bindLegalButtons();
   
-  // Applica traduzioni al footer
-  setTimeout(() => {
-    i18n.translatePage();
-  }, 150);
-  
-  // Ascolta cambiamenti lingua
-  window.addEventListener('languageChanged', () => {
-    setTimeout(() => {
-      i18n.translatePage();
-    }, 50);
-  });
+  // Sistema traduzione disabilitato - sempre italiano
   
   // Chiama update con dati vuoti per nascondere i campi dinamici di default
   // (verranno mostrati solo quando update() viene chiamata con dati reali)
