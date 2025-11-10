@@ -762,3 +762,64 @@
   line-height: var(--lh-15);
 }
 
+/* ===== CHART CONTAINERS (F1B Charts) ===== */
+.chart-container {
+  background: var(--surface-card);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-6);
+  margin-bottom: var(--sp-6);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.chart-container:last-child {
+  margin-bottom: 0;
+}
+
+.chart-title {
+  font-size: var(--fs-16);
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: var(--sp-3);
+  letter-spacing: -0.01em;
+}
+
+.chart-description {
+  font-size: var(--fs-13);
+  color: var(--ink-soft);
+  line-height: var(--lh-17);
+  margin-bottom: var(--sp-4);
+}
+
+.chart-description strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  margin-top: var(--sp-4);
+}
+
+.chart-wrapper canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Responsive chart containers */
+@media (max-width: 768px) {
+  .chart-container {
+    padding: var(--sp-4);
+    margin-bottom: var(--sp-4);
+  }
+  
+  .chart-title {
+    font-size: var(--fs-14);
+  }
+  
+  .chart-description {
+    font-size: var(--fs-12);
+  }
+}
+
