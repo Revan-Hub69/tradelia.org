@@ -594,7 +594,7 @@
       <div class="preview-container" id="chartScreenshotPreviewContainer">
         <img id="chartScreenshotPreviewImage" class="preview-image" alt="Preview" />
       </div>
-      <div class="status" id="chartScreenshotStatus"></div>
+      <div class="status" id="chartScreenshotStatusModal"></div>
       <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
         <button class="btn btn-primary" id="uploadChartScreenshotBtnModal" style="flex: 1;">💾 Salva Screenshot</button>
         <button class="btn btn-secondary" id="cancelChartScreenshotBtn">Annulla</button>
@@ -682,6 +682,18 @@
     const cancelJsonBtn = document.getElementById('cancelJsonBtn');
     const jsonStatus = document.getElementById('jsonStatus');
 
+    const uploadChartScreenshotModal = document.getElementById('uploadChartScreenshotModal');
+    const chartScreenshotModalTitle = document.getElementById('chartScreenshotModalTitle');
+    const chartScreenshotReportInfo = document.getElementById('chartScreenshotReportInfo');
+    const chartScreenshotUploadArea = document.getElementById('chartScreenshotUploadArea');
+    const chartScreenshotFileInput = document.getElementById('chartScreenshotFileInput');
+    const chartScreenshotPreviewContainer = document.getElementById('chartScreenshotPreviewContainer');
+    const chartScreenshotPreviewImage = document.getElementById('chartScreenshotPreviewImage');
+    const uploadChartScreenshotBtnModal = document.getElementById('uploadChartScreenshotBtnModal');
+    const closeChartScreenshotModal = document.getElementById('closeChartScreenshotModal');
+    const cancelChartScreenshotBtn = document.getElementById('cancelChartScreenshotBtn');
+    const chartScreenshotStatusEl = document.getElementById('chartScreenshotStatusModal');
+
     const uploadScreenshotModal = document.getElementById('uploadScreenshotModal');
     const screenshotModalTitle = document.getElementById('screenshotModalTitle');
     const screenshotReportInfo = document.getElementById('screenshotReportInfo');
@@ -693,6 +705,9 @@
     const closeScreenshotModal = document.getElementById('closeScreenshotModal');
     const cancelScreenshotBtn = document.getElementById('cancelScreenshotBtn');
     const screenshotStatus = document.getElementById('screenshotStatus');
+
+    let selectedChartScreenshotFile = null;
+    let chartPasteHandler = null;
 
     // Load reports
     async function loadReports() {
@@ -795,20 +810,38 @@
         modulesContainer.innerHTML = '<div class="loading">Caricamento moduli...</div>';
         
         // Lista tutti i file JSON nella directory del report
-        const response = await fetch(`/report/admin/api/report-files?reportId=${reportId}`);
-        const data = await response.json();
-        const jsonFiles = data.files || [];
+        let jsonFiles = [];
+        try {
+          const response = await fetch(`/report/admin/api/report-files?reportId=${reportId}`);
+          if (response.ok) {
+            const data = await response.json();
+            jsonFiles = data.files || [];
+          } else {
+            console.warn('[Dashboard] Endpoint report-files non disponibile, uso controllo diretto');
+            // Fallback: controlla direttamente i file
+            jsonFiles = [];
+          }
+        } catch (error) {
+          console.warn('[Dashboard] Errore chiamata report-files:', error);
+          jsonFiles = [];
+        }
         
         // Check which modules exist
         const modules = [];
         for (const moduleId of SWING_MODULES) {
           const fileName = MODULE_FILES[moduleId];
           // Cerca il file JSON (può essere f1b.json, f1b-generated.json, ecc.)
-          const hasJson = jsonFiles.some(f => {
-            const baseName = f.replace('.json', '').toLowerCase();
-            const moduleBase = fileName.replace('.json', '').toLowerCase();
-            return baseName === moduleBase || baseName.includes(moduleBase) || moduleBase.includes(baseName);
-          });
+          let hasJson = false;
+          if (jsonFiles.length > 0) {
+            hasJson = jsonFiles.some(f => {
+              const baseName = f.replace('.json', '').toLowerCase();
+              const moduleBase = fileName.replace('.json', '').toLowerCase();
+              return baseName === moduleBase || baseName.includes(moduleBase) || moduleBase.includes(baseName);
+            });
+          } else {
+            // Fallback: controlla direttamente se il file esiste
+            hasJson = await checkFileExists(`/report/reports/${reportId}/${fileName}`);
+          }
           const hasScreenshot = await checkFileExists(`/report/reports/${reportId}/${moduleId.toLowerCase()}-screenshot.png`);
           
           modules.push({

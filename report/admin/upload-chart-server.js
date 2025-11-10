@@ -111,33 +111,36 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    // Serve screenshot images (chart snapshot)
-    if (pathname.startsWith('/report/reports/') && pathname.endsWith('/chart-snapshot.png')) {
-      const reportPath = pathname.replace('/report/reports/', '').replace('/chart-snapshot.png', '');
-      const filePath = path.join(REPORTS_DIR, reportPath, 'chart-snapshot.png');
-      await serveFile(res, filePath, 'image/png');
-      return;
-    }
-
-    // Serve module screenshot images
-    if (pathname.startsWith('/report/reports/') && pathname.includes('-screenshot.png')) {
-      const parts = pathname.replace('/report/reports/', '').split('/');
-      if (parts.length === 2) {
-        const [reportId, screenshotFile] = parts;
-        const filePath = path.join(REPORTS_DIR, reportId, screenshotFile);
+    // Serve file statici report (JSON e immagini) - solo se non è una richiesta API
+    if (pathname.startsWith('/report/reports/') && !pathname.startsWith('/report/admin/')) {
+      // Serve chart snapshot
+      if (pathname.endsWith('/chart-snapshot.png')) {
+        const reportPath = pathname.replace('/report/reports/', '').replace('/chart-snapshot.png', '');
+        const filePath = path.join(REPORTS_DIR, reportPath, 'chart-snapshot.png');
         await serveFile(res, filePath, 'image/png');
         return;
       }
-    }
-
-    // Serve module JSON files
-    if (pathname.startsWith('/report/reports/') && pathname.endsWith('.json')) {
-      const parts = pathname.replace('/report/reports/', '').split('/');
-      if (parts.length === 2) {
-        const [reportId, jsonFile] = parts;
-        const filePath = path.join(REPORTS_DIR, reportId, jsonFile);
-        await serveFile(res, filePath, 'application/json');
-        return;
+      
+      // Serve module JSON files
+      if (pathname.endsWith('.json')) {
+        const parts = pathname.replace('/report/reports/', '').split('/');
+        if (parts.length === 2) {
+          const [reportId, jsonFile] = parts;
+          const filePath = path.join(REPORTS_DIR, reportId, jsonFile);
+          await serveFile(res, filePath, 'application/json');
+          return;
+        }
+      }
+      
+      // Serve module screenshot images
+      if (pathname.includes('-screenshot.png')) {
+        const parts = pathname.replace('/report/reports/', '').split('/');
+        if (parts.length === 2) {
+          const [reportId, screenshotFile] = parts;
+          const filePath = path.join(REPORTS_DIR, reportId, screenshotFile);
+          await serveFile(res, filePath, 'image/png');
+          return;
+        }
       }
     }
 
