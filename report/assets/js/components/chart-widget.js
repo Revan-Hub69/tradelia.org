@@ -165,7 +165,7 @@ const CHART_WIDGET = {
           </div>
         </div>
         <div class="chart-widget-static-source">
-          Fonte: Grafico gentilmente concesso da <a href="/Exante.html" class="chart-widget-source-link">Exante</a>
+          Fonte: Grafico gentilmente concesso da <a href="#" class="chart-widget-source-link">Exante</a>
         </div>
       </div>
     `;

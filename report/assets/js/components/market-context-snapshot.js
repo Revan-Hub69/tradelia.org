@@ -61,7 +61,7 @@ const MARKET_CONTEXT_SNAPSHOT = {
     // Se non ci sono dati, mostra placeholder minimale
     if (regimeScore === null && strategyMode === null) {
       root.innerHTML = `
-        <div class="market-context-snapshot-label">Market context snapshot — fonte F1B (30d regime)</div>
+        <div class="market-context-snapshot-label">Regime di mercato — Appetito al rischio (ultimi 30 giorni)</div>
         <div class="market-context-snapshot-gradient">
           <div class="market-context-snapshot-band"></div>
         </div>
@@ -77,8 +77,20 @@ const MARKET_CONTEXT_SNAPSHOT = {
     // Determina colore del marker in base al score
     const markerColor = this._getMarkerColor(regimeScore);
 
+    // Determina descrizione in base al RegimeScore
+    let description = '';
+    if (regimeScore !== null) {
+      if (regimeScore < -0.3) {
+        description = 'Risk-off (avversione al rischio)';
+      } else if (regimeScore > 0.3) {
+        description = 'Risk-on (appetito al rischio)';
+      } else {
+        description = 'Neutro';
+      }
+    }
+
     root.innerHTML = `
-      <div class="market-context-snapshot-label">Market context snapshot — fonte F1B (30d regime)</div>
+      <div class="market-context-snapshot-label">Regime di mercato — ${description} (ultimi 30 giorni)</div>
       <div class="market-context-snapshot-gradient">
         <div class="market-context-snapshot-band">
           <div 
