@@ -1733,17 +1733,19 @@ a:not(.site-footer a):not(.ftr-quick-links a):not(.ftr-socials a):not(.ftr-botto
   width: 100%;
 }
 
-/* Assicura che il container dei report sia centrato e usi tutta la larghezza disponibile */
+/* Assicura che il container dei report occupi tutta la larghezza disponibile */
 main#app-root.container {
-  max-width: var(--container-max);
+  max-width: 100% !important; /* Forza larghezza piena per i report */
   padding-inline: var(--sp-6); /* Padding leggermente aumentato per respiro */
   box-sizing: border-box;
+  width: 100%;
 }
 
-/* Su schermi grandi, aumenta il padding laterale ma mantieni il contenuto centrato */
+/* Su schermi grandi, aumenta il padding laterale */
 @media (min-width: 1024px) {
   main#app-root.container {
     padding-inline: var(--sp-8);
+    max-width: 100% !important; /* Mantieni larghezza piena */
   }
 }
 

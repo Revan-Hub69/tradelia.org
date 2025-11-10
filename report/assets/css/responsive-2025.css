@@ -191,11 +191,8 @@
 
 /* Tablet: Layout intermedio */
 @media (min-width: 641px) and (max-width: 1023px) {
-  .report-content-wrapper {
-    display: grid;
-    grid-template-columns: 240px 1fr;
-    gap: var(--sp-5);
-  }
+  /* report-content-wrapper usa flex column (definito in report-layout.css) */
+  /* Non usare grid perché la sidebar è sempre nascosta */
   
   .module-grid-2 {
     grid-template-columns: repeat(2, 1fr);
@@ -210,11 +207,8 @@
 
 /* Desktop: Layout completo */
 @media (min-width: 1024px) {
-  .report-content-wrapper {
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: var(--sp-6);
-  }
+  /* report-content-wrapper usa flex column (definito in report-layout.css) */
+  /* Non usare grid perché la sidebar è sempre nascosta */
   
   .module-grid-2 {
     grid-template-columns: repeat(2, 1fr);

@@ -163,25 +163,32 @@
 
 /* ===== REPORT CONTENT WRAPPER ===== */
 .report-content-wrapper {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 100%;
+  display: flex !important; /* Forza flex invece di grid */
+  flex-direction: column !important; /* Colonna verticale */
+  width: 100% !important;
+  max-width: 100% !important;
   gap: var(--sp-8);
+  box-sizing: border-box;
 }
 
 /* Sidebar nascosta di default (non popolata - reportNavigation è stub) */
 .report-index-sidebar {
-  display: none;
+  display: none !important; /* Forza nascosto */
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .report-modules-main {
   display: flex;
   flex-direction: column;
   gap: var(--sp-8);
-  width: 100%;
-  max-width: 100%;
+  width: 100% !important;
+  max-width: 100% !important;
   min-width: 0; /* Permette shrink */
+  flex: 1 1 0%; /* Occupa tutto lo spazio disponibile */
 }
 
 /* Se in futuro la sidebar viene popolata, possiamo riattivarla con:

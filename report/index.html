@@ -149,6 +149,21 @@
       max-width: 100%;
     }
     
+    /* Assicura che report-content-wrapper occupi tutta la larghezza */
+    main#app-root .report-content-wrapper {
+      width: 100% !important;
+      max-width: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    
+    /* Assicura che report-modules-main occupi tutta la larghezza */
+    main#app-root .report-modules-main {
+      width: 100% !important;
+      max-width: 100% !important;
+      flex: 1 1 0% !important;
+    }
+    
     /* Footer slot viene dopo main */
     #site-footer-slot {
       order: 3;
