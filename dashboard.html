@@ -1289,9 +1289,17 @@
         let reportDirs = [];
         
         try {
-          // Prova a caricare manifest report (generato dinamicamente)
+          // Carica manifest report da /archivio/manifest.json
           console.log('loadReports: Tentativo caricamento manifest...');
-          const manifestResponse = await fetch('/report/reports/reports-manifest.json');
+          const timestamp = new Date().getTime();
+          const manifestResponse = await fetch(`/archivio/manifest.json?t=${timestamp}`, {
+            cache: 'no-cache',
+            headers: {
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache',
+              'Expires': '0'
+            }
+          });
           if (manifestResponse.ok) {
             const manifest = await manifestResponse.json();
             // Estrai array di ID report (supporta sia array di stringhe che array di oggetti)
@@ -1311,7 +1319,10 @@
           // Lista hardcoded di report disponibili (fallback)
           reportDirs = [
             '20251107-1630',
-            'sample-id'
+            'sample-id',
+            'example-complete',
+            'example-with-screenshot',
+            'example-without-screenshot'
           ];
           console.log('loadReports: Usando lista hardcoded:', reportDirs.length, 'report');
           console.warn('loadReports: Errore caricamento manifest:', e.message);
