@@ -53,7 +53,13 @@ const CHART_WIDGET = {
       return;
     }
 
-    // Priorità 2: Cerca immagine statica nel report
+    // Priorità 2: Widget TradingView Ticker (se simbolo disponibile)
+    if (symbol) {
+      this._showTradingViewTicker(body, symbol, timestamp);
+      return;
+    }
+
+    // Priorità 3: Cerca immagine statica nel report (solo se non c'è simbolo)
     if (reportId) {
       const imageUrl = `/report/reports/${reportId}/chart-snapshot.png`;
       const imageExists = await this._checkImageExists(imageUrl);
@@ -64,20 +70,9 @@ const CHART_WIDGET = {
       }
     }
 
-    // Priorità 3: Widget TradingView Ticker
-    if (symbol) {
-      this._showTradingViewTicker(body, symbol, timestamp);
-      return;
-    }
-
-    // Fallback: messaggio
-    body.innerHTML = `
-      <div class="chart-widget-empty">
-        <div class="chart-widget-empty-icon">📊</div>
-        <div class="chart-widget-empty-text">Chart non disponibile</div>
-        <div class="chart-widget-empty-subtext">Inserisci un simbolo per visualizzare il ticker</div>
-      </div>
-    `;
+    // Fallback: nascondi completamente il widget se non ci sono dati
+    root.style.display = 'none';
+    Logger.debug('ChartWidget', 'Nessun dato disponibile, widget nascosto');
   },
 
   // ===== STATIC CHART =====
@@ -92,16 +87,25 @@ const CHART_WIDGET = {
         })
       : '';
 
+    // Gestione errore immagine: fallback a TradingView o nascondi
+    const img = document.createElement('img');
+    img.src = imageUrl;
+    img.alt = 'Chart snapshot';
+    img.className = 'chart-widget-static-image';
+    img.loading = 'lazy';
+    
+    img.onerror = () => {
+      // Se l'immagine non carica, nascondi il widget invece di mostrare errore
+      const root = body.closest('.chart-widget');
+      if (root) {
+        root.style.display = 'none';
+        Logger.debug('ChartWidget', 'Immagine chart non disponibile, widget nascosto');
+      }
+    };
+
     body.innerHTML = `
       <div class="chart-widget-static">
         <div class="chart-widget-static-image-container">
-          <img 
-            src="${imageUrl}" 
-            alt="Chart snapshot" 
-            class="chart-widget-static-image"
-            loading="lazy"
-            onerror="this.parentElement.innerHTML='<div class=\\'chart-widget-error\\'>Errore caricamento immagine chart</div>'"
-          />
         </div>
         ${timestampText ? `
           <div class="chart-widget-static-timestamp">
@@ -111,6 +115,12 @@ const CHART_WIDGET = {
       </div>
     `;
 
+    // Aggiungi immagine al container
+    const container = body.querySelector('.chart-widget-static-image-container');
+    if (container) {
+      container.appendChild(img);
+    }
+
     Logger.debug('ChartWidget', `Chart statico caricato: ${imageUrl}`);
   },
 
@@ -119,6 +129,15 @@ const CHART_WIDGET = {
     // Normalizza simbolo per TradingView
     // Es: AAPL -> NASDAQ:AAPL, BTCUSD -> BINANCE:BTCUSD
     const normalizedSymbol = this._normalizeSymbol(symbol);
+    
+    if (!normalizedSymbol) {
+      // Se il simbolo non può essere normalizzato, nascondi il widget
+      const root = body.closest('.chart-widget');
+      if (root) {
+        root.style.display = 'none';
+      }
+      return;
+    }
     
     body.innerHTML = `
       <div class="chart-widget-ticker">
@@ -135,8 +154,10 @@ const CHART_WIDGET = {
       </div>
     `;
 
-    // Carica script TradingView
-    this._loadTradingViewScript(normalizedSymbol);
+    // Carica script TradingView con delay per evitare errori
+    setTimeout(() => {
+      this._loadTradingViewScript(normalizedSymbol);
+    }, 100);
 
     Logger.debug('ChartWidget', `TradingView ticker caricato: ${normalizedSymbol}`);
   },
