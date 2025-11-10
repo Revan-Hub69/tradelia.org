@@ -55,17 +55,29 @@ import { i18n } from './utils/i18n.js';
   }
   
   // ===== UTILITIES =====
-  async function fetchJSON(path) {
+  async function fetchJSON(path, options = {}) {
+    const { silent = false } = options;
     try {
       const url = path + __versionQS;
       Logger.debug('App', `Fetching: ${url}`);
       const res = await fetch(url, { cache: 'no-store' });
-      if (!res.ok) throw new Error(`HTTP ${res.status}: ${path}`);
+      if (!res.ok) {
+        // 404 è normale quando un file non esiste (modulo opzionale)
+        if (res.status === 404 && silent) {
+          throw new Error(`HTTP ${res.status}: ${path}`);
+        }
+        throw new Error(`HTTP ${res.status}: ${path}`);
+      }
       const data = await res.json();
       if (!data || typeof data !== 'object') throw new Error(`Invalid JSON: ${path}`);
       return data;
     } catch (err) {
-      Logger.error('App', `Errore fetch ${path}`, err);
+      // Log come errore solo se non è silenzioso (moduli opzionali)
+      if (!silent) {
+        Logger.error('App', `Errore fetch ${path}`, err);
+      } else {
+        Logger.debug('App', `File non trovato (normale): ${path}`);
+      }
       throw err;
     }
   }
@@ -317,12 +329,14 @@ import { i18n } from './utils/i18n.js';
     let manifest = { order: ['F1', 'F1B', 'F2', 'F3', 'F3O', 'F4', 'F5', 'F5B', 'F5-LT+'] };
     
     try {
-      const m = await fetchJSON(`/report/reports/${reportId}/manifest.json`);
+      const m = await fetchJSON(`/report/reports/${reportId}/manifest.json`, { silent: true });
       if (Array.isArray(m?.order) && m.order.length) {
         manifest = { order: m.order };
+        Logger.debug('App', `Manifest caricato: ${manifest.order.length} moduli`);
       }
     } catch (err) {
-      Logger.warn('App', 'Manifest non trovato, uso default', err);
+      // Manifest non trovato è normale, usa lista default
+      Logger.debug('App', 'Manifest non trovato, uso lista default');
     }
     
     Logger.debug('App', `Montaggio ${manifest.order.length} moduli`);
@@ -352,14 +366,16 @@ import { i18n } from './utils/i18n.js';
         // Carica JSON (fallback a oggetto vuoto se mancante)
         let json = {};
         try {
-          json = await fetchJSON(jsonPath);
+          // Usa silent=true per moduli opzionali (non loggare errori per file mancanti)
+          json = await fetchJSON(jsonPath, { silent: true });
           // Se JSON non esiste o è vuoto, salta questo modulo
           if (!json || Object.keys(json).length === 0 || json._placeholder) {
             Logger.debug('App', `Modulo ${modId}: JSON non disponibile, salto`);
             continue;
           }
         } catch (jsonErr) {
-          Logger.debug('App', `Modulo ${modId}: JSON non trovato, salto`, jsonErr);
+          // File non trovato è normale per moduli opzionali, non loggare come errore
+          Logger.debug('App', `Modulo ${modId}: JSON non trovato, salto`);
           continue; // Salta se JSON non esiste (montaggio dinamico)
         }
         

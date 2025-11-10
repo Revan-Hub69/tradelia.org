@@ -1,0 +1,9 @@
+{
+  "id": "example-without-screenshot",
+  "title": "Tradelia · Report MSFT",
+  "order": ["F1B"],
+  "modules": {
+    "F1B": "f1b.json"
+  }
+}
+
