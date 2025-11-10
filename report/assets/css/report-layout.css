@@ -163,36 +163,50 @@
 
 /* ===== REPORT CONTENT WRAPPER ===== */
 .report-content-wrapper {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: var(--sp-6);
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  gap: var(--sp-8);
 }
 
+/* Sidebar nascosta di default (non popolata - reportNavigation è stub) */
 .report-index-sidebar {
-  position: sticky;
-  top: 80px;
-  align-self: start;
+  display: none;
 }
 
 .report-modules-main {
   display: flex;
   flex-direction: column;
   gap: var(--sp-8);
+  width: 100%;
+  max-width: 100%;
   min-width: 0; /* Permette shrink */
 }
 
+/* Se in futuro la sidebar viene popolata, possiamo riattivarla con:
+.report-index-sidebar:not(:empty) {
+  display: block;
+  position: sticky;
+  top: 80px;
+  align-self: start;
+  width: 280px;
+}
+
+.report-content-wrapper:has(.report-index-sidebar:not(:empty)) {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--sp-6);
+}
+*/
+
 @media (max-width: 1024px) {
   .report-content-wrapper {
-    grid-template-columns: 1fr;
     gap: var(--sp-4);
   }
 
   .report-index-sidebar {
-    position: relative;
-    top: 0;
-    order: -1;
-    margin-bottom: var(--sp-4);
+    display: none;
   }
 }
 
